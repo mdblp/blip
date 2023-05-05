@@ -108,23 +108,23 @@ describe('Caregiver home page', () => {
     // Checking that all patients are displayed
     const dataGridRow = screen.getByTestId('patient-list-grid')
     expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/AFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/AFlag patient fake@patient.emailAnnie VersaireMay 25, 2015N/AData calculated on the last 7 daysRows per page:101–3 of 3')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/AFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/AFlag patient fake@patient.emailAnnie VersaireMay 25, 2015N/A')
 
     const searchPatient = screen.getByPlaceholderText('Search for a patient...')
 
     // Searching by birthdate only
     await userEvent.type(searchPatient, '20/01/2010')
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/AFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/AData calculated on the last 7 daysRows per page:101–2 of 2')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/AFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/A')
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and first name
     await userEvent.type(searchPatient, '20/01/2010 Aki')
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/AData calculated on the last 7 daysRows per page:101–1 of 1')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/A')
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and last name
     await userEvent.type(searchPatient, '20/01/2010provi')
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/AData calculated on the last 7 daysRows per page:101–1 of 1')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/A')
   })
 
   it('should display a list of patients and allow to remove one of them', async () => {
@@ -137,7 +137,7 @@ describe('Caregiver home page', () => {
 
     const patientTableBody = screen.getByTestId('patient-list-grid')
     expect(within(patientTableBody).getAllByRole('row')).toHaveLength(5)
-    expect(patientTableBody).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980N/AFlag patient pending-patient@diabeloop.frPending PatientJan 1, 1980N/AData calculated on the last 7 daysRows per page:101–4 of 4')
+    expect(patientTableBody).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980N/AFlag patient pending-patient@diabeloop.frPending PatientJan 1, 1980N/A')
 
     const removePatientButton = screen.getByRole('button', { name: `Remove patient ${patient2AsTeamMember.email}` })
     expect(removePatientButton).toBeVisible()

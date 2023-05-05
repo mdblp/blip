@@ -34,10 +34,13 @@ import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
+import { completeDashboardData, mockDataAPI, twoWeeksOldDashboardData } from '../../mock/data.api.mock'
 import { type AppMainLayoutParams, testAppMainLayoutForCaregiver } from '../../use-cases/app-main-layout-visualisation'
 import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
-import { testDashboardDataVisualisationPrivateTeam } from '../../use-cases/patient-data-visualisation'
+import {
+  testDashboardDataVisualisationPrivateTeam,
+  testDashboardDataVisualisationWithTwoWeeksOldData
+} from '../../use-cases/patient-data-visualisation'
 
 describe('Patient dashboard for caregiver', () => {
   const patientDashboardRoute = `/patient/${patient1Id}/dashboard`
@@ -71,5 +74,15 @@ describe('Patient dashboard for caregiver', () => {
 
     await testAppMainLayoutForCaregiver(appMainLayoutParams)
     await testDashboardDataVisualisationPrivateTeam(patientDashboardLayoutParams)
+  })
+
+  it('should render correct statistic when data is two weeks old', async () => {
+    mockDataAPI(twoWeeksOldDashboardData)
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testDashboardDataVisualisationWithTwoWeeksOldData()
   })
 })

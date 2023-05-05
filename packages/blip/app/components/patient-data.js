@@ -643,7 +643,7 @@ class PatientDataPage extends React.Component {
     // Default one week data period for dashboard (now() - 7 days)
     this.setState({
       epochLocation: new Date().valueOf(),
-      msRange: TimeService.MS_IN_DAY * 7
+      msRange: TimeService.MS_IN_DAY * 14
     })
     if (fromChart !== toChart) {
       navigate(`${prefixURL}/${toChart}`)
