@@ -97,7 +97,7 @@ export default class DataApi {
   }
 
   static async exportData(user: User, patientId: string, startDate: string, endDate: string): Promise<string> {
-    const bgUnits = user.settings?.units ?? Unit.MilligramPerDeciliter
+    const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
     const { data } = await HttpService.get<string>({
       url: `/export/${patientId}`,
       config: {

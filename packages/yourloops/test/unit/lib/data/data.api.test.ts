@@ -131,14 +131,35 @@ describe('Data API', () => {
   })
 
   describe('exportData', () => {
-    it('should get a blob with data', async () => {
-      const data = {} as Blob
+    const data = {} as Blob
+    jest.spyOn(HttpService, 'get').mockResolvedValue({ data } as AxiosResponse)
+    it('should get a blob with data in mg/dL if the user have no unit set', async () => {
       const bgUnits = Unit.MilligramPerDeciliter
       const startDate = '2022-02-02'
       const endDate = '2022-02-05'
-      jest.spyOn(HttpService, 'get').mockResolvedValue({ data } as AxiosResponse)
 
       const response = await DataApi.exportData({} as User, patientId, startDate, endDate)
+      expect(response).toEqual(data)
+      expect(HttpService.get).toHaveBeenCalledWith({
+        url: `/export/${patientId}`,
+        config: {
+          headers: { [HttpHeaderKeys.contentType]: HttpHeaderValues.csv },
+          params: { bgUnits, startDate, endDate }
+        }
+      })
+    })
+
+    it('should get a blob with data with the user units', async () => {
+      const bgUnits = Unit.MmolPerLiter
+      const startDate = '2022-02-02'
+      const endDate = '2022-02-05'
+
+      const response = await DataApi.exportData(
+        { settings: { units: { bg: bgUnits } } } as User,
+        patientId,
+        startDate,
+        endDate
+      )
       expect(response).toEqual(data)
       expect(HttpService.get).toHaveBeenCalledWith({
         url: `/export/${patientId}`,
