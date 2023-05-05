@@ -29,7 +29,7 @@
 import { AppConfig } from 'yourloops/lib/config/models/app-config.model'
 import { Patient } from 'yourloops/lib/patient/models/patient.model'
 import BlipApi from 'yourloops/lib/data/blip.api'
-import DialogPDFOptions from 'yourloops/components/dialogs/pdf-print-options'
+import { PrintPDFDialog } from 'yourloops/components/pdf/print-pdf-dialog'
 import { IUser } from 'yourloops/lib/data/models/i-user.model'
 import { PatientData, PatientDatum } from 'yourloops/lib/data/models/patient-datum.model'
 import { MessageNote } from 'yourloops/lib/data/models/message-note.model'
@@ -46,13 +46,13 @@ interface BlipProperties {
   pathName: string;
   patient: Patient;
   prefixURL: string;
-  dialogPDFOptions: typeof DialogPDFOptions;
+  dialogPDFOptions: typeof PrintPDFDialog;
 }
 
 export {
   BlipProperties,
   BlipApi,
-  DialogPDFOptions,
+  PrintPDFDialog,
   IUser,
   PatientDatum,
   PatientData,

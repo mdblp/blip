@@ -39,7 +39,7 @@ import { useAuth } from '../lib/auth'
 import { useData } from '../lib/data/data.hook'
 import { setPageTitle } from '../lib/utils'
 
-import DialogPDFOptions from './dialogs/pdf-print-options'
+import { PrintPDFDialog } from './pdf/print-pdf-dialog'
 import { usePatientContext } from '../lib/patient/patient.provider'
 import { type Patient } from '../lib/patient/models/patient.model'
 import { getUserName } from '../lib/auth/user.util'
@@ -143,7 +143,7 @@ function PatientDataPage(): JSX.Element | null {
         pathName={pathName}
         patient={patient}
         prefixURL={prefixURL}
-        dialogPDFOptions={DialogPDFOptions}
+        dialogPDFOptions={PrintPDFDialog}
       />
     </Container>
   )

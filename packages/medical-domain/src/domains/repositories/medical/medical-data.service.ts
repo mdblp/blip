@@ -429,7 +429,7 @@ class MedicalDataService {
     })
   }
 
-  private getTimezoneAt(epoch: number): string {
+  getTimezoneAt(epoch: number): string {
     if (this.timezoneList.length === 0) {
       return this._datumOpts.timePrefs.timezoneName
     }

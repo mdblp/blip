@@ -29,7 +29,7 @@ import React, { type FunctionComponent, useEffect, useState } from 'react'
 import { PatientNavBarMemoized as PatientNavBar } from '../header-bars/patient-nav-bar'
 import { Route, Routes } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import DialogPDFOptions from '../dialogs/pdf-print-options'
+import { PrintPDFDialog } from '../pdf/print-pdf-dialog'
 import { PatientDashboard } from '../dashboard-widgets/patient-dashboard'
 import Daily from 'blip/app/components/chart/daily'
 import Trends from 'blip/app/components/chart/trends'
@@ -181,14 +181,13 @@ export const PatientData: FunctionComponent = () => {
                   />
                 </Routes>
                 {showPdfDialog &&
-                  <DialogPDFOptions
-                    minDate={medicalData.getLocaleTimeEndpoints().startDate}
-                    maxDate={medicalData.getLocaleTimeEndpoints().endDate}
-                    onResult={(result) => {
-                      console.log(result)
-                      setShowPdfDialog(false)
-                    }}
+                  <PrintPDFDialog
+                    bgPrefs={bgPrefs}
+                    dataUtil={dataUtil}
                     defaultPreset={'1week'}
+                    medicalData={medicalData}
+                    patient={patient}
+                    onClose={() => { setShowPdfDialog(false) }}
                   />
                 }
               </React.Fragment>
