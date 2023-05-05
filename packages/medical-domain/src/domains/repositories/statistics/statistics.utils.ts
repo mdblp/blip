@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,41 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.row {
-  display: flex;
-  align-items: center;
-  color: var(--stat--default);
-  composes: largeSize from '../../../styles/typography.css';
-  line-height: 1;
-  white-space: nowrap;
-}
+import { type WeekDaysFilter } from '../../models/time/date-filter.model'
+import type DateFilter from '../../models/time/date-filter.model'
+import { defaultWeekDaysFilter } from '../../models/time/date-filter.model'
 
-.rescueCarb {
-  padding-left: 10px;
-  margin-top: 4px;
-}
+export const getWeekDaysFilter = (dateFilter: DateFilter): WeekDaysFilter => dateFilter.weekDays ?? defaultWeekDaysFilter
 
-.total {
-  line-height: 1;
-  justify-content: space-between;
-  margin-left: auto;
-  color: var(--text-medium-contrast);
-}
-
-.value {
-  composes: extraLargeSize from '../../../styles/typography.css';
-  opacity: 1;
-  display: inline-block;
-}
-
-.suffix {
-  composes: smallSize from '../../../styles/typography.css';
-  color: var(--stat--default);
-  font-weight: normal;
-  position: relative;
-  bottom: 1px;
-  padding-left: 1px;
-}
-.disabled-label {
-  color: var(--muted);
-}
+export const sumValues = (values: number[]): number => values.reduce((total, current) => total + current, 0)
