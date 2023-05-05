@@ -135,6 +135,8 @@ export const minimalTrendViewData = {
   data: [
     { time: '2020-01-20T10:00:00Z', type: 'cbg', id: '2020-01-20_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.1, uploadId: 'osef', _userId: 'osef' },
     { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 9.1, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-19T10:00:00Z', type: 'wizard', id: WIZARD_ID1, timezone: 'Europe/Paris', units: 'mmol/L', carbInput: 45, bolus: WIZARD_BOLUS_ID1, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-19T10:00:00Z', type: 'food', id: 'food_19-35-00', meal: 'rescuecarbs', nutrition: { carbohydrate: { net: 10, units: 'grams' } }, timezone: 'Europe/Paris', uploadId: 'osef' },
     { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_1', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.9, uploadId: 'osef', _userId: 'osef' },
     { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_2', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.9, uploadId: 'osef', _userId: 'osef' },
     { time: '2020-01-18T10:00:00Z', type: 'cbg', id: '2020-01-18_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 9.8, uploadId: 'osef', _userId: 'osef' }

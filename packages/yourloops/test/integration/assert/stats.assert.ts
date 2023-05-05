@@ -35,6 +35,7 @@ export const checkStatTooltip = async (patientStatistics: BoundFunctions<typeof 
   const tooltip = await screen.findByTestId('stat-tooltip-content')
   expect(tooltip).toHaveTextContent(expectedTextContent)
   await userEvent.unhover(infoIcon)
+
   await waitFor(() => {
     expect(screen.queryByTestId('stat-tooltip-content')).not.toBeInTheDocument()
   }, { timeout: 3000 })

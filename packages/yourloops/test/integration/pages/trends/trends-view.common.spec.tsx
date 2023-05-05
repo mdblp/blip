@@ -66,6 +66,8 @@ describe('Trends view for anyone', () => {
       await waitFor(() => {
         expect(router.state.location.pathname).toEqual('/trends')
       })
+      const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
+      expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily Carbs55gRescue carbs10g')
 
       // Check the tooltips
       await checkTrendsTidelineContainerTooltips()
