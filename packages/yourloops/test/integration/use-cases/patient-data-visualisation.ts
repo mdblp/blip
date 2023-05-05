@@ -25,9 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkPatientStatistics, checkPatientStatisticsNoData } from '../assert/patient-statistics.assert'
+import {
+  checkPatientStatistics,
+  checkPatientStatisticsNoData,
+  checkPatientStatisticsWithTwoWeeksOldData
+} from '../assert/patient-statistics.assert'
 import { checkPatientDashboardLayout, type PatientDashboardLayoutParams } from '../assert/layout.assert'
-import { checkDeviceUsageWidget, checkDeviceUsageWidgetNoData } from '../assert/device-usage.assert'
+import {
+  checkDeviceUsageWidget,
+  checkDeviceUsageWidgetNoData,
+  checkDeviceUsageWidgetWithTwoWeeksOldData
+} from '../assert/device-usage.assert'
 import { patient1, patient2 } from '../data/patient.api.data'
 import { checkPatientDropdown, checkPatientNavBarForPatient } from '../assert/patient-nav-bar.assert'
 import { checkMonitoringAlertsCard } from '../assert/monitoring-alerts.assert'
@@ -37,6 +45,11 @@ export const testDashboardDataVisualisation = async (patientDashboardLayoutParam
   await checkPatientStatistics()
   await checkDeviceUsageWidget()
   await checkMonitoringAlertsCard()
+}
+
+export const testDashboardDataVisualisationWithTwoWeeksOldData = async () => {
+  await checkPatientStatisticsWithTwoWeeksOldData()
+  await checkDeviceUsageWidgetWithTwoWeeksOldData()
 }
 
 export const testDashboardDataVisualisationPrivateTeam = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {

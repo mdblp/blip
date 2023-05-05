@@ -28,7 +28,7 @@
 import { act, waitFor } from '@testing-library/react'
 import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
-import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
+import { completeDashboardData, mockDataAPI, twoWeeksOldDashboardData } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { patient1, patient1Id, patientWithMmolId } from '../../data/patient.api.data'
 import { mockChatAPI } from '../../mock/chat.api.mock'
@@ -47,6 +47,7 @@ import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-
 import {
   testDashboardDataVisualisation,
   testDashboardDataVisualisationPrivateTeamNoData,
+  testDashboardDataVisualisationWithTwoWeeksOldData,
   testPatientNavBarForHcp
 } from '../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
@@ -118,6 +119,16 @@ describe('Patient dashboard for HCP', () => {
     await testMedicalWidgetForHcp(medicalFilesWidgetParams)
     await testMonitoringAlertsParametersConfigurationDialogMgdl()
     await testChatWidgetForHcp()
+  })
+
+  it('should render correct statistic when data is two weeks old', async () => {
+    mockDataAPI(twoWeeksOldDashboardData)
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testDashboardDataVisualisationWithTwoWeeksOldData()
   })
 
   it('should render correct components when navigating to a patient scoped on the private team', async () => {
