@@ -29,6 +29,7 @@ import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import NotificationApi from '../../../lib/notifications/notification.api'
 import { invitationTeam } from '../data/notification.data'
+import { patient1Id } from '../data/patient.api.data'
 
 export const closeDialogNotificationTeam = async () => {
   const badgeNotification = screen.getByLabelText('Go to notifications list')
@@ -69,6 +70,6 @@ export const checkAcceptTeamInvite = async () => {
   await userEvent.click(checkPolicy)
   expect(addCareTeamButton).toBeEnabled()
   await userEvent.click(addCareTeamButton)
-  expect(NotificationApi.acceptInvitation).toHaveBeenCalledWith('monitoredPatientId', invitationTeam)
+  expect(NotificationApi.acceptInvitation).toHaveBeenCalledWith(patient1Id, invitationTeam)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }

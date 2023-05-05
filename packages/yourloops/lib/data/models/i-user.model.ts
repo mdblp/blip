@@ -26,7 +26,6 @@
  */
 
 import { type MonitoringAlerts } from '../../patient/models/monitoring-alerts.model'
-import { type Monitoring } from '../../team/models/monitoring.model'
 import { type MedicalData } from './medical-data.model'
 import { type UserRole } from '../../auth/models/enums/user-role.enum'
 import { type Profile } from '../../auth/models/profile.model'
@@ -50,6 +49,5 @@ export interface IUser {
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
   medicalData?: MedicalData | null
   monitoringAlerts?: MonitoringAlerts | null
-  monitoring?: Monitoring
   unreadMessages?: number
 }

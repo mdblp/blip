@@ -28,7 +28,7 @@
 import { fireEvent, screen, within } from '@testing-library/react'
 import { myFirstTeamName, mySecondTeamName } from '../mock/team.api.mock'
 import userEvent from '@testing-library/user-event'
-import { monitoredPatientId } from '../data/patient.api.data'
+import { patient1Id } from '../data/patient.api.data'
 import ChatApi from '../../../lib/chat/chat.api'
 
 export const checkChatWidgetMessageReadingForHcp = async (): Promise<void> => {
@@ -55,5 +55,5 @@ export const checkChatWidgetMessageSending = async (teamId): Promise<void> => {
   const message = 'Hey man, how are things going?'
   await userEvent.type(chatInput, message)
   await userEvent.click(within(chatCard).getByRole('button', { name: 'Send' }))
-  expect(ChatApi.sendChatMessage).toHaveBeenCalledWith(teamId, monitoredPatientId, message, false)
+  expect(ChatApi.sendChatMessage).toHaveBeenCalledWith(teamId, patient1Id, message, false)
 }
