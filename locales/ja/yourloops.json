@@ -283,7 +283,7 @@
   "modal-switch-hcp-info": "介護者アカウントから医療従事者アカウントへ切り替えます。",
   "modal-switch-hcp-info-2": "この操作は元に戻せません。",
   "modal-switch-hcp-info-3": "YourLoopsで医療従事者は以下のことが可能です：",
-  "modal-switch-hcp-info-4": "Patients you followed as a caregiver will be added to your Professional Private Care.",
+  "modal-switch-hcp-info-4": "介護者としてフォローした患者は、プライベートケアに追加されます。",
   "modal-switch-hcp-info-5": "介護者アカウントを医療従事者アカウントへ切り替えますか？",
   "modal-switch-hcp-list-1": "ケアチームの作成、管理、参加",
   "modal-switch-hcp-list-2": "患者にデータ共有をリクエストします。",
