@@ -27,7 +27,7 @@
 
 import { act, waitFor } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
-import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
+import { completeDashboardData, mockDataAPI, twoWeeksOldDashboardData } from '../../mock/data.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { type MedicalFilesWidgetParams } from '../../assert/medical-widget.assert'
@@ -48,7 +48,7 @@ import { type AppMainLayoutParams, testAppMainLayoutForPatient } from '../../use
 import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
 import {
   testDashboardDataVisualisation,
-  testDashboardDataVisualisationPrivateTeamNoData,
+  testDashboardDataVisualisationPrivateTeamNoData, testDashboardDataVisualisationWithTwoWeeksOldData,
   testPatientNavBarForPatient
 } from '../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForPatient } from '../../use-cases/medical-reports-management'
@@ -123,5 +123,15 @@ describe('Patient dashboard for HCP', () => {
     })
 
     await testDashboardDataVisualisationPrivateTeamNoData(patientDashboardLayoutParams)
+  })
+
+  it('should render correct statistic when data is two weeks old', async () => {
+    mockDataAPI(twoWeeksOldDashboardData)
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testDashboardDataVisualisationWithTwoWeeksOldData()
   })
 })

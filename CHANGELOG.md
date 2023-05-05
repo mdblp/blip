@@ -14,6 +14,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2160 Patient list new design
 - YLP-2172 Display patients count on patients list
 - YLP-2173 As a HCP, I want information when hovering the monitoring alerts icons
+- YLP-2174 Patient data should be computed based on the last 14 days
 - YLP-2175 Implement new design system
 - YLP-2182 Sort patients by number of monitoring alerts on patient list
 - YLP-2183 Merging monitoring alerts into 1 column in the patient list (step 1)

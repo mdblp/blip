@@ -45,6 +45,8 @@ const { DataUtil } = vizUtils.data
 /** @type {(s: string, p?: object) => string} */
 const t = i18next.t.bind(i18next)
 
+const FOURTEEN_DAYS_IN_MS = TimeService.MS_IN_DAY * 14
+
 const LOADING_STATE_NONE = 0
 const LOADING_STATE_INITIAL_FETCH = LOADING_STATE_NONE + 1
 const LOADING_STATE_INITIAL_PROCESS = LOADING_STATE_INITIAL_FETCH + 1
@@ -639,10 +641,10 @@ class PatientDataPage extends React.Component {
     if (this.dataUtil) {
       this.dataUtil.chartPrefs = this.state.chartPrefs[toChart]
     }
-    // Default one week data period for dashboard (now() - 7 days)
+    // Default two weeks data period for dashboard (now() - 14 days)
     this.setState({
       epochLocation: new Date().valueOf(),
-      msRange: TimeService.MS_IN_DAY * 7
+      msRange: FOURTEEN_DAYS_IN_MS
     })
     if (fromChart !== toChart) {
       navigate(`${prefixURL}/${toChart}`)
