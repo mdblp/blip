@@ -27,7 +27,7 @@
 
 import { act, waitFor } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
-import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
+import { completeDashboardData, mockDataAPI, twoWeeksOldDashboardData } from '../../mock/data.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { type MedicalFilesWidgetParams } from '../../assert/medical-widget.assert'
@@ -41,14 +41,14 @@ import {
   mySecondTeamId,
   mySecondTeamName
 } from '../../mock/team.api.mock'
-import { monitoredPatient, monitoredPatientAsTeamMember, monitoredPatientId } from '../../data/patient.api.data'
+import { patient1, patient1AsTeamMember, patient1Id } from '../../data/patient.api.data'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { type AppMainLayoutParams, testAppMainLayoutForPatient } from '../../use-cases/app-main-layout-visualisation'
 import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
 import {
   testDashboardDataVisualisation,
-  testDashboardDataVisualisationPrivateTeamNoData,
+  testDashboardDataVisualisationPrivateTeamNoData, testDashboardDataVisualisationWithTwoWeeksOldData,
   testPatientNavBarForPatient
 } from '../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForPatient } from '../../use-cases/medical-reports-management'
@@ -56,12 +56,12 @@ import { testChatWidgetForPatient } from '../../use-cases/communication-system'
 import { testJoinTeam } from '../../use-cases/teams-management'
 
 describe('Patient dashboard for HCP', () => {
-  const monitoredPatientDashboardRoute = '/dashboard'
-  const firstName = 'Monitored'
-  const lastName = 'Patient'
+  const patientDashboardRoute = '/dashboard'
+  const firstName = patient1.profile.firstName
+  const lastName = patient1.profile.lastName
 
   beforeEach(() => {
-    mockPatientLogin(monitoredPatientAsTeamMember)
+    mockPatientLogin(patient1AsTeamMember)
     mockPatientApiForPatients()
     mockDataAPI()
     mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
@@ -87,17 +87,17 @@ describe('Patient dashboard for HCP', () => {
     }
 
     const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
-      selectedPatientId: monitoredPatientId,
-      loggedInUserFirstName: monitoredPatient.profile.firstName,
-      loggedInUserLastName: monitoredPatient.profile.lastName,
+      selectedPatientId: patient1Id,
+      loggedInUserFirstName: patient1.profile.firstName,
+      loggedInUserLastName: patient1.profile.lastName,
       selectedTeamId: mySecondTeamId,
       selectedTeamName: mySecondTeamName
     }
 
-    const router = renderPage(monitoredPatientDashboardRoute)
+    const router = renderPage(patientDashboardRoute)
 
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(monitoredPatientDashboardRoute)
+      expect(router.state.location.pathname).toEqual(patientDashboardRoute)
     })
 
     await testAppMainLayoutForPatient(appMainLayoutParams)
@@ -119,9 +119,19 @@ describe('Patient dashboard for HCP', () => {
     }
 
     await act(async () => {
-      renderPage(monitoredPatientDashboardRoute)
+      renderPage(patientDashboardRoute)
     })
 
     await testDashboardDataVisualisationPrivateTeamNoData(patientDashboardLayoutParams)
+  })
+
+  it('should render correct statistic when data is two weeks old', async () => {
+    mockDataAPI(twoWeeksOldDashboardData)
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testDashboardDataVisualisationWithTwoWeeksOldData()
   })
 })

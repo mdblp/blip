@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,21 +24,9 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { type MonitoringStatus } from './enums/monitoring-status.enum'
-import { type BgUnit } from 'medical-domain'
 
-export interface Monitoring {
-  enabled: boolean
-  status?: MonitoringStatus
-  monitoringEnd?: Date
-  parameters?: {
-    bgUnit: BgUnit
-    lowBg: number
-    highBg: number
-    outOfRangeThreshold: number
-    veryLowBg: number
-    hypoThreshold: number
-    nonDataTxThreshold: number
-    reportingPeriod: number
-  }
+export interface CarbsStatistics {
+  foodCarbs: number
+  total: number
+  totalEntriesCarbWithRescueCarbs: number
 }

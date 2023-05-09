@@ -37,14 +37,14 @@ import Typography from '@mui/material/Typography'
 import BasicDropdown from '../dropdown/basic-dropdown'
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
-import { type Monitoring } from '../../lib/team/models/monitoring.model'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import useMonitoringAlertsContentConfiguration from './monitoring-alerts-content-configuration.hook'
+import { useMonitoringAlertsContentConfiguration } from './monitoring-alerts-content-configuration.hook'
 import { buildBgValues, buildThresholds, onBasicDropdownSelect, PERCENTAGES } from './monitoring-alert-content-configuration.util'
 import FormHelperText from '@mui/material/FormHelperText'
 import { useAuth } from '../../lib/auth'
 import { LoadingButton } from '@mui/lab'
 import { Unit } from 'medical-domain'
+import { type MonitoringAlertsParameters } from 'lib/team/models/monitoring-alerts-parameters.model'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   cancelButton: {
@@ -97,11 +97,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }))
 
 export interface MonitoringAlertsContentConfigurationProps {
-  monitoring: Monitoring
+  monitoringAlertsParameters: MonitoringAlertsParameters
   saveInProgress: boolean
   patient?: Patient
   onClose?: () => void
-  onSave: (monitoring: Monitoring) => void
+  onSave: (monitoringAlertsParameters: MonitoringAlertsParameters) => void
 }
 
 const INPUT_STEP_MGDL = 1
@@ -112,9 +112,13 @@ const TIME_SPENT_SEVERE_HYPOGLYCEMIA_THRESHOLD_PERCENT = 5
 const TIME_SPENT_WITHOUT_UPLOADED_DATA_THRESHOLD_PERCENT = 50
 
 function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConfigurationProps): JSX.Element {
-  const { monitoring, patient, saveInProgress, onClose, onSave } = props
+  const { monitoringAlertsParameters, patient, saveInProgress, onClose, onSave } = props
   const { classes } = useStyles()
   const { t } = useTranslation()
+  const { user } = useAuth()
+
+  const userBgUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
+
   const {
     lowBg,
     veryLowBg,
@@ -133,12 +137,9 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
     setHypoThreshold,
     setNonDataTxThreshold,
     bgUnit
-  } = useMonitoringAlertsContentConfiguration({ monitoring, saveInProgress, patient, onSave })
+  } = useMonitoringAlertsContentConfiguration({ monitoringAlertsParameters, saveInProgress, userBgUnit, patient, onSave })
   const { minLowBg, maxLowBg, minHighBg, maxHighBg, minVeryLowBg, maxVeryLowBg } = buildThresholds(bgUnit)
   const { highBgDefault, lowBgDefault, veryLowBgDefault } = buildBgValues(bgUnit)
-  const { user } = useAuth()
-
-  const userBgUnit = user.settings?.units?.bg
 
   const inputStep = userBgUnit === Unit.MilligramPerDeciliter ? INPUT_STEP_MGDL : INPUT_STEP_MMOLL
 

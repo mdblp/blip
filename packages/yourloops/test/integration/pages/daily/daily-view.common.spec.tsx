@@ -48,11 +48,11 @@ import * as constants from '../../../../../viz/src/modules/print/utils/constants
 import DataApi from '../../../../lib/data/data.api'
 import { User } from '../../../../lib/auth'
 import { when } from 'jest-when'
-import { unmonitoredPatientAsTeamMember } from '../../data/patient.api.data'
+import { patient2AsTeamMember } from '../../data/patient.api.data'
 
 describe('Daily view for anyone', () => {
   beforeAll(() => {
-    mockPatientLogin(unmonitoredPatientAsTeamMember)
+    mockPatientLogin(patient2AsTeamMember)
   })
 
   describe('with all kind of data', () => {
@@ -62,6 +62,8 @@ describe('Daily view for anyone', () => {
       await waitFor(() => {
         expect(router.state.location.pathname).toEqual('/daily')
       })
+      const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
+      expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Total Carbs110gRescue carbs15g')
 
       // Check the tooltips
       await checkDailyTidelineContainerTooltips()
@@ -131,9 +133,9 @@ describe('Daily view for anyone', () => {
       await userEvent.click(generateReportDialogFirstPdf.getByText('Download'))
 
       // This checks that we tried to generate a pdf
-      expect(downloadLinkElement.download).toEqual(`yourloops-report-${unmonitoredPatientAsTeamMember.userId}.pdf`)
+      expect(downloadLinkElement.download).toEqual(`yourloops-report-${patient2AsTeamMember.userId}.pdf`)
       expect(downloadLinkElement.href.length).toBeGreaterThan(17950)
-      expect(downloadLinkElement.href.length).toBeLessThan(18030)
+      expect(downloadLinkElement.href.length).toBeLessThan(18040)
       expect(downloadLinkElement.click).toHaveBeenCalledTimes(1)
 
       await userEvent.click(screen.getByText('Download report'))
@@ -150,9 +152,9 @@ describe('Daily view for anyone', () => {
       await userEvent.click(generateReportDialogFirstCsv.getByText('Download'))
 
       // This checks for CSV generation
-      expect(downloadLinkElement.download).toEqual(`yourloops-report-${unmonitoredPatientAsTeamMember.userId}.csv`)
+      expect(downloadLinkElement.download).toEqual(`yourloops-report-${patient2AsTeamMember.userId}.csv`)
       expect(downloadLinkElement.click).toHaveBeenCalledTimes(2)
-      expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), unmonitoredPatientAsTeamMember.userId, '2020-01-02T00:00:00.000Z', '2020-01-15T23:59:59.999Z')
+      expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), patient2AsTeamMember.userId, '2020-01-02T00:00:00.000Z', '2020-01-15T23:59:59.999Z')
     })
   })
 

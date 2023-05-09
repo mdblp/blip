@@ -131,10 +131,6 @@ function TeamDetailsPage(): JSX.Element {
     refresh()
   }, [refresh])
 
-  const isMonitoringEnabled = (): boolean => {
-    return dropdownData.selectedTeam?.monitoring?.enabled
-  }
-
   return (
     <React.Fragment>
       {dropdownData.selectedTeam &&
@@ -176,24 +172,22 @@ function TeamDetailsPage(): JSX.Element {
                     {t('members')}
                   </Typography>
                 </div>
-                {isMonitoringEnabled() &&
-                  <div
-                    role="link"
-                    className={`${classes.drawerTitle} ${activeLink === 'configuration' ? classes.activeLink : ''}`}
-                    tabIndex={0}
-                    onClick={() => {
-                      scrollTo(teamMonitoringAlerts)
-                    }}
-                    onKeyDown={() => {
-                      scrollTo(teamMonitoringAlerts)
-                    }}
-                  >
-                    <DesktopMacOutlinedIcon className={commonTeamClasses.icon} />
-                    <Typography className={classes.title}>
-                      {t('events-configuration')}
-                    </Typography>
-                  </div>
-                }
+                <div
+                  role="link"
+                  className={`${classes.drawerTitle} ${activeLink === 'configuration' ? classes.activeLink : ''}`}
+                  tabIndex={0}
+                  onClick={() => {
+                    scrollTo(teamMonitoringAlerts)
+                  }}
+                  onKeyDown={() => {
+                    scrollTo(teamMonitoringAlerts)
+                  }}
+                >
+                  <DesktopMacOutlinedIcon className={commonTeamClasses.icon} />
+                  <Typography className={classes.title}>
+                    {t('events-configuration')}
+                  </Typography>
+                </div>
               </div>
             }
             <Box display="flex" justifyContent="center" margin="auto">
@@ -219,19 +213,17 @@ function TeamDetailsPage(): JSX.Element {
                     >
                       <TeamMembers team={dropdownData.selectedTeam} refreshParent={refresh} />
                     </div>
-                    {isMonitoringEnabled() &&
-                      <div>
-                        <div className={classes.separator} />
-                        <div
-                          ref={teamMonitoringAlerts}
-                          role="region"
-                          data-link="configuration"
-                          className={classes.refElement}
-                        >
-                          <TeamMonitoringAlertsConfiguration team={dropdownData.selectedTeam} />
-                        </div>
+                    <div>
+                      <div className={classes.separator} />
+                      <div
+                        ref={teamMonitoringAlerts}
+                        role="region"
+                        data-link="configuration"
+                        className={classes.refElement}
+                      >
+                        <TeamMonitoringAlertsConfiguration team={dropdownData.selectedTeam} />
                       </div>
-                    }
+                    </div>
                   </div>
                 }
               </div>

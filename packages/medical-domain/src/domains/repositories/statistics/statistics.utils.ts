@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum MonitoringStatus {
-  pending = 'pending',
-  accepted = 'accepted',
-}
+import { type WeekDaysFilter } from '../../models/time/date-filter.model'
+import type DateFilter from '../../models/time/date-filter.model'
+import { defaultWeekDaysFilter } from '../../models/time/date-filter.model'
+
+export const getWeekDaysFilter = (dateFilter: DateFilter): WeekDaysFilter => dateFilter.weekDays ?? defaultWeekDaysFilter
+
+export const sumValues = (values: number[]): number => values.reduce((total, current) => total + current, 0)

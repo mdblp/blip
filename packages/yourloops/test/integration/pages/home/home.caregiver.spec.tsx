@@ -30,8 +30,8 @@ import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi, removeDirectShareMock } from '../../mock/direct-share.api.mock'
 import {
   buildPatientAsTeamMember,
-  monitoredPatientAsTeamMember,
-  unmonitoredPatientAsTeamMember
+  patient1AsTeamMember,
+  patient2AsTeamMember
 } from '../../data/patient.api.data'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { checkCaregiverLayout } from '../../assert/layout.assert'
@@ -108,23 +108,23 @@ describe('Caregiver home page', () => {
     // Checking that all patients are displayed
     const dataGridRow = screen.getByTestId('patient-list-grid')
     expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/AFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/AFlag patient fake@patient.emailAnnie VersaireMay 25, 2015N/AData calculated on the last 7 daysRows per page:101–3 of 3')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/AFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/AFlag patient fake@patient.emailAnnie VersaireMay 25, 2015N/A')
 
     const searchPatient = screen.getByPlaceholderText('Search for a patient...')
 
     // Searching by birthdate only
     await userEvent.type(searchPatient, '20/01/2010')
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/AFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/AData calculated on the last 7 daysRows per page:101–2 of 2')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/AFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/A')
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and first name
     await userEvent.type(searchPatient, '20/01/2010 Aki')
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/AData calculated on the last 7 daysRows per page:101–1 of 1')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/A')
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and last name
     await userEvent.type(searchPatient, '20/01/2010provi')
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/AData calculated on the last 7 daysRows per page:101–1 of 1')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/A')
   })
 
   it('should display a list of patients and allow to remove one of them', async () => {
@@ -137,9 +137,9 @@ describe('Caregiver home page', () => {
 
     const patientTableBody = screen.getByTestId('patient-list-grid')
     expect(within(patientTableBody).getAllByRole('row')).toHaveLength(5)
-    expect(patientTableBody).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient monitored-patient@diabeloop.frMonitored PatientJan 1, 1980N/AFlag patient monitored-patient2@diabeloop.frMonitored Patient 2Jan 1, 1980N/AFlag patient pending-patient@diabeloop.frPending PatientJan 1, 1980N/AFlag patient unmonitored-patient@diabeloop.frUnmonitored PatientJan 1, 1980N/AData calculated on the last 7 daysRows per page:101–4 of 4')
+    expect(patientTableBody).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980N/AFlag patient pending-patient@diabeloop.frPending PatientJan 1, 1980N/A')
 
-    const removePatientButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatientAsTeamMember.email}` })
+    const removePatientButton = screen.getByRole('button', { name: `Remove patient ${patient2AsTeamMember.email}` })
     expect(removePatientButton).toBeVisible()
 
     await userEvent.click(removePatientButton)
@@ -150,7 +150,7 @@ describe('Caregiver home page', () => {
     const removePatientDialogTitle = within(removePatientDialog).getByText('Remove a patient')
     expect(removePatientDialogTitle).toBeVisible()
 
-    const removePatientDialogQuestion = within(removePatientDialog).getByText('Are you sure you want to remove Unmonitored Patient?')
+    const removePatientDialogQuestion = within(removePatientDialog).getByText('Are you sure you want to remove Patient2 Rouis?')
     expect(removePatientDialogQuestion).toBeVisible()
 
     const removePatientDialogCancelButton = within(removePatientDialog).getByText('Cancel')
@@ -174,8 +174,8 @@ describe('Caregiver home page', () => {
       await userEvent.click(removePatientDialog2ConfirmButton)
     })
 
-    expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatientAsTeamMember.userId, loggedInUserId)
-    expect(jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([monitoredPatientAsTeamMember])).toHaveBeenCalledTimes(2)
+    expect(removeDirectShareMock).toHaveBeenCalledWith(patient2AsTeamMember.userId, loggedInUserId)
+    expect(jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1AsTeamMember])).toHaveBeenCalledTimes(2)
     expect(screen.queryByTestId('remove-direct-share-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You no longer have access to your patient\'s data.')
   })
@@ -187,7 +187,7 @@ describe('Caregiver home page', () => {
       renderPage('/')
     })
 
-    const removeButton = screen.getByRole('button', { name: `Remove patient ${unmonitoredPatientAsTeamMember.email}` })
+    const removeButton = screen.getByRole('button', { name: `Remove patient ${patient2AsTeamMember.email}` })
 
     await userEvent.click(removeButton)
 
@@ -199,7 +199,7 @@ describe('Caregiver home page', () => {
       await userEvent.click(confirmRemoveButton)
     })
 
-    expect(removeDirectShareMock).toHaveBeenCalledWith(unmonitoredPatientAsTeamMember.userId, loggedInUserId)
+    expect(removeDirectShareMock).toHaveBeenCalledWith(patient2AsTeamMember.userId, loggedInUserId)
     expect(screen.getByTestId('remove-direct-share-dialog')).toBeVisible()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
   })

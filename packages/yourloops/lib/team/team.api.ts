@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,6 @@
 import HttpService, { ErrorMessageStatus } from '../http/http.service'
 import { type INotification } from '../notifications/models/i-notification.model'
 import { getCurrentLang } from '../language'
-import { type Monitoring } from './models/monitoring.model'
 import bows from 'bows'
 import { type User } from '../auth'
 import { type TeamMemberRole } from './models/enums/team-member-role.enum'
@@ -73,15 +72,6 @@ const HCP_ROUTE = 'hcps'
 const PATIENTS_ROUTE = 'patients'
 
 export default class TeamApi {
-  private static getTeamsApiUrl(user: User): string {
-    const isUserHcp = user.isUserHcp()
-    if (!isUserHcp && !user.isUserPatient()) {
-      throw Error(`User with role ${user.role} cannot retrieve teams`)
-    }
-    const userRoute = isUserHcp ? HCP_ROUTE : PATIENTS_ROUTE
-    return `/bff/v1/${userRoute}/${user.id}/teams`
-  }
-
   static async getTeams(user: User): Promise<Team[]> {
     const url = TeamApi.getTeamsApiUrl(user)
     try {
@@ -122,13 +112,6 @@ export default class TeamApi {
     await HttpService.put<void, ITeam>({
       url: `/crew/v0/teams/${team.id}`,
       payload: team
-    })
-  }
-
-  static async updateTeamAlerts(teamId: string, monitoring: Monitoring): Promise<void> {
-    await HttpService.put<void, Monitoring>({
-      url: `/crew/v0/teams/${teamId}/remote-monitoring`,
-      payload: monitoring
     })
   }
 
@@ -181,5 +164,14 @@ export default class TeamApi {
       url: `/crew/v0/teams/${teamId}/patients`,
       payload: { userId }
     })
+  }
+
+  private static getTeamsApiUrl(user: User): string {
+    const isUserHcp = user.isUserHcp()
+    if (!isUserHcp && !user.isUserPatient()) {
+      throw Error(`User with role ${user.role} cannot retrieve teams`)
+    }
+    const userRoute = isUserHcp ? HCP_ROUTE : PATIENTS_ROUTE
+    return `/bff/v1/${userRoute}/${user.id}/teams`
   }
 }

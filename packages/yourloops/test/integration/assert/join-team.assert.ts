@@ -29,7 +29,7 @@ import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import TeamAPI from '../../../lib/team/team.api'
 import { iTeamOne } from '../mock/team.api.mock'
-import { monitoredPatientId } from '../data/patient.api.data'
+import { patient1Id } from '../data/patient.api.data'
 
 export const checkJoinTeamDialogCancel = async () => {
   const badgeTeamMenu = screen.getByLabelText('Open team menu')
@@ -106,7 +106,7 @@ export const checkJoinTeamDialog = async () => {
   await userEvent.click(checkPolicy)
   expect(addCareTeamButton).toBeEnabled()
   await userEvent.click(addCareTeamButton)
-  expect(TeamAPI.joinTeam).toHaveBeenCalledWith(iTeamOne.id, monitoredPatientId)
+  expect(TeamAPI.joinTeam).toHaveBeenCalledWith(iTeamOne.id, patient1Id)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   expect(screen.getByText('Your care team has now access to your data.')).toBeVisible()
 }

@@ -24,18 +24,15 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import { type BgUnit } from 'medical-domain'
 
-import { screen, within } from '@testing-library/react'
-
-export const checkSecondaryBar = (hasGenerateReportButton = true, hasAddPatientButton = true) => {
-  const secondaryBar = screen.getByTestId('patients-secondary-bar')
-  expect(secondaryBar).toBeInTheDocument()
-  expect(screen.getByLabelText('Data calculated on the last 7 days')).toHaveTextContent('Data calculated on the last 7 days')
-  expect(screen.getByLabelText('Search for a patient')).toBeInTheDocument()
-  if (hasGenerateReportButton) {
-    expect(within(secondaryBar).getByText('Download report')).toBeVisible()
-  }
-  if (hasAddPatientButton) {
-    expect(within(secondaryBar).getByText('Add patient')).toBeVisible()
-  }
+export interface MonitoringAlertsParameters {
+  bgUnit: BgUnit
+  lowBg: number
+  highBg: number
+  outOfRangeThreshold: number
+  veryLowBg: number
+  hypoThreshold: number
+  nonDataTxThreshold: number
+  reportingPeriod: number
 }

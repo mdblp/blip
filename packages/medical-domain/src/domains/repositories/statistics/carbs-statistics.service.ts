@@ -25,37 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  checkMonitoringAlertsIconsInactiveForFirstPatient,
-  checkPatientColumnsFiltersContent,
-  checkPatientListColumnSort,
-  checkPatientListCurrentTab,
-  checkPatientListCurrentTabForPrivateTeam,
-  checkPatientListFilters,
-  checkPatientListHeaderForHcp,
-  checkPatientListHideShowColumns,
-  checkPatientListPendingTab,
-  checkPatientListTooltipsMgDL,
-  checkPatientListTooltipsMmolL,
-  type Router
-} from '../assert/patient-list.assert'
+import type Meal from '../../models/medical/datum/meal.model'
+import type Wizard from '../../models/medical/datum/wizard.model'
+import type DateFilter from '../../models/time/date-filter.model'
+import MealService from '../medical/datum/meal.service'
+import WizardService from '../medical/datum/wizard.service'
+import { getWeekDaysFilter, sumValues } from './statistics.utils'
+import { type CarbsStatistics } from '../../models/statistics/carbs-statistics.model'
 
-export const testPatientListForHcp = async (router: Router) => {
-  checkPatientListHeaderForHcp()
-  await checkPatientListTooltipsMgDL()
-  await checkPatientListColumnSort()
-  await checkMonitoringAlertsIconsInactiveForFirstPatient()
-  await checkPatientListFilters()
-  await checkPatientColumnsFiltersContent()
-  await checkPatientListHideShowColumns()
-  await checkPatientListPendingTab(router)
-  await checkPatientListCurrentTab()
+function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter): CarbsStatistics {
+  const filterMeal = MealService.filterOnDate(meal, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  const filterWizard = WizardService.filterOnDate(wizard, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  const foodCarbsData = filterMeal.map(meal => meal.nutrition.carbohydrate.net)
+  const wizardData = filterWizard.map(wizard => wizard.carbInput)
+
+  return {
+    foodCarbs: sumValues(foodCarbsData),
+    total: sumValues(foodCarbsData) + sumValues(wizardData),
+    totalEntriesCarbWithRescueCarbs: foodCarbsData.length + wizardData.length
+  }
 }
 
-export const testPatientListForHcpWithMmolL = async () => {
-  await checkPatientListTooltipsMmolL()
+interface CarbsStatisticsAdapter {
+  getCarbsData: (meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter) => CarbsStatistics
 }
 
-export const testPatientListForHcpPrivateTeam = async () => {
-  await checkPatientListCurrentTabForPrivateTeam()
+export const CarbsStatisticsService: CarbsStatisticsAdapter = {
+  getCarbsData
 }

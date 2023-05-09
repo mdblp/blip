@@ -37,13 +37,13 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import FlagIcon from '@mui/icons-material/Flag'
 import FlagOutlineIcon from '@mui/icons-material/FlagOutlined'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { type MonitoringAlerts } from '../../lib/patient/models/monitoring-alerts.model'
 import Badge from '@mui/material/Badge'
 import { TimeSpentOufOfRangeIcon } from '../icons/diabeloop/time-spent-ouf-of-range-icon'
 import { NoDataIcon } from '../icons/diabeloop/no-data-icon'
 import { HypoglycemiaIcon } from '../icons/diabeloop/hypoglycemia-icon'
 import { NoMessageIcon } from '../icons/diabeloop/no-message-icon'
 import { MessageIcon } from '../icons/diabeloop/message-icon'
+import { convertBG } from '../../lib/units/units.util'
 
 interface FlagCellProps {
   isFlagged: boolean
@@ -51,7 +51,7 @@ interface FlagCellProps {
 }
 
 interface MonitoringAlertsCellProps {
-  monitoringAlerts: MonitoringAlerts
+  patient: Patient
 }
 
 interface MessageCellProps {
@@ -61,6 +61,15 @@ interface MessageCellProps {
 interface ActionsCellProps {
   patient: Patient
   onClickRemove: (patientId: string) => void
+}
+
+interface MonitoringAlertsTooltips {
+  timeSpentAwayFromTargetRate: number
+  frequencyOfSevereHypoglycemiaRate: number
+  nonDataTransmissionRate: number
+  min: number
+  max: number
+  veryLowBg: number
 }
 
 export const FlagIconCell: FunctionComponent<FlagCellProps> = ({ isFlagged, patient }) => {
@@ -105,30 +114,107 @@ export const PendingIconCell: FunctionComponent = () => {
   )
 }
 
-export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> = ({ monitoringAlerts }) => {
+export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> = ({ patient }) => {
   const { t } = useTranslation()
   const theme = useTheme()
+  const { user } = useAuth()
+
+  const { monitoringAlerts, monitoringAlertsParameters } = patient
+  const unit = user.settings?.units?.bg ?? monitoringAlertsParameters.bgUnit
+
+  const roundUpToOneDecimal = (value: number): number => {
+    return Math.round(value * 10) / 10
+  }
+
+  const buildTooltipValues = (): MonitoringAlertsTooltips => {
+    if (unit === monitoringAlertsParameters.bgUnit) {
+      return {
+        timeSpentAwayFromTargetRate: roundUpToOneDecimal(monitoringAlerts.timeSpentAwayFromTargetRate),
+        frequencyOfSevereHypoglycemiaRate: roundUpToOneDecimal(monitoringAlerts.frequencyOfSevereHypoglycemiaRate),
+        nonDataTransmissionRate: roundUpToOneDecimal(monitoringAlerts.nonDataTransmissionRate),
+        min: roundUpToOneDecimal(monitoringAlertsParameters.lowBg),
+        max: roundUpToOneDecimal(monitoringAlertsParameters.highBg),
+        veryLowBg: roundUpToOneDecimal(monitoringAlertsParameters.veryLowBg)
+      }
+    }
+    return {
+      timeSpentAwayFromTargetRate: roundUpToOneDecimal(monitoringAlerts.timeSpentAwayFromTargetRate),
+      frequencyOfSevereHypoglycemiaRate: roundUpToOneDecimal(monitoringAlerts.frequencyOfSevereHypoglycemiaRate),
+      nonDataTransmissionRate: roundUpToOneDecimal(monitoringAlerts.nonDataTransmissionRate),
+      min: roundUpToOneDecimal(convertBG(monitoringAlertsParameters.lowBg, monitoringAlertsParameters.bgUnit)),
+      max: roundUpToOneDecimal(convertBG(monitoringAlertsParameters.highBg, monitoringAlertsParameters.bgUnit)),
+      veryLowBg: roundUpToOneDecimal(convertBG(monitoringAlertsParameters.veryLowBg, monitoringAlertsParameters.bgUnit))
+    }
+  }
+
+  const {
+    timeSpentAwayFromTargetRate,
+    frequencyOfSevereHypoglycemiaRate,
+    nonDataTransmissionRate,
+    min,
+    max,
+    veryLowBg
+  } = buildTooltipValues()
 
   const isTimeSpentAwayFromTargetAlertActive = monitoringAlerts.timeSpentAwayFromTargetActive
   const isFrequencyOfSevereHypoglycemiaAlertActive = monitoringAlerts.frequencyOfSevereHypoglycemiaActive
   const isNonDataTransmissionAlertActive = monitoringAlerts.nonDataTransmissionActive
+  const sharedTooltip = t('monitoring-alerts-shared-tooltip')
 
   return (
     <>
-      <Tooltip title={t('time-out-of-range-target-tooltip')} data-testid="time-spent-out-of-range-icon-tooltip">
-          <TimeSpentOufOfRangeIcon
-            color={isTimeSpentAwayFromTargetAlertActive ? 'inherit' : 'disabled'}
-            data-testid="time-spent-out-of-range-icon"
-          />
+      <Tooltip
+        title={
+          <>
+            <Box>{t('time-out-of-range-target-tooltip1', { percentage: timeSpentAwayFromTargetRate })}</Box>
+            <Box>
+              {t('time-out-of-range-target-tooltip2', {
+                min,
+                max,
+                threshold: monitoringAlertsParameters.outOfRangeThreshold,
+                unit
+              })}
+            </Box>
+            <Box>{sharedTooltip}</Box>
+          </>
+        }
+        data-testid="time-spent-out-of-range-icon-tooltip"
+      >
+        <TimeSpentOufOfRangeIcon
+          color={isTimeSpentAwayFromTargetAlertActive ? 'inherit' : 'disabled'}
+          data-testid="time-spent-out-of-range-icon"
+        />
       </Tooltip>
-      <Tooltip title={t('hypoglycemia-tooltip')}>
+      <Tooltip
+        title={
+          <>
+            <Box>{t('hypoglycemia-tooltip1', { percentage: frequencyOfSevereHypoglycemiaRate })}</Box>
+            <Box>
+              {t('hypoglycemia-tooltip2', {
+                veryLowBg,
+                threshold: monitoringAlertsParameters.hypoThreshold,
+                unit
+              })}
+            </Box>
+            <Box>{sharedTooltip}</Box>
+          </>
+        }
+      >
         <HypoglycemiaIcon
           sx={{ marginLeft: theme.spacing(1) }}
           color={isFrequencyOfSevereHypoglycemiaAlertActive ? 'error' : 'disabled'}
           data-testid="hypoglycemia-icon"
         />
       </Tooltip>
-      <Tooltip title={t('data-not-transferred-tooltip')}>
+      <Tooltip
+        title={
+          <>
+            <Box>{t('data-not-transferred-tooltip1', { percentage: nonDataTransmissionRate })}</Box>
+            <Box>{t('data-not-transferred-tooltip2', { threshold: monitoringAlertsParameters.nonDataTxThreshold })}</Box>
+            <Box>{sharedTooltip}</Box>
+          </>
+        }
+      >
         <NoDataIcon
           sx={{ marginLeft: theme.spacing(1) }}
           color={isNonDataTransmissionAlertActive ? 'inherit' : 'disabled'}

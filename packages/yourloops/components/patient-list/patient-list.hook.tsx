@@ -39,7 +39,6 @@ import { PatientListColumns, PatientListTabs } from './models/enums/patient-list
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { getMedicalValues } from '../patient/utils'
 import { ActionsCell, FlagIconCell, MessageCell, MonitoringAlertsCell, PendingIconCell } from './custom-cells'
-import { type MonitoringAlerts } from '../../lib/patient/models/monitoring-alerts.model'
 import { useAuth } from '../../lib/auth'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import PatientUtils from '../../lib/patient/patient.util'
@@ -50,8 +49,10 @@ import { useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import { sortByDateOfBirth, sortByFlag, sortByUserName } from './sort-comparators.util'
+import { sortByDateOfBirth, sortByFlag, sortByMonitoringAlertsCount, sortByUserName } from './sort-comparators.util'
 import { getUserName } from '../../lib/auth/user.util'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import { TeamType } from '../../lib/team/models/enums/team-type.enum'
 
 interface SharedColumns {
   patientColumn: GridColDef
@@ -78,6 +79,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
   const { getFlagPatients, user } = useAuth()
   const { getPatientById, searchPatients } = usePatientContext()
   const { updatePendingFilter } = usePatientListContext()
+  const { selectedTeam } = useSelectedTeamContext()
   const navigate = useNavigate()
   const trNA = t('N/A')
 
@@ -174,7 +176,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
     ]
   }, [sharedColumns.actionColumn, sharedColumns.patientColumn])
 
-  const buildCurrentColumns = useCallback((): GridColDef[] => {
+  const medicalTeamsCurrentColumns = useMemo((): GridColDef[] => {
     return [
       {
         field: PatientListColumns.Flag,
@@ -221,9 +223,10 @@ export const usePatientListHook = (): PatientListHookReturns => {
         headerName: t('monitoring-alerts'),
         description: t('monitoring-alerts-tooltip'),
         flex: 0.3,
-        sortable: false,
-        renderCell: (params: GridRenderCellParams<GridRowModel, MonitoringAlerts>) => {
-          return <MonitoringAlertsCell monitoringAlerts={params.value} />
+        sortComparator: sortByMonitoringAlertsCount,
+        renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
+          const patient = params.value
+          return <MonitoringAlertsCell patient={patient} />
         }
       },
       {
@@ -246,23 +249,23 @@ export const usePatientListHook = (): PatientListHookReturns => {
     ]
   }, [sharedColumns.actionColumn, sharedColumns.patientColumn, t])
 
+  const buildPrivateTeamCurrentColumns = useCallback((): GridColDef[] => {
+    const fieldsNotWanted = [PatientListColumns.Messages, PatientListColumns.MonitoringAlerts]
+    return medicalTeamsCurrentColumns.filter(column => !fieldsNotWanted.includes(column.field as PatientListColumns))
+  }, [medicalTeamsCurrentColumns])
+
+  const buildCurrentColumns = useCallback((): GridColDef[] => {
+    return user.isUserCaregiver() || selectedTeam.type === TeamType.private ? buildPrivateTeamCurrentColumns() : medicalTeamsCurrentColumns
+  }, [user, selectedTeam, buildPrivateTeamCurrentColumns, medicalTeamsCurrentColumns])
+
   const columns: GridColDef[] = useMemo(() => {
     return selectedTab === PatientListTabs.Current ? buildCurrentColumns() : buildPendingColumns()
   }, [selectedTab, buildCurrentColumns, buildPendingColumns])
 
-  const rowsProps: GridRowsProp = useMemo(() => {
+  const buildMedicalTeamCurrentRows = useCallback((): GridRowsProp => {
     return filteredPatients.map((patient): GridRowModel => {
-      if (selectedTab === PatientListTabs.Pending) {
-        return {
-          id: patient.userid,
-          [PatientListColumns.Patient]: patient,
-          [PatientListColumns.Actions]: patient
-        }
-      }
       const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
-      const monitoringAlerts = patient.monitoringAlerts
       const birthdate = patient.profile.birthdate
-
       return {
         id: patient.userid,
         [PatientListColumns.Flag]: patient,
@@ -270,14 +273,52 @@ export const usePatientListHook = (): PatientListHookReturns => {
         [PatientListColumns.DateOfBirth]: patient,
         [PatientListColumns.Age]: PatientUtils.computeAge(birthdate),
         [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
-        [PatientListColumns.MonitoringAlerts]: monitoringAlerts,
+        [PatientListColumns.MonitoringAlerts]: patient,
         [PatientListColumns.System]: patient.settings.system ?? trNA,
         [PatientListColumns.LastDataUpdate]: lastUpload,
         [PatientListColumns.Messages]: patient.metadata.hasSentUnreadMessages,
         [PatientListColumns.Actions]: patient
       }
     })
-  }, [filteredPatients, selectedTab, trNA])
+  }, [filteredPatients, trNA])
+
+  const buildPrivateTeamCurrentRows = useCallback((): GridRowsProp => {
+    return filteredPatients.map((patient): GridRowModel => {
+      const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
+      const birthdate = patient.profile.birthdate
+      return {
+        id: patient.userid,
+        [PatientListColumns.Flag]: patient,
+        [PatientListColumns.Patient]: patient,
+        [PatientListColumns.DateOfBirth]: patient,
+        [PatientListColumns.Age]: PatientUtils.computeAge(birthdate),
+        [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
+        [PatientListColumns.System]: patient.settings.system ?? trNA,
+        [PatientListColumns.LastDataUpdate]: lastUpload,
+        [PatientListColumns.Actions]: patient
+      }
+    })
+  }, [filteredPatients, trNA])
+
+  const buildPendingRows = useCallback((): GridRowsProp => {
+    return filteredPatients.map((patient): GridRowModel => {
+      return {
+        id: patient.userid,
+        [PatientListColumns.Patient]: patient,
+        [PatientListColumns.Actions]: patient
+      }
+    })
+  }, [filteredPatients])
+
+  const rowsProps: GridRowsProp = useMemo(() => {
+    if (selectedTab === PatientListTabs.Pending) {
+      return buildPendingRows()
+    }
+    if (user.isUserCaregiver() || selectedTeam.type === TeamType.private) {
+      return buildPrivateTeamCurrentRows()
+    }
+    return buildMedicalTeamCurrentRows()
+  }, [buildMedicalTeamCurrentRows, buildPendingRows, buildPrivateTeamCurrentRows, selectedTab, selectedTeam, user])
 
   return {
     columns,
