@@ -57,7 +57,7 @@ export const TotalInsulinStatWrapper: FunctionComponent<TotalInsulinStatWrapperP
       title: t('Basal')
     }
   ]
-  console.log('totalInsulin', totalInsulin)
+
   return (
     <TotalInsulinStat
       data={data}
