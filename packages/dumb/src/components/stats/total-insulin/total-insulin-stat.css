@@ -50,10 +50,9 @@
 .rows {
   display: grid;
   row-gap: 4px;
-  margin-bottom: 0.5em;
+  margin-bottom: 4px;
   pointer-events: none;
   padding-left: 10px;
-  padding-right: 10px;
 }
 
 .rows .rowTitle {
@@ -97,4 +96,33 @@
 
 .rowsTotalInsulin-bolus {
   color: var(--bolus-meal);
+}
+
+.outputValueDisabled {
+  color: var(--stat--default);
+}
+
+.dailyDosePerWeightContainer{
+  margin-left: 8px;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.outputValue {
+  display: flex;
+}
+
+.dailyDoseValue{
+  font-size: 24px;
+  composes: extraLargeSize from '../../../styles/typography.css';
+  opacity: 1;
+  display: inline-block;
+  color: var(--text-medium-contrast);
+}
+
+.dailyDoseUnits{
+  font-size: 12px;
+  padding-left: 1px;
+  color: var(--text-medium-contrast);
 }

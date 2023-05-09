@@ -65,15 +65,15 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
     return res > 0 ? res.toString(10) : '--'
   }
 
-  const computedOutputValue = useMemo(() => {
+  const computedValueDailyDosePerWeight = useMemo(() => {
     const value = dailyDose / weight
     return value > 0 && Number.isFinite(value) ? formatDecimalNumber(value, 2) : EMPTY_DATA_PLACEHOLDER
   }, [dailyDose, weight])
 
   const outputValueClasses = useMemo(() => {
-    const isDisabled = computedOutputValue === EMPTY_DATA_PLACEHOLDER
+    const isDisabled = computedValueDailyDosePerWeight === EMPTY_DATA_PLACEHOLDER
     return `${styles.outputValue}${isDisabled ? ` ${styles.outputValueDisabled}` : ''}`
-  }, [computedOutputValue])
+  }, [computedValueDailyDosePerWeight])
 
   return (
     <div data-testid="total-insulin-stat">
@@ -107,21 +107,19 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
             </React.Fragment>
           )
         })}
-        {!isDailyPage &&
-        <div className={`${styles.commonDisplay} ${styles.statFooter}`}>
-          <div className={`${styles.commonDisplay} ${styles.outputWrapper}`}>
-            <div className={styles.outputLabel}>{t('daily-dose-per-weight')} ({weight} {t('kg')})</div>
-            <div>
-              <span className={outputValueClasses}>
-                {computedOutputValue}
-              </span>
-              <span className={styles.outputSuffix}>
-              {t('U/kg')}
-              </span>
-            </div>
-          </div>
-        </div>}
       </div>
+      {!isDailyPage && <>
+        <div data-testid="average-daily-dose" className={styles.dailyDosePerWeightContainer}>
+           <span>
+              {t('daily-dose-per-weight')} ({weight} {t('kg')})
+           </span>
+          <div className={outputValueClasses}>
+            <span className={styles.dailyDoseValue}>{computedValueDailyDosePerWeight}</span>
+            &nbsp;
+            <span className={styles.dailyDoseUnits}>{t('U/kg')}</span>
+          </div>
+        </div>
+      </>}
     </div>
   )
 }

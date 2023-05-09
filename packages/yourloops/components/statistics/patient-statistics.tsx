@@ -135,6 +135,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <TotalInsulinStatWrapper basal={basal} bolus={bolus} total={basalBolusTotal} weight={weight} totalInsulin={totalInsulin}/>
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       {children}
     </Box>
   )
