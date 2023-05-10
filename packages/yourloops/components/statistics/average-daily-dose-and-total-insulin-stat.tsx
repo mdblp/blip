@@ -40,7 +40,7 @@ interface TotalInsulinStatWrapperProps {
 
 export const AverageDailyDoseAndTotalInsulinStat: FunctionComponent<TotalInsulinStatWrapperProps> = (props) => {
   const { bolus, basal, total, totalInsulin, weight } = props
-
+  const weightValue = weight === null ? null : +weight.value
   const data = [
     {
       id: 'bolus',
@@ -62,7 +62,7 @@ export const AverageDailyDoseAndTotalInsulinStat: FunctionComponent<TotalInsulin
     <TotalInsulinStat
       data={data}
       total={Math.round(total * 10) / 10}
-      weight={weight}
+      weight={weightValue}
       dailyDose={totalInsulin}
     />
   )
