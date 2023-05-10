@@ -157,8 +157,8 @@ export function formatDateWithMomentLongFormat(date?: Date): string {
   return moment.utc(date).format(moment.localeData().longDateFormat('ll')).toString()
 }
 
-export function formatMonitoringAlertSettingThreshold(value: number): string {
-  return `${Math.round(value * 10) / 10}%`
+export function formatPercentageValue(value: number): string {
+  return value || value === 0 ? `${Math.round(value * 10) / 10}%` : t('N/A')
 }
 
 export function isEllipsisActive(element: HTMLElement | null): boolean | undefined {

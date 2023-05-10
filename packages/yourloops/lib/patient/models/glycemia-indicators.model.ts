@@ -25,25 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum PatientListTabs {
-  Current,
-  Pending
-}
-
-export enum PatientListColumns {
-  Actions = 'actions',
-  Age = 'age',
-  DateOfBirth = 'date-of-birth',
-  Flag = 'flag',
-  Gender = 'gender',
-  GlucoseManagementIndicator = 'glucose-management-indicator',
-  Hypoglycemia = 'hypoglycemia',
-  Icon = 'icon',
-  LastDataUpdate = 'last-data-update',
-  Messages = 'messages',
-  MonitoringAlerts = 'monitoring-alerts',
-  Patient = 'patient',
-  System = 'system',
-  TimeInRange = 'time-in-range',
-  Variance = 'variance'
+export interface GlycemiaIndicators {
+  coefficientOfVariation: number
+  glucoseManagementIndicator: number
+  hypoglycemia: number
+  timeInRange: number
 }

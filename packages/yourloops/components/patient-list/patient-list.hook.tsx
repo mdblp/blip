@@ -53,6 +53,7 @@ import { sortByDateOfBirth, sortByFlag, sortByMonitoringAlertsCount, sortByUserN
 import { getUserName } from '../../lib/auth/user.util'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { TeamType } from '../../lib/team/models/enums/team-type.enum'
+import { formatPercentageValue } from '../../lib/utils'
 
 interface SharedColumns {
   patientColumn: GridColDef
@@ -201,7 +202,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
       {
         field: PatientListColumns.DateOfBirth,
         headerName: t('date-of-birth'),
-        flex: 0.3,
+        flex: 0.5,
         sortComparator: sortByDateOfBirth,
         valueFormatter: (params: GridValueFormatterParams<Patient>): string => {
           const patient = params.value
@@ -222,7 +223,7 @@ export const usePatientListHook = (): PatientListHookReturns => {
         field: PatientListColumns.MonitoringAlerts,
         headerName: t('monitoring-alerts'),
         description: t('monitoring-alerts-tooltip'),
-        flex: 0.3,
+        flex: 0.7,
         sortComparator: sortByMonitoringAlertsCount,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
           const patient = params.value
@@ -240,6 +241,34 @@ export const usePatientListHook = (): PatientListHookReturns => {
         }
       },
       {
+        type: 'number',
+        field: PatientListColumns.TimeInRange,
+        headerName: t('time-in-range'),
+        flex: 0.5,
+        valueFormatter: (params: GridValueFormatterParams<number>): string => formatPercentageValue(params.value)
+      },
+      {
+        type: 'number',
+        field: PatientListColumns.GlucoseManagementIndicator,
+        headerName: t('glucose-management-indicator'),
+        flex: 0.5,
+        valueFormatter: (params: GridValueFormatterParams<number>): string => formatPercentageValue(params.value)
+      },
+      {
+        type: 'number',
+        field: PatientListColumns.Hypoglycemia,
+        headerName: t('hypoglycemia'),
+        flex: 0.5,
+        valueFormatter: (params: GridValueFormatterParams<number>): string => formatPercentageValue(params.value)
+      },
+      {
+        type: 'number',
+        field: PatientListColumns.Variance,
+        headerName: t('variance'),
+        flex: 0.5,
+        valueFormatter: (params: GridValueFormatterParams<number>): string => formatPercentageValue(params.value)
+      },
+      {
         type: 'string',
         field: PatientListColumns.LastDataUpdate,
         headerName: t('last-data-update'),
@@ -249,14 +278,14 @@ export const usePatientListHook = (): PatientListHookReturns => {
     ]
   }, [sharedColumns.actionColumn, sharedColumns.patientColumn, t])
 
-  const buildPrivateTeamCurrentColumns = useCallback((): GridColDef[] => {
+  const buildPrivateTeamOrCaregiverCurrentColumns = useCallback((): GridColDef[] => {
     const fieldsNotWanted = [PatientListColumns.Messages, PatientListColumns.MonitoringAlerts]
     return medicalTeamsCurrentColumns.filter(column => !fieldsNotWanted.includes(column.field as PatientListColumns))
   }, [medicalTeamsCurrentColumns])
 
   const buildCurrentColumns = useCallback((): GridColDef[] => {
-    return user.isUserCaregiver() || selectedTeam.type === TeamType.private ? buildPrivateTeamCurrentColumns() : medicalTeamsCurrentColumns
-  }, [user, selectedTeam, buildPrivateTeamCurrentColumns, medicalTeamsCurrentColumns])
+    return user.isUserCaregiver() || selectedTeam.type === TeamType.private ? buildPrivateTeamOrCaregiverCurrentColumns() : medicalTeamsCurrentColumns
+  }, [user, selectedTeam, buildPrivateTeamOrCaregiverCurrentColumns, medicalTeamsCurrentColumns])
 
   const columns: GridColDef[] = useMemo(() => {
     return selectedTab === PatientListTabs.Current ? buildCurrentColumns() : buildPendingColumns()
@@ -277,12 +306,16 @@ export const usePatientListHook = (): PatientListHookReturns => {
         [PatientListColumns.System]: patient.settings.system ?? trNA,
         [PatientListColumns.LastDataUpdate]: lastUpload,
         [PatientListColumns.Messages]: patient.metadata.hasSentUnreadMessages,
+        [PatientListColumns.TimeInRange]: patient.glycemiaIndicators.timeInRange,
+        [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators.glucoseManagementIndicator,
+        [PatientListColumns.Hypoglycemia]: patient.glycemiaIndicators.hypoglycemia,
+        [PatientListColumns.Variance]: patient.glycemiaIndicators.coefficientOfVariation,
         [PatientListColumns.Actions]: patient
       }
     })
   }, [filteredPatients, trNA])
 
-  const buildPrivateTeamCurrentRows = useCallback((): GridRowsProp => {
+  const buildPrivateTeamOrCaregiverCurrentRows = useCallback((): GridRowsProp => {
     return filteredPatients.map((patient): GridRowModel => {
       const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
       const birthdate = patient.profile.birthdate
@@ -295,6 +328,10 @@ export const usePatientListHook = (): PatientListHookReturns => {
         [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
         [PatientListColumns.System]: patient.settings.system ?? trNA,
         [PatientListColumns.LastDataUpdate]: lastUpload,
+        [PatientListColumns.TimeInRange]: patient.glycemiaIndicators.timeInRange,
+        [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators.glucoseManagementIndicator,
+        [PatientListColumns.Hypoglycemia]: patient.glycemiaIndicators.hypoglycemia,
+        [PatientListColumns.Variance]: patient.glycemiaIndicators.coefficientOfVariation,
         [PatientListColumns.Actions]: patient
       }
     })
@@ -315,10 +352,10 @@ export const usePatientListHook = (): PatientListHookReturns => {
       return buildPendingRows()
     }
     if (user.isUserCaregiver() || selectedTeam.type === TeamType.private) {
-      return buildPrivateTeamCurrentRows()
+      return buildPrivateTeamOrCaregiverCurrentRows()
     }
     return buildMedicalTeamCurrentRows()
-  }, [buildMedicalTeamCurrentRows, buildPendingRows, buildPrivateTeamCurrentRows, selectedTab, selectedTeam, user])
+  }, [buildMedicalTeamCurrentRows, buildPendingRows, buildPrivateTeamOrCaregiverCurrentRows, selectedTab, selectedTeam, user])
 
   return {
     columns,
