@@ -314,7 +314,6 @@ describe('Locales tests', () => {
         missingTranslations.push(key)
       }
     }
-
     expect(unusedTranslations, 'Unused translations').to.be.empty
     expect(missingTranslations, 'Missing translations').to.be.empty
   })
