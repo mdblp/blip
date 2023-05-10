@@ -59,7 +59,6 @@ function getWeight(allPumpSettings: PumpSettings[]): ParameterConfig | null {
   }
 
   const weight = lastPumpSettings.payload.parameters.find(parameter => parameter.name === 'WEIGHT')
-
   return weight ?? null
 }
 
