@@ -25,13 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import React, { type FunctionComponent, memo, useMemo } from 'react'
-import styles from './total-insulin-stat.css'
+import styles from './insulin-stats.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import Box from '@mui/material/Box'
-import { formatDecimalNumber } from '../../../utils/format/format.util'
-import { EMPTY_DATA_PLACEHOLDER } from '../../../models/stats.model'
 import { t } from 'i18next'
 import { useLocation } from 'react-router-dom'
+import { formatDecimalNumber } from '../../../utils/format/format.util'
+import { EMPTY_DATA_PLACEHOLDER } from '../../../models/stats.model'
+import { type ParameterConfig } from 'medical-domain'
 
 interface TotalInsulinPropsData {
   id: string
@@ -44,11 +45,11 @@ interface TotalInsulinPropsData {
 export interface TotalInsulinStatProps {
   data: TotalInsulinPropsData[]
   total: number
-  weight: number
+  weight: ParameterConfig
   dailyDose: number
 }
 
-const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
+const InsulinStats: FunctionComponent<TotalInsulinStatProps> = (props) => {
   const {
     data,
     total,
@@ -58,7 +59,8 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
 
   const location = useLocation()
   const isDailyPage = location.pathname.includes('daily')
-  const isTotalInsulinTooltip = isDailyPage ? t('total-insulin-days-tooltip') : t('average-daily-insulin-tooltip')
+  const isTotalInsulinTooltip = isDailyPage ? t('insulin-days-tooltip') : t('average-daily-insulin-tooltip')
+  const isEmptyWeight = weight === null
 
   const percent = (value: number): string => {
     const res = Math.round(100 * value / total)
@@ -66,7 +68,10 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   }
 
   const computedValueDailyDosePerWeight = useMemo(() => {
-    const value = dailyDose / weight
+    if (weight === null) {
+      return EMPTY_DATA_PLACEHOLDER
+    }
+    const value = dailyDose / +weight.value
     return value > 0 && Number.isFinite(value) ? formatDecimalNumber(value, 2) : EMPTY_DATA_PLACEHOLDER
   }, [dailyDose, weight])
 
@@ -76,7 +81,7 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   }, [computedValueDailyDosePerWeight])
 
   return (
-    <div data-testid="total-insulin-stat">
+    <div data-testid="container-insulin-stats">
       <Box className={styles.title}>
         {isDailyPage ? t('total-insulin') : t('average-daily-insulin')}
         <span className={styles.titleData}>
@@ -108,20 +113,22 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           )
         })}
       </div>
-      {!isDailyPage && <>
-        <div data-testid="average-daily-dose" className={styles.dailyDosePerWeightContainer}>
-           <span>
-              {t('daily-dose-per-weight')} ({weight} {t('kg')})
-           </span>
+
+      <div className={styles.dailyDosePerWeightContainer}>
+        {!isDailyPage && <>
+          {t('daily-dose-per-weight')}
+          {!isEmptyWeight && <>
+            ({weight} {t('kg')})
+          </>}
           <div className={outputValueClasses}>
             <span className={styles.dailyDoseValue}>{computedValueDailyDosePerWeight}</span>
             &nbsp;
             <span className={styles.dailyDoseUnits}>{t('U/kg')}</span>
           </div>
-        </div>
-      </>}
+        </>}
+      </div>
     </div>
   )
 }
 
-export const TotalInsulinStatMemoized = memo(TotalInsulinStat)
+export const InsulinStatsMemoized = memo(InsulinStats)
