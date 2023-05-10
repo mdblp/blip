@@ -68,7 +68,6 @@ class Stats extends React.Component {
       }
     }
   }
-
   updatesRequired(prevProps) {
     const {
       bgSource,
@@ -239,12 +238,10 @@ class Stats extends React.Component {
     switch (chartType) {
       case 'daily':
         isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
-        addStat(commonStats.carbs)
         break
 
       case 'patientStatistics':
         isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
-        addStat(commonStats.carbs)
         break
     }
 

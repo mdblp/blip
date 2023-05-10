@@ -29,11 +29,11 @@ import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 import { type BgPrefs, CBGPercentageBarChart, CBGStatType, TotalCarbsStat } from 'dumb'
 import {
   type BgType,
-  type BasalBolusStatisticsService,
   type DateFilter,
   DatumType,
   type MedicalData,
-  TimeService
+  TimeService,
+  BasalBolusStatisticsService
 } from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
