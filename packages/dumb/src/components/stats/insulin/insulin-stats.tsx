@@ -63,7 +63,7 @@ const InsulinStats: FunctionComponent<TotalInsulinStatProps> = (props) => {
   const isEmptyWeight = weight === null
 
   const computedValueDailyDosePerWeight = useMemo(() => {
-    if (weight === null) {
+    if (isEmptyWeight) {
       return EMPTY_DATA_PLACEHOLDER
     }
     const value = dailyDose / weight

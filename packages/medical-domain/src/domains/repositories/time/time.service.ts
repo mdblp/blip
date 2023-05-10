@@ -208,7 +208,7 @@ export function getNumberOfDays(start: number, end: number, daysFilter?: WeekDay
     return totalDays
   }
   const firstDay = moment.utc(start)
-  console.log(totalDays)
+
   return [...Array(totalDays).keys()].reduce((count, dayOffset) => {
     const currentDay = moment(firstDay).add(dayOffset, 'days')
     const weekDay = getWeekDay(currentDay)
