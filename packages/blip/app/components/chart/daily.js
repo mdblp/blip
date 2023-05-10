@@ -122,9 +122,8 @@ class DailyChart extends React.Component {
     if (chart !== null) {
       chart.loadingInProgress = loading
       if (needRecreate && !loading && !chart.isInTransition()) {
-        this.setState({ needRecreate: false }, () => {
-          this.reCreateChart()
-        })
+        this.setState({ needRecreate: false })
+        this.reCreateChart()
       }
     }
   }
@@ -138,11 +137,10 @@ class DailyChart extends React.Component {
       const { tidelineData, epochLocation } = this.props
       this.log.debug('Mounting...')
       const chart = chartDailyFactory(this.refNode.current, tidelineData, _.pick(this.props, this.chartOpts))
-      this.setState({ chart }, () => {
-        chart.setAtDate(epochLocation)
-        this.bindEvents()
-        cb()
-      })
+      this.setState({ chart })
+      chart.setAtDate(epochLocation)
+      this.bindEvents()
+      cb()
     } else {
       cb()
     }
@@ -154,7 +152,8 @@ class DailyChart extends React.Component {
       this.log('Unmounting...')
       this.unbindEvents()
       chart.destroy()
-      this.setState({ chart: null }, cb)
+      this.setState({ chart: null })
+      cb()
     } else {
       cb()
     }
@@ -191,13 +190,12 @@ class DailyChart extends React.Component {
     this.log.debug('handleWindowResize', { windowHeight, windowWidth }, '=>', { height, width })
     if (windowHeight !== height || width !== windowWidth) {
       const needRecreate = loading || chart?.isInTransition() === true
-      this.setState({ windowHeight: height, windowWidth: width, needRecreate }, () => {
-        if (!needRecreate) {
-          this.reCreateChart()
-        } else {
-          this.log.info('Delaying chart re-creation: loading or transition in progress')
-        }
-      })
+      this.setState({ windowHeight: height, windowWidth: width, needRecreate })
+      if (!needRecreate) {
+        this.reCreateChart()
+      } else {
+        this.log.info('Delaying chart re-creation: loading or transition in progress')
+      }
     }
   }
 

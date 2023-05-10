@@ -151,16 +151,15 @@ class Trends extends React.Component {
 
   componentDidMount() {
     this.log.debug('Mounting...')
-
-    this.setState({ updatingDates: true }, () => {
-      this.clampEndpoints().catch((reason) => {
+    this.setState({ updatingDates: true })
+    this.clampEndpoints()
+      .catch((reason) => {
         this.log.error(reason)
-      }).finally(() => {
-        this.setState({ updatingDates: false }, () => {
-          this.log.debug('Mounting finished')
-        })
       })
-    })
+      .finally(() => {
+        this.setState({ updatingDates: false })
+        this.log.debug('Mounting finished')
+      })
   }
 
   componentWillUnmount() {
@@ -245,11 +244,11 @@ class Trends extends React.Component {
     return Math.ceil(this.maxRange / TimeService.MS_IN_DAY)
   }
 
-  updateExtendsSize(/** @type {number} */ newExtend, /** @type {(()=>void)|undefined} */ cb) {
+  updateExtendsSize(/** @type {number} */ newExtend) {
     const prefs = _.cloneDeep(this.props.chartPrefs)
     prefs.trends.extentSize = Math.min(newExtend, this.getMaxExtendsSize())
     this.log.info('updateExtendsSize', prefs.trends.extentSize)
-    this.props.updateChartPrefs(prefs, cb)
+    this.props.updateChartPrefs(prefs)
   }
 
   /**
@@ -265,11 +264,10 @@ class Trends extends React.Component {
     if (availDays < extentSize) {
       const center = this.startDate.valueOf() + this.maxRange / 2
       this.log.debug('Too few days available, update date and range to', { center, maxRange: this.maxRange })
-      return this.props.onDatetimeLocationChange(center, this.maxRange).then(() => {
-        return new Promise((resolve) => {
-          this.updateExtendsSize(availDays, () => resolve(true))
+      return this.props.onDatetimeLocationChange(center, this.maxRange)
+        .then(() => {
+          this.updateExtendsSize(availDays)
         })
-      })
     }
 
     const msRange = Math.max(extentSize, 1) * TimeService.MS_IN_DAY
@@ -352,13 +350,11 @@ class Trends extends React.Component {
         const mEndDate = moment.tz(end, endTimezone).add(1, 'day')
         const extendSize = (mEndDate.valueOf() - mStartDate.valueOf()) / TimeService.MS_IN_DAY
 
-        this.setState({ updatingDates: true }, () => {
-          this.updateExtendsSize(extendSize, () => {
-            this.setEndPoints(mStartDate, mEndDate)
-            this.setState({ updatingDates: false })
-          })
-          this.trackMetric('data_visualization', 'select_period', 'date_picker', extendSize)
-        })
+        this.setState({ updatingDates: true })
+        this.updateExtendsSize(extendSize)
+        this.setEndPoints(mStartDate, mEndDate)
+        this.setState({ updatingDates: false })
+        this.trackMetric('data_visualization', 'select_period', 'date_picker', extendSize)
       }
     }
 
@@ -470,20 +466,18 @@ class Trends extends React.Component {
       startEpoch = this.startDate.valueOf()
     }
     newMsRange = endEpoch - startEpoch
-    this.setState({ updatingDates: true }, () => {
-      let epoch = endEpoch - Math.floor(newMsRange / 2)
+    this.setState({ updatingDates: true })
+    let epoch = endEpoch - Math.floor(newMsRange / 2)
+    this.props.onDatetimeLocationChange(epoch, newMsRange).then(() => {
+      // First load the data, we may have some changes in the timezone detection
+      startEpoch = getMomentDayAt(startEpoch, tidelineData).valueOf()
+      newMsRange = endEpoch - startEpoch
+      epoch = endEpoch - Math.floor(newMsRange / 2)
       this.props.onDatetimeLocationChange(epoch, newMsRange).then(() => {
-        // First load the data, we may have some changes in the timezone detection
-        startEpoch = getMomentDayAt(startEpoch, tidelineData).valueOf()
-        newMsRange = endEpoch - startEpoch
-        epoch = endEpoch - Math.floor(newMsRange / 2)
-        this.props.onDatetimeLocationChange(epoch, newMsRange).then(() => {
-          // Set the real value we want
-          this.updateExtendsSize(newExtentSize, () => {
-            this.setState({ updatingDates: false })
-            this.trackMetric('data_visualization', 'select_period', 'preset', extentSize)
-          })
-        })
+        // Set the real value we want
+        this.updateExtendsSize(newExtentSize)
+        this.setState({ updatingDates: false })
+        this.trackMetric('data_visualization', 'select_period', 'preset', extentSize)
       })
     })
   }

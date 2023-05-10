@@ -142,6 +142,9 @@ export const usePatientData = (): PatientDataContextResult => {
   }
 
   const changeChart = (chart: ChartTypes): void => {
+    if (chart === currentChart) {
+      return
+    }
     switch (chart) {
       case ChartTypes.Dashboard:
         setDashboardDate(new Date().valueOf())
@@ -161,7 +164,6 @@ export const usePatientData = (): PatientDataContextResult => {
   }
 
   const updateChartPrefs = (chartPrefs: ChartPrefs): void => {
-    dataUtil.chartPrefs = chartPrefs // TODO could be removed, chartPrefs is unused in dataUtils
     setChartPrefs(chartPrefs)
   }
 
