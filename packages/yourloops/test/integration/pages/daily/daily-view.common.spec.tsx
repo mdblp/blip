@@ -63,7 +63,7 @@ describe('Daily view for anyone', () => {
         expect(router.state.location.pathname).toEqual('/daily')
       })
       const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-      expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Total Carbs110gRescuecarbs15g')
+      expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Total Carbs110gRescue carbs15g')
 
       // Check the tooltips
       await checkDailyTidelineContainerTooltips()
