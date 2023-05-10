@@ -27,15 +27,15 @@
 
 import { screen, waitFor } from '@testing-library/react'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar'
+import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar.assert'
 import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
-import { checkPatientLayout } from '../../assert/layout'
-import { unmonitoredPatientAsTeamMember } from '../../data/patient.api.data'
+import { checkPatientLayout } from '../../assert/layout.assert'
+import { patient2AsTeamMember } from '../../data/patient.api.data'
 
 describe('Trends view for patient', () => {
   beforeAll(() => {
-    mockPatientLogin(unmonitoredPatientAsTeamMember)
+    mockPatientLogin(patient2AsTeamMember)
   })
 
   it('should render correct layout', async () => {
@@ -47,6 +47,6 @@ describe('Trends view for patient', () => {
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsPatient()
-    await checkPatientLayout(`${unmonitoredPatientAsTeamMember.profile.firstName} ${unmonitoredPatientAsTeamMember.profile.lastName}`)
+    await checkPatientLayout(`${patient2AsTeamMember.profile.firstName} ${patient2AsTeamMember.profile.lastName}`)
   })
 })

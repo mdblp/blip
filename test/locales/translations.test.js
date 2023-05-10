@@ -184,7 +184,21 @@ const ignoredTransKeyForYourLoops = [
   'standard-deviation',
   'standard-deviation-tooltip',
   'tooltip-smbg-data',
-  'time-out-of-range'
+  'time-out-of-range',
+  'hypoglycemia-tooltip2',
+  'time-out-of-range-target-tooltip2',
+  'tooltip-total-carbs-smbg-derived',
+  'avg-daily-carbs',
+  'tooltip-total-day-carbs',
+  'tooltip-total-derived-carbs',
+  'tooltip-total-week-carbs',
+  'total-carbs',
+  'average-daily-insulin',
+  'average-daily-insulin-tooltip',
+  'daily-dose-per-weight',
+  'total-insulin',
+  'total-insulin-days-tooltip',
+  'total-insulin-how-calculate-tooltip'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',

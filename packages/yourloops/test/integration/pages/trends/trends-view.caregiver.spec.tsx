@@ -33,12 +33,12 @@ import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { checkPatientNavBarAsCaregiver } from '../../assert/patient-nav-bar'
+import { checkPatientNavBarAsCaregiver } from '../../assert/patient-nav-bar.assert'
 import { renderPage } from '../../utils/render'
-import { checkCaregiverLayout } from '../../assert/layout'
+import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
-import { unmonitoredPatientId } from '../../data/patient.api.data'
+import { patient2Id } from '../../data/patient.api.data'
 
 describe('Trends view for caregiver', () => {
   const firstName = 'HCP firstName'
@@ -56,9 +56,9 @@ describe('Trends view for caregiver', () => {
 
   it('should render correct layout', async () => {
     mockDataAPI(minimalTrendViewData)
-    const router = renderPage(`/patient/${unmonitoredPatientId}/trends`)
+    const router = renderPage(`/patient/${patient2Id}/trends`)
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(`/patient/${unmonitoredPatientId}/trends`)
+      expect(router.state.location.pathname).toEqual(`/patient/${patient2Id}/trends`)
     })
     expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
     checkPatientNavBarAsCaregiver()

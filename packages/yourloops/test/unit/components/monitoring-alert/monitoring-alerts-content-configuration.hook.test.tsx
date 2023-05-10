@@ -26,15 +26,15 @@
  */
 
 import { act, renderHook } from '@testing-library/react-hooks'
-import useMonitoringAlertsContentConfiguration
+import { useMonitoringAlertsContentConfiguration }
   from '../../../../components/monitoring-alert/monitoring-alerts-content-configuration.hook'
 import { buildTeam, createPatient } from '../../common/utils'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { Unit } from 'medical-domain'
-import { type Monitoring } from '../../../../lib/team/models/monitoring.model'
 import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
+import { type MonitoringAlertsParameters } from '../../../../lib/team/models/monitoring-alerts-parameters.model'
 
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/auth')
@@ -42,22 +42,20 @@ jest.mock('../../../../lib/selected-team/selected-team.provider')
 describe('MonitoringAlertsContentConfiguration hook', () => {
   const teamId = 'teamId'
   const team = buildTeam(teamId)
-  const patient = createPatient('patientId', [teamId], UserInvitationStatus.accepted)
+  const patient = createPatient('patientId', UserInvitationStatus.accepted)
   const user = { id: 'id', settings: { units: { bg: Unit.MilligramPerDeciliter } } }
 
-  const getDefaultMonitoring = (): Monitoring => ({
-    enabled: true,
-    parameters: {
-      bgUnit: Unit.MilligramPerDeciliter,
-      lowBg: 50,
-      highBg: 140,
-      outOfRangeThreshold: 10,
-      veryLowBg: 40,
-      hypoThreshold: 45,
-      nonDataTxThreshold: 50,
-      reportingPeriod: 7
-    }
+  const getDefaultMonitoringAlertsParameters = (): MonitoringAlertsParameters => ({
+    bgUnit: Unit.MilligramPerDeciliter,
+    lowBg: 50,
+    highBg: 140,
+    outOfRangeThreshold: 10,
+    veryLowBg: 40,
+    hypoThreshold: 45,
+    nonDataTxThreshold: 50,
+    reportingPeriod: 7
   })
+
   const getTeamMock = jest.fn()
   beforeAll(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
@@ -71,7 +69,7 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
       }
     });
     (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
-      return { selectedTeam: { id: teamId } }
+      return { selectedTeam: { id: teamId, monitoringAlertsParameters: getDefaultMonitoringAlertsParameters() } }
     })
   })
 
@@ -81,9 +79,13 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
     })
 
     it('should return no error messages when monitoring values are correct', () => {
-      const monitoring = getDefaultMonitoring()
+      const monitoringAlertsParameters = getDefaultMonitoringAlertsParameters()
 
-      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({ monitoring, patient }))
+      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
+        monitoringAlertsParameters,
+        patient,
+        userBgUnit: Unit.MilligramPerDeciliter
+      }))
 
       expect(result.current.lowBg.errorMessage).toBeNull()
       expect(result.current.highBg.errorMessage).toBeNull()
@@ -91,15 +93,16 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
     })
 
     it('should return an error message expecting integer values if BG unit is mg/dL', () => {
-      const monitoring = getDefaultMonitoring()
+      const monitoringAlertsParameters = getDefaultMonitoringAlertsParameters()
 
-      monitoring.parameters.lowBg = 66.6
-      monitoring.parameters.highBg = 140.5
-      monitoring.parameters.veryLowBg = 64.1
+      monitoringAlertsParameters.lowBg = 66.6
+      monitoringAlertsParameters.highBg = 140.5
+      monitoringAlertsParameters.veryLowBg = 64.1
 
       const { result: firstHook } = renderHook(() => useMonitoringAlertsContentConfiguration({
-        monitoring,
-        patient
+        monitoringAlertsParameters,
+        patient,
+        userBgUnit: Unit.MilligramPerDeciliter
       }))
 
       expect(firstHook.current.veryLowBg.errorMessage).toBe('mandatory-integer')
@@ -108,18 +111,19 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
     })
 
     it('should return an error message expecting float values if BG unit is mmol/L', () => {
-      const monitoring = getDefaultMonitoring()
+      const monitoringAlertsParameters = getDefaultMonitoringAlertsParameters()
 
       user.settings.units.bg = Unit.MmolPerLiter
 
-      monitoring.parameters.lowBg = 3.55
-      monitoring.parameters.highBg = 8.55
-      monitoring.parameters.veryLowBg = 3.55
-      monitoring.parameters.bgUnit = Unit.MmolPerLiter
+      monitoringAlertsParameters.lowBg = 3.55
+      monitoringAlertsParameters.highBg = 8.55
+      monitoringAlertsParameters.veryLowBg = 3.55
+      monitoringAlertsParameters.bgUnit = Unit.MmolPerLiter
 
       const { result: secondHook } = renderHook(() => useMonitoringAlertsContentConfiguration({
-        monitoring,
-        patient
+        monitoringAlertsParameters,
+        patient,
+        userBgUnit: Unit.MmolPerLiter
       }))
 
       expect(secondHook.current.veryLowBg.errorMessage).toBe('mandatory-float-number')
@@ -128,12 +132,16 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
     })
 
     it('should return an error if values are out of range', () => {
-      const monitoring = getDefaultMonitoring()
-      monitoring.parameters.lowBg = 25000
-      monitoring.parameters.highBg = 14230
-      monitoring.parameters.veryLowBg = 123456789
+      const monitoringAlertsParameters = getDefaultMonitoringAlertsParameters()
+      monitoringAlertsParameters.lowBg = 25000
+      monitoringAlertsParameters.highBg = 14230
+      monitoringAlertsParameters.veryLowBg = 123456789
 
-      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({ monitoring, patient }))
+      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
+        monitoringAlertsParameters,
+        patient,
+        userBgUnit: Unit.MmolPerLiter
+      }))
 
       expect(result.current.veryLowBg.errorMessage).toBe('mandatory-range')
       expect(result.current.lowBg.errorMessage).toBe('mandatory-range')
@@ -144,68 +152,46 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
   describe('saveButtonDisabled', () => {
     it('should be enabled if monitoring is correct', () => {
       const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
-        monitoring: getDefaultMonitoring(),
-        patient
+        monitoringAlertsParameters: getDefaultMonitoringAlertsParameters(),
+        patient,
+        userBgUnit: Unit.MilligramPerDeciliter
       }))
 
       expect(result.current.saveButtonDisabled).toBeFalsy()
     })
 
     it('should be disabled if monitoring is incorrect', () => {
-      const monitoring = getDefaultMonitoring()
-      monitoring.parameters.highBg = 260
+      const monitoringAlertsParameters = getDefaultMonitoringAlertsParameters()
+      monitoringAlertsParameters.highBg = 260
 
-      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({ monitoring, patient }))
+      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
+        monitoringAlertsParameters,
+        patient,
+        userBgUnit: Unit.MilligramPerDeciliter
+      }))
 
       expect(result.current.saveButtonDisabled).toBeTruthy()
     })
   })
 
   describe('resetToTeamDefaultValues', () => {
-    const patient = createPatient('patientId', [teamId], UserInvitationStatus.accepted)
+    const patient = createPatient('patientId', UserInvitationStatus.accepted)
 
     it('should return an error message if patient is not created', () => {
-      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({ monitoring: getDefaultMonitoring() }))
+      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
+        monitoringAlertsParameters: getDefaultMonitoringAlertsParameters(),
+        userBgUnit: Unit.MilligramPerDeciliter
+      }))
 
       expect(() => {
         result.current.resetToTeamDefaultValues()
       }).toThrowError('This action cannot be done if the patient is undefined')
     })
 
-    it('should return a error message if patient team is not found', () => {
-      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
-        monitoring: getDefaultMonitoring(),
-        patient
-      }))
-
-      expect(() => {
-        result.current.resetToTeamDefaultValues()
-      }).toThrowError(`Cannot find team with id ${teamId}`)
-    })
-
-    it('should return an error message if the team has no monitoring parameters', () => {
-      delete team.monitoring.parameters;
-
-      (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-        return {
-          getTeam: () => team
-        }
-      })
-
-      const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
-        patient,
-        monitoring: getDefaultMonitoring()
-      }))
-
-      expect(() => {
-        result.current.resetToTeamDefaultValues()
-      }).toThrowError('The given team has no monitoring values')
-    })
-
     it('should set default values if there is no error', () => {
-      const defaultMonitoring = getDefaultMonitoring()
+      const defaultMonitoringAlertsParameters = getDefaultMonitoringAlertsParameters()
 
-      team.monitoring = getDefaultMonitoring();
+      team.monitoringAlertsParameters = getDefaultMonitoringAlertsParameters();
 
       (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
         return {
@@ -213,47 +199,49 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
         }
       })
 
-      const updatedMonitoring: Monitoring = {
-        enabled: true,
-        parameters: {
-          bgUnit: Unit.MilligramPerDeciliter,
-          lowBg: 55,
-          highBg: 120,
-          outOfRangeThreshold: 15,
-          veryLowBg: 45,
-          hypoThreshold: 50,
-          nonDataTxThreshold: 60,
-          reportingPeriod: 14
-        }
+      const updatedMonitoringAlertsParameters: MonitoringAlertsParameters = {
+        bgUnit: Unit.MilligramPerDeciliter,
+        lowBg: 55,
+        highBg: 120,
+        outOfRangeThreshold: 15,
+        veryLowBg: 45,
+        hypoThreshold: 50,
+        nonDataTxThreshold: 60,
+        reportingPeriod: 14
       }
 
       const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
-        monitoring: updatedMonitoring,
-        patient
+        monitoringAlertsParameters: updatedMonitoringAlertsParameters,
+        patient,
+        userBgUnit: Unit.MilligramPerDeciliter
       }))
       act(() => {
         result.current.resetToTeamDefaultValues()
       })
 
-      expect(result.current.highBg.value).toEqual(defaultMonitoring.parameters.highBg)
-      expect(result.current.lowBg.value).toEqual(defaultMonitoring.parameters.lowBg)
-      expect(result.current.veryLowBg.value).toEqual(defaultMonitoring.parameters.veryLowBg)
-      expect(result.current.nonDataTxThreshold.value).toEqual(defaultMonitoring.parameters.nonDataTxThreshold)
-      expect(result.current.outOfRangeThreshold.value).toEqual(defaultMonitoring.parameters.outOfRangeThreshold)
-      expect(result.current.hypoThreshold.value).toEqual(defaultMonitoring.parameters.hypoThreshold)
+      expect(result.current.highBg.value).toEqual(defaultMonitoringAlertsParameters.highBg)
+      expect(result.current.lowBg.value).toEqual(defaultMonitoringAlertsParameters.lowBg)
+      expect(result.current.veryLowBg.value).toEqual(defaultMonitoringAlertsParameters.veryLowBg)
+      expect(result.current.nonDataTxThreshold.value).toEqual(defaultMonitoringAlertsParameters.nonDataTxThreshold)
+      expect(result.current.outOfRangeThreshold.value).toEqual(defaultMonitoringAlertsParameters.outOfRangeThreshold)
+      expect(result.current.hypoThreshold.value).toEqual(defaultMonitoringAlertsParameters.hypoThreshold)
     })
   })
 
   it('should call the onSave prop method when calling save', () => {
-    const monitoring = getDefaultMonitoring()
+    const monitoringAlertsParameters = getDefaultMonitoringAlertsParameters()
     const expectedResult = {
-      ...monitoring,
+      ...monitoringAlertsParameters,
       status: undefined,
       monitoringEnd: undefined
     }
     const onSaveMock = jest.fn()
 
-    const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({ monitoring, onSave: onSaveMock }))
+    const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({
+      monitoringAlertsParameters,
+      onSave: onSaveMock,
+      userBgUnit: Unit.MilligramPerDeciliter
+    }))
     act(() => {
       result.current.save()
     })

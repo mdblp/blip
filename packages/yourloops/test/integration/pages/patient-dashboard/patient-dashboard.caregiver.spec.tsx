@@ -25,20 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen, within } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { monitoredPatientId } from '../../data/patient.api.data'
+import { patient1Id } from '../../data/patient.api.data'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { checkCaregiverLayout } from '../../assert/layout'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
+import { completeDashboardData, mockDataAPI, twoWeeksOldDashboardData } from '../../mock/data.api.mock'
+import { type AppMainLayoutParams, testAppMainLayoutForCaregiver } from '../../use-cases/app-main-layout-visualisation'
+import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
+import {
+  testDashboardDataVisualisationPrivateTeam,
+  testDashboardDataVisualisationWithTwoWeeksOldData
+} from '../../use-cases/patient-data-visualisation'
 
 describe('Patient dashboard for caregiver', () => {
-  const monitoredPatientDashboardRoute = `/patient/${monitoredPatientId}/dashboard`
+  const patientDashboardRoute = `/patient/${patient1Id}/dashboard`
   const firstName = 'Caregiver firstName'
   const lastName = 'Caregiver lastName'
 
@@ -52,20 +57,32 @@ describe('Patient dashboard for caregiver', () => {
   })
 
   it('should render correct components', async () => {
+    const appMainLayoutParams: AppMainLayoutParams = {
+      footerHasLanguageSelector: false,
+      loggedInUserFullName: `${firstName} ${lastName}`
+    }
+
+    const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
+      isChatCardVisible: false,
+      isMedicalFilesCardVisible: false,
+      isMonitoringAlertCardVisible: false
+    }
+
     await act(async () => {
-      renderPage(monitoredPatientDashboardRoute)
+      renderPage(patientDashboardRoute)
     })
 
-    await checkCaregiverLayout(`${firstName} ${lastName}`)
+    await testAppMainLayoutForCaregiver(appMainLayoutParams)
+    await testDashboardDataVisualisationPrivateTeam(patientDashboardLayoutParams)
+  })
 
-    const dashboard = within(await screen.findByTestId('patient-dashboard'))
-    expect(dashboard.getByText('Data calculated on the last 7 days')).toBeVisible()
-    expect(dashboard.getByText('Patient statistics')).toBeVisible()
-    expect(dashboard.getByText('Device Usage')).toBeVisible()
+  it('should render correct statistic when data is two weeks old', async () => {
+    mockDataAPI(twoWeeksOldDashboardData)
 
-    expect(dashboard.queryByTestId('remote-monitoring-card')).not.toBeInTheDocument()
-    expect(dashboard.queryByTestId('medical-files-card')).not.toBeInTheDocument()
-    expect(dashboard.queryByTestId('monitoring-alert-card')).not.toBeInTheDocument()
-    expect(dashboard.queryByTestId('chat-card')).not.toBeInTheDocument()
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testDashboardDataVisualisationWithTwoWeeksOldData()
   })
 })

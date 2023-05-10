@@ -31,12 +31,11 @@ import { type PatientProfile } from '../../../lib/patient/models/patient-profile
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
 import { type PatientMetadata } from '../../../lib/patient/models/patient-metadata.model'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { type Monitoring } from '../../../lib/team/models/monitoring.model'
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
-import { type MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { Unit } from 'medical-domain'
+import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
 
 export function triggerMouseEvent(event: string, domElement: Element): void {
   const clickEvent = new MouseEvent(event, { bubbles: true })
@@ -45,10 +44,8 @@ export function triggerMouseEvent(event: string, domElement: Element): void {
 
 export const createPatient = (
   id = 'fakePatientId',
-  teamIds: string[] = [],
   invitationStatus: UserInvitationStatus = UserInvitationStatus.accepted,
-  monitoringStatus: MonitoringStatus | undefined = undefined,
-  monitoring: Monitoring | undefined = undefined,
+  monitoringAlertsParameters: MonitoringAlertsParameters | undefined = undefined,
   profile: Partial<PatientProfile> = undefined,
   settings: Partial<PatientSettings> = undefined,
   metadata: Partial<PatientMetadata> = undefined,
@@ -64,7 +61,7 @@ export const createPatient = (
       nonDataTransmissionActive: monitoringAlerts?.nonDataTransmissionActive || false
     },
     profile: {
-      birthdate: profile?.birthdate || new Date(),
+      birthdate: profile?.birthdate || new Date().toString(),
       firstName: profile?.firstName || 'fakeFirstname',
       fullName: profile?.fullName || 'fakePatientFullName',
       lastName: profile?.lastName || 'fakeLastname',
@@ -80,10 +77,8 @@ export const createPatient = (
       medicalData: metadata?.medicalData || null,
       hasSentUnreadMessages: metadata?.hasSentUnreadMessages || false
     },
-    monitoring,
-    teamIds,
+    monitoringAlertsParameters,
     invitationStatus,
-    monitoringStatus,
     userid: id
   }
 }
@@ -98,7 +93,7 @@ export function buildPrivateTeam(): Team {
   }
 }
 
-export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 'fake team name', type = TeamType.medical, monitoringEnabled = true): Team {
+export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 'fake team name', type = TeamType.medical): Team {
   return {
     id,
     name,
@@ -106,18 +101,15 @@ export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 
     email: 'fale@email.com',
     type,
     members,
-    monitoring: {
-      enabled: monitoringEnabled,
-      parameters: {
-        bgUnit: Unit.MilligramPerDeciliter,
-        lowBg: 1,
-        highBg: 2,
-        outOfRangeThreshold: 10,
-        veryLowBg: 4,
-        hypoThreshold: 15,
-        nonDataTxThreshold: 20,
-        reportingPeriod: 7
-      }
+    monitoringAlertsParameters: {
+      bgUnit: Unit.MilligramPerDeciliter,
+      lowBg: 1,
+      highBg: 2,
+      outOfRangeThreshold: 10,
+      veryLowBg: 4,
+      hypoThreshold: 15,
+      nonDataTxThreshold: 20,
+      reportingPeriod: 7
     }
   }
 }

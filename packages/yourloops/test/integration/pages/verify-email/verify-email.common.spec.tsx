@@ -29,7 +29,7 @@ import * as auth0Mock from '@auth0/auth0-react'
 import { getAccessTokenWithPopupMock, logoutMock } from '../../mock/auth0.hook.mock'
 import { renderPage } from '../../utils/render'
 import { screen, waitFor, within } from '@testing-library/react'
-import { checkFooter } from '../../assert/footer'
+import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
 import userEvent from '@testing-library/user-event'
 import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../../../lib/auth/models/auth0-error.model'
 import { AppRoute } from '../../../../models/enums/routes.enum'
@@ -51,7 +51,7 @@ describe('Verify email page', () => {
       expect(router.state.location.pathname).toEqual(AppRoute.VerifyEmail)
     })
 
-    checkFooter({ needFooterLanguageSelector: true })
+    checkFooterForUserNotLoggedIn(true)
 
     const pageHeader = within(screen.getByTestId('verify-email-header'))
     expect(pageHeader.getByLabelText('YourLoops Logo')).toBeVisible()

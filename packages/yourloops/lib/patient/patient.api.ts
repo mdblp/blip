@@ -28,12 +28,12 @@ import HttpService, { ErrorMessageStatus } from '../http/http.service'
 import bows from 'bows'
 import { type INotification } from '../notifications/models/i-notification.model'
 import { getCurrentLang } from '../language'
-import { type Monitoring } from '../team/models/monitoring.model'
 import { UserRole } from '../auth/models/enums/user-role.enum'
 import { type ITeamMember } from '../team/models/i-team-member.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
 import { type Patient } from './models/patient.model'
+import { type MonitoringAlertsParameters } from '../team/models/monitoring-alerts-parameters.model'
 
 const log = bows('Patient API')
 
@@ -85,10 +85,10 @@ export default class PatientApi {
     }
   }
 
-  static async updatePatientAlerts(teamId: string, patientId: string, monitoring: Monitoring): Promise<void> {
-    await HttpService.put<void, Monitoring>({
-      url: `/crew/v0/teams/${teamId}/patients/${patientId}/monitoring`,
-      payload: monitoring
+  static async updatePatientAlerts(teamId: string, patientId: string, monitoringAlertsParameters: MonitoringAlertsParameters): Promise<void> {
+    await HttpService.put<void, MonitoringAlertsParameters>({
+      url: `/crew/v0/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`,
+      payload: monitoringAlertsParameters
     })
   }
 

@@ -30,10 +30,9 @@ import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/aut
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
-import { checkHCPLayout } from '../../assert/layout'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
-import { checkHcpProfilePage, checkPasswordChangeRequest } from '../../assert/profile'
+import { checkHcpProfilePage, checkPasswordChangeRequest } from '../../assert/profile.assert'
 import userEvent from '@testing-library/user-event'
 import { type Profile } from '../../../../lib/auth/models/profile.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
@@ -45,6 +44,7 @@ import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockAuthApi } from '../../mock/auth.api.mock'
 import { Unit } from 'medical-domain'
+import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 
 describe('Profile page for hcp', () => {
   const profile: Profile = {
@@ -81,6 +81,18 @@ describe('Profile page for hcp', () => {
       fullName: 'Jean Talue',
       hcpProfession: HcpProfession.nurse
     }
+
+    const appMainLayoutParams: AppMainLayoutHcpParams = {
+      footerHasLanguageSelector: false,
+      headerInfo: {
+        loggedInUserFullName: `${profile.firstName} ${profile.lastName}`,
+        teamMenuInfo: {
+          selectedTeamName: myThirdTeamName,
+          isSelectedTeamPrivate: false,
+          availableTeams: buildAvailableTeams()
+        }
+      }
+    }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
     const expectedSettings = { ...settings, units: { bg: Unit.MilligramPerDeciliter } }
     const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(expectedProfile)
@@ -92,7 +104,7 @@ describe('Profile page for hcp', () => {
       expect(router.state.location.pathname).toEqual('/preferences')
     })
 
-    await checkHCPLayout(`${profile.firstName} ${profile.lastName}`, { teamName: myThirdTeamName }, buildAvailableTeams())
+    await testAppMainLayoutForHcp(appMainLayoutParams)
     const fields = checkHcpProfilePage()
     const saveButton = screen.getByRole('button', { name: 'Save' })
 

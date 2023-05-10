@@ -76,4 +76,8 @@ export default class TeamUtils {
   static isPrivate(team: Team): boolean {
     return team.id === PRIVATE_TEAM_ID
   }
+
+  static formatTeamNameForTestId(teamName: string): string {
+    return teamName.replaceAll(' ', '-')
+  }
 }

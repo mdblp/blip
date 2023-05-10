@@ -46,7 +46,7 @@ jest.mock('../../../../lib/team')
 jest.mock('../../../../components/utils/snackbar')
 describe('TeamInformation', () => {
   const refresh = jest.fn()
-  const editTeamMock = jest.fn()
+  const updateTeamMock = jest.fn()
   const successMock = jest.fn()
   const errorMock = jest.fn()
 
@@ -68,7 +68,7 @@ describe('TeamInformation', () => {
       return { user: { isUserPatient: () => true } as User }
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { editTeam: editTeamMock }
+      return { updateTeam: updateTeamMock }
     })
     jest.spyOn(TeamUtils, 'isUserAdministrator').mockReturnValue(true)
     container = document.createElement('div')
@@ -97,15 +97,17 @@ describe('TeamInformation', () => {
     const editInfoButton = screen.getByRole('button', { name: 'button-edit-information' })
     await act(async () => {
       fireEvent.click(editInfoButton)
-      await waitFor(() => {
-        expect(screen.queryByRole('dialog')).not.toBeNull()
-      })
-      const editTeamDialog = within(screen.getByRole('dialog'))
-      const editTeamButton = editTeamDialog.getByRole('button', { name: 'button-save' })
+    })
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeNull()
+    })
+    const editTeamDialog = within(screen.getByRole('dialog'))
+    const editTeamButton = editTeamDialog.getByRole('button', { name: 'button-save' })
+    await act(async () => {
       fireEvent.click(editTeamButton)
-      await waitFor(() => {
-        expect(editTeamMock).toHaveBeenCalledWith(team)
-      })
+    })
+    await waitFor(() => {
+      expect(updateTeamMock).toHaveBeenCalledWith(team)
     })
   }
 
@@ -156,13 +158,6 @@ describe('TeamInformation', () => {
     expect(document.getElementById('edit-team-button')).toBeNull()
   })
 
-  it('should display button to leave team when user is patient and team is not a monitoring team', () => {
-    const teamWithNoMonitoring = buildTeam(teamId, [])
-    teamWithNoMonitoring.monitoring = undefined
-    renderTeamInformation({ team: teamWithNoMonitoring, refreshParent: refresh })
-    expect(document.getElementById('leave-team-button')).not.toBeNull()
-  })
-
   it('should not display button to leave team when user is not patient', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user: { isUserPatient: () => false } as User }
@@ -190,14 +185,14 @@ describe('TeamInformation', () => {
       const editTeamButton = editTeamDialog.getByRole('button', { name: 'button-cancel' })
       fireEvent.click(editTeamButton)
       await waitFor(() => {
-        expect(editTeamMock).toHaveBeenCalledTimes(0)
+        expect(updateTeamMock).toHaveBeenCalledTimes(0)
       })
     })
     expect(refresh).toHaveBeenCalledTimes(0)
   })
 
   it('should show error message when team edit failed', async () => {
-    editTeamMock.mockRejectedValue(Error('This error has been thrown by a mock on purpose'))
+    updateTeamMock.mockRejectedValue(Error('This error has been thrown by a mock on purpose'))
     render(getTeamInformationJSX())
     await editTeamInfo()
     expect(errorMock).toHaveBeenCalledWith('team-page-failed-edit')

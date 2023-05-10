@@ -54,6 +54,7 @@ import SpinningLoader from '../../components/loaders/spinning-loader'
 const ReactTeamContext = createContext<TeamContext>({} as TeamContext)
 
 export const PRIVATE_TEAM_ID = 'private'
+export const PRIVATE_TEAM_NAME = 'private'
 
 function TeamContextImpl(): TeamContext {
   const authHook = useAuth()
@@ -105,10 +106,6 @@ function TeamContextImpl(): TeamContext {
     return teams.filter((team: Team) => team.type === type)
   }
 
-  const getRemoteMonitoringTeams = (): Team[] => {
-    return teams.filter(team => team.monitoring?.enabled)
-  }
-
   const inviteMember = async (team: Team, username: string, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
     const result = await TeamApi.inviteMember(user.id, team.id, username, role)
     setTeams(result.teams)
@@ -127,27 +124,19 @@ function TeamContextImpl(): TeamContext {
     metrics.send('team_management', 'create_care_team', _.isEmpty(team.email) ? 'email_not_filled' : 'email_filled')
   }
 
-  const editTeam = async (team: Team): Promise<void> => {
+  const updateTeam = async (team: Team): Promise<void> => {
     const apiTeam: ITeam = {
-      ...team,
-      members: []
-    }
+      id: team.id,
+      name: team.name,
+      phone: team.phone,
+      email: team.email,
+      address: team.address,
+      members: [],
+      monitoringAlertsParameters: team.monitoringAlertsParameters
+    } as ITeam
     await TeamApi.editTeam(apiTeam)
     refresh()
     metrics.send('team_management', 'edit_care_team')
-  }
-
-  const updateTeamAlerts = async (team: Team): Promise<void> => {
-    if (!team.monitoring) {
-      throw Error('Cannot update team monitoring with undefined')
-    }
-    try {
-      await TeamApi.updateTeamAlerts(team.id, team.monitoring)
-    } catch (error) {
-      console.error(error)
-      throw Error(`Failed to update team with id ${team.id}`)
-    }
-    refresh()
   }
 
   const leaveTeam = async (team: Team): Promise<void> => {
@@ -217,11 +206,9 @@ function TeamContextImpl(): TeamContext {
     getTeam,
     getMedicalTeams,
     getPrivateTeam,
-    getRemoteMonitoringTeams,
     inviteMember,
     createTeam,
-    editTeam,
-    updateTeamAlerts,
+    updateTeam,
     leaveTeam,
     removeMember,
     changeMemberRole,

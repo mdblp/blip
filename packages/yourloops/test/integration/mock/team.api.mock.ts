@@ -32,19 +32,20 @@ import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
 import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
 
 import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
-import { MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
 import { type Team } from '../../../lib/team'
 import { type Profile } from '../../../lib/auth/models/profile.model'
 import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/monitoring-alert/monitoring-alert.default'
 import { type ITeam } from '../../../lib/team/models/i-team.model'
 import { Unit } from 'medical-domain'
+import { PRIVATE_TEAM_ID, PRIVATE_TEAM_NAME } from '../../../lib/team/team.hook'
+import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
 
 const {
   minVeryLowBg,
   minLowBg,
   minHighBg
 } = DEFAULT_THRESHOLDS_IN_MGDL
-export const monitoringParameters = {
+export const monitoringAlertsParameters: MonitoringAlertsParameters = {
   bgUnit: Unit.MilligramPerDeciliter,
   lowBg: minLowBg,
   highBg: minHighBg,
@@ -54,7 +55,7 @@ export const monitoringParameters = {
   nonDataTxThreshold: 15,
   reportingPeriod: 7
 }
-export const monitoringParametersBgUnitMmol = {
+export const monitoringAlertsParametersBgUnitMmol = {
   bgUnit: Unit.MmolPerLiter,
   lowBg: 2.8,
   highBg: 7.8,
@@ -73,8 +74,6 @@ export const myFirstTeamName = 'MyFirstTeam'
 export const mySecondTeamName = 'MySecondTeam'
 export const myThirdTeamName = 'A - MyThirdTeam - to be deleted'
 export const filtersTeamName = 'Team used to test the patients filters'
-
-const privateTeamId = 'private'
 
 export const buildTeamOne = (): Team => {
   return {
@@ -127,12 +126,7 @@ export const buildTeamTwo = (): Team => {
       status: UserInvitationStatus.accepted,
       email: 'ylp.ui.test.hcp.28@diabeloop.fr'
     }],
-    monitoring: {
-      enabled: true,
-      monitoringEnd: null,
-      status: MonitoringStatus.accepted,
-      parameters: monitoringParameters
-    }
+    monitoringAlertsParameters
   }
 }
 
@@ -173,7 +167,8 @@ export const buildTeamThree = (): Team => {
       } as Profile,
       status: UserInvitationStatus.accepted,
       email: 'ylp.ui.test.hcp.28.1@diabeloop.fr'
-    }]
+    }],
+    monitoringAlertsParameters
   }
 }
 
@@ -206,8 +201,8 @@ export const buildFiltersTeam = (): Team => {
 
 export const buildPrivateTeam = (): Team => {
   return {
-    name: 'private',
-    id: privateTeamId,
+    name: PRIVATE_TEAM_NAME,
+    id: PRIVATE_TEAM_ID,
     code: 'private',
     type: TeamType.private,
     phone: '',
@@ -221,10 +216,6 @@ export const iTeamOne: ITeam = {
   id: 'iTeamOneId',
   code: '679517388',
   type: TeamType.medical,
-  monitoring: {
-    ...monitoringParameters,
-    enabled: true
-  },
   phone: '0478780000',
   email: 'iTeamOne@hey.hey',
   address: {

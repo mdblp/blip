@@ -100,27 +100,9 @@ export const getStatAnnotations = (data, type, opts = {}) => {
 
   switch (type) {
 
-    case commonStats.averageDailyDose:
-      if (days > 1) {
-        annotations.push(t('**Avg. Daily Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view.'))
-      } else {
-        annotations.push(t('**Daily Insulin:** All basal and bolus insulin delivery (in Units) added together.'))
-      }
-      break
-
-    case commonStats.carbs:
-      if (days > 1) {
-        annotations.push(t('**Avg. Daily Carbs**: All carb entries added together, then divided by the number of days in this view. Note, these entries come from either bolus wizard events, or Apple Health records.'))
-      } else {
-        annotations.push(t('**Total Carbs**: All carb entries from bolus wizard events or Apple Health records added together.'))
-      }
-      annotations.push(t('Derived from _**{{total}}**_ carb entries.', { total: data.total }))
-      break
-
-    case commonStats.readingsInRange:
+   case commonStats.readingsInRange:
       annotations.push(t('**Readings In Range:** Daily average of the number of {{smbgLabel}} readings.', { smbgLabel: statBgSourceLabels.smbg }))
       break
-
 
     case commonStats.timeInAuto:
       if (days > 1) {
@@ -140,15 +122,6 @@ export const getStatAnnotations = (data, type, opts = {}) => {
         annotations.push(t('**Time In Range:** Time spent in range, based on {{cbgLabel}} readings.', { cbgLabel: statBgSourceLabels.cbg }))
         annotations.push(t('compute-oneday-time-in-range', { cbgLabel: statBgSourceLabels.cbg }))
       }
-      break
-
-    case commonStats.totalInsulin:
-      if (days > 1) {
-        annotations.push(t('**Total Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view'))
-      } else {
-        annotations.push(t('**Total Insulin:** All basal and bolus insulin delivery (in Units) added together'))
-      }
-      annotations.push(t('compute-total-insulin'))
       break
 
     default:
@@ -447,14 +420,6 @@ export const getStatTitle = (type, opts = {}) => {
   let title
 
   switch (type) {
-    case commonStats.averageDailyDose:
-      title = (days > 1) ? t('Avg. Daily Insulin') : t('Total Insulin')
-      break
-
-    case commonStats.carbs:
-      title = (days > 1) ? t('Avg. Daily Carbs') : t('Total Carbs')
-      break
-
     case commonStats.readingsInRange:
       title = (days > 1) ? t('Avg. Daily Readings In Range') : t('Readings In Range')
       break
@@ -468,11 +433,6 @@ export const getStatTitle = (type, opts = {}) => {
     case commonStats.timeInRange:
       title = (days > 1) ? t('Avg. Daily Time In Range') : t('Time In Range')
       break
-
-    case commonStats.totalInsulin:
-      title = (days > 1) ? t('Avg. Daily Total Insulin') : t('Total Insulin')
-      break
-
     default:
       title = ''
       break

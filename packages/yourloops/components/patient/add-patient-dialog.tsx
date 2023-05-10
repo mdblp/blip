@@ -114,7 +114,6 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
         return
       }
       alert.error(t('alert-invitation-patient-failed'))
-    } finally {
       setInProgress(false)
     }
   }

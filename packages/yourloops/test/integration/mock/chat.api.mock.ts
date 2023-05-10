@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,66 @@
  */
 
 import ChatApi from '../../../lib/chat/chat.api'
+import { type IMessage } from '../../../lib/chat/models/i-message.model'
+import {
+  myFirstTeamName,
+  mySecondTeamId,
+  mySecondTeamName,
+  myTeamId,
+  myThirdTeamId,
+  myThirdTeamName
+} from './team.api.mock'
+import { patient1AsTeamMember, patient1Id } from '../data/patient.api.data'
+import type User from '../../../lib/auth/models/user.model'
 
 export const mockChatAPI = () => {
-  jest.spyOn(ChatApi, 'getChatMessages').mockResolvedValue([])
+  jest.spyOn(ChatApi, 'sendChatMessage').mockResolvedValue(true)
+  jest.spyOn(ChatApi, 'getChatMessages').mockImplementation((teamId, patientId): Promise<IMessage[]> => {
+    if (teamId === myTeamId && patientId === patient1Id) {
+      const message: IMessage = {
+        id: 'fakeMessageId',
+        patientId: patient1Id,
+        teamId: myTeamId,
+        authorId: patient1Id,
+        destAck: true,
+        private: false,
+        text: `This is a message sent to the team ${myFirstTeamName}`,
+        timezone: 'timezone not used',
+        timestamp: '2023-03-30T09:10:06Z',
+        user: { profile: patient1AsTeamMember.profile } as User
+      }
+      return Promise.resolve([message])
+    }
+    if (teamId === mySecondTeamId && patientId === patient1Id) {
+      const message: IMessage = {
+        id: 'fakeMessageId',
+        patientId: patient1Id,
+        teamId: mySecondTeamId,
+        authorId: 'someoneElse',
+        destAck: false,
+        private: false,
+        text: `This is a message sent from the team ${mySecondTeamName}`,
+        timezone: 'timezone not used 2',
+        timestamp: '2023-03-21T15:32:19Z',
+        user: { profile: { firstName: 'fakeFirstName', lastName: 'fakeLastName' } } as User
+      }
+      return Promise.resolve([message])
+    }
+    if (teamId === myThirdTeamId && patientId === patient1Id) {
+      const message: IMessage = {
+        id: 'fakeMessageId',
+        patientId: patient1Id,
+        teamId: myThirdTeamId,
+        authorId: 'someoneElse',
+        destAck: false,
+        private: false,
+        text: `This messages is in the team ${myThirdTeamName} which is the best`,
+        timezone: 'timezone not used 2',
+        timestamp: '2023-01-11T12:42:39Z',
+        user: { profile: { firstName: 'fakeFirstName', lastName: 'fakeLastName' } } as User
+      }
+      return Promise.resolve([message])
+    }
+    return Promise.resolve([])
+  })
 }

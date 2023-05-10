@@ -31,7 +31,7 @@ import { usePatientListProviderHook } from '../../../../lib/providers/patient-li
 import { type PatientsFilters } from '../../../../lib/providers/models/patients-filters.model'
 import type User from '../../../../lib/auth/models/user.model'
 import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
-import { PatientListColumns } from '../../../../components/patient-list/enums/patient-list.enum'
+import { PatientListColumns } from '../../../../components/patient-list/models/enums/patient-list.enum'
 
 jest.mock('../../../../lib/auth')
 describe('usePatientListProviderHook', () => {
@@ -61,7 +61,7 @@ describe('usePatientListProviderHook', () => {
       return {
         user: {
           isUserHcp: () => true,
-          preferences: { patientsListSortedOptionalColumns: ['system', 'severe-hypoglycemia', 'last-data-update', 'messages'] }
+          preferences: { patientsListSortedOptionalColumns: ['system', 'last-data-update', 'messages'] }
         } as User,
         updatePreferences: updatePreferencesMock
       }
@@ -128,9 +128,7 @@ describe('usePatientListProviderHook', () => {
         [PatientListColumns.Flag]: true,
         [PatientListColumns.System]: true,
         [PatientListColumns.Patient]: true,
-        [PatientListColumns.TimeOutOfRange]: false,
-        [PatientListColumns.SevereHypoglycemia]: false,
-        [PatientListColumns.DataNotTransferred]: false,
+        [PatientListColumns.MonitoringAlerts]: false,
         [PatientListColumns.LastDataUpdate]: false,
         [PatientListColumns.Messages]: false,
         [PatientListColumns.Actions]: true
@@ -150,13 +148,14 @@ describe('usePatientListProviderHook', () => {
       const { result } = renderHook(() => usePatientListProviderHook())
       const expectedColumns: GridColumnVisibilityModel = {
         [PatientListColumns.Flag]: true,
-        [PatientListColumns.System]: true,
         [PatientListColumns.Patient]: true,
-        [PatientListColumns.TimeOutOfRange]: false,
-        [PatientListColumns.SevereHypoglycemia]: true,
-        [PatientListColumns.DataNotTransferred]: false,
-        [PatientListColumns.LastDataUpdate]: true,
+        [PatientListColumns.Age]: false,
+        [PatientListColumns.DateOfBirth]: false,
+        [PatientListColumns.Gender]: false,
+        [PatientListColumns.System]: true,
+        [PatientListColumns.MonitoringAlerts]: false,
         [PatientListColumns.Messages]: true,
+        [PatientListColumns.LastDataUpdate]: true,
         [PatientListColumns.Actions]: true
       }
 
@@ -175,19 +174,20 @@ describe('usePatientListProviderHook', () => {
       const { result } = renderHook(() => usePatientListProviderHook())
       const expectedColumns: GridColumnVisibilityModel = {
         [PatientListColumns.Flag]: true,
-        [PatientListColumns.System]: true,
         [PatientListColumns.Patient]: true,
-        [PatientListColumns.TimeOutOfRange]: false,
-        [PatientListColumns.SevereHypoglycemia]: false,
-        [PatientListColumns.DataNotTransferred]: false,
-        [PatientListColumns.LastDataUpdate]: true,
+        [PatientListColumns.Age]: false,
+        [PatientListColumns.DateOfBirth]: false,
+        [PatientListColumns.Gender]: false,
+        [PatientListColumns.System]: true,
+        [PatientListColumns.MonitoringAlerts]: false,
         [PatientListColumns.Messages]: false,
+        [PatientListColumns.LastDataUpdate]: true,
         [PatientListColumns.Actions]: true
       }
       expect(result.current.displayedColumns).toEqual(expectedColumns)
     })
 
-    it('should render all columns by default if the user has no preferences set yet', () => {
+    it('should render the default columns if the HCP user has no preferences set yet', () => {
       (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
         return {
           user: {
@@ -199,13 +199,39 @@ describe('usePatientListProviderHook', () => {
       const { result } = renderHook(() => usePatientListProviderHook())
       const expectedColumns: GridColumnVisibilityModel = {
         [PatientListColumns.Flag]: true,
-        [PatientListColumns.System]: true,
         [PatientListColumns.Patient]: true,
-        [PatientListColumns.TimeOutOfRange]: true,
-        [PatientListColumns.SevereHypoglycemia]: true,
-        [PatientListColumns.DataNotTransferred]: true,
-        [PatientListColumns.LastDataUpdate]: true,
+        [PatientListColumns.Age]: false,
+        [PatientListColumns.DateOfBirth]: true,
+        [PatientListColumns.Gender]: false,
+        [PatientListColumns.System]: false,
+        [PatientListColumns.MonitoringAlerts]: true,
         [PatientListColumns.Messages]: true,
+        [PatientListColumns.LastDataUpdate]: true,
+        [PatientListColumns.Actions]: true
+      }
+      expect(result.current.displayedColumns).toEqual(expectedColumns)
+    })
+
+    it('should render the default columns if the caregiver user has no preferences set yet', () => {
+      (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
+        return {
+          user: {
+            isUserHcp: () => false,
+            preferences: {}
+          } as User
+        }
+      })
+      const { result } = renderHook(() => usePatientListProviderHook())
+      const expectedColumns: GridColumnVisibilityModel = {
+        [PatientListColumns.Flag]: true,
+        [PatientListColumns.Patient]: true,
+        [PatientListColumns.Age]: false,
+        [PatientListColumns.DateOfBirth]: true,
+        [PatientListColumns.Gender]: false,
+        [PatientListColumns.System]: false,
+        [PatientListColumns.MonitoringAlerts]: false,
+        [PatientListColumns.Messages]: false,
+        [PatientListColumns.LastDataUpdate]: true,
         [PatientListColumns.Actions]: true
       }
       expect(result.current.displayedColumns).toEqual(expectedColumns)

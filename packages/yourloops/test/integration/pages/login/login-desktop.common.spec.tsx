@@ -27,10 +27,10 @@
 
 import * as auth0Mock from '@auth0/auth0-react'
 import { fireEvent, screen, waitFor, within } from '@testing-library/react'
-import { checkFooter } from '../../assert/footer'
 import { renderPage } from '../../utils/render'
 import userEvent from '@testing-library/user-event'
 import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../../../lib/auth/models/auth0-error.model'
+import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
 
 describe('Login page desktop view', () => {
   const loginWithRedirectMock = jest.fn()
@@ -75,7 +75,7 @@ describe('Login page desktop view', () => {
     expect(infoContainer).toHaveTextContent('YourLoops is a web application offered by Diabeloop in order to facilitate the monitoring of patients with diabetes using compatible medical devices.It provides access to visual representations of data that are automatically uploaded from DBL devices: blood sugar levels, insulin, carbohydrates and physical activity.YourLoops also enables patients to securely share their data with their medical team or caregivers.For health professionals, YourLoops is the platform for monitoring their patients. Through these features, it saves time and facilitates therapeutic decision-making.Learn more')
     expect(moreInfoLink).toBeVisible()
     expect(moreInfoLink).toHaveAttribute('href', 'https://www.dbl-diabetes.com')
-    checkFooter({ needFooterLanguageSelector: false })
+    checkFooterForUserNotLoggedIn(false)
 
     // More info link should disappear if language is french
     fireEvent.mouseDown(within(languageSelector).getByRole('button', { hidden: true }))
