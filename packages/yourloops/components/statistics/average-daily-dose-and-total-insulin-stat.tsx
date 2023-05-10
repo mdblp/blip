@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { TotalInsulinStat } from 'dumb'
+import { InsulinStats } from 'dumb'
 import React, { type FunctionComponent } from 'react'
 import { t } from 'i18next'
 import { type ParameterConfig } from 'medical-domain'
@@ -59,7 +59,7 @@ export const AverageDailyDoseAndTotalInsulinStat: FunctionComponent<TotalInsulin
   ]
 
   return (
-    <TotalInsulinStat
+    <InsulinStats
       data={data}
       total={Math.round(total * 10) / 10}
       weight={weightValue}

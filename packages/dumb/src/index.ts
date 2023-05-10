@@ -41,7 +41,7 @@ import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
 import { formatBgValue } from './utils/format/format.util'
 import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
 import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
-import { InsulinStatsMemoized as TotalInsulinStat } from './components/stats/insulin/./insulin-stats'
+import { InsulinStatsMemoized as InsulinStats } from './components/stats/insulin/./insulin-stats'
 import { TotalCarbsStatMemoized as TotalCarbsStat } from './components/stats/total-carbs/total-carbs-stat'
 import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mode-stat/loop-mode-stat'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
@@ -101,7 +101,7 @@ export {
   Table,
   TerminalTable,
   Tooltip,
-  TotalInsulinStat,
+  InsulinStats,
   TotalCarbsStat,
   TrendsContainer,
   TrendsProvider

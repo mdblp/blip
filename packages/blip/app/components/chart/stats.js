@@ -9,9 +9,7 @@ import {
   CBGStandardDeviation,
   CBGStatType,
   LoopModeStat,
-  SimpleStat,
-  TotalCarbsStat,
-  TotalInsulinStat
+  SimpleStat
 } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
 import Divider from '@mui/material/Divider'
@@ -105,24 +103,6 @@ class Stats extends React.Component {
             manual={stat.data.raw.manual}
             title={stat.title}
             total={stat.data.total.value}
-          />
-        )
-      case CBGStatType.TotalInsulin:
-        return (
-          <TotalInsulinStat
-            annotations={stat.annotations}
-            data={stat.data.data}
-            title={stat.title}
-            total={Math.round(stat.data.total.value * 10) / 10}
-          />
-        )
-      case CBGStatType.Carbs:
-        return (
-          <TotalCarbsStat
-            annotations={stat.annotations}
-            foodCarbs={stat.data.raw.foodCarbs}
-            title={stat.title}
-            totalCarbs={stat.data.raw.totalCarbs}
           />
         )
       case CBGStatType.AverageGlucose:
