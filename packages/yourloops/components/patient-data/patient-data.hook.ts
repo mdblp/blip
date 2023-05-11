@@ -62,7 +62,7 @@ export interface PatientDataContextResult {
 }
 
 const DATE_QUERY_PARAM_KEY = 'date'
-const DASHBOARD_MS_RANGE = TimeService.MS_IN_DAY * 7
+const FOURTEEN_DAYS_IN_MS = TimeService.MS_IN_DAY * 14
 const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
 export const usePatientData = (): PatientDataContextResult => {
@@ -134,7 +134,7 @@ export const usePatientData = (): PatientDataContextResult => {
     }
   }, [pathname, urlPrefix])
 
-  const [msRange, setMsRange] = useState<number>(currentChart === ChartTypes.Dashboard ? DASHBOARD_MS_RANGE : DEFAULT_MS_RANGE)
+  const [msRange, setMsRange] = useState<number>(currentChart === ChartTypes.Dashboard ? FOURTEEN_DAYS_IN_MS : DEFAULT_MS_RANGE)
 
   const changePatient = (patient: Patient): void => {
     patientDataUtils.current.changePatient(patient)
@@ -148,7 +148,7 @@ export const usePatientData = (): PatientDataContextResult => {
     switch (chart) {
       case ChartTypes.Dashboard:
         setDashboardDate(new Date().valueOf())
-        setMsRange(DASHBOARD_MS_RANGE)
+        setMsRange(FOURTEEN_DAYS_IN_MS)
         break
       case ChartTypes.Daily:
         if (dateQueryParam) {

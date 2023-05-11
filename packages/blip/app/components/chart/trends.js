@@ -561,6 +561,7 @@ class Trends extends React.Component {
                   <PatientStatistics
                     medicalData={this.props.tidelineData.medicalData}
                     bgPrefs={this.props.bgPrefs}
+                    bgType={this.props.dataUtil.bgSource}
                     dateFilter={dateFilter}
                   >
                     <Stats

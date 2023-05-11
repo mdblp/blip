@@ -144,6 +144,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
         <PatientStatisticsWidget
           medicalData={medicalData}
           bgPrefs={bgPrefs}
+          bgType={dataUtil.bgSource}
           dateFilter={dateFilter}
         >
           <Stats
