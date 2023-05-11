@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import React, { type FunctionComponent, memo, useMemo } from 'react'
-import styles from './insulin-stats.css'
+import styles from './total-insulin-stat.css'
 import Box from '@mui/material/Box'
 import { t } from 'i18next'
 import { EMPTY_DATA_PLACEHOLDER } from '../../../models/stats.model'
@@ -58,9 +58,12 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
 
   const location = useLocation()
   const isDailyPage = location.pathname.includes('daily')
-  const isTotalInsulinTooltip = isDailyPage ? t('total-insulin-days-tooltip', 'total-insulin-how-calculate-tooltip') : t('average-daily-insulin-tooltip', 'total-insulin-how-calculate-tooltip')
-  const annotations = !data ? [isTotalInsulinTooltip] : [isTotalInsulinTooltip, t('tooltip-empty-stat')]
+  const annotations = isDailyPage ? [t('total-insulin-days-tooltip'), t('total-insulin-how-calculate-tooltip')] : [t('average-daily-insulin-tooltip'), t('total-insulin-how-calculate-tooltip')]
   const isEmptyWeight = weight === null
+
+  if (!data) {
+    annotations.push(t('tooltip-empty-stat'))
+  }
 
   const computedValueDailyDosePerWeight = useMemo(() => {
     if (isEmptyWeight) {
@@ -68,7 +71,7 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
     }
     const value = dailyDose / weight
     return value > 0 && Number.isFinite(value) ? formatDecimalNumber(value, 2) : EMPTY_DATA_PLACEHOLDER
-  }, [dailyDose, weight])
+  }, [dailyDose, isEmptyWeight, weight])
 
   const outputValueClasses = useMemo(() => {
     const isDisabled = computedValueDailyDosePerWeight === EMPTY_DATA_PLACEHOLDER
@@ -83,7 +86,7 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   return (
     <div data-testid="container-insulin-stats">
       <Box className={styles.title}>
-        {isDailyPage ? t('total-insulin') : t('average-daily-insulin')}
+        {isDailyPage ? t('total-insulin') : t('average-daily-total-insulin')}
         <span className={styles.titleData}>
           <span className={styles.titleTotal}>
             {total}
