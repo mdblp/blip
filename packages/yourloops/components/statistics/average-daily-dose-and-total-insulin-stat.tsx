@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { InsulinStats } from 'dumb'
 import React, { type FunctionComponent } from 'react'
 import { t } from 'i18next'
 import { type ParameterConfig } from 'medical-domain'
+import { TotalInsulinStat } from 'dumb'
 
 interface TotalInsulinStatWrapperProps {
   basal: number
@@ -59,7 +59,7 @@ export const AverageDailyDoseAndTotalInsulinStat: FunctionComponent<TotalInsulin
   ]
 
   return (
-    <InsulinStats
+    <TotalInsulinStat
       data={data}
       total={Math.round(total * 10) / 10}
       weight={weightValue}

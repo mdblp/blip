@@ -41,7 +41,7 @@ import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
 import { formatBgValue } from './utils/format/format.util'
 import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
 import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
-import { InsulinStatsMemoized as InsulinStats } from './components/stats/insulin/./insulin-stats'
+import { TotalInsulinStatMemoized as TotalInsulinStat } from './components/stats/total-insulin/total-insulin-stat'
 import { TotalCarbsStatMemoized as TotalCarbsStat } from './components/stats/total-carbs/total-carbs-stat'
 import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mode-stat/loop-mode-stat'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
@@ -51,9 +51,7 @@ import { CgmTable } from './components/settings/cgm-table'
 import { PumpTable } from './components/settings/pump-table'
 import { TerminalTable } from './components/settings/terminal-table'
 import { HistoryParameterTable } from './components/settings/history/history-table'
-import {
-  AverageDailyDoseStatMemoized as AverageDailyDoseStat
-} from './components/stats/average-daily-dose/average-daily-dose-stat'
+import { AverageDailyDoseStatMemoized as AverageDailyDoseStat } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 import { Table } from './components/settings/table'
 import { type BgPrefs } from './models/blood-glucose.model'
@@ -101,7 +99,7 @@ export {
   Table,
   TerminalTable,
   Tooltip,
-  InsulinStats,
+  TotalInsulinStat,
   TotalCarbsStat,
   TrendsContainer,
   TrendsProvider

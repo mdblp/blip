@@ -48,7 +48,7 @@ export interface TotalInsulinStatProps {
   dailyDose: number
 }
 
-const InsulinStats: FunctionComponent<TotalInsulinStatProps> = (props) => {
+const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   const {
     data,
     total,
@@ -131,4 +131,4 @@ const InsulinStats: FunctionComponent<TotalInsulinStatProps> = (props) => {
   )
 }
 
-export const InsulinStatsMemoized = memo(InsulinStats)
+export const TotalInsulinStatMemoized = memo(TotalInsulinStat)
