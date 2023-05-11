@@ -198,7 +198,8 @@ const ignoredTransKeyForYourLoops = [
   'daily-dose-per-weight',
   'total-insulin',
   'total-insulin-days-tooltip',
-  'total-insulin-how-calculate-tooltip'
+  'total-insulin-how-calculate-tooltip',
+  'average-daily-total-insulin'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
