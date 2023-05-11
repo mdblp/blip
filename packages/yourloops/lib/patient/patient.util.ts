@@ -34,6 +34,7 @@ import { type User } from '../auth'
 import { type PatientsFilters } from '../providers/models/patients-filters.model'
 import i18next from 'i18next'
 import { Gender } from '../auth/models/enums/gender.enum'
+import { sortByUserName } from '../../components/patient-list/sort-comparators.util'
 
 const t = i18next.t.bind(i18next)
 
@@ -105,7 +106,7 @@ export default class PatientUtils {
   static extractPatients = (patients: Patient[], patientFilters: PatientsFilters, flaggedPatientsId: string[] | undefined): Patient[] => {
     // When the filter is pending, we only get the pending patients and don't apply any filter on them
     if (patientFilters.pendingEnabled) {
-      return patients.filter((patient) => PatientUtils.isInvitationPending(patient))
+      return patients.filter((patient) => PatientUtils.isInvitationPending(patient)).sort(sortByUserName)
     }
     // We do not take the pending patients
     const nonPendingPatients = PatientUtils.getNonPendingPatients(patients)
