@@ -83,7 +83,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2300 Remove the remote monitoring invitation flow
 - YLP-2301 Split ITs jobs by roles
 - YLP-2311 Reorganize ITs
-
+- YLP-2307 Incomplete alert when accepting a direct share invitation
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
 - YLP-2189 Fix error when applying team monitoring alarm params in mg/dL to user with monitoring in mmol/L
