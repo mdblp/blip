@@ -79,6 +79,7 @@ class DailyChart extends React.Component {
     onWarmUpHover: PropTypes.func.isRequired,
     onConfidentialHover: PropTypes.func.isRequired,
     onTooltipOut: PropTypes.func.isRequired,
+    onChartMounted: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired
   }
 
@@ -140,6 +141,7 @@ class DailyChart extends React.Component {
       this.setState({ chart })
       chart.setAtDate(epochLocation)
       this.bindEvents()
+      this.props.onChartMounted()
       cb()
     } else {
       cb()
@@ -273,7 +275,8 @@ class Daily extends React.Component {
       atMostRecent: this.isAtMostRecent(),
       inTransition: false,
       title: this.getTitle(props.epochLocation),
-      tooltip: null
+      tooltip: null,
+      chartMounted: false
     }
 
     /** @type {{tidelineData: MedicalDataService}} */
@@ -283,6 +286,7 @@ class Daily extends React.Component {
     this.startDate = Date.parse(startDate)
     /** @type {Date} */
     this.endDate = Date.parse(endDate)
+    this.onChartMounted = this.onChartMounted.bind(this)
   }
 
   componentDidUpdate(prevProps) {
@@ -297,6 +301,12 @@ class Daily extends React.Component {
       if (title !== nowTitle) {
         this.setState({ title: nowTitle, atMostRecent: this.isAtMostRecent() })
       }
+    }
+  }
+
+  onChartMounted() {
+    if (!this.state.chartMounted) {
+      this.setState({ chartMounted: true })
     }
   }
 
@@ -322,19 +332,21 @@ class Daily extends React.Component {
       <div id="tidelineMain" className="daily">
         <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
           <Box display="flex">
-            <DailyDatePicker
-              atMostRecent={atMostRecent}
-              displayedDate={title}
-              date={epochLocation}
-              endDate={this.endDate}
-              inTransition={inTransition}
-              loading={loading}
-              onBackButtonClick={this.handlePanBack}
-              onMostRecentButtonClick={this.handleClickMostRecent}
-              onNextButtonClick={this.handlePanForward}
-              onSelectedDateChange={onSelectedDateChange}
-              startDate={this.startDate}
-            />
+            {this.state.chartMounted &&
+              <DailyDatePicker
+                atMostRecent={atMostRecent}
+                displayedDate={title}
+                date={epochLocation}
+                endDate={this.endDate}
+                inTransition={inTransition}
+                loading={loading}
+                onBackButtonClick={this.handlePanBack}
+                onMostRecentButtonClick={this.handleClickMostRecent}
+                onNextButtonClick={this.handlePanForward}
+                onSelectedDateChange={onSelectedDateChange}
+                startDate={this.startDate}
+              />
+            }
           </Box>
           <Box display="flex">
             <div className="container-box-inner patient-data-content-inner">
@@ -364,6 +376,7 @@ class Daily extends React.Component {
                   onWarmUpHover={this.handleWarmUpHover}
                   onConfidentialHover={this.handleConfidentialHover}
                   onTooltipOut={this.handleTooltipOut}
+                  onChartMounted={this.onChartMounted}
                   trackMetric={trackMetric}
                   ref={this.chartRef}
                 />

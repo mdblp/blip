@@ -41,15 +41,16 @@ import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
 import { usePatientData } from './patient-data.hook'
-
+import { DailyNotes } from './daily-notes'
 import 'tidepool-viz/src/styles/colors.css'
 import 'tideline/css/tideline.less'
 import 'blip/app/style.less'
+import { useDailyNotes } from './daily-notes.hook'
 
 export const PatientData: FunctionComponent = () => {
   const alert = useAlert()
-  const { t } = useTranslation()
   const theme = useTheme()
+  const { t } = useTranslation()
   const {
     bgPrefs,
     chartPrefs,
@@ -59,6 +60,7 @@ export const PatientData: FunctionComponent = () => {
     dashboardDate,
     dataUtil,
     dailyDate,
+    dailyChartRef,
     fetchPatientData,
     goToDailySpecificDate,
     handleDatetimeLocationChange,
@@ -72,6 +74,17 @@ export const PatientData: FunctionComponent = () => {
     timePrefs,
     updateChartPrefs
   } = usePatientData()
+  const {
+    showMessageCreation,
+    showMessageThread,
+    closeMessageBox,
+    createNewMessage,
+    createMessageDatetime,
+    editMessage,
+    handleMessageCreation,
+    messageThread,
+    replyToMessage
+  } = useDailyNotes({ dailyDate, dailyChartRef, medicalData })
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
 
@@ -141,22 +154,34 @@ export const PatientData: FunctionComponent = () => {
                   <Route
                     path={AppUserRoute.Daily}
                     element={
-                      <Daily
-                        bgPrefs={bgPrefs}
-                        dataUtil={dataUtil}
-                        timePrefs={timePrefs}
-                        patient={patient}
-                        tidelineData={medicalData}
-                        epochLocation={dailyDate}
-                        msRange={msRange}
-                        loading={refreshingData}
-                        onClickRefresh={refreshData}
-                        onCreateMessage={() => {
-                        }}
-                        onShowMessageThread={() => {
-                        }}
-                        onDatetimeLocationChange={handleDatetimeLocationChange}
-                      />
+                      <React.Fragment>
+                        <Daily
+                          bgPrefs={bgPrefs}
+                          dataUtil={dataUtil}
+                          timePrefs={timePrefs}
+                          patient={patient}
+                          tidelineData={medicalData}
+                          epochLocation={dailyDate}
+                          msRange={msRange}
+                          loading={refreshingData}
+                          onClickRefresh={refreshData}
+                          onCreateMessage={showMessageCreation}
+                          onShowMessageThread={showMessageThread}
+                          onDatetimeLocationChange={handleDatetimeLocationChange}
+                          ref={dailyChartRef}
+                        />
+                        <DailyNotes
+                          closeMessageBox={closeMessageBox}
+                          createMessageDatetime={createMessageDatetime}
+                          createNewMessage={createNewMessage}
+                          editMessage={editMessage}
+                          handleMessageCreation={handleMessageCreation}
+                          messageThread={messageThread}
+                          patient={patient}
+                          replyToMessage={replyToMessage}
+                          timePrefs={timePrefs}
+                        />
+                      </React.Fragment>
                     }
                   />
                   <Route
@@ -187,7 +212,9 @@ export const PatientData: FunctionComponent = () => {
                     defaultPreset={'1week'}
                     medicalData={medicalData}
                     patient={patient}
-                    onClose={() => { setShowPdfDialog(false) }}
+                    onClose={() => {
+                      setShowPdfDialog(false)
+                    }}
                   />
                 }
               </React.Fragment>

@@ -34,9 +34,10 @@ import { useAuth } from '../../lib/auth'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import type MedicalDataService from 'medical-domain'
 import { defaultBgClasses, type TimePrefs, TimeService, Unit } from 'medical-domain'
-import { useMemo, useRef, useState } from 'react'
+import { type MutableRefObject, useMemo, useRef, useState } from 'react'
 import { PatientDataUtils } from './patient-data.utils'
 import DataUtil from 'tidepool-viz/src/utils/data'
+import { type DailyChartRef } from './models/daily-chart-ref.model'
 
 export interface PatientDataContextResult {
   bgPrefs: BgPrefs
@@ -45,6 +46,7 @@ export interface PatientDataContextResult {
   chartPrefs: ChartPrefs
   currentChart: ChartTypes
   dataUtil: DataUtil
+  dailyChartRef: MutableRefObject<DailyChartRef>
   dailyDate: number
   dashboardDate: number
   fetchPatientData: () => Promise<void>
@@ -74,6 +76,7 @@ export const usePatientData = (): PatientDataContextResult => {
   const { getPatientById } = usePatientContext()
   const [searchParams, setSearchParams] = useSearchParams()
 
+  const dailyChartRef = useRef(null)
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
   const urlPrefix = user.isUserPatient() ? '' : `/patient/${patientId}`
   const patient = getPatientById(patientId ?? user.id)
@@ -88,10 +91,6 @@ export const usePatientData = (): PatientDataContextResult => {
       targetLowerBound: bgClasses.low,
       veryLowThreshold: bgClasses.veryLow
     }
-  }
-  const timePrefs: TimePrefs = {
-    timezoneAware: true,
-    timezoneName: new Intl.DateTimeFormat().resolvedOptions().timeZone // the browser timezone
   }
   const defaultChartPrefs = {
     trends: {
@@ -116,6 +115,10 @@ export const usePatientData = (): PatientDataContextResult => {
   const [dashboardDate, setDashboardDate] = useState<number>(new Date().valueOf())
   const [dailyDate, setDailyDate] = useState<number | null>(null)
   const [trendsDate, setTrendsDate] = useState<number | null>(null)
+  const [timePrefs, setTimePrefs] = useState<TimePrefs>({
+    timezoneAware: true,
+    timezoneName: new Intl.DateTimeFormat().resolvedOptions().timeZone // the browser timezone
+  })
 
   const patientDataUtils = useRef(new PatientDataUtils({
     patient,
@@ -233,6 +236,7 @@ export const usePatientData = (): PatientDataContextResult => {
       // TODO check if dateQueryParam is a valid date
       setDailyDate(dateQueryParam ? new Date(dateQueryParam).valueOf() : initialDate)
       setTrendsDate(initialDate)
+      setTimePrefs(medicalData.opts.timePrefs)
     } finally {
       setLoadingData(false)
     }
@@ -245,6 +249,7 @@ export const usePatientData = (): PatientDataContextResult => {
     currentChart,
     chartPrefs,
     dataUtil,
+    dailyChartRef,
     dailyDate,
     dashboardDate,
     fetchPatientData,
@@ -256,8 +261,8 @@ export const usePatientData = (): PatientDataContextResult => {
     patient,
     refreshData,
     refreshingData,
-    timePrefs,
     trendsDate,
+    timePrefs,
     updateChartPrefs
   }
 }
