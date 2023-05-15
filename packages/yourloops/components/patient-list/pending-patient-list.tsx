@@ -46,7 +46,6 @@ export const PendingPatientList: FunctionComponent<PendingPatientListProps> = (p
   const {
     columns,
     patientToRemoveForHcp,
-    patientToRemoveForCaregiver,
     rowsProps,
     onCloseRemoveDialog
   } = usePendingPatientListHook({ patients })
@@ -57,7 +56,7 @@ export const PendingPatientList: FunctionComponent<PendingPatientListProps> = (p
   const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
 
   return (
-    <React.Fragment>
+    <>
       <Box data-testid="pending-patient-list-grid">
         <DataGrid
           columns={columns}
@@ -89,13 +88,6 @@ export const PendingPatientList: FunctionComponent<PendingPatientListProps> = (p
           onClose={onCloseRemoveDialog}
         />
       }
-
-      {patientToRemoveForCaregiver &&
-        <RemoveDirectShareDialog
-          userToRemove={patientToRemoveForCaregiver}
-          onClose={onCloseRemoveDialog}
-        />
-      }
-    </React.Fragment>
+    </>
   )
 }
