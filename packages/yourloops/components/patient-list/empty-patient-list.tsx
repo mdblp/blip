@@ -26,41 +26,21 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { PatientListHeader } from './patient-list-header'
-import { usePatientListHook } from './patient-list.hook'
-import { PatientListTabs } from './models/enums/patient-list.enum'
-import { GlobalStyles } from 'tss-react'
-import { useTheme } from '@mui/material/styles'
-import { CurrentPatientList } from './current-patient-list'
-import { PendingPatientList } from './pending-patient-list'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import { useTranslation } from 'react-i18next'
 
-export const PatientList: FunctionComponent = () => {
-  const theme = useTheme()
-  const {
-    selectedTab,
-    inputSearch,
-    patients,
-    onChangingTab,
-    setInputSearch
-  } = usePatientListHook()
+export const EmptyPatientList: FunctionComponent = () => {
+  const { t } = useTranslation()
 
   return (
-    <React.Fragment>
-      <GlobalStyles styles={{ body: { backgroundColor: theme.palette.common.white } }} />
-      <PatientListHeader
-        selectedTab={selectedTab}
-        inputSearch={inputSearch}
-        patientsDisplayedCount={patients.length}
-        onChangingTab={onChangingTab}
-        setInputSearch={setInputSearch}
-      />
-
-      {selectedTab === PatientListTabs.Current &&
-        <CurrentPatientList patients={patients} />
-      }
-      {selectedTab === PatientListTabs.Pending &&
-        <PendingPatientList patients={patients} />
-      }
-    </React.Fragment>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="100%"
+    >
+      <Typography>{t('no-patient')}</Typography>
+    </Box>
   )
 }
