@@ -32,7 +32,6 @@ import { usePatientListStyles } from './patient-list.styles'
 import { PendingPatientListColumns } from './models/enums/patient-list.enum'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { ActionsCell, PendingIconCell } from './custom-cells'
-import { useAuth } from '../../lib/auth'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { type GridRowModel } from './models/grid-row.model'
 import Box from '@mui/material/Box'
@@ -53,7 +52,6 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
   const { patients } = props
   const { t } = useTranslation()
   const { classes } = usePatientListStyles()
-  const { user } = useAuth()
   const { getPatientById } = usePatientContext()
 
   const [patientToRemoveForHcp, setPatientToRemoveForHcp] = useState<Patient | null>(null)
@@ -61,7 +59,7 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
   const onClickRemovePatient = useCallback((patientId: string): void => {
     const patient = getPatientById(patientId)
     setPatientToRemoveForHcp(patient)
-  }, [getPatientById, user])
+  }, [getPatientById])
 
   const onCloseRemoveDialog = (): void => {
     setPatientToRemoveForHcp(null)
