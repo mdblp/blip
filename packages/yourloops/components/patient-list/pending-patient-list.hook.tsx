@@ -35,8 +35,6 @@ import { ActionsCell, PendingIconCell } from './custom-cells'
 import { useAuth } from '../../lib/auth'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { type GridRowModel } from './models/grid-row.model'
-import { type UserToRemove } from '../dialogs/remove-direct-share-dialog'
-import { getPatientFullName } from 'dumb'
 import Box from '@mui/material/Box'
 import { sortByUserName } from './sort-comparators.util'
 
@@ -47,7 +45,6 @@ interface PendingPatientListHookProps {
 interface PatientListHookReturns {
   columns: GridColDef[]
   patientToRemoveForHcp: Patient | null
-  patientToRemoveForCaregiver: UserToRemove | null
   rowsProps: GridRowsProp
   onCloseRemoveDialog: () => void
 }
@@ -60,24 +57,14 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
   const { getPatientById } = usePatientContext()
 
   const [patientToRemoveForHcp, setPatientToRemoveForHcp] = useState<Patient | null>(null)
-  const [patientToRemoveForCaregiver, setPatientToRemoveForCaregiver] = useState<UserToRemove | null>(null)
 
   const onClickRemovePatient = useCallback((patientId: string): void => {
     const patient = getPatientById(patientId)
-    if (user.isUserHcp()) {
-      setPatientToRemoveForHcp(patient)
-      return
-    }
-    setPatientToRemoveForCaregiver({
-      id: patient.userid,
-      fullName: getPatientFullName(patient),
-      email: patient.profile.email
-    })
+    setPatientToRemoveForHcp(patient)
   }, [getPatientById, user])
 
   const onCloseRemoveDialog = (): void => {
     setPatientToRemoveForHcp(null)
-    setPatientToRemoveForCaregiver(null)
   }
 
   const buildPendingColumns = (): GridColDef[] => {
@@ -136,7 +123,6 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
   return {
     columns: buildPendingColumns(),
     patientToRemoveForHcp,
-    patientToRemoveForCaregiver,
     rowsProps,
     onCloseRemoveDialog
   }
