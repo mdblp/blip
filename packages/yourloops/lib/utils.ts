@@ -157,10 +157,6 @@ export function formatDateWithMomentLongFormat(date?: Date): string {
   return moment.utc(date).format(moment.localeData().longDateFormat('ll')).toString()
 }
 
-export function formatPercentageValue(value: number): string {
-  return value || value === 0 ? `${Math.round(value * 10) / 10}%` : t('N/A')
-}
-
 export function isEllipsisActive(element: HTMLElement | null): boolean | undefined {
   return element ? element.offsetWidth < element.scrollWidth : undefined
 }

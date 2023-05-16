@@ -52,7 +52,6 @@ import { sortByDateOfBirth, sortByFlag, sortByMonitoringAlertsCount, sortByUserN
 import { getUserName } from '../../../lib/auth/user.util'
 import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
-import { formatPercentageValue } from '../../../lib/utils'
 
 interface CurrentPatientListHookProps {
   patients: Patient[]
@@ -183,28 +182,28 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
         field: PatientListColumns.TimeInRange,
         headerName: t('time-in-range'),
         flex: 0.5,
-        valueFormatter: (params: GridValueFormatterParams<number>): string => formatPercentageValue(params.value)
+        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value)
       },
       {
         type: 'number',
         field: PatientListColumns.GlucoseManagementIndicator,
         headerName: t('glucose-management-indicator'),
         flex: 0.5,
-        valueFormatter: (params: GridValueFormatterParams<number>): string => formatPercentageValue(params.value)
+        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value)
       },
       {
         type: 'number',
         field: PatientListColumns.Hypoglycemia,
         headerName: t('hypoglycemia'),
         flex: 0.5,
-        valueFormatter: (params: GridValueFormatterParams<number>): string => formatPercentageValue(params.value)
+        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value)
       },
       {
         type: 'number',
         field: PatientListColumns.Variance,
         headerName: t('variance'),
         flex: 0.5,
-        valueFormatter: (params: GridValueFormatterParams<number>): string => formatPercentageValue(params.value)
+        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value)
       },
       {
         type: 'string',

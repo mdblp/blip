@@ -96,19 +96,19 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
     },
     {
       name: PatientListColumns.TimeInRange,
-      checked: updatedColumnsModel[PatientListColumns.TimeInRange],
+      checked: updatedColumnsModel[PatientListColumns.TimeInRange]
     },
     {
       name: PatientListColumns.GlucoseManagementIndicator,
-      checked: updatedColumnsModel[PatientListColumns.GlucoseManagementIndicator],
+      checked: updatedColumnsModel[PatientListColumns.GlucoseManagementIndicator]
     },
     {
       name: PatientListColumns.Hypoglycemia,
-      checked: updatedColumnsModel[PatientListColumns.Hypoglycemia],
+      checked: updatedColumnsModel[PatientListColumns.Hypoglycemia]
     },
     {
       name: PatientListColumns.Variance,
-      checked: updatedColumnsModel[PatientListColumns.Variance],
+      checked: updatedColumnsModel[PatientListColumns.Variance]
     },
     {
       name: PatientListColumns.LastDataUpdate,
