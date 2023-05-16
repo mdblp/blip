@@ -39,6 +39,7 @@ import {
   checkPatientListTooltipsMmolL,
   type Router
 } from '../assert/patient-list.assert'
+import { checkPatientFiltersForPrivateTeam } from '../assert/patient-filters.assert'
 
 export const testPatientListForHcp = async (router: Router) => {
   checkPatientListHeaderForHcp()
@@ -58,4 +59,5 @@ export const testPatientListForHcpWithMmolL = async () => {
 
 export const testPatientListForHcpPrivateTeam = async () => {
   await checkPatientListCurrentTabForPrivateTeam()
+  await checkPatientFiltersForPrivateTeam()
 }

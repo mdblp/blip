@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
+import { logDOM, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 interface FilterPatientsPresentationToggles {
@@ -62,6 +62,13 @@ export const checkPatientsFilters = (toggles: FilterPatientsPresentationToggles 
   expect(hypoglycemiaFilterToggle).toHaveProperty('checked', toggles.hypoglycemiaFilterToggle)
   expect(dataNotTransferredFilterToggle).toHaveProperty('checked', toggles.dataNotTransferredFilterToggle)
   expect(unreadMessagesFilterToggle).toHaveProperty('checked', toggles.unreadMessagesFilterToggle)
+}
+
+export const checkPatientFiltersForPrivateTeam = async (): Promise<void> => {
+  const filterButton = screen.getByRole('button', { name: 'Filters' })
+  await userEvent.click(filterButton)
+  const toggleFiltersList = screen.getByRole('presentation')
+  expect(toggleFiltersList).toHaveTextContent('Type of careManual flagTelemonitoredCancelApply')
 }
 
 export const updatePatientsFilters = async (toggles: FilterPatientsPresentationToggles = defaultToggles): Promise<void> => {
