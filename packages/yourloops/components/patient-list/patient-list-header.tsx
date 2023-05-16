@@ -267,7 +267,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
         <PatientFiltersPopover
           anchorEl={filtersRef.current}
           onClose={closeFiltersDialog}
-          isPrivatePracticeTeam={isSelectedTeamPrivate}
+          isSelectedTeamPrivate={isSelectedTeamPrivate}
         />
       }
       {isColumnSelectorOpened &&

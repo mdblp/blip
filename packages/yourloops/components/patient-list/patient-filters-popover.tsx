@@ -49,7 +49,7 @@ import { MessageIcon } from '../icons/diabeloop/message-icon'
 interface PatientsFiltersDialogProps {
   anchorEl: Element
   onClose: () => void
-  isPrivatePracticeTeam: boolean
+  isSelectedTeamPrivate: boolean
 }
 
 const useStyles = makeStyles()((theme) => ({
@@ -60,7 +60,7 @@ const useStyles = makeStyles()((theme) => ({
 }))
 
 export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps> = (props) => {
-  const { anchorEl, onClose, isPrivatePracticeTeam } = props
+  const { anchorEl, onClose, isSelectedTeamPrivate } = props
   const { t } = useTranslation()
   const { filters: patientsFiltersContext, updatePatientsFilters } = usePatientListContext()
   const theme = useTheme()
@@ -105,7 +105,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
             setFilters({ ...filters, telemonitoredEnabled: !filters.telemonitoredEnabled })
           }}
         />
-        {!isPrivatePracticeTeam &&
+        {!isSelectedTeamPrivate &&
           <>
             <Typography variant="h6" className={classes.title}>{t('monitoring-alerts')}</Typography>
             <PatientListOptionToggle
