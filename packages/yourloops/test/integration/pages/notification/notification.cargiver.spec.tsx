@@ -30,7 +30,6 @@ import { waitFor } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import NotificationApi from '../../../../lib/notifications/notification.api'
-import { invitationDirectShare } from '../../data/notification.data'
 import { checkAcceptNotificationDirectShare } from '../../assert/notification-direct-share.assert'
 import { mockUserApi } from '../../mock/user.api.mock'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
@@ -41,12 +40,16 @@ import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
+import { invitationDirectShare } from '../../data/notification.data'
 
 describe('Notification page for caregiver', () => {
   const firstName = 'Jeanned'
   const lastName = 'Arc'
   const directSharePatient: ShareUser = {
-    user: { userid: 'caregiverId', profile: { firstName: 'caregiverFirstName', lastName: 'caregiverLastName' } } as IUser,
+    user: {
+      userid: 'caregiverId',
+      profile: { firstName: 'caregiverFirstName', lastName: 'caregiverLastName' }
+    } as IUser,
     status: UserInvitationStatus.accepted,
     invitation: invitationDirectShare
   }
@@ -68,6 +71,7 @@ describe('Notification page for caregiver', () => {
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/notifications')
     })
+
     await checkAcceptNotificationDirectShare()
   })
 })
