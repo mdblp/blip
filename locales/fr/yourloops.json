@@ -11,7 +11,7 @@
   "Spain": "Espagne",
   "Switzerland": "Suisse",
   "United Kingdom": "Royaume-Uni",
-  "accept-notification-success": "You have accepted the notification of {{teamName}}",
+  "accept-notification-success": "You have accepted the notification of {{name}}",
   "accompanying-documents": "Documents d'accompagnement",
   "account-created-info-1": "Félicitations, vous venez de terminer la création de votre nouveau compte YourLoops",
   "account-created-info-2": "En cliquant sur le bouton \"continuer\", vous accéderez à votre tableau de bord. Vous pourrez ensuite ajouter vos patients, et également rejoindre des équipes médicales",
