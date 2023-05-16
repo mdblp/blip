@@ -38,7 +38,6 @@ export enum PatientListColumns {
   Gender = 'gender',
   GlucoseManagementIndicator = 'glucose-management-indicator',
   Hypoglycemia = 'hypoglycemia',
-  Icon = 'icon',
   LastDataUpdate = 'last-data-update',
   Messages = 'messages',
   MonitoringAlerts = 'monitoring-alerts',
@@ -46,4 +45,10 @@ export enum PatientListColumns {
   System = 'system',
   TimeInRange = 'time-in-range',
   Variance = 'variance'
+}
+
+export enum PendingPatientListColumns {
+  Actions = 'actions',
+  Icon = 'icon',
+  Patient = 'patient'
 }
