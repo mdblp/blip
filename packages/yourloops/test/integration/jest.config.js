@@ -40,5 +40,5 @@ module.exports = {
     '<rootDir>/**/*.spec.tsx'
   ],
 
-  testTimeout: 250000
+  testTimeout: 100000
 }
