@@ -41,6 +41,7 @@ import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { invitationDirectShare } from '../../data/notification.data'
+import { testNotificationManagementForCaregiver } from '../../use-cases/notification-management'
 
 describe('Notification page for caregiver', () => {
   const firstName = 'Jeanned'
@@ -66,12 +67,12 @@ describe('Notification page for caregiver', () => {
     jest.spyOn(NotificationApi, 'acceptInvitation').mockResolvedValue()
   })
 
-  it('should be able to accept a directShare invite', async () => {
+  it('should be able to accept a direct share invite', async () => {
     const router = renderPage('/notifications')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/notifications')
     })
 
-    await checkAcceptNotificationDirectShare()
+    await testNotificationManagementForCaregiver()
   })
 })
