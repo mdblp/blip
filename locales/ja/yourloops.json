@@ -11,7 +11,7 @@
   "Spain": "スペイン",
   "Switzerland": "スイス",
   "United Kingdom": "英国",
-  "accept-notification-success": "You have accepted the notification of {{teamName}}",
+  "accept-notification-success": "You have accepted the notification of {{name}}",
   "accompanying-documents": "添付文書",
   "account-created-info-1": "YourLoopsアカウントが作成されました。",
   "account-created-info-2": "「次へ」ボタンをクリックすると、ダッシュボードに移動します。患者を追加したり、医療チームに加わることができます。",
