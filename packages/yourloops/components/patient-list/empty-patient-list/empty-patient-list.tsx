@@ -25,39 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  checkMonitoringAlertsIconsInactiveForFirstPatient,
-  checkPatientColumnsFiltersContent,
-  checkPatientListColumnSort,
-  checkPatientListCurrentTab,
-  checkPatientListCurrentTabForPrivateTeam,
-  checkPatientListFilters,
-  checkPatientListHeaderForHcp,
-  checkPatientListHideShowColumns,
-  checkPatientListPendingTab,
-  checkPatientListTooltipsMgDL,
-  checkPatientListTooltipsMmolL,
-  type Router
-} from '../assert/patient-list.assert'
-import { checkPatientFiltersForPrivateTeam } from '../assert/patient-filters.assert'
+import React, { type FunctionComponent } from 'react'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import { useTranslation } from 'react-i18next'
 
-export const testPatientListForHcp = async (router: Router) => {
-  checkPatientListHeaderForHcp()
-  await checkPatientListTooltipsMgDL()
-  await checkPatientListColumnSort()
-  await checkMonitoringAlertsIconsInactiveForFirstPatient()
-  await checkPatientListFilters()
-  await checkPatientColumnsFiltersContent()
-  await checkPatientListHideShowColumns()
-  await checkPatientListPendingTab(router)
-  await checkPatientListCurrentTab()
-}
+export const EmptyPatientList: FunctionComponent = () => {
+  const { t } = useTranslation()
 
-export const testPatientListForHcpWithMmolL = async () => {
-  await checkPatientListTooltipsMmolL()
-}
-
-export const testPatientListForHcpPrivateTeam = async () => {
-  await checkPatientListCurrentTabForPrivateTeam()
-  await checkPatientFiltersForPrivateTeam()
+  return (
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="100%"
+    >
+      <Typography>{t('no-patient')}</Typography>
+    </Box>
+  )
 }

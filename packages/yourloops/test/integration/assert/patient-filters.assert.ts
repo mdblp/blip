@@ -64,6 +64,13 @@ export const checkPatientsFilters = (toggles: FilterPatientsPresentationToggles 
   expect(unreadMessagesFilterToggle).toHaveProperty('checked', toggles.unreadMessagesFilterToggle)
 }
 
+export const checkPatientFiltersForPrivateTeam = async (): Promise<void> => {
+  const filterButton = screen.getByRole('button', { name: 'Filters' })
+  await userEvent.click(filterButton)
+  const toggleFiltersList = screen.getByRole('presentation')
+  expect(toggleFiltersList).toHaveTextContent('Type of careManual flagTelemonitoredCancelApply')
+}
+
 export const updatePatientsFilters = async (toggles: FilterPatientsPresentationToggles = defaultToggles): Promise<void> => {
   const filtersPresentation = screen.getByRole('presentation')
   if (toggles.manualFlagFilterToggle) {

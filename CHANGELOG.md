@@ -29,6 +29,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2220 Remove "private practice" filter from patients list
 - YLP-2231 Implement new medical reports design for patients
 - YLP-2265 Disable Add patient button when private practice is selected
+- YLP-2285 Monitoring filter cannot be enabled when Private practice is selected
 - YLP-2312 Teams and patients in a team should always have a field "monitoringAlertsParameters"
 - YLP-2322 Pending patients should not display glycemia specific data
 - YLP-2323 Add new columns from existing data in patient list
@@ -82,8 +83,10 @@ It is based on Tidepool Blip 1.27.
 - YLP-2293 Migrate Average Glucose from stat.js to yourloops
 - YLP-2300 Remove the remote monitoring invitation flow
 - YLP-2301 Split ITs jobs by roles
+- YLP-2307 Incomplete alert when accepting a direct share invitation
 - YLP-2311 Reorganize ITs
 - YLP-2328 Migrate patient-data from jsx to tsx
+- YLP-2367 Patient list refacto
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team

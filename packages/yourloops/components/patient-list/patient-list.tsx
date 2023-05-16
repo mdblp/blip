@@ -25,56 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useState } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { PatientListHeader } from './patient-list-header'
 import { usePatientListHook } from './patient-list.hook'
-import { DataGrid, type GridPaginationModel, type GridSortModel } from '@mui/x-data-grid'
-import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
-import { useTranslation } from 'react-i18next'
-import RemovePatientDialog from '../patient/remove-patient-dialog'
-import RemoveDirectShareDialog from '../dialogs/remove-direct-share-dialog'
-import { PatientListCustomFooter } from './patient-list-custom-footer'
-import { PatientListColumns, PatientListTabs } from './models/enums/patient-list.enum'
+import { PatientListTabs } from './models/enums/patient-list.enum'
 import { GlobalStyles } from 'tss-react'
 import { useTheme } from '@mui/material/styles'
-import { usePatientListContext } from '../../lib/providers/patient-list.provider'
-import { usePatientContext } from '../../lib/patient/patient.provider'
+import { CurrentPatientList } from './current-patient-list/current-patient-list'
+import { PendingPatientList } from './pending-patient-list/pending-patient-list'
 
 export const PatientList: FunctionComponent = () => {
-  const { t } = useTranslation()
   const theme = useTheme()
   const {
-    columns,
     selectedTab,
     inputSearch,
-    patientsDisplayedCount,
-    patientToRemoveForHcp,
-    patientToRemoveForCaregiver,
-    rowsProps,
+    patients,
     onChangingTab,
-    onCloseRemoveDialog,
-    onRowClick,
     setInputSearch
   } = usePatientListHook()
-  const { gridApiRef, displayedColumns } = usePatientListContext()
-  const { refreshInProgress } = usePatientContext()
-
-  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
-  const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
-
-  const NoPatientMessage = (): JSX.Element => {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100%"
-      >
-        <Typography>{t('no-patient')}</Typography>
-      </Box>
-    )
-  }
 
   return (
     <React.Fragment>
@@ -82,53 +50,16 @@ export const PatientList: FunctionComponent = () => {
       <PatientListHeader
         selectedTab={selectedTab}
         inputSearch={inputSearch}
-        patientsDisplayedCount={patientsDisplayedCount}
+        patientsDisplayedCount={patients.length}
         onChangingTab={onChangingTab}
         setInputSearch={setInputSearch}
       />
 
-      <Box data-testid="patient-list-grid">
-        <DataGrid
-          columns={columns}
-          rows={rowsProps}
-          apiRef={gridApiRef}
-          autoHeight
-          disableColumnMenu
-          disableColumnFilter
-          disableColumnSelector
-          disableRowSelectionOnClick
-          loading={refreshInProgress}
-          disableVirtualization={process.env.NODE_ENV === 'test'}
-          columnVisibilityModel={displayedColumns}
-          sortModel={sortModel}
-          onSortModelChange={setSortModel}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          onRowClick={selectedTab !== PatientListTabs.Pending ? onRowClick : undefined}
-          pageSizeOptions={[5, 10, 25]}
-          sx={{
-            borderRadius: 0,
-            '& .MuiDataGrid-cell:hover': { cursor: selectedTab !== PatientListTabs.Pending ? 'pointer' : 'inherit' }
-          }}
-          slots={{
-            noRowsOverlay: NoPatientMessage,
-            footer: PatientListCustomFooter
-          }}
-        />
-      </Box>
-
-      {patientToRemoveForHcp &&
-        <RemovePatientDialog
-          patient={patientToRemoveForHcp}
-          onClose={onCloseRemoveDialog}
-        />
+      {selectedTab === PatientListTabs.Current &&
+        <CurrentPatientList patients={patients} />
       }
-
-      {patientToRemoveForCaregiver &&
-        <RemoveDirectShareDialog
-          userToRemove={patientToRemoveForCaregiver}
-          onClose={onCloseRemoveDialog}
-        />
+      {selectedTab === PatientListTabs.Pending &&
+        <PendingPatientList patients={patients} />
       }
     </React.Fragment>
   )
