@@ -56,11 +56,11 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
 
   const [processing, setProcessing] = useState<boolean>(false)
 
-  const userName = patient ? {
+  const userName = patient?.profile?.firstName ? {
     firstName: patient.profile.firstName,
     lastName: patient.profile.lastName
-  } : { firstName: '', lastName: '' }
-  const patientName = t('user-name', userName)
+  } : null
+  const patientName = userName ? t('user-name', userName) : patient.profile.email
 
   const getSuccessAlertMessage = (): void => {
     if (patient.invitationStatus === UserInvitationStatus.pending) {

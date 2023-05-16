@@ -36,10 +36,15 @@ export enum PatientListColumns {
   DateOfBirth = 'date-of-birth',
   Flag = 'flag',
   Gender = 'gender',
-  Icon = 'icon',
   LastDataUpdate = 'last-data-update',
   Messages = 'messages',
   MonitoringAlerts = 'monitoring-alerts',
   Patient = 'patient',
   System = 'system',
+}
+
+export enum PendingPatientListColumns {
+  Actions = 'actions',
+  Icon = 'icon',
+  Patient = 'patient'
 }
