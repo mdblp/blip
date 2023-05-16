@@ -49,6 +49,7 @@ import { MessageIcon } from '../icons/diabeloop/message-icon'
 interface PatientsFiltersDialogProps {
   anchorEl: Element
   onClose: () => void
+  isSelectedTeamPrivate: boolean
 }
 
 const useStyles = makeStyles()((theme) => ({
@@ -59,7 +60,7 @@ const useStyles = makeStyles()((theme) => ({
 }))
 
 export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps> = (props) => {
-  const { anchorEl, onClose } = props
+  const { anchorEl, onClose, isSelectedTeamPrivate } = props
   const { t } = useTranslation()
   const { filters: patientsFiltersContext, updatePatientsFilters } = usePatientListContext()
   const theme = useTheme()
@@ -104,44 +105,48 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
             setFilters({ ...filters, telemonitoredEnabled: !filters.telemonitoredEnabled })
           }}
         />
-        <Typography variant="h6" className={classes.title}>{t('monitoring-alerts')}</Typography>
-        <PatientListOptionToggle
-          ariaLabel={t('filter-out-of-range')}
-          checked={filters.timeOutOfTargetEnabled}
-          icon={<TimeSpentOufOfRangeIcon />}
-          label={t('time-out-of-range-target')}
-          onToggleChange={() => {
-            setFilters({ ...filters, timeOutOfTargetEnabled: !filters.timeOutOfTargetEnabled })
-          }}
-        />
-        <PatientListOptionToggle
-          ariaLabel={t('filter-hypoglycemia')}
-          checked={filters.hypoglycemiaEnabled}
-          icon={<HypoglycemiaIcon />}
-          label={t('hypoglycemia')}
-          onToggleChange={() => {
-            setFilters({ ...filters, hypoglycemiaEnabled: !filters.hypoglycemiaEnabled })
-          }}
-        />
-        <PatientListOptionToggle
-          ariaLabel={t('filter-data-not-transferred')}
-          checked={filters.dataNotTransferredEnabled}
-          icon={<NoDataIcon />}
-          label={t('data-not-transferred')}
-          onToggleChange={() => {
-            setFilters({ ...filters, dataNotTransferredEnabled: !filters.dataNotTransferredEnabled })
-          }}
-        />
-        <Typography variant="h6" className={classes.title}>{t('notification')}</Typography>
-        <PatientListOptionToggle
-          ariaLabel={t('filter-unread-messages')}
-          checked={filters.messagesEnabled}
-          icon={<MessageIcon />}
-          label={t('messages')}
-          onToggleChange={() => {
-            setFilters({ ...filters, messagesEnabled: !filters.messagesEnabled })
-          }}
-        />
+        {!isSelectedTeamPrivate &&
+          <>
+            <Typography variant="h6" className={classes.title}>{t('monitoring-alerts')}</Typography>
+            <PatientListOptionToggle
+              ariaLabel={t('filter-out-of-range')}
+              checked={filters.timeOutOfTargetEnabled}
+              icon={<TimeSpentOufOfRangeIcon />}
+              label={t('time-out-of-range-target')}
+              onToggleChange={() => {
+                setFilters({ ...filters, timeOutOfTargetEnabled: !filters.timeOutOfTargetEnabled })
+              }}
+            />
+            <PatientListOptionToggle
+              ariaLabel={t('filter-hypoglycemia')}
+              checked={filters.hypoglycemiaEnabled}
+              icon={<HypoglycemiaIcon />}
+              label={t('hypoglycemia')}
+              onToggleChange={() => {
+                setFilters({ ...filters, hypoglycemiaEnabled: !filters.hypoglycemiaEnabled })
+              }}
+            />
+            <PatientListOptionToggle
+              ariaLabel={t('filter-data-not-transferred')}
+              checked={filters.dataNotTransferredEnabled}
+              icon={<NoDataIcon />}
+              label={t('data-not-transferred')}
+              onToggleChange={() => {
+                setFilters({ ...filters, dataNotTransferredEnabled: !filters.dataNotTransferredEnabled })
+              }}
+            />
+            <Typography variant="h6" className={classes.title}>{t('notification')}</Typography>
+            <PatientListOptionToggle
+              ariaLabel={t('filter-unread-messages')}
+              checked={filters.messagesEnabled}
+              icon={<MessageIcon />}
+              label={t('messages')}
+              onToggleChange={() => {
+                setFilters({ ...filters, messagesEnabled: !filters.messagesEnabled })
+              }}
+            />
+          </>
+        }
       </Box>
       <Divider variant="middle" />
       <DialogActions>
