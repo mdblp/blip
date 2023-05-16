@@ -103,10 +103,10 @@ describe('Caregiver home page', () => {
 
     renderPage('/')
 
-    expect(await screen.findByTestId('patient-list-grid')).toBeVisible()
+    expect(await screen.findByTestId('current-patient-list-grid')).toBeVisible()
 
     // Checking that all patients are displayed
-    const dataGridRow = screen.getByTestId('patient-list-grid')
+    const dataGridRow = screen.getByTestId('current-patient-list-grid')
     expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
     expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/AFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/AFlag patient fake@patient.emailAnnie VersaireMay 25, 2015N/A')
 
@@ -135,7 +135,7 @@ describe('Caregiver home page', () => {
     await checkCaregiverLayout(`${firstName} ${lastName}`)
     checkPatientListHeaderCaregiver()
 
-    const patientTableBody = screen.getByTestId('patient-list-grid')
+    const patientTableBody = screen.getByTestId('current-patient-list-grid')
     expect(within(patientTableBody).getAllByRole('row')).toHaveLength(5)
     expect(patientTableBody).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980N/AFlag patient pending-patient@diabeloop.frPending PatientJan 1, 1980N/A')
 
