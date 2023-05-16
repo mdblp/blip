@@ -29,6 +29,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2220 Remove "private practice" filter from patients list
 - YLP-2231 Implement new medical reports design for patients
 - YLP-2265 Disable Add patient button when private practice is selected
+- YLP-2285 Monitoring filter cannot be enabled when Private practice is selected
 - YLP-2312 Teams and patients in a team should always have a field "monitoringAlertsParameters"
 - YLP-2322 Pending patients should not display glycemia specific data
 - YLP-2323 Add new columns from existing data in patient list
@@ -76,7 +77,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-2252 Bump auth0-react from 1.9.0 to 2.0.1
 - YLP-2256 Bump minor deps
 - YLP-2258 Bump react-markdown
-- YLP-2285 Monitoring filter cannot be enabled when Private practice is selected
 - YLP-2286 Rename the "alarm" concept to "monitored alert"
 - YLP-2289 Migrate Standard Deviation from stat.js to yourloops
 - YLP-2291 Get the patients from the scope route when logged in as HCP
