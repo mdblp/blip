@@ -24,47 +24,9 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { type Notification } from '../../../lib/notifications/models/notification.model'
-import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
-import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 
-export const invitationTeam: Notification = {
-  id: 'invitationTeamId',
-  type: NotificationType.careTeamPatientInvitation,
-  metricsType: 'join_team',
-  email: 'ylp.ui.test.67-patient12@diabeloop.fr',
-  creatorId: 'dec0816009d32',
-  date: '',
-  target: { id: '63c7b7989cacc878ecce2c40', name: 'sysReq-67-team2' },
-  role: TeamMemberRole.patient,
-  creator: {
-    userid: 'dec0816009d32',
-    profile: {
-      fullName: 'Backloops test SysReq 67 hcp1',
-      patient: {
-        birthday: '',
-        diagnosisDate: ''
-      },
-      email: ''
-    }
-  }
-}
-export const invitationDirectShare: Notification = {
-  id: 'invitationTeamId',
-  type: NotificationType.directInvitation,
-  metricsType: 'share_data',
-  email: 'ylp.ui.test-caregiver1@diabeloop.fr',
-  creatorId: 'patient1',
-  date: '',
-  creator: {
-    userid: 'patient1',
-    profile: {
-      fullName: 'Backloops test Patient1',
-      patient: {
-        birthday: '',
-        diagnosisDate: ''
-      },
-      email: ''
-    }
-  }
+import { checkAcceptNotificationDirectShare } from '../assert/notification-direct-share.assert'
+
+export const testNotificationManagementForCaregiver = async () => {
+  await checkAcceptNotificationDirectShare()
 }
