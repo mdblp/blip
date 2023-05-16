@@ -28,26 +28,30 @@
 import React, { type FunctionComponent, useState } from 'react'
 import { DataGrid, type GridPaginationModel, type GridSortModel } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
-import RemovePatientDialog from '../patient/remove-patient-dialog'
-import { PatientListColumns } from './models/enums/patient-list.enum'
-import { usePatientListContext } from '../../lib/providers/patient-list.provider'
-import { usePatientContext } from '../../lib/patient/patient.provider'
-import { usePendingPatientListHook } from './pending-patient-list.hook'
-import { type Patient } from '../../lib/patient/models/patient.model'
-import { EmptyPatientList } from './empty-patient-list'
+import { PatientListCustomFooter } from '../patient-list-custom-footer'
+import { PatientListColumns } from '../models/enums/patient-list.enum'
+import { usePatientListContext } from '../../../lib/providers/patient-list.provider'
+import { usePatientContext } from '../../../lib/patient/patient.provider'
+import { useCurrentPatientListHook } from './current-patient-list.hook'
+import RemovePatientDialog from '../../patient/remove-patient-dialog'
+import RemoveDirectShareDialog from '../../dialogs/remove-direct-share-dialog'
+import { type Patient } from '../../../lib/patient/models/patient.model'
+import { EmptyPatientList } from '../empty-patient-list/empty-patient-list'
 
-interface PendingPatientListProps {
+interface CurrentPatientListProps {
   patients: Patient[]
 }
 
-export const PendingPatientList: FunctionComponent<PendingPatientListProps> = (props: PendingPatientListProps) => {
+export const CurrentPatientList: FunctionComponent<CurrentPatientListProps> = (props: CurrentPatientListProps) => {
   const { patients } = props
   const {
     columns,
     patientToRemoveForHcp,
+    patientToRemoveForCaregiver,
     rowsProps,
-    onCloseRemoveDialog
-  } = usePendingPatientListHook({ patients })
+    onCloseRemoveDialog,
+    onRowClick
+  } = useCurrentPatientListHook({ patients })
   const { gridApiRef, displayedColumns } = usePatientListContext()
   const { refreshInProgress } = usePatientContext()
 
@@ -56,7 +60,7 @@ export const PendingPatientList: FunctionComponent<PendingPatientListProps> = (p
 
   return (
     <>
-      <Box data-testid="pending-patient-list-grid">
+      <Box data-testid="current-patient-list-grid">
         <DataGrid
           columns={columns}
           rows={rowsProps}
@@ -73,17 +77,28 @@ export const PendingPatientList: FunctionComponent<PendingPatientListProps> = (p
           onSortModelChange={setSortModel}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
-          onRowClick={undefined}
+          onRowClick={onRowClick}
           pageSizeOptions={[5, 10, 25]}
+          sx={{
+            borderRadius: 0,
+            '& .MuiDataGrid-cell:hover': { cursor: 'pointer' }
+          }}
           slots={{
-            noRowsOverlay: EmptyPatientList
+            noRowsOverlay: EmptyPatientList,
+            footer: PatientListCustomFooter
           }}
         />
       </Box>
-
       {patientToRemoveForHcp &&
         <RemovePatientDialog
           patient={patientToRemoveForHcp}
+          onClose={onCloseRemoveDialog}
+        />
+      }
+
+      {patientToRemoveForCaregiver &&
+        <RemoveDirectShareDialog
+          userToRemove={patientToRemoveForCaregiver}
           onClose={onCloseRemoveDialog}
         />
       }

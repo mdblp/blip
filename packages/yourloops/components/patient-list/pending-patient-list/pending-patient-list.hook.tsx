@@ -28,14 +28,14 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { type GridColDef, type GridRenderCellParams, type GridRowsProp } from '@mui/x-data-grid'
 import { useTranslation } from 'react-i18next'
-import { usePatientListStyles } from './patient-list.styles'
-import { PendingPatientListColumns } from './models/enums/patient-list.enum'
-import { usePatientContext } from '../../lib/patient/patient.provider'
-import { ActionsCell, PendingIconCell } from './custom-cells'
-import { type Patient } from '../../lib/patient/models/patient.model'
-import { type GridRowModel } from './models/grid-row.model'
+import { usePatientListStyles } from '../patient-list.styles'
+import { PendingPatientListColumns } from '../models/enums/patient-list.enum'
+import { usePatientContext } from '../../../lib/patient/patient.provider'
+import { ActionsCell, PendingIconCell } from '../custom-cells'
+import { type Patient } from '../../../lib/patient/models/patient.model'
+import { type GridRowModel } from '../models/grid-row.model'
 import Box from '@mui/material/Box'
-import { sortByUserName } from './sort-comparators.util'
+import { sortByUserName } from '../sort-comparators.util'
 
 interface PendingPatientListHookProps {
   patients: Patient[]

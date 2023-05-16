@@ -31,8 +31,8 @@ import { usePatientListHook } from './patient-list.hook'
 import { PatientListTabs } from './models/enums/patient-list.enum'
 import { GlobalStyles } from 'tss-react'
 import { useTheme } from '@mui/material/styles'
-import { CurrentPatientList } from './current-patient-list'
-import { PendingPatientList } from './pending-patient-list'
+import { CurrentPatientList } from './current-patient-list/current-patient-list'
+import { PendingPatientList } from './pending-patient-list/pending-patient-list'
 
 export const PatientList: FunctionComponent = () => {
   const theme = useTheme()

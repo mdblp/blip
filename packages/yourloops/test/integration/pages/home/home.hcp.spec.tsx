@@ -138,7 +138,7 @@ describe('HCP home page', () => {
     await testAppMainLayoutForHcp(appMainLayoutParams)
   })
 
-  it('should be able to managed patients when scoped on a medical team', async () => {
+  it('should be able to manage patients when scoped on a medical team', async () => {
     localStorage.setItem('selectedTeamId', myThirdTeamId)
 
     await renderHomePage()
