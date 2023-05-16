@@ -33,6 +33,7 @@ import MedicalDataService, { type BgUnit, Source, type TimePrefs, TimeService } 
 import config from '../../lib/config/config'
 import { ChartTypes } from '../../enum/chart-type.enum'
 import { type GetPatientDataOptions } from '../../lib/data/models/get-patient-data-options.model'
+import { type PatientData } from '../../lib/data/models/patient-datum.model'
 
 interface GetDatetimeBoundsArgs {
   currentChart: ChartTypes
@@ -45,7 +46,10 @@ interface DateRange {
   end: Moment
 }
 
-type PatientData = Array<Record<string, unknown>>
+export function isValidDateQueryParam(queryParam: string): boolean {
+  const date = new Date(queryParam)
+  return !isNaN(date.getTime())
+}
 
 export class PatientDataUtils {
   private readonly bgUnits: BgUnit

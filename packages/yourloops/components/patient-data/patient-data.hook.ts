@@ -35,7 +35,7 @@ import { usePatientContext } from '../../lib/patient/patient.provider'
 import type MedicalDataService from 'medical-domain'
 import { defaultBgClasses, type TimePrefs, TimeService, Unit } from 'medical-domain'
 import { type MutableRefObject, useMemo, useRef, useState } from 'react'
-import { PatientDataUtils } from './patient-data.utils'
+import { isValidDateQueryParam, PatientDataUtils } from './patient-data.utils'
 import DataUtil from 'tidepool-viz/src/utils/data'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
 
@@ -233,8 +233,7 @@ export const usePatientData = (): PatientDataContextResult => {
 
       setDataUtil(dataUtil)
       setMedicalData(medicalData)
-      // TODO check if dateQueryParam is a valid date
-      setDailyDate(dateQueryParam ? new Date(dateQueryParam).valueOf() : initialDate)
+      setDailyDate(dateQueryParam && isValidDateQueryParam(dateQueryParam) ? new Date(dateQueryParam).valueOf() : initialDate)
       setTrendsDate(initialDate)
       setTimePrefs(medicalData.opts.timePrefs)
     } finally {

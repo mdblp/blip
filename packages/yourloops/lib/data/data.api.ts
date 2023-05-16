@@ -36,13 +36,14 @@ import { type MessageNote } from './models/message-note.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import { HttpHeaderValues } from '../http/models/enums/http-header-values.enum'
 import { Unit } from 'medical-domain'
+import type { PatientDataRange } from './models/data-range.model'
 
 const log = bows('Data API')
 
 export default class DataApi {
-  static async getPatientDataRange(patientId: string): Promise<string[] | null> {
+  static async getPatientDataRange(patientId: string): Promise<PatientDataRange | null> {
     try {
-      const { data } = await HttpService.get<string[]>({ url: `/data/v2/range/${patientId}` })
+      const { data } = await HttpService.get<PatientDataRange>({ url: `/data/v2/range/${patientId}` })
       return data
     } catch (err) {
       const error = err as Error
