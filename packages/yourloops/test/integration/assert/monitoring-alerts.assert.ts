@@ -30,5 +30,5 @@ import { screen } from '@testing-library/react'
 export const checkMonitoringAlertsCard = async () => {
   const monitoringAlertsCard = screen.getByTestId('monitoring-alerts-card')
   expect(monitoringAlertsCard).toBeVisible()
-  expect(monitoringAlertsCard).toHaveTextContent('EventsCurrent eventsTime spent out of the target range10%Severe hypoglycemia20%Data not transferred30%')
+  expect(monitoringAlertsCard).toHaveTextContent('Monitoring alertsCurrent monitoring alertsTime spent out of the target range10%Severe hypoglycemia20%Data not transmitted30%')
 }
