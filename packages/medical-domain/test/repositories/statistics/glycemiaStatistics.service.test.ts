@@ -29,11 +29,17 @@ import { type BgBounds } from '../../../src/domains/models/statistics/glycemia-s
 import type Cbg from '../../../src/domains/models/medical/datum/cbg.model'
 import Unit from '../../../src/domains/models/medical/datum/enums/unit.enum'
 import type Smbg from '../../../src/domains/models/medical/datum/smbg.model'
-import type DateFilter from '../../../src/domains/models/time/date-filter.model'
 import { GlycemiaStatisticsService, classifyBgValue } from '../../../src/domains/repositories/statistics/glycemia-statistics.service'
 import { MS_IN_DAY, MS_IN_MIN } from '../../../src/domains/repositories/time/time.service'
 import { createRandomCbg, createRandomSmbg } from '../../data-generator'
 import { ClassificationType } from '../../../src/domains/models/statistics/enum/bg-classification.enum'
+import {
+  dateFilterOneDay,
+  dateFilterThreeDays,
+  dateFilterThreeDays2020,
+  dateFilterTwoDays,
+  dateFilterTwoWeeks
+} from '../../mock/carbs.statistics.mock'
 
 const buildCbgData = (data: Array<[Date, number, string]>): Cbg[] => (
   data.map((cbgData) => (
@@ -91,27 +97,6 @@ const bgBounds: BgBounds = {
   targetUpperBound: 180,
   targetLowerBound: 70,
   veryLowThreshold: 54
-}
-
-const dateFilterOneDay: DateFilter = {
-  start: new Date('2018-02-01T00:00:00.000Z').valueOf(),
-  end: new Date('2018-02-02T00:00:00.000Z').valueOf()
-}
-const dateFilterTwoDays: DateFilter = {
-  start: new Date('2018-02-01T00:00:00.000Z').valueOf(),
-  end: new Date('2018-02-03T00:00:00.000Z').valueOf()
-}
-const dateFilterThreeDays: DateFilter = {
-  start: new Date('2018-02-01T00:00:00.000Z').valueOf(),
-  end: new Date('2018-02-04T00:00:00.000Z').valueOf()
-}
-const dateFilterThreeDays2020: DateFilter = {
-  start: new Date('2020-02-01T00:00:00.000Z').valueOf(),
-  end: new Date('2020-02-04T00:00:00.000Z').valueOf()
-}
-const dateFilterTwoWeeks: DateFilter = {
-  start: new Date('2018-02-01T00:00:00.000Z').valueOf(),
-  end: new Date('2018-02-15T00:00:00.000Z').valueOf()
 }
 
 describe('GlycemiaStatisticsService classifyBgValue', () => {
