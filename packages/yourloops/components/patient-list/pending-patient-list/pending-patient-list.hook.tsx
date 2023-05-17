@@ -32,7 +32,6 @@ import { PendingPatientListColumns } from '../models/enums/patient-list.enum'
 import { usePatientContext } from '../../../lib/patient/patient.provider'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { type PendingGridRowModel } from '../models/grid-row.model'
-import { sortByDate } from '../sort-comparators.util'
 import { useNotification } from '../../../lib/notifications/notification.hook'
 import { useAuth } from '../../../lib/auth'
 import { getUserName } from '../../../lib/auth/user.util'
@@ -40,6 +39,7 @@ import { formatDate } from 'dumb/dist/src/utils/datetime/datetime.util'
 import Button from '@mui/material/Button'
 import CloseIcon from '@mui/icons-material/Close'
 import MailIcon from '@mui/icons-material/Mail'
+import Tooltip from '@mui/material/Tooltip'
 
 interface PendingPatientListHookProps {
   patients: Patient[]
@@ -100,7 +100,6 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
         type: 'string',
         headerName: t('date'),
         hideable: false,
-        sortComparator: sortByDate,
         minWidth: 200
       },
       {
@@ -115,32 +114,50 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
         headerName: t('actions'),
         getActions: (params: GridRowParams<PendingGridRowModel>) => {
           const patient = params.row[PendingPatientListColumns.Actions]
+          const inviteCreatedByLoggedUser = params.row.inviteCreatedByLoggedUser
+          const tooltipText = inviteCreatedByLoggedUser ? '' : 'This action cannot be performed as you did not invite this patient'
 
           return [
-            <Button
+            <Tooltip
               key={params.row.id}
-              data-action="remove-patient"
-              startIcon={<MailIcon />}
-              data-testid={`reinvite-patient-${patient.profile.email}`}
-              aria-label={`${t('button-resend-invite')} ${patient.profile.email}`}
-              onClick={() => {
-                resendInvite(patient)
-              }}
+              title={tooltipText}
+              aria-label={tooltipText}
             >
-              {t('button-resend-invite')}
-            </Button>,
-            <Button
+              <span>
+              <Button
+                data-action="remove-patient"
+                startIcon={<MailIcon />}
+                data-testid={`reinvite-patient-${patient.profile.email}`}
+                aria-label={`${t('button-resend-invite')} ${patient.profile.email}`}
+                disabled={!inviteCreatedByLoggedUser}
+                onClick={() => {
+                  resendInvite(patient)
+                }}
+              >
+                {t('button-resend-invite')}
+              </Button>
+              </span>
+            </Tooltip>,
+            <Tooltip
               key={params.row.id}
-              data-action="remove-patient"
-              startIcon={<CloseIcon />}
-              data-testid={`remove-patient-${patient.profile.email}`}
-              aria-label={`${t('button-remove-patient')} ${patient.profile.email}`}
-              onClick={() => {
-                removePatient(patient.userid)
-              }}
+              title={tooltipText}
+              aria-label={tooltipText}
             >
-              {t('button-cancel')}
-            </Button>
+              <span>
+              <Button
+                data-action="remove-patient"
+                startIcon={<CloseIcon />}
+                data-testid={`remove-patient-${patient.profile.email}`}
+                aria-label={`${t('button-remove-patient')} ${patient.profile.email}`}
+                disabled={!inviteCreatedByLoggedUser}
+                onClick={() => {
+                  removePatient(patient.userid)
+                }}
+              >
+                {t('button-cancel')}
+              </Button>
+              </span>
+            </Tooltip>
           ]
         },
         minWidth: 300
@@ -152,10 +169,12 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
     const { firstName, lastName, fullName } = user.profile
     return patients.map((patient): PendingGridRowModel => {
       const invite = sentInvitations.find(invitation => invitation.email === patient.profile.email)
+      const inviteCreatedByLoggedUser = !!invite
       const inviteDate = invite ? formatDate(invite.date) : t('N/A')
       const inviteAuthorName = invite ? getUserName(firstName, lastName, fullName) : t('N/A')
       return {
         id: patient.userid,
+        inviteCreatedByLoggedUser,
         [PendingPatientListColumns.Actions]: patient,
         [PendingPatientListColumns.Date]: inviteDate,
         [PendingPatientListColumns.Email]: patient.profile.email,
