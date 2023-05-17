@@ -51,8 +51,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import { CarbsStatisticsService } from 'medical-domain'
 import {
   bgDataSourceOneDay, bgDataSourceTwoDays,
   buildMealData,
@@ -60,6 +58,7 @@ import {
   dateFilterOneDay,
   dateFilterTwoDays
 } from '../../mock/carbs.statistics.mock'
+import { CarbsStatisticsService } from '../../../src'
 
 describe('getCarbsData', () => {
   it('should return the total carbs from wizard and food data when viewing 1 day', () => {
