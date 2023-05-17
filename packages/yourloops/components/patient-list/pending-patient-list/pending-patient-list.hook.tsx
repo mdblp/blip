@@ -39,6 +39,7 @@ import { getUserName } from '../../../lib/auth/user.util'
 import { formatDate } from 'dumb/dist/src/utils/datetime/datetime.util'
 import Button from '@mui/material/Button'
 import CloseIcon from '@mui/icons-material/Close'
+import MailIcon from '@mui/icons-material/Mail'
 
 interface PendingPatientListHookProps {
   patients: Patient[]
@@ -47,8 +48,11 @@ interface PendingPatientListHookProps {
 interface PatientListHookReturns {
   columns: GridColDef[]
   patientToRemoveForHcp: Patient | null
+  patientToReinvite: Patient | null
   rowsProps: GridRowsProp
   onCloseRemoveDialog: () => void
+  onCloseReinviteDialog: () => void
+  onSuccessReinviteDialog: () => void
 }
 
 export const usePendingPatientListHook = (props: PendingPatientListHookProps): PatientListHookReturns => {
@@ -59,14 +63,27 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
   const { user } = useAuth()
 
   const [patientToRemoveForHcp, setPatientToRemoveForHcp] = useState<Patient | null>(null)
+  const [patientToReinvite, setPatientToReinvite] = useState<Patient | null>(null)
 
-  const onClickRemovePatient = useCallback((patientId: string): void => {
+  const removePatient = useCallback((patientId: string): void => {
     const patient = getPatientById(patientId)
     setPatientToRemoveForHcp(patient)
   }, [getPatientById])
 
   const onCloseRemoveDialog = (): void => {
     setPatientToRemoveForHcp(null)
+  }
+
+  const onCloseReinviteDialog = (): void => {
+    setPatientToReinvite(null)
+  }
+
+  const onSuccessReinviteDialog = (): void => {
+    setPatientToReinvite(null)
+  }
+
+  const resendInvite = (patient: Patient): void => {
+    setPatientToReinvite(patient)
   }
 
   const buildPendingColumns = (): GridColDef[] => {
@@ -97,25 +114,36 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
         field: PendingPatientListColumns.Actions,
         headerName: t('actions'),
         getActions: (params: GridRowParams<PendingGridRowModel>) => {
-          const removePatientLabel = t('button-remove-patient')
           const patient = params.row[PendingPatientListColumns.Actions]
 
           return [
             <Button
               key={params.row.id}
               data-action="remove-patient"
-              startIcon={<CloseIcon />}
-              data-testid={`${removePatientLabel} ${patient.profile.email}`}
-              aria-label={`${removePatientLabel} ${patient.profile.email}`}
+              startIcon={<MailIcon />}
+              data-testid={`reinvite-patient-${patient.profile.email}`}
+              aria-label={`${t('button-resend-invite')} ${patient.profile.email}`}
               onClick={() => {
-                onClickRemovePatient(patient.userid)
+                resendInvite(patient)
+              }}
+            >
+              {t('button-resend-invite')}
+            </Button>,
+            <Button
+              key={params.row.id}
+              data-action="remove-patient"
+              startIcon={<CloseIcon />}
+              data-testid={`remove-patient-${patient.profile.email}`}
+              aria-label={`${t('button-remove-patient')} ${patient.profile.email}`}
+              onClick={() => {
+                removePatient(patient.userid)
               }}
             >
               {t('button-cancel')}
             </Button>
           ]
         },
-        minWidth: 200
+        minWidth: 300
       }
     ]
   }
@@ -124,7 +152,7 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
     const { firstName, lastName, fullName } = user.profile
     return patients.map((patient): PendingGridRowModel => {
       const invite = sentInvitations.find(invitation => invitation.email === patient.profile.email)
-      const inviteDate = formatDate(invite.date)
+      const inviteDate = invite ? formatDate(invite.date) : t('N/A')
       const inviteAuthorName = invite ? getUserName(firstName, lastName, fullName) : t('N/A')
       return {
         id: patient.userid,
@@ -143,7 +171,10 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
   return {
     columns: buildPendingColumns(),
     patientToRemoveForHcp,
+    patientToReinvite,
     rowsProps,
-    onCloseRemoveDialog
+    onCloseRemoveDialog,
+    onCloseReinviteDialog,
+    onSuccessReinviteDialog
   }
 }

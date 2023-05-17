@@ -27,7 +27,7 @@
 
 import { type PatientListColumns, type PendingPatientListColumns } from './enums/patient-list.enum'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { type Profile } from '../../../lib/auth/models/profile.model'
+import { type Notification } from '../../../lib/notifications/models/notification.model'
 
 export interface GridRowModel {
   id: string

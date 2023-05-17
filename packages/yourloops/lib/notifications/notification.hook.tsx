@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -79,8 +79,8 @@ function NotificationContextImpl(): NotificationContext {
     await NotificationApi.cancelRemoteMonitoringInvite(teamId, userId)
   }
 
-  const getInvitation = (teamId: string): Notification => {
-    const invitation = sentInvitations.find(invitation => invitation.target.id === teamId)
+  const getInvitation = (teamId: string, patientEmail: string): Notification => {
+    const invitation = sentInvitations.find(invitation => invitation.target.id === teamId && invitation.email === patientEmail)
     if (!invitation) {
       throw Error(`Could not find invitation for team ${teamId}`)
     }
