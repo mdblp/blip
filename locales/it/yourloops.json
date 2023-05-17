@@ -147,7 +147,7 @@
   "data-not-transferred-tooltip1": "Data not transmitted: {{percentage}}%.",
   "data-not-transferred-tooltip2": "Alert triggered when {{threshold}}% of data are not transmitted over the period considered.",
   "data-not-transmitted": "Dati non trasmessi",
-  "data-period-text": "Dati calcolati sugli ultimi 7 giorni",
+  "data-period-text": "Dati calcolati sugli ultimi 14 giorni",
   "date-of-birth": "Data di nascita",
   "date-picker-days-range": "{{numDays}} giorni selezionati",
   "date-picker-header-date-format": "MMMM YYYY",
