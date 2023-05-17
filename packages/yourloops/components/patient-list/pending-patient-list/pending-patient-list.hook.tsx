@@ -26,16 +26,19 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react'
-import { type GridColDef, type GridRenderCellParams, type GridRowsProp } from '@mui/x-data-grid'
+import { type GridColDef, type GridRowParams, type GridRowsProp } from '@mui/x-data-grid'
 import { useTranslation } from 'react-i18next'
-import { usePatientListStyles } from '../patient-list.styles'
 import { PendingPatientListColumns } from '../models/enums/patient-list.enum'
 import { usePatientContext } from '../../../lib/patient/patient.provider'
-import { ActionsCell, PendingIconCell } from '../custom-cells'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { type GridRowModel } from '../models/grid-row.model'
-import Box from '@mui/material/Box'
-import { sortByUserName } from '../sort-comparators.util'
+import { type PendingGridRowModel } from '../models/grid-row.model'
+import { sortByDate } from '../sort-comparators.util'
+import { useNotification } from '../../../lib/notifications/notification.hook'
+import { useAuth } from '../../../lib/auth'
+import { getUserName } from '../../../lib/auth/user.util'
+import { formatDate } from 'dumb/dist/src/utils/datetime/datetime.util'
+import Button from '@mui/material/Button'
+import CloseIcon from '@mui/icons-material/Close'
 
 interface PendingPatientListHookProps {
   patients: Patient[]
@@ -51,8 +54,9 @@ interface PatientListHookReturns {
 export const usePendingPatientListHook = (props: PendingPatientListHookProps): PatientListHookReturns => {
   const { patients } = props
   const { t } = useTranslation()
-  const { classes } = usePatientListStyles()
   const { getPatientById } = usePatientContext()
+  const { sentInvitations } = useNotification()
+  const { user } = useAuth()
 
   const [patientToRemoveForHcp, setPatientToRemoveForHcp] = useState<Patient | null>(null)
 
@@ -68,51 +72,69 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
   const buildPendingColumns = (): GridColDef[] => {
     return [
       {
-        field: PendingPatientListColumns.Icon,
-        type: 'actions',
-        headerName: '',
-        width: 55,
+        field: PendingPatientListColumns.InviteSentBy,
+        type: 'string',
+        headerName: t('invite-sent-by'),
         hideable: false,
-        sortable: false,
-        renderCell: (): JSX.Element => {
-          return <PendingIconCell />
-        }
+        minWidth: 250
       },
       {
-        field: PendingPatientListColumns.Patient,
-        headerName: t('patient'),
+        field: PendingPatientListColumns.Date,
+        type: 'string',
+        headerName: t('date'),
         hideable: false,
-        flex: 1,
-        headerClassName: classes.mandatoryCellBorder,
-        cellClassName: classes.mandatoryCellBorder,
-        renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
-          const { email } = params.value.profile
-          return <Box data-email={email}>{email}</Box>
-        },
-        sortComparator: sortByUserName
+        sortComparator: sortByDate,
+        minWidth: 200
+      },
+      {
+        field: PendingPatientListColumns.Email,
+        type: 'string',
+        headerName: t('email'),
+        minWidth: 250
       },
       {
         type: 'actions',
         field: PendingPatientListColumns.Actions,
         headerName: t('actions'),
-        headerClassName: classes.mandatoryCellBorder,
-        cellClassName: classes.mandatoryCellBorder,
-        renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
-          return <ActionsCell patient={params.value} onClickRemove={onClickRemovePatient} />
-        }
+        getActions: (params: GridRowParams<PendingGridRowModel>) => {
+          const removePatientLabel = t('button-remove-patient')
+          const patient = params.row[PendingPatientListColumns.Actions]
+
+          return [
+            <Button
+              key={params.row.id}
+              data-action="remove-patient"
+              startIcon={<CloseIcon />}
+              data-testid={`${removePatientLabel} ${patient.profile.email}`}
+              aria-label={`${removePatientLabel} ${patient.profile.email}`}
+              onClick={() => {
+                onClickRemovePatient(patient.userid)
+              }}
+            >
+              {t('button-cancel')}
+            </Button>
+          ]
+        },
+        minWidth: 200
       }
     ]
   }
 
   const buildPendingRows = useCallback((): GridRowsProp => {
-    return patients.map((patient): GridRowModel => {
+    const { firstName, lastName, fullName } = user.profile
+    return patients.map((patient): PendingGridRowModel => {
+      const invite = sentInvitations.find(invitation => invitation.email === patient.profile.email)
+      const inviteDate = formatDate(invite.date)
+      const inviteAuthorName = invite ? getUserName(firstName, lastName, fullName) : t('N/A')
       return {
         id: patient.userid,
-        [PendingPatientListColumns.Patient]: patient,
-        [PendingPatientListColumns.Actions]: patient
+        [PendingPatientListColumns.Actions]: patient,
+        [PendingPatientListColumns.Date]: inviteDate,
+        [PendingPatientListColumns.Email]: patient.profile.email,
+        [PendingPatientListColumns.InviteSentBy]: inviteAuthorName
       }
     })
-  }, [patients])
+  }, [patients, sentInvitations, t, user.profile])
 
   const rowsProps: GridRowsProp = useMemo(() => {
     return buildPendingRows()

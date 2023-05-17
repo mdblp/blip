@@ -44,6 +44,7 @@ import { HypoglycemiaIcon } from '../icons/diabeloop/hypoglycemia-icon'
 import { NoMessageIcon } from '../icons/diabeloop/no-message-icon'
 import { MessageIcon } from '../icons/diabeloop/message-icon'
 import { convertBG } from '../../lib/units/units.util'
+import Button from '@mui/material/Button'
 
 interface FlagCellProps {
   isFlagged: boolean
@@ -278,5 +279,24 @@ export const ActionsCell: FunctionComponent<ActionsCellProps> = ({ patient, onCl
         />
       </Box>
     </Tooltip>
+  )
+}
+
+export const PendingListCancelInviteCell: FunctionComponent<ActionsCellProps> = ({ patient, onClickRemove }) => {
+  const { t } = useTranslation()
+  const removePatientLabel = t('button-remove-patient')
+
+  return (
+    <Button
+      data-action="remove-patient"
+      data-testid={`${removePatientLabel} ${patient.profile.email}`}
+      aria-label={`${removePatientLabel} ${patient.profile.email}`}
+      color="inherit"
+      onClick={() => {
+        onClickRemove(patient.userid)
+      }}
+    >
+      ${removePatientLabel}
+    </Button>
   )
 }

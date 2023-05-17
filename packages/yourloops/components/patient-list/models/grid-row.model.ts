@@ -25,8 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PatientListColumns } from './enums/patient-list.enum'
+import { type PatientListColumns, type PendingPatientListColumns } from './enums/patient-list.enum'
 import { type Patient } from '../../../lib/patient/models/patient.model'
+import { type Profile } from '../../../lib/auth/models/profile.model'
 
 export interface GridRowModel {
   id: string
@@ -40,4 +41,12 @@ export interface GridRowModel {
   [PatientListColumns.LastDataUpdate]?: string
   [PatientListColumns.Messages]?: boolean
   [PatientListColumns.Actions]: Patient
+}
+
+export interface PendingGridRowModel {
+  id: string
+  [PendingPatientListColumns.Actions]: Patient
+  [PendingPatientListColumns.Date]: string
+  [PendingPatientListColumns.Email]: string
+  [PendingPatientListColumns.InviteSentBy]: string
 }
