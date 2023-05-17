@@ -115,7 +115,7 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
         getActions: (params: GridRowParams<PendingGridRowModel>) => {
           const patient = params.row[PendingPatientListColumns.Actions]
           const inviteCreatedByLoggedUser = params.row.inviteCreatedByLoggedUser
-          const tooltipText = inviteCreatedByLoggedUser ? '' : 'This action cannot be performed as you did not invite this patient'
+          const tooltipText = inviteCreatedByLoggedUser ? '' : t('action-unavailable')
 
           return [
             <Tooltip
@@ -123,7 +123,7 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
               title={tooltipText}
               aria-label={tooltipText}
             >
-              <span>
+              <div data-testid="reinvite-patient-button">
               <Button
                 data-action="remove-patient"
                 startIcon={<MailIcon />}
@@ -136,14 +136,14 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
               >
                 {t('button-resend-invite')}
               </Button>
-              </span>
+              </div>
             </Tooltip>,
             <Tooltip
               key={params.row.id}
               title={tooltipText}
               aria-label={tooltipText}
             >
-              <span>
+              <div data-testid="remove-patient-button">
               <Button
                 data-action="remove-patient"
                 startIcon={<CloseIcon />}
@@ -156,7 +156,7 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
               >
                 {t('button-cancel')}
               </Button>
-              </span>
+              </div>
             </Tooltip>
           ]
         },

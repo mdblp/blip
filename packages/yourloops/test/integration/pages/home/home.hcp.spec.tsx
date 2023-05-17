@@ -26,10 +26,10 @@
  */
 
 import { waitFor } from '@testing-library/react'
-import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { flaggedPatientId, patient1 } from '../../data/patient.api.data'
+import { flaggedPatientId, patient1, pendingPatient } from '../../data/patient.api.data'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
@@ -44,14 +44,21 @@ import {
   testPatientListForHcpPrivateTeam,
   testPatientListForHcpWithMmolL
 } from '../../use-cases/patient-list-management'
-import { testPatientManagementMedicalTeam, testPatientManagementPrivateTeam } from '../../use-cases/patients-management'
+import {
+  testPatientManagementMedicalTeam,
+  testPatientManagementPrivateTeam,
+  testPendingPatientManagementMedicalTeam
+} from '../../use-cases/patients-management'
 import { testTeamCreation } from '../../use-cases/teams-management'
 import { Unit } from 'medical-domain'
+import NotificationApi from '../../../../lib/notifications/notification.api'
+import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
+import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
+import { type Profile } from '../../../../lib/auth/models/profile.model'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
   const lastName = 'Ard'
-  jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
 
   beforeEach(() => {
     mockAuth0Hook()
@@ -61,6 +68,9 @@ describe('HCP home page', () => {
     mockPatientApiForHcp()
     mockDirectShareApi()
     mockDataAPI()
+    jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
+    jest.spyOn(PatientApi, 'invitePatient').mockResolvedValue(undefined)
+    jest.spyOn(NotificationApi, 'cancelInvitation').mockResolvedValue(undefined)
   })
 
   const renderHomePage = async () => {
@@ -140,10 +150,37 @@ describe('HCP home page', () => {
 
   it('should be able to manage patients when scoped on a medical team', async () => {
     localStorage.setItem('selectedTeamId', myThirdTeamId)
+    jest.spyOn(NotificationApi, 'getSentInvitations').mockResolvedValue([
+      {
+        id: 'fakeInvitationId',
+        type: NotificationType.careTeamPatientInvitation,
+        metricsType: 'join_team',
+        email: pendingPatient.profile.email,
+        creatorId: loggedInUserId,
+        date: '2023-05-17T11:37:42.638Z',
+        target: {
+          id: myThirdTeamId,
+          name: myThirdTeamName
+        },
+        role: TeamMemberRole.patient,
+        creator: {
+          userid: loggedInUserId,
+          profile: { firstName, lastName } as Profile
+        }
+      }
+    ])
 
     await renderHomePage()
 
     await testPatientManagementMedicalTeam()
+  })
+
+  it('should not be able to manage pending patients when logged user did not invite them', async () => {
+    localStorage.setItem('selectedTeamId', myThirdTeamId)
+
+    await renderHomePage()
+
+    await testPendingPatientManagementMedicalTeam()
   })
 
   it('should be able to manage the patient list when scoped on a medical team', async () => {
