@@ -33,9 +33,12 @@ import { GlobalStyles } from 'tss-react'
 import { useTheme } from '@mui/material/styles'
 import { CurrentPatientList } from './current-patient-list/current-patient-list'
 import { PendingPatientList } from './pending-patient-list/pending-patient-list'
+import { setPageTitle } from '../../lib/utils'
+import { useTranslation } from 'react-i18next'
 
-export const PatientList: FunctionComponent = () => {
+export const PatientListPage: FunctionComponent = () => {
   const theme = useTheme()
+  const { t } = useTranslation('yourloops')
   const {
     selectedTab,
     inputSearch,
@@ -43,6 +46,8 @@ export const PatientList: FunctionComponent = () => {
     onChangingTab,
     setInputSearch
   } = usePatientListHook()
+
+  setPageTitle(t('header-tab-patients'))
 
   return (
     <React.Fragment>

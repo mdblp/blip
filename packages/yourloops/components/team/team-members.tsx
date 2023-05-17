@@ -74,11 +74,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export interface TeamMembersProps {
   team: Team
-  refreshParent: () => void
+  // refreshParent: () => void
 }
 
 function TeamMembers(props: TeamMembersProps): JSX.Element {
-  const { team, refreshParent } = props
+  const { team } = props
   const teamHook = useTeam()
   const { classes } = useStyles()
   const authContext = useAuth()
@@ -119,7 +119,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
 
   const refresh = (): void => {
     setMembers(getNonPatientMembers(teamHook.getTeam(team.id) ?? undefined))
-    refreshParent()
+    // refreshParent()
   }
 
   return (
