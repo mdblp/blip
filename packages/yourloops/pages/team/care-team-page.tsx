@@ -170,7 +170,7 @@ function CareTeamPage(): JSX.Element {
                 >
                   <DesktopMacOutlinedIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
-                    {t('events-configuration')}
+                    {t('monitoring-alerts-configuration')}
                   </Typography>
                 </div>
               </div>
