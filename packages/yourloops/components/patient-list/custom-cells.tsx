@@ -209,8 +209,8 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
       <Tooltip
         title={
           <>
-            <Box>{t('data-not-transferred-tooltip1', { percentage: nonDataTransmissionRate })}</Box>
-            <Box>{t('data-not-transferred-tooltip2', { threshold: monitoringAlertsParameters.nonDataTxThreshold })}</Box>
+            <Box>{t('data-not-transmitted-tooltip1', { percentage: nonDataTransmissionRate })}</Box>
+            <Box>{t('data-not-transmitted-tooltip2', { threshold: monitoringAlertsParameters.nonDataTxThreshold })}</Box>
             <Box>{sharedTooltip}</Box>
           </>
         }

@@ -118,7 +118,7 @@ const ignoredTransKeyForYourLoops = [
   'consent-patient-privacy-policy',
   'consent-patient-terms-of-use',
   'consent-monitoring-terms-of-use',
-  'diabete-type',
+  'diabetes-type',
   'not-logged-in',
   'modal-add-medical-team-code-no-invite',
   'modal-caregiver-remove-patient-failure',

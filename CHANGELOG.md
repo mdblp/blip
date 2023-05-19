@@ -85,6 +85,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2301 Split ITs jobs by roles
 - YLP-2307 Incomplete alert when accepting a direct share invitation
 - YLP-2311 Reorganize ITs
+- YLP-2364 Fixed English translations
 - YLP-2367 Patient list refacto
 
 ### Fixed
