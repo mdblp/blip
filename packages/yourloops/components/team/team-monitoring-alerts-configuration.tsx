@@ -73,7 +73,7 @@ function TeamMonitoringAlertsConfiguration(props: TeamMonitoringAlertsConfigurat
         <div>
           <TuneIcon />
           <Typography className={commonTeamClasses.title} data-testid="monitoring-alert-configuration-section">
-            {t('events-configuration')}
+            {t('monitoring-alerts-configuration')}
           </Typography>
         </div>
       </div>
