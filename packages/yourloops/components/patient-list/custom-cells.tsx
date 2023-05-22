@@ -105,11 +105,11 @@ export const PendingIconCell: FunctionComponent = () => {
 
   return (
     <Tooltip
-      title={t('pending-invitation')}
-      aria-label={t('pending-invitation')}
+      title={t('pending-invite')}
+      aria-label={t('pending-invite')}
     >
       <Box display="flex">
-        <AccessTimeIcon titleAccess={t('pending-invitation')} />
+        <AccessTimeIcon titleAccess={t('pending-invite')} />
       </Box>
     </Tooltip>
   )

@@ -157,7 +157,7 @@ function TeamContextImpl(): TeamContext {
   const removeMember = async (member: TeamMember, teamId: string): Promise<void> => {
     if (member.status === UserInvitationStatus.pending) {
       if (!member.invitationId) {
-        throw new Error('Missing invitation!')
+        throw new Error('Missing invite!')
       }
       await notificationHook.cancel(member.invitationId, teamId, member.email)
     } else {

@@ -44,7 +44,7 @@ export interface GridRowModel {
 
 export interface PendingGridRowModel {
   id: string
-  inviteCreatedByLoggedUser: boolean
+  isInviteCreatedByLoggedUser: boolean
   [PendingPatientListColumns.Actions]: Patient
   [PendingPatientListColumns.Date]: string
   [PendingPatientListColumns.Email]: string

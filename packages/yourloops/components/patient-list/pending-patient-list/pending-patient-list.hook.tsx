@@ -118,7 +118,7 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
         headerName: t('actions'),
         getActions: (params: GridRowParams<PendingGridRowModel>) => {
           const patient = params.row[PendingPatientListColumns.Actions]
-          const inviteCreatedByLoggedUser = params.row.inviteCreatedByLoggedUser
+          const inviteCreatedByLoggedUser = params.row.isInviteCreatedByLoggedUser
           const tooltipText = inviteCreatedByLoggedUser ? '' : t('action-unavailable')
 
           return [
@@ -178,7 +178,7 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
       const inviteAuthorName = invite ? getUserName(firstName, lastName, fullName) : t('N/A')
       return {
         id: patient.userid,
-        inviteCreatedByLoggedUser,
+        isInviteCreatedByLoggedUser: inviteCreatedByLoggedUser,
         [PendingPatientListColumns.Actions]: patient,
         [PendingPatientListColumns.Date]: inviteDate,
         [PendingPatientListColumns.Email]: patient.profile.email,

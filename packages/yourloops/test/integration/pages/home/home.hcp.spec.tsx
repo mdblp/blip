@@ -152,7 +152,7 @@ describe('HCP home page', () => {
     localStorage.setItem('selectedTeamId', myThirdTeamId)
     jest.spyOn(NotificationApi, 'getSentInvitations').mockResolvedValue([
       {
-        id: 'fakeInvitationId',
+        id: 'fakeInviteId',
         type: NotificationType.careTeamPatientInvitation,
         metricsType: 'join_team',
         email: pendingPatient.profile.email,

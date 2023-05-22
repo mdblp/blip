@@ -54,12 +54,12 @@ function NotificationContextImpl(): NotificationContext {
   }
 
   const accept = async (notification: Notification): Promise<void> => {
-    log.info('Accept invitation', notification)
+    log.info('Accept invite', notification)
     await NotificationApi.acceptInvitation(user.id, notification)
   }
 
   const decline = async (notification: Notification): Promise<void> => {
-    log.info('Decline invitation', notification)
+    log.info('Decline invite', notification)
     await NotificationApi.declineInvitation(user.id, notification)
     const r = await NotificationApi.getReceivedInvitations(user.id)
     setReceivedInvitations(r)
@@ -82,7 +82,7 @@ function NotificationContextImpl(): NotificationContext {
   const getInvitation = (teamId: string, patientEmail: string): Notification => {
     const invitation = sentInvitations.find(invitation => invitation.target.id === teamId && invitation.email === patientEmail)
     if (!invitation) {
-      throw Error(`Could not find invitation for team ${teamId}`)
+      throw Error(`Could not find invite for team ${teamId}`)
     }
     return invitation
   }

@@ -93,7 +93,7 @@ describe('Notification', () => {
       expect(getByText(container, 'Jeanne Dubois wants to share their diabetes data with you.')).not.toBeNull()
     })
 
-    it('should display medical team join invitation for a member', () => {
+    it('should display medical team join invite for a member', () => {
       const { container } = render(
         fakeNotification({
           ...notif,
@@ -140,25 +140,25 @@ describe('Notification', () => {
       it('should display a correct icon when invitation type is a direct invitation', () => {
         render(fakeNotification())
 
-        expect(screen.queryByTitle('direct-invitation-icon')).not.toBeNull()
+        expect(screen.queryByTitle('direct-invite-icon')).not.toBeNull()
         expect(screen.queryByTitle('default-icon')).toBeNull()
-        expect(screen.queryByTitle('care-team-invitation-icon')).toBeNull()
+        expect(screen.queryByTitle('care-team-invite-icon')).toBeNull()
       })
 
       it('should display a correct icon when invitation type is a care team pro invitation', () => {
         render(fakeNotification({ ...teamNotif, type: NotificationType.careTeamProInvitation }))
 
-        expect(screen.queryByTitle('direct-invitation-icon')).toBeNull()
+        expect(screen.queryByTitle('direct-invite-icon')).toBeNull()
         expect(screen.queryByTitle('default-icon')).not.toBeNull()
-        expect(screen.queryByTitle('care-team-invitation-icon')).toBeNull()
+        expect(screen.queryByTitle('care-team-invite-icon')).toBeNull()
       })
 
       it('should display a correct icon when invitation type is a care team patient invitation', () => {
         render(fakeNotification({ ...teamNotif, type: NotificationType.careTeamPatientInvitation }))
 
-        expect(screen.queryByTitle('direct-invitation-icon')).toBeNull()
+        expect(screen.queryByTitle('direct-invite-icon')).toBeNull()
         expect(screen.queryByTitle('default-icon')).toBeNull()
-        expect(screen.queryByTitle('care-team-invitation-icon')).not.toBeNull()
+        expect(screen.queryByTitle('care-team-invite-icon')).not.toBeNull()
       })
     })
 

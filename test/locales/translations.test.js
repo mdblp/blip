@@ -99,9 +99,9 @@ const ignoredTransKeyForYourLoops = [
   'modal-add-patient-warning-line2',
   'modal-patient-team-privacy-2',
   'no',
-  'notification-caregiver-invitation-by-patient',
-  'notification-hcp-invitation-by-team',
-  'notification-patient-invitation-by-team',
+  'notification-caregiver-invite-by-patient',
+  'notification-hcp-invite-by-team',
+  'notification-patient-invite-by-team',
   'signup-steppers-ending-message-1',
   'signup-steppers-ending-message-2',
   'team-leave-dialog-and-del-question',
@@ -144,8 +144,8 @@ const ignoredTransKeyForYourLoops = [
   'until',
   // Others
   // TODO
-  'alert-invitation-patient-failed-already-in-team',
-  'alert-invitation-patient-failed-already-invited',
+  'alert-invite-patient-failed-already-in-team',
+  'alert-invite-patient-failed-already-invited',
   'alert-reinvite-patient-failure',
   'alert-reinvite-patient-from-team-success',
   'accompanying-documents',

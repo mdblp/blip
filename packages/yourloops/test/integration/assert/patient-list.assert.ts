@@ -559,7 +559,7 @@ export const checkRemovePendingPatientMedicalTeam = async () => {
   expect(pendingPatientList).toHaveTextContent('Eric ArdMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
   expect(pendingPatientList).toHaveTextContent('Rows per page:101–1 of 1')
 
-  // We open the dialog to cancel a pending invitation
+  // We open the dialog to cancel a pending invite
   const cancelInviteButton = screen.getByRole('button', { name: 'Remove patient pending-patient@diabeloop.fr' })
   await userEvent.click(cancelInviteButton)
   const cancelInviteDialog = screen.getByRole('dialog')
@@ -568,7 +568,7 @@ export const checkRemovePendingPatientMedicalTeam = async () => {
   expect(cancelInviteDialog).toHaveTextContent('You and the care team will no longer have access to their data.')
   expect(cancelInviteDialog).toHaveTextContent('If you want to remove the patient from another care team, you must first select the care team from the dropdown menu at the top right of YourLoops.')
 
-  // We click on cancel (meaning that we do not cancel the pending invitation... Very confusing)
+  // We click on cancel (meaning that we do not cancel the pending invite... Very confusing)
   const cancelButtonDialog = within(cancelInviteDialog).getByRole('button', { name: 'Cancel' })
   await userEvent.click(cancelButtonDialog)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
@@ -579,11 +579,11 @@ export const checkRemovePendingPatientMedicalTeam = async () => {
   await userEvent.click(removeInviteButton)
 
   // We check that the API has been properly called
-  expect(NotificationApi.cancelInvitation).toHaveBeenCalledWith('fakeInvitationId', undefined, pendingPatient.profile.email)
+  expect(NotificationApi.cancelInvitation).toHaveBeenCalledWith('fakeInviteId', undefined, pendingPatient.profile.email)
   expect(PatientApi.removePatient).toHaveBeenCalledWith(myThirdTeamId, pendingPatient.userid)
 
   // We check that the alert is successful
-  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('The invitation has been canceled')
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('The invite has been canceled')
 
   // We check that the pending patient list is still the same
   expect(pendingPatientList).toHaveTextContent('Invite sent byDateEmailActions')
@@ -606,11 +606,11 @@ export const checkReinvitePendingPatientMedicalTeam = async () => {
   expect(pendingPatientList).toHaveTextContent('Eric ArdMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
   expect(pendingPatientList).toHaveTextContent('Rows per page:101–1 of 1')
 
-  // We open the dialog to resend an invitation to a pending patient
+  // We open the dialog to resend an invite to a pending patient
   const cancelInviteButton = screen.getByRole('button', { name: 'Resend invite pending-patient@diabeloop.fr' })
   await userEvent.click(cancelInviteButton)
   const cancelInviteDialog = screen.getByRole('dialog')
-  expect(cancelInviteDialog).toHaveTextContent('Resend an invitation to a patient')
+  expect(cancelInviteDialog).toHaveTextContent('Resend an invite to a patient')
   expect(cancelInviteDialog).toHaveTextContent('Are you sure you want to reinvite pending-patient@diabeloop.fr to A - MyThirdTeam - to be deleted?CancelResend invite')
 
   // We click on cancel
@@ -624,7 +624,7 @@ export const checkReinvitePendingPatientMedicalTeam = async () => {
   await userEvent.click(removeInviteButton)
 
   // We check that the API has been properly called
-  expect(NotificationApi.cancelInvitation).toHaveBeenCalledWith('fakeInvitationId', undefined, pendingPatient.profile.email)
+  expect(NotificationApi.cancelInvitation).toHaveBeenCalledWith('fakeInviteId', undefined, pendingPatient.profile.email)
   expect(PatientApi.removePatient).toHaveBeenCalledWith(myThirdTeamId, pendingPatient.userid)
   expect(PatientApi.invitePatient).toHaveBeenCalledWith({ teamId: myThirdTeamId, email: pendingPatient.profile.email })
 
