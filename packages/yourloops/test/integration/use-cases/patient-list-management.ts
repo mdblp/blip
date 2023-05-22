@@ -36,7 +36,8 @@ import {
   checkPatientListHideShowColumns,
   checkPatientListPendingTab,
   checkPatientListTooltipsMgDL,
-  checkPatientListTooltipsMmolL, checkPendingPatientColumnsSettingsMedicalTeam,
+  checkPatientListTooltipsMmolL,
+  checkPendingPatientColumnsSettingsMedicalTeam,
   type Router
 } from '../assert/patient-list.assert'
 import { checkPatientFiltersForPrivateTeam } from '../assert/patient-filters.assert'
