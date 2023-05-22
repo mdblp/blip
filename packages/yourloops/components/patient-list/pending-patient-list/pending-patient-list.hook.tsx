@@ -55,6 +55,10 @@ interface PatientListHookReturns {
   onSuccessReinviteDialog: () => void
 }
 
+const SMALL_CELL_WIDTH = 200
+const MEDIUM_CELL_WIDTH = 250
+const LARGE_CELL_WIDTH = 300
+
 export const usePendingPatientListHook = (props: PendingPatientListHookProps): PatientListHookReturns => {
   const { patients } = props
   const { t } = useTranslation()
@@ -93,20 +97,20 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
         type: 'string',
         headerName: t('invite-sent-by'),
         hideable: false,
-        minWidth: 250
+        minWidth: MEDIUM_CELL_WIDTH
       },
       {
         field: PendingPatientListColumns.Date,
         type: 'string',
         headerName: t('date'),
         hideable: false,
-        minWidth: 200
+        minWidth: SMALL_CELL_WIDTH
       },
       {
         field: PendingPatientListColumns.Email,
         type: 'string',
         headerName: t('email'),
-        minWidth: 250
+        minWidth: MEDIUM_CELL_WIDTH
       },
       {
         type: 'actions',
@@ -160,7 +164,7 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
             </Tooltip>
           ]
         },
-        minWidth: 300
+        minWidth: LARGE_CELL_WIDTH
       }
     ]
   }

@@ -27,7 +27,7 @@
 
 import {
   addDuration,
-  formatClocktimeFromMsPer24,
+  formatClocktimeFromMsPer24, formatDate,
   formatDuration,
   formatLocalizedFromUTC,
   getTimezoneFromTimePrefs,
@@ -295,6 +295,16 @@ describe('DatetimeUtil', () => {
 
     it('should use a custom format string passed as second arg', () => {
       expect(formatClocktimeFromMsPer24(twoTwentyAfternoonMs, 'kk🙃mm')).toEqual('14🙃20')
+    })
+  })
+
+  describe('formatDate', () => {
+    it('should return correct date', () => {
+      expect(formatDate('1983-01-31')).toBe('Jan 31, 1983')
+    })
+
+    it('should return empty sting when given param is undefined', () => {
+      expect(formatDate(undefined)).toBe('')
     })
   })
 })
