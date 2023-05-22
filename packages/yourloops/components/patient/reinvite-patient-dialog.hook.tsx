@@ -59,10 +59,13 @@ export const useReinvitePatientDialog = ({
       setProcessing(true)
       await removePatient(patient)
       await invitePatient(selectedTeam, patientEmail)
-      alert.success(t('alert-reinvite-patient-from-team-success', {
-        teamName: selectedTeam.name,
-        patientEmail
-      }))
+      alert.success(
+        t('alert-reinvite-patient-from-team-success',
+          {
+            teamName: selectedTeam.name,
+            patientEmail
+          }
+        ))
       onSuccess()
     } catch (err) {
       alert.error(t('alert-reinvite-patient-failure', {

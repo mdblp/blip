@@ -222,7 +222,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               aria-label={t('current')}
               classes={{ root: classes.tab }}
             />
-            {isUserHcp &&
+            {isUserHcp && !isSelectedTeamPrivate &&
               <Tab
                 data-testid="patient-list-pending-tab"
                 icon={<HourglassEmptyIcon />}

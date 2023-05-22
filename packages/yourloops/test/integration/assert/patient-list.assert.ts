@@ -83,7 +83,7 @@ export const checkPatientListPendingTab = async (router: Router) => {
   await userEvent.click(pendingTab)
   const dataGridPendingRows = screen.getByTestId('pending-patient-list-grid')
   expect(within(dataGridPendingRows).getAllByRole('row')).toHaveLength(2)
-  expect(dataGridPendingRows).toHaveTextContent('PatientActionsPending invitationpending-patient@diabeloop.fr')
+  expect(dataGridPendingRows).toHaveTextContent('Invite sent byDateEmailActionsN/AN/Apending-patient@diabeloop.frResend inviteCancel')
 
   await userEvent.click(within(dataGridPendingRows).getAllByRole('row')[1])
   expect(router.state.location.pathname).toEqual('/home')
@@ -634,7 +634,7 @@ export const checkReinvitePendingPatientMedicalTeam = async () => {
   // We check that the team code dialog is opened with the correct content and we close it
   const teamCodeDialog = screen.getByRole('dialog')
   expect(teamCodeDialog).toHaveTextContent('A - MyThirdTeam - to be deletedCommunicate this identification code to your patient during a consultation so they can verify your identity.')
-  expect(teamCodeDialog).toHaveTextContent('This identification code is always available in the team information on the "My teams" page.263 - 381 - 988Ok')
+  expect(teamCodeDialog).toHaveTextContent('This identification code is always available in the Care team page.263 - 381 - 988Ok')
   const closeTeamCodeDialogButton = within(teamCodeDialog).getByRole('button', { name: 'Ok' })
   await userEvent.click(closeTeamCodeDialogButton)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()

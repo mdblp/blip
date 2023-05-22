@@ -146,6 +146,8 @@ const ignoredTransKeyForYourLoops = [
   // TODO
   'alert-invitation-patient-failed-already-in-team',
   'alert-invitation-patient-failed-already-invited',
+  'alert-reinvite-patient-failure',
+  'alert-reinvite-patient-from-team-success',
   'accompanying-documents',
   'current-trigger-setting-hypoglycemia',
   'current-trigger-setting-tir',
@@ -174,6 +176,7 @@ const ignoredTransKeyForYourLoops = [
   'delete-medical-report-number',
   'filters-activated',
   'remote-monitoring',
+  'modal-reinvite-patient-question',
   'no-settings-on-device-alert-message',
   'BGM',
   'tooltip-empty-stat',
