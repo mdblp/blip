@@ -114,7 +114,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
 
   return (
     <React.Fragment>
-      <div className={commonTeamClasses.root}>
+      <div className={commonTeamClasses.root} data-testid="team-information">
         <div className={commonTeamClasses.categoryHeader}>
           <div>
             <InfoOutlinedIcon />

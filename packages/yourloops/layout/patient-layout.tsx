@@ -28,7 +28,7 @@
 import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import PatientDataPage from '../components/patient-data'
-import CareTeamPage from '../pages/team/care-team-page'
+import CareTeamPage from '../pages/care-team/care-team-page'
 import CaregiversPage from '../pages/patient/caregivers/page'
 import { PatientProvider } from '../lib/patient/patient.provider'
 import { TeamContextProvider } from '../lib/team'
