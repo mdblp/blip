@@ -219,6 +219,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const [addTeamDialogVisible, setAddTeamDialogVisible] = useState(false)
   const isACareTeamPatientInvitation = notification.type === NotificationType.careTeamPatientInvitation
   const isADirectInvitation = notification.type === NotificationType.directInvitation
+  const inviterName = isADirectInvitation ? notification.creator.profile.fullName : notification.target.name
 
   if (isACareTeamPatientInvitation && !notification.target) {
     throw Error('Cannot accept team invite because notification is missing the team id info')
@@ -233,7 +234,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
       if (!isADirectInvitation) {
         teamHook.refresh()
       }
-      alert.success(t('accept-notification-success', { teamName: notification.target.name }))
+      alert.success(t('accept-notification-success', { name: inviterName }))
       refreshReceivedInvitations()
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)

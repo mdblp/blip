@@ -72,7 +72,7 @@ describe('Login page desktop view', () => {
     expect(languageSelector).toBeVisible()
 
     // main content
-    expect(infoContainer).toHaveTextContent('YourLoops is a web application offered by Diabeloop in order to facilitate the monitoring of patients with diabetes using compatible medical devices.It provides access to visual representations of data that are automatically uploaded from DBL devices: blood sugar levels, insulin, carbohydrates and physical activity.YourLoops also enables patients to securely share their data with their medical team or caregivers.For health professionals, YourLoops is the platform for monitoring their patients. Through these features, it saves time and facilitates therapeutic decision-making.Learn more')
+    expect(infoContainer).toHaveTextContent('YourLoops is a web application offered by Diabeloop to facilitate the monitoring of patients with diabetes using compatible medical devices.It provides access to visual representations of data that are automatically uploaded from DBL devices: glucose level, insulin, carbohydrates and physical activities.YourLoops also enables patients to securely share their data with their medical team or caregivers.For health professionals, YourLoops is the platform for monitoring their patients. Through these features, it saves time and facilitates therapeutic decision-making.Learn more')
     expect(moreInfoLink).toBeVisible()
     expect(moreInfoLink).toHaveAttribute('href', 'https://www.dbl-diabetes.com')
     checkFooterForUserNotLoggedIn(false)

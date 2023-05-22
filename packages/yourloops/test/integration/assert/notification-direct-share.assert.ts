@@ -25,39 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  checkMonitoringAlertsIconsInactiveForFirstPatient,
-  checkPatientColumnsFiltersContent,
-  checkPatientListColumnSort,
-  checkPatientListCurrentTab,
-  checkPatientListCurrentTabForPrivateTeam,
-  checkPatientListFilters,
-  checkPatientListHeaderForHcp,
-  checkPatientListHideShowColumns,
-  checkPatientListPendingTab,
-  checkPatientListTooltipsMgDL,
-  checkPatientListTooltipsMmolL,
-  type Router
-} from '../assert/patient-list.assert'
-import { checkPatientFiltersForPrivateTeam } from '../assert/patient-filters.assert'
+import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
-export const testPatientListForHcp = async (router: Router) => {
-  checkPatientListHeaderForHcp()
-  await checkPatientListTooltipsMgDL()
-  await checkPatientListColumnSort()
-  await checkMonitoringAlertsIconsInactiveForFirstPatient()
-  await checkPatientListFilters()
-  await checkPatientColumnsFiltersContent()
-  await checkPatientListHideShowColumns()
-  await checkPatientListPendingTab(router)
-  await checkPatientListCurrentTab()
-}
-
-export const testPatientListForHcpWithMmolL = async () => {
-  await checkPatientListTooltipsMmolL()
-}
-
-export const testPatientListForHcpPrivateTeam = async () => {
-  await checkPatientListCurrentTabForPrivateTeam()
-  await checkPatientFiltersForPrivateTeam()
+export const checkAcceptNotificationDirectShare = async () => {
+  const acceptButton = screen.getByRole('button', { name: 'Accept' })
+  await userEvent.click(acceptButton)
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You have accepted the notification of Backloops test Patient1')
 }

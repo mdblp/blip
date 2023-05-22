@@ -81,7 +81,7 @@ function MonitoringAlertCard(props: MonitoringAlertCardProps): JSX.Element {
   return (
     <GenericDashboardCard
       avatar={<AnnouncementIcon className={noActiveMonitoringAlert ? '' : classes.alertColor} />}
-      title={`${t('events')}${numberOfMonitoringAlertsLabel}`}
+      title={`${t('monitoring-alerts')}${numberOfMonitoringAlertsLabel}`}
       data-testid="monitoring-alerts-card"
       action={user.isUserHcp() &&
         <IconButton
@@ -97,7 +97,7 @@ function MonitoringAlertCard(props: MonitoringAlertCardProps): JSX.Element {
     >
       <CardContent>
         <Typography className={`${noActiveMonitoringAlert ? '' : classes.alertColor} bold`}>
-          {t('current-events')}
+          {t('current-monitoring-alerts')}
         </Typography>
         <Box
           id="time-away-target-monitoring-alert-id"
@@ -130,7 +130,7 @@ function MonitoringAlertCard(props: MonitoringAlertCardProps): JSX.Element {
           fontSize="13px"
           className={nonDataTransmissionActive ? classes.alertColor : ''}
         >
-          {t('data-not-transferred')}
+          {t('data-not-transmitted')}
           <Box>{`${Math.round(patient.monitoringAlerts.nonDataTransmissionRate * 10) / 10}%`}</Box>
         </Box>
       </CardContent>
