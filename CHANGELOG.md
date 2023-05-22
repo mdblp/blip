@@ -87,6 +87,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2311 Reorganize ITs
 - YLP-2364 Fixed English translations
 - YLP-2367 Patient list refacto
+- YLP-2387 Fix the tab title when displaying the patient list
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team

@@ -25,42 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { PatientListHeader } from './patient-list-header'
-import { usePatientListHook } from './patient-list.hook'
-import { PatientListTabs } from './models/enums/patient-list.enum'
-import { GlobalStyles } from 'tss-react'
-import { useTheme } from '@mui/material/styles'
-import { CurrentPatientList } from './current-patient-list/current-patient-list'
-import { PendingPatientList } from './pending-patient-list/pending-patient-list'
+import {
+  checkCareTeamInformation,
+  checkCareTeamMembers,
+  checkCareTeamMonitoringAlertsConfiguration
+} from '../assert/care-team.assert'
 
-export const PatientList: FunctionComponent = () => {
-  const theme = useTheme()
-  const {
-    selectedTab,
-    inputSearch,
-    patients,
-    onChangingTab,
-    setInputSearch
-  } = usePatientListHook()
-
-  return (
-    <React.Fragment>
-      <GlobalStyles styles={{ body: { backgroundColor: theme.palette.common.white } }} />
-      <PatientListHeader
-        selectedTab={selectedTab}
-        inputSearch={inputSearch}
-        patientsDisplayedCount={patients.length}
-        onChangingTab={onChangingTab}
-        setInputSearch={setInputSearch}
-      />
-
-      {selectedTab === PatientListTabs.Current &&
-        <CurrentPatientList patients={patients} />
-      }
-      {selectedTab === PatientListTabs.Pending &&
-        <PendingPatientList patients={patients} />
-      }
-    </React.Fragment>
-  )
+export const testCareTeamLayout = () => {
+  checkCareTeamInformation()
+  checkCareTeamMembers()
+  checkCareTeamMonitoringAlertsConfiguration()
 }
