@@ -55,7 +55,7 @@ const checkPatientListHeader = (header: HTMLElement) => {
   expect(header).toBeInTheDocument()
   expect(screen.getByPlaceholderText('Search for a patient...')).toBeVisible()
   expect(within(header).getByLabelText('Search by first name, last name or birthdate (dd/mm/yyyy)')).toBeVisible()
-  expect(within(header).getByTestId('column-settings-button')).toBeVisible()
+  expect(within(header).getByRole('button', { name: 'Change columns settings' })).toBeVisible()
   expect(screen.getByTestId('current-patient-list-grid')).toBeVisible()
   expect(screen.getByText('Data calculated on the last 14 days')).toBeVisible()
   expect(screen.getByRole('tab', { name: 'Current' })).toBeVisible()
@@ -204,8 +204,22 @@ export const checkPatientListFilters = async () => {
   expect(within(screen.getByTestId('current-patient-list-grid')).getAllByRole('row')).toHaveLength(5)
 }
 
+export const checkPendingPatientColumnsSettingsMedicalTeam = async () => {
+  // We go to the pending tab
+  const pendingTab = screen.getByRole('tab', { name: 'Pending' })
+  await userEvent.click(pendingTab)
+
+  // Check that the buttons are disabled
+  const columnSettingsButton = screen.getByRole('button', { name: 'Change columns settings' })
+  expect(columnSettingsButton).toBeDisabled()
+
+  // We go back to the current tab
+  const currentTab = screen.getByRole('tab', { name: 'Current' })
+  await userEvent.click(currentTab)
+}
+
 export const checkPatientColumnsFiltersContent = async () => {
-  const columnSettingsButton = screen.getByTestId('column-settings-button')
+  const columnSettingsButton = screen.getByRole('button', { name: 'Change columns settings' })
 
   await userEvent.click(columnSettingsButton)
 
@@ -226,7 +240,7 @@ export const checkPatientListHideShowColumns = async () => {
   const dataGridCurrentRows = screen.getByTestId('current-patient-list-grid')
   expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
 
-  const columnSettingsButton = screen.getByTestId('column-settings-button')
+  const columnSettingsButton = screen.getByRole('button', { name: 'Change columns settings' })
 
   // Assert default columns are displayed
   expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
