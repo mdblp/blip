@@ -129,7 +129,7 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
             >
               <div data-testid="reinvite-patient-button">
               <Button
-                data-action="remove-patient"
+                data-action="reinvite-patient"
                 startIcon={<MailIcon />}
                 data-testid={`reinvite-patient-${patient.profile.email}`}
                 aria-label={`${t('button-resend-invite')} ${patient.profile.email}`}
