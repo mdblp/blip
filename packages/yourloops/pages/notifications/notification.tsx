@@ -113,7 +113,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
       notificationText = (
         <Trans
           t={t}
-          i18nKey="notification-caregiver-invitation-by-patient"
+          i18nKey="notification-caregiver-invite-by-patient"
           components={{ strong: <strong /> }}
           values={values} parent={React.Fragment}
         >
@@ -125,7 +125,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
       notificationText = (
         <Trans
           t={t}
-          i18nKey="notification-hcp-invitation-by-team"
+          i18nKey="notification-hcp-invite-by-team"
           components={{ strong: <strong /> }}
           values={values}
           parent={React.Fragment}
@@ -138,7 +138,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
       notificationText = (
         <Trans
           t={t}
-          i18nKey="notification-patient-invitation-by-team"
+          i18nKey="notification-patient-invite-by-team"
           components={{ strong: <strong /> }}
           values={values} parent={React.Fragment}
         >
@@ -158,7 +158,7 @@ const NotificationIcon = ({ id, type, className }: NotificationIconPayload): JSX
       return (
         <PersonIcon
           id={`person-icon-${id}`}
-          titleAccess="direct-invitation-icon"
+          titleAccess="direct-invite-icon"
           className={className}
         />
       )
@@ -166,7 +166,7 @@ const NotificationIcon = ({ id, type, className }: NotificationIconPayload): JSX
       return (
         <MedicalServiceIcon
           id={`medical-service-icon-${id}`}
-          titleAccess="care-team-invitation-icon"
+          titleAccess="care-team-invite-icon"
           className={className}
         />
       )

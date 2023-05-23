@@ -114,11 +114,11 @@ const NotificationsPage: FunctionComponent<PropsWithChildren> = () => {
             ) : (
               <Typography
                 className={classes.noNotificationMessage}
-                id="typography-no-pending-invitation-message"
+                id="typography-no-pending-invite-message"
                 variant="body2"
                 gutterBottom
               >
-                {t('notification-no-pending-invitation')}
+                {t('notification-no-pending-invite')}
               </Typography>
             )}
           </List>

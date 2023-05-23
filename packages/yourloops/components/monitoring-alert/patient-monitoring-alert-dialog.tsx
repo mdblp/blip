@@ -92,7 +92,7 @@ function PatientMonitoringAlertDialog(props: PatientMonitoringAlertDialogProps):
           <div>
             <TuneIcon />
             <Typography className={commonClasses.title}>
-              {t('events-configuration')}
+              {t('monitoring-alerts-configuration')}
             </Typography>
           </div>
         </div>

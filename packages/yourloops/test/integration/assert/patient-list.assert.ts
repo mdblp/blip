@@ -38,7 +38,8 @@ import {
 } from './patient-filters.assert'
 import { changeTeamScope } from './header.assert'
 import { type createBrowserRouter } from 'react-router-dom'
-import { patient1, patient2, patient3, patientWithMmol } from '../data/patient.api.data'
+import { patient1, patient2, patient3, patientWithMmol, pendingPatient } from '../data/patient.api.data'
+import NotificationApi from '../../../lib/notifications/notification.api'
 
 export type Router = ReturnType<typeof createBrowserRouter>
 
@@ -54,7 +55,7 @@ const checkPatientListHeader = (header: HTMLElement) => {
   expect(header).toBeInTheDocument()
   expect(screen.getByPlaceholderText('Search for a patient...')).toBeVisible()
   expect(within(header).getByLabelText('Search by first name, last name or birthdate (dd/mm/yyyy)')).toBeVisible()
-  expect(within(header).getByTestId('column-settings-button')).toBeVisible()
+  expect(within(header).getByRole('button', { name: 'Change columns settings' })).toBeVisible()
   expect(screen.getByTestId('current-patient-list-grid')).toBeVisible()
   expect(screen.getByText('Data calculated on the last 14 days')).toBeVisible()
   expect(screen.getByRole('tab', { name: 'Current' })).toBeVisible()
@@ -82,7 +83,7 @@ export const checkPatientListPendingTab = async (router: Router) => {
   await userEvent.click(pendingTab)
   const dataGridPendingRows = screen.getByTestId('pending-patient-list-grid')
   expect(within(dataGridPendingRows).getAllByRole('row')).toHaveLength(2)
-  expect(dataGridPendingRows).toHaveTextContent('PatientActionsPending invitationpending-patient@diabeloop.fr')
+  expect(dataGridPendingRows).toHaveTextContent('Invite sent byDateEmailActionsN/AN/Apending-patient@diabeloop.frResend inviteCancel')
 
   await userEvent.click(within(dataGridPendingRows).getAllByRole('row')[1])
   expect(router.state.location.pathname).toEqual('/home')
@@ -183,7 +184,9 @@ export const checkPatientListFilters = async () => {
   expect(screen.queryByTestId('reset-filters-link')).not.toBeInTheDocument()
 
   expect(within(dataGridRowPending).getAllByRole('row')).toHaveLength(2)
-  expect(dataGridRowPending).toHaveTextContent('PatientActionsPending invitationpending-patient@diabeloop.fr')
+  expect(dataGridRowPending).toHaveTextContent('Invite sent byDateEmailActions')
+  expect(dataGridRowPending).toHaveTextContent('N/AN/Apending-patient@diabeloop.frResend inviteCancel')
+  expect(dataGridRowPending).toHaveTextContent('Rows per page:101–1 of 1')
 
   await changeTeamScope(filtersTeamName, myThirdTeamName)
   expect(PatientApi.getPatientsForHcp).toHaveBeenCalledWith(loggedInUserId, myThirdTeamId)
@@ -201,8 +204,22 @@ export const checkPatientListFilters = async () => {
   expect(within(screen.getByTestId('current-patient-list-grid')).getAllByRole('row')).toHaveLength(5)
 }
 
+export const checkPendingPatientColumnsSettingsMedicalTeam = async () => {
+  // We go to the pending tab
+  const pendingTab = screen.getByRole('tab', { name: 'Pending' })
+  await userEvent.click(pendingTab)
+
+  // Check that the buttons are disabled
+  const columnSettingsButton = screen.getByRole('button', { name: 'Change columns settings' })
+  expect(columnSettingsButton).toBeDisabled()
+
+  // We go back to the current tab
+  const currentTab = screen.getByRole('tab', { name: 'Current' })
+  await userEvent.click(currentTab)
+}
+
 export const checkPatientColumnsFiltersContent = async () => {
-  const columnSettingsButton = screen.getByTestId('column-settings-button')
+  const columnSettingsButton = screen.getByRole('button', { name: 'Change columns settings' })
 
   await userEvent.click(columnSettingsButton)
 
@@ -223,7 +240,7 @@ export const checkPatientListHideShowColumns = async () => {
   const dataGridCurrentRows = screen.getByTestId('current-patient-list-grid')
   expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
 
-  const columnSettingsButton = screen.getByTestId('column-settings-button')
+  const columnSettingsButton = screen.getByRole('button', { name: 'Change columns settings' })
 
   // Assert default columns are displayed
   expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
@@ -529,4 +546,119 @@ export const checkMonitoringAlertsIconsInactiveForFirstPatient = async (): Promi
 
   const firstRowNoDataIcon = within(dataGridRows).getAllByTestId('no-data-icon')[0]
   expect(firstRowNoDataIcon).toHaveStyle(`color: ${disabledColorAsRgba};`)
+}
+
+export const checkPendingPatientManagementMedicalTeam = async () => {
+  // We go to the pending tab
+  const pendingTab = screen.getByRole('tab', { name: 'Pending' })
+  await userEvent.click(pendingTab)
+
+  // Check that the buttons are disabled
+  expect(screen.getByRole('button', { name: 'Remove patient pending-patient@diabeloop.fr' })).toBeDisabled()
+  expect(screen.getByRole('button', { name: 'Resend invite pending-patient@diabeloop.fr' })).toBeDisabled()
+
+  // We go back to the current tab
+  const currentTab = screen.getByRole('tab', { name: 'Current' })
+  await userEvent.click(currentTab)
+}
+
+export const checkRemovePendingPatientMedicalTeam = async () => {
+  // We go to the pending tab
+  const pendingTab = screen.getByRole('tab', { name: 'Pending' })
+  await userEvent.click(pendingTab)
+
+  // We check that the patient list is correct
+  const pendingPatientList = screen.getByTestId('pending-patient-list-grid')
+  expect(pendingPatientList).toHaveTextContent('Invite sent byDateEmailActions')
+  expect(pendingPatientList).toHaveTextContent('Eric ArdMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
+  expect(pendingPatientList).toHaveTextContent('Rows per page:101–1 of 1')
+
+  // We open the dialog to cancel a pending invite
+  const cancelInviteButton = screen.getByRole('button', { name: 'Remove patient pending-patient@diabeloop.fr' })
+  await userEvent.click(cancelInviteButton)
+  const cancelInviteDialog = screen.getByRole('dialog')
+  expect(cancelInviteDialog).toHaveTextContent('Remove Pending Patient from A - MyThirdTeam - to be deleted')
+  expect(cancelInviteDialog).toHaveTextContent('Are you sure you want to remove Pending Patient from A - MyThirdTeam - to be deleted?')
+  expect(cancelInviteDialog).toHaveTextContent('You and the care team will no longer have access to their data.')
+  expect(cancelInviteDialog).toHaveTextContent('If you want to remove the patient from another care team, you must first select the care team from the dropdown menu at the top right of YourLoops.')
+
+  // We click on cancel (meaning that we do not cancel the pending invite... Very confusing)
+  const cancelButtonDialog = within(cancelInviteDialog).getByRole('button', { name: 'Cancel' })
+  await userEvent.click(cancelButtonDialog)
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+
+  // We open the dialog again and click on the remove button
+  await userEvent.click(cancelInviteButton)
+  const removeInviteButton = within(screen.getByRole('dialog')).getByRole('button', { name: 'Remove patient' })
+  await userEvent.click(removeInviteButton)
+
+  // We check that the API has been properly called
+  expect(NotificationApi.cancelInvitation).toHaveBeenCalledWith('fakeInviteId', undefined, pendingPatient.profile.email)
+  expect(PatientApi.removePatient).toHaveBeenCalledWith(myThirdTeamId, pendingPatient.userid)
+
+  // We check that the alert is successful
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('The invite has been canceled')
+
+  // We check that the pending patient list is still the same
+  expect(pendingPatientList).toHaveTextContent('Invite sent byDateEmailActions')
+  expect(pendingPatientList).toHaveTextContent('Eric ArdMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
+  expect(pendingPatientList).toHaveTextContent('Rows per page:101–1 of 1')
+
+  // We go back to the current tab
+  const currentTab = screen.getByRole('tab', { name: 'Current' })
+  await userEvent.click(currentTab)
+}
+
+export const checkReinvitePendingPatientMedicalTeam = async () => {
+  // We go to the pending tab
+  const pendingTab = screen.getByRole('tab', { name: 'Pending' })
+  await userEvent.click(pendingTab)
+
+  // We check that the patient list is correct
+  const pendingPatientList = screen.getByTestId('pending-patient-list-grid')
+  expect(pendingPatientList).toHaveTextContent('Invite sent byDateEmailActions')
+  expect(pendingPatientList).toHaveTextContent('Eric ArdMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
+  expect(pendingPatientList).toHaveTextContent('Rows per page:101–1 of 1')
+
+  // We open the dialog to resend an invite to a pending patient
+  const cancelInviteButton = screen.getByRole('button', { name: 'Resend invite pending-patient@diabeloop.fr' })
+  await userEvent.click(cancelInviteButton)
+  const cancelInviteDialog = screen.getByRole('dialog')
+  expect(cancelInviteDialog).toHaveTextContent('Resend an invite to a patient')
+  expect(cancelInviteDialog).toHaveTextContent('Are you sure you want to reinvite pending-patient@diabeloop.fr to A - MyThirdTeam - to be deleted?CancelResend invite')
+
+  // We click on cancel
+  const cancelButtonDialog = within(cancelInviteDialog).getByRole('button', { name: 'Cancel' })
+  await userEvent.click(cancelButtonDialog)
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+
+  // We open the dialog again and click on the resend invite button
+  await userEvent.click(cancelInviteButton)
+  const removeInviteButton = within(screen.getByRole('dialog')).getByRole('button', { name: 'Resend invite' })
+  await userEvent.click(removeInviteButton)
+
+  // We check that the API has been properly called
+  expect(NotificationApi.cancelInvitation).toHaveBeenCalledWith('fakeInviteId', undefined, pendingPatient.profile.email)
+  expect(PatientApi.removePatient).toHaveBeenCalledWith(myThirdTeamId, pendingPatient.userid)
+  expect(PatientApi.invitePatient).toHaveBeenCalledWith({ teamId: myThirdTeamId, email: pendingPatient.profile.email })
+
+  // We check that the alert is successful
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('pending-patient@diabeloop.fr has been reinvited to A - MyThirdTeam - to be deleted')
+
+  // We check that the team code dialog is opened with the correct content and we close it
+  const teamCodeDialog = screen.getByRole('dialog')
+  expect(teamCodeDialog).toHaveTextContent('A - MyThirdTeam - to be deletedCommunicate this identification code to your patient during a consultation so they can verify your identity.')
+  expect(teamCodeDialog).toHaveTextContent('This identification code is always available in the Care team page.263 - 381 - 988Ok')
+  const closeTeamCodeDialogButton = within(teamCodeDialog).getByRole('button', { name: 'Ok' })
+  await userEvent.click(closeTeamCodeDialogButton)
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+
+  // We check that the pending patient list is still the same
+  expect(pendingPatientList).toHaveTextContent('Invite sent byDateEmailActions')
+  expect(pendingPatientList).toHaveTextContent('Eric ArdMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
+  expect(pendingPatientList).toHaveTextContent('Rows per page:101–1 of 1')
+
+  // We go back to the current tab
+  const currentTab = screen.getByRole('tab', { name: 'Current' })
+  await userEvent.click(currentTab)
 }

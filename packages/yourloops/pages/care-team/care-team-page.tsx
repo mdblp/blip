@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
@@ -34,7 +34,7 @@ import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
 import Typography from '@mui/material/Typography'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-import { type Team, useTeam } from '../../lib/team'
+import { useTeam } from '../../lib/team'
 import TeamInformation from '../../components/team/team-information'
 import TeamMembers from '../../components/team/team-members'
 import { commonComponentStyles } from '../../components/common'
@@ -90,8 +90,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
   }
 }))
 
-function TeamDetailsPage(): JSX.Element {
-  const { getTeam, getMedicalTeams } = useTeam()
+function CareTeamPage(): JSX.Element {
+  const { getTeam } = useTeam()
   const { classes } = useStyles()
   const { classes: commonTeamClasses } = commonComponentStyles()
   const paramHook = useParams()
@@ -104,11 +104,8 @@ function TeamDetailsPage(): JSX.Element {
 
   const { teamId: queryParamTeamId } = paramHook as { teamId: string }
   const { selectedTeam } = useSelectedTeamContext()
-  const teamId = isUserHcp ? selectedTeam.id : queryParamTeamId
+  const team = isUserHcp ? selectedTeam : getTeam(queryParamTeamId)
 
-  const [dropdownData, setDropdownData] = useState<{ selectedTeam: Team | null, teamNames: string[] }>(
-    { selectedTeam: null, teamNames: [] }
-  )
   const [activeLink, setActiveLink] = useState<string>('information')
 
   const teamInformation = useRef<HTMLDivElement>(null)
@@ -120,20 +117,8 @@ function TeamDetailsPage(): JSX.Element {
     ref.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const refresh = useCallback(() => {
-    setDropdownData({
-      selectedTeam: getTeam(teamId) as Team,
-      teamNames: getMedicalTeams().map((team: Team) => team.name)
-    })
-  }, [getTeam, teamId, getMedicalTeams])
-
-  useEffect(() => {
-    refresh()
-  }, [refresh])
-
   return (
     <React.Fragment>
-      {dropdownData.selectedTeam &&
         <Box role="main" paddingLeft={2}>
           <Box display="flex">
             {isUserHcp &&
@@ -185,7 +170,7 @@ function TeamDetailsPage(): JSX.Element {
                 >
                   <DesktopMacOutlinedIcon className={commonTeamClasses.icon} />
                   <Typography className={classes.title}>
-                    {t('events-configuration')}
+                    {t('monitoring-alerts-configuration')}
                   </Typography>
                 </div>
               </div>
@@ -199,7 +184,7 @@ function TeamDetailsPage(): JSX.Element {
                   data-link="information"
                   className={`${classes.teamInformation} ${classes.refElement}`}
                 >
-                  <TeamInformation team={dropdownData.selectedTeam} refreshParent={refresh} />
+                  <TeamInformation team={team} />
                 </div>
                 {isUserHcp &&
                   <div>
@@ -211,7 +196,7 @@ function TeamDetailsPage(): JSX.Element {
                       data-link="members"
                       className={classes.refElement}
                     >
-                      <TeamMembers team={dropdownData.selectedTeam} refreshParent={refresh} />
+                      <TeamMembers team={team} />
                     </div>
                     <div>
                       <div className={classes.separator} />
@@ -221,7 +206,7 @@ function TeamDetailsPage(): JSX.Element {
                         data-link="configuration"
                         className={classes.refElement}
                       >
-                        <TeamMonitoringAlertsConfiguration team={dropdownData.selectedTeam} />
+                        <TeamMonitoringAlertsConfiguration team={team} />
                       </div>
                     </div>
                   </div>
@@ -230,9 +215,8 @@ function TeamDetailsPage(): JSX.Element {
             </Box>
           </Box>
         </Box>
-      }
     </React.Fragment>
   )
 }
 
-export default TeamDetailsPage
+export default CareTeamPage

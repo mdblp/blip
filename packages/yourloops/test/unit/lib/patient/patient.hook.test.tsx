@@ -258,7 +258,7 @@ describe('Patient hook', () => {
     const patientToRemove2 = createPatient('patientToRemove2', UserInvitationStatus.accepted)
     const allPatients = [pendingPatient, patientToRemovePrivatePractice, patientToRemove, patientToRemove2]
 
-    it('should call notification hook cancel method if invitation is pending and call removePatient method', async () => {
+    it('should call notification hook cancel method if invite is pending and call removePatient method', async () => {
       const res = await renderPatientHook(allPatients)
       const customHook = res.result.current
       const invitation = { id: 'fakeInvitationId', email: 'fakeInvitationEmail' } as Notification
