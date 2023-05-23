@@ -39,8 +39,8 @@ import {
   filtersTeamId,
   monitoringAlertsParameters,
   monitoringAlertsParametersBgUnitMmol,
+  myFirstTeamId,
   mySecondTeamId,
-  myTeamId,
   myThirdTeamId
 } from '../mock/team.api.mock'
 import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
@@ -307,7 +307,7 @@ export const patient3AsTeamMember: ITeamMember = buildTeamMemberFromPatient(pati
 export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(pendingPatient, mySecondTeamId, UserInvitationStatus.pending)
 
 export const PATIENTS_BY_TEAMID: Record<string, Patient[]> = {
-  [myTeamId]: [],
+  [myFirstTeamId]: [],
   [mySecondTeamId]: [
     {
       ...patient1,

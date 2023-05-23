@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,25 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type IMessage } from './models/i-message.model'
-import HttpService from '../http/http.service'
+import { type Team } from '../../../../lib/team'
+import { getUnreadMessagesByTeam } from '../../../../components/chat/chat.util'
 
-export default class ChatApi {
-  static async getChatMessages(teamId: string, patientId: string): Promise<IMessage[]> {
-    const { data } = await HttpService.get<IMessage[]>({ url: `chat/v1/messages/teams/${teamId}/patients/${patientId}` })
-    return data
-  }
+describe('ChatUtil', () => {
+  describe('getUnreadMessagesByTeamForPatient', () => {
+    it('should convert the string-number object into a string-boolean object and mention all teams', () => {
+      const teams = [{ id: 'team-1' }, { id: 'team-2' }, { id: 'team-3' }] as Team[]
+      const unreadMessagesCountByTeam = {
+        'team-1': 3,
+        'team-3': 2
+      }
+      const emptyApiResult = {}
 
-  static async sendChatMessage(teamId: string, patientId: string, text: string, isPrivate: boolean): Promise<boolean> {
-    await HttpService.post<boolean, { text: string, private: boolean }>({
-      url: `chat/v1/messages/teams/${teamId}/patients/${patientId}`,
-      payload: { text, private: isPrivate }
+      expect(getUnreadMessagesByTeam(unreadMessagesCountByTeam, teams)).toEqual({
+        'team-1': true,
+        'team-2': false,
+        'team-3': true
+      })
+      expect(getUnreadMessagesByTeam(emptyApiResult, teams)).toEqual({
+        'team-1': false,
+        'team-2': false,
+        'team-3': false
+      })
     })
-    return true
-  }
-
-  static async getUnreadMessagesCountForPatient(patientId: string): Promise<Record<string, number>> {
-    const { data } = await HttpService.get<Record<string, number>>({ url: `chat/v1/unread/patients/${patientId}/teams` })
-    return data
-  }
-}
+  })
+})

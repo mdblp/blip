@@ -66,7 +66,7 @@ export const monitoringAlertsParametersBgUnitMmol = {
   reportingPeriod: 7
 }
 
-export const myTeamId = 'myTeamId'
+export const myFirstTeamId = 'myTeamId'
 export const mySecondTeamId = 'mySecondTeamId'
 export const myThirdTeamId = 'myThirdTeamId'
 export const filtersTeamId = 'filtersTeamId'
@@ -81,7 +81,7 @@ export const filtersTeamName = 'Team used to test the patients filters'
 export const buildTeamOne = (): Team => {
   return {
     name: myFirstTeamName,
-    id: myTeamId,
+    id: myFirstTeamId,
     code: '036038775',
     type: TeamType.medical,
     phone: '0476000000',
