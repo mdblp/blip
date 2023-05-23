@@ -217,7 +217,7 @@ describe('Caregiver home page', () => {
       expect(router.state.location.pathname).toEqual('/home')
     })
 
-    const columnSettingsButton = screen.getByTestId('column-settings-button')
+    const columnSettingsButton = screen.getByRole('button', { name: 'Change columns settings' })
 
     checkPatientListHeaderCaregiver()
     expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()

@@ -80,11 +80,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export interface TeamInformationProps {
   team: Team
-  refreshParent: () => void
 }
 
 function TeamInformation(props: TeamInformationProps): JSX.Element {
-  const { team, refreshParent } = props
+  const { team } = props
   const teamHook = useTeam()
   const alert = useAlert()
   const { classes } = useStyles()
@@ -102,7 +101,6 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
       try {
         await teamHook.updateTeam(editedTeam as Team)
         alert.success(t('team-page-success-edit'))
-        refreshParent()
       } catch (reason: unknown) {
         alert.error(t('team-page-failed-edit'))
       }
@@ -116,7 +114,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
 
   return (
     <React.Fragment>
-      <div className={commonTeamClasses.root}>
+      <div className={commonTeamClasses.root} data-testid="team-information">
         <div className={commonTeamClasses.categoryHeader}>
           <div>
             <InfoOutlinedIcon />

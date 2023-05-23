@@ -29,65 +29,51 @@ import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import { useAlert } from '../utils/snackbar'
 import { usePatientContext } from '../../lib/patient/patient.provider'
-import { useTeam } from '../../lib/team'
-import TeamUtils from '../../lib/team/team.util'
-import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 
-interface RemovePatientDialogHookProps {
-  onClose: () => void
+interface ReinvitePatientDialogHookProps {
   patient: Patient
+  onSuccess: () => void
 }
 
-interface RemovePatientDialogHookReturn {
-  handleOnClickRemove: () => Promise<void>
-  patientName: string
+interface ReinvitePatientDialogHookReturn {
+  handleOnClickReinvite: () => Promise<void>
   processing: boolean
 }
 
-const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookProps): RemovePatientDialogHookReturn => {
+export const useReinvitePatientDialog = ({
+  patient,
+  onSuccess
+}: ReinvitePatientDialogHookProps): ReinvitePatientDialogHookReturn => {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
-  const { removePatient } = usePatientContext()
-  const { getTeam } = useTeam()
+  const { removePatient, invitePatient } = usePatientContext()
   const { selectedTeam } = useSelectedTeamContext()
-  const selectedTeamId = selectedTeam.id
 
   const [processing, setProcessing] = useState<boolean>(false)
 
-  const userName = patient?.profile?.firstName ? {
-    firstName: patient.profile.firstName,
-    lastName: patient.profile.lastName
-  } : null
-  const patientName = userName ? t('user-name', userName) : patient.profile.email
-
-  const getSuccessAlertMessage = (): void => {
-    if (patient.invitationStatus === UserInvitationStatus.pending) {
-      alert.success(t('alert-remove-patient-pending-invite-success'))
-      return
-    }
-    const team = getTeam(selectedTeamId)
-    if (TeamUtils.isPrivate(team)) {
-      alert.success(t('alert-remove-private-practice-success', { patientName }))
-    } else {
-      alert.success(t('alert-remove-patient-from-team-success', { teamName: team.name, patientName }))
-    }
-  }
-
-  const handleOnClickRemove = async (): Promise<void> => {
+  const handleOnClickReinvite = async (): Promise<void> => {
+    const patientEmail = patient.profile.email
     try {
       setProcessing(true)
       await removePatient(patient)
-      getSuccessAlertMessage()
-      onClose()
+      await invitePatient(selectedTeam, patientEmail)
+      alert.success(
+        t('alert-reinvite-patient-from-team-success',
+          {
+            teamName: selectedTeam.name,
+            patientEmail
+          }
+        ))
+      onSuccess()
     } catch (err) {
-      alert.error(t('alert-remove-patient-failure'))
+      alert.error(t('alert-reinvite-patient-failure', {
+        patientEmail
+      }))
       setProcessing(false)
     }
   }
 
-  return { processing, patientName, handleOnClickRemove }
+  return { processing, handleOnClickReinvite }
 }
-
-export default useRemovePatientDialog

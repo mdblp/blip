@@ -111,20 +111,19 @@ describe('TeamInformation', () => {
     })
   }
 
-  function getTeamInformationJSX(props: TeamInformationProps = { team, refreshParent: refresh }): JSX.Element {
+  function getTeamInformationJSX(props: TeamInformationProps = { team }): JSX.Element {
     return (
       <MemoryRouter>
         <ThemeProvider theme={getTheme()}>
           <TeamInformation
             team={props.team}
-            refreshParent={props.refreshParent}
           />
         </ThemeProvider>
       </MemoryRouter>
     )
   }
 
-  function renderTeamInformation(props: TeamInformationProps = { team, refreshParent: refresh }) {
+  function renderTeamInformation(props: TeamInformationProps = { team }) {
     act(() => {
       ReactDOM.render(getTeamInformationJSX(props), container)
     })
@@ -169,7 +168,6 @@ describe('TeamInformation', () => {
   it('should save edited team', async () => {
     render(getTeamInformationJSX())
     await editTeamInfo()
-    expect(refresh).toHaveBeenCalled()
     expect(successMock).toHaveBeenCalledWith('team-page-success-edit')
   })
 
@@ -202,7 +200,7 @@ describe('TeamInformation', () => {
     const teamWithNoAddress = buildTeam(teamId, [])
     const phone = '123456789'
     teamWithNoAddress.phone = phone
-    renderTeamInformation({ team: teamWithNoAddress, refreshParent: refresh })
+    renderTeamInformation({ team: teamWithNoAddress })
     expect(document.getElementById(`team-information-${teamId}-phone`).innerHTML).toEqual(phone)
   })
 })

@@ -73,6 +73,9 @@ export const filtersTeamId = 'filtersTeamId'
 export const myFirstTeamName = 'MyFirstTeam'
 export const mySecondTeamName = 'MySecondTeam'
 export const myThirdTeamName = 'A - MyThirdTeam - to be deleted'
+export const myThirdTeamPhoneNumber = '0476000000'
+export const myThirdTeamCode = '263381988'
+export const myThirdTeamAddress = 'Guinness Road W1D 1BS Dublin GB'
 export const filtersTeamName = 'Team used to test the patients filters'
 
 export const buildTeamOne = (): Team => {
@@ -138,7 +141,7 @@ export const buildTeamThree = (): Team => {
     type: TeamType.medical,
     phone: '0476000000',
     email: 'hey@third.hey',
-    address: { line1: 'Guiness Road', line2: '', zip: 'W1D 1BS', city: 'Dublin', country: 'IE' },
+    address: { line1: 'Guinness Road', line2: '', zip: 'W1D 1BS', city: 'Dublin', country: 'GB' },
     members: [{
       userId: loggedInUserId,
       role: TeamMemberRole.admin,
