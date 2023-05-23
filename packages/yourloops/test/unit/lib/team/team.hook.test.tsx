@@ -98,14 +98,14 @@ describe('Team hook', () => {
   })
 
   describe('removeMember', () => {
-    it('should throw an error when there is no invitation', async () => {
+    it('should throw an error when there is no invite', async () => {
       const teamMember = buildTeamMember()
       await expect(async () => {
         await teamHook.removeMember(teamMember, 'fakeTeamId')
       }).rejects.toThrow()
     })
 
-    it('should throw an error when there is no invitation for the member team', async () => {
+    it('should throw an error when there is no invite for the member team', async () => {
       const teamMember = buildTeamMember('fakeUserId')
       await expect(async () => {
         await teamHook.removeMember(teamMember, 'fakeTeamId')

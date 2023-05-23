@@ -63,8 +63,8 @@ export const checkAcceptTeamInvite = async () => {
   const addCareTeamButton = within(dialogPrivacy).getByRole('button', { name: 'Join team' })
   const checkPolicy = within(dialogPrivacy).getByRole('checkbox')
   expect(dialogPrivacy).toHaveTextContent('Share your data with a care teamYou ' +
-    'are about to share you data withiTeamOne6 rue des champs75000Paris679517388Please verify that the above details match the information provided by your healthcare professional ' +
-    'before accepting the invitation.By accepting this invitation, I recognize this team as my care team and consent to share my personal data with all its members, ' +
+    'are about to share your data withiTeamOne6 rue des champs75000Paris679517388Please verify that the above details match the information provided by your healthcare professional ' +
+    'before accepting the invite.By accepting this invite, I recognize this team as my care team and consent to share my personal data with all its members, ' +
     'who are authorized healthcare professionals registered on YourLoops. ' +
     'I acknowledge that I can revoke this access at any time.Read our Privacy Policy for more information.CancelJoin team')
   await userEvent.click(checkPolicy)

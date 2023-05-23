@@ -94,13 +94,13 @@ describe('Patient utils', () => {
   })
 
   describe('isInvitationPending', () => {
-    it('should return true when patient invitation is pending', () => {
+    it('should return true when patient invite is pending', () => {
       const patient = createPatient('fakePatientId', UserInvitationStatus.pending)
       const result = PatientUtils.isInvitationPending(patient)
       expect(result).toBeTruthy()
     })
 
-    it('should return false when patient invitation is accepted', () => {
+    it('should return false when patient invite is accepted', () => {
       const patient = createPatient('fakePatientId', UserInvitationStatus.accepted)
       const result = PatientUtils.isInvitationPending(patient)
       expect(result).toBeFalsy()

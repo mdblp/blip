@@ -71,7 +71,7 @@ export const checkDailyTidelineContainerTooltips = async () => {
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_ID1}`, `8:25 pmMealCarbs45gHigh fat mealEntered at ${moment(WIZARD_INPUT_TIME).format('h:mm a')}Loop modeBolus TypeStandardDelivered1.3U`)
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_ID2}`, `8:35 pmUnannounced mealEstimated carbs50gEntered at ${moment(WIZARD_INPUT_TIME2).format('h:mm a')}Loop modeBolus TypeStandardDelivered1.3U`)
   await checkTidelineContainerElementTooltip(`carb_group_${CARB_ID}`, '2:00 pmRecommended16gConfirmed15g')
-  await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_ID}`, `3:00 pmPhysical ActivityIntensitymediumDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_TIME).format('h')}:00 pm`)
+  await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_ID}`, `3:00 pmPhysical ActivityIntensitymoderateDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_TIME).format('h')}:00 pm`)
   await checkTidelineContainerElementTooltip(`reservoir_group_${RESERVOIR_CHANGE_ID}`, '7:00 pmCartridge change')
   await checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, '10:00 am10:00 amMEAL_RATIO_LUNCH_FACTOR110→100%')
   await checkTidelineContainerElementTooltip(`cbg_${CBG_ID}`, '5:30 pmGlucose189')

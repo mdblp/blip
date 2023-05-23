@@ -28,7 +28,7 @@
 import React, { type FunctionComponent } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { PatientData } from '../components/patient-data/patient-data'
-import TeamDetailsPage from '../pages/team/team-details-page'
+import CareTeamPage from '../pages/care-team/care-team-page'
 import { PatientProvider } from '../lib/patient/patient.provider'
 import { TeamContextProvider } from '../lib/team'
 import DashboardLayout from './dashboard-layout'
@@ -37,7 +37,7 @@ import ProfilePage from '../pages/profile/profile-page'
 import NotificationsPage from '../pages/notifications'
 import { SelectedTeamProvider } from '../lib/selected-team/selected-team.provider'
 import { AppUserRoute } from '../models/enums/routes.enum'
-import { PatientList } from '../components/patient-list/patient-list'
+import { PatientListPage } from '../components/patient-list/patient-list-page'
 import { PatientListProvider } from '../lib/providers/patient-list.provider'
 
 export const HcpLayout: FunctionComponent = () => {
@@ -51,9 +51,9 @@ export const HcpLayout: FunctionComponent = () => {
                 <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
                 <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
                 <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
-                <Route path={AppUserRoute.Home} element={<PatientList />} />
+                <Route path={AppUserRoute.Home} element={<PatientListPage />} />
                 <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientData />} />
-                <Route path={AppUserRoute.Team} element={<TeamDetailsPage />} />
+                <Route path={AppUserRoute.Team} element={<CareTeamPage />} />
                 <Route path="/" element={<Navigate to={AppUserRoute.Home} replace />} />
                 <Route path="*" element={<Navigate to={AppUserRoute.NotFound} replace />} />
               </Routes>

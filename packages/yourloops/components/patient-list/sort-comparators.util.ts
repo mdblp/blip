@@ -30,17 +30,21 @@ import { type Patient } from '../../lib/patient/models/patient.model'
 import { getUserName } from '../../lib/auth/user.util'
 import moment from 'moment-timezone'
 
-interface SortComparator extends GridComparatorFn<Patient> {
+interface PatientSortComparator extends GridComparatorFn<Patient> {
   (patient1: Patient, patient2: Patient): number
 }
 
-export const sortByUserName: SortComparator = (patient1, patient2): number => {
+interface SortComparator extends GridComparatorFn<string> {
+  (value1: string, value2: string): number
+}
+
+export const sortByUserName: PatientSortComparator = (patient1, patient2): number => {
   const patient1FullName = getUserName(patient1.profile.firstName, patient1.profile.lastName, patient1.profile.fullName)
   const patient2FullName = getUserName(patient2.profile.firstName, patient2.profile.lastName, patient2.profile.fullName)
   return patient1FullName.localeCompare(patient2FullName)
 }
 
-export const sortByFlag: SortComparator = (patient1: Patient, patient2: Patient): number => {
+export const sortByFlag: PatientSortComparator = (patient1: Patient, patient2: Patient): number => {
   const isPatient1Flagged = patient1.metadata.flagged
   const isPatient2Flagged = patient2.metadata.flagged
 
@@ -53,17 +57,24 @@ export const sortByFlag: SortComparator = (patient1: Patient, patient2: Patient)
   return 0
 }
 
-export const sortByDateOfBirth: SortComparator = (patient1: Patient, patient2: Patient): number => {
-  const patient1DateOfBirth = moment.utc(patient1.profile.birthdate)
-  const patient2DateOfBirth = moment.utc(patient2.profile.birthdate)
+export const sortByDate: SortComparator = (dateA: string, dateB: string): number => {
+  const dateAMoment = moment.utc(dateA)
+  const dateBMoment = moment.utc(dateB)
 
-  if (patient1DateOfBirth.isBefore(patient2DateOfBirth)) {
+  if (dateAMoment.isBefore(dateBMoment)) {
     return -1
   }
-  if (patient1DateOfBirth.isAfter(patient2DateOfBirth)) {
+  if (dateAMoment.isAfter(dateBMoment)) {
     return 1
   }
   return 0
+}
+
+export const sortByDateOfBirth: PatientSortComparator = (patient1: Patient, patient2: Patient): number => {
+  const patient1DateOfBirth = patient1.profile.birthdate
+  const patient2DateOfBirth = patient2.profile.birthdate
+
+  return sortByDate(patient1DateOfBirth, patient2DateOfBirth)
 }
 
 const getMonitoringAlertsCount = (patient: Patient): number => {
@@ -75,7 +86,7 @@ const getMonitoringAlertsCount = (patient: Patient): number => {
   return timeOutOfRangeCount + hypoglycemiaCount + noDataCount
 }
 
-export const sortByMonitoringAlertsCount: SortComparator = (patient1: Patient, patient2: Patient): number => {
+export const sortByMonitoringAlertsCount: PatientSortComparator = (patient1: Patient, patient2: Patient): number => {
   const patient1MonitoringAlertsCount = getMonitoringAlertsCount(patient1)
   const patient2MonitoringAlertsCount = getMonitoringAlertsCount(patient2)
 

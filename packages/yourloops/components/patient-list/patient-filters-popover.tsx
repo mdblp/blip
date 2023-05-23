@@ -127,10 +127,10 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
               }}
             />
             <PatientListOptionToggle
-              ariaLabel={t('filter-data-not-transferred')}
+              ariaLabel={t('filter-data-not-transmitted')}
               checked={filters.dataNotTransferredEnabled}
               icon={<NoDataIcon />}
-              label={t('data-not-transferred')}
+              label={t('data-not-transmitted')}
               onToggleChange={() => {
                 setFilters({ ...filters, dataNotTransferredEnabled: !filters.dataNotTransferredEnabled })
               }}

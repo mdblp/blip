@@ -108,6 +108,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const isUserHcp = user.isUserHcp()
 
   const filterButtonTooltipTitle = isUserHcp && filters.pendingEnabled ? t('filter-cannot-apply-pending-tab') : ''
+  const columnSettingsButtonTooltipTitle = isUserHcp && filters.pendingEnabled ? t('columns-settings-cannot-changed-pending-tab') : ''
 
   const onAddPatientSuccessful = (team: Team): void => {
     setShowAddPatientDialog(false)
@@ -191,16 +192,24 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
                 </span>
               </Tooltip>
             }
-            <Button
-              data-testid="column-settings-button"
-              variant="outlined"
-              color="inherit"
-              sx={{ marginLeft: theme.spacing(2), minWidth: 0, padding: theme.spacing(1) }}
-              ref={columnsRef}
-              onClick={() => { setIsColumnSelectorOpened(true) }}
-            >
-              <Settings />
-            </Button>
+            <Tooltip title={columnSettingsButtonTooltipTitle}>
+                <span>
+                  <Button
+                    data-testid="column-settings-button"
+                    aria-label={t('change-columns-settings')}
+                    variant="outlined"
+                    color="inherit"
+                    sx={{ marginLeft: theme.spacing(2), minWidth: 0, padding: theme.spacing(1) }}
+                    ref={columnsRef}
+                    disabled={filters.pendingEnabled}
+                    onClick={() => {
+                      setIsColumnSelectorOpened(true)
+                    }}
+                  >
+                    <Settings />
+                  </Button>
+                </span>
+            </Tooltip>
           </Box>
         </Box>
 
@@ -222,7 +231,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               aria-label={t('current')}
               classes={{ root: classes.tab }}
             />
-            {isUserHcp &&
+            {isUserHcp && !isSelectedTeamPrivate &&
               <Tab
                 data-testid="patient-list-pending-tab"
                 icon={<HourglassEmptyIcon />}
@@ -273,7 +282,9 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
       {isColumnSelectorOpened &&
         <ColumnSelectorPopover
           anchorEl={columnsRef.current}
-          onClose={() => { setIsColumnSelectorOpened(false) }}
+          onClose={() => {
+            setIsColumnSelectorOpened(false)
+          }}
         />
       }
     </React.Fragment>
