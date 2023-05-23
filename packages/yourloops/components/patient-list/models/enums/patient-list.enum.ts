@@ -45,6 +45,7 @@ export enum PatientListColumns {
 
 export enum PendingPatientListColumns {
   Actions = 'actions',
-  Icon = 'icon',
-  Patient = 'patient'
+  Date = 'date',
+  Email = 'email',
+  InviteSentBy = 'invite-sent-by',
 }

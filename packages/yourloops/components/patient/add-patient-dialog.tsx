@@ -104,16 +104,16 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
     try {
       setInProgress(true)
       await patientHook.invitePatient(selectedTeam, email)
-      alert.success(t('alert-invitation-sent-success'))
+      alert.success(t('alert-invite-sent-success'))
       metrics.send('invitation', 'send_invitation', 'patient')
       onAddPatientSuccessful(selectedTeam)
     } catch (err: unknown) {
       const error = err as Error
       if (error.message === PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE) {
-        alert.error(t('alert-invitation-patient-failed-already-invited'))
+        alert.error(t('alert-invite-patient-failed-already-invited'))
         return
       }
-      alert.error(t('alert-invitation-patient-failed'))
+      alert.error(t('alert-invite-patient-failed'))
       setInProgress(false)
     }
   }
