@@ -109,7 +109,6 @@ describe('Caregiver home page', () => {
 
     renderPage('/')
 
-    // expect(await screen.findByTestId('current-patient-list-grid')).toBeVisible()
     await waitFor(() => { expect(screen.queryByTestId('current-patient-list-grid')).toBeVisible() }, { timeout: 10000 })
 
     // Checking that all patients are displayed
