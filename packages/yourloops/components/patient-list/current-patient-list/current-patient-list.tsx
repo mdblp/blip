@@ -26,7 +26,7 @@
  */
 
 import React, { type FunctionComponent, useState } from 'react'
-import { DataGrid, type GridPaginationModel, type GridSortModel } from '@mui/x-data-grid'
+import { DataGrid, type GridPaginationModel, type GridSortModel, useGridApiRef } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
 import { PatientListCustomFooter } from '../patient-list-custom-footer'
 import { PatientListColumns } from '../models/enums/patient-list.enum'
@@ -53,9 +53,10 @@ export const CurrentPatientList: FunctionComponent<CurrentPatientListProps> = (p
     onCloseRemoveDialog,
     onRowClick
   } = useCurrentPatientListHook({ patients })
-  const { gridApiRef, displayedColumns } = usePatientListContext()
+  const { displayedColumns } = usePatientListContext()
   const { refreshInProgress } = usePatientContext()
   const { width } = useWindowDimensions()
+  const gridApiRef = useGridApiRef()
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
   const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
