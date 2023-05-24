@@ -45,7 +45,7 @@ import { useAlert } from '../../components/utils/snackbar'
 import TeamUtils from '../team/team.util'
 
 export default function usePatientProviderCustomHook(): PatientContextResult {
-  const { cancel: cancelInvitation, getInvitation, refreshSentInvitations } = useNotification()
+  const { cancel: cancelInvitation, refreshSentInvitations } = useNotification()
   const { refresh: refreshTeams } = useTeam()
   const { user } = useAuth()
   const { filters } = usePatientListContext()
@@ -145,8 +145,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   const removePatient = async (patient: Patient): Promise<void> => {
     if (PatientUtils.isInvitationPending(patient)) {
-      const invitation = getInvitation(selectedTeamId, patient.profile.email)
-      await cancelInvitation(invitation.id, undefined, invitation.email)
+      await cancelInvitation(patient.invite.id, undefined, patient.profile.email)
     }
     if (TeamUtils.isPrivate(selectedTeam)) {
       await DirectShareApi.removeDirectShare(patient.userid, user.id)

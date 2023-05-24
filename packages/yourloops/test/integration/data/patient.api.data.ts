@@ -45,6 +45,7 @@ import {
 } from '../mock/team.api.mock'
 import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
+import { loggedInUserId } from '../mock/auth0.hook.mock'
 
 export const patient1Id = 'patient1Id'
 export const patient2Id = 'patient2Id'
@@ -336,7 +337,12 @@ export const PATIENTS_BY_TEAMID: Record<string, Patient[]> = {
     },
     {
       ...pendingPatient,
-      invitationStatus: UserInvitationStatus.pending
+      invitationStatus: UserInvitationStatus.pending,
+      invite: {
+        id: 'fakeInviteId',
+        creatorId: loggedInUserId,
+        creationDate: '2023-05-17T11:37:42.638Z'
+      }
     }
   ],
   [filtersTeamId]: [

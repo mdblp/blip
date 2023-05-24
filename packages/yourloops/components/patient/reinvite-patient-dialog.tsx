@@ -86,6 +86,7 @@ export const ReinvitePatientDialog: FunctionComponent<ReinvitePatientDialogProps
           {t('button-cancel')}
         </Button>
         <LoadingButton
+          data-testid="reinvite-confirm"
           loading={processing}
           color="error"
           variant="contained"

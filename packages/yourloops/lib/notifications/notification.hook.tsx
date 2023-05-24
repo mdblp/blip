@@ -79,14 +79,6 @@ function NotificationContextImpl(): NotificationContext {
     await NotificationApi.cancelRemoteMonitoringInvite(teamId, userId)
   }
 
-  const getInvitation = (teamId: string, patientEmail: string): Notification => {
-    const invitation = sentInvitations.find(invitation => invitation.target.id === teamId && invitation.email === patientEmail)
-    if (!invitation) {
-      throw Error(`Could not find invite for team ${teamId}`)
-    }
-    return invitation
-  }
-
   const refreshSentInvitations = useCallback(async (): Promise<void> => {
     try {
       const invitations = await NotificationApi.getSentInvitations(user.id)
@@ -135,7 +127,6 @@ function NotificationContextImpl(): NotificationContext {
     cancel,
     inviteRemoteMonitoring,
     cancelRemoteMonitoringInvite,
-    getInvitation,
     refreshSentInvitations,
     refreshReceivedInvitations
   }

@@ -35,6 +35,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2323 Add new columns from existing data in patient list
 - YLP-2324 Hide certain columns when private practice is selected
 - YLP-2358 As a care team member, I want a new design when listing my pending patients
+- YLP-2381 As a HCP, I want to manage patient invites made by other members of the teams
 
 ### Engineering use
 - YLP-2044 Remove redux settings store
