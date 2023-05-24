@@ -25,15 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PatientsFilters } from './patients-filters.model'
-import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
+import { useState, useEffect } from 'react'
 
-export interface PatientListContextResult {
-  displayedColumns: GridColumnVisibilityModel
-  filters: PatientsFilters
-  hasAnyNonPendingFiltersEnabled: boolean
-  updatePatientsFilters: (filters: PatientsFilters) => void
-  updatePendingFilter: (pendingEnabled: boolean) => void
-  resetFilters: () => void
-  saveColumnsPreferences: (updatedColumnsModel: GridColumnVisibilityModel) => Promise<void>
+interface WindowDimensions {
+  height: number
+  width: number
+}
+
+function getWindowDimensions(): WindowDimensions {
+  const { innerWidth: width, innerHeight: height } = window
+  return { width, height }
+}
+
+export const useWindowDimensions = (): WindowDimensions => {
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
+
+  useEffect(() => {
+    function handleResize(): void {
+      setWindowDimensions(getWindowDimensions())
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
+  return windowDimensions
 }
