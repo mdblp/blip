@@ -36,6 +36,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2324 Hide certain columns when private practice is selected
 - YLP-2350 Display a visual info when a patient has unread messages from another team in the chat widget
 - YLP-2358 As a care team member, I want a new design when listing my pending patients
+- YLP-2390 Enlarge font of the buttons of the messaging system
 
 ### Engineering use
 - YLP-2044 Remove redux settings store
