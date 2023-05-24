@@ -36,11 +36,15 @@ export enum PatientListColumns {
   DateOfBirth = 'date-of-birth',
   Flag = 'flag',
   Gender = 'gender',
+  GlucoseManagementIndicator = 'glucose-management-indicator',
+  Hypoglycemia = 'hypoglycemia',
   LastDataUpdate = 'last-data-update',
   Messages = 'messages',
   MonitoringAlerts = 'monitoring-alerts',
   Patient = 'patient',
   System = 'system',
+  TimeInRange = 'time-in-range',
+  Variance = 'variance'
 }
 
 export enum PendingPatientListColumns {

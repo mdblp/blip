@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,23 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PatientProfile } from './patient-profile.model'
-import { type PatientSettings } from './patient-settings.model'
-import { type PatientMetadata } from './patient-metadata.model'
-import { type MonitoringAlerts } from './monitoring-alerts.model'
-import { type UserInvitationStatus } from '../../team/models/enums/user-invitation-status.enum'
-import { type MonitoringAlertsParameters } from '../../team/models/monitoring-alerts-parameters.model'
-import { type PatientInvite } from './patient-invite.model'
-import { type GlycemiaIndicators } from './glycemia-indicators.model'
-
-export interface Patient {
-  monitoringAlerts: MonitoringAlerts
-  glycemiaIndicators: GlycemiaIndicators
-  profile: PatientProfile
-  settings: PatientSettings
-  metadata: PatientMetadata
-  monitoringAlertsParameters?: MonitoringAlertsParameters
-  invitationStatus: UserInvitationStatus
-  invite?: PatientInvite
-  readonly userid: string
+export interface GlycemiaIndicators {
+  coefficientOfVariation: number
+  glucoseManagementIndicator: number
+  hypoglycemia: number
+  timeInRange: number
 }
