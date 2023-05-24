@@ -270,4 +270,19 @@ describe('Patient utils', () => {
       expect(PatientUtils.getGenderLabel(Gender.NotDefined)).toEqual('-')
     })
   })
+
+  describe('formatPercentageValue', () => {
+    it('should format the value with 1 digit', () => {
+      expect(PatientUtils.formatPercentageValue(70.06)).toEqual('70.1%')
+    })
+
+    it('should format the value even if it equals 0', () => {
+      expect(PatientUtils.formatPercentageValue(0)).toEqual('0%')
+    })
+
+    it('should return N/A if the value is not defined', () => {
+      expect(PatientUtils.formatPercentageValue(undefined)).toEqual('N/A')
+      expect(PatientUtils.formatPercentageValue(null)).toEqual('N/A')
+    })
+  })
 })

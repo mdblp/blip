@@ -142,4 +142,8 @@ export default class PatientUtils {
         return NO_GENDER_LABEL
     }
   }
+
+  static formatPercentageValue(value: number): string {
+    return value || value === 0 ? `${Math.round(value * 10) / 10}%` : t('N/A')
+  }
 }

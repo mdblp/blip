@@ -55,7 +55,7 @@ export const monitoringAlertsParameters: MonitoringAlertsParameters = {
   nonDataTxThreshold: 15,
   reportingPeriod: 7
 }
-export const monitoringAlertsParametersBgUnitMmol = {
+export const monitoringAlertsParametersBgUnitMmol: MonitoringAlertsParameters = {
   bgUnit: Unit.MmolPerLiter,
   lowBg: 2.8,
   highBg: 7.8,
@@ -228,7 +228,8 @@ export const iTeamOne: ITeam = {
     city: 'Paris',
     country: 'FR'
   },
-  members: null
+  members: null,
+  monitoringAlertsParameters
 }
 
 export const buildAvailableTeams = (): Team[] => {
