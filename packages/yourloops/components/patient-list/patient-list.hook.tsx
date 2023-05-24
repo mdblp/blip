@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { PatientListTabs } from './models/enums/patient-list.enum'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useAuth } from '../../lib/auth'
@@ -45,7 +45,7 @@ interface PatientListHookReturns {
 export const usePatientListHook = (): PatientListHookReturns => {
   const { getFlagPatients } = useAuth()
   const { searchPatients } = usePatientContext()
-  const { updatePendingFilter } = usePatientListContext()
+  const { updatePendingFilter, filters } = usePatientListContext()
 
   const [selectedTab, setSelectedTab] = useState<PatientListTabs>(PatientListTabs.Current)
   const [inputSearch, setInputSearch] = useState<string>('')
@@ -67,6 +67,12 @@ export const usePatientListHook = (): PatientListHookReturns => {
         updatePendingFilter(true)
     }
   }
+
+  useEffect(() => {
+    if (selectedTab === PatientListTabs.Current && filters.pendingEnabled) {
+      updatePendingFilter(false)
+    }
+  }, [filters.pendingEnabled, selectedTab, updatePendingFilter])
 
   return {
     selectedTab,

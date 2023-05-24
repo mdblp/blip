@@ -35,6 +35,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2323 Add new columns from existing data in patient list
 - YLP-2324 Hide certain columns when private practice is selected
 - YLP-2350 Display a visual info when a patient has unread messages from another team in the chat widget
+- YLP-2358 As a care team member, I want a new design when listing my pending patients
 
 ### Engineering use
 - YLP-2044 Remove redux settings store
@@ -88,6 +89,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2311 Reorganize ITs
 - YLP-2364 Fixed English translations
 - YLP-2367 Patient list refacto
+- YLP-2386 Fix navigation crash between care team and patient list
 - YLP-2387 Fix the tab title when displaying the patient list
 
 ### Fixed

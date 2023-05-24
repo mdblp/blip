@@ -28,6 +28,7 @@
 import {
   addDuration,
   formatClocktimeFromMsPer24,
+  formatDate,
   formatDuration,
   formatLocalizedFromUTC,
   getTimezoneFromTimePrefs,
@@ -268,19 +269,27 @@ describe('DatetimeUtil', () => {
     const errorMessage = 'First argument must be a value in milliseconds per twenty-four hour day'
 
     it('should throw an error if no `milliseconds` provided', () => {
-      const undefinedValueCase = () => { formatClocktimeFromMsPer24(undefined as unknown as number) }
+      const undefinedValueCase = () => {
+        formatClocktimeFromMsPer24(undefined as unknown as number)
+      }
       expect(undefinedValueCase).toThrow(errorMessage)
     })
 
     it('should throw an error if milliseconds < 0 or >= 864e5', () => {
-      const belowRangeValueCase = () => { formatClocktimeFromMsPer24(-1) }
+      const belowRangeValueCase = () => {
+        formatClocktimeFromMsPer24(-1)
+      }
       expect(belowRangeValueCase).toThrow(errorMessage)
-      const aboveRangeValueCase = () => { formatClocktimeFromMsPer24(864e5 + 1) }
+      const aboveRangeValueCase = () => {
+        formatClocktimeFromMsPer24(864e5 + 1)
+      }
       expect(aboveRangeValueCase).toThrow(errorMessage)
     })
 
     it('should throw an error if JavaScript Date provided', () => {
-      const jsDateValueCase = () => { formatClocktimeFromMsPer24(new Date() as unknown as number) }
+      const jsDateValueCase = () => {
+        formatClocktimeFromMsPer24(new Date() as unknown as number)
+      }
       expect(jsDateValueCase).toThrow(errorMessage)
     })
 
@@ -295,6 +304,16 @@ describe('DatetimeUtil', () => {
 
     it('should use a custom format string passed as second arg', () => {
       expect(formatClocktimeFromMsPer24(twoTwentyAfternoonMs, 'kk🙃mm')).toEqual('14🙃20')
+    })
+  })
+
+  describe('formatDate', () => {
+    it('should return correct date', () => {
+      expect(formatDate('1983-01-31')).toBe('Jan 31, 1983')
+    })
+
+    it('should return empty string when given param is undefined', () => {
+      expect(formatDate(undefined)).toBe('')
     })
   })
 })

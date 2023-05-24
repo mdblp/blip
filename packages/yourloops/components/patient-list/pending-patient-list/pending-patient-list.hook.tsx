@@ -26,16 +26,20 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react'
-import { type GridColDef, type GridRenderCellParams, type GridRowsProp } from '@mui/x-data-grid'
+import { type GridColDef, type GridRowParams, type GridRowsProp } from '@mui/x-data-grid'
 import { useTranslation } from 'react-i18next'
-import { usePatientListStyles } from '../patient-list.styles'
 import { PendingPatientListColumns } from '../models/enums/patient-list.enum'
 import { usePatientContext } from '../../../lib/patient/patient.provider'
-import { ActionsCell, PendingIconCell } from '../custom-cells'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { type GridRowModel } from '../models/grid-row.model'
-import Box from '@mui/material/Box'
-import { sortByUserName } from '../sort-comparators.util'
+import { type PendingGridRowModel } from '../models/grid-row.model'
+import { useNotification } from '../../../lib/notifications/notification.hook'
+import { useAuth } from '../../../lib/auth'
+import { getUserName } from '../../../lib/auth/user.util'
+import { formatDate } from 'dumb/dist/src/utils/datetime/datetime.util'
+import Button from '@mui/material/Button'
+import CloseIcon from '@mui/icons-material/Close'
+import MailIcon from '@mui/icons-material/Mail'
+import Tooltip from '@mui/material/Tooltip'
 
 interface PendingPatientListHookProps {
   patients: Patient[]
@@ -44,19 +48,28 @@ interface PendingPatientListHookProps {
 interface PatientListHookReturns {
   columns: GridColDef[]
   patientToRemoveForHcp: Patient | null
+  patientToReinvite: Patient | null
   rowsProps: GridRowsProp
   onCloseRemoveDialog: () => void
+  onCloseReinviteDialog: () => void
+  onSuccessReinviteDialog: () => void
 }
+
+const SMALL_CELL_WIDTH = 200
+const MEDIUM_CELL_WIDTH = 250
+const LARGE_CELL_WIDTH = 300
 
 export const usePendingPatientListHook = (props: PendingPatientListHookProps): PatientListHookReturns => {
   const { patients } = props
   const { t } = useTranslation()
-  const { classes } = usePatientListStyles()
   const { getPatientById } = usePatientContext()
+  const { sentInvitations } = useNotification()
+  const { user } = useAuth()
 
   const [patientToRemoveForHcp, setPatientToRemoveForHcp] = useState<Patient | null>(null)
+  const [patientToReinvite, setPatientToReinvite] = useState<Patient | null>(null)
 
-  const onClickRemovePatient = useCallback((patientId: string): void => {
+  const removePatient = useCallback((patientId: string): void => {
     const patient = getPatientById(patientId)
     setPatientToRemoveForHcp(patient)
   }, [getPatientById])
@@ -65,54 +78,114 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
     setPatientToRemoveForHcp(null)
   }
 
+  const onCloseReinviteDialog = (): void => {
+    setPatientToReinvite(null)
+  }
+
+  const onSuccessReinviteDialog = (): void => {
+    setPatientToReinvite(null)
+  }
+
+  const resendInvite = (patient: Patient): void => {
+    setPatientToReinvite(patient)
+  }
+
   const buildPendingColumns = (): GridColDef[] => {
     return [
       {
-        field: PendingPatientListColumns.Icon,
-        type: 'actions',
-        headerName: '',
-        width: 55,
+        field: PendingPatientListColumns.InviteSentBy,
+        type: 'string',
+        headerName: t('invite-sent-by'),
         hideable: false,
-        sortable: false,
-        renderCell: (): JSX.Element => {
-          return <PendingIconCell />
-        }
+        minWidth: MEDIUM_CELL_WIDTH
       },
       {
-        field: PendingPatientListColumns.Patient,
-        headerName: t('patient'),
+        field: PendingPatientListColumns.Date,
+        type: 'string',
+        headerName: t('date'),
         hideable: false,
-        flex: 1,
-        headerClassName: classes.mandatoryCellBorder,
-        cellClassName: classes.mandatoryCellBorder,
-        renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
-          const { email } = params.value.profile
-          return <Box data-email={email}>{email}</Box>
-        },
-        sortComparator: sortByUserName
+        minWidth: SMALL_CELL_WIDTH
+      },
+      {
+        field: PendingPatientListColumns.Email,
+        type: 'string',
+        headerName: t('email'),
+        minWidth: MEDIUM_CELL_WIDTH
       },
       {
         type: 'actions',
         field: PendingPatientListColumns.Actions,
         headerName: t('actions'),
-        headerClassName: classes.mandatoryCellBorder,
-        cellClassName: classes.mandatoryCellBorder,
-        renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
-          return <ActionsCell patient={params.value} onClickRemove={onClickRemovePatient} />
-        }
+        getActions: (params: GridRowParams<PendingGridRowModel>) => {
+          const patient = params.row[PendingPatientListColumns.Actions]
+          const inviteCreatedByLoggedUser = params.row.isInviteCreatedByLoggedUser
+          const tooltipText = inviteCreatedByLoggedUser ? '' : t('action-unavailable')
+
+          return [
+            <Tooltip
+              key={params.row.id}
+              title={tooltipText}
+              aria-label={tooltipText}
+            >
+              <div data-testid="reinvite-patient-button">
+              <Button
+                data-action="reinvite-patient"
+                startIcon={<MailIcon />}
+                data-testid={`reinvite-patient-${patient.profile.email}`}
+                aria-label={`${t('button-resend-invite')} ${patient.profile.email}`}
+                disabled={!inviteCreatedByLoggedUser}
+                onClick={() => {
+                  resendInvite(patient)
+                }}
+              >
+                {t('button-resend-invite')}
+              </Button>
+              </div>
+            </Tooltip>,
+            <Tooltip
+              key={params.row.id}
+              title={tooltipText}
+              aria-label={tooltipText}
+            >
+              <div data-testid="remove-patient-button">
+              <Button
+                data-action="remove-patient"
+                startIcon={<CloseIcon />}
+                data-testid={`remove-patient-${patient.profile.email}`}
+                aria-label={`${t('button-remove-patient')} ${patient.profile.email}`}
+                disabled={!inviteCreatedByLoggedUser}
+                onClick={() => {
+                  removePatient(patient.userid)
+                }}
+              >
+                {t('button-cancel')}
+              </Button>
+              </div>
+            </Tooltip>
+          ]
+        },
+        minWidth: LARGE_CELL_WIDTH
       }
     ]
   }
 
   const buildPendingRows = useCallback((): GridRowsProp => {
-    return patients.map((patient): GridRowModel => {
+    const { firstName, lastName, fullName } = user.profile
+    return patients.map((patient): PendingGridRowModel => {
+      const invite = sentInvitations.find(invitation => invitation.email === patient.profile.email)
+      const inviteCreatedByLoggedUser = !!invite
+      const inviteDate = invite ? formatDate(invite.date) : t('N/A')
+      const inviteAuthorName = invite ? getUserName(firstName, lastName, fullName) : t('N/A')
       return {
         id: patient.userid,
-        [PendingPatientListColumns.Patient]: patient,
-        [PendingPatientListColumns.Actions]: patient
+        isInviteCreatedByLoggedUser: inviteCreatedByLoggedUser,
+        [PendingPatientListColumns.Actions]: patient,
+        [PendingPatientListColumns.Date]: inviteDate,
+        [PendingPatientListColumns.Email]: patient.profile.email,
+        [PendingPatientListColumns.InviteSentBy]: inviteAuthorName
       }
     })
-  }, [patients])
+  }, [patients, sentInvitations, t, user.profile])
 
   const rowsProps: GridRowsProp = useMemo(() => {
     return buildPendingRows()
@@ -121,7 +194,10 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
   return {
     columns: buildPendingColumns(),
     patientToRemoveForHcp,
+    patientToReinvite,
     rowsProps,
-    onCloseRemoveDialog
+    onCloseRemoveDialog,
+    onCloseReinviteDialog,
+    onSuccessReinviteDialog
   }
 }
