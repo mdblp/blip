@@ -90,6 +90,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2367 Patient list refacto
 - YLP-2386 Fix navigation crash between care team and patient list
 - YLP-2387 Fix the tab title when displaying the patient list
+- YLP-2404 Fix patient list columns width
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
