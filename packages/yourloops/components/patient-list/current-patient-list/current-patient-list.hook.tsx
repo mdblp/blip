@@ -120,7 +120,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
         field: PatientListColumns.Patient,
         headerName: t('patient'),
         hideable: false,
-        flex: 1,
+        width: 250,
         headerClassName: classes.mandatoryCellBorder,
         cellClassName: classes.mandatoryCellBorder,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
@@ -132,15 +132,15 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
       },
       {
         field: PatientListColumns.Age,
-        type: 'number',
+        type: 'string',
         headerName: t('age'),
-        flex: 0.2
+        width: 80
       },
       {
         field: PatientListColumns.DateOfBirth,
         headerName: t('date-of-birth'),
-        flex: 0.3,
         sortComparator: sortByDateOfBirth,
+        width: 180,
         valueFormatter: (params: GridValueFormatterParams<Patient>): string => {
           const patient = params.value
           return formatBirthdate(patient.profile.birthdate)
@@ -148,20 +148,18 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
       },
       {
         field: PatientListColumns.Gender,
-        headerName: t('gender'),
-        flex: 0.3
+        headerName: t('gender')
       },
       {
         field: PatientListColumns.System,
-        headerName: t('system'),
-        flex: 0.3
+        headerName: t('system')
       },
       {
         field: PatientListColumns.MonitoringAlerts,
         headerName: t('monitoring-alerts'),
         description: t('monitoring-alerts-tooltip'),
-        flex: 0.3,
         sortComparator: sortByMonitoringAlertsCount,
+        width: 150,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
           const patient = params.value
           return <MonitoringAlertsCell patient={patient} />
@@ -171,8 +169,6 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
         type: 'boolean',
         field: PatientListColumns.Messages,
         headerName: t('messages'),
-        flex: 0.3,
-        width: 55,
         renderCell: (params: GridRenderCellParams<GridRowModel, boolean>) => {
           return <MessageCell hasNewMessages={params.value} />
         }
@@ -180,8 +176,8 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
       {
         type: 'string',
         field: PatientListColumns.LastDataUpdate,
-        headerName: t('last-data-update'),
-        flex: 0.8
+        width: 180,
+        headerName: t('last-data-update')
       },
       {
         type: 'actions',

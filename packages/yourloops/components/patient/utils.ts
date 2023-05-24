@@ -51,7 +51,7 @@ export const getMedicalValues = (medicalData: MedicalData | null | undefined, na
       const mLastUpload = moment.tz(medicalData.range.endDate, browserTimezone)
       if (mLastUpload.isValid()) {
         lastUploadEpoch = mLastUpload.valueOf()
-        lastUpload = mLastUpload.format('llll')
+        lastUpload = mLastUpload.format('lll')
       }
     }
     if (medicalData.computedTir?.count) {
