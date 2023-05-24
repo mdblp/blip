@@ -140,7 +140,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
         field: PatientListColumns.DateOfBirth,
         headerName: t('date-of-birth'),
         sortComparator: sortByDateOfBirth,
-        width: 180,
+        width: 150,
         valueFormatter: (params: GridValueFormatterParams<Patient>): string => {
           const patient = params.value
           return formatBirthdate(patient.profile.birthdate)
@@ -177,28 +177,26 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
         type: 'number',
         field: PatientListColumns.TimeInRange,
         headerName: t('time-in-range'),
-        flex: 0.5,
         valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value)
       },
       {
         type: 'number',
         field: PatientListColumns.GlucoseManagementIndicator,
         headerName: t('glucose-management-indicator'),
-        flex: 0.5,
+        width: 120,
         valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value)
       },
       {
         type: 'number',
         field: PatientListColumns.Hypoglycemia,
         headerName: t('hypoglycemia'),
-        flex: 0.5,
+        width: 120,
         valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value)
       },
       {
         type: 'number',
         field: PatientListColumns.Variance,
         headerName: t('variance'),
-        flex: 0.5,
         valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value)
       },
       {

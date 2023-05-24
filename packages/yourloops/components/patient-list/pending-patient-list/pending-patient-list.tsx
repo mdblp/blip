@@ -38,6 +38,7 @@ import { EmptyPatientList } from '../empty-patient-list/empty-patient-list'
 import { ReinvitePatientDialog } from '../../patient/reinvite-patient-dialog'
 import TeamCodeDialog from '../../patient/team-code-dialog'
 import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
+import { useWindowDimensions } from '../../../lib/custom-hooks/use-window-dimensions.hook'
 
 interface PendingPatientListProps {
   patients: Patient[]
@@ -56,6 +57,7 @@ export const PendingPatientList: FunctionComponent<PendingPatientListProps> = (p
   const { displayedColumns } = usePatientListContext()
   const { refreshInProgress } = usePatientContext()
   const { selectedTeam } = useSelectedTeamContext()
+  const { width } = useWindowDimensions()
   const gridApiRef = useGridApiRef()
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
@@ -64,7 +66,7 @@ export const PendingPatientList: FunctionComponent<PendingPatientListProps> = (p
 
   return (
     <>
-      <Box data-testid="pending-patient-list-grid">
+      <Box data-testid="pending-patient-list-grid" width={width}>
         <DataGrid
           columns={columns}
           rows={rowsProps}
