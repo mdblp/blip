@@ -31,6 +31,7 @@ import { type UserInvitationStatus } from './enums/user-invitation-status.enum'
 import { type Profile } from '../../auth/models/profile.model'
 import { type Settings } from '../../auth/models/settings.model'
 import { type Preferences } from '../../auth/models/preferences.model'
+import { type GlycemiaIndicators } from '../../patient/models/glycemia-indicators.model'
 
 /**
  * Team member (API view)
@@ -47,4 +48,5 @@ export interface ITeamMember {
   idVerified: boolean
   alarms?: MonitoringAlerts
   unreadMessages?: number
+  glycemiaIndicators: GlycemiaIndicators
 }

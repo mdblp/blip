@@ -39,7 +39,7 @@ export const checkAddPatientPrivateButtonTooltip = async () => {
 
   const addPatientHoverZone = within(patientListHeader).getByTestId('add-patient-button')
   await userEvent.hover(addPatientHoverZone)
-  const informationTooltip = screen.getByText('To invite a patient, you must first select a care team from the dropdown menu. You can create you own care team if you need to. Alternatively, you can provide the patient with your YourLoops email address so they can enable private data sharing with you.')
+  const informationTooltip = await screen.findByText('To invite a patient, you must first select a care team from the dropdown menu. You can create you own care team if you need to. Alternatively, you can provide the patient with your YourLoops email address so they can enable private data sharing with you.')
   expect(informationTooltip).toBeVisible()
 
   await userEvent.unhover(addPatientHoverZone)
