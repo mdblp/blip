@@ -34,6 +34,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2322 Pending patients should not display glycemia specific data
 - YLP-2323 Add new columns from existing data in patient list
 - YLP-2324 Hide certain columns when private practice is selected
+- YLP-2350 Display a visual info when a patient has unread messages from another team in the chat widget
 
 ### Engineering use
 - YLP-2044 Remove redux settings store
