@@ -133,7 +133,6 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const [inputText, setInputText] = useState('')
   const [messages, setMessages] = useState<IMessage[]>([])
   const [nbUnread, setNbUnread] = useState(0)
-  const [isFetchingMessages, setIsFetchingMessages] = useState(false)
   const [unreadMessagesByTeamForPatient, setUnreadMessagesByTeamForPatient] = useState<UnreadMessagesByTeam>(null)
   const [inputTab, setInputTab] = useState(0)
   const content = useRef<HTMLDivElement>(null)
@@ -155,14 +154,12 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
 
   useEffect(() => {
     async function fetchMessages(): Promise<void> {
-      setIsFetchingMessages(true)
       const messages = await ChatApi.getChatMessages(dropdownTeamId, patient.userid)
       if (patient.metadata.hasSentUnreadMessages) {
         patientHook.markPatientMessagesAsRead(patient)
       }
       setMessages(messages)
       setNbUnread(messages.filter(m => !(m.authorId === userId) && !m.destAck).length)
-      setIsFetchingMessages(false)
     }
 
     async function fetchUnreadMessagesCountForPatient(): Promise<void> {
@@ -174,15 +171,13 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       setUnreadMessagesByTeamForPatient(unreadMessages)
     }
 
-    if (!isFetchingMessages) {
-      fetchMessages()
-    }
+    fetchMessages()
     if (isUserPatient) {
       fetchUnreadMessagesCountForPatient()
     }
-    // The `teams` dependency causes an infinite loop, so the list is not exhaustive
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId, patient.userid, dropdownTeamId, patient, patientHook])
+  }, [dropdownTeamId])
 
   const onEmojiClick = (emoji: EmojiClickData): void => {
     setShowPicker(false)
