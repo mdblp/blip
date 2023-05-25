@@ -32,7 +32,7 @@ import { completeDashboardData, mockDataAPI, twoWeeksOldDashboardData } from '..
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { patient1, patient1Id, patientWithMmolId } from '../../data/patient.api.data'
 import { mockChatAPI } from '../../mock/chat.api.mock'
-import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
+import { mockMedicalFilesAPI, mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
 import { renderPage } from '../../utils/render'
@@ -48,6 +48,7 @@ import {
   testDashboardDataVisualisation,
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationWithTwoWeeksOldData,
+  testEmptyMedicalFilesWidgetForHcp,
   testPatientNavBarForHcp
 } from '../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
@@ -181,5 +182,15 @@ describe('Patient dashboard for HCP', () => {
     await waitFor(() => {
       expect(logoutMock).toHaveBeenCalledWith({ logoutParams: { returnTo: 'http://localhost/login?idle=true' } })
     }, { timeout: 3000 })
+  })
+
+  it('should display the fallback message when no medical files are returned by the API', async () => {
+    mockMedicalFilesApiEmptyResult()
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testEmptyMedicalFilesWidgetForHcp()
   })
 })

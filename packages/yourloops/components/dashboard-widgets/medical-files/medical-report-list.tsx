@@ -48,6 +48,7 @@ import {
 } from '../../../lib/medical-files/models/medical-report.model'
 import { getSortedMedicalReports } from './medical-report-list.util'
 import { MedicalReportItem } from './medical-report-item'
+import Typography from '@mui/material/Typography'
 
 const useStyle = makeStyles()(() => ({
   categoryTitle: {
@@ -70,6 +71,7 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
   const [medicalReportToEdit, setMedicalReportToEdit] = useState<MedicalReport | undefined>(undefined)
   const [medicalReportToDelete, setMedicalReportToDelete] = useState<MedicalReportDeleteDialogPayload | undefined>(undefined)
+  const emptyListLabel = user.isUserHcp() ? t('no-medical-files-hcp') : t('no-medical-files-patient')
 
   const closeMedicalReportEditDialog = (): void => {
     setIsEditDialogOpen(false)
@@ -124,7 +126,9 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
   return (
     <React.Fragment>
       {medicalReports
-        ? <List className={classes.list}>
+        ? medicalReports.length === 0
+          ? <Typography color="text.secondary">{emptyListLabel}</Typography>
+          : <List className={classes.list}>
           {getSortedMedicalReports(medicalReports).map((medicalReport, index) =>
             <MedicalReportItem
               key={index}

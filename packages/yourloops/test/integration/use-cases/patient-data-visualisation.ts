@@ -39,12 +39,18 @@ import {
 import { patient1, patient2 } from '../data/patient.api.data'
 import { checkPatientDropdown, checkPatientNavBarForPatient } from '../assert/patient-nav-bar.assert'
 import { checkMonitoringAlertsCard } from '../assert/monitoring-alerts.assert'
+import {
+  checkEmptyMedicalFilesWidgetForHcp,
+  checkEmptyMedicalFilesWidgetForPatient
+} from '../assert/medical-widget.assert'
 
 export const testDashboardDataVisualisation = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
   await checkPatientStatistics()
   await checkDeviceUsageWidget()
-  await checkMonitoringAlertsCard()
+  if (patientDashboardLayoutParams.isMonitoringAlertCardVisible) {
+    await checkMonitoringAlertsCard()
+  }
 }
 
 export const testDashboardDataVisualisationWithTwoWeeksOldData = async () => {
@@ -70,4 +76,12 @@ export const testPatientNavBarForHcp = async () => {
 
 export const testPatientNavBarForPatient = async () => {
   await checkPatientNavBarForPatient()
+}
+
+export const testEmptyMedicalFilesWidgetForPatient = async () => {
+  await checkEmptyMedicalFilesWidgetForPatient()
+}
+
+export const testEmptyMedicalFilesWidgetForHcp = async () => {
+  await checkEmptyMedicalFilesWidgetForHcp()
 }
