@@ -192,7 +192,9 @@ const ignoredTransKeyForYourLoops = [
   'tooltip-total-day-carbs',
   'tooltip-total-derived-carbs',
   'tooltip-total-week-carbs',
-  'total-carbs'
+  'total-carbs',
+  'hba1c',
+  'no-medical-files-patient'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
