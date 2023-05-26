@@ -110,7 +110,7 @@ export const buildPatient = (params: {
       sex: params.profile?.sex || Gender.Male
     },
     settings: {
-      a1c: params.settings?.a1c || { date: new Date().toJSON(), value: 'fakeA1cValue' },
+      a1c: params.settings?.a1c || { date: '2023-05-26T12:28:36.047Z', value: 'fakeA1cValue' },
       system: params.settings?.system
     },
     metadata: {

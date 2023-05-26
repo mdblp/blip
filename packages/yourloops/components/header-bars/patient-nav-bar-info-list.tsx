@@ -51,7 +51,7 @@ export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> =
   }, [patient.profile.sex, t, trNaLabel])
 
   const hbA1c = useMemo(() => {
-    return patient.settings.a1c ? `${patient.settings.a1c.value} (${moment(patient.settings.a1c?.date).format('L')})` : trNaLabel
+    return patient.settings.a1c ? `${patient.settings.a1c.value}% (${moment(patient.settings.a1c?.date).format('L')})` : trNaLabel
   }, [patient.settings.a1c, trNaLabel])
 
   return (

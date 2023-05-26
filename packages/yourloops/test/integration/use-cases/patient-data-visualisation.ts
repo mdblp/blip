@@ -38,19 +38,25 @@ import {
 } from '../assert/device-usage.assert'
 import { patient1, patient2 } from '../data/patient.api.data'
 import { checkPatientDropdown, checkPatientNavBarForPatient } from '../assert/patient-nav-bar.assert'
-import { checkMonitoringAlertsCard } from '../assert/monitoring-alerts.assert'
 import {
   checkEmptyMedicalFilesWidgetForHcp,
   checkEmptyMedicalFilesWidgetForPatient
 } from '../assert/medical-widget.assert'
+import { screen } from '@testing-library/react'
+import { checkMonitoringAlertsCard } from '../assert/monitoring-alerts.assert'
 
 export const testDashboardDataVisualisation = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
   await checkPatientStatistics()
   await checkDeviceUsageWidget()
-  if (patientDashboardLayoutParams.isMonitoringAlertCardVisible) {
-    await checkMonitoringAlertsCard()
-  }
+  await checkMonitoringAlertsCard()
+}
+
+export const testDashboardDataVisualisationForPatient = async (patientDashboardLayoutParams: PatientDashboardLayoutParams): Promise<void> => {
+  await checkPatientDashboardLayout(patientDashboardLayoutParams)
+  await checkPatientStatistics()
+  await checkDeviceUsageWidget()
+  expect(screen.queryByTestId('monitoring-alerts-card')).not.toBeInTheDocument()
 }
 
 export const testDashboardDataVisualisationWithTwoWeeksOldData = async () => {

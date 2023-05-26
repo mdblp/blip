@@ -47,7 +47,7 @@ import { mockChatAPI } from '../../mock/chat.api.mock'
 import { type AppMainLayoutParams, testAppMainLayoutForPatient } from '../../use-cases/app-main-layout-visualisation'
 import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
 import {
-  testDashboardDataVisualisation,
+  testDashboardDataVisualisationForPatient,
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationWithTwoWeeksOldData,
   testEmptyMedicalFilesWidgetForPatient,
@@ -103,7 +103,7 @@ describe('Patient dashboard for patient', () => {
     })
 
     await testAppMainLayoutForPatient(appMainLayoutParams)
-    await testDashboardDataVisualisation(patientDashboardLayoutParams)
+    await testDashboardDataVisualisationForPatient(patientDashboardLayoutParams)
     await testPatientNavBarForPatient()
     await testMedicalWidgetForPatient(medicalFilesWidgetParams)
     await testChatWidgetForPatient()
