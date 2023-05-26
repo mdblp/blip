@@ -117,7 +117,7 @@ export const checkAddPatientMedicalTeamDialogInvite = async () => {
   expect(PatientApi.invitePatient).toHaveBeenCalledWith({ teamId: myThirdTeamId, email: 'new-patient@email.com' })
   const identificationCodeDialog = screen.getByRole('dialog')
   expect(identificationCodeDialog).toHaveTextContent('A - MyThirdTeam - to be deletedCommunicate this identification code to your patient during a consultation so they can verify your identity.')
-  expect(identificationCodeDialog).toHaveTextContent('This identification code is always available in the Care team page.263 - 381 - 988Ok')
+  expect(identificationCodeDialog).toHaveTextContent('This identification code is always available in the Care team settings page.263 - 381 - 988Ok')
 
   const okButton = within(identificationCodeDialog).getByRole('button', { name: 'Ok' })
 

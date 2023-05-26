@@ -58,7 +58,7 @@ type LocalesCountries = Record<string, {
   name: string
 }>
 
-export interface TeamEditModalProps {
+export interface TeamInformationEditModalProps {
   teamToEdit: TeamEditModalContentProps | null
 }
 
@@ -89,7 +89,7 @@ const teamFieldsLimits = {
  * If the team in props.team is empty, the modal is used to create a team.
  * @param props null to hide the modal
  */
-function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
+function TeamInformationEditDialog(props: TeamInformationEditModalProps): JSX.Element {
   const { teamToEdit } = props
   const { team, onSaveTeam } = teamToEdit ?? ({ team: null, onSaveTeam: _.noop } as TeamEditModalContentProps)
   const { classes } = modalStyles()
@@ -168,7 +168,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
     phoneNumberInputOnError
   ])
 
-  const handleCloseModal = (): void => {
+  const handleCancelModal = (): void => {
     onSaveTeam(null)
   }
 
@@ -245,7 +245,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
       aria-labelledby={ariaModal}
       open={modalOpened}
       scroll="paper"
-      onClose={handleCloseModal}
+      onClose={handleCancelModal}
       maxWidth="sm"
       fullWidth
       fullScreen={isXSBreakpoint}
@@ -368,7 +368,7 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
         <Button
           id="team-edit-dialog-button-close"
           variant="outlined"
-          onClick={handleCloseModal}
+          onClick={handleCancelModal}
         >
           {t('button-cancel')}
         </Button>
@@ -387,4 +387,4 @@ function TeamEditDialog(props: TeamEditModalProps): JSX.Element {
   )
 }
 
-export default TeamEditDialog
+export default TeamInformationEditDialog

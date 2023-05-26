@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,9 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Team } from '../team'
+import { type createBrowserRouter } from 'react-router-dom'
 
-export interface SelectedTeamContextResult {
-  selectedTeam: Team
-  selectTeam: (teamId: string, isNewTeam?: boolean) => void
-}
+export type Router = ReturnType<typeof createBrowserRouter>

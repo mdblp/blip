@@ -27,13 +27,13 @@
 
 export enum AppUserRoute {
   Caregivers = '/caregivers',
+  CareTeamSettings = '/team',
   Dashboard = '/dashboard',
   Home = '/home',
   NotFound = '/not-found',
   Notifications = '/notifications',
   Patient = '/patient',
   Preferences = '/preferences',
-  Team = '/team',
   Teams = '/teams'
 }
 
