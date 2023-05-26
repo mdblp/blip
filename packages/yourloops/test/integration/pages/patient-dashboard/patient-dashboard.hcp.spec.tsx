@@ -45,7 +45,7 @@ import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import {
-  testDashboardDataVisualisation,
+  testDashboardDataVisualisationForHcp,
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationWithTwoWeeksOldData,
   testEmptyMedicalFilesWidgetForHcp,
@@ -115,7 +115,7 @@ describe('Patient dashboard for HCP', () => {
     })
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
-    await testDashboardDataVisualisation(patientDashboardLayoutParams)
+    await testDashboardDataVisualisationForHcp(patientDashboardLayoutParams)
     await testPatientNavBarForHcp()
     await testMedicalWidgetForHcp(medicalFilesWidgetParams)
     await testMonitoringAlertsParametersConfigurationDialogMgdl()

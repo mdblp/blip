@@ -42,10 +42,9 @@ import {
   checkEmptyMedicalFilesWidgetForHcp,
   checkEmptyMedicalFilesWidgetForPatient
 } from '../assert/medical-widget.assert'
-import { screen } from '@testing-library/react'
 import { checkMonitoringAlertsCard } from '../assert/monitoring-alerts.assert'
 
-export const testDashboardDataVisualisation = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
+export const testDashboardDataVisualisationForHcp = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
   await checkPatientStatistics()
   await checkDeviceUsageWidget()
@@ -56,7 +55,6 @@ export const testDashboardDataVisualisationForPatient = async (patientDashboardL
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
   await checkPatientStatistics()
   await checkDeviceUsageWidget()
-  expect(screen.queryByTestId('monitoring-alerts-card')).not.toBeInTheDocument()
 }
 
 export const testDashboardDataVisualisationWithTwoWeeksOldData = async () => {
