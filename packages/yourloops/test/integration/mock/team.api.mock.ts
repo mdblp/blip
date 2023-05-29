@@ -55,7 +55,7 @@ export const monitoringAlertsParameters: MonitoringAlertsParameters = {
   nonDataTxThreshold: 15,
   reportingPeriod: 7
 }
-export const monitoringAlertsParametersBgUnitMmol = {
+export const monitoringAlertsParametersBgUnitMmol: MonitoringAlertsParameters = {
   bgUnit: Unit.MmolPerLiter,
   lowBg: 2.8,
   highBg: 7.8,
@@ -66,7 +66,7 @@ export const monitoringAlertsParametersBgUnitMmol = {
   reportingPeriod: 7
 }
 
-export const myTeamId = 'myTeamId'
+export const myFirstTeamId = 'myTeamId'
 export const mySecondTeamId = 'mySecondTeamId'
 export const myThirdTeamId = 'myThirdTeamId'
 export const filtersTeamId = 'filtersTeamId'
@@ -81,7 +81,7 @@ export const filtersTeamName = 'Team used to test the patients filters'
 export const buildTeamOne = (): Team => {
   return {
     name: myFirstTeamName,
-    id: myTeamId,
+    id: myFirstTeamId,
     code: '036038775',
     type: TeamType.medical,
     phone: '0476000000',
@@ -228,7 +228,8 @@ export const iTeamOne: ITeam = {
     city: 'Paris',
     country: 'FR'
   },
-  members: null
+  members: null,
+  monitoringAlertsParameters
 }
 
 export const buildAvailableTeams = (): Team[] => {

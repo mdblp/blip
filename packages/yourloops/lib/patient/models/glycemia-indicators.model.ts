@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,25 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type IMessage } from './models/i-message.model'
-import HttpService from '../http/http.service'
-
-export default class ChatApi {
-  static async getChatMessages(teamId: string, patientId: string): Promise<IMessage[]> {
-    const { data } = await HttpService.get<IMessage[]>({ url: `chat/v1/messages/teams/${teamId}/patients/${patientId}` })
-    return data
-  }
-
-  static async sendChatMessage(teamId: string, patientId: string, text: string, isPrivate: boolean): Promise<boolean> {
-    await HttpService.post<boolean, { text: string, private: boolean }>({
-      url: `chat/v1/messages/teams/${teamId}/patients/${patientId}`,
-      payload: { text, private: isPrivate }
-    })
-    return true
-  }
-
-  static async getUnreadMessagesCountForPatient(patientId: string): Promise<Record<string, number>> {
-    const { data } = await HttpService.get<Record<string, number>>({ url: `chat/v1/unread/patients/${patientId}/teams` })
-    return data
-  }
+export interface GlycemiaIndicators {
+  coefficientOfVariation: number
+  glucoseManagementIndicator: number
+  hypoglycemia: number
+  timeInRange: number
 }

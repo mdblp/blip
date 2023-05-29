@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,25 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type IMessage } from './models/i-message.model'
-import HttpService from '../http/http.service'
+import { useState, useEffect } from 'react'
 
-export default class ChatApi {
-  static async getChatMessages(teamId: string, patientId: string): Promise<IMessage[]> {
-    const { data } = await HttpService.get<IMessage[]>({ url: `chat/v1/messages/teams/${teamId}/patients/${patientId}` })
-    return data
-  }
+interface WindowDimensions {
+  height: number
+  width: number
+}
 
-  static async sendChatMessage(teamId: string, patientId: string, text: string, isPrivate: boolean): Promise<boolean> {
-    await HttpService.post<boolean, { text: string, private: boolean }>({
-      url: `chat/v1/messages/teams/${teamId}/patients/${patientId}`,
-      payload: { text, private: isPrivate }
-    })
-    return true
-  }
+function getWindowDimensions(): WindowDimensions {
+  const { innerWidth: width, innerHeight: height } = window
+  return { width, height }
+}
 
-  static async getUnreadMessagesCountForPatient(patientId: string): Promise<Record<string, number>> {
-    const { data } = await HttpService.get<Record<string, number>>({ url: `chat/v1/unread/patients/${patientId}/teams` })
-    return data
-  }
+export const useWindowDimensions = (): WindowDimensions => {
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
+
+  useEffect(() => {
+    function handleResize(): void {
+      setWindowDimensions(getWindowDimensions())
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
+  return windowDimensions
 }

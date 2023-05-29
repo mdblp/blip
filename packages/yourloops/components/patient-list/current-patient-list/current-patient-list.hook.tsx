@@ -120,7 +120,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
         field: PatientListColumns.Patient,
         headerName: t('patient'),
         hideable: false,
-        flex: 1,
+        width: 250,
         headerClassName: classes.mandatoryCellBorder,
         cellClassName: classes.mandatoryCellBorder,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
@@ -132,15 +132,15 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
       },
       {
         field: PatientListColumns.Age,
-        type: 'number',
+        type: 'string',
         headerName: t('age'),
-        flex: 0.2
+        width: 80
       },
       {
         field: PatientListColumns.DateOfBirth,
         headerName: t('date-of-birth'),
-        flex: 0.3,
         sortComparator: sortByDateOfBirth,
+        width: 150,
         valueFormatter: (params: GridValueFormatterParams<Patient>): string => {
           const patient = params.value
           return formatBirthdate(patient.profile.birthdate)
@@ -148,20 +148,18 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
       },
       {
         field: PatientListColumns.Gender,
-        headerName: t('gender'),
-        flex: 0.3
+        headerName: t('gender')
       },
       {
         field: PatientListColumns.System,
-        headerName: t('system'),
-        flex: 0.3
+        headerName: t('system')
       },
       {
         field: PatientListColumns.MonitoringAlerts,
         headerName: t('monitoring-alerts'),
         description: t('monitoring-alerts-tooltip'),
-        flex: 0.3,
         sortComparator: sortByMonitoringAlertsCount,
+        width: 150,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
           const patient = params.value
           return <MonitoringAlertsCell patient={patient} />
@@ -171,17 +169,41 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
         type: 'boolean',
         field: PatientListColumns.Messages,
         headerName: t('messages'),
-        flex: 0.3,
-        width: 55,
         renderCell: (params: GridRenderCellParams<GridRowModel, boolean>) => {
           return <MessageCell hasNewMessages={params.value} />
         }
       },
       {
+        type: 'number',
+        field: PatientListColumns.TimeInRange,
+        headerName: t('time-in-range'),
+        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value)
+      },
+      {
+        type: 'number',
+        field: PatientListColumns.GlucoseManagementIndicator,
+        headerName: t('glucose-management-indicator'),
+        width: 120,
+        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value)
+      },
+      {
+        type: 'number',
+        field: PatientListColumns.Hypoglycemia,
+        headerName: t('hypoglycemia'),
+        width: 120,
+        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value)
+      },
+      {
+        type: 'number',
+        field: PatientListColumns.Variance,
+        headerName: t('variance'),
+        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value)
+      },
+      {
         type: 'string',
         field: PatientListColumns.LastDataUpdate,
-        headerName: t('last-data-update'),
-        flex: 0.8
+        width: 180,
+        headerName: t('last-data-update')
       },
       {
         type: 'actions',
@@ -196,14 +218,14 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
     ]
   }, [classes.mandatoryCellBorder, onClickRemovePatient, t])
 
-  const buildPrivateTeamColumns = useCallback((): GridColDef[] => {
+  const buildPrivateTeamOrCaregiverColumns = useCallback((): GridColDef[] => {
     const fieldsNotWanted = [PatientListColumns.Messages, PatientListColumns.MonitoringAlerts]
     return medicalTeamsColumns.filter(column => !fieldsNotWanted.includes(column.field as PatientListColumns))
   }, [medicalTeamsColumns])
 
   const columns: GridColDef[] = useMemo(() => {
-    return user.isUserCaregiver() || selectedTeam.type === TeamType.private ? buildPrivateTeamColumns() : medicalTeamsColumns
-  }, [buildPrivateTeamColumns, medicalTeamsColumns, selectedTeam, user])
+    return user.isUserCaregiver() || selectedTeam.type === TeamType.private ? buildPrivateTeamOrCaregiverColumns() : medicalTeamsColumns
+  }, [buildPrivateTeamOrCaregiverColumns, medicalTeamsColumns, selectedTeam, user])
 
   const buildMedicalTeamRows = useCallback((): GridRowsProp => {
     return patients.map((patient): GridRowModel => {
@@ -220,18 +242,21 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
         [PatientListColumns.System]: patient.settings.system ?? trNA,
         [PatientListColumns.LastDataUpdate]: lastUpload,
         [PatientListColumns.Messages]: patient.metadata.hasSentUnreadMessages,
+        [PatientListColumns.TimeInRange]: patient.glycemiaIndicators.timeInRange,
+        [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators.glucoseManagementIndicator,
+        [PatientListColumns.Hypoglycemia]: patient.glycemiaIndicators.hypoglycemia,
+        [PatientListColumns.Variance]: patient.glycemiaIndicators.coefficientOfVariation,
         [PatientListColumns.Actions]: patient
       }
     })
   }, [patients, trNA])
 
-  const buildPrivateTeamRows = useCallback((): GridRowsProp => {
+  const buildPrivateTeamOrCaregiverRows = useCallback((): GridRowsProp => {
     return patients.map((patient): GridRowModel => {
       const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
       const birthdate = patient.profile.birthdate
       return {
         id: patient.userid,
-        [PatientListColumns.Flag]: patient,
         [PatientListColumns.Flag]: patient,
         [PatientListColumns.Patient]: patient,
         [PatientListColumns.DateOfBirth]: patient,
@@ -239,6 +264,10 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
         [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
         [PatientListColumns.System]: patient.settings.system ?? trNA,
         [PatientListColumns.LastDataUpdate]: lastUpload,
+        [PatientListColumns.TimeInRange]: patient.glycemiaIndicators.timeInRange,
+        [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators.glucoseManagementIndicator,
+        [PatientListColumns.Hypoglycemia]: patient.glycemiaIndicators.hypoglycemia,
+        [PatientListColumns.Variance]: patient.glycemiaIndicators.coefficientOfVariation,
         [PatientListColumns.Actions]: patient
       }
     })
@@ -246,10 +275,10 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
 
   const rowsProps: GridRowsProp = useMemo(() => {
     if (user.isUserCaregiver() || selectedTeam.type === TeamType.private) {
-      return buildPrivateTeamRows()
+      return buildPrivateTeamOrCaregiverRows()
     }
     return buildMedicalTeamRows()
-  }, [buildMedicalTeamRows, buildPrivateTeamRows, selectedTeam, user])
+  }, [buildMedicalTeamRows, buildPrivateTeamOrCaregiverRows, selectedTeam, user])
 
   return {
     columns,

@@ -39,12 +39,13 @@ import {
   filtersTeamId,
   monitoringAlertsParameters,
   monitoringAlertsParametersBgUnitMmol,
+  myFirstTeamId,
   mySecondTeamId,
-  myTeamId,
   myThirdTeamId
 } from '../mock/team.api.mock'
 import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
+import { type GlycemiaIndicators } from '../../../lib/patient/models/glycemia-indicators.model'
 
 export const patient1Id = 'patient1Id'
 export const patient2Id = 'patient2Id'
@@ -75,6 +76,13 @@ const defaultMonitoringAlert: MonitoringAlerts = {
   nonDataTransmissionActive: false
 }
 
+const defaultGlycemiaIndicators: GlycemiaIndicators = {
+  timeInRange: 0,
+  glucoseManagementIndicator: null,
+  coefficientOfVariation: null,
+  hypoglycemia: 0
+}
+
 export const buildPatient = (params: {
   userid: string
   monitoringAlertsParameters: MonitoringAlertsParameters
@@ -92,6 +100,7 @@ export const buildPatient = (params: {
       nonDataTransmissionRate: params.monitoringAlerts?.nonDataTransmissionRate || 30,
       nonDataTransmissionActive: params.monitoringAlerts?.nonDataTransmissionActive || false
     },
+    glycemiaIndicators: defaultGlycemiaIndicators,
     profile: {
       birthdate: params.profile?.birthdate || new Date().toString(),
       firstName: params.profile?.firstName || 'fakeFirstname',
@@ -297,7 +306,8 @@ export const buildTeamMemberFromPatient = (patient: Patient, teamId: string, inv
     email: patient.profile.email,
     idVerified: false,
     unreadMessages: patient.metadata.hasSentUnreadMessages ? 1 : 0,
-    alarms: patient.monitoringAlerts
+    alarms: patient.monitoringAlerts,
+    glycemiaIndicators: patient.glycemiaIndicators
   }
 }
 
@@ -307,7 +317,7 @@ export const patient3AsTeamMember: ITeamMember = buildTeamMemberFromPatient(pati
 export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(pendingPatient, mySecondTeamId, UserInvitationStatus.pending)
 
 export const PATIENTS_BY_TEAMID: Record<string, Patient[]> = {
-  [myTeamId]: [],
+  [myFirstTeamId]: [],
   [mySecondTeamId]: [
     {
       ...patient1,
@@ -404,6 +414,7 @@ export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMem
     email: member.email ?? 'fake@patient.email',
     idVerified: member.idVerified ?? true,
     unreadMessages: member.unreadMessages ?? 0,
-    alarms: member.alarms
+    alarms: member.alarms,
+    glycemiaIndicators: member.glycemiaIndicators
   }
 }
