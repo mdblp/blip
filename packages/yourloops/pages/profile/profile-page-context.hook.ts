@@ -36,7 +36,6 @@ import { type ProfileErrors, type ProfileForm } from './models/profile-form.mode
 import { type ProfileFormKey } from './models/enums/profile-form-key.enum'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
-import { CountryCodes } from '../../lib/auth/models/country.model'
 import { type Profile } from '../../lib/auth/models/profile.model'
 import { type Settings } from '../../lib/auth/models/settings.model'
 import { type Preferences } from '../../lib/auth/models/preferences.model'
@@ -65,12 +64,9 @@ const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
     feedbackAccepted: !!user?.profile?.contactConsent?.isAccepted,
     firstName: user.firstName,
     hcpProfession: user.profile?.hcpProfession ?? HcpProfession.empty,
-    ins: user.profile?.patient?.ins ?? undefined,
     lang: user.preferences?.displayLanguageCode ?? getCurrentLang(),
     lastName: user.lastName,
-    referringDoctor: user.profile?.patient?.referringDoctor ?? undefined,
     sex: user.profile?.patient?.sex ?? undefined,
-    ssn: user.profile?.patient?.ssn ?? undefined,
     units: user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   })
   const [saving, setSaving] = useState<boolean>(false)
@@ -79,9 +75,7 @@ const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
     birthday: isUserPatient && !REGEX_BIRTHDATE.test(profileForm.birthday),
     firstName: !profileForm.firstName,
     hcpProfession: isUserHcp && profileForm.hcpProfession === HcpProfession.empty,
-    ins: isUserPatient && user.settings?.country === CountryCodes.France && (!profileForm.ins || (profileForm.ins && profileForm.ins.length !== 15)),
-    lastName: !profileForm.lastName,
-    ssn: isUserPatient && user.settings?.country === CountryCodes.France && (!profileForm.ssn || (profileForm.ssn && profileForm.ssn.length !== 15))
+    lastName: !profileForm.lastName
   }
 
   const updatedProfile = useMemo<Profile>(() => {
@@ -97,10 +91,7 @@ const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
         ...profile.patient,
         birthday: profileForm.birthday,
         birthPlace: profileForm.birthPlace,
-        ins: profileForm.ins,
-        sex: profileForm.sex,
-        ssn: profileForm.ssn,
-        referringDoctor: profileForm.referringDoctor
+        sex: profileForm.sex
       }
     }
 
@@ -116,7 +107,7 @@ const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
     }
 
     return profile
-  }, [isUserHcp, isUserPatient, profileForm.birthPlace, profileForm.birthday, profileForm.feedbackAccepted, profileForm.firstName, profileForm.hcpProfession, profileForm.ins, profileForm.lastName, profileForm.referringDoctor, profileForm.sex, profileForm.ssn, user])
+  }, [isUserHcp, isUserPatient, profileForm.birthPlace, profileForm.birthday, profileForm.feedbackAccepted, profileForm.firstName, profileForm.hcpProfession, profileForm.lastName, profileForm.sex, user])
 
   const updatedSettings: Settings = {
     ...user.settings,

@@ -75,7 +75,7 @@ export const checkPatientDropdown = async (initialPatient: Patient, patientToSwi
   await waitFor(() => { expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContent) })
 
   await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show more'))
-  const secondPatientHeaderContentExtended = `Patient${secondPatientName}Date of birth:${secondPatientDateOfBirth}Diabetes type:Type 1Gender:FemaleRemote monitoring:NoReferring doctor:N/Ahba1c:8.9 (11/21/2023)Email:${patientToSwitchTo.profile.email}Show lessDashboardDailyTrendsDownload report`
+  const secondPatientHeaderContentExtended = `Patient${secondPatientName}Date of birth:${secondPatientDateOfBirth}Diabetes type:Type 1Gender:FemaleRemote monitoring:Noreferring-doctor:N/Ahba1c:8.9 (11/21/2023)Email:${patientToSwitchTo.profile.email}Show lessDashboardDailyTrendsDownload report`
   expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContentExtended)
   await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show less'))
   expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContent)

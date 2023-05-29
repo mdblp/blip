@@ -40,7 +40,6 @@ import TextField from '@mui/material/TextField'
 import { useAuth } from '../../lib/auth'
 import { useProfilePageState } from './profile-page-context'
 import { profileFormCommonClasses } from './css-classes'
-import { CountryCodes } from '../../lib/auth/models/country.model'
 import { ProfileFormKey } from './models/enums/profile-form-key.enum'
 import { Gender } from '../../lib/auth/models/enums/gender.enum'
 import PatientUtils from '../../lib/patient/patient.util'
@@ -55,7 +54,6 @@ const PatientProfileForm: FunctionComponent = () => {
 
   const a1cDate = user.settings?.a1c?.rawdate
   const a1cValue = user.settings?.a1c?.value
-  const country = user.settings?.country ?? CountryCodes.Unknown
 
   const genderIndeterminateLabel = PatientUtils.getGenderLabel(Gender.Indeterminate)
   const genderMaleLabel = PatientUtils.getGenderLabel(Gender.Male)
@@ -85,34 +83,6 @@ const PatientProfileForm: FunctionComponent = () => {
           inputProps={{ maxLength: '50' }}
         />
       </Box>
-      {country === CountryCodes.France &&
-        <React.Fragment>
-          <Box className={classes.inputContainer}>
-            <TextField
-              id="profile-textfield-ins"
-              label={t('ins')}
-              variant="standard"
-              value={profileForm.ins}
-              onChange={event => { updateProfileForm(ProfileFormKey.ins, event.target.value) }}
-              className={classes.formInput}
-              inputProps={{ maxLength: '15' }}
-              error={errors.ins}
-              helperText={errors.ins && t('field-with-exactly-15-characters')}
-            />
-            <TextField
-              id="profile-textfield-ssn"
-              label={t('ssn')}
-              variant="standard"
-              value={profileForm.ssn}
-              onChange={event => { updateProfileForm(ProfileFormKey.ssn, event.target.value) }}
-              className={classes.formInput}
-              error={errors.ssn}
-              helperText={errors.ssn && t('field-with-exactly-15-characters')}
-              inputProps={{ maxLength: '15' }}
-            />
-          </Box>
-        </React.Fragment>
-      }
 
       <Box className={classes.inputContainer}>
         <FormControl
@@ -139,19 +109,7 @@ const PatientProfileForm: FunctionComponent = () => {
           </Select>
           <FormHelperText>{errors.sex && t('required-field')}</FormHelperText>
         </FormControl>
-        <TextField
-          id="profile-textfield-referring-doctor"
-          label={t('referring-doctor')}
-          variant="standard"
-          value={profileForm.referringDoctor}
-          onChange={event => { updateProfileForm(ProfileFormKey.referringDoctor, event.target.value) }}
-          className={classes.formInput}
-          inputProps={{ maxLength: '50' }}
-        />
-      </Box>
-
-      {a1cValue && a1cDate &&
-        <Box className={classes.inputContainer}>
+        {a1cValue && a1cDate &&
           <TextField
             label={t('patient-profile-hba1c', { hba1cDate: tz(a1cDate, browserTimezone).format('L') })}
             variant="standard"
@@ -159,8 +117,8 @@ const PatientProfileForm: FunctionComponent = () => {
             value={`${a1cValue}%`}
             className={classes.formInput}
           />
-        </Box>
-      }
+        }
+      </Box>
     </React.Fragment>
   )
 }
