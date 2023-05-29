@@ -34,7 +34,7 @@ import { useAuth } from '../../lib/auth'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import type MedicalDataService from 'medical-domain'
 import { defaultBgClasses, type TimePrefs, TimeService, Unit } from 'medical-domain'
-import { type MutableRefObject, useMemo, useRef, useState } from 'react'
+import { type MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
 import { isValidDateQueryParam, PatientDataUtils } from './patient-data.utils'
 import DataUtil from 'tidepool-viz/src/utils/data'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
@@ -240,6 +240,18 @@ export const usePatientData = (): PatientDataContextResult => {
       setLoadingData(false)
     }
   }
+
+  useEffect(() => {
+    if (medicalData) {
+      const dataUtil = new DataUtil(medicalData.data, {
+        bgPrefs,
+        timePrefs,
+        endpoints: medicalData.endpoints
+      })
+      setDataUtil(dataUtil)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dailyDate, dashboardDate, trendsDate, medicalData])
 
   return {
     bgPrefs,
