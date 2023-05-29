@@ -305,9 +305,7 @@ class Daily extends React.Component {
   }
 
   onChartMounted() {
-    if (!this.state.chartMounted) {
-      this.setState({ chartMounted: true })
-    }
+    this.setState({ chartMounted: true })
   }
 
   render() {
@@ -393,7 +391,7 @@ class Daily extends React.Component {
                   <Stats
                     bgPrefs={this.props.bgPrefs}
                     bgSource={DatumType.Cbg}
-                    chartPrefs={{}}
+                    chartPrefs={null}
                     chartType={ChartTypes.Daily}
                     dataUtil={this.props.dataUtil}
                     endpoints={endpoints}

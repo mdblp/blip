@@ -41,11 +41,13 @@ import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
 import { usePatientData } from './patient-data.hook'
-import { DailyNotes } from './daily-notes'
 import 'tidepool-viz/src/styles/colors.css'
 import 'tideline/css/tideline.less'
 import 'blip/app/style.less'
 import { useDailyNotes } from './daily-notes.hook'
+import metrics from '../../lib/metrics'
+import DailyNotes from 'blip/app/components/messages'
+import { useAuth } from '../../lib/auth'
 
 export const PatientData: FunctionComponent = () => {
   const alert = useAlert()
@@ -57,7 +59,7 @@ export const PatientData: FunctionComponent = () => {
     changeChart,
     changePatient,
     currentChart,
-    dashboardDate,
+    dashboardEpochDate,
     dataUtil,
     dailyDate,
     dailyChartRef,
@@ -85,6 +87,7 @@ export const PatientData: FunctionComponent = () => {
     messageThread,
     replyToMessage
   } = useDailyNotes({ dailyDate, dailyChartRef, medicalData })
+  const { user } = useAuth()
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
 
@@ -120,7 +123,7 @@ export const PatientData: FunctionComponent = () => {
                 alignItems="center"
                 height="100%"
               >
-                <Typography>No data for patient {patient.profile.fullName}</Typography>
+                <Typography>{t('no-patient-data', { patientName: patient.profile.fullName })}</Typography>
                 <Button
                   variant="contained"
                   color="primary"
@@ -141,7 +144,7 @@ export const PatientData: FunctionComponent = () => {
                       <PatientDashboard
                         bgPrefs={bgPrefs}
                         dataUtil={dataUtil}
-                        dashboardDate={dashboardDate}
+                        dashboardEpochDate={dashboardEpochDate}
                         goToDailySpecificDate={goToDailySpecificDate}
                         medicalDataService={medicalData}
                         msRange={msRange}
@@ -170,17 +173,22 @@ export const PatientData: FunctionComponent = () => {
                           onDatetimeLocationChange={handleDatetimeLocationChange}
                           ref={dailyChartRef}
                         />
-                        <DailyNotes
-                          closeMessageBox={closeMessageBox}
-                          createMessageDatetime={createMessageDatetime}
-                          createNewMessage={createNewMessage}
-                          editMessage={editMessage}
-                          handleMessageCreation={handleMessageCreation}
-                          messageThread={messageThread}
-                          patient={patient}
-                          replyToMessage={replyToMessage}
-                          timePrefs={timePrefs}
-                        />
+                        <>
+                          {(createMessageDatetime || messageThread) &&
+                            <DailyNotes
+                              createDatetime={createMessageDatetime}
+                              messages={messageThread}
+                              onNewMessage={handleMessageCreation}
+                              user={user}
+                              patient={patient}
+                              onClose={closeMessageBox}
+                              onSave={createMessageDatetime ? createNewMessage : replyToMessage}
+                              onEdit={editMessage}
+                              timePrefs={timePrefs}
+                              trackMetric={metrics.send}
+                            />
+                          }
+                        </>
                       </React.Fragment>
                     }
                   />

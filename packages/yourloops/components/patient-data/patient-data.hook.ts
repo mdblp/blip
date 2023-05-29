@@ -48,7 +48,7 @@ export interface PatientDataContextResult {
   dataUtil: DataUtil
   dailyChartRef: MutableRefObject<DailyChartRef>
   dailyDate: number
-  dashboardDate: number
+  dashboardEpochDate: number
   fetchPatientData: () => Promise<void>
   goToDailySpecificDate: (date: number | Date) => void
   handleDatetimeLocationChange: (epochLocation: number, msRange: number) => Promise<boolean>
@@ -112,7 +112,7 @@ export const usePatientData = (): PatientDataContextResult => {
   const [medicalData, setMedicalData] = useState<MedicalDataService | null>(null)
   const [dataUtil, setDataUtil] = useState<DataUtil | null>(null)
   const [chartPrefs, setChartPrefs] = useState<ChartPrefs>(defaultChartPrefs)
-  const [dashboardDate, setDashboardDate] = useState<number>(new Date().valueOf())
+  const [dashboardEpochDate, setDashboardEpochDate] = useState<number>(new Date().valueOf())
   const [dailyDate, setDailyDate] = useState<number | null>(null)
   const [trendsDate, setTrendsDate] = useState<number | null>(null)
   const [timePrefs, setTimePrefs] = useState<TimePrefs>({
@@ -150,7 +150,7 @@ export const usePatientData = (): PatientDataContextResult => {
     }
     switch (chart) {
       case ChartTypes.Dashboard:
-        setDashboardDate(new Date().valueOf())
+        setDashboardEpochDate(new Date().valueOf())
         setMsRange(FOURTEEN_DAYS_IN_MS)
         break
       case ChartTypes.Daily:
@@ -203,16 +203,22 @@ export const usePatientData = (): PatientDataContextResult => {
 
   const refreshData = async (): Promise<void> => {
     setLoadingData(true)
-    const patientData = await patientDataUtils.current.retrievePatientData()
-    const medicalData = patientDataUtils.current.buildMedicalData(patientData)
-    const dataUtil = new DataUtil(medicalData.data, {
-      bgPrefs,
-      timePrefs,
-      endpoints: medicalData.endpoints
-    })
-    setMedicalData(medicalData)
-    setDataUtil(dataUtil)
-    setLoadingData(false)
+    try {
+      const patientData = await patientDataUtils.current.retrievePatientData()
+      if (!patientData) {
+        return
+      }
+      const medicalData = patientDataUtils.current.buildMedicalData(patientData)
+      const dataUtil = new DataUtil(medicalData.data, {
+        bgPrefs,
+        timePrefs,
+        endpoints: medicalData.endpoints
+      })
+      setMedicalData(medicalData)
+      setDataUtil(dataUtil)
+    } finally {
+      setLoadingData(false)
+    }
   }
 
   const fetchPatientData = async (): Promise<void> => {
@@ -251,7 +257,7 @@ export const usePatientData = (): PatientDataContextResult => {
       setDataUtil(dataUtil)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dailyDate, dashboardDate, trendsDate, medicalData])
+  }, [dailyDate, dashboardEpochDate, trendsDate, medicalData])
 
   return {
     bgPrefs,
@@ -262,7 +268,7 @@ export const usePatientData = (): PatientDataContextResult => {
     dataUtil,
     dailyChartRef,
     dailyDate,
-    dashboardDate,
+    dashboardEpochDate,
     fetchPatientData,
     goToDailySpecificDate,
     handleDatetimeLocationChange,

@@ -310,6 +310,7 @@
   "new-message": "New",
   "new-unread-messages": "The patient has sent you new messages",
   "no": "No",
+  "no-patient-data": "No data for patient {{patientName}}",
   "no-new-messages": "No new messages",
   "no-patient": "No patient",
   "no-settings-on-device-alert-message": "This view shows the current settings, history of change and device information, but it looks like the system hasn't sent data yet.",

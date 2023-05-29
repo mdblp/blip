@@ -19,7 +19,7 @@ import _ from 'lodash'
 import i18next from 'i18next'
 import moment from 'moment-timezone'
 
-import { buildLayoutColumns, PrintView } from 'dumb'
+import { buildLayoutColumns, LayoutColumnType, PrintView } from 'dumb'
 
 import {
   cgmStatusMessage,
@@ -157,7 +157,7 @@ class BasicsPrintView extends PrintView {
     this.renderCenterColumn()
   }
 
-  goToLayoutColumnPosition(index) {
+  goToLayoutColumnPosition(index: number): void {
     if (this.layoutColumns) {
       this.doc.x = this.layoutColumns.columns[index].x
       this.doc.y = this.layoutColumns.columns[index].y
@@ -165,14 +165,14 @@ class BasicsPrintView extends PrintView {
     }
   }
 
-  getActiveColumnWidth() {
+  getActiveColumnWidth(): number {
     if (!this.layoutColumns) {
       throw Error('this.layoutColumns must be defined')
     }
     return this.layoutColumns.columns[this.layoutColumns.activeIndex].width
   }
 
-  setLayoutColumns(width, gutter, type, widths) {
+  setLayoutColumns(width: number, gutter: number, type: LayoutColumnType, widths: number[]): void {
     const columns = buildLayoutColumns(widths, this.chartArea.width, type, this.chartArea.leftEdge, this.doc.y, gutter)
 
     this.layoutColumns = {

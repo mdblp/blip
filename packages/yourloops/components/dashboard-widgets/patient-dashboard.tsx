@@ -55,7 +55,7 @@ import { PRIVATE_TEAM_ID, useTeam } from '../../lib/team/team.hook'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
-  dashboardDate: number
+  dashboardEpochDate: number
   dataUtil: typeof DataUtil
   goToDailySpecificDate: (date: number | Date) => void
   loading: boolean
@@ -76,7 +76,7 @@ const useStyle = makeStyles()((theme) => ({
 export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
   const {
     bgPrefs,
-    dashboardDate,
+    dashboardEpochDate,
     dataUtil,
     goToDailySpecificDate,
     loading,
@@ -94,12 +94,12 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
 
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
   const endpoints = [
-    moment.utc(dashboardDate - msRange).toISOString(), // start
-    moment.utc(dashboardDate).toISOString() // end
+    moment.utc(dashboardEpochDate - msRange).toISOString(), // start
+    moment.utc(dashboardEpochDate).toISOString() // end
   ]
   const dateFilter = {
-    start: dashboardDate - msRange,
-    end: dashboardDate
+    start: dashboardEpochDate - msRange,
+    end: dashboardEpochDate
   }
   const isSelectedTeamPrivate = selectedTeam?.id === PRIVATE_TEAM_ID
   const isCaregiver = user.isUserCaregiver()
