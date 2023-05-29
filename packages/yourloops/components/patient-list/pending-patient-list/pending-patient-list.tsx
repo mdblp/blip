@@ -26,7 +26,7 @@
  */
 
 import React, { type FunctionComponent, useState } from 'react'
-import { DataGrid, type GridPaginationModel, type GridSortModel } from '@mui/x-data-grid'
+import { DataGrid, type GridPaginationModel, type GridSortModel, useGridApiRef } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
 import RemovePatientDialog from '../../patient/remove-patient-dialog'
 import { PatientListColumns } from '../models/enums/patient-list.enum'
@@ -35,6 +35,10 @@ import { usePatientContext } from '../../../lib/patient/patient.provider'
 import { usePendingPatientListHook } from './pending-patient-list.hook'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { EmptyPatientList } from '../empty-patient-list/empty-patient-list'
+import { ReinvitePatientDialog } from '../../patient/reinvite-patient-dialog'
+import TeamCodeDialog from '../../patient/team-code-dialog'
+import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
+import { useWindowDimensions } from '../../../lib/custom-hooks/use-window-dimensions.hook'
 
 interface PendingPatientListProps {
   patients: Patient[]
@@ -45,18 +49,24 @@ export const PendingPatientList: FunctionComponent<PendingPatientListProps> = (p
   const {
     columns,
     patientToRemoveForHcp,
+    patientToReinvite,
     rowsProps,
-    onCloseRemoveDialog
+    onCloseRemoveDialog,
+    onCloseReinviteDialog
   } = usePendingPatientListHook({ patients })
-  const { gridApiRef, displayedColumns } = usePatientListContext()
+  const { displayedColumns } = usePatientListContext()
   const { refreshInProgress } = usePatientContext()
+  const { selectedTeam } = useSelectedTeamContext()
+  const { width } = useWindowDimensions()
+  const gridApiRef = useGridApiRef()
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
   const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
+  const [teamCodeDialogOpen, setTeamCodeDialogOpen] = useState(false)
 
   return (
     <>
-      <Box data-testid="pending-patient-list-grid">
+      <Box data-testid="pending-patient-list-grid" width={width}>
         <DataGrid
           columns={columns}
           rows={rowsProps}
@@ -85,6 +95,27 @@ export const PendingPatientList: FunctionComponent<PendingPatientListProps> = (p
         <RemovePatientDialog
           patient={patientToRemoveForHcp}
           onClose={onCloseRemoveDialog}
+        />
+      }
+
+      {patientToReinvite &&
+        <ReinvitePatientDialog
+          patient={patientToReinvite}
+          onClose={onCloseReinviteDialog}
+          onSuccess={() => {
+            onCloseReinviteDialog()
+            setTeamCodeDialogOpen(true)
+          }}
+        />
+      }
+
+      {teamCodeDialogOpen &&
+        <TeamCodeDialog
+          code={selectedTeam.code}
+          name={selectedTeam.name}
+          onClose={() => {
+            setTeamCodeDialogOpen(false)
+          }}
         />
       }
     </>

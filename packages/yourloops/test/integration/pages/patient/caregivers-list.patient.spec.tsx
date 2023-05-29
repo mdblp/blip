@@ -111,7 +111,7 @@ describe('Patient caregivers page', () => {
     expect(addDirectShareMock).toHaveBeenCalledWith(loggedInUserId, caregiverEmail)
 
     const invitationSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
-    expect(invitationSuccessfulSnackbar).toHaveTextContent('Invitation sent!')
+    expect(invitationSuccessfulSnackbar).toHaveTextContent('Invite sent!')
 
     const invitationSuccessfulSnackbarCloseButton = within(invitationSuccessfulSnackbar).getByTitle('Close')
 

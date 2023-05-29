@@ -188,8 +188,6 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
           <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
             <ChatWidget
               patient={patient}
-              userId={user.id}
-              userRole={user.role}
             />
           </Grid>
         </>

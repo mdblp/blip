@@ -103,7 +103,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
             control={<Radio />}
             label={
               <SignupRadioLabel
-                header={t('professional')}
+                header={t('health-care-professional')}
                 body={t('signup-radiolabel-hcp-body')}
               />
             }

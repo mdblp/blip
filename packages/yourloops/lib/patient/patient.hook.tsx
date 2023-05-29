@@ -145,7 +145,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   const removePatient = async (patient: Patient): Promise<void> => {
     if (PatientUtils.isInvitationPending(patient)) {
-      const invitation = getInvitation(selectedTeamId)
+      const invitation = getInvitation(selectedTeamId, patient.profile.email)
       await cancelInvitation(invitation.id, undefined, invitation.email)
     }
     if (TeamUtils.isPrivate(selectedTeam)) {

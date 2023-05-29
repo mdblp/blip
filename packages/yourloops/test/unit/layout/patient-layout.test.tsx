@@ -58,7 +58,7 @@ jest.mock('../../../pages/profile/profile-page', () => () => {
 jest.mock('../../../pages/notifications', () => () => {
   return <div data-testid={notificationsPageTestId} />
 })
-jest.mock('../../../pages/team/team-details-page', () => () => {
+jest.mock('../../../pages/care-team/care-team-page', () => () => {
   return <div data-testid={teamDetailsPageTestId} />
 })
 describe('Patient Layout', () => {

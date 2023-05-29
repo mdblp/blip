@@ -94,13 +94,13 @@ describe('Patient utils', () => {
   })
 
   describe('isInvitationPending', () => {
-    it('should return true when patient invitation is pending', () => {
+    it('should return true when patient invite is pending', () => {
       const patient = createPatient('fakePatientId', UserInvitationStatus.pending)
       const result = PatientUtils.isInvitationPending(patient)
       expect(result).toBeTruthy()
     })
 
-    it('should return false when patient invitation is accepted', () => {
+    it('should return false when patient invite is accepted', () => {
       const patient = createPatient('fakePatientId', UserInvitationStatus.accepted)
       const result = PatientUtils.isInvitationPending(patient)
       expect(result).toBeFalsy()
@@ -268,6 +268,21 @@ describe('Patient utils', () => {
       expect(PatientUtils.getGenderLabel(Gender.Female)).toEqual('gender-f')
       expect(PatientUtils.getGenderLabel(Gender.Male)).toEqual('gender-m')
       expect(PatientUtils.getGenderLabel(Gender.NotDefined)).toEqual('-')
+    })
+  })
+
+  describe('formatPercentageValue', () => {
+    it('should format the value with 1 digit', () => {
+      expect(PatientUtils.formatPercentageValue(70.06)).toEqual('70.1%')
+    })
+
+    it('should format the value even if it equals 0', () => {
+      expect(PatientUtils.formatPercentageValue(0)).toEqual('0%')
+    })
+
+    it('should return N/A if the value is not defined', () => {
+      expect(PatientUtils.formatPercentageValue(undefined)).toEqual('N/A')
+      expect(PatientUtils.formatPercentageValue(null)).toEqual('N/A')
     })
   })
 })

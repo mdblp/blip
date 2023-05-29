@@ -25,42 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { PatientListHeader } from './patient-list-header'
-import { usePatientListHook } from './patient-list.hook'
-import { PatientListTabs } from './models/enums/patient-list.enum'
-import { GlobalStyles } from 'tss-react'
-import { useTheme } from '@mui/material/styles'
-import { CurrentPatientList } from './current-patient-list/current-patient-list'
-import { PendingPatientList } from './pending-patient-list/pending-patient-list'
+import { type Team } from '../../../../lib/team'
+import { getUnreadMessagesByTeam } from '../../../../components/chat/chat.util'
 
-export const PatientList: FunctionComponent = () => {
-  const theme = useTheme()
-  const {
-    selectedTab,
-    inputSearch,
-    patients,
-    onChangingTab,
-    setInputSearch
-  } = usePatientListHook()
-
-  return (
-    <React.Fragment>
-      <GlobalStyles styles={{ body: { backgroundColor: theme.palette.common.white } }} />
-      <PatientListHeader
-        selectedTab={selectedTab}
-        inputSearch={inputSearch}
-        patientsDisplayedCount={patients.length}
-        onChangingTab={onChangingTab}
-        setInputSearch={setInputSearch}
-      />
-
-      {selectedTab === PatientListTabs.Current &&
-        <CurrentPatientList patients={patients} />
+describe('ChatUtil', () => {
+  describe('getUnreadMessagesByTeamForPatient', () => {
+    it('should convert the string-number object into a string-boolean object and mention all teams', () => {
+      const teams = [{ id: 'team-1' }, { id: 'team-2' }, { id: 'team-3' }] as Team[]
+      const unreadMessagesCountByTeam = {
+        'team-1': 3,
+        'team-3': 2
       }
-      {selectedTab === PatientListTabs.Pending &&
-        <PendingPatientList patients={patients} />
-      }
-    </React.Fragment>
-  )
-}
+      const emptyApiResult = {}
+
+      expect(getUnreadMessagesByTeam(unreadMessagesCountByTeam, teams)).toEqual({
+        'team-1': true,
+        'team-2': false,
+        'team-3': true
+      })
+      expect(getUnreadMessagesByTeam(emptyApiResult, teams)).toEqual({
+        'team-1': false,
+        'team-2': false,
+        'team-3': false
+      })
+    })
+  })
+})

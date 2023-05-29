@@ -87,7 +87,7 @@ describe('Remove patient dialog hook', () => {
       })
 
       expect(removePatientMock).toHaveBeenCalledWith(patient)
-      expect(onSuccessMock).toHaveBeenCalledWith('alert-remove-patient-pending-invitation-success')
+      expect(onSuccessMock).toHaveBeenCalledWith('alert-remove-patient-pending-invite-success')
     })
 
     it('should show success alert when removing a patient from a team', async () => {

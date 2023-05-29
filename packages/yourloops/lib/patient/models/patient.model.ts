@@ -31,9 +31,11 @@ import { type PatientMetadata } from './patient-metadata.model'
 import { type MonitoringAlerts } from './monitoring-alerts.model'
 import { type UserInvitationStatus } from '../../team/models/enums/user-invitation-status.enum'
 import { type MonitoringAlertsParameters } from '../../team/models/monitoring-alerts-parameters.model'
+import { type GlycemiaIndicators } from './glycemia-indicators.model'
 
 export interface Patient {
   monitoringAlerts: MonitoringAlerts
+  glycemiaIndicators: GlycemiaIndicators
   profile: PatientProfile
   settings: PatientSettings
   metadata: PatientMetadata

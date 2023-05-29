@@ -29,7 +29,7 @@ import { useState } from 'react'
 import { type PatientsFilters } from './models/patients-filters.model'
 import { type PatientListContextResult } from './models/patient-list-context-result.model'
 import { PatientListColumns } from '../../components/patient-list/models/enums/patient-list.enum'
-import { type GridColumnVisibilityModel, useGridApiRef } from '@mui/x-data-grid'
+import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
 import { useAuth } from '../auth'
 
 const DEFAULT_FILTERS = {
@@ -47,8 +47,10 @@ const DEFAULT_COLUMNS_HCP = [
   PatientListColumns.Patient,
   PatientListColumns.DateOfBirth,
   PatientListColumns.MonitoringAlerts,
-  PatientListColumns.LastDataUpdate,
   PatientListColumns.Messages,
+  PatientListColumns.TimeInRange,
+  PatientListColumns.Hypoglycemia,
+  PatientListColumns.LastDataUpdate,
   PatientListColumns.Actions
 ]
 
@@ -56,13 +58,14 @@ const DEFAULT_COLUMNS_CAREGIVER = [
   PatientListColumns.Flag,
   PatientListColumns.Patient,
   PatientListColumns.DateOfBirth,
+  PatientListColumns.TimeInRange,
+  PatientListColumns.Hypoglycemia,
   PatientListColumns.LastDataUpdate,
   PatientListColumns.Actions
 ]
 
 export const usePatientListProviderHook = (): PatientListContextResult => {
   const { user, updatePreferences } = useAuth()
-  const gridApiRef = useGridApiRef()
   const isUserHcp = user.isUserHcp()
 
   const getColumnPreference = (columnName: PatientListColumns): boolean => {
@@ -83,6 +86,10 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     [PatientListColumns.MonitoringAlerts]: isUserHcp ? getColumnPreference(PatientListColumns.MonitoringAlerts) : false,
     [PatientListColumns.LastDataUpdate]: getColumnPreference(PatientListColumns.LastDataUpdate),
     [PatientListColumns.Messages]: isUserHcp ? getColumnPreference(PatientListColumns.Messages) : false,
+    [PatientListColumns.TimeInRange]: getColumnPreference(PatientListColumns.TimeInRange),
+    [PatientListColumns.GlucoseManagementIndicator]: getColumnPreference(PatientListColumns.GlucoseManagementIndicator),
+    [PatientListColumns.Hypoglycemia]: getColumnPreference(PatientListColumns.Hypoglycemia),
+    [PatientListColumns.Variance]: getColumnPreference(PatientListColumns.Variance),
     [PatientListColumns.Actions]: true
   })
 
@@ -122,7 +129,6 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     updatePendingFilter,
     resetFilters,
     displayedColumns,
-    saveColumnsPreferences,
-    gridApiRef
+    saveColumnsPreferences
   }
 }

@@ -26,7 +26,7 @@
  */
 
 import { fireEvent, screen, within } from '@testing-library/react'
-import { myFirstTeamName, mySecondTeamName } from '../mock/team.api.mock'
+import { myFirstTeamId, myFirstTeamName, mySecondTeamId, mySecondTeamName } from '../mock/team.api.mock'
 import userEvent from '@testing-library/user-event'
 import { patient1Id } from '../data/patient.api.data'
 import ChatApi from '../../../lib/chat/chat.api'
@@ -41,11 +41,27 @@ export const checkChatWidgetMessageReadingForHcp = async (): Promise<void> => {
 export const checkChatWidgetMessageReadingForPatient = async (): Promise<void> => {
   const dashboard = within(screen.getByTestId('patient-dashboard'))
   const chatCard = dashboard.queryByTestId('chat-card')
-  expect(chatCard).toHaveTextContent('Messages MyFirstTeamThis is a message sent to the team MyFirstTeam')
+  expect(chatCard).toHaveTextContent('Messages MyFirstTeam​This is a message sent to the team MyFirstTeam')
+
   const chatCardHeaderTeamDropdown = within(within(chatCard).getByTestId('card-header')).getByText(myFirstTeamName)
+  checkDropdownBadge(true)
+
   fireEvent.mouseDown(chatCardHeaderTeamDropdown)
+
+  expect(within(screen.getByRole('listbox')).queryByTestId(`unread-messages-badge-team-${myFirstTeamId}`)).not.toBeInTheDocument()
+  expect(within(screen.getByRole('listbox')).getByTestId(`unread-messages-badge-team-${mySecondTeamId}`)).toBeVisible()
+
   await userEvent.click(within(screen.getByRole('listbox')).getByText(mySecondTeamName))
-  expect(chatCard).toHaveTextContent('Messages (+1)MySecondTeamThis is a message sent from the team MySecondTeam')
+
+  checkDropdownBadge(false)
+  expect(chatCard).toHaveTextContent('Messages (+1)MySecondTeam​This is a message sent from the team MySecondTeam')
+
+  fireEvent.mouseDown(chatCardHeaderTeamDropdown)
+
+  expect(within(screen.getByRole('listbox')).queryByTestId(`unread-messages-badge-team-${myFirstTeamId}`)).not.toBeInTheDocument()
+  expect(within(screen.getByRole('listbox')).queryByTestId(`unread-messages-badge-team-${mySecondTeamId}`)).not.toBeInTheDocument()
+
+  await userEvent.click(screen.getByRole('presentation').firstChild as HTMLElement)
 }
 
 export const checkChatWidgetMessageSending = async (teamId): Promise<void> => {
@@ -56,4 +72,27 @@ export const checkChatWidgetMessageSending = async (teamId): Promise<void> => {
   await userEvent.type(chatInput, message)
   await userEvent.click(within(chatCard).getByRole('button', { name: 'Send' }))
   expect(ChatApi.sendChatMessage).toHaveBeenCalledWith(teamId, patient1Id, message, false)
+}
+
+const checkDropdownBadge = (isVisible: boolean): void => {
+  const dashboard = within(screen.getByTestId('patient-dashboard'))
+  const chatCard = dashboard.queryByTestId('chat-card')
+  const chatCardHeader = within(within(chatCard).getByTestId('card-header'))
+  const badge = chatCardHeader.getByTestId('unread-messages-badge')
+
+  const array = new Array(badge.children.length).fill('')
+  const isBadgeFound = array.reduce((isFound: boolean, _: string, currentIndex: number) => {
+    const element = badge.children[currentIndex]
+    if (element.classList.contains('MuiBadge-badge')) {
+      if (isVisible) {
+        expect(element).not.toHaveClass('MuiBadge-invisible')
+      } else {
+        expect(element).toHaveClass('MuiBadge-invisible')
+      }
+      return true
+    }
+    return isFound || false
+  }, false)
+
+  expect(isBadgeFound).toEqual(true)
 }

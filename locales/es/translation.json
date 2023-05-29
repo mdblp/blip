@@ -250,6 +250,7 @@
   "compute-oneday-time-in-range": "**Método de cálculo:**\n\n**(%)** es el número de lecturas dentro del intervalo ideal dividido por todas las lecturas durante este periodo de tiempo.\n\n**(tiempo)** es 24 horas multiplicado por el % dentro del intervalo ideal.",
   "compute-total-insulin": "**Método de cálculo:**\n\n**(%)** es total de administraciones de insulina basal o de bolo dividido por el total de insulina administrada durante este periodo de tiempo.",
   "custom": "personalizado",
+  "date-format": "ll",
   "day": "día",
   "days": "días",
   "dbl": "DBL",

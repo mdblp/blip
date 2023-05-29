@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,7 +34,7 @@ export interface INotification {
   type: INotificationType
   /** Current user email */
   email: string
-  /** User who create the invitation == creator.userid? */
+  /** User who create the invite == creator.userid? */
   creatorId: string
   /** Undocumented value */
   context?: null
