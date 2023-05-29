@@ -61,11 +61,6 @@ export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> =
     return patient.settings.a1c ? `${patient.settings.a1c.value} (${moment(patient.settings.a1c?.date).format('L')})` : trNaLabel
   }, [patient.settings.a1c, trNaLabel])
 
-  const referringDoctor = useMemo(() => {
-    const doctor = patient.profile.referringDoctor
-    return !doctor || doctor === '' ? trNaLabel : doctor
-  }, [patient.profile.referringDoctor, trNaLabel])
-
   const onShowMoreInfoClick = (): void => {
     localStorage.setItem(LOCAL_STORAGE_SHOW_MORE_INFO_PATIENT_NAV_BAR_ID, String(!isShowingMore))
     setIsShowingMore(!isShowingMore)
@@ -96,10 +91,6 @@ export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> =
         </Box>
         {isShowingMore &&
           <Box display="flex" marginY={1}>
-            <PatientNavBarInfo
-              fieldName={t('colon', { label: t('referring-doctor') })}
-              fieldValue={referringDoctor}
-            />
             <PatientNavBarInfo
               fieldName={t('colon', { label: t('hba1c') })}
               fieldValue={hbA1c}
