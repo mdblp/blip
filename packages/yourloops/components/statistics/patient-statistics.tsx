@@ -26,7 +26,7 @@
  */
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import { type BgPrefs, CBGPercentageBarChart, CBGStatType, TotalCarbsStat } from 'dumb'
+import { type BgPrefs, CBGPercentageBarChart, CBGStatType, LoopModeStat, TotalCarbsStat } from 'dumb'
 import {
   type BgType,
   type DateFilter,
@@ -38,7 +38,7 @@ import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
-import { GlycemiaStatisticsService, CarbsStatisticsService } from 'medical-domain'
+import { GlycemiaStatisticsService, CarbsStatisticsService, BasalBolusStatisticsService } from 'medical-domain'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
@@ -88,6 +88,12 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
     : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
 
+  const {
+    total,
+    manual,
+    auto
+  } = BasalBolusStatisticsService.getTimeInAutoData(medicalData.basal, numberOfDays, dateFilter)
+
   return (
     <Box data-testid="patient-statistics">
       <CBGPercentageBarChart
@@ -132,6 +138,13 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         totalEntriesCarbWithRescueCarbs={totalEntriesCarbWithRescueCarbs}
         totalCarbs={Math.round(totalCarbs)}
         foodCarbs={Math.round(foodCarbs)}
+      />
+      <LoopModeStat
+        automated={auto}
+        manual={manual}
+        total={total}
+        title={'toto'}
+        annotations={['titi']}
       />
     </Box>
   )

@@ -65,9 +65,10 @@ import { type WeekDaysFilter } from './domains/models/time/date-filter.model'
 import type MedicalData from './domains/models/medical/medical-data.model'
 import { classifyBgValue, GlycemiaStatisticsService } from './domains/repositories/statistics/glycemia-statistics.service'
 import { CarbsStatisticsService } from './domains/repositories/statistics/carbs-statistics.service'
+import { BasalBolusStatisticsService } from './domains/repositories/statistics/insuline-statistics.service'
 export {
   type Basal, type BaseDatum, type BgBounds, type BgClasses, type BgType, type BgUnit, type Bolus, BolusSubtype, type Cbg, type CbgRangeStatistics, type CgmConfig, ClassificationType, type ConfidentialMode, DatumType, type DateFilter, type Datum, type DeviceConfig, type DeviceParameterChange, type DurationValue, DurationUnit,
   type Meal, type MedicalData, type Message, type Parameter, type ParameterConfig, type PhysicalActivity, Prescriptor, PumpManufacturer, type PumpConfig, type PumpSettings, type ReservoirChange, type Smbg, Source, type TimePrefs, Unit, type Upload, type Wizard, WizardInputMealFat, WizardInputMealSource, type ZenMode, type WeekDaysFilter,
-  defaultMedicalDataOptions, defaultBgClasses, TimeService, MGDL_UNITS, MMOLL_UNITS, classifyBgValue, convertBG, GlycemiaStatisticsService, CarbsStatisticsService
+  defaultMedicalDataOptions, defaultBgClasses, TimeService, MGDL_UNITS, MMOLL_UNITS, classifyBgValue, convertBG, GlycemiaStatisticsService, CarbsStatisticsService, BasalBolusStatisticsService
 }
 export default MedicalDataService
