@@ -77,7 +77,7 @@ function PatientCaregiversPage(): JSX.Element {
     if (email && user) {
       try {
         await DirectShareApi.addDirectShare(user.id, email)
-        alert.success(t('alert-invitation-sent-success'))
+        alert.success(t('alert-invite-sent-success'))
         metrics.send('invitation', 'send_invitation', 'caregiver')
         // Refresh the notifications list
         notificationHook.update()
@@ -88,10 +88,10 @@ function PatientCaregiversPage(): JSX.Element {
         log.error(reason)
 
         if (error.message === PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE) {
-          alert.error(t('alert-invitation-caregiver-failed-user-is-patient'))
+          alert.error(t('alert-invite-caregiver-failed-user-is-patient'))
           return
         }
-        alert.error(t('alert-invitation-caregiver-failed'))
+        alert.error(t('alert-invite-caregiver-failed'))
       }
     }
   }

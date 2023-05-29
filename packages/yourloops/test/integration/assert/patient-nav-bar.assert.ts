@@ -62,7 +62,7 @@ export const checkPatientNavBarAsPatient = () => {
 
 export const checkPatientDropdown = async (initialPatient: Patient, patientToSwitchTo: Patient) => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-  const initialPatientHeaderContent = `Patient${initialPatient.profile.firstName} ${initialPatient.profile.lastName}Date of birth:${moment(initialPatient.profile.birthdate).format('L')}Diabete type:Type 1Gender:MaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report`
+  const initialPatientHeaderContent = `Patient${initialPatient.profile.firstName} ${initialPatient.profile.lastName}Date of birth:${moment(initialPatient.profile.birthdate).format('L')}Diabetes type:Type 1Gender:MaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report`
   expect(secondaryHeader).toHaveTextContent(initialPatientHeaderContent)
 
   fireEvent.mouseDown(within(secondaryHeader).getByText(patient1.profile.fullName))
@@ -71,11 +71,11 @@ export const checkPatientDropdown = async (initialPatient: Patient, patientToSwi
   const secondPatientDateOfBirth = moment(patientToSwitchTo.profile.birthdate).format('L')
   const secondPatientName = `${patientToSwitchTo.profile.firstName} ${patientToSwitchTo.profile.lastName}`
   const secondaryHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
-  const secondPatientHeaderContent = `Patient${secondPatientName}Date of birth:${secondPatientDateOfBirth}Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report`
+  const secondPatientHeaderContent = `Patient${secondPatientName}Date of birth:${secondPatientDateOfBirth}Diabetes type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report`
   await waitFor(() => { expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContent) })
 
   await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show more'))
-  const secondPatientHeaderContentExtended = `Patient${secondPatientName}Date of birth:${secondPatientDateOfBirth}Diabete type:Type 1Gender:FemaleRemote monitoring:NoReferring doctor:N/Ahba1c:8.9 (11/21/2023)Email:${patientToSwitchTo.profile.email}Show lessDashboardDailyTrendsDownload report`
+  const secondPatientHeaderContentExtended = `Patient${secondPatientName}Date of birth:${secondPatientDateOfBirth}Diabetes type:Type 1Gender:FemaleRemote monitoring:NoReferring doctor:N/Ahba1c:8.9 (11/21/2023)Email:${patientToSwitchTo.profile.email}Show lessDashboardDailyTrendsDownload report`
   expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContentExtended)
   await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show less'))
   expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContent)

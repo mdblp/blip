@@ -64,7 +64,7 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
 
   const getSuccessAlertMessage = (): void => {
     if (patient.invitationStatus === UserInvitationStatus.pending) {
-      alert.success(t('alert-remove-patient-pending-invitation-success'))
+      alert.success(t('alert-remove-patient-pending-invite-success'))
       return
     }
     const team = getTeam(selectedTeamId)

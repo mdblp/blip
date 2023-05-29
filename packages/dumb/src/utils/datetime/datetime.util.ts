@@ -123,6 +123,14 @@ export const formatBirthdate = (birthDate?: string): string => {
   return moment.utc(birthDate).format(birthdayFormat)
 }
 
+export const formatDate = (date?: string): string => {
+  if (!date) {
+    return ''
+  }
+  const dateFormat = t('date-format')
+  return moment.utc(date).format(dateFormat)
+}
+
 export const formatCurrentDate = (): string => {
   return timeFormat(t('%b %-d, %Y'))(new Date())
 }

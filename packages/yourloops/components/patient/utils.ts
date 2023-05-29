@@ -51,7 +51,7 @@ export const getMedicalValues = (medicalData: MedicalData | null | undefined, na
       const mLastUpload = moment.tz(medicalData.range.endDate, browserTimezone)
       if (mLastUpload.isValid()) {
         lastUploadEpoch = mLastUpload.valueOf()
-        lastUpload = mLastUpload.format('llll')
+        lastUpload = mLastUpload.format('lll')
       }
     }
     if (medicalData.computedTir?.count) {
@@ -81,6 +81,7 @@ export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
   const birthdate = iTeamMember.profile?.patient?.birthday
   return {
     monitoringAlerts: iTeamMember.alarms ?? {} as MonitoringAlerts,
+    glycemiaIndicators: iTeamMember.glycemiaIndicators,
     profile: {
       birthdate,
       sex: iTeamMember.profile?.patient?.sex ? iTeamMember.profile?.patient?.sex : Gender.NotDefined,

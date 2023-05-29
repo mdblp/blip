@@ -28,7 +28,7 @@
 import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import PatientDataPage from '../components/patient-data'
-import TeamDetailsPage from '../pages/team/team-details-page'
+import CareTeamPage from '../pages/care-team/care-team-page'
 import CaregiversPage from '../pages/patient/caregivers/page'
 import { PatientProvider } from '../lib/patient/patient.provider'
 import { TeamContextProvider } from '../lib/team'
@@ -49,7 +49,7 @@ export function PatientLayout(): JSX.Element {
             <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
             <Route path={AppUserRoute.Home} element={<PatientDataPage />} />
             <Route path={AppUserRoute.Caregivers} element={<CaregiversPage />} />
-            <Route path={`${AppUserRoute.Teams}/:teamId`} element={<TeamDetailsPage />} />
+            <Route path={`${AppUserRoute.Teams}/:teamId`} element={<CareTeamPage />} />
             <Route
               path="/"
               element={<Navigate to={AppUserRoute.Dashboard} replace />}
