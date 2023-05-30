@@ -67,7 +67,6 @@
   "Change": "Changer",
   "Change Cartridge": "Changement de cartouche",
   "Change Pod": "Changement de pod",
-  "Click to reload.": "Cliquez ici pour rafraîchir",
   "Close": "Fermer",
   "Comment_submit": "Commentaire",
   "Confidential mode": "Mode confidentiel",
@@ -303,6 +302,5 @@
   "years": "années",
   "{{date}} - {{time}}": "{{date}} - {{time}}",
   "{{numVisibleDays}} days in view": "{{numVisibleDays}} jours affichés",
-  "{{patientName}} does not have any data yet.": "{{patientName}} n'a pas encore de données",
   "{{title}} (cont.)": "{{title}} (suite)"
 }
