@@ -45,7 +45,12 @@ import type Message from './domains/models/medical/datum/message.model'
 import type PhysicalActivity from './domains/models/medical/datum/physical-activity.model'
 import Prescriptor from './domains/models/medical/datum/enums/prescriptor.enum'
 import PumpManufacturer from './domains/models/medical/datum/enums/pump-manufacturer.enum'
-import { type CgmConfig, type DeviceConfig, type ParameterConfig, type PumpConfig } from './domains/models/medical/datum/pump-settings.model'
+import {
+  type CgmConfig,
+  type DeviceConfig,
+  type ParameterConfig,
+  type PumpConfig
+} from './domains/models/medical/datum/pump-settings.model'
 import type PumpSettings from './domains/models/medical/datum/pump-settings.model'
 import type ReservoirChange from './domains/models/medical/datum/reservoir-change.model'
 import type Smbg from './domains/models/medical/datum/smbg.model'
@@ -58,16 +63,74 @@ import { WizardInputMealSource } from './domains/models/medical/datum/enums/wiza
 import type ZenMode from './domains/models/medical/datum/zen-mode.model'
 import MedicalDataService from './domains/repositories/medical/medical-data.service'
 import { convertBG } from './domains/repositories/medical/datum/cbg.service'
-import { type BgClasses, defaultMedicalDataOptions, defaultBgClasses, type TimePrefs } from './domains/models/medical/medical-data-options.model'
+import {
+  type BgClasses,
+  defaultMedicalDataOptions,
+  defaultBgClasses,
+  type TimePrefs
+} from './domains/models/medical/medical-data-options.model'
 import * as TimeService from './domains/repositories/time/time.service'
 import type DateFilter from './domains/models/time/date-filter.model'
 import { type WeekDaysFilter } from './domains/models/time/date-filter.model'
 import type MedicalData from './domains/models/medical/medical-data.model'
-import { classifyBgValue, GlycemiaStatisticsService } from './domains/repositories/statistics/glycemia-statistics.service'
+import {
+  classifyBgValue,
+  GlycemiaStatisticsService
+} from './domains/repositories/statistics/glycemia-statistics.service'
+import type BasicData from './domains/repositories/medical/basics-data.service'
 import { CarbsStatisticsService } from './domains/repositories/statistics/carbs-statistics.service'
+
 export {
-  type Basal, type BaseDatum, type BgBounds, type BgClasses, type BgType, type BgUnit, type Bolus, BolusSubtype, type Cbg, type CbgRangeStatistics, type CgmConfig, ClassificationType, type ConfidentialMode, DatumType, type DateFilter, type Datum, type DeviceConfig, type DeviceParameterChange, type DurationValue, DurationUnit,
-  type Meal, type MedicalData, type Message, type Parameter, type ParameterConfig, type PhysicalActivity, Prescriptor, PumpManufacturer, type PumpConfig, type PumpSettings, type ReservoirChange, type Smbg, Source, type TimePrefs, Unit, type Upload, type Wizard, WizardInputMealFat, WizardInputMealSource, type ZenMode, type WeekDaysFilter,
-  defaultMedicalDataOptions, defaultBgClasses, TimeService, MGDL_UNITS, MMOLL_UNITS, classifyBgValue, convertBG, GlycemiaStatisticsService, CarbsStatisticsService
+  type Basal,
+  type BaseDatum,
+  type BgBounds,
+  type BgClasses,
+  type BgType,
+  type BgUnit,
+  type Bolus,
+  BolusSubtype,
+  type Cbg,
+  type CbgRangeStatistics,
+  type CgmConfig,
+  ClassificationType,
+  type ConfidentialMode,
+  DatumType,
+  type DateFilter,
+  type Datum,
+  type DeviceConfig,
+  type DeviceParameterChange,
+  type DurationValue,
+  DurationUnit,
+  type Meal,
+  type MedicalData,
+  type Message,
+  type Parameter,
+  type ParameterConfig,
+  type PhysicalActivity,
+  Prescriptor,
+  PumpManufacturer,
+  type PumpConfig,
+  type PumpSettings,
+  type ReservoirChange,
+  type Smbg,
+  Source,
+  type TimePrefs,
+  Unit,
+  type Upload,
+  type Wizard,
+  WizardInputMealFat,
+  WizardInputMealSource,
+  type ZenMode,
+  type WeekDaysFilter,
+  defaultMedicalDataOptions,
+  defaultBgClasses,
+  TimeService,
+  MGDL_UNITS,
+  MMOLL_UNITS,
+  classifyBgValue,
+  convertBG,
+  GlycemiaStatisticsService,
+  type BasicData,
+  CarbsStatisticsService
 }
 export default MedicalDataService

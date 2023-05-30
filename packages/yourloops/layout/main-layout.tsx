@@ -33,7 +33,6 @@ import { Navigate, Route } from 'react-router-dom'
 import { HcpLayout } from './hcp-layout'
 import { CaregiverLayout } from './caregiver-layout'
 import { PatientLayout } from './patient-layout'
-import { DataContextProvider, DefaultDataContext } from '../lib/data/data.hook'
 import { UserRole } from '../lib/auth/models/enums/user-role.enum'
 
 export function MainLayout(): JSX.Element {
@@ -60,9 +59,7 @@ export function MainLayout(): JSX.Element {
     <React.Fragment>
       {user &&
         <NotificationContextProvider>
-          <DataContextProvider context={DefaultDataContext}>
-            {getUserLayout()}
-          </DataContextProvider>
+          {getUserLayout()}
         </NotificationContextProvider>
       }
     </React.Fragment>

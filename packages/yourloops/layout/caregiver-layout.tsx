@@ -27,7 +27,6 @@
 
 import React, { type FunctionComponent } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import PatientDataPage from '../components/patient-data'
 import { PatientProvider } from '../lib/patient/patient.provider'
 import DashboardLayout from './dashboard-layout'
 import InvalidRoute from '../components/invalid-route'
@@ -36,6 +35,7 @@ import NotificationsPage from '../pages/notifications'
 import { AppUserRoute } from '../models/enums/routes.enum'
 import { PatientListPage } from '../components/patient-list/patient-list-page'
 import { PatientListProvider } from '../lib/providers/patient-list.provider'
+import { PatientData } from '../components/patient-data/patient-data'
 
 export const CaregiverLayout: FunctionComponent = () => {
   return (
@@ -46,7 +46,7 @@ export const CaregiverLayout: FunctionComponent = () => {
             <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
             <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
             <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
-            <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientDataPage />} />
+            <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientData />} />
             <Route path={AppUserRoute.Home} element={<PatientListPage />} />
             <Route
               path="/"

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,5 +40,10 @@ export default class ChatApi {
       payload: { text, private: isPrivate }
     })
     return true
+  }
+
+  static async getUnreadMessagesCountForPatient(patientId: string): Promise<Record<string, number>> {
+    const { data } = await HttpService.get<Record<string, number>>({ url: `chat/v1/unread/patients/${patientId}/teams` })
+    return data
   }
 }

@@ -29,7 +29,7 @@ import { useState } from 'react'
 import { type PatientsFilters } from './models/patients-filters.model'
 import { type PatientListContextResult } from './models/patient-list-context-result.model'
 import { PatientListColumns } from '../../components/patient-list/models/enums/patient-list.enum'
-import { type GridColumnVisibilityModel, useGridApiRef } from '@mui/x-data-grid'
+import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
 import { useAuth } from '../auth'
 
 const DEFAULT_FILTERS = {
@@ -66,7 +66,6 @@ const DEFAULT_COLUMNS_CAREGIVER = [
 
 export const usePatientListProviderHook = (): PatientListContextResult => {
   const { user, updatePreferences } = useAuth()
-  const gridApiRef = useGridApiRef()
   const isUserHcp = user.isUserHcp()
 
   const getColumnPreference = (columnName: PatientListColumns): boolean => {
@@ -130,7 +129,6 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     updatePendingFilter,
     resetFilters,
     displayedColumns,
-    saveColumnsPreferences,
-    gridApiRef
+    saveColumnsPreferences
   }
 }

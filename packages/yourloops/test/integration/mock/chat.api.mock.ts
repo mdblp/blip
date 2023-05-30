@@ -28,10 +28,10 @@
 import ChatApi from '../../../lib/chat/chat.api'
 import { type IMessage } from '../../../lib/chat/models/i-message.model'
 import {
+  myFirstTeamId,
   myFirstTeamName,
   mySecondTeamId,
   mySecondTeamName,
-  myTeamId,
   myThirdTeamId,
   myThirdTeamName
 } from './team.api.mock'
@@ -41,11 +41,11 @@ import type User from '../../../lib/auth/models/user.model'
 export const mockChatAPI = () => {
   jest.spyOn(ChatApi, 'sendChatMessage').mockResolvedValue(true)
   jest.spyOn(ChatApi, 'getChatMessages').mockImplementation((teamId, patientId): Promise<IMessage[]> => {
-    if (teamId === myTeamId && patientId === patient1Id) {
+    if (teamId === myFirstTeamId && patientId === patient1Id) {
       const message: IMessage = {
         id: 'fakeMessageId',
         patientId: patient1Id,
-        teamId: myTeamId,
+        teamId: myFirstTeamId,
         authorId: patient1Id,
         destAck: true,
         private: false,
@@ -87,5 +87,8 @@ export const mockChatAPI = () => {
       return Promise.resolve([message])
     }
     return Promise.resolve([])
+  })
+  jest.spyOn(ChatApi, 'getUnreadMessagesCountForPatient').mockResolvedValue({
+    [mySecondTeamId]: 1
   })
 }

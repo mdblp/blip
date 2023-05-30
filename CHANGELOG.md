@@ -35,8 +35,12 @@ It is based on Tidepool Blip 1.27.
 - YLP-2323 Add new columns from existing data in patient list
 - YLP-2324 Hide certain columns when private practice is selected
 - YLP-2348 New columns from glycemia indicators in patients list
+- YLP-2350 Display a visual info when a patient has unread messages from another team in the chat widget
 - YLP-2358 As a care team member, I want a new design when listing my pending patients
 - YLP-2381 As a HCP, I want to manage patient invites made by other members of the teams
+- YLP-2390 Enlarge font of the buttons of the messaging system
+- YLP-2393 Remove fields and "Show more/Show less" logic in the patient header
+- YLP-2394 Hide "Monitoring alerts" card for patients users
 
 ### Engineering use
 - YLP-2044 Remove redux settings store
@@ -88,10 +92,12 @@ It is based on Tidepool Blip 1.27.
 - YLP-2301 Split ITs jobs by roles
 - YLP-2307 Incomplete alert when accepting a direct share invitation
 - YLP-2311 Reorganize ITs
+- YLP-2328 Migrate patient-data from jsx to tsx
 - YLP-2364 Fixed English translations
 - YLP-2367 Patient list refacto
 - YLP-2386 Fix navigation crash between care team and patient list
 - YLP-2387 Fix the tab title when displaying the patient list
+- YLP-2404 Fix patient list columns width
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team

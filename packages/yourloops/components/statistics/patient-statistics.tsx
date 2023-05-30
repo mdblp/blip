@@ -48,8 +48,8 @@ import { AverageGlucoseStat } from './average-glucose-stat'
 export interface PatientStatisticsProps {
   medicalData: MedicalData
   bgPrefs: BgPrefs
-  dateFilter: DateFilter
   bgType: BgType
+  dateFilter: DateFilter
 }
 
 export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
