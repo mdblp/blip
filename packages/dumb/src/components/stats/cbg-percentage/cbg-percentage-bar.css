@@ -81,8 +81,8 @@
 .stat {
   display: flex;
   align-items: center;
-  padding-bottom: 6px;
-  padding-top: 6px;
+  padding-bottom: 4px;
+  padding-top: 4px;
 }
 
 .title {

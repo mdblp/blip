@@ -48,7 +48,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
 
   return (
     <Box data-testid="cbg-mean-stat">
-      <Box display="flex" justifyContent="space-between" marginTop="4px">
+      <Box display="flex" justifyContent="space-between" alignItems="center">
         <div>
           {title}
           <StatTooltip annotations={[tooltipValue]} />
@@ -57,7 +57,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
           {units}
         </Box>
       </Box>
-      <Box display="flex" marginLeft="6px" marginTop="4px">
+      <Box display="flex" alignItems="center" marginLeft="6px">
         {Number.isNaN(value)
           ? <>
             <div className={styles['disabled-line']} />

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,15 +33,14 @@
 }
 
 .statFooter {
-  border-top: 1px solid var(--stat--border);
-  padding: 0.25em 0.625em .375em;
+  padding-left: 0.625em;
   overflow: hidden;
 }
 
 .inputWrapper {
   width: 100%;
   color: var(--stat--default);
-  padding: 0.25em 0.625em .375em;
+  padding: 0.25em 0 .375em 0.625em;
 }
 
 .outputWrapper {
@@ -53,9 +52,6 @@
   composes: smallSize from '../../../styles/typography.css';
   color: var(--stat--default);
   font-weight: normal;
-  align-self: center;
-  line-height: 24px;
-  padding-left: .75em;
 }
 
 .stat.isOpen .chartTitleData {
@@ -69,20 +65,14 @@
 }
 
 .inputValue {
-  width: 45px;
   font-weight: 500;
-  color: var(--stat--default);
-  margin-right: .25em;
-  position: relative;
-  top: 1px;
+  margin-right: 2px;
 }
 
 .outputValue {
   font-weight: 500;
   color: var(--stat--default);
-  margin-right: .25em;
-  position: relative;
-  top: 1px;
+  margin-right: 2px;
 }
 
 .outputSuffix {
