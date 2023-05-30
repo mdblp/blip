@@ -58,3 +58,7 @@ export const mockMedicalFilesAPI = (teamId: string, teamName: string) => {
     authorLastName: 'Lapaix'
   }])
 }
+
+export const mockMedicalFilesApiEmptyResult = () => {
+  jest.spyOn(MedicalFilesApi, 'getMedicalReports').mockResolvedValue([])
+}

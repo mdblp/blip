@@ -25,10 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum ChartType {
+export enum ChartTypes {
   Dashboard = 'dashboard',
   Daily = 'daily',
   Trends = 'trends'
 }
-
-export default ChartType

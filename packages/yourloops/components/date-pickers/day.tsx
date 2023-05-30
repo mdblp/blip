@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,9 +39,11 @@ const dayStyles = makeStyles<void, 'disabled' | 'selected'>({ name: 'date-picker
   root: {
     padding: 0,
     backgroundColor: theme.palette.background.paper,
+    fontWeight: 600,
     color: theme.palette.text.primary,
     [`&.${classes.disabled}`]: {
-      color: theme.palette.text.secondary,
+      color: theme.palette.grey[600],
+      fontWeight: 'inherit',
       backgroundColor: 'transparent'
     },
     [`&.${classes.selected}`]: {

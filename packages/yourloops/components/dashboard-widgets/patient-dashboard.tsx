@@ -29,12 +29,10 @@ import React, { type FunctionComponent } from 'react'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import DeviceUsage from 'blip/app/components/chart/deviceUsage.js'
 import type MedicalDataService from 'medical-domain'
-import { type TimePrefs } from 'medical-domain'
-import { type ChartPrefs } from './models/chart-prefs.model'
+import { DatumType, type TimePrefs } from 'medical-domain'
 import { type BgPrefs } from 'dumb'
 import type DataUtil from 'tidepool-viz/src/utils/data'
-import moment, { type Moment } from 'moment-timezone'
-import type metrics from '../../lib/metrics'
+import moment from 'moment-timezone'
 import Grid from '@mui/material/Grid'
 import AccessTime from '@mui/icons-material/AccessTime'
 import { useTranslation } from 'react-i18next'
@@ -57,16 +55,14 @@ import { PRIVATE_TEAM_ID, useTeam } from '../../lib/team/team.hook'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
-  chartPrefs: ChartPrefs
+  dashboardEpochDate: number
   dataUtil: typeof DataUtil
-  epochDate: number
+  goToDailySpecificDate: (date: number | Date) => void
   loading: boolean
   medicalDataService: MedicalDataService
   msRange: number
   patient: Patient
   timePrefs: TimePrefs
-  trackMetric: typeof metrics.send
-  onSwitchToDaily: (dateTime: Moment | Date | number | null) => void
 }
 
 const useStyle = makeStyles()((theme) => ({
@@ -80,16 +76,14 @@ const useStyle = makeStyles()((theme) => ({
 export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
   const {
     bgPrefs,
-    chartPrefs,
+    dashboardEpochDate,
     dataUtil,
-    epochDate,
+    goToDailySpecificDate,
     loading,
     medicalDataService,
     msRange,
     patient,
-    timePrefs,
-    trackMetric,
-    onSwitchToDaily
+    timePrefs
   } = props
   const { user } = useAuth()
   const { selectedTeam } = useSelectedTeamContext()
@@ -97,14 +91,15 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
   const { medicalData } = medicalDataService
   const { t } = useTranslation()
   const { classes, theme } = useStyle()
+
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
   const endpoints = [
-    moment.utc(epochDate - msRange).toISOString(), // start
-    moment.utc(epochDate).toISOString() // end
+    moment.utc(dashboardEpochDate - msRange).toISOString(), // start
+    moment.utc(dashboardEpochDate).toISOString() // end
   ]
   const dateFilter = {
-    start: epochDate - msRange,
-    end: epochDate
+    start: dashboardEpochDate - msRange,
+    end: dashboardEpochDate
   }
   const isSelectedTeamPrivate = selectedTeam?.id === PRIVATE_TEAM_ID
   const isCaregiver = user.isUserCaregiver()
@@ -121,6 +116,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
   }
 
   const gridWidgetSize = getGridWidgetSize()
+
   return (
     <Grid
       data-testid="patient-dashboard"
@@ -148,17 +144,16 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
         <PatientStatisticsWidget
           medicalData={medicalData}
           bgPrefs={bgPrefs}
-          dateFilter={dateFilter}
           bgType={dataUtil.bgSource}
+          dateFilter={dateFilter}
         >
           <Stats
             bgPrefs={bgPrefs}
-            bgSource={dataUtil.bgSource}
-            chartPrefs={chartPrefs}
+            bgSource={DatumType.Cbg}
             chartType="patientStatistics"
+            loading={loading}
             dataUtil={dataUtil}
             endpoints={endpoints}
-            loading={loading}
             parametersConfig={medicalData?.pumpSettings[0]?.payload?.parameters}
           />
         </PatientStatisticsWidget>
@@ -170,9 +165,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
           timePrefs={timePrefs}
           patient={patient}
           tidelineData={medicalDataService}
-          trackMetric={trackMetric}
-          dataUtil={dataUtil}
-          onSwitchToDaily={onSwitchToDaily}
+          onSwitchToDaily={goToDailySpecificDate}
           medicalData={medicalData}
           dateFilter={dateFilter}
         />
@@ -181,7 +174,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
       {!isCaregiver && !isPatientWithNoTeams && !isSelectedTeamPrivate &&
         <>
           <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
-            <MonitoringAlertCard patient={patient} />
+            {user.isUserHcp() && <MonitoringAlertCard patient={patient} />}
             <MedicalFilesWidget patient={patient} />
           </Grid>
 

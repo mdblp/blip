@@ -29,6 +29,7 @@ import DataAPI from '../../../lib/data/data.api'
 import moment, { type Moment } from 'moment-timezone'
 import { type PatientData } from '../../../lib/data/models/patient-datum.model'
 import { history } from '../data/data-api.data'
+import type { PatientDataRange } from '../../../lib/data/models/data-range.model'
 
 const WIZARD_BOLUS_ID1 = 'carbBolusId'
 const WIZARD_BOLUS_ID2 = 'carbBolusId2'
@@ -49,7 +50,7 @@ export const TWO_WEEKS_AGO_DATE: Moment = moment().subtract(14, 'days')
 const twoWeeksAgoDateAsString = TWO_WEEKS_AGO_DATE.format('YYYY-MM-DD')
 const yesterdayDateAsString = YESTERDAY_DATE.format('YYYY-MM-DD')
 
-interface Data { dataRange: string[], data: PatientData }
+interface Data { dataRange: PatientDataRange, data: PatientData }
 
 export const generateDashboardCompleteData = (date: string): Data => {
   return {
@@ -82,7 +83,7 @@ export const generateDashboardCompleteData = (date: string): Data => {
 export const completeDashboardData = generateDashboardCompleteData(yesterdayDateAsString)
 export const twoWeeksOldDashboardData = generateDashboardCompleteData(twoWeeksAgoDateAsString)
 
-export const completeDailyViewData = {
+export const completeDailyViewData: Data = {
   dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],
   data: [
     { time: '2022-08-08T15:15:00Z', type: 'smbg', id: SMBG_ID, timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
@@ -150,7 +151,7 @@ export const minimalTrendViewData = {
   ]
 }
 
-export const timeInRangeStatsTrendViewData = {
+export const timeInRangeStatsTrendViewData: Data = {
   dataRange: ['2020-01-19T00:00:00Z', '2020-01-20T00:00:00Z'],
   data: [
     { time: '2020-01-20T10:00:00Z', type: 'cbg', id: '2020-01-20_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
@@ -172,7 +173,7 @@ export const timeInRangeStatsTrendViewData = {
   ]
 }
 
-export const twoWeeksOfCbg = {
+export const twoWeeksOfCbg: Data = {
   dataRange: ['2020-01-01T00:00:00Z', '2020-01-15T23:00:00Z'],
   data: [
     { time: '2020-01-01T10:00:00Z', type: 'cbg', id: '2020-01-01_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
