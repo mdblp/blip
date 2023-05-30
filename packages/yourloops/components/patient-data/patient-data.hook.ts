@@ -39,7 +39,7 @@ import { isValidDateQueryParam, PatientDataUtils } from './patient-data.utils'
 import DataUtil from 'tidepool-viz/src/utils/data'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
 
-export interface PatientDataContextResult {
+export interface usePatientDataResult {
   bgPrefs: BgPrefs
   changeChart: (chart: ChartTypes) => void
   changePatient: (patient: Patient) => void
@@ -67,7 +67,7 @@ const DATE_QUERY_PARAM_KEY = 'date'
 const FOURTEEN_DAYS_IN_MS = TimeService.MS_IN_DAY * 14
 const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
-export const usePatientData = (): PatientDataContextResult => {
+export const usePatientData = (): usePatientDataResult => {
   const navigate = useNavigate()
   const paramHook = useParams()
   const { patientId } = paramHook
