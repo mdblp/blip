@@ -98,40 +98,39 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
             <span className={styles.titleTotal}>
               {totalInsulin}
             </span>
+            &nbsp;
             <span className={styles.titleSuffix}>
               U
             </span>
           </Box>
         </Box>
-          {data.map(entry => {
-            return (
-              <React.Fragment key={entry.id}>
-                <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="4px">
+        {data.map(entry => {
+          return (
+            <React.Fragment key={entry.id}>
+              <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="4px">
                   <span>
                     {entry.title}
                   </span>
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Box display="flex" justifyContent="space-between" alignItems="center">
                     <span className={`${styles.rowValue} ${styles[`rowsTotalInsulin-${entry.id}`]}`}>
                       {`${entry.value > 0 ? entry.valueString : '0'} ${entry.units}`}
                     </span>
-                    <Box className={`${styles.rowPercent} ${styles[`rowsTotalInsulin-${entry.id}`]}`}>
-                      <span className={styles.rowPercentValue}>{percent(Math.max(entry.value, 0))}</span>
-                      <span className={styles.rowPercentUnits}>%</span>
-                    </Box>
+                  <Box className={`${styles.rowPercent} ${styles[`rowsTotalInsulin-${entry.id}`]}`}>
+                    <span className={styles.rowPercentValue}>{percent(Math.max(entry.value, 0))}</span>
+                    <span className={styles.rowPercentUnits}>%</span>
                   </Box>
                 </Box>
-              </React.Fragment>
-            )
-          })}
+              </Box>
+            </React.Fragment>
+          )
+        })}
         {(isTrendsPage || isDashboardPage) && <>
-          <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="4px">
+          <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="6px">
             {t('ratio-dose')}
-            <Box>
-              <div className={styles.weightPerUnit}>
-                <span className={outputValueClasses()}>{dailyDosePerWeight}</span>
-                &nbsp;
-                <span className={styles.dailyDoseUnits}>{t('U/kg')}</span>
-              </div>
+            <Box display="flex" alignItems="center">
+              <span className={outputValueClasses()}>{dailyDosePerWeight}</span>
+              &nbsp;
+              <span className={styles.dailyDoseUnits}>{t('U/kg')}</span>
             </Box>
           </Box>
           <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -139,13 +138,15 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
                 {t('weight')}
               </span>
             {!!weight && <>
+              <Box display="flex" alignItems="center">
                 <span className={outputValueClasses()}>
                   {weight}
                   &nbsp;
-                  <span className={styles.dailyDoseUnits}>
-                    {t('kg')}
-                  </span>
                 </span>
+                <span className={styles.dailyDoseUnits}>
+                  {t('kg')}
+                </span>
+              </Box>
             </>}
           </Box>
         </>}

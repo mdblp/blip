@@ -10,10 +10,6 @@ import {
 } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
 import Divider from '@mui/material/Divider'
-
-const WEIGHT_PARAM = 'WEIGHT'
-const WEIGHT_PARAM_DEFAULT_VALUE = -1
-
 class Stats extends React.Component {
   static propTypes = {
     bgPrefs: PropTypes.object.isRequired,
@@ -90,8 +86,7 @@ class Stats extends React.Component {
       : false
   }
 
-  getStatElementById(stat, bgClasses) {
-    const { parametersConfig } = this.props
+  getStatElementById(stat) {
     switch (stat.id) {
       case CBGStatType.TimeInAuto:
         return (
