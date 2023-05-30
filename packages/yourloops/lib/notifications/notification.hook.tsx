@@ -127,7 +127,6 @@ function NotificationContextImpl(): NotificationContext {
     cancel,
     inviteRemoteMonitoring,
     cancelRemoteMonitoringInvite,
-    refreshSentInvitations,
     refreshReceivedInvitations
   }
 }

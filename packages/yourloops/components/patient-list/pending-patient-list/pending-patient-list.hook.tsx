@@ -119,14 +119,15 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
           if (!params.row.isInviteAvailable) {
             return []
           }
+          const patientEmail = patient.profile.email
 
           return [
             <Button
               key={params.row.id}
               data-action="reinvite-patient"
               startIcon={<MailIcon />}
-              data-testid={`reinvite-patient-${patient.profile.email}`}
-              aria-label={`${t('button-resend-invite')} ${patient.profile.email}`}
+              data-testid={`reinvite-patient-${patientEmail}`}
+              aria-label={`${t('button-resend-invite')} ${patientEmail}`}
               onClick={() => {
                 resendInvite(patient)
               }}
@@ -137,8 +138,8 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
               key={params.row.id}
               data-action="remove-patient"
               startIcon={<CloseIcon />}
-              data-testid={`remove-patient-${patient.profile.email}`}
-              aria-label={`${t('button-remove-patient')} ${patient.profile.email}`}
+              data-testid={`remove-patient-${patientEmail}`}
+              aria-label={`${t('button-remove-patient')} ${patientEmail}`}
               onClick={() => {
                 removePatient(patient.userid)
               }}
@@ -167,14 +168,14 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
         }
       }
       const inviteCreator = selectedTeam.members.find(member => member.userId === invite.creatorId)
-      const inviteAuthorName = inviteCreator ? getUserName(inviteCreator.profile.firstName, inviteCreator.profile.lastName, inviteCreator.profile.fullName) : t('N/A')
+      const inviteCreatorName = inviteCreator ? getUserName(inviteCreator.profile.firstName, inviteCreator.profile.lastName, inviteCreator.profile.fullName) : t('N/A')
       return {
         id: patient.userid,
         isInviteAvailable: true,
         [PendingPatientListColumns.Actions]: patient,
         [PendingPatientListColumns.Date]: formatDate(invite.creationDate),
         [PendingPatientListColumns.Email]: patient.profile.email,
-        [PendingPatientListColumns.InviteSentBy]: inviteAuthorName
+        [PendingPatientListColumns.InviteSentBy]: inviteCreatorName
       }
     })
   }, [patients, selectedTeam, t])
