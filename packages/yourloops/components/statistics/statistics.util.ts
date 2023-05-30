@@ -25,45 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { t } from 'i18next'
-import { type ParameterConfig } from 'medical-domain'
-import { TotalInsulinStat } from 'dumb'
-
-interface TotalInsulinStatWrapperProps {
-  basal: number
-  bolus: number
-  total: number
-  totalInsulin: number
-  weight: ParameterConfig
-}
-
-export const AverageDailyDoseAndTotalInsulinStat: FunctionComponent<TotalInsulinStatWrapperProps> = (props) => {
-  const { bolus, basal, total, totalInsulin, weight } = props
-  const weightValue = weight === null ? null : +weight.value
-  const data = [
-    {
-      id: 'bolus',
-      value: Math.round(bolus * 10) / 10,
-      valueString: String(Math.round(bolus * 10) / 10),
-      units: t('U'),
-      title: t('Bolus')
-    },
-    {
-      id: 'basal',
-      value: Math.round(basal * 10) / 10,
-      valueString: String(Math.round(basal * 10) / 10),
-      units: t('U'),
-      title: t('Basal')
-    }
-  ]
-
-  return (
-    <TotalInsulinStat
-      data={data}
-      total={Math.round(total * 10) / 10}
-      weight={weightValue}
-      dailyDose={totalInsulin}
-    />
-  )
+export const convertToPercentage = (number: number): number => {
+  return Math.round(number * 10) / 10
 }

@@ -24,27 +24,17 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-.title {
-  line-height: 1;
-  margin: 4px 4px 8px;
-}
-
 .titleTotal {
   color: #0096D1;
   margin-left: 4px;
-}
-
-.titleData {
-  composes: smallSize from '../../../styles/typography.css';
-  padding-left: .25em;
-  position: relative;
-  top: -1px;
+  font-size: 24px;
+  composes: extraLargeSize from '../../../styles/typography.css';
 }
 
 .titleSuffix {
   padding-left: 1px;
   margin-right: 4px;
+  font-size: 12px;
 }
 
 .rows {
@@ -55,11 +45,7 @@
   padding-left: 10px;
 }
 
-.rows .rowTitle {
-  color: var(--stat--default);
-}
-
-.rows .rowValue {
+.rowValue {
   border-width: 2px;
   border-color: var(--stat-disabled);
   border-style: solid;
@@ -67,27 +53,25 @@
   text-align: center;
   font-size: 14px;
   white-space: pre;
+  padding: 2px;
+  margin-right: 40px;
 }
 
-.rows .rowPercent {
+.rowPercent {
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
-.rows .rowPercent .rowPercentValue {
+.rowPercent .rowPercentValue {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
   font-size: 24px;
 }
 
-.rows .rowPercent .rowPercentUnits {
+.rowPercent .rowPercentUnits {
   font-size: 12px;
   color: var(--text-medium-contrast);
   align-self: flex-end;
-}
-
-.rowsTotalInsulin {
-  grid-template-columns: auto 3.5em 3.5em;
 }
 
 .rowsTotalInsulin-basal {
@@ -106,18 +90,11 @@
   color: var(--muted);
 }
 
-.dailyDosePerWeightContainer{
-  margin-left: 8px;
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-}
-
 .outputValue {
   display: flex;
 }
 
-.dailyDoseValue{
+.dailyDoseValue {
   font-size: 24px;
   composes: extraLargeSize from '../../../styles/typography.css';
   opacity: 1;
@@ -125,8 +102,9 @@
   color: var(--text-medium-contrast);
 }
 
-.dailyDoseUnits{
+.dailyDoseUnits {
   font-size: 12px;
   padding-left: 1px;
   color: var(--text-medium-contrast);
+  align-self: flex-end;
 }

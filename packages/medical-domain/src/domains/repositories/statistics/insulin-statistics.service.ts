@@ -63,24 +63,24 @@ function getWeight(allPumpSettings: PumpSettings[]): ParameterConfig | null {
 }
 
 function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter): BasalBolusStatistics {
+  if (numDays === 0) {
+    return {
+      bolus: NaN,
+      basal: NaN,
+      total: NaN
+    }
+  }
+
   const filteredBasal = BasalService.filterOnDate(basalsData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const filteredBolus = BolusService.filterOnDate(bolus, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const basalData = resamplingDuration(filteredBasal, dateFilter.start, dateFilter.end)
   const bolusTotal = filteredBolus.reduce((accumulator, bolus) => accumulator + bolus.normal, 0)
   const basalTotal = basalData.reduce((accumulator, basal) => accumulator + (basal.duration / 3_600_000 * basal.rate), 0)
 
-  if (numDays > 1) {
-    return {
-      bolus: bolusTotal / numDays,
-      basal: basalTotal / numDays,
-      total: bolusTotal / numDays + basalTotal / numDays
-    }
-  }
-
   return {
-    basal: basalTotal,
-    bolus: bolusTotal,
-    total: basalTotal + bolusTotal
+    bolus: bolusTotal / numDays,
+    basal: basalTotal / numDays,
+    total: bolusTotal / numDays + basalTotal / numDays
   }
 }
 

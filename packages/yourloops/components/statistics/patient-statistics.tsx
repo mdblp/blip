@@ -45,7 +45,7 @@ import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { StandardDeviationStat } from './standard-deviation-stat'
 import { AverageGlucoseStat } from './average-glucose-stat'
-import { AverageDailyDoseAndTotalInsulinStat } from './average-daily-dose-and-total-insulin-stat'
+import { TotalInsulinStat } from './total-insulin-stat'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -98,7 +98,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
   const {
     weight,
-    totalInsulin
+    totalInsulin: dailyDose
   } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter, medicalData.pumpSettings)
 
   return (
@@ -138,12 +138,12 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
       <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <AverageDailyDoseAndTotalInsulinStat
+      <TotalInsulinStat
         basal={basal}
         bolus={bolus}
-        total={basalBolusTotal}
+        totalInsulin={basalBolusTotal}
         weight={weight}
-        totalInsulin={totalInsulin}
+        dailyDose={dailyDose}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       {children}
