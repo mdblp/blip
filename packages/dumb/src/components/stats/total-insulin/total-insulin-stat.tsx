@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -54,7 +54,7 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
 
   return (
     <div data-testid="total-insulin-stat">
-      <Box className={styles.title}>
+      <Box>
         {title}
         <span className={styles.titleData}>
           (

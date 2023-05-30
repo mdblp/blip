@@ -53,6 +53,7 @@ import {
   GlycemiaStatisticsService
 } from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
 import { TimeService } from 'medical-domain'
+import metrics from 'yourloops/lib/metrics'
 
 const useStyles = makeStyles()((theme) => ({
   sectionTitles: {
@@ -104,14 +105,14 @@ const getLabel = (row, t) => {
 
 const DeviceUsage = (props) => {
   //eslint-disable-next-line
-  const { bgPrefs, timePrefs, patient, tidelineData, trackMetric, dataUtil, onSwitchToDaily, medicalData, dateFilter } = props
+  const { bgPrefs, timePrefs, patient, tidelineData, onSwitchToDaily, medicalData, dateFilter } = props
   const [dialogOpened, setDialogOpened] = React.useState(false)
   const { t } = useTranslation()
   const { classes } = useStyles()
+  const trackMetric = metrics.send
   //eslint-disable-next-line
   const mostRecentSettings = tidelineData.grouped.pumpSettings.slice(-1)[0]
   // eslint-disable-next-line react/prop-types
-  const cbgSelected = dataUtil.bgSources.cbg
   const device = mostRecentSettings?.payload?.device ?? {}
   const pump = mostRecentSettings?.payload?.pump ?? {}
   const cgm = mostRecentSettings?.payload?.cgm ?? {}
@@ -210,12 +211,8 @@ const DeviceUsage = (props) => {
           </TableContainer>
         </Box>
         <Divider variant="fullWidth" className={classes.divider} />
-        {cbgSelected &&
-          <>
-            <SensorUsageStat total={total} usage={sensorUsage} />
-            <Divider variant="fullWidth" className={classes.divider} />
-          </>
-        }
+        <SensorUsageStat total={total} usage={sensorUsage} />
+        <Divider variant="fullWidth" className={classes.divider} />
         <BasicsChart
           //eslint-disable-next-line
           bgClasses={bgPrefs.bgClasses}
@@ -246,11 +243,9 @@ DeviceUsage.propType = {
   bgPrefs: PropTypes.object.isRequired,
   timePrefs: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
-  dataUtil: PropTypes.object.isRequired,
   tidelineData: PropTypes.object.isRequired,
   medicalData: PropTypes.object.isRequired,
   dateFilter: PropTypes.object.isRequired,
-  trackMetric: PropTypes.func.isRequired,
   onSwitchToDaily: PropTypes.func.isRequired
 }
 export default DeviceUsage
