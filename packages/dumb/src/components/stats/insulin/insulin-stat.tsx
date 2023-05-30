@@ -116,8 +116,12 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
                       {`${entry.value > 0 ? entry.valueString : '0'} ${entry.units}`}
                     </span>
                   <Box className={`${styles.rowPercent} ${styles[`rowsTotalInsulin-${entry.id}`]}`}>
-                    <span className={styles.rowPercentValue}>{percent(Math.max(entry.value, 0))}</span>
-                    <span className={styles.rowPercentUnits}>%</span>
+                    <span className={styles.rowPercentValue}>
+                      {percent(Math.max(entry.value, 0))}
+                    </span>
+                    <span className={styles.rowPercentUnits}>
+                      %
+                    </span>
                   </Box>
                 </Box>
               </Box>
@@ -125,15 +129,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           )
         })}
         {(isTrendsPage || isDashboardPage) && <>
-          <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="6px">
-            {t('ratio-dose')}
-            <Box display="flex" alignItems="center">
-              <span className={outputValueClasses()}>{dailyDosePerWeight}</span>
-              &nbsp;
-              <span className={styles.dailyDoseUnits}>{t('U/kg')}</span>
-            </Box>
-          </Box>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="4px">
               <span>
                 {t('weight')}
               </span>
@@ -148,6 +144,14 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
                 </span>
               </Box>
             </>}
+          </Box>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            {t('ratio-dose')}
+            <Box display="flex" alignItems="center">
+              <span className={outputValueClasses()}>{dailyDosePerWeight}</span>
+              &nbsp;
+              <span className={styles.dailyDoseUnits}>{t('U/kg')}</span>
+            </Box>
           </Box>
         </>}
       </Box>

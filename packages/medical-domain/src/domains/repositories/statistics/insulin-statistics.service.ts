@@ -76,11 +76,13 @@ function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], numDays: number,
   const basalData = resamplingDuration(filteredBasal, dateFilter.start, dateFilter.end)
   const bolusTotal = filteredBolus.reduce((accumulator, bolus) => accumulator + bolus.normal, 0)
   const basalTotal = basalData.reduce((accumulator, basal) => accumulator + (basal.duration / 3_600_000 * basal.rate), 0)
+  const totalBasalBolus = bolusTotal + basalTotal
 
   return {
     bolus: bolusTotal / numDays,
     basal: basalTotal / numDays,
-    total: bolusTotal / numDays + basalTotal / numDays
+    total: totalBasalBolus / numDays
+
   }
 }
 
