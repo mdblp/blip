@@ -171,16 +171,13 @@ const ignoredTransKeyForYourLoops = [
   'compute-ndays-time-in-range',
   'compute-oneday-time-in-range',
   'remaining-time',
-  'show-more',
   'created-by-unknown',
   'delete-medical-report-number',
   'filters-activated',
-  'remote-monitoring',
   'modal-reinvite-patient-question',
   'no-settings-on-device-alert-message',
   'BGM',
   'tooltip-empty-stat',
-  'remote-monitoring',
   'verify-email-details-2',
   'verify-email-details-3',
   'verify-email-details-4',
@@ -195,7 +192,9 @@ const ignoredTransKeyForYourLoops = [
   'tooltip-total-day-carbs',
   'tooltip-total-derived-carbs',
   'tooltip-total-week-carbs',
-  'total-carbs'
+  'total-carbs',
+  'hba1c',
+  'no-medical-files-patient'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
