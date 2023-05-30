@@ -45,8 +45,8 @@ export const PatientStatisticsWidget: FunctionComponent<PropsWithChildren<Patien
         <PatientStatistics
           medicalData={medicalData}
           bgPrefs={bgPrefs}
-          dateFilter={dateFilter}
           bgType={bgType}
+          dateFilter={dateFilter}
         >
           {children}
         </PatientStatistics>

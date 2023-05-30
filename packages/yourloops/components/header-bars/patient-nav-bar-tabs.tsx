@@ -37,13 +37,11 @@ import { makeStyles } from 'tss-react/mui'
 import { type Theme } from '@mui/material/styles'
 import Button from '@mui/material/Button'
 import GetAppIcon from '@mui/icons-material/GetApp'
-import ChartType from '../../enum/chart-type.enum'
+import { ChartTypes } from '../../enum/chart-type.enum'
 
 interface PatientNavBarTabsProps {
-  chartType: string
-  onClickDashboard: () => void
-  onClickTrends: () => void
-  onClickDaily: () => void
+  currentChart: string
+  onChangeChart: (chart: ChartTypes) => void
   onClickPrint: MouseEventHandler<HTMLButtonElement>
 }
 
@@ -72,24 +70,21 @@ const styles = makeStyles()((theme: Theme) => {
 
 export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (props) => {
   const {
-    chartType,
-    onClickDashboard,
-    onClickTrends,
-    onClickDaily,
+    currentChart,
+    onChangeChart,
     onClickPrint
   } = props
 
-  const { t } = useTranslation('yourloops')
-
+  const { t } = useTranslation()
   const { classes } = styles()
 
   const selectedTab = (): number => {
-    switch (chartType) {
-      case ChartType.Daily:
+    switch (currentChart) {
+      case ChartTypes.Daily:
         return 1
-      case ChartType.Trends:
+      case ChartTypes.Trends:
         return 2
-      case ChartType.Dashboard:
+      case ChartTypes.Dashboard:
       default:
         return 0
     }
@@ -104,7 +99,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           iconPosition="start"
           label={t('dashboard')}
           icon={<DashboardOutlinedIcon />}
-          onClick={onClickDashboard}
+          onClick={() => { onChangeChart(ChartTypes.Dashboard) }}
           classes={{
             root: classes.root
           }}
@@ -115,7 +110,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           iconPosition="start"
           label={t('daily')}
           icon={<Today />}
-          onClick={onClickDaily}
+          onClick={() => { onChangeChart(ChartTypes.Daily) }}
           classes={{
             root: classes.root
           }}
@@ -126,7 +121,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           iconPosition="start"
           label={t('trends')}
           icon={<TrendingUp />}
-          onClick={onClickTrends}
+          onClick={() => { onChangeChart(ChartTypes.Trends) }}
           classes={{
             root: classes.root
           }}
