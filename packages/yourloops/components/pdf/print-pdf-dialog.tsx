@@ -25,16 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { type FC, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import dayjs, { type Dayjs } from 'dayjs'
-
 import { type Theme, useTheme } from '@mui/material/styles'
-
 import { makeStyles } from 'tss-react/mui'
-
 import DateRangeIcon from '@mui/icons-material/DateRange'
-
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
@@ -50,9 +46,24 @@ import { Radio, RadioGroup } from '@mui/material'
 
 import { type CalendarOrientation } from '../date-pickers/models'
 import RangeDatePicker from '../date-pickers/range-date-picker'
+import { LoadingButton } from '@mui/lab'
+import { type Patient } from '../../lib/patient/models/patient.model'
+import type MedicalDataService from 'medical-domain'
+import { type BgPrefs } from 'dumb'
+import moment from 'moment-timezone'
+import { TimeService } from 'medical-domain'
+import { createPrintPDFPackage, utils as vizUtils } from 'tidepool-viz'
+import type DataUtil from 'tidepool-viz/src/utils/data'
+import DataApi from '../../lib/data/data.api'
+import { useAuth } from '../../lib/auth'
+import metrics from '../../lib/metrics'
+import { useAlert } from '../utils/snackbar'
 
 export type Presets = '1week' | '2weeks' | '4weeks' | '3months'
-export type OutputFormat = 'pdf' | 'csv'
+export enum OutputFormat {
+  Csv = 'csv',
+  Pdf = 'pdf'
+}
 
 export interface PrintPDFOptions {
   /** Print start date (ISO day ex: 2022-02-10) */
@@ -60,18 +71,16 @@ export interface PrintPDFOptions {
   /** Print end date (ISO day ex: 2022-02-10) */
   end: string
   preset?: Presets
-  format?: OutputFormat
+  format: OutputFormat
 }
 
-interface DialogPDFOptionsProps {
-  open: boolean
-  /** Oldest available date date (ISO day ex: 2022-02-10) */
-  minDate: string
-  /** Newest available date date (ISO day ex: 2022-02-10) */
-  maxDate: string
-  format?: OutputFormat
-  onResult: (options?: PrintPDFOptions) => void
+interface PrintPDFDialogProps {
+  bgPrefs: BgPrefs
+  dataUtil: DataUtil
   defaultPreset?: Presets
+  medicalData: MedicalDataService
+  onClose: () => void
+  patient: Patient
 }
 
 const DEFAULT_PRESET: Presets = '4weeks'
@@ -130,19 +139,22 @@ function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs, for
   return { start: start.format('YYYY-MM-DD'), end, preset, format }
 }
 
-function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
-  const { open, defaultPreset, onResult } = props
+export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
+  const { defaultPreset, onClose, medicalData, bgPrefs, patient, dataUtil } = props
   const { t } = useTranslation('yourloops')
   const theme = useTheme()
+  const { user } = useAuth()
+  const alert = useAlert()
   const matchLandscape = useMediaQuery(theme.breakpoints.up('sm'))
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
   const { classes } = printOptionsStyle()
   const orientation: CalendarOrientation = matchLandscape ? 'landscape' : 'portrait'
 
-  const [customStartDate, setCustomStartDate] = React.useState<Dayjs | null>(null)
-  const { minDate, maxDate } = React.useMemo(() => {
-    let mi = dayjs(props.minDate, { utc: true })
-    let ma = dayjs(props.maxDate, { utc: true })
+  const [customStartDate, setCustomStartDate] = useState<Dayjs | null>(null)
+  const { minDate, maxDate } = useMemo(() => {
+    const { startDate, endDate } = medicalData.getLocaleTimeEndpoints()
+    let mi = dayjs(startDate, { utc: true })
+    let ma = dayjs(endDate, { utc: true })
     if (customStartDate) {
       const newMinDate = customStartDate.subtract(MAX_SELECTABLE_DAYS, 'day')
       const newMaxDate = customStartDate.add(MAX_SELECTABLE_DAYS, 'day')
@@ -154,29 +166,16 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
       }
     }
     return { minDate: mi, maxDate: ma }
-  }, [props.minDate, props.maxDate, customStartDate])
+  }, [medicalData, customStartDate])
 
-  const [openState, setOpenState] = React.useState(false)
-  const [pdfOptions, setPDFOptions] = React.useState<PrintPDFOptions>(getDatesFromPreset(defaultPreset || DEFAULT_PRESET, minDate, maxDate, 'pdf'))
-  const { start, end, displayedDates } = React.useMemo(() => {
+  const [pdfOptions, setPDFOptions] = useState<PrintPDFOptions>(getDatesFromPreset(defaultPreset || DEFAULT_PRESET, minDate, maxDate, OutputFormat.Pdf))
+  const [buildingPdf, setBuildingPdf] = useState<boolean>(false)
+  const { start, end, displayedDates } = useMemo(() => {
     const startDate = customStartDate ?? dayjs(pdfOptions.start, { utc: true })
     const endDate = customStartDate ?? dayjs(pdfOptions.end, { utc: true })
     const displayed = `${startDate.format('ll')} → ${endDate.format('ll')}`
     return { start: startDate, end: endDate, displayedDates: displayed }
   }, [pdfOptions, customStartDate])
-
-  React.useEffect(() => {
-    // The openState is used to prevent to reset the selected dates, after a custom date selection
-    // Side effect of the useMemo for min/max dates.
-    // It's a workaround to mimic the prevProps param of React.Component.componentDidUpdate(prevProps)
-    if (open && !openState) {
-      setOpenState(true)
-      setPDFOptions(getDatesFromPreset(defaultPreset || DEFAULT_PRESET, minDate, maxDate, pdfOptions.format))
-    }
-    if (!open && openState) {
-      setOpenState(false)
-    }
-  }, [defaultPreset, open, openState, minDate, maxDate, pdfOptions.format])
 
   const handleClickPreset = (preset: Presets): void => {
     setPDFOptions(getDatesFromPreset(preset, minDate, maxDate, pdfOptions.format))
@@ -198,12 +197,86 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
     setPDFOptions({ ...pdfOptions, format: event.target.value as OutputFormat })
   }
 
+  const downloadFile = (url: string, fileName: string): void => {
+    const a = document.createElement('a')
+    a.href = url
+    a.download = fileName
+    document.body.appendChild(a) // we need to append the element to the dom -> otherwise it will not work in firefox
+    a.click()
+    a.remove()
+  }
+
+  const downloadPdf = (pdfUrl: string, patientId: string): void => {
+    downloadFile(pdfUrl, `yourloops-report-${patientId}.pdf`)
+  }
+
+  const downloadCsv = (csv: string, patientId: string): void => {
+    const url = window.URL.createObjectURL(new Blob([...csv], { type: 'application/zip' }))
+    downloadFile(url, `yourloops-report-${patientId}.csv`)
+  }
+
+  const generatePdf = async (): Promise<string> => {
+    const start = moment.tz(pdfOptions.start, medicalData.getTimezoneAt(TimeService.getEpoch(pdfOptions.start))).startOf('day')
+    const timezone = medicalData.getTimezoneAt(TimeService.getEpoch(pdfOptions.end))
+    const end = moment.tz(pdfOptions.end, timezone).endOf('day')
+    const endPDFDate = end.toISOString()
+    const timePrefs = {
+      timezoneAware: true,
+      timezoneName: timezone
+    }
+    const opts = {
+      bgPrefs,
+      patient,
+      timePrefs,
+      endPDFDate
+    }
+    const lastPumpSettings = medicalData.medicalData.pumpSettings[medicalData.medicalData.pumpSettings.length - 1]
+    const pdfData = {
+      basics: medicalData.generateBasicsData(start.toISOString(), end.toISOString()),
+      daily: vizUtils.data.selectDailyViewData(medicalData, start, end),
+      settings: !pdfOptions.preset && lastPumpSettings
+        ? vizUtils.data.generatePumpSettings(lastPumpSettings, end)
+        : lastPumpSettings
+    }
+
+    vizUtils.data.generatePDFStats(pdfData, dataUtil)
+    const { url } = await createPrintPDFPackage(pdfData, opts)
+    return url
+  }
+
+  const generateCsv = async (): Promise<string> => {
+    const startDate = moment.utc(pdfOptions.start).startOf('day').toISOString()
+    const endDate = moment.utc(pdfOptions.end).endOf('day').toISOString()
+    return await DataApi.exportData(user, patient.userid, startDate, endDate)
+  }
+
+  const onClickDownload = async (): Promise<void> => {
+    try {
+      setBuildingPdf(true)
+      switch (pdfOptions.format) {
+        case OutputFormat.Pdf:
+          downloadPdf(await generatePdf(), patient.userid)
+          break
+        case OutputFormat.Csv:
+          downloadCsv(await generateCsv(), patient.userid)
+          break
+      }
+      metrics.send('export_data', `save_report_${pdfOptions.format}`, pdfOptions.preset ?? 'custom')
+      onClose()
+    } catch (err) {
+      alert.error(err)
+      metrics.send('export_data', `save_report$_${pdfOptions.format}`, 'error')
+    } finally {
+      setBuildingPdf(false)
+    }
+  }
+
   return (
     <Dialog
       id="dialog-pdf-options"
       fullScreen={fullScreen}
-      open={open}
-      onClose={() => { onResult() }}
+      open
+      onClose={onClose}
       data-start={pdfOptions.start}
       data-end={pdfOptions.end}
       maxWidth={false}
@@ -312,23 +385,22 @@ function DialogPDFOptions(props: DialogPDFOptionsProps): JSX.Element {
         <Button
           id="pdf-options-button-cancel"
           variant="outlined"
-          onClick={() => { onResult() }}
+          onClick={onClose}
         >
           {t('button-cancel')}
         </Button>
-        <Button
+        <LoadingButton
           data-testid="pdf-options-button-download"
           disabled={!!customStartDate}
+          loading={buildingPdf}
           color="primary"
           variant="contained"
           disableElevation
-          onClick={() => { onResult(pdfOptions) }}
+          onClick={onClickDownload}
         >
           {t('button-download')}
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   )
 }
-
-export default DialogPDFOptions

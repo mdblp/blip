@@ -315,6 +315,7 @@
   "no-medical-files-patient": "No medical files have yet been created by your healthcare professional.",
   "no-new-messages": "No new messages",
   "no-patient": "No patient",
+  "no-patient-data": "No data for patient {{patientName}}",
   "no-settings-on-device-alert-message": "This view shows the current settings, history of change and device information, but it looks like the system hasn't sent data yet.",
   "not-logged-in": "You are not logged in",
   "notification": "Notification",
