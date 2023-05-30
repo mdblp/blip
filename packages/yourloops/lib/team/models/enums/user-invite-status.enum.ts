@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum UserInvitationStatus {
-  pending = 'pending',
-  accepted = 'accepted',
-  rejected = 'rejected',
+export enum UserInviteStatus {
+  Accepted = 'Accepted',
+  Pending = 'Pending',
+  Rejected = 'Rejected',
 }

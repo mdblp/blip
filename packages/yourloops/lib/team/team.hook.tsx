@@ -47,7 +47,7 @@ import { type TeamContext } from './models/team-context.model'
 import { type TeamMember } from './models/team-member.model'
 import { type ITeam } from './models/i-team.model'
 import { TeamMemberRole } from './models/enums/team-member-role.enum'
-import { UserInvitationStatus } from './models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from './models/enums/user-invite-status.enum'
 import { TeamType } from './models/enums/team-type.enum'
 import SpinningLoader from '../../components/loaders/spinning-loader'
 
@@ -144,7 +144,7 @@ function TeamContextImpl(): TeamContext {
     if (!ourselve) {
       throw new Error('We are not a member of the team!')
     }
-    if (ourselve.role === TeamMemberRole.admin && ourselve.status === UserInvitationStatus.accepted && TeamUtils.teamHasOnlyOneMember(team)) {
+    if (ourselve.role === TeamMemberRole.admin && ourselve.status === UserInviteStatus.Accepted && TeamUtils.teamHasOnlyOneMember(team)) {
       await TeamApi.deleteTeam(team.id)
       metrics.send('team_management', 'delete_team')
     } else {
@@ -155,7 +155,7 @@ function TeamContextImpl(): TeamContext {
   }
 
   const removeMember = async (member: TeamMember, teamId: string): Promise<void> => {
-    if (member.status === UserInvitationStatus.pending) {
+    if (member.status === UserInviteStatus.Pending) {
       if (!member.invitationId) {
         throw new Error('Missing invite!')
       }

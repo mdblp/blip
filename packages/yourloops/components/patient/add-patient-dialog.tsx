@@ -42,7 +42,7 @@ import Alert from '@mui/material/Alert'
 import { REGEX_EMAIL } from '../../lib/utils'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { usePatientContext } from '../../lib/patient/patient.provider'
-import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../lib/team/models/enums/user-invite-status.enum'
 import { type Team } from '../../lib/team'
 import metrics from '../../lib/metrics'
 import { useAlert } from '../utils/snackbar'
@@ -85,7 +85,7 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
     const patient = patientHook.getPatientByEmail(formEmail)
 
     if (patient) {
-      const isPatientPendingInTeam = patient.invitationStatus === UserInvitationStatus.pending
+      const isPatientPendingInTeam = patient.invitationStatus === UserInviteStatus.Pending
 
       if (isPatientPendingInTeam) {
         setErrorMessage(t('error-patient-already-invited'))

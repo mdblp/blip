@@ -29,7 +29,7 @@ import { type PatientProfile } from './patient-profile.model'
 import { type PatientSettings } from './patient-settings.model'
 import { type PatientMetadata } from './patient-metadata.model'
 import { type MonitoringAlerts } from './monitoring-alerts.model'
-import { type UserInvitationStatus } from '../../team/models/enums/user-invitation-status.enum'
+import { type UserInviteStatus } from '../../team/models/enums/user-invite-status.enum'
 import { type MonitoringAlertsParameters } from '../../team/models/monitoring-alerts-parameters.model'
 import { type GlycemiaIndicators } from './glycemia-indicators.model'
 
@@ -40,6 +40,6 @@ export interface Patient {
   settings: PatientSettings
   metadata: PatientMetadata
   monitoringAlertsParameters?: MonitoringAlertsParameters
-  invitationStatus: UserInvitationStatus
+  invitationStatus: UserInviteStatus
   readonly userid: string
 }
