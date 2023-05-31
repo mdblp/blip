@@ -153,11 +153,10 @@ describe('Caregiver home page', () => {
     const removePatientDialog = screen.getByRole('dialog')
     expect(removePatientDialog).toBeVisible()
 
-    const removePatientDialogTitle = within(removePatientDialog).getByText('Remove a patient')
+    const removePatientDialogTitle = within(removePatientDialog).getByText('Remove patient Patient2 Rouis')
     expect(removePatientDialogTitle).toBeVisible()
 
-    const removePatientDialogQuestion = within(removePatientDialog).getByText('Are you sure you want to remove Patient2 Rouis?')
-    expect(removePatientDialogQuestion).toBeVisible()
+    expect(removePatientDialog).toHaveTextContent('Are you sure you want to remove Patient2 Rouis?')
 
     const removePatientDialogCancelButton = within(removePatientDialog).getByText('Cancel')
     expect(removePatientDialogCancelButton).toBeVisible()

@@ -26,33 +26,33 @@
  */
 
 import React, { type FunctionComponent, useState } from 'react'
-import { DataGrid, type GridPaginationModel, type GridSortModel, useGridApiRef } from '@mui/x-data-grid'
+import { type Patient } from '../../../../lib/patient/models/patient.model'
+import { useCurrentPrivateTeamOrCaregiverPatientListHook } from './current-private-team-or-caregiver-patient-list.hook'
 import Box from '@mui/material/Box'
-import { PatientListCustomFooter } from '../patient-list-custom-footer'
-import { PatientListColumns } from '../models/enums/patient-list.enum'
-import { usePatientListContext } from '../../../lib/providers/patient-list.provider'
-import { usePatientContext } from '../../../lib/patient/patient.provider'
-import { useCurrentPatientListHook } from './current-patient-list.hook'
-import RemovePatientDialog from '../../patient/remove-patient-dialog'
-import RemoveDirectShareDialog from '../../dialogs/remove-direct-share-dialog'
-import { type Patient } from '../../../lib/patient/models/patient.model'
-import { EmptyPatientList } from '../empty-patient-list/empty-patient-list'
-import { useWindowDimensions } from '../../../lib/custom-hooks/use-window-dimensions.hook'
+import { DataGrid, type GridPaginationModel, type GridSortModel, useGridApiRef } from '@mui/x-data-grid'
+import { EmptyPatientList } from '../../empty-patient-list/empty-patient-list'
+import { PatientListCustomFooter } from '../../patient-list-custom-footer'
+import RemovePatientDialog from '../../../patient/remove-patient-dialog'
+import RemoveDirectShareDialog from '../../../dialogs/remove-direct-share-dialog'
+import { usePatientListContext } from '../../../../lib/providers/patient-list.provider'
+import { usePatientContext } from '../../../../lib/patient/patient.provider'
+import { useWindowDimensions } from '../../../../lib/custom-hooks/use-window-dimensions.hook'
+import { PatientListColumns } from '../../models/enums/patient-list.enum'
 
-interface CurrentPatientListProps {
+interface CurrentPrivateTeamOrCaregiverPatientListProps {
   patients: Patient[]
 }
 
-export const CurrentPatientList: FunctionComponent<CurrentPatientListProps> = (props: CurrentPatientListProps) => {
+export const CurrentPrivateTeamOrCaregiverPatientList: FunctionComponent<CurrentPrivateTeamOrCaregiverPatientListProps> = (props: CurrentPrivateTeamOrCaregiverPatientListProps) => {
   const { patients } = props
   const {
     columns,
-    patientToRemoveForHcp,
-    patientToRemoveForCaregiver,
+    patientToRemoveFromDirectShare,
+    patientToRemoveFromPrivateTeam,
     rowsProps,
     onCloseRemoveDialog,
     onRowClick
-  } = useCurrentPatientListHook({ patients })
+  } = useCurrentPrivateTeamOrCaregiverPatientListHook({ patients })
   const { displayedColumns } = usePatientListContext()
   const { refreshInProgress } = usePatientContext()
   const { width } = useWindowDimensions()
@@ -60,6 +60,8 @@ export const CurrentPatientList: FunctionComponent<CurrentPatientListProps> = (p
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
   const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
+
+  console.log({ rowsProps })
 
   return (
     <>
@@ -92,16 +94,17 @@ export const CurrentPatientList: FunctionComponent<CurrentPatientListProps> = (p
           }}
         />
       </Box>
-      {patientToRemoveForHcp &&
+
+      {patientToRemoveFromPrivateTeam &&
         <RemovePatientDialog
-          patient={patientToRemoveForHcp}
+          patient={patientToRemoveFromPrivateTeam}
           onClose={onCloseRemoveDialog}
         />
       }
 
-      {patientToRemoveForCaregiver &&
+      {patientToRemoveFromDirectShare &&
         <RemoveDirectShareDialog
-          userToRemove={patientToRemoveForCaregiver}
+          userToRemove={patientToRemoveFromDirectShare}
           onClose={onCloseRemoveDialog}
         />
       }
