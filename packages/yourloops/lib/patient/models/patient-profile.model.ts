@@ -34,5 +34,4 @@ export interface PatientProfile {
   lastName?: string
   email: string
   sex: Gender
-  referringDoctor?: string
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,11 +31,8 @@ export enum ProfileFormKey {
   feedbackAccepted = 'feedbackAccepted',
   firstName = 'firstName',
   hcpProfession = 'hcpProfession',
-  ins = 'ins',
   lang = 'lang',
   lastName = 'lastName',
-  referringDoctor = 'referringDoctor',
   sex = 'sex',
-  ssn = 'ssn',
   units = 'units'
 }
