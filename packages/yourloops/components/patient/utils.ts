@@ -88,8 +88,7 @@ export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
       firstName: iTeamMember.profile?.firstName,
       fullName: iTeamMember.profile?.fullName ?? iTeamMember.email,
       lastName: iTeamMember.profile?.lastName,
-      email: iTeamMember.email,
-      referringDoctor: iTeamMember.profile?.patient?.referringDoctor
+      email: iTeamMember.email
     },
     settings: {
       a1c: iTeamMember.settings?.a1c,

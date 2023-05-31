@@ -37,11 +37,9 @@ import {
   updatePatientsFilters
 } from './patient-filters.assert'
 import { changeTeamScope } from './header.assert'
-import { type createBrowserRouter } from 'react-router-dom'
 import { patient1, patient2, patient3, patientWithMmol, pendingPatient } from '../data/patient.api.data'
 import NotificationApi from '../../../lib/notifications/notification.api'
-
-export type Router = ReturnType<typeof createBrowserRouter>
+import { type Router } from '../models/router.model'
 
 export const checkDataGridAfterSinglePatientFilter = (dataGridRow: HTMLElement, rowContent: string): void => {
   expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
@@ -697,7 +695,7 @@ export const checkReinvitePendingPatientMedicalTeam = async () => {
   // We check that the team code dialog is opened with the correct content and we close it
   const teamCodeDialog = screen.getByRole('dialog')
   expect(teamCodeDialog).toHaveTextContent('A - MyThirdTeam - to be deletedCommunicate this identification code to your patient during a consultation so they can verify your identity.')
-  expect(teamCodeDialog).toHaveTextContent('This identification code is always available in the Care team page.263 - 381 - 988Ok')
+  expect(teamCodeDialog).toHaveTextContent('This identification code is always available in the Care team settings page.263 - 381 - 988Ok')
   const closeTeamCodeDialogButton = within(teamCodeDialog).getByRole('button', { name: 'Ok' })
   await userEvent.click(closeTeamCodeDialogButton)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()

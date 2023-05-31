@@ -86,23 +86,12 @@ export default class NotificationApi {
     await NotificationApi.updateInvitation(url, notification.id)
   }
 
-  static async cancelRemoteMonitoringInvite(teamId: string, userId: string): Promise<void> {
-    await HttpService.put({ url: `/confirm/dismiss/team/monitoring/${teamId}/${userId}` })
-  }
-
   static async getReceivedInvitations(userId: string): Promise<Notification[]> {
     return await NotificationApi.getInvitations(`/confirm/invitations/${userId}`)
   }
 
   static async getSentInvitations(userId: string): Promise<Notification[]> {
     return await NotificationApi.getInvitations(`/confirm/invite/${userId}`)
-  }
-
-  static async inviteToRemoteMonitoring(teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string): Promise<void> {
-    await HttpService.post<void, { monitoringEnd: string, referringDoctor?: string }>({
-      url: `/confirm/send/team/monitoring/${teamId}/${userId}`,
-      payload: { monitoringEnd: monitoringEnd.toJSON(), referringDoctor }
-    })
   }
 
   private static async updateInvitation(url: string, key: string): Promise<void> {

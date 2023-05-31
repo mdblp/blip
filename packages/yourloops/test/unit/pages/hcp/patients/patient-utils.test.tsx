@@ -82,7 +82,6 @@ describe('Patient utils', () => {
           fullName: profile.fullName,
           lastName: profile.lastName,
           email: teamMember.email,
-          referringDoctor: undefined,
           sex: Gender.NotDefined
         },
         settings: {
