@@ -19,7 +19,6 @@
   "account-creation-finalized": "Création de compte terminée",
   "account-preferences": "Préférences du compte",
   "acknowledge-training": "J'ai suivi l'ensemble de la formation et je l'ai comprise\n",
-  "action-unavailable": "This action cannot be performed as you did not invite this patient",
   "actions": "Actions",
   "add-new-patient-disabled-info": "To invite a patient, you must first select a care team from the dropdown menu. You can create you own care team if you need to. Alternatively, you can provide the patient with your YourLoops email address so they can enable private data sharing with you.",
   "add-patient": "Ajouter un patient",
