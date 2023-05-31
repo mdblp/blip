@@ -111,7 +111,7 @@ function TeamContextImpl(): TeamContext {
     setTeams(result.teams)
   }
 
-  const createTeam = async (team: Partial<Team>): Promise<void> => {
+  const createTeam = async (team: Partial<Team>): Promise<ITeam> => {
     const apiTeam: Partial<ITeam> = {
       address: team.address,
       email: team.email,
@@ -119,9 +119,10 @@ function TeamContextImpl(): TeamContext {
       phone: team.phone,
       type: team.type
     }
-    await TeamApi.createTeam(apiTeam)
+    const newTeam = await TeamApi.createTeam(apiTeam)
     refresh()
     metrics.send('team_management', 'create_care_team', _.isEmpty(team.email) ? 'email_not_filled' : 'email_filled')
+    return newTeam
   }
 
   const updateTeam = async (team: Team): Promise<void> => {

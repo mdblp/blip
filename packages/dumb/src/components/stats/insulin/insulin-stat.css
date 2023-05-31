@@ -40,10 +40,15 @@
 
 .rows {
   display: grid;
+  align-items: center;
   row-gap: 4px;
   margin-bottom: 4px;
   pointer-events: none;
   padding-left: 10px;
+}
+
+.rows .rowTitle {
+  color: var(--stat--default);
 }
 
 .rowValue {
@@ -59,7 +64,7 @@
 .rowPercent {
   display: flex;
   justify-content: flex-end;
-  align-items: center;
+  align-items: baseline;
 }
 
 .rowPercent .rowPercentValue {
@@ -70,7 +75,6 @@
 .rowPercent .rowPercentUnits {
   font-size: 12px;
   color: var(--text-medium-contrast);
-  align-self: flex-end;
 }
 
 .rowsTotalInsulin-basal {

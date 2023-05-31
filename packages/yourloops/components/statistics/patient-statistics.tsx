@@ -50,8 +50,8 @@ import { TotalInsulinStat } from './total-insulin-stat'
 export interface PatientStatisticsProps {
   medicalData: MedicalData
   bgPrefs: BgPrefs
-  dateFilter: DateFilter
   bgType: BgType
+  dateFilter: DateFilter
 }
 
 export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
@@ -77,9 +77,9 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
 
   const {
-    total: totalCarbs,
+    foodCarbsPerDay,
     totalEntriesCarbWithRescueCarbs,
-    foodCarbs
+    totalCarbsPerDay
   } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
 
   const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
@@ -150,8 +150,8 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
       <TotalCarbsStat
         totalEntriesCarbWithRescueCarbs={totalEntriesCarbWithRescueCarbs}
-        totalCarbs={Math.round(totalCarbs)}
-        foodCarbs={Math.round(foodCarbs)}
+        totalCarbsPerDay={Math.round(totalCarbsPerDay)}
+        foodCarbsPerDay={Math.round(foodCarbsPerDay)}
       />
     </Box>
   )

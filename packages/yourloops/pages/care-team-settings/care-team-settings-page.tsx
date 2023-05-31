@@ -90,7 +90,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   }
 }))
 
-function CareTeamPage(): JSX.Element {
+function CareTeamSettingsPage(): JSX.Element {
   const { getTeam } = useTeam()
   const { classes } = useStyles()
   const { classes: commonTeamClasses } = commonComponentStyles()
@@ -100,7 +100,7 @@ function CareTeamPage(): JSX.Element {
 
   const { t } = useTranslation('yourloops')
 
-  setPageTitle(t('header-tab-care-team'))
+  setPageTitle(t('header-tab-care-team-settings'))
 
   const { teamId: queryParamTeamId } = paramHook as { teamId: string }
   const { selectedTeam } = useSelectedTeamContext()
@@ -219,4 +219,4 @@ function CareTeamPage(): JSX.Element {
   )
 }
 
-export default CareTeamPage
+export default CareTeamSettingsPage

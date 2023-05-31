@@ -59,7 +59,7 @@ jest.mock('../../../pages/profile/profile-page', () => () => {
 jest.mock('../../../pages/notifications', () => () => {
   return <div data-testid={notificationsPageTestId} />
 })
-jest.mock('../../../pages/care-team/care-team-page', () => () => {
+jest.mock('../../../pages/care-team-settings/care-team-settings-page', () => () => {
   return <div data-testid={teamDetailsPageTestId} />
 })
 describe('Hcp Layout', () => {

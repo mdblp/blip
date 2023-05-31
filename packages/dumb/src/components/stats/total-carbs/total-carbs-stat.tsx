@@ -33,21 +33,17 @@ import { Unit } from 'medical-domain'
 import { useLocation } from 'react-router-dom'
 
 export interface TotalInsulinStatProps {
-  foodCarbs: number
-  totalCarbs: number
+  foodCarbsPerDay: number
+  totalCarbsPerDay: number
   totalEntriesCarbWithRescueCarbs: number
 }
 
 const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
-  const {
-    totalCarbs,
-    foodCarbs,
-    totalEntriesCarbWithRescueCarbs
-  } = props
+  const { totalCarbsPerDay, foodCarbsPerDay, totalEntriesCarbWithRescueCarbs } = props
   const { t } = useTranslation('main')
   const location = useLocation()
   const isDailyPage = location.pathname.includes('daily')
-  const isDerivedCarbs = foodCarbs && totalCarbs ? t('tooltip-total-derived-carbs', { total: totalEntriesCarbWithRescueCarbs }) : t('tooltip-empty-stat')
+  const isDerivedCarbs = foodCarbsPerDay && totalCarbsPerDay ? t('tooltip-total-derived-carbs', { total: totalEntriesCarbWithRescueCarbs }) : t('tooltip-empty-stat')
 
   return (
     <div data-testid="total-carbs-stat">
@@ -56,7 +52,7 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
         <StatTooltip
           annotations={[t(isDailyPage ? 'tooltip-total-day-carbs' : 'tooltip-total-week-carbs'), isDerivedCarbs]}
         />
-        {!totalCarbs
+        {!totalCarbsPerDay
           ? <>
             <div className={styles['disabled-line']} />
             <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
@@ -66,7 +62,7 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           : <>
             <div className={styles.total}>
                 <span className={styles.value}>
-                  {totalCarbs}
+                  {totalCarbsPerDay}
                 </span>
               <span className={styles.suffix}>
                   {Unit.Gram}
@@ -78,7 +74,7 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
 
       <Box className={`${styles.rescueCarb} ${styles.row}`}>
         {t('Rescuecarbs')}
-        {!foodCarbs
+        {!foodCarbsPerDay
           ? <>
             <div className={styles['disabled-line']} />
             <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
@@ -88,7 +84,7 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           : <>
             <div className={styles.total}>
               <span className={styles.value}>
-                {foodCarbs}
+                {foodCarbsPerDay}
               </span>
               <span className={styles.suffix}>
                 {Unit.Gram}

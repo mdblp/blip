@@ -37,7 +37,12 @@ It is based on Tidepool Blip 1.27.
 - YLP-2348 New columns from glycemia indicators in patients list
 - YLP-2350 Display a visual info when a patient has unread messages from another team in the chat widget
 - YLP-2358 As a care team member, I want a new design when listing my pending patients
+- YLP-2388 Select the new care team after creating it
 - YLP-2390 Enlarge font of the buttons of the messaging system
+- YLP-2391 Rename "Care team" page to "Care team settings"
+- YLP-2392 Refine the Account preferences page
+- YLP-2393 Remove fields and "Show more/Show less" logic in the patient header
+- YLP-2394 Hide "Monitoring alerts" card for patients users
 
 ### Engineering use
 - YLP-2044 Remove redux settings store
@@ -89,6 +94,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2301 Split ITs jobs by roles
 - YLP-2307 Incomplete alert when accepting a direct share invitation
 - YLP-2311 Reorganize ITs
+- YLP-2328 Migrate patient-data from jsx to tsx
 - YLP-2351 migrate average daily dose stat and total insulin stat from stat.js to yourloops
 - YLP-2364 Fixed English translations
 - YLP-2367 Patient list refacto

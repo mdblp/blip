@@ -77,7 +77,7 @@ export const PatientNavBarSelect: FunctionComponent<PatientNavBarSelectProps> = 
       <FormControl data-testid="subnav-patient-list">
         <Select
           data-testid="drop-down-patient"
-          defaultValue={currentPatient.userid}
+          value={currentPatient.userid}
           IconComponent={KeyboardArrowDownIcon}
           onChange={onPatientSelected}
           variant="standard"

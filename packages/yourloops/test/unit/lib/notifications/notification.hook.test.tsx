@@ -85,30 +85,6 @@ describe('Notification hook', () => {
     })
   })
 
-  describe('inviteRemoteMonitoring', () => {
-    it('should call the api', async () => {
-      const api = jest.spyOn(NotificationApi, 'inviteToRemoteMonitoring').mockResolvedValueOnce(null)
-      await initNotificationContext()
-      const teamId = 'fakeTeamId'
-      const userId = 'fakeUserId'
-      const monitoringEnd = new Date()
-      const referringDoctor = 'fakeReferringDoctor'
-      await notifications.inviteRemoteMonitoring(teamId, userId, monitoringEnd, referringDoctor)
-      expect(api).toHaveBeenCalledWith(teamId, userId, monitoringEnd, referringDoctor)
-    })
-  })
-
-  describe('cancelRemoteMonitoringInvite', () => {
-    it('should call the api', async () => {
-      const api = jest.spyOn(NotificationApi, 'cancelRemoteMonitoringInvite').mockResolvedValueOnce(null)
-      await initNotificationContext()
-      const teamId = 'fakeTeamId'
-      const userId = 'fakeUserId'
-      await notifications.cancelRemoteMonitoringInvite(teamId, userId)
-      expect(api).toHaveBeenCalledWith(teamId, userId)
-    })
-  })
-
   describe('Accept', () => {
     it('should call the api to accept the invite and refresh', async () => {
       await initNotificationContext()
