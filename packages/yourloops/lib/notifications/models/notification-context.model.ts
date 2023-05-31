@@ -35,7 +35,5 @@ export interface NotificationContext {
   accept: (notification: Notification) => Promise<void>
   decline: (notification: Notification) => Promise<void>
   cancel: (notificationId: string, teamId?: string, inviteeEmail?: string) => Promise<void>
-  getInvitation: (teamId: string, patientEmail: string) => Notification
   refreshReceivedInvitations: () => Promise<void>
-  refreshSentInvitations: () => Promise<void>
 }

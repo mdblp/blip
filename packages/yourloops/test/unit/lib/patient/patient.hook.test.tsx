@@ -254,6 +254,7 @@ describe('Patient hook', () => {
 
   describe('removePatient', () => {
     const pendingPatient = createPatient('pendingPatient', UserInviteStatus.Pending, {} as MonitoringAlertsParameters)
+    pendingPatient.invite = { creationDate: 'fakeCreationDate', creatorId: 'fakeCreatorId', id: 'fakeInviteId' }
     const patientToRemovePrivatePractice = createPatient('patientToRemovePrivatePractice', UserInviteStatus.Accepted)
     const patientToRemove2 = createPatient('patientToRemove2', UserInviteStatus.Accepted)
     const allPatients = [pendingPatient, patientToRemovePrivatePractice, patientToRemove, patientToRemove2]

@@ -25,13 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface CarbsStatistics {
-  numDays: number
-  wizardCarbs: number
-  foodCarbs: number
-  totalCarbs: number
-  totalCarbsPerDay: number
-  foodCarbsPerDay: number
-  wizardCarbsPerDay: number
-  totalEntriesCarbWithRescueCarbs: number
+export interface PatientInvite {
+  id: string
+  creatorId: string
+  creationDate: string
 }

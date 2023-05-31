@@ -31,6 +31,7 @@ import { type PatientMetadata } from './patient-metadata.model'
 import { type MonitoringAlerts } from './monitoring-alerts.model'
 import { type UserInviteStatus } from '../../team/models/enums/user-invite-status.enum'
 import { type MonitoringAlertsParameters } from '../../team/models/monitoring-alerts-parameters.model'
+import { type PatientInvite } from './patient-invite.model'
 import { type GlycemiaIndicators } from './glycemia-indicators.model'
 
 export interface Patient {
@@ -41,5 +42,6 @@ export interface Patient {
   metadata: PatientMetadata
   monitoringAlertsParameters?: MonitoringAlertsParameters
   invitationStatus: UserInviteStatus
+  invite?: PatientInvite
   readonly userid: string
 }
