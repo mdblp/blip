@@ -31,7 +31,12 @@ import {
   checkJoinTeamDialogDisplayErrorMessage,
   checkJoinTeamDialogPrivacyCancel
 } from '../assert/join-team.assert'
-import { checkCreateCareTeamDialog } from '../assert/team-dialog.assert'
+import {
+  checkCreateCareTeamDialog,
+  checkTeamCreationFailure,
+  checkTeamCreationSuccess
+} from '../assert/team-dialog.assert'
+import { type Router } from '../models/router.model'
 
 export const testJoinTeam = async () => {
   await checkJoinTeamDialog()
@@ -40,6 +45,8 @@ export const testJoinTeam = async () => {
   await checkJoinTeamDialogDisplayErrorMessage()
 }
 
-export const testTeamCreation = async () => {
+export const testTeamCreation = async (router: Router) => {
   await checkCreateCareTeamDialog()
+  await checkTeamCreationFailure()
+  await checkTeamCreationSuccess(router)
 }

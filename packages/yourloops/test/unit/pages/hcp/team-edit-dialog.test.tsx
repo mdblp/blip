@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,13 +27,15 @@
 
 import React from 'react'
 import { type Team, type TeamMember } from '../../../../lib/team'
-import TeamEditDialog, { type TeamEditModalProps } from '../../../../pages/hcp/team-edit-dialog'
+import TeamInformationEditDialog, {
+  type TeamInformationEditModalProps
+} from '../../../../pages/hcp/team-information-edit-dialog'
 import { render, unmountComponentAtNode } from 'react-dom'
 import { act, Simulate, type SyntheticEventData } from 'react-dom/test-utils'
 import { triggerMouseEvent } from '../../common/utils'
 
 describe('TeamEditDialog', () => {
-  const defaultProps: TeamEditModalProps = {
+  const defaultProps: TeamInformationEditModalProps = {
     teamToEdit: {
       team: {
         name: 'fakeTeamName',
@@ -75,9 +77,9 @@ describe('TeamEditDialog', () => {
     }
   })
 
-  function mountComponent(props: TeamEditModalProps = defaultProps): void {
+  function mountComponent(props: TeamInformationEditModalProps = defaultProps): void {
     act(() => {
-      render(<TeamEditDialog teamToEdit={props.teamToEdit} />, container)
+      render(<TeamInformationEditDialog teamToEdit={props.teamToEdit} />, container)
     })
   }
 

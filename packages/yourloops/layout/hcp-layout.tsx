@@ -28,7 +28,7 @@
 import React, { type FunctionComponent } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { PatientData } from '../components/patient-data/patient-data'
-import CareTeamPage from '../pages/care-team/care-team-page'
+import CareTeamSettingsPage from '../pages/care-team-settings/care-team-settings-page'
 import { PatientProvider } from '../lib/patient/patient.provider'
 import { TeamContextProvider } from '../lib/team'
 import DashboardLayout from './dashboard-layout'
@@ -53,7 +53,7 @@ export const HcpLayout: FunctionComponent = () => {
                 <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
                 <Route path={AppUserRoute.Home} element={<PatientListPage />} />
                 <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientData />} />
-                <Route path={AppUserRoute.Team} element={<CareTeamPage />} />
+                <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
                 <Route path="/" element={<Navigate to={AppUserRoute.Home} replace />} />
                 <Route path="*" element={<Navigate to={AppUserRoute.NotFound} replace />} />
               </Routes>
