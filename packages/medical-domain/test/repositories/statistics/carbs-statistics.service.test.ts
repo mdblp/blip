@@ -57,7 +57,7 @@ import {
   buildWizardData,
   dateFilterOneDay,
   dateFilterTwoDays
-} from '../../mock/carbs.statistics.mock'
+} from '../../mock/bg-source.statistics.mock'
 import { CarbsStatisticsService } from '../../../src'
 
 describe('getCarbsData', () => {
