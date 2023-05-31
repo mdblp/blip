@@ -38,16 +38,7 @@
   color: var(--text-medium-contrast);
 }
 
-.rows {
-  display: grid;
-  align-items: center;
-  row-gap: 4px;
-  margin-bottom: 4px;
-  pointer-events: none;
-  padding-left: 10px;
-}
-
-.rows .rowTitle {
+.rowTitle {
   color: var(--stat--default);
 }
 
