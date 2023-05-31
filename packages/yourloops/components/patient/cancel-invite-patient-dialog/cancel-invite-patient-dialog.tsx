@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import React, { type FunctionComponent } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -35,6 +35,8 @@ import { type Patient } from '../../../lib/patient/models/patient.model'
 import { LoadingButton } from '@mui/lab'
 import DialogContentText from '@mui/material/DialogContentText'
 import { useCancelInvitePatientDialog } from './cancel-invite-patient-dialog.hook'
+import Alert from '@mui/material/Alert'
+import Box from '@mui/material/Box'
 
 interface CancelInvitePatientDialogProps {
   patient: Patient | null
@@ -54,13 +56,22 @@ export const CancelInvitePatientDialog: FunctionComponent<CancelInvitePatientDia
       onClose={onClose}
     >
       <DialogTitle>
-        <strong>{t('modal-cancel-patient-invite-title', { patientEmail: patient.profile.email })}</strong>
+        <strong>{t('modal-cancel-patient-invite-title')}</strong>
       </DialogTitle>
 
       <DialogContent>
         <DialogContentText>
-          {t('modal-cancel-patient-invite-content')}
+          <Trans
+            i18nKey="modal-cancel-patient-invite-question"
+            t={t}
+            components={{ strong: <strong /> }}
+            values={{ patientEmail: patient.profile.email }}
+            parent={React.Fragment}
+          />
         </DialogContentText>
+        <Box mt={2}>
+          <Alert severity="info">{t('modal-cancel-patient-invite-info')}</Alert>
+        </Box>
       </DialogContent>
 
       <DialogActions>
