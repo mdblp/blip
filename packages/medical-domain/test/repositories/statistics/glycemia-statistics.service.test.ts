@@ -39,7 +39,7 @@ import {
   dateFilterThreeDays2020,
   dateFilterTwoDays,
   dateFilterTwoWeeks
-} from '../../mock/bg-source.statistics.mock'
+} from '../../mock/data.statistics.mock'
 
 const buildCbgData = (data: Array<[Date, number, string]>): Cbg[] => (
   data.map((cbgData) => (
