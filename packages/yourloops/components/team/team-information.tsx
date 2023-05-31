@@ -41,7 +41,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import EditIcon from '@mui/icons-material/Edit'
 
 import { type Team, useTeam } from '../../lib/team'
-import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
+import TeamInformationEditDialog from '../../pages/hcp/team-information-edit-dialog'
 import { type TeamEditModalContentProps } from '../../pages/hcp/types'
 import { commonComponentStyles } from '../common'
 import { useAlert } from '../utils/snackbar'
@@ -105,6 +105,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
         alert.error(t('team-page-failed-edit'))
       }
     }
+
     setTeamToEdit(null)
   }
 
@@ -206,7 +207,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
         </div>
       </div>
       {teamToEdit &&
-        <TeamEditDialog teamToEdit={teamToEdit} />
+        <TeamInformationEditDialog teamToEdit={teamToEdit} />
       }
     </React.Fragment>
   )
