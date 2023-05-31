@@ -244,4 +244,11 @@ export const buildAvailableTeams = (): Team[] => {
 
 export const mockTeamAPI = () => {
   jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue(buildAvailableTeams())
+  jest.spyOn(TeamAPI, 'createTeam').mockRejectedValue('Mocked error')
+}
+
+export const mockTeamApiForTeamCreation = () => {
+  const newTeam = { id: 'new-team-id', name: '🦁', type: TeamType.medical, members: [], monitoringAlertsParameters }
+  jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue(buildAvailableTeams().concat(newTeam as Team))
+  jest.spyOn(TeamAPI, 'createTeam').mockResolvedValue(newTeam as ITeam)
 }

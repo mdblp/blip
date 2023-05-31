@@ -71,14 +71,6 @@ function NotificationContextImpl(): NotificationContext {
     setSentInvitations(invitations)
   }
 
-  const inviteRemoteMonitoring = async (teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string): Promise<void> => {
-    await NotificationApi.inviteToRemoteMonitoring(teamId, userId, monitoringEnd, referringDoctor)
-  }
-
-  const cancelRemoteMonitoringInvite = async (teamId: string, userId: string): Promise<void> => {
-    await NotificationApi.cancelRemoteMonitoringInvite(teamId, userId)
-  }
-
   const refreshSentInvitations = useCallback(async (): Promise<void> => {
     try {
       const invitations = await NotificationApi.getSentInvitations(user.id)
@@ -125,8 +117,6 @@ function NotificationContextImpl(): NotificationContext {
     accept,
     decline,
     cancel,
-    inviteRemoteMonitoring,
-    cancelRemoteMonitoringInvite,
     refreshReceivedInvitations
   }
 }

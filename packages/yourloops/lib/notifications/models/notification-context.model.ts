@@ -35,7 +35,5 @@ export interface NotificationContext {
   accept: (notification: Notification) => Promise<void>
   decline: (notification: Notification) => Promise<void>
   cancel: (notificationId: string, teamId?: string, inviteeEmail?: string) => Promise<void>
-  inviteRemoteMonitoring: (teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string) => Promise<void>
-  cancelRemoteMonitoringInvite: (teamId: string, userId: string) => Promise<void>
   refreshReceivedInvitations: () => Promise<void>
 }

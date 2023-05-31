@@ -96,13 +96,13 @@ function MainHeader(): JSX.Element {
   }
 
   const handleTabClick = (tab: HcpNavigationTab): void => {
-    const route = tab === HcpNavigationTab.CareTeam ? AppUserRoute.Team : AppUserRoute.Home
+    const route = tab === HcpNavigationTab.CareTeam ? AppUserRoute.CareTeamSettings : AppUserRoute.Home
     navigate(route)
   }
 
   const getTabByPathname = (pathname): HcpNavigationTab | boolean => {
     switch (pathname) {
-      case AppUserRoute.Team:
+      case AppUserRoute.CareTeamSettings:
         return HcpNavigationTab.CareTeam
       case AppUserRoute.Preferences:
       case AppUserRoute.Notifications:
@@ -158,9 +158,9 @@ function MainHeader(): JSX.Element {
               />
               {selectedTeam.id !== PRIVATE_TEAM_ID &&
                 <StyledTab
-                  data-testid="main-header-hcp-care-team-tab"
+                  data-testid="main-header-hcp-care-team-settings-tab"
                   className={tab}
-                  label={t('header-tab-care-team')}
+                  label={t('header-tab-care-team-settings')}
                   value={HcpNavigationTab.CareTeam}
                   onClick={() => {
                     handleTabClick(HcpNavigationTab.CareTeam)

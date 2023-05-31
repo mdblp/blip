@@ -27,6 +27,7 @@
 
 export enum AppUserRoute {
   Caregivers = '/caregivers',
+  CareTeamSettings = '/team',
   Daily = '/daily',
   Dashboard = '/dashboard',
   Home = '/home',
@@ -34,7 +35,6 @@ export enum AppUserRoute {
   Notifications = '/notifications',
   Patient = '/patient',
   Preferences = '/preferences',
-  Team = '/team',
   Teams = '/teams',
   Trends = '/trends'
 }

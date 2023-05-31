@@ -48,6 +48,7 @@ import { testPatientManagementMedicalTeam, testPatientManagementPrivateTeam } fr
 import { testTeamCreation } from '../../use-cases/teams-management'
 import { Unit } from 'medical-domain'
 import NotificationApi from '../../../../lib/notifications/notification.api'
+import { type Router } from '../../models/router.model'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -66,7 +67,7 @@ describe('HCP home page', () => {
     jest.spyOn(NotificationApi, 'cancelInvitation').mockResolvedValue(undefined)
   })
 
-  const renderHomePage = async () => {
+  const renderHomePage = async (): Promise<Router> => {
     const router = renderPage('/')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/home')
@@ -160,9 +161,9 @@ describe('HCP home page', () => {
   it('should be able to create a team when on the home page', async () => {
     localStorage.setItem('selectedTeamId', myThirdTeamId)
 
-    await renderHomePage()
+    const router = await renderHomePage()
 
-    await testTeamCreation()
+    await testTeamCreation(router)
   })
 
   it('should show correct alerts tooltips when logged in with a user with units in mmol/L', async () => {

@@ -38,7 +38,10 @@ It is based on Tidepool Blip 1.27.
 - YLP-2350 Display a visual info when a patient has unread messages from another team in the chat widget
 - YLP-2358 As a care team member, I want a new design when listing my pending patients
 - YLP-2381 As a HCP, I want to manage patient invites made by other members of the teams
+- YLP-2388 Select the new care team after creating it
 - YLP-2390 Enlarge font of the buttons of the messaging system
+- YLP-2391 Rename "Care team" page to "Care team settings"
+- YLP-2392 Refine the Account preferences page
 - YLP-2393 Remove fields and "Show more/Show less" logic in the patient header
 - YLP-2394 Hide "Monitoring alerts" card for patients users
 

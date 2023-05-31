@@ -44,6 +44,7 @@ import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.
 import UserApi from '../../../../lib/auth/user.api'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { Unit } from 'medical-domain'
+import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
 
 describe('Profile page for patient', () => {
   const profile: Profile = {
@@ -56,10 +57,7 @@ describe('Profile page for patient', () => {
       birthPlace: 'Anywhere',
       diagnosisDate: '2020-12-02',
       diagnosisType: '1',
-      referringDoctor: 'Dr Dre',
-      sex: 'M',
-      ins: '123456789012345',
-      ssn: '012345678901234'
+      sex: Gender.Male
     },
     termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
     privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
@@ -96,19 +94,16 @@ describe('Profile page for patient', () => {
       expect(router.state.location.pathname).toEqual('/preferences')
     })
     await checkPatientLayout(`${profile.firstName} ${profile.lastName}`)
-    const fields = checkPatientProfilePage(settings.country)
+    const fields = checkPatientProfilePage()
     const saveButton = screen.getByRole('button', { name: 'Save' })
 
     expect(fields.firstNameInput).toHaveValue(profile.firstName)
     expect(fields.lastNameInput).toHaveValue(profile.lastName)
     expect(fields.birthdayInput).toHaveValue(profile.patient.birthday)
     expect(fields.birthPlaceInput).toHaveValue(profile.patient.birthPlace)
-    expect(fields.insInput).toHaveValue(profile.patient.ins)
-    expect(fields.ssnInput).toHaveValue(profile.patient.ssn)
     expect(fields.unitsSelect).toHaveTextContent(settings.units.bg)
     expect(fields.languageSelect).toHaveTextContent('Français')
     expect(fields.genderSelect).toHaveTextContent('Male')
-    expect(fields.referringDoctorInput).toHaveValue(profile.patient.referringDoctor)
     expect(fields.hba1cInput).toHaveValue('7.5%')
     expect(saveButton).toBeDisabled()
 
@@ -144,6 +139,6 @@ describe('Profile page for patient', () => {
     await act(async () => {
       renderPage('/preferences')
     })
-    checkPatientProfilePage(settings.country)
+    checkPatientProfilePage()
   })
 })

@@ -36,12 +36,9 @@ export interface ProfileForm {
   feedbackAccepted: boolean | undefined
   firstName: string
   hcpProfession: HcpProfession
-  ins: string | undefined
   lang: LanguageCodes
   lastName: string
-  referringDoctor: string | undefined
   sex: Gender | undefined
-  ssn: string | undefined
   units: BgUnit
 }
 

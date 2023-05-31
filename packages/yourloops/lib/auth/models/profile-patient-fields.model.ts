@@ -32,8 +32,5 @@ export interface ProfilePatientFields {
   birthPlace?: string
   diagnosisDate?: string
   diagnosisType?: string
-  ins?: string
   sex?: Gender
-  ssn?: string
-  referringDoctor?: string
 }

@@ -105,9 +105,9 @@ export const checkHcpHeader = async (headerInfo: HeaderInfo) => {
 
   expect(header.getByText('Patients')).toBeVisible()
   if (headerInfo.teamMenuInfo.isSelectedTeamPrivate) {
-    expect(header.queryByText('Care team')).not.toBeInTheDocument()
+    expect(header.queryByText('Care team settings')).not.toBeInTheDocument()
   } else {
-    expect(header.getByText('Care team')).toBeVisible()
+    expect(header.getByText('Care team settings')).toBeVisible()
   }
 
   await checkTeamScopeMenu(header, headerInfo.teamMenuInfo)

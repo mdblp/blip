@@ -53,9 +53,9 @@ describe('HCP care team page', () => {
   })
 
   const renderCareTeamPage = async () => {
-    const router = renderPage(AppUserRoute.Team)
+    const router = renderPage(AppUserRoute.CareTeamSettings)
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(AppUserRoute.Team)
+      expect(router.state.location.pathname).toEqual(AppUserRoute.CareTeamSettings)
     })
     return router
   }

@@ -26,7 +26,6 @@
  */
 
 import { act, screen, within } from '@testing-library/react'
-import { CountryCodes } from '../../../lib/auth/models/country.model'
 import userEvent from '@testing-library/user-event'
 import { AuthApi } from '../../../lib/auth/auth.api'
 
@@ -41,9 +40,6 @@ interface PatientFieldsHtmlElements extends CommonFieldsHtmlElements {
   birthdayInput: HTMLElement
   birthPlaceInput: HTMLElement
   genderSelect: HTMLElement
-  referringDoctorInput: HTMLElement
-  insInput?: HTMLElement
-  ssnInput?: HTMLElement
   hba1cInput?: HTMLElement
 }
 
@@ -83,41 +79,23 @@ export const checkCaregiverProfilePage = (): CommonFieldsHtmlElements => {
   return checkCommonFields()
 }
 
-export const checkPatientProfilePage = (country: CountryCodes): PatientFieldsHtmlElements => {
+export const checkPatientProfilePage = (): PatientFieldsHtmlElements => {
   const birthdayInput = screen.getByLabelText('Date of birth')
   const birthPlaceInput = screen.getByLabelText('Birth place')
   const genderSelect = screen.getByLabelText('Gender')
-  const referringDoctorInput = screen.getByLabelText('Referring doctor')
-  const insInput = screen.queryByLabelText('INS')
-  const ssnInput = screen.queryByLabelText('SSN')
   const hba1cInput = screen.getByLabelText('Initial HbA1c 01/01/2020')
   const inputs = {
     ...checkCommonFields(),
     birthdayInput,
     birthPlaceInput,
     genderSelect,
-    hba1cInput,
-    referringDoctorInput
+    hba1cInput
   }
 
   expect(within(inputs.unitsSelect).getByRole('button')).toHaveAttribute('aria-disabled', 'true')
   expect(birthdayInput).toBeVisible()
   expect(birthPlaceInput).toBeVisible()
   expect(genderSelect).toBeVisible()
-  expect(referringDoctorInput).toBeVisible()
-
-  if (country === CountryCodes.France) {
-    expect(insInput).toBeVisible()
-    expect(ssnInput).toBeVisible()
-
-    return {
-      ...inputs,
-      insInput,
-      ssnInput
-    }
-  }
-  expect(insInput).not.toBeInTheDocument()
-  expect(ssnInput).not.toBeInTheDocument()
 
   return inputs
 }
