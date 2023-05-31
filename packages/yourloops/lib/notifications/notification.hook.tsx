@@ -71,14 +71,6 @@ function NotificationContextImpl(): NotificationContext {
     setSentInvitations(invitations)
   }
 
-  const getInvitation = (teamId: string, patientEmail: string): Notification => {
-    const invitation = sentInvitations.find(invitation => invitation.target.id === teamId && invitation.email === patientEmail)
-    if (!invitation) {
-      throw Error(`Could not find invite for team ${teamId}`)
-    }
-    return invitation
-  }
-
   const refreshSentInvitations = useCallback(async (): Promise<void> => {
     try {
       const invitations = await NotificationApi.getSentInvitations(user.id)
@@ -125,8 +117,6 @@ function NotificationContextImpl(): NotificationContext {
     accept,
     decline,
     cancel,
-    getInvitation,
-    refreshSentInvitations,
     refreshReceivedInvitations
   }
 }
