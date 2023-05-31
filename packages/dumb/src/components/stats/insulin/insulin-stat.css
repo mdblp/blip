@@ -49,8 +49,6 @@
 .rowValue {
   border-width: 2px;
   border-color: var(--stat-disabled);
-  border-style: solid;
-  border-radius: 14px;
   text-align: center;
   font-size: 14px;
   white-space: pre;

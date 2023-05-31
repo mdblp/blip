@@ -27,6 +27,7 @@
 import React, { type FunctionComponent, memo, useMemo } from 'react'
 import styles from './insulin-stat.css'
 import Box from '@mui/material/Box'
+import Chip from '@mui/material/Chip'
 import { t } from 'i18next'
 import { formatDecimalNumber } from '../../../utils/format/format.util'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
@@ -87,14 +88,23 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   return (
     <div data-testid="container-insulin-stats">
       <Box>
-        <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="4px">
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          marginBottom="4px"
+        >
           <Box>
             {isDailyPage ? t('total-insulin') : t('average-daily-total-insulin')}
             <StatTooltip
               annotations={annotations}
             />
           </Box>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
             <span className={styles.titleTotal}>
               {totalInsulin}
             </span>
@@ -107,14 +117,25 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
         {data.map(entry => {
           return (
             <React.Fragment key={entry.id}>
-              <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="4px">
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                marginBottom="4px"
+              >
                   <span>
                     {entry.title}
                   </span>
-                <Box display="flex" justifyContent="space-between" alignItems="center">
-                    <span className={`${styles.rowValue} ${styles[`rowsTotalInsulin-${entry.id}`]}`}>
-                      {`${entry.value > 0 ? entry.valueString : '0'} ${entry.units}`}
-                    </span>
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Chip
+                    label={`${entry.value > 0 ? entry.valueString : '0'} ${entry.units}`}
+                    variant="outlined"
+                    className={`${styles.rowValue} ${styles[`rowsTotalInsulin-${entry.id}`]}`}
+                  />
                   <Box className={`${styles.rowPercent} ${styles[`rowsTotalInsulin-${entry.id}`]}`}>
                     <span className={styles.rowPercentValue}>
                       {percent(Math.max(entry.value, 0))}
@@ -129,12 +150,20 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           )
         })}
         {(isTrendsPage || isDashboardPage) && <>
-          <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom="4px">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            marginBottom="4px"
+          >
               <span>
                 {t('weight')}
               </span>
             {!!weight && <>
-              <Box display="flex" alignItems="center">
+              <Box
+                display="flex"
+                alignItems="center"
+              >
                 <span className={outputValueClasses()}>
                   {weight}
                   &nbsp;
@@ -145,12 +174,23 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
               </Box>
             </>}
           </Box>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
             {t('ratio-dose')}
-            <Box display="flex" alignItems="center">
-              <span className={outputValueClasses()}>{dailyDosePerWeight}</span>
+            <Box
+              display="flex"
+              alignItems="center"
+            >
+              <span className={outputValueClasses()}>
+                {dailyDosePerWeight}
+              </span>
               &nbsp;
-              <span className={styles.dailyDoseUnits}>{t('U/kg')}</span>
+              <span className={styles.dailyDoseUnits}>
+                {t('U/kg')}
+              </span>
             </Box>
           </Box>
         </>}
