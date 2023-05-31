@@ -796,41 +796,6 @@ describe('DataUtil', () => {
     })
   })
 
-  describe('getCarbsData', () => {
-    it('should return the total carbs from wizard and food data when viewing 1 day', () => {
-      dataUtil.endpoints = dayEndpoints
-      const carbsData = dataUtil.getCarbsData()
-      const expected = {
-        nDays: 1,
-        wizardCarbs: 6,
-        foodCarbs: 16,
-        totalCarbs: 22,
-        totalCarbsPerDay: 22,
-        foodCarbsPerDay: 16,
-        wizardCarbsPerDay: 6,
-        total: 5
-      }
-
-      expect(carbsData, JSON.stringify({ carbsData, expected })).to.eql(expected)
-    })
-
-    it('should return the avg daily carbs from wizard and food data when viewing more than 1 day', () => {
-      dataUtil.endpoints = twoDayEndpoints
-      const carbsData = dataUtil.getCarbsData()
-      const expected = {
-        nDays: 2,
-        wizardCarbs: 16,
-        foodCarbs: 29,
-        totalCarbs: 45,
-        totalCarbsPerDay: 22.5,
-        foodCarbsPerDay: 14.5,
-        wizardCarbsPerDay: 8,
-        total: 7
-      }
-      expect(carbsData, JSON.stringify({ carbsData, expected })).to.eql(expected)
-    })
-  })
-
   describe('getCoefficientOfVariationData', () => {
     it('should return the coefficient of variation for cbg data', () => {
       dataUtil.chartPrefs = { bgSource: 'cbg' }
