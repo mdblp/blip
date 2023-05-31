@@ -72,6 +72,7 @@ export const CancelInvitePatientDialog: FunctionComponent<CancelInvitePatientDia
         </Button>
         <LoadingButton
           loading={processing}
+          data-testid="cancel-patient-invite-button"
           color="error"
           variant="contained"
           disableElevation

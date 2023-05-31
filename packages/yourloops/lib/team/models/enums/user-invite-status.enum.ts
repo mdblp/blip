@@ -26,7 +26,7 @@
  */
 
 export enum UserInviteStatus {
-  Accepted = 'Accepted',
-  Pending = 'Pending',
-  Rejected = 'Rejected',
+  Accepted = 'accepted',
+  Pending = 'pending',
+  Rejected = 'rejected',
 }
