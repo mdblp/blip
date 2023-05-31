@@ -50,7 +50,7 @@ export const TWO_WEEKS_AGO_DATE: Moment = moment().subtract(14, 'days')
 const twoWeeksAgoDateAsString = TWO_WEEKS_AGO_DATE.format('YYYY-MM-DD')
 const yesterdayDateAsString = YESTERDAY_DATE.format('YYYY-MM-DD')
 
-interface Data { dataRange: PatientDataRange, data: PatientData }
+export interface Data { dataRange: PatientDataRange, data: PatientData }
 
 export const generateDashboardCompleteData = (date: string): Data => {
   return {
