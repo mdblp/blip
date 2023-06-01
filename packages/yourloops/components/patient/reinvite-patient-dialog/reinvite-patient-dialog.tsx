@@ -31,41 +31,33 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import useRemovePatientDialog from './remove-patient-dialog.hook'
-import { type Patient } from '../../lib/patient/models/patient.model'
+import { type Patient } from '../../../lib/patient/models/patient.model'
 import { LoadingButton } from '@mui/lab'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
-import Alert from '@mui/material/Alert'
-import Box from '@mui/material/Box'
+import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
 import DialogContentText from '@mui/material/DialogContentText'
-import TeamUtils from '../../lib/team/team.util'
+import { useReinvitePatientDialog } from './reinvite-patient-dialog.hook'
 
-interface RemovePatientDialogProps {
-  patient: Patient | null
+interface ReinvitePatientDialogProps {
+  patient: Patient
   onClose: () => void
+  onSuccess: () => void
 }
 
-const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onClose, patient }) => {
+export const ReinvitePatientDialog: FunctionComponent<ReinvitePatientDialogProps> = ({ patient, onClose, onSuccess }) => {
   const { t } = useTranslation('yourloops')
   const { selectedTeam } = useSelectedTeamContext()
   const {
     processing,
-    handleOnClickRemove,
-    patientName
-  } = useRemovePatientDialog({ patient, onClose })
+    handleOnClickReinvite
+  } = useReinvitePatientDialog({ patient, onSuccess })
 
-  const isSelectedTeamPrivate = TeamUtils.isPrivate(selectedTeam)
-  const selectedTeamLabel = isSelectedTeamPrivate ? t('my-private-practice') : selectedTeam.name
+  const selectedTeamLabel = selectedTeam.name
+  const patientEmail = patient.profile.email
 
-  const title = t('modal-remove-patient-title', {
-    patientName,
-    teamName: selectedTeamLabel
-  })
+  const title = t('modal-reinvite-patient-title')
 
   return (
     <Dialog
-      id="remove-hcp-patient-dialog"
-      data-testid="remove-hcp-patient-dialog"
       open
       onClose={onClose}
     >
@@ -74,26 +66,16 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
       </DialogTitle>
 
       <DialogContent>
-        <DialogContentText data-testid="modal-remove-patient-question">
+        <DialogContentText data-testid="modal-reinvite-patient-question">
           <Trans
-            i18nKey="modal-remove-patient-question"
+            i18nKey="modal-reinvite-patient-question"
             t={t}
             components={{ strong: <strong /> }}
-            values={{ patientName, selectedTeamName: selectedTeamLabel }}
+            values={{ patientEmail, selectedTeamName: selectedTeamLabel }}
             parent={React.Fragment}
           >
           </Trans>
         </DialogContentText>
-
-        <DialogContentText>
-          {isSelectedTeamPrivate ? t('modal-remove-patient-from-private-practice-info') : t('modal-remove-patient-from-team-info')}
-        </DialogContentText>
-
-          <Box mt={2}>
-            <Alert severity="info">
-              {t('modal-remove-patient-alert-info')}
-            </Alert>
-          </Box>
       </DialogContent>
 
       <DialogActions>
@@ -104,18 +86,16 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
           {t('button-cancel')}
         </Button>
         <LoadingButton
+          data-testid="reinvite-confirm"
           loading={processing}
-          data-testid="remove-patient-dialog-validate-button"
           color="error"
           variant="contained"
           disableElevation
-          onClick={handleOnClickRemove}
+          onClick={handleOnClickReinvite}
         >
-          {t('button-remove-patient')}
+          {t('button-resend-invite')}
         </LoadingButton>
       </DialogActions>
     </Dialog>
   )
 }
-
-export default RemovePatientDialog

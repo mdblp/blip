@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,32 +25,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PatientListColumns, type PendingPatientListColumns } from './enums/patient-list.enum'
+import { useTranslation } from 'react-i18next'
+import { useState } from 'react'
+import { useAlert } from '../../utils/snackbar'
+import { usePatientContext } from '../../../lib/patient/patient.provider'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 
-export interface GridRowModel {
-  id: string
-  [PatientListColumns.Flag]?: Patient
-  [PatientListColumns.Patient]: Patient
-  [PatientListColumns.DateOfBirth]?: Patient
-  [PatientListColumns.Age]?: number
-  [PatientListColumns.Gender]?: string
-  [PatientListColumns.System]?: string
-  [PatientListColumns.MonitoringAlerts]?: Patient
-  [PatientListColumns.Messages]?: boolean
-  [PatientListColumns.TimeInRange]?: number
-  [PatientListColumns.GlucoseManagementIndicator]?: number
-  [PatientListColumns.Hypoglycemia]?: number
-  [PatientListColumns.Variance]?: number
-  [PatientListColumns.LastDataUpdate]?: string
-  [PatientListColumns.Actions]: Patient
+interface CancelInvitePatientDialogHookProps {
+  onClose: () => void
+  patient: Patient
 }
 
-export interface PendingGridRowModel {
-  id: string
-  isInviteAvailable: boolean
-  [PendingPatientListColumns.Actions]: Patient
-  [PendingPatientListColumns.Date]: string
-  [PendingPatientListColumns.Email]: string
-  [PendingPatientListColumns.InviteSentBy]: string
+interface CancelInvitePatientDialogHookReturn {
+  handleOnClickCancelInvite: () => Promise<void>
+  processing: boolean
+}
+
+export const useCancelInvitePatientDialog = ({ patient, onClose }: CancelInvitePatientDialogHookProps): CancelInvitePatientDialogHookReturn => {
+  const { t } = useTranslation('yourloops')
+  const alert = useAlert()
+  const { removePatient } = usePatientContext()
+
+  const [processing, setProcessing] = useState<boolean>(false)
+
+  const handleOnClickCancelInvite = async (): Promise<void> => {
+    try {
+      setProcessing(true)
+      await removePatient(patient)
+      alert.info(t('alert-remove-patient-pending-invite-success'))
+      onClose()
+    } catch (err) {
+      alert.error(t('alert-remove-patient-failure'))
+      setProcessing(false)
+    }
+  }
+
+  return { processing, handleOnClickCancelInvite }
 }

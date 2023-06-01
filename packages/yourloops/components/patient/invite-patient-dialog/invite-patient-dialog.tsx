@@ -39,23 +39,23 @@ import Link from '@mui/material/Link'
 import TextField from '@mui/material/TextField'
 import Alert from '@mui/material/Alert'
 
-import { REGEX_EMAIL } from '../../lib/utils'
-import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
-import { usePatientContext } from '../../lib/patient/patient.provider'
-import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
-import { type Team } from '../../lib/team'
-import metrics from '../../lib/metrics'
-import { useAlert } from '../utils/snackbar'
-import { PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE } from '../../lib/patient/patient.api'
+import { REGEX_EMAIL } from '../../../lib/utils'
+import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
+import { usePatientContext } from '../../../lib/patient/patient.provider'
+import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
+import { type Team } from '../../../lib/team'
+import metrics from '../../../lib/metrics'
+import { useAlert } from '../../utils/snackbar'
+import { PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE } from '../../../lib/patient/patient.api'
 import { LoadingButton } from '@mui/lab'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
 
 export interface AddDialogProps {
   onClose: () => void
   onAddPatientSuccessful: (team: Team) => void
 }
 
-export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, onAddPatientSuccessful }) => {
+export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, onAddPatientSuccessful }) => {
   const alert = useAlert()
   const patientHook = usePatientContext()
   const { t } = useTranslation()
@@ -85,7 +85,7 @@ export const AddPatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, o
     const patient = patientHook.getPatientByEmail(formEmail)
 
     if (patient) {
-      const isPatientPendingInTeam = patient.invitationStatus === UserInvitationStatus.pending
+      const isPatientPendingInTeam = patient.invitationStatus === UserInviteStatus.Pending
 
       if (isPatientPendingInTeam) {
         setErrorMessage(t('error-patient-already-invited'))

@@ -121,6 +121,7 @@ const ignoredTransKeyForYourLoops = [
   'diabetes-type',
   'not-logged-in',
   'modal-add-medical-team-code-no-invite',
+  'modal-cancel-patient-invite-question',
   'modal-caregiver-remove-patient-failure',
   'modal-caregiver-remove-patient-info-2',
   'modal-caregiver-remove-patient-question',

@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, renderHook } from '@testing-library/react-hooks'
-import useRemovePatientDialog from '../../../../components/patient/remove-patient-dialog.hook'
+import { renderHook } from '@testing-library/react-hooks'
+import useRemovePatientDialog from '../../../../components/patient/remove-patient-dialog/remove-patient-dialog.hook'
 import PatientAPI from '../../../../lib/patient/patient.api'
 import * as usePatientContextMock from '../../../../lib/patient/patient.provider'
 import * as teamHookMock from '../../../../lib/team'
@@ -35,7 +35,7 @@ import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-te
 import * as alertMock from '../../../../components/utils/snackbar'
 import { buildPrivateTeam, buildTeam } from '../../common/utils'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
-import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
 
 jest.mock('../../../../lib/patient/patient.provider')
@@ -69,7 +69,7 @@ describe('Remove patient dialog hook', () => {
     }))
   })
 
-  function createDataMock(invitationStatus: UserInvitationStatus, teamId = 'teamId') {
+  function createDataMock(invitationStatus: UserInviteStatus, teamId = 'teamId') {
     team = teamId === 'private' ? buildPrivateTeam() : buildTeam(teamId)
     patient = {
       profile: { firstName: 'alain', lastName: 'tolerant' },
@@ -78,20 +78,8 @@ describe('Remove patient dialog hook', () => {
   }
 
   describe('handleOnClickRemove', () => {
-    it('should show success alert when removing a pending patient', async () => {
-      createDataMock(UserInvitationStatus.pending)
-
-      const { result } = renderHook(() => useRemovePatientDialog({ patient, onClose }))
-      await act(async () => {
-        await result.current.handleOnClickRemove()
-      })
-
-      expect(removePatientMock).toHaveBeenCalledWith(patient)
-      expect(onSuccessMock).toHaveBeenCalledWith('alert-remove-patient-pending-invite-success')
-    })
-
     it('should show success alert when removing a patient from a team', async () => {
-      createDataMock(UserInvitationStatus.accepted)
+      createDataMock(UserInviteStatus.Accepted)
       isPrivateMock.mockReturnValueOnce(false)
 
       const { result } = renderHook(() => useRemovePatientDialog({ patient, onClose }))
@@ -103,7 +91,7 @@ describe('Remove patient dialog hook', () => {
 
     it('should show success alert when removing a private practice patient', async () => {
       team = { id: 'private', type: TeamType.private, name: 'private' } as Team
-      createDataMock(UserInvitationStatus.accepted, 'private')
+      createDataMock(UserInviteStatus.Accepted, 'private')
       isPrivateMock.mockReturnValueOnce(true)
 
       const { result } = renderHook(() => useRemovePatientDialog({ patient, onClose }))

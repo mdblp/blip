@@ -32,7 +32,7 @@ import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import NotificationApi from '../../../../lib/notifications/notification.api'
 import { mockUserApi } from '../../mock/user.api.mock'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
-import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type ShareUser } from '../../../../lib/share/models/share-user.model'
 import { type IUser } from '../../../../lib/data/models/i-user.model'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
@@ -50,7 +50,7 @@ describe('Notification page for caregiver', () => {
       userid: 'caregiverId',
       profile: { firstName: 'caregiverFirstName', lastName: 'caregiverLastName' }
     } as IUser,
-    status: UserInvitationStatus.accepted,
+    status: UserInviteStatus.Accepted,
     invitation: invitationDirectShare
   }
 
