@@ -27,10 +27,10 @@
 
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
-import { useAlert } from '../utils/snackbar'
-import { usePatientContext } from '../../lib/patient/patient.provider'
-import { type Patient } from '../../lib/patient/models/patient.model'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import { useAlert } from '../../utils/snackbar'
+import { usePatientContext } from '../../../lib/patient/patient.provider'
+import { type Patient } from '../../../lib/patient/models/patient.model'
+import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
 
 interface ReinvitePatientDialogHookProps {
   patient: Patient

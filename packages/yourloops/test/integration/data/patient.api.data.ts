@@ -31,7 +31,7 @@ import { type PatientProfile } from '../../../lib/patient/models/patient-profile
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
-import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { type Profile } from '../../../lib/auth/models/profile.model'
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
@@ -120,7 +120,7 @@ export const buildPatient = (params: {
       hasSentUnreadMessages: params.metadata?.hasSentUnreadMessages || false
     },
     monitoringAlertsParameters: params.monitoringAlertsParameters,
-    invitationStatus: UserInvitationStatus.accepted,
+    invitationStatus: UserInviteStatus.Accepted,
     userid: params.userid
   }
 }
@@ -286,7 +286,7 @@ export const pendingPatient: Patient = buildPatient({
   monitoringAlerts: defaultMonitoringAlert
 })
 
-export const buildTeamMemberFromPatient = (patient: Patient, teamId: string, invitationStatus: UserInvitationStatus): ITeamMember => {
+export const buildTeamMemberFromPatient = (patient: Patient, teamId: string, invitationStatus: UserInviteStatus): ITeamMember => {
   return {
     userId: patient.userid,
     teamId,
@@ -312,42 +312,42 @@ export const buildTeamMemberFromPatient = (patient: Patient, teamId: string, inv
   }
 }
 
-export const patient1AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient1, mySecondTeamId, UserInvitationStatus.accepted)
-export const patient2AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient2, myThirdTeamId, UserInvitationStatus.accepted)
-export const patient3AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient3, myThirdTeamId, UserInvitationStatus.accepted)
-export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(pendingPatient, mySecondTeamId, UserInvitationStatus.pending)
+export const patient1AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient1, mySecondTeamId, UserInviteStatus.Accepted)
+export const patient2AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient2, myThirdTeamId, UserInviteStatus.Accepted)
+export const patient3AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient3, myThirdTeamId, UserInviteStatus.Accepted)
+export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(pendingPatient, mySecondTeamId, UserInviteStatus.Pending)
 
 export const PATIENTS_BY_TEAMID: Record<string, Patient[]> = {
   [myFirstTeamId]: [],
   [mySecondTeamId]: [
     {
       ...patient1,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     }, {
       ...pendingPatient,
-      invitationStatus: UserInvitationStatus.pending
+      invitationStatus: UserInviteStatus.Pending
     }
   ],
   [myThirdTeamId]: [
     {
       ...patient1,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...patient2,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...patient3,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...patientWithMmol,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...pendingPatient,
-      invitationStatus: UserInvitationStatus.pending,
+      invitationStatus: UserInviteStatus.Pending,
       invite: {
         id: 'fakeInviteId',
         creatorId: loggedInUserId,
@@ -358,31 +358,31 @@ export const PATIENTS_BY_TEAMID: Record<string, Patient[]> = {
   [filtersTeamId]: [
     {
       ...patient1,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...unreadMessagesPatient,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...timeSpentOutOfTargetRangePatient,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...hypoglycemiaPatient,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...noDataTransferredPatient,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...flaggedPatient,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...pendingPatient,
-      invitationStatus: UserInvitationStatus.pending
+      invitationStatus: UserInviteStatus.Pending
     }
   ]
 }
@@ -416,7 +416,7 @@ export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMem
     } as Profile,
     settings: member.settings,
     preferences: member.preferences,
-    invitationStatus: member.invitationStatus ?? UserInvitationStatus.accepted,
+    invitationStatus: member.invitationStatus ?? UserInviteStatus.Accepted,
     email: member.email ?? 'fake@patient.email',
     idVerified: member.idVerified ?? true,
     unreadMessages: member.unreadMessages ?? 0,

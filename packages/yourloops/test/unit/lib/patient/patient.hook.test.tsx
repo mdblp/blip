@@ -36,7 +36,7 @@ import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-te
 import * as patientFilterHookMock from '../../../../lib/providers/patient-list.provider'
 import PatientApi from '../../../../lib/patient/patient.api'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
-import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 import { type Notification } from '../../../../lib/notifications/models/notification.model'
@@ -49,8 +49,8 @@ jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/notifications/notification.hook')
 jest.mock('../../../../lib/providers/patient-list.provider')
 describe('Patient hook', () => {
-  const loggedInUserAsPatient = createPatient('loggedInUserAsPatient', UserInvitationStatus.accepted)
-  const patientToRemove = createPatient('patientToRemove', UserInvitationStatus.accepted)
+  const loggedInUserAsPatient = createPatient('loggedInUserAsPatient', UserInviteStatus.Accepted)
+  const patientToRemove = createPatient('patientToRemove', UserInviteStatus.Accepted)
   const notificationHookCancelMock = jest.fn()
   const authHookGetFlagPatientMock = jest.fn().mockReturnValue([patientToRemove.userid])
   const authHookFlagPatientMock = jest.fn()
@@ -109,19 +109,19 @@ describe('Patient hook', () => {
   }
 
   describe('filterPatients', () => {
-    const pendingPatient = createPatient('pendingPatient', UserInvitationStatus.pending, undefined, { birthdate: new Date(2001, 10, 19) })
-    const basicPatient = createPatient('basicPatient1', UserInvitationStatus.accepted, undefined, {
+    const pendingPatient = createPatient('pendingPatient', UserInviteStatus.Pending, undefined, { birthdate: new Date(2001, 10, 19) })
+    const basicPatient = createPatient('basicPatient1', UserInviteStatus.Accepted, undefined, {
       birthdate: new Date(2005, 5, 5),
       firstName: 'small brain',
       lastName: 'dupont'
     })
-    const basicPatient2 = createPatient('basicPatient2', UserInvitationStatus.accepted, undefined, { birthdate: new Date(2001, 10, 19) })
-    const bigBrainPatient = createPatient('big brain', UserInvitationStatus.accepted, undefined, {
+    const basicPatient2 = createPatient('basicPatient2', UserInviteStatus.Accepted, undefined, { birthdate: new Date(2001, 10, 19) })
+    const bigBrainPatient = createPatient('big brain', UserInviteStatus.Accepted, undefined, {
       birthdate: new Date(2005, 5, 5),
       firstName: 'big brain',
       lastName: 'smith'
     })
-    const noNamePatient = createPatient('big brain', UserInvitationStatus.accepted, undefined, {
+    const noNamePatient = createPatient('big brain', UserInviteStatus.Accepted, undefined, {
       birthdate: new Date(2006, 6, 6)
     })
     noNamePatient.profile.firstName = undefined
@@ -158,7 +158,7 @@ describe('Patient hook', () => {
 
   describe('getPatientByEmail', () => {
     const unknownPatient = createPatient('unknownPatient')
-    const existingPatient = createPatient('existingPatient', UserInvitationStatus.accepted, undefined, { email: 'test@test.com' })
+    const existingPatient = createPatient('existingPatient', UserInviteStatus.Accepted, undefined, { email: 'test@test.com' })
     const allPatients = [existingPatient]
     let customHook
 
@@ -180,7 +180,7 @@ describe('Patient hook', () => {
 
   describe('getPatientById', () => {
     const unknownPatient = createPatient('unknownPatient')
-    const existingPatient = createPatient('existingPatient', UserInvitationStatus.accepted)
+    const existingPatient = createPatient('existingPatient', UserInviteStatus.Accepted)
     const allPatients = [existingPatient]
     let customHook
 
@@ -201,7 +201,7 @@ describe('Patient hook', () => {
   })
 
   describe('invitePatient', () => {
-    const basicPatient = createPatient('basicPatient1', UserInvitationStatus.accepted)
+    const basicPatient = createPatient('basicPatient1', UserInviteStatus.Accepted)
     basicPatient.profile.email = 'simple@basic.com'
     const allPatients = [basicPatient]
     const team1 = buildTeam('team1Id')
@@ -252,10 +252,10 @@ describe('Patient hook', () => {
   })
 
   describe('removePatient', () => {
-    const pendingPatient = createPatient('pendingPatient', UserInvitationStatus.pending, {} as MonitoringAlertsParameters)
+    const pendingPatient = createPatient('pendingPatient', UserInviteStatus.Pending, {} as MonitoringAlertsParameters)
     pendingPatient.invite = { creationDate: 'fakeCreationDate', creatorId: 'fakeCreatorId', id: 'fakeInviteId' }
-    const patientToRemovePrivatePractice = createPatient('patientToRemovePrivatePractice', UserInvitationStatus.accepted)
-    const patientToRemove2 = createPatient('patientToRemove2', UserInvitationStatus.accepted)
+    const patientToRemovePrivatePractice = createPatient('patientToRemovePrivatePractice', UserInviteStatus.Accepted)
+    const patientToRemove2 = createPatient('patientToRemove2', UserInviteStatus.Accepted)
     const allPatients = [pendingPatient, patientToRemovePrivatePractice, patientToRemove, patientToRemove2]
 
     it('should call notification hook cancel method if invite is pending and call removePatient method', async () => {
@@ -324,7 +324,7 @@ describe('Patient hook', () => {
     let basicPatient
 
     beforeAll(async () => {
-      basicPatient = createPatient('basicPatient1', UserInvitationStatus.accepted)
+      basicPatient = createPatient('basicPatient1', UserInviteStatus.Accepted)
       basicPatient.metadata.hasSentUnreadMessages = true
       const allPatients = [basicPatient]
 

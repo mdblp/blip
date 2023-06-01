@@ -42,7 +42,7 @@ import TeamUtils from '../../../../lib/team/team.util'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import { type ConfirmDialogProps } from '../../../../components/dialogs/confirm-dialog'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
-import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 
 // eslint-disable-next-line react/display-name
 jest.mock('../../../../components/dialogs/confirm-dialog', () => (props: ConfirmDialogProps) => {
@@ -74,7 +74,7 @@ describe('MemberRow', () => {
     TeamMemberRole.member,
     'fake@username.com',
     'fake full name',
-    UserInvitationStatus.accepted
+    UserInviteStatus.Accepted
   )
 
   const pendingTeamMemberWithNoInvite = buildTeamMember(
@@ -83,7 +83,7 @@ describe('MemberRow', () => {
     TeamMemberRole.member,
     'fake@username.com',
     'fake full name',
-    UserInvitationStatus.pending
+    UserInviteStatus.Pending
   )
 
   const pendingTeamMemberWithInviteFromAnotherUser = buildTeamMember(
@@ -92,7 +92,7 @@ describe('MemberRow', () => {
     TeamMemberRole.member,
     'fake@username.com',
     'fake full name',
-    UserInvitationStatus.pending
+    UserInviteStatus.Pending
   )
 
   const pendingTeamMemberWithInviteFromCurrentLoggedInUser = buildTeamMember(
@@ -101,7 +101,7 @@ describe('MemberRow', () => {
     TeamMemberRole.member,
     'fake@username.com',
     'fake full name',
-    UserInvitationStatus.pending
+    UserInviteStatus.Pending
   )
 
   const loggedInUserAdmin = buildTeamMember(
@@ -110,7 +110,7 @@ describe('MemberRow', () => {
     TeamMemberRole.admin,
     'fake@admin.com',
     'fake admin full name',
-    UserInvitationStatus.accepted
+    UserInviteStatus.Accepted
   )
 
   const loggedInUserNotAdmin = buildTeamMember(
@@ -119,7 +119,7 @@ describe('MemberRow', () => {
     TeamMemberRole.member,
     'fake@admin.com',
     'fake admin full name',
-    UserInvitationStatus.accepted
+    UserInviteStatus.Accepted
   )
 
   const pendingTeamMember = buildTeamMember(
@@ -128,7 +128,7 @@ describe('MemberRow', () => {
     TeamMemberRole.member,
     'fake@username.com',
     'fake full name',
-    UserInvitationStatus.pending
+    UserInviteStatus.Pending
   )
 
   const pendingAdminTeamMember = buildTeamMember('fakeUserId', 'fakeInviteId7')
@@ -138,7 +138,7 @@ describe('MemberRow', () => {
     TeamMemberRole.admin,
     'fake@username.com',
     'fake full name',
-    UserInvitationStatus.accepted)
+    UserInviteStatus.Accepted)
 
   beforeAll(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {

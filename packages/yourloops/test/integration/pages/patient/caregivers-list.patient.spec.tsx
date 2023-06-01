@@ -38,7 +38,7 @@ import DirectShareApi, {
 } from '../../../../lib/share/direct-share.api'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { type IUser } from '../../../../lib/data/models/i-user.model'
-import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type Notification } from '../../../../lib/notifications/models/notification.model'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
@@ -102,7 +102,7 @@ describe('Patient caregivers page', () => {
     jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValueOnce([{
       user: { userid: caregiverId, profile: { firstName: caregiverFirstName, lastName: caregiverLastName } } as IUser,
       invitation: { email: caregiverEmail } as Notification,
-      status: UserInvitationStatus.accepted
+      status: UserInviteStatus.Accepted
     }])
     await userEvent.click(addCaregiverDialogConfirmButton)
 
