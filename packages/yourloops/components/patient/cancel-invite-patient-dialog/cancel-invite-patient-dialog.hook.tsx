@@ -25,28 +25,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type MonitoringAlerts } from '../../patient/models/monitoring-alerts.model'
-import { type TeamMemberRole } from './enums/team-member-role.enum'
-import { type UserInviteStatus } from './enums/user-invite-status.enum'
-import { type Profile } from '../../auth/models/profile.model'
-import { type Settings } from '../../auth/models/settings.model'
-import { type Preferences } from '../../auth/models/preferences.model'
-import { type GlycemiaIndicators } from '../../patient/models/glycemia-indicators.model'
+import { useTranslation } from 'react-i18next'
+import { useState } from 'react'
+import { useAlert } from '../../utils/snackbar'
+import { usePatientContext } from '../../../lib/patient/patient.provider'
+import { type Patient } from '../../../lib/patient/models/patient.model'
 
-/**
- * Team member (API view)
- */
-export interface ITeamMember {
-  userId: string
-  teamId: 'private' | string
-  email: string
-  role: TeamMemberRole
-  invitationStatus: UserInviteStatus
-  profile?: Profile | null
-  settings?: Settings | null
-  preferences?: Preferences | null
-  idVerified: boolean
-  alarms?: MonitoringAlerts
-  unreadMessages?: number
-  glycemiaIndicators: GlycemiaIndicators
+interface CancelInvitePatientDialogHookProps {
+  onClose: () => void
+  patient: Patient
+}
+
+interface CancelInvitePatientDialogHookReturn {
+  handleOnClickCancelInvite: () => Promise<void>
+  processing: boolean
+}
+
+export const useCancelInvitePatientDialog = ({ patient, onClose }: CancelInvitePatientDialogHookProps): CancelInvitePatientDialogHookReturn => {
+  const { t } = useTranslation('yourloops')
+  const alert = useAlert()
+  const { removePatient } = usePatientContext()
+
+  const [processing, setProcessing] = useState<boolean>(false)
+
+  const handleOnClickCancelInvite = async (): Promise<void> => {
+    try {
+      setProcessing(true)
+      await removePatient(patient)
+      alert.info(t('alert-remove-patient-pending-invite-success'))
+      onClose()
+    } catch (err) {
+      alert.error(t('alert-remove-patient-failure'))
+      setProcessing(false)
+    }
+  }
+
+  return { processing, handleOnClickCancelInvite }
 }

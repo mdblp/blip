@@ -31,7 +31,7 @@ import { type PatientProfile } from '../../../lib/patient/models/patient-profile
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
 import { type PatientMetadata } from '../../../lib/patient/models/patient-metadata.model'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { Unit } from 'medical-domain'
@@ -44,7 +44,7 @@ export function triggerMouseEvent(event: string, domElement: Element): void {
 
 export const createPatient = (
   id = 'fakePatientId',
-  invitationStatus: UserInvitationStatus = UserInvitationStatus.accepted,
+  invitationStatus: UserInviteStatus = UserInviteStatus.Accepted,
   monitoringAlertsParameters: MonitoringAlertsParameters | undefined = undefined,
   profile: Partial<PatientProfile> = undefined,
   settings: Partial<PatientSettings> = undefined,
@@ -120,7 +120,7 @@ export function buildTeamMember(
   role: TeamMemberRole = TeamMemberRole.admin,
   email = 'fake@username.com',
   fullName = 'fake full name',
-  status = UserInvitationStatus.pending
+  status = UserInviteStatus.Pending
 ): TeamMember {
   return {
     userId,

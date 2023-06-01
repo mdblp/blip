@@ -45,10 +45,10 @@ interface PendingPatientListHookProps {
 
 interface PatientListHookReturns {
   columns: GridColDef[]
-  patientToRemoveForHcp: Patient | null
+  patientToCancelInvite: Patient | null
   patientToReinvite: Patient | null
   rowsProps: GridRowsProp
-  onCloseRemoveDialog: () => void
+  onCloseCancelInviteDialog: () => void
   onCloseReinviteDialog: () => void
   onSuccessReinviteDialog: () => void
 }
@@ -63,16 +63,16 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
   const { getPatientById } = usePatientContext()
   const { selectedTeam } = useSelectedTeamContext()
 
-  const [patientToRemoveForHcp, setPatientToRemoveForHcp] = useState<Patient | null>(null)
+  const [patientToCancelInvite, setPatientToCancelInvite] = useState<Patient | null>(null)
   const [patientToReinvite, setPatientToReinvite] = useState<Patient | null>(null)
 
   const removePatient = useCallback((patientId: string): void => {
     const patient = getPatientById(patientId)
-    setPatientToRemoveForHcp(patient)
+    setPatientToCancelInvite(patient)
   }, [getPatientById])
 
-  const onCloseRemoveDialog = (): void => {
-    setPatientToRemoveForHcp(null)
+  const onCloseCancelInviteDialog = (): void => {
+    setPatientToCancelInvite(null)
   }
 
   const onCloseReinviteDialog = (): void => {
@@ -186,10 +186,10 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
 
   return {
     columns: buildPendingColumns(),
-    patientToRemoveForHcp,
+    patientToCancelInvite,
     patientToReinvite,
     rowsProps,
-    onCloseRemoveDialog,
+    onCloseCancelInviteDialog,
     onCloseReinviteDialog,
     onSuccessReinviteDialog
   }

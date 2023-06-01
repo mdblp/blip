@@ -37,7 +37,7 @@ import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
 import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
 
-import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 import { type Team } from '../../../lib/team'
 import { type Profile } from '../../../lib/auth/models/profile.model'
 import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/monitoring-alert/monitoring-alert.default'
@@ -105,7 +105,7 @@ export const buildTeamOne = (): Team => {
         privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
         termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
       } as Profile,
-      status: UserInvitationStatus.accepted,
+      status: UserInviteStatus.Accepted,
       email: loggedInUserEmail
     }]
   }
@@ -132,7 +132,7 @@ export const buildTeamTwo = (): Team => {
         privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
         termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
       } as Profile,
-      status: UserInvitationStatus.accepted,
+      status: UserInviteStatus.Accepted,
       email: loggedInUserEmail
     }],
     monitoringAlertsParameters
@@ -160,7 +160,7 @@ export const buildTeamThree = (): Team => {
         privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
         termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
       } as Profile,
-      status: UserInvitationStatus.accepted,
+      status: UserInviteStatus.Accepted,
       email: loggedInUserEmail
     }, {
       userId: '4d9afc649ae4',
@@ -174,7 +174,7 @@ export const buildTeamThree = (): Team => {
         privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
         termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
       } as Profile,
-      status: UserInvitationStatus.accepted,
+      status: UserInviteStatus.Accepted,
       email: 'fake@member.fr'
     }],
     monitoringAlertsParameters
@@ -202,7 +202,7 @@ export const buildFiltersTeam = (): Team => {
         privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
         termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
       } as Profile,
-      status: UserInvitationStatus.accepted,
+      status: UserInviteStatus.Accepted,
       email: 'filters@user.com'
     }]
   }

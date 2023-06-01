@@ -50,7 +50,7 @@ import { type ShareUser } from '../../../lib/share/models/share-user.model'
 import { getUserFirstName, getUserLastName } from '../../../lib/utils'
 import { SortDirection, SortFields } from './types'
 import RemoveDirectShareDialog from '../../../components/dialogs/remove-direct-share-dialog'
-import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 
 export interface CaregiverTableProps {
   caregivers: ShareUser[]
@@ -71,14 +71,14 @@ const tableStyles = makeStyles({ name: 'ylp-patient-caregivers-table' })(() => {
 function compareUserShare(orderBy: SortFields, order: SortDirection, a: ShareUser, b: ShareUser): number {
   let value = 0
 
-  if (a.status === UserInvitationStatus.pending && b.status === UserInvitationStatus.pending) {
+  if (a.status === UserInviteStatus.Pending && b.status === UserInviteStatus.Pending) {
     value = a.user.username.localeCompare(b.user.username)
     if (order === SortDirection.desc) {
       value = -value
     }
-  } else if (a.status === UserInvitationStatus.pending) {
+  } else if (a.status === UserInviteStatus.Pending) {
     value = 1
-  } else if (b.status === UserInvitationStatus.pending) {
+  } else if (b.status === UserInviteStatus.Pending) {
     value = -1
   } else {
     switch (orderBy) {
@@ -130,7 +130,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
   const tableRows = props.caregivers.map((caregiver: ShareUser) => {
     const user = caregiver.user
     const userId = user.userid
-    const isPending = caregiver.status === UserInvitationStatus.pending
+    const isPending = caregiver.status === UserInviteStatus.Pending
 
     const userToRemove = {
       id: userId,

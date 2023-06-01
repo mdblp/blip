@@ -44,7 +44,7 @@ import { useTheme } from '@mui/material/styles'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { type PatientListTabs } from './models/enums/patient-list.enum'
 import { makeStyles } from 'tss-react/mui'
-import { AddPatientDialog } from '../patient/add-patient-dialog'
+import { InvitePatientDialog } from '../patient/invite-patient-dialog/invite-patient-dialog'
 import TeamCodeDialog from '../patient/team-code-dialog'
 import { type Team } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
@@ -256,7 +256,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
         </Box>
       </Box>
       {showAddPatientDialog &&
-        <AddPatientDialog
+        <InvitePatientDialog
           onAddPatientSuccessful={onAddPatientSuccessful}
           onClose={() => {
             setShowAddPatientDialog(false)
