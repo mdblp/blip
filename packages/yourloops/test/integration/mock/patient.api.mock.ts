@@ -43,7 +43,7 @@ export const mockPatientApiForPatients = () => {
     }
     return Promise.resolve(patientsToReturn)
   })
-  // jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1AsTeamMember])
+  jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1AsTeamMember])
   jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
 }
 
