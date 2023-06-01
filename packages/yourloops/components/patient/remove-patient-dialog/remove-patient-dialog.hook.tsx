@@ -27,13 +27,12 @@
 
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
-import { useAlert } from '../utils/snackbar'
-import { usePatientContext } from '../../lib/patient/patient.provider'
-import { useTeam } from '../../lib/team'
-import TeamUtils from '../../lib/team/team.util'
-import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
-import { type Patient } from '../../lib/patient/models/patient.model'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import { useAlert } from '../../utils/snackbar'
+import { usePatientContext } from '../../../lib/patient/patient.provider'
+import { useTeam } from '../../../lib/team'
+import TeamUtils from '../../../lib/team/team.util'
+import { type Patient } from '../../../lib/patient/models/patient.model'
+import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
 
 interface RemovePatientDialogHookProps {
   onClose: () => void
@@ -62,24 +61,20 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
   } : null
   const patientName = userName ? t('user-name', userName) : patient.profile.email
 
-  const getSuccessAlertMessage = (): void => {
-    if (patient.invitationStatus === UserInvitationStatus.pending) {
-      alert.success(t('alert-remove-patient-pending-invite-success'))
-      return
-    }
+  const getSuccessAlertMessage = (): string => {
     const team = getTeam(selectedTeamId)
     if (TeamUtils.isPrivate(team)) {
-      alert.success(t('alert-remove-private-practice-success', { patientName }))
-    } else {
-      alert.success(t('alert-remove-patient-from-team-success', { teamName: team.name, patientName }))
+      return t('alert-remove-private-practice-success', { patientName })
     }
+    return t('alert-remove-patient-from-team-success', { teamName: team.name, patientName })
   }
 
   const handleOnClickRemove = async (): Promise<void> => {
     try {
       setProcessing(true)
       await removePatient(patient)
-      getSuccessAlertMessage()
+      const message = getSuccessAlertMessage()
+      alert.success(message)
       onClose()
     } catch (err) {
       alert.error(t('alert-remove-patient-failure'))

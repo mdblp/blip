@@ -42,7 +42,7 @@ import { Unit } from 'medical-domain'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
-import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import {
   testDashboardDataVisualisationForHcp,
@@ -136,7 +136,7 @@ describe('Patient dashboard for HCP', () => {
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
       ...patient1,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     }])
 
     const appMainLayoutParams: AppMainLayoutHcpParams = {

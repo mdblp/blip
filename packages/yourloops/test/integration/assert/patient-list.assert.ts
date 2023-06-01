@@ -615,19 +615,16 @@ export const checkRemovePendingPatientMedicalTeam = async () => {
   const cancelInviteButton = screen.getByRole('button', { name: 'Remove patient pending-patient@diabeloop.fr' })
   await userEvent.click(cancelInviteButton)
   const cancelInviteDialog = screen.getByRole('dialog')
-  expect(cancelInviteDialog).toHaveTextContent('Remove Pending Patient from A - MyThirdTeam - to be deleted')
-  expect(cancelInviteDialog).toHaveTextContent('Are you sure you want to remove Pending Patient from A - MyThirdTeam - to be deleted?')
-  expect(cancelInviteDialog).toHaveTextContent('You and the care team will no longer have access to their data.')
-  expect(cancelInviteDialog).toHaveTextContent('If you want to remove the patient from another care team, you must first select the care team from the dropdown menu at the top right of YourLoops.')
+  expect(cancelInviteDialog).toHaveTextContent('Are you sure you want to cancel the invite of pending-patient@diabeloop.fr?')
+  expect(cancelInviteDialog).toHaveTextContent('The patient will no longer see on YourLoops the invite notification to share their data.')
 
-  // We click on cancel (meaning that we do not cancel the pending invite... Very confusing)
-  const cancelButtonDialog = within(cancelInviteDialog).getByRole('button', { name: 'Cancel' })
-  await userEvent.click(cancelButtonDialog)
+  const closeButtonDialog = within(cancelInviteDialog).getByRole('button', { name: 'Keep it' })
+  await userEvent.click(closeButtonDialog)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 
   // We open the dialog again and click on the remove button
   await userEvent.click(cancelInviteButton)
-  const removeInviteButton = within(screen.getByRole('dialog')).getByRole('button', { name: 'Remove patient' })
+  const removeInviteButton = within(screen.getByRole('dialog')).getByRole('button', { name: 'Cancel invite' })
   await userEvent.click(removeInviteButton)
 
   // We check that the API has been properly called

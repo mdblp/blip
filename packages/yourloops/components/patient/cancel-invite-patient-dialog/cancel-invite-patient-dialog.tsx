@@ -31,69 +31,47 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import useRemovePatientDialog from './remove-patient-dialog.hook'
-import { type Patient } from '../../lib/patient/models/patient.model'
+import { type Patient } from '../../../lib/patient/models/patient.model'
 import { LoadingButton } from '@mui/lab'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import DialogContentText from '@mui/material/DialogContentText'
+import { useCancelInvitePatientDialog } from './cancel-invite-patient-dialog.hook'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
-import DialogContentText from '@mui/material/DialogContentText'
-import TeamUtils from '../../lib/team/team.util'
 
-interface RemovePatientDialogProps {
+interface CancelInvitePatientDialogProps {
   patient: Patient | null
   onClose: () => void
 }
 
-const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onClose, patient }) => {
+export const CancelInvitePatientDialog: FunctionComponent<CancelInvitePatientDialogProps> = ({ onClose, patient }) => {
   const { t } = useTranslation('yourloops')
-  const { selectedTeam } = useSelectedTeamContext()
   const {
     processing,
-    handleOnClickRemove,
-    patientName
-  } = useRemovePatientDialog({ patient, onClose })
-
-  const isSelectedTeamPrivate = TeamUtils.isPrivate(selectedTeam)
-  const selectedTeamLabel = isSelectedTeamPrivate ? t('my-private-practice') : selectedTeam.name
-
-  const title = t('modal-remove-patient-title', {
-    patientName,
-    teamName: selectedTeamLabel
-  })
+    handleOnClickCancelInvite
+  } = useCancelInvitePatientDialog({ patient, onClose })
 
   return (
     <Dialog
-      id="remove-hcp-patient-dialog"
-      data-testid="remove-hcp-patient-dialog"
       open
       onClose={onClose}
     >
       <DialogTitle>
-        <strong>{title}</strong>
+        <strong>{t('modal-cancel-patient-invite-title')}</strong>
       </DialogTitle>
 
       <DialogContent>
-        <DialogContentText data-testid="modal-remove-patient-question">
+        <DialogContentText>
           <Trans
-            i18nKey="modal-remove-patient-question"
+            i18nKey="modal-cancel-patient-invite-question"
             t={t}
             components={{ strong: <strong /> }}
-            values={{ patientName, selectedTeamName: selectedTeamLabel }}
+            values={{ patientEmail: patient.profile.email }}
             parent={React.Fragment}
-          >
-          </Trans>
+          />
         </DialogContentText>
-
-        <DialogContentText>
-          {isSelectedTeamPrivate ? t('modal-remove-patient-from-private-practice-info') : t('modal-remove-patient-from-team-info')}
-        </DialogContentText>
-
-          <Box mt={2}>
-            <Alert severity="info">
-              {t('modal-remove-patient-alert-info')}
-            </Alert>
-          </Box>
+        <Box mt={2}>
+          <Alert severity="info">{t('modal-cancel-patient-invite-info')}</Alert>
+        </Box>
       </DialogContent>
 
       <DialogActions>
@@ -101,21 +79,19 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
           variant="outlined"
           onClick={onClose}
         >
-          {t('button-cancel')}
+          {t('modal-cancel-patient-invite-button-keep')}
         </Button>
         <LoadingButton
           loading={processing}
-          data-testid="remove-patient-dialog-validate-button"
+          data-testid="cancel-patient-invite-button"
           color="error"
           variant="contained"
           disableElevation
-          onClick={handleOnClickRemove}
+          onClick={handleOnClickCancelInvite}
         >
-          {t('button-remove-patient')}
+          {t('modal-cancel-patient-invite-button-cancel')}
         </LoadingButton>
       </DialogActions>
     </Dialog>
   )
 }
-
-export default RemovePatientDialog
