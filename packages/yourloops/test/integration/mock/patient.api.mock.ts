@@ -39,7 +39,7 @@ export const mockPatientApiForPatients = () => {
   jest.spyOn(PatientApi, 'getPatient').mockImplementation((userId: string) => {
     const patientsToReturn = PATIENTS_BY_TEAMID[mySecondTeamId]
     if (!patientsToReturn) {
-      console.warn('Your mocked getPatient return is undefined, make sure that this is a wanted behaviour.')
+      console.warn('Your mocked getPatient return is undefined, make sure that this is a wanted behaviour.', userId)
     }
     return Promise.resolve(patientsToReturn)
   })
