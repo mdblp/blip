@@ -27,7 +27,7 @@
 
 import * as usePatientContextMock from '../../../../lib/patient/patient.provider'
 import PatientAPI from '../../../../lib/patient/patient.api'
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import {
   useCancelInvitePatientDialog
 } from '../../../../components/patient/cancel-invite-patient-dialog/cancel-invite-patient-dialog.hook'
