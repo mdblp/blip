@@ -116,9 +116,7 @@ describe('Profile page for patient', () => {
     await userEvent.type(fields.lastNameInput, 'Tanrien')
 
     expect(saveButton).not.toBeDisabled()
-    await act(async () => {
-      await userEvent.click(saveButton)
-    })
+    await userEvent.click(saveButton)
 
     expect(saveButton).toBeDisabled()
     expect(screen.getByRole('alert')).toBeVisible()

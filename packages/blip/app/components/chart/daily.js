@@ -19,7 +19,7 @@ import React from 'react'
 import _ from 'lodash'
 import bows from 'bows'
 import moment from 'moment-timezone'
-import WindowSizeListener from 'react-window-size-listener'
+import ReactResizeDetector from 'react-resize-detector'
 import i18next from 'i18next'
 
 import { chartDailyFactory } from 'tideline'
@@ -59,8 +59,9 @@ class DailyChart extends React.Component {
     bgClasses: PropTypes.object.isRequired,
     bgUnits: PropTypes.string.isRequired,
     epochLocation: PropTypes.number.isRequired,
-    msRange: PropTypes.number.isRequired,
+    msRange: PropTypes.number,
     patient: PropTypes.object,
+    refToAttachResize: PropTypes.object.isRequired,
     tidelineData: PropTypes.object.isRequired,
     timePrefs: PropTypes.object.isRequired,
     // message handlers
@@ -107,8 +108,6 @@ class DailyChart extends React.Component {
     this.state = {
       /** @type {function | null} */
       chart: null,
-      windowHeight: 0,
-      windowWidth: 0,
       /** Avoid recreate the chart on loading: This leads to a crash */
       needRecreate: false
     }
@@ -138,11 +137,12 @@ class DailyChart extends React.Component {
       const { tidelineData, epochLocation } = this.props
       this.log.debug('Mounting...')
       const chart = chartDailyFactory(this.refNode.current, tidelineData, _.pick(this.props, this.chartOpts))
-      this.setState({ chart })
-      chart.setAtDate(epochLocation)
-      this.bindEvents()
-      this.props.onChartMounted()
-      cb()
+      this.setState({ chart }, () => {
+        chart.setAtDate(epochLocation)
+        this.bindEvents()
+        cb()
+        this.props.onChartMounted()
+      })
     } else {
       cb()
     }
@@ -154,8 +154,7 @@ class DailyChart extends React.Component {
       this.log('Unmounting...')
       this.unbindEvents()
       chart.destroy()
-      this.setState({ chart: null })
-      cb()
+      this.setState({ chart: null }, cb)
     } else {
       cb()
     }
@@ -180,24 +179,30 @@ class DailyChart extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div id="tidelineContainer" data-testid="tidelineContainer" className="patient-data-chart" ref={this.refNode} />
-        <WindowSizeListener onResize={this.handleWindowResize} />
+        <ReactResizeDetector
+          targetRef={this.props.refToAttachResize}
+          onResize={this.handleWindowResize}
+          handleWidth
+          handleHeight
+        />
+        <div
+          id="tidelineContainer"
+          data-testid="tidelineContainer"
+          className="patient-data-chart"
+          ref={this.refNode}
+        />
       </React.Fragment>
     )
   }
 
-  handleWindowResize = ({ windowHeight: height, windowWidth: width }) => {
+  handleWindowResize = () => {
     const { loading } = this.props
-    const { windowHeight, windowWidth, chart } = this.state
-    this.log.debug('handleWindowResize', { windowHeight, windowWidth }, '=>', { height, width })
-    if (windowHeight !== height || width !== windowWidth) {
-      const needRecreate = loading || chart?.isInTransition() === true
-      this.setState({ windowHeight: height, windowWidth: width, needRecreate })
-      if (!needRecreate) {
-        this.reCreateChart()
-      } else {
-        this.log.info('Delaying chart re-creation: loading or transition in progress')
-      }
+    const { chart } = this.state
+    const needRecreate = loading || chart?.isInTransition() === true
+    if (!needRecreate) {
+      this.reCreateChart()
+    } else {
+      this.log.info('Delaying chart re-creation: loading or transition in progress')
     }
   }
 
@@ -269,6 +274,7 @@ class Daily extends React.Component {
     super(props)
 
     /** @type {React.RefObject<DailyChart>} */
+    this.refToAttachResize = React.createRef()
     this.chartRef = React.createRef()
     this.log = bows('DailyView')
     this.state = {
@@ -346,11 +352,12 @@ class Daily extends React.Component {
               />
             }
           </Box>
-          <Box display="flex">
+          <Box display="flex" ref={this.refToAttachResize}>
             <div className="container-box-inner patient-data-content-inner">
               <div className="patient-data-content">
                 {loading && <SpinningLoader className="centered-spinning-loader" />}
                 <DailyChart
+                  refToAttachResize={this.refToAttachResize}
                   loading={loading}
                   bgClasses={this.props.bgPrefs.bgClasses}
                   bgUnits={this.props.bgPrefs.bgUnits}

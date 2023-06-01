@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { buildPatient, buildTeamMemberFromPatient } from '../../data/patient.api.data'
@@ -75,9 +75,7 @@ describe('Training page when new training available', () => {
     expect(confirmButton).toBeDisabled()
     await userEvent.click(ackText)
     expect(confirmButton).toBeEnabled()
-    await act(async () => {
-      await userEvent.click(confirmButton)
-    })
+    await userEvent.click(confirmButton)
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/new-consent')
     })

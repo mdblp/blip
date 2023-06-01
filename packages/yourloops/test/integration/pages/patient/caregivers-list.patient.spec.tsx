@@ -104,9 +104,7 @@ describe('Patient caregivers page', () => {
       invitation: { email: caregiverEmail } as Notification,
       status: UserInvitationStatus.accepted
     }])
-    await act(async () => {
-      await userEvent.click(addCaregiverDialogConfirmButton)
-    })
+    await userEvent.click(addCaregiverDialogConfirmButton)
 
     expect(addDirectShareMock).toHaveBeenCalledWith(loggedInUserId, caregiverEmail)
 

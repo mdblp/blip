@@ -8,7 +8,6 @@ Some of the other dependencies we leverage in this repository are, like webpack,
 - [GSAP](https://greensock.com/ 'GreenSock') ([read more](./GSAP.md))
 - [Moment](http://momentjs.com/ 'Moment.js') ([read more](./Moment.md))
 - [React](https://facebook.github.io/react/ 'React') ([read more](./React.md))
-- [react-motion](https://github.com/chenglou/react-motion 'GitHub: react-motion') (see [D3 usage](./D3.md) as well as [React Motion](./ReactMotion.md))
 - [Redux](http://redux.js.org/ 'redux docs') ([read more](./Redux.md))
 - [webpack](https://webpack.github.io/ 'webpack module bundler') ([read more](./Webpack.md))
 
