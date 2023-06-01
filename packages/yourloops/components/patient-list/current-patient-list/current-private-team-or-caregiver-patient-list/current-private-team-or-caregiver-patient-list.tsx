@@ -32,12 +32,12 @@ import Box from '@mui/material/Box'
 import { DataGrid, type GridPaginationModel, type GridSortModel, useGridApiRef } from '@mui/x-data-grid'
 import { EmptyPatientList } from '../../empty-patient-list/empty-patient-list'
 import { PatientListCustomFooter } from '../../patient-list-custom-footer'
-import RemovePatientDialog from '../../../patient/remove-patient-dialog'
 import RemoveDirectShareDialog from '../../../dialogs/remove-direct-share-dialog'
 import { usePatientListContext } from '../../../../lib/providers/patient-list.provider'
 import { usePatientContext } from '../../../../lib/patient/patient.provider'
 import { useWindowDimensions } from '../../../../lib/custom-hooks/use-window-dimensions.hook'
 import { PatientListColumns } from '../../models/enums/patient-list.enum'
+import RemovePatientDialog from '../../../patient/remove-patient-dialog/remove-patient-dialog'
 
 interface CurrentPrivateTeamOrCaregiverPatientListProps {
   patients: Patient[]
@@ -60,8 +60,6 @@ export const CurrentPrivateTeamOrCaregiverPatientList: FunctionComponent<Current
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
   const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
-
-  console.log({ rowsProps })
 
   return (
     <>

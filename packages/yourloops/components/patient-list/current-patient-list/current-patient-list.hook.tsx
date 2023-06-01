@@ -71,27 +71,29 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
   const navigate = useNavigate()
   const noDataLabel = t('N/A')
 
-  const allRows = patients.map((patient): GridRowModel => {
-    const { lastUpload } = getMedicalValues(patient.metadata.medicalData, noDataLabel)
-    const birthdate = patient.profile.birthdate
-    return {
-      id: patient.userid,
-      [PatientListColumns.Flag]: patient,
-      [PatientListColumns.Patient]: patient,
-      [PatientListColumns.DateOfBirth]: patient,
-      [PatientListColumns.Age]: PatientUtils.computeAge(birthdate),
-      [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
-      [PatientListColumns.MonitoringAlerts]: patient,
-      [PatientListColumns.System]: patient.settings.system ?? noDataLabel,
-      [PatientListColumns.LastDataUpdate]: lastUpload,
-      [PatientListColumns.Messages]: patient.metadata.hasSentUnreadMessages,
-      [PatientListColumns.TimeInRange]: patient.glycemiaIndicators.timeInRange,
-      [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators.glucoseManagementIndicator,
-      [PatientListColumns.Hypoglycemia]: patient.glycemiaIndicators.hypoglycemia,
-      [PatientListColumns.Variance]: patient.glycemiaIndicators.coefficientOfVariation,
-      [PatientListColumns.Actions]: patient
-    }
-  })
+  const allRows = useMemo(() => {
+    return patients.map((patient): GridRowModel => {
+      const { lastUpload } = getMedicalValues(patient.metadata.medicalData, noDataLabel)
+      const birthdate = patient.profile.birthdate
+      return {
+        id: patient.userid,
+        [PatientListColumns.Flag]: patient,
+        [PatientListColumns.Patient]: patient,
+        [PatientListColumns.DateOfBirth]: patient,
+        [PatientListColumns.Age]: PatientUtils.computeAge(birthdate),
+        [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
+        [PatientListColumns.MonitoringAlerts]: patient,
+        [PatientListColumns.System]: patient.settings.system ?? noDataLabel,
+        [PatientListColumns.LastDataUpdate]: lastUpload,
+        [PatientListColumns.Messages]: patient.metadata.hasSentUnreadMessages,
+        [PatientListColumns.TimeInRange]: patient.glycemiaIndicators.timeInRange,
+        [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators.glucoseManagementIndicator,
+        [PatientListColumns.Hypoglycemia]: patient.glycemiaIndicators.hypoglycemia,
+        [PatientListColumns.Variance]: patient.glycemiaIndicators.coefficientOfVariation,
+        [PatientListColumns.Actions]: patient
+      }
+    })
+  }, [noDataLabel, patients])
 
   const allColumns = useMemo((): GridColDef[] => {
     return [

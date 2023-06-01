@@ -31,11 +31,11 @@ import { usePatientContext } from '../../../../lib/patient/patient.provider'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { useCurrentPatientListHook } from '../current-patient-list.hook'
 
-interface CurrentPatientListHookProps {
+interface CurrentMedicalTeamPatientListHookProps {
   patients: Patient[]
 }
 
-interface PatientListHookReturns {
+interface CurrentMedicalTeamPatientListHookReturns {
   columns: GridColDef[]
   patientToRemove: Patient | null
   rowsProps: GridRowsProp
@@ -43,7 +43,7 @@ interface PatientListHookReturns {
   onRowClick: (params: GridRowParams) => void
 }
 
-export const useCurrentMedicalTeamPatientListHook = (props: CurrentPatientListHookProps): PatientListHookReturns => {
+export const useCurrentMedicalTeamPatientListHook = (props: CurrentMedicalTeamPatientListHookProps): CurrentMedicalTeamPatientListHookReturns => {
   const { patients } = props
   const { getPatientById } = usePatientContext()
 
@@ -60,14 +60,10 @@ export const useCurrentMedicalTeamPatientListHook = (props: CurrentPatientListHo
     setPatientToRemove(null)
   }
 
-  const columns: GridColDef[] = allColumns
-
-  const rowsProps = allRows
-
   return {
-    columns,
+    columns: allColumns,
     patientToRemove,
-    rowsProps,
+    rowsProps: allRows,
     onCloseRemoveDialog,
     onRowClick
   }
