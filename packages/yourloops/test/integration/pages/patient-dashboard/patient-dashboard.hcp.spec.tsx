@@ -30,7 +30,6 @@ import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
 import {
   completeDailyViewData,
-  completeDashboardData,
   mockDataAPI,
   twoWeeksOldDashboardData
 } from '../../mock/data.api.mock'
@@ -53,7 +52,7 @@ import {
   testDashboardDataVisualisationForHcp,
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationWithTwoWeeksOldData,
-  testEmptyMedicalFilesWidgetForHcp,
+  testEmptyMedicalFilesWidgetForHcp
   // testPatientNavBarForHcp
 } from '../../use-cases/patient-data-visualisation'
 // import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'

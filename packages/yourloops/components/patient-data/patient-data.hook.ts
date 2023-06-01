@@ -145,7 +145,7 @@ export const usePatientData = (): usePatientDataResult => {
     return duration
   }
 
-  const [msRange, setMsRange] = useState<number>(currentChart === ChartTypes.Dashboard && checkDateRange(patient.metadata) ? FOURTEEN_DAYS_IN_MS : DEFAULT_MS_RANGE )
+  const [msRange, setMsRange] = useState<number>(currentChart === ChartTypes.Dashboard && checkDateRange(patient.metadata) ? FOURTEEN_DAYS_IN_MS : DEFAULT_MS_RANGE)
   console.log(msRange)
   const changePatient = (patient: Patient): void => {
     patientDataUtils.current.changePatient(patient)
