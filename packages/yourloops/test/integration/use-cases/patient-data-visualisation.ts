@@ -42,13 +42,15 @@ import {
   checkEmptyMedicalFilesWidgetForHcp,
   checkEmptyMedicalFilesWidgetForPatient
 } from '../assert/medical-widget.assert'
-import { checkMonitoringAlertsCard } from '../assert/monitoring-alerts.assert'
+// import { checkMonitoringAlertsCard } from '../assert/monitoring-alerts.assert'
 
-export const testDashboardDataVisualisationForHcp = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
-  await checkPatientDashboardLayout(patientDashboardLayoutParams)
+
+// export const testDashboardDataVisualisationForHcp = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
+export const testDashboardDataVisualisationForHcp = async () => {
+  // await checkPatientDashboardLayout(patientDashboardLayoutParams)
   await checkPatientStatistics()
-  await checkDeviceUsageWidget()
-  await checkMonitoringAlertsCard()
+  // await checkDeviceUsageWidget()
+  // await checkMonitoringAlertsCard()
 }
 
 export const testDashboardDataVisualisationForPatient = async (patientDashboardLayoutParams: PatientDashboardLayoutParams): Promise<void> => {

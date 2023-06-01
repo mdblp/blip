@@ -103,12 +103,11 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           <Box
             display="flex"
             justifyContent="space-between"
-            alignItems="center"
+            alignItems="baseline"
           >
             <span className={styles.titleTotal}>
               {totalInsulin}
             </span>
-            &nbsp;
             <span className={styles.titleSuffix}>
               U
             </span>
@@ -121,7 +120,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                marginBottom="4px"
+                margin="0px 0px 4px 8px"
               >
                   <span>
                     {entry.title}
@@ -129,7 +128,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
                 <Box
                   display="flex"
                   justifyContent="space-between"
-                  alignItems="center"
+                  alignItems="baseline"
                 >
                   <Chip
                     label={`${entry.value > 0 ? entry.valueString : '0'} ${entry.units}`}
@@ -153,8 +152,8 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           <Box
             display="flex"
             justifyContent="space-between"
-            alignItems="center"
-            marginBottom="4px"
+            alignItems="baseline"
+            margin="0px 0px 4px 8px"
           >
               <span>
                 {t('weight')}
@@ -162,11 +161,10 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
             {!!weight && <>
               <Box
                 display="flex"
-                alignItems="center"
+                alignItems="baseline"
               >
                 <span className={outputValueClasses()}>
                   {weight}
-                  &nbsp;
                 </span>
                 <span className={styles.dailyDoseUnits}>
                   {t('kg')}
@@ -177,17 +175,17 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           <Box
             display="flex"
             justifyContent="space-between"
-            alignItems="center"
+            alignItems="baseline"
+            margin="0px 0px 4px 8px"
           >
             {t('ratio-dose')}
             <Box
               display="flex"
-              alignItems="center"
+              alignItems="baseline"
             >
               <span className={outputValueClasses()}>
                 {dailyDosePerWeight}
               </span>
-              &nbsp;
               <span className={styles.dailyDoseUnits}>
                 {t('U/kg')}
               </span>

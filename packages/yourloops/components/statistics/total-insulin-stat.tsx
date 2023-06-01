@@ -47,6 +47,7 @@ export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props
     dailyDose,
     weight
   } = props
+
   const weightValue = weight === null ? null : +weight.value
   const data = [
     {

@@ -38,6 +38,7 @@ import { type MutableRefObject, useEffect, useMemo, useRef, useState } from 'rea
 import { isValidDateQueryParam, PatientDataUtils } from './patient-data.utils'
 import DataUtil from 'tidepool-viz/src/utils/data'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
+import { type PatientMetadata } from '../../lib/patient/models/patient-metadata.model'
 
 export interface usePatientDataResult {
   bgPrefs: BgPrefs
@@ -75,13 +76,13 @@ export const usePatientData = (): usePatientDataResult => {
   const { pathname } = useLocation()
   const { getPatientById } = usePatientContext()
   const [searchParams, setSearchParams] = useSearchParams()
-
   const dailyChartRef = useRef(null)
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
   const urlPrefix = user.isUserPatient() ? '' : `/patient/${patientId}`
   const patient = getPatientById(patientId ?? user.id)
   const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const bgClasses = defaultBgClasses[bgUnits]
+  console.log('toto', patient)
   const bgPrefs: BgPrefs = {
     bgUnits,
     bgClasses,
@@ -137,8 +138,15 @@ export const usePatientData = (): usePatientDataResult => {
     }
   }, [pathname, urlPrefix])
 
-  const [msRange, setMsRange] = useState<number>(currentChart === ChartTypes.Dashboard ? FOURTEEN_DAYS_IN_MS : DEFAULT_MS_RANGE)
+  const checkDateRange = (patientMetadata: PatientMetadata): number => {
+    const startDate = new Date(patientMetadata.medicalData.range.startDate)
+    const endDate = new Date(patientMetadata.medicalData.range.endDate)
+    const duration = (endDate.getTime() - startDate.getTime()) % FOURTEEN_DAYS_IN_MS
+    return duration
+  }
 
+  const [msRange, setMsRange] = useState<number>(currentChart === ChartTypes.Dashboard && checkDateRange(patient.metadata) ? FOURTEEN_DAYS_IN_MS : DEFAULT_MS_RANGE )
+  console.log(msRange)
   const changePatient = (patient: Patient): void => {
     patientDataUtils.current.changePatient(patient)
     navigate(`/patient/${patient.userid}/${currentChart}`)
@@ -151,7 +159,10 @@ export const usePatientData = (): usePatientDataResult => {
     switch (chart) {
       case ChartTypes.Dashboard:
         setDashboardEpochDate(new Date().valueOf())
-        setMsRange(FOURTEEN_DAYS_IN_MS)
+        if (checkDateRange(patient.metadata)) {
+          setMsRange(FOURTEEN_DAYS_IN_MS)
+        }
+        setMsRange(DEFAULT_MS_RANGE)
         break
       case ChartTypes.Daily:
         if (dateQueryParam) {
