@@ -104,6 +104,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2387 Fix the tab title when displaying the patient list
 - YLP-2403 Remove caregiver and private team logic from CurrentPatientList
 - YLP-2404 Fix patient list columns width
+- YLP-2418 use new patient route from harbour
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
