@@ -27,7 +27,7 @@
 
 import { mapITeamMemberToPatient } from '../../../../../components/patient/utils'
 import { type Patient } from '../../../../../lib/patient/models/patient.model'
-import { UserInvitationStatus } from '../../../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../../../lib/team/models/enums/user-invite-status.enum'
 import { TeamMemberRole } from '../../../../../lib/team/models/enums/team-member-role.enum'
 import { type ITeamMember } from '../../../../../lib/team/models/i-team-member.model'
 import { type Profile } from '../../../../../lib/auth/models/profile.model'
@@ -45,7 +45,7 @@ describe('Patient utils', () => {
       }
       const teamMember: ITeamMember = {
         idVerified: false,
-        invitationStatus: UserInvitationStatus.pending,
+        invitationStatus: UserInviteStatus.Pending,
         role: TeamMemberRole.patient,
         teamId: 'fakeTeamId',
         userId: 'fakeTeamMember',

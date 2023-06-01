@@ -26,7 +26,7 @@
  */
 
 import { type Patient } from '../../../../lib/patient/models/patient.model'
-import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import {
   sortByDateOfBirth,
   sortByFlag,
@@ -75,7 +75,7 @@ describe('useSortComparatorsHook', () => {
         monitoringAlerts: undefined,
         settings: undefined,
         metadata: { flagged: false, hasSentUnreadMessages: undefined },
-        invitationStatus: UserInvitationStatus.accepted,
+        invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
 
@@ -85,7 +85,7 @@ describe('useSortComparatorsHook', () => {
         monitoringAlerts: undefined,
         settings: undefined,
         metadata: { flagged: true, hasSentUnreadMessages: undefined },
-        invitationStatus: UserInvitationStatus.accepted,
+        invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
 
@@ -95,7 +95,7 @@ describe('useSortComparatorsHook', () => {
         monitoringAlerts: undefined,
         settings: undefined,
         metadata: { flagged: true, hasSentUnreadMessages: undefined },
-        invitationStatus: UserInvitationStatus.accepted,
+        invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
 
@@ -114,7 +114,7 @@ describe('useSortComparatorsHook', () => {
         monitoringAlerts: undefined,
         settings: undefined,
         metadata: { hasSentUnreadMessages: undefined },
-        invitationStatus: UserInvitationStatus.accepted,
+        invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
 
@@ -124,7 +124,7 @@ describe('useSortComparatorsHook', () => {
         monitoringAlerts: undefined,
         settings: undefined,
         metadata: { hasSentUnreadMessages: undefined },
-        invitationStatus: UserInvitationStatus.accepted,
+        invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
 
@@ -134,7 +134,7 @@ describe('useSortComparatorsHook', () => {
         monitoringAlerts: undefined,
         settings: undefined,
         metadata: { hasSentUnreadMessages: undefined },
-        invitationStatus: UserInvitationStatus.accepted,
+        invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
 
@@ -160,7 +160,7 @@ describe('useSortComparatorsHook', () => {
         },
         settings: undefined,
         metadata: { hasSentUnreadMessages: undefined },
-        invitationStatus: UserInvitationStatus.accepted,
+        invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
 
@@ -177,7 +177,7 @@ describe('useSortComparatorsHook', () => {
         },
         settings: undefined,
         metadata: { hasSentUnreadMessages: undefined },
-        invitationStatus: UserInvitationStatus.accepted,
+        invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
 
@@ -194,7 +194,7 @@ describe('useSortComparatorsHook', () => {
         },
         settings: undefined,
         metadata: { hasSentUnreadMessages: undefined },
-        invitationStatus: UserInvitationStatus.accepted,
+        invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
 
@@ -211,7 +211,7 @@ describe('useSortComparatorsHook', () => {
         },
         settings: undefined,
         metadata: { hasSentUnreadMessages: undefined },
-        invitationStatus: UserInvitationStatus.accepted,
+        invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
 

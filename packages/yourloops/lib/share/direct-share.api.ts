@@ -30,7 +30,7 @@ import { getCurrentLang } from '../language'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import { type ShareUser } from './models/share-user.model'
 import { type DirectShareAPI } from './models/direct-share-api.model'
-import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../team/models/enums/user-invite-status.enum'
 import { UserRole } from '../auth/models/enums/user-role.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
 
@@ -69,7 +69,7 @@ export default class DirectShareApi {
       const directShareUser = directShare.patient ?? directShare.viewer
       if (directShareUser) {
         shareUsers.push({
-          status: UserInvitationStatus.accepted,
+          status: UserInviteStatus.Accepted,
           user: {
             userid: directShareUser.userId,
             preferences: directShareUser.preferences ?? undefined,
