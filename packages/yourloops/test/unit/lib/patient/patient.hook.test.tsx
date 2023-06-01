@@ -284,7 +284,7 @@ describe('Patient hook', () => {
         await customHook.removePatient(patientToRemovePrivatePractice)
       })
       expect(removeDirectShareMock).toHaveBeenCalled()
-      expect(PatientUtils.computePatients).toHaveBeenCalledTimes(3)
+      expect(PatientUtils.computePatients).toHaveBeenCalledTimes(2)
     })
 
     it.skip('should unflag a patient when he no longer belongs to a team', async () => {

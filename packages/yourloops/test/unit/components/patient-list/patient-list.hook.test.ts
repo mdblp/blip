@@ -28,7 +28,7 @@
 import * as authHookMock from '../../../../lib/auth'
 import * as patientProviderMock from '../../../../lib/patient/patient.provider'
 import * as patientListProviderMock from '../../../../lib/providers/patient-list.provider'
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import { usePatientListHook } from '../../../../components/patient-list/patient-list.hook'
 import { PatientListTabs } from '../../../../components/patient-list/models/enums/patient-list.enum'
 import type { Patient } from '../../../../lib/patient/models/patient.model'

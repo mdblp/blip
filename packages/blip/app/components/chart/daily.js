@@ -113,13 +113,17 @@ class DailyChart extends React.Component {
     }
     /** @type {React.RefObject} */
     this.refNode = React.createRef()
+    this.viewHasBeenInitialized = false // This boolean is only here because react-resize-detector has to be mocked in ITs... :(
   }
 
   componentDidUpdate() {
     // Prevent the scroll drag while loading
     const { loading } = this.props
     const { chart, needRecreate } = this.state
-    if (chart !== null) {
+    if(!this.viewHasBeenInitialized) {
+      this.handleWindowResize()
+    }
+    if(chart) {
       chart.loadingInProgress = loading
       if (needRecreate && !loading && !chart.isInTransition()) {
         this.setState({ needRecreate: false })
@@ -200,6 +204,7 @@ class DailyChart extends React.Component {
     const { chart } = this.state
     const needRecreate = loading || chart?.isInTransition() === true
     if (!needRecreate) {
+      this.viewHasBeenInitialized = true
       this.reCreateChart()
     } else {
       this.log.info('Delaying chart re-creation: loading or transition in progress')

@@ -53,9 +53,11 @@ import userEvent from '@testing-library/user-event'
 import { screen, waitFor, within } from '@testing-library/react'
 import { patient2AsTeamMember } from '../../data/patient.api.data'
 import { buildHba1cData } from '../../data/data-api.data'
+import { mockWindowResizer } from '../../mock/window-resizer.mock'
 
 describe('Trends view for anyone', () => {
-  beforeAll(() => {
+  beforeEach(() => {
+    mockWindowResizer()
     mockPatientLogin(patient2AsTeamMember)
   })
 

@@ -49,10 +49,17 @@ import DataApi from '../../../../lib/data/data.api'
 import { User } from '../../../../lib/auth'
 import { when } from 'jest-when'
 import { patient2AsTeamMember } from '../../data/patient.api.data'
+import { mockWindowResizer } from '../../mock/window-resizer.mock'
 
 describe('Daily view for anyone', () => {
-  beforeAll(() => {
+  beforeEach(() => {
+    mockWindowResizer()
     mockPatientLogin(patient2AsTeamMember)
+  })
+
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
   })
 
   describe('with all kind of data', () => {

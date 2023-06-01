@@ -29,7 +29,7 @@ import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { addDirectShareMock, mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { act, screen, waitFor, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout.assert'
 import userEvent from '@testing-library/user-event'
@@ -155,9 +155,7 @@ describe('Patient caregivers page', () => {
     const removeCaregiverDialogConfirmButton = within(removeCaregiverDialog).getByText('Remove caregiver')
     expect(removeCaregiverDialogConfirmButton).toBeVisible()
 
-    await act(async () => {
-      await userEvent.click(removeCaregiverDialogConfirmButton)
-    })
+    await userEvent.click(removeCaregiverDialogConfirmButton)
 
     expect(caregiverRow).not.toBeVisible()
 
@@ -185,9 +183,7 @@ describe('Patient caregivers page', () => {
     await userEvent.type(addCaregiverDialogEmailInput2, otherPatientEmail)
 
     jest.spyOn(DirectShareApi, 'addDirectShare').mockRejectedValueOnce(new Error(PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE))
-    await act(async () => {
-      await userEvent.click(addCaregiverDialogConfirmButton2)
-    })
+    await userEvent.click(addCaregiverDialogConfirmButton2)
 
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You cannot share your data with this user as they are not a caregiver.')
   })

@@ -37,17 +37,24 @@ import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
+import { mockWindowResizer } from '../../mock/window-resizer.mock'
 
 describe('Daily view for caregiver', () => {
   const firstName = 'Caregiver firstName'
   const lastName = 'Caregiver lastName'
 
-  beforeAll(() => {
+  beforeEach(() => {
+    mockWindowResizer()
     mockAuth0Hook(UserRole.Caregiver)
     mockNotificationAPI()
     mockDirectShareApi()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForCaregivers()
+  })
+
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
   })
 
   it('should render correct layout', async () => {
