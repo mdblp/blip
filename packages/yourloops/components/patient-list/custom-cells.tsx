@@ -142,9 +142,9 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
       timeSpentAwayFromTargetRate: roundUpToOneDecimal(monitoringAlerts.timeSpentAwayFromTargetRate),
       frequencyOfSevereHypoglycemiaRate: roundUpToOneDecimal(monitoringAlerts.frequencyOfSevereHypoglycemiaRate),
       nonDataTransmissionRate: roundUpToOneDecimal(monitoringAlerts.nonDataTransmissionRate),
-      min: roundUpToOneDecimal(convertBG(monitoringAlertsParameters.lowBg, monitoringAlertsParameters.bgUnit)),
-      max: roundUpToOneDecimal(convertBG(monitoringAlertsParameters.highBg, monitoringAlertsParameters.bgUnit)),
-      veryLowBg: roundUpToOneDecimal(convertBG(monitoringAlertsParameters.veryLowBg, monitoringAlertsParameters.bgUnit))
+      min: convertBG(monitoringAlertsParameters.lowBg, monitoringAlertsParameters.bgUnit),
+      max: convertBG(monitoringAlertsParameters.highBg, monitoringAlertsParameters.bgUnit),
+      veryLowBg: convertBG(monitoringAlertsParameters.veryLowBg, monitoringAlertsParameters.bgUnit)
     }
   }
 
