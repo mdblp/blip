@@ -59,7 +59,7 @@ class DailyChart extends React.Component {
     bgClasses: PropTypes.object.isRequired,
     bgUnits: PropTypes.string.isRequired,
     epochLocation: PropTypes.number.isRequired,
-    msRange: PropTypes.number,
+    msRange: PropTypes.number.isRequired,
     patient: PropTypes.object,
     refToAttachResize: PropTypes.object.isRequired,
     tidelineData: PropTypes.object.isRequired,

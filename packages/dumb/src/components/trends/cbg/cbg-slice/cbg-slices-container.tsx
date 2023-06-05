@@ -29,7 +29,7 @@ import React, { type FunctionComponent, memo, useMemo } from 'react'
 
 import { type BgBounds } from 'medical-domain'
 import { type CbgSlicesContainerData } from '../../../../models/cbg-slices-container-data.model'
-import { CbgMedian } from '../cbg-median-animated/cbg-median'
+import { CbgMedian } from '../cbg-median/cbg-median'
 import { formatCbgs } from './cbg-slices-container.util'
 import { type ScaleFunction } from '../../../../models/scale-function.model'
 import { useTrendsContext } from '../../../../provider/trends.provider'
