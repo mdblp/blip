@@ -28,6 +28,7 @@
 import { type Team } from './team.model'
 import { type TeamMember } from './team-member.model'
 import { type TypeTeamMemberRole } from './enums/team-member-role.enum'
+import { type ITeam } from './i-team.model'
 
 export interface TeamContext {
   teams: Array<Readonly<Team>>
@@ -50,10 +51,6 @@ export interface TeamContext {
    */
   getPrivateTeam: () => Readonly<Team>
   /**
-   * Return the remote monitoring teams only
-   */
-  getRemoteMonitoringTeams: () => Array<Readonly<Team>>
-  /**
    * Return the team for a teamId or null of not found
    * @param teamId The technical team id
    */
@@ -71,19 +68,13 @@ export interface TeamContext {
    * Create a new team
    * @param team The team to create
    */
-  createTeam: (team: Partial<Team>) => Promise<void>
+  createTeam: (team: Partial<Team>) => Promise<ITeam>
 
   /**
    * Change some team infos (name, address...)
    * @param team The updated team
    */
-  editTeam: (team: Team) => Promise<void>
-
-  /**
-   * Update team alarm configuration
-   * @param team The updated team
-   */
-  updateTeamAlerts: (team: Team) => Promise<void>
+  updateTeam: (team: Team) => Promise<void>
 
   /**
    * Leave a team

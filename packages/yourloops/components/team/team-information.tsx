@@ -41,7 +41,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined'
 import EditIcon from '@mui/icons-material/Edit'
 
 import { type Team, useTeam } from '../../lib/team'
-import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
+import TeamInformationEditDialog from '../../pages/hcp/team-information-edit-dialog'
 import { type TeamEditModalContentProps } from '../../pages/hcp/types'
 import { commonComponentStyles } from '../common'
 import { useAlert } from '../utils/snackbar'
@@ -80,11 +80,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export interface TeamInformationProps {
   team: Team
-  refreshParent: () => void
 }
 
 function TeamInformation(props: TeamInformationProps): JSX.Element {
-  const { team, refreshParent } = props
+  const { team } = props
   const teamHook = useTeam()
   const alert = useAlert()
   const { classes } = useStyles()
@@ -100,13 +99,13 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
   const onSaveTeam = async (editedTeam: Partial<Team> | null): Promise<void> => {
     if (editedTeam) {
       try {
-        await teamHook.editTeam(editedTeam as Team)
+        await teamHook.updateTeam(editedTeam as Team)
         alert.success(t('team-page-success-edit'))
-        refreshParent()
       } catch (reason: unknown) {
         alert.error(t('team-page-failed-edit'))
       }
     }
+
     setTeamToEdit(null)
   }
 
@@ -116,7 +115,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
 
   return (
     <React.Fragment>
-      <div className={commonTeamClasses.root}>
+      <div className={commonTeamClasses.root} data-testid="team-information">
         <div className={commonTeamClasses.categoryHeader}>
           <div>
             <InfoOutlinedIcon />
@@ -137,7 +136,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
               {t('button-edit-information')}
             </Button>
           }
-          {isUserPatient && !team.monitoring &&
+          {isUserPatient &&
             <div id="leave-team-button">
               <LeaveTeamButton team={team} />
             </div>
@@ -208,7 +207,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
         </div>
       </div>
       {teamToEdit &&
-        <TeamEditDialog teamToEdit={teamToEdit} />
+        <TeamInformationEditDialog teamToEdit={teamToEdit} />
       }
     </React.Fragment>
   )

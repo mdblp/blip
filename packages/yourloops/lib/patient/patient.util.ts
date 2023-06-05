@@ -29,63 +29,34 @@ import PatientApi from './patient.api'
 import { mapITeamMemberToPatient } from '../../components/patient/utils'
 import moment from 'moment-timezone'
 import { type Patient } from './models/patient.model'
-import { type PatientTeam } from './models/patient-team.model'
-import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
-import { PatientListFilters } from '../../components/patient-list/enums/patient-list.enum'
+import { UserInviteStatus } from '../team/models/enums/user-invite-status.enum'
 import { type User } from '../auth'
+import { type PatientsFilters } from '../providers/models/patients-filters.model'
+import i18next from 'i18next'
+import { Gender } from '../auth/models/enums/gender.enum'
+
+const t = i18next.t.bind(i18next)
+
+const NO_GENDER_LABEL = '-'
 
 export default class PatientUtils {
-  static removeDuplicates(patientsWithDuplicates: Patient[]): Patient[] {
-    const patientsWithoutDuplicates = []
-    patientsWithDuplicates.forEach(patient => {
-      if (!patientsWithoutDuplicates.find(mergedPatient => mergedPatient.userid === patient.userid)) {
-        const patientDuplicates = patientsWithDuplicates.filter(patientDuplicated => patientDuplicated.userid === patient.userid)
-        const patientWithMonitoring = patientDuplicates.find(p => !!p.monitoring)
-        patient.monitoring = patientWithMonitoring ? patientWithMonitoring.monitoring : undefined
-        const monitoring = patientWithMonitoring ? patientWithMonitoring.monitoring : undefined
-        const teams = []
-        patientDuplicates.forEach(p => {
-          if (p.teams.length > 0) {
-            teams.push(p.teams[0])
-          }
-        })
-        const patientToAdd: Patient = {
-          alarms: patient.alarms,
-          profile: patient.profile,
-          settings: patient.settings,
-          metadata: patient.metadata,
-          monitoring,
-          teams,
-          userid: patient.userid
-        }
-        patientsWithoutDuplicates.push(patientToAdd)
-      }
-    })
-    return patientsWithoutDuplicates
-  }
-
   static async retrievePatients(): Promise<Patient[]> {
     const patientsAsITeamMembers = await PatientApi.getPatients()
     return patientsAsITeamMembers.map(patientAsITeamMember => mapITeamMemberToPatient(patientAsITeamMember))
   }
 
-  static async computePatients(user: User): Promise<Patient[]> {
+  static async computePatients(user: User, teamId?: string): Promise<Patient[]> {
     const userIsHcp = user.isUserHcp()
     if (!userIsHcp && !user.isUserPatient() && !user.isUserCaregiver()) {
       throw Error(`Cannot retrieve patients with user having role ${user.role}`)
     }
     if (userIsHcp) {
-      return await PatientApi.getPatientsForHcp(user.id)
+      if (!teamId) {
+        throw Error('Cannot retrieve scoped patients when no team id is given')
+      }
+      return await PatientApi.getPatientsForHcp(user.id, teamId)
     }
-    return PatientUtils.removeDuplicates(await PatientUtils.retrievePatients())
-  }
-
-  static getRemoteMonitoringTeam(patient: Patient): PatientTeam {
-    const remoteMonitoredTeam = patient.teams.find(team => team.monitoringStatus !== undefined)
-    if (!remoteMonitoredTeam) {
-      throw Error(`Could not find a monitored team for patient ${patient.userid}`)
-    }
-    return remoteMonitoredTeam
+    return await PatientUtils.retrievePatients()
   }
 
   static computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {
@@ -94,46 +65,53 @@ export default class PatientUtils {
     })
   }
 
-  static getNonPendingPatients = (patients: Patient[], selectedTeamId: string): Patient[] => {
-    return patients.filter(patient => patient.teams.some(team => team.teamId === selectedTeamId && team.status !== UserInvitationStatus.pending))
+  static isInvitationPending = (patient: Patient): boolean => {
+    return patient.invitationStatus === UserInviteStatus.Pending
   }
 
-  static getPendingPatients = (patients: Patient[], selectedTeamId: string): Patient[] => {
-    return patients.filter(patient => patient.teams.some(team => team.teamId === selectedTeamId && team.status === UserInvitationStatus.pending))
+  static getNonPendingPatients = (patients: Patient[]): Patient[] => {
+    return patients.filter(patient => !PatientUtils.isInvitationPending(patient))
   }
 
-  static isInTeam = (patient: Patient, teamId: string): boolean => {
-    const tm = patient.teams.find((team: PatientTeam) => team.teamId === teamId)
-    return !!tm
+  static getPendingPatients = (patients: Patient[]): Patient[] => {
+    return patients.filter(patient => patient.invitationStatus === UserInviteStatus.Pending)
   }
 
-  static extractPatients = (patients: Patient[], filterType: PatientListFilters, flaggedPatients: string[], selectedTeamId?: string): Patient[] => {
-    const twoWeeksFromNow = new Date()
-    switch (filterType) {
-      case PatientListFilters.All:
-        return selectedTeamId ? PatientUtils.getNonPendingPatients(patients, selectedTeamId) : patients
-      case PatientListFilters.Pending:
-        return PatientUtils.getPendingPatients(patients, selectedTeamId)
-      case PatientListFilters.Flagged:
-        return patients.filter(patient => flaggedPatients.includes(patient.userid))
-      case PatientListFilters.UnreadMessages:
-        return patients.filter(patient => patient.metadata.hasSentUnreadMessages)
-      case PatientListFilters.OutOfRange:
-        return patients.filter(patient => patient.alarms.timeSpentAwayFromTargetActive)
-      case PatientListFilters.SevereHypoglycemia:
-        return patients.filter(patient => patient.alarms.frequencyOfSevereHypoglycemiaActive)
-      case PatientListFilters.DataNotTransferred:
-        return patients.filter(patient => patient.alarms.nonDataTransmissionActive)
-      case PatientListFilters.RemoteMonitored:
-        return patients.filter(patient => patient.monitoring?.enabled)
-      case PatientListFilters.Private:
-        return patients.filter(patient => PatientUtils.isInTeam(patient, filterType))
-      case PatientListFilters.Renew:
-        twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14)
-        return patients.filter(patient => patient.monitoring?.enabled && patient.monitoring.monitoringEnd && new Date(patient.monitoring.monitoringEnd).getTime() - twoWeeksFromNow.getTime() < 0)
-      default:
-        return patients
+  static filterPatientsOnMonitoringAlerts = (patients: Patient[], patientFilters: PatientsFilters): Patient[] => {
+    if (!patientFilters.timeOutOfTargetEnabled && !patientFilters.hypoglycemiaEnabled && !patientFilters.dataNotTransferredEnabled) {
+      return patients
     }
+    if (patientFilters.timeOutOfTargetEnabled && patientFilters.hypoglycemiaEnabled && patientFilters.dataNotTransferredEnabled) {
+      return patients.filter(patient => patient.monitoringAlerts?.timeSpentAwayFromTargetActive || patient.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive || patient.monitoringAlerts?.nonDataTransmissionActive)
+    }
+    if (patientFilters.timeOutOfTargetEnabled && patientFilters.hypoglycemiaEnabled) {
+      return patients.filter(patient => patient.monitoringAlerts?.timeSpentAwayFromTargetActive || patient.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive)
+    }
+    if (patientFilters.hypoglycemiaEnabled && patientFilters.dataNotTransferredEnabled) {
+      return patients.filter(patient => patient.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive || patient.monitoringAlerts?.nonDataTransmissionActive)
+    }
+    if (patientFilters.timeOutOfTargetEnabled && patientFilters.dataNotTransferredEnabled) {
+      return patients.filter(patient => patient.monitoringAlerts?.timeSpentAwayFromTargetActive || patient.monitoringAlerts?.nonDataTransmissionActive)
+    }
+    if (patientFilters.timeOutOfTargetEnabled) {
+      return patients.filter(patient => patient.monitoringAlerts?.timeSpentAwayFromTargetActive)
+    }
+    if (patientFilters.hypoglycemiaEnabled) {
+      return patients.filter(patient => patient.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive)
+    }
+    return patients.filter(patient => patient.monitoringAlerts?.nonDataTransmissionActive)
+  }
+
+  static extractPatients = (patients: Patient[], patientFilters: PatientsFilters, flaggedPatientsId: string[] | undefined): Patient[] => {
+    // When the filter is pending, we only get the pending patients and don't apply any filter on them
+    if (patientFilters.pendingEnabled) {
+      return patients.filter((patient) => PatientUtils.isInvitationPending(patient))
+    }
+    // We do not take the pending patients
+    const nonPendingPatients = PatientUtils.getNonPendingPatients(patients)
+    return PatientUtils.filterPatientsOnMonitoringAlerts(nonPendingPatients, patientFilters)
+      .filter(patient => patientFilters.manualFlagEnabled ? flaggedPatientsId?.includes(patient.userid) : patient)
+      .filter(patient => patientFilters.messagesEnabled ? patient.metadata.hasSentUnreadMessages : patient)
   }
 
   static extractPatientsWithBirthdate = (patients: Patient[], birthdate: string, firstNameOrLastName: string): Patient[] => {
@@ -145,5 +123,27 @@ export default class PatientUtils {
       return dateString === birthdate &&
         (firstNameOrLastName.length === 0 || firstName.toLocaleLowerCase().startsWith(firstNameOrLastName) || lastName.toLocaleLowerCase().startsWith(firstNameOrLastName))
     })
+  }
+
+  static computeAge = (birthdate: string): number => {
+    return moment().diff(birthdate, 'years')
+  }
+
+  static getGenderLabel = (gender: Gender): string => {
+    switch (gender) {
+      case Gender.Indeterminate:
+        return t('gender-i')
+      case Gender.Female:
+        return t('gender-f')
+      case Gender.Male:
+        return t('gender-m')
+      case Gender.NotDefined:
+      default:
+        return NO_GENDER_LABEL
+    }
+  }
+
+  static formatPercentageValue(value: number): string {
+    return value || value === 0 ? `${Math.round(value * 10) / 10}%` : t('N/A')
   }
 }

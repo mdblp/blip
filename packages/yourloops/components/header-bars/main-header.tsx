@@ -28,8 +28,6 @@
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-
-import MenuIcon from '@mui/icons-material/Menu'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 
 import { type Theme } from '@mui/material/styles'
@@ -52,21 +50,12 @@ import { HcpNavigationTab } from '../../models/enums/hcp-navigation-tab.model'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../lib/team/team.hook'
 
-interface MainHeaderProps {
-  withShrinkIcon?: boolean
-  onClickShrinkIcon?: () => void
-}
-
 const classes = makeStyles()((theme: Theme) => ({
   appBar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
     zIndex: theme.zIndex.drawer + 1,
     backgroundColor: theme.palette.common.white,
     color: 'var(--text-color-primary)'
-  },
-  leftIcon: {
-    cursor: 'pointer',
-    marginRight: theme.spacing(3)
   },
   desktopLogo: {
     width: 140
@@ -91,8 +80,8 @@ const classes = makeStyles()((theme: Theme) => ({
 const StyledTabs = styled(Tabs)(({ theme }) => ({ ...theme.mixins.toolbar }))
 const StyledTab = styled(Tab)(({ theme }) => ({ ...theme.mixins.toolbar }))
 
-function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX.Element {
-  const { classes: { desktopLogo, separator, appBar, leftIcon, tab, toolbar } } = classes()
+function MainHeader(): JSX.Element {
+  const { classes: { desktopLogo, separator, appBar, tab, toolbar } } = classes()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
   const { user } = useAuth()
@@ -107,13 +96,13 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
   }
 
   const handleTabClick = (tab: HcpNavigationTab): void => {
-    const route = tab === HcpNavigationTab.CareTeam ? AppUserRoute.Team : AppUserRoute.Home
+    const route = tab === HcpNavigationTab.CareTeam ? AppUserRoute.CareTeamSettings : AppUserRoute.Home
     navigate(route)
   }
 
   const getTabByPathname = (pathname): HcpNavigationTab | boolean => {
     switch (pathname) {
-      case AppUserRoute.Team:
+      case AppUserRoute.CareTeamSettings:
         return HcpNavigationTab.CareTeam
       case AppUserRoute.Preferences:
       case AppUserRoute.Notifications:
@@ -144,11 +133,6 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
           alignItems="center"
         >
           <Box display="flex" alignItems="center">
-            {
-              withShrinkIcon &&
-              <MenuIcon id="left-menu-icon" aria-label={t('left-drawer-toggle')} className={leftIcon}
-                        onClick={onClickShrinkIcon} />
-            }
             <Link to="/">
               <Avatar
                 id="header-main-logo"
@@ -174,9 +158,9 @@ function MainHeader({ withShrinkIcon, onClickShrinkIcon }: MainHeaderProps): JSX
               />
               {selectedTeam.id !== PRIVATE_TEAM_ID &&
                 <StyledTab
-                  data-testid="main-header-hcp-care-team-tab"
+                  data-testid="main-header-hcp-care-team-settings-tab"
                   className={tab}
-                  label={t('header-tab-care-team')}
+                  label={t('header-tab-care-team-settings')}
                   value={HcpNavigationTab.CareTeam}
                   onClick={() => {
                     handleTabClick(HcpNavigationTab.CareTeam)

@@ -25,19 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Monitoring } from '../../team/models/monitoring.model'
 import { type PatientProfile } from './patient-profile.model'
 import { type PatientSettings } from './patient-settings.model'
 import { type PatientMetadata } from './patient-metadata.model'
-import { type PatientTeam } from './patient-team.model'
-import { type Alarms } from './alarms.model'
+import { type MonitoringAlerts } from './monitoring-alerts.model'
+import { type UserInviteStatus } from '../../team/models/enums/user-invite-status.enum'
+import { type MonitoringAlertsParameters } from '../../team/models/monitoring-alerts-parameters.model'
+import { type PatientInvite } from './patient-invite.model'
+import { type GlycemiaIndicators } from './glycemia-indicators.model'
 
 export interface Patient {
-  alarms: Alarms
+  monitoringAlerts: MonitoringAlerts
+  glycemiaIndicators: GlycemiaIndicators
   profile: PatientProfile
   settings: PatientSettings
   metadata: PatientMetadata
-  monitoring?: Monitoring
-  teams: PatientTeam[]
+  monitoringAlertsParameters?: MonitoringAlertsParameters
+  invitationStatus: UserInviteStatus
+  invite?: PatientInvite
   readonly userid: string
 }

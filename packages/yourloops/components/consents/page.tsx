@@ -109,9 +109,11 @@ function Page(props: ConsentProps): JSX.Element {
     const showFeedback = user.isUserHcp() && !user.profile?.contactConsent
 
     const onDecline = (): void => {
-      auth.logout().catch((reason) => {
+      try {
+        auth.logout()
+      } catch (reason) {
         console.error('logout', reason)
-      })
+      }
     }
 
     const onConfirm = (): void => {

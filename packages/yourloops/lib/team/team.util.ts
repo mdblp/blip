@@ -27,7 +27,7 @@
 
 import { type Team, TEAM_CODE_LENGTH } from './models/team.model'
 import { TeamMemberRole } from './models/enums/team-member-role.enum'
-import { UserInvitationStatus } from './models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from './models/enums/user-invite-status.enum'
 import { PRIVATE_TEAM_ID } from './team.hook'
 
 /**
@@ -50,7 +50,7 @@ export function getDisplayTeamCode(code: string): string {
 
 export default class TeamUtils {
   static isUserTheOnlyAdministrator = (team: Team, userId: string): boolean => {
-    const admins = team.members ? team.members.filter((member) => member.role === TeamMemberRole.admin && member.status === UserInvitationStatus.accepted) : []
+    const admins = team.members ? team.members.filter((member) => member.role === TeamMemberRole.admin && member.status === UserInviteStatus.Accepted) : []
     return admins.length === 1 && admins[0].userId === userId
   }
 
@@ -75,5 +75,9 @@ export default class TeamUtils {
 
   static isPrivate(team: Team): boolean {
     return team.id === PRIVATE_TEAM_ID
+  }
+
+  static formatTeamNameForTestId(teamName: string): string {
+    return teamName.replaceAll(' ', '-')
   }
 }

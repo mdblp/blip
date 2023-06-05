@@ -26,11 +26,12 @@
  */
 
 import moment from 'moment-timezone' // TODO: Change moment-timezone lib with something else
-import { type Alarms } from '../../lib/patient/models/alarms.model'
+import { type MonitoringAlerts } from '../../lib/patient/models/monitoring-alerts.model'
 import { type MedicalData } from '../../lib/data/models/medical-data.model'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { type MedicalTableValues } from './models/medical-table-values.model'
 import { type ITeamMember } from '../../lib/team/models/i-team-member.model'
+import { Gender } from '../../lib/auth/models/enums/gender.enum'
 
 export const getMedicalValues = (medicalData: MedicalData | null | undefined, na = 'N/A'): MedicalTableValues => {
   let tir = '-'
@@ -50,7 +51,7 @@ export const getMedicalValues = (medicalData: MedicalData | null | undefined, na
       const mLastUpload = moment.tz(medicalData.range.endDate, browserTimezone)
       if (mLastUpload.isValid()) {
         lastUploadEpoch = mLastUpload.valueOf()
-        lastUpload = mLastUpload.format('llll')
+        lastUpload = mLastUpload.format('lll')
       }
     }
     if (medicalData.computedTir?.count) {
@@ -79,15 +80,15 @@ export const getMedicalValues = (medicalData: MedicalData | null | undefined, na
 export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
   const birthdate = iTeamMember.profile?.patient?.birthday
   return {
-    alarms: iTeamMember.alarms ?? {} as Alarms,
+    monitoringAlerts: iTeamMember.alarms ?? {} as MonitoringAlerts,
+    glycemiaIndicators: iTeamMember.glycemiaIndicators,
     profile: {
-      birthdate: birthdate ? new Date(birthdate) : undefined,
-      sex: iTeamMember.profile?.patient?.sex ? iTeamMember.profile?.patient?.sex : '',
+      birthdate,
+      sex: iTeamMember.profile?.patient?.sex ? iTeamMember.profile?.patient?.sex : Gender.NotDefined,
       firstName: iTeamMember.profile?.firstName,
       fullName: iTeamMember.profile?.fullName ?? iTeamMember.email,
       lastName: iTeamMember.profile?.lastName,
-      email: iTeamMember.email,
-      referringDoctor: iTeamMember.profile?.patient?.referringDoctor
+      email: iTeamMember.email
     },
     settings: {
       a1c: iTeamMember.settings?.a1c,
@@ -98,16 +99,7 @@ export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
       medicalData: null,
       hasSentUnreadMessages: iTeamMember.unreadMessages > 0
     },
-    monitoring: iTeamMember.monitoring,
-    teams: iTeamMember.teamId === ''
-      ? []
-      : [
-          {
-            teamId: iTeamMember.teamId,
-            status: iTeamMember.invitationStatus,
-            monitoringStatus: iTeamMember.monitoring?.status
-          }
-        ],
+    invitationStatus: iTeamMember.invitationStatus,
     userid: iTeamMember.userId
   }
 }

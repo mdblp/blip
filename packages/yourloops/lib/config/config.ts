@@ -43,6 +43,7 @@ if (typeof window !== 'undefined') {
     LATEST_TRAINING: '1970-01-01',
     LATEST_RELEASE: '2022-03-03',
     SUPPORT_WEB_ADDRESS: DUMMY_URL,
+    CONTACT_SUPPORT_WEB_URL: DUMMY_URL,
     ASSETS_URL: DUMMY_URL,
     BRANDING: 'diabeloop_blue',
     METRICS_SERVICE: 'disabled',

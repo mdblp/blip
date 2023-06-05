@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Alarms } from '../../patient/models/alarms.model'
-import { type Monitoring } from './monitoring.model'
+import { type MonitoringAlerts } from '../../patient/models/monitoring-alerts.model'
 import { type TeamMemberRole } from './enums/team-member-role.enum'
-import { type UserInvitationStatus } from './enums/user-invitation-status.enum'
+import { type UserInviteStatus } from './enums/user-invite-status.enum'
 import { type Profile } from '../../auth/models/profile.model'
 import { type Settings } from '../../auth/models/settings.model'
 import { type Preferences } from '../../auth/models/preferences.model'
+import { type GlycemiaIndicators } from '../../patient/models/glycemia-indicators.model'
 
 /**
  * Team member (API view)
@@ -41,12 +41,12 @@ export interface ITeamMember {
   teamId: 'private' | string
   email: string
   role: TeamMemberRole
-  invitationStatus: UserInvitationStatus
+  invitationStatus: UserInviteStatus
   profile?: Profile | null
   settings?: Settings | null
   preferences?: Preferences | null
   idVerified: boolean
-  alarms?: Alarms
-  monitoring?: Monitoring
+  alarms?: MonitoringAlerts
   unreadMessages?: number
+  glycemiaIndicators: GlycemiaIndicators
 }

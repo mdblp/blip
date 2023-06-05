@@ -39,7 +39,7 @@ import { useTheme } from '@mui/material/styles'
 
 interface CBGPercentageBarChartProps {
   bgBounds: BgBounds
-  bgSource: BgType
+  bgType: BgType
   bgPrefs: BgPrefs
   cbgStatType: CBGStatType
   data: CbgRangeStatistics
@@ -47,7 +47,7 @@ interface CBGPercentageBarChartProps {
 }
 
 const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (props) => {
-  const { bgBounds, bgPrefs, bgSource, cbgStatType, data, days } = props
+  const { bgBounds, bgPrefs, bgType, cbgStatType, data, days } = props
   const theme = useTheme()
   const {
     annotations,
@@ -57,7 +57,7 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
     titleProps
   } = useCBGPercentageBarChartHook({
     bgBounds,
-    bgSource,
+    bgType,
     data,
     days,
     type: cbgStatType,

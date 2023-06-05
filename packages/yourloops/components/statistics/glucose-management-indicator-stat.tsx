@@ -35,7 +35,7 @@ interface GlucoseManagementIndicatorProps {
 
 export const GlucoseManagementIndicator: FunctionComponent<GlucoseManagementIndicatorProps> = (props) => {
   const { glucoseManagementIndicator } = props
-  const annotations = glucoseManagementIndicator ? [t('glucose-management-indicator-tooltip')] : [t('glucose-management-indicator-tooltip'), t('glucose-management-indicator-empty-stat')]
+  const annotations = glucoseManagementIndicator ? [t('glucose-management-indicator-tooltip')] : [t('glucose-management-indicator-tooltip'), t('tooltip-empty-stat')]
 
   return (
     <Box data-testid="glucose-management-indicator-stat">

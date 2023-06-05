@@ -30,42 +30,68 @@ import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
 import { Unit } from 'medical-domain'
+import { useLocation } from 'react-router-dom'
 
 export interface TotalInsulinStatProps {
-  annotations: []
-  foodCarbs: number
-  title: string
-  totalCarbs: number
+  foodCarbsPerDay: number
+  totalCarbsPerDay: number
+  totalEntriesCarbWithRescueCarbs: number
 }
 
 const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
-  const { annotations, title, totalCarbs, foodCarbs } = props
+  const { totalCarbsPerDay, foodCarbsPerDay, totalEntriesCarbWithRescueCarbs } = props
   const { t } = useTranslation('main')
+  const location = useLocation()
+  const isDaily = location.pathname.includes('daily')
+  const isDerivedCarbs = foodCarbsPerDay && totalCarbsPerDay ? t('tooltip-total-derived-carbs', { total: totalEntriesCarbWithRescueCarbs }) : t('tooltip-empty-stat')
 
   return (
     <div data-testid="total-carbs-stat">
-      <Box className={`${styles.title} ${styles.row}`}>
-        {title}
-        <StatTooltip annotations={annotations} />
-        <div className={styles.total}>
-          <span className={styles.value}>
-            {totalCarbs}
-          </span>
-          <span className={styles.suffix}>
-            {Unit.Gram}
-          </span>
-        </div>
+      <Box className={styles.row}>
+        {t(isDaily ? 'total-carbs' : 'avg-daily-carbs')}
+        <StatTooltip
+          annotations={[t(isDaily ? 'tooltip-total-day-carbs' : 'tooltip-total-week-carbs'), isDerivedCarbs]}
+        />
+        {!totalCarbsPerDay
+          ? <>
+            <div className={styles['disabled-line']} />
+            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
+              --
+            </Box>
+          </>
+          : <>
+            <div className={styles.total}>
+                <span className={styles.value}>
+                  {totalCarbsPerDay}
+                </span>
+              <span className={styles.suffix}>
+                  {Unit.Gram}
+                </span>
+            </div>
+          </>
+        }
       </Box>
+
       <Box className={`${styles.rescueCarb} ${styles.row}`}>
         {t('Rescuecarbs')}
-        <div className={styles.total}>
-          <span className={styles.value}>
-            {foodCarbs}
-          </span>
-          <span className={styles.suffix}>
-            {Unit.Gram}
-          </span>
-        </div>
+        {!foodCarbsPerDay
+          ? <>
+            <div className={styles['disabled-line']} />
+            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
+              --
+            </Box>
+          </>
+          : <>
+            <div className={styles.total}>
+              <span className={styles.value}>
+                {foodCarbsPerDay}
+              </span>
+              <span className={styles.suffix}>
+                {Unit.Gram}
+              </span>
+            </div>
+          </>
+        }
       </Box>
     </div>
   )

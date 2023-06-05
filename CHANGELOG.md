@@ -5,15 +5,46 @@ It is based on Tidepool Blip 1.27.
 ## 3.0.4-beta - 2023-02-10
 ### Added
 - YLP-1503 Logout idle user after 30 mn of inactivity
+- YLP-1932 Communication module available for all patients
+- YLP-2125 Allow users to ask support to resend the verification email
 - YLP-2140 As a HCP, I can only edit my medical records
 - YLP-2146 Adding groups in patient list
+- YLP-2151 As a HCP I want to be able to filter my patients via the new design
+- YLP-2154 Displayed columns choice in the patient list
 - YLP-2160 Patient list new design
+- YLP-2172 Display patients count on patients list
+- YLP-2173 As a HCP, I want information when hovering the monitoring alerts icons
+- YLP-2174 Patient data should be computed based on the last 14 days
 - YLP-2175 Implement new design system
+- YLP-2182 Sort patients by number of monitoring alerts on patient list
+- YLP-2183 Merging monitoring alerts into 1 column in the patient list (step 1)
+- YLP-2184 Merging monitoring alerts into 1 column in the patient list (step 2)
+- YLP-2185 Merging monitoring alerts into 1 column in the patient list (step 3)
+- YLP-2188 Sort patients by column on patient list
 - YLP-2192 Team scope dropdown for HCP
 - YLP-2194 Navigation tabs for HCP ("Patients", "Care teams")
 - YLP-2215 Implement specific daily visualisation of UMM bolus
+- YLP-2216 Use selected team in Add patient dialog
+- YLP-2218 Use selected team in Remove patient dialog
 - YLP-2220 Remove "private practice" filter from patients list
 - YLP-2231 Implement new medical reports design for patients
+- YLP-2265 Disable Add patient button when private practice is selected
+- YLP-2285 Monitoring filter cannot be enabled when Private practice is selected
+- YLP-2312 Teams and patients in a team should always have a field "monitoringAlertsParameters"
+- YLP-2322 Pending patients should not display glycemia specific data
+- YLP-2323 Add new columns from existing data in patient list
+- YLP-2324 Hide certain columns when private practice is selected
+- YLP-2348 New columns from glycemia indicators in patients list
+- YLP-2350 Display a visual info when a patient has unread messages from another team in the chat widget
+- YLP-2358 As a care team member, I want a new design when listing my pending patients
+- YLP-2381 As a HCP, I want to manage patient invites made by other members of the teams
+- YLP-2388 Select the new care team after creating it
+- YLP-2390 Enlarge font of the buttons of the messaging system
+- YLP-2391 Rename "Care team" page to "Care team settings"
+- YLP-2392 Refine the Account preferences page
+- YLP-2393 Remove fields and "Show more/Show less" logic in the patient header
+- YLP-2394 Hide "Monitoring alerts" card for patients users
+- YLP-2399 Cancel invite dialog new design
 
 ### Engineering use
 - YLP-2044 Remove redux settings store
@@ -51,14 +82,31 @@ It is based on Tidepool Blip 1.27.
 - YLP-2217 Bump react-router-dom to 6.8.2
 - YLP-2219 Migrate SensorUsage from stats.js to yourloops
 - YLP-2234 Migrate glucoseManagementIndicator from stats.js to yourloops
+- YLP-2242 Fix the pop "current settings in case no data has been set"
+- YLP-2244 Migrate coefficientOfVariation from stats.js to yourloops
 - YLP-2245 Migrate SettingsPrintView to dumb
 - YLP-2252 Bump auth0-react from 1.9.0 to 2.0.1
 - YLP-2256 Bump minor deps
 - YLP-2258 Bump react-markdown
+- YLP-2286 Rename the "alarm" concept to "monitored alert"
+- YLP-2289 Migrate Standard Deviation from stat.js to yourloops
+- YLP-2291 Get the patients from the scope route when logged in as HCP
+- YLP-2293 Migrate Average Glucose from stat.js to yourloops
+- YLP-2300 Remove the remote monitoring invitation flow
+- YLP-2301 Split ITs jobs by roles
+- YLP-2307 Incomplete alert when accepting a direct share invitation
+- YLP-2311 Reorganize ITs
+- YLP-2328 Migrate patient-data from jsx to tsx
+- YLP-2364 Fixed English translations
+- YLP-2367 Patient list refacto
+- YLP-2386 Fix navigation crash between care team and patient list
+- YLP-2387 Fix the tab title when displaying the patient list
+- YLP-2404 Fix patient list columns width
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
 - YLP-2189 Fix error when applying team monitoring alarm params in mg/dL to user with monitoring in mmol/L
+- YLP-2341 Pdf export in CSV is broken when a user has preferred units in its profile
 
 ## 3.0.3 - 2023-02-09
 ### Fixed

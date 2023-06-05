@@ -28,14 +28,22 @@
 import { MS_IN_MIN, MS_IN_DAY, diffDays } from '../time/time.service'
 import type Cbg from '../../models/medical/datum/cbg.model'
 import type Smbg from '../../models/medical/datum/smbg.model'
-import type { BgBounds, AverageGlucoseStatistics, CbgRangeStatistics, CoefficientOfVariationStatistics, GlucoseManagementIndicatoStatistics, SensorUsageStatistics, StandardDevStatistics } from '../../models/statistics/glycemia-statistics.model'
+import type {
+  BgBounds,
+  AverageGlucoseStatistics,
+  CbgRangeStatistics,
+  CoefficientOfVariationStatistics,
+  GlucoseManagementIndicatoStatistics,
+  SensorUsageStatistics,
+  StandardDevStatistics
+} from '../../models/statistics/glycemia-statistics.model'
 import { ClassificationType } from '../../models/statistics/enum/bg-classification.enum'
 import CbgService, { convertBG } from '../medical/datum/cbg.service'
 import SmbgService from '../medical/datum/smbg.service'
 import type DateFilter from '../../models/time/date-filter.model'
-import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../models/time/date-filter.model'
 import type Bg from '../../models/medical/datum/bg.model'
 import { type BgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../models/medical/datum/bg.model'
+import { getWeekDaysFilter, sumValues } from './statistics.utils'
 
 export function classifyBgValue(bgBounds: BgBounds, bgValue: number, classificationType: ClassificationType): keyof CbgRangeStatistics {
   if (bgValue <= 0) {
@@ -66,16 +74,8 @@ const cgmSampleFrequency = (cgmDeviceName: string): number => (
   cgmDeviceName.indexOf('AbbottFreeStyleLibre') === 0 ? 15 * MS_IN_MIN : 5 * MS_IN_MIN
 )
 
-const getWeekDaysFilter = (dateFilter: DateFilter): WeekDaysFilter => (
-  dateFilter.weekDays ? dateFilter.weekDays : defaultWeekDaysFilter
-)
-
 const getCgmTotalDuration = (cbgData: Cbg[]): number => (
   cbgData.reduce((duration, cbg) => duration + cgmSampleFrequency(cbg.deviceName), 0)
-)
-
-const sumValues = (values: number[]): number => (
-  values.reduce((total, current) => total + current, 0)
 )
 
 const meanValues = (values: number[]): number => (
@@ -150,11 +150,11 @@ function getSensorUsage(cbgData: Cbg[], numDays: number, dateFilter: DateFilter)
   const filteredCbg = CbgService.filterOnDate(cbgData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const totalDuration = getCgmTotalDuration(filteredCbg)
 
-  const totalUsage = Math.round(numDays * MS_IN_DAY)
+  const total = Math.round(numDays * MS_IN_DAY)
 
   return {
     sensorUsage: totalDuration,
-    totalUsage
+    total
   }
 }
 

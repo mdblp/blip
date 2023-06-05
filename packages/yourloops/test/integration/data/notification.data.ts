@@ -49,3 +49,22 @@ export const invitationTeam: Notification = {
     }
   }
 }
+export const invitationDirectShare: Notification = {
+  id: 'invitationTeamId',
+  type: NotificationType.directInvitation,
+  metricsType: 'share_data',
+  email: 'ylp.ui.test-caregiver1@diabeloop.fr',
+  creatorId: 'patient1',
+  date: '',
+  creator: {
+    userid: 'patient1',
+    profile: {
+      fullName: 'Backloops test Patient1',
+      patient: {
+        birthday: '',
+        diagnosisDate: ''
+      },
+      email: ''
+    }
+  }
+}

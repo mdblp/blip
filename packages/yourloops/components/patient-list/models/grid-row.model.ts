@@ -25,19 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PatientListColumns } from '../enums/patient-list.enum'
+import { type PatientListColumns, type PendingPatientListColumns } from './enums/patient-list.enum'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { type Alarms } from '../../../lib/patient/models/alarms.model'
 
 export interface GridRowModel {
   id: string
-  [PatientListColumns.Flag]: Patient
+  [PatientListColumns.Flag]?: Patient
   [PatientListColumns.Patient]: Patient
-  [PatientListColumns.System]: string
-  [PatientListColumns.TimeOutOfRange]: Alarms
-  [PatientListColumns.SevereHypoglycemia]: Alarms
-  [PatientListColumns.DataNotTransferred]: Alarms
-  [PatientListColumns.LastDataUpdate]: string
-  [PatientListColumns.Messages]: boolean
+  [PatientListColumns.DateOfBirth]?: Patient
+  [PatientListColumns.Age]?: number
+  [PatientListColumns.Gender]?: string
+  [PatientListColumns.System]?: string
+  [PatientListColumns.MonitoringAlerts]?: Patient
+  [PatientListColumns.Messages]?: boolean
+  [PatientListColumns.TimeInRange]?: number
+  [PatientListColumns.GlucoseManagementIndicator]?: number
+  [PatientListColumns.Hypoglycemia]?: number
+  [PatientListColumns.Variance]?: number
+  [PatientListColumns.LastDataUpdate]?: string
   [PatientListColumns.Actions]: Patient
+}
+
+export interface PendingGridRowModel {
+  id: string
+  isInviteAvailable: boolean
+  [PendingPatientListColumns.Actions]: Patient
+  [PendingPatientListColumns.Date]: string
+  [PendingPatientListColumns.Email]: string
+  [PendingPatientListColumns.InviteSentBy]: string
 }

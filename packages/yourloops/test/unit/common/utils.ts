@@ -25,19 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Alarms } from '../../../lib/patient/models/alarms.model'
+import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-alerts.model'
 import { type Team, type TeamMember } from '../../../lib/team'
 import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
 import { type PatientMetadata } from '../../../lib/patient/models/patient-metadata.model'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { type Monitoring } from '../../../lib/team/models/monitoring.model'
-import { type PatientTeam } from '../../../lib/patient/models/patient-team.model'
-import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
-import { type MonitoringStatus } from '../../../lib/team/models/enums/monitoring-status.enum'
+import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { Unit } from 'medical-domain'
+import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
 
 export function triggerMouseEvent(event: string, domElement: Element): void {
   const clickEvent = new MouseEvent(event, { bubbles: true })
@@ -46,24 +44,24 @@ export function triggerMouseEvent(event: string, domElement: Element): void {
 
 export const createPatient = (
   id = 'fakePatientId',
-  teams: PatientTeam[] = [],
-  monitoring: Monitoring | undefined = undefined,
+  invitationStatus: UserInviteStatus = UserInviteStatus.Accepted,
+  monitoringAlertsParameters: MonitoringAlertsParameters | undefined = undefined,
   profile: Partial<PatientProfile> = undefined,
   settings: Partial<PatientSettings> = undefined,
   metadata: Partial<PatientMetadata> = undefined,
-  alarms: Partial<Alarms> = undefined
+  monitoringAlerts: Partial<MonitoringAlerts> = undefined
 ): Patient => {
   return {
-    alarms: {
-      timeSpentAwayFromTargetRate: alarms?.timeSpentAwayFromTargetRate || 10,
-      timeSpentAwayFromTargetActive: alarms?.timeSpentAwayFromTargetActive || false,
-      frequencyOfSevereHypoglycemiaRate: alarms?.frequencyOfSevereHypoglycemiaRate || 20,
-      frequencyOfSevereHypoglycemiaActive: alarms?.frequencyOfSevereHypoglycemiaActive || false,
-      nonDataTransmissionRate: alarms?.nonDataTransmissionRate || 30,
-      nonDataTransmissionActive: alarms?.nonDataTransmissionActive || false
+    monitoringAlerts: {
+      timeSpentAwayFromTargetRate: monitoringAlerts?.timeSpentAwayFromTargetRate || 10,
+      timeSpentAwayFromTargetActive: monitoringAlerts?.timeSpentAwayFromTargetActive || false,
+      frequencyOfSevereHypoglycemiaRate: monitoringAlerts?.frequencyOfSevereHypoglycemiaRate || 20,
+      frequencyOfSevereHypoglycemiaActive: monitoringAlerts?.frequencyOfSevereHypoglycemiaActive || false,
+      nonDataTransmissionRate: monitoringAlerts?.nonDataTransmissionRate || 30,
+      nonDataTransmissionActive: monitoringAlerts?.nonDataTransmissionActive || false
     },
     profile: {
-      birthdate: profile?.birthdate || new Date(),
+      birthdate: profile?.birthdate || new Date().toString(),
       firstName: profile?.firstName || 'fakeFirstname',
       fullName: profile?.fullName || 'fakePatientFullName',
       lastName: profile?.lastName || 'fakeLastname',
@@ -79,28 +77,10 @@ export const createPatient = (
       medicalData: metadata?.medicalData || null,
       hasSentUnreadMessages: metadata?.hasSentUnreadMessages || false
     },
-    monitoring,
-    teams,
+    monitoringAlertsParameters,
+    invitationStatus,
     userid: id
   }
-}
-
-export const createPatientTeam = (
-  id: string,
-  status: UserInvitationStatus,
-  monitoringStatus: MonitoringStatus | undefined = undefined
-): PatientTeam => {
-  return {
-    teamId: id,
-    status,
-    monitoringStatus
-  } as PatientTeam
-}
-export const createAlarm = (timeSpentAwayFromTargetRate: number, frequencyOfSevereHypoglycemiaRate: number): Alarms => {
-  return {
-    timeSpentAwayFromTargetRate,
-    frequencyOfSevereHypoglycemiaRate
-  } as Alarms
 }
 
 export function buildPrivateTeam(): Team {
@@ -113,7 +93,7 @@ export function buildPrivateTeam(): Team {
   }
 }
 
-export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 'fake team name', type = TeamType.medical, monitoringEnabled = true): Team {
+export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 'fake team name', type = TeamType.medical): Team {
   return {
     id,
     name,
@@ -121,18 +101,15 @@ export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 
     email: 'fale@email.com',
     type,
     members,
-    monitoring: {
-      enabled: monitoringEnabled,
-      parameters: {
-        bgUnit: Unit.MilligramPerDeciliter,
-        lowBg: 1,
-        highBg: 2,
-        outOfRangeThreshold: 10,
-        veryLowBg: 4,
-        hypoThreshold: 15,
-        nonDataTxThreshold: 20,
-        reportingPeriod: 7
-      }
+    monitoringAlertsParameters: {
+      bgUnit: Unit.MilligramPerDeciliter,
+      lowBg: 1,
+      highBg: 2,
+      outOfRangeThreshold: 10,
+      veryLowBg: 4,
+      hypoThreshold: 15,
+      nonDataTxThreshold: 20,
+      reportingPeriod: 7
     }
   }
 }
@@ -143,7 +120,7 @@ export function buildTeamMember(
   role: TeamMemberRole = TeamMemberRole.admin,
   email = 'fake@username.com',
   fullName = 'fake full name',
-  status = UserInvitationStatus.pending
+  status = UserInviteStatus.Pending
 ): TeamMember {
   return {
     userId,

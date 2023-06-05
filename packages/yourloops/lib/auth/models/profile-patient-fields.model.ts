@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,13 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { type Gender } from './enums/gender.enum'
+
 export interface ProfilePatientFields {
   birthday?: string
   birthPlace?: string
   diagnosisDate?: string
   diagnosisType?: string
-  ins?: string
-  sex?: string
-  ssn?: string
-  referringDoctor?: string
+  sex?: Gender
 }

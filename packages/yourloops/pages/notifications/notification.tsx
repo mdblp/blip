@@ -33,14 +33,13 @@ import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import GroupIcon from '@mui/icons-material/Group'
 import PersonIcon from '@mui/icons-material/Person'
-import MedicalServiceIcon from '../../components/icons/medical-service-icon'
+import MedicalServiceIcon from '../../components/icons/mui/medical-service-icon'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import { errorTextFromException, getUserFirstName, getUserLastName } from '../../lib/utils'
 import { useNotification } from '../../lib/notifications/notification.hook'
 import metrics from '../../lib/metrics'
 import { useAlert } from '../../components/utils/snackbar'
-import MonitoringConsentDialog from '../../components/dialogs/monitoring-consent-dialog'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useTeam } from '../../lib/team'
 import { type Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
@@ -114,7 +113,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
       notificationText = (
         <Trans
           t={t}
-          i18nKey="notification-caregiver-invitation-by-patient"
+          i18nKey="notification-caregiver-invite-by-patient"
           components={{ strong: <strong /> }}
           values={values} parent={React.Fragment}
         >
@@ -126,7 +125,7 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
       notificationText = (
         <Trans
           t={t}
-          i18nKey="notification-hcp-invitation-by-team"
+          i18nKey="notification-hcp-invite-by-team"
           components={{ strong: <strong /> }}
           values={values}
           parent={React.Fragment}
@@ -139,23 +138,11 @@ export const NotificationSpan = ({ notification, id }: NotificationSpanProps): J
       notificationText = (
         <Trans
           t={t}
-          i18nKey="notification-patient-invitation-by-team"
+          i18nKey="notification-patient-invite-by-team"
           components={{ strong: <strong /> }}
           values={values} parent={React.Fragment}
         >
           You&apos;re invited to share your diabetes data with <strong>{careTeam}</strong>.
-        </Trans>
-      )
-      break
-    case NotificationType.careTeamMonitoringInvitation:
-      notificationText = (
-        <Trans
-          t={t}
-          i18nKey="notification-patient-remote-monitoring"
-          components={{ strong: <strong /> }}
-          values={values} parent={React.Fragment}
-        >
-          {t('invite-join-monitoring-team')} <strong>{careTeam}</strong>.
         </Trans>
       )
       break
@@ -171,7 +158,7 @@ const NotificationIcon = ({ id, type, className }: NotificationIconPayload): JSX
       return (
         <PersonIcon
           id={`person-icon-${id}`}
-          titleAccess="direct-invitation-icon"
+          titleAccess="direct-invite-icon"
           className={className}
         />
       )
@@ -179,7 +166,7 @@ const NotificationIcon = ({ id, type, className }: NotificationIconPayload): JSX
       return (
         <MedicalServiceIcon
           id={`medical-service-icon-${id}`}
-          titleAccess="care-team-invitation-icon"
+          titleAccess="care-team-invite-icon"
           className={className}
         />
       )
@@ -231,9 +218,8 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const { id } = notification
   const [addTeamDialogVisible, setAddTeamDialogVisible] = useState(false)
   const isACareTeamPatientInvitation = notification.type === NotificationType.careTeamPatientInvitation
-  const isAMonitoringInvitation = notification.type === NotificationType.careTeamMonitoringInvitation
   const isADirectInvitation = notification.type === NotificationType.directInvitation
-  const [displayMonitoringTerms, setDisplayMonitoringTerms] = useState(false)
+  const inviterName = isADirectInvitation ? notification.creator.profile.fullName : notification.target.name
 
   if (isACareTeamPatientInvitation && !notification.target) {
     throw Error('Cannot accept team invite because notification is missing the team id info')
@@ -248,7 +234,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
       if (!isADirectInvitation) {
         teamHook.refresh()
       }
-      alert.success(t('accept-notification-success', { teamName: notification.target.name }))
+      alert.success(t('accept-notification-success', { name: inviterName }))
       refreshReceivedInvitations()
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
@@ -261,16 +247,9 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const onOpenInvitationDialog = async (): Promise<void> => {
     if (isACareTeamPatientInvitation) {
       setAddTeamDialogVisible(true)
-    } else if (isAMonitoringInvitation) {
-      setDisplayMonitoringTerms(true)
     } else {
       await acceptInvitation()
     }
-  }
-
-  const acceptTerms = async (): Promise<void> => {
-    setDisplayMonitoringTerms(false)
-    await acceptInvitation()
   }
 
   const onDecline = async (): Promise<void> => {
@@ -316,14 +295,6 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
       }
       <div className={classes.rightSide}>
         <NotificationDate createdDate={notification.date} id={id} />
-        {isAMonitoringInvitation && displayMonitoringTerms && notification.target &&
-          <MonitoringConsentDialog
-            onAccept={acceptTerms}
-            teamName={notification.target.name}
-            onCancel={() => {
-              setDisplayMonitoringTerms(false)
-            }}
-          />}
         <Button
           data-testid="notification-button-accept"
           color="primary"

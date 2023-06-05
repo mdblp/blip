@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,12 +33,12 @@ module.exports = {
 
   displayName: 'yourloops integration',
 
-  maxWorkers: '30%',
+  maxWorkers: 4,
 
   // The glob patterns Jest uses to detect test files
   testMatch: [
     '<rootDir>/**/*.spec.tsx'
   ],
 
-  testTimeout: 45000
+  testTimeout: 150000
 }

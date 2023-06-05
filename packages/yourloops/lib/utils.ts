@@ -157,10 +157,6 @@ export function formatDateWithMomentLongFormat(date?: Date): string {
   return moment.utc(date).format(moment.localeData().longDateFormat('ll')).toString()
 }
 
-export function formatAlarmSettingThreshold(value: number): string {
-  return `${Math.round(value * 10) / 10}%`
-}
-
 export function isEllipsisActive(element: HTMLElement | null): boolean | undefined {
   return element ? element.offsetWidth < element.scrollWidth : undefined
 }

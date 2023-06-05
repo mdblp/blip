@@ -55,12 +55,8 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
   const bgClassesBarStyle = computeBgClassesBarStyle(bgClasses)
 
   return (
-    <Box
-      data-testid="cbg-standard-deviation-stat"
-      marginLeft="4px"
-      marginRight="4px"
-    >
-      <Box display="flex" justifyContent="space-between" marginTop="4px">
+    <Box data-testid="cbg-standard-deviation-stat">
+      <Box display="flex" justifyContent="space-between" alignItems="center">
         <Box display="flex">
           {title}
           {!Number.isNaN(standardDeviation) &&
@@ -81,11 +77,11 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
           {units}
         </Box>
       </Box>
-      <Box display="flex" marginLeft="6px" marginTop="4px">
+      <Box display="flex" alignItems="center" marginLeft="6px">
         {Number.isNaN(standardDeviation) ? (
           <>
             <div className={stylesCbgCommon['disabled-line']} />
-            <Box className={stylesCbgCommon['disabled-label']} fontSize="24px" marginLeft="auto" marginRight="4px">
+            <Box className={stylesCbgCommon['disabled-label']} fontSize="24px" marginLeft="auto">
               --
             </Box>
           </>
@@ -112,7 +108,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
                 style={{ left: valueBasedStyles.max.left }}
               />
             </div>
-            <Box className={styles.value} fontSize="24px" marginLeft="auto" marginRight="4px">
+            <Box className={styles.value} fontSize="24px" marginLeft="auto">
               {standardDeviation}
             </Box>
           </>

@@ -26,17 +26,16 @@
  */
 
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
-import { monitoredPatientId } from './patient.api.mock'
-import { teamTwo } from './team.api.mock'
+import { patient1Id } from '../data/patient.api.data'
 
-export const mockMedicalFilesAPI = () => {
+export const mockMedicalFilesAPI = (teamId: string, teamName: string) => {
   jest.spyOn(MedicalFilesApi, 'getMedicalReports').mockResolvedValue([{
     id: 'medicalReportId',
     authorId: 'authorId',
     creationDate: '2022-01-10T08:34:06.898Z',
-    patientId: monitoredPatientId,
-    teamId: teamTwo.id,
-    teamName: teamTwo.name,
+    patientId: patient1Id,
+    teamId,
+    teamName,
     diagnosis: 'whatever diagnosis',
     progressionProposal: 'whatever proposal',
     trainingSubject: 'here is the subject',
@@ -48,9 +47,9 @@ export const mockMedicalFilesAPI = () => {
     id: 'medicalReportId2',
     authorId: 'authorId',
     creationDate: '2022-01-02T10:30:00.000Z',
-    patientId: monitoredPatientId,
-    teamId: teamTwo.id,
-    teamName: teamTwo.name,
+    patientId: patient1Id,
+    teamId,
+    teamName,
     diagnosis: 'whatever diagnosis 2 ',
     progressionProposal: 'whatever proposal 2',
     trainingSubject: 'here is the subject 2',
@@ -58,4 +57,8 @@ export const mockMedicalFilesAPI = () => {
     authorFirstName: 'Vishnou',
     authorLastName: 'Lapaix'
   }])
+}
+
+export const mockMedicalFilesApiEmptyResult = () => {
+  jest.spyOn(MedicalFilesApi, 'getMedicalReports').mockResolvedValue([])
 }

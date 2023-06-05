@@ -33,7 +33,6 @@ import { type Theme, useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import SendIcon from '@mui/icons-material/Send'
 import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined'
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined'
 import ChatMessage from './chat-message'
 import ChatApi from '../../lib/chat/chat.api'
 import { useAuth } from '../../lib/auth'
@@ -42,13 +41,19 @@ import { Button, Tab, Tabs, TextField } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useTeam } from '../../lib/team'
 import { usePatientContext } from '../../lib/patient/patient.provider'
-import PatientUtils from '../../lib/patient/patient.util'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
-import { useUserName } from '../../lib/custom-hooks/user-name.hook'
-import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
 import Box from '@mui/material/Box'
+import Select, { type SelectChangeEvent } from '@mui/material/Select'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import MenuItem from '@mui/material/MenuItem'
+import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
+import FormGroup from '@mui/material/FormGroup'
+import TeamUtils from '../../lib/team/team.util'
+import { getUserName } from '../../lib/auth/user.util'
+import { MessageIcon } from '../icons/diabeloop/message-icon'
+import Badge from '@mui/material/Badge'
+import { getUnreadMessagesByTeam } from './chat.util'
 
 const CHAT_CONTENT_HEIGHT = '280px'
 const KEYBOARD_EVENT_ESCAPE = 'Escape'
@@ -86,14 +91,19 @@ const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) 
       minHeight: '0px',
       padding: '0px',
       marginLeft: '10px',
-      marginRight: '10px',
-      fontSize: '0.6rem'
+      marginRight: '10px'
     },
     chatWidgetInputRow: {
       display: 'flex',
       alignItems: 'center',
       background: theme.palette.common.white,
       paddingBlock: theme.spacing(1)
+    },
+    teamDropdown: {
+      borderRadius: '28px',
+      textTransform: 'none',
+      padding: 0,
+      height: '34px'
     }
   }
 })
@@ -103,18 +113,17 @@ export interface Message {
   isMine: boolean
 }
 
+export type UnreadMessagesByTeam = Record<string, boolean>
+
 export interface ChatWidgetProps {
   patient: Patient
-  userId: string
-  userRole: string
 }
 
 function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const { t } = useTranslation()
-  const { patient, userId, userRole } = props
+  const { patient } = props
   const { classes } = chatWidgetStyles()
-  const authHook = useAuth()
-  const teamHook = useTeam()
+  const { getMedicalTeams } = useTeam()
   const theme = useTheme()
   const patientHook = usePatientContext()
   const { selectedTeam } = useSelectedTeamContext()
@@ -124,11 +133,16 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const [inputText, setInputText] = useState('')
   const [messages, setMessages] = useState<IMessage[]>([])
   const [nbUnread, setNbUnread] = useState(0)
+  const [unreadMessagesByTeamForPatient, setUnreadMessagesByTeamForPatient] = useState<UnreadMessagesByTeam>(null)
   const [inputTab, setInputTab] = useState(0)
   const content = useRef<HTMLDivElement>(null)
   const inputRow = useRef<HTMLDivElement>(null)
-  const { getUserName } = useUserName()
-  const teamId = user.isUserHcp() ? selectedTeam.id : PatientUtils.getRemoteMonitoringTeam(patient).teamId
+  const isUserHcp = user.isUserHcp()
+  const isUserPatient = user.isUserPatient()
+  const teams = getMedicalTeams()
+  const teamId = isUserHcp ? selectedTeam.id : teams[0].id
+  const [dropdownTeamId, setDropdownTeamId] = useState(teamId)
+  const userId = user.id
 
   const handleChange = (_event: React.ChangeEvent, newValue: number): void => {
     setInputTab(newValue)
@@ -140,7 +154,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
 
   useEffect(() => {
     async function fetchMessages(): Promise<void> {
-      const messages = await ChatApi.getChatMessages(teamId, patient.userid)
+      const messages = await ChatApi.getChatMessages(dropdownTeamId, patient.userid)
       if (patient.metadata.hasSentUnreadMessages) {
         patientHook.markPatientMessagesAsRead(patient)
       }
@@ -148,8 +162,22 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       setNbUnread(messages.filter(m => !(m.authorId === userId) && !m.destAck).length)
     }
 
+    async function fetchUnreadMessagesCountForPatient(): Promise<void> {
+      const unreadMessagesCountByTeam = await ChatApi.getUnreadMessagesCountForPatient(userId)
+
+      const unreadMessages = getUnreadMessagesByTeam(unreadMessagesCountByTeam, teams)
+      unreadMessages[dropdownTeamId] = false
+
+      setUnreadMessagesByTeamForPatient(unreadMessages)
+    }
+
     fetchMessages()
-  }, [userId, authHook, patient.userid, teamId, patient, teamHook, patientHook])
+    if (isUserPatient) {
+      fetchUnreadMessagesCountForPatient()
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dropdownTeamId])
 
   const onEmojiClick = (emoji: EmojiClickData): void => {
     setShowPicker(false)
@@ -157,8 +185,8 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   }
 
   const sendMessage = async (): Promise<void> => {
-    await ChatApi.sendChatMessage(teamId, patient.userid, inputText, privateMessage)
-    const messages = await ChatApi.getChatMessages(teamId, patient.userid)
+    await ChatApi.sendChatMessage(dropdownTeamId, patient.userid, inputText, privateMessage)
+    const messages = await ChatApi.getChatMessages(dropdownTeamId, patient.userid)
     setMessages(messages)
     setInputText('')
   }
@@ -169,11 +197,53 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     }
   }
 
+  const onTeamSelected = (event: SelectChangeEvent<string>): void => {
+    setDropdownTeamId(event.target.value)
+  }
+
+  const hasNoUnreadMessages = (): boolean => {
+    return unreadMessagesByTeamForPatient === null || Object.values(unreadMessagesByTeamForPatient).every((hasUnread: boolean) => !hasUnread)
+  }
+
   return (
     <GenericDashboardCard
-      avatar={<EmailOutlinedIcon />}
-      title={`${t('chat-messages-header')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
+      avatar={<MessageIcon />}
+      title={`${t('messages')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
       data-testid="chat-card"
+      action={isUserPatient &&
+        <FormGroup>
+          <Badge color="primary" variant="dot" invisible={hasNoUnreadMessages()} data-testid="unread-messages-badge">
+            <Select
+              data-testid="chat-widget-team-scope"
+              defaultValue={teamId}
+              IconComponent={KeyboardArrowDownIcon}
+              onChange={onTeamSelected}
+              variant="outlined"
+              className={classes.teamDropdown}
+            >
+              {
+                teams.map((team, index) =>
+                  <MenuItem
+                    key={index}
+                    data-testid={`chat-widget-team-scope-menu-${TeamUtils.formatTeamNameForTestId(team.name)}-option`}
+                    value={team.id}
+                  >
+                    {team.name}
+                    {unreadMessagesByTeamForPatient?.[team.id] &&
+                      <Badge
+                        variant="dot"
+                        color="primary"
+                        sx={{ p: 0.5 }}
+                        data-testid={`unread-messages-badge-team-${team.id}`}
+                      />
+                    }
+                  </MenuItem>
+                )
+              }
+            </Select>
+          </Badge>
+        </FormGroup>
+      }
     >
       <Box position="relative">
         <Box
@@ -210,35 +280,41 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
           </div>
         }
         <div id="chat-widget-footer" className={classes.chatWidgetFooter}>
-            {userRole === UserRole.Hcp &&
-              <Tabs
-                className={classes.chatWidgetTabs}
-                value={inputTab}
-                onChange={handleChange}
-                sx={{ marginBottom: theme.spacing(1) }}
-              >
-                <Tab
-                  className={classes.chatWidgetTab}
-                  label={t('chat-footer-reply')}
-                  aria-label={t('chat-footer-reply')}
-                  data-testid="chat-card-reply"
-                  onClick={() => { setPrivateMessage(false) }}
-                />
-                <Tab
-                  className={classes.chatWidgetTab}
-                  label={t('chat-footer-private')}
-                  aria-label={t('chat-footer-private')}
-                  data-testid="chat-card-private"
-                  onClick={() => { setPrivateMessage(true) }}
-                />
-              </Tabs>
-            }
+          {isUserHcp &&
+            <Tabs
+              className={classes.chatWidgetTabs}
+              value={inputTab}
+              onChange={handleChange}
+              sx={{ marginBottom: theme.spacing(1) }}
+            >
+              <Tab
+                className={classes.chatWidgetTab}
+                label={t('chat-footer-reply')}
+                aria-label={t('chat-footer-reply')}
+                data-testid="chat-card-reply"
+                onClick={() => {
+                  setPrivateMessage(false)
+                }}
+              />
+              <Tab
+                className={classes.chatWidgetTab}
+                label={t('chat-footer-private')}
+                aria-label={t('chat-footer-private')}
+                data-testid="chat-card-private"
+                onClick={() => {
+                  setPrivateMessage(true)
+                }}
+              />
+            </Tabs>
+          }
           <div ref={inputRow} className={classes.chatWidgetInputRow}>
             <Button
               id="chat-widget-emoji-button"
               data-testid="chat-widget-emoji-button"
               className={classes.iconButton}
-              onClick={() => { setShowPicker(true) }}
+              onClick={() => {
+                setShowPicker(true)
+              }}
             >
               <SentimentSatisfiedOutlinedIcon />
             </Button>
@@ -249,7 +325,9 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
               multiline
               maxRows={3}
               value={inputText}
-              onChange={event => { setInputText(event.target.value) }}
+              onChange={event => {
+                setInputText(event.target.value)
+              }}
               InputLabelProps={{ shrink: false }}
               data-testid="chat-card-input"
             />
@@ -258,6 +336,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
               disabled={inputText.length < 1}
               className={classes.iconButton}
               arial-label={t('send')}
+              title={t('send')}
               data-testid="chat-card-send"
               onClick={sendMessage}
             >

@@ -49,6 +49,8 @@ import { BasicsChart } from 'tideline'
 import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from 'tidepool-viz'
 import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic-dashboard-card'
 import { SensorUsageStat } from 'yourloops/components/statistics/sensor-usage-stat'
+import { TimeService } from 'medical-domain'
+import metrics from 'yourloops/lib/metrics'
 import { TimeService, GlycemiaStatisticsService } from 'medical-domain'
 
 const useStyles = makeStyles()((theme) => ({
@@ -101,14 +103,14 @@ const getLabel = (row, t) => {
 
 const DeviceUsage = (props) => {
   //eslint-disable-next-line
-  const { bgPrefs, timePrefs, patient, tidelineData, trackMetric, dataUtil, onSwitchToDaily, medicalData, dateFilter } = props
+  const { bgPrefs, timePrefs, patient, tidelineData, onSwitchToDaily, medicalData, dateFilter } = props
   const [dialogOpened, setDialogOpened] = React.useState(false)
   const { t } = useTranslation()
   const { classes } = useStyles()
+  const trackMetric = metrics.send
   //eslint-disable-next-line
   const mostRecentSettings = tidelineData.grouped.pumpSettings.slice(-1)[0]
   // eslint-disable-next-line react/prop-types
-  const cbgSelected = dataUtil.bgSources.cbg
   const device = mostRecentSettings?.payload?.device ?? {}
   const pump = mostRecentSettings?.payload?.pump ?? {}
   const cgm = mostRecentSettings?.payload?.cgm ?? {}
@@ -118,8 +120,8 @@ const DeviceUsage = (props) => {
   // eslint-disable-next-line react/prop-types
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const {
-    sensorUsage,
-    totalUsage
+    total,
+    sensorUsage
     // eslint-disable-next-line react/prop-types
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
 
@@ -207,12 +209,8 @@ const DeviceUsage = (props) => {
           </TableContainer>
         </Box>
         <Divider variant="fullWidth" className={classes.divider} />
-        {cbgSelected &&
-          <>
-            <SensorUsageStat totalUsage={totalUsage} usage={sensorUsage} />
-            <Divider variant="fullWidth" className={classes.divider} />
-          </>
-        }
+        <SensorUsageStat total={total} usage={sensorUsage} />
+        <Divider variant="fullWidth" className={classes.divider} />
         <BasicsChart
           //eslint-disable-next-line
           bgClasses={bgPrefs.bgClasses}
@@ -243,11 +241,9 @@ DeviceUsage.propType = {
   bgPrefs: PropTypes.object.isRequired,
   timePrefs: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
-  dataUtil: PropTypes.object.isRequired,
   tidelineData: PropTypes.object.isRequired,
   medicalData: PropTypes.object.isRequired,
   dateFilter: PropTypes.object.isRequired,
-  trackMetric: PropTypes.func.isRequired,
   onSwitchToDaily: PropTypes.func.isRequired
 }
 export default DeviceUsage

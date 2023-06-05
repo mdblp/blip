@@ -26,7 +26,7 @@
  */
 
 import HttpStatus from '../../../../lib/http/models/enums/http-status.enum'
-import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
+import { ErrorMessageStatus } from '../../../../lib/http/http.service'
 import { loggedInUsers } from '../../common'
 import axios, { type AxiosResponse } from 'axios'
 import NotificationApi from '../../../../lib/notifications/notification.api'
@@ -107,35 +107,6 @@ describe('Notification API', () => {
       json: jest.fn().mockRejectedValue(new Error(error))
     } as unknown as Response
   }
-
-  describe('inviteToRemoteMonitoring', () => {
-    it('should call api with correct params', async () => {
-      const teamId = 'fakeTeamId'
-      const userId = 'fakeUserId'
-      const monitoringEnd = new Date()
-      const referringDoctor = 'fakeReferringDoctor'
-      const postRequestSpy = jest.spyOn(HttpService, 'post').mockResolvedValueOnce(null)
-      const expectedArgs = {
-        url: `/confirm/send/team/monitoring/${teamId}/${userId}`,
-        payload: { monitoringEnd: monitoringEnd.toJSON(), referringDoctor }
-      }
-      await NotificationApi.inviteToRemoteMonitoring(teamId, userId, monitoringEnd, referringDoctor)
-      expect(postRequestSpy).toHaveBeenCalledWith(expectedArgs)
-    })
-  })
-
-  describe('cancelRemoteMonitoringInvite', () => {
-    it('should call api with correct params', async () => {
-      const teamId = 'fakeTeamId'
-      const userId = 'fakeUserId'
-      const putRequestSpy = jest.spyOn(HttpService, 'put').mockResolvedValueOnce(null)
-      const expectedArgs = {
-        url: `/confirm/dismiss/team/monitoring/${teamId}/${userId}`
-      }
-      await NotificationApi.cancelRemoteMonitoringInvite(teamId, userId)
-      expect(putRequestSpy).toHaveBeenCalledWith(expectedArgs)
-    })
-  })
 
   describe('getReceivedInvitations', () => {
     const urlArgs = `/confirm/invitations/${userId}`

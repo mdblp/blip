@@ -45,9 +45,6 @@ export default class NotificationApi {
       case NotificationType.careTeamPatientInvitation:
         url = '/confirm/accept/team/invite'
         break
-      case NotificationType.careTeamMonitoringInvitation:
-        url = `/confirm/accept/team/monitoring/${notification.target?.id}/${userId}`
-        break
       default:
         log.info('Unknown notification', notification)
         throw Error('Unknown notification')
@@ -82,21 +79,11 @@ export default class NotificationApi {
         url = `/confirm/dismiss/team/invite/${notification.target?.id}`
         break
       }
-      case NotificationType.careTeamMonitoringInvitation:
-        if (!notification.target) {
-          throw Error('Cannot decline notification as team id is not specified')
-        }
-        await NotificationApi.cancelRemoteMonitoringInvite(notification.target?.id, userId)
-        return
       default:
         log.info('Unknown notification', notification)
         throw Error('Unknown notification')
     }
     await NotificationApi.updateInvitation(url, notification.id)
-  }
-
-  static async cancelRemoteMonitoringInvite(teamId: string, userId: string): Promise<void> {
-    await HttpService.put({ url: `/confirm/dismiss/team/monitoring/${teamId}/${userId}` })
   }
 
   static async getReceivedInvitations(userId: string): Promise<Notification[]> {
@@ -105,13 +92,6 @@ export default class NotificationApi {
 
   static async getSentInvitations(userId: string): Promise<Notification[]> {
     return await NotificationApi.getInvitations(`/confirm/invite/${userId}`)
-  }
-
-  static async inviteToRemoteMonitoring(teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string): Promise<void> {
-    await HttpService.post<void, { monitoringEnd: string, referringDoctor?: string }>({
-      url: `/confirm/send/team/monitoring/${teamId}/${userId}`,
-      payload: { monitoringEnd: monitoringEnd.toJSON(), referringDoctor }
-    })
   }
 
   private static async updateInvitation(url: string, key: string): Promise<void> {

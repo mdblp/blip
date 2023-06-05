@@ -40,7 +40,7 @@ export interface AuthContext {
   flagPatient: (userId: string) => Promise<void> // Flag or un-flag one patient
   getFlagPatients: () => string[]
   isLoggedIn: boolean
-  logout: (isIdle?: boolean) => Promise<void>
+  logout: (isIdle?: boolean) => void
   setFlagPatients: (userIds: string[]) => Promise<void> // Set the flagged patient
   completeSignup: (signupForm: SignupForm) => Promise<void>
   switchRoleToHCP: (feedbackConsent: boolean, hcpProfession: HcpProfession) => Promise<void> // Switch user role from caregiver to hcp
