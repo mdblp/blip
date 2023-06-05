@@ -28,7 +28,6 @@
 import React, { type FunctionComponent } from 'react'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import DeviceUsage from 'blip/app/components/chart/deviceUsage'
-import { type TimePrefs } from 'medical-domain'
 import type MedicalDataService from 'medical-domain'
 import { DatumType, type TimePrefs } from 'medical-domain'
 import { type BgPrefs } from 'dumb'

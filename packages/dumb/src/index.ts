@@ -106,7 +106,6 @@ export {
   TotalCarbsStat,
   TrendsContainer,
   TrendsProvider,
-  getPatientFullName,
   renderPageNumbers,
   StatFormats
 }
