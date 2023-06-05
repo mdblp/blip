@@ -69,12 +69,22 @@ jobs:
   publish:
     name: Publish
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/publish' }}
-    needs: [get-current-branch, build]
-    uses: ./.github/workflows/publish.yml
-    with:
-      head-ref: ${{ needs.get-current-branch.outputs.head-ref }}
-      image-tag: ${{ steps.changelog-version.outputs.semver }}-${{ env.PR_NUMBER }}
-      commit-sha: ${{ needs.get-current-branch.outputs.head-sha }}
+    needs: [ get-current-branch, build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read env file
+        id: changelog-version
+        uses: cardinalby/export-env-action@v1
+        with:
+          envFile: 'version.env'
+          expand: 'false'
+          export: 'false'
+
+      - uses: ./.github/workflows/publish.yml
+        with:
+          head-ref: ${{ needs.get-current-branch.outputs.head-ref }}
+          image-tag: ${{ steps.changelog-version.outputs.semver }}-${{ env.PR_NUMBER }}
+          commit-sha: ${{ needs.get-current-branch.outputs.head-sha }}
 #    runs-on: ubuntu-latest
 #    steps:
 #      - uses: xt0rted/pull-request-comment-branch@v1

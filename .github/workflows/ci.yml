@@ -299,10 +299,20 @@ jobs:
     name: Publish
     if: github.ref_name == 'main'
     needs: build
-    uses: ./.github/workflows/publish.yml
-    with:
-      head-ref: ${{ github.ref_name }}
-      image-tag: ${{ steps.changelog-version.outputs.semver }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read env file
+        id: changelog-version
+        uses: cardinalby/export-env-action@v1
+        with:
+          envFile: 'version.env'
+          expand: 'false'
+          export: 'false'
+
+      - uses: ./.github/workflows/publish.yml
+        with:
+          head-ref: ${{ github.ref_name }}
+          image-tag: ${{ steps.changelog-version.outputs.semver }}
   #    runs-on: ubuntu-latest
 #    outputs:
 #      version: ${{ steps.changelog-version.outputs.semver }}
