@@ -70,7 +70,7 @@ jobs:
     name: Publish
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/publish' }}
     needs: [get-current-branch, build]
-    uses: ./.github/workflows/jobs/publish.yml
+    uses: ./.github/workflows/publish.yml
     with:
       head-ref: ${{ needs.get-current-branch.outputs.head-ref }}
       image-tag: ${{ steps.changelog-version.outputs.semver }}-${{ env.PR_NUMBER }}

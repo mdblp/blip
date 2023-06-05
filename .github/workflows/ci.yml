@@ -299,7 +299,7 @@ jobs:
     name: Publish
     if: github.ref_name == 'main'
     needs: build
-    uses: ./.github/workflows/jobs/publish.yml
+    uses: ./.github/workflows/publish.yml
     with:
       head-ref: ${{ github.ref_name }}
       image-tag: ${{ steps.changelog-version.outputs.semver }}
