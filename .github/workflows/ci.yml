@@ -174,7 +174,7 @@ jobs:
         run: npm run test-yourloops-unit
 
   test-yourloops-integration-hcp:
-    name: Run integration tests (HCP)
+    name: Run ITs (HCP)
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -197,7 +197,7 @@ jobs:
         run: npm run test-yourloops-integration-hcp
 
   test-yourloops-integration-caregiver:
-    name: Run integration tests (caregiver)
+    name: Run ITs (caregiver)
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -220,7 +220,7 @@ jobs:
         run: npm run test-yourloops-integration-caregiver
 
   test-yourloops-integration-patient:
-    name: Run integration tests (patient)
+    name: Run ITs (patient)
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -243,7 +243,7 @@ jobs:
         run: npm run test-yourloops-integration-patient
 
   test-yourloops-integration-common:
-    name: Run integration tests (common)
+    name: Run ITs (common)
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -313,66 +313,9 @@ jobs:
         with:
           head-ref: ${{ github.ref_name }}
           image-tag: ${{ steps.changelog-version.outputs.semver }}
-  #    runs-on: ubuntu-latest
-#    outputs:
-#      version: ${{ steps.changelog-version.outputs.semver }}
-#    steps:
-#      - uses: actions/checkout@v3
-#
-#      - name: Download artifact
-#        uses: actions/download-artifact@v3
-#
-#      - name: Get yourloops version from changelog
-#        uses: addnab/docker-run-action@v3
-#        with:
-#          username: ${{ secrets.NEXUS_USERNAME }}
-#          password: ${{ secrets.NEXUS_PASSWORD }}
-#          registry: ${{ secrets.REGISTRY }}
-#          options: -v ${{ github.workspace }}:/dblprm/blip:rw --user 0:0
-#          image: docker.ci.diabeloop.eu/ci-toolbox:latest
-#          run: |
-#            cd blip
-#            echo "semver=$(release-helper get-version)" > version.env
-#
-#      - name: Read env file
-#        id: changelog-version
-#        uses: cardinalby/export-env-action@v1
-#        with:
-#          envFile: 'version.env'
-#          expand: 'false'
-#          export: 'false'
-#
-#      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
-#
-#      - name: Set up Docker Buildx
-#        uses: docker/setup-buildx-action@v2
-#        with:
-#          driver-opts: |
-#            image=moby/buildkit:v0.10.6
-#
-#      - name: Log in to the Nexus registry
-#        uses: docker/login-action@v2
-#        with:
-#          registry: ${{ secrets.REGISTRY }}
-#          username: ${{ secrets.NEXUS_USERNAME }}
-#          password: ${{ secrets.NEXUS_PASSWORD }}
-#
-#      - name: Build and push blip Docker image
-#        uses: docker/build-push-action@v3.2.0
-#        with:
-#          context: .
-#          push: true
-#          platforms: linux/arm64,linux/amd64
-#          tags: ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}
-#
-#      - name: Creating new github tag
-#        uses: rickstaa/action-create-tag@v1
-#        with:
-#          tag: v${{ steps.changelog-version.outputs.semver }}
-#          force_push_tag: true
 
   documentation:
+    name: Generate documentation
     if: github.ref_name == 'main'
     runs-on: ubuntu-latest
     needs: publish

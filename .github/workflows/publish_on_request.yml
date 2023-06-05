@@ -36,13 +36,6 @@ jobs:
           allow-edits: "false"
           permission-level: write
 
-# TODO what is this step?
-      - name: Act on the command
-        run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}'"
-
-#      - uses: xt0rted/pull-request-comment-branch@v1
-#        id: comment-branch
-
       - uses: actions/checkout@v3
         if: success()
         with:
@@ -85,67 +78,3 @@ jobs:
           head-ref: ${{ needs.get-current-branch.outputs.head-ref }}
           image-tag: ${{ steps.changelog-version.outputs.semver }}-${{ env.PR_NUMBER }}
           commit-sha: ${{ needs.get-current-branch.outputs.head-sha }}
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: xt0rted/pull-request-comment-branch@v1
-#        id: comment-branch
-
-#      - uses: actions/checkout@v3
-#        if: success()
-#        with:
-#          ref: ${{ needs.get-current-branch.outputs.head-ref }}
-#
-#      - name: Download artifact
-#        uses: actions/download-artifact@v3
-#
-#      - name: Get YourLoops version from changelog
-#        uses: addnab/docker-run-action@v3
-#        with:
-#          username: ${{ secrets.NEXUS_USERNAME }}
-#          password: ${{ secrets.NEXUS_PASSWORD }}
-#          registry: ${{ secrets.REGISTRY }}
-#          options: -v ${{ github.workspace }}:/dblprm/blip/:rw --user 0:0
-#          image: docker.ci.diabeloop.eu/ci-toolbox:latest
-#          run: |
-#            cd blip
-#            echo "semver=$(release-helper get-version)" > version.env
-#
-#      - name: Read env file
-#        id: changelog-version
-#        uses: cardinalby/export-env-action@v1
-#        with:
-#          envFile: 'version.env'
-#          expand: 'false'
-#          export: 'false'
-#
-#
-#      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
-#
-#      - name: Set up Docker Buildx
-#        uses: docker/setup-buildx-action@v2
-#        with:
-#          driver-opts: |
-#            image=moby/buildkit:v0.10.6
-#
-#      - name: Log in to the Nexus registry
-#        uses: docker/login-action@v2
-#        with:
-#          registry: ${{ secrets.REGISTRY }}
-#          username: ${{ secrets.NEXUS_USERNAME }}
-#          password: ${{ secrets.NEXUS_PASSWORD }}
-#
-#      - name: Build and push blip Docker image
-#        uses: docker/build-push-action@v3.2.0
-#        with:
-#          context: .
-#          push: true
-#          platforms: linux/arm64,linux/amd64
-#          tags:  ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}-${{ env.PR_NUMBER }}
-#
-#      - name: Creating new github tag
-#        uses: rickstaa/action-create-tag@v1
-#        with:
-#          tag: v${{ steps.changelog-version.outputs.semver }}-${{ env.PR_NUMBER }}
-#          commit_sha: ${{ steps.comment-branch.outputs.head_sha }}
-#          force_push_tag: true
