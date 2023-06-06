@@ -202,7 +202,9 @@ const ignoredTransKeyForYourLoops = [
   'total-insulin',
   'total-insulin-days-tooltip',
   'total-insulin-how-calculate-tooltip',
-  'average-daily-total-insulin'
+  'average-daily-total-insulin',
+  'ratio-dose',
+  'weight'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
@@ -210,6 +212,7 @@ const ignoredTransKeyInYourLoopsFiles = [
   // Documentation!
   'translate-me',
   'translate-{{someone}}'
+
 ]
 
 /**

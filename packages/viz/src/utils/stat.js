@@ -139,7 +139,6 @@ export const getStatAnnotations = (data, type, opts = {}) => {
       } else {
         annotations.push(t('**Total Insulin:** All basal and bolus insulin delivery (in Units) added together'))
       }
-      annotations.push(t('compute-insulin'))
       break
 
     default:
