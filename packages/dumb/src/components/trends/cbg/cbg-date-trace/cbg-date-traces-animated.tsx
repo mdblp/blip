@@ -71,14 +71,14 @@ export const CbgDateTracesAnimated: FunctionComponent<CbgDateTracesAnimatedProps
 
   return (
     <g>
-      {data.map((dateTrace: CbgDateTrace) => (
+      {data.map((dateTrace: CbgDateTrace, index) => (
         <circle
           className={styles[getBgClass(bgBounds, dateTrace.value, ClassificationType.FiveWay)]}
           cx={xScale(dateTrace.msPer24)}
           cy={yScale(dateTrace.value)}
           id={`${CBG_CIRCLE_PREFIX_ID}-${dateTrace.id}`}
           data-testid="trends-cbg-circle"
-          key={dateTrace.id}
+          key={index}
           onClick={() => {
             handleClick(dateTrace)
           }}

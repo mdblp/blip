@@ -26,7 +26,7 @@
  */
 
 import * as authHookMock from '../../../../lib/auth'
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import { usePatientListProviderHook } from '../../../../lib/providers/patient-list.provider.hook'
 import { type PatientsFilters } from '../../../../lib/providers/models/patients-filters.model'
 import type User from '../../../../lib/auth/models/user.model'

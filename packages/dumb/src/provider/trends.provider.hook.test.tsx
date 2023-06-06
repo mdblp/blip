@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, renderHook } from '@testing-library/react-hooks/dom'
+import { act, renderHook } from '@testing-library/react'
 import { useTrendsProviderHook } from './trends.provider.hook'
 import { DisplayFlag } from '../models/enums/display-flag.enum'
 import { RangeSegmentSlice } from '../models/enums/range-segment.enum'

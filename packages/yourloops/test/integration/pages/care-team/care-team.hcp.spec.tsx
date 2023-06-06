@@ -85,6 +85,6 @@ describe('HCP care team page', () => {
 
     await renderCareTeamPage()
 
-    testCareTeamLayout()
+    await testCareTeamLayout()
   })
 })

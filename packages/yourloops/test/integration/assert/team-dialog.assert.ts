@@ -26,7 +26,7 @@
  */
 
 import TeamAPI from '../../../lib/team/team.api'
-import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { PhonePrefixCode } from '../../../lib/utils'
 import userEvent from '@testing-library/user-event'
 import { mockTeamApiForTeamCreation } from '../mock/team.api.mock'
@@ -139,9 +139,7 @@ export const checkTeamCreationFailure = async (): Promise<void> => {
   await userEvent.type(zipcodeInput, teamZipCode)
   expect(createTeamButton).toBeEnabled()
 
-  await act(async () => {
-    await userEvent.click(createTeamButton)
-  })
+  await userEvent.click(createTeamButton)
   expect(TeamAPI.createTeam).toHaveBeenCalledWith({
     address: {
       city: teamCity,
@@ -187,9 +185,7 @@ export const checkTeamCreationSuccess = async (router: Router): Promise<void> =>
 
   mockTeamApiForTeamCreation()
 
-  await act(async () => {
-    await userEvent.click(createTeamButton)
-  })
+  await userEvent.click(createTeamButton)
   expect(TeamAPI.createTeam).toHaveBeenCalledWith({
     address: {
       city: teamCity,

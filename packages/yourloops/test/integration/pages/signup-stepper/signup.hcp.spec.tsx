@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import {
   getAccessTokenWithPopupMock,
   loggedInUserEmail,
@@ -98,9 +98,7 @@ describe('Signup stepper as hcp', () => {
     await userEvent.click(screen.getByText('Nurse'))
 
     expect(createButton).not.toBeDisabled()
-    await act(async () => {
-      await userEvent.click(screen.getByText('Create account'))
-    })
+    await userEvent.click(screen.getByText('Create account'))
 
     expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(
       loggedInUserId,

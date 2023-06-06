@@ -102,16 +102,17 @@ export const TrendsDatePicker: FunctionComponent<TrendsDatePickerProps> = (props
           )
         }}
       />
-      <DialogRangeDatePicker
-        start={start}
-        end={end}
-        minDate={minDate}
-        maxDate={maxDate}
-        maxSelectableDays={90}
-        onResult={handleResult}
-        isOpen={isOpen}
-        showToolbar
-      />
+      {isOpen &&
+        <DialogRangeDatePicker
+          start={start}
+          end={end}
+          minDate={minDate}
+          maxDate={maxDate}
+          maxSelectableDays={90}
+          onResult={handleResult}
+          showToolbar
+        />
+      }
       <IconButton
         data-testid="button-nav-next"
         onClick={onNextButtonClick}

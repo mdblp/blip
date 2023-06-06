@@ -29,8 +29,8 @@ import { screen, within } from '@testing-library/react'
 import { myThirdTeamAddress, myThirdTeamCode, myThirdTeamName, myThirdTeamPhoneNumber } from '../mock/team.api.mock'
 import { loggedInUserEmail, loggedInUserFullName } from '../mock/auth0.hook.mock'
 
-export const checkCareTeamInformation = () => {
-  const teamInformationSection = within(screen.getByTestId('team-information'))
+export const checkCareTeamInformation = async () => {
+  const teamInformationSection = within(await screen.findByTestId('team-information'))
 
   expect(teamInformationSection.getByText('Information')).toBeVisible()
   expect(teamInformationSection.getByText('Edit information')).toBeVisible()

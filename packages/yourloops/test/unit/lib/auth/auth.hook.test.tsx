@@ -75,9 +75,9 @@ describe('Auth hook', () => {
           </AuthContextProvider>
         </Auth0Provider>
       )
-      await waitFor(() => {
-        expect(auth.isLoggedIn).toBeTruthy()
-      })
+    })
+    await waitFor(() => {
+      expect(auth.isLoggedIn).toBeTruthy()
     })
   }
 
