@@ -266,7 +266,7 @@
   "modal-cancel-patient-invite-title": "Cancel the invite",
   "modal-caregiver-remove-patient-failure": "患者を削除できません。しばらくしてから再度お試しください。",
   "modal-caregiver-remove-patient-info-2": "データにアクセスできなくなります。",
-  "modal-caregiver-remove-patient-question": "Are you sure you want to remove {{name}}?",
+  "modal-caregiver-remove-patient-question": "Are you sure you want to remove <strong>{{name}}</strong>?",
   "modal-caregiver-remove-patient-remove": "患者を削除",
   "modal-caregiver-remove-patient-success": "患者のデータにアクセスできなくなりました。",
   "modal-caregiver-remove-patient-title": "患者を削除",
