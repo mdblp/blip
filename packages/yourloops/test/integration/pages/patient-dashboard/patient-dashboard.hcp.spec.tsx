@@ -53,7 +53,7 @@ import {
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationWithTwoWeeksOldData,
   testEmptyMedicalFilesWidgetForHcp,
-  testPatientNavBarForHcp
+  testPatientNavBarForHcp, testSwitchPatientCorrectDataDisplay
 } from '../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
 import { type MedicalFilesWidgetParams } from '../../assert/medical-widget.assert'
@@ -197,5 +197,12 @@ describe('Patient dashboard for HCP', () => {
     })
 
     await testEmptyMedicalFilesWidgetForHcp()
+  })
+
+  it('should render correct patient data when changing patient in the header dropdown', async () => {
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+    await testSwitchPatientCorrectDataDisplay()
   })
 })

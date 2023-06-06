@@ -31,14 +31,22 @@ import { usePatientListHook } from './patient-list.hook'
 import { PatientListTabs } from './models/enums/patient-list.enum'
 import { GlobalStyles } from 'tss-react'
 import { useTheme } from '@mui/material/styles'
-import { CurrentPatientList } from './current-patient-list/current-patient-list'
+import { MedicalTeamPatientList } from './current-patient-list/medical-team-patient-list/medical-team-patient-list'
 import { PendingPatientList } from './pending-patient-list/pending-patient-list'
 import { setPageTitle } from '../../lib/utils'
 import { useTranslation } from 'react-i18next'
+import { useAuth } from '../../lib/auth'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import TeamUtils from '../../lib/team/team.util'
+import {
+  PrivateTeamOrCaregiverPatientList
+} from './current-patient-list/private-team-or-caregiver-patient-list/private-team-or-caregiver-patient-list'
 
 export const PatientListPage: FunctionComponent = () => {
   const theme = useTheme()
   const { t } = useTranslation('yourloops')
+  const { user } = useAuth()
+  const { selectedTeam } = useSelectedTeamContext()
   const {
     selectedTab,
     inputSearch,
@@ -46,6 +54,8 @@ export const PatientListPage: FunctionComponent = () => {
     onChangingTab,
     setInputSearch
   } = usePatientListHook()
+
+  const isCaregiverUserOrPrivateTeam = user.isUserCaregiver() || TeamUtils.isPrivate(selectedTeam)
 
   setPageTitle(t('header-tab-patients'))
 
@@ -60,8 +70,11 @@ export const PatientListPage: FunctionComponent = () => {
         setInputSearch={setInputSearch}
       />
 
-      {selectedTab === PatientListTabs.Current &&
-        <CurrentPatientList patients={patients} />
+      {selectedTab === PatientListTabs.Current && isCaregiverUserOrPrivateTeam &&
+        <PrivateTeamOrCaregiverPatientList patients={patients} />
+      }
+      {selectedTab === PatientListTabs.Current && !isCaregiverUserOrPrivateTeam &&
+        <MedicalTeamPatientList patients={patients} />
       }
       {selectedTab === PatientListTabs.Pending &&
         <PendingPatientList patients={patients} />

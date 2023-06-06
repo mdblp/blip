@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useMemo, useState } from 'react'
+import { type Patient } from '../../../lib/patient/models/patient.model'
 import {
   type GridColDef,
   type GridRenderCellParams,
@@ -34,74 +34,68 @@ import {
   type GridValueFormatterParams
 } from '@mui/x-data-grid'
 import { useTranslation } from 'react-i18next'
-import { usePatientListStyles } from '../patient-list.styles'
-import { PatientListColumns } from '../models/enums/patient-list.enum'
-import { usePatientContext } from '../../../lib/patient/patient.provider'
-import { getMedicalValues } from '../../patient/utils'
-import { ActionsCell, FlagIconCell, MessageCell, MonitoringAlertsCell } from '../custom-cells'
-import { useAuth } from '../../../lib/auth'
-import { type Patient } from '../../../lib/patient/models/patient.model'
-import PatientUtils from '../../../lib/patient/patient.util'
 import { type GridRowModel } from '../models/grid-row.model'
-import { type UserToRemove } from '../../dialogs/remove-direct-share-dialog'
-import { formatBirthdate, getPatientFullName } from 'dumb'
-import { useNavigate } from 'react-router-dom'
-import Box from '@mui/material/Box'
-import { AppUserRoute } from '../../../models/enums/routes.enum'
-import { sortByDateOfBirth, sortByFlag, sortByMonitoringAlertsCount, sortByUserName } from '../sort-comparators.util'
+import { getMedicalValues } from '../../patient/utils'
+import { PatientListColumns } from '../models/enums/patient-list.enum'
+import PatientUtils from '../../../lib/patient/patient.util'
+import React, { useMemo } from 'react'
+import {
+  sortByDateOfBirth,
+  sortByFlag,
+  sortByMonitoringAlertsCount,
+  sortByUserName
+} from '../utils/sort-comparators.util'
+import { ActionsCell, FlagIconCell, MessageCell, MonitoringAlertsCell } from '../custom-cells'
 import { getUserName } from '../../../lib/auth/user.util'
-import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
-import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
+import Box from '@mui/material/Box'
+import { formatBirthdate } from 'dumb'
+import { usePatientListStyles } from '../patient-list.styles'
+import { AppUserRoute } from '../../../models/enums/routes.enum'
+import { useNavigate } from 'react-router-dom'
 
-interface CurrentPatientListHookProps {
+interface CurrentPatientListProps {
   patients: Patient[]
+  onClickRemovePatient: (patientId: string) => void
 }
 
-interface PatientListHookReturns {
-  columns: GridColDef[]
-  patientToRemoveForHcp: Patient | null
-  patientToRemoveForCaregiver: UserToRemove | null
-  rowsProps: GridRowsProp
-  onCloseRemoveDialog: () => void
+interface CurrentPatientListHookReturns {
+  allRows: GridRowsProp
+  allColumns: GridColDef[]
   onRowClick: (params: GridRowParams) => void
 }
 
-export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): PatientListHookReturns => {
-  const { patients } = props
+export const useCurrentPatientListHook = (props: CurrentPatientListProps): CurrentPatientListHookReturns => {
+  const { patients, onClickRemovePatient } = props
   const { t } = useTranslation()
   const { classes } = usePatientListStyles()
-  const { user } = useAuth()
-  const { getPatientById } = usePatientContext()
-  const { selectedTeam } = useSelectedTeamContext()
   const navigate = useNavigate()
-  const trNA = t('N/A')
+  const noDataLabel = t('N/A')
 
-  const [patientToRemoveForHcp, setPatientToRemoveForHcp] = useState<Patient | null>(null)
-  const [patientToRemoveForCaregiver, setPatientToRemoveForCaregiver] = useState<UserToRemove | null>(null)
-
-  const onClickRemovePatient = useCallback((patientId: string): void => {
-    const patient = getPatientById(patientId)
-    if (user.isUserHcp()) {
-      setPatientToRemoveForHcp(patient)
-      return
-    }
-    setPatientToRemoveForCaregiver({
-      id: patient.userid,
-      fullName: getPatientFullName(patient),
-      email: patient.profile.email
+  const allRows = useMemo(() => {
+    return patients.map((patient): GridRowModel => {
+      const { lastUpload } = getMedicalValues(patient.metadata.medicalData, noDataLabel)
+      const birthdate = patient.profile.birthdate
+      return {
+        id: patient.userid,
+        [PatientListColumns.Flag]: patient,
+        [PatientListColumns.Patient]: patient,
+        [PatientListColumns.DateOfBirth]: patient,
+        [PatientListColumns.Age]: PatientUtils.computeAge(birthdate),
+        [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
+        [PatientListColumns.MonitoringAlerts]: patient,
+        [PatientListColumns.System]: patient.settings.system ?? noDataLabel,
+        [PatientListColumns.LastDataUpdate]: lastUpload,
+        [PatientListColumns.Messages]: patient.metadata.hasSentUnreadMessages,
+        [PatientListColumns.TimeInRange]: patient.glycemiaIndicators.timeInRange,
+        [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators.glucoseManagementIndicator,
+        [PatientListColumns.Hypoglycemia]: patient.glycemiaIndicators.hypoglycemia,
+        [PatientListColumns.Variance]: patient.glycemiaIndicators.coefficientOfVariation,
+        [PatientListColumns.Actions]: patient
+      }
     })
-  }, [getPatientById, user])
+  }, [noDataLabel, patients])
 
-  const onCloseRemoveDialog = (): void => {
-    setPatientToRemoveForHcp(null)
-    setPatientToRemoveForCaregiver(null)
-  }
-
-  const onRowClick = (params: GridRowParams): void => {
-    navigate(`${AppUserRoute.Patient}/${params.id}/dashboard`)
-  }
-
-  const medicalTeamsColumns = useMemo((): GridColDef[] => {
+  const allColumns = useMemo((): GridColDef[] => {
     return [
       {
         field: PatientListColumns.Flag,
@@ -218,74 +212,9 @@ export const useCurrentPatientListHook = (props: CurrentPatientListHookProps): P
     ]
   }, [classes.mandatoryCellBorder, onClickRemovePatient, t])
 
-  const buildPrivateTeamOrCaregiverColumns = useCallback((): GridColDef[] => {
-    const fieldsNotWanted = [PatientListColumns.Messages, PatientListColumns.MonitoringAlerts]
-    return medicalTeamsColumns.filter(column => !fieldsNotWanted.includes(column.field as PatientListColumns))
-  }, [medicalTeamsColumns])
-
-  const columns: GridColDef[] = useMemo(() => {
-    return user.isUserCaregiver() || selectedTeam.type === TeamType.private ? buildPrivateTeamOrCaregiverColumns() : medicalTeamsColumns
-  }, [buildPrivateTeamOrCaregiverColumns, medicalTeamsColumns, selectedTeam, user])
-
-  const buildMedicalTeamRows = useCallback((): GridRowsProp => {
-    return patients.map((patient): GridRowModel => {
-      const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
-      const birthdate = patient.profile.birthdate
-      return {
-        id: patient.userid,
-        [PatientListColumns.Flag]: patient,
-        [PatientListColumns.Patient]: patient,
-        [PatientListColumns.DateOfBirth]: patient,
-        [PatientListColumns.Age]: PatientUtils.computeAge(birthdate),
-        [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
-        [PatientListColumns.MonitoringAlerts]: patient,
-        [PatientListColumns.System]: patient.settings.system ?? trNA,
-        [PatientListColumns.LastDataUpdate]: lastUpload,
-        [PatientListColumns.Messages]: patient.metadata.hasSentUnreadMessages,
-        [PatientListColumns.TimeInRange]: patient.glycemiaIndicators.timeInRange,
-        [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators.glucoseManagementIndicator,
-        [PatientListColumns.Hypoglycemia]: patient.glycemiaIndicators.hypoglycemia,
-        [PatientListColumns.Variance]: patient.glycemiaIndicators.coefficientOfVariation,
-        [PatientListColumns.Actions]: patient
-      }
-    })
-  }, [patients, trNA])
-
-  const buildPrivateTeamOrCaregiverRows = useCallback((): GridRowsProp => {
-    return patients.map((patient): GridRowModel => {
-      const { lastUpload } = getMedicalValues(patient.metadata.medicalData, trNA)
-      const birthdate = patient.profile.birthdate
-      return {
-        id: patient.userid,
-        [PatientListColumns.Flag]: patient,
-        [PatientListColumns.Patient]: patient,
-        [PatientListColumns.DateOfBirth]: patient,
-        [PatientListColumns.Age]: PatientUtils.computeAge(birthdate),
-        [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
-        [PatientListColumns.System]: patient.settings.system ?? trNA,
-        [PatientListColumns.LastDataUpdate]: lastUpload,
-        [PatientListColumns.TimeInRange]: patient.glycemiaIndicators.timeInRange,
-        [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators.glucoseManagementIndicator,
-        [PatientListColumns.Hypoglycemia]: patient.glycemiaIndicators.hypoglycemia,
-        [PatientListColumns.Variance]: patient.glycemiaIndicators.coefficientOfVariation,
-        [PatientListColumns.Actions]: patient
-      }
-    })
-  }, [patients, trNA])
-
-  const rowsProps: GridRowsProp = useMemo(() => {
-    if (user.isUserCaregiver() || selectedTeam.type === TeamType.private) {
-      return buildPrivateTeamOrCaregiverRows()
-    }
-    return buildMedicalTeamRows()
-  }, [buildMedicalTeamRows, buildPrivateTeamOrCaregiverRows, selectedTeam, user])
-
-  return {
-    columns,
-    patientToRemoveForHcp,
-    patientToRemoveForCaregiver,
-    rowsProps,
-    onCloseRemoveDialog,
-    onRowClick
+  const onRowClick = (params: GridRowParams): void => {
+    navigate(`${AppUserRoute.Patient}/${params.id}/dashboard`)
   }
+
+  return { allRows, allColumns, onRowClick }
 }

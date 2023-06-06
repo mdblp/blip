@@ -30,6 +30,7 @@ import { patient1, patient2 } from '../data/patient.api.data'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import moment from 'moment-timezone'
 import userEvent from '@testing-library/user-event'
+import { type Data, mockDataAPI } from '../mock/data.api.mock'
 
 const checkPatientNavBar = (patientNavBar: BoundFunctions<typeof queries>) => {
   const dashboardTab = patientNavBar.getByText('Dashboard')
@@ -83,4 +84,18 @@ export const checkPatientDropdown = async (initialPatient: Patient, patientToSwi
 export const checkPatientNavBarForPatient = async () => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
   expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDownload report')
+}
+
+export const checkPatientSwitch = async () => {
+  const secondaryHeader = await screen.findByTestId('patient-nav-bar')
+  expect(screen.getByTestId('patient-dashboard')).toBeInTheDocument()
+
+  mockDataAPI({} as Data)
+  fireEvent.mouseDown(within(secondaryHeader).getByText(patient1.profile.fullName))
+  fireEvent.click(within(screen.getByRole('listbox')).getByText(patient2.profile.fullName))
+
+  expect(screen.queryByTestId('patient-dashboard')).not.toBeInTheDocument()
+  await waitFor(() => {
+    expect(screen.getByText(`No data for patient ${patient2.profile.fullName}`)).toBeInTheDocument()
+  })
 }

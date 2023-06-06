@@ -32,7 +32,7 @@ import {
   sortByFlag,
   sortByMonitoringAlertsCount,
   sortByUserName
-} from '../../../../components/patient-list/sort-comparators.util'
+} from '../../../../components/patient-list/utils/sort-comparators.util'
 
 describe('useSortComparatorsHook', () => {
   describe('sortByUserName', () => {

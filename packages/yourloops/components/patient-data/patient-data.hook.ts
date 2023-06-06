@@ -140,6 +140,7 @@ export const usePatientData = (): usePatientDataResult => {
 
   const changePatient = (patient: Patient): void => {
     patientDataUtils.current.changePatient(patient)
+    setMedicalData(null)
     navigate(`/patient/${patient.userid}/${currentChart}`)
   }
   const changeChart = (chart: ChartTypes): void => {

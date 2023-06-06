@@ -37,7 +37,11 @@ import {
   checkDeviceUsageWidgetWithTwoWeeksOldData
 } from '../assert/device-usage.assert'
 import { patient1, patient2 } from '../data/patient.api.data'
-import { checkPatientDropdown, checkPatientNavBarForPatient } from '../assert/patient-nav-bar.assert'
+import {
+  checkPatientDropdown,
+  checkPatientNavBarForPatient,
+  checkPatientSwitch
+} from '../assert/patient-nav-bar.assert'
 import {
   checkEmptyMedicalFilesWidgetForHcp,
   checkEmptyMedicalFilesWidgetForPatient
@@ -88,4 +92,8 @@ export const testEmptyMedicalFilesWidgetForPatient = async () => {
 
 export const testEmptyMedicalFilesWidgetForHcp = async () => {
   await checkEmptyMedicalFilesWidgetForHcp()
+}
+
+export const testSwitchPatientCorrectDataDisplay = async () => {
+  await checkPatientSwitch()
 }
