@@ -32,7 +32,7 @@ import { useAuth } from '../../lib/auth'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import PatientUtils from '../../lib/patient/patient.util'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
-import { sortByUserName } from './sort-comparators.util'
+import { sortByUserName } from './utils/sort-comparators.util'
 
 interface PatientListHookReturns {
   selectedTab: PatientListTabs

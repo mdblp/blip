@@ -28,31 +28,29 @@
 import React, { type FunctionComponent, useState } from 'react'
 import { DataGrid, type GridPaginationModel, type GridSortModel, useGridApiRef } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
-import { PatientListCustomFooter } from '../patient-list-custom-footer'
-import { PatientListColumns } from '../models/enums/patient-list.enum'
-import { usePatientListContext } from '../../../lib/providers/patient-list.provider'
-import { usePatientContext } from '../../../lib/patient/patient.provider'
-import { useCurrentPatientListHook } from './current-patient-list.hook'
-import RemovePatientDialog from '../../patient/remove-patient-dialog/remove-patient-dialog'
-import RemoveDirectShareDialog from '../../dialogs/remove-direct-share-dialog'
-import { type Patient } from '../../../lib/patient/models/patient.model'
-import { EmptyPatientList } from '../empty-patient-list/empty-patient-list'
-import { useWindowDimensions } from '../../../lib/custom-hooks/use-window-dimensions.hook'
+import { PatientListCustomFooter } from '../../patient-list-custom-footer'
+import { PatientListColumns } from '../../models/enums/patient-list.enum'
+import { usePatientListContext } from '../../../../lib/providers/patient-list.provider'
+import { usePatientContext } from '../../../../lib/patient/patient.provider'
+import { useMedicalTeamPatientListHook } from './medical-team-patient-list.hook'
+import RemovePatientDialog from '../../../patient/remove-patient-dialog/remove-patient-dialog'
+import { type Patient } from '../../../../lib/patient/models/patient.model'
+import { EmptyPatientList } from '../../empty-patient-list/empty-patient-list'
+import { useWindowDimensions } from '../../../../lib/custom-hooks/use-window-dimensions.hook'
 
-interface CurrentPatientListProps {
+interface MedicalTeamPatientListProps {
   patients: Patient[]
 }
 
-export const CurrentPatientList: FunctionComponent<CurrentPatientListProps> = (props: CurrentPatientListProps) => {
+export const MedicalTeamPatientList: FunctionComponent<MedicalTeamPatientListProps> = (props: MedicalTeamPatientListProps) => {
   const { patients } = props
   const {
     columns,
-    patientToRemoveForHcp,
-    patientToRemoveForCaregiver,
+    patientToRemove,
     rowsProps,
     onCloseRemoveDialog,
     onRowClick
-  } = useCurrentPatientListHook({ patients })
+  } = useMedicalTeamPatientListHook({ patients })
   const { displayedColumns } = usePatientListContext()
   const { refreshInProgress } = usePatientContext()
   const { width } = useWindowDimensions()
@@ -92,16 +90,10 @@ export const CurrentPatientList: FunctionComponent<CurrentPatientListProps> = (p
           }}
         />
       </Box>
-      {patientToRemoveForHcp &&
-        <RemovePatientDialog
-          patient={patientToRemoveForHcp}
-          onClose={onCloseRemoveDialog}
-        />
-      }
 
-      {patientToRemoveForCaregiver &&
-        <RemoveDirectShareDialog
-          userToRemove={patientToRemoveForCaregiver}
+      {patientToRemove &&
+        <RemovePatientDialog
+          patient={patientToRemove}
           onClose={onCloseRemoveDialog}
         />
       }
