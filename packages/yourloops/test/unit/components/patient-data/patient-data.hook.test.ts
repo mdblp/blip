@@ -112,7 +112,10 @@ describe('usePatientData hook', () => {
     it('should be able to change patient', () => {
       const newPatientId = 'newPatientId'
       const { result } = renderHook(() => usePatientData())
-      result.current.changePatient({ userid: newPatientId } as Patient)
+      act(() => {
+        result.current.changePatient({ userid: newPatientId } as Patient)
+      })
+      expect(result.current.medicalData).toBeNull()
       expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp(newPatientId)}/${ChartTypes.Dashboard}`)
     })
   })
