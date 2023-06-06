@@ -297,7 +297,8 @@ jobs:
 
   publish:
     name: Publish
-    if: github.ref_name == 'main'
+#    TODO To uncomment before merging
+#    if: github.ref_name == 'main'
     needs: build
     runs-on: ubuntu-latest
     steps:
