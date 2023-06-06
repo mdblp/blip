@@ -6,7 +6,7 @@ import { utils as vizUtils } from 'tidepool-viz'
 import {
   CBGStatType,
   LoopModeStat,
-  SimpleStat,
+  SimpleStat
 } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
 import Divider from '@mui/material/Divider'
