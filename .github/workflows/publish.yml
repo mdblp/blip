@@ -17,9 +17,10 @@ jobs:
     outputs:
       version: ${{ steps.changelog-version.outputs.semver }}
     steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          ref: ${{ inputs.head-ref }}
+      - name: Checkout files
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.head-ref }}
 
       - name: Download artifact
         uses: actions/download-artifact@v3
