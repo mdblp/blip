@@ -25,69 +25,46 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Patient } from '../../../../lib/patient/models/patient.model'
-import { type GridColDef, type GridRowParams, type GridRowsProp, type GridValidRowModel } from '@mui/x-data-grid'
 import { useCallback, useState } from 'react'
-import { type UserToRemove } from '../../../dialogs/remove-direct-share-dialog'
+import { type GridColDef, type GridRowParams, type GridRowsProp } from '@mui/x-data-grid'
 import { usePatientContext } from '../../../../lib/patient/patient.provider'
-import { useAuth } from '../../../../lib/auth'
-import { getPatientFullName } from 'dumb'
+import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { useCurrentPatientListHook } from '../current-patient-list.hook'
-import { PatientListColumns } from '../../models/enums/patient-list.enum'
-import _ from 'lodash'
 
-interface CurrentPrivateTeamOrCaregiverPatientListHookProps {
+interface MedicalTeamPatientListHookProps {
   patients: Patient[]
 }
 
-interface CurrentPrivateTeamOrCaregiverPatientListHookReturns {
+interface MedicalTeamPatientListHookReturns {
   columns: GridColDef[]
-  patientToRemoveFromPrivateTeam: Patient | null
-  patientToRemoveFromDirectShare: UserToRemove | null
+  patientToRemove: Patient | null
   rowsProps: GridRowsProp
   onCloseRemoveDialog: () => void
   onRowClick: (params: GridRowParams) => void
 }
 
-const EXCLUDED_COLUMNS = [PatientListColumns.Messages, PatientListColumns.MonitoringAlerts]
-
-export const useCurrentPrivateTeamOrCaregiverPatientListHook = (props: CurrentPrivateTeamOrCaregiverPatientListHookProps): CurrentPrivateTeamOrCaregiverPatientListHookReturns => {
+export const useMedicalTeamPatientListHook = (props: MedicalTeamPatientListHookProps): MedicalTeamPatientListHookReturns => {
   const { patients } = props
-  const { user } = useAuth()
   const { getPatientById } = usePatientContext()
 
-  const [patientToRemoveFromPrivateTeam, setPatientToRemoveFromPrivateTeam] = useState<Patient | null>(null)
-  const [patientToRemoveFromDirectShare, setPatientToRemoveFromDirectShare] = useState<UserToRemove | null>(null)
+  const [patientToRemove, setPatientToRemove] = useState<Patient | null>(null)
 
   const onClickRemovePatient = useCallback((patientId: string): void => {
     const patient = getPatientById(patientId)
-    if (user.isUserHcp()) {
-      setPatientToRemoveFromPrivateTeam(patient)
-      return
-    }
-    setPatientToRemoveFromDirectShare({
-      id: patient.userid,
-      fullName: getPatientFullName(patient),
-      email: patient.profile.email
-    })
-  }, [getPatientById, user])
+    setPatientToRemove(patient)
+  }, [getPatientById])
 
   const { allRows, allColumns, onRowClick } = useCurrentPatientListHook({ patients, onClickRemovePatient })
 
   const onCloseRemoveDialog = (): void => {
-    setPatientToRemoveFromPrivateTeam(null)
-    setPatientToRemoveFromDirectShare(null)
+    setPatientToRemove(null)
   }
 
-  const columns = allColumns.filter((column: GridColDef) => !EXCLUDED_COLUMNS.includes(column.field as PatientListColumns))
-  const rowsProps = allRows.map((row: GridValidRowModel) => _.omit(row, EXCLUDED_COLUMNS))
-
   return {
-    columns,
-    rowsProps,
+    columns: allColumns,
+    patientToRemove,
+    rowsProps: allRows,
     onCloseRemoveDialog,
-    onRowClick,
-    patientToRemoveFromPrivateTeam,
-    patientToRemoveFromDirectShare
+    onRowClick
   }
 }

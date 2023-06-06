@@ -27,7 +27,7 @@
 
 import React, { type FunctionComponent, useState } from 'react'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
-import { useCurrentPrivateTeamOrCaregiverPatientListHook } from './current-private-team-or-caregiver-patient-list.hook'
+import { usePrivateTeamOrCaregiverPatientListHook } from './private-team-or-caregiver-patient-list.hook'
 import Box from '@mui/material/Box'
 import { DataGrid, type GridPaginationModel, type GridSortModel, useGridApiRef } from '@mui/x-data-grid'
 import { EmptyPatientList } from '../../empty-patient-list/empty-patient-list'
@@ -39,11 +39,11 @@ import { useWindowDimensions } from '../../../../lib/custom-hooks/use-window-dim
 import { PatientListColumns } from '../../models/enums/patient-list.enum'
 import RemovePatientDialog from '../../../patient/remove-patient-dialog/remove-patient-dialog'
 
-interface CurrentPrivateTeamOrCaregiverPatientListProps {
+interface PrivateTeamOrCaregiverPatientListProps {
   patients: Patient[]
 }
 
-export const CurrentPrivateTeamOrCaregiverPatientList: FunctionComponent<CurrentPrivateTeamOrCaregiverPatientListProps> = (props: CurrentPrivateTeamOrCaregiverPatientListProps) => {
+export const PrivateTeamOrCaregiverPatientList: FunctionComponent<PrivateTeamOrCaregiverPatientListProps> = (props: PrivateTeamOrCaregiverPatientListProps) => {
   const { patients } = props
   const {
     columns,
@@ -52,7 +52,7 @@ export const CurrentPrivateTeamOrCaregiverPatientList: FunctionComponent<Current
     rowsProps,
     onCloseRemoveDialog,
     onRowClick
-  } = useCurrentPrivateTeamOrCaregiverPatientListHook({ patients })
+  } = usePrivateTeamOrCaregiverPatientListHook({ patients })
   const { displayedColumns } = usePatientListContext()
   const { refreshInProgress } = usePatientContext()
   const { width } = useWindowDimensions()

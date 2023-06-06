@@ -32,17 +32,17 @@ import { PatientListCustomFooter } from '../../patient-list-custom-footer'
 import { PatientListColumns } from '../../models/enums/patient-list.enum'
 import { usePatientListContext } from '../../../../lib/providers/patient-list.provider'
 import { usePatientContext } from '../../../../lib/patient/patient.provider'
-import { useCurrentMedicalTeamPatientListHook } from './current-medical-team-patient-list.hook'
+import { useMedicalTeamPatientListHook } from './medical-team-patient-list.hook'
 import RemovePatientDialog from '../../../patient/remove-patient-dialog/remove-patient-dialog'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { EmptyPatientList } from '../../empty-patient-list/empty-patient-list'
 import { useWindowDimensions } from '../../../../lib/custom-hooks/use-window-dimensions.hook'
 
-interface CurrentMedicalTeamPatientListProps {
+interface MedicalTeamPatientListProps {
   patients: Patient[]
 }
 
-export const CurrentMedicalTeamPatientList: FunctionComponent<CurrentMedicalTeamPatientListProps> = (props: CurrentMedicalTeamPatientListProps) => {
+export const MedicalTeamPatientList: FunctionComponent<MedicalTeamPatientListProps> = (props: MedicalTeamPatientListProps) => {
   const { patients } = props
   const {
     columns,
@@ -50,7 +50,7 @@ export const CurrentMedicalTeamPatientList: FunctionComponent<CurrentMedicalTeam
     rowsProps,
     onCloseRemoveDialog,
     onRowClick
-  } = useCurrentMedicalTeamPatientListHook({ patients })
+  } = useMedicalTeamPatientListHook({ patients })
   const { displayedColumns } = usePatientListContext()
   const { refreshInProgress } = usePatientContext()
   const { width } = useWindowDimensions()
