@@ -221,7 +221,7 @@ const ConsentForm: FunctionComponent<ConsentFormProps> = (props) => {
         {userRole === UserRole.Hcp && setHcpConfirmAcknowledged &&
           <ConsentHcpConfirmAck
             id={id}
-            checked={hcpConfirmAcknowledged}
+            checked={!!hcpConfirmAcknowledged}
             onChange={() => { setHcpConfirmAcknowledged(!hcpConfirmAcknowledged) }}
           />
         }

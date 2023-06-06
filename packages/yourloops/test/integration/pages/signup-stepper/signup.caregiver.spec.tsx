@@ -34,7 +34,7 @@ import {
 } from '../../mock/auth0.hook.mock'
 import {
   checkAccountSelectorStep,
-  checkConsentStep,
+  checkConsentStepCaregiver,
   checkProfileStep,
   checkStepper
 } from '../../assert/signup-stepper.assert'
@@ -76,7 +76,7 @@ describe('Signup stepper as caregiver', () => {
     await userEvent.click(screen.getByText('Next'))
 
     // Step two
-    await checkConsentStep()
+    await checkConsentStepCaregiver()
     expect(screen.queryByLabelText('Feedback checkbox')).not.toBeInTheDocument()
     await userEvent.click(screen.getByText('Next'))
 
