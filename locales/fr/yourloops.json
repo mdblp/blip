@@ -266,7 +266,7 @@
   "modal-cancel-patient-invite-title": "Cancel the invite",
   "modal-caregiver-remove-patient-failure": "Impossible de supprimer le·la patient·e. Veuillez réessayer plus tard.",
   "modal-caregiver-remove-patient-info-2": "Vous n'aurez plus accès à ses données.",
-  "modal-caregiver-remove-patient-question": "Êtes-vous sûr·e de vouloir supprimer {{name}}?",
+  "modal-caregiver-remove-patient-question": "Are you sure you want to remove <strong>{{name}}</strong>?",
   "modal-caregiver-remove-patient-remove": "Supprimer le patient",
   "modal-caregiver-remove-patient-success": "Vous n'avez plus accès aux données du·de la patient·e.",
   "modal-caregiver-remove-patient-title": "Supprimer un patient",
