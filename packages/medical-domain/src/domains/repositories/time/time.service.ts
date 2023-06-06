@@ -190,6 +190,7 @@ export function twoWeeksAgo(time: string | number, timezone: string): number {
   const mTime = moment.tz(time, timezone)
   return mTime.startOf('week').subtract(2, 'weeks').valueOf()
 }
+
 /**
  * setTimeout() as promised
  * @param {number} timeout in milliseconds

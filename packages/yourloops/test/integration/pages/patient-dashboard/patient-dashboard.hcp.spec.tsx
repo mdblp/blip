@@ -52,16 +52,16 @@ import {
   testDashboardDataVisualisationForHcp,
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationWithTwoWeeksOldData,
-  testEmptyMedicalFilesWidgetForHcp
-  // testPatientNavBarForHcp
+  testEmptyMedicalFilesWidgetForHcp,
+  testPatientNavBarForHcp
 } from '../../use-cases/patient-data-visualisation'
-// import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
-// import { type MedicalFilesWidgetParams } from '../../assert/medical-widget.assert'
+import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
+import { type MedicalFilesWidgetParams } from '../../assert/medical-widget.assert'
 import {
-  // testMonitoringAlertsParametersConfigurationDialogMgdl,
+  testMonitoringAlertsParametersConfigurationDialogMgdl,
   testMonitoringAlertsParametersConfigurationDialogMmol
 } from '../../use-cases/monitoring-alerts-parameters-management'
-// import { testChatWidgetForHcp } from '../../use-cases/communication-system'
+import { testChatWidgetForHcp } from '../../use-cases/communication-system'
 import { ConfigService } from '../../../../lib/config/config.service'
 
 describe('Patient dashboard for HCP', () => {
@@ -86,45 +86,45 @@ describe('Patient dashboard for HCP', () => {
   })
 
   it('should render correct components when navigating to a patient not scoped on the private team', async () => {
-    // const selectedTeamName = myThirdTeamName
+    const selectedTeamName = myThirdTeamName
     mockDataAPI(completeDailyViewData)
 
-    // const appMainLayoutParams: AppMainLayoutHcpParams = {
-    //   footerHasLanguageSelector: false,
-    //   headerInfo: {
-    //     loggedInUserFullName: `${firstName} ${lastName}`,
-    //     teamMenuInfo: {
-    //       selectedTeamName,
-    //       isSelectedTeamPrivate: false,
-    //       availableTeams: buildAvailableTeams()
-    //     }
-    //   }
-    // }
-    // const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
-    //   isChatCardVisible: true,
-    //   isMedicalFilesCardVisible: true,
-    //   isMonitoringAlertCardVisible: true
-    // }
-    //
-    // const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
-    //   selectedPatientId: patient1Id,
-    //   loggedInUserFirstName: firstName,
-    //   loggedInUserLastName: lastName,
-    //   selectedTeamId: myThirdTeamId,
-    //   selectedTeamName
-    // }
+    const appMainLayoutParams: AppMainLayoutHcpParams = {
+      footerHasLanguageSelector: false,
+      headerInfo: {
+        loggedInUserFullName: `${firstName} ${lastName}`,
+        teamMenuInfo: {
+          selectedTeamName,
+          isSelectedTeamPrivate: false,
+          availableTeams: buildAvailableTeams()
+        }
+      }
+    }
+    const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
+      isChatCardVisible: true,
+      isMedicalFilesCardVisible: true,
+      isMonitoringAlertCardVisible: true
+    }
+
+    const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
+      selectedPatientId: patient1Id,
+      loggedInUserFirstName: firstName,
+      loggedInUserLastName: lastName,
+      selectedTeamId: myThirdTeamId,
+      selectedTeamName
+    }
 
     await act(async () => {
       renderPage(patientDashboardRoute)
     })
 
-    // await testAppMainLayoutForHcp(appMainLayoutParams)
-    // await testDashboardDataVisualisationForHcp(patientDashboardLayoutParams)
-    await testDashboardDataVisualisationForHcp()
-    // await testPatientNavBarForHcp()
-    // await testMedicalWidgetForHcp(medicalFilesWidgetParams)
-    // await testMonitoringAlertsParametersConfigurationDialogMgdl()
-    // await testChatWidgetForHcp()
+    await testAppMainLayoutForHcp(appMainLayoutParams)
+    await testDashboardDataVisualisationForHcp(patientDashboardLayoutParams)
+    await testDashboardDataVisualisationForHcp(patientDashboardLayoutParams)
+    await testPatientNavBarForHcp()
+    await testMedicalWidgetForHcp(medicalFilesWidgetParams)
+    await testMonitoringAlertsParametersConfigurationDialogMgdl()
+    await testChatWidgetForHcp()
   })
 
   it('should render correct statistic when data is two weeks old', async () => {

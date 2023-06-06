@@ -97,7 +97,6 @@ export class PatientDataUtils {
         end = moment.utc(epochLocation + TimeService.MS_IN_DAY * 4).startOf('day').add(1, 'day')
       }
     }
-
     return { start, end }
   }
 
@@ -140,7 +139,6 @@ export class PatientDataUtils {
 
   async retrievePatientData(): Promise<PatientData | null> {
     const dataRange = await DataApi.getPatientDataRange(this.patient.userid)
-
     if (!dataRange) {
       return null
     }
