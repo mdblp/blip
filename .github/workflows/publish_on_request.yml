@@ -66,6 +66,18 @@ jobs:
     needs: [ get-current-branch, build ]
     runs-on: ubuntu-latest
     steps:
+      - name: Get YourLoops version from changelog
+        uses: addnab/docker-run-action@v3
+        with:
+          username: ${{ secrets.NEXUS_USERNAME }}
+          password: ${{ secrets.NEXUS_PASSWORD }}
+          registry: ${{ secrets.REGISTRY }}
+          options: -v ${{ github.workspace }}:/dblprm/blip:rw --user 0:0
+          image: docker.ci.diabeloop.eu/ci-toolbox:latest
+          run: |
+            cd blip
+            echo "semver=$(release-helper get-version)" > version.env
+
       - name: Read env file
         id: changelog-version
         uses: cardinalby/export-env-action@v1
