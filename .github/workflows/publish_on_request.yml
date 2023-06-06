@@ -66,6 +66,12 @@ jobs:
     needs: [ get-current-branch, build ]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout files
+        uses: actions/checkout@v3
+        if: success()
+        with:
+          ref: ${{ needs.get-current-branch.outputs.head-ref }}
+
       - name: Get YourLoops version from changelog
         uses: addnab/docker-run-action@v3
         with:
@@ -86,7 +92,8 @@ jobs:
           expand: 'false'
           export: 'false'
 
-      - uses: ./.github/workflows/publish.yml
+      - name: Publish
+        uses: ./.github/workflows/publish.yml
         with:
           head-ref: ${{ needs.get-current-branch.outputs.head-ref }}
           image-tag: ${{ steps.changelog-version.outputs.semver }}-${{ env.PR_NUMBER }}

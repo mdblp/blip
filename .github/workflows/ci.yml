@@ -302,6 +302,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout files
+        uses: actions/checkout@v3
+
       - name: Get YourLoops version from changelog
         uses: addnab/docker-run-action@v3
         with:
@@ -322,7 +325,8 @@ jobs:
           expand: 'false'
           export: 'false'
 
-      - uses: ./.github/workflows/publish.yml
+      - name: Publish
+        uses: ./.github/workflows/publish.yml
         with:
           head-ref: ${{ github.ref_name }}
           image-tag: ${{ steps.changelog-version.outputs.semver }}
