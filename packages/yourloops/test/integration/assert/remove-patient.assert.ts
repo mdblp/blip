@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { myThirdTeamId, myThirdTeamName } from '../mock/team.api.mock'
 import PatientApi from '../../../lib/patient/patient.api'
@@ -100,9 +100,7 @@ export const checkRemovePatientMedicalTeamError = async () => {
   const removeDialog = screen.getByRole('dialog')
   const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
-  await act(async () => {
-    await userEvent.click(confirmRemoveButton)
-  })
+  await userEvent.click(confirmRemoveButton)
   expect(PatientApi.removePatient).toHaveBeenCalledWith(myThirdTeamId, patient1.userid)
   expect(screen.getByRole('dialog')).toBeVisible()
   expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')

@@ -86,6 +86,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2244 Migrate coefficientOfVariation from stats.js to yourloops
 - YLP-2245 Migrate SettingsPrintView to dumb
 - YLP-2252 Bump auth0-react from 1.9.0 to 2.0.1
+- YLP-2255 Bump react to 18.2.0
 - YLP-2256 Bump minor deps
 - YLP-2258 Bump react-markdown
 - YLP-2286 Rename the "alarm" concept to "monitored alert"
@@ -102,6 +103,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2367 Patient list refacto
 - YLP-2386 Fix navigation crash between care team and patient list
 - YLP-2387 Fix the tab title when displaying the patient list
+- YLP-2403 Remove caregiver and private team logic from CurrentPatientList
 - YLP-2404 Fix patient list columns width
 
 ### Fixed

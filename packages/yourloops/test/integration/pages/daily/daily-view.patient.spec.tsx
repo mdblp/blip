@@ -32,10 +32,17 @@ import { mockDataAPI } from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout.assert'
 import { patient2AsTeamMember } from '../../data/patient.api.data'
+import { mockWindowResizer } from '../../mock/window-resizer.mock'
 
 describe('Daily view for patient', () => {
-  beforeAll(() => {
+  beforeEach(() => {
+    mockWindowResizer()
     mockPatientLogin(patient2AsTeamMember)
+  })
+
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
   })
 
   it('should render correct layout', async () => {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,10 +27,9 @@
 
 import React from 'react'
 
-import { renderHook, act } from '@testing-library/react-hooks/dom'
+import { renderHook, act, render } from '@testing-library/react'
 
 import { type SnackbarContext, Snackbar, DefaultSnackbarContext } from '../../../../components/utils/snackbar'
-import { render } from '@testing-library/react'
 
 describe('Snackbar', () => {
   const spies = {

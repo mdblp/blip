@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,24 +60,12 @@ describe('Dialog date picker', () => {
     }
   })
 
-  it('should render nothing if not open', async () => {
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <DialogDatePicker isOpen={false} onResult={_.noop} />, container, resolve)
-      })
-    })
-
-    const calendarElem = document.getElementById('calendar-box')
-    expect(calendarElem).toBeNull()
-  })
-
   it('should call onSelectedDateChange() when the selected date changed', async () => {
     const onSelectedDateChanged = jest.fn()
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <DialogDatePicker isOpen date="2022-01-26" onSelectedDateChange={onSelectedDateChanged}
+          <DialogDatePicker date="2022-01-26" onSelectedDateChange={onSelectedDateChanged}
             onResult={_.noop} />, container, resolve)
       })
     })
@@ -99,7 +87,7 @@ describe('Dialog date picker', () => {
     const onResult = jest.fn()
     await act(() => {
       return new Promise((resolve) => {
-        ReactDOM.render(<DialogDatePicker isOpen onResult={onResult} />, container, resolve)
+        ReactDOM.render(<DialogDatePicker onResult={onResult} />, container, resolve)
       })
     })
 
@@ -117,7 +105,6 @@ describe('Dialog date picker', () => {
         // Note: wrong date value is intentional
         ReactDOM.render(
           <DialogDatePicker
-            isOpen
             onResult={onResult}
             date="2021-10-02"
             maxDate="2021-11-26"

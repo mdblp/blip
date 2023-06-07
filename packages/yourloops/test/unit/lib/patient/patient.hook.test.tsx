@@ -26,7 +26,7 @@
  */
 
 import usePatientProviderCustomHook from '../../../../lib/patient/patient.hook'
-import { act, renderHook } from '@testing-library/react-hooks/dom'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import PatientUtils from '../../../../lib/patient/patient.util'
 import { buildTeam, createPatient } from '../../common/utils'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
@@ -34,7 +34,6 @@ import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
 import * as patientFilterHookMock from '../../../../lib/providers/patient-list.provider'
-import { waitFor } from '@testing-library/react'
 import PatientApi from '../../../../lib/patient/patient.api'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
@@ -285,7 +284,7 @@ describe('Patient hook', () => {
         await customHook.removePatient(patientToRemovePrivatePractice)
       })
       expect(removeDirectShareMock).toHaveBeenCalled()
-      expect(PatientUtils.computePatients).toHaveBeenCalledTimes(3)
+      expect(PatientUtils.computePatients).toHaveBeenCalledTimes(2)
     })
 
     it.skip('should unflag a patient when he no longer belongs to a team', async () => {

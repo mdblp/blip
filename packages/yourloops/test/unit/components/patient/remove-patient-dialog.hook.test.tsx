@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 import useRemovePatientDialog from '../../../../components/patient/remove-patient-dialog/remove-patient-dialog.hook'
 import PatientAPI from '../../../../lib/patient/patient.api'
 import * as usePatientContextMock from '../../../../lib/patient/patient.provider'

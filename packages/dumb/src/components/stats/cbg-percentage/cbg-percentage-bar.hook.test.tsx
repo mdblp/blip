@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { renderHook } from '@testing-library/react-hooks/dom'
+import { renderHook } from '@testing-library/react'
 import { CBGStatType } from '../../../models/stats.model'
 import { type CBGPercentageBarHookProps, useCBGPercentageBar } from './cbg-percentage-bar.hook'
 

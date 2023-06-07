@@ -29,7 +29,7 @@ import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { addDirectShareMock, mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { act, screen, waitFor, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { checkPatientLayout } from '../../assert/layout.assert'
 import userEvent from '@testing-library/user-event'
@@ -104,9 +104,7 @@ describe('Patient caregivers page', () => {
       invitation: { email: caregiverEmail } as Notification,
       status: UserInviteStatus.Accepted
     }])
-    await act(async () => {
-      await userEvent.click(addCaregiverDialogConfirmButton)
-    })
+    await userEvent.click(addCaregiverDialogConfirmButton)
 
     expect(addDirectShareMock).toHaveBeenCalledWith(loggedInUserId, caregiverEmail)
 
@@ -142,11 +140,10 @@ describe('Patient caregivers page', () => {
     const removeCaregiverDialog = screen.getByRole('dialog')
     expect(removeCaregiverDialog).toBeVisible()
 
-    const removeCaregiverDialogTitle = within(removeCaregiverDialog).getByText('Remove a caregiver')
+    const removeCaregiverDialogTitle = within(removeCaregiverDialog).getByText(`Remove caregiver ${caregiverFirstName} ${caregiverLastName}`)
     expect(removeCaregiverDialogTitle).toBeVisible()
 
-    const removeCaregiverDialogQuestion = within(removeCaregiverDialog).getByText(`Are you sure you want to remove caregiver ${caregiverFirstName} ${caregiverLastName}?`)
-    expect(removeCaregiverDialogQuestion).toBeVisible()
+    expect(removeCaregiverDialog).toHaveTextContent(`Are you sure you want to remove caregiver ${caregiverFirstName} ${caregiverLastName}?`)
 
     const removeCaregiverDialogInfo = within(removeCaregiverDialog).getByText('They will no longer have access to your data.')
     expect(removeCaregiverDialogInfo).toBeVisible()
@@ -157,9 +154,7 @@ describe('Patient caregivers page', () => {
     const removeCaregiverDialogConfirmButton = within(removeCaregiverDialog).getByText('Remove caregiver')
     expect(removeCaregiverDialogConfirmButton).toBeVisible()
 
-    await act(async () => {
-      await userEvent.click(removeCaregiverDialogConfirmButton)
-    })
+    await userEvent.click(removeCaregiverDialogConfirmButton)
 
     expect(caregiverRow).not.toBeVisible()
 
@@ -187,9 +182,7 @@ describe('Patient caregivers page', () => {
     await userEvent.type(addCaregiverDialogEmailInput2, otherPatientEmail)
 
     jest.spyOn(DirectShareApi, 'addDirectShare').mockRejectedValueOnce(new Error(PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE))
-    await act(async () => {
-      await userEvent.click(addCaregiverDialogConfirmButton2)
-    })
+    await userEvent.click(addCaregiverDialogConfirmButton2)
 
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You cannot share your data with this user as they are not a caregiver.')
   })

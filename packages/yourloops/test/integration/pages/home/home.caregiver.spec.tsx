@@ -58,7 +58,7 @@ describe('Caregiver home page', () => {
     const router = renderPage('/')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/home')
-    })
+    }, { timeout: 3000 })
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
     await checkCaregiverLayout(`${firstName} ${lastName}`)
     checkPatientListHeaderCaregiver()
@@ -109,7 +109,9 @@ describe('Caregiver home page', () => {
 
     renderPage('/')
 
-    await waitFor(() => { expect(screen.queryByTestId('current-patient-list-grid')).toBeVisible() }, { timeout: 10000 })
+    await waitFor(() => {
+      expect(screen.queryByTestId('current-patient-list-grid')).toBeVisible()
+    }, { timeout: 10000 })
 
     // Checking that all patients are displayed
     const dataGridRow = screen.getByTestId('current-patient-list-grid')
@@ -153,11 +155,10 @@ describe('Caregiver home page', () => {
     const removePatientDialog = screen.getByRole('dialog')
     expect(removePatientDialog).toBeVisible()
 
-    const removePatientDialogTitle = within(removePatientDialog).getByText('Remove a patient')
+    const removePatientDialogTitle = within(removePatientDialog).getByText('Remove patient Patient2 Rouis')
     expect(removePatientDialogTitle).toBeVisible()
 
-    const removePatientDialogQuestion = within(removePatientDialog).getByText('Are you sure you want to remove Patient2 Rouis?')
-    expect(removePatientDialogQuestion).toBeVisible()
+    expect(removePatientDialog).toHaveTextContent('Are you sure you want to remove Patient2 Rouis?')
 
     const removePatientDialogCancelButton = within(removePatientDialog).getByText('Cancel')
     expect(removePatientDialogCancelButton).toBeVisible()
@@ -176,9 +177,7 @@ describe('Caregiver home page', () => {
 
     const removePatientDialog2ConfirmButton = within(removePatientDialog2).getByRole('button', { name: 'Remove patient' })
 
-    await act(async () => {
-      await userEvent.click(removePatientDialog2ConfirmButton)
-    })
+    await userEvent.click(removePatientDialog2ConfirmButton)
 
     expect(removeDirectShareMock).toHaveBeenCalledWith(patient2AsTeamMember.userId, loggedInUserId)
     expect(jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1AsTeamMember])).toHaveBeenCalledTimes(2)
@@ -201,9 +200,7 @@ describe('Caregiver home page', () => {
 
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
-    await act(async () => {
-      await userEvent.click(confirmRemoveButton)
-    })
+    await userEvent.click(confirmRemoveButton)
 
     expect(removeDirectShareMock).toHaveBeenCalledWith(patient2AsTeamMember.userId, loggedInUserId)
     expect(screen.getByTestId('remove-direct-share-dialog')).toBeVisible()
