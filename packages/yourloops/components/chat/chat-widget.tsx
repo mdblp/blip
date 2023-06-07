@@ -137,6 +137,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const [inputTab, setInputTab] = useState(0)
   const content = useRef<HTMLDivElement>(null)
   const inputRow = useRef<HTMLDivElement>(null)
+  const shouldMakeInitialApiCallToFetchMessages = useRef(true)
   const isUserHcp = user.isUserHcp()
   const isUserPatient = user.isUserPatient()
   const teams = getMedicalTeams()
@@ -171,9 +172,12 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       setUnreadMessagesByTeamForPatient(unreadMessages)
     }
 
-    fetchMessages()
-    if (isUserPatient) {
-      fetchUnreadMessagesCountForPatient()
+    if (shouldMakeInitialApiCallToFetchMessages.current) {
+      shouldMakeInitialApiCallToFetchMessages.current = false
+      fetchMessages()
+      if (isUserPatient) {
+        fetchUnreadMessagesCountForPatient()
+      }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
