@@ -24,8 +24,8 @@ inputs:
     required: false
     type: string
 
-outputs:
-  version: ${{ steps.changelog-version.outputs.semver }}
+#outputs:
+#  version: ${{ steps.changelog-version.outputs.semver }}
 
 runs:
   using: 'composite'

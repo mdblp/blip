@@ -301,6 +301,8 @@ jobs:
 #    if: github.ref_name == 'main'
     needs: build
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.changelog-version.outputs.semver }}
     steps:
       - name: Checkout files
         uses: actions/checkout@v3
