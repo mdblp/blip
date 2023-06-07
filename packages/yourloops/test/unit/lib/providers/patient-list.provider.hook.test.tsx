@@ -39,7 +39,6 @@ describe('usePatientListProviderHook', () => {
   const defaultFilters: PatientsFilters = {
     pendingEnabled: false,
     manualFlagEnabled: false,
-    telemonitoredEnabled: false,
     timeOutOfTargetEnabled: false,
     hypoglycemiaEnabled: false,
     dataNotTransferredEnabled: false,
@@ -49,7 +48,6 @@ describe('usePatientListProviderHook', () => {
   const filtersUpdated: PatientsFilters = {
     pendingEnabled: true,
     manualFlagEnabled: true,
-    telemonitoredEnabled: true,
     timeOutOfTargetEnabled: true,
     hypoglycemiaEnabled: true,
     dataNotTransferredEnabled: true,
@@ -61,7 +59,7 @@ describe('usePatientListProviderHook', () => {
       return {
         user: {
           isUserHcp: () => true,
-          preferences: { patientsListSortedOptionalColumns: ['system', 'last-data-update', 'messages'] }
+          preferences: { patientsListSortedOptionalColumns: [PatientListColumns.System, PatientListColumns.LastDataUpdate, PatientListColumns.Messages] }
         } as User,
         updatePreferences: updatePreferencesMock
       }
@@ -133,7 +131,7 @@ describe('usePatientListProviderHook', () => {
         [PatientListColumns.Messages]: false,
         [PatientListColumns.Actions]: true
       }
-      const patientsListSortedOptionalColumns = ['flag', 'system', 'patient', 'actions']
+      const patientsListSortedOptionalColumns = [PatientListColumns.Flag, PatientListColumns.System, PatientListColumns.Patient, PatientListColumns.Actions]
 
       act(() => {
         result.current.saveColumnsPreferences(updatedColumnsVisibilityModel)
@@ -171,7 +169,7 @@ describe('usePatientListProviderHook', () => {
         return {
           user: {
             isUserHcp: () => false,
-            preferences: { patientsListSortedOptionalColumns: ['system', 'last-data-update'] }
+            preferences: { patientsListSortedOptionalColumns: [PatientListColumns.System, PatientListColumns.LastDataUpdate] }
           } as User
         }
       })

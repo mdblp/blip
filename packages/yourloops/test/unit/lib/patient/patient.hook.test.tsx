@@ -89,7 +89,6 @@ describe('Patient hook', () => {
         filters: {
           pendingEnabled: false,
           manualFlagEnabled: false,
-          telemonitoredEnabled: false,
           timeOutOfTargetEnabled: false,
           hypoglycemiaEnabled: false,
           dataNotTransferredEnabled: false,

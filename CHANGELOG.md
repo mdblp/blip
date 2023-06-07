@@ -45,6 +45,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2393 Remove fields and "Show more/Show less" logic in the patient header
 - YLP-2394 Hide "Monitoring alerts" card for patients users
 - YLP-2399 Cancel invite dialog new design
+- YLP-2435 Remove "Telemonitored" filter on patient list
 
 ### Engineering use
 - YLP-2044 Remove redux settings store

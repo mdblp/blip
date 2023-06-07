@@ -43,7 +43,6 @@ const defaultMonitoringAlerts = {
 const defaultPatientFilters = {
   pendingEnabled: false,
   manualFlagEnabled: false,
-  telemonitoredEnabled: false,
   timeOutOfTargetEnabled: false,
   hypoglycemiaEnabled: false,
   dataNotTransferredEnabled: false,

@@ -35,7 +35,6 @@ import { useAuth } from '../auth'
 const DEFAULT_FILTERS = {
   pendingEnabled: false,
   manualFlagEnabled: false,
-  telemonitoredEnabled: false,
   timeOutOfTargetEnabled: false,
   hypoglycemiaEnabled: false,
   dataNotTransferredEnabled: false,
@@ -120,7 +119,7 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     setFilters(DEFAULT_FILTERS)
   }
 
-  const hasAnyNonPendingFiltersEnabled = filters.manualFlagEnabled || filters.telemonitoredEnabled || filters.timeOutOfTargetEnabled || filters.hypoglycemiaEnabled || filters.dataNotTransferredEnabled || filters.messagesEnabled
+  const hasAnyNonPendingFiltersEnabled = filters.manualFlagEnabled || filters.timeOutOfTargetEnabled || filters.hypoglycemiaEnabled || filters.dataNotTransferredEnabled || filters.messagesEnabled
 
   return {
     filters,
