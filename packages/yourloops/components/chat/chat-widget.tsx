@@ -137,7 +137,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const [inputTab, setInputTab] = useState(0)
   const content = useRef<HTMLDivElement>(null)
   const inputRow = useRef<HTMLDivElement>(null)
-  const shouldMakeInitialApiCallToFetchMessages = useRef(true)
+  const teamIdForWhichMessagesHaveBeenFetched = useRef(null)
   const isUserHcp = user.isUserHcp()
   const isUserPatient = user.isUserPatient()
   const teams = getMedicalTeams()
@@ -172,8 +172,8 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       setUnreadMessagesByTeamForPatient(unreadMessages)
     }
 
-    if (shouldMakeInitialApiCallToFetchMessages.current) {
-      shouldMakeInitialApiCallToFetchMessages.current = false
+    if (dropdownTeamId !== teamIdForWhichMessagesHaveBeenFetched.current) {
+      teamIdForWhichMessagesHaveBeenFetched.current = dropdownTeamId
       fetchMessages()
       if (isUserPatient) {
         fetchUnreadMessagesCountForPatient()

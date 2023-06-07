@@ -31,7 +31,8 @@ import React, {
   type PropsWithChildren,
   useCallback,
   useContext,
-  useEffect, useRef,
+  useEffect,
+  useRef,
   useState
 } from 'react'
 import _ from 'lodash'
@@ -195,7 +196,7 @@ function TeamContextImpl(): TeamContext {
 
   useEffect(() => {
     if (!initialized && shouldMakeInitialApiCallToGetTeams.current) {
-      shouldMakeInitialApiCallToGetTeams.current = false // Once the component has been mounted, we no longer want to execute this bit of code
+      shouldMakeInitialApiCallToGetTeams.current = false
       fetchTeams()
     }
   }, [initialized, fetchTeams])

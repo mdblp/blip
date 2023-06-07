@@ -53,7 +53,7 @@ export const PatientData: FunctionComponent = () => {
   const alert = useAlert()
   const theme = useTheme()
   const { t } = useTranslation()
-  const shouldMakeInitialApiCallToFetchPatientData = useRef(true)
+  const patientForWhichDataHasBeenFetched = useRef(null)
 
   const {
     bgPrefs,
@@ -94,8 +94,8 @@ export const PatientData: FunctionComponent = () => {
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
 
   useEffect(() => {
-    if (shouldMakeInitialApiCallToFetchPatientData.current) {
-      shouldMakeInitialApiCallToFetchPatientData.current = false
+    if (patient !== patientForWhichDataHasBeenFetched.current) {
+      patientForWhichDataHasBeenFetched.current = patient
       fetchPatientData()
         .catch((err) => {
           console.log(err)
