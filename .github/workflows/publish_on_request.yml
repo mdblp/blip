@@ -98,3 +98,6 @@ jobs:
           head-ref: ${{ needs.get-current-branch.outputs.head-ref }}
           image-tag: ${{ steps.changelog-version.outputs.semver }}-${{ env.PR_NUMBER }}
           commit-sha: ${{ needs.get-current-branch.outputs.head-sha }}
+          registry: ${{ secrets.REGISTRY }}
+          nexus-username: ${{ secrets.NEXUS_USERNAME }}
+          nexus-password: ${{ secrets.NEXUS_PASSWORD }}

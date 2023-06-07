@@ -23,6 +23,15 @@ inputs:
   commit-sha:
     required: false
     type: string
+  registry:
+    required: true
+    type: string
+  nexus-username:
+    required: true
+    type: string
+  nexus-password:
+    required: true
+    type: string
 
 #outputs:
 #  version: ${{ steps.changelog-version.outputs.semver }}
@@ -72,9 +81,9 @@ runs:
     - name: Log in to the Nexus registry
       uses: docker/login-action@v2
       with:
-        registry: ${{ secrets.REGISTRY }}
-        username: ${{ secrets.NEXUS_USERNAME }}
-        password: ${{ secrets.NEXUS_PASSWORD }}
+        registry: ${{ inputs.registry }}
+        username: ${{ inputs.nexus-username }}
+        password: ${{ inputs.nexus-password }}
 
     - name: Build and push blip Docker image
       uses: docker/build-push-action@v3.2.0
@@ -82,7 +91,7 @@ runs:
         context: .
         push: true
         platforms: linux/arm64,linux/amd64
-        tags: ${{ secrets.REGISTRY }}/blip:${{ inputs.image-tag }}
+        tags: ${{ inputs.registry }}/blip:${{ inputs.image-tag }}
 
     - name: Creating new github tag
       uses: rickstaa/action-create-tag@v1
