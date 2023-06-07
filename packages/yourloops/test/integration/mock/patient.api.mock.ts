@@ -31,19 +31,19 @@ import {
   patient3AsTeamMember,
   PATIENTS_BY_TEAMID,
   pendingPatientAsTeamMember,
-  patient2AsTeamMember
+  patient2AsTeamMember,
+  PATIENTS
 } from '../data/patient.api.data'
-import { mySecondTeamId } from './team.api.mock'
 
 export const mockPatientApiForPatients = () => {
   jest.spyOn(PatientApi, 'getPatient').mockImplementation((userId: string) => {
-    const patientsToReturn = PATIENTS_BY_TEAMID[mySecondTeamId]
+    const patient = PATIENTS.find(patient => patient.userid === userId)
+    const patientsToReturn = [patient]
     if (!patientsToReturn) {
       console.warn('Your mocked getPatient return is undefined, make sure that this is a wanted behaviour.', userId)
     }
     return Promise.resolve(patientsToReturn)
   })
-  jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1AsTeamMember])
   jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
 }
 

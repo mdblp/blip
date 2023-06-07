@@ -57,6 +57,7 @@ describe('PatientApi', () => {
       jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
       const response = await PatientApi.getPatients()
       expect(response).toBeInstanceOf(Array)
+      expect(response).toEqual([])
     })
 
     it('should throw an error if http call failed', async () => {
@@ -84,6 +85,7 @@ describe('PatientApi', () => {
       const userId = '1234'
       const response = await PatientApi.getPatient(userId)
       expect(response).toBeInstanceOf(Array)
+      expect(response).toEqual([])
     })
 
     it('should throw an error if http call failed', async () => {

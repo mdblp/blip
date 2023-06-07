@@ -29,13 +29,11 @@ import { mockAuth0Hook } from './auth0.hook.mock'
 import { mockNotificationAPI } from './notification.api.mock'
 import { mockDirectShareApi } from './direct-share.api.mock'
 import { mockTeamAPI } from './team.api.mock'
-import PatientAPI from '../../../lib/patient/patient.api'
 import { mockChatAPI } from './chat.api.mock'
 import { mockMedicalFilesAPI } from './medical-files.api.mock'
 import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from './user.api.mock'
-import { PATIENTS } from '../data/patient.api.data'
 
 export const mockPatientLogin = (patient: ITeamMember) => {
   mockAuth0Hook(UserRole.Patient, patient.userId)
@@ -43,14 +41,6 @@ export const mockPatientLogin = (patient: ITeamMember) => {
   mockDirectShareApi()
   mockTeamAPI()
   mockUserApi().mockUserDataFetch({ firstName: patient.profile.firstName, lastName: patient.profile.lastName })
-  jest.spyOn(PatientAPI, 'getPatient').mockImplementation((userId: string) => {
-    const patient = PATIENTS.find(patient => patient.userid === userId)
-    const patientsToReturn = [patient]
-    if (!patientsToReturn) {
-      console.warn('Your mocked getPatient return is undefined, make sure that this is a wanted behaviour.', userId)
-    }
-    return Promise.resolve(patientsToReturn)
-  })
   mockChatAPI()
   mockMedicalFilesAPI()
 }
