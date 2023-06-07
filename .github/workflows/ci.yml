@@ -327,7 +327,7 @@ jobs:
 
       - uses: actions/checkout@v3
       - name: Publish
-        uses: ./.github/actions/publish.yml
+        uses: ./.github/actions/publish
         with:
           head-ref: ${{ github.ref_name }}
           image-tag: ${{ steps.changelog-version.outputs.semver }}

@@ -11,7 +11,7 @@
 #        required: false
 #        type: string
 
-name: 'Publish action'
+name: Publish
 
 inputs:
   head-ref:
