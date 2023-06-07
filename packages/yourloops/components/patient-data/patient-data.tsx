@@ -53,7 +53,7 @@ export const PatientData: FunctionComponent = () => {
   const alert = useAlert()
   const theme = useTheme()
   const { t } = useTranslation()
-  const patientForWhichDataHasBeenFetched = useRef(null)
+  const patientIdForWhichDataHasBeenFetched = useRef(null)
 
   const {
     bgPrefs,
@@ -94,8 +94,8 @@ export const PatientData: FunctionComponent = () => {
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
 
   useEffect(() => {
-    if (patient !== patientForWhichDataHasBeenFetched.current) {
-      patientForWhichDataHasBeenFetched.current = patient
+    if (patient.userid !== patientIdForWhichDataHasBeenFetched.current) {
+      patientIdForWhichDataHasBeenFetched.current = patient.userid
       fetchPatientData()
         .catch((err) => {
           console.log(err)
