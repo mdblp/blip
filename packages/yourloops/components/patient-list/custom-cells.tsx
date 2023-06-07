@@ -45,6 +45,7 @@ import { NoMessageIcon } from '../icons/diabeloop/no-message-icon'
 import { MessageIcon } from '../icons/diabeloop/message-icon'
 import { convertBG } from '../../lib/units/units.util'
 import Button from '@mui/material/Button'
+import { Unit } from 'medical-domain'
 
 interface FlagCellProps {
   isFlagged: boolean
@@ -121,7 +122,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
   const { user } = useAuth()
 
   const { monitoringAlerts, monitoringAlertsParameters } = patient
-  const unit = user.settings?.units?.bg ?? monitoringAlertsParameters.bgUnit
+  const unit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter // This is the default unit used when the logged-in user has no unit preference
 
   const roundUpToOneDecimal = (value: number): number => {
     return Math.round(value * 10) / 10
