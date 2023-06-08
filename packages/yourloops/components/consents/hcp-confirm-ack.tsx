@@ -52,6 +52,7 @@ export const ConsentHcpConfirmAck: FunctionComponent<BaseConsentCheck> = ({ chec
 
   return (
     <FormControlLabel
+      data-testid="consent-hcp-confirm-ack"
       control={
         <Checkbox
           aria-label={t('hcp-confirm-ack-checkbox')}
