@@ -34,14 +34,22 @@ import { type MonitoringAlertsParameters } from '../../team/models/monitoring-al
 import { type PatientInvite } from './patient-invite.model'
 import { type GlycemiaIndicators } from './glycemia-indicators.model'
 
-export interface Patient {
-  monitoringAlerts: MonitoringAlerts
-  glycemiaIndicators: GlycemiaIndicators
+export interface Patient extends Partial<PatientMetrics> {
+  // monitoringAlerts?: MonitoringAlerts
+  // glycemiaIndicators?: GlycemiaIndicators
   profile: PatientProfile
   settings: PatientSettings
-  metadata: PatientMetadata
+  // metadata: PatientMetadata
   monitoringAlertsParameters?: MonitoringAlertsParameters
   invitationStatus: UserInviteStatus
   invite?: PatientInvite
   readonly userid: string
+}
+
+export interface PatientMetrics {
+  readonly userid: string
+  monitoringAlerts: MonitoringAlerts
+  glycemiaIndicators: GlycemiaIndicators
+  // monitoringAlertsParameters?: MonitoringAlertsParameters
+  metadata: PatientMetadata
 }

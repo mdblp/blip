@@ -32,7 +32,7 @@ import { UserRole } from '../auth/models/enums/user-role.enum'
 import { type ITeamMember } from '../team/models/i-team-member.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
-import { type Patient } from './models/patient.model'
+import { type Patient, PatientMetrics } from './models/patient.model'
 import { type MonitoringAlertsParameters } from '../team/models/monitoring-alerts-parameters.model'
 
 const log = bows('Patient API')
@@ -65,7 +65,18 @@ export default class PatientApi {
   }
 
   static async getPatientsForHcp(userId: string, teamId: string): Promise<Patient[]> {
-    const { data } = await HttpService.get<Patient[]>({ url: `/bff/v1/hcps/${userId}/teams/${teamId}/patients` })
+    const { data } = await HttpService.get<Patient[]>({ url: `/bff/v1/hcps/${userId}/teams/${teamId}/patients-info` })
+    return data
+  }
+
+  static async getPatientsMetricsForHcp(userId: string, teamId: string, patientIds: string[]): Promise<PatientMetrics[]> {
+    const { data } = await HttpService.get<PatientMetrics[]>({
+      url: `/bff/v1/hcps/${userId}/teams/${teamId}/patients-metrics`,
+      config: {
+        params: { patientList: patientIds },
+        paramsSerializer: { indexes: null }
+      }
+    })
     return data
   }
 

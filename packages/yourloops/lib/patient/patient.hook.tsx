@@ -37,7 +37,7 @@ import { useAuth } from '../auth'
 import metrics from '../metrics'
 import { errorTextFromException } from '../utils'
 import { type PatientContextResult } from './models/patient-context-result.model'
-import { type Patient } from './models/patient.model'
+import { type Patient, PatientMetrics } from './models/patient.model'
 import { type MedicalData } from '../data/models/medical-data.model'
 import { useSelectedTeamContext } from '../selected-team/selected-team.provider'
 import { usePatientListContext } from '../providers/patient-list.provider'
@@ -60,18 +60,46 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
 
   const fetchPatients = useCallback((teamId: string = selectedTeamId) => {
-    PatientUtils.computePatients(user, teamId).then(computedPatients => {
-      setPatients(computedPatients)
-    }).catch((reason: unknown) => {
-      const message = errorTextFromException(reason)
-      alert.error(message)
-    }).finally(() => {
-      setInitialized(true)
-      setRefreshInProgress(false)
-    })
+    PatientUtils.computePatients(user, teamId)
+      .then((computedPatients: Patient[]) => {
+        setPatients(computedPatients)
+        return computedPatients
+      })
+      .then(async (computedPatients: Patient[]) => {
+        if (!isUserHcp) {
+          return
+        }
+        // setTimeout(async () => {
+          await fetchPatientsMetrics(teamId, computedPatients)
+        // }, 5000)
+      })
+      .catch((reason: unknown) => {
+        const message = errorTextFromException(reason)
+        alert.error(message)
+      })
+      .finally(() => {
+        setInitialized(true)
+        setRefreshInProgress(false)
+      })
     // Need to rewrite the alert component, or it triggers infinite loop...
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, selectedTeam])
+
+  const fetchPatientsMetrics = async (teamId: string = selectedTeamId, computedPatients: Patient[]): Promise<void> => {
+    const patientIds = computedPatients.map((patient: Patient) => patient.userid)
+    const patientsMetrics = await PatientApi.getPatientsMetricsForHcp(user.id, teamId, patientIds)
+    const updatedPatients = computedPatients.map((patient: Patient) => {
+      const relatedMetrics = patientsMetrics.find((metrics: PatientMetrics) => metrics.userid === patient.userid)
+      if (!relatedMetrics) {
+        return patient
+      }
+      patient.glycemiaIndicators = relatedMetrics.glycemiaIndicators
+      patient.monitoringAlerts = relatedMetrics.monitoringAlerts
+      patient.metadata = relatedMetrics.metadata
+      return patient
+    })
+    setPatients(updatedPatients)
+  }
 
   const refresh = (teamId: string = selectedTeamId): void => {
     setRefreshInProgress(true)
