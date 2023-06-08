@@ -40,9 +40,9 @@ export function convertBG(value: number, currentUnit: BgUnit): number {
   }
   switch (currentUnit) {
     case Unit.MilligramPerDeciliter:
-      return value / MGDL_PER_MMOL
+      return Math.round(value / MGDL_PER_MMOL * 10) / 10
     case Unit.MmolPerLiter:
-      return value * MGDL_PER_MMOL
+      return Math.round(value * MGDL_PER_MMOL)
     default:
       throw new Error('Invalid parameter unit')
   }

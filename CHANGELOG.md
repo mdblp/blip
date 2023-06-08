@@ -45,6 +45,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2393 Remove fields and "Show more/Show less" logic in the patient header
 - YLP-2394 Hide "Monitoring alerts" card for patients users
 - YLP-2399 Cancel invite dialog new design
+- YLP-2435 Remove "Telemonitored" filter on patient list
 
 ### Engineering use
 - YLP-2044 Remove redux settings store
@@ -98,12 +99,14 @@ It is based on Tidepool Blip 1.27.
 - YLP-2307 Incomplete alert when accepting a direct share invitation
 - YLP-2311 Reorganize ITs
 - YLP-2328 Migrate patient-data from jsx to tsx
+- YLP-2352 Monitoring alert tooltips "out of range" displays incorrect values
 - YLP-2364 Fixed English translations
 - YLP-2367 Patient list refacto
 - YLP-2386 Fix navigation crash between care team and patient list
 - YLP-2387 Fix the tab title when displaying the patient list
 - YLP-2403 Remove caregiver and private team logic from CurrentPatientList
 - YLP-2404 Fix patient list columns width
+- YLP-2418 use new patient route from harbour
 - YLP-2434 Api calls are trigerred twice
 
 ### Fixed
