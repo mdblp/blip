@@ -67,6 +67,7 @@ const SignupStepperActionButtons: FunctionComponent<SignupStepperActionButtonsPr
         </Button>
       </Box>
       <LoadingButton
+        data-testid="next-step"
         loading={inProgress}
         variant="contained"
         color="primary"

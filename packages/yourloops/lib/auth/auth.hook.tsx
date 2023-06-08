@@ -225,6 +225,7 @@ export function AuthContextImpl(): AuthContext {
     if (signupForm.accountRole === UserRole.Hcp) {
       profile.contactConsent = { acceptanceTimestamp: now, isAccepted: signupForm.feedback }
       profile.hcpProfession = signupForm.hcpProfession
+      profile.hcpConfirmAck = { acceptanceTimestamp: now, isAccepted: signupForm.hcpConfirmAck }
     }
     const preferences: Preferences = { displayLanguageCode: signupForm.preferencesLanguage }
     const settings: Settings = { country: signupForm.profileCountry }

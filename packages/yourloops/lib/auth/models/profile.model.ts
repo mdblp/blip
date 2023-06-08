@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,5 +39,6 @@ export interface Profile {
   trainingAck?: Consent
   privacyPolicy?: Consent
   contactConsent?: Consent
+  hcpConfirmAck?: Consent
   hcpProfession?: HcpProfession
 }
