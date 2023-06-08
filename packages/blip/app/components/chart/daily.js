@@ -316,7 +316,9 @@ class Daily extends React.Component {
   }
 
   onChartMounted() {
-    this.setState({ chartMounted: true })
+    if (!this.state.chartMounted) {
+      this.setState({ chartMounted: true })
+    }
   }
 
   render() {
