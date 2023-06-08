@@ -15,22 +15,8 @@
  * == BSD2 LICENSE ==
  */
 
-import enzyme from 'enzyme'
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17'
+
 import moment from 'moment-timezone'
-
-enzyme.configure({
-  adapter: new Adapter(),
-  disableLifecycleMethods: true
-})
-
-window.d3 = require('d3')
-window.d3.chart = require('d3.chart')
-
-moment.locale('en')
-
-// DOM not required
-// ====================================
 
 /* js/data/ */
 import './format.test'
@@ -49,13 +35,15 @@ import './device.test'
 // ====================================
 
 /* plugins/ */
-import './chartbasicsfactory.test'
 import './basics_classifiers.test'
 import './basics_datamunger.test'
 import './nurseshark.test'
 
-import './blip/components/day/hover/InfusionHoverDisplay.test.js'
 import './blip/components/logic/actions.test.js'
 import './blip/components/sitechange/Selector.test.js'
 import './blip/components/BasicsUtils.test.js'
-import './blip/components/CalendarContainer.test.js'
+
+window.d3 = require('d3')
+window.d3.chart = require('d3.chart')
+
+moment.locale('en')

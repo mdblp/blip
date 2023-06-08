@@ -38,12 +38,14 @@ import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
+import { mockWindowResizer } from '../../mock/window-resizer.mock'
 
 describe('Daily view for HCP', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
-  beforeAll(() => {
+  beforeEach(() => {
+    mockWindowResizer()
     mockAuth0Hook()
     mockNotificationAPI()
     mockDirectShareApi()
@@ -51,6 +53,11 @@ describe('Daily view for HCP', () => {
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForHcp()
     mockChatAPI()
+  })
+
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
   })
 
   it('should render correct layout', async () => {

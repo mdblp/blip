@@ -46,6 +46,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2394 Hide "Monitoring alerts" card for patients users
 - YLP-2399 Cancel invite dialog new design
 - YLP-2430 Add checkbox to confirm that user is a hcp
+- YLP-2435 Remove "Telemonitored" filter on patient list
 
 ### Engineering use
 - YLP-2044 Remove redux settings store
@@ -87,6 +88,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2244 Migrate coefficientOfVariation from stats.js to yourloops
 - YLP-2245 Migrate SettingsPrintView to dumb
 - YLP-2252 Bump auth0-react from 1.9.0 to 2.0.1
+- YLP-2255 Bump react to 18.2.0
 - YLP-2256 Bump minor deps
 - YLP-2258 Bump react-markdown
 - YLP-2286 Rename the "alarm" concept to "monitored alert"
@@ -98,12 +100,14 @@ It is based on Tidepool Blip 1.27.
 - YLP-2307 Incomplete alert when accepting a direct share invitation
 - YLP-2311 Reorganize ITs
 - YLP-2328 Migrate patient-data from jsx to tsx
+- YLP-2352 Monitoring alert tooltips "out of range" displays incorrect values
 - YLP-2364 Fixed English translations
 - YLP-2367 Patient list refacto
 - YLP-2386 Fix navigation crash between care team and patient list
 - YLP-2387 Fix the tab title when displaying the patient list
 - YLP-2403 Remove caregiver and private team logic from CurrentPatientList
 - YLP-2404 Fix patient list columns width
+- YLP-2418 use new patient route from harbour
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team

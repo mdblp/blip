@@ -41,7 +41,6 @@ import { type CalendarOrientation, type DateRange, type CalendarSelectionRange, 
 import RangeDatePicker from './range-date-picker'
 
 interface DatePickerProps {
-  isOpen: boolean
   /** Please use string format `YYYY-MM-DD` if possible */
   start?: string | number | Dayjs | Date
   /** Please use string format `YYYY-MM-DD` if possible */
@@ -84,20 +83,15 @@ const datePickerStyle = makeStyles({ name: 'date-picker-days-range' })((theme: T
   }
 })
 
-const dummyDate = dayjs()
-
 function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.up('sm'))
   const orientation: CalendarOrientation = matches ? 'landscape' : 'portrait'
   const { classes, cx } = datePickerStyle()
-  const { maxSelectableDays, isOpen, onSelectedDateChange } = props
+  const { maxSelectableDays, onSelectedDateChange } = props
 
   const { startDate, endDate, minDate, maxDate } = React.useMemo(() => {
-    if (!isOpen) {
-      return { startDate: dummyDate, endDate: dummyDate, minDate: dummyDate, maxDate: dummyDate }
-    }
     // It's safe to use the UTC in the calendar
     // - dayjs don't support well the timezone (lost of copy)
     // - We return a day without any timezone, it's up to the caller to do
@@ -127,23 +121,21 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
       endDate = maxDate
     }
     return { startDate, endDate, minDate, maxDate }
-  }, [isOpen, props.start, props.end, props.maxDate, props.minDate])
+  }, [props.start, props.end, props.maxDate, props.minDate])
 
   const [nextSelection, setNextSelection] = React.useState<'first' | 'last'>('first')
   const [selected, setSelected] = React.useState<DateRange>({ start: startDate, end: endDate })
   const [selectable, setSelectable] = React.useState<DateRange | undefined>(undefined)
 
   React.useEffect(() => {
-    if (isOpen) {
-      // Refresh our states
-      const range: DateRange = { start: startDate, end: endDate }
-      setNextSelection('first')
-      setSelected(range)
-      if (onSelectedDateChange) {
-        onSelectedDateChange(range.start.format('YYYY-MM-DD'), range.end.format('YYYY-MM-DD'))
-      }
+    // Refresh our states
+    const range: DateRange = { start: startDate, end: endDate }
+    setNextSelection('first')
+    setSelected(range)
+    if (onSelectedDateChange) {
+      onSelectedDateChange(range.start.format('YYYY-MM-DD'), range.end.format('YYYY-MM-DD'))
     }
-  }, [isOpen, startDate, endDate, onSelectedDateChange])
+  }, [startDate, endDate, onSelectedDateChange])
 
   const handleCancel = (): void => {
     props.onResult()
@@ -192,7 +184,7 @@ function DialogRangeDatePicker(props: DatePickerProps): JSX.Element {
   })
 
   return (
-    <Dialog id="date-picker-dialog" onClose={handleCancel} open={isOpen} PaperProps={{ className: classes.dialogPaper }}>
+    <Dialog id="date-picker-dialog" onClose={handleCancel} open PaperProps={{ className: classes.dialogPaper }}>
       <DialogContent id="calendar-view" className={contentClasses}>
         <RangeDatePicker
           selection={{ mode: 'range', selected, selectable, maxSelectableDays } as CalendarSelectionRange}

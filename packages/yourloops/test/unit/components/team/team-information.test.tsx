@@ -176,15 +176,17 @@ describe('TeamInformation', () => {
     const editInfoButton = screen.getByRole('button', { name: 'button-edit-information' })
     await act(async () => {
       fireEvent.click(editInfoButton)
-      await waitFor(() => {
-        expect(screen.queryByRole('dialog')).not.toBeNull()
-      })
-      const editTeamDialog = within(screen.getByRole('dialog'))
-      const editTeamButton = editTeamDialog.getByRole('button', { name: 'button-cancel' })
+    })
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog')).not.toBeNull()
+    })
+    const editTeamDialog = within(screen.getByRole('dialog'))
+    const editTeamButton = editTeamDialog.getByRole('button', { name: 'button-cancel' })
+    await act(async () => {
       fireEvent.click(editTeamButton)
-      await waitFor(() => {
-        expect(updateTeamMock).toHaveBeenCalledTimes(0)
-      })
+    })
+    await waitFor(() => {
+      expect(updateTeamMock).toHaveBeenCalledTimes(0)
     })
     expect(refresh).toHaveBeenCalledTimes(0)
   })

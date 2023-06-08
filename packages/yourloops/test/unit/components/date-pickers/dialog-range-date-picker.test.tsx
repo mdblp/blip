@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -62,49 +62,11 @@ describe('Dialog range date picker', () => {
     }
   })
 
-  it('should render nothing when isOpen is false', async () => {
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <DialogRangeDatePicker
-            isOpen={false}
-            onResult={handleResultStub}
-            onSelectedDateChange={handleSelectedDateChange}
-          />, container, resolve)
-      })
-    })
-
-    const calendarElem = document.getElementById('calendar-box-first')
-    expect(calendarElem).toBeNull()
-    expect(handleResultStub).toHaveBeenCalledTimes(0)
-    expect(handleSelectedDateChange).toHaveBeenCalledTimes(0)
-  })
-
-  it('should render the calendar when isOpen is true', async () => {
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <DialogRangeDatePicker
-            isOpen
-            onResult={handleResultStub}
-            onSelectedDateChange={handleSelectedDateChange}
-            showToolbar
-          />, container, resolve)
-      })
-    })
-
-    const calendarElem = document.getElementById('calendar-box-first')
-    expect(calendarElem).not.toBeNull()
-    expect(handleResultStub).toHaveBeenCalledTimes(0)
-    expect(handleSelectedDateChange).toHaveBeenCalledTimes(1)
-  })
-
   it('should render the calendar when using the enter key on the button', async () => {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
           <DialogRangeDatePicker
-            isOpen
             onResult={handleResultStub}
             onSelectedDateChange={handleSelectedDateChange}
           />, container, resolve)
@@ -123,7 +85,6 @@ describe('Dialog range date picker', () => {
       return new Promise((resolve) => {
         ReactDOM.render(
           <DialogRangeDatePicker
-            isOpen
             onResult={handleResultStub}
             onSelectedDateChange={handleSelectedDateChange}
           />, container, resolve)
@@ -141,7 +102,7 @@ describe('Dialog range date picker', () => {
     await act(() => {
       return new Promise((resolve) => {
         ReactDOM.render(
-          <DialogRangeDatePicker isOpen onResult={handleResultStub} />, container, resolve)
+          <DialogRangeDatePicker onResult={handleResultStub} />, container, resolve)
       })
     })
 
@@ -161,7 +122,6 @@ describe('Dialog range date picker', () => {
       return new Promise((resolve) => {
         ReactDOM.render(
           <DialogRangeDatePicker
-            isOpen
             onResult={handleResultStub}
             onSelectedDateChange={handleSelectedDateChange}
             start="2021-01-01"
@@ -186,7 +146,6 @@ describe('Dialog range date picker', () => {
       return new Promise((resolve) => {
         ReactDOM.render(
           <DialogRangeDatePicker
-            isOpen
             onResult={handleResultStub}
             start="2022-12-01"
             end="2021-01-01"
@@ -208,7 +167,6 @@ describe('Dialog range date picker', () => {
       return new Promise((resolve) => {
         ReactDOM.render(
           <DialogRangeDatePicker
-            isOpen
             onResult={handleResultStub}
             start="2022-01-01"
             end="2022-01-05"
@@ -236,7 +194,6 @@ describe('Dialog range date picker', () => {
       return new Promise((resolve) => {
         ReactDOM.render(
           <DialogRangeDatePicker
-            isOpen
             onResult={handleResultStub}
             onSelectedDateChange={handleSelectedDateChange}
             start="2022-01-01"

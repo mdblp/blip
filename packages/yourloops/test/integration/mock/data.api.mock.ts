@@ -117,7 +117,7 @@ export const completeDailyViewData: Data = {
   ]
 }
 
-export const smbgData = {
+export const smbgData: Data = {
   dataRange: ['2022-08-08T11:30:00Z', '2022-08-08T18:30:00Z'],
   data: [
     { time: '2022-08-08T15:15:00Z', type: 'smbg', id: 'smb_2022-08-08_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
@@ -138,7 +138,7 @@ export const smbgData = {
   ]
 }
 
-export const minimalTrendViewData = {
+export const minimalTrendViewData: Data = {
   dataRange: ['2020-01-01T00:00:00Z', '2020-01-20T00:00:00Z'],
   data: [
     { time: '2020-01-20T10:00:00Z', type: 'cbg', id: '2020-01-20_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.1, uploadId: 'osef', _userId: 'osef' },

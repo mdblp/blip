@@ -21,7 +21,6 @@
   "types": "app/index.d.ts",
   "dependencies": {
     "classnames": "^2.3.1",
-    "prop-types": "^15.7.2",
-    "react-window-size-listener": "^1.5.4"
+    "prop-types": "^15.7.2"
   }
 }
