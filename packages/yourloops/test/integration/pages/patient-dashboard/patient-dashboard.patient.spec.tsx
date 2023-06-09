@@ -146,4 +146,10 @@ describe('Patient dashboard for patient', () => {
 
     await testEmptyMedicalFilesWidgetForPatient()
   })
+
+  // it('should allow the patient to join a care team by code', async () => {
+  //   await act(async () => {
+  //     renderPage(patientDashboardRoute)
+  //   })
+  // })
 })
