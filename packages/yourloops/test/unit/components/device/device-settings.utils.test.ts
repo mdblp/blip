@@ -25,9 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum ChartTypes {
-  Dashboard = 'dashboard',
-  Daily = 'daily',
-  Trends = 'trends',
-  Device = 'device'
-}
+import { formatParameterValue } from '../../../../components/device/device-settings.utils'
+import { Unit } from 'medical-domain'
+
+describe('Device settings utils', () => {
+  describe('formatParameterValue', () => {
+    it('should return the correct format for the given value', () => {
+      expect(formatParameterValue('75', Unit.Percent)).toEqual('75')
+      expect(formatParameterValue('5', Unit.Minute)).toEqual('5')
+      expect(formatParameterValue('12.45', Unit.Gram)).toEqual('12.4')
+      expect(formatParameterValue('85', Unit.Kilogram)).toEqual('85.0')
+      expect(formatParameterValue('35', Unit.InsulinUnit)).toEqual('35.0')
+      expect(formatParameterValue(24.78, Unit.MilligramPerDeciliter)).toEqual('24.8')
+      expect(formatParameterValue(2.54, Unit.MmolPerLiter)).toEqual('2.5')
+      expect(formatParameterValue('not_a_number', Unit.MmolPerLiter)).toEqual('--')
+    })
+  })
+})

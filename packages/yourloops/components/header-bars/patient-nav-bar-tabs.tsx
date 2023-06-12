@@ -38,6 +38,7 @@ import { type Theme } from '@mui/material/styles'
 import Button from '@mui/material/Button'
 import GetAppIcon from '@mui/icons-material/GetApp'
 import { ChartTypes } from '../../enum/chart-type.enum'
+import PhonelinkSetupOutlinedIcon from '@mui/icons-material/PhonelinkSetupOutlined'
 
 interface PatientNavBarTabsProps {
   currentChart: string
@@ -74,7 +75,6 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
     onChangeChart,
     onClickPrint
   } = props
-
   const { t } = useTranslation()
   const { classes } = styles()
 
@@ -84,6 +84,8 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
         return 1
       case ChartTypes.Trends:
         return 2
+      case ChartTypes.Device:
+        return 3
       case ChartTypes.Dashboard:
       default:
         return 0
@@ -122,6 +124,17 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           label={t('trends')}
           icon={<TrendingUp />}
           onClick={() => { onChangeChart(ChartTypes.Trends) }}
+          classes={{
+            root: classes.root
+          }}
+        />
+        <Tab
+          className={classes.tab}
+          data-testid="device-tab"
+          iconPosition="start"
+          label={t('device')}
+          icon={<PhonelinkSetupOutlinedIcon />}
+          onClick={() => { onChangeChart(ChartTypes.Device) }}
           classes={{
             root: classes.root
           }}

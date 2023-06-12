@@ -54,6 +54,7 @@ import {
 } from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
 import { TimeService } from 'medical-domain'
 import metrics from 'yourloops/lib/metrics'
+import { ChartTypes } from 'yourloops/enum/chart-type.enum'
 
 const useStyles = makeStyles()((theme) => ({
   sectionTitles: {
@@ -105,7 +106,7 @@ const getLabel = (row, t) => {
 
 const DeviceUsage = (props) => {
   //eslint-disable-next-line
-  const { bgPrefs, timePrefs, patient, tidelineData, onSwitchToDaily, medicalData, dateFilter } = props
+  const { bgPrefs, timePrefs, patient, tidelineData, onSwitchToDaily, medicalData, dateFilter, changeChart } = props
   const [dialogOpened, setDialogOpened] = React.useState(false)
   const { t } = useTranslation()
   const { classes } = useStyles()
@@ -142,6 +143,10 @@ const DeviceUsage = (props) => {
     }
   }
 
+  const goToDeviceSettings = () => {
+    changeChart(ChartTypes.Device)
+  }
+
   return <>
     <GenericDashboardCard
       avatar={<PhonelinkSetupOutlinedIcon />}
@@ -151,7 +156,7 @@ const DeviceUsage = (props) => {
         <IconButton
           data-testid="settings-button"
           aria-label="settings"
-          onClick={() => setDialogOpened(true)}
+          onClick={goToDeviceSettings}
           size="small"
         >
           <MoreHorizOutlinedIcon />
@@ -226,6 +231,7 @@ const DeviceUsage = (props) => {
         />
       </CardContent>
     </GenericDashboardCard>
+    {/*TODO To delete*/}
     {dialogOpened &&
       <SettingsDialog
         bgPrefs={bgPrefs}
@@ -241,6 +247,7 @@ const DeviceUsage = (props) => {
 
 DeviceUsage.propType = {
   bgPrefs: PropTypes.object.isRequired,
+  changeChart: PropTypes.func.isRequired,
   timePrefs: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
   tidelineData: PropTypes.object.isRequired,

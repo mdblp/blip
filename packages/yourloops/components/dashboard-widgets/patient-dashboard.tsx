@@ -52,9 +52,11 @@ import { makeStyles } from 'tss-react/mui'
 import ChatWidget from '../chat/chat-widget'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { PRIVATE_TEAM_ID, useTeam } from '../../lib/team/team.hook'
+import { type ChartTypes } from '../../enum/chart-type.enum'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
+  changeChart: (chart: ChartTypes) => void
   dashboardEpochDate: number
   dataUtil: typeof DataUtil
   goToDailySpecificDate: (date: number | Date) => void
@@ -76,6 +78,7 @@ const useStyle = makeStyles()((theme) => ({
 export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
   const {
     bgPrefs,
+    changeChart,
     dashboardEpochDate,
     dataUtil,
     goToDailySpecificDate,
@@ -165,6 +168,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
           timePrefs={timePrefs}
           patient={patient}
           tidelineData={medicalDataService}
+          changeChart={changeChart}
           onSwitchToDaily={goToDailySpecificDate}
           medicalData={medicalData}
           dateFilter={dateFilter}
