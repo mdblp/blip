@@ -166,18 +166,22 @@ class DailyChart extends React.Component {
 
   bindEvents() {
     const { chart } = this.state
-    chart.emitter.on('createMessage', this.props.onCreateMessage)
-    chart.emitter.on('inTransition', this.props.onTransition)
-    chart.emitter.on('messageThread', this.props.onShowMessageThread)
-    chart.emitter.on('navigated', this.props.onDatetimeLocationChange)
+    if(chart.emitter) {
+      chart.emitter.on('createMessage', this.props.onCreateMessage)
+      chart.emitter.on('inTransition', this.props.onTransition)
+      chart.emitter.on('messageThread', this.props.onShowMessageThread)
+      chart.emitter.on('navigated', this.props.onDatetimeLocationChange)
+    }
   }
 
   unbindEvents() {
     const { chart } = this.state
-    chart.emitter.off('createMessage', this.props.onCreateMessage)
-    chart.emitter.off('inTransition', this.props.onTransition)
-    chart.emitter.off('messageThread', this.props.onShowMessageThread)
-    chart.emitter.off('navigated', this.props.onDatetimeLocationChange)
+    if(chart.emitter) {
+      chart.emitter.off('createMessage', this.props.onCreateMessage)
+      chart.emitter.off('inTransition', this.props.onTransition)
+      chart.emitter.off('messageThread', this.props.onShowMessageThread)
+      chart.emitter.off('navigated', this.props.onDatetimeLocationChange)
+    }
   }
 
   render() {
