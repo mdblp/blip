@@ -28,7 +28,7 @@
 import { act, renderHook } from '@testing-library/react'
 import * as authHookMock from '../../../../lib/auth'
 import { type User } from '../../../../lib/auth'
-import * as patientContext from '../../../../lib/patient/patient.provider'
+import * as patientContext from '../../../../lib/patient/patients.provider'
 import * as alertMock from '../../../../components/utils/snackbar'
 import useProfilePageContextHook from '../../../../pages/profile/profile-page-context.hook'
 import { type Profile } from '../../../../lib/auth/models/profile.model'
@@ -81,7 +81,7 @@ describe('Profile page context hook', () => {
   const refreshPatientMock = jest.fn()
 
   beforeEach(() => {
-    (patientContext.usePatientContext as jest.Mock).mockImplementation(() => ({
+    (patientContext.usePatientsContext as jest.Mock).mockImplementation(() => ({
       refresh: refreshPatientMock
     }));
     (alertMock.useAlert as jest.Mock).mockImplementation(() => ({

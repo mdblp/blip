@@ -27,7 +27,7 @@
 
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
-import * as patientHookMock from '../../../../lib/patient/patient.provider'
+import * as patientsHookMock from '../../../../lib/patient/patients.provider'
 import NotificationApi from '../../../../lib/notifications/notification.api'
 import { renderHook } from '@testing-library/react'
 import useRemoveDirectShareDialog from '../../../../components/dialogs/remove-direct-share-dialog.hook'
@@ -68,7 +68,7 @@ describe('Remove direct share dialog hook', () => {
       error: onErrorAlertMock
     }));
 
-    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => ({
+    (patientsHookMock.usePatientsContext as jest.Mock).mockImplementation(() => ({
       refresh: refreshMock
     }))
   })

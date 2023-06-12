@@ -25,30 +25,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import PatientApi from '../../../lib/patient/patient.api'
-import {
-  patient1AsTeamMember,
-  patient2AsTeamMember,
-  patient3AsTeamMember,
-  PATIENTS_BY_TEAMID,
-  pendingPatientAsTeamMember
-} from '../data/patient.api.data'
+import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
+import usePatientsProviderCustomHook from './patients.hook'
+import { type PatientsContextResult } from './models/patients-context-result.model'
+import SpinningLoader from '../../components/loaders/spinning-loader'
 
-export const mockPatientApiForPatients = () => {
-  jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
+const PatientsContext = createContext<PatientsContextResult>({} as PatientsContextResult)
+
+export const PatientsProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
+  const patientProviderCustomHook = usePatientsProviderCustomHook()
+
+  return patientProviderCustomHook.initialized
+    ? <PatientsContext.Provider value={patientProviderCustomHook}>{children}</PatientsContext.Provider>
+    : <SpinningLoader className="centered-spinning-loader" />
 }
 
-export const mockPatientApiForCaregivers = () => {
-  jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1AsTeamMember, patient2AsTeamMember, patient3AsTeamMember, pendingPatientAsTeamMember])
-  jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
-}
-export const mockPatientApiForHcp = () => {
-  jest.spyOn(PatientApi, 'getPatientsForHcp').mockImplementation((userId: string, teamId: string) => {
-    const patientsToReturn = PATIENTS_BY_TEAMID[teamId]
-    if (!patientsToReturn) {
-      console.warn('Your mocked patients return is undefined, make sure that this is a wanted behaviour.')
-    }
-    return Promise.resolve(patientsToReturn)
-  })
-  jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
+export function usePatientsContext(): PatientsContextResult {
+  return useContext(PatientsContext)
 }

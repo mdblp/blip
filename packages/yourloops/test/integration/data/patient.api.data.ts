@@ -387,8 +387,6 @@ export const PATIENTS_BY_TEAMID: Record<string, Patient[]> = {
   ]
 }
 
-export const PATIENTS: Patient[] = [patient1, patient2, patient3]
-
 export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMember => {
   return {
     userId: member.userId ?? 'fakeUserId',

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import usePatientProviderCustomHook from '../../../../lib/patient/patient.hook'
+import usePatientsProviderCustomHook from '../../../../lib/patient/patients.hook'
 import { act, renderHook, waitFor } from '@testing-library/react'
 import PatientUtils from '../../../../lib/patient/patient.util'
 import { buildTeam, createPatient } from '../../common/utils'
@@ -98,9 +98,9 @@ describe('Patient hook', () => {
     })
   })
 
-  async function renderPatientHook(patients: Patient[]) {
+  async function renderpatientsHook(patients: Patient[]) {
     jest.spyOn(PatientUtils, 'computePatients').mockResolvedValue(patients)
-    const hook = renderHook(() => usePatientProviderCustomHook())
+    const hook = renderHook(() => usePatientsProviderCustomHook())
     await waitFor(() => {
       expect(hook.result.current.patients).toBeDefined()
     })
@@ -130,7 +130,7 @@ describe('Patient hook', () => {
     let customHook
 
     beforeAll(async () => {
-      const res = await renderPatientHook(allPatients)
+      const res = await renderpatientsHook(allPatients)
       customHook = res.result.current
     })
 
@@ -162,7 +162,7 @@ describe('Patient hook', () => {
     let customHook
 
     beforeAll(async () => {
-      const res = await renderPatientHook(allPatients)
+      const res = await renderpatientsHook(allPatients)
       customHook = res.result.current
     })
 
@@ -184,7 +184,7 @@ describe('Patient hook', () => {
     let customHook
 
     beforeAll(async () => {
-      const res = await renderPatientHook(allPatients)
+      const res = await renderpatientsHook(allPatients)
       customHook = res.result.current
     })
 
@@ -207,7 +207,7 @@ describe('Patient hook', () => {
     let customHook
 
     beforeAll(async () => {
-      const res = await renderPatientHook(allPatients)
+      const res = await renderpatientsHook(allPatients)
       customHook = res.result.current
     })
 
@@ -258,7 +258,7 @@ describe('Patient hook', () => {
     const allPatients = [pendingPatient, patientToRemovePrivatePractice, patientToRemove, patientToRemove2]
 
     it('should call notification hook cancel method if invite is pending and call removePatient method', async () => {
-      const res = await renderPatientHook(allPatients)
+      const res = await renderpatientsHook(allPatients)
       const customHook = res.result.current
       const invitation = { id: 'fakeInvitationId', email: 'fakeInvitationEmail' } as Notification
       getInvitationMock.mockReturnValue(invitation)
@@ -274,7 +274,7 @@ describe('Patient hook', () => {
       (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
         return { selectedTeam: { id: PRIVATE_TEAM_ID } }
       })
-      const res = await renderPatientHook(allPatients)
+      const res = await renderpatientsHook(allPatients)
       const customHook = res.result.current
       const invitation = { id: 'fakeInvitationId', email: 'fakeInvitationEmail' } as Notification
       getInvitationMock.mockReturnValue(invitation)
@@ -287,7 +287,7 @@ describe('Patient hook', () => {
     })
 
     it.skip('should unflag a patient when he no longer belongs to a team', async () => {
-      const res = await renderPatientHook(allPatients)
+      const res = await renderpatientsHook(allPatients)
       const customHook = res.result.current
       const invitation = { id: 'fakeInvitationId', email: 'fakeInvitationEmail' } as Notification
       getInvitationMock.mockReturnValue(invitation)
@@ -306,7 +306,7 @@ describe('Patient hook', () => {
       (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
         return { selectedTeam: { id: selectedTeamId } }
       })
-      const res = await renderPatientHook(allPatients)
+      const res = await renderpatientsHook(allPatients)
       const customHook = res.result.current
       const invitation = { id: 'fakeInvitationId', email: 'fakeInvitationEmail' } as Notification
       getInvitationMock.mockReturnValue(invitation)
@@ -327,7 +327,7 @@ describe('Patient hook', () => {
       basicPatient.metadata.hasSentUnreadMessages = true
       const allPatients = [basicPatient]
 
-      const res = await renderPatientHook(allPatients)
+      const res = await renderpatientsHook(allPatients)
       customHook = res.result.current
     })
 
@@ -344,7 +344,7 @@ describe('Patient hook', () => {
     let customHook
 
     beforeAll(async () => {
-      const res = await renderPatientHook(allPatients)
+      const res = await renderpatientsHook(allPatients)
       customHook = res.result.current
     })
 

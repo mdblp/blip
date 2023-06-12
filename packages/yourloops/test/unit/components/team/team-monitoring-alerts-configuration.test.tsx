@@ -28,7 +28,7 @@
 import React from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import * as teamHookMock from '../../../../lib/team'
-import * as patientHookMock from '../../../../lib/patient/patient.provider'
+import * as patientsHookMock from '../../../../lib/patient/patients.provider'
 import { buildTeam, buildTeamMember } from '../../common/utils'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import TeamMonitoringAlertsConfiguration, {
@@ -64,7 +64,7 @@ describe('TeamMembers', () => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return { updateTeam: updateTeamMock }
     });
-    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
+    (patientsHookMock.usePatientsContext as jest.Mock).mockImplementation(() => {
       return { refresh: refreshPatientsMock }
     });
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {

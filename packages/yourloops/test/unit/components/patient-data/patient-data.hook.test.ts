@@ -26,7 +26,7 @@
  */
 
 import * as authHookMock from '../../../../lib/auth'
-import * as patientHookMock from '../../../../lib/patient/patient.provider'
+import * as patientsHookMock from '../../../../lib/patient/patients.provider'
 import * as router from 'react-router'
 import type User from '../../../../lib/auth/models/user.model'
 import { act, renderHook } from '@testing-library/react'
@@ -61,7 +61,7 @@ describe('usePatientData hook', () => {
         } as User
       }
     });
-    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => ({
+    (patientsHookMock.usePatientsContext as jest.Mock).mockImplementation(() => ({
       getPatientById: () => createPatient()
     }))
   })

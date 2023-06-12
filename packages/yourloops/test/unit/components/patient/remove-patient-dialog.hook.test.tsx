@@ -28,7 +28,7 @@
 import { renderHook } from '@testing-library/react'
 import useRemovePatientDialog from '../../../../components/patient/remove-patient-dialog/remove-patient-dialog.hook'
 import PatientAPI from '../../../../lib/patient/patient.api'
-import * as usePatientContextMock from '../../../../lib/patient/patient.provider'
+import * as usePatientContextMock from '../../../../lib/patient/patients.provider'
 import * as teamHookMock from '../../../../lib/team'
 import { type Team } from '../../../../lib/team'
 import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
@@ -53,7 +53,7 @@ describe('Remove patient dialog hook', () => {
   const isPrivateMock = jest.fn()
 
   beforeEach(() => {
-    (usePatientContextMock.usePatientContext as jest.Mock).mockImplementation(() => ({
+    (usePatientContextMock.usePatientsContext as jest.Mock).mockImplementation(() => ({
       removePatient: removePatientMock
     }));
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => ({

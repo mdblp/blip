@@ -37,7 +37,7 @@ import { type Team, useTeam } from '../../lib/team'
 import { useAlert } from '../utils/snackbar'
 import MonitoringAlertsContentConfiguration from '../monitoring-alert/monitoring-alerts-content-configuration'
 import { type MonitoringAlertsParameters } from '../../lib/team/models/monitoring-alerts-parameters.model'
-import { usePatientContext } from '../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../lib/patient/patients.provider'
 
 export interface TeamMonitoringAlertsConfigurationProps {
   team: Team
@@ -48,7 +48,7 @@ function TeamMonitoringAlertsConfiguration(props: TeamMonitoringAlertsConfigurat
   const { classes: commonTeamClasses } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
   const teamHook = useTeam()
-  const { refresh } = usePatientContext()
+  const { refresh } = usePatientsContext()
   const alert = useAlert()
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 

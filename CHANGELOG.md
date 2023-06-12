@@ -108,6 +108,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2403 Remove caregiver and private team logic from CurrentPatientList
 - YLP-2404 Fix patient list columns width
 - YLP-2418 use new patient route from harbour
+- YLP-2446 Patient does not have to retrieve a list of patients
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team

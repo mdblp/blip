@@ -25,30 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import PatientApi from '../../../lib/patient/patient.api'
-import {
-  patient1AsTeamMember,
-  patient2AsTeamMember,
-  patient3AsTeamMember,
-  PATIENTS_BY_TEAMID,
-  pendingPatientAsTeamMember
-} from '../data/patient.api.data'
+import { type Team } from '../../team'
+import { type MedicalData } from '../../data/models/medical-data.model'
+import { type Patient } from './patient.model'
 
-export const mockPatientApiForPatients = () => {
-  jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
-}
-
-export const mockPatientApiForCaregivers = () => {
-  jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1AsTeamMember, patient2AsTeamMember, patient3AsTeamMember, pendingPatientAsTeamMember])
-  jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
-}
-export const mockPatientApiForHcp = () => {
-  jest.spyOn(PatientApi, 'getPatientsForHcp').mockImplementation((userId: string, teamId: string) => {
-    const patientsToReturn = PATIENTS_BY_TEAMID[teamId]
-    if (!patientsToReturn) {
-      console.warn('Your mocked patients return is undefined, make sure that this is a wanted behaviour.')
-    }
-    return Promise.resolve(patientsToReturn)
-  })
-  jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
+export interface PatientsContextResult {
+  patients: Patient[]
+  pendingPatientsCount?: number
+  allNonPendingPatientsForSelectedTeamCount?: number
+  initialized: boolean
+  refreshInProgress: boolean
+  getPatientByEmail: (email: string) => Patient
+  getPatientById: (userId: string) => Patient
+  searchPatients: (search: string) => Patient[]
+  invitePatient: (team: Team, username: string) => Promise<void>
+  markPatientMessagesAsRead: (patient: Patient) => void
+  updatePatientMonitoringAlertsParameters: (patient: Patient) => Promise<void>
+  removePatient: (patient: Patient) => Promise<void>
+  refresh: (teamId?: string) => void
 }

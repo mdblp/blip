@@ -67,34 +67,6 @@ describe('PatientApi', () => {
     })
   })
 
-  describe('getPatient', () => {
-    it('should get a patient', async () => {
-      const userId = '1234'
-      const data: Patient = { userid: userId } as Patient
-      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
-
-      const patients = await PatientApi.getPatient(userId)
-
-      expect(patients).toEqual([data])
-      expect(HttpService.get).toHaveBeenCalledWith({ url: `/bff/v1/patients/${userId}` })
-    })
-
-    it('should return an empty array if not found', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
-      const userId = '1234'
-      const response = await PatientApi.getPatient(userId)
-      expect(response).toEqual([])
-    })
-
-    it('should throw an error if http call failed', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
-      const userId = '1234'
-      await expect(async () => {
-        await PatientApi.getPatient(userId)
-      }).rejects.toThrowError('This error was thrown by a mock on purpose')
-    })
-  })
-
   describe('invitePatient', () => {
     it('should invite a new patient in a team and get a notification if success', async () => {
       const data = { creatorId: 'creatorId' } as INotification

@@ -28,7 +28,7 @@
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import { useAlert } from '../../utils/snackbar'
-import { usePatientContext } from '../../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../../lib/patient/patients.provider'
 import { useTeam } from '../../../lib/team'
 import TeamUtils from '../../../lib/team/team.util'
 import { type Patient } from '../../../lib/patient/models/patient.model'
@@ -48,7 +48,7 @@ interface RemovePatientDialogHookReturn {
 const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookProps): RemovePatientDialogHookReturn => {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
-  const { removePatient } = usePatientContext()
+  const { removePatient } = usePatientsContext()
   const { getTeam } = useTeam()
   const { selectedTeam } = useSelectedTeamContext()
   const selectedTeamId = selectedTeam.id

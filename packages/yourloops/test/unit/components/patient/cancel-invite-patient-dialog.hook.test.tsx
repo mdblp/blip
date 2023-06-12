@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as usePatientContextMock from '../../../../lib/patient/patient.provider'
+import * as usePatientContextMock from '../../../../lib/patient/patients.provider'
 import PatientAPI from '../../../../lib/patient/patient.api'
 import { act, renderHook } from '@testing-library/react'
 import {
@@ -43,7 +43,7 @@ describe('Cancel invite patient dialog hook', () => {
   const onInfoMock = jest.fn()
 
   beforeEach(() => {
-    (usePatientContextMock.usePatientContext as jest.Mock).mockImplementation(() => ({
+    (usePatientContextMock.usePatientsContext as jest.Mock).mockImplementation(() => ({
       removePatient: removePatientMock
     }));
     (alertMock.useAlert as jest.Mock).mockImplementation(() => ({

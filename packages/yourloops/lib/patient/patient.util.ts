@@ -54,12 +54,29 @@ export default class PatientUtils {
           throw Error('Cannot retrieve scoped patients when no team id is given')
         }
         return await PatientApi.getPatientsForHcp(user.id, teamId)
-      case UserRole.Patient:
-        return await PatientApi.getPatient(user.id)
       case UserRole.Caregiver:
         return await PatientUtils.retrievePatients()
       default:
         throw Error(`Cannot retrieve patients with user having role ${user.role}`)
+    }
+  }
+
+  static mapUserToPatient(user: User): Patient {
+    const profile = user.profile
+    return {
+      userid: user.id,
+      profile: {
+        firstName: profile.firstName,
+        fullName: profile.fullName,
+        lastName: profile.lastName,
+        email: profile.email,
+        sex: Gender.NotDefined
+      },
+      settings: user.settings,
+      metadata: {
+        medicalData: undefined,
+        hasSentUnreadMessages: false
+      }
     }
   }
 
