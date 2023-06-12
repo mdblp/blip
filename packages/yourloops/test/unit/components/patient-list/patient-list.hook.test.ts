@@ -35,7 +35,7 @@ import type { Patient } from '../../../../lib/patient/models/patient.model'
 import PatientUtils from '../../../../lib/patient/patient.util'
 
 jest.mock('../../../../lib/auth')
-jest.mock('../../../../lib/patient/patient.provider')
+jest.mock('../../../../lib/patient/patients.provider')
 jest.mock('../../../../lib/providers/patient-list.provider')
 describe('Patient list hook', () => {
   const patients: Patient[] = [

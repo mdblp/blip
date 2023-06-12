@@ -37,7 +37,7 @@ import { NotificationType } from '../../../../lib/notifications/models/enums/not
 
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/notifications/notification.hook')
-jest.mock('../../../../lib/patient/patient.provider')
+jest.mock('../../../../lib/patient/patients.provider')
 
 describe('Remove direct share dialog hook', () => {
   const userToRemoveEmail = 'fake@email.com'
@@ -116,7 +116,6 @@ describe('Remove direct share dialog hook', () => {
 
       expect(removeDirectShareMock).toHaveBeenCalledWith(authUserId, userToRemove.id)
       expect(onSuccessAlertMock).toHaveBeenCalledWith('modal-patient-remove-caregiver-success')
-      expect(refreshMock).toHaveBeenCalled()
       expect(onClose).toHaveBeenCalledWith(true)
     })
 

@@ -41,7 +41,7 @@ import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.
 import { Unit } from 'medical-domain'
 
 jest.mock('../../../../lib/auth')
-jest.mock('../../../../lib/patient/patient.provider')
+jest.mock('../../../../lib/patient/patients.provider')
 jest.mock('../../../../components/utils/snackbar')
 
 describe('Profile page context hook', () => {

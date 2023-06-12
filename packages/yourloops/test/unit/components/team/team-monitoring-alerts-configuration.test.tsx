@@ -47,7 +47,7 @@ jest.mock('../../../../components/monitoring-alert/monitoring-alerts-content-con
 })
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')
-jest.mock('../../../../lib/patient/patient.provider')
+jest.mock('../../../../lib/patient/patients.provider')
 describe('TeamMembers', () => {
   const updateTeamMock = jest.fn()
   const refreshPatientsMock = jest.fn()

@@ -38,7 +38,7 @@ import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
 
-jest.mock('../../../../lib/patient/patient.provider')
+jest.mock('../../../../lib/patient/patients.provider')
 jest.mock('../../../../lib/team')
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/selected-team/selected-team.provider')

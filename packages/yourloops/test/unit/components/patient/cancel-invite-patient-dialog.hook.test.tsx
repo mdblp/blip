@@ -35,7 +35,7 @@ import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-
 import * as alertMock from '../../../../components/utils/snackbar'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 
-jest.mock('../../../../lib/patient/patient.provider')
+jest.mock('../../../../lib/patient/patients.provider')
 jest.mock('../../../../components/utils/snackbar')
 describe('Cancel invite patient dialog hook', () => {
   jest.spyOn(PatientAPI, 'removePatient').mockResolvedValue(undefined)

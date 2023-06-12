@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useTeam } from '../team'
 import PatientUtils from './patient.util'
@@ -42,11 +42,6 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   const [patient, setPatient] = useState<Patient>(null)
   const [initialized, setInitialized] = useState<boolean>(false)
 
-  const fetchPatients = useCallback(() => {
-    setPatient(PatientUtils.mapUserToPatient(user))
-    setInitialized(true)
-  }, [user])
-
   const leaveTeam = async (teamId: string): Promise<void> => {
     await PatientApi.removePatient(teamId, patient.userid)
     metrics.send('team_management', 'leave_team')
@@ -55,9 +50,10 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   useEffect(() => {
     if (!initialized && user) {
-      fetchPatients()
+      setPatient(PatientUtils.mapUserToPatient(user))
+      setInitialized(true)
     }
-  }, [fetchPatients, initialized, user])
+  }, [initialized, user])
 
   return {
     patient,
