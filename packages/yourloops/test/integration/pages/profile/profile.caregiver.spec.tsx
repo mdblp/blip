@@ -37,7 +37,7 @@ import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { mockPatientApiForHcp, mockPatientApiForPatients } from '../../mock/patient.api.mock'
+import { mockPatientApiForCaregivers, mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { checkCaregiverProfilePage, checkPasswordChangeRequest } from '../../assert/profile.assert'
 import userEvent from '@testing-library/user-event'
 import { type Profile } from '../../../../lib/auth/models/profile.model'
@@ -75,8 +75,8 @@ describe('Profile page for caregiver', () => {
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockPatientApiForPatients()
-    mockPatientApiForHcp()
+    mockPatientApiForCaregivers()
+    mockPatientApiForHcp() // Do not remove this, this is need for when the user switches role
   })
 
   it('should render profile page for a caregiver and be able to change his password and change his role to HCP', async () => {
