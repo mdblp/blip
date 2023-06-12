@@ -30,7 +30,7 @@ import userEvent from '@testing-library/user-event'
 import TeamAPI, { PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE } from '../../../lib/team/team.api'
 import { iTeamOne } from '../mock/team.api.mock'
 import { patient1Id } from '../data/patient.api.data'
-import { ITeam } from '../../../lib/team/models/i-team.model'
+import { type ITeam } from '../../../lib/team/models/i-team.model'
 
 export const checkJoinTeamDialogCancel = async () => {
   const badgeTeamMenu = screen.getByLabelText('Open team menu')
