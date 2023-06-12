@@ -26,7 +26,6 @@
  */
 
 import { type Team } from '../../team'
-import { type MedicalData } from '../../data/models/medical-data.model'
 import { type Patient } from './patient.model'
 
 export interface PatientsContextResult {

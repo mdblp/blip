@@ -33,7 +33,6 @@ import PatientApi from '../../../../lib/patient/patient.api'
 import { type ITeamMember } from '../../../../lib/team/models/i-team-member.model'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
-import { type Patient } from '../../../../lib/patient/models/patient.model'
 
 describe('PatientApi', () => {
   const userId = 'userId'
