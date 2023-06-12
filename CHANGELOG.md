@@ -46,6 +46,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2393 Remove fields and "Show more/Show less" logic in the patient header
 - YLP-2394 Hide "Monitoring alerts" card for patients users
 - YLP-2399 Cancel invite dialog new design
+- YLP-2430 Add checkbox to confirm that user is a hcp
 - YLP-2435 Remove "Telemonitored" filter on patient list
 
 ### Engineering use
@@ -107,6 +108,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2387 Fix the tab title when displaying the patient list
 - YLP-2403 Remove caregiver and private team logic from CurrentPatientList
 - YLP-2404 Fix patient list columns width
+- YLP-2418 use new patient route from harbour
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team

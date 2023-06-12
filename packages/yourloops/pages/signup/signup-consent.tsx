@@ -36,15 +36,22 @@ import { useSignUpFormState } from './signup-formstate-context'
 import { type SignUpFormProps } from './signup-stepper'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
 import { SignupFormKey } from './models/enums/signup-form-key.enum'
+import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 
 const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const { handleBack, handleNext } = props
   const { signupForm, updateForm } = useSignUpFormState()
-  const consentsChecked = signupForm.terms && signupForm.privacyPolicy
+  const userIsHcp = signupForm.accountRole === UserRole.Hcp
+  const commonConsentsChecked = signupForm.terms && signupForm.privacyPolicy
+  const consentsChecked = (!userIsHcp && commonConsentsChecked) || (userIsHcp && commonConsentsChecked && signupForm.hcpConfirmAck)
 
   const setPolicyAccepted = (value: boolean): void => {
     updateForm(SignupFormKey.PrivacyPolicy, value)
+  }
+
+  const setHcpConfirmAck = (value: boolean): void => {
+    updateForm(SignupFormKey.HcpConfirmAck, value)
   }
 
   const setTermsAccepted = (value: boolean): void => {
@@ -76,6 +83,8 @@ const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
         setTermsAccepted={setTermsAccepted}
         feedbackAccepted={signupForm.feedback}
         setFeedbackAccepted={setFeedbackAccepted}
+        hcpConfirmAcknowledged={signupForm.hcpConfirmAck}
+        setHcpConfirmAcknowledged={setHcpConfirmAck}
       />
 
       <SignupStepperActionButtons
