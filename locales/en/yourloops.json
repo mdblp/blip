@@ -166,6 +166,7 @@
   "delete-medical-report": "Delete medical report",
   "delete-medical-report-confirmation": "Are you sure you want to delete the medical report {{number}} created by team {{name}}?",
   "delete-medical-report-number": "Delete medical report {{number}} created by team {{name}}",
+  "device": "device",
   "diabetes-type": "Diabetes type",
   "diagnosis": "Diagnosis",
   "dialog-pdf-options-custom-range": "or a customized period",
