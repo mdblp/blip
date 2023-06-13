@@ -1,6 +1,5 @@
-
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,26 +25,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type RangeSegmentHeightKeys, type RangeSegmentSlice } from './enums/range-segment.enum'
+import React, { type FunctionComponent } from 'react'
+import { useTranslation } from 'react-i18next'
 
-export interface CbgMedianTransitionMotionStyle {
-  height: number
-  median: number
-  opacity: number
-}
+import { type Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import { type BaseConsentCheck } from './models/consent-check.model'
 
-export interface CbgMedianTransitionMotionInterpolate {
-  key: string
-  style: CbgMedianTransitionMotionStyle
-}
+const formStyles = makeStyles({ name: 'ylp-form-consents' })((theme: Theme) => {
+  return {
+    formControlLabel: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
+    },
+    checkbox: {
+      marginBottom: 'auto'
+    }
+  }
+})
 
-export type CbgSliceTransitionMotionStyle = {
-  [key in RangeSegmentSlice | RangeSegmentHeightKeys]: number
-} & {
-  opacity: number
-}
+export const ConsentHcpConfirmAck: FunctionComponent<BaseConsentCheck> = ({ checked, onChange }) => {
+  const { t } = useTranslation('yourloops')
+  const { classes } = formStyles()
 
-export interface CbgSliceTransitionMotionInterpolate {
-  key: string
-  style: CbgSliceTransitionMotionStyle
+  return (
+    <FormControlLabel
+      data-testid="consent-hcp-confirm-ack"
+      control={
+        <Checkbox
+          aria-label={t('hcp-confirm-ack-checkbox')}
+          className={classes.checkbox}
+          checked={checked}
+          onChange={onChange}
+        />
+      }
+      label={t('consent-hcp-confirm-ack')}
+      className={classes.formControlLabel}
+    />
+  )
 }

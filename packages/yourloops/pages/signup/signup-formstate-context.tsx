@@ -65,6 +65,7 @@ export const SignUpFormStateProvider: FunctionComponent<PropsWithChildren> = ({ 
       setSignupForm(prevState => {
         delete prevState.hcpProfession
         delete prevState.feedback
+        delete prevState.hcpConfirmAck
         return { ...prevState }
       })
     }

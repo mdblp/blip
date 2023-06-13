@@ -151,15 +151,16 @@ class Trends extends React.Component {
 
   componentDidMount() {
     this.log.debug('Mounting...')
-    this.setState({ updatingDates: true })
-    this.clampEndpoints()
-      .catch((reason) => {
-        this.log.error(reason)
-      })
-      .finally(() => {
-        this.setState({ updatingDates: false })
-        this.log.debug('Mounting finished')
-      })
+    this.setState({ updatingDates: true }, () => {
+      this.clampEndpoints()
+        .catch((reason) => {
+          this.log.error(reason)
+        })
+        .finally(() => {
+          this.setState({ updatingDates: false })
+          this.log.debug('Mounting finished')
+        })
+    })
   }
 
   componentWillUnmount() {
@@ -350,11 +351,12 @@ class Trends extends React.Component {
         const mEndDate = moment.tz(end, endTimezone).add(1, 'day')
         const extendSize = (mEndDate.valueOf() - mStartDate.valueOf()) / TimeService.MS_IN_DAY
 
-        this.setState({ updatingDates: true })
-        this.updateExtendsSize(extendSize)
-        this.setEndPoints(mStartDate, mEndDate)
-        this.setState({ updatingDates: false })
-        this.trackMetric('data_visualization', 'select_period', 'date_picker', extendSize)
+        this.setState({ updatingDates: true }, () => {
+          this.updateExtendsSize(extendSize)
+          this.setEndPoints(mStartDate, mEndDate)
+          this.setState({ updatingDates: false })
+          this.trackMetric('data_visualization', 'select_period', 'date_picker', extendSize)
+        })
       }
     }
 
@@ -466,18 +468,19 @@ class Trends extends React.Component {
       startEpoch = this.startDate.valueOf()
     }
     newMsRange = endEpoch - startEpoch
-    this.setState({ updatingDates: true })
-    let epoch = endEpoch - Math.floor(newMsRange / 2)
-    this.props.onDatetimeLocationChange(epoch, newMsRange).then(() => {
-      // First load the data, we may have some changes in the timezone detection
-      startEpoch = getMomentDayAt(startEpoch, tidelineData).valueOf()
-      newMsRange = endEpoch - startEpoch
-      epoch = endEpoch - Math.floor(newMsRange / 2)
+    this.setState({ updatingDates: true }, () => {
+      let epoch = endEpoch - Math.floor(newMsRange / 2)
       this.props.onDatetimeLocationChange(epoch, newMsRange).then(() => {
-        // Set the real value we want
-        this.updateExtendsSize(newExtentSize)
-        this.setState({ updatingDates: false })
-        this.trackMetric('data_visualization', 'select_period', 'preset', extentSize)
+        // First load the data, we may have some changes in the timezone detection
+        startEpoch = getMomentDayAt(startEpoch, tidelineData).valueOf()
+        newMsRange = endEpoch - startEpoch
+        epoch = endEpoch - Math.floor(newMsRange / 2)
+        this.props.onDatetimeLocationChange(epoch, newMsRange).then(() => {
+          // Set the real value we want
+          this.updateExtendsSize(newExtentSize)
+          this.setState({ updatingDates: false })
+          this.trackMetric('data_visualization', 'select_period', 'preset', extentSize)
+        })
       })
     })
   }

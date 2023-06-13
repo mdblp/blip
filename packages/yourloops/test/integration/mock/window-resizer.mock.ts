@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,13 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import enzyme from 'enzyme'
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17'
-
-enzyme.configure({
-  adapter: new Adapter(),
-  disableLifecycleMethods: true
-})
-
-// Re-export all enzyme exports
-export * from 'enzyme'
+export const mockWindowResizer = () => {
+  delete window.ResizeObserver
+  window.ResizeObserver = jest.fn().mockImplementation(() => ({
+    observe: jest.fn(),
+    unobserve: jest.fn(),
+    disconnect: jest.fn()
+  }))
+}

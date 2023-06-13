@@ -29,7 +29,7 @@ import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 export const checkAcceptNotificationDirectShare = async () => {
-  const acceptButton = screen.getByRole('button', { name: 'Accept' })
+  const acceptButton = await screen.findByRole('button', { name: 'Accept' })
   await userEvent.click(acceptButton)
   expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You have accepted the notification of Backloops test Patient1')
 }

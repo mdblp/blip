@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,11 +28,8 @@
 import React from 'react'
 import { type Dayjs } from 'dayjs'
 
-import {
-  type CalendarOrientation,
-  type CalendarSelectionSingle
-} from './models'
-import { useChangeMonthState, toYearMonth } from './change-month'
+import { type CalendarOrientation, type CalendarSelectionSingle } from './models'
+import { toYearMonth, useChangeMonthState } from './change-month'
 import PickerToolbar from './picker-toolbar'
 import CalendarBox from './calendar-box'
 
@@ -94,7 +91,9 @@ function DatePicker(props: DatePickerProps): JSX.Element {
       {props.showToolbar && <PickerToolbar
         selection={selection}
         orientation={orientation}
-        onClickYear={() => { setSelectingYear(true) }}
+        onClickYear={() => {
+          setSelectingYear(true)
+        }}
       />}
       <CalendarBox
         orientation={orientation}

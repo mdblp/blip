@@ -71,9 +71,9 @@ describe('Team hook', () => {
           <DummyComponent />
         </TeamContextProvider>
       )
-      await waitFor(() => {
-        expect(teamHook.teams.length).toBeGreaterThan(0)
-      })
+    })
+    await waitFor(() => {
+      expect(teamHook.teams.length).toBeGreaterThan(0)
     })
   }
 

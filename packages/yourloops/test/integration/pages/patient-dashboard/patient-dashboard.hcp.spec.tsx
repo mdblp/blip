@@ -53,7 +53,8 @@ import {
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationWithTwoWeeksOldData,
   testEmptyMedicalFilesWidgetForHcp,
-  testPatientNavBarForHcp, testSwitchPatientCorrectDataDisplay
+  testPatientNavBarForHcp,
+  testSwitchPatientCorrectDataDisplay
 } from '../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
 import { type MedicalFilesWidgetParams } from '../../assert/medical-widget.assert'
@@ -106,6 +107,28 @@ describe('Patient dashboard for HCP', () => {
       isMonitoringAlertCardVisible: true
     }
 
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testAppMainLayoutForHcp(appMainLayoutParams)
+    await testDashboardDataVisualisationForHcp(patientDashboardLayoutParams)
+  })
+
+  it('should be able to switch from patient to patient', async () => {
+    mockDataAPI(completeDashboardData)
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testPatientNavBarForHcp()
+  })
+
+  it('should be able to manage medical reports', async () => {
+    const selectedTeamName = myThirdTeamName
+    mockDataAPI(completeDashboardData)
+
     const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
       selectedPatientId: patient1Id,
       loggedInUserFirstName: firstName,
@@ -120,10 +143,27 @@ describe('Patient dashboard for HCP', () => {
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
     await testDashboardDataVisualisationForHcp(patientDashboardLayoutParams)
-    await testDashboardDataVisualisationForHcp(patientDashboardLayoutParams)
     await testPatientNavBarForHcp()
     await testMedicalWidgetForHcp(medicalFilesWidgetParams)
+  })
+
+  it('should be able to manage monitoring alerts parameters', async () => {
+    mockDataAPI(completeDashboardData)
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
     await testMonitoringAlertsParametersConfigurationDialogMgdl()
+  })
+
+  it('should be able to use chat widget', async () => {
+    mockDataAPI(completeDashboardData)
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
     await testChatWidgetForHcp()
   })
 

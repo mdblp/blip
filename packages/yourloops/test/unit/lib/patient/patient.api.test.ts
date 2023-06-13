@@ -33,6 +33,7 @@ import PatientApi from '../../../../lib/patient/patient.api'
 import { type ITeamMember } from '../../../../lib/team/models/i-team-member.model'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
+import { type Patient } from '../../../../lib/patient/models/patient.model'
 
 describe('PatientApi', () => {
   const userId = 'userId'
@@ -55,13 +56,41 @@ describe('PatientApi', () => {
     it('should return an empty array if not found', async () => {
       jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
       const response = await PatientApi.getPatients()
-      expect(response).toBeInstanceOf(Array)
+      expect(response).toEqual([])
     })
 
     it('should throw an error if http call failed', async () => {
       jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
       await expect(async () => {
         await PatientApi.getPatients()
+      }).rejects.toThrowError('This error was thrown by a mock on purpose')
+    })
+  })
+
+  describe('getPatient', () => {
+    it('should get a patient', async () => {
+      const userId = '1234'
+      const data: Patient = { userid: userId } as Patient
+      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
+
+      const patients = await PatientApi.getPatient(userId)
+
+      expect(patients).toEqual([data])
+      expect(HttpService.get).toHaveBeenCalledWith({ url: `/bff/v1/patients/${userId}` })
+    })
+
+    it('should return an empty array if not found', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
+      const userId = '1234'
+      const response = await PatientApi.getPatient(userId)
+      expect(response).toEqual([])
+    })
+
+    it('should throw an error if http call failed', async () => {
+      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
+      const userId = '1234'
+      await expect(async () => {
+        await PatientApi.getPatient(userId)
       }).rejects.toThrowError('This error was thrown by a mock on purpose')
     })
   })

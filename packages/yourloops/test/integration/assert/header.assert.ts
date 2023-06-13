@@ -116,7 +116,7 @@ export const checkHcpHeader = async (headerInfo: HeaderInfo) => {
 }
 
 export const checkCaregiverHeader = async (fullName: string) => {
-  const header = within(screen.getByTestId('app-main-header'))
+  const header = within(await screen.findByTestId('app-main-header'))
   expect(header.queryByLabelText('Open team menu')).not.toBeInTheDocument()
 
   await checkUserMenu(header, fullName, UserRole.Caregiver)
@@ -124,7 +124,7 @@ export const checkCaregiverHeader = async (fullName: string) => {
 }
 
 export const checkPatientHeader = async (fullName: string) => {
-  const header = within(screen.getByTestId('app-main-header'))
+  const header = within(await screen.findByTestId('app-main-header'))
   expect(header.getByLabelText('Open team menu')).toBeVisible()
 
   await checkUserMenu(header, fullName, UserRole.Patient)

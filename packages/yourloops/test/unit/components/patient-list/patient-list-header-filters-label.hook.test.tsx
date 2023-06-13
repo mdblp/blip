@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 import {
   usePatientListHeaderFiltersLabelHook
 } from '../../../../components/patient-list/patient-list-header-filters-label.hook'

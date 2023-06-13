@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import * as authHookMock from '../../../../lib/auth'
 import { type MedicalReport, type NewMedicalReport } from '../../../../lib/medical-files/models/medical-report.model'
 import { useMedicalReportEditDialog } from '../../../../components/dialogs/medical-report-edit-dialog.hook'

@@ -37,6 +37,8 @@ export interface ConsentFormProps {
   group?: string
   policyAccepted: boolean
   setPolicyAccepted: React.Dispatch<boolean>
+  hcpConfirmAcknowledged?: boolean
+  setHcpConfirmAcknowledged?: React.Dispatch<boolean>
   termsAccepted: boolean
   setTermsAccepted: React.Dispatch<boolean>
   feedbackAccepted?: boolean

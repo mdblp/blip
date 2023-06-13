@@ -33,6 +33,7 @@ import { type CountryCodes } from './country.model'
 export interface SignupForm {
   accountRole: UserRole
   feedback?: boolean // Consent to be contacted by Diabeloop
+  hcpConfirmAck?: boolean
   hcpProfession?: HcpProfession
   preferencesLanguage: LanguageCodes
   privacyPolicy: boolean
