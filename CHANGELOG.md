@@ -28,6 +28,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2218 Use selected team in Remove patient dialog
 - YLP-2220 Remove "private practice" filter from patients list
 - YLP-2231 Implement new medical reports design for patients
+- YLP-2253 Dedicated error message for a patient joining a team they're already invited in
 - YLP-2265 Disable Add patient button when private practice is selected
 - YLP-2285 Monitoring filter cannot be enabled when Private practice is selected
 - YLP-2312 Teams and patients in a team should always have a field "monitoringAlertsParameters"

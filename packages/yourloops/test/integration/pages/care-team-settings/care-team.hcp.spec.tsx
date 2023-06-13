@@ -38,7 +38,7 @@ import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { testCareTeamLayout } from '../../use-cases/care-team-visualisation'
 
-describe('HCP care team page', () => {
+describe('HCP care team settings page', () => {
   const firstName = 'Jacques'
   const lastName = 'Xellerre'
 
@@ -52,7 +52,7 @@ describe('HCP care team page', () => {
     mockDataAPI()
   })
 
-  const renderCareTeamPage = async () => {
+  const renderCareTeamSettingsPage = async () => {
     const router = renderPage(AppUserRoute.CareTeamSettings)
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual(AppUserRoute.CareTeamSettings)
@@ -75,7 +75,7 @@ describe('HCP care team page', () => {
       }
     }
 
-    await renderCareTeamPage()
+    await renderCareTeamSettingsPage()
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
   })
@@ -83,7 +83,7 @@ describe('HCP care team page', () => {
   it('should display the selected team information', async () => {
     localStorage.setItem('selectedTeamId', myThirdTeamId)
 
-    await renderCareTeamPage()
+    await renderCareTeamSettingsPage()
 
     await testCareTeamLayout()
   })
