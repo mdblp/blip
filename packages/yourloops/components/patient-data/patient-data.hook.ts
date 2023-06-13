@@ -33,7 +33,7 @@ import { useLocation, useNavigate, useParams, useSearchParams } from 'react-rout
 import { useAuth } from '../../lib/auth'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import type MedicalDataService from 'medical-domain'
-import type { Cbg, TimePrefs } from 'medical-domain'
+import { type TimePrefs, type MedicalData } from 'medical-domain'
 import { defaultBgClasses, TimeService, Unit } from 'medical-domain'
 import { type MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
 import { isValidDateQueryParam, PatientDataUtils } from './patient-data.utils'
@@ -150,7 +150,7 @@ export const usePatientData = (): usePatientDataResult => {
     switch (chart) {
       case ChartTypes.Dashboard:
         setDashboardEpochDate(new Date().valueOf())
-        setMsRange(getRangeDaysInMs(medicalData.medicalData.cbg))
+        setMsRange(getRangeDaysInMs(medicalData.medicalData))
         break
       case ChartTypes.Daily:
         if (dateQueryParam) {
@@ -219,12 +219,22 @@ export const usePatientData = (): usePatientDataResult => {
       setLoadingData(false)
     }
   }
-  const getRangeDaysInMs = (data: Cbg[]): number => {
-    const dataCbg = data.map((cbgDate) => {
-      return cbgDate.localDate
+  const getRangeDaysInMs = (data: MedicalData): number => {
+    if (data.smbg.length !== 0) {
+      const dataSmbg = data.smbg.map((dataSmbg) => {
+        return dataSmbg.localDate
+      })
+      const dateRangeSet = new Set(dataSmbg)
+      if (dateRangeSet.size >= 14) {
+        return 14 * DEFAULT_MS_RANGE
+      }
+      return dateRangeSet.size * DEFAULT_MS_RANGE
+    }
+    const dataCbg = data.cbg.map((dataCbg) => {
+      return dataCbg.localDate
     })
     const dateRangeSet = new Set(dataCbg)
-    if (dateRangeSet.size > 14) {
+    if (dateRangeSet.size >= 14) {
       return 14 * DEFAULT_MS_RANGE
     }
     return dateRangeSet.size * DEFAULT_MS_RANGE
@@ -245,7 +255,7 @@ export const usePatientData = (): usePatientDataResult => {
         endpoints: medicalData.endpoints
       })
       const initialDate = patientDataUtils.current.getInitialDate(medicalData)
-      const daysInMs = getRangeDaysInMs(medicalData.medicalData.cbg)
+      const daysInMs = getRangeDaysInMs(medicalData.medicalData)
       setMsRange(daysInMs)
       setDataUtil(dataUtil)
       setMedicalData(medicalData)
@@ -266,7 +276,6 @@ export const usePatientData = (): usePatientDataResult => {
       })
       setDataUtil(dataUtil)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dailyDate, dashboardEpochDate, trendsDate, medicalData])
 
   return {

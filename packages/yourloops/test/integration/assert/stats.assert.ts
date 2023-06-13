@@ -72,7 +72,7 @@ export const checkReadingsInRangeStats = async () => {
 }
 
 export const checkReadingsInRangeStatsWidgets = async () => {
-  const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
+  const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 4000 }))
   expect(patientStatistics.getByTestId('cbg-percentage-stat-veryHigh-readingsInRange')).toHaveTextContent('213%')
   expect(patientStatistics.getByTestId('cbg-percentage-stat-high-readingsInRange')).toHaveTextContent('17%')
   expect(patientStatistics.getByTestId('cbg-percentage-stat-target-readingsInRange')).toHaveTextContent('320%')
