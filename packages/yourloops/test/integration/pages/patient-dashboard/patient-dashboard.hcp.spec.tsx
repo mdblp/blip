@@ -29,7 +29,8 @@ import { act, waitFor } from '@testing-library/react'
 import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
 import {
-  completeDailyViewData, dailyViewData,
+  completeDashboardData,
+  dailyViewData,
   mockDataAPI,
   twoWeeksOldDashboardData
 } from '../../mock/data.api.mock'
@@ -135,6 +136,22 @@ describe('Patient dashboard for HCP', () => {
       loggedInUserLastName: lastName,
       selectedTeamId: myThirdTeamId,
       selectedTeamName
+    }
+    const appMainLayoutParams: AppMainLayoutHcpParams = {
+      footerHasLanguageSelector: false,
+      headerInfo: {
+        loggedInUserFullName: `${firstName} ${lastName}`,
+        teamMenuInfo: {
+          selectedTeamName,
+          isSelectedTeamPrivate: false,
+          availableTeams: buildAvailableTeams()
+        }
+      }
+    }
+    const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
+      isChatCardVisible: true,
+      isMedicalFilesCardVisible: true,
+      isMonitoringAlertCardVisible: true
     }
 
     await act(async () => {
