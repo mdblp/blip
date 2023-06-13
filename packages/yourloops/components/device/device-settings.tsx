@@ -51,7 +51,7 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ pumpSettings, timePref
     parameter.value = formatParameterValue(parameter.value, parameter.unit)
   })
 
-  const lastUploadDate = new Date(pumpSettings.normalTime).toLocaleString()
+  const lastUploadDate = new Date(pumpSettings.normalTime).toLocaleDateString()
 
   const copySettingsToClipboard = async (): Promise<void> => {
     let rawText = `${new Date(lastUploadDate).toLocaleString()}\n\n`

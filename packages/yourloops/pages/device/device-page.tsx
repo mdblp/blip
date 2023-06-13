@@ -28,8 +28,6 @@
 import React, { type FC } from 'react'
 import { type PumpSettings, type TimePrefs } from 'medical-domain'
 import type MedicalDataService from 'medical-domain'
-import Typography from '@mui/material/Typography'
-import { useTranslation } from 'react-i18next'
 import { DeviceSettings } from '../../components/device/device-settings'
 import Container from '@mui/material/Container'
 
@@ -40,20 +38,15 @@ interface DevicePageProps {
 }
 
 export const DevicePage: FC<DevicePageProps> = ({ medicalData, timePrefs, goToDailySpecificDate }) => {
-  const { t } = useTranslation()
   const pumpSettings = [...medicalData.grouped.pumpSettings].pop() as PumpSettings
 
   return (
-
-    <Container>
-      {pumpSettings
-        ? <DeviceSettings
-          goToDailySpecificDate={goToDailySpecificDate}
-          pumpSettings={pumpSettings}
-          timePrefs={timePrefs}
-        />
-        : <Typography className="bold">{t('no-settings-on-device-alert-message')}</Typography>
-      }
+    <Container data-testid="device-settings-container">
+      <DeviceSettings
+        goToDailySpecificDate={goToDailySpecificDate}
+        pumpSettings={pumpSettings}
+        timePrefs={timePrefs}
+      />
     </Container>
   )
 }
