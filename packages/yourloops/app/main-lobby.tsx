@@ -63,7 +63,7 @@ const tssCache = createCache({
 })
 tssCache.compat = true
 
-const isRoutePublic = (route: string): boolean => PUBLIC_ROUTES.includes(route as AppRoute)
+const isRoutePublic = (route: string): boolean => PUBLIC_ROUTES.includes(route as AppRoute) || ALWAYS_ACCESSIBLE_ROUTES.includes(route as AppRoute)
 
 export const getRedirectUrl = (route: string, user: User, isAuthenticated: boolean): string | undefined => {
   const routeIsPublic = isRoutePublic(route)
@@ -117,7 +117,7 @@ export function MainLobby(): JSX.Element {
     <React.Fragment>
       {redirectTo
         ? <Navigate to={redirectTo} replace />
-        : (!isLoading && !fetchingUser &&
+        : (!isLoading && !fetchingUser && (isCurrentRoutePublic || user) &&
           <CacheProvider value={muiCache}>
             <TssCacheProvider value={tssCache}>
               <ThemeProvider theme={theme}>
