@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useEffect, useState } from 'react'
+import React, { type FunctionComponent, useEffect, useRef, useState } from 'react'
 import { PatientNavBarMemoized as PatientNavBar } from '../header-bars/patient-nav-bar'
 import { Route, Routes } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
@@ -53,6 +53,8 @@ export const PatientData: FunctionComponent = () => {
   const alert = useAlert()
   const theme = useTheme()
   const { t } = useTranslation()
+  const patientIdForWhichDataHasBeenFetched = useRef(null)
+
   const {
     bgPrefs,
     chartPrefs,
@@ -92,11 +94,14 @@ export const PatientData: FunctionComponent = () => {
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
 
   useEffect(() => {
-    fetchPatientData()
-      .catch((err) => {
-        console.log(err)
-        alert.error(err.toString())
-      })
+    if (patient.userid !== patientIdForWhichDataHasBeenFetched.current) {
+      patientIdForWhichDataHasBeenFetched.current = patient.userid
+      fetchPatientData()
+        .catch((err) => {
+          console.log(err)
+          alert.error(err.toString())
+        })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patient])
 

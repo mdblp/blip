@@ -113,7 +113,7 @@ export const checkJoinTeamDialogDisplayErrorMessage = async () => {
 }
 
 export const checkJoinTeamDialog = async () => {
-  const badgeTeamMenu = screen.getByLabelText('Open team menu')
+  const badgeTeamMenu = await screen.findByLabelText('Open team menu')
   expect(badgeTeamMenu).toHaveTextContent('2')
   await userEvent.click(badgeTeamMenu)
   const buttonJoinTeam = screen.getByTestId('team-menu-teams-link')
