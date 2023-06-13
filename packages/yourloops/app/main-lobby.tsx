@@ -63,14 +63,15 @@ const tssCache = createCache({
 })
 tssCache.compat = true
 
-const isRoutePublic = (route: string): boolean => PUBLIC_ROUTES.includes(route as AppRoute) || ALWAYS_ACCESSIBLE_ROUTES.includes(route as AppRoute)
+const isRoutePublic = (route: string): boolean => PUBLIC_ROUTES.includes(route as AppRoute)
+const isRouteAlwaysAccessible = (route: string): boolean => ALWAYS_ACCESSIBLE_ROUTES.includes(route as AppRoute)
 
 export const getRedirectUrl = (route: string, user: User, isAuthenticated: boolean): string | undefined => {
   const routeIsPublic = isRoutePublic(route)
   const renewConsentPath = route === AppRoute.RenewConsent || route === AppRoute.NewConsent
   const trainingPath = route === AppRoute.Training
-  const isCurrentRouteAlwaysAccessible = ALWAYS_ACCESSIBLE_ROUTES.includes(route as AppRoute)
-  if (routeIsPublic && isAuthenticated) {
+  const isCurrentRouteAlwaysAccessible = isRouteAlwaysAccessible(route as AppRoute)
+  if (routeIsPublic && !isCurrentRouteAlwaysAccessible && isAuthenticated) {
     return '/'
   }
   if (!isAuthenticated && !routeIsPublic && !isCurrentRouteAlwaysAccessible) {
@@ -98,6 +99,7 @@ export function MainLobby(): JSX.Element {
   const currentRoute = location.pathname
   const theme = getTheme()
   const isCurrentRoutePublic = isRoutePublic(currentRoute)
+  const isCurrentRouteAlwaysAccessible = isRouteAlwaysAccessible(currentRoute)
 
   const onIdle = (): void => {
     if (isLoggedIn) {
@@ -107,7 +109,7 @@ export function MainLobby(): JSX.Element {
 
   useIdleTimer({ timeout: ConfigService.getIdleTimeout(), onIdle })
 
-  if (!isCurrentRoutePublic && isLoading) {
+  if ((!isCurrentRoutePublic || !isCurrentRouteAlwaysAccessible) && isLoading) {
     return <React.Fragment />
   }
 
