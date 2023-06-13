@@ -41,8 +41,8 @@ jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/patient/patient.provider')
 describe('usePatientData hook', () => {
   const patientId = 'fakeId'
-  const FOURTEEN_DAYS_IN_MS = TimeService.MS_IN_DAY * 14
   const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
+  const FOURTEEN_DAYS_IN_MS = TimeService.MS_IN_DAY * 14
   const getUrlPrefixForHcp = (id = patientId) => `/patient/${id}`
   const useNavigateMock = jest.fn()
   const useParamHookMock = jest.fn().mockReturnValue({ patientId })
@@ -70,7 +70,7 @@ describe('usePatientData hook', () => {
     it('should change currentChart to Daily', async () => {
       const { result } = renderHook(() => usePatientData())
       expect(result.current.currentChart).toEqual(ChartTypes.Dashboard)
-      expect(result.current.msRange).toEqual(FOURTEEN_DAYS_IN_MS)
+      expect(result.current.msRange).toEqual(DEFAULT_MS_RANGE)
 
       act(() => {
         result.current.changeChart(ChartTypes.Daily)
@@ -97,7 +97,7 @@ describe('usePatientData hook', () => {
     it('should change currentChart to Trends', async () => {
       const { result } = renderHook(() => usePatientData())
       expect(result.current.currentChart).toEqual(ChartTypes.Dashboard)
-      expect(result.current.msRange).toEqual(FOURTEEN_DAYS_IN_MS)
+      expect(result.current.msRange).toEqual(DEFAULT_MS_RANGE)
 
       act(() => {
         result.current.changeChart(ChartTypes.Trends)

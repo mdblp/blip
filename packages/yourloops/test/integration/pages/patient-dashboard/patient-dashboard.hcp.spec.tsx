@@ -29,7 +29,7 @@ import { act, waitFor } from '@testing-library/react'
 import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
 import {
-  completeDailyViewData,
+  completeDailyViewData, dailyViewData,
   mockDataAPI,
   twoWeeksOldDashboardData
 } from '../../mock/data.api.mock'
@@ -87,7 +87,7 @@ describe('Patient dashboard for HCP', () => {
 
   it('should render correct components when navigating to a patient not scoped on the private team', async () => {
     const selectedTeamName = myThirdTeamName
-    mockDataAPI(completeDailyViewData)
+    mockDataAPI(dailyViewData)
 
     const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,

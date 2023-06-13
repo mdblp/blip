@@ -32,7 +32,7 @@ import {
   checkDailyTimeInRangeStatsWidgets,
   checkSMBGDailyStatsWidgetsTooltips
 } from '../../assert/daily.assert'
-import { mockDataAPI, smbgData, twoWeeksOfCbg } from '../../mock/data.api.mock'
+import { dailySmbgData, mockDataAPI, twoWeeksOfCbg } from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
@@ -160,7 +160,7 @@ describe('Daily view for anyone', () => {
 
   describe('with smbg data', () => {
     it('should display correct stats widgets', async () => {
-      mockDataAPI(smbgData)
+      mockDataAPI(dailySmbgData)
       renderPage('/daily')
 
       await checkReadingsInRangeStatsWidgets()
