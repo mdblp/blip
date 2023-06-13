@@ -35,6 +35,7 @@
   "alert-invite-patient-failed": "Impossible d'ajouter un·e patient·e. Veuillez recommencer plus tard.",
   "alert-invite-patient-failed-already-invited": "Ce·tte patient·e a déjà été invité·e et n'a pas encore accepté l'invitation.",
   "alert-invite-sent-success": "Invite sent!",
+  "alert-join-team-failed-already-invited": "This care team already invited you. Accept the pending invitation to join the care team.",
   "alert-reinvite-patient-from-team-success": "{{patientEmail}} has been reinvited to {{teamName}}",
   "alert-reinvite-patient-failure": "Impossible to resend invite to patient {{patientEmail}}. Please try again later.",
   "alert-remove-patient-failure": "Impossible de supprimer le·la patient·e. Veuillez réessayer plus tard.",
