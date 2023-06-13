@@ -114,36 +114,37 @@ export function MainLobby(): JSX.Element {
   }
 
   const redirectTo = getRedirectUrl(currentRoute, user, isAuthenticated)
+  const canDisplayApp = !isLoading && !fetchingUser && (isCurrentRoutePublic || isCurrentRouteAlwaysAccessible || user)
 
   return (
     <React.Fragment>
       {redirectTo
         ? <Navigate to={redirectTo} replace />
-        : (!isLoading && !fetchingUser && (isCurrentRoutePublic || user) &&
-          <CacheProvider value={muiCache}>
-            <TssCacheProvider value={tssCache}>
-              <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <GlobalStyles styles={{ body: { backgroundColor: 'var(--body-background-color)' } }} />
-                <SnackbarContextProvider context={DefaultSnackbarContext}>
-                  <Box>
-                    <Routes>
-                      <Route path={AppRoute.ProductLabelling} element={<ProductLabellingPage />} />
-                      <Route path={AppRoute.Login} element={<LoginPage />} />
-                      <Route path={AppRoute.CompleteSignup} element={<CompleteSignUpPage />} />
-                      <Route path={AppRoute.RenewConsent} element={<ConsentPage />} />
-                      <Route path={AppRoute.NewConsent} element={<PatientConsentPage />} />
-                      <Route path={AppRoute.Training} element={<TrainingPage />} />
-                      <Route path={AppRoute.VerifyEmail} element={<VerifyEmailPage />} />
-                      <Route path="*" element={<MainLayout />} />
-                    </Routes>
-                  </Box>
-                </SnackbarContextProvider>
-                <Footer />
-              </ThemeProvider>
-            </TssCacheProvider>
-          </CacheProvider>
-          )}
+        : canDisplayApp &&
+        <CacheProvider value={muiCache}>
+          <TssCacheProvider value={tssCache}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <GlobalStyles styles={{ body: { backgroundColor: 'var(--body-background-color)' } }} />
+              <SnackbarContextProvider context={DefaultSnackbarContext}>
+                <Box>
+                  <Routes>
+                    <Route path={AppRoute.ProductLabelling} element={<ProductLabellingPage />} />
+                    <Route path={AppRoute.Login} element={<LoginPage />} />
+                    <Route path={AppRoute.CompleteSignup} element={<CompleteSignUpPage />} />
+                    <Route path={AppRoute.RenewConsent} element={<ConsentPage />} />
+                    <Route path={AppRoute.NewConsent} element={<PatientConsentPage />} />
+                    <Route path={AppRoute.Training} element={<TrainingPage />} />
+                    <Route path={AppRoute.VerifyEmail} element={<VerifyEmailPage />} />
+                    <Route path="*" element={<MainLayout />} />
+                  </Routes>
+                </Box>
+              </SnackbarContextProvider>
+              <Footer />
+            </ThemeProvider>
+          </TssCacheProvider>
+        </CacheProvider>
+      }
     </React.Fragment>
   )
 }
