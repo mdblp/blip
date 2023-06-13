@@ -27,9 +27,10 @@
 
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import TeamAPI from '../../../lib/team/team.api'
+import TeamAPI, { PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE } from '../../../lib/team/team.api'
 import { iTeamOne } from '../mock/team.api.mock'
 import { patient1Id } from '../data/patient.api.data'
+import { type ITeam } from '../../../lib/team/models/i-team.model'
 
 export const checkJoinTeamDialogCancel = async () => {
   const badgeTeamMenu = screen.getByLabelText('Open team menu')
@@ -64,21 +65,55 @@ export const checkJoinTeamDialogPrivacyCancel = async () => {
 }
 
 export const checkJoinTeamDialogDisplayErrorMessage = async () => {
-  const badgeTeamMenu = screen.getByLabelText('Open team menu')
-  jest.spyOn(TeamAPI, 'getTeamFromCode').mockRejectedValue(undefined)
-  await userEvent.click(badgeTeamMenu)
-  const buttonJoinTeam = screen.getByTestId('team-menu-teams-link')
-  await userEvent.click(buttonJoinTeam)
+  jest.spyOn(TeamAPI, 'getTeamFromCode').mockRejectedValueOnce(undefined)
+  const teamMenuButton = screen.getByLabelText('Open team menu')
+
+  await userEvent.click(teamMenuButton)
+
+  const joinTeamLink = screen.getByTestId('team-menu-teams-link')
+
+  await userEvent.click(joinTeamLink)
+
   const dialog = screen.getByRole('dialog')
   const addTeamButton = within(dialog).getByRole('button', { name: 'Continue' })
   const inputCode = within(dialog).getByRole('textbox')
+
   await userEvent.type(inputCode, '263381990')
   await userEvent.click(addTeamButton)
-  expect(screen.getByTestId('alert-snackbar'))
+
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Unable to add the care team. Please try again later.')
   expect(screen.queryByRole('dialog')).toBeInTheDocument()
+
+  const snackbarCloseButton = within(screen.getByTestId('alert-snackbar')).getByTitle('Close')
+  await userEvent.click(snackbarCloseButton)
+
+  jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValueOnce({
+    id: '64671d9d3853b3fcc9af152d',
+    name: 'My team',
+    code: '263381990',
+    address: { line1: '', line2: '' }
+  } as ITeam)
+  jest.spyOn(TeamAPI, 'joinTeam').mockRejectedValueOnce(new Error(PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE))
+
+  await userEvent.click(addTeamButton)
+
+  const privacyPolicyDialog = within(screen.getByRole('dialog'))
+  const privacyPolicyCheckbox = privacyPolicyDialog.queryByRole('checkbox')
+  const joinTeamButton = privacyPolicyDialog.getByText('Join team')
+  expect(privacyPolicyDialog.getByText('Cancel')).toBeEnabled()
+  expect(joinTeamButton).toBeDisabled()
+
+  await userEvent.click(privacyPolicyCheckbox)
+
+  expect(joinTeamButton).toBeEnabled()
+
+  await userEvent.click(joinTeamButton)
+
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('This care team already invited you. Accept the pending invitation to join the care team.')
 }
+
 export const checkJoinTeamDialog = async () => {
-  const badgeTeamMenu = screen.getByLabelText('Open team menu')
+  const badgeTeamMenu = await screen.findByLabelText('Open team menu')
   expect(badgeTeamMenu).toHaveTextContent('2')
   await userEvent.click(badgeTeamMenu)
   const buttonJoinTeam = screen.getByTestId('team-menu-teams-link')

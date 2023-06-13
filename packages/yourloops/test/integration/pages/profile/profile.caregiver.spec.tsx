@@ -76,7 +76,7 @@ describe('Profile page for caregiver', () => {
     mockDirectShareApi()
     mockTeamAPI()
     mockPatientApiForCaregivers()
-    mockPatientApiForHcp() // Do not remove this, this is need for when the user switches role
+    mockPatientApiForHcp() // Do not remove this, this is needed for when the user switches role
   })
 
   it('should render profile page for a caregiver and be able to change his password and change his role to HCP', async () => {

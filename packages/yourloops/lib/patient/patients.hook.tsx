@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import moment from 'moment-timezone'
 
 import { type Team } from '../team'
@@ -55,6 +55,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const [patients, setPatients] = useState<Patient[]>([])
   const [initialized, setInitialized] = useState<boolean>(false)
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
+  const shouldMakeInitialApiCallToGetPatients = useRef(true)
 
   const fetchPatients = useCallback((teamId: string = selectedTeamId) => {
     PatientUtils.computePatients(user, teamId).then(computedPatients => {
@@ -152,7 +153,8 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   }
 
   useEffect(() => {
-    if (!initialized && user) {
+    if (!initialized && user && shouldMakeInitialApiCallToGetPatients.current) {
+      shouldMakeInitialApiCallToGetPatients.current = false
       fetchPatients()
     }
   }, [fetchPatients, initialized, user])
