@@ -223,7 +223,7 @@ describe('TeamApi', () => {
       expect(HttpService.post).toHaveBeenCalledWith({
         url: `/crew/v0/teams/${teamId}/patients`,
         payload: { userId }
-      })
+      }, [409])
     })
   })
 })
