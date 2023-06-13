@@ -142,7 +142,7 @@ const SignUpStepper: FunctionComponent = () => {
             mt={4}
           >
             <Button
-              id="button-signup-steppers-next"
+              data-testid="validate-account-completion"
               variant="contained"
               color="primary"
               disableElevation

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,14 +25,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum SignupFormKey {
-  AccountRole = 'accountRole',
-  Feedback = 'feedback',
-  HcpProfession = 'hcpProfession',
-  HcpConfirmAck = 'hcpConfirmAck',
-  PrivacyPolicy = 'privacyPolicy',
-  ProfileCountry = 'profileCountry',
-  ProfileFirstname = 'profileFirstname',
-  ProfileLastname = 'profileLastname',
-  Terms = 'terms'
+import React, { type FunctionComponent } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { type Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import { type BaseConsentCheck } from './models/consent-check.model'
+
+const formStyles = makeStyles({ name: 'ylp-form-consents' })((theme: Theme) => {
+  return {
+    formControlLabel: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
+    },
+    checkbox: {
+      marginBottom: 'auto'
+    }
+  }
+})
+
+export const ConsentHcpConfirmAck: FunctionComponent<BaseConsentCheck> = ({ checked, onChange }) => {
+  const { t } = useTranslation('yourloops')
+  const { classes } = formStyles()
+
+  return (
+    <FormControlLabel
+      data-testid="consent-hcp-confirm-ack"
+      control={
+        <Checkbox
+          aria-label={t('hcp-confirm-ack-checkbox')}
+          className={classes.checkbox}
+          checked={checked}
+          onChange={onChange}
+        />
+      }
+      label={t('consent-hcp-confirm-ack')}
+      className={classes.formControlLabel}
+    />
+  )
 }
