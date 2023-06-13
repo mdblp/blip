@@ -32,6 +32,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState
 } from 'react'
 import _ from 'lodash'
@@ -63,6 +64,7 @@ function TeamContextImpl(): TeamContext {
   const [initialized, setInitialized] = useState<boolean>(false)
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const shouldMakeInitialApiCallToGetTeams = useRef(true)
 
   const user = authHook.user
   if (!user) {
@@ -193,7 +195,8 @@ function TeamContextImpl(): TeamContext {
   }
 
   useEffect(() => {
-    if (!initialized) {
+    if (!initialized && shouldMakeInitialApiCallToGetTeams.current) {
+      shouldMakeInitialApiCallToGetTeams.current = false
       fetchTeams()
     }
   }, [initialized, fetchTeams])

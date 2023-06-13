@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useEffect, useState } from 'react'
+import React, { type FunctionComponent, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { makeStyles } from 'tss-react/mui'
@@ -71,6 +71,7 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false)
   const [medicalReportToEdit, setMedicalReportToEdit] = useState<MedicalReport | undefined>(undefined)
   const [medicalReportToDelete, setMedicalReportToDelete] = useState<MedicalReportDeleteDialogPayload | undefined>(undefined)
+  const shouldMakeInitialApiCallToFetchMedicalReports = useRef(true)
   const emptyListLabel = user.isUserHcp() ? t('no-medical-files-hcp') : t('no-medical-files-patient')
 
   const closeMedicalReportEditDialog = (): void => {
@@ -109,7 +110,8 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
   }
 
   useEffect(() => {
-    if (!medicalReports) {
+    if (!medicalReports && shouldMakeInitialApiCallToFetchMedicalReports.current) {
+      shouldMakeInitialApiCallToFetchMedicalReports.current = false
       MedicalFilesApi.getMedicalReports(patientId, teamId)
         .then(medicalReports => {
           setMedicalReports(medicalReports)
