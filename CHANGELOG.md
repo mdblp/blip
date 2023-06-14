@@ -110,6 +110,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2404 Fix patient list columns width
 - YLP-2418 use new patient route from harbour
 - YLP-2434 Api calls are trigerred twice
+- YLP-2454 Daily view crashes on mobile
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
