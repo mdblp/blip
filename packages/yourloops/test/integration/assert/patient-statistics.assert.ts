@@ -57,6 +57,16 @@ export const checkPatientStatisticsWithTwoWeeksOldData = async () => {
   expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily Carbs55gRescue carbs25g')
   expect(patientStatistics.getByTestId('sensor-usage-stat')).toHaveTextContent('Sensor Usage2%')
 }
+export const checkPatientStatisticsWithSixteenDaysOldData = async () => {
+  const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 4000 }))
+  expect(patientStatistics.getByTestId('cbg-percentage-bar-chart')).toHaveTextContent('Avg. Daily Time In Range4h 48m20%4h 48m20%4h 48m20%4h 48m20%4h 48m20%<5454-7070-180180-250>250mg/dL')
+  expect(patientStatistics.getByTestId('cbg-standard-deviation-stat')).toHaveTextContent('Standard Deviation (34-214)mg/dL90')
+  expect(patientStatistics.getByTestId('cbg-mean-stat')).toHaveTextContent('Avg. Glucose (CGM)mg/dL124')
+  expect(patientStatistics.getByTestId('container-insulin-stats')).toHaveTextContent('Avg. Daily Total Insulin2.4UBolus2 U83%Basal0.4 U17%Weight72kgRatio Dose0.03U/kg')
+  expect(patientStatistics.getByTestId('loop-mode-stat')).toHaveTextContent('Time In Loop ModeONOFF0%0m100%1d')
+  expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily Carbs55gRescue carbs25g')
+  expect(patientStatistics.getByTestId('sensor-usage-stat')).toHaveTextContent('Sensor Usage2%')
+}
 
 export const checkPatientStatisticsNoData = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))

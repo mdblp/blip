@@ -47,7 +47,9 @@ export const WIZARD_INPUT_TIME = '2022-08-08T02:00:00Z'
 export const WIZARD_INPUT_TIME2 = '2022-08-08T18:34:00Z'
 export const YESTERDAY_DATE: Moment = moment().subtract(1, 'days')
 export const TWO_WEEKS_AGO_DATE: Moment = moment().subtract(14, 'days')
+export const SIXTEEN_DAYS_AGO_DATE: Moment = moment().subtract(16, 'days')
 const twoWeeksAgoDateAsString = TWO_WEEKS_AGO_DATE.format('YYYY-MM-DD')
+const sixteenDaysAgoDateAsString = TWO_WEEKS_AGO_DATE.format('YYYY-MM-DD')
 const yesterdayDateAsString = YESTERDAY_DATE.format('YYYY-MM-DD')
 
 export interface Data {
@@ -90,6 +92,7 @@ export const generateCompleteDashboardNumberRandomDays = (date: string): Data =>
 
 export const completeDashBoardData = generateCompleteDashboardNumberRandomDays(yesterdayDateAsString)
 export const twoWeeksOldDashboardData = generateCompleteDashboardNumberRandomDays(twoWeeksAgoDateAsString)
+export const sixteenDaysOldDashboardData = generateCompleteDashboardNumberRandomDays(sixteenDaysAgoDateAsString)
 
 export const completeDailyViewData: Data = {
   dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],

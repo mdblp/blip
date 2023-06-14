@@ -53,7 +53,7 @@ import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
 import {
   testDashboardDataVisualisationForPatient,
   testDashboardDataVisualisationPrivateTeamNoData,
-  testDashboardDataVisualisationWithTwoWeeksOldData,
+  testDashboardDataVisualisationWithWeeksOldData,
   testEmptyMedicalFilesWidgetForPatient,
   testPatientNavBarForPatient
 } from '../../use-cases/patient-data-visualisation'
@@ -166,7 +166,7 @@ describe('Patient dashboard for patient', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationWithTwoWeeksOldData()
+    await testDashboardDataVisualisationWithWeeksOldData()
   })
 
   it('should display the fallback message when no medical files are returned by the API', async () => {

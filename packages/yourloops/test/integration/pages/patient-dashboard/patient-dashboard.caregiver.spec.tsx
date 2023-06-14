@@ -43,7 +43,7 @@ import { type AppMainLayoutParams, testAppMainLayoutForCaregiver } from '../../u
 import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
 import {
   testDashboardDataVisualisationPrivateTeam,
-  testDashboardDataVisualisationWithTwoWeeksOldData
+  testDashboardDataVisualisationWithWeeksOldData
 } from '../../use-cases/patient-data-visualisation'
 
 describe('Patient dashboard for caregiver', () => {
@@ -87,6 +87,6 @@ describe('Patient dashboard for caregiver', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationWithTwoWeeksOldData()
+    await testDashboardDataVisualisationWithWeeksOldData()
   })
 })

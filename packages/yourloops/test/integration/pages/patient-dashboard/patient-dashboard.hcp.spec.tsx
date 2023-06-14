@@ -31,6 +31,7 @@ import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from
 import {
   completeDashBoardData,
   mockDataAPI,
+  sixteenDaysOldDashboardData,
   twoWeeksOldDashboardData
 } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
@@ -51,7 +52,7 @@ import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-
 import {
   testDashboardDataVisualisationForHcp,
   testDashboardDataVisualisationPrivateTeamNoData,
-  testDashboardDataVisualisationWithTwoWeeksOldData,
+  testDashboardDataVisualisationWithWeeksOldData,
   testEmptyMedicalFilesWidgetForHcp,
   testPatientNavBarForHcp,
   testSwitchPatientCorrectDataDisplay
@@ -181,7 +182,17 @@ describe('Patient dashboard for HCP', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationWithTwoWeeksOldData()
+    await testDashboardDataVisualisationWithWeeksOldData()
+  })
+
+  it('should produce statistics that correspond to fourteen-week-old data when the data are sixteen days old', async () => {
+    mockDataAPI(sixteenDaysOldDashboardData)
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testDashboardDataVisualisationWithWeeksOldData()
   })
 
   it('should render correct components when navigating to a patient scoped on the private team', async () => {
