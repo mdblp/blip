@@ -56,7 +56,7 @@ export interface Data {
 }
 
 export const generateCompleteDashboardNumberRandomDays = (date: string): Data => {
-  const startDate = new Date(moment().format('YYYY-MM-DDTHH:mm:SS'))
+  const startDate = new Date(moment().format('YYYY-MM-DD'))
   const endDate = new Date(date)
   const data = []
   // eslint-disable-next-line no-unmodified-loop-condition
