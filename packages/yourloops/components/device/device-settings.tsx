@@ -104,7 +104,7 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ pumpSettings, timePref
           <PumpTable pump={pump} timePrefs={timePrefs} />
           <CgmTable cgm={cgm} timePrefs={timePrefs} />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6} data-testid="parameters-container">
           <Typography color="text.secondary">{t('Parameters')}</Typography>
           <Table
             title={t('Parameters')}
