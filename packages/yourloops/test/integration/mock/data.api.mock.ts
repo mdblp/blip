@@ -75,7 +75,10 @@ export const generateCompleteDashboardNumberRandomDays = (date: string): Data =>
       { time: `${date}T19:35:00Z`, type: 'basal', deliveryType: 'scheduled', duration: 7200, id: 'basal_166cc04053fac_2022-12-13_0', rate: 100, timezone: 'Europe/Paris' },
       { time: `${date}T19:35:00Z`, type: 'food', id: 'food_19-35-00', meal: 'rescuecarbs', nutrition: { carbohydrate: { net: 25, units: 'grams' } }, timezone: 'Europe/Paris', uploadId: 'osef' },
       { time: `${date}T19:40:00Z`, type: 'deviceEvent', id: 'osef', subType: 'reservoirChange', timezone: 'Europe/Paris', uploadId: 'osef' },
-      { dataSetType: 'continuous', deviceManufacturers: ['Diabeloop'], deviceModel: 'DBLG1', deviceTags: ['cgm', 'insulin-pump'], id: 'e00d2c6c2bf7eaf141bae9926a635dd0', revision: 1, time: `${yesterdayDateAsString}T17:05:00Z`, timezone: 'UTC', type: 'upload', uploadId: 'e00d2c6c2bf7eaf141bae9926a635dd0', version: '1.0.0' }
+      { dataSetType: 'continuous', deviceManufacturers: ['Diabeloop'], deviceModel: 'DBLG1', deviceTags: ['cgm', 'insulin-pump'], id: 'e00d2c6c2bf7eaf141bae9926a635dd0', revision: 1, time: `${yesterdayDateAsString}T17:05:00Z`, timezone: 'UTC', type: 'upload', uploadId: 'e00d2c6c2bf7eaf141bae9926a635dd0', version: '1.0.0' },
+      { time: `${date}T13:00:00Z`, type: 'physicalActivity', id: PHYSICAL_ACTIVITY_ID, timezone: 'Europe/Paris', duration: { units: 'seconds', value: 1800 }, guid: 'pa_18', reportedIntensity: 'medium', uploadId: 'osef', _userId: 'osef' },
+      { time: `${date}T17:00:00Z`, type: 'deviceEvent', id: RESERVOIR_CHANGE_ID, subType: 'reservoirChange', timezone: 'Europe/Paris', uploadId: 'osef', _userId: 'osef' },
+      { time: `${date}T08:00:00Z`, type: 'deviceEvent', id: PARAMETER_ID, lastUpdateDate: '2022-08-08T08:00:00Z', level: '1', name: 'MEAL_RATIO_LUNCH_FACTOR', previousValue: '110', subType: 'deviceParameter', timezone: 'UTC', units: '%', uploadId: 'osef', value: '100', _userId: 'osef' }
     )
     endDate.setDate(endDate.getDate() + 1)
   }
@@ -113,10 +116,8 @@ export const generateSmbgData = (date: string): Data => {
     data
   }
 }
-export const dailySmbgData = generateSmbgData(yesterdayDateAsString)
-export const completeDashboardData = generateCompleteDashboardNumberRandomDays(yesterdayDateAsString)
+export const completeDashBoardData = generateCompleteDashboardNumberRandomDays(yesterdayDateAsString)
 export const twoWeeksOldDashboardData = generateCompleteDashboardNumberRandomDays(twoWeeksAgoDateAsString)
-export const dailyViewData = generateCompleteDashboardNumberRandomDays(yesterdayDateAsString)
 
 export const completeDailyViewData: Data = {
   dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],
