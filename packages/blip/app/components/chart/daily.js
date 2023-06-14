@@ -114,16 +114,17 @@ class DailyChart extends React.Component {
     /** @type {React.RefObject} */
     this.refNode = React.createRef()
     this.viewHasBeenInitialized = false // This boolean is only here because react-resize-detector has to be mocked in ITs... :(
+    this.unmountingInProgress = false
   }
 
   componentDidUpdate() {
     // Prevent the scroll drag while loading
     const { loading } = this.props
     const { chart, needRecreate } = this.state
-    if(!this.viewHasBeenInitialized) {
+    if (!this.viewHasBeenInitialized) {
       this.handleWindowResize()
     }
-    if(chart) {
+    if (chart) {
       chart.loadingInProgress = loading
       if (needRecreate && !loading && !chart.isInTransition()) {
         this.setState({ needRecreate: false })
@@ -136,52 +137,51 @@ class DailyChart extends React.Component {
     this.unmountChart()
   }
 
-  mountChart(cb = _.noop) {
-    if (this.state.chart === null) {
+  mountChart() {
+    if (this.state.chart === null && !this.unmountingInProgress) {
       const { tidelineData, epochLocation } = this.props
       this.log.debug('Mounting...')
       const chart = chartDailyFactory(this.refNode.current, tidelineData, _.pick(this.props, this.chartOpts))
       this.setState({ chart }, () => {
-        chart.setAtDate(epochLocation)
+        this.state.chart.setAtDate(epochLocation)
         this.bindEvents()
-        cb()
         this.props.onChartMounted()
       })
-    } else {
-      cb()
     }
   }
 
-  unmountChart(cb = _.noop) {
+  unmountChart(recreate = false) {
     const { chart } = this.state
-    if (chart !== null) {
+    if (chart !== null && !this.unmountingInProgress) {
+      this.unmountingInProgress = true
       this.log('Unmounting...')
       this.unbindEvents()
       chart.destroy()
-      this.setState({ chart: null }, cb)
-    } else {
-      cb()
+      this.setState({ chart: null }, () => {
+        this.unmountingInProgress = false
+        if (recreate) {
+          this.mountChart()
+        }
+      })
+    } else if (recreate) {
+      this.mountChart()
     }
   }
 
   bindEvents() {
     const { chart } = this.state
-    if(chart.emitter) {
-      chart.emitter.on('createMessage', this.props.onCreateMessage)
-      chart.emitter.on('inTransition', this.props.onTransition)
-      chart.emitter.on('messageThread', this.props.onShowMessageThread)
-      chart.emitter.on('navigated', this.props.onDatetimeLocationChange)
-    }
+    chart.emitter.on('createMessage', this.props.onCreateMessage)
+    chart.emitter.on('inTransition', this.props.onTransition)
+    chart.emitter.on('messageThread', this.props.onShowMessageThread)
+    chart.emitter.on('navigated', this.props.onDatetimeLocationChange)
   }
 
   unbindEvents() {
     const { chart } = this.state
-    if(chart.emitter) {
-      chart.emitter.off('createMessage', this.props.onCreateMessage)
-      chart.emitter.off('inTransition', this.props.onTransition)
-      chart.emitter.off('messageThread', this.props.onShowMessageThread)
-      chart.emitter.off('navigated', this.props.onDatetimeLocationChange)
-    }
+    chart.emitter.off('createMessage', this.props.onCreateMessage)
+    chart.emitter.off('inTransition', this.props.onTransition)
+    chart.emitter.off('messageThread', this.props.onShowMessageThread)
+    chart.emitter.off('navigated', this.props.onDatetimeLocationChange)
   }
 
   render() {
@@ -218,7 +218,7 @@ class DailyChart extends React.Component {
   reCreateChart() {
     const { chart } = this.state
     this.log.info(chart === null ? 'Creating chart...' : 'Recreating chart...')
-    this.unmountChart(this.mountChart.bind(this))
+    this.unmountChart(true)
   }
 
   rerenderChartData() {
@@ -320,9 +320,7 @@ class Daily extends React.Component {
   }
 
   onChartMounted() {
-    if (!this.state.chartMounted) {
-      this.setState({ chartMounted: true })
-    }
+    this.setState({ chartMounted: true })
   }
 
   render() {
