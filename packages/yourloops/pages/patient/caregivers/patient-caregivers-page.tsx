@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
@@ -63,6 +63,7 @@ function PatientCaregiversPage(): JSX.Element {
   const [caregiverToAdd, setCaregiverToAdd] = React.useState<AddDialogContentProps | null>(null)
   const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null)
   const { sentInvitations, initialized: haveNotifications } = notificationHook
+  const patientIdForWhichDataHasBeenFetched = useRef(null)
 
   const handleShowAddCaregiverDialog = async (): Promise<void> => {
     const getCaregiverEmail = async (): Promise<string | null> => {
@@ -132,8 +133,11 @@ function PatientCaregiversPage(): JSX.Element {
   }, [getCaregiversFromPendingInvitations])
 
   useEffect(() => {
-    fetchCaregivers()
-  }, [fetchCaregivers, sentInvitations])
+    if (patientIdForWhichDataHasBeenFetched.current !== user.id) {
+      patientIdForWhichDataHasBeenFetched.current = user.id
+      fetchCaregivers()
+    }
+  }, [fetchCaregivers, sentInvitations, user.id])
 
   useEffect(() => {
     if (!caregivers && user && haveNotifications) {
@@ -153,7 +157,7 @@ function PatientCaregiversPage(): JSX.Element {
           <SecondaryBar onShowAddCaregiverDialog={handleShowAddCaregiverDialog} />
           <Container maxWidth="lg">
             <Box marginTop={4}>
-              <CaregiverTable caregivers={caregivers} fetchCaregivers={fetchCaregivers}/>
+              <CaregiverTable caregivers={caregivers} fetchCaregivers={fetchCaregivers} />
             </Box>
           </Container>
         </>

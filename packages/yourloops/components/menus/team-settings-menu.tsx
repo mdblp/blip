@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
@@ -91,6 +91,7 @@ function TeamSettingsMenu(): JSX.Element {
   const { user } = useAuth()
   const theme = useTheme()
   const isMobile: boolean = useMediaQuery(theme.breakpoints.only('xs'))
+  const patientIdForWhichDataHasBeenFetched = useRef(null)
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null)
@@ -109,7 +110,9 @@ function TeamSettingsMenu(): JSX.Element {
 
   useEffect(() => {
     (async () => {
-      if (!caregivers && user) {
+      if (!caregivers && user && patientIdForWhichDataHasBeenFetched.current !== user.id) {
+        patientIdForWhichDataHasBeenFetched.current = user.id
+
         try {
           setCaregivers(await DirectShareApi.getDirectShares())
         } catch (error) {
