@@ -61,7 +61,8 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   const isDashboardPage = location.pathname.includes('dashboard')
   const isTrendsPage = location.pathname.includes('trends')
   const annotations = [t(isDailyPage ? 'total-insulin-days-tooltip' : 'average-daily-insulin-tooltip'), t('total-insulin-how-calculate-tooltip')]
-  const isEmptyWeight = weight === null
+  const isEmptyWeight = weight === 0
+  const weightValue = isEmptyWeight ? EMPTY_DATA_PLACEHOLDER : weight
 
   if (data.length === 0) {
     annotations.push(t('tooltip-empty-stat'))
@@ -158,19 +159,17 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
               <span>
                 {t('weight')}
               </span>
-            {!!weight && <>
-              <Box
-                display="flex"
-                alignItems="baseline"
-              >
+            <Box
+              display="flex"
+              alignItems="baseline"
+            >
                 <span className={outputValueClasses()}>
-                  {weight}
+                  {weightValue}
                 </span>
-                <span className={styles.dailyDoseUnits}>
+              <span className={styles.dailyDoseUnits}>
                   {t('kg')}
                 </span>
-              </Box>
-            </>}
+            </Box>
           </Box>
           <Box
             display="flex"
