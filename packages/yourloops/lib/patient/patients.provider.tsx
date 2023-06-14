@@ -33,10 +33,10 @@ import SpinningLoader from '../../components/loaders/spinning-loader'
 const PatientsContext = createContext<PatientsContextResult>({} as PatientsContextResult)
 
 export const PatientsProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
-  const patientProviderCustomHook = usePatientsProviderCustomHook()
+  const patientsProviderCustomHook = usePatientsProviderCustomHook()
 
-  return patientProviderCustomHook.initialized
-    ? <PatientsContext.Provider value={patientProviderCustomHook}>{children}</PatientsContext.Provider>
+  return patientsProviderCustomHook.initialized
+    ? <PatientsContext.Provider value={patientsProviderCustomHook}>{children}</PatientsContext.Provider>
     : <SpinningLoader className="centered-spinning-loader" />
 }
 

@@ -70,7 +70,7 @@ export default class PatientUtils {
         fullName: profile.fullName,
         lastName: profile.lastName,
         email: profile.email,
-        sex: Gender.NotDefined
+        sex: profile.patient.sex
       },
       settings: user.settings,
       metadata: {
