@@ -62,8 +62,8 @@ function PatientCaregiversPage(): JSX.Element {
   const notificationHook = useNotification()
   const [caregiverToAdd, setCaregiverToAdd] = React.useState<AddDialogContentProps | null>(null)
   const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null)
-  const { sentInvitations, initialized: haveNotifications } = notificationHook
-  const patientIdForWhichDataHasBeenFetched = useRef(null)
+  const { sentInvitations } = notificationHook
+  const sentInvitationsFetched = useRef(null)
 
   const handleShowAddCaregiverDialog = async (): Promise<void> => {
     const getCaregiverEmail = async (): Promise<string | null> => {
@@ -130,20 +130,14 @@ function PatientCaregiversPage(): JSX.Element {
         caregivers.push(...invitedCaregivers)
         setCaregivers(caregivers)
       })
-  }, [getCaregiversFromPendingInvitations])
+  }, [getCaregiversFromPendingInvitations, sentInvitations])
 
   useEffect(() => {
-    if (patientIdForWhichDataHasBeenFetched.current !== user.id) {
-      patientIdForWhichDataHasBeenFetched.current = user.id
+    if (sentInvitationsFetched.current !== sentInvitations) {
+      sentInvitationsFetched.current = sentInvitations
       fetchCaregivers()
     }
   }, [fetchCaregivers, sentInvitations, user.id])
-
-  useEffect(() => {
-    if (!caregivers && user && haveNotifications) {
-      fetchCaregivers()
-    }
-  }, [caregivers, fetchCaregivers, haveNotifications, user])
 
   useEffect(() => {
     setPageTitle(t('caregivers-title'))
