@@ -87,35 +87,7 @@ export const generateCompleteDashboardNumberRandomDays = (date: string): Data =>
     data
   }
 }
-export const generateSmbgData = (date: string): Data => {
-  const startDate = new Date(moment().format('YYYY-MM-DD'))
-  const endDate = new Date(date)
-  const data = []
-  // eslint-disable-next-line no-unmodified-loop-condition
-  while (endDate <= startDate) {
-    const date = endDate.toISOString().split('T')[0]
-    data.push(
-      { time: `${date}T17:05:00Z`, type: 'smbg', id: 'cbg_17:05:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 15, uploadId: 'osef', _userId: 'osef' },
-      { time: `${date}T17:10:00Z`, type: 'smbg', id: 'cbg_17:10:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 55, uploadId: 'osef', _userId: 'osef' },
-      { time: `${date}T17:35:00Z`, type: 'smbg', id: 'cbg_17:35:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 100, uploadId: 'osef', _userId: 'osef' },
-      { time: `${date}T17:40:00Z`, type: 'smbg', id: 'cbg_17:40:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 188, uploadId: 'osef', _userId: 'osef' },
-      { time: `${date}T18:05:00Z`, type: 'smbg', id: 'cbg_18:05:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 260, uploadId: 'osef', _userId: 'osef' },
-      { time: `${date}T18:25:00Z`, type: 'bolus', id: WIZARD_BOLUS_ID1, timezone: 'Europe/Paris', prescriptor: 'auto', normal: 2, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
-      { time: `${date}T18:35:00Z`, type: 'wizard', id: WIZARD_ID1, timezone: 'Europe/Paris', units: 'mmol/L', carbInput: 30, bolus: WIZARD_BOLUS_ID1, uploadId: 'osef', _userId: 'osef' },
-      { time: `${date}T16:35:00Z`, type: 'pumpSettings', id: 'pump_2022-08-08_6', timezone: 'UTC', uploadId: 'osef', payload: { basalsecurityprofile: null, cgm: { apiVersion: 'v1', endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00', expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Dexcom', name: 'G6', swVersionTransmitter: 'v1', transmitterId: 'a1234' }, device: { deviceId: '1234', imei: '1234567890', manufacturer: 'Diabeloop', name: 'DBLG1', swVersion: 'beta' }, history, parameters: [{ name: 'WEIGHT', value: '72', unit: 'kg', level: 1, effectiveDate: '2020-01-17T08:00:00Z' }], pump: { expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Vicentra', name: 'Kaleido', serialNumber: '123456', swVersion: 'beta' } }, _userId: 'osef' },
-      { time: `${date}T16:30:00Z`, type: 'basal', deliveryType: 'scheduled', duration: 7200, id: 'basal_166cc04053fac_2022-12-13_0', rate: 100, timezone: 'Europe/Paris' },
-      { time: `${date}T19:35:00Z`, type: 'basal', deliveryType: 'scheduled', duration: 7200, id: 'basal_166cc04053fac_2022-12-13_0', rate: 100, timezone: 'Europe/Paris' },
-      { time: `${date}T19:35:00Z`, type: 'food', id: 'food_19-35-00', meal: 'rescuecarbs', nutrition: { carbohydrate: { net: 25, units: 'grams' } }, timezone: 'Europe/Paris', uploadId: 'osef' },
-      { time: `${date}T19:40:00Z`, type: 'deviceEvent', id: 'osef', subType: 'reservoirChange', timezone: 'Europe/Paris', uploadId: 'osef' },
-      { dataSetType: 'continuous', deviceManufacturers: ['Diabeloop'], deviceModel: 'DBLG1', deviceTags: ['cgm', 'insulin-pump'], id: 'e00d2c6c2bf7eaf141bae9926a635dd0', revision: 1, time: `${yesterdayDateAsString}T17:05:00Z`, timezone: 'UTC', type: 'upload', uploadId: 'e00d2c6c2bf7eaf141bae9926a635dd0', version: '1.0.0' }
-    )
-    endDate.setDate(endDate.getDate() + 1)
-  }
-  return {
-    dataRange: [`${date}T00:00:00Z`, `${moment().format('YYYY-MM-DD')}T00:00:00Z`],
-    data
-  }
-}
+
 export const completeDashBoardData = generateCompleteDashboardNumberRandomDays(yesterdayDateAsString)
 export const twoWeeksOldDashboardData = generateCompleteDashboardNumberRandomDays(twoWeeksAgoDateAsString)
 

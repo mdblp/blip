@@ -29,8 +29,7 @@ import { act, waitFor } from '@testing-library/react'
 import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
 import {
-  completeDashboardData,
-  dailyViewData,
+  completeDashBoardData,
   mockDataAPI,
   twoWeeksOldDashboardData
 } from '../../mock/data.api.mock'
@@ -89,7 +88,7 @@ describe('Patient dashboard for HCP', () => {
 
   it('should render correct components when navigating to a patient not scoped on the private team', async () => {
     const selectedTeamName = myThirdTeamName
-    mockDataAPI(dailyViewData)
+    mockDataAPI(completeDashBoardData)
 
     const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
@@ -102,6 +101,7 @@ describe('Patient dashboard for HCP', () => {
         }
       }
     }
+
     const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
       isChatCardVisible: true,
       isMedicalFilesCardVisible: true,
@@ -117,7 +117,7 @@ describe('Patient dashboard for HCP', () => {
   })
 
   it('should be able to switch from patient to patient', async () => {
-    mockDataAPI(completeDashboardData)
+    mockDataAPI(completeDashBoardData)
 
     await act(async () => {
       renderPage(patientDashboardRoute)
@@ -128,7 +128,6 @@ describe('Patient dashboard for HCP', () => {
 
   it('should be able to manage medical reports', async () => {
     const selectedTeamName = myThirdTeamName
-    mockDataAPI(completeDashboardData)
 
     const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
       selectedPatientId: patient1Id,
@@ -137,6 +136,7 @@ describe('Patient dashboard for HCP', () => {
       selectedTeamId: myThirdTeamId,
       selectedTeamName
     }
+
     const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
@@ -148,25 +148,17 @@ describe('Patient dashboard for HCP', () => {
         }
       }
     }
-    const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
-      isChatCardVisible: true,
-      isMedicalFilesCardVisible: true,
-      isMonitoringAlertCardVisible: true
-    }
 
     await act(async () => {
       renderPage(patientDashboardRoute)
     })
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
-    await testDashboardDataVisualisationForHcp(patientDashboardLayoutParams)
     await testPatientNavBarForHcp()
     await testMedicalWidgetForHcp(medicalFilesWidgetParams)
   })
 
   it('should be able to manage monitoring alerts parameters', async () => {
-    mockDataAPI(completeDashboardData)
-
     await act(async () => {
       renderPage(patientDashboardRoute)
     })
@@ -175,8 +167,6 @@ describe('Patient dashboard for HCP', () => {
   })
 
   it('should be able to use chat widget', async () => {
-    mockDataAPI(completeDashboardData)
-
     await act(async () => {
       renderPage(patientDashboardRoute)
     })
