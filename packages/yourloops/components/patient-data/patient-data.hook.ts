@@ -219,25 +219,24 @@ export const usePatientData = (): usePatientDataResult => {
       setLoadingData(false)
     }
   }
+  const calculedBgDate = (dateBg: string[]): number => {
+    const dateRangeSet = new Set(dateBg)
+    if (dateRangeSet.size >= 14) {
+      return 14 * DEFAULT_MS_RANGE
+    }
+    return dateRangeSet.size * DEFAULT_MS_RANGE
+  }
   const getRangeDaysInMs = (data: MedicalData): number => {
     if (data.smbg.length !== 0) {
       const dataSmbg = data.smbg.map((dataSmbg) => {
         return dataSmbg.localDate
       })
-      const dateRangeSet = new Set(dataSmbg)
-      if (dateRangeSet.size >= 14) {
-        return 14 * DEFAULT_MS_RANGE
-      }
-      return dateRangeSet.size * DEFAULT_MS_RANGE
+      return calculedBgDate(dataSmbg)
     }
     const dataCbg = data.cbg.map((dataCbg) => {
       return dataCbg.localDate
     })
-    const dateRangeSet = new Set(dataCbg)
-    if (dateRangeSet.size >= 14) {
-      return 14 * DEFAULT_MS_RANGE
-    }
-    return dateRangeSet.size * DEFAULT_MS_RANGE
+    return calculedBgDate(dataCbg)
   }
 
   const fetchPatientData = async (): Promise<void> => {

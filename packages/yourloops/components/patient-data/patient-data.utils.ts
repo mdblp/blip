@@ -139,6 +139,7 @@ export class PatientDataUtils {
 
   async retrievePatientData(): Promise<PatientData | null> {
     const dataRange = await DataApi.getPatientDataRange(this.patient.userid)
+
     if (!dataRange) {
       return null
     }
