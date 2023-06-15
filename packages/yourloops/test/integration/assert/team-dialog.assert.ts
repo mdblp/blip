@@ -36,7 +36,7 @@ export const checkCreateCareTeamDialog = async () => {
   jest.spyOn(TeamAPI, 'createTeam').mockResolvedValue(undefined)
   const teamMenu = screen.getByLabelText('Open team selection menu')
   await userEvent.click(teamMenu)
-  await userEvent.click(screen.getByText('Create a new care team'))
+  await userEvent.click(screen.getByText('Create a care team'))
   const dialogTeam = screen.getByRole('dialog')
   const createTeamButton = within(dialogTeam).getByRole('button', { name: 'Create team' })
   const cancelButton = within(dialogTeam).getByRole('button', { name: 'Cancel' })
@@ -122,7 +122,7 @@ export const checkTeamCreationFailure = async (): Promise<void> => {
 
   const teamMenu = screen.getByLabelText('Open team selection menu')
   await userEvent.click(teamMenu)
-  await userEvent.click(screen.getByText('Create a new care team'))
+  await userEvent.click(screen.getByText('Create a care team'))
 
   const dialog = screen.getByRole('dialog')
   const nameInput = within(dialog).getByRole('textbox', { name: 'Name' })
@@ -166,7 +166,7 @@ export const checkTeamCreationSuccess = async (router: Router): Promise<void> =>
 
   const teamMenu = screen.getByLabelText('Open team selection menu')
   await userEvent.click(teamMenu)
-  await userEvent.click(screen.getByText('Create a new care team'))
+  await userEvent.click(screen.getByText('Create a care team'))
 
   const dialog = screen.getByRole('dialog')
   const nameInput = within(dialog).getByRole('textbox', { name: 'Name' })

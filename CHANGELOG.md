@@ -109,6 +109,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2403 Remove caregiver and private team logic from CurrentPatientList
 - YLP-2404 Fix patient list columns width
 - YLP-2418 use new patient route from harbour
+- YLP-2420 Translations update
 - YLP-2434 Api calls are trigerred twice
 - YLP-2454 Daily view crashes on mobile
 
