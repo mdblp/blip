@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,39 +25,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useEffect, useState } from 'react'
+import { type Team } from '../../team'
+import { type Patient } from './patient.model'
 
-import { useTeam } from '../team'
-import PatientUtils from './patient.util'
-import PatientApi from './patient.api'
-import { useAuth } from '../auth'
-import metrics from '../metrics'
-import { type Patient } from './models/patient.model'
-import { type PatientContextResult } from './models/patient-context-result.model'
-
-export default function usePatientProviderCustomHook(): PatientContextResult {
-  const { refresh: refreshTeams } = useTeam()
-  const { user } = useAuth()
-
-  const [patient, setPatient] = useState<Patient>(null)
-  const [initialized, setInitialized] = useState<boolean>(false)
-
-  const leaveTeam = async (teamId: string): Promise<void> => {
-    await PatientApi.removePatient(teamId, patient.userid)
-    metrics.send('team_management', 'leave_team')
-    refreshTeams()
-  }
-
-  useEffect(() => {
-    if (!initialized && user) {
-      setPatient(PatientUtils.mapUserToPatient(user))
-      setInitialized(true)
-    }
-  }, [initialized, user])
-
-  return {
-    patient,
-    initialized,
-    leaveTeam
-  }
+export interface PatientsContextResult {
+  patients: Patient[]
+  pendingPatientsCount?: number
+  allNonPendingPatientsForSelectedTeamCount?: number
+  initialized: boolean
+  refreshInProgress: boolean
+  getPatientByEmail: (email: string) => Patient
+  getPatientById: (userId: string) => Patient
+  searchPatients: (search: string) => Patient[]
+  invitePatient: (team: Team, username: string) => Promise<void>
+  markPatientMessagesAsRead: (patient: Patient) => void
+  updatePatientMonitoringAlertsParameters: (patient: Patient) => Promise<void>
+  removePatient: (patient: Patient) => Promise<void>
+  refresh: (teamId?: string) => void
 }

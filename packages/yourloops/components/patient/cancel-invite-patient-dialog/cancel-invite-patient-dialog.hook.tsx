@@ -28,7 +28,7 @@
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import { useAlert } from '../../utils/snackbar'
-import { usePatientContext } from '../../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../../lib/patient/patients.provider'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 
 interface CancelInvitePatientDialogHookProps {
@@ -44,7 +44,7 @@ interface CancelInvitePatientDialogHookReturn {
 export const useCancelInvitePatientDialog = ({ patient, onClose }: CancelInvitePatientDialogHookProps): CancelInvitePatientDialogHookReturn => {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
-  const { removePatient } = usePatientContext()
+  const { removePatient } = usePatientsContext()
 
   const [processing, setProcessing] = useState<boolean>(false)
 

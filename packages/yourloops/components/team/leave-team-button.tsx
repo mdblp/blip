@@ -36,8 +36,8 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
 import LeaveTeamDialog from '../dialogs/leave-team-dialog'
 import TeamUtils from '../../lib/team/team.util'
-import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useTheme } from '@mui/material/styles'
+import { usePatientContext } from '../../lib/patient/patient.provider'
 
 export interface LeaveTeamButtonProps {
   team: Team

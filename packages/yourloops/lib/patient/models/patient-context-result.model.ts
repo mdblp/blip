@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,24 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Team } from '../../team'
-import { type MedicalData } from '../../data/models/medical-data.model'
 import { type Patient } from './patient.model'
 
 export interface PatientContextResult {
-  patients: Patient[]
-  pendingPatientsCount?: number
-  allNonPendingPatientsForSelectedTeamCount?: number
+  patient: Patient
   initialized: boolean
-  refreshInProgress: boolean
-  getPatientByEmail: (email: string) => Patient
-  getPatientById: (userId: string) => Patient
-  searchPatients: (search: string) => Patient[]
-  invitePatient: (team: Team, username: string) => Promise<void>
-  markPatientMessagesAsRead: (patient: Patient) => void
-  updatePatientMonitoringAlertsParameters: (patient: Patient) => Promise<void>
-  removePatient: (patient: Patient) => Promise<void>
   leaveTeam: (team: string) => Promise<void>
-  setPatientMedicalData: (userId: string, medicalData: MedicalData | null) => void
-  refresh: (teamId?: string) => void
 }
