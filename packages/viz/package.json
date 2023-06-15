@@ -44,7 +44,6 @@
     "stream-browserify": "^3.0.0",
     "text-table": "0.2.0",
     "translate-svg-path": "0.0.1",
-    "victory": "36.6.11",
     "voilab-pdf-table": "0.4.0"
   }
 }
