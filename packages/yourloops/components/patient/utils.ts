@@ -94,11 +94,9 @@ export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
       a1c: iTeamMember.settings?.a1c,
       system: 'DBLG1'
     },
-    metadata: {
-      flagged: undefined,
-      medicalData: null,
-      hasSentUnreadMessages: iTeamMember.unreadMessages > 0
-    },
+    flagged: undefined,
+    medicalData: null,
+    hasSentUnreadMessages: iTeamMember.unreadMessages > 0,
     invitationStatus: iTeamMember.invitationStatus,
     userid: iTeamMember.userId
   }

@@ -45,8 +45,8 @@ export const sortByUserName: PatientSortComparator = (patient1, patient2): numbe
 }
 
 export const sortByFlag: PatientSortComparator = (patient1: Patient, patient2: Patient): number => {
-  const isPatient1Flagged = patient1.metadata.flagged
-  const isPatient2Flagged = patient2.metadata.flagged
+  const isPatient1Flagged = patient1.flagged
+  const isPatient2Flagged = patient2.flagged
 
   if (isPatient1Flagged && !isPatient2Flagged) {
     return -1

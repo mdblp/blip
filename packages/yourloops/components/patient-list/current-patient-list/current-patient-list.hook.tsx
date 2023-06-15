@@ -77,7 +77,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
 
   const allRows = useMemo(() => {
     return patients.map((patient): GridRowModel => {
-      const { lastUpload } = getMedicalValues(patient.metadata.medicalData, noDataLabel)
+      const { lastUpload } = getMedicalValues(patient.medicalData, noDataLabel)
       const birthdate = patient.profile.birthdate
       return {
         id: patient.userid,
@@ -89,7 +89,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         [PatientListColumns.MonitoringAlerts]: patient,
         [PatientListColumns.System]: patient.settings.system ?? noDataLabel,
         [PatientListColumns.LastDataUpdate]: lastUpload,
-        [PatientListColumns.Messages]: patient.metadata.hasSentUnreadMessages,
+        [PatientListColumns.Messages]: patient.hasSentUnreadMessages,
         [PatientListColumns.TimeInRange]: patient.glycemiaIndicators?.timeInRange,
         [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators?.glucoseManagementIndicator,
         [PatientListColumns.Hypoglycemia]: patient.glycemiaIndicators?.hypoglycemia,
@@ -115,7 +115,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         sortComparator: sortByFlag,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>): JSX.Element => {
           const patient = params.value
-          return <FlagIconCell isFlagged={patient.metadata.flagged} patient={patient} />
+          return <FlagIconCell isFlagged={patient.flagged} patient={patient} />
         }
       },
       {

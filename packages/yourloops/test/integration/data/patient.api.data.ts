@@ -26,7 +26,6 @@
  */
 
 import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-alerts.model'
-import { type PatientMetadata } from '../../../lib/patient/models/patient-metadata.model'
 import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
 import { type Patient } from '../../../lib/patient/models/patient.model'
@@ -47,6 +46,7 @@ import { type MonitoringAlertsParameters } from '../../../lib/team/models/monito
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 import { loggedInUserId } from '../mock/auth0.hook.mock'
 import { type GlycemiaIndicators } from '../../../lib/patient/models/glycemia-indicators.model'
+import { type MedicalData } from '../../../lib/data/models/medical-data.model'
 
 export const patient1Id = 'patient1Id'
 export const patient2Id = 'patient2Id'
@@ -62,10 +62,6 @@ const defaultMonitoringAlertsParameters = monitoringAlertsParameters
 
 const defaultSettings: PatientSettings = {
   system: 'DBLG1'
-}
-
-const defaultMetadata: PatientMetadata = {
-  hasSentUnreadMessages: false
 }
 
 const defaultMonitoringAlert: MonitoringAlerts = {
@@ -89,8 +85,10 @@ export const buildPatient = (params: {
   monitoringAlertsParameters: MonitoringAlertsParameters
   profile?: Partial<PatientProfile>
   settings?: Partial<PatientSettings>
-  metadata?: Partial<PatientMetadata>
   monitoringAlerts?: Partial<MonitoringAlerts>
+  flagged?: boolean
+  hasSentUnreadMessages?: boolean
+  medicalData?: Partial<MedicalData>
 }): Patient => {
   return {
     monitoringAlerts: {
@@ -114,11 +112,9 @@ export const buildPatient = (params: {
       a1c: params.settings?.a1c || { date: '2023-05-26T12:28:36.047Z', value: 'fakeA1cValue' },
       system: params.settings?.system
     },
-    metadata: {
-      flagged: params.metadata?.flagged,
-      medicalData: params.metadata?.medicalData || null,
-      hasSentUnreadMessages: params.metadata?.hasSentUnreadMessages || false
-    },
+    flagged: params.flagged,
+    medicalData: params.medicalData || null,
+    hasSentUnreadMessages: params.hasSentUnreadMessages || false,
     monitoringAlertsParameters: params.monitoringAlertsParameters,
     invitationStatus: UserInviteStatus.Accepted,
     userid: params.userid
@@ -137,7 +133,6 @@ export const patient1: Patient = buildPatient({
     sex: Gender.Male
   },
   settings: defaultSettings,
-  metadata: defaultMetadata,
   monitoringAlerts: defaultMonitoringAlert
 })
 
@@ -153,8 +148,8 @@ export const unreadMessagesPatient: Patient = buildPatient({
     sex: Gender.Male
   },
   settings: defaultSettings,
-  metadata: { hasSentUnreadMessages: true },
-  monitoringAlerts: defaultMonitoringAlert
+  monitoringAlerts: defaultMonitoringAlert,
+  hasSentUnreadMessages: true
 })
 
 export const timeSpentOutOfTargetRangePatient: Patient = buildPatient({
@@ -169,7 +164,6 @@ export const timeSpentOutOfTargetRangePatient: Patient = buildPatient({
     sex: Gender.Male
   },
   settings: defaultSettings,
-  metadata: defaultMetadata,
   monitoringAlerts: { ...defaultMonitoringAlert, timeSpentAwayFromTargetActive: true }
 })
 
@@ -185,7 +179,6 @@ export const hypoglycemiaPatient: Patient = buildPatient({
     sex: Gender.Female
   },
   settings: defaultSettings,
-  metadata: defaultMetadata,
   monitoringAlerts: { ...defaultMonitoringAlert, frequencyOfSevereHypoglycemiaActive: true }
 })
 
@@ -201,7 +194,6 @@ export const noDataTransferredPatient: Patient = buildPatient({
     sex: Gender.Female
   },
   settings: defaultSettings,
-  metadata: defaultMetadata,
   monitoringAlerts: { ...defaultMonitoringAlert, nonDataTransmissionActive: true }
 })
 
@@ -217,8 +209,8 @@ export const flaggedPatient: Patient = buildPatient({
     sex: Gender.Female
   },
   settings: defaultSettings,
-  metadata: { ...defaultMetadata, flagged: true },
-  monitoringAlerts: defaultMonitoringAlert
+  monitoringAlerts: defaultMonitoringAlert,
+  flagged: true
 })
 
 export const patient2: Patient = buildPatient({
@@ -233,7 +225,6 @@ export const patient2: Patient = buildPatient({
     sex: Gender.Female
   },
   settings: { ...defaultSettings, a1c: { value: '8.9', date: '2023-11-21T12:30:38.473Z' } },
-  metadata: defaultMetadata,
   monitoringAlerts: defaultMonitoringAlert
 })
 
@@ -249,7 +240,6 @@ export const patient3: Patient = buildPatient({
     sex: Gender.Male
   },
   settings: defaultSettings,
-  metadata: defaultMetadata,
   monitoringAlerts: defaultMonitoringAlert
 })
 
@@ -265,7 +255,6 @@ export const patientWithMmol: Patient = buildPatient({
     sex: Gender.Male
   },
   settings: defaultSettings,
-  metadata: defaultMetadata,
   monitoringAlerts: defaultMonitoringAlert
 })
 
@@ -278,11 +267,9 @@ export const pendingPatient: Patient = buildPatient({
     firstName: 'Pending',
     fullName: 'Pending Patient',
     lastName: 'Patient',
-    sex: Gender.Female,
-    referringDoctor: 'Doc Eur'
+    sex: Gender.Female
   },
   settings: { ...defaultSettings, a1c: { value: '8.3', date: '2022-12-16T08:18:38.473Z' } },
-  metadata: defaultMetadata,
   monitoringAlerts: defaultMonitoringAlert
 })
 
@@ -306,7 +293,7 @@ export const buildTeamMemberFromPatient = (patient: Patient, teamId: string, inv
     invitationStatus,
     email: patient.profile.email,
     idVerified: false,
-    unreadMessages: patient.metadata.hasSentUnreadMessages ? 1 : 0,
+    unreadMessages: patient.hasSentUnreadMessages ? 1 : 0,
     alarms: patient.monitoringAlerts,
     glycemiaIndicators: patient.glycemiaIndicators
   }

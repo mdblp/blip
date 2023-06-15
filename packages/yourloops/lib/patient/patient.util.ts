@@ -73,16 +73,14 @@ export default class PatientUtils {
         sex: profile?.patient?.sex ?? Gender.NotDefined
       },
       settings: user.settings,
-      metadata: {
-        medicalData: undefined,
-        hasSentUnreadMessages: false
-      }
+      hasSentUnreadMessages: false
     }
   }
 
   static computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {
-    return patients.map(patient => {
-      return { ...patient, metadata: { ...patient.metadata, flagged: flaggedPatients.includes(patient.userid) } }
+    return patients.map((patient: Patient) => {
+      patient.flagged = flaggedPatients.includes(patient.userid)
+      return patient
     })
   }
 
@@ -132,7 +130,7 @@ export default class PatientUtils {
     const nonPendingPatients = PatientUtils.getNonPendingPatients(patients)
     return PatientUtils.filterPatientsOnMonitoringAlerts(nonPendingPatients, patientFilters)
       .filter(patient => patientFilters.manualFlagEnabled ? flaggedPatientsId?.includes(patient.userid) : patient)
-      .filter(patient => patientFilters.messagesEnabled ? patient.metadata.hasSentUnreadMessages : patient)
+      .filter(patient => patientFilters.messagesEnabled ? patient.hasSentUnreadMessages : patient)
   }
 
   static extractPatientsWithBirthdate = (patients: Patient[], birthdate: string, firstNameOrLastName: string): Patient[] => {

@@ -108,20 +108,20 @@ describe('Patients hook', () => {
   }
 
   describe('filterPatients', () => {
-    const pendingPatient = createPatient('pendingPatient', UserInviteStatus.Pending, undefined, { birthdate: new Date(2001, 10, 19) })
+    const pendingPatient = createPatient('pendingPatient', UserInviteStatus.Pending, undefined, { birthdate: new Date(2001, 10, 19).toString() })
     const basicPatient = createPatient('basicPatient1', UserInviteStatus.Accepted, undefined, {
-      birthdate: new Date(2005, 5, 5),
+      birthdate: new Date(2005, 5, 5).toString(),
       firstName: 'small brain',
       lastName: 'dupont'
     })
-    const basicPatient2 = createPatient('basicPatient2', UserInviteStatus.Accepted, undefined, { birthdate: new Date(2001, 10, 19) })
+    const basicPatient2 = createPatient('basicPatient2', UserInviteStatus.Accepted, undefined, { birthdate: new Date(2001, 10, 19).toString() })
     const bigBrainPatient = createPatient('big brain', UserInviteStatus.Accepted, undefined, {
-      birthdate: new Date(2005, 5, 5),
+      birthdate: new Date(2005, 5, 5).toString(),
       firstName: 'big brain',
       lastName: 'smith'
     })
     const noNamePatient = createPatient('big brain', UserInviteStatus.Accepted, undefined, {
-      birthdate: new Date(2006, 6, 6)
+      birthdate: new Date(2006, 6, 6).toString()
     })
     noNamePatient.profile.firstName = undefined
     noNamePatient.profile.lastName = undefined
@@ -324,7 +324,7 @@ describe('Patients hook', () => {
 
     beforeAll(async () => {
       basicPatient = createPatient('basicPatient1', UserInviteStatus.Accepted)
-      basicPatient.metadata.hasSentUnreadMessages = true
+      basicPatient.hasSentUnreadMessages = true
       const allPatients = [basicPatient]
 
       const res = await renderPatientsHook(allPatients)
@@ -334,7 +334,7 @@ describe('Patients hook', () => {
     it('should update patient unread messages to 0', () => {
       act(() => {
         customHook.markPatientMessagesAsRead(basicPatient)
-        expect(customHook.getPatientById(basicPatient.userid).metadata.hasSentUnreadMessages).toBeFalsy()
+        expect(customHook.getPatientById(basicPatient.userid).hasSentUnreadMessages).toBeFalsy()
       })
     })
   })

@@ -32,7 +32,7 @@ import { UserRole } from '../auth/models/enums/user-role.enum'
 import { type ITeamMember } from '../team/models/i-team-member.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
-import { type Patient, PatientMetrics } from './models/patient.model'
+import { type Patient, type PatientMetrics } from './models/patient.model'
 import { type MonitoringAlertsParameters } from '../team/models/monitoring-alerts-parameters.model'
 
 const log = bows('Patient API')

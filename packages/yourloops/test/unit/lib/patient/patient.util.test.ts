@@ -30,6 +30,8 @@ import PatientUtils from '../../../../lib/patient/patient.util'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
+import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
+import { type User } from '../../../../lib/auth'
 
 const defaultMonitoringAlerts = {
   timeSpentAwayFromTargetRate: 10,
@@ -49,19 +51,19 @@ const defaultPatientFilters = {
   messagesEnabled: false
 }
 
-const patientWithTimeOutOfTargetAlert = createPatient('outOfTarget', UserInviteStatus.Accepted, undefined, undefined, undefined, undefined, {
+const patientWithTimeOutOfTargetAlert = createPatient('outOfTarget', UserInviteStatus.Accepted, undefined, undefined, undefined, {
   ...defaultMonitoringAlerts,
   timeSpentAwayFromTargetActive: true
 })
-const patientWithHypoglycemiaAlert = createPatient('hypoglycemia', UserInviteStatus.Accepted, undefined, undefined, undefined, undefined, {
+const patientWithHypoglycemiaAlert = createPatient('hypoglycemia', UserInviteStatus.Accepted, undefined, undefined, undefined, {
   ...defaultMonitoringAlerts,
   frequencyOfSevereHypoglycemiaActive: true
 })
-const patientWithNoDataAlert = createPatient('noData', UserInviteStatus.Accepted, undefined, undefined, undefined, undefined, {
+const patientWithNoDataAlert = createPatient('noData', UserInviteStatus.Accepted, undefined, undefined, undefined, {
   ...defaultMonitoringAlerts,
   nonDataTransmissionActive: true
 })
-const noAlertsPatient = createPatient('nothing', UserInviteStatus.Accepted, undefined, undefined, undefined, undefined, defaultMonitoringAlerts)
+const noAlertsPatient = createPatient('nothing', UserInviteStatus.Accepted, undefined, undefined, undefined, defaultMonitoringAlerts)
 
 describe('Patient utils', () => {
   describe('computeFlaggedPatients', () => {
@@ -71,7 +73,7 @@ describe('Patient utils', () => {
       const flaggedPatientIds = [patientFlaggedId]
       const patientsUpdated = PatientUtils.computeFlaggedPatients(patients, flaggedPatientIds)
       patientsUpdated.forEach(patient => {
-        expect(patient.metadata.flagged).toBe(flaggedPatientIds.includes(patient.userid))
+        expect(patient.flagged).toBe(flaggedPatientIds.includes(patient.userid))
       })
     })
   })
@@ -180,7 +182,7 @@ describe('Patient utils', () => {
     const pendingPatient = createPatient('pendingPatient', UserInviteStatus.Pending, undefined, undefined, undefined, undefined, undefined)
     const monitoredPatient = createPatient('monitoredPatient', UserInviteStatus.Accepted, undefined, undefined, undefined, undefined)
     const flaggedPatient = createPatient('flaggedPatient', UserInviteStatus.Accepted, null, undefined, undefined, undefined, undefined)
-    const unreadMessagesPatient = createPatient('unreadMessagesPatient', UserInviteStatus.Accepted, null, undefined, undefined, { hasSentUnreadMessages: true }, undefined)
+    const unreadMessagesPatient = createPatient('unreadMessagesPatient', UserInviteStatus.Accepted, null, undefined, undefined, undefined, undefined, true)
     const patients = [noAlertsPatient, pendingPatient, monitoredPatient, unreadMessagesPatient, patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithNoDataAlert, noAlertsPatient, flaggedPatient]
     const flaggedPatientsIds = [flaggedPatient.userid]
 
@@ -282,6 +284,71 @@ describe('Patient utils', () => {
     it('should return N/A if the value is not defined', () => {
       expect(PatientUtils.formatPercentageValue(undefined)).toEqual('N/A')
       expect(PatientUtils.formatPercentageValue(null)).toEqual('N/A')
+    })
+  })
+
+  describe('mapUserToPatient', () => {
+    it('should convert a user into a patient model', () => {
+      const user = {
+        id: 'patient-id',
+        preferences: {
+          displayLanguageCode: LanguageCodes.En
+        },
+        profile: {
+          fullName: 'Patient 1',
+          firstName: 'Patient',
+          lastName: '1',
+          email: 'patient@email.fr',
+          patient: {
+            birthday: '1980-01-01T10:44:34+01:00',
+            diagnosisType: 'type1',
+            sex: 'F'
+          },
+          termsOfUse: {
+            acceptanceTimestamp: '2021-05-22',
+            isAccepted: true
+          },
+          privacyPolicy: {
+            acceptanceTimestamp: '2021-05-22',
+            isAccepted: true
+          },
+          trainingAck: {
+            acceptanceTimestamp: '2022-10-11',
+            isAccepted: true
+          }
+        },
+        settings: null,
+        consents: null
+      } as unknown as User
+
+      expect(PatientUtils.mapUserToPatient(user)).toEqual({
+        userid: 'patient-id',
+        profile: {
+          firstName: 'Patient',
+          lastName: '1',
+          fullName: 'Patient 1',
+          email: 'patient@email.fr',
+          sex: Gender.Female
+        },
+        settings: null,
+        hasSentUnreadMessages: false
+      })
+    })
+
+    it('should set the sex as Not Defined if none is specified', () => {
+      const user = {
+        id: 'patient-id',
+        profile: {
+          email: 'patient@email.fr',
+          patient: {
+            birthday: '1980-01-01T10:44:34+01:00',
+            diagnosisType: 'type1',
+          }
+        }
+      } as unknown as User
+
+      const result = PatientUtils.mapUserToPatient(user)
+      expect(result.profile.sex).toEqual(Gender.NotDefined)
     })
   })
 })

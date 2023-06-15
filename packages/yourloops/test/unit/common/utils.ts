@@ -29,18 +29,14 @@ import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-al
 import { type Team, type TeamMember } from '../../../lib/team'
 import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
-import { type PatientMetadata } from '../../../lib/patient/models/patient-metadata.model'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { Unit } from 'medical-domain'
 import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
-
-export function triggerMouseEvent(event: string, domElement: Element): void {
-  const clickEvent = new MouseEvent(event, { bubbles: true })
-  domElement.dispatchEvent(clickEvent)
-}
+import { Gender } from '../../../lib/auth/models/enums/gender.enum'
+import { type MedicalData } from '../../../lib/data/models/medical-data.model'
 
 export const createPatient = (
   id = 'fakePatientId',
@@ -48,8 +44,10 @@ export const createPatient = (
   monitoringAlertsParameters: MonitoringAlertsParameters | undefined = undefined,
   profile: Partial<PatientProfile> = undefined,
   settings: Partial<PatientSettings> = undefined,
-  metadata: Partial<PatientMetadata> = undefined,
-  monitoringAlerts: Partial<MonitoringAlerts> = undefined
+  monitoringAlerts: Partial<MonitoringAlerts> = undefined,
+  flagged: boolean = false,
+  hasSentUnreadMessages: boolean = false,
+  medicalData: MedicalData = null
 ): Patient => {
   return {
     monitoringAlerts: {
@@ -66,17 +64,15 @@ export const createPatient = (
       fullName: profile?.fullName || 'fakePatientFullName',
       lastName: profile?.lastName || 'fakeLastname',
       email: profile?.email || 'fake@email.com',
-      sex: profile?.sex || 'M'
+      sex: profile?.sex || Gender.Male
     },
     settings: {
       a1c: settings?.a1c || { date: new Date().toJSON(), value: 'fakeA1cValue' },
       system: settings?.system
     },
-    metadata: {
-      flagged: metadata?.flagged,
-      medicalData: metadata?.medicalData || null,
-      hasSentUnreadMessages: metadata?.hasSentUnreadMessages || false
-    },
+    flagged,
+    medicalData,
+    hasSentUnreadMessages,
     monitoringAlertsParameters,
     invitationStatus,
     userid: id

@@ -74,7 +74,8 @@ describe('useSortComparatorsHook', () => {
         profile: { fullName: 'A Patient', email: undefined, sex: undefined },
         monitoringAlerts: undefined,
         settings: undefined,
-        metadata: { flagged: false, hasSentUnreadMessages: undefined },
+        flagged: false,
+        hasSentUnreadMessages: undefined,
         invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
@@ -84,7 +85,8 @@ describe('useSortComparatorsHook', () => {
         profile: { fullName: 'B Patient', email: undefined, sex: undefined },
         monitoringAlerts: undefined,
         settings: undefined,
-        metadata: { flagged: true, hasSentUnreadMessages: undefined },
+        flagged: true,
+        hasSentUnreadMessages: undefined,
         invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
@@ -94,7 +96,8 @@ describe('useSortComparatorsHook', () => {
         profile: { fullName: 'C Patient', email: undefined, sex: undefined },
         monitoringAlerts: undefined,
         settings: undefined,
-        metadata: { flagged: true, hasSentUnreadMessages: undefined },
+        flagged: true,
+        hasSentUnreadMessages: undefined,
         invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
@@ -113,7 +116,7 @@ describe('useSortComparatorsHook', () => {
         profile: { fullName: 'A Patient', email: undefined, sex: undefined, birthdate: '2000-03-12T10:44:34+01:00' },
         monitoringAlerts: undefined,
         settings: undefined,
-        metadata: { hasSentUnreadMessages: undefined },
+        hasSentUnreadMessages: undefined,
         invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
@@ -123,7 +126,7 @@ describe('useSortComparatorsHook', () => {
         profile: { fullName: 'B Patient', email: undefined, sex: undefined, birthdate: '1980-01-01T10:44:34+01:00' },
         monitoringAlerts: undefined,
         settings: undefined,
-        metadata: { hasSentUnreadMessages: undefined },
+        hasSentUnreadMessages: undefined,
         invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
@@ -133,7 +136,7 @@ describe('useSortComparatorsHook', () => {
         profile: { fullName: 'C Patient', email: undefined, sex: undefined, birthdate: '1980-01-01T10:44:34+01:00' },
         monitoringAlerts: undefined,
         settings: undefined,
-        metadata: { hasSentUnreadMessages: undefined },
+        hasSentUnreadMessages: undefined,
         invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
@@ -159,7 +162,7 @@ describe('useSortComparatorsHook', () => {
           nonDataTransmissionRate: undefined
         },
         settings: undefined,
-        metadata: { hasSentUnreadMessages: undefined },
+        hasSentUnreadMessages: undefined,
         invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
@@ -176,7 +179,7 @@ describe('useSortComparatorsHook', () => {
           nonDataTransmissionRate: undefined
         },
         settings: undefined,
-        metadata: { hasSentUnreadMessages: undefined },
+        hasSentUnreadMessages: undefined,
         invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
@@ -193,7 +196,7 @@ describe('useSortComparatorsHook', () => {
           nonDataTransmissionRate: undefined
         },
         settings: undefined,
-        metadata: { hasSentUnreadMessages: undefined },
+        hasSentUnreadMessages: undefined,
         invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }
@@ -210,7 +213,7 @@ describe('useSortComparatorsHook', () => {
           nonDataTransmissionRate: undefined
         },
         settings: undefined,
-        metadata: { hasSentUnreadMessages: undefined },
+        hasSentUnreadMessages: undefined,
         invitationStatus: UserInviteStatus.Accepted,
         userid: ''
       }

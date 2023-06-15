@@ -36,11 +36,12 @@ import DirectShareApi from '../share/direct-share.api'
 import { useAuth } from '../auth'
 import { errorTextFromException } from '../utils'
 import { type PatientsContextResult } from './models/patients-context-result.model'
-import { type Patient } from './models/patient.model'
+import { type Patient, type PatientMetrics } from './models/patient.model'
 import { useSelectedTeamContext } from '../selected-team/selected-team.provider'
 import { usePatientListContext } from '../providers/patient-list.provider'
 import { useAlert } from '../../components/utils/snackbar'
 import TeamUtils from '../team/team.util'
+import { UserInviteStatus } from '../team/models/enums/user-invite-status.enum'
 
 export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const { cancel: cancelInvite } = useNotification()
@@ -58,18 +59,53 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const shouldMakeInitialApiCallToGetPatients = useRef(true)
 
   const fetchPatients = useCallback((teamId: string = selectedTeamId) => {
-    PatientUtils.computePatients(user, teamId).then(computedPatients => {
-      setPatients(computedPatients)
-    }).catch((reason: unknown) => {
-      const message = errorTextFromException(reason)
-      alert.error(message)
-    }).finally(() => {
-      setInitialized(true)
-      setRefreshInProgress(false)
-    })
+    PatientUtils.computePatients(user, teamId)
+      .then((computedPatients: Patient[]) => {
+        setPatients(computedPatients)
+        return computedPatients
+      })
+      .then(async (computedPatients: Patient[]) => {
+        if (!isUserHcp) {
+          return
+        }
+
+        const acceptedInvitePatients = computedPatients.filter((patient: Patient) => patient.invitationStatus === UserInviteStatus.Accepted)
+        if (!acceptedInvitePatients.length) {
+          return
+        }
+        // setTimeout(async () => {
+        await fetchPatientsMetrics(teamId, acceptedInvitePatients)
+        // }, 5000)
+      })
+      .catch((reason: unknown) => {
+        const message = errorTextFromException(reason)
+        alert.error(message)
+      })
+      .finally(() => {
+        setInitialized(true)
+        setRefreshInProgress(false)
+      })
     // Need to rewrite the alert component, or it triggers infinite loop...
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, selectedTeam])
+
+  const fetchPatientsMetrics = async (teamId: string = selectedTeamId, computedPatients: Patient[]): Promise<void> => {
+    const patientIds = computedPatients.map((patient: Patient) => patient.userid)
+
+    const patientsMetrics = await PatientApi.getPatientsMetricsForHcp(user.id, teamId, patientIds)
+
+    const updatedPatients = computedPatients.map((patient: Patient) => {
+      const relatedMetrics = patientsMetrics.find((metrics: PatientMetrics) => metrics.userid === patient.userid)
+      if (!relatedMetrics) {
+        return patient
+      }
+      patient.glycemiaIndicators = relatedMetrics.glycemiaIndicators
+      patient.monitoringAlerts = relatedMetrics.monitoringAlerts
+      patient.medicalData = relatedMetrics.medicalData
+      return patient
+    })
+    setPatients(updatedPatients)
+  }
 
   const refresh = (teamId: string = selectedTeamId): void => {
     setRefreshInProgress(true)
@@ -126,7 +162,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   }
 
   const markPatientMessagesAsRead = useCallback((patient: Patient) => {
-    patient.metadata.hasSentUnreadMessages = false
+    patient.hasSentUnreadMessages = false
     updatePatient(patient)
   }, [updatePatient])
 
