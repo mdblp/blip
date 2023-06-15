@@ -32,14 +32,17 @@ import classes from './device.css'
 import CardContent from '@mui/material/CardContent'
 import List from '@mui/material/List'
 import Divider from '@mui/material/Divider'
+import { useTheme } from '@mui/material/styles'
 
 interface GenericListCardProps extends PropsWithChildren {
   title: string
 }
 
 export const GenericListCard: FC<GenericListCardProps> = ({ children, title }) => {
+  const theme = useTheme()
+
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" sx={{ marginBottom: theme.spacing(4) }}>
       <CardHeader
         title={title}
         className={classes['card-header']}

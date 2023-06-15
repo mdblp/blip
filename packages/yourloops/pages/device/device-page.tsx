@@ -39,10 +39,11 @@ import { useTheme } from '@mui/material/styles'
 import { useDevice } from '../../components/device/use-device.hook'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
-import { CgmTable, type ChangeDateParameterGroup, HistoryParameterTable, PumpTable, Table } from 'dumb'
+import { CgmTable, type ChangeDateParameterGroup, HistoryParameterTable, Table } from 'dumb'
 import { sortHistoryParametersByDate } from '../../components/device/device.utils'
 import { makeStyles } from 'tss-react/mui'
 import { DeviceInfo } from '../../components/device/device-info'
+import { PumpInfo } from '../../components/device/pump-info'
 
 interface DevicePageProps {
   goToDailySpecificDate: (date: number) => void
@@ -98,7 +99,7 @@ export const DevicePage: FC<DevicePageProps> = ({ medicalData, timePrefs, goToDa
           >
             <Grid item xs={12} sm={6}>
               <DeviceInfo device={device} />
-              <PumpTable pump={pump} timePrefs={timePrefs} />
+              <PumpInfo pump={pump} />
               <CgmTable cgm={cgm} timePrefs={timePrefs} />
             </Grid>
             <Grid item xs={12} sm={6} data-testid="parameters-container">

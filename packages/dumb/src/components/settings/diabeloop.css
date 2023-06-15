@@ -46,10 +46,6 @@
   composes: settingsTable from 'settings.css';
 }
 
-.pumpTable {
-  composes: settingsTable from 'settings.css';
-}
-
 .cgmTable {
   composes: settingsTable from 'settings.css';
 }
