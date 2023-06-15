@@ -130,7 +130,7 @@ function PatientCaregiversPage(): JSX.Element {
         caregivers.push(...invitedCaregivers)
         setCaregivers(caregivers)
       })
-  }, [getCaregiversFromPendingInvitations, sentInvitations])
+  }, [getCaregiversFromPendingInvitations])
 
   useEffect(() => {
     if (sentInvitationsFetched.current !== sentInvitations) {
