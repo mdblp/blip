@@ -26,7 +26,7 @@
  */
 
 import React, { type FC } from 'react'
-import type { PumpConfig } from 'medical-domain'
+import type { CgmConfig } from 'medical-domain'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
@@ -34,46 +34,64 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { GenericListCard } from './generic-list-card'
 
-interface PumpInfoProps {
-  pump: PumpConfig
+interface CgmInfoProps {
+  cgm: CgmConfig
 }
 
 const FALLBACK_VALUE = '-'
 
-export const PumpInfo: FC<PumpInfoProps> = ({ pump }) => {
+export const CgmInfo: FC<CgmInfoProps> = ({ cgm }) => {
   const { t } = useTranslation()
+
   // TODO display time according to selected language (timezone ?)
   return (
-    <GenericListCard title={t('Pump')}>
+    <GenericListCard title={t('CGM')}>
       <ListItem divider>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography>{t('Manufacturer')}</Typography>
-            <Typography className="bold">{pump.manufacturer || FALLBACK_VALUE}</Typography>
+            <Typography className="bold">{cgm.manufacturer || FALLBACK_VALUE}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       <ListItem divider>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('Serial Number')}</Typography>
-            <Typography className="bold">{pump.serialNumber || FALLBACK_VALUE}</Typography>
+            <Typography>{t('Product')}</Typography>
+            <Typography className="bold">{cgm.name || FALLBACK_VALUE}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       <ListItem divider>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('Pump version')}</Typography>
-            <Typography className="bold">{pump.swVersion || FALLBACK_VALUE}</Typography>
+            <Typography>{t('Cgm sensor expiration date')}</Typography>
+            <Typography className="bold">{new Date(cgm.expirationDate).toLocaleDateString() || FALLBACK_VALUE}</Typography>
+          </Box>
+        </ListItemText>
+      </ListItem>
+      <ListItem divider>
+        <ListItemText>
+          <Box display="flex" justifyContent="space-between">
+            <Typography>{t('Cgm transmitter software version')}</Typography>
+            <Typography className="bold">{cgm.swVersionTransmitter || FALLBACK_VALUE}</Typography>
+          </Box>
+        </ListItemText>
+      </ListItem>
+      <ListItem divider>
+        <ListItemText>
+          <Box display="flex" justifyContent="space-between">
+            <Typography>{t('Cgm transmitter id')}</Typography>
+            <Typography className="bold">{cgm.transmitterId || FALLBACK_VALUE}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       <ListItem>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('Pump cartridge expiration date')}</Typography>
-            <Typography className="bold">{new Date(pump.expirationDate).toLocaleDateString() || FALLBACK_VALUE}</Typography>
+            <Typography>{t('Cgm transmitter end of life')}</Typography>
+            <Typography
+              className="bold">{new Date(cgm.endOfLifeTransmitterDate).toLocaleDateString() || FALLBACK_VALUE}</Typography>
           </Box>
         </ListItemText>
       </ListItem>

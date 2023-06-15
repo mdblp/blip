@@ -27,5 +27,5 @@
 
 .card-header {
   background-color: var(--primary-light-5);
-  font-weight: bold;
+  font-weight: 600;
 }

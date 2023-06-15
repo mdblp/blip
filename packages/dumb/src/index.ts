@@ -47,7 +47,6 @@ import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mo
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
 import Tooltip from './components/tooltips/common/tooltip/tooltip'
-import { CgmTable } from './components/settings/cgm-table'
 import { HistoryParameterTable } from './components/settings/history/history-table'
 import {
   AverageDailyDoseStatMemoized as AverageDailyDoseStat
@@ -79,7 +78,6 @@ export {
   CBGPercentageBarChart,
   CBGStandardDeviation,
   CBGStatType,
-  CgmTable,
   ConfidentialTooltip,
   FocusedRangeLabels,
   FoodTooltip,
