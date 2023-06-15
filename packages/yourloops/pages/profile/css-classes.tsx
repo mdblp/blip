@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -48,7 +48,7 @@ export const profileFormCommonClasses = makeStyles()((theme) => ({
     padding: 0,
     [theme.breakpoints.up('sm')]: {
       border: 'solid',
-      borderRadius: '15px',
+      borderRadius: theme.spacing(3),
       borderColor: theme.palette.grey[300],
       borderWidth: '1px',
       padding: '0 64px'

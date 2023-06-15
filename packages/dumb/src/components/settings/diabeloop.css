@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,10 +29,6 @@
   composes: copyButton from 'settings.css';
 }
 
-.copyText {
-  composes: copyText from 'settings.css';
-}
-
 .categoryTitle {
   composes: mediumContrastText from '../../styles/typography.css';
   width: 100%;
@@ -47,10 +43,6 @@
 }
 
 .settingsTable {
-  composes: settingsTable from 'settings.css';
-}
-
-.deviceTable {
   composes: settingsTable from 'settings.css';
 }
 

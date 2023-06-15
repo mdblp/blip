@@ -26,14 +26,23 @@
  */
 
 import React, { type FC } from 'react'
-import { type PumpSettings, type TimePrefs } from 'medical-domain'
+import { type TimePrefs } from 'medical-domain'
 import type MedicalDataService from 'medical-domain'
-import { DeviceSettings } from '../../components/device/device-settings'
 import Container from '@mui/material/Container'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardHeader from '@mui/material/CardHeader'
 import { useTranslation } from 'react-i18next'
+import Button from '@mui/material/Button'
+import FileCopyIcon from '@mui/icons-material/FileCopy'
 import { useTheme } from '@mui/material/styles'
+import { useDevice } from '../../components/device/use-device.hook'
+import Typography from '@mui/material/Typography'
+import Grid from '@mui/material/Grid'
+import { CgmTable, type ChangeDateParameterGroup, HistoryParameterTable, PumpTable, Table } from 'dumb'
+import { sortHistoryParametersByDate } from '../../components/device/device.utils'
+import { makeStyles } from 'tss-react/mui'
+import { DeviceInfo } from '../../components/device/device-info'
 
 interface DevicePageProps {
   goToDailySpecificDate: (date: number) => void
@@ -41,28 +50,72 @@ interface DevicePageProps {
   timePrefs: TimePrefs
 }
 
+const useStyles = makeStyles()(() => ({
+  cardHeaderAction: {
+    marginTop: 0
+  }
+}))
+
 export const DevicePage: FC<DevicePageProps> = ({ medicalData, timePrefs, goToDailySpecificDate }) => {
-  const { t } = useTranslation()
   const theme = useTheme()
-  const pumpSettings = [...medicalData.grouped.pumpSettings].pop() as PumpSettings
+  const { classes } = useStyles()
+  const { t } = useTranslation()
+  const {
+    copySettingsToClipboard,
+    lastUploadDate,
+    device,
+    pump,
+    parameters,
+    history,
+    cgm
+  } = useDevice(medicalData)
 
   return (
-    <Container data-testid="device-settings-container" maxWidth={!pumpSettings ? 'sm' : undefined}>
-      {pumpSettings
-        ? <DeviceSettings
-          goToDailySpecificDate={goToDailySpecificDate}
-          pumpSettings={pumpSettings}
-          timePrefs={timePrefs}
+    <Container data-testid="device-settings-container">
+      <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
+        <CardHeader
+          title={t('device')}
+          subheader={`${t('last-upload:')} ${lastUploadDate}`}
+          action={
+            <Button
+              variant="contained"
+              disableElevation
+              startIcon={<FileCopyIcon />}
+              onClick={copySettingsToClipboard}
+            >
+              {t('text-copy')}
+            </Button>
+          }
+          classes={{
+            action: classes.cardHeaderAction
+          }}
         />
-        : <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          marginTop={theme.spacing(4)}
-        >
-          <Typography fontWeight={500}>{t('no-settings-on-device-alert-message')}</Typography>
-        </Box>
-      }
+        <CardContent>
+          <Grid
+            container
+            spacing={4}
+            rowSpacing={4}
+          >
+            <Grid item xs={12} sm={6}>
+              <DeviceInfo device={device} />
+              <PumpTable pump={pump} timePrefs={timePrefs} />
+              <CgmTable cgm={cgm} timePrefs={timePrefs} />
+            </Grid>
+            <Grid item xs={12} sm={6} data-testid="parameters-container">
+              <Typography color="text.secondary">{t('Parameters')}</Typography>
+              <Table
+                title={t('Parameters')}
+                rows={parameters}
+              />
+            </Grid>
+          </Grid>
+          <HistoryParameterTable
+            rows={sortHistoryParametersByDate(history) as ChangeDateParameterGroup[]}
+            onSwitchToDaily={goToDailySpecificDate}
+            timePrefs={timePrefs}
+          />
+        </CardContent>
+      </Card>
     </Container>
   )
 }

@@ -49,7 +49,6 @@ import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
 import Tooltip from './components/tooltips/common/tooltip/tooltip'
 import { CgmTable } from './components/settings/cgm-table'
 import { PumpTable } from './components/settings/pump-table'
-import { TerminalTable } from './components/settings/terminal-table'
 import { HistoryParameterTable } from './components/settings/history/history-table'
 import {
   AverageDailyDoseStatMemoized as AverageDailyDoseStat
@@ -101,7 +100,6 @@ export {
   SimpleStat,
   StatTooltip,
   Table,
-  TerminalTable,
   Tooltip,
   TotalInsulinStat,
   TotalCarbsStat,

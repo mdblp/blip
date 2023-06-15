@@ -25,34 +25,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
-import { CgmTable, HistoryParameterTable, PumpTable, Table, TerminalTable } from 'dumb'
-import { type PumpSettings, type TimePrefs } from 'medical-domain'
-import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
+import {
+  type CgmConfig,
+  type DeviceConfig,
+  type ParameterConfig,
+  type ParametersChange,
+  type PumpConfig,
+  type PumpSettings
+} from 'medical-domain'
+import type MedicalDataService from 'medical-domain'
 import { useTranslation } from 'react-i18next'
-import { formatParameterValue, sortHistoryParametersByDate } from './device-settings.utils'
-import type { ChangeDateParameterGroup } from 'dumb'
-import Button from '@mui/material/Button'
 import textTable from 'text-table'
+import { formatParameterValue } from './device.utils'
+import { useEffect } from 'react'
 import moment from 'moment'
 
-interface DeviceSettingsProps {
-  goToDailySpecificDate: (date: number | Date) => void
-  pumpSettings: PumpSettings
-  timePrefs: TimePrefs
+interface UseDeviceSettingsReturn {
+  cgm: CgmConfig
+  copySettingsToClipboard: () => Promise<void>
+  device: DeviceConfig
+  history: ParametersChange[]
+  lastUploadDate: string
+  parameters: ParameterConfig[]
+  pump: PumpConfig
 }
 
-export const DeviceSettings: FC<DeviceSettingsProps> = ({ pumpSettings, timePrefs, goToDailySpecificDate }) => {
+export const useDevice = (medicalData: MedicalDataService): UseDeviceSettingsReturn => {
   const { t } = useTranslation()
+  const pumpSettings = [...medicalData.grouped.pumpSettings].pop() as PumpSettings
   const { device, pump, cgm, parameters, history } = pumpSettings.payload
-
-  // TODO Set this one directly in the futur new component (see YLP-2447 https://diabeloop.atlassian.net/browse/YLP-2354)
-  parameters.forEach(parameter => {
-    parameter.value = formatParameterValue(parameter.value, parameter.unit)
-  })
-
   const lastUploadDate = moment.tz(pumpSettings.normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
+
+  const formatParameters = (): void => {
+    parameters.forEach(parameter => {
+      parameter.value = formatParameterValue(parameter.value, parameter.unit)
+    })
+  }
 
   const copySettingsToClipboard = async (): Promise<void> => {
     let rawText = `${lastUploadDate}\n\n`
@@ -82,42 +90,10 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ pumpSettings, timePref
     }
   }
 
-  return (
-    <>
-      <Grid
-        container
-        spacing={2}
-        rowSpacing={2}
-        paddingX={3}
-      >
-        <Grid item xs={12} display="flex" justifyContent="space-between">
-          <Typography>{`${t('last-upload:')} ${lastUploadDate}`}</Typography>
-          <Button
-            variant="outlined"
-            onClick={copySettingsToClipboard}
-          >
-            {t('text-copy')}
-          </Button>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography color="text.secondary">{t('Device')}</Typography>
-          <TerminalTable device={device} />
-          <PumpTable pump={pump} timePrefs={timePrefs} />
-          <CgmTable cgm={cgm} timePrefs={timePrefs} />
-        </Grid>
-        <Grid item xs={12} sm={6} data-testid="parameters-container">
-          <Typography color="text.secondary">{t('Parameters')}</Typography>
-          <Table
-            title={t('Parameters')}
-            rows={parameters}
-          />
-        </Grid>
-      </Grid>
-      <HistoryParameterTable
-        rows={sortHistoryParametersByDate(history) as ChangeDateParameterGroup[]}
-        onSwitchToDaily={goToDailySpecificDate}
-        timePrefs={timePrefs}
-      />
-    </>
-  )
+  useEffect(() => {
+    formatParameters()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return { copySettingsToClipboard, lastUploadDate, parameters, device, cgm, pump, history }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-declare module '*.otf' {
-  const value: string
-  export default value
+import React, { type FC, type PropsWithChildren } from 'react'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import classes from './device.css'
+import CardContent from '@mui/material/CardContent'
+import List from '@mui/material/List'
+import Divider from '@mui/material/Divider'
+
+interface GenericListCardProps extends PropsWithChildren {
+  title: string
+}
+
+export const GenericListCard: FC<GenericListCardProps> = ({ children, title }) => {
+  return (
+    <Card variant="outlined">
+      <CardHeader
+        title={title}
+        className={classes['card-header']}
+        disableTypography
+      />
+      <CardContent sx={{ padding: '0 !important' }}>
+        <List disablePadding>
+          <Divider component="li" />
+          {children}
+        </List>
+      </CardContent>
+    </Card>
+  )
 }
