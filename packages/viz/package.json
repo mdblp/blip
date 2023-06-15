@@ -39,12 +39,12 @@
     "memorystream": "^0.3.1",
     "parse-svg-path": "0.1.2",
     "pdfkit": "^0.12.3",
-    "react-markdown": "^8.0.6",
+    "react-markdown": "^8.0.7",
     "serialize-svg-path": "0.1.0",
     "stream-browserify": "^3.0.0",
     "text-table": "0.2.0",
     "translate-svg-path": "0.0.1",
-    "victory": "36.6.8",
+    "victory": "36.6.11",
     "voilab-pdf-table": "0.4.0"
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,9 +26,9 @@
  */
 
 import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
+import SpinningLoader from '../../components/loaders/spinning-loader'
 import usePatientProviderCustomHook from './patient.hook'
 import { type PatientContextResult } from './models/patient-context-result.model'
-import SpinningLoader from '../../components/loaders/spinning-loader'
 
 const PatientContext = createContext<PatientContextResult>({} as PatientContextResult)
 

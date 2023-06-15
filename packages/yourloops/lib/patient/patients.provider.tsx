@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,39 +25,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useEffect, useState } from 'react'
+import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
+import usePatientsProviderCustomHook from './patients.hook'
+import { type PatientsContextResult } from './models/patients-context-result.model'
+import SpinningLoader from '../../components/loaders/spinning-loader'
 
-import { useTeam } from '../team'
-import PatientUtils from './patient.util'
-import PatientApi from './patient.api'
-import { useAuth } from '../auth'
-import metrics from '../metrics'
-import { type Patient } from './models/patient.model'
-import { type PatientContextResult } from './models/patient-context-result.model'
+const PatientsContext = createContext<PatientsContextResult>({} as PatientsContextResult)
 
-export default function usePatientProviderCustomHook(): PatientContextResult {
-  const { refresh: refreshTeams } = useTeam()
-  const { user } = useAuth()
+export const PatientsProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
+  const patientsProviderCustomHook = usePatientsProviderCustomHook()
 
-  const [patient, setPatient] = useState<Patient>(null)
-  const [initialized, setInitialized] = useState<boolean>(false)
+  return patientsProviderCustomHook.initialized
+    ? <PatientsContext.Provider value={patientsProviderCustomHook}>{children}</PatientsContext.Provider>
+    : <SpinningLoader className="centered-spinning-loader" />
+}
 
-  const leaveTeam = async (teamId: string): Promise<void> => {
-    await PatientApi.removePatient(teamId, patient.userid)
-    metrics.send('team_management', 'leave_team')
-    refreshTeams()
-  }
-
-  useEffect(() => {
-    if (!initialized && user) {
-      setPatient(PatientUtils.mapUserToPatient(user))
-      setInitialized(true)
-    }
-  }, [initialized, user])
-
-  return {
-    patient,
-    initialized,
-    leaveTeam
-  }
+export function usePatientsContext(): PatientsContextResult {
+  return useContext(PatientsContext)
 }

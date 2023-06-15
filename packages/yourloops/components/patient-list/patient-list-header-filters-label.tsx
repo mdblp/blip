@@ -35,7 +35,7 @@ import { makeStyles } from 'tss-react/mui'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
 import Link from '@mui/material/Link'
 import { usePatientListHeaderFiltersLabelHook } from './patient-list-header-filters-label.hook'
-import { usePatientContext } from '../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../lib/patient/patients.provider'
 
 interface PatientListHeaderFiltersLabelProps {
   patientsDisplayedCount: number
@@ -58,7 +58,7 @@ export const PatientListHeaderFiltersLabel: FunctionComponent<PatientListHeaderF
   const { t } = useTranslation()
   const { classes } = useStyles()
   const { filters, resetFilters, hasAnyNonPendingFiltersEnabled } = usePatientListContext()
-  const { allNonPendingPatientsForSelectedTeamCount } = usePatientContext()
+  const { allNonPendingPatientsForSelectedTeamCount } = usePatientsContext()
 
   const { filtersLabel } = usePatientListHeaderFiltersLabelHook({
     allNonPendingPatientsForSelectedTeamCount,

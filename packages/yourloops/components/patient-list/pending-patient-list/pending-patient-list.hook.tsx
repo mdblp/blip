@@ -29,7 +29,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { type GridColDef, type GridRowParams, type GridRowsProp } from '@mui/x-data-grid'
 import { useTranslation } from 'react-i18next'
 import { PendingPatientListColumns } from '../models/enums/patient-list.enum'
-import { usePatientContext } from '../../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../../lib/patient/patients.provider'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { type PendingGridRowModel } from '../models/grid-row.model'
 import { getUserName } from '../../../lib/auth/user.util'
@@ -60,7 +60,7 @@ const LARGE_CELL_WIDTH = 300
 export const usePendingPatientListHook = (props: PendingPatientListHookProps): PatientListHookReturns => {
   const { patients } = props
   const { t } = useTranslation()
-  const { getPatientById } = usePatientContext()
+  const { getPatientById } = usePatientsContext()
   const { selectedTeam } = useSelectedTeamContext()
 
   const [patientToCancelInvite, setPatientToCancelInvite] = useState<Patient | null>(null)

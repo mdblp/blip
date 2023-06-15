@@ -42,6 +42,7 @@ import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-
 import { type Notification } from '../../../../lib/notifications/models/notification.model'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
+import NotificationApi from '../../../../lib/notifications/notification.api'
 
 describe('Patient caregivers page', () => {
   const firstName = 'Théo'
@@ -102,8 +103,10 @@ describe('Patient caregivers page', () => {
     jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValueOnce([{
       user: { userid: caregiverId, profile: { firstName: caregiverFirstName, lastName: caregiverLastName } } as IUser,
       invitation: { email: caregiverEmail } as Notification,
-      status: UserInviteStatus.Accepted
+      status: UserInviteStatus.Pending
     }])
+    jest.spyOn(NotificationApi, 'getSentInvitations').mockResolvedValueOnce([{ id: 'id', email: caregiverEmail } as Notification])
+
     await userEvent.click(addCaregiverDialogConfirmButton)
 
     expect(addDirectShareMock).toHaveBeenCalledWith(loggedInUserId, caregiverEmail)
