@@ -143,8 +143,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         automated={auto}
         manual={manual}
         total={total}
-        title={'toto'}
-        annotations={['titi']}
       />
     </Box>
   )

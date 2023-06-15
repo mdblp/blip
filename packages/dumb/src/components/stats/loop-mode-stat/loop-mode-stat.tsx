@@ -32,20 +32,24 @@ import Box from '@mui/material/Box'
 import { LoopModePercentageDetail } from './loop-mode-percentage-detail'
 import { LoopModeLabel } from './loop-mode-label'
 import { LoopModeGraph } from './loop-mode-graph'
+import { useLocation } from 'react-router-dom'
+import { t } from 'i18next'
 
 interface LoopModeStatProps {
-  annotations: string[]
   automated: number
   manual: number
-  title: string
   total: number
 }
 
 const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
-  const { annotations, automated, manual, title, total } = props
+  const { automated, manual, total } = props
 
   const automatedPercentage = Math.round(100 * automated / total)
   const manualPercentage = Math.round(100 * manual / total)
+  const location = useLocation()
+  const isDailyPage = location.pathname.includes('daily')
+  const title = isDailyPage ? t('time-loop') : t('avg-time-loop')
+  const annotations = isDailyPage ? [t('time-loop-tooltip, time-loop-how-calculate')] : [t('avg-time-loop-tooltip,avg-time-loop-how-calculate')]
 
   return (
     <div data-testid="loop-mode-stat">
