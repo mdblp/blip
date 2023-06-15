@@ -26,11 +26,12 @@
  */
 
 import type DateFilter from '../../src/domains/models/time/date-filter.model'
-import { createMealData, createWizardData } from '../data-generator'
-import { type Meal, type Wizard } from '../../src'
+import { createMealData, createWizardData, createRandomBasal, createRandomBolus } from '../data-generator'
+import { type Meal, type Wizard, type Basal, type Bolus } from '../../src'
 
 const abbottDevice = 'AbbottFreeStyleLibre-XXX-XXXX'
 const dexcomDevice = 'Dexcom-XXX-XXXX'
+export const MS_IN_HOUR = 864e5 / 24
 
 export const bgDataSourceOneDay: Array<[Date, string]> = [
   // data for one day and two days tests
@@ -67,6 +68,18 @@ export const dateFilterTwoWeeks: DateFilter = {
   start: new Date('2018-02-01T00:00:00.000Z').valueOf(),
   end: new Date('2018-02-15T00:00:00.000Z').valueOf()
 }
+export const basalsData: Array<[Date, number, number, string]> = [
+  [new Date('2018-02-01T01:00:00Z'), 0.25, MS_IN_HOUR, 'automated'],
+  [new Date('2018-02-01T02:00:00Z'), 0.75, MS_IN_HOUR, 'scheduled'],
+  [new Date('2018-02-01T03:00:00Z'), 0.5, MS_IN_HOUR, 'scheduled'],
+  [new Date('2018-02-03T00:00:00Z'), 0.5, MS_IN_HOUR, 'scheduled']
+]
+export const bolusData: Array<[Date, number]> = [
+  [new Date('2018-02-01T01:00:00Z'), 4],
+  [new Date('2018-02-01T02:00:00Z'), 5],
+  [new Date('2018-02-01T03:00:00Z'), 6],
+  [new Date('2018-02-03T03:00:00Z'), 4]
+]
 
 export const buildMealData = (data: Array<[Date, string]>): Meal[] => (
   data.map((mealData) => (
@@ -82,6 +95,26 @@ export const buildWizardData = (data: Array<[Date, string]>): Wizard[] => (
     {
       ...createWizardData(wizardData[0]),
       deviceName: wizardData[1]
+    }
+  ))
+)
+
+export const buildBasalsData = (basalsData: Array<[Date, number, number, string]>): Basal[] => (
+  basalsData.map((basals) => (
+    {
+      ...createRandomBasal(basals[0], basals[2]),
+      rate: basals[1],
+      duration: basals[2],
+      deliveryType: basals[3],
+      subType: basals[3]
+    }
+  ))
+)
+export const buildBolusData = (bolusData: Array<[Date, number]>): Bolus[] => (
+  bolusData.map((bolus) => (
+    {
+      ...createRandomBolus(bolus[0]),
+      normal: bolus[1]
     }
   ))
 )

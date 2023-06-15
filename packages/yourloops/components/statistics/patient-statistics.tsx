@@ -132,18 +132,19 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
 
-      {children}
+      <LoopModeStat
+        automated={auto}
+        manual={manual}
+        total={total}
+      />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
 
       <TotalCarbsStat
         totalEntriesCarbWithRescueCarbs={totalEntriesCarbWithRescueCarbs}
         totalCarbsPerDay={Math.round(totalCarbsPerDay)}
         foodCarbsPerDay={Math.round(foodCarbsPerDay)}
       />
-      <LoopModeStat
-        automated={auto}
-        manual={manual}
-        total={total}
-      />
+      {children}
     </Box>
   )
 }
