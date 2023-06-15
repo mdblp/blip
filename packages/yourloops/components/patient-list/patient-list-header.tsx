@@ -41,7 +41,7 @@ import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
 import Badge from '@mui/material/Badge'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
-import { usePatientContext } from '../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../lib/patient/patients.provider'
 import { type PatientListTabs } from './models/enums/patient-list.enum'
 import { makeStyles } from 'tss-react/mui'
 import { InvitePatientDialog } from '../patient/invite-patient-dialog/invite-patient-dialog'
@@ -93,7 +93,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const { t } = useTranslation()
   const { user } = useAuth()
   const { classes } = useStyles()
-  const { pendingPatientsCount } = usePatientContext()
+  const { pendingPatientsCount } = usePatientsContext()
   const { filters } = usePatientListContext()
   const [isFiltersDialogOpen, setFiltersDialogOpen] = useState<boolean>(false)
   const [isColumnSelectorOpened, setIsColumnSelectorOpened] = useState<boolean>(false)

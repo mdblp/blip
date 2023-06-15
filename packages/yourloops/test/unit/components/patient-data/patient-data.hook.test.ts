@@ -26,7 +26,7 @@
  */
 
 import * as authHookMock from '../../../../lib/auth'
-import * as patientHookMock from '../../../../lib/patient/patient.provider'
+import * as patientsHookMock from '../../../../lib/patient/patients.provider'
 import * as router from 'react-router'
 import type User from '../../../../lib/auth/models/user.model'
 import { act, renderHook } from '@testing-library/react'
@@ -38,7 +38,7 @@ import type { ChartPrefs } from '../../../../components/dashboard-widgets/models
 import { createPatient } from '../../common/utils'
 
 jest.mock('../../../../lib/auth')
-jest.mock('../../../../lib/patient/patient.provider')
+jest.mock('../../../../lib/patient/patients.provider')
 describe('usePatientData hook', () => {
   const patientId = 'fakeId'
   const FOURTEEN_DAYS_IN_MS = TimeService.MS_IN_DAY * 14
@@ -61,7 +61,7 @@ describe('usePatientData hook', () => {
         } as User
       }
     });
-    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => ({
+    (patientsHookMock.usePatientsContext as jest.Mock).mockImplementation(() => ({
       getPatientById: () => createPatient()
     }))
   })

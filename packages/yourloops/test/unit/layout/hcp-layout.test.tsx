@@ -32,7 +32,7 @@ import { type User } from '../../../lib/auth'
 import * as teamHookMock from '../../../lib/team'
 import * as notificationsHookMock from '../../../lib/notifications/notification.hook'
 import { MemoryRouter } from 'react-router-dom'
-import * as patientHookMock from '../../../lib/patient/patient.provider'
+import * as patientsHookMock from '../../../lib/patient/patients.provider'
 import * as selectedTeamHookMock from '../../../lib/selected-team/selected-team.provider'
 import { HcpLayout } from '../../../layout/hcp-layout'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
@@ -67,7 +67,7 @@ describe('Hcp Layout', () => {
     (teamHookMock.TeamContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children
     });
-    (patientHookMock.PatientProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+    (patientsHookMock.PatientsProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children
     });
     (selectedTeamHookMock.SelectedTeamProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {

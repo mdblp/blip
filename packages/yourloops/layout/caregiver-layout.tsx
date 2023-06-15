@@ -27,7 +27,7 @@
 
 import React, { type FunctionComponent } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { PatientProvider } from '../lib/patient/patient.provider'
+import { PatientsProvider } from '../lib/patient/patients.provider'
 import DashboardLayout from './dashboard-layout'
 import InvalidRoute from '../components/invalid-route'
 import ProfilePage from '../pages/profile/profile-page'
@@ -40,7 +40,7 @@ import { PatientData } from '../components/patient-data/patient-data'
 export const CaregiverLayout: FunctionComponent = () => {
   return (
     <PatientListProvider>
-      <PatientProvider>
+      <PatientsProvider>
         <DashboardLayout>
           <Routes>
             <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
@@ -58,7 +58,7 @@ export const CaregiverLayout: FunctionComponent = () => {
             />
           </Routes>
         </DashboardLayout>
-      </PatientProvider>
+      </PatientsProvider>
     </PatientListProvider>
   )
 }

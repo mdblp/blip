@@ -29,7 +29,7 @@ import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { type GridColDef, type GridRowParams, type GridRowsProp, type GridValidRowModel } from '@mui/x-data-grid'
 import { useCallback, useState } from 'react'
 import { type UserToRemove } from '../../../dialogs/remove-direct-share-dialog'
-import { usePatientContext } from '../../../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useAuth } from '../../../../lib/auth'
 import { getPatientFullName } from 'dumb'
 import { useCurrentPatientListHook } from '../current-patient-list.hook'
@@ -54,7 +54,7 @@ const EXCLUDED_COLUMNS = [PatientListColumns.Messages, PatientListColumns.Monito
 export const usePrivateTeamOrCaregiverPatientListHook = (props: PrivateTeamOrCaregiverPatientListHookProps): PrivateTeamOrCaregiverPatientListHookReturns => {
   const { patients } = props
   const { user } = useAuth()
-  const { getPatientById } = usePatientContext()
+  const { getPatientById } = usePatientsContext()
 
   const [patientToRemoveFromPrivateTeam, setPatientToRemoveFromPrivateTeam] = useState<Patient | null>(null)
   const [patientToRemoveFromDirectShare, setPatientToRemoveFromDirectShare] = useState<UserToRemove | null>(null)

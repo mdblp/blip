@@ -111,6 +111,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2418 use new patient route from harbour
 - YLP-2420 Translations update
 - YLP-2434 Api calls are trigerred twice
+- YLP-2446 Patient does not have to retrieve a list of patients
 - YLP-2454 Daily view crashes on mobile
 
 ### Fixed

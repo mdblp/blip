@@ -32,7 +32,7 @@ import { type User } from '../../lib/auth'
 import { useNotification } from '../../lib/notifications/notification.hook'
 import { type OnCloseRemoveDirectShareDialog, type UserToRemove } from './remove-direct-share-dialog'
 import { type Notification } from '../../lib/notifications/models/notification.model'
-import { usePatientContext } from '../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../lib/patient/patients.provider'
 
 interface RemoveDirectShareDialogHookReturn {
   removeDirectShare: (userToRemove: UserToRemove, currentUser: User) => Promise<void>
@@ -42,7 +42,7 @@ const useRemoveDirectShareDialog = (onClose: OnCloseRemoveDirectShareDialog): Re
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
   const { cancel, sentInvitations } = useNotification()
-  const patientHook = usePatientContext()
+  const patientsHook = usePatientsContext()
 
   const removeDirectShare = async (userToRemove: UserToRemove, currentUser: User): Promise<void> => {
     const isCurrentUserCaregiver = currentUser.isUserCaregiver()
@@ -57,7 +57,9 @@ const useRemoveDirectShareDialog = (onClose: OnCloseRemoveDirectShareDialog): Re
         const viewerId = isCurrentUserCaregiver ? currentUser.id : userToRemove.id
 
         await DirectShareApi.removeDirectShare(patientId, viewerId)
-        patientHook.refresh()
+        if (isCurrentUserCaregiver) {
+          patientsHook.refresh()
+        }
       }
 
       const successAlertKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-success' : 'modal-patient-remove-caregiver-success'
