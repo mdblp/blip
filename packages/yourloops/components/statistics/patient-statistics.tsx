@@ -162,8 +162,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         automated={auto}
         manual={manual}
         total={total}
-        title={'toto'}
-        annotations={['titi']}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       {children}
