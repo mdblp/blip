@@ -64,13 +64,14 @@ const tssCache = createCache({
 tssCache.compat = true
 
 const isRoutePublic = (route: string): boolean => PUBLIC_ROUTES.includes(route as AppRoute)
+const isRouteAlwaysAccessible = (route: string): boolean => ALWAYS_ACCESSIBLE_ROUTES.includes(route as AppRoute)
 
 export const getRedirectUrl = (route: string, user: User, isAuthenticated: boolean): string | undefined => {
   const routeIsPublic = isRoutePublic(route)
   const renewConsentPath = route === AppRoute.RenewConsent || route === AppRoute.NewConsent
   const trainingPath = route === AppRoute.Training
-  const isCurrentRouteAlwaysAccessible = ALWAYS_ACCESSIBLE_ROUTES.includes(route as AppRoute)
-  if (routeIsPublic && isAuthenticated) {
+  const isCurrentRouteAlwaysAccessible = isRouteAlwaysAccessible(route as AppRoute)
+  if (routeIsPublic && !isCurrentRouteAlwaysAccessible && isAuthenticated) {
     return '/'
   }
   if (!isAuthenticated && !routeIsPublic && !isCurrentRouteAlwaysAccessible) {
@@ -98,6 +99,7 @@ export function MainLobby(): JSX.Element {
   const currentRoute = location.pathname
   const theme = getTheme()
   const isCurrentRoutePublic = isRoutePublic(currentRoute)
+  const isCurrentRouteAlwaysAccessible = isRouteAlwaysAccessible(currentRoute)
 
   const onIdle = (): void => {
     if (isLoggedIn) {
@@ -107,41 +109,42 @@ export function MainLobby(): JSX.Element {
 
   useIdleTimer({ timeout: ConfigService.getIdleTimeout(), onIdle })
 
-  if (!isCurrentRoutePublic && isLoading) {
+  if ((!isCurrentRoutePublic || !isCurrentRouteAlwaysAccessible) && isLoading) {
     return <React.Fragment />
   }
 
   const redirectTo = getRedirectUrl(currentRoute, user, isAuthenticated)
+  const canDisplayApp = !isLoading && !fetchingUser && (isCurrentRoutePublic || isCurrentRouteAlwaysAccessible || user)
 
   return (
     <React.Fragment>
       {redirectTo
         ? <Navigate to={redirectTo} replace />
-        : (!isLoading && !fetchingUser &&
-          <CacheProvider value={muiCache}>
-            <TssCacheProvider value={tssCache}>
-              <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <GlobalStyles styles={{ body: { backgroundColor: 'var(--body-background-color)' } }} />
-                <SnackbarContextProvider context={DefaultSnackbarContext}>
-                  <Box>
-                    <Routes>
-                      <Route path={AppRoute.ProductLabelling} element={<ProductLabellingPage />} />
-                      <Route path={AppRoute.Login} element={<LoginPage />} />
-                      <Route path={AppRoute.CompleteSignup} element={<CompleteSignUpPage />} />
-                      <Route path={AppRoute.RenewConsent} element={<ConsentPage />} />
-                      <Route path={AppRoute.NewConsent} element={<PatientConsentPage />} />
-                      <Route path={AppRoute.Training} element={<TrainingPage />} />
-                      <Route path={AppRoute.VerifyEmail} element={<VerifyEmailPage />} />
-                      <Route path="*" element={<MainLayout />} />
-                    </Routes>
-                  </Box>
-                </SnackbarContextProvider>
-                <Footer />
-              </ThemeProvider>
-            </TssCacheProvider>
-          </CacheProvider>
-          )}
+        : canDisplayApp &&
+        <CacheProvider value={muiCache}>
+          <TssCacheProvider value={tssCache}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <GlobalStyles styles={{ body: { backgroundColor: 'var(--body-background-color)' } }} />
+              <SnackbarContextProvider context={DefaultSnackbarContext}>
+                <Box>
+                  <Routes>
+                    <Route path={AppRoute.ProductLabelling} element={<ProductLabellingPage />} />
+                    <Route path={AppRoute.Login} element={<LoginPage />} />
+                    <Route path={AppRoute.CompleteSignup} element={<CompleteSignUpPage />} />
+                    <Route path={AppRoute.RenewConsent} element={<ConsentPage />} />
+                    <Route path={AppRoute.NewConsent} element={<PatientConsentPage />} />
+                    <Route path={AppRoute.Training} element={<TrainingPage />} />
+                    <Route path={AppRoute.VerifyEmail} element={<VerifyEmailPage />} />
+                    <Route path="*" element={<MainLayout />} />
+                  </Routes>
+                </Box>
+              </SnackbarContextProvider>
+              <Footer />
+            </ThemeProvider>
+          </TssCacheProvider>
+        </CacheProvider>
+      }
     </React.Fragment>
   )
 }

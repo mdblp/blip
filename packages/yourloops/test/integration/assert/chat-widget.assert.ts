@@ -39,7 +39,7 @@ export const checkChatWidgetMessageReadingForHcp = async (): Promise<void> => {
 }
 
 export const checkChatWidgetMessageReadingForPatient = async (): Promise<void> => {
-  const dashboard = within(screen.getByTestId('patient-dashboard'))
+  const dashboard = within(await screen.findByTestId('patient-dashboard'))
   const chatCard = dashboard.queryByTestId('chat-card')
   expect(chatCard).toHaveTextContent('Messages MyFirstTeam​This is a message sent to the team MyFirstTeam')
 

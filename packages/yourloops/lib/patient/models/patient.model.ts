@@ -41,7 +41,7 @@ export interface Patient extends Partial<PatientMetrics> {
   settings: PatientSettings
   // metadata: PatientMetadata
   monitoringAlertsParameters?: MonitoringAlertsParameters
-  invitationStatus: UserInviteStatus
+  invitationStatus?: UserInviteStatus
   invite?: PatientInvite
   readonly userid: string
 }
