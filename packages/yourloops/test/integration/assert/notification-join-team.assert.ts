@@ -31,7 +31,7 @@ import NotificationApi from '../../../lib/notifications/notification.api'
 import { invitationTeam } from '../data/notification.data'
 import { patient1Id } from '../data/patient.api.data'
 
-export const closeDialogNotificationTeam = async () => {
+export const checkPatientAcceptTeamInvite = async () => {
   const badgeNotification = await screen.findByLabelText('Go to notifications list')
   expect(badgeNotification).toHaveTextContent('1')
   const badgeTeam = screen.getByLabelText('Open team menu')
@@ -49,6 +49,7 @@ export const closeDialogNotificationTeam = async () => {
   await userEvent.click(cancelTeamButton)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
+
 export const checkAcceptTeamInvite = async () => {
   const acceptButton = screen.getByRole('button', { name: 'Accept' })
   await userEvent.click(acceptButton)
