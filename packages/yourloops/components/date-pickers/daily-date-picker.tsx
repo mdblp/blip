@@ -100,14 +100,15 @@ export const DailyDatePicker: FunctionComponent<DailyDatePickerProps> = (props) 
           )
         }}
       />
-      <DialogDatePicker
-        date={date}
-        minDate={startDate}
-        maxDate={endDate}
-        onResult={handleResult}
-        showToolbar
-        isOpen={isOpen}
-      />
+      {isOpen &&
+        <DialogDatePicker
+          date={date}
+          minDate={startDate}
+          maxDate={endDate}
+          onResult={handleResult}
+          showToolbar
+        />
+      }
       <IconButton
         data-testid="button-nav-next"
         onClick={onNextButtonClick}

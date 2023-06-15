@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -54,11 +54,12 @@ const RemoveDirectShareDialog: FunctionComponent<RemoveDirectShareProps> = ({ on
   const { removeDirectShare } = useRemoveDirectShareDialog(onClose)
   const { user: currentUser } = useAuth()
   const isCurrentUserCaregiver = currentUser.isUserCaregiver()
+  const userToRemoveName = userToRemove.fullName
 
-  const titleKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-title' : 'modal-patient-remove-caregiver-title'
+  const title = isCurrentUserCaregiver ? t('modal-caregiver-remove-patient-title', { patientName: userToRemoveName }) : t('modal-patient-remove-caregiver-title', { caregiverName: userToRemoveName })
   const questionKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-question' : 'modal-remove-caregiver-question'
-  const infoKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-info-2' : 'modal-patient-remove-caregiver-info-2'
-  const removeButtonKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-remove' : 'remove-caregiver'
+  const infoLabel = isCurrentUserCaregiver ? t('modal-caregiver-remove-patient-info-2') : t('modal-patient-remove-caregiver-info-2')
+  const removeButtonLabel = isCurrentUserCaregiver ? t('modal-caregiver-remove-patient-remove') : t('remove-caregiver')
 
   const closeDialog = (): void => {
     onClose(false)
@@ -72,19 +73,25 @@ const RemoveDirectShareDialog: FunctionComponent<RemoveDirectShareProps> = ({ on
     <Dialog
       data-testid="remove-direct-share-dialog"
       open
-      aria-labelledby={t(titleKey)}
+      aria-labelledby={title}
       onClose={closeDialog}
     >
       <DialogTitle id="remove-direct-share-dialog-title">
-        <strong>{t(titleKey)}</strong>
+        <strong>{title}</strong>
       </DialogTitle>
 
       <DialogContent>
         <DialogContentText>
-          {t(questionKey, { name: userToRemove.fullName })}
+          <Trans
+            i18nKey={questionKey}
+            t={t}
+            components={{ strong: <strong /> }}
+            values={{ name: userToRemoveName }}
+            parent={React.Fragment}
+          />
         </DialogContentText>
         <DialogContentText>
-          {t(infoKey)}
+          {infoLabel}
         </DialogContentText>
       </DialogContent>
 
@@ -102,7 +109,7 @@ const RemoveDirectShareDialog: FunctionComponent<RemoveDirectShareProps> = ({ on
           disableElevation
           onClick={removeUser}
         >
-          {t(removeButtonKey)}
+          {removeButtonLabel}
         </Button>
       </DialogActions>
     </Dialog>

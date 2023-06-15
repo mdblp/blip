@@ -64,6 +64,20 @@ export default class PatientApi {
     }
   }
 
+  static async getPatient(userId: string): Promise<Patient[]> {
+    try {
+      const { data } = await HttpService.get<Patient>({ url: `/bff/v1/patients/${userId}` })
+      return [data]
+    } catch (err) {
+      const error = err as Error
+      if (error.message === ErrorMessageStatus.NotFound) {
+        log.info('No patient')
+        return []
+      }
+      throw err
+    }
+  }
+
   static async getPatientsForHcp(userId: string, teamId: string): Promise<Patient[]> {
     const { data } = await HttpService.get<Patient[]>({ url: `/bff/v1/hcps/${userId}/teams/${teamId}/patients` })
     return data

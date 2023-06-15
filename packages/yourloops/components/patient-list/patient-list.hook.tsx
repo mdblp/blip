@@ -25,14 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { PatientListTabs } from './models/enums/patient-list.enum'
 import { usePatientContext } from '../../lib/patient/patient.provider'
 import { useAuth } from '../../lib/auth'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import PatientUtils from '../../lib/patient/patient.util'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
-import { sortByUserName } from './sort-comparators.util'
+import { sortByUserName } from './utils/sort-comparators.util'
 
 interface PatientListHookReturns {
   selectedTab: PatientListTabs
@@ -45,7 +45,7 @@ interface PatientListHookReturns {
 export const usePatientListHook = (): PatientListHookReturns => {
   const { getFlagPatients } = useAuth()
   const { searchPatients } = usePatientContext()
-  const { updatePendingFilter } = usePatientListContext()
+  const { updatePendingFilter, filters } = usePatientListContext()
 
   const [selectedTab, setSelectedTab] = useState<PatientListTabs>(PatientListTabs.Current)
   const [inputSearch, setInputSearch] = useState<string>('')
@@ -67,6 +67,12 @@ export const usePatientListHook = (): PatientListHookReturns => {
         updatePendingFilter(true)
     }
   }
+
+  useEffect(() => {
+    if (selectedTab === PatientListTabs.Current && filters.pendingEnabled) {
+      updatePendingFilter(false)
+    }
+  }, [filters.pendingEnabled, selectedTab, updatePendingFilter])
 
   return {
     selectedTab,

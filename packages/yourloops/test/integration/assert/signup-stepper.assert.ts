@@ -46,13 +46,13 @@ export const checkAccountSelectorStep = () => {
   expect(within(patientRadioInput).getByRole('radio')).toHaveAttribute('disabled')
   expect(within(caregiverRadioInput).getByTestId('radio-label-header')).toHaveTextContent('Caregiver and family')
   expect(within(caregiverRadioInput).getByTestId('radio-label-body')).toHaveTextContent('View patients diabetes data as an individual caregiver or family member.')
-  expect(within(hcpRadioInput).getByTestId('radio-label-header')).toHaveTextContent('Professional')
+  expect(within(hcpRadioInput).getByTestId('radio-label-header')).toHaveTextContent('Health care professional')
   expect(within(hcpRadioInput).getByTestId('radio-label-body')).toHaveTextContent('View all your patients diabetes data in one place. Join and create a care team for your clinic or practice.')
   expect(within(patientRadioInput).getByTestId('radio-label-header')).toHaveTextContent('Patient')
   expect(within(patientRadioInput).getByTestId('radio-label-body')).toHaveTextContent('If you use a DBL System, you have to create your account from your handset. You can’t create several accounts with the same email address.')
 }
 
-export const checkConsentStep = async () => {
+export const checkConsentStepCaregiver = async () => {
   const privacyCheckbox = within(screen.getByLabelText('Privacy policy checkbox')).getByRole('checkbox')
   const termsCheckbox = within(screen.getByLabelText('Terms checkbox')).getByRole('checkbox')
   const nextButton = screen.getByRole('button', { name: 'Next' })
@@ -64,6 +64,23 @@ export const checkConsentStep = async () => {
   await userEvent.click(privacyCheckbox)
   await userEvent.click(termsCheckbox)
 
+  expect(nextButton).not.toBeDisabled()
+}
+
+export const checkConsentStepHcp = async () => {
+  const hcpConfirmAck = within(screen.getByLabelText('Hcp confirmation acknowledgment checkbox')).getByRole('checkbox')
+  const privacyCheckbox = within(screen.getByLabelText('Privacy policy checkbox')).getByRole('checkbox')
+  const termsCheckbox = within(screen.getByLabelText('Terms checkbox')).getByRole('checkbox')
+  const nextButton = screen.getByRole('button', { name: 'Next' })
+  expect(nextButton).toBeDisabled()
+
+  await userEvent.click(hcpConfirmAck)
+  expect(nextButton).toBeDisabled()
+
+  await userEvent.click(privacyCheckbox)
+  expect(nextButton).toBeDisabled()
+
+  await userEvent.click(termsCheckbox)
   expect(nextButton).not.toBeDisabled()
 }
 

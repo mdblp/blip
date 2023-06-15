@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -54,12 +54,12 @@ function NotificationContextImpl(): NotificationContext {
   }
 
   const accept = async (notification: Notification): Promise<void> => {
-    log.info('Accept invitation', notification)
+    log.info('Accept invite', notification)
     await NotificationApi.acceptInvitation(user.id, notification)
   }
 
   const decline = async (notification: Notification): Promise<void> => {
-    log.info('Decline invitation', notification)
+    log.info('Decline invite', notification)
     await NotificationApi.declineInvitation(user.id, notification)
     const r = await NotificationApi.getReceivedInvitations(user.id)
     setReceivedInvitations(r)
@@ -69,22 +69,6 @@ function NotificationContextImpl(): NotificationContext {
     await NotificationApi.cancelInvitation(notificationId, teamId, inviteeEmail)
     const invitations = await NotificationApi.getSentInvitations(user.id)
     setSentInvitations(invitations)
-  }
-
-  const inviteRemoteMonitoring = async (teamId: string, userId: string, monitoringEnd: Date, referringDoctor?: string): Promise<void> => {
-    await NotificationApi.inviteToRemoteMonitoring(teamId, userId, monitoringEnd, referringDoctor)
-  }
-
-  const cancelRemoteMonitoringInvite = async (teamId: string, userId: string): Promise<void> => {
-    await NotificationApi.cancelRemoteMonitoringInvite(teamId, userId)
-  }
-
-  const getInvitation = (teamId: string): Notification => {
-    const invitation = sentInvitations.find(invitation => invitation.target.id === teamId)
-    if (!invitation) {
-      throw Error(`Could not find invitation for team ${teamId}`)
-    }
-    return invitation
   }
 
   const refreshSentInvitations = useCallback(async (): Promise<void> => {
@@ -133,10 +117,6 @@ function NotificationContextImpl(): NotificationContext {
     accept,
     decline,
     cancel,
-    inviteRemoteMonitoring,
-    cancelRemoteMonitoringInvite,
-    getInvitation,
-    refreshSentInvitations,
     refreshReceivedInvitations
   }
 }

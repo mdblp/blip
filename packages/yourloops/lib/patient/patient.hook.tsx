@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import moment from 'moment-timezone'
 
 import { type Team, useTeam } from '../team'
@@ -45,7 +45,7 @@ import { useAlert } from '../../components/utils/snackbar'
 import TeamUtils from '../team/team.util'
 
 export default function usePatientProviderCustomHook(): PatientContextResult {
-  const { cancel: cancelInvitation, getInvitation, refreshSentInvitations } = useNotification()
+  const { cancel: cancelInvite } = useNotification()
   const { refresh: refreshTeams } = useTeam()
   const { user } = useAuth()
   const { filters } = usePatientListContext()
@@ -58,6 +58,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   const [patients, setPatients] = useState<Patient[]>([])
   const [initialized, setInitialized] = useState<boolean>(false)
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
+  const shouldMakeInitialApiCallToGetPatients = useRef(true)
 
   const fetchPatients = useCallback((teamId: string = selectedTeamId) => {
     PatientUtils.computePatients(user, teamId).then(computedPatients => {
@@ -124,7 +125,6 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   const invitePatient = async (team: Team, username: string): Promise<void> => {
     await PatientApi.invitePatient({ teamId: team.id, email: username })
-    await refreshSentInvitations()
     refresh()
   }
 
@@ -145,8 +145,7 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
 
   const removePatient = async (patient: Patient): Promise<void> => {
     if (PatientUtils.isInvitationPending(patient)) {
-      const invitation = getInvitation(selectedTeamId)
-      await cancelInvitation(invitation.id, undefined, invitation.email)
+      await cancelInvite(patient.invite.id, undefined, patient.profile.email)
     }
     if (TeamUtils.isPrivate(selectedTeam)) {
       await DirectShareApi.removeDirectShare(patient.userid, user.id)
@@ -173,7 +172,8 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
   }
 
   useEffect(() => {
-    if (!initialized && user) {
+    if (!initialized && user && shouldMakeInitialApiCallToGetPatients.current) {
+      shouldMakeInitialApiCallToGetPatients.current = false
       fetchPatients()
     }
   }, [fetchPatients, initialized, user])

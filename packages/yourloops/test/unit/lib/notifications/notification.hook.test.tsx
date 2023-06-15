@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,10 +60,10 @@ describe('Notification hook', () => {
           </NotificationContextProvider>
         </BrowserRouter>
       )
-      await waitFor(() => { expect(notifications.initialized).toBeTruthy() })
-      expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
-      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
     })
+    await waitFor(() => { expect(notifications.initialized).toBeTruthy() })
+    expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
+    expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
   }
 
   beforeAll(() => {
@@ -73,7 +73,7 @@ describe('Notification hook', () => {
   })
 
   describe('Update', () => {
-    it('should re-fetch invitations from the api', async () => {
+    it('should re-fetch invites from the api', async () => {
       await initNotificationContext()
       expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
       expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
@@ -85,32 +85,8 @@ describe('Notification hook', () => {
     })
   })
 
-  describe('inviteRemoteMonitoring', () => {
-    it('should call the api', async () => {
-      const api = jest.spyOn(NotificationApi, 'inviteToRemoteMonitoring').mockResolvedValueOnce(null)
-      await initNotificationContext()
-      const teamId = 'fakeTeamId'
-      const userId = 'fakeUserId'
-      const monitoringEnd = new Date()
-      const referringDoctor = 'fakeReferringDoctor'
-      await notifications.inviteRemoteMonitoring(teamId, userId, monitoringEnd, referringDoctor)
-      expect(api).toHaveBeenCalledWith(teamId, userId, monitoringEnd, referringDoctor)
-    })
-  })
-
-  describe('cancelRemoteMonitoringInvite', () => {
-    it('should call the api', async () => {
-      const api = jest.spyOn(NotificationApi, 'cancelRemoteMonitoringInvite').mockResolvedValueOnce(null)
-      await initNotificationContext()
-      const teamId = 'fakeTeamId'
-      const userId = 'fakeUserId'
-      await notifications.cancelRemoteMonitoringInvite(teamId, userId)
-      expect(api).toHaveBeenCalledWith(teamId, userId)
-    })
-  })
-
   describe('Accept', () => {
-    it('should call the api to accept the invitation and refresh', async () => {
+    it('should call the api to accept the invite and refresh', async () => {
       await initNotificationContext()
       const currentUser = loggedInUsers.getHcp()
       const caregiver = loggedInUsers.getCaregiver()
@@ -137,7 +113,7 @@ describe('Notification hook', () => {
   })
 
   describe('Decline', () => {
-    it('should call the api to decline the invitation and refresh', async () => {
+    it('should call the api to decline the invite and refresh', async () => {
       await initNotificationContext()
       const currentUser = loggedInUsers.getHcp()
       const caregiver = loggedInUsers.getCaregiver()
@@ -164,7 +140,7 @@ describe('Notification hook', () => {
   })
 
   describe('Cancel', () => {
-    it('should call the api to decline the invitation and refresh', async () => {
+    it('should call the api to decline the invite and refresh', async () => {
       await initNotificationContext()
       const currentUser = loggedInUsers.getHcp()
       const caregiver = loggedInUsers.getCaregiver()

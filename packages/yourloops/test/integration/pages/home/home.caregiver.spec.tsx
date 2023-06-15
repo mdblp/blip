@@ -28,11 +28,7 @@
 import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi, removeDirectShareMock } from '../../mock/direct-share.api.mock'
-import {
-  buildPatientAsTeamMember,
-  patient1AsTeamMember,
-  patient2AsTeamMember
-} from '../../data/patient.api.data'
+import { buildPatientAsTeamMember, patient1AsTeamMember, patient2AsTeamMember } from '../../data/patient.api.data'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { renderPage } from '../../utils/render'
@@ -62,13 +58,20 @@ describe('Caregiver home page', () => {
     const router = renderPage('/')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/home')
-    })
+    }, { timeout: 3000 })
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
     await checkCaregiverLayout(`${firstName} ${lastName}`)
     checkPatientListHeaderCaregiver()
   })
 
   it('should filter patients correctly depending on the search value', async () => {
+    const glycemiaIndicators = {
+      timeInRange: 0,
+      glucoseManagementIndicator: null,
+      coefficientOfVariation: null,
+      hypoglycemia: 0
+    }
+
     const patient1 = buildPatientAsTeamMember({
       userId: 'patientId1',
       profile: {
@@ -77,7 +80,8 @@ describe('Caregiver home page', () => {
         lastName: 'Embett',
         fullName: 'Akim Embett',
         patient: { birthday: '2010-01-20T10:44:34+01:00' }
-      }
+      },
+      glycemiaIndicators
     })
     const patient2 = buildPatientAsTeamMember({
       userId: 'patientId2',
@@ -87,7 +91,8 @@ describe('Caregiver home page', () => {
         lastName: 'Provist',
         fullName: 'Alain Provist',
         patient: { birthday: '2010-01-20T10:44:34+01:00' }
-      }
+      },
+      glycemiaIndicators
     })
     const patient3 = buildPatientAsTeamMember({
       userId: 'patientId3',
@@ -97,34 +102,37 @@ describe('Caregiver home page', () => {
         lastName: 'Versaire',
         fullName: 'Annie Versaire',
         patient: { birthday: '2015-05-25T10:44:34+01:00' }
-      }
+      },
+      glycemiaIndicators
     })
     jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1, patient2, patient3])
 
     renderPage('/')
 
-    expect(await screen.findByTestId('current-patient-list-grid')).toBeVisible()
+    await waitFor(() => {
+      expect(screen.queryByTestId('current-patient-list-grid')).toBeVisible()
+    }, { timeout: 10000 })
 
     // Checking that all patients are displayed
     const dataGridRow = screen.getByTestId('current-patient-list-grid')
     expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/AFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/AFlag patient fake@patient.emailAnnie VersaireMay 25, 2015N/A')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%N/AFlag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/AFlag patient fake@patient.emailAnnie VersaireMay 25, 20150%0%N/A')
 
     const searchPatient = screen.getByPlaceholderText('Search for a patient...')
 
     // Searching by birthdate only
     await userEvent.type(searchPatient, '20/01/2010')
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/AFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/A')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%N/AFlag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/A')
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and first name
     await userEvent.type(searchPatient, '20/01/2010 Aki')
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 2010N/A')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%N/A')
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and last name
     await userEvent.type(searchPatient, '20/01/2010provi')
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient fake@patient.emailAlain ProvistJan 20, 2010N/A')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/A')
   })
 
   it('should display a list of patients and allow to remove one of them', async () => {
@@ -137,7 +145,7 @@ describe('Caregiver home page', () => {
 
     const patientTableBody = screen.getByTestId('current-patient-list-grid')
     expect(within(patientTableBody).getAllByRole('row')).toHaveLength(5)
-    expect(patientTableBody).toHaveTextContent('PatientDate of birthLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980N/AFlag patient pending-patient@diabeloop.frPending PatientJan 1, 1980N/A')
+    expect(patientTableBody).toHaveTextContent('PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 19800%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 19800%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 19800%0%N/AFlag patient pending-patient@diabeloop.frPending PatientJan 1, 19800%0%N/A')
 
     const removePatientButton = screen.getByRole('button', { name: `Remove patient ${patient2AsTeamMember.email}` })
     expect(removePatientButton).toBeVisible()
@@ -147,11 +155,10 @@ describe('Caregiver home page', () => {
     const removePatientDialog = screen.getByRole('dialog')
     expect(removePatientDialog).toBeVisible()
 
-    const removePatientDialogTitle = within(removePatientDialog).getByText('Remove a patient')
+    const removePatientDialogTitle = within(removePatientDialog).getByText('Remove patient Patient2 Rouis')
     expect(removePatientDialogTitle).toBeVisible()
 
-    const removePatientDialogQuestion = within(removePatientDialog).getByText('Are you sure you want to remove Patient2 Rouis?')
-    expect(removePatientDialogQuestion).toBeVisible()
+    expect(removePatientDialog).toHaveTextContent('Are you sure you want to remove Patient2 Rouis?')
 
     const removePatientDialogCancelButton = within(removePatientDialog).getByText('Cancel')
     expect(removePatientDialogCancelButton).toBeVisible()
@@ -170,9 +177,7 @@ describe('Caregiver home page', () => {
 
     const removePatientDialog2ConfirmButton = within(removePatientDialog2).getByRole('button', { name: 'Remove patient' })
 
-    await act(async () => {
-      await userEvent.click(removePatientDialog2ConfirmButton)
-    })
+    await userEvent.click(removePatientDialog2ConfirmButton)
 
     expect(removeDirectShareMock).toHaveBeenCalledWith(patient2AsTeamMember.userId, loggedInUserId)
     expect(jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1AsTeamMember])).toHaveBeenCalledTimes(2)
@@ -195,9 +200,7 @@ describe('Caregiver home page', () => {
 
     const confirmRemoveButton = within(removeDialog).getByRole('button', { name: 'Remove patient' })
 
-    await act(async () => {
-      await userEvent.click(confirmRemoveButton)
-    })
+    await userEvent.click(confirmRemoveButton)
 
     expect(removeDirectShareMock).toHaveBeenCalledWith(patient2AsTeamMember.userId, loggedInUserId)
     expect(screen.getByTestId('remove-direct-share-dialog')).toBeVisible()
@@ -210,7 +213,7 @@ describe('Caregiver home page', () => {
       expect(router.state.location.pathname).toEqual('/home')
     })
 
-    const columnSettingsButton = screen.getByTestId('column-settings-button')
+    const columnSettingsButton = screen.getByRole('button', { name: 'Change columns settings' })
 
     checkPatientListHeaderCaregiver()
     expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()

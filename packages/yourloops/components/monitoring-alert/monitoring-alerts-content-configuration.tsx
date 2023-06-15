@@ -39,7 +39,12 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { useMonitoringAlertsContentConfiguration } from './monitoring-alerts-content-configuration.hook'
-import { buildBgValues, buildThresholds, onBasicDropdownSelect, PERCENTAGES } from './monitoring-alert-content-configuration.util'
+import {
+  buildBgValues,
+  buildThresholds,
+  onBasicDropdownSelect,
+  PERCENTAGES
+} from './monitoring-alert-content-configuration.util'
 import FormHelperText from '@mui/material/FormHelperText'
 import { useAuth } from '../../lib/auth'
 import { LoadingButton } from '@mui/lab'
@@ -147,7 +152,7 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
     <React.Fragment>
       <Box paddingX={3}>
         <Typography className={classes.categoryTitle}>
-          1. {t('time-away-from-target')}
+          1. {t('time-away-from-target-range')}
         </Typography>
         <Typography variant="caption" className={classes.categoryInfo}>
           {t('current-trigger-setting-tir', {

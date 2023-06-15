@@ -28,12 +28,26 @@ It is based on Tidepool Blip 1.27.
 - YLP-2218 Use selected team in Remove patient dialog
 - YLP-2220 Remove "private practice" filter from patients list
 - YLP-2231 Implement new medical reports design for patients
+- YLP-2253 Dedicated error message for a patient joining a team they're already invited in
 - YLP-2265 Disable Add patient button when private practice is selected
 - YLP-2285 Monitoring filter cannot be enabled when Private practice is selected
 - YLP-2312 Teams and patients in a team should always have a field "monitoringAlertsParameters"
 - YLP-2322 Pending patients should not display glycemia specific data
 - YLP-2323 Add new columns from existing data in patient list
 - YLP-2324 Hide certain columns when private practice is selected
+- YLP-2348 New columns from glycemia indicators in patients list
+- YLP-2350 Display a visual info when a patient has unread messages from another team in the chat widget
+- YLP-2358 As a care team member, I want a new design when listing my pending patients
+- YLP-2381 As a HCP, I want to manage patient invites made by other members of the teams
+- YLP-2388 Select the new care team after creating it
+- YLP-2390 Enlarge font of the buttons of the messaging system
+- YLP-2391 Rename "Care team" page to "Care team settings"
+- YLP-2392 Refine the Account preferences page
+- YLP-2393 Remove fields and "Show more/Show less" logic in the patient header
+- YLP-2394 Hide "Monitoring alerts" card for patients users
+- YLP-2399 Cancel invite dialog new design
+- YLP-2430 Add checkbox to confirm that user is a hcp
+- YLP-2435 Remove "Telemonitored" filter on patient list
 
 ### Engineering use
 - YLP-2044 Remove redux settings store
@@ -75,6 +89,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2244 Migrate coefficientOfVariation from stats.js to yourloops
 - YLP-2245 Migrate SettingsPrintView to dumb
 - YLP-2252 Bump auth0-react from 1.9.0 to 2.0.1
+- YLP-2255 Bump react to 18.2.0
 - YLP-2256 Bump minor deps
 - YLP-2258 Bump react-markdown
 - YLP-2286 Rename the "alarm" concept to "monitored alert"
@@ -85,7 +100,17 @@ It is based on Tidepool Blip 1.27.
 - YLP-2301 Split ITs jobs by roles
 - YLP-2307 Incomplete alert when accepting a direct share invitation
 - YLP-2311 Reorganize ITs
+- YLP-2328 Migrate patient-data from jsx to tsx
+- YLP-2352 Monitoring alert tooltips "out of range" displays incorrect values
+- YLP-2364 Fixed English translations
 - YLP-2367 Patient list refacto
+- YLP-2386 Fix navigation crash between care team and patient list
+- YLP-2387 Fix the tab title when displaying the patient list
+- YLP-2403 Remove caregiver and private team logic from CurrentPatientList
+- YLP-2404 Fix patient list columns width
+- YLP-2418 use new patient route from harbour
+- YLP-2434 Api calls are trigerred twice
+- YLP-2454 Daily view crashes on mobile
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team

@@ -34,6 +34,7 @@ import { type Team } from './models/team.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import { type ITeam } from './models/i-team.model'
 import { TeamType } from './models/enums/team-type.enum'
+import HttpStatus from '../http/models/enums/http-status.enum'
 
 const log = bows('Team API')
 
@@ -70,6 +71,9 @@ interface InviteMemberResult {
 
 const HCP_ROUTE = 'hcps'
 const PATIENTS_ROUTE = 'patients'
+
+export const PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE = 'patient-already-invited-in-team'
+const PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
 
 export default class TeamApi {
   static async getTeams(user: User): Promise<Team[]> {
@@ -160,10 +164,17 @@ export default class TeamApi {
   }
 
   static async joinTeam(teamId: string, userId: string): Promise<void> {
-    await HttpService.post<void, { userId: string }>({
-      url: `/crew/v0/teams/${teamId}/patients`,
-      payload: { userId }
-    })
+    try {
+      await HttpService.post<void, { userId: string }>({
+        url: `/crew/v0/teams/${teamId}/patients`,
+        payload: { userId }
+      }, [PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_CODE])
+    } catch (error) {
+      if (error.response.status === PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_CODE) {
+        throw new Error(PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE)
+      }
+      throw error
+    }
   }
 
   private static getTeamsApiUrl(user: User): string {

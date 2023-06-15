@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,10 +27,10 @@
 
 import { type Notification } from '../../notifications/models/notification.model'
 import { type IUser } from '../../data/models/i-user.model'
-import { type UserInvitationStatus } from '../../team/models/enums/user-invitation-status.enum'
+import { type UserInviteStatus } from '../../team/models/enums/user-invite-status.enum'
 
 export interface ShareUser {
   user: IUser
   invitation?: Notification
-  status: UserInvitationStatus
+  status: UserInviteStatus
 }

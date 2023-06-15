@@ -26,7 +26,7 @@
  */
 
 import * as authHookMock from '../../../../lib/auth'
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import { usePatientListProviderHook } from '../../../../lib/providers/patient-list.provider.hook'
 import { type PatientsFilters } from '../../../../lib/providers/models/patients-filters.model'
 import type User from '../../../../lib/auth/models/user.model'
@@ -39,7 +39,6 @@ describe('usePatientListProviderHook', () => {
   const defaultFilters: PatientsFilters = {
     pendingEnabled: false,
     manualFlagEnabled: false,
-    telemonitoredEnabled: false,
     timeOutOfTargetEnabled: false,
     hypoglycemiaEnabled: false,
     dataNotTransferredEnabled: false,
@@ -49,7 +48,6 @@ describe('usePatientListProviderHook', () => {
   const filtersUpdated: PatientsFilters = {
     pendingEnabled: true,
     manualFlagEnabled: true,
-    telemonitoredEnabled: true,
     timeOutOfTargetEnabled: true,
     hypoglycemiaEnabled: true,
     dataNotTransferredEnabled: true,
@@ -61,7 +59,7 @@ describe('usePatientListProviderHook', () => {
       return {
         user: {
           isUserHcp: () => true,
-          preferences: { patientsListSortedOptionalColumns: ['system', 'last-data-update', 'messages'] }
+          preferences: { patientsListSortedOptionalColumns: [PatientListColumns.System, PatientListColumns.LastDataUpdate, PatientListColumns.Messages] }
         } as User,
         updatePreferences: updatePreferencesMock
       }
@@ -133,7 +131,7 @@ describe('usePatientListProviderHook', () => {
         [PatientListColumns.Messages]: false,
         [PatientListColumns.Actions]: true
       }
-      const patientsListSortedOptionalColumns = ['flag', 'system', 'patient', 'actions']
+      const patientsListSortedOptionalColumns = [PatientListColumns.Flag, PatientListColumns.System, PatientListColumns.Patient, PatientListColumns.Actions]
 
       act(() => {
         result.current.saveColumnsPreferences(updatedColumnsVisibilityModel)
@@ -152,7 +150,11 @@ describe('usePatientListProviderHook', () => {
         [PatientListColumns.Age]: false,
         [PatientListColumns.DateOfBirth]: false,
         [PatientListColumns.Gender]: false,
+        [PatientListColumns.GlucoseManagementIndicator]: false,
+        [PatientListColumns.Hypoglycemia]: false,
         [PatientListColumns.System]: true,
+        [PatientListColumns.TimeInRange]: false,
+        [PatientListColumns.Variance]: false,
         [PatientListColumns.MonitoringAlerts]: false,
         [PatientListColumns.Messages]: true,
         [PatientListColumns.LastDataUpdate]: true,
@@ -167,7 +169,7 @@ describe('usePatientListProviderHook', () => {
         return {
           user: {
             isUserHcp: () => false,
-            preferences: { patientsListSortedOptionalColumns: ['system', 'last-data-update'] }
+            preferences: { patientsListSortedOptionalColumns: [PatientListColumns.System, PatientListColumns.LastDataUpdate] }
           } as User
         }
       })
@@ -178,7 +180,11 @@ describe('usePatientListProviderHook', () => {
         [PatientListColumns.Age]: false,
         [PatientListColumns.DateOfBirth]: false,
         [PatientListColumns.Gender]: false,
+        [PatientListColumns.GlucoseManagementIndicator]: false,
+        [PatientListColumns.Hypoglycemia]: false,
         [PatientListColumns.System]: true,
+        [PatientListColumns.TimeInRange]: false,
+        [PatientListColumns.Variance]: false,
         [PatientListColumns.MonitoringAlerts]: false,
         [PatientListColumns.Messages]: false,
         [PatientListColumns.LastDataUpdate]: true,
@@ -203,7 +209,11 @@ describe('usePatientListProviderHook', () => {
         [PatientListColumns.Age]: false,
         [PatientListColumns.DateOfBirth]: true,
         [PatientListColumns.Gender]: false,
+        [PatientListColumns.GlucoseManagementIndicator]: false,
+        [PatientListColumns.Hypoglycemia]: true,
         [PatientListColumns.System]: false,
+        [PatientListColumns.TimeInRange]: true,
+        [PatientListColumns.Variance]: false,
         [PatientListColumns.MonitoringAlerts]: true,
         [PatientListColumns.Messages]: true,
         [PatientListColumns.LastDataUpdate]: true,
@@ -228,7 +238,11 @@ describe('usePatientListProviderHook', () => {
         [PatientListColumns.Age]: false,
         [PatientListColumns.DateOfBirth]: true,
         [PatientListColumns.Gender]: false,
+        [PatientListColumns.GlucoseManagementIndicator]: false,
+        [PatientListColumns.Hypoglycemia]: true,
         [PatientListColumns.System]: false,
+        [PatientListColumns.TimeInRange]: true,
+        [PatientListColumns.Variance]: false,
         [PatientListColumns.MonitoringAlerts]: false,
         [PatientListColumns.Messages]: false,
         [PatientListColumns.LastDataUpdate]: true,

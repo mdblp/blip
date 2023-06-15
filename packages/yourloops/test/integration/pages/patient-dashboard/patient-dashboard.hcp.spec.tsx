@@ -32,7 +32,7 @@ import { completeDashboardData, mockDataAPI, twoWeeksOldDashboardData } from '..
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { patient1, patient1Id, patientWithMmolId } from '../../data/patient.api.data'
 import { mockChatAPI } from '../../mock/chat.api.mock'
-import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
+import { mockMedicalFilesAPI, mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
 import { renderPage } from '../../utils/render'
@@ -42,13 +42,15 @@ import { Unit } from 'medical-domain'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
-import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import {
-  testDashboardDataVisualisation,
+  testDashboardDataVisualisationForHcp,
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationWithTwoWeeksOldData,
-  testPatientNavBarForHcp
+  testEmptyMedicalFilesWidgetForHcp,
+  testPatientNavBarForHcp,
+  testSwitchPatientCorrectDataDisplay
 } from '../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
 import { type MedicalFilesWidgetParams } from '../../assert/medical-widget.assert'
@@ -101,6 +103,28 @@ describe('Patient dashboard for HCP', () => {
       isMonitoringAlertCardVisible: true
     }
 
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testAppMainLayoutForHcp(appMainLayoutParams)
+    await testDashboardDataVisualisationForHcp(patientDashboardLayoutParams)
+  })
+
+  it('should be able to switch from patient to patient', async () => {
+    mockDataAPI(completeDashboardData)
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testPatientNavBarForHcp()
+  })
+
+  it('should be able to manage medical reports', async () => {
+    const selectedTeamName = myThirdTeamName
+    mockDataAPI(completeDashboardData)
+
     const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
       selectedPatientId: patient1Id,
       loggedInUserFirstName: firstName,
@@ -113,11 +137,26 @@ describe('Patient dashboard for HCP', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testAppMainLayoutForHcp(appMainLayoutParams)
-    await testDashboardDataVisualisation(patientDashboardLayoutParams)
-    await testPatientNavBarForHcp()
     await testMedicalWidgetForHcp(medicalFilesWidgetParams)
+  })
+
+  it('should be able to manage monitoring alerts parameters', async () => {
+    mockDataAPI(completeDashboardData)
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
     await testMonitoringAlertsParametersConfigurationDialogMgdl()
+  })
+
+  it('should be able to use chat widget', async () => {
+    mockDataAPI(completeDashboardData)
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
     await testChatWidgetForHcp()
   })
 
@@ -135,7 +174,7 @@ describe('Patient dashboard for HCP', () => {
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
       ...patient1,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     }])
 
     const appMainLayoutParams: AppMainLayoutHcpParams = {
@@ -181,5 +220,22 @@ describe('Patient dashboard for HCP', () => {
     await waitFor(() => {
       expect(logoutMock).toHaveBeenCalledWith({ logoutParams: { returnTo: 'http://localhost/login?idle=true' } })
     }, { timeout: 3000 })
+  })
+
+  it('should display the fallback message when no medical files are returned by the API', async () => {
+    mockMedicalFilesApiEmptyResult()
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testEmptyMedicalFilesWidgetForHcp()
+  })
+
+  it('should render correct patient data when changing patient in the header dropdown', async () => {
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+    await testSwitchPatientCorrectDataDisplay()
   })
 })

@@ -34,7 +34,7 @@ import { buildTeam, buildTeamMember } from '../../common/utils'
 import * as authHookMock from '../../../../lib/auth'
 import TeamApi from '../../../../lib/team/team.api'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
-import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type ITeam } from '../../../../lib/team/models/i-team.model'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
 import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
@@ -45,7 +45,7 @@ describe('Team hook', () => {
   let teamHook: TeamContext
 
   const memberHcp1 = buildTeamMember('memberHcp', undefined, TeamMemberRole.member)
-  const memberHcp2 = buildTeamMember('memberHcpAdmin', undefined, TeamMemberRole.admin, undefined, undefined, UserInvitationStatus.accepted)
+  const memberHcp2 = buildTeamMember('memberHcpAdmin', undefined, TeamMemberRole.admin, undefined, undefined, UserInviteStatus.Accepted)
   const team1 = buildTeam('team1Id', [memberHcp1])
   const team2 = buildTeam('team2Id', [])
   const team3 = buildTeam('team3Id', [memberHcp2])
@@ -71,9 +71,9 @@ describe('Team hook', () => {
           <DummyComponent />
         </TeamContextProvider>
       )
-      await waitFor(() => {
-        expect(teamHook.teams.length).toBeGreaterThan(0)
-      })
+    })
+    await waitFor(() => {
+      expect(teamHook.teams.length).toBeGreaterThan(0)
     })
   }
 
@@ -98,14 +98,14 @@ describe('Team hook', () => {
   })
 
   describe('removeMember', () => {
-    it('should throw an error when there is no invitation', async () => {
+    it('should throw an error when there is no invite', async () => {
       const teamMember = buildTeamMember()
       await expect(async () => {
         await teamHook.removeMember(teamMember, 'fakeTeamId')
       }).rejects.toThrow()
     })
 
-    it('should throw an error when there is no invitation for the member team', async () => {
+    it('should throw an error when there is no invite for the member team', async () => {
       const teamMember = buildTeamMember('fakeUserId')
       await expect(async () => {
         await teamHook.removeMember(teamMember, 'fakeTeamId')

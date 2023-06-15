@@ -29,7 +29,6 @@ import { mockAuth0Hook } from './auth0.hook.mock'
 import { mockNotificationAPI } from './notification.api.mock'
 import { mockDirectShareApi } from './direct-share.api.mock'
 import { mockTeamAPI } from './team.api.mock'
-import PatientAPI from '../../../lib/patient/patient.api'
 import { mockChatAPI } from './chat.api.mock'
 import { mockMedicalFilesAPI } from './medical-files.api.mock'
 import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
@@ -42,7 +41,6 @@ export const mockPatientLogin = (patient: ITeamMember) => {
   mockDirectShareApi()
   mockTeamAPI()
   mockUserApi().mockUserDataFetch({ firstName: patient.profile.firstName, lastName: patient.profile.lastName })
-  jest.spyOn(PatientAPI, 'getPatients').mockResolvedValue([patient])
   mockChatAPI()
   mockMedicalFilesAPI()
 }

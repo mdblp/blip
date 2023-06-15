@@ -28,6 +28,7 @@
 import { type Team } from './team.model'
 import { type TeamMember } from './team-member.model'
 import { type TypeTeamMemberRole } from './enums/team-member-role.enum'
+import { type ITeam } from './i-team.model'
 
 export interface TeamContext {
   teams: Array<Readonly<Team>>
@@ -67,7 +68,7 @@ export interface TeamContext {
    * Create a new team
    * @param team The team to create
    */
-  createTeam: (team: Partial<Team>) => Promise<void>
+  createTeam: (team: Partial<Team>) => Promise<ITeam>
 
   /**
    * Change some team infos (name, address...)

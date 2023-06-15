@@ -27,10 +27,11 @@
 
 import { type MonitoringAlerts } from '../../patient/models/monitoring-alerts.model'
 import { type TeamMemberRole } from './enums/team-member-role.enum'
-import { type UserInvitationStatus } from './enums/user-invitation-status.enum'
+import { type UserInviteStatus } from './enums/user-invite-status.enum'
 import { type Profile } from '../../auth/models/profile.model'
 import { type Settings } from '../../auth/models/settings.model'
 import { type Preferences } from '../../auth/models/preferences.model'
+import { type GlycemiaIndicators } from '../../patient/models/glycemia-indicators.model'
 
 /**
  * Team member (API view)
@@ -40,11 +41,12 @@ export interface ITeamMember {
   teamId: 'private' | string
   email: string
   role: TeamMemberRole
-  invitationStatus: UserInvitationStatus
+  invitationStatus: UserInviteStatus
   profile?: Profile | null
   settings?: Settings | null
   preferences?: Preferences | null
   idVerified: boolean
   alarms?: MonitoringAlerts
   unreadMessages?: number
+  glycemiaIndicators: GlycemiaIndicators
 }

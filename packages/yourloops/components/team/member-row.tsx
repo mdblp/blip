@@ -42,7 +42,7 @@ import { useAlert } from '../utils/snackbar'
 import PersonRemoveIcon from '../icons/mui/person-remove-icon'
 import ConfirmDialog from '../dialogs/confirm-dialog'
 import TeamUtils from '../../lib/team/team.util'
-import { UserInvitationStatus } from '../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../lib/team/models/enums/user-invite-status.enum'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -93,12 +93,12 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
   const loggedInUserId = authContext.user?.id
   const loggedInUserIsAdmin = TeamUtils.isUserAdministrator(team, loggedInUserId)
   const currentUserIsAdmin = TeamUtils.isUserAdministrator(team, currentUserId)
-  const currentUserIsPending = teamMember.status === UserInvitationStatus.pending
+  const currentUserIsPending = teamMember.status === UserInviteStatus.Pending
   const checkboxAdminDisabled = !loggedInUserIsAdmin || currentUserIsPending ||
     (loggedInUserId === currentUserId && TeamUtils.isUserTheOnlyAdministrator(team, loggedInUserId)) ||
     userUpdateInProgress
   const removeMemberDisabled = !loggedInUserIsAdmin || userUpdateInProgress || loggedInUserId === currentUserId ||
-    (teamMember.status === UserInvitationStatus.pending && !teamMember.invitationId) // This condition basically means that the logged in user did not invite the pending user
+    (teamMember.status === UserInviteStatus.Pending && !teamMember.invitationId) // This condition basically means that the logged in user did not invite the pending user
 
   const switchRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const isAdmin = event.target.checked

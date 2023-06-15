@@ -29,11 +29,12 @@ import PatientApi from './patient.api'
 import { mapITeamMemberToPatient } from '../../components/patient/utils'
 import moment from 'moment-timezone'
 import { type Patient } from './models/patient.model'
-import { UserInvitationStatus } from '../team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../team/models/enums/user-invite-status.enum'
 import { type User } from '../auth'
 import { type PatientsFilters } from '../providers/models/patients-filters.model'
 import i18next from 'i18next'
 import { Gender } from '../auth/models/enums/gender.enum'
+import { UserRole } from '../auth/models/enums/user-role.enum'
 
 const t = i18next.t.bind(i18next)
 
@@ -46,17 +47,20 @@ export default class PatientUtils {
   }
 
   static async computePatients(user: User, teamId?: string): Promise<Patient[]> {
-    const userIsHcp = user.isUserHcp()
-    if (!userIsHcp && !user.isUserPatient() && !user.isUserCaregiver()) {
-      throw Error(`Cannot retrieve patients with user having role ${user.role}`)
+    const userRole = user.role
+    switch (userRole) {
+      case UserRole.Hcp:
+        if (!teamId) {
+          throw Error('Cannot retrieve scoped patients when no team id is given')
+        }
+        return await PatientApi.getPatientsForHcp(user.id, teamId)
+      case UserRole.Patient:
+        return await PatientApi.getPatient(user.id)
+      case UserRole.Caregiver:
+        return await PatientUtils.retrievePatients()
+      default:
+        throw Error(`Cannot retrieve patients with user having role ${user.role}`)
     }
-    if (userIsHcp) {
-      if (!teamId) {
-        throw Error('Cannot retrieve scoped patients when no team id is given')
-      }
-      return await PatientApi.getPatientsForHcp(user.id, teamId)
-    }
-    return await PatientUtils.retrievePatients()
   }
 
   static computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {
@@ -66,7 +70,7 @@ export default class PatientUtils {
   }
 
   static isInvitationPending = (patient: Patient): boolean => {
-    return patient.invitationStatus === UserInvitationStatus.pending
+    return patient.invitationStatus === UserInviteStatus.Pending
   }
 
   static getNonPendingPatients = (patients: Patient[]): Patient[] => {
@@ -74,7 +78,7 @@ export default class PatientUtils {
   }
 
   static getPendingPatients = (patients: Patient[]): Patient[] => {
-    return patients.filter(patient => patient.invitationStatus === UserInvitationStatus.pending)
+    return patients.filter(patient => patient.invitationStatus === UserInviteStatus.Pending)
   }
 
   static filterPatientsOnMonitoringAlerts = (patients: Patient[], patientFilters: PatientsFilters): Patient[] => {
@@ -141,5 +145,9 @@ export default class PatientUtils {
       default:
         return NO_GENDER_LABEL
     }
+  }
+
+  static formatPercentageValue(value: number): string {
+    return value || value === 0 ? `${Math.round(value * 10) / 10}%` : t('N/A')
   }
 }

@@ -30,6 +30,7 @@ import { patient1, patient2 } from '../data/patient.api.data'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import moment from 'moment-timezone'
 import userEvent from '@testing-library/user-event'
+import { type Data, mockDataAPI } from '../mock/data.api.mock'
 
 const checkPatientNavBar = (patientNavBar: BoundFunctions<typeof queries>) => {
   const dashboardTab = patientNavBar.getByText('Dashboard')
@@ -62,7 +63,7 @@ export const checkPatientNavBarAsPatient = () => {
 
 export const checkPatientDropdown = async (initialPatient: Patient, patientToSwitchTo: Patient) => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-  const initialPatientHeaderContent = `Patient${initialPatient.profile.firstName} ${initialPatient.profile.lastName}Date of birth:${moment(initialPatient.profile.birthdate).format('L')}Diabete type:Type 1Gender:MaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report`
+  const initialPatientHeaderContent = `Patient${initialPatient.profile.firstName} ${initialPatient.profile.lastName}Date of birth:${moment(initialPatient.profile.birthdate).format('L')}Diabetes type:Type 1Gender:MaleHbA1c:fakeA1cValue% (05/26/2023)Email:patient1@diabeloop.frDashboardDailyTrendsDownload report`
   expect(secondaryHeader).toHaveTextContent(initialPatientHeaderContent)
 
   fireEvent.mouseDown(within(secondaryHeader).getByText(patient1.profile.fullName))
@@ -71,14 +72,8 @@ export const checkPatientDropdown = async (initialPatient: Patient, patientToSwi
   const secondPatientDateOfBirth = moment(patientToSwitchTo.profile.birthdate).format('L')
   const secondPatientName = `${patientToSwitchTo.profile.firstName} ${patientToSwitchTo.profile.lastName}`
   const secondaryHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
-  const secondPatientHeaderContent = `Patient${secondPatientName}Date of birth:${secondPatientDateOfBirth}Diabete type:Type 1Gender:FemaleRemote monitoring:NoShow moreDashboardDailyTrendsDownload report`
+  const secondPatientHeaderContent = `Patient${secondPatientName}Date of birth:${secondPatientDateOfBirth}Diabetes type:Type 1Gender:FemaleHbA1c:8.9% (11/21/2023)Email:patient2@diabeloop.frDashboardDailyTrendsDownload report`
   await waitFor(() => { expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContent) })
-
-  await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show more'))
-  const secondPatientHeaderContentExtended = `Patient${secondPatientName}Date of birth:${secondPatientDateOfBirth}Diabete type:Type 1Gender:FemaleRemote monitoring:NoReferring doctor:N/Ahba1c:8.9 (11/21/2023)Email:${patientToSwitchTo.profile.email}Show lessDashboardDailyTrendsDownload report`
-  expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContentExtended)
-  await userEvent.click(within(secondaryHeaderRefreshed).getByText('Show less'))
-  expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContent)
 
   fireEvent.mouseDown(within(await screen.findByTestId('patient-nav-bar')).getByText(patientToSwitchTo.profile.fullName))
   await userEvent.click(within(screen.getByRole('listbox')).getByText(initialPatient.profile.fullName))
@@ -89,4 +84,18 @@ export const checkPatientDropdown = async (initialPatient: Patient, patientToSwi
 export const checkPatientNavBarForPatient = async () => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
   expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDownload report')
+}
+
+export const checkPatientSwitch = async () => {
+  const secondaryHeader = await screen.findByTestId('patient-nav-bar')
+  expect(screen.getByTestId('patient-dashboard')).toBeInTheDocument()
+
+  mockDataAPI({} as Data)
+  fireEvent.mouseDown(within(secondaryHeader).getByText(patient1.profile.fullName))
+  fireEvent.click(within(screen.getByRole('listbox')).getByText(patient2.profile.fullName))
+
+  expect(screen.queryByTestId('patient-dashboard')).not.toBeInTheDocument()
+  await waitFor(() => {
+    expect(screen.getByText(`No data for patient ${patient2.profile.fullName}`)).toBeInTheDocument()
+  })
 }

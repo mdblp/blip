@@ -25,13 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, renderHook } from '@testing-library/react-hooks'
-import { useMonitoringAlertsContentConfiguration }
-  from '../../../../components/monitoring-alert/monitoring-alerts-content-configuration.hook'
+import { act, renderHook } from '@testing-library/react'
+import {
+  useMonitoringAlertsContentConfiguration
+} from '../../../../components/monitoring-alert/monitoring-alerts-content-configuration.hook'
 import { buildTeam, createPatient } from '../../common/utils'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
-import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { Unit } from 'medical-domain'
 import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
 import { type MonitoringAlertsParameters } from '../../../../lib/team/models/monitoring-alerts-parameters.model'
@@ -42,7 +43,7 @@ jest.mock('../../../../lib/selected-team/selected-team.provider')
 describe('MonitoringAlertsContentConfiguration hook', () => {
   const teamId = 'teamId'
   const team = buildTeam(teamId)
-  const patient = createPatient('patientId', UserInvitationStatus.accepted)
+  const patient = createPatient('patientId', UserInviteStatus.Accepted)
   const user = { id: 'id', settings: { units: { bg: Unit.MilligramPerDeciliter } } }
 
   const getDefaultMonitoringAlertsParameters = (): MonitoringAlertsParameters => ({
@@ -175,7 +176,7 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
   })
 
   describe('resetToTeamDefaultValues', () => {
-    const patient = createPatient('patientId', UserInvitationStatus.accepted)
+    const patient = createPatient('patientId', UserInviteStatus.Accepted)
 
     it('should return an error message if patient is not created', () => {
       const { result } = renderHook(() => useMonitoringAlertsContentConfiguration({

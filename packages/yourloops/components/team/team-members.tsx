@@ -74,11 +74,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export interface TeamMembersProps {
   team: Team
-  refreshParent: () => void
 }
 
 function TeamMembers(props: TeamMembersProps): JSX.Element {
-  const { team, refreshParent } = props
+  const { team } = props
   const teamHook = useTeam()
   const { classes } = useStyles()
   const authContext = useAuth()
@@ -119,12 +118,11 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
 
   const refresh = (): void => {
     setMembers(getNonPatientMembers(teamHook.getTeam(team.id) ?? undefined))
-    refreshParent()
   }
 
   return (
     <React.Fragment>
-      <div className={commonTeamClasses.root}>
+      <div className={commonTeamClasses.root} data-testid="team-members">
         <div className={commonTeamClasses.categoryHeader}>
           <div>
             <GroupOutlinedIcon />
@@ -153,6 +151,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
           <TableContainer component={Paper}>
             <Table
               id="team-members-list-table"
+              data-testid="team-members-list-table"
               aria-label={t('aria-table-list-members')}
               stickyHeader
             >

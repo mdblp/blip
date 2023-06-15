@@ -83,6 +83,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
       >
         <Paper elevation={3} className={classes.Paper}>
           <FormControlLabel
+            data-testid="create-caregiver-account"
             className={classes.FormControlLabel}
             value={UserRole.Caregiver}
             aria-label={t('create-caregiver-account')}
@@ -97,13 +98,14 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
         </Paper>
         <Paper elevation={3} className={classes.Paper}>
           <FormControlLabel
+            data-testid="create-hcp-account"
             className={classes.FormControlLabel}
             value={UserRole.Hcp}
             aria-label={t('hcp-radio-input')}
             control={<Radio />}
             label={
               <SignupRadioLabel
-                header={t('professional')}
+                header={t('health-care-professional')}
                 body={t('signup-radiolabel-hcp-body')}
               />
             }
@@ -111,6 +113,7 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
         </Paper>
         <Paper elevation={3} className={classes.Paper}>
           <FormControlLabel
+            data-testid="create-patient-account"
             disabled
             className={classes.FormControlLabel}
             value={UserRole.Patient}

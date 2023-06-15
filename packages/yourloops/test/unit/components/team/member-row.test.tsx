@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,7 +42,7 @@ import TeamUtils from '../../../../lib/team/team.util'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import { type ConfirmDialogProps } from '../../../../components/dialogs/confirm-dialog'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
-import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 
 // eslint-disable-next-line react/display-name
 jest.mock('../../../../components/dialogs/confirm-dialog', () => (props: ConfirmDialogProps) => {
@@ -74,7 +74,7 @@ describe('MemberRow', () => {
     TeamMemberRole.member,
     'fake@username.com',
     'fake full name',
-    UserInvitationStatus.accepted
+    UserInviteStatus.Accepted
   )
 
   const pendingTeamMemberWithNoInvite = buildTeamMember(
@@ -83,7 +83,7 @@ describe('MemberRow', () => {
     TeamMemberRole.member,
     'fake@username.com',
     'fake full name',
-    UserInvitationStatus.pending
+    UserInviteStatus.Pending
   )
 
   const pendingTeamMemberWithInviteFromAnotherUser = buildTeamMember(
@@ -92,7 +92,7 @@ describe('MemberRow', () => {
     TeamMemberRole.member,
     'fake@username.com',
     'fake full name',
-    UserInvitationStatus.pending
+    UserInviteStatus.Pending
   )
 
   const pendingTeamMemberWithInviteFromCurrentLoggedInUser = buildTeamMember(
@@ -101,7 +101,7 @@ describe('MemberRow', () => {
     TeamMemberRole.member,
     'fake@username.com',
     'fake full name',
-    UserInvitationStatus.pending
+    UserInviteStatus.Pending
   )
 
   const loggedInUserAdmin = buildTeamMember(
@@ -110,7 +110,7 @@ describe('MemberRow', () => {
     TeamMemberRole.admin,
     'fake@admin.com',
     'fake admin full name',
-    UserInvitationStatus.accepted
+    UserInviteStatus.Accepted
   )
 
   const loggedInUserNotAdmin = buildTeamMember(
@@ -119,7 +119,7 @@ describe('MemberRow', () => {
     TeamMemberRole.member,
     'fake@admin.com',
     'fake admin full name',
-    UserInvitationStatus.accepted
+    UserInviteStatus.Accepted
   )
 
   const pendingTeamMember = buildTeamMember(
@@ -128,7 +128,7 @@ describe('MemberRow', () => {
     TeamMemberRole.member,
     'fake@username.com',
     'fake full name',
-    UserInvitationStatus.pending
+    UserInviteStatus.Pending
   )
 
   const pendingAdminTeamMember = buildTeamMember('fakeUserId', 'fakeInviteId7')
@@ -138,7 +138,7 @@ describe('MemberRow', () => {
     TeamMemberRole.admin,
     'fake@username.com',
     'fake full name',
-    UserInvitationStatus.accepted)
+    UserInviteStatus.Accepted)
 
   beforeAll(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
@@ -159,12 +159,18 @@ describe('MemberRow', () => {
     const removeMemberButton = screen.getByRole('button', { name: 'remove-member-button' })
     await act(async () => {
       fireEvent.click(removeMemberButton)
-      await waitFor(() => { expect(screen.getByRole('button', { name: 'confirm-mock' })).toBeInTheDocument() })
-      const confirmButton = screen.getByRole('button', { name: 'confirm-mock' })
-      fireEvent.click(confirmButton)
-      await waitFor(() => { expect(removeMemberMock).toHaveBeenCalledWith(teamMember, teamId) })
-      expect(refreshParent).toHaveBeenCalled()
     })
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'confirm-mock' })).toBeInTheDocument()
+    })
+    const confirmButton = screen.getByRole('button', { name: 'confirm-mock' })
+    await act(async () => {
+      fireEvent.click(confirmButton)
+    })
+    await waitFor(() => {
+      expect(removeMemberMock).toHaveBeenCalledWith(teamMember, teamId)
+    })
+    expect(refreshParent).toHaveBeenCalled()
   }
 
   function getMemberRowJSX(memberProps: TeamMembersProps = props): JSX.Element {
@@ -271,7 +277,9 @@ describe('MemberRow', () => {
     expect(roleCheckbox).toBeChecked()
     await act(async () => {
       fireEvent.click(roleCheckbox)
-      await waitFor(() => { expect(changeMemberRoleMock).toHaveBeenCalledWith(teamMember, TeamMemberRole.member, team.id) })
+      await waitFor(() => {
+        expect(changeMemberRoleMock).toHaveBeenCalledWith(teamMember, TeamMemberRole.member, team.id)
+      })
       expect(refreshParent).toHaveBeenCalled()
     })
   })
@@ -292,7 +300,9 @@ describe('MemberRow', () => {
     expect(roleCheckbox).not.toBeChecked()
     await act(async () => {
       fireEvent.click(roleCheckbox)
-      await waitFor(() => { expect(changeMemberRoleMock).toHaveBeenCalledWith(adminTeamMember, TeamMemberRole.admin, team.id) })
+      await waitFor(() => {
+        expect(changeMemberRoleMock).toHaveBeenCalledWith(adminTeamMember, TeamMemberRole.admin, team.id)
+      })
       expect(refreshParent).toHaveBeenCalled()
       expect(errorMock).toHaveBeenCalledWith('team-page-failed-update-role')
     })

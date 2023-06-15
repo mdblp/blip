@@ -27,10 +27,11 @@
 
 import { mapITeamMemberToPatient } from '../../../../../components/patient/utils'
 import { type Patient } from '../../../../../lib/patient/models/patient.model'
-import { UserInvitationStatus } from '../../../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../../../lib/team/models/enums/user-invite-status.enum'
 import { TeamMemberRole } from '../../../../../lib/team/models/enums/team-member-role.enum'
 import { type ITeamMember } from '../../../../../lib/team/models/i-team-member.model'
 import { type Profile } from '../../../../../lib/auth/models/profile.model'
+import { Gender } from '../../../../../lib/auth/models/enums/gender.enum'
 
 describe('Patient utils', () => {
   describe('mapTeamUserToPatient', () => {
@@ -44,7 +45,7 @@ describe('Patient utils', () => {
       }
       const teamMember: ITeamMember = {
         idVerified: false,
-        invitationStatus: UserInvitationStatus.pending,
+        invitationStatus: UserInviteStatus.Pending,
         role: TeamMemberRole.patient,
         teamId: 'fakeTeamId',
         userId: 'fakeTeamMember',
@@ -58,11 +59,18 @@ describe('Patient utils', () => {
           nonDataTransmissionRate: 10,
           nonDataTransmissionActive: true
         },
+        glycemiaIndicators: {
+          timeInRange: 3,
+          hypoglycemia: 20,
+          coefficientOfVariation: 1,
+          glucoseManagementIndicator: 0
+        },
         unreadMessages: 5
       }
       teamMember.unreadMessages = 4
       const patient: Patient = {
         monitoringAlerts: teamMember.alarms,
+        glycemiaIndicators: teamMember.glycemiaIndicators,
         metadata: {
           flagged: undefined,
           medicalData: null,
@@ -74,8 +82,7 @@ describe('Patient utils', () => {
           fullName: profile.fullName,
           lastName: profile.lastName,
           email: teamMember.email,
-          referringDoctor: undefined,
-          sex: ''
+          sex: Gender.NotDefined
         },
         settings: {
           a1c: undefined,

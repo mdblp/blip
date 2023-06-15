@@ -36,7 +36,7 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { mockDataAPI } from '../../mock/data.api.mock'
-import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import {
@@ -47,11 +47,12 @@ import {
 import { testPatientManagementMedicalTeam, testPatientManagementPrivateTeam } from '../../use-cases/patients-management'
 import { testTeamCreation } from '../../use-cases/teams-management'
 import { Unit } from 'medical-domain'
+import NotificationApi from '../../../../lib/notifications/notification.api'
+import { type Router } from '../../models/router.model'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
   const lastName = 'Ard'
-  jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
 
   beforeEach(() => {
     mockAuth0Hook()
@@ -61,13 +62,16 @@ describe('HCP home page', () => {
     mockPatientApiForHcp()
     mockDirectShareApi()
     mockDataAPI()
+    jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
+    jest.spyOn(PatientApi, 'invitePatient').mockResolvedValue(undefined)
+    jest.spyOn(NotificationApi, 'cancelInvitation').mockResolvedValue(undefined)
   })
 
-  const renderHomePage = async () => {
+  const renderHomePage = async (): Promise<Router> => {
     const router = renderPage('/')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/home')
-    })
+    }, { timeout: 3000 })
     return router
   }
 
@@ -75,7 +79,7 @@ describe('HCP home page', () => {
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
       ...patient1,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     }])
 
     const appMainLayoutParams: AppMainLayoutHcpParams = {
@@ -98,7 +102,7 @@ describe('HCP home page', () => {
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
       ...patient1,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     }])
 
     await renderHomePage()
@@ -110,7 +114,7 @@ describe('HCP home page', () => {
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
       ...patient1,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     }])
 
     await renderHomePage()
@@ -157,9 +161,9 @@ describe('HCP home page', () => {
   it('should be able to create a team when on the home page', async () => {
     localStorage.setItem('selectedTeamId', myThirdTeamId)
 
-    await renderHomePage()
+    const router = await renderHomePage()
 
-    await testTeamCreation()
+    await testTeamCreation(router)
   })
 
   it('should show correct alerts tooltips when logged in with a user with units in mmol/L', async () => {

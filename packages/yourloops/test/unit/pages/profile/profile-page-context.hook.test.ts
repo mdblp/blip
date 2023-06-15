@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import * as authHookMock from '../../../../lib/auth'
 import { type User } from '../../../../lib/auth'
 import * as patientContext from '../../../../lib/patient/patient.provider'
@@ -109,32 +109,23 @@ describe('Profile page context hook', () => {
     })
   })
 
-  async function renderCustomHook() {
-    let hook
-    await act(async () => {
-      hook = renderHook(() => useProfilePageContextHook())
-    })
-    return hook
-  }
-
   it('should save profile when user change some fields', async () => {
     const firstName = 'Odile'
     const lastName = 'Deray'
     const expectedProfile = { ...profile, firstName, lastName, fullName: `${firstName} ${lastName}` }
     const expectedSettings = { ...settings, units: { bg: Unit.MilligramPerDeciliter } }
     const expectedPreferences = { displayLanguageCode: 'en' }
-
+    const { result } = renderHook(() => useProfilePageContextHook())
+    const { updateProfileForm } = result.current
     await act(async () => {
-      const { result } = await renderCustomHook()
-      const { updateProfileForm } = result.current
       updateProfileForm(ProfileFormKey.firstName, firstName)
       updateProfileForm(ProfileFormKey.lastName, lastName)
       updateProfileForm(ProfileFormKey.units, Unit.MilligramPerDeciliter)
       updateProfileForm(ProfileFormKey.lang, 'en')
-
+    })
+    await act(async () => {
       await result.current.saveProfile()
     })
-
     expect(updateProfileMock).toHaveBeenCalledWith(expectedProfile)
     expect(updateSettingsMock).toHaveBeenCalledWith(expectedSettings)
     expect(updatePreferencesMock).toHaveBeenCalledWith(expectedPreferences)
@@ -154,9 +145,9 @@ describe('Profile page context hook', () => {
         } as User
       }
     })
-    await act(async () => {
-      const { result } = await renderCustomHook()
 
+    const { result } = renderHook(() => useProfilePageContextHook())
+    await act(async () => {
       await result.current.saveProfile()
     })
     expect(onErrorAlertMock).toHaveBeenCalled()

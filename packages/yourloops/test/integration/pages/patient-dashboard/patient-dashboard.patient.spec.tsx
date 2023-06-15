@@ -31,7 +31,7 @@ import { completeDashboardData, mockDataAPI, twoWeeksOldDashboardData } from '..
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { type MedicalFilesWidgetParams } from '../../assert/medical-widget.assert'
-import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
+import { mockMedicalFilesAPI, mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
 import TeamAPI from '../../../../lib/team/team.api'
 import {
   buildPrivateTeam,
@@ -47,15 +47,17 @@ import { mockChatAPI } from '../../mock/chat.api.mock'
 import { type AppMainLayoutParams, testAppMainLayoutForPatient } from '../../use-cases/app-main-layout-visualisation'
 import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
 import {
-  testDashboardDataVisualisation,
-  testDashboardDataVisualisationPrivateTeamNoData, testDashboardDataVisualisationWithTwoWeeksOldData,
+  testDashboardDataVisualisationForPatient,
+  testDashboardDataVisualisationPrivateTeamNoData,
+  testDashboardDataVisualisationWithTwoWeeksOldData,
+  testEmptyMedicalFilesWidgetForPatient,
   testPatientNavBarForPatient
 } from '../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForPatient } from '../../use-cases/medical-reports-management'
 import { testChatWidgetForPatient } from '../../use-cases/communication-system'
 import { testJoinTeam } from '../../use-cases/teams-management'
 
-describe('Patient dashboard for HCP', () => {
+describe('Patient dashboard for patient', () => {
   const patientDashboardRoute = '/dashboard'
   const firstName = patient1.profile.firstName
   const lastName = patient1.profile.lastName
@@ -83,8 +85,22 @@ describe('Patient dashboard for HCP', () => {
     const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
       isChatCardVisible: true,
       isMedicalFilesCardVisible: true,
-      isMonitoringAlertCardVisible: true
+      isMonitoringAlertCardVisible: false
     }
+
+    const router = renderPage(patientDashboardRoute)
+
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(patientDashboardRoute)
+    })
+
+    await testAppMainLayoutForPatient(appMainLayoutParams)
+    await testDashboardDataVisualisationForPatient(patientDashboardLayoutParams)
+    await testPatientNavBarForPatient()
+  })
+
+  it('should display medical reports', async () => {
+    mockDataAPI(completeDashboardData)
 
     const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
       selectedPatientId: patient1Id,
@@ -100,11 +116,30 @@ describe('Patient dashboard for HCP', () => {
       expect(router.state.location.pathname).toEqual(patientDashboardRoute)
     })
 
-    await testAppMainLayoutForPatient(appMainLayoutParams)
-    await testDashboardDataVisualisation(patientDashboardLayoutParams)
-    await testPatientNavBarForPatient()
     await testMedicalWidgetForPatient(medicalFilesWidgetParams)
+  })
+
+  it('should be able to use the chat widget', async () => {
+    mockDataAPI(completeDashboardData)
+
+    const router = renderPage(patientDashboardRoute)
+
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(patientDashboardRoute)
+    })
+
     await testChatWidgetForPatient()
+  })
+
+  it('should be able to join a team', async () => {
+    mockDataAPI(completeDashboardData)
+
+    const router = renderPage(patientDashboardRoute)
+
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(patientDashboardRoute)
+    })
+
     await testJoinTeam()
   })
 
@@ -133,5 +168,15 @@ describe('Patient dashboard for HCP', () => {
     })
 
     await testDashboardDataVisualisationWithTwoWeeksOldData()
+  })
+
+  it('should display the fallback message when no medical files are returned by the API', async () => {
+    mockMedicalFilesApiEmptyResult()
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testEmptyMedicalFilesWidgetForPatient()
   })
 })

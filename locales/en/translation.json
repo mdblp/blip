@@ -67,7 +67,6 @@
   "Change": "Change",
   "Change Cartridge": "Change Cartridge",
   "Change Pod": "Change Pod",
-  "Click to reload.": "Click to reload.",
   "Close": "Close",
   "Comment_submit": "Comment",
   "Confidential mode": "Confidential mode",
@@ -250,6 +249,7 @@
   "compute-oneday-time-in-range": "**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is 24 hours multiplied by % in range.",
   "compute-total-insulin": "**How we calculate this:**\n\n**(%)** is the respective total of basal or bolus delivery divided by total insulin delivered for this time period.",
   "custom": "custom",
+  "date-format": "ll",
   "day": "day",
   "days": "days",
   "dbl": "DBL",
@@ -280,7 +280,7 @@
   "level": "level",
   "low": "low",
   "low-pa": "low",
-  "medium-pa": "medium",
+  "medium-pa": "moderate",
   "minute": "minute",
   "minutes": "minutes",
   "month": "month",
@@ -302,6 +302,5 @@
   "years": "years",
   "{{date}} - {{time}}": "{{date}} - {{time}}",
   "{{numVisibleDays}} days in view": "{{numVisibleDays}} days in view",
-  "{{patientName}} does not have any data yet.": "{{patientName}} does not have any data yet.",
   "{{title}} (cont.)": "{{title}} (cont.)"
 }

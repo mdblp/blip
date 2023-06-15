@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,9 +33,9 @@ export interface Notification {
   id: string
   type: NotificationType
   metricsType: 'share_data' | 'join_team'
-  /** Current user email for received invitation, target user email for sent invitations */
+  /** Current user email for received invite, target user email for sent invites */
   email: string
-  /** User who create the invitation == creator.userid? */
+  /** User who create the invite == creator.userid? */
   creatorId: string
   /** Notification creation date */
   date: string

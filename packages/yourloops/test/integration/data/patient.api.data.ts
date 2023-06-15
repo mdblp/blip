@@ -31,7 +31,7 @@ import { type PatientProfile } from '../../../lib/patient/models/patient-profile
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
-import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { type Profile } from '../../../lib/auth/models/profile.model'
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
@@ -39,12 +39,14 @@ import {
   filtersTeamId,
   monitoringAlertsParameters,
   monitoringAlertsParametersBgUnitMmol,
+  myFirstTeamId,
   mySecondTeamId,
-  myTeamId,
   myThirdTeamId
 } from '../mock/team.api.mock'
 import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
+import { loggedInUserId } from '../mock/auth0.hook.mock'
+import { type GlycemiaIndicators } from '../../../lib/patient/models/glycemia-indicators.model'
 
 export const patient1Id = 'patient1Id'
 export const patient2Id = 'patient2Id'
@@ -75,6 +77,13 @@ const defaultMonitoringAlert: MonitoringAlerts = {
   nonDataTransmissionActive: false
 }
 
+const defaultGlycemiaIndicators: GlycemiaIndicators = {
+  timeInRange: 0,
+  glucoseManagementIndicator: null,
+  coefficientOfVariation: null,
+  hypoglycemia: 0
+}
+
 export const buildPatient = (params: {
   userid: string
   monitoringAlertsParameters: MonitoringAlertsParameters
@@ -92,6 +101,7 @@ export const buildPatient = (params: {
       nonDataTransmissionRate: params.monitoringAlerts?.nonDataTransmissionRate || 30,
       nonDataTransmissionActive: params.monitoringAlerts?.nonDataTransmissionActive || false
     },
+    glycemiaIndicators: defaultGlycemiaIndicators,
     profile: {
       birthdate: params.profile?.birthdate || new Date().toString(),
       firstName: params.profile?.firstName || 'fakeFirstname',
@@ -101,7 +111,7 @@ export const buildPatient = (params: {
       sex: params.profile?.sex || Gender.Male
     },
     settings: {
-      a1c: params.settings?.a1c || { date: new Date().toJSON(), value: 'fakeA1cValue' },
+      a1c: params.settings?.a1c || { date: '2023-05-26T12:28:36.047Z', value: 'fakeA1cValue' },
       system: params.settings?.system
     },
     metadata: {
@@ -110,7 +120,7 @@ export const buildPatient = (params: {
       hasSentUnreadMessages: params.metadata?.hasSentUnreadMessages || false
     },
     monitoringAlertsParameters: params.monitoringAlertsParameters,
-    invitationStatus: UserInvitationStatus.accepted,
+    invitationStatus: UserInviteStatus.Accepted,
     userid: params.userid
   }
 }
@@ -276,7 +286,7 @@ export const pendingPatient: Patient = buildPatient({
   monitoringAlerts: defaultMonitoringAlert
 })
 
-export const buildTeamMemberFromPatient = (patient: Patient, teamId: string, invitationStatus: UserInvitationStatus): ITeamMember => {
+export const buildTeamMemberFromPatient = (patient: Patient, teamId: string, invitationStatus: UserInviteStatus): ITeamMember => {
   return {
     userId: patient.userid,
     teamId,
@@ -297,79 +307,87 @@ export const buildTeamMemberFromPatient = (patient: Patient, teamId: string, inv
     email: patient.profile.email,
     idVerified: false,
     unreadMessages: patient.metadata.hasSentUnreadMessages ? 1 : 0,
-    alarms: patient.monitoringAlerts
+    alarms: patient.monitoringAlerts,
+    glycemiaIndicators: patient.glycemiaIndicators
   }
 }
 
-export const patient1AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient1, mySecondTeamId, UserInvitationStatus.accepted)
-export const patient2AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient2, myThirdTeamId, UserInvitationStatus.accepted)
-export const patient3AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient3, myThirdTeamId, UserInvitationStatus.accepted)
-export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(pendingPatient, mySecondTeamId, UserInvitationStatus.pending)
+export const patient1AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient1, mySecondTeamId, UserInviteStatus.Accepted)
+export const patient2AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient2, myThirdTeamId, UserInviteStatus.Accepted)
+export const patient3AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient3, myThirdTeamId, UserInviteStatus.Accepted)
+export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(pendingPatient, mySecondTeamId, UserInviteStatus.Pending)
 
 export const PATIENTS_BY_TEAMID: Record<string, Patient[]> = {
-  [myTeamId]: [],
+  [myFirstTeamId]: [],
   [mySecondTeamId]: [
     {
       ...patient1,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     }, {
       ...pendingPatient,
-      invitationStatus: UserInvitationStatus.pending
+      invitationStatus: UserInviteStatus.Pending
     }
   ],
   [myThirdTeamId]: [
     {
       ...patient1,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...patient2,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...patient3,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...patientWithMmol,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...pendingPatient,
-      invitationStatus: UserInvitationStatus.pending
+      invitationStatus: UserInviteStatus.Pending,
+      invite: {
+        id: 'fakeInviteId',
+        creatorId: loggedInUserId,
+        creationDate: '2023-05-17T11:37:42.638Z'
+      }
     }
   ],
   [filtersTeamId]: [
     {
       ...patient1,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...unreadMessagesPatient,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...timeSpentOutOfTargetRangePatient,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...hypoglycemiaPatient,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...noDataTransferredPatient,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...flaggedPatient,
-      invitationStatus: UserInvitationStatus.accepted
+      invitationStatus: UserInviteStatus.Accepted
     },
     {
       ...pendingPatient,
-      invitationStatus: UserInvitationStatus.pending
+      invitationStatus: UserInviteStatus.Pending
     }
   ]
 }
+
+export const PATIENTS: Patient[] = [patient1, patient2, patient3]
 
 export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMember => {
   return {
@@ -400,10 +418,11 @@ export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMem
     } as Profile,
     settings: member.settings,
     preferences: member.preferences,
-    invitationStatus: member.invitationStatus ?? UserInvitationStatus.accepted,
+    invitationStatus: member.invitationStatus ?? UserInviteStatus.Accepted,
     email: member.email ?? 'fake@patient.email',
     idVerified: member.idVerified ?? true,
     unreadMessages: member.unreadMessages ?? 0,
-    alarms: member.alarms
+    alarms: member.alarms,
+    glycemiaIndicators: member.glycemiaIndicators
   }
 }

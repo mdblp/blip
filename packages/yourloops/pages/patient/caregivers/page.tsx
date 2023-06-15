@@ -44,7 +44,7 @@ import AddCaregiverDialog from './add-dialog'
 import CaregiverTable from './table'
 import DirectShareApi, { PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE } from '../../../lib/share/direct-share.api'
 import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
-import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { type Notification } from '../../../lib/notifications/models/notification.model'
 import { type AddDialogContentProps } from './models/add-dialog-content-props.model'
@@ -77,7 +77,7 @@ function PatientCaregiversPage(): JSX.Element {
     if (email && user) {
       try {
         await DirectShareApi.addDirectShare(user.id, email)
-        alert.success(t('alert-invitation-sent-success'))
+        alert.success(t('alert-invite-sent-success'))
         metrics.send('invitation', 'send_invitation', 'caregiver')
         // Refresh the notifications list
         notificationHook.update()
@@ -88,10 +88,10 @@ function PatientCaregiversPage(): JSX.Element {
         log.error(reason)
 
         if (error.message === PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE) {
-          alert.error(t('alert-invitation-caregiver-failed-user-is-patient'))
+          alert.error(t('alert-invite-caregiver-failed-user-is-patient'))
           return
         }
-        alert.error(t('alert-invitation-caregiver-failed'))
+        alert.error(t('alert-invite-caregiver-failed'))
       }
     }
   }
@@ -105,7 +105,7 @@ function PatientCaregiversPage(): JSX.Element {
       log.debug('Found pending direct-share invitation: ', invitation)
       const caregiver: ShareUser = {
         invitation,
-        status: UserInvitationStatus.pending,
+        status: UserInviteStatus.Pending,
         user: {
           username: invitation.email,
           userid: uuidv4(),

@@ -19,11 +19,11 @@ import React from 'react'
 import _ from 'lodash'
 import bows from 'bows'
 import moment from 'moment-timezone'
-import WindowSizeListener from 'react-window-size-listener'
+import ReactResizeDetector from 'react-resize-detector'
 import i18next from 'i18next'
 
 import { chartDailyFactory } from 'tideline'
-import { TimeService } from 'medical-domain'
+import { DatumType, TimeService } from 'medical-domain'
 
 import { components as vizComponents } from 'tidepool-viz'
 
@@ -40,10 +40,11 @@ import {
 } from 'dumb'
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
-import ChartType from 'yourloops/enum/chart-type.enum'
+import { ChartTypes } from 'yourloops/enum/chart-type.enum'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 import Stats from './stats'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
+import metrics from 'yourloops/lib/metrics'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -60,6 +61,7 @@ class DailyChart extends React.Component {
     epochLocation: PropTypes.number.isRequired,
     msRange: PropTypes.number.isRequired,
     patient: PropTypes.object,
+    refToAttachResize: PropTypes.object.isRequired,
     tidelineData: PropTypes.object.isRequired,
     timePrefs: PropTypes.object.isRequired,
     // message handlers
@@ -78,6 +80,7 @@ class DailyChart extends React.Component {
     onWarmUpHover: PropTypes.func.isRequired,
     onConfidentialHover: PropTypes.func.isRequired,
     onTooltipOut: PropTypes.func.isRequired,
+    onChartMounted: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired
   }
 
@@ -105,25 +108,27 @@ class DailyChart extends React.Component {
     this.state = {
       /** @type {function | null} */
       chart: null,
-      windowHeight: 0,
-      windowWidth: 0,
       /** Avoid recreate the chart on loading: This leads to a crash */
       needRecreate: false
     }
     /** @type {React.RefObject} */
     this.refNode = React.createRef()
+    this.viewHasBeenInitialized = false // This boolean is only here because react-resize-detector has to be mocked in ITs... :(
+    this.unmountingInProgress = false
   }
 
   componentDidUpdate() {
     // Prevent the scroll drag while loading
     const { loading } = this.props
     const { chart, needRecreate } = this.state
-    if (chart !== null) {
+    if (!this.viewHasBeenInitialized) {
+      this.handleWindowResize()
+    }
+    if (chart) {
       chart.loadingInProgress = loading
       if (needRecreate && !loading && !chart.isInTransition()) {
-        this.setState({ needRecreate: false }, () => {
-          this.reCreateChart()
-        })
+        this.setState({ needRecreate: false })
+        this.reCreateChart()
       }
     }
   }
@@ -132,30 +137,34 @@ class DailyChart extends React.Component {
     this.unmountChart()
   }
 
-  mountChart(cb = _.noop) {
-    if (this.state.chart === null) {
+  mountChart() {
+    if (this.state.chart === null && !this.unmountingInProgress) {
       const { tidelineData, epochLocation } = this.props
       this.log.debug('Mounting...')
       const chart = chartDailyFactory(this.refNode.current, tidelineData, _.pick(this.props, this.chartOpts))
       this.setState({ chart }, () => {
-        chart.setAtDate(epochLocation)
+        this.state.chart.setAtDate(epochLocation)
         this.bindEvents()
-        cb()
+        this.props.onChartMounted()
       })
-    } else {
-      cb()
     }
   }
 
-  unmountChart(cb = _.noop) {
+  unmountChart(recreate = false) {
     const { chart } = this.state
-    if (chart !== null) {
+    if (chart !== null && !this.unmountingInProgress) {
+      this.unmountingInProgress = true
       this.log('Unmounting...')
       this.unbindEvents()
       chart.destroy()
-      this.setState({ chart: null }, cb)
-    } else {
-      cb()
+      this.setState({ chart: null }, () => {
+        this.unmountingInProgress = false
+        if (recreate) {
+          this.mountChart()
+        }
+      })
+    } else if (recreate) {
+      this.mountChart()
     }
   }
 
@@ -178,32 +187,38 @@ class DailyChart extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div id="tidelineContainer" data-testid="tidelineContainer" className="patient-data-chart" ref={this.refNode} />
-        <WindowSizeListener onResize={this.handleWindowResize} />
+        <ReactResizeDetector
+          targetRef={this.props.refToAttachResize}
+          onResize={this.handleWindowResize}
+          handleWidth
+          handleHeight
+        />
+        <div
+          id="tidelineContainer"
+          data-testid="tidelineContainer"
+          className="patient-data-chart"
+          ref={this.refNode}
+        />
       </React.Fragment>
     )
   }
 
-  handleWindowResize = ({ windowHeight: height, windowWidth: width }) => {
+  handleWindowResize = () => {
     const { loading } = this.props
-    const { windowHeight, windowWidth, chart } = this.state
-    this.log.debug('handleWindowResize', { windowHeight, windowWidth }, '=>', { height, width })
-    if (windowHeight !== height || width !== windowWidth) {
-      const needRecreate = loading || chart?.isInTransition() === true
-      this.setState({ windowHeight: height, windowWidth: width, needRecreate }, () => {
-        if (!needRecreate) {
-          this.reCreateChart()
-        } else {
-          this.log.info('Delaying chart re-creation: loading or transition in progress')
-        }
-      })
+    const { chart } = this.state
+    const needRecreate = loading || chart?.isInTransition() === true
+    if (!needRecreate) {
+      this.viewHasBeenInitialized = true
+      this.reCreateChart()
+    } else {
+      this.log.info('Delaying chart re-creation: loading or transition in progress')
     }
   }
 
   reCreateChart() {
     const { chart } = this.state
     this.log.info(chart === null ? 'Creating chart...' : 'Recreating chart...')
-    this.unmountChart(this.mountChart.bind(this))
+    this.unmountChart(true)
   }
 
   rerenderChartData() {
@@ -240,7 +255,7 @@ class DailyChart extends React.Component {
 }
 
 /**
- * @typedef {{tidelineData: MedicalDataService; epochLocation: number; bgPrefs: any; msRange: number; loading: boolean; trackMetric: ()=>void; datePicker?: DatePicker}} DailyProps
+ * @typedef {{tidelineData: MedicalDataService; epochLocation: number; bgPrefs: any; msRange: number; loading: boolean; datePicker?: DatePicker}} DailyProps
  */
 
 /** @augments React.Component<DailyProps> */
@@ -249,7 +264,6 @@ class Daily extends React.Component {
     patient: PropTypes.object.isRequired,
     bgPrefs: PropTypes.object.isRequired,
     bgSource: PropTypes.oneOf(BG_DATA_TYPES),
-    chartPrefs: PropTypes.object.isRequired,
     dataUtil: PropTypes.object,
     timePrefs: PropTypes.object.isRequired,
     epochLocation: PropTypes.number.isRequired,
@@ -262,23 +276,22 @@ class Daily extends React.Component {
     onCreateMessage: PropTypes.func.isRequired,
     onShowMessageThread: PropTypes.func.isRequired,
     // navigation handlers
-    onDatetimeLocationChange: PropTypes.func.isRequired,
-    updateChartPrefs: PropTypes.func.isRequired,
-    trackMetric: PropTypes.func.isRequired
+    onDatetimeLocationChange: PropTypes.func.isRequired
   }
 
   constructor(props) {
     super(props)
 
     /** @type {React.RefObject<DailyChart>} */
+    this.refToAttachResize = React.createRef()
     this.chartRef = React.createRef()
-    this.chartType = ChartType.Daily
     this.log = bows('DailyView')
     this.state = {
       atMostRecent: this.isAtMostRecent(),
       inTransition: false,
       title: this.getTitle(props.epochLocation),
-      tooltip: null
+      tooltip: null,
+      chartMounted: false
     }
 
     /** @type {{tidelineData: MedicalDataService}} */
@@ -288,6 +301,7 @@ class Daily extends React.Component {
     this.startDate = Date.parse(startDate)
     /** @type {Date} */
     this.endDate = Date.parse(endDate)
+    this.onChartMounted = this.onChartMounted.bind(this)
   }
 
   componentDidUpdate(prevProps) {
@@ -305,9 +319,14 @@ class Daily extends React.Component {
     }
   }
 
+  onChartMounted() {
+    this.setState({ chartMounted: true })
+  }
+
   render() {
-    const { tidelineData, epochLocation, msRange, trackMetric, loading, timePrefs } = this.props
+    const { tidelineData, epochLocation, msRange, loading, timePrefs } = this.props
     const { inTransition, atMostRecent, tooltip, title } = this.state
+    const trackMetric = metrics.send
     const endpoints = this.getEndpoints()
     const dateFilter = {
       start: Date.parse(endpoints[0]).valueOf(),
@@ -326,25 +345,28 @@ class Daily extends React.Component {
       <div id="tidelineMain" className="daily">
         <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
           <Box display="flex">
-            <DailyDatePicker
-              atMostRecent={atMostRecent}
-              displayedDate={title}
-              date={epochLocation}
-              endDate={this.endDate}
-              inTransition={inTransition}
-              loading={loading}
-              onBackButtonClick={this.handlePanBack}
-              onMostRecentButtonClick={this.handleClickMostRecent}
-              onNextButtonClick={this.handlePanForward}
-              onSelectedDateChange={onSelectedDateChange}
-              startDate={this.startDate}
-            />
+            {this.state.chartMounted &&
+              <DailyDatePicker
+                atMostRecent={atMostRecent}
+                displayedDate={title}
+                date={epochLocation}
+                endDate={this.endDate}
+                inTransition={inTransition}
+                loading={loading}
+                onBackButtonClick={this.handlePanBack}
+                onMostRecentButtonClick={this.handleClickMostRecent}
+                onNextButtonClick={this.handlePanForward}
+                onSelectedDateChange={onSelectedDateChange}
+                startDate={this.startDate}
+              />
+            }
           </Box>
-          <Box display="flex">
+          <Box display="flex" ref={this.refToAttachResize}>
             <div className="container-box-inner patient-data-content-inner">
               <div className="patient-data-content">
                 {loading && <SpinningLoader className="centered-spinning-loader" />}
                 <DailyChart
+                  refToAttachResize={this.refToAttachResize}
                   loading={loading}
                   bgClasses={this.props.bgPrefs.bgClasses}
                   bgUnits={this.props.bgPrefs.bgUnits}
@@ -368,6 +390,7 @@ class Daily extends React.Component {
                   onWarmUpHover={this.handleWarmUpHover}
                   onConfidentialHover={this.handleConfidentialHover}
                   onTooltipOut={this.handleTooltipOut}
+                  onChartMounted={this.onChartMounted}
                   trackMetric={trackMetric}
                   ref={this.chartRef}
                 />
@@ -378,14 +401,14 @@ class Daily extends React.Component {
                 <PatientStatistics
                   medicalData={tidelineData.medicalData}
                   bgPrefs={this.props.bgPrefs}
-                  dateFilter={dateFilter}
                   bgType={this.props.dataUtil.bgSource}
+                  dateFilter={dateFilter}
                 >
                   <Stats
                     bgPrefs={this.props.bgPrefs}
-                    bgSource={this.props.dataUtil.bgSource}
-                    chartPrefs={this.props.chartPrefs}
-                    chartType={this.chartType}
+                    bgSource={DatumType.Cbg}
+                    chartPrefs={null}
+                    chartType={ChartTypes.Daily}
                     dataUtil={this.props.dataUtil}
                     endpoints={endpoints}
                     loading={loading}
@@ -395,9 +418,7 @@ class Daily extends React.Component {
             </div>
           </Box>
         </Box>
-        <Footer
-          chartType={this.chartType}
-          onClickRefresh={this.props.onClickRefresh} />
+        <Footer onClickRefresh={this.props.onClickRefresh} />
         {tooltip}
       </div>
     )
@@ -434,13 +455,6 @@ class Daily extends React.Component {
     /** @type {{tidelineData: MedicalDataService}} */
     const { tidelineData } = this.props
     return moment.tz(datetime, tidelineData.getTimezoneAt(datetime)).format(i18next.t('ddd, MMM D, YYYY'))
-  }
-
-  handleClickOneDay = (e) => {
-    if (e) {
-      e.preventDefault()
-    }
-    return false
   }
 
   handlePanBack = (e) => {

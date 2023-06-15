@@ -181,3 +181,13 @@ export const checkMedicalReportDelete = async (medicalFileWidgetParams: MedicalF
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   expect(medicalFilesWidget).toHaveTextContent(`Medical filesMedical report-1 2022-01-10Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}Medical report-2 2022-01-02Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}New`)
 }
+
+export const checkEmptyMedicalFilesWidgetForPatient = async (): Promise<void> => {
+  const medicalFilesWidget = await getMedicalFilesWidget()
+  expect(within(medicalFilesWidget).getByText('No medical files have yet been created by your healthcare professional.')).toBeVisible()
+}
+
+export const checkEmptyMedicalFilesWidgetForHcp = async (): Promise<void> => {
+  const medicalFilesWidget = await getMedicalFilesWidget()
+  expect(within(medicalFilesWidget).getByText('No medical files have yet been created.')).toBeVisible()
+}

@@ -44,6 +44,8 @@ import { HypoglycemiaIcon } from '../icons/diabeloop/hypoglycemia-icon'
 import { NoMessageIcon } from '../icons/diabeloop/no-message-icon'
 import { MessageIcon } from '../icons/diabeloop/message-icon'
 import { convertBG } from '../../lib/units/units.util'
+import Button from '@mui/material/Button'
+import { Unit } from 'medical-domain'
 
 interface FlagCellProps {
   isFlagged: boolean
@@ -104,11 +106,11 @@ export const PendingIconCell: FunctionComponent = () => {
 
   return (
     <Tooltip
-      title={t('pending-invitation')}
-      aria-label={t('pending-invitation')}
+      title={t('pending-invite')}
+      aria-label={t('pending-invite')}
     >
       <Box display="flex">
-        <AccessTimeIcon titleAccess={t('pending-invitation')} />
+        <AccessTimeIcon titleAccess={t('pending-invite')} />
       </Box>
     </Tooltip>
   )
@@ -120,7 +122,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
   const { user } = useAuth()
 
   const { monitoringAlerts, monitoringAlertsParameters } = patient
-  const unit = user.settings?.units?.bg ?? monitoringAlertsParameters.bgUnit
+  const unit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter // This is the default unit used when the logged-in user has no unit preference
 
   const roundUpToOneDecimal = (value: number): number => {
     return Math.round(value * 10) / 10
@@ -141,9 +143,9 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
       timeSpentAwayFromTargetRate: roundUpToOneDecimal(monitoringAlerts.timeSpentAwayFromTargetRate),
       frequencyOfSevereHypoglycemiaRate: roundUpToOneDecimal(monitoringAlerts.frequencyOfSevereHypoglycemiaRate),
       nonDataTransmissionRate: roundUpToOneDecimal(monitoringAlerts.nonDataTransmissionRate),
-      min: roundUpToOneDecimal(convertBG(monitoringAlertsParameters.lowBg, monitoringAlertsParameters.bgUnit)),
-      max: roundUpToOneDecimal(convertBG(monitoringAlertsParameters.highBg, monitoringAlertsParameters.bgUnit)),
-      veryLowBg: roundUpToOneDecimal(convertBG(monitoringAlertsParameters.veryLowBg, monitoringAlertsParameters.bgUnit))
+      min: convertBG(monitoringAlertsParameters.lowBg, monitoringAlertsParameters.bgUnit),
+      max: convertBG(monitoringAlertsParameters.highBg, monitoringAlertsParameters.bgUnit),
+      veryLowBg: convertBG(monitoringAlertsParameters.veryLowBg, monitoringAlertsParameters.bgUnit)
     }
   }
 
@@ -209,8 +211,8 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
       <Tooltip
         title={
           <>
-            <Box>{t('data-not-transferred-tooltip1', { percentage: nonDataTransmissionRate })}</Box>
-            <Box>{t('data-not-transferred-tooltip2', { threshold: monitoringAlertsParameters.nonDataTxThreshold })}</Box>
+            <Box>{t('data-not-transmitted-tooltip1', { percentage: nonDataTransmissionRate })}</Box>
+            <Box>{t('data-not-transmitted-tooltip2', { threshold: monitoringAlertsParameters.nonDataTxThreshold })}</Box>
             <Box>{sharedTooltip}</Box>
           </>
         }
@@ -278,5 +280,24 @@ export const ActionsCell: FunctionComponent<ActionsCellProps> = ({ patient, onCl
         />
       </Box>
     </Tooltip>
+  )
+}
+
+export const PendingListCancelInviteCell: FunctionComponent<ActionsCellProps> = ({ patient, onClickRemove }) => {
+  const { t } = useTranslation()
+  const removePatientLabel = t('button-remove-patient')
+
+  return (
+    <Button
+      data-action="remove-patient"
+      data-testid={`${removePatientLabel} ${patient.profile.email}`}
+      aria-label={`${removePatientLabel} ${patient.profile.email}`}
+      color="inherit"
+      onClick={() => {
+        onClickRemove(patient.userid)
+      }}
+    >
+      ${removePatientLabel}
+    </Button>
   )
 }
