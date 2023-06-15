@@ -37,12 +37,13 @@ import { useAuth } from '../auth'
 import metrics from '../metrics'
 import { errorTextFromException } from '../utils'
 import { type PatientContextResult } from './models/patient-context-result.model'
-import { type Patient, PatientMetrics } from './models/patient.model'
+import { type Patient, type PatientMetrics } from './models/patient.model'
 import { type MedicalData } from '../data/models/medical-data.model'
 import { useSelectedTeamContext } from '../selected-team/selected-team.provider'
 import { usePatientListContext } from '../providers/patient-list.provider'
 import { useAlert } from '../../components/utils/snackbar'
 import TeamUtils from '../team/team.util'
+import { UserInviteStatus } from '../team/models/enums/user-invite-status.enum'
 
 export default function usePatientProviderCustomHook(): PatientContextResult {
   const { cancel: cancelInvite } = useNotification()
@@ -70,8 +71,13 @@ export default function usePatientProviderCustomHook(): PatientContextResult {
         if (!isUserHcp) {
           return
         }
+
+        const acceptedInvitePatients = computedPatients.filter((patient: Patient) => patient.invitationStatus === UserInviteStatus.Accepted)
+        if (!acceptedInvitePatients.length) {
+          return
+        }
         // setTimeout(async () => {
-          await fetchPatientsMetrics(teamId, computedPatients)
+        await fetchPatientsMetrics(teamId, acceptedInvitePatients)
         // }, 5000)
       })
       .catch((reason: unknown) => {
