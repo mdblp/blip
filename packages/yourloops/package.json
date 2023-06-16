@@ -55,7 +55,7 @@
     "react-device-detect": "^2.2.3",
     "react-dom": "18.2.0",
     "react-i18next": "^12.2.0",
-    "react-idle-timer": "^5.5.3",
+    "react-idle-timer": "^5.7.2",
     "react-resize-detector": "^8.0.4",
     "react-router-dom": "^6.13.0",
     "tss-react": "^4.8.2",
