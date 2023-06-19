@@ -29,5 +29,5 @@ import { type Team } from '../team'
 
 export interface SelectedTeamContextResult {
   selectedTeam: Team
-  selectTeam: (teamId: string) => void
+  selectTeam: (teamId: string, isNewTeam?: boolean) => void
 }

@@ -50,9 +50,9 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Divider from '@mui/material/Divider'
 import AddIcon from '@mui/icons-material/Add'
-import TeamEditDialog from '../../pages/hcp/team-edit-dialog'
+import TeamInformationEditDialog from '../../pages/hcp/team-information-edit-dialog'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import { usePatientContext } from '../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../lib/patient/patients.provider'
 
 const classes = makeStyles()((theme: Theme) => ({
   sectionTitle: {
@@ -82,10 +82,9 @@ export const TeamScopeMenu: FunctionComponent = () => {
       typography
     }
   } = classes()
-  const { getMedicalTeams, getPrivateTeam } = useTeam()
+  const { getMedicalTeams, getPrivateTeam, createTeam, refresh: refreshTeams } = useTeam()
   const { selectTeam, selectedTeam } = useSelectedTeamContext()
-  const { createTeam } = useTeam()
-  const { refresh } = usePatientContext()
+  const { refresh } = usePatientsContext()
   const alert = useAlert()
   const navigate = useNavigate()
   const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null)
@@ -126,12 +125,16 @@ export const TeamScopeMenu: FunctionComponent = () => {
   const onSaveTeam = async (createdTeam: Partial<Team> | null): Promise<void> => {
     if (createdTeam) {
       try {
-        await createTeam(createdTeam as Team)
+        const newTeam = await createTeam(createdTeam as Team)
+        refreshTeams()
+        selectTeam(newTeam.id, true)
+        navigate(AppUserRoute.CareTeamSettings)
         alert.success(t('team-page-success-create'))
       } catch (reason: unknown) {
         alert.error(t('team-page-failed-create'))
       }
     }
+
     setTeamCreationDialogData(null)
   }
 
@@ -222,7 +225,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
       </MenuLayout>
 
       {teamCreationDialogData &&
-        <TeamEditDialog teamToEdit={teamCreationDialogData} />
+        <TeamInformationEditDialog teamToEdit={teamCreationDialogData} />
       }
     </>
   )

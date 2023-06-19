@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,11 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.title {
-  line-height: 1;
-  margin: 4px 4px 8px;
-}
-
 .titleTotal {
   color: #0096D1;
   margin-left: 4px;
@@ -49,11 +44,9 @@
 
 .rows {
   display: grid;
-  row-gap: 4px;
-  margin-bottom: 0.5em;
+  align-items: center;
   pointer-events: none;
   padding-left: 10px;
-  padding-right: 10px;
 }
 
 .rows .rowTitle {
@@ -73,7 +66,7 @@
 .rows .rowPercent {
   display: flex;
   justify-content: flex-end;
-  align-items: center;
+  align-items: baseline;
 }
 
 .rows .rowPercent .rowPercentValue {
@@ -84,7 +77,6 @@
 .rows .rowPercent .rowPercentUnits {
   font-size: 12px;
   color: var(--text-medium-contrast);
-  align-self: flex-end;
 }
 
 .rowsTotalInsulin {

@@ -60,10 +60,10 @@ describe('Notification hook', () => {
           </NotificationContextProvider>
         </BrowserRouter>
       )
-      await waitFor(() => { expect(notifications.initialized).toBeTruthy() })
-      expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
-      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
     })
+    await waitFor(() => { expect(notifications.initialized).toBeTruthy() })
+    expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
+    expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
   }
 
   beforeAll(() => {
@@ -82,30 +82,6 @@ describe('Notification hook', () => {
       })
       await waitFor(() => { expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(2) })
       expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(2)
-    })
-  })
-
-  describe('inviteRemoteMonitoring', () => {
-    it('should call the api', async () => {
-      const api = jest.spyOn(NotificationApi, 'inviteToRemoteMonitoring').mockResolvedValueOnce(null)
-      await initNotificationContext()
-      const teamId = 'fakeTeamId'
-      const userId = 'fakeUserId'
-      const monitoringEnd = new Date()
-      const referringDoctor = 'fakeReferringDoctor'
-      await notifications.inviteRemoteMonitoring(teamId, userId, monitoringEnd, referringDoctor)
-      expect(api).toHaveBeenCalledWith(teamId, userId, monitoringEnd, referringDoctor)
-    })
-  })
-
-  describe('cancelRemoteMonitoringInvite', () => {
-    it('should call the api', async () => {
-      const api = jest.spyOn(NotificationApi, 'cancelRemoteMonitoringInvite').mockResolvedValueOnce(null)
-      await initNotificationContext()
-      const teamId = 'fakeTeamId'
-      const userId = 'fakeUserId'
-      await notifications.cancelRemoteMonitoringInvite(teamId, userId)
-      expect(api).toHaveBeenCalledWith(teamId, userId)
     })
   })
 

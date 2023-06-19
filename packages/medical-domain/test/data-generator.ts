@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -56,7 +56,7 @@ import { DeviceEventSubtype } from '../src/domains/models/medical/datum/enums/de
 import { getTrendsTime } from '../src/domains/repositories/time/time.service'
 
 function createBaseData(date?: Date): BaseDatum {
-  const pastDate = date || faker.date.recent(20)
+  const pastDate = date ?? faker.date.recent(20)
   return {
     id: faker.datatype.uuid(),
     type: DatumType.Upload,
@@ -153,7 +153,7 @@ function createRandomDeviceParameterChange(date?: Date): DeviceParameterChange {
   }
 }
 
-function createRandomMeal(date?: Date): Meal {
+function createMealData(date?: Date): Meal {
   return {
     ...createBaseData(date),
     type: DatumType.Food,
@@ -161,7 +161,7 @@ function createRandomMeal(date?: Date): Meal {
     uploadId: faker.datatype.uuid(),
     nutrition: {
       carbohydrate: {
-        net: faker.datatype.number({ min: 0, max: 200, precision: 0.01 }),
+        net: 5,
         units: Unit.Gram
       }
     }
@@ -287,13 +287,13 @@ function createRandomWarmUp(date?: Date): WarmUp {
   return createModeData(DeviceEventSubtype.Warmup, date) as WarmUp
 }
 
-function createRandomWizard(date?: Date): Wizard {
+function createWizardData(date?: Date): Wizard {
   return {
     ...createBaseData(date),
     type: DatumType.Wizard,
     uploadId: faker.datatype.uuid(),
     bolusId: faker.datatype.uuid(),
-    carbInput: faker.datatype.number({ min: 0, max: 200, precision: 0.01 }),
+    carbInput: 5,
     units: 'g',
     bolus: null,
     recommended: undefined,
@@ -329,7 +329,7 @@ function createRandomDatum(type: DatumType, subtype?: DeviceEventSubtype, date?:
           throw new Error('unknown type')
       }
     case DatumType.Food:
-      return createRandomMeal(date)
+      return createMealData(date)
     case DatumType.Message:
       return createRandomMessage(date)
     case DatumType.PhysicalActivity:
@@ -341,7 +341,7 @@ function createRandomDatum(type: DatumType, subtype?: DeviceEventSubtype, date?:
     case DatumType.Upload:
       return createRandomUpload(date)
     case DatumType.Wizard:
-      return createRandomWizard(date)
+      return createWizardData(date)
     default:
       throw new Error('unknown type')
   }
@@ -350,7 +350,7 @@ function createRandomDatum(type: DatumType, subtype?: DeviceEventSubtype, date?:
 export default createRandomDatum
 export {
   createRandomBasal, createRandomBolus, createRandomCbg, createRandomConfidentialMode,
-  createRandomDeviceParameterChange, createRandomMeal, createRandomMessage,
+  createRandomDeviceParameterChange, createMealData, createRandomMessage,
   createRandomPhysicalActivity, createRandomPumpSetttings, createRandomReservoirChange,
-  createRandomSmbg, createRandomUpload, createRandomWarmUp, createRandomWizard, createRandomZenMode
+  createRandomSmbg, createRandomUpload, createRandomWarmUp, createWizardData, createRandomZenMode
 }

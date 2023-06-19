@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { buildPatient, buildTeamMemberFromPatient } from '../../data/patient.api.data'
@@ -33,7 +33,7 @@ import { renderPage } from '../../utils/render'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 
 describe('Training page when new training available', () => {
   beforeAll(() => {
@@ -49,7 +49,7 @@ describe('Training page when new training available', () => {
       }
     }
     const notAckTrainingPatient = buildPatient({ userid: 'id', profile })
-    const patientAsTeamMember = buildTeamMemberFromPatient(notAckTrainingPatient, 'team-id', UserInvitationStatus.accepted)
+    const patientAsTeamMember = buildTeamMemberFromPatient(notAckTrainingPatient, 'team-id', UserInviteStatus.Accepted)
     mockPatientLogin(patientAsTeamMember)
     mockAuth0Hook(UserRole.Patient)
     mockUserApi()
@@ -75,9 +75,7 @@ describe('Training page when new training available', () => {
     expect(confirmButton).toBeDisabled()
     await userEvent.click(ackText)
     expect(confirmButton).toBeEnabled()
-    await act(async () => {
-      await userEvent.click(confirmButton)
-    })
+    await userEvent.click(confirmButton)
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/new-consent')
     })

@@ -27,9 +27,9 @@
 
 import React, { type FunctionComponent } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import PatientDataPage from '../components/patient-data'
-import CareTeamPage from '../pages/care-team/care-team-page'
-import { PatientProvider } from '../lib/patient/patient.provider'
+import { PatientData } from '../components/patient-data/patient-data'
+import CareTeamSettingsPage from '../pages/care-team-settings/care-team-settings-page'
+import { PatientsProvider } from '../lib/patient/patients.provider'
 import { TeamContextProvider } from '../lib/team'
 import DashboardLayout from './dashboard-layout'
 import InvalidRoute from '../components/invalid-route'
@@ -45,26 +45,20 @@ export const HcpLayout: FunctionComponent = () => {
     <TeamContextProvider>
       <SelectedTeamProvider>
         <PatientListProvider>
-          <PatientProvider>
+          <PatientsProvider>
             <DashboardLayout>
               <Routes>
                 <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
                 <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
                 <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
                 <Route path={AppUserRoute.Home} element={<PatientListPage />} />
-                <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientDataPage />} />
-                <Route path={AppUserRoute.Team} element={<CareTeamPage />} />
-                <Route
-                  path="/"
-                  element={<Navigate to={AppUserRoute.Home} replace />}
-                />
-                <Route
-                  path="*"
-                  element={<Navigate to={AppUserRoute.NotFound} replace />}
-                />
+                <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientData />} />
+                <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
+                <Route path="/" element={<Navigate to={AppUserRoute.Home} replace />} />
+                <Route path="*" element={<Navigate to={AppUserRoute.NotFound} replace />} />
               </Routes>
             </DashboardLayout>
-          </PatientProvider>
+          </PatientsProvider>
         </PatientListProvider>
       </SelectedTeamProvider>
     </TeamContextProvider>

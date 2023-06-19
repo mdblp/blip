@@ -26,16 +26,16 @@
  */
 
 import * as authHookMock from '../../../../lib/auth'
-import * as patientProviderMock from '../../../../lib/patient/patient.provider'
+import * as patientProviderMock from '../../../../lib/patient/patients.provider'
 import * as patientListProviderMock from '../../../../lib/providers/patient-list.provider'
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import { usePatientListHook } from '../../../../components/patient-list/patient-list.hook'
 import { PatientListTabs } from '../../../../components/patient-list/models/enums/patient-list.enum'
 import type { Patient } from '../../../../lib/patient/models/patient.model'
 import PatientUtils from '../../../../lib/patient/patient.util'
 
 jest.mock('../../../../lib/auth')
-jest.mock('../../../../lib/patient/patient.provider')
+jest.mock('../../../../lib/patient/patients.provider')
 jest.mock('../../../../lib/providers/patient-list.provider')
 describe('Patient list hook', () => {
   const patients: Patient[] = [
@@ -51,7 +51,7 @@ describe('Patient list hook', () => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
       getFlagPatients: getFlagPatientsMock
     }));
-    (patientProviderMock.usePatientContext as jest.Mock).mockImplementation(() => ({
+    (patientProviderMock.usePatientsContext as jest.Mock).mockImplementation(() => ({
       searchPatients: searchPatientsMock
     }));
     (patientListProviderMock.usePatientListContext as jest.Mock).mockImplementation(() => ({

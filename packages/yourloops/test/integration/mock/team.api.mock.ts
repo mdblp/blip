@@ -26,12 +26,18 @@
  */
 
 import TeamAPI from '../../../lib/team/team.api'
-import { loggedInUserId } from './auth0.hook.mock'
+import {
+  loggedInUserEmail,
+  loggedInUserFirstName,
+  loggedInUserFullName,
+  loggedInUserId,
+  loggedInUserLastName
+} from './auth0.hook.mock'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
 import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
 
-import { UserInvitationStatus } from '../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 import { type Team } from '../../../lib/team'
 import { type Profile } from '../../../lib/auth/models/profile.model'
 import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/monitoring-alert/monitoring-alert.default'
@@ -66,7 +72,7 @@ export const monitoringAlertsParametersBgUnitMmol: MonitoringAlertsParameters = 
   reportingPeriod: 7
 }
 
-export const myTeamId = 'myTeamId'
+export const myFirstTeamId = 'myTeamId'
 export const mySecondTeamId = 'mySecondTeamId'
 export const myThirdTeamId = 'myThirdTeamId'
 export const filtersTeamId = 'filtersTeamId'
@@ -81,7 +87,7 @@ export const filtersTeamName = 'Team used to test the patients filters'
 export const buildTeamOne = (): Team => {
   return {
     name: myFirstTeamName,
-    id: myTeamId,
+    id: myFirstTeamId,
     code: '036038775',
     type: TeamType.medical,
     phone: '0476000000',
@@ -91,7 +97,7 @@ export const buildTeamOne = (): Team => {
       userId: loggedInUserId,
       role: TeamMemberRole.admin,
       profile: {
-        email: 'hey@hey.hey',
+        email: loggedInUserEmail,
         firstName: 'Yourloops UI 28.0',
         fullName: 'Yourloops UI 28.0 HCP 0',
         hcpProfession: HcpProfession.other,
@@ -99,8 +105,8 @@ export const buildTeamOne = (): Team => {
         privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
         termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
       } as Profile,
-      status: UserInvitationStatus.accepted,
-      email: 'ylp.ui.test.hcp.28@diabeloop.fr'
+      status: UserInviteStatus.Accepted,
+      email: loggedInUserEmail
     }]
   }
 }
@@ -118,7 +124,7 @@ export const buildTeamTwo = (): Team => {
       userId: loggedInUserId,
       role: TeamMemberRole.admin,
       profile: {
-        email: 'ylp.ui.test.hcp.28@diabeloop.fr',
+        email: loggedInUserEmail,
         firstName: 'Yourloops UI 28.0',
         fullName: 'Yourloops UI 28.0 HCP 0',
         hcpProfession: HcpProfession.other,
@@ -126,8 +132,8 @@ export const buildTeamTwo = (): Team => {
         privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
         termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
       } as Profile,
-      status: UserInvitationStatus.accepted,
-      email: 'ylp.ui.test.hcp.28@diabeloop.fr'
+      status: UserInviteStatus.Accepted,
+      email: loggedInUserEmail
     }],
     monitoringAlertsParameters
   }
@@ -146,30 +152,30 @@ export const buildTeamThree = (): Team => {
       userId: loggedInUserId,
       role: TeamMemberRole.admin,
       profile: {
-        email: 'ylp.ui.test.hcp.28@diabeloop.fr',
-        firstName: 'Yourloops UI 28.0',
-        fullName: 'Yourloops UI 28.0 HCP 0',
+        email: loggedInUserEmail,
+        firstName: loggedInUserFirstName,
+        fullName: loggedInUserFullName,
         hcpProfession: HcpProfession.other,
-        lastName: 'HCP 0',
+        lastName: loggedInUserLastName,
         privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
         termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
       } as Profile,
-      status: UserInvitationStatus.accepted,
-      email: 'ylp.ui.test.hcp.28@diabeloop.fr'
+      status: UserInviteStatus.Accepted,
+      email: loggedInUserEmail
     }, {
       userId: '4d9afc649ae4',
       role: TeamMemberRole.admin,
       profile: {
-        email: 'ylp.ui.test.hcp.28@diabeloop.fr',
-        firstName: 'Yourloops UI 28.1',
-        fullName: 'Yourloops UI 28.1 HCP 1',
+        email: 'fake@member.fr',
+        firstName: 'Fake',
+        fullName: 'Fake Member',
         hcpProfession: HcpProfession.other,
-        lastName: 'HCP 1',
+        lastName: 'Member',
         privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
         termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
       } as Profile,
-      status: UserInvitationStatus.accepted,
-      email: 'ylp.ui.test.hcp.28.1@diabeloop.fr'
+      status: UserInviteStatus.Accepted,
+      email: 'fake@member.fr'
     }],
     monitoringAlertsParameters
   }
@@ -188,15 +194,15 @@ export const buildFiltersTeam = (): Team => {
       userId: loggedInUserId,
       role: TeamMemberRole.admin,
       profile: {
-        email: 'filters@user.com',
-        firstName: 'Test',
-        lastName: 'Patients Filters',
-        fullName: 'Test Patients Filters',
+        email: loggedInUserEmail,
+        firstName: loggedInUserFirstName,
+        lastName: loggedInUserLastName,
+        fullName: loggedInUserFullName,
         hcpProfession: HcpProfession.other,
         privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
         termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
       } as Profile,
-      status: UserInvitationStatus.accepted,
+      status: UserInviteStatus.Accepted,
       email: 'filters@user.com'
     }]
   }
@@ -238,4 +244,11 @@ export const buildAvailableTeams = (): Team[] => {
 
 export const mockTeamAPI = () => {
   jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue(buildAvailableTeams())
+  jest.spyOn(TeamAPI, 'createTeam').mockRejectedValue('Mocked error')
+}
+
+export const mockTeamApiForTeamCreation = () => {
+  const newTeam = { id: 'new-team-id', name: '🦁', type: TeamType.medical, members: [], monitoringAlertsParameters }
+  jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue(buildAvailableTeams().concat(newTeam as Team))
+  jest.spyOn(TeamAPI, 'createTeam').mockResolvedValue(newTeam as ITeam)
 }

@@ -28,14 +28,13 @@
 import PatientApi from '../../../lib/patient/patient.api'
 import {
   patient1AsTeamMember,
+  patient2AsTeamMember,
   patient3AsTeamMember,
   PATIENTS_BY_TEAMID,
-  pendingPatientAsTeamMember,
-  patient2AsTeamMember
+  pendingPatientAsTeamMember
 } from '../data/patient.api.data'
 
 export const mockPatientApiForPatients = () => {
-  jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1AsTeamMember])
   jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
 }
 

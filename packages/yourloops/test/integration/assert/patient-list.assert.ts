@@ -37,11 +37,9 @@ import {
   updatePatientsFilters
 } from './patient-filters.assert'
 import { changeTeamScope } from './header.assert'
-import { type createBrowserRouter } from 'react-router-dom'
 import { patient1, patient2, patient3, patientWithMmol, pendingPatient } from '../data/patient.api.data'
 import NotificationApi from '../../../lib/notifications/notification.api'
-
-export type Router = ReturnType<typeof createBrowserRouter>
+import { type Router } from '../models/router.model'
 
 export const checkDataGridAfterSinglePatientFilter = (dataGridRow: HTMLElement, rowContent: string): void => {
   expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
@@ -83,7 +81,7 @@ export const checkPatientListPendingTab = async (router: Router) => {
   await userEvent.click(pendingTab)
   const dataGridPendingRows = screen.getByTestId('pending-patient-list-grid')
   expect(within(dataGridPendingRows).getAllByRole('row')).toHaveLength(2)
-  expect(dataGridPendingRows).toHaveTextContent('Invite sent byDateEmailActionsN/AN/Apending-patient@diabeloop.frResend inviteCancel')
+  expect(dataGridPendingRows).toHaveTextContent('Invite sent byDateEmailActionsYann BlancMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
 
   await userEvent.click(within(dataGridPendingRows).getAllByRole('row')[1])
   expect(router.state.location.pathname).toEqual('/home')
@@ -94,7 +92,7 @@ export const checkPatientListCurrentTab = async () => {
   await userEvent.click(currentTab)
   const dataGridCurrentRows = screen.getByTestId('current-patient-list-grid')
   expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(5)
-  expect(dataGridCurrentRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRHypoglycemiaLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages0%0%N/A')
+  expect(dataGridCurrentRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRHypoglycemiaLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages from the patient0%0%N/A')
 }
 
 export const checkPatientListCurrentTabForPrivateTeam = async () => {
@@ -112,7 +110,7 @@ export const checkPatientListFilters = async () => {
   expect(screen.queryByTestId('reset-filters-link')).not.toBeInTheDocument()
   const dataGridRowCurrent = screen.getByTestId('current-patient-list-grid')
   expect(within(dataGridRowCurrent).getAllByRole('row')).toHaveLength(7)
-  expect(dataGridRowCurrent).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRHypoglycemiaLast data updateActionsUnflag patient flagged@patient.frFlagged PatientJan 1, 1980No new messages0%0%N/AFlag patient hypoglycemia@patient.frHypoglycemia PatientJan 1, 1980No new messages0%0%N/AFlag patient no-data@patient.frNo Data PatientJan 1, 1980No new messages0%0%N/AFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages0%0%N/AFlag patient time-out-of-range@patient.frTime Out of Range PatientJan 1, 1980No new messages0%0%N/AFlag patient unread-messages@patient.frUnread Messages PatientJan 1, 1980The patient has sent you new messages0%0%N/AData calculated on the last 14 daysRows per page:101–6 of 6')
+  expect(dataGridRowCurrent).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRHypoglycemiaLast data updateActionsUnflag patient flagged@patient.frFlagged PatientJan 1, 1980No new messages from the patient0%0%N/AFlag patient hypoglycemia@patient.frHypoglycemia PatientJan 1, 1980No new messages from the patient0%0%N/AFlag patient no-data@patient.frNo Data PatientJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages from the patient0%0%N/AFlag patient time-out-of-range@patient.frTime Out of Range PatientJan 1, 1980No new messages from the patient0%0%N/AFlag patient unread-messages@patient.frUnread Messages PatientJan 1, 1980The patient has sent you new messages0%0%N/AData calculated on the last 14 daysRows per page:101–6 of 6')
 
   // Check the default values
   const filtersButton = screen.getByRole('button', { name: 'Filters' })
@@ -126,7 +124,7 @@ export const checkPatientListFilters = async () => {
   // check the manual flag toggle
   await updatePatientsFilters({ ...defaultToggles, manualFlagFilterToggle: true })
   expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
-  checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, 'Unflag patient flagged@patient.frFlagged PatientJan 1, 1980No new messages0%0%N/A')
+  checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, 'Unflag patient flagged@patient.frFlagged PatientJan 1, 1980No new messages from the patient0%0%N/A')
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, manualFlagFilterToggle: true })
 
@@ -136,7 +134,7 @@ export const checkPatientListFilters = async () => {
     manualFlagFilterToggle: true,
     outOfRangeFilterToggle: true
   })
-  checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, 'Flag patient time-out-of-range@patient.frTime Out of Range PatientJan 1, 1980No new messages0%0%N/A')
+  checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, 'Flag patient time-out-of-range@patient.frTime Out of Range PatientJan 1, 1980No new messages from the patient0%0%N/A')
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, outOfRangeFilterToggle: true })
 
@@ -146,7 +144,7 @@ export const checkPatientListFilters = async () => {
     outOfRangeFilterToggle: true,
     hypoglycemiaFilterToggle: true
   })
-  checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, 'Flag patient hypoglycemia@patient.frHypoglycemia PatientJan 1, 1980No new messages0%0%N/A')
+  checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, 'Flag patient hypoglycemia@patient.frHypoglycemia PatientJan 1, 1980No new messages from the patient0%0%N/A')
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, hypoglycemiaFilterToggle: true })
 
@@ -156,7 +154,7 @@ export const checkPatientListFilters = async () => {
     hypoglycemiaFilterToggle: true,
     dataNotTransferredFilterToggle: true
   })
-  checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, 'Flag patient no-data@patient.frNo Data PatientJan 1, 1980No new messages0%0%N/A')
+  checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, 'Flag patient no-data@patient.frNo Data PatientJan 1, 1980No new messages from the patient0%0%N/A')
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, dataNotTransferredFilterToggle: true })
 
@@ -185,8 +183,10 @@ export const checkPatientListFilters = async () => {
 
   expect(within(dataGridRowPending).getAllByRole('row')).toHaveLength(2)
   expect(dataGridRowPending).toHaveTextContent('Invite sent byDateEmailActions')
-  expect(dataGridRowPending).toHaveTextContent('N/AN/Apending-patient@diabeloop.frResend inviteCancel')
+  expect(dataGridRowPending).toHaveTextContent('N/AN/Apending-patient@diabeloop.fr')
   expect(dataGridRowPending).toHaveTextContent('Rows per page:101–1 of 1')
+  expect(within(dataGridRowPending).queryByRole('button', { name: 'Resend invite' })).not.toBeInTheDocument()
+  expect(within(dataGridRowPending).queryByRole('button', { name: 'Cancel' })).not.toBeInTheDocument()
 
   await changeTeamScope(filtersTeamName, myThirdTeamName)
   expect(PatientApi.getPatientsForHcp).toHaveBeenCalledWith(loggedInUserId, myThirdTeamId)
@@ -257,7 +257,7 @@ export const checkPatientListHideShowColumns = async () => {
   expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
 
-  expect(dataGridCurrentRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRHypoglycemiaLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages0%0%N/A')
+  expect(dataGridCurrentRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRHypoglycemiaLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages from the patient0%0%N/A')
 
   await userEvent.click(columnSettingsButton)
 
@@ -411,7 +411,7 @@ export const checkPatientListHideShowColumns = async () => {
   expect(screen.getByRole('columnheader', { name: 'Variance' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
 
-  expect(dataGridCurrentRows).toHaveTextContent('PatientAgeDate of birthGenderSystemMonitoring alertsMessagesTIRGMI (estimated HbA1C of last 3 months)HypoglycemiaVarianceLast data updateActionsFlag patient patient1@diabeloop.frPatient1 Groby43Jan 1, 1980MaleDBLG1No new messages0%N/A0%N/AN/AFlag patient patient2@diabeloop.frPatient2 Rouis43Jan 1, 1980FemaleDBLG1No new messages0%N/A0%N/AN/AFlag patient patient3@diabeloop.frPatient3 Srairi43Jan 1, 1980MaleDBLG1No new messages0%N/A0%N/AN/AFlag patient patient-mmol@diabeloop.frPatientMmol Perotto43Jan 1, 1980MaleDBLG1No new messages0%N/A0%N/AN/A')
+  expect(dataGridCurrentRows).toHaveTextContent('PatientAgeDate of birthGenderSystemMonitoring alertsMessagesTIRGMI (estimated HbA1C of last 3 months)HypoglycemiaVarianceLast data updateActionsFlag patient patient1@diabeloop.frPatient1 Groby43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient2@diabeloop.frPatient2 Rouis43Jan 1, 1980FemaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient3@diabeloop.frPatient3 Srairi43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient-mmol@diabeloop.frPatientMmol Perotto43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/A')
 
   await userEvent.click(columnSettingsButton)
   const columnSettingsPopoverForReset = screen.getByRole('presentation')
@@ -478,12 +478,12 @@ export const checkPatientListHideShowColumns = async () => {
   expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
 
-  expect(dataGridCurrentRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRHypoglycemiaLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages0%0%N/A')
+  expect(dataGridCurrentRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRHypoglycemiaLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages from the patient0%0%N/A')
 }
 
 const checkPatientListTooltips = async (outOfRangeTooltipValue: string, hypoglycemiaTooltipValue: string): Promise<void> => {
   const dataGridRows = screen.getByTestId('current-patient-list-grid')
-  expect(dataGridRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRHypoglycemiaLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages0%0%N/A')
+  expect(dataGridRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRHypoglycemiaLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages from the patient0%0%N/A')
   const monitoringAlertsColumnHeader = within(dataGridRows).getByText('Monitoring alerts')
   const tooltipText = 'Hover over the icons to learn more'
   expect(screen.queryByText(tooltipText)).not.toBeInTheDocument()
@@ -500,7 +500,7 @@ const checkPatientListTooltips = async (outOfRangeTooltipValue: string, hypoglyc
   await userEvent.hover(firstRowTimeSpentOutOfRangeIcon)
   const timeSpentOutOfRangeTooltip = await screen.findByRole('tooltip')
   expect(timeSpentOutOfRangeTooltip).toBeVisible()
-  expect(timeSpentOutOfRangeTooltip).toHaveTextContent('Out of the range: 10%.')
+  expect(timeSpentOutOfRangeTooltip).toHaveTextContent('Out of the range: 10%')
   expect(timeSpentOutOfRangeTooltip).toHaveTextContent(outOfRangeTooltipValue)
   expect(timeSpentOutOfRangeTooltip).toHaveTextContent('This value can be modified either in the care team settings or patient by patient.')
   await userEvent.unhover(firstRowTimeSpentOutOfRangeIcon)
@@ -513,7 +513,7 @@ const checkPatientListTooltips = async (outOfRangeTooltipValue: string, hypoglyc
   await userEvent.hover(firstRowHypoglycemiaIcon)
   const hypoglycemiaTooltip = await screen.findByRole('tooltip')
   expect(hypoglycemiaTooltip).toBeVisible()
-  expect(hypoglycemiaTooltip).toHaveTextContent('Hypoglycemia: 20%.')
+  expect(hypoglycemiaTooltip).toHaveTextContent('Hypoglycemia: 20%')
   expect(hypoglycemiaTooltip).toHaveTextContent(hypoglycemiaTooltipValue)
   expect(hypoglycemiaTooltip).toHaveTextContent('This value can be modified either in the care team settings or patient by patient.')
   await userEvent.unhover(firstRowHypoglycemiaIcon)
@@ -526,7 +526,7 @@ const checkPatientListTooltips = async (outOfRangeTooltipValue: string, hypoglyc
   await userEvent.hover(firstRowNoDataIcon)
   const noDataTooltip = await screen.findByRole('tooltip')
   expect(noDataTooltip).toBeVisible()
-  expect(noDataTooltip).toHaveTextContent('Data not transmitted: 30%.')
+  expect(noDataTooltip).toHaveTextContent('Data not transmitted: 30%')
   expect(noDataTooltip).toHaveTextContent('Alert triggered when 15% of data are not transmitted over the period considered.')
   expect(noDataTooltip).toHaveTextContent('This value can be modified either in the care team settings or patient by patient.')
   await userEvent.unhover(firstRowNoDataIcon)
@@ -539,7 +539,7 @@ const checkPatientListTooltips = async (outOfRangeTooltipValue: string, hypoglyc
   await userEvent.hover(firstRowMessageIcon)
   const messageTooltip = await screen.findByRole('tooltip')
   expect(messageTooltip).toBeVisible()
-  expect(messageTooltip).toHaveTextContent('No new messages')
+  expect(messageTooltip).toHaveTextContent('No new messages from the patient')
   await userEvent.unhover(firstRowMessageIcon)
   await waitFor(() => {
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
@@ -600,20 +600,6 @@ export const checkMonitoringAlertsIconsInactiveForFirstPatient = async (): Promi
   expect(firstRowNoDataIcon).toHaveStyle(`color: ${disabledColorAsRgba};`)
 }
 
-export const checkPendingPatientManagementMedicalTeam = async () => {
-  // We go to the pending tab
-  const pendingTab = screen.getByRole('tab', { name: 'Pending' })
-  await userEvent.click(pendingTab)
-
-  // Check that the buttons are disabled
-  expect(screen.getByRole('button', { name: 'Remove patient pending-patient@diabeloop.fr' })).toBeDisabled()
-  expect(screen.getByRole('button', { name: 'Resend invite pending-patient@diabeloop.fr' })).toBeDisabled()
-
-  // We go back to the current tab
-  const currentTab = screen.getByRole('tab', { name: 'Current' })
-  await userEvent.click(currentTab)
-}
-
 export const checkRemovePendingPatientMedicalTeam = async () => {
   // We go to the pending tab
   const pendingTab = screen.getByRole('tab', { name: 'Pending' })
@@ -622,26 +608,23 @@ export const checkRemovePendingPatientMedicalTeam = async () => {
   // We check that the patient list is correct
   const pendingPatientList = screen.getByTestId('pending-patient-list-grid')
   expect(pendingPatientList).toHaveTextContent('Invite sent byDateEmailActions')
-  expect(pendingPatientList).toHaveTextContent('Eric ArdMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
+  expect(pendingPatientList).toHaveTextContent('Yann BlancMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
   expect(pendingPatientList).toHaveTextContent('Rows per page:101–1 of 1')
 
   // We open the dialog to cancel a pending invite
   const cancelInviteButton = screen.getByRole('button', { name: 'Remove patient pending-patient@diabeloop.fr' })
   await userEvent.click(cancelInviteButton)
   const cancelInviteDialog = screen.getByRole('dialog')
-  expect(cancelInviteDialog).toHaveTextContent('Remove Pending Patient from A - MyThirdTeam - to be deleted')
-  expect(cancelInviteDialog).toHaveTextContent('Are you sure you want to remove Pending Patient from A - MyThirdTeam - to be deleted?')
-  expect(cancelInviteDialog).toHaveTextContent('You and the care team will no longer have access to their data.')
-  expect(cancelInviteDialog).toHaveTextContent('If you want to remove the patient from another care team, you must first select the care team from the dropdown menu at the top right of YourLoops.')
+  expect(cancelInviteDialog).toHaveTextContent('Are you sure you want to cancel the invite of pending-patient@diabeloop.fr?')
+  expect(cancelInviteDialog).toHaveTextContent('The patient will no longer see on YourLoops the invite notification to share their data.')
 
-  // We click on cancel (meaning that we do not cancel the pending invite... Very confusing)
-  const cancelButtonDialog = within(cancelInviteDialog).getByRole('button', { name: 'Cancel' })
-  await userEvent.click(cancelButtonDialog)
+  const closeButtonDialog = within(cancelInviteDialog).getByRole('button', { name: 'Keep it' })
+  await userEvent.click(closeButtonDialog)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 
   // We open the dialog again and click on the remove button
   await userEvent.click(cancelInviteButton)
-  const removeInviteButton = within(screen.getByRole('dialog')).getByRole('button', { name: 'Remove patient' })
+  const removeInviteButton = within(screen.getByRole('dialog')).getByRole('button', { name: 'Cancel invite' })
   await userEvent.click(removeInviteButton)
 
   // We check that the API has been properly called
@@ -653,7 +636,7 @@ export const checkRemovePendingPatientMedicalTeam = async () => {
 
   // We check that the pending patient list is still the same
   expect(pendingPatientList).toHaveTextContent('Invite sent byDateEmailActions')
-  expect(pendingPatientList).toHaveTextContent('Eric ArdMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
+  expect(pendingPatientList).toHaveTextContent('Yann BlancMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
   expect(pendingPatientList).toHaveTextContent('Rows per page:101–1 of 1')
 
   // We go back to the current tab
@@ -669,7 +652,7 @@ export const checkReinvitePendingPatientMedicalTeam = async () => {
   // We check that the patient list is correct
   const pendingPatientList = screen.getByTestId('pending-patient-list-grid')
   expect(pendingPatientList).toHaveTextContent('Invite sent byDateEmailActions')
-  expect(pendingPatientList).toHaveTextContent('Eric ArdMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
+  expect(pendingPatientList).toHaveTextContent('Yann BlancMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
   expect(pendingPatientList).toHaveTextContent('Rows per page:101–1 of 1')
 
   // We open the dialog to resend an invite to a pending patient
@@ -700,14 +683,14 @@ export const checkReinvitePendingPatientMedicalTeam = async () => {
   // We check that the team code dialog is opened with the correct content and we close it
   const teamCodeDialog = screen.getByRole('dialog')
   expect(teamCodeDialog).toHaveTextContent('A - MyThirdTeam - to be deletedCommunicate this identification code to your patient during a consultation so they can verify your identity.')
-  expect(teamCodeDialog).toHaveTextContent('This identification code is always available in the Care team page.263 - 381 - 988Ok')
+  expect(teamCodeDialog).toHaveTextContent('This identification code is always available in the Care team settings page.263 - 381 - 988Ok')
   const closeTeamCodeDialogButton = within(teamCodeDialog).getByRole('button', { name: 'Ok' })
   await userEvent.click(closeTeamCodeDialogButton)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 
   // We check that the pending patient list is still the same
   expect(pendingPatientList).toHaveTextContent('Invite sent byDateEmailActions')
-  expect(pendingPatientList).toHaveTextContent('Eric ArdMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
+  expect(pendingPatientList).toHaveTextContent('Yann BlancMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
   expect(pendingPatientList).toHaveTextContent('Rows per page:101–1 of 1')
 
   // We go back to the current tab

@@ -32,6 +32,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState
 } from 'react'
 import _ from 'lodash'
@@ -47,7 +48,7 @@ import { type TeamContext } from './models/team-context.model'
 import { type TeamMember } from './models/team-member.model'
 import { type ITeam } from './models/i-team.model'
 import { TeamMemberRole } from './models/enums/team-member-role.enum'
-import { UserInvitationStatus } from './models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from './models/enums/user-invite-status.enum'
 import { TeamType } from './models/enums/team-type.enum'
 import SpinningLoader from '../../components/loaders/spinning-loader'
 
@@ -63,6 +64,7 @@ function TeamContextImpl(): TeamContext {
   const [initialized, setInitialized] = useState<boolean>(false)
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const shouldMakeInitialApiCallToGetTeams = useRef(true)
 
   const user = authHook.user
   if (!user) {
@@ -111,7 +113,7 @@ function TeamContextImpl(): TeamContext {
     setTeams(result.teams)
   }
 
-  const createTeam = async (team: Partial<Team>): Promise<void> => {
+  const createTeam = async (team: Partial<Team>): Promise<ITeam> => {
     const apiTeam: Partial<ITeam> = {
       address: team.address,
       email: team.email,
@@ -119,9 +121,10 @@ function TeamContextImpl(): TeamContext {
       phone: team.phone,
       type: team.type
     }
-    await TeamApi.createTeam(apiTeam)
+    const newTeam = await TeamApi.createTeam(apiTeam)
     refresh()
     metrics.send('team_management', 'create_care_team', _.isEmpty(team.email) ? 'email_not_filled' : 'email_filled')
+    return newTeam
   }
 
   const updateTeam = async (team: Team): Promise<void> => {
@@ -144,7 +147,7 @@ function TeamContextImpl(): TeamContext {
     if (!ourselve) {
       throw new Error('We are not a member of the team!')
     }
-    if (ourselve.role === TeamMemberRole.admin && ourselve.status === UserInvitationStatus.accepted && TeamUtils.teamHasOnlyOneMember(team)) {
+    if (ourselve.role === TeamMemberRole.admin && ourselve.status === UserInviteStatus.Accepted && TeamUtils.teamHasOnlyOneMember(team)) {
       await TeamApi.deleteTeam(team.id)
       metrics.send('team_management', 'delete_team')
     } else {
@@ -155,7 +158,7 @@ function TeamContextImpl(): TeamContext {
   }
 
   const removeMember = async (member: TeamMember, teamId: string): Promise<void> => {
-    if (member.status === UserInvitationStatus.pending) {
+    if (member.status === UserInviteStatus.Pending) {
       if (!member.invitationId) {
         throw new Error('Missing invite!')
       }
@@ -192,7 +195,8 @@ function TeamContextImpl(): TeamContext {
   }
 
   useEffect(() => {
-    if (!initialized) {
+    if (!initialized && shouldMakeInitialApiCallToGetTeams.current) {
+      shouldMakeInitialApiCallToGetTeams.current = false
       fetchTeams()
     }
   }, [initialized, fetchTeams])

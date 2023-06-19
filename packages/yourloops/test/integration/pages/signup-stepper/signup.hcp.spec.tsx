@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import {
   getAccessTokenWithPopupMock,
   loggedInUserEmail,
@@ -34,7 +34,7 @@ import {
 } from '../../mock/auth0.hook.mock'
 import {
   checkAccountSelectorStep,
-  checkConsentStep,
+  checkConsentStepHcp,
   checkProfileStep,
   checkStepper
 } from '../../assert/signup-stepper.assert'
@@ -45,12 +45,13 @@ import { renderPage } from '../../utils/render'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
+import { type Profile } from '../../../../lib/auth/models/profile.model'
 
 describe('Signup stepper as hcp', () => {
   const { updateAuth0UserMetadataMock } = mockUserApi()
   const firstName = 'Lara'
   const lastName = 'Tatouille'
-  const expectedProfile = {
+  const expectedProfile: Profile = {
     email: loggedInUserEmail,
     firstName,
     lastName,
@@ -58,6 +59,7 @@ describe('Signup stepper as hcp', () => {
     privacyPolicy: { isAccepted: true, acceptanceTimestamp: expect.any(String) },
     termsOfUse: { isAccepted: true, acceptanceTimestamp: expect.any(String) },
     contactConsent: { isAccepted: true, acceptanceTimestamp: expect.any(String) },
+    hcpConfirmAck: { isAccepted: true, acceptanceTimestamp: expect.any(String) },
     hcpProfession: HcpProfession.nurse
   }
 
@@ -81,7 +83,7 @@ describe('Signup stepper as hcp', () => {
     // Step two
     const feedbackCheckbox = screen.queryByLabelText('Feedback checkbox')
 
-    await checkConsentStep()
+    await checkConsentStepHcp()
     expect(feedbackCheckbox).toBeVisible()
 
     await userEvent.click(feedbackCheckbox)
@@ -98,9 +100,7 @@ describe('Signup stepper as hcp', () => {
     await userEvent.click(screen.getByText('Nurse'))
 
     expect(createButton).not.toBeDisabled()
-    await act(async () => {
-      await userEvent.click(screen.getByText('Create account'))
-    })
+    await userEvent.click(screen.getByText('Create account'))
 
     expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(
       loggedInUserId,

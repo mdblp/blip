@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import {
   getAccessTokenWithPopupMock,
   loggedInUserEmail,
@@ -34,7 +34,7 @@ import {
 } from '../../mock/auth0.hook.mock'
 import {
   checkAccountSelectorStep,
-  checkConsentStep,
+  checkConsentStepCaregiver,
   checkProfileStep,
   checkStepper
 } from '../../assert/signup-stepper.assert'
@@ -76,7 +76,7 @@ describe('Signup stepper as caregiver', () => {
     await userEvent.click(screen.getByText('Next'))
 
     // Step two
-    await checkConsentStep()
+    await checkConsentStepCaregiver()
     expect(screen.queryByLabelText('Feedback checkbox')).not.toBeInTheDocument()
     await userEvent.click(screen.getByText('Next'))
 
@@ -85,9 +85,7 @@ describe('Signup stepper as caregiver', () => {
     await checkProfileStep(firstName, lastName)
     expect(screen.queryByTestId('hcp-profession-selector')).not.toBeInTheDocument()
     expect(createButton).not.toBeDisabled()
-    await act(async () => {
-      await userEvent.click(createButton)
-    })
+    await userEvent.click(createButton)
     expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(
       loggedInUserId,
       expect.objectContaining({

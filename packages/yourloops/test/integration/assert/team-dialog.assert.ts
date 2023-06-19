@@ -26,17 +26,20 @@
  */
 
 import TeamAPI from '../../../lib/team/team.api'
-import { act, fireEvent, screen, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { PhonePrefixCode } from '../../../lib/utils'
 import userEvent from '@testing-library/user-event'
+import { mockTeamApiForTeamCreation } from '../mock/team.api.mock'
+import { type Router } from '../models/router.model'
 
 export const checkCreateCareTeamDialog = async () => {
   jest.spyOn(TeamAPI, 'createTeam').mockResolvedValue(undefined)
   const teamMenu = screen.getByLabelText('Open team selection menu')
   await userEvent.click(teamMenu)
-  await userEvent.click(screen.getByText('Create a new care team'))
+  await userEvent.click(screen.getByText('Create a care team'))
   const dialogTeam = screen.getByRole('dialog')
   const createTeamButton = within(dialogTeam).getByRole('button', { name: 'Create team' })
+  const cancelButton = within(dialogTeam).getByRole('button', { name: 'Cancel' })
   const nameInput = within(dialogTeam).getByRole('textbox', { name: 'Name' })
   const address1Input = within(dialogTeam).getByRole('textbox', { name: 'Address 1' })
   const address2Input = within(dialogTeam).getByRole('textbox', { name: 'Address 2' })
@@ -105,21 +108,101 @@ export const checkCreateCareTeamDialog = async () => {
   await userEvent.type(emailInput, teamEmail)
   expect(createTeamButton).toBeEnabled()
 
-  await act(async () => {
-    await userEvent.click(createTeamButton)
-  })
+  await userEvent.click(cancelButton)
+
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+}
+
+export const checkTeamCreationFailure = async (): Promise<void> => {
+  const teamName = '🦁'
+  const teamAddress = 'Rue du Lion'
+  const teamCity = 'Lyon'
+  const teamZipCode = '69000'
+  const teamPhoneNumber = '0600000000'
+
+  const teamMenu = screen.getByLabelText('Open team selection menu')
+  await userEvent.click(teamMenu)
+  await userEvent.click(screen.getByText('Create a care team'))
+
+  const dialog = screen.getByRole('dialog')
+  const nameInput = within(dialog).getByRole('textbox', { name: 'Name' })
+  const address1Input = within(dialog).getByRole('textbox', { name: 'Address 1' })
+  const zipcodeInput = within(dialog).getByRole('textbox', { name: 'Zipcode' })
+  const cityInput = within(dialog).getByRole('textbox', { name: 'City (State / Province)' })
+  const phoneNumberInput = within(dialog).getByRole('textbox', { name: 'Phone number' })
+  const createTeamButton = within(dialog).getByRole('button', { name: 'Create team' })
+
+  await userEvent.type(nameInput, teamName)
+  await userEvent.type(address1Input, teamAddress)
+  await userEvent.type(cityInput, teamCity)
+  await userEvent.type(phoneNumberInput, teamPhoneNumber)
+  await userEvent.type(zipcodeInput, teamZipCode)
+  expect(createTeamButton).toBeEnabled()
+
+  await userEvent.click(createTeamButton)
   expect(TeamAPI.createTeam).toHaveBeenCalledWith({
     address: {
       city: teamCity,
-      country: 'AT',
+      country: 'FR',
       line1: teamAddress,
       zip: teamZipCode
     },
-    email: teamEmail,
+    email: undefined,
     name: teamName,
     phone: teamPhoneNumber,
     type: undefined
   })
 
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  expect(screen.getByText('Impossible to create the team. Please try again later.')).toBeVisible()
+}
+
+export const checkTeamCreationSuccess = async (router: Router): Promise<void> => {
+  const teamName = '🦁'
+  const teamAddress = 'Rue du Lion'
+  const teamCity = 'Lyon'
+  const teamZipCode = '69000'
+  const teamPhoneNumber = '0600000000'
+
+  const teamMenu = screen.getByLabelText('Open team selection menu')
+  await userEvent.click(teamMenu)
+  await userEvent.click(screen.getByText('Create a care team'))
+
+  const dialog = screen.getByRole('dialog')
+  const nameInput = within(dialog).getByRole('textbox', { name: 'Name' })
+  const address1Input = within(dialog).getByRole('textbox', { name: 'Address 1' })
+  const zipcodeInput = within(dialog).getByRole('textbox', { name: 'Zipcode' })
+  const cityInput = within(dialog).getByRole('textbox', { name: 'City (State / Province)' })
+  const phoneNumberInput = within(dialog).getByRole('textbox', { name: 'Phone number' })
+  const createTeamButton = within(dialog).getByRole('button', { name: 'Create team' })
+
+  await userEvent.type(nameInput, teamName)
+  await userEvent.type(address1Input, teamAddress)
+  await userEvent.type(cityInput, teamCity)
+  await userEvent.type(phoneNumberInput, teamPhoneNumber)
+  await userEvent.type(zipcodeInput, teamZipCode)
+  expect(createTeamButton).toBeEnabled()
+
+  mockTeamApiForTeamCreation()
+
+  await userEvent.click(createTeamButton)
+  expect(TeamAPI.createTeam).toHaveBeenCalledWith({
+    address: {
+      city: teamCity,
+      country: 'FR',
+      line1: teamAddress,
+      zip: teamZipCode
+    },
+    email: undefined,
+    name: teamName,
+    phone: teamPhoneNumber,
+    type: undefined
+  })
+
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  expect(screen.getByText('Team successfully created.')).toBeVisible()
+  expect(router.state.location.pathname).toEqual('/team')
+  await waitFor(() => {
+    expect(within(teamMenu).getByText(teamName)).toBeVisible()
+  })
 }

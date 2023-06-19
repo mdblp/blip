@@ -94,7 +94,7 @@ const checkTeamScopeMenu = async (header: BoundFunctions<typeof queries>, teamMe
     }
     expect(teamScopeMenu.getByText(team.name)).toBeVisible()
   })
-  expect(teamScopeMenu.getByText('Create a new care team')).toBeVisible()
+  expect(teamScopeMenu.getByText('Create a care team')).toBeVisible()
 
   await userEvent.click(screen.getByRole('presentation').firstChild as HTMLElement)
   expect(screen.queryByTestId('team-scope-menu')).not.toBeInTheDocument()
@@ -105,9 +105,9 @@ export const checkHcpHeader = async (headerInfo: HeaderInfo) => {
 
   expect(header.getByText('Patients')).toBeVisible()
   if (headerInfo.teamMenuInfo.isSelectedTeamPrivate) {
-    expect(header.queryByText('Care team')).not.toBeInTheDocument()
+    expect(header.queryByText('Care team settings')).not.toBeInTheDocument()
   } else {
-    expect(header.getByText('Care team')).toBeVisible()
+    expect(header.getByText('Care team settings')).toBeVisible()
   }
 
   await checkTeamScopeMenu(header, headerInfo.teamMenuInfo)
@@ -116,7 +116,7 @@ export const checkHcpHeader = async (headerInfo: HeaderInfo) => {
 }
 
 export const checkCaregiverHeader = async (fullName: string) => {
-  const header = within(screen.getByTestId('app-main-header'))
+  const header = within(await screen.findByTestId('app-main-header'))
   expect(header.queryByLabelText('Open team menu')).not.toBeInTheDocument()
 
   await checkUserMenu(header, fullName, UserRole.Caregiver)
@@ -124,7 +124,7 @@ export const checkCaregiverHeader = async (fullName: string) => {
 }
 
 export const checkPatientHeader = async (fullName: string) => {
-  const header = within(screen.getByTestId('app-main-header'))
+  const header = within(await screen.findByTestId('app-main-header'))
   expect(header.getByLabelText('Open team menu')).toBeVisible()
 
   await checkUserMenu(header, fullName, UserRole.Patient)

@@ -25,10 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import * as authHookMock from '../../../../lib/auth'
 import { type User } from '../../../../lib/auth'
-import * as patientContext from '../../../../lib/patient/patient.provider'
 import * as alertMock from '../../../../components/utils/snackbar'
 import useProfilePageContextHook from '../../../../pages/profile/profile-page-context.hook'
 import { type Profile } from '../../../../lib/auth/models/profile.model'
@@ -41,7 +40,6 @@ import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.
 import { Unit } from 'medical-domain'
 
 jest.mock('../../../../lib/auth')
-jest.mock('../../../../lib/patient/patient.provider')
 jest.mock('../../../../components/utils/snackbar')
 
 describe('Profile page context hook', () => {
@@ -78,12 +76,8 @@ describe('Profile page context hook', () => {
   const updateProfileMock = jest.fn()
   const updateSettingsMock = jest.fn()
   const updatePreferencesMock = jest.fn()
-  const refreshPatientMock = jest.fn()
 
   beforeEach(() => {
-    (patientContext.usePatientContext as jest.Mock).mockImplementation(() => ({
-      refresh: refreshPatientMock
-    }));
     (alertMock.useAlert as jest.Mock).mockImplementation(() => ({
       success: onSuccessAlertMock,
       error: onErrorAlertMock
@@ -109,36 +103,26 @@ describe('Profile page context hook', () => {
     })
   })
 
-  async function renderCustomHook() {
-    let hook
-    await act(async () => {
-      hook = renderHook(() => useProfilePageContextHook())
-    })
-    return hook
-  }
-
   it('should save profile when user change some fields', async () => {
     const firstName = 'Odile'
     const lastName = 'Deray'
     const expectedProfile = { ...profile, firstName, lastName, fullName: `${firstName} ${lastName}` }
     const expectedSettings = { ...settings, units: { bg: Unit.MilligramPerDeciliter } }
     const expectedPreferences = { displayLanguageCode: 'en' }
-
+    const { result } = renderHook(() => useProfilePageContextHook())
+    const { updateProfileForm } = result.current
     await act(async () => {
-      const { result } = await renderCustomHook()
-      const { updateProfileForm } = result.current
       updateProfileForm(ProfileFormKey.firstName, firstName)
       updateProfileForm(ProfileFormKey.lastName, lastName)
       updateProfileForm(ProfileFormKey.units, Unit.MilligramPerDeciliter)
       updateProfileForm(ProfileFormKey.lang, 'en')
-
+    })
+    await act(async () => {
       await result.current.saveProfile()
     })
-
     expect(updateProfileMock).toHaveBeenCalledWith(expectedProfile)
     expect(updateSettingsMock).toHaveBeenCalledWith(expectedSettings)
     expect(updatePreferencesMock).toHaveBeenCalledWith(expectedPreferences)
-    expect(refreshPatientMock).toHaveBeenCalled()
     expect(onSuccessAlertMock).toHaveBeenCalled()
   })
 
@@ -154,9 +138,9 @@ describe('Profile page context hook', () => {
         } as User
       }
     })
-    await act(async () => {
-      const { result } = await renderCustomHook()
 
+    const { result } = renderHook(() => useProfilePageContextHook())
+    await act(async () => {
       await result.current.saveProfile()
     })
     expect(onErrorAlertMock).toHaveBeenCalled()

@@ -21,16 +21,17 @@ import i18next from 'i18next'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { utils as vizUtils } from 'tidepool-viz'
-import { TimeService } from 'medical-domain'
+import { DatumType, TimeService } from 'medical-domain'
 import SubNav, { weekDays } from './trendssubnav'
 import Stats from './stats'
 import Footer from './footer'
 import Box from '@mui/material/Box'
 import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
-import ChartType from 'yourloops/enum/chart-type.enum'
+import { ChartTypes } from 'yourloops/enum/chart-type.enum'
 import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsContainer, TrendsProvider } from 'dumb'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
+import metrics from 'yourloops/lib/metrics'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -100,16 +101,13 @@ class Trends extends React.Component {
     onClickRefresh: PropTypes.func.isRequired,
     onSwitchToDaily: PropTypes.func.isRequired,
     onDatetimeLocationChange: PropTypes.func.isRequired,
-    trackMetric: PropTypes.func.isRequired,
-    updateChartPrefs: PropTypes.func.isRequired,
-    dialogRangeDatePicker: PropTypes.func.isRequired
+    updateChartPrefs: PropTypes.func.isRequired
   }
 
   constructor(props) {
     super(props)
 
     this.bgBounds = reshapeBgClassesToBgBounds(props.bgPrefs)
-    this.chartType = ChartType.Trends
 
     this.log = bows('Trends')
 
@@ -128,12 +126,12 @@ class Trends extends React.Component {
       currentCbgData: []
     }
 
+    this.trackMetric = metrics.send
+
 
     this.handleClickBack = this.handleClickBack.bind(this)
-    this.handleClickDaily = this.handleClickDaily.bind(this)
     this.handleClickForward = this.handleClickForward.bind(this)
     this.handleClickMostRecent = this.handleClickMostRecent.bind(this)
-    this.handleClickTrends = this.handleClickTrends.bind(this)
     this.handleSelectDate = this.handleSelectDate.bind(this)
     this.toggleDay = this.toggleDay.bind(this)
     this.toggleWeekdays = this.toggleWeekdays.bind(this)
@@ -153,15 +151,15 @@ class Trends extends React.Component {
 
   componentDidMount() {
     this.log.debug('Mounting...')
-
     this.setState({ updatingDates: true }, () => {
-      this.clampEndpoints().catch((reason) => {
-        this.log.error(reason)
-      }).finally(() => {
-        this.setState({ updatingDates: false }, () => {
+      this.clampEndpoints()
+        .catch((reason) => {
+          this.log.error(reason)
+        })
+        .finally(() => {
+          this.setState({ updatingDates: false })
           this.log.debug('Mounting finished')
         })
-      })
     })
   }
 
@@ -247,11 +245,11 @@ class Trends extends React.Component {
     return Math.ceil(this.maxRange / TimeService.MS_IN_DAY)
   }
 
-  updateExtendsSize(/** @type {number} */ newExtend, /** @type {(()=>void)|undefined} */ cb) {
+  updateExtendsSize(/** @type {number} */ newExtend) {
     const prefs = _.cloneDeep(this.props.chartPrefs)
     prefs.trends.extentSize = Math.min(newExtend, this.getMaxExtendsSize())
     this.log.info('updateExtendsSize', prefs.trends.extentSize)
-    this.props.updateChartPrefs(prefs, cb)
+    this.props.updateChartPrefs(prefs)
   }
 
   /**
@@ -267,11 +265,10 @@ class Trends extends React.Component {
     if (availDays < extentSize) {
       const center = this.startDate.valueOf() + this.maxRange / 2
       this.log.debug('Too few days available, update date and range to', { center, maxRange: this.maxRange })
-      return this.props.onDatetimeLocationChange(center, this.maxRange).then(() => {
-        return new Promise((resolve) => {
-          this.updateExtendsSize(availDays, () => resolve(true))
+      return this.props.onDatetimeLocationChange(center, this.maxRange)
+        .then(() => {
+          this.updateExtendsSize(availDays)
         })
-      })
     }
 
     const msRange = Math.max(extentSize, 1) * TimeService.MS_IN_DAY
@@ -340,7 +337,7 @@ class Trends extends React.Component {
   }
 
   getTitle() {
-    const { loading, tidelineData, dialogRangeDatePicker } = this.props
+    const { loading, tidelineData } = this.props
     const { atMostRecent } = this.state
 
     const [startDate, endDate] = this.getMomentEndpoints()
@@ -355,11 +352,10 @@ class Trends extends React.Component {
         const extendSize = (mEndDate.valueOf() - mStartDate.valueOf()) / TimeService.MS_IN_DAY
 
         this.setState({ updatingDates: true }, () => {
-          this.updateExtendsSize(extendSize, () => {
-            this.setEndPoints(mStartDate, mEndDate)
-            this.setState({ updatingDates: false })
-          })
-          this.props.trackMetric('data_visualization', 'select_period', 'date_picker', extendSize)
+          this.updateExtendsSize(extendSize)
+          this.setEndPoints(mStartDate, mEndDate)
+          this.setState({ updatingDates: false })
+          this.trackMetric('data_visualization', 'select_period', 'date_picker', extendSize)
         })
       }
     }
@@ -375,7 +371,7 @@ class Trends extends React.Component {
       <TrendsDatePicker
         atMostRecent={atMostRecent}
         disabled={loading}
-        dialogRangeDatePicker={dialogRangeDatePicker}
+        loading={loading}
         displayedDate={loading ? t('Loading...') : `${startDate.format(mFormat)} - ${displayEndDate.format(mFormat)}`}
         end={displayEndDate.format(ISO_DAY_FORMAT)}
         minDate={getDayAt(startMinDate.valueOf(), tidelineData)}
@@ -413,7 +409,7 @@ class Trends extends React.Component {
 
       this.setEndPoints(newStartDate, newEndDate)
     }
-    this.props.trackMetric('data_visualization', 'select_period', 'backward')
+    this.trackMetric('data_visualization', 'select_period', 'backward')
   }
 
   handleClickForward(e) {
@@ -435,7 +431,7 @@ class Trends extends React.Component {
       const newStartDate = getMomentDayAt(newEndDate.clone().subtract(extentSize, 'days').valueOf(), tidelineData)
       this.setEndPoints(newStartDate, newEndDate)
     }
-    this.props.trackMetric('data_visualization', 'select_period', 'forward')
+    this.trackMetric('data_visualization', 'select_period', 'forward')
   }
 
   handleClickMostRecent(event) {
@@ -450,7 +446,7 @@ class Trends extends React.Component {
     this.props.onDatetimeLocationChange(this.endDate.valueOf() - Math.floor(msRange / 2), msRange)
     if (event) {
       // If event is set, it's a click, so we can track this change
-      this.props.trackMetric('data_visualization', 'select_period', 'most_recent')
+      this.trackMetric('data_visualization', 'select_period', 'most_recent')
     }
   }
 
@@ -481,25 +477,12 @@ class Trends extends React.Component {
         epoch = endEpoch - Math.floor(newMsRange / 2)
         this.props.onDatetimeLocationChange(epoch, newMsRange).then(() => {
           // Set the real value we want
-          this.updateExtendsSize(newExtentSize, () => {
-            this.setState({ updatingDates: false })
-            this.props.trackMetric('data_visualization', 'select_period', 'preset', extentSize)
-          })
+          this.updateExtendsSize(newExtentSize)
+          this.setState({ updatingDates: false })
+          this.trackMetric('data_visualization', 'select_period', 'preset', extentSize)
         })
       })
     })
-  }
-
-  handleClickDaily(e) {
-    const { epochLocation } = this.props
-    if (e) {
-      e.preventDefault()
-    }
-    this.props.onSwitchToDaily(epochLocation)
-  }
-
-  handleClickTrends(e) {
-    e.preventDefault()
   }
 
   handleSelectDate(date) {
@@ -581,14 +564,14 @@ class Trends extends React.Component {
                   <PatientStatistics
                     medicalData={this.props.tidelineData.medicalData}
                     bgPrefs={this.props.bgPrefs}
-                    dateFilter={dateFilter}
                     bgType={this.props.dataUtil.bgSource}
+                    dateFilter={dateFilter}
                   >
                     <Stats
                       bgPrefs={this.props.bgPrefs}
-                      bgSource={this.props.dataUtil.bgSource}
+                      bgSource={DatumType.Cbg}
                       chartPrefs={chartPrefs}
-                      chartType={this.chartType}
+                      chartType={ChartTypes.Trends}
                       dataUtil={this.props.dataUtil}
                       endpoints={endpoints}
                       loading={loading}
@@ -610,7 +593,7 @@ class Trends extends React.Component {
     const { msRange } = this.props
     return (
       <SubNav
-        trackMetric={this.props.trackMetric}
+        trackMetric={this.trackMetric}
         activeDays={this.props.chartPrefs.trends.activeDays}
         extentSize={msRange / TimeService.MS_IN_DAY}
         domainClickHandlers={{

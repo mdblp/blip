@@ -30,7 +30,6 @@ import { useTranslation } from 'react-i18next'
 
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
 import Box from '@mui/material/Box'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
 import { type PatientsFilters } from '../../lib/providers/models/patients-filters.model'
@@ -85,7 +84,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
       transformOrigin={{ vertical: -10, horizontal: 0 }}
     >
       <Box marginX={theme.spacing(3)} marginTop={theme.spacing(3)}>
-        <Typography variant="h6" className={classes.title}>{t('type-of-care')}</Typography>
+        <Typography variant="h6" className={classes.title}>{t('personal-settings')}</Typography>
         <PatientListOptionToggle
           ariaLabel={t('filter-flagged')}
           checked={filters.manualFlagEnabled}
@@ -95,16 +94,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
             setFilters({ ...filters, manualFlagEnabled: !filters.manualFlagEnabled })
           }}
         />
-        <PatientListOptionToggle
-          ariaLabel={t('filter-telemonitored')}
-          checked={filters.telemonitoredEnabled}
-          disabled={true}
-          icon={<DesktopMacOutlinedIcon />}
-          label={t('telemonitored')}
-          onToggleChange={() => {
-            setFilters({ ...filters, telemonitoredEnabled: !filters.telemonitoredEnabled })
-          }}
-        />
+
         {!isSelectedTeamPrivate &&
           <>
             <Typography variant="h6" className={classes.title}>{t('monitoring-alerts')}</Typography>

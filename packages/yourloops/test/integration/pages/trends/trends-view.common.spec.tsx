@@ -50,13 +50,17 @@ import {
   checkTimeInRangeStatsTitle
 } from '../../assert/stats.assert'
 import userEvent from '@testing-library/user-event'
-import { act, screen, waitFor, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import { patient2AsTeamMember } from '../../data/patient.api.data'
 import { buildHba1cData } from '../../data/data-api.data'
+import { mockWindowResizer } from '../../mock/window-resizer.mock'
+import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 
 describe('Trends view for anyone', () => {
-  beforeAll(() => {
+  beforeEach(() => {
+    mockWindowResizer()
     mockPatientLogin(patient2AsTeamMember)
+    mockPatientApiForPatients()
   })
 
   describe('with all kind of data', () => {
@@ -67,7 +71,7 @@ describe('Trends view for anyone', () => {
         expect(router.state.location.pathname).toEqual('/trends')
       })
       const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-      expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily Carbs55gRescue carbs10g')
+      expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily Carbs55gRescue carbs28g')
 
       // Check the tooltips
       await checkTrendsTidelineContainerTooltips()
@@ -84,9 +88,7 @@ describe('Trends view for anyone', () => {
       // Check Layout
       checkTrendsLayout()
 
-      await act(async () => {
-        await userEvent.click(screen.getByTestId('button-nav-back'))
-      })
+      await userEvent.click(screen.getByTestId('button-nav-back'))
       expect(await screen.findByText('There is no CGM data for this time period :(')).toBeVisible()
     })
 

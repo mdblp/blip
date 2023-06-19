@@ -29,13 +29,12 @@ import { useState } from 'react'
 import { type PatientsFilters } from './models/patients-filters.model'
 import { type PatientListContextResult } from './models/patient-list-context-result.model'
 import { PatientListColumns } from '../../components/patient-list/models/enums/patient-list.enum'
-import { type GridColumnVisibilityModel, useGridApiRef } from '@mui/x-data-grid'
+import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
 import { useAuth } from '../auth'
 
 const DEFAULT_FILTERS = {
   pendingEnabled: false,
   manualFlagEnabled: false,
-  telemonitoredEnabled: false,
   timeOutOfTargetEnabled: false,
   hypoglycemiaEnabled: false,
   dataNotTransferredEnabled: false,
@@ -66,7 +65,6 @@ const DEFAULT_COLUMNS_CAREGIVER = [
 
 export const usePatientListProviderHook = (): PatientListContextResult => {
   const { user, updatePreferences } = useAuth()
-  const gridApiRef = useGridApiRef()
   const isUserHcp = user.isUserHcp()
 
   const getColumnPreference = (columnName: PatientListColumns): boolean => {
@@ -121,7 +119,7 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     setFilters(DEFAULT_FILTERS)
   }
 
-  const hasAnyNonPendingFiltersEnabled = filters.manualFlagEnabled || filters.telemonitoredEnabled || filters.timeOutOfTargetEnabled || filters.hypoglycemiaEnabled || filters.dataNotTransferredEnabled || filters.messagesEnabled
+  const hasAnyNonPendingFiltersEnabled = filters.manualFlagEnabled || filters.timeOutOfTargetEnabled || filters.hypoglycemiaEnabled || filters.dataNotTransferredEnabled || filters.messagesEnabled
 
   return {
     filters,
@@ -130,7 +128,6 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     updatePendingFilter,
     resetFilters,
     displayedColumns,
-    saveColumnsPreferences,
-    gridApiRef
+    saveColumnsPreferences
   }
 }

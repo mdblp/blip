@@ -103,7 +103,6 @@ Some background documents particular to this problem area (Tidepool-internal):
 - only extending the React Component class where the lifecycle methods are necessary, in "container" components
 - keeping rendering logic out of such container components
 - keeping styling out of container components
-- keeping animation logic (i.e., with [react-motion](https://github.com/chenglou/react-motion 'react-motion')) as a distinct layer that sits between container components and low-level rendering components
 - keep complex interface rendering method (e.g., the scrolling interface for the daily view) separate from the low-level rendering of smbgs, cbgs, boluses, basal itnervals, etc. so that:
     + code for the low-level rendering is reusable across views
     + the interface rendering method can be iterated on separately or swapped out entirely

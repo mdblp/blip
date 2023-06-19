@@ -31,8 +31,8 @@ import {
   checkCareTeamMonitoringAlertsConfiguration
 } from '../assert/care-team.assert'
 
-export const testCareTeamLayout = () => {
-  checkCareTeamInformation()
+export const testCareTeamLayout = async () => {
+  await checkCareTeamInformation()
   checkCareTeamMembers()
   checkCareTeamMonitoringAlertsConfiguration()
 }

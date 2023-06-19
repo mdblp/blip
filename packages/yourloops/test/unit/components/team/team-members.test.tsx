@@ -37,7 +37,7 @@ import * as alertHookMock from '../../../../components/utils/snackbar'
 import { getTheme } from '../../../../components/theme'
 import { ThemeProvider } from '@mui/material/styles'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
-import { UserInvitationStatus } from '../../../../lib/team/models/enums/user-invitation-status.enum'
+import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { MemoryRouter } from 'react-router-dom'
 
 jest.mock('../../../../components/utils/snackbar')
@@ -57,7 +57,7 @@ describe('TeamMembers', () => {
       TeamMemberRole.patient,
       'fakePatient',
       'patientFullName',
-      UserInvitationStatus.accepted
+      UserInviteStatus.Accepted
     )
   ]
   const team = buildTeam(teamId, members)

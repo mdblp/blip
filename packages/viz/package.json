@@ -27,11 +27,10 @@
     "LICENSE"
   ],
   "dependencies": {
-    "@serprex/react-motion": "0.6.3",
     "blob-stream": "^0.1.3",
     "buffer": "^6.0.3",
     "d3-array": "1.2.4",
-    "d3-format": "1.3.2",
+    "d3-format": "3.1.0",
     "d3-scale": "4.0.2",
     "d3-shape": "1.2.2",
     "d3-time": "1.0.10",
@@ -40,12 +39,12 @@
     "memorystream": "^0.3.1",
     "parse-svg-path": "0.1.2",
     "pdfkit": "^0.12.3",
-    "react-markdown": "^8.0.6",
+    "react-markdown": "^8.0.7",
     "serialize-svg-path": "0.1.0",
     "stream-browserify": "^3.0.0",
     "text-table": "0.2.0",
     "translate-svg-path": "0.0.1",
-    "victory": "36.6.8",
+    "victory": "36.6.11",
     "voilab-pdf-table": "0.4.0"
   }
 }
