@@ -37,7 +37,6 @@ import Box from '@mui/material/Box'
 import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
-import IconButton from '@mui/material/IconButton'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -45,7 +44,6 @@ import TableContainer from '@mui/material/TableContainer'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import PhonelinkSetupOutlinedIcon from '@mui/icons-material/PhonelinkSetupOutlined'
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined'
 import { BasicsChart } from 'tideline'
 import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from 'tidepool-viz'
 import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic-dashboard-card'
@@ -55,7 +53,6 @@ import {
 } from 'medical-domain/dist/src/domains/repositories/statistics/glycemia-statistics.service'
 import { TimeService } from 'medical-domain'
 import metrics from 'yourloops/lib/metrics'
-import { ChartTypes } from 'yourloops/enum/chart-type.enum'
 
 const useStyles = makeStyles()((theme) => ({
   sectionTitles: {
@@ -106,7 +103,7 @@ const getLabel = (row, t) => {
 }
 
 const DeviceUsage = (props) => {
-  const { bgPrefs, timePrefs, patient, tidelineData, medicalData, dateFilter, changeChart } = props
+  const { bgPrefs, timePrefs, patient, tidelineData, medicalData, dateFilter } = props
   const { t } = useTranslation()
   const { classes } = useStyles()
   const trackMetric = metrics.send
@@ -138,25 +135,11 @@ const DeviceUsage = (props) => {
     }
   }
 
-  const goToDeviceSettings = () => {
-    changeChart(ChartTypes.Device)
-  }
-
   return <>
     <GenericDashboardCard
       avatar={<PhonelinkSetupOutlinedIcon />}
       title={t('device-usage')}
       data-testid="device-usage-card"
-      action={
-        <IconButton
-          data-testid="settings-button"
-          aria-label="settings"
-          onClick={goToDeviceSettings}
-          size="small"
-        >
-          <MoreHorizOutlinedIcon />
-        </IconButton>
-      }
     >
       <CardContent>
         <Box data-testid="device-usage-device-list">
@@ -229,7 +212,6 @@ const DeviceUsage = (props) => {
 
 DeviceUsage.propType = {
   bgPrefs: PropTypes.object.isRequired,
-  changeChart: PropTypes.func.isRequired,
   timePrefs: PropTypes.object.isRequired,
   patient: PropTypes.object.isRequired,
   tidelineData: PropTypes.object.isRequired,

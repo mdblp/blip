@@ -322,6 +322,7 @@
   "no-new-messages": "No new messages from the patient",
   "no-patient": "No patient",
   "no-patient-data": "No data for patient {{patientName}}",
+  "no-settings-on-device-alert-message": "This view shows the current settings, history of change and device information, but it looks like the system hasn't sent data yet.",
   "not-logged-in": "You are not logged in",
   "notification": "Notification",
   "notification-caregiver-invite-by-patient": "<strong>{{firstName}} {{lastName}}</strong> wants to share their diabetes data with you.",

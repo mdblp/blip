@@ -35,6 +35,7 @@ import { formatParameterValue, sortHistoryParametersByDate } from './device-sett
 import type { ChangeDateParameterGroup } from 'dumb'
 import Button from '@mui/material/Button'
 import textTable from 'text-table'
+import moment from 'moment'
 
 interface DeviceSettingsProps {
   goToDailySpecificDate: (date: number | Date) => void
@@ -51,10 +52,11 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ pumpSettings, timePref
     parameter.value = formatParameterValue(parameter.value, parameter.unit)
   })
 
-  const lastUploadDate = new Date(pumpSettings.normalTime).toLocaleDateString()
+  const deviceDateISO = moment.tz(pumpSettings.normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format()
+  const lastUploadDate = new Date(deviceDateISO).toLocaleString()
 
   const copySettingsToClipboard = async (): Promise<void> => {
-    let rawText = `${new Date(lastUploadDate).toLocaleString()}\n\n`
+    let rawText = `${lastUploadDate}\n\n`
     rawText += `-- ${t('Device')} --\n`
     rawText += textTable([
       [t('Manufacturer'), device.manufacturer],

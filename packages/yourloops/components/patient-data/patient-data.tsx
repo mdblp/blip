@@ -149,7 +149,6 @@ export const PatientData: FunctionComponent = () => {
                     element={
                       <PatientDashboard
                         bgPrefs={bgPrefs}
-                        changeChart={changeChart}
                         dataUtil={dataUtil}
                         dashboardEpochDate={dashboardEpochDate}
                         goToDailySpecificDate={goToDailySpecificDate}

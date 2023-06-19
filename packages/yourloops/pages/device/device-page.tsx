@@ -30,6 +30,10 @@ import { type PumpSettings, type TimePrefs } from 'medical-domain'
 import type MedicalDataService from 'medical-domain'
 import { DeviceSettings } from '../../components/device/device-settings'
 import Container from '@mui/material/Container'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { useTranslation } from 'react-i18next'
+import { useTheme } from '@mui/material/styles'
 
 interface DevicePageProps {
   goToDailySpecificDate: (date: number) => void
@@ -38,15 +42,27 @@ interface DevicePageProps {
 }
 
 export const DevicePage: FC<DevicePageProps> = ({ medicalData, timePrefs, goToDailySpecificDate }) => {
+  const { t } = useTranslation()
+  const theme = useTheme()
   const pumpSettings = [...medicalData.grouped.pumpSettings].pop() as PumpSettings
 
   return (
-    <Container data-testid="device-settings-container">
-      <DeviceSettings
-        goToDailySpecificDate={goToDailySpecificDate}
-        pumpSettings={pumpSettings}
-        timePrefs={timePrefs}
-      />
+    <Container data-testid="device-settings-container" maxWidth={!pumpSettings ? 'sm' : undefined}>
+      {pumpSettings
+        ? <DeviceSettings
+          goToDailySpecificDate={goToDailySpecificDate}
+          pumpSettings={pumpSettings}
+          timePrefs={timePrefs}
+        />
+        : <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          marginTop={theme.spacing(4)}
+        >
+          <Typography fontWeight={500}>{t('no-settings-on-device-alert-message')}</Typography>
+        </Box>
+      }
     </Container>
   )
 }

@@ -34,10 +34,12 @@ import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
-import { checkDeviceSettingsContent, checkNavigationToDailyView } from '../../assert/device-page.assert'
 import { mockWindowResizer } from '../../mock/window-resizer.mock'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockTeamAPI } from '../../mock/team.api.mock'
+import { testAppMainLayoutForPatient } from '../../use-cases/app-main-layout-visualisation'
+import { testDeviceSettingsVisualisation } from '../../use-cases/device-settings-visualisation'
+import { testDeviceSettingsNavigationForPatient } from '../../use-cases/device-settings-navigation'
 
 describe('Device page for Caregiver', () => {
   const firstName = 'patient firstName'
@@ -54,12 +56,25 @@ describe('Device page for Caregiver', () => {
     mockDataAPI(pumpSettingsData)
   })
 
-  it('should render correct components when navigating to the device page', async () => {
+  it('should render correct layout', async () => {
+    await act(async () => {
+      renderPage('/device')
+    })
+    await testAppMainLayoutForPatient({ loggedInUserFullName: `${firstName} ${lastName}` })
+  })
+
+  it('should display correct parameters', async () => {
+    await act(async () => {
+      renderPage('/device')
+    })
+    await testDeviceSettingsVisualisation()
+  })
+
+  it('should navigate to daily page when clicking on the daily button', async () => {
     let router
     await act(async () => {
       router = renderPage('/device')
     })
-    checkDeviceSettingsContent()
-    await checkNavigationToDailyView(router, '/daily')
+    await testDeviceSettingsNavigationForPatient(router)
   })
 })

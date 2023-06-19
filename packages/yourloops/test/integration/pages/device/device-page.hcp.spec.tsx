@@ -27,7 +27,7 @@
 
 import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { mockTeamAPI } from '../../mock/team.api.mock'
+import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../mock/team.api.mock'
 import { mockDataAPI, pumpSettingsData } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { patient1Id } from '../../data/patient.api.data'
@@ -35,12 +35,10 @@ import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
-import {
-  checkCopyTextButton,
-  checkDeviceSettingsContent,
-  checkNavigationToDailyView
-} from '../../assert/device-page.assert'
 import { mockWindowResizer } from '../../mock/window-resizer.mock'
+import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
+import { testDeviceSettingsVisualisation } from '../../use-cases/device-settings-visualisation'
+import { testDeviceSettingsNavigationForHcpAndCaregiver } from '../../use-cases/device-settings-navigation'
 
 describe('Device page for HCP', () => {
   const firstName = 'HCP firstName'
@@ -57,13 +55,36 @@ describe('Device page for HCP', () => {
     mockDataAPI(pumpSettingsData)
   })
 
-  it('should render correct components when navigating to the device page', async () => {
+  it('should render correct layout', async () => {
+    const appMainLayoutParams: AppMainLayoutHcpParams = {
+      footerHasLanguageSelector: false,
+      headerInfo: {
+        loggedInUserFullName: `${firstName} ${lastName}`,
+        teamMenuInfo: {
+          selectedTeamName: myThirdTeamName,
+          isSelectedTeamPrivate: false,
+          availableTeams: buildAvailableTeams()
+        }
+      }
+    }
+    await act(async () => {
+      renderPage(`/patient/${patient1Id}/device`)
+    })
+    await testAppMainLayoutForHcp(appMainLayoutParams)
+  })
+
+  it('should display correct parameters', async () => {
+    await act(async () => {
+      renderPage(`/patient/${patient1Id}/device`)
+    })
+    await testDeviceSettingsVisualisation()
+  })
+
+  it('should navigate to daily page when clicking on the daily button', async () => {
     let router
     await act(async () => {
       router = renderPage(`/patient/${patient1Id}/device`)
     })
-    checkDeviceSettingsContent()
-    await checkCopyTextButton()
-    await checkNavigationToDailyView(router, `/patient/${patient1Id}/daily`)
+    await testDeviceSettingsNavigationForHcpAndCaregiver(router)
   })
 })

@@ -198,21 +198,7 @@ export const pumpSettingsData: Data = {
   dataRange: ['2022-08-08T16:35:00Z', '2022-08-08T16:40:00Z'],
   data: [
     { time: '2020-01-01T10:00:00Z', type: 'pumpSettings', id: 'pump_settings', timezone: 'UTC', uploadId: 'osef', payload: { basalsecurityprofile: null, cgm: { apiVersion: 'v1', endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00', expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Dexcom', name: 'G6', swVersionTransmitter: 'v1', transmitterId: 'a1234' }, device: { deviceId: '1234', imei: '1234567890', manufacturer: 'Diabeloop', name: 'DBLG1', swVersion: '1.0.5.25' }, history, parameters: [{ name: 'WEIGHT', value: '72', unit: 'kg', level: 1, effectiveDate: '2020-01-01T10:00:00Z' }], pump: { expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Vicentra', name: 'Kaleido', serialNumber: '123456', swVersion: 'beta' } }, _userId: 'osef' },
-    { time: '2020-01-01T10:00:00Z', type: 'cbg', id: '2020-01-01_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-02T10:00:00Z', type: 'cbg', id: '2020-01-02_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-03T10:00:00Z', type: 'cbg', id: '2020-01-03_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-04T10:00:00Z', type: 'cbg', id: '2020-01-04_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-05T10:00:00Z', type: 'cbg', id: '2020-01-05_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-06T10:00:00Z', type: 'cbg', id: '2020-01-06_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-07T10:00:00Z', type: 'cbg', id: '2020-01-07_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-08T10:00:00Z', type: 'cbg', id: '2020-01-08_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-09T10:00:00Z', type: 'cbg', id: '2020-01-09_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-10T10:00:00Z', type: 'cbg', id: '2020-01-10_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-11T10:00:00Z', type: 'cbg', id: '2020-01-11_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-12T10:00:00Z', type: 'cbg', id: '2020-01-12_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-13T10:00:00Z', type: 'cbg', id: '2020-01-13_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-14T10:00:00Z', type: 'cbg', id: '2020-01-14_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-15T10:00:00Z', type: 'cbg', id: '2020-01-15_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' }
+    { time: '2020-01-01T10:00:00Z', type: 'cbg', id: '2020-01-01_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' }
   ]
 }
 
