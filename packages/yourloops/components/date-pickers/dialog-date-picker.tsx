@@ -29,7 +29,7 @@ import React from 'react'
 import dayjs, { type Dayjs, isDayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
 
-import { useTheme, type Theme } from '@mui/material/styles'
+import { type Theme, useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Button from '@mui/material/Button'
@@ -37,7 +37,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 
-import { type CalendarOrientation, type CalendarSelectionSingle, MIN_YEAR, MAX_YEAR } from './models'
+import { type CalendarOrientation, type CalendarSelectionSingle, MAX_YEAR, MIN_YEAR } from './models'
 import DatePicker from './date-picker'
 
 interface CalendarStylesProps {
@@ -50,7 +50,6 @@ interface DatePickerProps {
   maxDate?: Dayjs | number | string | Date
   showToolbar?: boolean
   /** true to have the dialog open */
-  isOpen: boolean
   onResult: (date?: string) => void
   onSelectedDateChange?: (date?: string) => void
 }
@@ -77,20 +76,15 @@ const datePickerStyle = makeStyles<CalendarStylesProps>({ name: 'date-picker-sin
   }
 })
 
-const dummyDate = dayjs()
-
 function DialogDatePicker(props: DatePickerProps): JSX.Element {
-  const { isOpen, onSelectedDateChange } = props
+  const { onSelectedDateChange } = props
   const { t } = useTranslation('yourloops')
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.up('sm'))
   const orientation: CalendarOrientation = matches ? 'landscape' : 'portrait'
   const { classes } = datePickerStyle({ orientation })
 
-  const { date, minDate, maxDate } = React.useMemo(() => {
-    if (!isOpen) {
-      return { date: dummyDate, maxDate: dummyDate, minDate: dummyDate }
-    }
+  const getDates = (): { date: dayjs.Dayjs, minDate: dayjs.Dayjs, maxDate: dayjs.Dayjs } => {
     // It's safe to use the UTC in the calendar
     // - dayjs don't support well the timezone (lost of copy)
     // - We return a day without any timezone, it's up to the caller to do
@@ -107,21 +101,16 @@ function DialogDatePicker(props: DatePickerProps): JSX.Element {
       date = maxDate
     }
     return { date, minDate, maxDate }
-  }, [props.date, props.maxDate, props.minDate, isOpen])
+  }
+  const { date, minDate, maxDate } = getDates()
 
   const [selected, setSelected] = React.useState(date)
 
   React.useEffect(() => {
-    if (isOpen) {
-      setSelected(date)
-    }
-  }, [isOpen, date])
-
-  React.useEffect(() => {
-    if (isOpen && onSelectedDateChange) {
+    if (onSelectedDateChange) {
       onSelectedDateChange(selected.format('YYYY-MM-DD'))
     }
-  }, [isOpen, selected, onSelectedDateChange])
+  }, [selected, onSelectedDateChange])
 
   const handleCancel = (): void => {
     props.onResult()
@@ -131,7 +120,8 @@ function DialogDatePicker(props: DatePickerProps): JSX.Element {
   }
 
   return (
-    <Dialog onClose={handleCancel} aria-labelledby="date-picker-selected-date" open={isOpen} PaperProps={{ className: classes.dialogPaper }}>
+    <Dialog onClose={handleCancel} aria-labelledby="date-picker-selected-date" open
+            PaperProps={{ className: classes.dialogPaper }}>
       <DialogContent id="calendar-view" className={classes.content}>
         <DatePicker
           selection={{ mode: 'single', selected } as CalendarSelectionSingle}

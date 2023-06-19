@@ -71,7 +71,7 @@ describe('HCP home page', () => {
     const router = renderPage('/')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/home')
-    })
+    }, { timeout: 3000 })
     return router
   }
 

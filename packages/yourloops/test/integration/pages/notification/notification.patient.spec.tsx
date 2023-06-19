@@ -33,7 +33,7 @@ import NotificationApi from '../../../../lib/notifications/notification.api'
 import { buildTeamOne, buildTeamTwo, iTeamOne } from '../../mock/team.api.mock'
 import TeamAPI from '../../../../lib/team/team.api'
 import { invitationTeam } from '../../data/notification.data'
-import { checkAcceptTeamInvite, closeDialogNotificationTeam } from '../../assert/notification-join-team.assert'
+import { checkAcceptTeamInvite, checkPatientAcceptTeamInvite } from '../../assert/notification-join-team.assert'
 
 describe('Notification page for patient', () => {
   beforeAll(() => {
@@ -50,7 +50,7 @@ describe('Notification page for patient', () => {
       expect(router.state.location.pathname).toEqual('/notifications')
     })
 
-    await closeDialogNotificationTeam()
+    await checkPatientAcceptTeamInvite()
     await checkAcceptTeamInvite()
   })
 })

@@ -19,7 +19,7 @@ import React from 'react'
 import _ from 'lodash'
 import bows from 'bows'
 import moment from 'moment-timezone'
-import WindowSizeListener from 'react-window-size-listener'
+import ReactResizeDetector from 'react-resize-detector'
 import i18next from 'i18next'
 
 import { chartDailyFactory } from 'tideline'
@@ -61,6 +61,7 @@ class DailyChart extends React.Component {
     epochLocation: PropTypes.number.isRequired,
     msRange: PropTypes.number.isRequired,
     patient: PropTypes.object,
+    refToAttachResize: PropTypes.object.isRequired,
     tidelineData: PropTypes.object.isRequired,
     timePrefs: PropTypes.object.isRequired,
     // message handlers
@@ -107,20 +108,23 @@ class DailyChart extends React.Component {
     this.state = {
       /** @type {function | null} */
       chart: null,
-      windowHeight: 0,
-      windowWidth: 0,
       /** Avoid recreate the chart on loading: This leads to a crash */
       needRecreate: false
     }
     /** @type {React.RefObject} */
     this.refNode = React.createRef()
+    this.viewHasBeenInitialized = false // This boolean is only here because react-resize-detector has to be mocked in ITs... :(
+    this.unmountingInProgress = false
   }
 
   componentDidUpdate() {
     // Prevent the scroll drag while loading
     const { loading } = this.props
     const { chart, needRecreate } = this.state
-    if (chart !== null) {
+    if (!this.viewHasBeenInitialized) {
+      this.handleWindowResize()
+    }
+    if (chart) {
       chart.loadingInProgress = loading
       if (needRecreate && !loading && !chart.isInTransition()) {
         this.setState({ needRecreate: false })
@@ -133,31 +137,34 @@ class DailyChart extends React.Component {
     this.unmountChart()
   }
 
-  mountChart(cb = _.noop) {
-    if (this.state.chart === null) {
+  mountChart() {
+    if (this.state.chart === null && !this.unmountingInProgress) {
       const { tidelineData, epochLocation } = this.props
       this.log.debug('Mounting...')
       const chart = chartDailyFactory(this.refNode.current, tidelineData, _.pick(this.props, this.chartOpts))
-      this.setState({ chart })
-      chart.setAtDate(epochLocation)
-      this.bindEvents()
-      this.props.onChartMounted()
-      cb()
-    } else {
-      cb()
+      this.setState({ chart }, () => {
+        this.state.chart.setAtDate(epochLocation)
+        this.bindEvents()
+        this.props.onChartMounted()
+      })
     }
   }
 
-  unmountChart(cb = _.noop) {
+  unmountChart(recreate = false) {
     const { chart } = this.state
-    if (chart !== null) {
+    if (chart !== null && !this.unmountingInProgress) {
+      this.unmountingInProgress = true
       this.log('Unmounting...')
       this.unbindEvents()
       chart.destroy()
-      this.setState({ chart: null })
-      cb()
-    } else {
-      cb()
+      this.setState({ chart: null }, () => {
+        this.unmountingInProgress = false
+        if (recreate) {
+          this.mountChart()
+        }
+      })
+    } else if (recreate) {
+      this.mountChart()
     }
   }
 
@@ -180,31 +187,38 @@ class DailyChart extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div id="tidelineContainer" data-testid="tidelineContainer" className="patient-data-chart" ref={this.refNode} />
-        <WindowSizeListener onResize={this.handleWindowResize} />
+        <ReactResizeDetector
+          targetRef={this.props.refToAttachResize}
+          onResize={this.handleWindowResize}
+          handleWidth
+          handleHeight
+        />
+        <div
+          id="tidelineContainer"
+          data-testid="tidelineContainer"
+          className="patient-data-chart"
+          ref={this.refNode}
+        />
       </React.Fragment>
     )
   }
 
-  handleWindowResize = ({ windowHeight: height, windowWidth: width }) => {
+  handleWindowResize = () => {
     const { loading } = this.props
-    const { windowHeight, windowWidth, chart } = this.state
-    this.log.debug('handleWindowResize', { windowHeight, windowWidth }, '=>', { height, width })
-    if (windowHeight !== height || width !== windowWidth) {
-      const needRecreate = loading || chart?.isInTransition() === true
-      this.setState({ windowHeight: height, windowWidth: width, needRecreate })
-      if (!needRecreate) {
-        this.reCreateChart()
-      } else {
-        this.log.info('Delaying chart re-creation: loading or transition in progress')
-      }
+    const { chart } = this.state
+    const needRecreate = loading || chart?.isInTransition() === true
+    if (!needRecreate) {
+      this.viewHasBeenInitialized = true
+      this.reCreateChart()
+    } else {
+      this.log.info('Delaying chart re-creation: loading or transition in progress')
     }
   }
 
   reCreateChart() {
     const { chart } = this.state
     this.log.info(chart === null ? 'Creating chart...' : 'Recreating chart...')
-    this.unmountChart(this.mountChart.bind(this))
+    this.unmountChart(true)
   }
 
   rerenderChartData() {
@@ -269,6 +283,7 @@ class Daily extends React.Component {
     super(props)
 
     /** @type {React.RefObject<DailyChart>} */
+    this.refToAttachResize = React.createRef()
     this.chartRef = React.createRef()
     this.log = bows('DailyView')
     this.state = {
@@ -346,11 +361,12 @@ class Daily extends React.Component {
               />
             }
           </Box>
-          <Box display="flex">
+          <Box display="flex" ref={this.refToAttachResize}>
             <div className="container-box-inner patient-data-content-inner">
               <div className="patient-data-content">
                 {loading && <SpinningLoader className="centered-spinning-loader" />}
                 <DailyChart
+                  refToAttachResize={this.refToAttachResize}
                   loading={loading}
                   bgClasses={this.props.bgPrefs.bgClasses}
                   bgUnits={this.props.bgPrefs.bgUnits}

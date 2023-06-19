@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
@@ -55,6 +55,7 @@ import { JoinTeamDialog } from '../dialogs/join-team/join-team-dialog'
 import TeamUtils from '../../lib/team/team.util'
 import Button from '@mui/material/Button'
 import { AppUserRoute } from '../../models/enums/routes.enum'
+import { PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE } from '../../lib/team/team.api'
 
 const classes = makeStyles()((theme: Theme) => ({
   teamIcon: {
@@ -90,6 +91,7 @@ function TeamSettingsMenu(): JSX.Element {
   const { user } = useAuth()
   const theme = useTheme()
   const isMobile: boolean = useMediaQuery(theme.breakpoints.only('xs'))
+  const patientIdForWhichDataHasBeenFetched = useRef(null)
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null)
@@ -108,7 +110,9 @@ function TeamSettingsMenu(): JSX.Element {
 
   useEffect(() => {
     (async () => {
-      if (!caregivers && user) {
+      if (!caregivers && user && patientIdForWhichDataHasBeenFetched.current !== user.id) {
+        patientIdForWhichDataHasBeenFetched.current = user.id
+
         try {
           setCaregivers(await DirectShareApi.getDirectShares())
         } catch (error) {
@@ -133,14 +137,25 @@ function TeamSettingsMenu(): JSX.Element {
     closeMenu()
   }
 
+  const getErrorMessage = (error: Error): string => {
+    if (error.message === PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE) {
+      return t('alert-join-team-failed-already-invited')
+    }
+
+    const errorMessage = errorTextFromException(error)
+    return t('modal-patient-add-team-failure', { errorMessage })
+  }
+
   const onJoinTeam = async (teamId: string): Promise<void> => {
     try {
       await joinTeam(teamId)
       alert.success(t('modal-patient-add-team-success'))
       setShowJoinTeamDialog(false)
     } catch (reason: unknown) {
-      const errorMessage = errorTextFromException(reason)
-      alert.error(t('modal-patient-add-team-failure', { errorMessage }))
+      const error = reason as Error
+      const message = getErrorMessage(error)
+      alert.error(message)
+      setShowJoinTeamDialog(false)
     }
   }
   return (

@@ -41,7 +41,7 @@ import Alert from '@mui/material/Alert'
 
 import { REGEX_EMAIL } from '../../../lib/utils'
 import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
-import { usePatientContext } from '../../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../../lib/patient/patients.provider'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 import { type Team } from '../../../lib/team'
 import metrics from '../../../lib/metrics'
@@ -57,7 +57,7 @@ export interface AddDialogProps {
 
 export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose, onAddPatientSuccessful }) => {
   const alert = useAlert()
-  const patientHook = usePatientContext()
+  const patientsHook = usePatientsContext()
   const { t } = useTranslation()
   const [email, setEmail] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -82,7 +82,7 @@ export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose
   }
 
   const checkPatientInTeam = (formEmail: string): void => {
-    const patient = patientHook.getPatientByEmail(formEmail)
+    const patient = patientsHook.getPatientByEmail(formEmail)
 
     if (patient) {
       const isPatientPendingInTeam = patient.invitationStatus === UserInviteStatus.Pending
@@ -103,7 +103,7 @@ export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose
   const addPatient = async (): Promise<void> => {
     try {
       setInProgress(true)
-      await patientHook.invitePatient(selectedTeam, email)
+      await patientsHook.invitePatient(selectedTeam, email)
       alert.success(t('alert-invite-sent-success'))
       metrics.send('invitation', 'send_invitation', 'patient')
       onAddPatientSuccessful(selectedTeam)

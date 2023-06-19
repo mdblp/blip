@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,7 +41,7 @@ const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) 
   return (
     <React.Fragment>
       <Link
-        id="footer-link-product-labelling"
+        data-testid="product-labelling-link"
         component={RouterLink}
         to="/product-labelling"
         className={link}
@@ -51,7 +51,7 @@ const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) 
       <Box className={separator}>|</Box>
 
       <Link
-        id="footer-link-url-training"
+        data-testid="training-link"
         target="_blank"
         href={diabeloopExternalUrls.training(user?.role)}
         rel="nofollow"

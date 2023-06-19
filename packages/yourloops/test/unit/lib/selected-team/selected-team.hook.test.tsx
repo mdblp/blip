@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import * as teamHookMock from '../../../../lib/team'
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import { useSelectedTeamProviderCustomHook } from '../../../../lib/selected-team/selected-team.hook'
 
 jest.mock('../../../../lib/team')

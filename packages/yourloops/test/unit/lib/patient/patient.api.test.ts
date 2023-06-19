@@ -55,7 +55,7 @@ describe('PatientApi', () => {
     it('should return an empty array if not found', async () => {
       jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
       const response = await PatientApi.getPatients()
-      expect(response).toBeInstanceOf(Array)
+      expect(response).toEqual([])
     })
 
     it('should throw an error if http call failed', async () => {

@@ -40,7 +40,7 @@ import { type IMessage } from '../../lib/chat/models/i-message.model'
 import { Button, Tab, Tabs, TextField } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useTeam } from '../../lib/team'
-import { usePatientContext } from '../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../lib/patient/patients.provider'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import Box from '@mui/material/Box'
@@ -125,7 +125,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const { classes } = chatWidgetStyles()
   const { getMedicalTeams } = useTeam()
   const theme = useTheme()
-  const patientHook = usePatientContext()
+  const patientsHook = usePatientsContext()
   const { selectedTeam } = useSelectedTeamContext()
   const { user } = useAuth()
   const [showPicker, setShowPicker] = useState(false)
@@ -137,6 +137,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const [inputTab, setInputTab] = useState(0)
   const content = useRef<HTMLDivElement>(null)
   const inputRow = useRef<HTMLDivElement>(null)
+  const teamIdForWhichMessagesHaveBeenFetched = useRef(null)
   const isUserHcp = user.isUserHcp()
   const isUserPatient = user.isUserPatient()
   const teams = getMedicalTeams()
@@ -156,7 +157,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     async function fetchMessages(): Promise<void> {
       const messages = await ChatApi.getChatMessages(dropdownTeamId, patient.userid)
       if (patient.metadata.hasSentUnreadMessages) {
-        patientHook.markPatientMessagesAsRead(patient)
+        patientsHook.markPatientMessagesAsRead(patient)
       }
       setMessages(messages)
       setNbUnread(messages.filter(m => !(m.authorId === userId) && !m.destAck).length)
@@ -171,9 +172,12 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       setUnreadMessagesByTeamForPatient(unreadMessages)
     }
 
-    fetchMessages()
-    if (isUserPatient) {
-      fetchUnreadMessagesCountForPatient()
+    if (dropdownTeamId !== teamIdForWhichMessagesHaveBeenFetched.current) {
+      teamIdForWhichMessagesHaveBeenFetched.current = dropdownTeamId
+      fetchMessages()
+      if (isUserPatient) {
+        fetchUnreadMessagesCountForPatient()
+      }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 import useRemovePatientDialog from '../../../../components/patient/remove-patient-dialog/remove-patient-dialog.hook'
 import PatientAPI from '../../../../lib/patient/patient.api'
-import * as usePatientContextMock from '../../../../lib/patient/patient.provider'
+import * as usePatientContextMock from '../../../../lib/patient/patients.provider'
 import * as teamHookMock from '../../../../lib/team'
 import { type Team } from '../../../../lib/team'
 import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
@@ -38,7 +38,7 @@ import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
 
-jest.mock('../../../../lib/patient/patient.provider')
+jest.mock('../../../../lib/patient/patients.provider')
 jest.mock('../../../../lib/team')
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/selected-team/selected-team.provider')
@@ -53,7 +53,7 @@ describe('Remove patient dialog hook', () => {
   const isPrivateMock = jest.fn()
 
   beforeEach(() => {
-    (usePatientContextMock.usePatientContext as jest.Mock).mockImplementation(() => ({
+    (usePatientContextMock.usePatientsContext as jest.Mock).mockImplementation(() => ({
       removePatient: removePatientMock
     }));
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => ({

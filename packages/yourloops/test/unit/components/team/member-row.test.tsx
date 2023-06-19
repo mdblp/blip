@@ -159,12 +159,18 @@ describe('MemberRow', () => {
     const removeMemberButton = screen.getByRole('button', { name: 'remove-member-button' })
     await act(async () => {
       fireEvent.click(removeMemberButton)
-      await waitFor(() => { expect(screen.getByRole('button', { name: 'confirm-mock' })).toBeInTheDocument() })
-      const confirmButton = screen.getByRole('button', { name: 'confirm-mock' })
-      fireEvent.click(confirmButton)
-      await waitFor(() => { expect(removeMemberMock).toHaveBeenCalledWith(teamMember, teamId) })
-      expect(refreshParent).toHaveBeenCalled()
     })
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'confirm-mock' })).toBeInTheDocument()
+    })
+    const confirmButton = screen.getByRole('button', { name: 'confirm-mock' })
+    await act(async () => {
+      fireEvent.click(confirmButton)
+    })
+    await waitFor(() => {
+      expect(removeMemberMock).toHaveBeenCalledWith(teamMember, teamId)
+    })
+    expect(refreshParent).toHaveBeenCalled()
   }
 
   function getMemberRowJSX(memberProps: TeamMembersProps = props): JSX.Element {
@@ -271,7 +277,9 @@ describe('MemberRow', () => {
     expect(roleCheckbox).toBeChecked()
     await act(async () => {
       fireEvent.click(roleCheckbox)
-      await waitFor(() => { expect(changeMemberRoleMock).toHaveBeenCalledWith(teamMember, TeamMemberRole.member, team.id) })
+      await waitFor(() => {
+        expect(changeMemberRoleMock).toHaveBeenCalledWith(teamMember, TeamMemberRole.member, team.id)
+      })
       expect(refreshParent).toHaveBeenCalled()
     })
   })
@@ -292,7 +300,9 @@ describe('MemberRow', () => {
     expect(roleCheckbox).not.toBeChecked()
     await act(async () => {
       fireEvent.click(roleCheckbox)
-      await waitFor(() => { expect(changeMemberRoleMock).toHaveBeenCalledWith(adminTeamMember, TeamMemberRole.admin, team.id) })
+      await waitFor(() => {
+        expect(changeMemberRoleMock).toHaveBeenCalledWith(adminTeamMember, TeamMemberRole.admin, team.id)
+      })
       expect(refreshParent).toHaveBeenCalled()
       expect(errorMock).toHaveBeenCalledWith('team-page-failed-update-role')
     })

@@ -29,11 +29,11 @@ import React, { type FunctionComponent, memo, useMemo } from 'react'
 
 import { type BgBounds } from 'medical-domain'
 import { type CbgSlicesContainerData } from '../../../../models/cbg-slices-container-data.model'
-import { CbgSliceSegment } from './cbg-slice-segment'
 import { CbgMedian } from '../cbg-median/cbg-median'
 import { formatCbgs } from './cbg-slices-container.util'
 import { type ScaleFunction } from '../../../../models/scale-function.model'
 import { useTrendsContext } from '../../../../provider/trends.provider'
+import { CbgSliceSegment } from './cbg-slice-segment'
 
 interface CbgSlicesContainerProps {
   bgBounds: BgBounds

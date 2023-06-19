@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,6 +29,7 @@ export enum SignupFormKey {
   AccountRole = 'accountRole',
   Feedback = 'feedback',
   HcpProfession = 'hcpProfession',
+  HcpConfirmAck = 'hcpConfirmAck',
   PrivacyPolicy = 'privacyPolicy',
   ProfileCountry = 'profileCountry',
   ProfileFirstname = 'profileFirstname',

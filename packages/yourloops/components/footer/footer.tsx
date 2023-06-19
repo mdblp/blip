@@ -222,7 +222,9 @@ const Footer: FunctionComponent = () => {
   }
 
   const metricsPdfDocument = (title: string) => {
-    return () => { metrics.send('pdf_document', 'view_document', title) }
+    return () => {
+      metrics.send('pdf_document', 'view_document', title)
+    }
   }
 
   return (

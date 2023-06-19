@@ -124,6 +124,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
       justifyContent="center"
     >
       <TextField
+        data-testid="first-name"
         aria-label={t('first-name')}
         margin="normal"
         label={t('first-name')}
@@ -135,6 +136,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         helperText={errors.firstName && t('required-field')}
       />
       <TextField
+        data-testid="last-name"
         aria-label={t('last-name')}
         margin="normal"
         label={t('last-name')}

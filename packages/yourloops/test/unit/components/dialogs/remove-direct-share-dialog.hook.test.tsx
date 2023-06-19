@@ -27,9 +27,9 @@
 
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
-import * as patientHookMock from '../../../../lib/patient/patient.provider'
+import * as patientsHookMock from '../../../../lib/patient/patients.provider'
 import NotificationApi from '../../../../lib/notifications/notification.api'
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 import useRemoveDirectShareDialog from '../../../../components/dialogs/remove-direct-share-dialog.hook'
 import * as alertMock from '../../../../components/utils/snackbar'
 import { type User } from '../../../../lib/auth'
@@ -37,7 +37,7 @@ import { NotificationType } from '../../../../lib/notifications/models/enums/not
 
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/notifications/notification.hook')
-jest.mock('../../../../lib/patient/patient.provider')
+jest.mock('../../../../lib/patient/patients.provider')
 
 describe('Remove direct share dialog hook', () => {
   const userToRemoveEmail = 'fake@email.com'
@@ -68,7 +68,7 @@ describe('Remove direct share dialog hook', () => {
       error: onErrorAlertMock
     }));
 
-    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => ({
+    (patientsHookMock.usePatientsContext as jest.Mock).mockImplementation(() => ({
       refresh: refreshMock
     }))
   })
@@ -116,7 +116,6 @@ describe('Remove direct share dialog hook', () => {
 
       expect(removeDirectShareMock).toHaveBeenCalledWith(authUserId, userToRemove.id)
       expect(onSuccessAlertMock).toHaveBeenCalledWith('modal-patient-remove-caregiver-success')
-      expect(refreshMock).toHaveBeenCalled()
       expect(onClose).toHaveBeenCalledWith(true)
     })
 

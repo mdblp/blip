@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as usePatientContextMock from '../../../../lib/patient/patient.provider'
+import * as usePatientContextMock from '../../../../lib/patient/patients.provider'
 import PatientAPI from '../../../../lib/patient/patient.api'
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import {
   useCancelInvitePatientDialog
 } from '../../../../components/patient/cancel-invite-patient-dialog/cancel-invite-patient-dialog.hook'
@@ -35,7 +35,7 @@ import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-
 import * as alertMock from '../../../../components/utils/snackbar'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 
-jest.mock('../../../../lib/patient/patient.provider')
+jest.mock('../../../../lib/patient/patients.provider')
 jest.mock('../../../../components/utils/snackbar')
 describe('Cancel invite patient dialog hook', () => {
   jest.spyOn(PatientAPI, 'removePatient').mockResolvedValue(undefined)
@@ -43,7 +43,7 @@ describe('Cancel invite patient dialog hook', () => {
   const onInfoMock = jest.fn()
 
   beforeEach(() => {
-    (usePatientContextMock.usePatientContext as jest.Mock).mockImplementation(() => ({
+    (usePatientContextMock.usePatientsContext as jest.Mock).mockImplementation(() => ({
       removePatient: removePatientMock
     }));
     (alertMock.useAlert as jest.Mock).mockImplementation(() => ({

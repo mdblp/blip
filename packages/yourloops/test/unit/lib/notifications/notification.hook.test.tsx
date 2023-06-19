@@ -60,10 +60,10 @@ describe('Notification hook', () => {
           </NotificationContextProvider>
         </BrowserRouter>
       )
-      await waitFor(() => { expect(notifications.initialized).toBeTruthy() })
-      expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
-      expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
     })
+    await waitFor(() => { expect(notifications.initialized).toBeTruthy() })
+    expect(NotificationApi.getReceivedInvitations).toHaveBeenCalledTimes(1)
+    expect(NotificationApi.getSentInvitations).toHaveBeenCalledTimes(1)
   }
 
   beforeAll(() => {

@@ -49,10 +49,19 @@ import DataApi from '../../../../lib/data/data.api'
 import { User } from '../../../../lib/auth'
 import { when } from 'jest-when'
 import { patient2AsTeamMember } from '../../data/patient.api.data'
+import { mockWindowResizer } from '../../mock/window-resizer.mock'
+import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 
 describe('Daily view for anyone', () => {
-  beforeAll(() => {
+  beforeEach(() => {
+    mockWindowResizer()
     mockPatientLogin(patient2AsTeamMember)
+    mockPatientApiForPatients()
+  })
+
+  afterEach(() => {
+    window.ResizeObserver = ResizeObserver
+    jest.restoreAllMocks()
   })
 
   describe('with all kind of data', () => {
@@ -134,7 +143,7 @@ describe('Daily view for anyone', () => {
 
       // This checks that we tried to generate a pdf
       expect(downloadLinkElement.download).toEqual(`yourloops-report-${patient2AsTeamMember.userId}.pdf`)
-      expect(downloadLinkElement.href.length).toBeGreaterThan(17950)
+      expect(downloadLinkElement.href.length).toBeGreaterThan(17949)
       expect(downloadLinkElement.href.length).toBeLessThan(18040)
       expect(downloadLinkElement.click).toHaveBeenCalledTimes(1)
 

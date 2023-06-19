@@ -25,17 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import cx from 'classnames'
 import React, { type FunctionComponent } from 'react'
-
 import styles from './cbg-slice-animated.css'
-import { getRangeSegments } from './cbg-slice-animated.util'
-import { type ScaleFunction } from '../../../../models/scale-function.model'
+import { type CbgPositionData, type CbgSliceYPositions } from '../../../../models/cbg-position-data.model'
+import { CBG_CIRCLE_PREFIX_ID } from '../../../../models/constants/cbg.constants'
 import { useTrendsContext } from '../../../../provider/trends.provider'
 import { type CbgSlice } from '../../../../models/cbg-slice.model'
-import { CBG_CIRCLE_PREFIX_ID } from '../../../../models/constants/cbg.constants'
-import { type CbgPositionData, type CbgSliceYPositions } from '../../../../models/cbg-position-data.model'
+import { type ScaleFunction } from '../../../../models/scale-function.model'
 import { type RangeSegmentSlice } from '../../../../models/enums/range-segment.enum'
+import { getRangeSegments } from './cbg-slice-animated.util'
+import cx from 'classnames'
 
 interface CbgSliceAnimatedProps {
   datum: CbgSlice
@@ -55,7 +54,6 @@ export const CbgSliceSegment: FunctionComponent<CbgSliceAnimatedProps> = (props)
     xScale,
     yScale
   } = props
-
   const { displayFlags, showCbgDateTraces, focusCbgSlice, unfocusCbgSlice } = useTrendsContext()
 
   const handleMouseOut = (event: { relatedTarget: EventTarget | null | { id: string } }): void => {

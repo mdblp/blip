@@ -88,6 +88,20 @@ describe('Patient dashboard for patient', () => {
       isMonitoringAlertCardVisible: false
     }
 
+    const router = renderPage(patientDashboardRoute)
+
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(patientDashboardRoute)
+    })
+
+    await testAppMainLayoutForPatient(appMainLayoutParams)
+    await testDashboardDataVisualisationForPatient(patientDashboardLayoutParams)
+    await testPatientNavBarForPatient()
+  })
+
+  it('should display medical reports', async () => {
+    mockDataAPI(completeDashboardData)
+
     const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
       selectedPatientId: patient1Id,
       loggedInUserFirstName: patient1.profile.firstName,
@@ -102,11 +116,30 @@ describe('Patient dashboard for patient', () => {
       expect(router.state.location.pathname).toEqual(patientDashboardRoute)
     })
 
-    await testAppMainLayoutForPatient(appMainLayoutParams)
-    await testDashboardDataVisualisationForPatient(patientDashboardLayoutParams)
-    await testPatientNavBarForPatient()
     await testMedicalWidgetForPatient(medicalFilesWidgetParams)
+  })
+
+  it('should be able to use the chat widget', async () => {
+    mockDataAPI(completeDashboardData)
+
+    const router = renderPage(patientDashboardRoute)
+
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(patientDashboardRoute)
+    })
+
     await testChatWidgetForPatient()
+  })
+
+  it('should be able to join a team', async () => {
+    mockDataAPI(completeDashboardData)
+
+    const router = renderPage(patientDashboardRoute)
+
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(patientDashboardRoute)
+    })
+
     await testJoinTeam()
   })
 

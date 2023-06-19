@@ -52,7 +52,7 @@ import Divider from '@mui/material/Divider'
 import AddIcon from '@mui/icons-material/Add'
 import TeamInformationEditDialog from '../../pages/hcp/team-information-edit-dialog'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import { usePatientContext } from '../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../lib/patient/patients.provider'
 
 const classes = makeStyles()((theme: Theme) => ({
   sectionTitle: {
@@ -82,10 +82,9 @@ export const TeamScopeMenu: FunctionComponent = () => {
       typography
     }
   } = classes()
-  const { getMedicalTeams, getPrivateTeam } = useTeam()
+  const { getMedicalTeams, getPrivateTeam, createTeam, refresh: refreshTeams } = useTeam()
   const { selectTeam, selectedTeam } = useSelectedTeamContext()
-  const { createTeam, refresh: refreshTeams } = useTeam()
-  const { refresh } = usePatientContext()
+  const { refresh } = usePatientsContext()
   const alert = useAlert()
   const navigate = useNavigate()
   const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null)

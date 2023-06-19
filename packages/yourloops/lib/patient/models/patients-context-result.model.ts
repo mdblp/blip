@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,9 +25,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum FilterType {
-  all = 'all',
-  flagged = 'flagged',
-  pending = 'pending',
-  private = 'private',
+import { type Team } from '../../team'
+import { type Patient } from './patient.model'
+
+export interface PatientsContextResult {
+  patients: Patient[]
+  pendingPatientsCount?: number
+  allNonPendingPatientsForSelectedTeamCount?: number
+  initialized: boolean
+  refreshInProgress: boolean
+  getPatientByEmail: (email: string) => Patient
+  getPatientById: (userId: string) => Patient
+  searchPatients: (search: string) => Patient[]
+  invitePatient: (team: Team, username: string) => Promise<void>
+  markPatientMessagesAsRead: (patient: Patient) => void
+  updatePatientMonitoringAlertsParameters: (patient: Patient) => Promise<void>
+  removePatient: (patient: Patient) => Promise<void>
+  refresh: (teamId?: string) => void
 }

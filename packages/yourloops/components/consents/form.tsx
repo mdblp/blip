@@ -40,6 +40,7 @@ import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { type ConsentCheck } from './models/consent-check.model'
 import { type ConsentFormProps } from './models/consent-form-props.model'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
+import { ConsentHcpConfirmAck } from './hcp-confirm-ack'
 
 const formStyles = makeStyles({ name: 'ylp-form-consents' })((theme: Theme) => {
   return {
@@ -184,6 +185,8 @@ const ConsentForm: FunctionComponent<ConsentFormProps> = (props) => {
     group,
     policyAccepted,
     setPolicyAccepted,
+    hcpConfirmAcknowledged,
+    setHcpConfirmAcknowledged,
     termsAccepted,
     setTermsAccepted,
     feedbackAccepted,
@@ -215,6 +218,13 @@ const ConsentForm: FunctionComponent<ConsentFormProps> = (props) => {
   return (
     <FormControl className={className}>
       <FormGroup className={`${classes.formGroup} ${group ?? ''}`}>
+        {userRole === UserRole.Hcp && setHcpConfirmAcknowledged &&
+          <ConsentHcpConfirmAck
+            id={id}
+            checked={!!hcpConfirmAcknowledged}
+            onChange={() => { setHcpConfirmAcknowledged(!hcpConfirmAcknowledged) }}
+          />
+        }
         <ConsentPrivacyPolicy
           id={id}
           userRole={userRole}

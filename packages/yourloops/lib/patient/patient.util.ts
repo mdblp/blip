@@ -34,6 +34,7 @@ import { type User } from '../auth'
 import { type PatientsFilters } from '../providers/models/patients-filters.model'
 import i18next from 'i18next'
 import { Gender } from '../auth/models/enums/gender.enum'
+import { UserRole } from '../auth/models/enums/user-role.enum'
 
 const t = i18next.t.bind(i18next)
 
@@ -46,17 +47,37 @@ export default class PatientUtils {
   }
 
   static async computePatients(user: User, teamId?: string): Promise<Patient[]> {
-    const userIsHcp = user.isUserHcp()
-    if (!userIsHcp && !user.isUserPatient() && !user.isUserCaregiver()) {
-      throw Error(`Cannot retrieve patients with user having role ${user.role}`)
+    const userRole = user.role
+    switch (userRole) {
+      case UserRole.Hcp:
+        if (!teamId) {
+          throw Error('Cannot retrieve scoped patients when no team id is given')
+        }
+        return await PatientApi.getPatientsForHcp(user.id, teamId)
+      case UserRole.Caregiver:
+        return await PatientUtils.retrievePatients()
+      default:
+        throw Error(`Cannot retrieve patients with user having role ${user.role}`)
     }
-    if (userIsHcp) {
-      if (!teamId) {
-        throw Error('Cannot retrieve scoped patients when no team id is given')
+  }
+
+  static mapUserToPatient(user: User): Patient {
+    const profile = user.profile
+    return {
+      userid: user.id,
+      profile: {
+        firstName: profile.firstName,
+        fullName: profile.fullName,
+        lastName: profile.lastName,
+        email: profile.email,
+        sex: profile?.patient?.sex ?? Gender.NotDefined
+      },
+      settings: user.settings,
+      metadata: {
+        medicalData: undefined,
+        hasSentUnreadMessages: false
       }
-      return await PatientApi.getPatientsForHcp(user.id, teamId)
     }
-    return await PatientUtils.retrievePatients()
   }
 
   static computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {

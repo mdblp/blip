@@ -26,8 +26,8 @@
  */
 
 import { type GridComparatorFn } from '@mui/x-data-grid'
-import { type Patient } from '../../lib/patient/models/patient.model'
-import { getUserName } from '../../lib/auth/user.util'
+import { type Patient } from '../../../lib/patient/models/patient.model'
+import { getUserName } from '../../../lib/auth/user.util'
 import moment from 'moment-timezone'
 
 interface PatientSortComparator extends GridComparatorFn<Patient> {

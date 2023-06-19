@@ -35,13 +35,13 @@ import { type PatientInvite } from './patient-invite.model'
 import { type GlycemiaIndicators } from './glycemia-indicators.model'
 
 export interface Patient {
-  monitoringAlerts: MonitoringAlerts
-  glycemiaIndicators: GlycemiaIndicators
+  monitoringAlerts?: MonitoringAlerts
+  glycemiaIndicators?: GlycemiaIndicators
   profile: PatientProfile
   settings: PatientSettings
   metadata: PatientMetadata
   monitoringAlertsParameters?: MonitoringAlertsParameters
-  invitationStatus: UserInviteStatus
+  invitationStatus?: UserInviteStatus
   invite?: PatientInvite
   readonly userid: string
 }

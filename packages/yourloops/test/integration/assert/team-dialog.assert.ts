@@ -26,7 +26,7 @@
  */
 
 import TeamAPI from '../../../lib/team/team.api'
-import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { PhonePrefixCode } from '../../../lib/utils'
 import userEvent from '@testing-library/user-event'
 import { mockTeamApiForTeamCreation } from '../mock/team.api.mock'
@@ -36,7 +36,7 @@ export const checkCreateCareTeamDialog = async () => {
   jest.spyOn(TeamAPI, 'createTeam').mockResolvedValue(undefined)
   const teamMenu = screen.getByLabelText('Open team selection menu')
   await userEvent.click(teamMenu)
-  await userEvent.click(screen.getByText('Create a new care team'))
+  await userEvent.click(screen.getByText('Create a care team'))
   const dialogTeam = screen.getByRole('dialog')
   const createTeamButton = within(dialogTeam).getByRole('button', { name: 'Create team' })
   const cancelButton = within(dialogTeam).getByRole('button', { name: 'Cancel' })
@@ -122,7 +122,7 @@ export const checkTeamCreationFailure = async (): Promise<void> => {
 
   const teamMenu = screen.getByLabelText('Open team selection menu')
   await userEvent.click(teamMenu)
-  await userEvent.click(screen.getByText('Create a new care team'))
+  await userEvent.click(screen.getByText('Create a care team'))
 
   const dialog = screen.getByRole('dialog')
   const nameInput = within(dialog).getByRole('textbox', { name: 'Name' })
@@ -139,9 +139,7 @@ export const checkTeamCreationFailure = async (): Promise<void> => {
   await userEvent.type(zipcodeInput, teamZipCode)
   expect(createTeamButton).toBeEnabled()
 
-  await act(async () => {
-    await userEvent.click(createTeamButton)
-  })
+  await userEvent.click(createTeamButton)
   expect(TeamAPI.createTeam).toHaveBeenCalledWith({
     address: {
       city: teamCity,
@@ -168,7 +166,7 @@ export const checkTeamCreationSuccess = async (router: Router): Promise<void> =>
 
   const teamMenu = screen.getByLabelText('Open team selection menu')
   await userEvent.click(teamMenu)
-  await userEvent.click(screen.getByText('Create a new care team'))
+  await userEvent.click(screen.getByText('Create a care team'))
 
   const dialog = screen.getByRole('dialog')
   const nameInput = within(dialog).getByRole('textbox', { name: 'Name' })
@@ -187,9 +185,7 @@ export const checkTeamCreationSuccess = async (router: Router): Promise<void> =>
 
   mockTeamApiForTeamCreation()
 
-  await act(async () => {
-    await userEvent.click(createTeamButton)
-  })
+  await userEvent.click(createTeamButton)
   expect(TeamAPI.createTeam).toHaveBeenCalledWith({
     address: {
       city: teamCity,
