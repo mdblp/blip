@@ -53,7 +53,7 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ pumpSettings, timePref
   })
 
   const deviceDateISO = moment.tz(pumpSettings.normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format()
-  const lastUploadDate = new Date(deviceDateISO).toLocaleString()
+  const lastUploadDate = new Date(deviceDateISO).toLocaleDateString()
 
   const copySettingsToClipboard = async (): Promise<void> => {
     let rawText = `${lastUploadDate}\n\n`
