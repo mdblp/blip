@@ -34,7 +34,7 @@
   "dependencies": {
     "@auth0/auth0-react": "^2.0.1",
     "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
+    "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^4.1.0",
     "@mui/icons-material": "^5.11.11",
     "@mui/lab": "^5.0.0-alpha.124",
@@ -55,9 +55,9 @@
     "react-device-detect": "^2.2.3",
     "react-dom": "18.2.0",
     "react-i18next": "^12.2.0",
-    "react-idle-timer": "^5.5.3",
+    "react-idle-timer": "^5.7.2",
     "react-resize-detector": "^8.0.4",
-    "react-router-dom": "^6.9.0",
+    "react-router-dom": "^6.13.0",
     "tss-react": "^4.8.2",
     "uuid": "^9.0.0"
   }
