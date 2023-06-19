@@ -28,10 +28,10 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { type GridColDef, type GridRowParams, type GridRowsProp } from '@mui/x-data-grid'
 import { useTranslation } from 'react-i18next'
-import { PendingPatientListColumns } from '../models/enums/patient-list.enum'
+import { PendingPatientListTeamColumns } from '../models/enums/patient-list.enum'
 import { usePatientsContext } from '../../../lib/patient/patients.provider'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { type PendingGridRowModel } from '../models/grid-row.model'
+import { type PendingGridRowTeamModel } from '../models/grid-row.model'
 import { getUserName } from '../../../lib/auth/user.util'
 import Button from '@mui/material/Button'
 import CloseIcon from '@mui/icons-material/Close'
@@ -39,11 +39,11 @@ import MailIcon from '@mui/icons-material/Mail'
 import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
 import { formatDate } from 'dumb/dist/src/utils/datetime/datetime.util'
 
-interface PendingPatientListHookProps {
+interface PendingPatientListTeamHookProps {
   patients: Patient[]
 }
 
-interface PatientListHookReturns {
+interface PendingPatientListTeamHookReturns {
   columns: GridColDef[]
   patientToCancelInvite: Patient | null
   patientToReinvite: Patient | null
@@ -57,7 +57,7 @@ const SMALL_CELL_WIDTH = 200
 const MEDIUM_CELL_WIDTH = 250
 const LARGE_CELL_WIDTH = 300
 
-export const usePendingPatientListHook = (props: PendingPatientListHookProps): PatientListHookReturns => {
+export const usePendingPatientListTeamHook = (props: PendingPatientListTeamHookProps): PendingPatientListTeamHookReturns => {
   const { patients } = props
   const { t } = useTranslation()
   const { getPatientById } = usePatientsContext()
@@ -90,31 +90,31 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
   const buildPendingColumns = (): GridColDef[] => {
     return [
       {
-        field: PendingPatientListColumns.InviteSentBy,
+        field: PendingPatientListTeamColumns.InviteSentBy,
         type: 'string',
         headerName: t('invite-sent-by'),
         hideable: false,
         minWidth: MEDIUM_CELL_WIDTH
       },
       {
-        field: PendingPatientListColumns.Date,
+        field: PendingPatientListTeamColumns.Date,
         type: 'string',
         headerName: t('date'),
         hideable: false,
         minWidth: SMALL_CELL_WIDTH
       },
       {
-        field: PendingPatientListColumns.Email,
+        field: PendingPatientListTeamColumns.Email,
         type: 'string',
         headerName: t('email'),
         minWidth: MEDIUM_CELL_WIDTH
       },
       {
         type: 'actions',
-        field: PendingPatientListColumns.Actions,
+        field: PendingPatientListTeamColumns.Actions,
         headerName: t('actions'),
-        getActions: (params: GridRowParams<PendingGridRowModel>) => {
-          const patient = params.row[PendingPatientListColumns.Actions]
+        getActions: (params: GridRowParams<PendingGridRowTeamModel>) => {
+          const patient = params.row[PendingPatientListTeamColumns.Actions]
 
           if (!params.row.isInviteAvailable) {
             return []
@@ -154,17 +154,17 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
   }
 
   const buildPendingRows = useCallback((): GridRowsProp => {
-    return patients.map((patient): PendingGridRowModel => {
+    return patients.map((patient): PendingGridRowTeamModel => {
       const invite = patient.invite
       if (!invite) {
         const notAvailableLabel = t('N/A')
         return {
           id: patient.userid,
           isInviteAvailable: false,
-          [PendingPatientListColumns.Actions]: patient,
-          [PendingPatientListColumns.Date]: notAvailableLabel,
-          [PendingPatientListColumns.Email]: patient.profile.email,
-          [PendingPatientListColumns.InviteSentBy]: notAvailableLabel
+          [PendingPatientListTeamColumns.Actions]: patient,
+          [PendingPatientListTeamColumns.Date]: notAvailableLabel,
+          [PendingPatientListTeamColumns.Email]: patient.profile.email,
+          [PendingPatientListTeamColumns.InviteSentBy]: notAvailableLabel
         }
       }
       const inviteCreator = selectedTeam.members.find(member => member.userId === invite.creatorId)
@@ -172,10 +172,10 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
       return {
         id: patient.userid,
         isInviteAvailable: true,
-        [PendingPatientListColumns.Actions]: patient,
-        [PendingPatientListColumns.Date]: formatDate(invite.creationDate),
-        [PendingPatientListColumns.Email]: patient.profile.email,
-        [PendingPatientListColumns.InviteSentBy]: inviteCreatorName
+        [PendingPatientListTeamColumns.Actions]: patient,
+        [PendingPatientListTeamColumns.Date]: formatDate(invite.creationDate),
+        [PendingPatientListTeamColumns.Email]: patient.profile.email,
+        [PendingPatientListTeamColumns.InviteSentBy]: inviteCreatorName
       }
     })
   }, [patients, selectedTeam, t])

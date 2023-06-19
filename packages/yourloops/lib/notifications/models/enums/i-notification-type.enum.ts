@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,5 +31,4 @@ export enum INotificationType {
   medicalTeamPatientInvitation = 'medicalteam_patient_invitation',
   medicalTeamDoAdmin = 'medicalteam_do_admin',
   medicalTeamRemoveMember = 'medicalteam_remove',
-  medicalTeamMonitoringInvitation = 'medicalteam_monitoring_invitation',
 }

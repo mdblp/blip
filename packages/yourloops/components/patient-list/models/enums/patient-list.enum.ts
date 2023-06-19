@@ -47,9 +47,16 @@ export enum PatientListColumns {
   Variance = 'variance'
 }
 
-export enum PendingPatientListColumns {
+export enum PendingPatientListTeamColumns {
   Actions = 'actions',
   Date = 'date',
   Email = 'email',
   InviteSentBy = 'invite-sent-by',
+}
+
+export enum PendingPatientListPrivateColumns {
+  Actions = 'actions',
+  Date = 'date',
+  Email = 'email',
+  Patient = 'patient',
 }

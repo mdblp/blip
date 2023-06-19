@@ -32,7 +32,7 @@ import { PatientListTabs } from './models/enums/patient-list.enum'
 import { GlobalStyles } from 'tss-react'
 import { useTheme } from '@mui/material/styles'
 import { MedicalTeamPatientList } from './current-patient-list/medical-team-patient-list/medical-team-patient-list'
-import { PendingPatientList } from './pending-patient-list/pending-patient-list'
+import { PendingPatientListTeam } from './pending-patient-list/pending-patient-list-team'
 import { setPageTitle } from '../../lib/utils'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../lib/auth'
@@ -41,6 +41,7 @@ import TeamUtils from '../../lib/team/team.util'
 import {
   PrivateTeamOrCaregiverPatientList
 } from './current-patient-list/private-team-or-caregiver-patient-list/private-team-or-caregiver-patient-list'
+import { PendingPatientListPrivate } from './pending-patient-list/pending-patient-list-private'
 
 export const PatientListPage: FunctionComponent = () => {
   const theme = useTheme()
@@ -76,8 +77,11 @@ export const PatientListPage: FunctionComponent = () => {
       {selectedTab === PatientListTabs.Current && !isCaregiverUserOrPrivateTeam &&
         <MedicalTeamPatientList patients={patients} />
       }
-      {selectedTab === PatientListTabs.Pending &&
-        <PendingPatientList patients={patients} />
+      {selectedTab === PatientListTabs.Pending && !isCaregiverUserOrPrivateTeam &&
+        <PendingPatientListTeam patients={patients} />
+      }
+      {selectedTab === PatientListTabs.Pending && isCaregiverUserOrPrivateTeam &&
+        <PendingPatientListPrivate />
       }
     </React.Fragment>
   )

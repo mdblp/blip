@@ -31,7 +31,7 @@ import Box from '@mui/material/Box'
 import { PatientListColumns } from '../models/enums/patient-list.enum'
 import { usePatientListContext } from '../../../lib/providers/patient-list.provider'
 import { usePatientsContext } from '../../../lib/patient/patients.provider'
-import { usePendingPatientListHook } from './pending-patient-list.hook'
+import { usePendingPatientListTeamHook } from './pending-patient-list-team.hook'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { EmptyPatientList } from '../empty-patient-list/empty-patient-list'
 import { ReinvitePatientDialog } from '../../patient/reinvite-patient-dialog/reinvite-patient-dialog'
@@ -40,11 +40,11 @@ import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team
 import { useWindowDimensions } from '../../../lib/custom-hooks/use-window-dimensions.hook'
 import { CancelInvitePatientDialog } from '../../patient/cancel-invite-patient-dialog/cancel-invite-patient-dialog'
 
-interface PendingPatientListProps {
+interface PendingPatientListTeamProps {
   patients: Patient[]
 }
 
-export const PendingPatientList: FunctionComponent<PendingPatientListProps> = (props: PendingPatientListProps) => {
+export const PendingPatientListTeam: FunctionComponent<PendingPatientListTeamProps> = (props: PendingPatientListTeamProps) => {
   const { patients } = props
   const {
     columns,
@@ -53,7 +53,7 @@ export const PendingPatientList: FunctionComponent<PendingPatientListProps> = (p
     rowsProps,
     onCloseCancelInviteDialog,
     onCloseReinviteDialog
-  } = usePendingPatientListHook({ patients })
+  } = usePendingPatientListTeamHook({ patients })
   const { displayedColumns } = usePatientListContext()
   const { refreshInProgress } = usePatientsContext()
   const { selectedTeam } = useSelectedTeamContext()

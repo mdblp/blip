@@ -25,8 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PatientListColumns, type PendingPatientListColumns } from './enums/patient-list.enum'
+import {
+  type PatientListColumns,
+  type PendingPatientListPrivateColumns,
+  type PendingPatientListTeamColumns
+} from './enums/patient-list.enum'
 import { type Patient } from '../../../lib/patient/models/patient.model'
+import { type Notification } from '../../../lib/notifications/models/notification.model'
 
 export interface GridRowModel {
   id: string
@@ -46,11 +51,19 @@ export interface GridRowModel {
   [PatientListColumns.Actions]: Patient
 }
 
-export interface PendingGridRowModel {
+export interface PendingGridRowTeamModel {
   id: string
   isInviteAvailable: boolean
-  [PendingPatientListColumns.Actions]: Patient
-  [PendingPatientListColumns.Date]: string
-  [PendingPatientListColumns.Email]: string
-  [PendingPatientListColumns.InviteSentBy]: string
+  [PendingPatientListTeamColumns.Actions]: Patient
+  [PendingPatientListTeamColumns.Date]: string
+  [PendingPatientListTeamColumns.Email]: string
+  [PendingPatientListTeamColumns.InviteSentBy]: string
+}
+
+export interface PendingGridRowPrivateModel {
+  id: string
+  [PendingPatientListPrivateColumns.Actions]: { invite: Notification, patientFullName: string }
+  [PendingPatientListPrivateColumns.Date]: string
+  [PendingPatientListPrivateColumns.Email]: string
+  [PendingPatientListPrivateColumns.Patient]: string
 }
