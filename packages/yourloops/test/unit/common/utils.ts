@@ -38,6 +38,11 @@ import { type MonitoringAlertsParameters } from '../../../lib/team/models/monito
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 import { type MedicalData } from '../../../lib/data/models/medical-data.model'
 
+export function triggerMouseEvent(event: string, domElement: Element): void {
+  const clickEvent = new MouseEvent(event, { bubbles: true })
+  domElement.dispatchEvent(clickEvent)
+}
+
 export const createPatient = (
   id = 'fakePatientId',
   invitationStatus: UserInviteStatus = UserInviteStatus.Accepted,

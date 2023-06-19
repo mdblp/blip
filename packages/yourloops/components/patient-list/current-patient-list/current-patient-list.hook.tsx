@@ -77,7 +77,8 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
 
   const allRows = useMemo(() => {
     return patients.map((patient): GridRowModel => {
-      const { lastUpload } = getMedicalValues(patient.medicalData, noDataLabel)
+      const medicalValues = getMedicalValues(patient.medicalData, noDataLabel)
+      const lastUpload = patient.medicalData ? medicalValues.lastUpload : undefined
       const birthdate = patient.profile.birthdate
       return {
         id: patient.userid,
