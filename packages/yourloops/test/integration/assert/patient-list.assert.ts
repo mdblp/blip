@@ -224,7 +224,7 @@ export const checkPatientColumnsFiltersContent = async () => {
   await userEvent.click(columnSettingsButton)
 
   const columnSettingsPopover = screen.getByRole('presentation')
-  expect(columnSettingsPopover).toHaveTextContent('Show columnPatientAgeDate of birthGenderSystemMonitoring alertsMessagesTIRGMI (estimated HbA1C of last 3 months)HypoglycemiaVarianceLast data updateCancelApply')
+  expect(columnSettingsPopover).toHaveTextContent('Show columnPatientAgeDate of birthGenderSystemMonitoring alertsMessagesTIRGMI (estimated HbA1C of last 3 months)HypoglycemiaCVLast data updateCancelApply')
 
   const disabledToggle = screen.getByLabelText('This column cannot be removed')
   await userEvent.hover(disabledToggle)
@@ -253,7 +253,7 @@ export const checkPatientListHideShowColumns = async () => {
   expect(screen.getByRole('columnheader', { name: 'TIR' })).toBeVisible()
   expect(screen.queryByRole('columnheader', { name: 'GMI (estimated HbA1C of last 3 months)' })).not.toBeInTheDocument()
   expect(screen.getByRole('columnheader', { name: 'Hypoglycemia' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'Variance' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'CV' })).not.toBeInTheDocument()
   expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
 
@@ -329,7 +329,7 @@ export const checkPatientListHideShowColumns = async () => {
   expect(screen.queryByRole('columnheader', { name: 'TIR' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'GMI (estimated HbA1C of last 3 months)' })).not.toBeInTheDocument()
   expect(screen.queryByRole('columnheader', { name: 'Hypoglycemia' })).not.toBeInTheDocument()
-  expect(screen.queryByRole('columnheader', { name: 'Variance' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'CV' })).not.toBeInTheDocument()
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
 
   expect(dataGridCurrentRows).toHaveTextContent('PatientActionsFlag patient patient1@diabeloop.frPatient1 GrobyFlag patient patient2@diabeloop.frPatient2 RouisFlag patient patient3@diabeloop.frPatient3 SrairiFlag patient patient-mmol@diabeloop.frPatientMmol Perotto')
@@ -350,7 +350,7 @@ export const checkPatientListHideShowColumns = async () => {
   const tirToggleForShow = within(within(columnSettingsPopoverForShow).getByLabelText('TIR')).getByRole('checkbox')
   const gmiToggleForShow = within(within(columnSettingsPopoverForShow).getByLabelText('GMI (estimated HbA1C of last 3 months)')).getByRole('checkbox')
   const hypoglycemiaToggleForShow = within(within(columnSettingsPopoverForShow).getByLabelText('Hypoglycemia')).getByRole('checkbox')
-  const varianceToggleForShow = within(within(columnSettingsPopoverForShow).getByLabelText('Variance')).getByRole('checkbox')
+  const varianceToggleForShow = within(within(columnSettingsPopoverForShow).getByLabelText('CV')).getByRole('checkbox')
   const lastUpdateToggleForShow = within(within(columnSettingsPopoverForShow).getByLabelText('Last data update')).getByRole('checkbox')
 
   // Assert only mandatory columns are checked
@@ -408,10 +408,10 @@ export const checkPatientListHideShowColumns = async () => {
   expect(screen.getByRole('columnheader', { name: 'TIR' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'GMI (estimated HbA1C of last 3 months)' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Hypoglycemia' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'Variance' })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'CV' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
 
-  expect(dataGridCurrentRows).toHaveTextContent('PatientAgeDate of birthGenderSystemMonitoring alertsMessagesTIRGMI (estimated HbA1C of last 3 months)HypoglycemiaVarianceLast data updateActionsFlag patient patient1@diabeloop.frPatient1 Groby43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient2@diabeloop.frPatient2 Rouis43Jan 1, 1980FemaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient3@diabeloop.frPatient3 Srairi43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient-mmol@diabeloop.frPatientMmol Perotto43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/A')
+  expect(dataGridCurrentRows).toHaveTextContent('PatientAgeDate of birthGenderSystemMonitoring alertsMessagesTIRGMI (estimated HbA1C of last 3 months)HypoglycemiaCVLast data updateActionsFlag patient patient1@diabeloop.frPatient1 Groby43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient2@diabeloop.frPatient2 Rouis43Jan 1, 1980FemaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient3@diabeloop.frPatient3 Srairi43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient-mmol@diabeloop.frPatientMmol Perotto43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/A')
 
   await userEvent.click(columnSettingsButton)
   const columnSettingsPopoverForReset = screen.getByRole('presentation')
@@ -429,7 +429,7 @@ export const checkPatientListHideShowColumns = async () => {
   const tirToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('TIR')).getByRole('checkbox')
   const gmiToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('GMI (estimated HbA1C of last 3 months)')).getByRole('checkbox')
   const hypoglycemiaToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('Hypoglycemia')).getByRole('checkbox')
-  const varianceToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('Variance')).getByRole('checkbox')
+  const varianceToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('CV')).getByRole('checkbox')
   const lastUpdateToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('Last data update')).getByRole('checkbox')
 
   // Assert all columns are checked
@@ -474,7 +474,7 @@ export const checkPatientListHideShowColumns = async () => {
   expect(screen.getByRole('columnheader', { name: 'TIR' })).toBeVisible()
   expect(screen.queryByRole('columnheader', { name: 'GMI (estimated HbA1C of last 3 months)' })).not.toBeInTheDocument()
   expect(screen.getByRole('columnheader', { name: 'Hypoglycemia' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'Variance' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'CV' })).not.toBeInTheDocument()
   expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
 
