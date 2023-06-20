@@ -37,7 +37,7 @@ import {
   updatePatientsFilters
 } from './patient-filters.assert'
 import { changeTeamScope } from './header.assert'
-import { patient1, patient2, patient3, patientWithMmol, pendingPatient } from '../data/patient.api.data'
+import { patient1Info, patient2Info, patient3Info, patientWithMmolInfo, pendingPatient } from '../data/patient.api.data'
 import NotificationApi from '../../../lib/notifications/notification.api'
 import { type Router } from '../models/router.model'
 
@@ -563,27 +563,27 @@ export const checkPatientListColumnSort = async (): Promise<void> => {
 
   const patientColumnHeader = within(dataGridRows).getByRole('columnheader', { name: 'Patient' })
   const allRowsBeforeSort = within(dataGridRows).getAllByRole('row')
-  expect(allRowsBeforeSort[1]).toHaveTextContent(patient1.profile.fullName)
-  expect(allRowsBeforeSort[2]).toHaveTextContent(patient2.profile.fullName)
-  expect(allRowsBeforeSort[3]).toHaveTextContent(patient3.profile.fullName)
-  expect(allRowsBeforeSort[4]).toHaveTextContent(patientWithMmol.profile.fullName)
+  expect(allRowsBeforeSort[1]).toHaveTextContent(patient1Info.profile.fullName)
+  expect(allRowsBeforeSort[2]).toHaveTextContent(patient2Info.profile.fullName)
+  expect(allRowsBeforeSort[3]).toHaveTextContent(patient3Info.profile.fullName)
+  expect(allRowsBeforeSort[4]).toHaveTextContent(patientWithMmolInfo.profile.fullName)
 
   const sortButton = within(patientColumnHeader).getByRole('button', { hidden: true })
   await userEvent.click(sortButton)
 
   const allRowsAfterFirstSort = within(dataGridRows).getAllByRole('row')
-  expect(allRowsAfterFirstSort[1]).toHaveTextContent(patientWithMmol.profile.fullName)
-  expect(allRowsAfterFirstSort[2]).toHaveTextContent(patient3.profile.fullName)
-  expect(allRowsAfterFirstSort[3]).toHaveTextContent(patient2.profile.fullName)
-  expect(allRowsAfterFirstSort[4]).toHaveTextContent(patient1.profile.fullName)
+  expect(allRowsAfterFirstSort[1]).toHaveTextContent(patientWithMmolInfo.profile.fullName)
+  expect(allRowsAfterFirstSort[2]).toHaveTextContent(patient3Info.profile.fullName)
+  expect(allRowsAfterFirstSort[3]).toHaveTextContent(patient2Info.profile.fullName)
+  expect(allRowsAfterFirstSort[4]).toHaveTextContent(patient1Info.profile.fullName)
 
   await userEvent.click(sortButton)
 
   const allRowsAfterSecondSort = within(dataGridRows).getAllByRole('row')
-  expect(allRowsAfterSecondSort[1]).toHaveTextContent(patient1.profile.fullName)
-  expect(allRowsAfterSecondSort[2]).toHaveTextContent(patient2.profile.fullName)
-  expect(allRowsAfterSecondSort[3]).toHaveTextContent(patient3.profile.fullName)
-  expect(allRowsAfterSecondSort[4]).toHaveTextContent(patientWithMmol.profile.fullName)
+  expect(allRowsAfterSecondSort[1]).toHaveTextContent(patient1Info.profile.fullName)
+  expect(allRowsAfterSecondSort[2]).toHaveTextContent(patient2Info.profile.fullName)
+  expect(allRowsAfterSecondSort[3]).toHaveTextContent(patient3Info.profile.fullName)
+  expect(allRowsAfterSecondSort[4]).toHaveTextContent(patientWithMmolInfo.profile.fullName)
 }
 
 export const checkMonitoringAlertsIconsInactiveForFirstPatient = async (): Promise<void> => {

@@ -41,7 +41,7 @@ import {
   mySecondTeamId,
   mySecondTeamName
 } from '../../mock/team.api.mock'
-import { patient1, patient1AsTeamMember, patient1Id } from '../../data/patient.api.data'
+import { patient1AsTeamMember, patient1Id, patient1Info } from '../../data/patient.api.data'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { type AppMainLayoutParams, testAppMainLayoutForPatient } from '../../use-cases/app-main-layout-visualisation'
@@ -59,8 +59,8 @@ import { testJoinTeam } from '../../use-cases/teams-management'
 
 describe('Patient dashboard for patient', () => {
   const patientDashboardRoute = '/dashboard'
-  const firstName = patient1.profile.firstName
-  const lastName = patient1.profile.lastName
+  const firstName = patient1Info.profile.firstName
+  const lastName = patient1Info.profile.lastName
 
   beforeEach(() => {
     mockPatientLogin(patient1AsTeamMember)
@@ -104,8 +104,8 @@ describe('Patient dashboard for patient', () => {
 
     const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
       selectedPatientId: patient1Id,
-      loggedInUserFirstName: patient1.profile.firstName,
-      loggedInUserLastName: patient1.profile.lastName,
+      loggedInUserFirstName: patient1Info.profile.firstName,
+      loggedInUserLastName: patient1Info.profile.lastName,
       selectedTeamId: mySecondTeamId,
       selectedTeamName: mySecondTeamName
     }

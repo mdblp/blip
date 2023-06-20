@@ -30,7 +30,7 @@ import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
 import { completeDashboardData, mockDataAPI, twoWeeksOldDashboardData } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { patient1, patient1Id, patientWithMmolId } from '../../data/patient.api.data'
+import { patient1Id, patient1Info, patientWithMmolId } from '../../data/patient.api.data'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI, mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -173,7 +173,7 @@ describe('Patient dashboard for HCP', () => {
   it('should render correct components when navigating to a patient scoped on the private team', async () => {
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
-      ...patient1,
+      ...patient1Info,
       invitationStatus: UserInviteStatus.Accepted
     }])
 

@@ -36,7 +36,7 @@ import {
   checkDeviceUsageWidgetNoData,
   checkDeviceUsageWidgetWithTwoWeeksOldData
 } from '../assert/device-usage.assert'
-import { patient1, patient2 } from '../data/patient.api.data'
+import { patient1Info, patient2Info } from '../data/patient.api.data'
 import {
   checkPatientDropdown,
   checkPatientNavBarForPatient,
@@ -79,7 +79,7 @@ export const testDashboardDataVisualisationPrivateTeamNoData = async (patientDas
 }
 
 export const testPatientNavBarForHcp = async () => {
-  await checkPatientDropdown(patient1, patient2)
+  await checkPatientDropdown(patient1Info, patient2Info)
 }
 
 export const testPatientNavBarForPatient = async () => {

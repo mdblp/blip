@@ -64,6 +64,7 @@ export const getMedicalValues = (medicalData: MedicalData | null | undefined, na
     } else {
       tir = na
       tbr = na
+      lastUpload = na
     }
   }
 

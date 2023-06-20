@@ -69,12 +69,8 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
           return
         }
 
-        const acceptedInvitePatients = computedPatients.filter((patient: Patient) => patient.invitationStatus === UserInviteStatus.Accepted)
-        if (!acceptedInvitePatients.length) {
-          return
-        }
         // setTimeout(async () => {
-        await fetchPatientsMetrics(teamId, acceptedInvitePatients)
+        await fetchPatientsMetrics(teamId, computedPatients)
         // }, 5000)
       })
       .catch((reason: unknown) => {
@@ -89,12 +85,17 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, selectedTeam])
 
-  const fetchPatientsMetrics = async (teamId: string = selectedTeamId, computedPatients: Patient[]): Promise<void> => {
-    const patientIds = computedPatients.map((patient: Patient) => patient.userid)
+  const fetchPatientsMetrics = async (teamId: string = selectedTeamId, allPatients: Patient[]): Promise<void> => {
+    const acceptedInvitePatients = allPatients.filter((patient: Patient) => patient.invitationStatus === UserInviteStatus.Accepted)
+    if (!acceptedInvitePatients.length) {
+      return
+    }
+
+    const patientIds = acceptedInvitePatients.map((patient: Patient) => patient.userid)
 
     const patientsMetrics = await PatientApi.getPatientsMetricsForHcp(user.id, teamId, patientIds)
 
-    const updatedPatients = computedPatients.map((patient: Patient) => {
+    const updatedPatients = allPatients.map((patient: Patient) => {
       const relatedMetrics = patientsMetrics.find((metrics: PatientMetrics) => metrics.userid === patient.userid)
       if (!relatedMetrics) {
         return patient

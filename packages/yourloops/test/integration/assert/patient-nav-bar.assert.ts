@@ -26,7 +26,7 @@
  */
 
 import { type BoundFunctions, fireEvent, type queries, screen, waitFor, within } from '@testing-library/react'
-import { patient1, patient2 } from '../data/patient.api.data'
+import { patient1Info, patient2Info } from '../data/patient.api.data'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import moment from 'moment-timezone'
 import userEvent from '@testing-library/user-event'
@@ -66,8 +66,8 @@ export const checkPatientDropdown = async (initialPatient: Patient, patientToSwi
   const initialPatientHeaderContent = `Patient${initialPatient.profile.firstName} ${initialPatient.profile.lastName}Date of birth:${moment(initialPatient.profile.birthdate).format('L')}Diabetes type:Type 1Gender:MaleHbA1c:fakeA1cValue% (05/26/2023)Email:patient1@diabeloop.frDashboardDailyTrendsDownload report`
   expect(secondaryHeader).toHaveTextContent(initialPatientHeaderContent)
 
-  fireEvent.mouseDown(within(secondaryHeader).getByText(patient1.profile.fullName))
-  fireEvent.click(within(screen.getByRole('listbox')).getByText(patient2.profile.fullName))
+  fireEvent.mouseDown(within(secondaryHeader).getByText(patient1Info.profile.fullName))
+  fireEvent.click(within(screen.getByRole('listbox')).getByText(patient2Info.profile.fullName))
 
   const secondPatientDateOfBirth = moment(patientToSwitchTo.profile.birthdate).format('L')
   const secondPatientName = `${patientToSwitchTo.profile.firstName} ${patientToSwitchTo.profile.lastName}`
@@ -91,11 +91,11 @@ export const checkPatientSwitch = async () => {
   expect(screen.getByTestId('patient-dashboard')).toBeInTheDocument()
 
   mockDataAPI({} as Data)
-  fireEvent.mouseDown(within(secondaryHeader).getByText(patient1.profile.fullName))
-  fireEvent.click(within(screen.getByRole('listbox')).getByText(patient2.profile.fullName))
+  fireEvent.mouseDown(within(secondaryHeader).getByText(patient1Info.profile.fullName))
+  fireEvent.click(within(screen.getByRole('listbox')).getByText(patient2Info.profile.fullName))
 
   expect(screen.queryByTestId('patient-dashboard')).not.toBeInTheDocument()
   await waitFor(() => {
-    expect(screen.getByText(`No data for patient ${patient2.profile.fullName}`)).toBeInTheDocument()
+    expect(screen.getByText(`No data for patient ${patient2Info.profile.fullName}`)).toBeInTheDocument()
   })
 }

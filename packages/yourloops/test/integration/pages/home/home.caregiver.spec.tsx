@@ -28,7 +28,7 @@
 import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi, removeDirectShareMock } from '../../mock/direct-share.api.mock'
-import { buildPatientAsTeamMember, patient1AsTeamMember, patient2AsTeamMember } from '../../data/patient.api.data'
+import { patient1AsTeamMember, patient2AsTeamMember } from '../../data/patient.api.data'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { renderPage } from '../../utils/render'
@@ -40,6 +40,7 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { checkPatientListHeaderCaregiver } from '../../assert/patient-list.assert'
+import { buildPatientAsTeamMember } from '../../data/patient-builder.data'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'

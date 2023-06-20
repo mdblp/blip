@@ -53,6 +53,7 @@ import { usePatientListStyles } from '../patient-list.styles'
 import { AppUserRoute } from '../../../models/enums/routes.enum'
 import { useNavigate } from 'react-router-dom'
 import { Skeleton } from '@mui/material'
+import { useAuth } from '../../../lib/auth'
 
 interface CurrentPatientListProps {
   patients: Patient[]
@@ -72,13 +73,14 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
   const { patients, onClickRemovePatient } = props
   const { t } = useTranslation()
   const { classes } = usePatientListStyles()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const noDataLabel = t('N/A')
 
   const allRows = useMemo(() => {
     return patients.map((patient): GridRowModel => {
       const medicalValues = getMedicalValues(patient.medicalData, noDataLabel)
-      const lastUpload = patient.medicalData ? medicalValues.lastUpload : undefined
+      const lastUpload = user.isUserHcp() && !patient.medicalData ? undefined : medicalValues.lastUpload
       const birthdate = patient.profile.birthdate
       return {
         id: patient.userid,

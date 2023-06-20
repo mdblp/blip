@@ -342,7 +342,7 @@ describe('Patient utils', () => {
           email: 'patient@email.fr',
           patient: {
             birthday: '1980-01-01T10:44:34+01:00',
-            diagnosisType: 'type1',
+            diagnosisType: 'type1'
           }
         }
       } as unknown as User

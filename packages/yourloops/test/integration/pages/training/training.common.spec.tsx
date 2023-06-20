@@ -28,12 +28,12 @@
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { buildPatient, buildTeamMemberFromPatient } from '../../data/patient.api.data'
 import { renderPage } from '../../utils/render'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
+import { buildPatient, buildTeamMemberFromPatient } from '../../data/patient-builder.data'
 
 describe('Training page when new training available', () => {
   beforeAll(() => {
@@ -48,8 +48,8 @@ describe('Training page when new training available', () => {
         isAccepted: null
       }
     }
-    const notAckTrainingPatient = buildPatient({ userid: 'id', profile })
-    const patientAsTeamMember = buildTeamMemberFromPatient(notAckTrainingPatient, 'team-id', UserInviteStatus.Accepted)
+    const notAckTrainingPatient = buildPatient({ userid: 'id', profile, monitoringAlertsParameters: undefined })
+    const patientAsTeamMember = buildTeamMemberFromPatient(notAckTrainingPatient, undefined, 'team-id', UserInviteStatus.Accepted)
     mockPatientLogin(patientAsTeamMember)
     mockAuth0Hook(UserRole.Patient)
     mockUserApi()
