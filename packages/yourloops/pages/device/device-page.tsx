@@ -37,14 +37,14 @@ import Button from '@mui/material/Button'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
 import { useTheme } from '@mui/material/styles'
 import { useDevice } from '../../components/device/use-device.hook'
-import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
-import { type ChangeDateParameterGroup, HistoryParameterTable, Table } from 'dumb'
+import { type ChangeDateParameterGroup, HistoryParameterTable } from 'dumb'
 import { sortHistoryParametersByDate } from '../../components/device/device.utils'
 import { makeStyles } from 'tss-react/mui'
 import { DeviceInfo } from '../../components/device/device-info'
 import { PumpInfo } from '../../components/device/pump-info'
 import { CgmInfo } from '../../components/device/cgm-info'
+import { ParameterList } from '../../components/device/parameter-list'
 
 interface DevicePageProps {
   goToDailySpecificDate: (date: number) => void
@@ -104,11 +104,7 @@ export const DevicePage: FC<DevicePageProps> = ({ medicalData, timePrefs, goToDa
               <CgmInfo cgm={cgm} />
             </Grid>
             <Grid item xs={12} sm={6} data-testid="parameters-container">
-              <Typography color="text.secondary">{t('Parameters')}</Typography>
-              <Table
-                title={t('Parameters')}
-                rows={parameters}
-              />
+              <ParameterList parameters={parameters} />
             </Grid>
           </Grid>
           <HistoryParameterTable

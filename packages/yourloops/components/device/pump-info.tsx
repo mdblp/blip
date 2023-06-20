@@ -48,32 +48,32 @@ export const PumpInfo: FC<PumpInfoProps> = ({ pump }) => {
       <ListItem divider>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('Manufacturer')}</Typography>
-            <Typography className="bold">{pump.manufacturer || FALLBACK_VALUE}</Typography>
+            <Typography variant="body2">{t('Manufacturer')}</Typography>
+            <Typography variant="body2" className="bold">{pump.manufacturer || FALLBACK_VALUE}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       <ListItem divider>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('Serial Number')}</Typography>
-            <Typography className="bold">{pump.serialNumber || FALLBACK_VALUE}</Typography>
+            <Typography variant="body2">{t('Serial Number')}</Typography>
+            <Typography variant="body2" className="bold">{pump.serialNumber || FALLBACK_VALUE}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       <ListItem divider>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('Pump version')}</Typography>
-            <Typography className="bold">{pump.swVersion || FALLBACK_VALUE}</Typography>
+            <Typography variant="body2">{t('Pump version')}</Typography>
+            <Typography variant="body2" className="bold">{pump.swVersion || FALLBACK_VALUE}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       <ListItem>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('Pump cartridge expiration date')}</Typography>
-            <Typography className="bold">{new Date(pump.expirationDate).toLocaleDateString() || FALLBACK_VALUE}</Typography>
+            <Typography variant="body2">{t('Pump cartridge expiration date')}</Typography>
+            <Typography variant="body2" className="bold">{new Date(pump.expirationDate).toLocaleDateString() || FALLBACK_VALUE}</Typography>
           </Box>
         </ListItemText>
       </ListItem>

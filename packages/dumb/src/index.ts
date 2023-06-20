@@ -52,7 +52,6 @@ import {
   AverageDailyDoseStatMemoized as AverageDailyDoseStat
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
-import { Table } from './components/settings/table'
 import { type BgPrefs } from './models/blood-glucose.model'
 import { RangeSelect } from './components/trends/cbg/range-select/range-select'
 import { TrendsProvider } from './provider/trends.provider'
@@ -95,7 +94,6 @@ export {
   SettingsPrintView,
   SimpleStat,
   StatTooltip,
-  Table,
   Tooltip,
   TotalInsulinStat,
   TotalCarbsStat,

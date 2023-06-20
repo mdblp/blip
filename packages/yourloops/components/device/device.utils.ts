@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type ParametersChange, Unit } from 'medical-domain'
+import { type ParameterConfig, type ParametersChange, Unit } from 'medical-domain'
 
 export const formatParameterValue = (value: string | number, units: string | Unit): string => {
   if (typeof value === 'string') {
@@ -81,4 +81,38 @@ export const sortHistoryParametersByDate = (historyParameters: ParametersChange[
   return historyParameters.sort((a, b) => {
     return new Date(a.changeDate).valueOf() - new Date(b.changeDate).valueOf()
   })
+}
+
+export const sortParameterList = (parameters: ParameterConfig[]): ParameterConfig[] => {
+  const aggressivenessParameters = parameters.filter(parameter => parameter.unit === Unit.Percent)
+  const insulinParameters = parameters.filter(parameter => parameter.unit === Unit.InsulinUnit)
+  const mealParameters = parameters.filter(parameter => parameter.unit === Unit.Gram)
+  const weightParameters = parameters.filter(parameter => parameter.unit === Unit.Kilogram)
+  const thresholdParameters = parameters.filter(parameter => parameter.unit === Unit.MilligramPerDeciliter)
+
+  return [...insulinParameters, ...weightParameters, ...thresholdParameters, ...aggressivenessParameters, ...sortMealParameters(mealParameters)]
+}
+
+const sortMealParameters = (parameters: ParameterConfig[]): ParameterConfig[] => {
+  const breakfastMeals = []
+  const lunchMeals = []
+  const dinnerMeals = []
+  parameters.forEach((parameter) => {
+    const splitParameterKey = parameter.name.split('_')
+    switch (splitParameterKey[2]) {
+      case 'BREAKFAST':
+        breakfastMeals.push(parameter)
+        break
+      case 'LUNCH':
+        lunchMeals.push(parameter)
+        break
+      case 'DINNER':
+        dinnerMeals.push(parameter)
+        break
+    }
+  })
+  breakfastMeals[0] = breakfastMeals.splice(1, 1, breakfastMeals[0])[0]
+  lunchMeals[0] = lunchMeals.splice(1, 1, lunchMeals[0])[0]
+  dinnerMeals[0] = dinnerMeals.splice(1, 1, dinnerMeals[0])[0]
+  return [...breakfastMeals, ...lunchMeals, ...dinnerMeals]
 }

@@ -49,49 +49,53 @@ export const CgmInfo: FC<CgmInfoProps> = ({ cgm }) => {
       <ListItem divider>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('Manufacturer')}</Typography>
-            <Typography className="bold">{cgm.manufacturer || FALLBACK_VALUE}</Typography>
+            <Typography variant="body2">{t('Manufacturer')}</Typography>
+            <Typography variant="body2" className="bold">{cgm.manufacturer || FALLBACK_VALUE}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       <ListItem divider>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('Product')}</Typography>
-            <Typography className="bold">{cgm.name || FALLBACK_VALUE}</Typography>
+            <Typography variant="body2">{t('Product')}</Typography>
+            <Typography variant="body2" className="bold">{cgm.name || FALLBACK_VALUE}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       <ListItem divider>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('Cgm sensor expiration date')}</Typography>
-            <Typography className="bold">{new Date(cgm.expirationDate).toLocaleDateString() || FALLBACK_VALUE}</Typography>
+            <Typography variant="body2">{t('Cgm sensor expiration date')}</Typography>
+            <Typography variant="body2" className="bold">{new Date(cgm.expirationDate).toLocaleDateString() || FALLBACK_VALUE}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       <ListItem divider>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('Cgm transmitter software version')}</Typography>
-            <Typography className="bold">{cgm.swVersionTransmitter || FALLBACK_VALUE}</Typography>
+            <Typography variant="body2">{t('Cgm transmitter software version')}</Typography>
+            <Typography variant="body2" className="bold">{cgm.swVersionTransmitter || FALLBACK_VALUE}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       <ListItem divider>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('Cgm transmitter id')}</Typography>
-            <Typography className="bold">{cgm.transmitterId || FALLBACK_VALUE}</Typography>
+            <Typography variant="body2">{t('Cgm transmitter id')}</Typography>
+            <Typography variant="body2" className="bold">{cgm.transmitterId || FALLBACK_VALUE}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       <ListItem>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('Cgm transmitter end of life')}</Typography>
+            <Typography variant="body2">{t('Cgm transmitter end of life')}</Typography>
             <Typography
-              className="bold">{new Date(cgm.endOfLifeTransmitterDate).toLocaleDateString() || FALLBACK_VALUE}</Typography>
+              variant="body2"
+              className="bold"
+            >
+              {new Date(cgm.endOfLifeTransmitterDate).toLocaleDateString() || FALLBACK_VALUE}
+            </Typography>
           </Box>
         </ListItemText>
       </ListItem>

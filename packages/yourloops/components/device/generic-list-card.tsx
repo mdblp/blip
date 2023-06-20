@@ -42,13 +42,13 @@ export const GenericListCard: FC<GenericListCardProps> = ({ children, title }) =
   const theme = useTheme()
 
   return (
-    <Card variant="outlined" sx={{ marginBottom: theme.spacing(4) }}>
+    <Card variant="outlined" sx={{ marginBottom: theme.spacing(5) }}>
       <CardHeader
         title={title}
-        className={classes['card-header']}
+        className={classes.cardHeader}
         disableTypography
       />
-      <CardContent sx={{ padding: '0 !important' }}>
+      <CardContent sx={{ padding: '0 !important', fontSize: 14 }}>
         <List disablePadding>
           <Divider component="li" />
           {children}

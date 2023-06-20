@@ -46,32 +46,32 @@ export const DeviceInfo: FC<DeviceInfoProps> = ({ device }) => {
       <ListItem divider>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('Manufacturer')}</Typography>
-            <Typography className="bold">{device.manufacturer}</Typography>
+            <Typography variant="body2">{t('Manufacturer')}</Typography>
+            <Typography variant="body2" className="bold">{device.manufacturer}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       <ListItem divider>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('Identifier')}</Typography>
-            <Typography className="bold">{device.deviceId}</Typography>
+            <Typography variant="body2">{t('Identifier')}</Typography>
+            <Typography variant="body2" className="bold">{device.deviceId}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       <ListItem divider>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('IMEI')}</Typography>
-            <Typography className="bold">{device.imei}</Typography>
+            <Typography variant="body2">{t('IMEI')}</Typography>
+            <Typography variant="body2" className="bold">{device.imei}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       <ListItem>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography>{t('Software version')}</Typography>
-            <Typography className="bold">{device.swVersion}</Typography>
+            <Typography variant="body2">{t('Software version')}</Typography>
+            <Typography variant="body2" className="bold">{device.swVersion}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
