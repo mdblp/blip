@@ -50,7 +50,7 @@ const defaultMedicalData = { range: { startDate: '', endDate: '' } }
 
 export const buildPatient = (params: {
   userid: string
-  monitoringAlertsParameters: MonitoringAlertsParameters
+  monitoringAlertsParameters?: MonitoringAlertsParameters
   profile?: Partial<PatientProfile>
   settings?: Partial<PatientSettings>
   flagged?: boolean

@@ -69,9 +69,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
           return
         }
 
-        // setTimeout(async () => {
         await fetchPatientsMetrics(teamId, computedPatients)
-        // }, 5000)
       })
       .catch((reason: unknown) => {
         const message = errorTextFromException(reason)

@@ -35,8 +35,6 @@ import { type GlycemiaIndicators } from './glycemia-indicators.model'
 import { type MedicalData } from '../../data/models/medical-data.model'
 
 export interface Patient extends Partial<PatientMetrics> {
-  // monitoringAlerts?: MonitoringAlerts
-  // glycemiaIndicators?: GlycemiaIndicators
   profile: PatientProfile
   settings: PatientSettings
   monitoringAlertsParameters?: MonitoringAlertsParameters
@@ -51,7 +49,6 @@ export interface PatientMetrics {
   readonly userid: string
   monitoringAlerts: MonitoringAlerts
   glycemiaIndicators: GlycemiaIndicators
-  // monitoringAlertsParameters?: MonitoringAlertsParameters
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
   medicalData?: MedicalData | null
 }
