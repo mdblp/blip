@@ -41,7 +41,7 @@ import { testAppMainLayoutForPatient } from '../../use-cases/app-main-layout-vis
 import { testDeviceSettingsVisualisation } from '../../use-cases/device-settings-visualisation'
 import { testDeviceSettingsNavigationForPatient } from '../../use-cases/device-settings-navigation'
 
-describe('Device page for Caregiver', () => {
+describe('Device page for Patient', () => {
   const firstName = 'patient firstName'
   const lastName = 'patient lastName'
 
