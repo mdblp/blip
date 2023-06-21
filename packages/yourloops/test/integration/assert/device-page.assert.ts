@@ -27,6 +27,8 @@
 
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import moment from 'moment/moment'
+import { pumpSettingsData } from '../mock/data.api.mock'
 
 export const checkDeviceSettingsContent = () => {
   const deviceSettings = screen.getByTestId('device-settings-container')
@@ -44,7 +46,8 @@ export const checkCopyTextButton = async () => {
   const copyTextButton = within(deviceSettings).getByRole('button', { name: 'Copy as text' })
   await userEvent.click(copyTextButton)
 
-  const copiedStringToPaste = 'Wednesday, January 1, 2020 11:00 AM\n\n-- DBL --\nManufacturer      Diabeloop\nIdentifier        1234\nIMEI              1234567890\nSoftware version  1.0.5.25\n\n-- Settings --\nName    Value  Unit\nWEIGHT   72.0  kg'
+  const date = moment.tz(pumpSettingsData.data[0].time, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
+  const copiedStringToPaste = `${date}\n\n-- DBL --\nManufacturer      Diabeloop\nIdentifier        1234\nIMEI              1234567890\nSoftware version  1.0.5.25\n\n-- Settings --\nName    Value  Unit\nWEIGHT   72.0  kg`
   expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringContaining(copiedStringToPaste))
 }
 
