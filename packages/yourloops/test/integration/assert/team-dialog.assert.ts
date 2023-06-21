@@ -29,8 +29,10 @@ import TeamAPI from '../../../lib/team/team.api'
 import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { PhonePrefixCode } from '../../../lib/utils'
 import userEvent from '@testing-library/user-event'
-import { mockTeamApiForTeamCreation } from '../mock/team.api.mock'
+import { mockTeamApiForTeamCreation, NEW_TEAM_ID } from '../mock/team.api.mock'
 import { type Router } from '../models/router.model'
+import PatientApi from '../../../lib/patient/patient.api'
+import { loggedInUserId } from '../mock/auth0.hook.mock'
 
 export const checkCreateCareTeamDialog = async () => {
   jest.spyOn(TeamAPI, 'createTeam').mockResolvedValue(undefined)
@@ -205,4 +207,5 @@ export const checkTeamCreationSuccess = async (router: Router): Promise<void> =>
   await waitFor(() => {
     expect(within(teamMenu).getByText(teamName)).toBeVisible()
   })
+  expect(PatientApi.getPatientsForHcp).toHaveBeenCalledWith(loggedInUserId, NEW_TEAM_ID)
 }
