@@ -34,10 +34,10 @@ import { type PatientProfile } from '../../../lib/patient/models/patient-profile
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
-import { ITeamMember } from '../../../lib/team/models/i-team-member.model'
+import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
-import { Profile } from '../../../lib/auth/models/profile.model'
+import { type Profile } from '../../../lib/auth/models/profile.model'
 
 const defaultGlycemiaIndicators: GlycemiaIndicators = {
   timeInRange: 0,

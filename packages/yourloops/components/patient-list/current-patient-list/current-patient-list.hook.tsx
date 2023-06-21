@@ -100,7 +100,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         [PatientListColumns.Actions]: patient
       }
     })
-  }, [noDataLabel, patients])
+  }, [noDataLabel, patients, user])
 
   const isNumberValueDefined = (value: number): boolean => {
     return !!value || value === 0 || value === null
