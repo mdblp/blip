@@ -226,6 +226,10 @@ class MedicalDataService {
     )
   }
 
+  hasDeviceSettings(): boolean {
+    return this.grouped.pumpSettings.length > 0
+  }
+
   filterByDate(epochStart: number, epochEnd: number): Datum[] {
     return this.data.filter((d) => {
       const datumEpoch = this.getDatumEpoch(d)
