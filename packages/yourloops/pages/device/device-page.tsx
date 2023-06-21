@@ -26,7 +26,6 @@
  */
 
 import React, { type FC } from 'react'
-import { type TimePrefs } from 'medical-domain'
 import type MedicalDataService from 'medical-domain'
 import Container from '@mui/material/Container'
 import Card from '@mui/material/Card'
@@ -38,18 +37,17 @@ import FileCopyIcon from '@mui/icons-material/FileCopy'
 import { useTheme } from '@mui/material/styles'
 import { useDevice } from '../../components/device/use-device.hook'
 import Grid from '@mui/material/Grid'
-import { type ChangeDateParameterGroup, HistoryParameterTable } from 'dumb'
-import { sortHistoryParametersByDate } from '../../components/device/device.utils'
 import { makeStyles } from 'tss-react/mui'
 import { DeviceInfo } from '../../components/device/device-info'
 import { PumpInfo } from '../../components/device/pump-info'
 import { CgmInfo } from '../../components/device/cgm-info'
 import { ParameterList } from '../../components/device/parameter-list'
+import { ParametersChangeHistory } from '../../components/device/parameters-change-history'
+import Box from '@mui/material/Box'
 
 interface DevicePageProps {
   goToDailySpecificDate: (date: number) => void
   medicalData: MedicalDataService
-  timePrefs: TimePrefs
 }
 
 const useStyles = makeStyles()(() => ({
@@ -58,7 +56,7 @@ const useStyles = makeStyles()(() => ({
   }
 }))
 
-export const DevicePage: FC<DevicePageProps> = ({ medicalData, timePrefs, goToDailySpecificDate }) => {
+export const DevicePage: FC<DevicePageProps> = ({ medicalData, goToDailySpecificDate }) => {
   const theme = useTheme()
   const { classes } = useStyles()
   const { t } = useTranslation()
@@ -107,11 +105,12 @@ export const DevicePage: FC<DevicePageProps> = ({ medicalData, timePrefs, goToDa
               <ParameterList parameters={parameters} />
             </Grid>
           </Grid>
-          <HistoryParameterTable
-            rows={sortHistoryParametersByDate(history) as ChangeDateParameterGroup[]}
-            onSwitchToDaily={goToDailySpecificDate}
-            timePrefs={timePrefs}
-          />
+          <Box marginTop={5}>
+            <ParametersChangeHistory
+              onClickChangeDate={goToDailySpecificDate}
+              history={history}
+            />
+          </Box>
         </CardContent>
       </Card>
     </Container>

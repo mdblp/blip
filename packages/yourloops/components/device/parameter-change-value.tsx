@@ -25,20 +25,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { formatParameterValue } from '../../../../components/device/utils/device.utils'
-import { Unit } from 'medical-domain'
+import React, { type FC } from 'react'
+import { type ParametersChange, type PumpSettingsParameter } from 'medical-domain'
+import Box from '@mui/material/Box'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import { useTheme } from '@mui/material/styles'
 
-describe('Device settings utils', () => {
-  describe('formatParameterValue', () => {
-    it('should return the correct format for the given value', () => {
-      expect(formatParameterValue('75', Unit.Percent)).toEqual('75')
-      expect(formatParameterValue('5', Unit.Minute)).toEqual('5')
-      expect(formatParameterValue('12.45', Unit.Gram)).toEqual('12.4')
-      expect(formatParameterValue('85', Unit.Kilogram)).toEqual('85.0')
-      expect(formatParameterValue('35', Unit.InsulinUnit)).toEqual('35.0')
-      expect(formatParameterValue(24.78, Unit.MilligramPerDeciliter)).toEqual('24.8')
-      expect(formatParameterValue(2.54, Unit.MmolPerLiter)).toEqual('2.5')
-      expect(formatParameterValue('not_a_number', Unit.MmolPerLiter)).toEqual('--')
-    })
+interface ParameterChangeValueProps {
+  historyCurrentIndex: number
+  history: ParametersChange[]
+  parameter: PumpSettingsParameter
+}
+
+export const ParameterChangeValue: FC<ParameterChangeValueProps> = (props) => {
+  let previousParameter: PumpSettingsParameter
+  const theme = useTheme()
+  const { parameter, history, historyCurrentIndex } = props
+  const filteredHistory = history.slice(historyCurrentIndex + 1)
+
+  filteredHistory.every(parametersChange => {
+    previousParameter = parametersChange.parameters.find(paramChange => paramChange.name === parameter.name)
+    return !previousParameter
   })
-})
+
+  return (
+    <Box display="flex" alignItems="center">
+      {previousParameter && `${previousParameter.value} ${previousParameter.unit}`}
+      <ChevronRightIcon sx={{ marginInline: theme.spacing(1) }} />
+      {`${parameter.value} ${parameter.unit}`}
+    </Box>
+  )
+}

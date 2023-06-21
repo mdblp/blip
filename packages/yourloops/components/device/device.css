@@ -26,7 +26,7 @@
  */
 
 .cardHeader {
-  background-color: var(--primary-light-5);
+  background-color: var(--primary-color-background);
   font-size: 14px;
   font-weight: 600;
 }

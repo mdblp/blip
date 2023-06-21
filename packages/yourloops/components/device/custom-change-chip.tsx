@@ -26,48 +26,57 @@
  */
 
 import React, { type FC } from 'react'
-import Card from '@mui/material/Card'
+import Chip from '@mui/material/Chip'
+import { ChangeType } from 'dumb/dist/src/models/historized-parameter.model'
+import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
-import TableContainer from '@mui/material/TableContainer'
-import Table from '@mui/material/Table'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import TableCell from '@mui/material/TableCell'
-import TableBody from '@mui/material/TableBody'
-import { type ParameterConfig } from 'medical-domain'
-import { sortParameterList } from './utils/device.utils'
-import classes from './device.css'
 
-interface ParameterListProps {
-  parameters: ParameterConfig[]
+interface CustomChangeChipProps {
+  changeType: ChangeType
 }
 
-export const ParameterList: FC<ParameterListProps> = ({ parameters }) => {
+const useStyles = makeStyles<{ backgroundColor: string }>()((theme, { backgroundColor }) => ({
+  customChip: {
+    fontWeight: 500,
+    border: 'none',
+    backgroundColor
+  }
+}))
+
+type ChipVariant = 'primary' | 'error' | 'success'
+
+export const CustomChangeChip: FC<CustomChangeChipProps> = ({ changeType }) => {
   const { t } = useTranslation()
-  const sortedParameters = sortParameterList(parameters)
+
+  const computeStyle = (): { variant: ChipVariant, backgroundColor: string } => {
+    let variant: ChipVariant
+    let backgroundColor: string
+    switch (changeType) {
+      case ChangeType.Added:
+        variant = 'success'
+        backgroundColor = 'var(--success-color-background)'
+        break
+      case ChangeType.Deleted:
+        variant = 'error'
+        backgroundColor = 'var(--error-color-background)'
+        break
+      case ChangeType.Updated:
+        variant = 'primary'
+        backgroundColor = 'var(--info-color-background)'
+        break
+    }
+    return { variant, backgroundColor }
+  }
+
+  const { variant, backgroundColor } = computeStyle()
+  const { classes } = useStyles({ backgroundColor })
 
   return (
-    <Card variant="outlined">
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>{t('Parameter')}</TableCell>
-              <TableCell align="right">{t('Value')}</TableCell>
-              <TableCell align="right">{t('Unit')}</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {sortedParameters.map((parameter, index) => (
-              <TableRow key={index} className={classes.parameterRow}>
-                <TableCell>{t(`params|${parameter.name}`)}</TableCell>
-                <TableCell align="right">{parameter.value}</TableCell>
-                <TableCell align="right">{parameter.unit}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Card>
+    <Chip
+      label={t(changeType)}
+      color={variant}
+      variant="outlined"
+      className={classes.customChip}
+    />
   )
 }

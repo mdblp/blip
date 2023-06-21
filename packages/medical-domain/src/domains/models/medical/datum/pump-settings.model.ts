@@ -29,6 +29,7 @@ import type BaseDatum from './basics/base-datum.model'
 import type PumpManufacturer from './enums/pump-manufacturer.enum'
 import { type DatumType } from './enums/datum-type.enum'
 import type Unit from './enums/unit.enum'
+import { type ChangeType } from 'dumb/dist/src/models/historized-parameter.model'
 
 interface CgmConfig {
   apiVersion: string
@@ -48,18 +49,18 @@ interface DeviceConfig {
   swVersion: string
 }
 
-export interface Parameter {
-  changeType: string
+export interface PumpSettingsParameter {
+  changeType: ChangeType
   effectiveDate: string
   level: number
   name: string
-  unit: string
+  unit: Unit
   value: string
 }
 
 interface ParametersChange {
   changeDate: string
-  parameters: Parameter[]
+  parameters: PumpSettingsParameter[]
 }
 
 interface PumpConfig {

@@ -42,6 +42,7 @@ import { getConvertedParamUnitAndValue } from '../../../utils/unit.util'
 import type Unit from '../../../models/medical/datum/enums/unit.enum'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../../models/time/date-filter.model'
+import { type ChangeType } from 'dumb/dist/src/models/historized-parameter.model'
 
 const normalizeHistory = (rawHistory: Array<Record<string, unknown>>, opts: MedicalDataOptions): ParametersChange[] => {
   return rawHistory.map(h => {
@@ -51,11 +52,11 @@ const normalizeHistory = (rawHistory: Array<Record<string, unknown>>, opts: Medi
       parameters: params.map(param => {
         const { unit, value } = getConvertedParamUnitAndValue(param.unit as Unit, param.value as string, opts.bgUnits)
         return {
-          changeType: param.changeType as string,
+          changeType: param.changeType as ChangeType,
           effectiveDate: param.effectiveDate as string,
           level: param.level as number,
           name: param.name as string,
-          unit,
+          unit: unit as Unit,
           value
         }
       })

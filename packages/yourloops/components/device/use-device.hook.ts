@@ -36,7 +36,7 @@ import {
 import type MedicalDataService from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import textTable from 'text-table'
-import { formatParameterValue } from './device.utils'
+import { formatParameterValue } from './utils/device.utils'
 import { useEffect } from 'react'
 import moment from 'moment'
 
