@@ -189,7 +189,8 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
           const value = params.value
           return isNumberValueDefined(value)
             ? PatientUtils.formatPercentageValue(params.value)
-            : <Skeleton variant="rounded"
+            : <Skeleton data-testid="time-in-range-cell-skeleton"
+                        variant="rounded"
                         width={SKELETON_PERCENTAGE_VALUE_WIDTH_PX}
                         height={SKELETON_HEIGHT_PX} />
         }
@@ -206,9 +207,10 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
           const value = params.value
           return isNumberValueDefined(value)
             ? PatientUtils.formatPercentageValue(params.value)
-            : <Skeleton variant="rounded"
-                      width={SKELETON_PERCENTAGE_VALUE_WIDTH_PX}
-                      height={SKELETON_HEIGHT_PX} />
+            : <Skeleton data-testid="glucose-management-indicator-cell-skeleton"
+                        variant="rounded"
+                        width={SKELETON_PERCENTAGE_VALUE_WIDTH_PX}
+                        height={SKELETON_HEIGHT_PX} />
         }
       },
       {
@@ -223,7 +225,8 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
           const value = params.value
           return isNumberValueDefined(value)
             ? PatientUtils.formatPercentageValue(params.value)
-            : <Skeleton variant="rounded"
+            : <Skeleton data-testid="hypoglycemia-cell-skeleton"
+                        variant="rounded"
                         width={SKELETON_PERCENTAGE_VALUE_WIDTH_PX}
                         height={SKELETON_HEIGHT_PX} />
         }
@@ -239,7 +242,8 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
           const value = params.value
           return isNumberValueDefined(value)
             ? PatientUtils.formatPercentageValue(params.value)
-            : <Skeleton variant="rounded"
+            : <Skeleton data-testid="variance-cell-skeleton"
+                        variant="rounded"
                         width={SKELETON_PERCENTAGE_VALUE_WIDTH_PX}
                         height={SKELETON_HEIGHT_PX} />
         }
@@ -251,7 +255,10 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         headerName: t('last-data-update'),
         renderCell: (params: GridRenderCellParams<GridRowModel, string>) => {
           const value = params.value
-          return value ?? <Skeleton variant="rounded" width={150} height={SKELETON_HEIGHT_PX} />
+          return value ?? <Skeleton data-testid="last-data-update-cell-skeleton"
+                                    variant="rounded"
+                                    width={150}
+                                    height={SKELETON_HEIGHT_PX} />
         }
       },
       {

@@ -170,7 +170,13 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
   return (
     <>
       {isLoading
-        ? <Skeleton variant="circular" width={ICON_SIZE_PX} height={ICON_SIZE_PX} sx={{ marginRight: theme.spacing(1) }}></Skeleton>
+        ? <Skeleton
+          data-testid="time-out-of-range-icon-skeleton"
+          variant="circular"
+          width={ICON_SIZE_PX}
+          height={ICON_SIZE_PX}
+          sx={{ marginRight: theme.spacing(1) }}
+        />
         : <Tooltip
           title={
             <>
@@ -196,7 +202,13 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
       }
 
       {isLoading
-        ? <Skeleton variant="circular" width={ICON_SIZE_PX} height={ICON_SIZE_PX} sx={{ marginRight: theme.spacing(1) }}></Skeleton>
+        ? <Skeleton
+          data-testid="hypoglycemia-icon-skeleton"
+          variant="circular"
+          width={ICON_SIZE_PX}
+          height={ICON_SIZE_PX}
+          sx={{ marginRight: theme.spacing(1) }}
+        />
         : <Tooltip
           title={
             <>
@@ -221,7 +233,13 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
       }
 
       {isLoading
-        ? <Skeleton variant="circular" width={ICON_SIZE_PX} height={ICON_SIZE_PX} sx={{ marginRight: theme.spacing(1) }}></Skeleton>
+        ? <Skeleton
+          data-testid="data-not-transmitted-icon-skeleton"
+          variant="circular"
+          width={ICON_SIZE_PX}
+          height={ICON_SIZE_PX}
+          sx={{ marginRight: theme.spacing(1) }}
+        />
         : <Tooltip
           title={
             <>

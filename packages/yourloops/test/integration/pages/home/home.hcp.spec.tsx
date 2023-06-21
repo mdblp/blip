@@ -29,7 +29,7 @@ import { waitFor } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { flaggedPatientId, patient1Info } from '../../data/patient.api.data'
+import { flaggedPatientId, patient1Info, patient1Metrics } from '../../data/patient.api.data'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
@@ -81,6 +81,7 @@ describe('HCP home page', () => {
       ...patient1Info,
       invitationStatus: UserInviteStatus.Accepted
     }])
+    jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockResolvedValue([patient1Metrics])
 
     const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
@@ -104,6 +105,7 @@ describe('HCP home page', () => {
       ...patient1Info,
       invitationStatus: UserInviteStatus.Accepted
     }])
+    jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockResolvedValue([patient1Metrics])
 
     await renderHomePage()
 
@@ -116,6 +118,7 @@ describe('HCP home page', () => {
       ...patient1Info,
       invitationStatus: UserInviteStatus.Accepted
     }])
+    jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockResolvedValue([patient1Metrics])
 
     await renderHomePage()
 
@@ -140,6 +143,8 @@ describe('HCP home page', () => {
     await renderHomePage()
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
+
+    expect(PatientApi.getPatientsMetricsForHcp).toHaveBeenCalledTimes(1)
   })
 
   it('should be able to manage patients when scoped on a medical team', async () => {

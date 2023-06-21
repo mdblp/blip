@@ -56,6 +56,8 @@ describe('Caregiver home page', () => {
   })
 
   it('should render the home page with correct components', async () => {
+    jest.spyOn(PatientApi, 'getPatientsMetricsForHcp')
+
     const router = renderPage('/')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/home')
@@ -63,6 +65,8 @@ describe('Caregiver home page', () => {
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
     await checkCaregiverLayout(`${firstName} ${lastName}`)
     checkPatientListHeaderCaregiver()
+
+    expect(PatientApi.getPatientsMetricsForHcp).not.toHaveBeenCalled()
   })
 
   it('should filter patients correctly depending on the search value', async () => {

@@ -82,7 +82,7 @@ export const patient1Info: Patient = buildPatient({
   settings: defaultSettings
 })
 
-const patient1Metrics: PatientMetrics = buildPatientMetrics({ userId: patient1Id })
+export const patient1Metrics: PatientMetrics = buildPatientMetrics({ userId: patient1Id })
 
 export const unreadMessagesPatientInfo: Patient = buildPatient({
   userid: unreadMessagesPatientId,
@@ -245,6 +245,7 @@ export const patient3AsTeamMember: ITeamMember = buildTeamMemberFromPatient(pati
 export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(pendingPatient, pendingPatientMetrics, mySecondTeamId, UserInviteStatus.Pending)
 
 export const PATIENTS_INFO_BY_TEAMID: Record<string, Patient[]> = {
+  private: [],
   [myFirstTeamId]: [],
   [mySecondTeamId]: [
     {
