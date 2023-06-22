@@ -73,12 +73,15 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
   const { patients, onClickRemovePatient } = props
   const { t } = useTranslation()
   const { classes } = usePatientListStyles()
-  const { user } = useAuth()
+  const { user, getFlagPatients } = useAuth()
   const navigate = useNavigate()
   const noDataLabel = t('N/A')
 
+  const flaggedPatients = getFlagPatients()
+  const sortedPatients = PatientUtils.computeFlaggedPatients(patients, flaggedPatients).sort(sortByUserName)
+
   const allRows = useMemo(() => {
-    return patients.map((patient): GridRowModel => {
+    return sortedPatients.map((patient): GridRowModel => {
       const medicalValues = getMedicalValues(patient.medicalData, noDataLabel)
       const lastUpload = user.isUserHcp() && !patient.medicalData ? undefined : medicalValues.lastUpload
       const birthdate = patient.profile.birthdate
@@ -100,7 +103,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         [PatientListColumns.Actions]: patient
       }
     })
-  }, [noDataLabel, patients, user])
+  }, [noDataLabel, sortedPatients, user])
 
   const isNumberValueDefined = (value: number): boolean => {
     return !!value || value === 0 || value === null

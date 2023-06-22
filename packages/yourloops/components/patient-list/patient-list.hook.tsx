@@ -28,11 +28,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { PatientListTabs } from './models/enums/patient-list.enum'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
-import { useAuth } from '../../lib/auth'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import PatientUtils from '../../lib/patient/patient.util'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
-import { sortByUserName } from './utils/sort-comparators.util'
 
 interface PatientListHookReturns {
   selectedTab: PatientListTabs
@@ -43,19 +40,13 @@ interface PatientListHookReturns {
 }
 
 export const usePatientListHook = (): PatientListHookReturns => {
-  const { getFlagPatients } = useAuth()
   const { searchPatients } = usePatientsContext()
   const { updatePendingFilter, filters } = usePatientListContext()
 
   const [selectedTab, setSelectedTab] = useState<PatientListTabs>(PatientListTabs.Current)
   const [inputSearch, setInputSearch] = useState<string>('')
 
-  const flaggedPatients = getFlagPatients()
-
-  const patients = useMemo(() => {
-    const searchedPatients = searchPatients(inputSearch)
-    return PatientUtils.computeFlaggedPatients(searchedPatients, flaggedPatients).sort(sortByUserName)
-  }, [searchPatients, inputSearch, flaggedPatients])
+  const patients = useMemo(() => searchPatients(inputSearch), [searchPatients, inputSearch])
 
   const onChangingTab = (newTab: PatientListTabs): void => {
     setSelectedTab(newTab)

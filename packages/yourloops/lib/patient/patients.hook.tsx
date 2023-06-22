@@ -64,13 +64,6 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
         setPatients(computedPatients)
         return computedPatients
       })
-      .then(async (computedPatients: Patient[]) => {
-        if (!isUserHcp) {
-          return
-        }
-
-        await fetchPatientsMetrics(teamId, computedPatients)
-      })
       .catch((reason: unknown) => {
         const message = errorTextFromException(reason)
         alert.error(message)
@@ -78,6 +71,13 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
       .finally(() => {
         setInitialized(true)
         setRefreshInProgress(false)
+      })
+      .then(async (computedPatients: Patient[]) => {
+        if (!isUserHcp) {
+          return
+        }
+
+        await fetchPatientsMetrics(teamId, computedPatients)
       })
     // Need to rewrite the alert component, or it triggers infinite loop...
     // eslint-disable-next-line react-hooks/exhaustive-deps

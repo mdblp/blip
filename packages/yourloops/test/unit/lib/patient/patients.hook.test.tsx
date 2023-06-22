@@ -96,6 +96,7 @@ describe('Patients hook', () => {
         }
       }
     })
+    jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockResolvedValue([])
   })
 
   async function renderPatientsHook(patients: Patient[]) {
