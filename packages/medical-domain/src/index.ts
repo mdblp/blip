@@ -51,7 +51,8 @@ import {
   type ParameterConfig,
   type PumpConfig,
   type ParametersChange,
-  type PumpSettingsParameter
+  type PumpSettingsParameter,
+  type ChangeType
 } from './domains/models/medical/datum/pump-settings.model'
 import type PumpSettings from './domains/models/medical/datum/pump-settings.model'
 import type ReservoirChange from './domains/models/medical/datum/reservoir-change.model'
@@ -135,6 +136,7 @@ export {
   type BasicData,
   CarbsStatisticsService,
   type ParametersChange,
-  type PumpSettingsParameter
+  type PumpSettingsParameter,
+  type ChangeType
 }
 export default MedicalDataService
