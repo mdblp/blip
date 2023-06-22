@@ -50,10 +50,9 @@ interface ParametersChangeHistoryProps {
   history: ParametersChange[]
 }
 
-export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = (props) => {
+export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ history, onClickChangeDate }) => {
   const theme = useTheme()
   const { t } = useTranslation()
-  const { history, onClickChangeDate } = props
 
   useEffect(() => {
     sortHistoryParametersByDate(history).reverse()
@@ -61,7 +60,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = (props)
   }, [])
 
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" data-testid="history-parameter-table">
       <TableContainer>
         <Table>
           <TableHead>
@@ -75,8 +74,8 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = (props)
           </TableHead>
           <TableBody>
             {history.map((parametersChange, historyCurrentIndex) => (
-              <>
-                <TableRow sx={{ backgroundColor: 'var(--primary-color-background)' }} key={historyCurrentIndex}>
+              <React.Fragment key={historyCurrentIndex}>
+                <TableRow sx={{ backgroundColor: 'var(--primary-color-background)' }}>
                   <TableCell colSpan={5}>
                     <Box
                       display="flex"
@@ -87,6 +86,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = (props)
                       <IconButton
                         size="small"
                         color="primary"
+                        data-testid={`daily-button-link-${parametersChange.changeDate}`}
                         sx={{ padding: 0 }}
                         onClick={() => {
                           onClickChangeDate(new Date(parametersChange.changeDate).getTime())
@@ -120,7 +120,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = (props)
                     <TableCell align="right">{formatDateWithMomentLongFormat(new Date(parameter.effectiveDate), 'llll')}</TableCell>
                   </TableRow>
                 ))}
-              </>
+              </React.Fragment>
             ))}
           </TableBody>
         </Table>

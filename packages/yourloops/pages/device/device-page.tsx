@@ -45,7 +45,7 @@ export const DevicePage: FC<DevicePageProps> = ({ medicalData, goToDailySpecific
 
   return (
     <Container data-testid="device-settings-container">
-      {medicalData.hasDeviceSettings()
+      {medicalData.grouped.pumpSettings.length > 0
         ? <DeviceSettings
           goToDailySpecificDate={goToDailySpecificDate}
           medicalData={medicalData}

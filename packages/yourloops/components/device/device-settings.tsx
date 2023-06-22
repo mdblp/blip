@@ -43,6 +43,7 @@ import { CgmInfo } from './cgm-info'
 import { ParameterList } from './parameter-list'
 import { ParametersChangeHistory } from './parameters-change-history'
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 
 interface DeviceSettingsProps {
   goToDailySpecificDate: (date: number) => void
@@ -104,6 +105,7 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
           </Grid>
         </Grid>
         <Box marginTop={5}>
+          <Typography variant="h5" sx={{ marginBlock: theme.spacing(2) }}>{t('change-history')}</Typography>
           <ParametersChangeHistory
             onClickChangeDate={goToDailySpecificDate}
             history={history}

@@ -90,7 +90,8 @@ export const sortParameterList = (parameters: ParameterConfig[]): ParameterConfi
   const weightParameters = parameters.filter(parameter => parameter.unit === Unit.Kilogram)
   const thresholdParameters = parameters.filter(parameter => parameter.unit === Unit.MilligramPerDeciliter)
 
-  return [...insulinParameters, ...weightParameters, ...thresholdParameters, ...aggressivenessParameters, ...sortMealParameters(mealParameters)]
+  const sortedMealParameters = mealParameters.length > 0 ? sortMealParameters(mealParameters) : mealParameters
+  return [...insulinParameters, ...weightParameters, ...thresholdParameters, ...aggressivenessParameters, ...sortedMealParameters]
 }
 
 const sortMealParameters = (parameters: ParameterConfig[]): ParameterConfig[] => {

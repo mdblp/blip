@@ -50,8 +50,12 @@ export const ParameterChangeValue: FC<ParameterChangeValueProps> = (props) => {
 
   return (
     <Box display="flex" alignItems="center">
-      {previousParameter && `${previousParameter.value} ${previousParameter.unit}`}
-      <ChevronRightIcon sx={{ marginInline: theme.spacing(1) }} />
+      {previousParameter &&
+        <>
+          {`${previousParameter.value} ${previousParameter.unit}`}
+          <ChevronRightIcon sx={{ marginInline: theme.spacing(1) }} />
+        </>
+      }
       {`${parameter.value} ${parameter.unit}`}
     </Box>
   )
