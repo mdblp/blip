@@ -49,7 +49,8 @@ import {
   type CgmConfig,
   type DeviceConfig,
   type ParameterConfig,
-  type PumpConfig
+  type PumpConfig,
+  type ParametersChange
 } from './domains/models/medical/datum/pump-settings.model'
 import type PumpSettings from './domains/models/medical/datum/pump-settings.model'
 import type ReservoirChange from './domains/models/medical/datum/reservoir-change.model'
@@ -131,6 +132,7 @@ export {
   convertBG,
   GlycemiaStatisticsService,
   type BasicData,
-  CarbsStatisticsService
+  CarbsStatisticsService,
+  type ParametersChange
 }
 export default MedicalDataService

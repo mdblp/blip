@@ -37,6 +37,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2324 Hide certain columns when private practice is selected
 - YLP-2348 New columns from glycemia indicators in patients list
 - YLP-2350 Display a visual info when a patient has unread messages from another team in the chat widget
+- YLP-2354 Access to the DBL settings page from every view
 - YLP-2358 As a care team member, I want a new design when listing my pending patients
 - YLP-2381 As a HCP, I want to manage patient invites made by other members of the teams
 - YLP-2388 Select the new care team after creating it
