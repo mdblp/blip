@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "charset": "UTF-8",
     "sourceMap": true,
     "outDir": "./dist",
     "jsx": "react",
