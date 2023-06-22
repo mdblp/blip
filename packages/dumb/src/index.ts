@@ -47,7 +47,6 @@ import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mo
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
 import Tooltip from './components/tooltips/common/tooltip/tooltip'
-import { HistoryParameterTable } from './components/settings/history/history-table'
 import {
   AverageDailyDoseStatMemoized as AverageDailyDoseStat
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
@@ -63,10 +62,8 @@ import { LayoutColumnType } from './models/enums/layout-column-type.enum'
 import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
 import { getPatientFullName } from './utils/patient/patient.util'
 import { formatBirthdate, formatLocalizedFromUTC, getLongDayHourFormat } from './utils/datetime/datetime.util'
-import { type ChangeDateParameterGroup } from './models/historized-parameter.model'
 
 export {
-  type ChangeDateParameterGroup,
   AverageDailyDoseStat,
   buildLayoutColumns,
   type BgPrefs,
@@ -82,7 +79,6 @@ export {
   FoodTooltip,
   formatBirthdate,
   getPatientFullName,
-  HistoryParameterTable,
   formatBgValue,
   LayoutColumnType,
   LoopModeStat,

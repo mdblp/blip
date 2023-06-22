@@ -28,6 +28,7 @@
 import type PumpSettings from '../../../models/medical/datum/pump-settings.model'
 import {
   type CgmConfig,
+  type ChangeType,
   type DeviceConfig,
   type ParameterConfig,
   type ParametersChange,
@@ -42,7 +43,6 @@ import { getConvertedParamUnitAndValue } from '../../../utils/unit.util'
 import type Unit from '../../../models/medical/datum/enums/unit.enum'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../../models/time/date-filter.model'
-import { type ChangeType } from 'dumb/dist/src/models/historized-parameter.model'
 
 const normalizeHistory = (rawHistory: Array<Record<string, unknown>>, opts: MedicalDataOptions): ParametersChange[] => {
   return rawHistory.map(h => {

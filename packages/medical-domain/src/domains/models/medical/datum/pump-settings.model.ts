@@ -29,7 +29,12 @@ import type BaseDatum from './basics/base-datum.model'
 import type PumpManufacturer from './enums/pump-manufacturer.enum'
 import { type DatumType } from './enums/datum-type.enum'
 import type Unit from './enums/unit.enum'
-import { type ChangeType } from 'dumb/dist/src/models/historized-parameter.model'
+
+export enum ChangeType {
+  Added = 'added',
+  Deleted = 'deleted',
+  Updated = 'updated'
+}
 
 interface CgmConfig {
   apiVersion: string

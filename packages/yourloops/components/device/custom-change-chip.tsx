@@ -27,9 +27,9 @@
 
 import React, { type FC } from 'react'
 import Chip from '@mui/material/Chip'
-import { ChangeType } from 'dumb/dist/src/models/historized-parameter.model'
 import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
+import { ChangeType } from 'medical-domain/dist/src/domains/models/medical/datum/pump-settings.model'
 
 interface CustomChangeChipProps {
   changeType: ChangeType
