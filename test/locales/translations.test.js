@@ -65,7 +65,11 @@ const ignoredTransKeysForBlip = [
   'delivered',
   'level',
   'wheel-label-off',
-  'wheel-label-on'
+  'wheel-label-on',
+  'Date',
+  'Level',
+  'Parameter',
+  'Parameters History'
 ]
 const ignoredTransKeyInBlipFiles = [
   '${physicalActivity.reportedIntensity}-pa',
