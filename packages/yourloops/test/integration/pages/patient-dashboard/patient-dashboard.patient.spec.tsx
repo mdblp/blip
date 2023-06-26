@@ -28,9 +28,8 @@
 import { act, waitFor } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import {
-  completeDashBoardData,
-  mockDataAPI,
-  twoWeeksOldDashboardData
+  completeDashBoardData, emptyWeightData,
+  mockDataAPI, sixteenDaysOldDashboardData, twoWeeksOldDashboardData
 } from '../../mock/data.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
@@ -53,7 +52,7 @@ import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
 import {
   testDashboardDataVisualisationForPatient,
   testDashboardDataVisualisationPrivateTeamNoData,
-  testDashboardDataVisualisationWithWeeksOldData,
+  testDashboardDataVisualisationWithOldData,
   testEmptyMedicalFilesWidgetForPatient,
   testPatientNavBarForPatient
 } from '../../use-cases/patient-data-visualisation'
@@ -142,7 +141,7 @@ describe('Patient dashboard for patient', () => {
   })
 
   it('should render correct components when patient is in no medical teams', async () => {
-    mockDataAPI()
+    mockDataAPI(emptyWeightData)
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildPrivateTeam()])
 
@@ -166,7 +165,16 @@ describe('Patient dashboard for patient', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationWithWeeksOldData()
+    await testDashboardDataVisualisationWithOldData()
+  })
+  it('should produce statistics for fourteen days, whereas the data are sixteen days old', async () => {
+    mockDataAPI(sixteenDaysOldDashboardData)
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testDashboardDataVisualisationWithOldData()
   })
 
   it('should display the fallback message when no medical files are returned by the API', async () => {

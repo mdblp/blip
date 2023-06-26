@@ -35,5 +35,5 @@ export interface BasalBolusStatistics {
 
 export interface TotalInsulinAndWeightStatistics {
   totalInsulin: number
-  weight: ParameterConfig | null
+  weight?: ParameterConfig
 }

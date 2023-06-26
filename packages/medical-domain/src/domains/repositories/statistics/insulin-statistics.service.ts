@@ -51,15 +51,15 @@ function resamplingDuration(basals: Basal[], start: number, end: number): Basal[
   })
 }
 
-function getWeight(allPumpSettings: PumpSettings[]): ParameterConfig | null {
+function getWeight(allPumpSettings: PumpSettings[]): ParameterConfig | undefined {
   const lastPumpSettings = allPumpSettings[allPumpSettings.length - 1]
 
   if (!lastPumpSettings) {
-    return null
+    return undefined
   }
 
   const weight = lastPumpSettings.payload.parameters.find(parameter => parameter.name === 'WEIGHT')
-  return weight ?? null
+  return weight ?? undefined
 }
 
 function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter): BasalBolusStatistics {

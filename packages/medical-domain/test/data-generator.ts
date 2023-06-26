@@ -86,7 +86,7 @@ function createBaseDurationData(date?: Date): BaseDatum & Duration {
 }
 
 function createRandomBasal(date?: Date, duration?: number): Basal {
-  if (duration === undefined) {
+  if (!duration) {
     duration = faker.datatype.number({ min: 60000, max: 300000 })
   }
   const baseData = createBaseData(date)

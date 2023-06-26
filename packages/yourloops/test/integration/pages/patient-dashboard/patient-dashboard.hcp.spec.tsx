@@ -29,7 +29,7 @@ import { act, waitFor } from '@testing-library/react'
 import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
 import {
-  completeDashBoardData,
+  completeDashBoardData, emptyWeightData,
   mockDataAPI,
   sixteenDaysOldDashboardData,
   twoWeeksOldDashboardData
@@ -52,7 +52,7 @@ import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-
 import {
   testDashboardDataVisualisationForHcp,
   testDashboardDataVisualisationPrivateTeamNoData,
-  testDashboardDataVisualisationWithWeeksOldData,
+  testDashboardDataVisualisationWithOldData,
   testEmptyMedicalFilesWidgetForHcp,
   testPatientNavBarForHcp,
   testSwitchPatientCorrectDataDisplay
@@ -128,6 +128,7 @@ describe('Patient dashboard for HCP', () => {
   })
 
   it('should be able to manage medical reports', async () => {
+    mockDataAPI(emptyWeightData)
     const selectedTeamName = myThirdTeamName
 
     const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
@@ -182,20 +183,21 @@ describe('Patient dashboard for HCP', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationWithWeeksOldData()
+    await testDashboardDataVisualisationWithOldData()
   })
 
-  it('should produce statistics that correspond to fourteen-week-old data when the data are sixteen days old', async () => {
+  it('should produce fourteen days old statistics when data is sixteen days old', async () => {
     mockDataAPI(sixteenDaysOldDashboardData)
 
     await act(async () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationWithWeeksOldData()
+    await testDashboardDataVisualisationWithOldData()
   })
 
   it('should render correct components when navigating to a patient scoped on the private team', async () => {
+    mockDataAPI(emptyWeightData)
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
       ...patient1,

@@ -28,14 +28,12 @@
 import {
   checkPatientStatistics,
   checkPatientStatisticsNoData,
-  checkPatientStatisticsWithSixteenDaysOldData,
-  checkPatientStatisticsWithTwoWeeksOldData
+  checkPatientStatisticsWithSixteenDaysOldData
 } from '../assert/patient-statistics.assert'
 import { checkPatientDashboardLayout, type PatientDashboardLayoutParams } from '../assert/layout.assert'
 import {
   checkDeviceUsageWidget,
-  checkDeviceUsageWidgetNoData,
-  checkDeviceUsageWidgetWithTwoWeeksOldData
+  checkDeviceUsageWidgetNoData
 } from '../assert/device-usage.assert'
 import { patient1, patient2 } from '../data/patient.api.data'
 import {
@@ -62,10 +60,8 @@ export const testDashboardDataVisualisationForPatient = async (patientDashboardL
   await checkDeviceUsageWidget()
 }
 
-export const testDashboardDataVisualisationWithWeeksOldData = async () => {
-  await checkPatientStatisticsWithTwoWeeksOldData()
+export const testDashboardDataVisualisationWithOldData = async () => {
   await checkPatientStatisticsWithSixteenDaysOldData()
-  await checkDeviceUsageWidgetWithTwoWeeksOldData()
 }
 
 export const testDashboardDataVisualisationPrivateTeam = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {

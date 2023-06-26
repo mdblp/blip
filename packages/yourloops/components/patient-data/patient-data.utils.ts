@@ -29,7 +29,7 @@ import DataApi from '../../lib/data/data.api'
 import moment, { type Moment } from 'moment-timezone'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import PartialDataLoad from 'blip/app/core/lib/partial-data-load'
-import MedicalDataService, { type BgUnit, Source, type TimePrefs, TimeService } from 'medical-domain'
+import MedicalDataService, { type BgUnit, type MedicalData, Source, type TimePrefs, TimeService } from 'medical-domain'
 import config from '../../lib/config/config'
 import { ChartTypes } from '../../enum/chart-type.enum'
 import { type GetPatientDataOptions } from '../../lib/data/models/get-patient-data-options.model'
@@ -50,6 +50,8 @@ export function isValidDateQueryParam(queryParam: string): boolean {
   const date = new Date(queryParam)
   return !isNaN(date.getTime())
 }
+const FOURTEEN_DAYS = 14
+const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
 export class PatientDataUtils {
   private readonly bgUnits: BgUnit
@@ -82,6 +84,27 @@ export class PatientDataUtils {
 
   changePatient(patient: Patient): void {
     this.patient = patient
+  }
+
+  calculateDashboardDateRange(dateBg: string[]): number {
+    const dateRangeSet = new Set(dateBg)
+    if (dateRangeSet.size >= FOURTEEN_DAYS) {
+      return DEFAULT_MS_RANGE * FOURTEEN_DAYS
+    }
+    return dateRangeSet.size * DEFAULT_MS_RANGE
+  }
+
+  getRangeDaysInMs(data: MedicalData): number {
+    if (data.smbg.length !== 0) {
+      const dataSmbg = data.smbg.map((dataSmbg) => {
+        return dataSmbg.localDate
+      })
+      return this.calculateDashboardDateRange(dataSmbg)
+    }
+    const dataCbg = data.cbg.map((dataCbg) => {
+      return dataCbg.localDate
+    })
+    return this.calculateDashboardDateRange(dataCbg)
   }
 
   getDateRange({ currentChart, epochLocation, msRange }: GetDatetimeBoundsArgs): DateRange {

@@ -30,13 +30,14 @@ import { t } from 'i18next'
 import { type ParameterConfig } from 'medical-domain'
 import { InsulinStat } from 'dumb'
 import { convertToPercentage } from './statistics.util'
+import { EMPTY_DATA_PLACEHOLDER } from 'dumb/dist/src/models/stats.model'
 
 interface TotalInsulinStatProps {
   basal: number
   bolus: number
   totalInsulin: number
   dailyDose: number
-  weight: ParameterConfig | null
+  weight?: ParameterConfig
 }
 
 export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
@@ -48,7 +49,6 @@ export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props
     weight
   } = props
 
-  const weightValue = weight === null ? null : +weight.value
   const data = [
     {
       id: 'bolus',
@@ -65,7 +65,7 @@ export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props
       title: t('Basal')
     }
   ]
-
+  const weightValue = !weight ? EMPTY_DATA_PLACEHOLDER : +weight.value
   return (
     <InsulinStat
       data={data}

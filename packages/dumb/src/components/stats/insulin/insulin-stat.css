@@ -42,20 +42,9 @@
   color: var(--stat--default);
 }
 
-.rowValue {
-  border-width: 2px;
-  border-color: var(--stat-disabled);
-  text-align: center;
-  font-size: 14px;
-  white-space: pre;
-  padding: 4px;
-  margin-right: 40px;
-}
-
 .rowPercent {
   display: flex;
   justify-content: flex-end;
-  align-items: baseline;
 }
 
 .rowPercent .rowPercentValue {
@@ -81,6 +70,7 @@
   composes: extraLargeSize from '../../../styles/typography.css';
   opacity: 1;
   display: inline-block;
+  margin-right: 4px;
   color: var(--muted);
 }
 

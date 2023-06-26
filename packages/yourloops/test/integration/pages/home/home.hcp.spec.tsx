@@ -106,8 +106,17 @@ describe('HCP home page', () => {
     }])
 
     await renderHomePage()
-
     await testPatientManagementPrivateTeam()
+  })
+
+  it('should be able to manage the patient list when scoped on the private practice team', async () => {
+    localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
+    jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
+      ...patient1,
+      invitationStatus: UserInviteStatus.Accepted
+    }])
+
+    await renderHomePage()
     await testPatientListForHcpPrivateTeam()
   })
 
