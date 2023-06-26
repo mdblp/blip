@@ -29,7 +29,7 @@ import React, { type FunctionComponent } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { PatientData } from '../components/patient-data/patient-data'
 import CareTeamSettingsPage from '../pages/care-team-settings/care-team-settings-page'
-import { PatientProvider } from '../lib/patient/patient.provider'
+import { PatientsProvider } from '../lib/patient/patients.provider'
 import { TeamContextProvider } from '../lib/team'
 import DashboardLayout from './dashboard-layout'
 import InvalidRoute from '../components/invalid-route'
@@ -45,7 +45,7 @@ export const HcpLayout: FunctionComponent = () => {
     <TeamContextProvider>
       <SelectedTeamProvider>
         <PatientListProvider>
-          <PatientProvider>
+          <PatientsProvider>
             <DashboardLayout>
               <Routes>
                 <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
@@ -58,7 +58,7 @@ export const HcpLayout: FunctionComponent = () => {
                 <Route path="*" element={<Navigate to={AppUserRoute.NotFound} replace />} />
               </Routes>
             </DashboardLayout>
-          </PatientProvider>
+          </PatientsProvider>
         </PatientListProvider>
       </SelectedTeamProvider>
     </TeamContextProvider>

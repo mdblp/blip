@@ -65,8 +65,10 @@ import { LayoutColumnType } from './models/enums/layout-column-type.enum'
 import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
 import { getPatientFullName } from './utils/patient/patient.util'
 import { formatBirthdate } from './utils/datetime/datetime.util'
+import { type ChangeDateParameterGroup } from './models/historized-parameter.model'
 
 export {
+  type ChangeDateParameterGroup,
   AverageDailyDoseStat,
   buildLayoutColumns,
   type BgPrefs,

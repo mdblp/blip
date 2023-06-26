@@ -30,7 +30,7 @@ import { DataGrid, type GridPaginationModel, type GridSortModel, useGridApiRef }
 import Box from '@mui/material/Box'
 import { PatientListColumns } from '../models/enums/patient-list.enum'
 import { usePatientListContext } from '../../../lib/providers/patient-list.provider'
-import { usePatientContext } from '../../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../../lib/patient/patients.provider'
 import { usePendingPatientListHook } from './pending-patient-list.hook'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { EmptyPatientList } from '../empty-patient-list/empty-patient-list'
@@ -55,7 +55,7 @@ export const PendingPatientList: FunctionComponent<PendingPatientListProps> = (p
     onCloseReinviteDialog
   } = usePendingPatientListHook({ patients })
   const { displayedColumns } = usePatientListContext()
-  const { refreshInProgress } = usePatientContext()
+  const { refreshInProgress } = usePatientsContext()
   const { selectedTeam } = useSelectedTeamContext()
   const { width } = useWindowDimensions()
   const gridApiRef = useGridApiRef()

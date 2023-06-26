@@ -94,7 +94,7 @@ const checkTeamScopeMenu = async (header: BoundFunctions<typeof queries>, teamMe
     }
     expect(teamScopeMenu.getByText(team.name)).toBeVisible()
   })
-  expect(teamScopeMenu.getByText('Create a new care team')).toBeVisible()
+  expect(teamScopeMenu.getByText('Create a care team')).toBeVisible()
 
   await userEvent.click(screen.getByRole('presentation').firstChild as HTMLElement)
   expect(screen.queryByTestId('team-scope-menu')).not.toBeInTheDocument()

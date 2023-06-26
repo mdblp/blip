@@ -34,6 +34,7 @@ import { mockMedicalFilesAPI } from './medical-files.api.mock'
 import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from './user.api.mock'
+import { mockPatientApiForPatients } from './patient.api.mock'
 
 export const mockPatientLogin = (patient: ITeamMember) => {
   mockAuth0Hook(UserRole.Patient, patient.userId)
@@ -43,4 +44,5 @@ export const mockPatientLogin = (patient: ITeamMember) => {
   mockUserApi().mockUserDataFetch({ firstName: patient.profile.firstName, lastName: patient.profile.lastName })
   mockChatAPI()
   mockMedicalFilesAPI()
+  mockPatientApiForPatients()
 }

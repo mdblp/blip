@@ -27,7 +27,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { PatientListTabs } from './models/enums/patient-list.enum'
-import { usePatientContext } from '../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../lib/patient/patients.provider'
 import { useAuth } from '../../lib/auth'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import PatientUtils from '../../lib/patient/patient.util'
@@ -44,7 +44,7 @@ interface PatientListHookReturns {
 
 export const usePatientListHook = (): PatientListHookReturns => {
   const { getFlagPatients } = useAuth()
-  const { searchPatients } = usePatientContext()
+  const { searchPatients } = usePatientsContext()
   const { updatePendingFilter, filters } = usePatientListContext()
 
   const [selectedTab, setSelectedTab] = useState<PatientListTabs>(PatientListTabs.Current)

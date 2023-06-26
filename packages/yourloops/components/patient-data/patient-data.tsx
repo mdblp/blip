@@ -48,6 +48,7 @@ import { useDailyNotes } from './daily-notes.hook'
 import metrics from '../../lib/metrics'
 import DailyNotes from 'blip/app/components/messages'
 import { useAuth } from '../../lib/auth'
+import { DevicePage } from '../../pages/device/device-page'
 
 export const PatientData: FunctionComponent = () => {
   const alert = useAlert()
@@ -216,6 +217,16 @@ export const PatientData: FunctionComponent = () => {
                         updateChartPrefs={updateChartPrefs}
                       />
                     }
+                  />
+                  <Route
+                    path={AppUserRoute.Device}
+                    element={
+                    <DevicePage
+                      goToDailySpecificDate={goToDailySpecificDate}
+                      medicalData={medicalData}
+                      timePrefs={timePrefs}
+                    />
+                  }
                   />
                 </Routes>
                 {showPdfDialog &&

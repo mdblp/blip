@@ -36,7 +36,7 @@ import { makeStyles } from 'tss-react/mui'
 import { useAlert } from '../utils/snackbar'
 import { commonComponentStyles } from '../common'
 import MonitoringAlertsContentConfiguration from './monitoring-alerts-content-configuration'
-import { usePatientContext } from '../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../lib/patient/patients.provider'
 import DialogContent from '@mui/material/DialogContent'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { type MonitoringAlertsParameters } from '../../lib/team/models/monitoring-alerts-parameters.model'
@@ -58,7 +58,7 @@ function PatientMonitoringAlertDialog(props: PatientMonitoringAlertDialogProps):
   const { classes: commonClasses } = commonComponentStyles()
   const { classes } = useStyles()
   const { t } = useTranslation('yourloops')
-  const patientHook = usePatientContext()
+  const patientsHook = usePatientsContext()
   const alert = useAlert()
   const { selectedTeam } = useSelectedTeamContext()
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
@@ -68,7 +68,7 @@ function PatientMonitoringAlertDialog(props: PatientMonitoringAlertDialogProps):
     patient.monitoringAlertsParameters = monitoringAlertsParameters
     setSaveInProgress(true)
     try {
-      await patientHook.updatePatientMonitoringAlertsParameters(patient)
+      await patientsHook.updatePatientMonitoringAlertsParameters(patient)
       alert.success(t('patient-update-success'))
       setSaveInProgress(false)
       onClose()

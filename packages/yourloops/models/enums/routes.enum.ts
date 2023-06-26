@@ -29,6 +29,7 @@ export enum AppUserRoute {
   Caregivers = '/caregivers',
   CareTeamSettings = '/team',
   Daily = '/daily',
+  Device = '/device',
   Dashboard = '/dashboard',
   Home = '/home',
   NotFound = '/not-found',

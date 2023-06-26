@@ -27,7 +27,7 @@
 
 import { useCallback, useState } from 'react'
 import { type GridColDef, type GridRowParams, type GridRowsProp } from '@mui/x-data-grid'
-import { usePatientContext } from '../../../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { useCurrentPatientListHook } from '../current-patient-list.hook'
 
@@ -45,7 +45,7 @@ interface MedicalTeamPatientListHookReturns {
 
 export const useMedicalTeamPatientListHook = (props: MedicalTeamPatientListHookProps): MedicalTeamPatientListHookReturns => {
   const { patients } = props
-  const { getPatientById } = usePatientContext()
+  const { getPatientById } = usePatientsContext()
 
   const [patientToRemove, setPatientToRemove] = useState<Patient | null>(null)
 

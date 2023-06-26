@@ -40,7 +40,7 @@ import { errorTextFromException, getUserFirstName, getUserLastName } from '../..
 import { useNotification } from '../../lib/notifications/notification.hook'
 import metrics from '../../lib/metrics'
 import { useAlert } from '../../components/utils/snackbar'
-import { usePatientContext } from '../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../lib/patient/patients.provider'
 import { useTeam } from '../../lib/team'
 import { type Notification as NotificationModel } from '../../lib/notifications/models/notification.model'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
@@ -211,7 +211,7 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
   const notifications = useNotification()
   const alert = useAlert()
   const teamHook = useTeam()
-  const patientHook = usePatientContext()
+  const patientsHook = usePatientsContext()
   const [inProgress, setInProgress] = useState(false)
   const { classes } = useStyles()
   const { notification, userRole, onHelp, refreshReceivedInvitations } = props
@@ -230,13 +230,15 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
     try {
       await notifications.accept(notification)
       metrics.send('invitation', 'accept_invitation', notification.metricsType)
-      patientHook.refresh()
       if (!isADirectInvitation) {
         teamHook.refresh()
+      } else {
+        patientsHook.refresh()
       }
       alert.success(t('accept-notification-success', { name: inviterName }))
       refreshReceivedInvitations()
     } catch (reason: unknown) {
+      console.error(reason)
       const errorMessage = errorTextFromException(reason)
       alert.error(t(errorMessage))
       setInProgress(false)
