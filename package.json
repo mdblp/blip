@@ -70,7 +70,7 @@
     "@babel/preset-react": "^7.14.5",
     "@babel/preset-typescript": "^7.21.0",
     "@babel/runtime": "^7.22.5",
-    "@faker-js/faker": "^7.6.0",
+    "@faker-js/faker": "^8.0.2",
     "@peculiar/webcrypto": "^1.4.3",
     "@serprex/react-motion": "0.6.3",
     "@testing-library/dom": "^9.2.0",
