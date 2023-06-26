@@ -31,7 +31,6 @@ import styles from './table.css'
 import { useTranslation } from 'react-i18next'
 
 interface Row {
-  rawData: string
   name: string
   value: string
   unit: string
@@ -67,9 +66,9 @@ export const Table: FunctionComponent<TableProps> = (props) => {
       </thead>
       <tbody>
       {rows.map((row, index) =>
-        <tr key={index} data-testid={`${row.rawData.toLowerCase()}-row`}>
+        <tr key={index} data-testid={`${row.name.toLowerCase()}-row`}>
           <td className={styles.secondaryLabelWithMain}>
-            {row.name}
+            {t(`params|${row.name}`)}
           </td>
           <td className={styles.secondaryLabelWithMain}>
             {row.value}

@@ -52,6 +52,7 @@ export const HistorySpannedRow: FunctionComponent<HistorySpannedRowProps> = (pro
         {content}
         <i
           role="button"
+          data-testid={`button-${content}`}
           tabIndex={0}
           data-date={dateString}
           className={`icon-chart-line ${styles.clickableIcon}`}

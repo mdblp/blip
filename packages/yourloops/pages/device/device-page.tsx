@@ -25,33 +25,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import styles from '../diabeloop.css'
-import { type TimePrefs } from 'medical-domain'
+import React, { type FC } from 'react'
+import { type PumpSettings, type TimePrefs } from 'medical-domain'
+import type MedicalDataService from 'medical-domain'
+import { DeviceSettings } from '../../components/device/device-settings'
+import Container from '@mui/material/Container'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import { useTranslation } from 'react-i18next'
-import { HistoryTableHeader } from './history-table-header'
-import { HistoryTableContent } from './history-table-content'
-import { type ChangeDateParameterGroup } from '../../../models/historized-parameter.model'
-import type moment from 'moment-timezone'
+import { useTheme } from '@mui/material/styles'
 
-interface HistoryParameterTableProps {
-  rows: ChangeDateParameterGroup[]
-  onSwitchToDaily: (date: moment.Moment | Date | number | null) => void
+interface DevicePageProps {
+  goToDailySpecificDate: (date: number) => void
+  medicalData: MedicalDataService
   timePrefs: TimePrefs
 }
 
-export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps> = (props) => {
-  const { t } = useTranslation('main')
-  const { rows, onSwitchToDaily, timePrefs } = props
+export const DevicePage: FC<DevicePageProps> = ({ medicalData, timePrefs, goToDailySpecificDate }) => {
+  const { t } = useTranslation()
+  const theme = useTheme()
+  const pumpSettings = [...medicalData.grouped.pumpSettings].pop() as PumpSettings
 
   return (
-    <table className={styles.settingsTable} data-testid="history-parameter-table">
-      <caption className={styles.bdlgSettingsHeader}>
-        {t('Parameters History')}
-        <span className={styles.secondaryLabelWithMain} />
-      </caption>
-      <HistoryTableHeader />
-      <HistoryTableContent rows={rows} onSwitchToDaily={onSwitchToDaily} timePrefs={timePrefs} />
-    </table>
+    <Container data-testid="device-settings-container" maxWidth={!pumpSettings ? 'sm' : undefined}>
+      {pumpSettings
+        ? <DeviceSettings
+          goToDailySpecificDate={goToDailySpecificDate}
+          pumpSettings={pumpSettings}
+          timePrefs={timePrefs}
+        />
+        : <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          marginTop={theme.spacing(4)}
+        >
+          <Typography fontWeight={500}>{t('no-settings-on-device-alert-message')}</Typography>
+        </Box>
+      }
+    </Container>
   )
 }

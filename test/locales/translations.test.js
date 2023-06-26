@@ -202,7 +202,17 @@ const ignoredTransKeyInYourLoopsFiles = [
   'gender-${patient.profile.sex.toLocaleLowerCase()}',
   // Documentation!
   'translate-me',
-  'translate-{{someone}}'
+  'translate-{{someone}}',
+  'Software version',
+  'Manufacturer',
+  'IMEI',
+  'Identifier',
+  'Name',
+  'Parameters',
+  'params|${parameter.name}',
+  'Device',
+  'Unit',
+  'Value'
 ]
 
 /**

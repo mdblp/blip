@@ -15,12 +15,10 @@
 
 import Daily from './daily'
 import Trends from './trends'
-import SettingsDialog from './settingsDialog'
 import Footer from './footer'
 
 export {
   Daily,
   Trends,
-  SettingsDialog,
   Footer
 }
