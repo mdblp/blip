@@ -230,13 +230,15 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
     try {
       await notifications.accept(notification)
       metrics.send('invitation', 'accept_invitation', notification.metricsType)
-      patientsHook.refresh()
       if (!isADirectInvitation) {
         teamHook.refresh()
+      } else {
+        patientsHook.refresh()
       }
       alert.success(t('accept-notification-success', { name: inviterName }))
       refreshReceivedInvitations()
     } catch (reason: unknown) {
+      console.error(reason)
       const errorMessage = errorTextFromException(reason)
       alert.error(t(errorMessage))
       setInProgress(false)
