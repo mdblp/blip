@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,40 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
-import { patient1Id } from '../data/patient.api.data'
+import { formatParameterValue } from '../../../../components/device/device-settings.utils'
+import { Unit } from 'medical-domain'
 
-export const mockMedicalFilesAPI = (teamId: string = 'teamId', teamName: string = 'teamName') => {
-  jest.spyOn(MedicalFilesApi, 'getMedicalReports').mockResolvedValue([{
-    id: 'medicalReportId',
-    authorId: 'authorId',
-    creationDate: '2022-01-10T08:34:06.898Z',
-    patientId: patient1Id,
-    teamId,
-    teamName,
-    diagnosis: 'whatever diagnosis',
-    progressionProposal: 'whatever proposal',
-    trainingSubject: 'here is the subject',
-    number: 1,
-    authorFirstName: 'Vishnou',
-    authorLastName: 'Lapaix'
-  },
-  {
-    id: 'medicalReportId2',
-    authorId: 'authorId',
-    creationDate: '2022-01-02T10:30:00.000Z',
-    patientId: patient1Id,
-    teamId,
-    teamName,
-    diagnosis: 'whatever diagnosis 2 ',
-    progressionProposal: 'whatever proposal 2',
-    trainingSubject: 'here is the subject 2',
-    number: 2,
-    authorFirstName: 'Vishnou',
-    authorLastName: 'Lapaix'
-  }])
-}
-
-export const mockMedicalFilesApiEmptyResult = () => {
-  jest.spyOn(MedicalFilesApi, 'getMedicalReports').mockResolvedValue([])
-}
+describe('Device settings utils', () => {
+  describe('formatParameterValue', () => {
+    it('should return the correct format for the given value', () => {
+      expect(formatParameterValue('75', Unit.Percent)).toEqual('75')
+      expect(formatParameterValue('5', Unit.Minute)).toEqual('5')
+      expect(formatParameterValue('12.45', Unit.Gram)).toEqual('12.4')
+      expect(formatParameterValue('85', Unit.Kilogram)).toEqual('85.0')
+      expect(formatParameterValue('35', Unit.InsulinUnit)).toEqual('35.0')
+      expect(formatParameterValue(24.78, Unit.MilligramPerDeciliter)).toEqual('24.8')
+      expect(formatParameterValue(2.54, Unit.MmolPerLiter)).toEqual('2.5')
+      expect(formatParameterValue('not_a_number', Unit.MmolPerLiter)).toEqual('--')
+    })
+  })
+})

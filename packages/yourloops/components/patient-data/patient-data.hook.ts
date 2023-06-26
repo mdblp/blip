@@ -137,6 +137,8 @@ export const usePatientData = (): usePatientDataResult => {
         return ChartTypes.Trends
       case `${urlPrefix}/dashboard`:
         return ChartTypes.Dashboard
+      case `${urlPrefix}/device`:
+        return ChartTypes.Device
     }
   }, [pathname, urlPrefix])
 

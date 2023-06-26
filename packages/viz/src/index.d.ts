@@ -1,9 +1,6 @@
 export namespace components {
   export { WarmUpTooltip }
 }
-export namespace containers {
-  export { PumpSettingsContainer }
-}
 export namespace utils {
   namespace basal {
     export { getGroupDurations }
@@ -43,7 +40,6 @@ import getParametersChanges from './types/utils/parametersHistory'
 import { getLongDayHourFormat } from './types/utils/datetime'
 import { formatParameterValue } from './types/utils/format'
 import WarmUpTooltip from './types/components/daily/warmuptooltip/WarmUpTooltip'
-import PumpSettingsContainer from './types/components/settings/common/PumpSettingsContainer'
 import { getGroupDurations } from './types/utils/basal'
 import { getTotalBasalFromEndpoints } from './types/utils/basal'
 import { formatBgValue } from './types/utils/format'
