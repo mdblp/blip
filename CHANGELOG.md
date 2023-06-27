@@ -37,6 +37,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2324 Hide certain columns when private practice is selected
 - YLP-2348 New columns from glycemia indicators in patients list
 - YLP-2350 Display a visual info when a patient has unread messages from another team in the chat widget
+- YLP-2354 Access to the DBL settings page from every view
 - YLP-2358 As a care team member, I want a new design when listing my pending patients
 - YLP-2381 As a HCP, I want to manage patient invites made by other members of the teams
 - YLP-2388 Select the new care team after creating it
@@ -109,8 +110,12 @@ It is based on Tidepool Blip 1.27.
 - YLP-2403 Remove caregiver and private team logic from CurrentPatientList
 - YLP-2404 Fix patient list columns width
 - YLP-2418 use new patient route from harbour
+- YLP-2420 Translations update
 - YLP-2434 Api calls are trigerred twice
+- YLP-2446 Patient does not have to retrieve a list of patients
 - YLP-2454 Daily view crashes on mobile
+- YLP-2458 Blip auto dependencies update
+- YLP-2468 Fix team management issues
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team

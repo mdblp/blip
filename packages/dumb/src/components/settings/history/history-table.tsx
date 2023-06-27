@@ -45,7 +45,7 @@ export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps
   const { rows, onSwitchToDaily, timePrefs } = props
 
   return (
-    <table className={styles.settingsTable}>
+    <table className={styles.settingsTable} data-testid="history-parameter-table">
       <caption className={styles.bdlgSettingsHeader}>
         {t('Parameters History')}
         <span className={styles.secondaryLabelWithMain} />

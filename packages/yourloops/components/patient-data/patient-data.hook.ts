@@ -31,13 +31,14 @@ import { type Patient } from '../../lib/patient/models/patient.model'
 import { type ChartPrefs } from '../dashboard-widgets/models/chart-prefs.model'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
-import { usePatientContext } from '../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../lib/patient/patients.provider'
 import type MedicalDataService from 'medical-domain'
 import { defaultBgClasses, type TimePrefs, TimeService, Unit } from 'medical-domain'
 import { type MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
 import { isValidDateQueryParam, PatientDataUtils } from './patient-data.utils'
 import DataUtil from 'tidepool-viz/src/utils/data'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
+import { usePatientContext } from '../../lib/patient/patient.provider'
 
 export interface usePatientDataResult {
   bgPrefs: BgPrefs
@@ -73,13 +74,15 @@ export const usePatientData = (): usePatientDataResult => {
   const { patientId } = paramHook
   const { user } = useAuth()
   const { pathname } = useLocation()
-  const { getPatientById } = usePatientContext()
+  const { getPatientById } = usePatientsContext()
+  const patientHook = usePatientContext()
   const [searchParams, setSearchParams] = useSearchParams()
 
   const dailyChartRef = useRef(null)
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
-  const urlPrefix = user.isUserPatient() ? '' : `/patient/${patientId}`
-  const patient = getPatientById(patientId ?? user.id)
+  const isUserPatient = user.isUserPatient()
+  const urlPrefix = isUserPatient ? '' : `/patient/${patientId}`
+  const patient = isUserPatient ? patientHook.patient : getPatientById(patientId)
   const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const bgClasses = defaultBgClasses[bgUnits]
   const bgPrefs: BgPrefs = {
@@ -134,6 +137,8 @@ export const usePatientData = (): usePatientDataResult => {
         return ChartTypes.Trends
       case `${urlPrefix}/dashboard`:
         return ChartTypes.Dashboard
+      case `${urlPrefix}/device`:
+        return ChartTypes.Device
     }
   }, [pathname, urlPrefix])
 

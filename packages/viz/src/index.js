@@ -17,7 +17,6 @@
 
 import './styles/colors.css'
 
-import PumpSettingsContainer from './components/settings/common/PumpSettingsContainer'
 import WarmUpTooltip from './components/daily/warmuptooltip/WarmUpTooltip'
 
 import { formatBgValue, formatParameterValue } from './utils/format'
@@ -42,10 +41,6 @@ import { generatePDFStats, generatePumpSettings, selectDailyViewData } from './u
 
 const components = {
   WarmUpTooltip
-}
-
-const containers = {
-  PumpSettingsContainer
 }
 
 const utils = {
@@ -85,7 +80,6 @@ const utils = {
 
 export {
   components,
-  containers,
   utils,
   createPrintPDFPackage,
   getParametersChanges,

@@ -31,7 +31,7 @@ import Box from '@mui/material/Box'
 import { PatientListCustomFooter } from '../../patient-list-custom-footer'
 import { PatientListColumns } from '../../models/enums/patient-list.enum'
 import { usePatientListContext } from '../../../../lib/providers/patient-list.provider'
-import { usePatientContext } from '../../../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useMedicalTeamPatientListHook } from './medical-team-patient-list.hook'
 import RemovePatientDialog from '../../../patient/remove-patient-dialog/remove-patient-dialog'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
@@ -52,7 +52,7 @@ export const MedicalTeamPatientList: FunctionComponent<MedicalTeamPatientListPro
     onRowClick
   } = useMedicalTeamPatientListHook({ patients })
   const { displayedColumns } = usePatientListContext()
-  const { refreshInProgress } = usePatientContext()
+  const { refreshInProgress } = usePatientsContext()
   const { width } = useWindowDimensions()
   const gridApiRef = useGridApiRef()
 

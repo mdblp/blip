@@ -29,7 +29,7 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import * as authHookMock from '../../../lib/auth'
 import { type User } from '../../../lib/auth'
-import * as patientHookMock from '../../../lib/patient/patient.provider'
+import * as patientsHookMock from '../../../lib/patient/patients.provider'
 import * as notificationsHookMock from '../../../lib/notifications/notification.hook'
 import { MemoryRouter } from 'react-router-dom'
 import { CaregiverLayout } from '../../../layout/caregiver-layout'
@@ -57,7 +57,7 @@ jest.mock('../../../pages/notifications', () => () => {
 })
 describe('Caregiver Layout', () => {
   beforeAll(() => {
-    (patientHookMock.PatientProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
+    (patientsHookMock.PatientsProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {
       return children
     });
     (notificationsHookMock.NotificationContextProvider as jest.Mock) = jest.fn().mockImplementation(({ children }) => {

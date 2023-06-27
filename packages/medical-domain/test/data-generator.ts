@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -56,7 +56,7 @@ import { DeviceEventSubtype } from '../src/domains/models/medical/datum/enums/de
 import { getTrendsTime } from '../src/domains/repositories/time/time.service'
 
 function createBaseData(date?: Date): BaseDatum {
-  const pastDate = date || faker.date.recent(20)
+  const pastDate = date ?? faker.date.recent(20)
   return {
     id: faker.datatype.uuid(),
     type: DatumType.Upload,

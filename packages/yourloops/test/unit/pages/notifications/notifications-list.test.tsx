@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import NotificationsPage from '../../../../pages/notifications/notifications-list'
+import NotificationsPage from '../../../../pages/notifications/notifications-page'
 
 describe('Notification list', () => {
   it('should be exported as a function', () => {

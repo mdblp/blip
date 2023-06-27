@@ -34,7 +34,6 @@ import { REGEX_BIRTHDATE } from '../../lib/utils'
 import { isEqual, some } from 'lodash'
 import { type ProfileErrors, type ProfileForm } from './models/profile-form.model'
 import { type ProfileFormKey } from './models/enums/profile-form-key.enum'
-import { usePatientContext } from '../../lib/patient/patient.provider'
 import { HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
 import { type Profile } from '../../lib/auth/models/profile.model'
 import { type Settings } from '../../lib/auth/models/settings.model'
@@ -54,7 +53,6 @@ const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
   const alert = useAlert()
   const { t, i18n } = useTranslation('yourloops')
   const { user, updateProfile, updatePreferences, updateSettings } = useAuth()
-  const patientHook = usePatientContext()
   const isUserPatient = user.isUserPatient()
   const isUserHcp = user.isUserHcp()
 
@@ -143,9 +141,6 @@ const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
         await i18n.changeLanguage(profileForm.lang)
       }
 
-      if (isUserPatient) {
-        patientHook.refresh()
-      }
       alert.success(t('profile-updated'))
     } catch (err) {
       alert.error(t('profile-update-failed'))

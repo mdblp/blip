@@ -37,7 +37,7 @@ import { makeStyles } from 'tss-react/mui'
 import { type Theme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import { usePatientContext } from '../../lib/patient/patient.provider'
+import { usePatientsContext } from '../../lib/patient/patients.provider'
 import { getUserName } from '../../lib/auth/user.util'
 
 interface PatientNavBarSelectProps {
@@ -58,7 +58,7 @@ export const PatientNavBarSelect: FunctionComponent<PatientNavBarSelectProps> = 
   const { t } = useTranslation('yourloops')
 
   const { classes, theme } = styles()
-  const { patients } = usePatientContext()
+  const { patients } = usePatientsContext()
 
   const onPatientSelected = (event: SelectChangeEvent<string>): void => {
     onSwitchPatient(patients.find(patient => patient.userid === event.target.value))

@@ -28,5 +28,6 @@
 export enum ChartTypes {
   Dashboard = 'dashboard',
   Daily = 'daily',
-  Trends = 'trends'
+  Trends = 'trends',
+  Device = 'device'
 }
