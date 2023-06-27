@@ -106,6 +106,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2352 Monitoring alert tooltips "out of range" displays incorrect values
 - YLP-2364 Fixed English translations
 - YLP-2367 Patient list refacto
+- YLP-2383 Migrate LoopMode from stat.js to yourloops
 - YLP-2386 Fix navigation crash between care team and patient list
 - YLP-2387 Fix the tab title when displaying the patient list
 - YLP-2403 Remove caregiver and private team logic from CurrentPatientList
