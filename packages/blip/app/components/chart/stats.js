@@ -214,7 +214,6 @@ class Stats extends React.Component {
     const { commonStats } = vizUtils.stat
     const { bgBounds, bgUnits, days, latestPump } = dataUtil
     const { manufacturer, deviceModel } = latestPump
-    const isAutomatedBasalDevice = vizUtils.device.isAutomatedBasalDevice(manufacturer, deviceModel)
 
     const stats = []
 
@@ -239,13 +238,11 @@ class Stats extends React.Component {
     switch (chartType) {
       case 'daily':
         addStat(commonStats.totalInsulin)
-        isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
         break
 
       case 'patientStatistics':
         addStat(commonStats.totalInsulin)
         addStat(commonStats.averageDailyDose)
-        isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
         break
     }
 
