@@ -195,7 +195,13 @@ const ignoredTransKeyForYourLoops = [
   'tooltip-total-week-carbs',
   'total-carbs',
   'hba1c',
-  'no-medical-files-patient'
+  'no-medical-files-patient',
+  'avg-time-loop',
+  'time-loop',
+  'avg-time-loop-tooltip',
+  'time-loop-tooltip',
+  'avg-time-loop-how-calculate',
+  'time-loop-how-calculate'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
@@ -321,7 +327,7 @@ describe('Locales tests', () => {
         missingTranslations.push(key)
       }
     }
-
+    console.log(missingTranslations)
     expect(unusedTranslations, 'Unused translations').to.be.empty
     expect(missingTranslations, 'Missing translations').to.be.empty
   })

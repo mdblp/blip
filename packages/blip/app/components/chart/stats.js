@@ -98,16 +98,6 @@ class Stats extends React.Component {
   getStatElementById(stat, bgClasses) {
     const { parametersConfig } = this.props
     switch (stat.id) {
-      case CBGStatType.TimeInAuto:
-        return (
-          <LoopModeStat
-            annotations={stat.annotations}
-            automated={stat.data.raw.automated}
-            manual={stat.data.raw.manual}
-            title={stat.title}
-            total={stat.data.total.value}
-          />
-        )
       case CBGStatType.TotalInsulin:
         return (
           <TotalInsulinStat
