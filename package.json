@@ -151,7 +151,7 @@
     "typescript-plugin-css-modules": "^4.2.2",
     "voilab-pdf-table": "0.4.0",
     "webpack": "^5.87.0",
-    "webpack-cli": "^5.0.1",
+    "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1",
     "webpack-subresource-integrity": "^5.1.0"
   }
