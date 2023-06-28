@@ -33,7 +33,8 @@ import {
 import { checkPatientDashboardLayout, type PatientDashboardLayoutParams } from '../assert/layout.assert'
 import {
   checkDeviceUsageWidget,
-  checkDeviceUsageWidgetNoData
+  checkDeviceUsageWidgetNoData,
+  checkDeviceUsageWidgetWithTwoWeeksOldData
 } from '../assert/device-usage.assert'
 import { patient1, patient2 } from '../data/patient.api.data'
 import {
@@ -65,6 +66,7 @@ export const testDashboardDataVisualisationWithOldData = async () => {
 }
 export const testDashboardDataVisualisationTwoWeeksOldData = async () => {
   await checkPatientStatisticsWithTwoWeeksOldData()
+  await checkDeviceUsageWidgetWithTwoWeeksOldData()
 }
 
 export const testDashboardDataVisualisationPrivateTeam = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
