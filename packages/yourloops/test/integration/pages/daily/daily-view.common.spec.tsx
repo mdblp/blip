@@ -143,8 +143,8 @@ describe('Daily view for anyone', () => {
 
       // This checks that we tried to generate a pdf
       expect(downloadLinkElement.download).toEqual(`yourloops-report-${patient2AsTeamMember.userId}.pdf`)
-      expect(downloadLinkElement.href.length).toBeGreaterThan(17949)
-      expect(downloadLinkElement.href.length).toBeLessThan(18040)
+      expect(downloadLinkElement.href.length).toBeGreaterThan(18000)
+      expect(downloadLinkElement.href.length).toBeLessThan(18090)
       expect(downloadLinkElement.click).toHaveBeenCalledTimes(1)
 
       await userEvent.click(screen.getByText('Download report'))
