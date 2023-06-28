@@ -27,7 +27,7 @@
 
 import React, { type FunctionComponent } from 'react'
 import { t } from 'i18next'
-import { type ParameterConfig } from 'medical-domain'
+import { type ParameterConfig, Unit } from 'medical-domain'
 import { InsulinStat } from 'dumb'
 import { convertToPercentage } from './statistics.util'
 import { EMPTY_DATA_PLACEHOLDER } from 'dumb/dist/src/models/stats.model'
@@ -54,14 +54,14 @@ export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props
       id: 'bolus',
       value: convertToPercentage(bolus),
       valueString: String(convertToPercentage(bolus)),
-      units: 'U',
+      units: Unit.InsulinUnit,
       title: t('Bolus')
     },
     {
       id: 'basal',
       value: convertToPercentage(basal),
       valueString: String(convertToPercentage(basal)),
-      units: 'U',
+      units: Unit.InsulinUnit,
       title: t('Basal')
     }
   ]

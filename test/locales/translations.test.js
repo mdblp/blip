@@ -221,9 +221,7 @@ const ignoredTransKeyInYourLoopsFiles = [
   'params|${parameter.name}',
   'Device',
   'Unit',
-  'Value',
-  'translate-{{someone}}'
-
+  'Value'
 ]
 
 /**

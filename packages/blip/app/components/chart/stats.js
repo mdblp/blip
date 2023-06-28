@@ -10,6 +10,7 @@ import {
 } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
 import Divider from '@mui/material/Divider'
+
 class Stats extends React.Component {
   static propTypes = {
     bgPrefs: PropTypes.object.isRequired,
@@ -87,140 +88,145 @@ class Stats extends React.Component {
   }
 
   getStatElementById(stat) {
-    switch (stat.id) {
-      case CBGStatType.TimeInAuto:
-        return (
-          <LoopModeStat
-            annotations={stat.annotations}
-            automated={stat.data.raw.automated}
-            manual={stat.data.raw.manual}
-            title={stat.title}
-            total={stat.data.total.value}
-          />
-        )
-      default: {
-        if (stat.type !== vizUtils.stat.statTypes.simple) {
-          throw Error(`Unexpected stat id ${stat.id} and type ${stat.type}`)
-        }
-        return (
-          <SimpleStat
-            annotations={stat.annotations}
-            summaryFormat={stat.dataFormat.summary}
-            title={stat.title}
-            total={stat.data.total?.value}
-            value={stat.data.data[0].value}
-          />
-        )
-      }
-    }
-  }
-
-  renderStats(stats) {
-    const { bgPrefs } = this.props
-    const bgClasses = {
-      high: bgPrefs.bgClasses.high,
-      low: bgPrefs.bgClasses.low,
-      target: bgPrefs.bgClasses.target,
-      veryLow: bgPrefs.bgClasses.veryLow
-    }
-    return stats.map(stat => {
+    if (stat.id === CBGStatType.TimeInAuto) {
       return (
-        <div key={stat.id} data-testid={`stat-${stat.id}`}>
-          {this.getStatElementById(stat, bgClasses)}
-          <Divider sx={{ marginBlock: '8px', backgroundColor: '#757575' }} />
-        </div>
+        <LoopModeStat
+          annotations={stat.annotations}
+          automated={stat.data.raw.automated}
+          manual={stat.data.raw.manual}
+          title={stat.title}
+          total={stat.data.total.value}
+        />
       )
-    })
-  }
+    }
+    if (stat.type !== vizUtils.stat.statTypes.simple) {
+      throw Error(`Unexpected stat id ${stat.id} and type ${stat.type}`)
+    }
 
-  render() {
     return (
-      <div className="Stats" data-testid="stats-widgets">
-        {this.renderStats(this.state.stats)}
-      </div>
+      <SimpleStat
+        annotations={stat.annotations}
+        summaryFormat={stat.dataFormat.summary}
+        title={stat.title}
+        total={stat.data.total?.value}
+        value={stat.data.data[0].value}
+      />
     )
   }
 
-  getStatsByChartType() {
-    const {
-      chartType,
-      dataUtil,
-      bgSource
-    } = this.props
-
-    const { commonStats } = vizUtils.stat
-    const { bgBounds, bgUnits, days, latestPump } = dataUtil
-    const { manufacturer, deviceModel } = latestPump
-    const isAutomatedBasalDevice = vizUtils.device.isAutomatedBasalDevice(manufacturer, deviceModel)
-
-    const stats = []
-
-    const addStat = statType => {
-      const chartStatOpts = _.get(this.props, `chartPrefs.${chartType}.${statType}`)
-
-      const stat = vizUtils.stat.getStatDefinition(dataUtil[vizUtils.stat.statFetchMethods[statType]](), statType, {
-        bgSource,
-        days,
-        bgPrefs: {
-          bgBounds,
-          bgUnits
-        },
-        manufacturer,
-        ...chartStatOpts
+    renderStats(stats)
+    {
+      const { bgPrefs } = this.props
+      const bgClasses = {
+        high: bgPrefs.bgClasses.high,
+        low: bgPrefs.bgClasses.low,
+        target: bgPrefs.bgClasses.target,
+        veryLow: bgPrefs.bgClasses.veryLow
+      }
+      return stats.map(stat => {
+        return (
+          <div key={stat.id} data-testid={`stat-${stat.id}`}>
+            {this.getStatElementById(stat, bgClasses)}
+            <Divider sx={{ marginBlock: '8px', backgroundColor: '#757575' }} />
+          </div>
+        )
       })
-
-      stats.push(stat)
     }
 
-
-    switch (chartType) {
-      case 'daily':
-        isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
-        break
-
-      case 'patientStatistics':
-        isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
-        break
+    render()
+    {
+      return (
+        <div className="Stats" data-testid="stats-widgets">
+          {this.renderStats(this.state.stats)}
+        </div>
+      )
     }
 
-    return stats
-  }
+    getStatsByChartType()
+    {
+      const {
+        chartType,
+        dataUtil,
+        bgSource
+      } = this.props
 
-  updateDataUtilEndpoints() {
-    const {
-      dataUtil,
-      endpoints
-    } = this.props
+      const { commonStats } = vizUtils.stat
+      const { bgBounds, bgUnits, days, latestPump } = dataUtil
+      const { manufacturer, deviceModel } = latestPump
+      const isAutomatedBasalDevice = vizUtils.device.isAutomatedBasalDevice(manufacturer, deviceModel)
 
-    dataUtil.endpoints = endpoints
-  }
+      const stats = []
 
-  updateStatData() {
-    const { bgSource, dataUtil } = this.props
-    const stats = this.state.stats
+      const addStat = statType => {
+        const chartStatOpts = _.get(this.props, `chartPrefs.${chartType}.${statType}`)
 
-    const { bgBounds, bgUnits, days, latestPump } = dataUtil
-    const { manufacturer } = latestPump
+        const stat = vizUtils.stat.getStatDefinition(dataUtil[vizUtils.stat.statFetchMethods[statType]](), statType, {
+          bgSource,
+          days,
+          bgPrefs: {
+            bgBounds,
+            bgUnits
+          },
+          manufacturer,
+          ...chartStatOpts
+        })
 
-    _.forEach(stats, (stat, i) => {
-      const data = dataUtil[vizUtils.stat.statFetchMethods[stat.id]]()
-      const opts = {
-        bgSource: bgSource,
-        bgPrefs: {
-          bgBounds,
-          bgUnits
-        },
-        days,
-        manufacturer
+        stats.push(stat)
       }
 
-      stats[i].data = vizUtils.stat.getStatData(data, stat.id, opts)
-      stats[i].annotations = vizUtils.stat.getStatAnnotations(data, stat.id, opts)
-      stats[i].title = vizUtils.stat.getStatTitle(stat.id, opts)
-    })
 
-    this.setState({ stats })
+      switch (chartType) {
+        case 'daily':
+          isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
+          break
+
+        case 'patientStatistics':
+          isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
+          break
+      }
+
+      return stats
+    }
+
+    updateDataUtilEndpoints()
+    {
+      const {
+        dataUtil,
+        endpoints
+      } = this.props
+
+      dataUtil.endpoints = endpoints
+    }
+
+    updateStatData()
+    {
+      const { bgSource, dataUtil } = this.props
+      const stats = this.state.stats
+
+      const { bgBounds, bgUnits, days, latestPump } = dataUtil
+      const { manufacturer } = latestPump
+
+      _.forEach(stats, (stat, i) => {
+        const data = dataUtil[vizUtils.stat.statFetchMethods[stat.id]]()
+        const opts = {
+          bgSource: bgSource,
+          bgPrefs: {
+            bgBounds,
+            bgUnits
+          },
+          days,
+          manufacturer
+        }
+
+        stats[i].data = vizUtils.stat.getStatData(data, stat.id, opts)
+        stats[i].annotations = vizUtils.stat.getStatAnnotations(data, stat.id, opts)
+        stats[i].title = vizUtils.stat.getStatTitle(stat.id, opts)
+      })
+
+      this.setState({ stats })
+    }
   }
-}
 
-export default Stats
+  export
+  default
+  Stats

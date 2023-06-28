@@ -85,7 +85,8 @@ function createBaseDurationData(date?: Date): BaseDatum & Duration {
   }
 }
 
-function createRandomBasal(date?: Date, duration?: number): Basal {
+function createRandomBasal(date?: Date, hours?: number): Basal {
+  let duration = hours
   if (!duration) {
     duration = faker.datatype.number({ min: 60000, max: 300000 })
   }

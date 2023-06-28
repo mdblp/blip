@@ -90,7 +90,7 @@ function getTotalInsulinAndWeightData(basalsData: Basal[], bolusData: Bolus[], n
   const weight = getWeight(pumpSettings)
   const { basal, bolus } = getBasalBolusData(basalsData, bolusData, numDays, dateFilter)
   const totalInsulin = [basal, bolus].reduce((accumulator, value) => {
-    const delivered = isNaN(value) ? 0 : value || 0
+    const delivered = isNaN(value) ? 0 : value
     return accumulator + delivered
   })
 

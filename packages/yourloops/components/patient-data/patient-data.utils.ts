@@ -50,7 +50,7 @@ export function isValidDateQueryParam(queryParam: string): boolean {
   const date = new Date(queryParam)
   return !isNaN(date.getTime())
 }
-const FOURTEEN_DAYS = 14
+const DEFAULT_DASHBOARD_TIME_RANGE_DAYS = 14
 const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
 export class PatientDataUtils {
@@ -88,23 +88,23 @@ export class PatientDataUtils {
 
   calculateDashboardDateRange(dateBg: string[]): number {
     const dateRangeSet = new Set(dateBg)
-    if (dateRangeSet.size >= FOURTEEN_DAYS) {
-      return DEFAULT_MS_RANGE * FOURTEEN_DAYS
+    if (dateRangeSet.size >= DEFAULT_DASHBOARD_TIME_RANGE_DAYS) {
+      return DEFAULT_MS_RANGE * DEFAULT_DASHBOARD_TIME_RANGE_DAYS
     }
     return dateRangeSet.size * DEFAULT_MS_RANGE
   }
 
   getRangeDaysInMs(data: MedicalData): number {
     if (data.smbg.length !== 0) {
-      const dataSmbg = data.smbg.map((dataSmbg) => {
+      const datasSmbg = data.smbg.map((dataSmbg) => {
         return dataSmbg.localDate
       })
-      return this.calculateDashboardDateRange(dataSmbg)
+      return this.calculateDashboardDateRange(datasSmbg)
     }
-    const dataCbg = data.cbg.map((dataCbg) => {
+    const datasCbg = data.cbg.map((dataCbg) => {
       return dataCbg.localDate
     })
-    return this.calculateDashboardDateRange(dataCbg)
+    return this.calculateDashboardDateRange(datasCbg)
   }
 
   getDateRange({ currentChart, epochLocation, msRange }: GetDatetimeBoundsArgs): DateRange {

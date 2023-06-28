@@ -27,9 +27,15 @@
 
 import { act, waitFor } from '@testing-library/react'
 import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
 import {
-  completeDashBoardData, emptyWeightData,
+  buildAvailableTeams,
+  buildPrivateTeam,
+  mockTeamAPI,
+  myThirdTeamId,
+  myThirdTeamName
+} from '../../mock/team.api.mock'
+import {
+  completeDashboardData, dataSetsWithZeroValues,
   mockDataAPI,
   sixteenDaysOldDashboardData,
   twoWeeksOldDashboardData
@@ -52,6 +58,7 @@ import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-
 import {
   testDashboardDataVisualisationForHcp,
   testDashboardDataVisualisationPrivateTeamNoData,
+  testDashboardDataVisualisationTwoWeeksOldData,
   testDashboardDataVisualisationWithOldData,
   testEmptyMedicalFilesWidgetForHcp,
   testPatientNavBarForHcp,
@@ -65,6 +72,7 @@ import {
 } from '../../use-cases/monitoring-alerts-parameters-management'
 import { testChatWidgetForHcp } from '../../use-cases/communication-system'
 import { ConfigService } from '../../../../lib/config/config.service'
+import TeamAPI from '../../../../lib/team/team.api'
 
 describe('Patient dashboard for HCP', () => {
   const patientDashboardRoute = `/patient/${patient1Id}/dashboard`
@@ -89,7 +97,7 @@ describe('Patient dashboard for HCP', () => {
 
   it('should render correct components when navigating to a patient not scoped on the private team', async () => {
     const selectedTeamName = myThirdTeamName
-    mockDataAPI(completeDashBoardData)
+    mockDataAPI(completeDashboardData)
 
     const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
@@ -117,18 +125,8 @@ describe('Patient dashboard for HCP', () => {
     await testDashboardDataVisualisationForHcp(patientDashboardLayoutParams)
   })
 
-  it('should be able to switch from patient to patient', async () => {
-    mockDataAPI(completeDashBoardData)
-
-    await act(async () => {
-      renderPage(patientDashboardRoute)
-    })
-
-    await testPatientNavBarForHcp()
-  })
-
   it('should be able to manage medical reports', async () => {
-    mockDataAPI(emptyWeightData)
+    mockDataAPI(completeDashboardData)
     const selectedTeamName = myThirdTeamName
 
     const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
@@ -139,23 +137,10 @@ describe('Patient dashboard for HCP', () => {
       selectedTeamName
     }
 
-    const appMainLayoutParams: AppMainLayoutHcpParams = {
-      footerHasLanguageSelector: false,
-      headerInfo: {
-        loggedInUserFullName: `${firstName} ${lastName}`,
-        teamMenuInfo: {
-          selectedTeamName,
-          isSelectedTeamPrivate: false,
-          availableTeams: buildAvailableTeams()
-        }
-      }
-    }
-
     await act(async () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testAppMainLayoutForHcp(appMainLayoutParams)
     await testPatientNavBarForHcp()
     await testMedicalWidgetForHcp(medicalFilesWidgetParams)
   })
@@ -183,7 +168,7 @@ describe('Patient dashboard for HCP', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationWithOldData()
+    await testDashboardDataVisualisationTwoWeeksOldData()
   })
 
   it('should produce fourteen days old statistics when data is sixteen days old', async () => {
@@ -197,7 +182,7 @@ describe('Patient dashboard for HCP', () => {
   })
 
   it('should render correct components when navigating to a patient scoped on the private team', async () => {
-    mockDataAPI(emptyWeightData)
+    mockDataAPI(completeDashboardData)
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
       ...patient1,
@@ -215,6 +200,19 @@ describe('Patient dashboard for HCP', () => {
         }
       }
     }
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testAppMainLayoutForHcp(appMainLayoutParams)
+  })
+
+  it('should render correct components when patient is in no medical teams', async () => {
+    mockDataAPI(dataSetsWithZeroValues)
+    localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
+    jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildPrivateTeam()])
+
     const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
       isChatCardVisible: false,
       isMedicalFilesCardVisible: false,
@@ -225,7 +223,6 @@ describe('Patient dashboard for HCP', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testAppMainLayoutForHcp(appMainLayoutParams)
     await testDashboardDataVisualisationPrivateTeamNoData(patientDashboardLayoutParams)
   })
 

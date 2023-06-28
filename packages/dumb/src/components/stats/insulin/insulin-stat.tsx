@@ -62,22 +62,25 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   const isDailyPage = location.pathname.includes('daily')
   const isDashboardPage = location.pathname.includes('dashboard')
   const isTrendsPage = location.pathname.includes('trends')
-  const annotations = [t(isDailyPage ? 'total-insulin-days-tooltip' : 'average-daily-insulin-tooltip'), t('total-insulin-how-calculate-tooltip')]
-  const isDisabledWeight = weight === EMPTY_DATA_PLACEHOLDER
+  const insulinAnnotations = isDailyPage ? t('total-insulin-days-tooltip') : t('average-daily-insulin-tooltip')
+  const annotations = [insulinAnnotations, t('total-insulin-how-calculate-tooltip')]
   if (data.length === 0) {
     annotations.push(t('tooltip-empty-stat'))
   }
-  const dailyDosePerWeight = (): string | number => {
+  const isDisabledWeight = weight === EMPTY_DATA_PLACEHOLDER
+  const isDisabledTotalInsuline = totalInsulin === 0 ? 'center' : 'baseline'
+
+  const getDailyDosePerWeight = (): string | number => {
     if (weight === EMPTY_DATA_PLACEHOLDER) {
       return EMPTY_DATA_PLACEHOLDER
     }
     const value = dailyDose / +weight
     return value > 0 && Number.isFinite(value) ? formatDecimalNumber(value, 2) : EMPTY_DATA_PLACEHOLDER
   }
-  const isDailyDosePerWeight = dailyDosePerWeight.toString() === EMPTY_DATA_PLACEHOLDER
 
-  const getOutPutValueClasses = (): string => {
-    return `${isDailyDosePerWeight ? `${styles.outputValueDisabled}` : `${styles.dailyDoseValue}`}`
+  const getOutputValueClasses = (): string => {
+    const hasDailyDosePerWeight = getDailyDosePerWeight.toString() !== EMPTY_DATA_PLACEHOLDER
+    return hasDailyDosePerWeight ? styles.dailyDoseValue : styles.outputValueDisabled
   }
 
   const getPercentage = (value: number): string => {
@@ -92,7 +95,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           display="flex"
           justifyContent="space-between"
           alignItems="center"
-          marginBottom="4px"
+          sx={{ marginBottom: theme.spacing(1) }}
         >
           <Box>
             {isDailyPage ? t('total-insulin') : t('average-daily-total-insulin')}
@@ -103,7 +106,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           <Box
             display="flex"
             justifyContent="space-between"
-            alignItems="baseline"
+            alignItems={isDisabledTotalInsuline}
           >
             <span className={styles.titleTotal}>
               {totalInsulin}
@@ -120,7 +123,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                margin="0px 0px 4px 8px"
+                sx={{ marginLeft: theme.spacing(1) }}
               >
                   <span>
                     {entry.title}
@@ -128,7 +131,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
                 <Box
                   display="flex"
                   justifyContent="space-between"
-                  alignItems="baseline"
+                  alignItems="center"
                 >
                   <Chip
                     label={`${entry.value > 0 ? entry.valueString : '0'} ${entry.units}`}
@@ -140,7 +143,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
                   <Box
                     className={`${styles.rowPercent} ${styles[`rowsTotalInsulin-${entry.id}`]}`}
                     width="50px"
-                    alignItems="baseline"
+                    alignItems={entry.value === 0 ? 'center' : 'baseline'}
                   >
                     <span className={styles.rowPercentValue}>
                       {getPercentage(Math.max(entry.value, 0))}
@@ -159,7 +162,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            margin="0px 0px 4px 8px"
+            sx={{ marginLeft: theme.spacing(1) }}
           >
               <span>
                 {t('weight')}
@@ -168,7 +171,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
               display="flex"
               alignItems={isDisabledWeight ? 'center' : 'baseline'}
             >
-                <span className={getOutPutValueClasses()}>
+                <span className={getOutputValueClasses()}>
                   {weight}
                 </span>
               <span className={styles.dailyDoseUnits}>
@@ -180,15 +183,15 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
             display="flex"
             justifyContent="space-between"
             alignItems="baseline"
-            margin="0px 0px 4px 8px"
+            sx={{ marginLeft: theme.spacing(1) }}
           >
             {t('ratio-dose')}
             <Box
               display="flex"
-              alignItems="baseline"
+              alignItems={isDisabledWeight ? 'center' : 'baseline'}
             >
-              <span className={getOutPutValueClasses()}>
-                {dailyDosePerWeight()}
+              <span className={getOutputValueClasses()}>
+                {getDailyDosePerWeight()}
               </span>
               <span className={styles.dailyDoseUnits}>
                 {t('U/kg')}
