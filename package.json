@@ -61,7 +61,7 @@
     "npm": ">=8.x"
   },
   "devDependencies": {
-    "@babel/cli": "^7.21.0",
+    "@babel/cli": "^7.22.5",
     "@babel/core": "^7.22.5",
     "@babel/eslint-parser": "^7.22.5",
     "@babel/plugin-transform-runtime": "^7.21.0",
