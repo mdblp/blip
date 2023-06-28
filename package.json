@@ -144,7 +144,7 @@
     "sinon": "^11.1.2",
     "source-map-loader": "^4.0.1",
     "style-loader": "^3.3.3",
-    "terser-webpack-plugin": "^5.3.7",
+    "terser-webpack-plugin": "^5.3.9",
     "ts-loader": "^9.4.4",
     "typed-css-modules": "^0.7.2",
     "typescript": "^5.1.3",
