@@ -138,7 +138,7 @@
     "object-invariant-test-helper": "^0.1.1",
     "pdfkit": "^0.13.0",
     "postcss": "^8.4.21",
-    "postcss-calc": "^8.0.0",
+    "postcss-calc": "^9.0.1",
     "postcss-custom-properties": "^13.2.0",
     "postcss-loader": "^7.0.2",
     "sinon": "^11.1.2",
