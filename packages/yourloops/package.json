@@ -44,7 +44,7 @@
     "bows": "^1.7.2",
     "clsx": "^1.1.1",
     "core-js": "^3.27.2",
-    "dayjs": "^1.11.7",
+    "dayjs": "^1.11.8",
     "emoji-picker-react": "^4.4.9",
     "html-react-parser": "^4.0.0",
     "i18next": "^23.2.3",
