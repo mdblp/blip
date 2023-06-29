@@ -46,13 +46,18 @@ import { CustomChangeChip } from './custom-change-chip'
 import { ParameterChangeValue } from './parameter-change-value'
 
 interface ParametersChangeHistoryProps {
-  onClickChangeDate: (date: number) => void
+  goToDailySpecificDate: (date: number) => void
   history: ParametersChange[]
 }
 
-export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ history, onClickChangeDate }) => {
+export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ history, goToDailySpecificDate }) => {
   const theme = useTheme()
   const { t } = useTranslation()
+
+  const onClickChangeDate = (date: number): void => {
+    goToDailySpecificDate(date)
+    window.scroll(0, 0)
+  }
 
   useEffect(() => {
     sortHistoryParametersByDate(history).reverse()
@@ -118,7 +123,8 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                     <TableCell align="right">
                       <CustomChangeChip changeType={parameter.changeType} />
                     </TableCell>
-                    <TableCell align="right">{formatDateWithMomentLongFormat(new Date(parameter.effectiveDate), 'llll')}</TableCell>
+                    <TableCell
+                      align="right">{formatDateWithMomentLongFormat(new Date(parameter.effectiveDate), 'llll')}</TableCell>
                   </TableRow>
                 ))}
               </React.Fragment>

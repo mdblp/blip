@@ -107,7 +107,7 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
         <Box marginTop={5}>
           <Typography variant="h5" sx={{ marginBlock: theme.spacing(2) }}>{t('change-history')}</Typography>
           <ParametersChangeHistory
-            onClickChangeDate={goToDailySpecificDate}
+            goToDailySpecificDate={goToDailySpecificDate}
             history={history}
           />
         </Box>
