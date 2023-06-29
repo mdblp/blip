@@ -90,7 +90,6 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
 
   return (
     <div data-testid="container-insulin-stats">
-      <Box>
         <Box
           display="flex"
           justifyContent="space-between"
@@ -199,7 +198,6 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
             </Box>
           </Box>
         </>}
-      </Box>
     </div>
 
   )
