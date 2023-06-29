@@ -19,7 +19,6 @@ import _ from 'lodash'
 import i18next from 'i18next'
 import PropTypes from 'prop-types'
 import React from 'react'
-import sizeMe from 'react-sizeme'
 
 import './less/basics.less'
 
@@ -135,7 +134,7 @@ class BasicsChartNoSize extends React.Component {
           bgClasses={bgClasses}
           bgUnits={bgUnits}
           chart={section.chart}
-          chartWidth={this.props.size.width}
+          chartWidth={0}
           data={data}
           days={basicsData.days}
           labels={section.labels}
@@ -155,4 +154,5 @@ class BasicsChartNoSize extends React.Component {
 }
 
 export { BasicsChartNoSize }
-export default sizeMe({ monitorHeight: true })(BasicsChartNoSize)
+export default BasicsChartNoSize
+
