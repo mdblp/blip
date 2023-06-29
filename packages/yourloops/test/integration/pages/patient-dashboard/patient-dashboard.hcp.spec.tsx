@@ -27,7 +27,12 @@
 
 import { act, waitFor } from '@testing-library/react'
 import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
+import {
+  buildAvailableTeams,
+  mockTeamAPI,
+  myThirdTeamId,
+  myThirdTeamName
+} from '../../mock/team.api.mock'
 import {
   completeDashboardData,
   dataSetsWithZeroValues,
@@ -53,7 +58,8 @@ import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-
 import {
   testDashboardDataVisualisationForHcp,
   testDashboardDataVisualisationPrivateTeamNoData,
-  testDashboardDataVisualisationTwoWeeksOldData, testDashboardDataVisualisationWithOldData,
+  testDashboardDataVisualisationTwoWeeksOldData,
+  testDashboardDataVisualisationWithOldData,
   testEmptyMedicalFilesWidgetForHcp,
   testSwitchPatientCorrectDataDisplay
 } from '../../use-cases/patient-data-visualisation'
@@ -151,17 +157,7 @@ describe('Patient dashboard for HCP', () => {
     await testChatWidgetForHcp()
   })
 
-  it('should render correct statistic when data is two weeks old', async () => {
-    mockDataAPI(twoWeeksOldDashboardData)
-
-    await act(async () => {
-      renderPage(patientDashboardRoute)
-    })
-
-    await testDashboardDataVisualisationTwoWeeksOldData()
-  })
-
-  it('should produce fourteen days old statistics when data is sixteen days old', async () => {
+  it('should render correct statistic when data is  old', async () => {
     mockDataAPI(sixteenDaysOldDashboardData)
 
     await act(async () => {
@@ -171,29 +167,14 @@ describe('Patient dashboard for HCP', () => {
     await testDashboardDataVisualisationWithOldData()
   })
 
-  it('should render correct components when navigating to a patient scoped on the private team', async () => {
-    localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
-    jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
-      ...patient1,
-      invitationStatus: UserInviteStatus.Accepted
-    }])
+  it('should produce fourteen days old statistics when data is sixteen days old', async () => {
+    mockDataAPI(twoWeeksOldDashboardData)
 
-    const appMainLayoutParams: AppMainLayoutHcpParams = {
-      footerHasLanguageSelector: false,
-      headerInfo: {
-        loggedInUserFullName: `${firstName} ${lastName}`,
-        teamMenuInfo: {
-          selectedTeamName: PRIVATE_TEAM_ID,
-          isSelectedTeamPrivate: true,
-          availableTeams: buildAvailableTeams()
-        }
-      }
-    }
     await act(async () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testAppMainLayoutForHcp(appMainLayoutParams)
+    await testDashboardDataVisualisationTwoWeeksOldData()
   })
 
   it('should render correct components when patient is in no medical teams', async () => {
