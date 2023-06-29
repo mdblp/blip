@@ -149,6 +149,4 @@ class BasicsChartNoSize extends React.Component {
   }
 }
 
-
-export { BasicsChartNoSize }
 export default BasicsChartNoSize
