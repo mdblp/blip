@@ -53,7 +53,6 @@ class BasicsChartNoSize extends React.Component {
 
   componentDidMount() {
     const { tidelineData, bgClasses, bgUnits, patient } = this.props
-    console.log('I AM HERE')
     if (!tidelineData.basicsData) {
       return
     }
