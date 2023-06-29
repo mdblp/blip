@@ -90,116 +90,114 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
 
   return (
     <div data-testid="container-insulin-stats">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Box>
+          {isDailyPage ? t('total-insulin') : t('average-daily-total-insulin')}
+          <StatTooltip
+            annotations={annotations}
+          />
+        </Box>
         <Box
           display="flex"
           justifyContent="space-between"
-          alignItems="center"
-          sx={{ marginBottom: theme.spacing(1) }}
+          alignItems={isDisabledTotalInsuline}
         >
-          <Box>
-            {isDailyPage ? t('total-insulin') : t('average-daily-total-insulin')}
-            <StatTooltip
-              annotations={annotations}
-            />
-          </Box>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems={isDisabledTotalInsuline}
-          >
-            <span className={styles.titleTotal}>
-              {totalInsulin}
-            </span>
-            <span className={styles.titleSuffix}>
-              U
-            </span>
-          </Box>
+          <span className={styles.titleTotal}>
+            {totalInsulin}
+          </span>
+          <span className={styles.titleSuffix}>
+            U
+          </span>
         </Box>
-        {data.map(entry => {
-          return (
-            <React.Fragment key={entry.id}>
+      </Box>
+      {data.map(entry => {
+        return (
+          <React.Fragment key={entry.id}>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              sx={{ marginLeft: theme.spacing(1) }}
+            >
+              <div>
+                {entry.title}
+              </div>
               <Box
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                sx={{ marginLeft: theme.spacing(1) }}
               >
-                  <span>
-                    {entry.title}
-                  </span>
+                <Chip
+                  label={`${entry.value > 0 ? entry.valueString : '0'} ${entry.units}`}
+                  variant="outlined"
+                  className={`${styles[`rowsTotalInsulin-${entry.id}`]}`}
+                  size="small"
+                  sx={{ marginRight: theme.spacing(2) }}
+                />
                 <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
+                  className={`${styles.rowPercent} ${styles[`rowsTotalInsulin-${entry.id}`]}`}
+                  width="50px"
+                  alignItems={entry.value === 0 ? 'center' : 'baseline'}
                 >
-                  <Chip
-                    label={`${entry.value > 0 ? entry.valueString : '0'} ${entry.units}`}
-                    variant="outlined"
-                    className={`${styles[`rowsTotalInsulin-${entry.id}`]}`}
-                    size="small"
-                    sx={{ marginRight: theme.spacing(2) }}
-                  />
-                  <Box
-                    className={`${styles.rowPercent} ${styles[`rowsTotalInsulin-${entry.id}`]}`}
-                    width="50px"
-                    alignItems={entry.value === 0 ? 'center' : 'baseline'}
-                  >
-                    <span className={styles.rowPercentValue}>
-                      {getPercentage(Math.max(entry.value, 0))}
-                    </span>
-                    <span className={styles.rowPercentUnits}>
-                      %
-                    </span>
-                  </Box>
+                  <span className={styles.rowPercentValue}>
+                    {getPercentage(Math.max(entry.value, 0))}
+                  </span>
+                  <span className={styles.rowPercentUnits}>
+                    %
+                  </span>
                 </Box>
               </Box>
-            </React.Fragment>
-          )
-        })}
-        {(isTrendsPage || isDashboardPage) && <>
+            </Box>
+          </React.Fragment>
+        )
+      })}
+      {(isTrendsPage || isDashboardPage) && <>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{ marginLeft: theme.spacing(1) }}
+        >
+          <span>
+            {t('weight')}
+          </span>
           <Box
             display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            sx={{ marginLeft: theme.spacing(1) }}
+            alignItems={isDisabledWeight ? 'center' : 'baseline'}
           >
-              <span>
-                {t('weight')}
-              </span>
-            <Box
-              display="flex"
-              alignItems={isDisabledWeight ? 'center' : 'baseline'}
-            >
-                <span className={getOutputValueClasses()}>
-                  {weight}
-                </span>
-              <span className={styles.dailyDoseUnits}>
-                  {t('kg')}
-                </span>
-            </Box>
+            <span className={getOutputValueClasses()}>
+              {weight}
+            </span>
+            <span className={styles.dailyDoseUnits}>
+              {t('kg')}
+            </span>
           </Box>
+        </Box>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{ marginLeft: theme.spacing(1) }}
+        >
+          {t('ratio-dose')}
           <Box
             display="flex"
-            justifyContent="space-between"
-            alignItems="baseline"
-            sx={{ marginLeft: theme.spacing(1) }}
+            alignItems={isDisabledWeight ? 'center' : 'baseline'}
           >
-            {t('ratio-dose')}
-            <Box
-              display="flex"
-              alignItems={isDisabledWeight ? 'center' : 'baseline'}
-            >
-              <span className={getOutputValueClasses()}>
-                {getDailyDosePerWeight()}
-              </span>
-              <span className={styles.dailyDoseUnits}>
-                {t('U/kg')}
-              </span>
-            </Box>
+            <span className={getOutputValueClasses()}>
+              {getDailyDosePerWeight()}
+            </span>
+            <span className={styles.dailyDoseUnits}>
+              {t('U/kg')}
+            </span>
           </Box>
-        </>}
+        </Box>
+      </>}
     </div>
-
   )
 }
 
