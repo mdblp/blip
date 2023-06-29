@@ -114,119 +114,112 @@ class Stats extends React.Component {
     )
   }
 
-    renderStats(stats)
-    {
-      const { bgPrefs } = this.props
-      const bgClasses = {
-        high: bgPrefs.bgClasses.high,
-        low: bgPrefs.bgClasses.low,
-        target: bgPrefs.bgClasses.target,
-        veryLow: bgPrefs.bgClasses.veryLow
-      }
-      return stats.map(stat => {
-        return (
-          <div key={stat.id} data-testid={`stat-${stat.id}`}>
-            {this.getStatElementById(stat, bgClasses)}
-            <Divider sx={{ marginBlock: '8px', backgroundColor: '#757575' }} />
-          </div>
-        )
-      })
+  renderStats(stats) {
+    const { bgPrefs } = this.props
+    const bgClasses = {
+      high: bgPrefs.bgClasses.high,
+      low: bgPrefs.bgClasses.low,
+      target: bgPrefs.bgClasses.target,
+      veryLow: bgPrefs.bgClasses.veryLow
     }
-
-    render()
-    {
+    return stats.map(stat => {
       return (
-        <div className="Stats" data-testid="stats-widgets">
-          {this.renderStats(this.state.stats)}
+        <div key={stat.id} data-testid={`stat-${stat.id}`}>
+          {this.getStatElementById(stat, bgClasses)}
+          <Divider sx={{ marginBlock: '8px', backgroundColor: '#757575' }} />
         </div>
       )
-    }
-
-    getStatsByChartType()
-    {
-      const {
-        chartType,
-        dataUtil,
-        bgSource
-      } = this.props
-
-      const { commonStats } = vizUtils.stat
-      const { bgBounds, bgUnits, days, latestPump } = dataUtil
-      const { manufacturer, deviceModel } = latestPump
-      const isAutomatedBasalDevice = vizUtils.device.isAutomatedBasalDevice(manufacturer, deviceModel)
-
-      const stats = []
-
-      const addStat = statType => {
-        const chartStatOpts = _.get(this.props, `chartPrefs.${chartType}.${statType}`)
-
-        const stat = vizUtils.stat.getStatDefinition(dataUtil[vizUtils.stat.statFetchMethods[statType]](), statType, {
-          bgSource,
-          days,
-          bgPrefs: {
-            bgBounds,
-            bgUnits
-          },
-          manufacturer,
-          ...chartStatOpts
-        })
-
-        stats.push(stat)
-      }
-
-
-      switch (chartType) {
-        case 'daily':
-          isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
-          break
-
-        case 'patientStatistics':
-          isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
-          break
-      }
-
-      return stats
-    }
-
-    updateDataUtilEndpoints()
-    {
-      const {
-        dataUtil,
-        endpoints
-      } = this.props
-
-      dataUtil.endpoints = endpoints
-    }
-
-    updateStatData()
-    {
-      const { bgSource, dataUtil } = this.props
-      const stats = this.state.stats
-
-      const { bgBounds, bgUnits, days, latestPump } = dataUtil
-      const { manufacturer } = latestPump
-
-      _.forEach(stats, (stat, i) => {
-        const data = dataUtil[vizUtils.stat.statFetchMethods[stat.id]]()
-        const opts = {
-          bgSource: bgSource,
-          bgPrefs: {
-            bgBounds,
-            bgUnits
-          },
-          days,
-          manufacturer
-        }
-
-        stats[i].data = vizUtils.stat.getStatData(data, stat.id, opts)
-        stats[i].annotations = vizUtils.stat.getStatAnnotations(data, stat.id, opts)
-        stats[i].title = vizUtils.stat.getStatTitle(stat.id, opts)
-      })
-
-      this.setState({ stats })
-    }
+    })
   }
 
-  export
-  default
-  Stats
+  render() {
+    return (
+      <div className="Stats" data-testid="stats-widgets">
+        {this.renderStats(this.state.stats)}
+      </div>
+    )
+  }
+
+  getStatsByChartType() {
+    const {
+      chartType,
+      dataUtil,
+      bgSource
+    } = this.props
+
+    const { commonStats } = vizUtils.stat
+    const { bgBounds, bgUnits, days, latestPump } = dataUtil
+    const { manufacturer, deviceModel } = latestPump
+    const isAutomatedBasalDevice = vizUtils.device.isAutomatedBasalDevice(manufacturer, deviceModel)
+
+    const stats = []
+
+    const addStat = statType => {
+      const chartStatOpts = _.get(this.props, `chartPrefs.${chartType}.${statType}`)
+
+      const stat = vizUtils.stat.getStatDefinition(dataUtil[vizUtils.stat.statFetchMethods[statType]](), statType, {
+        bgSource,
+        days,
+        bgPrefs: {
+          bgBounds,
+          bgUnits
+        },
+        manufacturer,
+        ...chartStatOpts
+      })
+
+      stats.push(stat)
+    }
+
+
+    switch (chartType) {
+      case 'daily':
+        isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
+        break
+
+      case 'patientStatistics':
+        isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
+        break
+    }
+
+    return stats
+  }
+
+  updateDataUtilEndpoints() {
+    const {
+      dataUtil,
+      endpoints
+    } = this.props
+
+    dataUtil.endpoints = endpoints
+  }
+
+  updateStatData() {
+    const { bgSource, dataUtil } = this.props
+    const stats = this.state.stats
+
+    const { bgBounds, bgUnits, days, latestPump } = dataUtil
+    const { manufacturer } = latestPump
+
+    _.forEach(stats, (stat, i) => {
+      const data = dataUtil[vizUtils.stat.statFetchMethods[stat.id]]()
+      const opts = {
+        bgSource: bgSource,
+        bgPrefs: {
+          bgBounds,
+          bgUnits
+        },
+        days,
+        manufacturer
+      }
+
+      stats[i].data = vizUtils.stat.getStatData(data, stat.id, opts)
+      stats[i].annotations = vizUtils.stat.getStatAnnotations(data, stat.id, opts)
+      stats[i].title = vizUtils.stat.getStatTitle(stat.id, opts)
+    })
+
+    this.setState({ stats })
+  }
+}
+
+export default Stats
