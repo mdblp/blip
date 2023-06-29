@@ -86,10 +86,7 @@ function createBaseDurationData(date?: Date): BaseDatum & Duration {
 }
 
 function createRandomBasal(date?: Date, hours?: number): Basal {
-  let duration = hours
-  if (!duration) {
-    duration = faker.datatype.number({ min: 60000, max: 300000 })
-  }
+  const duration = hours ?? faker.datatype.number({ min: 60000, max: 300000 })
   const baseData = createBaseData(date)
   const epochEnd = baseData.epoch + duration
   const normalEnd = new Date(epochEnd).toISOString()

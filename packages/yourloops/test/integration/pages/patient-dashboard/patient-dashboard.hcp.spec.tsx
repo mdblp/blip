@@ -60,7 +60,7 @@ import {
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationTwoWeeksOldData,
   testDashboardDataVisualisationWithOldData,
-  testEmptyMedicalFilesWidgetForHcp,
+  testEmptyMedicalFilesWidgetForHcp, testPatientNavBarForHcp,
   testSwitchPatientCorrectDataDisplay
 } from '../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
@@ -120,6 +120,16 @@ describe('Patient dashboard for HCP', () => {
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
     await testDashboardDataVisualisationForHcp(patientDashboardLayoutParams)
+  })
+
+  it('should be able to switch from patient to patient', async () => {
+    mockDataAPI(completeDashboardData)
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testPatientNavBarForHcp()
   })
 
   it('should be able to manage medical reports', async () => {

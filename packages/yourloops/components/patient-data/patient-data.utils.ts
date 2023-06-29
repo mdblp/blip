@@ -96,15 +96,15 @@ export class PatientDataUtils {
 
   getRangeDaysInMs(data: MedicalData): number {
     if (data.smbg.length !== 0) {
-      const datasSmbg = data.smbg.map((dataSmbg) => {
+      const dataLocalDates = data.smbg.map((dataSmbg) => {
         return dataSmbg.localDate
       })
-      return this.calculateDashboardDateRange(datasSmbg)
+      return this.calculateDashboardDateRange(dataLocalDates)
     }
-    const datasCbg = data.cbg.map((dataCbg) => {
+    const dataLocalDates = data.cbg.map((dataCbg) => {
       return dataCbg.localDate
     })
-    return this.calculateDashboardDateRange(datasCbg)
+    return this.calculateDashboardDateRange(dataLocalDates)
   }
 
   getDateRange({ currentChart, epochLocation, msRange }: GetDatetimeBoundsArgs): DateRange {

@@ -51,7 +51,8 @@ import { type AppMainLayoutParams, testAppMainLayoutForPatient } from '../../use
 import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
 import {
   testDashboardDataVisualisationForPatient,
-  testDashboardDataVisualisationPrivateTeamNoData, testDashboardDataVisualisationTwoWeeksOldData,
+  testDashboardDataVisualisationPrivateTeamNoData,
+  testDashboardDataVisualisationTwoWeeksOldData,
   testDashboardDataVisualisationWithOldData,
   testEmptyMedicalFilesWidgetForPatient,
   testPatientNavBarForPatient
