@@ -33,6 +33,7 @@ import Typography from '@mui/material/Typography'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { GenericListCard } from './generic-list-card'
+import { formatDateWithMomentLongFormat } from '../../lib/utils'
 
 interface PumpInfoProps {
   pump: PumpConfig
@@ -44,8 +45,8 @@ export const PumpInfo: FC<PumpInfoProps> = ({ pump }) => {
   const { t } = useTranslation()
   // TODO display time according to selected language (timezone ?)
   return (
-    <GenericListCard title={t('Pump')}>
-      <ListItem divider>
+    <GenericListCard title={t('Pump')} data-testid="settings-table-pump">
+      <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Manufacturer')}</Typography>
@@ -53,7 +54,7 @@ export const PumpInfo: FC<PumpInfoProps> = ({ pump }) => {
           </Box>
         </ListItemText>
       </ListItem>
-      <ListItem divider>
+      <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Serial Number')}</Typography>
@@ -61,7 +62,7 @@ export const PumpInfo: FC<PumpInfoProps> = ({ pump }) => {
           </Box>
         </ListItemText>
       </ListItem>
-      <ListItem divider>
+      <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Pump version')}</Typography>
@@ -70,10 +71,10 @@ export const PumpInfo: FC<PumpInfoProps> = ({ pump }) => {
         </ListItemText>
       </ListItem>
       <ListItem>
-        <ListItemText>
+        <ListItemText className="list-item">
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Pump cartridge expiration date')}</Typography>
-            <Typography variant="body2" className="bold">{new Date(pump.expirationDate).toLocaleDateString() || FALLBACK_VALUE}</Typography>
+            <Typography variant="body2" className="bold">{formatDateWithMomentLongFormat(new Date(pump.expirationDate)) || FALLBACK_VALUE}</Typography>
           </Box>
         </ListItemText>
       </ListItem>

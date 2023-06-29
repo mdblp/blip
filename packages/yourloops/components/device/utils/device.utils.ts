@@ -83,15 +83,22 @@ export const sortHistoryParametersByDate = (historyParameters: ParametersChange[
   })
 }
 
+export const sortPumpSettingsParameterByLevel = (historyParameters: ParametersChange[]): void => {
+  historyParameters.forEach(parametersChange => {
+    parametersChange.parameters = parametersChange.parameters.sort((a, b) => a.level - b.level)
+  })
+}
+
 export const sortParameterList = (parameters: ParameterConfig[]): ParameterConfig[] => {
   const aggressivenessParameters = parameters.filter(parameter => parameter.unit === Unit.Percent)
-  const insulinParameters = parameters.filter(parameter => parameter.unit === Unit.InsulinUnit)
+  const insulinParameters = parameters.filter(parameter => parameter.unit === Unit.InsulinUnit || parameter.unit === Unit.InsulinUnitPerGram)
   const mealParameters = parameters.filter(parameter => parameter.unit === Unit.Gram)
   const weightParameters = parameters.filter(parameter => parameter.unit === Unit.Kilogram)
-  const thresholdParameters = parameters.filter(parameter => parameter.unit === Unit.MilligramPerDeciliter)
+  const thresholdParameters = parameters.filter(parameter => parameter.unit === Unit.MilligramPerDeciliter || parameter.unit === Unit.MmolPerLiter)
+  const minutesParameter = parameters.filter(parameter => parameter.unit === Unit.Minute)
 
   const sortedMealParameters = mealParameters.length > 0 ? sortMealParameters(mealParameters) : mealParameters
-  return [...insulinParameters, ...weightParameters, ...thresholdParameters, ...aggressivenessParameters, ...sortedMealParameters]
+  return [...insulinParameters, ...weightParameters, ...thresholdParameters, ...aggressivenessParameters, ...sortedMealParameters, ...minutesParameter]
 }
 
 const sortMealParameters = (parameters: ParameterConfig[]): ParameterConfig[] => {

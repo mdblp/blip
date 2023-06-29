@@ -37,7 +37,7 @@ import { useTranslation } from 'react-i18next'
 import Typography from '@mui/material/Typography'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Box from '@mui/material/Box'
-import { sortHistoryParametersByDate } from './utils/device.utils'
+import { sortHistoryParametersByDate, sortPumpSettingsParameterByLevel } from './utils/device.utils'
 import { type ParametersChange } from 'medical-domain'
 import IconButton from '@mui/material/IconButton'
 import { useTheme } from '@mui/material/styles'
@@ -56,6 +56,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
 
   useEffect(() => {
     sortHistoryParametersByDate(history).reverse()
+    sortPumpSettingsParameterByLevel(history)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -75,7 +76,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
           <TableBody>
             {history.map((parametersChange, historyCurrentIndex) => (
               <React.Fragment key={historyCurrentIndex}>
-                <TableRow sx={{ backgroundColor: 'var(--primary-color-background)' }}>
+                <TableRow sx={{ backgroundColor: 'var(--primary-color-background)' }} className="change-date-row">
                   <TableCell colSpan={5}>
                     <Box
                       display="flex"
@@ -104,7 +105,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                   </TableCell>
                 </TableRow>
                 {parametersChange.parameters.map((parameter, parameterChangeIndex) => (
-                  <TableRow key={parameterChangeIndex}>
+                  <TableRow key={parameterChangeIndex} className="parameter-change-row">
                     <TableCell>{parameter.level}</TableCell>
                     <TableCell>{t(`params|${parameter.name}`)}</TableCell>
                     <TableCell>

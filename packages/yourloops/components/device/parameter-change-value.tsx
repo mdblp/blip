@@ -30,6 +30,7 @@ import { type ParametersChange, type PumpSettingsParameter } from 'medical-domai
 import Box from '@mui/material/Box'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import { useTheme } from '@mui/material/styles'
+import { formatParameterValue } from './utils/device.utils'
 
 interface ParameterChangeValueProps {
   historyCurrentIndex: number
@@ -49,14 +50,18 @@ export const ParameterChangeValue: FC<ParameterChangeValueProps> = (props) => {
   })
 
   return (
-    <Box display="flex" alignItems="center">
+    <Box
+      display="flex"
+      alignItems="center"
+      className={`${parameter.name.toLowerCase()} ${previousParameter ? 'updated-value' : 'added-value'}`}
+    >
       {previousParameter &&
         <>
-          {`${previousParameter.value} ${previousParameter.unit}`}
+          <span>{`${formatParameterValue(previousParameter.value, previousParameter.unit)} ${previousParameter.unit}`}</span>
           <ChevronRightIcon sx={{ marginInline: theme.spacing(1) }} />
         </>
       }
-      {`${parameter.value} ${parameter.unit}`}
+      <span>{`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}</span>
     </Box>
   )
 }

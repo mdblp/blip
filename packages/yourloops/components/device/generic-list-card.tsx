@@ -36,13 +36,19 @@ import { useTheme } from '@mui/material/styles'
 
 interface GenericListCardProps extends PropsWithChildren {
   title: string
+  ['data-testid']?: string
 }
 
-export const GenericListCard: FC<GenericListCardProps> = ({ children, title }) => {
+export const GenericListCard: FC<GenericListCardProps> = (props) => {
   const theme = useTheme()
+  const { title, children } = props
 
   return (
-    <Card variant="outlined" sx={{ marginBottom: theme.spacing(5) }}>
+    <Card
+      variant="outlined"
+      sx={{ marginBottom: theme.spacing(5) }}
+      data-testid={props['data-testid']}
+    >
       <CardHeader
         title={title}
         className={classes.cardHeader}

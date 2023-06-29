@@ -42,8 +42,8 @@ export const DeviceInfo: FC<DeviceInfoProps> = ({ device }) => {
   const { t } = useTranslation()
 
   return (
-    <GenericListCard title={device.name}>
-      <ListItem divider>
+    <GenericListCard title={device.name} data-testid="settings-table-terminal">
+      <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Manufacturer')}</Typography>
@@ -51,7 +51,7 @@ export const DeviceInfo: FC<DeviceInfoProps> = ({ device }) => {
           </Box>
         </ListItemText>
       </ListItem>
-      <ListItem divider>
+      <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Identifier')}</Typography>
@@ -59,7 +59,7 @@ export const DeviceInfo: FC<DeviceInfoProps> = ({ device }) => {
           </Box>
         </ListItemText>
       </ListItem>
-      <ListItem divider>
+      <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('IMEI')}</Typography>
@@ -68,7 +68,7 @@ export const DeviceInfo: FC<DeviceInfoProps> = ({ device }) => {
         </ListItemText>
       </ListItem>
       <ListItem>
-        <ListItemText>
+        <ListItemText className="list-item">
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Software version')}</Typography>
             <Typography variant="body2" className="bold">{device.swVersion}</Typography>

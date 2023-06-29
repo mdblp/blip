@@ -33,6 +33,7 @@ import Typography from '@mui/material/Typography'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { GenericListCard } from './generic-list-card'
+import { formatDateWithMomentLongFormat } from '../../lib/utils'
 
 interface CgmInfoProps {
   cgm: CgmConfig
@@ -45,8 +46,8 @@ export const CgmInfo: FC<CgmInfoProps> = ({ cgm }) => {
 
   // TODO display time according to selected language (timezone ?)
   return (
-    <GenericListCard title={t('CGM')}>
-      <ListItem divider>
+    <GenericListCard title={t('CGM')} data-testid="settings-table-cgm">
+      <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Manufacturer')}</Typography>
@@ -54,7 +55,7 @@ export const CgmInfo: FC<CgmInfoProps> = ({ cgm }) => {
           </Box>
         </ListItemText>
       </ListItem>
-      <ListItem divider>
+      <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Product')}</Typography>
@@ -62,15 +63,15 @@ export const CgmInfo: FC<CgmInfoProps> = ({ cgm }) => {
           </Box>
         </ListItemText>
       </ListItem>
-      <ListItem divider>
+      <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Cgm sensor expiration date')}</Typography>
-            <Typography variant="body2" className="bold">{new Date(cgm.expirationDate).toLocaleDateString() || FALLBACK_VALUE}</Typography>
+            <Typography variant="body2" className="bold">{formatDateWithMomentLongFormat(new Date(cgm.expirationDate)) || FALLBACK_VALUE}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
-      <ListItem divider>
+      <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Cgm transmitter software version')}</Typography>
@@ -78,7 +79,7 @@ export const CgmInfo: FC<CgmInfoProps> = ({ cgm }) => {
           </Box>
         </ListItemText>
       </ListItem>
-      <ListItem divider>
+      <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Cgm transmitter id')}</Typography>
@@ -87,14 +88,14 @@ export const CgmInfo: FC<CgmInfoProps> = ({ cgm }) => {
         </ListItemText>
       </ListItem>
       <ListItem>
-        <ListItemText>
+        <ListItemText className="list-item">
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Cgm transmitter end of life')}</Typography>
             <Typography
               variant="body2"
               className="bold"
             >
-              {new Date(cgm.endOfLifeTransmitterDate).toLocaleDateString() || FALLBACK_VALUE}
+              {formatDateWithMomentLongFormat(new Date(cgm.endOfLifeTransmitterDate)) || FALLBACK_VALUE}
             </Typography>
           </Box>
         </ListItemText>

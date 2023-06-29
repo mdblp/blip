@@ -35,7 +35,7 @@ import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import TableBody from '@mui/material/TableBody'
 import { type ParameterConfig } from 'medical-domain'
-import { sortParameterList } from './utils/device.utils'
+import { formatParameterValue, sortParameterList } from './utils/device.utils'
 import classes from './device.css'
 
 interface ParameterListProps {
@@ -59,9 +59,13 @@ export const ParameterList: FC<ParameterListProps> = ({ parameters }) => {
           </TableHead>
           <TableBody>
             {sortedParameters.map((parameter, index) => (
-              <TableRow key={index} className={classes.parameterRow}>
+              <TableRow
+                key={index}
+                className={classes.parameterRow}
+                data-testid={`${parameter.name.toLowerCase()}-row`}
+              >
                 <TableCell>{t(`params|${parameter.name}`)}</TableCell>
-                <TableCell align="right">{parameter.value}</TableCell>
+                <TableCell align="right">{formatParameterValue(parameter.value, parameter.unit)}</TableCell>
                 <TableCell align="right">{parameter.unit}</TableCell>
               </TableRow>
             ))}
