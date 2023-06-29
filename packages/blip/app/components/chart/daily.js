@@ -192,8 +192,6 @@ class DailyChart extends React.Component {
           onResize={this.handleWindowResize}
           handleWidth
           handleHeight
-          refreshMode="debounce" // This is necessary because of an issue in react-resize-detector 9.1.0
-          refreshRate={0}       // and it should be removable in future versions
         />
         <div
           id="tidelineContainer"
