@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,82 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-:global(.centered-spinning-loader) {
-  position: absolute;
-  top: calc(50% - 20px);
-  left: calc(50% - 20px);
-}
-
-:global(.primary-color-main) {
-  color: var(--primary-color-main)
-}
-
-:global(.bold) {
-  font-weight: bold;
-}
-
-:global(.flex) {
-  display: flex;
-}
-
-:global(.capitalize) {
-  text-transform: capitalize;
-}
-
-:global(.bold) {
-  font-weight: bold;
-}
-
-:global(.visibility-hidden) {
-  visibility: hidden;
-}
-
-:global(.display-none) {
-  display: none;
-}
-
-:global(.no-margin) {
-  margin: 0 !important;
-}
-
-:global(.no-margin-top) {
-  margin-top: 0 !important;
-}
-
-:global(.no-margin-right) {
-  margin-right: 0 !important;
-}
-
-:global(.no-margin-bottom) {
-  margin-bottom: 0 !important;
-}
-
-:global(.no-margin-left) {
-  margin-left: 0 !important;
-}
-
-:global(.no-padding) {
-  padding: 0 !important;
-}
-
-:global(.no-padding-top) {
-  padding-top: 0 !important;
-}
-
-:global(.no-padding-right) {
-  padding-right: 0 !important;
-}
-
-:global(.no-padding-bottom) {
-  padding-bottom: 0 !important;
-}
-
-:global(.no-padding-left) {
-  padding-left: 0 !important;
-}
-
-:global(.is-ellipsis) {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+export enum DeviceMeals {
+  Breakfast = 'BREAKFAST',
+  Dinner = 'DINNER',
+  Lunch = 'LUNCH'
 }

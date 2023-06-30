@@ -28,19 +28,28 @@
 import React, { type FC, type PropsWithChildren } from 'react'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
-import classes from './device.css'
 import CardContent from '@mui/material/CardContent'
 import List from '@mui/material/List'
 import Divider from '@mui/material/Divider'
-import { useTheme } from '@mui/material/styles'
+import { type Theme, useTheme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
 
 interface GenericListCardProps extends PropsWithChildren {
   title: string
   ['data-testid']?: string
 }
 
+const useStyles = makeStyles()((theme: Theme) => ({
+  cardHeader: {
+    backgroundColor: 'var(--primary-color-background)',
+    fontSize: theme.typography.fontSize,
+    fontWeight: theme.typography.fontWeightBold
+  }
+}))
+
 export const GenericListCard: FC<GenericListCardProps> = (props) => {
   const theme = useTheme()
+  const { classes } = useStyles()
   const { title, children } = props
 
   return (
@@ -54,7 +63,7 @@ export const GenericListCard: FC<GenericListCardProps> = (props) => {
         className={classes.cardHeader}
         disableTypography
       />
-      <CardContent sx={{ padding: '0 !important', fontSize: 14 }}>
+      <CardContent sx={{ padding: '0 !important', fontSize: theme.typography.fontSize }}>
         <List disablePadding>
           <Divider component="li" />
           {children}

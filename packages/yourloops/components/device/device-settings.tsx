@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
+import React, { type FC, useEffect } from 'react'
 import type MedicalDataService from 'medical-domain'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -34,16 +34,18 @@ import { useTranslation } from 'react-i18next'
 import Button from '@mui/material/Button'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
 import { useTheme } from '@mui/material/styles'
-import { useDevice } from './use-device.hook'
 import Grid from '@mui/material/Grid'
 import { makeStyles } from 'tss-react/mui'
-import { DeviceInfo } from './device-info'
-import { PumpInfo } from './pump-info'
-import { CgmInfo } from './cgm-info'
+import { DeviceInfoTable } from './device-info-table'
+import { PumpInfoTable } from './pump-info-table'
+import { CgmInfoTable } from './cgm-info-table'
 import { ParameterList } from './parameter-list'
 import { ParametersChangeHistory } from './parameters-change-history'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import { type PumpSettings } from 'medical-domain'
+import moment from 'moment/moment'
+import { copySettingsToClipboard, formatParameterValue } from './utils/device.utils'
 
 interface DeviceSettingsProps {
   goToDailySpecificDate: (date: number) => void
@@ -60,15 +62,20 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
   const theme = useTheme()
   const { classes } = useStyles()
   const { t } = useTranslation()
-  const {
-    copySettingsToClipboard,
-    lastUploadDate,
-    device,
-    pump,
-    parameters,
-    history,
-    cgm
-  } = useDevice(medicalData)
+  const pumpSettings = [...medicalData.grouped.pumpSettings].pop() as PumpSettings
+  const { device, pump, cgm, parameters, history } = pumpSettings.payload
+  const lastUploadDate = moment.tz(pumpSettings.normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
+
+  const onClickCopyButton = async (): Promise<void> => {
+    await copySettingsToClipboard(lastUploadDate, device, parameters)
+  }
+
+  useEffect(() => {
+    parameters.forEach(parameter => {
+      parameter.value = formatParameterValue(parameter.value, parameter.unit)
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
@@ -80,7 +87,7 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
             variant="contained"
             disableElevation
             startIcon={<FileCopyIcon />}
-            onClick={copySettingsToClipboard}
+            onClick={onClickCopyButton}
           >
             {t('text-copy')}
           </Button>
@@ -96,9 +103,9 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
           rowSpacing={4}
         >
           <Grid item xs={12} sm={6}>
-            <DeviceInfo device={device} />
-            <PumpInfo pump={pump} />
-            <CgmInfo cgm={cgm} />
+            <DeviceInfoTable device={device} />
+            <PumpInfoTable pump={pump} />
+            <CgmInfoTable cgm={cgm} />
           </Grid>
           <Grid item xs={12} sm={6} data-testid="parameters-container">
             <ParameterList parameters={parameters} />

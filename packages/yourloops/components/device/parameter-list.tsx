@@ -35,8 +35,11 @@ import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import TableBody from '@mui/material/TableBody'
 import { type ParameterConfig } from 'medical-domain'
-import { formatParameterValue, sortParameterList } from './utils/device.utils'
+import { formatParameterValue, PARAMETER_STRING_MAX_WIDTH, sortParameterList } from './utils/device.utils'
 import classes from './device.css'
+import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
+import { isEllipsisActive } from '../../lib/utils'
 
 interface ParameterListProps {
   parameters: ParameterConfig[]
@@ -60,11 +63,21 @@ export const ParameterList: FC<ParameterListProps> = ({ parameters }) => {
           <TableBody>
             {sortedParameters.map((parameter, index) => (
               <TableRow
-                key={index}
+                key={parameter.name}
                 className={classes.parameterRow}
                 data-testid={`${parameter.name.toLowerCase()}-row`}
               >
-                <TableCell>{t(`params|${parameter.name}`)}</TableCell>
+                <TableCell>
+                  <Tooltip title={isEllipsisActive(document.getElementById(`${parameter.name}-${index}`)) ? parameter.name : ''}>
+                    <Typography
+                      className="is-ellipsis"
+                      maxWidth={PARAMETER_STRING_MAX_WIDTH}
+                      id={`${parameter.name}-${index}`}
+                    >
+                      {t(`params|${parameter.name}`)}
+                    </Typography>
+                  </Tooltip>
+                </TableCell>
                 <TableCell align="right">{formatParameterValue(parameter.value, parameter.unit)}</TableCell>
                 <TableCell align="right">{parameter.unit}</TableCell>
               </TableRow>

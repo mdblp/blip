@@ -38,7 +38,7 @@ interface DeviceInfoProps {
   device: DeviceConfig
 }
 
-export const DeviceInfo: FC<DeviceInfoProps> = ({ device }) => {
+export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
   const { t } = useTranslation()
 
   return (

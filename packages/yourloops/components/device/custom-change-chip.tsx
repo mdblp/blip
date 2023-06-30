@@ -48,33 +48,25 @@ type ChipVariant = 'primary' | 'error' | 'success'
 export const CustomChangeChip: FC<CustomChangeChipProps> = ({ changeType }) => {
   const { t } = useTranslation()
 
-  const computeStyle = (): { variant: ChipVariant, backgroundColor: string } => {
-    let variant: ChipVariant
-    let backgroundColor: string
+  const computeStyle = (): { variantColor: ChipVariant, backgroundColor: string } => {
     switch (changeType) {
       case ChangeType.Added:
-        variant = 'success'
-        backgroundColor = 'var(--success-color-background)'
-        break
+        return { variantColor: 'success', backgroundColor: 'var(--success-color-background)' }
       case ChangeType.Deleted:
-        variant = 'error'
-        backgroundColor = 'var(--error-color-background)'
-        break
+        return { variantColor: 'error', backgroundColor: 'var(--error-color-background)' }
       case ChangeType.Updated:
-        variant = 'primary'
-        backgroundColor = 'var(--info-color-background)'
-        break
+        return { variantColor: 'primary', backgroundColor: 'var(--info-color-background)' }
     }
-    return { variant, backgroundColor }
+    return { variantColor, backgroundColor }
   }
 
-  const { variant, backgroundColor } = computeStyle()
+  const { variantColor, backgroundColor } = computeStyle()
   const { classes } = useStyles({ backgroundColor })
 
   return (
     <Chip
       label={t(changeType)}
-      color={variant}
+      color={variantColor}
       variant="outlined"
       className={classes.customChip}
     />

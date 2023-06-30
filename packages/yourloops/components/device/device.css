@@ -25,12 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.cardHeader {
-  background-color: var(--primary-color-background);
-  font-size: 14px;
-  font-weight: 600;
-}
-
 .parameterRow:last-child td {
   border-bottom: none;
 }

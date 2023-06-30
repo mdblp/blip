@@ -25,7 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type ParameterConfig, type ParametersChange, Unit } from 'medical-domain'
+import { type DeviceConfig, type ParameterConfig, type ParametersChange, Unit } from 'medical-domain'
+import { DeviceMeals } from '../models/device.models'
+import i18next from 'i18next'
+import textTable from 'text-table'
+
+const t = i18next.t.bind(i18next)
+export const PARAMETER_STRING_MAX_WIDTH = 250
+
+export const copySettingsToClipboard = async (lastUploadDate: string, device: DeviceConfig, parameters: ParameterConfig[]): Promise<void> => {
+  const lastUploadDateText = `${lastUploadDate}\n\n`
+  const deviceText = `-- ${t('Device')} --\n`
+  const deviceTableText = textTable([
+    [t('Manufacturer'), device.manufacturer],
+    [t('Identifier'), device.deviceId],
+    [t('IMEI'), device.imei],
+    [t('Software version'), device.swVersion]]
+  ) as string
+  const parametersText = `\n\n-- ${t('Parameters')} --\n`
+  const parametersTable = [[
+    t('Name'),
+    t('Value'),
+    t('Unit')
+  ]]
+  parameters.forEach((parameter) => {
+    parametersTable.push([t(`params|${parameter.name}`), parameter.value, parameter.unit])
+  })
+
+  const rawText = `${lastUploadDateText}${deviceText}${deviceTableText}${parametersText}${textTable(parametersTable, { align: ['l', 'r', 'l'] })}`
+
+  try {
+    await navigator.clipboard.writeText(rawText)
+  } catch (err) {
+    console.log(err)
+  }
+}
 
 export const formatParameterValue = (value: string | number, units: string | Unit): string => {
   if (typeof value === 'string') {
@@ -108,13 +142,13 @@ const sortMealParameters = (parameters: ParameterConfig[]): ParameterConfig[] =>
   parameters.forEach((parameter) => {
     const splitParameterKey = parameter.name.split('_')
     switch (splitParameterKey[2]) {
-      case 'BREAKFAST':
+      case DeviceMeals.Breakfast:
         breakfastMeals.push(parameter)
         break
-      case 'LUNCH':
+      case DeviceMeals.Lunch:
         lunchMeals.push(parameter)
         break
-      case 'DINNER':
+      case DeviceMeals.Dinner:
         dinnerMeals.push(parameter)
         break
     }

@@ -41,9 +41,9 @@ interface PumpInfoProps {
 
 const FALLBACK_VALUE = '-'
 
-export const PumpInfo: FC<PumpInfoProps> = ({ pump }) => {
+export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
   const { t } = useTranslation()
-  // TODO display time according to selected language (timezone ?)
+
   return (
     <GenericListCard title={t('Pump')} data-testid="settings-table-pump">
       <ListItem divider className="list-item">
@@ -74,7 +74,9 @@ export const PumpInfo: FC<PumpInfoProps> = ({ pump }) => {
         <ListItemText className="list-item">
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Pump cartridge expiration date')}</Typography>
-            <Typography variant="body2" className="bold">{formatDateWithMomentLongFormat(new Date(pump.expirationDate)) || FALLBACK_VALUE}</Typography>
+            <Typography variant="body2" className="bold">
+              {formatDateWithMomentLongFormat(new Date(pump.expirationDate)) || FALLBACK_VALUE}
+            </Typography>
           </Box>
         </ListItemText>
       </ListItem>

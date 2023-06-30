@@ -37,13 +37,19 @@ import { useTranslation } from 'react-i18next'
 import Typography from '@mui/material/Typography'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Box from '@mui/material/Box'
-import { sortHistoryParametersByDate, sortPumpSettingsParameterByLevel } from './utils/device.utils'
+import {
+  PARAMETER_STRING_MAX_WIDTH,
+  sortHistoryParametersByDate,
+  sortPumpSettingsParameterByLevel
+} from './utils/device.utils'
 import { type ParametersChange } from 'medical-domain'
 import IconButton from '@mui/material/IconButton'
 import { useTheme } from '@mui/material/styles'
-import { formatDateWithMomentLongFormat } from '../../lib/utils'
+import { formatDateWithMomentLongFormat, isEllipsisActive } from '../../lib/utils'
 import { CustomChangeChip } from './custom-change-chip'
 import { ParameterChangeValue } from './parameter-change-value'
+import classes from './device.css'
+import Tooltip from '@mui/material/Tooltip'
 
 interface ParametersChangeHistoryProps {
   goToDailySpecificDate: (date: number) => void
@@ -80,7 +86,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
           </TableHead>
           <TableBody>
             {history.map((parametersChange, historyCurrentIndex) => (
-              <React.Fragment key={historyCurrentIndex}>
+              <React.Fragment key={`${parametersChange.changeDate}-${historyCurrentIndex}`}>
                 <TableRow sx={{ backgroundColor: 'var(--primary-color-background)' }} className="change-date-row">
                   <TableCell colSpan={5}>
                     <Box
@@ -109,10 +115,23 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                     </Box>
                   </TableCell>
                 </TableRow>
-                {parametersChange.parameters.map((parameter, parameterChangeIndex) => (
-                  <TableRow key={parameterChangeIndex} className="parameter-change-row">
+                {parametersChange.parameters.map((parameter, index) => (
+                  <TableRow
+                    key={`${parameter.effectiveDate}-${index}`}
+                    className={`${classes.parameterRow} parameter-change-row`}
+                  >
                     <TableCell>{parameter.level}</TableCell>
-                    <TableCell>{t(`params|${parameter.name}`)}</TableCell>
+                    <TableCell>
+                      <Tooltip title={isEllipsisActive(document.getElementById(`${parameter.name}-${index}`)) ? parameter.name : ''}>
+                        <Typography
+                          className="is-ellipsis"
+                          maxWidth={PARAMETER_STRING_MAX_WIDTH}
+                          id={`${parameter.name}-${index}`}
+                        >
+                          {t(`params|${parameter.name}`)}
+                        </Typography>
+                      </Tooltip>
+                    </TableCell>
                     <TableCell>
                       <ParameterChangeValue
                         historyCurrentIndex={historyCurrentIndex}
