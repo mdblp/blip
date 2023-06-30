@@ -153,7 +153,7 @@
   "data-not-transmitted": "データが送信されていません。",
   "data-not-transmitted-tooltip1": "Data not transmitted: {{percentage}}%",
   "data-not-transmitted-tooltip2": "Alert triggered when {{threshold}}% of data are not transmitted over the period considered.",
-  "data-period-text": "過去7日間を基に算出されたデータ",
+  "data-period-text": "過去14日間を基に算出されたデータ",
   "date": "Date",
   "date-of-birth": "生年月日",
   "date-picker-days-range": "{{numDays}} 日間選択",
