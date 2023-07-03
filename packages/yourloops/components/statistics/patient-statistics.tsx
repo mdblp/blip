@@ -175,7 +175,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         totalCarbsPerDay={Math.round(totalCarbsPerDay)}
         foodCarbsPerDay={Math.round(foodCarbsPerDay)}
       />
-      <Divider sx={{ marginBlock: t  me.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       {children}
     </Box>
   )
