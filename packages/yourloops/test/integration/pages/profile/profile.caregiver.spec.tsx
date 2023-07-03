@@ -37,7 +37,10 @@ import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { mockPatientApiForCaregivers, mockPatientApiForHcp } from '../../mock/patient.api.mock'
+import {
+  mockPatientApiForCaregivers,
+  mockPatientApiForHcp
+} from '../../mock/patient.api.mock'
 import { checkCaregiverProfilePage, checkPasswordChangeRequest } from '../../assert/profile.assert'
 import userEvent from '@testing-library/user-event'
 import { type Profile } from '../../../../lib/auth/models/profile.model'

@@ -25,33 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { HistorySpannedRow } from './history-table-spanned-row'
-import { HistoryTableRow } from './history-table-row'
-import React, { type FunctionComponent } from 'react'
-import { type TimePrefs } from 'medical-domain'
-import { type ChangeDateParameterGroup } from '../../../models/historized-parameter.model'
-import { transformToHistorizedParameters } from './history-table.core'
-import type moment from 'moment-timezone'
+import { checkCopyTextButton, checkDeviceSettingsContent } from '../assert/device-page.assert'
 
-interface HistoryTableContentProps {
-  onSwitchToDaily: (date: moment.Moment | Date | number | null) => void
-  rows: ChangeDateParameterGroup[]
-  timePrefs: TimePrefs
-}
-
-export const HistoryTableContent: FunctionComponent<HistoryTableContentProps> = (props): JSX.Element => {
-  const { onSwitchToDaily, rows, timePrefs } = props
-  const historizedParameters = transformToHistorizedParameters(rows, timePrefs)
-
-  return (
-    <tbody>
-    {
-      historizedParameters.map((row, key) =>
-        row.isGroupedParameterHeader
-          ? (<HistorySpannedRow key={key} data={row} onSwitchToDaily={onSwitchToDaily} />)
-          : (<HistoryTableRow key={key} data={row} />)
-      )
-    }
-    </tbody>
-  )
+export const testDeviceSettingsVisualisation = async () => {
+  checkDeviceSettingsContent()
+  await checkCopyTextButton()
 }

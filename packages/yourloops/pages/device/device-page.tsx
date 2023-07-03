@@ -25,41 +25,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import styles from '../diabeloop.css'
-import React, { type FunctionComponent } from 'react'
-import { ChangeType, type HistorizedParameter } from '../../../models/historized-parameter.model'
+import React, { type FC } from 'react'
+import type MedicalDataService from 'medical-domain'
+import Container from '@mui/material/Container'
 import { useTranslation } from 'react-i18next'
+import { useTheme } from '@mui/material/styles'
+import Box from '@mui/material/Box'
+import { DeviceSettings } from '../../components/device/device-settings'
+import Typography from '@mui/material/Typography'
 
-interface HistoryTableParameterChangeProps {
-  parameter: HistorizedParameter
+interface DevicePageProps {
+  goToDailySpecificDate: (date: number) => void
+  medicalData: MedicalDataService
 }
 
-const buildIconCssClass = (change: ChangeType): string => {
-  switch (change) {
-    case ChangeType.Added:
-      return 'icon-add'
-    case ChangeType.Deleted:
-      return 'icon-remove'
-    case ChangeType.Updated:
-      return 'icon-refresh'
-    default:
-      break
-  }
-  return 'icon-unsure-data'
-}
+export const DevicePage: FC<DevicePageProps> = ({ medicalData, goToDailySpecificDate }) => {
+  const { t } = useTranslation()
+  const theme = useTheme()
 
-export const HistoryTableParameterChange: FunctionComponent<HistoryTableParameterChangeProps> = (props): JSX.Element => {
-  const { t } = useTranslation('main')
-  const { parameter } = props
-
-  const iconClass = buildIconCssClass(parameter.changeType)
   return (
-    <span>
-      <i className={iconClass} />
-      <span
-        className={styles.parameterHistory}>
-          {t(`params|${parameter.name}`)}
-      </span>
-    </span>
+    <Container data-testid="device-settings-container">
+      {medicalData.grouped.pumpSettings.length > 0
+        ? <DeviceSettings
+          goToDailySpecificDate={goToDailySpecificDate}
+          medicalData={medicalData}
+        />
+        : <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          marginTop={theme.spacing(4)}
+        >
+          <Typography fontWeight={500}>{t('no-settings-on-device-alert-message')}</Typography>
+        </Box>
+      }
+    </Container>
   )
 }

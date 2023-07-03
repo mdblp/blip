@@ -25,39 +25,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import styles from '../diabeloop.css'
-import React, { type FunctionComponent } from 'react'
-import { type HistorizedParameter } from '../../../models/historized-parameter.model'
-import type moment from 'moment-timezone'
+import React, { type FC } from 'react'
+import Chip from '@mui/material/Chip'
+import { makeStyles } from 'tss-react/mui'
+import { useTranslation } from 'react-i18next'
+import { ChangeType } from 'medical-domain'
 
-interface HistorySpannedRowProps {
-  data: HistorizedParameter
-  onSwitchToDaily: (date: moment.Moment | Date | number | null) => void
+interface CustomChangeChipProps {
+  changeType: ChangeType
 }
 
-const ONE_SPACE_STRING = '&nbsp;'
-const NUMBER_OF_COLUMNS = 4
-
-export const HistorySpannedRow: FunctionComponent<HistorySpannedRowProps> = (props) => {
-  const { onSwitchToDaily, data } = props
-  const content = data.groupedParameterHeaderContent ?? ONE_SPACE_STRING
-
-  const handleSwitchToDaily = (): void => {
-    onSwitchToDaily(data.latestDate)
+const useStyles = makeStyles<{ backgroundColor: string }>()((theme, { backgroundColor }) => ({
+  customChip: {
+    fontWeight: 500,
+    border: 'none',
+    backgroundColor
   }
-  const dateString = data.latestDate.toString()
+}))
+
+type ChipVariant = 'primary' | 'error' | 'success'
+
+export const CustomChangeChip: FC<CustomChangeChipProps> = ({ changeType }) => {
+  const { t } = useTranslation()
+
+  const computeStyle = (): { variantColor: ChipVariant, backgroundColor: string } => {
+    switch (changeType) {
+      case ChangeType.Added:
+        return { variantColor: 'success', backgroundColor: 'var(--success-color-background)' }
+      case ChangeType.Deleted:
+        return { variantColor: 'error', backgroundColor: 'var(--error-color-background)' }
+      case ChangeType.Updated:
+        return { variantColor: 'primary', backgroundColor: 'var(--info-color-background)' }
+    }
+    return { variantColor, backgroundColor }
+  }
+
+  const { variantColor, backgroundColor } = computeStyle()
+  const { classes } = useStyles({ backgroundColor })
+
   return (
-    <tr className={styles.spannedRow} >
-      <td colSpan={NUMBER_OF_COLUMNS}>
-        {content}
-        <i
-          role="button"
-          tabIndex={0}
-          data-date={dateString}
-          className={`icon-chart-line ${styles.clickableIcon}`}
-          onClick={handleSwitchToDaily}
-        />
-      </td>
-    </tr>
+    <Chip
+      label={t(changeType)}
+      color={variantColor}
+      variant="outlined"
+      className={classes.customChip}
+    />
   )
 }

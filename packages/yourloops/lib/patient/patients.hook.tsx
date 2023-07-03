@@ -56,7 +56,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const [patients, setPatients] = useState<Patient[]>([])
   const [initialized, setInitialized] = useState<boolean>(false)
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
-  const shouldMakeInitialApiCallToGetPatients = useRef(true)
+  const teamIdForWhichPatientsAreFetched = useRef(null)
 
   const fetchPatients = useCallback((teamId: string = selectedTeamId) => {
     PatientUtils.computePatients(user, teamId)
@@ -188,11 +188,11 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   }
 
   useEffect(() => {
-    if (!initialized && user && shouldMakeInitialApiCallToGetPatients.current) {
-      shouldMakeInitialApiCallToGetPatients.current = false
+    if (user && teamIdForWhichPatientsAreFetched.current !== selectedTeamId) {
+      teamIdForWhichPatientsAreFetched.current = selectedTeamId
       fetchPatients()
     }
-  }, [fetchPatients, initialized, user])
+  }, [fetchPatients, initialized, selectedTeamId, user])
 
   return {
     patients: patientList,

@@ -25,39 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Unit } from 'medical-domain'
+import { checkNavigationToDailyView } from '../assert/device-page.assert'
+import { patient1Id } from '../data/patient.api.data'
 
-export enum ChangeType {
-  Added = 'added',
-  Deleted = 'deleted',
-  Updated = 'updated'
+export const testDeviceSettingsNavigationForHcpAndCaregiver = async (router) => {
+  await checkNavigationToDailyView(router, `/patient/${patient1Id}/daily`)
 }
-
-export interface ParameterValue {
-  value: string
-  unit: Unit
-}
-
-export interface Parameter {
-  changeType: ChangeType
-  effectiveDate: string
-  name: string
-  unit: Unit
-  level: number
-  value: string
-}
-
-export interface ChangeDateParameterGroup {
-  changeDate: string
-  parameters: Parameter[]
-}
-
-export interface HistorizedParameter extends Parameter {
-  rawData: string
-  parameterDate: string
-  previousUnit: Unit
-  previousValue: string
-  isGroupedParameterHeader: boolean
-  groupedParameterHeaderContent: string
-  latestDate: Date
+export const testDeviceSettingsNavigationForPatient = async (router) => {
+  await checkNavigationToDailyView(router, '/daily')
 }
