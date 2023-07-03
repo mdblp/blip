@@ -26,20 +26,21 @@
  */
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import { type BgPrefs, CBGPercentageBarChart, CBGStatType, TotalCarbsStat } from 'dumb'
+import { type BgPrefs, CBGPercentageBarChart, CBGStatType, LoopModeStat, TotalCarbsStat } from 'dumb'
+import Box from '@mui/material/Box'
+import { useTheme } from '@mui/material'
+import Divider from '@mui/material/Divider'
+import { SensorUsageStat } from './sensor-usage-stat'
 import {
   type BgType,
   type DateFilter,
   DatumType,
   type MedicalData,
   TimeService,
+  GlycemiaStatisticsService,
+  CarbsStatisticsService,
   BasalBolusStatisticsService
 } from 'medical-domain'
-import Box from '@mui/material/Box'
-import { useTheme } from '@mui/material'
-import Divider from '@mui/material/Divider'
-import { SensorUsageStat } from './sensor-usage-stat'
-import { GlycemiaStatisticsService, CarbsStatisticsService } from 'medical-domain'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
@@ -101,6 +102,12 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     totalInsulin: dailyDose
   } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter, medicalData.pumpSettings)
 
+  const {
+    total,
+    manual,
+    auto
+  } = BasalBolusStatisticsService.getTimeInAutoData(medicalData.basal, numberOfDays, dateFilter)
+
   return (
     <Box data-testid="patient-statistics">
       <CBGPercentageBarChart
@@ -145,14 +152,21 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         weight={weight}
         dailyDose={dailyDose}
       />
-      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      {children}
-
       <TotalCarbsStat
         totalEntriesCarbWithRescueCarbs={totalEntriesCarbWithRescueCarbs}
         totalCarbsPerDay={Math.round(totalCarbsPerDay)}
         foodCarbsPerDay={Math.round(foodCarbsPerDay)}
       />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      <LoopModeStat
+        automated={auto}
+        manual={manual}
+        total={total}
+        title={'toto'}
+        annotations={['titi']}
+      />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      {children}
     </Box>
   )
 }

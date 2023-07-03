@@ -34,7 +34,7 @@ import { LoopModeLabel } from './loop-mode-label'
 import { LoopModeGraph } from './loop-mode-graph'
 
 interface LoopModeStatProps {
-  annotations: []
+  annotations: string[]
   automated: number
   manual: number
   title: string

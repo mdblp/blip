@@ -132,9 +132,9 @@ export {
   classifyBgValue,
   convertBG,
   GlycemiaStatisticsService,
-  type BasicData,
   CarbsStatisticsService,
-  type ParametersChange,
-  BasalBolusStatisticsService
+  BasalBolusStatisticsService,
+  type BasicData,
+  type ParametersChange
 }
 export default MedicalDataService

@@ -37,6 +37,7 @@ import {
 import { getWeekDaysFilter } from './statistics.utils'
 import type PumpSettings from '../../models/medical/datum/pump-settings.model'
 import { type ParameterConfig } from '../../models/medical/datum/pump-settings.model'
+import { type TimeInAutoStatistics } from '../../models/statistics/time-in-auto.model'
 
 function resamplingDuration(basals: Basal[], start: number, end: number): Basal[] {
   return basals.map(basal => {
@@ -99,13 +100,33 @@ function getTotalInsulinAndWeightData(basalsData: Basal[], bolusData: Bolus[], n
     weight
   }
 }
+function getTimeInAutoData(basalsData: Basal[], numDays: number, dateFilter: DateFilter): TimeInAutoStatistics {
+  const filteredBasal = BasalService.filterOnDate(basalsData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  const resampledBasalData = resamplingDuration(filteredBasal, dateFilter.start, dateFilter.end)
+
+  const manualBasals = resampledBasalData.filter((manualBasal) => {
+    return (manualBasal.subType === 'manual')
+  }).reduce((accumulator, manualBasal) => accumulator + manualBasal.duration, 0)
+
+  const automatedBasals = resampledBasalData.filter((automateBasal) => {
+    return (automateBasal.subType === 'automated')
+  }).reduce((accumulator, automateBasal) => accumulator + automateBasal.duration, 0)
+
+  return {
+    auto: automatedBasals,
+    manual: manualBasals,
+    total: automatedBasals + manualBasals
+  }
+}
 
 interface BasalBolusStatisticsAdapter {
   getBasalBolusData: (basals: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter) => BasalBolusStatistics
   getTotalInsulinAndWeightData: (basals: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter, pumpSettings: PumpSettings[]) => TotalInsulinAndWeightStatistics
+  getTimeInAutoData: (basalsData: Basal[], numDays: number, dateFilter: DateFilter) => TimeInAutoStatistics
 }
 
 export const BasalBolusStatisticsService: BasalBolusStatisticsAdapter = {
   getBasalBolusData,
+  getTimeInAutoData,
   getTotalInsulinAndWeightData
 }
