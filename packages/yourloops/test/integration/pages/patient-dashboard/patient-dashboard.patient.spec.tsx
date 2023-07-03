@@ -53,7 +53,7 @@ import {
   testDashboardDataVisualisationForPatient,
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationTwoWeeksOldData,
-  testDashboardDataVisualisationWithOldData,
+  testDashboardDataVisualisationSixteenDaysOldData,
   testEmptyMedicalFilesWidgetForPatient,
   testPatientNavBarForPatient
 } from '../../use-cases/patient-data-visualisation'
@@ -176,7 +176,7 @@ describe('Patient dashboard for patient', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationWithOldData()
+    await testDashboardDataVisualisationSixteenDaysOldData()
   })
 
   it('should display the fallback message when no medical files are returned by the API', async () => {

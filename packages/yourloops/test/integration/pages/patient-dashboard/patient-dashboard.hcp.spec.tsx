@@ -59,7 +59,7 @@ import {
   testDashboardDataVisualisationForHcp,
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationTwoWeeksOldData,
-  testDashboardDataVisualisationWithOldData,
+  testDashboardDataVisualisationSixteenDaysOldData,
   testEmptyMedicalFilesWidgetForHcp, testPatientNavBarForHcp,
   testSwitchPatientCorrectDataDisplay
 } from '../../use-cases/patient-data-visualisation'
@@ -167,14 +167,14 @@ describe('Patient dashboard for HCP', () => {
     await testChatWidgetForHcp()
   })
 
-  it('should render correct statistic when data is  old', async () => {
+  it('should return correct statistics when data is sixteen days old', async () => {
     mockDataAPI(sixteenDaysOldDashboardData)
 
     await act(async () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationWithOldData()
+    await testDashboardDataVisualisationSixteenDaysOldData()
   })
 
   it('should produce fourteen days old statistics when data is sixteen days old', async () => {
