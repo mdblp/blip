@@ -47,7 +47,7 @@
     "dayjs": "^1.11.8",
     "emoji-picker-react": "^4.4.9",
     "html-react-parser": "^4.0.0",
-    "i18next": "^23.2.3",
+    "i18next": "^23.2.6",
     "lodash": "^4.17.21",
     "lottie-react": "^2.4.0",
     "moment-timezone": "^0.5.43",
