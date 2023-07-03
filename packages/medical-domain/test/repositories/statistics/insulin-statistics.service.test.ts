@@ -54,6 +54,7 @@ describe('Time In Auto Data', () => {
       manual: 3600000,
       total: 5400000
     })
+  })
 })
 
 describe('getBasalBolusData', () => {

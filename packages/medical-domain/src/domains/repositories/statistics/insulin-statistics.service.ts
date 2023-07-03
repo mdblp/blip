@@ -116,7 +116,7 @@ function getTimeInAutoData(basalsData: Basal[], numDays: number, dateFilter: Dat
   return {
     auto: automatedBasals,
     manual: manualBasals,
-    total: (automatedBasals + manualBasals) / numDays
+    total: (automatedBasals + manualBasals)
   }
 }
 
