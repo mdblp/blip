@@ -118,7 +118,7 @@ export function getTheme(): Theme {
       MuiPaper: {
         styleOverrides: {
           rounded: {
-            borderRadius: 12
+            borderRadius: 24
           }
         }
       }

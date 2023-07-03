@@ -26,6 +26,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* eslint-disable react/prop-types */
+
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
@@ -35,16 +37,13 @@ import Box from '@mui/material/Box'
 import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
-import IconButton from '@mui/material/IconButton'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
-import SettingsDialog from './settingsDialog'
 import PhonelinkSetupOutlinedIcon from '@mui/icons-material/PhonelinkSetupOutlined'
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined'
 import { BasicsChart } from 'tideline'
 import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from 'tidepool-viz'
 import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic-dashboard-card'
@@ -102,27 +101,21 @@ const getLabel = (row, t) => {
 }
 
 const DeviceUsage = (props) => {
-  //eslint-disable-next-line
-  const { bgPrefs, timePrefs, patient, tidelineData, onSwitchToDaily, medicalData, dateFilter } = props
-  const [dialogOpened, setDialogOpened] = React.useState(false)
+  const { bgPrefs, timePrefs, patient, tidelineData, medicalData, dateFilter } = props
   const { t } = useTranslation()
   const { classes } = useStyles()
   const trackMetric = metrics.send
-  //eslint-disable-next-line
   const mostRecentSettings = tidelineData.grouped.pumpSettings.slice(-1)[0]
-  // eslint-disable-next-line react/prop-types
   const device = mostRecentSettings?.payload?.device ?? {}
   const pump = mostRecentSettings?.payload?.pump ?? {}
   const cgm = mostRecentSettings?.payload?.cgm ?? {}
   const history = _.sortBy(_.cloneDeep(mostRecentSettings?.payload?.history), ['changeDate'])
   const dateFormat = getLongDayHourFormat()
   const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false)
-  // eslint-disable-next-line react/prop-types
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const {
     total,
     sensorUsage
-    // eslint-disable-next-line react/prop-types
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
 
   const deviceData = {
@@ -145,16 +138,6 @@ const DeviceUsage = (props) => {
       avatar={<PhonelinkSetupOutlinedIcon />}
       title={t('device-usage')}
       data-testid="device-usage-card"
-      action={
-        <IconButton
-          data-testid="settings-button"
-          aria-label="settings"
-          onClick={() => setDialogOpened(true)}
-          size="small"
-        >
-          <MoreHorizOutlinedIcon />
-        </IconButton>
-      }
     >
       <CardContent>
         <Box data-testid="device-usage-device-list">
@@ -212,9 +195,7 @@ const DeviceUsage = (props) => {
         <SensorUsageStat total={total} usage={sensorUsage} />
         <Divider variant="fullWidth" className={classes.divider} />
         <BasicsChart
-          //eslint-disable-next-line
           bgClasses={bgPrefs.bgClasses}
-          //eslint-disable-next-line
           bgUnits={bgPrefs.bgUnits}
           onSelectDay={() => null}
           patient={patient}
@@ -224,16 +205,6 @@ const DeviceUsage = (props) => {
         />
       </CardContent>
     </GenericDashboardCard>
-    {dialogOpened &&
-      <SettingsDialog
-        bgPrefs={bgPrefs}
-        timePrefs={timePrefs}
-        patientData={tidelineData}
-        onSwitchToDaily={onSwitchToDaily}
-        trackMetric={trackMetric}
-        setOpen={setDialogOpened}
-      />
-    }
   </>
 }
 
@@ -243,7 +214,6 @@ DeviceUsage.propType = {
   patient: PropTypes.object.isRequired,
   tidelineData: PropTypes.object.isRequired,
   medicalData: PropTypes.object.isRequired,
-  dateFilter: PropTypes.object.isRequired,
-  onSwitchToDaily: PropTypes.func.isRequired
+  dateFilter: PropTypes.object.isRequired
 }
 export default DeviceUsage

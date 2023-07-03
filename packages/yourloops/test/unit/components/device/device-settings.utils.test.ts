@@ -25,33 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import styles from '../diabeloop.css'
-import { type HistorizedParameter } from '../../../models/historized-parameter.model'
-import { HistoryTableParameterChange } from './history-table-parameter-change'
-import { HistoryTableParameterValueChange } from './history-table-parameter-value-change'
+import { formatParameterValue } from '../../../../components/device/utils/device.utils'
+import { Unit } from 'medical-domain'
 
-interface HistoryTableRowsProps {
-  data: HistorizedParameter
-}
-
-export const HistoryTableRow: FunctionComponent<HistoryTableRowsProps> = (props) => {
-  const { data } = props
-
-  return (
-    <tr data-testid={`${data.rawData.toLowerCase()}-row`} >
-      <td data-testid={`${data.rawData.toLowerCase()}-level`} className={styles.secondaryLabelWithMain}>
-        {data.level}
-      </td>
-      <td data-testid={`${data.rawData.toLowerCase()}-parameterChange`} className={styles.secondaryLabelWithMain}>
-        <HistoryTableParameterChange parameter={data} />
-      </td>
-      <td data-testid={`${data.rawData.toLowerCase()}-valueChange`} className={styles.secondaryLabelWithMain}>
-        <HistoryTableParameterValueChange parameter={data} />
-      </td>
-      <td data-testid={`${data.rawData.toLowerCase()}-parameterDate`} className={styles.secondaryLabelWithMain}>
-        {data.parameterDate}
-      </td>
-    </tr>
-  )
-}
+describe('Device settings utils', () => {
+  describe('formatParameterValue', () => {
+    it('should return the correct format for the given value', () => {
+      expect(formatParameterValue('75', Unit.Percent)).toEqual('75')
+      expect(formatParameterValue('5', Unit.Minute)).toEqual('5')
+      expect(formatParameterValue('12.45', Unit.Gram)).toEqual('12.4')
+      expect(formatParameterValue('85', Unit.Kilogram)).toEqual('85.0')
+      expect(formatParameterValue('35', Unit.InsulinUnit)).toEqual('35.0')
+      expect(formatParameterValue(24.78, Unit.MilligramPerDeciliter)).toEqual('24.8')
+      expect(formatParameterValue(2.54, Unit.MmolPerLiter)).toEqual('2.5')
+      expect(formatParameterValue('not_a_number', Unit.MmolPerLiter)).toEqual('--')
+    })
+  })
+})

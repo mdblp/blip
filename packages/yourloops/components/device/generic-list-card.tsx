@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,57 +25,57 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import React, { type FC, type PropsWithChildren } from 'react'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
+import List from '@mui/material/List'
+import Divider from '@mui/material/Divider'
+import { type Theme, useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 
-export const profileFormCommonClasses = makeStyles()((theme) => ({
-  button: {
-    marginLeft: theme.spacing(2)
+interface GenericListCardProps extends PropsWithChildren {
+  title: string
+  ['data-testid']?: string
+}
+
+const useStyles = makeStyles()((theme: Theme) => ({
+  cardHeader: {
+    backgroundColor: 'var(--primary-color-background)',
+    fontSize: theme.typography.fontSize,
+    fontWeight: theme.typography.fontWeightBold
   },
-  cancelLink: {
-    textDecoration: 'unset'
-  },
-  formInput: {
-    marginTop: theme.spacing(2)
-  },
-  title: {
-    color: theme.palette.primary.main,
-    textAlign: 'center',
-    width: '100%'
-  },
-  container: {
-    backgroundColor: 'white',
-    marginTop: '32px',
+  cardContent: {
+    fontSize: theme.typography.fontSize,
     padding: 0,
-    [theme.breakpoints.up('sm')]: {
-      border: 'solid',
-      borderRadius: theme.spacing(3),
-      borderColor: theme.palette.grey[300],
-      borderWidth: '1px',
-      padding: '0 64px'
-    }
-  },
-  uppercase: {
-    textTransform: 'uppercase'
-  },
-  inputContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    [theme.breakpoints.only('xs')]: {
-      flexDirection: 'column'
-    },
-    [theme.breakpoints.up('sm')]: {
-      '& > div': {
-        width: 'calc(50% - 16px)'
-      }
-    }
-  },
-  categoryLabel: {
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: theme.spacing(5),
-    '& > :nth-child(2)': {
-      marginLeft: theme.spacing(1)
+    '&:last-child': {
+      padding: 0
     }
   }
 }))
+
+export const GenericListCard: FC<GenericListCardProps> = (props) => {
+  const theme = useTheme()
+  const { classes } = useStyles()
+  const { title, children } = props
+
+  return (
+    <Card
+      variant="outlined"
+      sx={{ marginBottom: theme.spacing(5) }}
+      data-testid={props['data-testid']}
+    >
+      <CardHeader
+        title={title}
+        className={classes.cardHeader}
+        disableTypography
+      />
+      <CardContent className={classes.cardContent}>
+        <List disablePadding>
+          <Divider component="li" />
+          {children}
+        </List>
+      </CardContent>
+    </Card>
+  )
+}

@@ -35,11 +35,10 @@ import {
 import {
   CbgStandardDeviationMemoized as CBGStandardDeviation
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
-import { CBGStatType, StatFormats } from './models/stats.model'
+import { CBGStatType } from './models/stats.model'
 import { ConfidentialTooltip } from './components/tooltips/confidential-tooltip/confidential-tooltip'
 import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
 import { formatBgValue } from './utils/format/format.util'
-import { renderPageNumbers } from './utils/pdf/pdf.util'
 import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
 import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
 import { TotalInsulinStatMemoized as TotalInsulinStat } from './components/stats/total-insulin/total-insulin-stat'
@@ -48,15 +47,10 @@ import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mo
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
 import Tooltip from './components/tooltips/common/tooltip/tooltip'
-import { CgmTable } from './components/settings/cgm-table'
-import { PumpTable } from './components/settings/pump-table'
-import { TerminalTable } from './components/settings/terminal-table'
-import { HistoryParameterTable } from './components/settings/history/history-table'
 import {
   AverageDailyDoseStatMemoized as AverageDailyDoseStat
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
-import { Table } from './components/settings/table'
 import { type BgPrefs } from './models/blood-glucose.model'
 import { RangeSelect } from './components/trends/cbg/range-select/range-select'
 import { TrendsProvider } from './provider/trends.provider'
@@ -67,7 +61,7 @@ import { PrintView } from './modules/print/print-view/print-view'
 import { LayoutColumnType } from './models/enums/layout-column-type.enum'
 import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
 import { getPatientFullName } from './utils/patient/patient.util'
-import { formatBirthdate } from './utils/datetime/datetime.util'
+import { formatBirthdate, formatLocalizedFromUTC, getLongDayHourFormat } from './utils/datetime/datetime.util'
 
 export {
   AverageDailyDoseStat,
@@ -80,32 +74,27 @@ export {
   CBGPercentageBarChart,
   CBGStandardDeviation,
   CBGStatType,
-  CgmTable,
   ConfidentialTooltip,
   FocusedRangeLabels,
   FoodTooltip,
   formatBirthdate,
   getPatientFullName,
-  HistoryParameterTable,
   formatBgValue,
   LayoutColumnType,
   LoopModeStat,
   ParameterTooltip,
   PhysicalTooltip,
   PrintView,
-  PumpTable,
   RangeSelect,
   ReservoirTooltip,
   SettingsPrintView,
   SimpleStat,
   StatTooltip,
-  Table,
-  TerminalTable,
   Tooltip,
   TotalInsulinStat,
   TotalCarbsStat,
   TrendsContainer,
   TrendsProvider,
-  renderPageNumbers,
-  StatFormats
+  formatLocalizedFromUTC,
+  getLongDayHourFormat
 }

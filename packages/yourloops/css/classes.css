@@ -98,3 +98,9 @@
 :global(.no-padding-left) {
   padding-left: 0 !important;
 }
+
+:global(.is-ellipsis) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

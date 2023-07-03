@@ -19,7 +19,6 @@ import _ from 'lodash'
 import i18next from 'i18next'
 import PropTypes from 'prop-types'
 import React from 'react'
-import sizeMe from 'react-sizeme'
 
 import './less/basics.less'
 
@@ -54,7 +53,6 @@ class BasicsChartNoSize extends React.Component {
 
   componentDidMount() {
     const { tidelineData, bgClasses, bgUnits, patient } = this.props
-
     if (!tidelineData.basicsData) {
       return
     }
@@ -79,7 +77,7 @@ class BasicsChartNoSize extends React.Component {
 
   adjustSectionsBasedOnAvailableData(basicsData) {
     const insulinDataAvailable = this.insulinDataAvailable(basicsData)
-    const noPumpDataMessage = i18next.t("This section requires data from an insulin pump, so there's nothing to display.")
+    const noPumpDataMessage = i18next.t('This section requires data from an insulin pump, so there\'s nothing to display.')
 
     if (basicsData.sections.siteChanges.type !== SECTION_TYPE_UNDECLARED) {
       if (!this.hasSectionData(basicsData, basicsData.sections.siteChanges.type)) {
@@ -135,7 +133,7 @@ class BasicsChartNoSize extends React.Component {
           bgClasses={bgClasses}
           bgUnits={bgUnits}
           chart={section.chart}
-          chartWidth={this.props.size.width}
+          chartWidth={0}
           data={data}
           days={basicsData.days}
           labels={section.labels}
@@ -154,5 +152,4 @@ class BasicsChartNoSize extends React.Component {
   }
 }
 
-export { BasicsChartNoSize }
-export default sizeMe({ monitorHeight: true })(BasicsChartNoSize)
+export default BasicsChartNoSize

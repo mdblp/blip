@@ -28,7 +28,7 @@
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 import { patient1Id } from '../data/patient.api.data'
 
-export const mockMedicalFilesAPI = (teamId: string, teamName: string) => {
+export const mockMedicalFilesAPI = (teamId: string = 'teamId', teamName: string = 'teamName') => {
   jest.spyOn(MedicalFilesApi, 'getMedicalReports').mockResolvedValue([{
     id: 'medicalReportId',
     authorId: 'authorId',

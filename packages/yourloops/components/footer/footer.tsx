@@ -88,7 +88,8 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
       zIndex: theme.zIndex.drawer + 1,
       [theme.breakpoints.down('md')]: {
         flexWrap: 'wrap'
-      }
+      },
+      marginTop: theme.spacing(3)
     },
     cookiesManagement: {
       '&:hover': {

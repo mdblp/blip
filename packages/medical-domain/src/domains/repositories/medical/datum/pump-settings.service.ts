@@ -28,6 +28,7 @@
 import type PumpSettings from '../../../models/medical/datum/pump-settings.model'
 import {
   type CgmConfig,
+  type ChangeType,
   type DeviceConfig,
   type ParameterConfig,
   type ParametersChange,
@@ -51,11 +52,11 @@ const normalizeHistory = (rawHistory: Array<Record<string, unknown>>, opts: Medi
       parameters: params.map(param => {
         const { unit, value } = getConvertedParamUnitAndValue(param.unit as Unit, param.value as string, opts.bgUnits)
         return {
-          changeType: param.changeType as string,
+          changeType: param.changeType as ChangeType,
           effectiveDate: param.effectiveDate as string,
           level: param.level as number,
           name: param.name as string,
-          unit,
+          unit: unit as Unit,
           value
         }
       })

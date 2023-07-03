@@ -83,6 +83,7 @@ export const myThirdTeamPhoneNumber = '0476000000'
 export const myThirdTeamCode = '263381988'
 export const myThirdTeamAddress = 'Guinness Road W1D 1BS Dublin GB'
 export const filtersTeamName = 'Team used to test the patients filters'
+export const NEW_TEAM_ID = 'new-team-id'
 
 export const buildTeamOne = (): Team => {
   return {
@@ -248,7 +249,7 @@ export const mockTeamAPI = () => {
 }
 
 export const mockTeamApiForTeamCreation = () => {
-  const newTeam = { id: 'new-team-id', name: '🦁', type: TeamType.medical, members: [], monitoringAlertsParameters }
+  const newTeam = { id: NEW_TEAM_ID, name: '🦁', type: TeamType.medical, members: [], monitoringAlertsParameters }
   jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue(buildAvailableTeams().concat(newTeam as Team))
   jest.spyOn(TeamAPI, 'createTeam').mockResolvedValue(newTeam as ITeam)
 }

@@ -25,28 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import styles from '../diabeloop.css'
-import { useTranslation } from 'react-i18next'
-
-export const HistoryTableHeader: FunctionComponent = () => {
-  const { t } = useTranslation('main')
-  return (
-    <thead>
-      <tr>
-        <th className={styles.secondaryLabelAlone}>
-          {t('Level')}
-        </th>
-        <th className={styles.secondaryLabelAlone}>
-          {t('Parameter')}
-        </th>
-        <th className={styles.secondaryLabelAlone}>
-          {t('Value')}
-        </th>
-        <th className={styles.secondaryLabelAlone}>
-          {t('Date')}
-        </th>
-      </tr>
-    </thead>
-  )
+export enum DeviceMeals {
+  Breakfast = 'BREAKFAST',
+  Dinner = 'DINNER',
+  Lunch = 'LUNCH'
 }
