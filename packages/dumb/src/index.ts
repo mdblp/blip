@@ -47,13 +47,10 @@ import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mo
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
 import Tooltip from './components/tooltips/common/tooltip/tooltip'
-import { CgmTable } from './components/settings/cgm-table'
-import { PumpTable } from './components/settings/pump-table'
-import { TerminalTable } from './components/settings/terminal-table'
-import { HistoryParameterTable } from './components/settings/history/history-table'
-import { AverageDailyDoseStatMemoized as AverageDailyDoseStat } from './components/stats/average-daily-dose/average-daily-dose-stat'
+import {
+  AverageDailyDoseStatMemoized as AverageDailyDoseStat
+} from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
-import { Table } from './components/settings/table'
 import { type BgPrefs } from './models/blood-glucose.model'
 import { RangeSelect } from './components/trends/cbg/range-select/range-select'
 import { TrendsProvider } from './provider/trends.provider'
@@ -64,11 +61,9 @@ import { PrintView } from './modules/print/print-view/print-view'
 import { LayoutColumnType } from './models/enums/layout-column-type.enum'
 import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
 import { getPatientFullName } from './utils/patient/patient.util'
-import { formatBirthdate } from './utils/datetime/datetime.util'
-import { type ChangeDateParameterGroup } from './models/historized-parameter.model'
+import { formatBirthdate, formatLocalizedFromUTC, getLongDayHourFormat } from './utils/datetime/datetime.util'
 
 export {
-  type ChangeDateParameterGroup,
   AverageDailyDoseStat,
   buildLayoutColumns,
   type BgPrefs,
@@ -79,30 +74,27 @@ export {
   CBGPercentageBarChart,
   CBGStandardDeviation,
   CBGStatType,
-  CgmTable,
   ConfidentialTooltip,
   FocusedRangeLabels,
   FoodTooltip,
   formatBirthdate,
   getPatientFullName,
-  HistoryParameterTable,
   formatBgValue,
   LayoutColumnType,
   LoopModeStat,
   ParameterTooltip,
   PhysicalTooltip,
   PrintView,
-  PumpTable,
   RangeSelect,
   ReservoirTooltip,
   SettingsPrintView,
   SimpleStat,
   StatTooltip,
-  Table,
-  TerminalTable,
   Tooltip,
   InsulinStat,
   TotalCarbsStat,
   TrendsContainer,
-  TrendsProvider
+  TrendsProvider,
+  formatLocalizedFromUTC,
+  getLongDayHourFormat
 }

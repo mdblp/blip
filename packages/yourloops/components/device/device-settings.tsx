@@ -25,99 +25,100 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
-import { CgmTable, HistoryParameterTable, PumpTable, Table, TerminalTable } from 'dumb'
-import { type PumpSettings, type TimePrefs } from 'medical-domain'
-import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
+import React, { type FC, useEffect } from 'react'
+import type MedicalDataService from 'medical-domain'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardHeader from '@mui/material/CardHeader'
 import { useTranslation } from 'react-i18next'
-import { formatParameterValue, sortHistoryParametersByDate } from './device-settings.utils'
-import type { ChangeDateParameterGroup } from 'dumb'
 import Button from '@mui/material/Button'
-import textTable from 'text-table'
-import moment from 'moment'
+import FileCopyIcon from '@mui/icons-material/FileCopy'
+import { useTheme } from '@mui/material/styles'
+import Grid from '@mui/material/Grid'
+import { makeStyles } from 'tss-react/mui'
+import { DeviceInfoTable } from './device-info-table'
+import { PumpInfoTable } from './pump-info-table'
+import { CgmInfoTable } from './cgm-info-table'
+import { ParameterList } from './parameter-list'
+import { ParametersChangeHistory } from './parameters-change-history'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { type PumpSettings } from 'medical-domain'
+import moment from 'moment/moment'
+import { copySettingsToClipboard, formatParameterValue } from './utils/device.utils'
 
 interface DeviceSettingsProps {
-  goToDailySpecificDate: (date: number | Date) => void
-  pumpSettings: PumpSettings
-  timePrefs: TimePrefs
+  goToDailySpecificDate: (date: number) => void
+  medicalData: MedicalDataService
 }
 
-export const DeviceSettings: FC<DeviceSettingsProps> = ({ pumpSettings, timePrefs, goToDailySpecificDate }) => {
+const useStyles = makeStyles()(() => ({
+  cardHeaderAction: {
+    marginTop: 0
+  }
+}))
+
+export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDailySpecificDate }) => {
+  const theme = useTheme()
+  const { classes } = useStyles()
   const { t } = useTranslation()
+  const pumpSettings = [...medicalData.grouped.pumpSettings].pop() as PumpSettings
   const { device, pump, cgm, parameters, history } = pumpSettings.payload
-
-  // TODO Set this one directly in the futur new component (see YLP-2447 https://diabeloop.atlassian.net/browse/YLP-2354)
-  parameters.forEach(parameter => {
-    parameter.value = formatParameterValue(parameter.value, parameter.unit)
-  })
-
   const lastUploadDate = moment.tz(pumpSettings.normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
 
-  const copySettingsToClipboard = async (): Promise<void> => {
-    let rawText = `${lastUploadDate}\n\n`
-    rawText += `-- ${t('Device')} --\n`
-    rawText += textTable([
-      [t('Manufacturer'), device.manufacturer],
-      [t('Identifier'), device.deviceId],
-      [t('IMEI'), device.imei],
-      [t('Software version'), device.swVersion]]
-    ) as string
-    rawText += `\n\n-- ${t('Parameters')} --\n`
-
-    const parametersTable = [[
-      t('Name'),
-      t('Value'),
-      t('Unit')
-    ]]
-    parameters.forEach((parameter) => {
-      parametersTable.push([t(`params|${parameter.name}`), parameter.value, parameter.unit])
-    })
-    rawText += textTable(parametersTable, { align: ['l', 'r', 'l'] }) as string
-
-    try {
-      await navigator.clipboard.writeText(rawText)
-    } catch (err) {
-      console.log(err)
-    }
+  const onClickCopyButton = async (): Promise<void> => {
+    await copySettingsToClipboard(lastUploadDate, device, parameters)
   }
 
+  useEffect(() => {
+    parameters.forEach(parameter => {
+      parameter.value = formatParameterValue(parameter.value, parameter.unit)
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
-    <>
-      <Grid
-        container
-        spacing={2}
-        rowSpacing={2}
-        paddingX={3}
-      >
-        <Grid item xs={12} display="flex" justifyContent="space-between">
-          <Typography>{`${t('last-upload:')} ${lastUploadDate}`}</Typography>
+    <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
+      <CardHeader
+        title={t('device')}
+        subheader={`${t('last-upload:')} ${lastUploadDate}`}
+        action={
           <Button
-            variant="outlined"
-            onClick={copySettingsToClipboard}
+            variant="contained"
+            disableElevation
+            startIcon={<FileCopyIcon />}
+            onClick={onClickCopyButton}
           >
             {t('text-copy')}
           </Button>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography color="text.secondary">{t('Device')}</Typography>
-          <TerminalTable device={device} />
-          <PumpTable pump={pump} timePrefs={timePrefs} />
-          <CgmTable cgm={cgm} timePrefs={timePrefs} />
-        </Grid>
-        <Grid item xs={12} sm={6} data-testid="parameters-container">
-          <Typography color="text.secondary">{t('Parameters')}</Typography>
-          <Table
-            title={t('Parameters')}
-            rows={parameters}
-          />
-        </Grid>
-      </Grid>
-      <HistoryParameterTable
-        rows={sortHistoryParametersByDate(history) as ChangeDateParameterGroup[]}
-        onSwitchToDaily={goToDailySpecificDate}
-        timePrefs={timePrefs}
+        }
+        classes={{
+          action: classes.cardHeaderAction
+        }}
       />
-    </>
+      <CardContent>
+        <Grid
+          container
+          spacing={4}
+          rowSpacing={4}
+        >
+          <Grid item xs={12} sm={6}>
+            <DeviceInfoTable device={device} />
+            <PumpInfoTable pump={pump} />
+            <CgmInfoTable cgm={cgm} />
+          </Grid>
+          <Grid item xs={12} sm={6} data-testid="parameters-container">
+            <ParameterList parameters={parameters} />
+          </Grid>
+        </Grid>
+        <Box marginTop={5}>
+          <Typography variant="h5" sx={{ marginBlock: theme.spacing(2) }}>{t('change-history')}</Typography>
+          <ParametersChangeHistory
+            goToDailySpecificDate={goToDailySpecificDate}
+            history={history}
+          />
+        </Box>
+      </CardContent>
+    </Card>
   )
 }

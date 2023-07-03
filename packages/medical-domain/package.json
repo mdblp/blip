@@ -32,7 +32,7 @@
     "tsc": "tsc --project ./tsconfig.json",
     "build": "npm run tsc",
     "test": "jest --config=test/jest.config.js",
-    "lint": "eslint .",
+    "lint": "eslint . --ext js,ts",
     "lint-fix": "npm run lint -- --fix"
   },
   "bugs": {
