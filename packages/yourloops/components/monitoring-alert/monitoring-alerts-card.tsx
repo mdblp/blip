@@ -40,6 +40,7 @@ import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import { useAuth } from '../../lib/auth'
 import { useTheme } from '@mui/material/styles'
+import { MonitoringAlertsCardSkeletonValue } from './monitoring-alerts-card-skeleton-value'
 
 const monitoringAlertsCardStyles = makeStyles()((theme) => {
   return {
@@ -53,9 +54,6 @@ export interface MonitoringAlertsCardProps {
   patient: Patient
 }
 
-const SKELETON_ALERT_HEIGHT = 12
-const SKELETON_ALERT_LABEL_WIDTH = 250
-const SKELETON_ALERT_VALUE_WIDTH = 50
 const SKELETON_TITLE_HEIGHT = 15
 const SKELETON_TITLE_WIDTH = 200
 
@@ -156,30 +154,21 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
               justifyContent="space-between"
               sx={{ paddingTop: theme.spacing(1) }}
             >
-              <Skeleton variant="rounded" width={SKELETON_ALERT_LABEL_WIDTH} height={SKELETON_ALERT_HEIGHT}/>
-              <Box>
-                <Skeleton variant="rounded" width={SKELETON_ALERT_VALUE_WIDTH} height={SKELETON_ALERT_HEIGHT}/>
-              </Box>
+              <MonitoringAlertsCardSkeletonValue />
             </Box>
             <Box
               display="flex"
               justifyContent="space-between"
               sx={{ paddingTop: theme.spacing(1) }}
             >
-              <Skeleton variant="rounded" width={SKELETON_ALERT_LABEL_WIDTH} height={SKELETON_ALERT_HEIGHT}/>
-              <Box>
-                <Skeleton variant="rounded" width={SKELETON_ALERT_VALUE_WIDTH} height={SKELETON_ALERT_HEIGHT}/>
-              </Box>
+              <MonitoringAlertsCardSkeletonValue />
             </Box>
             <Box
               display="flex"
               justifyContent="space-between"
               sx={{ paddingTop: theme.spacing(1) }}
             >
-              <Skeleton variant="rounded" width={SKELETON_ALERT_LABEL_WIDTH} height={SKELETON_ALERT_HEIGHT}/>
-              <Box>
-                <Skeleton variant="rounded" width={SKELETON_ALERT_VALUE_WIDTH} height={SKELETON_ALERT_HEIGHT}/>
-              </Box>
+              <MonitoringAlertsCardSkeletonValue />
             </Box>
           </Box>
 

@@ -77,13 +77,13 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
           return
         }
 
-        await fetchPatientsMetrics(teamId, computedPatients)
+        await fetchPatientsMetrics(computedPatients, teamId)
       })
     // Need to rewrite the alert component, or it triggers infinite loop...
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, selectedTeam])
 
-  const fetchPatientsMetrics = async (teamId: string = selectedTeamId, allPatients: Patient[]): Promise<void> => {
+  const fetchPatientsMetrics = async (allPatients: Patient[], teamId: string = selectedTeamId): Promise<void> => {
     const acceptedInvitePatients = allPatients.filter((patient: Patient) => patient.invitationStatus === UserInviteStatus.Accepted)
     if (!acceptedInvitePatients.length) {
       return
