@@ -44,6 +44,13 @@ const useStyles = makeStyles()((theme: Theme) => ({
     backgroundColor: 'var(--primary-color-background)',
     fontSize: theme.typography.fontSize,
     fontWeight: theme.typography.fontWeightBold
+  },
+  cardContent: {
+    fontSize: theme.typography.fontSize,
+    padding: 0,
+    '&:last-child': {
+      padding: 0
+    }
   }
 }))
 
@@ -63,7 +70,7 @@ export const GenericListCard: FC<GenericListCardProps> = (props) => {
         className={classes.cardHeader}
         disableTypography
       />
-      <CardContent sx={{ padding: '0 !important', fontSize: theme.typography.fontSize }}>
+      <CardContent className={classes.cardContent}>
         <List disablePadding>
           <Divider component="li" />
           {children}

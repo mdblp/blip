@@ -72,6 +72,7 @@ export const ParameterList: FC<ParameterListProps> = ({ parameters }) => {
                     <Typography
                       className="is-ellipsis"
                       maxWidth={PARAMETER_STRING_MAX_WIDTH}
+                      variant="body2"
                       id={`${parameter.name}-${index}`}
                     >
                       {t(`params|${parameter.name}`)}

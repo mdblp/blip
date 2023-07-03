@@ -26,7 +26,7 @@
  */
 
 import { type DeviceConfig, type ParameterConfig, type ParametersChange, Unit } from 'medical-domain'
-import { DeviceMeals } from '../models/device.models'
+import { DeviceMeals } from '../models/device-meal.models'
 import i18next from 'i18next'
 import textTable from 'text-table'
 
