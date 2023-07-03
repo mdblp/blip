@@ -32,8 +32,29 @@ import {
   buildBasalsData,
   buildBolusData,
   dateFilterOneDay,
-  dateFilterTwoWeeks
+  dateFilterTwoDays,
+  dateFilterTwoWeeks,
+  MS_IN_HOUR
 } from '../../mock/data.statistics.mock'
+
+describe('Time In Auto Data', () => {
+  it('should return the time spent in automated and manual basal delivery when viewing 1 day', () => {
+    const basalData = buildBasalsData(basalsData)
+    expect(BasalBolusStatisticsService.getTimeInAutoData(basalData, 1, dateFilterOneDay)).toEqual({
+      auto: MS_IN_HOUR,
+      manual: MS_IN_HOUR * 2,
+      total: MS_IN_HOUR + MS_IN_HOUR * 2
+    })
+  })
+
+  it('should return the avg daily time spent in automated and manual basal delivery when viewing more than 1 day', () => {
+    const basalData = buildBasalsData(basalsData)
+    expect(BasalBolusStatisticsService.getTimeInAutoData(basalData, 2, dateFilterTwoDays)).toEqual({
+      auto: 1800000,
+      manual: 3600000,
+      total: 5400000
+    })
+})
 
 describe('getBasalBolusData', () => {
   it('should return the total basal and bolus insulin delivery when viewing 1 day', () => {

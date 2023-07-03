@@ -47,6 +47,7 @@ import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { StandardDeviationStat } from './standard-deviation-stat'
 import { AverageGlucoseStat } from './average-glucose-stat'
 import { TotalInsulinStat } from './total-insulin-stat'
+import { automatedBasalDeviceModel, checkManufacturerName } from './patient-statistics.utils'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -66,6 +67,13 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const bgUnits = bgPrefs.bgUnits
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
   const isTrendsPage = location.pathname.includes('trends')
+  const manufacturer = medicalData.pumpSettings.map(item => item.payload.device.manufacturer)
+  const deviceModel = medicalData.pumpSettings.map(item => item.payload.device.name)
+
+  const isAutomatedBasalDevice = (): boolean => {
+    const models = automatedBasalDeviceModel[checkManufacturerName(manufacturer)] || false
+    return Array.isArray(models) && models.includes(deviceModel)
+  }
 
   const {
     standardDeviation,
@@ -142,7 +150,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
         </>
       }
-
       <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <TotalInsulinStat
@@ -152,16 +159,21 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         weight={weight}
         dailyDose={dailyDose}
       />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      {isAutomatedBasalDevice &&
+        <>
+          <LoopModeStat
+            automated={auto}
+            manual={manual}
+            total={total}
+          />
+        </>
+      }
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <TotalCarbsStat
         totalEntriesCarbWithRescueCarbs={totalEntriesCarbWithRescueCarbs}
         totalCarbsPerDay={Math.round(totalCarbsPerDay)}
         foodCarbsPerDay={Math.round(foodCarbsPerDay)}
-      />
-      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <LoopModeStat
-        automated={auto}
-        manual={manual}
-        total={total}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       {children}

@@ -100,6 +100,7 @@ function getTotalInsulinAndWeightData(basalsData: Basal[], bolusData: Bolus[], n
     weight
   }
 }
+
 function getTimeInAutoData(basalsData: Basal[], numDays: number, dateFilter: DateFilter): TimeInAutoStatistics {
   const filteredBasal = BasalService.filterOnDate(basalsData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const resampledBasalData = resamplingDuration(filteredBasal, dateFilter.start, dateFilter.end)
@@ -115,7 +116,7 @@ function getTimeInAutoData(basalsData: Basal[], numDays: number, dateFilter: Dat
   return {
     auto: automatedBasals,
     manual: manualBasals,
-    total: automatedBasals + manualBasals
+    total: (automatedBasals + manualBasals) / numDays
   }
 }
 

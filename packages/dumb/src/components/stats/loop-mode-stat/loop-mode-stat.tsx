@@ -49,7 +49,7 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
   const location = useLocation()
   const isDailyPage = location.pathname.includes('daily')
   const title = isDailyPage ? t('time-loop') : t('avg-time-loop')
-  const annotations = isDailyPage ? [t('time-loop-tooltip, time-loop-how-calculate')] : [t('avg-time-loop-tooltip,avg-time-loop-how-calculate')]
+  const annotations = isDailyPage ? [t('time-loop-tooltip'), t('time-loop-how-calculate')] : [t('avg-time-loop-tooltip'), t('avg-time-loop-how-calculate')]
 
   return (
     <div data-testid="loop-mode-stat">
