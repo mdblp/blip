@@ -30,6 +30,12 @@ import type PumpManufacturer from './enums/pump-manufacturer.enum'
 import { type DatumType } from './enums/datum-type.enum'
 import type Unit from './enums/unit.enum'
 
+export enum ChangeType {
+  Added = 'added',
+  Deleted = 'deleted',
+  Updated = 'updated'
+}
+
 interface CgmConfig {
   apiVersion: string
   endOfLifeTransmitterDate: string
@@ -48,18 +54,18 @@ interface DeviceConfig {
   swVersion: string
 }
 
-export interface Parameter {
-  changeType: string
+export interface PumpSettingsParameter {
+  changeType: ChangeType
   effectiveDate: string
   level: number
   name: string
-  unit: string
+  unit: Unit
   value: string
 }
 
 interface ParametersChange {
   changeDate: string
-  parameters: Parameter[]
+  parameters: PumpSettingsParameter[]
 }
 
 interface PumpConfig {

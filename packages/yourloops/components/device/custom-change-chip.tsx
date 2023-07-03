@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,60 +25,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-
-import styles from './table.css'
+import React, { type FC } from 'react'
+import Chip from '@mui/material/Chip'
+import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
+import { ChangeType } from 'medical-domain'
 
-interface Row {
-  name: string
-  value: string
-  unit: string
+interface CustomChangeChipProps {
+  changeType: ChangeType
 }
 
-interface TableProps {
-  rows: Row[]
-  title: string
-}
+const useStyles = makeStyles<{ backgroundColor: string }>()((theme, { backgroundColor }) => ({
+  customChip: {
+    fontWeight: 500,
+    border: 'none',
+    backgroundColor
+  }
+}))
 
-export const Table: FunctionComponent<TableProps> = (props) => {
-  const { rows, title } = props
+type ChipVariant = 'primary' | 'error' | 'success'
 
+export const CustomChangeChip: FC<CustomChangeChipProps> = ({ changeType }) => {
   const { t } = useTranslation()
 
+  const computeStyle = (): { variantColor: ChipVariant, backgroundColor: string } => {
+    switch (changeType) {
+      case ChangeType.Added:
+        return { variantColor: 'success', backgroundColor: 'var(--success-color-background)' }
+      case ChangeType.Deleted:
+        return { variantColor: 'error', backgroundColor: 'var(--error-color-background)' }
+      case ChangeType.Updated:
+        return { variantColor: 'primary', backgroundColor: 'var(--info-color-background)' }
+    }
+    return { variantColor, backgroundColor }
+  }
+
+  const { variantColor, backgroundColor } = computeStyle()
+  const { classes } = useStyles({ backgroundColor })
+
   return (
-    <table className={styles.settingsTable}>
-      <caption className={styles.bdglSettingsHeader}>
-        {title}
-      </caption>
-      <thead>
-        <tr>
-          <th>
-            {t('Parameter')}
-          </th>
-          <th >
-            {t('Value')}
-          </th>
-          <th>
-            {t('Unit')}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-      {rows.map((row, index) =>
-        <tr key={index} data-testid={`${row.name.toLowerCase()}-row`}>
-          <td className={styles.secondaryLabelWithMain}>
-            {t(`params|${row.name}`)}
-          </td>
-          <td className={styles.secondaryLabelWithMain}>
-            {row.value}
-          </td>
-          <td className={styles.secondaryLabelWithMain}>
-            {row.unit}
-          </td>
-        </tr>
-      )}
-      </tbody>
-    </table>
+    <Chip
+      label={t(changeType)}
+      color={variantColor}
+      variant="outlined"
+      className={classes.customChip}
+    />
   )
 }

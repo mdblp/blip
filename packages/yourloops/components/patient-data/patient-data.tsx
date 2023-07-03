@@ -224,7 +224,6 @@ export const PatientData: FunctionComponent = () => {
                     <DevicePage
                       goToDailySpecificDate={goToDailySpecificDate}
                       medicalData={medicalData}
-                      timePrefs={timePrefs}
                     />
                   }
                   />

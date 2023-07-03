@@ -65,7 +65,11 @@ const ignoredTransKeysForBlip = [
   'delivered',
   'level',
   'wheel-label-off',
-  'wheel-label-on'
+  'wheel-label-on',
+  'Date',
+  'Level',
+  'Parameter',
+  'Parameters History'
 ]
 const ignoredTransKeyInBlipFiles = [
   '${physicalActivity.reportedIntensity}-pa',
@@ -195,7 +199,10 @@ const ignoredTransKeyForYourLoops = [
   'tooltip-total-week-carbs',
   'total-carbs',
   'hba1c',
-  'no-medical-files-patient'
+  'no-medical-files-patient',
+  'added',
+  'deleted',
+  'updated'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
@@ -212,7 +219,19 @@ const ignoredTransKeyInYourLoopsFiles = [
   'params|${parameter.name}',
   'Device',
   'Unit',
-  'Value'
+  'Value',
+  'Cgm sensor expiration date',
+  'Cgm transmitter id',
+  'Cgm transmitter end of life',
+  'Cgm transmitter software version',
+  'Level',
+  'Parameter',
+  'Product',
+  'Pump',
+  'Pump cartridge expiration date',
+  'Pump version',
+  'Serial Number',
+  'Setting'
 ]
 
 /**
