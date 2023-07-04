@@ -106,12 +106,12 @@ function getTimeInAutoData(basalsData: Basal[], numDays: number, dateFilter: Dat
   const resampledBasalData = resamplingDuration(filteredBasal, dateFilter.start, dateFilter.end)
 
   const manualBasals = resampledBasalData.filter((manualBasal) => {
-    return (manualBasal.subType === 'manual')
-  }).reduce((accumulator, manualBasal) => accumulator + manualBasal.duration, 0)
+    return (manualBasal.subType === 'scheduled')
+  }).reduce((accumulator, manualBasal) => accumulator + (manualBasal.duration / numDays), 0)
 
   const automatedBasals = resampledBasalData.filter((automateBasal) => {
     return (automateBasal.subType === 'automated')
-  }).reduce((accumulator, automateBasal) => accumulator + automateBasal.duration, 0)
+  }).reduce((accumulator, automateBasal) => accumulator + (automateBasal.duration / numDays), 0)
 
   return {
     auto: automatedBasals,
