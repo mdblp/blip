@@ -76,7 +76,7 @@ const AverageDailyDoseStat: FunctionComponent<AverageDailyDoseStatProps> = (prop
           </Box>
           <SimpleValue
             className={styles.insulinTitle}
-            suffix={t('U')}
+            suffix='U'
             value={formatDecimalNumber(dailyDose, 1)}
           />
         </div>

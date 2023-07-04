@@ -41,7 +41,6 @@ jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/patient/patients.provider')
 describe('usePatientData hook', () => {
   const patientId = 'fakeId'
-  const FOURTEEN_DAYS_IN_MS = TimeService.MS_IN_DAY * 14
   const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
   const getUrlPrefixForHcp = (id = patientId) => `/patient/${id}`
   const useNavigateMock = jest.fn()
@@ -70,7 +69,7 @@ describe('usePatientData hook', () => {
     it('should change currentChart to Daily', async () => {
       const { result } = renderHook(() => usePatientData())
       expect(result.current.currentChart).toEqual(ChartTypes.Dashboard)
-      expect(result.current.msRange).toEqual(FOURTEEN_DAYS_IN_MS)
+      expect(result.current.msRange).toEqual(DEFAULT_MS_RANGE)
 
       act(() => {
         result.current.changeChart(ChartTypes.Daily)
@@ -79,25 +78,11 @@ describe('usePatientData hook', () => {
       expect(result.current.msRange).toEqual(TimeService.MS_IN_DAY)
       expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp()}/${ChartTypes.Daily}`)
     })
-    it('should change currentChart to Dashboard', async () => {
-      jest.spyOn(router, 'useLocation')
-        .mockImplementationOnce(jest.fn().mockReturnValue({ pathname: `${getUrlPrefixForHcp()}/${ChartTypes.Daily}` }))
-      const { result } = renderHook(() => usePatientData())
-      expect(result.current.currentChart).toEqual(ChartTypes.Daily)
-      expect(result.current.msRange).toEqual(DEFAULT_MS_RANGE)
-
-      act(() => {
-        result.current.changeChart(ChartTypes.Dashboard)
-      })
-
-      expect(result.current.msRange).toEqual(FOURTEEN_DAYS_IN_MS)
-      expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp()}/${ChartTypes.Dashboard}`)
-    })
 
     it('should change currentChart to Trends', async () => {
       const { result } = renderHook(() => usePatientData())
       expect(result.current.currentChart).toEqual(ChartTypes.Dashboard)
-      expect(result.current.msRange).toEqual(FOURTEEN_DAYS_IN_MS)
+      expect(result.current.msRange).toEqual(DEFAULT_MS_RANGE)
 
       act(() => {
         result.current.changeChart(ChartTypes.Trends)

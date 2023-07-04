@@ -108,7 +108,6 @@ describe('HCP home page', () => {
     jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockResolvedValue([patient1Metrics])
 
     await renderHomePage()
-
     await testPatientManagementPrivateTeam()
   })
 
@@ -121,7 +120,6 @@ describe('HCP home page', () => {
     jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockResolvedValue([patient1Metrics])
 
     await renderHomePage()
-
     await testPatientListForHcpPrivateTeam()
   })
 

@@ -42,15 +42,15 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   const { totalCarbsPerDay, foodCarbsPerDay, totalEntriesCarbWithRescueCarbs } = props
   const { t } = useTranslation('main')
   const location = useLocation()
-  const isDaily = location.pathname.includes('daily')
+  const isDailyPage = location.pathname.includes('daily')
   const isDerivedCarbs = foodCarbsPerDay && totalCarbsPerDay ? t('tooltip-total-derived-carbs', { total: totalEntriesCarbWithRescueCarbs }) : t('tooltip-empty-stat')
 
   return (
     <div data-testid="total-carbs-stat">
       <Box className={styles.row}>
-        {t(isDaily ? 'total-carbs' : 'avg-daily-carbs')}
+        {t(isDailyPage ? 'total-carbs' : 'avg-daily-carbs')}
         <StatTooltip
-          annotations={[t(isDaily ? 'tooltip-total-day-carbs' : 'tooltip-total-week-carbs'), isDerivedCarbs]}
+          annotations={[t(isDailyPage ? 'tooltip-total-day-carbs' : 'tooltip-total-week-carbs'), isDerivedCarbs]}
         />
         {!totalCarbsPerDay
           ? <>

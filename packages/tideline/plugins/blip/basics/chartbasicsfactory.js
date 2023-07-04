@@ -19,14 +19,11 @@ import _ from 'lodash'
 import i18next from 'i18next'
 import PropTypes from 'prop-types'
 import React from 'react'
-
 import './less/basics.less'
-
 import basicsState from './logic/state'
 import basicsActions from './logic/actions'
 import dataMungerMkr from './logic/datamunger'
 import { SECTION_TYPE_UNDECLARED } from './logic/constants'
-
 import Section from './components/DashboardSection'
 import togglableState from './TogglableState'
 

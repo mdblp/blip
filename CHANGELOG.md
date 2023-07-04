@@ -104,6 +104,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2307 Incomplete alert when accepting a direct share invitation
 - YLP-2311 Reorganize ITs
 - YLP-2328 Migrate patient-data from jsx to tsx
+- YLP-2351 Migrate average daily dose stat and total insulin stat from stat.js to yourloops
 - YLP-2352 Monitoring alert tooltips "out of range" displays incorrect values
 - YLP-2364 Fixed English translations
 - YLP-2367 Patient list refacto

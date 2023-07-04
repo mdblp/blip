@@ -29,7 +29,7 @@ import DataApi from '../../lib/data/data.api'
 import moment, { type Moment } from 'moment-timezone'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import PartialDataLoad from 'blip/app/core/lib/partial-data-load'
-import MedicalDataService, { type BgUnit, Source, type TimePrefs, TimeService } from 'medical-domain'
+import MedicalDataService, { type BgUnit, type MedicalData, Source, type TimePrefs, TimeService } from 'medical-domain'
 import config from '../../lib/config/config'
 import { ChartTypes } from '../../enum/chart-type.enum'
 import { type GetPatientDataOptions } from '../../lib/data/models/get-patient-data-options.model'
@@ -50,6 +50,8 @@ export function isValidDateQueryParam(queryParam: string): boolean {
   const date = new Date(queryParam)
   return !isNaN(date.getTime())
 }
+const DEFAULT_DASHBOARD_TIME_RANGE_DAYS = 14
+const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
 export class PatientDataUtils {
   private readonly bgUnits: BgUnit
@@ -84,6 +86,20 @@ export class PatientDataUtils {
     this.patient = patient
   }
 
+  calculateDashboardDateRange(dateBg: string[]): number {
+    const dateRangeSet = new Set(dateBg)
+    if (dateRangeSet.size >= DEFAULT_DASHBOARD_TIME_RANGE_DAYS) {
+      return DEFAULT_MS_RANGE * DEFAULT_DASHBOARD_TIME_RANGE_DAYS
+    }
+    return dateRangeSet.size * DEFAULT_MS_RANGE
+  }
+
+  getRangeDaysInMs(data: MedicalData): number {
+    const dateRangeData = data.smbg.length > 0 ? data.smbg : data.cbg
+    const localDates = dateRangeData.map((bgData) => bgData.localDate)
+    return this.calculateDashboardDateRange(localDates)
+  }
+
   getDateRange({ currentChart, epochLocation, msRange }: GetDatetimeBoundsArgs): DateRange {
     const msDiff = currentChart === ChartTypes.Daily ? msRange : Math.round(msRange / 2)
     let start = moment.utc(epochLocation - msDiff).startOf('day')
@@ -97,7 +113,6 @@ export class PatientDataUtils {
         end = moment.utc(epochLocation + TimeService.MS_IN_DAY * 4).startOf('day').add(1, 'day')
       }
     }
-
     return { start, end }
   }
 

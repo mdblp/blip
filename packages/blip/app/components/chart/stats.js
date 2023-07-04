@@ -4,20 +4,12 @@ import _ from 'lodash'
 import bows from 'bows'
 import { utils as vizUtils } from 'tidepool-viz'
 import {
-  AverageDailyDoseStat,
-  CBGMeanStat,
-  CBGStandardDeviation,
   CBGStatType,
   LoopModeStat,
-  SimpleStat,
-  TotalCarbsStat,
-  TotalInsulinStat
+  SimpleStat
 } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
 import Divider from '@mui/material/Divider'
-
-const WEIGHT_PARAM = 'WEIGHT'
-const WEIGHT_PARAM_DEFAULT_VALUE = -1
 
 class Stats extends React.Component {
   static propTypes = {
@@ -95,87 +87,31 @@ class Stats extends React.Component {
       : false
   }
 
-  getStatElementById(stat, bgClasses) {
-    const { parametersConfig } = this.props
-    switch (stat.id) {
-      case CBGStatType.TimeInAuto:
-        return (
-          <LoopModeStat
-            annotations={stat.annotations}
-            automated={stat.data.raw.automated}
-            manual={stat.data.raw.manual}
-            title={stat.title}
-            total={stat.data.total.value}
-          />
-        )
-      case CBGStatType.TotalInsulin:
-        return (
-          <TotalInsulinStat
-            annotations={stat.annotations}
-            data={stat.data.data}
-            title={stat.title}
-            total={Math.round(stat.data.total.value * 10) / 10}
-          />
-        )
-      case CBGStatType.Carbs:
-        return (
-          <TotalCarbsStat
-            annotations={stat.annotations}
-            foodCarbs={stat.data.raw.foodCarbs}
-            title={stat.title}
-            totalCarbs={stat.data.raw.totalCarbs}
-          />
-        )
-      case CBGStatType.AverageGlucose:
-        return (
-          <CBGMeanStat
-            bgClasses={bgClasses}
-            title={stat.title}
-            tooltipValue={stat.annotations[0]}
-            units={stat.units}
-            value={Math.round(stat.data.raw.averageGlucose)}
-          />
-        )
-      case CBGStatType.StandardDeviation:
-        return (
-          <CBGStandardDeviation
-            annotations={stat.annotations}
-            averageGlucose={Math.round(stat.data.raw.averageGlucose)}
-            bgClasses={bgClasses}
-            standardDeviation={Math.round(stat.data.raw.standardDeviation)}
-            title={stat.title}
-            units={stat.units}
-          />
-        )
-      case CBGStatType.AverageDailyDose: {
-        const weightParam = parametersConfig?.find(param => param.name === WEIGHT_PARAM)
-        const weight = weightParam ? Number(weightParam?.value) : WEIGHT_PARAM_DEFAULT_VALUE
-        return (
-          <AverageDailyDoseStat
-            annotations={stat.annotations}
-            dailyDose={stat.data.data[0].value}
-            footerLabel={stat.data.data[0].output.label}
-            title={stat.title}
-            weight={weight}
-            weightSuffix={stat.data.data[0].input.suffix}
-          />
-        )
-      }
-      default: {
-        if (stat.type !== vizUtils.stat.statTypes.simple) {
-          throw Error(`Unexpected stat id ${stat.id} and type ${stat.type}`)
-        }
-        return (
-          <SimpleStat
-            annotations={stat.annotations}
-            summaryFormat={stat.dataFormat.summary}
-            title={stat.title}
-            total={stat.data.total?.value}
-            value={stat.data.data[0].value}
-          />
-        )
-      }
+  getStatElementById(stat) {
+    if (stat.id === CBGStatType.TimeInAuto) {
+      return (
+        <LoopModeStat
+          annotations={stat.annotations}
+          automated={stat.data.raw.automated}
+          manual={stat.data.raw.manual}
+          title={stat.title}
+          total={stat.data.total.value}
+        />
+      )
     }
+    if (stat.type !== vizUtils.stat.statTypes.simple) {
+      throw Error(`Unexpected stat id ${stat.id} and type ${stat.type}`)
+    }
+
+    return (
+      <SimpleStat
+        annotations={stat.annotations}
+        summaryFormat={stat.dataFormat.summary}
+        title={stat.title}
+        total={stat.data.total?.value}
+        value={stat.data.data[0].value}
+      />
+    )
   }
 
   renderStats(stats) {
@@ -238,13 +174,10 @@ class Stats extends React.Component {
 
     switch (chartType) {
       case 'daily':
-        addStat(commonStats.totalInsulin)
         isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
         break
 
       case 'patientStatistics':
-        addStat(commonStats.totalInsulin)
-        addStat(commonStats.averageDailyDose)
         isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
         break
     }
