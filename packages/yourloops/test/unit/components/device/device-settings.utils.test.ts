@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { formatParameterValue } from '../../../../components/device/device-settings.utils'
+import { formatParameterValue } from '../../../../components/device/utils/device.utils'
 import { Unit } from 'medical-domain'
 
 describe('Device settings utils', () => {

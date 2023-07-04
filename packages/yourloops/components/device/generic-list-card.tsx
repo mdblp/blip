@@ -25,40 +25,57 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
-import type MedicalDataService from 'medical-domain'
-import Container from '@mui/material/Container'
-import { useTranslation } from 'react-i18next'
-import { useTheme } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import { DeviceSettings } from '../../components/device/device-settings'
-import Typography from '@mui/material/Typography'
+import React, { type FC, type PropsWithChildren } from 'react'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
+import List from '@mui/material/List'
+import Divider from '@mui/material/Divider'
+import { type Theme, useTheme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
 
-interface DevicePageProps {
-  goToDailySpecificDate: (date: number) => void
-  medicalData: MedicalDataService
+interface GenericListCardProps extends PropsWithChildren {
+  title: string
+  ['data-testid']?: string
 }
 
-export const DevicePage: FC<DevicePageProps> = ({ medicalData, goToDailySpecificDate }) => {
-  const { t } = useTranslation()
+const useStyles = makeStyles()((theme: Theme) => ({
+  cardHeader: {
+    backgroundColor: 'var(--primary-color-background)',
+    fontSize: theme.typography.fontSize,
+    fontWeight: theme.typography.fontWeightBold
+  },
+  cardContent: {
+    fontSize: theme.typography.fontSize,
+    padding: 0,
+    '&:last-child': {
+      padding: 0
+    }
+  }
+}))
+
+export const GenericListCard: FC<GenericListCardProps> = (props) => {
   const theme = useTheme()
+  const { classes } = useStyles()
+  const { title, children } = props
 
   return (
-    <Container data-testid="device-settings-container">
-      {medicalData.grouped.pumpSettings.length > 0
-        ? <DeviceSettings
-          goToDailySpecificDate={goToDailySpecificDate}
-          medicalData={medicalData}
-        />
-        : <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          marginTop={theme.spacing(4)}
-        >
-          <Typography fontWeight={500}>{t('no-settings-on-device-alert-message')}</Typography>
-        </Box>
-      }
-    </Container>
+    <Card
+      variant="outlined"
+      sx={{ marginBottom: theme.spacing(5) }}
+      data-testid={props['data-testid']}
+    >
+      <CardHeader
+        title={title}
+        className={classes.cardHeader}
+        disableTypography
+      />
+      <CardContent className={classes.cardContent}>
+        <List disablePadding>
+          <Divider component="li" />
+          {children}
+        </List>
+      </CardContent>
+    </Card>
   )
 }

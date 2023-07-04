@@ -26,39 +26,42 @@
  */
 
 import React, { type FC } from 'react'
-import type MedicalDataService from 'medical-domain'
-import Container from '@mui/material/Container'
-import { useTranslation } from 'react-i18next'
-import { useTheme } from '@mui/material/styles'
+import { type ParametersChange, type PumpSettingsParameter } from 'medical-domain'
 import Box from '@mui/material/Box'
-import { DeviceSettings } from '../../components/device/device-settings'
-import Typography from '@mui/material/Typography'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import { useTheme } from '@mui/material/styles'
+import { formatParameterValue } from './utils/device.utils'
 
-interface DevicePageProps {
-  goToDailySpecificDate: (date: number) => void
-  medicalData: MedicalDataService
+interface ParameterChangeValueProps {
+  historyCurrentIndex: number
+  history: ParametersChange[]
+  parameter: PumpSettingsParameter
 }
 
-export const DevicePage: FC<DevicePageProps> = ({ medicalData, goToDailySpecificDate }) => {
-  const { t } = useTranslation()
+export const ParameterChangeValue: FC<ParameterChangeValueProps> = (props) => {
+  let previousParameter: PumpSettingsParameter
   const theme = useTheme()
+  const { parameter, history, historyCurrentIndex } = props
+  const filteredHistory = history.slice(historyCurrentIndex + 1)
+
+  filteredHistory.every(parametersChange => {
+    previousParameter = parametersChange.parameters.find(paramChange => paramChange.name === parameter.name)
+    return !previousParameter
+  })
 
   return (
-    <Container data-testid="device-settings-container">
-      {medicalData.grouped.pumpSettings.length > 0
-        ? <DeviceSettings
-          goToDailySpecificDate={goToDailySpecificDate}
-          medicalData={medicalData}
-        />
-        : <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          marginTop={theme.spacing(4)}
-        >
-          <Typography fontWeight={500}>{t('no-settings-on-device-alert-message')}</Typography>
-        </Box>
+    <Box
+      display="flex"
+      alignItems="center"
+      className={`${parameter.name.toLowerCase()} ${previousParameter ? 'updated-value' : 'added-value'}`}
+    >
+      {previousParameter &&
+        <>
+          <span>{`${formatParameterValue(previousParameter.value, previousParameter.unit)} ${previousParameter.unit}`}</span>
+          <ChevronRightIcon sx={{ marginInline: theme.spacing(1) }} />
+        </>
       }
-    </Container>
+      <span>{`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}</span>
+    </Box>
   )
 }

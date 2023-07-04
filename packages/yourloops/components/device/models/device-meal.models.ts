@@ -25,33 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import styles from '../diabeloop.css'
-import { type TimePrefs } from 'medical-domain'
-import { useTranslation } from 'react-i18next'
-import { HistoryTableHeader } from './history-table-header'
-import { HistoryTableContent } from './history-table-content'
-import { type ChangeDateParameterGroup } from '../../../models/historized-parameter.model'
-import type moment from 'moment-timezone'
-
-interface HistoryParameterTableProps {
-  rows: ChangeDateParameterGroup[]
-  onSwitchToDaily: (date: moment.Moment | Date | number | null) => void
-  timePrefs: TimePrefs
-}
-
-export const HistoryParameterTable: FunctionComponent<HistoryParameterTableProps> = (props) => {
-  const { t } = useTranslation('main')
-  const { rows, onSwitchToDaily, timePrefs } = props
-
-  return (
-    <table className={styles.settingsTable} data-testid="history-parameter-table">
-      <caption className={styles.bdlgSettingsHeader}>
-        {t('Parameters History')}
-        <span className={styles.secondaryLabelWithMain} />
-      </caption>
-      <HistoryTableHeader />
-      <HistoryTableContent rows={rows} onSwitchToDaily={onSwitchToDaily} timePrefs={timePrefs} />
-    </table>
-  )
+export enum DeviceMeals {
+  Breakfast = 'BREAKFAST',
+  Dinner = 'DINNER',
+  Lunch = 'LUNCH'
 }

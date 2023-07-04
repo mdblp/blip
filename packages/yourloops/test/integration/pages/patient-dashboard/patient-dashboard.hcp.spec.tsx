@@ -178,7 +178,7 @@ describe('Patient dashboard for HCP', () => {
     await testDashboardDataVisualisationSixteenDaysOldData()
   })
 
-  it('should produce fourteen days old statistics when data is sixteen days old', async () => {
+  it('should produce fourteen days old statistics when data is two weeks old', async () => {
     mockDataAPI(twoWeeksOldDashboardData)
 
     await act(async () => {

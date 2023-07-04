@@ -8,18 +8,22 @@
   --success-color-main: #21c6b6;
   --success-color-light: #59d4c8;
   --success-color-dark: #178a7f;
+  --success-color-background: #E9F9F8;
 
   --error-color-main: #e12a4e;
   --error-color-light: #e85f7a;
   --error-color-dark: #9d1d36;
+  --error-color-background: #FCEAED;
 
   --warning-color-main: #f28b2d;
   --warning-color-light: #f5a861;
   --warning-color-dark: #a9611f;
+  --warning-color-background: #FEF3EA;
 
   --info-color-main: #009bd6;
   --info-color-light: #40bae9;
   --info-color-dark: #006c95;
+  --info-color-background: #E6F6FD;
 
   /* Components */
   --card-header-background-color: #eee;
@@ -33,6 +37,7 @@
   --primary-color-light: #40bae9;
   --primary-color-dark: #006c95;
   --primary-color-contrast-text: #fff;
+  --primary-color-background: #E6F6FD;
   --logo-color: #00a3e2;
 
   --secondary-color-main: #edfaff;
@@ -49,6 +54,7 @@
   --primary-color-light: #eb4799;
   --primary-color-dark: #a11159;
   --primary-color-contrast-text: #fff;
+  --primary-color-background: #FDE8F2;
   --logo-color: #e72980;
 
   --secondary-color-main: #ffedf6;

@@ -27,7 +27,7 @@
 
 import { t } from './language'
 import metrics from './metrics'
-import moment from 'moment-timezone'
+import moment, { type LongDateFormatKey } from 'moment-timezone'
 import { type IUser } from './data/models/i-user.model'
 import { type Settings } from './auth/models/settings.model'
 import { CountryCodes } from './auth/models/country.model'
@@ -153,8 +153,8 @@ export function setPageTitle(prefix?: string, metricsTitle?: string): void {
   }
 }
 
-export function formatDateWithMomentLongFormat(date?: Date): string {
-  return moment.utc(date).format(moment.localeData().longDateFormat('ll')).toString()
+export function formatDateWithMomentLongFormat(date?: Date, key: LongDateFormatKey = 'll'): string {
+  return moment.utc(date).format(moment.localeData().longDateFormat(key)).toString()
 }
 
 export function isEllipsisActive(element: HTMLElement | null): boolean | undefined {
