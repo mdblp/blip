@@ -35,6 +35,7 @@ import { type GlycemiaIndicators } from './glycemia-indicators.model'
 import { type MedicalData } from '../../data/models/medical-data.model'
 
 export interface Patient extends Partial<PatientMetrics> {
+  readonly userid: string
   profile: PatientProfile
   settings: PatientSettings
   monitoringAlertsParameters?: MonitoringAlertsParameters
@@ -42,12 +43,11 @@ export interface Patient extends Partial<PatientMetrics> {
   invite?: PatientInvite
   hasSentUnreadMessages: boolean
   flagged?: boolean
-  readonly userid: string
 }
 
 export interface PatientMetrics {
   readonly userid: string
-  monitoringAlerts: MonitoringAlerts
+  monitoringAlerts?: MonitoringAlerts
   glycemiaIndicators: GlycemiaIndicators
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
   medicalData?: MedicalData | null

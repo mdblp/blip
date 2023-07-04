@@ -45,7 +45,13 @@ import {
   sortByMonitoringAlertsCount,
   sortByUserName
 } from '../utils/sort-comparators.util'
-import { ActionsCell, FlagIconCell, MessageCell, MonitoringAlertsCell } from '../custom-cells'
+import {
+  ActionsCell,
+  FlagIconCell,
+  MessageCell,
+  MonitoringAlertsCell,
+  MonitoringAlertsSkeletonCell
+} from '../custom-cells'
 import { getUserName } from '../../../lib/auth/user.util'
 import Box from '@mui/material/Box'
 import { formatBirthdate } from 'dumb'
@@ -170,7 +176,9 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         width: 150,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
           const patient = params.value
-          return <MonitoringAlertsCell patient={patient} />
+          const isLoading = !patient.monitoringAlertsParameters || !patient.monitoringAlerts
+
+          return isLoading ? <MonitoringAlertsSkeletonCell /> : <MonitoringAlertsCell patient={patient} />
         }
       },
       {

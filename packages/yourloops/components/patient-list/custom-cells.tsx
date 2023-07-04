@@ -33,7 +33,6 @@ import Tooltip from '@mui/material/Tooltip'
 import { useTranslation } from 'react-i18next'
 import IconActionButton from '../buttons/icon-action'
 import PersonRemoveIcon from '../icons/mui/person-remove-icon'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import FlagIcon from '@mui/icons-material/Flag'
 import FlagOutlineIcon from '@mui/icons-material/FlagOutlined'
 import { type Patient } from '../../lib/patient/models/patient.model'
@@ -103,18 +102,30 @@ export const FlagIconCell: FunctionComponent<FlagCellProps> = ({ isFlagged, pati
   )
 }
 
-export const PendingIconCell: FunctionComponent = () => {
-  const { t } = useTranslation()
+export const MonitoringAlertsSkeletonCell: FunctionComponent = () => {
+  const theme = useTheme()
 
   return (
-    <Tooltip
-      title={t('pending-invite')}
-      aria-label={t('pending-invite')}
-    >
-      <Box display="flex">
-        <AccessTimeIcon titleAccess={t('pending-invite')} />
-      </Box>
-    </Tooltip>
+    <>
+      <Skeleton
+        variant="circular"
+        width={ICON_SIZE_PX}
+        height={ICON_SIZE_PX}
+        sx={{ marginRight: theme.spacing(1) }}
+      />
+      <Skeleton
+        variant="circular"
+        width={ICON_SIZE_PX}
+        height={ICON_SIZE_PX}
+        sx={{ marginRight: theme.spacing(1) }}
+      />
+      <Skeleton
+        variant="circular"
+        width={ICON_SIZE_PX}
+        height={ICON_SIZE_PX}
+        sx={{ marginRight: theme.spacing(1) }}
+      />
+    </>
   )
 }
 
@@ -133,21 +144,21 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
   const buildTooltipValues = (): MonitoringAlertsTooltips => {
     if (unit === monitoringAlertsParameters.bgUnit) {
       return {
-        timeSpentAwayFromTargetRate: roundUpToOneDecimal(monitoringAlerts?.timeSpentAwayFromTargetRate),
-        frequencyOfSevereHypoglycemiaRate: roundUpToOneDecimal(monitoringAlerts?.frequencyOfSevereHypoglycemiaRate),
-        nonDataTransmissionRate: roundUpToOneDecimal(monitoringAlerts?.nonDataTransmissionRate),
-        min: roundUpToOneDecimal(monitoringAlertsParameters?.lowBg),
-        max: roundUpToOneDecimal(monitoringAlertsParameters?.highBg),
-        veryLowBg: roundUpToOneDecimal(monitoringAlertsParameters?.veryLowBg)
+        timeSpentAwayFromTargetRate: roundUpToOneDecimal(monitoringAlerts.timeSpentAwayFromTargetRate),
+        frequencyOfSevereHypoglycemiaRate: roundUpToOneDecimal(monitoringAlerts.frequencyOfSevereHypoglycemiaRate),
+        nonDataTransmissionRate: roundUpToOneDecimal(monitoringAlerts.nonDataTransmissionRate),
+        min: roundUpToOneDecimal(monitoringAlertsParameters.lowBg),
+        max: roundUpToOneDecimal(monitoringAlertsParameters.highBg),
+        veryLowBg: roundUpToOneDecimal(monitoringAlertsParameters.veryLowBg)
       }
     }
     return {
-      timeSpentAwayFromTargetRate: roundUpToOneDecimal(monitoringAlerts?.timeSpentAwayFromTargetRate),
-      frequencyOfSevereHypoglycemiaRate: roundUpToOneDecimal(monitoringAlerts?.frequencyOfSevereHypoglycemiaRate),
-      nonDataTransmissionRate: roundUpToOneDecimal(monitoringAlerts?.nonDataTransmissionRate),
-      min: convertBG(monitoringAlertsParameters?.lowBg, monitoringAlertsParameters?.bgUnit),
-      max: convertBG(monitoringAlertsParameters?.highBg, monitoringAlertsParameters?.bgUnit),
-      veryLowBg: convertBG(monitoringAlertsParameters?.veryLowBg, monitoringAlertsParameters?.bgUnit)
+      timeSpentAwayFromTargetRate: roundUpToOneDecimal(monitoringAlerts.timeSpentAwayFromTargetRate),
+      frequencyOfSevereHypoglycemiaRate: roundUpToOneDecimal(monitoringAlerts.frequencyOfSevereHypoglycemiaRate),
+      nonDataTransmissionRate: roundUpToOneDecimal(monitoringAlerts.nonDataTransmissionRate),
+      min: convertBG(monitoringAlertsParameters.lowBg, monitoringAlertsParameters.bgUnit),
+      max: convertBG(monitoringAlertsParameters.highBg, monitoringAlertsParameters.bgUnit),
+      veryLowBg: convertBG(monitoringAlertsParameters.veryLowBg, monitoringAlertsParameters.bgUnit)
     }
   }
 
@@ -160,102 +171,73 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
     veryLowBg
   } = buildTooltipValues()
 
-  const isTimeSpentAwayFromTargetAlertActive = monitoringAlerts?.timeSpentAwayFromTargetActive
-  const isFrequencyOfSevereHypoglycemiaAlertActive = monitoringAlerts?.frequencyOfSevereHypoglycemiaActive
-  const isNonDataTransmissionAlertActive = monitoringAlerts?.nonDataTransmissionActive
+  const isTimeSpentAwayFromTargetAlertActive = monitoringAlerts.timeSpentAwayFromTargetActive
+  const isFrequencyOfSevereHypoglycemiaAlertActive = monitoringAlerts.frequencyOfSevereHypoglycemiaActive
+  const isNonDataTransmissionAlertActive = monitoringAlerts.nonDataTransmissionActive
   const sharedTooltip = t('monitoring-alerts-shared-tooltip')
-
-  const isLoading = !monitoringAlerts
 
   return (
     <>
-      {isLoading
-        ? <Skeleton
-          data-testid="time-out-of-range-icon-skeleton"
-          variant="circular"
-          width={ICON_SIZE_PX}
-          height={ICON_SIZE_PX}
-          sx={{ marginRight: theme.spacing(1) }}
+      <Tooltip
+        title={
+          <>
+            <Box>{t('time-out-of-range-target-tooltip1', { percentage: timeSpentAwayFromTargetRate })}</Box>
+            <Box>
+              {t('time-out-of-range-target-tooltip2', {
+                min,
+                max,
+                threshold: monitoringAlertsParameters.outOfRangeThreshold,
+                unit
+              })}
+            </Box>
+            <Box>{sharedTooltip}</Box>
+          </>
+        }
+        data-testid="time-spent-out-of-range-icon-tooltip"
+      >
+        <TimeSpentOufOfRangeIcon
+          color={isTimeSpentAwayFromTargetAlertActive ? 'inherit' : 'disabled'}
+          data-testid="time-spent-out-of-range-icon"
         />
-        : <Tooltip
-          title={
-            <>
-              <Box>{t('time-out-of-range-target-tooltip1', { percentage: timeSpentAwayFromTargetRate })}</Box>
-              <Box>
-                {t('time-out-of-range-target-tooltip2', {
-                  min,
-                  max,
-                  threshold: monitoringAlertsParameters.outOfRangeThreshold,
-                  unit
-                })}
-              </Box>
-              <Box>{sharedTooltip}</Box>
-            </>
-          }
-          data-testid="time-spent-out-of-range-icon-tooltip"
-        >
-          <TimeSpentOufOfRangeIcon
-            color={isTimeSpentAwayFromTargetAlertActive ? 'inherit' : 'disabled'}
-            data-testid="time-spent-out-of-range-icon"
-          />
-        </Tooltip>
-      }
+      </Tooltip>
 
-      {isLoading
-        ? <Skeleton
-          data-testid="hypoglycemia-icon-skeleton"
-          variant="circular"
-          width={ICON_SIZE_PX}
-          height={ICON_SIZE_PX}
-          sx={{ marginRight: theme.spacing(1) }}
+      <Tooltip
+        title={
+          <>
+            <Box>{t('hypoglycemia-tooltip1', { percentage: frequencyOfSevereHypoglycemiaRate })}</Box>
+            <Box>
+              {t('hypoglycemia-tooltip2', {
+                veryLowBg,
+                threshold: monitoringAlertsParameters.hypoThreshold,
+                unit
+              })}
+            </Box>
+            <Box>{sharedTooltip}</Box>
+          </>
+        }
+      >
+        <HypoglycemiaIcon
+          sx={{ marginLeft: theme.spacing(1) }}
+          color={isFrequencyOfSevereHypoglycemiaAlertActive ? 'error' : 'disabled'}
+          data-testid="hypoglycemia-icon"
         />
-        : <Tooltip
-          title={
-            <>
-              <Box>{t('hypoglycemia-tooltip1', { percentage: frequencyOfSevereHypoglycemiaRate })}</Box>
-              <Box>
-                {t('hypoglycemia-tooltip2', {
-                  veryLowBg,
-                  threshold: monitoringAlertsParameters.hypoThreshold,
-                  unit
-                })}
-              </Box>
-              <Box>{sharedTooltip}</Box>
-            </>
-          }
-        >
-          <HypoglycemiaIcon
-            sx={{ marginLeft: theme.spacing(1) }}
-            color={isFrequencyOfSevereHypoglycemiaAlertActive ? 'error' : 'disabled'}
-            data-testid="hypoglycemia-icon"
-          />
-        </Tooltip>
-      }
+      </Tooltip>
 
-      {isLoading
-        ? <Skeleton
-          data-testid="data-not-transmitted-icon-skeleton"
-          variant="circular"
-          width={ICON_SIZE_PX}
-          height={ICON_SIZE_PX}
-          sx={{ marginRight: theme.spacing(1) }}
+      <Tooltip
+        title={
+          <>
+            <Box>{t('data-not-transmitted-tooltip1', { percentage: nonDataTransmissionRate })}</Box>
+            <Box>{t('data-not-transmitted-tooltip2', { threshold: monitoringAlertsParameters.nonDataTxThreshold })}</Box>
+            <Box>{sharedTooltip}</Box>
+          </>
+        }
+      >
+        <NoDataIcon
+          sx={{ marginLeft: theme.spacing(1) }}
+          color={isNonDataTransmissionAlertActive ? 'inherit' : 'disabled'}
+          data-testid="no-data-icon"
         />
-        : <Tooltip
-          title={
-            <>
-              <Box>{t('data-not-transmitted-tooltip1', { percentage: nonDataTransmissionRate })}</Box>
-              <Box>{t('data-not-transmitted-tooltip2', { threshold: monitoringAlertsParameters.nonDataTxThreshold })}</Box>
-              <Box>{sharedTooltip}</Box>
-            </>
-          }
-        >
-          <NoDataIcon
-            sx={{ marginLeft: theme.spacing(1) }}
-            color={isNonDataTransmissionAlertActive ? 'inherit' : 'disabled'}
-            data-testid="no-data-icon"
-          />
-        </Tooltip>
-      }
+      </Tooltip>
     </>
   )
 }
