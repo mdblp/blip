@@ -245,7 +245,6 @@
   "compute-ndays-time-in-range": "**Wie wir das berechnen:**\n\n**(%)** ist die Anzahl der Messwerte in diesem Bereich, dividiert durch alle Messwerte für diesen Zeitraum.\n\n**(Zeitraum)** ist die Anzahl der Messwerte in diesem Bereich multipliziert mit der {{cbgLabel}} Messfrequenz.",
   "compute-oneday-time-in-auto": "**Wie wir das berechnen:**\n\n**(%)** ist die Zeit, in der der Loop-Modus aktiviert (ON) oder deaktiviert (OFF) war, dividiert durch die Gesamtzeit, in der während dieses Zeitraums Basalinsulin abgegeben wurde.\n\n**(Dauer)** ist 24 Stunden multipliziert mit % im Loop-Modus ON oder OFF.",
   "compute-oneday-time-in-range": "**Wie wir das berechnen:**\n\n**(%)** ist die Anzahl der Messwerte im Bereich dividiert durch alle Messwerte für diesen Zeitraum.\n\n**(Zeitraum)** ist 24 Stunden multipliziert mit % im Bereich.",
-  "compute-total-insulin": "**Wie wir das berechnen:**\n\n**(%)** ist Summe der Basal- oder Bolusabgabe dividiert durch das für diesen Zeitraum insgesamt abgegebene Insulin.",
   "custom": "benutzerdefiniert",
   "date-format": "ll",
   "day": "Tag",
