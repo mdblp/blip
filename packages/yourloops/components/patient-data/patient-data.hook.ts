@@ -33,7 +33,7 @@ import { useLocation, useNavigate, useParams, useSearchParams } from 'react-rout
 import { useAuth } from '../../lib/auth'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
 import type MedicalDataService from 'medical-domain'
-import { defaultBgClasses, type TimePrefs, TimeService, Unit } from 'medical-domain'
+import { defaultBgClasses, TimeService, Unit, type TimePrefs } from 'medical-domain'
 import { type MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
 import { isValidDateQueryParam, PatientDataUtils } from './patient-data.utils'
 import DataUtil from 'tidepool-viz/src/utils/data'
@@ -65,7 +65,6 @@ export interface usePatientDataResult {
 }
 
 const DATE_QUERY_PARAM_KEY = 'date'
-const FOURTEEN_DAYS_IN_MS = TimeService.MS_IN_DAY * 14
 const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
 export const usePatientData = (): usePatientDataResult => {
@@ -77,7 +76,6 @@ export const usePatientData = (): usePatientDataResult => {
   const { getPatientById } = usePatientsContext()
   const patientHook = usePatientContext()
   const [searchParams, setSearchParams] = useSearchParams()
-
   const dailyChartRef = useRef(null)
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
   const isUserPatient = user.isUserPatient()
@@ -142,14 +140,13 @@ export const usePatientData = (): usePatientDataResult => {
     }
   }, [pathname, urlPrefix])
 
-  const [msRange, setMsRange] = useState<number>(currentChart === ChartTypes.Dashboard ? FOURTEEN_DAYS_IN_MS : DEFAULT_MS_RANGE)
+  const [msRange, setMsRange] = useState<number>(DEFAULT_MS_RANGE)
 
   const changePatient = (patient: Patient): void => {
     patientDataUtils.current.changePatient(patient)
     setMedicalData(null)
     navigate(`/patient/${patient.userid}/${currentChart}`)
   }
-
   const changeChart = (chart: ChartTypes): void => {
     if (chart === currentChart) {
       return
@@ -157,7 +154,7 @@ export const usePatientData = (): usePatientDataResult => {
     switch (chart) {
       case ChartTypes.Dashboard:
         setDashboardEpochDate(new Date().valueOf())
-        setMsRange(FOURTEEN_DAYS_IN_MS)
+        setMsRange(patientDataUtils.current.getRangeDaysInMs(medicalData.medicalData))
         break
       case ChartTypes.Daily:
         if (dateQueryParam) {
@@ -242,7 +239,8 @@ export const usePatientData = (): usePatientDataResult => {
         endpoints: medicalData.endpoints
       })
       const initialDate = patientDataUtils.current.getInitialDate(medicalData)
-
+      const daysInMs = patientDataUtils.current.getRangeDaysInMs(medicalData.medicalData)
+      setMsRange(daysInMs)
       setDataUtil(dataUtil)
       setMedicalData(medicalData)
       setDailyDate(dateQueryParam && isValidDateQueryParam(dateQueryParam) ? new Date(dateQueryParam).valueOf() : initialDate)

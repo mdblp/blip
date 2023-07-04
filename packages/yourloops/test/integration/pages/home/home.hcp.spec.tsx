@@ -106,7 +106,6 @@ describe('HCP home page', () => {
     }])
 
     await renderHomePage()
-
     await testPatientManagementPrivateTeam()
   })
 
@@ -118,7 +117,6 @@ describe('HCP home page', () => {
     }])
 
     await renderHomePage()
-
     await testPatientListForHcpPrivateTeam()
   })
 

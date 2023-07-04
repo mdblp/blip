@@ -34,12 +34,16 @@ import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { completeDashboardData, mockDataAPI, twoWeeksOldDashboardData } from '../../mock/data.api.mock'
+import {
+  completeDashboardData,
+  mockDataAPI, sixteenDaysOldDashboardData,
+  twoWeeksOldDashboardData
+} from '../../mock/data.api.mock'
 import { type AppMainLayoutParams, testAppMainLayoutForCaregiver } from '../../use-cases/app-main-layout-visualisation'
 import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
 import {
-  testDashboardDataVisualisationPrivateTeam,
-  testDashboardDataVisualisationWithTwoWeeksOldData
+  testDashboardDataVisualisationPrivateTeam, testDashboardDataVisualisationTwoWeeksOldData,
+  testDashboardDataVisualisationSixteenDaysOldData
 } from '../../use-cases/patient-data-visualisation'
 
 describe('Patient dashboard for caregiver', () => {
@@ -53,10 +57,10 @@ describe('Patient dashboard for caregiver', () => {
     mockDirectShareApi()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForCaregivers()
-    mockDataAPI(completeDashboardData)
   })
 
   it('should render correct components', async () => {
+    mockDataAPI(completeDashboardData)
     const appMainLayoutParams: AppMainLayoutParams = {
       footerHasLanguageSelector: false,
       loggedInUserFullName: `${firstName} ${lastName}`
@@ -83,6 +87,16 @@ describe('Patient dashboard for caregiver', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationWithTwoWeeksOldData()
+    await testDashboardDataVisualisationTwoWeeksOldData()
+  })
+
+  it('should produce fourteen days old statistics when data is sixteen days old', async () => {
+    mockDataAPI(sixteenDaysOldDashboardData)
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testDashboardDataVisualisationSixteenDaysOldData()
   })
 })

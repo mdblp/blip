@@ -27,8 +27,19 @@
 
 import { act, waitFor } from '@testing-library/react'
 import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
-import { completeDashboardData, mockDataAPI, twoWeeksOldDashboardData } from '../../mock/data.api.mock'
+import {
+  buildAvailableTeams,
+  mockTeamAPI,
+  myThirdTeamId,
+  myThirdTeamName
+} from '../../mock/team.api.mock'
+import {
+  completeDashboardData,
+  dataSetsWithZeroValues,
+  mockDataAPI,
+  sixteenDaysOldDashboardData,
+  twoWeeksOldDashboardData
+} from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { patient1, patient1Id, patientWithMmolId } from '../../data/patient.api.data'
 import { mockChatAPI } from '../../mock/chat.api.mock'
@@ -47,9 +58,9 @@ import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-
 import {
   testDashboardDataVisualisationForHcp,
   testDashboardDataVisualisationPrivateTeamNoData,
-  testDashboardDataVisualisationWithTwoWeeksOldData,
-  testEmptyMedicalFilesWidgetForHcp,
-  testPatientNavBarForHcp,
+  testDashboardDataVisualisationTwoWeeksOldData,
+  testDashboardDataVisualisationSixteenDaysOldData,
+  testEmptyMedicalFilesWidgetForHcp, testPatientNavBarForHcp,
   testSwitchPatientCorrectDataDisplay
 } from '../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
@@ -141,8 +152,6 @@ describe('Patient dashboard for HCP', () => {
   })
 
   it('should be able to manage monitoring alerts parameters', async () => {
-    mockDataAPI(completeDashboardData)
-
     await act(async () => {
       renderPage(patientDashboardRoute)
     })
@@ -151,8 +160,6 @@ describe('Patient dashboard for HCP', () => {
   })
 
   it('should be able to use chat widget', async () => {
-    mockDataAPI(completeDashboardData)
-
     await act(async () => {
       renderPage(patientDashboardRoute)
     })
@@ -160,34 +167,34 @@ describe('Patient dashboard for HCP', () => {
     await testChatWidgetForHcp()
   })
 
-  it('should render correct statistic when data is two weeks old', async () => {
+  it('should return correct statistics when data is sixteen days old', async () => {
+    mockDataAPI(sixteenDaysOldDashboardData)
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testDashboardDataVisualisationSixteenDaysOldData()
+  })
+
+  it('should produce fourteen days old statistics when data is two weeks old', async () => {
     mockDataAPI(twoWeeksOldDashboardData)
 
     await act(async () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationWithTwoWeeksOldData()
+    await testDashboardDataVisualisationTwoWeeksOldData()
   })
 
-  it('should render correct components when navigating to a patient scoped on the private team', async () => {
+  it('should render correct components when patient is in no medical teams', async () => {
+    mockDataAPI(dataSetsWithZeroValues)
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
       ...patient1,
       invitationStatus: UserInviteStatus.Accepted
     }])
 
-    const appMainLayoutParams: AppMainLayoutHcpParams = {
-      footerHasLanguageSelector: false,
-      headerInfo: {
-        loggedInUserFullName: `${firstName} ${lastName}`,
-        teamMenuInfo: {
-          selectedTeamName: PRIVATE_TEAM_ID,
-          isSelectedTeamPrivate: true,
-          availableTeams: buildAvailableTeams()
-        }
-      }
-    }
     const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
       isChatCardVisible: false,
       isMedicalFilesCardVisible: false,
@@ -198,7 +205,6 @@ describe('Patient dashboard for HCP', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testAppMainLayoutForHcp(appMainLayoutParams)
     await testDashboardDataVisualisationPrivateTeamNoData(patientDashboardLayoutParams)
   })
 

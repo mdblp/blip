@@ -61,7 +61,11 @@ export const testDashboardDataVisualisationForPatient = async (patientDashboardL
   await checkDeviceUsageWidget()
 }
 
-export const testDashboardDataVisualisationWithTwoWeeksOldData = async () => {
+export const testDashboardDataVisualisationSixteenDaysOldData = async () => {
+  await checkPatientStatisticsWithTwoWeeksOldData()
+}
+
+export const testDashboardDataVisualisationTwoWeeksOldData = async () => {
   await checkPatientStatisticsWithTwoWeeksOldData()
   await checkDeviceUsageWidgetWithTwoWeeksOldData()
 }

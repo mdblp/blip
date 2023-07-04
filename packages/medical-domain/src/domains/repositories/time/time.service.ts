@@ -37,10 +37,12 @@ interface NormalizedTime {
   displayOffset: number
   normalTime: string
 }
+
 interface NormalizedEndTime {
   epochEnd: number
   normalEnd: string
 }
+
 interface TrendsTime {
   localDate: string
   isoWeekday: WeekDays
@@ -125,9 +127,9 @@ function getWeekDay(mTime: moment.Moment): WeekDays {
 export function getTrendsTime(epoch: number, timezone: string): TrendsTime {
   const mTime = moment.tz(epoch, timezone)
   const msPer24 = mTime.hours() * 1000 * 60 * 60 +
-                  mTime.minutes() * 1000 * 60 +
-                  mTime.seconds() * 1000 +
-                  mTime.milliseconds()
+    mTime.minutes() * 1000 * 60 +
+    mTime.seconds() * 1000 +
+    mTime.milliseconds()
   return {
     localDate: mTime.format('YYYY-MM-DD'),
     isoWeekday: getWeekDay(mTime),
@@ -154,7 +156,10 @@ export function format(epoch: number, timezone: string, strFormat: string): stri
   return moment.tz(epoch, timezone).format(strFormat)
 }
 
-export function findBasicsDays(firstEpoch: number, firstTimezone: string, lastEpoch: number, lastTimezone: string, fullWeeks: boolean = false): Array<{ date: string, type: string }> {
+export function findBasicsDays(firstEpoch: number, firstTimezone: string, lastEpoch: number, lastTimezone: string, fullWeeks: boolean = false): Array<{
+  date: string
+  type: string
+}> {
   const first = moment.tz(firstEpoch, firstTimezone)
   const last = moment.tz(lastEpoch, lastTimezone)
 
@@ -185,11 +190,12 @@ export function twoWeeksAgo(time: string | number, timezone: string): number {
   const mTime = moment.tz(time, timezone)
   return mTime.startOf('week').subtract(2, 'weeks').valueOf()
 }
+
 /**
-   * setTimeout() as promised
-   * @param {number} timeout in milliseconds
-   * @returns Promise<void>
-   */
+ * setTimeout() as promised
+ * @param {number} timeout in milliseconds
+ * @returns Promise<void>
+ */
 export async function waitTimeout(timeout: number): Promise<void> {
   await new Promise(resolve => setTimeout(resolve, timeout))
 }
@@ -199,7 +205,7 @@ export const isEpochBetweenBounds = (epoch: number, start: number, end: number):
 )
 
 export function diffDays(start: number, end: number): number {
-  return moment.utc(end).diff(moment.utc(start)) / MS_IN_DAY
+  return Math.round(moment.utc(end).diff(moment.utc(start)) / MS_IN_DAY)
 }
 
 export function getNumberOfDays(start: number, end: number, daysFilter?: WeekDaysFilter): number {
@@ -208,6 +214,7 @@ export function getNumberOfDays(start: number, end: number, daysFilter?: WeekDay
     return totalDays
   }
   const firstDay = moment.utc(start)
+
   return [...Array(totalDays).keys()].reduce((count, dayOffset) => {
     const currentDay = moment(firstDay).add(dayOffset, 'days')
     const weekDay = getWeekDay(currentDay)
