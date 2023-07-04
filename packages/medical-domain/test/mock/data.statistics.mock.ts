@@ -33,7 +33,6 @@ const abbottDevice = 'AbbottFreeStyleLibre-XXX-XXXX'
 const dexcomDevice = 'Dexcom-XXX-XXXX'
 export const MS_IN_HOUR = 864e5 / 24
 
-export const MS_IN_HOUR = 864e5 / 24
 export const bgDataSourceOneDay: Array<[Date, string]> = [
   // data for one day and two days tests
   [new Date('2018-02-01T00:00:00.000Z'), abbottDevice],
@@ -108,26 +107,7 @@ export const buildBasalsData = (basalsData: Array<[Date, number, number, string]
     }
   ))
 )
-export const buildBolusData = (bolusData: Array<[Date, number]>): Bolus[] => (
-  bolusData.map((bolus) => (
-    {
-      ...createRandomBolus(bolus[0]),
-      normal: bolus[1]
-    }
-  ))
-)
 
-export const buildBasalsData = (basalsData: Array<[Date, number, number, string]>): Basal[] => (
-  basalsData.map((basals) => (
-    {
-      ...createRandomBasal(basals[0], basals[2]),
-      rate: basals[1],
-      duration: basals[2],
-      deliveryType: basals[3],
-      subType: basals[3]
-    }
-  ))
-)
 export const buildBolusData = (bolusData: Array<[Date, number]>): Bolus[] => (
   bolusData.map((bolus) => (
     {
