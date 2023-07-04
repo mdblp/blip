@@ -36,12 +36,11 @@ import DirectShareApi from '../share/direct-share.api'
 import { useAuth } from '../auth'
 import { errorTextFromException } from '../utils'
 import { type PatientsContextResult } from './models/patients-context-result.model'
-import { type Patient, type PatientMetrics } from './models/patient.model'
+import { type Patient } from './models/patient.model'
 import { useSelectedTeamContext } from '../selected-team/selected-team.provider'
 import { usePatientListContext } from '../providers/patient-list.provider'
 import { useAlert } from '../../components/utils/snackbar'
 import TeamUtils from '../team/team.util'
-import { UserInviteStatus } from '../team/models/enums/user-invite-status.enum'
 
 export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const { cancel: cancelInvite } = useNotification()
@@ -84,25 +83,12 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   }, [user, selectedTeam])
 
   const fetchPatientsMetrics = async (allPatients: Patient[], teamId: string = selectedTeamId): Promise<void> => {
-    const acceptedInvitePatients = allPatients.filter((patient: Patient) => patient.invitationStatus === UserInviteStatus.Accepted)
-    if (!acceptedInvitePatients.length) {
+    const metrics = await PatientUtils.fetchMetrics(allPatients, teamId, user.id)
+    if (!metrics) {
       return
     }
 
-    const patientIds = acceptedInvitePatients.map((patient: Patient) => patient.userid)
-
-    const patientsMetrics = await PatientApi.getPatientsMetricsForHcp(user.id, teamId, patientIds)
-
-    const updatedPatients = allPatients.map((patient: Patient) => {
-      const relatedMetrics = patientsMetrics.find((metrics: PatientMetrics) => metrics.userid === patient.userid)
-      if (!relatedMetrics) {
-        return patient
-      }
-      patient.glycemiaIndicators = relatedMetrics.glycemiaIndicators
-      patient.monitoringAlerts = relatedMetrics.monitoringAlerts
-      patient.medicalData = relatedMetrics.medicalData
-      return patient
-    })
+    const updatedPatients = PatientUtils.getUpdatedPatientsWithMetrics(allPatients, metrics)
     setPatients(updatedPatients)
   }
 

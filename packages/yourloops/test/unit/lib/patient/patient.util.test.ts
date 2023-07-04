@@ -32,6 +32,7 @@ import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-
 import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 import { type User } from '../../../../lib/auth'
+import PatientApi from '../../../../lib/patient/patient.api'
 
 const defaultMonitoringAlerts = {
   timeSpentAwayFromTargetRate: 10,
@@ -349,6 +350,87 @@ describe('Patient utils', () => {
 
       const result = PatientUtils.mapUserToPatient(user)
       expect(result.profile.sex).toEqual(Gender.NotDefined)
+    })
+  })
+
+  describe('fetchMetrics', () => {
+    it('should not perform an API call if there is no patient in the team', async () => {
+      jest.spyOn(PatientApi, 'getPatientsMetricsForHcp')
+      const patients = []
+
+      const result = await PatientUtils.fetchMetrics(patients, 'team-id', 'user-id')
+      expect(result).toEqual(undefined)
+      expect(PatientApi.getPatientsMetricsForHcp).not.toHaveBeenCalled()
+    })
+
+    it('should not perform an API call if there are only pending patients in the team', async () => {
+      jest.spyOn(PatientApi, 'getPatientsMetricsForHcp')
+      const patients = [
+        { userid: 'pending-patient-1', invitationStatus: UserInviteStatus.Pending },
+        { userid: 'pending-patient-2', invitationStatus: UserInviteStatus.Pending }
+      ] as Patient[]
+
+      const result = await PatientUtils.fetchMetrics(patients, 'team-id', 'user-id')
+      expect(result).toEqual(undefined)
+      expect(PatientApi.getPatientsMetricsForHcp).not.toHaveBeenCalled()
+    })
+
+    it('should perform an API call for the non-pending patients in the team and return their metrics', async () => {
+      const acceptedPatientId = 'accepted-patient'
+      const userId = 'user-id'
+      const teamId = 'team-id'
+      const patientMetrics = {
+        userid: acceptedPatientId,
+        glycemiaIndicators: {
+          glucoseManagementIndicator: 1,
+          coefficientOfVariation: 2,
+          hypoglycemia: 3,
+          timeInRange: 4
+        },
+        monitoringAlerts: defaultMonitoringAlerts,
+        medicalData: { data: [] }
+      }
+      jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockResolvedValue([patientMetrics])
+      const patients = [
+        { userid: 'pending-patient-1', invitationStatus: UserInviteStatus.Pending },
+        { userid: 'pending-patient-2', invitationStatus: UserInviteStatus.Pending },
+        { userid: acceptedPatientId, invitationStatus: UserInviteStatus.Accepted }
+      ] as Patient[]
+
+      const result = await PatientUtils.fetchMetrics(patients, teamId, userId)
+      expect(result).toEqual([patientMetrics])
+      expect(PatientApi.getPatientsMetricsForHcp).toHaveBeenCalledWith(userId, teamId, [acceptedPatientId])
+    })
+  })
+
+  describe('getUpdatedPatientsWithMetrics', () => {
+    it('should update only the patients having metrics', () => {
+      const pendingPatient = { userid: 'pending-patient', invitationStatus: UserInviteStatus.Pending } as Patient
+      const acceptedPatient = { userid: 'accepted-patient', invitationStatus: UserInviteStatus.Accepted } as Patient
+
+      const patientMetrics = {
+        userid: acceptedPatient.userid,
+        glycemiaIndicators: {
+          glucoseManagementIndicator: 1,
+          coefficientOfVariation: 2,
+          hypoglycemia: 3,
+          timeInRange: 4
+        },
+        monitoringAlerts: defaultMonitoringAlerts,
+        medicalData: { data: [] }
+      }
+
+      const result = PatientUtils.getUpdatedPatientsWithMetrics([pendingPatient, acceptedPatient], [patientMetrics])
+      expect(result).toEqual([
+        pendingPatient,
+        {
+          userid: acceptedPatient.userid,
+          invitationStatus: acceptedPatient.invitationStatus,
+          glycemiaIndicators: acceptedPatient.glycemiaIndicators,
+          monitoringAlerts: acceptedPatient.monitoringAlerts,
+          medicalData: acceptedPatient.medicalData
+        }
+      ])
     })
   })
 })

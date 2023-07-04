@@ -137,7 +137,8 @@ export const hypoglycemiaPatientInfo: Patient = buildPatient({
 
 const hypoglycemiaPatientMetrics: PatientMetrics = buildPatientMetrics({
   userId: hypoglycemiaPatientId,
-  monitoringAlerts: { ...defaultMonitoringAlerts, frequencyOfSevereHypoglycemiaActive: true }
+  monitoringAlerts: { ...defaultMonitoringAlerts, frequencyOfSevereHypoglycemiaActive: true },
+  medicalData: { range: { startDate: '1980-01-01T10:44:34+01:00', endDate: '2023-01-01T10:44:34+01:00' } }
 })
 
 export const noDataTransferredPatientInfo: Patient = buildPatient({

@@ -35,7 +35,6 @@ import {
 } from '@mui/x-data-grid'
 import { useTranslation } from 'react-i18next'
 import { type GridRowModel } from '../models/grid-row.model'
-import { getMedicalValues } from '../../patient/utils'
 import { PatientListColumns } from '../models/enums/patient-list.enum'
 import PatientUtils from '../../../lib/patient/patient.util'
 import React, { useMemo } from 'react'
@@ -75,6 +74,8 @@ interface CurrentPatientListHookReturns {
 const SKELETON_PERCENTAGE_VALUE_WIDTH_PX = 50
 const SKELETON_HEIGHT_PX = 15
 
+const GLYCEMIA_INDICATOR_NO_DATA_VALUE = null
+
 export const useCurrentPatientListHook = (props: CurrentPatientListProps): CurrentPatientListHookReturns => {
   const { patients, onClickRemovePatient } = props
   const { t } = useTranslation()
@@ -88,8 +89,9 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
 
   const allRows = useMemo(() => {
     return sortedPatients.map((patient): GridRowModel => {
-      const medicalValues = getMedicalValues(patient.medicalData, noDataLabel)
-      const lastUpload = user.isUserHcp() && !patient.medicalData ? undefined : medicalValues.lastUpload
+      const lastUploadDate = PatientUtils.getLastUploadDate(patient.medicalData, noDataLabel)
+      // FIXME YLP-2460 Bug on /my-patients route: `medicalData` is never returned for caregivers
+      const lastUpload = user.isUserCaregiver() ? noDataLabel : lastUploadDate
       const birthdate = patient.profile.birthdate
       return {
         id: patient.userid,
@@ -112,7 +114,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
   }, [noDataLabel, sortedPatients, user])
 
   const isNumberValueDefined = (value: number): boolean => {
-    return !!value || value === 0 || value === null
+    return !!value || value === 0 || value === GLYCEMIA_INDICATOR_NO_DATA_VALUE
   }
 
   const allColumns = useMemo((): GridColDef[] => {

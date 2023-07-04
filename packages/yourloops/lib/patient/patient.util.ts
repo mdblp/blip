@@ -28,13 +28,14 @@
 import PatientApi from './patient.api'
 import { mapITeamMemberToPatient } from '../../components/patient/utils'
 import moment from 'moment-timezone'
-import { type Patient } from './models/patient.model'
+import { type Patient, type PatientMetrics } from './models/patient.model'
 import { UserInviteStatus } from '../team/models/enums/user-invite-status.enum'
 import { type User } from '../auth'
 import { type PatientsFilters } from '../providers/models/patients-filters.model'
 import i18next from 'i18next'
 import { Gender } from '../auth/models/enums/gender.enum'
 import { UserRole } from '../auth/models/enums/user-role.enum'
+import { type MedicalData } from '../data/models/medical-data.model'
 
 const t = i18next.t.bind(i18next)
 
@@ -59,6 +60,31 @@ export default class PatientUtils {
       default:
         throw Error(`Cannot retrieve patients with user having role ${user.role}`)
     }
+  }
+
+  static async fetchMetrics(patients: Patient[], teamId: string, userId: string): Promise<PatientMetrics[]> {
+    const acceptedInvitePatients = patients.filter((patient: Patient) => patient.invitationStatus === UserInviteStatus.Accepted)
+    if (!acceptedInvitePatients.length) {
+      return
+    }
+
+    const patientIds = acceptedInvitePatients.map((patient: Patient) => patient.userid)
+
+    return await PatientApi.getPatientsMetricsForHcp(userId, teamId, patientIds)
+  }
+
+  static getUpdatedPatientsWithMetrics(patients: Patient[], metrics: PatientMetrics[]): Patient[] {
+    return patients.map((patient: Patient) => {
+      const patientMetrics = metrics.find((metrics: PatientMetrics) => metrics.userid === patient.userid)
+      if (!patientMetrics) {
+        return patient
+      }
+
+      patient.glycemiaIndicators = patientMetrics.glycemiaIndicators
+      patient.monitoringAlerts = patientMetrics.monitoringAlerts
+      patient.medicalData = patientMetrics.medicalData
+      return patient
+    })
   }
 
   static mapUserToPatient(user: User): Patient {
@@ -164,5 +190,24 @@ export default class PatientUtils {
 
   static formatPercentageValue(value: number): string {
     return value || value === 0 ? `${Math.round(value * 10) / 10}%` : t('N/A')
+  }
+
+  static getLastUploadDate(medicalData: MedicalData, noDataLabel: string): string {
+    if (!medicalData) {
+      return null
+    }
+
+    const dataEndDate = medicalData.range?.endDate
+    if (!dataEndDate) {
+      return noDataLabel
+    }
+
+    const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
+    const mLastUpload = moment.tz(dataEndDate, browserTimezone)
+    if (!mLastUpload.isValid()) {
+      return noDataLabel
+    }
+
+    return mLastUpload.format('lll')
   }
 }
