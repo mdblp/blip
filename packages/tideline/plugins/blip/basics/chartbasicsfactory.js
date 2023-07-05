@@ -34,7 +34,7 @@ class BasicsChartNoSize extends React.Component {
     onSelectDay: PropTypes.func.isRequired,
     patient: PropTypes.object.isRequired,
     tidelineData: PropTypes.object.isRequired,
-    size: PropTypes.object.isRequired,
+    size: PropTypes.object,
     timePrefs: PropTypes.object.isRequired,
     trackMetric: PropTypes.func.isRequired
   }
