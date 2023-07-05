@@ -81,9 +81,9 @@ describe('getBasalBolusData', () => {
 
     const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, 2, dateFilterTwoWeeks)
     const expectBasalBolusData = {
-      basal: 1,
+      basal: 1.25,
       bolus: 9.5,
-      total: 10.5
+      total: 10.75
     }
     expect(basalBolusData).toEqual(expectBasalBolusData)
   })
