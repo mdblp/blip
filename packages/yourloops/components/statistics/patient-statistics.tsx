@@ -60,7 +60,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const { medicalData, bgPrefs, bgType, dateFilter, children } = props
   const theme = useTheme()
   const location = useLocation()
-
   const cbgSelected = bgType === DatumType.Cbg
   const cbgStatType: CBGStatType = cbgSelected ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
@@ -111,9 +110,11 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter, medicalData.pumpSettings)
 
   const {
-    total,
-    manual,
-    auto
+    totalAutomatedBasals,
+    totalManualBasalsTimeOverOneDay,
+    totalAutomatedAndManualBasals,
+    totalManualBasals,
+    totalAutomatedBasalsTimeOverOneDay
   } = BasalBolusStatisticsService.getTimeInAutoData(medicalData.basal, numberOfDays, dateFilter)
 
   return (
@@ -163,9 +164,11 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       {isAutomatedBasalDevice &&
         <>
           <LoopModeStat
-            automated={auto}
-            manual={manual}
-            total={total}
+            automated={totalAutomatedBasals}
+            manual={totalManualBasals}
+            total={totalAutomatedAndManualBasals}
+            automatedTimeOverDay={totalAutomatedBasalsTimeOverOneDay}
+            manualTimeOverDay={totalManualBasalsTimeOverOneDay}
           />
         </>
       }

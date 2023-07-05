@@ -39,10 +39,12 @@ interface LoopModeStatProps {
   automated: number
   manual: number
   total: number
+  automatedTimeOverDay: number
+  manualTimeOverDay: number
 }
 
 const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
-  const { automated, manual, total } = props
+  const { automated, manual, total, manualTimeOverDay, automatedTimeOverDay } = props
 
   const automatedPercentage = Math.round(100 * automated / total)
   const manualPercentage = Math.round(100 * manual / total)
@@ -67,13 +69,13 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
           className={styles.labelOnValueUnits}
           percentage={automatedPercentage}
           transform="translate(30 63)"
-          value={automated}
+          value={automatedTimeOverDay}
         />
         <LoopModePercentageDetail
           className={styles.labelOffValueUnits}
           percentage={manualPercentage}
           transform="translate(260 63)"
-          value={manual}
+          value={manualTimeOverDay}
         />
         <LoopModeGraph automatedPercentage={automatedPercentage} manualPercentage={manualPercentage} />
       </svg>

@@ -103,20 +103,21 @@ function getTotalInsulinAndWeightData(basalsData: Basal[], bolusData: Bolus[], n
 
 function getTimeInAutoData(basalsData: Basal[], numDays: number, dateFilter: DateFilter): TimeInAutoStatistics {
   const filteredBasal = BasalService.filterOnDate(basalsData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  const resampledBasalData = resamplingDuration(filteredBasal, dateFilter.start, dateFilter.end)
 
-  const manualBasals = resampledBasalData.filter((manualBasal) => {
-    return (manualBasal.subType === 'scheduled')
-  }).reduce((accumulator, manualBasal) => accumulator + (manualBasal.duration / numDays), 0)
+  const manualBasals = filteredBasal.filter(manualBasal => manualBasal.subType === 'scheduled')
+  const manualBasalsDuration = manualBasals.reduce((accumulator, manualBasal) => accumulator + manualBasal.duration, 0)
 
-  const automatedBasals = resampledBasalData.filter((automateBasal) => {
-    return (automateBasal.subType === 'automated')
-  }).reduce((accumulator, automateBasal) => accumulator + (automateBasal.duration / numDays), 0)
+  const automatedBasals = filteredBasal.filter(automateBasal => automateBasal.subType === 'automated')
+  const automatedBasalsDuration = automatedBasals.reduce((accumulator, automateBasal) => accumulator + automateBasal.duration, 0)
+  const totalManualBasalsTimeOverOneDay = manualBasalsDuration / numDays
+  const totalAutomatedBasalsTimeOverOneDay = automatedBasalsDuration / numDays
 
   return {
-    auto: automatedBasals,
-    manual: manualBasals,
-    total: (automatedBasals + manualBasals)
+    totalAutomatedBasals: automatedBasalsDuration,
+    totalManualBasals: manualBasalsDuration,
+    totalAutomatedAndManualBasals: (automatedBasalsDuration + manualBasalsDuration),
+    totalManualBasalsTimeOverOneDay,
+    totalAutomatedBasalsTimeOverOneDay
   }
 }
 
