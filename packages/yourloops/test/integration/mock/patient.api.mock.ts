@@ -30,7 +30,8 @@ import {
   patient1AsTeamMember,
   patient2AsTeamMember,
   patient3AsTeamMember,
-  PATIENTS_BY_TEAMID,
+  PATIENTS_INFO_BY_TEAMID,
+  PATIENTS_METRICS_BY_TEAMID,
   pendingPatientAsTeamMember
 } from '../data/patient.api.data'
 
@@ -44,9 +45,16 @@ export const mockPatientApiForCaregivers = () => {
 }
 export const mockPatientApiForHcp = () => {
   jest.spyOn(PatientApi, 'getPatientsForHcp').mockImplementation((userId: string, teamId: string) => {
-    const patientsToReturn = PATIENTS_BY_TEAMID[teamId]
+    const patientsToReturn = PATIENTS_INFO_BY_TEAMID[teamId]
     if (!patientsToReturn) {
       console.warn('Your mocked patients return is undefined, make sure that this is a wanted behaviour.')
+    }
+    return Promise.resolve(patientsToReturn)
+  })
+  jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockImplementation((userId: string, teamId: string) => {
+    const patientsToReturn = PATIENTS_METRICS_BY_TEAMID[teamId]
+    if (!patientsToReturn) {
+      console.warn('Your mocked patients metrics return is undefined, make sure that this is a wanted behaviour.')
     }
     return Promise.resolve(patientsToReturn)
   })

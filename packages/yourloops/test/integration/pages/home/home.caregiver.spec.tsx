@@ -28,7 +28,7 @@
 import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi, removeDirectShareMock } from '../../mock/direct-share.api.mock'
-import { buildPatientAsTeamMember, patient1AsTeamMember, patient2AsTeamMember } from '../../data/patient.api.data'
+import { patient1AsTeamMember, patient2AsTeamMember } from '../../data/patient.api.data'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { renderPage } from '../../utils/render'
@@ -40,6 +40,7 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { checkPatientListHeaderCaregiver } from '../../assert/patient-list.assert'
+import { buildPatientAsTeamMember } from '../../data/patient-builder.data'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
@@ -55,6 +56,8 @@ describe('Caregiver home page', () => {
   })
 
   it('should render the home page with correct components', async () => {
+    jest.spyOn(PatientApi, 'getPatientsMetricsForHcp')
+
     const router = renderPage('/')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/home')
@@ -62,6 +65,8 @@ describe('Caregiver home page', () => {
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
     await checkCaregiverLayout(`${firstName} ${lastName}`)
     checkPatientListHeaderCaregiver()
+
+    expect(PatientApi.getPatientsMetricsForHcp).not.toHaveBeenCalled()
   })
 
   it('should filter patients correctly depending on the search value', async () => {

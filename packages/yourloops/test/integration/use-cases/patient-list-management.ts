@@ -37,10 +37,10 @@ import {
   checkPatientListPendingTab,
   checkPatientListTooltipsMgDL,
   checkPatientListTooltipsMmolL,
-  checkPendingPatientColumnsSettingsMedicalTeam,
-  type Router
+  checkPendingPatientColumnsSettingsMedicalTeam
 } from '../assert/patient-list.assert'
 import { checkPatientFiltersForPrivateTeam } from '../assert/patient-filters.assert'
+import { type Router } from '../models/router.model'
 
 export const testPatientListForHcp = async (router: Router) => {
   checkPatientListHeaderForHcp()

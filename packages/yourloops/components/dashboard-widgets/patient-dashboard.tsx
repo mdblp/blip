@@ -47,7 +47,7 @@ import {
 import { PatientStatisticsWidget } from './patient-statistics-widget'
 import Stats from 'blip/app/components/chart/stats'
 import MedicalFilesWidget from './medical-files/medical-files-widget'
-import MonitoringAlertCard from '../monitoring-alert/monitoring-alert-card'
+import MonitoringAlertsCard from '../monitoring-alert/monitoring-alerts-card'
 import { makeStyles } from 'tss-react/mui'
 import ChatWidget from '../chat/chat-widget'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
@@ -174,7 +174,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
       {!isCaregiver && !isPatientWithNoTeams && !isSelectedTeamPrivate &&
         <>
           <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
-            {user.isUserHcp() && <MonitoringAlertCard patient={patient} />}
+            {user.isUserHcp() && <MonitoringAlertsCard patient={patient} />}
             <MedicalFilesWidget patient={patient} />
           </Grid>
 
