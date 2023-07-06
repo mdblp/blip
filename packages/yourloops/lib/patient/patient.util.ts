@@ -70,7 +70,7 @@ export default class PatientUtils {
 
     const patientIds = acceptedInvitePatients.map((patient: Patient) => patient.userid)
 
-    return await PatientApi.getPatientsMetricsForHcp(userId, teamId, patientIds)
+    return PatientApi.getPatientsMetricsForHcp(userId, teamId, patientIds)
   }
 
   static getUpdatedPatientsWithMetrics(patients: Patient[], metrics: PatientMetrics[]): Patient[] {
@@ -96,7 +96,8 @@ export default class PatientUtils {
         fullName: profile.fullName,
         lastName: profile.lastName,
         email: profile.email,
-        sex: profile?.patient?.sex ?? Gender.NotDefined
+        sex: profile?.patient?.sex ?? Gender.NotDefined,
+        birthdate: profile?.patient?.birthday
       },
       settings: user.settings,
       hasSentUnreadMessages: false

@@ -329,7 +329,8 @@ describe('Patient utils', () => {
           lastName: '1',
           fullName: 'Patient 1',
           email: 'patient@email.fr',
-          sex: Gender.Female
+          sex: Gender.Female,
+          birthdate: '1980-01-01T10:44:34+01:00'
         },
         settings: null,
         hasSentUnreadMessages: false
