@@ -30,7 +30,6 @@ import { t } from 'i18next'
 import { type ParameterConfig, Unit } from 'medical-domain'
 import { InsulinStat } from 'dumb'
 import { convertToPercentage } from './statistics.util'
-import { EMPTY_DATA_PLACEHOLDER } from 'dumb/dist/src/models/stats.model'
 
 interface TotalInsulinStatProps {
   basal: number
@@ -65,7 +64,7 @@ export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props
       title: t('Basal')
     }
   ]
-  const weightValue = !weight ? EMPTY_DATA_PLACEHOLDER : +weight.value
+  const weightValue = !weight ? '--' : +weight.value
   return (
     <InsulinStat
       data={data}

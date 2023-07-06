@@ -25,10 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import React, { type FunctionComponent } from 'react'
-import { SimpleStat } from 'dumb'
-import { StatFormats } from 'dumb/src/models/stats.model'
-import { t } from 'i18next'
+import { SimpleStat, StatFormats } from 'dumb'
 import Box from '@mui/material/Box'
+import { useTranslation } from 'react-i18next'
 
 export interface SensorUsageStatProp {
   total: number
@@ -36,6 +35,7 @@ export interface SensorUsageStatProp {
 }
 
 export const SensorUsageStat: FunctionComponent<SensorUsageStatProp> = (props) => {
+  const { t } = useTranslation()
   const { usage, total } = props
 
   return (

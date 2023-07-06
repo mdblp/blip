@@ -35,7 +35,7 @@ import {
 import {
   CbgStandardDeviationMemoized as CBGStandardDeviation
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
-import { CBGStatType } from './models/stats.model'
+import { CBGStatType, StatFormats } from './models/stats.model'
 import { ConfidentialTooltip } from './components/tooltips/confidential-tooltip/confidential-tooltip'
 import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
 import { formatBgValue } from './utils/format/format.util'
@@ -61,9 +61,13 @@ import { PrintView } from './modules/print/print-view/print-view'
 import { LayoutColumnType } from './models/enums/layout-column-type.enum'
 import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
 import { getPatientFullName } from './utils/patient/patient.util'
-import { formatBirthdate, formatLocalizedFromUTC, getLongDayHourFormat } from './utils/datetime/datetime.util'
+import { formatBirthdate, formatLocalizedFromUTC, getLongDayHourFormat, formatDate } from './utils/datetime/datetime.util'
+import { renderPageNumbers } from './utils/pdf/pdf.util'
 
 export {
+  formatDate,
+  StatFormats,
+  renderPageNumbers,
   AverageDailyDoseStat,
   buildLayoutColumns,
   type BgPrefs,

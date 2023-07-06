@@ -26,9 +26,8 @@
  */
 import React, { type FunctionComponent } from 'react'
 import { t } from 'i18next'
-import { SimpleStat } from 'dumb'
+import { SimpleStat, StatFormats } from 'dumb'
 import Box from '@mui/material/Box'
-import { StatFormats } from 'dumb/src/models/stats.model'
 
 interface GlucoseManagementIndicatorProps {
   glucoseManagementIndicator: number
