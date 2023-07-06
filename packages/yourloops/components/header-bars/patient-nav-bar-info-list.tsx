@@ -44,7 +44,7 @@ export const PatientNavBarInfoList: FunctionComponent<PatientNavBarInfosProps> =
   const trNaLabel = t('N/A')
 
   const gender = useMemo(() => {
-    if (patient.profile.sex === '') {
+    if (!patient.profile.sex) {
       return trNaLabel
     }
     return t(`gender-${patient.profile.sex.toLocaleLowerCase()}`)

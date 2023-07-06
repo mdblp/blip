@@ -71,11 +71,9 @@ describe('Patient utils', () => {
       const patient: Patient = {
         monitoringAlerts: teamMember.alarms,
         glycemiaIndicators: teamMember.glycemiaIndicators,
-        metadata: {
-          flagged: undefined,
-          medicalData: null,
-          hasSentUnreadMessages: teamMember.unreadMessages > 0
-        },
+        flagged: undefined,
+        medicalData: null,
+        hasSentUnreadMessages: teamMember.unreadMessages > 0,
         profile: {
           birthdate: undefined,
           firstName: profile.firstName,

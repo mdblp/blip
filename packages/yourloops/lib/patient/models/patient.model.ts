@@ -27,21 +27,28 @@
 
 import { type PatientProfile } from './patient-profile.model'
 import { type PatientSettings } from './patient-settings.model'
-import { type PatientMetadata } from './patient-metadata.model'
 import { type MonitoringAlerts } from './monitoring-alerts.model'
 import { type UserInviteStatus } from '../../team/models/enums/user-invite-status.enum'
 import { type MonitoringAlertsParameters } from '../../team/models/monitoring-alerts-parameters.model'
 import { type PatientInvite } from './patient-invite.model'
 import { type GlycemiaIndicators } from './glycemia-indicators.model'
+import { type MedicalData } from '../../data/models/medical-data.model'
 
-export interface Patient {
-  monitoringAlerts?: MonitoringAlerts
-  glycemiaIndicators?: GlycemiaIndicators
+export interface Patient extends Partial<PatientMetrics> {
+  readonly userid: string
   profile: PatientProfile
   settings: PatientSettings
-  metadata: PatientMetadata
   monitoringAlertsParameters?: MonitoringAlertsParameters
   invitationStatus?: UserInviteStatus
   invite?: PatientInvite
+  hasSentUnreadMessages: boolean
+  flagged?: boolean
+}
+
+export interface PatientMetrics {
   readonly userid: string
+  monitoringAlerts?: MonitoringAlerts
+  glycemiaIndicators: GlycemiaIndicators
+  /** Patient medical data. undefined means not fetched, null if the fetch failed */
+  medicalData?: MedicalData | null
 }

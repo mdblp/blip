@@ -58,18 +58,39 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const teamIdForWhichPatientsAreFetched = useRef(null)
 
   const fetchPatients = useCallback((teamId: string = selectedTeamId) => {
-    PatientUtils.computePatients(user, teamId).then(computedPatients => {
-      setPatients(computedPatients)
-    }).catch((reason: unknown) => {
-      const message = errorTextFromException(reason)
-      alert.error(message)
-    }).finally(() => {
-      setInitialized(true)
-      setRefreshInProgress(false)
-    })
+    PatientUtils.computePatients(user, teamId)
+      .then((computedPatients: Patient[]) => {
+        setPatients(computedPatients)
+        return computedPatients
+      })
+      .catch((reason: unknown) => {
+        const message = errorTextFromException(reason)
+        alert.error(message)
+      })
+      .finally(() => {
+        setInitialized(true)
+        setRefreshInProgress(false)
+      })
+      .then(async (computedPatients: Patient[]) => {
+        if (!isUserHcp) {
+          return
+        }
+
+        await fetchPatientsMetrics(computedPatients, teamId)
+      })
     // Need to rewrite the alert component, or it triggers infinite loop...
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, selectedTeam])
+
+  const fetchPatientsMetrics = async (allPatients: Patient[], teamId: string = selectedTeamId): Promise<void> => {
+    const metrics = await PatientUtils.fetchMetrics(allPatients, teamId, user.id)
+    if (!metrics) {
+      return
+    }
+
+    const updatedPatients = PatientUtils.getUpdatedPatientsWithMetrics(allPatients, metrics)
+    setPatients(updatedPatients)
+  }
 
   const refresh = (teamId: string = selectedTeamId): void => {
     setRefreshInProgress(true)
@@ -126,7 +147,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   }
 
   const markPatientMessagesAsRead = useCallback((patient: Patient) => {
-    patient.metadata.hasSentUnreadMessages = false
+    patient.hasSentUnreadMessages = false
     updatePatient(patient)
   }, [updatePatient])
 
