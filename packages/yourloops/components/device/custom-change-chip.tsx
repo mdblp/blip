@@ -43,7 +43,7 @@ const useStyles = makeStyles<{ backgroundColor: string }>()((theme, { background
   }
 }))
 
-type ChipVariant = 'primary' | 'error' | 'success'
+type ChipVariant = 'info' | 'error' | 'success'
 
 export const CustomChangeChip: FC<CustomChangeChipProps> = ({ changeType }) => {
   const { t } = useTranslation()
@@ -55,7 +55,7 @@ export const CustomChangeChip: FC<CustomChangeChipProps> = ({ changeType }) => {
       case ChangeType.Deleted:
         return { variantColor: 'error', backgroundColor: 'var(--error-color-background)' }
       case ChangeType.Updated:
-        return { variantColor: 'primary', backgroundColor: 'var(--info-color-background)' }
+        return { variantColor: 'info', backgroundColor: 'var(--info-color-background)' }
     }
     return { variantColor, backgroundColor }
   }
