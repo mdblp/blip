@@ -21,12 +21,9 @@ import bows from 'bows'
 import moment from 'moment-timezone'
 import ReactResizeDetector from 'react-resize-detector'
 import i18next from 'i18next'
-
 import { chartDailyFactory } from 'tideline'
-import { DatumType, TimeService } from 'medical-domain'
-
+import { TimeService } from 'medical-domain'
 import { components as vizComponents } from 'tidepool-viz'
-
 import { BG_DATA_TYPES } from '../../core/constants'
 import Footer from './footer'
 import {
@@ -40,9 +37,7 @@ import {
 } from 'dumb'
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
-import { ChartTypes } from 'yourloops/enum/chart-type.enum'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
-import Stats from './stats'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import metrics from 'yourloops/lib/metrics'
 
@@ -404,15 +399,15 @@ class Daily extends React.Component {
                   bgType={this.props.dataUtil.bgSource}
                   dateFilter={dateFilter}
                 >
-                  <Stats
-                    bgPrefs={this.props.bgPrefs}
-                    bgSource={DatumType.Cbg}
-                    chartPrefs={null}
-                    chartType={ChartTypes.Daily}
-                    dataUtil={this.props.dataUtil}
-                    endpoints={endpoints}
-                    loading={loading}
-                  />
+                  {/*<Stats*/}
+                  {/*  bgPrefs={this.props.bgPrefs}*/}
+                  {/*  bgSource={DatumType.Cbg}*/}
+                  {/*  chartPrefs={null}*/}
+                  {/*  chartType={ChartTypes.Daily}*/}
+                  {/*  dataUtil={this.props.dataUtil}*/}
+                  {/*  endpoints={endpoints}*/}
+                  {/*  loading={loading}*/}
+                  {/*/>*/}
                 </PatientStatistics>
               </div>
             </div>

@@ -29,10 +29,9 @@ import React, { type FunctionComponent } from 'react'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import DeviceUsage from 'blip/app/components/chart/deviceUsage.js'
 import type MedicalDataService from 'medical-domain'
-import { DatumType, type TimePrefs } from 'medical-domain'
+import { type TimePrefs } from 'medical-domain'
 import { type BgPrefs } from 'dumb'
 import type DataUtil from 'tidepool-viz/src/utils/data'
-import moment from 'moment-timezone'
 import Grid from '@mui/material/Grid'
 import AccessTime from '@mui/icons-material/AccessTime'
 import { useTranslation } from 'react-i18next'
@@ -45,7 +44,6 @@ import {
   RESPONSIVE_GRID_HALF_WIDTH
 } from '../../css/css-utils'
 import { PatientStatisticsWidget } from './patient-statistics-widget'
-import Stats from 'blip/app/components/chart/stats'
 import MedicalFilesWidget from './medical-files/medical-files-widget'
 import MonitoringAlertCard from '../monitoring-alert/monitoring-alert-card'
 import { makeStyles } from 'tss-react/mui'
@@ -79,7 +77,6 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
     dashboardEpochDate,
     dataUtil,
     goToDailySpecificDate,
-    loading,
     medicalDataService,
     msRange,
     patient,
@@ -93,10 +90,6 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
   const { classes, theme } = useStyle()
 
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
-  const endpoints = [
-    moment.utc(dashboardEpochDate - msRange).toISOString(), // start
-    moment.utc(dashboardEpochDate).toISOString() // end
-  ]
   const dateFilter = {
     start: dashboardEpochDate - msRange,
     end: dashboardEpochDate
@@ -146,17 +139,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
           bgPrefs={bgPrefs}
           bgType={dataUtil.bgSource}
           dateFilter={dateFilter}
-        >
-          <Stats
-            bgPrefs={bgPrefs}
-            bgSource={DatumType.Cbg}
-            chartType="patientStatistics"
-            loading={loading}
-            dataUtil={dataUtil}
-            endpoints={endpoints}
-            parametersConfig={medicalData?.pumpSettings[0]?.payload?.parameters}
-          />
-        </PatientStatisticsWidget>
+        />
       </Grid>
 
       <Grid item xs={gridWidgetSize}>
