@@ -52,7 +52,6 @@ import Divider from '@mui/material/Divider'
 import AddIcon from '@mui/icons-material/Add'
 import TeamInformationEditDialog from '../../pages/hcp/team-information-edit-dialog'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import { usePatientsContext } from '../../lib/patient/patients.provider'
 
 const classes = makeStyles()((theme: Theme) => ({
   sectionTitle: {
@@ -84,7 +83,6 @@ export const TeamScopeMenu: FunctionComponent = () => {
   } = classes()
   const { getMedicalTeams, getPrivateTeam, createTeam, refresh: refreshTeams } = useTeam()
   const { selectTeam, selectedTeam } = useSelectedTeamContext()
-  const { refresh } = usePatientsContext()
   const alert = useAlert()
   const navigate = useNavigate()
   const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null)
@@ -108,7 +106,6 @@ export const TeamScopeMenu: FunctionComponent = () => {
   const onSelectTeam = (teamId: string): void => {
     if (teamId !== selectedTeam.id) {
       selectTeam(teamId)
-      refresh(teamId)
 
       if (pathname !== AppUserRoute.Home) {
         navigate(AppUserRoute.Home)
