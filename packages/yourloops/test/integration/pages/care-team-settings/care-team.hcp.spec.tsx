@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
+import { mockAuth0Hook, userTimFirstName, userTimId, userTimLastName } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
 import { mockUserApi } from '../../mock/user.api.mock'
@@ -37,6 +37,11 @@ import { waitFor } from '@testing-library/react'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { testCareTeamLayout } from '../../use-cases/care-team-visualisation'
+import {
+  testMonitoringAlertsParametersTeamAdmin,
+  testMonitoringAlertsParametersTeamMember
+} from '../../use-cases/monitoring-alerts-parameters-management'
+import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 
 describe('HCP care team settings page', () => {
   const firstName = 'Jacques'
@@ -86,5 +91,23 @@ describe('HCP care team settings page', () => {
     await renderCareTeamSettingsPage()
 
     await testCareTeamLayout()
+  })
+
+  it('should be able to update monitoring alerts parameters when user is admin of the team', async () => {
+    localStorage.setItem('selectedTeamId', myThirdTeamId)
+
+    await renderCareTeamSettingsPage()
+
+    await testMonitoringAlertsParametersTeamAdmin()
+  })
+
+  it('should not be able to update monitoring alerts parameters when user is not admin of the team', async () => {
+    localStorage.setItem('selectedTeamId', myThirdTeamId)
+    mockAuth0Hook(UserRole.Hcp, userTimId)
+    mockUserApi().mockUserDataFetch({ firstName: userTimFirstName, lastName: userTimLastName })
+
+    await renderCareTeamSettingsPage()
+
+    await testMonitoringAlertsParametersTeamMember()
   })
 })
