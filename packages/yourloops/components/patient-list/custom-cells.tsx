@@ -33,7 +33,6 @@ import Tooltip from '@mui/material/Tooltip'
 import { useTranslation } from 'react-i18next'
 import IconActionButton from '../buttons/icon-action'
 import PersonRemoveIcon from '../icons/mui/person-remove-icon'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import FlagIcon from '@mui/icons-material/Flag'
 import FlagOutlineIcon from '@mui/icons-material/FlagOutlined'
 import { type Patient } from '../../lib/patient/models/patient.model'
@@ -44,8 +43,8 @@ import { HypoglycemiaIcon } from '../icons/diabeloop/hypoglycemia-icon'
 import { NoMessageIcon } from '../icons/diabeloop/no-message-icon'
 import { MessageIcon } from '../icons/diabeloop/message-icon'
 import { convertBG } from '../../lib/units/units.util'
-import Button from '@mui/material/Button'
 import { Unit } from 'medical-domain'
+import { Skeleton } from '@mui/material'
 
 interface FlagCellProps {
   isFlagged: boolean
@@ -74,6 +73,8 @@ interface MonitoringAlertsTooltips {
   veryLowBg: number
 }
 
+const ICON_SIZE_PX = 25
+
 export const FlagIconCell: FunctionComponent<FlagCellProps> = ({ isFlagged, patient }) => {
   const { flagPatient } = useAuth()
   const { t } = useTranslation()
@@ -101,18 +102,30 @@ export const FlagIconCell: FunctionComponent<FlagCellProps> = ({ isFlagged, pati
   )
 }
 
-export const PendingIconCell: FunctionComponent = () => {
-  const { t } = useTranslation()
+export const MonitoringAlertsSkeletonCell: FunctionComponent = () => {
+  const theme = useTheme()
 
   return (
-    <Tooltip
-      title={t('pending-invite')}
-      aria-label={t('pending-invite')}
-    >
-      <Box display="flex">
-        <AccessTimeIcon titleAccess={t('pending-invite')} />
-      </Box>
-    </Tooltip>
+    <>
+      <Skeleton
+        variant="circular"
+        width={ICON_SIZE_PX}
+        height={ICON_SIZE_PX}
+        sx={{ marginRight: theme.spacing(1) }}
+      />
+      <Skeleton
+        variant="circular"
+        width={ICON_SIZE_PX}
+        height={ICON_SIZE_PX}
+        sx={{ marginRight: theme.spacing(1) }}
+      />
+      <Skeleton
+        variant="circular"
+        width={ICON_SIZE_PX}
+        height={ICON_SIZE_PX}
+        sx={{ marginRight: theme.spacing(1) }}
+      />
+    </>
   )
 }
 
@@ -187,6 +200,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
           data-testid="time-spent-out-of-range-icon"
         />
       </Tooltip>
+
       <Tooltip
         title={
           <>
@@ -208,6 +222,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
           data-testid="hypoglycemia-icon"
         />
       </Tooltip>
+
       <Tooltip
         title={
           <>
@@ -280,24 +295,5 @@ export const ActionsCell: FunctionComponent<ActionsCellProps> = ({ patient, onCl
         />
       </Box>
     </Tooltip>
-  )
-}
-
-export const PendingListCancelInviteCell: FunctionComponent<ActionsCellProps> = ({ patient, onClickRemove }) => {
-  const { t } = useTranslation()
-  const removePatientLabel = t('button-remove-patient')
-
-  return (
-    <Button
-      data-action="remove-patient"
-      data-testid={`${removePatientLabel} ${patient.profile.email}`}
-      aria-label={`${removePatientLabel} ${patient.profile.email}`}
-      color="inherit"
-      onClick={() => {
-        onClickRemove(patient.userid)
-      }}
-    >
-      ${removePatientLabel}
-    </Button>
   )
 }

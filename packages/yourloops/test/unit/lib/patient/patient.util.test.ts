@@ -30,6 +30,9 @@ import PatientUtils from '../../../../lib/patient/patient.util'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
+import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
+import { type User } from '../../../../lib/auth'
+import PatientApi from '../../../../lib/patient/patient.api'
 
 const defaultMonitoringAlerts = {
   timeSpentAwayFromTargetRate: 10,
@@ -49,19 +52,19 @@ const defaultPatientFilters = {
   messagesEnabled: false
 }
 
-const patientWithTimeOutOfTargetAlert = createPatient('outOfTarget', UserInviteStatus.Accepted, undefined, undefined, undefined, undefined, {
+const patientWithTimeOutOfTargetAlert = createPatient('outOfTarget', UserInviteStatus.Accepted, undefined, undefined, undefined, {
   ...defaultMonitoringAlerts,
   timeSpentAwayFromTargetActive: true
 })
-const patientWithHypoglycemiaAlert = createPatient('hypoglycemia', UserInviteStatus.Accepted, undefined, undefined, undefined, undefined, {
+const patientWithHypoglycemiaAlert = createPatient('hypoglycemia', UserInviteStatus.Accepted, undefined, undefined, undefined, {
   ...defaultMonitoringAlerts,
   frequencyOfSevereHypoglycemiaActive: true
 })
-const patientWithNoDataAlert = createPatient('noData', UserInviteStatus.Accepted, undefined, undefined, undefined, undefined, {
+const patientWithNoDataAlert = createPatient('noData', UserInviteStatus.Accepted, undefined, undefined, undefined, {
   ...defaultMonitoringAlerts,
   nonDataTransmissionActive: true
 })
-const noAlertsPatient = createPatient('nothing', UserInviteStatus.Accepted, undefined, undefined, undefined, undefined, defaultMonitoringAlerts)
+const noAlertsPatient = createPatient('nothing', UserInviteStatus.Accepted, undefined, undefined, undefined, defaultMonitoringAlerts)
 
 describe('Patient utils', () => {
   describe('computeFlaggedPatients', () => {
@@ -71,7 +74,7 @@ describe('Patient utils', () => {
       const flaggedPatientIds = [patientFlaggedId]
       const patientsUpdated = PatientUtils.computeFlaggedPatients(patients, flaggedPatientIds)
       patientsUpdated.forEach(patient => {
-        expect(patient.metadata.flagged).toBe(flaggedPatientIds.includes(patient.userid))
+        expect(patient.flagged).toBe(flaggedPatientIds.includes(patient.userid))
       })
     })
   })
@@ -180,7 +183,7 @@ describe('Patient utils', () => {
     const pendingPatient = createPatient('pendingPatient', UserInviteStatus.Pending, undefined, undefined, undefined, undefined, undefined)
     const monitoredPatient = createPatient('monitoredPatient', UserInviteStatus.Accepted, undefined, undefined, undefined, undefined)
     const flaggedPatient = createPatient('flaggedPatient', UserInviteStatus.Accepted, null, undefined, undefined, undefined, undefined)
-    const unreadMessagesPatient = createPatient('unreadMessagesPatient', UserInviteStatus.Accepted, null, undefined, undefined, { hasSentUnreadMessages: true }, undefined)
+    const unreadMessagesPatient = createPatient('unreadMessagesPatient', UserInviteStatus.Accepted, null, undefined, undefined, undefined, undefined, true)
     const patients = [noAlertsPatient, pendingPatient, monitoredPatient, unreadMessagesPatient, patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithNoDataAlert, noAlertsPatient, flaggedPatient]
     const flaggedPatientsIds = [flaggedPatient.userid]
 
@@ -282,6 +285,153 @@ describe('Patient utils', () => {
     it('should return N/A if the value is not defined', () => {
       expect(PatientUtils.formatPercentageValue(undefined)).toEqual('N/A')
       expect(PatientUtils.formatPercentageValue(null)).toEqual('N/A')
+    })
+  })
+
+  describe('mapUserToPatient', () => {
+    it('should convert a user into a patient model', () => {
+      const user = {
+        id: 'patient-id',
+        preferences: {
+          displayLanguageCode: LanguageCodes.En
+        },
+        profile: {
+          fullName: 'Patient 1',
+          firstName: 'Patient',
+          lastName: '1',
+          email: 'patient@email.fr',
+          patient: {
+            birthday: '1980-01-01T10:44:34+01:00',
+            diagnosisType: 'type1',
+            sex: 'F'
+          },
+          termsOfUse: {
+            acceptanceTimestamp: '2021-05-22',
+            isAccepted: true
+          },
+          privacyPolicy: {
+            acceptanceTimestamp: '2021-05-22',
+            isAccepted: true
+          },
+          trainingAck: {
+            acceptanceTimestamp: '2022-10-11',
+            isAccepted: true
+          }
+        },
+        settings: null,
+        consents: null
+      } as unknown as User
+
+      expect(PatientUtils.mapUserToPatient(user)).toEqual({
+        userid: 'patient-id',
+        profile: {
+          firstName: 'Patient',
+          lastName: '1',
+          fullName: 'Patient 1',
+          email: 'patient@email.fr',
+          sex: Gender.Female,
+          birthdate: '1980-01-01T10:44:34+01:00'
+        },
+        settings: null,
+        hasSentUnreadMessages: false
+      })
+    })
+
+    it('should set the sex as Not Defined if none is specified', () => {
+      const user = {
+        id: 'patient-id',
+        profile: {
+          email: 'patient@email.fr',
+          patient: {
+            birthday: '1980-01-01T10:44:34+01:00',
+            diagnosisType: 'type1'
+          }
+        }
+      } as unknown as User
+
+      const result = PatientUtils.mapUserToPatient(user)
+      expect(result.profile.sex).toEqual(Gender.NotDefined)
+    })
+  })
+
+  describe('fetchMetrics', () => {
+    it('should not perform an API call if there is no patient in the team', async () => {
+      jest.spyOn(PatientApi, 'getPatientsMetricsForHcp')
+      const patients = []
+
+      const result = await PatientUtils.fetchMetrics(patients, 'team-id', 'user-id')
+      expect(result).toEqual(undefined)
+      expect(PatientApi.getPatientsMetricsForHcp).not.toHaveBeenCalled()
+    })
+
+    it('should not perform an API call if there are only pending patients in the team', async () => {
+      jest.spyOn(PatientApi, 'getPatientsMetricsForHcp')
+      const patients = [
+        { userid: 'pending-patient-1', invitationStatus: UserInviteStatus.Pending },
+        { userid: 'pending-patient-2', invitationStatus: UserInviteStatus.Pending }
+      ] as Patient[]
+
+      const result = await PatientUtils.fetchMetrics(patients, 'team-id', 'user-id')
+      expect(result).toEqual(undefined)
+      expect(PatientApi.getPatientsMetricsForHcp).not.toHaveBeenCalled()
+    })
+
+    it('should perform an API call for the non-pending patients in the team and return their metrics', async () => {
+      const acceptedPatientId = 'accepted-patient'
+      const userId = 'user-id'
+      const teamId = 'team-id'
+      const patientMetrics = {
+        userid: acceptedPatientId,
+        glycemiaIndicators: {
+          glucoseManagementIndicator: 1,
+          coefficientOfVariation: 2,
+          hypoglycemia: 3,
+          timeInRange: 4
+        },
+        monitoringAlerts: defaultMonitoringAlerts,
+        medicalData: { data: [] }
+      }
+      jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockResolvedValue([patientMetrics])
+      const patients = [
+        { userid: 'pending-patient-1', invitationStatus: UserInviteStatus.Pending },
+        { userid: 'pending-patient-2', invitationStatus: UserInviteStatus.Pending },
+        { userid: acceptedPatientId, invitationStatus: UserInviteStatus.Accepted }
+      ] as Patient[]
+
+      const result = await PatientUtils.fetchMetrics(patients, teamId, userId)
+      expect(result).toEqual([patientMetrics])
+      expect(PatientApi.getPatientsMetricsForHcp).toHaveBeenCalledWith(userId, teamId, [acceptedPatientId])
+    })
+  })
+
+  describe('getUpdatedPatientsWithMetrics', () => {
+    it('should update only the patients having metrics', () => {
+      const pendingPatient = { userid: 'pending-patient', invitationStatus: UserInviteStatus.Pending } as Patient
+      const acceptedPatient = { userid: 'accepted-patient', invitationStatus: UserInviteStatus.Accepted } as Patient
+
+      const patientMetrics = {
+        userid: acceptedPatient.userid,
+        glycemiaIndicators: {
+          glucoseManagementIndicator: 1,
+          coefficientOfVariation: 2,
+          hypoglycemia: 3,
+          timeInRange: 4
+        },
+        monitoringAlerts: defaultMonitoringAlerts,
+        medicalData: { data: [] }
+      }
+
+      const result = PatientUtils.getUpdatedPatientsWithMetrics([pendingPatient, acceptedPatient], [patientMetrics])
+      expect(result).toEqual([
+        pendingPatient,
+        {
+          userid: acceptedPatient.userid,
+          invitationStatus: acceptedPatient.invitationStatus,
+          glycemiaIndicators: acceptedPatient.glycemiaIndicators,
+          monitoringAlerts: acceptedPatient.monitoringAlerts,
+          medicalData: acceptedPatient.medicalData
+        }
+      ])
     })
   })
 })

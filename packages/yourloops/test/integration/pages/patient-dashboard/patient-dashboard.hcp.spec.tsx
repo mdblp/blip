@@ -41,7 +41,7 @@ import {
   twoWeeksOldDashboardData
 } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { patient1, patient1Id, patientWithMmolId } from '../../data/patient.api.data'
+import { patient1Id, patient1Info, patient1Metrics, patientWithMmolId } from '../../data/patient.api.data'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI, mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -192,9 +192,10 @@ describe('Patient dashboard for HCP', () => {
     mockDataAPI(dataSetsWithZeroValues)
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
-      ...patient1,
+      ...patient1Info,
       invitationStatus: UserInviteStatus.Accepted
     }])
+    jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockResolvedValue([patient1Metrics])
 
     const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
       isChatCardVisible: false,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,13 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type MedicalData } from '../../data/models/medical-data.model'
+import { Box, Skeleton } from '@mui/material'
+import React from 'react'
 
-interface PatientMetadata {
-  flagged?: boolean
-  /** Patient medical data. undefined means not fetched, null if the fetch failed */
-  medicalData?: MedicalData | null
-  hasSentUnreadMessages: boolean
+const SKELETON_ALERT_HEIGHT = 12
+const SKELETON_ALERT_LABEL_WIDTH = 250
+const SKELETON_ALERT_VALUE_WIDTH = 50
+
+export const MonitoringAlertsCardSkeletonValue = (): JSX.Element => {
+  return (
+    <>
+      <Skeleton variant="rounded" width={SKELETON_ALERT_LABEL_WIDTH} height={SKELETON_ALERT_HEIGHT} />
+      <Box>
+        <Skeleton variant="rounded" width={SKELETON_ALERT_VALUE_WIDTH} height={SKELETON_ALERT_HEIGHT} />
+      </Box>
+    </>
+  )
 }
-
-export type { PatientMetadata }

@@ -25,57 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import moment from 'moment-timezone' // TODO: Change moment-timezone lib with something else
 import { type MonitoringAlerts } from '../../lib/patient/models/monitoring-alerts.model'
-import { type MedicalData } from '../../lib/data/models/medical-data.model'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { type MedicalTableValues } from './models/medical-table-values.model'
 import { type ITeamMember } from '../../lib/team/models/i-team-member.model'
 import { Gender } from '../../lib/auth/models/enums/gender.enum'
-
-export const getMedicalValues = (medicalData: MedicalData | null | undefined, na = 'N/A'): MedicalTableValues => {
-  let tir = '-'
-  let tbr = '-'
-  let lastUpload = '-'
-  let tirNumber = Number.NaN
-  let tbrNumber = Number.NaN
-  let lastUploadEpoch = Number.NaN
-
-  if (medicalData === null) {
-    tir = na
-    tbr = na
-    lastUpload = na
-  } else if (medicalData) {
-    if (medicalData.range?.endDate) {
-      const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
-      const mLastUpload = moment.tz(medicalData.range.endDate, browserTimezone)
-      if (mLastUpload.isValid()) {
-        lastUploadEpoch = mLastUpload.valueOf()
-        lastUpload = mLastUpload.format('lll')
-      }
-    }
-    if (medicalData.computedTir?.count) {
-      const { high, low, target, veryHigh, veryLow } = medicalData.computedTir.count
-      const total = high + low + target + veryHigh + veryLow
-      tirNumber = Math.round((100 * target) / total)
-      tir = tirNumber.toString(10)
-      tbrNumber = Math.round((100 * (low + veryLow)) / total)
-      tbr = tbrNumber.toString(10)
-    } else {
-      tir = na
-      tbr = na
-    }
-  }
-
-  return {
-    tir,
-    tbr,
-    lastUpload,
-    tirNumber,
-    tbrNumber,
-    lastUploadEpoch
-  }
-}
 
 export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
   const birthdate = iTeamMember.profile?.patient?.birthday
@@ -94,11 +47,9 @@ export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
       a1c: iTeamMember.settings?.a1c,
       system: 'DBLG1'
     },
-    metadata: {
-      flagged: undefined,
-      medicalData: null,
-      hasSentUnreadMessages: iTeamMember.unreadMessages > 0
-    },
+    flagged: undefined,
+    medicalData: null,
+    hasSentUnreadMessages: iTeamMember.unreadMessages > 0,
     invitationStatus: iTeamMember.invitationStatus,
     userid: iTeamMember.userId
   }
