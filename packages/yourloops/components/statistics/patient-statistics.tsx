@@ -57,7 +57,7 @@ export interface PatientStatisticsProps {
 }
 
 export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
-  const { medicalData, bgPrefs, bgType, dateFilter, children } = props
+  const { medicalData, bgPrefs, bgType, dateFilter } = props
   const theme = useTheme()
   const location = useLocation()
   const cbgSelected = bgType === DatumType.Cbg
@@ -178,8 +178,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         totalCarbsPerDay={Math.round(totalCarbsPerDay)}
         foodCarbsPerDay={Math.round(foodCarbsPerDay)}
       />
-      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      {children}
     </Box>
   )
 }
