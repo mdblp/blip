@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { logDOM, screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import { checkTooltip } from './stats.assert'
 
 export const checkPatientStatistics = async () => {
@@ -60,7 +60,6 @@ export const checkPatientStatisticsWithTwoWeeksOldData = async () => {
 
 export const checkPatientStatisticsNoData = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  logDOM(await screen.findByTestId('patient-statistics'), 8000000)
   checkTooltip(patientStatistics, 'Time In Range')
   checkTooltip(patientStatistics, 'Standard Deviation')
   checkTooltip(patientStatistics, 'Avg. Glucose (CGM)')

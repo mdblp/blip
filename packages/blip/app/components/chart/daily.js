@@ -398,17 +398,7 @@ class Daily extends React.Component {
                   bgPrefs={this.props.bgPrefs}
                   bgType={this.props.dataUtil.bgSource}
                   dateFilter={dateFilter}
-                >
-                  {/*<Stats*/}
-                  {/*  bgPrefs={this.props.bgPrefs}*/}
-                  {/*  bgSource={DatumType.Cbg}*/}
-                  {/*  chartPrefs={null}*/}
-                  {/*  chartType={ChartTypes.Daily}*/}
-                  {/*  dataUtil={this.props.dataUtil}*/}
-                  {/*  endpoints={endpoints}*/}
-                  {/*  loading={loading}*/}
-                  {/*/>*/}
-                </PatientStatistics>
+                />
               </div>
             </div>
           </Box>
