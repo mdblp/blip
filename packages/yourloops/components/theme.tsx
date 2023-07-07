@@ -64,6 +64,13 @@ export function getTheme(): Theme {
         }
       `
       },
+      MuiAlert: {
+        styleOverrides: {
+          root: {
+            borderRadius: 12
+          }
+        }
+      },
       MuiButton: {
         styleOverrides: {
           root: {
@@ -114,7 +121,7 @@ export function getTheme(): Theme {
       MuiPaper: {
         styleOverrides: {
           rounded: {
-            borderRadius: 12
+            borderRadius: 24
           }
         }
       }
