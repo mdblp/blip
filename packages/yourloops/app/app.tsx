@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { type FC } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { Auth0Provider } from '@auth0/auth0-react'
 
@@ -41,8 +41,9 @@ import { AuthContextProvider } from '../lib/auth'
 import { MainLobby } from './main-lobby'
 import MetricsLocationListener from '../components/MetricsLocationListener'
 
-const Yourloops = (): JSX.Element => {
+export const Yourloops: FC = () => {
   const redirectUri = window.location.origin
+
   return (
     <Auth0Provider
       domain={appConfig.AUTH0_DOMAIN}
@@ -64,5 +65,3 @@ const Yourloops = (): JSX.Element => {
     </Auth0Provider>
   )
 }
-
-export default Yourloops
