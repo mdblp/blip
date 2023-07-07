@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,6 +37,7 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 export interface BasicDropdownProps {
   id: string
   defaultValue: string
+  disabled?: boolean
   values: string[]
   error?: boolean
   onSelect: (value: string) => void
@@ -61,7 +62,7 @@ const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
 
 function BasicDropdown(props: BasicDropdownProps): JSX.Element {
-  const { onSelect, defaultValue, values, id, error } = props
+  const { onSelect, defaultValue, disabled, values, id, error } = props
   const { t } = useTranslation('yourloops')
   const { classes } = styles()
   const [selectedValue, setSelectedValue] = React.useState(defaultValue)
@@ -83,6 +84,7 @@ function BasicDropdown(props: BasicDropdownProps): JSX.Element {
 
   return (
     <Select
+      disabled={disabled}
       id={`basic-dropdown-${id}-selector`}
       data-testid={`basic-dropdown-${id}-selector`}
       value={selectedValue}

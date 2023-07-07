@@ -31,7 +31,12 @@ import {
   loggedInUserFirstName,
   loggedInUserFullName,
   loggedInUserId,
-  loggedInUserLastName
+  loggedInUserLastName,
+  userTimEmail,
+  userTimFirstName,
+  userTimFullName,
+  userTimId,
+  userTimLastName
 } from './auth0.hook.mock'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
@@ -164,19 +169,19 @@ export const buildTeamThree = (): Team => {
       status: UserInviteStatus.Accepted,
       email: loggedInUserEmail
     }, {
-      userId: '4d9afc649ae4',
-      role: TeamMemberRole.admin,
+      userId: userTimId,
+      role: TeamMemberRole.member,
       profile: {
-        email: 'fake@member.fr',
-        firstName: 'Fake',
-        fullName: 'Fake Member',
+        email: userTimEmail,
+        firstName: userTimFirstName,
+        fullName: userTimFullName,
         hcpProfession: HcpProfession.other,
-        lastName: 'Member',
+        lastName: userTimLastName,
         privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
         termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
       } as Profile,
       status: UserInviteStatus.Accepted,
-      email: 'fake@member.fr'
+      email: userTimEmail
     }],
     monitoringAlertsParameters
   }

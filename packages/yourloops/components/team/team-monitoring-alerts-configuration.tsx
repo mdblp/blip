@@ -38,6 +38,9 @@ import { useAlert } from '../utils/snackbar'
 import MonitoringAlertsContentConfiguration from '../monitoring-alert/monitoring-alerts-content-configuration'
 import { type MonitoringAlertsParameters } from '../../lib/team/models/monitoring-alerts-parameters.model'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
+import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import { useAuth } from '../../lib/auth'
 
 export interface TeamMonitoringAlertsConfigurationProps {
   team: Team
@@ -50,7 +53,12 @@ function TeamMonitoringAlertsConfiguration(props: TeamMonitoringAlertsConfigurat
   const teamHook = useTeam()
   const { refresh } = usePatientsContext()
   const alert = useAlert()
+  const { user } = useAuth()
+  const { selectedTeam } = useSelectedTeamContext()
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
+
+  const currentUserAsTeamMember = selectedTeam.members.find(member => member.userId === user.id)
+  const isCurrentUserTeamAdmin = currentUserAsTeamMember?.role === TeamMemberRole.admin
 
   const save = async (monitoringAlertsParameters: MonitoringAlertsParameters): Promise<void> => {
     team.monitoringAlertsParameters = monitoringAlertsParameters
@@ -80,6 +88,7 @@ function TeamMonitoringAlertsConfiguration(props: TeamMonitoringAlertsConfigurat
 
       <Box paddingX={3}>
         <MonitoringAlertsContentConfiguration
+          displayInReadonly={!isCurrentUserTeamAdmin}
           monitoringAlertsParameters={team.monitoringAlertsParameters}
           onSave={save}
           saveInProgress={saveInProgress}
