@@ -30,7 +30,8 @@ import userEvent from '@testing-library/user-event'
 import { patientWithMmolId } from '../data/patient.api.data'
 import { Unit } from 'medical-domain'
 import PatientApi from '../../../lib/patient/patient.api'
-import { myThirdTeamId } from '../mock/team.api.mock'
+import { buildTeamThree, myThirdTeamId } from '../mock/team.api.mock'
+import TeamApi from '../../../lib/team/team.api'
 
 export const checkMonitoringAlertsDialogContentMgdl = async (): Promise<void> => {
   const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring alerts')
@@ -57,6 +58,57 @@ export const checkMonitoringAlertsDialogContentMmol = async (): Promise<void> =>
   const cancelButton = within(dialog).getByRole('button', { name: 'Cancel' })
   await userEvent.click(cancelButton)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+}
+
+export const checkMonitoringAlertsParametersTeamAdmin = async (): Promise<void> => {
+  jest.spyOn(TeamApi, 'editTeam').mockResolvedValue(undefined)
+  const monitoringAlertsParameters = await screen.findByTestId('team-monitoring-alerts-configuration')
+  expect(monitoringAlertsParameters).toHaveTextContent('Monitoring alerts configuration1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)A. Glycemic targetMinimum:​mg/dLMaximum:​mg/dLDefault: min at 70 mg/dL and max at 180 mg/dLB. Event trigger thresholdTime spent off target5%​Default: 50%')
+  expect(monitoringAlertsParameters).toHaveTextContent('2. Severe hypoglycemiaCurrent trigger setting: 10% of time below 40 mg/dL thresholdA. Severe hypoglycemia threshold:Severe hypoglycemia below:​mg/dLDefault: 54 mg/dLB. Event trigger thresholdTime spent in severe hypoglycemia10%​Default: 5%')
+  expect(monitoringAlertsParameters).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​Default: 50%Save')
+
+  const lowBgInput = within(monitoringAlertsParameters).getByRole('spinbutton', { name: 'Low blood glucose input' })
+  const highBgInput = within(monitoringAlertsParameters).getByRole('spinbutton', { name: 'High blood glucose input' })
+  const veryLowBgInput = within(monitoringAlertsParameters).getByRole('spinbutton', { name: 'Very low blood glucose input' })
+
+  const outOfRangeThreshold = within(monitoringAlertsParameters).getByTestId('basic-dropdown-out-of-range-selector')
+  const hypoThreshold = within(monitoringAlertsParameters).getByTestId('basic-dropdown-hypo-threshold-selector')
+  const nonDataTxThreshold = within(monitoringAlertsParameters).getByTestId('basic-dropdown-non-data-selector')
+
+  expect(lowBgInput).not.toBeDisabled()
+  expect(highBgInput).not.toBeDisabled()
+  expect(veryLowBgInput).not.toBeDisabled()
+  expect(outOfRangeThreshold).not.toHaveClass('Mui-disabled')
+  expect(hypoThreshold).not.toHaveClass('Mui-disabled')
+  expect(nonDataTxThreshold).not.toHaveClass('Mui-disabled')
+
+  const saveButton = within(monitoringAlertsParameters).getByRole('button', { name: 'Save' })
+  expect(saveButton).not.toBeDisabled()
+  await userEvent.click(saveButton)
+
+  const thirdTeam = { ...buildTeamThree(), code: undefined, members: [], type: undefined }
+  expect(TeamApi.editTeam).toHaveBeenCalledWith(thirdTeam)
+}
+
+export const checkMonitoringAlertsParametersTeamMember = async (): Promise<void> => {
+  const monitoringAlertsParameters = within(await screen.findByTestId('team-monitoring-alerts-configuration'))
+  const lowBgInput = monitoringAlertsParameters.getByRole('spinbutton', { name: 'Low blood glucose input' })
+  const highBgInput = monitoringAlertsParameters.getByRole('spinbutton', { name: 'High blood glucose input' })
+  const veryLowBgInput = monitoringAlertsParameters.getByRole('spinbutton', { name: 'Very low blood glucose input' })
+
+  const outOfRangeThreshold = monitoringAlertsParameters.getByTestId('basic-dropdown-out-of-range-selector')
+  const hypoThreshold = monitoringAlertsParameters.getByTestId('basic-dropdown-hypo-threshold-selector')
+  const nonDataTxThreshold = monitoringAlertsParameters.getByTestId('basic-dropdown-non-data-selector')
+
+  expect(lowBgInput).toBeDisabled()
+  expect(highBgInput).toBeDisabled()
+  expect(veryLowBgInput).toBeDisabled()
+  expect(outOfRangeThreshold).toHaveClass('Mui-disabled')
+  expect(hypoThreshold).toHaveClass('Mui-disabled')
+  expect(nonDataTxThreshold).toHaveClass('Mui-disabled')
+
+  const saveButton = monitoringAlertsParameters.queryByRole('button', { name: 'Save' })
+  expect(saveButton).not.toBeInTheDocument()
 }
 
 export const checkMonitoringAlertsDialogSaveButtonMmol = async (): Promise<void> => {

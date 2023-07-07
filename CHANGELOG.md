@@ -125,6 +125,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
 - YLP-2189 Fix error when applying team monitoring alarm params in mg/dL to user with monitoring in mmol/L
 - YLP-2341 Pdf export in CSV is broken when a user has preferred units in its profile
+- YLP-2487 HCP non admin can see button to save new team monitoring alerts parameters
 
 ## 3.0.3 - 2023-02-09
 ### Fixed
