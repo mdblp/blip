@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,43 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { type FunctionComponent } from 'react'
+import { SelectedTeamProvider } from '../lib/selected-team/selected-team.provider'
+import { HcpLayout } from './hcp-layout'
+import { TeamContextProvider } from '../lib/team'
 
-import { useAuth } from '../lib/auth'
-import { NotificationContextProvider } from '../lib/notifications/notification.hook'
-import { Navigate, Route } from 'react-router-dom'
-import { CaregiverLayout } from './caregiver-layout'
-import { PatientLayout } from './patient-layout'
-import { UserRole } from '../lib/auth/models/enums/user-role.enum'
-import { HcpLayoutWithContext } from './hcp-layout-with-context'
-
-export function MainLayout(): JSX.Element {
-  const { user } = useAuth()
-
-  const getUserLayout = (): JSX.Element => {
-    switch (user?.role) {
-      case UserRole.Hcp:
-        return <HcpLayoutWithContext />
-      case UserRole.Caregiver:
-        return <CaregiverLayout />
-      case UserRole.Patient:
-        return <PatientLayout />
-      default:
-        console.error(`no layout found for role ${user?.role}`)
-        return <Route
-          path="*"
-          element={<Navigate to="/not-found" replace />}
-        />
-    }
-  }
-
+export const HcpLayoutWithContext: FunctionComponent = () => {
   return (
-    <React.Fragment>
-      {user &&
-        <NotificationContextProvider>
-          {getUserLayout()}
-        </NotificationContextProvider>
-      }
-    </React.Fragment>
+    <TeamContextProvider>
+      <SelectedTeamProvider>
+        <HcpLayout />
+      </SelectedTeamProvider>
+    </TeamContextProvider>
   )
 }

@@ -120,6 +120,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2458 Blip auto dependencies update
 - YLP-2468 Fix team management issues
 - YLP-2490 Invitation confirmation string correction
+- YLP-2492 Fix errors on /team when private team selected
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team

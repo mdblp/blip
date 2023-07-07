@@ -48,7 +48,7 @@ import { styled, Tab, Tabs } from '@mui/material'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { HcpNavigationTab } from '../../models/enums/hcp-navigation-tab.model'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import { PRIVATE_TEAM_ID } from '../../lib/team/team.hook'
+import TeamUtils from '../../lib/team/team.util'
 
 const classes = makeStyles()((theme: Theme) => ({
   appBar: {
@@ -113,7 +113,8 @@ function MainHeader(): JSX.Element {
   }
 
   useEffect(() => {
-    const tabToSelect = getTabByPathname(pathname)
+    const tabByPathname = getTabByPathname(pathname)
+    const tabToSelect = TeamUtils.isPrivate(selectedTeam) ? HcpNavigationTab.Patients : tabByPathname
     setSelectedTab(tabToSelect)
   }, [pathname, selectedTeam])
 
@@ -156,7 +157,7 @@ function MainHeader(): JSX.Element {
                   handleTabClick(HcpNavigationTab.Patients)
                 }}
               />
-              {selectedTeam.id !== PRIVATE_TEAM_ID &&
+              {!TeamUtils.isPrivate(selectedTeam) &&
                 <StyledTab
                   data-testid="main-header-hcp-care-team-settings-tab"
                   className={tab}

@@ -30,37 +30,40 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { PatientData } from '../components/patient-data/patient-data'
 import CareTeamSettingsPage from '../pages/care-team-settings/care-team-settings-page'
 import { PatientsProvider } from '../lib/patient/patients.provider'
-import { TeamContextProvider } from '../lib/team'
 import DashboardLayout from './dashboard-layout'
 import InvalidRoute from '../components/invalid-route'
 import ProfilePage from '../pages/profile/profile-page'
 import NotificationsPage from '../pages/notifications'
-import { SelectedTeamProvider } from '../lib/selected-team/selected-team.provider'
+import { useSelectedTeamContext } from '../lib/selected-team/selected-team.provider'
 import { AppUserRoute } from '../models/enums/routes.enum'
 import { PatientListPage } from '../components/patient-list/patient-list-page'
 import { PatientListProvider } from '../lib/providers/patient-list.provider'
+import TeamUtils from '../lib/team/team.util'
 
 export const HcpLayout: FunctionComponent = () => {
+  const { selectedTeam } = useSelectedTeamContext()
+
   return (
-    <TeamContextProvider>
-      <SelectedTeamProvider>
-        <PatientListProvider>
-          <PatientsProvider>
-            <DashboardLayout>
-              <Routes>
-                <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
-                <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
-                <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
-                <Route path={AppUserRoute.Home} element={<PatientListPage />} />
-                <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientData />} />
-                <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
-                <Route path="/" element={<Navigate to={AppUserRoute.Home} replace />} />
-                <Route path="*" element={<Navigate to={AppUserRoute.NotFound} replace />} />
-              </Routes>
-            </DashboardLayout>
-          </PatientsProvider>
-        </PatientListProvider>
-      </SelectedTeamProvider>
-    </TeamContextProvider>
+    <PatientListProvider>
+      <PatientsProvider>
+        <DashboardLayout>
+          <Routes>
+            <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
+            <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
+            <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
+            <Route path={AppUserRoute.Home} element={<PatientListPage />} />
+            <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientData />} />
+            <Route path={AppUserRoute.CareTeamSettings}
+                   element={
+                     TeamUtils.isPrivate(selectedTeam)
+                       ? <Navigate to={AppUserRoute.Home} replace />
+                       : <CareTeamSettingsPage />
+                   } />
+            <Route path="/" element={<Navigate to={AppUserRoute.Home} replace />} />
+            <Route path="*" element={<Navigate to={AppUserRoute.NotFound} replace />} />
+          </Routes>
+        </DashboardLayout>
+      </PatientsProvider>
+    </PatientListProvider>
   )
 }
