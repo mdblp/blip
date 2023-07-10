@@ -29,7 +29,9 @@ import {
   checkMonitoringAlertsDialogContentMgdl,
   checkMonitoringAlertsDialogContentMmol,
   checkMonitoringAlertsDialogDefaultButtonMgdl,
-  checkMonitoringAlertsDialogSaveButtonMmol
+  checkMonitoringAlertsDialogSaveButtonMmol,
+  checkMonitoringAlertsParametersTeamAdmin,
+  checkMonitoringAlertsParametersTeamMember
 } from '../assert/monitoring-alerts-parameters.assert'
 
 export const testMonitoringAlertsParametersConfigurationDialogMgdl = async (): Promise<void> => {
@@ -40,4 +42,12 @@ export const testMonitoringAlertsParametersConfigurationDialogMgdl = async (): P
 export const testMonitoringAlertsParametersConfigurationDialogMmol = async (): Promise<void> => {
   await checkMonitoringAlertsDialogContentMmol()
   await checkMonitoringAlertsDialogSaveButtonMmol()
+}
+
+export const testMonitoringAlertsParametersTeamAdmin = async (): Promise<void> => {
+  await checkMonitoringAlertsParametersTeamAdmin()
+}
+
+export const testMonitoringAlertsParametersTeamMember = async (): Promise<void> => {
+  await checkMonitoringAlertsParametersTeamMember()
 }

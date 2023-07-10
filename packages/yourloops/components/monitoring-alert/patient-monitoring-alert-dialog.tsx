@@ -100,6 +100,7 @@ function PatientMonitoringAlertDialog(props: PatientMonitoringAlertDialogProps):
 
       <DialogContent className={'no-padding'}>
         <MonitoringAlertsContentConfiguration
+          displayInReadonly={false}
           monitoringAlertsParameters={monitoringAlertsParameters}
           patient={patient}
           onSave={save}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,7 +41,6 @@ declare global {
 
   // var window: Window & typeof globalThis & ExtendedWindow;
   interface Window {
-    startLoadingTime?: number
     _jipt: any // Zendesk
     _paq?: Array<Array<string | number>> // Matomo
     process: any
@@ -53,9 +52,6 @@ declare global {
     openAxeptioCookies?: () => void
     loadStonlyWidget?: () => void
     zE: (...args: any) => void // Zendesk API
-    cleanBlipReduxStore?: () => void
-    /** If the application crash, stop the session timeout timers */
-    clearSessionTimeout?: () => void
   }
   interface Navigator {
     userLanguage?: string

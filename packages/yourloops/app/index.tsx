@@ -36,7 +36,7 @@ import initCookiesConsentListener from '../lib/cookies-manager'
 import initDayJS from '../lib/dayjs'
 import { initTheme } from '../components/theme'
 
-import Yourloops from './app'
+import { Yourloops } from './app'
 import OnError from './error'
 import { BrowserRouter } from 'react-router-dom'
 import initAxios from '../lib/http/axios.service'

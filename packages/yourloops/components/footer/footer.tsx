@@ -161,6 +161,7 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
     },
     link: {
       color: theme.palette.grey[700],
+      marginLeft: theme.spacing(1),
       fontWeight: 400,
       [theme.breakpoints.down('sm')]: {
         marginBottom: '15px',
@@ -316,7 +317,7 @@ const Footer: FunctionComponent = () => {
               onClick={metricsPdfDocument('release_notes')}
               className={classes.link}
             >
-              <span className={classes.versionSpan}>&nbsp;{`v${config.VERSION}`.substring(0, 20)}</span>
+              <span className={classes.versionSpan}>{`v${config.VERSION}`.substring(0, 20)}</span>
             </Link>
           </Tooltip>
           <span className={classes.bySpan}>by </span>

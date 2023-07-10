@@ -178,6 +178,7 @@ const ignoredTransKeyForYourLoops = [
   'remaining-time',
   'created-by-unknown',
   'delete-medical-report-number',
+  'default-min-max',
   'filters-activated',
   'modal-reinvite-patient-question',
   'no-settings-on-device-alert-message',
