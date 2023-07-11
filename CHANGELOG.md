@@ -47,6 +47,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2392 Refine the Account preferences page
 - YLP-2393 Remove fields and "Show more/Show less" logic in the patient header
 - YLP-2394 Hide "Monitoring alerts" card for patients users
+- YLP-2395 Update chat widget size
 - YLP-2399 Cancel invite dialog new design
 - YLP-2430 Add checkbox to confirm that user is a hcp
 - YLP-2435 Remove "Telemonitored" filter on patient list
@@ -119,11 +120,14 @@ It is based on Tidepool Blip 1.27.
 - YLP-2454 Daily view crashes on mobile
 - YLP-2458 Blip auto dependencies update
 - YLP-2468 Fix team management issues
+- YLP-2490 Invitation confirmation string correction
+- YLP-2492 Fix errors on /team when private team selected
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
 - YLP-2189 Fix error when applying team monitoring alarm params in mg/dL to user with monitoring in mmol/L
 - YLP-2341 Pdf export in CSV is broken when a user has preferred units in its profile
+- YLP-2487 HCP non admin can see button to save new team monitoring alerts parameters
 
 ## 3.0.3 - 2023-02-09
 ### Fixed

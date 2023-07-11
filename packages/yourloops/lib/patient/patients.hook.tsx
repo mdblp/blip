@@ -66,13 +66,14 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
       .catch((reason: unknown) => {
         const message = errorTextFromException(reason)
         alert.error(message)
+        setPatients([])
       })
       .finally(() => {
         setInitialized(true)
         setRefreshInProgress(false)
       })
       .then(async (computedPatients: Patient[]) => {
-        if (!isUserHcp) {
+        if (!isUserHcp || !computedPatients) {
           return
         }
 

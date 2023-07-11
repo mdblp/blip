@@ -102,6 +102,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }))
 
 export interface MonitoringAlertsContentConfigurationProps {
+  displayInReadonly: boolean
   monitoringAlertsParameters: MonitoringAlertsParameters
   saveInProgress: boolean
   patient?: Patient
@@ -117,7 +118,7 @@ const TIME_SPENT_SEVERE_HYPOGLYCEMIA_THRESHOLD_PERCENT = 5
 const TIME_SPENT_WITHOUT_UPLOADED_DATA_THRESHOLD_PERCENT = 50
 
 function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConfigurationProps): JSX.Element {
-  const { monitoringAlertsParameters, patient, saveInProgress, onClose, onSave } = props
+  const { displayInReadonly, monitoringAlertsParameters, patient, saveInProgress, onClose, onSave } = props
   const { classes } = useStyles()
   const { t } = useTranslation()
   const { user } = useAuth()
@@ -142,7 +143,13 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
     setHypoThreshold,
     setNonDataTxThreshold,
     bgUnit
-  } = useMonitoringAlertsContentConfiguration({ monitoringAlertsParameters, saveInProgress, userBgUnit, patient, onSave })
+  } = useMonitoringAlertsContentConfiguration({
+    monitoringAlertsParameters,
+    saveInProgress,
+    userBgUnit,
+    patient,
+    onSave
+  })
   const { minLowBg, maxLowBg, minHighBg, maxHighBg, minVeryLowBg, maxVeryLowBg } = buildThresholds(bgUnit)
   const { highBgDefault, lowBgDefault, veryLowBgDefault } = buildBgValues(bgUnit)
 
@@ -178,6 +185,7 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
               >
                 <Typography>{t('minimum')}</Typography>
                 <TextField
+                  disabled={displayInReadonly}
                   value={lowBg.value}
                   error={!!lowBg.errorMessage}
                   type="number"
@@ -191,7 +199,9 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
                       'aria-label': t('low-bg-input')
                     }
                   }}
-                  onChange={(event) => { onChange(+event.target.value, minLowBg, maxLowBg, setLowBg) }}
+                  onChange={(event) => {
+                    onChange(+event.target.value, minLowBg, maxLowBg, setLowBg)
+                  }}
                 />
                 <Typography>{userBgUnit}</Typography>
                 {!!lowBg.errorMessage &&
@@ -209,6 +219,7 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
               >
                 <Typography>{t('maximum')}</Typography>
                 <TextField
+                  disabled={displayInReadonly}
                   value={highBg.value}
                   error={!!highBg.errorMessage}
                   type="number"
@@ -222,7 +233,9 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
                       'aria-label': t('high-bg-input')
                     }
                   }}
-                  onChange={(event) => { onChange(+event.target.value, minHighBg, maxHighBg, setHighBg) }}
+                  onChange={(event) => {
+                    onChange(+event.target.value, minHighBg, maxHighBg, setHighBg)
+                  }}
                 />
                 <Typography>{bgUnit}</Typography>
                 {!!highBg.errorMessage &&
@@ -234,7 +247,10 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
             </div>
             {!patient &&
               <Typography
-                className={classes.defaultLabel}>{t('default-min-max', { min: `${lowBgDefault} ${bgUnit}`, max: `${highBgDefault} ${bgUnit}` })}</Typography>
+                className={classes.defaultLabel}>{t('default-min-max', {
+                  min: `${lowBgDefault} ${bgUnit}`,
+                  max: `${highBgDefault} ${bgUnit}`
+                })}</Typography>
             }
           </div>
           <div>
@@ -243,18 +259,22 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
               <Typography>{t('time-spent-off-target')}</Typography>
               <div className={classes.dropdown} data-testid="dropdown-out-of-range">
                 <BasicDropdown
+                  disabled={displayInReadonly}
                   key={`out-of-range-${outOfRangeThreshold.value}`}
                   id="out-of-range"
                   defaultValue={`${outOfRangeThreshold.value}%` ?? ''}
                   values={PERCENTAGES}
                   error={outOfRangeThreshold.error}
-                  onSelect={(value) => { onBasicDropdownSelect(value, setOutOfRangeThreshold) }}
+                  onSelect={(value) => {
+                    onBasicDropdownSelect(value, setOutOfRangeThreshold)
+                  }}
 
                 />
               </div>
             </div>
             {!patient &&
-              <Typography className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_OFF_TARGET_THRESHOLD_PERCENT}%` })}</Typography>
+              <Typography
+                className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_OFF_TARGET_THRESHOLD_PERCENT}%` })}</Typography>
             }
           </div>
         </Box>
@@ -283,6 +303,7 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
             >
               <Typography>{t('severe-hypoglycemia-below')}</Typography>
               <TextField
+                disabled={displayInReadonly}
                 value={veryLowBg.value}
                 error={!!veryLowBg.errorMessage}
                 type="number"
@@ -296,7 +317,9 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
                     'aria-label': t('very-low-bg-input')
                   }
                 }}
-                onChange={(event) => { onChange(+event.target.value, minVeryLowBg, maxVeryLowBg, setVeryLowBg) }}
+                onChange={(event) => {
+                  onChange(+event.target.value, minVeryLowBg, maxVeryLowBg, setVeryLowBg)
+                }}
               />
               <Typography data-testid="bgUnits-severalHypo">{bgUnit}</Typography>
               {!!veryLowBg.errorMessage &&
@@ -318,6 +341,7 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
               <Typography>{t('time-spent-severe-hypoglycemia')}</Typography>
               <div className={classes.dropdown}>
                 <BasicDropdown
+                  disabled={displayInReadonly}
                   key={`hypo-threshold-${hypoThreshold.value}`}
                   id="hypo-threshold"
                   defaultValue={`${hypoThreshold.value}%` ?? ''}
@@ -330,7 +354,8 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
               </div>
             </div>
             {!patient &&
-              <Typography className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_SEVERE_HYPOGLYCEMIA_THRESHOLD_PERCENT}%` })}</Typography>
+              <Typography
+                className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_SEVERE_HYPOGLYCEMIA_THRESHOLD_PERCENT}%` })}</Typography>
             }
           </div>
         </Box>
@@ -349,17 +374,21 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
               <Typography>{t('time-spent-without-uploaded-data')}</Typography>
               <div className={classes.dropdown} data-testid="dropdown-nonData">
                 <BasicDropdown
+                  disabled={displayInReadonly}
                   key={`tir-dropdown-${nonDataTxThreshold.value}`}
                   id="non-data"
                   defaultValue={`${nonDataTxThreshold.value}%` ?? ''}
                   values={PERCENTAGES.slice(0, 10)}
                   error={nonDataTxThreshold.error}
-                  onSelect={(value) => { onBasicDropdownSelect(value, setNonDataTxThreshold) }}
+                  onSelect={(value) => {
+                    onBasicDropdownSelect(value, setNonDataTxThreshold)
+                  }}
                 />
               </div>
             </div>
             {!patient &&
-              <Typography className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_WITHOUT_UPLOADED_DATA_THRESHOLD_PERCENT}%` })}</Typography>
+              <Typography
+                className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_WITHOUT_UPLOADED_DATA_THRESHOLD_PERCENT}%` })}</Typography>
             }
           </div>
         </Box>
@@ -391,18 +420,20 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
               {t('button-cancel')}
             </Button>
           }
-          <LoadingButton
-            loading={saveInProgress}
-            id="save-button-id"
-            variant="contained"
-            color="primary"
-            disableElevation
-            disabled={saveButtonDisabled}
-            onClick={save}
-            data-testid="monitoring-alert-config-save"
-          >
-            {t('button-save')}
-          </LoadingButton>
+          {!displayInReadonly &&
+            <LoadingButton
+              loading={saveInProgress}
+              id="save-button-id"
+              variant="contained"
+              color="primary"
+              disableElevation
+              disabled={saveButtonDisabled}
+              onClick={save}
+              data-testid="monitoring-alert-config-save"
+            >
+              {t('button-save')}
+            </LoadingButton>
+          }
         </Box>
       </Box>
     </React.Fragment>
