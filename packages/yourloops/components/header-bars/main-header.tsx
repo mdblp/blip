@@ -113,8 +113,7 @@ function MainHeader(): JSX.Element {
   }
 
   useEffect(() => {
-    const tabByPathname = getTabByPathname(pathname)
-    const tabToSelect = TeamUtils.isPrivate(selectedTeam) ? HcpNavigationTab.Patients : tabByPathname
+    const tabToSelect = getTabByPathname(pathname)
     setSelectedTab(tabToSelect)
   }, [pathname, selectedTeam])
 
