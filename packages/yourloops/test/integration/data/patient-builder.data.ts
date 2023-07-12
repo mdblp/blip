@@ -119,7 +119,8 @@ export const buildTeamMemberFromPatient = (patient: Patient, metrics: PatientMet
     idVerified: false,
     unreadMessages: patient.hasSentUnreadMessages ? 1 : 0,
     alarms: metrics?.monitoringAlerts,
-    glycemiaIndicators: metrics?.glycemiaIndicators
+    glycemiaIndicators: metrics?.glycemiaIndicators,
+    medicalData: metrics?.medicalData
   }
 }
 
@@ -157,6 +158,7 @@ export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMem
     idVerified: member.idVerified ?? true,
     unreadMessages: member.unreadMessages ?? 0,
     alarms: member.alarms,
-    glycemiaIndicators: member.glycemiaIndicators
+    glycemiaIndicators: member.glycemiaIndicators,
+    medicalData: member.medicalData || { range: { startDate: '', endDate: '' } }
   }
 }
