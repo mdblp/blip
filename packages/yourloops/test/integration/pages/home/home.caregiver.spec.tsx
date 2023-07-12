@@ -41,6 +41,7 @@ import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { checkPatientListHeaderCaregiver } from '../../assert/patient-list.assert'
 import { buildPatientAsTeamMember } from '../../data/patient-builder.data'
+import moment from 'moment-timezone'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
@@ -119,21 +120,23 @@ describe('Caregiver home page', () => {
       expect(screen.queryByTestId('current-patient-list-grid')).toBeVisible()
     }, { timeout: 10000 })
 
+    const lastDataUploadDate = moment.tz(patient1.medicalData.range.endDate, new Intl.DateTimeFormat().resolvedOptions().timeZone).format('lll')
+
     // Checking that all patients are displayed
     const dataGridRow = screen.getByTestId('current-patient-list-grid')
     expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%Jun 22, 2023 9:02 AMFlag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/AFlag patient fake@patient.emailAnnie VersaireMay 25, 20150%0%N/A')
+    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%${lastDataUploadDate}Flag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/AFlag patient fake@patient.emailAnnie VersaireMay 25, 20150%0%N/A`)
 
     const searchPatient = screen.getByPlaceholderText('Search for a patient...')
 
     // Searching by birthdate only
     await userEvent.type(searchPatient, '20/01/2010')
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%Jun 22, 2023 9:02 AMFlag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/A')
+    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%${lastDataUploadDate}Flag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/A`)
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and first name
     await userEvent.type(searchPatient, '20/01/2010 Aki')
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%Jun 22, 2023 9:02 AM')
+    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%${lastDataUploadDate}`)
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and last name
