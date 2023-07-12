@@ -49,6 +49,9 @@ import { type AppRoute } from '../../models/enums/routes.enum'
 
 export const footerStyle = makeStyles({ name: 'footer-component-styles' })((theme: Theme) => {
   return {
+    appVersionLink: {
+      marginLeft: theme.spacing(1)
+    },
     bySpan: {
       paddingLeft: '12px',
       paddingRight: '12px',
@@ -168,9 +171,6 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
         marginRight: '0.5rem',
         textAlign: 'center'
       }
-    },
-    appVersionLink: {
-      marginLeft: theme.spacing(1)
     },
     rightBox: {
       display: 'flex',
