@@ -49,6 +49,9 @@ import { type AppRoute } from '../../models/enums/routes.enum'
 
 export const footerStyle = makeStyles({ name: 'footer-component-styles' })((theme: Theme) => {
   return {
+    appVersionLink: {
+      marginLeft: theme.spacing(1)
+    },
     bySpan: {
       paddingLeft: '12px',
       paddingRight: '12px',
@@ -161,7 +164,6 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
     },
     link: {
       color: theme.palette.grey[700],
-      marginLeft: theme.spacing(1),
       fontWeight: 400,
       [theme.breakpoints.down('sm')]: {
         marginBottom: '15px',
@@ -315,7 +317,7 @@ const Footer: FunctionComponent = () => {
               href={diabeloopExternalUrls.releaseNotes}
               rel="nofollow"
               onClick={metricsPdfDocument('release_notes')}
-              className={classes.link}
+              className={`${classes.link} ${classes.appVersionLink}`}
             >
               <span className={classes.versionSpan}>{`v${config.VERSION}`.substring(0, 20)}</span>
             </Link>
