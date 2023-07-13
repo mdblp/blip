@@ -1,4 +1,5 @@
 import * as core from '@aws-cdk/core';
+import { Duration } from '@aws-cdk/core';
 import * as cloudfront from '@aws-cdk/aws-cloudfront';
 import { DnsValidatedCertificate } from '@aws-cdk/aws-certificatemanager';
 import * as iam from '@aws-cdk/aws-iam';
@@ -8,7 +9,6 @@ import * as s3 from '@aws-cdk/aws-s3';
 import * as s3deploy from '@aws-cdk/aws-s3-deployment';
 import * as route53 from '@aws-cdk/aws-route53';
 import { WebStackProps } from './props/WebStackProps';
-import { Duration } from '@aws-cdk/core';
 import * as path from 'path';
 
 export class StaticWebSiteStack extends core.Stack {
@@ -148,7 +148,7 @@ export class StaticWebSiteStack extends core.Stack {
       destinationBucket: bucket,
       destinationKeyPrefix: `${props?.FrontAppName}/${props?.version}`,
       distribution,
-      distributionPaths: ['/index.html']
+      distributionPaths: ['/*']
     });
     new s3deploy.BucketDeployment(this, `${id}-maintenancepage`, {
       sources: [s3deploy.Source.asset(path.resolve(__dirname, '../../assets/maintenance'))],
