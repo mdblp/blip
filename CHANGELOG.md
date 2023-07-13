@@ -123,6 +123,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2490 Invitation confirmation string correction
 - YLP-2492 Fix errors on /team when private team selected
 - YLP-2497 Fix cache invalidation of all files after app deployment
+- YLP-2498 Fix chat widget minimal height
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
