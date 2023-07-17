@@ -137,7 +137,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                     <TableCell>
                       <ParameterChangeValue
                         historyCurrentIndex={historyCurrentIndex}
-                        history={history}
+                        history={historyToDisplay}
                         parameter={parameter}
                       />
                     </TableCell>
