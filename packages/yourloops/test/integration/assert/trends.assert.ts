@@ -90,10 +90,10 @@ export const checkTrendsStatsWidgetsTooltips = async () => {
 
 export const checkTrendsTimeInRangeStatsWidgets = async () => {
   expect(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
-  expect(screen.getByTestId('cbg-percentage-stat-veryHigh-timeInRange')).toHaveTextContent('1h 36m7%')
+  expect(screen.getByTestId('cbg-percentage-stat-veryHigh-timeInRange')).toHaveTextContent('2h7%')
   expect(screen.getByTestId('cbg-percentage-stat-high-timeInRange')).toHaveTextContent('6h 24m27%')
   expect(screen.getByTestId('cbg-percentage-stat-target-timeInRange')).toHaveTextContent('3h 12m13%')
-  expect(screen.getByTestId('cbg-percentage-stat-low-timeInRange')).toHaveTextContent('4h 48m20%')
+  expect(screen.getByTestId('cbg-percentage-stat-low-timeInRange')).toHaveTextContent('5h20%')
   expect(screen.getByTestId('cbg-percentage-stat-veryLow-timeInRange')).toHaveTextContent('8h33%')
 }
 

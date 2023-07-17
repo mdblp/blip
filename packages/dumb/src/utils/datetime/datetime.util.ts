@@ -187,7 +187,7 @@ export const formatDuration = (duration: number, condensed: boolean = false): st
       let roundedHours = hours
       let roundedDays = days
 
-      if (roundedMinutes >= 60) {
+      if (roundedMinutes >= 30) {
         roundedMinutes = roundedMinutes - 60
         roundedHours++
       }

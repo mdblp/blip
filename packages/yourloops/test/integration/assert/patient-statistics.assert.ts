@@ -38,7 +38,7 @@ export const checkPatientStatistics = async () => {
   checkTooltip(patientStatistics, 'Avg. Daily Carbs')
   checkTooltip(patientStatistics, 'CV (CGM)')
 
-  expect(patientStatistics.getByTestId('cbg-percentage-bar-chart')).toHaveTextContent('Avg. Daily Time In Range4h 48m20%4h 48m20%4h 48m20%4h 48m20%4h 48m20%<5454-7070-180180-250>250mg/dL')
+  expect(patientStatistics.getByTestId('cbg-percentage-bar-chart')).toHaveTextContent('Avg. Daily Time In Range5h20%5h20%5h20%5h20%5h20%<5454-7070-180180-250>250mg/dL')
   expect(patientStatistics.getByTestId('cbg-standard-deviation-stat')).toHaveTextContent('Standard Deviation (24-224)mg/dL100')
   expect(patientStatistics.getByTestId('cbg-mean-stat')).toHaveTextContent('Avg. Glucose (CGM)mg/dL124')
   expect(patientStatistics.getByTestId('container-insulin-stats')).toHaveTextContent('Avg. Daily Total Insulin5.4UBolus1 U19%Basal4.4 U81%Weight72kgRatio Dose0.08U/kg')
@@ -49,7 +49,7 @@ export const checkPatientStatistics = async () => {
 
 export const checkPatientStatisticsWithTwoWeeksOldData = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 4000 }))
-  expect(patientStatistics.getByTestId('cbg-percentage-bar-chart')).toHaveTextContent('Avg. Daily Time In Range4h 48m20%4h 48m20%4h 48m20%4h 48m20%4h 48m20%<5454-7070-180180-250>250mg/dL')
+  expect(patientStatistics.getByTestId('cbg-percentage-bar-chart')).toHaveTextContent('Avg. Daily Time In Range5h20%5h20%5h20%5h20%5h20%<5454-7070-180180-250>250mg/dL')
   expect(patientStatistics.getByTestId('cbg-standard-deviation-stat')).toHaveTextContent('Standard Deviation (34-214)mg/dL90')
   expect(patientStatistics.getByTestId('cbg-mean-stat')).toHaveTextContent('Avg. Glucose (CGM)mg/dL124')
   expect(patientStatistics.getByTestId('container-insulin-stats')).toHaveTextContent('Avg. Daily Total Insulin10.8UBolus2 U19%Basal8.8 U81%Weight72kgRatio Dose0.15U/kg')
