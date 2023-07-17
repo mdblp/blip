@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, useEffect } from 'react'
+import React, { type FC, useEffect, useState } from 'react'
 import TableContainer from '@mui/material/TableContainer'
 import Table from '@mui/material/Table'
 import TableHead from '@mui/material/TableHead'
@@ -60,6 +60,7 @@ interface ParametersChangeHistoryProps {
 export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ history, goToDailySpecificDate, timezone }) => {
   const theme = useTheme()
   const { t } = useTranslation()
+  const [historyToDisplay, setHistoryToDisplay] = useState<ParametersChange[]>([])
 
   const onClickChangeDate = (date: number): void => {
     goToDailySpecificDate(date)
@@ -67,10 +68,10 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
   }
 
   useEffect(() => {
-    sortHistoryParametersByDate(history).reverse()
-    sortPumpSettingsParameterByLevel(history)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    const historyParametersSortedByDate = sortHistoryParametersByDate(history).reverse()
+    const historyPumpSettingSortedByLevel = sortPumpSettingsParameterByLevel(historyParametersSortedByDate)
+    setHistoryToDisplay(historyPumpSettingSortedByLevel)
+  }, [history])
 
   return (
     <Card variant="outlined" data-testid="history-parameter-table">
@@ -86,7 +87,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
             </TableRow>
           </TableHead>
           <TableBody>
-            {history.map((parametersChange, historyCurrentIndex) => (
+            {historyToDisplay.map((parametersChange, historyCurrentIndex) => (
               <React.Fragment key={`${parametersChange.changeDate}-${historyCurrentIndex}`}>
                 <TableRow sx={{ backgroundColor: 'var(--primary-color-background)' }} className="change-date-row">
                   <TableCell colSpan={5}>
@@ -137,7 +138,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                     <TableCell>
                       <ParameterChangeValue
                         historyCurrentIndex={historyCurrentIndex}
-                        history={history}
+                        history={historyToDisplay}
                         parameter={parameter}
                       />
                     </TableCell>
