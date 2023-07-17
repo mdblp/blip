@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, type PropsWithChildren } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { type BgPrefs, CBGPercentageBarChart, CBGStatType, LoopModeStat, TotalCarbsStat } from 'dumb'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
@@ -56,7 +56,7 @@ export interface PatientStatisticsProps {
   dateFilter: DateFilter
 }
 
-export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
+export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (props) => {
   const { medicalData, bgPrefs, bgType, dateFilter } = props
   const theme = useTheme()
   const location = useLocation()

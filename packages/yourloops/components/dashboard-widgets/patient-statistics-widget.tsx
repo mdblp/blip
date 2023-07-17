@@ -25,14 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, type PropsWithChildren } from 'react'
+import React, { type FunctionComponent } from 'react'
 import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined'
 import GenericDashboardCard from './generic-dashboard-card'
 import { useTranslation } from 'react-i18next'
 import CardContent from '@mui/material/CardContent'
 import { PatientStatistics, type PatientStatisticsProps } from '../statistics/patient-statistics'
 
-export const PatientStatisticsWidget: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
+export const PatientStatisticsWidget: FunctionComponent<PatientStatisticsProps> = (props) => {
   const { t } = useTranslation()
   const { medicalData, bgPrefs, bgType, dateFilter } = props
 
@@ -47,8 +47,7 @@ export const PatientStatisticsWidget: FunctionComponent<PropsWithChildren<Patien
           bgPrefs={bgPrefs}
           bgType={bgType}
           dateFilter={dateFilter}
-        >
-        </PatientStatistics>
+        />
       </CardContent>
     </GenericDashboardCard>
   )
