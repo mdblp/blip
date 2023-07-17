@@ -34,7 +34,7 @@ import { type Profile } from '../../../../../lib/auth/models/profile.model'
 import { Gender } from '../../../../../lib/auth/models/enums/gender.enum'
 
 describe('Patient utils', () => {
-  describe('mapTeamUserToPatient', () => {
+  describe('mapITeamMemberToPatient', () => {
     it('should map correctly', () => {
       const email = 'fake@email.com'
       const profile: Profile = {
@@ -65,14 +65,15 @@ describe('Patient utils', () => {
           coefficientOfVariation: 1,
           glucoseManagementIndicator: 0
         },
-        unreadMessages: 5
+        unreadMessages: 5,
+        medicalData: { range: { startDate: '', endDate: '' } }
       }
       teamMember.unreadMessages = 4
       const patient: Patient = {
         monitoringAlerts: teamMember.alarms,
         glycemiaIndicators: teamMember.glycemiaIndicators,
         flagged: undefined,
-        medicalData: null,
+        medicalData: teamMember.medicalData,
         hasSentUnreadMessages: teamMember.unreadMessages > 0,
         profile: {
           birthdate: undefined,

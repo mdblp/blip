@@ -80,7 +80,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
   const { patients, onClickRemovePatient } = props
   const { t } = useTranslation()
   const { classes } = usePatientListStyles()
-  const { user, getFlagPatients } = useAuth()
+  const { getFlagPatients } = useAuth()
   const navigate = useNavigate()
   const noDataLabel = t('N/A')
 
@@ -89,9 +89,6 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
 
   const allRows = useMemo(() => {
     return sortedPatients.map((patient): GridRowModel => {
-      const lastUploadDate = PatientUtils.getLastUploadDate(patient.medicalData, noDataLabel)
-      // FIXME YLP-2460 Bug on /my-patients route: `medicalData` is never returned for caregivers
-      const lastUpload = user.isUserCaregiver() ? noDataLabel : lastUploadDate
       const birthdate = patient.profile.birthdate
       return {
         id: patient.userid,
@@ -102,7 +99,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
         [PatientListColumns.MonitoringAlerts]: patient,
         [PatientListColumns.System]: patient.settings.system ?? noDataLabel,
-        [PatientListColumns.LastDataUpdate]: lastUpload,
+        [PatientListColumns.LastDataUpdate]: PatientUtils.getLastUploadDate(patient.medicalData, noDataLabel),
         [PatientListColumns.Messages]: patient.hasSentUnreadMessages,
         [PatientListColumns.TimeInRange]: patient.glycemiaIndicators?.timeInRange,
         [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators?.glucoseManagementIndicator,
@@ -111,7 +108,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         [PatientListColumns.Actions]: patient
       }
     })
-  }, [noDataLabel, sortedPatients, user])
+  }, [noDataLabel, sortedPatients])
 
   const isNumberValueDefined = (value: number): boolean => {
     return !!value || value === 0 || value === GLYCEMIA_INDICATOR_NO_DATA_VALUE
