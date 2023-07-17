@@ -253,16 +253,18 @@ export const MessageCell: FunctionComponent<MessageCellProps> = ({ hasNewMessage
       title={title}
       aria-label={title}
     >
-      <Box display="flex" justifyContent="center" data-testid="message-icon">
+      <Box display="flex" justifyContent="center">
         {hasNewMessages
           ? <Badge color="warning" variant="dot">
             <MessageIcon
+              data-testid="message-icon"
               titleAccess={newUnreadMessagesLabel}
               aria-label={newUnreadMessagesLabel}
               color="inherit"
             />
           </Badge>
           : <NoMessageIcon
+            data-testid="message-icon"
             titleAccess={noNewMessagesLabel}
             aria-label={noNewMessagesLabel}
             color="disabled"
