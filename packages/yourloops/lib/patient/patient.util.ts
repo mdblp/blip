@@ -70,7 +70,7 @@ export default class PatientUtils {
 
     const patientIds = acceptedInvitePatients.map((patient: Patient) => patient.userid)
 
-    return PatientApi.getPatientsMetricsForHcp(userId, teamId, patientIds)
+    return await PatientApi.getPatientsMetricsForHcp(userId, teamId, patientIds)
   }
 
   static getUpdatedPatientsWithMetrics(patients: Patient[], metrics: PatientMetrics[]): Patient[] {

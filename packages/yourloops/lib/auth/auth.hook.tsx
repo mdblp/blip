@@ -198,14 +198,9 @@ export function AuthContextImpl(): AuthContext {
 
   const logout = (isIdle = false): void => {
     try {
-      if (window.cleanBlipReduxStore) {
-        window.cleanBlipReduxStore()
-      }
       zendeskLogout()
-
       const redirectUrl = getLogoutRedirectUrl(isIdle)
       auth0logout({ logoutParams: { returnTo: redirectUrl } })
-
       metrics.resetUser()
     } catch (err) {
       log.error('logout', err)

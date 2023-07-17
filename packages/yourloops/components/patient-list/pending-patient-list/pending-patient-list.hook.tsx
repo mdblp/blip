@@ -37,7 +37,7 @@ import Button from '@mui/material/Button'
 import CloseIcon from '@mui/icons-material/Close'
 import MailIcon from '@mui/icons-material/Mail'
 import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
-import { formatDate } from 'dumb/dist/src/utils/datetime/datetime.util'
+import { formatDate } from 'dumb'
 
 interface PendingPatientListHookProps {
   patients: Patient[]

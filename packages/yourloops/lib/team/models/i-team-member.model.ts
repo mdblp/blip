@@ -32,6 +32,7 @@ import { type Profile } from '../../auth/models/profile.model'
 import { type Settings } from '../../auth/models/settings.model'
 import { type Preferences } from '../../auth/models/preferences.model'
 import { type GlycemiaIndicators } from '../../patient/models/glycemia-indicators.model'
+import { type MedicalData } from '../../data/models/medical-data.model'
 
 /**
  * Team member (API view)
@@ -49,4 +50,5 @@ export interface ITeamMember {
   alarms?: MonitoringAlerts
   unreadMessages?: number
   glycemiaIndicators: GlycemiaIndicators
+  medicalData?: MedicalData | null
 }

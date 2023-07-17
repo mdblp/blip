@@ -31,25 +31,31 @@ import * as authHookMock from '../../../lib/auth'
 import { type User } from '../../../lib/auth'
 import * as teamHookMock from '../../../lib/team'
 import * as notificationsHookMock from '../../../lib/notifications/notification.hook'
-import { MemoryRouter } from 'react-router-dom'
+import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import * as patientsHookMock from '../../../lib/patient/patients.provider'
 import * as selectedTeamHookMock from '../../../lib/selected-team/selected-team.provider'
 import { HcpLayout } from '../../../layout/hcp-layout'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
+import TeamUtils from '../../../lib/team/team.util'
+import * as patientListHookMock from '../../../components/patient-list/patient-list.hook'
+import { PatientListTabs } from '../../../components/patient-list/models/enums/patient-list.enum'
 
 const profilePageTestId = 'mock-profile-page'
 const notificationsPageTestId = 'mock-notifications-page'
 const teamDetailsPageTestId = 'mock-team-details-page'
+const homePageTestId = 'mock-home-page'
 const allTestIds = [
   profilePageTestId,
   notificationsPageTestId,
-  teamDetailsPageTestId
+  teamDetailsPageTestId,
+  homePageTestId
 ]
 
 /* eslint-disable react/display-name */
 jest.mock('../../../lib/auth')
 jest.mock('../../../lib/team')
 jest.mock('../../../lib/notifications/notification.hook')
+jest.mock('../../../components/patient-list/patient-list.hook')
 jest.mock('../../../layout/dashboard-layout', () => (props: { children: JSX.Element }) => {
   return <> {props.children} </>
 })
@@ -61,6 +67,9 @@ jest.mock('../../../pages/notifications', () => () => {
 })
 jest.mock('../../../pages/care-team-settings/care-team-settings-page', () => () => {
   return <div data-testid={teamDetailsPageTestId} />
+})
+jest.mock('../../../components/patient-list/patient-list-page', () => () => {
+  return <div data-testid={homePageTestId} />
 })
 describe('Hcp Layout', () => {
   beforeAll(() => {
@@ -91,15 +100,31 @@ describe('Hcp Layout', () => {
           isUserPatient: () => false
         } as User
       }
+    });
+    (patientListHookMock.usePatientListHook as jest.Mock).mockImplementation(() => {
+      return {
+        selectedTab: PatientListTabs.Current
+      }
     })
+    jest.spyOn(TeamUtils, 'isPrivate').mockReturnValue(false)
   })
 
-  function getMainLayoutJSX(initialEntry: string): JSX.Element {
-    return (
-      <MemoryRouter initialEntries={[initialEntry]}>
-        <HcpLayout />
-      </MemoryRouter>
+  const getMainLayoutJSX = (initialEntry: string) => {
+    const router = createMemoryRouter(
+      [
+        {
+          path: '*',
+          element: <HcpLayout />
+        }
+      ],
+      {
+        initialEntries: [initialEntry],
+        initialIndex: 0
+      }
     )
+
+    render(<RouterProvider router={router} />)
+    return router
   }
 
   function checkInDocument(testId: string) {
@@ -110,17 +135,29 @@ describe('Hcp Layout', () => {
   }
 
   it('should render profile page when route is /preferences', () => {
-    render(getMainLayoutJSX('/preferences'))
+    getMainLayoutJSX('/preferences')
     checkInDocument(profilePageTestId)
   })
 
   it('should render notifications page when route is /notifications', () => {
-    render(getMainLayoutJSX('/notifications'))
+    getMainLayoutJSX('/notifications')
     checkInDocument(notificationsPageTestId)
   })
 
   it('should render team details page when route matches /team and user is hcp', () => {
-    render(getMainLayoutJSX('/team'))
+    getMainLayoutJSX('/team')
     checkInDocument(teamDetailsPageTestId)
+  })
+
+  it('should render patient list page when route matches /home', () => {
+    const router = getMainLayoutJSX('/home')
+    expect(router.state.location.pathname).toEqual('/home')
+  })
+
+  it('should render home page instead of team details page when route matches /team, user is hcp and selected team is private', () => {
+    jest.spyOn(TeamUtils, 'isPrivate').mockReturnValueOnce(true)
+
+    const router = getMainLayoutJSX('/team')
+    expect(router.state.location.pathname).toEqual('/home')
   })
 })
