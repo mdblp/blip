@@ -54,9 +54,10 @@ import Tooltip from '@mui/material/Tooltip'
 interface ParametersChangeHistoryProps {
   goToDailySpecificDate: (date: number) => void
   history: ParametersChange[]
+  timezone: string
 }
 
-export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ history, goToDailySpecificDate }) => {
+export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ history, goToDailySpecificDate, timezone }) => {
   const theme = useTheme()
   const { t } = useTranslation()
   const [historyToDisplay, setHistoryToDisplay] = useState<ParametersChange[]>([])
@@ -111,7 +112,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                         variant="body2"
                         sx={{ color: theme.palette.primary.main }}
                       >
-                        {formatDateWithMomentLongFormat(new Date(parametersChange.changeDate), 'llll')}
+                        {formatDateWithMomentLongFormat(new Date(parametersChange.changeDate), 'llll', timezone)}
                       </Typography>
                     </Box>
                   </TableCell>
@@ -119,6 +120,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                 {parametersChange.parameters.map((parameter, index) => (
                   <TableRow
                     key={`${parameter.effectiveDate}-${index}`}
+                    data-testid={`parameters-group-${parametersChange.changeDate.substring(0, 10)}-${historyCurrentIndex}-rows-${index}`}
                     className={`${classes.parameterRow} parameter-change-row`}
                   >
                     <TableCell>{parameter.level}</TableCell>
@@ -145,7 +147,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                       <CustomChangeChip changeType={parameter.changeType} />
                     </TableCell>
                     <TableCell
-                      align="right">{formatDateWithMomentLongFormat(new Date(parameter.effectiveDate), 'llll')}</TableCell>
+                      align="right">{formatDateWithMomentLongFormat(new Date(parameter.effectiveDate), 'llll', timezone)}</TableCell>
                   </TableRow>
                 ))}
               </React.Fragment>
