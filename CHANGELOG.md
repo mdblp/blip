@@ -3,7 +3,7 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.0.5-beta - 2023-07-12
-### Engineering use
+### Added
 - YLP-2484 Remove level column in device change parameter history
 
 ## 3.0.4-beta - 2023-02-10
