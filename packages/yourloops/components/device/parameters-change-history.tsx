@@ -119,6 +119,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                 {parametersChange.parameters.map((parameter, index) => (
                   <TableRow
                     key={`${parameter.effectiveDate}-${index}`}
+                    data-testid={`parameters-group-${parametersChange.changeDate.substring(0, 10)}-${historyCurrentIndex}-rows-${index}`}
                     className={`${classes.parameterRow} parameter-change-row`}
                   >
                     <TableCell>{parameter.level}</TableCell>
