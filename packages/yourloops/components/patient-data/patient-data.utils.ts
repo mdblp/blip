@@ -50,14 +50,15 @@ export function isValidDateQueryParam(queryParam: string): boolean {
   const date = new Date(queryParam)
   return !isNaN(date.getTime())
 }
+
 const DEFAULT_DASHBOARD_TIME_RANGE_DAYS = 14
 const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
 export class PatientDataUtils {
+  partialDataLoad: typeof PartialDataLoad
   private readonly bgUnits: BgUnit
   private patient: Patient
   private readonly timePrefs: TimePrefs
-  partialDataLoad: typeof PartialDataLoad
 
   constructor({ patient, timePrefs, bgUnits }) {
     this.bgUnits = bgUnits
@@ -95,7 +96,7 @@ export class PatientDataUtils {
   }
 
   getRangeDaysInMs(data: MedicalData): number {
-    const dateRangeData = data.smbg.length > 0 ? data.smbg : data.cbg
+    const dateRangeData = [...data.smbg, ...data.cbg]
     const localDates = dateRangeData.map((bgData) => bgData.localDate)
     return this.calculateDashboardDateRange(localDates)
   }
@@ -132,27 +133,6 @@ export class PatientDataUtils {
     return null
   }
 
-  private async fetchPatientDataRanges(dateRange: DateRange): Promise<PatientData> {
-    const ranges = this.partialDataLoad.getMissingRanges(dateRange)
-    const promises = []
-    ranges.forEach(range => {
-      promises.push(this.fetchPatientData({
-        startDate: range.start.toISOString(),
-        endDate: range.end.toISOString()
-      }))
-    })
-    const results = await Promise.all(promises)
-    return results.flat()
-  }
-
-  private async fetchPatientData(options: GetPatientDataOptions): Promise<PatientData> {
-    const [patientData, messagesNotes] = await Promise.all([
-      DataApi.getPatientData(this.patient, options),
-      DataApi.getMessages(this.patient, options)
-    ])
-    return [...patientData, ...messagesNotes] as PatientData
-  }
-
   async retrievePatientData(): Promise<PatientData | null> {
     const dataRange = await DataApi.getPatientDataRange(this.patient.userid)
 
@@ -179,5 +159,26 @@ export class PatientDataUtils {
     )
 
     return patientData
+  }
+
+  private async fetchPatientDataRanges(dateRange: DateRange): Promise<PatientData> {
+    const ranges = this.partialDataLoad.getMissingRanges(dateRange)
+    const promises = []
+    ranges.forEach(range => {
+      promises.push(this.fetchPatientData({
+        startDate: range.start.toISOString(),
+        endDate: range.end.toISOString()
+      }))
+    })
+    const results = await Promise.all(promises)
+    return results.flat()
+  }
+
+  private async fetchPatientData(options: GetPatientDataOptions): Promise<PatientData> {
+    const [patientData, messagesNotes] = await Promise.all([
+      DataApi.getPatientData(this.patient, options),
+      DataApi.getMessages(this.patient, options)
+    ])
+    return [...patientData, ...messagesNotes] as PatientData
   }
 }
