@@ -49,6 +49,7 @@ import metrics from '../../lib/metrics'
 import DailyNotes from 'blip/app/components/messages'
 import { useAuth } from '../../lib/auth'
 import { DevicePage } from '../../pages/device/device-page'
+import { setPageTitle } from '../../lib/utils'
 
 export const PatientData: FunctionComponent = () => {
   const alert = useAlert()
@@ -94,6 +95,8 @@ export const PatientData: FunctionComponent = () => {
   const { user } = useAuth()
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
+
+  setPageTitle(t(currentChart))
 
   useEffect(() => {
     if (patient.userid !== patientIdForWhichDataHasBeenFetched.current) {
