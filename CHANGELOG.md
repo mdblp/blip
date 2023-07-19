@@ -127,6 +127,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2498 Fix chat widget minimal height
 - YLP-2502 History of device parameters is not sorted properly
 - YLP-2503 Device settings history is not taking timezone into account
+- YLP-2506 Fix reservoir change icon always falling back to default
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team

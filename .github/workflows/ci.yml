@@ -2,9 +2,9 @@ name: Front CI
 
 on:
   push:
-    branches: [ 'release/v3.0.x' ]
+    branches: [ 'release/v3.0.4', 'release/v3.0.x' ]
   pull_request:
-    branches: [ 'release/v3.0.x' ]
+    branches: [ 'release/v3.0.4', 'release/v3.0.x' ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
