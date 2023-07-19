@@ -134,6 +134,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2341 Pdf export in CSV is broken when a user has preferred units in its profile
 - YLP-2460 Caregiver users cannot see the "Last data update" date in the patients list
 - YLP-2487 HCP non admin can see button to save new team monitoring alerts parameters
+- YLP-2508 PDF report is missing information about rescue carbs
 
 ## 3.0.3 - 2023-02-09
 ### Fixed
