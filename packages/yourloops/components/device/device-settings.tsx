@@ -116,6 +116,7 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
           <ParametersChangeHistory
             goToDailySpecificDate={goToDailySpecificDate}
             history={history}
+            timezone={pumpSettings.timezone}
           />
         </Box>
       </CardContent>
