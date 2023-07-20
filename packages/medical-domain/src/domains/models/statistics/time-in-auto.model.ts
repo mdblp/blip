@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 export interface TimeInAutoStatistics {
-  totalAutomatedBasals: number
+  totalAutomaticBasals: number
   totalManualBasals: number
   totalAutomatedAndManualBasals: number
-  totalManualBasalsTimeOverOneDay: number
-  totalAutomatedBasalsTimeOverOneDay: number
+  automaticPerDays: number
+  manualPerDays: number
 }

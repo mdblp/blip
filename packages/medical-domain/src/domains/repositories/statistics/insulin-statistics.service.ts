@@ -38,6 +38,7 @@ import { getWeekDaysFilter } from './statistics.utils'
 import type PumpSettings from '../../models/medical/datum/pump-settings.model'
 import { type ParameterConfig } from '../../models/medical/datum/pump-settings.model'
 import { type TimeInAutoStatistics } from '../../models/statistics/time-in-auto.model'
+import { TimeService } from '../../../index'
 
 function resamplingDuration(basals: Basal[], start: number, end: number): Basal[] {
   return basals.map(basal => {
@@ -103,24 +104,19 @@ function getTotalInsulinAndWeightData(basalsData: Basal[], bolusData: Bolus[], n
 
 function getTimeInAutoData(basalsData: Basal[], numDays: number, dateFilter: DateFilter): TimeInAutoStatistics {
   const filteredBasal = BasalService.filterOnDate(basalsData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-
-  const manualBasals = filteredBasal.filter(manualBasal => manualBasal.subType === 'scheduled')
-  const resamplingManualBasals = resamplingDuration(manualBasals, dateFilter.start, dateFilter.end)
-  const manualBasalsDuration = resamplingManualBasals.reduce((accumulator, manualBasal) => accumulator + manualBasal.duration, 0)
-
-  const automatedBasals = filteredBasal.filter(automateBasal => automateBasal.subType === 'automated')
-  const resamplingAutoBasals = resamplingDuration(automatedBasals, dateFilter.start, dateFilter.end)
-  const automatedBasalsDuration = resamplingAutoBasals.reduce((accumulator, automateBasal) => accumulator + automateBasal.duration, 0)
-
-  const totalManualBasalsTimeOverOneDay = manualBasalsDuration / numDays
-  const totalAutomatedBasalsTimeOverOneDay = automatedBasalsDuration / numDays
+  const basalData = resamplingDuration(filteredBasal, dateFilter.start, dateFilter.end)
+  const manualBasals = basalData.filter(manualBasal => manualBasal.subType === 'scheduled')
+  const manualBasalsDuration = manualBasals.reduce((accumulator, manualBasal) => accumulator + manualBasal.duration, 0)
+  const automaticBasals = basalData.filter(automaticBasal => automaticBasal.subType === 'automated')
+  const automaticBasalsDuration = automaticBasals.reduce((accumulator, automaticBasal) => accumulator + automaticBasal.duration, 0)
+  const total = manualBasalsDuration + automaticBasalsDuration
 
   return {
-    totalAutomatedBasals: automatedBasalsDuration,
+    totalAutomaticBasals: automaticBasalsDuration,
     totalManualBasals: manualBasalsDuration,
-    totalAutomatedAndManualBasals: (automatedBasalsDuration + manualBasalsDuration),
-    totalManualBasalsTimeOverOneDay,
-    totalAutomatedBasalsTimeOverOneDay
+    totalAutomatedAndManualBasals: Math.round(total),
+    automaticPerDays: (automaticBasalsDuration / total) * TimeService.MS_IN_DAY,
+    manualPerDays: (manualBasalsDuration / total) * TimeService.MS_IN_DAY
   }
 }
 

@@ -110,11 +110,11 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter, medicalData.pumpSettings)
 
   const {
-    totalAutomatedBasals,
-    totalManualBasalsTimeOverOneDay,
+    totalAutomaticBasals,
     totalAutomatedAndManualBasals,
     totalManualBasals,
-    totalAutomatedBasalsTimeOverOneDay
+    automaticPerDays,
+    manualPerDays
   } = BasalBolusStatisticsService.getTimeInAutoData(medicalData.basal, numberOfDays, dateFilter)
 
   return (
@@ -164,11 +164,11 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
       {isAutomatedBasalDevice &&
         <>
           <LoopModeStat
-            automated={totalAutomatedBasals}
+            automated={totalAutomaticBasals}
             manual={totalManualBasals}
             total={totalAutomatedAndManualBasals}
-            automatedTimeOverDay={totalAutomatedBasalsTimeOverOneDay}
-            manualTimeOverDay={totalManualBasalsTimeOverOneDay}
+            automaticPerDays={automaticPerDays}
+            manualPerDays={manualPerDays}
           />
         </>
       }
