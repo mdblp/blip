@@ -188,8 +188,9 @@ export const usePatientData = (): usePatientDataResult => {
       const dateRange = patientDataUtils.current.getDateRange({ currentChart, epochLocation, msRange })
       const patientData = await patientDataUtils.current.loadDataRange(dateRange)
       if (patientData && patientData.length > 0) {
-        medicalData.add(patientData)
-        setMedicalData(medicalData)
+        const medicalDataUpdated = medicalData
+        medicalDataUpdated.add(patientData)
+        setMedicalData(medicalDataUpdated)
         return true
       }
       return false
@@ -213,8 +214,9 @@ export const usePatientData = (): usePatientDataResult => {
       setRefreshingData(true)
       const patientData = await patientDataUtils.current.loadDataRange(dateRange)
       if (patientData && patientData.length > 0) {
-        medicalData.add(patientData)
-        setMedicalData(medicalData)
+        const medicalDataUpdated = medicalData
+        medicalDataUpdated.add(patientData)
+        setMedicalData(medicalDataUpdated)
         return true
       }
       return false
@@ -232,13 +234,13 @@ export const usePatientData = (): usePatientDataResult => {
       if (!patientData) {
         return
       }
-      const medicalData = patientDataUtils.current.buildMedicalData(patientData)
-      const dataUtil = new DataUtil(medicalData.data, {
+      const medicalDataRetrieved = patientDataUtils.current.buildMedicalData(patientData)
+      const dataUtil = new DataUtil(medicalDataRetrieved.data, {
         bgPrefs,
         timePrefs,
-        endpoints: medicalData.endpoints
+        endpoints: medicalDataRetrieved.endpoints
       })
-      setMedicalData(medicalData)
+      setMedicalData(medicalDataRetrieved)
       setDataUtil(dataUtil)
     } finally {
       setLoadingData(false)
