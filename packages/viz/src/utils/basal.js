@@ -211,7 +211,6 @@ export function getTotalBasalFromEndpoints(data, endpoints) {
 export function getBasalGroupDurationsFromEndpoints(data, endpoints) {
   const start = new Date(endpoints[0])
   const end = new Date(endpoints[1])
-
   const durations = {
     automated: 0,
     manual: 0
