@@ -129,6 +129,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
 - YLP-2189 Fix error when applying team monitoring alarm params in mg/dL to user with monitoring in mmol/L
 - YLP-2341 Pdf export in CSV is broken when a user has preferred units in its profile
+- YLP-2438 Inconsistency in the daily view between carbs displayed on the graph and Total carbs in the statistics panel
 - YLP-2460 Caregiver users cannot see the "Last data update" date in the patients list
 - YLP-2487 HCP non admin can see button to save new team monitoring alerts parameters
 
