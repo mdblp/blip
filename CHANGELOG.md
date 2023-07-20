@@ -129,6 +129,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2503 Device settings history is not taking timezone into account
 - YLP-2506 Fix reservoir change icon always falling back to default
 - YLP-2510 Static dashboard does not perform calculation based on the last 14 days
+- YLP-2511 In the daily view, not all graph data is taken into account by the loop mode
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
