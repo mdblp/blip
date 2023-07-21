@@ -40,9 +40,9 @@ import { type ParameterConfig } from '../../models/medical/datum/pump-settings.m
 
 function resamplingDuration(basals: Basal[], start: number, end: number): Basal[] {
   return basals.map(basal => {
-    const basalEpoch = basal.epoch < start ? start : basal.epoch
+    const basalEpochStart = basal.epoch < start ? start : basal.epoch
     const basalEpochEnd = basal.epochEnd > end ? end : basal.epochEnd
-    basal.duration = basalEpochEnd - basalEpoch
+    basal.duration = basalEpochEnd - basalEpochStart
     return basal
   })
 }
