@@ -35,10 +35,14 @@ import {
   PHYSICAL_ACTIVITY_TIME,
   RESERVOIR_CHANGE_ID,
   SMBG_ID,
-  WIZARD_ID1,
-  WIZARD_ID2,
-  WIZARD_INPUT_TIME,
-  WIZARD_INPUT_TIME2
+  WIZARD_NEGATIVE_OVERRIDE_ID,
+  WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME,
+  WIZARD_POSITIVE_OVERRIDE_ID,
+  WIZARD_POSITIVE_OVERRIDE_INPUT_TIME,
+  WIZARD_UMM_ID,
+  WIZARD_UMM_INPUT_TIME,
+  WIZARD_UNDELIVERED_ID,
+  WIZARD_UNDELIVERED_INPUT_TIME
 } from '../mock/data.api.mock'
 import moment from 'moment-timezone'
 import { checkStatTooltip } from './stats.assert'
@@ -49,7 +53,7 @@ const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added to
 const AVG_GLUCOSE_BGM_TOOLTIP = 'Avg. Glucose (BGM): All BGM glucose values added together, divided by the number of readings.'
 const TOTAL_INSULIN_TOOLTIP = 'Total Insulin: All basal and bolus insulin delivery (in Units) added togetherHow we calculate this: (%) is the respective total of basal or bolus delivery divided by total insulin delivered for this time period.'
 const TIME_IN_LOOP_MODE_TOOLTIP = 'Time In Loop Mode: Time spent in automated basal delivery.How we calculate this: (%) is the duration in loop mode ON or OFF divided by the total duration of basals for this time period. (time) is the estimated time in each mode.'
-const TOTAL_CARBS_TOOLTIP = 'Total Carbs: All carb entries from meals or rescue carbs added together.Derived from 3 carb entries, including rescue carbs.'
+const TOTAL_CARBS_TOOLTIP = 'Total Carbs: All carb entries from meals or rescue carbs added together.Derived from 5 carb entries, including rescue carbs.'
 const STANDARD_DEVIATION_TOOLTIP = 'SD (Standard Deviation): How far values are from the average.'
 const STANDARD_DEVIATION_BGM_TOOLTIP = 'SD (Standard Deviation): How far values are from the average.Derived from 15 BGM readings.'
 const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
@@ -68,8 +72,10 @@ export const checkDailyTidelineContainerTooltips = async () => {
   await checkTidelineContainerElementTooltip('poolBG_confidential_group', 'Confidential mode')
   await checkTidelineContainerElementTooltip('poolBolus_confidential_group', 'Confidential mode')
   await checkTidelineContainerElementTooltip('poolBasal_confidential_group', 'Confidential mode')
-  await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_ID1}`, `8:25 pmMealCarbs45gHigh fat mealEntered at ${moment(WIZARD_INPUT_TIME).format('h:mm a')}Loop modeBolus TypeStandardDelivered1.3U`)
-  await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_ID2}`, `8:35 pmUnannounced mealEstimated carbs50gEntered at ${moment(WIZARD_INPUT_TIME2).format('h:mm a')}Loop modeBolus TypeStandardDelivered1.3U`)
+  await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_UNDELIVERED_ID}`, `8:25 pmMealCarbs45gHigh fat mealEntered at ${moment(WIZARD_UNDELIVERED_INPUT_TIME).format('h:mm a')}IOB3.18ULoop modeBolus TypeStandardRecommended25.0UUndelivered2.70UDelivered22.3U`)
+  await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_UMM_ID}`, `8:35 pmUnannounced mealEstimated carbs50gEntered at ${moment(WIZARD_UMM_INPUT_TIME).format('h:mm a')}Loop modeBolus TypeStandardDelivered1.3U`)
+  await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_POSITIVE_OVERRIDE_ID}`, `8:45 pmMealCarbs100gEntered at ${moment(WIZARD_POSITIVE_OVERRIDE_INPUT_TIME).format('h:mm a')}IOB3.12ULoop modeBolus TypeStandardRecommended14.35UOverride+5.00UDelivered19.35U`)
+  await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_NEGATIVE_OVERRIDE_ID}`, `8:55 pmMealCarbs100gEntered at ${moment(WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME).format('h:mm a')}IOB3.06ULoop modeBolus TypeStandardRecommended10.05UOverride−1.0UDelivered9.05U`)
   await checkTidelineContainerElementTooltip(`carb_group_${CARB_ID}`, '2:00 pmRecommended16gConfirmed15g')
   await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_ID}`, `3:00 pmPhysical ActivityIntensitymoderateDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_TIME).format('h')}:00 pm`)
   await checkTidelineContainerElementTooltip(`reservoir_group_${RESERVOIR_CHANGE_ID}`, '7:00 pmCartridge change')
