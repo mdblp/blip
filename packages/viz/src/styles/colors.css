@@ -24,9 +24,7 @@
   --text-basal: #a4a4a4;
   --text-basal-automated: #3a90a4;
   --bolus: var(--blip-color-primary-light);
-  --bolus-ride: black;
-  --bolus-underride: black;
-  --bolus-ride-border: white;
+  --bolus-ride: white;
   --bolus-undelivered: #E98D7C;
   --bolus-meal: #178A7F;
   --bolus-umm: #21C6B6;

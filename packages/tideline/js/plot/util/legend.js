@@ -73,7 +73,7 @@ const legend = {
             class: 'd3-pool-legend'
           })
           .text(t('Loop mode status'))
-          .each(function() {
+          .each(function () {
             opts.widths.push(this.getBoundingClientRect().width + legend.SHAPE_MARGIN)
             opts.textHeight = this.getBoundingClientRect().height
           })
@@ -83,13 +83,13 @@ const legend = {
   ],
   bg: [
     {
-      create: function(opts) {
+      create: function (opts) {
         return opts.selection.append('text')
           .attr({
             class: 'd3-pool-legend'
           })
           .text(t('high'))
-          .each(function() {
+          .each(function () {
             opts.widths.push(this.getBoundingClientRect().width)
             opts.textHeight = this.getBoundingClientRect().height
           })
@@ -97,7 +97,7 @@ const legend = {
       type: 'text'
     },
     {
-      create: function(opts) {
+      create: function (opts) {
         opts.widths.push(opts.SHAPE_WIDTH)
         return opts.selection.append('circle')
           .attr({
@@ -107,7 +107,7 @@ const legend = {
       type: 'circle'
     },
     {
-      create: function(opts) {
+      create: function (opts) {
         opts.widths.push(opts.SHAPE_WIDTH)
         return opts.selection.append('circle')
           .attr({
@@ -117,7 +117,7 @@ const legend = {
       type: 'circle'
     },
     {
-      create: function(opts) {
+      create: function (opts) {
         opts.widths.push(opts.SHAPE_WIDTH)
         return opts.selection.append('circle')
           .attr({
@@ -127,7 +127,7 @@ const legend = {
       type: 'circle'
     },
     {
-      create: function(opts) {
+      create: function (opts) {
         opts.widths.push(opts.SHAPE_WIDTH)
         return opts.selection.append('circle')
           .attr({
@@ -137,7 +137,7 @@ const legend = {
       type: 'circle'
     },
     {
-      create: function(opts) {
+      create: function (opts) {
         opts.widths.push(opts.SHAPE_WIDTH)
         return opts.selection.append('circle')
           .attr({
@@ -147,26 +147,26 @@ const legend = {
       type: 'circle'
     },
     {
-      create: function(opts) {
+      create: function (opts) {
         return opts.selection.append('text')
           .attr({
             class: 'd3-pool-legend d3-pool-legend-space'
           })
           .text(t('low') + ' ')
-          .each(function() {
+          .each(function () {
             opts.widths.push(this.getBoundingClientRect().width)
           })
       },
       type: 'text'
     },
     {
-      create: function(opts) {
+      create: function (opts) {
         return opts.selection.append('text')
           .attr({
             class: 'd3-pool-legend d3-pool-legend-dexcom'
           })
           .text('Dexcom CGM -')
-          .each(function() {
+          .each(function () {
             opts.widths.push(this.getBoundingClientRect().width)
           })
       },
@@ -182,7 +182,7 @@ const legend = {
             class: 'd3-pool-legend'
           })
           .text(t('Bolus Legend'))
-          .each(function() {
+          .each(function () {
             opts.widths.push(this.getBoundingClientRect().width - legend.SHAPE_MARGIN)
             opts.textHeight = this.getBoundingClientRect().height
           })
@@ -191,7 +191,7 @@ const legend = {
     },
     // Meal Bolus
     {
-      create: function(opts) {
+      create: function (opts) {
         opts.widths.push(opts.SHAPE_WIDTH * 1.5)
         return opts.selection.append('rect')
           .attr({
@@ -207,7 +207,7 @@ const legend = {
             class: 'd3-pool-legend'
           })
           .text(t('Meal Bolus'))
-          .each(function() {
+          .each(function () {
             opts.widths.push(this.getBoundingClientRect().width - legend.SHAPE_MARGIN)
             opts.textHeight = this.getBoundingClientRect().height
           })
@@ -216,7 +216,7 @@ const legend = {
     },
     // Umm Bolus
     {
-      create: function(opts) {
+      create: function (opts) {
         opts.widths.push(opts.SHAPE_WIDTH * 1.5)
         return opts.selection.append('rect')
           .attr({
@@ -232,7 +232,7 @@ const legend = {
             class: 'd3-pool-legend'
           })
           .text(t('Unannounced Meal Bolus'))
-          .each(function() {
+          .each(function () {
             opts.widths.push(this.getBoundingClientRect().width - legend.SHAPE_MARGIN)
             opts.textHeight = this.getBoundingClientRect().height
           })
@@ -241,7 +241,7 @@ const legend = {
     },
     // Micro Bolus
     {
-      create: function(opts) {
+      create: function (opts) {
         opts.widths.push(opts.SHAPE_WIDTH * 1.5)
         return opts.selection.append('rect')
           .attr({
@@ -251,13 +251,13 @@ const legend = {
       type: 'rect'
     },
     {
-      create: function(opts) {
+      create: function (opts) {
         return opts.selection.append('text')
           .attr({
             class: 'd3-pool-legend'
           })
           .text(t('Micro Bolus'))
-          .each(function() {
+          .each(function () {
             opts.widths.push(this.getBoundingClientRect().width - legend.SHAPE_MARGIN)
             opts.textHeight = this.getBoundingClientRect().height
           })
@@ -266,7 +266,7 @@ const legend = {
     },
     // Manual Bolus
     {
-      create: function(opts) {
+      create: function (opts) {
         opts.widths.push(opts.SHAPE_WIDTH * 1.5)
         return opts.selection.append('rect')
           .attr({
@@ -276,13 +276,13 @@ const legend = {
       type: 'rect'
     },
     {
-      create: function(opts) {
+      create: function (opts) {
         return opts.selection.append('text')
           .attr({
             class: 'd3-pool-legend'
           })
           .text(t('Manual Bolus'))
-          .each(function() {
+          .each(function () {
             opts.widths.push(this.getBoundingClientRect().width - legend.SHAPE_MARGIN)
             opts.textHeight = this.getBoundingClientRect().height
           })
@@ -291,7 +291,7 @@ const legend = {
     },
     // Undelivered
     {
-      create: function(opts) {
+      create: function (opts) {
         opts.widths.push(opts.SHAPE_WIDTH * 1.5)
         return opts.selection.append('rect')
           .attr({
@@ -301,13 +301,13 @@ const legend = {
       type: 'rect'
     },
     {
-      create: function(opts) {
+      create: function (opts) {
         return opts.selection.append('text')
           .attr({
             class: 'd3-pool-legend'
           })
           .text(t('Undelivered'))
-          .each(function() {
+          .each(function () {
             opts.widths.push(this.getBoundingClientRect().width - legend.SHAPE_MARGIN)
             opts.textHeight = this.getBoundingClientRect().height
           })
@@ -316,38 +316,42 @@ const legend = {
     },
     // Override (technically an Underride)
     {
-      create: function(opts) {
+      create: function (opts) {
         opts.widths.push(25)
-        const g = opts.selection.append('g').attr({class: 'd3-bolus d3-rect-bolus-legend'})
-        g.append('rect')
+        const g = opts.selection.append('g').attr({ class: 'd3-bolus d3-rect-bolus-legend' })
+        g.append('path')
           .attr({
-            class: 'd3-bolus-underride',
-            transform: 'translate(-5, -5) rotate(45) translate(-10,10)',
-            width: 10,
-            height: 10
+            'd': function () {
+              var x = -12, y = -12
+              return 'M ' + x + ' ' + y + ' l 5 5 l -10 0 z'
+            },
+            'fill': 'white',
+            'stroke': 'black',
+            'stroke-width': '0.5'
           })
-        g.append('rect')
+
+        g.append('path')
           .attr({
-            width: 14.5,
-            height: 1,
-            fill: 'var(--bkgrnd,white)',
-            stroke: 'transparent',
-            x: -19,
-            y: -5.875,
-            transform: 'translate(0,4.9)'
+            'd': function () {
+              var x = -12, y = 0
+              return 'M ' + x + ' ' + y + ' l 5 -5 l -10 0 z'
+            },
+            'fill': 'white',
+            'stroke': 'black',
+            'stroke-width': '0.5'
           })
         return g
       },
       type: 'group'
     },
     {
-      create: function(opts) {
+      create: function (opts) {
         return opts.selection.append('text')
           .attr({
             class: 'd3-pool-legend'
           })
           .text(t('Override'))
-          .each(function() {
+          .each(function () {
             opts.widths.push(this.getBoundingClientRect().width - legend.SHAPE_MARGIN)
             opts.textHeight = this.getBoundingClientRect().height
           })
@@ -357,7 +361,7 @@ const legend = {
   ].reverse(),
   carbs: [
     {
-      create: function(opts) {
+      create: function (opts) {
         opts.widths.push(opts.SHAPE_WIDTH)
         return opts.selection.append('circle')
           .attr({
@@ -367,13 +371,13 @@ const legend = {
       type: 'circle'
     },
     {
-      create: function(opts) {
+      create: function (opts) {
         return opts.selection.append('text')
           .attr({
             class: 'd3-pool-legend'
           })
           .text(t('Carbs'))
-          .each(function() {
+          .each(function () {
             opts.widths.push(this.getBoundingClientRect().width)
             opts.textHeight = this.getBoundingClientRect().height
           })
@@ -381,7 +385,7 @@ const legend = {
       type: 'text'
     },
     {
-      create: function(opts) {
+      create: function (opts) {
         opts.widths.push(opts.SHAPE_WIDTH * 1.5)
         return opts.selection.append('circle')
           .attr({
@@ -391,13 +395,13 @@ const legend = {
       type: 'circle'
     },
     {
-      create: function(opts) {
+      create: function (opts) {
         return opts.selection.append('text')
           .attr({
             class: 'd3-pool-legend'
           })
           .text(t('Unannounced Carbs'))
-          .each(function() {
+          .each(function () {
             opts.widths.push(this.getBoundingClientRect().width)
             opts.textHeight = this.getBoundingClientRect().height
           })
@@ -405,7 +409,7 @@ const legend = {
       type: 'text'
     },
     {
-      create: function(opts) {
+      create: function (opts) {
         opts.widths.push(opts.SHAPE_WIDTH * 1.5)
         return opts.selection.append('circle')
           .attr({
@@ -415,13 +419,13 @@ const legend = {
       type: 'circle'
     },
     {
-      create: function(opts) {
+      create: function (opts) {
         return opts.selection.append('text')
           .attr({
             class: 'd3-pool-legend'
           })
           .text(t('Rescuecarbs'))
-          .each(function() {
+          .each(function () {
             opts.widths.push(this.getBoundingClientRect().width)
             opts.textHeight = this.getBoundingClientRect().height
           })
@@ -429,44 +433,44 @@ const legend = {
       type: 'text'
     }
   ].reverse(),
-  cumWidth: function(a, i) {
+  cumWidth: function (a, i) {
     var b = a.slice()
     b.splice(i)
-    return _.reduce(b, function(sum, num) { return sum + num })
+    return _.reduce(b, function (sum, num) {
+      return sum + num
+    })
   },
-  draw: function(selection, type) {
+  draw: function (selection, type) {
     const opts = {
       selection: selection,
       widths: [],
       SHAPE_WIDTH: this.SHAPE_WIDTH
     }
     const typeFns = this[type]
-    _.forEach(typeFns, _.bind(function(fn, i) {
+    _.forEach(typeFns, _.bind(function (fn, i) {
       const created = fn.create(opts)
       if (fn.type === 'text' || fn.type === 'group') {
         if (opts.widths[i - 1]) {
           const w = this.cumWidth(opts.widths, i)
           if ((i === typeFns.length - 1) && (i !== 1)) {
-            const s = this.SHAPE_WIDTH - this.SHAPE_MARGIN*2
-            created.attr('transform', 'translate(' + (-(w + s/2)) + ',0)')
+            const s = this.SHAPE_WIDTH - this.SHAPE_MARGIN * 2
+            created.attr('transform', 'translate(' + (-(w + s / 2)) + ',0)')
           } else {
             created.attr('transform', 'translate(' + (-w) + ',0)')
           }
         }
-      }
-      else if (fn.type === 'circle') {
+      } else if (fn.type === 'circle') {
         if (opts.widths[i - 1]) {
           const w = this.cumWidth(opts.widths, i)
-          const r = (this.SHAPE_WIDTH - this.SHAPE_MARGIN*2)/2
+          const r = (this.SHAPE_WIDTH - this.SHAPE_MARGIN * 2) / 2
           created.attr({
-            cx: -(w + 2*r),
-            cy: -opts.textHeight/4,
+            cx: -(w + 2 * r),
+            cy: -opts.textHeight / 4,
             r: r
           })
         }
-      }
-      else if (fn.type === 'rect') {
-        const side = this.SHAPE_WIDTH - this.SHAPE_MARGIN*2
+      } else if (fn.type === 'rect') {
+        const side = this.SHAPE_WIDTH - this.SHAPE_MARGIN * 2
         created.attr({
           width: side,
           height: side
@@ -476,8 +480,7 @@ const legend = {
           created.attr({
             x: -w - this.SHAPE_WIDTH
           })
-        }
-        else {
+        } else {
           created.attr({
             x: -side - 1.5
           })
@@ -487,12 +490,14 @@ const legend = {
     if (type !== 'bg') {
       // a y-attribute of 0 would put the top of the rects *at* the text baseline
       // so an upward (negative) shift of half the shape width works well
-      var baselineShift = -(this.SHAPE_WIDTH/2 + this.SHAPE_MARGIN)
+      var baselineShift = -(this.SHAPE_WIDTH / 2 + this.SHAPE_MARGIN)
       selection.selectAll('rect')
         .attr('y', baselineShift)
     }
     var w
-    selection.each(function() { w = this.getBoundingClientRect() })
+    selection.each(function () {
+      w = this.getBoundingClientRect()
+    })
     return w
   }
 }
