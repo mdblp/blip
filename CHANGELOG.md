@@ -130,6 +130,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2506 Fix reservoir change icon always falling back to default
 - YLP-2510 Static dashboard does not perform calculation based on the last 14 days
 - YLP-2511 In the daily view, not all graph data is taken into account by the loop mode
+- YLP-2519 Fix refresh on Daily view disabling the forward arrow in the date picker
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
