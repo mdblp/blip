@@ -42,7 +42,7 @@ export const computeQuantile = (data: number[], quantile: number): number => {
   const indexNotRounded = (data.length - 1) * quantile
   const baseRoundedToFloor = Math.floor(indexNotRounded)
   const indexesDiff = indexNotRounded - baseRoundedToFloor
-  if (data[baseRoundedToFloor + 1] !== undefined) {
+  if (data[baseRoundedToFloor + 1]) {
     return data[baseRoundedToFloor] + indexesDiff * (data[baseRoundedToFloor + 1] - data[baseRoundedToFloor])
   } else {
     return data[baseRoundedToFloor]
