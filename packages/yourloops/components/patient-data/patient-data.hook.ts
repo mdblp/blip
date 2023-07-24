@@ -190,7 +190,13 @@ export const usePatientData = (): usePatientDataResult => {
       if (patientData && patientData.length > 0) {
         const medicalDataUpdated = medicalData
         medicalDataUpdated.add(patientData)
+        const dataUtil = new DataUtil(medicalData.data, {
+          bgPrefs,
+          timePrefs,
+          endpoints: medicalData.endpoints
+        })
         setMedicalData(medicalDataUpdated)
+        setDataUtil(dataUtil)
         return true
       }
       return false
