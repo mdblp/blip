@@ -322,8 +322,9 @@ const legend = {
         g.append('path')
           .attr({
             'd': function () {
-              var x = -12, y = -12
-              return 'M ' + x + ' ' + y + ' l 5 5 l -10 0 z'
+              const x = -12
+              const y = -12
+              return `M ${x} ${y} l 5 5 l -10 0 z`
             },
             'fill': 'white',
             'stroke': 'black',
@@ -333,8 +334,9 @@ const legend = {
         g.append('path')
           .attr({
             'd': function () {
-              var x = -12, y = 0
-              return 'M ' + x + ' ' + y + ' l 5 -5 l -10 0 z'
+              const x = -12
+              const y = 0
+              return `M ${x} ${y} l 5 -5 l -10 0 z`
             },
             'fill': 'white',
             'stroke': 'black',
