@@ -132,6 +132,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2511 In the daily view, not all graph data is taken into account by the loop mode
 - YLP-2519 Fix refresh on Daily view disabling the forward arrow in the date picker
 - YLP-2522 PDF/CSV report generation does not take into account data that was not loaded in daily
+- YLP-2523 Fix insulin values not rounded in Bolus tooltip
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
@@ -139,6 +140,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2341 Pdf export in CSV is broken when a user has preferred units in its profile
 - YLP-2460 Caregiver users cannot see the "Last data update" date in the patients list
 - YLP-2487 HCP non admin can see button to save new team monitoring alerts parameters
+- YLP-2496 Undelivered value is not rounded in micro-bolus tooltip
 - YLP-2508 PDF report is missing information about rescue carbs
 - YLP-2509 "Sensor warmup" icon is not shown
 
