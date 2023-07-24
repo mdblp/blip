@@ -38,38 +38,28 @@ export const computeMsThresholdForTimeOfDay = (numberOfMs: number): number => {
   return Math.floor(numberOfMs / THIRTY_MINS) * THIRTY_MINS + (THIRTY_MINS / 2)
 }
 
-export const computeMedian = (data: number[]): number => {
-  const dataLength = data.length
-  if (dataLength === 0) {
-    return 0
-  }
-  if (dataLength === 1) {
-    return data[0]
-  }
-  const isSortedDataLengthEven = dataLength % 2 === 0
-  if (isSortedDataLengthEven) {
-    return (data[Math.floor(dataLength / 2) - 1] + data[Math.floor(dataLength / 2)]) / 2
+export const computeQuantile = (data: number[], quantile: number): number => {
+  const indexNotRounded = (data.length - 1) * quantile
+  const baseRoundedToFloor = Math.floor(indexNotRounded)
+  const indexesDiff = indexNotRounded - baseRoundedToFloor
+  if (data[baseRoundedToFloor + 1] !== undefined) {
+    return data[baseRoundedToFloor] + indexesDiff * (data[baseRoundedToFloor + 1] - data[baseRoundedToFloor])
   } else {
-    return data[Math.floor(dataLength / 2)]
+    return data[baseRoundedToFloor]
   }
 }
 
 const computeCbgStatsForGivenTimeOfDay = (numberOfMs: number, data: number[]): CbgSlice => {
   const sorted = data.sort((a, b) => a - b)
   const sortedDataLength = sorted.length
-  const firstQuartileIndex = Math.floor(sortedDataLength / 4)
-  const tenthQuantileIndex = Math.floor(sortedDataLength / 10)
-  const median = computeMedian(sorted)
-  const thirdQuartileIndex = Math.floor((sortedDataLength / 4) * 3)
-  const ninetiethQuantileIndex = Math.floor((sortedDataLength / 10) * 9)
   return {
     id: numberOfMs.toString(),
     [RangeSegmentSlice.Min]: sorted[0],
-    [RangeSegmentSlice.FirstQuartile]: sorted[firstQuartileIndex],
-    [RangeSegmentSlice.TenthQuantile]: sorted[tenthQuantileIndex],
-    [RangeSegmentSlice.Median]: median,
-    [RangeSegmentSlice.ThirdQuartile]: sorted[thirdQuartileIndex],
-    [RangeSegmentSlice.NinetiethQuantile]: sorted[ninetiethQuantileIndex],
+    [RangeSegmentSlice.TenthQuantile]: computeQuantile(sorted, 0.1),
+    [RangeSegmentSlice.FirstQuartile]: computeQuantile(sorted, 0.25),
+    [RangeSegmentSlice.Median]: computeQuantile(sorted, 0.5),
+    [RangeSegmentSlice.ThirdQuartile]: computeQuantile(sorted, 0.75),
+    [RangeSegmentSlice.NinetiethQuantile]: computeQuantile(sorted, 0.9),
     [RangeSegmentSlice.Max]: sorted[sortedDataLength - 1],
     msX: numberOfMs,
     msFrom: numberOfMs - (THIRTY_MINS / 2),

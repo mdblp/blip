@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { computeMedian, computeMsThresholdForTimeOfDay, formatCbgs } from './cbg-slices-container.util'
+import { computeMsThresholdForTimeOfDay, computeQuantile, formatCbgs } from './cbg-slices-container.util'
 import { type CbgSlicesContainerData } from '../../../../models/cbg-slices-container-data.model'
 
 describe('CbgSlicesContainerUtil', () => {
@@ -68,8 +68,8 @@ describe('CbgSlicesContainerUtil', () => {
           msFrom: 0,
           msTo: 1800000,
           msX: 900000,
-          ninetiethQuantile: 12,
-          tenthQuantile: 2,
+          ninetiethQuantile: 11.8,
+          tenthQuantile: 2.2,
           thirdQuartile: 10
         },
         {
@@ -81,8 +81,8 @@ describe('CbgSlicesContainerUtil', () => {
           msFrom: 3600000,
           msTo: 5400000,
           msX: 4500000,
-          ninetiethQuantile: 90,
-          tenthQuantile: 12,
+          ninetiethQuantile: 89.2,
+          tenthQuantile: 20.8,
           thirdQuartile: 78
         }
       ])
@@ -99,20 +99,68 @@ describe('CbgSlicesContainerUtil', () => {
     })
   })
 
-  describe('computeMedian', () => {
+  describe('computeQuantile used for median', () => {
     it('should return 0 when empty array', () => {
-      const median = computeMedian([])
-      expect(median).toBe(0)
+      const median = computeQuantile([], 0.5)
+      expect(median).toBeUndefined()
     })
 
     it('should return correct result when odd array', () => {
-      const median = computeMedian([12])
+      const median = computeQuantile([12], 0.5)
       expect(median).toBe(12)
     })
 
     it('should return correct result when even array', () => {
-      const median = computeMedian([2, 2, 4, 4])
+      const median = computeQuantile([2, 2, 4, 4], 0.5)
       expect(median).toBe(3)
+    })
+  })
+
+  describe('computeQuantile used for first quantile', () => {
+    it('should return correct result when odd array', () => {
+      const median = computeQuantile([0, 5, 10, 15, 20], 0.1)
+      expect(median).toBe(2)
+    })
+
+    it('should return correct result when even array', () => {
+      const median = computeQuantile([0, 5, 10, 15, 20, 25], 0.1)
+      expect(median).toBe(2.5)
+    })
+  })
+
+  describe('computeQuantile used for first quartile', () => {
+    it('should return correct result when odd array', () => {
+      const median = computeQuantile([0, 5, 10, 15, 20], 0.25)
+      expect(median).toBe(5)
+    })
+
+    it('should return correct result when even array', () => {
+      const median = computeQuantile([0, 5, 10, 15, 20, 25], 0.25)
+      expect(median).toBe(6.25)
+    })
+  })
+
+  describe('computeQuantile used for third quartile', () => {
+    it('should return correct result when odd array', () => {
+      const median = computeQuantile([0, 5, 10, 15, 20], 0.75)
+      expect(median).toBe(15)
+    })
+
+    it('should return correct result when even array', () => {
+      const median = computeQuantile([0, 5, 10, 15, 20, 25], 0.75)
+      expect(median).toBe(18.75)
+    })
+  })
+
+  describe('computeQuantile used for ninetiethh quartile', () => {
+    it('should return correct result when odd array', () => {
+      const median = computeQuantile([0, 5, 10, 15, 20], 0.9)
+      expect(median).toBe(18)
+    })
+
+    it('should return correct result when even array', () => {
+      const median = computeQuantile([0, 5, 10, 15, 20, 25], 0.9)
+      expect(median).toBe(22.5)
     })
   })
 })
