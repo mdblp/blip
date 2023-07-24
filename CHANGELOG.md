@@ -133,6 +133,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-2519 Fix refresh on Daily view disabling the forward arrow in the date picker
 - YLP-2522 PDF/CSV report generation does not take into account data that was not loaded in daily
 - YLP-2523 Fix insulin values not rounded in Bolus tooltip
+- YLP-2524 Override information is hardly visible
+- YLP-2529 Fix median in trends view
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
