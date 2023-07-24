@@ -41,7 +41,7 @@ interface GetDatetimeBoundsArgs {
   msRange: number
 }
 
-interface DateRange {
+export interface DateRange {
   start: Moment
   end: Moment
 }

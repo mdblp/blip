@@ -35,7 +35,7 @@ import { usePatientsContext } from '../../lib/patient/patients.provider'
 import type MedicalDataService from 'medical-domain'
 import { defaultBgClasses, type TimePrefs, TimeService, Unit } from 'medical-domain'
 import { type MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
-import { isValidDateQueryParam, PatientDataUtils } from './patient-data.utils'
+import { type DateRange, isValidDateQueryParam, PatientDataUtils } from './patient-data.utils'
 import DataUtil from 'tidepool-viz/src/utils/data'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
 import { usePatientContext } from '../../lib/patient/patient.provider'
@@ -53,6 +53,7 @@ export interface usePatientDataResult {
   fetchPatientData: () => Promise<void>
   goToDailySpecificDate: (date: number | Date) => void
   handleDatetimeLocationChange: (epochLocation: number, msRange: number) => Promise<boolean>
+  updateDataForGivenRange: (dateRange: DateRange) => Promise<boolean>
   loadingData: boolean
   medicalData: MedicalDataService | null
   msRange: number
@@ -187,8 +188,15 @@ export const usePatientData = (): usePatientDataResult => {
       const dateRange = patientDataUtils.current.getDateRange({ currentChart, epochLocation, msRange })
       const patientData = await patientDataUtils.current.loadDataRange(dateRange)
       if (patientData && patientData.length > 0) {
-        medicalData.add(patientData)
-        setMedicalData(medicalData)
+        const medicalDataUpdated = medicalData
+        medicalDataUpdated.add(patientData)
+        const dataUtil = new DataUtil(medicalData.data, {
+          bgPrefs,
+          timePrefs,
+          endpoints: medicalData.endpoints
+        })
+        setMedicalData(medicalDataUpdated)
+        setDataUtil(dataUtil)
         return true
       }
       return false
@@ -207,6 +215,25 @@ export const usePatientData = (): usePatientDataResult => {
     }
   }
 
+  // This function is used for the PDF/CSV, this is the only case where we update medicalData without updating dataUtil
+  const updateDataForGivenRange = async (dateRange: DateRange): Promise<boolean> => {
+    try {
+      setRefreshingData(true)
+      const patientData = await patientDataUtils.current.loadDataRange(dateRange)
+      if (patientData && patientData.length > 0) {
+        const medicalDataUpdated = medicalData
+        medicalDataUpdated.add(patientData)
+        setMedicalData(medicalDataUpdated)
+        return true
+      }
+      return false
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setRefreshingData(false)
+    }
+  }
+
   const refreshData = async (): Promise<void> => {
     setLoadingData(true)
     try {
@@ -214,13 +241,13 @@ export const usePatientData = (): usePatientDataResult => {
       if (!patientData) {
         return
       }
-      const medicalData = patientDataUtils.current.buildMedicalData(patientData)
-      const dataUtil = new DataUtil(medicalData.data, {
+      const medicalDataRetrieved = patientDataUtils.current.buildMedicalData(patientData)
+      const dataUtil = new DataUtil(medicalDataRetrieved.data, {
         bgPrefs,
         timePrefs,
-        endpoints: medicalData.endpoints
+        endpoints: medicalDataRetrieved.endpoints
       })
-      setMedicalData(medicalData)
+      setMedicalData(medicalDataRetrieved)
       setDataUtil(dataUtil)
     } finally {
       setLoadingData(false)
@@ -279,6 +306,7 @@ export const usePatientData = (): usePatientDataResult => {
     fetchPatientData,
     goToDailySpecificDate,
     handleDatetimeLocationChange,
+    updateDataForGivenRange,
     loadingData,
     medicalData,
     msRange,
