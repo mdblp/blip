@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,9 +34,7 @@
   --text-basal: #a4a4a4;
   --text-basal-automated: #3a90a4;
   --bolus: var(--blip-color-primary-light);
-  --bolus-ride: #7E7E7E;
-  --bolus-override: #7E7E7E;
-  --bolus-underride: #7E7E7E;
+  --bolus-ride: white;
   --bolus-undelivered: #E98D7C;
   --bolus-meal: #178A7F;
   --bolus-umm: #21C6B6;

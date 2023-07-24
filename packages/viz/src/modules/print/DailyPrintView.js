@@ -760,18 +760,18 @@ class DailyPrintView extends PrintView {
     return this
   }
 
-  renderFoodCarbs({ bolusScale, data: { food }, xScale }) {
+  renderFoodCarbs({ bolusScale, data: { meals }, xScale }) {
     const circleOffset = 1
     const textOffset = 1.75
 
-    _.forEach(food, foodEvent => {
-      const carbs = _.get(foodEvent, 'nutrition.carbohydrate.net')
+    _.forEach(meals, mealEvent => {
+      const carbs = _.get(mealEvent, 'nutrition.carbohydrate.net')
 
       if (carbs) {
-        const carbsX = xScale(foodEvent.utc)
+        const carbsX = xScale(mealEvent.utc)
         const carbsY = bolusScale(0) - this.carbRadius - circleOffset
         if (Number.isNaN(carbsX) || Number.isNaN(carbsY)) {
-          console.error('renderFoodCarbs', { carbsX, carbsY, carbs, foodEvent })
+          console.error('renderFoodCarbs', { carbsX, carbsY, carbs, foodEvent: mealEvent })
           return
         }
         this.doc.circle(carbsX, carbsY, this.carbRadius)

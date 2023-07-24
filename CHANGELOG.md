@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.4-rc2 - 2023-07-13
+## 3.0.4-rc3 - 2023-07-19
 ### Added
 - YLP-1503 Logout idle user after 30 mn of inactivity
 - YLP-1932 Communication module available for all patients
@@ -127,6 +127,13 @@ It is based on Tidepool Blip 1.27.
 - YLP-2498 Fix chat widget minimal height
 - YLP-2502 History of device parameters is not sorted properly
 - YLP-2503 Device settings history is not taking timezone into account
+- YLP-2506 Fix reservoir change icon always falling back to default
+- YLP-2510 Static dashboard does not perform calculation based on the last 14 days
+- YLP-2511 In the daily view, not all graph data is taken into account by the loop mode
+- YLP-2519 Fix refresh on Daily view disabling the forward arrow in the date picker
+- YLP-2522 PDF/CSV report generation does not take into account data that was not loaded in daily
+- YLP-2524 Override information is hardly visible
+- YLP-2529 Fix median in trends view
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
@@ -134,6 +141,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-2341 Pdf export in CSV is broken when a user has preferred units in its profile
 - YLP-2460 Caregiver users cannot see the "Last data update" date in the patients list
 - YLP-2487 HCP non admin can see button to save new team monitoring alerts parameters
+- YLP-2496 Undelivered value is not rounded in micro-bolus tooltip
+- YLP-2508 PDF report is missing information about rescue carbs
+- YLP-2509 "Sensor warmup" icon is not shown
 
 ## 3.0.3 - 2023-02-09
 ### Fixed

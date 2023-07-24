@@ -62,7 +62,8 @@ export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props
   const { reservoir, position, side, timePrefs } = props
 
   const getChangeTypeByManufacturer = (manufacturer: PumpManufacturer): ChangeType => {
-    switch (manufacturer) {
+    const manufacturerUpperCase = manufacturer.toUpperCase()
+    switch (manufacturerUpperCase) {
       case PumpManufacturer.Vicentra:
       case PumpManufacturer.Roche:
         return ChangeType.Reservoir
