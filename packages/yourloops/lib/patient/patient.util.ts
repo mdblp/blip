@@ -28,13 +28,14 @@
 import PatientApi from './patient.api'
 import { mapITeamMemberToPatient } from '../../components/patient/utils'
 import moment from 'moment-timezone'
-import { type Patient } from './models/patient.model'
+import { type Patient, type PatientMetrics } from './models/patient.model'
 import { UserInviteStatus } from '../team/models/enums/user-invite-status.enum'
 import { type User } from '../auth'
 import { type PatientsFilters } from '../providers/models/patients-filters.model'
 import i18next from 'i18next'
 import { Gender } from '../auth/models/enums/gender.enum'
 import { UserRole } from '../auth/models/enums/user-role.enum'
+import { type MedicalData } from '../data/models/medical-data.model'
 
 const t = i18next.t.bind(i18next)
 
@@ -61,6 +62,31 @@ export default class PatientUtils {
     }
   }
 
+  static async fetchMetrics(patients: Patient[], teamId: string, userId: string): Promise<PatientMetrics[]> {
+    const acceptedInvitePatients = patients.filter((patient: Patient) => patient.invitationStatus === UserInviteStatus.Accepted)
+    if (!acceptedInvitePatients.length) {
+      return
+    }
+
+    const patientIds = acceptedInvitePatients.map((patient: Patient) => patient.userid)
+
+    return await PatientApi.getPatientsMetricsForHcp(userId, teamId, patientIds)
+  }
+
+  static getUpdatedPatientsWithMetrics(patients: Patient[], metrics: PatientMetrics[]): Patient[] {
+    return patients.map((patient: Patient) => {
+      const patientMetrics = metrics.find((metrics: PatientMetrics) => metrics.userid === patient.userid)
+      if (!patientMetrics) {
+        return patient
+      }
+
+      patient.glycemiaIndicators = patientMetrics.glycemiaIndicators
+      patient.monitoringAlerts = patientMetrics.monitoringAlerts
+      patient.medicalData = patientMetrics.medicalData
+      return patient
+    })
+  }
+
   static mapUserToPatient(user: User): Patient {
     const profile = user.profile
     return {
@@ -70,19 +96,18 @@ export default class PatientUtils {
         fullName: profile.fullName,
         lastName: profile.lastName,
         email: profile.email,
-        sex: profile?.patient?.sex ?? Gender.NotDefined
+        sex: profile?.patient?.sex ?? Gender.NotDefined,
+        birthdate: profile?.patient?.birthday
       },
       settings: user.settings,
-      metadata: {
-        medicalData: undefined,
-        hasSentUnreadMessages: false
-      }
+      hasSentUnreadMessages: false
     }
   }
 
   static computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {
-    return patients.map(patient => {
-      return { ...patient, metadata: { ...patient.metadata, flagged: flaggedPatients.includes(patient.userid) } }
+    return patients.map((patient: Patient) => {
+      patient.flagged = flaggedPatients.includes(patient.userid)
+      return patient
     })
   }
 
@@ -132,7 +157,7 @@ export default class PatientUtils {
     const nonPendingPatients = PatientUtils.getNonPendingPatients(patients)
     return PatientUtils.filterPatientsOnMonitoringAlerts(nonPendingPatients, patientFilters)
       .filter(patient => patientFilters.manualFlagEnabled ? flaggedPatientsId?.includes(patient.userid) : patient)
-      .filter(patient => patientFilters.messagesEnabled ? patient.metadata.hasSentUnreadMessages : patient)
+      .filter(patient => patientFilters.messagesEnabled ? patient.hasSentUnreadMessages : patient)
   }
 
   static extractPatientsWithBirthdate = (patients: Patient[], birthdate: string, firstNameOrLastName: string): Patient[] => {
@@ -166,5 +191,24 @@ export default class PatientUtils {
 
   static formatPercentageValue(value: number): string {
     return value || value === 0 ? `${Math.round(value * 10) / 10}%` : t('N/A')
+  }
+
+  static getLastUploadDate(medicalData: MedicalData, noDataLabel: string): string {
+    if (!medicalData) {
+      return null
+    }
+
+    const dataEndDate = medicalData.range?.endDate
+    if (!dataEndDate) {
+      return noDataLabel
+    }
+
+    const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
+    const mLastUpload = moment.tz(dataEndDate, browserTimezone)
+    if (!mLastUpload.isValid()) {
+      return noDataLabel
+    }
+
+    return mLastUpload.format('lll')
   }
 }

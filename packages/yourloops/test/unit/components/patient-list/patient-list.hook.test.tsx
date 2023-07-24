@@ -32,7 +32,6 @@ import { act, renderHook } from '@testing-library/react'
 import { usePatientListHook } from '../../../../components/patient-list/patient-list.hook'
 import { PatientListTabs } from '../../../../components/patient-list/models/enums/patient-list.enum'
 import type { Patient } from '../../../../lib/patient/models/patient.model'
-import PatientUtils from '../../../../lib/patient/patient.util'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/patient/patients.provider')
@@ -45,7 +44,6 @@ describe('Patient list hook', () => {
   const getFlagPatientsMock = jest.fn().mockReturnValue([])
   const searchPatientsMock = jest.fn().mockReturnValue([])
   const updatePendingFilterMock = jest.fn()
-  const computePatientsMock = jest.spyOn(PatientUtils, 'computeFlaggedPatients').mockReturnValue(patients)
 
   beforeAll(() => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
@@ -62,13 +60,12 @@ describe('Patient list hook', () => {
 
   describe('patients useMemo', () => {
     it('should return a list of patients according to user search', () => {
+      const filteredPatients = [patients[1]]
+      searchPatientsMock.mockReturnValueOnce(patients).mockReturnValueOnce(filteredPatients)
       const { result } = renderHook(() => usePatientListHook())
       expect(result.current.patients).toEqual(patients)
-      expect(computePatientsMock).toHaveBeenCalledTimes(1)
 
       // simulate that user type a patient firstname
-      const filteredPatients = [patients[1]]
-      jest.spyOn(PatientUtils, 'computeFlaggedPatients').mockReturnValueOnce(filteredPatients)
       act(() => {
         result.current.setInputSearch('laurent')
       })

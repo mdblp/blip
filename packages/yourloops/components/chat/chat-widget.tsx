@@ -55,7 +55,7 @@ import { MessageIcon } from '../icons/diabeloop/message-icon'
 import Badge from '@mui/material/Badge'
 import { getUnreadMessagesByTeam } from './chat.util'
 
-const CHAT_CONTENT_HEIGHT = '280px'
+const CHAT_CONTENT_MAX_HEIGHT = '450px'
 const KEYBOARD_EVENT_ESCAPE = 'Escape'
 
 const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) => {
@@ -69,7 +69,7 @@ const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) 
     },
     chatWidgetContent: {
       padding: theme.spacing(2),
-      height: CHAT_CONTENT_HEIGHT,
+      maxHeight: CHAT_CONTENT_MAX_HEIGHT,
       overflowY: 'auto',
       overflowX: 'hidden'
     },
@@ -156,7 +156,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   useEffect(() => {
     async function fetchMessages(): Promise<void> {
       const messages = await ChatApi.getChatMessages(dropdownTeamId, patient.userid)
-      if (patient.metadata.hasSentUnreadMessages) {
+      if (patient.hasSentUnreadMessages) {
         patientsHook.markPatientMessagesAsRead(patient)
       }
       setMessages(messages)

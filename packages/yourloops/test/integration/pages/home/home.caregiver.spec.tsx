@@ -28,7 +28,7 @@
 import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi, removeDirectShareMock } from '../../mock/direct-share.api.mock'
-import { buildPatientAsTeamMember, patient1AsTeamMember, patient2AsTeamMember } from '../../data/patient.api.data'
+import { patient1AsTeamMember, patient2AsTeamMember } from '../../data/patient.api.data'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { renderPage } from '../../utils/render'
@@ -40,6 +40,8 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { checkPatientListHeaderCaregiver } from '../../assert/patient-list.assert'
+import { buildPatientAsTeamMember } from '../../data/patient-builder.data'
+import moment from 'moment-timezone'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
@@ -55,6 +57,8 @@ describe('Caregiver home page', () => {
   })
 
   it('should render the home page with correct components', async () => {
+    jest.spyOn(PatientApi, 'getPatientsMetricsForHcp')
+
     const router = renderPage('/')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/home')
@@ -62,6 +66,8 @@ describe('Caregiver home page', () => {
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
     await checkCaregiverLayout(`${firstName} ${lastName}`)
     checkPatientListHeaderCaregiver()
+
+    expect(PatientApi.getPatientsMetricsForHcp).not.toHaveBeenCalled()
   })
 
   it('should filter patients correctly depending on the search value', async () => {
@@ -81,7 +87,8 @@ describe('Caregiver home page', () => {
         fullName: 'Akim Embett',
         patient: { birthday: '2010-01-20T10:44:34+01:00' }
       },
-      glycemiaIndicators
+      glycemiaIndicators,
+      medicalData: { range: { startDate: '2023-06-21T07:02:25.378Z', endDate: '2023-06-22T07:02:25.378Z' } }
     })
     const patient2 = buildPatientAsTeamMember({
       userId: 'patientId2',
@@ -113,21 +120,23 @@ describe('Caregiver home page', () => {
       expect(screen.queryByTestId('current-patient-list-grid')).toBeVisible()
     }, { timeout: 10000 })
 
+    const lastDataUploadDate = moment.tz(patient1.medicalData.range.endDate, new Intl.DateTimeFormat().resolvedOptions().timeZone).format('lll')
+
     // Checking that all patients are displayed
     const dataGridRow = screen.getByTestId('current-patient-list-grid')
     expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%N/AFlag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/AFlag patient fake@patient.emailAnnie VersaireMay 25, 20150%0%N/A')
+    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%${lastDataUploadDate}Flag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/AFlag patient fake@patient.emailAnnie VersaireMay 25, 20150%0%N/A`)
 
     const searchPatient = screen.getByPlaceholderText('Search for a patient...')
 
     // Searching by birthdate only
     await userEvent.type(searchPatient, '20/01/2010')
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%N/AFlag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/A')
+    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%${lastDataUploadDate}Flag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/A`)
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and first name
     await userEvent.type(searchPatient, '20/01/2010 Aki')
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%N/A')
+    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%${lastDataUploadDate}`)
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and last name

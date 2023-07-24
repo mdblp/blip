@@ -31,7 +31,7 @@
     "prebuild": "npm run clean",
     "build": "vite build && tsc --emitDeclarationOnly && mv dist/src dist/types",
     "test": "jest --config=test/jest.config.cjs",
-    "lint": "eslint .",
+    "lint": "eslint . --ext js,ts",
     "lint-fix": "npm run lint -- --fix"
   },
   "bugs": {

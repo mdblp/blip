@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,13 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type MedicalData } from '../../data/models/medical-data.model'
+import { type ParameterConfig } from '../medical/datum/pump-settings.model'
 
-interface PatientMetadata {
-  flagged?: boolean
-  /** Patient medical data. undefined means not fetched, null if the fetch failed */
-  medicalData?: MedicalData | null
-  hasSentUnreadMessages: boolean
+export interface BasalBolusStatistics {
+  bolus: number
+  basal: number
+  total: number
 }
 
-export type { PatientMetadata }
+export interface TotalInsulinAndWeightStatistics {
+  totalInsulin: number
+  weight?: ParameterConfig
+}

@@ -24,7 +24,6 @@ import BasicsPrintView from './BasicsPrintView'
 import DailyPrintView from './DailyPrintView'
 import { reshapeBgClassesToBgBounds } from '../../utils/bloodglucose'
 import { PrintView, SettingsPrintView, renderPageNumbers } from 'dumb'
-
 import { getPatientFullName } from '../../utils/misc'
 import * as constants from './utils/constants'
 import { arrayBufferToBase64 } from './utils/functions'

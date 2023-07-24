@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,68 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.titleTotal {
-  color: #0096D1;
-  margin-left: 4px;
-}
-
-.titleData {
-  composes: smallSize from '../../../styles/typography.css';
-  padding-left: .25em;
-  position: relative;
-  top: -1px;
-}
-
-.titleSuffix {
-  padding-left: 1px;
-  margin-right: 4px;
-}
-
-.rows {
-  display: grid;
-  align-items: center;
-  pointer-events: none;
-  padding-left: 10px;
-}
-
-.rows .rowTitle {
-  color: var(--stat--default);
-}
-
-.rows .rowValue {
-  border-width: 2px;
-  border-color: var(--stat-disabled);
-  border-style: solid;
-  border-radius: 14px;
-  text-align: center;
-  font-size: 14px;
-  white-space: pre;
-}
-
-.rows .rowPercent {
-  display: flex;
-  justify-content: flex-end;
-  align-items: baseline;
-}
-
-.rows .rowPercent .rowPercentValue {
-  font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
-  font-size: 24px;
-}
-
-.rows .rowPercent .rowPercentUnits {
-  font-size: 12px;
-  color: var(--text-medium-contrast);
-}
-
-.rowsTotalInsulin {
-  grid-template-columns: auto 3.5em 3.5em;
-}
-
-.rowsTotalInsulin-basal {
-  color: var(--basal-automated);
-}
-
-.rowsTotalInsulin-bolus {
-  color: var(--bolus-meal);
+export const convertToPercentage = (number: number): number => {
+  return Math.round(number * 10) / 10
 }

@@ -28,6 +28,7 @@ import React, { type FunctionComponent } from 'react'
 import { SimpleStat, StatFormats } from 'dumb'
 import { t } from 'i18next'
 import Box from '@mui/material/Box'
+import { useTranslation } from 'react-i18next'
 
 export interface SensorUsageStatProp {
   total: number
@@ -35,6 +36,7 @@ export interface SensorUsageStatProp {
 }
 
 export const SensorUsageStat: FunctionComponent<SensorUsageStatProp> = (props) => {
+  const { t } = useTranslation()
   const { usage, total } = props
 
   return (

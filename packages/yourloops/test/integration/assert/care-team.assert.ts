@@ -27,7 +27,7 @@
 
 import { screen, within } from '@testing-library/react'
 import { myThirdTeamAddress, myThirdTeamCode, myThirdTeamName, myThirdTeamPhoneNumber } from '../mock/team.api.mock'
-import { loggedInUserEmail, loggedInUserFullName } from '../mock/auth0.hook.mock'
+import { loggedInUserEmail, loggedInUserFullName, userTimEmail, userTimFullName } from '../mock/auth0.hook.mock'
 
 export const checkCareTeamInformation = async () => {
   const teamInformationSection = within(await screen.findByTestId('team-information'))
@@ -55,7 +55,7 @@ export const checkCareTeamMembers = () => {
   expect(teamMembersSection.getByText('Add healthcare professional')).toBeVisible()
   expect(teamMembersSection.getByText('Add healthcare professional')).toBeEnabled()
 
-  expect(screen.getByTestId('team-members-list-table')).toHaveTextContent(`MemberEmailAdmin${loggedInUserFullName}${loggedInUserEmail}Fake Memberfake@member.fr`)
+  expect(screen.getByTestId('team-members-list-table')).toHaveTextContent(`MemberEmailAdmin${loggedInUserFullName}${loggedInUserEmail}${userTimFullName}${userTimEmail}`)
 }
 
 export const checkCareTeamMonitoringAlertsConfiguration = () => {

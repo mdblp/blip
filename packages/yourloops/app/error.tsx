@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -85,9 +85,6 @@ function OnError(props: OnErrorProps): JSX.Element {
       })
     } catch (err) {
       console.error(err)
-    }
-    if (typeof window.clearSessionTimeout === 'function') {
-      window.clearSessionTimeout()
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 

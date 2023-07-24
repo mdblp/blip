@@ -27,7 +27,10 @@
 
 import { act, waitFor } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
-import { completeDashboardData, mockDataAPI, twoWeeksOldDashboardData } from '../../mock/data.api.mock'
+import {
+  completeDashboardData, dataSetsWithZeroValues,
+  mockDataAPI, sixteenDaysOldDashboardData, twoWeeksOldDashboardData
+} from '../../mock/data.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { type MedicalFilesWidgetParams } from '../../assert/medical-widget.assert'
@@ -41,7 +44,7 @@ import {
   mySecondTeamId,
   mySecondTeamName
 } from '../../mock/team.api.mock'
-import { patient1, patient1AsTeamMember, patient1Id } from '../../data/patient.api.data'
+import { patient1AsTeamMember, patient1Id, patient1Info } from '../../data/patient.api.data'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { type AppMainLayoutParams, testAppMainLayoutForPatient } from '../../use-cases/app-main-layout-visualisation'
@@ -49,7 +52,8 @@ import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
 import {
   testDashboardDataVisualisationForPatient,
   testDashboardDataVisualisationPrivateTeamNoData,
-  testDashboardDataVisualisationWithTwoWeeksOldData,
+  testDashboardDataVisualisationTwoWeeksOldData,
+  testDashboardDataVisualisationSixteenDaysOldData,
   testEmptyMedicalFilesWidgetForPatient,
   testPatientNavBarForPatient
 } from '../../use-cases/patient-data-visualisation'
@@ -59,13 +63,12 @@ import { testJoinTeam } from '../../use-cases/teams-management'
 
 describe('Patient dashboard for patient', () => {
   const patientDashboardRoute = '/dashboard'
-  const firstName = patient1.profile.firstName
-  const lastName = patient1.profile.lastName
+  const firstName = patient1Info.profile.firstName
+  const lastName = patient1Info.profile.lastName
 
   beforeEach(() => {
     mockPatientLogin(patient1AsTeamMember)
     mockPatientApiForPatients()
-    mockDataAPI()
     mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
     mockChatAPI()
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
@@ -76,7 +79,6 @@ describe('Patient dashboard for patient', () => {
 
   it('should display correct components when patient is in some medical teams', async () => {
     mockDataAPI(completeDashboardData)
-
     const appMainLayoutParams: AppMainLayoutParams = {
       footerHasLanguageSelector: false,
       loggedInUserFullName: `${firstName} ${lastName}`
@@ -100,12 +102,11 @@ describe('Patient dashboard for patient', () => {
   })
 
   it('should display medical reports', async () => {
-    mockDataAPI(completeDashboardData)
-
+    mockDataAPI()
     const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
       selectedPatientId: patient1Id,
-      loggedInUserFirstName: patient1.profile.firstName,
-      loggedInUserLastName: patient1.profile.lastName,
+      loggedInUserFirstName: patient1Info.profile.firstName,
+      loggedInUserLastName: patient1Info.profile.lastName,
       selectedTeamId: mySecondTeamId,
       selectedTeamName: mySecondTeamName
     }
@@ -120,8 +121,7 @@ describe('Patient dashboard for patient', () => {
   })
 
   it('should be able to use the chat widget', async () => {
-    mockDataAPI(completeDashboardData)
-
+    mockDataAPI()
     const router = renderPage(patientDashboardRoute)
 
     await waitFor(() => {
@@ -132,8 +132,6 @@ describe('Patient dashboard for patient', () => {
   })
 
   it('should be able to join a team', async () => {
-    mockDataAPI(completeDashboardData)
-
     const router = renderPage(patientDashboardRoute)
 
     await waitFor(() => {
@@ -144,6 +142,7 @@ describe('Patient dashboard for patient', () => {
   })
 
   it('should render correct components when patient is in no medical teams', async () => {
+    mockDataAPI(dataSetsWithZeroValues)
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildPrivateTeam()])
 
@@ -167,7 +166,17 @@ describe('Patient dashboard for patient', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationWithTwoWeeksOldData()
+    await testDashboardDataVisualisationTwoWeeksOldData()
+  })
+
+  it('should produce statistics for fourteen days, whereas the data are sixteen days old', async () => {
+    mockDataAPI(sixteenDaysOldDashboardData)
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testDashboardDataVisualisationSixteenDaysOldData()
   })
 
   it('should display the fallback message when no medical files are returned by the API', async () => {

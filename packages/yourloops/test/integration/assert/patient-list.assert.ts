@@ -37,9 +37,20 @@ import {
   updatePatientsFilters
 } from './patient-filters.assert'
 import { changeTeamScope } from './header.assert'
-import { patient1, patient2, patient3, patientWithMmol, pendingPatient } from '../data/patient.api.data'
+import {
+  hypoglycemiaPatientMetrics,
+  patient1Info,
+  patient2Info,
+  patient3Info,
+  patientWithMmolInfo,
+  pendingPatient
+} from '../data/patient.api.data'
 import NotificationApi from '../../../lib/notifications/notification.api'
 import { type Router } from '../models/router.model'
+import moment from 'moment-timezone'
+
+const SVG_ICON_DISABLED_CLASS = 'MuiSvgIcon-colorDisabled'
+const SVG_ICON_FILL = 'currentColor'
 
 export const checkDataGridAfterSinglePatientFilter = (dataGridRow: HTMLElement, rowContent: string): void => {
   expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
@@ -110,7 +121,9 @@ export const checkPatientListFilters = async () => {
   expect(screen.queryByTestId('reset-filters-link')).not.toBeInTheDocument()
   const dataGridRowCurrent = screen.getByTestId('current-patient-list-grid')
   expect(within(dataGridRowCurrent).getAllByRole('row')).toHaveLength(7)
-  expect(dataGridRowCurrent).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRHypoglycemiaLast data updateActionsUnflag patient flagged@patient.frFlagged PatientJan 1, 1980No new messages from the patient0%0%N/AFlag patient hypoglycemia@patient.frHypoglycemia PatientJan 1, 1980No new messages from the patient0%0%N/AFlag patient no-data@patient.frNo Data PatientJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages from the patient0%0%N/AFlag patient time-out-of-range@patient.frTime Out of Range PatientJan 1, 1980No new messages from the patient0%0%N/AFlag patient unread-messages@patient.frUnread Messages PatientJan 1, 1980The patient has sent you new messages0%0%N/AData calculated on the last 14 daysRows per page:101–6 of 6')
+
+  const lastDataUploadDate = moment.tz(hypoglycemiaPatientMetrics.medicalData.range.endDate, new Intl.DateTimeFormat().resolvedOptions().timeZone).format('lll')
+  expect(dataGridRowCurrent).toHaveTextContent(`PatientDate of birthMonitoring alertsMessagesTIRHypoglycemiaLast data updateActionsUnflag patient flagged@patient.frFlagged PatientJan 1, 1980No new messages from the patient0%0%N/AFlag patient hypoglycemia@patient.frHypoglycemia PatientJan 1, 1980No new messages from the patient0%0%${lastDataUploadDate}Flag patient no-data@patient.frNo Data PatientJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages from the patient0%0%N/AFlag patient time-out-of-range@patient.frTime Out of Range PatientJan 1, 1980No new messages from the patient0%0%N/AFlag patient unread-messages@patient.frUnread Messages PatientJan 1, 1980The patient has sent you new messages0%0%N/AData calculated on the last 14 daysRows per page:101–6 of 6`)
 
   // Check the default values
   const filtersButton = screen.getByRole('button', { name: 'Filters' })
@@ -144,7 +157,7 @@ export const checkPatientListFilters = async () => {
     outOfRangeFilterToggle: true,
     hypoglycemiaFilterToggle: true
   })
-  checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, 'Flag patient hypoglycemia@patient.frHypoglycemia PatientJan 1, 1980No new messages from the patient0%0%N/A')
+  checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, `Flag patient hypoglycemia@patient.frHypoglycemia PatientJan 1, 1980No new messages from the patient0%0%${lastDataUploadDate}`)
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, hypoglycemiaFilterToggle: true })
 
@@ -481,7 +494,7 @@ export const checkPatientListHideShowColumns = async () => {
   expect(dataGridCurrentRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRHypoglycemiaLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages from the patient0%0%N/A')
 }
 
-const checkPatientListTooltips = async (outOfRangeTooltipValue: string, hypoglycemiaTooltipValue: string): Promise<void> => {
+const checkPatientListMonitoringAlertsIcons = async (outOfRangeTooltipValue: string, hypoglycemiaTooltipValue: string): Promise<void> => {
   const dataGridRows = screen.getByTestId('current-patient-list-grid')
   expect(dataGridRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRHypoglycemiaLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages from the patient0%0%N/A')
   const monitoringAlertsColumnHeader = within(dataGridRows).getByText('Monitoring alerts')
@@ -496,6 +509,9 @@ const checkPatientListTooltips = async (outOfRangeTooltipValue: string, hypoglyc
   })
 
   const firstRowTimeSpentOutOfRangeIcon = within(dataGridRows).getAllByTestId('time-spent-out-of-range-icon')[0]
+  expect(firstRowTimeSpentOutOfRangeIcon).toHaveAttribute('fill', SVG_ICON_FILL)
+  expect(firstRowTimeSpentOutOfRangeIcon.getAttribute('class').includes(SVG_ICON_DISABLED_CLASS)).toEqual(true)
+
   expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   await userEvent.hover(firstRowTimeSpentOutOfRangeIcon)
   const timeSpentOutOfRangeTooltip = await screen.findByRole('tooltip')
@@ -509,6 +525,9 @@ const checkPatientListTooltips = async (outOfRangeTooltipValue: string, hypoglyc
   })
 
   const firstRowHypoglycemiaIcon = within(dataGridRows).getAllByTestId('hypoglycemia-icon')[0]
+  expect(firstRowHypoglycemiaIcon).toHaveAttribute('fill', SVG_ICON_FILL)
+  expect(firstRowHypoglycemiaIcon.getAttribute('class').includes(SVG_ICON_DISABLED_CLASS)).toEqual(true)
+
   expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   await userEvent.hover(firstRowHypoglycemiaIcon)
   const hypoglycemiaTooltip = await screen.findByRole('tooltip')
@@ -522,6 +541,9 @@ const checkPatientListTooltips = async (outOfRangeTooltipValue: string, hypoglyc
   })
 
   const firstRowNoDataIcon = within(dataGridRows).getAllByTestId('no-data-icon')[0]
+  expect(firstRowNoDataIcon).toHaveAttribute('fill', SVG_ICON_FILL)
+  expect(firstRowNoDataIcon.getAttribute('class').includes(SVG_ICON_DISABLED_CLASS)).toEqual(true)
+
   expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   await userEvent.hover(firstRowNoDataIcon)
   const noDataTooltip = await screen.findByRole('tooltip')
@@ -535,6 +557,9 @@ const checkPatientListTooltips = async (outOfRangeTooltipValue: string, hypoglyc
   })
 
   const firstRowMessageIcon = within(dataGridRows).getAllByTestId('message-icon')[0]
+  expect(firstRowMessageIcon).toHaveAttribute('fill', SVG_ICON_FILL)
+  expect(firstRowMessageIcon.getAttribute('class').includes(SVG_ICON_DISABLED_CLASS)).toEqual(true)
+
   expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   await userEvent.hover(firstRowMessageIcon)
   const messageTooltip = await screen.findByRole('tooltip')
@@ -549,13 +574,13 @@ const checkPatientListTooltips = async (outOfRangeTooltipValue: string, hypoglyc
 export const checkPatientListTooltipsMgDL = async (): Promise<void> => {
   const outOfRangeTooltip = 'Alert triggered when more than 5% of time over the period considered are off target (50-140 mg/dL).'
   const hypoglycemiaTooltip = 'Alert triggered when 10% of time below 40 mg/dL threshold over the period considered.'
-  await checkPatientListTooltips(outOfRangeTooltip, hypoglycemiaTooltip)
+  await checkPatientListMonitoringAlertsIcons(outOfRangeTooltip, hypoglycemiaTooltip)
 }
 
 export const checkPatientListTooltipsMmolL = async (): Promise<void> => {
   const outOfRangeTooltip = 'Alert triggered when more than 5% of time over the period considered are off target (2.8-7.8 mmol/L).'
   const hypoglycemiaTooltip = 'Alert triggered when 10% of time below 2.2 mmol/L threshold over the period considered.'
-  await checkPatientListTooltips(outOfRangeTooltip, hypoglycemiaTooltip)
+  await checkPatientListMonitoringAlertsIcons(outOfRangeTooltip, hypoglycemiaTooltip)
 }
 
 export const checkPatientListColumnSort = async (): Promise<void> => {
@@ -563,27 +588,27 @@ export const checkPatientListColumnSort = async (): Promise<void> => {
 
   const patientColumnHeader = within(dataGridRows).getByRole('columnheader', { name: 'Patient' })
   const allRowsBeforeSort = within(dataGridRows).getAllByRole('row')
-  expect(allRowsBeforeSort[1]).toHaveTextContent(patient1.profile.fullName)
-  expect(allRowsBeforeSort[2]).toHaveTextContent(patient2.profile.fullName)
-  expect(allRowsBeforeSort[3]).toHaveTextContent(patient3.profile.fullName)
-  expect(allRowsBeforeSort[4]).toHaveTextContent(patientWithMmol.profile.fullName)
+  expect(allRowsBeforeSort[1]).toHaveTextContent(patient1Info.profile.fullName)
+  expect(allRowsBeforeSort[2]).toHaveTextContent(patient2Info.profile.fullName)
+  expect(allRowsBeforeSort[3]).toHaveTextContent(patient3Info.profile.fullName)
+  expect(allRowsBeforeSort[4]).toHaveTextContent(patientWithMmolInfo.profile.fullName)
 
   const sortButton = within(patientColumnHeader).getByRole('button', { hidden: true })
   await userEvent.click(sortButton)
 
   const allRowsAfterFirstSort = within(dataGridRows).getAllByRole('row')
-  expect(allRowsAfterFirstSort[1]).toHaveTextContent(patientWithMmol.profile.fullName)
-  expect(allRowsAfterFirstSort[2]).toHaveTextContent(patient3.profile.fullName)
-  expect(allRowsAfterFirstSort[3]).toHaveTextContent(patient2.profile.fullName)
-  expect(allRowsAfterFirstSort[4]).toHaveTextContent(patient1.profile.fullName)
+  expect(allRowsAfterFirstSort[1]).toHaveTextContent(patientWithMmolInfo.profile.fullName)
+  expect(allRowsAfterFirstSort[2]).toHaveTextContent(patient3Info.profile.fullName)
+  expect(allRowsAfterFirstSort[3]).toHaveTextContent(patient2Info.profile.fullName)
+  expect(allRowsAfterFirstSort[4]).toHaveTextContent(patient1Info.profile.fullName)
 
   await userEvent.click(sortButton)
 
   const allRowsAfterSecondSort = within(dataGridRows).getAllByRole('row')
-  expect(allRowsAfterSecondSort[1]).toHaveTextContent(patient1.profile.fullName)
-  expect(allRowsAfterSecondSort[2]).toHaveTextContent(patient2.profile.fullName)
-  expect(allRowsAfterSecondSort[3]).toHaveTextContent(patient3.profile.fullName)
-  expect(allRowsAfterSecondSort[4]).toHaveTextContent(patientWithMmol.profile.fullName)
+  expect(allRowsAfterSecondSort[1]).toHaveTextContent(patient1Info.profile.fullName)
+  expect(allRowsAfterSecondSort[2]).toHaveTextContent(patient2Info.profile.fullName)
+  expect(allRowsAfterSecondSort[3]).toHaveTextContent(patient3Info.profile.fullName)
+  expect(allRowsAfterSecondSort[4]).toHaveTextContent(patientWithMmolInfo.profile.fullName)
 }
 
 export const checkMonitoringAlertsIconsInactiveForFirstPatient = async (): Promise<void> => {

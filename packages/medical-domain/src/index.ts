@@ -82,6 +82,7 @@ import {
 } from './domains/repositories/statistics/glycemia-statistics.service'
 import type BasicData from './domains/repositories/medical/basics-data.service'
 import { CarbsStatisticsService } from './domains/repositories/statistics/carbs-statistics.service'
+import { BasalBolusStatisticsService } from './domains/repositories/statistics/insulin-statistics.service'
 
 export {
   type Basal,
@@ -137,6 +138,7 @@ export {
   CarbsStatisticsService,
   type ParametersChange,
   type PumpSettingsParameter,
-  ChangeType
+  ChangeType,
+  BasalBolusStatisticsService
 }
 export default MedicalDataService

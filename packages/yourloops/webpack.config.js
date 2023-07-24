@@ -24,7 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+/* eslint-disable @typescript-eslint/no-var-requires */
 const _ = require('lodash')
 const path = require('path')
 const webpack = require('webpack')
@@ -45,7 +45,7 @@ const reJTSX = /\.[jt]sx?$/
 
 // Compile mode
 const mode =
-  process.argv.indexOf('--mode=production') >= 0 || process.env.NODE_ENV === 'production' ? 'production' : 'development'
+  process.argv.includes('--mode=production') || process.env.NODE_ENV === 'production' ? 'production' : 'development'
 const isTest = process.env.NODE_ENV === 'test'
 const isProduction = mode === 'production'
 const isDev = !isProduction

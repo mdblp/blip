@@ -39,7 +39,7 @@ export const TimeSpentOufOfRangeIcon = React.forwardRef((props: SvgIconProps, re
   const { classes } = styles()
   return (
     <SvgIcon {...props} ref={ref}>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+      <svg viewBox="0 0 48 48" fill="currentColor">
         <path
           d="m42,4.03h-8c-1.1,0-2,.9-2,2s.9,2,2,2h3.17l-16.62,16.62c-.78.78-.78,2.05,0,2.83.39.39.9.59,1.41.59s1.02-.2,1.41-.59l16.62-16.62v3.17c0,1.1.9,2,2,2s2-.9,2-2v-8c0-1.1-.9-2-2-2Z" />
         <g>

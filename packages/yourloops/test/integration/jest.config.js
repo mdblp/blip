@@ -25,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const commonJestConfig = require('../common-jest.config')
 module.exports = {
   ...commonJestConfig,

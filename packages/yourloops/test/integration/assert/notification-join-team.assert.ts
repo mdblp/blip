@@ -74,5 +74,5 @@ export const checkAcceptTeamInvite = async () => {
   expect(NotificationApi.acceptInvitation).toHaveBeenCalledWith(patient1Id, invitationTeam)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   const successAlert = screen.getByRole('alert')
-  expect(successAlert).toHaveTextContent('You have accepted the notification of sysReq-67-team2')
+  expect(successAlert).toHaveTextContent('You have accepted the invitation from sysReq-67-team2')
 }

@@ -32,7 +32,8 @@ import {
   type DateFilter,
   DatumType,
   type MedicalData,
-  TimeService
+  TimeService,
+  BasalBolusStatisticsService
 } from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
@@ -44,6 +45,7 @@ import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { StandardDeviationStat } from './standard-deviation-stat'
 import { AverageGlucoseStat } from './average-glucose-stat'
+import { TotalInsulinStat } from './total-insulin-stat'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -88,6 +90,17 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
     : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
 
+  const {
+    bolus,
+    basal,
+    total: basalBolusTotal
+  } = BasalBolusStatisticsService.getBasalBolusData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter)
+
+  const {
+    weight,
+    totalInsulin: dailyDose
+  } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter, medicalData.pumpSettings)
+
   return (
     <Box data-testid="patient-statistics">
       <CBGPercentageBarChart
@@ -125,7 +138,14 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
       <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-
+      <TotalInsulinStat
+        basal={basal}
+        bolus={bolus}
+        totalInsulin={basalBolusTotal}
+        weight={weight}
+        dailyDose={dailyDose}
+      />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       {children}
 
       <TotalCarbsStat

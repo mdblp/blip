@@ -35,7 +35,6 @@ import {
 } from '@mui/x-data-grid'
 import { useTranslation } from 'react-i18next'
 import { type GridRowModel } from '../models/grid-row.model'
-import { getMedicalValues } from '../../patient/utils'
 import { PatientListColumns } from '../models/enums/patient-list.enum'
 import PatientUtils from '../../../lib/patient/patient.util'
 import React, { useMemo } from 'react'
@@ -45,13 +44,21 @@ import {
   sortByMonitoringAlertsCount,
   sortByUserName
 } from '../utils/sort-comparators.util'
-import { ActionsCell, FlagIconCell, MessageCell, MonitoringAlertsCell } from '../custom-cells'
+import {
+  ActionsCell,
+  FlagIconCell,
+  MessageCell,
+  MonitoringAlertsCell,
+  MonitoringAlertsSkeletonCell
+} from '../custom-cells'
 import { getUserName } from '../../../lib/auth/user.util'
 import Box from '@mui/material/Box'
 import { formatBirthdate } from 'dumb'
 import { usePatientListStyles } from '../patient-list.styles'
 import { AppUserRoute } from '../../../models/enums/routes.enum'
 import { useNavigate } from 'react-router-dom'
+import { Skeleton } from '@mui/material'
+import { useAuth } from '../../../lib/auth'
 
 interface CurrentPatientListProps {
   patients: Patient[]
@@ -64,16 +71,24 @@ interface CurrentPatientListHookReturns {
   onRowClick: (params: GridRowParams) => void
 }
 
+const SKELETON_PERCENTAGE_VALUE_WIDTH_PX = 50
+const SKELETON_HEIGHT_PX = 15
+
+const GLYCEMIA_INDICATOR_NO_DATA_VALUE = null
+
 export const useCurrentPatientListHook = (props: CurrentPatientListProps): CurrentPatientListHookReturns => {
   const { patients, onClickRemovePatient } = props
   const { t } = useTranslation()
   const { classes } = usePatientListStyles()
+  const { getFlagPatients } = useAuth()
   const navigate = useNavigate()
   const noDataLabel = t('N/A')
 
+  const flaggedPatients = getFlagPatients()
+  const sortedPatients = PatientUtils.computeFlaggedPatients(patients, flaggedPatients).sort(sortByUserName)
+
   const allRows = useMemo(() => {
-    return patients.map((patient): GridRowModel => {
-      const { lastUpload } = getMedicalValues(patient.metadata.medicalData, noDataLabel)
+    return sortedPatients.map((patient): GridRowModel => {
       const birthdate = patient.profile.birthdate
       return {
         id: patient.userid,
@@ -84,16 +99,20 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
         [PatientListColumns.MonitoringAlerts]: patient,
         [PatientListColumns.System]: patient.settings.system ?? noDataLabel,
-        [PatientListColumns.LastDataUpdate]: lastUpload,
-        [PatientListColumns.Messages]: patient.metadata.hasSentUnreadMessages,
-        [PatientListColumns.TimeInRange]: patient.glycemiaIndicators.timeInRange,
-        [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators.glucoseManagementIndicator,
-        [PatientListColumns.Hypoglycemia]: patient.glycemiaIndicators.hypoglycemia,
-        [PatientListColumns.Variance]: patient.glycemiaIndicators.coefficientOfVariation,
+        [PatientListColumns.LastDataUpdate]: PatientUtils.getLastUploadDate(patient.medicalData, noDataLabel),
+        [PatientListColumns.Messages]: patient.hasSentUnreadMessages,
+        [PatientListColumns.TimeInRange]: patient.glycemiaIndicators?.timeInRange,
+        [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators?.glucoseManagementIndicator,
+        [PatientListColumns.Hypoglycemia]: patient.glycemiaIndicators?.hypoglycemia,
+        [PatientListColumns.Variance]: patient.glycemiaIndicators?.coefficientOfVariation,
         [PatientListColumns.Actions]: patient
       }
     })
-  }, [noDataLabel, patients])
+  }, [noDataLabel, sortedPatients])
+
+  const isNumberValueDefined = (value: number): boolean => {
+    return !!value || value === 0 || value === GLYCEMIA_INDICATOR_NO_DATA_VALUE
+  }
 
   const allColumns = useMemo((): GridColDef[] => {
     return [
@@ -107,7 +126,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         sortComparator: sortByFlag,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>): JSX.Element => {
           const patient = params.value
-          return <FlagIconCell isFlagged={patient.metadata.flagged} patient={patient} />
+          return <FlagIconCell isFlagged={patient.flagged} patient={patient} />
         }
       },
       {
@@ -156,7 +175,9 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         width: 150,
         renderCell: (params: GridRenderCellParams<GridRowModel, Patient>) => {
           const patient = params.value
-          return <MonitoringAlertsCell patient={patient} />
+          const isLoading = !patient.monitoringAlertsParameters || !patient.monitoringAlerts
+
+          return isLoading ? <MonitoringAlertsSkeletonCell /> : <MonitoringAlertsCell patient={patient} />
         }
       },
       {
@@ -171,33 +192,84 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         type: 'number',
         field: PatientListColumns.TimeInRange,
         headerName: t('time-in-range'),
-        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value)
+        headerAlign: 'left',
+        align: 'left',
+        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value),
+        renderCell: (params: GridRenderCellParams<GridRowModel, number>) => {
+          const value = params.value
+          return isNumberValueDefined(value)
+            ? PatientUtils.formatPercentageValue(params.value)
+            : <Skeleton data-testid="time-in-range-cell-skeleton"
+                        variant="rounded"
+                        width={SKELETON_PERCENTAGE_VALUE_WIDTH_PX}
+                        height={SKELETON_HEIGHT_PX} />
+        }
       },
       {
         type: 'number',
         field: PatientListColumns.GlucoseManagementIndicator,
         headerName: t('glucose-management-indicator'),
+        headerAlign: 'left',
+        align: 'left',
         width: 120,
-        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value)
+        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value),
+        renderCell: (params: GridRenderCellParams<GridRowModel, number>) => {
+          const value = params.value
+          return isNumberValueDefined(value)
+            ? PatientUtils.formatPercentageValue(params.value)
+            : <Skeleton data-testid="glucose-management-indicator-cell-skeleton"
+                        variant="rounded"
+                        width={SKELETON_PERCENTAGE_VALUE_WIDTH_PX}
+                        height={SKELETON_HEIGHT_PX} />
+        }
       },
       {
         type: 'number',
         field: PatientListColumns.Hypoglycemia,
         headerName: t('hypoglycemia'),
+        headerAlign: 'left',
+        align: 'left',
         width: 120,
-        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value)
+        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value),
+        renderCell: (params: GridRenderCellParams<GridRowModel, number>) => {
+          const value = params.value
+          return isNumberValueDefined(value)
+            ? PatientUtils.formatPercentageValue(params.value)
+            : <Skeleton data-testid="hypoglycemia-cell-skeleton"
+                        variant="rounded"
+                        width={SKELETON_PERCENTAGE_VALUE_WIDTH_PX}
+                        height={SKELETON_HEIGHT_PX} />
+        }
       },
       {
         type: 'number',
         field: PatientListColumns.Variance,
         headerName: t('variance'),
-        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value)
+        headerAlign: 'left',
+        align: 'left',
+        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value),
+        renderCell: (params: GridRenderCellParams<GridRowModel, number>) => {
+          const value = params.value
+          return isNumberValueDefined(value)
+            ? PatientUtils.formatPercentageValue(params.value)
+            : <Skeleton data-testid="variance-cell-skeleton"
+                        variant="rounded"
+                        width={SKELETON_PERCENTAGE_VALUE_WIDTH_PX}
+                        height={SKELETON_HEIGHT_PX} />
+        }
       },
       {
         type: 'string',
         field: PatientListColumns.LastDataUpdate,
         width: 180,
-        headerName: t('last-data-update')
+        headerName: t('last-data-update'),
+        renderCell: (params: GridRenderCellParams<GridRowModel, string>) => {
+          const value = params.value
+          return value ?? <Skeleton data-testid="last-data-update-cell-skeleton"
+                                    variant="rounded"
+                                    width={150}
+                                    height={SKELETON_HEIGHT_PX} />
+        }
       },
       {
         type: 'actions',

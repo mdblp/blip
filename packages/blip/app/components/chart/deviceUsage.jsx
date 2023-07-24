@@ -48,7 +48,7 @@ import { BasicsChart } from 'tideline'
 import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from 'tidepool-viz'
 import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic-dashboard-card'
 import { SensorUsageStat } from 'yourloops/components/statistics/sensor-usage-stat'
-import { TimeService } from 'medical-domain'
+import { GlycemiaStatisticsService, TimeService } from 'medical-domain'
 import metrics from 'yourloops/lib/metrics'
 import { TimeService, GlycemiaStatisticsService } from 'medical-domain'
 

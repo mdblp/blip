@@ -68,6 +68,13 @@ export function getTheme(): Theme {
         }
       `
       },
+      MuiAlert: {
+        styleOverrides: {
+          root: {
+            borderRadius: 12
+          }
+        }
+      },
       MuiButton: {
         styleOverrides: {
           root: {

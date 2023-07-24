@@ -2,6 +2,8 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## 3.0.5-beta - 2023-07-12
+
 ## 3.0.4-beta - 2023-02-10
 ### Added
 - YLP-1503 Logout idle user after 30 mn of inactivity
@@ -28,6 +30,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2218 Use selected team in Remove patient dialog
 - YLP-2220 Remove "private practice" filter from patients list
 - YLP-2231 Implement new medical reports design for patients
+- YLP-2250 Patient list lazy loading
 - YLP-2253 Dedicated error message for a patient joining a team they're already invited in
 - YLP-2265 Disable Add patient button when private practice is selected
 - YLP-2285 Monitoring filter cannot be enabled when Private practice is selected
@@ -46,6 +49,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2392 Refine the Account preferences page
 - YLP-2393 Remove fields and "Show more/Show less" logic in the patient header
 - YLP-2394 Hide "Monitoring alerts" card for patients users
+- YLP-2395 Update chat widget size
 - YLP-2399 Cancel invite dialog new design
 - YLP-2430 Add checkbox to confirm that user is a hcp
 - YLP-2435 Remove "Telemonitored" filter on patient list
@@ -103,6 +107,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2307 Incomplete alert when accepting a direct share invitation
 - YLP-2311 Reorganize ITs
 - YLP-2328 Migrate patient-data from jsx to tsx
+- YLP-2351 Migrate average daily dose stat and total insulin stat from stat.js to yourloops
 - YLP-2352 Monitoring alert tooltips "out of range" displays incorrect values
 - YLP-2364 Fixed English translations
 - YLP-2367 Patient list refacto
@@ -117,11 +122,15 @@ It is based on Tidepool Blip 1.27.
 - YLP-2454 Daily view crashes on mobile
 - YLP-2458 Blip auto dependencies update
 - YLP-2468 Fix team management issues
+- YLP-2490 Invitation confirmation string correction
+- YLP-2492 Fix errors on /team when private team selected
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
 - YLP-2189 Fix error when applying team monitoring alarm params in mg/dL to user with monitoring in mmol/L
 - YLP-2341 Pdf export in CSV is broken when a user has preferred units in its profile
+- YLP-2460 Caregiver users cannot see the "Last data update" date in the patients list
+- YLP-2487 HCP non admin can see button to save new team monitoring alerts parameters
 
 ## 3.0.3 - 2023-02-09
 ### Fixed

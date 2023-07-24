@@ -178,6 +178,7 @@ const ignoredTransKeyForYourLoops = [
   'remaining-time',
   'created-by-unknown',
   'delete-medical-report-number',
+  'default-min-max',
   'filters-activated',
   'modal-reinvite-patient-question',
   'no-settings-on-device-alert-message',
@@ -202,7 +203,17 @@ const ignoredTransKeyForYourLoops = [
   'no-medical-files-patient',
   'added',
   'deleted',
-  'updated'
+  'updated',
+  'no-medical-files-patient',
+  'average-daily-insulin',
+  'average-daily-insulin-tooltip',
+  'daily-dose-per-weight',
+  'total-insulin',
+  'total-insulin-days-tooltip',
+  'total-insulin-how-calculate-tooltip',
+  'average-daily-total-insulin',
+  'ratio-dose',
+  'weight'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
@@ -340,7 +351,6 @@ describe('Locales tests', () => {
         missingTranslations.push(key)
       }
     }
-
     expect(unusedTranslations, 'Unused translations').to.be.empty
     expect(missingTranslations, 'Missing translations').to.be.empty
   })
