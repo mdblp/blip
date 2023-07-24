@@ -37,11 +37,13 @@ import { WizardInputMealSource } from '../../../models/medical/datum/enums/wizar
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Wizard => {
   const base = BaseDatumService.normalize(rawData, opts)
+  const bolusId = (rawData?.bolus ?? '') as string
   const wizard: Wizard = {
     ...base,
     type: DatumType.Wizard,
     uploadId: rawData.uploadId as string,
-    bolusId: (rawData?.bolus ?? '') as string,
+    bolusId,
+    bolusIds: [bolusId],
     carbInput: rawData.carbInput as number,
     units: rawData.units as string,
     bolus: null,
@@ -69,8 +71,31 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   return wizard
 }
 
-const deduplicate = (data: Wizard[], opts: MedicalDataOptions): Wizard[] => {
-  return DatumService.deduplicate(data, opts) as Wizard[]
+const deduplicate = (data: Wizard[], _opts: MedicalDataOptions): Wizard[] => {
+  // group wizards by normal time
+  const initialGroups: Record<string, Wizard[]> = {}
+  const timeGroups = data.reduce((previous, current: Wizard) => {
+    if (previous[current.normalTime] === undefined) {
+      previous[current.normalTime] = []
+    }
+    previous[current.normalTime].push(current)
+    return previous
+  }, initialGroups)
+  // Getting only one wizard with the max inputTime & aggregating bolusIds
+  return Object.values(timeGroups).flatMap(value => {
+    if (value.length <= 1) {
+      return value
+    }
+    const uniqueWizard = value.reduce((max: Wizard, val: Wizard) => {
+      max.bolusIds.push(val.bolusId)
+      max.bolusIds = [...new Set(max.bolusIds)]
+      if (val.inputTime > max.inputTime) {
+        return { ...val, bolusIds: max.bolusIds }
+      }
+      return max
+    }, value[0])
+    return [uniqueWizard]
+  })
 }
 
 const filterOnDate = (data: Wizard[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): Wizard[] => {

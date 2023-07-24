@@ -35,6 +35,7 @@ export type Wizard = BaseDatum & {
   type: DatumType.Wizard
   uploadId: string
   bolusId: string
+  bolusIds: string[]
   carbInput: number
   units: string
   bolus: Bolus | null
