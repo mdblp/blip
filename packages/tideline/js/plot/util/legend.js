@@ -21,6 +21,10 @@ import _ from 'lodash'
 const t = i18next.t.bind(i18next)
 
 const rectLoopMode = 7
+const BOLUS_RIDE_COLOR = 'white'
+const BOLUS_RIDE_BORDER_COLOR = 'black'
+const BOLUS_RIDE_BORDER_WIDTH = 0.5
+const BOLUS_RIDE_X_LOCATION = -12
 
 const legend = {
   SHAPE_MARGIN: 3,
@@ -322,25 +326,25 @@ const legend = {
         g.append('path')
           .attr({
             'd': function () {
-              const x = -12
+              const x = BOLUS_RIDE_X_LOCATION
               const y = -12
               return `M ${x} ${y} l 5 5 l -10 0 z`
             },
-            'fill': 'white',
-            'stroke': 'black',
-            'stroke-width': '0.5'
+            'fill': BOLUS_RIDE_COLOR,
+            'stroke': BOLUS_RIDE_BORDER_COLOR,
+            'stroke-width': BOLUS_RIDE_BORDER_WIDTH
           })
 
         g.append('path')
           .attr({
             'd': function () {
-              const x = -12
+              const x = BOLUS_RIDE_X_LOCATION
               const y = 0
               return `M ${x} ${y} l 5 -5 l -10 0 z`
             },
-            'fill': 'white',
-            'stroke': 'black',
-            'stroke-width': '0.5'
+            'fill': BOLUS_RIDE_COLOR,
+            'stroke': BOLUS_RIDE_BORDER_COLOR,
+            'stroke-width': BOLUS_RIDE_BORDER_WIDTH
           })
         return g
       },
