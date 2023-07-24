@@ -38,6 +38,7 @@ export const computeMsThresholdForTimeOfDay = (numberOfMs: number): number => {
   return Math.floor(numberOfMs / THIRTY_MINS) * THIRTY_MINS + (THIRTY_MINS / 2)
 }
 
+// Highly inspired from: https://stackoverflow.com/questions/48719873/how-to-get-median-and-quartiles-percentiles-of-an-array-in-javascript-or-php
 export const computeQuantile = (data: number[], quantile: number): number => {
   const indexNotRounded = (data.length - 1) * quantile
   const baseRoundedToFloor = Math.floor(indexNotRounded)
