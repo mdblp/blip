@@ -55,8 +55,9 @@ function plotQuickBolus(pool, opts = defaults) {
       const bolusGroups = boluses.enter()
         .append('g')
         .attr({
-          class: 'd3-bolus-group',
-          id: (d) => `bolus_group_${d.id}`
+          'class': 'd3-bolus-group',
+          'id': (d) => `bolus_group_${d.id}`,
+          'data-testid': 'd3-bolus-group'
         })
         .sort((a, b) => {
           // sort by size so smaller boluses are drawn last
