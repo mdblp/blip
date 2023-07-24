@@ -43,7 +43,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     type: DatumType.Wizard,
     uploadId: rawData.uploadId as string,
     bolusId,
-    bolusIds: [bolusId],
+    bolusIds: new Set<string>([bolusId]),
     carbInput: rawData.carbInput as number,
     units: rawData.units as string,
     bolus: null,
@@ -87,8 +87,7 @@ const deduplicate = (data: Wizard[], _opts: MedicalDataOptions): Wizard[] => {
       return value
     }
     const uniqueWizard = value.reduce((max: Wizard, val: Wizard) => {
-      max.bolusIds.push(val.bolusId)
-      max.bolusIds = [...new Set(max.bolusIds)]
+      max.bolusIds.add(val.bolusId)
       if (val.inputTime > max.inputTime) {
         return { ...val, bolusIds: max.bolusIds }
       }
