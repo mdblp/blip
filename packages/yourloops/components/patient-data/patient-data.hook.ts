@@ -209,6 +209,7 @@ export const usePatientData = (): usePatientDataResult => {
     }
   }
 
+  // This function is used for the PDF/CSV, this is the only case where we update medicalData without updating dataUtil
   const updateDataForGivenRange = async (dateRange: DateRange): Promise<boolean> => {
     try {
       setRefreshingData(true)
