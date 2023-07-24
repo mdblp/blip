@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { computeMsThresholdForTimeOfDay, formatCbgs } from './cbg-slices-container.util'
+import { computeMedian, computeMsThresholdForTimeOfDay, formatCbgs } from './cbg-slices-container.util'
 import { type CbgSlicesContainerData } from '../../../../models/cbg-slices-container-data.model'
 
 describe('CbgSlicesContainerUtil', () => {
@@ -96,6 +96,23 @@ describe('CbgSlicesContainerUtil', () => {
 
     it('should throw exception when given number is superior to 86400000 (a full day in milliseconds)', () => {
       expect(() => computeMsThresholdForTimeOfDay(86400001)).toThrow('numberOfMs < 0 or >= 86400000 is invalid')
+    })
+  })
+
+  describe('computeMedian', () => {
+    it('should return 0 when empty array', () => {
+      const median = computeMedian([])
+      expect(median).toBe(0)
+    })
+
+    it('should return correct result when odd array', () => {
+      const median = computeMedian([12])
+      expect(median).toBe(12)
+    })
+
+    it('should return correct result when even array', () => {
+      const median = computeMedian([2, 2, 4, 4])
+      expect(median).toBe(3)
     })
   })
 })

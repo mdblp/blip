@@ -38,12 +38,28 @@ export const computeMsThresholdForTimeOfDay = (numberOfMs: number): number => {
   return Math.floor(numberOfMs / THIRTY_MINS) * THIRTY_MINS + (THIRTY_MINS / 2)
 }
 
+export const computeMedian = (data: number[]): number => {
+  const dataLength = data.length
+  if (dataLength === 0) {
+    return 0
+  }
+  if (dataLength === 1) {
+    return data[0]
+  }
+  const isSortedDataLengthEven = dataLength % 2 === 0
+  if (isSortedDataLengthEven) {
+    return (data[Math.floor(dataLength / 2) - 1] + data[Math.floor(dataLength / 2)]) / 2
+  } else {
+    return data[Math.floor(dataLength / 2)]
+  }
+}
+
 const computeCbgStatsForGivenTimeOfDay = (numberOfMs: number, data: number[]): CbgSlice => {
   const sorted = data.sort((a, b) => a - b)
   const sortedDataLength = sorted.length
   const firstQuartileIndex = Math.floor(sortedDataLength / 4)
   const tenthQuantileIndex = Math.floor(sortedDataLength / 10)
-  const medianIndex = Math.floor(sortedDataLength / 2)
+  const median = computeMedian(sorted)
   const thirdQuartileIndex = Math.floor((sortedDataLength / 4) * 3)
   const ninetiethQuantileIndex = Math.floor((sortedDataLength / 10) * 9)
   return {
@@ -51,7 +67,7 @@ const computeCbgStatsForGivenTimeOfDay = (numberOfMs: number, data: number[]): C
     [RangeSegmentSlice.Min]: sorted[0],
     [RangeSegmentSlice.FirstQuartile]: sorted[firstQuartileIndex],
     [RangeSegmentSlice.TenthQuantile]: sorted[tenthQuantileIndex],
-    [RangeSegmentSlice.Median]: sorted[medianIndex],
+    [RangeSegmentSlice.Median]: median,
     [RangeSegmentSlice.ThirdQuartile]: sorted[thirdQuartileIndex],
     [RangeSegmentSlice.NinetiethQuantile]: sorted[ninetiethQuantileIndex],
     [RangeSegmentSlice.Max]: sorted[sortedDataLength - 1],

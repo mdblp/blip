@@ -131,6 +131,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2510 Static dashboard does not perform calculation based on the last 14 days
 - YLP-2511 In the daily view, not all graph data is taken into account by the loop mode
 - YLP-2519 Fix refresh on Daily view disabling the forward arrow in the date picker
+- YLP-2529 Fix median in trends view
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
