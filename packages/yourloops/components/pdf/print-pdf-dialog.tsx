@@ -49,17 +49,19 @@ import RangeDatePicker from '../date-pickers/range-date-picker'
 import { LoadingButton } from '@mui/lab'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import type MedicalDataService from 'medical-domain'
+import { TimeService } from 'medical-domain'
 import { type BgPrefs } from 'dumb'
 import moment from 'moment-timezone'
-import { TimeService } from 'medical-domain'
 import { createPrintPDFPackage, utils as vizUtils } from 'tidepool-viz'
 import type DataUtil from 'tidepool-viz/src/utils/data'
 import DataApi from '../../lib/data/data.api'
 import { useAuth } from '../../lib/auth'
 import metrics from '../../lib/metrics'
 import { useAlert } from '../utils/snackbar'
+import { type DateRange } from '../patient-data/patient-data.utils'
 
 export type Presets = '1week' | '2weeks' | '4weeks' | '3months'
+
 export enum OutputFormat {
   Csv = 'csv',
   Pdf = 'pdf'
@@ -81,6 +83,7 @@ interface PrintPDFDialogProps {
   medicalData: MedicalDataService
   onClose: () => void
   patient: Patient
+  updateDataForGivenRange: (dateRange: DateRange) => Promise<boolean>
 }
 
 const DEFAULT_PRESET: Presets = '4weeks'
@@ -140,7 +143,7 @@ function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs, for
 }
 
 export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
-  const { defaultPreset, onClose, medicalData, bgPrefs, patient, dataUtil } = props
+  const { defaultPreset, onClose, medicalData, bgPrefs, patient, dataUtil, updateDataForGivenRange } = props
   const { t } = useTranslation('yourloops')
   const theme = useTheme()
   const { user } = useAuth()
@@ -230,6 +233,7 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
       timePrefs,
       endPDFDate
     }
+    await updateDataForGivenRange({ start, end })
     const lastPumpSettings = medicalData.medicalData.pumpSettings[medicalData.medicalData.pumpSettings.length - 1]
     const pdfData = {
       basics: medicalData.generateBasicsData(start.toISOString(), end.toISOString()),
@@ -292,7 +296,9 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
             variant={presetSelected === '1week' ? 'filled' : 'outlined'}
             color={presetSelected === '1week' ? 'primary' : 'default'}
             aria-selected={presetSelected === '1week'}
-            onClick={() => { handleClickPreset('1week') }}
+            onClick={() => {
+              handleClickPreset('1week')
+            }}
             className={classes.presetButtons}
             label={t('preset-dates-range-1week')}
           />
@@ -301,7 +307,9 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
             variant={presetSelected === '2weeks' ? 'filled' : 'outlined'}
             color={presetSelected === '2weeks' ? 'primary' : 'default'}
             aria-selected={presetSelected === '2weeks'}
-            onClick={() => { handleClickPreset('2weeks') }}
+            onClick={() => {
+              handleClickPreset('2weeks')
+            }}
             className={classes.presetButtons}
             label={t('preset-dates-range-2weeks')}
           />
@@ -310,7 +318,9 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
             variant={presetSelected === '4weeks' ? 'filled' : 'outlined'}
             color={presetSelected === '4weeks' ? 'primary' : 'default'}
             aria-selected={presetSelected === '4weeks'}
-            onClick={() => { handleClickPreset('4weeks') }}
+            onClick={() => {
+              handleClickPreset('4weeks')
+            }}
             className={classes.presetButtons}
             label={t('preset-dates-range-4weeks')}
           />
@@ -319,7 +329,9 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
             variant={presetSelected === '3months' ? 'filled' : 'outlined'}
             color={presetSelected === '3months' ? 'primary' : 'default'}
             aria-selected={presetSelected === '3months'}
-            onClick={() => { handleClickPreset('3months') }}
+            onClick={() => {
+              handleClickPreset('3months')
+            }}
             className={classes.presetButtons}
             label={t('preset-dates-range-3months')}
           />
