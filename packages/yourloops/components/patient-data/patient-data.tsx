@@ -69,6 +69,7 @@ export const PatientData: FunctionComponent = () => {
     fetchPatientData,
     goToDailySpecificDate,
     handleDatetimeLocationChange,
+    updateDataForGivenRange,
     loadingData,
     medicalData,
     msRange,
@@ -234,6 +235,7 @@ export const PatientData: FunctionComponent = () => {
                     dataUtil={dataUtil}
                     defaultPreset={'1week'}
                     medicalData={medicalData}
+                    updateDataForGivenRange={updateDataForGivenRange}
                     patient={patient}
                     onClose={() => {
                       setShowPdfDialog(false)
