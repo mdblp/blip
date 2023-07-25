@@ -74,6 +74,7 @@ import {
 import type PumpSettings from '../../models/medical/datum/pump-settings.model'
 import { DatumType } from '../../models/medical/datum/enums/datum-type.enum'
 import type PumpManufacturer from '../../models/medical/datum/enums/pump-manufacturer.enum'
+import WizardService from './datum/wizard.service'
 
 class MedicalDataService {
   medicalData: MedicalData = {
@@ -351,6 +352,7 @@ class MedicalDataService {
   private deduplicate(): void {
     this.medicalData.basal = BasalService.deduplicate(this.medicalData.basal, this._datumOpts)
     this.medicalData.bolus = BolusService.deduplicate(this.medicalData.bolus, this._datumOpts)
+    this.medicalData.wizards = WizardService.deduplicate(this.medicalData.wizards, this._datumOpts)
     this.medicalData.physicalActivities = PhysicalActivityService.deduplicate(this.medicalData.physicalActivities, this._datumOpts)
   }
 
@@ -371,13 +373,16 @@ class MedicalDataService {
       })
     )
     this.medicalData.wizards = this.medicalData.wizards.map(wizard => {
-      if (wizard.bolusId !== '') {
-        const sourceBolus = bolusMap.get(wizard.bolusId)
-        if (sourceBolus) {
-          const bolusWizard = { ...wizard, ...{ bolus: null } } as Wizard
-          this.medicalData.bolus[sourceBolus.idx].wizard = bolusWizard
-          wizard.bolus = sourceBolus.bolus
-          return wizard
+      if (wizard.bolusIds.size > 0) {
+        const bolusId = Array.from(wizard.bolusIds).find(id => bolusMap.has(id))
+        if (bolusId) {
+          wizard.bolusId = bolusId
+          const sourceBolus = bolusMap.get(wizard.bolusId)
+          if (sourceBolus) {
+            const bolusWizard = { ...wizard, ...{ bolus: null } } as Wizard
+            this.medicalData.bolus[sourceBolus.idx].wizard = bolusWizard
+            wizard.bolus = sourceBolus.bolus
+          }
         }
       }
       return wizard
