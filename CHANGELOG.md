@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.4-rc3 - 2023-07-19
+## 3.0.4-rc4 - 2023-07-25
 ### Added
 - YLP-1503 Logout idle user after 30 mn of inactivity
 - YLP-1932 Communication module available for all patients
@@ -145,6 +145,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2496 Undelivered value is not rounded in micro-bolus tooltip
 - YLP-2508 PDF report is missing information about rescue carbs
 - YLP-2509 "Sensor warmup" icon is not shown
+- YLP-2523 Fix insulin values not rounded in Bolus tooltip
 - YLP-2525 The carbs information is duplicated
 - YLP-2528 The "Cartridge changes" widget doesn't display the info on the 14 days period
 

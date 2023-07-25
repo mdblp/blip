@@ -294,7 +294,7 @@ function createWizardData(date?: Date): Wizard {
     type: DatumType.Wizard,
     uploadId: faker.string.uuid(),
     bolusId,
-    bolusIds: [bolusId],
+    bolusIds: new Set<string>([bolusId]),
     carbInput: 5,
     units: 'g',
     bolus: null,

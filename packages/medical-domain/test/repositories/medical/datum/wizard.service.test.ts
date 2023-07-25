@@ -40,7 +40,7 @@ describe('deduplicate', () => {
         normalTime: normalTime1,
         inputTime: '2023-07-24T08:00:04.000Z',
         bolusId: 'bolus3',
-        bolusIds: ['bolus3']
+        bolusIds: new Set<string>(['bolus3'])
       }
     }
     const expectedWizard2 = {
@@ -49,7 +49,7 @@ describe('deduplicate', () => {
         normalTime: normalTime2,
         inputTime: '2023-07-12:00:00.000Z',
         bolusId: 'bolus4',
-        bolusIds: ['bolus4']
+        bolusIds: new Set<string>(['bolus4'])
       }
     }
     const wizardData = [
@@ -59,7 +59,7 @@ describe('deduplicate', () => {
           normalTime: normalTime1,
           inputTime: '2023-07-24T08:00:00.000Z',
           bolusId: 'bolus1',
-          bolusIds: ['bolus1']
+          bolusIds: new Set<string>(['bolus1'])
         }
       },
       {
@@ -68,7 +68,7 @@ describe('deduplicate', () => {
           normalTime: normalTime1,
           inputTime: '2023-07-24T08:00:02.000Z',
           bolusId: 'bolus2',
-          bolusIds: ['bolus2']
+          bolusIds: new Set<string>(['bolus2'])
         }
       },
       expectedWizard1,
@@ -76,7 +76,7 @@ describe('deduplicate', () => {
     ]
     const dedupWizards = WizardService.deduplicate(wizardData, defaultMedicalDataOptions)
     const expectedWizards = [
-      { ...expectedWizard1, ...{ bolusIds: ['bolus1', 'bolus2', 'bolus3'] } },
+      { ...expectedWizard1, ...{ bolusIds: new Set<string>(['bolus1', 'bolus2', 'bolus3']) } },
       expectedWizard2
     ]
     expect(dedupWizards).toEqual(expectedWizards)

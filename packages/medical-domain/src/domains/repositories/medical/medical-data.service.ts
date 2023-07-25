@@ -373,8 +373,8 @@ class MedicalDataService {
       })
     )
     this.medicalData.wizards = this.medicalData.wizards.map(wizard => {
-      if (wizard.bolusIds.length > 0) {
-        const bolusId = wizard.bolusIds.find(id => bolusMap.has(id))
+      if (wizard.bolusIds.size > 0) {
+        const bolusId = Array.from(wizard.bolusIds).find(id => bolusMap.has(id))
         if (bolusId) {
           wizard.bolusId = bolusId
           const sourceBolus = bolusMap.get(wizard.bolusId)
