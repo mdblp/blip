@@ -27,12 +27,11 @@
 
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { VitePluginNode } from 'vite-plugin-node'
 import * as path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), VitePluginNode({ adapter: 'express', appPath: '.' })],
+  plugins: [react()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './')
@@ -48,5 +47,13 @@ export default defineConfig({
   server: {
     host: 'localhost',
     port: 3001
+  },
+  css: {
+    preprocessorOptions: {
+      less: {
+        javascriptEnabled: true,
+        additionalData: '@root-entry-name: default;'
+      }
+    }
   }
 })

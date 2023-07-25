@@ -29,19 +29,30 @@ import React, { type FC } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { Auth0Provider } from '@auth0/auth0-react'
 
+import appConfig from '../lib/config/config'
+import { AuthContextProvider } from '../lib/auth'
+import { MainLobby } from './main-lobby'
+import MetricsLocationListener from '../components/MetricsLocationListener'
+import { init as i18nInit } from '../lib/language'
+import initDayJS from '../lib/dayjs'
+import initCookiesConsentListener from '../lib/cookies-manager'
+import initAxios from '../lib/http/axios.service'
+import { initTheme } from '../components/theme'
+
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import '../../../branding/global.css'
+import '../../../branding/palette.css'
 import '../css/classes.css'
 
-import appConfig from '../lib/config/config'
-import { AuthContextProvider } from '../lib/auth'
-import { MainLobby } from './main-lobby'
-import MetricsLocationListener from '../components/MetricsLocationListener'
-
 export const Yourloops: FC = () => {
+  i18nInit()
+  initDayJS()
+  initCookiesConsentListener()
+  initAxios()
+  initTheme()
   const redirectUri = window.location.origin
 
   return (

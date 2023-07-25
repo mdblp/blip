@@ -50,7 +50,6 @@ import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic
 import { SensorUsageStat } from 'yourloops/components/statistics/sensor-usage-stat'
 import { GlycemiaStatisticsService, TimeService } from 'medical-domain'
 import metrics from 'yourloops/lib/metrics'
-import { TimeService, GlycemiaStatisticsService } from 'medical-domain'
 
 const useStyles = makeStyles()((theme) => ({
   sectionTitles: {

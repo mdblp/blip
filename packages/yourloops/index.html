@@ -34,20 +34,24 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <meta name="description" lang="en" content="YourLoops | Cloud-based platform for diabetes management by Diabeloop">
   <link rel="alternate" href="https://{{ DOMAIN_NAME }}/" hreflang="x-default">
-<!--  <link href="/palette.css" rel="stylesheet" type="text/css">-->
   <link rel="shortcut icon" id="favicon">
 </head>
 <body>
-  <div id="app"></div>
-  <script type="module" src="app/index.tsx"></script>
-  <!-- config -->
-  <!-- Start of cookie-banner -->
-  <!-- End of cookie-banner -->
-  <!-- Start of stonly-widget -->
-  <!-- End of stonly-widget -->
-  <!-- Start of support Zendesk Widget script -->
-  <!-- End of support Zendesk Widget script -->
-  <!-- Start of Tracker Code -->
-  <!-- End of Tracker Code -->
+<div id="app"></div>
+<script>window.global = window;</script>
+<script type="module">
+  import { Buffer } from "buffer/"; // <-- no typo here ("/")
+  window.Buffer = Buffer;
+</script>
+<script type="module" src="app/index.tsx"></script>
+<!-- config -->
+<!-- Start of cookie-banner -->
+<!-- End of cookie-banner -->
+<!-- Start of stonly-widget -->
+<!-- End of stonly-widget -->
+<!-- Start of support Zendesk Widget script -->
+<!-- End of support Zendesk Widget script -->
+<!-- Start of Tracker Code -->
+<!-- End of Tracker Code -->
 </body>
 </html>

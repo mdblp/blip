@@ -25,35 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Polyfills for compatibility with older browsers:
-import 'core-js/stable'
-
 import React from 'react'
-
-import config from '../lib/config/config'
-import { init as i18nInit } from '../lib/language'
-import initCookiesConsentListener from '../lib/cookies-manager'
-import initDayJS from '../lib/dayjs'
-import { initTheme } from '../components/theme'
-
+import ReactDOM from 'react-dom/client'
 import { Yourloops } from './app'
-import OnError from './error'
-import { BrowserRouter } from 'react-router-dom'
-import initAxios from '../lib/http/axios.service'
-import { createRoot } from 'react-dom/client'
 
-i18nInit().then(() => {
-  let div = document.getElementById('app')
-  if (div === null) {
-    div = document.createElement('div')
-    div.id = 'app'
-    document.body.appendChild(div)
-  }
-
-  initDayJS()
-  initCookiesConsentListener()
-  initAxios()
-  initTheme()
-
-  ReactDOM.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />, document.getElementById('app'))
-})
+ReactDOM.createRoot(document.getElementById('app'))
+  .render(
+    <React.StrictMode>
+      <Yourloops />
+    </React.StrictMode>
+  )

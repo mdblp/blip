@@ -29,10 +29,11 @@ import { createTheme, type Theme } from '@mui/material/styles'
 import config from '../lib/config/config'
 import MuseoSlabRegular from '../../../branding/fonts/museo-slab/Museo_Slab_Regular.otf'
 import MuseoSlabBold from '../../../branding/fonts/museo-slab/Museo_Slab_Bold.otf'
+import brandings from '../../../branding/branding.json'
 
 const DEFAULT_COLOR = '#000'
+const BRANDING_LIST = JSON.stringify(brandings.map(brand => brand.replace('/', '-')))
 let appElement: HTMLElement
-
 if (typeof document !== 'undefined') {
   appElement = document.getElementById('app')
 }
