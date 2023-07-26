@@ -147,6 +147,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2509 "Sensor warmup" icon is not shown
 - YLP-2523 Fix insulin values not rounded in Bolus tooltip
 - YLP-2525 The carbs information is duplicated
+- YLP-2528 The "Cartridge changes" widget doesn't display the info on the 14 days period
 
 ## 3.0.3 - 2023-02-09
 ### Fixed

@@ -52,7 +52,9 @@ export const WIZARD_UMM_INPUT_TIME = '2022-08-08T18:34:00Z'
 export const WIZARD_POSITIVE_OVERRIDE_INPUT_TIME = '2022-08-08T22:45:00Z'
 export const WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME = '2022-08-08T23:15:00Z'
 export const YESTERDAY_DATE: Moment = moment().subtract(1, 'days')
+export const RESERVOIR_CHANGE_TODAY_DATE: Moment = moment()
 export const TWO_WEEKS_AGO_DATE: Moment = moment().subtract(14, 'days')
+export const RESERVOIR_CHANGE_13_DAYS_AGO_DATE: Moment = moment().subtract(13, 'days')
 export const SIXTEEN_DAYS_AGO_DATE: Moment = moment().subtract(16, 'days')
 const twoWeeksAgoDateAsString = TWO_WEEKS_AGO_DATE.format('YYYY-MM-DD')
 const sixteenDaysAgoDateAsString = SIXTEEN_DAYS_AGO_DATE.format('YYYY-MM-DD')
@@ -64,12 +66,15 @@ export interface Data {
 }
 
 export const generateCompleteDashboardFromDate = (date: string): Data => {
-  const startDate = new Date(moment().format('YYYY-MM-DD'))
-  const endDate = new Date(date)
+  const endDate = new Date(moment().format('YYYY-MM-DD'))
+  const startDate = new Date(date)
+  const reservoirChangeDate = new Date(date)
+  reservoirChangeDate.setDate(reservoirChangeDate.getDate() + 1)
+  const reservoirChangeDateAsString = reservoirChangeDate.toISOString().split('T')[0]
   const data = []
   // eslint-disable-next-line no-unmodified-loop-condition
-  while (endDate <= startDate) {
-    const date = endDate.toISOString().split('T')[0]
+  while (startDate <= endDate) {
+    const date = startDate.toISOString().split('T')[0]
     data.push(
       { time: `${date}T17:05:00Z`, type: 'cbg', id: 'cbg_17:05:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 15, uploadId: 'osef', _userId: 'osef' },
       { time: `${date}T17:10:00Z`, type: 'cbg', id: 'cbg_17:10:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 55, uploadId: 'osef', _userId: 'osef' },
@@ -86,10 +91,10 @@ export const generateCompleteDashboardFromDate = (date: string): Data => {
       { time: `${date}T13:00:00Z`, type: 'physicalActivity', id: PHYSICAL_ACTIVITY_ID, timezone: 'Europe/Paris', duration: { units: 'seconds', value: 1800 }, guid: 'pa_18', reportedIntensity: 'medium', uploadId: 'osef', _userId: 'osef' },
       { time: `${date}T08:00:00Z`, type: 'deviceEvent', id: PARAMETER_ID, lastUpdateDate: '2022-08-08T08:00:00Z', level: '1', name: 'MEAL_RATIO_LUNCH_FACTOR', previousValue: '110', subType: 'deviceParameter', timezone: 'UTC', units: '%', uploadId: 'osef', value: '100', _userId: 'osef' }
     )
-    endDate.setDate(endDate.getDate() + 1)
+    startDate.setDate(startDate.getDate() + 1)
   }
   data.push(
-    { time: `${date}T17:00:00Z`, type: 'deviceEvent', id: RESERVOIR_CHANGE_ID, subType: 'reservoirChange', timezone: 'Europe/Paris', uploadId: 'osef', _userId: 'osef' }
+    { time: `${reservoirChangeDateAsString}T17:00:00Z`, type: 'deviceEvent', id: RESERVOIR_CHANGE_ID, subType: 'reservoirChange', timezone: 'Europe/Paris', uploadId: 'osef', _userId: 'osef' }
   )
   return {
     dataRange: [`${date}T00:00:00Z`, `${moment().format('YYYY-MM-DD')}T00:00:00Z`],
