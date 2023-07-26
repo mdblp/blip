@@ -27,8 +27,7 @@
 .titleTotal {
   color: #0096D1;
   margin-left: 4px;
-  font-size: 24px;
-  composes: extraLargeSize from '../../../styles/typography.css';
+  font-size: 20px;
 }
 
 .titleSuffix {
@@ -49,7 +48,7 @@
 
 .rowPercent .rowPercentValue {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .rowPercent .rowPercentUnits {
@@ -66,8 +65,7 @@
 }
 
 .outputValueDisabled {
-  font-size: 24px;
-  composes: extraLargeSize from '../../../styles/typography.css';
+  font-size: 20px;
   opacity: 1;
   display: inline-block;
   margin-right: 4px;
@@ -79,8 +77,7 @@
 }
 
 .dailyDoseValue {
-  font-size: 24px;
-  composes: extraLargeSize from '../../../styles/typography.css';
+  font-size: 20px;
   opacity: 1;
   display: inline-block;
   color: var(--text-medium-contrast);

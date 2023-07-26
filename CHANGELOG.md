@@ -136,6 +136,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2529 Fix median in trends view
 - YLP-2532 Patients with only a fullname are not shown when using the search bar
 - YLP-2533 Sanitize glycemia unit when retrieving the user
+- YLP-2536 Gain some space in patient statistics widget
 - YLP-2539 Update arrow icon in Device parameters change history
 
 ### Fixed
