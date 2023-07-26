@@ -26,6 +26,7 @@ import dataMungerMkr from './logic/datamunger'
 import { SECTION_TYPE_UNDECLARED } from './logic/constants'
 import Section from './components/DashboardSection'
 import togglableState from './TogglableState'
+import { DEFAULT_DASHBOARD_TIME_RANGE_DAYS } from 'yourloops/components/patient-data/patient-data.utils'
 
 class BasicsChartNoSize extends React.Component {
   static propTypes = {
@@ -58,10 +59,10 @@ class BasicsChartNoSize extends React.Component {
 
     // We only want the last 15 days for the dashboard
     const now = new Date()
-    const twoWeeksAgo = new Date()
-    twoWeeksAgo.setDate(now.getDate() - 15)
-    basicsData.days = tidelineData.basicsData.days.filter(day => new Date(day.date) >= twoWeeksAgo)
-    basicsData.dateRange = [twoWeeksAgo.toJSON(), now.toJSON()]
+    const dashboardStartDate = new Date()
+    dashboardStartDate.setDate(now.getDate() - DEFAULT_DASHBOARD_TIME_RANGE_DAYS)
+    basicsData.days = tidelineData.basicsData.days.filter(day => new Date(day.date) >= dashboardStartDate)
+    basicsData.dateRange = [dashboardStartDate.toJSON(), now.toJSON()]
 
     const dataMunger = dataMungerMkr(bgClasses, bgUnits)
     const latestPump = dataMunger.getLatestPumpUploaded(this.props.tidelineData)

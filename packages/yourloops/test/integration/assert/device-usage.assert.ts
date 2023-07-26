@@ -27,7 +27,7 @@
 
 import { screen, within } from '@testing-library/react'
 import { checkTooltip } from './stats.assert'
-import { TWO_WEEKS_AGO_DATE, YESTERDAY_DATE } from '../mock/data.api.mock'
+import { RESERVOIR_CHANGE_13_DAYS_AGO_DATE, RESERVOIR_CHANGE_TODAY_DATE } from '../mock/data.api.mock'
 import userEvent from '@testing-library/user-event'
 
 export const checkDeviceUsageWidget = async () => {
@@ -39,7 +39,7 @@ export const checkDeviceUsageWidget = async () => {
   expect(await deviceUsageWidget.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changes')
   const reservoirChange = deviceUsageWidget.getByTestId('reservoir-change')
   await userEvent.hover(reservoirChange)
-  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${YESTERDAY_DATE.format('MMM D')}7:00 pm`)
+  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${RESERVOIR_CHANGE_TODAY_DATE.format('MMM D')}7:00 pm`)
 }
 
 export const checkDeviceUsageWidgetWithTwoWeeksOldData = async () => {
@@ -51,7 +51,7 @@ export const checkDeviceUsageWidgetWithTwoWeeksOldData = async () => {
   expect(await deviceUsageWidget.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changes')
   const reservoirChange = deviceUsageWidget.getByTestId('reservoir-change')
   await userEvent.hover(reservoirChange)
-  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${TWO_WEEKS_AGO_DATE.format('MMM D')}7:00 pm`)
+  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${RESERVOIR_CHANGE_13_DAYS_AGO_DATE.format('MMM D')}7:00 pm`)
 }
 
 export const checkDeviceUsageWidgetNoData = async () => {
