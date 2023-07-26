@@ -39,6 +39,7 @@ import Typography from '@mui/material/Typography'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
 import { getUserName } from '../../lib/auth/user.util'
+import { sortByUserName } from '../patient-list/utils/sort-comparators.util'
 
 interface PatientNavBarSelectProps {
   currentPatient?: Patient
@@ -84,9 +85,10 @@ export const PatientNavBarSelect: FunctionComponent<PatientNavBarSelectProps> = 
           disableUnderline
           sx={{ fontSize: theme.typography.h6.fontSize, color: theme.palette.primary.main }}
           classes={{ iconStandard: classes.iconStandard }}
+          MenuProps={{ sx: { maxHeight: '500px' } }}
         >
           {
-            patients.map((patient, index) => {
+            patients.sort(sortByUserName).map((patient, index) => {
               return (
                 <MenuItem
                   key={index}
