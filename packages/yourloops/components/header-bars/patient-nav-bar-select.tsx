@@ -60,6 +60,7 @@ export const PatientNavBarSelect: FunctionComponent<PatientNavBarSelectProps> = 
 
   const { classes, theme } = styles()
   const { patients } = usePatientsContext()
+  patients.sort(sortByUserName)
 
   const onPatientSelected = (event: SelectChangeEvent<string>): void => {
     onSwitchPatient(patients.find(patient => patient.userid === event.target.value))
@@ -88,7 +89,7 @@ export const PatientNavBarSelect: FunctionComponent<PatientNavBarSelectProps> = 
           MenuProps={{ sx: { maxHeight: '500px' } }}
         >
           {
-            patients.sort(sortByUserName).map((patient, index) => {
+            patients.map((patient, index) => {
               return (
                 <MenuItem
                   key={index}
