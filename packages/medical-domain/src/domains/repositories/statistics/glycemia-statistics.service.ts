@@ -213,7 +213,7 @@ function getCoefficientOfVariationData(bgData: Cbg[] | Smbg[], dateFilter: DateF
   }
 }
 
-function getGlucoseManagementIndicatorData(cbgData: Cbg[], bgUnit: BgUnit, numDays: number, dateFilter: DateFilter): GlucoseManagementIndicatoStatistics {
+function getGlucoseManagementIndicatorData(cbgData: Cbg[], bgUnit: BgUnit, dateFilter: DateFilter): GlucoseManagementIndicatoStatistics {
   const insufficientData = {
     glucoseManagementIndicator: Number.NaN,
     insufficientData: true
@@ -226,7 +226,7 @@ function getGlucoseManagementIndicatorData(cbgData: Cbg[], bgUnit: BgUnit, numDa
   const totalCbgDuration = getCgmTotalDuration(filteredCbg)
   // Duration must be at least 70% of 14 days
   const SEVENTY_PERCENT = 0.7
-  if (totalCbgDuration < Math.round(numDays * MS_IN_DAY) * SEVENTY_PERCENT) {
+  if (totalCbgDuration < 14 * MS_IN_DAY * SEVENTY_PERCENT) {
     return insufficientData
   }
 
@@ -266,7 +266,7 @@ export interface GlycemiaStatisticsAdapter {
   getSensorUsage: (cbgData: Cbg[], dateFilter: DateFilter) => SensorUsageStatistics
   getAverageGlucoseData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => AverageGlucoseStatistics
   getCoefficientOfVariationData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => CoefficientOfVariationStatistics
-  getGlucoseManagementIndicatorData: (cbgData: Cbg[], bgUnit: BgUnit, numDays: number, dateFilter: DateFilter) => GlucoseManagementIndicatoStatistics
+  getGlucoseManagementIndicatorData: (cbgData: Cbg[], bgUnit: BgUnit, dateFilter: DateFilter) => GlucoseManagementIndicatoStatistics
   getStandardDevData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => StandardDevStatistics
 }
 
