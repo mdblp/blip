@@ -98,6 +98,12 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
       .map((bgData) => bgData.normalTime)
       .sort((a, b) => a.localeCompare(b))
     const dateRangeSet = new Set(localDates)
+    if (dateRangeSet.size === 0) {
+      return {
+        start: 0,
+        end: 0
+      }
+    }
     const dataRangeArray = Array.from(dateRangeSet)
     return {
       start: new Date(dataRangeArray[0]).valueOf(),
