@@ -276,6 +276,17 @@ class MedicalDataService {
     return normalizedMessage
   }
 
+  getTimezoneAt(epoch: number): string {
+    if (this.timezoneList.length === 0) {
+      return this._datumOpts.timePrefs.timezoneName
+    }
+
+    let c = 0
+    while (c < this.timezoneList.length && epoch >= this.timezoneList[c].time) c++
+    c = Math.max(c, 1)
+    return this.timezoneList[c - 1].timezone
+  }
+
   private normalize(rawData: Array<Record<string, unknown>>): void {
     rawData.forEach(raw => {
       try {
@@ -344,7 +355,7 @@ class MedicalDataService {
         } else {
           message = String(error)
         }
-        console.log({ message, rawData: raw })
+        console.debug({ message, rawData: raw })
       }
     })
   }
@@ -443,17 +454,6 @@ class MedicalDataService {
       }
       return d
     })
-  }
-
-  getTimezoneAt(epoch: number): string {
-    if (this.timezoneList.length === 0) {
-      return this._datumOpts.timePrefs.timezoneName
-    }
-
-    let c = 0
-    while (c < this.timezoneList.length && epoch >= this.timezoneList[c].time) c++
-    c = Math.max(c, 1)
-    return this.timezoneList[c - 1].timezone
   }
 
   private setTimeZones(): void {

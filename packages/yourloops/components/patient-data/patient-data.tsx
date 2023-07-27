@@ -62,7 +62,6 @@ export const PatientData: FunctionComponent = () => {
     changeChart,
     changePatient,
     currentChart,
-    dashboardEpochDate,
     dataUtil,
     dailyDate,
     dailyChartRef,
@@ -142,7 +141,7 @@ export const PatientData: FunctionComponent = () => {
                 </Button>
               </Box>
             }
-            {medicalData?.hasDiabetesData() && dataUtil &&
+            {medicalData?.hasDiabetesData() &&
               <React.Fragment>
                 <Routes>
                   <Route
@@ -150,11 +149,8 @@ export const PatientData: FunctionComponent = () => {
                     element={
                       <PatientDashboard
                         bgPrefs={bgPrefs}
-                        dataUtil={dataUtil}
-                        dashboardEpochDate={dashboardEpochDate}
                         goToDailySpecificDate={goToDailySpecificDate}
                         medicalDataService={medicalData}
-                        msRange={msRange}
                         patient={patient}
                         timePrefs={timePrefs}
                         loading={refreshingData}
@@ -205,7 +201,6 @@ export const PatientData: FunctionComponent = () => {
                       <Trends
                         bgPrefs={bgPrefs}
                         chartPrefs={chartPrefs}
-                        dataUtil={dataUtil}
                         timePrefs={timePrefs}
                         epochLocation={trendsDate}
                         msRange={msRange}
@@ -222,11 +217,11 @@ export const PatientData: FunctionComponent = () => {
                   <Route
                     path={AppUserRoute.Device}
                     element={
-                    <DevicePage
-                      goToDailySpecificDate={goToDailySpecificDate}
-                      medicalData={medicalData}
-                    />
-                  }
+                      <DevicePage
+                        goToDailySpecificDate={goToDailySpecificDate}
+                        medicalData={medicalData}
+                      />
+                    }
                   />
                 </Routes>
                 {showPdfDialog &&

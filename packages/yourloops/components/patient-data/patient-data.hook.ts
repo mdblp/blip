@@ -49,7 +49,6 @@ export interface usePatientDataResult {
   dataUtil: DataUtil
   dailyChartRef: MutableRefObject<DailyChartRef>
   dailyDate: number
-  dashboardEpochDate: number
   fetchPatientData: () => Promise<void>
   goToDailySpecificDate: (date: number | Date) => void
   handleDatetimeLocationChange: (epochLocation: number, msRange: number) => Promise<boolean>
@@ -114,7 +113,6 @@ export const usePatientData = (): usePatientDataResult => {
   const [medicalData, setMedicalData] = useState<MedicalDataService | null>(null)
   const [dataUtil, setDataUtil] = useState<DataUtil | null>(null)
   const [chartPrefs, setChartPrefs] = useState<ChartPrefs>(defaultChartPrefs)
-  const [dashboardEpochDate, setDashboardEpochDate] = useState<number>(new Date().valueOf())
   const [dailyDate, setDailyDate] = useState<number | null>(null)
   const [trendsDate, setTrendsDate] = useState<number | null>(null)
   const [timePrefs, setTimePrefs] = useState<TimePrefs>({
@@ -159,9 +157,6 @@ export const usePatientData = (): usePatientDataResult => {
   const changeChart = (chart: ChartTypes): void => {
     if (chart === currentChart) {
       return
-    }
-    if (chart === ChartTypes.Dashboard) {
-      setDashboardEpochDate(new Date().valueOf())
     }
     if (chart === ChartTypes.Daily && dateQueryParam) {
       setDailyDate(parseInt(dateQueryParam))
@@ -291,7 +286,7 @@ export const usePatientData = (): usePatientDataResult => {
       setDataUtil(dataUtil)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dailyDate, dashboardEpochDate, trendsDate, medicalData])
+  }, [dailyDate, trendsDate, medicalData])
 
   return {
     bgPrefs,
@@ -302,7 +297,6 @@ export const usePatientData = (): usePatientDataResult => {
     dataUtil,
     dailyChartRef,
     dailyDate,
-    dashboardEpochDate,
     fetchPatientData,
     goToDailySpecificDate,
     handleDatetimeLocationChange,

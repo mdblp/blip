@@ -28,40 +28,42 @@
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
 import { type BgPrefs, CBGPercentageBarChart, CBGStatType, TotalCarbsStat } from 'dumb'
 import {
+  BasalBolusStatisticsService,
   type BgType,
+  CarbsStatisticsService,
   type DateFilter,
   DatumType,
+  GlycemiaStatisticsService,
   type MedicalData,
-  TimeService,
-  BasalBolusStatisticsService
+  TimeService
 } from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
-import { GlycemiaStatisticsService, CarbsStatisticsService } from 'medical-domain'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { StandardDeviationStat } from './standard-deviation-stat'
 import { AverageGlucoseStat } from './average-glucose-stat'
 import { TotalInsulinStat } from './total-insulin-stat'
+import { MS_IN_DAY } from 'medical-domain/dist/src/domains/repositories/time/time.service'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
   bgPrefs: BgPrefs
-  bgType: BgType
   dateFilter: DateFilter
 }
 
 export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
-  const { medicalData, bgPrefs, bgType, dateFilter, children } = props
+  const { medicalData, bgPrefs, dateFilter, children } = props
   const theme = useTheme()
   const location = useLocation()
 
-  const cbgSelected = bgType === DatumType.Cbg
+  const cbgSelected = medicalData.cbg.length > 0
+  const bgType: BgType = cbgSelected ? DatumType.Cbg : DatumType.Smbg
   const cbgStatType: CBGStatType = cbgSelected ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
-  const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
+  const numberOfDays = dateFilter.weekDays ? TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays) : (dateFilter.end - dateFilter.start) / MS_IN_DAY
   const bgUnits = bgPrefs.bgUnits
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
   const isTrendsPage = location.pathname.includes('trends')
@@ -74,7 +76,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const {
     sensorUsage,
     total: sensorUsageTotal
-  } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+  } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, dateFilter)
 
   const {
     foodCarbsPerDay,
@@ -84,7 +86,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
 
   const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
   const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
-  const { glucoseManagementIndicator } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
+  const { glucoseManagementIndicator } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, numberOfDays, dateFilter)
 
   const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
