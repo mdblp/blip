@@ -401,7 +401,6 @@ class Daily extends React.Component {
                 <PatientStatistics
                   medicalData={tidelineData.medicalData}
                   bgPrefs={this.props.bgPrefs}
-                  bgType={this.props.dataUtil.bgSource}
                   dateFilter={dateFilter}
                 >
                   <Stats

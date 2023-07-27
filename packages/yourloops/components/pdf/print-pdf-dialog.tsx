@@ -78,12 +78,11 @@ export interface PrintPDFOptions {
 
 interface PrintPDFDialogProps {
   bgPrefs: BgPrefs
-  dataUtil: DataUtil
   defaultPreset?: Presets
   medicalData: MedicalDataService
   onClose: () => void
   patient: Patient
-  updateDataForGivenRange: (dateRange: DateRange) => Promise<boolean>
+  updateDataForGivenRange: (dateRange: DateRange) => Promise<{ medicalData: MedicalDataService, dataUtil: DataUtil }>
 }
 
 const DEFAULT_PRESET: Presets = '4weeks'
@@ -143,7 +142,7 @@ function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs, for
 }
 
 export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
-  const { defaultPreset, onClose, medicalData, bgPrefs, patient, dataUtil, updateDataForGivenRange } = props
+  const { defaultPreset, onClose, medicalData, bgPrefs, patient, updateDataForGivenRange } = props
   const { t } = useTranslation('yourloops')
   const theme = useTheme()
   const { user } = useAuth()
@@ -233,17 +232,17 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
       timePrefs,
       endPDFDate
     }
-    await updateDataForGivenRange({ start, end })
+    const { medicalData: medicalDataUpdated, dataUtil: dataUtilUpdated } = await updateDataForGivenRange({ start, end })
     const lastPumpSettings = medicalData.medicalData.pumpSettings[medicalData.medicalData.pumpSettings.length - 1]
     const pdfData = {
-      basics: medicalData.generateBasicsData(start.toISOString(), end.toISOString()),
-      daily: vizUtils.data.selectDailyViewData(medicalData, start, end),
+      basics: medicalDataUpdated.generateBasicsData(start.toISOString(), end.toISOString()),
+      daily: vizUtils.data.selectDailyViewData(medicalDataUpdated, start, end),
       settings: !pdfOptions.preset && lastPumpSettings
         ? vizUtils.data.generatePumpSettings(lastPumpSettings, end)
         : lastPumpSettings
     }
 
-    vizUtils.data.generatePDFStats(pdfData, dataUtil)
+    vizUtils.data.generatePDFStats(pdfData, dataUtilUpdated)
     const { url } = await createPrintPDFPackage(pdfData, opts)
     return url
   }

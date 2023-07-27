@@ -52,7 +52,7 @@ export interface usePatientDataResult {
   fetchPatientData: () => Promise<void>
   goToDailySpecificDate: (date: number | Date) => void
   handleDatetimeLocationChange: (epochLocation: number, msRange: number) => Promise<boolean>
-  updateDataForGivenRange: (dateRange: DateRange) => Promise<boolean>
+  updateDataForGivenRange: (dateRange: DateRange) => Promise<{ medicalData: MedicalDataService, dataUtil: DataUtil }>
   loadingData: boolean
   medicalData: MedicalDataService | null
   msRange: number
@@ -211,17 +211,25 @@ export const usePatientData = (): usePatientDataResult => {
   }
 
   // This function is used for the PDF/CSV, this is the only case where we update medicalData without updating dataUtil
-  const updateDataForGivenRange = async (dateRange: DateRange): Promise<boolean> => {
+  const updateDataForGivenRange = async (dateRange: DateRange): Promise<{
+    medicalData: MedicalDataService
+    dataUtil: DataUtil
+  }> => {
     try {
       setRefreshingData(true)
       const patientData = await patientDataUtils.current.loadDataRange(dateRange)
       if (patientData && patientData.length > 0) {
         const medicalDataUpdated = medicalData
         medicalDataUpdated.add(patientData)
+        const dataUtilUpdated = new DataUtil(medicalDataUpdated.data, {
+          bgPrefs,
+          timePrefs,
+          endpoints: medicalDataUpdated.endpoints
+        })
         setMedicalData(medicalDataUpdated)
-        return true
+        return { medicalData: medicalDataUpdated, dataUtil: dataUtilUpdated }
       }
-      return false
+      return { medicalData, dataUtil }
     } catch (err) {
       console.log(err)
     } finally {

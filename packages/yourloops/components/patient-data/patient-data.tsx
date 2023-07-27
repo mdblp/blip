@@ -227,7 +227,6 @@ export const PatientData: FunctionComponent = () => {
                 {showPdfDialog &&
                   <PrintPDFDialog
                     bgPrefs={bgPrefs}
-                    dataUtil={dataUtil}
                     defaultPreset={'1week'}
                     medicalData={medicalData}
                     updateDataForGivenRange={updateDataForGivenRange}
