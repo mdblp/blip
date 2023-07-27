@@ -147,15 +147,15 @@ export const sortParameterList = (parameters: ParameterConfig[]): ParameterConfi
   ]
 
   parameters.sort((a, b) => {
-    const aIdx = settingsOrder.indexOf(a.name)
-    const bIdx = settingsOrder.indexOf(b.name)
-    if (aIdx < 0) {
+    const aIndex = settingsOrder.indexOf(a.name)
+    const bIndex = settingsOrder.indexOf(b.name)
+    if (aIndex < 0) {
       return 1
     }
-    if (bIdx < 0) {
+    if (bIndex < 0) {
       return -1
     }
-    return aIdx - bIdx
+    return aIndex - bIndex
   })
 
   return parameters
