@@ -27,7 +27,7 @@
 
 import { screen, within } from '@testing-library/react'
 import { checkTooltip } from './stats.assert'
-import { TWO_WEEKS_AGO_DATE, YESTERDAY_DATE } from '../mock/data.api.mock'
+import { RESERVOIR_CHANGE_13_DAYS_AGO_DATE, RESERVOIR_CHANGE_TODAY_DATE } from '../mock/data.api.mock'
 import userEvent from '@testing-library/user-event'
 
 export const checkDeviceUsageWidget = async () => {
@@ -36,10 +36,10 @@ export const checkDeviceUsageWidget = async () => {
   expect(deviceUsageWidget.getByTestId('sensor-usage-stat')).toHaveTextContent('Sensor Usage3%')
   expect(deviceUsageWidget.getByTestId('device-usage-device-list')).toHaveTextContent('DevicesCGM:Dexcom G6DBL:DiabeloopPump:VICENTRA')
   expect(deviceUsageWidget.getByTestId('device-usage-updates')).toHaveTextContent('Last updatesNov 1, 2022 12:00 amBOLUS_AGGRESSIVENESS_FACTOR (143 %)Nov 1, 2022 12:00 amLARGE_MEAL_BREAKFAST (150.0 g)Nov 1, 2022 12:00 amLARGE_MEAL_DINNER (150.0 g)Nov 1, 2022 12:00 amLARGE_MEAL_LUNCH (70.0 g)Nov 2, 2022 5:00 pmMEAL_RATIO_BREAKFAST_FACTOR (100 % -> 110 %)Nov 1, 2022 12:00 amMEAL_RATIO_BREAKFAST_FACTOR (100 % -> 100 %)Nov 1, 2022 12:00 amMEAL_RATIO_BREAKFAST_FACTOR (100 %)Nov 2, 2022 5:00 pmMEAL_RATIO_DINNER_FACTOR (100 % -> 90 %)Nov 1, 2022 12:00 amMEAL_RATIO_DINNER_FACTOR (100 % -> 100 %)Nov 1, 2022 12:00 amMEAL_RATIO_DINNER_FACTOR (100 %)Nov 7, 2022 2:01 pmMEAL_RATIO_LUNCH_FACTOR (130 % -> 90 %)Nov 1, 2022 12:00 amMEAL_RATIO_LUNCH_FACTOR (130 %)Nov 1, 2022 12:00 amMEDIUM_MEAL_BREAKFAST (70.0 g)Nov 1, 2022 12:00 amMEDIUM_MEAL_DINNER (60.0 g)Nov 1, 2022 12:00 amMEDIUM_MEAL_LUNCH (50.0 g)Nov 1, 2022 12:00 amPATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA (100 %)Nov 2, 2022 7:00 amPATIENT_GLY_HYPER_LIMIT (180.1 mg/dL -> 140.0 mg/dL)Nov 1, 2022 12:00 amPATIENT_GLY_HYPER_LIMIT (180.1 mg/dL -> 180.1 mg/dL)Nov 1, 2022 12:00 amPATIENT_GLY_HYPER_LIMIT (180.1 mg/dL)Nov 2, 2022 7:00 amPATIENT_GLY_HYPO_LIMIT (70.0 mg/dL -> 60.0 mg/dL)Nov 1, 2022 12:00 amPATIENT_GLY_HYPO_LIMIT (70.0 mg/dL -> 70.0 mg/dL)Nov 1, 2022 12:00 amPATIENT_GLY_HYPO_LIMIT (70.0 mg/dL)Nov 1, 2022 12:00 amPATIENT_GLYCEMIA_TARGET (100.0 mg/dL)Nov 1, 2022 12:00 amSMALL_MEAL_BREAKFAST (15.0 g)Nov 1, 2022 12:00 amSMALL_MEAL_DINNER (20.0 g)Nov 1, 2022 12:00 amSMALL_MEAL_LUNCH (30.0 g)Nov 1, 2022 12:00 amTOTAL_INSULIN_FOR_24H (53.0 U)Nov 1, 2022 12:00 amWEIGHT (69.0 kg)')
-  expect(await deviceUsageWidget.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changesSunMonTueWedThuFriSat')
+  expect(await deviceUsageWidget.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changes')
   const reservoirChange = deviceUsageWidget.getByTestId('reservoir-change')
   await userEvent.hover(reservoirChange)
-  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${YESTERDAY_DATE.format('MMM D')}7:00 pm`)
+  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${RESERVOIR_CHANGE_TODAY_DATE.format('MMM D')}7:00 pm`)
 }
 
 export const checkDeviceUsageWidgetWithTwoWeeksOldData = async () => {
@@ -48,10 +48,10 @@ export const checkDeviceUsageWidgetWithTwoWeeksOldData = async () => {
   expect(deviceUsageWidget.getByTestId('sensor-usage-stat')).toHaveTextContent('Sensor Usage2%')
   expect(deviceUsageWidget.getByTestId('device-usage-device-list')).toHaveTextContent('DevicesCGM:Dexcom G6DBL:DiabeloopPump:VICENTRA')
   expect(deviceUsageWidget.getByTestId('device-usage-updates')).toHaveTextContent('Last updatesNov 1, 2022 12:00 amBOLUS_AGGRESSIVENESS_FACTOR (143 %)Nov 1, 2022 12:00 amLARGE_MEAL_BREAKFAST (150.0 g)Nov 1, 2022 12:00 amLARGE_MEAL_DINNER (150.0 g)Nov 1, 2022 12:00 amLARGE_MEAL_LUNCH (70.0 g)Nov 2, 2022 5:00 pmMEAL_RATIO_BREAKFAST_FACTOR (100 % -> 110 %)Nov 1, 2022 12:00 amMEAL_RATIO_BREAKFAST_FACTOR (100 % -> 100 %)Nov 1, 2022 12:00 amMEAL_RATIO_BREAKFAST_FACTOR (100 %)Nov 2, 2022 5:00 pmMEAL_RATIO_DINNER_FACTOR (100 % -> 90 %)Nov 1, 2022 12:00 amMEAL_RATIO_DINNER_FACTOR (100 % -> 100 %)Nov 1, 2022 12:00 amMEAL_RATIO_DINNER_FACTOR (100 %)Nov 7, 2022 2:01 pmMEAL_RATIO_LUNCH_FACTOR (130 % -> 90 %)Nov 1, 2022 12:00 amMEAL_RATIO_LUNCH_FACTOR (130 %)Nov 1, 2022 12:00 amMEDIUM_MEAL_BREAKFAST (70.0 g)Nov 1, 2022 12:00 amMEDIUM_MEAL_DINNER (60.0 g)Nov 1, 2022 12:00 amMEDIUM_MEAL_LUNCH (50.0 g)Nov 1, 2022 12:00 amPATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA (100 %)Nov 2, 2022 7:00 amPATIENT_GLY_HYPER_LIMIT (180.1 mg/dL -> 140.0 mg/dL)Nov 1, 2022 12:00 amPATIENT_GLY_HYPER_LIMIT (180.1 mg/dL -> 180.1 mg/dL)Nov 1, 2022 12:00 amPATIENT_GLY_HYPER_LIMIT (180.1 mg/dL)Nov 2, 2022 7:00 amPATIENT_GLY_HYPO_LIMIT (70.0 mg/dL -> 60.0 mg/dL)Nov 1, 2022 12:00 amPATIENT_GLY_HYPO_LIMIT (70.0 mg/dL -> 70.0 mg/dL)Nov 1, 2022 12:00 amPATIENT_GLY_HYPO_LIMIT (70.0 mg/dL)Nov 1, 2022 12:00 amPATIENT_GLYCEMIA_TARGET (100.0 mg/dL)Nov 1, 2022 12:00 amSMALL_MEAL_BREAKFAST (15.0 g)Nov 1, 2022 12:00 amSMALL_MEAL_DINNER (20.0 g)Nov 1, 2022 12:00 amSMALL_MEAL_LUNCH (30.0 g)Nov 1, 2022 12:00 amTOTAL_INSULIN_FOR_24H (53.0 U)Nov 1, 2022 12:00 amWEIGHT (69.0 kg)')
-  expect(await deviceUsageWidget.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changesSunMonTueWedThuFriSat')
+  expect(await deviceUsageWidget.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changes')
   const reservoirChange = deviceUsageWidget.getByTestId('reservoir-change')
   await userEvent.hover(reservoirChange)
-  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${TWO_WEEKS_AGO_DATE.format('MMM D')}7:00 pm`)
+  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${RESERVOIR_CHANGE_13_DAYS_AGO_DATE.format('MMM D')}7:00 pm`)
 }
 
 export const checkDeviceUsageWidgetNoData = async () => {
@@ -60,5 +60,5 @@ export const checkDeviceUsageWidgetNoData = async () => {
   expect(deviceUsageWidget.getByTestId('sensor-usage-stat')).toHaveTextContent('Sensor Usage0%')
   expect(deviceUsageWidget.getByTestId('device-usage-device-list')).toHaveTextContent('DevicesCGM:Dexcom G6DBL:DiabeloopPump:VICENTRA')
   expect(deviceUsageWidget.getByTestId('device-usage-updates')).toHaveTextContent('Last updates')
-  expect(await deviceUsageWidget.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changesSunMonTueWedThuFriSat')
+  expect(await deviceUsageWidget.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changesNothing to display!')
 }

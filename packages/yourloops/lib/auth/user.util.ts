@@ -26,9 +26,18 @@
  */
 
 import i18next from 'i18next'
+import { Unit } from 'medical-domain'
 
 const t = i18next.t.bind(i18next)
 
+const DEFAULT_BG_UNIT = Unit.MilligramPerDeciliter
+
 export const getUserName = (firstName: string, lastName: string, fullName: string): string => {
   return firstName && lastName ? t('user-name', { firstName, lastName }) : fullName
+}
+
+export const sanitizeBgUnit = (bgUnit: string): Unit.MilligramPerDeciliter | Unit.MmolPerLiter => {
+  const allowedBgUnits: Array< Unit.MilligramPerDeciliter | Unit.MmolPerLiter> = [Unit.MilligramPerDeciliter, Unit.MmolPerLiter]
+  const sanitizedUnit = allowedBgUnits.find((unit) => unit.toLocaleLowerCase() === bgUnit?.toLowerCase())
+  return sanitizedUnit ?? DEFAULT_BG_UNIT
 }

@@ -134,6 +134,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-2522 PDF/CSV report generation does not take into account data that was not loaded in daily
 - YLP-2524 Override information is hardly visible
 - YLP-2529 Fix median in trends view
+- YLP-2532 Patients with only a fullname are not shown when using the search bar
+- YLP-2533 Sanitize glycemia unit when retrieving the user
 - YLP-2535 Dashboard statistics should only be computed on days having data
 
 ### Fixed
@@ -147,6 +149,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2509 "Sensor warmup" icon is not shown
 - YLP-2523 Fix insulin values not rounded in Bolus tooltip
 - YLP-2525 The carbs information is duplicated
+- YLP-2528 The "Cartridge changes" widget doesn't display the info on the 14 days period
 
 ## 3.0.3 - 2023-02-09
 ### Fixed

@@ -138,7 +138,11 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
     return patientList.filter(patient => {
       const firstName = patient.profile.firstName ?? ''
       const lastName = patient.profile.lastName ?? ''
-      return firstName.toLocaleLowerCase().includes(searchText) || lastName.toLocaleLowerCase().includes(searchText)
+      const fullName = patient.profile.fullName ?? ''
+
+      return firstName.toLocaleLowerCase().includes(searchText) ||
+        lastName.toLocaleLowerCase().includes(searchText) ||
+        fullName.toLocaleLowerCase().includes(searchText)
     })
   }
 
