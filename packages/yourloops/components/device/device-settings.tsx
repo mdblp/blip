@@ -45,7 +45,7 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { type PumpSettings } from 'medical-domain'
 import moment from 'moment/moment'
-import { copySettingsToClipboard, formatParameterValue } from './utils/device.utils'
+import { copySettingsToClipboard, formatParameterValue, sortParameterList } from './utils/device.utils'
 
 interface DeviceSettingsProps {
   goToDailySpecificDate: (date: number) => void
@@ -65,13 +65,14 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
   const pumpSettings = [...medicalData.grouped.pumpSettings].pop() as PumpSettings
   const { device, pump, cgm, parameters, history } = pumpSettings.payload
   const lastUploadDate = moment.tz(pumpSettings.normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
+  const sortedParameters = sortParameterList(parameters)
 
   const onClickCopyButton = async (): Promise<void> => {
-    await copySettingsToClipboard(lastUploadDate, device, parameters)
+    await copySettingsToClipboard(lastUploadDate, device, sortedParameters)
   }
 
   useEffect(() => {
-    parameters.forEach(parameter => {
+    sortedParameters.forEach(parameter => {
       parameter.value = formatParameterValue(parameter.value, parameter.unit)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -108,7 +109,7 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
             <CgmInfoTable cgm={cgm} />
           </Grid>
           <Grid item xs={12} sm={6} data-testid="parameters-container">
-            <ParameterList parameters={parameters} />
+            <ParameterList parameters={sortedParameters} />
           </Grid>
         </Grid>
         <Box marginTop={5}>

@@ -35,7 +35,7 @@ import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import TableBody from '@mui/material/TableBody'
 import { type ParameterConfig } from 'medical-domain'
-import { formatParameterValue, PARAMETER_STRING_MAX_WIDTH, sortParameterList } from './utils/device.utils'
+import { formatParameterValue, PARAMETER_STRING_MAX_WIDTH } from './utils/device.utils'
 import classes from './device.css'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
@@ -47,7 +47,6 @@ interface ParameterListProps {
 
 export const ParameterList: FC<ParameterListProps> = ({ parameters }) => {
   const { t } = useTranslation()
-  const sortedParameters = sortParameterList(parameters)
 
   return (
     <Card variant="outlined">
@@ -61,7 +60,7 @@ export const ParameterList: FC<ParameterListProps> = ({ parameters }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {sortedParameters.map((parameter, index) => (
+            {parameters.map((parameter, index) => (
               <TableRow
                 key={parameter.name}
                 className={classes.parameterRow}
