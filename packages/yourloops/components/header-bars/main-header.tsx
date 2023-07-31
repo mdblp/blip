@@ -89,16 +89,13 @@ export const MainHeader: FC = () => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
-  const getSelectedTab = (): HcpNavigationTab | null => {
-    if (TeamUtils.isPrivate(selectedTeam) && pathname === AppUserRoute.CareTeamSettings) {
-      return HcpNavigationTab.Patients
-    }
+  const getSelectedTab = (): HcpNavigationTab | false => {
     switch (pathname) {
       case AppUserRoute.CareTeamSettings:
         return HcpNavigationTab.CareTeam
       case AppUserRoute.Preferences:
       case AppUserRoute.Notifications:
-        return null
+        return false
       default:
         return HcpNavigationTab.Patients
     }
