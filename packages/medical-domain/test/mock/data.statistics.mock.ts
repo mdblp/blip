@@ -46,8 +46,7 @@ export const basalsData: Array<[Date, number, number, string]> = [
   [new Date('2018-02-01T02:00:00Z'), 0.75, MS_IN_HOUR, 'scheduled'],
   [new Date('2018-02-01T03:00:00Z'), 0.5, MS_IN_HOUR, 'scheduled'],
   [new Date('2018-02-02T00:00:00Z'), 0.5, MS_IN_HOUR, 'scheduled'],
-  [new Date('2018-02-02T00:00:00Z'), 0.5, MS_IN_HOUR, 'scheduled'],
-  [new Date('2018-02-03T03:00:00Z'), 0.5, MS_IN_HOUR, 'temp']
+  [new Date('2018-02-02T00:00:00Z'), 0.5, MS_IN_HOUR, 'temp']
 ]
 export const bolusData: Array<[Date, number]> = [
   [new Date('2018-02-01T01:00:00Z'), 4],

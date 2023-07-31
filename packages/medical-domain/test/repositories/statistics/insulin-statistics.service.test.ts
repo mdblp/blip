@@ -40,23 +40,23 @@ import {
 describe('Time In Auto Data', () => {
   it('should return the time spent in automated and manual basal delivery when viewing 1 day', () => {
     const basalData = buildBasalsData(basalsData)
-    expect(BasalBolusStatisticsService.getTimeInAutoData(basalData, 1, dateFilterOneDay)).toEqual({
-      totalAutomaticBasals: MS_IN_HOUR,
-      totalManualBasals: MS_IN_HOUR * 2,
-      totalAutomatedAndManualBasals: MS_IN_HOUR + MS_IN_HOUR * 2,
-      automaticPerDays: 28800000,
-      manualPerDays: 57600000
+    expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, 1, dateFilterOneDay)).toEqual({
+      automatedBasalDuration: MS_IN_HOUR,
+      manualBasalDuration: MS_IN_HOUR * 2,
+      automatedAndManualTotalDuration: MS_IN_HOUR + MS_IN_HOUR * 2,
+      automatedBasalPerDayDuration: 28800000,
+      manualBasalPerDayDuration: 57600000
     })
   })
 
   it('should return the avg daily time spent in automated and manual basal delivery when viewing more than 1 day', () => {
     const basalData = buildBasalsData(basalsData)
-    expect(BasalBolusStatisticsService.getTimeInAutoData(basalData, 2, dateFilterTwoDays)).toEqual({
-      totalAutomaticBasals: MS_IN_HOUR,
-      totalManualBasals: MS_IN_HOUR * 3,
-      totalAutomatedAndManualBasals: MS_IN_HOUR + MS_IN_HOUR * 3,
-      manualPerDays: 64800000,
-      automaticPerDays: 21600000
+    expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, 2, dateFilterTwoDays)).toEqual({
+      automatedBasalDuration: MS_IN_HOUR,
+      manualBasalDuration: MS_IN_HOUR * 4,
+      automatedAndManualTotalDuration: MS_IN_HOUR + MS_IN_HOUR * 4,
+      manualBasalPerDayDuration: 69120000,
+      automatedBasalPerDayDuration: 17280000
     })
   })
 })
