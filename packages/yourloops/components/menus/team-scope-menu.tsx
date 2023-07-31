@@ -156,6 +156,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
           color="inherit"
           aria-label={t('open-team-selection-menu')}
           data-testid="team-scope-menu-button"
+          data-stonlyid="team-scope-menu-button"
           startIcon={selectedTeamIcon}
           endIcon={<ArrowDropDownIcon />}
           onClick={openMenu}
