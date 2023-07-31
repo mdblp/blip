@@ -42,19 +42,25 @@ interface LoopModeStatProps {
   total: number
   automaticPerDays: number
   manualPerDays: number
+  automaticTime: number
+  manualTime: number
+
 }
 
 const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
-  const { automated, manual, total, automaticPerDays, manualPerDays } = props
+  const {
+    automated,
+    manual,
+    total,
+    manualTime,
+    automaticTime
+  } = props
   const automaticPercentage = Math.round(100 * automated / total)
   const manualPercentage = Math.round(100 * manual / total)
   const location = useLocation()
   const isDailyPage = location.pathname.includes('daily')
-  const isDashboardPage = location.pathname.includes('dashboard')
   const title = isDailyPage ? t('time-loop') : t('avg-time-loop')
   const annotations = isDailyPage ? [t('time-loop-tooltip'), t('time-loop-how-calculate')] : [t('avg-time-loop-tooltip'), t('avg-time-loop-how-calculate')]
-  const automaticTimeDashboard = isDashboardPage ? automaticPerDays : automated
-  const manualTimeDashboard = isDashboardPage ? manualPerDays : manual
 
   return (
     <div data-testid="loop-mode-stat">
@@ -72,13 +78,13 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
           className={styles.labelOnValueUnits}
           percentage={automaticPercentage}
           transform="translate(30 63)"
-          value={ensureNumeric(automaticTimeDashboard)}
+          value={ensureNumeric(automaticTime)}
         />
         <LoopModePercentageDetail
           className={styles.labelOffValueUnits}
           percentage={manualPercentage}
           transform="translate(260 63)"
-          value={ensureNumeric(manualTimeDashboard)}
+          value={ensureNumeric(manualTime)}
         />
         <LoopModeGraph automatedPercentage={automaticPercentage} manualPercentage={manualPercentage} />
       </svg>

@@ -47,7 +47,6 @@ import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { StandardDeviationStat } from './standard-deviation-stat'
 import { AverageGlucoseStat } from './average-glucose-stat'
 import { TotalInsulinStat } from './total-insulin-stat'
-import { automatedBasalDeviceModel, checkManufacturerName } from './patient-statistics.utils'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -66,13 +65,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   const bgUnits = bgPrefs.bgUnits
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
   const isTrendsPage = location.pathname.includes('trends')
-  const manufacturer = medicalData.pumpSettings.map(item => item.payload.device.manufacturer)
-  const deviceModel = medicalData.pumpSettings.map(item => item.payload.device.name)
-
-  const isAutomatedBasalDevice = (): boolean => {
-    const models = automatedBasalDeviceModel[checkManufacturerName(manufacturer)] || false
-    return Array.isArray(models) && models.includes(deviceModel)
-  }
+  const isDashboardPage = location.pathname.includes('dashboard')
 
   const {
     standardDeviation,
@@ -110,12 +103,15 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter, medicalData.pumpSettings)
 
   const {
-    totalAutomaticBasals,
-    totalAutomatedAndManualBasals,
-    totalManualBasals,
-    automaticPerDays,
-    manualPerDays
-  } = BasalBolusStatisticsService.getTimeInAutoData(medicalData.basal, numberOfDays, dateFilter)
+    automatedBasalDuration,
+    manualBasalDuration,
+    manualBasalPerDayDuration,
+    automatedBasalPerDayDuration,
+    automatedAndManualTotalDuration
+  } = BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(medicalData.basal, numberOfDays, dateFilter)
+
+  const automaticTimeDashboard = isDashboardPage ? automatedBasalPerDayDuration : automatedBasalDuration
+  const manualTimeDashboard = isDashboardPage ? manualBasalPerDayDuration : manualBasalDuration
 
   return (
     <Box data-testid="patient-statistics">
@@ -161,17 +157,15 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
         dailyDose={dailyDose}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      {isAutomatedBasalDevice &&
-        <>
-          <LoopModeStat
-            automated={totalAutomaticBasals}
-            manual={totalManualBasals}
-            total={totalAutomatedAndManualBasals}
-            automaticPerDays={automaticPerDays}
-            manualPerDays={manualPerDays}
-          />
-        </>
-      }
+      <LoopModeStat
+        automated={automatedBasalDuration}
+        manual={manualBasalDuration}
+        total={automatedAndManualTotalDuration}
+        automaticPerDays={automatedBasalPerDayDuration}
+        manualPerDays={manualBasalPerDayDuration}
+        automaticTime={automaticTimeDashboard}
+        manualTime={manualTimeDashboard}
+      />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <TotalCarbsStat
         totalEntriesCarbWithRescueCarbs={totalEntriesCarbWithRescueCarbs}
