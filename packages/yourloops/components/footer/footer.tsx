@@ -213,7 +213,7 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
   }
 })
 
-const Footer: FunctionComponent = () => {
+export const Footer: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
   const { pathname } = useLocation()
@@ -337,5 +337,3 @@ const Footer: FunctionComponent = () => {
     </Container>
   )
 }
-
-export default Footer

@@ -28,9 +28,9 @@
 import React, { type FC } from 'react'
 import { type ParametersChange, type PumpSettingsParameter } from 'medical-domain'
 import Box from '@mui/material/Box'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import { useTheme } from '@mui/material/styles'
 import { formatParameterValue } from './utils/device.utils'
+import { East } from '@mui/icons-material'
 
 interface ParameterChangeValueProps {
   historyCurrentIndex: number
@@ -58,7 +58,7 @@ export const ParameterChangeValue: FC<ParameterChangeValueProps> = (props) => {
       {previousParameter &&
         <>
           <span>{`${formatParameterValue(previousParameter.value, previousParameter.unit)} ${previousParameter.unit}`}</span>
-          <ChevronRightIcon sx={{ marginInline: theme.spacing(1) }} />
+          <East sx={{ marginInline: theme.spacing(1) }} />
         </>
       }
       <span>{`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}</span>

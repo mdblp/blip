@@ -597,52 +597,6 @@ TidelineData.prototype.setDeviceParameters = function setDeviceParameters() {
   }
 }
 
-/**
- * Sort the parameters of the pump settings
- * @param {PumpSettings[]} pumpSettings
- */
-TidelineData.prototype.sortPumpSettingsParameters = function sortPumpSettingsParameters() {
-  const settingsOrder = [
-    'MEDIUM_MEAL_BREAKFAST',
-    'MEDIUM_MEAL_LUNCH',
-    'MEDIUM_MEAL_DINNER',
-    'TOTAL_INSULIN_FOR_24H',
-    'WEIGHT',
-    'PATIENT_GLY_HYPER_LIMIT',
-    'PATIENT_GLY_HYPO_LIMIT',
-    'PATIENT_GLYCEMIA_TARGET',
-    'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA',
-    'BOLUS_AGGRESSIVENESS_FACTOR',
-    'MEAL_RATIO_BREAKFAST_FACTOR',
-    'MEAL_RATIO_LUNCH_FACTOR',
-    'MEAL_RATIO_DINNER_FACTOR',
-    'SMALL_MEAL_BREAKFAST',
-    'LARGE_MEAL_BREAKFAST',
-    'SMALL_MEAL_LUNCH',
-    'LARGE_MEAL_LUNCH',
-    'SMALL_MEAL_DINNER',
-    'LARGE_MEAL_DINNER'
-  ]
-  if (!Array.isArray(this.grouped.pumpSettings)) {
-    return
-  }
-  this.grouped.pumpSettings.forEach((ps) => {
-    /** @type {{name: string, value: string, level: number|string, unit: string}[]} */
-    const p = _.get(ps, 'payload.parameters', [])
-    p.sort((a, b) => {
-      const aIdx = settingsOrder.indexOf(a.name)
-      const bIdx = settingsOrder.indexOf(b.name)
-      if (aIdx < 0) {
-        return 1
-      }
-      if (bIdx < 0) {
-        return -1
-      }
-      return aIdx - bIdx
-    })
-  })
-}
-
 TidelineData.prototype.deduplicateBoluses = function deduplicateBoluses() {
   if (!Array.isArray(this.data)) {
     return
@@ -1043,7 +997,6 @@ TidelineData.prototype.addData = async function addData(newData) {
   // generate the fill data for chart BGs
   this.generateFillData()
   this.setDeviceParameters()
-  this.sortPumpSettingsParameters()
   this.latestPumpManufacturer = this.getLatestManufacturer()
   this.zenEvents = this.setEvents({ type: 'deviceEvent', subType: 'zen' }, ['inputTime'])
   this.confidentialEvents = this.setEvents({ type: 'deviceEvent', subType: 'confidential' }, ['inputTime'])
