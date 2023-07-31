@@ -90,6 +90,9 @@ export const MainHeader: FC = () => {
   const { pathname } = useLocation()
 
   const getSelectedTab = (): HcpNavigationTab | false => {
+    if (TeamUtils.isPrivate(selectedTeam) && pathname === AppUserRoute.CareTeamSettings) {
+      return HcpNavigationTab.Patients
+    }
     switch (pathname) {
       case AppUserRoute.CareTeamSettings:
         return HcpNavigationTab.CareTeam
