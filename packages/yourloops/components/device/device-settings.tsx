@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, useEffect } from 'react'
+import React, { type FC } from 'react'
 import type MedicalDataService from 'medical-domain'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -76,14 +76,11 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
     await copySettingsToClipboard(lastUploadDate, device, parameters)
   }
 
-  useEffect(() => {
-    sortParameterList(parameters)
-    formatParameters(parameters)
-    sortHistoryParametersByDate(history)
-    sortPumpSettingsParametersByDate(history)
-    sortPumpSettingsParameterByLevel(history)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  sortParameterList(parameters)
+  formatParameters(parameters)
+  sortHistoryParametersByDate(history)
+  sortPumpSettingsParametersByDate(history)
+  sortPumpSettingsParameterByLevel(history)
 
   return (
     <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
