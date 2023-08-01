@@ -242,7 +242,6 @@
   "language": "Langue",
   "last-data-update": "Dernière mise à jour des données",
   "last-name": "Nom",
-  "last-upload:": "Dernier envoi :",
   "learn-more": "En savoir plus",
   "login-page-desktop-info-1": "Elle permet d'accéder à des <strong>représentations visuelles des données</strong> qui remontent automatiquement depuis les dispositifs DBL : glycémies, insuline, glucides et activités physiques.",
   "login-page-desktop-info-2": "<strong className=\"primary-color-main\">YourLoops</strong> offre aussi aux patients et patientes la possibilité de <strong>partager leurs données</strong> de manière sécurisée avec leur équipe médicale ou leurs proches.",
@@ -480,5 +479,6 @@
   "verify-email-details-4": "Voulez-vous vous connecter avec une autre adresse ? <underline>Essayez de vous connecter à nouveau</underline>.",
   "verify-email-title": "Confirmez votre adresse e-mail",
   "very-low-bg-input": "Entrée de glycémie très basse",
-  "yesterday": "Hier"
+  "yesterday": "Hier",
+  "last-update:": "Dernier envoi :"
 }
