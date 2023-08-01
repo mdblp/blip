@@ -367,7 +367,7 @@
   "profile-update-failed": "プロファイルの更新ができませんでした。",
   "profile-updated": "プロファイルが更新されました。",
   "progression-proposal": "経過課題",
-  "ratio-dose": "Ratio Dose",
+  "ratio-dose": "Dose ratio",
   "readings-in-range-bgm-daily-average": "**Readings In Range:** Daily average of the number of {{smbgLabel}} readings.",
   "refresh": "再読込",
   "remaining-time": "残存時間",
