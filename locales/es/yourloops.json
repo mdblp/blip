@@ -209,7 +209,7 @@
   "gender-f": "Mujer",
   "gender-i": "Indeterminado",
   "gender-m": "Hombre",
-  "glucose-management-indicator": "GMI (HbA1c estimado de los últimos 3 meses)",
+  "glucose-management-indicator": "GMI (HbA1c estimado de los últimos 14 días)",
   "glucose-management-indicator-title": "GMI (HbA1c)",
   "glucose-management-indicator-tooltip": "**GMI (indicador de control de la glucemia):**\n\nindica el nivel aproximado de A1C según el nivel de glucemia promedio calculado a partir de las lecturas de CGM.",
   "glycemic-target": "Objetivo glucémico",
