@@ -225,7 +225,7 @@
   "header-tab-patients": "Patients",
   "health-care-professional": "Health care professional",
   "high-bg-input": "High blood glucose input",
-  "hypoglycemia": "Hypoglycemia",
+  "hypoglycemia": "Below range",
   "hypoglycemia-tooltip1": "Hypoglycemia: {{percentage}}%",
   "hypoglycemia-tooltip2": "Alert triggered when {{threshold}}% of time below {{veryLowBg}} {{unit}} threshold over the period considered.",
   "identification-code": "Identification code",
@@ -242,7 +242,6 @@
   "language": "Language",
   "last-data-update": "Last data update",
   "last-name": "Last name",
-  "last-upload:": "Last upload:",
   "learn-more": "Learn more",
   "login-page-desktop-info-1": "It provides access to <strong>visual representations of data</strong> that are automatically uploaded from DBL devices: glucose level, insulin, carbohydrates and physical activities.",
   "login-page-desktop-info-2": "<strong className=\"primary-color-main\">YourLoops</strong> also enables patients to securely <strong>share their data</strong> with their medical team or caregivers.",
@@ -480,5 +479,6 @@
   "verify-email-details-4": "Do you want to login with another address? <underline>Try to login again</underline>.",
   "verify-email-title": "Verify your email address",
   "very-low-bg-input": "Very low blood glucose input",
-  "yesterday": "Yesterday"
+  "yesterday": "Yesterday",
+  "last-update:": "Last update:"
 }
