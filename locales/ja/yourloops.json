@@ -155,7 +155,7 @@
   "current-trigger-setting-hypoglycemia": "Current trigger setting: {{hypoThreshold}}% of time below {{veryLowBg}} {{bgUnit}} threshold",
   "current-trigger-setting-tir": "現在のトリガー設定：目標値外にいた時間の{{tir}}%（最小値{{lowBg}}{{bgUnit}}、最大値{{highBg}}{{bgUnit}}）",
   "daily": "日次グラフ",
-  "ratio-dose": "Ratio Dose",
+  "ratio-dose": "Dose ratio",
   "weight": "体重",
   "dashboard": "ダッシュボード",
   "data-not-transmitted": "データが送信されていません。",
