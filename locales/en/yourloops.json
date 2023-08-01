@@ -367,7 +367,7 @@
   "profile-update-failed": "Profile update failed, not all data could be saved",
   "profile-updated": "Profile updated",
   "progression-proposal": "Progression proposal",
-  "ratio-dose": "Ratio Dose",
+  "ratio-dose": "Dose ratio",
   "readings-in-range-bgm-daily-average": "**Readings In Range:** Daily average of the number of {{smbgLabel}} readings.",
   "refresh": "Refresh",
   "remaining-time": "Remaining time",
