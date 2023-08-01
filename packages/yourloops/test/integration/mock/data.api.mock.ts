@@ -235,8 +235,71 @@ export const twoWeeksOfCbg: Data = {
 export const pumpSettingsData: Data = {
   dataRange: ['2022-08-08T16:35:00Z', '2022-08-08T16:40:00Z'],
   data: [
-    { time: '2020-01-01T10:00:00Z', type: 'pumpSettings', id: 'pump_settings', timezone: 'UTC', uploadId: 'osef', payload: { basalsecurityprofile: null, cgm: { apiVersion: 'v1', endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00', expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Dexcom', name: 'G6', swVersionTransmitter: 'v1', transmitterId: 'a1234' }, device: { deviceId: '1234', imei: '1234567890', manufacturer: 'Diabeloop', name: 'DBLG1', swVersion: '1.0.5.25' }, history, parameters: [{ name: 'WEIGHT', value: '72', unit: 'kg', level: 1, effectiveDate: '2020-01-01T10:00:00Z' }], pump: { expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Vicentra', name: 'Kaleido', serialNumber: '123456', swVersion: 'beta' } }, _userId: 'osef' },
-    { time: '2020-01-01T10:00:00Z', type: 'cbg', id: '2020-01-01_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' }
+    {
+      time: '2020-01-01T10:00:00Z',
+      type: 'pumpSettings',
+      id: 'pump_settings',
+      timezone: 'UTC',
+      uploadId: 'osef',
+      payload: {
+        basalsecurityprofile: null,
+        cgm: {
+          apiVersion: 'v1',
+          endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00',
+          expirationDate: '2050-04-12T17:53:54+02:00',
+          manufacturer: 'Dexcom',
+          name: 'G6',
+          swVersionTransmitter: 'v1',
+          transmitterId: 'a1234'
+        },
+        device: {
+          deviceId: '1234',
+          imei: '1234567890',
+          manufacturer: 'Diabeloop',
+          name: 'DBLG1',
+          swVersion: '1.0.5.25'
+        },
+        history,
+        parameters: [
+          { name: 'WEIGHT', value: '72', unit: 'kg', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'MEDIUM_MEAL_BREAKFAST', value: '36', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'MEDIUM_MEAL_DINNER', value: '96', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'PATIENT_GLYCEMIA_TARGET', value: '110', unit: 'mg/dL', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA', value: '100', unit: '%', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'PATIENT_GLY_HYPER_LIMIT', value: '180', unit: 'mg/dL', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'MEDIUM_MEAL_LUNCH', value: '96', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'PATIENT_GLY_HYPO_LIMIT', value: '75', unit: 'mg/dL', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'BOLUS_AGGRESSIVENESS_FACTOR', value: '100', unit: '%', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'SMALL_MEAL_LUNCH', value: '48', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'SMALL_MEAL_BREAKFAST', value: '18', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'MEAL_RATIO_LUNCH_FACTOR', value: '100', unit: '%', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'LARGE_MEAL_DINNER', value: '144', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'MEAL_RATIO_DINNER_FACTOR', value: '80', unit: '%', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'LARGE_MEAL_BREAKFAST', value: '54', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'MEAL_RATIO_BREAKFAST_FACTOR', value: '100', unit: '%', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'LARGE_MEAL_LUNCH', value: '144', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'SMALL_MEAL_DINNER', value: '48', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' }
+        ],
+        pump: {
+          expirationDate: '2050-04-12T17:53:54+02:00',
+          manufacturer: 'Vicentra',
+          name: 'Kaleido',
+          serialNumber: '123456',
+          swVersion: 'beta'
+        }
+      },
+      _userId: 'osef'
+    },
+    {
+      time: '2020-01-01T10:00:00Z',
+      type: 'cbg',
+      id: '2020-01-01_0',
+      timezone: 'Europe/Paris',
+      units: 'mmol/L',
+      value: 10.5,
+      uploadId: 'osef',
+      _userId: 'osef'
+    }
   ]
 }
 

@@ -25,8 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { formatParameterValue } from '../../../../components/device/utils/device.utils'
-import { Unit } from 'medical-domain'
+import {
+  formatParameterValue,
+  sortParameterList
+} from '../../../../components/device/utils/device.utils'
+import { type ParameterConfig, Unit } from 'medical-domain'
 
 describe('Device settings utils', () => {
   describe('formatParameterValue', () => {
@@ -39,6 +42,56 @@ describe('Device settings utils', () => {
       expect(formatParameterValue(24.78, Unit.MilligramPerDeciliter)).toEqual('24.8')
       expect(formatParameterValue(2.54, Unit.MmolPerLiter)).toEqual('2.5')
       expect(formatParameterValue('not_a_number', Unit.MmolPerLiter)).toEqual('--')
+    })
+  })
+
+  describe('sortParameterList', () => {
+    it('should sort the parameters in a correct order', () => {
+      const parameterList = [
+        { name: 'MEDIUM_MEAL_DINNER' },
+        { name: 'TOTAL_INSULIN_FOR_24H' },
+        { name: 'MEDIUM_MEAL_LUNCH' },
+        { name: 'MEDIUM_MEAL_BREAKFAST' },
+        { name: 'PATIENT_GLY_HYPER_LIMIT' },
+        { name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA' },
+        { name: 'WEIGHT' },
+        { name: 'PATIENT_GLYCEMIA_TARGET' },
+        { name: 'MEAL_RATIO_LUNCH_FACTOR' },
+        { name: 'PATIENT_GLY_HYPO_LIMIT' },
+        { name: 'LARGE_MEAL_LUNCH' },
+        { name: 'BOLUS_AGGRESSIVENESS_FACTOR' },
+        { name: 'SMALL_MEAL_LUNCH' },
+        { name: 'LARGE_MEAL_BREAKFAST' },
+        { name: 'MEAL_RATIO_BREAKFAST_FACTOR' },
+        { name: 'LARGE_MEAL_DINNER' },
+        { name: 'MEAL_RATIO_DINNER_FACTOR' },
+        { name: 'SMALL_MEAL_BREAKFAST' },
+        { name: 'SMALL_MEAL_DINNER' }
+      ]
+
+      const expectedResult = [
+        { name: 'MEDIUM_MEAL_BREAKFAST' },
+        { name: 'MEDIUM_MEAL_LUNCH' },
+        { name: 'MEDIUM_MEAL_DINNER' },
+        { name: 'TOTAL_INSULIN_FOR_24H' },
+        { name: 'WEIGHT' },
+        { name: 'PATIENT_GLY_HYPER_LIMIT' },
+        { name: 'PATIENT_GLY_HYPO_LIMIT' },
+        { name: 'PATIENT_GLYCEMIA_TARGET' },
+        { name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA' },
+        { name: 'BOLUS_AGGRESSIVENESS_FACTOR' },
+        { name: 'MEAL_RATIO_BREAKFAST_FACTOR' },
+        { name: 'MEAL_RATIO_LUNCH_FACTOR' },
+        { name: 'MEAL_RATIO_DINNER_FACTOR' },
+        { name: 'SMALL_MEAL_BREAKFAST' },
+        { name: 'LARGE_MEAL_BREAKFAST' },
+        { name: 'SMALL_MEAL_LUNCH' },
+        { name: 'LARGE_MEAL_LUNCH' },
+        { name: 'SMALL_MEAL_DINNER' },
+        { name: 'LARGE_MEAL_DINNER' }
+      ]
+
+      expect(sortParameterList(parameterList as ParameterConfig[])).toEqual(expectedResult)
     })
   })
 })
