@@ -253,19 +253,7 @@ export const checkPatientListHideShowColumns = async () => {
   const columnSettingsButton = screen.getByRole('button', { name: 'Change columns settings' })
 
   // Assert default columns are displayed
-  expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'Age' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Date of birth' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'Gender' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Monitoring alerts' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Messages' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'TIR' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'GMI (estimated HbA1c of last 14 days)' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Below range' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'CV' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
+  checkDefaultColumnsDisplay()
 
   expect(dataGridCurrentRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages from the patient0%0%N/A')
 
@@ -474,19 +462,7 @@ export const checkPatientListHideShowColumns = async () => {
   expect(columnSettingsPopoverForReset).not.toBeVisible()
 
   // Assert default columns are displayed
-  expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'Age' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Date of birth' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'Gender' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Monitoring alerts' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Messages' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'TIR' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'GMI (estimated HbA1c of last 14 days)' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Below range' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'CV' })).not.toBeInTheDocument()
-  expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
+  checkDefaultColumnsDisplay()
 
   expect(dataGridCurrentRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages from the patient0%0%N/A')
 }
@@ -706,4 +682,20 @@ export const checkReinvitePendingPatientMedicalTeam = async () => {
   // We go back to the current tab
   const currentTab = screen.getByRole('tab', { name: 'Current' })
   await userEvent.click(currentTab)
+}
+
+const checkDefaultColumnsDisplay = () => {
+  expect(screen.getByRole('columnheader', { name: 'Patient' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'Age' })).not.toBeInTheDocument()
+  expect(screen.getByRole('columnheader', { name: 'Date of birth' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'Gender' })).not.toBeInTheDocument()
+  expect(screen.getByRole('columnheader', { name: 'Monitoring alerts' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
+  expect(screen.getByRole('columnheader', { name: 'Messages' })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'TIR' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'GMI (estimated HbA1c of last 14 days)' })).not.toBeInTheDocument()
+  expect(screen.getByRole('columnheader', { name: 'Below range' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'CV' })).not.toBeInTheDocument()
+  expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
 }
