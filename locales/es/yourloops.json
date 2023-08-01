@@ -475,7 +475,7 @@
   "updated": "Actualizado",
   "user-name": "{{firstName}} {{lastName}}",
   "variance": "CV",
-  "verify-email": "Email verification",
+  "verify-email": "Verificación de email",
   "verify-email-details-1": "Para utilizar YourLoops, es necesario que confirme su dirección de correo electrónico haciendo clic en el enlace que le hemos enviado. Esta protección le ayuda a mantener segura su cuenta.",
   "verify-email-details-2": "¿No tiene el correo en su bandeja de entrada o de spam? <underline>Contacte con Atención al cliente</underline>.",
   "verify-email-details-3": "¿La dirección de correo es incorrecta? Si ha introducido mal su correo electrónico al registrarse, <underline>cierre sesión y cree una cuenta nueva</underline>.",
