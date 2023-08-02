@@ -61,9 +61,9 @@ function getWeight(allPumpSettings: PumpSettings[]): ParameterConfig | undefined
 function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter): BasalBolusStatistics {
   if (numDays === 0) {
     return {
-      bolus: NaN,
-      basal: NaN,
-      total: NaN
+      bolus: 0,
+      basal: 0,
+      total: 0
     }
   }
 
@@ -88,7 +88,7 @@ function getTotalInsulinAndWeightData(basalsData: Basal[], bolusData: Bolus[], n
   const totalInsulin = [basal, bolus].reduce((accumulator, value) => {
     const delivered = isNaN(value) ? 0 : value
     return accumulator + delivered
-  })
+  }, 0)
 
   return {
     totalInsulin,
