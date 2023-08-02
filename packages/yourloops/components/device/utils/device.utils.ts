@@ -125,7 +125,7 @@ export const sortPumpSettingsParametersByDate = (historyParameters: ParametersCh
   })
 }
 
-export const sortPumpSettingsParameterByLevel = (historyParameters: ParametersChange[]): void => {
+export const sortPumpSettingsParametersByLevel = (historyParameters: ParametersChange[]): void => {
   historyParameters.forEach(parametersChange => {
     parametersChange.parameters = parametersChange.parameters.sort((a, b) => a.level - b.level)
   })

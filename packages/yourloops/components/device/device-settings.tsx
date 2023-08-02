@@ -49,7 +49,7 @@ import {
   copySettingsToClipboard, formatParameters,
   sortHistoryParametersByDate,
   sortParameterList,
-  sortPumpSettingsParameterByLevel,
+  sortPumpSettingsParametersByLevel,
   sortPumpSettingsParametersByDate
 } from './utils/device.utils'
 
@@ -80,7 +80,7 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
   formatParameters(parameters)
   sortHistoryParametersByDate(history)
   sortPumpSettingsParametersByDate(history)
-  sortPumpSettingsParameterByLevel(history)
+  sortPumpSettingsParametersByLevel(history)
 
   return (
     <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>

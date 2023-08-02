@@ -47,7 +47,7 @@ export const ParameterChangeValue: FC<ParameterChangeValueProps> = ({ parameter 
     >
       {parameter.previousValue &&
         <>
-          <span>{`${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.unit}`}</span>
+          <span>{`${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}`}</span>
           <East sx={{ marginInline: theme.spacing(1) }} />
         </>
       }
