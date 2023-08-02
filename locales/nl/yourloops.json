@@ -209,7 +209,7 @@
   "gender-f": "Vrouw",
   "gender-i": "Onbepaald",
   "gender-m": "Man",
-  "glucose-management-indicator": "GMI (geschatte HbA1c van de afgelopen 3 maanden)",
+  "glucose-management-indicator": "GMI (geschat HbA1c)",
   "glucose-management-indicator-title": "GMI (geschat HbA1c)",
   "glucose-management-indicator-tooltip": "**GMI (Glucose Management Indicator):**\n\ngeeft aan wat je A1C-niveau waarschijnlijk zal zijn, gebaseerd op de gemiddelde glucosespiegel van je CGM-metingen.",
   "glycemic-target": "Glykemisch doel",
