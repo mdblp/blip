@@ -55,7 +55,6 @@ import { DeviceUsageWidget } from './device-usage-widget'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
-  dataUtil: typeof DataUtil
   loading: boolean
   medicalDataService: MedicalDataService
   patient: Patient
