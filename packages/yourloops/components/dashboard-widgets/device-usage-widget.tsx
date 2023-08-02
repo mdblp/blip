@@ -40,9 +40,7 @@ import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import PhonelinkSetupOutlinedIcon from '@mui/icons-material/PhonelinkSetupOutlined'
 import { BasicsChart } from 'tideline'
-import { type DateFilter, type PumpSettings, type TimePrefs } from 'medical-domain'
-import type MedicalDataService from 'medical-domain'
-import { GlycemiaStatisticsService, TimeService } from 'medical-domain'
+import MedicalDataService, { GlycemiaStatisticsService, type DateFilter, type PumpSettings, type TimePrefs } from 'medical-domain'
 import metrics from '../../lib/metrics'
 import GenericDashboardCard from './generic-dashboard-card'
 import { SensorUsageStat } from '../statistics/sensor-usage-stat'
@@ -172,9 +170,9 @@ export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
           >
             <Table>
               <TableBody className={classes.sectionContent}>
-                {pumpSettingsParameters.map((parameter, index) => (
+                {pumpSettingsParameters.map((parameter) => (
                   <TableRow
-                    key={`${parameter.name}-${parameter.effectiveDate}-${index}`}
+                    key={`${parameter.name}-${parameter.effectiveDate}-${parameter.previousValue}`}
                     data-param={parameter.name}
                     data-testid={parameter.name}
                     data-changetype={parameter.changeType}
