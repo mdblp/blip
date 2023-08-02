@@ -25,7 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type DeviceConfig, type ParameterConfig, type ParametersChange, Unit } from 'medical-domain'
+import {
+  type DeviceConfig,
+  type ParameterConfig,
+  type ParametersChange,
+  type PumpSettingsParameter,
+  Unit
+} from 'medical-domain'
 import i18next from 'i18next'
 import textTable from 'text-table'
 import { sortByDate } from '../../patient-list/utils/sort-comparators.util'
@@ -111,8 +117,8 @@ export const formatParameterValue = (value: string | number, units: string | Uni
   return value.toFixed(numberOfDecimals)
 }
 
-export const sortHistoryParametersByDate = (historyParameters: ParametersChange[]): void => {
-  historyParameters.sort((a, b) => {
+export const sortHistoryParametersByDate = (historyParameters: ParametersChange[]): ParametersChange[] => {
+  return historyParameters.sort((a, b) => {
     return new Date(b.changeDate).valueOf() - new Date(a.changeDate).valueOf()
   })
 }
@@ -171,4 +177,12 @@ export const formatParameters = (parameters: ParameterConfig[]): void => {
   parameters.forEach(parameter => {
     parameter.value = formatParameterValue(parameter.value, parameter.unit)
   })
+}
+
+export const flattenParametersChange = (historyParameters: ParametersChange[]): PumpSettingsParameter[] => {
+  let pumpSettingsParameterList: PumpSettingsParameter[] = []
+  historyParameters.forEach((parametersChange) => {
+    pumpSettingsParameterList = [...pumpSettingsParameterList, ...parametersChange.parameters]
+  })
+  return pumpSettingsParameterList
 }

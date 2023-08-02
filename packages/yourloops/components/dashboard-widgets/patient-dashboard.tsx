@@ -27,7 +27,6 @@
 
 import React, { type FunctionComponent } from 'react'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import DeviceUsage from 'blip/app/components/chart/deviceUsage.js'
 import type MedicalDataService from 'medical-domain'
 import { type DateFilter, DatumType, type MedicalData, type TimePrefs } from 'medical-domain'
 import { type BgPrefs } from 'dumb'
@@ -52,10 +51,11 @@ import ChatWidget from '../chat/chat-widget'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { PRIVATE_TEAM_ID, useTeam } from '../../lib/team/team.hook'
 import { DEFAULT_DASHBOARD_TIME_RANGE_DAYS } from '../patient-data/patient-data.utils'
+import { DeviceUsageWidget } from './device-usage-widget'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
-  goToDailySpecificDate: (date: number | Date) => void
+  dataUtil: typeof DataUtil
   loading: boolean
   medicalDataService: MedicalDataService
   patient: Patient
@@ -73,7 +73,6 @@ const useStyle = makeStyles()((theme) => ({
 export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
   const {
     bgPrefs,
-    goToDailySpecificDate,
     loading,
     medicalDataService,
     patient,
@@ -178,14 +177,12 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
       </Grid>
 
       <Grid item xs={gridWidgetSize}>
-        <DeviceUsage
+        <DeviceUsageWidget
           bgPrefs={bgPrefs}
-          timePrefs={timePrefs}
-          patient={patient}
-          tidelineData={medicalDataService}
-          onSwitchToDaily={goToDailySpecificDate}
-          medicalData={medicalData}
           dateFilter={dateFilter}
+          medicalDataService={medicalDataService}
+          patient={patient}
+          timePrefs={timePrefs}
         />
       </Grid>
 
