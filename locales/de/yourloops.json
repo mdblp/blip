@@ -209,7 +209,7 @@
   "gender-f": "Weiblich",
   "gender-i": "Unbestimmt",
   "gender-m": "Männlich",
-  "glucose-management-indicator": "GMI (geschätzter HbA1c-WErt für die letzten 14 Tage)",
+  "glucose-management-indicator": "GMI (geschätzter HbA1c-Wert)",
   "glucose-management-indicator-title": "GMI (geschätzter HbA1c-Wert)",
   "glucose-management-indicator-tooltip": "**GMI (Glucose Management Indicator):**\n\nSagt Ihnen, wie hoch Ihr ungefährer HbA1c-Wert wahrscheinlich ist, basierend auf dem durchschnittlichen Glukose-Niveau Ihrer CGM-Messungen.",
   "glycemic-target": "Glykämischer Zielbereich",
