@@ -94,6 +94,7 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
           id="configure-icon-button-id"
           aria-label={t('configure-monitoring-alerts')}
           data-testid="monitoring-alert-card-configure-button"
+          data-stonlyid="monitoring-alerts-card-configure-button"
           onClick={() => { setShowPatientMonitoringAlertsDialog(true) }}
           size="small"
         >

@@ -65,24 +65,24 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
   })
 
   return (
-    <div data-testid="cbg-percentage-bar-chart">
-      <div>
-        <CbgPercentageTitle
-          annotations={annotations}
-          hoveredStatId={hoveredStatId}
-          {...titleProps}
-        />
-        <Box onMouseLeave={() => { onMouseLeave() }}>
-          <CBGPercentageBar {...cbgStatsProps.veryHighStat} />
-          <CBGPercentageBar {...cbgStatsProps.highStat} />
-          <CBGPercentageBar {...cbgStatsProps.targetStat} />
-          <CBGPercentageBar {...cbgStatsProps.lowStat} />
-          <CBGPercentageBar {...cbgStatsProps.veryLowStat} />
-        </Box>
-      </div>
+    <Box data-testid="cbg-percentage-bar-chart">
+      <CbgPercentageTitle
+        annotations={annotations}
+        hoveredStatId={hoveredStatId}
+        {...titleProps}
+      />
+      <Box onMouseLeave={() => {
+        onMouseLeave()
+      }}>
+        <CBGPercentageBar {...cbgStatsProps.veryHighStat} />
+        <CBGPercentageBar {...cbgStatsProps.highStat} />
+        <CBGPercentageBar {...cbgStatsProps.targetStat} />
+        <CBGPercentageBar {...cbgStatsProps.lowStat} />
+        <CBGPercentageBar {...cbgStatsProps.veryLowStat} />
+      </Box>
       <Divider sx={{ marginBlock: theme.spacing(1) }} />
       <StatLegend bgClasses={bgPrefs.bgClasses} units={bgPrefs.bgUnits} />
-    </div>
+    </Box>
   )
 }
 export const CBGPercentageBarChartMemoized = React.memo(CBGPercentageBarChart)

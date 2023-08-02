@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, useEffect, useState } from 'react'
+import React, { type FC } from 'react'
 import TableContainer from '@mui/material/TableContainer'
 import Table from '@mui/material/Table'
 import TableHead from '@mui/material/TableHead'
@@ -37,11 +37,7 @@ import { useTranslation } from 'react-i18next'
 import Typography from '@mui/material/Typography'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Box from '@mui/material/Box'
-import {
-  PARAMETER_STRING_MAX_WIDTH,
-  sortHistoryParametersByDate,
-  sortPumpSettingsParameterByLevel
-} from './utils/device.utils'
+import { PARAMETER_STRING_MAX_WIDTH } from './utils/device.utils'
 import { type ParametersChange } from 'medical-domain'
 import IconButton from '@mui/material/IconButton'
 import { useTheme } from '@mui/material/styles'
@@ -60,18 +56,11 @@ interface ParametersChangeHistoryProps {
 export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ history, goToDailySpecificDate, timezone }) => {
   const theme = useTheme()
   const { t } = useTranslation()
-  const [historyToDisplay, setHistoryToDisplay] = useState<ParametersChange[]>([])
 
   const onClickChangeDate = (date: number): void => {
     goToDailySpecificDate(date)
     window.scroll(0, 0)
   }
-
-  useEffect(() => {
-    const historyParametersSortedByDate = sortHistoryParametersByDate(history).reverse()
-    const historyPumpSettingSortedByLevel = sortPumpSettingsParameterByLevel(historyParametersSortedByDate)
-    setHistoryToDisplay(historyPumpSettingSortedByLevel)
-  }, [history])
 
   return (
     <Card variant="outlined" data-testid="history-parameter-table">
@@ -87,7 +76,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
             </TableRow>
           </TableHead>
           <TableBody>
-            {historyToDisplay.map((parametersChange, historyCurrentIndex) => (
+            {history.map((parametersChange, historyCurrentIndex) => (
               <React.Fragment key={`${parametersChange.changeDate}-${historyCurrentIndex}`}>
                 <TableRow sx={{ backgroundColor: 'var(--primary-color-background)' }} className="change-date-row">
                   <TableCell colSpan={5}>
@@ -137,17 +126,14 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                       </Tooltip>
                     </TableCell>
                     <TableCell>
-                      <ParameterChangeValue
-                        historyCurrentIndex={historyCurrentIndex}
-                        history={historyToDisplay}
-                        parameter={parameter}
-                      />
+                      <ParameterChangeValue parameter={parameter} />
                     </TableCell>
                     <TableCell align="right">
                       <CustomChangeChip changeType={parameter.changeType} />
                     </TableCell>
-                    <TableCell
-                      align="right">{formatDateWithMomentLongFormat(new Date(parameter.effectiveDate), 'llll', timezone)}</TableCell>
+                    <TableCell align="right">
+                      {formatDateWithMomentLongFormat(new Date(parameter.effectiveDate), 'llll', timezone)}
+                    </TableCell>
                   </TableRow>
                 ))}
               </React.Fragment>
