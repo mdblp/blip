@@ -296,7 +296,7 @@
   "modal-patient-team-warning": "招待に同意する前に、上記詳細が医療従事者から提供された情報と一致していることをご確認ください。",
   "modal-reinvite-patient-question": "Are you sure you want to reinvite <strong>{{patientEmail}}</strong> to <strong>{{selectedTeamName}}</strong>?",
   "modal-reinvite-patient-title": "Resend an invite to a patient",
-  "modal-remove-caregiver-question": "{{name }}（介護者）を削除しますか？",
+  "modal-remove-caregiver-question": "<strong>{{name}}</strong>（介護者）を削除しますか？",
   "modal-remove-patient-alert-info": "If you want to remove the patient from another care team, you must first select the care team from the dropdown menu at the top right of YourLoops.",
   "modal-remove-patient-from-private-practice-info": "彼/彼女のデータにアクセスできなくなります。",
   "modal-remove-patient-from-team-info": "You and the care team will no longer have access to their data.",
