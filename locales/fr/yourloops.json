@@ -209,7 +209,7 @@
   "gender-f": "Femme",
   "gender-i": "Indéterminé",
   "gender-m": "Homme",
-  "glucose-management-indicator": "GMI (HbA1c estimée des 14 jours)",
+  "glucose-management-indicator": "GMI (HbA1c estimée)",
   "glucose-management-indicator-title": "GMI (HbA1c estimée)",
   "glucose-management-indicator-tooltip": "**GMI (Indicateur de gestion du glucose):**\n\nEstimation de l'Hb1Ac basée sur la moyenne des mesures CGM.",
   "glycemic-target": "Cible glycémique",
