@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, useEffect } from 'react'
+import React, { type FC } from 'react'
 import type MedicalDataService from 'medical-domain'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -45,7 +45,13 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { type PumpSettings } from 'medical-domain'
 import moment from 'moment/moment'
-import { copySettingsToClipboard, formatParameterValue, sortParameterList } from './utils/device.utils'
+import {
+  copySettingsToClipboard, formatParameters,
+  sortHistoryParametersByDate,
+  sortParameterList,
+  sortPumpSettingsParametersByLevel,
+  sortPumpSettingsParametersByDate
+} from './utils/device.utils'
 
 interface DeviceSettingsProps {
   goToDailySpecificDate: (date: number) => void
@@ -65,18 +71,16 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
   const pumpSettings = [...medicalData.grouped.pumpSettings].pop() as PumpSettings
   const { device, pump, cgm, parameters, history } = pumpSettings.payload
   const lastUploadDate = moment.tz(pumpSettings.normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
-  const sortedParameters = sortParameterList(parameters)
 
   const onClickCopyButton = async (): Promise<void> => {
-    await copySettingsToClipboard(lastUploadDate, device, sortedParameters)
+    await copySettingsToClipboard(lastUploadDate, device, parameters)
   }
 
-  useEffect(() => {
-    sortedParameters.forEach(parameter => {
-      parameter.value = formatParameterValue(parameter.value, parameter.unit)
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  sortParameterList(parameters)
+  formatParameters(parameters)
+  sortHistoryParametersByDate(history)
+  sortPumpSettingsParametersByDate(history)
+  sortPumpSettingsParametersByLevel(history)
 
   return (
     <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
@@ -109,7 +113,7 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
             <CgmInfoTable cgm={cgm} />
           </Grid>
           <Grid item xs={12} sm={6} data-testid="parameters-container">
-            <ParameterList parameters={sortedParameters} />
+            <ParameterList parameters={parameters} />
           </Grid>
         </Grid>
         <Box marginTop={5}>

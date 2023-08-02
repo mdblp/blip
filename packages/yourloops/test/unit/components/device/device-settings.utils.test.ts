@@ -91,7 +91,8 @@ describe('Device settings utils', () => {
         { name: 'LARGE_MEAL_DINNER' }
       ]
 
-      expect(sortParameterList(parameterList as ParameterConfig[])).toEqual(expectedResult)
+      sortParameterList(parameterList as ParameterConfig[])
+      expect(parameterList).toEqual(expectedResult)
     })
   })
 })

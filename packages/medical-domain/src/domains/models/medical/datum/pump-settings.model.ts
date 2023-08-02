@@ -60,7 +60,9 @@ export interface PumpSettingsParameter {
   level: number
   name: string
   unit: Unit
+  previousUnit: Unit
   value: string
+  previousValue: string
 }
 
 interface ParametersChange {

@@ -28,6 +28,7 @@
 import { type DeviceConfig, type ParameterConfig, type ParametersChange, Unit } from 'medical-domain'
 import i18next from 'i18next'
 import textTable from 'text-table'
+import { sortByDate } from '../../patient-list/utils/sort-comparators.util'
 
 const t = i18next.t.bind(i18next)
 export const PARAMETER_STRING_MAX_WIDTH = 250
@@ -110,20 +111,27 @@ export const formatParameterValue = (value: string | number, units: string | Uni
   return value.toFixed(numberOfDecimals)
 }
 
-export const sortHistoryParametersByDate = (historyParameters: ParametersChange[]): ParametersChange[] => {
-  return historyParameters.sort((a, b) => {
-    return new Date(a.changeDate).valueOf() - new Date(b.changeDate).valueOf()
+export const sortHistoryParametersByDate = (historyParameters: ParametersChange[]): void => {
+  historyParameters.sort((a, b) => {
+    return new Date(b.changeDate).valueOf() - new Date(a.changeDate).valueOf()
   })
 }
 
-export const sortPumpSettingsParameterByLevel = (historyParameters: ParametersChange[]): ParametersChange[] => {
+export const sortPumpSettingsParametersByDate = (historyParameters: ParametersChange[]): void => {
+  historyParameters.forEach((parameterChange) => {
+    parameterChange.parameters.sort((paramA, paramB) => {
+      return sortByDate(paramB.effectiveDate, paramA.effectiveDate)
+    })
+  })
+}
+
+export const sortPumpSettingsParametersByLevel = (historyParameters: ParametersChange[]): void => {
   historyParameters.forEach(parametersChange => {
     parametersChange.parameters = parametersChange.parameters.sort((a, b) => a.level - b.level)
   })
-  return historyParameters
 }
 
-export const sortParameterList = (parameters: ParameterConfig[]): ParameterConfig[] => {
+export const sortParameterList = (parameters: ParameterConfig[]): void => {
   const settingsOrder = [
     'MEDIUM_MEAL_BREAKFAST',
     'MEDIUM_MEAL_LUNCH',
@@ -157,6 +165,10 @@ export const sortParameterList = (parameters: ParameterConfig[]): ParameterConfi
     }
     return aIndex - bIndex
   })
+}
 
-  return parameters
+export const formatParameters = (parameters: ParameterConfig[]): void => {
+  parameters.forEach(parameter => {
+    parameter.value = formatParameterValue(parameter.value, parameter.unit)
+  })
 }
