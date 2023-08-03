@@ -110,7 +110,6 @@ export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
   const { classes } = useStyles()
   const trackMetric = metrics.send
   const pumpSettings = [...medicalDataService.grouped.pumpSettings].pop() as PumpSettings
-  const { device, pump, cgm, history } = pumpSettings.payload
   const {
     total,
     sensorUsage
@@ -119,20 +118,21 @@ export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
   const deviceData = {
     cgm: {
       label: `${t('CGM')}:`,
-      value: cgm.manufacturer && cgm.name ? `${cgm.manufacturer} ${cgm.name}` : ''
+      value: pumpSettings?.payload.cgm ? `${pumpSettings.payload.cgm.manufacturer} ${pumpSettings.payload.cgm.name}` : ''
     },
     device: {
       label: `${t('dbl')}:`,
-      value: device.manufacturer ?? ''
+      value: pumpSettings?.payload.device.manufacturer ?? ''
     },
     pump: {
       label: `${t('Pump')}:`,
-      value: pump.manufacturer ?? ''
+      value: pumpSettings?.payload.pump.manufacturer ?? ''
     }
   }
 
-  sortHistory(history)
-  const pumpSettingsParameters = getPumpSettingsParameterList(history)
+  if (pumpSettings) {
+    sortHistory(pumpSettings.payload.history)
+  }
 
   return (
     <GenericDashboardCard
@@ -172,7 +172,7 @@ export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
           >
             <Table>
               <TableBody className={classes.sectionContent}>
-                {pumpSettingsParameters.map((parameter) => (
+                {pumpSettings && getPumpSettingsParameterList(pumpSettings.payload.history).map((parameter) => (
                   <TableRow
                     key={`${parameter.name}-${parameter.effectiveDate}-${parameter.previousValue}`}
                     data-param={parameter.name}
