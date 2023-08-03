@@ -182,7 +182,7 @@ export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
                     className={`${classes.tableRows} parameter-update`}
                   >
                     <TableCell className={`${classes.sectionContent} ${classes.tableCell}`}>
-                      {formatDateWithMomentLongFormat(new Date(parameter.effectiveDate), 'llll', pumpSettings.timezone)}
+                      {formatDateWithMomentLongFormat(new Date(parameter.effectiveDate), 'lll', pumpSettings.timezone)}
                     </TableCell>
                     <TableCell className={`${classes.sectionContent} ${classes.tableCell}`}>
                       {t(`params|${parameter.name}`)} (
