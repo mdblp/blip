@@ -58,7 +58,6 @@ import {
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { type BgPrefs } from 'dumb'
 import { formatDateWithMomentLongFormat } from '../../lib/utils'
-import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
 
 interface DeviceUsageWidgetProps {
   bgPrefs: BgPrefs
@@ -69,11 +68,6 @@ interface DeviceUsageWidgetProps {
 }
 
 const useStyles = makeStyles()((theme) => ({
-  arrowIcon: {
-    position: 'relative',
-    top: '6px',
-    marginInline: '2px'
-  },
   sectionTitles: {
     fontSize: 'var(--section-title-font-size)',
     fontWeight: 'var(--section-title-font-weight)',
@@ -189,7 +183,7 @@ export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
                       {parameter.previousValue &&
                         <>
                           {formatParameterValue(parameter.previousValue, parameter.previousUnit)}{parameter.previousUnit}
-                          <TrendingFlatIcon fontSize="small" className={classes.arrowIcon} />
+                          <Box component="span" sx={{ marginInline: '4px' }}>&#10142;</Box>
                         </>
                       }
                       {formatParameterValue(parameter.value, parameter.unit)}{parameter.unit})
