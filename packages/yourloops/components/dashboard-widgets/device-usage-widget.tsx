@@ -40,16 +40,20 @@ import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import PhonelinkSetupOutlinedIcon from '@mui/icons-material/PhonelinkSetupOutlined'
 import { BasicsChart } from 'tideline'
-import MedicalDataService, { GlycemiaStatisticsService, type DateFilter, type PumpSettings, type TimePrefs } from 'medical-domain'
+import type MedicalDataService from 'medical-domain'
+import {
+  GlycemiaStatisticsService,
+  type DateFilter,
+  type PumpSettings,
+  type TimePrefs
+} from 'medical-domain'
 import metrics from '../../lib/metrics'
 import GenericDashboardCard from './generic-dashboard-card'
 import { SensorUsageStat } from '../statistics/sensor-usage-stat'
 import {
-  flattenParametersChange,
+  getPumpSettingsParameterList,
   formatParameterValue,
-  sortHistoryParametersByDate,
-  sortPumpSettingsParametersByDate,
-  sortPumpSettingsParametersByLevel
+  sortHistory
 } from '../device/utils/device.utils'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { type BgPrefs } from 'dumb'
@@ -127,10 +131,8 @@ export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
     }
   }
 
-  sortHistoryParametersByDate(history)
-  sortPumpSettingsParametersByDate(history)
-  sortPumpSettingsParametersByLevel(history)
-  const pumpSettingsParameters = flattenParametersChange(history)
+  sortHistory(history)
+  const pumpSettingsParameters = getPumpSettingsParameterList(history)
 
   return (
     <GenericDashboardCard
