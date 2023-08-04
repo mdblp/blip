@@ -58,13 +58,13 @@ export interface PatientStatisticsProps {
 const useStyles = makeStyles()((theme) => ({
   divider: {
     marginBlock: theme.spacing(1),
-    backgroundColor: theme.palette.grey[500]
+    backgroundColor: 'var(--light-grey-border-color)'
   },
   widgetGroup: {
-    border: `1px solid ${theme.palette.grey[500]}`,
-    borderRadius: theme.spacing(2),
-    marginBottom: theme.spacing(1),
-    padding: theme.spacing(1)
+    border: '1px solid var(--light-grey-border-color)',
+    borderRadius: theme.spacing(3),
+    marginBottom: '20px',
+    padding: '20px'
   }
 }))
 
@@ -127,7 +127,8 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
           bgPrefs={bgPrefs}
           days={numberOfDays}
         />
-        <Divider className={classes.divider} />
+      </Box>
+      <Box className={classes.widgetGroup}>
         <AverageGlucoseStat
           averageGlucose={averageGlucose}
           bgPrefs={bgPrefs}
