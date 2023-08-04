@@ -29,18 +29,15 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type CBGPercentageBarProps } from './cbg-percentage-bar'
 import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
-import { formatBgValue } from './cbg-percentage-bar.util'
 import { ensureNumeric } from '../stats.util'
 import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
-import { type BgBounds, type BgType, type BgUnit, DatumType } from 'medical-domain'
+import { type BgType, DatumType } from 'medical-domain'
 
 export interface CBGPercentageBarChartHookProps {
-  bgBounds: BgBounds
   bgType: BgType
   data: TimeInRangeData
   days: number
   type: CBGStatType
-  units: BgUnit
 }
 
 interface CBGPercentageBarChartHookReturn {
@@ -54,14 +51,14 @@ interface CBGPercentageBarChartHookReturn {
   }
   hoveredStatId: StatLevel | null
   onMouseLeave: () => void
-  titleProps: { legendTitle: string, title: string }
+  titleProps: string
 }
 
 const TITLE_TYPE_READINGS = 'Readings'
 const TITLE_TYPE_TIME = 'Time'
 
 export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookProps): CBGPercentageBarChartHookReturn => {
-  const { type, units, days, data, bgBounds, bgType } = props
+  const { type, days, data, bgType } = props
   const { t } = useTranslation('main')
   const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
 
@@ -75,7 +72,7 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
     }
   }, [days, t, type])
 
-  const [titleProps, setTitleProps] = useState({ legendTitle: '', title })
+  const [titleProps, setTitleProps] = useState(title)
 
   const annotations = useMemo<string[]>(() => {
     const annotations = []
@@ -109,60 +106,49 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
     return annotations
   }, [bgType, data.total, days, t, type])
 
-  const onStatMouseover = (id: StatLevel, title: string, legendTitle: string, hasValues: boolean): void => {
+  const onStatMouseover = (id: StatLevel, title: string, hasValues: boolean): void => {
     if (hasValues) {
-      setTitleProps({ legendTitle, title: `${title}` })
+      setTitleProps(title)
       setHoveredStatId(id)
     }
   }
 
   const onMouseLeave = (): void => {
-    setTitleProps({ legendTitle: '', title })
+    setTitleProps(title)
     setHoveredStatId(null)
   }
 
   const dataArray = useMemo<CBGPercentageData[]>(() => {
     const titleType = type === CBGStatType.ReadingsInRange ? TITLE_TYPE_READINGS : TITLE_TYPE_TIME
-    const bounds = {
-      targetLowerBound: formatBgValue(bgBounds.targetLowerBound, units),
-      targetUpperBound: formatBgValue(bgBounds.targetUpperBound, units),
-      veryHighThreshold: formatBgValue(bgBounds.veryHighThreshold, units),
-      veryLowThreshold: formatBgValue(bgBounds.veryLowThreshold, units)
-    }
 
     return [
       {
         id: StatLevel.VeryLow,
         value: ensureNumeric(data.veryLow),
-        title: t(`${titleType} Below Range`),
-        legendTitle: `<${bounds.veryLowThreshold}`
+        title: t(`${titleType} Below Range`)
       },
       {
         id: StatLevel.Low,
         value: ensureNumeric(data.low),
-        title: t(`${titleType} Below Range`),
-        legendTitle: `${bounds.veryLowThreshold}-${bounds.targetLowerBound}`
+        title: t(`${titleType} Below Range`)
       },
       {
         id: StatLevel.Target,
         value: ensureNumeric(data.target),
-        title: t(`${titleType} In Range`),
-        legendTitle: `${bounds.targetLowerBound}-${bounds.targetUpperBound}`
+        title: t(`${titleType} In Range`)
       },
       {
         id: StatLevel.High,
         value: ensureNumeric(data.high),
-        title: t(`${titleType} Above Range`),
-        legendTitle: `${bounds.targetUpperBound}-${bounds.veryHighThreshold}`
+        title: t(`${titleType} Above Range`)
       },
       {
         id: StatLevel.VeryHigh,
         value: ensureNumeric(data.veryHigh),
-        title: t(`${titleType} Above Range`),
-        legendTitle: `>${bounds.veryHighThreshold}`
+        title: t(`${titleType} Above Range`)
       }
     ]
-  }, [bgBounds.targetLowerBound, bgBounds.targetUpperBound, bgBounds.veryHighThreshold, bgBounds.veryLowThreshold, data.high, data.low, data.target, data.veryHigh, data.veryLow, t, type, units])
+  }, [data.high, data.low, data.target, data.veryHigh, data.veryLow, t, type])
 
   const total = dataArray.map(data => data.value).reduce((sum: number, value: number) => sum + value)
 
@@ -175,7 +161,6 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
       type,
       id: stat.id,
       isDisabled: (hoveredStatId && hoveredStatId !== stat.id) ?? total === 0,
-      legendTitle: stat.legendTitle,
       onMouseEnter: onStatMouseover,
       title: stat.title,
       total,

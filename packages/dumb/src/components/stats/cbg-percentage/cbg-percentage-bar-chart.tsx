@@ -34,11 +34,10 @@ import { StatLegendMemoized as StatLegend } from '../stat-legend/stat-legend'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { type BgPrefs } from '../../../models/blood-glucose.model'
-import { type CbgRangeStatistics, type BgBounds, type BgType } from 'medical-domain'
+import { type BgType, type CbgRangeStatistics } from 'medical-domain'
 import { useTheme } from '@mui/material/styles'
 
 interface CBGPercentageBarChartProps {
-  bgBounds: BgBounds
   bgType: BgType
   bgPrefs: BgPrefs
   cbgStatType: CBGStatType
@@ -47,7 +46,7 @@ interface CBGPercentageBarChartProps {
 }
 
 const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (props) => {
-  const { bgBounds, bgPrefs, bgType, cbgStatType, data, days } = props
+  const { bgPrefs, bgType, cbgStatType, data, days } = props
   const theme = useTheme()
   const {
     annotations,
@@ -56,20 +55,18 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
     onMouseLeave,
     titleProps
   } = useCBGPercentageBarChartHook({
-    bgBounds,
     bgType,
     data,
     days,
-    type: cbgStatType,
-    units: bgPrefs.bgUnits
+    type: cbgStatType
   })
 
   return (
     <Box data-testid="cbg-percentage-bar-chart">
       <CbgPercentageTitle
         annotations={annotations}
-        hoveredStatId={hoveredStatId}
-        {...titleProps}
+        title={titleProps}
+        shouldDisplayInfoTooltip={!hoveredStatId}
       />
       <Box onMouseLeave={() => {
         onMouseLeave()
