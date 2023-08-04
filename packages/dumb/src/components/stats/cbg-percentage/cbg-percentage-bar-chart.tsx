@@ -53,7 +53,7 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
     cbgStatsProps,
     hoveredStatId,
     onMouseLeave,
-    titleProps
+    title
   } = useCBGPercentageBarChartHook({
     bgType,
     data,
@@ -65,7 +65,7 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
     <Box data-testid="cbg-percentage-bar-chart">
       <CbgPercentageTitle
         annotations={annotations}
-        title={titleProps}
+        title={title}
         shouldDisplayInfoTooltip={!hoveredStatId}
       />
       <Box onMouseLeave={() => {

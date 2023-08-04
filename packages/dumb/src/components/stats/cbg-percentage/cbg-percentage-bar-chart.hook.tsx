@@ -51,7 +51,7 @@ interface CBGPercentageBarChartHookReturn {
   }
   hoveredStatId: StatLevel | null
   onMouseLeave: () => void
-  titleProps: string
+  title: string
 }
 
 const TITLE_TYPE_READINGS = 'Readings'
@@ -62,7 +62,7 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
   const { t } = useTranslation('main')
   const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
 
-  const title = useMemo<string>(() => {
+  const defaultTitle = useMemo<string>(() => {
     switch (type) {
       case CBGStatType.TimeInRange:
         return days > 1 ? t('Avg. Daily Time In Range') : t('Time In Range')
@@ -72,7 +72,7 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
     }
   }, [days, t, type])
 
-  const [titleProps, setTitleProps] = useState(title)
+  const [title, setTitle] = useState(defaultTitle)
 
   const annotations = useMemo<string[]>(() => {
     const annotations = []
@@ -106,15 +106,15 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
     return annotations
   }, [bgType, data.total, days, t, type])
 
-  const onStatMouseover = (id: StatLevel, title: string, hasValues: boolean): void => {
+  const onStatMouseover = (id: StatLevel, barTitle: string, hasValues: boolean): void => {
     if (hasValues) {
-      setTitleProps(title)
+      setTitle(barTitle)
       setHoveredStatId(id)
     }
   }
 
   const onMouseLeave = (): void => {
-    setTitleProps(title)
+    setTitle(defaultTitle)
     setHoveredStatId(null)
   }
 
@@ -181,6 +181,6 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
     cbgStatsProps,
     onMouseLeave,
     hoveredStatId,
-    titleProps
+    title
   })
 }
