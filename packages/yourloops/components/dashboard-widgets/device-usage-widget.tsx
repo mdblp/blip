@@ -183,7 +183,7 @@ export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
                       {parameter.previousValue &&
                         <>
                           {formatParameterValue(parameter.previousValue, parameter.previousUnit)}{parameter.previousUnit}
-                          <Box component="span" sx={{ marginInline: '4px' }}>&#10142;</Box>
+                          <span> ➞ </span>
                         </>
                       }
                       {formatParameterValue(parameter.value, parameter.unit)}{parameter.unit})
