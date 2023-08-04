@@ -27,9 +27,12 @@
 
 import {
   formatParameterValue,
+  getPumpSettingsParameterList,
+  sortHistory,
   sortParameterList
 } from '../../../../components/device/utils/device.utils'
 import { type ParameterConfig, Unit } from 'medical-domain'
+import { expectedPumpSettingsParameterList, expectedSortedHistory, history } from './device-settings.mock'
 
 describe('Device settings utils', () => {
   describe('formatParameterValue', () => {
@@ -93,6 +96,20 @@ describe('Device settings utils', () => {
 
       sortParameterList(parameterList as ParameterConfig[])
       expect(parameterList).toEqual(expectedResult)
+    })
+  })
+
+  describe('sortHistory', () => {
+    it('should sort the parameter history by date (desc) and pump settings parameter by date (desc) and level', () => {
+      sortHistory(history)
+      expect(history).toEqual(expectedSortedHistory)
+    })
+  })
+
+  describe('getPumpSettingsParameterList', () => {
+    it('should retrieve pump settings parameters only from parameter history', () => {
+      const pumpSettingsParameterList = getPumpSettingsParameterList(expectedSortedHistory)
+      expect(pumpSettingsParameterList).toEqual(expectedPumpSettingsParameterList)
     })
   })
 })
