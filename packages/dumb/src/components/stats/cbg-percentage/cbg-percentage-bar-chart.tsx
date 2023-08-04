@@ -32,10 +32,8 @@ import { useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
 import { type CBGStatType } from '../../../models/stats.model'
 import { StatLegendMemoized as StatLegend } from '../stat-legend/stat-legend'
 import Box from '@mui/material/Box'
-import Divider from '@mui/material/Divider'
 import { type BgPrefs } from '../../../models/blood-glucose.model'
 import { type CbgRangeStatistics, type BgBounds, type BgType } from 'medical-domain'
-import { useTheme } from '@mui/material/styles'
 
 interface CBGPercentageBarChartProps {
   bgBounds: BgBounds
@@ -48,7 +46,6 @@ interface CBGPercentageBarChartProps {
 
 const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (props) => {
   const { bgBounds, bgPrefs, bgType, cbgStatType, data, days } = props
-  const theme = useTheme()
   const {
     annotations,
     cbgStatsProps,
@@ -71,16 +68,18 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
         hoveredStatId={hoveredStatId}
         {...titleProps}
       />
-      <Box onMouseLeave={() => {
-        onMouseLeave()
-      }}>
+      <Box
+        onMouseLeave={() => {
+          onMouseLeave()
+        }}
+        marginBottom={1}
+      >
         <CBGPercentageBar {...cbgStatsProps.veryHighStat} />
         <CBGPercentageBar {...cbgStatsProps.highStat} />
         <CBGPercentageBar {...cbgStatsProps.targetStat} />
         <CBGPercentageBar {...cbgStatsProps.lowStat} />
         <CBGPercentageBar {...cbgStatsProps.veryLowStat} />
       </Box>
-      <Divider sx={{ marginBlock: theme.spacing(1) }} />
       <StatLegend bgClasses={bgPrefs.bgClasses} units={bgPrefs.bgUnits} />
     </Box>
   )

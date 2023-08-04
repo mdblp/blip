@@ -125,8 +125,8 @@ class Stats extends React.Component {
     return stats.map(stat => {
       return (
         <div key={stat.id} data-testid={`stat-${stat.id}`}>
+          <Divider sx={{ marginBlock: '8px', backgroundColor: '#9e9e9e' }} />
           {this.getStatElementById(stat, bgClasses)}
-          <Divider sx={{ marginBlock: '8px', backgroundColor: '#757575' }} />
         </div>
       )
     })
