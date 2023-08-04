@@ -61,9 +61,10 @@ const useStyles = makeStyles()((theme) => ({
     backgroundColor: 'var(--light-grey-border-color)'
   },
   widgetGroup: {
+    backgroundColor: theme.palette.background.paper,
     border: '1px solid var(--light-grey-border-color)',
     borderRadius: theme.spacing(3),
-    marginBottom: '20px',
+    marginBottom: '12px',
     padding: '20px'
   }
 }))
@@ -79,7 +80,8 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const numberOfDays = dateFilter.weekDays ? TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays) : (dateFilter.end - dateFilter.start) / MS_IN_DAY
   const bgUnits = bgPrefs.bgUnits
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
-  const isTrendsPage = location.pathname.includes('trends')
+  const isTrendsView = location.pathname.includes('trends')
+  const isDailyView = location.pathname.includes('daily')
 
   const {
     standardDeviation,
@@ -127,7 +129,34 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
           bgPrefs={bgPrefs}
           days={numberOfDays}
         />
+        {isTrendsView &&
+          <>
+            <Divider className={classes.divider} />
+            <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage} />
+          </>
+        }
       </Box>
+
+      <Box className={classes.widgetGroup}>
+        <TotalCarbsStat
+          totalEntriesCarbWithRescueCarbs={totalEntriesCarbWithRescueCarbs}
+          totalCarbsPerDay={Math.round(totalCarbsPerDay)}
+          foodCarbsPerDay={Math.round(foodCarbsPerDay)}
+        />
+        <Divider className={classes.divider} />
+        <TotalInsulinStat
+          basal={basal}
+          bolus={bolus}
+          totalInsulin={basalBolusTotal}
+          weight={weight}
+          dailyDose={dailyDose}
+        />
+      </Box>
+
+      <Box className={classes.widgetGroup}>
+        {children}
+      </Box>
+
       <Box className={classes.widgetGroup}>
         <AverageGlucoseStat
           averageGlucose={averageGlucose}
@@ -144,33 +173,12 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         />
         <Divider className={classes.divider} />
         <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
-        {isTrendsPage &&
+        {!isDailyView &&
           <>
             <Divider className={classes.divider} />
             <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
           </>
         }
-      </Box>
-
-      <Box className={classes.widgetGroup}>
-        <TotalInsulinStat
-          basal={basal}
-          bolus={bolus}
-          totalInsulin={basalBolusTotal}
-          weight={weight}
-          dailyDose={dailyDose}
-        />
-        <Divider className={classes.divider} />
-        <TotalCarbsStat
-          totalEntriesCarbWithRescueCarbs={totalEntriesCarbWithRescueCarbs}
-          totalCarbsPerDay={Math.round(totalCarbsPerDay)}
-          foodCarbsPerDay={Math.round(foodCarbsPerDay)}
-        />
-      </Box>
-
-      <Box className={classes.widgetGroup}>
-        <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage} />
-        {children}
       </Box>
     </Box>
   )

@@ -21,7 +21,7 @@ import i18next from 'i18next'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { utils as vizUtils } from 'tidepool-viz'
-import { TimeService } from 'medical-domain'
+import { DatumType, TimeService } from 'medical-domain'
 import SubNav, { weekDays } from './trendssubnav'
 import Footer from './footer'
 import Box from '@mui/material/Box'
@@ -30,6 +30,8 @@ import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsContainer, Tr
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import metrics from 'yourloops/lib/metrics'
+import { ChartTypes } from 'yourloops/enum/chart-type.enum'
+import Stats from './stats'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -93,6 +95,7 @@ class Trends extends React.Component {
     epochLocation: PropTypes.number.isRequired,
     msRange: PropTypes.number.isRequired,
     patient: PropTypes.object,
+    dataUtil: PropTypes.object,
     tidelineData: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
     onClickRefresh: PropTypes.func.isRequired,
@@ -543,7 +546,7 @@ class Trends extends React.Component {
               {this.getTitle()}
             </div>
             <Box className="chart-with-stats-wrapper">
-              <div className="container-box-inner patient-data-content-inner">
+              <div className="container-box-inner patient-data-content-inner light-rounded-border">
                 {this.renderSubNav()}
                 <div className="patient-data-content">
                   {loading && <SpinningLoader className="centered-spinning-loader" />}
@@ -553,22 +556,33 @@ class Trends extends React.Component {
                   <CbgDateTraceLabel />
                   <FocusedRangeLabels bgUnit={this.props.bgPrefs.bgUnits} />
                 </div>
+                <Box marginBottom={2}>
+                  <Footer onClickRefresh={this.props.onClickRefresh}>
+                    <RangeSelect />
+                  </Footer>
+                </Box>
               </div>
               <div className="container-box-inner patient-data-sidebar">
                 <div className="patient-data-sidebar-inner">
-                  <div id="toggle-bg-replacement" style={{ height: 36 }} />
                   <PatientStatistics
                     medicalData={this.props.tidelineData.medicalData}
                     bgPrefs={this.props.bgPrefs}
                     dateFilter={dateFilter}
-                  />
+                  >
+                    <Stats
+                      bgPrefs={this.props.bgPrefs}
+                      bgSource={DatumType.Cbg}
+                      chartPrefs={null}
+                      chartType={ChartTypes.Daily}
+                      dataUtil={this.props.dataUtil}
+                      endpoints={endpoints}
+                      loading={loading}
+                    />
+                  </PatientStatistics>
                 </div>
               </div>
             </Box>
           </Box>
-          <Footer onClickRefresh={this.props.onClickRefresh}>
-            <RangeSelect />
-          </Footer>
         </div>
       </TrendsProvider>
     )
@@ -589,7 +603,8 @@ class Trends extends React.Component {
         }}
         onClickDay={this.toggleDay}
         toggleWeekdays={this.toggleWeekdays}
-        toggleWeekends={this.toggleWeekends} />
+        toggleWeekends={this.toggleWeekends}
+      />
     )
   }
 
