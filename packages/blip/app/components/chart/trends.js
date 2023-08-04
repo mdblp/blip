@@ -542,7 +542,7 @@ class Trends extends React.Component {
             <div>
               {this.getTitle()}
             </div>
-            <Box display="flex">
+            <Box className="chart-with-stats-wrapper">
               <div className="container-box-inner patient-data-content-inner">
                 {this.renderSubNav()}
                 <div className="patient-data-content">
