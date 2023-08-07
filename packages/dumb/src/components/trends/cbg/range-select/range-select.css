@@ -29,5 +29,4 @@
   display: flex;
   flex-direction: row;
   composes: mediumContrastText defaultSize from '../../../../styles/typography.css';
-  padding-top: 15px;
 }

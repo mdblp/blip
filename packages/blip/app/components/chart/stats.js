@@ -9,7 +9,6 @@ import {
   SimpleStat
 } from 'dumb'
 import { BG_DATA_TYPES } from '../../core/constants'
-import Divider from '@mui/material/Divider'
 
 class Stats extends React.Component {
   static propTypes = {
@@ -126,7 +125,6 @@ class Stats extends React.Component {
       return (
         <div key={stat.id} data-testid={`stat-${stat.id}`}>
           {this.getStatElementById(stat, bgClasses)}
-          <Divider sx={{ marginBlock: '8px', backgroundColor: '#757575' }} />
         </div>
       )
     })

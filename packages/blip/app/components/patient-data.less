@@ -32,6 +32,7 @@
 .chart-with-stats-wrapper {
   @media (min-width: @patient-data-sidebar-bp) {
     display: flex;
+    align-items: flex-start;
   }
 }
 
@@ -225,8 +226,6 @@ a.js-home {
 
 .patient-data-sidebar {
   width: 100%;
-  background-color: #fff;
-  padding: @spacing-small;
 
   @media (min-width: @patient-data-sidebar-bp) {
     flex-shrink: 0;
@@ -236,7 +235,6 @@ a.js-home {
 
 .patient-data-sidebar-inner {
   position: relative;
-  margin-top: 8px;
 }
 
 // Loader

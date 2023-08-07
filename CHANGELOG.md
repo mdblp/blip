@@ -143,6 +143,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2539 Update arrow icon in Device parameters change history
 - YLP-2551 Sort device usage last settings by anti-chronological order
 - YLP-2557 Responsive for daily and trends views
+- YLP-2558 Statistics panel design improvements
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team

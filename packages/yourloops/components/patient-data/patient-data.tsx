@@ -202,6 +202,7 @@ export const PatientData: FunctionComponent = () => {
                     element={
                       <Trends
                         bgPrefs={bgPrefs}
+                        dataUtil={dataUtil}
                         chartPrefs={chartPrefs}
                         timePrefs={timePrefs}
                         epochLocation={trendsDate}
