@@ -40,7 +40,6 @@ export enum CBGStatType {
 
 export interface CBGPercentageData {
   id: StatLevel
-  legendTitle: string
   title: string
   value: number
 }

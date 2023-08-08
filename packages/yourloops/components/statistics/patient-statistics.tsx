@@ -122,7 +122,6 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     <Box data-testid="patient-statistics">
       <Box className={classes.widgetGroup}>
         <CBGPercentageBarChart
-          bgBounds={bgPrefs.bgBounds}
           bgType={bgType}
           cbgStatType={cbgStatType}
           data={cbgPercentageBarChartData}
