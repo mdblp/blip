@@ -25,30 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { SimpleStat, StatFormats } from 'dumb'
-import { t } from 'i18next'
-import Box from '@mui/material/Box'
-import { type BgType, DatumType } from 'medical-domain'
+import React, { type FC } from 'react'
+import Tooltip from '@mui/material/Tooltip'
+import { usePatientListStyles } from './patient-list.styles'
 
-export interface CoefficientOfVariationProps {
-  coefficientOfVariation: number
-  bgType: BgType
+interface CustomHeaderWithTooltipProps {
+  tooltipText: string
+  headerTitle: string
 }
 
-export const CoefficientOfVariation: FunctionComponent<CoefficientOfVariationProps> = (props) => {
-  const { coefficientOfVariation, bgType } = props
-  const annotation = coefficientOfVariation ? [t('coefficient-of-variation-tooltip')] : [t('coefficient-of-variation-tooltip'), t('tooltip-empty-stat')]
-  const selectedLabel = bgType === DatumType.Cbg ? t('CGM') : t('BGM')
+export const CustomHeaderWithTooltip: FC<CustomHeaderWithTooltipProps> = (props) => {
+  const { tooltipText, headerTitle } = props
+  const { classes } = usePatientListStyles()
+
   return (
-    <Box data-testid="coefficient-of-variation-stat">
-      <SimpleStat
-        annotations={annotation}
-        title={t('coefficient-of-variation-with-value', { cbgLabel: selectedLabel })}
-        value={coefficientOfVariation}
-        summaryFormat={StatFormats.Cv}
-        total={0}
-      />
-    </Box>
+    <Tooltip title={tooltipText}>
+      <span className={classes.customColumnHeader}>{headerTitle}</span>
+    </Tooltip>
   )
 }
