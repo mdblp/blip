@@ -44,7 +44,7 @@ export const CoefficientOfVariation: FunctionComponent<CoefficientOfVariationPro
     <Box data-testid="coefficient-of-variation-stat">
       <SimpleStat
         annotations={annotation}
-        title={t('coefficient-of-variation', { cbgLabel: selectedLabel })}
+        title={t('coefficient-of-variation-with-value', { cbgLabel: selectedLabel })}
         value={coefficientOfVariation}
         summaryFormat={StatFormats.Cv}
         total={0}

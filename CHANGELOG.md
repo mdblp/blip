@@ -52,6 +52,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2430 Add checkbox to confirm that user is a hcp
 - YLP-2435 Remove "Telemonitored" filter on patient list
 - YLP-2447 Device page new design
+- YLP-2563 Add tooltips for column headers in patient list
 
 ### Engineering use
 - YLP-2044 Remove redux settings store

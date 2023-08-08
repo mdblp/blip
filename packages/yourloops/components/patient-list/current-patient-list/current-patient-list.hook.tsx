@@ -59,6 +59,7 @@ import { AppUserRoute } from '../../../models/enums/routes.enum'
 import { useNavigate } from 'react-router-dom'
 import { Skeleton } from '@mui/material'
 import { useAuth } from '../../../lib/auth'
+import Tooltip from '@mui/material/Tooltip'
 
 interface CurrentPatientListProps {
   patients: Patient[]
@@ -192,6 +193,13 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         type: 'number',
         field: PatientListColumns.TimeInRange,
         headerName: t('time-in-range'),
+        renderHeader: () => {
+          return (
+            <Tooltip title={t('Time In Range')}>
+              <span className={classes.customColumnHeader}>{t('time-in-range')}</span>
+            </Tooltip>
+          )
+        },
         headerAlign: 'left',
         align: 'left',
         valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value),
@@ -245,6 +253,13 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         type: 'number',
         field: PatientListColumns.Variance,
         headerName: t('variance'),
+        renderHeader: () => {
+          return (
+            <Tooltip title={t('coefficient-of-variation')}>
+              <span className={classes.customColumnHeader}>{t('variance')}</span>
+            </Tooltip>
+          )
+        },
         headerAlign: 'left',
         align: 'left',
         valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value),
