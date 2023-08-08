@@ -152,7 +152,6 @@ export const PatientData: FunctionComponent = () => {
                     element={
                       <PatientDashboard
                         bgPrefs={bgPrefs}
-                        goToDailySpecificDate={goToDailySpecificDate}
                         medicalDataService={medicalData}
                         patient={patient}
                         timePrefs={timePrefs}
@@ -203,6 +202,7 @@ export const PatientData: FunctionComponent = () => {
                     element={
                       <Trends
                         bgPrefs={bgPrefs}
+                        dataUtil={dataUtil}
                         chartPrefs={chartPrefs}
                         timePrefs={timePrefs}
                         epochLocation={trendsDate}

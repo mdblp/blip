@@ -30,7 +30,7 @@ import { type PumpSettingsParameter } from 'medical-domain'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material/styles'
 import { formatParameterValue } from './utils/device.utils'
-import { East } from '@mui/icons-material'
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
 
 interface ParameterChangeValueProps {
   parameter: PumpSettingsParameter
@@ -48,7 +48,7 @@ export const ParameterChangeValue: FC<ParameterChangeValueProps> = ({ parameter 
       {parameter.previousValue &&
         <>
           <span>{`${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}`}</span>
-          <East sx={{ marginInline: theme.spacing(1) }} />
+          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
         </>
       }
       <span>{`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}</span>
