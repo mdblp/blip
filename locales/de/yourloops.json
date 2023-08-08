@@ -120,6 +120,7 @@
   "chat-footer-start-writing": "Mit dem Schreiben beginnen",
   "coefficient-of-variation": "Variationskoeffizient ({{cbgLabel}})",
   "coefficient-of-variation-tooltip": "**CV (Variationskoeffizient):** Das Verhältnis zwischen der Standardabweichung und dem mittleren Glukosewert. Für jeden Zeitraum, der länger als 1 Tag dauert, berechnen wir den Mittelwert des täglichen CV.",
+  "coefficient-of-variation-with-value": "Variationskoeffizient ({{cbgLabel}})",
   "colon": "{{label}}:",
   "columns-settings-cannot-changed-pending-tab": "Spalteneinstellungen können in der ausstehenden Registerkarte nicht geändert werden",
   "compute-ndays-time-in-range": "**Wie wir das berechnen:**\n\n**(%)** ist die Anzahl der Messwerte in diesem Bereich, dividiert durch alle Messwerte für diesen Zeitraum.\n\n**(Zeitraum)** ist die Anzahl der Messwerte in diesem Bereich multipliziert mit der {{cbgLabel}} Messfrequenz.",
