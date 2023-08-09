@@ -147,8 +147,7 @@ class Stats extends React.Component {
 
     const { commonStats } = vizUtils.stat
     const { bgBounds, bgUnits, days, latestPump } = dataUtil
-    const { manufacturer, deviceModel } = latestPump
-    const isAutomatedBasalDevice = vizUtils.device.isAutomatedBasalDevice(manufacturer, deviceModel)
+    const { manufacturer } = latestPump
 
     const stats = []
 
