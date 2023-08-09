@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {screen, waitFor, within} from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import {loggedInUserId} from '../mock/auth0.hook.mock'
-import {filtersTeamName, myThirdTeamId, myThirdTeamName} from '../mock/team.api.mock'
+import { loggedInUserId } from '../mock/auth0.hook.mock'
+import { filtersTeamName, myThirdTeamId, myThirdTeamName } from '../mock/team.api.mock'
 import PatientApi from '../../../lib/patient/patient.api'
 import {
   checkPatientsFilters,
@@ -36,7 +36,7 @@ import {
   defaultToggles,
   updatePatientsFilters
 } from './patient-filters.assert'
-import {changeTeamScope} from './header.assert'
+import { changeTeamScope } from './header.assert'
 import {
   hypoglycemiaPatientMetrics,
   noDataTransferredPatientInfo,
@@ -47,7 +47,7 @@ import {
   pendingPatient
 } from '../data/patient.api.data'
 import NotificationApi from '../../../lib/notifications/notification.api'
-import {type Router} from '../models/router.model'
+import { type Router } from '../models/router.model'
 import moment from 'moment-timezone'
 
 export const checkDataGridAfterSinglePatientFilter = (dataGridRow: HTMLElement, rowContent: string): void => {

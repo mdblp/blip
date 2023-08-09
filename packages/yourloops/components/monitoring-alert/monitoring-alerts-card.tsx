@@ -25,22 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, {useState} from 'react'
-import {useTranslation} from 'react-i18next'
+import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import {makeStyles} from 'tss-react/mui'
-import {Box, IconButton, Skeleton} from '@mui/material'
+import { makeStyles } from 'tss-react/mui'
+import { Box, IconButton, Skeleton } from '@mui/material'
 import TuneIcon from '@mui/icons-material/Tune'
 import AnnouncementIcon from '@mui/icons-material/Announcement'
 
 import PatientMonitoringAlertDialog from './patient-monitoring-alert-dialog'
-import {type Patient} from '../../lib/patient/models/patient.model'
+import { type Patient } from '../../lib/patient/models/patient.model'
 import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
-import {useAuth} from '../../lib/auth'
-import {useTheme} from '@mui/material/styles'
-import {MonitoringAlertsCardSkeletonValue} from './monitoring-alerts-card-skeleton-value'
+import { useAuth } from '../../lib/auth'
+import { useTheme } from '@mui/material/styles'
+import { MonitoringAlertsCardSkeletonValue } from './monitoring-alerts-card-skeleton-value'
 import PatientUtils from '../../lib/patient/patient.util'
 
 const monitoringAlertsCardStyles = makeStyles()((theme) => {

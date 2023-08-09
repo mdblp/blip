@@ -2,9 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import _ from 'lodash'
 import bows from 'bows'
-import {utils as vizUtils} from 'tidepool-viz'
-import {CBGStatType, LoopModeStat, SimpleStat} from 'dumb'
-import {BG_DATA_TYPES} from '../../core/constants'
+import { utils as vizUtils } from 'tidepool-viz'
+import {
+  CBGStatType,
+  LoopModeStat,
+  SimpleStat
+} from 'dumb'
+import { BG_DATA_TYPES } from '../../core/constants'
 
 class Stats extends React.Component {
   static propTypes = {

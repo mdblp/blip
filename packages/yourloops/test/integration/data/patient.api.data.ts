@@ -25,11 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {type MonitoringAlerts} from '../../../lib/patient/models/monitoring-alerts.model'
-import {type PatientSettings} from '../../../lib/patient/models/patient-settings.model'
-import {type Patient, type PatientMetrics} from '../../../lib/patient/models/patient.model'
-import {UserInviteStatus} from '../../../lib/team/models/enums/user-invite-status.enum'
-import {type ITeamMember} from '../../../lib/team/models/i-team-member.model'
+import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-alerts.model'
+import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
+import { type Patient, type PatientMetrics } from '../../../lib/patient/models/patient.model'
+import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
+import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import {
   filtersTeamId,
   monitoringAlertsParameters,
@@ -39,9 +39,9 @@ import {
   myThirdTeamId,
   NEW_TEAM_ID
 } from '../mock/team.api.mock'
-import {Gender} from '../../../lib/auth/models/enums/gender.enum'
-import {loggedInUserId} from '../mock/auth0.hook.mock'
-import {buildPatient, buildPatientMetrics, buildTeamMemberFromPatient} from './patient-builder.data'
+import { Gender } from '../../../lib/auth/models/enums/gender.enum'
+import { loggedInUserId } from '../mock/auth0.hook.mock'
+import { buildPatient, buildPatientMetrics, buildTeamMemberFromPatient } from './patient-builder.data'
 
 export const patient1Id = 'patient1Id'
 export const patient2Id = 'patient2Id'

@@ -26,23 +26,27 @@
  */
 
 import {
-    checkPatientStatistics,
-    checkPatientStatisticsNoData,
-    checkPatientStatisticsWithTwoWeeksOldData
+  checkPatientStatistics,
+  checkPatientStatisticsNoData,
+  checkPatientStatisticsWithTwoWeeksOldData
 } from '../assert/patient-statistics.assert'
-import {checkPatientDashboardLayout, type PatientDashboardLayoutParams} from '../assert/layout.assert'
+import { checkPatientDashboardLayout, type PatientDashboardLayoutParams } from '../assert/layout.assert'
 import {
-    checkDeviceUsageWidget,
-    checkDeviceUsageWidgetNoData,
-    checkDeviceUsageWidgetWithTwoWeeksOldData
+  checkDeviceUsageWidget,
+  checkDeviceUsageWidgetNoData,
+  checkDeviceUsageWidgetWithTwoWeeksOldData
 } from '../assert/device-usage.assert'
-import {patient1Info, patient2Info} from '../data/patient.api.data'
-import {checkPatientDropdown, checkPatientNavBarForPatient, checkPatientSwitch} from '../assert/patient-nav-bar.assert'
+import { patient1Info, patient2Info } from '../data/patient.api.data'
 import {
-    checkEmptyMedicalFilesWidgetForHcp,
-    checkEmptyMedicalFilesWidgetForPatient
+  checkPatientDropdown,
+  checkPatientNavBarForPatient,
+  checkPatientSwitch
+} from '../assert/patient-nav-bar.assert'
+import {
+  checkEmptyMedicalFilesWidgetForHcp,
+  checkEmptyMedicalFilesWidgetForPatient
 } from '../assert/medical-widget.assert'
-import {checkMonitoringAlertsCard, checkMonitoringAlertsCardNoData} from '../assert/monitoring-alerts.assert'
+import { checkMonitoringAlertsCard, checkMonitoringAlertsCardNoData } from '../assert/monitoring-alerts.assert'
 
 export const testDashboardDataVisualisationForHcp = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)

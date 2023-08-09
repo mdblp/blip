@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {screen} from '@testing-library/react'
+import { screen } from '@testing-library/react'
 
 export const checkMonitoringAlertsCard = async () => {
   const monitoringAlertsCard = screen.getByTestId('monitoring-alerts-card')
