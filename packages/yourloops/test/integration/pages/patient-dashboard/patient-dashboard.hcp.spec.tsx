@@ -25,14 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, waitFor } from '@testing-library/react'
-import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import {
-  buildAvailableTeams,
-  mockTeamAPI,
-  myThirdTeamId,
-  myThirdTeamName
-} from '../../mock/team.api.mock'
+import {act, waitFor} from '@testing-library/react'
+import {logoutMock, mockAuth0Hook} from '../../mock/auth0.hook.mock'
+import {buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName} from '../../mock/team.api.mock'
 import {
   completeDashboardData,
   dataSetsWithZeroValues,
@@ -40,37 +35,45 @@ import {
   sixteenDaysOldDashboardData,
   twoWeeksOldDashboardData
 } from '../../mock/data.api.mock'
-import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { patient1Id, patient1Info, patient1Metrics, patientWithMmolId } from '../../data/patient.api.data'
-import { mockChatAPI } from '../../mock/chat.api.mock'
-import { mockMedicalFilesAPI, mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
-import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
-import { renderPage } from '../../utils/render'
-import { mockUserApi } from '../../mock/user.api.mock'
+import {mockNotificationAPI} from '../../mock/notification.api.mock'
+import {
+  noDataTransferredPatientId,
+  patient1Id,
+  patient1Info,
+  patient1Metrics,
+  patientWithMmolId
+} from '../../data/patient.api.data'
+import {mockChatAPI} from '../../mock/chat.api.mock'
+import {mockMedicalFilesAPI, mockMedicalFilesApiEmptyResult} from '../../mock/medical-files.api.mock'
+import {mockDirectShareApi} from '../../mock/direct-share.api.mock'
+import {type PatientDashboardLayoutParams} from '../../assert/layout.assert'
+import {renderPage} from '../../utils/render'
+import {mockUserApi} from '../../mock/user.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
-import { Unit } from 'medical-domain'
-import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
-import { type Settings } from '../../../../lib/auth/models/settings.model'
-import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
-import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
-import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
+import {Unit} from 'medical-domain'
+import {mockPatientApiForHcp} from '../../mock/patient.api.mock'
+import {type Settings} from '../../../../lib/auth/models/settings.model'
+import {PRIVATE_TEAM_ID} from '../../../../lib/team/team.hook'
+import {UserInviteStatus} from '../../../../lib/team/models/enums/user-invite-status.enum'
+import {type AppMainLayoutHcpParams, testAppMainLayoutForHcp} from '../../use-cases/app-main-layout-visualisation'
 import {
   testDashboardDataVisualisationForHcp,
+  testDashboardDataVisualisationNoDataForHcp,
   testDashboardDataVisualisationPrivateTeamNoData,
-  testDashboardDataVisualisationTwoWeeksOldData,
   testDashboardDataVisualisationSixteenDaysOldData,
-  testEmptyMedicalFilesWidgetForHcp, testPatientNavBarForHcp,
+  testDashboardDataVisualisationTwoWeeksOldData,
+  testEmptyMedicalFilesWidgetForHcp,
+  testPatientNavBarForHcp,
   testSwitchPatientCorrectDataDisplay
 } from '../../use-cases/patient-data-visualisation'
-import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
-import { type MedicalFilesWidgetParams } from '../../assert/medical-widget.assert'
+import {testMedicalWidgetForHcp} from '../../use-cases/medical-reports-management'
+import {type MedicalFilesWidgetParams} from '../../assert/medical-widget.assert'
 import {
   testMonitoringAlertsParametersConfigurationDialogMgdl,
   testMonitoringAlertsParametersConfigurationDialogMmol
 } from '../../use-cases/monitoring-alerts-parameters-management'
-import { testChatWidgetForHcp } from '../../use-cases/communication-system'
-import { ConfigService } from '../../../../lib/config/config.service'
+import {testChatWidgetForHcp} from '../../use-cases/communication-system'
+import {ConfigService} from '../../../../lib/config/config.service'
 
 describe('Patient dashboard for HCP', () => {
   const patientDashboardRoute = `/patient/${patient1Id}/dashboard`
@@ -120,6 +123,17 @@ describe('Patient dashboard for HCP', () => {
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
     await testDashboardDataVisualisationForHcp(patientDashboardLayoutParams)
+  })
+
+  it('should render components with correct display when the patient has no data', async () => {
+    const patientWithNoDataDashboardRoute = `/patient/${noDataTransferredPatientId}/dashboard`
+    mockDataAPI(completeDashboardData)
+
+    await act(async () => {
+      renderPage(patientWithNoDataDashboardRoute)
+    })
+
+    await testDashboardDataVisualisationNoDataForHcp()
   })
 
   it('should be able to switch from patient to patient', async () => {

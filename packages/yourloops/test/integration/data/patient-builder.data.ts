@@ -25,19 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-alerts.model'
-import { type MedicalData } from '../../../lib/data/models/medical-data.model'
-import { type Patient, type PatientMetrics } from '../../../lib/patient/models/patient.model'
-import { type GlycemiaIndicators } from '../../../lib/patient/models/glycemia-indicators.model'
-import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
-import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'
-import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
-import { Gender } from '../../../lib/auth/models/enums/gender.enum'
-import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
-import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
-import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
-import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
-import { type Profile } from '../../../lib/auth/models/profile.model'
+import {type MonitoringAlerts} from '../../../lib/patient/models/monitoring-alerts.model'
+import {type MedicalData} from '../../../lib/data/models/medical-data.model'
+import {type Patient, type PatientMetrics} from '../../../lib/patient/models/patient.model'
+import {type GlycemiaIndicators} from '../../../lib/patient/models/glycemia-indicators.model'
+import {type MonitoringAlertsParameters} from '../../../lib/team/models/monitoring-alerts-parameters.model'
+import {type PatientProfile} from '../../../lib/patient/models/patient-profile.model'
+import {type PatientSettings} from '../../../lib/patient/models/patient-settings.model'
+import {Gender} from '../../../lib/auth/models/enums/gender.enum'
+import {UserInviteStatus} from '../../../lib/team/models/enums/user-invite-status.enum'
+import {type ITeamMember} from '../../../lib/team/models/i-team-member.model'
+import {TeamMemberRole} from '../../../lib/team/models/enums/team-member-role.enum'
+import {LanguageCodes} from '../../../lib/auth/models/enums/language-codes.enum'
+import {type Profile} from '../../../lib/auth/models/profile.model'
 
 const defaultGlycemiaIndicators: GlycemiaIndicators = {
   timeInRange: 0,
@@ -82,14 +82,18 @@ export const buildPatientMetrics = (params: {
   monitoringAlerts?: Partial<MonitoringAlerts>
   medicalData?: Partial<MedicalData>
 }): PatientMetrics => {
+  const timeSpentAwayFromTargetRate = params.monitoringAlerts?.timeSpentAwayFromTargetRate
+  const frequencyOfSevereHypoglycemiaRate = params.monitoringAlerts?.frequencyOfSevereHypoglycemiaRate
+  const nonDataTransmissionRate = params.monitoringAlerts?.nonDataTransmissionRate
+
   return {
     userid: params.userId,
     monitoringAlerts: {
-      timeSpentAwayFromTargetRate: params.monitoringAlerts?.timeSpentAwayFromTargetRate || 10,
+      timeSpentAwayFromTargetRate: timeSpentAwayFromTargetRate !== undefined ? timeSpentAwayFromTargetRate : 10,
       timeSpentAwayFromTargetActive: params.monitoringAlerts?.timeSpentAwayFromTargetActive || false,
-      frequencyOfSevereHypoglycemiaRate: params.monitoringAlerts?.frequencyOfSevereHypoglycemiaRate || 20,
+      frequencyOfSevereHypoglycemiaRate: frequencyOfSevereHypoglycemiaRate !== undefined ? frequencyOfSevereHypoglycemiaRate : 20,
       frequencyOfSevereHypoglycemiaActive: params.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive || false,
-      nonDataTransmissionRate: params.monitoringAlerts?.nonDataTransmissionRate || 30,
+      nonDataTransmissionRate: nonDataTransmissionRate !== undefined ? nonDataTransmissionRate : 30,
       nonDataTransmissionActive: params.monitoringAlerts?.nonDataTransmissionActive || false
     },
     glycemiaIndicators: defaultGlycemiaIndicators,

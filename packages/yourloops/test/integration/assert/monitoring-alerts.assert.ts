@@ -25,10 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
+import {screen} from '@testing-library/react'
 
 export const checkMonitoringAlertsCard = async () => {
   const monitoringAlertsCard = screen.getByTestId('monitoring-alerts-card')
   expect(monitoringAlertsCard).toBeVisible()
   expect(monitoringAlertsCard).toHaveTextContent('Monitoring alertsCurrent monitoring alertsTime spent out of the target range10%Severe hypoglycemia20%Data not transmitted30%')
+}
+
+export const checkMonitoringAlertsCardNoData = async () => {
+  const monitoringAlertsCard = screen.getByTestId('monitoring-alerts-card')
+  expect(monitoringAlertsCard).toBeVisible()
+  expect(monitoringAlertsCard).toHaveTextContent('Monitoring alerts (+1)Current monitoring alertsTime spent out of the target rangeN/ASevere hypoglycemiaN/AData not transmitted100%')
 }
