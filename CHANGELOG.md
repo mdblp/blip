@@ -146,6 +146,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2554 Hide tooltip and values on TIR stat title when one bar is hovered
 - YLP-2557 Responsive for daily and trends views
 - YLP-2558 Statistics panel design improvements
+- YLP-2561 Manage monitoring alerts display when no data available
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team

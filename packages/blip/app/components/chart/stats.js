@@ -147,8 +147,7 @@ class Stats extends React.Component {
 
     const { commonStats } = vizUtils.stat
     const { bgBounds, bgUnits, days, latestPump } = dataUtil
-    const { manufacturer, deviceModel } = latestPump
-    const isAutomatedBasalDevice = vizUtils.device.isAutomatedBasalDevice(manufacturer, deviceModel)
+    const { manufacturer } = latestPump
 
     const stats = []
 
@@ -169,15 +168,8 @@ class Stats extends React.Component {
       stats.push(stat)
     }
 
-
-    switch (chartType) {
-      case 'daily':
-        isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
-        break
-
-      case 'patientStatistics':
-        isAutomatedBasalDevice && addStat(commonStats.timeInAuto)
-        break
+    if (chartType === 'daily' || chartType === 'patientStatistics') {
+      addStat(commonStats.timeInAuto)
     }
 
     return stats

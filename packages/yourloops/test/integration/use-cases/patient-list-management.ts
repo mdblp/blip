@@ -37,6 +37,7 @@ import {
   checkPatientListPendingTab,
   checkPatientListTooltipsMgDL,
   checkPatientListTooltipsMmolL,
+  checkPatientListTooltipsNoData,
   checkPendingPatientColumnsSettingsMedicalTeam
 } from '../assert/patient-list.assert'
 import { checkPatientFiltersForPrivateTeam } from '../assert/patient-filters.assert'
@@ -45,6 +46,7 @@ import { type Router } from '../models/router.model'
 export const testPatientListForHcp = async (router: Router) => {
   checkPatientListHeaderForHcp()
   await checkPatientListTooltipsMgDL()
+  await checkPatientListTooltipsNoData()
   await checkPatientListColumnSort()
   await checkMonitoringAlertsIconsInactiveForFirstPatient()
   await checkPatientListFilters()
