@@ -25,7 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type DeviceConfig, type ParameterConfig, type ParametersChange, Unit } from 'medical-domain'
+import {
+  type DeviceConfig,
+  type ParameterConfig,
+  type ParametersChange,
+  type PumpSettingsParameter,
+  Unit
+} from 'medical-domain'
 import i18next from 'i18next'
 import textTable from 'text-table'
 import { sortByDate } from '../../patient-list/utils/sort-comparators.util'
@@ -111,13 +117,13 @@ export const formatParameterValue = (value: string | number, units: string | Uni
   return value.toFixed(numberOfDecimals)
 }
 
-export const sortHistoryParametersByDate = (historyParameters: ParametersChange[]): void => {
-  historyParameters.sort((a, b) => {
+const sortHistoryParametersByDate = (historyParameters: ParametersChange[]): ParametersChange[] => {
+  return historyParameters.sort((a, b) => {
     return new Date(b.changeDate).valueOf() - new Date(a.changeDate).valueOf()
   })
 }
 
-export const sortPumpSettingsParametersByDate = (historyParameters: ParametersChange[]): void => {
+const sortPumpSettingsParametersByDate = (historyParameters: ParametersChange[]): void => {
   historyParameters.forEach((parameterChange) => {
     parameterChange.parameters.sort((paramA, paramB) => {
       return sortByDate(paramB.effectiveDate, paramA.effectiveDate)
@@ -125,10 +131,16 @@ export const sortPumpSettingsParametersByDate = (historyParameters: ParametersCh
   })
 }
 
-export const sortPumpSettingsParametersByLevel = (historyParameters: ParametersChange[]): void => {
+const sortPumpSettingsParametersByLevel = (historyParameters: ParametersChange[]): void => {
   historyParameters.forEach(parametersChange => {
     parametersChange.parameters = parametersChange.parameters.sort((a, b) => a.level - b.level)
   })
+}
+
+export const sortHistory = (history: ParametersChange[]): void => {
+  sortHistoryParametersByDate(history)
+  sortPumpSettingsParametersByDate(history)
+  sortPumpSettingsParametersByLevel(history)
 }
 
 export const sortParameterList = (parameters: ParameterConfig[]): void => {
@@ -171,4 +183,8 @@ export const formatParameters = (parameters: ParameterConfig[]): void => {
   parameters.forEach(parameter => {
     parameter.value = formatParameterValue(parameter.value, parameter.unit)
   })
+}
+
+export const getPumpSettingsParameterList = (historyParameters: ParametersChange[]): PumpSettingsParameter[] => {
+  return historyParameters.reduce<PumpSettingsParameter[]>((pumpSettingsParameters, parameterChange) => [...pumpSettingsParameters, ...parameterChange.parameters], [])
 }
