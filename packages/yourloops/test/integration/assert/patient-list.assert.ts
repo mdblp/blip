@@ -545,6 +545,50 @@ export const checkPatientListTooltipsMmolL = async (): Promise<void> => {
   await checkPatientListTooltips(outOfRangeTooltip, hypoglycemiaTooltip)
 }
 
+export const checkPatientListTooltipsNoData = async (): Promise<void> => {
+  const dataGridRows = screen.getByTestId('current-patient-list-grid')
+  const noDataPatientIndex = 4
+
+  const noDataPatientTimeSpentOutOfRangeIcon = within(dataGridRows).getAllByTestId('time-spent-out-of-range-icon')[noDataPatientIndex]
+  expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  await userEvent.hover(noDataPatientTimeSpentOutOfRangeIcon)
+  const timeSpentOutOfRangeTooltip = await screen.findByRole('tooltip')
+  expect(timeSpentOutOfRangeTooltip).toBeVisible()
+  expect(timeSpentOutOfRangeTooltip).toHaveTextContent('Out of the range: N/A')
+  expect(timeSpentOutOfRangeTooltip).toHaveTextContent('Alert triggered when more than 5% of time over the period considered are off target (50-140 mg/dL).')
+  expect(timeSpentOutOfRangeTooltip).toHaveTextContent('This value can be modified either in the care team settings or patient by patient.')
+  await userEvent.unhover(noDataPatientTimeSpentOutOfRangeIcon)
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+
+  const noDataPatientHypoglycemiaIcon = within(dataGridRows).getAllByTestId('hypoglycemia-icon')[noDataPatientIndex]
+  expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  await userEvent.hover(noDataPatientHypoglycemiaIcon)
+  const hypoglycemiaTooltip = await screen.findByRole('tooltip')
+  expect(hypoglycemiaTooltip).toBeVisible()
+  expect(hypoglycemiaTooltip).toHaveTextContent('Hypoglycemia: N/A')
+  expect(hypoglycemiaTooltip).toHaveTextContent('Alert triggered when 10% of time below 40 mg/dL threshold over the period considered.')
+  expect(hypoglycemiaTooltip).toHaveTextContent('This value can be modified either in the care team settings or patient by patient.')
+  await userEvent.unhover(noDataPatientHypoglycemiaIcon)
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+
+  const noDataPatientNoDataIcon = within(dataGridRows).getAllByTestId('no-data-icon')[noDataPatientIndex]
+  expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  await userEvent.hover(noDataPatientNoDataIcon)
+  const noDataTooltip = await screen.findByRole('tooltip')
+  expect(noDataTooltip).toBeVisible()
+  expect(noDataTooltip).toHaveTextContent('Data not transmitted: 100%')
+  expect(noDataTooltip).toHaveTextContent('Alert triggered when 15% of data are not transmitted over the period considered.')
+  expect(noDataTooltip).toHaveTextContent('This value can be modified either in the care team settings or patient by patient.')
+  await userEvent.unhover(noDataPatientNoDataIcon)
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+}
+
 export const checkPatientListColumnSort = async (): Promise<void> => {
   const dataGridRows = screen.getByTestId('current-patient-list-grid')
 
