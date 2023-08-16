@@ -150,7 +150,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-2561 Manage monitoring alerts display when no data available
 
 ### Fixed
-- YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
 - YLP-2189 Fix error when applying team monitoring alarm params in mg/dL to user with monitoring in mmol/L
 - YLP-2341 Pdf export in CSV is broken when a user has preferred units in its profile
 - YLP-2460 Caregiver users cannot see the "Last data update" date in the patients list
