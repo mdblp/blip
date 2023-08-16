@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.4-rc6 - 2023-08-16
+## 3.0.4-rc7 - 2023-08-16
 ### Added
 - YLP-1503 Logout idle user after 30 mn of inactivity
 - YLP-1932 Communication module available for all patients
@@ -150,12 +150,12 @@ It is based on Tidepool Blip 1.27.
 - YLP-2561 Manage monitoring alerts display when no data available
 
 ### Fixed
-- YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
 - YLP-2189 Fix error when applying team monitoring alarm params in mg/dL to user with monitoring in mmol/L
 - YLP-2341 Pdf export in CSV is broken when a user has preferred units in its profile
 - YLP-2460 Caregiver users cannot see the "Last data update" date in the patients list
 - YLP-2487 HCP non admin can see button to save new team monitoring alerts parameters
 - YLP-2496 Undelivered value is not rounded in micro-bolus tooltip
+- YLP-2504 PDF displays "NaN" instead of "0" for insulin value
 - YLP-2508 PDF report is missing information about rescue carbs
 - YLP-2509 "Sensor warmup" icon is not shown
 - YLP-2523 Fix insulin values not rounded in Bolus tooltip
