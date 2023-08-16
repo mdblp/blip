@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.4-rc4 - 2023-07-25
+## 3.0.4-rc6 - 2023-08-16
 ### Added
 - YLP-1503 Logout idle user after 30 mn of inactivity
 - YLP-1932 Communication module available for all patients
@@ -51,7 +51,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-2399 Cancel invite dialog new design
 - YLP-2430 Add checkbox to confirm that user is a hcp
 - YLP-2435 Remove "Telemonitored" filter on patient list
+- YLP-2538 Correct order for device settings
 - YLP-2447 Device page new design
+- YLP-2563 Add tooltips for column headers in patient list
 
 ### Engineering use
 - YLP-2044 Remove redux settings store
@@ -141,6 +143,11 @@ It is based on Tidepool Blip 1.27.
 - YLP-2535 Dashboard statistics should only be computed on days having data
 - YLP-2536 Gain some space in patient statistics widget
 - YLP-2539 Update arrow icon in Device parameters change history
+- YLP-2551 Sort device usage last settings by anti-chronological order
+- YLP-2554 Hide tooltip and values on TIR stat title when one bar is hovered
+- YLP-2557 Responsive for daily and trends views
+- YLP-2558 Statistics panel design improvements
+- YLP-2561 Manage monitoring alerts display when no data available
 
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
@@ -154,7 +161,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-2523 Fix insulin values not rounded in Bolus tooltip
 - YLP-2525 The carbs information is duplicated
 - YLP-2528 The "Cartridge changes" widget doesn't display the info on the 14 days period
-- YLP-2538 Correct order for device settings
 
 ## 3.0.3 - 2023-02-09
 ### Fixed

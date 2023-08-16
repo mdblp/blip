@@ -1,6 +1,5 @@
-/**
- * Copyright (c) 2022 - 2023, Diabeloop
- * Device Usage widget component
+/*
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,12 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* eslint-disable react/prop-types */
-
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import _ from 'lodash'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import CardContent from '@mui/material/CardContent'
@@ -45,11 +40,32 @@ import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import PhonelinkSetupOutlinedIcon from '@mui/icons-material/PhonelinkSetupOutlined'
 import { BasicsChart } from 'tideline'
-import { formatParameterValue, getLongDayHourFormat, getParametersChanges } from 'tidepool-viz'
-import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic-dashboard-card'
-import { SensorUsageStat } from 'yourloops/components/statistics/sensor-usage-stat'
-import { GlycemiaStatisticsService } from 'medical-domain'
-import metrics from 'yourloops/lib/metrics'
+import type MedicalDataService from 'medical-domain'
+import {
+  GlycemiaStatisticsService,
+  type DateFilter,
+  type PumpSettings,
+  type TimePrefs
+} from 'medical-domain'
+import metrics from '../../lib/metrics'
+import GenericDashboardCard from './generic-dashboard-card'
+import { SensorUsageStat } from '../statistics/sensor-usage-stat'
+import {
+  getPumpSettingsParameterList,
+  formatParameterValue,
+  sortHistory
+} from '../device/utils/device.utils'
+import { type Patient } from '../../lib/patient/models/patient.model'
+import { type BgPrefs } from 'dumb'
+import { formatDateWithMomentLongFormat } from '../../lib/utils'
+
+interface DeviceUsageWidgetProps {
+  bgPrefs: BgPrefs
+  dateFilter: DateFilter
+  medicalDataService: MedicalDataService
+  patient: Patient
+  timePrefs: TimePrefs
+}
 
 const useStyles = makeStyles()((theme) => ({
   sectionTitles: {
@@ -65,15 +81,13 @@ const useStyles = makeStyles()((theme) => ({
     lineHeight: '15px',
     color: '#444444'
   },
-  deviceLabels: {
-    paddingLeft: theme.spacing(2)
-  },
   tableRows: {
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.grey[100]
     }
   },
   tableCell: {
+    height: '30px',
     padding: theme.spacing(0.2, 0.5)
   },
   divider: {
@@ -84,54 +98,37 @@ const useStyles = makeStyles()((theme) => ({
   }
 }))
 
-const getLabel = (row, t) => {
-  const fCurrentValue = `${formatParameterValue(row.value, row.unit)} ${row.unit}`
-  const currentLabel = t(`params|${row.name}`)
-  switch (row.changeType) {
-    case 'added':
-      return `${currentLabel} (${fCurrentValue})`
-    case 'deleted':
-      return `${currentLabel} (${fCurrentValue} -> ${t('deleted')})`
-    case 'updated':
-      return `${currentLabel} (${formatParameterValue(row.previousValue, row.previousUnit)} ${row.unit} -> ${fCurrentValue})`
-    default:
-      return `${currentLabel} X (${fCurrentValue})`
-  }
-}
-
-const DeviceUsage = (props) => {
-  const { bgPrefs, timePrefs, patient, tidelineData, medicalData, dateFilter } = props
+export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
+  const { bgPrefs, timePrefs, patient, medicalDataService, dateFilter } = props
   const { t } = useTranslation()
   const { classes } = useStyles()
   const trackMetric = metrics.send
-  const mostRecentSettings = tidelineData.grouped.pumpSettings.slice(-1)[0]
-  const device = mostRecentSettings?.payload?.device ?? {}
-  const pump = mostRecentSettings?.payload?.pump ?? {}
-  const cgm = mostRecentSettings?.payload?.cgm ?? {}
-  const history = _.sortBy(_.cloneDeep(mostRecentSettings?.payload?.history), ['changeDate'])
-  const dateFormat = getLongDayHourFormat()
-  const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false)
+  const pumpSettings = [...medicalDataService.grouped.pumpSettings].pop() as PumpSettings
   const {
     total,
     sensorUsage
-  } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, dateFilter)
+  } = GlycemiaStatisticsService.getSensorUsage(medicalDataService.medicalData.cbg, dateFilter)
 
   const deviceData = {
     cgm: {
       label: `${t('CGM')}:`,
-      value: cgm.manufacturer && cgm.name ? `${cgm.manufacturer} ${cgm.name}` : ''
+      value: pumpSettings?.payload.cgm ? `${pumpSettings.payload.cgm.manufacturer} ${pumpSettings.payload.cgm.name}` : ''
     },
     device: {
       label: `${t('dbl')}:`,
-      value: device.manufacturer ?? ''
+      value: pumpSettings?.payload.device.manufacturer ?? ''
     },
     pump: {
       label: `${t('Pump')}:`,
-      value: pump.manufacturer ?? ''
+      value: pumpSettings?.payload.pump.manufacturer ?? ''
     }
   }
 
-  return <>
+  if (pumpSettings) {
+    sortHistory(pumpSettings.payload.history)
+  }
+
+  return (
     <GenericDashboardCard
       avatar={<PhonelinkSetupOutlinedIcon />}
       title={t('device-usage')}
@@ -145,46 +142,54 @@ const DeviceUsage = (props) => {
               (key) =>
                 <React.Fragment key={key}>
                   <Grid item xs={6}>
-                    <div className={`${classes.deviceLabels} device-label`}>
+                    <Box paddingLeft={2}>
                       {deviceData[key].label}
-                    </div>
+                    </Box>
                   </Grid>
-                  <Grid item xs={6} className="device-value">
+                  <Grid item xs={6}>
                     {deviceData[key].value}
                   </Grid>
                 </React.Fragment>
             )}
           </Grid>
         </Box>
+
         <Divider variant="fullWidth" className={classes.divider} />
+
         <Box data-testid="device-usage-updates">
-          <Typography className={classes.sectionTitles}>{t('last-updates')}</Typography>
-          <TableContainer data-testid="device-usage-updates-list" className={classes.parameterChangesTable}>
+          <Typography className={classes.sectionTitles}>
+            {t('last-updates')}
+          </Typography>
+          <TableContainer
+            data-testid="device-usage-updates-list"
+            className={classes.parameterChangesTable}
+          >
             <Table>
               <TableBody className={classes.sectionContent}>
-                {paramChanges.map((row, index) =>
-                  (
-                    <TableRow
-                      key={row.key + index}
-                      data-param={row.name}
-                      data-testid={row.name}
-                      data-changetype={row.changeType}
-                      data-isodate={row.effectiveDate}
-                      className={`${classes.tableRows} parameter-update`}
-                    >
-                      {['date', 'value'].map((column) => {
-                        return (
-                          <TableCell
-                            className={`${classes.sectionContent} ${classes.tableCell} parameter-${column}`}
-                            key={`${column}-${row.key}-${index}`}
-                          >
-                            {column === 'date' ? row.parameterDate : getLabel(row, t)}
-                          </TableCell>
-                        )
-                      })}
-                    </TableRow>
-                  )
-                )}
+                {pumpSettings && getPumpSettingsParameterList(pumpSettings.payload.history).map((parameter) => (
+                  <TableRow
+                    key={`${parameter.name}-${parameter.effectiveDate}-${parameter.previousValue}`}
+                    data-param={parameter.name}
+                    data-testid={parameter.name}
+                    data-changetype={parameter.changeType}
+                    data-isodate={parameter.effectiveDate}
+                    className={`${classes.tableRows} parameter-update`}
+                  >
+                    <TableCell className={`${classes.sectionContent} ${classes.tableCell}`}>
+                      {formatDateWithMomentLongFormat(new Date(parameter.effectiveDate), 'lll', pumpSettings.timezone)}
+                    </TableCell>
+                    <TableCell className={`${classes.sectionContent} ${classes.tableCell}`}>
+                      {t(`params|${parameter.name}`)} (
+                      {parameter.previousValue &&
+                        <>
+                          {formatParameterValue(parameter.previousValue, parameter.previousUnit)}{parameter.previousUnit}
+                          <span> ➞ </span>
+                        </>
+                      }
+                      {formatParameterValue(parameter.value, parameter.unit)}{parameter.unit})
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -197,21 +202,10 @@ const DeviceUsage = (props) => {
           bgUnits={bgPrefs.bgUnits}
           onSelectDay={() => null}
           patient={patient}
-          tidelineData={tidelineData}
+          tidelineData={medicalDataService}
           timePrefs={timePrefs}
           trackMetric={trackMetric}
         />
       </CardContent>
-    </GenericDashboardCard>
-  </>
+    </GenericDashboardCard>)
 }
-
-DeviceUsage.propType = {
-  bgPrefs: PropTypes.object.isRequired,
-  timePrefs: PropTypes.object.isRequired,
-  patient: PropTypes.object.isRequired,
-  tidelineData: PropTypes.object.isRequired,
-  medicalData: PropTypes.object.isRequired,
-  dateFilter: PropTypes.object.isRequired
-}
-export default DeviceUsage

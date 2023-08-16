@@ -26,32 +26,21 @@
  */
 
 import React, { type FC } from 'react'
-import { type PumpSettingsParameter } from 'medical-domain'
-import Box from '@mui/material/Box'
-import { useTheme } from '@mui/material/styles'
-import { formatParameterValue } from './utils/device.utils'
-import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
+import Tooltip from '@mui/material/Tooltip'
+import { usePatientListStyles } from './patient-list.styles'
 
-interface ParameterChangeValueProps {
-  parameter: PumpSettingsParameter
+interface CustomHeaderWithTooltipProps {
+  tooltipText: string
+  headerTitle: string
 }
 
-export const ParameterChangeValue: FC<ParameterChangeValueProps> = ({ parameter }) => {
-  const theme = useTheme()
+export const CustomHeaderWithTooltip: FC<CustomHeaderWithTooltipProps> = (props) => {
+  const { tooltipText, headerTitle } = props
+  const { classes } = usePatientListStyles()
 
   return (
-    <Box
-      display="flex"
-      alignItems="center"
-      className={`${parameter.name.toLowerCase()} ${parameter.previousValue ? 'updated-value' : 'added-value'}`}
-    >
-      {parameter.previousValue &&
-        <>
-          <span>{`${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}`}</span>
-          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
-        </>
-      }
-      <span>{`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}</span>
-    </Box>
+    <Tooltip title={tooltipText}>
+      <span className={classes.customColumnHeader}>{headerTitle}</span>
+    </Tooltip>
   )
 }

@@ -34,15 +34,14 @@ export interface CBGPercentageBarProps {
   type: CBGStatType
   id: StatLevel
   isDisabled: boolean
-  legendTitle: string
-  onMouseEnter: (id: StatLevel, title: string, legendTitle: string, hasValues: boolean) => void
+  onMouseEnter: (id: StatLevel, title: string, hasValues: boolean) => void
   title: string
   total: number
   value: number
 }
 
 const CBGPercentageBar: FunctionComponent<CBGPercentageBarProps> = (props) => {
-  const { type, id, isDisabled, onMouseEnter, legendTitle, title, total, value } = props
+  const { type, id, isDisabled, onMouseEnter, title, total, value } = props
 
   const {
     barClasses,
@@ -57,7 +56,7 @@ const CBGPercentageBar: FunctionComponent<CBGPercentageBarProps> = (props) => {
     <div
       data-testid={`cbg-percentage-stat-${id}-${type}`}
       className={styles.stat}
-      onMouseEnter={() => { onMouseEnter(id, title, legendTitle, total !== 0) }}
+      onMouseEnter={() => { onMouseEnter(id, title, total !== 0) }}
     >
       <div className={styles.bar}>
         {hasValues &&

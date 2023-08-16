@@ -46,11 +46,10 @@ import Typography from '@mui/material/Typography'
 import { type PumpSettings } from 'medical-domain'
 import moment from 'moment/moment'
 import {
-  copySettingsToClipboard, formatParameters,
-  sortHistoryParametersByDate,
+  copySettingsToClipboard,
+  formatParameters,
   sortParameterList,
-  sortPumpSettingsParametersByLevel,
-  sortPumpSettingsParametersByDate
+  sortHistory
 } from './utils/device.utils'
 
 interface DeviceSettingsProps {
@@ -78,9 +77,7 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
 
   sortParameterList(parameters)
   formatParameters(parameters)
-  sortHistoryParametersByDate(history)
-  sortPumpSettingsParametersByDate(history)
-  sortPumpSettingsParametersByLevel(history)
+  sortHistory(history)
 
   return (
     <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
