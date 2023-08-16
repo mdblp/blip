@@ -155,6 +155,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2460 Caregiver users cannot see the "Last data update" date in the patients list
 - YLP-2487 HCP non admin can see button to save new team monitoring alerts parameters
 - YLP-2496 Undelivered value is not rounded in micro-bolus tooltip
+- YLP-2504 PDF displays "NaN" instead of "0" for insulin value
 - YLP-2508 PDF report is missing information about rescue carbs
 - YLP-2509 "Sensor warmup" icon is not shown
 - YLP-2523 Fix insulin values not rounded in Bolus tooltip
