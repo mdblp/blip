@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.4-rc6 - 2023-08-16
+## 3.0.4-rc7 - 2023-08-16
 ### Added
 - YLP-1503 Logout idle user after 30 mn of inactivity
 - YLP-1932 Communication module available for all patients
