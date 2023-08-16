@@ -32,13 +32,10 @@ import { useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
 import { type CBGStatType } from '../../../models/stats.model'
 import { StatLegendMemoized as StatLegend } from '../stat-legend/stat-legend'
 import Box from '@mui/material/Box'
-import Divider from '@mui/material/Divider'
 import { type BgPrefs } from '../../../models/blood-glucose.model'
-import { type CbgRangeStatistics, type BgBounds, type BgType } from 'medical-domain'
-import { useTheme } from '@mui/material/styles'
+import { type BgType, type CbgRangeStatistics } from 'medical-domain'
 
 interface CBGPercentageBarChartProps {
-  bgBounds: BgBounds
   bgType: BgType
   bgPrefs: BgPrefs
   cbgStatType: CBGStatType
@@ -47,42 +44,41 @@ interface CBGPercentageBarChartProps {
 }
 
 const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (props) => {
-  const { bgBounds, bgPrefs, bgType, cbgStatType, data, days } = props
-  const theme = useTheme()
+  const { bgPrefs, bgType, cbgStatType, data, days } = props
   const {
     annotations,
     cbgStatsProps,
     hoveredStatId,
     onMouseLeave,
-    titleProps
+    title
   } = useCBGPercentageBarChartHook({
-    bgBounds,
     bgType,
     data,
     days,
-    type: cbgStatType,
-    units: bgPrefs.bgUnits
+    type: cbgStatType
   })
 
   return (
-    <div data-testid="cbg-percentage-bar-chart">
-      <div>
-        <CbgPercentageTitle
-          annotations={annotations}
-          hoveredStatId={hoveredStatId}
-          {...titleProps}
-        />
-        <Box onMouseLeave={() => { onMouseLeave() }}>
-          <CBGPercentageBar {...cbgStatsProps.veryHighStat} />
-          <CBGPercentageBar {...cbgStatsProps.highStat} />
-          <CBGPercentageBar {...cbgStatsProps.targetStat} />
-          <CBGPercentageBar {...cbgStatsProps.lowStat} />
-          <CBGPercentageBar {...cbgStatsProps.veryLowStat} />
-        </Box>
-      </div>
-      <Divider sx={{ marginBlock: theme.spacing(1) }} />
+    <Box data-testid="cbg-percentage-bar-chart">
+      <CbgPercentageTitle
+        annotations={annotations}
+        title={title}
+        shouldDisplayInfoTooltip={!hoveredStatId}
+      />
+      <Box
+        onMouseLeave={() => {
+          onMouseLeave()
+        }}
+        marginBottom={1}
+      >
+        <CBGPercentageBar {...cbgStatsProps.veryHighStat} />
+        <CBGPercentageBar {...cbgStatsProps.highStat} />
+        <CBGPercentageBar {...cbgStatsProps.targetStat} />
+        <CBGPercentageBar {...cbgStatsProps.lowStat} />
+        <CBGPercentageBar {...cbgStatsProps.veryLowStat} />
+      </Box>
       <StatLegend bgClasses={bgPrefs.bgClasses} units={bgPrefs.bgUnits} />
-    </div>
+    </Box>
   )
 }
 export const CBGPercentageBarChartMemoized = React.memo(CBGPercentageBarChart)

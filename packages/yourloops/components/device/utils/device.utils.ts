@@ -25,10 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type DeviceConfig, type ParameterConfig, type ParametersChange, Unit } from 'medical-domain'
-import { DeviceMeals } from '../models/device-meal.models'
+import {
+  type DeviceConfig,
+  type ParameterConfig,
+  type ParametersChange,
+  type PumpSettingsParameter,
+  Unit
+} from 'medical-domain'
 import i18next from 'i18next'
 import textTable from 'text-table'
+import { sortByDate } from '../../patient-list/utils/sort-comparators.util'
 
 const t = i18next.t.bind(i18next)
 export const PARAMETER_STRING_MAX_WIDTH = 250
@@ -111,51 +117,74 @@ export const formatParameterValue = (value: string | number, units: string | Uni
   return value.toFixed(numberOfDecimals)
 }
 
-export const sortHistoryParametersByDate = (historyParameters: ParametersChange[]): ParametersChange[] => {
+const sortHistoryParametersByDate = (historyParameters: ParametersChange[]): ParametersChange[] => {
   return historyParameters.sort((a, b) => {
-    return new Date(a.changeDate).valueOf() - new Date(b.changeDate).valueOf()
+    return new Date(b.changeDate).valueOf() - new Date(a.changeDate).valueOf()
   })
 }
 
-export const sortPumpSettingsParameterByLevel = (historyParameters: ParametersChange[]): ParametersChange[] => {
+const sortPumpSettingsParametersByDate = (historyParameters: ParametersChange[]): void => {
+  historyParameters.forEach((parameterChange) => {
+    parameterChange.parameters.sort((paramA, paramB) => {
+      return sortByDate(paramB.effectiveDate, paramA.effectiveDate)
+    })
+  })
+}
+
+const sortPumpSettingsParametersByLevel = (historyParameters: ParametersChange[]): void => {
   historyParameters.forEach(parametersChange => {
     parametersChange.parameters = parametersChange.parameters.sort((a, b) => a.level - b.level)
   })
-  return historyParameters
 }
 
-export const sortParameterList = (parameters: ParameterConfig[]): ParameterConfig[] => {
-  const aggressivenessParameters = parameters.filter(parameter => parameter.unit === Unit.Percent)
-  const insulinParameters = parameters.filter(parameter => parameter.unit === Unit.InsulinUnit || parameter.unit === Unit.InsulinUnitPerGram)
-  const mealParameters = parameters.filter(parameter => parameter.unit === Unit.Gram)
-  const weightParameters = parameters.filter(parameter => parameter.unit === Unit.Kilogram)
-  const thresholdParameters = parameters.filter(parameter => parameter.unit === Unit.MilligramPerDeciliter || parameter.unit === Unit.MmolPerLiter)
-  const minutesParameter = parameters.filter(parameter => parameter.unit === Unit.Minute)
-
-  const sortedMealParameters = mealParameters.length > 0 ? sortMealParameters(mealParameters) : mealParameters
-  return [...insulinParameters, ...weightParameters, ...thresholdParameters, ...aggressivenessParameters, ...sortedMealParameters, ...minutesParameter]
+export const sortHistory = (history: ParametersChange[]): void => {
+  sortHistoryParametersByDate(history)
+  sortPumpSettingsParametersByDate(history)
+  sortPumpSettingsParametersByLevel(history)
 }
 
-const sortMealParameters = (parameters: ParameterConfig[]): ParameterConfig[] => {
-  const breakfastMeals = []
-  const lunchMeals = []
-  const dinnerMeals = []
-  parameters.forEach((parameter) => {
-    const splitParameterKey = parameter.name.split('_')
-    switch (splitParameterKey[2]) {
-      case DeviceMeals.Breakfast:
-        breakfastMeals.push(parameter)
-        break
-      case DeviceMeals.Lunch:
-        lunchMeals.push(parameter)
-        break
-      case DeviceMeals.Dinner:
-        dinnerMeals.push(parameter)
-        break
+export const sortParameterList = (parameters: ParameterConfig[]): void => {
+  const settingsOrder = [
+    'MEDIUM_MEAL_BREAKFAST',
+    'MEDIUM_MEAL_LUNCH',
+    'MEDIUM_MEAL_DINNER',
+    'TOTAL_INSULIN_FOR_24H',
+    'WEIGHT',
+    'PATIENT_GLY_HYPER_LIMIT',
+    'PATIENT_GLY_HYPO_LIMIT',
+    'PATIENT_GLYCEMIA_TARGET',
+    'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA',
+    'BOLUS_AGGRESSIVENESS_FACTOR',
+    'MEAL_RATIO_BREAKFAST_FACTOR',
+    'MEAL_RATIO_LUNCH_FACTOR',
+    'MEAL_RATIO_DINNER_FACTOR',
+    'SMALL_MEAL_BREAKFAST',
+    'LARGE_MEAL_BREAKFAST',
+    'SMALL_MEAL_LUNCH',
+    'LARGE_MEAL_LUNCH',
+    'SMALL_MEAL_DINNER',
+    'LARGE_MEAL_DINNER'
+  ]
+
+  parameters.sort((a, b) => {
+    const aIndex = settingsOrder.indexOf(a.name)
+    const bIndex = settingsOrder.indexOf(b.name)
+    if (aIndex < 0) {
+      return 1
     }
+    if (bIndex < 0) {
+      return -1
+    }
+    return aIndex - bIndex
   })
-  breakfastMeals[0] = breakfastMeals.splice(1, 1, breakfastMeals[0])[0]
-  lunchMeals[0] = lunchMeals.splice(1, 1, lunchMeals[0])[0]
-  dinnerMeals[0] = dinnerMeals.splice(1, 1, dinnerMeals[0])[0]
-  return [...breakfastMeals, ...lunchMeals, ...dinnerMeals]
+}
+
+export const formatParameters = (parameters: ParameterConfig[]): void => {
+  parameters.forEach(parameter => {
+    parameter.value = formatParameterValue(parameter.value, parameter.unit)
+  })
+}
+
+export const getPumpSettingsParameterList = (historyParameters: ParametersChange[]): PumpSettingsParameter[] => {
+  return historyParameters.reduce<PumpSettingsParameter[]>((pumpSettingsParameters, parameterChange) => [...pumpSettingsParameters, ...parameterChange.parameters], [])
 }

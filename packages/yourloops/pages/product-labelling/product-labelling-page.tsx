@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useState } from 'react'
+import React, { type FC, useState } from 'react'
 import parse from 'html-react-parser'
 import { getCurrentLang } from '../../lib/language'
 import i18n from 'i18next'
@@ -37,8 +37,11 @@ import rawHtmlNL from './raw-html/NL'
 import rawHtmlIT from './raw-html/IT'
 import Box from '@mui/material/Box'
 import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
+import { setPageTitle } from '../../lib/utils'
+import { useTranslation } from 'react-i18next'
 
-const ProductLabellingPage: FunctionComponent = () => {
+export const ProductLabellingPage: FC = () => {
+  const { t } = useTranslation()
   const getHtml = (): string => {
     switch (getCurrentLang()) {
       case LanguageCodes.De:
@@ -63,11 +66,11 @@ const ProductLabellingPage: FunctionComponent = () => {
     setHtml(getHtml)
   })
 
+  setPageTitle(t('product-labelling'))
+
   return (
     <Box marginBottom={2}>
       {parse(html)}
     </Box>
   )
 }
-
-export default ProductLabellingPage

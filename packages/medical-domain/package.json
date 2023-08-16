@@ -1,6 +1,6 @@
 {
   "name": "medical-domain",
-  "version": "3.0.4-rc4",
+  "version": "3.0.4-rc7",
   "description": "Yourloops package for processing medical data",
   "author": {
     "name": "Diabeloop",

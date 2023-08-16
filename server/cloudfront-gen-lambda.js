@@ -21,7 +21,6 @@ const blipConfig = require('./config.app')
 const { getDistDir } = require('./gen-utils')
 const locales = require('../locales/languages.json')
 
-const reTitle = /<title>([^<]*)<\/title>/
 const reZendesk = /(^\s+<!-- Start of support Zendesk Widget script -->\n)(.*\n)*(^\s+<!-- End of support Zendesk Widget script -->)/m
 const reTrackerUrl = /const u = '(.*)'/
 const reTrackerSiteId = /const id = ([0-9])/
@@ -278,11 +277,6 @@ console.info('Using configuration:', blipConfig)
 
 const indexHtmlPath = path.resolve(`${distDir}/static/index.html`)
 indexHtml = fs.readFileSync(indexHtmlPath, 'utf8')
-if (typeof process.env.BRANDING === 'string') {
-  const title = process.env.BRANDING.replace(/^\w/, (c) => { return c.toUpperCase() })
-  console.info(`- Setup title to ${title}`)
-  indexHtml = indexHtml.replace(reTitle, `<title>${title}</title>`)
-}
 
 // *** ZenDesk ***
 zendeskEnabled = typeof blipConfig.HELP_SCRIPT_URL === 'string' && reUrl.test(blipConfig.HELP_SCRIPT_URL)

@@ -193,21 +193,21 @@ export const timeInRangeStatsTrendViewData: Data = {
   dataRange: ['2020-01-19T00:00:00Z', '2020-01-20T00:00:00Z'],
   data: [
     { time: '2020-01-20T10:00:00Z', type: 'cbg', id: '2020-01-20_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-01-20T11:00:00Z', type: 'cbg', id: '2020-01-20_1', timezone: 'Europe/Paris', units: 'mmol/L', value: 14.7, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-01-20T11:05:00Z', type: 'cbg', id: '2020-01-20_3', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-01-20T11:10:00Z', type: 'cbg', id: '2020-01-20_4', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-01-20T11:15:00Z', type: 'cbg', id: '2020-01-20_5', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-01-20T11:20:00Z', type: 'cbg', id: '2020-01-20_6', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-01-20T11:25:00Z', type: 'cbg', id: '2020-01-20_7', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-01-20T11:30:00Z', type: 'cbg', id: '2020-01-20_8', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-01-20T11:35:00Z', type: 'cbg', id: '2020-01-20_9', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-01-20T11:40:00Z', type: 'cbg', id: '2020-01-20_10', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-01-20T11:45:00Z', type: 'cbg', id: '2020-01-20_11', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-01-20T11:50:00Z', type: 'cbg', id: '2020-01-20_12', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-01-20T11:55:00Z', type: 'cbg', id: '2020-01-20_13', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-01-20T12:00:00Z', type: 'cbg', id: '2020-01-20_14', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-01-20T12:05:00Z', type: 'cbg', id: '2020-01-20_15', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-01-20T12:10:00Z', type: 'cbg', id: '2020-01-20_16', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' }
+    { time: '2020-01-20T11:00:00Z', type: 'cbg', id: '2020-01-20_1', timezone: 'Europe/Paris', units: 'mmol/L', value: 14.7, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-20T11:05:00Z', type: 'cbg', id: '2020-01-20_3', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-20T11:10:00Z', type: 'cbg', id: '2020-01-20_4', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-20T11:15:00Z', type: 'cbg', id: '2020-01-20_5', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-20T11:20:00Z', type: 'cbg', id: '2020-01-20_6', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-20T11:25:00Z', type: 'cbg', id: '2020-01-20_7', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-20T11:30:00Z', type: 'cbg', id: '2020-01-20_8', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-20T11:35:00Z', type: 'cbg', id: '2020-01-20_9', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-20T11:40:00Z', type: 'cbg', id: '2020-01-20_10', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-20T11:45:00Z', type: 'cbg', id: '2020-01-20_11', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-20T11:50:00Z', type: 'cbg', id: '2020-01-20_12', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-20T11:55:00Z', type: 'cbg', id: '2020-01-20_13', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-20T12:00:00Z', type: 'cbg', id: '2020-01-20_14', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-20T12:05:00Z', type: 'cbg', id: '2020-01-20_15', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-20T12:10:00Z', type: 'cbg', id: '2020-01-20_16', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' }
   ]
 }
 
@@ -235,8 +235,71 @@ export const twoWeeksOfCbg: Data = {
 export const pumpSettingsData: Data = {
   dataRange: ['2022-08-08T16:35:00Z', '2022-08-08T16:40:00Z'],
   data: [
-    { time: '2020-01-01T10:00:00Z', type: 'pumpSettings', id: 'pump_settings', timezone: 'UTC', uploadId: 'osef', payload: { basalsecurityprofile: null, cgm: { apiVersion: 'v1', endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00', expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Dexcom', name: 'G6', swVersionTransmitter: 'v1', transmitterId: 'a1234' }, device: { deviceId: '1234', imei: '1234567890', manufacturer: 'Diabeloop', name: 'DBLG1', swVersion: '1.0.5.25' }, history, parameters: [{ name: 'WEIGHT', value: '72', unit: 'kg', level: 1, effectiveDate: '2020-01-01T10:00:00Z' }], pump: { expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Vicentra', name: 'Kaleido', serialNumber: '123456', swVersion: 'beta' } }, _userId: 'osef' },
-    { time: '2020-01-01T10:00:00Z', type: 'cbg', id: '2020-01-01_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' }
+    {
+      time: '2020-01-01T10:00:00Z',
+      type: 'pumpSettings',
+      id: 'pump_settings',
+      timezone: 'UTC',
+      uploadId: 'osef',
+      payload: {
+        basalsecurityprofile: null,
+        cgm: {
+          apiVersion: 'v1',
+          endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00',
+          expirationDate: '2050-04-12T17:53:54+02:00',
+          manufacturer: 'Dexcom',
+          name: 'G6',
+          swVersionTransmitter: 'v1',
+          transmitterId: 'a1234'
+        },
+        device: {
+          deviceId: '1234',
+          imei: '1234567890',
+          manufacturer: 'Diabeloop',
+          name: 'DBLG1',
+          swVersion: '1.0.5.25'
+        },
+        history,
+        parameters: [
+          { name: 'WEIGHT', value: '72', unit: 'kg', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'MEDIUM_MEAL_BREAKFAST', value: '36', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'MEDIUM_MEAL_DINNER', value: '96', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'PATIENT_GLYCEMIA_TARGET', value: '110', unit: 'mg/dL', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA', value: '100', unit: '%', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'PATIENT_GLY_HYPER_LIMIT', value: '180', unit: 'mg/dL', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'MEDIUM_MEAL_LUNCH', value: '96', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'PATIENT_GLY_HYPO_LIMIT', value: '75', unit: 'mg/dL', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'BOLUS_AGGRESSIVENESS_FACTOR', value: '100', unit: '%', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'SMALL_MEAL_LUNCH', value: '48', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'SMALL_MEAL_BREAKFAST', value: '18', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'MEAL_RATIO_LUNCH_FACTOR', value: '100', unit: '%', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'LARGE_MEAL_DINNER', value: '144', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'MEAL_RATIO_DINNER_FACTOR', value: '80', unit: '%', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'LARGE_MEAL_BREAKFAST', value: '54', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'MEAL_RATIO_BREAKFAST_FACTOR', value: '100', unit: '%', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'LARGE_MEAL_LUNCH', value: '144', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
+          { name: 'SMALL_MEAL_DINNER', value: '48', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' }
+        ],
+        pump: {
+          expirationDate: '2050-04-12T17:53:54+02:00',
+          manufacturer: 'Vicentra',
+          name: 'Kaleido',
+          serialNumber: '123456',
+          swVersion: 'beta'
+        }
+      },
+      _userId: 'osef'
+    },
+    {
+      time: '2020-01-01T10:00:00Z',
+      type: 'cbg',
+      id: '2020-01-01_0',
+      timezone: 'Europe/Paris',
+      units: 'mmol/L',
+      value: 10.5,
+      uploadId: 'osef',
+      _userId: 'osef'
+    }
   ]
 }
 
