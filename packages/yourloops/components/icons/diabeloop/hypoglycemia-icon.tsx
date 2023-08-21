@@ -31,7 +31,7 @@ import SvgIcon, { type SvgIconProps } from '@mui/material/SvgIcon'
 export const HypoglycemiaIcon = React.forwardRef((props: SvgIconProps, ref: ForwardedRef<SVGSVGElement>) => {
   return (
     <SvgIcon {...props} ref={ref}>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+      <svg viewBox="0 0 48 48" fill="currentColor">
         <path d="m36.62,27.21c-5.13,0-7.46,4.65-9.34,8.38-.99,1.98-2.23,4.44-3.25,4.44s-2.26-2.46-3.25-4.44c-1.88-3.74-4.21-8.38-9.34-8.38-1.1,0-2,.9-2,2s.9,2,2,2c2.48,0,3.89,2.45,5.76,6.18,1.64,3.27,3.34,6.64,6.83,6.64s5.19-3.38,6.83-6.64c1.87-3.73,3.29-6.18,5.76-6.18,1.1,0,2-.9,2-2s-.9-2-2-2Z" />
         <path d="m24,31.99c-1.1,0-2-.9-2-2V6c0-1.1.9-2,2-2s2,.9,2,2v23.99c0,1.1-.9,2-2,2Z" />
       </svg>

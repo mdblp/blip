@@ -31,7 +31,7 @@ import SvgIcon, { type SvgIconProps } from '@mui/material/SvgIcon'
 export const MessageIcon = React.forwardRef((props: SvgIconProps, ref: ForwardedRef<SVGSVGElement>) => {
   return (
     <SvgIcon {...props} ref={ref}>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+      <svg viewBox="0 0 48 48" fill="currentColor">
         <path d="m44,12.31v-.66c0-1.1-.9-2-2-2H6c-1.1,0-2,.9-2,2v.66h0v24.04c0,1.1.9,2,2,2h36c1.1,0,2-.9,2-2V12.31h0Zm-7.77,1.34l-12.23,7.96-12.23-7.96h24.46Zm-28.23,20.7V15.97l14.91,9.71c.33.22.71.32,1.09.32s.76-.11,1.09-.32l14.91-9.71v18.38H8Z" />
       </svg>
     </SvgIcon>
