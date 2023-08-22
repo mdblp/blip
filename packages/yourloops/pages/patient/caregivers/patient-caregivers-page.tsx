@@ -37,7 +37,7 @@ import { useNotification } from '../../../lib/notifications/notification.hook'
 import { type ShareUser } from '../../../lib/share/models/share-user.model'
 import { useAlert } from '../../../components/utils/snackbar'
 import SecondaryBar from './secondary-bar'
-import AddCaregiverDialog from './add-dialog'
+import AddCaregiverDialog from './add-caregiver-dialog'
 import CaregiverTable from './table'
 import DirectShareApi, { PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE } from '../../../lib/share/direct-share.api'
 import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
@@ -95,7 +95,6 @@ export const PatientCaregiversPage: FC = () => {
         return acc
       }
 
-      console.debug('Found pending direct-share invitation: ', invitation)
       const caregiver: ShareUser = {
         invitation,
         status: UserInviteStatus.Pending,
@@ -146,7 +145,7 @@ export const PatientCaregiversPage: FC = () => {
           </Container>
         </>
       }
-      <AddCaregiverDialog actions={caregiverToAdd} />
+      <AddCaregiverDialog actions={caregiverToAdd} currentCaregivers={caregivers} />
     </>
   )
 }

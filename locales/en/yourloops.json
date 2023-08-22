@@ -189,6 +189,7 @@
   "edit-medical-report": "Edit medical report {{number}}",
   "email": "Email",
   "end-date": "End date",
+  "error-caregiver-already-in-list": "You are already sharing your data with this caregiver.",
   "error-http-40x": "An error occurred. Please contact support for assistance",
   "error-http-500": "Something went wrong. Please try again in a few moments. If problem persists, contact support for assistance",
   "error-patient-already-in-team": "This patient is already sharing data with the team.",
