@@ -19,9 +19,10 @@ export class StaticWebSiteStack extends core.Stack {
     const bucket = new s3.Bucket(this, `${props?.rootBucketName}.${props?.prefix}`, {
       bucketName: `${props?.rootBucketName}.${props?.prefix}`,
       removalPolicy: core.RemovalPolicy.DESTROY,
-      publicReadAccess: true,
+      autoDeleteObjects: true,
     });
-
+    const originAccessIdentity = new cloudfront.OriginAccessIdentity(this, `${id}-originAccessIdentity`,{})
+    bucket.grantRead(originAccessIdentity)
     // Retrieve the Lambda arn
     const lambdaParameter = new rsc.AwsCustomResource(this, `${id}-GetParameter`, {
       policy: rsc.AwsCustomResourcePolicy.fromStatements([
@@ -73,6 +74,7 @@ export class StaticWebSiteStack extends core.Stack {
             s3OriginSource: {
               originPath: `/${props?.FrontAppName}/${props?.version}`,
               s3BucketSource: bucket,
+              originAccessIdentity: originAccessIdentity
             },
             behaviors: [
               {
