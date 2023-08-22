@@ -40,7 +40,7 @@ import { useNotification } from '../../../lib/notifications/notification.hook'
 import { type ShareUser } from '../../../lib/share/models/share-user.model'
 import { useAlert } from '../../../components/utils/snackbar'
 import SecondaryBar from './secondary-bar'
-import AddCaregiverDialog from './add-dialog'
+import AddCaregiverDialog from './add-caregiver-dialog'
 import CaregiverTable from './table'
 import DirectShareApi, { PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE } from '../../../lib/share/direct-share.api'
 import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
@@ -156,7 +156,7 @@ function PatientCaregiversPage(): JSX.Element {
           </Container>
         </>
       }
-      <AddCaregiverDialog actions={caregiverToAdd} />
+      <AddCaregiverDialog actions={caregiverToAdd} currentCaregivers={caregivers} />
     </>
   )
 }

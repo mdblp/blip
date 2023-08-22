@@ -37,15 +37,18 @@ import TextField from '@mui/material/TextField'
 
 import { REGEX_EMAIL } from '../../../lib/utils'
 import { type AddDialogContentProps } from './models/add-dialog-content-props.model'
+import { type ShareUser } from '../../../lib/share/models/share-user.model'
 
 export interface AddDialogProps {
   actions: AddDialogContentProps | null
+  currentCaregivers: ShareUser[]
 }
 
 /**
  * Add a caregiver dialog / modale
  */
-function AddDialog(props: AddDialogProps): JSX.Element {
+function AddCaregiverDialog(props: AddDialogProps): JSX.Element {
+  const { actions, currentCaregivers } = props
   const { t } = useTranslation('yourloops')
   const [email, setEmail] = React.useState<string>('')
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
@@ -58,12 +61,12 @@ function AddDialog(props: AddDialogProps): JSX.Element {
     }, 100)
   }
   const handleClose = (): void => {
-    props.actions?.onDialogResult(null)
+    actions?.onDialogResult(null)
     resetDialog()
   }
   const handleClickAdd = (): void => {
     if (isValidEmail()) {
-      props.actions?.onDialogResult(email)
+      actions?.onDialogResult(email)
       resetDialog()
     } else {
       setErrorMessage(t('invalid-email'))
@@ -72,6 +75,11 @@ function AddDialog(props: AddDialogProps): JSX.Element {
   const handleVerifyEmail = (): void => {
     if (email.length > 0 && !isValidEmail()) {
       setErrorMessage(t('invalid-email'))
+      return
+    }
+    const currentCaregiversEmails = currentCaregivers.map((caregiver: ShareUser) => caregiver.user.username)
+    if (currentCaregiversEmails.includes(email)) {
+      setErrorMessage(t('error-caregiver-already-in-list'))
     }
   }
   const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -82,7 +90,7 @@ function AddDialog(props: AddDialogProps): JSX.Element {
     setEmail(inputEmail)
   }
 
-  const dialogIsOpen = props.actions !== null
+  const dialogIsOpen = actions !== null
   const buttonAddDisabled = errorMessage !== null || !isValidEmail()
 
   return (
@@ -135,4 +143,4 @@ function AddDialog(props: AddDialogProps): JSX.Element {
   )
 }
 
-export default AddDialog
+export default AddCaregiverDialog
