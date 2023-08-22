@@ -28,6 +28,6 @@ export interface TimeInAutoStatistics {
   automatedBasalDuration: number
   manualBasalDuration: number
   automatedAndManualTotalDuration: number
-  automatedBasalPerDayDuration: number
-  manualBasalPerDayDuration: number
+  automatedBasalInDays: number
+  manualBasalInDays: number
 }

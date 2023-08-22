@@ -63,9 +63,9 @@ function getWeight(allPumpSettings: PumpSettings[]): ParameterConfig | undefined
 function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter): BasalBolusStatistics {
   if (numDays === 0) {
     return {
-      bolus: NaN,
-      basal: NaN,
-      total: NaN
+      bolus: 0,
+      basal: 0,
+      total: 0
     }
   }
 
@@ -90,7 +90,7 @@ function getTotalInsulinAndWeightData(basalsData: Basal[], bolusData: Bolus[], n
   const totalInsulin = [basal, bolus].reduce((accumulator, value) => {
     const delivered = isNaN(value) ? 0 : value
     return accumulator + delivered
-  })
+  }, 0)
 
   return {
     totalInsulin,
@@ -98,7 +98,7 @@ function getTotalInsulinAndWeightData(basalsData: Basal[], bolusData: Bolus[], n
   }
 }
 
-function getAutomatedAndManualBasalDuration(basalsData: Basal[], numDays: number, dateFilter: DateFilter): TimeInAutoStatistics {
+function getAutomatedAndManualBasalDuration(basalsData: Basal[], dateFilter: DateFilter): TimeInAutoStatistics {
   const filteredBasal = BasalService.filterOnDate(basalsData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const basalData = resamplingDuration(filteredBasal, dateFilter.start, dateFilter.end)
   const manualBasal = basalData.filter(manualBasal => manualBasal.subType !== 'automated')
@@ -111,15 +111,15 @@ function getAutomatedAndManualBasalDuration(basalsData: Basal[], numDays: number
     automatedBasalDuration,
     manualBasalDuration,
     automatedAndManualTotalDuration: Math.round(total),
-    automatedBasalPerDayDuration: (automatedBasalDuration / total) * TimeService.MS_IN_DAY,
-    manualBasalPerDayDuration: (manualBasalDuration / total) * TimeService.MS_IN_DAY
+    automatedBasalInDays: (automatedBasalDuration / total) * TimeService.MS_IN_DAY,
+    manualBasalInDays: (manualBasalDuration / total) * TimeService.MS_IN_DAY
   }
 }
 
 interface BasalBolusStatisticsAdapter {
   getBasalBolusData: (basals: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter) => BasalBolusStatistics
   getTotalInsulinAndWeightData: (basals: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter, pumpSettings: PumpSettings[]) => TotalInsulinAndWeightStatistics
-  getAutomatedAndManualBasalDuration: (basalsData: Basal[], numDays: number, dateFilter: DateFilter) => TimeInAutoStatistics
+  getAutomatedAndManualBasalDuration: (basalsData: Basal[], dateFilter: DateFilter) => TimeInAutoStatistics
 }
 
 export const BasalBolusStatisticsService: BasalBolusStatisticsAdapter = {

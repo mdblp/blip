@@ -37,26 +37,24 @@ import { t } from 'i18next'
 import { ensureNumeric } from '../stats.util'
 
 interface LoopModeStatProps {
-  automated: number
-  manual: number
-  total: number
-  automaticPerDays: number
-  manualPerDays: number
-  automaticTime: number
-  manualTime: number
+  automatedBasalDuration: number
+  manualBasalDuration: number
+  totalBasalDuration: number
+  automatedBasals: number
+  manualBasals: number
 
 }
 
 const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
   const {
-    automated,
-    manual,
-    total,
-    manualTime,
-    automaticTime
+    manualBasalDuration,
+    automatedBasalDuration,
+    totalBasalDuration,
+    manualBasals,
+    automatedBasals
   } = props
-  const automaticPercentage = Math.round(100 * automated / total)
-  const manualPercentage = Math.round(100 * manual / total)
+  const automaticPercentage = Math.round(100 * automatedBasalDuration / totalBasalDuration)
+  const manualPercentage = Math.round(100 * manualBasalDuration / totalBasalDuration)
   const location = useLocation()
   const isDailyPage = location.pathname.includes('daily')
   const title = isDailyPage ? t('time-loop') : t('avg-time-loop')
@@ -78,13 +76,13 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
           className={styles.labelOnValueUnits}
           percentage={automaticPercentage}
           transform="translate(30 63)"
-          value={ensureNumeric(automaticTime)}
+          value={ensureNumeric(automatedBasals)}
         />
         <LoopModePercentageDetail
           className={styles.labelOffValueUnits}
           percentage={manualPercentage}
           transform="translate(260 63)"
-          value={ensureNumeric(manualTime)}
+          value={ensureNumeric(manualBasals)}
         />
         <LoopModeGraph automatedPercentage={automaticPercentage} manualPercentage={manualPercentage} />
       </svg>

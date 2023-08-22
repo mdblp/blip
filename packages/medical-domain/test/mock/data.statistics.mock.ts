@@ -57,7 +57,7 @@ export const bolusData: Array<[Date, number]> = [
 export const bgDataSourceTwoDays: Array<[Date, string]> = [
   // data for two days tests
   [new Date('2018-02-01T00:50:00.000Z'), dexcomDevice],
-  [new Date('2018-02-02T00:50:00.000Z'), dexcomDevice]
+  [new Date('2018-02-03T00:50:00.000Z'), dexcomDevice]
 ]
 
 export const dateFilterOneDay: DateFilter = {

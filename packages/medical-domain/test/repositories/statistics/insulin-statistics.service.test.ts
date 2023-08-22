@@ -40,7 +40,7 @@ import {
 describe('Time In Auto Data', () => {
   it('should return the time spent in automated and manual basal delivery when viewing 1 day', () => {
     const basalData = buildBasalsData(basalsData)
-    expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, 1, dateFilterOneDay)).toEqual({
+    expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, dateFilterOneDay)).toEqual({
       automatedBasalDuration: MS_IN_HOUR,
       manualBasalDuration: MS_IN_HOUR * 2,
       automatedAndManualTotalDuration: MS_IN_HOUR + MS_IN_HOUR * 2,
@@ -51,7 +51,7 @@ describe('Time In Auto Data', () => {
 
   it('should return the avg daily time spent in automated and manual basal delivery when viewing more than 1 day', () => {
     const basalData = buildBasalsData(basalsData)
-    expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, 2, dateFilterTwoDays)).toEqual({
+    expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, dateFilterTwoDays)).toEqual({
       automatedBasalDuration: MS_IN_HOUR,
       manualBasalDuration: MS_IN_HOUR * 4,
       automatedAndManualTotalDuration: MS_IN_HOUR + MS_IN_HOUR * 4,

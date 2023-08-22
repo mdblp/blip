@@ -89,7 +89,6 @@ class Trends extends React.Component {
   static propTypes = {
     bgPrefs: PropTypes.object.isRequired,
     chartPrefs: PropTypes.object.isRequired,
-    dataUtil: PropTypes.object,
     timePrefs: PropTypes.object.isRequired,
     epochLocation: PropTypes.number.isRequired,
     msRange: PropTypes.number.isRequired,
@@ -561,7 +560,6 @@ class Trends extends React.Component {
                   <PatientStatistics
                     medicalData={this.props.tidelineData.medicalData}
                     bgPrefs={this.props.bgPrefs}
-                    bgType={this.props.dataUtil.bgSource}
                     dateFilter={dateFilter}
                   />
                 </div>

@@ -6,6 +6,9 @@ It is based on Tidepool Blip 1.27.
 ### Added
 - YLP-2484 Remove level column in device change parameter history
 
+### Engineering use
+- YLP-2383 Migrate LoopMode from stat.js to yourloops
+
 ## 3.0.4-beta - 2023-02-10
 ### Added
 - YLP-1503 Logout idle user after 30 mn of inactivity
@@ -113,7 +116,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-2352 Monitoring alert tooltips "out of range" displays incorrect values
 - YLP-2364 Fixed English translations
 - YLP-2367 Patient list refacto
-- YLP-2383 Migrate LoopMode from stat.js to yourloops
 - YLP-2386 Fix navigation crash between care team and patient list
 - YLP-2387 Fix the tab title when displaying the patient list
 - YLP-2403 Remove caregiver and private team logic from CurrentPatientList

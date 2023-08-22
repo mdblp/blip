@@ -75,7 +75,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   const {
     sensorUsage,
     total: sensorUsageTotal
-  } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+  } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, dateFilter)
 
   const {
     foodCarbsPerDay,
@@ -105,13 +105,13 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   const {
     automatedBasalDuration,
     manualBasalDuration,
-    manualBasalPerDayDuration,
-    automatedBasalPerDayDuration,
+    manualBasalInDays,
+    automatedBasalInDays,
     automatedAndManualTotalDuration
-  } = BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(medicalData.basal, numberOfDays, dateFilter)
+  } = BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(medicalData.basal, dateFilter)
 
-  const automaticTimeDashboard = isDashboardPage ? automatedBasalPerDayDuration : automatedBasalDuration
-  const manualTimeDashboard = isDashboardPage ? manualBasalPerDayDuration : manualBasalDuration
+  const automatedBasals = isDashboardPage ? automatedBasalInDays : automatedBasalDuration
+  const manualBasals = isDashboardPage ? manualBasalInDays : manualBasalDuration
 
   return (
     <Box data-testid="patient-statistics">
@@ -158,13 +158,11 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <LoopModeStat
-        automated={automatedBasalDuration}
-        manual={manualBasalDuration}
-        total={automatedAndManualTotalDuration}
-        automaticPerDays={automatedBasalPerDayDuration}
-        manualPerDays={manualBasalPerDayDuration}
-        automaticTime={automaticTimeDashboard}
-        manualTime={manualTimeDashboard}
+        automatedBasalDuration={automatedBasalDuration}
+        manualBasalDuration={manualBasalDuration}
+        totalBasalDuration={automatedAndManualTotalDuration}
+        automatedBasals={automatedBasals}
+        manualBasals={manualBasals}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <TotalCarbsStat
