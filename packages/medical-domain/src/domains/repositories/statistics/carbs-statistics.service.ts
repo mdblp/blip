@@ -30,7 +30,7 @@ import type Wizard from '../../models/medical/datum/wizard.model'
 import type DateFilter from '../../models/time/date-filter.model'
 import MealService from '../medical/datum/meal.service'
 import WizardService from '../medical/datum/wizard.service'
-import { getWeekDaysFilter } from './statistics.utils'
+import { getWeekDaysFilter, sumValues } from './statistics.utils'
 import { type CarbsStatistics } from '../../models/statistics/carbs-statistics.model'
 
 function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter): CarbsStatistics {
@@ -38,8 +38,8 @@ function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilte
   const filterWizard = WizardService.filterOnDate(wizard, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const foodCarbsData = filterMeal.map(meal => meal.nutrition.carbohydrate.net)
   const wizardData = filterWizard.map(wizard => wizard.carbInput)
-  const wizardCarbs = wizardData.reduce((accumulator, wizards) => accumulator + wizards, 0)
-  const foodCarbs = foodCarbsData.reduce((accumulator, foodCarbs) => accumulator + foodCarbs, 0)
+  const wizardCarbs = sumValues(wizardData)
+  const foodCarbs = sumValues(wizardData)
   const totalEntriesCarbWithRescueCarbs = foodCarbsData.length + wizardData.length
 
   return {
