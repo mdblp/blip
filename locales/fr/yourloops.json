@@ -118,7 +118,7 @@
   "chat-footer-private": "Privé",
   "chat-footer-reply": "Répondre",
   "chat-footer-start-writing": "Commencer à écrire",
-  "coefficient-of-variation": "Coefficient of Variation",
+  "coefficient-of-variation": "Coefficient de Variation",
   "coefficient-of-variation-tooltip": "**CV (Coefficient de Variation):** L'écart le plus large entre les valeurs de glycémie.",
   "coefficient-of-variation-with-value": "CV ({{cbgLabel}})",
   "colon": "{{label}}:",
