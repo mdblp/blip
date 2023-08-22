@@ -118,7 +118,7 @@
   "chat-footer-private": "Privado",
   "chat-footer-reply": "Responder",
   "chat-footer-start-writing": "Empiece a escribir",
-  "coefficient-of-variation": "Coefficient of Variation",
+  "coefficient-of-variation": "Coeficiente de variación",
   "coefficient-of-variation-tooltip": "**CV (Coeficiente de variación):** Distancia (separación) entre los valores de glucemia.",
   "coefficient-of-variation-with-value": "CV ({{cbgLabel}})",
   "colon": "{{label}}:",

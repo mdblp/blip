@@ -118,7 +118,7 @@
   "chat-footer-private": "Privat",
   "chat-footer-reply": "Antworten",
   "chat-footer-start-writing": "Mit dem Schreiben beginnen",
-  "coefficient-of-variation": "Variationskoeffizient ({{cbgLabel}})",
+  "coefficient-of-variation": "Variationskoeffizient",
   "coefficient-of-variation-tooltip": "**CV (Variationskoeffizient):** Das Verhältnis zwischen der Standardabweichung und dem mittleren Glukosewert. Für jeden Zeitraum, der länger als 1 Tag dauert, berechnen wir den Mittelwert des täglichen CV.",
   "coefficient-of-variation-with-value": "Variationskoeffizient ({{cbgLabel}})",
   "colon": "{{label}}:",

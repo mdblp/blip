@@ -118,7 +118,7 @@
   "chat-footer-private": "Privé",
   "chat-footer-reply": "Antwoorden",
   "chat-footer-start-writing": "Begin met typen",
-  "coefficient-of-variation": "Coefficient of Variation",
+  "coefficient-of-variation": "Variatiecoëfficiënt",
   "coefficient-of-variation-tooltip": "**VC (variatiecoëfficiënt):** de verhouding van de standaardafwijking tot de gemiddelde glucosewaarde. Voor elke periode langer dan 1 dag berekenen we het gemiddelde van de dagelijkse VC.",
   "coefficient-of-variation-with-value": "CV ({{cbgLabel}})",
   "colon": "{{label}}:",
