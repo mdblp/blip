@@ -118,7 +118,7 @@
   "chat-footer-private": "非公開",
   "chat-footer-reply": "返信",
   "chat-footer-start-writing": "入力を開始",
-  "coefficient-of-variation": "CV ({{cbgLabel}})",
+  "coefficient-of-variation": "変動係数",
   "coefficient-of-variation-tooltip": "**CV（変動係数）**平均血糖値に対しての標準偏差値比。1日以上の期間に対しては、日次CVの平均が計算されます。",
   "colon": "{{label}}",
   "columns-settings-cannot-changed-pending-tab": "Columns settings cannot be changed while on the pending tab",
