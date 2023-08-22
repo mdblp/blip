@@ -147,6 +147,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2557 Responsive for daily and trends views
 - YLP-2558 Statistics panel design improvements
 - YLP-2561 Manage monitoring alerts display when no data available
+- YLP-2571 Upgrade SSL security policy for cloudfront distributions
 
 ### Fixed
 - YLP-1770 Team list is not refreshed after patient accept invitation from notification
