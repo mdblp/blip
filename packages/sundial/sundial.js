@@ -18,7 +18,7 @@
 // DO NOT PASS GO, DO NOT COLLECT $200
 /* * * * */
 
-const moment = require('moment-timezone')
+import moment from 'moment-timezone'
 
 export const datetimeWrapper = function() {
   const timezoneNames = {}
