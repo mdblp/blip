@@ -108,7 +108,7 @@ export class StaticWebSiteStack extends core.Stack {
           props: {
             acmCertificateArn: cert.certificateArn,
             sslSupportMethod: cloudfront.SSLMethod.SNI,
-            minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2018
+            minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021
           },
 
         },
