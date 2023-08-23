@@ -25,6 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const convertToPercentage = (number: number): number => {
-  return Math.round(number * 10) / 10
+export const convertToPercentage = (value: number): number => {
+  if (Number.isNaN(value)) {
+    return 0
+  }
+  return Math.round(value * 10) / 10
 }

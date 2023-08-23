@@ -48,7 +48,7 @@ import { BasicsChart } from 'tideline'
 import { getParametersChanges, getLongDayHourFormat, formatParameterValue } from 'tidepool-viz'
 import GenericDashboardCard from 'yourloops/components/dashboard-widgets/generic-dashboard-card'
 import { SensorUsageStat } from 'yourloops/components/statistics/sensor-usage-stat'
-import { GlycemiaStatisticsService, TimeService } from 'medical-domain'
+import { GlycemiaStatisticsService } from 'medical-domain'
 import metrics from 'yourloops/lib/metrics'
 
 const useStyles = makeStyles()((theme) => ({
@@ -111,11 +111,10 @@ const DeviceUsage = (props) => {
   const history = _.sortBy(_.cloneDeep(mostRecentSettings?.payload?.history), ['changeDate'])
   const dateFormat = getLongDayHourFormat()
   const paramChanges = getParametersChanges(history, timePrefs, dateFormat, false)
-  const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
   const {
     total,
     sensorUsage
-  } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+  } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, dateFilter)
 
   const deviceData = {
     cgm: {

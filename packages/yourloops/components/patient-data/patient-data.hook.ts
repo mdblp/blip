@@ -185,7 +185,13 @@ export const usePatientData = (): usePatientDataResult => {
       const patientData = await patientDataUtils.current.loadDataRange(dateRange)
       if (patientData && patientData.length > 0) {
         medicalData.add(patientData)
+        const dataUtil = new DataUtil(medicalData.data, {
+          bgPrefs,
+          timePrefs,
+          endpoints: medicalData.endpoints
+        })
         setMedicalData(medicalData)
+        setDataUtil(dataUtil)
         return true
       }
       return false

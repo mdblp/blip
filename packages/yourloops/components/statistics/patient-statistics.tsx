@@ -25,46 +25,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import { type BgPrefs, CBGPercentageBarChart, CBGStatType, TotalCarbsStat } from 'dumb'
+import React, { type FunctionComponent } from 'react'
+import { type BgPrefs, CBGPercentageBarChart, CBGStatType, LoopModeStat, TotalCarbsStat } from 'dumb'
+import Box from '@mui/material/Box'
+import { useTheme } from '@mui/material'
+import Divider from '@mui/material/Divider'
+import { SensorUsageStat } from './sensor-usage-stat'
 import {
   type BgType,
   type DateFilter,
   DatumType,
   type MedicalData,
   TimeService,
-  BasalBolusStatisticsService
+  BasalBolusStatisticsService,
+  GlycemiaStatisticsService,
+  CarbsStatisticsService
 } from 'medical-domain'
-import Box from '@mui/material/Box'
-import { useTheme } from '@mui/material'
-import Divider from '@mui/material/Divider'
-import { SensorUsageStat } from './sensor-usage-stat'
-import { GlycemiaStatisticsService, CarbsStatisticsService } from 'medical-domain'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { StandardDeviationStat } from './standard-deviation-stat'
 import { AverageGlucoseStat } from './average-glucose-stat'
 import { TotalInsulinStat } from './total-insulin-stat'
+import { MS_IN_DAY } from 'medical-domain/dist/src/domains/repositories/time/time.service'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
   bgPrefs: BgPrefs
-  bgType: BgType
   dateFilter: DateFilter
 }
 
-export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
-  const { medicalData, bgPrefs, bgType, dateFilter, children } = props
+export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (props) => {
+  const { medicalData, bgPrefs, dateFilter } = props
   const theme = useTheme()
   const location = useLocation()
-
-  const cbgSelected = bgType === DatumType.Cbg
+  const cbgSelected = medicalData.cbg.length > 0
+  const bgType: BgType = cbgSelected ? DatumType.Cbg : DatumType.Smbg
   const cbgStatType: CBGStatType = cbgSelected ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
-  const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
+  const numberOfDays = dateFilter.weekDays ? TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays) : (dateFilter.end - dateFilter.start) / MS_IN_DAY
   const bgUnits = bgPrefs.bgUnits
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
-  const isTrendsPage = location.pathname.includes('trends')
+  const isTrendsView = location.pathname.includes('trends')
+  const isDashboardPage = location.pathname.includes('dashboard')
 
   const {
     standardDeviation,
@@ -74,7 +76,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const {
     sensorUsage,
     total: sensorUsageTotal
-  } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+  } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, dateFilter)
 
   const {
     foodCarbsPerDay,
@@ -100,6 +102,17 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     weight,
     totalInsulin: dailyDose
   } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter, medicalData.pumpSettings)
+
+  const {
+    automatedBasalDuration,
+    manualBasalDuration,
+    manualBasalInDays,
+    automatedBasalInDays,
+    automatedAndManualTotalDuration
+  } = BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(medicalData.basal, dateFilter)
+
+  const automatedBasals = isDashboardPage ? automatedBasalInDays : automatedBasalDuration
+  const manualBasals = isDashboardPage ? manualBasalInDays : manualBasalDuration
 
   return (
     <Box data-testid="patient-statistics">
@@ -129,7 +142,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
 
-      {isTrendsPage &&
+      {isTrendsView &&
         <>
           <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
@@ -146,8 +159,14 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
         dailyDose={dailyDose}
       />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      {children}
-
+      <LoopModeStat
+        automatedBasalDuration={automatedBasalDuration}
+        manualBasalDuration={manualBasalDuration}
+        totalBasalDuration={automatedAndManualTotalDuration}
+        automatedBasals={automatedBasals}
+        manualBasals={manualBasals}
+      />
+      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
       <TotalCarbsStat
         totalEntriesCarbWithRescueCarbs={totalEntriesCarbWithRescueCarbs}
         totalCarbsPerDay={Math.round(totalCarbsPerDay)}

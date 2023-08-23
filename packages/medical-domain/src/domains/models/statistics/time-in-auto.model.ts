@@ -24,30 +24,10 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import React, { type FunctionComponent } from 'react'
-import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined'
-import GenericDashboardCard from './generic-dashboard-card'
-import { useTranslation } from 'react-i18next'
-import CardContent from '@mui/material/CardContent'
-import { PatientStatistics, type PatientStatisticsProps } from '../statistics/patient-statistics'
-
-export const PatientStatisticsWidget: FunctionComponent<PatientStatisticsProps> = (props) => {
-  const { t } = useTranslation()
-  const { medicalData, bgPrefs, dateFilter} = props
-
-  return (
-    <GenericDashboardCard
-      avatar={<InsertChartOutlinedIcon />}
-      title={t('patient-statistics')}
-    >
-      <CardContent>
-        <PatientStatistics
-          medicalData={medicalData}
-          bgPrefs={bgPrefs}
-          dateFilter={dateFilter}
-       />
-      </CardContent>
-    </GenericDashboardCard>
-  )
+export interface TimeInAutoStatistics {
+  automatedAndManualTotalDuration: number
+  automatedBasalDuration: number
+  automatedBasalInDays: number
+  manualBasalDuration: number
+  manualBasalInDays: number
 }

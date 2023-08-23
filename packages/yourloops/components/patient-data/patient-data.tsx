@@ -141,7 +141,7 @@ export const PatientData: FunctionComponent = () => {
                 </Button>
               </Box>
             }
-            {medicalData?.hasDiabetesData() && dataUtil &&
+            {medicalData?.hasDiabetesData() &&
               <React.Fragment>
                 <Routes>
                   <Route
@@ -149,7 +149,6 @@ export const PatientData: FunctionComponent = () => {
                     element={
                       <PatientDashboard
                         bgPrefs={bgPrefs}
-                        dataUtil={dataUtil}
                         dashboardEpochDate={dashboardEpochDate}
                         goToDailySpecificDate={goToDailySpecificDate}
                         medicalDataService={medicalData}

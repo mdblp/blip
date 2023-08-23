@@ -21,13 +21,11 @@ import i18next from 'i18next'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { utils as vizUtils } from 'tidepool-viz'
-import { DatumType, TimeService } from 'medical-domain'
+import { TimeService } from 'medical-domain'
 import SubNav, { weekDays } from './trendssubnav'
-import Stats from './stats'
 import Footer from './footer'
 import Box from '@mui/material/Box'
 import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
-import { ChartTypes } from 'yourloops/enum/chart-type.enum'
 import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsContainer, TrendsProvider } from 'dumb'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
@@ -91,7 +89,6 @@ class Trends extends React.Component {
   static propTypes = {
     bgPrefs: PropTypes.object.isRequired,
     chartPrefs: PropTypes.object.isRequired,
-    dataUtil: PropTypes.object,
     timePrefs: PropTypes.object.isRequired,
     epochLocation: PropTypes.number.isRequired,
     msRange: PropTypes.number.isRequired,
@@ -528,7 +525,6 @@ class Trends extends React.Component {
 
   render() {
     const {
-      chartPrefs,
       loading
     } = this.props
 
@@ -564,19 +560,9 @@ class Trends extends React.Component {
                   <PatientStatistics
                     medicalData={this.props.tidelineData.medicalData}
                     bgPrefs={this.props.bgPrefs}
-                    bgType={this.props.dataUtil.bgSource}
                     dateFilter={dateFilter}
-                  >
-                    <Stats
-                      bgPrefs={this.props.bgPrefs}
-                      bgSource={DatumType.Cbg}
-                      chartPrefs={chartPrefs}
-                      chartType={ChartTypes.Trends}
-                      dataUtil={this.props.dataUtil}
-                      endpoints={endpoints}
-                      loading={loading}
-                    />
-                  </PatientStatistics>
+                  />
+
                 </div>
               </div>
             </Box>
