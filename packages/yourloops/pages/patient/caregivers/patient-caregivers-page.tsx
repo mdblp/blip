@@ -159,7 +159,9 @@ function PatientCaregiversPage(): JSX.Element {
           </Container>
         </>
       }
-      <AddCaregiverDialog actions={caregiverToAdd} currentCaregivers={caregivers} />
+      {caregiverToAdd &&
+        <AddCaregiverDialog actions={caregiverToAdd} currentCaregivers={caregivers} />
+      }
     </>
   )
 }
