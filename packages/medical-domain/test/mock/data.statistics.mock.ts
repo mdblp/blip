@@ -46,7 +46,7 @@ export const basalsData: Array<[Date, number, number, string]> = [
   [new Date('2018-02-01T01:00:00Z'), 0.25, MS_IN_HOUR, 'automated'],
   [new Date('2018-02-01T02:00:00Z'), 0.75, MS_IN_HOUR, 'scheduled'],
   [new Date('2018-02-01T03:00:00Z'), 0.5, MS_IN_HOUR, 'scheduled'],
-  [new Date('2018-02-03T03:00:00Z'), 0.5, MS_IN_HOUR, 'scheduled'],
+  [new Date('2018-02-02T00:00:00Z'), 0.5, MS_IN_HOUR, 'scheduled'],
   [new Date('2018-02-02T00:00:00Z'), 0.5, MS_IN_HOUR, 'temp']
 ]
 
