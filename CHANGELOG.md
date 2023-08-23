@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.4-rc6 - 2023-08-16
+## 3.0.4-rc7 - 2023-08-16
 ### Added
 - YLP-1503 Logout idle user after 30 mn of inactivity
 - YLP-1932 Communication module available for all patients
@@ -129,7 +129,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-2498 Fix chat widget minimal height
 - YLP-2502 History of device parameters is not sorted properly
 - YLP-2503 Device settings history is not taking timezone into account
-- YLP-2506 Fix reservoir change icon always falling back to default
 - YLP-2510 Static dashboard does not perform calculation based on the last 14 days
 - YLP-2511 In the daily view, not all graph data is taken into account by the loop mode
 - YLP-2514 Add data-stonlyid to UI elements to display 3.0.4 updates via Stonly triggers
@@ -148,14 +147,17 @@ It is based on Tidepool Blip 1.27.
 - YLP-2557 Responsive for daily and trends views
 - YLP-2558 Statistics panel design improvements
 - YLP-2561 Manage monitoring alerts display when no data available
+- YLP-2571 Upgrade SSL security policy for cloudfront distributions
 
 ### Fixed
-- YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
+- YLP-1770 Team list is not refreshed after patient accept invitation from notification
 - YLP-2189 Fix error when applying team monitoring alarm params in mg/dL to user with monitoring in mmol/L
 - YLP-2341 Pdf export in CSV is broken when a user has preferred units in its profile
 - YLP-2460 Caregiver users cannot see the "Last data update" date in the patients list
 - YLP-2487 HCP non admin can see button to save new team monitoring alerts parameters
 - YLP-2496 Undelivered value is not rounded in micro-bolus tooltip
+- YLP-2504 PDF displays "NaN" instead of "0" for insulin value
+- YLP-2506 Fix reservoir change icon always falling back to default
 - YLP-2508 PDF report is missing information about rescue carbs
 - YLP-2509 "Sensor warmup" icon is not shown
 - YLP-2523 Fix insulin values not rounded in Bolus tooltip
@@ -185,7 +187,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-1625 Display an explicit error when trying to share data with another patient
 - YLP-1680 getPatientData Api method has a wrong parameter
 - YLP-1726 Rework signup with Auth0
-- YLP-1770 Team list is not refreshed after patient accept invitation from notification
 - YLP-1805 Push error to the backend
 - YLP-1868 Add route to invite team member
 - YLP-1873 Fix patient profile update not visible in dashboard
