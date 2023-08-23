@@ -44,8 +44,8 @@ describe('Time In Auto Data', () => {
       automatedBasalDuration: MS_IN_HOUR,
       manualBasalDuration: MS_IN_HOUR * 2,
       automatedAndManualTotalDuration: MS_IN_HOUR + MS_IN_HOUR * 2,
-      automatedBasalPerDayDuration: 28800000,
-      manualBasalPerDayDuration: 57600000
+      automatedBasalInDays: 28800000,
+      manualBasalInDays: 57600000
     })
   })
 
@@ -55,8 +55,8 @@ describe('Time In Auto Data', () => {
       automatedBasalDuration: MS_IN_HOUR,
       manualBasalDuration: MS_IN_HOUR * 4,
       automatedAndManualTotalDuration: MS_IN_HOUR + MS_IN_HOUR * 4,
-      manualBasalPerDayDuration: 69120000,
-      automatedBasalPerDayDuration: 17280000
+      manualBasalInDays: 69120000,
+      automatedBasalInDays: 17280000
     })
   })
 })

@@ -47,24 +47,25 @@ import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { StandardDeviationStat } from './standard-deviation-stat'
 import { AverageGlucoseStat } from './average-glucose-stat'
 import { TotalInsulinStat } from './total-insulin-stat'
+import { MS_IN_DAY } from 'medical-domain/dist/src/domains/repositories/time/time.service'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
   bgPrefs: BgPrefs
-  bgType: BgType
   dateFilter: DateFilter
 }
 
 export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (props) => {
-  const { medicalData, bgPrefs, bgType, dateFilter } = props
+  const { medicalData, bgPrefs, dateFilter } = props
   const theme = useTheme()
   const location = useLocation()
-  const cbgSelected = bgType === DatumType.Cbg
+  const cbgSelected = medicalData.cbg.length > 0
+  const bgType: BgType = cbgSelected ? DatumType.Cbg : DatumType.Smbg
   const cbgStatType: CBGStatType = cbgSelected ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
-  const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
+  const numberOfDays = dateFilter.weekDays ? TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays) : (dateFilter.end - dateFilter.start) / MS_IN_DAY
   const bgUnits = bgPrefs.bgUnits
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
-  const isTrendsPage = location.pathname.includes('trends')
+  const isTrendsView = location.pathname.includes('trends')
   const isDashboardPage = location.pathname.includes('dashboard')
 
   const {
@@ -141,7 +142,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
       <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage} />
       <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
 
-      {isTrendsPage &&
+      {isTrendsView &&
         <>
           <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
           <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />

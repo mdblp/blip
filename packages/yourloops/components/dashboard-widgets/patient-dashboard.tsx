@@ -31,7 +31,6 @@ import DeviceUsage from 'blip/app/components/chart/deviceUsage.js'
 import type MedicalDataService from 'medical-domain'
 import { type TimePrefs } from 'medical-domain'
 import { type BgPrefs } from 'dumb'
-import type DataUtil from 'tidepool-viz/src/utils/data'
 import Grid from '@mui/material/Grid'
 import AccessTime from '@mui/icons-material/AccessTime'
 import { useTranslation } from 'react-i18next'
@@ -54,7 +53,6 @@ import { PRIVATE_TEAM_ID, useTeam } from '../../lib/team/team.hook'
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
   dashboardEpochDate: number
-  dataUtil: typeof DataUtil
   goToDailySpecificDate: (date: number | Date) => void
   loading: boolean
   medicalDataService: MedicalDataService
@@ -75,7 +73,6 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
   const {
     bgPrefs,
     dashboardEpochDate,
-    dataUtil,
     goToDailySpecificDate,
     medicalDataService,
     msRange,
@@ -137,7 +134,6 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
         <PatientStatisticsWidget
           medicalData={medicalData}
           bgPrefs={bgPrefs}
-          bgType={dataUtil.bgSource}
           dateFilter={dateFilter}
         />
       </Grid>
