@@ -41,8 +41,8 @@ interface TotalInsulinStatProps {
 
 export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   const {
-    bolus,
     basal,
+    bolus,
     totalInsulin,
     dailyDose,
     weight
