@@ -145,7 +145,9 @@ export const PatientCaregiversPage: FC = () => {
           </Container>
         </>
       }
-      <AddCaregiverDialog actions={caregiverToAdd} currentCaregivers={caregivers} />
+      {caregiverToAdd &&
+        <AddCaregiverDialog actions={caregiverToAdd} currentCaregivers={caregivers} />
+      }
     </>
   )
 }
