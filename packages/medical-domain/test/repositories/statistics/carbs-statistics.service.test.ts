@@ -68,7 +68,7 @@ describe('getCarbsData', () => {
     const expected = {
       foodCarbsPerDay: 25,
       totalEntriesCarbWithRescueCarbs: 10,
-      totalCarbsPerDay: 25
+      totalCarbsPerDay: 50
     }
 
     expect(carbsData).toEqual(expected)
@@ -81,7 +81,7 @@ describe('getCarbsData', () => {
     const expected = {
       foodCarbsPerDay: 2.5,
       totalEntriesCarbWithRescueCarbs: 2,
-      totalCarbsPerDay: 2.5
+      totalCarbsPerDay: 5
     }
     expect(carbsData).toEqual(expected)
   })
