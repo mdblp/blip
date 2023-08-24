@@ -41,11 +41,11 @@ function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilte
   const wizardCarbs = sumValues(wizardData)
   const foodCarbs = sumValues(foodCarbsData)
   const totalEntriesCarbWithRescueCarbs = foodCarbsData.length + wizardData.length
-
+  const totalCarbs = wizardCarbs + foodCarbs
   return {
     foodCarbsPerDay: foodCarbs / numDays,
     totalEntriesCarbWithRescueCarbs,
-    totalCarbsPerDay: wizardCarbs / numDays
+    totalCarbsPerDay: totalCarbs / numDays
   }
 }
 
