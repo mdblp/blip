@@ -96,5 +96,7 @@ describe('Signup stepper as caregiver', () => {
       })
     )
     expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })
+    const messageCompleteAccount = screen.getByTestId('message-complete-account')
+    expect(messageCompleteAccount).toHaveTextContent('Clicking the continue button will take you to your dashboard. Patients must invite you from their YourLoops account for you to access their data.')
   })
 })

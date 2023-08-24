@@ -134,14 +134,9 @@ const SignUpStepper: FunctionComponent = () => {
           <Typography gutterBottom>
             {t('account-created-info-1')}.
           </Typography>
-          { isHcp
-            ? <Typography gutterBottom>
-            {t('account-created-info-2-hcp')}.
+          <Typography data-testid='message-complete-account'>
+            {isHcp ? t('account-created-info-2-hcp') : t('account-created-info-2-cargiver') }
           </Typography>
-            : <Typography gutterBottom>
-              {t('account-created-info-2-cargiver')}.
-            </Typography>
-          }
           <Box
             id="signup-consent-button-group"
             display="flex"
