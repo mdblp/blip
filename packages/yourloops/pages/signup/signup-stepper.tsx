@@ -42,6 +42,8 @@ import SignUpProfileForm from './signup-profile-form'
 import SignUpConsent from './signup-consent'
 import { useAuth } from '../../lib/auth'
 import SignUpAccountSelector from './signup-account-selector'
+import { SignUpFormStateContext } from './signup-formstate-context'
+import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 
 export interface SignUpFormProps {
   handleBack: () => void
@@ -68,7 +70,8 @@ const SignUpStepper: FunctionComponent = () => {
     'consent',
     'create-profile'
   ]
-
+  const { signupForm } = React.useContext(SignUpFormStateContext)
+  const isHcp = signupForm.accountRole === UserRole.Hcp
   const handleNext = (): void => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1)
   }
@@ -131,9 +134,14 @@ const SignUpStepper: FunctionComponent = () => {
           <Typography gutterBottom>
             {t('account-created-info-1')}.
           </Typography>
-          <Typography gutterBottom>
-            {t('account-created-info-2')}.
+          { isHcp
+            ? <Typography gutterBottom>
+            {t('account-created-info-2-hcp')}.
           </Typography>
+            : <Typography gutterBottom>
+              {t('account-created-info-2-cargiver')}.
+            </Typography>
+          }
           <Box
             id="signup-consent-button-group"
             display="flex"

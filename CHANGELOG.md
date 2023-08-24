@@ -5,6 +5,8 @@ It is based on Tidepool Blip 1.27.
 ## 3.0.5-beta - 2023-07-12
 ### Added
 - YLP-2484 Remove level column in device change parameter history
+### Engineering
+- YLP-2573 Create a dedicated message for the caregiver when the account creation is complete
 
 ## 3.0.4-beta - 2023-02-10
 ### Added
