@@ -541,7 +541,7 @@ class Trends extends React.Component {
     return (
       <TrendsProvider>
         <div id="tidelineMain" className="trends grid">
-          <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
+          <Box data-testid="trends-view-content" className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
             <div>
               {this.getTitle()}
             </div>
