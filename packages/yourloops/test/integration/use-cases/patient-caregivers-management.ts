@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,16 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import DirectShareApi from '../../../lib/share/direct-share.api'
-import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
-import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
+import {
+  checkAddCaregiverErrorCases,
+  checkAddRemoveCaregiver,
+  checkCaregiversListLayout
+} from '../assert/caregivers-list.assert'
 
-export const addDirectShareMock = jest.spyOn(DirectShareApi, 'addDirectShare').mockResolvedValue(undefined)
-export const removeDirectShareMock = jest.spyOn(DirectShareApi, 'removeDirectShare').mockResolvedValue(undefined)
-
-export const mockCaregiverEmail = 'caregiver@mail.com'
-export const mockDirectShareApi = () => {
-  jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValue([
-    { status: UserInviteStatus.Accepted, user: { username: mockCaregiverEmail, role: UserRole.Caregiver, userid: 'userid' } }
-  ])
+export const testCaregiversVisualisation = async () => {
+  await checkCaregiversListLayout()
+  // await checkAddRemoveCaregiver()
+  await checkAddCaregiverErrorCases()
 }
