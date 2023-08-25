@@ -151,7 +151,10 @@ function PatientCaregiversPage(): JSX.Element {
           <SecondaryBar onShowAddCaregiverDialog={handleShowAddCaregiverDialog} />
           <Container maxWidth="lg">
             <Box marginTop={4}>
-              <CaregiverTable caregivers={caregivers} fetchCaregivers={fetchCaregivers} />
+              <CaregiverTable
+                caregivers={caregivers}
+                fetchCaregivers={fetchCaregivers}
+              />
             </Box>
           </Container>
         </>

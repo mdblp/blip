@@ -193,7 +193,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
   })
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} data-testid="patient-caregivers-list">
       <Table id="patient-caregivers-table" aria-label={t('aria-table-list-caregivers')} stickyHeader>
         <TableHead id="patient-caregivers-table-header">
           <TableRow id="patient-caregivers-table-header-row" className={classes.tableRowHeader}>

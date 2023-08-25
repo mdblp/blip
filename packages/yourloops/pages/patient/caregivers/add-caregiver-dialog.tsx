@@ -96,6 +96,7 @@ function AddCaregiverDialog(props: AddDialogProps): JSX.Element {
   return (
     <Dialog
       id="patient-add-caregiver-dialog"
+      data-testid="patient-add-caregiver-dialog"
       open={dialogIsOpen}
       aria-labelledby={t('modal-add-caregiver')}
       onClose={handleClose}
@@ -109,6 +110,7 @@ function AddCaregiverDialog(props: AddDialogProps): JSX.Element {
       <DialogContent>
         <TextField
           id="patient-add-caregiver-dialog-email"
+          data-testid="patient-add-caregiver-dialog-email"
           label={t('email')}
           value={email}
           required

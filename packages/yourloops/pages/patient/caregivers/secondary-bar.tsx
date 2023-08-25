@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -70,6 +70,7 @@ function SecondaryBar(props: BarProps): JSX.Element {
     <div id="patient-navbar-item-right" data-testid="patient-caregivers-secondary-bar" className={classes.topBar}>
       <Button
         id="patient-navbar-add-caregiver"
+        data-testid="add-caregiver-button"
         color="primary"
         variant="contained"
         disableElevation
