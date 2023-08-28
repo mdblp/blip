@@ -27,6 +27,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2188 Sort patients by column on patient list
 - YLP-2192 Team scope dropdown for HCP
 - YLP-2194 Navigation tabs for HCP ("Patients", "Care teams")
+- YLP-2195 Remove the menu present in the header of 3.0.3 to access the care team settings and to create a care team
 - YLP-2215 Implement specific daily visualisation of UMM bolus
 - YLP-2216 Use selected team in Add patient dialog
 - YLP-2218 Use selected team in Remove patient dialog
@@ -36,6 +37,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2253 Dedicated error message for a patient joining a team they're already invited in
 - YLP-2265 Disable Add patient button when private practice is selected
 - YLP-2285 Monitoring filter cannot be enabled when Private practice is selected
+- YLP-2287 Refine statistics cards of the dashboard
 - YLP-2312 Teams and patients in a team should always have a field "monitoringAlertsParameters"
 - YLP-2322 Pending patients should not display glycemia specific data
 - YLP-2323 Add new columns from existing data in patient list
@@ -56,6 +58,10 @@ It is based on Tidepool Blip 1.27.
 - YLP-2430 Add checkbox to confirm that user is a hcp
 - YLP-2435 Remove "Telemonitored" filter on patient list
 - YLP-2447 Device page new design
+- YLP-2552 Calculate the statistics of the patient list on the last 14 days
+- YLP-2554 Delete the info icone on the tooltips displayed with mouseover on the TIR graph
+- YLP-2556 Make the TIR graph title more responsive
+- YLP-2560 Make sure we show N/A instead of 0% for alerts when no data is available
 
 ### Engineering use
 - YLP-2044 Remove redux settings store
