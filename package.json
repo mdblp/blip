@@ -1,6 +1,6 @@
 {
   "name": "yourloops",
-  "version": "3.0.4",
+  "version": "3.0.5-beta",
   "private": true,
   "description": "Blip is a web app for type 1 diabetes (T1D) built on top of the [Tidepool](http://tidepool.org/) platform.",
   "repository": {
@@ -95,7 +95,7 @@
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
     "autoprefixer": "^10.4.14",
-    "babel-jest": "^29.5.0",
+    "babel-jest": "^29.6.2",
     "babel-loader": "^9.1.2",
     "body-parser": "^1.20.2",
     "chai": "^4.3.4",
@@ -113,7 +113,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "handlebars": "^4.7.7",
+    "handlebars": "^4.7.8",
     "helmet": "^7.0.0",
     "html-webpack-plugin": "^5.5.3",
     "jest": "^29.5.0",

@@ -68,7 +68,6 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>{t('Level')}</TableCell>
               <TableCell>{t('Setting')}</TableCell>
               <TableCell>{t('Value')}</TableCell>
               <TableCell align="right">{t('type-of-change')}</TableCell>
@@ -112,7 +111,6 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                     data-testid={`parameters-group-${parametersChange.changeDate.substring(0, 10)}-${historyCurrentIndex}-rows-${index}`}
                     className={`${classes.parameterRow} parameter-change-row`}
                   >
-                    <TableCell>{parameter.level}</TableCell>
                     <TableCell>
                       <Tooltip title={isEllipsisActive(document.getElementById(`${parameter.name}-${index}`)) ? parameter.name : ''}>
                         <Typography
