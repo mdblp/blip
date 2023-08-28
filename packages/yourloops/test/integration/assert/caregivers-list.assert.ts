@@ -33,6 +33,7 @@ import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
 import { type Notification } from '../../../lib/notifications/models/notification.model'
 import { expectation } from 'sinon'
+import DirectShareApi from '../../../lib/share/direct-share.api'
 
 export const checkCaregiversListLayout = async () => {
   expect(await screen.findByTestId('patient-caregivers-list')).toBeVisible()
@@ -68,7 +69,8 @@ export const checkAddRemoveCaregiver = async () => {
   jest.spyOn(NotificationApi, 'getSentInvitations').mockResolvedValueOnce([{
     email: newCaregiverEmail,
     type: NotificationType.directInvitation,
-    target: { id: 'target-id' }
+    target: { id: 'target-id' },
+    id: 'my-id'
   } as Notification])
   await userEvent.click(inviteButton)
 
@@ -117,6 +119,7 @@ export const checkAddRemoveCaregiver = async () => {
   expect(caregiverRowAfterRemove).toHaveTextContent('UserCaregivercaregiver@mail.com')
   expect(within(caregiverRowAfterRemove).getByTestId(`patient-caregivers-table-row-${mockCaregiverUser.username}-button-remove`)).toBeVisible()
 
+  expect(NotificationApi.cancelInvitation).toHaveBeenCalledWith('my-id', 'target-id', 'new-caregiver@mail.com')
   expect(within(caregiversTableAfterRemove).queryByTestId(`patient-caregivers-table-row-${newCaregiverEmail}`)).not.toBeInTheDocument()
 }
 
