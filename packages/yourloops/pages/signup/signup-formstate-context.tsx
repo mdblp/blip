@@ -51,7 +51,7 @@ const initialState: SignupForm = {
 /*
  * Create the context for the Signup Form state
  */
-export const SignUpFormStateContext = createContext<ISignUpFormStateContext>({} as ISignUpFormStateContext)
+const SignUpFormStateContext = createContext<ISignUpFormStateContext>({} as ISignUpFormStateContext)
 
 /*
  * Provide a signup form state context

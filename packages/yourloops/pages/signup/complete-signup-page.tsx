@@ -27,7 +27,6 @@
 
 import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
-
 import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Card from '@mui/material/Card'
@@ -35,8 +34,7 @@ import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
-
-import SignUpStepper from './signup-stepper'
+import { SignUpStepper } from './signup-stepper'
 import { SignUpFormStateProvider } from './signup-formstate-context'
 import appConfig from '../../lib/config/config'
 
