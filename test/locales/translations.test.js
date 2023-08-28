@@ -214,7 +214,8 @@ const ignoredTransKeyForYourLoops = [
   'average-daily-total-insulin',
   'ratio-dose',
   'weight',
-  'account-created-info-2-cargiver'
+  'account-created-info-2-caregiver',
+  'account-created-info-2-hcp'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
