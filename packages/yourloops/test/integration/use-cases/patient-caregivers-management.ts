@@ -34,5 +34,5 @@ import {
 export const testCaregiversVisualisation = async () => {
   await checkCaregiversListLayout()
   await checkAddRemoveCaregiver()
-  // await checkAddCaregiverErrorCases()
+  await checkAddCaregiverErrorCases()
 }

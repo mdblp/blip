@@ -33,7 +33,8 @@ import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
 import { type Notification } from '../../../lib/notifications/models/notification.model'
 import { expectation } from 'sinon'
-import DirectShareApi from '../../../lib/share/direct-share.api'
+import DirectShareApi, { PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE } from '../../../lib/share/direct-share.api'
+import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 
 export const checkCaregiversListLayout = async () => {
   expect(await screen.findByTestId('patient-caregivers-list')).toBeVisible()
@@ -104,6 +105,7 @@ export const checkAddRemoveCaregiver = async () => {
   expect(removeButton).toBeEnabled()
 
   jest.spyOn(NotificationApi, 'getSentInvitations').mockResolvedValueOnce([])
+  jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValue([{ status: UserInviteStatus.Accepted, user: mockCaregiverUser }])
   await userEvent.click(removeButton)
 
   expect(screen.queryByTestId('remove-direct-share-dialog')).not.toBeInTheDocument()
@@ -160,7 +162,12 @@ export const checkAddCaregiverErrorCases = async () => {
   expect(inviteButton).toBeDisabled()
   expect(within(addCaregiverDialog).getByText('You are already sharing your data with this caregiver.')).toBeVisible()
 
-  await userEvent.click(cancelButton)
+  await userEvent.clear(emailInput)
+  await userEvent.type(emailInput, 'other-patient@mail.com')
 
+  jest.spyOn(DirectShareApi, 'addDirectShare').mockRejectedValueOnce(new Error(PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE))
+  await userEvent.click(inviteButton)
+
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You cannot share your data with this user as they are not a caregiver.')
   expect(screen.queryByTestId('patient-add-caregiver-dialog')).not.toBeInTheDocument()
 }
