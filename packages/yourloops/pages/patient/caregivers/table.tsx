@@ -130,11 +130,12 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
   const tableRows = props.caregivers.map((caregiver: ShareUser) => {
     const user = caregiver.user
     const userId = user.userid
+    const userEmail = user.username
     const isPending = caregiver.status === UserInviteStatus.Pending
 
     const userToRemove = {
       id: userId,
-      email: user.username,
+      email: userEmail,
       fullName: `${getUserFirstName(user)} ${getUserLastName(user)}`
     }
 
@@ -149,7 +150,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
           key={userId}
           id={`patient-caregivers-table-row-${userId}`}
           data-userid={userId}
-          data-testid={`patient-caregivers-table-row-${userId}`}
+          data-testid={`patient-caregivers-table-row-${userEmail}`}
           data-status={caregiver.status}
         >
           <TableCell id={`patient-caregivers-table-row-${userId}-status`}>
@@ -176,6 +177,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
             <IconActionButton
               icon={<PersonRemoveIcon />}
               id={`patient-caregivers-table-row-${userId}-button-remove`}
+              data-testid={`patient-caregivers-table-row-${userEmail}-button-remove`}
               aria-label={`${t('remove-caregiver')}-${userId}`}
               onClick={onClickRemoveCaregiver}
               tooltip={t('remove-caregiver')} />

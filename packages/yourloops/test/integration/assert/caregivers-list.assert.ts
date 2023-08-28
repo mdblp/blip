@@ -25,9 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, waitFor, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { mockCaregiverEmail } from '../mock/direct-share.api.mock'
+import { mockCaregiverUser } from '../mock/direct-share.api.mock'
+import NotificationApi from '../../../lib/notifications/notification.api'
+import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
+import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
+import { type Notification } from '../../../lib/notifications/models/notification.model'
+import { expectation } from 'sinon'
 
 export const checkCaregiversListLayout = async () => {
   expect(await screen.findByTestId('patient-caregivers-list')).toBeVisible()
@@ -38,6 +43,14 @@ export const checkCaregiversListLayout = async () => {
 }
 
 export const checkAddRemoveCaregiver = async () => {
+  const caregiversTable = screen.getByTestId('patient-caregivers-list')
+  expect(caregiversTable).toHaveTextContent('Last nameFirst nameEmail')
+
+  const caregiverRow = within(caregiversTable).getByTestId(`patient-caregivers-table-row-${mockCaregiverUser.username}`)
+  expect(caregiverRow).toBeVisible()
+  expect(caregiverRow).toHaveTextContent('UserCaregivercaregiver@mail.com')
+  expect(within(caregiverRow).getByTestId(`patient-caregivers-table-row-${mockCaregiverUser.username}-button-remove`)).toBeVisible()
+
   const addCaregiverButton = await screen.findByTestId('add-caregiver-button')
   await userEvent.click(addCaregiverButton)
 
@@ -47,13 +60,64 @@ export const checkAddRemoveCaregiver = async () => {
   const emailInput = within(addCaregiverDialog).getByRole('textbox', { name: 'Email' })
   expect(emailInput).toBeVisible()
 
+  const newCaregiverEmail = 'new-caregiver@mail.com'
   await userEvent.type(emailInput, 'new-caregiver@mail.com')
   const inviteButton = within(addCaregiverDialog).getByRole('button', { name: 'Invite' })
   expect(inviteButton).toBeEnabled()
 
+  jest.spyOn(NotificationApi, 'getSentInvitations').mockResolvedValueOnce([{
+    email: newCaregiverEmail,
+    type: NotificationType.directInvitation,
+    target: { id: 'target-id' }
+  } as Notification])
   await userEvent.click(inviteButton)
 
-  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  expect(screen.queryByTestId('patient-add-caregiver-dialog')).not.toBeInTheDocument()
+  const inviteSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
+  expect(inviteSuccessfulSnackbar).toHaveTextContent('Invite sent!')
+  await userEvent.click(within(inviteSuccessfulSnackbar).getByTitle('Close'))
+
+  const caregiversTableAfterAdd = await screen.findByTestId('patient-caregivers-list')
+  expect(caregiversTableAfterAdd).toBeVisible()
+
+  const caregiverRowAfterAdd = within(caregiversTableAfterAdd).getByTestId(`patient-caregivers-table-row-${mockCaregiverUser.username}`)
+  expect(caregiverRowAfterAdd).toBeVisible()
+  expect(caregiverRowAfterAdd).toHaveTextContent('UserCaregivercaregiver@mail.com')
+  expect(within(caregiverRowAfterAdd).getByTestId(`patient-caregivers-table-row-${mockCaregiverUser.username}-button-remove`)).toBeVisible()
+
+  const newCaregiverRow = within(caregiversTableAfterAdd).getByTestId(`patient-caregivers-table-row-${newCaregiverEmail}`)
+  expect(newCaregiverRow).toBeVisible()
+  expect(newCaregiverRow).toHaveTextContent('--new-caregiver@mail.com')
+  const removeCaregiverButton = within(newCaregiverRow).getByTestId(`patient-caregivers-table-row-${newCaregiverEmail}-button-remove`)
+  expect(removeCaregiverButton).toBeVisible()
+
+  await userEvent.click(removeCaregiverButton)
+
+  const removeCaregiverDialog = screen.getByTestId('remove-direct-share-dialog')
+  expect(within(removeCaregiverDialog).getByText('Remove caregiver new-caregiver@mail.com')).toBeVisible()
+  expect(removeCaregiverDialog).toHaveTextContent('Are you sure you want to remove caregiver new-caregiver@mail.com?They will no longer have access to your data.')
+  const cancelButton = within(removeCaregiverDialog).getByRole('button', { name: 'Cancel' })
+  expect(cancelButton).toBeEnabled()
+  const removeButton = within(removeCaregiverDialog).getByRole('button', { name: 'Remove caregiver' })
+  expect(removeButton).toBeEnabled()
+
+  jest.spyOn(NotificationApi, 'getSentInvitations').mockResolvedValueOnce([])
+  await userEvent.click(removeButton)
+
+  expect(screen.queryByTestId('remove-direct-share-dialog')).not.toBeInTheDocument()
+  const removeCaregiverSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
+  expect(removeCaregiverSuccessfulSnackbar).toHaveTextContent('Your caregiver has no longer access to your data.')
+  await userEvent.click(within(removeCaregiverSuccessfulSnackbar).getByTitle('Close'))
+
+  const caregiversTableAfterRemove = await screen.findByTestId('patient-caregivers-list')
+  expect(caregiversTableAfterRemove).toBeVisible()
+
+  const caregiverRowAfterRemove = within(caregiversTableAfterRemove).getByTestId(`patient-caregivers-table-row-${mockCaregiverUser.username}`)
+  expect(caregiverRowAfterRemove).toBeVisible()
+  expect(caregiverRowAfterRemove).toHaveTextContent('UserCaregivercaregiver@mail.com')
+  expect(within(caregiverRowAfterRemove).getByTestId(`patient-caregivers-table-row-${mockCaregiverUser.username}-button-remove`)).toBeVisible()
+
+  expect(within(caregiversTableAfterRemove).queryByTestId(`patient-caregivers-table-row-${newCaregiverEmail}`)).not.toBeInTheDocument()
 }
 
 export const checkAddCaregiverErrorCases = async () => {
@@ -80,8 +144,6 @@ export const checkAddCaregiverErrorCases = async () => {
   expect(inviteButton).toBeDisabled()
 
   await userEvent.type(emailInput, 'invalid-email')
-  // Blur the email input field to trigger the error message display
-  await userEvent.click(addCaregiverDialog)
   expect(inviteButton).toBeDisabled()
   expect(within(addCaregiverDialog).getByText('Invalid email address (special characters are not allowed).')).toBeVisible()
 
@@ -91,18 +153,11 @@ export const checkAddCaregiverErrorCases = async () => {
   expect(within(addCaregiverDialog).queryByText('Invalid email address (special characters are not allowed).')).not.toBeInTheDocument()
 
   await userEvent.clear(emailInput)
-  await userEvent.type(emailInput, mockCaregiverEmail)
-  // Blur the email input field to trigger the error message display
-  await userEvent.click(addCaregiverDialog)
+  await userEvent.type(emailInput, mockCaregiverUser.username)
   expect(inviteButton).toBeDisabled()
   expect(within(addCaregiverDialog).getByText('You are already sharing your data with this caregiver.')).toBeVisible()
 
   await userEvent.click(cancelButton)
 
-  // await waitFor(() => {
-  //   // expect(screen.queryByTestId('patient-add-caregiver-dialog')).not.toBeInTheDocument()
-  //   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  // }, { timeout: 3000 })
-
-  expect(await screen.findByRole('dialog', {}, { timeout: 5000 })).not.toBeInTheDocument()
+  expect(screen.queryByTestId('patient-add-caregiver-dialog')).not.toBeInTheDocument()
 }

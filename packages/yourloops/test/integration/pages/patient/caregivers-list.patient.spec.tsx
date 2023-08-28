@@ -37,8 +37,6 @@ import DirectShareApi, {
   PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE
 } from '../../../../lib/share/direct-share.api'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { type IUser } from '../../../../lib/data/models/i-user.model'
-import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type Notification } from '../../../../lib/notifications/models/notification.model'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
@@ -100,11 +98,11 @@ describe('Patient caregivers page', () => {
 
     expect(addCaregiverDialogConfirmButton).toBeEnabled()
 
-    jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValueOnce([{
-      user: { userid: caregiverId, profile: { firstName: caregiverFirstName, lastName: caregiverLastName } } as IUser,
-      invitation: { email: caregiverEmail } as Notification,
-      status: UserInviteStatus.Pending
-    }])
+    // jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValueOnce([{
+    //   user: { userid: caregiverId, profile: { firstName: caregiverFirstName, lastName: caregiverLastName } } as IUser,
+    //   invitation: { email: caregiverEmail } as Notification,
+    //   status: UserInviteStatus.Pending
+    // }])
     jest.spyOn(NotificationApi, 'getSentInvitations').mockResolvedValueOnce([{ id: 'id', email: caregiverEmail } as Notification])
 
     await userEvent.click(addCaregiverDialogConfirmButton)

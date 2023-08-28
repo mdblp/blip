@@ -32,9 +32,22 @@ import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 export const addDirectShareMock = jest.spyOn(DirectShareApi, 'addDirectShare').mockResolvedValue(undefined)
 export const removeDirectShareMock = jest.spyOn(DirectShareApi, 'removeDirectShare').mockResolvedValue(undefined)
 
-export const mockCaregiverEmail = 'caregiver@mail.com'
+export const mockCaregiverUser = {
+  username: 'caregiver@mail.com',
+  role: UserRole.Caregiver,
+  userid: 'userid',
+  profile: {
+    firstName: 'Caregiver',
+    lastName: 'User',
+    fullName: 'Caregiver User',
+    email: 'caregiver@mail.com'
+  }
+}
 export const mockDirectShareApi = () => {
   jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValue([
-    { status: UserInviteStatus.Accepted, user: { username: mockCaregiverEmail, role: UserRole.Caregiver, userid: 'userid' } }
+    { status: UserInviteStatus.Accepted, user: mockCaregiverUser }
   ])
+
+  jest.spyOn(DirectShareApi, 'addDirectShare').mockResolvedValue()
+  jest.spyOn(DirectShareApi, 'removeDirectShare').mockResolvedValue()
 }
