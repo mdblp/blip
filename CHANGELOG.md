@@ -115,6 +115,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2307 Incomplete alert when accepting a direct share invitation
 - YLP-2311 Reorganize ITs
 - YLP-2328 Migrate patient-data from jsx to tsx
+- YLP-2341 Pdf export in CSV is broken when a user has preferred units in its profile
 - YLP-2351 Migrate average daily dose stat and total insulin stat from stat.js to yourloops
 - YLP-2352 Monitoring alert tooltips "out of range" displays incorrect values
 - YLP-2364 Fixed English translations
@@ -136,7 +137,6 @@ It is based on Tidepool Blip 1.27.
 ### Fixed
 - YLP-2145 Patient cannot see monitoring widgets when he's in a monitoring team and another non-monitoring team
 - YLP-2189 Fix error when applying team monitoring alarm params in mg/dL to user with monitoring in mmol/L
-- YLP-2341 Pdf export in CSV is broken when a user has preferred units in its profile
 - YLP-2460 Caregiver users cannot see the "Last data update" date in the patients list
 - YLP-2487 HCP non admin can see button to save new team monitoring alerts parameters
 
