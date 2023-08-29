@@ -25,8 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
-
+import React, { type FC, type ReactElement } from 'react'
 import { useAuth } from '../lib/auth'
 import { NotificationContextProvider } from '../lib/notifications/notification.hook'
 import { Navigate, Route } from 'react-router-dom'
@@ -35,10 +34,10 @@ import { PatientLayout } from './patient-layout'
 import { UserRole } from '../lib/auth/models/enums/user-role.enum'
 import { HcpLayoutWithContext } from './hcp-layout-with-context'
 
-export function MainLayout(): JSX.Element {
+export const MainLayout: FC = () => {
   const { user } = useAuth()
 
-  const getUserLayout = (): JSX.Element => {
+  const getUserLayout = (): ReactElement => {
     switch (user?.role) {
       case UserRole.Hcp:
         return <HcpLayoutWithContext />

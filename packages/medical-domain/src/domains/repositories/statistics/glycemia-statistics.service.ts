@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MS_IN_MIN, MS_IN_DAY, diffDays } from '../time/time.service'
+import { diffDays, MS_IN_DAY, MS_IN_MIN } from '../time/time.service'
 import type Cbg from '../../models/medical/datum/cbg.model'
 import type Smbg from '../../models/medical/datum/smbg.model'
 import type {
-  BgBounds,
   AverageGlucoseStatistics,
+  BgBounds,
   CbgRangeStatistics,
   CoefficientOfVariationStatistics,
   GlucoseManagementIndicatoStatistics,
@@ -146,11 +146,11 @@ function getReadingsInRangeData(smbgData: Smbg[], bgBounds: BgBounds, numDays: n
   return readingsInRange
 }
 
-function getSensorUsage(cbgData: Cbg[], numDays: number, dateFilter: DateFilter): SensorUsageStatistics {
+function getSensorUsage(cbgData: Cbg[], dateFilter: DateFilter): SensorUsageStatistics {
   const filteredCbg = CbgService.filterOnDate(cbgData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const totalDuration = getCgmTotalDuration(filteredCbg)
 
-  const total = Math.round(numDays * MS_IN_DAY)
+  const total = dateFilter.end - dateFilter.start
 
   return {
     sensorUsage: totalDuration,
@@ -263,7 +263,7 @@ function getStandardDevData(bgData: Cbg[] | Smbg[], dateFilter: DateFilter): Sta
 export interface GlycemiaStatisticsAdapter {
   getReadingsInRangeData: (smbgData: Smbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter) => CbgRangeStatistics
   getTimeInRangeData: (cbgData: Cbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter) => CbgRangeStatistics
-  getSensorUsage: (cbgData: Cbg[], numDays: number, dateFilter: DateFilter) => SensorUsageStatistics
+  getSensorUsage: (cbgData: Cbg[], dateFilter: DateFilter) => SensorUsageStatistics
   getAverageGlucoseData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => AverageGlucoseStatistics
   getCoefficientOfVariationData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => CoefficientOfVariationStatistics
   getGlucoseManagementIndicatorData: (cbgData: Cbg[], bgUnit: BgUnit, dateFilter: DateFilter) => GlucoseManagementIndicatoStatistics

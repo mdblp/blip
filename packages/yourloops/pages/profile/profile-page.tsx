@@ -25,15 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useEffect, useState } from 'react'
+import React, { type FunctionComponent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import DialogTitle from '@mui/material/DialogTitle'
 import Link from '@mui/material/Link'
-
-import { getCurrentLang } from '../../lib/language'
 import { setPageTitle } from '../../lib/utils'
 import { useAuth } from '../../lib/auth'
 import metrics from '../../lib/metrics'
@@ -47,37 +44,35 @@ import { Lock } from '@mui/icons-material'
 import { Divider } from '@mui/material'
 import { AuthApi } from '../../lib/auth/auth.api'
 import { useAlert } from '../../components/utils/snackbar'
-import bows from 'bows'
 
-const log = bows('ProfilePage')
-
-const ProfilePage: FunctionComponent = () => {
+export const ProfilePage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { classes } = profileFormCommonClasses()
   const { user } = useAuth()
   const alert = useAlert()
 
   const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false)
-  const lang = user.preferences?.displayLanguageCode ?? getCurrentLang()
 
   const handleSwitchRoleOpen = (): void => {
     setSwitchRoleOpen(true)
     metrics.send('switch_account', 'display_switch_preferences')
   }
 
-  const handleSwitchRoleCancel = (): void => { setSwitchRoleOpen(false) }
+  const handleSwitchRoleCancel = (): void => {
+    setSwitchRoleOpen(false)
+  }
 
   const sendChangePasswordEmail = async (): Promise<void> => {
     try {
       await AuthApi.sendResetPasswordEmail(user.email)
       alert.success(t('alert-change-password-email-success'))
     } catch (reason: unknown) {
-      log.error(reason)
+      console.error(reason)
       alert.error(t('alert-change-password-email-failed'))
     }
   }
 
-  useEffect(() => { setPageTitle(t('account-preferences')) }, [lang, t])
+  setPageTitle(t('account-preferences'))
 
   return (
     <React.Fragment>
@@ -131,5 +126,3 @@ const ProfilePage: FunctionComponent = () => {
     </React.Fragment>
   )
 }
-
-export default ProfilePage

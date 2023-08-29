@@ -146,10 +146,10 @@ export const noDataTransferredPatientInfo: Patient = buildPatient({
   monitoringAlertsParameters: defaultMonitoringAlertsParameters,
   profile: {
     birthdate: '1980-01-01T10:44:34+01:00',
-    email: 'no-data@patient.fr',
-    firstName: 'No Data',
+    email: 'z-no-data@patient.fr',
+    firstName: 'Z - No Data',
     lastName: 'Patient',
-    fullName: 'No Data Patient',
+    fullName: 'Z - No Data Patient',
     sex: Gender.Female
   },
   settings: defaultSettings
@@ -157,7 +157,14 @@ export const noDataTransferredPatientInfo: Patient = buildPatient({
 
 const noDataTransferredPatientMetrics: PatientMetrics = buildPatientMetrics({
   userId: noDataTransferredPatientId,
-  monitoringAlerts: { ...defaultMonitoringAlerts, nonDataTransmissionActive: true }
+  monitoringAlerts: {
+    nonDataTransmissionActive: true,
+    nonDataTransmissionRate: 100,
+    timeSpentAwayFromTargetActive: false,
+    timeSpentAwayFromTargetRate: null,
+    frequencyOfSevereHypoglycemiaActive: false,
+    frequencyOfSevereHypoglycemiaRate: null
+  }
 })
 
 export const flaggedPatientInfo: Patient = buildPatient({
@@ -277,6 +284,10 @@ export const PATIENTS_INFO_BY_TEAMID: Record<string, Patient[]> = {
       invitationStatus: UserInviteStatus.Accepted
     },
     {
+      ...noDataTransferredPatientInfo,
+      invitationStatus: UserInviteStatus.Accepted
+    },
+    {
       ...pendingPatient,
       invitationStatus: UserInviteStatus.Pending,
       invite: {
@@ -325,7 +336,8 @@ export const PATIENTS_METRICS_BY_TEAMID: Record<string, PatientMetrics[]> = {
     patient1Metrics,
     patient2Metrics,
     patient3Metrics,
-    patientWithMmolMetrics
+    patientWithMmolMetrics,
+    noDataTransferredPatientMetrics
   ],
   [filtersTeamId]: [
     patient1Metrics,
