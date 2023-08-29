@@ -56,21 +56,12 @@ function AddCaregiverDialog(props: AddDialogProps): JSX.Element {
 
   const isValidEmail = (caregiverEmail: string): boolean => caregiverEmail.length > 0 && REGEX_EMAIL.test(caregiverEmail)
 
-  const resetDialog = (): void => {
-    setTimeout(() => {
-      setEmail('')
-      setErrorMessage(null)
-    }, 100)
-  }
-
   const handleClose = (): void => {
     actions.onDialogResult(null)
-    resetDialog()
   }
 
   const handleClickAdd = (): void => {
     actions.onDialogResult(email)
-    resetDialog()
   }
 
   const checkCaregiverAlreadyInvited = (caregiverEmail: string): void => {
