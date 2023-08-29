@@ -39,8 +39,9 @@ import { IDLE_USER_QUERY_PARAM } from '../../lib/auth'
 import { useTranslation } from 'react-i18next'
 import { AppRoute } from '../../models/enums/routes.enum'
 import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../lib/auth/models/auth0-error.model'
+import { setPageTitle } from '../../lib/utils'
 
-const LoginPageLanding: FunctionComponent = () => {
+export const LoginPageLanding: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { error } = useAuth0()
   const navigate = useNavigate()
@@ -67,6 +68,8 @@ const LoginPageLanding: FunctionComponent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [error])
 
+  setPageTitle(t('login'))
+
   return (
     <React.Fragment>
       <GlobalStyles styles={{ body: { backgroundColor: 'white' } }} />
@@ -77,5 +80,3 @@ const LoginPageLanding: FunctionComponent = () => {
     </React.Fragment>
   )
 }
-
-export default LoginPageLanding

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -67,7 +67,7 @@ export const buildSimpleValueProps = (format: string, total: number, value: numb
   }
 
   if (format === StatFormats.Percentage && total >= 0) {
-    const percentage = (value / total) * 100
+    const percentage = total === 0 ? 0 : (value / total) * 100
     return {
       className: styles.statEnabled,
       value: formatDecimalNumber(percentage, getPercentagePrecision(percentage)),

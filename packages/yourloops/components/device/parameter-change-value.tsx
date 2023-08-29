@@ -26,39 +26,29 @@
  */
 
 import React, { type FC } from 'react'
-import { type ParametersChange, type PumpSettingsParameter } from 'medical-domain'
+import { type PumpSettingsParameter } from 'medical-domain'
 import Box from '@mui/material/Box'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import { useTheme } from '@mui/material/styles'
 import { formatParameterValue } from './utils/device.utils'
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
 
 interface ParameterChangeValueProps {
-  historyCurrentIndex: number
-  history: ParametersChange[]
   parameter: PumpSettingsParameter
 }
 
-export const ParameterChangeValue: FC<ParameterChangeValueProps> = (props) => {
-  let previousParameter: PumpSettingsParameter
+export const ParameterChangeValue: FC<ParameterChangeValueProps> = ({ parameter }) => {
   const theme = useTheme()
-  const { parameter, history, historyCurrentIndex } = props
-  const filteredHistory = history.slice(historyCurrentIndex + 1)
-
-  filteredHistory.every(parametersChange => {
-    previousParameter = parametersChange.parameters.find(paramChange => paramChange.name === parameter.name)
-    return !previousParameter
-  })
 
   return (
     <Box
       display="flex"
       alignItems="center"
-      className={`${parameter.name.toLowerCase()} ${previousParameter ? 'updated-value' : 'added-value'}`}
+      className={`${parameter.name.toLowerCase()} ${parameter.previousValue ? 'updated-value' : 'added-value'}`}
     >
-      {previousParameter &&
+      {parameter.previousValue &&
         <>
-          <span>{`${formatParameterValue(previousParameter.value, previousParameter.unit)} ${previousParameter.unit}`}</span>
-          <ChevronRightIcon sx={{ marginInline: theme.spacing(1) }} />
+          <span>{`${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}`}</span>
+          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
         </>
       }
       <span>{`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}</span>

@@ -124,7 +124,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
     <React.Fragment>
       <div className={commonTeamClasses.root} data-testid="team-members">
         <div className={commonTeamClasses.categoryHeader}>
-          <div>
+          <div data-stonlyid="care-team-settings-members-title">
             <GroupOutlinedIcon />
             <Typography className={commonTeamClasses.title}>
               {t('members')} ({members.length})

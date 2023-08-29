@@ -47,14 +47,14 @@ class CalendarContainer extends React.Component {
    * @param  {String} date
    */
   onHover = (date) => {
-    this.setState({hoverDate: date})
+    this.setState({ hoverDate: date })
   }
 
   getSelectedSubtotal() {
     var options = this.props.selectorOptions
 
     if (options) {
-      return _.get(_.find(_.flatten(options.rows), {selected: true}), 'key', options.primary.key)
+      return _.get(_.find(_.flatten(options.rows), { selected: true }), 'key', options.primary.key)
     }
     return null
   }
@@ -65,7 +65,7 @@ class CalendarContainer extends React.Component {
 
     if (options) {
       var rows = _.flatten(options.rows)
-      var selectedOption = _.find(rows, {selected: true}) || options.primary
+      var selectedOption = _.find(rows, { selected: true }) || options.primary
 
       // If the default selected option has no value, choose the first option that does
       if (selectedOption.path && !this.getOptionValue(selectedOption, data)) {
@@ -129,6 +129,9 @@ class CalendarContainer extends React.Component {
     // Could be subject to change so I thought this was preferred over
     // hard-coding a solution that assumes Monday is the first day
     // of the week.
+    if (this.props.days.length === 0) {
+      return <></>
+    }
     var firstDay = moment.utc(this.props.days[0].date).day()
     const daysRange = _.range(firstDay, firstDay + 7)
     return daysRange.map((dow) => {

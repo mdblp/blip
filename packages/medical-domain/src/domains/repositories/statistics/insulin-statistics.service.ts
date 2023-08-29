@@ -40,13 +40,9 @@ import { type ParameterConfig } from '../../models/medical/datum/pump-settings.m
 
 function resamplingDuration(basals: Basal[], start: number, end: number): Basal[] {
   return basals.map(basal => {
-    if (basal.epoch < start) {
-      basal.epoch = start
-    }
-    if (basal.epochEnd > end) {
-      basal.epochEnd = end
-    }
-    basal.duration = basal.epochEnd - basal.epoch
+    const basalEpochStart = basal.epoch < start ? start : basal.epoch
+    const basalEpochEnd = basal.epochEnd > end ? end : basal.epochEnd
+    basal.duration = basalEpochEnd - basalEpochStart
     return basal
   })
 }
@@ -65,9 +61,9 @@ function getWeight(allPumpSettings: PumpSettings[]): ParameterConfig | undefined
 function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter): BasalBolusStatistics {
   if (numDays === 0) {
     return {
-      bolus: NaN,
-      basal: NaN,
-      total: NaN
+      bolus: 0,
+      basal: 0,
+      total: 0
     }
   }
 
@@ -92,7 +88,7 @@ function getTotalInsulinAndWeightData(basalsData: Basal[], bolusData: Bolus[], n
   const totalInsulin = [basal, bolus].reduce((accumulator, value) => {
     const delivered = isNaN(value) ? 0 : value
     return accumulator + delivered
-  })
+  }, 0)
 
   return {
     totalInsulin,

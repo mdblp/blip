@@ -55,6 +55,7 @@ import { MessageIcon } from '../icons/diabeloop/message-icon'
 import Badge from '@mui/material/Badge'
 import { getUnreadMessagesByTeam } from './chat.util'
 
+const CHAT_CONTENT_MIN_HEIGHT = '280px'
 const CHAT_CONTENT_MAX_HEIGHT = '450px'
 const KEYBOARD_EVENT_ESCAPE = 'Escape'
 
@@ -69,6 +70,7 @@ const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) 
     },
     chatWidgetContent: {
       padding: theme.spacing(2),
+      minHeight: CHAT_CONTENT_MIN_HEIGHT,
       maxHeight: CHAT_CONTENT_MAX_HEIGHT,
       overflowY: 'auto',
       overflowX: 'hidden'
