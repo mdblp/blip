@@ -3,10 +3,8 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.0.5-beta - 2023-07-12
-### Added
-- YLP-2484 Remove level column in device change parameter history
-
 ### Changed
+- YLP-2484 Remove level column in device change parameter history
 - YLP-2572 Prevent patient from adding the same caregiver to their list twice
 
 ## 3.0.4-beta - 2023-02-10
