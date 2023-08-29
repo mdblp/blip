@@ -201,7 +201,7 @@ export async function waitTimeout(timeout: number): Promise<void> {
 }
 
 export const isEpochBetweenBounds = (epoch: number, start: number, end: number): boolean => (
-  epoch >= start && epoch < end
+  epoch >= start && epoch <= end
 )
 
 export function diffDays(start: number, end: number): number {

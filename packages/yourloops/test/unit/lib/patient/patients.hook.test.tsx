@@ -108,7 +108,7 @@ describe('Patients hook', () => {
     return hook
   }
 
-  describe('filterPatients', () => {
+  describe('searchPatients', () => {
     const pendingPatient = createPatient('pendingPatient', UserInviteStatus.Pending, undefined, { birthdate: new Date(2001, 10, 19).toString() })
     const basicPatient = createPatient('basicPatient1', UserInviteStatus.Accepted, undefined, {
       birthdate: new Date(2005, 5, 5).toString(),
@@ -126,8 +126,14 @@ describe('Patients hook', () => {
     })
     noNamePatient.profile.firstName = undefined
     noNamePatient.profile.lastName = undefined
+    const mediumBrainPatient = createPatient('medium brain', UserInviteStatus.Accepted, undefined, {
+      birthdate: new Date(2005, 5, 5).toString(),
+      fullName: 'Medium brain'
+    })
+    mediumBrainPatient.profile.firstName = undefined
+    mediumBrainPatient.profile.lastName = undefined
 
-    const allPatients = [basicPatient, basicPatient2, bigBrainPatient, noNamePatient, pendingPatient]
+    const allPatients = [basicPatient, basicPatient2, bigBrainPatient, noNamePatient, pendingPatient, mediumBrainPatient]
     let customHook
 
     beforeAll(async () => {
@@ -138,6 +144,11 @@ describe('Patients hook', () => {
     it('should return correct patients when provided a first name search filter', () => {
       const patientsReceived = customHook.searchPatients('big brain')
       expect(patientsReceived).toEqual([bigBrainPatient])
+    })
+
+    it('should return correct patients when provided a name search filter but patient only has a fullname', () => {
+      const patientsReceived = customHook.searchPatients('medium')
+      expect(patientsReceived).toEqual([mediumBrainPatient])
     })
 
     it('should return correct patients when provided a date search filter', () => {

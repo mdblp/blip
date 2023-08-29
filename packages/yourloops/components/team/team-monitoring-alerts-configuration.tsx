@@ -78,7 +78,7 @@ function TeamMonitoringAlertsConfiguration(props: TeamMonitoringAlertsConfigurat
   return (
     <div className={commonTeamClasses.root} data-testid="team-monitoring-alerts-configuration">
       <div className={commonTeamClasses.categoryHeader}>
-        <div>
+        <div data-stonlyid="care-team-settings-monitoring-alerts-configuration-title">
           <TuneIcon />
           <Typography className={commonTeamClasses.title} data-testid="monitoring-alert-configuration-section">
             {t('monitoring-alerts-configuration')}

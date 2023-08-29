@@ -182,4 +182,13 @@ describe('HCP home page', () => {
 
     await testPatientListForHcpWithMmolL()
   })
+
+  it('should render home page instead of team details page when route matches /team, user is hcp and selected team is private', async () => {
+    localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
+
+    const router = renderPage('/team')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/home')
+    }, { timeout: 3000 })
+  })
 })
