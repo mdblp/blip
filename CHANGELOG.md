@@ -6,7 +6,7 @@ It is based on Tidepool Blip 1.27.
 ### Added
 - YLP-2484 Remove level column in device change parameter history
 
-### Fixed
+### Changed
 - YLP-2572 Prevent patient from adding the same caregiver to their list twice
 
 ## 3.0.4-beta - 2023-02-10
