@@ -277,14 +277,14 @@ jobs:
         run: nice bash build.sh
 
       - name: Upload yourloops build
-        if: ${{ github.ref_name == 'main' || startsWith(github.ref_name, 'release/') }}
+        if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')
         uses: actions/upload-artifact@v3
         with:
           name: dist
           path: dist/
 
   publish:
-    if: ${{ github.ref_name == 'main' || startsWith(github.ref_name, 'release/') }}
+    if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')
     needs: build
     runs-on: ubuntu-latest
     outputs:
@@ -346,7 +346,7 @@ jobs:
           force_push_tag: true
 
   documentation:
-    if: ${{ github.ref_name == 'main' || startsWith(github.ref_name, 'release/') }}
+    if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')
     runs-on: ubuntu-latest
     needs: publish
     steps:
