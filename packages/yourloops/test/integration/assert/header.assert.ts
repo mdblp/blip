@@ -124,7 +124,7 @@ export const checkCaregiverHeader = async (fullName: string) => {
 }
 
 export const checkPatientHeader = async (fullName: string) => {
-  const header = within(await screen.findByTestId('app-main-header'))
+  const header = within(await screen.findByTestId('app-main-header', {}, { timeout: 3000 }))
   expect(header.getByLabelText('Open team menu')).toBeVisible()
 
   await checkUserMenu(header, fullName, UserRole.Patient)

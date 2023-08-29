@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, type PropsWithChildren, useEffect, useState } from 'react'
+import React, { type FunctionComponent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Theme } from '@mui/material/styles'
@@ -65,7 +65,7 @@ const useStyles = makeStyles({ name: 'ylp-page-notifications-list' })((theme: Th
   }
 }))
 
-const NotificationsPage: FunctionComponent<PropsWithChildren> = () => {
+export const NotificationsPage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { classes } = useStyles()
   const { user } = useAuth()
@@ -73,9 +73,8 @@ const NotificationsPage: FunctionComponent<PropsWithChildren> = () => {
   const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false)
   const notifications = notificationsHook.receivedInvitations
 
-  useEffect(() => {
-    setPageTitle(t('breadcrumb-notifications'))
-  }, [t])
+  setPageTitle(t('breadcrumb-notifications'))
+
   if (user === null) {
     throw new Error('Notification require a logged-in user')
   }
@@ -84,9 +83,11 @@ const NotificationsPage: FunctionComponent<PropsWithChildren> = () => {
     metrics.send('switch_account', 'display_switch_notification')
     setSwitchRoleOpen(true)
   }
+
   const handleSwitchRoleCancel = (): void => {
     setSwitchRoleOpen(false)
   }
+
   const refreshReceivedInvitations = async (): Promise<void> => {
     await notificationsHook.refreshReceivedInvitations()
   }
@@ -129,5 +130,3 @@ const NotificationsPage: FunctionComponent<PropsWithChildren> = () => {
     </>
   )
 }
-
-export default NotificationsPage

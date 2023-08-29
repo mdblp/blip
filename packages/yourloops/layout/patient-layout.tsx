@@ -25,20 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { type FC } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { PatientData } from '../components/patient-data/patient-data'
-import CareTeamSettingsPage from '../pages/care-team-settings/care-team-settings-page'
-import CaregiversPage from '../pages/patient/caregivers/patient-caregivers-page'
+import { CareTeamSettingsPage } from '../pages/care-team-settings/care-team-settings-page'
+import { PatientCaregiversPage } from '../pages/patient/caregivers/patient-caregivers-page'
 import { PatientProvider } from '../lib/patient/patient.provider'
 import { TeamContextProvider } from '../lib/team'
-import DashboardLayout from './dashboard-layout'
-import InvalidRoute from '../components/invalid-route'
-import ProfilePage from '../pages/profile/profile-page'
-import NotificationsPage from '../pages/notifications'
+import { DashboardLayout } from './dashboard-layout'
+import { InvalidRoute } from '../components/invalid-route'
+import { ProfilePage } from '../pages/profile/profile-page'
+import { NotificationsPage } from '../pages/notifications/notifications-page'
 import { AppUserRoute } from '../models/enums/routes.enum'
 
-export function PatientLayout(): JSX.Element {
+export const PatientLayout: FC = () => {
   return (
     <TeamContextProvider>
       <PatientProvider>
@@ -48,7 +48,7 @@ export function PatientLayout(): JSX.Element {
             <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
             <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
             <Route path={AppUserRoute.Home} element={<PatientData />} />
-            <Route path={AppUserRoute.Caregivers} element={<CaregiversPage />} />
+            <Route path={AppUserRoute.Caregivers} element={<PatientCaregiversPage />} />
             <Route path={`${AppUserRoute.Teams}/:teamId`} element={<CareTeamSettingsPage />} />
             <Route path="/" element={<Navigate to={AppUserRoute.Dashboard} replace />} />
             <Route path="*" element={<PatientData />} />

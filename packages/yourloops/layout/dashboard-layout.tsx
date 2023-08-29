@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { type FC, type PropsWithChildren } from 'react'
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
-import MainHeader from '../components/header-bars/main-header'
+import { MainHeader } from '../components/header-bars/main-header'
 
 const dashboardLayoutStyle = makeStyles()(() => ({
   container: {
@@ -38,7 +38,7 @@ const dashboardLayoutStyle = makeStyles()(() => ({
   }
 }))
 
-function DashboardLayout({ children }: { children: JSX.Element }): JSX.Element {
+export const DashboardLayout: FC<PropsWithChildren> = ({ children }) => {
   const { classes } = dashboardLayoutStyle()
   const theme = useTheme()
 
@@ -52,5 +52,3 @@ function DashboardLayout({ children }: { children: JSX.Element }): JSX.Element {
     </Box>
   )
 }
-
-export default DashboardLayout

@@ -25,11 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from 'react'
-
+import React, { type FC, useState } from 'react'
 import { useAuth } from '../../lib/auth'
 import { useTranslation } from 'react-i18next'
-import bows from 'bows'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
@@ -46,6 +44,7 @@ import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { type Profile } from '../../lib/auth/models/profile.model'
+import { setPageTitle } from '../../lib/utils'
 
 const style = makeStyles({ name: 'ylp-training-page' })((theme: Theme) => {
   return {
@@ -81,13 +80,9 @@ const style = makeStyles({ name: 'ylp-training-page' })((theme: Theme) => {
   }
 })
 
-/**
- * Training Page
- */
-function TrainingPage(): JSX.Element {
+export const TrainingPage: FC = () => {
   const { t } = useTranslation('yourloops')
   const auth = useAuth()
-  const log = bows('consent')
   const navigate = useNavigate()
   const location = useLocation()
   const fromPath = location.state?.from?.pathname
@@ -102,11 +97,13 @@ function TrainingPage(): JSX.Element {
     updatedProfile.trainingAck = { acceptanceTimestamp: now, isAccepted: true }
 
     auth.updateProfile(updatedProfile).catch((reason: unknown) => {
-      log.error(reason)
+      console.error(reason)
     }).finally(() => {
       navigate(fromPath ?? '/')
     })
   }
+
+  setPageTitle(t('training'))
 
   return (
     <Container maxWidth="sm" className={classes.mainContainer} data-testid="training-container">
@@ -184,5 +181,3 @@ function TrainingPage(): JSX.Element {
     </Container>
   )
 }
-
-export default TrainingPage

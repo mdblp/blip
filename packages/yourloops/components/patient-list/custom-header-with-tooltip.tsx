@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,6 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import NotificationsPage from './notifications-page'
+import React, { type FC } from 'react'
+import Tooltip from '@mui/material/Tooltip'
+import { usePatientListStyles } from './patient-list.styles'
 
-export default NotificationsPage
+interface CustomHeaderWithTooltipProps {
+  tooltipText: string
+  headerTitle: string
+}
+
+export const CustomHeaderWithTooltip: FC<CustomHeaderWithTooltipProps> = (props) => {
+  const { tooltipText, headerTitle } = props
+  const { classes } = usePatientListStyles()
+
+  return (
+    <Tooltip title={tooltipText}>
+      <span className={classes.customColumnHeader}>{headerTitle}</span>
+    </Tooltip>
+  )
+}
