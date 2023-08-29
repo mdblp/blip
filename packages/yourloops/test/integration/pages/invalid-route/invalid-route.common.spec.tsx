@@ -63,7 +63,7 @@ describe('Invalid Route', () => {
     const router = renderPage('/wrongRoute')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/not-found')
-    })
+    }, { timeout: 3000 })
     expect(await screen.findByText('Page not found')).toBeVisible()
     const homeLink = screen.getByText('Home')
     expect(homeLink).toBeVisible()

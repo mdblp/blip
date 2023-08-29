@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { type FC } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 
@@ -38,20 +38,19 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { useAuth, type User } from '../lib/auth'
 import { getTheme } from '../components/theme'
 import { DefaultSnackbarContext, SnackbarContextProvider } from '../components/utils/snackbar'
-import Footer from '../components/footer/footer'
-import PatientConsentPage from '../pages/patient/patient-consent'
-import CompleteSignUpPage from '../pages/signup/complete-signup-page'
-import { ConsentPage } from '../pages/login'
+import { Footer } from '../components/footer/footer'
+import { CompleteSignUpPage } from '../pages/signup/complete-signup-page'
 import { MainLayout } from '../layout/main-layout'
-import TrainingPage from '../pages/training/training'
-import ProductLabellingPage from '../pages/product-labelling/product-labelling-page'
-import LoginPage from '../pages/login/login-page-landing'
+import { TrainingPage } from '../pages/training/training'
+import { ProductLabellingPage } from '../pages/product-labelling/product-labelling-page'
+import { LoginPageLanding } from '../pages/login/login-page-landing'
 import { ALWAYS_ACCESSIBLE_ROUTES, PUBLIC_ROUTES } from '../lib/diabeloop-urls.model'
-import VerifyEmailPage from '../pages/login/verify-email-page'
-import Box from '@mui/material/Box'
+import { VerifyEmailPage } from '../pages/login/verify-email-page'
 import { useIdleTimer } from 'react-idle-timer'
 import { ConfigService } from '../lib/config/config.service'
 import { AppRoute } from '../models/enums/routes.enum'
+import { ConsentPage } from '../pages/consent/consent-page'
+import Box from '@mui/material/Box'
 
 const muiCache = createCache({
   key: 'mui',
@@ -92,7 +91,7 @@ export const getRedirectUrl = (route: string, user: User, isAuthenticated: boole
   return undefined
 }
 
-export function MainLobby(): JSX.Element {
+export const MainLobby: FC = () => {
   const { isLoading, isAuthenticated } = useAuth0()
   const { fetchingUser, isLoggedIn, logout, user } = useAuth()
   const location = useLocation()
@@ -130,10 +129,10 @@ export function MainLobby(): JSX.Element {
                 <Box>
                   <Routes>
                     <Route path={AppRoute.ProductLabelling} element={<ProductLabellingPage />} />
-                    <Route path={AppRoute.Login} element={<LoginPage />} />
+                    <Route path={AppRoute.Login} element={<LoginPageLanding />} />
                     <Route path={AppRoute.CompleteSignup} element={<CompleteSignUpPage />} />
-                    <Route path={AppRoute.RenewConsent} element={<ConsentPage />} />
-                    <Route path={AppRoute.NewConsent} element={<PatientConsentPage />} />
+                    <Route path={AppRoute.RenewConsent} element={<ConsentPage messageKey="consent-renew-message" />} />
+                    <Route path={AppRoute.NewConsent} element={<ConsentPage messageKey="consent-welcome-message" />} />
                     <Route path={AppRoute.Training} element={<TrainingPage />} />
                     <Route path={AppRoute.VerifyEmail} element={<VerifyEmailPage />} />
                     <Route path="*" element={<MainLayout />} />

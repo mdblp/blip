@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,6 +26,5 @@
  */
 
 import ConsentForm, { ConsentFeedback } from './form'
-import ConsentPage from './page'
 
-export { ConsentFeedback, ConsentForm, ConsentPage }
+export { ConsentFeedback, ConsentForm }

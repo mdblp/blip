@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useEffect } from 'react'
+import React, { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
@@ -80,7 +80,7 @@ const classes = makeStyles()((theme: Theme) => ({
 const StyledTabs = styled(Tabs)(({ theme }) => ({ ...theme.mixins.toolbar }))
 const StyledTab = styled(Tab)(({ theme }) => ({ ...theme.mixins.toolbar }))
 
-function MainHeader(): JSX.Element {
+export const MainHeader: FC = () => {
   const { classes: { desktopLogo, separator, appBar, tab, toolbar } } = classes()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
@@ -89,18 +89,10 @@ function MainHeader(): JSX.Element {
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
-  const [selectedTab, setSelectedTab] = React.useState<HcpNavigationTab | boolean>(HcpNavigationTab.Patients)
-
-  const handleTabChange = (event: React.SyntheticEvent, newTab: HcpNavigationTab): void => {
-    setSelectedTab(newTab)
-  }
-
-  const handleTabClick = (tab: HcpNavigationTab): void => {
-    const route = tab === HcpNavigationTab.CareTeam ? AppUserRoute.CareTeamSettings : AppUserRoute.Home
-    navigate(route)
-  }
-
-  const getTabByPathname = (pathname): HcpNavigationTab | boolean => {
+  const getSelectedTab = (): HcpNavigationTab | false => {
+    if (TeamUtils.isPrivate(selectedTeam) && pathname === AppUserRoute.CareTeamSettings) {
+      return HcpNavigationTab.Patients
+    }
     switch (pathname) {
       case AppUserRoute.CareTeamSettings:
         return HcpNavigationTab.CareTeam
@@ -112,10 +104,10 @@ function MainHeader(): JSX.Element {
     }
   }
 
-  useEffect(() => {
-    const tabToSelect = getTabByPathname(pathname)
-    setSelectedTab(tabToSelect)
-  }, [pathname, selectedTeam])
+  const handleTabClick = (tab: HcpNavigationTab): void => {
+    const route = tab === HcpNavigationTab.CareTeam ? AppUserRoute.CareTeamSettings : AppUserRoute.Home
+    navigate(route)
+  }
 
   return (
     <AppBar
@@ -146,7 +138,7 @@ function MainHeader(): JSX.Element {
           </Box>
 
           {user.isUserHcp() &&
-            <StyledTabs value={selectedTab} onChange={handleTabChange} centered>
+            <StyledTabs value={getSelectedTab()} centered>
               <StyledTab
                 data-testid="main-header-hcp-patients-tab"
                 className={tab}
@@ -197,5 +189,3 @@ function MainHeader(): JSX.Element {
     </AppBar>
   )
 }
-
-export default MainHeader

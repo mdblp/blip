@@ -58,7 +58,7 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
   backgroundImage: {
     position: 'absolute',
     right: 0,
-    bottom: -1,
+    bottom: 0,
     zIndex: -1,
     height: '100%'
   },
@@ -107,7 +107,8 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
     }
   },
   laptopImage: {
-    width: '75%'
+    width: '75%',
+    maxWidth: '650px'
   }
 }))
 
@@ -189,7 +190,6 @@ const LoginPageDesktop: FunctionComponent = () => {
       <Box
         width="100%"
         height="calc(100% - 97px)"
-        position="relative"
       >
         <img src={loginPageBackground} alt={t('alt-img-login-page-background')} className={classes.backgroundImage} />
 

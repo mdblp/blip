@@ -25,14 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useEffect, useRef } from 'react'
-import bows from 'bows'
+import React, { type FC, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
-
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
-
 import { useAuth } from '../../../lib/auth'
 import metrics from '../../../lib/metrics'
 import { setPageTitle } from '../../../lib/utils'
@@ -50,12 +47,7 @@ import { type Notification } from '../../../lib/notifications/models/notificatio
 import { type AddDialogContentProps } from './models/add-dialog-content-props.model'
 import SpinningLoader from '../../../components/loaders/spinning-loader'
 
-const log = bows('PatientCaregiversPage')
-
-/**
- * Patient caregivers page
- */
-function PatientCaregiversPage(): JSX.Element {
+export const PatientCaregiversPage: FC = () => {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
   const { user } = useAuth()
@@ -86,7 +78,7 @@ function PatientCaregiversPage(): JSX.Element {
         setCaregivers(null)
       } catch (reason) {
         const error = reason as Error
-        log.error(reason)
+        console.error(reason)
 
         if (error.message === PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE) {
           alert.error(t('alert-invite-caregiver-failed-user-is-patient'))
@@ -103,7 +95,7 @@ function PatientCaregiversPage(): JSX.Element {
         return acc
       }
 
-      log.debug('Found pending direct-share invitation: ', invitation)
+      console.debug('Found pending direct-share invitation: ', invitation)
       const caregiver: ShareUser = {
         invitation,
         status: UserInviteStatus.Pending,
@@ -121,7 +113,7 @@ function PatientCaregiversPage(): JSX.Element {
   const fetchCaregivers = useCallback(async (): Promise<void> => {
     await DirectShareApi.getDirectShares()
       .catch((reason: unknown) => {
-        log.error(reason)
+        console.error(reason)
 
         return []
       })
@@ -139,9 +131,7 @@ function PatientCaregiversPage(): JSX.Element {
     }
   }, [fetchCaregivers, sentInvitations, user.id])
 
-  useEffect(() => {
-    setPageTitle(t('caregivers-title'))
-  }, [t])
+  setPageTitle(t('caregivers-title'))
 
   return (
     <>
@@ -165,5 +155,3 @@ function PatientCaregiversPage(): JSX.Element {
     </>
   )
 }
-
-export default PatientCaregiversPage

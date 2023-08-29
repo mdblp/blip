@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, useEffect } from 'react'
+import React, { type FC } from 'react'
 import TableContainer from '@mui/material/TableContainer'
 import Table from '@mui/material/Table'
 import TableHead from '@mui/material/TableHead'
@@ -37,11 +37,7 @@ import { useTranslation } from 'react-i18next'
 import Typography from '@mui/material/Typography'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Box from '@mui/material/Box'
-import {
-  PARAMETER_STRING_MAX_WIDTH,
-  sortHistoryParametersByDate,
-  sortPumpSettingsParameterByLevel
-} from './utils/device.utils'
+import { PARAMETER_STRING_MAX_WIDTH } from './utils/device.utils'
 import { type ParametersChange } from 'medical-domain'
 import IconButton from '@mui/material/IconButton'
 import { useTheme } from '@mui/material/styles'
@@ -54,9 +50,10 @@ import Tooltip from '@mui/material/Tooltip'
 interface ParametersChangeHistoryProps {
   goToDailySpecificDate: (date: number) => void
   history: ParametersChange[]
+  timezone: string
 }
 
-export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ history, goToDailySpecificDate }) => {
+export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ history, goToDailySpecificDate, timezone }) => {
   const theme = useTheme()
   const { t } = useTranslation()
 
@@ -64,12 +61,6 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
     goToDailySpecificDate(date)
     window.scroll(0, 0)
   }
-
-  useEffect(() => {
-    sortHistoryParametersByDate(history).reverse()
-    sortPumpSettingsParameterByLevel(history)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
     <Card variant="outlined" data-testid="history-parameter-table">
@@ -109,7 +100,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                         variant="body2"
                         sx={{ color: theme.palette.primary.main }}
                       >
-                        {formatDateWithMomentLongFormat(new Date(parametersChange.changeDate), 'llll')}
+                        {formatDateWithMomentLongFormat(new Date(parametersChange.changeDate), 'llll', timezone)}
                       </Typography>
                     </Box>
                   </TableCell>
@@ -117,6 +108,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                 {parametersChange.parameters.map((parameter, index) => (
                   <TableRow
                     key={`${parameter.effectiveDate}-${index}`}
+                    data-testid={`parameters-group-${parametersChange.changeDate.substring(0, 10)}-${historyCurrentIndex}-rows-${index}`}
                     className={`${classes.parameterRow} parameter-change-row`}
                   >
                     <TableCell>
@@ -132,17 +124,14 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                       </Tooltip>
                     </TableCell>
                     <TableCell>
-                      <ParameterChangeValue
-                        historyCurrentIndex={historyCurrentIndex}
-                        history={history}
-                        parameter={parameter}
-                      />
+                      <ParameterChangeValue parameter={parameter} />
                     </TableCell>
                     <TableCell align="right">
                       <CustomChangeChip changeType={parameter.changeType} />
                     </TableCell>
-                    <TableCell
-                      align="right">{formatDateWithMomentLongFormat(new Date(parameter.effectiveDate), 'llll')}</TableCell>
+                    <TableCell align="right">
+                      {formatDateWithMomentLongFormat(new Date(parameter.effectiveDate), 'llll', timezone)}
+                    </TableCell>
                   </TableRow>
                 ))}
               </React.Fragment>

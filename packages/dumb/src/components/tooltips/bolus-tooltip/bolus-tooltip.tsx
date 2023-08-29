@@ -26,7 +26,15 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { type Bolus, DatumType, Prescriptor, type TimePrefs, type Wizard, WizardInputMealFat, WizardInputMealSource } from 'medical-domain'
+import {
+  type Bolus,
+  DatumType,
+  Prescriptor,
+  type TimePrefs,
+  type Wizard,
+  WizardInputMealFat,
+  WizardInputMealSource
+} from 'medical-domain'
 import { Tooltip } from '../../../index'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
 import {
@@ -78,7 +86,7 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
   const delivered = getDelivered(bolusData as Bolus)
   const isInterrupted = isInterruptedBolus(bolusData as Bolus)
   const programmed = getProgrammed(bolusData as Bolus) ?? 0
-  const undeliveredValue = programmed - delivered
+  const undeliveredValue = formatInsulin(programmed - delivered)
 
   // Wizard-specific properties
   const carbs = (bolus as Wizard).carbInput
@@ -88,8 +96,8 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
   const inputTime = (bolus as Wizard).inputTime
   const recommended = getRecommended(bolus as Wizard)
   const suggested = Number.isFinite(recommended) ? recommended : null
-  const override = programmed - recommended
-  const overrideValue = programmed > recommended ? `+${override}` : `-${override}`
+  const override = formatInsulin(programmed - recommended)
+  const overrideValue = programmed > recommended ? `+${override}` : override.toString()
   const shouldDisplayOverride = Number.isFinite(programmed) && Number.isFinite(recommended) && programmed !== recommended
   const shouldDisplayRecommended = (isInterrupted || shouldDisplayOverride) && suggested !== null
 
@@ -163,10 +171,12 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
             <TooltipLine label={t('Recommended')} value={formatInsulin(recommended)} units={insulinUnitLabel} isBold />
           }
           {isWizard && shouldDisplayOverride &&
-            <TooltipLine label={t('Override')} value={overrideValue} units={insulinUnitLabel} isBold customColor={TooltipColor.Undelivered} />
+            <TooltipLine label={t('Override')} value={overrideValue} units={insulinUnitLabel} isBold
+                         customColor={TooltipColor.Undelivered} />
           }
           {isInterrupted &&
-            <TooltipLine label={t('Undelivered')} value={undeliveredValue} units={insulinUnitLabel} isBold customColor={TooltipColor.Undelivered} />
+            <TooltipLine label={t('Undelivered')} value={undeliveredValue} units={insulinUnitLabel} isBold
+                         customColor={TooltipColor.Undelivered} />
           }
           {Number.isFinite(delivered) &&
             <TooltipLine label={t('Delivered')} value={formatInsulin(delivered)} units={insulinUnitLabel} isBold />
