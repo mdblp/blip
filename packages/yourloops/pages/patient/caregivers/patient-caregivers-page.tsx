@@ -98,7 +98,6 @@ function PatientCaregiversPage(): JSX.Element {
   }
 
   const getCaregiversFromPendingInvitations = useCallback((): ShareUser[] => {
-    // console.log({ sentInvitations })
     return sentInvitations.reduce((acc: ShareUser[], invitation: Notification) => {
       if (invitation.type !== NotificationType.directInvitation) {
         return acc
@@ -127,12 +126,8 @@ function PatientCaregiversPage(): JSX.Element {
         return []
       })
       .then((receivedCaregivers: ShareUser[]) => {
-        console.log({ receivedCaregivers })
         const invitedCaregivers = getCaregiversFromPendingInvitations()
-        console.log({ invitedCaregivers })
         receivedCaregivers.push(...invitedCaregivers)
-        // console.log({ caregivers })
-        console.log({ final: receivedCaregivers })
         setCaregivers(receivedCaregivers)
       })
   }, [getCaregiversFromPendingInvitations])
