@@ -25,7 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { getUserName } from '../../../../lib/auth/user.util'
+import { getUserName, sanitizeBgUnit } from '../../../../lib/auth/user.util'
+import { Unit } from 'medical-domain'
 
 describe('User util', () => {
   describe('getUserName', () => {
@@ -43,6 +44,24 @@ describe('User util', () => {
       expect(firstNameCaseName).toEqual(fullName)
       expect(lastNameCaseName).toEqual(fullName)
       expect(bothNamesCaseName).toEqual('user-name')
+    })
+  })
+
+  describe('sanitizeBgUnit', () => {
+    it('should return the default unit when no unit is provided', () => {
+      expect(sanitizeBgUnit(undefined)).toEqual(Unit.MilligramPerDeciliter)
+    })
+
+    it('should return the appropriate unit even if the casing is wrong', () => {
+      expect(sanitizeBgUnit(Unit.MilligramPerDeciliter)).toEqual(Unit.MilligramPerDeciliter)
+      expect(sanitizeBgUnit('mg/dl')).toEqual(Unit.MilligramPerDeciliter)
+      expect(sanitizeBgUnit('MG/DL')).toEqual(Unit.MilligramPerDeciliter)
+      expect(sanitizeBgUnit('Mg/dl')).toEqual(Unit.MilligramPerDeciliter)
+
+      expect(sanitizeBgUnit(Unit.MmolPerLiter)).toEqual(Unit.MmolPerLiter)
+      expect(sanitizeBgUnit('mmol/l')).toEqual(Unit.MmolPerLiter)
+      expect(sanitizeBgUnit('MMOL/L')).toEqual(Unit.MmolPerLiter)
+      expect(sanitizeBgUnit('Mmol/l')).toEqual(Unit.MmolPerLiter)
     })
   })
 })

@@ -70,7 +70,7 @@ function drawBolus(pool, opts = {}) {
     width: 12,
     r: 14,
     suspendMarkerWidth: 5,
-    markerHeight: 2,
+    markerHeight: 5,
     triangleHeight: 4,
     triangleOffset: 4,
     bolusStroke: 2,

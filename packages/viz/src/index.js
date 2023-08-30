@@ -35,7 +35,6 @@ import {
   statTypes
 } from './utils/stat'
 import DataUtil from './utils/data'
-import getParametersChanges from './utils/parametersHistory'
 import createPrintPDFPackage from './modules/print'
 import { generatePDFStats, generatePumpSettings, selectDailyViewData } from './utils/print/data'
 
@@ -82,7 +81,6 @@ export {
   components,
   utils,
   createPrintPDFPackage,
-  getParametersChanges,
   getLongDayHourFormat,
   formatParameterValue
 }

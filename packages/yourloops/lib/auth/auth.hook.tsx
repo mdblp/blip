@@ -55,6 +55,7 @@ import { type AuthenticatedUser, IDLE_USER_QUERY_PARAM } from './models/authenti
 import { type SignupForm } from './models/signup-form.model'
 import { type ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
 import { v4 as uuidv4 } from 'uuid'
+import { sanitizeBgUnit } from './user.util'
 
 const ReactAuthContext = createContext({} as AuthContext)
 const log = bows('AuthHook')
@@ -173,6 +174,12 @@ export function AuthContextImpl(): AuthContext {
           user.profile = userMetadata.profile
           user.preferences = userMetadata.preferences
           user.settings = userMetadata.settings
+          if (!user.settings) {
+            user.settings = {}
+          }
+          user.settings.units = {
+            bg: sanitizeBgUnit(userMetadata.settings?.units?.bg)
+          }
         }
         updateUserLanguage(user)
         metrics.setUser(user)

@@ -45,6 +45,7 @@ import { MessageIcon } from '../icons/diabeloop/message-icon'
 import { convertBG } from '../../lib/units/units.util'
 import { Unit } from 'medical-domain'
 import { Skeleton } from '@mui/material'
+import PatientUtils from '../../lib/patient/patient.util'
 
 interface FlagCellProps {
   isFlagged: boolean
@@ -65,9 +66,9 @@ interface ActionsCellProps {
 }
 
 interface MonitoringAlertsTooltips {
-  timeSpentAwayFromTargetRate: number
-  frequencyOfSevereHypoglycemiaRate: number
-  nonDataTransmissionRate: number
+  timeSpentAwayFromTargetRate: string
+  frequencyOfSevereHypoglycemiaRate: string
+  nonDataTransmissionRate: string
   min: number
   max: number
   veryLowBg: number
@@ -142,23 +143,20 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
   }
 
   const buildTooltipValues = (): MonitoringAlertsTooltips => {
-    if (unit === monitoringAlertsParameters.bgUnit) {
-      return {
-        timeSpentAwayFromTargetRate: roundUpToOneDecimal(monitoringAlerts.timeSpentAwayFromTargetRate),
-        frequencyOfSevereHypoglycemiaRate: roundUpToOneDecimal(monitoringAlerts.frequencyOfSevereHypoglycemiaRate),
-        nonDataTransmissionRate: roundUpToOneDecimal(monitoringAlerts.nonDataTransmissionRate),
-        min: roundUpToOneDecimal(monitoringAlertsParameters.lowBg),
-        max: roundUpToOneDecimal(monitoringAlertsParameters.highBg),
-        veryLowBg: roundUpToOneDecimal(monitoringAlertsParameters.veryLowBg)
-      }
-    }
+    const bgUnit = monitoringAlertsParameters.bgUnit
+    const isBgUnit = unit === bgUnit
+
+    const lowBg = monitoringAlertsParameters.lowBg
+    const highBg = monitoringAlertsParameters.highBg
+    const veryLowBg = monitoringAlertsParameters.veryLowBg
+
     return {
-      timeSpentAwayFromTargetRate: roundUpToOneDecimal(monitoringAlerts.timeSpentAwayFromTargetRate),
-      frequencyOfSevereHypoglycemiaRate: roundUpToOneDecimal(monitoringAlerts.frequencyOfSevereHypoglycemiaRate),
-      nonDataTransmissionRate: roundUpToOneDecimal(monitoringAlerts.nonDataTransmissionRate),
-      min: convertBG(monitoringAlertsParameters.lowBg, monitoringAlertsParameters.bgUnit),
-      max: convertBG(monitoringAlertsParameters.highBg, monitoringAlertsParameters.bgUnit),
-      veryLowBg: convertBG(monitoringAlertsParameters.veryLowBg, monitoringAlertsParameters.bgUnit)
+      timeSpentAwayFromTargetRate: PatientUtils.formatPercentageValue(monitoringAlerts.timeSpentAwayFromTargetRate),
+      frequencyOfSevereHypoglycemiaRate: PatientUtils.formatPercentageValue(monitoringAlerts.frequencyOfSevereHypoglycemiaRate),
+      nonDataTransmissionRate: PatientUtils.formatPercentageValue(monitoringAlerts.nonDataTransmissionRate),
+      min: isBgUnit ? roundUpToOneDecimal(lowBg) : convertBG(lowBg, bgUnit),
+      max: isBgUnit ? roundUpToOneDecimal(highBg) : convertBG(highBg, bgUnit),
+      veryLowBg: isBgUnit ? roundUpToOneDecimal(veryLowBg) : convertBG(veryLowBg, bgUnit)
     }
   }
 
