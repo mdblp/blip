@@ -34,7 +34,7 @@
   white-space: nowrap;
 }
 
-.rescueCarb {
+.rescueCarb, .mealCarb {
   padding-left: 10px;
   margin-top: 4px;
 }

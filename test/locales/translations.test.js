@@ -213,7 +213,19 @@ const ignoredTransKeyForYourLoops = [
   'total-insulin-how-calculate-tooltip',
   'average-daily-total-insulin',
   'ratio-dose',
-  'weight'
+  'weight',
+  'avg-daily-declared-carbs',
+  'avg-daily-estimated-carbs',
+  'meal-carbs',
+  'tooltip-avg-daily-estimated-carbs',
+  'tooltip-avg-daily-week-carbs',
+  'tooltip-declared-derived-carbs',
+  'tooltip-estimated-derived-carbs',
+  'tooltip-estimated-week-carbs',
+  'tooltip-per-day-carbs',
+  'tooltip-per-day-estimated-carbs',
+  'total-declared-carbs',
+  'total-estimated-carbs'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
