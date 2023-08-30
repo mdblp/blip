@@ -72,7 +72,7 @@ describe('Daily view for anyone', () => {
         expect(router.state.location.pathname).toEqual('/daily')
       })
       const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-      expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Total Carbs110gRescue carbs15g')
+      expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Total Carbs310gRescue carbs15g')
 
       // Check the tooltips
       await checkDailyTidelineContainerTooltips()
@@ -144,7 +144,7 @@ describe('Daily view for anyone', () => {
       // This checks that we tried to generate a pdf
       expect(downloadLinkElement.download).toEqual(`yourloops-report-${patient2AsTeamMember.userId}.pdf`)
       expect(downloadLinkElement.href.length).toBeGreaterThan(18000)
-      expect(downloadLinkElement.href.length).toBeLessThan(18100)
+      expect(downloadLinkElement.href.length).toBeLessThan(18150)
       expect(downloadLinkElement.click).toHaveBeenCalledTimes(1)
 
       await userEvent.click(screen.getByText('Download report'))

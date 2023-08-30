@@ -61,7 +61,6 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   const location = useLocation()
   const isDailyPage = location.pathname.includes('daily')
   const isDashboardPage = location.pathname.includes('dashboard')
-  const isTrendsPage = location.pathname.includes('trends')
   const insulinAnnotations = isDailyPage ? t('total-insulin-days-tooltip') : t('average-daily-insulin-tooltip')
   const annotations = [insulinAnnotations, t('total-insulin-how-calculate-tooltip')]
   if (data.length === 0) {
@@ -155,7 +154,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           </React.Fragment>
         )
       })}
-      {(isTrendsPage || isDashboardPage) && <>
+      {isDashboardPage && <>
         <Box
           display="flex"
           justifyContent="space-between"

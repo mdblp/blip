@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Check for Command
         id: command
-        uses: xt0rted/slash-command-action@v1
+        uses: xt0rted/slash-command-action@v2
         with:
           repo-token: ${{ secrets.GIT_TOKEN }}
           command: publish
@@ -26,7 +26,7 @@ jobs:
 
       - name: Act on the command
         run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}'"
-      - uses: xt0rted/pull-request-comment-branch@v1
+      - uses: xt0rted/pull-request-comment-branch@v2
         id: comment-branch
 
       - uses: actions/checkout@v3
@@ -57,7 +57,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: xt0rted/pull-request-comment-branch@v1
+      - uses: xt0rted/pull-request-comment-branch@v2
         id: comment-branch
 
       - uses: actions/checkout@v3

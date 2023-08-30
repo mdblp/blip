@@ -61,7 +61,7 @@ import { PrintView } from './modules/print/print-view/print-view'
 import { LayoutColumnType } from './models/enums/layout-column-type.enum'
 import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
 import { getPatientFullName } from './utils/patient/patient.util'
-import { formatBirthdate, formatLocalizedFromUTC, getLongDayHourFormat, formatDate } from './utils/datetime/datetime.util'
+import { formatBirthdate, formatLocalizedFromUTC, getLongDayHourFormat, formatDate, TIMEZONE_UTC } from './utils/datetime/datetime.util'
 import { renderPageNumbers } from './utils/pdf/pdf.util'
 
 export {
@@ -100,5 +100,6 @@ export {
   TrendsContainer,
   TrendsProvider,
   formatLocalizedFromUTC,
-  getLongDayHourFormat
+  getLongDayHourFormat,
+  TIMEZONE_UTC
 }

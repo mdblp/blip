@@ -36,7 +36,6 @@ export namespace utils {
   }
 }
 import createPrintPDFPackage from './types/modules/print'
-import getParametersChanges from './types/utils/parametersHistory'
 import { getLongDayHourFormat } from './types/utils/datetime'
 import { formatParameterValue } from './types/utils/format'
 import WarmUpTooltip from './types/components/daily/warmuptooltip/WarmUpTooltip'
@@ -61,4 +60,4 @@ import { statBgSourceLabels } from './types/utils/stat'
 import { statFetchMethods } from './types/utils/stat'
 import { statTypes } from './types/utils/stat'
 
-export { createPrintPDFPackage, getParametersChanges, getLongDayHourFormat, formatParameterValue }
+export { createPrintPDFPackage, getLongDayHourFormat, formatParameterValue }
