@@ -66,7 +66,7 @@ describe('CBGPercentageBarChart hook', () => {
     bgType: DatumType.Cbg,
     data,
     days: 2,
-    type: CBGStatType.TimeInRange,
+    type: CBGStatType.TimeInRange
   }
 
   it('should return correct cbgStatsProps', () => {

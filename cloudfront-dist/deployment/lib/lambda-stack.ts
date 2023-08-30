@@ -1,16 +1,16 @@
-import * as core from '@aws-cdk/core';
-import * as lambda from '@aws-cdk/aws-lambda';
-import * as ssm from '@aws-cdk/aws-ssm';
-import * as iam from '@aws-cdk/aws-iam';
+import * as core from '@aws-cdk/core'
+import * as lambda from '@aws-cdk/aws-lambda'
+import * as ssm from '@aws-cdk/aws-ssm'
+import * as iam from '@aws-cdk/aws-iam'
 
 export class LambdaStack extends core.Stack {
 
-  private functionName: string;
+  private functionName: string
 
   constructor(parent: core.Construct, id: string, distDir: string, props?: core.StackProps, prefix?: string) {
-    super(parent, id, props);
+    super(parent, id, props)
 
-    this.functionName = `${prefix}-blip-request-viewer`;
+    this.functionName = `${prefix}-blip-request-viewer`
 
     const override = new lambda.Function(this, this.functionName, {
       functionName: this.functionName,
@@ -20,10 +20,10 @@ export class LambdaStack extends core.Stack {
       role: new iam.Role(this, 'AllowLambdaServiceToAssumeRole', {
         assumedBy: new iam.CompositePrincipal(
           new iam.ServicePrincipal('lambda.amazonaws.com'),
-          new iam.ServicePrincipal('edgelambda.amazonaws.com'),
+          new iam.ServicePrincipal('edgelambda.amazonaws.com')
         )
       })
-    });
+    })
 
     new ssm.StringParameter(this, 'edge-lambda-arn', {
       parameterName: `/blip/${prefix}/lambda-edge-arn`,
@@ -33,10 +33,10 @@ export class LambdaStack extends core.Stack {
   }
 
   /**
-  * Get the name of the lambda
-  */
+   * Get the name of the lambda
+   */
   public get FunctionName(): string {
-    return this.functionName;
+    return this.functionName
   }
 
 }

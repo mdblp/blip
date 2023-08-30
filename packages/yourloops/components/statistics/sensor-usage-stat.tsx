@@ -26,7 +26,6 @@
  */
 import React, { type FunctionComponent } from 'react'
 import { SimpleStat, StatFormats } from 'dumb'
-import { t } from 'i18next'
 import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
 
