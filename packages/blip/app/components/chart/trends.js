@@ -20,14 +20,14 @@ import moment from 'moment-timezone'
 import i18next from 'i18next'
 import React from 'react'
 import PropTypes from 'prop-types'
-import {utils as vizUtils} from 'tidepool-viz'
-import {TimeService} from 'medical-domain'
-import SubNav, {weekDays} from './trendssubnav'
+import { utils as vizUtils } from 'tidepool-viz'
+import { TimeService } from 'medical-domain'
+import SubNav, { weekDays } from './trendssubnav'
 import Footer from './footer'
 import Box from '@mui/material/Box'
-import {TrendsDatePicker} from 'yourloops/components/date-pickers/trends-date-picker'
-import {CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsContainer, TrendsProvider} from 'dumb'
-import {PatientStatistics} from 'yourloops/components/statistics/patient-statistics'
+import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
+import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsContainer, TrendsProvider } from 'dumb'
+import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import metrics from 'yourloops/lib/metrics'
 
@@ -134,7 +134,7 @@ class Trends extends React.Component {
     this.toggleWeekends = this.toggleWeekends.bind(this)
 
     /** @type {{tidelineData: MedicalDataService}} */
-    const {tidelineData} = props
+    const { tidelineData } = props
     // Min / max date for the date picker
     /** @type {Date} */
     this.startDate = new Date(tidelineData.endpoints[0])
@@ -142,18 +142,18 @@ class Trends extends React.Component {
     this.endDate = new Date(tidelineData.endpoints[1])
     /** Max range in ms */
     this.maxRange = this.endDate.valueOf() - this.startDate.valueOf()
-    this.log.debug({startDate: this.startDate, endDate: this.endDate, maxRange: this.maxRange})
+    this.log.debug({ startDate: this.startDate, endDate: this.endDate, maxRange: this.maxRange })
   }
 
   componentDidMount() {
     this.log.debug('Mounting...')
-    this.setState({updatingDates: true}, () => {
+    this.setState({ updatingDates: true }, () => {
       this.clampEndpoints()
         .catch((reason) => {
           this.log.error(reason)
         })
         .finally(() => {
-          this.setState({updatingDates: false})
+          this.setState({ updatingDates: false })
           this.log.debug('Mounting finished')
         })
     })
@@ -185,8 +185,8 @@ class Trends extends React.Component {
       this.updateAtMostRecent()
       const localDates = this.getDisplayedLocalDates()
       if (!_.isEqual(localDates, this.state.localDates)) {
-        this.log.debug('componentDidUpdate', {localDates})
-        this.setState({localDates})
+        this.log.debug('componentDidUpdate', { localDates })
+        this.setState({ localDates })
       }
     }
 
@@ -200,13 +200,13 @@ class Trends extends React.Component {
     const epochLocation = this.props.epochLocation
     const atMostRecent = epochLocation + Math.floor(extentSize * TimeService.MS_IN_DAY / 2) + 1 > this.endDate.valueOf()
     if (this.state.atMostRecent !== atMostRecent) {
-      this.setState({atMostRecent})
+      this.setState({ atMostRecent })
     }
   }
 
   filterData() {
-    const {tidelineData, chartPrefs} = this.props
-    const {localDates} = this.state
+    const { tidelineData, chartPrefs } = this.props
+    const { localDates } = this.state
 
     const activeDays = chartPrefs.trends.activeDays
     const activeDaysArray = []
@@ -221,7 +221,7 @@ class Trends extends React.Component {
     ))
     currentCbgData.sort((a, b) => a.epoch - b.epoch)
     this.log.debug('filterData', currentCbgData)
-    this.setState({currentCbgData})
+    this.setState({ currentCbgData })
   }
 
   /**
@@ -260,7 +260,7 @@ class Trends extends React.Component {
     const availDays = this.getMaxExtendsSize()
     if (availDays < extentSize) {
       const center = this.startDate.valueOf() + this.maxRange / 2
-      this.log.debug('Too few days available, update date and range to', {center, maxRange: this.maxRange})
+      this.log.debug('Too few days available, update date and range to', { center, maxRange: this.maxRange })
       return this.props.onDatetimeLocationChange(center, this.maxRange)
         .then(() => {
           this.updateExtendsSize(availDays)
@@ -274,7 +274,7 @@ class Trends extends React.Component {
     // If (currentLocation + range/2) is after the end date
     if (end > this.endDate.valueOf()) {
       const center = this.endDate.valueOf() - msRangeDiv2
-      this.log.debug('Current location too closed to the end', {center, maxRange: this.maxRange})
+      this.log.debug('Current location too closed to the end', { center, maxRange: this.maxRange })
       return this.props.onDatetimeLocationChange(center, msRange).then(() => Promise.resolve(true))
     }
 
@@ -282,7 +282,7 @@ class Trends extends React.Component {
     const start = epochLocation - msRangeDiv2
     if (start < this.startDate.valueOf()) {
       const center = this.startDate.valueOf() + msRangeDiv2
-      this.log.debug('Current location too closed to the start', {center, maxRange: this.maxRange})
+      this.log.debug('Current location too closed to the start', { center, maxRange: this.maxRange })
       return this.props.onDatetimeLocationChange(center, msRange).then(() => Promise.resolve(true))
     }
 
@@ -299,7 +299,7 @@ class Trends extends React.Component {
    * @returns {[moment.Moment, moment.Moment]}
    */
   getMomentEndpoints() {
-    const {epochLocation, tidelineData} = this.props
+    const { epochLocation, tidelineData } = this.props
     /** @type {number} */
     const extentSize = this.props.chartPrefs.trends.extentSize
     const msRange = Math.max(extentSize, 1) * TimeService.MS_IN_DAY
@@ -333,8 +333,8 @@ class Trends extends React.Component {
   }
 
   getTitle() {
-    const {loading, tidelineData} = this.props
-    const {atMostRecent} = this.state
+    const { loading, tidelineData } = this.props
+    const { atMostRecent } = this.state
 
     const [startDate, endDate] = this.getMomentEndpoints()
     const mFormat = t('MMM D, YYYY')
@@ -347,10 +347,10 @@ class Trends extends React.Component {
         const mEndDate = moment.tz(end, endTimezone).add(1, 'day')
         const extendSize = (mEndDate.valueOf() - mStartDate.valueOf()) / TimeService.MS_IN_DAY
 
-        this.setState({updatingDates: true}, () => {
+        this.setState({ updatingDates: true }, () => {
           this.updateExtendsSize(extendSize)
           this.setEndPoints(mStartDate, mEndDate)
-          this.setState({updatingDates: false})
+          this.setState({ updatingDates: false })
           this.trackMetric('data_visualization', 'select_period', 'date_picker', extendSize)
         })
       }
@@ -386,7 +386,7 @@ class Trends extends React.Component {
       e.preventDefault()
     }
 
-    const {epochLocation, tidelineData} = this.props
+    const { epochLocation, tidelineData } = this.props
     const extentSize = Math.round(this.props.chartPrefs.trends.extentSize)
     // Multiply by 1.5 => 1 = the extends + 0.5 since the current location is the
     // middle of the range.
@@ -416,7 +416,7 @@ class Trends extends React.Component {
       return
     }
     // For the comments see handleClickBack()
-    const {epochLocation, tidelineData} = this.props
+    const { epochLocation, tidelineData } = this.props
     const extentSize = Math.round(this.props.chartPrefs.trends.extentSize)
     const epochShift = Math.max(Math.floor(extentSize * 1.5), 1) * TimeService.MS_IN_DAY
     if (epochLocation + epochShift > this.endDate.valueOf()) {
@@ -455,7 +455,7 @@ class Trends extends React.Component {
     if (e) {
       e.preventDefault()
     }
-    const {tidelineData, epochLocation, msRange} = this.props
+    const { tidelineData, epochLocation, msRange } = this.props
     let newExtentSize = extentSize
     let newMsRange = newExtentSize * TimeService.MS_IN_DAY
     let endEpoch = epochLocation + Math.floor(msRange / 2)
@@ -464,7 +464,7 @@ class Trends extends React.Component {
       startEpoch = this.startDate.valueOf()
     }
     newMsRange = endEpoch - startEpoch
-    this.setState({updatingDates: true}, () => {
+    this.setState({ updatingDates: true }, () => {
       let epoch = endEpoch - Math.floor(newMsRange / 2)
       this.props.onDatetimeLocationChange(epoch, newMsRange).then(() => {
         // First load the data, we may have some changes in the timezone detection
@@ -474,7 +474,7 @@ class Trends extends React.Component {
         this.props.onDatetimeLocationChange(epoch, newMsRange).then(() => {
           // Set the real value we want
           this.updateExtendsSize(newExtentSize)
-          this.setState({updatingDates: false})
+          this.setState({ updatingDates: false })
           this.trackMetric('data_visualization', 'select_period', 'preset', extentSize)
         })
       })
@@ -545,16 +545,16 @@ class Trends extends React.Component {
               <div className="container-box-inner patient-data-content-inner light-rounded-border">
                 {this.renderSubNav()}
                 <div className="patient-data-content">
-                  {loading && <SpinningLoader className="centered-spinning-loader"/>}
+                  {loading && <SpinningLoader className="centered-spinning-loader" />}
                   <div id="tidelineContainer" className="patient-data-chart-trends">
                     {this.renderChart()}
                   </div>
-                  <CbgDateTraceLabel/>
-                  <FocusedRangeLabels bgUnit={this.props.bgPrefs.bgUnits}/>
+                  <CbgDateTraceLabel />
+                  <FocusedRangeLabels bgUnit={this.props.bgPrefs.bgUnits} />
                 </div>
                 <Box marginBottom={2}>
                   <Footer onClickRefresh={this.props.onClickRefresh}>
-                    <RangeSelect/>
+                    <RangeSelect />
                   </Footer>
                 </Box>
               </div>
@@ -575,7 +575,7 @@ class Trends extends React.Component {
   }
 
   renderSubNav() {
-    const {msRange} = this.props
+    const { msRange } = this.props
     return (
       <SubNav
         trackMetric={this.trackMetric}
@@ -595,7 +595,7 @@ class Trends extends React.Component {
   }
 
   renderChart() {
-    const {localDates, currentCbgData} = this.state
+    const { localDates, currentCbgData } = this.state
     return (
       Array.isArray(localDates) && localDates.length >= 1 &&
       <TrendsContainer

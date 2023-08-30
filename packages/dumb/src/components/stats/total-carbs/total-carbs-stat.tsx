@@ -54,7 +54,7 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
         />
         {!totalCarbsPerDay
           ? <>
-            <div className={styles['disabled-line']}/>
+            <div className={styles['disabled-line']} />
             <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
               --
             </Box>
@@ -76,7 +76,7 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
         {t('Rescuecarbs')}
         {!foodCarbsPerDay
           ? <>
-            <div className={styles['disabled-line']}/>
+            <div className={styles['disabled-line']} />
             <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
               --
             </Box>
