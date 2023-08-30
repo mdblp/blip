@@ -9,8 +9,8 @@
   "extends": [
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
-    "standard-with-typescript",
-    "plugin:@typescript-eslint/eslint-recommended"
+    "plugin:@typescript-eslint/eslint-recommended",
+    "standard-with-typescript"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
