@@ -90,7 +90,7 @@ export const checkDailyStatsWidgetsTooltips = async () => {
   await checkStatTooltip(patientStatistics, 'Avg. Glucose (CGM)', AVG_GLUCOSE_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Total Insulin', TOTAL_INSULIN_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Time In Loop Mode', TIME_IN_LOOP_MODE_TOOLTIP)
-  await checkStatTooltip(patientStatistics, 'Total Carbs', TOTAL_CARBS_TOOLTIP)
+  await checkStatTooltip(patientStatistics, 'Total of declared carbs', TOTAL_CARBS_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'CV (CGM)', CV_TOOLTIP)
 }

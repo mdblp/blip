@@ -35,7 +35,8 @@ export const checkPatientStatistics = async () => {
   checkTooltip(patientStatistics, 'Avg. Glucose (CGM)')
   checkTooltip(patientStatistics, 'Avg. Daily Total Insulin')
   checkTooltip(patientStatistics, 'Avg. Daily Time In Loop Mode')
-  checkTooltip(patientStatistics, 'Avg. Daily Carbs')
+  checkTooltip(patientStatistics, 'Avg. Daily declared carbs')
+  checkTooltip(patientStatistics, 'Avg. Daily estimated carbs')
   checkTooltip(patientStatistics, 'CV (CGM)')
 
   expect(patientStatistics.getByTestId('cbg-percentage-bar-chart')).toHaveTextContent('Avg. Daily Time In Range4h 48m20%4h 48m20%4h 48m20%4h 48m20%4h 48m20%<5454-7070-180180-250>250mg/dL')
@@ -43,7 +44,7 @@ export const checkPatientStatistics = async () => {
   expect(patientStatistics.getByTestId('cbg-mean-stat')).toHaveTextContent('Avg. Glucose (CGM)mg/dL124')
   expect(patientStatistics.getByTestId('container-insulin-stats')).toHaveTextContent('Avg. Daily Total Insulin4UBolus1.9 U48%Basal2.1 U53%Weight72kgDose ratio0.06U/kg')
   expect(patientStatistics.getByTestId('loop-mode-stat')).toHaveTextContent('Avg. Daily Time In Loop ModeONOFF91%21h 49m9%2h 11m')
-  expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily Carbs53gRescue carbs24g')
+  expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily declared carbs53gMeal carbs29gRescue carbs24gAvg. Daily estimated carbs24g')
 }
 
 export const checkPatientStatisticsWithTwoWeeksOldData = async () => {
@@ -53,7 +54,7 @@ export const checkPatientStatisticsWithTwoWeeksOldData = async () => {
   expect(patientStatistics.getByTestId('cbg-mean-stat')).toHaveTextContent('Avg. Glucose (CGM)mg/dL124')
   expect(patientStatistics.getByTestId('container-insulin-stats')).toHaveTextContent('Avg. Daily Total Insulin4.2UBolus2 U48%Basal2.2 U52%Weight72kgDose ratio0.06U/kg')
   expect(patientStatistics.getByTestId('loop-mode-stat')).toHaveTextContent('Avg. Daily Time In Loop ModeONOFF91%21h 49m9%2h 11m')
-  expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily Carbs55gRescue carbs25g')
+  expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily declared carbs55gMeal carbs30gRescue carbs25gAvg. Daily estimated carbs25g')
 }
 
 export const checkPatientStatisticsNoData = async () => {
@@ -63,7 +64,8 @@ export const checkPatientStatisticsNoData = async () => {
   checkTooltip(patientStatistics, 'Avg. Glucose (CGM)')
   checkTooltip(patientStatistics, 'Avg. Daily Total Insulin')
   checkTooltip(patientStatistics, 'Time In Loop Mode')
-  checkTooltip(patientStatistics, 'Avg. Daily Carbs')
+  checkTooltip(patientStatistics, 'Avg. Daily declared carbs')
+  checkTooltip(patientStatistics, 'Avg. Daily estimated carbs')
   checkTooltip(patientStatistics, 'CV (CGM)')
 
   expect(patientStatistics.getByTestId('cbg-percentage-bar-chart')).toHaveTextContent('Time In Range0m--0m--0m--0m--0m--<5454-7070-180180-250>250mg/dL')
@@ -71,5 +73,5 @@ export const checkPatientStatisticsNoData = async () => {
   expect(patientStatistics.getByTestId('cbg-mean-stat')).toHaveTextContent('Avg. Glucose (CGM)mg/dL--')
   expect(patientStatistics.getByTestId('container-insulin-stats')).toHaveTextContent('Avg. Daily Total Insulin0UBolus0 U--%Basal0 U--%Weight--kgDose ratio--U/kg')
   expect(patientStatistics.getByTestId('loop-mode-stat')).toHaveTextContent('Time In Loop ModeONOFFN/AN/A')
-  expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily Carbs--Rescue carbs--')
+  expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily declared carbs--Meal carbs--Rescue carbs--Avg. Daily estimated carbs--')
 }
