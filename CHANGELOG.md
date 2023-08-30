@@ -6,6 +6,9 @@ It is based on Tidepool Blip 1.27.
 ### Added
 - YLP-2484 Remove level column in device change parameter history
 
+### Engineering use
+- YLP-2595 Update deprecated GitHub Actions to Node 16
+
 ## 3.0.4 - 2023-08-23
 ### Added
 - YLP-1503 Logout idle user after 30 mn of inactivity
