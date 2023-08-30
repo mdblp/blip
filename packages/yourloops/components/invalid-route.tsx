@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,19 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { type FC } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-
 import { setPageTitle } from '../lib/utils'
 
-function InvalidRoute(): JSX.Element {
+export const InvalidRoute: FC = () => {
   const { t } = useTranslation('yourloops')
 
-  setPageTitle()
+  setPageTitle(t('page-not-found'))
 
   return (
     <Grid container direction="column" justifyContent="center" alignItems="center">
@@ -50,5 +48,3 @@ function InvalidRoute(): JSX.Element {
     </Grid>
   )
 }
-
-export default InvalidRoute

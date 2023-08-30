@@ -244,7 +244,8 @@ const ignoredTransKeyInYourLoopsFiles = [
   'Pump cartridge expiration date',
   'Pump version',
   'Serial Number',
-  'Setting'
+  'Setting',
+  'Time In Range'
 ]
 
 /**

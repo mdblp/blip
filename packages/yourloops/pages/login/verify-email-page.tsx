@@ -48,6 +48,7 @@ import Avatar from '@mui/material/Avatar'
 import { makeStyles } from 'tss-react/mui'
 import { type Theme } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
+import { setPageTitle } from '../../lib/utils'
 
 const classes = makeStyles()((theme: Theme) => ({
   appBar: {
@@ -61,7 +62,7 @@ const classes = makeStyles()((theme: Theme) => ({
   }
 }))
 
-const VerifyEmailPage: FunctionComponent = () => {
+export const VerifyEmailPage: FunctionComponent = () => {
   const { classes: { appBar, desktopLogo } } = classes()
   const { loginWithRedirect, getAccessTokenSilently } = useAuth0()
   const { t } = useTranslation()
@@ -108,6 +109,8 @@ const VerifyEmailPage: FunctionComponent = () => {
         }
       })
   }, [getAccessTokenSilently])
+
+  setPageTitle(t('verify-email'))
 
   return (
     <>
@@ -202,5 +205,3 @@ const VerifyEmailPage: FunctionComponent = () => {
     </>
   )
 }
-
-export default VerifyEmailPage

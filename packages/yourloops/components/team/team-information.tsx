@@ -117,7 +117,7 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
     <React.Fragment>
       <div className={commonTeamClasses.root} data-testid="team-information">
         <div className={commonTeamClasses.categoryHeader}>
-          <div>
+          <div data-stonlyid="care-team-settings-information-title">
             <InfoOutlinedIcon />
             <Typography className={commonTeamClasses.title}>
               {t('information')}

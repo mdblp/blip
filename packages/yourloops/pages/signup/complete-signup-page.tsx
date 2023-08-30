@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,6 +37,7 @@ import Grid from '@mui/material/Grid'
 import { SignUpStepper } from './signup-stepper'
 import { SignUpFormStateProvider } from './signup-formstate-context'
 import appConfig from '../../lib/config/config'
+import { setPageTitle } from '../../lib/utils'
 
 const formStyle = makeStyles({ name: 'signup-page-styles' })((theme: Theme) => ({
   card: {
@@ -52,9 +53,11 @@ const formStyle = makeStyles({ name: 'signup-page-styles' })((theme: Theme) => (
   }
 }))
 
-const CompleteSignUpPage: FunctionComponent = () => {
+export const CompleteSignUpPage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { classes } = formStyle()
+
+  setPageTitle(t('signup'))
 
   return (
     <Container maxWidth="sm">
@@ -81,5 +84,3 @@ const CompleteSignUpPage: FunctionComponent = () => {
     </Container>
   )
 }
-
-export default CompleteSignUpPage

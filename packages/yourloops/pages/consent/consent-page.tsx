@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { type FC, useMemo, useState } from 'react'
 import _ from 'lodash'
 import bows from 'bows'
 import { useTranslation } from 'react-i18next'
@@ -44,9 +44,9 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 
 import { useAuth } from '../../lib/auth'
-import ConsentForm from './form'
 import appConfig from '../../lib/config/config'
 import { type Profile } from '../../lib/auth/models/profile.model'
+import { ConsentForm } from '../../components/consents'
 
 interface ConsentProps {
   messageKey: string
@@ -85,10 +85,7 @@ const style = makeStyles({ name: 'ylp-component-consent' })((theme: Theme) => {
   }
 })
 
-/**
- * Renew consents page
- */
-function Page(props: ConsentProps): JSX.Element {
+export const ConsentPage: FC<ConsentProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const navigate = useNavigate()
   const location = useLocation()
@@ -193,5 +190,3 @@ function Page(props: ConsentProps): JSX.Element {
   }
   return <React.Fragment />
 }
-
-export default Page
