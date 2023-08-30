@@ -8,6 +8,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Engineering use
 - YLP-2594 Handle release branches in GitHub CI workflow
+- YLP-2595 Update deprecated GitHub Actions to Node 16
 
 ## 3.0.4 - 2023-08-23
 ### Added
