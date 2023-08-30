@@ -24,7 +24,6 @@ import i18next from 'i18next'
 import { chartDailyFactory } from 'tideline'
 import { TimeService } from 'medical-domain'
 import { components as vizComponents } from 'tidepool-viz'
-import { BG_DATA_TYPES } from '../../core/constants'
 import Footer from './footer'
 import {
   BloodGlucoseTooltip,
@@ -258,8 +257,6 @@ class Daily extends React.Component {
   static propTypes = {
     patient: PropTypes.object.isRequired,
     bgPrefs: PropTypes.object.isRequired,
-    bgSource: PropTypes.oneOf(BG_DATA_TYPES),
-    dataUtil: PropTypes.object,
     timePrefs: PropTypes.object.isRequired,
     epochLocation: PropTypes.number.isRequired,
     msRange: PropTypes.number.isRequired,

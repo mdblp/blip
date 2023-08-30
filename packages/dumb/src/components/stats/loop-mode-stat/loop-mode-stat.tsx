@@ -56,45 +56,45 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
   const manualPercentage = Math.round(100 * manualBasalDuration / totalBasalDuration)
   const location = useLocation()
   const isDailyPage = location.pathname.includes('daily')
-  const title = isDailyPage ? t('time-loop') : t('avg-time-loop')
+  const title = t(isDailyPage ? 'time-loop' : 'avg-time-loop')
   const annotations = isDailyPage ? [t('time-loop-tooltip'), t('time-loop-how-calculate')] : [t('avg-time-loop-tooltip'), t('avg-time-loop-how-calculate')]
 
   return (
-        <div data-testid="loop-mode-stat">
-            <Box className={styles.title}>
-                {title}
-                <StatTooltip annotations={annotations}/>
-            </Box>
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 290 80"
-                className={`${styles.statWheelTimeInAuto} ${styles.donutChart}`}
-            >
-                <LoopModeLabel
-                    className={styles.onColor}
-                    transform="translate(10 15)"
-                    translationKey="wheel-label-on"
-                />
-                <LoopModeLabel
-                    className={styles.offColor}
-                    transform="translate(240 15)"
-                    translationKey="wheel-label-off"
-                />
-                <LoopModePercentageDetail
-                    className={styles.labelOnValueUnits}
-                    percentage={automatedPercentage}
-                    transform="translate(30 63)"
-                    value={ensureNumeric(automatedBasals)}
-                />
-                <LoopModePercentageDetail
-                    className={styles.labelOffValueUnits}
-                    percentage={manualPercentage}
-                    transform="translate(260 63)"
-                    value={ensureNumeric(manualBasals)}
-                />
-                <LoopModeGraph automatedPercentage={automatedPercentage} manualPercentage={manualPercentage}/>
-            </svg>
-        </div>
+    <div data-testid="loop-mode-stat">
+      <Box className={styles.title}>
+        {title}
+        <StatTooltip annotations={annotations}/>
+      </Box>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 290 80"
+        className={`${styles.statWheelTimeInAuto} ${styles.donutChart}`}
+      >
+        <LoopModeLabel
+          className={styles.onColor}
+          transform="translate(10 15)"
+          translationKey="wheel-label-on"
+        />
+        <LoopModeLabel
+          className={styles.offColor}
+          transform="translate(240 15)"
+          translationKey="wheel-label-off"
+        />
+        <LoopModePercentageDetail
+          className={styles.labelOnValueUnits}
+          percentage={automatedPercentage}
+          transform="translate(30 63)"
+          value={ensureNumeric(automatedBasals)}
+        />
+        <LoopModePercentageDetail
+          className={styles.labelOffValueUnits}
+          percentage={manualPercentage}
+          transform="translate(260 63)"
+          value={ensureNumeric(manualBasals)}
+        />
+        <LoopModeGraph automatedPercentage={automatedPercentage} manualPercentage={manualPercentage}/>
+      </svg>
+    </div>
   )
 }
 

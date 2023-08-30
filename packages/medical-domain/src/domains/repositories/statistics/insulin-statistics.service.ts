@@ -102,8 +102,8 @@ function getAutomatedAndManualBasalDuration(basalsData: Basal[], dateFilter: Dat
   const basalData = resamplingDuration(filteredBasal, dateFilter.start, dateFilter.end)
   const manualBasal = basalData.filter(manualBasal => manualBasal.subType !== 'automated')
   const manualBasalDuration = manualBasal.reduce((accumulator, manualBasal) => accumulator + manualBasal.duration, 0)
-  const automaticBasals = basalData.filter(automaticBasal => automaticBasal.subType === 'automated')
-  const automatedBasalDuration = automaticBasals.reduce((accumulator, automaticBasal) => accumulator + automaticBasal.duration, 0)
+  const automatedBasals = basalData.filter(automatedBasal => automatedBasal.subType === 'automated')
+  const automatedBasalDuration = automatedBasals.reduce((accumulator, automaticBasal) => accumulator + automaticBasal.duration, 0)
   const total = manualBasalDuration + automatedBasalDuration
 
   return {
