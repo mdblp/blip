@@ -66,14 +66,11 @@ describe('getCarbsData', () => {
     const wizardData = buildWizardData(bgDataSourceOneDay)
     const carbsData = CarbsStatisticsService.getCarbsData(mealData, wizardData, 1, dateFilterOneDay)
     const expected = {
-      numDays: 1,
-      wizardCarbs: 25,
-      foodCarbs: 25,
-      totalCarbs: 50,
+      mealCarbs: 25,
+      rescueCarbs: 25,
       totalCarbsPerDay: 50,
-      foodCarbsPerDay: 25,
-      wizardCarbsPerDay: 25,
-      totalEntriesCarbWithRescueCarbs: 10
+      totalEntriesMealCarbWithRescueCarbs: 10,
+      totalEntriesRescueCarbs: 5
     }
 
     expect(carbsData).toEqual(expected)
@@ -84,14 +81,11 @@ describe('getCarbsData', () => {
     const wizardData = buildWizardData(bgDataSourceTwoDays)
     const carbsData = CarbsStatisticsService.getCarbsData(mealData, wizardData, 2, dateFilterTwoDays)
     const expected = {
-      numDays: 2,
-      wizardCarbs: 10,
-      foodCarbs: 10,
-      totalCarbs: 20,
+      mealCarbs: 5,
+      rescueCarbs: 5,
       totalCarbsPerDay: 10,
-      foodCarbsPerDay: 5,
-      wizardCarbsPerDay: 5,
-      totalEntriesCarbWithRescueCarbs: 4
+      totalEntriesMealCarbWithRescueCarbs: 4,
+      totalEntriesRescueCarbs: 2
     }
     expect(carbsData).toEqual(expected)
   })

@@ -33,24 +33,26 @@ import { Unit } from 'medical-domain'
 import { useLocation } from 'react-router-dom'
 
 export interface TotalInsulinStatProps {
-  foodCarbsPerDay: number
   totalCarbsPerDay: number
-  totalEntriesCarbWithRescueCarbs: number
+  rescueCarbs: number
+  mealCarbs: number
+  totalEntriesMealCarbWithRescueCarbs: number
+  totalEntriesRescueCarbs: number
 }
 
 const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
-  const { totalCarbsPerDay, foodCarbsPerDay, totalEntriesCarbWithRescueCarbs } = props
+  const { totalCarbsPerDay, totalEntriesMealCarbWithRescueCarbs, rescueCarbs, mealCarbs, totalEntriesRescueCarbs } = props
   const { t } = useTranslation('main')
   const location = useLocation()
   const isDailyPage = location.pathname.includes('daily')
-  const isDerivedCarbs = foodCarbsPerDay && totalCarbsPerDay ? t('tooltip-total-derived-carbs', { total: totalEntriesCarbWithRescueCarbs }) : t('tooltip-empty-stat')
-
+  const isDeclaredDerivedCarbs = rescueCarbs && totalCarbsPerDay ? t('tooltip-declared-derived-carbs', { total: totalEntriesMealCarbWithRescueCarbs }) : t('tooltip-empty-stat')
+  const isEstimatedDerivedCarbs = mealCarbs && totalCarbsPerDay ? t('tooltip-estimated-derived-carbs', { rescueCarbs: totalEntriesRescueCarbs }) : t('tooltip-empty-stat')
   return (
     <div data-testid="total-carbs-stat">
       <Box className={styles.row}>
-        {t(isDailyPage ? 'total-carbs' : 'avg-daily-carbs')}
+        {t(isDailyPage ? 'total-declared-carbs' : 'avg-daily-declared-carbs')}
         <StatTooltip
-          annotations={[t(isDailyPage ? 'tooltip-total-day-carbs' : 'tooltip-total-week-carbs'), isDerivedCarbs]}
+          annotations={[t(isDailyPage ? 'tooltip-per-day-carbs' : 'tooltip-avg-daily-week-carbs'), isDeclaredDerivedCarbs]}
         />
         {!totalCarbsPerDay
           ? <>
@@ -72,9 +74,9 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
         }
       </Box>
 
-      <Box className={`${styles.rescueCarb} ${styles.row}`}>
-        {t('Rescuecarbs')}
-        {!foodCarbsPerDay
+      <Box className={`${styles.mealCarb} ${styles.row}`}>
+        {t('meal-carbs')}
+        {!mealCarbs
           ? <>
             <div className={styles['disabled-line']} />
             <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
@@ -84,11 +86,58 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           : <>
             <div className={styles.total}>
               <span className={styles.value}>
-                {foodCarbsPerDay}
+                {mealCarbs}
               </span>
               <span className={styles.suffix}>
                 {Unit.Gram}
               </span>
+            </div>
+          </>
+        }
+      </Box>
+
+      <Box className={`${styles.rescueCarb} ${styles.row}`}>
+        {t('Rescuecarbs')}
+        {!rescueCarbs
+          ? <>
+            <div className={styles['disabled-line']} />
+            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
+              --
+            </Box>
+          </>
+          : <>
+            <div className={styles.total}>
+              <span className={styles.value}>
+                {rescueCarbs}
+              </span>
+              <span className={styles.suffix}>
+                {Unit.Gram}
+              </span>
+            </div>
+          </>
+        }
+      </Box>
+
+      <Box className={styles.row}>
+        {t(isDailyPage ? 'total-estimated-carbs' : 'avg-daily-estimated-carbs')}
+        <StatTooltip
+          annotations={[t(isDailyPage ? 'tooltip-per-day-estimated-carbs' : 'tooltip-avg-daily-estimated-carbs'), isEstimatedDerivedCarbs]}
+        />
+        {!rescueCarbs
+          ? <>
+            <div className={styles['disabled-line']} />
+            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
+              --
+            </Box>
+          </>
+          : <>
+            <div className={styles.total}>
+                <span className={styles.value}>
+                  {rescueCarbs}
+                </span>
+              <span className={styles.suffix}>
+                  {Unit.Gram}
+                </span>
             </div>
           </>
         }

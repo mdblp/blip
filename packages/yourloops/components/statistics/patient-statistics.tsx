@@ -77,9 +77,11 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
 
   const {
-    foodCarbsPerDay,
-    totalEntriesCarbWithRescueCarbs,
-    totalCarbsPerDay
+    rescueCarbs,
+    totalEntriesMealCarbWithRescueCarbs,
+    totalCarbsPerDay,
+    mealCarbs,
+    totalEntriesRescueCarbs
   } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
 
   const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
@@ -149,9 +151,11 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       {children}
 
       <TotalCarbsStat
-        totalEntriesCarbWithRescueCarbs={totalEntriesCarbWithRescueCarbs}
+        totalEntriesMealCarbWithRescueCarbs={totalEntriesMealCarbWithRescueCarbs}
         totalCarbsPerDay={Math.round(totalCarbsPerDay)}
-        foodCarbsPerDay={Math.round(foodCarbsPerDay)}
+        rescueCarbs={Math.round(rescueCarbs)}
+        mealCarbs={Math.round(mealCarbs)}
+        totalEntriesRescueCarbs={totalEntriesRescueCarbs}
       />
     </Box>
   )
