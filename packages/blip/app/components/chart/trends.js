@@ -30,8 +30,6 @@ import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsContainer, Tr
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import metrics from 'yourloops/lib/metrics'
-import { ChartTypes } from 'yourloops/enum/chart-type.enum'
-import Stats from './stats'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
