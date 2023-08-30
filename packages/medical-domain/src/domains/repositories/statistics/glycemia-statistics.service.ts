@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { diffDays, MS_IN_MIN, MS_IN_DAY } from '../time/time.service'
+import { diffDays, MS_IN_DAY, MS_IN_MIN } from '../time/time.service'
 import type Cbg from '../../models/medical/datum/cbg.model'
 import type Smbg from '../../models/medical/datum/smbg.model'
 import type {

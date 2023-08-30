@@ -32,6 +32,7 @@ import { type IUser } from './data/models/i-user.model'
 import { type Settings } from './auth/models/settings.model'
 import { CountryCodes } from './auth/models/country.model'
 import { Unit } from 'medical-domain'
+import { TIMEZONE_UTC } from 'dumb'
 
 // Matches the Amazon SES emails rules (only 7-bit ASCII)
 export const REGEX_EMAIL = /^[A-Za-z0-9][A-Za-z0-9._%+-]{0,64}@(?:(?=[A-Za-z0-9-]{1,63}\.)[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.){1,8}[A-Za-z]{2,63}$/
@@ -153,8 +154,8 @@ export function setPageTitle(prefix?: string, metricsTitle?: string): void {
   }
 }
 
-export function formatDateWithMomentLongFormat(date?: Date, key: LongDateFormatKey = 'll'): string {
-  return moment.utc(date).format(moment.localeData().longDateFormat(key)).toString()
+export function formatDateWithMomentLongFormat(date?: Date, key: LongDateFormatKey = 'll', timezone: string = TIMEZONE_UTC): string {
+  return moment.utc(date).tz(timezone).format(moment.localeData().longDateFormat(key)).toString()
 }
 
 export function isEllipsisActive(element: HTMLElement | null): boolean | undefined {

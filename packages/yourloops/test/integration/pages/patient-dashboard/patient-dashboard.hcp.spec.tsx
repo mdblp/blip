@@ -41,7 +41,7 @@ import {
   twoWeeksOldDashboardData
 } from '../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { patient1Id, patient1Info, patient1Metrics, patientWithMmolId } from '../../data/patient.api.data'
+import { noDataTransferredPatientId, patient1Id, patient1Info, patient1Metrics, patientWithMmolId } from '../../data/patient.api.data'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesAPI, mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -57,6 +57,7 @@ import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import {
   testDashboardDataVisualisationForHcp,
+  testDashboardDataVisualisationNoDataForHcp,
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationTwoWeeksOldData,
   testDashboardDataVisualisationSixteenDaysOldData,
@@ -121,6 +122,17 @@ describe('Patient dashboard for HCP', () => {
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
     await testDashboardDataVisualisationForHcp(patientDashboardLayoutParams)
+  })
+
+  it('should render components with correct display when the patient has no data', async () => {
+    const patientWithNoDataDashboardRoute = `/patient/${noDataTransferredPatientId}/dashboard`
+    mockDataAPI(completeDashboardData)
+
+    await act(async () => {
+      renderPage(patientWithNoDataDashboardRoute)
+    })
+
+    await testDashboardDataVisualisationNoDataForHcp()
   })
 
   it('should be able to switch from patient to patient', async () => {

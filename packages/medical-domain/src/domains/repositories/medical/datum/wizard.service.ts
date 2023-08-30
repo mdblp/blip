@@ -70,7 +70,9 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   }
   return wizard
 }
+
 const deduplicate = (data: Wizard[], _opts: MedicalDataOptions): Wizard[] => {
+  // group wizards by normal time
   const initialGroups: Record<string, Wizard[]> = {}
   const timeGroups = data.reduce((previous, current: Wizard) => {
     if (previous[current.normalTime] === undefined) {

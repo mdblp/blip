@@ -33,9 +33,9 @@ import { useLocation, useNavigate, useParams, useSearchParams } from 'react-rout
 import { useAuth } from '../../lib/auth'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
 import type MedicalDataService from 'medical-domain'
-import { defaultBgClasses, TimeService, Unit, type TimePrefs } from 'medical-domain'
+import { defaultBgClasses, type TimePrefs, TimeService, Unit } from 'medical-domain'
 import { type MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
-import { isValidDateQueryParam, PatientDataUtils } from './patient-data.utils'
+import { type DateRange, isValidDateQueryParam, PatientDataUtils } from './patient-data.utils'
 import DataUtil from 'tidepool-viz/src/utils/data'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
 import { usePatientContext } from '../../lib/patient/patient.provider'
@@ -49,10 +49,10 @@ export interface usePatientDataResult {
   dataUtil: DataUtil
   dailyChartRef: MutableRefObject<DailyChartRef>
   dailyDate: number
-  dashboardEpochDate: number
   fetchPatientData: () => Promise<void>
   goToDailySpecificDate: (date: number | Date) => void
   handleDatetimeLocationChange: (epochLocation: number, msRange: number) => Promise<boolean>
+  updateDataForGivenRange: (dateRange: DateRange) => Promise<{ medicalData: MedicalDataService, dataUtil: DataUtil }>
   loadingData: boolean
   medicalData: MedicalDataService | null
   msRange: number
@@ -113,7 +113,6 @@ export const usePatientData = (): usePatientDataResult => {
   const [medicalData, setMedicalData] = useState<MedicalDataService | null>(null)
   const [dataUtil, setDataUtil] = useState<DataUtil | null>(null)
   const [chartPrefs, setChartPrefs] = useState<ChartPrefs>(defaultChartPrefs)
-  const [dashboardEpochDate, setDashboardEpochDate] = useState<number>(new Date().valueOf())
   const [dailyDate, setDailyDate] = useState<number | null>(null)
   const [trendsDate, setTrendsDate] = useState<number | null>(null)
   const [timePrefs, setTimePrefs] = useState<TimePrefs>({
@@ -147,25 +146,25 @@ export const usePatientData = (): usePatientDataResult => {
     setMedicalData(null)
     navigate(`/patient/${patient.userid}/${currentChart}`)
   }
+
+  const getMsRangeByChartType = (chartType: ChartTypes, patientMedicalData: MedicalDataService): number => {
+    if (chartType === ChartTypes.Dashboard) {
+      return patientDataUtils.current.getRangeDaysInMs(patientMedicalData.medicalData)
+    }
+    return DEFAULT_MS_RANGE
+  }
+
   const changeChart = (chart: ChartTypes): void => {
     if (chart === currentChart) {
       return
     }
-    switch (chart) {
-      case ChartTypes.Dashboard:
-        setDashboardEpochDate(new Date().valueOf())
-        setMsRange(patientDataUtils.current.getRangeDaysInMs(medicalData.medicalData))
-        break
-      case ChartTypes.Daily:
-        if (dateQueryParam) {
-          setDailyDate(parseInt(dateQueryParam))
-        }
-        setMsRange(DEFAULT_MS_RANGE)
-        break
-      case ChartTypes.Trends:
-        setMsRange(DEFAULT_MS_RANGE)
-        break
+    if (chart === ChartTypes.Daily && dateQueryParam) {
+      setDailyDate(parseInt(dateQueryParam))
     }
+
+    const newMsRange = getMsRangeByChartType(chart, medicalData)
+    setMsRange(newMsRange)
+
     navigate(`${urlPrefix}/${chart}`)
   }
 
@@ -184,13 +183,14 @@ export const usePatientData = (): usePatientDataResult => {
       const dateRange = patientDataUtils.current.getDateRange({ currentChart, epochLocation, msRange })
       const patientData = await patientDataUtils.current.loadDataRange(dateRange)
       if (patientData && patientData.length > 0) {
-        medicalData.add(patientData)
+        const medicalDataUpdated = medicalData
+        medicalDataUpdated.add(patientData)
         const dataUtil = new DataUtil(medicalData.data, {
           bgPrefs,
           timePrefs,
           endpoints: medicalData.endpoints
         })
-        setMedicalData(medicalData)
+        setMedicalData(medicalDataUpdated)
         setDataUtil(dataUtil)
         return true
       }
@@ -210,6 +210,33 @@ export const usePatientData = (): usePatientDataResult => {
     }
   }
 
+  // This function is used for the PDF/CSV, this is the only case where we update medicalData without updating dataUtil
+  const updateDataForGivenRange = async (dateRange: DateRange): Promise<{
+    medicalData: MedicalDataService
+    dataUtil: DataUtil
+  }> => {
+    try {
+      setRefreshingData(true)
+      const patientData = await patientDataUtils.current.loadDataRange(dateRange)
+      if (patientData && patientData.length > 0) {
+        const medicalDataUpdated = medicalData
+        medicalDataUpdated.add(patientData)
+        const dataUtilUpdated = new DataUtil(medicalDataUpdated.data, {
+          bgPrefs,
+          timePrefs,
+          endpoints: medicalDataUpdated.endpoints
+        })
+        setMedicalData(medicalDataUpdated)
+        return { medicalData: medicalDataUpdated, dataUtil: dataUtilUpdated }
+      }
+      return { medicalData, dataUtil }
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setRefreshingData(false)
+    }
+  }
+
   const refreshData = async (): Promise<void> => {
     setLoadingData(true)
     try {
@@ -217,13 +244,13 @@ export const usePatientData = (): usePatientDataResult => {
       if (!patientData) {
         return
       }
-      const medicalData = patientDataUtils.current.buildMedicalData(patientData)
-      const dataUtil = new DataUtil(medicalData.data, {
+      const medicalDataRetrieved = patientDataUtils.current.buildMedicalData(patientData)
+      const dataUtil = new DataUtil(medicalDataRetrieved.data, {
         bgPrefs,
         timePrefs,
-        endpoints: medicalData.endpoints
+        endpoints: medicalDataRetrieved.endpoints
       })
-      setMedicalData(medicalData)
+      setMedicalData(medicalDataRetrieved)
       setDataUtil(dataUtil)
     } finally {
       setLoadingData(false)
@@ -245,8 +272,8 @@ export const usePatientData = (): usePatientDataResult => {
         endpoints: medicalData.endpoints
       })
       const initialDate = patientDataUtils.current.getInitialDate(medicalData)
-      const daysInMs = patientDataUtils.current.getRangeDaysInMs(medicalData.medicalData)
-      setMsRange(daysInMs)
+      const msRangeByChartType = getMsRangeByChartType(currentChart, medicalData)
+      setMsRange(msRangeByChartType)
       setDataUtil(dataUtil)
       setMedicalData(medicalData)
       setDailyDate(dateQueryParam && isValidDateQueryParam(dateQueryParam) ? new Date(dateQueryParam).valueOf() : initialDate)
@@ -267,7 +294,7 @@ export const usePatientData = (): usePatientDataResult => {
       setDataUtil(dataUtil)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dailyDate, dashboardEpochDate, trendsDate, medicalData])
+  }, [dailyDate, trendsDate, medicalData])
 
   return {
     bgPrefs,
@@ -278,10 +305,10 @@ export const usePatientData = (): usePatientDataResult => {
     dataUtil,
     dailyChartRef,
     dailyDate,
-    dashboardEpochDate,
     fetchPatientData,
     goToDailySpecificDate,
     handleDatetimeLocationChange,
+    updateDataForGivenRange,
     loadingData,
     medicalData,
     msRange,

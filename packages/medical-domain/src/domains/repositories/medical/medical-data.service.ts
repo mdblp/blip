@@ -71,6 +71,7 @@ import {
 } from '../time/time.service'
 import type PumpSettings from '../../models/medical/datum/pump-settings.model'
 import { DatumType } from '../../models/medical/datum/enums/datum-type.enum'
+import type PumpManufacturer from '../../models/medical/datum/enums/pump-manufacturer.enum'
 import WizardService from './datum/wizard.service'
 
 class MedicalDataService {
@@ -115,8 +116,7 @@ class MedicalDataService {
     }
     const pumpSettings = this.medicalData.pumpSettings
     if (pumpSettings.length > 0) {
-      pumpSettings.sort((a, b) => this.sortDatum(a, b))
-      const latestPumpSettings = pumpSettings[pumpSettings.length - 1]
+      const latestPumpSettings = this.getLatestPumpSettings(pumpSettings)
       const manufacturer = latestPumpSettings.payload.pump.manufacturer.toLowerCase()
       return capitalize(manufacturer)
     } else {
@@ -365,6 +365,11 @@ class MedicalDataService {
     this.medicalData.physicalActivities = PhysicalActivityService.deduplicate(this.medicalData.physicalActivities, this._datumOpts)
   }
 
+  private getLatestPumpSettings(pumpSettings: PumpSettings[]): PumpSettings {
+    pumpSettings.sort((a, b) => this.sortDatum(a, b))
+    return pumpSettings[pumpSettings.length - 1]
+  }
+
   private join(): void {
     this.joinBolus()
     this.joinReservoirChanges()
@@ -394,15 +399,21 @@ class MedicalDataService {
   }
 
   private joinReservoirChanges(): void {
-    const sortedDescPumpSettings = this.medicalData.pumpSettings.sort((pumpSettings1: PumpSettings, pumpSettings2: PumpSettings) => this.sortDatum(pumpSettings2, pumpSettings1))
-    const lastPumpSettings: PumpSettings = sortedDescPumpSettings[0]
+    const latestPumpSettings = this.getLatestPumpSettings(this.medicalData.pumpSettings)
 
-    if (!lastPumpSettings) {
+    if (!latestPumpSettings) {
       return
     }
 
+    const pump = latestPumpSettings.payload.pump
     this.medicalData.reservoirChanges = this.medicalData.reservoirChanges.map((reservoirChange: ReservoirChange) => {
-      reservoirChange.pump = lastPumpSettings.payload.pump
+      reservoirChange.pump = {
+        expirationDate: pump.expirationDate,
+        name: pump.name,
+        serialNumber: pump.serialNumber,
+        swVersion: pump.swVersion,
+        manufacturer: this.latestPumpManufacturer as PumpManufacturer
+      }
       return reservoirChange
     })
   }

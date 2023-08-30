@@ -41,7 +41,7 @@ interface GetDatetimeBoundsArgs {
   msRange: number
 }
 
-interface DateRange {
+export interface DateRange {
   start: Moment
   end: Moment
 }
@@ -51,7 +51,7 @@ export function isValidDateQueryParam(queryParam: string): boolean {
   return !isNaN(date.getTime())
 }
 
-const DEFAULT_DASHBOARD_TIME_RANGE_DAYS = 14
+export const DEFAULT_DASHBOARD_TIME_RANGE_DAYS = 14
 const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
 export class PatientDataUtils {

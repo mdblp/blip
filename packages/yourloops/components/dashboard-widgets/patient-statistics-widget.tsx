@@ -34,7 +34,7 @@ import { PatientStatistics, type PatientStatisticsProps } from '../statistics/pa
 
 export const PatientStatisticsWidget: FunctionComponent<PatientStatisticsProps> = (props) => {
   const { t } = useTranslation()
-  const { medicalData, bgPrefs, dateFilter} = props
+  const { medicalData, bgPrefs, dateFilter } = props
 
   return (
     <GenericDashboardCard

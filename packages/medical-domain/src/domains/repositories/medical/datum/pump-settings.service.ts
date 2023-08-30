@@ -51,12 +51,15 @@ const normalizeHistory = (rawHistory: Array<Record<string, unknown>>, opts: Medi
       changeDate: (h?.changeDate ?? '') as string,
       parameters: params.map(param => {
         const { unit, value } = getConvertedParamUnitAndValue(param.unit as Unit, param.value as string, opts.bgUnits)
+        const { unit: previousUnit, value: previousValue } = getConvertedParamUnitAndValue(param.previousUnit as Unit, param.previousValue as string, opts.bgUnits)
         return {
           changeType: param.changeType as ChangeType,
           effectiveDate: param.effectiveDate as string,
           level: param.level as number,
           name: param.name as string,
           unit: unit as Unit,
+          previousUnit: previousUnit as Unit,
+          previousValue,
           value
         }
       })

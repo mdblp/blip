@@ -245,7 +245,7 @@ function createRandomReservoirChange(date?: Date): ReservoirChange {
       expirationDate: faker.date.future().toISOString(),
       manufacturer: PumpManufacturer.Default,
       name: '',
-      serialNumber: faker.datatype.uuid(),
+      serialNumber: faker.string.uuid(),
       swVersion: faker.system.semver()
     }
   }
@@ -262,7 +262,7 @@ function createRandomUpload(date?: Date): Upload {
   return {
     ...createBaseData(date),
     type: DatumType.Upload,
-    uploadId: faker.datatype.uuid(),
+    uploadId: faker.string.uuid(),
 
     _dataState: '',
     _deduplicator: {

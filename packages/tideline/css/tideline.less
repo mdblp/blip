@@ -333,9 +333,6 @@ svg {
   &.d3-bolus-undelivered {
     fill: @bolus-undelivered !important;
   }
-  rect.d3-bolus-underride {
-    fill: @bolus-underride;
-  }
   &.d3-rect-undelivered {
     fill: @bolus-undelivered;
   }
@@ -344,8 +341,9 @@ svg {
     stroke: transparent;
   }
   &.d3-polygon-ride {
-    stroke: @bolus-ride;
     fill: @bolus-ride;
+    stroke: black;
+    stroke-width: 0.5px;
   }
   &.d3-rect-bolus-legend {
     stroke-width: 1.5;

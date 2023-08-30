@@ -87,6 +87,9 @@ export function formatBgValue(val, bgPrefs, outOfRangeThresholds) {
  * @return {String} numeric value rounded to the desired number of decimal places
  */
 export function formatDecimalNumber(val, places) {
+  if (Number.isNaN(val)) {
+    return 0
+  }
   if (_.isNil(places)) {
     return format('d')(val)
   }

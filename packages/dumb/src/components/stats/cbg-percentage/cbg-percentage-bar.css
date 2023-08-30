@@ -68,21 +68,19 @@
 }
 
 .percentage-value {
-  font-size: 24px;
+  font-size: 22px;
   margin-left: auto;
   margin-right: 2px;
 }
 
 .rectangle {
-  height: 32px;
+  height: 28px;
   border-radius: 2px;
 }
 
 .stat {
   display: flex;
   align-items: center;
-  padding-bottom: 4px;
-  padding-top: 4px;
 }
 
 .title {

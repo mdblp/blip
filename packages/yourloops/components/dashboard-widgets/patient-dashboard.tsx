@@ -27,10 +27,10 @@
 
 import React, { type FunctionComponent } from 'react'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import DeviceUsage from 'blip/app/components/chart/deviceUsage.js'
 import type MedicalDataService from 'medical-domain'
-import { type TimePrefs } from 'medical-domain'
+import { type DateFilter, DatumType, type MedicalData, type TimePrefs } from 'medical-domain'
 import { type BgPrefs } from 'dumb'
+import DataUtil from 'tidepool-viz/src/utils/data'
 import Grid from '@mui/material/Grid'
 import AccessTime from '@mui/icons-material/AccessTime'
 import { useTranslation } from 'react-i18next'
@@ -49,14 +49,13 @@ import { makeStyles } from 'tss-react/mui'
 import ChatWidget from '../chat/chat-widget'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { PRIVATE_TEAM_ID, useTeam } from '../../lib/team/team.hook'
+import { DEFAULT_DASHBOARD_TIME_RANGE_DAYS } from '../patient-data/patient-data.utils'
+import { DeviceUsageWidget } from './device-usage-widget'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
-  dashboardEpochDate: number
-  goToDailySpecificDate: (date: number | Date) => void
   loading: boolean
   medicalDataService: MedicalDataService
-  msRange: number
   patient: Patient
   timePrefs: TimePrefs
 }
@@ -72,10 +71,8 @@ const useStyle = makeStyles()((theme) => ({
 export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
   const {
     bgPrefs,
-    dashboardEpochDate,
-    goToDailySpecificDate,
+    loading,
     medicalDataService,
-    msRange,
     patient,
     timePrefs
   } = props
@@ -87,10 +84,39 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
   const { classes, theme } = useStyle()
 
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
-  const dateFilter = {
-    start: dashboardEpochDate - msRange,
-    end: dashboardEpochDate
+
+  const computeDateFilter = (data: MedicalData): DateFilter => {
+    const now = new Date()
+    const dashboardStartDate = new Date()
+    dashboardStartDate.setDate(now.getDate() - DEFAULT_DASHBOARD_TIME_RANGE_DAYS)
+    const dateRangeData = [...data.smbg, ...data.cbg]
+    const localDates = dateRangeData
+      .filter(bgData => new Date(bgData.normalTime) >= dashboardStartDate)
+      .map((bgData) => bgData.normalTime)
+      .sort((a, b) => a.localeCompare(b))
+    const dateRangeSet = new Set(localDates)
+    if (dateRangeSet.size === 0) {
+      return {
+        start: 0,
+        end: 0
+      }
+    }
+    const dataRangeArray = Array.from(dateRangeSet)
+    return {
+      start: new Date(dataRangeArray[0]).valueOf(),
+      end: new Date(dataRangeArray.pop()).valueOf()
+    }
   }
+
+  const dateFilter = computeDateFilter(medicalData)
+  const endpoints = [new Date(dateFilter.start).toJSON(), new Date(dateFilter.end).toJSON()]
+
+  const dataUtil = new DataUtil(medicalDataService.data, {
+    bgPrefs,
+    timePrefs,
+    endpoints
+  })
+
   const isSelectedTeamPrivate = selectedTeam?.id === PRIVATE_TEAM_ID
   const isCaregiver = user.isUserCaregiver()
   const isPatientWithNoTeams = user.isUserPatient() && getMedicalTeams().length === 0
@@ -139,14 +165,12 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
       </Grid>
 
       <Grid item xs={gridWidgetSize}>
-        <DeviceUsage
+        <DeviceUsageWidget
           bgPrefs={bgPrefs}
-          timePrefs={timePrefs}
-          patient={patient}
-          tidelineData={medicalDataService}
-          onSwitchToDaily={goToDailySpecificDate}
-          medicalData={medicalData}
           dateFilter={dateFilter}
+          medicalDataService={medicalDataService}
+          patient={patient}
+          timePrefs={timePrefs}
         />
       </Grid>
 

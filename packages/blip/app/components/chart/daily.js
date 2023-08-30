@@ -356,8 +356,8 @@ class Daily extends React.Component {
               />
             }
           </Box>
-          <Box display="flex" ref={this.refToAttachResize}>
-            <div className="container-box-inner patient-data-content-inner">
+          <Box className="chart-with-stats-wrapper" ref={this.refToAttachResize}>
+            <div className="container-box-inner patient-data-content-inner light-rounded-border">
               <div className="patient-data-content">
                 {loading && <SpinningLoader className="centered-spinning-loader" />}
                 <DailyChart
@@ -390,20 +390,21 @@ class Daily extends React.Component {
                   ref={this.chartRef}
                 />
               </div>
+              <Box marginBlock={2}>
+                <Footer onClickRefresh={this.props.onClickRefresh} />
+              </Box>
             </div>
             <div className="container-box-inner patient-data-sidebar">
               <div className="patient-data-sidebar-inner">
                 <PatientStatistics
                   medicalData={tidelineData.medicalData}
                   bgPrefs={this.props.bgPrefs}
-                  bgType={this.props.dataUtil.bgSource}
                   dateFilter={dateFilter}
                 />
               </div>
             </div>
           </Box>
         </Box>
-        <Footer onClickRefresh={this.props.onClickRefresh} />
         {tooltip}
       </div>
     )

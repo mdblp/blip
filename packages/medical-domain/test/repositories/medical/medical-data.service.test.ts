@@ -211,6 +211,7 @@ describe('MedicalDataService', () => {
       // // basal + bolus + physicalActivity deduplication is called
       expect(basalDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(bolusDeduplicateMock).toHaveBeenCalledTimes(1)
+      expect(wizardDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(physicalActivityDeduplicateMock).toHaveBeenCalledTimes(1)
 
       // Main medicalData Checks (we have two objects of each except timezones )

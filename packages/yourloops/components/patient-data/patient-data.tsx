@@ -49,6 +49,7 @@ import metrics from '../../lib/metrics'
 import DailyNotes from 'blip/app/components/messages'
 import { useAuth } from '../../lib/auth'
 import { DevicePage } from '../../pages/device/device-page'
+import { setPageTitle } from '../../lib/utils'
 
 export const PatientData: FunctionComponent = () => {
   const alert = useAlert()
@@ -62,13 +63,13 @@ export const PatientData: FunctionComponent = () => {
     changeChart,
     changePatient,
     currentChart,
-    dashboardEpochDate,
     dataUtil,
     dailyDate,
     dailyChartRef,
     fetchPatientData,
     goToDailySpecificDate,
     handleDatetimeLocationChange,
+    updateDataForGivenRange,
     loadingData,
     medicalData,
     msRange,
@@ -93,6 +94,8 @@ export const PatientData: FunctionComponent = () => {
   const { user } = useAuth()
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
+
+  setPageTitle(t(currentChart))
 
   useEffect(() => {
     if (patient.userid !== patientIdForWhichDataHasBeenFetched.current) {
@@ -149,10 +152,7 @@ export const PatientData: FunctionComponent = () => {
                     element={
                       <PatientDashboard
                         bgPrefs={bgPrefs}
-                        dashboardEpochDate={dashboardEpochDate}
-                        goToDailySpecificDate={goToDailySpecificDate}
                         medicalDataService={medicalData}
-                        msRange={msRange}
                         patient={patient}
                         timePrefs={timePrefs}
                         loading={refreshingData}
@@ -202,8 +202,8 @@ export const PatientData: FunctionComponent = () => {
                     element={
                       <Trends
                         bgPrefs={bgPrefs}
-                        chartPrefs={chartPrefs}
                         dataUtil={dataUtil}
+                        chartPrefs={chartPrefs}
                         timePrefs={timePrefs}
                         epochLocation={trendsDate}
                         msRange={msRange}
@@ -220,19 +220,19 @@ export const PatientData: FunctionComponent = () => {
                   <Route
                     path={AppUserRoute.Device}
                     element={
-                    <DevicePage
-                      goToDailySpecificDate={goToDailySpecificDate}
-                      medicalData={medicalData}
-                    />
-                  }
+                      <DevicePage
+                        goToDailySpecificDate={goToDailySpecificDate}
+                        medicalData={medicalData}
+                      />
+                    }
                   />
                 </Routes>
                 {showPdfDialog &&
                   <PrintPDFDialog
                     bgPrefs={bgPrefs}
-                    dataUtil={dataUtil}
                     defaultPreset={'1week'}
                     medicalData={medicalData}
+                    updateDataForGivenRange={updateDataForGivenRange}
                     patient={patient}
                     onClose={() => {
                       setShowPdfDialog(false)
