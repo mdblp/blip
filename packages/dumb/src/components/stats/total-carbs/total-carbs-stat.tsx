@@ -25,12 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import React, { type FunctionComponent, memo } from 'react'
-import styles from './total-carbs-stat.css'
-import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
-import { Unit } from 'medical-domain'
 import { useLocation } from 'react-router-dom'
+import { TotalCarbsValue } from './total-carbs-value'
+import { TotalCarbsTitle } from './total-carbs-title'
 
 export interface TotalInsulinStatProps {
   totalCarbsPerDay: number
@@ -47,101 +45,22 @@ const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   const isDailyPage = location.pathname.includes('daily')
   const isDeclaredDerivedCarbs = rescueCarbs && totalCarbsPerDay ? t('tooltip-declared-derived-carbs', { total: totalEntriesMealCarbWithRescueCarbs }) : t('tooltip-empty-stat')
   const isEstimatedDerivedCarbs = mealCarbs && totalCarbsPerDay ? t('tooltip-estimated-derived-carbs', { rescueCarbs: totalEntriesRescueCarbs }) : t('tooltip-empty-stat')
+  const declaredCarbsAnnotation = [t(isDailyPage ? 'tooltip-per-day-carbs' : 'tooltip-avg-daily-week-carbs'), isDeclaredDerivedCarbs]
+  const estimatedCarbsAnnotation = [t(isDailyPage ? 'tooltip-per-day-estimated-carbs' : 'tooltip-avg-daily-estimated-carbs'), isEstimatedDerivedCarbs]
   return (
     <div data-testid="total-carbs-stat">
-      <Box className={styles.row}>
-        {t(isDailyPage ? 'total-declared-carbs' : 'avg-daily-declared-carbs')}
-        <StatTooltip
-          annotations={[t(isDailyPage ? 'tooltip-per-day-carbs' : 'tooltip-avg-daily-week-carbs'), isDeclaredDerivedCarbs]}
-        />
-        {!totalCarbsPerDay
-          ? <>
-            <div className={styles['disabled-line']} />
-            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
-              --
-            </Box>
-          </>
-          : <>
-            <div className={styles.total}>
-                <span className={styles.value}>
-                  {totalCarbsPerDay}
-                </span>
-              <span className={styles.suffix}>
-                  {Unit.Gram}
-                </span>
-            </div>
-          </>
-        }
-      </Box>
-
-      <Box className={`${styles.mealCarb} ${styles.row}`}>
-        {t('meal-carbs')}
-        {!mealCarbs
-          ? <>
-            <div className={styles['disabled-line']} />
-            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
-              --
-            </Box>
-          </>
-          : <>
-            <div className={styles.total}>
-              <span className={styles.value}>
-                {mealCarbs}
-              </span>
-              <span className={styles.suffix}>
-                {Unit.Gram}
-              </span>
-            </div>
-          </>
-        }
-      </Box>
-
-      <Box className={`${styles.rescueCarb} ${styles.row}`}>
-        {t('Rescuecarbs')}
-        {!rescueCarbs
-          ? <>
-            <div className={styles['disabled-line']} />
-            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
-              --
-            </Box>
-          </>
-          : <>
-            <div className={styles.total}>
-              <span className={styles.value}>
-                {rescueCarbs}
-              </span>
-              <span className={styles.suffix}>
-                {Unit.Gram}
-              </span>
-            </div>
-          </>
-        }
-      </Box>
-
-      <Box className={styles.row}>
-        {t(isDailyPage ? 'total-estimated-carbs' : 'avg-daily-estimated-carbs')}
-        <StatTooltip
-          annotations={[t(isDailyPage ? 'tooltip-per-day-estimated-carbs' : 'tooltip-avg-daily-estimated-carbs'), isEstimatedDerivedCarbs]}
-        />
-        {!rescueCarbs
-          ? <>
-            <div className={styles['disabled-line']} />
-            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
-              --
-            </Box>
-          </>
-          : <>
-            <div className={styles.total}>
-                <span className={styles.value}>
-                  {rescueCarbs}
-                </span>
-              <span className={styles.suffix}>
-                  {Unit.Gram}
-                </span>
-            </div>
-          </>
-        }
-      </Box>
+      <TotalCarbsTitle
+        title={t(isDailyPage ? 'total-declared-carbs' : 'avg-daily-declared-carbs')}
+        annotation={declaredCarbsAnnotation}
+        value={totalCarbsPerDay}
+      />
+      <TotalCarbsValue title={t('meal-carbs')} value={mealCarbs}/>
+      <TotalCarbsValue title={t('Rescuecarbs')} value={rescueCarbs}/>
+      <TotalCarbsTitle
+        title={t(isDailyPage ? 'total-estimated-carbs' : 'avg-daily-estimated-carbs')}
+        annotation={estimatedCarbsAnnotation}
+        value={rescueCarbs}
+      />
     </div>
   )
 }
