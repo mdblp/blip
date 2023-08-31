@@ -52,12 +52,6 @@ const datetime = {
     return [start, end]
   },
 
-  applyOffset: function(d, offset) {
-    var date = new Date(d)
-    date.setUTCMinutes(date.getUTCMinutes() + offset)
-    return new Date(date).toISOString()
-  },
-
   checkIfDateInRange: function(s, endpoints) {
     var d = new Date(s)
     var start = new Date(endpoints[0])
@@ -260,17 +254,6 @@ const datetime = {
       date = d
     }
     return date.toISOString().slice(0,10)
-  },
-
-  smbgEdge: function(d, offset) {
-    var date = offset ? new Date(this.applyOffset(d, offset)) : new Date(d)
-    if (date.getUTCHours() <= 2) {
-      return 'left'
-    } else if (date.getUTCHours() >= 21) {
-      return 'right'
-    }
-
-    return null
   },
 
   verifyEndpoints: function(s, e, endpoints) {

@@ -83,8 +83,10 @@ import {
 import type BasicData from './domains/repositories/medical/basics-data.service'
 import { CarbsStatisticsService } from './domains/repositories/statistics/carbs-statistics.service'
 import { BasalBolusStatisticsService } from './domains/repositories/statistics/insulin-statistics.service'
+import { applyOffset } from './domains/repositories/time/time.service'
 
 export {
+  applyOffset,
   type Basal,
   type BaseDatum,
   type BgBounds,
