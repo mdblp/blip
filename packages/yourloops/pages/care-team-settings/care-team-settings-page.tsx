@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useRef, useState } from 'react'
+import React, { type FC, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
@@ -90,7 +90,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   }
 }))
 
-function CareTeamSettingsPage(): JSX.Element {
+export const CareTeamSettingsPage: FC = () => {
   const { getTeam } = useTeam()
   const { classes } = useStyles()
   const { classes: commonTeamClasses } = commonComponentStyles()
@@ -218,5 +218,3 @@ function CareTeamSettingsPage(): JSX.Element {
     </React.Fragment>
   )
 }
-
-export default CareTeamSettingsPage

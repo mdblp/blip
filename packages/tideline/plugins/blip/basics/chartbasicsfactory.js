@@ -55,13 +55,23 @@ class BasicsChartNoSize extends React.Component {
     }
 
     const basicsData = _.cloneDeep(tidelineData.basicsData)
+
+    // We only want the last 15 days for the dashboard
+    const now = new Date()
+    const dashboardStartDate = new Date()
+    dashboardStartDate.setDate(now.getDate() - 14)
+    basicsData.days = tidelineData.basicsData.days.filter(day => new Date(day.date) >= dashboardStartDate)
+    basicsData.dateRange = [dashboardStartDate.toJSON(), now.toJSON()]
+
     const dataMunger = dataMungerMkr(bgClasses, bgUnits)
     const latestPump = dataMunger.getLatestPumpUploaded(this.props.tidelineData)
     basicsData.sections = basicsState(latestPump, tidelineData.latestPumpManufacturer).sections
 
     dataMunger.reduceByDay(basicsData)
 
-    dataMunger.processInfusionSiteHistory(basicsData, latestPump, patient)
+    if (basicsData.days.length > 0) {
+      dataMunger.processInfusionSiteHistory(basicsData, latestPump, patient)
+    }
 
     this.adjustSectionsBasedOnAvailableData(basicsData)
     basicsActions.bindApp(this)

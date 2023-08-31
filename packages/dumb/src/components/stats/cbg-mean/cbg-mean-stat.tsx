@@ -83,7 +83,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
                 style={{ left: valueBasedStyles.left }}
               />
             </div>
-            <Box className={valueBasedStyles.color} fontSize="24px" marginLeft="auto">
+            <Box className={valueBasedStyles.color} fontSize="20px" marginLeft="auto">
               {value}
             </Box>
           </>

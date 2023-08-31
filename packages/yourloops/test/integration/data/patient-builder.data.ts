@@ -82,14 +82,18 @@ export const buildPatientMetrics = (params: {
   monitoringAlerts?: Partial<MonitoringAlerts>
   medicalData?: Partial<MedicalData>
 }): PatientMetrics => {
+  const timeSpentAwayFromTargetRate = params.monitoringAlerts?.timeSpentAwayFromTargetRate
+  const frequencyOfSevereHypoglycemiaRate = params.monitoringAlerts?.frequencyOfSevereHypoglycemiaRate
+  const nonDataTransmissionRate = params.monitoringAlerts?.nonDataTransmissionRate
+
   return {
     userid: params.userId,
     monitoringAlerts: {
-      timeSpentAwayFromTargetRate: params.monitoringAlerts?.timeSpentAwayFromTargetRate || 10,
+      timeSpentAwayFromTargetRate: timeSpentAwayFromTargetRate !== undefined ? timeSpentAwayFromTargetRate : 10,
       timeSpentAwayFromTargetActive: params.monitoringAlerts?.timeSpentAwayFromTargetActive || false,
-      frequencyOfSevereHypoglycemiaRate: params.monitoringAlerts?.frequencyOfSevereHypoglycemiaRate || 20,
+      frequencyOfSevereHypoglycemiaRate: frequencyOfSevereHypoglycemiaRate !== undefined ? frequencyOfSevereHypoglycemiaRate : 20,
       frequencyOfSevereHypoglycemiaActive: params.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive || false,
-      nonDataTransmissionRate: params.monitoringAlerts?.nonDataTransmissionRate || 30,
+      nonDataTransmissionRate: nonDataTransmissionRate !== undefined ? nonDataTransmissionRate : 30,
       nonDataTransmissionActive: params.monitoringAlerts?.nonDataTransmissionActive || false
     },
     glycemiaIndicators: defaultGlycemiaIndicators,

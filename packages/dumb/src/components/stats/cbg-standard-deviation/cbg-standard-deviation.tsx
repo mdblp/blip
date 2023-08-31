@@ -108,7 +108,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
                 style={{ left: valueBasedStyles.max.left }}
               />
             </div>
-            <Box className={styles.value} fontSize="24px" marginLeft="auto">
+            <Box className={styles.value} fontSize="20px" marginLeft="auto">
               {standardDeviation}
             </Box>
           </>
