@@ -183,7 +183,7 @@ export const formatDuration = (duration: number, condensed: boolean = false): st
         formatted.minutes = `0${t('abbrev_duration_minute_m')}`
       }
     } else {
-      let roundedMinutes = seconds >= 30 ? minutes + 1 : minutes
+      let roundedMinutes = seconds >= 60 ? minutes + 1 : minutes
       let roundedHours = hours
       let roundedDays = days
 
