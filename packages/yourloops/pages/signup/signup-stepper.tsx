@@ -25,13 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, type ReactElement, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { type FunctionComponent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Stepper from '@mui/material/Stepper'
 import Step from '@mui/material/Step'
 import StepLabel from '@mui/material/StepLabel'
@@ -40,8 +38,7 @@ import SignUpProfileForm from './signup-profile-form'
 import SignUpConsent from './signup-consent'
 import { useAuth } from '../../lib/auth'
 import SignUpAccountSelector from './signup-account-selector'
-import { useSignUpFormState } from './signup-formstate-context'
-import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
+import { SignupCompleteMessage } from './signup-complete-message'
 
 export interface SignUpFormProps {
   handleBack: () => void
@@ -61,15 +58,8 @@ export const SignUpStepper: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { classes: { stepper } } = useStyles()
   const { logout } = useAuth()
-  const navigate = useNavigate()
+  const steps = ['select-account-type', 'consent', 'create-profile']
   const [activeStep, setActiveStep] = useState(0)
-  const steps = [
-    'select-account-type',
-    'consent',
-    'create-profile'
-  ]
-  const { signupForm } = useSignUpFormState()
-  const isHcp = signupForm.accountRole === UserRole.Hcp
 
   const handleNext = (): void => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1)
@@ -83,79 +73,35 @@ export const SignUpStepper: FunctionComponent = () => {
     }
   }
 
-  const redirectToHome = (): void => {
-    navigate('/')
-  }
-
-  const getStepContent = (step: number): ReactElement | string => {
-    switch (step) {
-      case 0:
-        return <SignUpAccountSelector handleBack={handleBack} handleNext={handleNext}/>
-      case 1:
-        return <SignUpConsent handleBack={handleBack} handleNext={handleNext}/>
-      case 2:
-        return <SignUpProfileForm handleBack={handleBack} handleNext={handleNext}/>
-      default:
-        return t('signup-unknown-step')
-    }
-  }
-
   return (
-        <React.Fragment>
-            <Box
-                marginX="auto"
-                marginY={3}
-                textAlign="center"
-                maxWidth="60%"
-            >
-                <Typography variant="h5">
-                    {t('account-creation-finalization')}
-                </Typography>
-            </Box>
-            <Stepper
-                aria-label={t('signup-stepper')}
-                activeStep={activeStep}
-                alternativeLabel
-                className={stepper}
-            >
-                {steps.map((label) => (
-                    <Step key={label}>
-                        <StepLabel aria-label={t(label)}>{t(label)}</StepLabel>
-                    </Step>
-                ))}
-            </Stepper>
+    <React.Fragment>
+      <Box
+        marginX="auto"
+        marginY={3}
+        textAlign="center"
+        maxWidth="60%"
+      >
+        <Typography variant="h5">
+          {t('account-creation-finalization')}
+        </Typography>
+      </Box>
+      <Stepper
+        aria-label={t('signup-stepper')}
+        activeStep={activeStep}
+        alternativeLabel
+        className={stepper}
+      >
+        {steps.map((label) => (
+          <Step key={label}>
+            <StepLabel aria-label={t(label)}>{t(label)}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
 
-            {activeStep === steps.length
-              ? <Box paddingX={2} paddingTop={1} textAlign="left">
-                    <Typography id="signup-steppers-ending-text-1" variant="h6" gutterBottom>
-                        {t('account-creation-finalized')}
-                    </Typography>
-                    <Typography gutterBottom>
-                        {t('account-created-info-1')}.
-                    </Typography>
-                    <Typography data-testid='message-complete-account'>
-                        {t(isHcp ? 'account-created-info-2-hcp' : 'account-created-info-2-caregiver')}
-                    </Typography>
-                    <Box
-                        id="signup-consent-button-group"
-                        display="flex"
-                        justifyContent="center"
-                        mx={0}
-                        mt={4}
-                    >
-                        <Button
-                            data-testid="validate-account-completion"
-                            variant="contained"
-                            color="primary"
-                            disableElevation
-                            onClick={redirectToHome}
-                        >
-                            {t('button-continue')}
-                        </Button>
-                    </Box>
-                </Box>
-              : getStepContent(activeStep)
-            }
-        </React.Fragment>
+      {activeStep === 0 && <SignUpAccountSelector handleBack={handleBack} handleNext={handleNext} />}
+      {activeStep === 1 && <SignUpConsent handleBack={handleBack} handleNext={handleNext} />}
+      {activeStep === 2 && <SignUpProfileForm handleBack={handleBack} handleNext={handleNext} />}
+      {activeStep === 3 && <SignupCompleteMessage />}
+    </React.Fragment>
   )
 }
