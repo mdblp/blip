@@ -75,6 +75,7 @@ jobs:
       - name: Install npm dependencies
         run: |
           npm ci
+          npm run build-dependencies
 
       - name: Test tideline
         run: npm run test-tideline
