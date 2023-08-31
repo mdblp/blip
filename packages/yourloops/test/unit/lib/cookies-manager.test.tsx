@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -82,7 +82,6 @@ describe('Cookie manager', () => {
     const axeptIO: AxeptIO = {
       on: (event: string, callback: (c: CookiesComplete) => void) => {
         expect(event).toBe('cookies:complete')
-        // eslint-disable-next-line n/no-callback-literal
         callback({ matomo: false, stonly: false, zendesk: false })
       }
     }
