@@ -675,7 +675,7 @@ class Daily extends React.Component {
 
   /**
    * Update the daily view by adding the new message
-   * @param {object} message A nurseshark processed message
+   * @param {object} message A processed message
    * @return {Promise<boolean>} true if the message was added
    */
   createMessage = (message) => {
@@ -684,7 +684,7 @@ class Daily extends React.Component {
 
   /**
    * Update the daily view message
-   * @param {object} message A nurseshark processed message
+   * @param {object} message A processed message
    * @return {boolean} true if the message was correctly updated
    */
   editMessage = (message) => {
