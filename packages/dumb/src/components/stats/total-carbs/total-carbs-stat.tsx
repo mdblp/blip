@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,44 +25,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import React, { type FunctionComponent, memo } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router-dom'
-import { TotalCarbsValue } from './total-carbs-value'
-import { TotalCarbsTitle } from './total-carbs-title'
+import styles from './total-carbs-stat.css'
+import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
+import Box from '@mui/material/Box'
+import { Unit } from 'medical-domain'
 
-export interface TotalInsulinStatProps {
-  totalCarbsPerDay: number
-  rescueCarbs: number
-  mealCarbs: number
-  totalEntriesMealCarbWithRescueCarbs: number
-  totalEntriesRescueCarbs: number
+export interface TotalCarbsStatProps {
+  title: string
+  annotation?: string[]
+  value: number
 }
-
-const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
-  const { totalCarbsPerDay, totalEntriesMealCarbWithRescueCarbs, rescueCarbs, mealCarbs, totalEntriesRescueCarbs } = props
-  const { t } = useTranslation('main')
-  const location = useLocation()
-  const isDailyPage = location.pathname.includes('daily')
-  const isDeclaredDerivedCarbs = rescueCarbs && totalCarbsPerDay ? t('tooltip-declared-derived-carbs', { total: totalEntriesMealCarbWithRescueCarbs }) : t('tooltip-empty-stat')
-  const isEstimatedDerivedCarbs = mealCarbs && totalCarbsPerDay ? t('tooltip-estimated-derived-carbs', { rescueCarbs: totalEntriesRescueCarbs }) : t('tooltip-empty-stat')
-  const declaredCarbsAnnotation = [t(isDailyPage ? 'tooltip-per-day-carbs' : 'tooltip-avg-daily-week-carbs'), isDeclaredDerivedCarbs]
-  const estimatedCarbsAnnotation = [t(isDailyPage ? 'tooltip-per-day-estimated-carbs' : 'tooltip-avg-daily-estimated-carbs'), isEstimatedDerivedCarbs]
+const TotalCarbsStat: FunctionComponent<TotalCarbsStatProps> = (props) => {
+  const { annotation, value, title } = props
   return (
-    <div data-testid="total-carbs-stat">
-      <TotalCarbsTitle
-        title={t(isDailyPage ? 'total-declared-carbs' : 'avg-daily-declared-carbs')}
-        annotation={declaredCarbsAnnotation}
-        value={totalCarbsPerDay}
-      />
-      <TotalCarbsValue title={t('meal-carbs')} value={mealCarbs}/>
-      <TotalCarbsValue title={t('Rescuecarbs')} value={rescueCarbs}/>
-      <TotalCarbsTitle
-        title={t(isDailyPage ? 'total-estimated-carbs' : 'avg-daily-estimated-carbs')}
-        annotation={estimatedCarbsAnnotation}
-        value={rescueCarbs}
-      />
-    </div>
+    <Box className={`${styles.row} ${!annotation ? styles.carbs : null}`}>
+      {title}
+      {annotation &&
+        <StatTooltip
+          annotations={annotation}
+        />
+      }
+      {!value
+        ? <>
+          <div className={styles['disabled-line']}/>
+          <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
+            --
+          </Box>
+        </>
+        : <>
+          <div className={styles.total}>
+                <span className={styles.value}>
+                  {value}
+                </span>
+            <span className={styles.suffix}>
+                  {Unit.Gram}
+                </span>
+          </div>
+        </>
+      }
+    </Box>
   )
 }
-
 export const TotalCarbsStatMemoized = memo(TotalCarbsStat)
