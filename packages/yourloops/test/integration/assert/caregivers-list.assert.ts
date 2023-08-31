@@ -37,7 +37,7 @@ import { patient1Id } from '../data/patient.api.data'
 export const checkCaregiversListLayout = async () => {
   expect(await screen.findByTestId('patient-caregivers-list')).toBeVisible()
 
-  const addCaregiverButton = screen.getByTestId('add-caregiver-button')
+  const addCaregiverButton = screen.getByRole('button', { name: 'Add caregiver' })
   expect(addCaregiverButton).toBeVisible()
   expect(addCaregiverButton).toBeEnabled()
 
@@ -51,7 +51,7 @@ export const checkCaregiversListLayout = async () => {
 }
 
 export const checkAddCaregiverSuccess = async (newCaregiverEmail: string) => {
-  const addCaregiverButton = screen.getByTestId('add-caregiver-button')
+  const addCaregiverButton = screen.getByRole('button', { name: 'Add caregiver' })
   await userEvent.click(addCaregiverButton)
 
   const addCaregiverDialog = screen.getByRole('dialog')
@@ -81,7 +81,7 @@ export const checkAddCaregiverSuccess = async (newCaregiverEmail: string) => {
 }
 
 export const checkAddCaregiverCancel = async () => {
-  const addCaregiverButton = await screen.findByTestId('add-caregiver-button')
+  const addCaregiverButton = screen.getByRole('button', { name: 'Add caregiver' })
   await userEvent.click(addCaregiverButton)
 
   const addCaregiverDialog = screen.getByRole('dialog')
@@ -97,7 +97,7 @@ export const checkAddCaregiverCancel = async () => {
 }
 
 export const checkAddCaregiverErrors = async () => {
-  const addCaregiverButton = await screen.findByTestId('add-caregiver-button')
+  const addCaregiverButton = screen.getByRole('button', { name: 'Add caregiver' })
   await userEvent.click(addCaregiverButton)
 
   const addCaregiverDialog = screen.getByRole('dialog')
@@ -141,10 +141,10 @@ export const checkAddCaregiverErrors = async () => {
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const checkRemoveCaregiverCancel = async (newCaregiverEmail: string) => {
-  const caregiversTable = await screen.findByTestId('patient-caregivers-list')
-  const newCaregiverRow = within(caregiversTable).getByTestId(`patient-caregivers-table-row-${newCaregiverEmail}`)
-  const removeCaregiverButton = within(newCaregiverRow).getByTestId(`patient-caregivers-table-row-${newCaregiverEmail}-button-remove`)
+export const checkRemoveCaregiverCancel = async (caregiverEmail: string) => {
+  const caregiversTable = screen.getByTestId('patient-caregivers-list')
+  const caregiverRow = within(caregiversTable).getByTestId(`patient-caregivers-table-row-${caregiverEmail}`)
+  const removeCaregiverButton = within(caregiverRow).getByTestId(`patient-caregivers-table-row-${caregiverEmail}-button-remove`)
 
   await userEvent.click(removeCaregiverButton)
 
@@ -157,17 +157,17 @@ export const checkRemoveCaregiverCancel = async (newCaregiverEmail: string) => {
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const checkRemoveCaregiverSuccess = async (newCaregiverEmail: string) => {
-  const caregiversTable = await screen.findByTestId('patient-caregivers-list')
-  const newCaregiverRow = within(caregiversTable).getByTestId(`patient-caregivers-table-row-${newCaregiverEmail}`)
-  const removeCaregiverButton = within(newCaregiverRow).getByTestId(`patient-caregivers-table-row-${newCaregiverEmail}-button-remove`)
+export const checkRemoveCaregiverSuccess = async (caregiverEmail: string) => {
+  const caregiversTable = screen.getByTestId('patient-caregivers-list')
+  const caregiverRow = within(caregiversTable).getByTestId(`patient-caregivers-table-row-${caregiverEmail}`)
+  const removeCaregiverButton = within(caregiverRow).getByTestId(`patient-caregivers-table-row-${caregiverEmail}-button-remove`)
   expect(removeCaregiverButton).toBeVisible()
 
   await userEvent.click(removeCaregiverButton)
 
   const removeCaregiverDialog = screen.getByRole('dialog')
-  expect(within(removeCaregiverDialog).getByText('Remove caregiver new-caregiver@mail.com')).toBeVisible()
-  expect(removeCaregiverDialog).toHaveTextContent('Are you sure you want to remove caregiver new-caregiver@mail.com?They will no longer have access to your data.')
+  expect(within(removeCaregiverDialog).getByText(`Remove caregiver ${caregiverEmail}`)).toBeVisible()
+  expect(removeCaregiverDialog).toHaveTextContent(`Are you sure you want to remove caregiver ${caregiverEmail}?They will no longer have access to your data.`)
   const cancelButton = within(removeCaregiverDialog).getByRole('button', { name: 'Cancel' })
   expect(cancelButton).toBeEnabled()
   const removeButton = within(removeCaregiverDialog).getByRole('button', { name: 'Remove caregiver' })
@@ -175,7 +175,7 @@ export const checkRemoveCaregiverSuccess = async (newCaregiverEmail: string) => 
 
   await userEvent.click(removeButton)
 
-  expect(NotificationApi.cancelInvitation).toHaveBeenCalledWith('my-id', 'target-id', newCaregiverEmail)
+  expect(NotificationApi.cancelInvitation).toHaveBeenCalledWith('my-id', 'target-id', caregiverEmail)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 
   const removeCaregiverSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
