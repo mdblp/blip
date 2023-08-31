@@ -27,7 +27,7 @@
 
 import {
   checkAddCaregiverCancel,
-  checkAddCaregiverError,
+  checkAddCaregiverErrors,
   checkAddCaregiverSuccess,
   checkCaregiversListLayout,
   checkRemoveCaregiverCancel,
@@ -39,7 +39,7 @@ export const testCaregiversVisualisation = async () => {
 
   await checkCaregiversListLayout()
   await checkAddCaregiverCancel()
-  await checkAddCaregiverError()
+  await checkAddCaregiverErrors()
   await checkAddCaregiverSuccess(newCaregiverEmail)
   await checkRemoveCaregiverCancel(newCaregiverEmail)
   await checkRemoveCaregiverSuccess(newCaregiverEmail)

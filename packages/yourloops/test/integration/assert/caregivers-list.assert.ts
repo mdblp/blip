@@ -96,7 +96,7 @@ export const checkAddCaregiverCancel = async () => {
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
-export const checkAddCaregiverError = async () => {
+export const checkAddCaregiverErrors = async () => {
   const addCaregiverButton = await screen.findByTestId('add-caregiver-button')
   await userEvent.click(addCaregiverButton)
 

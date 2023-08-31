@@ -88,7 +88,6 @@ function AddCaregiverDialog(props: AddDialogProps): JSX.Element {
   return (
     <Dialog
       id="patient-add-caregiver-dialog"
-      data-testid="patient-add-caregiver-dialog"
       open
       aria-labelledby={t('modal-add-caregiver')}
       onClose={handleClose}
