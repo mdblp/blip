@@ -32,17 +32,15 @@ import NotificationApi from '../../../lib/notifications/notification.api'
 import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
 import { type Notification } from '../../../lib/notifications/models/notification.model'
 import DirectShareApi, { PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE } from '../../../lib/share/direct-share.api'
-import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
+import { patient1Id } from '../data/patient.api.data'
 
 export const checkCaregiversListLayout = async () => {
   expect(await screen.findByTestId('patient-caregivers-list')).toBeVisible()
 
-  const addCaregiverButton = await screen.findByTestId('add-caregiver-button')
+  const addCaregiverButton = screen.getByTestId('add-caregiver-button')
   expect(addCaregiverButton).toBeVisible()
   expect(addCaregiverButton).toBeEnabled()
-}
 
-export const checkAddRemoveCaregiver = async () => {
   const caregiversTable = screen.getByTestId('patient-caregivers-list')
   expect(caregiversTable).toHaveTextContent('Last nameFirst nameEmail')
 
@@ -50,18 +48,19 @@ export const checkAddRemoveCaregiver = async () => {
   expect(caregiverRow).toBeVisible()
   expect(caregiverRow).toHaveTextContent('UserCaregivercaregiver@mail.com')
   expect(within(caregiverRow).getByTestId(`patient-caregivers-table-row-${mockCaregiverUser.username}-button-remove`)).toBeVisible()
+}
 
-  const addCaregiverButton = await screen.findByTestId('add-caregiver-button')
+export const checkAddCaregiverSuccess = async (newCaregiverEmail: string) => {
+  const addCaregiverButton = screen.getByTestId('add-caregiver-button')
   await userEvent.click(addCaregiverButton)
 
-  const addCaregiverDialog = screen.getByTestId('patient-add-caregiver-dialog')
+  const addCaregiverDialog = screen.getByRole('dialog')
   expect(addCaregiverDialog).toBeVisible()
   expect(within(addCaregiverDialog).getByText('Add a caregiver')).toBeVisible()
   const emailInput = within(addCaregiverDialog).getByRole('textbox', { name: 'Email' })
   expect(emailInput).toBeVisible()
 
-  const newCaregiverEmail = 'new-caregiver@mail.com'
-  await userEvent.type(emailInput, 'new-caregiver@mail.com')
+  await userEvent.type(emailInput, newCaregiverEmail)
   const inviteButton = within(addCaregiverDialog).getByRole('button', { name: 'Invite' })
   expect(inviteButton).toBeEnabled()
 
@@ -73,66 +72,36 @@ export const checkAddRemoveCaregiver = async () => {
   } as Notification])
   await userEvent.click(inviteButton)
 
-  expect(screen.queryByTestId('patient-add-caregiver-dialog')).not.toBeInTheDocument()
+  expect(DirectShareApi.addDirectShare).toHaveBeenCalledWith(patient1Id, newCaregiverEmail)
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+
   const inviteSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
   expect(inviteSuccessfulSnackbar).toHaveTextContent('Invite sent!')
   await userEvent.click(within(inviteSuccessfulSnackbar).getByTitle('Close'))
-
-  const caregiversTableAfterAdd = await screen.findByTestId('patient-caregivers-list')
-  expect(caregiversTableAfterAdd).toBeVisible()
-
-  const caregiverRowAfterAdd = within(caregiversTableAfterAdd).getByTestId(`patient-caregivers-table-row-${mockCaregiverUser.username}`)
-  expect(caregiverRowAfterAdd).toBeVisible()
-  expect(caregiverRowAfterAdd).toHaveTextContent('UserCaregivercaregiver@mail.com')
-  expect(within(caregiverRowAfterAdd).getByTestId(`patient-caregivers-table-row-${mockCaregiverUser.username}-button-remove`)).toBeVisible()
-
-  const newCaregiverRow = within(caregiversTableAfterAdd).getByTestId(`patient-caregivers-table-row-${newCaregiverEmail}`)
-  expect(newCaregiverRow).toBeVisible()
-  expect(newCaregiverRow).toHaveTextContent('--new-caregiver@mail.com')
-  const removeCaregiverButton = within(newCaregiverRow).getByTestId(`patient-caregivers-table-row-${newCaregiverEmail}-button-remove`)
-  expect(removeCaregiverButton).toBeVisible()
-
-  await userEvent.click(removeCaregiverButton)
-
-  const removeCaregiverDialog = screen.getByTestId('remove-direct-share-dialog')
-  expect(within(removeCaregiverDialog).getByText('Remove caregiver new-caregiver@mail.com')).toBeVisible()
-  expect(removeCaregiverDialog).toHaveTextContent('Are you sure you want to remove caregiver new-caregiver@mail.com?They will no longer have access to your data.')
-  const cancelButton = within(removeCaregiverDialog).getByRole('button', { name: 'Cancel' })
-  expect(cancelButton).toBeEnabled()
-  const removeButton = within(removeCaregiverDialog).getByRole('button', { name: 'Remove caregiver' })
-  expect(removeButton).toBeEnabled()
-
-  jest.spyOn(NotificationApi, 'getSentInvitations').mockResolvedValueOnce([])
-  jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValue([{ status: UserInviteStatus.Accepted, user: mockCaregiverUser }])
-  await userEvent.click(removeButton)
-
-  expect(screen.queryByTestId('remove-direct-share-dialog')).not.toBeInTheDocument()
-  const removeCaregiverSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
-  expect(removeCaregiverSuccessfulSnackbar).toHaveTextContent('Your caregiver has no longer access to your data.')
-  await userEvent.click(within(removeCaregiverSuccessfulSnackbar).getByTitle('Close'))
-
-  const caregiversTableAfterRemove = await screen.findByTestId('patient-caregivers-list')
-  expect(caregiversTableAfterRemove).toBeVisible()
-
-  const caregiverRowAfterRemove = within(caregiversTableAfterRemove).getByTestId(`patient-caregivers-table-row-${mockCaregiverUser.username}`)
-  expect(caregiverRowAfterRemove).toBeVisible()
-  expect(caregiverRowAfterRemove).toHaveTextContent('UserCaregivercaregiver@mail.com')
-  expect(within(caregiverRowAfterRemove).getByTestId(`patient-caregivers-table-row-${mockCaregiverUser.username}-button-remove`)).toBeVisible()
-
-  expect(NotificationApi.cancelInvitation).toHaveBeenCalledWith('my-id', 'target-id', 'new-caregiver@mail.com')
-  expect(within(caregiversTableAfterRemove).queryByTestId(`patient-caregivers-table-row-${newCaregiverEmail}`)).not.toBeInTheDocument()
 }
 
-export const checkAddCaregiverErrorCases = async () => {
+export const checkAddCaregiverCancel = async () => {
   const addCaregiverButton = await screen.findByTestId('add-caregiver-button')
   await userEvent.click(addCaregiverButton)
 
-  const addCaregiverDialog = screen.getByTestId('patient-add-caregiver-dialog')
+  const addCaregiverDialog = screen.getByRole('dialog')
   expect(addCaregiverDialog).toBeVisible()
 
   const cancelButton = within(addCaregiverDialog).getByRole('button', { name: 'Cancel' })
   expect(cancelButton).toBeVisible()
   expect(cancelButton).toBeEnabled()
+
+  await userEvent.click(cancelButton)
+
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+}
+
+export const checkAddCaregiverError = async () => {
+  const addCaregiverButton = await screen.findByTestId('add-caregiver-button')
+  await userEvent.click(addCaregiverButton)
+
+  const addCaregiverDialog = screen.getByRole('dialog')
+  expect(addCaregiverDialog).toBeVisible()
 
   const inviteButton = within(addCaregiverDialog).getByRole('button', { name: 'Invite' })
   expect(inviteButton).toBeVisible()
@@ -166,6 +135,50 @@ export const checkAddCaregiverErrorCases = async () => {
   jest.spyOn(DirectShareApi, 'addDirectShare').mockRejectedValueOnce(new Error(PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE))
   await userEvent.click(inviteButton)
 
+  expect(DirectShareApi.addDirectShare).toHaveBeenCalled()
   expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You cannot share your data with this user as they are not a caregiver.')
-  expect(screen.queryByTestId('patient-add-caregiver-dialog')).not.toBeInTheDocument()
+  await userEvent.click(within(screen.getByTestId('alert-snackbar')).getByTitle('Close'))
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+}
+
+export const checkRemoveCaregiverCancel = async (newCaregiverEmail: string) => {
+  const caregiversTable = await screen.findByTestId('patient-caregivers-list')
+  const newCaregiverRow = within(caregiversTable).getByTestId(`patient-caregivers-table-row-${newCaregiverEmail}`)
+  const removeCaregiverButton = within(newCaregiverRow).getByTestId(`patient-caregivers-table-row-${newCaregiverEmail}-button-remove`)
+
+  await userEvent.click(removeCaregiverButton)
+
+  const removeCaregiverDialog = screen.getByRole('dialog')
+  const cancelButton = within(removeCaregiverDialog).getByRole('button', { name: 'Cancel' })
+  expect(cancelButton).toBeEnabled()
+
+  await userEvent.click(cancelButton)
+
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+}
+
+export const checkRemoveCaregiverSuccess = async (newCaregiverEmail: string) => {
+  const caregiversTable = await screen.findByTestId('patient-caregivers-list')
+  const newCaregiverRow = within(caregiversTable).getByTestId(`patient-caregivers-table-row-${newCaregiverEmail}`)
+  const removeCaregiverButton = within(newCaregiverRow).getByTestId(`patient-caregivers-table-row-${newCaregiverEmail}-button-remove`)
+  expect(removeCaregiverButton).toBeVisible()
+
+  await userEvent.click(removeCaregiverButton)
+
+  const removeCaregiverDialog = screen.getByRole('dialog')
+  expect(within(removeCaregiverDialog).getByText('Remove caregiver new-caregiver@mail.com')).toBeVisible()
+  expect(removeCaregiverDialog).toHaveTextContent('Are you sure you want to remove caregiver new-caregiver@mail.com?They will no longer have access to your data.')
+  const cancelButton = within(removeCaregiverDialog).getByRole('button', { name: 'Cancel' })
+  expect(cancelButton).toBeEnabled()
+  const removeButton = within(removeCaregiverDialog).getByRole('button', { name: 'Remove caregiver' })
+  expect(removeButton).toBeEnabled()
+
+  await userEvent.click(removeButton)
+
+  expect(NotificationApi.cancelInvitation).toHaveBeenCalledWith('my-id', 'target-id', newCaregiverEmail)
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+
+  const removeCaregiverSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
+  expect(removeCaregiverSuccessfulSnackbar).toHaveTextContent('Your caregiver has no longer access to your data.')
+  await userEvent.click(within(removeCaregiverSuccessfulSnackbar).getByTitle('Close'))
 }

@@ -26,13 +26,21 @@
  */
 
 import {
-  checkAddCaregiverErrorCases,
-  checkAddRemoveCaregiver,
-  checkCaregiversListLayout
+  checkAddCaregiverCancel,
+  checkAddCaregiverError,
+  checkAddCaregiverSuccess,
+  checkCaregiversListLayout,
+  checkRemoveCaregiverCancel,
+  checkRemoveCaregiverSuccess
 } from '../assert/caregivers-list.assert'
 
 export const testCaregiversVisualisation = async () => {
+  const newCaregiverEmail = 'new-caregiver@mail.com'
+
   await checkCaregiversListLayout()
-  await checkAddRemoveCaregiver()
-  await checkAddCaregiverErrorCases()
+  await checkAddCaregiverCancel()
+  await checkAddCaregiverError()
+  await checkAddCaregiverSuccess(newCaregiverEmail)
+  await checkRemoveCaregiverCancel(newCaregiverEmail)
+  await checkRemoveCaregiverSuccess(newCaregiverEmail)
 }
