@@ -28,7 +28,10 @@
 import Unit from '../models/medical/datum/enums/unit.enum'
 import { convertBG } from '../repositories/medical/datum/cbg.service'
 
-interface UnitValuePair { unit: Unit | string, value: string}
+interface UnitValuePair {
+  unit: Unit | string,
+  value: string
+}
 
 export const getConvertedParamUnitAndValue = (paramUnit: Unit | string, paramValue: string, expectedUnit: Unit): UnitValuePair => {
   if ((paramUnit === Unit.MilligramPerDeciliter || paramUnit === Unit.MmolPerLiter) && paramUnit !== expectedUnit) {
