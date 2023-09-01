@@ -159,6 +159,7 @@ export const formatDuration = (duration: number, condensed: boolean = false): st
   const days = momentDuration.days()
   const hours = momentDuration.hours()
   const minutes = momentDuration.minutes()
+  console.log({ duration })
   const seconds = momentDuration.seconds()
 
   const QUARTER = '¼'
@@ -183,7 +184,7 @@ export const formatDuration = (duration: number, condensed: boolean = false): st
         formatted.minutes = `0${t('abbrev_duration_minute_m')}`
       }
     } else {
-      let roundedMinutes = seconds >= 60 ? minutes + 1 : minutes
+      let roundedMinutes = seconds >= 30 ? minutes + 1 : minutes
       let roundedHours = hours
       let roundedDays = days
 
