@@ -7,6 +7,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2484 Remove level column in device change parameter history
 
 ### Engineering use
+- YLP-2227 Adjustment of the stats on carbs of the dashboard
 - YLP-2594 Handle release branches in GitHub CI workflow
 - YLP-2595 Update deprecated GitHub Actions to Node 16
 
