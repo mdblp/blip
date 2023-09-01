@@ -26,7 +26,7 @@
  */
 
 import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import { type BgPrefs, CBGPercentageBarChart, CBGStatType, TotalCarbsStat } from 'dumb'
+import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
 import {
   BasalBolusStatisticsService,
   type BgType,
@@ -48,6 +48,7 @@ import { AverageGlucoseStat } from './average-glucose-stat'
 import { TotalInsulinStat } from './total-insulin-stat'
 import { MS_IN_DAY } from 'medical-domain/dist/src/domains/repositories/time/time.service'
 import { makeStyles } from 'tss-react/mui'
+import { CarbsStat } from './carbs-stat'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -139,7 +140,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
       </Box>
 
       <Box className={classes.widgetGroup}>
-        <TotalCarbsStat
+        <CarbsStat
           totalEntriesMealCarbWithRescueCarbs={totalEntriesMealCarbWithRescueCarbs}
           totalCarbsPerDay={Math.round(totalCarbsPerDay)}
           rescueCarbs={Math.round(rescueCarbs)}

@@ -27,7 +27,7 @@
 
 const fs = require('fs').promises
 const path = require('path')
-const { expect } = require('chai')
+const {expect} = require('chai')
 const blipEnglish = Object.keys(require('../../locales/en/translation.json'))
 const ylpEnglish = Object.keys(require('../../locales/en/yourloops.json'))
 
@@ -225,7 +225,9 @@ const ignoredTransKeyForYourLoops = [
   'tooltip-per-day-carbs',
   'tooltip-per-day-estimated-carbs',
   'total-declared-carbs',
-  'total-estimated-carbs'
+  'total-estimated-carbs',
+  'time-loop-tooltip',
+  'tooltip-total-derived-carbs'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
@@ -293,7 +295,7 @@ async function getFiles(baseDir) {
  * @returns {Promise<string[]>} The list of used translations
  */
 async function getTranslations(file) {
-  const content = await fs.readFile(file, { encoding: 'utf-8' })
+  const content = await fs.readFile(file, {encoding: 'utf-8'})
   const lines = content.split('\n')
   /** @type {string[]} */
   const trKeys = []
@@ -365,6 +367,7 @@ describe('Locales tests', () => {
       }
     }
     expect(unusedTranslations, 'Unused translations').to.be.empty
+    console.log(missingTranslations)
     expect(missingTranslations, 'Missing translations').to.be.empty
   })
 

@@ -38,7 +38,13 @@ export interface TotalInsulinStatProps {
 }
 
 export const CarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
-  const { totalCarbsPerDay, totalEntriesMealCarbWithRescueCarbs, rescueCarbs, mealCarbs, totalEntriesRescueCarbs } = props
+  const {
+    totalCarbsPerDay,
+    totalEntriesMealCarbWithRescueCarbs,
+    rescueCarbs,
+    mealCarbs,
+    totalEntriesRescueCarbs
+  } = props
   const { t } = useTranslation('main')
   const location = useLocation()
   const isDailyPage = location.pathname.includes('daily')
@@ -59,7 +65,7 @@ export const CarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
         value={mealCarbs}
       />
       <TotalCarbsStat
-        title={t('Rescuecarbs')}
+        title={t('rescue-carbs')}
         value={rescueCarbs}
       />
       <TotalCarbsStat
