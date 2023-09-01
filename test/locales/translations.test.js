@@ -215,7 +215,8 @@ const ignoredTransKeyForYourLoops = [
   'ratio-dose',
   'weight',
   'account-created-info-2-caregiver',
-  'account-created-info-2-hcp'
+  'account-created-info-2-hcp',
+  'signup-unknown-step'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
