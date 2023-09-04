@@ -97,6 +97,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const {
     rescueCarbs,
     totalEntriesMealCarbWithRescueCarbs,
+    estimatedCarbs,
     totalCarbsPerDay,
     mealCarbs,
     totalEntriesRescueCarbs
@@ -144,6 +145,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
           totalEntriesMealCarbWithRescueCarbs={totalEntriesMealCarbWithRescueCarbs}
           totalCarbsPerDay={Math.round(totalCarbsPerDay)}
           rescueCarbs={Math.round(rescueCarbs)}
+          estimatedCarbs={Math.round(estimatedCarbs)}
           mealCarbs={Math.round(mealCarbs)}
           totalEntriesRescueCarbs={totalEntriesRescueCarbs}
         />

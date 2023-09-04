@@ -29,6 +29,7 @@ export interface CarbsStatistics {
   totalCarbsPerDay: number
   rescueCarbs: number
   mealCarbs: number
+  estimatedCarbs: number
   totalEntriesMealCarbWithRescueCarbs: number
   totalEntriesRescueCarbs: number
 }

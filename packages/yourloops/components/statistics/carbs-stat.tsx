@@ -33,6 +33,7 @@ export interface TotalInsulinStatProps {
   totalCarbsPerDay: number
   rescueCarbs: number
   mealCarbs: number
+  estimatedCarbs: number
   totalEntriesMealCarbWithRescueCarbs: number
   totalEntriesRescueCarbs: number
 }
@@ -42,6 +43,7 @@ export const CarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
     totalCarbsPerDay,
     totalEntriesMealCarbWithRescueCarbs,
     rescueCarbs,
+    estimatedCarbs,
     mealCarbs,
     totalEntriesRescueCarbs
   } = props
@@ -71,7 +73,7 @@ export const CarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
       <TotalCarbsStat
         title={t(isDailyPage ? 'total-estimated-carbs' : 'avg-daily-estimated-carbs')}
         annotation={estimatedCarbsAnnotation}
-        value={rescueCarbs}
+        value={estimatedCarbs}
       />
     </div>
   )
