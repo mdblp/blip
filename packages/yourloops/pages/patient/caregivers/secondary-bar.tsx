@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -57,6 +57,8 @@ const pageBarStyles = makeStyles({ name: 'ylp-patient-caregivers-secondary-bar' 
     }
   }
 })
+
+console.log('Test commit')
 
 function SecondaryBar(props: BarProps): JSX.Element {
   const { classes } = pageBarStyles()
