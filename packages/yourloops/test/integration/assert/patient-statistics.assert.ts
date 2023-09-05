@@ -62,7 +62,7 @@ export const checkPatientStatisticsNoData = async () => {
   checkTooltip(patientStatistics, 'Standard Deviation')
   checkTooltip(patientStatistics, 'Avg. Glucose (CGM)')
   checkTooltip(patientStatistics, 'Avg. Daily Total Insulin')
-  checkTooltip(patientStatistics, 'Time In Loop Mode')
+  checkTooltip(patientStatistics, 'Avg. Daily Time In Loop Mode')
   checkTooltip(patientStatistics, 'Avg. Daily Carbs')
   checkTooltip(patientStatistics, 'CV (CGM)')
 
