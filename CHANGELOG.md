@@ -4,6 +4,7 @@ It is based on Tidepool Blip 1.27.
 
 ## 3.0.5-beta - 2023-07-12
 ### Added
+- YLP-2292 Display rescue carbs and manual bolus in the trends view for DBLG1 patient
 - YLP-2484 Remove level column in device change parameter history
 
 ### Engineering use

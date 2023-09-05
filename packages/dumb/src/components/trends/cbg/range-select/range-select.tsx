@@ -59,6 +59,7 @@ export const RangeSelect: FunctionComponent = () => {
         checked={displayFlags.cbgMedianEnabled}
         displayFlag={DisplayFlag.CbgMedianEnabled}
         label={t('Median')}
+        sx={{ marginRight: 0 }}
       />
     </div>
   )

@@ -32,6 +32,7 @@ import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import metrics from 'yourloops/lib/metrics'
 import { ChartTypes } from 'yourloops/enum/chart-type.enum'
 import Stats from './stats'
+import { CarbsAndBolusAverage } from 'yourloops/components/statistics/carbs-and-bolus-average'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -561,6 +562,7 @@ class Trends extends React.Component {
                     <RangeSelect />
                   </Footer>
                 </Box>
+                <CarbsAndBolusAverage />
               </div>
               <div className="container-box-inner patient-data-sidebar">
                 <div className="patient-data-sidebar-inner">
