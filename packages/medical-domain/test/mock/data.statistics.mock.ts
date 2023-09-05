@@ -31,8 +31,8 @@ import { type Basal, type Bolus, type Meal, type Wizard, WizardInputMealFat, Wiz
 
 const abbottDevice = 'AbbottFreeStyleLibre-XXX-XXXX'
 const dexcomDevice = 'Dexcom-XXX-XXXX'
-
 export const MS_IN_HOUR = 864e5 / 24
+
 export const bgDataSourceOneDay: Array<[Date, string]> = [
   // data for one day and two days tests
   [new Date('2018-02-01T00:00:00.000Z'), abbottDevice],
@@ -41,40 +41,48 @@ export const bgDataSourceOneDay: Array<[Date, string]> = [
   [new Date('2018-02-01T00:45:00.000Z'), dexcomDevice],
   [new Date('2018-02-01T00:50:00.000Z'), dexcomDevice]
 ]
+
 export const basalsData: Array<[Date, number, number, string]> = [
   [new Date('2018-02-01T01:00:00Z'), 0.25, MS_IN_HOUR, 'automated'],
   [new Date('2018-02-01T02:00:00Z'), 0.75, MS_IN_HOUR, 'scheduled'],
   [new Date('2018-02-01T03:00:00Z'), 0.5, MS_IN_HOUR, 'scheduled'],
-  [new Date('2018-02-03T03:00:00Z'), 0.5, MS_IN_HOUR, 'scheduled']
+  [new Date('2018-02-02T00:00:00Z'), 0.5, MS_IN_HOUR, 'scheduled'],
+  [new Date('2018-02-02T00:00:00Z'), 0.5, MS_IN_HOUR, 'temp']
 ]
+
 export const bolusData: Array<[Date, number]> = [
   [new Date('2018-02-01T01:00:00Z'), 4],
   [new Date('2018-02-01T02:00:00Z'), 5],
   [new Date('2018-02-01T03:00:00Z'), 6],
   [new Date('2018-02-03T03:00:00Z'), 4]
 ]
+
 export const bgDataSourceTwoDays: Array<[Date, string]> = [
   // data for two days tests
   [new Date('2018-02-01T00:50:00.000Z'), dexcomDevice],
-  [new Date('2018-02-02T00:50:00.000Z'), dexcomDevice]
+  [new Date('2018-02-03T00:50:00.000Z'), dexcomDevice]
 ]
 
 export const dateFilterOneDay: DateFilter = {
   start: new Date('2018-02-01T00:00:00.000Z').valueOf(),
   end: new Date('2018-02-02T00:00:00.000Z').valueOf()
 }
+
 export const dateFilterTwoDays: DateFilter = {
   start: new Date('2018-02-01T00:00:00.000Z').valueOf(),
   end: new Date('2018-02-03T00:00:00.000Z').valueOf()
 }
+
 export const dateFilterThreeDays: DateFilter = {
   start: new Date('2018-02-01T00:00:00.000Z').valueOf(),
   end: new Date('2018-02-04T00:00:00.000Z').valueOf()
 }
+
 export const dateFilterThreeDays2020: DateFilter = {
   start: new Date('2020-02-01T00:00:00.000Z').valueOf(),
   end: new Date('2020-02-04T00:00:00.000Z').valueOf()
 }
+
 export const dateFilterTwoWeeks: DateFilter = {
   start: new Date('2018-02-01T00:00:00.000Z').valueOf(),
   end: new Date('2018-02-15T00:00:00.000Z').valueOf()
@@ -101,16 +109,19 @@ export const buildWizardData = (data: Array<[Date, string]>): Wizard[] => (
     }
   ))
 )
+
 export const buildBasalsData = (basalsData: Array<[Date, number, number, string]>): Basal[] => (
   basalsData.map((basals) => (
     {
       ...createRandomBasal(basals[0], basals[2]),
       rate: basals[1],
       duration: basals[2],
+      subType: basals[3],
       deliveryType: basals[3]
     }
   ))
 )
+
 export const buildBolusData = (bolusData: Array<[Date, number]>): Bolus[] => (
   bolusData.map((bolus) => (
     {

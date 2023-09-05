@@ -63,7 +63,6 @@ export const PatientData: FunctionComponent = () => {
     changeChart,
     changePatient,
     currentChart,
-    dataUtil,
     dailyDate,
     dailyChartRef,
     fetchPatientData,
@@ -165,7 +164,6 @@ export const PatientData: FunctionComponent = () => {
                       <React.Fragment>
                         <Daily
                           bgPrefs={bgPrefs}
-                          dataUtil={dataUtil}
                           timePrefs={timePrefs}
                           patient={patient}
                           tidelineData={medicalData}
@@ -202,9 +200,7 @@ export const PatientData: FunctionComponent = () => {
                     element={
                       <Trends
                         bgPrefs={bgPrefs}
-                        dataUtil={dataUtil}
                         chartPrefs={chartPrefs}
-                        timePrefs={timePrefs}
                         epochLocation={trendsDate}
                         msRange={msRange}
                         patient={patient}

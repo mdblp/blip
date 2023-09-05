@@ -46,7 +46,6 @@ export interface usePatientDataResult {
   changePatient: (patient: Patient) => void
   chartPrefs: ChartPrefs
   currentChart: ChartTypes
-  dataUtil: DataUtil
   dailyChartRef: MutableRefObject<DailyChartRef>
   dailyDate: number
   fetchPatientData: () => Promise<void>
@@ -302,7 +301,6 @@ export const usePatientData = (): usePatientDataResult => {
     changePatient,
     currentChart,
     chartPrefs,
-    dataUtil,
     dailyChartRef,
     dailyDate,
     fetchPatientData,

@@ -35,7 +35,6 @@ import type ReservoirChange from '../../models/medical/datum/reservoir-change.mo
 import type WarmUp from '../../models/medical/datum/warm-up.model'
 import type Wizard from '../../models/medical/datum/wizard.model'
 import type ZenMode from '../../models/medical/datum/zen-mode.model'
-
 import type BasicData from './basics-data.service'
 import { generateBasicData } from './basics-data.service'
 import BasalService from './datum/basal.service'
@@ -46,7 +45,6 @@ import MessageService from './datum/message.service'
 import PhysicalActivityService from './datum/physical-activity.service'
 import TimeZoneChangeService from './datum/time-zone-change.service'
 import DatumService from './datum.service'
-
 import type MedicalDataOptions from '../../models/medical/medical-data-options.model'
 import {
   BG_CLAMP_THRESHOLD,
