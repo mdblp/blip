@@ -35,8 +35,6 @@ import DirectShareApi, { PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE } fr
 import { patient1Id } from '../data/patient.api.data'
 
 export const checkCaregiversListLayout = async () => {
-  expect(await screen.findByTestId('patient-caregivers-list')).toBeVisible()
-
   const addCaregiverButton = screen.getByRole('button', { name: 'Add caregiver' })
   expect(addCaregiverButton).toBeVisible()
   expect(addCaregiverButton).toBeEnabled()
@@ -47,7 +45,7 @@ export const checkCaregiversListLayout = async () => {
   const caregiverRow = within(caregiversTable).getByTestId(`patient-caregivers-table-row-${mockCaregiverUser.username}`)
   expect(caregiverRow).toBeVisible()
   expect(caregiverRow).toHaveTextContent('UserCaregivercaregiver@mail.com')
-  expect(within(caregiverRow).getByTestId(`patient-caregivers-table-row-${mockCaregiverUser.username}-button-remove`)).toBeVisible()
+  expect(within(caregiverRow).getByRole('button', { name: `Remove caregiver-${mockCaregiverUser.username}`})).toBeVisible()
 }
 
 export const checkAddCaregiverSuccess = async (newCaregiverEmail: string) => {
@@ -88,8 +86,6 @@ export const checkAddCaregiverCancel = async () => {
   expect(addCaregiverDialog).toBeVisible()
 
   const cancelButton = within(addCaregiverDialog).getByRole('button', { name: 'Cancel' })
-  expect(cancelButton).toBeVisible()
-  expect(cancelButton).toBeEnabled()
 
   await userEvent.click(cancelButton)
 
@@ -129,13 +125,14 @@ export const checkAddCaregiverErrors = async () => {
   expect(inviteButton).toBeDisabled()
   expect(within(addCaregiverDialog).getByText('You are already sharing your data with this caregiver.')).toBeVisible()
 
+  const otherPatientEmail = 'other-patient@mail.com'
   await userEvent.clear(emailInput)
-  await userEvent.type(emailInput, 'other-patient@mail.com')
+  await userEvent.type(emailInput, otherPatientEmail)
 
   jest.spyOn(DirectShareApi, 'addDirectShare').mockRejectedValueOnce(new Error(PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE))
   await userEvent.click(inviteButton)
 
-  expect(DirectShareApi.addDirectShare).toHaveBeenCalled()
+  expect(DirectShareApi.addDirectShare).toHaveBeenCalledWith(patient1Id, otherPatientEmail)
   expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You cannot share your data with this user as they are not a caregiver.')
   await userEvent.click(within(screen.getByTestId('alert-snackbar')).getByTitle('Close'))
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
@@ -144,7 +141,7 @@ export const checkAddCaregiverErrors = async () => {
 export const checkRemoveCaregiverCancel = async (caregiverEmail: string) => {
   const caregiversTable = screen.getByTestId('patient-caregivers-list')
   const caregiverRow = within(caregiversTable).getByTestId(`patient-caregivers-table-row-${caregiverEmail}`)
-  const removeCaregiverButton = within(caregiverRow).getByTestId(`patient-caregivers-table-row-${caregiverEmail}-button-remove`)
+  const removeCaregiverButton = within(caregiverRow).getByRole('button', { name: `Remove caregiver-${caregiverEmail}`})
 
   await userEvent.click(removeCaregiverButton)
 
@@ -160,7 +157,7 @@ export const checkRemoveCaregiverCancel = async (caregiverEmail: string) => {
 export const checkRemoveCaregiverSuccess = async (caregiverEmail: string) => {
   const caregiversTable = screen.getByTestId('patient-caregivers-list')
   const caregiverRow = within(caregiversTable).getByTestId(`patient-caregivers-table-row-${caregiverEmail}`)
-  const removeCaregiverButton = within(caregiverRow).getByTestId(`patient-caregivers-table-row-${caregiverEmail}-button-remove`)
+  const removeCaregiverButton = within(caregiverRow).getByRole('button', { name: `Remove caregiver-${caregiverEmail}` })
   expect(removeCaregiverButton).toBeVisible()
 
   await userEvent.click(removeCaregiverButton)

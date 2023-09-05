@@ -97,7 +97,7 @@ function compareUserShare(orderBy: SortFields, order: SortDirection, a: ShareUse
   return value
 }
 
-function CaregiverTable(props: CaregiverTableProps): JSX.Element {
+function CaregiversTable(props: CaregiverTableProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { classes } = tableStyles()
   const [orderBy, setOrderBy] = React.useState<SortFields>(SortFields.lastname)
@@ -177,8 +177,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
             <IconActionButton
               icon={<PersonRemoveIcon />}
               id={`patient-caregivers-table-row-${userId}-button-remove`}
-              data-testid={`patient-caregivers-table-row-${userEmail}-button-remove`}
-              aria-label={`${t('remove-caregiver')}-${userId}`}
+              aria-label={`${t('remove-caregiver')}-${userEmail}`}
               onClick={onClickRemoveCaregiver}
               tooltip={t('remove-caregiver')} />
           </TableCell>
@@ -230,4 +229,4 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
   )
 }
 
-export default CaregiverTable
+export default CaregiversTable
