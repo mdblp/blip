@@ -68,6 +68,7 @@ describe('getCarbsData', () => {
     const expected = {
       mealCarbs: 25,
       rescueCarbs: 25,
+      estimatedCarbs: 25,
       totalCarbsPerDay: 50,
       totalEntriesMealCarbWithRescueCarbs: 10,
       totalEntriesRescueCarbs: 5
@@ -82,6 +83,7 @@ describe('getCarbsData', () => {
     const carbsData = CarbsStatisticsService.getCarbsData(mealData, wizardData, 2, dateFilterTwoDays)
     const expected = {
       mealCarbs: 5,
+      estimatedCarbs: 5,
       rescueCarbs: 5,
       totalCarbsPerDay: 10,
       totalEntriesMealCarbWithRescueCarbs: 4,
