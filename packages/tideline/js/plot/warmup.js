@@ -52,6 +52,7 @@ function plotWarmUp(pool, opts) {
     const xScale = pool.xScale().copy()
     selection.each(function () {
       const warmUpEvents = pool.filterDataForRender(opts.tidelineData.medicalData.warmUps)
+      console.log(`Found ${warmUpEvents.length} events for warmup`)
       if (warmUpEvents.length < 1) {
         d3.select(this).selectAll('g.d3-warmup-group').remove()
         return

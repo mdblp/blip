@@ -36,7 +36,8 @@ import {
   FoodTooltip,
   ParameterTooltip,
   PhysicalTooltip,
-  ReservoirTooltip
+  ReservoirTooltip,
+  HypoglycemiaEventTooltip
 } from 'dumb'
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
@@ -78,6 +79,7 @@ class DailyChart extends React.Component {
     onPhysicalHover: PropTypes.func.isRequired,
     onParameterHover: PropTypes.func.isRequired,
     onWarmUpHover: PropTypes.func.isRequired,
+    onHypoglycemiaEventHover: PropTypes.func.isRequired,
     onConfidentialHover: PropTypes.func.isRequired,
     onTooltipOut: PropTypes.func.isRequired,
     onChartMounted: PropTypes.func.isRequired,
@@ -100,6 +102,7 @@ class DailyChart extends React.Component {
       'onParameterHover',
       'onConfidentialHover',
       'onWarmUpHover',
+      'onHypoglycemiaEventHover',
       'onTooltipOut',
       'trackMetric'
     ]
@@ -388,6 +391,7 @@ class Daily extends React.Component {
                   onPhysicalHover={this.handlePhysicalHover}
                   onParameterHover={this.handleParameterHover}
                   onWarmUpHover={this.handleWarmUpHover}
+                  onHypoglycemiaEventHover={this.handleHypoglycemiaEventHover}
                   onConfidentialHover={this.handleConfidentialHover}
                   onTooltipOut={this.handleTooltipOut}
                   onChartMounted={this.onChartMounted}
@@ -647,6 +651,22 @@ class Daily extends React.Component {
     const tooltip = (
       <WarmUpTooltip
         datum={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        bgPrefs={datum.bgPrefs}
+        timePrefs={datum.timePrefs}
+      />)
+    this.setState({ tooltip })
+  }
+
+  handleHypoglycemiaEventHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum)
+    const tooltip = (
+      <HypoglycemiaEventTooltip
+        event={datum.data}
         position={{
           top: datum.top,
           left: datum.left

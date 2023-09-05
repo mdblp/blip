@@ -89,7 +89,8 @@ const resolve = {
     'cartridge.png': path.resolve(__dirname, '../../branding/sitechange/cartridge.png'),
     'infusion.png': path.resolve(__dirname, '../../branding/sitechange/infusion.png'),
     'cartridge-vicentra.png': path.resolve(__dirname, '../../branding/sitechange/cartridge-vicentra.png'),
-    'warmup-dexcom.svg': path.resolve(__dirname, '../../branding/warmup/warmup-dexcom.svg')
+    'warmup-dexcom.svg': path.resolve(__dirname, '../../branding/warmup/warmup-dexcom.svg'),
+    'hypoglycemia-event.svg': path.resolve(__dirname, '../../branding/hypoglycemia-event/hypoglycemia-event.svg')
     // Theses aliases will be needed for webpack 5.x :
     // crypto: require.resolve('crypto-browserify'),
     // path: require.resolve('path-browserify'),

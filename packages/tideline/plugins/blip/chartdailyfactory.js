@@ -32,6 +32,7 @@ import plotReservoirChange from '../../js/plot/reservoir'
 import plotDeviceParameterChange from '../../js/plot/deviceParameterChange'
 import plotConfidentialModeEvent from '../../js/plot/confidentialModeEvent'
 import plotWarmUp from '../../js/plot/warmup'
+import plotHypoglycemiaEvent from '../../js/plot/hypoglycemiaEvent'
 import plotCbg from '../../js/plot/cbg'
 import plotSmbg from '../../js/plot/smbg'
 import plotWizard from '../../js/plot/wizard'
@@ -273,6 +274,12 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     tidelineData,
     onWarmUpHover: options.onWarmUpHover,
     onWarmUpOut: options.onTooltipOut
+  }))
+
+  poolBG.addPlotType({ type: 'deviceEvent' }, plotHypoglycemiaEvent(poolBG, {
+    tidelineData,
+    onHypoglycemiaEventHover: options.onHypoglycemiaEventHover,
+    onHypoglycemiaEventOut: options.onTooltipOut
   }))
 
   // add CBG data to BG pool
