@@ -370,7 +370,6 @@ describe('Locales tests', () => {
       }
     }
     expect(unusedTranslations, 'Unused translations').to.be.empty
-    console.log(missingTranslations)
     expect(missingTranslations, 'Missing translations').to.be.empty
   })
 
