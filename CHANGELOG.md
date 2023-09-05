@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2438 Inconsistency in the daily view between carbs displayed on the graph and Total carbs in the statistics panel
 
 ### Engineering use
+- YLP-2573 Create a dedicated message for the caregiver when the account creation is complete
 - YLP-2594 Handle release branches in GitHub CI workflow
 - YLP-2595 Update deprecated GitHub Actions to Node 16
 

@@ -219,7 +219,10 @@ const ignoredTransKeyForYourLoops = [
   'total-insulin-how-calculate-tooltip',
   'average-daily-total-insulin',
   'ratio-dose',
-  'weight'
+  'weight',
+  'account-created-info-2-caregiver',
+  'account-created-info-2-hcp',
+  'signup-unknown-step'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
