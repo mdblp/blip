@@ -45,7 +45,7 @@ export const checkCaregiversListLayout = async () => {
   const caregiverRow = within(caregiversTable).getByTestId(`patient-caregivers-table-row-${mockCaregiverUser.username}`)
   expect(caregiverRow).toBeVisible()
   expect(caregiverRow).toHaveTextContent('UserCaregivercaregiver@mail.com')
-  expect(within(caregiverRow).getByRole('button', { name: `Remove caregiver-${mockCaregiverUser.username}`})).toBeVisible()
+  expect(within(caregiverRow).getByRole('button', { name: `Remove caregiver-${mockCaregiverUser.username}` })).toBeVisible()
 }
 
 export const checkAddCaregiverSuccess = async (newCaregiverEmail: string) => {
@@ -141,7 +141,7 @@ export const checkAddCaregiverErrors = async () => {
 export const checkRemoveCaregiverCancel = async (caregiverEmail: string) => {
   const caregiversTable = screen.getByTestId('patient-caregivers-list')
   const caregiverRow = within(caregiversTable).getByTestId(`patient-caregivers-table-row-${caregiverEmail}`)
-  const removeCaregiverButton = within(caregiverRow).getByRole('button', { name: `Remove caregiver-${caregiverEmail}`})
+  const removeCaregiverButton = within(caregiverRow).getByRole('button', { name: `Remove caregiver-${caregiverEmail}` })
 
   await userEvent.click(removeCaregiverButton)
 
