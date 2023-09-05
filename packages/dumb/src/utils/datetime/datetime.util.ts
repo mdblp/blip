@@ -159,7 +159,6 @@ export const formatDuration = (duration: number, condensed: boolean = false): st
   const days = momentDuration.days()
   const hours = momentDuration.hours()
   const minutes = momentDuration.minutes()
-  console.log({ duration })
   const seconds = momentDuration.seconds()
 
   const QUARTER = '¼'
