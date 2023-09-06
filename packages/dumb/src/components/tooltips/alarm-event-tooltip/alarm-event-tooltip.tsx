@@ -76,7 +76,7 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
       case AlarmCode.LongHyperglycemia:
         return t('alert-hyperglycemia-title')
       case AlarmCode.SensorSessionExpired:
-        return t('alert-sensor-session-expired-title')
+        return t('alarm-sensor-session-expired-title')
       case AlarmCode.Hypoglycemia:
       case AlarmCode.LongHypoglycemia:
         return t('alarm-hypoglycemia-title')
@@ -104,7 +104,7 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
       case AlarmCode.Hyperglycemia:
         return [t('alert-hyperglycemia-description'), t('alert-loop-mode-deactivated-description')]
       case AlarmCode.SensorSessionExpired:
-        return [t('alert-sensor-session-expired-description-line1'), t('alert-sensor-session-expired-description-line2')]
+        return [t('alarm-sensor-session-expired-description-line1'), t('alarm-sensor-session-expired-description-line2')]
       case AlarmCode.Hypoglycemia:
         return [t('alarm-hypoglycemia-description'), t('alarm-loop-mode-deactivated-description')]
       case AlarmCode.LongHyperglycemia:
@@ -151,8 +151,8 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
       content={
         <div className={styles.container}>
           <TooltipLine label={contentTitle} isBold/>
-          {contentTextArray.map((textLine: string, index: number) => (
-            <TooltipLine label={textLine} key={index} />
+          {contentTextArray.map((textLine: string) => (
+            <TooltipLine label={textLine} key={textLine} />
           ))}
         </div>
       }
