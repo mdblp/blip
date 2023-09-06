@@ -193,6 +193,7 @@
   "edit-medical-report": "Modifica il referto medico {{number}}",
   "email": "E-mail",
   "end-date": "Data finale",
+  "error-caregiver-already-in-list": "You are already sharing your data with this caregiver.",
   "error-http-40x": "Si è verificato un errore. Contattare il supporto per ricevere assistenza",
   "error-http-500": "Si è verificato un problema. Riprovare tra qualche minuto. Se il problema persiste, contattare il supporto per ricevere assistenza",
   "error-patient-already-in-team": "Questo paziente sta già condividendo i dati con il team.",
