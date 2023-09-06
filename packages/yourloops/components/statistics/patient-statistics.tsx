@@ -26,8 +26,12 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { type BgPrefs, CBGPercentageBarChart, CBGStatType } from 'dumb'
-import { type BgPrefs, CBGPercentageBarChart, CBGStatType, LoopModeStat, TotalCarbsStat } from 'dumb'
+import {
+  type BgPrefs,
+  CBGPercentageBarChart,
+  CBGStatType,
+  LoopModeStat
+} from 'dumb'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
