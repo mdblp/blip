@@ -27,11 +27,12 @@
 
 import React, { FC } from 'react'
 import Box from '@mui/material/Box'
-import { CarbsAndBolusCell, LIGHT_BORDER, MANUAL_BOLUS_COLOR, RESCUE_CARBS_COLOR } from './carbs-and-bolus-cell'
+import { CarbsAndBolusCell } from './carbs-and-bolus-cell'
 import Typography from '@mui/material/Typography'
 import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from 'tss-react/mui'
+import { LIGHT_BORDER, MANUAL_BOLUS_COLOR, RESCUE_CARBS_COLOR } from './carbs-and-bolus-styles'
 
 const useStyles = makeStyles()(() => ({
   captionColorIndicator: {

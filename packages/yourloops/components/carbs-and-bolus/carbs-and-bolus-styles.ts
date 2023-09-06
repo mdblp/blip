@@ -25,25 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC } from 'react'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
 import { makeStyles } from 'tss-react/mui'
 import { Theme } from '@mui/material/styles'
-import { SxProps } from '@mui/system'
-
-interface CarbsAndBolusCellProps {
-  manualBolus: number
-  rescueCarbs: number
-  sx?: SxProps<Theme>
-  time: string
-}
 
 export const LIGHT_BORDER = '1px solid #e7e7e7'
 export const RESCUE_CARBS_COLOR = '#E98D7C'
 export const MANUAL_BOLUS_COLOR = '#8C65D6'
 
-const useStyles = makeStyles()((theme: Theme) => ({
+export const useCarbsAndBolusStyles = makeStyles()((theme: Theme) => ({
   cell: {
     borderRadius: theme.spacing(1),
     margin: 'auto',
@@ -51,7 +40,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 90
+    width: 90,
+    position: 'relative'
   },
   cellsWrapper: {
     display: 'flex',
@@ -61,50 +51,37 @@ const useStyles = makeStyles()((theme: Theme) => ({
     backgroundColor: '#f8f8f8',
     gap: 10,
     paddingBlock: theme.spacing(2)
+  },
+  hoverTooltip: {
+    position: 'absolute',
+    left: 108,
+    zIndex: 1,
+    borderRadius: '4px',
+    width: '250px',
+    backgroundColor: theme.palette.common.white,
+    '& .header': {
+      backgroundColor: theme.palette.grey[200],
+      padding: theme.spacing(1, 2)
+    },
+    '& .content': {
+      padding: theme.spacing(1, 2)
+    }
+  },
+  tooltipTail: {
+    width: 0,
+    height: 0,
+    borderTop: '10px solid transparent',
+    borderBottom: '10px solid transparent',
+    position: 'absolute',
+    '&.rescue-carbs': {
+      top: 46,
+      left: -16,
+      borderRight: `15px solid ${RESCUE_CARBS_COLOR}`
+    },
+    '&.manual-bolus': {
+      top: 38,
+      left: -16,
+      borderRight: `15px solid ${MANUAL_BOLUS_COLOR}`
+    }
   }
 }))
-
-export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
-  const { time, manualBolus, rescueCarbs, sx } = props
-  const { classes, theme } = useStyles()
-  const carbsCellBackgroundColor = !!rescueCarbs ? RESCUE_CARBS_COLOR : theme.palette.grey[200]
-  const bolusCellBackgroundColor = !!manualBolus ? MANUAL_BOLUS_COLOR : theme.palette.grey[200]
-
-  return (
-    <Box
-      width="12.5%"
-      sx={{ ...sx, borderLeft: LIGHT_BORDER }}
-    >
-      <Typography
-        variant="caption"
-        sx={{ marginLeft: '4px' }}
-      >
-        {time}
-      </Typography>
-      <Box className={classes.cellsWrapper}>
-        <Box
-          className={classes.cell}
-          sx={{ backgroundColor: carbsCellBackgroundColor }}
-        >
-          <Typography
-            variant="caption"
-            sx={{ color: '#444444' }}
-          >
-            {rescueCarbs}
-          </Typography>
-        </Box>
-        <Box
-          className={classes.cell}
-          sx={{ backgroundColor: bolusCellBackgroundColor }}
-        >
-          <Typography
-            variant="caption"
-            sx={{ color: 'white' }}
-          >
-            {manualBolus}
-          </Typography>
-        </Box>
-      </Box>
-    </Box>
-  )
-}

@@ -32,7 +32,7 @@ import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import metrics from 'yourloops/lib/metrics'
 import { ChartTypes } from 'yourloops/enum/chart-type.enum'
 import Stats from './stats'
-import { CarbsAndBolusAverage } from 'yourloops/components/statistics/carbs-and-bolus-average'
+import { CarbsAndBolusAverage } from 'yourloops/components/carbs-and-bolus/carbs-and-bolus-average'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService

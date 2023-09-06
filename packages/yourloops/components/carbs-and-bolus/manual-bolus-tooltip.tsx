@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,88 +25,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-:global(.centered-spinning-loader) {
-  position: absolute;
-  top: calc(50% - 20px);
-  left: calc(50% - 20px);
-}
+import React, { FC } from 'react'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import { MANUAL_BOLUS_COLOR, useCarbsAndBolusStyles } from './carbs-and-bolus-styles'
+import { useTranslation } from 'react-i18next'
 
-:global(.primary-color-main) {
-  color: var(--primary-color-main)
-}
+export const ManualBolusTooltip: FC = () => {
+  const { classes } = useCarbsAndBolusStyles()
+  const { t } = useTranslation()
 
-:global(.bold) {
-  font-weight: bold;
-}
-
-:global(.flex) {
-  display: flex;
-}
-
-:global(.flex-justify-between-align-center) {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-:global(.capitalize) {
-  text-transform: capitalize;
-}
-
-:global(.bold) {
-  font-weight: bold;
-}
-
-:global(.visibility-hidden) {
-  visibility: hidden;
-}
-
-:global(.display-none) {
-  display: none;
-}
-
-:global(.no-margin) {
-  margin: 0 !important;
-}
-
-:global(.no-margin-top) {
-  margin-top: 0 !important;
-}
-
-:global(.no-margin-right) {
-  margin-right: 0 !important;
-}
-
-:global(.no-margin-bottom) {
-  margin-bottom: 0 !important;
-}
-
-:global(.no-margin-left) {
-  margin-left: 0 !important;
-}
-
-:global(.no-padding) {
-  padding: 0 !important;
-}
-
-:global(.no-padding-top) {
-  padding-top: 0 !important;
-}
-
-:global(.no-padding-right) {
-  padding-right: 0 !important;
-}
-
-:global(.no-padding-bottom) {
-  padding-bottom: 0 !important;
-}
-
-:global(.no-padding-left) {
-  padding-left: 0 !important;
-}
-
-:global(.is-ellipsis) {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  return (
+    <Box
+      className={classes.hoverTooltip}
+      sx={{ border: `2px solid ${MANUAL_BOLUS_COLOR}` }}
+    >
+      <div className={`${classes.tooltipTail} manual-bolus`} />
+      <Typography
+        variant="subtitle2"
+        className="header"
+      >
+        {t('manual-bolus')}
+      </Typography>
+      <Box className="content">
+        <div className="flex-justify-between-align-center">
+          <Typography variant="body2">{t('number-of-injections')}</Typography>
+          <Typography variant="body2">0,5</Typography>
+        </div>
+        <div className="flex-justify-between-align-center">
+          <Typography variant="body2">{t('confirmed-dose')}</Typography>
+          <Typography variant="body2">12U</Typography>
+        </div>
+      </Box>
+    </Box>
+  )
 }
