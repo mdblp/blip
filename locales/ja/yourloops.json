@@ -193,6 +193,7 @@
   "edit-medical-report": "Edit medical report {{number}}",
   "email": "メールアドレス",
   "end-date": "終了日",
+  "error-caregiver-already-in-list": "You are already sharing your data with this caregiver.",
   "error-http-40x": "エラーが発生しました。テルモコールセンターへ連絡してください。",
   "error-http-500": "問題が発生しました。しばらくしてからもう一度お試しください。問題が解決しない場合は、テルモコールセンターに連絡してください。",
   "error-patient-already-in-team": "この患者はすでにチームとデータを共有しています。",
