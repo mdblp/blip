@@ -26,6 +26,9 @@
  */
 
 import type Datum from './domains/models/medical/datum.model'
+import type { AlarmEvent } from './domains/models/medical/datum/alarm-event.model'
+import { AlarmCode } from './domains/models/medical/datum/enums/alarm-code.enum'
+import { AlarmEventType } from './domains/models/medical/datum/enums/alarm-event-type.enum'
 import type Basal from './domains/models/medical/datum/basal.model'
 import type BaseDatum from './domains/models/medical/datum/basics/base-datum.model'
 import type Bolus from './domains/models/medical/datum/bolus.model'
@@ -85,6 +88,9 @@ import { CarbsStatisticsService } from './domains/repositories/statistics/carbs-
 import { BasalBolusStatisticsService } from './domains/repositories/statistics/insulin-statistics.service'
 
 export {
+  AlarmCode,
+  type AlarmEvent,
+  AlarmEventType,
   type Basal,
   type BaseDatum,
   type BgBounds,

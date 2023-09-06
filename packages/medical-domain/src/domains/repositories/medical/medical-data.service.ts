@@ -75,9 +75,13 @@ import type PumpSettings from '../../models/medical/datum/pump-settings.model'
 import { DatumType } from '../../models/medical/datum/enums/datum-type.enum'
 import type PumpManufacturer from '../../models/medical/datum/enums/pump-manufacturer.enum'
 import WizardService from './datum/wizard.service'
+import { DeviceEventSubtype } from '../../models/medical/datum/enums/device-event-subtype.enum';
+import { AlarmEvent } from '../../models/medical/datum/alarm-event.model';
+import { AlarmEventType } from '../../models/medical/datum/enums/alarm-event-type.enum';
 
 class MedicalDataService {
   medicalData: MedicalData = {
+    alarmEvents: [],
     basal: [],
     bolus: [],
     cbg: [],
@@ -291,7 +295,7 @@ class MedicalDataService {
     rawData.forEach(raw => {
       try {
         const datum = DatumService.normalize(raw, this._datumOpts)
-        const deviceEventDatum = datum as ConfidentialMode | DeviceParameterChange | ReservoirChange | WarmUp | ZenMode
+        const deviceEventDatum = datum as AlarmEvent | ConfidentialMode | DeviceParameterChange | ReservoirChange | WarmUp | ZenMode
 
         switch (datum.type) {
           case DatumType.Bolus:
@@ -305,19 +309,25 @@ class MedicalDataService {
             break
           case DatumType.DeviceEvent:
             switch (deviceEventDatum.subType as string) {
-              case 'confidential':
+              case DeviceEventSubtype.Alarm:
+                const alarmEvent = deviceEventDatum as AlarmEvent
+                if (alarmEvent.alarmEventType !== AlarmEventType.Unknown) {
+                  this.medicalData.alarmEvents.push(alarmEvent)
+                }
+                break
+              case DeviceEventSubtype.Confidential:
                 this.medicalData.confidentialModes.push(deviceEventDatum as ConfidentialMode)
                 break
-              case 'deviceParameter':
+              case DeviceEventSubtype.DeviceParameter:
                 this.medicalData.deviceParametersChanges.push(deviceEventDatum as DeviceParameterChange)
                 break
-              case 'reservoirChange':
+              case DeviceEventSubtype.ReservoirChange:
                 this.medicalData.reservoirChanges.push(deviceEventDatum as ReservoirChange)
                 break
-              case 'warmup':
+              case DeviceEventSubtype.Warmup:
                 this.medicalData.warmUps.push(deviceEventDatum as WarmUp)
                 break
-              case 'zen':
+              case DeviceEventSubtype.Zen:
                 this.medicalData.zenModes.push(deviceEventDatum as ZenMode)
                 break
               default:

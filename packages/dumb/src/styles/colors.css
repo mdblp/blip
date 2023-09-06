@@ -115,6 +115,8 @@
   muted: #C1C9D6;
   rescuecarbs: #FA9494;
   deviceEvent: #727375;
+  hyperglycemia: var(--warning-color-main);
+  hypoglycemia: var(--error-color-main);
   physicalActivity: #00D3E6;
   confidentialMode: #B4B4B4;
   smbg: #6480FB;

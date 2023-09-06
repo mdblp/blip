@@ -30,14 +30,14 @@ import { components as vizComponents } from 'tidepool-viz'
 import { BG_DATA_TYPES } from '../../core/constants'
 import Footer from './footer'
 import {
+  AlarmEventTooltip,
   BloodGlucoseTooltip,
   BolusTooltip,
   ConfidentialTooltip,
   FoodTooltip,
   ParameterTooltip,
   PhysicalTooltip,
-  ReservoirTooltip,
-  HypoglycemiaEventTooltip
+  ReservoirTooltip
 } from 'dumb'
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
@@ -79,7 +79,7 @@ class DailyChart extends React.Component {
     onPhysicalHover: PropTypes.func.isRequired,
     onParameterHover: PropTypes.func.isRequired,
     onWarmUpHover: PropTypes.func.isRequired,
-    onHypoglycemiaEventHover: PropTypes.func.isRequired,
+    onAlarmEventHover: PropTypes.func.isRequired,
     onConfidentialHover: PropTypes.func.isRequired,
     onTooltipOut: PropTypes.func.isRequired,
     onChartMounted: PropTypes.func.isRequired,
@@ -102,7 +102,7 @@ class DailyChart extends React.Component {
       'onParameterHover',
       'onConfidentialHover',
       'onWarmUpHover',
-      'onHypoglycemiaEventHover',
+      'onAlarmEventHover',
       'onTooltipOut',
       'trackMetric'
     ]
@@ -391,7 +391,7 @@ class Daily extends React.Component {
                   onPhysicalHover={this.handlePhysicalHover}
                   onParameterHover={this.handleParameterHover}
                   onWarmUpHover={this.handleWarmUpHover}
-                  onHypoglycemiaEventHover={this.handleHypoglycemiaEventHover}
+                  onAlarmEventHover={this.handleAlarmEventHover}
                   onConfidentialHover={this.handleConfidentialHover}
                   onTooltipOut={this.handleTooltipOut}
                   onChartMounted={this.onChartMounted}
@@ -662,11 +662,11 @@ class Daily extends React.Component {
     this.setState({ tooltip })
   }
 
-  handleHypoglycemiaEventHover = (datum) => {
+  handleAlarmEventHover = (datum) => {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
-      <HypoglycemiaEventTooltip
-        event={datum.data}
+      <AlarmEventTooltip
+        alarmEvent={datum.data}
         position={{
           top: datum.top,
           left: datum.left

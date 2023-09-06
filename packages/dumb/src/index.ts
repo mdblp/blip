@@ -63,7 +63,7 @@ import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
 import { getPatientFullName } from './utils/patient/patient.util'
 import { formatBirthdate, formatLocalizedFromUTC, getLongDayHourFormat, formatDate, TIMEZONE_UTC } from './utils/datetime/datetime.util'
 import { renderPageNumbers } from './utils/pdf/pdf.util'
-import { HypoglycemiaEventTooltip } from './components/tooltips/hypoglycemia-event-tooltip/hypoglycemia-event-tooltip';
+import { AlarmEventTooltip } from './components/tooltips/alarm-event-tooltip/alarm-event-tooltip';
 
 export {
   formatDate,
@@ -84,7 +84,7 @@ export {
   FoodTooltip,
   formatBirthdate,
   getPatientFullName,
-  HypoglycemiaEventTooltip,
+  AlarmEventTooltip,
   formatBgValue,
   LayoutColumnType,
   LoopModeStat,
