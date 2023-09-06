@@ -193,6 +193,7 @@
   "edit-medical-report": "Medizinbericht {{number}} bearbeiten",
   "email": "E-Mail",
   "end-date": "Enddatum",
+  "error-caregiver-already-in-list": "You are already sharing your data with this caregiver.",
   "error-http-40x": "Es ist ein Fehler aufgetreten. Für Hilfe kontaktieren Sie den Support.",
   "error-http-500": "Etwas ist schiefgelaufen. Bitte versuchen Sie es in einigen Augenblicken erneut. Wenn das Problem weiterhin besteht, wenden Sie sich an den Support.",
   "error-patient-already-in-team": "Dieser Patient teilt bereits Daten mit dem Team.",
