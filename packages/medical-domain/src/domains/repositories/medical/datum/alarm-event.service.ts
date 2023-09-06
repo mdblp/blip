@@ -59,18 +59,24 @@ const CATEGORIZED_ALARM_CODES = {
 }
 
 const getAlarmEventType = (alarmCode: AlarmCode, alarmLevel: string): AlarmEventType => {
-  if (alarmLevel === AlarmLevel.Alarm && CATEGORIZED_ALARM_CODES.HYPOGLYCEMIA.ALARM.includes(alarmCode)
-  || (alarmLevel === AlarmLevel.Alert && CATEGORIZED_ALARM_CODES.HYPOGLYCEMIA.ALERT.includes(alarmCode))) {
+  const isHypoglycemiaAlarm = alarmLevel === AlarmLevel.Alarm && CATEGORIZED_ALARM_CODES.HYPOGLYCEMIA.ALARM.includes(alarmCode)
+  const isHypoglycemiaAlert = alarmLevel === AlarmLevel.Alert && CATEGORIZED_ALARM_CODES.HYPOGLYCEMIA.ALERT.includes(alarmCode)
+  const isHyperglycemiaAlarm = alarmLevel === AlarmLevel.Alarm && CATEGORIZED_ALARM_CODES.HYPERGLYCEMIA.ALARM.includes(alarmCode)
+  const isHyperglycemiaAlert = alarmLevel === AlarmLevel.Alert && CATEGORIZED_ALARM_CODES.HYPERGLYCEMIA.ALERT.includes(alarmCode)
+  const isDeviceAlarm = alarmLevel === AlarmLevel.Alarm && CATEGORIZED_ALARM_CODES.DEVICE.ALARM.includes(alarmCode)
+
+  if (isHypoglycemiaAlarm || isHypoglycemiaAlert) {
     return AlarmEventType.Hypoglycemia
   }
-  if (alarmLevel === AlarmLevel.Alarm && CATEGORIZED_ALARM_CODES.HYPERGLYCEMIA.ALARM.includes(alarmCode)
-  || (alarmLevel === AlarmLevel.Alert && CATEGORIZED_ALARM_CODES.HYPERGLYCEMIA.ALERT.includes(alarmCode))) {
+
+  if (isHyperglycemiaAlarm || isHyperglycemiaAlert) {
     return AlarmEventType.Hyperglycemia
   }
-  if (alarmLevel === AlarmLevel.Alarm && CATEGORIZED_ALARM_CODES.DEVICE.ALARM.includes(alarmCode)) {
-    console.log('Returning device alarm')
+
+  if (isDeviceAlarm) {
     return AlarmEventType.Device
   }
+
   return AlarmEventType.Unknown
 }
 
@@ -81,26 +87,6 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const alarmCode = rawData.alarmCode as AlarmCode
   const alarmLevel = rawData.alarmLevel as AlarmLevel
   const alarmEventType = getAlarmEventType(alarmCode, alarmLevel)
-
-  if (alarmCode === '11000') {
-    console.log('Alarm 11000')
-    console.log({
-      ...base,
-      ...duration,
-      type: DatumType.DeviceEvent,
-      subType: DeviceEventSubtype.Alarm,
-      guid: rawData.guid as string,
-      inputTime: rawData.time as string,
-      alarm: {
-        alarmCode,
-        alarmLevel,
-        alarmType: rawData.alarmType as string,
-        ackStatus: rawData.ackStatus as string,
-        updateTime: rawData.updateTime as string
-      },
-      alarmEventType
-    })
-  }
 
   return {
     ...base,

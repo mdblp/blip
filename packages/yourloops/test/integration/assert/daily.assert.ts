@@ -28,6 +28,18 @@
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {
+  ALARM_EVENT_EMPTY_INSULIN_CARTRIDGE_ID,
+  ALARM_EVENT_EMPTY_PUMP_BATTERY_ID,
+  ALARM_EVENT_HYPERGLYCEMIA_ID,
+  ALARM_EVENT_HYPOGLYCEMIA_ID,
+  ALARM_EVENT_INSULIN_CARTRIDGE_EXPIRED_ID,
+  ALARM_EVENT_LONG_HYPERGLYCEMIA_ID,
+  ALARM_EVENT_LONG_HYPOGLYCEMIA_ID,
+  ALARM_EVENT_NO_READINGS_HYPOGLYCEMIA_RISK_ID,
+  ALARM_EVENT_OCCLUSION_ID,
+  ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID,
+  ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID,
+  ALARM_EVENT_URGENT_LOW_SOON_ID,
   CARB_ID,
   CBG_ID,
   PARAMETER_ID,
@@ -82,6 +94,18 @@ export const checkDailyTidelineContainerTooltips = async () => {
   await checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, '10:00 am10:00 amMEAL_RATIO_LUNCH_FACTOR110→100%')
   await checkTidelineContainerElementTooltip(`cbg_${CBG_ID}`, '5:30 pmGlucose189')
   await checkTidelineContainerElementTooltip(`smbg_${SMBG_ID}`, '5:15 pmGlucose189Calibration')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_EMPTY_INSULIN_CARTRIDGE_ID}`, '11:00 amAlarm 41002Empty insulin cartridgeYour pump stopped because the insulin cartridge is empty.The pump can no longer deliver insulin.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_EMPTY_PUMP_BATTERY_ID}`, '11:05 amAlarm 41001Empty pump batteryThe pump will stop because its battery is empty.The pump can no longer deliver insulin.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_INSULIN_CARTRIDGE_EXPIRED_ID}`, '11:10 amAlarm 41003Insulin cartridge expiredYour pump stopped because the insulin cartridge has expired.The pump can no longer deliver insulin.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_HYPERGLYCEMIA_ID}`, '11:15 amAlert 10113HyperglycemiaG6 readings are above a configurable threshold (250 mg/dL by default).IMPORTANT this alert is triggered only if loop mode is deactivated.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_HYPOGLYCEMIA_ID}`, '11:20 amAlarm 12000HypoglycemiaYour glycemia is below 55 mg/dL.IMPORTANT this alarm is triggered only if loop mode is deactivated.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_LONG_HYPERGLYCEMIA_ID}`, '11:25 amAlarm 15000HyperglycemiaThe G6 readings have been higher than 320 mg/dL for more than 20 minutes.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_LONG_HYPOGLYCEMIA_ID}`, '11:30 amAlarm 24000HypoglycemiaYour G6 reading has been below 60 mg/dL for at least 25 minutes.IMPORTANT this alarm is triggered only if loop mode is activated.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_NO_READINGS_HYPOGLYCEMIA_RISK_ID}`, '11:35 amAlert 20100No readings and hypoglycemia riskThe system has not received any G6 reading for 15 minutes. However, the last known G6 reading was less than 100 mg/dL.IMPORTANT this alert is triggered only if loop mode is activated.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_OCCLUSION_ID}`, '11:40 amAlarm 41004OcclusionThe pump stopped because it has detected an occlusion.The pump can no longer deliver insulin.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID}`, '11:45 amAlarm 11000Sensor session expiredThe sensor session has expired.IMPORTANT If loop mode was running, it will stop within the next 30 minutes.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID}`, '11:50 amAlert 20102A sudden rise in glycemiaA sudden rise in glycemia was detected.IMPORTANT this alert is triggered only if loop mode is activated.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_URGENT_LOW_SOON_ID}`, '11:55 amAlert 10112Urgent low soonThe transmitter predicts that your sensor glucose will be at or below 55 mg/dL in 2 minutes.IMPORTANT this alert is triggered only if loop mode is deactivated.')
 }
 
 export const checkDailyStatsWidgetsTooltips = async () => {

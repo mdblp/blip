@@ -47,6 +47,18 @@ export const PHYSICAL_ACTIVITY_ID = 'physicalActivityId'
 export const PHYSICAL_ACTIVITY_TIME = '2022-08-08T13:00:00Z'
 export const RESERVOIR_CHANGE_ID = 'reservoirChangeId'
 export const PARAMETER_ID = 'parameterId'
+export const ALARM_EVENT_EMPTY_INSULIN_CARTRIDGE_ID = 'alarmEventEmptyInsulinCartridgeId'
+export const ALARM_EVENT_EMPTY_PUMP_BATTERY_ID = 'alarmEventEmptyPumpBatteryId'
+export const ALARM_EVENT_INSULIN_CARTRIDGE_EXPIRED_ID = 'alarmEventInsulinCartridgeExpiredId'
+export const ALARM_EVENT_HYPERGLYCEMIA_ID = 'alarmEventHyperglycemiaId'
+export const ALARM_EVENT_HYPOGLYCEMIA_ID = 'alarmEventHypoglycemiaId'
+export const ALARM_EVENT_LONG_HYPERGLYCEMIA_ID = 'alarmEventLongHyperglycemiaId'
+export const ALARM_EVENT_LONG_HYPOGLYCEMIA_ID = 'alarmEventLongHypoglycemiaId'
+export const ALARM_EVENT_NO_READINGS_HYPOGLYCEMIA_RISK_ID = 'alarmEventNoReadingsHypoglycemiaRiskId'
+export const ALARM_EVENT_OCCLUSION_ID = 'alarmEventOcclusionId'
+export const ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID = 'alarmEventSensorSessionExpiredId'
+export const ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID = 'alarmEventSuddenRiseInGlycemiaId'
+export const ALARM_EVENT_URGENT_LOW_SOON_ID = 'alarmEventUrgentLowSoonId'
 export const WIZARD_UNDELIVERED_INPUT_TIME = '2022-08-08T02:00:00Z'
 export const WIZARD_UMM_INPUT_TIME = '2022-08-08T18:34:00Z'
 export const WIZARD_POSITIVE_OVERRIDE_INPUT_TIME = '2022-08-08T22:45:00Z'
@@ -140,7 +152,19 @@ export const completeDailyViewData: Data = {
     { time: '2022-08-08T12:00:00Z', type: 'food', id: CARB_ID, timezone: 'Europe/Paris', meal: 'rescuecarbs', nutrition: { carbohydrate: { net: 15, units: 'grams' } }, prescribedNutrition: { carbohydrate: { net: 16, units: 'grams' } }, prescriptor: 'hybrid', uploadId: 'osef', _userId: 'osef' },
     { time: PHYSICAL_ACTIVITY_TIME, type: 'physicalActivity', id: PHYSICAL_ACTIVITY_ID, timezone: 'Europe/Paris', duration: { units: 'seconds', value: 1800 }, guid: 'pa_18', reportedIntensity: 'medium', uploadId: 'osef', _userId: 'osef' },
     { time: '2022-08-08T17:00:00Z', type: 'deviceEvent', id: RESERVOIR_CHANGE_ID, subType: 'reservoirChange', timezone: 'Europe/Paris', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T08:00:00Z', type: 'deviceEvent', id: PARAMETER_ID, lastUpdateDate: '2022-08-08T08:00:00Z', level: '1', name: 'MEAL_RATIO_LUNCH_FACTOR', previousValue: '110', subType: 'deviceParameter', timezone: 'UTC', units: '%', uploadId: 'osef', value: '100', _userId: 'osef' }
+    { time: '2022-08-08T08:00:00Z', type: 'deviceEvent', id: PARAMETER_ID, lastUpdateDate: '2022-08-08T08:00:00Z', level: '1', name: 'MEAL_RATIO_LUNCH_FACTOR', previousValue: '110', subType: 'deviceParameter', timezone: 'UTC', units: '%', uploadId: 'osef', value: '100', _userId: 'osef' },
+    { time: '2022-08-08T09:00:00Z', type: 'deviceEvent', id: ALARM_EVENT_EMPTY_INSULIN_CARTRIDGE_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '41002', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7030', guid: 'Alarm7030', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T09:05:00Z', type: 'deviceEvent', id: ALARM_EVENT_EMPTY_PUMP_BATTERY_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '41001', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7031', guid: 'Alarm7031', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T09:10:00Z', type: 'deviceEvent', id: ALARM_EVENT_INSULIN_CARTRIDGE_EXPIRED_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '41003', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7032', guid: 'Alarm7032', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T09:15:00Z', type: 'deviceEvent', id: ALARM_EVENT_HYPERGLYCEMIA_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '10113', alarmLabel: 'NA', alarmLevel: 'alert', alarmType: 'handset', eventId: 'Alarm7033', guid: 'Alarm7033', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T09:20:00Z', type: 'deviceEvent', id: ALARM_EVENT_HYPOGLYCEMIA_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '12000', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7034', guid: 'Alarm7034', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T09:25:00Z', type: 'deviceEvent', id: ALARM_EVENT_LONG_HYPERGLYCEMIA_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '15000', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7035', guid: 'Alarm7035', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T09:30:00Z', type: 'deviceEvent', id: ALARM_EVENT_LONG_HYPOGLYCEMIA_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '24000', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7036', guid: 'Alarm7036', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T09:35:00Z', type: 'deviceEvent', id: ALARM_EVENT_NO_READINGS_HYPOGLYCEMIA_RISK_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '20100', alarmLabel: 'NA', alarmLevel: 'alert', alarmType: 'handset', eventId: 'Alarm7037', guid: 'Alarm7037', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T09:40:00Z', type: 'deviceEvent', id: ALARM_EVENT_OCCLUSION_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '41004', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7038', guid: 'Alarm7038', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T09:45:00Z', type: 'deviceEvent', id: ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '11000', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7039', guid: 'Alarm7039', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T09:50:00Z', type: 'deviceEvent', id: ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '20102', alarmLabel: 'NA', alarmLevel: 'alert', alarmType: 'handset', eventId: 'Alarm7040', guid: 'Alarm7040', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T09:55:00Z', type: 'deviceEvent', id: ALARM_EVENT_URGENT_LOW_SOON_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '10112', alarmLabel: 'NA', alarmLevel: 'alert', alarmType: 'handset', eventId: 'Alarm7041', guid: 'Alarm7041', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' }
   ]
 }
 export const dataSetsWithZeroValues: Data = {

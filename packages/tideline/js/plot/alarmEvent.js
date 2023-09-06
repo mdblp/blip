@@ -41,12 +41,14 @@ function plotAlarmEvent(pool, opts) {
         .selectAll(`circle.d3-${D3_ALARM_EVENT_ID}`)
         .data(alarmEvents, (data) => data.id)
 
+      const alarmEventPlotPrefixId = `${D3_ALARM_EVENT_ID}_group`
       const alarmEventGroup = allAlarmEvents
         .enter()
         .append('g')
         .attr({
-          class: alarmEventGroupSelector,
-          id: (data) => `${D3_ALARM_EVENT_ID}_group_${data.id}`
+          'class': alarmEventGroupSelector,
+          'id': (data) => `${alarmEventPlotPrefixId}_${data.id}`,
+          'data-testid': (data) => `${alarmEventPlotPrefixId}_${data.id}`
         })
 
       alarmEventGroup.append('image').attr({

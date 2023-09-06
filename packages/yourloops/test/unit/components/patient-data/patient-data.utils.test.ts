@@ -86,7 +86,7 @@ describe('Patient data utils', () => {
         await patientDataUtils.retrievePatientData()
         const medicalData = patientDataUtils.buildMedicalData(patientDataMock)
         expect(medicalData instanceof MedicalDataService).toBeTruthy()
-        expect(Object.keys(medicalData.medicalData).length).toEqual(16)
+        expect(Object.keys(medicalData.medicalData).length).toEqual(17)
       })
     })
 
