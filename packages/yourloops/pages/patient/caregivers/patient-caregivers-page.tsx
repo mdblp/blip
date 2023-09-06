@@ -37,8 +37,8 @@ import { useNotification } from '../../../lib/notifications/notification.hook'
 import { type ShareUser } from '../../../lib/share/models/share-user.model'
 import { useAlert } from '../../../components/utils/snackbar'
 import SecondaryBar from './secondary-bar'
-import AddCaregiverDialog from './add-dialog'
-import CaregiverTable from './table'
+import AddCaregiverDialog from './add-caregiver-dialog'
+import CaregiversTable from './caregivers-table'
 import DirectShareApi, { PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE } from '../../../lib/share/direct-share.api'
 import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
@@ -117,10 +117,10 @@ export const PatientCaregiversPage: FC = () => {
 
         return []
       })
-      .then((caregivers: ShareUser[]) => {
+      .then((receivedCaregivers: ShareUser[]) => {
         const invitedCaregivers = getCaregiversFromPendingInvitations()
-        caregivers.push(...invitedCaregivers)
-        setCaregivers(caregivers)
+        receivedCaregivers.push(...invitedCaregivers)
+        setCaregivers(receivedCaregivers)
       })
   }, [getCaregiversFromPendingInvitations])
 
@@ -141,12 +141,17 @@ export const PatientCaregiversPage: FC = () => {
           <SecondaryBar onShowAddCaregiverDialog={handleShowAddCaregiverDialog} />
           <Container maxWidth="lg">
             <Box marginTop={4}>
-              <CaregiverTable caregivers={caregivers} fetchCaregivers={fetchCaregivers} />
+              <CaregiversTable
+                caregivers={caregivers}
+                fetchCaregivers={fetchCaregivers}
+              />
             </Box>
           </Container>
         </>
       }
-      <AddCaregiverDialog actions={caregiverToAdd} />
+      {caregiverToAdd &&
+        <AddCaregiverDialog actions={caregiverToAdd} currentCaregivers={caregivers} />
+      }
     </>
   )
 }

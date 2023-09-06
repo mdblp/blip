@@ -32,8 +32,34 @@ import {
   buildBasalsData,
   buildBolusData,
   dateFilterOneDay,
-  dateFilterTwoWeeks
+  dateFilterTwoWeeks,
+  dateFilterTwoDays,
+  MS_IN_HOUR
 } from '../../mock/data.statistics.mock'
+
+describe('Time In Auto Data', () => {
+  it('should return the time spent in automated and manual basal delivery when viewing 1 day', () => {
+    const basalData = buildBasalsData(basalsData)
+    expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, dateFilterOneDay)).toEqual({
+      automatedBasalDuration: MS_IN_HOUR,
+      manualBasalDuration: MS_IN_HOUR * 2,
+      automatedAndManualTotalDuration: MS_IN_HOUR + MS_IN_HOUR * 2,
+      automatedBasalInDays: 28800000,
+      manualBasalInDays: 57600000
+    })
+  })
+
+  it('should return the avg daily time spent in automated and manual basal delivery when viewing more than 1 day', () => {
+    const basalData = buildBasalsData(basalsData)
+    expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, dateFilterTwoDays)).toEqual({
+      automatedBasalDuration: MS_IN_HOUR,
+      manualBasalDuration: MS_IN_HOUR * 4,
+      automatedAndManualTotalDuration: MS_IN_HOUR + MS_IN_HOUR * 4,
+      manualBasalInDays: 69120000,
+      automatedBasalInDays: 17280000
+    })
+  })
+})
 
 describe('getBasalBolusData', () => {
   it('should return the total basal and bolus insulin delivery when viewing 1 day', () => {
@@ -55,9 +81,9 @@ describe('getBasalBolusData', () => {
 
     const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, 2, dateFilterTwoWeeks)
     const expectBasalBolusData = {
-      basal: 1,
+      basal: 1.25,
       bolus: 9.5,
-      total: 10.5
+      total: 10.75
     }
     expect(basalBolusData).toEqual(expectBasalBolusData)
   })
