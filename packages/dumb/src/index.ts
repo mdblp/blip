@@ -25,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { AlarmEventTooltip } from './components/tooltips/alarm-event-tooltip/alarm-event-tooltip'
 import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
 import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
 import { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
@@ -63,7 +64,6 @@ import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
 import { getPatientFullName } from './utils/patient/patient.util'
 import { formatBirthdate, formatLocalizedFromUTC, getLongDayHourFormat, formatDate, TIMEZONE_UTC } from './utils/datetime/datetime.util'
 import { renderPageNumbers } from './utils/pdf/pdf.util'
-import { AlarmEventTooltip } from './components/tooltips/alarm-event-tooltip/alarm-event-tooltip';
 
 export {
   formatDate,
