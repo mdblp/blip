@@ -82,12 +82,12 @@ describe('getCarbsData', () => {
     const wizardData = buildWizardData(bgDataSourceTwoDays)
     const carbsData = CarbsStatisticsService.getCarbsData(mealData, wizardData, 2, dateFilterTwoDays)
     const expected = {
-      mealCarbs: 5,
-      estimatedCarbs: 5,
-      rescueCarbs: 5,
-      totalCarbsPerDay: 10,
-      totalEntriesMealCarbWithRescueCarbs: 4,
-      totalEntriesRescueCarbs: 2
+      mealCarbs: 2.5,
+      estimatedCarbs: 2.5,
+      rescueCarbs: 2.5,
+      totalCarbsPerDay: 5,
+      totalEntriesMealCarbWithRescueCarbs: 2,
+      totalEntriesRescueCarbs: 1
     }
     expect(carbsData).toEqual(expected)
   })
