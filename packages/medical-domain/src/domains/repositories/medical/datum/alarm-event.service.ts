@@ -44,9 +44,9 @@ const CATEGORIZED_ALARM_CODES = {
       AlarmCode.EmptyPumpBattery,
       AlarmCode.EmptyInsulinCartridge,
       AlarmCode.InsulinCartridgeExpired,
-      AlarmCode.Occlusion
-    ],
-    ALERT: [AlarmCode.SensorSessionExpired]
+      AlarmCode.Occlusion,
+      AlarmCode.SensorSessionExpired
+    ]
   },
   HYPOGLYCEMIA: {
     ALARM: [AlarmCode.Hypoglycemia, AlarmCode.LongHypoglycemia],
@@ -67,8 +67,8 @@ const getAlarmEventType = (alarmCode: AlarmCode, alarmLevel: string): AlarmEvent
   || (alarmLevel === AlarmLevel.Alert && CATEGORIZED_ALARM_CODES.HYPERGLYCEMIA.ALERT.includes(alarmCode))) {
     return AlarmEventType.Hyperglycemia
   }
-  if (alarmLevel === AlarmLevel.Alarm && CATEGORIZED_ALARM_CODES.DEVICE.ALARM.includes(alarmCode)
-    || (alarmLevel === AlarmLevel.Alert && CATEGORIZED_ALARM_CODES.DEVICE.ALERT.includes(alarmCode))) {
+  if (alarmLevel === AlarmLevel.Alarm && CATEGORIZED_ALARM_CODES.DEVICE.ALARM.includes(alarmCode)) {
+    console.log('Returning device alarm')
     return AlarmEventType.Device
   }
   return AlarmEventType.Unknown
@@ -82,12 +82,31 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const alarmLevel = rawData.alarmLevel as AlarmLevel
   const alarmEventType = getAlarmEventType(alarmCode, alarmLevel)
 
+  if (alarmCode === '11000') {
+    console.log('Alarm 11000')
+    console.log({
+      ...base,
+      ...duration,
+      type: DatumType.DeviceEvent,
+      subType: DeviceEventSubtype.Alarm,
+      guid: rawData.guid as string,
+      inputTime: rawData.time as string,
+      alarm: {
+        alarmCode,
+        alarmLevel,
+        alarmType: rawData.alarmType as string,
+        ackStatus: rawData.ackStatus as string,
+        updateTime: rawData.updateTime as string
+      },
+      alarmEventType
+    })
+  }
+
   return {
     ...base,
     ...duration,
     type: DatumType.DeviceEvent,
     subType: DeviceEventSubtype.Alarm,
-    uploadId: rawData.uploadId as string,
     guid: rawData.guid as string,
     inputTime: rawData.time as string,
     alarm: {

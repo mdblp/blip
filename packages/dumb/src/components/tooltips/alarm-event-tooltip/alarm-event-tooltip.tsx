@@ -56,8 +56,6 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
   const { alarmEvent, position, side, timePrefs } = props
   const { t } = useTranslation('main')
 
-  console.log({ alarmEvent })
-
   const getBorderColor = (alarmEventType: AlarmEventType): string => {
     switch (alarmEventType) {
       case AlarmEventType.Hyperglycemia:
@@ -104,19 +102,19 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
       case AlarmCode.UrgentLowSoon:
         return [t('alert-urgent-low-soon-description'), t('alert-loop-mode-deactivated-description')]
       case AlarmCode.Hyperglycemia:
-        return [t('alert-readings-above-threshold-description'), t('alert-loop-mode-deactivated-description')]
+        return [t('alert-hyperglycemia-description'), t('alert-loop-mode-deactivated-description')]
       case AlarmCode.SensorSessionExpired:
         return [t('alert-sensor-session-expired-description-line1'), t('alert-sensor-session-expired-description-line2')]
       case AlarmCode.Hypoglycemia:
         return [t('alarm-hypoglycemia-description'), t('alarm-loop-mode-deactivated-description')]
       case AlarmCode.LongHyperglycemia:
-        return [t('alert-hyperglycemia-description')]
+        return [t('alert-long-hyperglycemia-description')]
       case AlarmCode.NoReadingsHypoglycemiaRisk:
         return [t('alert-no-readings-hypoglycemia-risk-description'), t('alert-loop-mode-activated-description')]
       case AlarmCode.SuddenRiseInGlycemia:
         return [t('alert-sudden-rise-glycemia-description'), t('alert-loop-mode-activated-description')]
       case AlarmCode.LongHypoglycemia:
-        return [t('alarm-low-readings-description'), t('alarm-loop-mode-activated-description')]
+        return [t('alarm-long-hypoglycemia-description'), t('alarm-loop-mode-activated-description')]
       case AlarmCode.EmptyPumpBattery:
         return [t('alarm-empty-pump-battery-description'), t('alarm-pump-cannot-deliver-insulin-description')]
       case AlarmCode.EmptyInsulinCartridge:

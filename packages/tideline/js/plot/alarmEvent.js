@@ -1,8 +1,21 @@
-import _ from 'lodash'
+import deviceEventIcon from 'device-event.svg'
+import hyperglycemiaEventIcon from 'hyperglycemia-event.svg'
 import hypoglycemiaEventIcon from 'hypoglycemia-event.svg'
 import utils from './util/utils'
+import { AlarmEventType } from 'medical-domain'
 
 const D3_ALARM_EVENT_ID = 'alarmEvent'
+
+const getAlarmEventImage = (alarmEventType) => {
+  switch (alarmEventType) {
+    case AlarmEventType.Device:
+      return deviceEventIcon
+    case AlarmEventType.Hyperglycemia:
+      return hyperglycemiaEventIcon
+    case AlarmEventType.Hypoglycemia:
+      return hypoglycemiaEventIcon
+  }
+}
 
 function plotAlarmEvent(pool, opts) {
   const d3 = window.d3
@@ -41,9 +54,7 @@ function plotAlarmEvent(pool, opts) {
         'y': 0,
         width,
         height,
-        // TODO Update image
-        // 'xlink:href': hypoglycemiaEventIcon
-        'xlink:href': hypoglycemiaEventIcon
+        'xlink:href': (alarmEvent) => getAlarmEventImage(alarmEvent.alarmEventType)
       })
 
       allAlarmEvents.exit().remove()

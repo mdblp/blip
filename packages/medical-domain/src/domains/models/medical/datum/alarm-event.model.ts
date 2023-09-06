@@ -44,7 +44,6 @@ interface Alarm {
 export type AlarmEvent = BaseDatum & Duration & {
   type: DatumType.DeviceEvent
   subType: DeviceEventSubtype.Alarm
-  uploadId: string
   guid: string
   inputTime: string
   alarm: Alarm
