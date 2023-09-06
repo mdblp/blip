@@ -193,6 +193,7 @@
   "edit-medical-report": "Editar el parte médico {{number}}",
   "email": "Correo electrónico",
   "end-date": "Fecha final",
+  "error-caregiver-already-in-list": "You are already sharing your data with this caregiver.",
   "error-http-40x": "Se ha producido un error. Póngase en contacto con la asistencia al cliente para recibir ayuda",
   "error-http-500": "Algo ha fallado. Vuelva a intentarlo más tarde. Si el problema persiste, póngase en contacto con la asistencia al cliente para recibir ayuda",
   "error-patient-already-in-team": "Este paciente ya está compartiendo datos con el equipo.",
