@@ -48,7 +48,7 @@ function plotAlarmEvent(pool, opts) {
         .attr({
           'class': alarmEventGroupSelector,
           'id': (data) => `${alarmEventPlotPrefixId}_${data.id}`,
-          'data-testid': (data) => `${alarmEventPlotPrefixId}_${data.id}`
+          'data-testid': (data) => `${alarmEventPlotPrefixId}_${data.guid}`
         })
 
       alarmEventGroup.append('image').attr({
