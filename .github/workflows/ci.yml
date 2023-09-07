@@ -79,6 +79,28 @@ jobs:
       - name: Test sundial
         run: npm run test-sundial
 
+  test-tideline:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+          node-version: 16
+
+      - name: Install npm dependencies
+        run: |
+          npm ci
+          npm run build-dependencies
+
+      - name: Test tideline
+        run: npm run test-tideline
+
   test-medical:
     runs-on: ubuntu-latest
     needs: lint
@@ -99,27 +121,6 @@ jobs:
 
       - name: Test medical domain
         run: npm run test-medical-domain
-
-  test-tideline:
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Use Node.js 16
-        uses: actions/setup-node@v3
-        with:
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-          node-version: 16
-
-      - name: Install npm dependencies
-        run: |
-          npm ci
-
-      - name: Test tideline
-        run: npm run test-tideline
 
   test-dumb:
     runs-on: ubuntu-latest
