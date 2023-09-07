@@ -46,7 +46,7 @@ import type WarmUp from '../src/domains/models/medical/datum/warm-up.model'
 import type Wizard from '../src/domains/models/medical/datum/wizard.model'
 import type ZenMode from '../src/domains/models/medical/datum/zen-mode.model'
 import type Datum from '../src/domains/models/medical/datum.model'
-import { DatumType } from '../src/domains/models/medical/datum/enums/datum-type.enum'
+import { DatumType } from '../src'
 import Source from '../src/domains/models/medical/datum/enums/source.enum'
 import DurationUnit from '../src/domains/models/medical/datum/enums/duration-unit.enum'
 import Unit from '../src/domains/models/medical/datum/enums/unit.enum'
@@ -54,6 +54,8 @@ import Intensity from '../src/domains/models/medical/datum/enums/intensity.enum'
 import PumpManufacturer from '../src/domains/models/medical/datum/enums/pump-manufacturer.enum'
 import { DeviceEventSubtype } from '../src/domains/models/medical/datum/enums/device-event-subtype.enum'
 import { getTrendsTime } from '../src/domains/repositories/time/time.service'
+import { AlarmCode, AlarmEvent, AlarmEventType } from '../src'
+import { AlarmLevel } from '../src/domains/models/medical/datum/enums/alarm-level.enum'
 
 function createBaseData(date?: Date): BaseDatum {
   const pastDate = date ?? faker.date.recent({ days: 20 })
@@ -82,6 +84,24 @@ function createBaseDurationData(date?: Date): BaseDatum & Duration {
     },
     normalEnd,
     epochEnd
+  }
+}
+
+function createRandomAlarm(date?: Date): AlarmEvent {
+  return {
+    ...createBaseData(date),
+    alarmEventType: AlarmEventType.Device,
+    guid: 'none',
+    inputTime: faker.date.past().toISOString(),
+    type: DatumType.DeviceEvent,
+    subType: DeviceEventSubtype.Alarm,
+    alarm: {
+      alarmCode: AlarmCode.Occlusion,
+      alarmLevel: AlarmLevel.Alarm,
+      alarmType: 'handset',
+      ackStatus: 'new',
+      updateTime: faker.date.past().toISOString()
+    }
   }
 }
 
@@ -317,6 +337,8 @@ function createRandomDatum(type: DatumType, subtype?: DeviceEventSubtype, date?:
       return createRandomCbg(date)
     case DatumType.DeviceEvent:
       switch (subtype) {
+        case DeviceEventSubtype.Alarm:
+          return createRandomAlarm(date)
         case DeviceEventSubtype.Confidential:
           return createRandomConfidentialMode(date)
         case DeviceEventSubtype.DeviceParameter:

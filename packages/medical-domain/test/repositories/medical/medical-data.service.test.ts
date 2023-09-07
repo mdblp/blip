@@ -43,7 +43,7 @@ import type BasicData from '../../../src/domains/repositories/medical/basics-dat
 import * as BasiscsDataService from '../../../src/domains/repositories/medical/basics-data.service'
 import * as TimeService from '../../../src/domains/repositories/time/time.service'
 import crypto from 'crypto'
-import { DatumType } from '../../../src/domains/models/medical/datum/enums/datum-type.enum'
+import { DatumType } from '../../../src'
 import { DeviceEventSubtype } from '../../../src/domains/models/medical/datum/enums/device-event-subtype.enum'
 
 // window.crypto is not defined in jest...
@@ -55,14 +55,16 @@ Object.defineProperty(global, 'crypto', {
 })
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const knownTypes: Array<Record<string, unknown>> = Object.values(DatumType).flatMap(datumType => {
-  if (datumType !== DatumType.DeviceEvent) {
-    return [{ type: datumType }]
-  }
-  return Object.values(DeviceEventSubtype).map(
-    (datumSubtype) => ({ type: datumType, subType: datumSubtype })
-  )
-})
+const knownTypes: Array<Record<string, unknown>> = Object
+  .values(DatumType)
+  .flatMap(datumType => {
+    if (datumType !== DatumType.DeviceEvent) {
+      return [{ type: datumType }]
+    }
+    return Object.values(DeviceEventSubtype).map(
+      (datumSubtype) => ({ type: datumType, subType: datumSubtype })
+    )
+  })
 
 const datumNormalizeMock = jest.fn(
   (rawData: Record<string, unknown>, _opts: MedicalDataOptions) => {
@@ -182,7 +184,7 @@ describe('MedicalDataService', () => {
       expect(wizardDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(physicalActivityDeduplicateMock).toHaveBeenCalledTimes(1)
 
-      // Main medicalData Checks (we have on objects of each exept timezones)
+      // Main medicalData Checks (we have on objects of each except timezones)
       const expectedCount: Partial<Record<keyof MedicalData, number>> = {}
       Object.keys(medicalData.medicalData).forEach(
         (type) => {
@@ -203,7 +205,8 @@ describe('MedicalDataService', () => {
       // Fill Data checks
       testFillData(medicalData)
     })
-    it('should handle mulitple data add', () => {
+
+    it('should handle multiple data add', () => {
       medicalData.add(knownTypes)
       // normalize is called on each piece of data
       expect(datumNormalizeMock).toHaveBeenCalledTimes(knownTypes.length)
@@ -235,12 +238,14 @@ describe('MedicalDataService', () => {
       testFillData(medicalData)
     })
   })
+
   describe('Timezone detection', () => {
     const medicalData = new MedicalDataService()
     medicalData.opts.dateRange = {
       start: new Date().valueOf(),
       end: new Date().valueOf()
     }
+
     beforeAll(() => {
       BasalService.deduplicate = basalDeduplicateMock
       BolusService.deduplicate = bolusDeduplicateMock
@@ -251,6 +256,7 @@ describe('MedicalDataService', () => {
     afterEach(() => {
       jest.clearAllMocks()
     })
+
     it('should detect timezone changes events', () => {
       DatumService.normalize = datumNormalizeTzMock
       medicalData.add([{ type: 'bolus' }, { type: 'basal' }])
@@ -285,6 +291,7 @@ describe('MedicalDataService', () => {
       // Fill Data checks
       testFillData(medicalData)
     })
+
     it('should detect DST changes events', () => {
       DatumService.normalize = datumNormalizeTzMock
       medicalData.add([{ type: 'cbg' }, { type: 'cbg' }])
@@ -325,6 +332,7 @@ describe('MedicalDataService', () => {
       testFillData(medicalData)
     })
   })
+
   describe('Basics Data', () => {
     const medicalDataService = new MedicalDataService()
     const medicalDataOpts = {
@@ -338,6 +346,7 @@ describe('MedicalDataService', () => {
         timezoneOffset: 60
       }
     }
+
     medicalDataService.opts = medicalDataOpts
     const mockedData = (endTimezone: string): BasicData => ({
       timezone: endTimezone,

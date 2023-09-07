@@ -29,7 +29,6 @@ import BaseDatum from './basics/base-datum.model';
 import { DatumType } from './enums/datum-type.enum';
 import { DeviceEventSubtype } from './enums/device-event-subtype.enum';
 import { AlarmEventType } from './enums/alarm-event-type.enum';
-import Duration from './basics/duration.model';
 import { AlarmLevel } from './enums/alarm-level.enum';
 import { AlarmCode } from './enums/alarm-code.enum'
 
@@ -41,7 +40,7 @@ interface Alarm {
   updateTime: string
 }
 
-export type AlarmEvent = BaseDatum & Duration & {
+export type AlarmEvent = BaseDatum & {
   type: DatumType.DeviceEvent
   subType: DeviceEventSubtype.Alarm
   guid: string
