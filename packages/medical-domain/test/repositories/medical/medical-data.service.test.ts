@@ -119,6 +119,7 @@ const wizardDeduplicateMock = jest.fn(
     return data
   }
 )
+
 const physicalActivityDeduplicateMock = jest.fn(
   (data: PhysicalActivity[], _opts: MedicalDataOptions) => {
     return data

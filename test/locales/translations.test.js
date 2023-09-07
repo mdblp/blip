@@ -234,6 +234,12 @@ const ignoredTransKeyForYourLoops = [
   'added',
   'deleted',
   'updated',
+  'avg-time-loop',
+  'time-loop',
+  'avg-time-loop-tooltip',
+  'time-loop-tooltip',
+  'avg-time-loop-how-calculate',
+  'time-loop-how-calculate',
   'no-medical-files-patient',
   'average-daily-insulin',
   'average-daily-insulin-tooltip',
@@ -243,7 +249,10 @@ const ignoredTransKeyForYourLoops = [
   'total-insulin-how-calculate-tooltip',
   'average-daily-total-insulin',
   'ratio-dose',
-  'weight'
+  'weight',
+  'account-created-info-2-caregiver',
+  'account-created-info-2-hcp',
+  'signup-unknown-step'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',

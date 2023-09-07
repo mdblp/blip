@@ -37,58 +37,58 @@ import TextField from '@mui/material/TextField'
 
 import { REGEX_EMAIL } from '../../../lib/utils'
 import { type AddDialogContentProps } from './models/add-dialog-content-props.model'
+import { type ShareUser } from '../../../lib/share/models/share-user.model'
+import Box from '@mui/material/Box'
 
 export interface AddDialogProps {
   actions: AddDialogContentProps | null
+  currentCaregivers: ShareUser[]
 }
 
 /**
  * Add a caregiver dialog / modale
  */
-function AddDialog(props: AddDialogProps): JSX.Element {
+function AddCaregiverDialog(props: AddDialogProps): JSX.Element {
+  const { actions, currentCaregivers } = props
   const { t } = useTranslation('yourloops')
   const [email, setEmail] = React.useState<string>('')
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null)
 
-  const isValidEmail = (mail = email): boolean => mail.length > 0 && REGEX_EMAIL.test(mail)
-  const resetDialog = (): void => {
-    setTimeout(() => {
-      setEmail('')
-      setErrorMessage(null)
-    }, 100)
-  }
+  const isValidEmail = (caregiverEmail: string): boolean => caregiverEmail.length > 0 && REGEX_EMAIL.test(caregiverEmail)
+
   const handleClose = (): void => {
-    props.actions?.onDialogResult(null)
-    resetDialog()
+    actions.onDialogResult(null)
   }
+
   const handleClickAdd = (): void => {
-    if (isValidEmail()) {
-      props.actions?.onDialogResult(email)
-      resetDialog()
+    actions.onDialogResult(email)
+  }
+
+  const checkCaregiverAlreadyInvited = (caregiverEmail: string): void => {
+    const currentCaregiversEmails = currentCaregivers.map((caregiver: ShareUser) => caregiver.user.username)
+    if (currentCaregiversEmails.includes(caregiverEmail)) {
+      setErrorMessage(t('error-caregiver-already-in-list'))
     } else {
-      setErrorMessage(t('invalid-email'))
+      setErrorMessage(null)
     }
   }
-  const handleVerifyEmail = (): void => {
-    if (email.length > 0 && !isValidEmail()) {
-      setErrorMessage(t('invalid-email'))
-    }
-  }
+
   const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const inputEmail = event.target.value.trim()
-    if (errorMessage !== null && isValidEmail(inputEmail)) {
-      setErrorMessage(null)
+    if (isValidEmail(inputEmail)) {
+      checkCaregiverAlreadyInvited(inputEmail)
+    } else {
+      setErrorMessage(t('invalid-email'))
     }
     setEmail(inputEmail)
   }
 
-  const dialogIsOpen = props.actions !== null
-  const buttonAddDisabled = errorMessage !== null || !isValidEmail()
+  const buttonAddDisabled = !!errorMessage || email.length === 0
 
   return (
     <Dialog
       id="patient-add-caregiver-dialog"
-      open={dialogIsOpen}
+      open
       aria-labelledby={t('modal-add-caregiver')}
       onClose={handleClose}
       maxWidth="xs"
@@ -99,22 +99,25 @@ function AddDialog(props: AddDialogProps): JSX.Element {
       </DialogTitle>
 
       <DialogContent>
-        <TextField
-          id="patient-add-caregiver-dialog-email"
-          label={t('email')}
-          value={email}
-          required
-          error={errorMessage !== null}
-          onBlur={handleVerifyEmail}
-          onChange={handleChangeEmail}
-          helperText={errorMessage}
-          fullWidth
-        />
+        <Box paddingTop={1}>
+          <TextField
+            id="patient-add-caregiver-dialog-email"
+            data-testid="patient-add-caregiver-dialog-email"
+            label={t('email')}
+            value={email}
+            required
+            error={!!errorMessage}
+            onChange={handleChangeEmail}
+            helperText={errorMessage}
+            fullWidth
+          />
+        </Box>
       </DialogContent>
 
       <DialogActions>
         <Button
           id="patient-add-caregiver-dialog-button-cancel"
+          data-testid="add-caregiver-dialog-cancel-button"
           variant="outlined"
           onClick={handleClose}
         >
@@ -135,4 +138,4 @@ function AddDialog(props: AddDialogProps): JSX.Element {
   )
 }
 
-export default AddDialog
+export default AddCaregiverDialog
