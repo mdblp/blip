@@ -167,7 +167,9 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
       {!isCaregiver && !isPatientWithNoTeams && !isSelectedTeamPrivate &&
         <>
           <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
-            {user.isUserHcp() && <MonitoringAlertsCard patient={patient}/>}
+            {user.isUserHcp() &&
+              <MonitoringAlertsCard patient={patient}/>
+            }
             <MedicalFilesWidget patient={patient}/>
           </Grid>
 

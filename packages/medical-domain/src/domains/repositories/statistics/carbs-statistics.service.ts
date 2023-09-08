@@ -37,7 +37,8 @@ import { WizardInputMealSource } from '../../models/medical/datum/enums/wizard-i
 function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter): CarbsStatistics {
   const filterMeal = MealService.filterOnDate(meal, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const filterWizard = WizardService.filterOnDate(wizard, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  const filterEstimatedCarbs = filterWizard.filter(estimatedCarb => estimatedCarb.inputMeal).filter((wizard) => wizard.inputMeal?.source === WizardInputMealSource.Umm)
+  const filterEstimatedCarbs = filterWizard.filter(estimatedCarb => estimatedCarb.inputMeal)
+    .filter((wizard) => wizard.inputMeal?.source === WizardInputMealSource.Umm)
   const rescueCarbsData = filterMeal.map(meal => meal.nutrition.carbohydrate.net)
   const mealData = filterWizard.map(wizard => wizard.carbInput)
   const estimatedCarbsData = filterEstimatedCarbs.map(wizard => wizard.carbInput)
@@ -45,15 +46,15 @@ function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilte
   const mealCarbs = sumValues(mealData)
   const rescueCarbs = sumValues(rescueCarbsData)
   const totalEntriesMealCarbWithRescueCarbs = rescueCarbsData.length + mealData.length
-  const totalEntriesRescueCarbs = rescueCarbsData.length
+  const totalRescueCarbsEntries = rescueCarbsData.length
   const totalCarbs = mealCarbs + rescueCarbs
   return {
-    mealCarbs: mealCarbs / numDays,
-    rescueCarbs: rescueCarbs / numDays,
-    estimatedCarbs: estimatedCarbs / numDays,
-    totalEntriesMealCarbWithRescueCarbs,
+    mealCarbsPerDay: mealCarbs / numDays,
+    rescueCarbsPerDay: rescueCarbs / numDays,
+    estimatedCarbsPerDay: estimatedCarbs / numDays,
+    totalMealCarbsWithRescueCarbsEntries: totalEntriesMealCarbWithRescueCarbs,
     totalCarbsPerDay: totalCarbs / numDays,
-    totalEntriesRescueCarbs
+    totalRescueCarbsEntries
   }
 }
 

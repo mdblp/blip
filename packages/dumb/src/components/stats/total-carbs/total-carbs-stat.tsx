@@ -32,19 +32,21 @@ import { Unit } from 'medical-domain'
 
 export interface TotalCarbsStatProps {
   title: string
-  annotation?: string[]
+  annotations?: string[]
   value: number
 }
 const TotalCarbsStat: FunctionComponent<TotalCarbsStatProps> = (props) => {
-  const { annotation, value, title } = props
+  const { annotations, value, title } = props
   return (
-    <Box className={`${styles.row} ${!annotation ? styles.carbs : null}`}>
+    <Box className={`${styles.row} ${annotations ? null : styles.carbs}`}>
       {title}
-      {annotation &&
+
+      {annotations &&
         <StatTooltip
-          annotations={annotation}
+          annotations={annotations}
         />
       }
+
       {!value
         ? <>
           <div className={styles['disabled-line']}/>
@@ -52,6 +54,7 @@ const TotalCarbsStat: FunctionComponent<TotalCarbsStatProps> = (props) => {
             --
           </Box>
         </>
+
         : <>
           <div className={styles.total}>
                 <span className={styles.value}>
@@ -62,6 +65,7 @@ const TotalCarbsStat: FunctionComponent<TotalCarbsStatProps> = (props) => {
                 </span>
           </div>
         </>
+
       }
     </Box>
   )

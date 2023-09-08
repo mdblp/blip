@@ -101,12 +101,12 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, dateFilter)
 
   const {
-    rescueCarbs,
-    totalEntriesMealCarbWithRescueCarbs,
-    estimatedCarbs,
+    rescueCarbsPerDay,
+    totalMealCarbsWithRescueCarbsEntries,
+    estimatedCarbsPerDay,
     totalCarbsPerDay,
-    mealCarbs,
-    totalEntriesRescueCarbs
+    mealCarbsPerDay,
+    totalRescueCarbsEntries
   } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
 
   const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
@@ -159,12 +159,12 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
 
       <Box className={classes.widgetGroup}>
         <CarbsStat
-          totalEntriesMealCarbWithRescueCarbs={totalEntriesMealCarbWithRescueCarbs}
+          totalMealCarbsWithRescueCarbsEntries={totalMealCarbsWithRescueCarbsEntries}
           totalCarbsPerDay={Math.round(totalCarbsPerDay)}
-          rescueCarbs={Math.round(rescueCarbs)}
-          estimatedCarbs={Math.round(estimatedCarbs)}
-          mealCarbs={Math.round(mealCarbs)}
-          totalEntriesRescueCarbs={totalEntriesRescueCarbs}
+          rescueCarbsPerDay={Math.round(rescueCarbsPerDay)}
+          estimatedCarbsPerDay={Math.round(estimatedCarbsPerDay)}
+          mealCarbsPerDay={Math.round(mealCarbsPerDay)}
+          totalRescueCarbsEntries={totalRescueCarbsEntries}
         />
         <Divider className={classes.divider} />
         <TotalInsulinStat

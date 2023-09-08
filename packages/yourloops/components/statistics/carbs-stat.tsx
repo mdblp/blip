@@ -31,27 +31,27 @@ import { TotalCarbsStat } from 'dumb'
 
 export interface TotalInsulinStatProps {
   totalCarbsPerDay: number
-  rescueCarbs: number
-  mealCarbs: number
-  estimatedCarbs: number
-  totalEntriesMealCarbWithRescueCarbs: number
-  totalEntriesRescueCarbs: number
+  rescueCarbsPerDay: number
+  mealCarbsPerDay: number
+  estimatedCarbsPerDay: number
+  totalMealCarbsWithRescueCarbsEntries: number
+  totalRescueCarbsEntries: number
 }
 
 export const CarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   const {
     totalCarbsPerDay,
-    totalEntriesMealCarbWithRescueCarbs,
-    rescueCarbs,
-    estimatedCarbs,
-    mealCarbs,
-    totalEntriesRescueCarbs
+    totalMealCarbsWithRescueCarbsEntries,
+    rescueCarbsPerDay,
+    estimatedCarbsPerDay,
+    mealCarbsPerDay,
+    totalRescueCarbsEntries
   } = props
   const { t } = useTranslation('main')
   const location = useLocation()
   const isDailyPage = location.pathname.includes('daily')
-  const isDeclaredDerivedCarbs = rescueCarbs && totalCarbsPerDay ? t('tooltip-declared-derived-carbs', { total: totalEntriesMealCarbWithRescueCarbs }) : t('tooltip-empty-stat')
-  const isEstimatedDerivedCarbs = mealCarbs && totalCarbsPerDay ? t('tooltip-estimated-derived-carbs', { rescueCarbs: totalEntriesRescueCarbs }) : t('tooltip-empty-stat')
+  const isDeclaredDerivedCarbs = rescueCarbsPerDay && totalCarbsPerDay ? t('tooltip-declared-derived-carbs', { total: totalMealCarbsWithRescueCarbsEntries }) : t('tooltip-empty-stat')
+  const isEstimatedDerivedCarbs = mealCarbsPerDay && totalCarbsPerDay ? t('tooltip-estimated-derived-carbs', { rescueCarbs: totalRescueCarbsEntries }) : t('tooltip-empty-stat')
   const declaredCarbsAnnotation = [t(isDailyPage ? 'tooltip-per-day-carbs' : 'tooltip-avg-daily-week-carbs'), isDeclaredDerivedCarbs]
   const estimatedCarbsAnnotation = [t(isDailyPage ? 'tooltip-per-day-estimated-carbs' : 'tooltip-avg-daily-estimated-carbs'), isEstimatedDerivedCarbs]
 
@@ -59,21 +59,21 @@ export const CarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
     <div data-testid="total-carbs-stat">
       <TotalCarbsStat
         title={t(isDailyPage ? 'total-declared-carbs' : 'avg-daily-declared-carbs')}
-        annotation={declaredCarbsAnnotation}
+        annotations={declaredCarbsAnnotation}
         value={totalCarbsPerDay}
       />
       <TotalCarbsStat
         title={t('meal-carbs')}
-        value={mealCarbs}
+        value={mealCarbsPerDay}
       />
       <TotalCarbsStat
         title={t('rescue-carbs')}
-        value={rescueCarbs}
+        value={rescueCarbsPerDay}
       />
       <TotalCarbsStat
         title={t(isDailyPage ? 'total-estimated-carbs' : 'avg-daily-estimated-carbs')}
-        annotation={estimatedCarbsAnnotation}
-        value={estimatedCarbs}
+        annotations={estimatedCarbsAnnotation}
+        value={estimatedCarbsPerDay}
       />
     </div>
   )
