@@ -558,7 +558,7 @@ class Trends extends React.Component {
                     <RangeSelect />
                   </Footer>
                 </Box>
-                <CarbsAndBolusAverage />
+                <CarbsAndBolusAverage medicalData={this.props.tidelineData.medicalData} />
               </div>
               <div className="container-box-inner patient-data-sidebar">
                 <div className="patient-data-sidebar-inner">

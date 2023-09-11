@@ -30,8 +30,9 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { RESCUE_CARBS_COLOR, useCarbsAndBolusStyles } from './carbs-and-bolus-styles'
 import { useTranslation } from 'react-i18next'
+import { RescueCarbsAveragePerRange } from 'medical-domain/dist/src/domains/models/statistics/carbs-statistics.model'
 
-export const RescueCarbsTooltip: FC = () => {
+export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }> = ({ rescueCarbs }) => {
   const { classes } = useCarbsAndBolusStyles()
   const { t } = useTranslation()
 
@@ -50,15 +51,15 @@ export const RescueCarbsTooltip: FC = () => {
       <Box className="content">
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">{t('intakes-average')}</Typography>
-          <Typography variant="body2">0,5</Typography>
+          <Typography variant="body2">{rescueCarbs.numberOfIntakes}</Typography>
         </div>
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">{t('confirmed-carbs')}</Typography>
-          <Typography variant="body2">18g</Typography>
+          <Typography variant="body2">{rescueCarbs.confirmedCarbs}g</Typography>
         </div>
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">{t('recommended-carbs')}</Typography>
-          <Typography variant="body2">10g</Typography>
+          <Typography variant="body2">{rescueCarbs.recommendedCarbs}g</Typography>
         </div>
       </Box>
     </Box>

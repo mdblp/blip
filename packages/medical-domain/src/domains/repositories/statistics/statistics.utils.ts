@@ -32,3 +32,16 @@ import { defaultWeekDaysFilter } from '../../models/time/date-filter.model'
 export const getWeekDaysFilter = (dateFilter: DateFilter): WeekDaysFilter => dateFilter.weekDays ?? defaultWeekDaysFilter
 
 export const sumValues = (values: number[]): number => values.reduce((total, current) => total + current, 0)
+
+export const roundValue = (value: number, numberOfDecimals?: 1 | 2): number => {
+  let multiplicator = 1
+  switch (numberOfDecimals) {
+    case 1:
+      multiplicator = 10
+      break
+    case 2:
+      multiplicator = 100
+      break
+  }
+  return Math.round(value * multiplicator) / multiplicator
+}

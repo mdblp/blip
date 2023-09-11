@@ -33,6 +33,8 @@ import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from 'tss-react/mui'
 import { LIGHT_BORDER, MANUAL_BOLUS_COLOR, RESCUE_CARBS_COLOR } from './carbs-and-bolus-styles'
+import { CarbsStatisticsService, MedicalData } from 'medical-domain'
+import { HoursRange } from 'medical-domain/dist/src/domains/models/statistics/carbs-statistics.model'
 
 const useStyles = makeStyles()(() => ({
   captionColorIndicator: {
@@ -41,10 +43,11 @@ const useStyles = makeStyles()(() => ({
   }
 }))
 
-export const CarbsAndBolusAverage: FC = () => {
+export const CarbsAndBolusAverage: FC<{ medicalData: MedicalData }> = ({ medicalData }) => {
   const theme = useTheme()
   const { t } = useTranslation()
   const { classes } = useStyles()
+  const rescueCarbsStats = CarbsStatisticsService.getRescueCarbsAverageStatistics(medicalData.meals, 14)
 
   return (
     <Box margin="32px 10px 32px 40px">
@@ -55,42 +58,42 @@ export const CarbsAndBolusAverage: FC = () => {
         <CarbsAndBolusCell
           time="0h"
           manualBolus={undefined}
-          rescueCarbs={undefined}
+          rescueCarbs={rescueCarbsStats.get(HoursRange.MidnightToThree)}
         />
         <CarbsAndBolusCell
           time="3h"
           manualBolus={0.5}
-          rescueCarbs={0.5}
+          rescueCarbs={rescueCarbsStats.get(HoursRange.ThreeToSix)}
         />
         <CarbsAndBolusCell
           time="6h"
           manualBolus={undefined}
-          rescueCarbs={undefined}
+          rescueCarbs={rescueCarbsStats.get(HoursRange.SixToNine)}
         />
         <CarbsAndBolusCell
           time="9h"
           manualBolus={1}
-          rescueCarbs={0.5}
+          rescueCarbs={rescueCarbsStats.get(HoursRange.NineToTwelve)}
         />
         <CarbsAndBolusCell
           time="12h"
           manualBolus={undefined}
-          rescueCarbs={undefined}
+          rescueCarbs={rescueCarbsStats.get(HoursRange.TwelveToFifteen)}
         />
         <CarbsAndBolusCell
           time="15h"
           manualBolus={undefined}
-          rescueCarbs={0.5}
+          rescueCarbs={rescueCarbsStats.get(HoursRange.FifteenToEighteen)}
         />
         <CarbsAndBolusCell
           time="18h"
           manualBolus={0.5}
-          rescueCarbs={0.5}
+          rescueCarbs={rescueCarbsStats.get(HoursRange.EighteenToTwentyOne)}
         />
         <CarbsAndBolusCell
           time="21h"
           manualBolus={0.1}
-          rescueCarbs={undefined}
+          rescueCarbs={rescueCarbsStats.get(HoursRange.TwentyOneToMidnight)}
           sx={{ borderRight: LIGHT_BORDER }}
         />
       </Box>
