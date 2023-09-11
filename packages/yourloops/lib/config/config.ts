@@ -65,7 +65,9 @@ const defaultConfig: AppConfig = {
   YLPZ_RA_LAD_001_IT_REV: '0',
   YLPZ_RA_LAD_001_ES_REV: '0',
   YLPZ_RA_LAD_001_DE_REV: '0',
-  IDLE_TIMEOUT_MS: 1800000
+  IDLE_TIMEOUT_MS: 1800000,
+  MATOMO_TRACKER_URL: '//cdn.matomo.cloud/yourloops.matomo.cloud/matomo.js',
+  MATOMO_TRACKER_SITEID: '1'
 }
 const appConfig = _.assign({}, defaultConfig)
 if (_.has(window, 'config') && _.isObjectLike(_.get(window, 'config', null))) {

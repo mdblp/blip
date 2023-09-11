@@ -86,7 +86,7 @@ function sendMatomoMetrics(category: string, action: string, name?: string, valu
     logWrongMetricsConfiguration()
     return
   }
-  // action = 'enabled'
+
   if (category === 'metrics') {
     switch (action) {
       case 'enabled':
@@ -159,7 +159,6 @@ const metrics = {
    */
   send: (category: string, action: string, name?: string, value?: number): void => {
     log.info({ category, action, name, value })
-    console.log({category, action})
 
     if (category === 'metrics' && (action === 'enabled' || action === 'disabled')) {
       metricsEnabled = action === 'enabled'

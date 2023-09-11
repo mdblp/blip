@@ -90,7 +90,9 @@ const config = {
   YLPZ_RA_LAD_001_IT_REV: stringOption(process.env.YLPZ_RA_LAD_001_IT_REV, '0'),
   YLPZ_RA_LAD_001_ES_REV: stringOption(process.env.YLPZ_RA_LAD_001_ES_REV, '0'),
   YLPZ_RA_LAD_001_DE_REV: stringOption(process.env.YLPZ_RA_LAD_001_DE_REV, '0'),
-  IDLE_TIMEOUT_MS: process.env.IDLE_TIMEOUT_MS || 1800000
+  IDLE_TIMEOUT_MS: process.env.IDLE_TIMEOUT_MS || 1800000,
+  MATOMO_TRACKER_URL: process.env.MATOMO_TRACKER_URL || '',
+  MATOMO_TRACKER_SITEID: process.env.MATOMO_TRACKER_SITEID || ''
 }
 
 module.exports = config

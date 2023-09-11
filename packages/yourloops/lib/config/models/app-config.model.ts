@@ -56,4 +56,6 @@ export interface AppConfig {
   YLPZ_RA_LAD_001_ES_REV: string
   YLPZ_RA_LAD_001_DE_REV: string
   IDLE_TIMEOUT_MS: number
+  MATOMO_TRACKER_URL: string
+  MATOMO_TRACKER_SITEID: string
 }
