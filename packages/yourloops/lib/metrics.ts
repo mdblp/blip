@@ -159,9 +159,6 @@ const metrics = {
    */
   send: (category: string, action: string, name?: string, value?: number): void => {
     log.info({ category, action, name, value })
-    console.log({ category })
-    console.log({ action })
-    console.log({ name })
     if (category === 'metrics' && (action === 'enabled' || action === 'disabled')) {
       metricsEnabled = action === 'enabled'
       log.info('metricsEnabled', metricsEnabled)
