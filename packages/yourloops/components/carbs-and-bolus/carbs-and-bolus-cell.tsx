@@ -34,10 +34,10 @@ import { TypeOfCell } from './carbs-and-bolus.model'
 import { LIGHT_BORDER, MANUAL_BOLUS_COLOR, RESCUE_CARBS_COLOR, useCarbsAndBolusStyles } from './carbs-and-bolus-styles'
 import { RescueCarbsTooltip } from './rescue-carbs-tooltip'
 import { ManualBolusTooltip } from './manual-bolus-tooltip'
-import { RescueCarbsAveragePerRange } from 'medical-domain/dist/src/domains/models/statistics/carbs-statistics.model'
+import { ManualBolusAveragePerRange, RescueCarbsAveragePerRange } from 'medical-domain'
 
 interface CarbsAndBolusCellProps {
-  manualBolus: number
+  manualBolus: ManualBolusAveragePerRange
   rescueCarbs: RescueCarbsAveragePerRange
   sx?: SxProps<Theme>
   time: string
@@ -47,8 +47,9 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
   const { time, manualBolus, rescueCarbs, sx } = props
   const { classes, theme } = useCarbsAndBolusStyles()
   const { numberOfIntakes } = rescueCarbs
+  const { numberOfInjections } = manualBolus
   const carbsCellBackgroundColor = numberOfIntakes > 0 ? RESCUE_CARBS_COLOR : theme.palette.grey[200]
-  const bolusCellBackgroundColor = manualBolus ? MANUAL_BOLUS_COLOR : theme.palette.grey[200]
+  const bolusCellBackgroundColor = numberOfInjections > 0 ? MANUAL_BOLUS_COLOR : theme.palette.grey[200]
   const [cellOnHover, setCellOnHover] = useState<TypeOfCell>(undefined)
 
   const openPopover = (cellOnHover: TypeOfCell): void => {
@@ -99,10 +100,10 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
             variant="caption"
             sx={{ color: 'white' }}
           >
-            {manualBolus}
+            {numberOfInjections > 0 ? numberOfInjections : ''}
           </Typography>
-          {manualBolus && cellOnHover === TypeOfCell.ManualBolus &&
-            <ManualBolusTooltip />
+          {numberOfInjections > 0 && cellOnHover === TypeOfCell.ManualBolus &&
+            <ManualBolusTooltip manualBolus={manualBolus} />
           }
         </Box>
       </Box>

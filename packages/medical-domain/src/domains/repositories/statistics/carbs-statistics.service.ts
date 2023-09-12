@@ -30,14 +30,14 @@ import type Wizard from '../../models/medical/datum/wizard.model'
 import type DateFilter from '../../models/time/date-filter.model'
 import MealService from '../medical/datum/meal.service'
 import WizardService from '../medical/datum/wizard.service'
-import { getWeekDaysFilter, roundValue, sumValues } from './statistics.utils'
+import { buildHoursRangeMap, getWeekDaysFilter, roundValue, sumValues } from './statistics.utils'
 import {
   type CarbsStatistics,
-  HoursRange,
   RescueCarbsAveragePerRange,
   RescueCarbsAverageStatistics
 } from '../../models/statistics/carbs-statistics.model'
 import { getHours } from '../time/time.service'
+import { HoursRange } from '../../models/statistics/satistics.model'
 
 function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter): CarbsStatistics {
   const filterMeal = MealService.filterOnDate(meal, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
@@ -56,16 +56,7 @@ function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilte
 }
 
 function getRescueCarbsAverageStatistics(meals: Meal[], numberOfDays: number): RescueCarbsAverageStatistics {
-  const carbsMap = new Map<HoursRange, Meal[]>([
-    [HoursRange.MidnightToThree, []],
-    [HoursRange.ThreeToSix, []],
-    [HoursRange.SixToNine, []],
-    [HoursRange.NineToTwelve, []],
-    [HoursRange.TwelveToFifteen, []],
-    [HoursRange.FifteenToEighteen, []],
-    [HoursRange.EighteenToTwentyOne, []],
-    [HoursRange.TwentyOneToMidnight, []]
-  ])
+  const carbsMap = buildHoursRangeMap<Meal>()
 
   const midnightToThree = carbsMap.get(HoursRange.MidnightToThree) as Meal[]
   const threeToSix = carbsMap.get(HoursRange.ThreeToSix) as Meal[]

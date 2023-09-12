@@ -30,8 +30,9 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { MANUAL_BOLUS_COLOR, useCarbsAndBolusStyles } from './carbs-and-bolus-styles'
 import { useTranslation } from 'react-i18next'
+import { ManualBolusAveragePerRange } from 'medical-domain'
 
-export const ManualBolusTooltip: FC = () => {
+export const ManualBolusTooltip: FC<{ manualBolus: ManualBolusAveragePerRange }> = ({ manualBolus }) => {
   const { classes } = useCarbsAndBolusStyles()
   const { t } = useTranslation()
 
@@ -50,11 +51,11 @@ export const ManualBolusTooltip: FC = () => {
       <Box className="content">
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">{t('number-of-injections')}</Typography>
-          <Typography variant="body2">0,5</Typography>
+          <Typography variant="body2">{manualBolus.numberOfInjections}</Typography>
         </div>
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">{t('confirmed-dose')}</Typography>
-          <Typography variant="body2">12U</Typography>
+          <Typography variant="body2">{manualBolus.confirmedDose}U</Typography>
         </div>
       </Box>
     </Box>

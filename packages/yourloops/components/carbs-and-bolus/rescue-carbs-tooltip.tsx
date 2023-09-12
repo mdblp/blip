@@ -30,7 +30,7 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { RESCUE_CARBS_COLOR, useCarbsAndBolusStyles } from './carbs-and-bolus-styles'
 import { useTranslation } from 'react-i18next'
-import { RescueCarbsAveragePerRange } from 'medical-domain/dist/src/domains/models/statistics/carbs-statistics.model'
+import { RescueCarbsAveragePerRange } from 'medical-domain'
 
 export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }> = ({ rescueCarbs }) => {
   const { classes } = useCarbsAndBolusStyles()
