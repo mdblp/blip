@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import NotificationApi from '../../../lib/notifications/notification.api'
+import {
+  checkAddCaregiverCancel,
+  checkAddCaregiverErrors,
+  checkAddCaregiverSuccess,
+  checkCaregiversListLayout,
+  checkRemoveCaregiverCancel,
+  checkRemoveCaregiverSuccess
+} from '../assert/caregivers-list.assert'
 
-export const mockNotificationAPI = () => {
-  jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValue([])
-  jest.spyOn(NotificationApi, 'getSentInvitations').mockResolvedValue([])
-  jest.spyOn(NotificationApi, 'cancelInvitation').mockResolvedValue()
+export const testCaregiversVisualisation = async () => {
+  const newCaregiverEmail = 'new-caregiver@mail.com'
+
+  await checkCaregiversListLayout()
+  await checkAddCaregiverCancel()
+  await checkAddCaregiverErrors()
+  await checkAddCaregiverSuccess(newCaregiverEmail)
+  await checkRemoveCaregiverCancel(newCaregiverEmail)
+  await checkRemoveCaregiverSuccess(newCaregiverEmail)
 }
