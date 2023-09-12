@@ -471,7 +471,7 @@
   "tooltip-avg-daily-week-carbs": "**Avg. Daily declared carbs**: All carb entries added together (meals and rescue carbs), then divided by the number of days in this view.",
   "tooltip-declared-derived-carbs": "Derived from {{total}} carb entries, including rescue carbs.",
   "tooltip-empty-stat": "**Why is this stat empty?**\n\nThere is not enough data present in this view to calculate it.",
-  "tooltip-estimated-derived-carbs": "Derived from {{rescueCarbs}} carb entries, including rescue carbs.",
+  "tooltip-estimated-derived-carbs": "Derived from {{ummMeals}}  unannounced meal(s).",
   "tooltip-estimated-week-carbs": "Avg. Daily estimated carbs: Total of estimated carbs from unannounced meals, then divided by the number of days in this view.",
   "tooltip-per-day-carbs": "**Total Carbs**: All carb entries from meals or rescue carbs added together.",
   "tooltip-per-day-estimated-carbs": "**Estimated Carbs**: estimated amount of carbs of the unannounced meals.",
