@@ -35,7 +35,7 @@ export interface TotalCarbsStatProps {
   annotations?: string[]
   value: number
 }
-const TotalCarbsStat: FunctionComponent<TotalCarbsStatProps> = (props) => {
+const CarbsStatItem: FunctionComponent<TotalCarbsStatProps> = (props) => {
   const { annotations, value, title } = props
   return (
     <Box className={`${styles.row} ${annotations ? null : styles.carbs}`}>
@@ -70,4 +70,4 @@ const TotalCarbsStat: FunctionComponent<TotalCarbsStatProps> = (props) => {
     </Box>
   )
 }
-export const TotalCarbsStatMemoized = memo(TotalCarbsStat)
+export const CarbsStatItemMemoized = memo(CarbsStatItem)

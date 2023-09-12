@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,9 +27,9 @@
 import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
-import { TotalCarbsStat } from 'dumb'
+import { CarbsStatItem } from 'dumb'
 
-export interface TotalInsulinStatProps {
+export interface CarbsStatProps {
   totalCarbsPerDay: number
   rescueCarbsPerDay: number
   mealCarbsPerDay: number
@@ -38,7 +38,7 @@ export interface TotalInsulinStatProps {
   totalRescueCarbsEntries: number
 }
 
-export const CarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
+export const CarbsStat: FunctionComponent<CarbsStatProps> = (props) => {
   const {
     totalCarbsPerDay,
     totalMealCarbsWithRescueCarbsEntries,
@@ -50,27 +50,25 @@ export const CarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   const { t } = useTranslation('main')
   const location = useLocation()
   const isDailyPage = location.pathname.includes('daily')
-  const isDeclaredDerivedCarbs = rescueCarbsPerDay && totalCarbsPerDay ? t('tooltip-declared-derived-carbs', { total: totalMealCarbsWithRescueCarbsEntries }) : t('tooltip-empty-stat')
-  const isEstimatedDerivedCarbs = mealCarbsPerDay && totalCarbsPerDay ? t('tooltip-estimated-derived-carbs', { rescueCarbs: totalRescueCarbsEntries }) : t('tooltip-empty-stat')
-  const declaredCarbsAnnotation = [t(isDailyPage ? 'tooltip-per-day-carbs' : 'tooltip-avg-daily-week-carbs'), isDeclaredDerivedCarbs]
-  const estimatedCarbsAnnotation = [t(isDailyPage ? 'tooltip-per-day-estimated-carbs' : 'tooltip-avg-daily-estimated-carbs'), isEstimatedDerivedCarbs]
+  const declaredCarbsAnnotation = [t(isDailyPage ? 'tooltip-per-day-carbs' : 'tooltip-avg-daily-week-carbs'), t('tooltip-declared-derived-carbs', { total: totalMealCarbsWithRescueCarbsEntries })]
+  const estimatedCarbsAnnotation = [t(isDailyPage ? 'tooltip-per-day-estimated-carbs' : 'tooltip-avg-daily-estimated-carbs'), t('tooltip-estimated-derived-carbs', { ummMeals: totalRescueCarbsEntries })]
 
   return (
     <div data-testid="total-carbs-stat">
-      <TotalCarbsStat
+      <CarbsStatItem
         title={t(isDailyPage ? 'total-declared-carbs' : 'avg-daily-declared-carbs')}
         annotations={declaredCarbsAnnotation}
         value={totalCarbsPerDay}
       />
-      <TotalCarbsStat
+      <CarbsStatItem
         title={t('meal-carbs')}
         value={mealCarbsPerDay}
       />
-      <TotalCarbsStat
+      <CarbsStatItem
         title={t('rescue-carbs')}
         value={rescueCarbsPerDay}
       />
-      <TotalCarbsStat
+      <CarbsStatItem
         title={t(isDailyPage ? 'total-estimated-carbs' : 'avg-daily-estimated-carbs')}
         annotations={estimatedCarbsAnnotation}
         value={estimatedCarbsPerDay}

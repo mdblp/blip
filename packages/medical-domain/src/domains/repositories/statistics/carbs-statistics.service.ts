@@ -35,13 +35,13 @@ import { type CarbsStatistics } from '../../models/statistics/carbs-statistics.m
 import { WizardInputMealSource } from '../../models/medical/datum/enums/wizard-input-meal-source.enum'
 
 function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter): CarbsStatistics {
-  const filterMeal = MealService.filterOnDate(meal, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  const filterWizard = WizardService.filterOnDate(wizard, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  const filterEstimatedCarbs = filterWizard.filter(estimatedCarb => estimatedCarb.inputMeal)
+  const filteredMeal = MealService.filterOnDate(meal, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  const filteredWizard = WizardService.filterOnDate(wizard, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  const filteredEstimatedCarbs = filteredWizard.filter(estimatedCarb => estimatedCarb.inputMeal)
     .filter((wizard) => wizard.inputMeal?.source === WizardInputMealSource.Umm)
-  const rescueCarbsData = filterMeal.map(meal => meal.nutrition.carbohydrate.net)
-  const mealData = filterWizard.map(wizard => wizard.carbInput)
-  const estimatedCarbsData = filterEstimatedCarbs.map(wizard => wizard.carbInput)
+  const rescueCarbsData = filteredMeal.map(meal => meal.nutrition.carbohydrate.net)
+  const mealData = filteredWizard.map(wizard => wizard.carbInput)
+  const estimatedCarbsData = filteredEstimatedCarbs.map(wizard => wizard.carbInput)
   const estimatedCarbs = sumValues(estimatedCarbsData)
   const mealCarbs = sumValues(mealData)
   const rescueCarbs = sumValues(rescueCarbsData)

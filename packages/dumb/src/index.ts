@@ -43,7 +43,7 @@ import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parame
 import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
 import { InsulinStatMemoized as InsulinStat } from './components/stats/insulin/insulin-stat'
 import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mode-stat/loop-mode-stat'
-import { TotalCarbsStatMemoized as TotalCarbsStat } from './components/stats/total-carbs/total-carbs-stat'
+import { CarbsStatItemMemoized as CarbsStatItem } from './components/stats/total-carbs/total-carbs-stat'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
 import Tooltip from './components/tooltips/common/tooltip/tooltip'
@@ -94,7 +94,7 @@ export {
   StatTooltip,
   Tooltip,
   InsulinStat,
-  TotalCarbsStat,
+  CarbsStatItem,
   TrendsContainer,
   TrendsProvider,
   formatLocalizedFromUTC,
