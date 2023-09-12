@@ -185,7 +185,7 @@ function getManualBolusAverageStatistics(boluses: Bolus[], numberOfDays: number,
 }
 
 function getManualBolusAveragePerRange(boluses: Bolus[], numberOfDays: number): ManualBolusAveragePerRange {
-  const confirmedDoseTotal = boluses.reduce((totalDose, bolus) => totalDose + (bolus.expectedNormal ?? 0), 0)
+  const confirmedDoseTotal = boluses.reduce((totalDose, bolus) => totalDose + (bolus.normal ?? 0), 0)
   const numberOfInjections = boluses.length / numberOfDays
   return {
     confirmedDose: roundValue(confirmedDoseTotal / numberOfDays, 1),

@@ -25,28 +25,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type BaseDatum from './basics/base-datum.model'
-import type Wizard from './wizard.model'
-import { BolusSubtype } from './enums/bolus-subtype.enum'
-import { type DatumType } from './enums/datum-type.enum'
-import Prescriptor from './enums/prescriptor.enum'
+import { buildHoursRangeMap, roundValue } from '../../../src/domains/repositories/statistics/statistics.utils'
+import { HoursRange, Meal } from '../../../src'
 
-function isBolusSubType(value: unknown): boolean {
-  return Object.values(BolusSubtype).includes(value as BolusSubtype)
-}
+describe('statistics.utils.test', () => {
+  describe('roundValue', () => {
+    it('should return a rounded value', () => {
+      const value = 2.54858713
+      expect(roundValue(value)).toEqual(3) // By default an integer
+      expect(roundValue(value, 1)).toEqual(2.5)
+      expect(roundValue(value, 2)).toEqual(2.55)
+    })
+  })
 
-type Bolus = BaseDatum & {
-  type: DatumType.Bolus
-  subType: BolusSubtype
-  uploadId: string
-  normal: number
-  prescriptor: Prescriptor
-  wizard: Wizard | null
-  expectedNormal?: number
-  insulinOnBoard?: number
-  part?: string
-  biphasicId?: string
-}
+  describe('buildHoursRangeMap', () => {
+    it('should return a map of hours range', () => {
+      const map = buildHoursRangeMap<Meal[]>()
+      const expectedResult: Map<HoursRange, Meal[]> = new Map([
+        [HoursRange.MidnightToThree, []],
+        [HoursRange.ThreeToSix, []],
+        [HoursRange.SixToNine, []],
+        [HoursRange.NineToTwelve, []],
+        [HoursRange.TwelveToFifteen, []],
+        [HoursRange.FifteenToEighteen, []],
+        [HoursRange.EighteenToTwentyOne, []],
+        [HoursRange.TwentyOneToMidnight, []]
+      ])
 
-export default Bolus
-export { isBolusSubType }
+      expect(map).toEqual(expectedResult)
+    })
+  })
+})

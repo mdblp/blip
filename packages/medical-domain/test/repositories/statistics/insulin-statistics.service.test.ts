@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BasalBolusStatisticsService } from '../../../src'
+import { BasalBolusStatisticsService, HoursRange } from '../../../src'
 import {
   basalsData,
   bolusData,
@@ -34,57 +34,79 @@ import {
   dateFilterOneDay,
   dateFilterTwoWeeks,
   dateFilterTwoDays,
-  MS_IN_HOUR
+  MS_IN_HOUR,
+  manualBolusData
 } from '../../mock/data.statistics.mock'
+import { ManualBolusAverageStatistics } from '../../../src/domains/models/statistics/basal-bolus-statistics.model'
 
-describe('Time In Auto Data', () => {
-  it('should return the time spent in automated and manual basal delivery when viewing 1 day', () => {
-    const basalData = buildBasalsData(basalsData)
-    expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, dateFilterOneDay)).toEqual({
-      automatedBasalDuration: MS_IN_HOUR,
-      manualBasalDuration: MS_IN_HOUR * 2,
-      automatedAndManualTotalDuration: MS_IN_HOUR + MS_IN_HOUR * 2,
-      automatedBasalInDays: 28800000,
-      manualBasalInDays: 57600000
+describe('BasalBolusStatisticsService', () => {
+  describe('Time In Auto Data', () => {
+    it('should return the time spent in automated and manual basal delivery when viewing 1 day', () => {
+      const basalData = buildBasalsData(basalsData)
+      expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, dateFilterOneDay)).toEqual({
+        automatedBasalDuration: MS_IN_HOUR,
+        manualBasalDuration: MS_IN_HOUR * 2,
+        automatedAndManualTotalDuration: MS_IN_HOUR + MS_IN_HOUR * 2,
+        automatedBasalInDays: 28800000,
+        manualBasalInDays: 57600000
+      })
+    })
+
+    it('should return the avg daily time spent in automated and manual basal delivery when viewing more than 1 day', () => {
+      const basalData = buildBasalsData(basalsData)
+      expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, dateFilterTwoDays)).toEqual({
+        automatedBasalDuration: MS_IN_HOUR,
+        manualBasalDuration: MS_IN_HOUR * 4,
+        automatedAndManualTotalDuration: MS_IN_HOUR + MS_IN_HOUR * 4,
+        manualBasalInDays: 69120000,
+        automatedBasalInDays: 17280000
+      })
     })
   })
 
-  it('should return the avg daily time spent in automated and manual basal delivery when viewing more than 1 day', () => {
-    const basalData = buildBasalsData(basalsData)
-    expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, dateFilterTwoDays)).toEqual({
-      automatedBasalDuration: MS_IN_HOUR,
-      manualBasalDuration: MS_IN_HOUR * 4,
-      automatedAndManualTotalDuration: MS_IN_HOUR + MS_IN_HOUR * 4,
-      manualBasalInDays: 69120000,
-      automatedBasalInDays: 17280000
+  describe('getBasalBolusData', () => {
+    it('should return the total basal and bolus insulin delivery when viewing 1 day', () => {
+      const basals = buildBasalsData(basalsData)
+      const bolus = buildBolusData(bolusData)
+
+      const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, 1, dateFilterOneDay)
+      const expectBasalBolusData = {
+        basal: 1.5,
+        bolus: 15,
+        total: 16.5
+      }
+      expect(basalBolusData).toEqual(expectBasalBolusData)
+    })
+
+    it('should return the avg daily total basal and bolus insulin delivery when viewing more than 1 day', () => {
+      const basals = buildBasalsData(basalsData)
+      const bolus = buildBolusData(bolusData)
+
+      const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, 2, dateFilterTwoWeeks)
+      const expectBasalBolusData = {
+        basal: 1.25,
+        bolus: 9.5,
+        total: 10.75
+      }
+      expect(basalBolusData).toEqual(expectBasalBolusData)
     })
   })
-})
 
-describe('getBasalBolusData', () => {
-  it('should return the total basal and bolus insulin delivery when viewing 1 day', () => {
-    const basals = buildBasalsData(basalsData)
-    const bolus = buildBolusData(bolusData)
-
-    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, 1, dateFilterOneDay)
-    const expectBasalBolusData = {
-      basal: 1.5,
-      bolus: 15,
-      total: 16.5
-    }
-    expect(basalBolusData).toEqual(expectBasalBolusData)
-  })
-
-  it('should return the avg daily total basal and bolus insulin delivery when viewing more than 1 day', () => {
-    const basals = buildBasalsData(basalsData)
-    const bolus = buildBolusData(bolusData)
-
-    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, 2, dateFilterTwoWeeks)
-    const expectBasalBolusData = {
-      basal: 1.25,
-      bolus: 9.5,
-      total: 10.75
-    }
-    expect(basalBolusData).toEqual(expectBasalBolusData)
+  describe('getManualBolusAverageStatistics', () => {
+    it('should return a map with ranges of hours and manual bolus average statistics', () => {
+      const boluses = buildBolusData(manualBolusData)
+      const manualBoluses = BasalBolusStatisticsService.getManualBolusAverageStatistics(boluses, 14, dateFilterTwoWeeks)
+      const expected: ManualBolusAverageStatistics = new Map([
+        [HoursRange.MidnightToThree, { confirmedDose: 0.1, numberOfInjections: 0.1 }],
+        [HoursRange.ThreeToSix, { confirmedDose: 0.4, numberOfInjections: 0.1 }],
+        [HoursRange.SixToNine, { confirmedDose: 0, numberOfInjections: 0 }],
+        [HoursRange.NineToTwelve, { confirmedDose: 0, numberOfInjections: 0 }],
+        [HoursRange.TwelveToFifteen, { confirmedDose: 0.3, numberOfInjections: 0.1 }],
+        [HoursRange.FifteenToEighteen, { confirmedDose: 0, numberOfInjections: 0 }],
+        [HoursRange.EighteenToTwentyOne, { confirmedDose: 0.5, numberOfInjections: 0.1 }],
+        [HoursRange.TwentyOneToMidnight, { confirmedDose: 0.3, numberOfInjections: 0.2 }]
+      ])
+      expect(manualBoluses).toEqual(expected)
+    })
   })
 })
