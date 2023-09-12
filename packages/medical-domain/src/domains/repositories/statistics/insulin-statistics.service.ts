@@ -120,7 +120,7 @@ function getAutomatedAndManualBasalDuration(basalsData: Basal[], dateFilter: Dat
   }
 }
 
-function getManualBolusAverageStatistics(boluses: Bolus[], numberOfDays: number): ManualBolusAverageStatistics {
+function getManualBolusAverageStatistics(boluses: Bolus[], numberOfDays: number, dateFilter: DateFilter): ManualBolusAverageStatistics {
   const carbsMap = buildHoursRangeMap<Bolus>()
 
   const midnightToThree = carbsMap.get(HoursRange.MidnightToThree)as Bolus[]
@@ -134,7 +134,8 @@ function getManualBolusAverageStatistics(boluses: Bolus[], numberOfDays: number)
 
 
   const manualBoluses = boluses.filter(bolus => bolus.prescriptor === Prescriptor.Manual)
-  manualBoluses.forEach((bolus) => {
+  const filteredManualBoluses = BolusService.filterOnDate(manualBoluses, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  filteredManualBoluses.forEach((bolus) => {
     const hours = getHours(bolus.normalTime, bolus.timezone)
 
     if (hours < 3) {
@@ -196,7 +197,7 @@ interface BasalBolusStatisticsAdapter {
   getBasalBolusData: (basals: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter) => BasalBolusStatistics
   getTotalInsulinAndWeightData: (basals: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter, pumpSettings: PumpSettings[]) => TotalInsulinAndWeightStatistics
   getAutomatedAndManualBasalDuration: (basalsData: Basal[], dateFilter: DateFilter) => TimeInAutoStatistics
-  getManualBolusAverageStatistics: (boluses: Bolus[], numberOfDays: number) => ManualBolusAverageStatistics
+  getManualBolusAverageStatistics: (boluses: Bolus[], numberOfDays: number, dateFilter: DateFilter) => ManualBolusAverageStatistics
 }
 
 export const BasalBolusStatisticsService: BasalBolusStatisticsAdapter = {

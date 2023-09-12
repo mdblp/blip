@@ -55,7 +55,7 @@ function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilte
   }
 }
 
-function getRescueCarbsAverageStatistics(meals: Meal[], numberOfDays: number): RescueCarbsAverageStatistics {
+function getRescueCarbsAverageStatistics(meals: Meal[], numberOfDays: number, dateFilter: DateFilter): RescueCarbsAverageStatistics {
   const carbsMap = buildHoursRangeMap<Meal>()
 
   const midnightToThree = carbsMap.get(HoursRange.MidnightToThree) as Meal[]
@@ -67,7 +67,8 @@ function getRescueCarbsAverageStatistics(meals: Meal[], numberOfDays: number): R
   const eighteenToTwentyOne = carbsMap.get(HoursRange.EighteenToTwentyOne) as Meal[]
   const twentyOneToMidnight = carbsMap.get(HoursRange.TwentyOneToMidnight) as Meal[]
 
-  meals.forEach((meal) => {
+  const filteredMeal = MealService.filterOnDate(meals, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  filteredMeal.forEach((meal) => {
     const hours = getHours(meal.normalTime, meal.timezone)
 
     if (hours < 3) {
@@ -135,7 +136,7 @@ function getRescueCarbsAveragePerRange(meals: Meal[], numberOfDays: number): Res
 
 interface CarbsStatisticsAdapter {
   getCarbsData: (meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter) => CarbsStatistics
-  getRescueCarbsAverageStatistics: (meals: Meal[], numberOfDays: number) => RescueCarbsAverageStatistics
+  getRescueCarbsAverageStatistics: (meals: Meal[], numberOfDays: number, dateFilter: DateFilter) => RescueCarbsAverageStatistics
 }
 
 export const CarbsStatisticsService: CarbsStatisticsAdapter = {

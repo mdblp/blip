@@ -33,8 +33,18 @@ import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from 'tss-react/mui'
 import { LIGHT_BORDER, MANUAL_BOLUS_COLOR, RESCUE_CARBS_COLOR } from './carbs-and-bolus-styles'
-import { BasalBolusStatisticsService, CarbsStatisticsService, HoursRange, MedicalData } from 'medical-domain'
+import {
+  BasalBolusStatisticsService,
+  CarbsStatisticsService,
+  DateFilter,
+  HoursRange,
+  MedicalData, TimeService
+} from 'medical-domain'
 
+interface CarbsAndBolusAverageProps {
+  dateFilter: DateFilter
+  medicalData: MedicalData
+}
 
 const useStyles = makeStyles()(() => ({
   captionColorIndicator: {
@@ -43,14 +53,14 @@ const useStyles = makeStyles()(() => ({
   }
 }))
 
-export const CarbsAndBolusAverage: FC<{ medicalData: MedicalData }> = ({ medicalData }) => {
+export const CarbsAndBolusAverage: FC<CarbsAndBolusAverageProps> = ({ medicalData, dateFilter }) => {
   const theme = useTheme()
   const { t } = useTranslation()
   const { classes } = useStyles()
-  const rescueCarbsStats = CarbsStatisticsService.getRescueCarbsAverageStatistics(medicalData.meals, 14)
-  const manualBolusStats = BasalBolusStatisticsService.getManualBolusAverageStatistics(medicalData.bolus, 14)
+  const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
+  const rescueCarbsStats = CarbsStatisticsService.getRescueCarbsAverageStatistics(medicalData.meals, numberOfDays, dateFilter)
+  const manualBolusStats = BasalBolusStatisticsService.getManualBolusAverageStatistics(medicalData.bolus, numberOfDays, dateFilter)
 
-  console.log({ manualBolusStats })
   return (
     <Box margin="32px 10px 32px 40px">
       <Typography sx={{ fontWeight: 500, marginBottom: theme.spacing(1) }}>
