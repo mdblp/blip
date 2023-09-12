@@ -38,7 +38,7 @@ const STANDARD_DEVIATION_TOOLTIP = 'SD (Standard Deviation): How far values are 
 const STANDARD_DEVIATION_BGM_TOOLTIP = 'SD (Standard Deviation): How far values are from the average.Derived from 15 BGM readings.'
 const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
 const AVG_DAILY_CARBS_DECLARED_TOOLTIP = 'Avg. Daily declared carbs: All carb entries added together (meals and rescue carbs), then divided by the number of days in this view.Derived from 3 carb entries, including rescue carbs.'
-const AVG_DAILY_CARBS_ESTIMATED_TOOLTIP = 'Avg. Daily estimated carbs: Total of estimated carbs from unannounced meals, then divided by the number of days in this view.Derived from 1 carb entries, including rescue carbs.'
+const AVG_DAILY_CARBS_ESTIMATED_TOOLTIP = 'Avg. Daily estimated carbs: Total of estimated carbs from unannounced meals, then divided by the number of days in this view.Derived from 1 unannounced meal(s).'
 export const GMI_TOOLTIP_EMPTY_VALUE = 'GMI (Glucose Management Indicator): Tells you what your approximate A1C level is likely to be, based on the average glucose level from your CGM readings.Why is this stat empty? There is not enough data present in this view to calculate it.'
 export const GMI_TOOLTIP = 'GMI (Glucose Management Indicator): Tells you what your approximate A1C level is likely to be, based on the average glucose level from your CGM readings.'
 
