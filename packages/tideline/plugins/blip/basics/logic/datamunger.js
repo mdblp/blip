@@ -18,14 +18,13 @@
 import _ from 'lodash'
 import crossfilter from 'crossfilter2'
 
-import { MGDL_UNITS } from '../../../../js'
 import { getLatestPumpUpload } from '../../../../js/data/util/device'
 
 import classifiersMkr from './classifiers'
 import * as constants from './constants'
 import basicsActions from './actions'
 import togglableState from '../TogglableState'
-import { applyOffset } from 'medical-domain'
+import { applyOffset, MGDL_UNITS } from 'medical-domain'
 
 function dataMunger(bgClasses, bgUnits = MGDL_UNITS) {
   const classifiers = classifiersMkr(bgClasses, bgUnits)
