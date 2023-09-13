@@ -14,7 +14,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2573 Create a dedicated message for the caregiver when the account creation is complete
 - YLP-2594 Handle release branches in GitHub CI workflow
 - YLP-2595 Update deprecated GitHub Actions to Node 16
-- YLP-2595 Add visual regression tests
+- YLP-2596 Add visual regression tests
 
 ## 3.0.4 - 2023-08-23
 ### Added
