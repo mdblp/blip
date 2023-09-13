@@ -38,7 +38,6 @@ import { getWeekDaysFilter } from './statistics.utils'
 import type PumpSettings from '../../models/medical/datum/pump-settings.model'
 import { type ParameterConfig } from '../../models/medical/datum/pump-settings.model'
 import { type TimeInAutoStatistics } from '../../models/statistics/time-in-auto.model'
-import { TimeService } from '../../../index'
 
 function resamplingDuration(basals: Basal[], start: number, end: number): Basal[] {
   return basals.map(basal => {
