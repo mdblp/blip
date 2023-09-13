@@ -20,7 +20,7 @@
     "postbuild": "mkdir dist && mv packages/yourloops/dist dist/static",
     "gen-robot": "node server/gen-robot-txt.js",
     "gen-sitemap": "node server/gen-sitemap-xml.js",
-    "gen-lambda": "node server/cloudfront-gen-lambda.js",
+    "gen-lambda": "cd server && npm install && node cloudfront-gen-lambda.js",
     "lint": "eslint templates server && npm run lint-blip && npm run lint --workspaces --if-present",
     "lint-blip": "eslint packages",
     "lint-fix-blip": "npm run lint-blip -- --fix",
