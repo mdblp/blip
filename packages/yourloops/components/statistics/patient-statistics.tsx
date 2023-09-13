@@ -82,7 +82,6 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
   const isTrendsView = location.pathname.includes('trends')
   const isDailyView = location.pathname.includes('daily')
-  const isDashboardPage = location.pathname.includes('dashboard')
 
   const {
     standardDeviation,
@@ -122,13 +121,11 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   const {
     automatedBasalDuration,
     manualBasalDuration,
-    manualBasalInDays,
-    automatedBasalInDays,
+    manualBasalDurationPerDays,
+    automatedBasalDurationPerDays,
     automatedAndManualTotalDuration
   } = BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(medicalData.basal, dateFilter)
 
-  const automatedBasals = isDashboardPage ? automatedBasalInDays : automatedBasalDuration
-  const manualBasals = isDashboardPage ? manualBasalInDays : manualBasalDuration
 
   return (
     <Box data-testid="patient-statistics">
@@ -168,8 +165,8 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
             automatedBasalDuration={automatedBasalDuration}
             manualBasalDuration={manualBasalDuration}
             totalBasalDuration={automatedAndManualTotalDuration}
-            automatedBasals={automatedBasals}
-            manualBasals={manualBasals}
+            automatedBasals={automatedBasalDurationPerDays}
+            manualBasals={manualBasalDurationPerDays}
         />
       </Box>
       <Box className={classes.widgetGroup}>

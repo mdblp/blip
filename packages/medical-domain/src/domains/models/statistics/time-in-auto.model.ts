@@ -27,7 +27,7 @@
 export interface TimeInAutoStatistics {
   automatedAndManualTotalDuration: number
   automatedBasalDuration: number
-  automatedBasalInDays: number
+  automatedBasalDurationPerDays: number
   manualBasalDuration: number
-  manualBasalInDays: number
+  manualBasalDurationPerDays: number
 }

@@ -104,14 +104,15 @@ function getAutomatedAndManualBasalDuration(basalsData: Basal[], dateFilter: Dat
   const manualBasalDuration = manualBasal.reduce((accumulator, manualBasal) => accumulator + manualBasal.duration, 0)
   const automatedBasals = basalData.filter(automatedBasal => automatedBasal.subType === 'automated')
   const automatedBasalDuration = automatedBasals.reduce((accumulator, automaticBasal) => accumulator + automaticBasal.duration, 0)
+  const numOfDay = (dateFilter.end - dateFilter.start) / (1000*60*60*24)
   const total = manualBasalDuration + automatedBasalDuration
 
   return {
     automatedBasalDuration,
     manualBasalDuration,
     automatedAndManualTotalDuration: Math.round(total),
-    automatedBasalInDays: (automatedBasalDuration / total) * TimeService.MS_IN_DAY,
-    manualBasalInDays: (manualBasalDuration / total) * TimeService.MS_IN_DAY
+    automatedBasalDurationPerDays: automatedBasalDuration / numOfDay,
+    manualBasalDurationPerDays: manualBasalDuration / numOfDay
   }
 }
 
