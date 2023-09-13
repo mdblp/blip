@@ -112,5 +112,7 @@ describe('Signup stepper as hcp', () => {
       })
     )
     expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })
+    const completedAccountMessage = screen.getByTestId('message-complete-account')
+    expect(completedAccountMessage).toHaveTextContent('Clicking the continue button will take you to your dashboard. You can then add your patients, and also join care teams')
   })
 })

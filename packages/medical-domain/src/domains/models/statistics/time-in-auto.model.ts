@@ -24,53 +24,10 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import React, { type FunctionComponent } from 'react'
-import { t } from 'i18next'
-import { type ParameterConfig, Unit } from 'medical-domain'
-import { InsulinStat } from 'dumb'
-import { convertToPercentage } from './statistics.util'
-
-interface TotalInsulinStatProps {
-  basal: number
-  bolus: number
-  totalInsulin: number
-  dailyDose: number
-  weight?: ParameterConfig
-}
-
-export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
-  const {
-    basal,
-    bolus,
-    totalInsulin,
-    dailyDose,
-    weight
-  } = props
-
-  const data = [
-    {
-      id: 'bolus',
-      value: convertToPercentage(bolus),
-      valueString: String(convertToPercentage(bolus)),
-      units: Unit.InsulinUnit,
-      title: t('Bolus')
-    },
-    {
-      id: 'basal',
-      value: convertToPercentage(basal),
-      valueString: String(convertToPercentage(basal)),
-      units: Unit.InsulinUnit,
-      title: t('Basal')
-    }
-  ]
-  const weightValue = !weight ? '--' : +weight.value
-  return (
-    <InsulinStat
-      data={data}
-      totalInsulin={convertToPercentage(totalInsulin)}
-      weight={weightValue}
-      dailyDose={dailyDose}
-    />
-  )
+export interface TimeInAutoStatistics {
+  automatedAndManualTotalDuration: number
+  automatedBasalDuration: number
+  automatedBasalInDays: number
+  manualBasalDuration: number
+  manualBasalInDays: number
 }

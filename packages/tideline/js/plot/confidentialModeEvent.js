@@ -21,7 +21,7 @@ import lockIcon from 'lock.svg'
 import utils from './util/utils'
 
 /**
- * @typedef {import("../tidelinedata").default} TidelineData
+ * @typedef {import("../tidelinedata").default} MedicalDataService
  * @typedef {import("../tidelinedata").Datum} Datum
  * @typedef {import("../pool").default} Pool
  */
@@ -29,7 +29,7 @@ import utils from './util/utils'
 /**
  *
  * @param {Pool} pool
- * @param {{ tidelineData: TidelineData }} opts
+ * @param {{ tidelineData: MedicalDataService }} opts
  * @returns
  */
 function plotConfidentialModeEvent(pool, opts) {
