@@ -40,7 +40,6 @@ interface LoopModePercentageDetailProps {
 export const LoopModePercentageDetail: FunctionComponent<LoopModePercentageDetailProps> = (props) => {
   const { className, percentage, transform, value } = props
   const { t } = useTranslation('main')
-
   const isPercentageValid = !Number.isNaN(percentage)
 
   return (
