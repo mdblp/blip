@@ -20,7 +20,7 @@ import utils from './util/utils'
 import drawPhysicalActivity from './util/drawphysicalactivity'
 
 /**
- * @typedef {import("../tidelinedata").default} TidelineData
+ * @typedef {import("../tidelinedata").default} MedicalDataService
  * @typedef {import("../tidelinedata").Datum} Datum
  * @typedef {import("../pool").default} Pool
  */
@@ -28,7 +28,7 @@ import drawPhysicalActivity from './util/drawphysicalactivity'
 /**
  *
  * @param {Pool} pool
- * @param {{ tidelineData: TidelineData}} opts
+ * @param {{ tidelineData: MedicalDataService}} opts
  */
 function plotPhysicalActivity(pool, opts) {
   return function physicalActivityEvent(selection) {
