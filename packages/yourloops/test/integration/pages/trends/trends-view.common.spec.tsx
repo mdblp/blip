@@ -31,7 +31,6 @@ import {
   checkRangeSelection,
   checkSMBGTrendsStatsWidgetsTooltips,
   checkTrendsLayout,
-  checkTrendsStatsWidgetsTooltips,
   checkTrendsTidelineContainerTooltips,
   checkTrendsTimeInRangeStatsWidgets,
   GMI_TOOLTIP
@@ -44,7 +43,6 @@ import {
   checkGlucoseManagementIndicator,
   checkReadingsInRangeStats,
   checkReadingsInRangeStatsWidgets,
-  checkSensorUsage,
   checkStandardDeviationStatWidget,
   checkStatTooltip,
   checkTimeInRangeStatsTitle
@@ -55,6 +53,7 @@ import { patient2AsTeamMember } from '../../data/patient.api.data'
 import { buildHba1cData } from '../../data/data-api.data'
 import { mockWindowResizer } from '../../mock/window-resizer.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
+import { testTrendsDataVisualisationForPatient } from '../../use-cases/patient-data-visualisation'
 
 describe('Trends view for anyone', () => {
   beforeEach(() => {
@@ -70,18 +69,10 @@ describe('Trends view for anyone', () => {
       await waitFor(() => {
         expect(router.state.location.pathname).toEqual('/trends')
       })
-      const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-      expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily declared carbs69gMeal carbs42gRescue carbs28gAvg. Daily estimated carbs14g')
 
-      // Check the tooltips
+      await testTrendsDataVisualisationForPatient()
+
       await checkTrendsTidelineContainerTooltips()
-      await checkTrendsStatsWidgetsTooltips()
-
-      // Check the widget
-      await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL183')
-      await checkStandardDeviationStatWidget('Standard Deviation (169-197)mg/dL14')
-      await checkSensorUsage('Sensor Usage0.1%')
-      await checkCoefficientOfVariationStatWidget('CV (CGM)10%')
       await checkRangeSelection()
       await checkDaysSelection()
 
