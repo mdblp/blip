@@ -35,7 +35,6 @@
     "test-lambda": "bash test-lambda.sh",
     "test-locales": "mocha --recursive test/locales",
     "test-medical-domain": "npm run test -w medical-domain",
-    "test-sundial": "npm run test -w sundial",
     "test-tideline": "npm run test -w tideline",
     "test-tideline-debug": "npm run test-debug -w tideline",
     "test-yourloops": "npm run test-yourloops-integration && npm run test-yourloops-unit",
