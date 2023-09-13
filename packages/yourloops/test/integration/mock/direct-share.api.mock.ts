@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,9 +26,28 @@
  */
 
 import DirectShareApi from '../../../lib/share/direct-share.api'
+import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
+import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 
 export const addDirectShareMock = jest.spyOn(DirectShareApi, 'addDirectShare').mockResolvedValue(undefined)
 export const removeDirectShareMock = jest.spyOn(DirectShareApi, 'removeDirectShare').mockResolvedValue(undefined)
+
+export const mockCaregiverUser = {
+  username: 'caregiver@mail.com',
+  role: UserRole.Caregiver,
+  userid: 'userid',
+  profile: {
+    firstName: 'Caregiver',
+    lastName: 'User',
+    fullName: 'Caregiver User',
+    email: 'caregiver@mail.com'
+  }
+}
 export const mockDirectShareApi = () => {
-  jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValue([])
+  jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValue([
+    { status: UserInviteStatus.Accepted, user: mockCaregiverUser }
+  ])
+
+  jest.spyOn(DirectShareApi, 'addDirectShare').mockResolvedValue()
+  jest.spyOn(DirectShareApi, 'removeDirectShare').mockResolvedValue()
 }

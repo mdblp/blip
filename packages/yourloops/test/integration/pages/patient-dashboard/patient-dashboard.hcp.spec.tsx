@@ -61,7 +61,8 @@ import {
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationTwoWeeksOldData,
   testDashboardDataVisualisationSixteenDaysOldData,
-  testEmptyMedicalFilesWidgetForHcp, testPatientNavBarForHcp,
+  testEmptyMedicalFilesWidgetForHcp,
+  testPatientNavBarForHcp,
   testSwitchPatientCorrectDataDisplay
 } from '../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'

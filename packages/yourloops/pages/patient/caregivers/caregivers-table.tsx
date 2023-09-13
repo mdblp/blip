@@ -97,7 +97,7 @@ function compareUserShare(orderBy: SortFields, order: SortDirection, a: ShareUse
   return value
 }
 
-function CaregiverTable(props: CaregiverTableProps): JSX.Element {
+function CaregiversTable(props: CaregiverTableProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const { classes } = tableStyles()
   const [orderBy, setOrderBy] = React.useState<SortFields>(SortFields.lastname)
@@ -130,11 +130,12 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
   const tableRows = props.caregivers.map((caregiver: ShareUser) => {
     const user = caregiver.user
     const userId = user.userid
+    const userEmail = user.username
     const isPending = caregiver.status === UserInviteStatus.Pending
 
     const userToRemove = {
       id: userId,
-      email: user.username,
+      email: userEmail,
       fullName: `${getUserFirstName(user)} ${getUserLastName(user)}`
     }
 
@@ -149,7 +150,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
           key={userId}
           id={`patient-caregivers-table-row-${userId}`}
           data-userid={userId}
-          data-testid={`patient-caregivers-table-row-${userId}`}
+          data-testid={`patient-caregivers-table-row-${userEmail}`}
           data-status={caregiver.status}
         >
           <TableCell id={`patient-caregivers-table-row-${userId}-status`}>
@@ -176,7 +177,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
             <IconActionButton
               icon={<PersonRemoveIcon />}
               id={`patient-caregivers-table-row-${userId}-button-remove`}
-              aria-label={`${t('remove-caregiver')}-${userId}`}
+              aria-label={`${t('remove-caregiver')}-${userEmail}`}
               onClick={onClickRemoveCaregiver}
               tooltip={t('remove-caregiver')} />
           </TableCell>
@@ -193,7 +194,7 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
   })
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} data-testid="patient-caregivers-list">
       <Table id="patient-caregivers-table" aria-label={t('aria-table-list-caregivers')} stickyHeader>
         <TableHead id="patient-caregivers-table-header">
           <TableRow id="patient-caregivers-table-header-row" className={classes.tableRowHeader}>
@@ -228,4 +229,4 @@ function CaregiverTable(props: CaregiverTableProps): JSX.Element {
   )
 }
 
-export default CaregiverTable
+export default CaregiversTable

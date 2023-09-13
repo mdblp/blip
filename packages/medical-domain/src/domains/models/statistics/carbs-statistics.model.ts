@@ -26,12 +26,7 @@
  */
 
 export interface CarbsStatistics {
-  numDays: number
-  wizardCarbs: number
-  foodCarbs: number
-  totalCarbs: number
   totalCarbsPerDay: number
   foodCarbsPerDay: number
-  wizardCarbsPerDay: number
   totalEntriesCarbWithRescueCarbs: number
 }
