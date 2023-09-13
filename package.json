@@ -90,7 +90,7 @@
     "@types/react-dom": "^18.2.6",
     "@types/react-router-dom": "^5.3.3",
     "@types/sinon": "^10.0.15",
-    "@types/uuid": "^9.0.2",
+    "@types/uuid": "^9.0.3",
     "@types/voilab-pdf-table": "^0.5.1",
     "@typescript-eslint/eslint-plugin": "^6.5.0",
     "@typescript-eslint/parser": "^6.5.0",
