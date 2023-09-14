@@ -28,7 +28,7 @@
 import {
   checkPatientStatistics,
   checkPatientStatisticsNoData,
-  checkPatientStatisticsWithTwoWeeksOldData
+  checkPatientStatisticsWithTwoWeeksOldData, checkTrendsPatientStatistics
 } from '../assert/patient-statistics.assert'
 import { checkPatientDashboardLayout, type PatientDashboardLayoutParams } from '../assert/layout.assert'
 import {
@@ -47,6 +47,7 @@ import {
   checkEmptyMedicalFilesWidgetForPatient
 } from '../assert/medical-widget.assert'
 import { checkMonitoringAlertsCard, checkMonitoringAlertsCardNoData } from '../assert/monitoring-alerts.assert'
+import { checkTrendsStatsWidgetsTooltips } from '../assert/trends.assert'
 
 export const testDashboardDataVisualisationForHcp = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
@@ -86,6 +87,10 @@ export const testDashboardDataVisualisationPrivateTeamNoData = async (patientDas
   await checkDeviceUsageWidgetNoData()
 }
 
+export const testTrendDataVisualisationForHCP = async () => {
+  await checkTrendsPatientStatistics()
+  await checkTrendsStatsWidgetsTooltips()
+}
 export const testPatientNavBarForHcp = async () => {
   await checkPatientDropdown(patient1Info, patient2Info)
 }

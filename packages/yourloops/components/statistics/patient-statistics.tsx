@@ -119,11 +119,10 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter, medicalData.pumpSettings)
 
   const {
-    automatedBasalDuration,
-    manualBasalDuration,
-    manualBasalDurationPerDays,
-    automatedBasalDurationPerDays,
-    automatedAndManualTotalDuration
+    automatedBasal,
+    manualBasal,
+    manualPercentage,
+    automatedPercentage
   } = BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(medicalData.basal, dateFilter)
 
 
@@ -139,8 +138,8 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
         />
         {isTrendsView &&
           <>
-            <Divider className={classes.divider} />
-            <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage} />
+            <Divider className={classes.divider}/>
+            <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage}/>
           </>
         }
       </Box>
@@ -151,7 +150,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           totalCarbsPerDay={Math.round(totalCarbsPerDay)}
           foodCarbsPerDay={Math.round(foodCarbsPerDay)}
         />
-        <Divider className={classes.divider} />
+        <Divider className={classes.divider}/>
         <TotalInsulinStat
           basal={basal}
           bolus={bolus}
@@ -162,11 +161,10 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
       </Box>
       <Box className={classes.widgetGroup}>
         <LoopModeStat
-            automatedBasalDuration={automatedBasalDuration}
-            manualBasalDuration={manualBasalDuration}
-            totalBasalDuration={automatedAndManualTotalDuration}
-            automatedBasals={automatedBasalDurationPerDays}
-            manualBasals={manualBasalDurationPerDays}
+          automatedBasal={automatedBasal}
+          manualBasal={manualBasal}
+          manualPercentage={manualPercentage}
+          automatedPercentage={automatedPercentage}
         />
       </Box>
       <Box className={classes.widgetGroup}>
@@ -175,7 +173,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           bgPrefs={bgPrefs}
           bgType={bgType}
         />
-        <Divider className={classes.divider} />
+        <Divider className={classes.divider}/>
         <StandardDeviationStat
           total={standardDeviationTotal}
           bgType={bgType}
@@ -183,12 +181,12 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           averageGlucose={averageGlucose}
           standardDeviation={standardDeviation}
         />
-        <Divider className={classes.divider} />
-        <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
+        <Divider className={classes.divider}/>
+        <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType}/>
         {!isDailyView &&
           <>
-            <Divider className={classes.divider} />
-            <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
+            <Divider className={classes.divider}/>
+            <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator}/>
           </>
         }
       </Box>
