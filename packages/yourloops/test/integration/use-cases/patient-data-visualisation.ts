@@ -107,8 +107,7 @@ export const testSwitchPatientCorrectDataDisplay = async () => {
   await checkPatientSwitch()
 }
 
-export const testTrendsDataVisualisationForPatient = async () => {
-
+export const testTrendsDataVisualisationForHCP = async () => {
   await checkTrendsStatsWidgetsTooltips()
   await checkPatientStatisticsTrendsView()
 }
