@@ -41,22 +41,22 @@ describe('Time In Auto Data', () => {
   it('should return the time spent in automated and manual basal delivery when viewing 1 day', () => {
     const basalData = buildBasalsData(basalsData)
     expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, dateFilterOneDay)).toEqual({
-      automatedBasalDuration: MS_IN_HOUR,
-      manualBasalDuration: MS_IN_HOUR * 2,
-      automatedAndManualTotalDuration: MS_IN_HOUR + MS_IN_HOUR * 2,
-      automatedBasalDurationPerDays: 3600000,
-      manualBasalDurationPerDays: 7200000
-    })
+      automatedBasal: MS_IN_HOUR,
+      automatedPercentage: 33,
+      manualBasal: 7200000,
+      manualPercentage: 67,
+
+
+  })
   })
 
   it('should return the avg daily time spent in automated and manual basal delivery when viewing more than 1 day', () => {
     const basalData = buildBasalsData(basalsData)
     expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, dateFilterTwoDays)).toEqual({
-      automatedBasalDuration: MS_IN_HOUR,
-      manualBasalDuration: MS_IN_HOUR * 4,
-      automatedAndManualTotalDuration: MS_IN_HOUR + MS_IN_HOUR * 4,
-      manualBasalDurationPerDays: 7200000,
-      automatedBasalDurationPerDays: 1800000
+      automatedBasal: 1800000,
+      automatedPercentage: 20,
+      manualBasal: 7200000,
+      manualPercentage: 80
     })
   })
 })
