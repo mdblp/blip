@@ -221,3 +221,7 @@ export function getNumberOfDays(start: number, end: number, daysFilter?: WeekDay
     return daysFilter[weekDay] ? count + 1 : count
   }, 0)
 }
+
+export function applyOffset(timestamp: string, offset: number): Date {
+  return moment.utc(timestamp).add(offset, 'minutes').toDate()
+}

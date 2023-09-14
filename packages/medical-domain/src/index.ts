@@ -83,13 +83,13 @@ import {
 import type BasicData from './domains/repositories/medical/basics-data.service'
 import { CarbsStatisticsService } from './domains/repositories/statistics/carbs-statistics.service'
 import { BasalBolusStatisticsService } from './domains/repositories/statistics/insulin-statistics.service'
+import { applyOffset, MS_IN_DAY } from './domains/repositories/time/time.service'
 import { HoursRange } from './domains/models/statistics/satistics.model'
 import { RescueCarbsAveragePerRange } from './domains/models/statistics/carbs-statistics.model'
 import { ManualBolusAveragePerRange } from './domains/models/statistics/basal-bolus-statistics.model'
-import { MS_IN_DAY } from './domains/repositories/time/time.service'
 
 export {
-  MS_IN_DAY,
+  applyOffset,
   RescueCarbsAveragePerRange,
   ManualBolusAveragePerRange,
   HoursRange,
@@ -147,6 +147,7 @@ export {
   type ParametersChange,
   type PumpSettingsParameter,
   ChangeType,
-  BasalBolusStatisticsService
+  BasalBolusStatisticsService,
+  MS_IN_DAY
 }
 export default MedicalDataService
