@@ -20,14 +20,14 @@ import _ from 'lodash'
 import legendDefs from './plot/util/legend'
 
 /**
- * @typedef {import('./tidelinedata').default} TidelineData
+ * @typedef {import('./tidelinedata').default} MedicalDataService
  * @typedef {import('./tidelinedata').Datum} Datum
  * @typedef {import("./oneday").OneDay} OneDay
  * @typedef {{ type: string; name: string; plot: function; pan: boolean; data: Datum[]; }} PlotType
  * @typedef { import('d3').Axis } Axis
  * @typedef { import('d3').ScaleContinuousNumeric<number, number> } ScaleContinuousNumeric
  *
- * @typedef {(tidelineData: TidelineData, pool: Pool) => { axis: Axis, scale: ScaleContinuousNumeric }} AxisScaleFunc
+ * @typedef {(tidelineData: MedicalDataService, pool: Pool) => { axis: Axis, scale: ScaleContinuousNumeric }} AxisScaleFunc
  * @typedef {{ spans: { text: string; className: string; }[]; baseline: number}[]} Labels
  * @typedef {{ name: string; baseline: number }[]} Legends
  */

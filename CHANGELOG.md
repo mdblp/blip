@@ -3,11 +3,18 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.0.5-beta - 2023-07-12
-### Added
+### Changed
 - YLP-2484 Remove level column in device change parameter history
+- YLP-2572 Prevent patient from adding the same caregiver to their list twice
+
+### Fixed
+- YLP-2438 Inconsistency in the daily view between carbs displayed on the graph and Total carbs in the statistics panel
 
 ### Engineering use
+- YLP-2573 Create a dedicated message for the caregiver when the account creation is complete
+- YLP-2594 Handle release branches in GitHub CI workflow
 - YLP-2595 Update deprecated GitHub Actions to Node 16
+- YLP-2596 Add visual regression tests
 
 ## 3.0.4 - 2023-08-23
 ### Added

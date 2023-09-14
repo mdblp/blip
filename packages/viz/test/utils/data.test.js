@@ -1166,44 +1166,6 @@ describe('DataUtil', () => {
     })
   })
 
-  describe('getTimeInAutoData', () => {
-    it('should return the time spent in automated and manual basal delivery when viewing 1 day', () => {
-      dataUtil.endpoints = dayEndpoints
-      expect(dataUtil.getTimeInAutoData()).to.eql({
-        automated: MS_IN_HOUR,
-        manual: MS_IN_HOUR * 2
-      })
-    })
-
-    it('should return the avg daily time spent in automated and manual basal delivery when viewing more than 1 day', () => {
-      dataUtil.endpoints = twoDayEndpoints
-      expect(dataUtil.getTimeInAutoData()).to.eql({
-        automated: TimeService.MS_IN_DAY * (1 / 3),
-        manual: TimeService.MS_IN_DAY * (2 / 3)
-      })
-    })
-
-    context('basal delivery overlaps endpoints', () => {
-      it('should include the portion of delivery of a basal datum that overlaps the start endpoint', () => {
-        dataUtil.endpoints = dayEndpoints
-        dataUtil.addData([basalDatumOverlappingStart])
-        expect(dataUtil.getTimeInAutoData()).to.eql({
-          automated: MS_IN_HOUR * 2,
-          manual: MS_IN_HOUR * 2
-        })
-      })
-
-      it('should include the portion of delivery of a basal datum that overlaps the start endpoint', () => {
-        dataUtil.endpoints = dayEndpoints
-        dataUtil.addData([basalDatumOverlappingEnd])
-        expect(dataUtil.getTimeInAutoData()).to.eql({
-          automated: MS_IN_HOUR * 3,
-          manual: MS_IN_HOUR * 2
-        })
-      })
-    })
-  })
-
   describe('getTimeInRangeData', () => {
     it('should return the time in range data when viewing 1 day', () => {
       dataUtil.endpoints = dayEndpoints

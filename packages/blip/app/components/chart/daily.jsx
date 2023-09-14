@@ -21,13 +21,9 @@ import bows from 'bows'
 import moment from 'moment-timezone'
 import ReactResizeDetector from 'react-resize-detector'
 import i18next from 'i18next'
-
 import { chartDailyFactory } from 'tideline'
-import { DatumType, TimeService } from 'medical-domain'
-
+import { TimeService } from 'medical-domain'
 import { components as vizComponents } from 'tidepool-viz'
-
-import { BG_DATA_TYPES } from '../../core/constants'
 import Footer from './footer'
 import {
   BloodGlucoseTooltip,
@@ -40,9 +36,7 @@ import {
 } from 'dumb'
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
-import { ChartTypes } from 'yourloops/enum/chart-type.enum'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
-import Stats from './stats'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import metrics from 'yourloops/lib/metrics'
 
@@ -263,8 +257,6 @@ class Daily extends React.Component {
   static propTypes = {
     patient: PropTypes.object.isRequired,
     bgPrefs: PropTypes.object.isRequired,
-    bgSource: PropTypes.oneOf(BG_DATA_TYPES),
-    dataUtil: PropTypes.object,
     timePrefs: PropTypes.object.isRequired,
     epochLocation: PropTypes.number.isRequired,
     msRange: PropTypes.number.isRequired,
@@ -343,7 +335,7 @@ class Daily extends React.Component {
 
     return (
       <div id="tidelineMain" className="daily">
-        <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
+        <Box data-testid="daily-view-content" className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
           <Box display="flex">
             {this.state.chartMounted &&
               <DailyDatePicker
@@ -405,17 +397,7 @@ class Daily extends React.Component {
                   medicalData={tidelineData.medicalData}
                   bgPrefs={this.props.bgPrefs}
                   dateFilter={dateFilter}
-                >
-                  <Stats
-                    bgPrefs={this.props.bgPrefs}
-                    bgSource={DatumType.Cbg}
-                    chartPrefs={null}
-                    chartType={ChartTypes.Daily}
-                    dataUtil={this.props.dataUtil}
-                    endpoints={endpoints}
-                    loading={loading}
-                  />
-                </PatientStatistics>
+                />
               </div>
             </div>
           </Box>
@@ -675,7 +657,7 @@ class Daily extends React.Component {
 
   /**
    * Update the daily view by adding the new message
-   * @param {object} message A nurseshark processed message
+   * @param {object} message A processed message
    * @return {Promise<boolean>} true if the message was added
    */
   createMessage = (message) => {
@@ -684,7 +666,7 @@ class Daily extends React.Component {
 
   /**
    * Update the daily view message
-   * @param {object} message A nurseshark processed message
+   * @param {object} message A processed message
    * @return {boolean} true if the message was correctly updated
    */
   editMessage = (message) => {

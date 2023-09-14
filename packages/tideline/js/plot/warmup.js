@@ -32,7 +32,7 @@ import warmUpDexcom from '../../../../branding/warmup/warmup-dexcom.svg'
 import utils from './util/utils'
 
 /**
- * @typedef {import("../tidelinedata").default} TidelineData
+ * @typedef {import("../tidelinedata").default} MedicalDataService
  * @typedef {import("../tidelinedata").Datum} Datum
  * @typedef {import("../pool").default} Pool
  */
@@ -40,7 +40,7 @@ import utils from './util/utils'
 /**
  *
  * @param {Pool} pool
- * @param {{ onParameterHover: (p: any) => void, onParameterOut: () => void, tidelineData: TidelineData }} opts
+ * @param {{ onParameterHover: (p: any) => void, onParameterOut: () => void, tidelineData: MedicalDataService }} opts
  * @returns {(data: Datum[]) => void}
  */
 function plotWarmUp(pool, opts) {

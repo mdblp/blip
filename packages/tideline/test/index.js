@@ -22,7 +22,6 @@ import moment from 'moment-timezone'
 import './format.test'
 import './datetime.test'
 import './constants.test'
-import './tidelinedata.test'
 import './basalutil.test'
 import './categorize.test'
 
@@ -37,7 +36,6 @@ import './device.test'
 /* plugins/ */
 import './basics_classifiers.test'
 import './basics_datamunger.test'
-import './nurseshark.test'
 
 import './blip/components/logic/actions.test.js'
 import './blip/components/sitechange/Selector.test.js'

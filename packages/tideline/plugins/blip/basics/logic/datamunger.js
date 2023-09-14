@@ -18,15 +18,13 @@
 import _ from 'lodash'
 import crossfilter from 'crossfilter2'
 
-import { datetimeWrapper } from 'sundial'
-
-import { MGDL_UNITS } from '../../../../js/data/util/constants'
 import { getLatestPumpUpload } from '../../../../js/data/util/device'
 
 import classifiersMkr from './classifiers'
 import * as constants from './constants'
 import basicsActions from './actions'
 import togglableState from '../TogglableState'
+import { applyOffset, MGDL_UNITS } from 'medical-domain'
 
 function dataMunger(bgClasses, bgUnits = MGDL_UNITS) {
   const classifiers = classifiersMkr(bgClasses, bgUnits)
@@ -135,7 +133,7 @@ function dataMunger(bgClasses, bgUnits = MGDL_UNITS) {
     _buildCrossfilterUtils: function(dataObj, type) {
 
       function getLocalDate(d) {
-        return datetimeWrapper().applyOffset(d.normalTime, d.displayOffset).toISOString().slice(0,10)
+        return applyOffset(d.normalTime, d.displayOffset).toISOString().slice(0,10)
       }
 
       function reduceAddMaker(classifier) {

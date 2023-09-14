@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type CBGPercentageBarProps } from './cbg-percentage-bar'
 import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
@@ -62,7 +62,7 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
   const { t } = useTranslation('main')
   const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
 
-  const defaultTitle = useMemo<string>(() => {
+  const getDefaultTitle = useCallback((): string => {
     switch (type) {
       case CBGStatType.TimeInRange:
         return days > 1 ? t('Avg. Daily Time In Range') : t('Time In Range')
@@ -72,7 +72,11 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
     }
   }, [days, t, type])
 
-  const [title, setTitle] = useState(defaultTitle)
+  const [title, setTitle] = useState(() => getDefaultTitle())
+
+  useEffect(() => {
+    setTitle(getDefaultTitle())
+  }, [getDefaultTitle])
 
   const annotations = useMemo<string[]>(() => {
     const annotations = []
@@ -114,7 +118,7 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
   }
 
   const onMouseLeave = (): void => {
-    setTitle(defaultTitle)
+    setTitle(getDefaultTitle())
     setHoveredStatId(null)
   }
 

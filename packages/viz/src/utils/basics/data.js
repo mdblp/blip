@@ -17,7 +17,6 @@
 
 import _ from 'lodash'
 import moment from 'moment-timezone'
-import { datetimeWrapper } from 'sundial'
 import crossfilter from 'crossfilter2'
 import i18next from 'i18next'
 
@@ -45,6 +44,7 @@ import {
   DIABELOOP,
   getPumpVocabularies
 } from '../constants'
+import { applyOffset } from 'medical-domain'
 
 const t = i18next.t.bind(i18next)
 
@@ -214,7 +214,7 @@ function buildCrossfilterUtils(dataObj, type, bgPrefs) {
   const classifiers = generateClassifiers(bgPrefs)
 
   const getLocalDate = (datum) => (
-    datetimeWrapper().applyOffset(datum.normalTime, datum.displayOffset).toISOString().slice(0, 10)
+    applyOffset(datum.normalTime, datum.displayOffset).toISOString().slice(0, 10)
   )
 
   const reduceAddMaker = (classifier) => {

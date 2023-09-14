@@ -25,8 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import { type BgPrefs, CBGPercentageBarChart, CBGStatType, TotalCarbsStat } from 'dumb'
+import React, { type FunctionComponent } from 'react'
+import { type BgPrefs, CBGPercentageBarChart, CBGStatType, LoopModeStat, TotalCarbsStat } from 'dumb'
+import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
+import { SensorUsageStat } from './sensor-usage-stat'
 import {
   BasalBolusStatisticsService,
   type BgType,
@@ -35,11 +38,9 @@ import {
   DatumType,
   GlycemiaStatisticsService,
   type MedicalData,
-  TimeService
+  TimeService,
+  MS_IN_DAY
 } from 'medical-domain'
-import Box from '@mui/material/Box'
-import Divider from '@mui/material/Divider'
-import { SensorUsageStat } from './sensor-usage-stat'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
@@ -68,8 +69,8 @@ const useStyles = makeStyles()((theme) => ({
   }
 }))
 
-export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
-  const { medicalData, bgPrefs, dateFilter, children } = props
+export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (props) => {
+  const { medicalData, bgPrefs, dateFilter } = props
   const { classes } = useStyles()
   const location = useLocation()
 
@@ -81,6 +82,7 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
   const isTrendsView = location.pathname.includes('trends')
   const isDailyView = location.pathname.includes('daily')
+  const isDashboardPage = location.pathname.includes('dashboard')
 
   const {
     standardDeviation,
@@ -117,6 +119,17 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     totalInsulin: dailyDose
   } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter, medicalData.pumpSettings)
 
+  const {
+    automatedBasalDuration,
+    manualBasalDuration,
+    manualBasalInDays,
+    automatedBasalInDays,
+    automatedAndManualTotalDuration
+  } = BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(medicalData.basal, dateFilter)
+
+  const automatedBasals = isDashboardPage ? automatedBasalInDays : automatedBasalDuration
+  const manualBasals = isDashboardPage ? manualBasalInDays : manualBasalDuration
+
   return (
     <Box data-testid="patient-statistics">
       <Box className={classes.widgetGroup}>
@@ -150,11 +163,15 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
           dailyDose={dailyDose}
         />
       </Box>
-
       <Box className={classes.widgetGroup}>
-        {children}
+        <LoopModeStat
+            automatedBasalDuration={automatedBasalDuration}
+            manualBasalDuration={manualBasalDuration}
+            totalBasalDuration={automatedAndManualTotalDuration}
+            automatedBasals={automatedBasals}
+            manualBasals={manualBasals}
+        />
       </Box>
-
       <Box className={classes.widgetGroup}>
         <AverageGlucoseStat
           averageGlucose={averageGlucose}

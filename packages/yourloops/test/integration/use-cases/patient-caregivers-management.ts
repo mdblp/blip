@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module.exports = {
-  plugins: [
-    require('autoprefixer'),
-    require('postcss-calc'),
-    require('postcss-custom-properties')
-  ]
+import {
+  checkAddCaregiverCancel,
+  checkAddCaregiverErrors,
+  checkAddCaregiverSuccess,
+  checkCaregiversListLayout,
+  checkRemoveCaregiverCancel,
+  checkRemoveCaregiverSuccess
+} from '../assert/caregivers-list.assert'
+
+export const testCaregiversVisualisation = async () => {
+  const newCaregiverEmail = 'new-caregiver@mail.com'
+
+  await checkCaregiversListLayout()
+  await checkAddCaregiverCancel()
+  await checkAddCaregiverErrors()
+  await checkAddCaregiverSuccess(newCaregiverEmail)
+  await checkRemoveCaregiverCancel(newCaregiverEmail)
+  await checkRemoveCaregiverSuccess(newCaregiverEmail)
 }
