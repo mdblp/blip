@@ -38,6 +38,7 @@ import { getWeekDaysFilter } from './statistics.utils'
 import type PumpSettings from '../../models/medical/datum/pump-settings.model'
 import { type ParameterConfig } from '../../models/medical/datum/pump-settings.model'
 import { type TimeInAutoStatistics } from '../../models/statistics/time-in-auto.model'
+import { MS_IN_DAY } from '../time/time.service'
 
 function resamplingDuration(basals: Basal[], start: number, end: number): Basal[] {
   return basals.map(basal => {
@@ -103,7 +104,7 @@ function getAutomatedAndManualBasalDuration(basalsData: Basal[], dateFilter: Dat
   const manualBasalDuration = manualBasal.reduce((accumulator, manualBasal) => accumulator + manualBasal.duration, 0)
   const automatedBasals = basalData.filter(automatedBasal => automatedBasal.subType === 'automated')
   const automatedBasalDuration = automatedBasals.reduce((accumulator, automaticBasal) => accumulator + automaticBasal.duration, 0)
-  const numOfDay = (dateFilter.end - dateFilter.start) / (1000*60*60*24)
+  const numOfDay = (dateFilter.end - dateFilter.start) / MS_IN_DAY
   const automatedBasalPerDay = automatedBasalDuration / numOfDay
   const manualBasalPerDay = manualBasalDuration / numOfDay
   const total = automatedBasalPerDay + manualBasalPerDay
