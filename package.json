@@ -84,7 +84,7 @@
     "@types/lodash": "^4.14.195",
     "@types/mini-css-extract-plugin": "^2.3.0",
     "@types/mocha": "^10.0.1",
-    "@types/pdfkit": "^0.12.10",
+    "@types/pdfkit": "^0.12.11",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "@types/react-router-dom": "^5.3.3",
