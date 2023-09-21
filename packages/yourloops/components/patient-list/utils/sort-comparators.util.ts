@@ -29,6 +29,9 @@ import { type GridComparatorFn } from '@mui/x-data-grid'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { getUserName } from '../../../lib/auth/user.util'
 import moment from 'moment-timezone'
+import i18next from 'i18next'
+
+const t = i18next.t.bind(i18next)
 
 interface PatientSortComparator extends GridComparatorFn<Patient> {
   (patient1: Patient, patient2: Patient): number
@@ -97,4 +100,18 @@ export const sortByMonitoringAlertsCount: PatientSortComparator = (patient1: Pat
     return 1
   }
   return 0
+}
+
+export const sortByLastDataUpdate: SortComparator = (patient1: string, patient2: string): number => {
+  const noDataLabel = t('N/A')
+  if (patient2 === noDataLabel) {
+    return 1
+  }
+  if (patient1 === noDataLabel) {
+    return -1
+  }
+  const lastDataUpdateAsDate1 = new Date(patient1).getTime()
+  const lastDataUpdateAsDate2 = new Date(patient2).getTime()
+
+  return lastDataUpdateAsDate1 - lastDataUpdateAsDate2
 }

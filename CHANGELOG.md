@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Fixed
 - YLP-2438 Inconsistency in the daily view between carbs displayed on the graph and Total carbs in the statistics panel
+- YLP-2627 "Last data update" column is not sorting properly
 
 ### Engineering use
 - YLP-2573 Create a dedicated message for the caregiver when the account creation is complete
