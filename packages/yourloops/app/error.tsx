@@ -69,17 +69,17 @@ function OnError(props: OnErrorProps): JSX.Element {
   const errorId = uuidv4()
   const { classes: style } = classes()
   const errorMessage = props.error?.message ?? 'n/a'
-  const error = props.error ? `Error: ${errorMessage}\nStack: ${props.error.stack}` : 'n/a'
-  const info = `${(props.event as string).toString()}\nSource: ${props.source}:${props.lineno}:${props.colno}\n${error}`
+  const error = `Error: ${errorMessage}\nStack: ${props?.error?.stack}`
+  const completeErrorMessage = `${(props.event as string).toString()}\nSource: ${props.source}:${props.lineno}:${props.colno}\n${error}`
 
   React.useEffect(() => {
     try {
-      metrics.send('error', 'app-crash', errorMessage)
+      metrics.send('error', 'app-crash', completeErrorMessage)
       ErrorApi.sendError({
         browserName,
         browserVersion,
         date: moment(new Date()).format('DD/MM/YYYY'),
-        err: errorMessage,
+        err: completeErrorMessage,
         errorId,
         path: location.pathname
       })
@@ -122,7 +122,7 @@ function OnError(props: OnErrorProps): JSX.Element {
               multiline
               minRows={5}
               maxRows={8}
-              value={info}
+              value={completeErrorMessage}
             />
           </>
         ) : (
