@@ -55,15 +55,6 @@ const lessLoaderConfiguration = {
       }
     },
     {
-      loader: 'postcss-loader',
-      options: {
-        sourceMap: true,
-        postcssOptions: {
-          path: __dirname
-        }
-      }
-    },
-    {
       loader: 'less-loader',
       options: {
         sourceMap: true,
@@ -87,15 +78,6 @@ const cssLoaderConfiguration = {
         sourceMap: true,
         modules: {
           localIdentName
-        }
-      }
-    },
-    {
-      loader: 'postcss-loader',
-      options: {
-        sourceMap: true,
-        postcssOptions: {
-          path: __dirname
         }
       }
     }

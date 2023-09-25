@@ -338,7 +338,7 @@ class Daily extends React.Component {
 
     return (
       <div id="tidelineMain" className="daily">
-        <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
+        <Box data-testid="daily-view-content" className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
           <Box display="flex">
             {this.state.chartMounted &&
               <DailyDatePicker
@@ -677,7 +677,7 @@ class Daily extends React.Component {
 
   /**
    * Update the daily view by adding the new message
-   * @param {object} message A nurseshark processed message
+   * @param {object} message A processed message
    * @return {Promise<boolean>} true if the message was added
    */
   createMessage = (message) => {
@@ -686,7 +686,7 @@ class Daily extends React.Component {
 
   /**
    * Update the daily view message
-   * @param {object} message A nurseshark processed message
+   * @param {object} message A processed message
    * @return {boolean} true if the message was correctly updated
    */
   editMessage = (message) => {

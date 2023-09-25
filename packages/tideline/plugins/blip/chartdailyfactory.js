@@ -43,7 +43,7 @@ import plotMessage from '../../js/plot/message'
 import plotTimeChange from '../../js/plot/timechange'
 
 /**
- * @typedef {import('../../js/tidelinedata').default } TidelineData
+ * @typedef {import('../../js/tidelinedata').default } MedicalDataService
  * @typedef {import('../../js/pool').default } Pool
  */
 
@@ -51,7 +51,7 @@ import plotTimeChange from '../../js/plot/timechange'
 /**
  * Create a 'One Day' chart object that is a wrapper around Tideline components
  * @param {HTMLElement} parentElement The div parent element
- * @param {TidelineData} tidelineData
+ * @param {MedicalDataService} tidelineData
  * @param {object} options
  * @returns {function}
  */

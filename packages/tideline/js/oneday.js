@@ -19,7 +19,7 @@
  * @typedef {import('./tidelinedata').Datum} Datum
  * @typedef {{ trackMetric: (category: string, action: string, name?: string, value?: number) => void }} OneDayOptions
  * @typedef {import('./pool').default} Pool
- * @typedef {{poolGroup:SVGGElement;id:(v?:string)=>string|OneDay;options:OneDayOptions;tidelineData:TidelineData;pools:Pool[];width:(v?:number)=>number|OneDay;axisGutter:()=>number;data:(td?:TidelineData)=>Datum[]|OneDay;setAxes:()=>OneDay;filterDataForRender:(d:Datum[])=>Datum[]}} OneDay
+ * @typedef {{poolGroup:SVGGElement;id:(v?:string)=>string|OneDay;options:OneDayOptions;tidelineData:MedicalDataService;pools:Pool[];width:(v?:number)=>number|OneDay;axisGutter:()=>number;data:(td?:MedicalDataService)=>Datum[]|OneDay;setAxes:()=>OneDay;filterDataForRender:(d:Datum[])=>Datum[]}} OneDay
  */
 
 import _ from 'lodash'
@@ -73,7 +73,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   /** @type {Datum[]} The currently rendered data */
   let renderedData = []
   /**
-   * The dates (in ms) we asked data for from TidelineData.
+   * The dates (in ms) we asked data for from MedicalDataService.
    *
    * Used to know if we need to re-fetch new data from it, and
    * perform a new SVG render.
@@ -147,7 +147,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   container.annotations = null
   /** @type {d3.AxisScale<Date>} */
   container.xScale = d3.time.scale()
-  /** @type {TidelineData} */
+  /** @type {MedicalDataService} */
   container.tidelineData = null
   container.throttleTrackMetric = _.throttle(options.trackMetric, 10000)
 
@@ -702,7 +702,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     return container
   }
 
-  container.data = function(/** @type {TidelineData} */ td) {
+  container.data = function(/** @type {MedicalDataService} */ td) {
     if (td !== undefined) {
       container.tidelineData = td
     } else if (container.tidelineData === null) {
