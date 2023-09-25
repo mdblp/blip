@@ -61,17 +61,19 @@ const CATEGORIZED_ALARM_CODES = {
 const getAlarmEventType = (alarmCode: AlarmCode, alarmLevel: string): AlarmEventType => {
   const isHypoglycemiaAlarm = alarmLevel === AlarmLevel.Alarm && CATEGORIZED_ALARM_CODES.HYPOGLYCEMIA.ALARM.includes(alarmCode)
   const isHypoglycemiaAlert = alarmLevel === AlarmLevel.Alert && CATEGORIZED_ALARM_CODES.HYPOGLYCEMIA.ALERT.includes(alarmCode)
-  const isHyperglycemiaAlarm = alarmLevel === AlarmLevel.Alarm && CATEGORIZED_ALARM_CODES.HYPERGLYCEMIA.ALARM.includes(alarmCode)
-  const isHyperglycemiaAlert = alarmLevel === AlarmLevel.Alert && CATEGORIZED_ALARM_CODES.HYPERGLYCEMIA.ALERT.includes(alarmCode)
-  const isDeviceAlarm = alarmLevel === AlarmLevel.Alarm && CATEGORIZED_ALARM_CODES.DEVICE.ALARM.includes(alarmCode)
 
   if (isHypoglycemiaAlarm || isHypoglycemiaAlert) {
     return AlarmEventType.Hypoglycemia
   }
 
+  const isHyperglycemiaAlarm = alarmLevel === AlarmLevel.Alarm && CATEGORIZED_ALARM_CODES.HYPERGLYCEMIA.ALARM.includes(alarmCode)
+  const isHyperglycemiaAlert = alarmLevel === AlarmLevel.Alert && CATEGORIZED_ALARM_CODES.HYPERGLYCEMIA.ALERT.includes(alarmCode)
+
   if (isHyperglycemiaAlarm || isHyperglycemiaAlert) {
     return AlarmEventType.Hyperglycemia
   }
+
+  const isDeviceAlarm = alarmLevel === AlarmLevel.Alarm && CATEGORIZED_ALARM_CODES.DEVICE.ALARM.includes(alarmCode)
 
   if (isDeviceAlarm) {
     return AlarmEventType.Device

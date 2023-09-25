@@ -35,14 +35,13 @@ import {
   Position,
   Side
 } from '../common/tooltip/tooltip'
-import { AlarmCode, AlarmEvent, AlarmEventType, TimePrefs } from 'medical-domain'
+import { AlarmCode, AlarmEvent, AlarmEventType, AlarmLevel, TimePrefs } from 'medical-domain'
 import React, { FC } from 'react'
 import { Tooltip } from '../../../index'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { useTranslation } from 'react-i18next'
 import colors from '../../../styles/colors.css'
 import { getDateTitle } from '../../../utils/tooltip/tooltip.util';
-import { AlarmLevel } from 'medical-domain/dist/src/domains/models/medical/datum/enums/alarm-level.enum';
 import styles from './alarm-event-tooltip.css'
 
 interface AlarmEventTooltipProps {
