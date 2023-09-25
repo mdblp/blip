@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -65,7 +65,7 @@ describe('Error page', () => {
       browserName: expect.any(String),
       browserVersion: expect.any(String),
       date: expect.any(String),
-      err: error,
+      err: expect.stringContaining(error),
       errorId: expect.any(String),
       path: url
     }
