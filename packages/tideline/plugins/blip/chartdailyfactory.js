@@ -19,7 +19,7 @@ import i18next from 'i18next'
 import _ from 'lodash'
 import { EventEmitter } from 'events'
 
-import { MGDL_UNITS } from '../../js'
+import { MGDL_UNITS } from 'medical-domain'
 
 import Pool from '../../js/pool'
 import oneDay from '../../js/oneday'
