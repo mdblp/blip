@@ -51,7 +51,7 @@ import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { StandardDeviationStat } from './standard-deviation-stat'
 import { AverageGlucoseStat } from './average-glucose-stat'
 import { TotalInsulinStat } from './total-insulin-stat'
-import { MS_IN_DAY } from 'medical-domain/dist/src/domains/repositories/time/time.service'
+import { MS_IN_DAY } from 'medical-domain'
 import { makeStyles } from 'tss-react/mui'
 import { CarbsStat } from './carbs-stat'
 

@@ -83,8 +83,10 @@ import {
 import type BasicData from './domains/repositories/medical/basics-data.service'
 import { CarbsStatisticsService } from './domains/repositories/statistics/carbs-statistics.service'
 import { BasalBolusStatisticsService } from './domains/repositories/statistics/insulin-statistics.service'
+import { applyOffset, MS_IN_DAY } from './domains/repositories/time/time.service'
 
 export {
+  applyOffset,
   type Basal,
   type BaseDatum,
   type BgBounds,
@@ -139,6 +141,7 @@ export {
   type ParametersChange,
   type PumpSettingsParameter,
   ChangeType,
-  BasalBolusStatisticsService
+  BasalBolusStatisticsService,
+  MS_IN_DAY
 }
 export default MedicalDataService

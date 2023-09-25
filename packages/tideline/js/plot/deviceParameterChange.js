@@ -21,7 +21,7 @@ import picto from '../../img/parameter.png'
 import utils from './util/utils'
 
 /**
- * @typedef {import("../tidelinedata").default} TidelineData
+ * @typedef {import("../tidelinedata").default} MedicalDataService
  * @typedef {import("../tidelinedata").Datum} Datum
  * @typedef {import("../pool").default} Pool
  */
@@ -29,7 +29,7 @@ import utils from './util/utils'
 /**
  *
  * @param {Pool} pool
- * @param {{r: number, padding: number, onParameterHover: (p: any) => void, onParameterOut: () => void, tidelineData: TidelineData, xScale: (d: number) => number }} opts
+ * @param {{r: number, padding: number, onParameterHover: (p: any) => void, onParameterOut: () => void, tidelineData: MedicalDataService, xScale: (d: number) => number }} opts
  * @returns {(data: Datum[]) => void}
  */
 function plotDeviceParameterChange(pool, opts) {

@@ -19,7 +19,7 @@
  * @typedef { import('d3').ScaleLinear<number, number> } ScaleLinear
  * @typedef { import('d3').ScalePower<number, number> } ScalePower
  * @typedef { import('d3').Axis } Axis
- * @typedef { import('../../../js/tidelinedata').default } TidelineData
+ * @typedef { import('../../../js/tidelinedata').default } MedicalDataService
  * @typedef { import('../../../js/tidelinedata').Datum } Datum
  * @typedef { import('../../pool').default} Pool
  */
@@ -31,7 +31,7 @@ import { MGDL_UNITS, DEFAULT_BG_BOUNDS } from '../../data/util/constants'
 import format from '../../data/util/format'
 
 /**
- * @param {TidelineData} tidelineData
+ * @param {MedicalDataService} tidelineData
  * @param {"mg/dL" | "mmol/L"} bgUnits
  * @return {number}
  */
@@ -42,7 +42,7 @@ function getTargetBoundary(tidelineData, bgUnits = MGDL_UNITS) {
 
 /**
  * Create a d3.scale
- * @param {TidelineData} tidelineData
+ * @param {MedicalDataService} tidelineData
  * @param {Pool} pool Parent pool
  * @param {[number, number]} extent
  * @param {number} pad padding
@@ -81,7 +81,7 @@ function createScaleBG(tidelineData, pool, extent, pad) {
 }
 
 /**
- * @param {TidelineData} tidelineData
+ * @param {MedicalDataService} tidelineData
  * @param {[number, number]} extent
  * @returns {string[]} The displayed ticks
  */
@@ -107,7 +107,7 @@ function createTicksBG(tidelineData, extent) {
 
 /**
  * Create the Y-Axis SVG and scale for BG graph
- * @param {TidelineData} tidelineData
+ * @param {MedicalDataService} tidelineData
  * @param {Pool} pool Parent pool
  * @returns {{ axis: Axis, scale: ScaleLinear }}
  */
@@ -154,7 +154,7 @@ function createScaleBolus(data, pool) {
 
 /**
  * Create the Y-Axis scale for bolus & carbs graph
- * @param {TidelineData} tidelineData
+ * @param {MedicalDataService} tidelineData
  * @param {Pool} pool Parent pool
  * @returns {{ axis: Axis, scale: ScalePower }}
  */
@@ -199,7 +199,7 @@ function createScaleBasal(data, pool) {
 
 /**
  * Create the Y-Axis SVG and scale for basal graph
- * @param {TidelineData} tidelineData
+ * @param {MedicalDataService} tidelineData
  * @param {Pool} pool Parent pool
  * @returns {{ axis: Axis, scale: ScaleLinear }}
  */

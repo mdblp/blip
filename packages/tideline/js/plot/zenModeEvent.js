@@ -20,14 +20,14 @@ import _ from 'lodash'
 import utils from './util/utils'
 
 /**
- * @typedef {import("../tidelinedata").default} TidelineData
+ * @typedef {import("../tidelinedata").default} MedicalDataService
  * @typedef {import("../tidelinedata").Datum} Datum
  * @typedef {import("../pool").default} Pool
  */
 
 /**
  * @param {Pool} pool
- * @param {{ tidelineData: TidelineData, r: number, xScale: (d: number) => number }} opts
+ * @param {{ tidelineData: MedicalDataService, r: number, xScale: (d: number) => number }} opts
  * @returns
  */
 function plotZenMode(pool, opts = {}) {
