@@ -37,17 +37,17 @@ import { t } from 'i18next'
 import { ensureNumeric } from '../stats.util'
 
 interface LoopModeStatProps {
-  automatedBasal: number
-  manualBasal: number
+  automatedBasalDuration: number
+  manualBasalDuration: number
   manualPercentage: number
   automatedPercentage: number
 }
 
 const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
   const {
-    automatedBasal,
+    automatedBasalDuration,
     automatedPercentage,
-    manualBasal,
+    manualBasalDuration,
     manualPercentage
   } = props
 
@@ -81,13 +81,13 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
           className={styles.labelOnValueUnits}
           percentage={automatedPercentage}
           transform="translate(30 63)"
-          value={ensureNumeric(automatedBasal)}
+          value={ensureNumeric(automatedBasalDuration)}
         />
         <LoopModePercentageDetail
           className={styles.labelOffValueUnits}
           percentage={manualPercentage}
           transform="translate(260 63)"
-          value={ensureNumeric(manualBasal)}
+          value={ensureNumeric(manualBasalDuration)}
         />
         <LoopModeGraph automatedPercentage={automatedPercentage} manualPercentage={manualPercentage}/>
       </svg>

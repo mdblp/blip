@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 export interface TimeInAutoStatistics {
-  automatedBasal: number
-  manualBasal: number
+  automatedBasalDuration: number
+  manualBasalDuration: number
   automatedPercentage: number
   manualPercentage: number
 }

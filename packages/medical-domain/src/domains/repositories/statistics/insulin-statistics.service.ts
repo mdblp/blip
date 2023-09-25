@@ -113,8 +113,8 @@ function getAutomatedAndManualBasalDuration(basalsData: Basal[], dateFilter: Dat
 
 
   return {
-    automatedBasal: automatedBasalPerDay ,
-    manualBasal: manualBasalPerDay ,
+    automatedBasalDuration: automatedBasalPerDay ,
+    manualBasalDuration: manualBasalPerDay ,
     automatedPercentage,
     manualPercentage
 
