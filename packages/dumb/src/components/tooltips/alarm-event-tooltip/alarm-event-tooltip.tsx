@@ -35,9 +35,18 @@ import {
   Position,
   Side
 } from '../common/tooltip/tooltip'
-import { AlarmCode, AlarmEvent, AlarmEventType, AlarmLevel, TimePrefs } from 'medical-domain'
+import {
+  AlarmCode,
+  AlarmEvent,
+  AlarmEventType,
+  AlarmLevel,
+  BgUnit,
+  convertBG,
+  MGDL_UNITS,
+  TimePrefs
+} from 'medical-domain'
 import React, { FC } from 'react'
-import { Tooltip } from '../../../index'
+import { BgPrefs, Tooltip } from '../../../index'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { useTranslation } from 'react-i18next'
 import colors from '../../../styles/colors.css'
@@ -48,11 +57,24 @@ interface AlarmEventTooltipProps {
   alarmEvent: AlarmEvent
   position: Position
   side: Side
+  bgPrefs: BgPrefs
   timePrefs: TimePrefs
+  hypoglycemiaThreshold?: {
+    value: number
+    unit: BgUnit
+  }
 }
 
+const DEFAULT_UNIT = MGDL_UNITS
+const URGENT_LOW_SOON_DEFAULT_VALUE_MGDL = 55
+const HYPERGLYCEMIA_DEFAULT_VALUE_MGDL = 250
+const HYPOGLYCEMIA_DEFAULT_VALUE_MGDL = 55
+const LONG_HYPERGLYCEMIA_DEFAULT_VALUE_MGDL = 320
+const LONG_HYPOGLYCEMIA_DEFAULT_VALUE_MGDL = 60
+const NO_READINGS_HYPOGLYCEMIA_RISK_DEFAULT_VALUE_MGDL = 100
+
 export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
-  const { alarmEvent, position, side, timePrefs } = props
+  const { alarmEvent, bgPrefs, hypoglycemiaThreshold, position, side, timePrefs } = props
   const { t } = useTranslation('main')
 
   const getBorderColor = (alarmEventType: AlarmEventType): string => {
@@ -96,24 +118,77 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
     }
   }
 
-  const getContentTextByCode = (alarmCode: AlarmCode): string[] => {
+  const getConvertedValue = (value: number, requiredUnit: BgUnit, valueUnit = DEFAULT_UNIT): number => {
+    const shouldConvert = requiredUnit !== valueUnit
+    return shouldConvert ? convertBG(value, requiredUnit) : value
+  }
+
+  const getDefaultValueByCode = (alarmCode: AlarmCode): number => {
     switch (alarmCode) {
       case AlarmCode.UrgentLowSoon:
-        return [t('alert-urgent-low-soon-description'), t('alert-loop-mode-deactivated-description')]
+        return URGENT_LOW_SOON_DEFAULT_VALUE_MGDL
       case AlarmCode.Hyperglycemia:
-        return [t('alert-hyperglycemia-description'), t('alert-loop-mode-deactivated-description')]
+        return HYPERGLYCEMIA_DEFAULT_VALUE_MGDL
+      case AlarmCode.Hypoglycemia:
+        return HYPOGLYCEMIA_DEFAULT_VALUE_MGDL
+      case AlarmCode.LongHyperglycemia:
+        return LONG_HYPERGLYCEMIA_DEFAULT_VALUE_MGDL
+      case AlarmCode.LongHypoglycemia:
+        return LONG_HYPOGLYCEMIA_DEFAULT_VALUE_MGDL
+      case AlarmCode.NoReadingsHypoglycemiaRisk:
+        return NO_READINGS_HYPOGLYCEMIA_RISK_DEFAULT_VALUE_MGDL
+      default:
+        return 0
+    }
+  }
+
+  const getDefaultConvertedValue = (alarmCode: AlarmCode, unit: BgUnit): number => {
+    const defaultValue = getDefaultValueByCode(alarmCode)
+    return getConvertedValue(defaultValue, unit)
+  }
+
+  const getContentTextByCode = (alarmCode: AlarmCode): string[] => {
+    const bgUnit = bgPrefs.bgUnits
+    const defaultConvertedValue = getDefaultConvertedValue(alarmCode, bgUnit)
+
+    switch (alarmCode) {
+      case AlarmCode.UrgentLowSoon:
+        return [t('alert-urgent-low-soon-description', {
+          value: defaultConvertedValue,
+          unit: bgUnit
+        }), t('alert-loop-mode-deactivated-description')]
+      case AlarmCode.Hyperglycemia:
+        return [t('alert-hyperglycemia-description', {
+          value: defaultConvertedValue,
+          unit: bgUnit
+        }), t('alert-loop-mode-deactivated-description')]
       case AlarmCode.SensorSessionExpired:
         return [t('alarm-sensor-session-expired-description-line1'), t('alarm-sensor-session-expired-description-line2')]
       case AlarmCode.Hypoglycemia:
-        return [t('alarm-hypoglycemia-description'), t('alarm-loop-mode-deactivated-description')]
+        return [t('alarm-hypoglycemia-description', {
+          value: defaultConvertedValue,
+          unit: bgUnit
+        }), t('alarm-loop-mode-deactivated-description')]
       case AlarmCode.LongHyperglycemia:
-        return [t('alert-long-hyperglycemia-description')]
+        return [t('alert-long-hyperglycemia-description', {
+          value: defaultConvertedValue,
+          unit: bgUnit
+        })]
       case AlarmCode.NoReadingsHypoglycemiaRisk:
-        return [t('alert-no-readings-hypoglycemia-risk-description'), t('alert-loop-mode-activated-description')]
+        return [t('alert-no-readings-hypoglycemia-risk-description', {
+          value: defaultConvertedValue,
+          unit: bgUnit
+        }), t('alert-loop-mode-activated-description')]
       case AlarmCode.SuddenRiseInGlycemia:
         return [t('alert-sudden-rise-glycemia-description'), t('alert-loop-mode-activated-description')]
       case AlarmCode.LongHypoglycemia:
-        return [t('alarm-long-hypoglycemia-description'), t('alarm-loop-mode-activated-description')]
+        const hypoglycemiaThresholdValue = hypoglycemiaThreshold
+          ? getConvertedValue(hypoglycemiaThreshold.value, bgUnit, hypoglycemiaThreshold.unit)
+          : defaultConvertedValue
+        return [t('alarm-long-hypoglycemia-description', {
+          value: hypoglycemiaThresholdValue,
+          unit: bgUnit
+        }), t('alarm-loop-mode-activated-description')]
       case AlarmCode.EmptyPumpBattery:
         return [t('alarm-empty-pump-battery-description'), t('alarm-pump-cannot-deliver-insulin-description')]
       case AlarmCode.EmptyInsulinCartridge:
