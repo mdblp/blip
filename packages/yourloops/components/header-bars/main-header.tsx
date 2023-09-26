@@ -135,7 +135,7 @@ const MainHeaderNotMemoized: FC<MainHeaderProps> = (props) => {
       position="fixed"
       ref={appBarRefCallback}
     >
-      <Toolbar className={toolbar} variant="dense">
+      <Toolbar className={toolbar}>
         <Box
           display="flex"
           flexDirection="column"
