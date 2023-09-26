@@ -43,7 +43,12 @@ const availableCountries: Country[] = _.map(locales.countries, (item, key) => {
   return { code: key, name: item.name } as Country
 })
 
-let language: LanguageCodes = (localStorage.getItem('lang') || getLocale() || 'en') as LanguageCodes
+
+export const getLanguage = (): LanguageCodes => {
+  return (localStorage.getItem('lang') || getLocale() || 'en') as LanguageCodes
+}
+
+const language: LanguageCodes = getLanguage()
 
 function refreshLanguage(language: LanguageCodes): void {
   zendeskLocale(language)
@@ -87,9 +92,8 @@ async function init(options = i18nOptions): Promise<void> {
   // Update moment with the right language, for date display
   i18n.on('languageChanged', (lng: LanguageCodes) => {
     if (language !== lng && availableLanguageCodes.includes(lng)) {
-      language = lng
-      refreshLanguage(language)
-      localStorage.setItem('lang', language)
+      refreshLanguage(lng)
+      localStorage.setItem('lang', lng)
     }
   })
 

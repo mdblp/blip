@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
+import React, { Dispatch, type FC, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 
-import { type Theme } from '@mui/material/styles'
+import { type Theme, useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import AppBar from '@mui/material/AppBar'
 import Avatar from '@mui/material/Avatar'
@@ -49,6 +49,12 @@ import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.pr
 import { HcpNavigationTab } from '../../models/enums/hcp-navigation-tab.model'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import TeamUtils from '../../lib/team/team.util'
+import { Banner } from './banner'
+import { ConfigService } from '../../lib/config/config.service'
+
+interface MainHeaderProps {
+  setMainHeaderHeight: Dispatch<SetStateAction<number>>
+}
 
 const classes = makeStyles()((theme: Theme) => ({
   appBar: {
@@ -67,6 +73,9 @@ const classes = makeStyles()((theme: Theme) => ({
     margin: `0 ${theme.spacing(2)}`
   },
   toolbar: {
+    padding: 0
+  },
+  actionHeader: {
     padding: `0 ${theme.spacing(2)}`
   },
   tab: {
@@ -80,11 +89,13 @@ const classes = makeStyles()((theme: Theme) => ({
 const StyledTabs = styled(Tabs)(({ theme }) => ({ ...theme.mixins.toolbar }))
 const StyledTab = styled(Tab)(({ theme }) => ({ ...theme.mixins.toolbar }))
 
-export const MainHeader: FC = () => {
+const MainHeaderNotMemoized: FC<MainHeaderProps> = (props) => {
+  const { setMainHeaderHeight } = props
   const { classes: { desktopLogo, separator, appBar, tab, toolbar } } = classes()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
   const { user } = useAuth()
+  const theme = useTheme()
   const { selectedTeam } = useSelectedTeamContext()
   const navigate = useNavigate()
   const { pathname } = useLocation()
@@ -109,6 +120,12 @@ export const MainHeader: FC = () => {
     navigate(route)
   }
 
+  const appBarRefCallback = (appMainHeaderElement: HTMLHeadElement): void => {
+    if (appMainHeaderElement) {
+      setMainHeaderHeight(appMainHeaderElement?.offsetHeight ?? 0)
+    }
+  }
+
   return (
     <AppBar
       id="app-main-header"
@@ -116,76 +133,89 @@ export const MainHeader: FC = () => {
       elevation={0}
       className={appBar}
       position="fixed"
+      ref={appBarRefCallback}
     >
-      <Toolbar className={toolbar}>
+      <Toolbar className={toolbar} variant="dense">
         <Box
-          width="100%"
           display="flex"
-          justifyContent="space-between"
-          alignItems="center"
+          flexDirection="column"
+          width="100%"
         >
-          <Box display="flex" alignItems="center">
-            <Link to="/">
-              <Avatar
-                id="header-main-logo"
-                aria-label={t('alt-img-logo')}
-                variant="square"
-                src={`/branding_${config.BRANDING}_logo.svg`}
-                alt={t('alt-img-logo')}
-                className={desktopLogo}
-              />
-            </Link>
-          </Box>
+          {ConfigService.isBannerEnabled() &&
+            <Banner />
+          }
+          <Box
+            width="100%"
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            padding={`0 ${theme.spacing(2)}`}
+          >
+            <Box display="flex" alignItems="center">
+              <Link to="/">
+                <Avatar
+                  id="header-main-logo"
+                  aria-label={t('alt-img-logo')}
+                  variant="square"
+                  src={`/branding_${config.BRANDING}_logo.svg`}
+                  alt={t('alt-img-logo')}
+                  className={desktopLogo}
+                />
+              </Link>
+            </Box>
 
-          {user.isUserHcp() &&
-            <StyledTabs value={getSelectedTab()} centered>
-              <StyledTab
-                data-testid="main-header-hcp-patients-tab"
-                className={tab}
-                label={t('header-tab-patients')}
-                value={HcpNavigationTab.Patients}
-                onClick={() => {
-                  handleTabClick(HcpNavigationTab.Patients)
-                }}
-              />
-              {!TeamUtils.isPrivate(selectedTeam) &&
+            {user.isUserHcp() &&
+              <StyledTabs value={getSelectedTab()} centered>
                 <StyledTab
-                  data-testid="main-header-hcp-care-team-settings-tab"
+                  data-testid="main-header-hcp-patients-tab"
                   className={tab}
-                  label={t('header-tab-care-team-settings')}
-                  value={HcpNavigationTab.CareTeam}
+                  label={t('header-tab-patients')}
+                  value={HcpNavigationTab.Patients}
                   onClick={() => {
-                    handleTabClick(HcpNavigationTab.CareTeam)
+                    handleTabClick(HcpNavigationTab.Patients)
                   }}
                 />
-              }
-            </StyledTabs>
-          }
-
-          <Box display="flex" alignItems="center">
-            <Link to={AppUserRoute.Notifications} id="header-notification-link">
-              <Badge
-                id="notification-count-badge"
-                aria-label={t('notification-list')}
-                badgeContent={receivedInvitations.length}
-                overlap="circular"
-                color="error"
-              >
-                <NotificationsNoneIcon />
-              </Badge>
-            </Link>
-            <div className={separator} />
-            {!user?.isUserCaregiver() &&
-              <React.Fragment>
-                {user.isUserPatient() && <TeamSettingsMenu />}
-                {user.isUserHcp() && <TeamScopeMenu />}
-                <div className={separator} />
-              </React.Fragment>
+                {!TeamUtils.isPrivate(selectedTeam) &&
+                  <StyledTab
+                    data-testid="main-header-hcp-care-team-settings-tab"
+                    className={tab}
+                    label={t('header-tab-care-team-settings')}
+                    value={HcpNavigationTab.CareTeam}
+                    onClick={() => {
+                      handleTabClick(HcpNavigationTab.CareTeam)
+                    }}
+                  />
+                }
+              </StyledTabs>
             }
-            <UserMenu />
+
+            <Box display="flex" alignItems="center">
+              <Link to={AppUserRoute.Notifications} id="header-notification-link">
+                <Badge
+                  id="notification-count-badge"
+                  aria-label={t('notification-list')}
+                  badgeContent={receivedInvitations.length}
+                  overlap="circular"
+                  color="error"
+                >
+                  <NotificationsNoneIcon />
+                </Badge>
+              </Link>
+              <div className={separator} />
+              {!user?.isUserCaregiver() &&
+                <React.Fragment>
+                  {user.isUserPatient() && <TeamSettingsMenu />}
+                  {user.isUserHcp() && <TeamScopeMenu />}
+                  <div className={separator} />
+                </React.Fragment>
+              }
+              <UserMenu />
+            </Box>
           </Box>
         </Box>
       </Toolbar>
     </AppBar>
   )
 }
+
+export const MainHeader = React.memo(MainHeaderNotMemoized)

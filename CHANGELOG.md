@@ -6,6 +6,7 @@ It is based on Tidepool Blip 1.27.
 ### Changed
 - YLP-2484 Remove level column in device change parameter history
 - YLP-2572 Prevent patient from adding the same caregiver to their list twice
+- YLP-2630 As a user, I would like to be notified with a banner when there are ongoing issues with yourloops
 
 ### Fixed
 - YLP-2438 Inconsistency in the daily view between carbs displayed on the graph and Total carbs in the statistics panel

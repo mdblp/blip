@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,52 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const commonJestConfig = require('../common-jest.config')
-module.exports = {
-  ...commonJestConfig,
 
-  bail: true,
+import { ConfigService } from '../../../../lib/config/config.service'
 
-  displayName: 'yourloops integration',
+describe('ConfigService', () => {
 
-  maxWorkers: 4,
+  it('isBannerEnabled should return true when BANNER_ENABLED in config is set to true', () => {
+    expect(ConfigService.isBannerEnabled()).toBeTruthy()
+  })
 
-  globals: {
-    BUILD_CONFIG: {
-      BANNER_ENABLED: false,
-      BANNER_LABEL_EN: '',
-      BANNER_LABEL_ES: '',
-      BANNER_LABEL_DE: '',
-      BANNER_LABEL_FR: '',
-      BANNER_LABEL_IT: '',
-      BANNER_LABEL_NL: '',
-      STONLY_WID: '',
-      ASSETS_URL: 'fake-url',
-      TEST: true,
-      CBG_BUCKETS_ENABLED: false,
-      COOKIE_BANNER_CLIENT_ID: '',
-      DEV: false,
-      ECPS_ENABLED: true,
-      YLP820_BASAL_TIME: 0,
-      VERSION: '3.0.2',
-      LATEST_RELEASE: '2000-01-01',
-      API_HOST: 'http://localhost:8009',
-      BRANDING: 'diabeloop/blue',
-      YLPZ_RA_LAD_001_FR_REV: '1',
-      YLPZ_RA_LAD_001_EN_REV: '3',
-      YLPZ_RA_LAD_001_NL_REV: '0',
-      YLPZ_RA_LAD_001_ES_REV: '0',
-      YLPZ_RA_LAD_001_IT_REV: '0',
-      YLPZ_RA_LAD_001_DE_REV: '0',
-      IDLE_TIMEOUT_MS: 1800000
-    }
-  },
-
-  // The glob patterns Jest uses to detect test files
-  testMatch: [
-    '<rootDir>/**/*.spec.tsx'
-  ],
-
-  testTimeout: 150000
-}
+  it('getBannerLabel should return banner text in english when current user language is english', () => {
+    expect(ConfigService.getBannerLabel()).toEqual("This is the banner text in english")
+  })
+})

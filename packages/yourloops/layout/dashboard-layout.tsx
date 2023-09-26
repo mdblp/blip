@@ -25,8 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, type PropsWithChildren } from 'react'
-import { useTheme } from '@mui/material/styles'
+import React, { type FC, type PropsWithChildren, useState } from 'react'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
@@ -40,13 +39,13 @@ const dashboardLayoutStyle = makeStyles()(() => ({
 
 export const DashboardLayout: FC<PropsWithChildren> = ({ children }) => {
   const { classes } = dashboardLayoutStyle()
-  const theme = useTheme()
+  const [mainHeaderHeight, setMainHeaderHeight] = useState<number>(0)
 
   return (
     <Box display="flex">
-      <MainHeader />
+      <MainHeader setMainHeaderHeight={setMainHeaderHeight} />
       <Container maxWidth={false} className={classes.container}>
-        <Box sx={{ ...theme.mixins.toolbar }} />
+        <Box sx={{ minHeight: mainHeaderHeight }} />
         {children}
       </Container>
     </Box>
