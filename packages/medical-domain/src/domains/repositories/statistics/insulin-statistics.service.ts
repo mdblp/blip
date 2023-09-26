@@ -40,8 +40,8 @@ import { buildHoursRangeMap, getWeekDaysFilter, roundValue } from './statistics.
 import type PumpSettings from '../../models/medical/datum/pump-settings.model'
 import { type ParameterConfig } from '../../models/medical/datum/pump-settings.model'
 import { type TimeInAutoStatistics } from '../../models/statistics/time-in-auto.model'
-import { Prescriptor, TimeService } from '../../../index'
-import { getHours } from '../time/time.service'
+import { Prescriptor } from '../../../index'
+import { getHours, MS_IN_DAY } from '../time/time.service'
 import { HoursRange } from '../../models/statistics/satistics.model'
 
 function resamplingDuration(basals: Basal[], start: number, end: number): Basal[] {
@@ -109,14 +109,20 @@ function getAutomatedAndManualBasalDuration(basalsData: Basal[], dateFilter: Dat
   const manualBasalDuration = manualBasal.reduce((accumulator, manualBasal) => accumulator + manualBasal.duration, 0)
   const automatedBasals = basalData.filter(automatedBasal => automatedBasal.subType === 'automated')
   const automatedBasalDuration = automatedBasals.reduce((accumulator, automaticBasal) => accumulator + automaticBasal.duration, 0)
-  const total = manualBasalDuration + automatedBasalDuration
+  const numOfDay = (dateFilter.end - dateFilter.start) / MS_IN_DAY
+  const automatedBasalPerDay = automatedBasalDuration / numOfDay
+  const manualBasalPerDay = manualBasalDuration / numOfDay
+  const total = automatedBasalPerDay + manualBasalPerDay
+  const automatedPercentage = Math.round(100 * automatedBasalPerDay / total)
+  const manualPercentage = Math.round(100 * manualBasalPerDay / total)
+
 
   return {
-    automatedBasalDuration,
-    manualBasalDuration,
-    automatedAndManualTotalDuration: Math.round(total),
-    automatedBasalInDays: (automatedBasalDuration / total) * TimeService.MS_IN_DAY,
-    manualBasalInDays: (manualBasalDuration / total) * TimeService.MS_IN_DAY
+    automatedBasalDuration: automatedBasalPerDay ,
+    manualBasalDuration: manualBasalPerDay ,
+    automatedPercentage,
+    manualPercentage
+
   }
 }
 

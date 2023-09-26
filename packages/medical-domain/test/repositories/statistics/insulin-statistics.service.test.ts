@@ -39,30 +39,29 @@ import {
 } from '../../mock/data.statistics.mock'
 import { ManualBolusAverageStatistics } from '../../../src/domains/models/statistics/basal-bolus-statistics.model'
 
-describe('BasalBolusStatisticsService', () => {
-  describe('Time In Auto Data', () => {
-    it('should return the time spent in automated and manual basal delivery when viewing 1 day', () => {
-      const basalData = buildBasalsData(basalsData)
-      expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, dateFilterOneDay)).toEqual({
-        automatedBasalDuration: MS_IN_HOUR,
-        manualBasalDuration: MS_IN_HOUR * 2,
-        automatedAndManualTotalDuration: MS_IN_HOUR + MS_IN_HOUR * 2,
-        automatedBasalInDays: 28800000,
-        manualBasalInDays: 57600000
-      })
-    })
+describe('Time In Auto Data', () => {
+  it('should return the time spent in automated and manual basal delivery when viewing 1 day', () => {
+    const basalData = buildBasalsData(basalsData)
+    expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, dateFilterOneDay)).toEqual({
+      automatedBasalDuration: MS_IN_HOUR,
+      automatedPercentage: 33,
+      manualBasalDuration: 7200000,
+      manualPercentage: 67,
 
-    it('should return the avg daily time spent in automated and manual basal delivery when viewing more than 1 day', () => {
-      const basalData = buildBasalsData(basalsData)
-      expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, dateFilterTwoDays)).toEqual({
-        automatedBasalDuration: MS_IN_HOUR,
-        manualBasalDuration: MS_IN_HOUR * 4,
-        automatedAndManualTotalDuration: MS_IN_HOUR + MS_IN_HOUR * 4,
-        manualBasalInDays: 69120000,
-        automatedBasalInDays: 17280000
-      })
+
+  })
+  })
+
+  it('should return the avg daily time spent in automated and manual basal delivery when viewing more than 1 day', () => {
+    const basalData = buildBasalsData(basalsData)
+    expect(BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(basalData, dateFilterTwoDays)).toEqual({
+      automatedBasalDuration: 1800000,
+      automatedPercentage: 20,
+      manualBasalDuration: 7200000,
+      manualPercentage: 80
     })
   })
+})
 
   describe('getBasalBolusData', () => {
     it('should return the total basal and bolus insulin delivery when viewing 1 day', () => {
