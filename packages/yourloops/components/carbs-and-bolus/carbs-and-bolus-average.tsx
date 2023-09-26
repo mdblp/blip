@@ -62,7 +62,10 @@ export const CarbsAndBolusAverage: FC<CarbsAndBolusAverageProps> = ({ medicalDat
   const manualBolusStats = BasalBolusStatisticsService.getManualBolusAverageStatistics(medicalData.bolus, numberOfDays, dateFilter)
 
   return (
-    <Box margin="32px 10px 32px 40px">
+    <Box
+      margin="32px 10px 32px 40px"
+      data-testid="rescue-carbs-and-manual-bolus-average"
+    >
       <Typography sx={{ fontWeight: 500, marginBottom: theme.spacing(1) }}>
         {t('daily-rescue-carbs-and-manual-bolus')}
       </Typography>

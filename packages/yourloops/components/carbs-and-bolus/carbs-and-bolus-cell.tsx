@@ -65,6 +65,7 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
     <Box
       width="12.5%"
       sx={{ ...sx, borderLeft: LIGHT_BORDER }}
+      data-testid="carbs-and-bolus-cell"
     >
       <Typography
         variant="caption"
@@ -82,6 +83,7 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
           <Typography
             variant="caption"
             sx={{ color: '#444444' }}
+            data-testid="rescue-carbs-cell"
           >
             {numberOfIntakes > 0 ? numberOfIntakes : ''}
           </Typography>
@@ -99,6 +101,7 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
           <Typography
             variant="caption"
             sx={{ color: 'white' }}
+            data-testid="manual-bolus-cell"
           >
             {numberOfInjections > 0 ? numberOfInjections : ''}
           </Typography>
