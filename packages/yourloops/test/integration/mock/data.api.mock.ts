@@ -182,15 +182,15 @@ export const minimalTrendViewData: Data = {
   data: [
     { time: '2020-01-20T10:00:00Z', type: 'cbg', id: '2020-01-20_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.1, uploadId: 'osef', _userId: 'osef' },
     { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 9.1, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-19T10:00:00Z', type: 'wizard', id: WIZARD_UNDELIVERED_ID, timezone: 'Europe/Paris', units: 'mmol/L', carbInput: 385, bolus: WIZARD_BOLUS_UNDELIVERED_ID, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-19T15:00:00Z', type: 'wizard', id: WIZARD_UMM_ID, timezone: 'Europe/Paris', units: 'mmol/L', carbInput: 200, inputMeal: { source: 'umm' }, bolus: WIZARD_BOLUS_UNDELIVERED_ID, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-19T10:00:00Z', type: 'food', id: 'food_19-35-00', meal: 'rescuecarbs', nutrition: { carbohydrate: { net: 385, units: 'grams' } }, timezone: 'Europe/Paris', _userId: 'osef', uploadId: 'osef' },
     { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_1', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.9, uploadId: 'osef', _userId: 'osef' },
     { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_2', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.9, uploadId: 'osef', _userId: 'osef' },
     { time: '2020-01-18T10:00:00Z', type: 'cbg', id: '2020-01-18_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 9.8, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-08T16:30:00Z', type: 'basal', id: 'basal_2022-08-08_5', timezone: 'Europe/Paris', deliveryType: 'automated', duration: 500000000, internalId: '3deeb71f-9b5b-496e-b0af-ef9512c2787f', rate: 0.8, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-08T17:30:00Z', type: 'basal', id: 'basal_2022-08-08_5', timezone: 'Europe/Paris', deliveryType: 'scheduled', duration: 400000000, internalId: '3deeb71f-9b5b-496e-b0af-ef9512c2787f', rate: 0.8, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-08T18:45:00Z', type: 'bolus', id: WIZARD_BOLUS_POSITIVE_OVERRIDE_ID, timezone: 'Europe/Paris', prescriptor: 'hybrid', normal: 19.35, expectedNormal: 19.35, insulinOnBoard: 3.1218212, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-19T10:00:00Z', type: 'wizard', id: WIZARD_UNDELIVERED_ID, timezone: 'Europe/Paris', units: 'mmol/L', carbInput: 385, bolus: WIZARD_BOLUS_UNDELIVERED_ID, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-18T10:00:00Z', type: 'wizard', id: WIZARD_UMM_ID, timezone: 'Europe/Paris', units: 'mmol/L',inputMeal: { source: 'umm' }, carbInput: 285, bolus: WIZARD_BOLUS_UNDELIVERED_ID, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-19T10:00:00Z', type: 'food', id: 'food_19-35-00', meal: 'rescuecarbs', nutrition: { carbohydrate: { net: 385, units: 'grams' } }, timezone: 'Europe/Paris', _userId: 'osef', uploadId: 'osef' },
+    { time: '2020-01-08T16:30:00Z', type: 'basal', id: 'basal_2020_01_08_1', timezone: 'Europe/Paris', deliveryType: 'automated', duration: 400000000, internalId: '3deeb71f-9b5b-496e-b0af-ef9512c2787f', rate: 0.8, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-08T17:30:00Z', type: 'basal', id: 'basal_2020-01-08_2', timezone: 'Europe/Paris', deliveryType: 'scheduled', duration: 500000000, internalId: '3deeb71f-9b5b-496e-b0af-ef9512c2787f', rate: 0.8, uploadId: 'osef', _userId: 'osef' },
+    { time: '2020-01-08T18:45:00Z', type: 'bolus', id: WIZARD_BOLUS_POSITIVE_OVERRIDE_ID, timezone: 'Europe/Paris', prescriptor: 'hybrid', normal: 19.35, expectedNormal: 19.35, insulinOnBoard: 3.1218212, subType: 'normal', uploadId: 'osef', _userId: 'osef' }
   ]
 }
 
