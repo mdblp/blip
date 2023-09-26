@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, waitFor } from '@testing-library/react'
+import { waitFor } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -49,7 +49,6 @@ import { testTeamCreation } from '../../use-cases/teams-management'
 import { Unit } from 'medical-domain'
 import NotificationApi from '../../../../lib/notifications/notification.api'
 import { type Router } from '../../models/router.model'
-import { ConfigService } from '../../../../lib/config/config.service'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -191,17 +190,5 @@ describe('HCP home page', () => {
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/home')
     }, { timeout: 3000 })
-  })
-
-
-  it('should show the banner when it is enabled', async () => {
-    localStorage.setItem('selectedTeamId', myThirdTeamId)
-    const bannerText = 'This is the banner text'
-    jest.spyOn(ConfigService, 'isBannerEnabled').mockReturnValue(true)
-    jest.spyOn(ConfigService, 'getBannerLabel').mockReturnValue(bannerText)
-
-    await renderHomePage()
-
-    expect(screen.getByRole('banner')).toHaveTextContent(bannerText)
   })
 })

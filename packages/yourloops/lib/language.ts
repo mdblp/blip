@@ -48,7 +48,7 @@ export const getLanguage = (): LanguageCodes => {
   return (localStorage.getItem('lang') || getLocale() || 'en') as LanguageCodes
 }
 
-const language: LanguageCodes = getLanguage()
+let language: LanguageCodes = getLanguage()
 
 function refreshLanguage(language: LanguageCodes): void {
   zendeskLocale(language)
@@ -92,8 +92,9 @@ async function init(options = i18nOptions): Promise<void> {
   // Update moment with the right language, for date display
   i18n.on('languageChanged', (lng: LanguageCodes) => {
     if (language !== lng && availableLanguageCodes.includes(lng)) {
-      refreshLanguage(lng)
-      localStorage.setItem('lang', lng)
+      language = lng
+      refreshLanguage(language)
+      localStorage.setItem('lang', language)
     }
   })
 

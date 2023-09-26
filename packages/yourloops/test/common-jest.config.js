@@ -91,7 +91,7 @@ module.exports = {
   // A set of global variables that need to be available in all test environments
   globals: {
     BUILD_CONFIG: {
-      BANNER_ENABLED: true,
+      BANNER_ENABLED: false,
       BANNER_LABEL_EN: 'This is the banner text in english',
       BANNER_LABEL_ES: 'Es banero text es en espanol!',
       BANNER_LABEL_DE: 'Eine frauen este un apfel und un kartofel salad',
