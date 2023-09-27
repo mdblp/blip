@@ -174,7 +174,6 @@ function getManualBolusAverageStatistics(boluses: Bolus[], numberOfDays: number,
     }
     if (hours >= 21) {
       twentyOneToMidnight.push(bolus)
-      return
     }
   })
 

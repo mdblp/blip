@@ -101,7 +101,6 @@ function getRescueCarbsAverageStatistics(meals: Meal[], numberOfDays: number, da
     }
     if (hours >= 21) {
       twentyOneToMidnight.push(meal)
-      return
     }
   })
 

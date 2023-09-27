@@ -46,7 +46,7 @@ import type WarmUp from '../src/domains/models/medical/datum/warm-up.model'
 import type Wizard from '../src/domains/models/medical/datum/wizard.model'
 import type ZenMode from '../src/domains/models/medical/datum/zen-mode.model'
 import type Datum from '../src/domains/models/medical/datum.model'
-import { DatumType } from '../src'
+import { DatumType, Prescriptor } from '../src'
 import Source from '../src/domains/models/medical/datum/enums/source.enum'
 import DurationUnit from '../src/domains/models/medical/datum/enums/duration-unit.enum'
 import Unit from '../src/domains/models/medical/datum/enums/unit.enum'
@@ -54,7 +54,6 @@ import Intensity from '../src/domains/models/medical/datum/enums/intensity.enum'
 import PumpManufacturer from '../src/domains/models/medical/datum/enums/pump-manufacturer.enum'
 import { DeviceEventSubtype } from '../src/domains/models/medical/datum/enums/device-event-subtype.enum'
 import { getTrendsTime } from '../src/domains/repositories/time/time.service'
-import { Prescriptor } from '../src'
 
 function createBaseData(date?: Date): BaseDatum {
   const pastDate = date ?? faker.date.recent({ days: 20 })
