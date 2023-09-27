@@ -29,7 +29,7 @@ import React, { type FC, type PropsWithChildren, useState } from 'react'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
-import { MainHeader } from '../components/header-bars/main-header'
+import { MainHeaderMemoized as MainHeader } from '../components/header-bars/main-header'
 
 const dashboardLayoutStyle = makeStyles()(() => ({
   container: {

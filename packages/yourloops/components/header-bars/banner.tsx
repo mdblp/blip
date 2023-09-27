@@ -49,8 +49,7 @@ export const Banner: FC = () => {
     >
       <Typography
         color={theme.palette.common.white}
-        fontSize={14}
-        fontWeight="medium"
+        variant="subtitle2"
         textAlign="center"
       >
         {ConfigService.getBannerLabel()}

@@ -89,7 +89,7 @@ const classes = makeStyles()((theme: Theme) => ({
 const StyledTabs = styled(Tabs)(({ theme }) => ({ ...theme.mixins.toolbar }))
 const StyledTab = styled(Tab)(({ theme }) => ({ ...theme.mixins.toolbar }))
 
-const MainHeaderNotMemoized: FC<MainHeaderProps> = (props) => {
+const MainHeader: FC<MainHeaderProps> = (props) => {
   const { setMainHeaderHeight } = props
   const { classes: { desktopLogo, separator, appBar, tab, toolbar } } = classes()
   const { t } = useTranslation('yourloops')
@@ -122,7 +122,7 @@ const MainHeaderNotMemoized: FC<MainHeaderProps> = (props) => {
 
   const appBarRefCallback = (appMainHeaderElement: HTMLHeadElement): void => {
     if (appMainHeaderElement) {
-      setMainHeaderHeight(appMainHeaderElement?.offsetHeight ?? 0)
+      setMainHeaderHeight(appMainHeaderElement.offsetHeight ?? 0)
     }
   }
 
@@ -218,4 +218,4 @@ const MainHeaderNotMemoized: FC<MainHeaderProps> = (props) => {
   )
 }
 
-export const MainHeader = React.memo(MainHeaderNotMemoized)
+export const MainHeaderMemoized = React.memo(MainHeader)
