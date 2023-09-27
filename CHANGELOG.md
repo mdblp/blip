@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Fixed
 - YLP-2438 Inconsistency in the daily view between carbs displayed on the graph and Total carbs in the statistics panel
+- YLP-2642 Disabled Google Translate automated translation to avoid React crashes
 
 ### Engineering use
 - YLP-2573 Create a dedicated message for the caregiver when the account creation is complete
