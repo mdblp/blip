@@ -40,6 +40,7 @@ import {
   HoursRange,
   MedicalData, TimeService
 } from 'medical-domain'
+import { CarbsAndBolusTimeRange } from './models/carbs-and-bolus.model'
 
 interface CarbsAndBolusAverageProps {
   dateFilter: DateFilter
@@ -71,42 +72,42 @@ export const CarbsAndBolusAverage: FC<CarbsAndBolusAverageProps> = ({ medicalDat
       </Typography>
       <Box display="flex">
         <CarbsAndBolusCell
-          time="0h"
+          time={CarbsAndBolusTimeRange.Midnight}
           rescueCarbs={rescueCarbsStats.get(HoursRange.MidnightToThree)}
           manualBolus={manualBolusStats.get(HoursRange.MidnightToThree)}
         />
         <CarbsAndBolusCell
-          time="3h"
+          time={CarbsAndBolusTimeRange.Three}
           rescueCarbs={rescueCarbsStats.get(HoursRange.ThreeToSix)}
           manualBolus={manualBolusStats.get(HoursRange.ThreeToSix)}
         />
         <CarbsAndBolusCell
-          time="6h"
+          time={CarbsAndBolusTimeRange.Six}
           rescueCarbs={rescueCarbsStats.get(HoursRange.SixToNine)}
           manualBolus={manualBolusStats.get(HoursRange.SixToNine)}
         />
         <CarbsAndBolusCell
-          time="9h"
+          time={CarbsAndBolusTimeRange.Nine}
           rescueCarbs={rescueCarbsStats.get(HoursRange.NineToTwelve)}
           manualBolus={manualBolusStats.get(HoursRange.NineToTwelve)}
         />
         <CarbsAndBolusCell
-          time="12h"
+          time={CarbsAndBolusTimeRange.Twelve}
           rescueCarbs={rescueCarbsStats.get(HoursRange.TwelveToFifteen)}
           manualBolus={manualBolusStats.get(HoursRange.TwelveToFifteen)}
         />
         <CarbsAndBolusCell
-          time="15h"
+          time={CarbsAndBolusTimeRange.Fifteen}
           rescueCarbs={rescueCarbsStats.get(HoursRange.FifteenToEighteen)}
           manualBolus={manualBolusStats.get(HoursRange.FifteenToEighteen)}
         />
         <CarbsAndBolusCell
-          time="18h"
+          time={CarbsAndBolusTimeRange.Eighteen}
           rescueCarbs={rescueCarbsStats.get(HoursRange.EighteenToTwentyOne)}
           manualBolus={manualBolusStats.get(HoursRange.EighteenToTwentyOne)}
         />
         <CarbsAndBolusCell
-          time="21h"
+          time={CarbsAndBolusTimeRange.TwentyOne}
           rescueCarbs={rescueCarbsStats.get(HoursRange.TwentyOneToMidnight)}
           manualBolus={manualBolusStats.get(HoursRange.TwentyOneToMidnight)}
           sx={{ borderRight: LIGHT_BORDER }}

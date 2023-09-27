@@ -69,7 +69,7 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
     >
       <Typography
         variant="caption"
-        sx={{ marginLeft: '4px' }}
+        sx={{ marginLeft: theme.spacing(0.5) }}
       >
         {time}
       </Typography>
@@ -100,7 +100,7 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
         >
           <Typography
             variant="caption"
-            sx={{ color: 'white' }}
+            sx={{ color: theme.palette.common.white }}
             data-testid="manual-bolus-cell"
           >
             {numberOfInjections > 0 ? numberOfInjections : ''}

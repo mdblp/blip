@@ -211,7 +211,7 @@ export const checkTrendsBolusAndCarbsAverage = async () => {
   expect(carbsCells[7]).toHaveTextContent('0.1')
   expect(bolusCells[7]).toBeEmptyDOMElement()
 
-  const oneWeekButton = screen.getByTestId('button-trends-period-1week')
+  const oneWeekButton = screen.getByRole('button', { name: '1 week' })
   await userEvent.click(oneWeekButton)
 
   expect(bolusCells[0]).toHaveTextContent('0.3')

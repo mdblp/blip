@@ -158,7 +158,6 @@ class TrendsSubNav extends React.Component {
     return (
       <button
         id={`button-trends-period-${domain.replace(/\s/g, '')}`}
-        data-testid={`button-trends-period-${domain.replace(/\s/g, '')}`}
         className={domainLinkClass}
         key={domain}
         type="button"

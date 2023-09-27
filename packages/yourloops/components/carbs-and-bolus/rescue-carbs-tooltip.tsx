@@ -50,15 +50,15 @@ export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }>
       </Typography>
       <Box className="content">
         <div className="flex-justify-between-align-center">
-          <Typography variant="body2">{t('intakes-average')}</Typography>
+          <Typography variant="body2">{t('avg-intakes')}</Typography>
           <Typography variant="body2">{rescueCarbs.numberOfIntakes}</Typography>
         </div>
         <div className="flex-justify-between-align-center">
-          <Typography variant="body2">{t('confirmed-carbs')}</Typography>
+          <Typography variant="body2">{t('avg-confirmed-carbs')}</Typography>
           <Typography variant="body2">{rescueCarbs.confirmedCarbs}g</Typography>
         </div>
         <div className="flex-justify-between-align-center">
-          <Typography variant="body2">{t('recommended-carbs')}</Typography>
+          <Typography variant="body2">{t('avg-recommended-carbs')}</Typography>
           <Typography variant="body2">{rescueCarbs.recommendedCarbs}g</Typography>
         </div>
       </Box>
