@@ -38,7 +38,7 @@ export interface TotalCarbsStatProps {
 const CarbsStatItem: FunctionComponent<TotalCarbsStatProps> = (props) => {
   const { annotations, value, title } = props
   return (
-    <Box className={`${styles.row} ${annotations ? null : styles.carbs}`}>
+    <Box className={`${styles.row} ${annotations ? null : styles.carbs}`} data-testid={"estimatedCarbs"}>
       {title}
 
       {annotations &&
