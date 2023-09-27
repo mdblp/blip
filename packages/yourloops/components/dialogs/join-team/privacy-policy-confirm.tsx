@@ -88,7 +88,9 @@ export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
           {team.name}
           <br />
           {team.address.line1}
-          {team.address.line2 ?? <br />}
+          <br/>
+          {team.address.line2}
+          {team.address.line2 && <br/>}
           {team.address.zip}
           <br />
           {team.address.city}
@@ -96,7 +98,11 @@ export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
           {team.code}
           <br />
         </DialogContentText>
-        <DialogContentText color="textPrimary">
+        <DialogContentText
+          color="textPrimary"
+          paddingTop={theme.spacing(1)}
+          paddingBottom={theme.spacing(2)}
+        >
           <strong>{t('modal-patient-team-warning')}</strong>
         </DialogContentText>
 
