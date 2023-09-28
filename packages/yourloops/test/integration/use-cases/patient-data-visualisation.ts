@@ -88,7 +88,7 @@ export const testDashboardDataVisualisationPrivateTeamNoData = async (patientDas
   await checkDeviceUsageWidgetNoData()
 }
 
-export const testTrendDataVisualisationForHCP = async () => {
+export const testTrensdsDataVisualisationForHCP = async () => {
   await checkPatientStatisticsTrendsView()
   await checkTrendsStatsWidgetsTooltips()
 }
@@ -110,9 +110,4 @@ export const testEmptyMedicalFilesWidgetForHcp = async () => {
 
 export const testSwitchPatientCorrectDataDisplay = async () => {
   await checkPatientSwitch()
-}
-
-export const testTrendsDataVisualisationForHCP = async () => {
-  await checkTrendsStatsWidgetsTooltips()
-  await checkPatientStatisticsTrendsView()
 }
