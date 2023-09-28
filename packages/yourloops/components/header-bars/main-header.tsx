@@ -145,11 +145,12 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
             <Banner />
           }
           <Box
-            width="100%"
+            alignItems="center"
             display="flex"
             justifyContent="space-between"
-            alignItems="center"
+            minHeight={64}
             padding={`0 ${theme.spacing(2)}`}
+            width="100%"
           >
             <Box display="flex" alignItems="center">
               <Link to="/">
