@@ -43,7 +43,12 @@ const availableCountries: Country[] = _.map(locales.countries, (item, key) => {
   return { code: key, name: item.name } as Country
 })
 
-let language: LanguageCodes = (localStorage.getItem('lang') || getLocale() || 'en') as LanguageCodes
+
+export const getLanguage = (): LanguageCodes => {
+  return (localStorage.getItem('lang') || getLocale() || 'en') as LanguageCodes
+}
+
+let language: LanguageCodes = getLanguage()
 
 function refreshLanguage(language: LanguageCodes): void {
   zendeskLocale(language)
