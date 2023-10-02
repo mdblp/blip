@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
+import{ screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { checkStatTooltip } from './stats.assert'
 
@@ -37,7 +37,7 @@ const SENSOR_USAGE_TOOLTIP = 'Sensor Usage: Time the CGM collected data, divided
 const STANDARD_DEVIATION_TOOLTIP = 'SD (Standard Deviation): How far values are from the average.'
 const STANDARD_DEVIATION_BGM_TOOLTIP = 'SD (Standard Deviation): How far values are from the average.Derived from 15 BGM readings.'
 const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
-const AVG_DAILY_CARBS_TOOLTIP = 'Avg. Daily Carbs: All carb entries added together (including rescue carbs), then divided by the number of days in this view.Derived from 2 carb entries, including rescue carbs.'
+const AVG_DAILY_CARBS_TOOLTIP = 'Avg. Daily Carbs: All carb entries added together (including rescue carbs), then divided by the number of days in this view.Derived from 6 carb entries, including rescue carbs.'
 const LOOP_MODE_TOOLTIP = 'Time In Loop Mode: Daily average of the time spent in automated basal delivery.How we calculate this: (%) is the duration in loop mode ON or OFF divided by the total duration of basals for this time period. (time) is the average daily time spent in loop mode ON or OFF.'
 export const GMI_TOOLTIP_EMPTY_VALUE = 'GMI (Glucose Management Indicator): Tells you what your approximate A1C level is likely to be, based on the average glucose level from your CGM readings.Why is this stat empty? There is not enough data present in this view to calculate it.'
 export const GMI_TOOLTIP = 'GMI (Glucose Management Indicator): Tells you what your approximate A1C level is likely to be, based on the average glucose level from your CGM readings.'
@@ -184,6 +184,42 @@ export const checkTrendsLayout = () => {
 
   const targetRangeLines = screen.getByTestId('trends-target-range-lines')
   expect(targetRangeLines).toBeVisible()
+}
+
+export const checkTrendsBolusAndCarbsAverage = async () => {
+  const wrapper = screen.getByTestId('rescue-carbs-and-manual-bolus-average')
+  expect(wrapper).toBeVisible()
+  expect(within(wrapper).getAllByTestId('carbs-and-bolus-cell')).toHaveLength(8)
+
+  const carbsCells = within(wrapper).getAllByTestId('rescue-carbs-cell')
+  const bolusCells = within(wrapper).getAllByTestId('manual-bolus-cell')
+
+  expect(carbsCells[0]).toBeEmptyDOMElement()
+  expect(bolusCells[0]).toHaveTextContent('0.1')
+  expect(carbsCells[1]).toBeEmptyDOMElement()
+  expect(bolusCells[1]).toHaveTextContent('0.3')
+  expect(carbsCells[2]).toBeEmptyDOMElement()
+  expect(bolusCells[2]).toBeEmptyDOMElement()
+  expect(carbsCells[3]).toHaveTextContent('0.2')
+  expect(bolusCells[3]).toBeEmptyDOMElement()
+  expect(carbsCells[4]).toBeEmptyDOMElement()
+  expect(bolusCells[4]).toBeEmptyDOMElement()
+  expect(carbsCells[5]).toBeEmptyDOMElement()
+  expect(bolusCells[5]).toHaveTextContent('0.1')
+  expect(carbsCells[6]).toHaveTextContent('0.1')
+  expect(bolusCells[6]).toBeEmptyDOMElement()
+  expect(carbsCells[7]).toHaveTextContent('0.1')
+  expect(bolusCells[7]).toBeEmptyDOMElement()
+
+  const oneWeekButton = screen.getByRole('button', { name: '1 week' })
+  await userEvent.click(oneWeekButton)
+
+  expect(bolusCells[0]).toHaveTextContent('0.3')
+  expect(bolusCells[1]).toHaveTextContent('0.6')
+  expect(carbsCells[3]).toHaveTextContent('0.4')
+  expect(bolusCells[5]).toHaveTextContent('0.3')
+  expect(carbsCells[6]).toHaveTextContent('0.1')
+  expect(carbsCells[7]).toHaveTextContent('0.1')
 }
 
 export const checkReadings100 = async () => {

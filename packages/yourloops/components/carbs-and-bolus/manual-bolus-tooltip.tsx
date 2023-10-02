@@ -25,18 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { HoursRange } from './satistics.model'
+import React, { FC } from 'react'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import { MANUAL_BOLUS_COLOR, useCarbsAndBolusStyles } from './carbs-and-bolus-styles'
+import { useTranslation } from 'react-i18next'
+import { ManualBolusAveragePerRange } from 'medical-domain'
 
-export interface CarbsStatistics {
-  totalCarbsPerDay: number
-  foodCarbsPerDay: number
-  totalEntriesCarbWithRescueCarbs: number
+export const ManualBolusTooltip: FC<{ manualBolus: ManualBolusAveragePerRange }> = ({ manualBolus }) => {
+  const { classes } = useCarbsAndBolusStyles()
+  const { t } = useTranslation()
+
+  return (
+    <Box
+      className={classes.hoverTooltip}
+      sx={{ border: `2px solid ${MANUAL_BOLUS_COLOR}` }}
+    >
+      <div className={`${classes.tooltipTail} manual-bolus`} />
+      <Typography
+        variant="subtitle2"
+        className="header"
+      >
+        {t('manual-bolus')}
+      </Typography>
+      <Box className="content">
+        <div className="flex-justify-between-align-center">
+          <Typography variant="body2">{t('avg-number-of-injections')}</Typography>
+          <Typography variant="body2">{manualBolus.numberOfInjections}</Typography>
+        </div>
+        <div className="flex-justify-between-align-center">
+          <Typography variant="body2">{t('avg-confirmed-dose')}</Typography>
+          <Typography variant="body2">{manualBolus.confirmedDose}U</Typography>
+        </div>
+      </Box>
+    </Box>
+  )
 }
-
-export interface RescueCarbsAveragePerRange {
-  numberOfIntakes: number
-  confirmedCarbs: number
-  recommendedCarbs: number
-}
-
-export type RescueCarbsAverageStatistics = Map<HoursRange, RescueCarbsAveragePerRange>

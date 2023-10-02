@@ -25,18 +25,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { HoursRange } from './satistics.model'
+import { buildHoursRangeMap, roundValue } from '../../../src/domains/repositories/statistics/statistics.utils'
+import { HoursRange, Meal } from '../../../src'
 
-export interface CarbsStatistics {
-  totalCarbsPerDay: number
-  foodCarbsPerDay: number
-  totalEntriesCarbWithRescueCarbs: number
-}
+describe('statistics.utils.test', () => {
+  describe('roundValue', () => {
+    it('should return a rounded value', () => {
+      const value = 2.54858713
+      expect(roundValue(value)).toEqual(3) // By default an integer
+      expect(roundValue(value, 1)).toEqual(2.5)
+      expect(roundValue(value, 2)).toEqual(2.55)
+    })
+  })
 
-export interface RescueCarbsAveragePerRange {
-  numberOfIntakes: number
-  confirmedCarbs: number
-  recommendedCarbs: number
-}
+  describe('buildHoursRangeMap', () => {
+    it('should return a map of hours range', () => {
+      const map = buildHoursRangeMap<Meal[]>()
+      const expectedResult: Map<HoursRange, Meal[]> = new Map([
+        [HoursRange.MidnightToThree, []],
+        [HoursRange.ThreeToSix, []],
+        [HoursRange.SixToNine, []],
+        [HoursRange.NineToTwelve, []],
+        [HoursRange.TwelveToFifteen, []],
+        [HoursRange.FifteenToEighteen, []],
+        [HoursRange.EighteenToTwentyOne, []],
+        [HoursRange.TwentyOneToMidnight, []]
+      ])
 
-export type RescueCarbsAverageStatistics = Map<HoursRange, RescueCarbsAveragePerRange>
+      expect(map).toEqual(expectedResult)
+    })
+  })
+})

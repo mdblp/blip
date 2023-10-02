@@ -25,18 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { HoursRange } from './satistics.model'
-
-export interface CarbsStatistics {
-  totalCarbsPerDay: number
-  foodCarbsPerDay: number
-  totalEntriesCarbWithRescueCarbs: number
+export enum TypeOfCell {
+  ManualBolus = 'manual_bolus',
+  RescueCarbs = 'rescue_carbs'
 }
-
-export interface RescueCarbsAveragePerRange {
-  numberOfIntakes: number
-  confirmedCarbs: number
-  recommendedCarbs: number
-}
-
-export type RescueCarbsAverageStatistics = Map<HoursRange, RescueCarbsAveragePerRange>
