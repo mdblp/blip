@@ -30,6 +30,7 @@ import {
   checkDaysSelection,
   checkRangeSelection,
   checkSMBGTrendsStatsWidgetsTooltips,
+  checkTrendsBolusAndCarbsAverage,
   checkTrendsLayout,
   checkTrendsTidelineContainerTooltips,
   checkTrendsTimeInRangeStatsWidgets,
@@ -79,6 +80,7 @@ describe('Trends view for anyone', () => {
 
       // Check Layout
       checkTrendsLayout()
+      await checkTrendsBolusAndCarbsAverage()
 
       await userEvent.click(screen.getByTestId('button-nav-back'))
       expect(await screen.findByText('There is no CGM data for this time period :(')).toBeVisible()

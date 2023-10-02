@@ -26,6 +26,13 @@
  */
 
 export interface AppConfig {
+  BANNER_ENABLED: boolean
+  BANNER_LABEL_EN: string
+  BANNER_LABEL_ES: string
+  BANNER_LABEL_DE: string
+  BANNER_LABEL_FR: string
+  BANNER_LABEL_IT: string
+  BANNER_LABEL_NL: string
   VERSION: string
   API_HOST: string
   BRANDING: string
