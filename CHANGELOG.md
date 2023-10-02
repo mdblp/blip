@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Fixed
 - YLP-2438 Inconsistency in the daily view between carbs displayed on the graph and Total carbs in the statistics panel
+- YLP-2627 "Last data update" column is not sorting properly
 - YLP-2642 Disabled Google Translate automated translation to avoid React crashes in notification page
 - YLP-2643 Disabled Google Translate automated translation to avoid React crashes in training page
 

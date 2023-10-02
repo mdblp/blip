@@ -30,6 +30,7 @@ import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-
 import {
   sortByDateOfBirth,
   sortByFlag,
+  sortByLastDataUpdate,
   sortByMonitoringAlertsCount,
   sortByUserName
 } from '../../../../components/patient-list/utils/sort-comparators.util'
@@ -145,6 +146,21 @@ describe('useSortComparatorsHook', () => {
       expect(sortByDateOfBirth(patientB, patientA)).toEqual(-1)
       expect(sortByDateOfBirth(patientB, patientC)).toEqual(0)
       expect(sortByDateOfBirth(patientC, patientB)).toEqual(0)
+    })
+  })
+
+  describe('sortByLastDataUpdate', () => {
+    it('should sort the patients by last data update', () => {
+      const notAvailableDate = 'N/A'
+      const oldestDate = 'Sep 14, 2023 1:50 AM'
+      const mostRecentDate = 'Sep 20, 2023 1:50 AM'
+
+      expect(sortByLastDataUpdate(notAvailableDate, notAvailableDate)).toEqual(1)
+      expect(sortByLastDataUpdate(notAvailableDate, oldestDate)).toEqual(-1)
+      expect(sortByLastDataUpdate(oldestDate, notAvailableDate)).toEqual(1)
+      expect(sortByLastDataUpdate(oldestDate, mostRecentDate)).toBeLessThanOrEqual(-1)
+      expect(sortByLastDataUpdate(mostRecentDate, oldestDate)).toBeGreaterThanOrEqual(1)
+      expect(sortByLastDataUpdate(oldestDate, oldestDate)).toEqual(0)
     })
   })
 
