@@ -29,7 +29,8 @@ import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import {
   sortByDateOfBirth,
-  sortByFlag, sortByLastDataUpdate,
+  sortByFlag,
+  sortByLastDataUpdate,
   sortByMonitoringAlertsCount,
   sortByUserName
 } from '../../../../components/patient-list/utils/sort-comparators.util'
