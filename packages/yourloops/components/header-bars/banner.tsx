@@ -25,40 +25,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  checkBannerLanguageChange,
-  checkCaregiverHeader,
-  checkHcpHeader,
-  checkPatientHeader,
-  type HeaderInfo
-} from '../assert/header.assert'
-import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from '../assert/footer.assert'
+import React, { type FC } from 'react'
 
-export interface AppMainLayoutHcpParams {
-  footerHasLanguageSelector?: boolean
-  headerInfo: HeaderInfo
-}
+import { useTheme } from '@mui/material/styles'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { ConfigService } from '../../lib/config/config.service'
 
-export interface AppMainLayoutParams {
-  footerHasLanguageSelector?: boolean
-  loggedInUserFullName: string
-}
 
-export const testAppMainLayoutForHcp = async (appMainLayoutParams: AppMainLayoutHcpParams) => {
-  await checkHcpHeader(appMainLayoutParams.headerInfo)
-  checkFooterForHcp(appMainLayoutParams.footerHasLanguageSelector ?? false)
-}
+export const Banner: FC = () => {
+  const theme = useTheme();
 
-export const testAppMainLayoutForCaregiver = async (appMainLayoutParams: AppMainLayoutParams) => {
-  await checkCaregiverHeader(appMainLayoutParams.loggedInUserFullName)
-  checkFooterForCaregiver(appMainLayoutParams.footerHasLanguageSelector ?? false)
-}
-
-export const testAppMainLayoutForPatient = async (appMainLayoutParams: AppMainLayoutParams) => {
-  await checkPatientHeader(appMainLayoutParams.loggedInUserFullName)
-  checkFooterForPatient(appMainLayoutParams.footerHasLanguageSelector ?? false)
-}
-
-export const testBannerLanguageUpdate = async () => {
-  await checkBannerLanguageChange()
+  return (
+    <Box
+      alignItems="center"
+      bgcolor="var(--primary-color-dark)"
+      display="flex"
+      justifyContent="center"
+      minHeight={60}
+      paddingLeft={theme.spacing(4)}
+      paddingRight={theme.spacing(4)}
+      width="100%"
+    >
+      <Typography
+        color={theme.palette.common.white}
+        variant="subtitle2"
+        textAlign="center"
+      >
+        {ConfigService.getBannerLabel()}
+      </Typography>
+    </Box>
+  )
 }
