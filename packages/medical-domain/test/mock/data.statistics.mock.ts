@@ -27,12 +27,11 @@
 
 import type DateFilter from '../../src/domains/models/time/date-filter.model'
 import { createMealData, createRandomBasal, createRandomBolus, createWizardData } from '../data-generator'
-import { type Basal, type Bolus, type Meal, Prescriptor, Unit, type Wizard } from '../../src'
+import { type Basal, type Bolus, type Meal, WizardInputMealFat, WizardInputMealSource, type Wizard,  Prescriptor, Unit } from '../../src'
 
 type BgDataRange = Array<[Date, string, number?]>
 type BolusDataRange = Array<[Date, number, Prescriptor?]>
 type BasalDataRange = Array<[Date, number, number, string]>
-
 const abbottDevice = 'AbbottFreeStyleLibre-XXX-XXXX'
 const dexcomDevice = 'Dexcom-XXX-XXXX'
 export const MS_IN_HOUR = 864e5 / 24
@@ -154,7 +153,11 @@ export const buildWizardData = (data: BgDataRange): Wizard[] => (
   data.map((wizardData) => (
     {
       ...createWizardData(wizardData[0]),
-      deviceName: wizardData[1]
+      deviceName: wizardData[1],
+      inputMeal:{
+        fat: WizardInputMealFat.No,
+        source: WizardInputMealSource.Umm
+      }
     }
   ))
 )

@@ -222,7 +222,21 @@ const ignoredTransKeyForYourLoops = [
   'weight',
   'account-created-info-2-caregiver',
   'account-created-info-2-hcp',
-  'signup-unknown-step'
+  'signup-unknown-step',
+  'avg-daily-declared-carbs',
+  'avg-daily-estimated-carbs',
+  'meal-carbs',
+  'tooltip-avg-daily-estimated-carbs',
+  'tooltip-avg-daily-week-carbs',
+  'tooltip-declared-derived-carbs',
+  'tooltip-estimated-derived-carbs',
+  'tooltip-estimated-week-carbs',
+  'tooltip-per-day-carbs',
+  'tooltip-per-day-estimated-carbs',
+  'total-declared-carbs',
+  'total-estimated-carbs',
+  'time-loop-tooltip',
+  'tooltip-total-derived-carbs'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',

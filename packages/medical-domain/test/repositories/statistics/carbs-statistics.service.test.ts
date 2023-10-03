@@ -30,37 +30,43 @@ import {
   buildMealData,
   buildWizardData,
   dateFilterOneDay,
-  dateFilterTwoDays, dateFilterTwoWeeks, bgDataSourceTwoWeeks
+  dateFilterTwoDays,
+  dateFilterTwoWeeks,
+  bgDataSourceTwoWeeks
 } from '../../mock/data.statistics.mock'
 import { CarbsStatisticsService, HoursRange } from '../../../src'
 import { RescueCarbsAverageStatistics } from '../../../src/domains/models/statistics/carbs-statistics.model'
 
-describe('CarbsStatisticsService', () => {
-  describe('getCarbsData', () => {
-    it('should return the total carbs from wizard and food data when viewing 1 day', () => {
-      const mealData = buildMealData(bgDataSourceOneDay)
-      const wizardData = buildWizardData(bgDataSourceOneDay)
-      const carbsData = CarbsStatisticsService.getCarbsData(mealData, wizardData, 1, dateFilterOneDay)
-      const expected = {
-        foodCarbsPerDay: 25,
-        totalEntriesCarbWithRescueCarbs: 10,
-        totalCarbsPerDay: 50
-      }
+describe('getCarbsData', () => {
+  it('should return the total carbs from wizard and food data when viewing 1 day', () => {
+    const mealData = buildMealData(bgDataSourceOneDay)
+    const wizardData = buildWizardData(bgDataSourceOneDay)
+    const carbsData = CarbsStatisticsService.getCarbsData(mealData, wizardData, 1, dateFilterOneDay)
+    const expected = {
+      mealCarbsPerDay: 25,
+      rescueCarbsPerDay: 25,
+      estimatedCarbsPerDay: 25,
+      totalCarbsPerDay: 50,
+      totalMealCarbsWithRescueCarbsEntries: 10,
+      totalRescueCarbsEntries: 5
+    }
 
       expect(carbsData).toEqual(expected)
     })
 
-    it('should return the avg daily carbs from wizard and food data when viewing more than 1 day', () => {
-      const mealData = buildMealData(bgDataSourceTwoDays)
-      const wizardData = buildWizardData(bgDataSourceTwoDays)
-      const carbsData = CarbsStatisticsService.getCarbsData(mealData, wizardData, 2, dateFilterTwoDays)
-      const expected = {
-        foodCarbsPerDay: 2.5,
-        totalEntriesCarbWithRescueCarbs: 2,
-        totalCarbsPerDay: 5
-      }
-      expect(carbsData).toEqual(expected)
-    })
+  it('should return the avg daily carbs from wizard and food data when viewing more than 1 day', () => {
+    const mealData = buildMealData(bgDataSourceTwoDays)
+    const wizardData = buildWizardData(bgDataSourceTwoDays)
+    const carbsData = CarbsStatisticsService.getCarbsData(mealData, wizardData, 2, dateFilterTwoDays)
+    const expected = {
+      mealCarbsPerDay: 2.5,
+      estimatedCarbsPerDay: 2.5,
+      rescueCarbsPerDay: 2.5,
+      totalCarbsPerDay: 5,
+      totalMealCarbsWithRescueCarbsEntries: 2,
+      totalRescueCarbsEntries: 1
+    }
+    expect(carbsData).toEqual(expected)
   })
 
   describe('getRescueCarbsAverageStatistics', () => {

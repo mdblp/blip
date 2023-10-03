@@ -7,6 +7,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2292 Display rescue carbs and manual bolus in the trends view for DBLG1 patient
 
 ### Changed
+- YLP-2227 Adjustment of the stats on carbs of the dashboard
 - YLP-2484 Remove level column in device change parameter history
 - YLP-2572 Prevent patient from adding the same caregiver to their list twice
 - YLP-2630 As a user, I would like to be notified with a banner when there are ongoing issues with yourloops

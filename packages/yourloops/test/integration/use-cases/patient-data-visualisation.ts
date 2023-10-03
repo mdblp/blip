@@ -28,7 +28,8 @@
 import {
   checkPatientStatistics,
   checkPatientStatisticsNoData,
-  checkPatientStatisticsWithTwoWeeksOldData, checkTrendsPatientStatistics
+  checkPatientStatisticsWithTwoWeeksOldData,
+  checkPatientStatisticsTrendsView,
 } from '../assert/patient-statistics.assert'
 import { checkPatientDashboardLayout, type PatientDashboardLayoutParams } from '../assert/layout.assert'
 import {
@@ -87,8 +88,8 @@ export const testDashboardDataVisualisationPrivateTeamNoData = async (patientDas
   await checkDeviceUsageWidgetNoData()
 }
 
-export const testTrendDataVisualisationForHCP = async () => {
-  await checkTrendsPatientStatistics()
+export const testTrensdsDataVisualisationForHCP = async () => {
+  await checkPatientStatisticsTrendsView()
   await checkTrendsStatsWidgetsTooltips()
 }
 export const testPatientNavBarForHcp = async () => {
