@@ -1,8 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Dumb" type="JavaScriptTestRunnerJest">
+  <configuration default="false" name="dumb unit tests" type="JavaScriptTestRunnerJest">
     <config-file value="$PROJECT_DIR$/packages/dumb/src/jest.config.js" />
     <node-interpreter value="project" />
-    <node-options value="" />
     <jest-package value="$PROJECT_DIR$/node_modules/jest" />
     <working-dir value="$PROJECT_DIR$/packages/dumb" />
     <envs />

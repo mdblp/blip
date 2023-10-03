@@ -25,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { AlarmEventTooltip } from './components/tooltips/alarm-event-tooltip/alarm-event-tooltip'
 import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
 import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
 import { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
@@ -81,6 +82,7 @@ export {
   FoodTooltip,
   formatBirthdate,
   getPatientFullName,
+  AlarmEventTooltip,
   formatBgValue,
   LayoutColumnType,
   LoopModeStat,

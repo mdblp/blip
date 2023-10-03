@@ -28,6 +28,24 @@
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {
+  ALARM_EVENT_HYPERGLYCEMIA_ID,
+  ALARM_EVENT_HYPOGLYCEMIA_ID,
+  ALARM_EVENT_INSIGHT_EMPTY_INSULIN_CARTRIDGE_ID,
+  ALARM_EVENT_INSIGHT_EMPTY_PUMP_BATTERY_ID,
+  ALARM_EVENT_INSIGHT_HYPOGLYCEMIA_ID,
+  ALARM_EVENT_INSIGHT_INCOMPATIBLE_ACTIONS_ON_PUMP_ID,
+  ALARM_EVENT_INSIGHT_INSULIN_CARTRIDGE_EXPIRED_ID,
+  ALARM_EVENT_INSIGHT_OCCLUSION_ID,
+  ALARM_EVENT_KALEIDO_EMPTY_INSULIN_CARTRIDGE_ID,
+  ALARM_EVENT_KALEIDO_EMPTY_PUMP_BATTERY_ID,
+  ALARM_EVENT_KALEIDO_INSULIN_CARTRIDGE_EXPIRED_ID,
+  ALARM_EVENT_KALEIDO_OCCLUSION_ID,
+  ALARM_EVENT_LONG_HYPERGLYCEMIA_ID,
+  ALARM_EVENT_LONG_HYPOGLYCEMIA_ID,
+  ALARM_EVENT_NO_READINGS_HYPOGLYCEMIA_RISK_ID,
+  ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID,
+  ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID,
+  ALARM_EVENT_URGENT_LOW_SOON_ID,
   CARB_ID,
   CBG_ID,
   PARAMETER_ID,
@@ -83,6 +101,24 @@ export const checkDailyTidelineContainerTooltips = async () => {
   await checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, '10:00 am10:00 amMEAL_RATIO_LUNCH_FACTOR110→100%')
   await checkTidelineContainerElementTooltip(`cbg_${CBG_ID}`, '5:30 pmGlucose189')
   await checkTidelineContainerElementTooltip(`smbg_${SMBG_ID}`, '5:15 pmGlucose189Calibration')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_HYPERGLYCEMIA_ID}`, '11:00 amAlert 10113HyperglycemiaG6 readings are above a configurable threshold (250 mg/dL by default).IMPORTANT this alert is triggered only if loop mode is deactivated.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_HYPOGLYCEMIA_ID}`, '11:05 amAlarm 12000HypoglycemiaYour glycemia is below 55 mg/dL.IMPORTANT this alarm is triggered only if loop mode is deactivated.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_INSIGHT_EMPTY_INSULIN_CARTRIDGE_ID}`, '11:10 amAlarm 71002Cartridge emptyThere is no insulin left in the cartridge. Insert a new cartridge.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_INSIGHT_EMPTY_PUMP_BATTERY_ID}`, '11:15 amAlarm 71001Pump empty batteryThe battery in your pump is dead. Insert a new battery.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_INSIGHT_HYPOGLYCEMIA_ID}`, '11:20 amAlert 10117Hypoglycemia alertG6 readings are below a configurable threshold (70 mg/dL by default).IMPORTANT: this alert is triggered only if loop mode is OFF.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_INSIGHT_INCOMPATIBLE_ACTIONS_ON_PUMP_ID}`, '11:25 amAlarm 71003Incompatible actions on the pumpSome actions on the pump are not supported. Loop mode is now off and cannot be restarted for up to 3 hours.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_INSIGHT_INSULIN_CARTRIDGE_EXPIRED_ID}`, '11:30 amAlarm 71020Insulin cartridge expiredInsulin cartridge has expired. Insert a new cartridge.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_INSIGHT_OCCLUSION_ID}`, '11:35 amAlarm 71004OcclusionThe insulin cannot flow freely. Change the complete infusion set. If the message occurs again, change the cartridge as well.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_KALEIDO_EMPTY_INSULIN_CARTRIDGE_ID}`, '11:40 amAlarm 41002Empty insulin cartridgeYour pump stopped because the insulin cartridge is empty.The pump can no longer deliver insulin.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_KALEIDO_EMPTY_PUMP_BATTERY_ID}`, '11:45 amAlarm 41001Empty pump batteryThe pump will stop because its battery is empty.The pump can no longer deliver insulin.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_KALEIDO_INSULIN_CARTRIDGE_EXPIRED_ID}`, '11:50 amAlarm 41003Insulin cartridge expiredYour pump stopped because the insulin cartridge has expired.The pump can no longer deliver insulin.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_KALEIDO_OCCLUSION_ID}`, '11:55 amAlarm 41004OcclusionThe pump stopped because it has detected an occlusion.The pump can no longer deliver insulin.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_LONG_HYPERGLYCEMIA_ID}`, '12:00 pmAlarm 15000HyperglycemiaThe G6 readings have been higher than 320 mg/dL for more than 20 minutes.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_LONG_HYPOGLYCEMIA_ID}`, '12:05 pmAlarm 24000HypoglycemiaYour G6 reading has been below 60 mg/dL for at least 25 minutes.IMPORTANT this alarm is triggered only if loop mode is activated.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_NO_READINGS_HYPOGLYCEMIA_RISK_ID}`, '12:10 pmAlert 20100No readings and hypoglycemia riskThe system has not received any G6 reading for 15 minutes. However, the last known G6 reading was less than 100 mg/dL.IMPORTANT this alert is triggered only if loop mode is activated.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID}`, '12:15 pmAlarm 11000Sensor session expiredThe sensor session has expired.IMPORTANT If loop mode was running, it will stop within the next 30 minutes.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID}`, '12:20 pmAlert 20102A sudden rise in glycemiaA sudden rise in glycemia was detected.IMPORTANT this alert is triggered only if loop mode is activated.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_URGENT_LOW_SOON_ID}`, '12:25 pmAlert 10112Urgent low soonThe transmitter predicts that your sensor glucose will be at or below 55 mg/dL in 2 minutes.IMPORTANT this alert is triggered only if loop mode is deactivated.')
 }
 
 export const checkDailyStatsWidgetsTooltips = async () => {

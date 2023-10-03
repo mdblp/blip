@@ -27,6 +27,7 @@
 
 import { faker } from '@faker-js/faker'
 import type Bolus from '../src/domains/models/medical/datum/bolus.model'
+import { AlarmCode, AlarmEvent, AlarmEventType, AlarmLevel, BolusSubtype, DatumType, Prescriptor } from '../src'
 import type Basal from '../src/domains/models/medical/datum/basal.model'
 import type Cbg from '../src/domains/models/medical/datum/cbg.model'
 import { bgUnits } from '../src/domains/models/medical/datum/bg.model'
@@ -45,7 +46,6 @@ import type WarmUp from '../src/domains/models/medical/datum/warm-up.model'
 import type Wizard from '../src/domains/models/medical/datum/wizard.model'
 import type ZenMode from '../src/domains/models/medical/datum/zen-mode.model'
 import type Datum from '../src/domains/models/medical/datum.model'
-import { DatumType, Prescriptor, BolusSubtype } from '../src'
 import Source from '../src/domains/models/medical/datum/enums/source.enum'
 import DurationUnit from '../src/domains/models/medical/datum/enums/duration-unit.enum'
 import Unit from '../src/domains/models/medical/datum/enums/unit.enum'
@@ -81,6 +81,24 @@ function createBaseDurationData(date?: Date): BaseDatum & Duration {
     },
     normalEnd,
     epochEnd
+  }
+}
+
+function createRandomAlarm(date?: Date): AlarmEvent {
+  return {
+    ...createBaseData(date),
+    alarmEventType: AlarmEventType.Device,
+    guid: 'none',
+    inputTime: faker.date.past().toISOString(),
+    type: DatumType.DeviceEvent,
+    subType: DeviceEventSubtype.Alarm,
+    alarm: {
+      alarmCode: AlarmCode.KaleidoOcclusion,
+      alarmLevel: AlarmLevel.Alarm,
+      alarmType: 'handset',
+      ackStatus: 'new',
+      updateTime: faker.date.past().toISOString()
+    }
   }
 }
 
@@ -316,6 +334,8 @@ function createRandomDatum(type: DatumType, subtype?: DeviceEventSubtype, date?:
       return createRandomCbg(date)
     case DatumType.DeviceEvent:
       switch (subtype) {
+        case DeviceEventSubtype.Alarm:
+          return createRandomAlarm(date)
         case DeviceEventSubtype.Confidential:
           return createRandomConfidentialMode(date)
         case DeviceEventSubtype.DeviceParameter:

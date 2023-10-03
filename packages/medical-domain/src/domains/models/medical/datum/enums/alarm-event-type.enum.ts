@@ -25,11 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum DeviceEventSubtype {
-  Alarm = 'alarm',
-  Confidential = 'confidential',
-  DeviceParameter = 'deviceParameter',
-  ReservoirChange = 'reservoirChange',
-  Warmup = 'warmup',
-  Zen = 'zen',
+export enum AlarmEventType {
+  Device = 'Device',
+  Hyperglycemia = 'Hyperglycemia',
+  Hypoglycemia = 'Hypoglycemia',
+  Unknown = 'Unknown'
 }

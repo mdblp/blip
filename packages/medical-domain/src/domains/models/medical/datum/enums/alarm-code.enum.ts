@@ -25,11 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum DeviceEventSubtype {
-  Alarm = 'alarm',
-  Confidential = 'confidential',
-  DeviceParameter = 'deviceParameter',
-  ReservoirChange = 'reservoirChange',
-  Warmup = 'warmup',
-  Zen = 'zen',
+export enum AlarmCode {
+  Hyperglycemia = '10113',
+  Hypoglycemia = '12000',
+  InsightEmptyInsulinCartridge = '71002',
+  InsightEmptyPumpBattery = '71001',
+  InsightHypoglycemia = '10117',
+  InsightIncompatibleActionsOnPump = '71003',
+  InsightInsulinCartridgeExpired = '71020',
+  InsightOcclusion = '71004',
+  KaleidoEmptyInsulinCartridge = '41002',
+  KaleidoEmptyPumpBattery = '41001',
+  KaleidoInsulinCartridgeExpired = '41003',
+  KaleidoOcclusion = '41004',
+  LongHyperglycemia = '15000',
+  LongHypoglycemia = '24000',
+  NoReadingsHypoglycemiaRisk = '20100',
+  SensorSessionExpired = '11000',
+  SuddenRiseInGlycemia = '20102',
+  UrgentLowSoon = '10112'
 }
