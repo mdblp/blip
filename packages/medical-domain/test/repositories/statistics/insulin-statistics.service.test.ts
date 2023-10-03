@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BasalBolusStatisticsService } from '../../../src'
+import { BasalBolusStatisticsService, HoursRange } from '../../../src'
 import {
   basalsData,
   bolusData,
@@ -34,8 +34,10 @@ import {
   dateFilterOneDay,
   dateFilterTwoWeeks,
   dateFilterTwoDays,
-  MS_IN_HOUR
+  MS_IN_HOUR,
+  manualBolusData
 } from '../../mock/data.statistics.mock'
+import { ManualBolusAverageStatistics } from '../../../src/domains/models/statistics/basal-bolus-statistics.model'
 
 describe('Time In Auto Data', () => {
   it('should return the time spent in automated and manual basal delivery when viewing 1 day', () => {
@@ -44,10 +46,10 @@ describe('Time In Auto Data', () => {
       automatedBasalDuration: MS_IN_HOUR,
       automatedPercentage: 33,
       manualBasalDuration: 7200000,
-      manualPercentage: 67,
+      manualPercentage: 67
 
 
-  })
+    })
   })
 
   it('should return the avg daily time spent in automated and manual basal delivery when viewing more than 1 day', () => {
@@ -86,5 +88,23 @@ describe('getBasalBolusData', () => {
       total: 10.75
     }
     expect(basalBolusData).toEqual(expectBasalBolusData)
+  })
+})
+
+describe('getManualBolusAverageStatistics', () => {
+  it('should return a map with ranges of hours and manual bolus average statistics', () => {
+    const boluses = buildBolusData(manualBolusData)
+    const manualBoluses = BasalBolusStatisticsService.getManualBolusAverageStatistics(boluses, 14, dateFilterTwoWeeks)
+    const expected: ManualBolusAverageStatistics = new Map([
+      [HoursRange.MidnightToThree, { confirmedDose: 0.1, numberOfInjections: 0.1 }],
+      [HoursRange.ThreeToSix, { confirmedDose: 0.4, numberOfInjections: 0.1 }],
+      [HoursRange.SixToNine, { confirmedDose: 0, numberOfInjections: 0 }],
+      [HoursRange.NineToTwelve, { confirmedDose: 0, numberOfInjections: 0 }],
+      [HoursRange.TwelveToFifteen, { confirmedDose: 0.3, numberOfInjections: 0.1 }],
+      [HoursRange.FifteenToEighteen, { confirmedDose: 0, numberOfInjections: 0 }],
+      [HoursRange.EighteenToTwentyOne, { confirmedDose: 0.5, numberOfInjections: 0.1 }],
+      [HoursRange.TwentyOneToMidnight, { confirmedDose: 0.3, numberOfInjections: 0.2 }]
+    ])
+    expect(manualBoluses).toEqual(expected)
   })
 })

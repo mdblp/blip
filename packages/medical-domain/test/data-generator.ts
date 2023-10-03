@@ -27,7 +27,7 @@
 
 import { faker } from '@faker-js/faker'
 import type Bolus from '../src/domains/models/medical/datum/bolus.model'
-import { AlarmCode, AlarmEvent, AlarmEventType, BolusSubtype, DatumType } from '../src'
+import { AlarmCode, AlarmEvent, AlarmEventType, AlarmLevel, BolusSubtype, DatumType, Prescriptor } from '../src'
 import type Basal from '../src/domains/models/medical/datum/basal.model'
 import type Cbg from '../src/domains/models/medical/datum/cbg.model'
 import { bgUnits } from '../src/domains/models/medical/datum/bg.model'
@@ -53,7 +53,6 @@ import Intensity from '../src/domains/models/medical/datum/enums/intensity.enum'
 import PumpManufacturer from '../src/domains/models/medical/datum/enums/pump-manufacturer.enum'
 import { DeviceEventSubtype } from '../src/domains/models/medical/datum/enums/device-event-subtype.enum'
 import { getTrendsTime } from '../src/domains/repositories/time/time.service'
-import { AlarmLevel } from '../src/domains/models/medical/datum/enums/alarm-level.enum'
 
 function createBaseData(date?: Date): BaseDatum {
   const pastDate = date ?? faker.date.recent({ days: 20 })
@@ -129,7 +128,7 @@ function createRandomBolus(date?: Date): Bolus {
     subType: faker.helpers.arrayElement(Object.values(BolusSubtype)),
     uploadId: faker.string.uuid(),
     normal: 0,
-    prescriptor: 'test',
+    prescriptor: Prescriptor.Auto,
     wizard: null
   }
 }

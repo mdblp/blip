@@ -34,6 +34,7 @@ import { type BolusSubtype } from '../../../models/medical/datum/enums/bolus-sub
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import DatumService from '../datum.service'
 import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
+import Prescriptor from '../../../models/medical/datum/enums/prescriptor.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Bolus => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -46,7 +47,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     subType: rawData.subType as BolusSubtype,
     uploadId: rawData.uploadId as string,
     normal: rawData.normal as number,
-    prescriptor: rawData.prescriptor as string,
+    prescriptor: rawData.prescriptor as Prescriptor,
     wizard: null
   }
   if (rawData.expectedNormal) {

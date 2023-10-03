@@ -19,6 +19,13 @@ const DUMMY_DOMAIN = 'example.com'
 const DUMMY_URL = `https://${DUMMY_DOMAIN}/`
 
 const defaultConfig = {
+  BANNER_ENABLED: false,
+  BANNER_LABEL_EN: '',
+  BANNER_LABEL_ES: '',
+  BANNER_LABEL_DE: '',
+  BANNER_LABEL_FR: '',
+  BANNER_LABEL_IT: '',
+  BANNER_LABEL_NL: '',
   VERSION: '0.0.0',
   UPLOAD_API: 'https://tidepool.org/uploader',
   API_HOST: `${window.location.protocol}//${window.location.host}`,

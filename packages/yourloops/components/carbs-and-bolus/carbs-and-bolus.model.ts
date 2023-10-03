@@ -25,40 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  checkBannerLanguageChange,
-  checkCaregiverHeader,
-  checkHcpHeader,
-  checkPatientHeader,
-  type HeaderInfo
-} from '../assert/header.assert'
-import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from '../assert/footer.assert'
-
-export interface AppMainLayoutHcpParams {
-  footerHasLanguageSelector?: boolean
-  headerInfo: HeaderInfo
-}
-
-export interface AppMainLayoutParams {
-  footerHasLanguageSelector?: boolean
-  loggedInUserFullName: string
-}
-
-export const testAppMainLayoutForHcp = async (appMainLayoutParams: AppMainLayoutHcpParams) => {
-  await checkHcpHeader(appMainLayoutParams.headerInfo)
-  checkFooterForHcp(appMainLayoutParams.footerHasLanguageSelector ?? false)
-}
-
-export const testAppMainLayoutForCaregiver = async (appMainLayoutParams: AppMainLayoutParams) => {
-  await checkCaregiverHeader(appMainLayoutParams.loggedInUserFullName)
-  checkFooterForCaregiver(appMainLayoutParams.footerHasLanguageSelector ?? false)
-}
-
-export const testAppMainLayoutForPatient = async (appMainLayoutParams: AppMainLayoutParams) => {
-  await checkPatientHeader(appMainLayoutParams.loggedInUserFullName)
-  checkFooterForPatient(appMainLayoutParams.footerHasLanguageSelector ?? false)
-}
-
-export const testBannerLanguageUpdate = async () => {
-  await checkBannerLanguageChange()
+export enum TypeOfCell {
+  ManualBolus = 'manual_bolus',
+  RescueCarbs = 'rescue_carbs'
 }

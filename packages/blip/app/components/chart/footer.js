@@ -23,8 +23,13 @@ import Box from '@mui/material/Box'
 function TidelineFooter(props) {
   const { children, onClickRefresh } = props
   return (
-    <Box display="flex" justifyContent="space-between">
-      <div>
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      marginLeft={5}
+      marginRight="10px"
+    >
+      <Box>
         <Button
           data-testid="confirm-dialog-cancel-button"
           variant="outlined"
@@ -32,8 +37,8 @@ function TidelineFooter(props) {
         >
           {i18next.t('Refresh')}
         </Button>
-      </div>
-      <div>{children}</div>
+      </Box>
+      {children}
     </Box>
   )
 }

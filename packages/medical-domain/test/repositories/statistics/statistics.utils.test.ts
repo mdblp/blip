@@ -25,40 +25,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  checkBannerLanguageChange,
-  checkCaregiverHeader,
-  checkHcpHeader,
-  checkPatientHeader,
-  type HeaderInfo
-} from '../assert/header.assert'
-import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from '../assert/footer.assert'
+import { buildHoursRangeMap, roundValue } from '../../../src/domains/repositories/statistics/statistics.utils'
+import { HoursRange, Meal } from '../../../src'
 
-export interface AppMainLayoutHcpParams {
-  footerHasLanguageSelector?: boolean
-  headerInfo: HeaderInfo
-}
+describe('statistics.utils.test', () => {
+  describe('roundValue', () => {
+    it('should return a rounded value', () => {
+      const value = 2.54858713
+      expect(roundValue(value)).toEqual(3) // By default an integer
+      expect(roundValue(value, 1)).toEqual(2.5)
+      expect(roundValue(value, 2)).toEqual(2.55)
+    })
+  })
 
-export interface AppMainLayoutParams {
-  footerHasLanguageSelector?: boolean
-  loggedInUserFullName: string
-}
+  describe('buildHoursRangeMap', () => {
+    it('should return a map of hours range', () => {
+      const map = buildHoursRangeMap<Meal[]>()
+      const expectedResult: Map<HoursRange, Meal[]> = new Map([
+        [HoursRange.MidnightToThree, []],
+        [HoursRange.ThreeToSix, []],
+        [HoursRange.SixToNine, []],
+        [HoursRange.NineToTwelve, []],
+        [HoursRange.TwelveToFifteen, []],
+        [HoursRange.FifteenToEighteen, []],
+        [HoursRange.EighteenToTwentyOne, []],
+        [HoursRange.TwentyOneToMidnight, []]
+      ])
 
-export const testAppMainLayoutForHcp = async (appMainLayoutParams: AppMainLayoutHcpParams) => {
-  await checkHcpHeader(appMainLayoutParams.headerInfo)
-  checkFooterForHcp(appMainLayoutParams.footerHasLanguageSelector ?? false)
-}
-
-export const testAppMainLayoutForCaregiver = async (appMainLayoutParams: AppMainLayoutParams) => {
-  await checkCaregiverHeader(appMainLayoutParams.loggedInUserFullName)
-  checkFooterForCaregiver(appMainLayoutParams.footerHasLanguageSelector ?? false)
-}
-
-export const testAppMainLayoutForPatient = async (appMainLayoutParams: AppMainLayoutParams) => {
-  await checkPatientHeader(appMainLayoutParams.loggedInUserFullName)
-  checkFooterForPatient(appMainLayoutParams.footerHasLanguageSelector ?? false)
-}
-
-export const testBannerLanguageUpdate = async () => {
-  await checkBannerLanguageChange()
-}
+      expect(map).toEqual(expectedResult)
+    })
+  })
+})
