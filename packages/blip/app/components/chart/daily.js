@@ -46,8 +46,6 @@ import metrics from 'yourloops/lib/metrics'
  * @typedef { import('../../index').DatePicker } DatePicker
  */
 
-const HYPOGLYCEMIA_THRESHOLD_PARAMETER_NAME = 'PATIENT_GLY_HYPO_LIMIT'
-
 const WarmUpTooltip = vizComponents.WarmUpTooltip
 
 class DailyChart extends React.Component {
