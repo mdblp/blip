@@ -84,5 +84,5 @@ export const checkPatientStatisticsTrendsView = async () => {
   expect(patientStatistics.getByTestId('container-insulin-stats')).toHaveTextContent('Avg. Daily Total Insulin18.4UBolus4.1 U22%Basal14.3 U78%')
   expect(patientStatistics.getByTestId('coefficient-of-variation-stat')).toHaveTextContent('CV (CGM)10%')
   expect(patientStatistics.getByTestId('loop-mode-stat')).toHaveTextContent('Avg. Daily Time In Loop ModeONOFF44%7h 56m56%9h 55m')
-  expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily declared carbs155gMeal carbs48gRescue carbs107gAvg. Daily estimated carbs20g')
+  expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily declared carbs154.9gMeal carbs47.9gRescue carbs107gAvg. Daily estimated carbs20g')
 }
