@@ -41,16 +41,21 @@ import { AlarmCode } from '../../../models/medical/datum/enums/alarm-code.enum'
 const CATEGORIZED_ALARM_CODES = {
   DEVICE: {
     ALARM: [
-      AlarmCode.EmptyPumpBattery,
-      AlarmCode.EmptyInsulinCartridge,
-      AlarmCode.InsulinCartridgeExpired,
-      AlarmCode.Occlusion,
+      AlarmCode.InsightEmptyInsulinCartridge,
+      AlarmCode.InsightEmptyPumpBattery,
+      AlarmCode.InsightIncompatibleActionsOnPump,
+      AlarmCode.InsightInsulinCartridgeExpired,
+      AlarmCode.InsightOcclusion,
+      AlarmCode.KaleidoEmptyInsulinCartridge,
+      AlarmCode.KaleidoEmptyPumpBattery,
+      AlarmCode.KaleidoInsulinCartridgeExpired,
+      AlarmCode.KaleidoOcclusion,
       AlarmCode.SensorSessionExpired
     ]
   },
   HYPOGLYCEMIA: {
     ALARM: [AlarmCode.Hypoglycemia, AlarmCode.LongHypoglycemia],
-    ALERT: [AlarmCode.UrgentLowSoon, AlarmCode.NoReadingsHypoglycemiaRisk]
+    ALERT: [AlarmCode.InsightHypoglycemia, AlarmCode.NoReadingsHypoglycemiaRisk, AlarmCode.UrgentLowSoon]
   },
   HYPERGLYCEMIA: {
     ALARM: [AlarmCode.LongHyperglycemia],

@@ -648,14 +648,6 @@ class Daily extends React.Component {
 
   handleAlarmEventHover = (datum) => {
     this.updateDatumHoverForTooltip(datum)
-    const { tidelineData } = this.props
-    const lastPumpSettings = [...tidelineData.medicalData.pumpSettings].pop()
-    const parameters = lastPumpSettings.payload.parameters
-    const hypoglycemiaThresholdParameter = parameters.find((parameter) => parameter.name === HYPOGLYCEMIA_THRESHOLD_PARAMETER_NAME)
-    const hypoglycemiaThreshold = hypoglycemiaThresholdParameter ? {
-      value: hypoglycemiaThresholdParameter.value,
-      unit: hypoglycemiaThresholdParameter.unit
-    } : undefined
     const tooltip = (
       <AlarmEventTooltip
         alarmEvent={datum.data}
@@ -666,7 +658,6 @@ class Daily extends React.Component {
         side={datum.side}
         bgPrefs={datum.bgPrefs}
         timePrefs={datum.timePrefs}
-        hypoglycemiaThreshold={hypoglycemiaThreshold}
       />)
     this.setState({ tooltip })
   }

@@ -59,22 +59,19 @@ interface AlarmEventTooltipProps {
   side: Side
   bgPrefs: BgPrefs
   timePrefs: TimePrefs
-  hypoglycemiaThreshold?: {
-    value: number
-    unit: BgUnit
-  }
 }
 
 const DEFAULT_UNIT = MGDL_UNITS
-const URGENT_LOW_SOON_DEFAULT_VALUE_MGDL = 55
+const INSIGHT_HYPOGLYCEMIA_DEFAULT_VALUE_MGDL = 70
 const HYPERGLYCEMIA_DEFAULT_VALUE_MGDL = 250
 const HYPOGLYCEMIA_DEFAULT_VALUE_MGDL = 55
 const LONG_HYPERGLYCEMIA_DEFAULT_VALUE_MGDL = 320
 const LONG_HYPOGLYCEMIA_DEFAULT_VALUE_MGDL = 60
 const NO_READINGS_HYPOGLYCEMIA_RISK_DEFAULT_VALUE_MGDL = 100
+const URGENT_LOW_SOON_DEFAULT_VALUE_MGDL = 55
 
 export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
-  const { alarmEvent, bgPrefs, hypoglycemiaThreshold, position, side, timePrefs } = props
+  const { alarmEvent, bgPrefs, position, side, timePrefs } = props
   const { t } = useTranslation('main')
 
   const getBorderColor = (alarmEventType: AlarmEventType): string => {
@@ -91,28 +88,38 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
 
   const getContentTitleByCode = (alarmCode: AlarmCode): string => {
     switch (alarmCode) {
-      case AlarmCode.UrgentLowSoon:
-        return t('alert-urgent-low-soon-title')
       case AlarmCode.Hyperglycemia:
       case AlarmCode.LongHyperglycemia:
-        return t('alert-hyperglycemia-title')
-      case AlarmCode.SensorSessionExpired:
-        return t('alarm-sensor-session-expired-title')
+        return t('alarm-hyperglycemia-title')
       case AlarmCode.Hypoglycemia:
       case AlarmCode.LongHypoglycemia:
         return t('alarm-hypoglycemia-title')
-      case AlarmCode.NoReadingsHypoglycemiaRisk:
-        return t('alert-no-readings-hypoglycemia-risk-title')
-      case AlarmCode.SuddenRiseInGlycemia:
-        return t('alert-sudden-rise-glycemia-title')
-      case AlarmCode.EmptyPumpBattery:
-        return t('alarm-empty-pump-battery-title')
-      case AlarmCode.EmptyInsulinCartridge:
-        return t('alarm-empty-insulin-cartridge-title')
-      case AlarmCode.InsulinCartridgeExpired:
+      case AlarmCode.InsightHypoglycemia:
+        return t('alarm-insight-hypoglycemia-title')
+      case AlarmCode.InsightEmptyInsulinCartridge:
+        return t('alarm-insight-empty-insulin-cartridge-title')
+      case AlarmCode.InsightEmptyPumpBattery:
+        return t('alarm-insight-empty-pump-battery-title')
+      case AlarmCode.InsightIncompatibleActionsOnPump:
+        return t('alarm-insight-incompatible-actions-on-pump-title')
+      case AlarmCode.InsightInsulinCartridgeExpired:
+      case AlarmCode.KaleidoInsulinCartridgeExpired:
         return t('alarm-insulin-cartridge-expired-title')
-      case AlarmCode.Occlusion:
+      case AlarmCode.InsightOcclusion:
+      case AlarmCode.KaleidoOcclusion:
         return t('alarm-occlusion-title')
+      case AlarmCode.KaleidoEmptyInsulinCartridge:
+        return t('alarm-kaleido-empty-insulin-cartridge-title')
+      case AlarmCode.KaleidoEmptyPumpBattery:
+        return t('alarm-kaleido-empty-pump-battery-title')
+      case AlarmCode.NoReadingsHypoglycemiaRisk:
+        return t('alarm-no-readings-hypoglycemia-risk-title')
+      case AlarmCode.SensorSessionExpired:
+        return t('alarm-sensor-session-expired-title')
+      case AlarmCode.SuddenRiseInGlycemia:
+        return t('alarm-sudden-rise-glycemia-title')
+      case AlarmCode.UrgentLowSoon:
+        return t('alarm-urgent-low-soon-title')
       default:
         return ''
     }
@@ -125,18 +132,20 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
 
   const getDefaultValueByCode = (alarmCode: AlarmCode): number => {
     switch (alarmCode) {
-      case AlarmCode.UrgentLowSoon:
-        return URGENT_LOW_SOON_DEFAULT_VALUE_MGDL
       case AlarmCode.Hyperglycemia:
         return HYPERGLYCEMIA_DEFAULT_VALUE_MGDL
       case AlarmCode.Hypoglycemia:
         return HYPOGLYCEMIA_DEFAULT_VALUE_MGDL
+      case AlarmCode.InsightHypoglycemia:
+        return INSIGHT_HYPOGLYCEMIA_DEFAULT_VALUE_MGDL
       case AlarmCode.LongHyperglycemia:
         return LONG_HYPERGLYCEMIA_DEFAULT_VALUE_MGDL
       case AlarmCode.LongHypoglycemia:
         return LONG_HYPOGLYCEMIA_DEFAULT_VALUE_MGDL
       case AlarmCode.NoReadingsHypoglycemiaRisk:
         return NO_READINGS_HYPOGLYCEMIA_RISK_DEFAULT_VALUE_MGDL
+      case AlarmCode.UrgentLowSoon:
+        return URGENT_LOW_SOON_DEFAULT_VALUE_MGDL
       default:
         return 0
     }
@@ -149,54 +158,66 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
 
   const getContentTextByCode = (alarmCode: AlarmCode): string[] => {
     const bgUnit = bgPrefs.bgUnits
-    const defaultConvertedValue = getDefaultConvertedValue(alarmCode, bgUnit)
+    const convertedValue = getDefaultConvertedValue(alarmCode, bgUnit)
 
     switch (alarmCode) {
-      case AlarmCode.UrgentLowSoon:
-        return [t('alert-urgent-low-soon-description', {
-          value: defaultConvertedValue,
-          unit: bgUnit
-        }), t('alert-loop-mode-deactivated-description')]
       case AlarmCode.Hyperglycemia:
-        return [t('alert-hyperglycemia-description', {
-          value: defaultConvertedValue,
+        return [t('alarm-hyperglycemia-description', {
+          value: convertedValue,
           unit: bgUnit
-        }), t('alert-loop-mode-deactivated-description')]
-      case AlarmCode.SensorSessionExpired:
-        return [t('alarm-sensor-session-expired-description-line1'), t('alarm-sensor-session-expired-description-line2')]
+        }), t('alarm-alert-loop-mode-deactivated-description')]
       case AlarmCode.Hypoglycemia:
         return [t('alarm-hypoglycemia-description', {
-          value: defaultConvertedValue,
+          value: convertedValue,
           unit: bgUnit
         }), t('alarm-loop-mode-deactivated-description')]
+      case AlarmCode.InsightEmptyInsulinCartridge:
+        return [t('alarm-insight-empty-insulin-cartridge-description')]
+      case AlarmCode.InsightEmptyPumpBattery:
+        return [t('alarm-insight-empty-pump-battery-description')]
+      case AlarmCode.InsightHypoglycemia:
+        return [t('alarm-insight-hypoglycemia-description', {
+          value: convertedValue,
+          unit: bgUnit
+        }), t('alarm-insight-loop-mode-deactivated-description')]
+      case AlarmCode.InsightIncompatibleActionsOnPump:
+        return [t('alarm-insight-incompatible-actions-on-pump-description')]
+      case AlarmCode.InsightInsulinCartridgeExpired:
+        return [t('alarm-insight-insulin-cartridge-expired-description')]
+      case AlarmCode.InsightOcclusion:
+        return [t('alarm-insight-occlusion-description')]
+      case AlarmCode.KaleidoEmptyPumpBattery:
+        return [t('alarm-kaleido-empty-pump-battery-description'), t('alarm-pump-cannot-deliver-insulin-description')]
+      case AlarmCode.KaleidoEmptyInsulinCartridge:
+        return [t('alarm-kaleido-empty-insulin-cartridge-description'), t('alarm-pump-cannot-deliver-insulin-description')]
+      case AlarmCode.KaleidoInsulinCartridgeExpired:
+        return [t('alarm-kaleido-insulin-cartridge-expired-description'), t('alarm-pump-cannot-deliver-insulin-description')]
+      case AlarmCode.KaleidoOcclusion:
+        return [t('alarm-kaleido-occlusion-description'), t('alarm-pump-cannot-deliver-insulin-description')]
       case AlarmCode.LongHyperglycemia:
-        return [t('alert-long-hyperglycemia-description', {
-          value: defaultConvertedValue,
+        return [t('alarm-long-hyperglycemia-description', {
+          value: convertedValue,
           unit: bgUnit
         })]
-      case AlarmCode.NoReadingsHypoglycemiaRisk:
-        return [t('alert-no-readings-hypoglycemia-risk-description', {
-          value: defaultConvertedValue,
-          unit: bgUnit
-        }), t('alert-loop-mode-activated-description')]
-      case AlarmCode.SuddenRiseInGlycemia:
-        return [t('alert-sudden-rise-glycemia-description'), t('alert-loop-mode-activated-description')]
       case AlarmCode.LongHypoglycemia:
-        const hypoglycemiaThresholdValue = hypoglycemiaThreshold
-          ? getConvertedValue(hypoglycemiaThreshold.value, bgUnit, hypoglycemiaThreshold.unit)
-          : defaultConvertedValue
         return [t('alarm-long-hypoglycemia-description', {
-          value: hypoglycemiaThresholdValue,
+          value: convertedValue,
           unit: bgUnit
         }), t('alarm-loop-mode-activated-description')]
-      case AlarmCode.EmptyPumpBattery:
-        return [t('alarm-empty-pump-battery-description'), t('alarm-pump-cannot-deliver-insulin-description')]
-      case AlarmCode.EmptyInsulinCartridge:
-        return [t('alarm-empty-insulin-cartridge-description'), t('alarm-pump-cannot-deliver-insulin-description')]
-      case AlarmCode.InsulinCartridgeExpired:
-        return [t('alarm-insulin-cartridge-expired-description'), t('alarm-pump-cannot-deliver-insulin-description')]
-      case AlarmCode.Occlusion:
-        return [t('alarm-occlusion-description'), t('alarm-pump-cannot-deliver-insulin-description')]
+      case AlarmCode.NoReadingsHypoglycemiaRisk:
+        return [t('alarm-no-readings-hypoglycemia-risk-description', {
+          value: convertedValue,
+          unit: bgUnit
+        }), t('alarm-alert-loop-mode-activated-description')]
+      case AlarmCode.SensorSessionExpired:
+        return [t('alarm-sensor-session-expired-description-line1'), t('alarm-sensor-session-expired-description-line2')]
+      case AlarmCode.SuddenRiseInGlycemia:
+        return [t('alarm-sudden-rise-glycemia-description'), t('alarm-alert-loop-mode-activated-description')]
+      case AlarmCode.UrgentLowSoon:
+        return [t('alarm-urgent-low-soon-description', {
+          value: convertedValue,
+          unit: bgUnit
+        }), t('alarm-alert-loop-mode-deactivated-description')]
       default:
         return ['']
     }
@@ -205,7 +226,7 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
   const alarmCode = alarmEvent.alarm.alarmCode
   const title = alarmEvent.alarm.alarmLevel === AlarmLevel.Alarm
     ? t('alarm-with-code', { code: alarmCode })
-    : t('alert-with-code', { code: alarmCode })
+    : t('alarm-alert-with-code', { code: alarmCode })
 
   const contentTitle = getContentTitleByCode(alarmCode)
   const contentTextArray = getContentTextByCode(alarmCode)

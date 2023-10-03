@@ -94,7 +94,7 @@ function createRandomAlarm(date?: Date): AlarmEvent {
     type: DatumType.DeviceEvent,
     subType: DeviceEventSubtype.Alarm,
     alarm: {
-      alarmCode: AlarmCode.Occlusion,
+      alarmCode: AlarmCode.KaleidoOcclusion,
       alarmLevel: AlarmLevel.Alarm,
       alarmType: 'handset',
       ackStatus: 'new',
