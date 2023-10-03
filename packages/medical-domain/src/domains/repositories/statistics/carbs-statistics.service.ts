@@ -30,28 +30,42 @@ import type Wizard from '../../models/medical/datum/wizard.model'
 import type DateFilter from '../../models/time/date-filter.model'
 import MealService from '../medical/datum/meal.service'
 import WizardService from '../medical/datum/wizard.service'
-import { buildHoursRangeMap, getWeekDaysFilter, roundValue, sumValues } from './statistics.utils'
+import {
+  getWeekDaysFilter,
+  sumValues,
+  buildHoursRangeMap,
+  roundValue
+} from './statistics.utils'
 import {
   type CarbsStatistics,
   RescueCarbsAveragePerRange,
-  RescueCarbsAverageStatistics
-} from '../../models/statistics/carbs-statistics.model'
+  RescueCarbsAverageStatistics } from '../../models/statistics/carbs-statistics.model'
+import { WizardInputMealSource } from '../../models/medical/datum/enums/wizard-input-meal-source.enum'
 import { getHours } from '../time/time.service'
 import { HoursRange } from '../../models/statistics/satistics.model'
 
+
 function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter): CarbsStatistics {
-  const filterMeal = MealService.filterOnDate(meal, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  const filterWizard = WizardService.filterOnDate(wizard, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  const foodCarbsData = filterMeal.map(meal => meal.nutrition.carbohydrate.net)
-  const wizardData = filterWizard.map(wizard => wizard.carbInput)
-  const wizardCarbs = sumValues(wizardData)
-  const foodCarbs = sumValues(foodCarbsData)
-  const totalEntriesCarbWithRescueCarbs = foodCarbsData.length + wizardData.length
-  const totalCarbs = wizardCarbs + foodCarbs
+  const filteredMeal = MealService.filterOnDate(meal, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  const filteredWizard = WizardService.filterOnDate(wizard, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  const filteredEstimatedCarbs = filteredWizard.filter(estimatedCarb => estimatedCarb.inputMeal)
+    .filter((wizard) => wizard.inputMeal?.source === WizardInputMealSource.Umm)
+  const rescueCarbsData = filteredMeal.map(meal => meal.nutrition.carbohydrate.net)
+  const mealData = filteredWizard.map(wizard => wizard.carbInput)
+  const estimatedCarbsData = filteredEstimatedCarbs.map(wizard => wizard.carbInput)
+  const estimatedCarbs = sumValues(estimatedCarbsData)
+  const mealCarbs = sumValues(mealData)
+  const rescueCarbs = sumValues(rescueCarbsData)
+  const totalEntriesMealCarbWithRescueCarbs = rescueCarbsData.length + mealData.length
+  const totalRescueCarbsEntries = rescueCarbsData.length
+  const totalCarbs = mealCarbs + rescueCarbs
   return {
-    foodCarbsPerDay: foodCarbs / numDays,
-    totalEntriesCarbWithRescueCarbs,
-    totalCarbsPerDay: totalCarbs / numDays
+    mealCarbsPerDay: mealCarbs / numDays,
+    rescueCarbsPerDay: rescueCarbs / numDays,
+    estimatedCarbsPerDay: estimatedCarbs / numDays,
+    totalMealCarbsWithRescueCarbsEntries: totalEntriesMealCarbWithRescueCarbs,
+    totalCarbsPerDay: totalCarbs / numDays,
+    totalRescueCarbsEntries
   }
 }
 

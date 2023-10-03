@@ -147,6 +147,7 @@ function drawBolus(pool, opts = {}) {
           'cy': yPos,
           'r': (d) => yScaleCarbs(d.carbInput),
           'stroke-width': 0,
+          'data-testid': 'carbs-meals',
           'class': carbCircleClass,
           'id': (d) => `carbs_circle_${d.id}`
         })
