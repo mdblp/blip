@@ -156,10 +156,10 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
       <Box className={classes.widgetGroup}>
         <CarbsStat
           totalMealCarbsWithRescueCarbsEntries={totalMealCarbsWithRescueCarbsEntries}
-          totalCarbsPerDay={Math.round(totalCarbsPerDay)}
-          rescueCarbsPerDay={Math.round(rescueCarbsPerDay)}
+          totalCarbsPerDay={Math.round(totalCarbsPerDay*10)/10}
+          rescueCarbsPerDay={Math.round(rescueCarbsPerDay*10)/10}
           estimatedCarbsPerDay={Math.round(estimatedCarbsPerDay)}
-          mealCarbsPerDay={Math.round(mealCarbsPerDay)}
+          mealCarbsPerDay={Math.round(mealCarbsPerDay*10)/10}
           totalRescueCarbsEntries={totalRescueCarbsEntries}
         />
         <Divider className={classes.divider}/>
