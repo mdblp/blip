@@ -38,9 +38,9 @@ export const checkMonitoringAlertsDialogContentMgdl = async (): Promise<void> =>
   await userEvent.click(configureMonitoringAlertsButton)
   const dialog = screen.getByRole('dialog')
 
-  expect(dialog).toHaveTextContent('Monitoring alerts configuration1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)A. Glycemic targetMinimum:​mg/dLMaximum:​mg/dLB. Event trigger thresholdTime spent off target5%​')
+  expect(dialog).toHaveTextContent('Monitoring alerts configurationCare team values1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)A. Glycemic targetMinimum:​mg/dLMaximum:​mg/dLB. Event trigger thresholdTime spent off target5%​')
   expect(dialog).toHaveTextContent('2. Severe hypoglycemiaCurrent trigger setting: 10% of time below 40 mg/dL thresholdA. Severe hypoglycemia threshold:Severe hypoglycemia below:​mg/dLB. Event trigger thresholdTime spent in severe hypoglycemia10%​')
-  expect(dialog).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​Default valuesCancelSave')
+  expect(dialog).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​CancelSave')
 
   const cancelButton = within(dialog).getByRole('button', { name: 'Cancel' })
   await userEvent.click(cancelButton)
@@ -51,9 +51,9 @@ export const checkMonitoringAlertsDialogContentMmol = async (): Promise<void> =>
   const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring alerts')
   await userEvent.click(configureMonitoringAlertsButton)
   const dialog = screen.getByRole('dialog')
-  expect(dialog).toHaveTextContent('Monitoring alerts configuration1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 2.8 mmol/L max at 7.8 mmol/L)A. Glycemic targetMinimum:​mmol/LMaximum:​mmol/LB. Event trigger thresholdTime spent off target5%​')
+  expect(dialog).toHaveTextContent('Monitoring alerts configurationCare team values1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 2.8 mmol/L max at 7.8 mmol/L)A. Glycemic targetMinimum:​mmol/LMaximum:​mmol/LB. Event trigger thresholdTime spent off target5%​')
   expect(dialog).toHaveTextContent('2. Severe hypoglycemiaCurrent trigger setting: 10% of time below 2.2 mmol/L thresholdA. Severe hypoglycemia threshold:Severe hypoglycemia below:​mmol/LB. Event trigger thresholdTime spent in severe hypoglycemia10%​')
-  expect(dialog).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​Default valuesCancelSave')
+  expect(dialog).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​CancelSave')
 
   const cancelButton = within(dialog).getByRole('button', { name: 'Cancel' })
   await userEvent.click(cancelButton)
@@ -199,7 +199,7 @@ export const checkMonitoringAlertsDialogDefaultButtonMgdl = async (): Promise<vo
   const hypoThreshold = dialog.getByTestId('basic-dropdown-hypo-threshold-selector')
   const nonDataThreshold = dialog.getByTestId('basic-dropdown-non-data-selector')
   const saveButton = dialog.getByRole('button', { name: 'Save' })
-  const defaultButton = dialog.getByRole('button', { name: 'Default values' })
+  const careTeamValuesButton = dialog.getByRole('button', { name: 'Care team values' })
   const cancelButton = dialog.getByRole('button', { name: 'Cancel' })
 
   await userEvent.clear(lowBgInput)
@@ -240,7 +240,7 @@ export const checkMonitoringAlertsDialogDefaultButtonMgdl = async (): Promise<vo
   expect(dialog.getByText('Current trigger setting: 20% of time below 50 mg/dL threshold')).toBeVisible()
   expect(dialog.getByText('Current trigger setting: 40% of data not transmitted over the period')).toBeVisible()
 
-  await userEvent.click(defaultButton)
+  await userEvent.click(careTeamValuesButton)
   expect(lowBgInput).toHaveValue(50)
   expect(highBgInput).toHaveValue(140)
   expect(veryLowBgInput).toHaveValue(40)
