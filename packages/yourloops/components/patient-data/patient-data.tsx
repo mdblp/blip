@@ -48,9 +48,9 @@ import { useDailyNotes } from './daily-notes.hook'
 import metrics from '../../lib/metrics'
 import DailyNotes from 'blip/app/components/messages'
 import { useAuth } from '../../lib/auth'
-import { DevicePage } from '../../pages/patient-view/device/device-page'
+import { DeviceView } from '../../pages/patient-view/device/device-view'
 import { setPageTitle } from '../../lib/utils'
-import { TargetAndAlertsPage } from '../../pages/patient-view/target-and-alerts/target-and-alerts-page'
+import { TargetAndAlertsView } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
 
 export const PatientData: FunctionComponent = () => {
   const alert = useAlert()
@@ -217,7 +217,7 @@ export const PatientData: FunctionComponent = () => {
                   <Route
                     path={AppUserRoute.Device}
                     element={
-                      <DevicePage
+                      <DeviceView
                         goToDailySpecificDate={goToDailySpecificDate}
                         medicalData={medicalData}
                       />
@@ -228,7 +228,7 @@ export const PatientData: FunctionComponent = () => {
                     <Route
                       path={AppUserRoute.TargetAndAlerts}
                       element={
-                        <TargetAndAlertsPage
+                        <TargetAndAlertsView
                           patient={patient}
                         />
                       }

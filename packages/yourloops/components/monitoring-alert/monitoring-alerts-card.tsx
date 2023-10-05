@@ -25,15 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { makeStyles } from 'tss-react/mui'
 import { Box, IconButton, Skeleton } from '@mui/material'
-import TuneIcon from '@mui/icons-material/Tune'
 import AnnouncementIcon from '@mui/icons-material/Announcement'
-
-import PatientMonitoringAlertDialog from './patient-monitoring-alert-dialog'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
 import CardContent from '@mui/material/CardContent'
@@ -42,6 +39,10 @@ import { useAuth } from '../../lib/auth'
 import { useTheme } from '@mui/material/styles'
 import { MonitoringAlertsCardSkeletonValue } from './monitoring-alerts-card-skeleton-value'
 import PatientUtils from '../../lib/patient/patient.util'
+import { useNavigate } from 'react-router-dom'
+import { AppUserRoute } from '../../models/enums/routes.enum'
+import { MONITORING_ALERTS_SECTION_ID } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
+import { FilterCenterFocus } from '@mui/icons-material'
 
 const monitoringAlertsCardStyles = makeStyles()((theme) => {
   return {
@@ -64,7 +65,8 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
   const { user } = useAuth()
   const theme = useTheme()
   const { classes } = monitoringAlertsCardStyles()
-  const [showPatientMonitoringAlertsDialog, setShowPatientMonitoringAlertsDialog] = useState(false)
+  const navigate = useNavigate()
+
   const monitoringAlerts = patient.monitoringAlerts
   const timeSpentAwayFromTargetActive = monitoringAlerts?.timeSpentAwayFromTargetActive
   const frequencyOfSevereHypoglycemiaActive = monitoringAlerts?.frequencyOfSevereHypoglycemiaActive
@@ -81,10 +83,6 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
 
   const numberOfMonitoringAlertsLabel = buildNumberOfMonitoringAlertsLabel()
 
-  const onClosePatientMonitoringAlertsDialog = (): void => {
-    setShowPatientMonitoringAlertsDialog(false)
-  }
-
   return (
     <GenericDashboardCard
       avatar={<AnnouncementIcon className={noActiveMonitoringAlert ? '' : classes.alertColor} />}
@@ -96,10 +94,13 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
           aria-label={t('configure-monitoring-alerts')}
           data-testid="monitoring-alert-card-configure-button"
           data-stonlyid="monitoring-alerts-card-configure-button"
-          onClick={() => { setShowPatientMonitoringAlertsDialog(true) }}
+          onClick={() => {
+            const targetAndAlertsMonitoringAlertsSectionRoute = `${AppUserRoute.Patient}/${patient.userid}${AppUserRoute.TargetAndAlerts}#${MONITORING_ALERTS_SECTION_ID}`
+            navigate(targetAndAlertsMonitoringAlertsSectionRoute)
+          }}
           size="small"
         >
-          <TuneIcon />
+          <FilterCenterFocus />
         </IconButton>
       }
     >
@@ -179,9 +180,6 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
         }
 
       </CardContent>
-      {showPatientMonitoringAlertsDialog &&
-        <PatientMonitoringAlertDialog patient={patient} onClose={onClosePatientMonitoringAlertsDialog} />
-      }
     </GenericDashboardCard>
   )
 }

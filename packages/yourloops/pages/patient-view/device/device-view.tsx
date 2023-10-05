@@ -34,12 +34,12 @@ import Box from '@mui/material/Box'
 import { DeviceSettings } from '../../../components/device/device-settings'
 import Typography from '@mui/material/Typography'
 
-interface DevicePageProps {
+interface DeviceViewProps {
   goToDailySpecificDate: (date: number) => void
   medicalData: MedicalDataService
 }
 
-export const DevicePage: FC<DevicePageProps> = ({ medicalData, goToDailySpecificDate }) => {
+export const DeviceView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecificDate }) => {
   const { t } = useTranslation()
   const theme = useTheme()
 

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import Container from '@mui/material/Container'
 import MonitoringAlertsContentConfiguration
   from '../../../components/monitoring-alert/monitoring-alerts-content-configuration'
@@ -40,21 +40,37 @@ import { useTheme } from '@mui/material/styles'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
+import { useLocation } from 'react-router-dom'
 
-interface TargetAndAlertsPageProps {
+interface TargetAndAlertsViewProps {
   patient: Patient
 }
 
-export const TargetAndAlertsPage: FC<TargetAndAlertsPageProps> = (props) => {
+export const MONITORING_ALERTS_SECTION_ID = 'monitoring-alerts'
+
+export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
   const { patient } = props
   const theme = useTheme()
   const { t } = useTranslation('yourloops')
   const { updatePatientMonitoringAlertsParameters } = usePatientsContext()
   const { selectedTeam } = useSelectedTeamContext()
   const alert = useAlert()
+  const { pathname, hash, key } = useLocation()
   const monitoringAlertsParameters = patient.monitoringAlertsParameters ?? selectedTeam.monitoringAlertsParameters
 
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (hash === '') {
+      return
+    }
+
+    const sectionId = hash.replace('#', '')
+    const section = document.getElementById(sectionId)
+    if (section) {
+      section.scrollIntoView()
+    }
+  }, [pathname, hash, key])
 
   const save = async (monitoringAlertsParameters: MonitoringAlertsParameters): Promise<void> => {
     patient.monitoringAlertsParameters = monitoringAlertsParameters
@@ -75,15 +91,18 @@ export const TargetAndAlertsPage: FC<TargetAndAlertsPageProps> = (props) => {
       <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
         <CardHeader title={t('target-and-alerts')} />
         <CardContent>
-          <Typography variant="h6" paddingBottom={theme.spacing(1)}>{t('monitoring-alerts')}</Typography>
-          <Typography variant="body2" paddingBottom={theme.spacing(2)}>{t('monitoring-alerts-description')}</Typography>
-          <MonitoringAlertsContentConfiguration
-            displayInReadonly={false}
-            monitoringAlertsParameters={monitoringAlertsParameters}
-            saveInProgress={saveInProgress}
-            onSave={save}
-            patient={patient}
-          />
+          <section id={MONITORING_ALERTS_SECTION_ID}>
+            <Typography variant="h6" paddingBottom={theme.spacing(1)}>{t('monitoring-alerts')}</Typography>
+            <Typography variant="body2"
+                        paddingBottom={theme.spacing(2)}>{t('monitoring-alerts-description')}</Typography>
+            <MonitoringAlertsContentConfiguration
+              displayInReadonly={false}
+              monitoringAlertsParameters={monitoringAlertsParameters}
+              saveInProgress={saveInProgress}
+              onSave={save}
+              patient={patient}
+            />
+          </section>
         </CardContent>
       </Card>
     </Container>
