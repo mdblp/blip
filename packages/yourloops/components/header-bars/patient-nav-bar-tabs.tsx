@@ -124,18 +124,6 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
             root: classes.root
           }}
         />
-        <Tab
-          className={classes.tab}
-          value={PatientView.Device}
-          data-testid="device-tab"
-          iconPosition="start"
-          label={t('device')}
-          icon={<PhonelinkSetupOutlinedIcon />}
-          onClick={() => { onChangePatientView(PatientView.Device) }}
-          classes={{
-            root: classes.root
-          }}
-        />
         {user.isUserHcp() &&
           <Tab
             className={classes.tab}
@@ -150,6 +138,18 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
             }}
           />
         }
+        <Tab
+          className={classes.tab}
+          value={PatientView.Device}
+          data-testid="device-tab"
+          iconPosition="start"
+          label={t('device')}
+          icon={<PhonelinkSetupOutlinedIcon />}
+          onClick={() => { onChangePatientView(PatientView.Device) }}
+          classes={{
+            root: classes.root
+          }}
+        />
       </Tabs>
       <Button data-testid="download-report" onClick={onClickPrint}>
         <GetAppIcon />
