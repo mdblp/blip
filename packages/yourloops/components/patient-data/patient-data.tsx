@@ -27,7 +27,7 @@
 
 import React, { type FunctionComponent, useEffect, useRef, useState } from 'react'
 import { PatientNavBarMemoized as PatientNavBar } from '../header-bars/patient-nav-bar'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { PrintPDFDialog } from '../pdf/print-pdf-dialog'
 import { PatientDashboard } from '../dashboard-widgets/patient-dashboard'
@@ -48,8 +48,9 @@ import { useDailyNotes } from './daily-notes.hook'
 import metrics from '../../lib/metrics'
 import DailyNotes from 'blip/app/components/messages'
 import { useAuth } from '../../lib/auth'
-import { DevicePage } from '../../pages/device/device-page'
+import { DevicePage } from '../../pages/patient-view/device/device-page'
 import { setPageTitle } from '../../lib/utils'
+import { TargetAndAlertsPage } from '../../pages/patient-view/target-and-alerts/target-and-alerts-page'
 
 export const PatientData: FunctionComponent = () => {
   const alert = useAlert()
@@ -60,9 +61,9 @@ export const PatientData: FunctionComponent = () => {
   const {
     bgPrefs,
     chartPrefs,
-    changeChart,
+    changePatientView,
     changePatient,
-    currentChart,
+    currentPatientView,
     dailyDate,
     dailyChartRef,
     fetchPatientData,
@@ -94,7 +95,7 @@ export const PatientData: FunctionComponent = () => {
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
 
-  setPageTitle(t(currentChart))
+  setPageTitle(t(currentPatientView))
 
   useEffect(() => {
     if (patient.userid !== patientIdForWhichDataHasBeenFetched.current) {
@@ -111,9 +112,9 @@ export const PatientData: FunctionComponent = () => {
   return (
     <React.Fragment>
       <PatientNavBar
-        currentChart={currentChart}
+        currentPatientView={currentPatientView}
         currentPatient={patient}
-        onChangeChart={changeChart}
+        onChangePatientView={changePatientView}
         onClickPrint={() => {
           setShowPdfDialog(true)
         }}
@@ -222,6 +223,18 @@ export const PatientData: FunctionComponent = () => {
                       />
                     }
                   />
+                  {
+                    user.isUserHcp() &&
+                    <Route
+                      path={AppUserRoute.TargetAndAlerts}
+                      element={
+                        <TargetAndAlertsPage
+                          patient={patient}
+                        />
+                      }
+                    />
+                  }
+                  <Route path="*" element={<Navigate to={AppUserRoute.Dashboard} replace />} />
                 </Routes>
                 {showPdfDialog &&
                   <PrintPDFDialog

@@ -41,6 +41,8 @@ import DialogContent from '@mui/material/DialogContent'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { type MonitoringAlertsParameters } from '../../lib/team/models/monitoring-alerts-parameters.model'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import Box from '@mui/material/Box'
+import { useTheme } from '@mui/material/styles'
 
 const useStyles = makeStyles()(() => ({
   title: {
@@ -61,6 +63,7 @@ function PatientMonitoringAlertDialog(props: PatientMonitoringAlertDialogProps):
   const patientsHook = usePatientsContext()
   const alert = useAlert()
   const { selectedTeam } = useSelectedTeamContext()
+  const theme = useTheme()
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
   const monitoringAlertsParameters = patient.monitoringAlertsParameters ?? selectedTeam.monitoringAlertsParameters
 
@@ -99,13 +102,15 @@ function PatientMonitoringAlertDialog(props: PatientMonitoringAlertDialogProps):
       </DialogTitle>
 
       <DialogContent className={'no-padding'}>
-        <MonitoringAlertsContentConfiguration
-          displayInReadonly={false}
-          monitoringAlertsParameters={monitoringAlertsParameters}
-          patient={patient}
-          onSave={save}
-          saveInProgress={saveInProgress}
-          onClose={onClose} />
+        <Box paddingX={theme.spacing(3)}>
+          <MonitoringAlertsContentConfiguration
+            displayInReadonly={false}
+            monitoringAlertsParameters={monitoringAlertsParameters}
+            patient={patient}
+            onSave={save}
+            saveInProgress={saveInProgress}
+            onClose={onClose} />
+        </Box>
       </DialogContent>
     </Dialog>
   )

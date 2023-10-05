@@ -6,6 +6,7 @@ It is based on Tidepool Blip 1.27.
 ### Added
 - YLP-2292 Display rescue carbs and manual bolus in the trends view for DBLG1 patient
 - YLP-2299 Display DBLG1 events in Daily view
+- YLP-2609 Patient "Target & alerts" view for HCP
 
 ### Changed
 - YLP-2227 Adjustment of the stats on carbs of the dashboard
