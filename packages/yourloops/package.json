@@ -57,7 +57,7 @@
     "react-i18next": "^13.2.2",
     "react-idle-timer": "^5.7.2",
     "react-resize-detector": "^9.1.0",
-    "react-router-dom": "^6.14.1",
+    "react-router-dom": "^6.16.0",
     "tss-react": "^4.8.6",
     "uuid": "^9.0.0"
   }
