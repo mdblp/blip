@@ -50,7 +50,12 @@ export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Manufacturer')}</Typography>
-            <Typography variant="body2" className="bold">{pump.manufacturer || FALLBACK_VALUE}</Typography>
+            <Typography
+              variant="body2"
+              className="bold"
+              sx={{ textTransform: 'uppercase' }}
+            >
+              {pump.manufacturer || FALLBACK_VALUE}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
