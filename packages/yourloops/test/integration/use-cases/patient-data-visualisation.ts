@@ -40,7 +40,7 @@ import {
 import { patient1Info, patient2Info } from '../data/patient.api.data'
 import {
   checkPatientDropdown,
-  checkPatientNavBarForPatient,
+  checkPatientNavBarForPatientAndCaregiver,
   checkPatientSwitch
 } from '../assert/patient-nav-bar.assert'
 import {
@@ -96,8 +96,8 @@ export const testPatientNavBarForHcp = async () => {
   await checkPatientDropdown(patient1Info, patient2Info)
 }
 
-export const testPatientNavBarForPatient = async () => {
-  await checkPatientNavBarForPatient()
+export const testPatientNavBarForPatientAndCaregiver = async () => {
+  await checkPatientNavBarForPatientAndCaregiver()
 }
 
 export const testEmptyMedicalFilesWidgetForPatient = async () => {

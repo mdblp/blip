@@ -55,7 +55,7 @@ import {
   testDashboardDataVisualisationTwoWeeksOldData,
   testDashboardDataVisualisationSixteenDaysOldData,
   testEmptyMedicalFilesWidgetForPatient,
-  testPatientNavBarForPatient
+  testPatientNavBarForPatientAndCaregiver
 } from '../../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForPatient } from '../../../use-cases/medical-reports-management'
 import { testChatWidgetForPatient } from '../../../use-cases/communication-system'
@@ -99,7 +99,7 @@ describe('Dashboard view for patient', () => {
 
     await testAppMainLayoutForPatient(appMainLayoutParams)
     await testDashboardDataVisualisationForPatient(patientDashboardLayoutParams)
-    await testPatientNavBarForPatient()
+    await testPatientNavBarForPatientAndCaregiver()
   })
 
   it('should display medical reports', async () => {

@@ -43,7 +43,7 @@ import { type AppMainLayoutParams, testAppMainLayoutForCaregiver } from '../../.
 import { type PatientDashboardLayoutParams } from '../../../assert/layout.assert'
 import {
   testDashboardDataVisualisationPrivateTeam, testDashboardDataVisualisationTwoWeeksOldData,
-  testDashboardDataVisualisationSixteenDaysOldData
+  testDashboardDataVisualisationSixteenDaysOldData, testPatientNavBarForPatientAndCaregiver
 } from '../../../use-cases/patient-data-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
@@ -79,6 +79,7 @@ describe('Dashboard view for caregiver', () => {
 
     await testAppMainLayoutForCaregiver(appMainLayoutParams)
     await testDashboardDataVisualisationPrivateTeam(patientDashboardLayoutParams)
+    await testPatientNavBarForPatientAndCaregiver()
   })
 
   it('should render correct statistic when data is two weeks old', async () => {
