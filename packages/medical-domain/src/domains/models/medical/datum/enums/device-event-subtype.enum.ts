@@ -26,6 +26,7 @@
  */
 
 export enum DeviceEventSubtype {
+  Alarm = 'alarm',
   Confidential = 'confidential',
   DeviceParameter = 'deviceParameter',
   ReservoirChange = 'reservoirChange',

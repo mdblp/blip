@@ -15,6 +15,13 @@ export YLPZ_RA_LAD_001_IT_REV=0
 export YLPZ_RA_LAD_001_ES_REV=0
 export YLPZ_RA_LAD_001_DE_REV=0
 export IDLE_TIMEOUT_MS=1800000
+export BANNER_ENABLED=false
+export BANNER_LABEL_EN=""
+export BANNER_LABEL_ES=""
+export BANNER_LABEL_DE=""
+export BANNER_LABEL_FR=""
+export BANNER_LABEL_IT=""
+export BANNER_LABEL_NL=""
 
 # External services:
 # URL to HELP system

@@ -19,12 +19,12 @@ import i18next from 'i18next'
 import _ from 'lodash'
 import { EventEmitter } from 'events'
 
-import { MGDL_UNITS } from '../../js/data/util/constants'
+import { MGDL_UNITS } from 'medical-domain'
 
 import Pool from '../../js/pool'
 import oneDay from '../../js/oneday'
 import fill from '../../js/plot/util/fill'
-import { createYAxisBG, createYAxisBolus, createYAxisBasal } from '../../js/plot/util/scales'
+import { createYAxisBasal, createYAxisBG, createYAxisBolus } from '../../js/plot/util/scales'
 import axesDailyx from '../../js/plot/util/axes/dailyx'
 import plotZenModeEvent from '../../js/plot/zenModeEvent'
 import plotPhysicalActivity from '../../js/plot/physicalActivity'
@@ -32,6 +32,7 @@ import plotReservoirChange from '../../js/plot/reservoir'
 import plotDeviceParameterChange from '../../js/plot/deviceParameterChange'
 import plotConfidentialModeEvent from '../../js/plot/confidentialModeEvent'
 import plotWarmUp from '../../js/plot/warmup'
+import plotAlarmEvent from '../../js/plot/alarmEvent'
 import plotCbg from '../../js/plot/cbg'
 import plotSmbg from '../../js/plot/smbg'
 import plotWizard from '../../js/plot/wizard'
@@ -273,6 +274,12 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     tidelineData,
     onWarmUpHover: options.onWarmUpHover,
     onWarmUpOut: options.onTooltipOut
+  }))
+
+  poolBG.addPlotType({ type: 'deviceEvent' }, plotAlarmEvent(poolBG, {
+    tidelineData,
+    onAlarmEventHover: options.onAlarmEventHover,
+    onAlarmEventOut: options.onTooltipOut
   }))
 
   // add CBG data to BG pool

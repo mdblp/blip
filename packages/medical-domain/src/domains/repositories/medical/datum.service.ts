@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,9 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type DatumProcessor } from '../../models/medical/datum.model'
 import type Datum from '../../models/medical/datum.model'
+import { type DatumProcessor } from '../../models/medical/datum.model'
 import type MedicalDataOptions from '../../models/medical/medical-data-options.model'
+import AlarmEventService from './datum/alarm-event.service'
 import BasalService from './datum/basal.service'
 import BolusService from './datum/bolus.service'
 import CbgService from './datum/cbg.service'
@@ -47,7 +48,7 @@ import { isEpochBetweenBounds } from '../time/time.service'
 import { isBasal } from '../../models/medical/datum/basal.model'
 import { isDuration } from '../../models/medical/datum/basics/duration.model'
 import { isBg } from '../../models/medical/datum/bg.model'
-import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../models/time/date-filter.model'
+import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../models/time/date-filter.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Datum => {
   let type = rawData.type
@@ -63,6 +64,8 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
       return CbgService.normalize(rawData, opts)
     case 'deviceEvent':
       switch (rawData.subType as string) {
+        case 'alarm':
+          return AlarmEventService.normalize(rawData, opts)
         case 'confidential':
           return ConfidentialModeService.normalize(rawData, opts)
         case 'deviceParameter':

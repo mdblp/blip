@@ -27,7 +27,7 @@
 
 import { faker } from '@faker-js/faker'
 import type Bolus from '../src/domains/models/medical/datum/bolus.model'
-import { BolusSubtype } from '../src/domains/models/medical/datum/enums/bolus-subtype.enum'
+import { AlarmCode, AlarmEvent, AlarmEventType, AlarmLevel, BolusSubtype, DatumType, Prescriptor } from '../src'
 import type Basal from '../src/domains/models/medical/datum/basal.model'
 import type Cbg from '../src/domains/models/medical/datum/cbg.model'
 import { bgUnits } from '../src/domains/models/medical/datum/bg.model'
@@ -46,7 +46,6 @@ import type WarmUp from '../src/domains/models/medical/datum/warm-up.model'
 import type Wizard from '../src/domains/models/medical/datum/wizard.model'
 import type ZenMode from '../src/domains/models/medical/datum/zen-mode.model'
 import type Datum from '../src/domains/models/medical/datum.model'
-import { DatumType } from '../src/domains/models/medical/datum/enums/datum-type.enum'
 import Source from '../src/domains/models/medical/datum/enums/source.enum'
 import DurationUnit from '../src/domains/models/medical/datum/enums/duration-unit.enum'
 import Unit from '../src/domains/models/medical/datum/enums/unit.enum'
@@ -85,6 +84,24 @@ function createBaseDurationData(date?: Date): BaseDatum & Duration {
   }
 }
 
+function createRandomAlarm(date?: Date): AlarmEvent {
+  return {
+    ...createBaseData(date),
+    alarmEventType: AlarmEventType.Device,
+    guid: 'none',
+    inputTime: faker.date.past().toISOString(),
+    type: DatumType.DeviceEvent,
+    subType: DeviceEventSubtype.Alarm,
+    alarm: {
+      alarmCode: AlarmCode.KaleidoOcclusion,
+      alarmLevel: AlarmLevel.Alarm,
+      alarmType: 'handset',
+      ackStatus: 'new',
+      updateTime: faker.date.past().toISOString()
+    }
+  }
+}
+
 function createRandomBasal(date?: Date, hours?: number): Basal {
   const duration = hours ?? faker.number.int({ min: 60000, max: 300000 })
   const baseData = createBaseData(date)
@@ -111,7 +128,7 @@ function createRandomBolus(date?: Date): Bolus {
     subType: faker.helpers.arrayElement(Object.values(BolusSubtype)),
     uploadId: faker.string.uuid(),
     normal: 0,
-    prescriptor: 'test',
+    prescriptor: Prescriptor.Auto,
     wizard: null
   }
 }
@@ -317,6 +334,8 @@ function createRandomDatum(type: DatumType, subtype?: DeviceEventSubtype, date?:
       return createRandomCbg(date)
     case DatumType.DeviceEvent:
       switch (subtype) {
+        case DeviceEventSubtype.Alarm:
+          return createRandomAlarm(date)
         case DeviceEventSubtype.Confidential:
           return createRandomConfidentialMode(date)
         case DeviceEventSubtype.DeviceParameter:
