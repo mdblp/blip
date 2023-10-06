@@ -88,7 +88,7 @@ const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) 
     },
     chatWidgetEmojiPickerContainer: {
       position: 'absolute',
-      top: -60,
+      top: 10,
       zIndex: 3,
       width: '100%'
     },
