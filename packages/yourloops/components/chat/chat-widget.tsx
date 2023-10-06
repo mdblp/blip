@@ -88,7 +88,7 @@ const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) 
     },
     chatWidgetEmojiPickerContainer: {
       position: 'absolute',
-      top: -60,
+      top: 10,
       zIndex: 3,
       width: '100%'
     },
@@ -128,7 +128,7 @@ export interface ChatWidgetProps {
   patient: Patient
 }
 
-function ChatWidget(props: ChatWidgetProps): JSX.Element {
+function ChatWidget(props: Readonly<ChatWidgetProps>): JSX.Element {
   const { t } = useTranslation()
   const { patient } = props
   const { classes } = chatWidgetStyles()

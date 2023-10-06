@@ -92,7 +92,7 @@ export const checkPatientProfilePage = (): PatientFieldsHtmlElements => {
     hba1cInput
   }
 
-  expect(within(inputs.unitsSelect).getByRole('button')).toHaveAttribute('aria-disabled', 'true')
+  expect(within(inputs.unitsSelect).getByRole('combobox')).toHaveAttribute('aria-disabled', 'true')
   expect(birthdayInput).toBeVisible()
   expect(birthPlaceInput).toBeVisible()
   expect(genderSelect).toBeVisible()

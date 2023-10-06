@@ -64,7 +64,7 @@ export const checkCreateCareTeamDialog = async () => {
   expect(createTeamButton).toBeDisabled()
 
   // Team dropdown with prefix phone number
-  fireEvent.mouseDown(within(screen.getByTestId('team-edit-dialog-select-country')).getByRole('button'))
+  fireEvent.mouseDown(within(screen.getByTestId('team-edit-dialog-select-country')).getByRole('combobox'))
   await userEvent.click(screen.getByRole('option', { name: 'Austria' }))
   expect(prefixPhoneNumber).toHaveTextContent(PhonePrefixCode.AT)
 

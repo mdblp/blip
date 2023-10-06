@@ -97,7 +97,7 @@ export const checkProfileStep = async (firstname: string, lastname: string) => {
 
   await userEvent.type(firstnameInput, firstname)
   await userEvent.type(lastnameInput, lastname)
-  fireEvent.mouseDown(within(countrySelect).getByRole('button'))
+  fireEvent.mouseDown(within(countrySelect).getByRole('combobox'))
   screen.getByRole('listbox')
   await userEvent.click(screen.getByRole('option', { name: 'France' }))
 }

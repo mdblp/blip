@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import '@testing-library/jest-dom/extend-expect'
+import '@testing-library/jest-dom'
 import { enableFetchMocks } from 'jest-fetch-mock'
 
 enableFetchMocks()
