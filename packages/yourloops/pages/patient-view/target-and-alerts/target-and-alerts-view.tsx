@@ -87,11 +87,11 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
   }
 
   return (
-    <Container>
+    <Container data-testid="target-and-alerts-container">
       <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
         <CardHeader title={t('target-and-alerts')} />
         <CardContent>
-          <section id={MONITORING_ALERTS_SECTION_ID}>
+          <section id={MONITORING_ALERTS_SECTION_ID} data-testid="monitoring-alerts-section">
             <Typography variant="h6" paddingBottom={theme.spacing(1)}>{t('monitoring-alerts')}</Typography>
             <Typography variant="body2"
                         paddingBottom={theme.spacing(2)}>{t('monitoring-alerts-description')}</Typography>
