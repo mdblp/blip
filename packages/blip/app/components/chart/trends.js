@@ -30,6 +30,7 @@ import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsContainer, Tr
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import metrics from 'yourloops/lib/metrics'
+import { CarbsAndBolusAverage } from 'yourloops/components/carbs-and-bolus/carbs-and-bolus-average'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -557,6 +558,10 @@ class Trends extends React.Component {
                     <RangeSelect />
                   </Footer>
                 </Box>
+                <CarbsAndBolusAverage
+                  medicalData={this.props.tidelineData.medicalData}
+                  dateFilter={dateFilter}
+                />
               </div>
               <div className="container-box-inner patient-data-sidebar">
                 <div className="patient-data-sidebar-inner">

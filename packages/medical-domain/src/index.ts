@@ -26,6 +26,10 @@
  */
 
 import type Datum from './domains/models/medical/datum.model'
+import type { AlarmEvent } from './domains/models/medical/datum/alarm-event.model'
+import { AlarmCode } from './domains/models/medical/datum/enums/alarm-code.enum'
+import { AlarmEventType } from './domains/models/medical/datum/enums/alarm-event-type.enum'
+import { AlarmLevel } from './domains/models/medical/datum/enums/alarm-level.enum'
 import type Basal from './domains/models/medical/datum/basal.model'
 import type BaseDatum from './domains/models/medical/datum/basics/base-datum.model'
 import type Bolus from './domains/models/medical/datum/bolus.model'
@@ -84,9 +88,19 @@ import type BasicData from './domains/repositories/medical/basics-data.service'
 import { CarbsStatisticsService } from './domains/repositories/statistics/carbs-statistics.service'
 import { BasalBolusStatisticsService } from './domains/repositories/statistics/insulin-statistics.service'
 import { applyOffset, MS_IN_DAY } from './domains/repositories/time/time.service'
+import { HoursRange } from './domains/models/statistics/satistics.model'
+import { RescueCarbsAveragePerRange } from './domains/models/statistics/carbs-statistics.model'
+import { ManualBolusAveragePerRange } from './domains/models/statistics/basal-bolus-statistics.model'
 
 export {
+  AlarmCode,
+  type AlarmEvent,
+  AlarmEventType,
+  AlarmLevel,
   applyOffset,
+  RescueCarbsAveragePerRange,
+  ManualBolusAveragePerRange,
+  HoursRange,
   type Basal,
   type BaseDatum,
   type BgBounds,

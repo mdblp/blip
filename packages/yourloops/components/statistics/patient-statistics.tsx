@@ -26,7 +26,12 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { type BgPrefs, CBGPercentageBarChart, CBGStatType, LoopModeStat, TotalCarbsStat } from 'dumb'
+import {
+  type BgPrefs,
+  CBGPercentageBarChart,
+  CBGStatType,
+  LoopModeStat
+} from 'dumb'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
@@ -48,6 +53,7 @@ import { AverageGlucoseStat } from './average-glucose-stat'
 import { TotalInsulinStat } from './total-insulin-stat'
 import { MS_IN_DAY } from 'medical-domain'
 import { makeStyles } from 'tss-react/mui'
+import { CarbsStat } from './carbs-stat'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -94,9 +100,12 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, dateFilter)
 
   const {
-    foodCarbsPerDay,
-    totalEntriesCarbWithRescueCarbs,
-    totalCarbsPerDay
+    rescueCarbsPerDay,
+    totalMealCarbsWithRescueCarbsEntries,
+    estimatedCarbsPerDay,
+    totalCarbsPerDay,
+    mealCarbsPerDay,
+    totalRescueCarbsEntries
   } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
 
   const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
@@ -145,10 +154,13 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
       </Box>
 
       <Box className={classes.widgetGroup}>
-        <TotalCarbsStat
-          totalEntriesCarbWithRescueCarbs={totalEntriesCarbWithRescueCarbs}
-          totalCarbsPerDay={Math.round(totalCarbsPerDay)}
-          foodCarbsPerDay={Math.round(foodCarbsPerDay)}
+        <CarbsStat
+          totalMealCarbsWithRescueCarbsEntries={totalMealCarbsWithRescueCarbsEntries}
+          totalCarbsPerDay={Math.round(totalCarbsPerDay*10)/10}
+          rescueCarbsPerDay={Math.round(rescueCarbsPerDay*10)/10}
+          estimatedCarbsPerDay={Math.round(estimatedCarbsPerDay)}
+          mealCarbsPerDay={Math.round(mealCarbsPerDay*10)/10}
+          totalRescueCarbsEntries={totalRescueCarbsEntries}
         />
         <Divider className={classes.divider}/>
         <TotalInsulinStat

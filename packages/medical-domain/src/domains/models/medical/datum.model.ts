@@ -44,8 +44,9 @@ import type Wizard from './datum/wizard.model'
 import type ZenMode from './datum/zen-mode.model'
 import type MedicalDataOptions from './medical-data-options.model'
 import { type WeekDaysFilter } from '../time/date-filter.model'
+import { AlarmEvent } from './datum/alarm-event.model';
 
-type Datum = Basal | Bolus | Cbg | ConfidentialMode | DeviceParameterChange | Fill | Meal |
+type Datum = AlarmEvent | Basal | Bolus | Cbg | ConfidentialMode | DeviceParameterChange | Fill | Meal |
 Message | PhysicalActivity | PumpSettings | ReservoirChange | Smbg | Upload | Wizard |
 ZenMode | TimeZoneChange | WarmUp
 

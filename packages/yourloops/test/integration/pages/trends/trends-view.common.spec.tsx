@@ -30,6 +30,7 @@ import {
   checkDaysSelection,
   checkRangeSelection,
   checkSMBGTrendsStatsWidgetsTooltips,
+  checkTrendsBolusAndCarbsAverage,
   checkTrendsLayout,
   checkTrendsTidelineContainerTooltips,
   checkTrendsTimeInRangeStatsWidgets,
@@ -53,7 +54,7 @@ import { patient2AsTeamMember } from '../../data/patient.api.data'
 import { buildHba1cData } from '../../data/data-api.data'
 import { mockWindowResizer } from '../../mock/window-resizer.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
-import { testTrendDataVisualisationForHCP } from '../../use-cases/patient-data-visualisation'
+import { testTrensdsDataVisualisationForHCP } from '../../use-cases/patient-data-visualisation'
 
 describe('Trends view for anyone', () => {
   beforeEach(() => {
@@ -69,9 +70,8 @@ describe('Trends view for anyone', () => {
       await waitFor(() => {
         expect(router.state.location.pathname).toEqual('/trends')
       })
-      await testTrendDataVisualisationForHCP()
+      await testTrensdsDataVisualisationForHCP()
 
-      // Check the tooltips
       await checkTrendsTidelineContainerTooltips()
 
       // Check the widget
@@ -80,6 +80,7 @@ describe('Trends view for anyone', () => {
 
       // Check Layout
       checkTrendsLayout()
+      await checkTrendsBolusAndCarbsAverage()
 
       await userEvent.click(screen.getByTestId('button-nav-back'))
       expect(await screen.findByText('There is no CGM data for this time period :(')).toBeVisible()
