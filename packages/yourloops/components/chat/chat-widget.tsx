@@ -128,7 +128,7 @@ export interface ChatWidgetProps {
   patient: Patient
 }
 
-function ChatWidget(props: ChatWidgetProps): JSX.Element {
+function ChatWidget(props: Readonly<ChatWidgetProps>): JSX.Element {
   const { t } = useTranslation()
   const { patient } = props
   const { classes } = chatWidgetStyles()
