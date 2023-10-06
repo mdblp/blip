@@ -91,7 +91,7 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
       <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
         <CardHeader title={t('target-and-alerts')} />
         <CardContent>
-          <section id={MONITORING_ALERTS_SECTION_ID} data-testid="monitoring-alerts-section">
+          <section id={MONITORING_ALERTS_SECTION_ID} data-testid="monitoring-alerts-configuration-section">
             <Typography variant="h6" paddingBottom={theme.spacing(1)}>{t('monitoring-alerts')}</Typography>
             <Typography variant="body2"
                         paddingBottom={theme.spacing(2)}>{t('monitoring-alerts-description')}</Typography>
