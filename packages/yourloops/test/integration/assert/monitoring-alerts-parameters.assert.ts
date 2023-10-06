@@ -129,9 +129,9 @@ export const checkMonitoringAlertsDialogSaveButtonMmol = async (): Promise<void>
   expect(lowBgInput).toHaveValue(2.8)
   expect(highBgInput).toHaveValue(7.8)
   expect(veryLowBgInput).toHaveValue(2.2)
-  expect(within(outOfRangeThreshold).getByRole('button')).toHaveTextContent('5%')
-  expect(within(hypoThreshold).getByRole('button')).toHaveTextContent('10%')
-  expect(within(nonDataTxThreshold).getByRole('button')).toHaveTextContent('15%')
+  expect(within(outOfRangeThreshold).getByRole('combobox')).toHaveTextContent('5%')
+  expect(within(hypoThreshold).getByRole('combobox')).toHaveTextContent('10%')
+  expect(within(nonDataTxThreshold).getByRole('combobox')).toHaveTextContent('15%')
 
   expect(saveButton).toBeEnabled()
 
@@ -160,15 +160,15 @@ export const checkMonitoringAlertsDialogSaveButtonMmol = async (): Promise<void>
   expect(saveButton).toBeEnabled()
 
   const dopDownOutRange = within(dialog.getByTestId('dropdown-out-of-range'))
-  fireEvent.mouseDown(dopDownOutRange.getByRole('button'))
+  fireEvent.mouseDown(dopDownOutRange.getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: '15%' }))
 
   const dropDownHypo = within(dialog.getByTestId('dropdown-hypo'))
-  fireEvent.mouseDown(dropDownHypo.getByRole('button'))
+  fireEvent.mouseDown(dropDownHypo.getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: '20%' }))
 
   const dropDownNonData = within(dialog.getByTestId('dropdown-nonData'))
-  fireEvent.mouseDown(dropDownNonData.getByRole('button'))
+  fireEvent.mouseDown(dropDownNonData.getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: '40%' }))
 
   await userEvent.click(saveButton)
@@ -204,15 +204,15 @@ export const checkMonitoringAlertsDialogDefaultButtonMgdl = async (): Promise<vo
 
   await userEvent.clear(lowBgInput)
   const dropDownOutRange = within(dialog.getByTestId('dropdown-out-of-range'))
-  fireEvent.mouseDown(dropDownOutRange.getByRole('button'))
+  fireEvent.mouseDown(dropDownOutRange.getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: '15%' }))
 
   const dropDownHypo = within(dialog.getByTestId('dropdown-hypo'))
-  fireEvent.mouseDown(dropDownHypo.getByRole('button'))
+  fireEvent.mouseDown(dropDownHypo.getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: '20%' }))
 
   const dropDownNonData = within(dialog.getByTestId('dropdown-nonData'))
-  fireEvent.mouseDown(dropDownNonData.getByRole('button'))
+  fireEvent.mouseDown(dropDownNonData.getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: '40%' }))
 
   await userEvent.type(lowBgInput, '50.5')
@@ -244,9 +244,9 @@ export const checkMonitoringAlertsDialogDefaultButtonMgdl = async (): Promise<vo
   expect(lowBgInput).toHaveValue(50)
   expect(highBgInput).toHaveValue(140)
   expect(veryLowBgInput).toHaveValue(40)
-  expect(within(outOfRangeThreshold).getByRole('button')).toHaveTextContent('5%')
-  expect(within(hypoThreshold).getByRole('button')).toHaveTextContent('10%')
-  expect(within(nonDataThreshold).getByRole('button')).toHaveTextContent('15%')
+  expect(within(outOfRangeThreshold).getByRole('combobox')).toHaveTextContent('5%')
+  expect(within(hypoThreshold).getByRole('combobox')).toHaveTextContent('10%')
+  expect(within(nonDataThreshold).getByRole('combobox')).toHaveTextContent('15%')
   expect(saveButton).not.toBeDisabled()
 
   await userEvent.click(cancelButton)
