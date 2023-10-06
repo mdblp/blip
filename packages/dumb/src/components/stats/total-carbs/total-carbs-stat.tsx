@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,73 +28,46 @@ import React, { type FunctionComponent, memo } from 'react'
 import styles from './total-carbs-stat.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import Box from '@mui/material/Box'
-import { useTranslation } from 'react-i18next'
 import { Unit } from 'medical-domain'
-import { useLocation } from 'react-router-dom'
 
-export interface TotalInsulinStatProps {
-  foodCarbsPerDay: number
-  totalCarbsPerDay: number
-  totalEntriesCarbWithRescueCarbs: number
+export interface TotalCarbsStatProps {
+  title: string
+  annotations?: string[]
+  value: number
 }
-
-const TotalCarbsStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
-  const { totalCarbsPerDay, foodCarbsPerDay, totalEntriesCarbWithRescueCarbs } = props
-  const { t } = useTranslation('main')
-  const location = useLocation()
-  const isDailyPage = location.pathname.includes('daily')
-  const isDerivedCarbs = foodCarbsPerDay && totalCarbsPerDay ? t('tooltip-total-derived-carbs', { total: totalEntriesCarbWithRescueCarbs }) : t('tooltip-empty-stat')
-
+const CarbsStatItem: FunctionComponent<TotalCarbsStatProps> = (props) => {
+  const { annotations, value, title } = props
   return (
-    <div data-testid="total-carbs-stat">
-      <Box className={styles.row}>
-        {t(isDailyPage ? 'total-carbs' : 'avg-daily-carbs')}
+    <Box className={`${styles.row} ${annotations ? null : styles.carbs}`} data-testid={"estimatedCarbs"}>
+      {title}
+
+      {annotations &&
         <StatTooltip
-          annotations={[t(isDailyPage ? 'tooltip-total-day-carbs' : 'tooltip-total-week-carbs'), isDerivedCarbs]}
+          annotations={annotations}
         />
-        {!totalCarbsPerDay
-          ? <>
-            <div className={styles['disabled-line']} />
-            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
-              --
-            </Box>
-          </>
-          : <>
-            <div className={styles.total}>
+      }
+
+      {!value
+        ? <>
+          <div className={styles['disabled-line']}/>
+          <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
+            --
+          </Box>
+        </>
+
+        : <>
+          <div className={styles.total}>
                 <span className={styles.value}>
-                  {totalCarbsPerDay}
+                  {value}
                 </span>
-              <span className={styles.suffix}>
+            <span className={styles.suffix}>
                   {Unit.Gram}
                 </span>
-            </div>
-          </>
-        }
-      </Box>
+          </div>
+        </>
 
-      <Box className={`${styles.rescueCarb} ${styles.row}`}>
-        {t('Rescuecarbs')}
-        {!foodCarbsPerDay
-          ? <>
-            <div className={styles['disabled-line']} />
-            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
-              --
-            </Box>
-          </>
-          : <>
-            <div className={styles.total}>
-              <span className={styles.value}>
-                {foodCarbsPerDay}
-              </span>
-              <span className={styles.suffix}>
-                {Unit.Gram}
-              </span>
-            </div>
-          </>
-        }
-      </Box>
-    </div>
+      }
+    </Box>
   )
 }
-
-export const TotalCarbsStatMemoized = memo(TotalCarbsStat)
+export const CarbsStatItemMemoized = memo(CarbsStatItem)

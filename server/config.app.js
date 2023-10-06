@@ -33,7 +33,7 @@ function integerFromText(value, defaultValue) {
     intValue = Number.parseInt(value, 10)
   }
   if (Number.isNaN(intValue)) {
-    if (typeof(defaultValue) === 'number' && !Number.isNaN(defaultValue)) {
+    if (typeof (defaultValue) === 'number' && !Number.isNaN(defaultValue)) {
       intValue = defaultValue
     } else {
       intValue = 0
@@ -58,6 +58,13 @@ function stringOption(value, defaultValue) {
 const isDev = (process.env.NODE_ENV === 'development')
 const isTest = (process.env.NODE_ENV === 'test')
 const config = {
+  BANNER_ENABLED: booleanFromText(process.env.BANNER_ENABLED, false),
+  BANNER_LABEL_EN: stringOption(process.env.BANNER_LABEL_EN, ''),
+  BANNER_LABEL_ES: stringOption(process.env.BANNER_LABEL_ES, ''),
+  BANNER_LABEL_DE: stringOption(process.env.BANNER_LABEL_DE, ''),
+  BANNER_LABEL_FR: stringOption(process.env.BANNER_LABEL_FR, ''),
+  BANNER_LABEL_IT: stringOption(process.env.BANNER_LABEL_IT, ''),
+  BANNER_LABEL_NL: stringOption(process.env.BANNER_LABEL_NL, ''),
   TARGET_ENVIRONMENT: stringOption(process.env.TARGET_ENVIRONMENT, 'dev'),
   DOMAIN_NAME: stringOption(process.env.DOMAIN_NAME, 'www.preview.your-loops.dev'),
   ALLOW_SEARCH_ENGINE_ROBOTS: booleanFromText(process.env.ALLOW_SEARCH_ENGINE_ROBOTS, false),
