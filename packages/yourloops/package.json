@@ -45,7 +45,7 @@
     "clsx": "^1.1.1",
     "core-js": "^3.32.1",
     "dayjs": "^1.11.8",
-    "emoji-picker-react": "^4.4.9",
+    "emoji-picker-react": "^4.5.2",
     "html-react-parser": "^4.2.2",
     "i18next": "^23.2.6",
     "lodash": "^4.17.21",
