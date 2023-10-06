@@ -103,10 +103,10 @@ describe('Profile page for caregiver', () => {
     expect(fields.languageSelect).toHaveTextContent('Français')
     expect(saveButton).toBeDisabled()
 
-    fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('button'))
+    fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
     fireEvent.click(screen.getByRole('option', { name: 'English' }))
 
-    fireEvent.mouseDown(within(screen.getByTestId('profile-units-selector')).getByRole('button'))
+    fireEvent.mouseDown(within(screen.getByTestId('profile-units-selector')).getByRole('combobox'))
     fireEvent.click(screen.getByRole('option', { name: Unit.MilligramPerDeciliter }))
 
     await userEvent.clear(fields.firstNameInput)
@@ -184,7 +184,7 @@ describe('Profile page for caregiver', () => {
     expect(validateButton).toBeDisabled()
     expect(hcpProfessionSelect.textContent).toEqual('​')
 
-    fireEvent.mouseDown(within(screen.getByTestId('dropdown-profession-selector')).getByRole('button'))
+    fireEvent.mouseDown(within(screen.getByTestId('dropdown-profession-selector')).getByRole('combobox'))
     fireEvent.click(screen.getByRole('option', { name: 'Dietitian' }))
     expect(hcpProfessionSelect).toHaveTextContent('Dietitian')
     await userEvent.click(validateButton)

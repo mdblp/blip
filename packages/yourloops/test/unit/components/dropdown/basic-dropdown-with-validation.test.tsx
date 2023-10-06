@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -73,7 +73,7 @@ describe('BasicDropdownWithValidation', () => {
       inputTranslationKey
     }
     render(fakeDropdown(props))
-    fireEvent.mouseDown(screen.getByRole('button'))
+    fireEvent.mouseDown(screen.getByRole('combobox'))
     const menuItems = within(screen.getByRole('listbox'))
     fireEvent.click(menuItems.getByText(valueToSelect))
     expect(spyOnSelect).toHaveBeenCalledTimes(1)

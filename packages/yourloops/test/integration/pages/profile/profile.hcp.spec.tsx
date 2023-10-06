@@ -120,13 +120,13 @@ describe('Profile page for hcp', () => {
     expect(fields.hcpProfessionSelect).toHaveTextContent('Diabetologist')
     expect(saveButton).toBeDisabled()
 
-    fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('button'))
+    fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
     fireEvent.click(screen.getByRole('option', { name: 'English' }))
 
-    fireEvent.mouseDown(within(screen.getByTestId('profile-units-selector')).getByRole('button'))
+    fireEvent.mouseDown(within(screen.getByTestId('profile-units-selector')).getByRole('combobox'))
     fireEvent.click(screen.getByRole('option', { name: Unit.MilligramPerDeciliter }))
 
-    fireEvent.mouseDown(within(screen.getByTestId('dropdown-profession-selector')).getByRole('button'))
+    fireEvent.mouseDown(within(screen.getByTestId('dropdown-profession-selector')).getByRole('combobox'))
     fireEvent.click(screen.getByRole('option', { name: 'Nurse' }))
 
     await userEvent.clear(fields.firstNameInput)
