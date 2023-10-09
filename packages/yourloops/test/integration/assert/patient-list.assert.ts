@@ -247,7 +247,7 @@ export const checkPatientColumnsFiltersContent = async () => {
   const cancelButton = within(columnSettingsPopover).getByRole('button', { name: 'Cancel' })
 
   await userEvent.click(cancelButton)
-  expect(screen.queryByRole('presentation')).not.toBeInTheDocument()
+  expect(screen.queryByRole('presentation', { name: 'Show columns' })).not.toBeInTheDocument()
 }
 
 export const checkPatientListHideShowColumns = async () => {
