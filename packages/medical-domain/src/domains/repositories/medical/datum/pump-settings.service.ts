@@ -54,7 +54,10 @@ const normalizeHistory = (rawHistory: Array<Record<string, unknown>>, opts: Medi
       changeDate: (h?.changeDate ?? '') as string,
       parameters: params.map(param => {
         const { unit, value } = getConvertedParamUnitAndValue(param.unit as Unit, param.value as string, opts.bgUnits)
-        const { unit: previousUnit, value: previousValue } = getConvertedParamUnitAndValue(param.previousUnit as Unit, param.previousValue as string, opts.bgUnits)
+        const {
+          unit: previousUnit,
+          value: previousValue
+        } = getConvertedParamUnitAndValue(param.previousUnit as Unit, param.previousValue as string, opts.bgUnits)
         return {
           changeType: param.changeType as ChangeType,
           effectiveDate: param.effectiveDate as string,
@@ -96,8 +99,8 @@ const normalizePump = (rawPump: Record<string, unknown> | null): PumpConfig => {
   const notAvailableLabel = t('N/A')
   const manufacturer = (rawPump?.manufacturer ?? '') as string
   return {
-    expirationDate: (rawPump?.expirationDate ?? notAvailableLabel) as string,
-    manufacturer: manufacturer?.toUpperCase() as PumpManufacturer ?? PumpManufacturer.Default,
+    expirationDate: rawPump?.expirationDate as string ?? null,
+    manufacturer: manufacturer?.toUpperCase() as PumpManufacturer || notAvailableLabel,
     name: (rawPump?.name ?? notAvailableLabel) as string,
     serialNumber: (rawPump?.serialNumber ?? notAvailableLabel) as string,
     swVersion: (rawPump?.swVersion ?? notAvailableLabel) as string

@@ -39,8 +39,6 @@ interface PumpInfoProps {
   pump: PumpConfig
 }
 
-const FALLBACK_VALUE = '-'
-
 export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
   const { t } = useTranslation()
 
@@ -55,7 +53,7 @@ export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
               className="bold"
               sx={{ textTransform: 'uppercase' }}
             >
-              {pump.manufacturer || FALLBACK_VALUE}</Typography>
+              {pump.manufacturer}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
@@ -63,7 +61,7 @@ export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Serial Number')}</Typography>
-            <Typography variant="body2" className="bold">{pump.serialNumber || FALLBACK_VALUE}</Typography>
+            <Typography variant="body2" className="bold">{pump.serialNumber}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
@@ -71,7 +69,7 @@ export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Pump version')}</Typography>
-            <Typography variant="body2" className="bold">{pump.swVersion || FALLBACK_VALUE}</Typography>
+            <Typography variant="body2" className="bold">{pump.swVersion}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
@@ -80,7 +78,7 @@ export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Pump cartridge expiration date')}</Typography>
             <Typography variant="body2" className="bold">
-              {formatDateWithMomentLongFormat(new Date(pump.expirationDate)) || FALLBACK_VALUE}
+              {pump.expirationDate ? formatDateWithMomentLongFormat(new Date(pump.expirationDate)) : t('N/A')}
             </Typography>
           </Box>
         </ListItemText>
