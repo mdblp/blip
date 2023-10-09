@@ -236,7 +236,7 @@ describe('Patients hook', () => {
 
       await act(async () => {
         await customHook.invitePatient(team1, 'new-patient@mail.com')
-        expect(computePatientsSpy).toBeCalledTimes(1)
+        expect(computePatientsSpy).toHaveBeenCalledTimes(1)
       })
     })
 
@@ -257,7 +257,7 @@ describe('Patients hook', () => {
       })
       await waitFor(() => {
         expect(customHook.patients.length).toEqual(initialPatientsLength)
-        expect(computePatientsSpy).toBeCalledTimes(1)
+        expect(computePatientsSpy).toHaveBeenCalledTimes(1)
       })
     })
   })
@@ -296,22 +296,6 @@ describe('Patients hook', () => {
       })
       expect(removeDirectShareMock).toHaveBeenCalled()
       expect(PatientUtils.computePatients).toHaveBeenCalledTimes(2)
-    })
-
-    it.skip('should unflag a patient when he no longer belongs to a team', async () => {
-      const res = await renderPatientsHook(allPatients)
-      const customHook = res.result.current
-      const invitation = { id: 'fakeInvitationId', email: 'fakeInvitationEmail' } as Notification
-      getInvitationMock.mockReturnValue(invitation)
-      jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
-      await act(async () => {
-        await customHook.removePatient(patientToRemove)
-      })
-      await waitFor(() => {
-        expect(customHook.getPatientById(patientToRemove.userid)).toBeUndefined()
-      })
-      expect(authHookGetFlagPatientMock).toHaveBeenCalled()
-      expect(authHookFlagPatientMock).toHaveBeenCalled()
     })
 
     it('should update patient when he still belongs to a team', async () => {

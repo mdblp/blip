@@ -7,7 +7,8 @@
     "jest": true
   },
   "extends": [
-    "plugin:@typescript-eslint/eslint-recommended"
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:jest/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -48,6 +49,7 @@
         "varsIgnorePattern": "^_",
         "caughtErrorsIgnorePattern": "^_"
       }
-    ]
+    ],
+    "jest/expect-expect": ["error", {"assertFunctionNames": ["expect", "test*", "check*"], "additionalTestBlockFunctions": []}]
   }
 }

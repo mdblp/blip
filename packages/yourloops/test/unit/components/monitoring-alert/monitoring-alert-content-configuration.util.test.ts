@@ -95,7 +95,7 @@ describe('MonitoringAlertsContentConfiguration util', function () {
       expect(bgValuesInMmol.veryLowBgDefault).toBe(54)
     })
 
-    it('should return default bg values in mg/dL if the parameters are in mg/dL ', () => {
+    it('should return default bg values in mg/dL if the parameters are in mg/dL', () => {
       const monitoring = defaultMonitoringBgValue()
       monitoring.parameters.bgUnitDefault = Unit.MmolPerLiter
       const bgValuesInMmol = buildBgValues(monitoring.parameters.bgUnitDefault)

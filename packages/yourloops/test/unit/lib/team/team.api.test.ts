@@ -80,7 +80,7 @@ describe('TeamApi', () => {
       jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
       await expect(async () => {
         await TeamApi.getTeams(hcpUser)
-      }).rejects.toThrowError('This error was thrown by a mock on purpose')
+      }).rejects.toThrow('This error was thrown by a mock on purpose')
     })
   })
 
@@ -212,7 +212,7 @@ describe('TeamApi', () => {
       jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
       await expect(async () => {
         await TeamApi.getTeamFromCode(code)
-      }).rejects.toThrowError('This error was thrown by a mock on purpose')
+      }).rejects.toThrow('This error was thrown by a mock on purpose')
     })
   })
 

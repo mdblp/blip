@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -136,7 +136,7 @@ describe('Regex', () => {
     })
   })
 
-  describe('REGEX_ZIPCODE_WITHOUT_STRING ', () => {
+  describe('REGEX_ZIPCODE_WITHOUT_STRING', () => {
     it('should be valid when given many numbers with -', () => {
       // given
       const value = '8888-8888888888'
@@ -178,7 +178,7 @@ describe('Regex', () => {
     })
   })
 
-  describe('REGEX_ZIPCODE_WITH_STRING ', () => {
+  describe('REGEX_ZIPCODE_WITH_STRING', () => {
     it('should be valid when given many numbers with one space', () => {
       // given
       const value = '8888 888888888'
