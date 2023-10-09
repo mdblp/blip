@@ -158,9 +158,6 @@ describe('Dashboard view for HCP', () => {
   })
 
   it('should be able to manage monitoring alerts parameters', async () => {
-    // Mocking the `scrollIntoView` method as it is not implemented in jsdom
-    Element.prototype.scrollIntoView = jest.fn()
-
     await act(async () => {
       renderPage(patientDashboardRoute)
     })

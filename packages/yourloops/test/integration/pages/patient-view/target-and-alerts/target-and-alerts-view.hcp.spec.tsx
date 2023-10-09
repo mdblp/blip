@@ -25,21 +25,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../../mock/team.api.mock'
 import { mockUserApi } from '../../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
-import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
+import { mockDataAPI } from '../../../mock/data.api.mock'
 import { AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../use-cases/app-main-layout-visualisation'
 import { act } from '@testing-library/react'
 import { renderPage } from '../../../utils/render'
 import { patient1Id, patientWithMmolId } from '../../../data/patient.api.data'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
-  testMonitoringAlertsParametersConfigurationForPatientMgdl, testMonitoringAlertsParametersConfigurationForPatientMmol
+  testMonitoringAlertsParametersConfigurationForPatientMgdl,
+  testMonitoringAlertsParametersConfigurationForPatientMmol
 } from '../../../use-cases/monitoring-alerts-parameters-management'
 import { testTargetAndAlertsViewContent } from '../../../use-cases/target-and-alerts-management'
 import { Settings } from '../../../../../lib/auth/models/settings.model'
@@ -53,14 +53,13 @@ describe('Target and alerts view for HCP', () => {
   const patientTargetAndAlertsRouteMmoL = `${AppUserRoute.Patient}/${patientWithMmolId}${AppUserRoute.TargetAndAlerts}`
 
   beforeEach(() => {
-    mockWindowResizer()
     mockAuth0Hook()
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForHcp()
-    mockDataAPI(pumpSettingsData)
+    mockDataAPI()
   })
 
   it('should render correct layout', async () => {

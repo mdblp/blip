@@ -39,7 +39,7 @@ import Button from '@mui/material/Button'
 import GetAppIcon from '@mui/icons-material/GetApp'
 import { PatientView } from '../../enum/patient-view.enum'
 import PhonelinkSetupOutlinedIcon from '@mui/icons-material/PhonelinkSetupOutlined'
-import { Notifications } from '@mui/icons-material'
+import { AddAlertOutlined } from '@mui/icons-material'
 import { useAuth } from '../../lib/auth'
 
 interface PatientNavBarTabsProps {
@@ -131,7 +131,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
             data-testid="target-and-alerts-tab"
             iconPosition="start"
             label={t('target-and-alerts')}
-            icon={<Notifications />}
+            icon={<AddAlertOutlined />}
             onClick={() => { onChangePatientView(PatientView.TargetAndAlerts) }}
             classes={{
               root: classes.root

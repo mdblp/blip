@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import Container from '@mui/material/Container'
 import MonitoringAlertsContentConfiguration
   from '../../../components/monitoring-alert/monitoring-alerts-content-configuration'
@@ -41,6 +41,7 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import { useLocation } from 'react-router-dom'
+import Divider from '@mui/material/Divider'
 
 interface TargetAndAlertsViewProps {
   patient: Patient
@@ -56,7 +57,9 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
   const { selectedTeam } = useSelectedTeamContext()
   const alert = useAlert()
   const { pathname, hash, key } = useLocation()
+
   const monitoringAlertsParameters = patient.monitoringAlertsParameters ?? selectedTeam.monitoringAlertsParameters
+  const monitoringAlertsSection = useRef<HTMLElement>(null)
 
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 
@@ -66,9 +69,8 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
     }
 
     const sectionId = hash.replace('#', '')
-    const section = document.getElementById(sectionId)
-    if (section) {
-      section.scrollIntoView()
+    if (monitoringAlertsSection && sectionId === MONITORING_ALERTS_SECTION_ID) {
+      monitoringAlertsSection.current.scrollIntoView({ behavior: 'smooth' })
     }
   }, [pathname, hash, key])
 
@@ -91,10 +93,26 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
       <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
         <CardHeader title={t('target-and-alerts')} />
         <CardContent>
-          <section id={MONITORING_ALERTS_SECTION_ID} data-testid="monitoring-alerts-configuration-section">
-            <Typography variant="h6" paddingBottom={theme.spacing(1)}>{t('monitoring-alerts')}</Typography>
-            <Typography variant="body2"
-                        paddingBottom={theme.spacing(2)}>{t('monitoring-alerts-description')}</Typography>
+          <Divider variant="fullWidth" sx={{
+            marginBottom: theme.spacing(5),
+            marginTop: theme.spacing(2)
+          }}/>
+          <section
+            data-testid="monitoring-alerts-configuration-section"
+            ref={monitoringAlertsSection}
+          >
+            <Typography
+              variant="h6"
+              paddingBottom={theme.spacing(1)}
+            >
+              {t('monitoring-alerts')}
+            </Typography>
+            <Typography
+              variant="body2"
+              paddingBottom={theme.spacing(2)}
+            >
+              {t('monitoring-alerts-description')}
+            </Typography>
             <MonitoringAlertsContentConfiguration
               displayInReadonly={false}
               monitoringAlertsParameters={monitoringAlertsParameters}
