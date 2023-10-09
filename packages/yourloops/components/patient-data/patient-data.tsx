@@ -138,6 +138,7 @@ export const PatientData: FunctionComponent = () => {
                   disableElevation
                   onClick={refreshData}
                   sx={{ marginTop: theme.spacing(1) }}
+                  data-testid="no-data-refresh-button"
                 >
                   {t('refresh')}
                 </Button>
