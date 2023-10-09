@@ -37,10 +37,6 @@ describe('HttpService', () => {
   const config = { withCredentials: true }
   let axiosStub: jest.SpyInstance
 
-  afterEach(() => {
-    axiosStub.mockRestore()
-  })
-
   describe('get', () => {
     it('should get make correct request', async () => {
       // given
@@ -58,20 +54,11 @@ describe('HttpService', () => {
     it('should throw error when failing', async () => {
       // given
       const expectedError = {} as AxiosError
-      axiosStub = jest.spyOn(mockedAxios, 'get')
-      axiosStub.mockImplementation(() => {
-        throw expectedError
-      })
+      jest.spyOn(mockedAxios, 'get').mockRejectedValueOnce(expectedError)
 
       // when
-      try {
-        await HttpService.get({ url, config })
-        throw Error('This test should have gone into the catch')
-      } catch (errorReceived) {
-        // then
-        expect(axiosStub).toHaveBeenCalledWith(url, config)
-        expect(errorReceived).toBe(expectedError)
-      }
+      await expect(HttpService.get({ url, config })).rejects.toEqual(expectedError)
+      expect(mockedAxios.get).toHaveBeenCalledWith(url, config)
     })
   })
 
@@ -92,19 +79,11 @@ describe('HttpService', () => {
     it('should throw error when failing', async () => {
       // given
       const expectedError = {} as AxiosError
-      axiosStub = jest.spyOn(mockedAxios, 'post')
-      axiosStub.mockImplementation(() => {
-        throw expectedError
-      })
+       jest.spyOn(mockedAxios, 'post').mockRejectedValueOnce(expectedError)
+
       // when
-      try {
-        await HttpService.post({ url, payload, config })
-        throw Error('This test should have gone into the catch')
-      } catch (errorReceived) {
-        // then
-        expect(axiosStub).toHaveBeenCalledWith(url, payload, config)
-        expect(errorReceived).toBe(expectedError)
-      }
+      await expect(HttpService.post({ url, payload, config })).rejects.toEqual(expectedError)
+      expect(mockedAxios.post).toHaveBeenCalledWith(url, payload, config)
     })
   })
 
@@ -125,20 +104,11 @@ describe('HttpService', () => {
     it('should throw error when failing', async () => {
       // given
       const expectedError = {} as AxiosError
-      axiosStub = jest.spyOn(mockedAxios, 'put')
-      axiosStub.mockImplementation(() => {
-        throw expectedError
-      })
+      jest.spyOn(mockedAxios, 'put').mockRejectedValueOnce(expectedError)
 
       // when
-      try {
-        await HttpService.put({ url, payload, config })
-        throw Error('This test should have gone into the catch')
-      } catch (errorReceived) {
-        // then
-        expect(axiosStub).toHaveBeenCalledWith(url, payload, config)
-        expect(errorReceived).toBe(expectedError)
-      }
+      await expect(HttpService.put({ url, payload, config })).rejects.toEqual(expectedError)
+      expect(mockedAxios.put).toHaveBeenCalledWith(url, payload, config)
     })
   })
 
@@ -158,20 +128,12 @@ describe('HttpService', () => {
 
     it('should throw error when failing', async () => {
       // given
-      const expectedError = {} as AxiosError
-      axiosStub = jest.spyOn(mockedAxios, 'delete')
-      axiosStub.mockImplementation(() => {
-        throw expectedError
-      })
+      const expectedError = { message: 'error' } as AxiosError
+      jest.spyOn(mockedAxios, 'delete').mockRejectedValueOnce(expectedError)
+
       // when
-      try {
-        await HttpService.delete({ url, config })
-        throw Error('This test should have gone into the catch')
-      } catch (errorReceived) {
-        // then
-        expect(axiosStub).toHaveBeenCalledWith(url, config)
-        expect(errorReceived).toBe(expectedError)
-      }
+      await expect(HttpService.delete({ url, config })).rejects.toEqual(expectedError)
+      expect(mockedAxios.delete).toHaveBeenCalledWith(url, config)
     })
   })
 })

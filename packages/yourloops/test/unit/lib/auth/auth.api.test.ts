@@ -47,19 +47,16 @@ describe('Auth API', () => {
     })
 
     it('should throw an error when the request fails', async () => {
-      const errorMessage = 'Error'
-      jest.spyOn(axios, 'post').mockRejectedValueOnce(new Error(errorMessage))
+      const errorMessage = { message: 'Error' }
+      jest.spyOn(axios, 'post').mockRejectedValueOnce(errorMessage)
 
-      try {
-        await AuthApi.sendResetPasswordEmail(userEmail)
-      } catch (error) {
-        expect(axios.post).toHaveBeenCalledWith('/dbconnections/change_password', {
-          client_id: '',
-          connection: 'Username-Password-Authentication',
-          email: userEmail
-        }, { baseURL: 'https://', params: { noHeader: true } })
-        expect(error.message).toEqual(errorMessage)
-      }
+      await expect(AuthApi.sendResetPasswordEmail(userEmail)).rejects.toEqual(errorMessage)
+
+      expect(axios.post).toHaveBeenCalledWith('/dbconnections/change_password', {
+        client_id: '',
+        connection: 'Username-Password-Authentication',
+        email: userEmail
+      }, { baseURL: 'https://', params: { noHeader: true } })
     })
   })
 })
