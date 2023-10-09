@@ -17,8 +17,9 @@
 
 import _ from 'lodash'
 
-import { SITE_CHANGE_BY_MANUFACTURER, DEFAULT_MANUFACTURER } from '../../plugins/blip/basics/logic/constants'
+import { SITE_CHANGE_BY_MANUFACTURER } from '../../plugins/blip/basics/logic/constants'
 import utils from './util/utils'
+import { PumpManufacturer } from 'medical-domain'
 
 function plotReservoirChange(pool, opts) {
   const d3 = window.d3
@@ -27,7 +28,7 @@ function plotReservoirChange(pool, opts) {
 
   const xPos = (d) => opts.xScale(d.epoch)
   const getPicto = (d) => {
-    const change = _.get(SITE_CHANGE_BY_MANUFACTURER, _.get(d, 'pump.manufacturer', DEFAULT_MANUFACTURER), SITE_CHANGE_BY_MANUFACTURER[DEFAULT_MANUFACTURER])
+    const change = _.get(SITE_CHANGE_BY_MANUFACTURER, _.get(d, 'pump.manufacturer', PumpManufacturer.Default), SITE_CHANGE_BY_MANUFACTURER[PumpManufacturer.Default])
     return change.picto
   }
 
