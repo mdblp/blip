@@ -147,7 +147,7 @@ export const usePatientData = (): usePatientDataResult => {
   }
 
   const getMsRangeByChartType = (chartType: ChartTypes, patientMedicalData: MedicalDataService): number => {
-    if (chartType === ChartTypes.Dashboard) {
+    if (patientMedicalData && chartType === ChartTypes.Dashboard) {
       return patientDataUtils.current.getRangeDaysInMs(patientMedicalData.medicalData)
     }
     return DEFAULT_MS_RANGE
