@@ -167,7 +167,7 @@ export const usePatientData = (): usePatientDataResult => {
   }
 
   const getMsRangeByPatientView = (patientView: PatientView, patientMedicalData: MedicalDataService): number => {
-    if (patientView === PatientView.Dashboard) {
+    if (patientMedicalData && patientView === PatientView.Dashboard) {
       return patientDataUtils.current.getRangeDaysInMs(patientMedicalData.medicalData)
     }
     return DEFAULT_MS_RANGE
@@ -320,7 +320,7 @@ export const usePatientData = (): usePatientDataResult => {
     bgPrefs,
     changePatientView,
     changePatient,
-    currentPatientView: currentPatientView,
+    currentPatientView,
     chartPrefs,
     dailyChartRef,
     dailyDate,
