@@ -58,12 +58,13 @@ class DailyPrintView extends PrintView {
     this.leftEdge = this.margins.left
     this.rightEdge = this.margins.left + this.width
 
-    this.source = _.get(data, 'latestPumpUpload.source', '').toLowerCase()
+    this.source = _.get(data, 'pumpSettings.source', '').toLowerCase()
     this.manufacturer = this.source === 'carelink' ? 'medtronic' : this.source
 
+    const deviceModel = data.pumpSettings.payload.device.name
     this.isAutomatedBasalDevice = isAutomatedBasalDevice(
       this.manufacturer,
-      _.get(data, 'latestPumpUpload.deviceModel')
+      deviceModel
     )
 
     const deviceLabels = getPumpVocabulary(this.manufacturer)

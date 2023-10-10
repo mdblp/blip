@@ -37,7 +37,6 @@ import type PumpSettings from './datum/pump-settings.model'
 import type ReservoirChange from './datum/reservoir-change.model'
 import type Smbg from './datum/smbg.model'
 import type TimeZoneChange from './datum/time-zone-change.model'
-import type Upload from './datum/upload.model'
 import type WarmUp from './datum/warm-up.model'
 import type Wizard from './datum/wizard.model'
 import type ZenMode from './datum/zen-mode.model'
@@ -56,7 +55,7 @@ interface MedicalData {
   pumpSettings: PumpSettings[]
   reservoirChanges: ReservoirChange[]
   smbg: Smbg[]
-  uploads: Upload[]
+  // uploads: Upload[]
   warmUps: WarmUp[]
   wizards: Wizard[]
   zenModes: ZenMode[]

@@ -33,7 +33,7 @@ import { type DeviceEventSubtype } from './enums/device-event-subtype.enum'
 type ReservoirChange = BaseDatum & {
   type: DatumType.DeviceEvent
   subType: DeviceEventSubtype.ReservoirChange
-  uploadId: string
+  // uploadId: string
   pump: PumpConfig
 }
 

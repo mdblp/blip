@@ -40,7 +40,7 @@ interface Parameter {
   id: string
   epoch: number
   timezone: string
-  uploadId: string
+  // uploadId: string
   name: string
   level: string
   units: Unit

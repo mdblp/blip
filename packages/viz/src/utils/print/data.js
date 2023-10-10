@@ -189,7 +189,8 @@ export function selectDailyViewData(medicalData, startDate, endDate) {
     bgRange: processBgRange(dataByDate),
     bolusRange: processBolusRange(dataByDate),
     dateRange: [startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD')],
-    latestPumpUpload: getLatestPumpUpload(medicalData.medicalData.uploads),
+    // latestPumpUpload: getLatestPumpUpload(medicalData.medicalData.uploads),
+    pumpSettings: medicalData.medicalData.pumpSettings[0],
     timezone: medicalData.getLastTimezone()
   }
 }

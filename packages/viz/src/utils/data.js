@@ -3,12 +3,11 @@ import moment from 'moment-timezone'
 import _ from 'lodash'
 import bows from 'bows'
 
-import { convertBG, classifyBgValue, MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
+import { classifyBgValue, convertBG, MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
 import { getBasalGroupDurationsFromEndpoints, getTotalBasalFromEndpoints } from './basal'
 import { getTotalBolus } from './bolus'
 import { cgmSampleFrequency, reshapeBgClassesToBgBounds } from './bloodglucose'
 import { addDuration } from './datetime'
-import { getLatestPumpUpload } from './device'
 
 class DataUtil {
   /**
@@ -385,20 +384,26 @@ class DataUtil {
 
   getLatestPump = () => {
     const pumpSettings = this.sort.byDate(this.filter.byType('pumpSettings').top(Infinity))[0]
-    if (pumpSettings?.payload?.device?.name && pumpSettings?.payload?.device?.manufacturer) {
+    const device = pumpSettings?.payload?.device
+    if (!device) {
       return {
-        deviceModel: pumpSettings.payload.device.name,
-        manufacturer: pumpSettings.payload.device.manufacturer
+        deviceModel: '',
+        manufacturer: ''
       }
     }
-    /*If no pumpSettings is found, we can fall back to old upload object*/
-    const uploadData = this.sort.byDate(this.filter.byType('upload').top(Infinity))
-    const latestPumpUpload = getLatestPumpUpload(uploadData)
-    const latestUploadSource = _.get(latestPumpUpload, 'source', '').toLowerCase()
+
     return {
-      deviceModel: _.get(latestPumpUpload, 'deviceModel', ''),
-      manufacturer: latestUploadSource === 'carelink' ? 'medtronic' : latestUploadSource
+      deviceModel: device.name,
+      manufacturer: device.manufacturer
     }
+    /*If no pumpSettings is found, we can fall back to old upload object*/
+    // const uploadData = this.sort.byDate(this.filter.byType('upload').top(Infinity))
+    // const latestPumpUpload = getLatestPumpUpload(uploadData)
+    // const latestUploadSource = _.get(latestPumpUpload, 'source', '').toLowerCase()
+    // return {
+    //   deviceModel: _.get(latestPumpUpload, 'deviceModel', ''),
+    //   manufacturer: latestUploadSource === 'carelink' ? 'medtronic' : latestUploadSource
+    // }
   }
 
   getReadingsInRangeData = () => {

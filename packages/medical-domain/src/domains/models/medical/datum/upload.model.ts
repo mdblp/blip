@@ -24,31 +24,3 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import type BaseDatum from './basics/base-datum.model'
-import { type DatumType } from './enums/datum-type.enum'
-
-type Upload = BaseDatum & {
-  type: DatumType.Upload
-  uploadId: string
-
-  _dataState: string
-  _deduplicator: {
-    name: string
-    version: string
-  }
-  _state: string
-  client: {
-    name: string
-    version: string
-  }
-  dataSetType: string
-  deviceManufacturers: string[]
-  deviceModel: string
-  deviceTags: string[]
-  revision: string
-
-  version: string
-}
-
-export default Upload

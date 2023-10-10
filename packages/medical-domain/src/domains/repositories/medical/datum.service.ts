@@ -40,7 +40,6 @@ import PhysicalActivityService from './datum/physical-activity.service'
 import PumpSettingsService from './datum/pump-settings.service'
 import ReservoirChangeService from './datum/reservoir-change.service'
 import SmbgService from './datum/smbg.service'
-import UploadService from './datum/upload.service'
 import WarmUpService from './datum/warm-up.service'
 import WizardService from './datum/wizard.service'
 import ZenModeService from './datum/zen-mode.service'
@@ -89,8 +88,8 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
       return PumpSettingsService.normalize(rawData, opts)
     case 'smbg':
       return SmbgService.normalize(rawData, opts)
-    case 'upload':
-      return UploadService.normalize(rawData, opts)
+    // case 'upload':
+    //   return UploadService.normalize(rawData, opts)
     case 'wizard':
       return WizardService.normalize(rawData, opts)
     default:

@@ -21,28 +21,25 @@ import crossfilter from 'crossfilter2'
 import i18next from 'i18next'
 
 import generateClassifiers from '../classifiers'
-import { getLatestPumpUpload, isAutomatedBasalDevice, getPumpVocabulary } from '../device'
-import {
-  generateBgRangeLabels,
-  weightedCGMCount
-} from '../bloodglucose'
+import { getPumpVocabulary, isAutomatedBasalDevice } from '../device'
+import { generateBgRangeLabels, weightedCGMCount } from '../bloodglucose'
 
 import {
+  AUTOMATED_DELIVERY,
   BGM_DATA_KEY,
-  CGM_DATA_KEY,
-  MS_IN_DAY,
-  CGM_READINGS_ONE_DAY,
-  NOT_ENOUGH_CGM,
   CGM_CALCULATED,
+  CGM_DATA_KEY,
+  CGM_READINGS_ONE_DAY,
+  DIABELOOP,
+  getPumpVocabularies,
+  MS_IN_DAY,
   NO_CGM,
   NO_SITE_CHANGE,
-  SITE_CHANGE,
-  SITE_CHANGE_RESERVOIR,
-  SECTION_TYPE_UNDECLARED,
-  AUTOMATED_DELIVERY,
+  NOT_ENOUGH_CGM,
   SCHEDULED_DELIVERY,
-  DIABELOOP,
-  getPumpVocabularies
+  SECTION_TYPE_UNDECLARED,
+  SITE_CHANGE,
+  SITE_CHANGE_RESERVOIR
 } from '../constants'
 import { applyOffset } from 'medical-domain'
 
@@ -111,7 +108,7 @@ export function cgmStatusMessage(cgmStatus) {
  * @returns {String|Null} - the latest upload source or null
  */
 export function getLatestPumpUploaded(basicsData) {
-  const latestPump = getLatestPumpUpload(_.get(basicsData, 'data.upload.data', []))
+  const latestPump = _.get(basicsData, 'data.pumpSettings.data', [])[0]
 
   if (latestPump && _.has(latestPump, 'source')) {
     return latestPump.source
@@ -447,6 +444,7 @@ export function defineBasicsSections(bgPrefs, manufacturer, deviceModel) {
 
       case 'timeInAutoRatio':
         title = t('Time in {{automatedLabel}} ratio', { automatedLabel: deviceLabels[AUTOMATED_DELIVERY] })
+        console.log({ deviceModel })
         active = isAutomatedBasalDevice(manufacturer, deviceModel)
         dimensions = [
           { key: 'manual', label: deviceLabels[SCHEDULED_DELIVERY] },

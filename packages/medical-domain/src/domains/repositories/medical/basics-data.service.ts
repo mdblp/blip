@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,6 @@
 
 import type MedicalData from '../../models/medical/medical-data.model'
 import type Datum from '../../models/medical/datum.model'
-import type Upload from '../../models/medical/datum/upload.model'
 import { findBasicsDays, toISOString } from '../time/time.service'
 
 interface BasicData {
@@ -45,9 +44,9 @@ interface BasicData {
     deviceParameter: {
       data: Datum[]
     }
-    upload: {
-      data: Upload[]
-    }
+    // upload: {
+    //   data: Upload[]
+    // }
     cbg: {
       data: Datum[]
     }
@@ -87,9 +86,9 @@ export function generateBasicData(medicalData: MedicalData, startEpoch: number, 
         data: selectData(medicalData.deviceParametersChanges)
       },
       // Types below are needed for PDF
-      upload: {
-        data: medicalData.uploads
-      },
+      // upload: {
+      //   data: medicalData.uploads
+      // },
       cbg: {
         data: selectData(medicalData.cbg)
       },
@@ -104,6 +103,9 @@ export function generateBasicData(medicalData: MedicalData, startEpoch: number, 
       },
       wizard: {
         data: selectData(medicalData.wizards)
+      },
+      pumpSettings: {
+        data: medicalData.pumpSettings
       }
     }
   }

@@ -33,7 +33,6 @@ import {
 
 import { generateBgRangeLabels } from '../../utils/bloodglucose'
 import { formatDecimalNumber, formatPercentage } from '../../utils/format'
-import { getLatestPumpUpload } from '../../utils/device'
 
 import { arc, pie } from 'd3-shape'
 import parse from 'parse-svg-path'
@@ -63,8 +62,9 @@ class BasicsPrintView extends PrintView {
       [SITE_CHANGE_TUBING]: Images.siteChangeTubingImage
     }
 
-    const latestPumpUpload = getLatestPumpUpload(_.get(data, 'data.upload.data', []))
-    this.source = _.get(latestPumpUpload, 'source', '').toLowerCase()
+    // const latestPumpUpload = getLatestPumpUpload(_.get(data, 'data.upload.data', []))
+    const pumpSettings = data.data.pumpSettings.data[0]
+    this.source = _.get(pumpSettings, 'source', '').toLowerCase()
     this.manufacturer = this.source
 
     // Process basics data
@@ -74,7 +74,7 @@ class BasicsPrintView extends PrintView {
     this.data.sections = defineBasicsSections(
       this.bgPrefs,
       this.manufacturer,
-      _.get(latestPumpUpload, 'deviceModel')
+      _.get(pumpSettings, 'payload.device.name')
     )
 
     this.data = reduceByDay(this.data, this.bgPrefs)

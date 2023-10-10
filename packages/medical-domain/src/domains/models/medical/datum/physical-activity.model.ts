@@ -33,7 +33,7 @@ import { type DatumType } from './enums/datum-type.enum'
 
 type PhysicalActivity = BaseDatum & Duration & {
   type: DatumType.PhysicalActivity
-  uploadId: string
+  // uploadId: string
   guid: string
   reportedIntensity: Intensity
   eventId: string

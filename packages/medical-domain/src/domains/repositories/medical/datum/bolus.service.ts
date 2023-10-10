@@ -45,7 +45,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     ...base,
     type: DatumType.Bolus,
     subType: rawData.subType as BolusSubtype,
-    uploadId: rawData.uploadId as string,
+    // uploadId: rawData.uploadId as string,
     normal: rawData.normal as number,
     prescriptor: rawData.prescriptor as Prescriptor,
     wizard: null

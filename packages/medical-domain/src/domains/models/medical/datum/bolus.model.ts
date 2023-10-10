@@ -38,7 +38,7 @@ function isBolusSubType(value: unknown): boolean {
 type Bolus = BaseDatum & {
   type: DatumType.Bolus
   subType: BolusSubtype
-  uploadId: string
+  // uploadId: string
   normal: number
   prescriptor: Prescriptor
   wizard: Wizard | null

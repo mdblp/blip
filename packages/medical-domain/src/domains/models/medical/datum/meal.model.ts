@@ -32,7 +32,7 @@ import { type DatumType } from './enums/datum-type.enum'
 
 type Meal = BaseDatum & {
   type: DatumType.Food
-  uploadId: string
+  // uploadId: string
   meal: 'rescuecarbs'
   nutrition: Nutrition
   prescriptor?: Prescriptor

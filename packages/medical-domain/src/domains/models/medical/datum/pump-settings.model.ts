@@ -88,7 +88,7 @@ interface ParameterConfig {
 
 type PumpSettings = BaseDatum & {
   type: DatumType.PumpSettings
-  uploadId: string
+  // uploadId: string
   basalSchedules: object[]
   activeSchedule: string
   deviceId: string
