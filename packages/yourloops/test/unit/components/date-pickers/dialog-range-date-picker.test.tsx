@@ -240,8 +240,10 @@ describe('Dialog range date picker', () => {
           const dayButton = document.getElementById(`button-calendar-day-${formatedDay}`)
           expect(dayButton).not.toBeNull()
           if (range.disabled) {
+            // eslint-disable-next-line jest/no-conditional-expect
             expect(dayButton.getAttribute('disabled')).toBeDefined()
           } else {
+            // eslint-disable-next-line jest/no-conditional-expect
             expect(dayButton.getAttribute('disabled')).toBeNull()
           }
           day = day.add(1, 'day')

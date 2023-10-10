@@ -108,7 +108,7 @@ export const checkMedicalReportCreate = async (medicalFileWidgetParams: MedicalF
     authorFirstName: medicalFileWidgetParams.loggedInUserFirstName,
     authorLastName: medicalFileWidgetParams.loggedInUserLastName
   })
-  expect(within(screen.getByTestId('alert-snackbar')).getByText('Medical report successfully saved'))
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Medical report successfully saved')
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   expect(medicalFilesWidget).toHaveTextContent(`Medical filesMedical report-1 2022-01-10Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}Medical report-2 2022-01-02Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}Medical report-3 01-01-2023Created by HCP firstName HCP lastName${medicalFileWidgetParams.selectedTeamName}New`)
 }
@@ -144,7 +144,7 @@ export const checkMedicalReportUpdate = async (medicalFileWidgetParams: MedicalF
   jest.spyOn(MedicalFilesApi, 'updateMedicalReport').mockResolvedValue(medicalReportUpdated)
   await userEvent.click(within(createdMedicalReportDialogEdit).getByRole('button', { name: 'Save' }))
   expect(MedicalFilesApi.updateMedicalReport).toHaveBeenCalledWith(medicalReportUpdated)
-  expect(within(screen.getByTestId('alert-snackbar')).getByText('Medical report successfully saved'))
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Medical report successfully saved')
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }
 
@@ -177,7 +177,7 @@ export const checkMedicalReportDelete = async (medicalFileWidgetParams: MedicalF
   jest.spyOn(MedicalFilesApi, 'deleteMedicalReport').mockResolvedValue(undefined)
   await userEvent.click(deleteButton)
   expect(MedicalFilesApi.deleteMedicalReport).toHaveBeenCalledWith(MEDICAL_REPORT_TO_CREATE_ID)
-  expect(within(screen.getByTestId('alert-snackbar')).getByText('Medical report successfully deleted'))
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Medical report successfully deleted')
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   expect(medicalFilesWidget).toHaveTextContent(`Medical filesMedical report-1 2022-01-10Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}Medical report-2 2022-01-02Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}New`)
 }

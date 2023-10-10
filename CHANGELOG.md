@@ -20,6 +20,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2627 "Last data update" column is not sorting properly
 - YLP-2642 Disabled Google Translate automated translation to avoid React crashes in notification page
 - YLP-2643 Disabled Google Translate automated translation to avoid React crashes in training page
+- YLP-2661 App crashes when patient does not have a pump
 
 ### Engineering use
 - YLP-2573 Create a dedicated message for the caregiver when the account creation is complete

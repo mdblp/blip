@@ -149,18 +149,19 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: CgmConfig 
         value: (data as DeviceConfig).swVersion
       }]
     case PdfSettingsDataType.Pump:
+      const pump = data as PumpConfig
       return [{
         label: t('Manufacturer'),
-        value: (data as PumpConfig).manufacturer
+        value: pump.manufacturer
       }, {
         label: t('Serial Number'),
-        value: (data as PumpConfig).serialNumber
+        value: pump.serialNumber
       }, {
         label: t('Pump version'),
-        value: (data as PumpConfig).swVersion
+        value: pump.swVersion
       }, {
         label: t('Pump cartridge expiration date'),
-        value: formatLocalizedFromUTC((data as PumpConfig).expirationDate, timePrefs, longDayFormat)
+        value: pump.expirationDate ? formatLocalizedFromUTC(pump.expirationDate, timePrefs, longDayFormat) : t('N/A')
       }]
   }
 }
@@ -193,7 +194,10 @@ export const getTableDataByDataType = (type: PdfSettingsDataType, data: CgmConfi
   return { heading, columns, rows }
 }
 
-export const getDeviceParametersTableData = (parameters: ParameterSettingsTableRow[], tableParameters: { level: number, width: number }, timezone?: string, date?: string): ParameterSettingsTable => {
+export const getDeviceParametersTableData = (parameters: ParameterSettingsTableRow[], tableParameters: {
+  level: number,
+  width: number
+}, timezone?: string, date?: string): ParameterSettingsTable => {
   const timePrefs = getTimePrefs(timezone)
   const text = t('Parameters')
   const subText = tableParameters.level !== 1 ? `- ${t('Advanced')}` : undefined

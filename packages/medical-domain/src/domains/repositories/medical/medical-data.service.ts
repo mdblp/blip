@@ -114,17 +114,12 @@ class MedicalDataService {
   }
 
   public get latestPumpManufacturer(): string {
-    const capitalize = (s: string): string => {
-      const lower = s.toLowerCase()
-      return lower[0].toUpperCase() + lower.slice(1)
-    }
     const pumpSettings = this.medicalData.pumpSettings
     if (pumpSettings.length > 0) {
       const latestPumpSettings = this.getLatestPumpSettings(pumpSettings)
-      const manufacturer = latestPumpSettings.payload.pump.manufacturer.toLowerCase()
-      return capitalize(manufacturer)
+      return latestPumpSettings.payload.pump.manufacturer
     } else {
-      return capitalize(this._datumOpts.defaultPumpManufacturer)
+      return this._datumOpts.defaultPumpManufacturer
     }
   }
 

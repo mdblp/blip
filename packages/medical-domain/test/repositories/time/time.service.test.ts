@@ -31,7 +31,7 @@ import { applyOffset } from '../../../src'
 
 describe('TimeService', () => {
   describe('getNumberOfDays', () => {
-    it('should return number of days when no week days are filtered ', () => {
+    it('should return number of days when no week days are filtered', () => {
       const start = new Date('2018-02-01T00:00:00.000Z').valueOf()
       const end = new Date('2018-02-02T00:00:00.000Z').valueOf()
       const fullWeekFilter = defaultWeekDaysFilter
@@ -47,7 +47,7 @@ describe('TimeService', () => {
       expect(oneWeekWithFullWeekFilter).toBe(7)
     })
 
-    it('should return number of days when some week days are filtered ', () => {
+    it('should return number of days when some week days are filtered', () => {
       const start = new Date('2018-02-01T00:00:00.000Z').valueOf()
       const end = new Date('2018-02-02T00:00:00.000Z').valueOf()
       const weekFilter = defaultWeekDaysFilter

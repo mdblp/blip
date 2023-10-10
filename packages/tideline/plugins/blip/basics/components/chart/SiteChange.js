@@ -19,9 +19,10 @@ import _ from 'lodash'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-import { SITE_CHANGE_RESERVOIR, DEFAULT_MANUFACTURER, SITE_CHANGE } from '../../logic/constants'
+import { SITE_CHANGE_RESERVOIR, SITE_CHANGE } from '../../logic/constants'
 import Change from '../sitechange/Change'
 import NoChange from '../sitechange/NoChange'
+import { PumpManufacturer } from 'medical-domain'
 
 function SiteChange(props) {
   const getValue = () => {
@@ -30,7 +31,7 @@ function SiteChange(props) {
 
   const type = props.subtotalType ?? SITE_CHANGE_RESERVOIR
   const value = getValue()
-  const manufacturer = _.get(_.last(value.data), 'pump.manufacturer', DEFAULT_MANUFACTURER)
+  const manufacturer = _.get(_.last(value.data), 'pump.manufacturer', PumpManufacturer.Default)
   value.count = value.count ?? 1 //default value
   // Reservoir Change
   const siteChangeComponent =
