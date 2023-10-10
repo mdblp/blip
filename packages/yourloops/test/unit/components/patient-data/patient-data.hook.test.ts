@@ -31,11 +31,12 @@ import * as router from 'react-router'
 import type User from '../../../../lib/auth/models/user.model'
 import { act, renderHook } from '@testing-library/react'
 import { usePatientData } from '../../../../components/patient-data/patient-data.hook'
-import { ChartTypes } from '../../../../enum/chart-type.enum'
+import { PatientView } from '../../../../enum/patient-view.enum'
 import type { Patient } from '../../../../lib/patient/models/patient.model'
 import { TimeService } from 'medical-domain'
 import type { ChartPrefs } from '../../../../components/dashboard-widgets/models/chart-prefs.model'
 import { createPatient } from '../../common/utils'
+import { AppUserRoute } from '../../../../models/enums/routes.enum'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/patient/patients.provider')
@@ -45,7 +46,7 @@ describe('usePatientData hook', () => {
   const getUrlPrefixForHcp = (id = patientId) => `/patient/${id}`
   const useNavigateMock = jest.fn()
   const useParamHookMock = jest.fn().mockReturnValue({ patientId })
-  const useLocationMock = jest.fn().mockReturnValue({ pathname: `${getUrlPrefixForHcp()}/${ChartTypes.Dashboard}` })
+  const useLocationMock = jest.fn().mockReturnValue({ pathname: `${getUrlPrefixForHcp()}${AppUserRoute.Dashboard}` })
 
   beforeAll(() => {
     jest.spyOn(router, 'useNavigate').mockImplementation(() => useNavigateMock)
@@ -65,31 +66,31 @@ describe('usePatientData hook', () => {
     }))
   })
 
-  describe('changeChart', () => {
-    it('should change currentChart to Daily', async () => {
+  describe('changePatientView', () => {
+    it('should change currentPatientView to Daily', async () => {
       const { result } = renderHook(() => usePatientData())
-      expect(result.current.currentChart).toEqual(ChartTypes.Dashboard)
+      expect(result.current.currentPatientView).toEqual(PatientView.Dashboard)
       expect(result.current.msRange).toEqual(DEFAULT_MS_RANGE)
 
       act(() => {
-        result.current.changeChart(ChartTypes.Daily)
+        result.current.changePatientView(PatientView.Daily)
       })
 
       expect(result.current.msRange).toEqual(TimeService.MS_IN_DAY)
-      expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp()}/${ChartTypes.Daily}`)
+      expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp()}${AppUserRoute.Daily}`)
     })
 
-    it('should change currentChart to Trends', async () => {
+    it('should change currentPatientView to Trends', async () => {
       const { result } = renderHook(() => usePatientData())
-      expect(result.current.currentChart).toEqual(ChartTypes.Dashboard)
+      expect(result.current.currentPatientView).toEqual(PatientView.Dashboard)
       expect(result.current.msRange).toEqual(DEFAULT_MS_RANGE)
 
       act(() => {
-        result.current.changeChart(ChartTypes.Trends)
+        result.current.changePatientView(PatientView.Trends)
       })
 
       expect(result.current.msRange).toEqual(DEFAULT_MS_RANGE)
-      expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp()}/${ChartTypes.Trends}`)
+      expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp()}${AppUserRoute.Trends}`)
     })
   })
 
@@ -101,7 +102,7 @@ describe('usePatientData hook', () => {
         result.current.changePatient({ userid: newPatientId } as Patient)
       })
       expect(result.current.medicalData).toBeNull()
-      expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp(newPatientId)}/${ChartTypes.Dashboard}`)
+      expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp(newPatientId)}${AppUserRoute.Dashboard}`)
     })
   })
 
@@ -154,7 +155,7 @@ describe('usePatientData hook', () => {
         result.current.goToDailySpecificDate(currentDate)
       })
       expect(result.current.dailyDate).toEqual(currentDate)
-      expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp()}/${ChartTypes.Daily}?date=${new Date(currentDate).toISOString()}`)
+      expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp()}${AppUserRoute.Daily}?date=${new Date(currentDate).toISOString()}`)
     })
   })
 })

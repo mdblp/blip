@@ -26,23 +26,26 @@
  */
 
 import { act } from '@testing-library/react'
-import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { mockDataAPI, pumpSettingsData } from '../../mock/data.api.mock'
-import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { patient1Id } from '../../data/patient.api.data'
-import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { renderPage } from '../../utils/render'
-import { mockUserApi } from '../../mock/user.api.mock'
-import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
-import { mockWindowResizer } from '../../mock/window-resizer.mock'
-import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { testDeviceSettingsVisualisation } from '../../use-cases/device-settings-visualisation'
-import { testDeviceSettingsNavigationForHcpAndCaregiver } from '../../use-cases/device-settings-navigation'
-import { testAppMainLayoutForCaregiver } from '../../use-cases/app-main-layout-visualisation'
+import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
+import { mockNotificationAPI } from '../../../mock/notification.api.mock'
+import { patient1Id } from '../../../data/patient.api.data'
+import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
+import { renderPage } from '../../../utils/render'
+import { mockUserApi } from '../../../mock/user.api.mock'
+import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
+import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
+import { testDeviceSettingsVisualisation } from '../../../use-cases/device-settings-visualisation'
+import { testDeviceSettingsNavigationForHcpAndCaregiver } from '../../../use-cases/device-settings-navigation'
+import { testAppMainLayoutForCaregiver } from '../../../use-cases/app-main-layout-visualisation'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
-describe('Device page for Caregiver', () => {
+describe('Device view for Caregiver', () => {
   const firstName = 'Caregiver firstName'
   const lastName = 'Caregiver lastName'
+
+  const deviceRoute = `${AppUserRoute.Patient}/${patient1Id}${AppUserRoute.Device}`
 
   beforeEach(() => {
     mockWindowResizer()
@@ -56,14 +59,14 @@ describe('Device page for Caregiver', () => {
 
   it('should render correct layout', async () => {
     await act(async () => {
-      renderPage(`/patient/${patient1Id}/device`)
+      renderPage(deviceRoute)
     })
     await testAppMainLayoutForCaregiver({ loggedInUserFullName: `${firstName} ${lastName}` })
   })
 
   it('should display correct parameters', async () => {
     await act(async () => {
-      renderPage(`/patient/${patient1Id}/device`)
+      renderPage(deviceRoute)
     })
     await testDeviceSettingsVisualisation()
   })
@@ -71,7 +74,7 @@ describe('Device page for Caregiver', () => {
   it('should navigate to daily page when clicking on the daily button', async () => {
     let router
     await act(async () => {
-      router = renderPage(`/patient/${patient1Id}/device`)
+      router = renderPage(deviceRoute)
     })
     await testDeviceSettingsNavigationForHcpAndCaregiver(router)
   })

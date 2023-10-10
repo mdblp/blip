@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -59,7 +59,7 @@ describe('Metrics', () => {
     metrics.send('test', 'you should see me')
     expect(window._paq).toBeInstanceOf(Array)
     if (window._paq) { // Make typescript happy
-      // eslint-disable-next-line no-magic-numbers
+      // eslint-disable-next-line no-magic-numbers,jest/no-conditional-expect
       expect(window._paq.length).toBe(7)
     }
   })
@@ -68,9 +68,13 @@ describe('Metrics', () => {
     metrics.send('metrics', 'setCustomUrl', location.pathname)
     expect(window._paq).toBeInstanceOf(Array)
     if (window._paq) { // Make typescript happy
+      // eslint-disable-next-line jest/no-conditional-expect
       expect(window._paq.length).toBe(1)
+      // eslint-disable-next-line jest/no-conditional-expect
       expect(window._paq[0].length).toBe(2)
+      // eslint-disable-next-line jest/no-conditional-expect
       expect(window._paq[0][0]).toBe('setCustomUrl')
+      // eslint-disable-next-line jest/no-conditional-expect
       expect(typeof window._paq[0][1]).toBe('string')
     }
   })

@@ -26,7 +26,7 @@
  */
 
 import { type BgPrefs } from 'dumb'
-import { ChartTypes } from '../../enum/chart-type.enum'
+import { PatientView } from '../../enum/patient-view.enum'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { type ChartPrefs } from '../dashboard-widgets/models/chart-prefs.model'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -39,13 +39,14 @@ import { type DateRange, isValidDateQueryParam, PatientDataUtils } from './patie
 import DataUtil from 'tidepool-viz/src/utils/data'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
 import { usePatientContext } from '../../lib/patient/patient.provider'
+import { AppUserRoute } from '../../models/enums/routes.enum'
 
 export interface usePatientDataResult {
   bgPrefs: BgPrefs
-  changeChart: (chart: ChartTypes) => void
+  changePatientView: (patientView: PatientView) => void
   changePatient: (patient: Patient) => void
   chartPrefs: ChartPrefs
-  currentChart: ChartTypes
+  currentPatientView: PatientView
   dailyChartRef: MutableRefObject<DailyChartRef>
   dailyDate: number
   fetchPatientData: () => Promise<void>
@@ -125,46 +126,66 @@ export const usePatientData = (): usePatientDataResult => {
     bgUnits
   }))
 
-  const currentChart = useMemo<ChartTypes>(() => {
-    switch (pathname) {
-      case `${urlPrefix}/daily`:
-        return ChartTypes.Daily
-      case `${urlPrefix}/trends`:
-        return ChartTypes.Trends
-      case `${urlPrefix}/dashboard`:
-        return ChartTypes.Dashboard
-      case `${urlPrefix}/device`:
-        return ChartTypes.Device
+  const currentPatientView = useMemo<PatientView>(() => {
+    const routeWithoutUrlPrefix = pathname.replace(urlPrefix, '')
+
+    switch (routeWithoutUrlPrefix) {
+      case AppUserRoute.Daily:
+        return PatientView.Daily
+      case AppUserRoute.Trends:
+        return PatientView.Trends
+      case AppUserRoute.Dashboard:
+        return PatientView.Dashboard
+      case AppUserRoute.Device:
+        return PatientView.Device
+      case AppUserRoute.TargetAndAlerts:
+        return PatientView.TargetAndAlerts
     }
   }, [pathname, urlPrefix])
+
+  const getRouteByPatientView = (view: PatientView): AppUserRoute => {
+    switch (view) {
+      case PatientView.Daily:
+        return AppUserRoute.Daily
+      case PatientView.Dashboard:
+        return AppUserRoute.Dashboard
+      case PatientView.Device:
+        return AppUserRoute.Device
+      case PatientView.TargetAndAlerts:
+        return AppUserRoute.TargetAndAlerts
+      case PatientView.Trends:
+        return AppUserRoute.Trends
+    }
+  }
 
   const [msRange, setMsRange] = useState<number>(DEFAULT_MS_RANGE)
 
   const changePatient = (patient: Patient): void => {
     patientDataUtils.current.changePatient(patient)
     setMedicalData(null)
-    navigate(`/patient/${patient.userid}/${currentChart}`)
+    navigate(`/patient/${patient.userid}/${currentPatientView}`)
   }
 
-  const getMsRangeByChartType = (chartType: ChartTypes, patientMedicalData: MedicalDataService): number => {
-    if (patientMedicalData && chartType === ChartTypes.Dashboard) {
+  const getMsRangeByPatientView = (patientView: PatientView, patientMedicalData: MedicalDataService): number => {
+    if (patientMedicalData && patientView === PatientView.Dashboard) {
       return patientDataUtils.current.getRangeDaysInMs(patientMedicalData.medicalData)
     }
     return DEFAULT_MS_RANGE
   }
 
-  const changeChart = (chart: ChartTypes): void => {
-    if (chart === currentChart) {
+  const changePatientView = (patientView: PatientView): void => {
+    if (patientView === currentPatientView) {
       return
     }
-    if (chart === ChartTypes.Daily && dateQueryParam) {
+    if (patientView === PatientView.Daily && dateQueryParam) {
       setDailyDate(parseInt(dateQueryParam))
     }
 
-    const newMsRange = getMsRangeByChartType(chart, medicalData)
+    const newMsRange = getMsRangeByPatientView(patientView, medicalData)
     setMsRange(newMsRange)
 
-    navigate(`${urlPrefix}/${chart}`)
+    const route = getRouteByPatientView(patientView)
+    navigate(`${urlPrefix}${route}`)
   }
 
   const updateChartPrefs = (chartPrefs: ChartPrefs): void => {
@@ -173,13 +194,13 @@ export const usePatientData = (): usePatientDataResult => {
 
   const goToDailySpecificDate = (date: number | Date): void => {
     setDailyDate(date instanceof Date ? date.valueOf() : date)
-    navigate(`${urlPrefix}/${ChartTypes.Daily}?date=${new Date(date).toISOString()}`)
+    navigate(`${urlPrefix}/${PatientView.Daily}?date=${new Date(date).toISOString()}`)
   }
 
   const handleDatetimeLocationChange = async (epochLocation: number, msRange: number): Promise<boolean> => {
     try {
       setRefreshingData(true)
-      const dateRange = patientDataUtils.current.getDateRange({ currentChart, epochLocation, msRange })
+      const dateRange = patientDataUtils.current.getDateRange({ currentPatientView: currentPatientView, epochLocation, msRange })
       const patientData = await patientDataUtils.current.loadDataRange(dateRange)
       if (patientData && patientData.length > 0) {
         const medicalDataUpdated = medicalData
@@ -197,11 +218,11 @@ export const usePatientData = (): usePatientDataResult => {
     } catch (err) {
       console.log(err)
     } finally {
-      if (currentChart === ChartTypes.Daily) {
+      if (currentPatientView === PatientView.Daily) {
         setDailyDate(epochLocation)
         setSearchParams({ [DATE_QUERY_PARAM_KEY]: new Date(epochLocation).toISOString() })
       }
-      if (currentChart === ChartTypes.Trends) {
+      if (currentPatientView === PatientView.Trends) {
         setTrendsDate(epochLocation)
       }
       setMsRange(msRange)
@@ -271,8 +292,8 @@ export const usePatientData = (): usePatientDataResult => {
         endpoints: medicalData.endpoints
       })
       const initialDate = patientDataUtils.current.getInitialDate(medicalData)
-      const msRangeByChartType = getMsRangeByChartType(currentChart, medicalData)
-      setMsRange(msRangeByChartType)
+      const msRangeByPatientView = getMsRangeByPatientView(currentPatientView, medicalData)
+      setMsRange(msRangeByPatientView)
       setDataUtil(dataUtil)
       setMedicalData(medicalData)
       setDailyDate(dateQueryParam && isValidDateQueryParam(dateQueryParam) ? new Date(dateQueryParam).valueOf() : initialDate)
@@ -297,9 +318,9 @@ export const usePatientData = (): usePatientDataResult => {
 
   return {
     bgPrefs,
-    changeChart,
+    changePatientView,
     changePatient,
-    currentChart,
+    currentPatientView,
     chartPrefs,
     dailyChartRef,
     dailyDate,

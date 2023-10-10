@@ -26,16 +26,17 @@
  */
 
 import { screen, waitFor } from '@testing-library/react'
-import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { checkPatientNavBarAsPatient } from '../../assert/patient-nav-bar.assert'
-import { mockDataAPI } from '../../mock/data.api.mock'
-import { renderPage } from '../../utils/render'
-import { checkPatientLayout } from '../../assert/layout.assert'
-import { patient2AsTeamMember } from '../../data/patient.api.data'
-import { mockWindowResizer } from '../../mock/window-resizer.mock'
-import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
+import { checkPatientNavBarAsPatient } from '../../../assert/patient-nav-bar.assert'
+import { minimalTrendViewData, mockDataAPI } from '../../../mock/data.api.mock'
+import { renderPage } from '../../../utils/render'
+import { checkPatientLayout } from '../../../assert/layout.assert'
+import { patient2AsTeamMember } from '../../../data/patient.api.data'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
+import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
-describe('Daily view for patient', () => {
+describe('Trends view for patient', () => {
   beforeEach(() => {
     mockWindowResizer()
     mockPatientLogin(patient2AsTeamMember)
@@ -48,10 +49,11 @@ describe('Daily view for patient', () => {
   })
 
   it('should render correct layout', async () => {
-    mockDataAPI()
-    const router = renderPage('/daily')
+    mockDataAPI(minimalTrendViewData)
+    const trendsRoute = AppUserRoute.Trends
+    const router = renderPage(trendsRoute)
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/daily')
+      expect(router.state.location.pathname).toEqual(trendsRoute)
     })
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
