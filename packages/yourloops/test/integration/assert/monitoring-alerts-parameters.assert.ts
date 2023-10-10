@@ -33,31 +33,29 @@ import PatientApi from '../../../lib/patient/patient.api'
 import { buildTeamThree, myThirdTeamId } from '../mock/team.api.mock'
 import TeamApi from '../../../lib/team/team.api'
 
-export const checkMonitoringAlertsDialogContentMgdl = async (): Promise<void> => {
+export const checkMonitoringAlertsLinkToTargetAndAlerts = async (): Promise<void> => {
   const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring alerts')
   await userEvent.click(configureMonitoringAlertsButton)
-  const dialog = screen.getByRole('dialog')
 
-  expect(dialog).toHaveTextContent('Monitoring alerts configuration1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)A. Glycemic targetMinimum:​mg/dLMaximum:​mg/dLB. Event trigger thresholdTime spent off target5%​')
-  expect(dialog).toHaveTextContent('2. Severe hypoglycemiaCurrent trigger setting: 10% of time below 40 mg/dL thresholdA. Severe hypoglycemia threshold:Severe hypoglycemia below:​mg/dLB. Event trigger thresholdTime spent in severe hypoglycemia10%​')
-  expect(dialog).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​Default valuesCancelSave')
-
-  const cancelButton = within(dialog).getByRole('button', { name: 'Cancel' })
-  await userEvent.click(cancelButton)
-  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  const targetAndAlertsContent = screen.getByTestId('target-and-alerts-container')
+  expect(targetAndAlertsContent).toHaveTextContent('Target & alerts')
+  expect(targetAndAlertsContent).toHaveTextContent('Monitoring alertsSet manually each value or apply care team values.')
 }
 
-export const checkMonitoringAlertsDialogContentMmol = async (): Promise<void> => {
-  const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring alerts')
-  await userEvent.click(configureMonitoringAlertsButton)
-  const dialog = screen.getByRole('dialog')
-  expect(dialog).toHaveTextContent('Monitoring alerts configuration1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 2.8 mmol/L max at 7.8 mmol/L)A. Glycemic targetMinimum:​mmol/LMaximum:​mmol/LB. Event trigger thresholdTime spent off target5%​')
-  expect(dialog).toHaveTextContent('2. Severe hypoglycemiaCurrent trigger setting: 10% of time below 2.2 mmol/L thresholdA. Severe hypoglycemia threshold:Severe hypoglycemia below:​mmol/LB. Event trigger thresholdTime spent in severe hypoglycemia10%​')
-  expect(dialog).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​Default valuesCancelSave')
+export const checkMonitoringAlertsContentForPatientMgdl = async (): Promise<void> => {
+  const monitoringAlertsSection = screen.getByTestId('monitoring-alerts-configuration-section')
 
-  const cancelButton = within(dialog).getByRole('button', { name: 'Cancel' })
-  await userEvent.click(cancelButton)
-  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  expect(monitoringAlertsSection).toHaveTextContent('Care team values1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)A. Glycemic targetMinimum:​mg/dLMaximum:​mg/dLB. Event trigger thresholdTime spent off target5%​')
+  expect(monitoringAlertsSection).toHaveTextContent('2. Severe hypoglycemiaCurrent trigger setting: 10% of time below 40 mg/dL thresholdA. Severe hypoglycemia threshold:Severe hypoglycemia below:​mg/dLB. Event trigger thresholdTime spent in severe hypoglycemia10%​')
+  expect(monitoringAlertsSection).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​CancelSave')
+}
+
+export const checkMonitoringAlertsContentForPatientMmol = async (): Promise<void> => {
+  const monitoringAlertsSection = screen.getByTestId('monitoring-alerts-configuration-section')
+
+  expect(monitoringAlertsSection).toHaveTextContent('Care team values1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 2.8 mmol/L max at 7.8 mmol/L)A. Glycemic targetMinimum:​mmol/LMaximum:​mmol/LB. Event trigger thresholdTime spent off target5%​')
+  expect(monitoringAlertsSection).toHaveTextContent('2. Severe hypoglycemiaCurrent trigger setting: 10% of time below 2.2 mmol/L thresholdA. Severe hypoglycemia threshold:Severe hypoglycemia below:​mmol/LB. Event trigger thresholdTime spent in severe hypoglycemia10%​')
+  expect(monitoringAlertsSection).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​CancelSave')
 }
 
 export const checkMonitoringAlertsParametersTeamAdmin = async (): Promise<void> => {
@@ -111,21 +109,20 @@ export const checkMonitoringAlertsParametersTeamMember = async (): Promise<void>
   expect(saveButton).not.toBeInTheDocument()
 }
 
-export const checkMonitoringAlertsDialogSaveButtonMmol = async (): Promise<void> => {
-  const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring alerts')
-  await userEvent.click(configureMonitoringAlertsButton)
-  const dialog = within(screen.getByRole('dialog'))
-  const lowBgInput = dialog.getByRole('spinbutton', { name: 'Low blood glucose input' })
-  const highBgInput = dialog.getByRole('spinbutton', { name: 'High blood glucose input' })
-  const veryLowBgInput = dialog.getByRole('spinbutton', { name: 'Very low blood glucose input' })
-  const outOfRangeThreshold = dialog.getByTestId('basic-dropdown-out-of-range-selector')
-  const hypoThreshold = dialog.getByTestId('basic-dropdown-hypo-threshold-selector')
-  const nonDataTxThreshold = dialog.getByTestId('basic-dropdown-non-data-selector')
-  const saveButton = dialog.getByTestId('monitoring-alert-config-save')
+export const checkMonitoringAlertsForPatientSaveButtonMmol = async (): Promise<void> => {
+  const monitoringAlertsSection = within(screen.getByTestId('monitoring-alerts-configuration-section'))
 
-  expect(within(dialog.getByTestId('low-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
-  expect(within(dialog.getByTestId('high-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
-  expect(within(dialog.getByTestId('very-low-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
+  const lowBgInput = monitoringAlertsSection.getByRole('spinbutton', { name: 'Low blood glucose input' })
+  const highBgInput = monitoringAlertsSection.getByRole('spinbutton', { name: 'High blood glucose input' })
+  const veryLowBgInput = monitoringAlertsSection.getByRole('spinbutton', { name: 'Very low blood glucose input' })
+  const outOfRangeThreshold = monitoringAlertsSection.getByTestId('basic-dropdown-out-of-range-selector')
+  const hypoThreshold = monitoringAlertsSection.getByTestId('basic-dropdown-hypo-threshold-selector')
+  const nonDataTxThreshold = monitoringAlertsSection.getByTestId('basic-dropdown-non-data-selector')
+  const saveButton = monitoringAlertsSection.getByTestId('monitoring-alert-config-save')
+
+  expect(within(monitoringAlertsSection.getByTestId('low-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
+  expect(within(monitoringAlertsSection.getByTestId('high-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
+  expect(within(monitoringAlertsSection.getByTestId('very-low-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
   expect(lowBgInput).toHaveValue(2.8)
   expect(highBgInput).toHaveValue(7.8)
   expect(veryLowBgInput).toHaveValue(2.2)
@@ -137,7 +134,7 @@ export const checkMonitoringAlertsDialogSaveButtonMmol = async (): Promise<void>
 
   await userEvent.clear(lowBgInput)
   await userEvent.type(lowBgInput, '3.55')
-  expect(within(dialog.getByTestId('low-bg-text-field-id')).getByText('Value must be a number')).toBeInTheDocument()
+  expect(within(monitoringAlertsSection.getByTestId('low-bg-text-field-id')).getByText('Value must be a number')).toBeInTheDocument()
   expect(saveButton).toBeDisabled()
   await userEvent.clear(lowBgInput)
   await userEvent.type(lowBgInput, '4.8')
@@ -145,7 +142,7 @@ export const checkMonitoringAlertsDialogSaveButtonMmol = async (): Promise<void>
 
   await userEvent.clear(highBgInput)
   await userEvent.type(highBgInput, '8.55')
-  expect(within(dialog.getByTestId('high-bg-text-field-id')).getByText('Value must be a number')).toBeInTheDocument()
+  expect(within(monitoringAlertsSection.getByTestId('high-bg-text-field-id')).getByText('Value must be a number')).toBeInTheDocument()
   expect(saveButton).toBeDisabled()
   await userEvent.clear(highBgInput)
   await userEvent.type(highBgInput, '8.8')
@@ -153,21 +150,21 @@ export const checkMonitoringAlertsDialogSaveButtonMmol = async (): Promise<void>
 
   await userEvent.clear(veryLowBgInput)
   await userEvent.type(veryLowBgInput, '3.55')
-  expect(within(dialog.getByTestId('very-low-bg-text-field-id')).getByText('Value must be a number')).toBeInTheDocument()
+  expect(within(monitoringAlertsSection.getByTestId('very-low-bg-text-field-id')).getByText('Value must be a number')).toBeInTheDocument()
   expect(saveButton).toBeDisabled()
   await userEvent.clear(veryLowBgInput)
   await userEvent.type(veryLowBgInput, '3.2')
   expect(saveButton).toBeEnabled()
 
-  const dopDownOutRange = within(dialog.getByTestId('dropdown-out-of-range'))
-  fireEvent.mouseDown(dopDownOutRange.getByRole('combobox'))
+  const dropDownOutRange = within(monitoringAlertsSection.getByTestId('dropdown-out-of-range'))
+  fireEvent.mouseDown(dropDownOutRange.getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: '15%' }))
 
-  const dropDownHypo = within(dialog.getByTestId('dropdown-hypo'))
+  const dropDownHypo = within(monitoringAlertsSection.getByTestId('dropdown-hypo'))
   fireEvent.mouseDown(dropDownHypo.getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: '20%' }))
 
-  const dropDownNonData = within(dialog.getByTestId('dropdown-nonData'))
+  const dropDownNonData = within(monitoringAlertsSection.getByTestId('dropdown-nonData'))
   fireEvent.mouseDown(dropDownNonData.getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: '40%' }))
 
@@ -184,39 +181,39 @@ export const checkMonitoringAlertsDialogSaveButtonMmol = async (): Promise<void>
     reportingPeriod: 7
   }
   expect(PatientApi.updatePatientAlerts).toHaveBeenCalledWith(myThirdTeamId, patientWithMmolId, expectedMonitoringAlertsParameters)
-  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   expect(screen.getByText('Patient update succeeded')).toBeVisible()
 }
 
 export const checkMonitoringAlertsDialogDefaultButtonMgdl = async (): Promise<void> => {
-  const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring alerts')
-  await userEvent.click(configureMonitoringAlertsButton)
-  const dialog = within(screen.getByRole('dialog'))
-  const lowBgInput = dialog.getByRole('spinbutton', { name: 'Low blood glucose input' })
-  const highBgInput = dialog.getByRole('spinbutton', { name: 'High blood glucose input' })
-  const veryLowBgInput = dialog.getByRole('spinbutton', { name: 'Very low blood glucose input' })
-  const outOfRangeThreshold = dialog.getByTestId('basic-dropdown-out-of-range-selector')
-  const hypoThreshold = dialog.getByTestId('basic-dropdown-hypo-threshold-selector')
-  const nonDataThreshold = dialog.getByTestId('basic-dropdown-non-data-selector')
-  const saveButton = dialog.getByRole('button', { name: 'Save' })
-  const defaultButton = dialog.getByRole('button', { name: 'Default values' })
-  const cancelButton = dialog.getByRole('button', { name: 'Cancel' })
+  const monitoringAlertsSection = within(screen.getByTestId('monitoring-alerts-configuration-section'))
+
+  const lowBgInput = monitoringAlertsSection.getByRole('spinbutton', { name: 'Low blood glucose input' })
+  const highBgInput = monitoringAlertsSection.getByRole('spinbutton', { name: 'High blood glucose input' })
+  const veryLowBgInput = monitoringAlertsSection.getByRole('spinbutton', { name: 'Very low blood glucose input' })
+  const outOfRangeThreshold = monitoringAlertsSection.getByTestId('basic-dropdown-out-of-range-selector')
+  const hypoThreshold = monitoringAlertsSection.getByTestId('basic-dropdown-hypo-threshold-selector')
+  const nonDataThreshold = monitoringAlertsSection.getByTestId('basic-dropdown-non-data-selector')
+  const saveButton = monitoringAlertsSection.getByRole('button', { name: 'Save' })
+  const careTeamValuesButton = monitoringAlertsSection.getByRole('button', { name: 'Care team values' })
+  const cancelButton = monitoringAlertsSection.getByRole('button', { name: 'Cancel' })
+
+  expect(cancelButton).toBeEnabled()
 
   await userEvent.clear(lowBgInput)
-  const dropDownOutRange = within(dialog.getByTestId('dropdown-out-of-range'))
+  const dropDownOutRange = within(monitoringAlertsSection.getByTestId('dropdown-out-of-range'))
   fireEvent.mouseDown(dropDownOutRange.getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: '15%' }))
 
-  const dropDownHypo = within(dialog.getByTestId('dropdown-hypo'))
+  const dropDownHypo = within(monitoringAlertsSection.getByTestId('dropdown-hypo'))
   fireEvent.mouseDown(dropDownHypo.getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: '20%' }))
 
-  const dropDownNonData = within(dialog.getByTestId('dropdown-nonData'))
+  const dropDownNonData = within(monitoringAlertsSection.getByTestId('dropdown-nonData'))
   fireEvent.mouseDown(dropDownNonData.getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: '40%' }))
 
   await userEvent.type(lowBgInput, '50.5')
-  expect(within(dialog.getByTestId('low-bg-text-field-id')).getByText('Value must be an integer')).toBeVisible()
+  expect(within(monitoringAlertsSection.getByTestId('low-bg-text-field-id')).getByText('Value must be an integer')).toBeVisible()
   expect(saveButton).toBeDisabled()
 
   await userEvent.clear(lowBgInput)
@@ -224,7 +221,7 @@ export const checkMonitoringAlertsDialogDefaultButtonMgdl = async (): Promise<vo
   expect(saveButton).toBeEnabled()
   await userEvent.clear(highBgInput)
   await userEvent.type(highBgInput, '140.5')
-  expect(within(dialog.getByTestId('high-bg-text-field-id')).getByText('Value must be an integer')).toBeVisible()
+  expect(within(monitoringAlertsSection.getByTestId('high-bg-text-field-id')).getByText('Value must be an integer')).toBeVisible()
   expect(saveButton).toBeDisabled()
 
   await userEvent.clear(highBgInput)
@@ -232,15 +229,15 @@ export const checkMonitoringAlertsDialogDefaultButtonMgdl = async (): Promise<vo
   expect(saveButton).toBeEnabled()
   await userEvent.clear(veryLowBgInput)
   await userEvent.type(veryLowBgInput, '40.5')
-  expect(within(dialog.getByTestId('very-low-bg-text-field-id')).getByText('Value must be an integer')).toBeVisible()
+  expect(within(monitoringAlertsSection.getByTestId('very-low-bg-text-field-id')).getByText('Value must be an integer')).toBeVisible()
   expect(saveButton).toBeDisabled()
   await userEvent.clear(veryLowBgInput)
   await userEvent.type(veryLowBgInput, '50')
-  expect(dialog.getByText('Current trigger setting: 15% of time off target (min at 60 mg/dL max at 150 mg/dL)')).toBeVisible()
-  expect(dialog.getByText('Current trigger setting: 20% of time below 50 mg/dL threshold')).toBeVisible()
-  expect(dialog.getByText('Current trigger setting: 40% of data not transmitted over the period')).toBeVisible()
+  expect(monitoringAlertsSection.getByText('Current trigger setting: 15% of time off target (min at 60 mg/dL max at 150 mg/dL)')).toBeVisible()
+  expect(monitoringAlertsSection.getByText('Current trigger setting: 20% of time below 50 mg/dL threshold')).toBeVisible()
+  expect(monitoringAlertsSection.getByText('Current trigger setting: 40% of data not transmitted over the period')).toBeVisible()
 
-  await userEvent.click(defaultButton)
+  await userEvent.click(careTeamValuesButton)
   expect(lowBgInput).toHaveValue(50)
   expect(highBgInput).toHaveValue(140)
   expect(veryLowBgInput).toHaveValue(40)
@@ -248,7 +245,4 @@ export const checkMonitoringAlertsDialogDefaultButtonMgdl = async (): Promise<vo
   expect(within(hypoThreshold).getByRole('combobox')).toHaveTextContent('10%')
   expect(within(nonDataThreshold).getByRole('combobox')).toHaveTextContent('15%')
   expect(saveButton).not.toBeDisabled()
-
-  await userEvent.click(cancelButton)
-  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 }

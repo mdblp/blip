@@ -31,12 +31,12 @@ import { type Patient } from '../../lib/patient/models/patient.model'
 import PartialDataLoad from 'blip/app/core/lib/partial-data-load'
 import MedicalDataService, { type BgUnit, type MedicalData, Source, type TimePrefs, TimeService } from 'medical-domain'
 import config from '../../lib/config/config'
-import { ChartTypes } from '../../enum/chart-type.enum'
+import { PatientView } from '../../enum/patient-view.enum'
 import { type GetPatientDataOptions } from '../../lib/data/models/get-patient-data-options.model'
 import { type PatientData } from '../../lib/data/models/patient-datum.model'
 
 interface GetDatetimeBoundsArgs {
-  currentChart: ChartTypes
+  currentPatientView: PatientView
   epochLocation: number
   msRange: number
 }
@@ -101,12 +101,12 @@ export class PatientDataUtils {
     return this.calculateDashboardDateRange(localDates)
   }
 
-  getDateRange({ currentChart, epochLocation, msRange }: GetDatetimeBoundsArgs): DateRange {
-    const msDiff = currentChart === ChartTypes.Daily ? msRange : Math.round(msRange / 2)
+  getDateRange({ currentPatientView, epochLocation, msRange }: GetDatetimeBoundsArgs): DateRange {
+    const msDiff = currentPatientView === PatientView.Daily ? msRange : Math.round(msRange / 2)
     let start = moment.utc(epochLocation - msDiff).startOf('day')
     let end = moment.utc(epochLocation + msDiff).startOf('day').add(1, 'day')
 
-    if (currentChart === ChartTypes.Daily) {
+    if (currentPatientView === PatientView.Daily) {
       const rangesToLoad = this.partialDataLoad.getMissingRanges({ start, end }, true)
       if (rangesToLoad.length > 0) {
         // For daily, we will load 4 days to avoid too many loading

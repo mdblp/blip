@@ -36,6 +36,7 @@ export enum AppUserRoute {
   Notifications = '/notifications',
   Patient = '/patient',
   Preferences = '/preferences',
+  TargetAndAlerts = '/target-and-alerts',
   Teams = '/teams',
   Trends = '/trends'
 }

@@ -25,12 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkNavigationToDailyView } from '../assert/device-view.assert'
-import { patient1Id } from '../data/patient.api.data'
+import { checkTargetAndAlertsViewContent } from '../assert/target-and-alerts-view.assert'
 
-export const testDeviceSettingsNavigationForHcpAndCaregiver = async (router) => {
-  await checkNavigationToDailyView(router, `/patient/${patient1Id}/daily`)
-}
-export const testDeviceSettingsNavigationForPatient = async (router) => {
-  await checkNavigationToDailyView(router, '/daily')
+export const testTargetAndAlertsViewContent = (): void => {
+  checkTargetAndAlertsViewContent()
 }

@@ -36,12 +36,12 @@ import { PatientNavBarInfoList } from './patient-nav-bar-info-list'
 import { PatientNavBarSelect } from './patient-nav-bar-select'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { useNavigate } from 'react-router-dom'
-import { type ChartTypes } from '../../enum/chart-type.enum'
+import { type PatientView } from '../../enum/patient-view.enum'
 
 interface PatientNavBarProps {
-  currentChart: string
+  currentPatientView: PatientView
   currentPatient: Patient
-  onChangeChart: (chart: ChartTypes) => void
+  onChangePatientView: (patientView: PatientView) => void
   onClickDashboard?: () => void
   onClickDaily?: () => void
   onClickPrint?: () => void
@@ -68,9 +68,9 @@ const styles = makeStyles()((theme: Theme) => {
 
 const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
   const {
-    currentChart,
+    currentPatientView,
     currentPatient,
-    onChangeChart,
+    onChangePatientView,
     onClickPrint,
     onSwitchPatient
   } = props
@@ -102,8 +102,8 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
         </Box>
       }
       <PatientNavBarTabs
-        currentChart={currentChart}
-        onChangeChart={onChangeChart}
+        currentPatientView={currentPatientView}
+        onChangePatientView={onChangePatientView}
         onClickPrint={onClickPrint}
       />
     </Box>
