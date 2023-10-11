@@ -28,7 +28,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Theme } from '@mui/material/styles'
+import { type Theme, useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -50,6 +50,7 @@ import { useAuth } from '../../lib/auth'
 import { LoadingButton } from '@mui/lab'
 import { Unit } from 'medical-domain'
 import { type MonitoringAlertsParameters } from 'lib/team/models/monitoring-alerts-parameters.model'
+import { Save } from '@mui/icons-material'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   cancelButton: {
@@ -122,6 +123,7 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
   const { classes } = useStyles()
   const { t } = useTranslation()
   const { user } = useAuth()
+  const theme = useTheme()
 
   const userBgUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
 
@@ -157,7 +159,22 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
 
   return (
     <React.Fragment>
-      <Box paddingX={3}>
+      {
+        patient &&
+        <Box paddingBottom={theme.spacing(4)}>
+          <Button
+            id="default-values-button-id"
+            variant="outlined"
+            color="primary"
+            disableElevation
+            onClick={resetToTeamDefaultValues}
+            data-testid="monitoring-alert-config-reset"
+          >
+            {t('button-care-team-values')}
+          </Button>
+        </Box>
+      }
+      <Box>
         <Typography className={classes.categoryTitle}>
           1. {t('time-away-from-target-range')}
         </Typography>
@@ -248,9 +265,9 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
             {!patient &&
               <Typography
                 className={classes.defaultLabel}>{t('default-min-max', {
-                  min: `${lowBgDefault} ${bgUnit}`,
-                  max: `${highBgDefault} ${bgUnit}`
-                })}</Typography>
+                min: `${lowBgDefault} ${bgUnit}`,
+                max: `${highBgDefault} ${bgUnit}`
+              })}</Typography>
             }
           </div>
           <div>
@@ -393,48 +410,33 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
           </div>
         </Box>
       </Box>
-      <Box display="flex" justifyContent="space-between" margin={2}>
-        <Box>
-          {patient &&
-            <Button
-              id="default-values-button-id"
-              variant="contained"
-              color="primary"
-              disableElevation
-              onClick={resetToTeamDefaultValues}
-              data-testid="monitoring-alert-config-reset"
-            >
-              {t('button-default-values')}
-            </Button>
-          }
-        </Box>
-        <Box display="flex">
-          {patient &&
-            <Button
-              id="cancel-button-id"
-              className={classes.cancelButton}
-              variant="outlined"
-              onClick={onClose}
-              data-testid="monitoring-alert-config-cancel"
-            >
-              {t('button-cancel')}
-            </Button>
-          }
-          {!displayInReadonly &&
-            <LoadingButton
-              loading={saveInProgress}
-              id="save-button-id"
-              variant="contained"
-              color="primary"
-              disableElevation
-              disabled={saveButtonDisabled}
-              onClick={save}
-              data-testid="monitoring-alert-config-save"
-            >
-              {t('button-save')}
-            </LoadingButton>
-          }
-        </Box>
+      <Box display="flex" justifyContent="flex-end" margin={2}>
+        {patient &&
+          <Button
+            id="cancel-button-id"
+            className={classes.cancelButton}
+            variant="outlined"
+            onClick={onClose}
+            data-testid="monitoring-alert-config-cancel"
+          >
+            {t('button-cancel')}
+          </Button>
+        }
+        {!displayInReadonly &&
+          <LoadingButton
+            loading={saveInProgress}
+            id="save-button-id"
+            variant="contained"
+            color="primary"
+            disableElevation
+            startIcon={<Save />}
+            disabled={saveButtonDisabled}
+            onClick={save}
+            data-testid="monitoring-alert-config-save"
+          >
+            {t('button-save')}
+          </LoadingButton>
+        }
       </Box>
     </React.Fragment>
   )

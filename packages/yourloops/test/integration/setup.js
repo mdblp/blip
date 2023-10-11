@@ -28,9 +28,12 @@
 import '@testing-library/jest-dom'
 import { enableFetchMocks } from 'jest-fetch-mock'
 
-/* This is done because the chat widget is using the scroll method, not implemented by jsdom which is manipulating only dom no layout */
+// Mocking the `scroll` method as it is not implemented in jsdom (used by the Chat widget component)
 Element.prototype.scroll = jest.fn()
 window.scroll = jest.fn()
+// Mocking the `scrollIntoView` method as it is not implemented in jsdom (used by the Target & alerts page)
+Element.prototype.scrollIntoView = jest.fn()
+
 global.URL.createObjectURL = jest.fn().mockReturnValue('/')
 
 enableFetchMocks()

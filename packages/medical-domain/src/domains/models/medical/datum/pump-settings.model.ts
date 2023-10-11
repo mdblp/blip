@@ -71,7 +71,7 @@ interface ParametersChange {
 }
 
 interface PumpConfig {
-  expirationDate: string
+  expirationDate?: string
   manufacturer: PumpManufacturer
   name: string
   serialNumber: string

@@ -25,34 +25,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { mockPatientLogin } from '../../mock/patient-login.mock'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import {
   checkDailyStatsWidgetsTooltips,
   checkDailyTidelineContainerTooltips,
   checkDailyTimeInRangeStatsWidgets,
   checkSMBGDailyStatsWidgetsTooltips
-} from '../../assert/daily.assert'
-import { mockDataAPI, smbgData, twoWeeksOfCbg } from '../../mock/data.api.mock'
-import { renderPage } from '../../utils/render'
+} from '../../../assert/daily-view.assert'
+import { mockDataAPI, smbgData, twoWeeksOfCbg } from '../../../mock/data.api.mock'
+import { renderPage } from '../../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
   checkReadingsInRangeStatsWidgets,
   checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
-} from '../../assert/stats.assert'
+} from '../../../assert/stats.assert'
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import dayjs from 'dayjs'
-import { weekArrayPlugin, weekdaysPlugin } from '../../../../lib/dayjs'
-import * as constants from '../../../../../viz/src/modules/print/utils/constants'
-import DataApi from '../../../../lib/data/data.api'
-import { User } from '../../../../lib/auth'
+import { weekArrayPlugin, weekdaysPlugin } from '../../../../../lib/dayjs'
+import * as constants from '../../../../../../viz/src/modules/print/utils/constants'
+import DataApi from '../../../../../lib/data/data.api'
+import { User } from '../../../../../lib/auth'
 import { when } from 'jest-when'
-import { patient2AsTeamMember } from '../../data/patient.api.data'
-import { mockWindowResizer } from '../../mock/window-resizer.mock'
-import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
+import { patient2AsTeamMember } from '../../../data/patient.api.data'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
+import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
 describe('Daily view for anyone', () => {
+  const dailyRoute = AppUserRoute.Daily
+
   beforeEach(() => {
     mockWindowResizer()
     mockPatientLogin(patient2AsTeamMember)
@@ -67,9 +70,9 @@ describe('Daily view for anyone', () => {
   describe('with all kind of data', () => {
     it('should render correct tooltips and values', async () => {
       mockDataAPI()
-      const router = renderPage('/daily')
+      const router = renderPage(dailyRoute)
       await waitFor(() => {
-        expect(router.state.location.pathname).toEqual('/daily')
+        expect(router.state.location.pathname).toEqual(dailyRoute)
       })
       const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
       expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Total of declared carbs310gMeal carbs295gRescue carbs15gTotal of estimated carbs50g')
@@ -110,7 +113,7 @@ describe('Daily view for anyone', () => {
 
       const httpGetSpy = jest.spyOn(DataApi, 'exportData').mockResolvedValue('')
 
-      renderPage('/daily')
+      renderPage(dailyRoute)
 
       const generateReportButton = await screen.findByText('Download report')
       expect(generateReportButton).toBeVisible()
@@ -170,7 +173,7 @@ describe('Daily view for anyone', () => {
   describe('with smbg data', () => {
     it('should display correct stats widgets', async () => {
       mockDataAPI(smbgData)
-      renderPage('/daily')
+      renderPage(dailyRoute)
 
       await checkReadingsInRangeStatsWidgets()
 

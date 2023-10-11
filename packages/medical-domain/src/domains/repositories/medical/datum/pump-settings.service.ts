@@ -38,11 +38,14 @@ import { type DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
 import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
-import type PumpManufacturer from '../../../models/medical/datum/enums/pump-manufacturer.enum'
+import PumpManufacturer from '../../../models/medical/datum/enums/pump-manufacturer.enum'
 import { getConvertedParamUnitAndValue } from '../../../utils/unit.util'
 import type Unit from '../../../models/medical/datum/enums/unit.enum'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../../models/time/date-filter.model'
+import i18next from 'i18next'
+
+const t = i18next.t.bind(i18next)
 
 const normalizeHistory = (rawHistory: Array<Record<string, unknown>>, opts: MedicalDataOptions): ParametersChange[] => {
   return rawHistory.map(h => {
@@ -51,7 +54,10 @@ const normalizeHistory = (rawHistory: Array<Record<string, unknown>>, opts: Medi
       changeDate: (h?.changeDate ?? '') as string,
       parameters: params.map(param => {
         const { unit, value } = getConvertedParamUnitAndValue(param.unit as Unit, param.value as string, opts.bgUnits)
-        const { unit: previousUnit, value: previousValue } = getConvertedParamUnitAndValue(param.previousUnit as Unit, param.previousValue as string, opts.bgUnits)
+        const {
+          unit: previousUnit,
+          value: previousValue
+        } = getConvertedParamUnitAndValue(param.previousUnit as Unit, param.previousValue as string, opts.bgUnits)
         return {
           changeType: param.changeType as ChangeType,
           effectiveDate: param.effectiveDate as string,
@@ -89,14 +95,15 @@ const normalizeDevice = (rawDevice: Record<string, unknown>): DeviceConfig => {
   }
 }
 
-const normalizePump = (rawPump: Record<string, unknown>): PumpConfig => {
+const normalizePump = (rawPump: Record<string, unknown> | null): PumpConfig => {
+  const notAvailableLabel = t('N/A')
   const manufacturer = (rawPump?.manufacturer ?? '') as string
   return {
-    expirationDate: (rawPump?.expirationDate ?? '') as string,
-    manufacturer: manufacturer.toUpperCase() as PumpManufacturer,
-    name: (rawPump?.name ?? '') as string,
-    serialNumber: (rawPump?.serialNumber ?? '') as string,
-    swVersion: (rawPump?.swVersion ?? '') as string
+    expirationDate: rawPump?.expirationDate as string ?? null,
+    manufacturer: manufacturer?.toUpperCase() as PumpManufacturer || notAvailableLabel,
+    name: (rawPump?.name ?? notAvailableLabel) as string,
+    serialNumber: (rawPump?.serialNumber ?? notAvailableLabel) as string,
+    swVersion: (rawPump?.swVersion ?? notAvailableLabel) as string
   }
 }
 
@@ -121,7 +128,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const payload = (rawData?.payload ?? {}) as Record<string, unknown>
   const rawCgm = (payload?.cgm ?? {}) as Record<string, unknown>
   const rawDevice = (payload?.device ?? {}) as Record<string, unknown>
-  const rawPump = (payload?.pump ?? {}) as Record<string, unknown>
+  const rawPump = payload?.pump as Record<string, unknown> ?? null
   const rawHistory = (payload?.history ?? []) as Array<Record<string, unknown>>
   const rawParams = (payload?.parameters ?? []) as Array<Record<string, unknown>>
 

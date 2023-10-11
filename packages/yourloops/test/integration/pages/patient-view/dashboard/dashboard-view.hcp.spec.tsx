@@ -26,61 +26,54 @@
  */
 
 import { act, waitFor } from '@testing-library/react'
-import { logoutMock, mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import {
-  buildAvailableTeams,
-  mockTeamAPI,
-  myThirdTeamId,
-  myThirdTeamName
-} from '../../mock/team.api.mock'
+import { logoutMock, mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import {
   completeDashboardData,
   dataSetsWithZeroValues,
   mockDataAPI,
   sixteenDaysOldDashboardData,
   twoWeeksOldDashboardData
-} from '../../mock/data.api.mock'
-import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { noDataTransferredPatientId, patient1Id, patient1Info, patient1Metrics, patientWithMmolId } from '../../data/patient.api.data'
-import { mockChatAPI } from '../../mock/chat.api.mock'
-import { mockMedicalFilesAPI, mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
-import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
-import { renderPage } from '../../utils/render'
-import { mockUserApi } from '../../mock/user.api.mock'
-import PatientApi from '../../../../lib/patient/patient.api'
+} from '../../../mock/data.api.mock'
+import { mockNotificationAPI } from '../../../mock/notification.api.mock'
+import { noDataTransferredPatientId, patient1Id, patient1Info, patient1Metrics } from '../../../data/patient.api.data'
+import { mockChatAPI } from '../../../mock/chat.api.mock'
+import { mockMedicalFilesAPI, mockMedicalFilesApiEmptyResult } from '../../../mock/medical-files.api.mock'
+import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
+import { type PatientDashboardLayoutParams } from '../../../assert/layout.assert'
+import { renderPage } from '../../../utils/render'
+import { mockUserApi } from '../../../mock/user.api.mock'
+import PatientApi from '../../../../../lib/patient/patient.api'
 import { Unit } from 'medical-domain'
-import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
-import { type Settings } from '../../../../lib/auth/models/settings.model'
-import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
-import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
-import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
+import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
+import { type Settings } from '../../../../../lib/auth/models/settings.model'
+import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.hook'
+import { UserInviteStatus } from '../../../../../lib/team/models/enums/user-invite-status.enum'
+import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../use-cases/app-main-layout-visualisation'
 import {
   testDashboardDataVisualisationForHcp,
   testDashboardDataVisualisationNoDataForHcp,
   testDashboardDataVisualisationPrivateTeamNoData,
-  testDashboardDataVisualisationTwoWeeksOldData,
   testDashboardDataVisualisationSixteenDaysOldData,
+  testDashboardDataVisualisationTwoWeeksOldData,
   testEmptyMedicalFilesWidgetForHcp,
   testPatientNavBarForHcp,
   testSwitchPatientCorrectDataDisplay
-} from '../../use-cases/patient-data-visualisation'
-import { testMedicalWidgetForHcp } from '../../use-cases/medical-reports-management'
-import { type MedicalFilesWidgetParams } from '../../assert/medical-widget.assert'
+} from '../../../use-cases/patient-data-visualisation'
+import { testMedicalWidgetForHcp } from '../../../use-cases/medical-reports-management'
+import { type MedicalFilesWidgetParams } from '../../../assert/medical-widget.assert'
 import {
-  testMonitoringAlertsParametersConfigurationDialogMgdl,
-  testMonitoringAlertsParametersConfigurationDialogMmol
-} from '../../use-cases/monitoring-alerts-parameters-management'
-import { testChatWidgetForHcp } from '../../use-cases/communication-system'
-import { ConfigService } from '../../../../lib/config/config.service'
+  testMonitoringAlertsCardLinkToMonitoringAlertsConfiguration
+} from '../../../use-cases/monitoring-alerts-parameters-management'
+import { testChatWidgetForHcp } from '../../../use-cases/communication-system'
+import { ConfigService } from '../../../../../lib/config/config.service'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
-describe('Patient dashboard for HCP', () => {
-  const patientDashboardRoute = `/patient/${patient1Id}/dashboard`
-  const patientDashboardRouteMmoL = `/patient/${patientWithMmolId}/dashboard`
+describe('Dashboard view for HCP', () => {
+  const patientDashboardRoute = `${AppUserRoute.Patient}/${patient1Id}${AppUserRoute.Dashboard}`
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
   const mgdlSettings: Settings = { units: { bg: Unit.MilligramPerDeciliter } }
-  const mmolSettings: Settings = { units: { bg: Unit.MmolPerLiter } }
 
   beforeEach(() => {
     mockAuth0Hook()
@@ -125,7 +118,7 @@ describe('Patient dashboard for HCP', () => {
   })
 
   it('should render components with correct display when the patient has no data', async () => {
-    const patientWithNoDataDashboardRoute = `/patient/${noDataTransferredPatientId}/dashboard`
+    const patientWithNoDataDashboardRoute = `${AppUserRoute.Patient}/${noDataTransferredPatientId}${AppUserRoute.Dashboard}`
     mockDataAPI(completeDashboardData)
 
     await act(async () => {
@@ -169,7 +162,7 @@ describe('Patient dashboard for HCP', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testMonitoringAlertsParametersConfigurationDialogMgdl()
+    await testMonitoringAlertsCardLinkToMonitoringAlertsConfiguration()
   })
 
   it('should be able to use chat widget', async () => {
@@ -222,20 +215,10 @@ describe('Patient dashboard for HCP', () => {
     await testDashboardDataVisualisationPrivateTeamNoData(patientDashboardLayoutParams)
   })
 
-  it('should be possible to edit monitoring alerts parameters in mmol/L', async () => {
-    mockUserApi().mockUserDataFetch({ firstName, lastName, settings: mmolSettings })
-
-    await act(async () => {
-      renderPage(patientDashboardRouteMmoL)
-    })
-
-    await testMonitoringAlertsParametersConfigurationDialogMmol()
-  })
-
   it('should automatically log out an idle user', async () => {
     jest.spyOn(ConfigService, 'getIdleTimeout').mockReturnValue(1000)
 
-    renderPage(`/patient/${patient1Id}/dashboard`)
+    renderPage(`${AppUserRoute.Patient}/${patient1Id}${AppUserRoute.Dashboard}`)
 
     await waitFor(() => {
       expect(logoutMock).toHaveBeenCalledWith({ logoutParams: { returnTo: 'http://localhost/login?idle=true' } })

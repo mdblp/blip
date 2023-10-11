@@ -27,7 +27,7 @@
 
 import React, { type FunctionComponent, useEffect, useRef, useState } from 'react'
 import { PatientNavBarMemoized as PatientNavBar } from '../header-bars/patient-nav-bar'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { PrintPDFDialog } from '../pdf/print-pdf-dialog'
 import { PatientDashboard } from '../dashboard-widgets/patient-dashboard'
@@ -48,8 +48,9 @@ import { useDailyNotes } from './daily-notes.hook'
 import metrics from '../../lib/metrics'
 import DailyNotes from 'blip/app/components/messages'
 import { useAuth } from '../../lib/auth'
-import { DevicePage } from '../../pages/device/device-page'
+import { DeviceView } from '../../pages/patient-view/device/device-view'
 import { setPageTitle } from '../../lib/utils'
+import { TargetAndAlertsView } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
 
 export const PatientData: FunctionComponent = () => {
   const alert = useAlert()
@@ -60,9 +61,9 @@ export const PatientData: FunctionComponent = () => {
   const {
     bgPrefs,
     chartPrefs,
-    changeChart,
+    changePatientView,
     changePatient,
-    currentChart,
+    currentPatientView,
     dailyDate,
     dailyChartRef,
     fetchPatientData,
@@ -94,7 +95,7 @@ export const PatientData: FunctionComponent = () => {
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
 
-  setPageTitle(t(currentChart))
+  setPageTitle(t(currentPatientView))
 
   useEffect(() => {
     if (patient.userid !== patientIdForWhichDataHasBeenFetched.current) {
@@ -111,9 +112,9 @@ export const PatientData: FunctionComponent = () => {
   return (
     <React.Fragment>
       <PatientNavBar
-        currentChart={currentChart}
+        currentPatientView={currentPatientView}
         currentPatient={patient}
-        onChangeChart={changeChart}
+        onChangePatientView={changePatientView}
         onClickPrint={() => {
           setShowPdfDialog(true)
         }}
@@ -138,6 +139,7 @@ export const PatientData: FunctionComponent = () => {
                   disableElevation
                   onClick={refreshData}
                   sx={{ marginTop: theme.spacing(1) }}
+                  data-testid="no-data-refresh-button"
                 >
                   {t('refresh')}
                 </Button>
@@ -216,12 +218,24 @@ export const PatientData: FunctionComponent = () => {
                   <Route
                     path={AppUserRoute.Device}
                     element={
-                      <DevicePage
+                      <DeviceView
                         goToDailySpecificDate={goToDailySpecificDate}
                         medicalData={medicalData}
                       />
                     }
                   />
+                  {
+                    user.isUserHcp() &&
+                    <Route
+                      path={AppUserRoute.TargetAndAlerts}
+                      element={
+                        <TargetAndAlertsView
+                          patient={patient}
+                        />
+                      }
+                    />
+                  }
+                  <Route path="*" element={<Navigate to={AppUserRoute.Dashboard} replace />} />
                 </Routes>
                 {showPdfDialog &&
                   <PrintPDFDialog

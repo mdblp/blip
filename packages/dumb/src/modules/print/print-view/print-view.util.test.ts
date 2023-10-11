@@ -78,7 +78,7 @@ describe('Print view util', () => {
       expect(textData).toEqual(textExpected)
     })
 
-    it('should return correct text data when row is a header and id is of table type', () => {
+    it('should return correct text data when row is a header and id is not of table type', () => {
       const textExpected = 'res'
       const row: Row = { column: 'column', heading: { text: 'text' }, fakeId: 'res' } as unknown as Row
       const column: TableColumn = { id: 'wrongId', header: { text: textExpected } } as TableColumn

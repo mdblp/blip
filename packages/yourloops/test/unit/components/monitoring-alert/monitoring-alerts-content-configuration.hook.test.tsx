@@ -186,7 +186,7 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
 
       expect(() => {
         result.current.resetToTeamDefaultValues()
-      }).toThrowError('This action cannot be done if the patient is undefined')
+      }).toThrow('This action cannot be done if the patient is undefined')
     })
 
     it('should set default values if there is no error', () => {

@@ -26,16 +26,16 @@
  */
 
 import { act, waitFor } from '@testing-library/react'
-import { renderPage } from '../../utils/render'
+import { renderPage } from '../../../utils/render'
 import {
   completeDashboardData, dataSetsWithZeroValues,
   mockDataAPI, sixteenDaysOldDashboardData, twoWeeksOldDashboardData
-} from '../../mock/data.api.mock'
-import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
-import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { type MedicalFilesWidgetParams } from '../../assert/medical-widget.assert'
-import { mockMedicalFilesAPI, mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
-import TeamAPI from '../../../../lib/team/team.api'
+} from '../../../mock/data.api.mock'
+import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
+import { type MedicalFilesWidgetParams } from '../../../assert/medical-widget.assert'
+import { mockMedicalFilesAPI, mockMedicalFilesApiEmptyResult } from '../../../mock/medical-files.api.mock'
+import TeamAPI from '../../../../../lib/team/team.api'
 import {
   buildPrivateTeam,
   buildTeamOne,
@@ -43,26 +43,27 @@ import {
   iTeamOne,
   mySecondTeamId,
   mySecondTeamName
-} from '../../mock/team.api.mock'
-import { patient1AsTeamMember, patient1Id, patient1Info } from '../../data/patient.api.data'
-import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
-import { mockChatAPI } from '../../mock/chat.api.mock'
-import { type AppMainLayoutParams, testAppMainLayoutForPatient } from '../../use-cases/app-main-layout-visualisation'
-import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
+} from '../../../mock/team.api.mock'
+import { patient1AsTeamMember, patient1Id, patient1Info } from '../../../data/patient.api.data'
+import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.hook'
+import { mockChatAPI } from '../../../mock/chat.api.mock'
+import { type AppMainLayoutParams, testAppMainLayoutForPatient } from '../../../use-cases/app-main-layout-visualisation'
+import { type PatientDashboardLayoutParams } from '../../../assert/layout.assert'
 import {
   testDashboardDataVisualisationForPatient,
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationTwoWeeksOldData,
   testDashboardDataVisualisationSixteenDaysOldData,
   testEmptyMedicalFilesWidgetForPatient,
-  testPatientNavBarForPatient
-} from '../../use-cases/patient-data-visualisation'
-import { testMedicalWidgetForPatient } from '../../use-cases/medical-reports-management'
-import { testChatWidgetForPatient } from '../../use-cases/communication-system'
-import { testJoinTeam } from '../../use-cases/teams-management'
+  testPatientNavBarForPatientAndCaregiver
+} from '../../../use-cases/patient-data-visualisation'
+import { testMedicalWidgetForPatient } from '../../../use-cases/medical-reports-management'
+import { testChatWidgetForPatient } from '../../../use-cases/communication-system'
+import { testJoinTeam } from '../../../use-cases/teams-management'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
-describe('Patient dashboard for patient', () => {
-  const patientDashboardRoute = '/dashboard'
+describe('Dashboard view for patient', () => {
+  const patientDashboardRoute = AppUserRoute.Dashboard
   const firstName = patient1Info.profile.firstName
   const lastName = patient1Info.profile.lastName
 
@@ -98,7 +99,7 @@ describe('Patient dashboard for patient', () => {
 
     await testAppMainLayoutForPatient(appMainLayoutParams)
     await testDashboardDataVisualisationForPatient(patientDashboardLayoutParams)
-    await testPatientNavBarForPatient()
+    await testPatientNavBarForPatientAndCaregiver()
   })
 
   it('should display medical reports', async () => {

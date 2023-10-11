@@ -26,34 +26,34 @@
  */
 
 import { screen, waitFor } from '@testing-library/react'
-import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { mockTeamAPI } from '../../mock/team.api.mock'
-import { minimalTrendViewData, mockDataAPI } from '../../mock/data.api.mock'
-import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
-import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
-import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { checkPatientNavBarAsCaregiver } from '../../assert/patient-nav-bar.assert'
-import { renderPage } from '../../utils/render'
-import { checkCaregiverLayout } from '../../assert/layout.assert'
-import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { mockUserApi } from '../../mock/user.api.mock'
-import { patient2Id } from '../../data/patient.api.data'
-import { mockWindowResizer } from '../../mock/window-resizer.mock'
+import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../../mock/team.api.mock'
+import { mockDataAPI } from '../../../mock/data.api.mock'
+import { mockNotificationAPI } from '../../../mock/notification.api.mock'
+import { patient2Id } from '../../../data/patient.api.data'
+import { mockChatAPI } from '../../../mock/chat.api.mock'
+import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
+import { checkPatientNavBarAsHCP } from '../../../assert/patient-nav-bar.assert'
+import { renderPage } from '../../../utils/render'
+import { mockUserApi } from '../../../mock/user.api.mock'
+import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
+import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../use-cases/app-main-layout-visualisation'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
-describe('Trends view for caregiver', () => {
+describe('Daily view for HCP', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
   beforeEach(() => {
     mockWindowResizer()
-    mockAuth0Hook(UserRole.Caregiver)
+    mockAuth0Hook()
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForCaregivers()
-    mockMedicalFilesAPI()
+    mockPatientApiForHcp()
+    mockChatAPI()
   })
 
   afterEach(() => {
@@ -62,13 +62,26 @@ describe('Trends view for caregiver', () => {
   })
 
   it('should render correct layout', async () => {
-    mockDataAPI(minimalTrendViewData)
-    const router = renderPage(`/patient/${patient2Id}/trends`)
+    mockDataAPI()
+    const appMainLayoutParams: AppMainLayoutHcpParams = {
+      footerHasLanguageSelector: false,
+      headerInfo: {
+        loggedInUserFullName: `${firstName} ${lastName}`,
+        teamMenuInfo: {
+          selectedTeamName: myThirdTeamName,
+          isSelectedTeamPrivate: false,
+          availableTeams: buildAvailableTeams()
+        }
+      }
+    }
+    const dailyRoute = `${AppUserRoute.Patient}/${patient2Id}${AppUserRoute.Daily}`
+    const router = renderPage(dailyRoute)
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(`/patient/${patient2Id}/trends`)
+      expect(router.state.location.pathname).toEqual(dailyRoute)
     })
-    expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
-    checkPatientNavBarAsCaregiver()
-    await checkCaregiverLayout(`${firstName} ${lastName}`)
+
+    expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
+    checkPatientNavBarAsHCP()
+    await testAppMainLayoutForHcp(appMainLayoutParams)
   })
 })
