@@ -26,7 +26,12 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { type BgPrefs, CBGPercentageBarChart, CBGStatType, LoopModeStat, TotalCarbsStat } from 'dumb'
+import {
+  type BgPrefs,
+  CBGPercentageBarChart,
+  CBGStatType,
+  LoopModeStat
+} from 'dumb'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
@@ -46,8 +51,9 @@ import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { StandardDeviationStat } from './standard-deviation-stat'
 import { AverageGlucoseStat } from './average-glucose-stat'
 import { TotalInsulinStat } from './total-insulin-stat'
-import { MS_IN_DAY } from 'medical-domain/dist/src/domains/repositories/time/time.service'
+import { MS_IN_DAY } from 'medical-domain'
 import { makeStyles } from 'tss-react/mui'
+import { CarbsStat } from './carbs-stat'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -82,7 +88,6 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
   const isTrendsView = location.pathname.includes('trends')
   const isDailyView = location.pathname.includes('daily')
-  const isDashboardPage = location.pathname.includes('dashboard')
 
   const {
     standardDeviation,
@@ -95,9 +100,12 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, dateFilter)
 
   const {
-    foodCarbsPerDay,
-    totalEntriesCarbWithRescueCarbs,
-    totalCarbsPerDay
+    rescueCarbsPerDay,
+    totalMealCarbsWithRescueCarbsEntries,
+    estimatedCarbsPerDay,
+    totalCarbsPerDay,
+    mealCarbsPerDay,
+    totalRescueCarbsEntries
   } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
 
   const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
@@ -122,13 +130,10 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   const {
     automatedBasalDuration,
     manualBasalDuration,
-    manualBasalInDays,
-    automatedBasalInDays,
-    automatedAndManualTotalDuration
+    manualPercentage,
+    automatedPercentage
   } = BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(medicalData.basal, dateFilter)
 
-  const automatedBasals = isDashboardPage ? automatedBasalInDays : automatedBasalDuration
-  const manualBasals = isDashboardPage ? manualBasalInDays : manualBasalDuration
 
   return (
     <Box data-testid="patient-statistics">
@@ -142,19 +147,22 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
         />
         {isTrendsView &&
           <>
-            <Divider className={classes.divider} />
-            <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage} />
+            <Divider className={classes.divider}/>
+            <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage}/>
           </>
         }
       </Box>
 
       <Box className={classes.widgetGroup}>
-        <TotalCarbsStat
-          totalEntriesCarbWithRescueCarbs={totalEntriesCarbWithRescueCarbs}
-          totalCarbsPerDay={Math.round(totalCarbsPerDay)}
-          foodCarbsPerDay={Math.round(foodCarbsPerDay)}
+        <CarbsStat
+          totalMealCarbsWithRescueCarbsEntries={totalMealCarbsWithRescueCarbsEntries}
+          totalCarbsPerDay={Math.round(totalCarbsPerDay*10)/10}
+          rescueCarbsPerDay={Math.round(rescueCarbsPerDay*10)/10}
+          estimatedCarbsPerDay={Math.round(estimatedCarbsPerDay)}
+          mealCarbsPerDay={Math.round(mealCarbsPerDay*10)/10}
+          totalRescueCarbsEntries={totalRescueCarbsEntries}
         />
-        <Divider className={classes.divider} />
+        <Divider className={classes.divider}/>
         <TotalInsulinStat
           basal={basal}
           bolus={bolus}
@@ -165,11 +173,10 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
       </Box>
       <Box className={classes.widgetGroup}>
         <LoopModeStat
-            automatedBasalDuration={automatedBasalDuration}
-            manualBasalDuration={manualBasalDuration}
-            totalBasalDuration={automatedAndManualTotalDuration}
-            automatedBasals={automatedBasals}
-            manualBasals={manualBasals}
+          automatedBasalDuration={automatedBasalDuration}
+          manualBasalDuration={manualBasalDuration}
+          manualPercentage={manualPercentage}
+          automatedPercentage={automatedPercentage}
         />
       </Box>
       <Box className={classes.widgetGroup}>
@@ -178,7 +185,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           bgPrefs={bgPrefs}
           bgType={bgType}
         />
-        <Divider className={classes.divider} />
+        <Divider className={classes.divider}/>
         <StandardDeviationStat
           total={standardDeviationTotal}
           bgType={bgType}
@@ -186,12 +193,12 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           averageGlucose={averageGlucose}
           standardDeviation={standardDeviation}
         />
-        <Divider className={classes.divider} />
-        <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
+        <Divider className={classes.divider}/>
+        <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType}/>
         {!isDailyView &&
           <>
-            <Divider className={classes.divider} />
-            <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
+            <Divider className={classes.divider}/>
+            <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator}/>
           </>
         }
       </Box>

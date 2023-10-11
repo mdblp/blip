@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkNavigationToDailyView } from '../assert/device-page.assert'
+import { checkNavigationToDailyView } from '../assert/device-view.assert'
 import { patient1Id } from '../data/patient.api.data'
 
 export const testDeviceSettingsNavigationForHcpAndCaregiver = async (router) => {

@@ -107,7 +107,7 @@ describe('Profile page for patient', () => {
     expect(fields.hba1cInput).toHaveValue('7.5%')
     expect(saveButton).toBeDisabled()
 
-    fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('button'))
+    fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
     fireEvent.click(screen.getByRole('option', { name: 'English' }))
 
     await userEvent.clear(fields.firstNameInput)

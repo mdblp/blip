@@ -21,7 +21,8 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import cx from 'classnames'
 
-import { SITE_CHANGE_BY_MANUFACTURER, DEFAULT_MANUFACTURER } from '../../logic/constants'
+import { SITE_CHANGE_BY_MANUFACTURER } from '../../logic/constants'
+import { PumpManufacturer } from 'medical-domain'
 
 class Change extends React.Component {
   static propTypes = {
@@ -34,7 +35,7 @@ class Change extends React.Component {
   render() {
     var daysText = null
     var daysSinceNum = null
-    if (!_.isNaN(this.props.daysSince)){
+    if (!_.isNaN(this.props.daysSince)) {
       daysText = (this.props.daysSince === 1)
         ? i18next.t('day')
         : i18next.t('days')
@@ -51,7 +52,7 @@ class Change extends React.Component {
       _.get(
         SITE_CHANGE_BY_MANUFACTURER,
         this.props.manufacturer,
-        SITE_CHANGE_BY_MANUFACTURER[DEFAULT_MANUFACTURER]),
+        SITE_CHANGE_BY_MANUFACTURER[PumpManufacturer.Default]),
       'class')
 
     var changeClass = cx({

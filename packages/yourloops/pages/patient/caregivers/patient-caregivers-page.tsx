@@ -95,7 +95,6 @@ export const PatientCaregiversPage: FC = () => {
         return acc
       }
 
-      console.debug('Found pending direct-share invitation: ', invitation)
       const caregiver: ShareUser = {
         invitation,
         status: UserInviteStatus.Pending,

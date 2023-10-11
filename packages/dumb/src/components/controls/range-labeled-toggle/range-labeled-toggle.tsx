@@ -26,23 +26,26 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { Checkbox, FormControlLabel } from '@mui/material'
+import { Checkbox, FormControlLabel, Theme } from '@mui/material'
 import { useTrendsContext } from '../../../provider/trends.provider'
 import { type DisplayFlag } from '../../../models/enums/display-flag.enum'
+import { SxProps } from '@mui/system'
 
 interface LabeledCheckboxProps {
   checked: boolean
   displayFlag: DisplayFlag
   label: string
+  sx?: SxProps<Theme>
 }
 
 export const RangeLabeledToggle: FunctionComponent<LabeledCheckboxProps> = (props) => {
-  const { checked, displayFlag, label } = props
+  const { checked, displayFlag, label, sx } = props
   const { toggleCbgSegments } = useTrendsContext()
 
   return (
     <FormControlLabel
       label={label}
+      sx={sx}
       control={
         <Checkbox
           size="small"

@@ -27,7 +27,7 @@
 
 import { renderPage } from '../../utils/render'
 import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../mock/team.api.mock'
+import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -44,7 +44,12 @@ import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockAuthApi } from '../../mock/auth.api.mock'
 import { Unit } from 'medical-domain'
-import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
+import {
+  type AppMainLayoutHcpParams,
+  testAppMainLayoutForHcp,
+  testBannerLanguageUpdate
+} from '../../use-cases/app-main-layout-visualisation'
+import { ConfigService } from '../../../../lib/config/config.service'
 
 describe('Profile page for hcp', () => {
   const profile: Profile = {
@@ -115,13 +120,13 @@ describe('Profile page for hcp', () => {
     expect(fields.hcpProfessionSelect).toHaveTextContent('Diabetologist')
     expect(saveButton).toBeDisabled()
 
-    fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('button'))
+    fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
     fireEvent.click(screen.getByRole('option', { name: 'English' }))
 
-    fireEvent.mouseDown(within(screen.getByTestId('profile-units-selector')).getByRole('button'))
+    fireEvent.mouseDown(within(screen.getByTestId('profile-units-selector')).getByRole('combobox'))
     fireEvent.click(screen.getByRole('option', { name: Unit.MilligramPerDeciliter }))
 
-    fireEvent.mouseDown(within(screen.getByTestId('dropdown-profession-selector')).getByRole('button'))
+    fireEvent.mouseDown(within(screen.getByTestId('dropdown-profession-selector')).getByRole('combobox'))
     fireEvent.click(screen.getByRole('option', { name: 'Nurse' }))
 
     await userEvent.clear(fields.firstNameInput)
@@ -146,5 +151,17 @@ describe('Profile page for hcp', () => {
     await userEvent.click(profileUpdateSuccessfulSnackbarCloseButton)
 
     await checkPasswordChangeRequest(loggedInUserEmail)
+  })
+
+  it('should show the banner and change its content when the banner is enabled and language is changed', async () => {
+    localStorage.setItem('selectedTeamId', myThirdTeamId)
+    jest.spyOn(ConfigService, 'isBannerEnabled').mockReturnValue(true)
+
+    const router = renderPage('/preferences')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/preferences')
+    })
+
+    await testBannerLanguageUpdate()
   })
 })

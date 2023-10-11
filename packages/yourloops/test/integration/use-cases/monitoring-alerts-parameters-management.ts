@@ -26,22 +26,22 @@
  */
 
 import {
-  checkMonitoringAlertsDialogContentMgdl,
-  checkMonitoringAlertsDialogContentMmol,
+  checkMonitoringAlertsContentForPatientMgdl,
+  checkMonitoringAlertsContentForPatientMmol,
   checkMonitoringAlertsDialogDefaultButtonMgdl,
-  checkMonitoringAlertsDialogSaveButtonMmol,
+  checkMonitoringAlertsForPatientSaveButtonMmol, checkMonitoringAlertsLinkToTargetAndAlerts,
   checkMonitoringAlertsParametersTeamAdmin,
   checkMonitoringAlertsParametersTeamMember
 } from '../assert/monitoring-alerts-parameters.assert'
 
-export const testMonitoringAlertsParametersConfigurationDialogMgdl = async (): Promise<void> => {
-  await checkMonitoringAlertsDialogContentMgdl()
+export const testMonitoringAlertsParametersConfigurationForPatientMgdl = async (): Promise<void> => {
+  await checkMonitoringAlertsContentForPatientMgdl()
   await checkMonitoringAlertsDialogDefaultButtonMgdl()
 }
 
-export const testMonitoringAlertsParametersConfigurationDialogMmol = async (): Promise<void> => {
-  await checkMonitoringAlertsDialogContentMmol()
-  await checkMonitoringAlertsDialogSaveButtonMmol()
+export const testMonitoringAlertsParametersConfigurationForPatientMmol = async (): Promise<void> => {
+  await checkMonitoringAlertsContentForPatientMmol()
+  await checkMonitoringAlertsForPatientSaveButtonMmol()
 }
 
 export const testMonitoringAlertsParametersTeamAdmin = async (): Promise<void> => {
@@ -50,4 +50,8 @@ export const testMonitoringAlertsParametersTeamAdmin = async (): Promise<void> =
 
 export const testMonitoringAlertsParametersTeamMember = async (): Promise<void> => {
   await checkMonitoringAlertsParametersTeamMember()
+}
+
+export const testMonitoringAlertsCardLinkToMonitoringAlertsConfiguration = async (): Promise<void> => {
+  await checkMonitoringAlertsLinkToTargetAndAlerts()
 }

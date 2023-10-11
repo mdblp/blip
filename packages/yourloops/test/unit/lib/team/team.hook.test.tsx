@@ -155,7 +155,7 @@ describe('Team hook', () => {
       expect(teams).toHaveLength(initialTeamsLength)
       await act(async () => {
         await teamHook.createTeam(newTeam)
-        expect(getTeamsSpy).toBeCalledTimes(1)
+        expect(getTeamsSpy).toHaveBeenCalledTimes(1)
       })
     })
   })
@@ -189,7 +189,7 @@ describe('Team hook', () => {
       await act(async () => {
         await teamHook.changeMemberRole(memberHcp1, TeamMemberRole.admin, 'fakeTeamId')
       })
-      expect(getTeamsSpy).toBeCalledTimes(1)
+      expect(getTeamsSpy).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -228,7 +228,7 @@ describe('Team hook', () => {
     it('should throw an error if user is not a member of the team', async () => {
       await expect(async () => {
         await teamHook.leaveTeam(team3)
-      }).rejects.toThrowError('We are not a member of the team!')
+      }).rejects.toThrow('We are not a member of the team!')
     })
   })
 })

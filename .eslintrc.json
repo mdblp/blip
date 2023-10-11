@@ -56,7 +56,7 @@
     "react/no-find-dom-node": "off",
     "react/prop-types": "error"
   },
-  "plugins": ["react", "jsx-a11y", "moment-utc"],
+  "plugins": ["react", "jsx-a11y", "moment-utc", "jest"],
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",

@@ -82,10 +82,10 @@ describe('Patient hook', () => {
       const removePatientMock = jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
       await act(async () => {
         customHook.leaveTeam(teamId)
-        expect(removePatientMock).toBeCalledWith(teamId, loggedInUserAsPatient.userid)
+        expect(removePatientMock).toHaveBeenCalledWith(teamId, loggedInUserAsPatient.userid)
       })
       await waitFor(() => {
-        expect(refreshTeamsMock).toBeCalled()
+        expect(refreshTeamsMock).toHaveBeenCalled()
       })
     })
   })

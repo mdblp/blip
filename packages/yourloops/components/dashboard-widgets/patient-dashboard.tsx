@@ -137,7 +137,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
         display="flex"
         alignItems="center"
       >
-        <AccessTime fontSize="small" />
+        <AccessTime fontSize="small"/>
         <Typography
           variant="subtitle2"
           sx={{ marginLeft: theme.spacing(1), fontStyle: 'italic' }}
@@ -167,8 +167,10 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
       {!isCaregiver && !isPatientWithNoTeams && !isSelectedTeamPrivate &&
         <>
           <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
-            {user.isUserHcp() && <MonitoringAlertsCard patient={patient} />}
-            <MedicalFilesWidget patient={patient} />
+            {user.isUserHcp() &&
+              <MonitoringAlertsCard patient={patient}/>
+            }
+            <MedicalFilesWidget patient={patient}/>
           </Grid>
 
           <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>

@@ -27,13 +27,16 @@
 
 import type DateFilter from '../../src/domains/models/time/date-filter.model'
 import { createMealData, createRandomBasal, createRandomBolus, createWizardData } from '../data-generator'
-import { type Basal, type Bolus, type Meal, type Wizard } from '../../src'
+import { type Basal, type Bolus, type Meal, WizardInputMealFat, WizardInputMealSource, type Wizard,  Prescriptor, Unit } from '../../src'
 
+type BgDataRange = Array<[Date, string, number?]>
+type BolusDataRange = Array<[Date, number, Prescriptor?]>
+type BasalDataRange = Array<[Date, number, number, string]>
 const abbottDevice = 'AbbottFreeStyleLibre-XXX-XXXX'
 const dexcomDevice = 'Dexcom-XXX-XXXX'
 export const MS_IN_HOUR = 864e5 / 24
 
-export const bgDataSourceOneDay: Array<[Date, string]> = [
+export const bgDataSourceOneDay: BgDataRange = [
   // data for one day and two days tests
   [new Date('2018-02-01T00:00:00.000Z'), abbottDevice],
   [new Date('2018-02-01T00:15:00.000Z'), abbottDevice],
@@ -42,7 +45,36 @@ export const bgDataSourceOneDay: Array<[Date, string]> = [
   [new Date('2018-02-01T00:50:00.000Z'), dexcomDevice]
 ]
 
-export const basalsData: Array<[Date, number, number, string]> = [
+export const bgDataSourceTwoDays: BgDataRange = [
+  // data for two days tests
+  [new Date('2018-02-01T00:50:00.000Z'), dexcomDevice],
+  [new Date('2018-02-03T00:50:00.000Z'), dexcomDevice]
+]
+
+export const bgDataSourceTwoWeeks: BgDataRange = [
+  [new Date('2018-02-01T00:33:00.000Z'), dexcomDevice, 5],
+  [new Date('2018-02-01T04:33:00.000Z'), dexcomDevice, 10],
+  [new Date('2018-02-01T11:33:00.000Z'), dexcomDevice],
+  [new Date('2018-02-01T17:33:00.000Z'), dexcomDevice],
+  [new Date('2018-02-01T21:33:00.000Z'), dexcomDevice, 20],
+  [new Date('2018-02-03T00:33:00.000Z'), dexcomDevice],
+  [new Date('2018-02-03T04:33:00.000Z'), dexcomDevice, 15.5],
+  [new Date('2018-02-03T11:33:00.000Z'), dexcomDevice],
+  [new Date('2018-02-03T17:33:00.000Z'), dexcomDevice, 10],
+  [new Date('2018-02-03T21:33:00.000Z'), dexcomDevice],
+  [new Date('2018-02-11T00:33:00.000Z'), dexcomDevice],
+  [new Date('2018-02-11T04:33:00.000Z'), dexcomDevice],
+  [new Date('2018-02-11T11:33:00.000Z'), dexcomDevice, 12],
+  [new Date('2018-02-11T17:33:00.000Z'), dexcomDevice, 5],
+  [new Date('2018-02-11T21:33:00.000Z'), dexcomDevice, 7],
+  [new Date('2018-02-15T00:33:00.000Z'), dexcomDevice, 10],
+  [new Date('2018-02-15T04:33:00.000Z'), dexcomDevice],
+  [new Date('2018-02-15T11:33:00.000Z'), dexcomDevice],
+  [new Date('2018-02-15T17:33:00.000Z'), dexcomDevice, 8],
+  [new Date('2018-02-15T21:33:00.000Z'), dexcomDevice]
+]
+
+export const basalsData: BasalDataRange = [
   [new Date('2018-02-01T01:00:00Z'), 0.25, MS_IN_HOUR, 'automated'],
   [new Date('2018-02-01T02:00:00Z'), 0.75, MS_IN_HOUR, 'scheduled'],
   [new Date('2018-02-01T03:00:00Z'), 0.5, MS_IN_HOUR, 'scheduled'],
@@ -50,17 +82,34 @@ export const basalsData: Array<[Date, number, number, string]> = [
   [new Date('2018-02-02T00:00:00Z'), 0.5, MS_IN_HOUR, 'temp']
 ]
 
-export const bolusData: Array<[Date, number]> = [
+export const bolusData: BolusDataRange = [
   [new Date('2018-02-01T01:00:00Z'), 4],
   [new Date('2018-02-01T02:00:00Z'), 5],
   [new Date('2018-02-01T03:00:00Z'), 6],
   [new Date('2018-02-03T03:00:00Z'), 4]
 ]
 
-export const bgDataSourceTwoDays: Array<[Date, string]> = [
-  // data for two days tests
-  [new Date('2018-02-01T00:50:00.000Z'), dexcomDevice],
-  [new Date('2018-02-03T00:50:00.000Z'), dexcomDevice]
+export const manualBolusData: BolusDataRange = [
+  [new Date('2018-02-01T00:33:00.000Z'), 2, Prescriptor.Manual],
+  [new Date('2018-02-01T04:33:00.000Z'), 5, Prescriptor.Manual],
+  [new Date('2018-02-01T11:33:00.000Z'), 2, Prescriptor.Manual],
+  [new Date('2018-02-01T17:33:00.000Z'), 3, Prescriptor.Manual],
+  [new Date('2018-02-01T21:33:00.000Z'), 1.4, Prescriptor.Manual],
+  [new Date('2018-02-03T00:33:00.000Z'), 5],
+  [new Date('2018-02-03T04:33:00.000Z'), 5.4],
+  [new Date('2018-02-03T11:33:00.000Z'), 2, Prescriptor.Manual],
+  [new Date('2018-02-03T17:33:00.000Z'), 3],
+  [new Date('2018-02-03T21:33:00.000Z'), 2, Prescriptor.Manual],
+  [new Date('2018-02-11T00:33:00.000Z'), 3.2],
+  [new Date('2018-02-11T04:33:00.000Z'), 4],
+  [new Date('2018-02-11T11:33:00.000Z'), 2],
+  [new Date('2018-02-11T17:33:00.000Z'), 4, Prescriptor.Manual],
+  [new Date('2018-02-11T21:33:00.000Z'), 1, Prescriptor.Manual],
+  [new Date('2018-02-15T00:33:00.000Z'), 2],
+  [new Date('2018-02-15T04:33:00.000Z'), 3, Prescriptor.Manual],
+  [new Date('2018-02-15T11:33:00.000Z'), 4],
+  [new Date('2018-02-15T17:33:00.000Z'), 5, Prescriptor.Manual],
+  [new Date('2018-02-15T21:33:00.000Z'), 5]
 ]
 
 export const dateFilterOneDay: DateFilter = {
@@ -88,25 +137,32 @@ export const dateFilterTwoWeeks: DateFilter = {
   end: new Date('2018-02-15T00:00:00.000Z').valueOf()
 }
 
-export const buildMealData = (data: Array<[Date, string]>): Meal[] => (
+export const buildMealData = (data: BgDataRange): Meal[] => (
   data.map((mealData) => (
     {
       ...createMealData(mealData[0]),
-      deviceName: mealData[1]
+      deviceName: mealData[1],
+      prescribedNutrition: mealData[2]
+        ? { carbohydrate: { net: mealData[2], units: Unit.Gram } }
+        : undefined
     }
   ))
 )
 
-export const buildWizardData = (data: Array<[Date, string]>): Wizard[] => (
+export const buildWizardData = (data: BgDataRange): Wizard[] => (
   data.map((wizardData) => (
     {
       ...createWizardData(wizardData[0]),
-      deviceName: wizardData[1]
+      deviceName: wizardData[1],
+      inputMeal:{
+        fat: WizardInputMealFat.No,
+        source: WizardInputMealSource.Umm
+      }
     }
   ))
 )
 
-export const buildBasalsData = (basalsData: Array<[Date, number, number, string]>): Basal[] => (
+export const buildBasalsData = (basalsData: BasalDataRange): Basal[] => (
   basalsData.map((basals) => (
     {
       ...createRandomBasal(basals[0], basals[2]),
@@ -118,11 +174,12 @@ export const buildBasalsData = (basalsData: Array<[Date, number, number, string]
   ))
 )
 
-export const buildBolusData = (bolusData: Array<[Date, number]>): Bolus[] => (
+export const buildBolusData = (bolusData: BolusDataRange): Bolus[] => (
   bolusData.map((bolus) => (
     {
       ...createRandomBolus(bolus[0]),
-      normal: bolus[1]
+      normal: bolus[1],
+      prescriptor: bolus[2] ?? Prescriptor.Auto
     }
   ))
 )
