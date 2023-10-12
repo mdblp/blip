@@ -41,7 +41,6 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const wizard: Wizard = {
     ...base,
     type: DatumType.Wizard,
-    // uploadId: rawData.uploadId as string,
     bolusId,
     bolusIds: new Set<string>([bolusId]),
     carbInput: rawData.carbInput as number,

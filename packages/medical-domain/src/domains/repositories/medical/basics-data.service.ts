@@ -44,9 +44,6 @@ interface BasicData {
     deviceParameter: {
       data: Datum[]
     }
-    // upload: {
-    //   data: Upload[]
-    // }
     cbg: {
       data: Datum[]
     }
@@ -86,9 +83,6 @@ export function generateBasicData(medicalData: MedicalData, startEpoch: number, 
         data: selectData(medicalData.deviceParametersChanges)
       },
       // Types below are needed for PDF
-      // upload: {
-      //   data: medicalData.uploads
-      // },
       cbg: {
         data: selectData(medicalData.cbg)
       },

@@ -20,8 +20,8 @@ import moment from 'moment-timezone'
 import { extent } from 'd3-array'
 
 import { getBasalSequences, getGroupDurations } from '../../utils/basal'
-import { getLatestPumpUpload, isAutomatedBasalDevice } from '../../utils/device'
-import { commonStats, statFetchMethods, getStatDefinition } from '../../utils/stat'
+import { isAutomatedBasalDevice } from '../../utils/device'
+import { commonStats, getStatDefinition, statFetchMethods } from '../../utils/stat'
 
 /**
  * @typedef { import("../data").default } DataUtil
@@ -189,7 +189,6 @@ export function selectDailyViewData(medicalData, startDate, endDate) {
     bgRange: processBgRange(dataByDate),
     bolusRange: processBolusRange(dataByDate),
     dateRange: [startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD')],
-    // latestPumpUpload: getLatestPumpUpload(medicalData.medicalData.uploads),
     pumpSettings: medicalData.medicalData.pumpSettings[0],
     timezone: medicalData.getLastTimezone()
   }

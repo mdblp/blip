@@ -55,7 +55,6 @@ interface MedicalData {
   pumpSettings: PumpSettings[]
   reservoirChanges: ReservoirChange[]
   smbg: Smbg[]
-  // uploads: Upload[]
   warmUps: WarmUp[]
   wizards: Wizard[]
   zenModes: ZenMode[]

@@ -42,7 +42,6 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     ...base,
     type: DatumType.DeviceEvent,
     subType: DeviceEventSubtype.ReservoirChange,
-    // uploadId: rawData.uploadId as string,
     pump: { manufacturer: PumpManufacturer.Default } as PumpConfig
   }
   return reservoirChange

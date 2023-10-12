@@ -56,7 +56,6 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
         id: base.id,
         epoch: base.epoch,
         timezone: base.timezone,
-        // uploadId: rawData.uploadId as string,
         name: rawData.name as string,
         level: rawData.level as string,
         units: unit as Unit,

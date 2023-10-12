@@ -396,14 +396,6 @@ class DataUtil {
       deviceModel: device.name,
       manufacturer: device.manufacturer
     }
-    /*If no pumpSettings is found, we can fall back to old upload object*/
-    // const uploadData = this.sort.byDate(this.filter.byType('upload').top(Infinity))
-    // const latestPumpUpload = getLatestPumpUpload(uploadData)
-    // const latestUploadSource = _.get(latestPumpUpload, 'source', '').toLowerCase()
-    // return {
-    //   deviceModel: _.get(latestPumpUpload, 'deviceModel', ''),
-    //   manufacturer: latestUploadSource === 'carelink' ? 'medtronic' : latestUploadSource
-    // }
   }
 
   getReadingsInRangeData = () => {

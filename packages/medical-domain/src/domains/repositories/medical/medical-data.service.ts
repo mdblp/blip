@@ -91,7 +91,6 @@ class MedicalDataService {
     pumpSettings: [],
     reservoirChanges: [],
     smbg: [],
-    // uploads: [],
     warmUps: [],
     wizards: [],
     zenModes: [],
