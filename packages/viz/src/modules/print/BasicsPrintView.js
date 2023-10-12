@@ -62,7 +62,6 @@ class BasicsPrintView extends PrintView {
       [SITE_CHANGE_TUBING]: Images.siteChangeTubingImage
     }
 
-    // const latestPumpUpload = getLatestPumpUpload(_.get(data, 'data.upload.data', []))
     const pumpSettings = data.data.pumpSettings.data[0]
     this.source = _.get(pumpSettings, 'source', '').toLowerCase()
     this.manufacturer = this.source

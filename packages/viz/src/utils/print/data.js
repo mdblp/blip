@@ -139,7 +139,7 @@ function transformData(type, data) {
  * @param {moment.Moment} endDate
  */
 export function selectDailyViewData(medicalData, startDate, endDate) {
-  const dailyDataTypes = ['basal', 'bolus', 'cbg', 'meals', 'message', 'smbg', 'uploads', 'physicalActivities']
+  const dailyDataTypes = ['basal', 'bolus', 'cbg', 'meals', 'message', 'smbg', 'physicalActivities']
   const current = startDate.clone()
 
   // Partially compute in patient-data.js in blip

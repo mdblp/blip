@@ -18,8 +18,6 @@
 import _ from 'lodash'
 import crossfilter from 'crossfilter2'
 
-import { getLatestPumpUpload } from '../../../../js/data/util/device'
-
 import classifiersMkr from './classifiers'
 import * as constants from './constants'
 import basicsActions from './actions'
@@ -31,8 +29,8 @@ function dataMunger(bgClasses, bgUnits = MGDL_UNITS) {
 
   return {
     getLatestPumpUploaded: function(patientData) {
-      const lastUploadDatum = getLatestPumpUpload(patientData.grouped.upload)
-      return _.get(lastUploadDatum, 'source', null)
+      const pumpSettings = patientData.grouped.pumpSettings[0]
+      return _.get(pumpSettings, 'source', null)
     },
 
     processInfusionSiteHistory: function(basicsData, latestPump, patient) {

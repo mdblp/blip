@@ -341,9 +341,6 @@ class MedicalDataService {
           case DatumType.Smbg:
             this.medicalData.smbg.push(datum)
             break
-          // case DatumType.Upload:
-          //   this.medicalData.uploads.push(datum)
-          //   break
           case DatumType.Wizard:
             this.medicalData.wizards.push(datum)
             break

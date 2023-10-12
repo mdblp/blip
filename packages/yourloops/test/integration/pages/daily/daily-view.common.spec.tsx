@@ -134,10 +134,10 @@ describe('Daily view for anyone', () => {
       expect(generateReportDialogFirstPdf.getByText('Cancel')).toBeVisible()
 
       const createElementSpy = jest.spyOn(document, 'createElement')
-      const appenChildSpy = jest.spyOn(document.body, 'appendChild')
+      const appendChildSpy = jest.spyOn(document.body, 'appendChild')
 
       when(createElementSpy).calledWith('a').mockReturnValueOnce(downloadLinkElement as unknown as HTMLElement)
-      when(appenChildSpy).calledWith(downloadLinkElement).mockReturnValueOnce(null)
+      when(appendChildSpy).calledWith(downloadLinkElement).mockReturnValueOnce(null)
 
       await userEvent.click(generateReportDialogFirstPdf.getByText('Download'))
 
@@ -156,7 +156,7 @@ describe('Daily view for anyone', () => {
       expect(generateReportDialogFirstCsv.getByTestId('button-calendar-day-2020-01-15')).toHaveAttribute('aria-selected', 'true')
 
       when(createElementSpy).calledWith('a').mockReturnValueOnce(downloadLinkElement as unknown as HTMLElement)
-      when(appenChildSpy).calledWith(downloadLinkElement).mockReturnValueOnce(null)
+      when(appendChildSpy).calledWith(downloadLinkElement).mockReturnValueOnce(null)
 
       await userEvent.click(generateReportDialogFirstCsv.getByText('Download'))
 

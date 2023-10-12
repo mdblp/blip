@@ -444,7 +444,6 @@ export function defineBasicsSections(bgPrefs, manufacturer, deviceModel) {
 
       case 'timeInAutoRatio':
         title = t('Time in {{automatedLabel}} ratio', { automatedLabel: deviceLabels[AUTOMATED_DELIVERY] })
-        console.log({ deviceModel })
         active = isAutomatedBasalDevice(manufacturer, deviceModel)
         dimensions = [
           { key: 'manual', label: deviceLabels[SCHEDULED_DELIVERY] },
