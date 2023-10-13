@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,10 +30,11 @@ import React from 'react'
 import { type Team } from '../../../../lib/team'
 import AddMemberDialog, { type AddMemberDialogProps } from '../../../../pages/hcp/team-member-add-dialog'
 import { type AddMemberDialogContentProps } from '../../../../pages/hcp/types'
-import ReactDOM from 'react-dom'
-import { act, Simulate, type SyntheticEventData } from 'react-dom/test-utils'
+import { Simulate, type SyntheticEventData } from 'react-dom/test-utils'
 import { triggerMouseEvent } from '../../common/utils'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
+
+import { act, render } from '@testing-library/react'
 
 describe('AddMemberDialog', () => {
   const addMember: AddMemberDialogContentProps = {
@@ -41,24 +42,9 @@ describe('AddMemberDialog', () => {
     onMemberInvited: jest.fn()
   }
 
-  let container: HTMLDivElement | null = null
-
-  beforeEach(() => {
-    container = document.createElement('div')
-    document.body.appendChild(container)
-  })
-
-  afterEach(() => {
-    if (container) {
-      ReactDOM.unmountComponentAtNode(container)
-      document.body.removeChild(container)
-      container = null
-    }
-  })
-
   function renderComponent(props: AddMemberDialogProps) {
     act(() => {
-      ReactDOM.render(<AddMemberDialog addMember={props.addMember} />, container)
+      render(<AddMemberDialog addMember={props.addMember} />)
     })
   }
 
@@ -77,7 +63,9 @@ describe('AddMemberDialog', () => {
     const email = 'test@example.com'
     expect((document.getElementById('team-add-member-dialog-button-add') as HTMLButtonElement).disabled).toBeTruthy()
     const emailInput = document.getElementById('team-add-member-dialog-field-email') as HTMLInputElement
-    Simulate.change(emailInput, { target: { value: email } } as unknown as SyntheticEventData)
+    act(() => {
+      Simulate.change(emailInput, { target: { value: email } } as unknown as SyntheticEventData)
+    })
     expect((document.getElementById('team-add-member-dialog-button-add') as HTMLButtonElement).disabled).toBeFalsy()
     const cancelButton = document.getElementById('team-add-member-dialog-button-cancel')
     triggerMouseEvent('click', cancelButton)
@@ -91,7 +79,9 @@ describe('AddMemberDialog', () => {
     expect((document.getElementById('team-add-member-dialog-button-add') as HTMLButtonElement).disabled).toBeTruthy()
     const emailInput = document.getElementById('team-add-member-dialog-field-email') as HTMLInputElement
     const adminCheckbox = document.getElementById('team-add-member-dialog-checkbox-admin')
-    Simulate.change(emailInput, { target: { value: email } } as unknown as SyntheticEventData)
+    act(() => {
+      Simulate.change(emailInput, { target: { value: email } } as unknown as SyntheticEventData)
+    })
     triggerMouseEvent('click', adminCheckbox)
     expect((document.getElementById('team-add-member-dialog-button-add') as HTMLButtonElement).disabled).toBeFalsy()
     const addButton = document.getElementById('team-add-member-dialog-button-add')

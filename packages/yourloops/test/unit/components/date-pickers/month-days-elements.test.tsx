@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,31 +26,18 @@
  */
 
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { act } from 'react-dom/test-utils'
 import dayjs from 'dayjs'
 
 import MonthDayElements from '../../../../components/date-pickers/month-days-elements'
 import initDayJS from '../../../../lib/dayjs'
+import { render } from '@testing-library/react'
 
 describe('Month day element', () => {
-  let container: HTMLDivElement | null = null
 
   beforeAll(() => {
     initDayJS()
   })
 
-  beforeEach(() => {
-    container = document.createElement('div')
-    document.body.appendChild(container)
-  })
-  afterEach(() => {
-    if (container) {
-      ReactDOM.unmountComponentAtNode(container)
-      document.body.removeChild(container)
-      container = null
-    }
-  })
 
   it('should correctly render a month', async () => {
     const today = dayjs('2021-11-01T12:00:00Z') // Monday
@@ -58,19 +45,15 @@ describe('Month day element', () => {
     const tomorrow = today.add(1, 'day')
     const days = today.getWeekArray()
     const onChange = jest.fn()
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <MonthDayElements
-            daysArray={days}
-            currentMonth={today.month()}
-            onChange={onChange}
-            selection={{ mode: 'single', selected: today }}
-            minDate={yesterday}
-            maxDate={tomorrow}
-          />, container, resolve)
-      })
-    })
+    render(
+      <MonthDayElements
+        daysArray={days}
+        currentMonth={today.month()}
+        onChange={onChange}
+        selection={{ mode: 'single', selected: today }}
+        minDate={yesterday}
+        maxDate={tomorrow}
+      />)
 
     const todayElem = document.getElementById('button-calendar-day-2021-11-01')
     const yesterdayElem = document.getElementById('button-calendar-day-2021-10-31')

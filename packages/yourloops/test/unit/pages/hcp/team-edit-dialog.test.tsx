@@ -30,8 +30,8 @@ import { type Team, type TeamMember } from '../../../../lib/team'
 import TeamInformationEditDialog, {
   type TeamInformationEditModalProps
 } from '../../../../pages/hcp/team-information-edit-dialog'
-import { render, unmountComponentAtNode } from 'react-dom'
-import { act, Simulate, type SyntheticEventData } from 'react-dom/test-utils'
+import { act, render } from '@testing-library/react'
+import { Simulate, type SyntheticEventData } from 'react-dom/test-utils'
 import { triggerMouseEvent } from '../../common/utils'
 
 describe('TeamEditDialog', () => {
@@ -62,24 +62,9 @@ describe('TeamEditDialog', () => {
     'team-edit-dialog-field-email'
   ]
 
-  let container: HTMLElement | null = null
-
-  beforeEach(() => {
-    container = document.createElement('div')
-    document.body.appendChild(container)
-  })
-
-  afterEach(() => {
-    if (container) {
-      unmountComponentAtNode(container)
-      container.remove()
-      container = null
-    }
-  })
-
   function mountComponent(props: TeamInformationEditModalProps = defaultProps): void {
     act(() => {
-      render(<TeamInformationEditDialog teamToEdit={props.teamToEdit} />, container)
+      render(<TeamInformationEditDialog teamToEdit={props.teamToEdit} />)
     })
   }
 
@@ -130,7 +115,9 @@ describe('TeamEditDialog', () => {
       }
     }
     const nameInput = document.getElementById('team-edit-dialog-field-name')
-    Simulate.change(nameInput, event as unknown as SyntheticEventData)
+    act(() => {
+      Simulate.change(nameInput, event as unknown as SyntheticEventData)
+    })
     expect((document.getElementById('team-edit-dialog-button-validate') as HTMLButtonElement).disabled).toBeTruthy()
   })
 
@@ -154,7 +141,9 @@ describe('TeamEditDialog', () => {
     const updatedTeam = { ...defaultProps.teamToEdit.team, members: [] as TeamMember[], name: event.target.value }
 
     const nameInput = document.getElementById('team-edit-dialog-field-name')
-    Simulate.change(nameInput, event as unknown as SyntheticEventData)
+    act(() => {
+      Simulate.change(nameInput, event as unknown as SyntheticEventData)
+    })
     const saveButton = document.getElementById('team-edit-dialog-button-validate') as HTMLButtonElement
     expect(saveButton.disabled).toBeFalsy()
 
