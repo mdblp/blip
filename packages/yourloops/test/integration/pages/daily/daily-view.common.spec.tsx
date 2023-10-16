@@ -50,13 +50,11 @@ import { User } from '../../../../lib/auth'
 import { when } from 'jest-when'
 import { patient2AsTeamMember } from '../../data/patient.api.data'
 import { mockWindowResizer } from '../../mock/window-resizer.mock'
-import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 
 describe('Daily view for anyone', () => {
   beforeEach(() => {
     mockWindowResizer()
     mockPatientLogin(patient2AsTeamMember)
-    mockPatientApiForPatients()
   })
 
   afterEach(() => {

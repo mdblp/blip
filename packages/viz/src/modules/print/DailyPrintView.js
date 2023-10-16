@@ -61,7 +61,7 @@ class DailyPrintView extends PrintView {
     this.source = _.get(data, 'pumpSettings.source', '').toLowerCase()
     this.manufacturer = this.source === 'carelink' ? 'medtronic' : this.source
 
-    const deviceModel = data.pumpSettings.payload.device.name
+    const deviceModel = data.pumpSettings?.payload.device.name
     this.isAutomatedBasalDevice = isAutomatedBasalDevice(
       this.manufacturer,
       deviceModel
