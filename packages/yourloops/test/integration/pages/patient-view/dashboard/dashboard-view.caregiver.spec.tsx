@@ -26,28 +26,29 @@
  */
 
 import { act } from '@testing-library/react'
-import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { patient1Id } from '../../data/patient.api.data'
-import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { renderPage } from '../../utils/render'
-import { mockUserApi } from '../../mock/user.api.mock'
-import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
-import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
+import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { mockNotificationAPI } from '../../../mock/notification.api.mock'
+import { patient1Id } from '../../../data/patient.api.data'
+import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
+import { renderPage } from '../../../utils/render'
+import { mockUserApi } from '../../../mock/user.api.mock'
+import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
+import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
 import {
   completeDashboardData,
   mockDataAPI, sixteenDaysOldDashboardData,
   twoWeeksOldDashboardData
-} from '../../mock/data.api.mock'
-import { type AppMainLayoutParams, testAppMainLayoutForCaregiver } from '../../use-cases/app-main-layout-visualisation'
-import { type PatientDashboardLayoutParams } from '../../assert/layout.assert'
+} from '../../../mock/data.api.mock'
+import { type AppMainLayoutParams, testAppMainLayoutForCaregiver } from '../../../use-cases/app-main-layout-visualisation'
+import { type PatientDashboardLayoutParams } from '../../../assert/layout.assert'
 import {
   testDashboardDataVisualisationPrivateTeam, testDashboardDataVisualisationTwoWeeksOldData,
-  testDashboardDataVisualisationSixteenDaysOldData
-} from '../../use-cases/patient-data-visualisation'
+  testDashboardDataVisualisationSixteenDaysOldData, testPatientNavBarForPatientAndCaregiver
+} from '../../../use-cases/patient-data-visualisation'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
-describe('Patient dashboard for caregiver', () => {
-  const patientDashboardRoute = `/patient/${patient1Id}/dashboard`
+describe('Dashboard view for caregiver', () => {
+  const patientDashboardRoute = `${AppUserRoute.Patient}/${patient1Id}${AppUserRoute.Dashboard}`
   const firstName = 'Caregiver firstName'
   const lastName = 'Caregiver lastName'
 
@@ -78,6 +79,7 @@ describe('Patient dashboard for caregiver', () => {
 
     await testAppMainLayoutForCaregiver(appMainLayoutParams)
     await testDashboardDataVisualisationPrivateTeam(patientDashboardLayoutParams)
+    await testPatientNavBarForPatientAndCaregiver()
   })
 
   it('should render correct statistic when data is two weeks old', async () => {

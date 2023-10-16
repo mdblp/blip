@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -70,7 +70,7 @@ describe('Leave team dialog', () => {
     mountComponent()
     const leaveButton = screen.getByRole('button', { name: 'button-cancel' })
     leaveButton.click()
-    expect(onDialogResult).toBeCalledWith(false)
+    expect(onDialogResult).toHaveBeenCalledWith(false)
   })
 
   it('should not be able to leave team when member is the only administrator', () => {
@@ -83,7 +83,7 @@ describe('Leave team dialog', () => {
     const confirmButton = screen.getByRole('button', { name: 'button-ok' })
     expect(confirmButton).toBeInTheDocument()
     confirmButton.click()
-    expect(onDialogResult).toBeCalledWith(false)
+    expect(onDialogResult).toHaveBeenCalledWith(false)
   })
 
   it('should display a delete message when user is hcp and the only member and leave the team', () => {
@@ -95,7 +95,7 @@ describe('Leave team dialog', () => {
     expect(screen.getByTestId(teamLeaveDialogConsequencesTestId).textContent).toEqual('team-leave-dialog-and-del-consequences')
     const confirmButton = screen.getByRole('button', { name: 'team-leave-dialog-button-leave-and-del' })
     confirmButton.click()
-    expect(onDialogResult).toBeCalledWith(true)
+    expect(onDialogResult).toHaveBeenCalledWith(true)
   })
 
   it('should display a leaving message when user is a patient and leave the team', () => {
@@ -112,6 +112,6 @@ describe('Leave team dialog', () => {
     const confirmButton = screen.getByRole('button', { name: 'team-leave-dialog-button-leave' })
     expect(confirmButton).toBeInTheDocument()
     confirmButton.click()
-    expect(onDialogResult).toBeCalledWith(true)
+    expect(onDialogResult).toHaveBeenCalledWith(true)
   })
 })

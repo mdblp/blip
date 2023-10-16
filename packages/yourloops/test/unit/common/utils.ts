@@ -37,10 +37,13 @@ import { Unit } from 'medical-domain'
 import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 import { type MedicalData } from '../../../lib/data/models/medical-data.model'
+import { act } from '@testing-library/react'
 
 export function triggerMouseEvent(event: string, domElement: Element): void {
   const clickEvent = new MouseEvent(event, { bubbles: true })
-  domElement.dispatchEvent(clickEvent)
+  act(() => {
+    domElement.dispatchEvent(clickEvent)
+  })
 }
 
 export const createPatient = (

@@ -78,7 +78,7 @@ describe('Error page', () => {
     const showMoreInfoButton = screen.getByText('Show more information')
     await userEvent.click(showMoreInfoButton)
     expect(screen.getByTestId('error-stacktrace')).toHaveTextContent(/fakeEvent Source: fakeSource:12:56 Error: This is the error we are supposed to throw to harbour Stack: Error: This is the error we are supposed to throw to harbour/)
-    expect(ErrorApi.sendError).toBeCalledWith(expectPayload)
+    expect(ErrorApi.sendError).toHaveBeenCalledWith(expectPayload)
     expect(screen.queryByText('Show more information')).not.toBeInTheDocument()
   })
 })

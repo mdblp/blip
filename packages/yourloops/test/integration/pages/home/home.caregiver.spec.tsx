@@ -256,7 +256,7 @@ describe('Caregiver home page', () => {
 
     const disabledToggle = screen.getByLabelText('This column cannot be removed')
     await userEvent.hover(disabledToggle)
-    expect(await screen.findByText('This column cannot be removed'))
+    expect(await screen.findByText('This column cannot be removed')).toBeVisible()
 
     await userEvent.click(ageToggle)
     await userEvent.click(lastUpdateToggle)

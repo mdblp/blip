@@ -26,8 +26,6 @@
  */
 
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { act } from 'react-dom/test-utils'
 import { ThemeProvider } from '@mui/material/styles'
 import * as authHookMock from '../../../../lib/auth'
 import { getTheme } from '../../../../components/theme'
@@ -35,7 +33,7 @@ import TeamInformation, { type TeamInformationProps } from '../../../../componen
 import { buildTeam, triggerMouseEvent } from '../../common/utils'
 import type User from '../../../../lib/auth/models/user.model'
 import TeamUtils from '../../../../lib/team/team.util'
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import * as teamHookMock from '../../../../lib/team'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import { PhonePrefixCode } from '../../../../lib/utils'
@@ -60,9 +58,6 @@ describe('TeamInformation', () => {
     city: 'Vouilly',
     country: 'FR'
   }
-
-  let container: HTMLDivElement | null = null
-
   beforeEach(() => {
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return { user: { isUserPatient: () => true } as User }
@@ -71,8 +66,6 @@ describe('TeamInformation', () => {
       return { updateTeam: updateTeamMock }
     })
     jest.spyOn(TeamUtils, 'isUserAdministrator').mockReturnValue(true)
-    container = document.createElement('div')
-    document.body.appendChild(container)
   })
 
   beforeAll(() => {
@@ -83,14 +76,6 @@ describe('TeamInformation', () => {
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
       return { error: errorMock, success: successMock }
     })
-  })
-
-  afterEach(() => {
-    if (container) {
-      ReactDOM.unmountComponentAtNode(container)
-      document.body.removeChild(container)
-      container = null
-    }
   })
 
   async function editTeamInfo() {
@@ -124,9 +109,7 @@ describe('TeamInformation', () => {
   }
 
   function renderTeamInformation(props: TeamInformationProps = { team }) {
-    act(() => {
-      ReactDOM.render(getTeamInformationJSX(props), container)
-    })
+    render(getTeamInformationJSX(props))
   }
 
   it('should display correct team information', () => {

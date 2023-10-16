@@ -67,7 +67,7 @@ describe('Login page mobile view', () => {
     checkFooterForUserNotLoggedIn(false)
 
     // More info link should disappear if language is french
-    fireEvent.mouseDown(within(languageSelector).getByRole('button', { hidden: true }))
+    fireEvent.mouseDown(within(languageSelector).getByRole('combobox', { hidden: true }))
     await userEvent.click(screen.getByText('Français'))
     expect(moreInfoLink).not.toBeVisible()
 

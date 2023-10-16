@@ -68,7 +68,7 @@ describe('User API', () => {
       jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
       await expect(async () => {
         await UserApi.getUserMetadata(userId)
-      }).rejects.toThrowError('This error was thrown by a mock on purpose')
+      }).rejects.toThrow('This error was thrown by a mock on purpose')
     })
   })
 

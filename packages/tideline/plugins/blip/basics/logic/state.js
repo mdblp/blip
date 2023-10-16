@@ -21,9 +21,8 @@ import React from 'react'
 
 import {
   SITE_CHANGE_BY_MANUFACTURER,
-  DEFAULT_MANUFACTURER,
-  SITE_CHANGE_RESERVOIR,
   SITE_CHANGE_CANNULA,
+  SITE_CHANGE_RESERVOIR,
   SITE_CHANGE_TUBING
 } from './constants'
 import CalendarContainer from '../components/CalendarContainer'
@@ -31,11 +30,12 @@ import SiteChangeSelector from '../components/sitechange/Selector'
 import SiteChange from '../components/chart/SiteChange'
 import InfusionHoverDisplay from '../components/day/hover/InfusionHoverDisplay'
 import togglableState from '../TogglableState'
+import { PumpManufacturer } from 'medical-domain'
 
 function basicsState(source, manufacturer) {
   const t = i18next.t.bind(i18next)
   const siteChangesTitle = _.get(
-    _.get(SITE_CHANGE_BY_MANUFACTURER, manufacturer, SITE_CHANGE_BY_MANUFACTURER[DEFAULT_MANUFACTURER]),
+    _.get(SITE_CHANGE_BY_MANUFACTURER, manufacturer, SITE_CHANGE_BY_MANUFACTURER[PumpManufacturer.Default]),
     'label'
   )
 

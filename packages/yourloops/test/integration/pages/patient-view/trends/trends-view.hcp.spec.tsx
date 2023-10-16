@@ -26,21 +26,22 @@
  */
 
 import { screen, waitFor } from '@testing-library/react'
-import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../mock/team.api.mock'
-import { mockDataAPI } from '../../mock/data.api.mock'
-import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { patient2Id } from '../../data/patient.api.data'
-import { mockChatAPI } from '../../mock/chat.api.mock'
-import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { checkPatientNavBarAsHCP } from '../../assert/patient-nav-bar.assert'
-import { renderPage } from '../../utils/render'
-import { mockUserApi } from '../../mock/user.api.mock'
-import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
-import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
-import { mockWindowResizer } from '../../mock/window-resizer.mock'
+import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../../mock/team.api.mock'
+import { minimalTrendViewData, mockDataAPI } from '../../../mock/data.api.mock'
+import { mockNotificationAPI } from '../../../mock/notification.api.mock'
+import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
+import { mockChatAPI } from '../../../mock/chat.api.mock'
+import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
+import { checkPatientNavBarAsHCP } from '../../../assert/patient-nav-bar.assert'
+import { renderPage } from '../../../utils/render'
+import { mockUserApi } from '../../../mock/user.api.mock'
+import { patient2Id } from '../../../data/patient.api.data'
+import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../use-cases/app-main-layout-visualisation'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
-describe('Daily view for HCP', () => {
+describe('Trends view for HCP', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
@@ -61,7 +62,8 @@ describe('Daily view for HCP', () => {
   })
 
   it('should render correct layout', async () => {
-    mockDataAPI()
+    mockDataAPI(minimalTrendViewData)
+
     const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
@@ -73,9 +75,10 @@ describe('Daily view for HCP', () => {
         }
       }
     }
-    const router = renderPage(`/patient/${patient2Id}/daily`)
+    const trendsRoute = `${AppUserRoute.Patient}/${patient2Id}${AppUserRoute.Trends}`
+    const router = renderPage(trendsRoute)
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(`/patient/${patient2Id}/daily`)
+      expect(router.state.location.pathname).toEqual(trendsRoute)
     })
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkCopyTextButton, checkDeviceSettingsContent } from '../assert/device-page.assert'
+import { checkCopyTextButton, checkDeviceSettingsContent } from '../assert/device-view.assert'
 
 export const testDeviceSettingsVisualisation = async () => {
   checkDeviceSettingsContent()

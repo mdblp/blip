@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,18 +26,16 @@
  */
 
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { act } from 'react-dom/test-utils'
 import dayjs from 'dayjs'
 
 import RangeDatePicker from '../../../../components/date-pickers/range-date-picker'
 import initDayJS from '../../../../lib/dayjs'
 import i18n from '../../../../lib/language'
+import { render } from '@testing-library/react'
 
 describe('Range date picker', () => {
   const minDate = dayjs('2000-01-01', { utc: true })
   const maxDate = dayjs('2100-01-01', { utc: true })
-  let container: HTMLDivElement | null = null
 
   beforeAll(() => {
     initDayJS()
@@ -48,37 +46,20 @@ describe('Range date picker', () => {
       .init({ react: { useSuspense: true } })
   })
 
-  beforeEach(() => {
-    container = document.createElement('div')
-    document.body.appendChild(container)
-  })
-
-  afterEach(() => {
-    if (container) {
-      ReactDOM.unmountComponentAtNode(container)
-      document.body.removeChild(container)
-      container = null
-    }
-  })
-
   it('should correctly render a month', async () => {
     const range = { start: dayjs('2021-11-09'), end: dayjs('2021-11-20') }
     const rangeSelectable = { start: dayjs('2021-11-01'), end: dayjs('2021-12-02') }
     const onChange = jest.fn()
 
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <RangeDatePicker
-            orientation="portrait"
-            minDate={minDate}
-            maxDate={maxDate}
-            selection={{ mode: 'range', selected: range, selectable: rangeSelectable, maxSelectableDays: 20 }}
-            onChange={onChange}
-            showToolbar
-          />, container, resolve)
-      })
-    })
+    render(
+      <RangeDatePicker
+        orientation="portrait"
+        minDate={minDate}
+        maxDate={maxDate}
+        selection={{ mode: 'range', selected: range, selectable: rangeSelectable, maxSelectableDays: 20 }}
+        onChange={onChange}
+        showToolbar
+      />)
 
     let elem = document.getElementById('calendar-box-first')
     expect(elem).not.toBeNull()
