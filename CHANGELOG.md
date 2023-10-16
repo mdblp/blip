@@ -29,6 +29,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2595 Update deprecated GitHub Actions to Node 16
 - YLP-2596 Add visual regression tests
 - YLP-2631 Calls made to /harbour/errors do not always give an error message
+- YLP-2672 Error code given by the front should be findable in kibana
 
 ## 3.0.4 - 2023-08-23
 ### Added

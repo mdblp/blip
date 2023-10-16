@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { browserName, browserVersion } from 'react-device-detect'
 
@@ -66,11 +66,14 @@ function OnError(props: OnErrorProps): JSX.Element {
   const location = useLocation()
   const [showMore, setShowMore] = React.useState(false)
   const fullScreen = useMediaQuery(theme.breakpoints.down('lg'))
-  const errorId = uuidv4()
   const { classes: style } = classes()
   const errorMessage = props.error?.message ?? 'n/a'
   const error = `Error: ${errorMessage}\nStack: ${props?.error?.stack}`
   const completeErrorMessage = `${(props.event as string).toString()}\nSource: ${props.source}:${props.lineno}:${props.colno}\n${error}`
+
+  const errorId = useMemo(() => {
+    return uuidv4()
+  }, [])
 
   React.useEffect(() => {
     try {
