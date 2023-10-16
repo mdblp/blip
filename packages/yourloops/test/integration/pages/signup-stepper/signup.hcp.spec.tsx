@@ -77,7 +77,7 @@ describe('Signup stepper as hcp', () => {
 
     // Step one
     checkAccountSelectorStep()
-    await userEvent.click(screen.getByLabelText('Create hcp account'))
+    await userEvent.click(screen.getByLabelText('Create professional account'))
     await userEvent.click(screen.getByText('Next'))
 
     // Step two
