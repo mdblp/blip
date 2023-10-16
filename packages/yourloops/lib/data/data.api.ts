@@ -35,7 +35,7 @@ import { type PatientData } from './models/patient-datum.model'
 import { type MessageNote } from './models/message-note.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import { HttpHeaderValues } from '../http/models/enums/http-header-values.enum'
-import { Unit } from 'medical-domain'
+import { MedicalData, Unit } from 'medical-domain'
 import type { PatientDataRange } from './models/data-range.model'
 
 const log = bows('Data API')
@@ -55,38 +55,18 @@ export default class DataApi {
     }
   }
 
-  static async getPatientData(patient: Patient, options?: GetPatientDataOptions): Promise<PatientData> {
+  static async getPatientData(patient: Patient, options?: GetPatientDataOptions): Promise<MedicalData> {
     const params = {
       startDate: options?.startDate,
       endDate: options?.endDate,
-      withPumpSettings: options?.withPumpSettings ?? undefined
+      withPumpSettings: options?.withPumpSettings ?? undefined,
+      bgUnits: options.bgUnits
     }
-    const { data } = await HttpService.get<PatientData>({
-      url: `/data/v1/dataV2/${patient.userid}`,
+    const { data } = await HttpService.get<MedicalData>({
+      url: `/data/v2/all/${patient.userid}`,
       config: { params }
     })
     return data
-  }
-
-  static async getMessages(patient: Patient, options?: GetPatientDataOptions): Promise<MessageNote[]> {
-    try {
-      const params = {
-        starttime: options?.startDate,
-        endtime: options?.endDate
-      }
-      const { data } = await HttpService.get<MessageNote[]>({
-        url: `/message/v1/notes/${patient.userid}`,
-        config: { params }
-      })
-      return data
-    } catch (err) {
-      const error = err as Error
-      if (error.message === ErrorMessageStatus.NotFound) {
-        log.info(`No messages for patient ${patient.userid}`)
-        return []
-      }
-      throw err
-    }
   }
 
   static async editMessage(message: MessageNote): Promise<void> {

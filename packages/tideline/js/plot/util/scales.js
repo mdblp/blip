@@ -115,7 +115,7 @@ export function createYAxisBG(tidelineData, pool) {
   const d3 = window.d3
   const SMBG_SIZE = 16
 
-  const allBG = tidelineData.grouped.cbg.concat(tidelineData.grouped.smbg)
+  const allBG = tidelineData.medicalData.cbg.concat(tidelineData.medicalData.smbg)
   /** @type {[number, number]} */
   const extent = d3.extent(allBG, (d) => d.value)
   const scale = createScaleBG(tidelineData, pool, Array.from(extent), SMBG_SIZE/2)
@@ -161,7 +161,7 @@ function createScaleBolus(data, pool) {
 export function createYAxisBolus(tidelineData, pool) {
   const d3 = window.d3
 
-  const allBolus = tidelineData.grouped.bolus.concat(tidelineData.grouped.wizard)
+  const allBolus = tidelineData.medicalData.bolus.concat(tidelineData.medicalData.wizards)
   const scale = createScaleBolus(allBolus, pool)
   // set up y-axis for bolus
   const bolusTickValues = [0, 1, 5, 10]
@@ -205,7 +205,7 @@ function createScaleBasal(data, pool) {
  */
 export function createYAxisBasal(tidelineData, pool) {
   const d3 = window.d3
-  const scale = createScaleBasal(tidelineData.grouped.basal, pool)
+  const scale = createScaleBasal(tidelineData.medicalData.basal, pool)
   const axis = d3.svg.axis()
     .scale(scale)
     .orient('left')

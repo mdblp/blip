@@ -26,15 +26,11 @@
  */
 
 import { MGDL_UNITS } from '../../models/medical/datum/bg.model'
-import type ConfidentialMode from '../../models/medical/datum/confidential-mode.model'
-import type DeviceParameterChange from '../../models/medical/datum/device-parameter-change.model'
 import type Fill from '../../models/medical/datum/fill.model'
 import type MedicalData from '../../models/medical/medical-data.model'
 import type Message from '../../models/medical/datum/message.model'
 import type ReservoirChange from '../../models/medical/datum/reservoir-change.model'
-import type WarmUp from '../../models/medical/datum/warm-up.model'
 import type Wizard from '../../models/medical/datum/wizard.model'
-import type ZenMode from '../../models/medical/datum/zen-mode.model'
 
 import type BasicData from './basics-data.service'
 import { generateBasicData } from './basics-data.service'
@@ -45,7 +41,6 @@ import FillService from './datum/fill.service'
 import MessageService from './datum/message.service'
 import PhysicalActivityService from './datum/physical-activity.service'
 import TimeZoneChangeService from './datum/time-zone-change.service'
-import DatumService from './datum.service'
 
 import type MedicalDataOptions from '../../models/medical/medical-data-options.model'
 import {
@@ -73,6 +68,11 @@ import {
 } from '../time/time.service'
 import type PumpSettings from '../../models/medical/datum/pump-settings.model'
 import { DatumType } from '../../models/medical/datum/enums/datum-type.enum'
+import DatumService from './datum.service'
+import ConfidentialMode from '../../models/medical/datum/confidential-mode.model'
+import DeviceParameterChange from '../../models/medical/datum/device-parameter-change.model'
+import WarmUp from '../../models/medical/datum/warm-up.model'
+import ZenMode from '../../models/medical/datum/zen-mode.model'
 
 class MedicalDataService {
   medicalData: MedicalData = {
@@ -123,25 +123,6 @@ class MedicalDataService {
     } else {
       return capitalize(this._datumOpts.defaultPumpManufacturer)
     }
-  }
-
-  // for compatibility with tidelineData interface only...
-  public get grouped(): Record<DatumType, Datum[]> {
-    const initalValue: Record<string, Datum[]> = {}
-    for (const type of Object.values(DatumType)) {
-      initalValue[type] = []
-    }
-
-    return this.data.reduce<Record<DatumType, Datum[]>>(
-      (accum, d) => {
-        if (accum[d.type] === undefined) {
-          accum[d.type] = []
-        }
-        accum[d.type].push(d)
-        return accum
-      },
-      initalValue
-    )
   }
 
   public get opts(): MedicalDataOptions {
@@ -205,77 +186,7 @@ class MedicalDataService {
     return this._datumOpts.timezoneName
   }
 
-  add(rawData: Array<Record<string, unknown>>): void {
-    this.normalize(rawData)
-    this.deduplicate()
-    this.join()
-    this.setTimeZones()
-    this.group()
-    this.setEndPoints()
-    this.generateFillData()
-    this.generateBasicsData()
-  }
-
-  hasDiabetesData(): boolean {
-    return (
-      this.medicalData.basal.length > 0 ||
-      this.medicalData.bolus.length > 0 ||
-      this.medicalData.cbg.length > 0 ||
-      this.medicalData.smbg.length > 0 ||
-      this.medicalData.wizards.length > 0
-    )
-  }
-
-  filterByDate(epochStart: number, epochEnd: number): Datum[] {
-    return this.data.filter((d) => {
-      const datumEpoch = this.getDatumEpoch(d)
-      return datumEpoch > epochStart && datumEpoch < epochEnd
-    })
-  }
-
-  // Basics data are needed to display the cartridge changes in dashboard and in print actions
-  // We may only need to generate these for the current day displayed in dashboard view and on print...
-  generateBasicsData(startDate: string | null = null, endDate: string | null = null): BasicData | null {
-    const start = startDate ?? this.endpoints[0]
-    const end = endDate ?? this.endpoints[1]
-    let startEpoch = new Date(start).valueOf()
-    let endEpoch = new Date(end).valueOf()
-    if (!endDate) {
-      endEpoch = endEpoch - 1
-    }
-    const endTimezone = this.getTimezoneAt(endEpoch)
-    if (!startDate) {
-      startEpoch = twoWeeksAgo(endEpoch, endTimezone)
-    }
-    const startTimezone = this.getTimezoneAt(startEpoch)
-
-    if (startEpoch > endEpoch) {
-      console.warn('Invalid date range', { start: toISOString(startEpoch), mEnd: toISOString(endEpoch) })
-      this.basicsData = null
-      return null
-    }
-    startEpoch += 1
-    endEpoch -= 1
-
-    this.basicsData = generateBasicData(this.medicalData, startEpoch, startTimezone, endEpoch, endTimezone)
-
-    return this.basicsData
-  }
-
-  editMessage(message: Record<string, unknown>): Message | null {
-    const normalizedMessage = MessageService.normalize(message, this._datumOpts)
-    normalizedMessage.timezone = this.getTimezoneAt(normalizedMessage.epoch)
-    normalizedMessage.displayOffset = getOffset(normalizedMessage.epoch, normalizedMessage.timezone)
-    const currentMessageIdx = this.medicalData.messages.findIndex(msg => msg.id === normalizedMessage.id)
-    if (currentMessageIdx === -1) {
-      return null
-    }
-    this.medicalData.messages[currentMessageIdx] = normalizedMessage
-    this.medicalData.messages.sort((a, b) => this.sortDatum(a, b))
-    return normalizedMessage
-  }
-
-  private normalize(rawData: Array<Record<string, unknown>>): void {
+  public normalize(rawData: Array<Record<string, unknown>>): void {
     rawData.forEach(raw => {
       try {
         const datum = DatumService.normalize(raw, this._datumOpts)
@@ -346,6 +257,96 @@ class MedicalDataService {
         console.log({ message, rawData: raw })
       }
     })
+  }
+
+  add(data: MedicalData): void {
+    this.medicalData.bolus = this.medicalData.bolus.concat(data.bolus)
+    this.medicalData.basal = this.medicalData.basal.concat(data.basal)
+    this.medicalData.cbg = this.medicalData.cbg.concat(data.cbg)
+    this.medicalData.confidentialModes = this.medicalData.confidentialModes.concat(data.confidentialModes)
+    this.medicalData.deviceParametersChanges = this.medicalData.deviceParametersChanges.concat(data.deviceParametersChanges)
+    this.medicalData.messages = this.medicalData.messages.concat(data.messages)
+    this.medicalData.meals = this.medicalData.meals.concat(data.meals)
+    this.medicalData.physicalActivities = this.medicalData.physicalActivities.concat(data.physicalActivities)
+    this.medicalData.pumpSettings = this.medicalData.pumpSettings.concat(data.pumpSettings)
+    this.medicalData.reservoirChanges = this.medicalData.reservoirChanges.concat(data.reservoirChanges)
+    this.medicalData.smbg = this.medicalData.smbg.concat(data.smbg)
+    this.medicalData.warmUps = this.medicalData.warmUps.concat(data.warmUps)
+    this.medicalData.wizards = this.medicalData.wizards.concat(data.wizards)
+    this.medicalData.zenModes = this.medicalData.zenModes.concat(data.zenModes)
+
+    this.deduplicate()
+    this.join()
+    this.setTimeZones()
+    this.group()
+    this.setEndPoints()
+    this.generateFillData()
+    this.generateBasicsData()
+  }
+
+  hasDiabetesData(): boolean {
+    return (
+      this.medicalData.basal.length > 0 ||
+      this.medicalData.bolus.length > 0 ||
+      this.medicalData.cbg.length > 0 ||
+      this.medicalData.smbg.length > 0 ||
+      this.medicalData.wizards.length > 0
+    )
+  }
+
+  filterByDate(epochStart: number, epochEnd: number): Datum[] {
+    return this.data.filter((d) => {
+      const datumEpoch = this.getDatumEpoch(d)
+      return datumEpoch > epochStart && datumEpoch < epochEnd
+    })
+  }
+
+  // Basics data are needed to display the cartridge changes in dashboard and in print actions
+  // We may only need to generate these for the current day displayed in dashboard view and on print...
+  generateBasicsData(startDate: string | null = null, endDate: string | null = null): BasicData | null {
+    const start = startDate ?? this.endpoints[0]
+    const end = endDate ?? this.endpoints[1]
+    let startEpoch = new Date(start).valueOf()
+    let endEpoch = new Date(end).valueOf()
+    if (!endDate) {
+      endEpoch = endEpoch - 1
+    }
+    const endTimezone = this.getTimezoneAt(endEpoch)
+    if (!startDate) {
+      startEpoch = twoWeeksAgo(endEpoch, endTimezone)
+    }
+    const startTimezone = this.getTimezoneAt(startEpoch)
+
+    if (startEpoch > endEpoch) {
+      console.warn('Invalid date range', { start: toISOString(startEpoch), mEnd: toISOString(endEpoch) })
+      this.basicsData = null
+      return null
+    }
+    startEpoch += 1
+    endEpoch -= 1
+
+    this.basicsData = generateBasicData(this.medicalData, startEpoch, startTimezone, endEpoch, endTimezone)
+
+    return this.basicsData
+  }
+
+  addMessage(message: Record<string, unknown>): void {
+    // TODO: cleanup normalize methods
+    const normalizedMsg: Message = MessageService.normalize(message, this._datumOpts)
+    this.medicalData.messages.push(normalizedMsg)
+  }
+
+  editMessage(message: Record<string, unknown>): Message | null {
+    const normalizedMessage = MessageService.normalize(message, this._datumOpts)
+    normalizedMessage.timezone = this.getTimezoneAt(normalizedMessage.epoch)
+    normalizedMessage.displayOffset = getOffset(normalizedMessage.epoch, normalizedMessage.timezone)
+    const currentMessageIdx = this.medicalData.messages.findIndex(msg => msg.id === normalizedMessage.id)
+    if (currentMessageIdx === -1) {
+      return null
+    }
+    this.medicalData.messages[currentMessageIdx] = normalizedMessage
+    this.medicalData.messages.sort((a, b) => this.sortDatum(a, b))
+    return normalizedMessage
   }
 
   private deduplicate(): void {

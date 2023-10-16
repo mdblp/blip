@@ -104,7 +104,7 @@ const DeviceUsage = (props) => {
   const { t } = useTranslation()
   const { classes } = useStyles()
   const trackMetric = metrics.send
-  const mostRecentSettings = tidelineData.grouped.pumpSettings.slice(-1)[0]
+  const mostRecentSettings = medicalData.pumpSettings.slice(-1)[0]
   const device = mostRecentSettings?.payload?.device ?? {}
   const pump = mostRecentSettings?.payload?.pump ?? {}
   const cgm = mostRecentSettings?.payload?.cgm ?? {}

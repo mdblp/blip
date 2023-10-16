@@ -183,7 +183,7 @@ export const usePatientData = (): usePatientDataResult => {
       setRefreshingData(true)
       const dateRange = patientDataUtils.current.getDateRange({ currentChart, epochLocation, msRange })
       const patientData = await patientDataUtils.current.loadDataRange(dateRange)
-      if (patientData && patientData.length > 0) {
+      if (patientData && patientData.cbg.length > 0) {
         medicalData.add(patientData)
         setMedicalData(medicalData)
         return true

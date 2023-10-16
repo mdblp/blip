@@ -62,7 +62,7 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
   const theme = useTheme()
   const { classes } = useStyles()
   const { t } = useTranslation()
-  const pumpSettings = [...medicalData.grouped.pumpSettings].pop() as PumpSettings
+  const pumpSettings = medicalData.medicalData.pumpSettings.at(-1)
   const { device, pump, cgm, parameters, history } = pumpSettings.payload
   const lastUploadDate = moment.tz(pumpSettings.normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
 

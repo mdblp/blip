@@ -30,6 +30,8 @@ import moment, { type Moment } from 'moment-timezone'
 import { type PatientData } from '../../../lib/data/models/patient-datum.model'
 import { history } from '../data/data-api.data'
 import type { PatientDataRange } from '../../../lib/data/models/data-range.model'
+import MedicalDataService, { Source, Unit } from 'medical-domain'
+import config from '../../../lib/config/config'
 
 const WIZARD_BOLUS_ID1 = 'carbBolusId'
 const WIZARD_BOLUS_ID2 = 'carbBolusId2'
@@ -226,7 +228,20 @@ export const pumpSettingsData: Data = {
 }
 
 export const mockDataAPI = (patientData: Data = completeDailyViewData) => {
+  const medicalData = new MedicalDataService()
+  medicalData.opts = {
+    defaultSource: Source.Diabeloop,
+    YLP820_BASAL_TIME: config.YLP820_BASAL_TIME,
+    timezoneName: 'Europe/Paris',
+    bgUnits: Unit.MilligramPerDeciliter,
+    defaultPumpManufacturer: 'default',
+    dateRange: {
+      start: new Date(patientData.dataRange[0]).getTime(),
+      end: new Date(patientData.dataRange[1]).getTime()
+    }
+  }
+  medicalData.normalize(patientData.data)
+  //console.log(medicalData.medicalData)
   jest.spyOn(DataAPI, 'getPatientDataRange').mockResolvedValue(patientData.dataRange)
-  jest.spyOn(DataAPI, 'getMessages').mockResolvedValue([])
-  jest.spyOn(DataAPI, 'getPatientData').mockImplementation(() => Promise.resolve(patientData.data))
+  jest.spyOn(DataAPI, 'getPatientData').mockImplementation(() => Promise.resolve(medicalData.medicalData))
 }

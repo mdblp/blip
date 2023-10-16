@@ -33,7 +33,7 @@ function dataMunger(bgClasses, bgUnits = MGDL_UNITS) {
 
   return {
     getLatestPumpUploaded: function(patientData) {
-      const lastUploadDatum = getLatestPumpUpload(patientData.grouped.upload)
+      const lastUploadDatum = getLatestPumpUpload(patientData.uploads)
       return _.get(lastUploadDatum, 'source', null)
     },
 
