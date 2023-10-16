@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,51 +26,35 @@
  */
 
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { act, Simulate } from 'react-dom/test-utils'
+import { Simulate } from 'react-dom/test-utils'
 import dayjs from 'dayjs'
 
 import Calendar from '../../../../components/date-pickers/calendar'
 import initDayJS from '../../../../lib/dayjs'
 
+import { render } from '@testing-library/react'
+
+
 describe('Calendar', () => {
   const minDate = dayjs('2010-01-01', { utc: true })
   const maxDate = dayjs('2040-01-01', { utc: true })
-  let container: HTMLDivElement | null = null
 
   beforeAll(() => {
     initDayJS()
   })
 
-  beforeEach(() => {
-    container = document.createElement('div')
-    document.body.appendChild(container)
-  })
-
-  afterEach(() => {
-    if (container) {
-      ReactDOM.unmountComponentAtNode(container)
-      document.body.removeChild(container)
-      container = null
-    }
-  })
 
   it('should correctly render a month', async () => {
     const today = dayjs('2021-11-09')
     const onChange = jest.fn()
-
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <Calendar
-            currentMonth={today}
-            selection={{ mode: 'single', selected: today }}
-            onChange={onChange}
-            minDate={minDate}
-            maxDate={maxDate}
-          />, container, resolve)
-      })
-    })
+    render(
+      <Calendar
+        currentMonth={today}
+        selection={{ mode: 'single', selected: today }}
+        onChange={onChange}
+        minDate={minDate}
+        maxDate={maxDate}
+      />)
 
     const calendarElem = document.getElementById('calendar-month')
     expect(calendarElem).not.toBeNull()
@@ -97,18 +81,14 @@ describe('Calendar', () => {
     const today = dayjs('2021-11-09')
     const onChange = jest.fn()
 
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <Calendar
-            currentMonth={today}
-            selection={{ mode: 'single', selected: today }}
-            onChange={onChange}
-            minDate={minDate}
-            maxDate={maxDate}
-          />, container, resolve)
-      })
-    })
+    render(
+      <Calendar
+        currentMonth={today}
+        selection={{ mode: 'single', selected: today }}
+        onChange={onChange}
+        minDate={minDate}
+        maxDate={maxDate}
+      />)
 
     const calendarElem = document.getElementById('calendar-month')
     Simulate.keyUp(calendarElem, { key: 'ArrowUp' })

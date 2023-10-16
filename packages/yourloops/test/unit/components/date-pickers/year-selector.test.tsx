@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,46 +26,29 @@
  */
 
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { act, Simulate } from 'react-dom/test-utils'
+import { Simulate } from 'react-dom/test-utils'
 
 import { MAX_YEAR, MIN_YEAR } from '../../../../components/date-pickers/models'
 import YearSelector from '../../../../components/date-pickers/year-selector'
+import { act, render } from '@testing-library/react'
 
 describe('Year selector', () => {
-  let container: HTMLDivElement | null = null
-
   beforeAll(() => {
     window.HTMLElement.prototype.scrollIntoView = () => {
       // This is a stub
     }
   })
 
-  beforeEach(() => {
-    container = document.createElement('div')
-    document.body.appendChild(container)
-  })
-  afterEach(() => {
-    if (container) {
-      ReactDOM.unmountComponentAtNode(container)
-      document.body.removeChild(container)
-      container = null
-    }
-  })
 
   it('should correctly render the default list of years', async () => {
     const onSelectYear = jest.fn()
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <YearSelector
-            minYear={1900}
-            maxYear={2100}
-            selectedYear={2021}
-            onSelectYear={onSelectYear}
-          />, container, resolve)
-      })
-    })
+    render(
+      <YearSelector
+        minYear={1900}
+        maxYear={2100}
+        selectedYear={2021}
+        onSelectYear={onSelectYear}
+      />)
 
     const yearSelector = document.getElementById('year-selector')
     expect(yearSelector).not.toBeNull()
@@ -74,17 +57,13 @@ describe('Year selector', () => {
 
   it('should select the previous year with the arrow up key', async () => {
     const onSelectYear = jest.fn()
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <YearSelector
-            selectedYear={2021}
-            maxYear={2024}
-            minYear={2017}
-            onSelectYear={onSelectYear}
-          />, container, resolve)
-      })
-    })
+    render(
+      <YearSelector
+        selectedYear={2021}
+        maxYear={2024}
+        minYear={2017}
+        onSelectYear={onSelectYear}
+      />)
 
     const yearSelector = document.getElementById('year-selector')
     const year2020 = document.getElementById('year-2020')
@@ -93,12 +72,17 @@ describe('Year selector', () => {
     expect(year2020.getAttribute('aria-selected')).toBe('false')
     expect(year2021.getAttribute('aria-selected')).toBe('true')
 
-    Simulate.keyUp(yearSelector, { key: 'ArrowUp' })
+    act(() => {
+      Simulate.keyUp(yearSelector, { key: 'ArrowUp' })
+    })
 
     expect(year2020.getAttribute('aria-selected')).toBe('true')
     expect(year2021.getAttribute('aria-selected')).toBe('false')
 
-    Simulate.keyUp(yearSelector, { key: 'Enter' })
+
+    act(() => {
+      Simulate.keyUp(yearSelector, { key: 'Enter' })
+    })
     expect(onSelectYear).toHaveBeenCalledTimes(1)
     // eslint-disable-next-line no-magic-numbers
     expect(onSelectYear.mock.calls[0][0]).toBe(2020)
@@ -106,17 +90,13 @@ describe('Year selector', () => {
 
   it('should select the next year with the arrow down key', async () => {
     const onSelectYear = jest.fn()
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <YearSelector
-            selectedYear={2021}
-            maxYear={2024}
-            minYear={2017}
-            onSelectYear={onSelectYear}
-          />, container, resolve)
-      })
-    })
+    render(
+      <YearSelector
+        selectedYear={2021}
+        maxYear={2024}
+        minYear={2017}
+        onSelectYear={onSelectYear}
+      />)
 
     const yearSelector = document.getElementById('year-selector')
     const year2021 = document.getElementById('year-2021')
@@ -125,12 +105,17 @@ describe('Year selector', () => {
     expect(year2021.getAttribute('aria-selected')).toBe('true')
     expect(year2022.getAttribute('aria-selected')).toBe('false')
 
-    Simulate.keyUp(yearSelector, { key: 'ArrowDown' })
+    act(() => {
+      Simulate.keyUp(yearSelector, { key: 'ArrowDown' })
+    })
 
     expect(year2021.getAttribute('aria-selected')).toBe('false')
     expect(year2022.getAttribute('aria-selected')).toBe('true')
 
-    Simulate.keyUp(yearSelector, { key: ' ' })
+
+    act(() => {
+      Simulate.keyUp(yearSelector, { key: ' ' })
+    })
     expect(onSelectYear).toHaveBeenCalledTimes(1)
     // eslint-disable-next-line no-magic-numbers
     expect(onSelectYear.mock.calls[0][0]).toBe(2022)

@@ -40,9 +40,9 @@
     "@mui/lab": "^5.0.0-alpha.148",
     "@mui/material": "^5.14.12",
     "@mui/x-data-grid": "^6.16.1",
-    "axios": "^1.4.0",
+    "axios": "^1.5.1",
     "bows": "^1.7.2",
-    "core-js": "^3.32.1",
+    "core-js": "^3.33.0",
     "dayjs": "^1.11.10",
     "emoji-picker-react": "^4.5.2",
     "html-react-parser": "^4.2.2",
@@ -58,6 +58,6 @@
     "react-resize-detector": "^9.1.0",
     "react-router-dom": "^6.16.0",
     "tss-react": "^4.9.2",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.1"
   }
 }
