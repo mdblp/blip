@@ -25,12 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkNavigationToDailyView } from '../assert/device-view.assert'
-import { patient1Id } from '../data/patient.api.data'
+import { screen } from '@testing-library/react'
 
-export const testDeviceSettingsNavigationForHcpAndCaregiver = async (router) => {
-  await checkNavigationToDailyView(router, `/patient/${patient1Id}/daily`)
-}
-export const testDeviceSettingsNavigationForPatient = async (router) => {
-  await checkNavigationToDailyView(router, '/daily')
+export const checkTargetAndAlertsViewContent = (): void => {
+  const targetAndAlertsContent = screen.getByTestId('target-and-alerts-container')
+  expect(targetAndAlertsContent).toHaveTextContent('Target & alerts')
+  expect(targetAndAlertsContent).toHaveTextContent('Monitoring alertsSet manually each value or apply care team values.')
 }

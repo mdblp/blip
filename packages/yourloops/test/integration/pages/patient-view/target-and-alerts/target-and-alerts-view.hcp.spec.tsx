@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,34 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { mockNotificationAPI } from '../../../mock/notification.api.mock'
+import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
+import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../../mock/team.api.mock'
+import { mockUserApi } from '../../../mock/user.api.mock'
+import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
+import { mockDataAPI } from '../../../mock/data.api.mock'
+import { AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../use-cases/app-main-layout-visualisation'
 import { act } from '@testing-library/react'
-import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../mock/team.api.mock'
-import { mockDataAPI, pumpSettingsData } from '../../mock/data.api.mock'
-import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { patient1Id } from '../../data/patient.api.data'
-import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
-import { renderPage } from '../../utils/render'
-import { mockUserApi } from '../../mock/user.api.mock'
-import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
-import { mockWindowResizer } from '../../mock/window-resizer.mock'
-import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
-import { testDeviceSettingsVisualisation } from '../../use-cases/device-settings-visualisation'
-import { testDeviceSettingsNavigationForHcpAndCaregiver } from '../../use-cases/device-settings-navigation'
+import { renderPage } from '../../../utils/render'
+import { patient1Id, patientWithMmolId } from '../../../data/patient.api.data'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import {
+  testMonitoringAlertsParametersConfigurationForPatientMgdl,
+  testMonitoringAlertsParametersConfigurationForPatientMmol
+} from '../../../use-cases/monitoring-alerts-parameters-management'
+import { testTargetAndAlertsViewContent } from '../../../use-cases/target-and-alerts-management'
+import { Settings } from '../../../../../lib/auth/models/settings.model'
+import { Unit } from 'medical-domain'
 
-describe('Device page for HCP', () => {
+describe('Target and alerts view for HCP', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
+  const targetAndAlertsRoute = `${AppUserRoute.Patient}/${patient1Id}${AppUserRoute.TargetAndAlerts}`
+  const patientTargetAndAlertsRouteMmoL = `${AppUserRoute.Patient}/${patientWithMmolId}${AppUserRoute.TargetAndAlerts}`
+
   beforeEach(() => {
-    mockWindowResizer()
     mockAuth0Hook()
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForHcp()
-    mockDataAPI(pumpSettingsData)
+    mockDataAPI()
   })
 
   it('should render correct layout', async () => {
@@ -68,23 +75,29 @@ describe('Device page for HCP', () => {
       }
     }
     await act(async () => {
-      renderPage(`/patient/${patient1Id}/device`)
+      renderPage(targetAndAlertsRoute)
     })
     await testAppMainLayoutForHcp(appMainLayoutParams)
   })
 
-  it('should display correct parameters', async () => {
+  it('should display the monitoring alerts configuration in mg/dL', async () => {
     await act(async () => {
-      renderPage(`/patient/${patient1Id}/device`)
+      renderPage(targetAndAlertsRoute)
     })
-    await testDeviceSettingsVisualisation()
+
+    testTargetAndAlertsViewContent()
+    await testMonitoringAlertsParametersConfigurationForPatientMgdl()
   })
 
-  it('should navigate to daily page when clicking on the daily button', async () => {
-    let router
+  it('should display the monitoring alerts configuration in mmol/L', async () => {
+    const mmolSettings: Settings = { units: { bg: Unit.MmolPerLiter } }
+    mockUserApi().mockUserDataFetch({ firstName, lastName, settings: mmolSettings })
+
     await act(async () => {
-      router = renderPage(`/patient/${patient1Id}/device`)
+      renderPage(patientTargetAndAlertsRouteMmoL)
     })
-    await testDeviceSettingsNavigationForHcpAndCaregiver(router)
+
+    testTargetAndAlertsViewContent()
+    await testMonitoringAlertsParametersConfigurationForPatientMmol()
   })
 })
