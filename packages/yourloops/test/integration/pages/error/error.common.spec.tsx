@@ -30,7 +30,7 @@ import React from 'react'
 import OnError from '../../../../app/error'
 import ErrorApi from '../../../../lib/error/error.api'
 import { act, render, screen } from '@testing-library/react'
-
+import * as uuidMocked from 'uuid'
 import crypto from 'crypto'
 import userEvent from '@testing-library/user-event'
 
@@ -42,6 +42,7 @@ Object.defineProperty(global, 'crypto', {
   }
 })
 
+jest.mock('uuid')
 describe('Error page', () => {
   const event = 'fakeEvent'
   const source = 'fakeSource'
@@ -59,24 +60,27 @@ describe('Error page', () => {
   }
 
   it('should display correct information and send error to bff', async () => {
+    const errorId = 'FakeErrorId'
     jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
+    jest.spyOn(uuidMocked, 'v4').mockReturnValueOnce(errorId)
+    jest.spyOn(uuidMocked, 'v4').mockReturnValueOnce('wrongErrorId')
 
     const expectPayload = {
       browserName: expect.any(String),
       browserVersion: expect.any(String),
       date: expect.any(String),
       err: expect.stringContaining(error),
-      errorId: expect.any(String),
+      errorId: errorId,
       path: url
     }
 
     await act(async () => {
       renderErrorPage()
     })
-    expect(screen.getByText('Sorry! Something went wrong.')).toBeVisible()
-    expect(screen.getByText('Please contact YourLoops support and forward them the error id:')).toBeVisible()
+    expect(screen.getByRole('dialog')).toHaveTextContent(`Sorry! Something went wrong.Please contact YourLoops support and forward them the error id:${errorId}`)
     const showMoreInfoButton = screen.getByText('Show more information')
     await userEvent.click(showMoreInfoButton)
+    expect(screen.getByRole('dialog')).toHaveTextContent(`Sorry! Something went wrong.Please contact YourLoops support and forward them the error id:${errorId}`)
     expect(screen.getByTestId('error-stacktrace')).toHaveTextContent(/fakeEvent Source: fakeSource:12:56 Error: This is the error we are supposed to throw to harbour Stack: Error: This is the error we are supposed to throw to harbour/)
     expect(ErrorApi.sendError).toHaveBeenCalledWith(expectPayload)
     expect(screen.queryByText('Show more information')).not.toBeInTheDocument()
