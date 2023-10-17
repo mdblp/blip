@@ -56,6 +56,9 @@ interface BasicData {
     bolus: {
       data: Datum[]
     }
+    pumpSettings: {
+      data: Datum[]
+    }
     wizard: {
       data: Datum[]
     }
@@ -95,11 +98,11 @@ export function generateBasicData(medicalData: MedicalData, startEpoch: number, 
       bolus: {
         data: selectData(medicalData.bolus)
       },
-      wizard: {
-        data: selectData(medicalData.wizards)
-      },
       pumpSettings: {
         data: medicalData.pumpSettings
+      },
+      wizard: {
+        data: selectData(medicalData.wizards)
       }
     }
   }
