@@ -51,12 +51,15 @@ import { useAuth } from '../../lib/auth'
 import { DeviceView } from '../../pages/patient-view/device/device-view'
 import { setPageTitle } from '../../lib/utils'
 import { TargetAndAlertsView } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import TeamUtils from '../../lib/team/team.util'
 
 export const PatientData: FunctionComponent = () => {
   const alert = useAlert()
   const theme = useTheme()
   const { t } = useTranslation()
   const patientIdForWhichDataHasBeenFetched = useRef(null)
+  const { selectedTeam } = useSelectedTeamContext()
 
   const {
     bgPrefs,
@@ -225,7 +228,7 @@ export const PatientData: FunctionComponent = () => {
                     }
                   />
                   {
-                    user.isUserHcp() &&
+                    user.isUserHcp() && !TeamUtils.isPrivate(selectedTeam) &&
                     <Route
                       path={AppUserRoute.TargetAndAlerts}
                       element={

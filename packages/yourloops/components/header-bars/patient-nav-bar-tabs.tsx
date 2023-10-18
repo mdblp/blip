@@ -41,6 +41,8 @@ import { PatientView } from '../../enum/patient-view.enum'
 import PhonelinkSetupOutlinedIcon from '@mui/icons-material/PhonelinkSetupOutlined'
 import { AddAlertOutlined } from '@mui/icons-material'
 import { useAuth } from '../../lib/auth'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import TeamUtils from '../../lib/team/team.util'
 
 interface PatientNavBarTabsProps {
   currentPatientView: PatientView
@@ -80,6 +82,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
   const { t } = useTranslation()
   const { classes } = styles()
   const { user } = useAuth()
+  const { selectedTeam } = useSelectedTeamContext()
 
   const getSelectedTab = (): PatientView => {
     return currentPatientView ?? PatientView.Dashboard
@@ -95,7 +98,9 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           iconPosition="start"
           label={t('dashboard')}
           icon={<DashboardOutlinedIcon />}
-          onClick={() => { onChangePatientView(PatientView.Dashboard) }}
+          onClick={() => {
+            onChangePatientView(PatientView.Dashboard)
+          }}
           classes={{
             root: classes.root
           }}
@@ -107,7 +112,9 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           iconPosition="start"
           label={t('daily')}
           icon={<Today />}
-          onClick={() => { onChangePatientView(PatientView.Daily) }}
+          onClick={() => {
+            onChangePatientView(PatientView.Daily)
+          }}
           classes={{
             root: classes.root
           }}
@@ -119,12 +126,14 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           iconPosition="start"
           label={t('trends')}
           icon={<TrendingUp />}
-          onClick={() => { onChangePatientView(PatientView.Trends) }}
+          onClick={() => {
+            onChangePatientView(PatientView.Trends)
+          }}
           classes={{
             root: classes.root
           }}
         />
-        {user.isUserHcp() &&
+        {user.isUserHcp() && !TeamUtils.isPrivate(selectedTeam) &&
           <Tab
             className={classes.tab}
             value={PatientView.TargetAndAlerts}
@@ -132,7 +141,9 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
             iconPosition="start"
             label={t('target-and-alerts')}
             icon={<AddAlertOutlined />}
-            onClick={() => { onChangePatientView(PatientView.TargetAndAlerts) }}
+            onClick={() => {
+              onChangePatientView(PatientView.TargetAndAlerts)
+            }}
             classes={{
               root: classes.root
             }}
@@ -145,7 +156,9 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           iconPosition="start"
           label={t('device')}
           icon={<PhonelinkSetupOutlinedIcon />}
-          onClick={() => { onChangePatientView(PatientView.Device) }}
+          onClick={() => {
+            onChangePatientView(PatientView.Device)
+          }}
           classes={{
             root: classes.root
           }}

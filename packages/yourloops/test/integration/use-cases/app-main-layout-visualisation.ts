@@ -33,6 +33,7 @@ import {
   type HeaderInfo
 } from '../assert/header.assert'
 import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from '../assert/footer.assert'
+import { checkPatientNavBarAsHcp, checkPatientNavBarAsHcpInPrivateTeam } from '../assert/patient-nav-bar.assert'
 
 export interface AppMainLayoutHcpParams {
   footerHasLanguageSelector?: boolean
@@ -61,4 +62,12 @@ export const testAppMainLayoutForPatient = async (appMainLayoutParams: AppMainLa
 
 export const testBannerLanguageUpdate = async () => {
   await checkBannerLanguageChange()
+}
+
+export const testPatientNavBarLayoutForHcp = () => {
+  checkPatientNavBarAsHcp()
+}
+
+export const testPatientNavBarLayoutForHcpInPrivateTeam = () => {
+  checkPatientNavBarAsHcpInPrivateTeam()
 }
