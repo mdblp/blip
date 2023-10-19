@@ -36,6 +36,8 @@ import Button from '@mui/material/Button'
 import GetAppIcon from '@mui/icons-material/GetApp'
 import { PatientView } from '../../enum/patient-view.enum'
 import { useAuth } from '../../lib/auth'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import TeamUtils from '../../lib/team/team.util'
 
 interface PatientNavBarTabsProps {
   currentPatientView: PatientView
@@ -74,6 +76,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
   const { t } = useTranslation()
   const { classes } = styles()
   const { user } = useAuth()
+  const { selectedTeam } = useSelectedTeamContext()
 
   const getSelectedTab = (): PatientView => {
     return currentPatientView ?? PatientView.Dashboard
@@ -121,7 +124,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
             root: classes.root
           }}
         />
-        {user.isUserHcp() &&
+        {user.isUserHcp() && !TeamUtils.isPrivate(selectedTeam) &&
           <Tab
             className={classes.tab}
             value={PatientView.TargetAndAlerts}
