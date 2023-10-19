@@ -49,7 +49,11 @@ import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { type Settings } from '../../../../../lib/auth/models/settings.model'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.hook'
 import { UserInviteStatus } from '../../../../../lib/team/models/enums/user-invite-status.enum'
-import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../use-cases/app-main-layout-visualisation'
+import {
+  type AppMainLayoutHcpParams,
+  testAppMainLayoutForHcp,
+  testPatientNavBarLayoutForHcp, testPatientNavBarLayoutForHcpInPrivateTeam
+} from '../../../use-cases/app-main-layout-visualisation'
 import {
   testDashboardDataVisualisationForHcp,
   testDashboardDataVisualisationNoDataForHcp,
@@ -114,6 +118,7 @@ describe('Dashboard view for HCP', () => {
     })
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
+    testPatientNavBarLayoutForHcp()
     await testDashboardDataVisualisationForHcp(patientDashboardLayoutParams)
   })
 
@@ -202,6 +207,18 @@ describe('Dashboard view for HCP', () => {
     }])
     jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockResolvedValue([patient1Metrics])
 
+
+    const appMainLayoutParams: AppMainLayoutHcpParams = {
+      footerHasLanguageSelector: false,
+      headerInfo: {
+        loggedInUserFullName: `${firstName} ${lastName}`,
+        teamMenuInfo: {
+          isSelectedTeamPrivate: true,
+          availableTeams: buildAvailableTeams()
+        }
+      }
+    }
+
     const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
       isChatCardVisible: false,
       isMedicalFilesCardVisible: false,
@@ -212,6 +229,8 @@ describe('Dashboard view for HCP', () => {
       renderPage(patientDashboardRoute)
     })
 
+    await testAppMainLayoutForHcp(appMainLayoutParams)
+    testPatientNavBarLayoutForHcpInPrivateTeam()
     await testDashboardDataVisualisationPrivateTeamNoData(patientDashboardLayoutParams)
   })
 

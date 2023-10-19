@@ -33,7 +33,7 @@ import { initReactI18next } from 'react-i18next'
 
 import locales from '../../../locales/languages.json'
 import { type Country } from './auth/models/country.model'
-import getLocale from './browser-locale'
+import { getBrowserLocale } from './browser'
 import metrics from './metrics'
 import { zendeskLocale } from './zendesk'
 import { type LanguageCodes } from './auth/models/enums/language-codes.enum'
@@ -45,7 +45,7 @@ const availableCountries: Country[] = _.map(locales.countries, (item, key) => {
 
 
 export const getLanguage = (): LanguageCodes => {
-  return (localStorage.getItem('lang') || getLocale() || 'en') as LanguageCodes
+  return (localStorage.getItem('lang') || getBrowserLocale() || 'en') as LanguageCodes
 }
 
 let language: LanguageCodes = getLanguage()

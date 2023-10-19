@@ -27,8 +27,6 @@
 
 import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import AssignmentIcon from '@mui/icons-material/Assignment'
 import CardContent from '@mui/material/CardContent'
 import MedicalReportList from './medical-report-list'
 import { type Patient } from '../../../lib/patient/models/patient.model'
@@ -55,7 +53,6 @@ const MedicalFilesWidget: FunctionComponent<MedicalFilesWidgetProps> = (props) =
 
   return (
     <GenericDashboardCard
-      avatar={<AssignmentIcon />}
       title={t('medical-files')}
       data-testid="medical-files-card"
     >
