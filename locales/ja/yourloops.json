@@ -547,6 +547,7 @@
   "units": "単位",
   "until": "期日",
   "updated": "更新済",
+  "use-supported-browser": "For a better user experience, it is advised to use Google Chrome on desktop.",
   "user-name": "{{lastName}} {{firstName}}",
   "variance": "CV値",
   "verify-email": "メール認証",
