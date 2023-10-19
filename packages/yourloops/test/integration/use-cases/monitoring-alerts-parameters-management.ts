@@ -29,7 +29,9 @@ import {
   checkMonitoringAlertsContentForPatientMgdl,
   checkMonitoringAlertsContentForPatientMmol,
   checkMonitoringAlertsDialogDefaultButtonMgdl,
-  checkMonitoringAlertsForPatientSaveButtonMmol, checkMonitoringAlertsLinkToTargetAndAlerts,
+  checkMonitoringAlertsForPatientDiscardButton,
+  checkMonitoringAlertsForPatientSaveButtonMmol,
+  checkMonitoringAlertsLinkToTargetAndAlerts,
   checkMonitoringAlertsParametersTeamAdmin,
   checkMonitoringAlertsParametersTeamMember
 } from '../assert/monitoring-alerts-parameters.assert'
@@ -41,6 +43,7 @@ export const testMonitoringAlertsParametersConfigurationForPatientMgdl = async (
 
 export const testMonitoringAlertsParametersConfigurationForPatientMmol = async (): Promise<void> => {
   await checkMonitoringAlertsContentForPatientMmol()
+  await checkMonitoringAlertsForPatientDiscardButton()
   await checkMonitoringAlertsForPatientSaveButtonMmol()
 }
 
