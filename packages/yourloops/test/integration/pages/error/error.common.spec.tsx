@@ -31,16 +31,8 @@ import OnError from '../../../../app/error'
 import ErrorApi from '../../../../lib/error/error.api'
 import { act, render, screen } from '@testing-library/react'
 import * as uuidMocked from 'uuid'
-import crypto from 'crypto'
+import * as deviceDetect from 'react-device-detect'
 import userEvent from '@testing-library/user-event'
-
-// window.crypto is not defined in jest...
-Object.defineProperty(global, 'crypto', {
-  value: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getRandomValues: (arr: any) => crypto.randomBytes(arr.length)
-  }
-})
 
 jest.mock('uuid')
 describe('Error page', () => {
@@ -64,6 +56,8 @@ describe('Error page', () => {
     jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
     jest.spyOn(uuidMocked, 'v4').mockReturnValueOnce(errorId)
     jest.spyOn(uuidMocked, 'v4').mockReturnValueOnce('wrongErrorId')
+    Object.defineProperty(deviceDetect, 'isChrome', { get: () => false })
+    Object.defineProperty(deviceDetect, 'isDesktop', { get: () => true })
 
     const expectPayload = {
       browserName: expect.any(String),
@@ -77,12 +71,27 @@ describe('Error page', () => {
     await act(async () => {
       renderErrorPage()
     })
-    expect(screen.getByRole('dialog')).toHaveTextContent(`Sorry! Something went wrong.Please contact YourLoops support and forward them the error id:${errorId}`)
+    expect(screen.getByRole('dialog')).toHaveTextContent(`Sorry! Something went wrong.For a better user experience, it is advised to use Google Chrome on desktop.Please contact YourLoops support and forward them the error id:${errorId}`)
     const showMoreInfoButton = screen.getByText('Show more information')
     await userEvent.click(showMoreInfoButton)
-    expect(screen.getByRole('dialog')).toHaveTextContent(`Sorry! Something went wrong.Please contact YourLoops support and forward them the error id:${errorId}`)
+    expect(screen.getByRole('dialog')).toHaveTextContent(`Sorry! Something went wrong.For a better user experience, it is advised to use Google Chrome on desktop.Please contact YourLoops support and forward them the error id:${errorId}`)
     expect(screen.getByTestId('error-stacktrace')).toHaveTextContent(/fakeEvent Source: fakeSource:12:56 Error: This is the error we are supposed to throw to harbour Stack: Error: This is the error we are supposed to throw to harbour/)
     expect(ErrorApi.sendError).toHaveBeenCalledWith(expectPayload)
     expect(screen.queryByText('Show more information')).not.toBeInTheDocument()
+    jest.spyOn(uuidMocked, 'v4').mockReset()
+  })
+
+  it('should not display message about using chrome when already on chrome desktop', async () => {
+    const errorId = 'FakeErrorId'
+    jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
+    jest.spyOn(uuidMocked, 'v4').mockReturnValueOnce(errorId)
+
+    Object.defineProperty(deviceDetect, 'isChrome', { get: () => true })
+    Object.defineProperty(deviceDetect, 'isDesktop', { get: () => true })
+
+    await act(async () => {
+      renderErrorPage()
+    })
+    expect(screen.getByRole('dialog')).toHaveTextContent(`Sorry! Something went wrong.Please contact YourLoops support and forward them the error id:${errorId}`)
   })
 })

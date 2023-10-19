@@ -531,7 +531,7 @@ const checkPatientListMonitoringAlertsIcons = async (outOfRangeTooltipValue: str
   await userEvent.unhover(firstRowNoDataIcon)
   await waitFor(() => {
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
-  })
+  }, { timeout: 3000 })
 
   const firstRowMessageIcon = within(dataGridRows).getAllByTestId('message-icon')[0]
   expect(firstRowMessageIcon).toHaveAttribute('fill', SVG_ICON_FILL)

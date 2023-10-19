@@ -44,6 +44,9 @@ import ErrorApi from '../lib/error/error.api'
 import { v4 as uuidv4 } from 'uuid'
 import moment from 'moment-timezone'
 import { useLocation } from 'react-router-dom'
+import Alert from '@mui/material/Alert'
+import Box from '@mui/material/Box'
+import { isBrowserOfficiallySupported } from '../lib/browser'
 
 interface OnErrorProps {
   event: Event | string
@@ -108,6 +111,11 @@ function OnError(props: OnErrorProps): JSX.Element {
     >
       <DialogTitle>{t('app-crash-title')}</DialogTitle>
       <DialogContent>
+        {!isBrowserOfficiallySupported() &&
+          <Box marginBottom={theme.spacing(1)} maxWidth={600}>
+            <Alert severity="info" sx={{ borderRadius: '12px' }}>{t('use-supported-browser')}</Alert>
+          </Box>
+        }
         <DialogContentText color="textPrimary">
           {t('app-crash-text')}
           <span className={style.errorId}>{errorId}</span>

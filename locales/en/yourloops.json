@@ -547,6 +547,7 @@
   "units": "Units",
   "until": "Until",
   "updated": "Updated",
+  "use-supported-browser": "For a better user experience, it is advised to use Google Chrome on desktop.",
   "user-name": "{{firstName}} {{lastName}}",
   "variance": "CV",
   "verify-email": "Email verification",
