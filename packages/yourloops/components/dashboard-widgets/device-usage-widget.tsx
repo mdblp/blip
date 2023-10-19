@@ -38,23 +38,13 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
-import PhonelinkSetupOutlinedIcon from '@mui/icons-material/PhonelinkSetupOutlined'
 import { BasicsChart } from 'tideline'
 import type MedicalDataService from 'medical-domain'
-import {
-  GlycemiaStatisticsService,
-  type DateFilter,
-  type PumpSettings,
-  type TimePrefs
-} from 'medical-domain'
+import { type DateFilter, GlycemiaStatisticsService, type PumpSettings, type TimePrefs } from 'medical-domain'
 import metrics from '../../lib/metrics'
 import GenericDashboardCard from './generic-dashboard-card'
 import { SensorUsageStat } from '../statistics/sensor-usage-stat'
-import {
-  getPumpSettingsParameterList,
-  formatParameterValue,
-  sortHistory
-} from '../device/utils/device.utils'
+import { formatParameterValue, getPumpSettingsParameterList, sortHistory } from '../device/utils/device.utils'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { type BgPrefs } from 'dumb'
 import { formatDateWithMomentLongFormat } from '../../lib/utils'
@@ -130,7 +120,6 @@ export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
 
   return (
     <GenericDashboardCard
-      avatar={<PhonelinkSetupOutlinedIcon />}
       title={t('device-usage')}
       data-testid="device-usage-card"
     >

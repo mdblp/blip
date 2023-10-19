@@ -32,19 +32,20 @@ import { makeStyles } from 'tss-react/mui'
 
 interface GenericDashboardCardProps {
   action?: JSX.Element
-  avatar: JSX.Element
   title: string
   width?: string
   ['data-testid']?: string
 }
 
-const useStyles = makeStyles()(() => ({
+const useStyles = makeStyles()((theme) => ({
   header: {
     backgroundColor: 'var(--card-header-background-color)',
     height: 58,
     textTransform: 'uppercase'
   },
   headerTitle: {
+    marginLeft: theme.spacing(2),
+    fontSize: '14px',
     fontWeight: 600
   }
 }))
@@ -58,7 +59,6 @@ const GenericDashboardCard: FunctionComponent<PropsWithChildren<GenericDashboard
         data-testid="card-header"
         className={classes.header}
         classes={{ title: classes.headerTitle }}
-        avatar={props.avatar}
         title={props.title}
         action={props.action}
       />

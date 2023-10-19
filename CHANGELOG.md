@@ -15,6 +15,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2610 Direct link from Monitoring alerts card to "Target & alerts" view
 - YLP-2630 As a user, I would like to be notified with a banner when there are ongoing issues with yourloops
 - YLP-2652 Improve error message on app crash
+- YLP-2668 Remove icons of the tabs and widget titles
 
 ### Fixed
 - YLP-2438 Inconsistency in the daily view between carbs displayed on the graph and Total carbs in the statistics panel
