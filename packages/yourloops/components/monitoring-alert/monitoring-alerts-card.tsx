@@ -30,7 +30,6 @@ import { useTranslation } from 'react-i18next'
 
 import { makeStyles } from 'tss-react/mui'
 import { Box, IconButton, Skeleton } from '@mui/material'
-import AnnouncementIcon from '@mui/icons-material/Announcement'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
 import CardContent from '@mui/material/CardContent'
@@ -42,7 +41,7 @@ import PatientUtils from '../../lib/patient/patient.util'
 import { useNavigate } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { MONITORING_ALERTS_SECTION_ID } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
-import { FilterCenterFocus } from '@mui/icons-material'
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 
 const monitoringAlertsCardStyles = makeStyles()((theme) => {
   return {
@@ -85,7 +84,6 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
 
   return (
     <GenericDashboardCard
-      avatar={<AnnouncementIcon className={noActiveMonitoringAlert ? '' : classes.alertColor} />}
       title={`${t('monitoring-alerts')}${numberOfMonitoringAlertsLabel}`}
       data-testid="monitoring-alerts-card"
       action={user.isUserHcp() &&
@@ -100,7 +98,7 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
           }}
           size="small"
         >
-          <FilterCenterFocus />
+          <SettingsOutlinedIcon />
         </IconButton>
       }
     >

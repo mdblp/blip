@@ -14,6 +14,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2609 Moved patient monitoring alerts configuration to a dedicated view for HCP
 - YLP-2610 Direct link from Monitoring alerts card to "Target & alerts" view
 - YLP-2630 As a user, I would like to be notified with a banner when there are ongoing issues with yourloops
+- YLP-2668 Remove icons of the tabs and widget titles
 - YLP-2670 Remove target & alerts view from "private practice"
 
 ### Fixed

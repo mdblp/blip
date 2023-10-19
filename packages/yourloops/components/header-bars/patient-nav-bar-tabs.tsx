@@ -28,9 +28,6 @@
 import React, { type FunctionComponent, type MouseEventHandler } from 'react'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
-import Today from '@mui/icons-material/Today'
-import TrendingUp from '@mui/icons-material/TrendingUp'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { makeStyles } from 'tss-react/mui'
@@ -38,8 +35,6 @@ import { type Theme } from '@mui/material/styles'
 import Button from '@mui/material/Button'
 import GetAppIcon from '@mui/icons-material/GetApp'
 import { PatientView } from '../../enum/patient-view.enum'
-import PhonelinkSetupOutlinedIcon from '@mui/icons-material/PhonelinkSetupOutlined'
-import { AddAlertOutlined } from '@mui/icons-material'
 import { useAuth } from '../../lib/auth'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import TeamUtils from '../../lib/team/team.util'
@@ -66,7 +61,6 @@ const styles = makeStyles()((theme: Theme) => {
     },
     tab: {
       fontWeight: 'bold',
-      marginRight: theme.spacing(5),
       fontSize: theme.typography.htmlFontSize,
       color: 'var(--text-color-primary)'
     }
@@ -97,7 +91,6 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           data-testid="dashboard-tab"
           iconPosition="start"
           label={t('dashboard')}
-          icon={<DashboardOutlinedIcon />}
           onClick={() => {
             onChangePatientView(PatientView.Dashboard)
           }}
@@ -111,7 +104,6 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           data-testid="daily-tab"
           iconPosition="start"
           label={t('daily')}
-          icon={<Today />}
           onClick={() => {
             onChangePatientView(PatientView.Daily)
           }}
@@ -125,7 +117,6 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           data-testid="trends-tab"
           iconPosition="start"
           label={t('trends')}
-          icon={<TrendingUp />}
           onClick={() => {
             onChangePatientView(PatientView.Trends)
           }}
@@ -140,7 +131,6 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
             data-testid="target-and-alerts-tab"
             iconPosition="start"
             label={t('target-and-alerts')}
-            icon={<AddAlertOutlined />}
             onClick={() => {
               onChangePatientView(PatientView.TargetAndAlerts)
             }}
@@ -155,7 +145,6 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           data-testid="device-tab"
           iconPosition="start"
           label={t('device')}
-          icon={<PhonelinkSetupOutlinedIcon />}
           onClick={() => {
             onChangePatientView(PatientView.Device)
           }}
