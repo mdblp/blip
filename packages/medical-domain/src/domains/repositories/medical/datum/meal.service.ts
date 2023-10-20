@@ -65,7 +65,6 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     ...base,
     type: DatumType.Food,
     meal: 'rescuecarbs',
-    uploadId: rawData.uploadId as string,
     nutrition,
     prescribedNutrition,
     prescriptor

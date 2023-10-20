@@ -361,9 +361,6 @@ describe('MedicalDataService', () => {
         deviceParameter: {
           data: []
         },
-        upload: {
-          data: []
-        },
         cbg: {
           data: []
         },

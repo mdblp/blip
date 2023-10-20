@@ -23,7 +23,7 @@ export function selectDailyViewData(medicalData: any, startDate: moment.Moment, 
     bgRange: any[];
     bolusRange: [string, string] | [undefined, undefined];
     dateRange: any[];
-    latestPumpUpload: any;
+    pumpSettings: any;
     timezone: any;
 };
 /**

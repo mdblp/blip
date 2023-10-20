@@ -50,7 +50,6 @@ import { User } from '../../../../../lib/auth'
 import { when } from 'jest-when'
 import { patient2AsTeamMember } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
-import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
 describe('Daily view for anyone', () => {
@@ -59,7 +58,6 @@ describe('Daily view for anyone', () => {
   beforeEach(() => {
     mockWindowResizer()
     mockPatientLogin(patient2AsTeamMember)
-    mockPatientApiForPatients()
   })
 
   afterEach(() => {
@@ -137,10 +135,10 @@ describe('Daily view for anyone', () => {
       expect(generateReportDialogFirstPdf.getByText('Cancel')).toBeVisible()
 
       const createElementSpy = jest.spyOn(document, 'createElement')
-      const appenChildSpy = jest.spyOn(document.body, 'appendChild')
+      const appendChildSpy = jest.spyOn(document.body, 'appendChild')
 
       when(createElementSpy).calledWith('a').mockReturnValueOnce(downloadLinkElement as unknown as HTMLElement)
-      when(appenChildSpy).calledWith(downloadLinkElement).mockReturnValueOnce(null)
+      when(appendChildSpy).calledWith(downloadLinkElement).mockReturnValueOnce(null)
 
       await userEvent.click(generateReportDialogFirstPdf.getByText('Download'))
 
@@ -159,7 +157,7 @@ describe('Daily view for anyone', () => {
       expect(generateReportDialogFirstCsv.getByTestId('button-calendar-day-2020-01-15')).toHaveAttribute('aria-selected', 'true')
 
       when(createElementSpy).calledWith('a').mockReturnValueOnce(downloadLinkElement as unknown as HTMLElement)
-      when(appenChildSpy).calledWith(downloadLinkElement).mockReturnValueOnce(null)
+      when(appendChildSpy).calledWith(downloadLinkElement).mockReturnValueOnce(null)
 
       await userEvent.click(generateReportDialogFirstCsv.getByText('Download'))
 
