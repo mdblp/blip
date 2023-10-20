@@ -31,7 +31,7 @@ import MedicalDataService, { TimeService, Unit } from 'medical-domain'
 import DataApi from '../../../../lib/data/data.api'
 import { dataRangeMock, messagesMock, patientDataMock } from './patient-data.mock'
 import PartialDataLoad from 'blip/app/core/lib/partial-data-load'
-import { ChartTypes } from '../../../../enum/chart-type.enum'
+import { PatientView } from '../../../../enum/patient-view.enum'
 import { medicalServiceResult, mockdata, mockdataFromApi } from './data.mock'
 
 function createNewPatientDataUtils(): PatientDataUtils {
@@ -98,12 +98,12 @@ describe('Patient data utils', () => {
         const patientDataUtils = createNewPatientDataUtils()
         await patientDataUtils.retrievePatientData()
         const trendsDateRange = patientDataUtils.getDateRange({
-          currentChart: ChartTypes.Trends,
+          currentPatientView: PatientView.Trends,
           epochLocation: new Date('2023-04-01T00:00:00.000Z').getTime(),
           msRange: TimeService.MS_IN_DAY
         })
         const dailyDateRange = patientDataUtils.getDateRange({
-          currentChart: ChartTypes.Trends,
+          currentPatientView: PatientView.Trends,
           epochLocation: new Date('2023-03-01T00:00:00.000Z').getTime(),
           msRange: TimeService.MS_IN_DAY
         })

@@ -139,9 +139,6 @@ describe('print data utils', () => {
         smbg: [
           new types.SMBG({ deviceTime: '2019-05-26T11:20:27', timezone: 'Europe/Paris' })
         ],
-        uploads: [
-          new types.Upload({ deviceTime: '2019-05-20T08:59:37', timezone: 'Europe/Paris' })
-        ],
         warmUps: [],
         wizards: [
           new types.Wizard({ deviceTime: '2019-05-22T14:33:15', timezone: 'Europe/Paris' })

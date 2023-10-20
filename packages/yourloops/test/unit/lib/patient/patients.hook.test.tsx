@@ -108,7 +108,7 @@ describe('Patients hook', () => {
     return hook
   }
 
-  describe('filterPatients', () => {
+  describe('searchPatients', () => {
     const pendingPatient = createPatient('pendingPatient', UserInviteStatus.Pending, undefined, { birthdate: new Date(2001, 10, 19).toString() })
     const basicPatient = createPatient('basicPatient1', UserInviteStatus.Accepted, undefined, {
       birthdate: new Date(2005, 5, 5).toString(),
@@ -126,8 +126,14 @@ describe('Patients hook', () => {
     })
     noNamePatient.profile.firstName = undefined
     noNamePatient.profile.lastName = undefined
+    const mediumBrainPatient = createPatient('medium brain', UserInviteStatus.Accepted, undefined, {
+      birthdate: new Date(2005, 5, 5).toString(),
+      fullName: 'Medium brain'
+    })
+    mediumBrainPatient.profile.firstName = undefined
+    mediumBrainPatient.profile.lastName = undefined
 
-    const allPatients = [basicPatient, basicPatient2, bigBrainPatient, noNamePatient, pendingPatient]
+    const allPatients = [basicPatient, basicPatient2, bigBrainPatient, noNamePatient, pendingPatient, mediumBrainPatient]
     let customHook
 
     beforeAll(async () => {
@@ -138,6 +144,11 @@ describe('Patients hook', () => {
     it('should return correct patients when provided a first name search filter', () => {
       const patientsReceived = customHook.searchPatients('big brain')
       expect(patientsReceived).toEqual([bigBrainPatient])
+    })
+
+    it('should return correct patients when provided a name search filter but patient only has a fullname', () => {
+      const patientsReceived = customHook.searchPatients('medium')
+      expect(patientsReceived).toEqual([mediumBrainPatient])
     })
 
     it('should return correct patients when provided a date search filter', () => {
@@ -225,7 +236,7 @@ describe('Patients hook', () => {
 
       await act(async () => {
         await customHook.invitePatient(team1, 'new-patient@mail.com')
-        expect(computePatientsSpy).toBeCalledTimes(1)
+        expect(computePatientsSpy).toHaveBeenCalledTimes(1)
       })
     })
 
@@ -246,7 +257,7 @@ describe('Patients hook', () => {
       })
       await waitFor(() => {
         expect(customHook.patients.length).toEqual(initialPatientsLength)
-        expect(computePatientsSpy).toBeCalledTimes(1)
+        expect(computePatientsSpy).toHaveBeenCalledTimes(1)
       })
     })
   })
@@ -285,22 +296,6 @@ describe('Patients hook', () => {
       })
       expect(removeDirectShareMock).toHaveBeenCalled()
       expect(PatientUtils.computePatients).toHaveBeenCalledTimes(2)
-    })
-
-    it.skip('should unflag a patient when he no longer belongs to a team', async () => {
-      const res = await renderPatientsHook(allPatients)
-      const customHook = res.result.current
-      const invitation = { id: 'fakeInvitationId', email: 'fakeInvitationEmail' } as Notification
-      getInvitationMock.mockReturnValue(invitation)
-      jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
-      await act(async () => {
-        await customHook.removePatient(patientToRemove)
-      })
-      await waitFor(() => {
-        expect(customHook.getPatientById(patientToRemove.userid)).toBeUndefined()
-      })
-      expect(authHookGetFlagPatientMock).toHaveBeenCalled()
-      expect(authHookFlagPatientMock).toHaveBeenCalled()
     })
 
     it('should update patient when he still belongs to a team', async () => {

@@ -21,15 +21,12 @@ import bows from 'bows'
 import moment from 'moment-timezone'
 import ReactResizeDetector from 'react-resize-detector'
 import i18next from 'i18next'
-
 import { chartDailyFactory } from 'tideline'
-import { DatumType, TimeService } from 'medical-domain'
-
+import { TimeService } from 'medical-domain'
 import { components as vizComponents } from 'tidepool-viz'
-
-import { BG_DATA_TYPES } from '../../core/constants'
 import Footer from './footer'
 import {
+  AlarmEventTooltip,
   BloodGlucoseTooltip,
   BolusTooltip,
   ConfidentialTooltip,
@@ -40,9 +37,7 @@ import {
 } from 'dumb'
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
-import { ChartTypes } from 'yourloops/enum/chart-type.enum'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
-import Stats from './stats'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import metrics from 'yourloops/lib/metrics'
 
@@ -78,6 +73,7 @@ class DailyChart extends React.Component {
     onPhysicalHover: PropTypes.func.isRequired,
     onParameterHover: PropTypes.func.isRequired,
     onWarmUpHover: PropTypes.func.isRequired,
+    onAlarmEventHover: PropTypes.func.isRequired,
     onConfidentialHover: PropTypes.func.isRequired,
     onTooltipOut: PropTypes.func.isRequired,
     onChartMounted: PropTypes.func.isRequired,
@@ -100,6 +96,7 @@ class DailyChart extends React.Component {
       'onParameterHover',
       'onConfidentialHover',
       'onWarmUpHover',
+      'onAlarmEventHover',
       'onTooltipOut',
       'trackMetric'
     ]
@@ -263,8 +260,6 @@ class Daily extends React.Component {
   static propTypes = {
     patient: PropTypes.object.isRequired,
     bgPrefs: PropTypes.object.isRequired,
-    bgSource: PropTypes.oneOf(BG_DATA_TYPES),
-    dataUtil: PropTypes.object,
     timePrefs: PropTypes.object.isRequired,
     epochLocation: PropTypes.number.isRequired,
     msRange: PropTypes.number.isRequired,
@@ -343,7 +338,7 @@ class Daily extends React.Component {
 
     return (
       <div id="tidelineMain" className="daily">
-        <Box className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
+        <Box data-testid="daily-view-content" className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
           <Box display="flex">
             {this.state.chartMounted &&
               <DailyDatePicker
@@ -361,8 +356,8 @@ class Daily extends React.Component {
               />
             }
           </Box>
-          <Box display="flex" ref={this.refToAttachResize}>
-            <div className="container-box-inner patient-data-content-inner">
+          <Box className="chart-with-stats-wrapper" ref={this.refToAttachResize}>
+            <div className="container-box-inner patient-data-content-inner light-rounded-border">
               <div className="patient-data-content">
                 {loading && <SpinningLoader className="centered-spinning-loader" />}
                 <DailyChart
@@ -388,6 +383,7 @@ class Daily extends React.Component {
                   onPhysicalHover={this.handlePhysicalHover}
                   onParameterHover={this.handleParameterHover}
                   onWarmUpHover={this.handleWarmUpHover}
+                  onAlarmEventHover={this.handleAlarmEventHover}
                   onConfidentialHover={this.handleConfidentialHover}
                   onTooltipOut={this.handleTooltipOut}
                   onChartMounted={this.onChartMounted}
@@ -395,30 +391,21 @@ class Daily extends React.Component {
                   ref={this.chartRef}
                 />
               </div>
+              <Box marginBlock={2}>
+                <Footer onClickRefresh={this.props.onClickRefresh} />
+              </Box>
             </div>
             <div className="container-box-inner patient-data-sidebar">
               <div className="patient-data-sidebar-inner">
                 <PatientStatistics
                   medicalData={tidelineData.medicalData}
                   bgPrefs={this.props.bgPrefs}
-                  bgType={this.props.dataUtil.bgSource}
                   dateFilter={dateFilter}
-                >
-                  <Stats
-                    bgPrefs={this.props.bgPrefs}
-                    bgSource={DatumType.Cbg}
-                    chartPrefs={null}
-                    chartType={ChartTypes.Daily}
-                    dataUtil={this.props.dataUtil}
-                    endpoints={endpoints}
-                    loading={loading}
-                  />
-                </PatientStatistics>
+                />
               </div>
             </div>
           </Box>
         </Box>
-        <Footer onClickRefresh={this.props.onClickRefresh} />
         {tooltip}
       </div>
     )
@@ -657,6 +644,22 @@ class Daily extends React.Component {
     this.setState({ tooltip })
   }
 
+  handleAlarmEventHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum)
+    const tooltip = (
+      <AlarmEventTooltip
+        alarmEvent={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        bgPrefs={datum.bgPrefs}
+        timePrefs={datum.timePrefs}
+      />)
+    this.setState({ tooltip })
+  }
+
   handleConfidentialHover = (datum) => {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
@@ -674,7 +677,7 @@ class Daily extends React.Component {
 
   /**
    * Update the daily view by adding the new message
-   * @param {object} message A nurseshark processed message
+   * @param {object} message A processed message
    * @return {Promise<boolean>} true if the message was added
    */
   createMessage = (message) => {
@@ -683,7 +686,7 @@ class Daily extends React.Component {
 
   /**
    * Update the daily view message
-   * @param {object} message A nurseshark processed message
+   * @param {object} message A processed message
    * @return {boolean} true if the message was correctly updated
    */
   editMessage = (message) => {

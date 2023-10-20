@@ -32,46 +32,64 @@ import Box from '@mui/material/Box'
 import { LoopModePercentageDetail } from './loop-mode-percentage-detail'
 import { LoopModeLabel } from './loop-mode-label'
 import { LoopModeGraph } from './loop-mode-graph'
+import { useLocation } from 'react-router-dom'
+import { t } from 'i18next'
+import { ensureNumeric } from '../stats.util'
 
 interface LoopModeStatProps {
-  annotations: []
-  automated: number
-  manual: number
-  title: string
-  total: number
+  automatedBasalDuration: number
+  manualBasalDuration: number
+  manualPercentage: number
+  automatedPercentage: number
 }
 
 const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
-  const { annotations, automated, manual, title, total } = props
+  const {
+    automatedBasalDuration,
+    automatedPercentage,
+    manualBasalDuration,
+    manualPercentage
+  } = props
 
-  const automatedPercentage = Math.round(100 * automated / total)
-  const manualPercentage = Math.round(100 * manual / total)
+  const location = useLocation()
+  const isDailyPage = location.pathname.includes('daily')
+  const title = t(isDailyPage ? 'time-loop' : 'avg-time-loop')
+  const annotations = isDailyPage ? [t('time-loop-tooltip'), t('time-loop-how-calculate')] : [t('avg-time-loop-tooltip'), t('avg-time-loop-how-calculate')]
 
   return (
     <div data-testid="loop-mode-stat">
       <Box className={styles.title}>
         {title}
-        <StatTooltip annotations={annotations} />
+        <StatTooltip annotations={annotations}/>
       </Box>
       <svg
-        xmlns="http://www.w3.org/2000/svg" viewBox="0 0 290 80"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 290 80"
         className={`${styles.statWheelTimeInAuto} ${styles.donutChart}`}
       >
-        <LoopModeLabel className={styles.onColor} transform="translate(10 15)" translationKey="wheel-label-on" />
-        <LoopModeLabel className={styles.offColor} transform="translate(240 15)" translationKey="wheel-label-off" />
+        <LoopModeLabel
+          className={styles.onColor}
+          transform="translate(10 15)"
+          translationKey="wheel-label-on"
+        />
+        <LoopModeLabel
+          className={styles.offColor}
+          transform="translate(240 15)"
+          translationKey="wheel-label-off"
+        />
         <LoopModePercentageDetail
           className={styles.labelOnValueUnits}
           percentage={automatedPercentage}
           transform="translate(30 63)"
-          value={automated}
+          value={ensureNumeric(automatedBasalDuration)}
         />
         <LoopModePercentageDetail
           className={styles.labelOffValueUnits}
           percentage={manualPercentage}
           transform="translate(260 63)"
-          value={manual}
+          value={ensureNumeric(manualBasalDuration)}
         />
-        <LoopModeGraph automatedPercentage={automatedPercentage} manualPercentage={manualPercentage} />
+        <LoopModeGraph automatedPercentage={automatedPercentage} manualPercentage={manualPercentage}/>
       </svg>
     </div>
   )

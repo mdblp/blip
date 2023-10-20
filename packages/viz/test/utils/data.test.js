@@ -214,14 +214,14 @@ describe('DataUtil', () => {
     })
   ]
 
-  const uploadData = [
-    new Types.Upload({
-      deviceModel: 'dash',
-      deviceTime: '2018-01-02T00:00:00'
-    }),
-    new Types.Upload({
-      deviceModel: '1780',
-      deviceTime: '2018-02-02T00:00:00'
+  const pumpSettingsData = [
+    new Types.PumpSettings({
+      payload: {
+        device: {
+          name: 'dash',
+          manufacturer: 'diabeloop'
+        }
+      }
     })
   ]
 
@@ -258,7 +258,6 @@ describe('DataUtil', () => {
     ...cbgData,
     ...foodData,
     ...smbgData,
-    ...uploadData,
     ...wizardData
   ]
 
@@ -1036,12 +1035,7 @@ describe('DataUtil', () => {
 
   describe('getLatestPump', () => {
     it('should return the make and model of the latest pump uploaded', () => {
-      expect(dataUtil.getLatestPump()).to.eql({
-        manufacturer: 'diabeloop',
-        deviceModel: '1780'
-      })
-
-      dataUtil = new DataUtil(uploadData.slice(0, 1), defaultOpts)
+      dataUtil = new DataUtil(pumpSettingsData.slice(0, 1), defaultOpts)
 
       expect(dataUtil.getLatestPump()).to.eql({
         manufacturer: 'diabeloop',
@@ -1123,7 +1117,7 @@ describe('DataUtil', () => {
         total: 5,
         standardDeviation: 90.38805230781334,
         coefficientOfVariationByDate: {
-          '2018-02-01' : 68.47579720288888
+          '2018-02-01': 68.47579720288888
         }
       })
     })
@@ -1136,8 +1130,7 @@ describe('DataUtil', () => {
         insufficientData: false,
         total: 5,
         standardDeviation: 93.96807968666806,
-        coefficientOfVariationByDate: {
-        }
+        coefficientOfVariationByDate: {}
       })
     })
 
@@ -1150,7 +1143,7 @@ describe('DataUtil', () => {
         total: 5,
         standardDeviation: 93.96807968666806,
         coefficientOfVariationByDate: {
-          '2018-02-01' : 63.912988640759494
+          '2018-02-01': 63.912988640759494
         }
       })
     })
@@ -1162,44 +1155,6 @@ describe('DataUtil', () => {
         insufficientData: true,
         total: 2,
         standardDeviation: Number.NaN
-      })
-    })
-  })
-
-  describe('getTimeInAutoData', () => {
-    it('should return the time spent in automated and manual basal delivery when viewing 1 day', () => {
-      dataUtil.endpoints = dayEndpoints
-      expect(dataUtil.getTimeInAutoData()).to.eql({
-        automated: MS_IN_HOUR,
-        manual: MS_IN_HOUR * 2
-      })
-    })
-
-    it('should return the avg daily time spent in automated and manual basal delivery when viewing more than 1 day', () => {
-      dataUtil.endpoints = twoDayEndpoints
-      expect(dataUtil.getTimeInAutoData()).to.eql({
-        automated: TimeService.MS_IN_DAY * (1 / 3),
-        manual: TimeService.MS_IN_DAY * (2 / 3)
-      })
-    })
-
-    context('basal delivery overlaps endpoints', () => {
-      it('should include the portion of delivery of a basal datum that overlaps the start endpoint', () => {
-        dataUtil.endpoints = dayEndpoints
-        dataUtil.addData([basalDatumOverlappingStart])
-        expect(dataUtil.getTimeInAutoData()).to.eql({
-          automated: MS_IN_HOUR * 2,
-          manual: MS_IN_HOUR * 2
-        })
-      })
-
-      it('should include the portion of delivery of a basal datum that overlaps the start endpoint', () => {
-        dataUtil.endpoints = dayEndpoints
-        dataUtil.addData([basalDatumOverlappingEnd])
-        expect(dataUtil.getTimeInAutoData()).to.eql({
-          automated: MS_IN_HOUR * 3,
-          manual: MS_IN_HOUR * 2
-        })
       })
     })
   })

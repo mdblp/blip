@@ -28,7 +28,34 @@
 import { type WeekDaysFilter } from '../../models/time/date-filter.model'
 import type DateFilter from '../../models/time/date-filter.model'
 import { defaultWeekDaysFilter } from '../../models/time/date-filter.model'
+import { HoursRange } from '../../models/statistics/satistics.model'
 
 export const getWeekDaysFilter = (dateFilter: DateFilter): WeekDaysFilter => dateFilter.weekDays ?? defaultWeekDaysFilter
 
 export const sumValues = (values: number[]): number => values.reduce((total, current) => total + current, 0)
+
+export const roundValue = (value: number, numberOfDecimals?: 1 | 2): number => {
+  let multiplicator = 1
+  switch (numberOfDecimals) {
+    case 1:
+      multiplicator = 10
+      break
+    case 2:
+      multiplicator = 100
+      break
+  }
+  return Math.round(value * multiplicator) / multiplicator
+}
+
+export const buildHoursRangeMap = <T>(): Map<HoursRange, T[]> => {
+  return new Map([
+    [HoursRange.MidnightToThree, []],
+    [HoursRange.ThreeToSix, []],
+    [HoursRange.SixToNine, []],
+    [HoursRange.NineToTwelve, []],
+    [HoursRange.TwelveToFifteen, []],
+    [HoursRange.FifteenToEighteen, []],
+    [HoursRange.EighteenToTwentyOne, []],
+    [HoursRange.TwentyOneToMidnight, []]
+  ])
+}

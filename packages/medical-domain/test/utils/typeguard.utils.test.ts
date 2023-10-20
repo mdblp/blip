@@ -56,7 +56,6 @@ describe('isRecord', () => {
     ]
     for (const testedValue of notRecords) {
       const testKo = isRecord(testedValue)
-      console.log(testedValue, testKo)
       expect(testKo).toEqual(false)
     }
   })

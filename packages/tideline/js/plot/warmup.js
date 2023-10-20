@@ -32,7 +32,7 @@ import warmUpDexcom from 'warmup-dexcom.svg'
 import utils from './util/utils'
 
 /**
- * @typedef {import("../tidelinedata").default} TidelineData
+ * @typedef {import("../tidelinedata").default} MedicalDataService
  * @typedef {import("../tidelinedata").Datum} Datum
  * @typedef {import("../pool").default} Pool
  */
@@ -40,7 +40,7 @@ import utils from './util/utils'
 /**
  *
  * @param {Pool} pool
- * @param {{ onParameterHover: (p: any) => void, onParameterOut: () => void, tidelineData: TidelineData }} opts
+ * @param {{ onParameterHover: (p: any) => void, onParameterOut: () => void, tidelineData: MedicalDataService }} opts
  * @returns {(data: Datum[]) => void}
  */
 function plotWarmUp(pool, opts) {
@@ -51,7 +51,7 @@ function plotWarmUp(pool, opts) {
     const offset = pool.height() / 5
     const xScale = pool.xScale().copy()
     selection.each(function () {
-      const warmUpEvents = pool.filterDataForRender(opts.tidelineData.medicalData.warmUpEvents)
+      const warmUpEvents = pool.filterDataForRender(opts.tidelineData.medicalData.warmUps)
       if (warmUpEvents.length < 1) {
         d3.select(this).selectAll('g.d3-warmup-group').remove()
         return

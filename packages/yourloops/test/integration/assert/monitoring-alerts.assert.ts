@@ -32,3 +32,9 @@ export const checkMonitoringAlertsCard = async () => {
   expect(monitoringAlertsCard).toBeVisible()
   expect(monitoringAlertsCard).toHaveTextContent('Monitoring alertsCurrent monitoring alertsTime spent out of the target range10%Severe hypoglycemia20%Data not transmitted30%')
 }
+
+export const checkMonitoringAlertsCardNoData = async () => {
+  const monitoringAlertsCard = screen.getByTestId('monitoring-alerts-card')
+  expect(monitoringAlertsCard).toBeVisible()
+  expect(monitoringAlertsCard).toHaveTextContent('Monitoring alerts (+1)Current monitoring alertsTime spent out of the target rangeN/ASevere hypoglycemiaN/AData not transmitted100%')
+}

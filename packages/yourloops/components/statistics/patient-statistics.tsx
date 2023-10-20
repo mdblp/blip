@@ -25,46 +25,69 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import { type BgPrefs, CBGPercentageBarChart, CBGStatType, TotalCarbsStat } from 'dumb'
+import React, { type FunctionComponent } from 'react'
 import {
-  type BgType,
-  type DateFilter,
-  DatumType,
-  type MedicalData,
-  TimeService,
-  BasalBolusStatisticsService
-} from 'medical-domain'
+  type BgPrefs,
+  CBGPercentageBarChart,
+  CBGStatType,
+  LoopModeStat
+} from 'dumb'
 import Box from '@mui/material/Box'
-import { useTheme } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
-import { GlycemiaStatisticsService, CarbsStatisticsService } from 'medical-domain'
+import {
+  BasalBolusStatisticsService,
+  type BgType,
+  CarbsStatisticsService,
+  type DateFilter,
+  DatumType,
+  GlycemiaStatisticsService,
+  type MedicalData,
+  TimeService
+} from 'medical-domain'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
 import { useLocation } from 'react-router-dom'
 import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { StandardDeviationStat } from './standard-deviation-stat'
 import { AverageGlucoseStat } from './average-glucose-stat'
 import { TotalInsulinStat } from './total-insulin-stat'
+import { MS_IN_DAY } from 'medical-domain'
+import { makeStyles } from 'tss-react/mui'
+import { CarbsStat } from './carbs-stat'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
   bgPrefs: BgPrefs
-  bgType: BgType
   dateFilter: DateFilter
 }
 
-export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStatisticsProps>> = (props) => {
-  const { medicalData, bgPrefs, bgType, dateFilter, children } = props
-  const theme = useTheme()
+const useStyles = makeStyles()((theme) => ({
+  divider: {
+    marginBlock: theme.spacing(1),
+    backgroundColor: 'var(--light-grey-border-color)'
+  },
+  widgetGroup: {
+    backgroundColor: theme.palette.background.paper,
+    border: '1px solid var(--light-grey-border-color)',
+    borderRadius: theme.spacing(3),
+    marginBottom: '12px',
+    padding: '20px'
+  }
+}))
+
+export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (props) => {
+  const { medicalData, bgPrefs, dateFilter } = props
+  const { classes } = useStyles()
   const location = useLocation()
 
-  const cbgSelected = bgType === DatumType.Cbg
+  const cbgSelected = medicalData.cbg.length > 0
+  const bgType: BgType = cbgSelected ? DatumType.Cbg : DatumType.Smbg
   const cbgStatType: CBGStatType = cbgSelected ? CBGStatType.TimeInRange : CBGStatType.ReadingsInRange
-  const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
+  const numberOfDays = dateFilter.weekDays ? TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays) : (dateFilter.end - dateFilter.start) / MS_IN_DAY
   const bgUnits = bgPrefs.bgUnits
   const selectedBgData = cbgSelected ? medicalData.cbg : medicalData.smbg
-  const isTrendsPage = location.pathname.includes('trends')
+  const isTrendsView = location.pathname.includes('trends')
+  const isDailyView = location.pathname.includes('daily')
 
   const {
     standardDeviation,
@@ -74,12 +97,15 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
   const {
     sensorUsage,
     total: sensorUsageTotal
-  } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, numberOfDays, dateFilter)
+  } = GlycemiaStatisticsService.getSensorUsage(medicalData.cbg, dateFilter)
 
   const {
-    foodCarbsPerDay,
-    totalEntriesCarbWithRescueCarbs,
-    totalCarbsPerDay
+    rescueCarbsPerDay,
+    totalMealCarbsWithRescueCarbsEntries,
+    estimatedCarbsPerDay,
+    totalCarbsPerDay,
+    mealCarbsPerDay,
+    totalRescueCarbsEntries
   } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
 
   const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
@@ -101,58 +127,81 @@ export const PatientStatistics: FunctionComponent<PropsWithChildren<PatientStati
     totalInsulin: dailyDose
   } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter, medicalData.pumpSettings)
 
+  const {
+    automatedBasalDuration,
+    manualBasalDuration,
+    manualPercentage,
+    automatedPercentage
+  } = BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(medicalData.basal, dateFilter)
+
+
   return (
     <Box data-testid="patient-statistics">
-      <CBGPercentageBarChart
-        bgBounds={bgPrefs.bgBounds}
-        bgType={bgType}
-        cbgStatType={cbgStatType}
-        data={cbgPercentageBarChartData}
-        bgPrefs={bgPrefs}
-        days={numberOfDays}
-      />
-      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <StandardDeviationStat
-        total={standardDeviationTotal}
-        bgType={bgType}
-        bgPrefs={bgPrefs}
-        averageGlucose={averageGlucose}
-        standardDeviation={standardDeviation}
-      />
-      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <AverageGlucoseStat
-        averageGlucose={averageGlucose}
-        bgPrefs={bgPrefs}
-        bgType={bgType}
-      />
-      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage} />
-      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
+      <Box className={classes.widgetGroup}>
+        <CBGPercentageBarChart
+          bgType={bgType}
+          cbgStatType={cbgStatType}
+          data={cbgPercentageBarChartData}
+          bgPrefs={bgPrefs}
+          days={numberOfDays}
+        />
+        {isTrendsView &&
+          <>
+            <Divider className={classes.divider}/>
+            <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage}/>
+          </>
+        }
+      </Box>
 
-      {isTrendsPage &&
-        <>
-          <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator} />
-          <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-        </>
-      }
-
-      <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType} />
-      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      <TotalInsulinStat
-        basal={basal}
-        bolus={bolus}
-        totalInsulin={basalBolusTotal}
-        weight={weight}
-        dailyDose={dailyDose}
-      />
-      <Divider sx={{ marginBlock: theme.spacing(1), backgroundColor: theme.palette.grey[600] }} />
-      {children}
-
-      <TotalCarbsStat
-        totalEntriesCarbWithRescueCarbs={totalEntriesCarbWithRescueCarbs}
-        totalCarbsPerDay={Math.round(totalCarbsPerDay)}
-        foodCarbsPerDay={Math.round(foodCarbsPerDay)}
-      />
+      <Box className={classes.widgetGroup}>
+        <CarbsStat
+          totalMealCarbsWithRescueCarbsEntries={totalMealCarbsWithRescueCarbsEntries}
+          totalCarbsPerDay={Math.round(totalCarbsPerDay*10)/10}
+          rescueCarbsPerDay={Math.round(rescueCarbsPerDay*10)/10}
+          estimatedCarbsPerDay={Math.round(estimatedCarbsPerDay)}
+          mealCarbsPerDay={Math.round(mealCarbsPerDay*10)/10}
+          totalRescueCarbsEntries={totalRescueCarbsEntries}
+        />
+        <Divider className={classes.divider}/>
+        <TotalInsulinStat
+          basal={basal}
+          bolus={bolus}
+          totalInsulin={basalBolusTotal}
+          weight={weight}
+          dailyDose={dailyDose}
+        />
+      </Box>
+      <Box className={classes.widgetGroup}>
+        <LoopModeStat
+          automatedBasalDuration={automatedBasalDuration}
+          manualBasalDuration={manualBasalDuration}
+          manualPercentage={manualPercentage}
+          automatedPercentage={automatedPercentage}
+        />
+      </Box>
+      <Box className={classes.widgetGroup}>
+        <AverageGlucoseStat
+          averageGlucose={averageGlucose}
+          bgPrefs={bgPrefs}
+          bgType={bgType}
+        />
+        <Divider className={classes.divider}/>
+        <StandardDeviationStat
+          total={standardDeviationTotal}
+          bgType={bgType}
+          bgPrefs={bgPrefs}
+          averageGlucose={averageGlucose}
+          standardDeviation={standardDeviation}
+        />
+        <Divider className={classes.divider}/>
+        <CoefficientOfVariation coefficientOfVariation={coefficientOfVariation} bgType={bgType}/>
+        {!isDailyView &&
+          <>
+            <Divider className={classes.divider}/>
+            <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator}/>
+          </>
+        }
+      </Box>
     </Box>
   )
 }

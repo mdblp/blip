@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,12 +37,13 @@ import type PumpSettings from './datum/pump-settings.model'
 import type ReservoirChange from './datum/reservoir-change.model'
 import type Smbg from './datum/smbg.model'
 import type TimeZoneChange from './datum/time-zone-change.model'
-import type Upload from './datum/upload.model'
 import type WarmUp from './datum/warm-up.model'
 import type Wizard from './datum/wizard.model'
 import type ZenMode from './datum/zen-mode.model'
+import { AlarmEvent } from './datum/alarm-event.model';
 
 interface MedicalData {
+  alarmEvents: AlarmEvent[]
   basal: Basal[]
   bolus: Bolus[]
   cbg: Cbg[]
@@ -54,7 +55,6 @@ interface MedicalData {
   pumpSettings: PumpSettings[]
   reservoirChanges: ReservoirChange[]
   smbg: Smbg[]
-  uploads: Upload[]
   warmUps: WarmUp[]
   wizards: Wizard[]
   zenModes: ZenMode[]

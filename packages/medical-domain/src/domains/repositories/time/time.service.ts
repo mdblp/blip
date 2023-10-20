@@ -201,7 +201,7 @@ export async function waitTimeout(timeout: number): Promise<void> {
 }
 
 export const isEpochBetweenBounds = (epoch: number, start: number, end: number): boolean => (
-  epoch >= start && epoch < end
+  epoch >= start && epoch <= end
 )
 
 export function diffDays(start: number, end: number): number {
@@ -220,4 +220,8 @@ export function getNumberOfDays(start: number, end: number, daysFilter?: WeekDay
     const weekDay = getWeekDay(currentDay)
     return daysFilter[weekDay] ? count + 1 : count
   }, 0)
+}
+
+export function applyOffset(timestamp: string, offset: number): Date {
+  return moment.utc(timestamp).add(offset, 'minutes').toDate()
 }

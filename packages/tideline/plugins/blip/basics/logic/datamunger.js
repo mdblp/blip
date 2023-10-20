@@ -18,22 +18,18 @@
 import _ from 'lodash'
 import crossfilter from 'crossfilter2'
 
-import sundial from 'sundial'
-
-import { MGDL_UNITS } from '../../../../js/data/util/constants'
-import { getLatestPumpUpload } from '../../../../js/data/util/device'
-
 import classifiersMkr from './classifiers'
 import * as constants from './constants'
 import basicsActions from './actions'
 import togglableState from '../TogglableState'
+import { applyOffset, MGDL_UNITS } from 'medical-domain'
 
 function dataMunger(bgClasses, bgUnits = MGDL_UNITS) {
   const classifiers = classifiersMkr(bgClasses, bgUnits)
 
   return {
     getLatestPumpUploaded: function(patientData) {
-      const lastUploadDatum = getLatestPumpUpload(patientData.uploads)
+      const lastUploadDatum = getLatestPumpUpload(patientData.pumpSettings[0])
       return _.get(lastUploadDatum, 'source', null)
     },
 
@@ -135,7 +131,7 @@ function dataMunger(bgClasses, bgUnits = MGDL_UNITS) {
     _buildCrossfilterUtils: function(dataObj, type) {
 
       function getLocalDate(d) {
-        return sundial.applyOffset(d.normalTime, d.displayOffset).toISOString().slice(0,10)
+        return applyOffset(d.normalTime, d.displayOffset).toISOString().slice(0,10)
       }
 
       function reduceAddMaker(classifier) {

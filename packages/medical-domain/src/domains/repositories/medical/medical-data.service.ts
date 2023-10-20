@@ -31,7 +31,7 @@ import type MedicalData from '../../models/medical/medical-data.model'
 import type Message from '../../models/medical/datum/message.model'
 import type ReservoirChange from '../../models/medical/datum/reservoir-change.model'
 import type Wizard from '../../models/medical/datum/wizard.model'
-
+import type ZenMode from '../../models/medical/datum/zen-mode.model'
 import type BasicData from './basics-data.service'
 import { generateBasicData } from './basics-data.service'
 import BasalService from './datum/basal.service'
@@ -41,7 +41,7 @@ import FillService from './datum/fill.service'
 import MessageService from './datum/message.service'
 import PhysicalActivityService from './datum/physical-activity.service'
 import TimeZoneChangeService from './datum/time-zone-change.service'
-
+import DatumService from './datum.service'
 import type MedicalDataOptions from '../../models/medical/medical-data-options.model'
 import {
   BG_CLAMP_THRESHOLD,
@@ -68,14 +68,15 @@ import {
 } from '../time/time.service'
 import type PumpSettings from '../../models/medical/datum/pump-settings.model'
 import { DatumType } from '../../models/medical/datum/enums/datum-type.enum'
-import DatumService from './datum.service'
-import ConfidentialMode from '../../models/medical/datum/confidential-mode.model'
-import DeviceParameterChange from '../../models/medical/datum/device-parameter-change.model'
-import WarmUp from '../../models/medical/datum/warm-up.model'
-import ZenMode from '../../models/medical/datum/zen-mode.model'
+import type PumpManufacturer from '../../models/medical/datum/enums/pump-manufacturer.enum'
+import WizardService from './datum/wizard.service'
+import { DeviceEventSubtype } from '../../models/medical/datum/enums/device-event-subtype.enum';
+import { AlarmEvent } from '../../models/medical/datum/alarm-event.model';
+import { AlarmEventType } from '../../models/medical/datum/enums/alarm-event-type.enum';
 
 class MedicalDataService {
   medicalData: MedicalData = {
+    alarmEvents: [],
     basal: [],
     bolus: [],
     cbg: [],
@@ -87,7 +88,6 @@ class MedicalDataService {
     pumpSettings: [],
     reservoirChanges: [],
     smbg: [],
-    uploads: [],
     warmUps: [],
     wizards: [],
     zenModes: [],
@@ -110,18 +110,12 @@ class MedicalDataService {
   }
 
   public get latestPumpManufacturer(): string {
-    const capitalize = (s: string): string => {
-      const lower = s.toLowerCase()
-      return lower[0].toUpperCase() + lower.slice(1)
-    }
     const pumpSettings = this.medicalData.pumpSettings
     if (pumpSettings.length > 0) {
-      pumpSettings.sort((a, b) => this.sortDatum(a, b))
-      const latestPumpSettings = pumpSettings[pumpSettings.length - 1]
-      const manufacturer = latestPumpSettings.payload.pump.manufacturer.toLowerCase()
-      return capitalize(manufacturer)
+      const latestPumpSettings = this.getLatestPumpSettings(pumpSettings)
+      return latestPumpSettings.payload.pump.manufacturer
     } else {
-      return capitalize(this._datumOpts.defaultPumpManufacturer)
+      return this._datumOpts.defaultPumpManufacturer
     }
   }
 
@@ -190,7 +184,7 @@ class MedicalDataService {
     rawData.forEach(raw => {
       try {
         const datum = DatumService.normalize(raw, this._datumOpts)
-        const deviceEventDatum = datum as ConfidentialMode | DeviceParameterChange | ReservoirChange | WarmUp | ZenMode
+        const deviceEventDatum = datum as AlarmEvent | ConfidentialMode | DeviceParameterChange | ReservoirChange | WarmUp | ZenMode
 
         switch (datum.type) {
           case DatumType.Bolus:
@@ -352,7 +346,13 @@ class MedicalDataService {
   private deduplicate(): void {
     this.medicalData.basal = BasalService.deduplicate(this.medicalData.basal, this._datumOpts)
     this.medicalData.bolus = BolusService.deduplicate(this.medicalData.bolus, this._datumOpts)
+    this.medicalData.wizards = WizardService.deduplicate(this.medicalData.wizards, this._datumOpts)
     this.medicalData.physicalActivities = PhysicalActivityService.deduplicate(this.medicalData.physicalActivities, this._datumOpts)
+  }
+
+  private getLatestPumpSettings(pumpSettings: PumpSettings[]): PumpSettings {
+    pumpSettings.sort((a, b) => this.sortDatum(a, b))
+    return pumpSettings[pumpSettings.length - 1]
   }
 
   private join(): void {
@@ -367,13 +367,16 @@ class MedicalDataService {
       })
     )
     this.medicalData.wizards = this.medicalData.wizards.map(wizard => {
-      if (wizard.bolusId !== '') {
-        const sourceBolus = bolusMap.get(wizard.bolusId)
-        if (sourceBolus) {
-          const bolusWizard = { ...wizard, ...{ bolus: null } } as Wizard
-          this.medicalData.bolus[sourceBolus.idx].wizard = bolusWizard
-          wizard.bolus = sourceBolus.bolus
-          return wizard
+      if (wizard.bolusIds.size > 0) {
+        const bolusId = Array.from(wizard.bolusIds).find(id => bolusMap.has(id))
+        if (bolusId) {
+          wizard.bolusId = bolusId
+          const sourceBolus = bolusMap.get(wizard.bolusId)
+          if (sourceBolus) {
+            const bolusWizard = { ...wizard, ...{ bolus: null } } as Wizard
+            this.medicalData.bolus[sourceBolus.idx].wizard = bolusWizard
+            wizard.bolus = sourceBolus.bolus
+          }
         }
       }
       return wizard
@@ -381,15 +384,21 @@ class MedicalDataService {
   }
 
   private joinReservoirChanges(): void {
-    const sortedDescPumpSettings = this.medicalData.pumpSettings.sort((pumpSettings1: PumpSettings, pumpSettings2: PumpSettings) => this.sortDatum(pumpSettings2, pumpSettings1))
-    const lastPumpSettings: PumpSettings = sortedDescPumpSettings[0]
+    const latestPumpSettings = this.getLatestPumpSettings(this.medicalData.pumpSettings)
 
-    if (!lastPumpSettings) {
+    if (!latestPumpSettings) {
       return
     }
 
+    const pump = latestPumpSettings.payload.pump
     this.medicalData.reservoirChanges = this.medicalData.reservoirChanges.map((reservoirChange: ReservoirChange) => {
-      reservoirChange.pump = lastPumpSettings.payload.pump
+      reservoirChange.pump = {
+        expirationDate: pump.expirationDate,
+        name: pump.name,
+        serialNumber: pump.serialNumber,
+        swVersion: pump.swVersion,
+        manufacturer: this.latestPumpManufacturer as PumpManufacturer
+      }
       return reservoirChange
     })
   }
@@ -428,17 +437,6 @@ class MedicalDataService {
       }
       return d
     })
-  }
-
-  getTimezoneAt(epoch: number): string {
-    if (this.timezoneList.length === 0) {
-      return this._datumOpts.timePrefs.timezoneName
-    }
-
-    let c = 0
-    while (c < this.timezoneList.length && epoch >= this.timezoneList[c].time) c++
-    c = Math.max(c, 1)
-    return this.timezoneList[c - 1].timezone
   }
 
   private setTimeZones(): void {

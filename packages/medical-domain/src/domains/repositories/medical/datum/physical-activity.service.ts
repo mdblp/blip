@@ -46,7 +46,6 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     ...base,
     ...duration,
     type: DatumType.PhysicalActivity,
-    uploadId: rawData.uploadId as string,
     guid: rawData.guid as string,
     reportedIntensity: rawData.reportedIntensity as Intensity,
     eventId,

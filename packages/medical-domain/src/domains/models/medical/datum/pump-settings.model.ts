@@ -60,7 +60,9 @@ export interface PumpSettingsParameter {
   level: number
   name: string
   unit: Unit
+  previousUnit: Unit
   value: string
+  previousValue: string
 }
 
 interface ParametersChange {
@@ -69,7 +71,7 @@ interface ParametersChange {
 }
 
 interface PumpConfig {
-  expirationDate: string
+  expirationDate?: string
   manufacturer: PumpManufacturer
   name: string
   serialNumber: string
@@ -86,7 +88,6 @@ interface ParameterConfig {
 
 type PumpSettings = BaseDatum & {
   type: DatumType.PumpSettings
-  uploadId: string
   basalSchedules: object[]
   activeSchedule: string
   deviceId: string

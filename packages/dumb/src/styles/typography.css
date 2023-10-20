@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -55,7 +55,7 @@
 }
 
 .extraLargeSize {
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .mediumContrastText {

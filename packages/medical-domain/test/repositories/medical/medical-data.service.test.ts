@@ -28,12 +28,14 @@
 import { faker } from '@faker-js/faker'
 import type Basal from '../../../src/domains/models/medical/datum/basal.model'
 import type Bolus from '../../../src/domains/models/medical/datum/bolus.model'
+import type Wizard from '../../../src/domains/models/medical/datum/wizard.model'
 import type PhysicalActivity from '../../../src/domains/models/medical/datum/physical-activity.model'
 import type MedicalData from '../../../src/domains/models/medical/medical-data.model'
 import type MedicalDataOptions from '../../../src/domains/models/medical/medical-data-options.model'
 import BasalService from '../../../src/domains/repositories/medical/datum/basal.service'
 import BolusService from '../../../src/domains/repositories/medical/datum/bolus.service'
 import PhysicalActivityService from '../../../src/domains/repositories/medical/datum/physical-activity.service'
+import WizardService from '../../../src/domains/repositories/medical/datum/wizard.service'
 import DatumService from '../../../src/domains/repositories/medical/datum.service'
 import MedicalDataService from '../../../src/domains/repositories/medical/medical-data.service'
 import createRandomDatum from '../../data-generator'
@@ -41,7 +43,7 @@ import type BasicData from '../../../src/domains/repositories/medical/basics-dat
 import * as BasiscsDataService from '../../../src/domains/repositories/medical/basics-data.service'
 import * as TimeService from '../../../src/domains/repositories/time/time.service'
 import crypto from 'crypto'
-import { DatumType } from '../../../src/domains/models/medical/datum/enums/datum-type.enum'
+import { DatumType } from '../../../src'
 import { DeviceEventSubtype } from '../../../src/domains/models/medical/datum/enums/device-event-subtype.enum'
 
 // window.crypto is not defined in jest...
@@ -53,14 +55,16 @@ Object.defineProperty(global, 'crypto', {
 })
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const knownTypes: Array<Record<string, unknown>> = Object.values(DatumType).flatMap(datumType => {
-  if (datumType !== DatumType.DeviceEvent) {
-    return [{ type: datumType }]
-  }
-  return Object.values(DeviceEventSubtype).map(
-    (datumSubtype) => ({ type: datumType, subType: datumSubtype })
-  )
-})
+const knownTypes: Array<Record<string, unknown>> = Object
+  .values(DatumType)
+  .flatMap(datumType => {
+    if (datumType !== DatumType.DeviceEvent) {
+      return [{ type: datumType }]
+    }
+    return Object.values(DeviceEventSubtype).map(
+      (datumSubtype) => ({ type: datumType, subType: datumSubtype })
+    )
+  })
 
 const datumNormalizeMock = jest.fn(
   (rawData: Record<string, unknown>, _opts: MedicalDataOptions) => {
@@ -72,14 +76,14 @@ const datumNormalizeTzMock = jest.fn(
   (rawData: Record<string, unknown>, _opts: MedicalDataOptions) => {
     const datum = createRandomDatum(rawData.type as DatumType, rawData.subType as DeviceEventSubtype | undefined)
     if (rawData.type === 'bolus') {
-      const pastDate = faker.date.between('2022-08-01T00:00:00.000Z', '2022-08-31T00:00:00.000Z')
+      const pastDate = faker.date.between({ from: '2022-08-01T00:00:00.000Z', to: '2022-08-31T00:00:00.000Z' })
       datum.epoch = pastDate.valueOf()
       datum.normalTime = pastDate.toISOString()
       datum.timezone = 'Atlantic/Reykjavik'
       datum.displayOffset = 0
     }
     if (rawData.type === 'basal') {
-      const pastDate = faker.date.between('2022-07-01T00:00:00.000Z', '2022-07-31T00:00:00.000Z')
+      const pastDate = faker.date.between({ from: '2022-07-01T00:00:00.000Z', to: '2022-07-31T00:00:00.000Z' })
       datum.epoch = pastDate.valueOf()
       datum.normalTime = pastDate.toISOString()
       // DST offset (Summer time)
@@ -87,7 +91,7 @@ const datumNormalizeTzMock = jest.fn(
     }
     // DST in Europe/Paris is on Sunday, March 27, 2022 at 01:00 GMT
     if (rawData.type === 'cbg') {
-      const pastDate = faker.date.between('2022-03-27T00:00:00.001Z', '2022-03-27T00:59:59.999Z')
+      const pastDate = faker.date.between({ from: '2022-03-27T00:00:00.001Z', to: '2022-03-27T00:59:59.999Z' })
       datum.epoch = pastDate.valueOf()
       datum.normalTime = pastDate.toISOString()
       // DST offset (Winter time)
@@ -106,6 +110,12 @@ const basalDeduplicateMock = jest.fn(
 
 const bolusDeduplicateMock = jest.fn(
   (data: Bolus[], _opts: MedicalDataOptions) => {
+    return data
+  }
+)
+
+const wizardDeduplicateMock = jest.fn(
+  (data: Wizard[], _opts: MedicalDataOptions) => {
     return data
   }
 )
@@ -158,6 +168,7 @@ describe('MedicalDataService', () => {
       DatumService.normalize = datumNormalizeMock
       BasalService.deduplicate = basalDeduplicateMock
       BolusService.deduplicate = bolusDeduplicateMock
+      WizardService.deduplicate = wizardDeduplicateMock
       PhysicalActivityService.deduplicate = physicalActivityDeduplicateMock
     })
     afterEach(() => {
@@ -171,9 +182,10 @@ describe('MedicalDataService', () => {
       // basal + bolus + physicalActivity deduplication is called
       expect(basalDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(bolusDeduplicateMock).toHaveBeenCalledTimes(1)
+      expect(wizardDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(physicalActivityDeduplicateMock).toHaveBeenCalledTimes(1)
 
-      // Main medicalData Checks (we have on objects of each exept timezones)
+      // Main medicalData Checks (we have on objects of each except timezones)
       const expectedCount: Partial<Record<keyof MedicalData, number>> = {}
       Object.keys(medicalData.medicalData).forEach(
         (type) => {
@@ -194,13 +206,15 @@ describe('MedicalDataService', () => {
       // Fill Data checks
       testFillData(medicalData)
     })
-    it('should handle mulitple data add', () => {
+
+    it('should handle multiple data add', () => {
       medicalData.add(knownTypes)
       // normalize is called on each piece of data
       expect(datumNormalizeMock).toHaveBeenCalledTimes(knownTypes.length)
       // // basal + bolus + physicalActivity deduplication is called
       expect(basalDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(bolusDeduplicateMock).toHaveBeenCalledTimes(1)
+      expect(wizardDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(physicalActivityDeduplicateMock).toHaveBeenCalledTimes(1)
 
       // Main medicalData Checks (we have two objects of each except timezones )
@@ -225,21 +239,25 @@ describe('MedicalDataService', () => {
       testFillData(medicalData)
     })
   })
+
   describe('Timezone detection', () => {
     const medicalData = new MedicalDataService()
     medicalData.opts.dateRange = {
       start: new Date().valueOf(),
       end: new Date().valueOf()
     }
+
     beforeAll(() => {
       BasalService.deduplicate = basalDeduplicateMock
       BolusService.deduplicate = bolusDeduplicateMock
+      WizardService.deduplicate = wizardDeduplicateMock
       PhysicalActivityService.deduplicate = physicalActivityDeduplicateMock
     })
 
     afterEach(() => {
       jest.clearAllMocks()
     })
+
     it('should detect timezone changes events', () => {
       DatumService.normalize = datumNormalizeTzMock
       medicalData.add([{ type: 'bolus' }, { type: 'basal' }])
@@ -248,6 +266,7 @@ describe('MedicalDataService', () => {
       // basal + bolus + physicalActivity deduplication is called
       expect(basalDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(bolusDeduplicateMock).toHaveBeenCalledTimes(1)
+      expect(wizardDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(physicalActivityDeduplicateMock).toHaveBeenCalledTimes(1)
 
       // Main medicalData Checks (we have one objects for timezones, bolus & basal)
@@ -273,6 +292,7 @@ describe('MedicalDataService', () => {
       // Fill Data checks
       testFillData(medicalData)
     })
+
     it('should detect DST changes events', () => {
       DatumService.normalize = datumNormalizeTzMock
       medicalData.add([{ type: 'cbg' }, { type: 'cbg' }])
@@ -281,6 +301,7 @@ describe('MedicalDataService', () => {
       // basal + bolus + physicalActivity deduplication is called
       expect(basalDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(bolusDeduplicateMock).toHaveBeenCalledTimes(1)
+      expect(wizardDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(physicalActivityDeduplicateMock).toHaveBeenCalledTimes(1)
 
       // Main medicalData Checks (we have 2 objects for cbg & timezones, 1 for bolus & basal)
@@ -312,6 +333,7 @@ describe('MedicalDataService', () => {
       testFillData(medicalData)
     })
   })
+
   describe('Basics Data', () => {
     const medicalDataService = new MedicalDataService()
     const medicalDataOpts = {
@@ -325,6 +347,7 @@ describe('MedicalDataService', () => {
         timezoneOffset: 60
       }
     }
+
     medicalDataService.opts = medicalDataOpts
     const mockedData = (endTimezone: string): BasicData => ({
       timezone: endTimezone,
@@ -336,9 +359,6 @@ describe('MedicalDataService', () => {
           data: []
         },
         deviceParameter: {
-          data: []
-        },
-        upload: {
           data: []
         },
         cbg: {
@@ -367,6 +387,7 @@ describe('MedicalDataService', () => {
     beforeAll(() => {
       BasalService.deduplicate = basalDeduplicateMock
       BolusService.deduplicate = bolusDeduplicateMock
+      WizardService.deduplicate = wizardDeduplicateMock
       PhysicalActivityService.deduplicate = physicalActivityDeduplicateMock
       // eslint-disable-next-line no-import-assign
       BasiscsDataService.generateBasicData = generateBasicDataMock

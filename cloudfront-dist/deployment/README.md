@@ -26,7 +26,7 @@ After the installation of the pre-requisites software you need to build a blip p
 cd blip/
 export TARGET_ENVIRONMENT=<target env>
 npm install
-source ./config/env.$TARGET_ENVIRONMENT.sh && npm run build
+source ./config/env.$TARGET_ENVIRONMENT.sh && npm run build && npm run gen-lambda
 ```
 
 ### Installation

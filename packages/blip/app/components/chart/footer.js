@@ -1,4 +1,3 @@
-
 /*
  * == BSD2 LICENSE ==
  * Copyright (c) 2014, Tidepool Project
@@ -19,24 +18,28 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import i18next from 'i18next'
 import Button from '@mui/material/Button'
+import Box from '@mui/material/Box'
 
 function TidelineFooter(props) {
   const { children, onClickRefresh } = props
   return (
-    <div className="container-box-outer patient-data-footer-outer">
-      <div className="container-box-inner patient-data-footer-inner">
-        <div className="patient-data-footer-left">
-          <Button
-            data-testid="confirm-dialog-cancel-button"
-            variant="outlined"
-            onClick={onClickRefresh}
-          >
-            {i18next.t('Refresh')}
-          </Button>
-        </div>
-        <div className="patient-data-footer-right">{children}</div>
-      </div>
-    </div>
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      marginLeft={5}
+      marginRight="10px"
+    >
+      <Box>
+        <Button
+          data-testid="confirm-dialog-cancel-button"
+          variant="outlined"
+          onClick={onClickRefresh}
+        >
+          {i18next.t('Refresh')}
+        </Button>
+      </Box>
+      {children}
+    </Box>
   )
 }
 

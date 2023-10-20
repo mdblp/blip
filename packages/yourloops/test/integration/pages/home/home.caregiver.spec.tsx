@@ -125,23 +125,23 @@ describe('Caregiver home page', () => {
     // Checking that all patients are displayed
     const dataGridRow = screen.getByTestId('current-patient-list-grid')
     expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
-    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%${lastDataUploadDate}Flag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/AFlag patient fake@patient.emailAnnie VersaireMay 25, 20150%0%N/A`)
+    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%${lastDataUploadDate}Flag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/AFlag patient fake@patient.emailAnnie VersaireMay 25, 20150%0%N/A`)
 
     const searchPatient = screen.getByPlaceholderText('Search for a patient...')
 
     // Searching by birthdate only
     await userEvent.type(searchPatient, '20/01/2010')
-    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%${lastDataUploadDate}Flag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/A`)
+    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%${lastDataUploadDate}Flag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/A`)
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and first name
     await userEvent.type(searchPatient, '20/01/2010 Aki')
-    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%${lastDataUploadDate}`)
+    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient fake@patient.emailAkim EmbettJan 20, 20100%0%${lastDataUploadDate}`)
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and last name
     await userEvent.type(searchPatient, '20/01/2010provi')
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/A')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient fake@patient.emailAlain ProvistJan 20, 20100%0%N/A')
   })
 
   it('should display a list of patients and allow to remove one of them', async () => {
@@ -154,7 +154,7 @@ describe('Caregiver home page', () => {
 
     const patientTableBody = screen.getByTestId('current-patient-list-grid')
     expect(within(patientTableBody).getAllByRole('row')).toHaveLength(5)
-    expect(patientTableBody).toHaveTextContent('PatientDate of birthTIRHypoglycemiaLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 19800%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 19800%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 19800%0%N/AFlag patient pending-patient@diabeloop.frPending PatientJan 1, 19800%0%N/A')
+    expect(patientTableBody).toHaveTextContent('PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 19800%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 19800%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 19800%0%N/AFlag patient pending-patient@diabeloop.frPending PatientJan 1, 19800%0%N/A')
 
     const removePatientButton = screen.getByRole('button', { name: `Remove patient ${patient2AsTeamMember.email}` })
     expect(removePatientButton).toBeVisible()
@@ -256,7 +256,7 @@ describe('Caregiver home page', () => {
 
     const disabledToggle = screen.getByLabelText('This column cannot be removed')
     await userEvent.hover(disabledToggle)
-    expect(await screen.findByText('This column cannot be removed'))
+    expect(await screen.findByText('This column cannot be removed')).toBeVisible()
 
     await userEvent.click(ageToggle)
     await userEvent.click(lastUpdateToggle)

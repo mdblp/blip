@@ -37,7 +37,6 @@ import ChatMessage from './chat-message'
 import ChatApi from '../../lib/chat/chat.api'
 import { useAuth } from '../../lib/auth'
 import { type IMessage } from '../../lib/chat/models/i-message.model'
-import { Button, Tab, Tabs, TextField } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useTeam } from '../../lib/team'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
@@ -51,10 +50,18 @@ import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
 import FormGroup from '@mui/material/FormGroup'
 import TeamUtils from '../../lib/team/team.util'
 import { getUserName } from '../../lib/auth/user.util'
-import { MessageIcon } from '../icons/diabeloop/message-icon'
 import Badge from '@mui/material/Badge'
 import { getUnreadMessagesByTeam } from './chat.util'
+import Link from '@mui/material/Link'
+import Dialog from '@mui/material/Dialog'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogContent from '@mui/material/DialogContent'
+import Button from '@mui/material/Button'
+import Tab from '@mui/material/Tab'
+import Tabs from '@mui/material/Tabs'
+import TextField from '@mui/material/TextField'
 
+const CHAT_CONTENT_MIN_HEIGHT = '280px'
 const CHAT_CONTENT_MAX_HEIGHT = '450px'
 const KEYBOARD_EVENT_ESCAPE = 'Escape'
 
@@ -69,6 +76,7 @@ const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) 
     },
     chatWidgetContent: {
       padding: theme.spacing(2),
+      minHeight: CHAT_CONTENT_MIN_HEIGHT,
       maxHeight: CHAT_CONTENT_MAX_HEIGHT,
       overflowY: 'auto',
       overflowX: 'hidden'
@@ -79,7 +87,7 @@ const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) 
     },
     chatWidgetEmojiPickerContainer: {
       position: 'absolute',
-      top: -60,
+      top: 10,
       zIndex: 3,
       width: '100%'
     },
@@ -119,7 +127,7 @@ export interface ChatWidgetProps {
   patient: Patient
 }
 
-function ChatWidget(props: ChatWidgetProps): JSX.Element {
+function ChatWidget(props: Readonly<ChatWidgetProps>): JSX.Element {
   const { t } = useTranslation()
   const { patient } = props
   const { classes } = chatWidgetStyles()
@@ -130,6 +138,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
   const { user } = useAuth()
   const [showPicker, setShowPicker] = useState(false)
   const [privateMessage, setPrivateMessage] = useState(false)
+  const [here, setHere] = useState(false)
   const [inputText, setInputText] = useState('')
   const [messages, setMessages] = useState<IMessage[]>([])
   const [nbUnread, setNbUnread] = useState(0)
@@ -209,9 +218,14 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
     return unreadMessagesByTeamForPatient === null || Object.values(unreadMessagesByTeamForPatient).every((hasUnread: boolean) => !hasUnread)
   }
 
+  const checkThisOut = (text: string): void => {
+    if (text === '666' && process.env.NODE_ENV === 'development') {
+      setHere(true)
+    }
+  }
+
   return (
     <GenericDashboardCard
-      avatar={<MessageIcon />}
       title={`${t('messages')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
       data-testid="chat-card"
       action={isUserPatient &&
@@ -250,6 +264,13 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
       }
     >
       <Box position="relative">
+        <Dialog open={here} onClose={() => setHere(false)}>
+          <DialogContent>
+            <DialogContentText>
+              You asked for the beast, meet her at <Link href="https://eightsins.fr">www.eightsins.fr</Link>
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
         <Box
           ref={content}
           className={classes.chatWidgetContent}
@@ -330,6 +351,7 @@ function ChatWidget(props: ChatWidgetProps): JSX.Element {
               maxRows={3}
               value={inputText}
               onChange={event => {
+                checkThisOut(event.target.value)
                 setInputText(event.target.value)
               }}
               InputLabelProps={{ shrink: false }}

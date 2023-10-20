@@ -33,8 +33,8 @@ import { type WizardInputMealSource } from './enums/wizard-input-meal-source.enu
 
 export type Wizard = BaseDatum & {
   type: DatumType.Wizard
-  uploadId: string
   bolusId: string
+  bolusIds: Set<string>
   carbInput: number
   units: string
   bolus: Bolus | null

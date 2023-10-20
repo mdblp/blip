@@ -135,6 +135,7 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
         horizontal: 'right'
       }}
       transformOrigin={{ vertical: -10, horizontal: 0 }}
+      aria-label={t('show-column')}
     >
       <CardContent>
         <Typography variant="h6">{t('show-column')}</Typography>

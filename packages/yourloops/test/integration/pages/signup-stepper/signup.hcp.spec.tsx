@@ -77,7 +77,7 @@ describe('Signup stepper as hcp', () => {
 
     // Step one
     checkAccountSelectorStep()
-    await userEvent.click(screen.getByLabelText('Create hcp account'))
+    await userEvent.click(screen.getByLabelText('Create professional account'))
     await userEvent.click(screen.getByText('Next'))
 
     // Step two
@@ -96,7 +96,7 @@ describe('Signup stepper as hcp', () => {
     await checkProfileStep(firstName, lastName)
     expect(hcpProfessionSelector).toBeVisible()
 
-    fireEvent.mouseDown(within(hcpProfessionSelector).getByRole('button', { hidden: true }))
+    fireEvent.mouseDown(within(hcpProfessionSelector).getByRole('combobox', { hidden: true }))
     await userEvent.click(screen.getByText('Nurse'))
 
     expect(createButton).not.toBeDisabled()
@@ -112,5 +112,7 @@ describe('Signup stepper as hcp', () => {
       })
     )
     expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })
+    const completedAccountMessage = screen.getByTestId('message-complete-account')
+    expect(completedAccountMessage).toHaveTextContent('Clicking the continue button will take you to your dashboard. You can then add your patients, and also join care teams')
   })
 })

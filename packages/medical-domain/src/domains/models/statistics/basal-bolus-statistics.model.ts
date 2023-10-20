@@ -26,12 +26,20 @@
  */
 
 import { type ParameterConfig } from '../medical/datum/pump-settings.model'
+import { HoursRange } from './satistics.model'
 
 export interface BasalBolusStatistics {
   bolus: number
   basal: number
   total: number
 }
+
+export interface ManualBolusAveragePerRange {
+  numberOfInjections: number
+  confirmedDose: number
+}
+
+export type ManualBolusAverageStatistics = Map<HoursRange, ManualBolusAveragePerRange>
 
 export interface TotalInsulinAndWeightStatistics {
   totalInsulin: number

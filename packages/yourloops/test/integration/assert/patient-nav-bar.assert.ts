@@ -32,38 +32,41 @@ import moment from 'moment-timezone'
 import userEvent from '@testing-library/user-event'
 import { type Data, mockDataAPI } from '../mock/data.api.mock'
 
-const checkPatientNavBar = (patientNavBar: BoundFunctions<typeof queries>) => {
-  const dashboardTab = patientNavBar.getByText('Dashboard')
-  const dailyTab = patientNavBar.getByText('Daily')
-  const trendsTab = patientNavBar.getByText('Trends')
-  expect(dashboardTab).toBeVisible()
-  expect(dailyTab).toBeVisible()
-  expect(trendsTab).toBeVisible()
+const checkPatientNavBarCommon = (patientNavBar: BoundFunctions<typeof queries>) => {
+  expect(patientNavBar.getByRole('tablist')).toHaveTextContent('DashboardDailyTrendsDevice')
   expect(patientNavBar.getByText('Download report')).toBeVisible()
 }
 
-export const checkPatientNavBarAsHCP = () => {
+export const checkPatientNavBarAsHcp = () => {
   const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
   expect(patientNavBar.getByTestId('subnav-patient-list')).toBeVisible()
   expect(patientNavBar.getByTestId('patient-dropdown')).toBeVisible()
-  checkPatientNavBar(patientNavBar)
+  expect(patientNavBar.getByRole('tablist')).toHaveTextContent('DashboardDailyTrendsTarget & alertsDevice')
+  expect(patientNavBar.getByText('Download report')).toBeVisible()
+}
+
+export const checkPatientNavBarAsHcpInPrivateTeam = () => {
+  const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
+  expect(patientNavBar.getByTestId('subnav-patient-list')).toBeVisible()
+  expect(patientNavBar.getByTestId('patient-dropdown')).toBeVisible()
+  checkPatientNavBarCommon(patientNavBar)
 }
 
 export const checkPatientNavBarAsCaregiver = () => {
   const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
   expect(patientNavBar.getByTestId('subnav-patient-list')).toBeVisible()
   expect(patientNavBar.getByTestId('patient-dropdown')).toBeVisible()
-  checkPatientNavBar(patientNavBar)
+  checkPatientNavBarCommon(patientNavBar)
 }
 
 export const checkPatientNavBarAsPatient = () => {
   const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
-  checkPatientNavBar(patientNavBar)
+  checkPatientNavBarCommon(patientNavBar)
 }
 
 export const checkPatientDropdown = async (initialPatient: Patient, patientToSwitchTo: Patient) => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-  const initialPatientHeaderContent = `Patient${initialPatient.profile.firstName} ${initialPatient.profile.lastName}Date of birth:${moment(initialPatient.profile.birthdate).format('L')}Diabetes type:Type 1Gender:MaleHbA1c:fakeA1cValue% (05/26/2023)Email:patient1@diabeloop.frDashboardDailyTrendsDeviceDownload report`
+  const initialPatientHeaderContent = `Patient${initialPatient.profile.firstName} ${initialPatient.profile.lastName}Date of birth:${moment(initialPatient.profile.birthdate).format('L')}Diabetes type:Type 1Gender:MaleHbA1c:fakeA1cValue% (05/26/2023)Email:patient1@diabeloop.frDashboardDailyTrendsTarget & alertsDeviceDownload report`
   expect(secondaryHeader).toHaveTextContent(initialPatientHeaderContent)
 
   fireEvent.mouseDown(within(secondaryHeader).getByText(patient1Info.profile.fullName))
@@ -72,8 +75,10 @@ export const checkPatientDropdown = async (initialPatient: Patient, patientToSwi
   const secondPatientDateOfBirth = moment(patientToSwitchTo.profile.birthdate).format('L')
   const secondPatientName = `${patientToSwitchTo.profile.firstName} ${patientToSwitchTo.profile.lastName}`
   const secondaryHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
-  const secondPatientHeaderContent = `Patient${secondPatientName}Date of birth:${secondPatientDateOfBirth}Diabetes type:Type 1Gender:FemaleHbA1c:8.9% (11/21/2023)Email:patient2@diabeloop.frDashboardDailyTrendsDeviceDownload report`
-  await waitFor(() => { expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContent) })
+  const secondPatientHeaderContent = `Patient${secondPatientName}Date of birth:${secondPatientDateOfBirth}Diabetes type:Type 1Gender:FemaleHbA1c:8.9% (11/21/2023)Email:patient2@diabeloop.frDashboardDailyTrendsTarget & alertsDeviceDownload report`
+  await waitFor(() => {
+    expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContent)
+  })
 
   fireEvent.mouseDown(within(await screen.findByTestId('patient-nav-bar')).getByText(patientToSwitchTo.profile.fullName))
   await userEvent.click(within(screen.getByRole('listbox')).getByText(initialPatient.profile.fullName))
@@ -81,7 +86,7 @@ export const checkPatientDropdown = async (initialPatient: Patient, patientToSwi
   expect(secondaryHeader).toHaveTextContent(initialPatientHeaderContent)
 }
 
-export const checkPatientNavBarForPatient = async () => {
+export const checkPatientNavBarForPatientAndCaregiver = async () => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
   expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDeviceDownload report')
 }

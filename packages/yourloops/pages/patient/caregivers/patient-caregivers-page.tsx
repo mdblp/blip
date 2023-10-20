@@ -25,14 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { useCallback, useEffect, useRef } from 'react'
-import bows from 'bows'
+import React, { type FC, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
-
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
-
 import { useAuth } from '../../../lib/auth'
 import metrics from '../../../lib/metrics'
 import { setPageTitle } from '../../../lib/utils'
@@ -40,8 +37,8 @@ import { useNotification } from '../../../lib/notifications/notification.hook'
 import { type ShareUser } from '../../../lib/share/models/share-user.model'
 import { useAlert } from '../../../components/utils/snackbar'
 import SecondaryBar from './secondary-bar'
-import AddCaregiverDialog from './add-dialog'
-import CaregiverTable from './table'
+import AddCaregiverDialog from './add-caregiver-dialog'
+import CaregiversTable from './caregivers-table'
 import DirectShareApi, { PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE } from '../../../lib/share/direct-share.api'
 import { NotificationType } from '../../../lib/notifications/models/enums/notification-type.enum'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
@@ -50,12 +47,7 @@ import { type Notification } from '../../../lib/notifications/models/notificatio
 import { type AddDialogContentProps } from './models/add-dialog-content-props.model'
 import SpinningLoader from '../../../components/loaders/spinning-loader'
 
-const log = bows('PatientCaregiversPage')
-
-/**
- * Patient caregivers page
- */
-function PatientCaregiversPage(): JSX.Element {
+export const PatientCaregiversPage: FC = () => {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
   const { user } = useAuth()
@@ -86,7 +78,7 @@ function PatientCaregiversPage(): JSX.Element {
         setCaregivers(null)
       } catch (reason) {
         const error = reason as Error
-        log.error(reason)
+        console.error(reason)
 
         if (error.message === PATIENT_CANNOT_BE_ADDED_AS_CAREGIVER_ERROR_MESSAGE) {
           alert.error(t('alert-invite-caregiver-failed-user-is-patient'))
@@ -103,7 +95,6 @@ function PatientCaregiversPage(): JSX.Element {
         return acc
       }
 
-      log.debug('Found pending direct-share invitation: ', invitation)
       const caregiver: ShareUser = {
         invitation,
         status: UserInviteStatus.Pending,
@@ -121,14 +112,14 @@ function PatientCaregiversPage(): JSX.Element {
   const fetchCaregivers = useCallback(async (): Promise<void> => {
     await DirectShareApi.getDirectShares()
       .catch((reason: unknown) => {
-        log.error(reason)
+        console.error(reason)
 
         return []
       })
-      .then((caregivers: ShareUser[]) => {
+      .then((receivedCaregivers: ShareUser[]) => {
         const invitedCaregivers = getCaregiversFromPendingInvitations()
-        caregivers.push(...invitedCaregivers)
-        setCaregivers(caregivers)
+        receivedCaregivers.push(...invitedCaregivers)
+        setCaregivers(receivedCaregivers)
       })
   }, [getCaregiversFromPendingInvitations])
 
@@ -139,9 +130,7 @@ function PatientCaregiversPage(): JSX.Element {
     }
   }, [fetchCaregivers, sentInvitations, user.id])
 
-  useEffect(() => {
-    setPageTitle(t('caregivers-title'))
-  }, [t])
+  setPageTitle(t('caregivers-title'))
 
   return (
     <>
@@ -151,14 +140,17 @@ function PatientCaregiversPage(): JSX.Element {
           <SecondaryBar onShowAddCaregiverDialog={handleShowAddCaregiverDialog} />
           <Container maxWidth="lg">
             <Box marginTop={4}>
-              <CaregiverTable caregivers={caregivers} fetchCaregivers={fetchCaregivers} />
+              <CaregiversTable
+                caregivers={caregivers}
+                fetchCaregivers={fetchCaregivers}
+              />
             </Box>
           </Container>
         </>
       }
-      <AddCaregiverDialog actions={caregiverToAdd} />
+      {caregiverToAdd &&
+        <AddCaregiverDialog actions={caregiverToAdd} currentCaregivers={caregivers} />
+      }
     </>
   )
 }
-
-export default PatientCaregiversPage

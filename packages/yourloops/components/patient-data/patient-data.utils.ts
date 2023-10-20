@@ -31,16 +31,16 @@ import { type Patient } from '../../lib/patient/models/patient.model'
 import PartialDataLoad from 'blip/app/core/lib/partial-data-load'
 import MedicalDataService, { type BgUnit, type MedicalData, Source, type TimePrefs, TimeService } from 'medical-domain'
 import config from '../../lib/config/config'
-import { ChartTypes } from '../../enum/chart-type.enum'
+import { PatientView } from '../../enum/patient-view.enum'
 import { type GetPatientDataOptions } from '../../lib/data/models/get-patient-data-options.model'
 
 interface GetDatetimeBoundsArgs {
-  currentChart: ChartTypes
+  currentPatientView: PatientView
   epochLocation: number
   msRange: number
 }
 
-interface DateRange {
+export interface DateRange {
   start: Moment
   end: Moment
 }
@@ -49,14 +49,15 @@ export function isValidDateQueryParam(queryParam: string): boolean {
   const date = new Date(queryParam)
   return !isNaN(date.getTime())
 }
-const DEFAULT_DASHBOARD_TIME_RANGE_DAYS = 14
+
+export const DEFAULT_DASHBOARD_TIME_RANGE_DAYS = 14
 const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
 export class PatientDataUtils {
+  partialDataLoad: typeof PartialDataLoad
   private readonly bgUnits: BgUnit
   private patient: Patient
   private readonly timePrefs: TimePrefs
-  partialDataLoad: typeof PartialDataLoad
 
   constructor({ patient, timePrefs, bgUnits }) {
     this.bgUnits = bgUnits
@@ -94,17 +95,17 @@ export class PatientDataUtils {
   }
 
   getRangeDaysInMs(data: MedicalData): number {
-    const dateRangeData = data.smbg.length > 0 ? data.smbg : data.cbg
+    const dateRangeData = [...data.smbg, ...data.cbg]
     const localDates = dateRangeData.map((bgData) => bgData.localDate)
     return this.calculateDashboardDateRange(localDates)
   }
 
-  getDateRange({ currentChart, epochLocation, msRange }: GetDatetimeBoundsArgs): DateRange {
-    const msDiff = currentChart === ChartTypes.Daily ? msRange : Math.round(msRange / 2)
+  getDateRange({ currentPatientView, epochLocation, msRange }: GetDatetimeBoundsArgs): DateRange {
+    const msDiff = currentPatientView === PatientView.Daily ? msRange : Math.round(msRange / 2)
     let start = moment.utc(epochLocation - msDiff).startOf('day')
     let end = moment.utc(epochLocation + msDiff).startOf('day').add(1, 'day')
 
-    if (currentChart === ChartTypes.Daily) {
+    if (currentPatientView === PatientView.Daily) {
       const rangesToLoad = this.partialDataLoad.getMissingRanges({ start, end }, true)
       if (rangesToLoad.length > 0) {
         // For daily, we will load 4 days to avoid too many loading
@@ -129,48 +130,6 @@ export class PatientDataUtils {
       return await this.fetchPatientDataRanges(rangeDisplay)
     }
     return null
-  }
-
-  private async fetchPatientDataRanges(dateRange: DateRange): Promise<MedicalData> {
-    const ranges = this.partialDataLoad.getMissingRanges(dateRange)
-    const aggregatedData: MedicalData = {
-      basal: [],
-      bolus: [],
-      cbg: [],
-      confidentialModes: [],
-      deviceParametersChanges: [],
-      messages: [],
-      meals: [],
-      physicalActivities: [],
-      pumpSettings: [],
-      reservoirChanges: [],
-      smbg: [],
-      uploads: [],
-      warmUps: [],
-      wizards: [],
-      zenModes: [],
-      timezoneChanges: []
-    }
-    const promises = []
-    const medicalDataKeys = Object.keys(aggregatedData)
-    ranges.forEach(range => {
-      promises.push(this.fetchPatientData({
-        startDate: range.start.toISOString(),
-        endDate: range.end.toISOString(),
-        bgUnits: this.bgUnits
-      }))
-    })
-    const results = await Promise.all(promises)
-    results.forEach(dataRange => {
-      medicalDataKeys.forEach((key) => {
-        aggregatedData[key] = aggregatedData[key].concat(dataRange[key])
-      })
-    })
-    return aggregatedData
-  }
-
-  private async fetchPatientData(options: GetPatientDataOptions): Promise<MedicalData> {
-    return await DataApi.getPatientData(this.patient, options)
   }
 
   async retrievePatientData(): Promise<MedicalData | null> {
@@ -201,4 +160,46 @@ export class PatientDataUtils {
 
     return patientData
   }
+}
+
+private async fetchPatientDataRanges(dateRange: DateRange): Promise<MedicalData> {
+  const ranges = this.partialDataLoad.getMissingRanges(dateRange)
+  const aggregatedData: MedicalData = {
+  basal: [],
+  bolus: [],
+  cbg: [],
+  confidentialModes: [],
+  deviceParametersChanges: [],
+  messages: [],
+  meals: [],
+  physicalActivities: [],
+  pumpSettings: [],
+  reservoirChanges: [],
+  smbg: [],
+  uploads: [],
+  warmUps: [],
+  wizards: [],
+  zenModes: [],
+  timezoneChanges: []
+}
+const promises = []
+const medicalDataKeys = Object.keys(aggregatedData)
+ranges.forEach(range => {
+  promises.push(this.fetchPatientData({
+    startDate: range.start.toISOString(),
+    endDate: range.end.toISOString(),
+    bgUnits: this.bgUnits
+  }))
+})
+const results = await Promise.all(promises)
+results.forEach(dataRange => {
+  medicalDataKeys.forEach((key) => {
+    aggregatedData[key] = aggregatedData[key].concat(dataRange[key])
+  })
+})
+return aggregatedData
+}
+
+private async fetchPatientData(options: GetPatientDataOptions): Promise<MedicalData> {
+  return await DataApi.getPatientData(this.patient, options)
 }

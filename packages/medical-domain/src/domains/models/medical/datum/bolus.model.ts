@@ -29,6 +29,7 @@ import type BaseDatum from './basics/base-datum.model'
 import type Wizard from './wizard.model'
 import { BolusSubtype } from './enums/bolus-subtype.enum'
 import { type DatumType } from './enums/datum-type.enum'
+import Prescriptor from './enums/prescriptor.enum'
 
 function isBolusSubType(value: unknown): boolean {
   return Object.values(BolusSubtype).includes(value as BolusSubtype)
@@ -37,9 +38,8 @@ function isBolusSubType(value: unknown): boolean {
 type Bolus = BaseDatum & {
   type: DatumType.Bolus
   subType: BolusSubtype
-  uploadId: string
   normal: number
-  prescriptor: string
+  prescriptor: Prescriptor
   wizard: Wizard | null
   expectedNormal?: number
   insulinOnBoard?: number

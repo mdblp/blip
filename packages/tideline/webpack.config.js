@@ -51,15 +51,6 @@ const lessLoaderConfiguration = {
       }
     },
     {
-      loader: 'postcss-loader',
-      options: {
-        sourceMap: true,
-        postcssOptions: {
-          path: __dirname
-        }
-      }
-    },
-    {
       loader: 'less-loader',
       options: {
         sourceMap: true,
@@ -89,7 +80,10 @@ const resolve = {
     'cartridge.png': path.resolve(__dirname, '../../branding/sitechange/cartridge.png'),
     'infusion.png': path.resolve(__dirname, '../../branding/sitechange/infusion.png'),
     'cartridge-vicentra.png': path.resolve(__dirname, '../../branding/sitechange/cartridge-vicentra.png'),
-    'warmup-dexcom.svg': path.resolve(__dirname, '../../branding/warmup/warmup-dexcom.svg')
+    'warmup-dexcom.svg': path.resolve(__dirname, '../../branding/warmup/warmup-dexcom.svg'),
+    'device-event.svg': path.resolve(__dirname, '../../branding/alarm-event/device-event.svg'),
+    'hyperglycemia-event.svg': path.resolve(__dirname, '../../branding/alarm-event/hyperglycemia-event.svg'),
+    'hypoglycemia-event.svg': path.resolve(__dirname, '../../branding/alarm-event/hypoglycemia-event.svg')
     // Theses aliases will be needed for webpack 5.x :
     // crypto: require.resolve('crypto-browserify'),
     // path: require.resolve('path-browserify'),

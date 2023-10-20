@@ -7,7 +7,8 @@
     "jest": true
   },
   "extends": [
-    "standard-with-typescript"
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:jest/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -32,6 +33,7 @@
     "space-before-function-paren": "off",
     "multiline-ternary": "off",
     "no-shadow": "off",
+    "object-curly-spacing": ["error", "always"],
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/strict-boolean-expressions": "off",
     "@typescript-eslint/space-before-function-paren": ["error", { "anonymous": "always", "named": "never", "asyncArrow": "always" }],
@@ -47,6 +49,7 @@
         "varsIgnorePattern": "^_",
         "caughtErrorsIgnorePattern": "^_"
       }
-    ]
+    ],
+    "jest/expect-expect": ["error", {"assertFunctionNames": ["expect", "test*", "check*"], "additionalTestBlockFunctions": []}]
   }
 }

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, useEffect } from 'react'
+import React, { type FC } from 'react'
 import type MedicalDataService from 'medical-domain'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -45,7 +45,12 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { type PumpSettings } from 'medical-domain'
 import moment from 'moment/moment'
-import { copySettingsToClipboard, formatParameterValue } from './utils/device.utils'
+import {
+  copySettingsToClipboard,
+  formatParameters,
+  sortParameterList,
+  sortHistory
+} from './utils/device.utils'
 
 interface DeviceSettingsProps {
   goToDailySpecificDate: (date: number) => void
@@ -70,12 +75,9 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
     await copySettingsToClipboard(lastUploadDate, device, parameters)
   }
 
-  useEffect(() => {
-    parameters.forEach(parameter => {
-      parameter.value = formatParameterValue(parameter.value, parameter.unit)
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  sortParameterList(parameters)
+  formatParameters(parameters)
+  sortHistory(history)
 
   return (
     <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
@@ -116,6 +118,7 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
           <ParametersChangeHistory
             goToDailySpecificDate={goToDailySpecificDate}
             history={history}
+            timezone={pumpSettings.timezone}
           />
         </Box>
       </CardContent>

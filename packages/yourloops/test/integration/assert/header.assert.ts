@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BoundFunctions, type queries, screen, within } from '@testing-library/react'
+import { type BoundFunctions, fireEvent, type queries, screen, within } from '@testing-library/react'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { type Team } from '../../../lib/team'
 import userEvent from '@testing-library/user-event'
@@ -124,7 +124,7 @@ export const checkCaregiverHeader = async (fullName: string) => {
 }
 
 export const checkPatientHeader = async (fullName: string) => {
-  const header = within(await screen.findByTestId('app-main-header'))
+  const header = within(await screen.findByTestId('app-main-header', {}, { timeout: 3000 }))
   expect(header.getByLabelText('Open team menu')).toBeVisible()
 
   await checkUserMenu(header, fullName, UserRole.Patient)
@@ -137,4 +137,16 @@ export const changeTeamScope = async (currentTeamName: string, wantedTeamName: s
 
   const teamScopeMenu = within(screen.getByTestId('team-scope-menu'))
   await userEvent.click(teamScopeMenu.getByText(wantedTeamName))
+}
+
+export const checkBannerLanguageChange = async () => {
+  expect(await screen.findByRole('banner')).toHaveTextContent('Ceci est le texte de la bannière en français')
+
+  fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
+  fireEvent.click(screen.getByRole('option', { name: 'English' }))
+  const saveButton = screen.getByRole('button', { name: 'Save' })
+
+  await userEvent.click(saveButton)
+
+  expect(await screen.findByRole('banner')).toHaveTextContent('This is the banner text in english')
 }

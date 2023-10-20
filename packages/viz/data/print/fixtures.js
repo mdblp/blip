@@ -218,20 +218,6 @@ export const basicsData = {
         })
       })))
     },
-    upload: {
-      data: [
-        new types.Upload({
-          normalTime: '2017-09-18T18:00:00',
-          deviceTags: ['cgm', 'insulin-pump'],
-          source: 'Diabeloop'
-        }),
-        new types.Upload({
-          normalTime: '2017-09-26T18:00:00',
-          deviceTags: ['cgm', 'insulin-pump'],
-          source: 'Diabeloop'
-        })
-      ]
-    },
     reservoirChange: {
       data: _.compact(_.map(days, (day, index) => {
         if (index % 15 !== 0) return null

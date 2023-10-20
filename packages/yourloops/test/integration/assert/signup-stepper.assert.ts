@@ -37,7 +37,7 @@ export const checkStepper = () => {
 
 export const checkAccountSelectorStep = () => {
   const caregiverRadioInput = screen.getByLabelText('Create caregiver account')
-  const hcpRadioInput = screen.getByLabelText('Create hcp account')
+  const hcpRadioInput = screen.getByLabelText('Create professional account')
   const patientRadioInput = screen.getByLabelText('Create patient account')
 
   expect(within(caregiverRadioInput).getByRole('radio')).toBeInTheDocument()
@@ -97,7 +97,7 @@ export const checkProfileStep = async (firstname: string, lastname: string) => {
 
   await userEvent.type(firstnameInput, firstname)
   await userEvent.type(lastnameInput, lastname)
-  fireEvent.mouseDown(within(countrySelect).getByRole('button'))
+  fireEvent.mouseDown(within(countrySelect).getByRole('combobox'))
   screen.getByRole('listbox')
   await userEvent.click(screen.getByRole('option', { name: 'France' }))
 }

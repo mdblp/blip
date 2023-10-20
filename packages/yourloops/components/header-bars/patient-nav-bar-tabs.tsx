@@ -28,21 +28,20 @@
 import React, { type FunctionComponent, type MouseEventHandler } from 'react'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
-import Today from '@mui/icons-material/Today'
-import TrendingUp from '@mui/icons-material/TrendingUp'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { makeStyles } from 'tss-react/mui'
 import { type Theme } from '@mui/material/styles'
 import Button from '@mui/material/Button'
 import GetAppIcon from '@mui/icons-material/GetApp'
-import { ChartTypes } from '../../enum/chart-type.enum'
-import PhonelinkSetupOutlinedIcon from '@mui/icons-material/PhonelinkSetupOutlined'
+import { PatientView } from '../../enum/patient-view.enum'
+import { useAuth } from '../../lib/auth'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import TeamUtils from '../../lib/team/team.util'
 
 interface PatientNavBarTabsProps {
-  currentChart: string
-  onChangeChart: (chart: ChartTypes) => void
+  currentPatientView: PatientView
+  onChangePatientView: (patientView: PatientView) => void
   onClickPrint: MouseEventHandler<HTMLButtonElement>
 }
 
@@ -62,7 +61,6 @@ const styles = makeStyles()((theme: Theme) => {
     },
     tab: {
       fontWeight: 'bold',
-      marginRight: theme.spacing(5),
       fontSize: theme.typography.htmlFontSize,
       color: 'var(--text-color-primary)'
     }
@@ -71,70 +69,85 @@ const styles = makeStyles()((theme: Theme) => {
 
 export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (props) => {
   const {
-    currentChart,
-    onChangeChart,
+    currentPatientView,
+    onChangePatientView,
     onClickPrint
   } = props
   const { t } = useTranslation()
   const { classes } = styles()
+  const { user } = useAuth()
+  const { selectedTeam } = useSelectedTeamContext()
 
-  const selectedTab = (): number => {
-    switch (currentChart) {
-      case ChartTypes.Daily:
-        return 1
-      case ChartTypes.Trends:
-        return 2
-      case ChartTypes.Device:
-        return 3
-      case ChartTypes.Dashboard:
-      default:
-        return 0
-    }
+  const getSelectedTab = (): PatientView => {
+    return currentPatientView ?? PatientView.Dashboard
   }
 
   return (
     <Box className={classes.tabsContainer}>
-      <Tabs value={selectedTab()} classes={{ root: classes.root }}>
+      <Tabs value={getSelectedTab()} classes={{ root: classes.root }}>
         <Tab
           className={classes.tab}
+          value={PatientView.Dashboard}
           data-testid="dashboard-tab"
           iconPosition="start"
           label={t('dashboard')}
-          icon={<DashboardOutlinedIcon />}
-          onClick={() => { onChangeChart(ChartTypes.Dashboard) }}
+          onClick={() => {
+            onChangePatientView(PatientView.Dashboard)
+          }}
           classes={{
             root: classes.root
           }}
         />
         <Tab
           className={classes.tab}
+          value={PatientView.Daily}
           data-testid="daily-tab"
           iconPosition="start"
           label={t('daily')}
-          icon={<Today />}
-          onClick={() => { onChangeChart(ChartTypes.Daily) }}
+          onClick={() => {
+            onChangePatientView(PatientView.Daily)
+          }}
           classes={{
             root: classes.root
           }}
         />
         <Tab
           className={classes.tab}
+          value={PatientView.Trends}
           data-testid="trends-tab"
           iconPosition="start"
           label={t('trends')}
-          icon={<TrendingUp />}
-          onClick={() => { onChangeChart(ChartTypes.Trends) }}
+          onClick={() => {
+            onChangePatientView(PatientView.Trends)
+          }}
           classes={{
             root: classes.root
           }}
         />
+        {user.isUserHcp() && !TeamUtils.isPrivate(selectedTeam) &&
+          <Tab
+            className={classes.tab}
+            value={PatientView.TargetAndAlerts}
+            data-testid="target-and-alerts-tab"
+            iconPosition="start"
+            label={t('target-and-alerts')}
+            onClick={() => {
+              onChangePatientView(PatientView.TargetAndAlerts)
+            }}
+            classes={{
+              root: classes.root
+            }}
+          />
+        }
         <Tab
           className={classes.tab}
+          value={PatientView.Device}
           data-testid="device-tab"
           iconPosition="start"
           label={t('device')}
-          icon={<PhonelinkSetupOutlinedIcon />}
-          onClick={() => { onChangeChart(ChartTypes.Device) }}
+          onClick={() => {
+            onChangePatientView(PatientView.Device)
+          }}
           classes={{
             root: classes.root
           }}

@@ -27,7 +27,7 @@
 
 import React, { type FunctionComponent, useEffect, useRef, useState } from 'react'
 import { PatientNavBarMemoized as PatientNavBar } from '../header-bars/patient-nav-bar'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { PrintPDFDialog } from '../pdf/print-pdf-dialog'
 import { PatientDashboard } from '../dashboard-widgets/patient-dashboard'
@@ -48,27 +48,31 @@ import { useDailyNotes } from './daily-notes.hook'
 import metrics from '../../lib/metrics'
 import DailyNotes from 'blip/app/components/messages'
 import { useAuth } from '../../lib/auth'
-import { DevicePage } from '../../pages/device/device-page'
+import { DeviceView } from '../../pages/patient-view/device/device-view'
+import { setPageTitle } from '../../lib/utils'
+import { TargetAndAlertsView } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import TeamUtils from '../../lib/team/team.util'
 
 export const PatientData: FunctionComponent = () => {
   const alert = useAlert()
   const theme = useTheme()
   const { t } = useTranslation()
   const patientIdForWhichDataHasBeenFetched = useRef(null)
+  const { selectedTeam } = useSelectedTeamContext()
 
   const {
     bgPrefs,
     chartPrefs,
-    changeChart,
+    changePatientView,
     changePatient,
-    currentChart,
-    dashboardEpochDate,
-    dataUtil,
+    currentPatientView,
     dailyDate,
     dailyChartRef,
     fetchPatientData,
     goToDailySpecificDate,
     handleDatetimeLocationChange,
+    updateDataForGivenRange,
     loadingData,
     medicalData,
     msRange,
@@ -94,6 +98,8 @@ export const PatientData: FunctionComponent = () => {
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
 
+  setPageTitle(t(currentPatientView))
+
   useEffect(() => {
     if (patient.userid !== patientIdForWhichDataHasBeenFetched.current) {
       patientIdForWhichDataHasBeenFetched.current = patient.userid
@@ -109,9 +115,9 @@ export const PatientData: FunctionComponent = () => {
   return (
     <React.Fragment>
       <PatientNavBar
-        currentChart={currentChart}
+        currentPatientView={currentPatientView}
         currentPatient={patient}
-        onChangeChart={changeChart}
+        onChangePatientView={changePatientView}
         onClickPrint={() => {
           setShowPdfDialog(true)
         }}
@@ -136,12 +142,13 @@ export const PatientData: FunctionComponent = () => {
                   disableElevation
                   onClick={refreshData}
                   sx={{ marginTop: theme.spacing(1) }}
+                  data-testid="no-data-refresh-button"
                 >
                   {t('refresh')}
                 </Button>
               </Box>
             }
-            {medicalData?.hasDiabetesData() && dataUtil &&
+            {medicalData?.hasDiabetesData() &&
               <React.Fragment>
                 <Routes>
                   <Route
@@ -149,11 +156,7 @@ export const PatientData: FunctionComponent = () => {
                     element={
                       <PatientDashboard
                         bgPrefs={bgPrefs}
-                        dataUtil={dataUtil}
-                        dashboardEpochDate={dashboardEpochDate}
-                        goToDailySpecificDate={goToDailySpecificDate}
                         medicalDataService={medicalData}
-                        msRange={msRange}
                         patient={patient}
                         timePrefs={timePrefs}
                         loading={refreshingData}
@@ -166,7 +169,6 @@ export const PatientData: FunctionComponent = () => {
                       <React.Fragment>
                         <Daily
                           bgPrefs={bgPrefs}
-                          dataUtil={dataUtil}
                           timePrefs={timePrefs}
                           patient={patient}
                           tidelineData={medicalData}
@@ -204,8 +206,6 @@ export const PatientData: FunctionComponent = () => {
                       <Trends
                         bgPrefs={bgPrefs}
                         chartPrefs={chartPrefs}
-                        dataUtil={dataUtil}
-                        timePrefs={timePrefs}
                         epochLocation={trendsDate}
                         msRange={msRange}
                         patient={patient}
@@ -221,19 +221,31 @@ export const PatientData: FunctionComponent = () => {
                   <Route
                     path={AppUserRoute.Device}
                     element={
-                    <DevicePage
-                      goToDailySpecificDate={goToDailySpecificDate}
-                      medicalData={medicalData}
+                      <DeviceView
+                        goToDailySpecificDate={goToDailySpecificDate}
+                        medicalData={medicalData}
+                      />
+                    }
+                  />
+                  {
+                    user.isUserHcp() && !TeamUtils.isPrivate(selectedTeam) &&
+                    <Route
+                      path={AppUserRoute.TargetAndAlerts}
+                      element={
+                        <TargetAndAlertsView
+                          patient={patient}
+                        />
+                      }
                     />
                   }
-                  />
+                  <Route path="*" element={<Navigate to={AppUserRoute.Dashboard} replace />} />
                 </Routes>
                 {showPdfDialog &&
                   <PrintPDFDialog
                     bgPrefs={bgPrefs}
-                    dataUtil={dataUtil}
                     defaultPreset={'1week'}
                     medicalData={medicalData}
+                    updateDataForGivenRange={updateDataForGivenRange}
                     patient={patient}
                     onClose={() => {
                       setShowPdfDialog(false)

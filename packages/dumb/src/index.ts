@@ -25,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { AlarmEventTooltip } from './components/tooltips/alarm-event-tooltip/alarm-event-tooltip'
 import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
 import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
 import { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
@@ -42,14 +43,12 @@ import { formatBgValue } from './utils/format/format.util'
 import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
 import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
 import { InsulinStatMemoized as InsulinStat } from './components/stats/insulin/insulin-stat'
-import { TotalCarbsStatMemoized as TotalCarbsStat } from './components/stats/total-carbs/total-carbs-stat'
 import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mode-stat/loop-mode-stat'
+import { CarbsStatItemMemoized as CarbsStatItem } from './components/stats/total-carbs/total-carbs-stat'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
 import Tooltip from './components/tooltips/common/tooltip/tooltip'
-import {
-  AverageDailyDoseStatMemoized as AverageDailyDoseStat
-} from './components/stats/average-daily-dose/average-daily-dose-stat'
+import { AverageDailyDoseStatMemoized as AverageDailyDoseStat } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 import { type BgPrefs } from './models/blood-glucose.model'
 import { RangeSelect } from './components/trends/cbg/range-select/range-select'
@@ -61,7 +60,7 @@ import { PrintView } from './modules/print/print-view/print-view'
 import { LayoutColumnType } from './models/enums/layout-column-type.enum'
 import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
 import { getPatientFullName } from './utils/patient/patient.util'
-import { formatBirthdate, formatLocalizedFromUTC, getLongDayHourFormat, formatDate } from './utils/datetime/datetime.util'
+import { formatBirthdate, formatLocalizedFromUTC, getLongDayHourFormat, formatDate, TIMEZONE_UTC } from './utils/datetime/datetime.util'
 import { renderPageNumbers } from './utils/pdf/pdf.util'
 
 export {
@@ -83,6 +82,7 @@ export {
   FoodTooltip,
   formatBirthdate,
   getPatientFullName,
+  AlarmEventTooltip,
   formatBgValue,
   LayoutColumnType,
   LoopModeStat,
@@ -96,9 +96,10 @@ export {
   StatTooltip,
   Tooltip,
   InsulinStat,
-  TotalCarbsStat,
+  CarbsStatItem,
   TrendsContainer,
   TrendsProvider,
   formatLocalizedFromUTC,
-  getLongDayHourFormat
+  getLongDayHourFormat,
+  TIMEZONE_UTC
 }

@@ -32,7 +32,6 @@ import { type DatumType } from './enums/datum-type.enum'
 type ZenMode = BaseDatum & Duration & {
   type: DatumType.DeviceEvent
   subType: 'zen'
-  uploadId: string
   guid: string
   inputTime: string
 }

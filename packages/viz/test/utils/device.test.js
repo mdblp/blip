@@ -23,42 +23,6 @@ import { ANIMAS, TANDEM, INSULET, MEDTRONIC, DIABELOOP, getPumpVocabularies } fr
 import * as device from '../../src/utils/device'
 
 describe('device utility functions', () => {
-  describe('getLatestPumpUpload', () => {
-    it('should return a pump with proper data', () => {
-      const data = [
-        {
-          deviceTags: ['bgm'],
-          source: 'BGM'
-        },
-        {
-          deviceTags: ['insulin-pump'],
-          source: TANDEM
-        },
-        {
-          deviceTags: ['insulin-pump', 'bgm'],
-          source: INSULET
-        },
-        {
-          deviceTags: ['cgm'],
-          source: 'CGM'
-        }
-      ]
-
-      expect(device.getLatestPumpUpload(data)).to.eql(data[2])
-    })
-
-    it('should return `undefined` without proper data', () => {
-      const patientData = {
-        grouped: {
-          pumpSettings: []
-        }
-      }
-
-      expect(device.getLatestPumpUpload(patientData)).to.equal(undefined)
-      expect(device.getLatestPumpUpload([])).to.equal(undefined)
-    })
-  })
-
   describe('isAutomatedBasalDevice', () => {
     it('should return `true` for an upload record for a pump with automated basal delivery capabilities', () => {
       expect(device.isAutomatedBasalDevice(MEDTRONIC, '1780')).to.be.true
