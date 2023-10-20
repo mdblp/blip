@@ -38,7 +38,6 @@ import type PumpSettings from './datum/pump-settings.model'
 import type ReservoirChange from './datum/reservoir-change.model'
 import type Smbg from './datum/smbg.model'
 import type TimeZoneChange from './datum/time-zone-change.model'
-import type Upload from './datum/upload.model'
 import type WarmUp from './datum/warm-up.model'
 import type Wizard from './datum/wizard.model'
 import type ZenMode from './datum/zen-mode.model'
@@ -47,7 +46,7 @@ import { type WeekDaysFilter } from '../time/date-filter.model'
 import { AlarmEvent } from './datum/alarm-event.model';
 
 type Datum = AlarmEvent | Basal | Bolus | Cbg | ConfidentialMode | DeviceParameterChange | Fill | Meal |
-Message | PhysicalActivity | PumpSettings | ReservoirChange | Smbg | Upload | Wizard |
+Message | PhysicalActivity | PumpSettings | ReservoirChange | Smbg | Wizard |
 ZenMode | TimeZoneChange | WarmUp
 
 interface DatumProcessor<T> {

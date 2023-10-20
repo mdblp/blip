@@ -390,7 +390,7 @@ describe('basics data utils', () => {
       const basicsData = {
         data: {
           [SITE_CHANGE_RESERVOIR]: { dataByDate: countSiteChangesByDay },
-          upload: { data: [new Types.Upload({ deviceTags: ['cgm', 'insulin-pump'], source: DIABELOOP })] }
+          pumpSettings: [{ source: DIABELOOP }]
         },
         days: oneWeekDates,
         sections: siteChangeSections
