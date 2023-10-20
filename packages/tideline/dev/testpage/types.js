@@ -287,31 +287,6 @@ var DeviceEvent = function(opts) {
 
 DeviceEvent.prototype = common
 
-var Upload = function(opts) {
-  opts = opts || {}
-  var defaults = {
-    deviceTime: this.makeDeviceTime(),
-    timezone
-  }
-  _.defaults(opts, defaults)
-
-  this.type = 'upload'
-  this.deviceTags = opts.deviceTags
-  this.deviceTime = opts.deviceTime
-  this.deviceModel = opts.deviceModel
-  this.source = opts.source
-
-  this.time = this.makeTime()
-  this.timezone = opts.timezone
-  this.normalTime = this.makeNormalTime()
-  this.createdTime = this.makeTime()
-  this.timezoneOffset = this.makeTimezoneOffset()
-
-  this.id = this.makeId()
-}
-
-Upload.prototype = common
-
 var Wizard = function(opts) {
   opts = opts || {}
   if (opts.bolus) {
@@ -390,7 +365,6 @@ export {
   Message,
   Settings,
   SMBG,
-  Upload,
   Wizard,
   PhysicalActivity
 }

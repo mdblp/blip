@@ -63,7 +63,6 @@ import type ReservoirChange from './domains/models/medical/datum/reservoir-chang
 import type Smbg from './domains/models/medical/datum/smbg.model'
 import Source from './domains/models/medical/datum/enums/source.enum'
 import Unit from './domains/models/medical/datum/enums/unit.enum'
-import type Upload from './domains/models/medical/datum/upload.model'
 import type Wizard from './domains/models/medical/datum/wizard.model'
 import { WizardInputMealFat } from './domains/models/medical/datum/enums/wizard-input-meal-fat.enum'
 import { WizardInputMealSource } from './domains/models/medical/datum/enums/wizard-input-meal-source.enum'
@@ -136,7 +135,6 @@ export {
   Source,
   type TimePrefs,
   Unit,
-  type Upload,
   type Wizard,
   WizardInputMealFat,
   WizardInputMealSource,

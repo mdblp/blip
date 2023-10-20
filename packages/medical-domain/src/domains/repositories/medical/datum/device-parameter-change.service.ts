@@ -33,7 +33,7 @@ import type Unit from '../../../models/medical/datum/enums/unit.enum'
 import { getConvertedParamUnitAndValue } from '../../../utils/unit.util'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import DatumService from '../datum.service'
-import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
+import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../../models/time/date-filter.model'
 import { DeviceEventSubtype } from '../../../models/medical/datum/enums/device-event-subtype.enum'
 
 /**
@@ -56,7 +56,6 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
         id: base.id,
         epoch: base.epoch,
         timezone: base.timezone,
-        uploadId: rawData.uploadId as string,
         name: rawData.name as string,
         level: rawData.level as string,
         units: unit as Unit,
@@ -79,9 +78,7 @@ const groupData = (data: DeviceParameterChange[]): DeviceParameterChange[] => {
   let currentGroup: DeviceParameterChange | null = null
   data.forEach((currentParam) => {
     const paramList = currentParam.params.map(p => {
-      if (p.id === currentParam.id) {
-        p.timezone = currentParam.timezone
-      }
+      p.timezone = currentParam.timezone
       return p
     })
     currentParam.params = paramList

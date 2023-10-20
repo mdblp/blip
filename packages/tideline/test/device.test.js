@@ -18,45 +18,9 @@
 import { expect } from 'chai'
 
 import * as constants from '../plugins/blip/basics/logic/constants'
-import { getLatestPumpUpload, isAutomatedBasalDevice } from '../js/data/util/device'
+import { isAutomatedBasalDevice } from '../js/data/util/device'
 
 describe('device utility functions', function() {
-  describe('getLatestPumpUpload', function() {
-    it('should return a pump with proper data', function() {
-      var data = [
-        {
-          deviceTags: ['bgm'],
-          source: 'BGM'
-        },
-        {
-          deviceTags: ['insulin-pump'],
-          source: constants.TANDEM
-        },
-        {
-          deviceTags: ['insulin-pump', 'bgm'],
-          source: constants.INSULET
-        },
-        {
-          deviceTags: ['cgm'],
-          source: 'CGM'
-        }
-      ]
-
-      expect(getLatestPumpUpload(data)).to.eql(data[2])
-    })
-
-    it('should return `undefined` without proper data', function() {
-      var patientData = {
-        grouped: {
-          pumpSettings: []
-        }
-      }
-
-      expect(getLatestPumpUpload(patientData)).to.equal(undefined)
-      expect(getLatestPumpUpload([])).to.equal(undefined)
-    })
-  })
-
   describe('isAutomatedBasalDevice', function() {
     it('should return `true` for an upload record for a pump with automated basal delivery capabilities', function() {
       var upload = {

@@ -42,7 +42,6 @@ import ReservoirChangeService from '../../../src/domains/repositories/medical/da
 import SmbgService from '../../../src/domains/repositories/medical/datum/smbg.service'
 import WarmUpService from '../../../src/domains/repositories/medical/datum/warm-up.service'
 import WizardService from '../../../src/domains/repositories/medical/datum/wizard.service'
-import UploadService from '../../../src/domains/repositories/medical/datum/upload.service'
 import ZenModeService from '../../../src/domains/repositories/medical/datum/zen-mode.service'
 import { type DatumProcessor } from '../../../src/domains/models/medical/datum.model'
 import type Datum from '../../../src/domains/models/medical/datum.model'
@@ -83,10 +82,6 @@ const knownTypes: Array<{ data: Record<string, unknown>, service: DatumProcessor
   {
     data: { type: 'smbg' },
     service: SmbgService
-  },
-  {
-    data: { type: 'upload' },
-    service: UploadService
   },
   {
     data: { type: 'wizard' },

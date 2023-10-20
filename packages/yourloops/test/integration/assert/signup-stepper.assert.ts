@@ -37,7 +37,7 @@ export const checkStepper = () => {
 
 export const checkAccountSelectorStep = () => {
   const caregiverRadioInput = screen.getByLabelText('Create caregiver account')
-  const hcpRadioInput = screen.getByLabelText('Create hcp account')
+  const hcpRadioInput = screen.getByLabelText('Create professional account')
   const patientRadioInput = screen.getByLabelText('Create patient account')
 
   expect(within(caregiverRadioInput).getByRole('radio')).toBeInTheDocument()

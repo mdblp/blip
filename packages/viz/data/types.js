@@ -287,27 +287,6 @@ export class DeviceEvent extends Common {
   }
 }
 
-export class Upload extends Common {
-  constructor(opts = {}) {
-    super(opts)
-
-    _.defaults(opts, {
-      deviceTime: this.makeDeviceTime(),
-      deviceTags: ['cgm', 'insulin-pump']
-    })
-
-    this.type = 'upload'
-    this.deviceTags = opts.deviceTags
-    this.deviceTime = opts.deviceTime
-    this.deviceModel = opts.deviceModel
-
-    this.time = this.makeTime()
-    this.normalTime = this.makeNormalTime()
-    this.createdTime = this.makeTime()
-    this.epoch = Date.parse(this.normalTime)
-  }
-}
-
 export class Wizard extends Common {
   constructor(opts = {}) {
     super(opts)
@@ -401,6 +380,5 @@ export const types = {
   PumpSettings,
   Settings,
   SMBG,
-  Upload,
   Wizard
 }

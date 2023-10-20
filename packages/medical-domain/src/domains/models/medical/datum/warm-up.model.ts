@@ -33,7 +33,6 @@ import { type DeviceEventSubtype } from './enums/device-event-subtype.enum'
 type WarmUp = BaseDatum & Duration & {
   type: DatumType.DeviceEvent
   subType: DeviceEventSubtype.Warmup
-  uploadId: string
   guid: string
   inputTime: string
 }

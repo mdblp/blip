@@ -33,7 +33,6 @@ import { type DeviceEventSubtype } from './enums/device-event-subtype.enum'
 type ConfidentialMode = BaseDatum & Duration & {
   type: DatumType.DeviceEvent
   subType: DeviceEventSubtype.Confidential
-  uploadId: string
   guid: string
   inputTime: string
 }
