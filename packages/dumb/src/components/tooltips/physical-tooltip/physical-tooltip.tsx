@@ -40,7 +40,7 @@ import { Tooltip } from '../../../index'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { formatInputTime } from '../../../utils/format/format.util'
 import colors from '../../../styles/colors.css'
-import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { convertValueToMinutes } from '../../../utils/datetime/datetime.util'
 import { DurationUnit, type DurationValue, type PhysicalActivity, type TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
@@ -75,7 +75,7 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
       position={position}
       side={side || COMMON_TOOLTIP_SIDE}
       borderColor={colors.physicalActivity}
-      dateTitle={getDateTitle(physicalActivity, timePrefs)}
+      dateTitle={getDateTitleForBaseDatum(physicalActivity, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tail={DEFAULT_TOOLTIP_TAIL}

@@ -48,6 +48,7 @@ export const PHYSICAL_ACTIVITY_TIME = '2022-08-08T13:00:00Z'
 export const RESERVOIR_CHANGE_ID = 'reservoirChangeId'
 export const PARAMETER_ID = 'parameterId'
 export const ALARM_EVENT_HYPERGLYCEMIA_ID = 'alarmEventHyperglycemiaId'
+export const ALARM_EVENT_HYPERGLYCEMIA_OTHER_OCCURRENCE_ID = 'alarmEventHyperglycemiaOtherOccurrenceId'
 export const ALARM_EVENT_HYPOGLYCEMIA_ID = 'alarmEventHypoglycemiaId'
 export const ALARM_EVENT_INSIGHT_EMPTY_INSULIN_CARTRIDGE_ID = 'alarmEventInsightEmptyInsulinCartridgeId'
 export const ALARM_EVENT_INSIGHT_EMPTY_PUMP_BATTERY_ID = 'alarmEventInsightEmptyPumpBatteryId'
@@ -161,6 +162,7 @@ export const completeDailyViewData: Data = {
     { time: '2022-08-08T17:00:00Z', type: 'deviceEvent', id: RESERVOIR_CHANGE_ID, subType: 'reservoirChange', timezone: 'Europe/Paris', uploadId: 'osef', _userId: 'osef' },
     { time: '2022-08-08T08:00:00Z', type: 'deviceEvent', id: PARAMETER_ID, lastUpdateDate: '2022-08-08T08:00:00Z', level: '1', name: 'MEAL_RATIO_LUNCH_FACTOR', previousValue: '110', subType: 'deviceParameter', timezone: 'UTC', units: '%', uploadId: 'osef', value: '100', _userId: 'osef' },
     { time: '2022-08-08T09:00:00Z', type: 'deviceEvent', id: 'alarm-01', guid: ALARM_EVENT_HYPERGLYCEMIA_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '10113', alarmLabel: 'NA', alarmLevel: 'alert', alarmType: 'handset', eventId: 'Alarm7001', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
+    { time: '2022-08-08T09:05:00Z', type: 'deviceEvent', id: 'alarm-011', guid: ALARM_EVENT_HYPERGLYCEMIA_OTHER_OCCURRENCE_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '10113', alarmLabel: 'NA', alarmLevel: 'alert', alarmType: 'handset', eventId: 'Alarm7001', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
     { time: '2022-08-08T09:05:00Z', type: 'deviceEvent', id: 'alarm-02', guid: ALARM_EVENT_HYPOGLYCEMIA_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '12000', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7002', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
     { time: '2022-08-08T09:10:00Z', type: 'deviceEvent', id: 'alarm-03', guid: ALARM_EVENT_INSIGHT_EMPTY_INSULIN_CARTRIDGE_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '71002', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7003', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
     { time: '2022-08-08T09:15:00Z', type: 'deviceEvent', id: 'alarm-04', guid: ALARM_EVENT_INSIGHT_EMPTY_PUMP_BATTERY_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '71001', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7004', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,8 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { getDateTitle } from './tooltip.util'
+import { computeDateValue, getDateTitleForBaseDatum } from './tooltip.util'
 import { type BaseDatum, type Source, type TimePrefs } from 'medical-domain'
+import { DateTitle } from '../../components/tooltips/common/tooltip/tooltip'
 
 describe('TooltipUtil', () => {
   const timePrefs = {
@@ -35,7 +36,7 @@ describe('TooltipUtil', () => {
   }
   const customNormalTime = 'Normal time'
 
-  describe('getDateTitle', () => {
+  describe('getDateTitleForBaseDatum', () => {
     it('should return the values from data if provided', () => {
       const customSource = 'Other source'
       const customTimezone = 'Custom timezone'
@@ -45,7 +46,7 @@ describe('TooltipUtil', () => {
         timezone: customTimezone
       } as BaseDatum
 
-      expect(getDateTitle(data, timePrefs as TimePrefs)).toEqual({
+      expect(getDateTitleForBaseDatum(data, timePrefs as TimePrefs)).toEqual({
         source: customSource,
         normalTime: customNormalTime,
         timezone: customTimezone,
@@ -56,12 +57,43 @@ describe('TooltipUtil', () => {
     it('should return default values if some information is missing from data', () => {
       const data = { normalTime: customNormalTime } as BaseDatum
 
-      expect(getDateTitle(data, timePrefs as TimePrefs)).toEqual({
+      expect(getDateTitleForBaseDatum(data, timePrefs as TimePrefs)).toEqual({
         source: 'Diabeloop',
         normalTime: customNormalTime,
         timezone: 'UTC',
         timePrefs
       })
+    })
+  })
+
+  describe('computeDateValue', () => {
+    const defaultDateTitle: DateTitle = {
+      normalTime: 'TBD',
+      timezone: 'Europe/Paris',
+      source: 'not Diabeloop',
+      timePrefs: {
+        timezoneAware: true,
+        timezoneName: 'Europe/Paris'
+      }
+    }
+
+    it('should return undefined when dateTitle is undefined', () => {
+      const dateValue = computeDateValue()
+      expect(dateValue).toBeUndefined()
+    })
+
+    it('should return correct value when source is not "Diabeloop"', () => {
+      const date = '2020-01-13T'
+      const dateTitle = { ...defaultDateTitle, normalTime: `${date}22:00:00.000Z` }
+      const dateValue = computeDateValue(dateTitle)
+      expect(dateValue).toBe('11:00 pm')
+    })
+
+    it('should return correct value when source is "Diabeloop"', () => {
+      const date = '2020-01-13T'
+      const dateTitle = { ...defaultDateTitle, normalTime: `${date}22:00:00.000Z`, source: 'Diabeloop' }
+      const dateValue = computeDateValue(dateTitle)
+      expect(dateValue).toBe('11:00 pm')
     })
   })
 })

@@ -39,7 +39,7 @@ import {
 import commonStyles from '../../../styles/tooltip-common.css'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
-import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { type Meal, Prescriptor, type TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
@@ -68,7 +68,7 @@ export const FoodTooltip: FunctionComponent<FoodTooltipProps> = (props) => {
       position={position}
       side={side || COMMON_TOOLTIP_SIDE}
       borderColor={colors.rescuecarbs}
-      dateTitle={getDateTitle(food, timePrefs)}
+      dateTitle={getDateTitleForBaseDatum(food, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tail={DEFAULT_TOOLTIP_TAIL}

@@ -29,7 +29,7 @@ import React, { type FunctionComponent } from 'react'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { convertBgClassesToBgBounds, getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
-import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { formatBgValue } from '../../../utils/format/format.util'
 import {
@@ -74,7 +74,7 @@ export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = 
       position={position}
       side={side || COMMON_TOOLTIP_SIDE}
       borderColor={colors[bgClass] || colors.bolus}
-      dateTitle={getDateTitle(data, timePrefs)}
+      dateTitle={getDateTitleForBaseDatum(data, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tail={DEFAULT_TOOLTIP_TAIL}

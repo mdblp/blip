@@ -109,42 +109,6 @@ describe('Tooltip hook', () => {
     })
   })
 
-  describe('computeDateValue', () => {
-    const defaultDateTitle: DateTitle = {
-      normalTime: 'TBD',
-      timezone: 'Europe/Paris',
-      source: 'not Diabeloop',
-      timePrefs: {
-        timezoneAware: true,
-        timezoneName: 'Europe/Paris'
-      }
-    }
-    it('should return undefined when dateTitle is undefined', () => {
-      const props = { ...defaultProps, dateTitle: undefined }
-      const { result } = renderHook(() => useTooltip(props))
-      const dateValue = result.current.computeDateValue()
-      expect(dateValue).toBeUndefined()
-    })
-
-    it('should return correct value when source is not "Diabeloop"', () => {
-      const date = '2020-01-13T'
-      const dateTitle = { ...defaultDateTitle, normalTime: `${date}22:00:00.000Z` }
-      const props = { ...defaultProps, dateTitle }
-      const { result } = renderHook(() => useTooltip(props))
-      const dateValue = result.current.computeDateValue()
-      expect(dateValue).toBe('11:00 pm')
-    })
-
-    it('should return correct value when source is "Diabeloop"', () => {
-      const date = '2020-01-13T'
-      const dateTitle = { ...defaultDateTitle, normalTime: `${date}22:00:00.000Z`, source: 'Diabeloop' }
-      const props = { ...defaultProps, dateTitle }
-      const { result } = renderHook(() => useTooltip(props))
-      const dateValue = result.current.computeDateValue()
-      expect(dateValue).toBe('11:00 pm')
-    })
-  })
-
   describe('computeTailData', () => {
     let props = {
       ...defaultProps,
