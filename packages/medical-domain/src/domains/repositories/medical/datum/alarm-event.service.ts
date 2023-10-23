@@ -40,8 +40,8 @@ import { AlarmCode } from '../../../models/medical/datum/enums/alarm-code.enum'
 import moment from 'moment-timezone';
 
 interface AlarmEventsWithLastOccurrence {
-  lastOccurrence: string;
-  alarmEvents: AlarmEvent[];
+  lastOccurrence: string
+  alarmEvents: AlarmEvent[]
 }
 
 type GroupedAlarmEvents = {
