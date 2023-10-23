@@ -36,6 +36,5 @@ export enum DatumType {
   PhysicalActivity = 'physicalActivity',
   PumpSettings = 'pumpSettings',
   Smbg = 'smbg',
-  Upload = 'upload',
   Wizard = 'wizard'
 }

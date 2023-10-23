@@ -40,7 +40,6 @@ import PhysicalActivityService from './datum/physical-activity.service'
 import PumpSettingsService from './datum/pump-settings.service'
 import ReservoirChangeService from './datum/reservoir-change.service'
 import SmbgService from './datum/smbg.service'
-import UploadService from './datum/upload.service'
 import WarmUpService from './datum/warm-up.service'
 import WizardService from './datum/wizard.service'
 import ZenModeService from './datum/zen-mode.service'
@@ -49,49 +48,49 @@ import { isBasal } from '../../models/medical/datum/basal.model'
 import { isDuration } from '../../models/medical/datum/basics/duration.model'
 import { isBg } from '../../models/medical/datum/bg.model'
 import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../models/time/date-filter.model'
+import { DatumType } from '../../models/medical/datum/enums/datum-type.enum';
+import { DeviceEventSubtype } from '../../models/medical/datum/enums/device-event-subtype.enum';
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Datum => {
   let type = rawData.type
   if (type === undefined && rawData.messagetext) {
-    type = 'message'
+    type = DatumType.Message
   }
-  switch (type as string) {
-    case 'basal':
+  switch (type as DatumType) {
+    case DatumType.Basal:
       return BasalService.normalize(rawData, opts)
-    case 'bolus':
+    case DatumType.Bolus:
       return BolusService.normalize(rawData, opts)
-    case 'cbg':
+    case DatumType.Cbg:
       return CbgService.normalize(rawData, opts)
-    case 'deviceEvent':
+    case DatumType.DeviceEvent:
       switch (rawData.subType as string) {
-        case 'alarm':
+        case DeviceEventSubtype.Alarm:
           return AlarmEventService.normalize(rawData, opts)
-        case 'confidential':
+        case DeviceEventSubtype.Confidential:
           return ConfidentialModeService.normalize(rawData, opts)
-        case 'deviceParameter':
+        case DeviceEventSubtype.DeviceParameter:
           return DeviceParameterChangeService.normalize(rawData, opts)
-        case 'reservoirChange':
+        case DeviceEventSubtype.ReservoirChange:
           return ReservoirChangeService.normalize(rawData, opts)
-        case 'zen':
+        case DeviceEventSubtype.Zen:
           return ZenModeService.normalize(rawData, opts)
-        case 'warmup':
+        case DeviceEventSubtype.Warmup:
           return WarmUpService.normalize(rawData, opts)
         default:
           throw new Error(`Unknown deviceEvent subType ${rawData.subType as string}`)
       }
-    case 'food':
+    case DatumType.Food:
       return MealService.normalize(rawData, opts)
-    case 'message':
+    case DatumType.Message:
       return MessageService.normalize(rawData, opts)
-    case 'physicalActivity':
+    case DatumType.PhysicalActivity:
       return PhysicalActivityService.normalize(rawData, opts)
-    case 'pumpSettings':
+    case DatumType.PumpSettings:
       return PumpSettingsService.normalize(rawData, opts)
-    case 'smbg':
+    case DatumType.Smbg:
       return SmbgService.normalize(rawData, opts)
-    case 'upload':
-      return UploadService.normalize(rawData, opts)
-    case 'wizard':
+    case DatumType.Wizard:
       return WizardService.normalize(rawData, opts)
     default:
       throw new Error(`Unknown datum type ${rawData.type as string}`)

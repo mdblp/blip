@@ -16,6 +16,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2630 As a user, I would like to be notified with a banner when there are ongoing issues with yourloops
 - YLP-2652 Improve error message on app crash
 - YLP-2668 Remove icons of the tabs and widget titles
+- YLP-2670 Remove target & alerts view from "private practice"
 - YLP-2671 Group alarms with the same code occurring in a 30 mn interval
 
 ### Fixed
@@ -31,6 +32,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2594 Handle release branches in GitHub CI workflow
 - YLP-2595 Update deprecated GitHub Actions to Node 16
 - YLP-2596 Add visual regression tests
+- YLP-2622 Remove references to uploads in the app
 - YLP-2631 Calls made to /harbour/errors do not always give an error message
 - YLP-2672 Error code given by the front should be findable in kibana
 

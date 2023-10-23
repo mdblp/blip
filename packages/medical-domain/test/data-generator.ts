@@ -41,7 +41,6 @@ import type PhysicalActivity from '../src/domains/models/medical/datum/physical-
 import type PumpSettings from '../src/domains/models/medical/datum/pump-settings.model'
 import type ReservoirChange from '../src/domains/models/medical/datum/reservoir-change.model'
 import type Smbg from '../src/domains/models/medical/datum/smbg.model'
-import type Upload from '../src/domains/models/medical/datum/upload.model'
 import type WarmUp from '../src/domains/models/medical/datum/warm-up.model'
 import type Wizard from '../src/domains/models/medical/datum/wizard.model'
 import type ZenMode from '../src/domains/models/medical/datum/zen-mode.model'
@@ -54,11 +53,10 @@ import PumpManufacturer from '../src/domains/models/medical/datum/enums/pump-man
 import { DeviceEventSubtype } from '../src/domains/models/medical/datum/enums/device-event-subtype.enum'
 import { getTrendsTime } from '../src/domains/repositories/time/time.service'
 
-function createBaseData(date?: Date): BaseDatum {
+function createBaseData(date?: Date): Omit<BaseDatum, 'type'> {
   const pastDate = date ?? faker.date.recent({ days: 20 })
   return {
     id: faker.string.uuid(),
-    type: DatumType.Upload,
     source: Source.Diabeloop,
     timezone: 'Europe/Paris',
     epoch: pastDate.valueOf(),
@@ -68,7 +66,7 @@ function createBaseData(date?: Date): BaseDatum {
   }
 }
 
-function createBaseDurationData(date?: Date): BaseDatum & Duration {
+function createBaseDurationData(date?: Date): Omit<BaseDatum, 'type'> & Duration {
   const baseData = createBaseData(date)
   const duration = faker.number.int({ min: 60000, max: 300000 })
   const epochEnd = baseData.epoch + duration
@@ -111,7 +109,6 @@ function createRandomBasal(date?: Date, hours?: number): Basal {
     ...baseData,
     type: DatumType.Basal,
     subType: 'automated',
-    uploadId: faker.string.uuid(),
     internalId: faker.string.uuid(),
     deliveryType: 'automated',
     duration,
@@ -126,7 +123,6 @@ function createRandomBolus(date?: Date): Bolus {
     ...createBaseData(date),
     type: DatumType.Bolus,
     subType: faker.helpers.arrayElement(Object.values(BolusSubtype)),
-    uploadId: faker.string.uuid(),
     normal: 0,
     prescriptor: Prescriptor.Auto,
     wizard: null
@@ -151,7 +147,6 @@ function createModeData(mode: DeviceEventSubtype.Confidential | DeviceEventSubty
     ...createBaseDurationData(date),
     type: DatumType.DeviceEvent,
     subType: mode,
-    uploadId: faker.string.uuid(),
     guid: faker.string.uuid(),
     inputTime
   }
@@ -175,7 +170,6 @@ function createMealData(date?: Date): Meal {
     ...createBaseData(date),
     type: DatumType.Food,
     meal: 'rescuecarbs',
-    uploadId: faker.string.uuid(),
     nutrition: {
       carbohydrate: {
         net: 5,
@@ -204,7 +198,6 @@ function createRandomPhysicalActivity(date?: Date): PhysicalActivity {
   return {
     ...createBaseDurationData(date),
     type: DatumType.PhysicalActivity,
-    uploadId: faker.string.uuid(),
     guid: faker.string.uuid(),
     reportedIntensity: faker.helpers.arrayElement(Object.values(Intensity)),
     eventId: faker.string.uuid(),
@@ -212,11 +205,10 @@ function createRandomPhysicalActivity(date?: Date): PhysicalActivity {
   }
 }
 
-function createRandomPumpSetttings(date?: Date): PumpSettings {
+function createRandomPumpSettings(date?: Date): PumpSettings {
   return {
     ...createBaseData(date),
     type: DatumType.PumpSettings,
-    uploadId: faker.string.uuid(),
     basalSchedules: [],
     activeSchedule: '',
     deviceId: faker.string.uuid(),
@@ -257,7 +249,6 @@ function createRandomReservoirChange(date?: Date): ReservoirChange {
     ...createBaseData(date),
     type: DatumType.DeviceEvent,
     subType: DeviceEventSubtype.ReservoirChange,
-    uploadId: faker.string.uuid(),
     pump: {
       expirationDate: faker.date.future().toISOString(),
       manufacturer: PumpManufacturer.Default,
@@ -275,31 +266,6 @@ function createRandomSmbg(date?: Date): Smbg {
   }
 }
 
-function createRandomUpload(date?: Date): Upload {
-  return {
-    ...createBaseData(date),
-    type: DatumType.Upload,
-    uploadId: faker.string.uuid(),
-
-    _dataState: '',
-    _deduplicator: {
-      name: '',
-      version: faker.system.semver()
-    },
-    _state: '',
-    client: {
-      name: '',
-      version: faker.system.semver()
-    },
-    dataSetType: '',
-    deviceManufacturers: [],
-    deviceModel: '',
-    deviceTags: [],
-    revision: faker.system.semver(),
-    version: faker.system.semver()
-  }
-}
-
 function createRandomWarmUp(date?: Date): WarmUp {
   return createModeData(DeviceEventSubtype.Warmup, date) as WarmUp
 }
@@ -309,7 +275,6 @@ function createWizardData(date?: Date): Wizard {
   return {
     ...createBaseData(date),
     type: DatumType.Wizard,
-    uploadId: faker.string.uuid(),
     bolusId,
     bolusIds: new Set<string>([bolusId]),
     carbInput: 5,
@@ -356,11 +321,9 @@ function createRandomDatum(type: DatumType, subtype?: DeviceEventSubtype, date?:
     case DatumType.PhysicalActivity:
       return createRandomPhysicalActivity(date)
     case DatumType.PumpSettings:
-      return createRandomPumpSetttings(date)
+      return createRandomPumpSettings(date)
     case DatumType.Smbg:
       return createRandomSmbg(date)
-    case DatumType.Upload:
-      return createRandomUpload(date)
     case DatumType.Wizard:
       return createWizardData(date)
     default:
@@ -372,6 +335,6 @@ export default createRandomDatum
 export {
   createRandomBasal, createRandomBolus, createRandomCbg, createRandomConfidentialMode,
   createRandomDeviceParameterChange, createMealData, createRandomMessage,
-  createRandomPhysicalActivity, createRandomPumpSetttings, createRandomReservoirChange,
-  createRandomSmbg, createRandomUpload, createRandomWarmUp, createWizardData, createRandomZenMode
+  createRandomPhysicalActivity, createRandomPumpSettings, createRandomReservoirChange,
+  createRandomSmbg, createRandomWarmUp, createWizardData, createRandomZenMode
 }
