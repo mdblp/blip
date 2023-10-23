@@ -33,7 +33,7 @@ import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { mockChatAPI } from '../../../mock/chat.api.mock'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
-import { checkPatientNavBarAsHCP } from '../../../assert/patient-nav-bar.assert'
+import { checkPatientNavBarAsHcp } from '../../../assert/patient-nav-bar.assert'
 import { renderPage } from '../../../utils/render'
 import { mockUserApi } from '../../../mock/user.api.mock'
 import { patient2Id } from '../../../data/patient.api.data'
@@ -82,7 +82,7 @@ describe('Trends view for HCP', () => {
     })
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
-    checkPatientNavBarAsHCP()
+    checkPatientNavBarAsHcp()
     await testAppMainLayoutForHcp(appMainLayoutParams)
   })
 })

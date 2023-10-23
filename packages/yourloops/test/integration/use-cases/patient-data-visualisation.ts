@@ -92,6 +92,7 @@ export const testTrensdsDataVisualisationForHCP = async () => {
   await checkPatientStatisticsTrendsView()
   await checkTrendsStatsWidgetsTooltips()
 }
+
 export const testPatientNavBarForHcp = async () => {
   await checkPatientDropdown(patient1Info, patient2Info)
 }

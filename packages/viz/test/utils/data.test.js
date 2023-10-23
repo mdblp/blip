@@ -214,14 +214,14 @@ describe('DataUtil', () => {
     })
   ]
 
-  const uploadData = [
-    new Types.Upload({
-      deviceModel: 'dash',
-      deviceTime: '2018-01-02T00:00:00'
-    }),
-    new Types.Upload({
-      deviceModel: '1780',
-      deviceTime: '2018-02-02T00:00:00'
+  const pumpSettingsData = [
+    new Types.PumpSettings({
+      payload: {
+        device: {
+          name: 'dash',
+          manufacturer: 'diabeloop'
+        }
+      }
     })
   ]
 
@@ -258,7 +258,6 @@ describe('DataUtil', () => {
     ...cbgData,
     ...foodData,
     ...smbgData,
-    ...uploadData,
     ...wizardData
   ]
 
@@ -1036,12 +1035,7 @@ describe('DataUtil', () => {
 
   describe('getLatestPump', () => {
     it('should return the make and model of the latest pump uploaded', () => {
-      expect(dataUtil.getLatestPump()).to.eql({
-        manufacturer: 'diabeloop',
-        deviceModel: '1780'
-      })
-
-      dataUtil = new DataUtil(uploadData.slice(0, 1), defaultOpts)
+      dataUtil = new DataUtil(pumpSettingsData.slice(0, 1), defaultOpts)
 
       expect(dataUtil.getLatestPump()).to.eql({
         manufacturer: 'diabeloop',
@@ -1123,7 +1117,7 @@ describe('DataUtil', () => {
         total: 5,
         standardDeviation: 90.38805230781334,
         coefficientOfVariationByDate: {
-          '2018-02-01' : 68.47579720288888
+          '2018-02-01': 68.47579720288888
         }
       })
     })
@@ -1136,8 +1130,7 @@ describe('DataUtil', () => {
         insufficientData: false,
         total: 5,
         standardDeviation: 93.96807968666806,
-        coefficientOfVariationByDate: {
-        }
+        coefficientOfVariationByDate: {}
       })
     })
 
@@ -1150,7 +1143,7 @@ describe('DataUtil', () => {
         total: 5,
         standardDeviation: 93.96807968666806,
         coefficientOfVariationByDate: {
-          '2018-02-01' : 63.912988640759494
+          '2018-02-01': 63.912988640759494
         }
       })
     })

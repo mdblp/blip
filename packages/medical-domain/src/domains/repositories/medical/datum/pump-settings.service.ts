@@ -135,7 +135,6 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const pumpSettings: PumpSettings = {
     ...base,
     type: DatumType.PumpSettings,
-    uploadId: rawData.uploadId as string,
     activeSchedule: rawData.activeSchedule as string,
     deviceId: rawData.deviceId as string,
     deviceTime: rawData.deviceTime as string,

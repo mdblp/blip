@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,6 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { isChrome, isDesktop } from 'react-device-detect'
+
 /**
  * browser-locale
  *
@@ -33,7 +35,7 @@
  * - repository: https://github.com/maxogden/browser-locale
  */
 
-function browserLocale(): string {
+export function getBrowserLocale(): string {
   let lang: string
 
   if (Array.isArray(navigator.languages) && navigator.languages.length > 0) {
@@ -55,4 +57,6 @@ function browserLocale(): string {
   return lang
 }
 
-export default browserLocale
+export function isBrowserOfficiallySupported() {
+  return isChrome && isDesktop
+}

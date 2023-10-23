@@ -4,15 +4,6 @@ import { AUTOMATED_BASAL_DEVICE_MODELS, getPumpVocabularies } from './constants'
 import { deviceName as getDeviceName } from './settings/data'
 
 /**
- * Get the latest upload datum
- * @param {Array} uploadData Array of Tidepool upload data
- * @returns {Object} The latest upload datum
- */
-export function getLatestPumpUpload(uploadData = []) {
-  return _.findLast(uploadData, { deviceTags: ['insulin-pump'] })
-}
-
-/**
  * Check if the provided upload datum was for an automated basal device
  * @param {String} manufacturer Manufacturer name
  * @param {String} deviceModel Device model number

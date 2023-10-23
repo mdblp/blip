@@ -43,7 +43,6 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     ...duration,
     type: DatumType.DeviceEvent,
     subType: DeviceEventSubtype.Zen,
-    uploadId: rawData.uploadId as string,
     guid: rawData.guid as string,
     inputTime: rawData.inputTime as string
   }

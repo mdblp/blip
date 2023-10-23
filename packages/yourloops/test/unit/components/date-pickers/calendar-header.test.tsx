@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,17 +26,15 @@
  */
 
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { act } from 'react-dom/test-utils'
 import dayjs from 'dayjs'
 
 import { type CalendarChangeMonth } from '../../../../components/date-pickers/models'
 import CalendarHeader from '../../../../components/date-pickers/calendar-header'
 import i18n from '../../../../lib/language'
 
-describe('Calendar header', () => {
-  let container: HTMLDivElement | null = null
+import { render } from '@testing-library/react'
 
+describe('Calendar header', () => {
   beforeAll(() => {
     i18n.addResourceBundle('en', 'yourloops', {
       'date-picker-header-date-format': 'MMMM YYYY',
@@ -45,35 +43,19 @@ describe('Calendar header', () => {
       .init({ react: { useSuspense: true } })
   })
 
-  beforeEach(() => {
-    container = document.createElement('div')
-    document.body.appendChild(container)
-  })
-
-  afterEach(() => {
-    if (container) {
-      ReactDOM.unmountComponentAtNode(container)
-      document.body.removeChild(container)
-      container = null
-    }
-  })
 
   it('should correctly render a month', async () => {
     const today = dayjs('2021-11-01T12:00:00Z') // Monday
     const onPrevMonth = jest.fn()
     const onNextMonth = jest.fn()
 
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <CalendarHeader
-            orientation="landscape"
-            currentMonth={today}
-            onPrevMonth={onPrevMonth}
-            onNextMonth={onNextMonth}
-          />, container, resolve)
-      })
-    })
+    render(
+      <CalendarHeader
+        orientation="landscape"
+        currentMonth={today}
+        onPrevMonth={onPrevMonth}
+        onNextMonth={onNextMonth}
+      />)
 
     expect(document.getElementById('calendar-header')).not.toBeNull()
 
@@ -99,15 +81,11 @@ describe('Calendar header', () => {
   it('should correctly restrict prev/next month when disabled', async () => {
     const today = dayjs('2021-11-01T12:00:00Z') // Monday
 
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <CalendarHeader
-            orientation="landscape"
-            currentMonth={today}
-          />, container, resolve)
-      })
-    })
+    render(
+      <CalendarHeader
+        orientation="landscape"
+        currentMonth={today}
+      />)
 
     const buttonPrevMonth = document.getElementById('calendar-header-button-prev-month')
     expect(buttonPrevMonth).not.toBeNull()
@@ -128,18 +106,14 @@ describe('Calendar header', () => {
       onAnimationEnd: jest.fn()
     }
 
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <CalendarHeader
-            orientation="landscape"
-            currentMonth={today}
-            onPrevMonth={onPrevMonth}
-            onNextMonth={onNextMonth}
-            changingMonth={changingMonth}
-          />, container, resolve)
-      })
-    })
+    render(
+      <CalendarHeader
+        orientation="landscape"
+        currentMonth={today}
+        onPrevMonth={onPrevMonth}
+        onNextMonth={onNextMonth}
+        changingMonth={changingMonth}
+      />)
 
     const prevMonth = document.getElementById('calendar-header-prev-month')
     expect(prevMonth).not.toBeNull()
@@ -151,27 +125,22 @@ describe('Calendar header', () => {
   })
 
   it('should hide the prev-month button when position is last and orientation islandscape', async () => {
-    const today = dayjs('2021-11-01T12:00:00Z') // Monday
-    const onPrevMonth = jest.fn()
-    const onNextMonth = jest.fn()
+      const today = dayjs('2021-11-01T12:00:00Z') // Monday
+      const onPrevMonth = jest.fn()
+      const onNextMonth = jest.fn()
+      render(
+        <CalendarHeader
+          orientation="landscape"
+          position="last"
+          currentMonth={today}
+          onPrevMonth={onPrevMonth}
+          onNextMonth={onNextMonth}
+        />)
 
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <CalendarHeader
-            orientation="landscape"
-            position="last"
-            currentMonth={today}
-            onPrevMonth={onPrevMonth}
-            onNextMonth={onNextMonth}
-          />, container, resolve)
-      })
-    })
-
-    const buttonPrevMonth = document.getElementById('calendar-header-last-button-prev-month')
-    expect(buttonPrevMonth).not.toBeNull()
-    expect(buttonPrevMonth.getAttribute('aria-disabled')).toBe('true')
-  }
+      const buttonPrevMonth = document.getElementById('calendar-header-last-button-prev-month')
+      expect(buttonPrevMonth).not.toBeNull()
+      expect(buttonPrevMonth.getAttribute('aria-disabled')).toBe('true')
+    }
   )
 
   it('should hide the next-month button when position is first and orientation islandscape', async () => {
@@ -179,18 +148,14 @@ describe('Calendar header', () => {
     const onPrevMonth = jest.fn()
     const onNextMonth = jest.fn()
 
-    await act(() => {
-      return new Promise((resolve) => {
-        ReactDOM.render(
-          <CalendarHeader
-            orientation="landscape"
-            position="first"
-            currentMonth={today}
-            onPrevMonth={onPrevMonth}
-            onNextMonth={onNextMonth}
-          />, container, resolve)
-      })
-    })
+    render(
+      <CalendarHeader
+        orientation="landscape"
+        position="first"
+        currentMonth={today}
+        onPrevMonth={onPrevMonth}
+        onNextMonth={onNextMonth}
+      />)
 
     const buttonNextMonth = document.getElementById('calendar-header-first-button-next-month')
     expect(buttonNextMonth).not.toBeNull()

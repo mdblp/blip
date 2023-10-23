@@ -26,7 +26,6 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined'
 import GenericDashboardCard from './generic-dashboard-card'
 import { useTranslation } from 'react-i18next'
 import CardContent from '@mui/material/CardContent'
@@ -38,7 +37,6 @@ export const PatientStatisticsWidget: FunctionComponent<PatientStatisticsProps> 
 
   return (
     <GenericDashboardCard
-      avatar={<InsertChartOutlinedIcon />}
       title={t('patient-statistics')}
     >
       <CardContent>
@@ -46,7 +44,7 @@ export const PatientStatisticsWidget: FunctionComponent<PatientStatisticsProps> 
           medicalData={medicalData}
           bgPrefs={bgPrefs}
           dateFilter={dateFilter}
-       />
+        />
       </CardContent>
     </GenericDashboardCard>
   )

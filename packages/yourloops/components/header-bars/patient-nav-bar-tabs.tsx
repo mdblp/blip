@@ -28,9 +28,6 @@
 import React, { type FunctionComponent, type MouseEventHandler } from 'react'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined'
-import Today from '@mui/icons-material/Today'
-import TrendingUp from '@mui/icons-material/TrendingUp'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { makeStyles } from 'tss-react/mui'
@@ -38,9 +35,9 @@ import { type Theme } from '@mui/material/styles'
 import Button from '@mui/material/Button'
 import GetAppIcon from '@mui/icons-material/GetApp'
 import { PatientView } from '../../enum/patient-view.enum'
-import PhonelinkSetupOutlinedIcon from '@mui/icons-material/PhonelinkSetupOutlined'
-import { AddAlertOutlined } from '@mui/icons-material'
 import { useAuth } from '../../lib/auth'
+import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import TeamUtils from '../../lib/team/team.util'
 
 interface PatientNavBarTabsProps {
   currentPatientView: PatientView
@@ -64,7 +61,6 @@ const styles = makeStyles()((theme: Theme) => {
     },
     tab: {
       fontWeight: 'bold',
-      marginRight: theme.spacing(5),
       fontSize: theme.typography.htmlFontSize,
       color: 'var(--text-color-primary)'
     }
@@ -80,6 +76,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
   const { t } = useTranslation()
   const { classes } = styles()
   const { user } = useAuth()
+  const { selectedTeam } = useSelectedTeamContext()
 
   const getSelectedTab = (): PatientView => {
     return currentPatientView ?? PatientView.Dashboard
@@ -94,8 +91,9 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           data-testid="dashboard-tab"
           iconPosition="start"
           label={t('dashboard')}
-          icon={<DashboardOutlinedIcon />}
-          onClick={() => { onChangePatientView(PatientView.Dashboard) }}
+          onClick={() => {
+            onChangePatientView(PatientView.Dashboard)
+          }}
           classes={{
             root: classes.root
           }}
@@ -106,8 +104,9 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           data-testid="daily-tab"
           iconPosition="start"
           label={t('daily')}
-          icon={<Today />}
-          onClick={() => { onChangePatientView(PatientView.Daily) }}
+          onClick={() => {
+            onChangePatientView(PatientView.Daily)
+          }}
           classes={{
             root: classes.root
           }}
@@ -118,21 +117,23 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           data-testid="trends-tab"
           iconPosition="start"
           label={t('trends')}
-          icon={<TrendingUp />}
-          onClick={() => { onChangePatientView(PatientView.Trends) }}
+          onClick={() => {
+            onChangePatientView(PatientView.Trends)
+          }}
           classes={{
             root: classes.root
           }}
         />
-        {user.isUserHcp() &&
+        {user.isUserHcp() && !TeamUtils.isPrivate(selectedTeam) &&
           <Tab
             className={classes.tab}
             value={PatientView.TargetAndAlerts}
             data-testid="target-and-alerts-tab"
             iconPosition="start"
             label={t('target-and-alerts')}
-            icon={<AddAlertOutlined />}
-            onClick={() => { onChangePatientView(PatientView.TargetAndAlerts) }}
+            onClick={() => {
+              onChangePatientView(PatientView.TargetAndAlerts)
+            }}
             classes={{
               root: classes.root
             }}
@@ -144,8 +145,9 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
           data-testid="device-tab"
           iconPosition="start"
           label={t('device')}
-          icon={<PhonelinkSetupOutlinedIcon />}
-          onClick={() => { onChangePatientView(PatientView.Device) }}
+          onClick={() => {
+            onChangePatientView(PatientView.Device)
+          }}
           classes={{
             root: classes.root
           }}

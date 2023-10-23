@@ -50,7 +50,6 @@ import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
 import FormGroup from '@mui/material/FormGroup'
 import TeamUtils from '../../lib/team/team.util'
 import { getUserName } from '../../lib/auth/user.util'
-import { MessageIcon } from '../icons/diabeloop/message-icon'
 import Badge from '@mui/material/Badge'
 import { getUnreadMessagesByTeam } from './chat.util'
 import Link from '@mui/material/Link'
@@ -227,7 +226,6 @@ function ChatWidget(props: Readonly<ChatWidgetProps>): JSX.Element {
 
   return (
     <GenericDashboardCard
-      avatar={<MessageIcon />}
       title={`${t('messages')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
       data-testid="chat-card"
       action={isUserPatient &&
