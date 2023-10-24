@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { faker } from '@faker-js/faker'
 import type Basal from '../../../src/domains/models/medical/datum/basal.model'
 import type Bolus from '../../../src/domains/models/medical/datum/bolus.model'
 import type Wizard from '../../../src/domains/models/medical/datum/wizard.model'
@@ -54,17 +53,6 @@ Object.defineProperty(global, 'crypto', {
   }
 })
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const knownTypes: Array<Record<string, unknown>> = Object
-  .values(DatumType)
-  .flatMap(datumType => {
-    if (datumType !== DatumType.DeviceEvent) {
-      return [{ type: datumType }]
-    }
-    return Object.values(DeviceEventSubtype).map(
-      (datumSubtype) => ({ type: datumType, subType: datumSubtype })
-    )
-  })
 const testData = {
   alarmEvents: [{ a: "b" }],
   basal: [
@@ -1353,41 +1341,6 @@ const testData = {
 const datumNormalizeMock = jest.fn(
   (rawData: Record<string, unknown>, _opts: MedicalDataOptions) => {
     return createRandomDatum(rawData.type as DatumType, rawData.subType as DeviceEventSubtype | undefined)
-  }
-)
-const JoinMock = jest.fn(
-  (rawData: Record<string, unknown>, _opts: MedicalDataOptions) => {
-    return createRandomDatum(rawData.type as DatumType, rawData.subType as DeviceEventSubtype | undefined)
-  }
-)
-
-const datumNormalizeTzMock = jest.fn(
-  (rawData: Record<string, unknown>, _opts: MedicalDataOptions) => {
-    const datum = createRandomDatum(rawData.type as DatumType, rawData.subType as DeviceEventSubtype | undefined)
-    if (rawData.type === 'bolus') {
-      const pastDate = faker.date.between({ from: '2022-08-01T00:00:00.000Z', to: '2022-08-31T00:00:00.000Z' })
-      datum.epoch = pastDate.valueOf()
-      datum.normalTime = pastDate.toISOString()
-      datum.timezone = 'Atlantic/Reykjavik'
-      datum.displayOffset = 0
-    }
-    if (rawData.type === 'basal') {
-      const pastDate = faker.date.between({ from: '2022-07-01T00:00:00.000Z', to: '2022-07-31T00:00:00.000Z' })
-      datum.epoch = pastDate.valueOf()
-      datum.normalTime = pastDate.toISOString()
-      // DST offset (Summer time)
-      datum.displayOffset = -120
-    }
-    // DST in Europe/Paris is on Sunday, March 27, 2022 at 01:00 GMT
-    if (rawData.type === 'cbg') {
-      const pastDate = faker.date.between({ from: '2022-03-27T00:00:00.001Z', to: '2022-03-27T00:59:59.999Z' })
-      datum.epoch = pastDate.valueOf()
-      datum.normalTime = pastDate.toISOString()
-      // DST offset (Winter time)
-      datum.displayOffset = -60
-    }
-
-    return datum
   }
 )
 

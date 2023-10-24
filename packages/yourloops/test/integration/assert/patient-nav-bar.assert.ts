@@ -30,7 +30,7 @@ import { patient1Info, patient2Info } from '../data/patient.api.data'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import moment from 'moment-timezone'
 import userEvent from '@testing-library/user-event'
-import { type Data, mockDataAPI, noData } from '../mock/data.api.mock'
+import { mockDataAPI, noData } from '../mock/data.api.mock'
 
 const checkPatientNavBarCommon = (patientNavBar: BoundFunctions<typeof queries>) => {
   expect(patientNavBar.getByRole('tablist')).toHaveTextContent('DashboardDailyTrendsDevice')

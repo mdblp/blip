@@ -31,11 +31,6 @@ import { history } from '../data/data-api.data'
 import type { PatientDataRange } from '../../../lib/data/models/data-range.model'
 import { MedicalData } from 'medical-domain'
 
-const WIZARD_BOLUS_UNDELIVERED_ID = 'carbBolusId'
-const WIZARD_BOLUS_UMM_ID = 'carbBolusId2'
-const WIZARD_BOLUS_POSITIVE_OVERRIDE_ID = 'carbBolusId3'
-const WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID = 'carbBolusId4'
-
 export const CBG_ID = 'cbgId'
 export const SMBG_ID = 'smbgId'
 export const WIZARD_UNDELIVERED_ID = 'wizardId1'
@@ -74,9 +69,6 @@ export const RESERVOIR_CHANGE_TODAY_DATE: Moment = moment('2023-10-23')
 export const TWO_WEEKS_AGO_DATE: Moment = moment('2023-10-09')
 export const RESERVOIR_CHANGE_13_DAYS_AGO_DATE: Moment = moment('2023-10-10')
 export const SIXTEEN_DAYS_AGO_DATE: Moment = moment('2023-10-07')
-const twoWeeksAgoDateAsString = TWO_WEEKS_AGO_DATE.format('YYYY-MM-DD')
-const sixteenDaysAgoDateAsString = SIXTEEN_DAYS_AGO_DATE.format('YYYY-MM-DD')
-const yesterdayDateAsString = YESTERDAY_DATE.format('YYYY-MM-DD')
 
 export interface Data {
   dataRange: PatientDataRange
