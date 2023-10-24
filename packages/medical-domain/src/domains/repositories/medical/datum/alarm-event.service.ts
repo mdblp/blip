@@ -37,6 +37,20 @@ import { AlarmLevel } from '../../../models/medical/datum/enums/alarm-level.enum
 import DatumService from '../datum.service';
 import { defaultWeekDaysFilter, WeekDaysFilter } from '../../../models/time/date-filter.model';
 import { AlarmCode } from '../../../models/medical/datum/enums/alarm-code.enum'
+import moment from 'moment-timezone';
+
+interface AlarmEventsWithLastOccurrence {
+  lastOccurrence: string
+  alarmEvents: AlarmEvent[]
+}
+
+type GroupedAlarmEvents = {
+  [code in AlarmCode]: AlarmEventsWithLastOccurrence
+}
+
+interface AlarmEventProcessor {
+  groupData: (alarmEvents: AlarmEvent[]) => AlarmEvent[]
+}
 
 const CATEGORIZED_ALARM_CODES = {
   DEVICE: {
@@ -62,6 +76,8 @@ const CATEGORIZED_ALARM_CODES = {
     ALERT: [AlarmCode.Hyperglycemia, AlarmCode.SuddenRiseInGlycemia]
   }
 }
+
+export const GROUP_ALARMS_THRESHOLD_MINUTES = 30
 
 const getAlarmEventType = (alarmCode: AlarmCode, alarmLevel: string): AlarmEventType => {
   const isHypoglycemiaAlarm = alarmLevel === AlarmLevel.Alarm && CATEGORIZED_ALARM_CODES.HYPOGLYCEMIA.ALARM.includes(alarmCode)
@@ -113,6 +129,61 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   }
 }
 
+const getDefaultAlarmEventsByCodeValue = (alarmEvent: AlarmEvent): AlarmEventsWithLastOccurrence => {
+  return {
+    lastOccurrence: alarmEvent.normalTime,
+    alarmEvents: [alarmEvent]
+  }
+}
+
+const buildGroupedAlarmEventsByCode = (sortedAlarmEvents: AlarmEvent[]): GroupedAlarmEvents => {
+  return sortedAlarmEvents.reduce<GroupedAlarmEvents>((groupedAlarmEvents: GroupedAlarmEvents, alarmEvent: AlarmEvent) => {
+    const code = alarmEvent.alarm.alarmCode
+
+    if (!groupedAlarmEvents[code]) {
+      groupedAlarmEvents[code] = getDefaultAlarmEventsByCodeValue(alarmEvent)
+      return groupedAlarmEvents
+    }
+
+    const alarmEventsWithLastOccurrence = groupedAlarmEvents[code]
+    const alarmEvents = alarmEventsWithLastOccurrence.alarmEvents
+    const lastOccurrence = alarmEventsWithLastOccurrence.lastOccurrence
+    const differenceInMinutes = moment(alarmEvent.normalTime).diff(lastOccurrence, 'minutes')
+
+    if (differenceInMinutes < GROUP_ALARMS_THRESHOLD_MINUTES) {
+      const alarmEventsLength = alarmEvents.length
+      const lastAlarmEvent = alarmEvents[alarmEventsLength - 1]
+      const otherOccurrencesDate = lastAlarmEvent.otherOccurrencesDate ?? []
+
+      otherOccurrencesDate.push(alarmEvent.normalTime)
+      lastAlarmEvent.otherOccurrencesDate = otherOccurrencesDate
+    } else {
+      alarmEvents.push(alarmEvent)
+    }
+
+    alarmEventsWithLastOccurrence.lastOccurrence = alarmEvent.normalTime
+    return groupedAlarmEvents
+  }, {} as GroupedAlarmEvents)
+}
+
+const getSortedAlarmEvents = (alarmEvents: AlarmEvent[]): AlarmEvent[] => {
+  return alarmEvents.sort((alarmEvent1: AlarmEvent, alarmEvent2: AlarmEvent) => {
+    return moment(alarmEvent1.normalTime).diff(alarmEvent2.normalTime)
+  })
+}
+
+const groupData = (alarmEvents: AlarmEvent[]): AlarmEvent[] => {
+  const sortedAlarmEvents = getSortedAlarmEvents(alarmEvents)
+  const alarmsByCode = buildGroupedAlarmEventsByCode(sortedAlarmEvents)
+
+  const alarmEventsWithGroupedOccurrences = Object
+    .entries(alarmsByCode)
+    .map(([, value]) => value.alarmEvents)
+    .flat()
+
+  return getSortedAlarmEvents(alarmEventsWithGroupedOccurrences)
+}
+
 const deduplicate = (data: AlarmEvent[], opts: MedicalDataOptions): AlarmEvent[] => {
   return DatumService.deduplicate(data, opts) as AlarmEvent[]
 }
@@ -121,10 +192,11 @@ const filterOnDate = (data: AlarmEvent[], start: number, end: number, weekDaysFi
   return DatumService.filterOnDate(data, start, end, weekDaysFilter) as AlarmEvent[]
 }
 
-const AlarmEventService: DatumProcessor<AlarmEvent> = {
+const AlarmEventService: DatumProcessor<AlarmEvent> & AlarmEventProcessor = {
   normalize,
   deduplicate,
-  filterOnDate
+  filterOnDate,
+  groupData
 }
 
 export default AlarmEventService

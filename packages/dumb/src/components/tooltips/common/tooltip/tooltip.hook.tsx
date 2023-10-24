@@ -26,14 +26,10 @@
  */
 
 import { useCallback, useMemo } from 'react'
-import { type DateTitle, type Offset, type Position } from './tooltip'
-import { formatLocalizedFromUTC, getHourMinuteFormat, TIMEZONE_UTC } from '../../../../utils/datetime/datetime.util'
-import moment from 'moment-timezone'
-import { Source } from 'medical-domain'
+import { type Offset, type Position } from './tooltip'
 
 export interface TooltipHookProps {
   borderWidth: number
-  dateTitle?: DateTitle
   offset: Offset
   position: Position
   side: 'top' | 'right' | 'bottom' | 'left'
@@ -42,14 +38,12 @@ export interface TooltipHookProps {
 
 export interface TooltipHookReturn {
   calculateOffset: (mainDiv: HTMLDivElement | null, tailDiv: HTMLDivElement | null) => { top: number, left: number }
-  computeDateValue: () => string | undefined
   computeTailData: () => { marginOuterValue: string, borderSide: string }
 }
 
 const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
   const {
     borderWidth,
-    dateTitle,
     offset,
     position,
     side,
@@ -106,23 +100,6 @@ const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
     return { top: 0, left: 0 }
   }, [offset.horizontal, offset.left, offset.top, position.left, position.top, side])
 
-  const computeDateValue = useCallback(() => {
-    if (!dateTitle) {
-      return undefined
-    }
-    let dateValue
-    if (dateTitle.source === Source.Diabeloop) {
-      // For diabeloop device, use the timezone of the object
-      const timezoneName = dateTitle ? dateTitle?.timePrefs?.timezoneName : ''
-      const { timezone: datumTimezone } = dateTitle
-      const mNormalTime = moment.tz(dateTitle.normalTime, datumTimezone === TIMEZONE_UTC ? timezoneName : datumTimezone)
-      dateValue = mNormalTime.format(getHourMinuteFormat())
-    } else {
-      dateValue = formatLocalizedFromUTC(dateTitle.normalTime, dateTitle.timePrefs, getHourMinuteFormat())
-    }
-    return dateValue
-  }, [dateTitle])
-
   const computeTailData = useCallback(() => {
     const padding = 10
     let marginOuterValue
@@ -137,11 +114,9 @@ const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
 
   return useMemo(() => ({
     calculateOffset,
-    computeDateValue,
     computeTailData
   }), [
     calculateOffset,
-    computeDateValue,
     computeTailData
   ])
 }
