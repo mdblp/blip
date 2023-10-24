@@ -61,6 +61,7 @@ interface MonitoringAlertsContentConfigurationHookReturn {
   hypoThreshold: ValueErrorPair
   setHypoThreshold: React.Dispatch<ValueErrorPair>
   saveButtonDisabled: boolean
+  discardChanges: () => void
   save: () => void
   resetToTeamDefaultValues: () => void
   onChange: (value: number, lowValue: number, highValue: number, setValue: React.Dispatch<ValueErrorPair>) => void
@@ -111,50 +112,57 @@ export const useMonitoringAlertsContentConfiguration = ({
     return null
   }
 
-  const highBgValue = getConvertedValue(monitoringAlertsParameters.highBg, monitoringBgUnit, userBgUnit)
-  const [highBg, setHighBg] = useState<ValueErrorMessagePair>(() => {
+  const getHighBgInitialState = (): ValueErrorMessagePair => {
+    const highBgValue = getConvertedValue(monitoringAlertsParameters.highBg, monitoringBgUnit, userBgUnit)
     return {
       value: highBgValue,
       errorMessage: getErrorMessage(highBgValue, thresholds.minHighBg, thresholds.maxHighBg)
     }
-  })
+  }
 
-  const veryLowBgValue = getConvertedValue(monitoringAlertsParameters.veryLowBg, monitoringBgUnit, userBgUnit)
-  const [veryLowBg, setVeryLowBg] = useState<ValueErrorMessagePair>(() => {
+  const getVeryLowBgInitialState = (): ValueErrorMessagePair => {
+    const veryLowBgValue = getConvertedValue(monitoringAlertsParameters.veryLowBg, monitoringBgUnit, userBgUnit)
     return {
       value: veryLowBgValue,
       errorMessage: getErrorMessage(veryLowBgValue, thresholds.minVeryLowBg, thresholds.maxVeryLowBg)
     }
-  })
+  }
 
-  const lowBgValue = getConvertedValue(monitoringAlertsParameters.lowBg, monitoringBgUnit, userBgUnit)
-  const [lowBg, setLowBg] = useState<ValueErrorMessagePair>(() => {
+  const getLowBgInitialState = (): ValueErrorMessagePair => {
+    const lowBgValue = getConvertedValue(monitoringAlertsParameters.lowBg, monitoringBgUnit, userBgUnit)
     return {
       value: lowBgValue,
       errorMessage: getErrorMessage(lowBgValue, thresholds.minLowBg, thresholds.maxLowBg)
     }
-  })
+  }
 
-  const [nonDataTxThreshold, setNonDataTxThreshold] = useState<ValueErrorPair>(() => {
+  const getNonDataTxThresholdInitialState = (): ValueErrorPair => {
     return {
       value: monitoringAlertsParameters.nonDataTxThreshold,
       error: isInvalidPercentage(monitoringAlertsParameters.nonDataTxThreshold)
     }
-  })
+  }
 
-  const [outOfRangeThreshold, setOutOfRangeThreshold] = useState<ValueErrorPair>(() => {
+  const getOutOfRangeThresholdInitialState = (): ValueErrorPair => {
     return {
       value: monitoringAlertsParameters.outOfRangeThreshold,
       error: isInvalidPercentage(monitoringAlertsParameters.outOfRangeThreshold)
     }
-  })
+  }
 
-  const [hypoThreshold, setHypoThreshold] = useState<ValueErrorPair>(() => {
+  const getHypoThresholdInitialState = (): ValueErrorPair => {
     return {
       value: monitoringAlertsParameters.hypoThreshold,
       error: isInvalidPercentage(monitoringAlertsParameters.hypoThreshold)
     }
-  })
+  }
+
+  const [highBg, setHighBg] = useState<ValueErrorMessagePair>(() => getHighBgInitialState())
+  const [veryLowBg, setVeryLowBg] = useState<ValueErrorMessagePair>(() => getVeryLowBgInitialState())
+  const [lowBg, setLowBg] = useState<ValueErrorMessagePair>(() => getLowBgInitialState())
+  const [nonDataTxThreshold, setNonDataTxThreshold] = useState<ValueErrorPair>(() => getNonDataTxThresholdInitialState())
+  const [outOfRangeThreshold, setOutOfRangeThreshold] = useState<ValueErrorPair>(() => getOutOfRangeThresholdInitialState())
+  const [hypoThreshold, setHypoThreshold] = useState<ValueErrorPair>(() => getHypoThresholdInitialState())
 
   const saveButtonDisabled = useMemo(() => {
     return !!lowBg.errorMessage ||
@@ -200,6 +208,16 @@ export const useMonitoringAlertsContentConfiguration = ({
     setHypoThreshold({ ...hypoThreshold, value: defaultMonitoringAlertsParameters.hypoThreshold })
   }
 
+  const discardChanges = (): void => {
+    setHighBg(getHighBgInitialState())
+    setVeryLowBg(getVeryLowBgInitialState())
+    setLowBg(getLowBgInitialState())
+    setNonDataTxThreshold(getNonDataTxThresholdInitialState())
+    setOutOfRangeThreshold(getOutOfRangeThresholdInitialState())
+    setHypoThreshold(getHypoThresholdInitialState())
+  }
+
+
   const save = (): void => {
     const reportingPeriod = (monitoringAlertsParameters.reportingPeriod && monitoringAlertsParameters.reportingPeriod > 0) ? monitoringAlertsParameters.reportingPeriod : DEFAULT_REPORTING_PERIOD
     const monitoringAlertsParametersUpdated: MonitoringAlertsParameters = {
@@ -218,6 +236,7 @@ export const useMonitoringAlertsContentConfiguration = ({
   return {
     lowBg,
     saveButtonDisabled,
+    discardChanges,
     save,
     resetToTeamDefaultValues,
     onChange,
