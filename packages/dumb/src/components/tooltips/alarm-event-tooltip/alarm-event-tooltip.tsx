@@ -257,7 +257,7 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
           ))}
 
           {alarmEvent.otherOccurrencesDate &&
-            <Box>
+            <>
               <Divider sx={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(2) }} variant="middle" />
               <Box
                 marginBottom={theme.spacing(1)}
@@ -272,7 +272,7 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
                 const occurrenceLine = t('alarm-at-time', { alarmTime: formattedDateTime })
                 return <TooltipLine label={occurrenceLine} key={dateTime} />
               })}
-            </Box>
+            </>
           }
         </div>
       }
