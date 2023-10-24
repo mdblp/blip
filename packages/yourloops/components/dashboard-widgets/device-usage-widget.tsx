@@ -93,7 +93,7 @@ export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
   const { t } = useTranslation()
   const { classes } = useStyles()
   const trackMetric = metrics.send
-  const pumpSettings = medicalData.pumpSettings.slice(-1)[0] as PumpSettings
+  const pumpSettings = medicalDataService.medicalData.pumpSettings.slice(-1)[0] as PumpSettings
   const {
     total,
     sensorUsage

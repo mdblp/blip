@@ -31,7 +31,6 @@ import type MedicalData from '../../models/medical/medical-data.model'
 import type Message from '../../models/medical/datum/message.model'
 import type ReservoirChange from '../../models/medical/datum/reservoir-change.model'
 import type Wizard from '../../models/medical/datum/wizard.model'
-import type ZenMode from '../../models/medical/datum/zen-mode.model'
 import type BasicData from './basics-data.service'
 import { generateBasicData } from './basics-data.service'
 import BasalService from './datum/basal.service'
@@ -41,7 +40,6 @@ import FillService from './datum/fill.service'
 import MessageService from './datum/message.service'
 import PhysicalActivityService from './datum/physical-activity.service'
 import TimeZoneChangeService from './datum/time-zone-change.service'
-import DatumService from './datum.service'
 import type MedicalDataOptions from '../../models/medical/medical-data-options.model'
 import {
   BG_CLAMP_THRESHOLD,
@@ -67,12 +65,18 @@ import {
   twoWeeksAgo
 } from '../time/time.service'
 import type PumpSettings from '../../models/medical/datum/pump-settings.model'
-import { DatumType } from '../../models/medical/datum/enums/datum-type.enum'
 import type PumpManufacturer from '../../models/medical/datum/enums/pump-manufacturer.enum'
 import WizardService from './datum/wizard.service'
-import { DeviceEventSubtype } from '../../models/medical/datum/enums/device-event-subtype.enum';
-import { AlarmEvent } from '../../models/medical/datum/alarm-event.model';
-import { AlarmEventType } from '../../models/medical/datum/enums/alarm-event-type.enum';
+import DatumService from './datum.service'
+import { DatumType } from '../../models/medical/datum/enums/datum-type.enum'
+import { AlarmEvent } from '../../models/medical/datum/alarm-event.model'
+import WarmUp from '../../models/medical/datum/warm-up.model'
+import ConfidentialMode from '../../models/medical/datum/confidential-mode.model'
+import ZenMode from '../../models/medical/datum/zen-mode.model'
+import DeviceParameterChange from '../../models/medical/datum/device-parameter-change.model'
+import AlarmEventService from './datum/alarm-event.service'
+import { DeviceEventSubtype } from '../../models/medical/datum/enums/device-event-subtype.enum'
+import { AlarmEventType } from '../../models/medical/datum/enums/alarm-event-type.enum'
 
 class MedicalDataService {
   medicalData: MedicalData = {
@@ -171,6 +175,17 @@ class MedicalDataService {
     }
   }
 
+  getTimezoneAt(epoch: number): string {
+    if (this.timezoneList.length === 0) {
+      return this._datumOpts.timePrefs.timezoneName
+    }
+
+    let c = 0
+    while (c < this.timezoneList.length && epoch >= this.timezoneList[c].time) c++
+    c = Math.max(c, 1)
+    return this.timezoneList[c - 1].timezone
+  }
+
   getLastTimezone(defaultTimezone = null): string {
     if (this.timezoneList.length > 0) {
       return this.timezoneList[this.timezoneList.length - 1].timezone
@@ -198,19 +213,25 @@ class MedicalDataService {
             break
           case DatumType.DeviceEvent:
             switch (deviceEventDatum.subType as string) {
-              case 'confidential':
+              case DeviceEventSubtype.Alarm:
+                const alarmEvent = deviceEventDatum as AlarmEvent
+                if (alarmEvent.alarmEventType !== AlarmEventType.Unknown) {
+                  this.medicalData.alarmEvents.push(alarmEvent)
+                }
+                break
+              case DeviceEventSubtype.Confidential:
                 this.medicalData.confidentialModes.push(deviceEventDatum as ConfidentialMode)
                 break
-              case 'deviceParameter':
+              case DeviceEventSubtype.DeviceParameter:
                 this.medicalData.deviceParametersChanges.push(deviceEventDatum as DeviceParameterChange)
                 break
-              case 'reservoirChange':
+              case DeviceEventSubtype.ReservoirChange:
                 this.medicalData.reservoirChanges.push(deviceEventDatum as ReservoirChange)
                 break
-              case 'warmup':
+              case DeviceEventSubtype.Warmup:
                 this.medicalData.warmUps.push(deviceEventDatum as WarmUp)
                 break
-              case 'zen':
+              case DeviceEventSubtype.Zen:
                 this.medicalData.zenModes.push(deviceEventDatum as ZenMode)
                 break
               default:
@@ -232,9 +253,6 @@ class MedicalDataService {
           case DatumType.Smbg:
             this.medicalData.smbg.push(datum)
             break
-          case DatumType.Upload:
-            this.medicalData.uploads.push(datum)
-            break
           case DatumType.Wizard:
             this.medicalData.wizards.push(datum)
             break
@@ -254,20 +272,51 @@ class MedicalDataService {
   }
 
   add(data: MedicalData): void {
-    this.medicalData.bolus = this.medicalData.bolus.concat(data.bolus)
-    this.medicalData.basal = this.medicalData.basal.concat(data.basal)
-    this.medicalData.cbg = this.medicalData.cbg.concat(data.cbg)
-    this.medicalData.confidentialModes = this.medicalData.confidentialModes.concat(data.confidentialModes)
-    this.medicalData.deviceParametersChanges = this.medicalData.deviceParametersChanges.concat(data.deviceParametersChanges)
-    this.medicalData.messages = this.medicalData.messages.concat(data.messages)
-    this.medicalData.meals = this.medicalData.meals.concat(data.meals)
-    this.medicalData.physicalActivities = this.medicalData.physicalActivities.concat(data.physicalActivities)
-    this.medicalData.pumpSettings = this.medicalData.pumpSettings.concat(data.pumpSettings)
-    this.medicalData.reservoirChanges = this.medicalData.reservoirChanges.concat(data.reservoirChanges)
-    this.medicalData.smbg = this.medicalData.smbg.concat(data.smbg)
-    this.medicalData.warmUps = this.medicalData.warmUps.concat(data.warmUps)
-    this.medicalData.wizards = this.medicalData.wizards.concat(data.wizards)
-    this.medicalData.zenModes = this.medicalData.zenModes.concat(data.zenModes)
+    if (data.bolus) {
+      this.medicalData.bolus = this.medicalData.bolus.concat(data.bolus)
+    }
+    if (data.basal) {
+      this.medicalData.basal = this.medicalData.basal.concat(data.basal)
+    }
+    if (data.cbg) {
+      this.medicalData.cbg = this.medicalData.cbg.concat(data.cbg)
+    }
+    if (data.confidentialModes) {
+      this.medicalData.confidentialModes = this.medicalData.confidentialModes.concat(data.confidentialModes)
+    }
+    if (data.deviceParametersChanges) {
+      this.medicalData.deviceParametersChanges = this.medicalData.deviceParametersChanges.concat(data.deviceParametersChanges)
+    }
+    if (data.messages) {
+      this.medicalData.messages = this.medicalData.messages.concat(data.messages)
+    }
+    if (data.meals) {
+      this.medicalData.meals = this.medicalData.meals.concat(data.meals)
+    }
+    if (data.physicalActivities) {
+      this.medicalData.physicalActivities = this.medicalData.physicalActivities.concat(data.physicalActivities)
+    }
+    if (data.pumpSettings) {
+      this.medicalData.pumpSettings = this.medicalData.pumpSettings.concat(data.pumpSettings)
+    }
+    if (data.reservoirChanges) {
+      this.medicalData.reservoirChanges = this.medicalData.reservoirChanges.concat(data.reservoirChanges)
+    }
+    if (data.smbg) {
+      this.medicalData.smbg = this.medicalData.smbg.concat(data.smbg)
+    }
+    if (data.warmUps) {
+      this.medicalData.warmUps = this.medicalData.warmUps.concat(data.warmUps)
+    }
+    if (data.wizards) {
+      this.medicalData.wizards = this.medicalData.wizards.concat(data.wizards)
+    }
+    if (data.zenModes) {
+      this.medicalData.zenModes = this.medicalData.zenModes.concat(data.zenModes)
+    }
+    if (data.alarmEvents) {
+      this.medicalData.alarmEvents = this.medicalData.alarmEvents.concat(data.alarmEvents)
+    }
 
     this.deduplicate()
     this.join()
@@ -367,7 +416,7 @@ class MedicalDataService {
       })
     )
     this.medicalData.wizards = this.medicalData.wizards.map(wizard => {
-      if (wizard.bolusIds.size > 0) {
+      if (wizard.bolusIds && wizard.bolusIds.size > 0) {
         const bolusId = Array.from(wizard.bolusIds).find(id => bolusMap.has(id))
         if (bolusId) {
           wizard.bolusId = bolusId
@@ -504,7 +553,6 @@ class MedicalDataService {
         start = getStartOfDay(this._datumOpts.dateRange.start, this.getTimezoneAt(this._datumOpts.dateRange.start))
       }
     }
-
     this.endpoints = [toISOString(start), toISOString(end)]
   }
 

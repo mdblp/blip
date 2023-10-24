@@ -160,46 +160,47 @@ export class PatientDataUtils {
 
     return patientData
   }
+
+  private async fetchPatientDataRanges(dateRange: DateRange): Promise<MedicalData> {
+    const ranges = this.partialDataLoad.getMissingRanges(dateRange)
+    const aggregatedData: MedicalData = {
+      basal: [],
+      bolus: [],
+      alarmEvents: [],
+      cbg: [],
+      confidentialModes: [],
+      deviceParametersChanges: [],
+      messages: [],
+      meals: [],
+      physicalActivities: [],
+      pumpSettings: [],
+      reservoirChanges: [],
+      smbg: [],
+      warmUps: [],
+      wizards: [],
+      zenModes: [],
+      timezoneChanges: []
+    }
+    const promises = []
+    const medicalDataKeys = Object.keys(aggregatedData)
+    ranges.forEach(range => {
+      promises.push(this.fetchPatientData({
+        startDate: range.start.toISOString(),
+        endDate: range.end.toISOString(),
+        bgUnits: this.bgUnits
+      }))
+    })
+    const results = await Promise.all(promises)
+    results.forEach(dataRange => {
+      medicalDataKeys.forEach((key) => {
+        aggregatedData[key] = aggregatedData[key].concat(dataRange[key])
+      })
+    })
+    return aggregatedData
+  }
+
+  private async fetchPatientData(options: GetPatientDataOptions): Promise<MedicalData> {
+    return await DataApi.getPatientData(this.patient, options)
+  }
 }
 
-private async fetchPatientDataRanges(dateRange: DateRange): Promise<MedicalData> {
-  const ranges = this.partialDataLoad.getMissingRanges(dateRange)
-  const aggregatedData: MedicalData = {
-  basal: [],
-  bolus: [],
-  cbg: [],
-  confidentialModes: [],
-  deviceParametersChanges: [],
-  messages: [],
-  meals: [],
-  physicalActivities: [],
-  pumpSettings: [],
-  reservoirChanges: [],
-  smbg: [],
-  uploads: [],
-  warmUps: [],
-  wizards: [],
-  zenModes: [],
-  timezoneChanges: []
-}
-const promises = []
-const medicalDataKeys = Object.keys(aggregatedData)
-ranges.forEach(range => {
-  promises.push(this.fetchPatientData({
-    startDate: range.start.toISOString(),
-    endDate: range.end.toISOString(),
-    bgUnits: this.bgUnits
-  }))
-})
-const results = await Promise.all(promises)
-results.forEach(dataRange => {
-  medicalDataKeys.forEach((key) => {
-    aggregatedData[key] = aggregatedData[key].concat(dataRange[key])
-  })
-})
-return aggregatedData
-}
-
-private async fetchPatientData(options: GetPatientDataOptions): Promise<MedicalData> {
-  return await DataApi.getPatientData(this.patient, options)
-}

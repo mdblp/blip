@@ -238,7 +238,7 @@ export const usePatientData = (): usePatientDataResult => {
     try {
       setRefreshingData(true)
       const patientData = await patientDataUtils.current.loadDataRange(dateRange)
-      if (patientData && patientData.length > 0) {
+      if (patientData && patientData.cbg.length > 0) {
         const medicalDataUpdated = medicalData
         medicalDataUpdated.add(patientData)
         const dataUtilUpdated = new DataUtil(medicalDataUpdated.data, {

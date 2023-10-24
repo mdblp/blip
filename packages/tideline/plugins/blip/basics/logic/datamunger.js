@@ -29,8 +29,8 @@ function dataMunger(bgClasses, bgUnits = MGDL_UNITS) {
 
   return {
     getLatestPumpUploaded: function(patientData) {
-      const lastUploadDatum = getLatestPumpUpload(patientData.pumpSettings[0])
-      return _.get(lastUploadDatum, 'source', null)
+      const pumpSettings = patientData.medicalData.pumpSettings[0]
+      return _.get(pumpSettings, 'source', null)
     },
 
     processInfusionSiteHistory: function(basicsData, latestPump, patient) {

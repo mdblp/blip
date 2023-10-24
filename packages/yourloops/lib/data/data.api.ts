@@ -31,7 +31,6 @@ import { type GetPatientDataOptions } from './models/get-patient-data-options.mo
 import type User from '../auth/models/user.model'
 import bows from 'bows'
 import { type Patient } from '../patient/models/patient.model'
-import { type PatientData } from './models/patient-datum.model'
 import { type MessageNote } from './models/message-note.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import { HttpHeaderValues } from '../http/models/enums/http-header-values.enum'

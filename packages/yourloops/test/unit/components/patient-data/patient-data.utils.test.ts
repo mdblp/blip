@@ -29,10 +29,10 @@ import { isValidDateQueryParam, PatientDataUtils } from '../../../../components/
 import { createPatient } from '../../common/utils'
 import MedicalDataService, { TimeService, Unit } from 'medical-domain'
 import DataApi from '../../../../lib/data/data.api'
-import { dataRangeMock, messagesMock, patientDataMock } from './patient-data.mock'
+import { dataRangeMock, patientDataMock } from './patient-data.mock'
 import PartialDataLoad from 'blip/app/core/lib/partial-data-load'
 import { PatientView } from '../../../../enum/patient-view.enum'
-import { medicalServiceResult, mockdata, mockdataFromApi } from './data.mock'
+import { medicalServiceResult, mockdataFromApi } from './data.mock'
 
 function createNewPatientDataUtils(): PatientDataUtils {
   return new PatientDataUtils({

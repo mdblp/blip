@@ -43,7 +43,6 @@ import { ParameterList } from './parameter-list'
 import { ParametersChangeHistory } from './parameters-change-history'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { type PumpSettings } from 'medical-domain'
 import moment from 'moment/moment'
 import {
   copySettingsToClipboard,
