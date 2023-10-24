@@ -130,9 +130,11 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
     }
   }
 
-  const getConvertedValue = (value: number, requiredUnit: BgUnit, valueUnit = DEFAULT_UNIT): number => {
-    const shouldConvert = requiredUnit !== valueUnit
-    return shouldConvert ? convertBG(value, requiredUnit) : value
+  const getConvertedValue = (value: number, requiredUnit: BgUnit, valueUnit?: BgUnit): number => {
+    const currentUnit = valueUnit ?? DEFAULT_UNIT
+    const shouldConvert = requiredUnit !== currentUnit
+
+    return shouldConvert ? convertBG(value, currentUnit) : value
   }
 
   const getDefaultValueByCode = (alarmCode: AlarmCode): number => {
