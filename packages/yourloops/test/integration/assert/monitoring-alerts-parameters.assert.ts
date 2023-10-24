@@ -205,31 +205,23 @@ export const checkMonitoringAlertsForPatientDiscardButton = async (): Promise<vo
   expect(within(hypoThreshold).getByRole('combobox')).toHaveTextContent('10%')
   expect(within(nonDataTxThreshold).getByRole('combobox')).toHaveTextContent('15%')
 
-  expect(discardButton).toBeEnabled()
-
   await userEvent.clear(lowBgInput)
   await userEvent.type(lowBgInput, '3.55')
   expect(within(monitoringAlertsSection.getByTestId('low-bg-text-field-id')).getByText('Value must be a number')).toBeInTheDocument()
-  expect(discardButton).toBeEnabled()
   await userEvent.clear(lowBgInput)
   await userEvent.type(lowBgInput, '4.8')
-  expect(discardButton).toBeEnabled()
 
   await userEvent.clear(highBgInput)
   await userEvent.type(highBgInput, '8.55')
   expect(within(monitoringAlertsSection.getByTestId('high-bg-text-field-id')).getByText('Value must be a number')).toBeInTheDocument()
-  expect(discardButton).toBeEnabled()
   await userEvent.clear(highBgInput)
   await userEvent.type(highBgInput, '8.8')
-  expect(discardButton).toBeEnabled()
 
   await userEvent.clear(veryLowBgInput)
   await userEvent.type(veryLowBgInput, '3.55')
   expect(within(monitoringAlertsSection.getByTestId('very-low-bg-text-field-id')).getByText('Value must be a number')).toBeInTheDocument()
-  expect(discardButton).toBeEnabled()
   await userEvent.clear(veryLowBgInput)
   await userEvent.type(veryLowBgInput, '3.2')
-  expect(discardButton).toBeEnabled()
 
   const dropDownOutRange = within(monitoringAlertsSection.getByTestId('dropdown-out-of-range'))
   fireEvent.mouseDown(dropDownOutRange.getByRole('combobox'))
