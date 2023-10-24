@@ -25,6 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import moment from 'moment-timezone'
+
 export const history = [
   {
     changeDate: '2022-11-01T00:00:00Z',
@@ -356,22 +358,24 @@ export const reservoirChanges = [
 export const buildHba1cData = () => {
   const dataGMI = {
     dataRange: ['2020-01-01T00:00:00Z', '2020-01-20T23:00:00Z'],
-    data: []
+    data: { cbg: []}
   }
   let index = 0
   for (let day = 1; day < 15; day++) {
     for (let hour = 0; hour < 24; hour++) {
       for (let minute = 0; minute < 60; minute += 10) {
         index += 1
-        dataGMI.data.push({
-          time: `2020-01-${day.toString().padStart(2, '0')}T${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00Z`,
+        const time =  `2020-01-${day.toString().padStart(2, '0')}T${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00.000Z`
+        dataGMI.data.cbg.push({
+          normalTime: time,
+          epoch: moment(time).unix() * 1000,
           type: 'cbg',
           id: `CBG-${index}`,
+          source: "Diabeloop",
           timezone: 'Europe/Paris',
+          displayOffset: 120,
           units: 'mmol/L',
-          value: 10.1,
-          uploadId: 'osef',
-          _userId: 'osef'
+          value: 10.1
         })
       }
     }
