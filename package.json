@@ -91,7 +91,7 @@
     "@types/sinon": "^10.0.19",
     "@types/uuid": "^9.0.5",
     "@types/voilab-pdf-table": "^0.5.2",
-    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.7.5",
     "babel-jest": "^29.7.0",
     "babel-loader": "^9.1.3",
