@@ -27,6 +27,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2662 App crashes for patient without enough data
 
 ### Engineering use
+- YLP-2222 Repair matomo
 - YLP-2573 Create a dedicated message for the caregiver when the account creation is complete
 - YLP-2594 Handle release branches in GitHub CI workflow
 - YLP-2595 Update deprecated GitHub Actions to Node 16
