@@ -375,7 +375,8 @@ export const buildHba1cData = () => {
           timezone: 'Europe/Paris',
           displayOffset: 120,
           units: 'mmol/L',
-          value: 10.1
+          value: 10.1,
+          deviceName: "unknown"
         })
       }
     }

@@ -17894,6 +17894,33 @@ export const completeDailyViewData: Data = {
         "normalTime": "2022-08-08T09:05:00.000Z",
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
+        "id": "alarm-011",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T09:05:00.000Z",
+        "epochEnd": 1659949500000,
+        "subType": "alarm",
+        "guid": "alarmEventHyperglycemiaId",
+        "inputTime": "2022-08-08T09:05:00Z",
+        "alarm": {
+          "alarmCode": "10113",
+          "alarmLevel": "alert",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Hyperglycemia"
+      },
+      {
+        "epoch": 1659949500000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T09:05:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
         "id": "alarm-02",
         "type": "deviceEvent",
         "source": "Diabeloop",
