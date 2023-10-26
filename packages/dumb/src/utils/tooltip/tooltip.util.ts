@@ -27,13 +27,34 @@
 
 import { type DateTitle } from '../../components/tooltips/common/tooltip/tooltip'
 import { type BaseDatum, Source, type TimePrefs } from 'medical-domain'
-import { TIMEZONE_UTC } from '../datetime/datetime.util'
+import { formatLocalizedFromUTC, getHourMinuteFormat, TIMEZONE_UTC } from '../datetime/datetime.util'
+import moment from 'moment-timezone';
 
-export const getDateTitle = (data: BaseDatum, timePrefs: TimePrefs): DateTitle => {
+export const getDateTitle = (normalTime: string, data: BaseDatum, timePrefs: TimePrefs): DateTitle => {
   return {
     source: data.source ?? Source.Diabeloop,
-    normalTime: data.normalTime,
+    normalTime,
     timezone: data.timezone ?? TIMEZONE_UTC,
     timePrefs
   }
+}
+
+export const getDateTitleForBaseDatum = (data: BaseDatum, timePrefs: TimePrefs): DateTitle => {
+  return getDateTitle(data.normalTime, data, timePrefs)
+}
+
+export const computeDateValue = (dateTitle?: DateTitle) => {
+  if (!dateTitle) {
+    return undefined
+  }
+
+  if (dateTitle.source === Source.Diabeloop) {
+    // For Diabeloop devices, use the timezone of the object
+    const timezoneName = dateTitle ? dateTitle?.timePrefs?.timezoneName : ''
+    const { timezone: datumTimezone } = dateTitle
+    const mNormalTime = moment.tz(dateTitle.normalTime, datumTimezone === TIMEZONE_UTC ? timezoneName : datumTimezone)
+    return mNormalTime.format(getHourMinuteFormat())
+  }
+
+  return formatLocalizedFromUTC(dateTitle.normalTime, dateTitle.timePrefs, getHourMinuteFormat())
 }

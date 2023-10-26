@@ -30,6 +30,7 @@ import styles from './tooltip.css'
 import useTooltip from './tooltip.hook'
 import TooltipTail from '../tooltip-tail/tooltip-tail'
 import { type TimePrefs } from 'medical-domain'
+import { computeDateValue } from '../../../../utils/tooltip/tooltip.util';
 
 export interface Offset {
   top: number
@@ -95,9 +96,8 @@ const Tooltip: FunctionComponent<TooltipProps> = (
 
   const {
     calculateOffset,
-    computeDateValue,
     computeTailData
-  } = useTooltip({ position, offset: initialOffset, side, dateTitle, borderWidth, tailWidth })
+  } = useTooltip({ position, offset: initialOffset, side, borderWidth, tailWidth })
 
   const elementRef = useRef<HTMLDivElement>(null)
   const tailElementRef = useRef<HTMLDivElement>(null)
@@ -113,8 +113,8 @@ const Tooltip: FunctionComponent<TooltipProps> = (
   }, [computeTailData])
 
   const dateValue = useMemo(() => {
-    return computeDateValue()
-  }, [computeDateValue])
+    return computeDateValue(dateTitle)
+  }, [dateTitle])
 
   return (
     <div
