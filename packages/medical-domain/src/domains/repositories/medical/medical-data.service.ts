@@ -76,6 +76,7 @@ import WizardService from './datum/wizard.service'
 import { DeviceEventSubtype } from '../../models/medical/datum/enums/device-event-subtype.enum';
 import { AlarmEvent } from '../../models/medical/datum/alarm-event.model';
 import { AlarmEventType } from '../../models/medical/datum/enums/alarm-event-type.enum';
+import AlarmEventService from './datum/alarm-event.service';
 
 class MedicalDataService {
   medicalData: MedicalData = {
@@ -421,6 +422,7 @@ class MedicalDataService {
 
   private group(): void {
     this.medicalData.deviceParametersChanges = DeviceParameterChangeService.groupData(this.medicalData.deviceParametersChanges)
+    this.medicalData.alarmEvents = AlarmEventService.groupData(this.medicalData.alarmEvents)
   }
 
   private getAllData(excludeKeys: string[] = []): Datum[] {

@@ -32,7 +32,7 @@ import moment from 'moment-timezone'
 import { Tooltip } from '../../../index'
 import { formatParameterValue } from '../../../utils/format/format.util'
 import { getHourMinuteFormat } from '../../../utils/datetime/datetime.util'
-import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import {
   COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
@@ -114,7 +114,7 @@ export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props
       position={position}
       side={side || COMMON_TOOLTIP_SIDE}
       borderColor={colors.deviceEvent}
-      dateTitle={getDateTitle(parameter, timePrefs)}
+      dateTitle={getDateTitleForBaseDatum(parameter, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tail={DEFAULT_TOOLTIP_TAIL}

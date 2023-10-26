@@ -47,4 +47,5 @@ export type AlarmEvent = BaseDatum & {
   inputTime: string
   alarm: Alarm
   alarmEventType: AlarmEventType
+  otherOccurrencesDate?: string[]
 }

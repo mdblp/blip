@@ -90,6 +90,7 @@ import { applyOffset, MS_IN_DAY } from './domains/repositories/time/time.service
 import { HoursRange } from './domains/models/statistics/satistics.model'
 import { RescueCarbsAveragePerRange } from './domains/models/statistics/carbs-statistics.model'
 import { ManualBolusAveragePerRange } from './domains/models/statistics/basal-bolus-statistics.model'
+import { GROUP_ALARMS_THRESHOLD_MINUTES } from './domains/repositories/medical/datum/alarm-event.service'
 
 export {
   AlarmCode,
@@ -154,6 +155,7 @@ export {
   type PumpSettingsParameter,
   ChangeType,
   BasalBolusStatisticsService,
-  MS_IN_DAY
+  MS_IN_DAY,
+  GROUP_ALARMS_THRESHOLD_MINUTES
 }
 export default MedicalDataService
