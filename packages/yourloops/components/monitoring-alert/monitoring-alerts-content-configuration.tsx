@@ -107,7 +107,6 @@ export interface MonitoringAlertsContentConfigurationProps {
   monitoringAlertsParameters: MonitoringAlertsParameters
   saveInProgress: boolean
   patient?: Patient
-  onClose?: () => void
   onSave: (monitoringAlertsParameters: MonitoringAlertsParameters) => void
 }
 
@@ -119,7 +118,7 @@ const TIME_SPENT_SEVERE_HYPOGLYCEMIA_THRESHOLD_PERCENT = 5
 const TIME_SPENT_WITHOUT_UPLOADED_DATA_THRESHOLD_PERCENT = 50
 
 function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConfigurationProps): JSX.Element {
-  const { displayInReadonly, monitoringAlertsParameters, patient, saveInProgress, onClose, onSave } = props
+  const { displayInReadonly, monitoringAlertsParameters, patient, saveInProgress, onSave } = props
   const { classes } = useStyles()
   const { t } = useTranslation()
   const { user } = useAuth()
@@ -137,6 +136,7 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
     resetToTeamDefaultValues,
     onChange,
     saveButtonDisabled,
+    discardChanges,
     save,
     setHighBg,
     setLowBg,
@@ -413,13 +413,12 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
       <Box display="flex" justifyContent="flex-end" margin={2}>
         {patient &&
           <Button
-            id="cancel-button-id"
             className={classes.cancelButton}
             variant="outlined"
-            onClick={onClose}
+            onClick={discardChanges}
             data-testid="monitoring-alert-config-cancel"
           >
-            {t('button-cancel')}
+            {t('button-discard-changes')}
           </Button>
         }
         {!displayInReadonly &&

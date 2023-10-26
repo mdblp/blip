@@ -76,6 +76,7 @@ import ZenMode from '../../models/medical/datum/zen-mode.model'
 import DeviceParameterChange from '../../models/medical/datum/device-parameter-change.model'
 import { DeviceEventSubtype } from '../../models/medical/datum/enums/device-event-subtype.enum'
 import { AlarmEventType } from '../../models/medical/datum/enums/alarm-event-type.enum'
+import AlarmEventService from './datum/alarm-event.service';
 
 class MedicalDataService {
   medicalData: MedicalData = {
@@ -453,6 +454,7 @@ class MedicalDataService {
 
   private group(): void {
     this.medicalData.deviceParametersChanges = DeviceParameterChangeService.groupData(this.medicalData.deviceParametersChanges)
+    this.medicalData.alarmEvents = AlarmEventService.groupData(this.medicalData.alarmEvents)
   }
 
   private getAllData(excludeKeys: string[] = []): Datum[] {

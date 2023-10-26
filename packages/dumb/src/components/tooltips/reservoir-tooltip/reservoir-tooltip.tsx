@@ -40,7 +40,7 @@ import {
 } from '../common/tooltip/tooltip'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
-import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { PumpManufacturer, type ReservoirChange, type TimePrefs } from 'medical-domain'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 
@@ -84,7 +84,7 @@ export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props
       position={position}
       side={side || COMMON_TOOLTIP_SIDE}
       borderColor={colors.deviceEvent}
-      dateTitle={getDateTitle(reservoir, timePrefs)}
+      dateTitle={getDateTitleForBaseDatum(reservoir, timePrefs)}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tail={DEFAULT_TOOLTIP_TAIL}

@@ -36,7 +36,7 @@ import {
   WizardInputMealSource
 } from 'medical-domain'
 import { Tooltip } from '../../../index'
-import { getDateTitle } from '../../../utils/tooltip/tooltip.util'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import {
   getBolusFromInsulinEvent,
   getBolusType,
@@ -135,7 +135,7 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
 
   return (
     <Tooltip
-      dateTitle={getDateTitle(bolus, timePrefs)}
+      dateTitle={getDateTitleForBaseDatum(bolus, timePrefs)}
       title={bolusTypeTitle}
       borderColor={color}
       position={position}

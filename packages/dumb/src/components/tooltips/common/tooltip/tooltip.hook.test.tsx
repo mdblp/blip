@@ -27,7 +27,6 @@
 
 import { renderHook } from '@testing-library/react'
 import useTooltip, { type TooltipHookProps } from './tooltip.hook'
-import { type DateTitle } from './tooltip'
 
 describe('Tooltip hook', () => {
   const defaultProps = { offset: { top: 0 }, position: { top: 0, left: 0 } } as TooltipHookProps
@@ -106,42 +105,6 @@ describe('Tooltip hook', () => {
       const { top, left } = result.current.calculateOffset(mainDiv, tailDiv)
       expect(top).toBe(-(tailDivTop + (height / 2)) + mainDivTop)
       expect(left).toBe(-(tailDivLeft + (width / 2)) + mainDivLeft)
-    })
-  })
-
-  describe('computeDateValue', () => {
-    const defaultDateTitle: DateTitle = {
-      normalTime: 'TBD',
-      timezone: 'Europe/Paris',
-      source: 'not Diabeloop',
-      timePrefs: {
-        timezoneAware: true,
-        timezoneName: 'Europe/Paris'
-      }
-    }
-    it('should return undefined when dateTitle is undefined', () => {
-      const props = { ...defaultProps, dateTitle: undefined }
-      const { result } = renderHook(() => useTooltip(props))
-      const dateValue = result.current.computeDateValue()
-      expect(dateValue).toBeUndefined()
-    })
-
-    it('should return correct value when source is not "Diabeloop"', () => {
-      const date = '2020-01-13T'
-      const dateTitle = { ...defaultDateTitle, normalTime: `${date}22:00:00.000Z` }
-      const props = { ...defaultProps, dateTitle }
-      const { result } = renderHook(() => useTooltip(props))
-      const dateValue = result.current.computeDateValue()
-      expect(dateValue).toBe('11:00 pm')
-    })
-
-    it('should return correct value when source is "Diabeloop"', () => {
-      const date = '2020-01-13T'
-      const dateTitle = { ...defaultDateTitle, normalTime: `${date}22:00:00.000Z`, source: 'Diabeloop' }
-      const props = { ...defaultProps, dateTitle }
-      const { result } = renderHook(() => useTooltip(props))
-      const dateValue = result.current.computeDateValue()
-      expect(dateValue).toBe('11:00 pm')
     })
   })
 
