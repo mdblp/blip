@@ -128,7 +128,7 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
   const inputStep = bgUnit === Unit.MilligramPerDeciliter ? INPUT_STEP_MGDL : INPUT_STEP_MMOLL
 
   return (
-    <React.Fragment>
+    <>
       <Box>
         <Typography className={classes.categoryTitle}>
           1. {t('time-away-from-target-range')}
@@ -410,7 +410,7 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
           </div>
         </Box>
       </Box>
-    </React.Fragment>
+    </>
   )
 }
 

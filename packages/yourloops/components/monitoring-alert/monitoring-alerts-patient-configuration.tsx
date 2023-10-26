@@ -47,11 +47,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
   }
 }))
 
-export interface MonitoringAlertsPatientConfigurationProps {
+interface MonitoringAlertsPatientConfigurationProps {
   displayInReadonly: boolean
   monitoringAlertsParameters: MonitoringAlertsParameters
   saveInProgress: boolean
-  isInitiallyUsingTeamAlertParameters: boolean
+  wasInitiallyUsingTeamAlertParameters: boolean
   onResetToTeamParameters: () => void
   onSave: (monitoringAlertsParameters: MonitoringAlertsParameters) => void
 }
@@ -62,7 +62,7 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
   {
     displayInReadonly,
     monitoringAlertsParameters,
-    isInitiallyUsingTeamAlertParameters,
+    wasInitiallyUsingTeamAlertParameters,
     saveInProgress,
     onResetToTeamParameters,
     onSave
@@ -88,7 +88,7 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
     monitoringAlertsParameters,
     saveInProgress,
     userBgUnit,
-    isInitiallyUsingTeamAlertParameters,
+    wasInitiallyUsingTeamAlertParameters,
     onSave
   })
 

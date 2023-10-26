@@ -41,10 +41,10 @@ import {
   useMonitoringAlertsContentConfiguration
 } from './monitoring-alerts-content-configuration.hook'
 
-export interface MonitoringAlertsPatientConfigurationHookProps {
+interface MonitoringAlertsPatientConfigurationHookProps {
   monitoringAlertsParameters: MonitoringAlertsParameters
   onSave?: (monitoringAlertsParameters: MonitoringAlertsParameters) => void
-  isInitiallyUsingTeamAlertParameters: boolean
+  wasInitiallyUsingTeamAlertParameters: boolean
   saveInProgress?: boolean
   userBgUnit: Unit.MilligramPerDeciliter | Unit.MmolPerLiter
 }
@@ -67,7 +67,7 @@ export const useMonitoringAlertsPatientConfiguration = (
     saveInProgress,
     userBgUnit,
     onSave,
-    isInitiallyUsingTeamAlertParameters
+    wasInitiallyUsingTeamAlertParameters
   }: MonitoringAlertsPatientConfigurationHookProps
 ): MonitoringAlertsPatientConfigurationHookReturn => {
   const { selectedTeam } = useSelectedTeamContext()
@@ -86,7 +86,7 @@ export const useMonitoringAlertsPatientConfiguration = (
     setMonitoringValuesDisplayed
   } = useMonitoringAlertsContentConfiguration({ monitoringAlertsParameters, saveInProgress, userBgUnit, onSave })
 
-  const [useTeamValues, setUseTeamValues] = useState<boolean>(isInitiallyUsingTeamAlertParameters)
+  const [useTeamValues, setUseTeamValues] = useState<boolean>(wasInitiallyUsingTeamAlertParameters)
 
   const teamAlertParametersValues = useMemo(() => {
     const teamParameters = selectedTeam.monitoringAlertsParameters
@@ -163,18 +163,18 @@ export const useMonitoringAlertsPatientConfiguration = (
   }
 
   const shouldSaveButtonBeDisabled = useMemo(() => {
-    return isInitiallyUsingTeamAlertParameters === useTeamValues && saveButtonDisabled
-  }, [isInitiallyUsingTeamAlertParameters, saveButtonDisabled, useTeamValues])
+    return wasInitiallyUsingTeamAlertParameters === useTeamValues && saveButtonDisabled
+  }, [wasInitiallyUsingTeamAlertParameters, saveButtonDisabled, useTeamValues])
 
   const onValueChange = () => {
     setUseTeamValues(false)
   }
 
   useEffect(() => {
-    if (haveValuesBeenUpdated || useTeamValues !== isInitiallyUsingTeamAlertParameters) {
+    if (haveValuesBeenUpdated || useTeamValues !== wasInitiallyUsingTeamAlertParameters) {
       setUseTeamValues(areCurrentAndTeamValuesTheSame)
     }
-  }, [areCurrentAndTeamValuesTheSame, haveValuesBeenUpdated, isInitiallyUsingTeamAlertParameters, useTeamValues])
+  }, [areCurrentAndTeamValuesTheSame, haveValuesBeenUpdated, wasInitiallyUsingTeamAlertParameters, useTeamValues])
 
   return {
     bgUnit: userBgUnit,

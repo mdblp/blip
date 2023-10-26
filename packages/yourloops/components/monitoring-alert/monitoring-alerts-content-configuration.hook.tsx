@@ -36,14 +36,14 @@ import { type Thresholds } from '../../lib/patient/models/monitoring-alerts.mode
 import { Unit } from 'medical-domain'
 import { type MonitoringAlertsParameters } from '../../lib/team/models/monitoring-alerts-parameters.model'
 
-export interface MonitoringAlertsContentConfigurationHookProps {
+interface MonitoringAlertsContentConfigurationHookProps {
   monitoringAlertsParameters: MonitoringAlertsParameters
   onSave?: (monitoringAlertsParameters: MonitoringAlertsParameters) => void
   saveInProgress?: boolean
   userBgUnit: Unit.MilligramPerDeciliter | Unit.MmolPerLiter
 }
 
-export interface MonitoringAlertsContentConfigurationHookReturn {
+interface MonitoringAlertsContentConfigurationHookReturn {
   haveValuesBeenUpdated: boolean
   getHighBgInitialState: () => ValueErrorMessagePair
   getHypoThresholdInitialState: () => ValueErrorPair
@@ -66,12 +66,12 @@ export interface MonitoringValuesDisplayed {
   veryLowBg: ValueErrorMessagePair
 }
 
-export interface ValueErrorMessagePair {
+interface ValueErrorMessagePair {
   value?: number
   errorMessage?: string
 }
 
-export interface ValueErrorPair {
+interface ValueErrorPair {
   value?: number
   error?: boolean
 }

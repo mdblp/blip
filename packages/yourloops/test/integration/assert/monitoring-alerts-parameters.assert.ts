@@ -27,7 +27,7 @@
 
 import { fireEvent, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { patientWithMmolId } from '../data/patient.api.data'
+import { patient1Id, patientWithMmolId } from '../data/patient.api.data'
 import { Unit } from 'medical-domain'
 import PatientApi from '../../../lib/patient/patient.api'
 import { buildTeamThree, myThirdTeamId } from '../mock/team.api.mock'
@@ -307,8 +307,10 @@ export const checkMonitoringAlertsDialogDefaultButtonMgdl = async (): Promise<vo
   expect(monitoringAlertsSection.getByText('Current trigger setting: 15% of time off target (min at 60 mg/dL max at 150 mg/dL)')).toBeVisible()
   expect(monitoringAlertsSection.getByText('Current trigger setting: 20% of time below 50 mg/dL threshold')).toBeVisible()
   expect(monitoringAlertsSection.getByText('Current trigger setting: 40% of data not transmitted over the period')).toBeVisible()
+  expect(screen.queryByText('The care team values have been entered. Please save the changes')).not.toBeInTheDocument()
 
   await userEvent.click(careTeamValuesButton)
+  expect(screen.getByText('The care team values have been entered. Please save the changes')).toBeVisible()
   expect(lowBgInput).toHaveValue(50)
   expect(highBgInput).toHaveValue(140)
   expect(veryLowBgInput).toHaveValue(40)
@@ -316,4 +318,7 @@ export const checkMonitoringAlertsDialogDefaultButtonMgdl = async (): Promise<vo
   expect(within(hypoThreshold).getByRole('combobox')).toHaveTextContent('10%')
   expect(within(nonDataThreshold).getByRole('combobox')).toHaveTextContent('15%')
   expect(saveButton).not.toBeDisabled()
+
+  await userEvent.click(saveButton)
+  expect(PatientApi.deletePatientAlerts).toHaveBeenCalledWith(myThirdTeamId, patient1Id)
 }

@@ -44,6 +44,7 @@ import {
 import { testTargetAndAlertsViewContent } from '../../../use-cases/target-and-alerts-management'
 import { Settings } from '../../../../../lib/auth/models/settings.model'
 import { Unit } from 'medical-domain'
+import PatientApi from '../../../../../lib/patient/patient.api'
 
 describe('Target and alerts view for HCP', () => {
   const firstName = 'HCP firstName'
@@ -81,6 +82,7 @@ describe('Target and alerts view for HCP', () => {
   })
 
   it('should display the monitoring alerts configuration in mg/dL', async () => {
+    jest.spyOn(PatientApi, 'deletePatientAlerts').mockReturnValueOnce(null)
     await act(async () => {
       renderPage(targetAndAlertsRoute)
     })

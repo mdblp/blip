@@ -130,7 +130,7 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
               saveInProgress={saveInProgress}
               onSave={save}
               onResetToTeamParameters={deletePatientAlertsParameters}
-              isInitiallyUsingTeamAlertParameters={!!patient.isUsingTeamAlertParameters}
+              wasInitiallyUsingTeamAlertParameters={!!patient.isUsingTeamAlertParameters}
             />
           </section>
         </CardContent>
