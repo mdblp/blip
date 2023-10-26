@@ -57,7 +57,6 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
   const alert = useAlert()
   const { pathname, hash, key } = useLocation()
 
-  const monitoringAlertsParameters = patient.monitoringAlertsParameters
   const monitoringAlertsSection = useRef<HTMLElement>(null)
 
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
@@ -127,7 +126,7 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
             </Typography>
             <MonitoringAlertsPatientConfiguration
               displayInReadonly={false}
-              monitoringAlertsParameters={monitoringAlertsParameters}
+              monitoringAlertsParameters={patient.monitoringAlertsParameters}
               saveInProgress={saveInProgress}
               onSave={save}
               onResetToTeamParameters={deletePatientAlertsParameters}

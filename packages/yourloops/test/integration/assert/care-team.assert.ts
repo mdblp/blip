@@ -62,8 +62,9 @@ export const checkCareTeamMonitoringAlertsConfiguration = () => {
   const monitoringAlertsConfigurationSection = screen.getByTestId('team-monitoring-alerts-configuration')
 
   expect(within(monitoringAlertsConfigurationSection).getByText('Monitoring alerts configuration')).toBeVisible()
-  expect(within(monitoringAlertsConfigurationSection).getByText('Save')).toBeVisible()
-  expect(within(monitoringAlertsConfigurationSection).getByText('Save')).toBeEnabled()
+  const saveButton = within(monitoringAlertsConfigurationSection).getByRole('button', { name: 'Save' })
+  expect(saveButton).toBeVisible()
+  expect(saveButton).toBeDisabled() // No monitoring value has been changed, button should be disabled
 
   expect(monitoringAlertsConfigurationSection).toHaveTextContent('Monitoring alerts configuration1. Time away from target range')
   expect(monitoringAlertsConfigurationSection).toHaveTextContent('1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)A. Glycemic targetMinimum:​mg/dLMaximum:​mg/dLDefault: min at 70 mg/dL and max at 180 mg/dLB. Event trigger thresholdTime spent off target5%​Default: 50%')

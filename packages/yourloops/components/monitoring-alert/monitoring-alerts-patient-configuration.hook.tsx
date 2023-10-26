@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,50 +35,31 @@ import {
 import { type BgUnit, Unit } from 'medical-domain'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { type MonitoringAlertsParameters } from '../../lib/team/models/monitoring-alerts-parameters.model'
-import { useMonitoringAlertsContentConfiguration } from './monitoring-alerts-content-configuration.hook'
+import {
+  DEFAULT_BG_UNIT,
+  MonitoringValuesDisplayed,
+  useMonitoringAlertsContentConfiguration
+} from './monitoring-alerts-content-configuration.hook'
 
 export interface MonitoringAlertsPatientConfigurationHookProps {
   monitoringAlertsParameters: MonitoringAlertsParameters
+  onSave?: (monitoringAlertsParameters: MonitoringAlertsParameters) => void
   isInitiallyUsingTeamAlertParameters: boolean
   saveInProgress?: boolean
   userBgUnit: Unit.MilligramPerDeciliter | Unit.MmolPerLiter
-  onSave?: (monitoringAlertsParameters: MonitoringAlertsParameters) => void
 }
 
 interface MonitoringAlertsPatientConfigurationHookReturn {
-  lowBg: ValueErrorMessagePair
-  setLowBg: React.Dispatch<ValueErrorMessagePair>
-  veryLowBg: ValueErrorMessagePair
-  setVeryLowBg: React.Dispatch<ValueErrorMessagePair>
-  highBg: ValueErrorMessagePair
-  setHighBg: React.Dispatch<ValueErrorMessagePair>
-  nonDataTxThreshold: ValueErrorPair
-  setNonDataTxThreshold: React.Dispatch<ValueErrorPair>
-  outOfRangeThreshold: ValueErrorPair
-  setOutOfRangeThreshold: React.Dispatch<ValueErrorPair>
-  hypoThreshold: ValueErrorPair
-  setHypoThreshold: React.Dispatch<ValueErrorPair>
-  useTeamValues: boolean
-  saveButtonDisabled: boolean
-  discardChanges: () => void
-  save: () => void
-  resetToTeamDefaultValues: () => void
-  onChange: (value: number, lowValue: number, highValue: number, setValue: React.Dispatch<ValueErrorPair>) => void
   bgUnit: BgUnit
+  discardChanges: () => void
+  monitoringValuesDisplayed: MonitoringValuesDisplayed
+  resetToTeamDefaultValues: () => void
+  save: () => void
+  saveButtonDisabled: boolean
+  setMonitoringValuesDisplayed: React.Dispatch<MonitoringValuesDisplayed>
+  useTeamValues: boolean
+  onValueChange: () => void
 }
-
-interface ValueErrorMessagePair {
-  value?: number
-  errorMessage?: string
-}
-
-interface ValueErrorPair {
-  value?: number
-  error?: boolean
-}
-
-const DEFAULT_BG_UNIT = Unit.MilligramPerDeciliter
-const DEFAULT_REPORTING_PERIOD = 55
 
 export const useMonitoringAlertsPatientConfiguration = (
   {
@@ -93,27 +74,17 @@ export const useMonitoringAlertsPatientConfiguration = (
 
   const {
     haveValuesBeenUpdated,
-    lowBg,
-    saveButtonDisabled,
-    onChange,
-    veryLowBg,
-    highBg,
-    hypoThreshold,
-    nonDataTxThreshold,
-    outOfRangeThreshold,
+    monitoringValuesDisplayed,
     getHighBgInitialState,
     getLowBgInitialState,
     getVeryLowBgInitialState,
     getNonDataTxThresholdInitialState,
     getOutOfRangeThresholdInitialState,
     getHypoThresholdInitialState,
-    setLowBg,
-    setHighBg,
-    setOutOfRangeThreshold,
-    setHypoThreshold,
-    setVeryLowBg,
-    setNonDataTxThreshold
-  } = useMonitoringAlertsContentConfiguration({ monitoringAlertsParameters, saveInProgress, userBgUnit })
+    save,
+    saveButtonDisabled,
+    setMonitoringValuesDisplayed
+  } = useMonitoringAlertsContentConfiguration({ monitoringAlertsParameters, saveInProgress, userBgUnit, onSave })
 
   const [useTeamValues, setUseTeamValues] = useState<boolean>(isInitiallyUsingTeamAlertParameters)
 
@@ -133,20 +104,13 @@ export const useMonitoringAlertsPatientConfiguration = (
   }, [selectedTeam.monitoringAlertsParameters, userBgUnit])
 
   const areCurrentAndTeamValuesTheSame = useMemo((): boolean => {
-    return teamAlertParametersValues.highBg === highBg.value
-      && teamAlertParametersValues.lowBg === lowBg.value
-      && teamAlertParametersValues.veryLowBg === veryLowBg.value
-      && teamAlertParametersValues.hypoThreshold === hypoThreshold.value
-      && teamAlertParametersValues.nonDataTxThreshold === nonDataTxThreshold.value
-      && teamAlertParametersValues.outOfRangeThreshold === outOfRangeThreshold.value
-  }, [highBg.value, hypoThreshold.value, lowBg.value, nonDataTxThreshold.value, outOfRangeThreshold.value, teamAlertParametersValues, veryLowBg.value])
-
-  useEffect(() => {
-    if (haveValuesBeenUpdated || useTeamValues !== isInitiallyUsingTeamAlertParameters) {
-      console.log(areCurrentAndTeamValuesTheSame)
-      setUseTeamValues(areCurrentAndTeamValuesTheSame)
-    }
-  }, [areCurrentAndTeamValuesTheSame, haveValuesBeenUpdated, isInitiallyUsingTeamAlertParameters, useTeamValues])
+    return teamAlertParametersValues.highBg === monitoringValuesDisplayed.highBg.value
+      && teamAlertParametersValues.lowBg === monitoringValuesDisplayed.lowBg.value
+      && teamAlertParametersValues.veryLowBg === monitoringValuesDisplayed.veryLowBg.value
+      && teamAlertParametersValues.hypoThreshold === monitoringValuesDisplayed.hypoThreshold.value
+      && teamAlertParametersValues.nonDataTxThreshold === monitoringValuesDisplayed.nonDataTxThreshold.value
+      && teamAlertParametersValues.outOfRangeThreshold === monitoringValuesDisplayed.outOfRangeThreshold.value
+  }, [monitoringValuesDisplayed.highBg.value, monitoringValuesDisplayed.hypoThreshold.value, monitoringValuesDisplayed.lowBg.value, monitoringValuesDisplayed.nonDataTxThreshold.value, monitoringValuesDisplayed.outOfRangeThreshold.value, monitoringValuesDisplayed.veryLowBg.value, teamAlertParametersValues.highBg, teamAlertParametersValues.hypoThreshold, teamAlertParametersValues.lowBg, teamAlertParametersValues.nonDataTxThreshold, teamAlertParametersValues.outOfRangeThreshold, teamAlertParametersValues.veryLowBg])
 
   const resetToTeamDefaultValues = (): void => {
     const defaultMonitoringAlertsParameters = selectedTeam.monitoringAlertsParameters
@@ -158,85 +122,69 @@ export const useMonitoringAlertsPatientConfiguration = (
 
     const { minLowBg, maxLowBg, minHighBg, maxHighBg, minVeryLowBg, maxVeryLowBg } = buildThresholds(userBgUnit)
 
-    setHighBg({
-      value: defaultHighBgValue,
-      errorMessage: getErrorMessage(userBgUnit, defaultHighBgValue, minHighBg, maxHighBg)
-    })
-    setVeryLowBg({
-      value: defaultVeryLowBgValue,
-      errorMessage: getErrorMessage(userBgUnit, defaultVeryLowBgValue, minVeryLowBg, maxVeryLowBg)
-    })
-    setLowBg({
-      value: defaultLowBgValue,
-      errorMessage: getErrorMessage(userBgUnit, defaultLowBgValue, minLowBg, maxLowBg)
-    })
-    setNonDataTxThreshold({
-      value: defaultMonitoringAlertsParameters.nonDataTxThreshold,
-      error: isInvalidPercentage(defaultMonitoringAlertsParameters.nonDataTxThreshold)
-    })
-    setOutOfRangeThreshold({
-      value: defaultMonitoringAlertsParameters.outOfRangeThreshold,
-      error: isInvalidPercentage(defaultMonitoringAlertsParameters.outOfRangeThreshold)
-    })
-    setHypoThreshold({
-      value: defaultMonitoringAlertsParameters.hypoThreshold,
-      error: isInvalidPercentage(defaultMonitoringAlertsParameters.hypoThreshold)
+    setMonitoringValuesDisplayed({
+      highBg: {
+        value: defaultHighBgValue,
+        errorMessage: getErrorMessage(userBgUnit, defaultHighBgValue, minHighBg, maxHighBg)
+      },
+      hypoThreshold: {
+        value: defaultMonitoringAlertsParameters.hypoThreshold,
+        error: isInvalidPercentage(defaultMonitoringAlertsParameters.hypoThreshold)
+      },
+      lowBg: {
+        value: defaultLowBgValue,
+        errorMessage: getErrorMessage(userBgUnit, defaultLowBgValue, minLowBg, maxLowBg)
+      },
+      nonDataTxThreshold: {
+        value: defaultMonitoringAlertsParameters.nonDataTxThreshold,
+        error: isInvalidPercentage(defaultMonitoringAlertsParameters.nonDataTxThreshold)
+      },
+      outOfRangeThreshold: {
+        value: defaultMonitoringAlertsParameters.outOfRangeThreshold,
+        error: isInvalidPercentage(defaultMonitoringAlertsParameters.outOfRangeThreshold)
+      },
+      veryLowBg: {
+        value: defaultVeryLowBgValue,
+        errorMessage: getErrorMessage(userBgUnit, defaultVeryLowBgValue, minVeryLowBg, maxVeryLowBg)
+      }
     })
     setUseTeamValues(true)
   }
 
   const discardChanges = (): void => {
-    setHighBg(getHighBgInitialState())
-    setVeryLowBg(getVeryLowBgInitialState())
-    setLowBg(getLowBgInitialState())
-    setNonDataTxThreshold(getNonDataTxThresholdInitialState())
-    setOutOfRangeThreshold(getOutOfRangeThresholdInitialState())
-    setHypoThreshold(getHypoThresholdInitialState())
-  }
-
-  const save = (): void => {
-    const reportingPeriod = (monitoringAlertsParameters.reportingPeriod && monitoringAlertsParameters.reportingPeriod > 0) ? monitoringAlertsParameters.reportingPeriod : DEFAULT_REPORTING_PERIOD
-    const monitoringAlertsParametersUpdated: MonitoringAlertsParameters = {
-      bgUnit: userBgUnit,
-      lowBg: lowBg.value,
-      highBg: highBg.value,
-      outOfRangeThreshold: outOfRangeThreshold.value,
-      veryLowBg: veryLowBg.value,
-      hypoThreshold: hypoThreshold.value,
-      nonDataTxThreshold: nonDataTxThreshold.value,
-      reportingPeriod
-    }
-    onSave(monitoringAlertsParametersUpdated)
-  }
-
-  const onValueChange = (value: number, lowValue: number, highValue: number, setValue: React.Dispatch<ValueErrorPair>) => {
-    onChange(value, lowValue, highValue, setValue)
-    setUseTeamValues(false)
+    setMonitoringValuesDisplayed({
+      highBg: getHighBgInitialState(),
+      hypoThreshold: getHypoThresholdInitialState(),
+      lowBg: getLowBgInitialState(),
+      nonDataTxThreshold: getNonDataTxThresholdInitialState(),
+      outOfRangeThreshold: getOutOfRangeThresholdInitialState(),
+      veryLowBg: getVeryLowBgInitialState()
+    })
   }
 
   const shouldSaveButtonBeDisabled = useMemo(() => {
     return isInitiallyUsingTeamAlertParameters === useTeamValues && saveButtonDisabled
   }, [isInitiallyUsingTeamAlertParameters, saveButtonDisabled, useTeamValues])
 
+  const onValueChange = () => {
+    setUseTeamValues(false)
+  }
+
+  useEffect(() => {
+    if (haveValuesBeenUpdated || useTeamValues !== isInitiallyUsingTeamAlertParameters) {
+      setUseTeamValues(areCurrentAndTeamValuesTheSame)
+    }
+  }, [areCurrentAndTeamValuesTheSame, haveValuesBeenUpdated, isInitiallyUsingTeamAlertParameters, useTeamValues])
+
   return {
-    lowBg,
-    useTeamValues,
-    saveButtonDisabled: shouldSaveButtonBeDisabled,
+    bgUnit: userBgUnit,
     discardChanges,
-    save,
+    monitoringValuesDisplayed,
+    onValueChange,
     resetToTeamDefaultValues,
-    onChange: onValueChange,
-    veryLowBg,
-    highBg,
-    hypoThreshold,
-    nonDataTxThreshold,
-    outOfRangeThreshold,
-    setLowBg,
-    setHighBg,
-    setOutOfRangeThreshold,
-    setHypoThreshold,
-    setVeryLowBg,
-    setNonDataTxThreshold,
-    bgUnit: userBgUnit
+    save,
+    saveButtonDisabled: shouldSaveButtonBeDisabled,
+    setMonitoringValuesDisplayed,
+    useTeamValues
   }
 }

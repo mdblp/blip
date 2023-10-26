@@ -39,18 +39,14 @@ import TextField from '@mui/material/TextField'
 import {
   buildBgValues,
   buildThresholds,
-  onBasicDropdownSelect,
+  getErrorMessage,
   PERCENTAGES
 } from './monitoring-alert-content-configuration.util'
 import FormHelperText from '@mui/material/FormHelperText'
-import { useAuth } from '../../lib/auth'
 import { Unit } from 'medical-domain'
-import { ValueErrorMessagePair, ValueErrorPair } from './monitoring-alerts-content-configuration.hook'
+import { MonitoringValuesDisplayed } from './monitoring-alerts-content-configuration.hook'
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  cancelButton: {
-    marginRight: theme.spacing(2)
-  },
   categoryInfo: {
     marginLeft: theme.spacing(3)
   },
@@ -98,21 +94,12 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }))
 
 export interface MonitoringAlertsContentConfigurationProps {
+  bgUnit: Unit.MilligramPerDeciliter | Unit.MmolPerLiter
   displayInReadonly: boolean
   displayDefaultValues: boolean
-  lowBg: ValueErrorMessagePair
-  setLowBg: React.Dispatch<ValueErrorMessagePair>
-  veryLowBg: ValueErrorMessagePair
-  setVeryLowBg: React.Dispatch<ValueErrorMessagePair>
-  highBg: ValueErrorMessagePair
-  setHighBg: React.Dispatch<ValueErrorMessagePair>
-  nonDataTxThreshold: ValueErrorPair
-  setNonDataTxThreshold: React.Dispatch<ValueErrorPair>
-  outOfRangeThreshold: ValueErrorPair
-  setOutOfRangeThreshold: React.Dispatch<ValueErrorPair>
-  hypoThreshold: ValueErrorPair
-  setHypoThreshold: React.Dispatch<ValueErrorPair>
-  onChange: (value: number, lowValue: number, highValue: number, setValue: React.Dispatch<ValueErrorPair>) => void
+  monitoringValuesDisplayed: MonitoringValuesDisplayed
+  setMonitoringValuesDisplayed: React.Dispatch<MonitoringValuesDisplayed>
+  onValueChange?: () => void
 }
 
 const INPUT_STEP_MGDL = 1
@@ -124,28 +111,16 @@ const TIME_SPENT_WITHOUT_UPLOADED_DATA_THRESHOLD_PERCENT = 50
 
 export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentConfigurationProps> = (
   {
+    bgUnit,
     displayInReadonly,
     displayDefaultValues,
-    lowBg,
-    setLowBg,
-    veryLowBg,
-    setVeryLowBg,
-    highBg,
-    setHighBg,
-    nonDataTxThreshold,
-    setNonDataTxThreshold,
-    outOfRangeThreshold,
-    setOutOfRangeThreshold,
-    hypoThreshold,
-    setHypoThreshold,
-    onChange
+    monitoringValuesDisplayed,
+    setMonitoringValuesDisplayed,
+    onValueChange = () => {}
   }
 ) => {
   const { classes } = useStyles()
   const { t } = useTranslation()
-  const { user } = useAuth()
-
-  const bgUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
 
   const { minLowBg, maxLowBg, minHighBg, maxHighBg, minVeryLowBg, maxVeryLowBg } = buildThresholds(bgUnit)
   const { highBgDefault, lowBgDefault, veryLowBgDefault } = buildBgValues(bgUnit)
@@ -160,9 +135,9 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
         </Typography>
         <Typography variant="caption" className={classes.categoryInfo}>
           {t('current-trigger-setting-tir', {
-            tir: outOfRangeThreshold.value,
-            lowBg: lowBg.value,
-            highBg: highBg.value,
+            tir: monitoringValuesDisplayed.outOfRangeThreshold.value,
+            lowBg: monitoringValuesDisplayed.lowBg.value,
+            highBg: monitoringValuesDisplayed.highBg.value,
             bgUnit
           })}
         </Typography>
@@ -183,8 +158,8 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                 <Typography>{t('minimum')}</Typography>
                 <TextField
                   disabled={displayInReadonly}
-                  value={lowBg.value}
-                  error={!!lowBg.errorMessage}
+                  value={monitoringValuesDisplayed.lowBg.value}
+                  error={!!monitoringValuesDisplayed.lowBg.errorMessage}
                   type="number"
                   className={classes.textField}
                   size="small"
@@ -197,13 +172,21 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                     }
                   }}
                   onChange={(event) => {
-                    onChange(+event.target.value, minLowBg, maxLowBg, setLowBg)
+                    const value = +event.target.value
+                    setMonitoringValuesDisplayed({
+                      ...monitoringValuesDisplayed,
+                      lowBg: {
+                        value,
+                        errorMessage: getErrorMessage(bgUnit, value, minLowBg, maxLowBg)
+                      }
+                    })
+                    onValueChange()
                   }}
                 />
                 <Typography>{bgUnit}</Typography>
-                {!!lowBg.errorMessage &&
+                {!!monitoringValuesDisplayed.lowBg.errorMessage &&
                   <FormHelperText error className={classes.inputHelperText}>
-                    {lowBg.errorMessage}
+                    {monitoringValuesDisplayed.lowBg.errorMessage}
                   </FormHelperText>
                 }
               </Box>
@@ -217,8 +200,8 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                 <Typography>{t('maximum')}</Typography>
                 <TextField
                   disabled={displayInReadonly}
-                  value={highBg.value}
-                  error={!!highBg.errorMessage}
+                  value={monitoringValuesDisplayed.highBg.value}
+                  error={!!monitoringValuesDisplayed.highBg.errorMessage}
                   type="number"
                   className={classes.textField}
                   size="small"
@@ -231,13 +214,21 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                     }
                   }}
                   onChange={(event) => {
-                    onChange(+event.target.value, minHighBg, maxHighBg, setHighBg)
+                    const value = +event.target.value
+                    setMonitoringValuesDisplayed({
+                      ...monitoringValuesDisplayed,
+                      highBg: {
+                        value,
+                        errorMessage: getErrorMessage(bgUnit, value, minHighBg, maxHighBg)
+                      }
+                    })
+                    onValueChange()
                   }}
                 />
                 <Typography>{bgUnit}</Typography>
-                {!!highBg.errorMessage &&
+                {!!monitoringValuesDisplayed.highBg.errorMessage &&
                   <FormHelperText error className={classes.inputHelperText}>
-                    {highBg.errorMessage}
+                    {monitoringValuesDisplayed.highBg.errorMessage}
                   </FormHelperText>
                 }
               </Box>
@@ -257,13 +248,20 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
               <div className={classes.dropdown} data-testid="dropdown-out-of-range">
                 <BasicDropdown
                   disabled={displayInReadonly}
-                  key={`out-of-range-${outOfRangeThreshold.value}`}
+                  key={`out-of-range-${monitoringValuesDisplayed.outOfRangeThreshold.value}`}
                   id="out-of-range"
-                  defaultValue={`${outOfRangeThreshold.value}%` ?? ''}
+                  defaultValue={`${monitoringValuesDisplayed.outOfRangeThreshold.value}%` ?? ''}
                   values={PERCENTAGES}
-                  error={outOfRangeThreshold.error}
+                  error={monitoringValuesDisplayed.outOfRangeThreshold.error}
                   onSelect={(value) => {
-                    onBasicDropdownSelect(value, setOutOfRangeThreshold)
+                    setMonitoringValuesDisplayed({
+                      ...monitoringValuesDisplayed,
+                      outOfRangeThreshold: {
+                        value: parseFloat(value),
+                        error: false
+                      }
+                    })
+                    onValueChange()
                   }}
 
                 />
@@ -281,16 +279,16 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
         </Typography>
         <Typography variant="caption" className={classes.categoryInfo}>
           {t('current-trigger-setting-hypoglycemia', {
-            hypoThreshold: hypoThreshold.value,
-            veryLowBg: veryLowBg.value,
+            hypoThreshold: monitoringValuesDisplayed.hypoThreshold.value,
+            veryLowBg: monitoringValuesDisplayed.veryLowBg.value,
             bgUnit
           })}
         </Typography>
         <Box display="flex" data-testid="severe-hypoglycemia">
           <div className={classes.subCategoryContainer}>
             <Typography className={classes.subCategoryTitle}>A. {t('severe-hypoglycemia-threshold', {
-              hypoThreshold: hypoThreshold.value,
-              veryLowBg: veryLowBg.value
+              hypoThreshold: monitoringValuesDisplayed.hypoThreshold.value,
+              veryLowBg: monitoringValuesDisplayed.veryLowBg.value
             })}:</Typography>
             <Box
               className={classes.valueSelection}
@@ -301,8 +299,8 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
               <Typography>{t('severe-hypoglycemia-below')}</Typography>
               <TextField
                 disabled={displayInReadonly}
-                value={veryLowBg.value}
-                error={!!veryLowBg.errorMessage}
+                value={monitoringValuesDisplayed.veryLowBg.value}
+                error={!!monitoringValuesDisplayed.veryLowBg.errorMessage}
                 type="number"
                 className={classes.textField}
                 size="small"
@@ -315,13 +313,21 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                   }
                 }}
                 onChange={(event) => {
-                  onChange(+event.target.value, minVeryLowBg, maxVeryLowBg, setVeryLowBg)
+                  const value = +event.target.value
+                  setMonitoringValuesDisplayed({
+                    ...monitoringValuesDisplayed,
+                    veryLowBg: {
+                      value,
+                      errorMessage: getErrorMessage(bgUnit, value, minVeryLowBg, maxVeryLowBg)
+                    }
+                  })
+                  onValueChange()
                 }}
               />
               <Typography data-testid="bgUnits-severalHypo">{bgUnit}</Typography>
-              {!!veryLowBg.errorMessage &&
+              {!!monitoringValuesDisplayed.veryLowBg.errorMessage &&
                 <FormHelperText error className={classes.inputHelperText}>
-                  {veryLowBg.errorMessage}
+                  {monitoringValuesDisplayed.veryLowBg.errorMessage}
                 </FormHelperText>
               }
             </Box>
@@ -339,13 +345,20 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
               <div className={classes.dropdown}>
                 <BasicDropdown
                   disabled={displayInReadonly}
-                  key={`hypo-threshold-${hypoThreshold.value}`}
+                  key={`hypo-threshold-${monitoringValuesDisplayed.hypoThreshold.value}`}
                   id="hypo-threshold"
-                  defaultValue={`${hypoThreshold.value}%` ?? ''}
+                  defaultValue={`${monitoringValuesDisplayed.hypoThreshold.value}%` ?? ''}
                   values={PERCENTAGES}
-                  error={hypoThreshold.error}
+                  error={monitoringValuesDisplayed.hypoThreshold.error}
                   onSelect={(value) => {
-                    onBasicDropdownSelect(value, setHypoThreshold)
+                    setMonitoringValuesDisplayed({
+                      ...monitoringValuesDisplayed,
+                      hypoThreshold: {
+                        value: parseFloat(value),
+                        error: false
+                      }
+                    })
+                    onValueChange()
                   }}
                 />
               </div>
@@ -362,7 +375,7 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
           3. {t('data-not-transmitted')}
         </Typography>
         <Typography variant="caption" className={classes.categoryInfo}>
-          {t('current-trigger-setting-data', { nonDataThreshold: nonDataTxThreshold.value })}
+          {t('current-trigger-setting-data', { nonDataThreshold: monitoringValuesDisplayed.nonDataTxThreshold.value })}
         </Typography>
         <Box display="flex">
           <div className={classes.subCategoryContainer}>
@@ -372,13 +385,20 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
               <div className={classes.dropdown} data-testid="dropdown-nonData">
                 <BasicDropdown
                   disabled={displayInReadonly}
-                  key={`tir-dropdown-${nonDataTxThreshold.value}`}
+                  key={`tir-dropdown-${monitoringValuesDisplayed.nonDataTxThreshold.value}`}
                   id="non-data"
-                  defaultValue={`${nonDataTxThreshold.value}%` ?? ''}
+                  defaultValue={`${monitoringValuesDisplayed.nonDataTxThreshold.value}%` ?? ''}
                   values={PERCENTAGES.slice(0, 10)}
-                  error={nonDataTxThreshold.error}
+                  error={monitoringValuesDisplayed.nonDataTxThreshold.error}
                   onSelect={(value) => {
-                    onBasicDropdownSelect(value, setNonDataTxThreshold)
+                    setMonitoringValuesDisplayed({
+                      ...monitoringValuesDisplayed,
+                      nonDataTxThreshold: {
+                        value: parseFloat(value),
+                        error: false
+                      }
+                    })
+                    onValueChange()
                   }}
                 />
               </div>

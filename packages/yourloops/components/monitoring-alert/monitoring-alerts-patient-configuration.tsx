@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -76,24 +76,14 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
   const userBgUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
 
   const {
-    lowBg,
-    veryLowBg,
-    highBg,
-    nonDataTxThreshold,
-    hypoThreshold,
-    outOfRangeThreshold,
+    monitoringValuesDisplayed,
     resetToTeamDefaultValues,
-    onChange,
     useTeamValues,
     saveButtonDisabled,
     discardChanges,
     save,
-    setHighBg,
-    setLowBg,
-    setVeryLowBg,
-    setOutOfRangeThreshold,
-    setHypoThreshold,
-    setNonDataTxThreshold
+    setMonitoringValuesDisplayed,
+    onValueChange
   } = useMonitoringAlertsPatientConfiguration({
     monitoringAlertsParameters,
     saveInProgress,
@@ -115,32 +105,19 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
         >
           {t('button-care-team-values')}
         </Button>
-        {useTeamValues &&
+        {useTeamValues && !saveButtonDisabled &&
           <Typography fontSize="12px" lineHeight="16px" color={theme.palette.info.main}>
-            {
-              saveButtonDisabled ?
-                t('The care team values are being used.') :
-                t('The care team values have been entered. Please save the changes')
-            }
+            {t('care-team-values-entered')}
           </Typography>
         }
       </Box>
       <MonitoringAlertsContentConfiguration
+        bgUnit={userBgUnit}
         displayInReadonly={displayInReadonly}
         displayDefaultValues={false}
-        lowBg={lowBg}
-        setLowBg={setLowBg}
-        veryLowBg={veryLowBg}
-        setVeryLowBg={setVeryLowBg}
-        highBg={highBg}
-        setHighBg={setHighBg}
-        nonDataTxThreshold={nonDataTxThreshold}
-        setNonDataTxThreshold={setNonDataTxThreshold}
-        outOfRangeThreshold={outOfRangeThreshold}
-        setOutOfRangeThreshold={setOutOfRangeThreshold}
-        hypoThreshold={hypoThreshold}
-        setHypoThreshold={setHypoThreshold}
-        onChange={onChange}
+        monitoringValuesDisplayed={monitoringValuesDisplayed}
+        setMonitoringValuesDisplayed={setMonitoringValuesDisplayed}
+        onValueChange={onValueChange}
       />
       <Box display="flex" justifyContent="flex-end" margin={2}>
         <Button

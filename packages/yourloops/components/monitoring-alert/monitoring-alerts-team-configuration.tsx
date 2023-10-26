@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,19 +28,19 @@
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
-import { useMonitoringAlertsTeamConfiguration } from './monitoring-alerts-team-configuration.hook'
 import { useAuth } from '../../lib/auth'
 import { LoadingButton } from '@mui/lab'
 import { Unit } from 'medical-domain'
 import { type MonitoringAlertsParameters } from 'lib/team/models/monitoring-alerts-parameters.model'
 import { Save } from '@mui/icons-material'
 import { MonitoringAlertsContentConfiguration } from './monitoring-alerts-content-configuration'
+import { useMonitoringAlertsContentConfiguration } from './monitoring-alerts-content-configuration.hook'
 
 export interface MonitoringAlertsTeamConfigurationProps {
   displayInReadonly: boolean
   monitoringAlertsParameters: MonitoringAlertsParameters
-  saveInProgress: boolean
   onSave: (monitoringAlertsParameters: MonitoringAlertsParameters) => void
+  saveInProgress: boolean
 }
 
 export const MonitoringAlertsTeamConfiguration: FC<MonitoringAlertsTeamConfigurationProps> = (
@@ -57,22 +57,11 @@ export const MonitoringAlertsTeamConfiguration: FC<MonitoringAlertsTeamConfigura
   const userBgUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
 
   const {
-    lowBg,
-    veryLowBg,
-    highBg,
-    nonDataTxThreshold,
-    hypoThreshold,
-    outOfRangeThreshold,
-    onChange,
-    saveButtonDisabled,
+    monitoringValuesDisplayed,
     save,
-    setHighBg,
-    setLowBg,
-    setVeryLowBg,
-    setOutOfRangeThreshold,
-    setHypoThreshold,
-    setNonDataTxThreshold
-  } = useMonitoringAlertsTeamConfiguration({
+    saveButtonDisabled,
+    setMonitoringValuesDisplayed
+  } = useMonitoringAlertsContentConfiguration({
     monitoringAlertsParameters,
     saveInProgress,
     userBgUnit,
@@ -80,23 +69,13 @@ export const MonitoringAlertsTeamConfiguration: FC<MonitoringAlertsTeamConfigura
   })
 
   return (
-    <React.Fragment>
+    <>
       <MonitoringAlertsContentConfiguration
+        bgUnit={userBgUnit}
         displayInReadonly={displayInReadonly}
         displayDefaultValues
-        lowBg={lowBg}
-        setLowBg={setLowBg}
-        veryLowBg={veryLowBg}
-        setVeryLowBg={setVeryLowBg}
-        highBg={highBg}
-        setHighBg={setHighBg}
-        nonDataTxThreshold={nonDataTxThreshold}
-        setNonDataTxThreshold={setNonDataTxThreshold}
-        outOfRangeThreshold={outOfRangeThreshold}
-        setOutOfRangeThreshold={setOutOfRangeThreshold}
-        hypoThreshold={hypoThreshold}
-        setHypoThreshold={setHypoThreshold}
-        onChange={onChange}
+        monitoringValuesDisplayed={monitoringValuesDisplayed}
+        setMonitoringValuesDisplayed={setMonitoringValuesDisplayed}
       />
       <Box display="flex" justifyContent="flex-end" margin={2}>
         {!displayInReadonly &&
@@ -115,6 +94,6 @@ export const MonitoringAlertsTeamConfiguration: FC<MonitoringAlertsTeamConfigura
           </LoadingButton>
         }
       </Box>
-    </React.Fragment>
+    </>
   )
 }

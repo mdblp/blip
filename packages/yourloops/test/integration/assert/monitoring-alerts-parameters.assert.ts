@@ -81,10 +81,16 @@ export const checkMonitoringAlertsParametersTeamAdmin = async (): Promise<void> 
   expect(nonDataTxThreshold).not.toHaveClass('Mui-disabled')
 
   const saveButton = within(monitoringAlertsParameters).getByRole('button', { name: 'Save' })
+  expect(saveButton).toBeDisabled() // It should be disabled as no values have been changed yet
+
+  await userEvent.clear(lowBgInput)
+  await userEvent.type(lowBgInput, '51')
   expect(saveButton).not.toBeDisabled()
+
   await userEvent.click(saveButton)
 
   const thirdTeam = { ...buildTeamThree(), code: undefined, members: [], type: undefined }
+  thirdTeam.monitoringAlertsParameters.lowBg = 51
   expect(TeamApi.editTeam).toHaveBeenCalledWith(thirdTeam)
 }
 
@@ -130,6 +136,10 @@ export const checkMonitoringAlertsForPatientSaveButtonMmol = async (): Promise<v
   expect(within(hypoThreshold).getByRole('combobox')).toHaveTextContent('10%')
   expect(within(nonDataTxThreshold).getByRole('combobox')).toHaveTextContent('15%')
 
+  expect(saveButton).toBeDisabled() // No value has been changed, button should be disabled
+
+  await userEvent.clear(lowBgInput)
+  await userEvent.type(lowBgInput, '4.8')
   expect(saveButton).toBeEnabled()
 
   await userEvent.clear(lowBgInput)

@@ -41,13 +41,6 @@ export const isInvalidPercentage = (value: number): boolean => {
   return !PERCENTAGES.includes(`${value}%`)
 }
 
-export const onBasicDropdownSelect = (value: string, setValue: React.Dispatch<{ value?: number, error: boolean }>): void => {
-  setValue({
-    value: parseFloat(value),
-    error: false
-  })
-}
-
 export const buildThresholds = (bgUnit: BgUnit): Thresholds => {
   if (bgUnit === Unit.MmolPerLiter) {
     return {
@@ -93,13 +86,12 @@ export const getErrorMessage = (bgUnit: Unit.MilligramPerDeciliter | Unit.MmolPe
     return i18next.t('mandatory-integer')
   }
 
-  if (value < lowValue || value > highValue) {
-    return i18next.t('mandatory-range', { lowValue, highValue })
-  }
-
   if (bgUnit === Unit.MmolPerLiter && !REGEX_VALUE_BG.test(value.toString())) {
     return i18next.t('mandatory-float-number')
   }
 
+  if (value < lowValue || value > highValue) {
+    return i18next.t('mandatory-range', { lowValue, highValue })
+  }
   return null
 }
