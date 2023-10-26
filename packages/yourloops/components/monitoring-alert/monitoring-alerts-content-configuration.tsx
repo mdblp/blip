@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { type Theme, useTheme } from '@mui/material/styles'
+import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -36,9 +36,6 @@ import Typography from '@mui/material/Typography'
 
 import BasicDropdown from '../dropdown/basic-dropdown'
 import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
-import { type Patient } from '../../lib/patient/models/patient.model'
-import { useMonitoringAlertsContentConfiguration } from './monitoring-alerts-content-configuration.hook'
 import {
   buildBgValues,
   buildThresholds,
@@ -47,10 +44,8 @@ import {
 } from './monitoring-alert-content-configuration.util'
 import FormHelperText from '@mui/material/FormHelperText'
 import { useAuth } from '../../lib/auth'
-import { LoadingButton } from '@mui/lab'
 import { Unit } from 'medical-domain'
-import { type MonitoringAlertsParameters } from 'lib/team/models/monitoring-alerts-parameters.model'
-import { Save } from '@mui/icons-material'
+import { ValueErrorMessagePair, ValueErrorPair } from './monitoring-alerts-content-configuration.hook'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   cancelButton: {
@@ -104,10 +99,20 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export interface MonitoringAlertsContentConfigurationProps {
   displayInReadonly: boolean
-  monitoringAlertsParameters: MonitoringAlertsParameters
-  saveInProgress: boolean
-  patient?: Patient
-  onSave: (monitoringAlertsParameters: MonitoringAlertsParameters) => void
+  displayDefaultValues: boolean
+  lowBg: ValueErrorMessagePair
+  setLowBg: React.Dispatch<ValueErrorMessagePair>
+  veryLowBg: ValueErrorMessagePair
+  setVeryLowBg: React.Dispatch<ValueErrorMessagePair>
+  highBg: ValueErrorMessagePair
+  setHighBg: React.Dispatch<ValueErrorMessagePair>
+  nonDataTxThreshold: ValueErrorPair
+  setNonDataTxThreshold: React.Dispatch<ValueErrorPair>
+  outOfRangeThreshold: ValueErrorPair
+  setOutOfRangeThreshold: React.Dispatch<ValueErrorPair>
+  hypoThreshold: ValueErrorPair
+  setHypoThreshold: React.Dispatch<ValueErrorPair>
+  onChange: (value: number, lowValue: number, highValue: number, setValue: React.Dispatch<ValueErrorPair>) => void
 }
 
 const INPUT_STEP_MGDL = 1
@@ -117,63 +122,38 @@ const TIME_SPENT_OFF_TARGET_THRESHOLD_PERCENT = 50
 const TIME_SPENT_SEVERE_HYPOGLYCEMIA_THRESHOLD_PERCENT = 5
 const TIME_SPENT_WITHOUT_UPLOADED_DATA_THRESHOLD_PERCENT = 50
 
-function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConfigurationProps): JSX.Element {
-  const { displayInReadonly, monitoringAlertsParameters, patient, saveInProgress, onSave } = props
+export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentConfigurationProps> = (
+  {
+    displayInReadonly,
+    displayDefaultValues,
+    lowBg,
+    setLowBg,
+    veryLowBg,
+    setVeryLowBg,
+    highBg,
+    setHighBg,
+    nonDataTxThreshold,
+    setNonDataTxThreshold,
+    outOfRangeThreshold,
+    setOutOfRangeThreshold,
+    hypoThreshold,
+    setHypoThreshold,
+    onChange
+  }
+) => {
   const { classes } = useStyles()
   const { t } = useTranslation()
   const { user } = useAuth()
-  const theme = useTheme()
 
-  const userBgUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
+  const bgUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
 
-  const {
-    lowBg,
-    veryLowBg,
-    highBg,
-    nonDataTxThreshold,
-    hypoThreshold,
-    outOfRangeThreshold,
-    resetToTeamDefaultValues,
-    onChange,
-    saveButtonDisabled,
-    discardChanges,
-    save,
-    setHighBg,
-    setLowBg,
-    setVeryLowBg,
-    setOutOfRangeThreshold,
-    setHypoThreshold,
-    setNonDataTxThreshold,
-    bgUnit
-  } = useMonitoringAlertsContentConfiguration({
-    monitoringAlertsParameters,
-    saveInProgress,
-    userBgUnit,
-    patient,
-    onSave
-  })
   const { minLowBg, maxLowBg, minHighBg, maxHighBg, minVeryLowBg, maxVeryLowBg } = buildThresholds(bgUnit)
   const { highBgDefault, lowBgDefault, veryLowBgDefault } = buildBgValues(bgUnit)
 
-  const inputStep = userBgUnit === Unit.MilligramPerDeciliter ? INPUT_STEP_MGDL : INPUT_STEP_MMOLL
+  const inputStep = bgUnit === Unit.MilligramPerDeciliter ? INPUT_STEP_MGDL : INPUT_STEP_MMOLL
 
   return (
     <React.Fragment>
-      {
-        patient &&
-        <Box paddingBottom={theme.spacing(4)}>
-          <Button
-            id="default-values-button-id"
-            variant="outlined"
-            color="primary"
-            disableElevation
-            onClick={resetToTeamDefaultValues}
-            data-testid="monitoring-alert-config-reset"
-          >
-            {t('button-care-team-values')}
-          </Button>
-        </Box>
-      }
       <Box>
         <Typography className={classes.categoryTitle}>
           1. {t('time-away-from-target-range')}
@@ -220,7 +200,7 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
                     onChange(+event.target.value, minLowBg, maxLowBg, setLowBg)
                   }}
                 />
-                <Typography>{userBgUnit}</Typography>
+                <Typography>{bgUnit}</Typography>
                 {!!lowBg.errorMessage &&
                   <FormHelperText error className={classes.inputHelperText}>
                     {lowBg.errorMessage}
@@ -262,7 +242,7 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
                 }
               </Box>
             </div>
-            {!patient &&
+            {displayDefaultValues &&
               <Typography
                 className={classes.defaultLabel}>{t('default-min-max', {
                 min: `${lowBgDefault} ${bgUnit}`,
@@ -289,7 +269,7 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
                 />
               </div>
             </div>
-            {!patient &&
+            {displayDefaultValues &&
               <Typography
                 className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_OFF_TARGET_THRESHOLD_PERCENT}%` })}</Typography>
             }
@@ -345,7 +325,7 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
                 </FormHelperText>
               }
             </Box>
-            {!patient &&
+            {displayDefaultValues &&
               <Typography
                 className={classes.defaultLabel}>{t('default', { value: `${veryLowBgDefault} ${bgUnit}` })}</Typography>
             }
@@ -370,7 +350,7 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
                 />
               </div>
             </div>
-            {!patient &&
+            {displayDefaultValues &&
               <Typography
                 className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_SEVERE_HYPOGLYCEMIA_THRESHOLD_PERCENT}%` })}</Typography>
             }
@@ -403,42 +383,14 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
                 />
               </div>
             </div>
-            {!patient &&
+            {displayDefaultValues &&
               <Typography
                 className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_WITHOUT_UPLOADED_DATA_THRESHOLD_PERCENT}%` })}</Typography>
             }
           </div>
         </Box>
       </Box>
-      <Box display="flex" justifyContent="flex-end" margin={2}>
-        {patient &&
-          <Button
-            className={classes.cancelButton}
-            variant="outlined"
-            onClick={discardChanges}
-            data-testid="monitoring-alert-config-cancel"
-          >
-            {t('button-discard-changes')}
-          </Button>
-        }
-        {!displayInReadonly &&
-          <LoadingButton
-            loading={saveInProgress}
-            id="save-button-id"
-            variant="contained"
-            color="primary"
-            disableElevation
-            startIcon={<Save />}
-            disabled={saveButtonDisabled}
-            onClick={save}
-            data-testid="monitoring-alert-config-save"
-          >
-            {t('button-save')}
-          </LoadingButton>
-        }
-      </Box>
     </React.Fragment>
   )
 }
 
-export default MonitoringAlertsContentConfiguration

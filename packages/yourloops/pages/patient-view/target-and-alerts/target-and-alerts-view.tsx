@@ -27,14 +27,11 @@
 
 import React, { FC, useEffect, useRef, useState } from 'react'
 import Container from '@mui/material/Container'
-import MonitoringAlertsContentConfiguration
-  from '../../../components/monitoring-alert/monitoring-alerts-content-configuration'
 import { Patient } from '../../../lib/patient/models/patient.model'
 import { MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
 import { usePatientsContext } from '../../../lib/patient/patients.provider'
 import { useAlert } from '../../../components/utils/snackbar'
 import { useTranslation } from 'react-i18next'
-import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
 import Card from '@mui/material/Card'
 import { useTheme } from '@mui/material/styles'
 import CardHeader from '@mui/material/CardHeader'
@@ -42,6 +39,9 @@ import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import { useLocation } from 'react-router-dom'
 import Divider from '@mui/material/Divider'
+import {
+  MonitoringAlertsPatientConfiguration
+} from '../../../components/monitoring-alert/monitoring-alerts-patient-configuration'
 
 interface TargetAndAlertsViewProps {
   patient: Patient
@@ -53,12 +53,11 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
   const { patient } = props
   const theme = useTheme()
   const { t } = useTranslation('yourloops')
-  const { updatePatientMonitoringAlertsParameters } = usePatientsContext()
-  const { selectedTeam } = useSelectedTeamContext()
+  const { deletePatientMonitoringAlertsParameters, updatePatientMonitoringAlertsParameters } = usePatientsContext()
   const alert = useAlert()
   const { pathname, hash, key } = useLocation()
 
-  const monitoringAlertsParameters = patient.monitoringAlertsParameters ?? selectedTeam.monitoringAlertsParameters
+  const monitoringAlertsParameters = patient.monitoringAlertsParameters
   const monitoringAlertsSection = useRef<HTMLElement>(null)
 
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
@@ -88,6 +87,19 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
     }
   }
 
+  const deletePatientAlertsParameters = async (): Promise<void> => {
+    setSaveInProgress(true)
+    try {
+      await deletePatientMonitoringAlertsParameters(patient.userid)
+      alert.success(t('patient-update-success'))
+      setSaveInProgress(false)
+    } catch (error) {
+      console.error(error)
+      alert.error(t('patient-update-error'))
+      setSaveInProgress(false)
+    }
+  }
+
   return (
     <Container data-testid="target-and-alerts-container">
       <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
@@ -96,7 +108,7 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
           <Divider variant="fullWidth" sx={{
             marginBottom: theme.spacing(5),
             marginTop: theme.spacing(2)
-          }}/>
+          }} />
           <section
             data-testid="monitoring-alerts-configuration-section"
             ref={monitoringAlertsSection}
@@ -113,12 +125,13 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
             >
               {t('monitoring-alerts-description')}
             </Typography>
-            <MonitoringAlertsContentConfiguration
+            <MonitoringAlertsPatientConfiguration
               displayInReadonly={false}
               monitoringAlertsParameters={monitoringAlertsParameters}
               saveInProgress={saveInProgress}
               onSave={save}
-              patient={patient}
+              onResetToTeamParameters={deletePatientAlertsParameters}
+              isInitiallyUsingTeamAlertParameters={!!patient.isUsingTeamAlertParameters}
             />
           </section>
         </CardContent>
