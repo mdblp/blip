@@ -30,7 +30,6 @@ import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../../mock/team.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
-import { patient2Id } from '../../../data/patient.api.data'
 import { mockChatAPI } from '../../../mock/chat.api.mock'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
 import { checkPatientNavBarAsHcp } from '../../../assert/patient-nav-bar.assert'
@@ -40,10 +39,15 @@ import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../use-cases/app-main-layout-visualisation'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { Unit } from 'medical-domain'
+import { testDailyViewTooltipsAndValuesMmolL } from '../../../use-cases/patient-data-visualisation'
+import { patient2Id } from '../../../data/patient.api.data'
 
 describe('Daily view for HCP', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
+
+  const dailyRoute = `${AppUserRoute.Patient}/${patient2Id}${AppUserRoute.Daily}`
 
   beforeEach(() => {
     mockWindowResizer()
@@ -54,6 +58,7 @@ describe('Daily view for HCP', () => {
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForHcp()
     mockChatAPI()
+    mockDataAPI()
   })
 
   afterEach(() => {
@@ -74,7 +79,6 @@ describe('Daily view for HCP', () => {
         }
       }
     }
-    const dailyRoute = `${AppUserRoute.Patient}/${patient2Id}${AppUserRoute.Daily}`
     const router = renderPage(dailyRoute)
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual(dailyRoute)
@@ -83,5 +87,20 @@ describe('Daily view for HCP', () => {
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsHcp()
     await testAppMainLayoutForHcp(appMainLayoutParams)
+  })
+
+  it('should display values in mmol/L according to the HCP settings', async () => {
+    mockUserApi().mockUserDataFetch({
+      firstName,
+      lastName,
+      settings: { units: { bg: Unit.MmolPerLiter } }
+    })
+
+    const router = renderPage(dailyRoute)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(dailyRoute)
+    })
+
+    await testDailyViewTooltipsAndValuesMmolL()
   })
 })
