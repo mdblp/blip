@@ -81,7 +81,7 @@ export const getConvertedValue = (value: number, currentUnit: BgUnit, requiredUn
   return isConversionRequired ? convertAndFormatBgValue(value, currentUnit) : value
 }
 
-export const getErrorMessage = (bgUnit: Unit.MilligramPerDeciliter | Unit.MmolPerLiter, value: number, lowValue: number, highValue: number): string => {
+export const getErrorMessage = (bgUnit: Unit.MilligramPerDeciliter | Unit.MmolPerLiter, value: number, lowValue: number, highValue: number): string | null => {
   if (bgUnit === Unit.MilligramPerDeciliter && !(Number.isInteger(value))) {
     return i18next.t('mandatory-integer')
   }

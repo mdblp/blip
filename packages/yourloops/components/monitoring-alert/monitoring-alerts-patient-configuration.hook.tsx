@@ -25,14 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import type React from 'react'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   buildThresholds,
   getConvertedValue,
   getErrorMessage,
   isInvalidPercentage
 } from './monitoring-alert-content-configuration.util'
-import { type BgUnit, Unit } from 'medical-domain'
+import { Unit } from 'medical-domain'
 import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { type MonitoringAlertsParameters } from '../../lib/team/models/monitoring-alerts-parameters.model'
 import {
@@ -50,7 +50,6 @@ interface MonitoringAlertsPatientConfigurationHookProps {
 }
 
 interface MonitoringAlertsPatientConfigurationHookReturn {
-  bgUnit: BgUnit
   discardChanges: () => void
   monitoringValuesDisplayed: MonitoringValuesDisplayed
   resetToTeamDefaultValues: () => void
@@ -58,7 +57,7 @@ interface MonitoringAlertsPatientConfigurationHookReturn {
   saveButtonDisabled: boolean
   setMonitoringValuesDisplayed: React.Dispatch<MonitoringValuesDisplayed>
   useTeamValues: boolean
-  onValueChange: () => void
+  onValueChange: (newMonitoringParametersValuesToDisplay: MonitoringValuesDisplayed) => void
 }
 
 export const useMonitoringAlertsPatientConfiguration = (
@@ -73,7 +72,6 @@ export const useMonitoringAlertsPatientConfiguration = (
   const { selectedTeam } = useSelectedTeamContext()
 
   const {
-    haveValuesBeenUpdated,
     monitoringValuesDisplayed,
     getHighBgInitialState,
     getLowBgInitialState,
@@ -103,14 +101,14 @@ export const useMonitoringAlertsPatientConfiguration = (
     }
   }, [selectedTeam.monitoringAlertsParameters, userBgUnit])
 
-  const areCurrentAndTeamValuesTheSame = useMemo((): boolean => {
-    return teamAlertParametersValues.highBg === monitoringValuesDisplayed.highBg.value
-      && teamAlertParametersValues.lowBg === monitoringValuesDisplayed.lowBg.value
-      && teamAlertParametersValues.veryLowBg === monitoringValuesDisplayed.veryLowBg.value
-      && teamAlertParametersValues.hypoThreshold === monitoringValuesDisplayed.hypoThreshold.value
-      && teamAlertParametersValues.nonDataTxThreshold === monitoringValuesDisplayed.nonDataTxThreshold.value
-      && teamAlertParametersValues.outOfRangeThreshold === monitoringValuesDisplayed.outOfRangeThreshold.value
-  }, [monitoringValuesDisplayed.highBg.value, monitoringValuesDisplayed.hypoThreshold.value, monitoringValuesDisplayed.lowBg.value, monitoringValuesDisplayed.nonDataTxThreshold.value, monitoringValuesDisplayed.outOfRangeThreshold.value, monitoringValuesDisplayed.veryLowBg.value, teamAlertParametersValues.highBg, teamAlertParametersValues.hypoThreshold, teamAlertParametersValues.lowBg, teamAlertParametersValues.nonDataTxThreshold, teamAlertParametersValues.outOfRangeThreshold, teamAlertParametersValues.veryLowBg])
+  const areTeamValuesAndGivenValuesTheSame = (values: MonitoringValuesDisplayed): boolean => {
+    return teamAlertParametersValues.highBg === values.highBg.value
+      && teamAlertParametersValues.lowBg === values.lowBg.value
+      && teamAlertParametersValues.veryLowBg === values.veryLowBg.value
+      && teamAlertParametersValues.hypoThreshold === values.hypoThreshold.value
+      && teamAlertParametersValues.nonDataTxThreshold === values.nonDataTxThreshold.value
+      && teamAlertParametersValues.outOfRangeThreshold === values.outOfRangeThreshold.value
+  }
 
   const resetToTeamDefaultValues = (): void => {
     const defaultMonitoringAlertsParameters = selectedTeam.monitoringAlertsParameters
@@ -166,18 +164,11 @@ export const useMonitoringAlertsPatientConfiguration = (
     return wasInitiallyUsingTeamAlertParameters === useTeamValues && saveButtonDisabled
   }, [wasInitiallyUsingTeamAlertParameters, saveButtonDisabled, useTeamValues])
 
-  const onValueChange = () => {
-    setUseTeamValues(false)
+  const onValueChange = (newMonitoringParametersValuesToDisplay: MonitoringValuesDisplayed) => {
+    setUseTeamValues(areTeamValuesAndGivenValuesTheSame(newMonitoringParametersValuesToDisplay))
   }
 
-  useEffect(() => {
-    if (haveValuesBeenUpdated || useTeamValues !== wasInitiallyUsingTeamAlertParameters) {
-      setUseTeamValues(areCurrentAndTeamValuesTheSame)
-    }
-  }, [areCurrentAndTeamValuesTheSame, haveValuesBeenUpdated, wasInitiallyUsingTeamAlertParameters, useTeamValues])
-
   return {
-    bgUnit: userBgUnit,
     discardChanges,
     monitoringValuesDisplayed,
     onValueChange,

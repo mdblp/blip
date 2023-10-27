@@ -99,7 +99,7 @@ export interface MonitoringAlertsContentConfigurationProps {
   displayDefaultValues: boolean
   monitoringValuesDisplayed: MonitoringValuesDisplayed
   setMonitoringValuesDisplayed: React.Dispatch<MonitoringValuesDisplayed>
-  onValueChange?: () => void
+  onValueChange?: (newMonitoringParametersValuesToDisplay: MonitoringValuesDisplayed) => void
 }
 
 const INPUT_STEP_MGDL = 1
@@ -173,14 +173,15 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                 }}
                 onChange={(event) => {
                   const value = +event.target.value
-                  setMonitoringValuesDisplayed({
+                  const newValuesToDisplay: MonitoringValuesDisplayed = {
                     ...monitoringValuesDisplayed,
                     lowBg: {
                       value,
                       errorMessage: getErrorMessage(bgUnit, value, minLowBg, maxLowBg)
                     }
-                  })
-                  onValueChange()
+                  }
+                  setMonitoringValuesDisplayed(newValuesToDisplay)
+                  onValueChange(newValuesToDisplay)
                 }}
               />
               <Typography>{bgUnit}</Typography>
@@ -215,14 +216,15 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                 }}
                 onChange={(event) => {
                   const value = +event.target.value
-                  setMonitoringValuesDisplayed({
+                  const newValuesToDisplay: MonitoringValuesDisplayed = {
                     ...monitoringValuesDisplayed,
                     highBg: {
                       value,
                       errorMessage: getErrorMessage(bgUnit, value, minHighBg, maxHighBg)
                     }
-                  })
-                  onValueChange()
+                  }
+                  setMonitoringValuesDisplayed(newValuesToDisplay)
+                  onValueChange(newValuesToDisplay)
                 }}
               />
               <Typography>{bgUnit}</Typography>
@@ -254,14 +256,15 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                 values={PERCENTAGES}
                 error={monitoringValuesDisplayed.outOfRangeThreshold.error}
                 onSelect={(value) => {
-                  setMonitoringValuesDisplayed({
+                  const newValuesToDisplay: MonitoringValuesDisplayed = {
                     ...monitoringValuesDisplayed,
                     outOfRangeThreshold: {
                       value: parseFloat(value),
                       error: false
                     }
-                  })
-                  onValueChange()
+                  }
+                  setMonitoringValuesDisplayed(newValuesToDisplay)
+                  onValueChange(newValuesToDisplay)
                 }}
 
               />
@@ -314,14 +317,15 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
               }}
               onChange={(event) => {
                 const value = +event.target.value
-                setMonitoringValuesDisplayed({
+                const newValuesToDisplay: MonitoringValuesDisplayed = {
                   ...monitoringValuesDisplayed,
                   veryLowBg: {
                     value,
                     errorMessage: getErrorMessage(bgUnit, value, minVeryLowBg, maxVeryLowBg)
                   }
-                })
-                onValueChange()
+                }
+                setMonitoringValuesDisplayed(newValuesToDisplay)
+                onValueChange(newValuesToDisplay)
               }}
             />
             <Typography data-testid="bgUnits-severalHypo">{bgUnit}</Typography>
@@ -351,14 +355,15 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                 values={PERCENTAGES}
                 error={monitoringValuesDisplayed.hypoThreshold.error}
                 onSelect={(value) => {
-                  setMonitoringValuesDisplayed({
+                  const newValuesToDisplay: MonitoringValuesDisplayed = {
                     ...monitoringValuesDisplayed,
                     hypoThreshold: {
                       value: parseFloat(value),
                       error: false
                     }
-                  })
-                  onValueChange()
+                  }
+                  setMonitoringValuesDisplayed(newValuesToDisplay)
+                  onValueChange(newValuesToDisplay)
                 }}
               />
             </div>
@@ -391,14 +396,15 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                 values={PERCENTAGES.slice(0, 10)}
                 error={monitoringValuesDisplayed.nonDataTxThreshold.error}
                 onSelect={(value) => {
-                  setMonitoringValuesDisplayed({
+                  const newValuesToDisplay: MonitoringValuesDisplayed = {
                     ...monitoringValuesDisplayed,
                     nonDataTxThreshold: {
                       value: parseFloat(value),
                       error: false
                     }
-                  })
-                  onValueChange()
+                  }
+                  setMonitoringValuesDisplayed(newValuesToDisplay)
+                  onValueChange(newValuesToDisplay)
                 }}
               />
             </div>

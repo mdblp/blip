@@ -44,7 +44,6 @@ interface MonitoringAlertsContentConfigurationHookProps {
 }
 
 interface MonitoringAlertsContentConfigurationHookReturn {
-  haveValuesBeenUpdated: boolean
   getHighBgInitialState: () => ValueErrorMessagePair
   getHypoThresholdInitialState: () => ValueErrorPair
   getLowBgInitialState: () => ValueErrorMessagePair
@@ -67,13 +66,13 @@ export interface MonitoringValuesDisplayed {
 }
 
 interface ValueErrorMessagePair {
-  value?: number
+  value: number
   errorMessage?: string
 }
 
 interface ValueErrorPair {
-  value?: number
-  error?: boolean
+  value: number
+  error: boolean
 }
 
 export const DEFAULT_BG_UNIT = Unit.MilligramPerDeciliter
@@ -185,7 +184,6 @@ export const useMonitoringAlertsContentConfiguration = (
   }
 
   return {
-    haveValuesBeenUpdated,
     getHighBgInitialState,
     getHypoThresholdInitialState,
     getLowBgInitialState,
