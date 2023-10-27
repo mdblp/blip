@@ -54,7 +54,34 @@ Object.defineProperty(global, 'crypto', {
 })
 
 const testData = {
-  alarmEvents: [{ a: "b" }],
+  alarmEvents: [{
+    "timezone": "Europe/Paris",
+    "normalTime": "2023-10-15T00:00:00.000Z",
+    "epoch": 1697328000000,
+    "displayOffset": 120,
+    "guessedTimezone": false,
+    "id": "alarm-01",
+    "type": "deviceEvent",
+    "source": "Diabeloop",
+    "duration": {
+      "units": "hours",
+      "value": 0
+      },
+    "normalEnd": "2023-10-15T00:00:00.000Z",
+    "epochEnd": 1697328000000,
+    "subType": "alarm",
+    "guid": "guid",
+    "inputTime": "2023-10-15T00:00:00Z",
+    "alarm": {
+      "alarmCode": "10113",
+      "alarmLevel": "alert",
+      "alarmType": "handset",
+      "ackStatus": "acknowledged",
+      "updateTime": "2023-10-15T00:00:00"
+    },
+    "alarmEventType": "Hyperglycemia"
+    }
+  ],
   basal: [
     {
       "id": "basal_fc25685018a9c_2023-10-15_0",
@@ -1440,7 +1467,7 @@ describe('MedicalDataService', () => {
         }
       )
       testMedicalData(medicalData, expectedCount as Record<keyof MedicalData, number>)
-      expect(medicalData.timezoneList.length).toBe(7)
+      expect(medicalData.timezoneList.length).toBe(6)
       expect(medicalData.timezoneList[0]).toStrictEqual({ time: 0, timezone: 'Europe/Paris' })
       // Endpoints checks
       testEndPoints(medicalData)
