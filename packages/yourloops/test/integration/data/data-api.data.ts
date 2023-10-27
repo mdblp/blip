@@ -358,14 +358,31 @@ export const reservoirChanges = [
 export const buildHba1cData = () => {
   const dataGMI = {
     dataRange: ['2020-01-01T00:00:00Z', '2020-01-20T23:00:00Z'],
-    data: { cbg: [] }
+    data: {
+      alarmEvents: [],
+      basal: [],
+      bolus: [],
+      cbg: [],
+      confidentialModes: [],
+      deviceParametersChanges: [],
+      messages: [],
+      meals: [],
+      physicalActivities: [],
+      pumpSettings: [],
+      reservoirChanges: [],
+      smbg: [],
+      warmUps: [],
+      wizards: [],
+      zenModes: [],
+      timezoneChanges: []
+    }
   }
   let index = 0
   for (let day = 1; day < 15; day++) {
     for (let hour = 0; hour < 24; hour++) {
       for (let minute = 0; minute < 60; minute += 10) {
         index += 1
-        const time =  `2020-01-${day.toString().padStart(2, '0')}T${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00.000Z`
+        const time = `2020-01-${day.toString().padStart(2, '0')}T${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00.000Z`
         dataGMI.data.cbg.push({
           normalTime: time,
           epoch: moment(time).unix() * 1000,
@@ -374,8 +391,8 @@ export const buildHba1cData = () => {
           source: "Diabeloop",
           timezone: 'Europe/Paris',
           displayOffset: 120,
-          units: 'mmol/L',
-          value: 10.1,
+          units: 'mg/dL',
+          value: 182,
           deviceName: "unknown"
         })
       }
