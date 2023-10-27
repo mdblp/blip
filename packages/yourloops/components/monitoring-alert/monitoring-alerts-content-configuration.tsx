@@ -116,7 +116,8 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
     displayDefaultValues,
     monitoringValuesDisplayed,
     setMonitoringValuesDisplayed,
-    onValueChange = () => {}
+    onValueChange = () => {
+    }
   }
 ) => {
   const { classes } = useStyles()
@@ -250,7 +251,7 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                   disabled={displayInReadonly}
                   key={`out-of-range-${monitoringValuesDisplayed.outOfRangeThreshold.value}`}
                   id="out-of-range"
-                  defaultValue={`${monitoringValuesDisplayed.outOfRangeThreshold.value}%` ?? ''}
+                  defaultValue={`${monitoringValuesDisplayed.outOfRangeThreshold.value}%`}
                   values={PERCENTAGES}
                   error={monitoringValuesDisplayed.outOfRangeThreshold.error}
                   onSelect={(value) => {
@@ -347,7 +348,7 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                   disabled={displayInReadonly}
                   key={`hypo-threshold-${monitoringValuesDisplayed.hypoThreshold.value}`}
                   id="hypo-threshold"
-                  defaultValue={`${monitoringValuesDisplayed.hypoThreshold.value}%` ?? ''}
+                  defaultValue={`${monitoringValuesDisplayed.hypoThreshold.value}%`}
                   values={PERCENTAGES}
                   error={monitoringValuesDisplayed.hypoThreshold.error}
                   onSelect={(value) => {
@@ -387,7 +388,7 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                   disabled={displayInReadonly}
                   key={`tir-dropdown-${monitoringValuesDisplayed.nonDataTxThreshold.value}`}
                   id="non-data"
-                  defaultValue={`${monitoringValuesDisplayed.nonDataTxThreshold.value}%` ?? ''}
+                  defaultValue={`${monitoringValuesDisplayed.nonDataTxThreshold.value}%`}
                   values={PERCENTAGES.slice(0, 10)}
                   error={monitoringValuesDisplayed.nonDataTxThreshold.error}
                   onSelect={(value) => {
