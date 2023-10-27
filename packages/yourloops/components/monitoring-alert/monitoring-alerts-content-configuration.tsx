@@ -129,289 +129,287 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
   const inputStep = bgUnit === Unit.MilligramPerDeciliter ? INPUT_STEP_MGDL : INPUT_STEP_MMOLL
 
   return (
-    <>
-      <Box>
-        <Typography className={classes.categoryTitle}>
-          1. {t('time-away-from-target-range')}
-        </Typography>
-        <Typography variant="caption" className={classes.categoryInfo}>
-          {t('current-trigger-setting-tir', {
-            tir: monitoringValuesDisplayed.outOfRangeThreshold.value,
-            lowBg: monitoringValuesDisplayed.lowBg.value,
-            highBg: monitoringValuesDisplayed.highBg.value,
-            bgUnit
-          })}
-        </Typography>
-        <Box display="flex" data-testid="time-target">
-          <div className={classes.subCategoryContainer}>
-            <Typography className={classes.subCategoryTitle}>
-              A. {t('glycemic-target')}
-            </Typography>
-            <div className={classes.valueSelection}>
-              <Box
-                display="flex"
-                alignItems="center"
-                marginRight={2}
-                paddingBottom={1}
-                position="relative"
-                data-testid="low-bg-text-field-id"
-              >
-                <Typography>{t('minimum')}</Typography>
-                <TextField
-                  disabled={displayInReadonly}
-                  value={monitoringValuesDisplayed.lowBg.value}
-                  error={!!monitoringValuesDisplayed.lowBg.errorMessage}
-                  type="number"
-                  className={classes.textField}
-                  size="small"
-                  InputProps={{
-                    inputProps: {
-                      min: minLowBg,
-                      max: maxLowBg,
-                      step: inputStep,
-                      'aria-label': t('low-bg-input')
-                    }
-                  }}
-                  onChange={(event) => {
-                    const value = +event.target.value
-                    setMonitoringValuesDisplayed({
-                      ...monitoringValuesDisplayed,
-                      lowBg: {
-                        value,
-                        errorMessage: getErrorMessage(bgUnit, value, minLowBg, maxLowBg)
-                      }
-                    })
-                    onValueChange()
-                  }}
-                />
-                <Typography>{bgUnit}</Typography>
-                {!!monitoringValuesDisplayed.lowBg.errorMessage &&
-                  <FormHelperText error className={classes.inputHelperText}>
-                    {monitoringValuesDisplayed.lowBg.errorMessage}
-                  </FormHelperText>
-                }
-              </Box>
-              <Box
-                display="flex"
-                alignItems="center"
-                paddingBottom={1}
-                position="relative"
-                data-testid="high-bg-text-field-id"
-              >
-                <Typography>{t('maximum')}</Typography>
-                <TextField
-                  disabled={displayInReadonly}
-                  value={monitoringValuesDisplayed.highBg.value}
-                  error={!!monitoringValuesDisplayed.highBg.errorMessage}
-                  type="number"
-                  className={classes.textField}
-                  size="small"
-                  InputProps={{
-                    inputProps: {
-                      min: minHighBg,
-                      max: maxHighBg,
-                      step: inputStep,
-                      'aria-label': t('high-bg-input')
-                    }
-                  }}
-                  onChange={(event) => {
-                    const value = +event.target.value
-                    setMonitoringValuesDisplayed({
-                      ...monitoringValuesDisplayed,
-                      highBg: {
-                        value,
-                        errorMessage: getErrorMessage(bgUnit, value, minHighBg, maxHighBg)
-                      }
-                    })
-                    onValueChange()
-                  }}
-                />
-                <Typography>{bgUnit}</Typography>
-                {!!monitoringValuesDisplayed.highBg.errorMessage &&
-                  <FormHelperText error className={classes.inputHelperText}>
-                    {monitoringValuesDisplayed.highBg.errorMessage}
-                  </FormHelperText>
-                }
-              </Box>
-            </div>
-            {displayDefaultValues &&
-              <Typography
-                className={classes.defaultLabel}>{t('default-min-max', {
-                min: `${lowBgDefault} ${bgUnit}`,
-                max: `${highBgDefault} ${bgUnit}`
-              })}</Typography>
-            }
-          </div>
-          <div>
-            <Typography className={classes.subCategoryTitle}>B. {t('event-trigger-threshold')}</Typography>
-            <div className={classes.valueSelection}>
-              <Typography>{t('time-spent-off-target')}</Typography>
-              <div className={classes.dropdown} data-testid="dropdown-out-of-range">
-                <BasicDropdown
-                  disabled={displayInReadonly}
-                  key={`out-of-range-${monitoringValuesDisplayed.outOfRangeThreshold.value}`}
-                  id="out-of-range"
-                  defaultValue={`${monitoringValuesDisplayed.outOfRangeThreshold.value}%`}
-                  values={PERCENTAGES}
-                  error={monitoringValuesDisplayed.outOfRangeThreshold.error}
-                  onSelect={(value) => {
-                    setMonitoringValuesDisplayed({
-                      ...monitoringValuesDisplayed,
-                      outOfRangeThreshold: {
-                        value: parseFloat(value),
-                        error: false
-                      }
-                    })
-                    onValueChange()
-                  }}
-
-                />
-              </div>
-            </div>
-            {displayDefaultValues &&
-              <Typography
-                className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_OFF_TARGET_THRESHOLD_PERCENT}%` })}</Typography>
-            }
-          </div>
-        </Box>
-        <Divider variant="middle" className={classes.divider} />
-        <Typography className={classes.categoryTitle}>
-          2. {t('severe-hypoglycemia')}
-        </Typography>
-        <Typography variant="caption" className={classes.categoryInfo}>
-          {t('current-trigger-setting-hypoglycemia', {
-            hypoThreshold: monitoringValuesDisplayed.hypoThreshold.value,
-            veryLowBg: monitoringValuesDisplayed.veryLowBg.value,
-            bgUnit
-          })}
-        </Typography>
-        <Box display="flex" data-testid="severe-hypoglycemia">
-          <div className={classes.subCategoryContainer}>
-            <Typography className={classes.subCategoryTitle}>A. {t('severe-hypoglycemia-threshold', {
-              hypoThreshold: monitoringValuesDisplayed.hypoThreshold.value,
-              veryLowBg: monitoringValuesDisplayed.veryLowBg.value
-            })}:</Typography>
+    <Box>
+      <Typography className={classes.categoryTitle}>
+        1. {t('time-away-from-target-range')}
+      </Typography>
+      <Typography variant="caption" className={classes.categoryInfo}>
+        {t('current-trigger-setting-tir', {
+          tir: monitoringValuesDisplayed.outOfRangeThreshold.value,
+          lowBg: monitoringValuesDisplayed.lowBg.value,
+          highBg: monitoringValuesDisplayed.highBg.value,
+          bgUnit
+        })}
+      </Typography>
+      <Box display="flex" data-testid="time-target">
+        <div className={classes.subCategoryContainer}>
+          <Typography className={classes.subCategoryTitle}>
+            A. {t('glycemic-target')}
+          </Typography>
+          <div className={classes.valueSelection}>
             <Box
-              className={classes.valueSelection}
-              data-testid="very-low-bg-text-field-id"
+              display="flex"
+              alignItems="center"
+              marginRight={2}
+              paddingBottom={1}
               position="relative"
-              paddingBottom={2}
+              data-testid="low-bg-text-field-id"
             >
-              <Typography>{t('severe-hypoglycemia-below')}</Typography>
+              <Typography>{t('minimum')}</Typography>
               <TextField
                 disabled={displayInReadonly}
-                value={monitoringValuesDisplayed.veryLowBg.value}
-                error={!!monitoringValuesDisplayed.veryLowBg.errorMessage}
+                value={monitoringValuesDisplayed.lowBg.value}
+                error={!!monitoringValuesDisplayed.lowBg.errorMessage}
                 type="number"
                 className={classes.textField}
                 size="small"
                 InputProps={{
                   inputProps: {
-                    min: minVeryLowBg,
-                    max: maxVeryLowBg,
+                    min: minLowBg,
+                    max: maxLowBg,
                     step: inputStep,
-                    'aria-label': t('very-low-bg-input')
+                    'aria-label': t('low-bg-input')
                   }
                 }}
                 onChange={(event) => {
                   const value = +event.target.value
                   setMonitoringValuesDisplayed({
                     ...monitoringValuesDisplayed,
-                    veryLowBg: {
+                    lowBg: {
                       value,
-                      errorMessage: getErrorMessage(bgUnit, value, minVeryLowBg, maxVeryLowBg)
+                      errorMessage: getErrorMessage(bgUnit, value, minLowBg, maxLowBg)
                     }
                   })
                   onValueChange()
                 }}
               />
-              <Typography data-testid="bgUnits-severalHypo">{bgUnit}</Typography>
-              {!!monitoringValuesDisplayed.veryLowBg.errorMessage &&
+              <Typography>{bgUnit}</Typography>
+              {!!monitoringValuesDisplayed.lowBg.errorMessage &&
                 <FormHelperText error className={classes.inputHelperText}>
-                  {monitoringValuesDisplayed.veryLowBg.errorMessage}
+                  {monitoringValuesDisplayed.lowBg.errorMessage}
                 </FormHelperText>
               }
             </Box>
-            {displayDefaultValues &&
-              <Typography
-                className={classes.defaultLabel}>{t('default', { value: `${veryLowBgDefault} ${bgUnit}` })}</Typography>
-            }
+            <Box
+              display="flex"
+              alignItems="center"
+              paddingBottom={1}
+              position="relative"
+              data-testid="high-bg-text-field-id"
+            >
+              <Typography>{t('maximum')}</Typography>
+              <TextField
+                disabled={displayInReadonly}
+                value={monitoringValuesDisplayed.highBg.value}
+                error={!!monitoringValuesDisplayed.highBg.errorMessage}
+                type="number"
+                className={classes.textField}
+                size="small"
+                InputProps={{
+                  inputProps: {
+                    min: minHighBg,
+                    max: maxHighBg,
+                    step: inputStep,
+                    'aria-label': t('high-bg-input')
+                  }
+                }}
+                onChange={(event) => {
+                  const value = +event.target.value
+                  setMonitoringValuesDisplayed({
+                    ...monitoringValuesDisplayed,
+                    highBg: {
+                      value,
+                      errorMessage: getErrorMessage(bgUnit, value, minHighBg, maxHighBg)
+                    }
+                  })
+                  onValueChange()
+                }}
+              />
+              <Typography>{bgUnit}</Typography>
+              {!!monitoringValuesDisplayed.highBg.errorMessage &&
+                <FormHelperText error className={classes.inputHelperText}>
+                  {monitoringValuesDisplayed.highBg.errorMessage}
+                </FormHelperText>
+              }
+            </Box>
           </div>
-          <div>
-            <Typography className={classes.subCategoryTitle}>
-              B. {t('event-trigger-threshold')}
-            </Typography>
-            <div className={classes.valueSelection} data-testid="dropdown-hypo">
-              <Typography>{t('time-spent-severe-hypoglycemia')}</Typography>
-              <div className={classes.dropdown}>
-                <BasicDropdown
-                  disabled={displayInReadonly}
-                  key={`hypo-threshold-${monitoringValuesDisplayed.hypoThreshold.value}`}
-                  id="hypo-threshold"
-                  defaultValue={`${monitoringValuesDisplayed.hypoThreshold.value}%`}
-                  values={PERCENTAGES}
-                  error={monitoringValuesDisplayed.hypoThreshold.error}
-                  onSelect={(value) => {
-                    setMonitoringValuesDisplayed({
-                      ...monitoringValuesDisplayed,
-                      hypoThreshold: {
-                        value: parseFloat(value),
-                        error: false
-                      }
-                    })
-                    onValueChange()
-                  }}
-                />
-              </div>
-            </div>
-            {displayDefaultValues &&
-              <Typography
-                className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_SEVERE_HYPOGLYCEMIA_THRESHOLD_PERCENT}%` })}</Typography>
-            }
-          </div>
-        </Box>
-        <Divider variant="middle" className={classes.divider} />
+          {displayDefaultValues &&
+            <Typography
+              className={classes.defaultLabel}>{t('default-min-max', {
+              min: `${lowBgDefault} ${bgUnit}`,
+              max: `${highBgDefault} ${bgUnit}`
+            })}</Typography>
+          }
+        </div>
+        <div>
+          <Typography className={classes.subCategoryTitle}>B. {t('event-trigger-threshold')}</Typography>
+          <div className={classes.valueSelection}>
+            <Typography>{t('time-spent-off-target')}</Typography>
+            <div className={classes.dropdown} data-testid="dropdown-out-of-range">
+              <BasicDropdown
+                disabled={displayInReadonly}
+                key={`out-of-range-${monitoringValuesDisplayed.outOfRangeThreshold.value}`}
+                id="out-of-range"
+                defaultValue={`${monitoringValuesDisplayed.outOfRangeThreshold.value}%`}
+                values={PERCENTAGES}
+                error={monitoringValuesDisplayed.outOfRangeThreshold.error}
+                onSelect={(value) => {
+                  setMonitoringValuesDisplayed({
+                    ...monitoringValuesDisplayed,
+                    outOfRangeThreshold: {
+                      value: parseFloat(value),
+                      error: false
+                    }
+                  })
+                  onValueChange()
+                }}
 
-        <Typography className={classes.categoryTitle}>
-          3. {t('data-not-transmitted')}
-        </Typography>
-        <Typography variant="caption" className={classes.categoryInfo}>
-          {t('current-trigger-setting-data', { nonDataThreshold: monitoringValuesDisplayed.nonDataTxThreshold.value })}
-        </Typography>
-        <Box display="flex">
-          <div className={classes.subCategoryContainer}>
-            <Typography className={classes.subCategoryTitle}>A. {t('event-trigger-threshold')}</Typography>
-            <div className={classes.valueSelection}>
-              <Typography>{t('time-spent-without-uploaded-data')}</Typography>
-              <div className={classes.dropdown} data-testid="dropdown-nonData">
-                <BasicDropdown
-                  disabled={displayInReadonly}
-                  key={`tir-dropdown-${monitoringValuesDisplayed.nonDataTxThreshold.value}`}
-                  id="non-data"
-                  defaultValue={`${monitoringValuesDisplayed.nonDataTxThreshold.value}%`}
-                  values={PERCENTAGES.slice(0, 10)}
-                  error={monitoringValuesDisplayed.nonDataTxThreshold.error}
-                  onSelect={(value) => {
-                    setMonitoringValuesDisplayed({
-                      ...monitoringValuesDisplayed,
-                      nonDataTxThreshold: {
-                        value: parseFloat(value),
-                        error: false
-                      }
-                    })
-                    onValueChange()
-                  }}
-                />
-              </div>
+              />
             </div>
-            {displayDefaultValues &&
-              <Typography
-                className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_WITHOUT_UPLOADED_DATA_THRESHOLD_PERCENT}%` })}</Typography>
-            }
           </div>
-        </Box>
+          {displayDefaultValues &&
+            <Typography
+              className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_OFF_TARGET_THRESHOLD_PERCENT}%` })}</Typography>
+          }
+        </div>
       </Box>
-    </>
+      <Divider variant="middle" className={classes.divider} />
+      <Typography className={classes.categoryTitle}>
+        2. {t('severe-hypoglycemia')}
+      </Typography>
+      <Typography variant="caption" className={classes.categoryInfo}>
+        {t('current-trigger-setting-hypoglycemia', {
+          hypoThreshold: monitoringValuesDisplayed.hypoThreshold.value,
+          veryLowBg: monitoringValuesDisplayed.veryLowBg.value,
+          bgUnit
+        })}
+      </Typography>
+      <Box display="flex" data-testid="severe-hypoglycemia">
+        <div className={classes.subCategoryContainer}>
+          <Typography className={classes.subCategoryTitle}>A. {t('severe-hypoglycemia-threshold', {
+            hypoThreshold: monitoringValuesDisplayed.hypoThreshold.value,
+            veryLowBg: monitoringValuesDisplayed.veryLowBg.value
+          })}:</Typography>
+          <Box
+            className={classes.valueSelection}
+            data-testid="very-low-bg-text-field-id"
+            position="relative"
+            paddingBottom={2}
+          >
+            <Typography>{t('severe-hypoglycemia-below')}</Typography>
+            <TextField
+              disabled={displayInReadonly}
+              value={monitoringValuesDisplayed.veryLowBg.value}
+              error={!!monitoringValuesDisplayed.veryLowBg.errorMessage}
+              type="number"
+              className={classes.textField}
+              size="small"
+              InputProps={{
+                inputProps: {
+                  min: minVeryLowBg,
+                  max: maxVeryLowBg,
+                  step: inputStep,
+                  'aria-label': t('very-low-bg-input')
+                }
+              }}
+              onChange={(event) => {
+                const value = +event.target.value
+                setMonitoringValuesDisplayed({
+                  ...monitoringValuesDisplayed,
+                  veryLowBg: {
+                    value,
+                    errorMessage: getErrorMessage(bgUnit, value, minVeryLowBg, maxVeryLowBg)
+                  }
+                })
+                onValueChange()
+              }}
+            />
+            <Typography data-testid="bgUnits-severalHypo">{bgUnit}</Typography>
+            {!!monitoringValuesDisplayed.veryLowBg.errorMessage &&
+              <FormHelperText error className={classes.inputHelperText}>
+                {monitoringValuesDisplayed.veryLowBg.errorMessage}
+              </FormHelperText>
+            }
+          </Box>
+          {displayDefaultValues &&
+            <Typography
+              className={classes.defaultLabel}>{t('default', { value: `${veryLowBgDefault} ${bgUnit}` })}</Typography>
+          }
+        </div>
+        <div>
+          <Typography className={classes.subCategoryTitle}>
+            B. {t('event-trigger-threshold')}
+          </Typography>
+          <div className={classes.valueSelection} data-testid="dropdown-hypo">
+            <Typography>{t('time-spent-severe-hypoglycemia')}</Typography>
+            <div className={classes.dropdown}>
+              <BasicDropdown
+                disabled={displayInReadonly}
+                key={`hypo-threshold-${monitoringValuesDisplayed.hypoThreshold.value}`}
+                id="hypo-threshold"
+                defaultValue={`${monitoringValuesDisplayed.hypoThreshold.value}%`}
+                values={PERCENTAGES}
+                error={monitoringValuesDisplayed.hypoThreshold.error}
+                onSelect={(value) => {
+                  setMonitoringValuesDisplayed({
+                    ...monitoringValuesDisplayed,
+                    hypoThreshold: {
+                      value: parseFloat(value),
+                      error: false
+                    }
+                  })
+                  onValueChange()
+                }}
+              />
+            </div>
+          </div>
+          {displayDefaultValues &&
+            <Typography
+              className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_SEVERE_HYPOGLYCEMIA_THRESHOLD_PERCENT}%` })}</Typography>
+          }
+        </div>
+      </Box>
+      <Divider variant="middle" className={classes.divider} />
+
+      <Typography className={classes.categoryTitle}>
+        3. {t('data-not-transmitted')}
+      </Typography>
+      <Typography variant="caption" className={classes.categoryInfo}>
+        {t('current-trigger-setting-data', { nonDataThreshold: monitoringValuesDisplayed.nonDataTxThreshold.value })}
+      </Typography>
+      <Box display="flex">
+        <div className={classes.subCategoryContainer}>
+          <Typography className={classes.subCategoryTitle}>A. {t('event-trigger-threshold')}</Typography>
+          <div className={classes.valueSelection}>
+            <Typography>{t('time-spent-without-uploaded-data')}</Typography>
+            <div className={classes.dropdown} data-testid="dropdown-nonData">
+              <BasicDropdown
+                disabled={displayInReadonly}
+                key={`tir-dropdown-${monitoringValuesDisplayed.nonDataTxThreshold.value}`}
+                id="non-data"
+                defaultValue={`${monitoringValuesDisplayed.nonDataTxThreshold.value}%`}
+                values={PERCENTAGES.slice(0, 10)}
+                error={monitoringValuesDisplayed.nonDataTxThreshold.error}
+                onSelect={(value) => {
+                  setMonitoringValuesDisplayed({
+                    ...monitoringValuesDisplayed,
+                    nonDataTxThreshold: {
+                      value: parseFloat(value),
+                      error: false
+                    }
+                  })
+                  onValueChange()
+                }}
+              />
+            </div>
+          </div>
+          {displayDefaultValues &&
+            <Typography
+              className={classes.defaultLabel}>{t('default', { value: `${TIME_SPENT_WITHOUT_UPLOADED_DATA_THRESHOLD_PERCENT}%` })}</Typography>
+          }
+        </div>
+      </Box>
+    </Box>
   )
 }
 
