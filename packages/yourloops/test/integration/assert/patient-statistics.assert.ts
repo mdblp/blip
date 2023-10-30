@@ -53,7 +53,7 @@ export const checkPatientStatisticsWithTwoWeeksOldData = async () => {
   expect(patientStatistics.getByTestId('cbg-standard-deviation-stat')).toHaveTextContent('Standard Deviation (34-214)mg/dL90')
   expect(patientStatistics.getByTestId('cbg-mean-stat')).toHaveTextContent('Avg. Glucose (CGM)mg/dL124')
   expect(patientStatistics.getByTestId('container-insulin-stats')).toHaveTextContent('Avg. Daily Total Insulin4.2UBolus2 U48%Basal2.2 U52%Weight72kgRatio0.06U/kg')
-  expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily declared carbs74.8gMeal carbs49.8gRescue carbs24.9gAvg. Daily estimated carbs20g')
+  expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Avg. Daily declared carbs74.8gMeal carbs49.9gRescue carbs24.9gAvg. Daily estimated carbs20g')
 }
 
 export const checkPatientStatisticsNoData = async () => {

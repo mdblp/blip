@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,23 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const commonJestConfig = require('../common-jest.config')
-module.exports = {
-  ...commonJestConfig,
-
-  bail: true,
-
-  displayName: 'yourloops integration',
-
-  maxWorkers: 4,
-
-  globalSetup: '<rootDir>/global-setup.js',
-
-  // The glob patterns Jest uses to detect test files
-  testMatch: [
-    '<rootDir>/**/*.spec.tsx'
-  ],
-
-  testTimeout: 200000
+module.exports = async () => {
+  process.env.TZ = 'UTC'
 }
