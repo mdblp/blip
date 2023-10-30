@@ -36,6 +36,8 @@ module.exports = {
 
   maxWorkers: 4,
 
+  TZ: 'utc',
+
   // The glob patterns Jest uses to detect test files
   testMatch: [
     '<rootDir>/**/*.spec.tsx'
