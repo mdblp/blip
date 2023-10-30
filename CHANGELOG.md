@@ -19,6 +19,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2668 Remove icons of the tabs and widget titles
 - YLP-2670 Remove target & alerts view from "private practice"
 - YLP-2671 Group alarms with the same code occurring in a 30 mn interval
+- YLP-2683 Update alarm device event icon
 
 ### Fixed
 - YLP-2438 Inconsistency in the daily view between carbs displayed on the graph and Total carbs in the statistics panel
@@ -37,6 +38,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2622 Remove references to uploads in the app
 - YLP-2631 Calls made to /harbour/errors do not always give an error message
 - YLP-2672 Error code given by the front should be findable in kibana
+- YLP-2680 Conversion error in alarm tooltips in mmol/L
 
 ## 3.0.4 - 2023-08-23
 ### Added
