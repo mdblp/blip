@@ -37,3 +37,7 @@ Element.prototype.scrollIntoView = jest.fn()
 global.URL.createObjectURL = jest.fn().mockReturnValue('/')
 
 enableFetchMocks()
+
+module.exports = async () => {
+  process.env.TZ = 'UTC'
+}
