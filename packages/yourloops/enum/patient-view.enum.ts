@@ -29,6 +29,6 @@ export enum PatientView {
   Daily = 'daily',
   Dashboard = 'dashboard',
   Device = 'device',
-  TargetAndAlerts = 'targetAndAlerts',
+  TargetAndAlerts = 'target-and-alerts',
   Trends = 'trends'
 }
