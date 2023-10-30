@@ -20,6 +20,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2670 Remove target & alerts view from "private practice"
 - YLP-2671 Group alarms with the same code occurring in a 30 mn interval
 - YLP-2683 Update alarm device event icon
+- YLP-2690 Switching patient from the tab "Target&Alerts" is not working
 
 ### Fixed
 - YLP-2438 Inconsistency in the daily view between carbs displayed on the graph and Total carbs in the statistics panel

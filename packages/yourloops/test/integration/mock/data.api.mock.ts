@@ -86,7 +86,9 @@ export interface Data {
 
 export const generateCompleteDashboardFromDate = (date: string): Data => {
   const endDate = new Date(moment().format('YYYY-MM-DD'))
+  endDate.setUTCHours(1)
   const startDate = new Date(date)
+  startDate.setUTCHours(1)
   const reservoirChangeDate = new Date(date)
   reservoirChangeDate.setDate(reservoirChangeDate.getDate() + 1)
   const reservoirChangeDateAsString = reservoirChangeDate.toISOString().split('T')[0]
