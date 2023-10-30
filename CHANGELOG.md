@@ -37,6 +37,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2622 Remove references to uploads in the app
 - YLP-2631 Calls made to /harbour/errors do not always give an error message
 - YLP-2672 Error code given by the front should be findable in kibana
+- YLP-2680 Conversion error in alarm tooltips in mmol/L
 
 ## 3.0.4 - 2023-08-23
 ### Added
