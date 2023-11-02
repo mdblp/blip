@@ -163,7 +163,7 @@ export const usePatientData = (): usePatientDataResult => {
   const changePatient = (patient: Patient): void => {
     patientDataUtils.current.changePatient(patient)
     setMedicalData(null)
-    navigate(`/patient/${patient.userid}/${currentPatientView}`)
+    navigate(`/patient/${patient.userid}${getRouteByPatientView(currentPatientView)}`)
   }
 
   const getMsRangeByPatientView = (patientView: PatientView, patientMedicalData: MedicalDataService): number => {
@@ -200,7 +200,11 @@ export const usePatientData = (): usePatientDataResult => {
   const handleDatetimeLocationChange = async (epochLocation: number, msRange: number): Promise<boolean> => {
     try {
       setRefreshingData(true)
-      const dateRange = patientDataUtils.current.getDateRange({ currentPatientView: currentPatientView, epochLocation, msRange })
+      const dateRange = patientDataUtils.current.getDateRange({
+        currentPatientView: currentPatientView,
+        epochLocation,
+        msRange
+      })
       const patientData = await patientDataUtils.current.loadDataRange(dateRange)
       if (patientData && patientData.cbg.length > 0) {
         const medicalDataUpdated = medicalData

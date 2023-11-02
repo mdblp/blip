@@ -118,6 +118,7 @@ export const CarbsAndBolusAverage: FC<CarbsAndBolusAverageProps> = ({ medicalDat
         justifyContent="end"
         alignItems="baseline"
         marginTop={1}
+        data-testid="rescue-carbs-and-manual-bolus-average-caption"
       >
         <Box
           className={classes.captionColorIndicator}
