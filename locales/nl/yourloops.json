@@ -315,7 +315,7 @@
   "mandatory-integer": "De waarde moet een heel getal zijn",
   "mandatory-range": "Voer een getal in tussen {{lowValue}} en {{highValue}}",
   "manual-bolus": "Manual bolus",
-  "manual-bolus-number": "Nb. of manual bolus",
+  "manual-bolus-number": "Avg. daily nb. of manual bolus",
   "manual-flag": "Handmatige markering",
   "maximum": "Maximum:",
   "meal-carbs": "Meal carbs",

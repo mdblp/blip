@@ -315,7 +315,7 @@
   "mandatory-integer": "Wert muss eine ganze Zahl sein",
   "mandatory-range": "Zahl zwischen {{lowValue}} und {{highValue}} eingeben",
   "manual-bolus": "Manual bolus",
-  "manual-bolus-number": "Nb. of manual bolus",
+  "manual-bolus-number": "Avg. daily nb. of manual bolus",
   "manual-flag": "Manuelle Markierung",
   "maximum": "Maximum:",
   "meal-carbs": "Meal carbs",
