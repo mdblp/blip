@@ -67,15 +67,6 @@ import {
 import type PumpSettings from '../../models/medical/datum/pump-settings.model'
 import type PumpManufacturer from '../../models/medical/datum/enums/pump-manufacturer.enum'
 import WizardService from './datum/wizard.service'
-import DatumService from './datum.service'
-import { DatumType } from '../../models/medical/datum/enums/datum-type.enum'
-import { AlarmEvent } from '../../models/medical/datum/alarm-event.model'
-import WarmUp from '../../models/medical/datum/warm-up.model'
-import ConfidentialMode from '../../models/medical/datum/confidential-mode.model'
-import ZenMode from '../../models/medical/datum/zen-mode.model'
-import DeviceParameterChange from '../../models/medical/datum/device-parameter-change.model'
-import { DeviceEventSubtype } from '../../models/medical/datum/enums/device-event-subtype.enum'
-import { AlarmEventType } from '../../models/medical/datum/enums/alarm-event-type.enum'
 import AlarmEventService from './datum/alarm-event.service';
 
 class MedicalDataService {
