@@ -238,5 +238,16 @@ To update the text of the copyright, go to `Preferences | Editor | Copyright | C
 
 As the copyright text is shared at project-level, do not forget to commit the changes to the file `.idea/Diabeloop.xml`.
 
+## Version management
+A NPM script allows to automatically update the version of all packages:
+```shell
+$ VERSION=<VERSION_NUMBER> npm run bump-version
+```
+
+This script will update the package version of:
+- all packages in the NPM workspace
+- the `server` package
+- the `cloudfront-dist/deployment` package
+
 ### Other
 For more copyright management options, check the [IntelliJ documentation](https://jetbrains.com/help/idea/copyright.html).

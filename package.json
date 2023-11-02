@@ -10,14 +10,10 @@
     "packages/*"
   ],
   "scripts": {
-    "bump-version": "VERSION_TYPE=$VERSION_TYPE npm run bump-version:workspace && npm run bump-version:server && npm run bump-version:cloudfront-dist",
-    "bump-version:cloudfront-dist": "cd cloudfront-dist/deployment && npm version $VERSION_TYPE --no-git-tag-version",
-    "bump-version:server": "cd server && npm version $VERSION_TYPE --no-git-tag-version",
-    "bump-version:workspace": "npm version $VERSION_TYPE --no-git-tag-version && npm version $VERSION_TYPE --no-git-tag-version --workspaces",
-    "bump-version:rc": "npm run bump-version:rc-workspace && npm run bump-version:rc-server && npm run bump-version:rc-cloudfront-dist",
-    "bump-version:rc-cloudfront-dist": "cd cloudfront-dist/deployment && npm version prerelease --no-git-tag-version --preid=rc",
-    "bump-version:rc-server": "cd server && npm version prerelease --no-git-tag-version --preid=rc",
-    "bump-version:rc-workspace": "npm version prerelease --no-git-tag-version --preid=rc && npm version prerelease --no-git-tag-version --workspaces --preid=rc",
+    "bump-version": "VERSION=$VERSION npm run bump-version:workspace && npm run bump-version:server && npm run bump-version:cloudfront-dist",
+    "bump-version:cloudfront-dist": "cd cloudfront-dist/deployment && npm version $VERSION --no-git-tag-version",
+    "bump-version:server": "cd server && npm version $VERSION --no-git-tag-version",
+    "bump-version:workspace": "npm version $VERSION --no-git-tag-version && npm version $VERSION --no-git-tag-version --workspaces",
     "mrproper": "npm run mrproper --workspaces",
     "postmrproper": "rm -rf deploy node_modules cloudfront-dist/deployment/node_modules server/node_modules",
     "clean": "npm run clean --workspaces --if-present",
