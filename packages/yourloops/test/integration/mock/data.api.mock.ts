@@ -29,7 +29,8 @@ import DataAPI from '../../../lib/data/data.api'
 import moment, { type Moment } from 'moment-timezone'
 import { history } from '../data/data-api.data'
 import type { PatientDataRange } from '../../../lib/data/models/data-range.model'
-import { MedicalData } from 'medical-domain'
+import { MedicalData, Smbg, Unit } from 'medical-domain'
+import Cbg from 'medical-domain/dist/src/domains/models/medical/datum/cbg.model'
 
 const WIZARD_BOLUS_UNDELIVERED_ID = 'carbBolusId'
 const WIZARD_BOLUS_UMM_ID = 'carbBolusId2'
@@ -94,9 +95,31 @@ const getWeekDay = (date) => {
   return days[date.getDay()]
 }
 
-const cbgMock = (date, time, value) => {
+const convertCbgMg2Mmol = (mgValues: Cbg[]) => {
+  const mmolValues: Cbg[] = []
+  mgValues.forEach((mg: Cbg) => {
+    const mMolVal = JSON.parse(JSON.stringify(mg))
+    mMolVal.value = Math.round(10.0 * mg.value / 18.01577) / 10
+    mMolVal.units = Unit.MmolPerLiter
+    mmolValues.push(mMolVal as Cbg)
+  })
+  return mmolValues
+}
+
+const convertSmbgMg2Mmol = (mgValues: Smbg[]) => {
+  const mmolValues: Smbg[] = []
+  mgValues.forEach((mg: Smbg) => {
+    const mMolVal = JSON.parse(JSON.stringify(mg))
+    mMolVal.value = Math.round(10.0 * mg.value / 18.01577) / 10
+    mMolVal.units = Unit.MmolPerLiter
+    mmolValues.push(mMolVal as Smbg)
+  })
+  return mmolValues
+}
+
+const cbgMockMgdL = (date, time, value) => {
   const normalTime = new Date(`${date}T${time}.000Z`)
-  return  {
+  return {
     epoch: normalTime.getTime(),
     displayOffset: -120,
     normalTime: `${date}T${time}.000Z`,
@@ -116,7 +139,7 @@ const cbgMock = (date, time, value) => {
 
 const bolusMock = (date, time) => {
   const normalTime = new Date(`${date}T${time}.000Z`)
-  return  {
+  return {
     epoch: normalTime.getTime(),
     displayOffset: -120,
     normalTime: `${date}T${time}.000Z`,
@@ -136,18 +159,18 @@ const wizardMock = (date, time, id, carbinput, umm) => {
   const normalTime = new Date(`${date}T${time}.000Z`)
   const wizard = {
     epoch: normalTime.getTime(),
-      displayOffset: -120,
-      normalTime: `${date}T${time}.000Z`,
-      timezone: 'Europe/Paris',
-      guessedTimezone: false,
-      id: id,
-      type: 'wizard',
-      source: 'Diabeloop',
-      bolusId: WIZARD_BOLUS_UNDELIVERED_ID,
-      bolusIds: {WIZARD_BOLUS_UNDELIVERED_ID},
-      carbInput: carbinput,
-      units: 'mmol/L',
-      bolus: null
+    displayOffset: -120,
+    normalTime: `${date}T${time}.000Z`,
+    timezone: 'Europe/Paris',
+    guessedTimezone: false,
+    id: id,
+    type: 'wizard',
+    source: 'Diabeloop',
+    bolusId: WIZARD_BOLUS_UNDELIVERED_ID,
+    bolusIds: { WIZARD_BOLUS_UNDELIVERED_ID },
+    carbInput: carbinput,
+    units: 'mmol/L',
+    bolus: null
   }
   if (umm) {
     wizard.inputMeal = {
@@ -174,26 +197,26 @@ const PumpSettingsMock = (date, time) => {
       basalsecurityprofile: {},
       cgm: {
         apiVersion: 'v1',
-          endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00',
-          expirationDate: '2050-04-12T17:53:54+02:00',
-          manufacturer: 'Dexcom',
-          name: 'G6',
-          swVersionTransmitter: 'v1',
-          transmitterId: 'a1234'
+        endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00',
+        expirationDate: '2050-04-12T17:53:54+02:00',
+        manufacturer: 'Dexcom',
+        name: 'G6',
+        swVersionTransmitter: 'v1',
+        transmitterId: 'a1234'
       },
       device: {
         deviceId: '1234',
-          imei: '1234567890',
-          manufacturer: 'Diabeloop',
-          name: 'DBLG1',
-          swVersion: 'beta'
+        imei: '1234567890',
+        manufacturer: 'Diabeloop',
+        name: 'DBLG1',
+        swVersion: 'beta'
       },
       pump: {
         expirationDate: '2050-04-12T17:53:54+02:00',
-          manufacturer: 'VICENTRA',
-          name: 'Kaleido',
-          serialNumber: '123456',
-          swVersion: 'beta'
+        manufacturer: 'VICENTRA',
+        name: 'Kaleido',
+        serialNumber: '123456',
+        swVersion: 'beta'
       },
       parameters: [
         {
@@ -253,10 +276,10 @@ const mealMock = (date, time) => {
 
 const physActivityMock = (date, time, duration) => {
   const startTime = new Date(`${date}T${time}.000Z`).getTime()
-  const normalEnd = addMilliseconds(`${date}T${time}.000Z`, duration*1000)
+  const normalEnd = addMilliseconds(`${date}T${time}.000Z`, duration * 1000)
   const epochEnd = startTime + duration
   return {
-    epoch:  startTime,
+    epoch: startTime,
     displayOffset: -120,
     normalTime: `${date}T${time}.000Z`,
     timezone: 'Europe/Paris',
@@ -336,11 +359,11 @@ export const generateCompleteDashboardFromDate = (date: string): Data => {
   while (startDate <= endDate) {
     const date = startDate.toISOString().split('T')[0]
     data.cbg.push(
-      cbgMock(date, '17:05:00', 15),
-      cbgMock(date, '17:10:00', 55),
-      cbgMock(date, '17:35:00', 100),
-      cbgMock(date, '17:40:00', 188),
-      cbgMock(date, '18:05:00', 260)
+      cbgMockMgdL(date, '17:05:00', 15),
+      cbgMockMgdL(date, '17:10:00', 55),
+      cbgMockMgdL(date, '17:35:00', 100),
+      cbgMockMgdL(date, '17:40:00', 188),
+      cbgMockMgdL(date, '18:05:00', 260)
     )
     data.bolus.push(bolusMock(date, '18:25:00'))
     data.basal.push(
@@ -351,7 +374,7 @@ export const generateCompleteDashboardFromDate = (date: string): Data => {
     data.pumpSettings.push(PumpSettingsMock(date, '16:35:00'))
     data.wizards.push(
       wizardMock(date, '18:35:00', WIZARD_UNDELIVERED_ID, 30, false),
-      wizardMock(date, '19:25:00', WIZARD_UMM_ID, 20,true)
+      wizardMock(date, '19:25:00', WIZARD_UMM_ID, 20, true)
     )
     data.physicalActivities.push(physActivityMock(date, '13:00:00', 1800))
     data.deviceParametersChanges.push(deviceEventMock(date, '08:00:00'))
@@ -524,7 +547,7 @@ export const pumpSettingsData: Data = {
 export const completeDailyViewData: Data = {
   dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],
   data: {
-    "alarmEvents": [
+    alarmEvents: [
       {
         "epoch": 1659949200000,
         "displayOffset": -120,
@@ -1039,7 +1062,7 @@ export const completeDailyViewData: Data = {
         "alarmEventType": "Hypoglycemia"
       }
     ],
-    "basal": [
+    basal: [
       {
         "epoch": 1659976200000,
         "displayOffset": -120,
@@ -1058,7 +1081,7 @@ export const completeDailyViewData: Data = {
         "epochEnd": 1659976201000
       }
     ],
-    "bolus": [
+    bolus: [
       {
         "epoch": 1659983100000,
         "displayOffset": -120,
@@ -1122,14 +1145,14 @@ export const completeDailyViewData: Data = {
         "insulinOnBoard": 3.0588088
       }
     ],
-    "cbg": [
+    cbg: [
       {
         "epoch": 1659972600000,
         "displayOffset": -120,
         "normalTime": "2022-08-08T15:30:00.000Z",
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
-        "id": "cbgId",
+        "id": CBG_ID,
         "type": "cbg",
         "source": "Diabeloop",
         "units": "mg/dL",
@@ -1364,7 +1387,7 @@ export const completeDailyViewData: Data = {
         "deviceName": "Unknown"
       }
     ],
-    "confidentialModes": [
+    confidentialModes: [
       {
         "epoch": 1659924000000,
         "displayOffset": -120,
@@ -1385,7 +1408,7 @@ export const completeDailyViewData: Data = {
         "inputTime": "2022-08-08T02:00:00Z"
       }
     ],
-    "deviceParametersChanges": [
+    deviceParametersChanges: [
       {
         "epoch": 1659945600000,
         "displayOffset": 0,
@@ -1411,8 +1434,8 @@ export const completeDailyViewData: Data = {
         ]
       }
     ],
-    "messages": [],
-    "meals": [
+    messages: [],
+    meals: [
       {
         "epoch": 1659960000000,
         "displayOffset": -120,
@@ -1438,7 +1461,7 @@ export const completeDailyViewData: Data = {
         "prescriptor": "hybrid"
       }
     ],
-    "physicalActivities": [
+    physicalActivities: [
       {
         "epoch": 1659963600000,
         "displayOffset": -120,
@@ -1460,7 +1483,7 @@ export const completeDailyViewData: Data = {
         "inputTime": "2022-08-08T13:00:00.000Z"
       }
     ],
-    "pumpSettings": [
+    pumpSettings: [
       {
         "epoch": 1659976500000,
         "displayOffset": 0,
@@ -1509,7 +1532,7 @@ export const completeDailyViewData: Data = {
         }
       }
     ],
-    "reservoirChanges": [
+    reservoirChanges: [
       {
         "epoch": 1659978000000,
         "displayOffset": -120,
@@ -1525,14 +1548,14 @@ export const completeDailyViewData: Data = {
         }
       }
     ],
-    "smbg": [
+    smbg: [
       {
         "epoch": 1659971700000,
         "displayOffset": -120,
         "normalTime": "2022-08-08T15:15:00.000Z",
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
-        "id": "smbgId",
+        "id": SMBG_ID,
         "type": "smbg",
         "source": "Diabeloop",
         "units": "mg/dL",
@@ -1554,7 +1577,7 @@ export const completeDailyViewData: Data = {
         "type": "wizard",
         "source": "Diabeloop",
         "bolusId": WIZARD_BOLUS_UNDELIVERED_ID,
-        "bolusIds": {WIZARD_BOLUS_UNDELIVERED_ID},
+        "bolusIds": { WIZARD_BOLUS_UNDELIVERED_ID },
         "carbInput": 45,
         "units": "mmol/L",
         "bolus": null,
@@ -1579,7 +1602,7 @@ export const completeDailyViewData: Data = {
         "type": "wizard",
         "source": "Diabeloop",
         "bolusId": WIZARD_BOLUS_UMM_ID,
-        "bolusIds": {WIZARD_BOLUS_UMM_ID},
+        "bolusIds": { WIZARD_BOLUS_UMM_ID },
         "carbInput": 50,
         "units": "mmol/L",
         "bolus": null,
@@ -1598,7 +1621,7 @@ export const completeDailyViewData: Data = {
         "type": "wizard",
         "source": "Diabeloop",
         "bolusId": WIZARD_BOLUS_POSITIVE_OVERRIDE_ID,
-        "bolusIds": {WIZARD_BOLUS_POSITIVE_OVERRIDE_ID},
+        "bolusIds": { WIZARD_BOLUS_POSITIVE_OVERRIDE_ID },
         "carbInput": 100,
         "units": "mmol/L",
         "bolus": null,
@@ -1619,7 +1642,7 @@ export const completeDailyViewData: Data = {
         "type": "wizard",
         "source": "Diabeloop",
         "bolusId": WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID,
-        "bolusIds": {WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID},
+        "bolusIds": { WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID },
         "carbInput": 100,
         "units": "mmol/L",
         "bolus": null,
@@ -1635,6 +1658,14 @@ export const completeDailyViewData: Data = {
     "timezoneChanges": []
   }
 }
+
+export const completeDailyViewDataMmol: Data = {
+  dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],
+  data: JSON.parse(JSON.stringify(completeDailyViewData.data))
+}
+
+completeDailyViewDataMmol.data.cbg = convertCbgMg2Mmol(completeDailyViewData.data.cbg)
+completeDailyViewDataMmol.data.smbg = convertSmbgMg2Mmol(completeDailyViewData.data.smbg)
 
 export const dataSetsWithZeroValues: Data = {
   dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],
