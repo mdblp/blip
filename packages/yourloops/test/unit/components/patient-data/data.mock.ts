@@ -110,31 +110,31 @@ export const mockdataFromApi = {
   warmUps: [],
   wizards: [
     {
-      "id": "1ad669607b31b2d87d92cdfda35845f8",
-      "type": "wizard",
-      "source": "Diabeloop",
-      "timezone": "Europe/Paris",
-      "normalTime": "2023-10-30T20:35:00.000Z",
-      "epoch": 1698698100000,
-      "displayOffset": -60,
-      "bolusId": "cebc8ae1f92b4a85fde0d5fb7809e7f2",
-      "bolusIds": [
+      id: "1ad669607b31b2d87d92cdfda35845f8",
+      type: "wizard",
+      source: "Diabeloop",
+      timezone: "Europe/Paris",
+      normalTime: "2023-10-30T20:35:00.000Z",
+      epoch: 1698698100000,
+      displayOffset: -60,
+      bolusId: "cebc8ae1f92b4a85fde0d5fb7809e7f2",
+      bolusIds: [
         "cebc8ae1f92b4a85fde0d5fb7809e7f2"
       ],
-      "carbInput": 50,
-      "units": "mmol/L",
-      "bolus": null,
-      "inputTime": "2023-10-30T20:35:00.000Z"
+      carbInput: 50,
+      units: "mmol/L",
+      bolus: null,
+      inputTime: "2023-10-30T20:35:00.000Z"
     }
   ],
   zenModes: [],
 }
 
 export const medicalServiceResult = {
-  "alarmEvents": [],
-  "basal": [],
-  "bolus": [],
-  "cbg": [
+  alarmEvents: [],
+  basal: [],
+  bolus: [],
+  cbg: [
     {
       "epoch": 1579514400000,
       "displayOffset": -60,
@@ -216,10 +216,10 @@ export const medicalServiceResult = {
       "deviceName": "Unknown"
     }
   ],
-  "confidentialModes": [],
-  "deviceParametersChanges": [],
-  "messages": [],
-  "meals": [
+  confidentialModes: [],
+  deviceParametersChanges: [],
+  messages: [],
+  meals: [
     {
       "epoch": 1579428000000,
       "displayOffset": -60,
@@ -236,28 +236,28 @@ export const medicalServiceResult = {
       "prescriptor": ""
     }
   ],
-  "physicalActivities": [],
-  "pumpSettings": [],
-  "reservoirChanges": [],
-  "smbg": [],
-  "warmUps": [],
-  "wizards": [
+  physicalActivities: [],
+  pumpSettings: [],
+  reservoirChanges: [],
+  smbg: [],
+  warmUps: [],
+  wizards: [
     {
-      "id": "1ad669607b31b2d87d92cdfda35845f8",
-      "type": "wizard",
-      "source": "Diabeloop",
-      "timezone": "Europe/Paris",
-      "normalTime": "2023-10-30T20:35:00.000Z",
-      "epoch": 1698698100000,
-      "displayOffset": -60,
-      "bolusId": "cebc8ae1f92b4a85fde0d5fb7809e7f2",
-      "bolusIds": [
+      id: "1ad669607b31b2d87d92cdfda35845f8",
+      type: "wizard",
+      source: "Diabeloop",
+      timezone: "Europe/Paris",
+      normalTime: "2023-10-30T20:35:00.000Z",
+      epoch: 1698698100000,
+      displayOffset: -60,
+      bolusId: "cebc8ae1f92b4a85fde0d5fb7809e7f2",
+      bolusIds: new Set([
         "cebc8ae1f92b4a85fde0d5fb7809e7f2"
-      ],
-      "carbInput": 50,
-      "units": "mmol/L",
-      "bolus": null,
-      "inputTime": "2023-10-30T20:35:00.000Z"
+      ]),
+      carbInput: 50,
+      units: "mmol/L",
+      bolus: null,
+      inputTime: "2023-10-30T20:35:00.000Z"
     }
   ],
   "zenModes": [],
