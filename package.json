@@ -77,7 +77,7 @@
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.5.1",
     "@types/blob-stream": "^0.1.31",
-    "@types/chai": "^4.3.8",
+    "@types/chai": "^4.3.9",
     "@types/d3-format": "^3.0.2",
     "@types/d3-time-format": "^4.0.1",
     "@types/jest": "^29.5.5",
