@@ -195,82 +195,6 @@ class MedicalDataService {
     return this._datumOpts.timezoneName
   }
 
-  public normalize(rawData: Array<Record<string, unknown>>): void {
-    rawData.forEach(raw => {
-      try {
-        const datum = DatumService.normalize(raw, this._datumOpts)
-        const deviceEventDatum = datum as AlarmEvent | ConfidentialMode | DeviceParameterChange | ReservoirChange | WarmUp | ZenMode
-
-        switch (datum.type) {
-          case DatumType.Bolus:
-            this.medicalData.bolus.push(datum)
-            break
-          case DatumType.Basal:
-            this.medicalData.basal.push(datum)
-            break
-          case DatumType.Cbg:
-            this.medicalData.cbg.push(datum)
-            break
-          case DatumType.DeviceEvent:
-            switch (deviceEventDatum.subType as string) {
-              case DeviceEventSubtype.Alarm:
-                const alarmEvent = deviceEventDatum as AlarmEvent
-                if (alarmEvent.alarmEventType !== AlarmEventType.Unknown) {
-                  this.medicalData.alarmEvents.push(alarmEvent)
-                }
-                break
-              case DeviceEventSubtype.Confidential:
-                this.medicalData.confidentialModes.push(deviceEventDatum as ConfidentialMode)
-                break
-              case DeviceEventSubtype.DeviceParameter:
-                this.medicalData.deviceParametersChanges.push(deviceEventDatum as DeviceParameterChange)
-                break
-              case DeviceEventSubtype.ReservoirChange:
-                this.medicalData.reservoirChanges.push(deviceEventDatum as ReservoirChange)
-                break
-              case DeviceEventSubtype.Warmup:
-                this.medicalData.warmUps.push(deviceEventDatum as WarmUp)
-                break
-              case DeviceEventSubtype.Zen:
-                this.medicalData.zenModes.push(deviceEventDatum as ZenMode)
-                break
-              default:
-                break
-            }
-            break
-          case DatumType.Food:
-            this.medicalData.meals.push(datum)
-            break
-          case DatumType.Message:
-            this.medicalData.messages.push(datum)
-            break
-          case DatumType.PhysicalActivity:
-            this.medicalData.physicalActivities.push(datum)
-            break
-          case DatumType.PumpSettings:
-            this.medicalData.pumpSettings.push(datum)
-            break
-          case DatumType.Smbg:
-            this.medicalData.smbg.push(datum)
-            break
-          case DatumType.Wizard:
-            this.medicalData.wizards.push(datum)
-            break
-          default:
-            break
-        }
-      } catch (error) {
-        let message
-        if (error instanceof Error) {
-          message = error.message
-        } else {
-          message = String(error)
-        }
-        console.log({ message, rawData: raw })
-      }
-    })
-  }
-
   add(data: MedicalData): void {
     if (data.bolus) {
       this.medicalData.bolus = this.medicalData.bolus.concat(data.bolus)
@@ -374,7 +298,6 @@ class MedicalDataService {
   }
 
   addMessage(message: Record<string, unknown>): void {
-    // TODO: cleanup normalize methods
     const normalizedMsg: Message = MessageService.normalize(message, this._datumOpts)
     this.medicalData.messages.push(normalizedMsg)
   }
