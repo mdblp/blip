@@ -39,7 +39,7 @@
     "@mui/icons-material": "^5.14.13",
     "@mui/lab": "^5.0.0-alpha.148",
     "@mui/material": "^5.14.12",
-    "@mui/x-data-grid": "^6.16.1",
+    "@mui/x-data-grid": "^6.17.0",
     "axios": "^1.6.0",
     "bows": "^1.7.2",
     "core-js": "^3.33.0",
