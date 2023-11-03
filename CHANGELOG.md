@@ -2,6 +2,10 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## UNRELEASED
+### Engineering use
+- YLP-2476 Use tide-whisperer v2: route /all.
+
 ## 3.0.5-beta - 2023-07-12
 ### Added
 - YLP-2292 Display rescue carbs and manual bolus in the trends view for DBLG1 patient
