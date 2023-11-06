@@ -187,6 +187,9 @@ class MedicalDataService {
   }
 
   add(data: MedicalData): void {
+    if (data.alarmEvents) {
+      this.medicalData.alarmEvents = this.medicalData.alarmEvents.concat(data.alarmEvents)
+    }
     if (data.bolus) {
       this.medicalData.bolus = this.medicalData.bolus.concat(data.bolus)
     }
@@ -228,9 +231,6 @@ class MedicalDataService {
     }
     if (data.zenModes) {
       this.medicalData.zenModes = this.medicalData.zenModes.concat(data.zenModes)
-    }
-    if (data.alarmEvents) {
-      this.medicalData.alarmEvents = this.medicalData.alarmEvents.concat(data.alarmEvents)
     }
 
     this.deduplicate()

@@ -31,6 +31,7 @@ import { history } from '../data/data-api.data'
 import type { PatientDataRange } from '../../../lib/data/models/data-range.model'
 import { MedicalData, Smbg, Unit } from 'medical-domain'
 import Cbg from 'medical-domain/dist/src/domains/models/medical/datum/cbg.model'
+import Bg from 'medical-domain/dist/src/domains/models/medical/datum/bg.model'
 
 const WIZARD_BOLUS_UNDELIVERED_ID = 'carbBolusId'
 const WIZARD_BOLUS_UMM_ID = 'carbBolusId2'
@@ -95,13 +96,18 @@ const getWeekDay = (date) => {
   return days[date.getDay()]
 }
 
+const convertBgMg2Mmol = (value: Bg) => {
+  const mmolVal = JSON.parse(JSON.stringify(value))
+  mmolVal.value = Math.round(10.0 * value.value / 18.01577) / 10
+  mmolVal.units = Unit.MmolPerLiter
+  return mmolVal
+}
 const convertCbgMg2Mmol = (mgValues: Cbg[]) => {
   const mmolValues: Cbg[] = []
-  mgValues.forEach((mg: Cbg) => {
-    const mMolVal = JSON.parse(JSON.stringify(mg))
-    mMolVal.value = Math.round(10.0 * mg.value / 18.01577) / 10
-    mMolVal.units = Unit.MmolPerLiter
-    mmolValues.push(mMolVal as Cbg)
+  mgValues.forEach((mg) => {
+    const mMolVal = convertBgMg2Mmol(mg as Bg)
+    mMolVal.deviceName = mg.deviceName
+    mmolValues.push(mMolVal)
   })
   return mmolValues
 }
@@ -109,9 +115,7 @@ const convertCbgMg2Mmol = (mgValues: Cbg[]) => {
 const convertSmbgMg2Mmol = (mgValues: Smbg[]) => {
   const mmolValues: Smbg[] = []
   mgValues.forEach((mg: Smbg) => {
-    const mMolVal = JSON.parse(JSON.stringify(mg))
-    mMolVal.value = Math.round(10.0 * mg.value / 18.01577) / 10
-    mMolVal.units = Unit.MmolPerLiter
+    const mMolVal = convertBgMg2Mmol(mg as Bg)
     mmolValues.push(mMolVal as Smbg)
   })
   return mmolValues

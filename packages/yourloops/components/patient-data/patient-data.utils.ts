@@ -164,9 +164,9 @@ export class PatientDataUtils {
   private async fetchPatientDataRanges(dateRange: DateRange): Promise<MedicalData> {
     const ranges = this.partialDataLoad.getMissingRanges(dateRange)
     const aggregatedData: MedicalData = {
+      alarmEvents: [],
       basal: [],
       bolus: [],
-      alarmEvents: [],
       cbg: [],
       confidentialModes: [],
       deviceParametersChanges: [],
