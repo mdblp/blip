@@ -43,7 +43,7 @@ import {
   sortByFlag,
   sortByLastDataUpdate,
   sortByMonitoringAlertsCount,
-  sortByUserName
+  sortByUserName,
 } from '../utils/sort-comparators.util'
 import {
   ActionsCell,
@@ -54,7 +54,7 @@ import {
 } from '../custom-cells'
 import { getUserName } from '../../../lib/auth/user.util'
 import Box from '@mui/material/Box'
-import { formatBirthdate } from 'dumb'
+import { formatBirthdate, StatTooltip } from 'dumb'
 import { usePatientListStyles } from '../patient-list.styles'
 import { AppUserRoute } from '../../../models/enums/routes.enum'
 import { useNavigate } from 'react-router-dom'
@@ -214,7 +214,11 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       {
         type: 'number',
         field: PatientListColumns.GlucoseManagementIndicator,
-        headerName: t('glucose-management-indicator'),
+        headerName:'',
+        renderHeader: () => <CustomHeaderWithTooltip
+          tooltipText={t('glucose-management-indicator')}
+          headerTitle={'GMI'}
+        />,
         headerAlign: 'left',
         align: 'left',
         width: 120,
@@ -233,6 +237,10 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         type: 'number',
         field: PatientListColumns.Hypoglycemia,
         headerName: t('hypoglycemia'),
+        renderHeader: () => <CustomHeaderWithTooltip
+          tooltipText={t('hypoglycemia')}
+          headerTitle={t('hypoglycemia')}
+        />,
         headerAlign: 'left',
         align: 'left',
         width: 120,
@@ -272,7 +280,11 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         type: 'string',
         field: PatientListColumns.LastDataUpdate,
         width: 180,
-        headerName: t('last-data-update'),
+        headerName: '',
+        renderHeader: () => <CustomHeaderWithTooltip
+          tooltipText={t('last-data-update')}
+          headerTitle={t('last-data-update')}
+        />,
         sortComparator: sortByLastDataUpdate,
         renderCell: (params: GridRenderCellParams<GridRowModel, string>) => {
           const value = params.value
