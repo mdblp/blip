@@ -101,7 +101,7 @@ const Tooltip: FunctionComponent<TooltipProps> = (
 
   const elementRef = useRef<HTMLDivElement>(null)
   const tailElementRef = useRef<HTMLDivElement>(null)
-  const [offsets, setOffset] = useState<Offset | null>(null)
+  const [offset, setOffset] = useState<Offset | null>(null)
 
   useEffect(() => {
     const { top, left } = calculateOffset(elementRef.current, tailElementRef.current)
@@ -121,12 +121,12 @@ const Tooltip: FunctionComponent<TooltipProps> = (
       className={styles.tooltip}
       data-testid="tooltip"
       style={{
-        top: offsets?.top ?? 0,
-        left: offsets?.left ?? 0,
+        top: offset?.top ?? 0,
+        left: offset?.left ?? 0,
         backgroundColor,
         borderColor,
         borderWidth: `${borderWidth}px`,
-        visibility: offsets ? 'visible' : 'hidden'
+        visibility: offset ? 'visible' : 'hidden'
       }}
       ref={elementRef}
     >

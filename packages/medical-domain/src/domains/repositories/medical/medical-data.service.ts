@@ -303,9 +303,8 @@ class MedicalDataService {
           case DatumType.DeviceEvent:
             switch (deviceEventDatum.subType as string) {
               case DeviceEventSubtype.Alarm:
-                const alarmEvent = deviceEventDatum as AlarmEvent
-                if (alarmEvent.alarmEventType !== AlarmEventType.Unknown) {
-                  this.medicalData.alarmEvents.push(alarmEvent)
+                if ((deviceEventDatum as AlarmEvent).alarmEventType !== AlarmEventType.Unknown) {
+                  this.medicalData.alarmEvents.push(deviceEventDatum as AlarmEvent)
                 }
                 break
               case DeviceEventSubtype.Confidential:
