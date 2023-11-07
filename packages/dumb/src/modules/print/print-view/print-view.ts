@@ -34,7 +34,7 @@ import PdfTableFitColumn from 'voilab-pdf-table/plugins/fitcolumn'
 import { formatBirthdate, formatCurrentDate, formatDateRange } from '../../../utils/datetime/datetime.util'
 
 import { DPI, FOOTER_FONT_SIZE, HEIGHT, MARGIN, MARGINS } from '../../../models/constants/pdf.constants'
-import { type BgBounds, type TimePrefs, type BgUnit } from 'medical-domain'
+import { type BgBounds, type BgUnit, type TimePrefs } from 'medical-domain'
 import { type BgPrefs } from '../../../models/blood-glucose.model'
 import { getFonts, getTextData } from './print-view.util'
 import { getPatientFullName } from '../../../utils/patient/patient.util'
@@ -257,20 +257,40 @@ export class PrintView<T> {
     this.doc.moveDown(moveDown)
   }
 
+  getCustomTextCellStyleParameters(isHeader: boolean | undefined, column: TableColumn, cellStripe: CellStripe, padding: Padding, pos: Position): {
+    align: string,
+    xPos: number,
+    width: number,
+    height: number,
+    font: string,
+    fontSize: number
+  } {
+    const stripeOffset = cellStripe.background ? 0 : cellStripe.width
+    const paddingLeft = padding.left ?? 0
+    const paddingRight = padding.right ?? 0
+
+    return {
+      align: (isHeader ? column.headerAlign : column.align) ?? ALIGN_LEFT,
+      xPos: pos.x + paddingLeft + stripeOffset,
+      width: column.width - paddingLeft - paddingRight,
+      height: isHeader ? column.headerHeight : column.height,
+      font: isHeader ? column.headerFont : column.font,
+      fontSize: column.fontSize ?? this.defaultFontSize
+    }
+  }
+
   renderCustomTextCell(tb: VoilabPdfTable<Table>, row: Row, draw: boolean, column: TableColumn, pos: Position, padding: Padding, isHeader: boolean | undefined): string {
     if (draw) {
       const { text, subText, note } = getTextData(row, column, isHeader)
       const cellStripe = this.#renderCellStripe(row, column, pos, isHeader)
-
-      const align = (isHeader ? column.headerAlign : column.align) ?? ALIGN_LEFT
-      const stripeOffset = cellStripe.background ? 0 : cellStripe.width
-      const paddingLeft = padding.left ?? 0
-      const paddingRight = padding.right ?? 0
-      const xPos = pos.x + paddingLeft + stripeOffset
-      const width = column.width - paddingLeft - paddingRight
-      const height = isHeader ? column.headerHeight : column.height
-      const font = isHeader ? column.headerFont : column.font
-      const fontSize = column.fontSize ?? this.defaultFontSize
+      const {
+        align,
+        xPos,
+        width,
+        height,
+        font,
+        fontSize
+      } = this.getCustomTextCellStyleParameters(isHeader, column, cellStripe, padding, pos)
 
       this.doc
         .font(font)
