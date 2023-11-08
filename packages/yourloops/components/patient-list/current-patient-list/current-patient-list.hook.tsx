@@ -193,11 +193,8 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       {
         type: 'number',
         field: PatientListColumns.TimeInRange,
-        headerName: t('time-in-range'),
-        renderHeader: () => <CustomHeaderWithTooltip
-          tooltipText={t('Time In Range')}
-          headerTitle={t('time-in-range')}
-        />,
+        headerName: t('column-header-time-in-range'),
+        description: t('time-in-range'),
         headerAlign: 'left',
         align: 'left',
         valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value),
@@ -214,11 +211,8 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       {
         type: 'number',
         field: PatientListColumns.GlucoseManagementIndicator,
-        headerName:'',
-        renderHeader: () => <CustomHeaderWithTooltip
-          tooltipText={t('glucose-management-indicator')}
-          headerTitle={'GMI'}
-        />,
+        headerName:t('column-header-glucose-management'),
+        description: t('glucose-management-indicator'),
         headerAlign: 'left',
         align: 'left',
         width: 120,
@@ -237,10 +231,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         type: 'number',
         field: PatientListColumns.Hypoglycemia,
         headerName: t('hypoglycemia'),
-        renderHeader: () => <CustomHeaderWithTooltip
-          tooltipText={t('hypoglycemia')}
-          headerTitle={t('hypoglycemia')}
-        />,
+        description: t('below-range-tooltip'),
         headerAlign: 'left',
         align: 'left',
         width: 120,
@@ -259,10 +250,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         type: 'number',
         field: PatientListColumns.Variance,
         headerName: t('variance'),
-        renderHeader: () => <CustomHeaderWithTooltip
-          tooltipText={t('coefficient-of-variation')}
-          headerTitle={t('variance')}
-        />,
+        description: t('coefficient-of-variation'),
         headerAlign: 'left',
         align: 'left',
         valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value),
@@ -280,11 +268,8 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         type: 'string',
         field: PatientListColumns.LastDataUpdate,
         width: 180,
-        headerName: '',
-        renderHeader: () => <CustomHeaderWithTooltip
-          tooltipText={t('last-data-update')}
-          headerTitle={t('last-data-update')}
-        />,
+        headerName: t('last-data-update'),
+        description: t('last-data-update'),
         sortComparator: sortByLastDataUpdate,
         renderCell: (params: GridRenderCellParams<GridRowModel, string>) => {
           const value = params.value
