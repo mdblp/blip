@@ -41,7 +41,6 @@ import { useTranslation } from 'react-i18next'
 import { useTeam } from '../../lib/team'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import Box from '@mui/material/Box'
 import Select, { type SelectChangeEvent } from '@mui/material/Select'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -60,6 +59,7 @@ import Button from '@mui/material/Button'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import TextField from '@mui/material/TextField'
+import { useParams } from 'react-router-dom'
 
 const CHAT_CONTENT_MIN_HEIGHT = '280px'
 const CHAT_CONTENT_MAX_HEIGHT = '450px'
@@ -134,7 +134,7 @@ function ChatWidget(props: Readonly<ChatWidgetProps>): JSX.Element {
   const { getMedicalTeams } = useTeam()
   const theme = useTheme()
   const patientsHook = usePatientsContext()
-  const { selectedTeam } = useSelectedTeamContext()
+  const { teamId: selectedTeamId } = useParams()
   const { user } = useAuth()
   const [showPicker, setShowPicker] = useState(false)
   const [privateMessage, setPrivateMessage] = useState(false)
@@ -150,7 +150,7 @@ function ChatWidget(props: Readonly<ChatWidgetProps>): JSX.Element {
   const isUserHcp = user.isUserHcp()
   const isUserPatient = user.isUserPatient()
   const teams = getMedicalTeams()
-  const teamId = isUserHcp ? selectedTeam.id : teams[0].id
+  const teamId = isUserHcp ? selectedTeamId : teams[0].id
   const [dropdownTeamId, setDropdownTeamId] = useState(teamId)
   const userId = user.id
 

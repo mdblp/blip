@@ -296,7 +296,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
   }, [classes.mandatoryCellBorder, onClickRemovePatient, t])
 
   const onRowClick = (params: GridRowParams): void => {
-    navigate(`${AppUserRoute.Patient}/${params.id}/dashboard`)
+    navigate(`${params.id}/dashboard`)
   }
 
   return { allRows, allColumns, onRowClick }

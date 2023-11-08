@@ -36,8 +36,9 @@ import {
 } from './monitoring-alert-content-configuration.util'
 import { type Thresholds } from '../../lib/patient/models/monitoring-alerts.model'
 import { type BgUnit, Unit } from 'medical-domain'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { type MonitoringAlertsParameters } from '../../lib/team/models/monitoring-alerts-parameters.model'
+import { useParams } from 'react-router-dom'
+import { useTeam } from '../../lib/team'
 
 export interface MonitoringAlertsContentConfigurationHookProps {
   monitoringAlertsParameters: MonitoringAlertsParameters
@@ -88,7 +89,9 @@ export const useMonitoringAlertsContentConfiguration = ({
   onSave,
   patient
 }: MonitoringAlertsContentConfigurationHookProps): MonitoringAlertsContentConfigurationHookReturn => {
-  const { selectedTeam } = useSelectedTeamContext()
+  const { teamId } = useParams()
+  const { getTeam } = useTeam()
+  const selectedTeam = getTeam(teamId)
 
   const monitoringBgUnit = monitoringAlertsParameters?.bgUnit ?? DEFAULT_BG_UNIT
 

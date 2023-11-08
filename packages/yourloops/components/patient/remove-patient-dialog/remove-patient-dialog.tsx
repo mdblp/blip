@@ -34,11 +34,12 @@ import DialogTitle from '@mui/material/DialogTitle'
 import useRemovePatientDialog from './remove-patient-dialog.hook'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { LoadingButton } from '@mui/lab'
-import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import DialogContentText from '@mui/material/DialogContentText'
 import TeamUtils from '../../../lib/team/team.util'
+import { useParams } from 'react-router-dom'
+import { useTeam } from '../../../lib/team'
 
 interface RemovePatientDialogProps {
   patient: Patient | null
@@ -47,7 +48,9 @@ interface RemovePatientDialogProps {
 
 const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onClose, patient }) => {
   const { t } = useTranslation('yourloops')
-  const { selectedTeam } = useSelectedTeamContext()
+  const { teamId } = useParams()
+  const { getTeam } = useTeam()
+  const selectedTeam = getTeam(teamId)
   const {
     processing,
     handleOnClickRemove,
@@ -89,11 +92,11 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
           {isSelectedTeamPrivate ? t('modal-remove-patient-from-private-practice-info') : t('modal-remove-patient-from-team-info')}
         </DialogContentText>
 
-          <Box mt={2}>
-            <Alert severity="info">
-              {t('modal-remove-patient-alert-info')}
-            </Alert>
-          </Box>
+        <Box mt={2}>
+          <Alert severity="info">
+            {t('modal-remove-patient-alert-info')}
+          </Alert>
+        </Box>
       </DialogContent>
 
       <DialogActions>

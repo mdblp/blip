@@ -35,18 +35,18 @@ import { MedicalTeamPatientList } from './current-patient-list/medical-team-pati
 import { PendingPatientList } from './pending-patient-list/pending-patient-list'
 import { setPageTitle } from '../../lib/utils'
 import { useTranslation } from 'react-i18next'
-import { useAuth } from '../../lib/auth'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
-import TeamUtils from '../../lib/team/team.util'
 import {
   PrivateTeamOrCaregiverPatientList
 } from './current-patient-list/private-team-or-caregiver-patient-list/private-team-or-caregiver-patient-list'
+import { useParams } from 'react-router-dom'
+import { PRIVATE_TEAM_ID } from '../../lib/team/team.hook'
 
 export const PatientListPage: FunctionComponent = () => {
   const theme = useTheme()
   const { t } = useTranslation('yourloops')
-  const { user } = useAuth()
-  const { selectedTeam } = useSelectedTeamContext()
+  const paramHook = useParams()
+  const { teamId } = paramHook as { teamId: string }
+
   const {
     selectedTab,
     inputSearch,
@@ -55,7 +55,7 @@ export const PatientListPage: FunctionComponent = () => {
     setInputSearch
   } = usePatientListHook()
 
-  const isCaregiverUserOrPrivateTeam = user.isUserCaregiver() || TeamUtils.isPrivate(selectedTeam)
+  const isCaregiverUserOrPrivateTeam = teamId === PRIVATE_TEAM_ID
 
   setPageTitle(t('header-tab-patients'))
 

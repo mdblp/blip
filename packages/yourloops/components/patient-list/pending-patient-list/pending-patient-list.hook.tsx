@@ -36,8 +36,9 @@ import { getUserName } from '../../../lib/auth/user.util'
 import Button from '@mui/material/Button'
 import CloseIcon from '@mui/icons-material/Close'
 import MailIcon from '@mui/icons-material/Mail'
-import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
 import { formatDate } from 'dumb'
+import { useParams } from 'react-router-dom'
+import { useTeam } from '../../../lib/team'
 
 interface PendingPatientListHookProps {
   patients: Patient[]
@@ -61,7 +62,9 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
   const { patients } = props
   const { t } = useTranslation()
   const { getPatientById } = usePatientsContext()
-  const { selectedTeam } = useSelectedTeamContext()
+  const { teamId } = useParams()
+  const { getTeam } = useTeam()
+  const selectedTeam = getTeam(teamId)
 
   const [patientToCancelInvite, setPatientToCancelInvite] = useState<Patient | null>(null)
   const [patientToReinvite, setPatientToReinvite] = useState<Patient | null>(null)

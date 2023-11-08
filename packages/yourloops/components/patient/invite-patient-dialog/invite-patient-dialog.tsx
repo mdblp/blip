@@ -43,12 +43,12 @@ import { REGEX_EMAIL } from '../../../lib/utils'
 import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
 import { usePatientsContext } from '../../../lib/patient/patients.provider'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
-import { type Team } from '../../../lib/team'
+import { type Team, useTeam } from '../../../lib/team'
 import metrics from '../../../lib/metrics'
 import { useAlert } from '../../utils/snackbar'
 import { PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE } from '../../../lib/patient/patient.api'
 import { LoadingButton } from '@mui/lab'
-import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
+import { useParams } from 'react-router-dom'
 
 export interface AddDialogProps {
   onClose: () => void
@@ -62,7 +62,9 @@ export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose
   const [email, setEmail] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [inProgress, setInProgress] = useState<boolean>(false)
-  const { selectedTeam } = useSelectedTeamContext()
+  const { teamId } = useParams()
+  const { getTeam } = useTeam()
+  const selectedTeam = getTeam(teamId)
 
   const isValidEmail = (mail = email): boolean => mail.length > 0 && REGEX_EMAIL.test(mail)
 

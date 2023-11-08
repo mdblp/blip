@@ -52,9 +52,9 @@ import Tooltip from '@mui/material/Tooltip'
 import { usePatientListContext } from '../../lib/providers/patient-list.provider'
 import { PatientFiltersPopover } from './patient-filters-popover'
 import { PatientListHeaderFiltersLabel } from './patient-list-header-filters-label'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
-import TeamUtils from '../../lib/team/team.util'
 import { ColumnSelectorPopover } from './column-selector-popover'
+import { useParams } from 'react-router-dom'
+import { PRIVATE_TEAM_ID } from '../../lib/team/team.hook'
 
 interface PatientListHeaderProps {
   selectedTab: PatientListTabs
@@ -99,8 +99,8 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const [isColumnSelectorOpened, setIsColumnSelectorOpened] = useState<boolean>(false)
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
   const [teamCodeDialogSelectedTeam, setTeamCodeDialogSelectedTeam] = useState<Team | null>(null)
-  const { selectedTeam } = useSelectedTeamContext()
-  const isSelectedTeamPrivate = user.isUserHcp() ? TeamUtils.isPrivate(selectedTeam) : undefined
+  const { teamId } = useParams()
+  const isSelectedTeamPrivate = teamId === PRIVATE_TEAM_ID
 
   const filtersRef = useRef<HTMLButtonElement>(null)
   const columnsRef = useRef<HTMLButtonElement>(null)

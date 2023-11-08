@@ -32,7 +32,7 @@ import { Navigate, Route } from 'react-router-dom'
 import { CaregiverLayout } from './caregiver-layout'
 import { PatientLayout } from './patient-layout'
 import { UserRole } from '../lib/auth/models/enums/user-role.enum'
-import { HcpLayoutWithContext } from './hcp-layout-with-context'
+import { HcpLayoutWithContext } from './hcp-layout'
 
 export const MainLayout: FC = () => {
   const { user } = useAuth()

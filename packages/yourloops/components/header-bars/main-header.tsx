@@ -45,12 +45,12 @@ import { TeamSettingsMenuMemoized as TeamSettingsMenu } from '../menus/team-sett
 import { UserMenuMemoized as UserMenu } from '../menus/user-menu'
 import { TeamScopeMenu } from '../menus/team-scope-menu'
 import { styled, Tab, Tabs } from '@mui/material'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { HcpNavigationTab } from '../../models/enums/hcp-navigation-tab.model'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import TeamUtils from '../../lib/team/team.util'
 import { Banner } from './banner'
 import { ConfigService } from '../../lib/config/config.service'
+import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
+import { PRIVATE_TEAM_ID } from '../../lib/team/team.hook'
 
 interface MainHeaderProps {
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
@@ -96,28 +96,18 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
   const { receivedInvitations } = useNotification()
   const { user } = useAuth()
   const theme = useTheme()
-  const { selectedTeam } = useSelectedTeamContext()
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
 
   const getSelectedTab = (): HcpNavigationTab | false => {
-    if (TeamUtils.isPrivate(selectedTeam) && pathname === AppUserRoute.CareTeamSettings) {
+    if (pathname.includes('patients')) {
       return HcpNavigationTab.Patients
     }
-    switch (pathname) {
-      case AppUserRoute.CareTeamSettings:
-        return HcpNavigationTab.CareTeam
-      case AppUserRoute.Preferences:
-      case AppUserRoute.Notifications:
-        return false
-      default:
-        return HcpNavigationTab.Patients
+    if (pathname.includes('teams')) {
+      return HcpNavigationTab.CareTeam
     }
-  }
-
-  const handleTabClick = (tab: HcpNavigationTab): void => {
-    const route = tab === HcpNavigationTab.CareTeam ? AppUserRoute.CareTeamSettings : AppUserRoute.Home
-    navigate(route)
+    return false
   }
 
   const appBarRefCallback = (appMainHeaderElement: HTMLHeadElement): void => {
@@ -173,17 +163,17 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                   label={t('header-tab-patients')}
                   value={HcpNavigationTab.Patients}
                   onClick={() => {
-                    handleTabClick(HcpNavigationTab.Patients)
+                    navigate(`${AppUserRoute.Teams}/${teamId}/patients`)
                   }}
                 />
-                {!TeamUtils.isPrivate(selectedTeam) &&
+                {teamId !== PRIVATE_TEAM_ID &&
                   <StyledTab
                     data-testid="main-header-hcp-care-team-settings-tab"
                     className={tab}
                     label={t('header-tab-care-team-settings')}
                     value={HcpNavigationTab.CareTeam}
                     onClick={() => {
-                      handleTabClick(HcpNavigationTab.CareTeam)
+                      navigate(`${AppUserRoute.Teams}/${teamId}`)
                     }}
                   />
                 }

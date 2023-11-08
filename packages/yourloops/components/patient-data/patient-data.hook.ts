@@ -38,8 +38,8 @@ import { type MutableRefObject, useEffect, useMemo, useRef, useState } from 'rea
 import { type DateRange, isValidDateQueryParam, PatientDataUtils } from './patient-data.utils'
 import DataUtil from 'tidepool-viz/src/utils/data'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
-import { usePatientContext } from '../../lib/patient/patient.provider'
 import { AppUserRoute } from '../../models/enums/routes.enum'
+import PatientUtils from '../../lib/patient/patient.util'
 
 export interface usePatientDataResult {
   bgPrefs: BgPrefs
@@ -69,18 +69,15 @@ const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
 export const usePatientData = (): usePatientDataResult => {
   const navigate = useNavigate()
-  const paramHook = useParams()
-  const { patientId } = paramHook
+  const { patientId } = useParams()
   const { user } = useAuth()
   const { pathname } = useLocation()
   const { getPatientById } = usePatientsContext()
-  const patientHook = usePatientContext()
+  const isUserPatient = user.isUserPatient()
   const [searchParams, setSearchParams] = useSearchParams()
   const dailyChartRef = useRef(null)
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
-  const isUserPatient = user.isUserPatient()
-  const urlPrefix = isUserPatient ? '' : `/patient/${patientId}`
-  const patient = isUserPatient ? patientHook.patient : getPatientById(patientId)
+  const patient = isUserPatient ? PatientUtils.mapUserToPatient(user) : getPatientById(patientId)
   const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const bgClasses = defaultBgClasses[bgUnits]
   const bgPrefs: BgPrefs = {
@@ -127,6 +124,7 @@ export const usePatientData = (): usePatientDataResult => {
   }))
 
   const currentPatientView = useMemo<PatientView>(() => {
+    const urlPrefix = pathname.substring(0, pathname.lastIndexOf('/'))
     const routeWithoutUrlPrefix = pathname.replace(urlPrefix, '')
 
     switch (routeWithoutUrlPrefix) {
@@ -141,7 +139,7 @@ export const usePatientData = (): usePatientDataResult => {
       case AppUserRoute.TargetAndAlerts:
         return PatientView.TargetAndAlerts
     }
-  }, [pathname, urlPrefix])
+  }, [pathname])
 
   const getRouteByPatientView = (view: PatientView): AppUserRoute => {
     switch (view) {
@@ -185,7 +183,7 @@ export const usePatientData = (): usePatientDataResult => {
     setMsRange(newMsRange)
 
     const route = getRouteByPatientView(patientView)
-    navigate(`${urlPrefix}${route}`)
+    navigate(`..${route}`, { relative: "path" });
   }
 
   const updateChartPrefs = (chartPrefs: ChartPrefs): void => {
@@ -194,7 +192,7 @@ export const usePatientData = (): usePatientDataResult => {
 
   const goToDailySpecificDate = (date: number | Date): void => {
     setDailyDate(date instanceof Date ? date.valueOf() : date)
-    navigate(`${urlPrefix}/${PatientView.Daily}?date=${new Date(date).toISOString()}`)
+    navigate(`../${PatientView.Daily}?date=${new Date(date).toISOString()}`, { relative: 'path' })
   }
 
   const handleDatetimeLocationChange = async (epochLocation: number, msRange: number): Promise<boolean> => {

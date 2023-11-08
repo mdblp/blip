@@ -108,6 +108,14 @@ function TeamContextImpl(): TeamContext {
     return teams.filter((team: Team) => team.type === type)
   }
 
+  const getDefaultTeamId = (): string => {
+    const medicalTeams = getMedicalTeams()
+    if (medicalTeams.length) {
+      return TeamUtils.sortTeamsByName(medicalTeams)[0].id
+    }
+    return getPrivateTeam().id
+  }
+
   const inviteMember = async (team: Team, username: string, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
     const result = await TeamApi.inviteMember(user.id, team.id, username, role)
     setTeams(result.teams)
@@ -210,6 +218,7 @@ function TeamContextImpl(): TeamContext {
     getTeam,
     getMedicalTeams,
     getPrivateTeam,
+    getDefaultTeamId,
     inviteMember,
     createTeam,
     updateTeam,

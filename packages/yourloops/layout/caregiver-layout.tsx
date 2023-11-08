@@ -46,11 +46,11 @@ export const CaregiverLayout: FunctionComponent = () => {
             <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
             <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
             <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
-            <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientData />} />
-            <Route path={AppUserRoute.Home} element={<PatientListPage />} />
+            <Route path="teams/private/patients" element={<PatientListPage />} />
+            <Route path={`teams/private/patients/:patientId/*`} element={<PatientData />} />
             <Route
               path="/"
-              element={<Navigate to={AppUserRoute.Home} replace />}
+              element={<Navigate to="teams/private/patients" replace />}
             />
             <Route
               path="*"

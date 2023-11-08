@@ -37,7 +37,9 @@ import { useAuth } from '../../lib/auth'
 import LeaveTeamDialog from '../dialogs/leave-team-dialog'
 import TeamUtils from '../../lib/team/team.util'
 import { useTheme } from '@mui/material/styles'
-import { usePatientContext } from '../../lib/patient/patient.provider'
+import PatientApi from '../../lib/patient/patient.api'
+import metrics from '../../lib/metrics'
+import { AppUserRoute } from '../../models/enums/routes.enum'
 
 export interface LeaveTeamButtonProps {
   team: Team
@@ -45,8 +47,7 @@ export interface LeaveTeamButtonProps {
 
 function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
   const { team } = props
-  const teamHook = useTeam()
-  const patientHook = usePatientContext()
+  const { leaveTeam: leaveTeamAsHcp, refresh: refreshTeams, getDefaultTeamId } = useTeam()
   const alert = useAlert()
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -54,19 +55,27 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false)
 
+  const leaveTeamAsPatient = async (): Promise<void> => {
+    await PatientApi.removePatient(team.id, user.id)
+    metrics.send('team_management', 'leave_team')
+    refreshTeams()
+  }
+
   const onTeamLeft = async (hasLeft: boolean): Promise<void> => {
     if (hasLeft) {
       try {
         if (user.isUserPatient()) {
-          await patientHook.leaveTeam(team.id)
+          await leaveTeamAsPatient()
+          navigate(AppUserRoute.Dashboard)
         } else {
-          await teamHook.leaveTeam(team)
+          await leaveTeamAsHcp(team)
+          const message = TeamUtils.teamHasOnlyOneMember(team)
+            ? t('team-page-success-deleted')
+            : t('team-page-leave-success')
+          alert.success(message)
+          const defaultTeamId = getDefaultTeamId()
+          navigate(`/teams/${defaultTeamId}/patients`)
         }
-        const message = TeamUtils.teamHasOnlyOneMember(team) && !user.isUserPatient()
-          ? t('team-page-success-deleted')
-          : t('team-page-leave-success')
-        alert.success(message)
-        navigate('/')
       } catch (reason: unknown) {
         const message = TeamUtils.teamHasOnlyOneMember(team) && !user.isUserPatient()
           ? t('team-page-failure-deleted')
