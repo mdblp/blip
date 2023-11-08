@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, waitFor, within } from '@testing-library/react'
+import { logDOM, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { loggedInUserId } from '../mock/auth0.hook.mock'
 import { filtersTeamName, myThirdTeamId, myThirdTeamName } from '../mock/team.api.mock'
@@ -807,7 +807,8 @@ const checkTooltipsColumnHeader = async (dataGridRows) => {
 
   await userEvent.hover(LastDataUpdateColumnHeader)
   const lastDataUpdate = await screen.findAllByText(tooltipTextLastDataUpdate)
-  expect(lastDataUpdate[1]).toBeVisible()
+  expect(lastDataUpdate[0]).toBeVisible()
+  logDOM(lastDataUpdate[0])
   await userEvent.unhover(LastDataUpdateColumnHeader)
 
 
