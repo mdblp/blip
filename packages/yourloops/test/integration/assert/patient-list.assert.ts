@@ -238,7 +238,7 @@ export const checkPatientColumnsFiltersContent = async () => {
   await userEvent.click(columnSettingsButton)
 
   const columnSettingsPopover = screen.getByRole('presentation')
-  expect(columnSettingsPopover).toHaveTextContent('Show columnPatientAgeDate of birthGenderSystemMonitoring alertsMessagesTIRGMI (estimated HbA1c)Below rangeCVLast data updateCancelApply')
+  expect(columnSettingsPopover).toHaveTextContent('Show columnPatientAgeDate of birthGenderSystemMonitoring alertsMessagesTime in rangeGMI (estimated HbA1c)Below rangeCVLast data updateCancelApply')
 
   const disabledToggle = screen.getByLabelText('This column cannot be removed')
   await userEvent.hover(disabledToggle)
@@ -284,7 +284,7 @@ export const checkPatientListHideShowColumns = async () => {
   const monitoringAlertsToggleForHide = within(within(columnSettingsPopoverForHide).getByLabelText('Monitoring alerts')).getByRole('checkbox')
   const systemToggleForHide = within(within(columnSettingsPopoverForHide).getByLabelText('System')).getByRole('checkbox')
   const messagesToggleForHide = within(within(columnSettingsPopoverForHide).getByLabelText('Messages')).getByRole('checkbox')
-  const tirToggleForHide = within(within(columnSettingsPopoverForHide).getByLabelText('TIR')).getByRole('checkbox')
+  const tirToggleForHide = within(within(columnSettingsPopoverForHide).getByLabelText('Time in range')).getByRole('checkbox')
   const hypoglycemiaToggleForHide = within(within(columnSettingsPopoverForHide).getByLabelText('Below range')).getByRole('checkbox')
   const lastUpdateToggleForHide = within(within(columnSettingsPopoverForHide).getByLabelText('Last data update')).getByRole('checkbox')
 
@@ -349,7 +349,7 @@ export const checkPatientListHideShowColumns = async () => {
   const monitoringAlertsToggleForShow = within(within(columnSettingsPopoverForShow).getByLabelText('Monitoring alerts')).getByRole('checkbox')
   const systemToggleForShow = within(within(columnSettingsPopoverForShow).getByLabelText('System')).getByRole('checkbox')
   const messagesToggleForShow = within(within(columnSettingsPopoverForShow).getByLabelText('Messages')).getByRole('checkbox')
-  const tirToggleForShow = within(within(columnSettingsPopoverForShow).getByLabelText('TIR')).getByRole('checkbox')
+  const tirToggleForShow = within(within(columnSettingsPopoverForShow).getByLabelText('Time in range')).getByRole('checkbox')
   const gmiToggleForShow = within(within(columnSettingsPopoverForShow).getByLabelText('GMI (estimated HbA1c)')).getByRole('checkbox')
   const hypoglycemiaToggleForShow = within(within(columnSettingsPopoverForShow).getByLabelText('Below range')).getByRole('checkbox')
   const varianceToggleForShow = within(within(columnSettingsPopoverForShow).getByLabelText('CV')).getByRole('checkbox')
@@ -407,13 +407,15 @@ export const checkPatientListHideShowColumns = async () => {
   expect(screen.getByRole('columnheader', { name: 'System' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Messages' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'Time In Range' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'GMI (estimated HbA1c)' })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'TIR' })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'GMI' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Below range' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'Coefficient of Variation' })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'CV' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
 
-  expect(dataGridCurrentRows).toHaveTextContent('PatientAgeDate of birthGenderSystemMonitoring alertsMessagesTIRGMI (estimated HbA1c)Below rangeCVLast data updateActionsFlag patient patient1@diabeloop.frPatient1 Groby43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient2@diabeloop.frPatient2 Rouis43Jan 1, 1980FemaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient3@diabeloop.frPatient3 Srairi43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient-mmol@diabeloop.frPatientMmol Perotto43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/A')
+  await checkTooltipsColumnHeader(dataGridCurrentRows)
+
+  expect(dataGridCurrentRows).toHaveTextContent('PatientAgeDate of birthGenderSystemMonitoring alertsMessagesTIRGMIBelow rangeCVLast data updateActionsFlag patient patient1@diabeloop.frPatient1 Groby43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient2@diabeloop.frPatient2 Rouis43Jan 1, 1980FemaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient3@diabeloop.frPatient3 Srairi43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient-mmol@diabeloop.frPatientMmol Perotto43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/A')
 
   await userEvent.click(columnSettingsButton)
   const columnSettingsPopoverForReset = screen.getByRole('presentation')
@@ -428,7 +430,7 @@ export const checkPatientListHideShowColumns = async () => {
   const monitoringAlertsToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('Monitoring alerts')).getByRole('checkbox')
   const systemToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('System')).getByRole('checkbox')
   const messagesToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('Messages')).getByRole('checkbox')
-  const tirToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('TIR')).getByRole('checkbox')
+  const tirToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('Time in range')).getByRole('checkbox')
   const gmiToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('GMI (estimated HbA1c)')).getByRole('checkbox')
   const hypoglycemiaToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('Below range')).getByRole('checkbox')
   const varianceToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('CV')).getByRole('checkbox')
@@ -755,10 +757,58 @@ const checkDefaultColumnsDisplay = () => {
   expect(screen.getByRole('columnheader', { name: 'Monitoring alerts' })).toBeVisible()
   expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
   expect(screen.getByRole('columnheader', { name: 'Messages' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'Time In Range' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'GMI (estimated HbA1c of last 14 days)' })).not.toBeInTheDocument()
+  expect(screen.getByRole('columnheader', { name: 'TIR' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'GMI' })).not.toBeInTheDocument()
   expect(screen.getByRole('columnheader', { name: 'Below range' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'Coefficient of Variation' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'CV' })).not.toBeInTheDocument()
   expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
+}
+const checkTooltipsColumnHeader = async (dataGridRows) => {
+  const tooltipTextMonitoringAlerts = 'Hover over the icons to learn more'
+  const tooltipTextMessages = 'Messages'
+  const tooltipTextBelowRange = 'Below Range'
+  const tooltipTextManagementGlucose = 'GMI (estimated HbA1c)'
+  const tooltipTextTimeInRange = 'Time in range'
+  const tooltipTextVariant = 'Coefficient of Variation'
+  const tooltipTextLastDataUpdate = 'Last data update'
+
+  const monitoringAlertsColumnHeader = within(dataGridRows).getByText('Monitoring alerts')
+  const messagesColumnHeader = within(dataGridRows).getByText('Messages')
+  const TimeInRangeColumnHeader = within(dataGridRows).getByText('TIR')
+  const managementGlucoseColumnHeader = within(dataGridRows).getByText('GMI')
+  const belowRangeColumnHeader = within(dataGridRows).getByText('Below range')
+  const variantColumnHeader = within(dataGridRows).getByText('CV')
+  const LastDataUpdateColumnHeader = within(dataGridRows).getByText('Last data update')
+
+  await userEvent.hover(monitoringAlertsColumnHeader)
+  expect(await screen.findByText(tooltipTextMonitoringAlerts)).toBeVisible()
+  await userEvent.unhover(monitoringAlertsColumnHeader)
+
+  await userEvent.hover(messagesColumnHeader)
+  expect(await screen.findByText(tooltipTextMessages)).toBeVisible()
+  await userEvent.unhover(messagesColumnHeader)
+
+  await userEvent.hover(TimeInRangeColumnHeader)
+  expect(await screen.findByText(tooltipTextTimeInRange)).toBeVisible()
+  await userEvent.unhover(TimeInRangeColumnHeader)
+
+  await userEvent.hover(managementGlucoseColumnHeader)
+  expect(await screen.findByText(tooltipTextManagementGlucose)).toBeVisible()
+  await userEvent.unhover(managementGlucoseColumnHeader)
+
+  await userEvent.hover(belowRangeColumnHeader)
+  expect(await screen.findByText(tooltipTextBelowRange)).toBeVisible()
+  await userEvent.unhover(belowRangeColumnHeader)
+
+  await userEvent.hover(variantColumnHeader)
+  expect(await screen.findByText(tooltipTextVariant)).toBeVisible()
+  await userEvent.unhover(variantColumnHeader)
+
+  await userEvent.hover(LastDataUpdateColumnHeader)
+  const lastDataUpdate = await screen.findAllByText(tooltipTextLastDataUpdate)
+  expect(lastDataUpdate[1]).toBeVisible()
+  await userEvent.unhover(LastDataUpdateColumnHeader)
+
+
 }
