@@ -268,7 +268,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         field: PatientListColumns.LastDataUpdate,
         width: 180,
         headerName: t('last-data-update'),
-        description: t('last-data-update'),
+        description: t('last-data-update-tooltip'),
         sortComparator: sortByLastDataUpdate,
         renderCell: (params: GridRenderCellParams<GridRowModel, string>) => {
           const value = params.value

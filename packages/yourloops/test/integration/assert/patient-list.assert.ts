@@ -771,7 +771,7 @@ const checkTooltipsColumnHeader = async (dataGridRows) => {
   const tooltipTextManagementGlucose = 'GMI (estimated HbA1c)'
   const tooltipTextTimeInRange = 'Time in range'
   const tooltipTextVariant = 'Coefficient of Variation'
-  const tooltipTextLastDataUpdate = 'Last data update'
+  const tooltipTextLastDataUpdate = 'Last data Update'
 
   const monitoringAlertsColumnHeader = within(dataGridRows).getByText('Monitoring alerts')
   const messagesColumnHeader = within(dataGridRows).getByText('Messages')
@@ -806,9 +806,7 @@ const checkTooltipsColumnHeader = async (dataGridRows) => {
   await userEvent.unhover(variantColumnHeader)
 
   await userEvent.hover(LastDataUpdateColumnHeader)
-  const lastDataUpdate = await screen.findAllByText(tooltipTextLastDataUpdate)
-  expect(lastDataUpdate[0]).toBeVisible()
-  logDOM(lastDataUpdate[0])
+  expect(await screen.findByText(tooltipTextLastDataUpdate)).toBeVisible()
   await userEvent.unhover(LastDataUpdateColumnHeader)
 
 
