@@ -54,13 +54,12 @@ import {
 } from '../custom-cells'
 import { getUserName } from '../../../lib/auth/user.util'
 import Box from '@mui/material/Box'
-import { formatBirthdate, StatTooltip } from 'dumb'
+import { formatBirthdate } from 'dumb'
 import { usePatientListStyles } from '../patient-list.styles'
 import { AppUserRoute } from '../../../models/enums/routes.enum'
 import { useNavigate } from 'react-router-dom'
 import { Skeleton } from '@mui/material'
 import { useAuth } from '../../../lib/auth'
-import { CustomHeaderWithTooltip } from '../custom-header-with-tooltip'
 
 interface CurrentPatientListProps {
   patients: Patient[]
