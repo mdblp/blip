@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { logDOM, screen, waitFor, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { loggedInUserId } from '../mock/auth0.hook.mock'
 import { filtersTeamName, myThirdTeamId, myThirdTeamName } from '../mock/team.api.mock'
