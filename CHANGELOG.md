@@ -32,6 +32,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Engineering use
 - YLP-2573 Create a dedicated message for the caregiver when the account creation is complete
+- YLP-2574 Create tool tips independently of the name of the columns
 - YLP-2594 Handle release branches in GitHub CI workflow
 - YLP-2595 Update deprecated GitHub Actions to Node 16
 - YLP-2596 Add visual regression tests
