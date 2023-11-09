@@ -53,7 +53,7 @@ export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
               className="bold"
               sx={{ textTransform: 'uppercase' }}
             >
-              {pump.manufacturer}</Typography>
+              {pump.manufacturer ? pump.manufacturer : t( 'N/A')}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
@@ -61,7 +61,7 @@ export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Serial Number')}</Typography>
-            <Typography variant="body2" className="bold">{pump.serialNumber}</Typography>
+            <Typography variant="body2" className="bold">{pump.serialNumber ? pump.serialNumber : t( 'N/A')}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
@@ -69,7 +69,7 @@ export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Pump version')}</Typography>
-            <Typography variant="body2" className="bold">{pump.swVersion}</Typography>
+            <Typography variant="body2" className="bold">{pump.swVersion ? pump.swVersion : t( 'N/A')}</Typography>
           </Box>
         </ListItemText>
       </ListItem>

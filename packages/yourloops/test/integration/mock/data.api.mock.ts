@@ -299,7 +299,6 @@ const physActivityMock = (date, time, duration) => {
     epochEnd: epochEnd,
     guid: 'pa_18',
     reportedIntensity: 'medium',
-    eventId: PHYSICAL_ACTIVITY_ID,
     inputTime: `${date}T${time}.000Z`
   }
 }
@@ -1430,7 +1429,7 @@ export const completeDailyViewData: Data = {
             "timezone": "UTC",
             "name": "MEAL_RATIO_LUNCH_FACTOR",
             "level": "1",
-            "units": "%",
+            "unit": "%",
             "value": "100",
             "previousValue": "110",
             "lastUpdateDate": "2022-08-08T08:00:00Z"
@@ -1483,7 +1482,6 @@ export const completeDailyViewData: Data = {
         "epochEnd": 1659965400000,
         "guid": "pa_18",
         "reportedIntensity": "medium",
-        "eventId": "physicalActivityId",
         "inputTime": "2022-08-08T13:00:00.000Z"
       }
     ],
@@ -1714,7 +1712,7 @@ export const dataSetsWithZeroValues: Data = {
             "timezone": "UTC",
             "name": "MEAL_RATIO_LUNCH_FACTOR",
             "level": "1",
-            "units": "%",
+            "unit": "%",
             "value": "100",
             "previousValue": "110",
             "lastUpdateDate": "2022-08-08T08:00:00Z"
@@ -1742,7 +1740,6 @@ export const dataSetsWithZeroValues: Data = {
         "epochEnd": 1659963600000,
         "guid": "pa_18",
         "reportedIntensity": "medium",
-        "eventId": "physicalActivityId",
         "inputTime": "2022-08-08T13:00:00.000Z"
       }
     ],

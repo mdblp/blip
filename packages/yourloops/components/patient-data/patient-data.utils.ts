@@ -193,7 +193,9 @@ export class PatientDataUtils {
     const results = await Promise.all(promises)
     results.forEach(dataRange => {
       medicalDataKeys.forEach((key) => {
-        aggregatedData[key] = aggregatedData[key].concat(dataRange[key])
+        if (dataRange[key]) {
+          aggregatedData[key] = aggregatedData[key].concat(dataRange[key])
+        }
       })
     })
     return aggregatedData
