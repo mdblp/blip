@@ -39,6 +39,7 @@ import { mockUserApi } from '../../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.hook'
 
 describe('Daily view for caregiver', () => {
   const firstName = 'Caregiver firstName'
@@ -60,7 +61,8 @@ describe('Daily view for caregiver', () => {
 
   it('should render correct layout', async () => {
     mockDataAPI()
-    const dailyRoute = `${AppUserRoute.Patient}/${patient2Id}${AppUserRoute.Daily}`
+
+    const dailyRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient2Id}${AppUserRoute.Daily}`
     const router = renderPage(dailyRoute)
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual(dailyRoute)

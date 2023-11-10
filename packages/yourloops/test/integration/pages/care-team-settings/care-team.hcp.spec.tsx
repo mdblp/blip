@@ -47,6 +47,8 @@ describe('HCP care team settings page', () => {
   const firstName = 'Jacques'
   const lastName = 'Xellerre'
 
+  const thirdTeamDetailsRoute = `${AppUserRoute.Teams}/${myThirdTeamId}`
+
   beforeEach(() => {
     mockAuth0Hook()
     mockNotificationAPI()
@@ -57,17 +59,15 @@ describe('HCP care team settings page', () => {
     mockDataAPI()
   })
 
-  const renderCareTeamSettingsPage = async () => {
-    const router = renderPage(AppUserRoute.CareTeamSettings)
+  const renderCareTeamSettingsPage = async (route: string) => {
+    const router = renderPage(route)
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(AppUserRoute.CareTeamSettings)
+      expect(router.state.location.pathname).toEqual(route)
     })
     return router
   }
 
   it('should render the correct layout', async () => {
-    localStorage.setItem('selectedTeamId', myThirdTeamId)
-
     const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
@@ -80,7 +80,7 @@ describe('HCP care team settings page', () => {
       }
     }
 
-    await renderCareTeamSettingsPage()
+    await renderCareTeamSettingsPage(thirdTeamDetailsRoute)
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
   })
@@ -88,25 +88,22 @@ describe('HCP care team settings page', () => {
   it('should display the selected team information', async () => {
     localStorage.setItem('selectedTeamId', myThirdTeamId)
 
-    await renderCareTeamSettingsPage()
+    await renderCareTeamSettingsPage(thirdTeamDetailsRoute)
 
     await testCareTeamLayout()
   })
 
   it('should be able to update monitoring alerts parameters when user is admin of the team', async () => {
-    localStorage.setItem('selectedTeamId', myThirdTeamId)
-
-    await renderCareTeamSettingsPage()
+    await renderCareTeamSettingsPage(thirdTeamDetailsRoute)
 
     await testMonitoringAlertsParametersTeamAdmin()
   })
 
   it('should not be able to update monitoring alerts parameters when user is not admin of the team', async () => {
-    localStorage.setItem('selectedTeamId', myThirdTeamId)
     mockAuth0Hook(UserRole.Hcp, userTimId)
     mockUserApi().mockUserDataFetch({ firstName: userTimFirstName, lastName: userTimLastName })
 
-    await renderCareTeamSettingsPage()
+    await renderCareTeamSettingsPage(thirdTeamDetailsRoute)
 
     await testMonitoringAlertsParametersTeamMember()
   })

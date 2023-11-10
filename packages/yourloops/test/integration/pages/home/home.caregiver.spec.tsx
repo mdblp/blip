@@ -42,6 +42,7 @@ import PatientApi from '../../../../lib/patient/patient.api'
 import { checkPatientListHeaderCaregiver } from '../../assert/patient-list.assert'
 import { buildPatientAsTeamMember } from '../../data/patient-builder.data'
 import moment from 'moment-timezone'
+import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
@@ -56,12 +57,12 @@ describe('Caregiver home page', () => {
     mockDirectShareApi()
   })
 
-  it('should render the home page with correct components', async () => {
+  it('should render the patient list page with correct components', async () => {
     jest.spyOn(PatientApi, 'getPatientsMetricsForHcp')
 
     const router = renderPage('/')
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/home')
+      expect(router.state.location.pathname).toEqual(`/teams/${PRIVATE_TEAM_ID}/patients`)
     }, { timeout: 3000 })
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
     await checkCaregiverLayout(`${firstName} ${lastName}`)
@@ -145,8 +146,9 @@ describe('Caregiver home page', () => {
   })
 
   it('should display a list of patients and allow to remove one of them', async () => {
-    await act(async () => {
-      renderPage('/')
+    const router = renderPage('/')
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(`/teams/${PRIVATE_TEAM_ID}/patients`)
     })
 
     await checkCaregiverLayout(`${firstName} ${lastName}`)
@@ -219,7 +221,7 @@ describe('Caregiver home page', () => {
   it('should display the right columns for caregivers and be able to change them', async () => {
     const router = renderPage('/')
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/home')
+      expect(router.state.location.pathname).toEqual(`/teams/${PRIVATE_TEAM_ID}/patients`)
     })
 
     const columnSettingsButton = screen.getByRole('button', { name: 'Change columns settings' })

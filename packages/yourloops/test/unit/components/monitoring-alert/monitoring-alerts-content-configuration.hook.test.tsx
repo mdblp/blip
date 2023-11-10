@@ -34,12 +34,10 @@ import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { Unit } from 'medical-domain'
-import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
 import { type MonitoringAlertsParameters } from '../../../../lib/team/models/monitoring-alerts-parameters.model'
 
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/auth')
-jest.mock('../../../../lib/selected-team/selected-team.provider')
 describe('MonitoringAlertsContentConfiguration hook', () => {
   const teamId = 'teamId'
   const team = buildTeam(teamId)
@@ -68,9 +66,6 @@ describe('MonitoringAlertsContentConfiguration hook', () => {
       return {
         user
       }
-    });
-    (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
-      return { selectedTeam: { id: teamId, monitoringAlertsParameters: getDefaultMonitoringAlertsParameters() } }
     })
   })
 

@@ -29,7 +29,6 @@ import React from 'react'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 
 import * as teamHookMock from '../../../../lib/team'
-import * as patientHookMock from '../../../../lib/patient/patient.provider'
 import * as authHookMock from '../../../../lib/auth'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import { buildTeam, buildTeamMember } from '../../common/utils'
@@ -39,11 +38,9 @@ import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')
-jest.mock('../../../../lib/patient/patient.provider')
 jest.mock('../../../../lib/auth')
 describe('TeamMembers', () => {
   const leaveTeamMock = jest.fn()
-  const patientLeaveTeamMock = jest.fn()
   const successMock = jest.fn()
   const errorMock = jest.fn()
   const teamId = 'teamId'
@@ -57,9 +54,6 @@ describe('TeamMembers', () => {
   beforeAll(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return { leaveTeam: leaveTeamMock, getTeam: jest.fn().mockReturnValue(team) }
-    });
-    (patientHookMock.usePatientContext as jest.Mock).mockImplementation(() => {
-      return { leaveTeam: patientLeaveTeamMock }
     });
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
       user: {
@@ -171,7 +165,6 @@ describe('TeamMembers', () => {
       }
     }))
     renderLeaveTeamButton()
-    await leaveTeam(patientLeaveTeamMock)
     expect(successMock).toHaveBeenCalledWith('team-page-leave-success')
   })
 })

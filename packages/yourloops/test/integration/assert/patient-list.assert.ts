@@ -28,7 +28,7 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { loggedInUserId } from '../mock/auth0.hook.mock'
-import { filtersTeamName, myThirdTeamId, myThirdTeamName } from '../mock/team.api.mock'
+import { filtersTeamId, filtersTeamName, myThirdTeamId, myThirdTeamName } from '../mock/team.api.mock'
 import PatientApi from '../../../lib/patient/patient.api'
 import {
   checkPatientsFilters,
@@ -80,8 +80,8 @@ export const checkPatientListHeaderCaregiver = () => {
   expect(screen.queryByRole('tab', { name: 'Pending' })).not.toBeInTheDocument()
 }
 
-export const checkPatientListHeaderForHcp = () => {
-  const header = screen.getByTestId('patient-list-header')
+export const checkPatientListHeaderForHcp = async () => {
+  const header = await screen.findByTestId('patient-list-header')
   checkPatientListHeader(header)
   expect(within(header).getByRole('button', { name: 'Filters' })).toBeVisible()
   expect(within(header).getByRole('button', { name: 'Add new patient' })).toBeVisible()
@@ -96,7 +96,7 @@ export const checkPatientListPendingTab = async (router: Router) => {
   expect(dataGridPendingRows).toHaveTextContent('Invite sent byDateEmailActionsYann BlancMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
 
   await userEvent.click(within(dataGridPendingRows).getAllByRole('row')[1])
-  expect(router.state.location.pathname).toEqual('/home')
+  expect(router.state.location.pathname).toEqual(`/teams/${myThirdTeamId}/patients`) // Todo: Maybe the URL should precise that these are the pending patients?
 }
 
 export const checkPatientListCurrentTab = async () => {
@@ -108,7 +108,7 @@ export const checkPatientListCurrentTab = async () => {
 }
 
 export const checkPatientListCurrentTabForPrivateTeam = async () => {
-  const currentTab = screen.getByRole('tab', { name: 'Current' })
+  const currentTab = await screen.findByRole('tab', { name: 'Current' })
   await userEvent.click(currentTab)
   const dataGridCurrentRows = screen.getByTestId('current-patient-list-grid')
   expect(within(dataGridCurrentRows).getAllByRole('row')).toHaveLength(2)
@@ -117,6 +117,7 @@ export const checkPatientListCurrentTabForPrivateTeam = async () => {
 
 export const checkPatientListFilters = async () => {
   await changeTeamScope(myThirdTeamName, filtersTeamName)
+  expect(PatientApi.getPatientsForHcp).toHaveBeenCalledWith(loggedInUserId, filtersTeamId)
 
   expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters deactivated: 6 patient(s) out of 6')
   expect(screen.queryByTestId('reset-filters-link')).not.toBeInTheDocument()
@@ -472,7 +473,7 @@ export const checkPatientListHideShowColumns = async () => {
 }
 
 const checkPatientListMonitoringAlertsIcons = async (outOfRangeTooltipValue: string, hypoglycemiaTooltipValue: string): Promise<void> => {
-  const dataGridRows = screen.getByTestId('current-patient-list-grid')
+  const dataGridRows = await screen.findByTestId('current-patient-list-grid')
   expect(dataGridRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages from the patient0%0%N/AFlag patient z-no-data@patient.frZ - No Data PatientJan 1, 1980No new messages from the patient0%0%N/A')
   const monitoringAlertsColumnHeader = within(dataGridRows).getByText('Monitoring alerts')
   const tooltipText = 'Hover over the icons to learn more'

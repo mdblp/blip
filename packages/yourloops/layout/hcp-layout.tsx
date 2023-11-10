@@ -38,7 +38,6 @@ import { AppUserRoute } from '../models/enums/routes.enum'
 import { PatientListPage } from '../components/patient-list/patient-list-page'
 import { PatientListProvider } from '../lib/providers/patient-list.provider'
 import { Team, TeamContextProvider, useTeam } from '../lib/team'
-import TeamUtils from '../lib/team/team.util'
 
 export const LOCAL_STORAGE_SELECTED_TEAM_ID_KEY = 'selectedTeamId'
 
@@ -92,9 +91,13 @@ const HcpLayout: FunctionComponent = () => {
         <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
         <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
         <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
-        <Route path="/teams/:teamId" element={<CareTeamSettingsPage />} />
-        <Route path="/teams/:teamId/patients" element={<PatientListPage />} />
-        <Route path="/teams/:teamId/patients/:patientId/*" element={<PatientData />} />
+        <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
+        <Route
+          path="/teams/private"
+          element={<Navigate to={`/teams/${teamId}/patients`} replace />}
+        />
+        <Route path={AppUserRoute.PatientsList} element={<PatientListPage />} />
+        <Route path={AppUserRoute.PatientView} element={<PatientData />} />
         <Route path="/" element={<Navigate to={`/teams/${teamId}/patients`} replace />} />
         <Route path="*" element={<Navigate to={AppUserRoute.NotFound} replace />} />
       </Route>

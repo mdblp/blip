@@ -28,12 +28,11 @@
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
-import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../../mock/team.api.mock'
+import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import { mockUserApi } from '../../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
 import { AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../use-cases/app-main-layout-visualisation'
-import { act } from '@testing-library/react'
 import { renderPage } from '../../../utils/render'
 import { patient1Id, patientWithMmolId } from '../../../data/patient.api.data'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
@@ -49,8 +48,8 @@ describe('Target and alerts view for HCP', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
-  const targetAndAlertsRoute = `${AppUserRoute.Patient}/${patient1Id}${AppUserRoute.TargetAndAlerts}`
-  const patientTargetAndAlertsRouteMmoL = `${AppUserRoute.Patient}/${patientWithMmolId}${AppUserRoute.TargetAndAlerts}`
+  const targetAndAlertsRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.TargetAndAlerts}`
+  const patientTargetAndAlertsRouteMmoL = `/teams/${myThirdTeamId}/patients/${patientWithMmolId}${AppUserRoute.TargetAndAlerts}`
 
   beforeEach(() => {
     mockAuth0Hook()
@@ -74,18 +73,14 @@ describe('Target and alerts view for HCP', () => {
         }
       }
     }
-    await act(async () => {
-      renderPage(targetAndAlertsRoute)
-    })
+    renderPage(targetAndAlertsRoute)
     await testAppMainLayoutForHcp(appMainLayoutParams)
   })
 
   it('should display the monitoring alerts configuration in mg/dL', async () => {
-    await act(async () => {
-      renderPage(targetAndAlertsRoute)
-    })
+    renderPage(targetAndAlertsRoute)
 
-    testTargetAndAlertsViewContent()
+    await testTargetAndAlertsViewContent()
     await testMonitoringAlertsParametersConfigurationForPatientMgdl()
   })
 
@@ -93,11 +88,9 @@ describe('Target and alerts view for HCP', () => {
     const mmolSettings: Settings = { units: { bg: Unit.MmolPerLiter } }
     mockUserApi().mockUserDataFetch({ firstName, lastName, settings: mmolSettings })
 
-    await act(async () => {
-      renderPage(patientTargetAndAlertsRouteMmoL)
-    })
+    renderPage(patientTargetAndAlertsRouteMmoL)
 
-    testTargetAndAlertsViewContent()
+    await testTargetAndAlertsViewContent()
     await testMonitoringAlertsParametersConfigurationForPatientMmol()
   })
 })

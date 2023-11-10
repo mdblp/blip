@@ -77,7 +77,7 @@ describe('usePatientData hook', () => {
       })
 
       expect(result.current.msRange).toEqual(TimeService.MS_IN_DAY)
-      expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp()}${AppUserRoute.Daily}`)
+      expect(useNavigateMock).toHaveBeenCalledWith(`..${AppUserRoute.Daily}`, { relative: 'path' })
     })
 
     it('should change currentPatientView to Trends', async () => {
@@ -90,7 +90,7 @@ describe('usePatientData hook', () => {
       })
 
       expect(result.current.msRange).toEqual(DEFAULT_MS_RANGE)
-      expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp()}${AppUserRoute.Trends}`)
+      expect(useNavigateMock).toHaveBeenCalledWith(`..${AppUserRoute.Trends}`, { relative: 'path' })
     })
   })
 
@@ -155,7 +155,7 @@ describe('usePatientData hook', () => {
         result.current.goToDailySpecificDate(currentDate)
       })
       expect(result.current.dailyDate).toEqual(currentDate)
-      expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp()}${AppUserRoute.Daily}?date=${new Date(currentDate).toISOString()}`)
+      expect(useNavigateMock).toHaveBeenCalledWith(`..${AppUserRoute.Daily}?date=${new Date(currentDate).toISOString()}`, { relative: 'path' })
     })
   })
 })

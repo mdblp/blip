@@ -49,10 +49,14 @@ import { testTeamCreation } from '../../use-cases/teams-management'
 import { Unit } from 'medical-domain'
 import NotificationApi from '../../../../lib/notifications/notification.api'
 import { type Router } from '../../models/router.model'
+import { AppUserRoute } from '../../../../models/enums/routes.enum'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
   const lastName = 'Ard'
+
+  const privatePatientsList = `${AppUserRoute.Teams}/${PRIVATE_TEAM_ID}/patients`
+  const thirdTeamPatientsList = `${AppUserRoute.Teams}/${myThirdTeamId}/patients`
 
   beforeEach(() => {
     mockAuth0Hook()
@@ -67,16 +71,15 @@ describe('HCP home page', () => {
     jest.spyOn(NotificationApi, 'cancelInvitation').mockResolvedValue(undefined)
   })
 
-  const renderHomePage = async (): Promise<Router> => {
-    const router = renderPage('/')
+  const renderHomePage = async (route: string): Promise<Router> => {
+    const router = renderPage(route)
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/home')
+      expect(router.state.location.pathname).toEqual(route)
     }, { timeout: 3000 })
     return router
   }
 
   it('should render correct layout when scoped on the private practice team', async () => {
-    localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
       ...patient1Info,
       invitationStatus: UserInviteStatus.Accepted
@@ -94,38 +97,34 @@ describe('HCP home page', () => {
       }
     }
 
-    await renderHomePage()
+    await renderHomePage(privatePatientsList)
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
   })
 
   it('should be able to manage patients when scoped on the private practice team', async () => {
-    localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
       ...patient1Info,
       invitationStatus: UserInviteStatus.Accepted
     }])
     jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockResolvedValue([patient1Metrics])
 
-    await renderHomePage()
+    await renderHomePage(privatePatientsList)
     await testPatientManagementPrivateTeam()
   })
 
   it('should be able to manage the patient list when scoped on the private practice team', async () => {
-    localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
       ...patient1Info,
       invitationStatus: UserInviteStatus.Accepted
     }])
     jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockResolvedValue([patient1Metrics])
 
-    await renderHomePage()
+    await renderHomePage(privatePatientsList)
     await testPatientListForHcpPrivateTeam()
   })
 
   it('should render correct layout when scoped on a medical team', async () => {
-    localStorage.setItem('selectedTeamId', myThirdTeamId)
-
     const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
@@ -138,7 +137,7 @@ describe('HCP home page', () => {
       }
     }
 
-    await renderHomePage()
+    await renderHomePage(thirdTeamPatientsList)
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
 
@@ -146,31 +145,24 @@ describe('HCP home page', () => {
   })
 
   it('should be able to manage patients when scoped on a medical team', async () => {
-    localStorage.setItem('selectedTeamId', myThirdTeamId)
-
-    await renderHomePage()
+    await renderHomePage(thirdTeamPatientsList)
 
     await testPatientManagementMedicalTeam()
   })
 
   it('should be able to manage the patient list when scoped on a medical team', async () => {
-    localStorage.setItem('selectedTeamId', myThirdTeamId)
-
-    const router = await renderHomePage()
+    const router = await renderHomePage(thirdTeamPatientsList)
 
     await testPatientListForHcp(router)
   })
 
   it('should be able to create a team when on the home page', async () => {
-    localStorage.setItem('selectedTeamId', myThirdTeamId)
-
-    const router = await renderHomePage()
+    const router = await renderHomePage(thirdTeamPatientsList)
 
     await testTeamCreation(router)
   })
 
   it('should show correct alerts tooltips when logged in with a user with units in mmol/L', async () => {
-    localStorage.setItem('selectedTeamId', myThirdTeamId)
     mockUserApi().mockUserDataFetch({
       firstName,
       lastName,
@@ -178,17 +170,17 @@ describe('HCP home page', () => {
       settings: { units: { bg: Unit.MmolPerLiter } }
     })
 
-    await renderHomePage()
+    await renderHomePage(thirdTeamPatientsList)
 
     await testPatientListForHcpWithMmolL()
   })
 
-  it('should render home page instead of team details page when route matches /team, user is hcp and selected team is private', async () => {
+  it('should render patient list instead of team details page when route matches /teams/private, user is hcp and selected team is private', async () => {
     localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
 
-    const router = renderPage('/team')
+    const router = renderPage('/teams/private')
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/home')
+      expect(router.state.location.pathname).toEqual('/teams/private/patients')
     }, { timeout: 3000 })
   })
 })

@@ -27,7 +27,7 @@
 
 import { screen, waitFor } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
-import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../../mock/team.api.mock'
+import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { mockChatAPI } from '../../../mock/chat.api.mock'
@@ -47,7 +47,7 @@ describe('Daily view for HCP', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
-  const dailyRoute = `${AppUserRoute.Patient}/${patient2Id}${AppUserRoute.Daily}`
+  const dailyRoute = `/teams/${myThirdTeamId}/patients/${patient2Id}${AppUserRoute.Daily}`
 
   beforeEach(() => {
     mockWindowResizer()

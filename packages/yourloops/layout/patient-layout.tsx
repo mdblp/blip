@@ -46,7 +46,7 @@ export const PatientLayout: FC = () => {
           <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
           <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
           <Route path={AppUserRoute.Caregivers} element={<PatientCaregiversPage />} />
-          <Route path={`${AppUserRoute.Teams}/:teamId`} element={<CareTeamSettingsPage />} />
+          <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
           <Route path="*" element={<PatientData />} />
         </Routes>
       </DashboardLayout>

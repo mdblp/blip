@@ -69,7 +69,7 @@ const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
 export const usePatientData = (): usePatientDataResult => {
   const navigate = useNavigate()
-  const { patientId } = useParams()
+  const { patientId, teamId } = useParams()
   const { user } = useAuth()
   const { pathname } = useLocation()
   const { getPatientById } = usePatientsContext()
@@ -161,7 +161,7 @@ export const usePatientData = (): usePatientDataResult => {
   const changePatient = (patient: Patient): void => {
     patientDataUtils.current.changePatient(patient)
     setMedicalData(null)
-    navigate(`/patient/${patient.userid}${getRouteByPatientView(currentPatientView)}`)
+    navigate(`/teams/${teamId}/patients/${patient.userid}${getRouteByPatientView(currentPatientView)}`)
   }
 
   const getMsRangeByPatientView = (patientView: PatientView, patientMedicalData: MedicalDataService): number => {
@@ -183,7 +183,7 @@ export const usePatientData = (): usePatientDataResult => {
     setMsRange(newMsRange)
 
     const route = getRouteByPatientView(patientView)
-    navigate(`..${route}`, { relative: "path" });
+    navigate(`..${route}`, { relative: "path" })
   }
 
   const updateChartPrefs = (chartPrefs: ChartPrefs): void => {

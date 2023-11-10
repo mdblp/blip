@@ -37,9 +37,9 @@ import { LoadingButton } from '@mui/lab'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import DialogContentText from '@mui/material/DialogContentText'
-import TeamUtils from '../../../lib/team/team.util'
 import { useParams } from 'react-router-dom'
 import { useTeam } from '../../../lib/team'
+import { PRIVATE_TEAM_ID } from '../../../lib/team/team.hook'
 
 interface RemovePatientDialogProps {
   patient: Patient | null
@@ -50,15 +50,14 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
   const { t } = useTranslation('yourloops')
   const { teamId } = useParams()
   const { getTeam } = useTeam()
-  const selectedTeam = getTeam(teamId)
   const {
     processing,
     handleOnClickRemove,
     patientName
   } = useRemovePatientDialog({ patient, onClose })
 
-  const isSelectedTeamPrivate = TeamUtils.isPrivate(selectedTeam)
-  const selectedTeamLabel = isSelectedTeamPrivate ? t('my-private-practice') : selectedTeam.name
+  const isSelectedTeamPrivate = teamId === PRIVATE_TEAM_ID
+  const selectedTeamLabel = isSelectedTeamPrivate ? t('my-private-practice') : getTeam(teamId).name
 
   const title = t('modal-remove-patient-title', {
     patientName,

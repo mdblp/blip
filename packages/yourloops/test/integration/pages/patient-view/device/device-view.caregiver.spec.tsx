@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
@@ -37,15 +36,17 @@ import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
 import { testDeviceSettingsVisualisation } from '../../../use-cases/device-settings-visualisation'
-import { testDeviceSettingsNavigationForHcpAndCaregiver } from '../../../use-cases/device-settings-navigation'
+import { testDeviceSettingsNavigationForCaregiver } from '../../../use-cases/device-settings-navigation'
 import { testAppMainLayoutForCaregiver } from '../../../use-cases/app-main-layout-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.hook'
+import { act } from '@testing-library/react'
 
 describe('Device view for Caregiver', () => {
   const firstName = 'Caregiver firstName'
   const lastName = 'Caregiver lastName'
 
-  const deviceRoute = `${AppUserRoute.Patient}/${patient1Id}${AppUserRoute.Device}`
+  const deviceRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Device}`
 
   beforeEach(() => {
     mockWindowResizer()
@@ -58,9 +59,7 @@ describe('Device view for Caregiver', () => {
   })
 
   it('should render correct layout', async () => {
-    await act(async () => {
-      renderPage(deviceRoute)
-    })
+    renderPage(deviceRoute)
     await testAppMainLayoutForCaregiver({ loggedInUserFullName: `${firstName} ${lastName}` })
   })
 
@@ -76,6 +75,6 @@ describe('Device view for Caregiver', () => {
     await act(async () => {
       router = renderPage(deviceRoute)
     })
-    await testDeviceSettingsNavigationForHcpAndCaregiver(router)
+    await testDeviceSettingsNavigationForCaregiver(router)
   })
 })

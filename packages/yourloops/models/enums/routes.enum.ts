@@ -28,6 +28,9 @@
 export enum AppUserRoute {
   Caregivers = '/caregivers',
   CareTeamSettings = '/teams/:teamId',
+  PrivatePatientsList = '/teams/private/patients',
+  PatientsList = '/teams/:teamId/patients',
+  PatientView = '/teams/:teamId/patients/:patientId/*',
   Daily = '/daily',
   Device = '/device',
   Dashboard = '/dashboard',

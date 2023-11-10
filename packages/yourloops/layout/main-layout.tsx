@@ -33,6 +33,7 @@ import { CaregiverLayout } from './caregiver-layout'
 import { PatientLayout } from './patient-layout'
 import { UserRole } from '../lib/auth/models/enums/user-role.enum'
 import { HcpLayoutWithContext } from './hcp-layout'
+import { AppUserRoute } from '../models/enums/routes.enum'
 
 export const MainLayout: FC = () => {
   const { user } = useAuth()
@@ -49,7 +50,7 @@ export const MainLayout: FC = () => {
         console.error(`no layout found for role ${user?.role}`)
         return <Route
           path="*"
-          element={<Navigate to="/not-found" replace />}
+          element={<Navigate to={AppUserRoute.NotFound} replace />}
         />
     }
   }

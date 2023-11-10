@@ -32,7 +32,6 @@ import { buildTeam, createPatient } from '../../common/utils'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
 import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
-import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
 import * as patientFilterHookMock from '../../../../lib/providers/patient-list.provider'
 import PatientApi from '../../../../lib/patient/patient.api'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
@@ -44,7 +43,6 @@ import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import { type MonitoringAlertsParameters } from '../../../../lib/team/models/monitoring-alerts-parameters.model'
 
 jest.mock('../../../../lib/auth')
-jest.mock('../../../../lib/selected-team/selected-team.provider')
 jest.mock('../../../../lib/team')
 jest.mock('../../../../lib/notifications/notification.hook')
 jest.mock('../../../../lib/providers/patient-list.provider')
@@ -75,9 +73,6 @@ describe('Patients hook', () => {
         getInvitation: getInvitationMock,
         refreshSentInvitations: refreshSentInvitationsMock
       }
-    });
-    (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
-      return { selectedTeam: { id: selectedTeamId } }
     });
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
       return {

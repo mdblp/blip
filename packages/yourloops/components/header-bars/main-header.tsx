@@ -101,7 +101,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
   const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
 
   const getSelectedTab = (): HcpNavigationTab | false => {
-    if (pathname.includes('patients')) {
+    if (pathname.includes('patients') || pathname.includes('private')) {
       return HcpNavigationTab.Patients
     }
     if (pathname.includes('teams')) {
