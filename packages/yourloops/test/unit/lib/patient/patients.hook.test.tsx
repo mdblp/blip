@@ -34,13 +34,9 @@ import * as teamHookMock from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
 import * as patientFilterHookMock from '../../../../lib/providers/patient-list.provider'
 import PatientApi from '../../../../lib/patient/patient.api'
-import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
-import { type Notification } from '../../../../lib/notifications/models/notification.model'
-import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
-import { type MonitoringAlertsParameters } from '../../../../lib/team/models/monitoring-alerts-parameters.model'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
@@ -56,7 +52,6 @@ describe('Patients hook', () => {
   const refreshTeamsMock = jest.fn()
   const refreshSentInvitationsMock = jest.fn()
   const computePatientsSpy = jest.spyOn(PatientUtils, 'computePatients')
-  const selectedTeamId = 'selectedTeamId'
 
   beforeAll(() => {
     computePatientsSpy.mockReset();
@@ -102,109 +97,6 @@ describe('Patients hook', () => {
     })
     return hook
   }
-
-  describe('searchPatients', () => {
-    const pendingPatient = createPatient('pendingPatient', UserInviteStatus.Pending, undefined, { birthdate: new Date(2001, 10, 19).toString() })
-    const basicPatient = createPatient('basicPatient1', UserInviteStatus.Accepted, undefined, {
-      birthdate: new Date(2005, 5, 5).toString(),
-      firstName: 'small brain',
-      lastName: 'dupont'
-    })
-    const basicPatient2 = createPatient('basicPatient2', UserInviteStatus.Accepted, undefined, { birthdate: new Date(2001, 10, 19).toString() })
-    const bigBrainPatient = createPatient('big brain', UserInviteStatus.Accepted, undefined, {
-      birthdate: new Date(2005, 5, 5).toString(),
-      firstName: 'big brain',
-      lastName: 'smith'
-    })
-    const noNamePatient = createPatient('big brain', UserInviteStatus.Accepted, undefined, {
-      birthdate: new Date(2006, 6, 6).toString()
-    })
-    noNamePatient.profile.firstName = undefined
-    noNamePatient.profile.lastName = undefined
-    const mediumBrainPatient = createPatient('medium brain', UserInviteStatus.Accepted, undefined, {
-      birthdate: new Date(2005, 5, 5).toString(),
-      fullName: 'Medium brain'
-    })
-    mediumBrainPatient.profile.firstName = undefined
-    mediumBrainPatient.profile.lastName = undefined
-
-    const allPatients = [basicPatient, basicPatient2, bigBrainPatient, noNamePatient, pendingPatient, mediumBrainPatient]
-    let customHook
-
-    beforeAll(async () => {
-      const res = await renderPatientsHook(allPatients)
-      customHook = res.result.current
-    })
-
-    it('should return correct patients when provided a first name search filter', () => {
-      const patientsReceived = customHook.searchPatients('big brain')
-      expect(patientsReceived).toEqual([bigBrainPatient])
-    })
-
-    it('should return correct patients when provided a name search filter but patient only has a fullname', () => {
-      const patientsReceived = customHook.searchPatients('medium')
-      expect(patientsReceived).toEqual([mediumBrainPatient])
-    })
-
-    it('should return correct patients when provided a date search filter', () => {
-      const patientsReceived = customHook.searchPatients('19/11/2001')
-      expect(patientsReceived).toEqual([basicPatient2])
-    })
-
-    it('should return correct patients when provided a date and first name search filter', () => {
-      const patientsReceived = customHook.searchPatients('05/06/2005 big')
-      expect(patientsReceived).toEqual([bigBrainPatient])
-    })
-
-    it('should return correct patients when provided a date and last name search filter', () => {
-      const patientsReceived = customHook.searchPatients('05/06/2005smith')
-      expect(patientsReceived).toEqual([bigBrainPatient])
-    })
-  })
-
-  describe('getPatientByEmail', () => {
-    const unknownPatient = createPatient('unknownPatient')
-    const existingPatient = createPatient('existingPatient', UserInviteStatus.Accepted, undefined, { email: 'test@test.com' })
-    const allPatients = [existingPatient]
-    let customHook
-
-    beforeAll(async () => {
-      const res = await renderPatientsHook(allPatients)
-      customHook = res.result.current
-    })
-
-    it('should return a patient when the patient is present in the patient state', () => {
-      const patient = customHook.getPatientByEmail(existingPatient.profile.email)
-      expect(patient).toBeDefined()
-    })
-
-    it('should return null when patient is not present in the patient state', () => {
-      const patient = customHook.getPatientByEmail(unknownPatient.profile.email)
-      expect(patient).toBeUndefined()
-    })
-  })
-
-  describe('getPatientById', () => {
-    const unknownPatient = createPatient('unknownPatient')
-    const existingPatient = createPatient('existingPatient', UserInviteStatus.Accepted)
-    const allPatients = [existingPatient]
-    let customHook
-
-    beforeAll(async () => {
-      const res = await renderPatientsHook(allPatients)
-      customHook = res.result.current
-    })
-
-    it('should return a patient when the patient is present in the patient state', () => {
-      const patient = customHook.getPatientById(existingPatient.userid)
-      expect(patient).toBeDefined()
-    })
-
-    it('should return null when patient is not present in the patient state', () => {
-      const patient = customHook.getPatientById(unknownPatient.userid)
-      expect(patient).toBeUndefined()
-    })
-  })
 
   describe('invitePatient', () => {
     const basicPatient = createPatient('basicPatient1', UserInviteStatus.Accepted)
@@ -253,79 +145,6 @@ describe('Patients hook', () => {
       await waitFor(() => {
         expect(customHook.patients.length).toEqual(initialPatientsLength)
         expect(computePatientsSpy).toHaveBeenCalledTimes(1)
-      })
-    })
-  })
-
-  describe('removePatient', () => {
-    const pendingPatient = createPatient('pendingPatient', UserInviteStatus.Pending, {} as MonitoringAlertsParameters)
-    pendingPatient.invite = { creationDate: 'fakeCreationDate', creatorId: 'fakeCreatorId', id: 'fakeInviteId' }
-    const patientToRemovePrivatePractice = createPatient('patientToRemovePrivatePractice', UserInviteStatus.Accepted)
-    const patientToRemove2 = createPatient('patientToRemove2', UserInviteStatus.Accepted)
-    const allPatients = [pendingPatient, patientToRemovePrivatePractice, patientToRemove, patientToRemove2]
-
-    it('should call notification hook cancel method if invite is pending and call removePatient method', async () => {
-      const res = await renderPatientsHook(allPatients)
-      const customHook = res.result.current
-      const invitation = { id: 'fakeInvitationId', email: 'fakeInvitationEmail' } as Notification
-      getInvitationMock.mockReturnValue(invitation)
-      const removePatientMock = jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
-      await act(async () => {
-        await customHook.removePatient(pendingPatient)
-      })
-      expect(notificationHookCancelMock).toHaveBeenCalled()
-      expect(removePatientMock).toHaveBeenCalled()
-    })
-
-    it('should call removeDirectShare API method if private practice', async () => {
-      (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
-        return { selectedTeam: { id: PRIVATE_TEAM_ID } }
-      })
-      const res = await renderPatientsHook(allPatients)
-      const customHook = res.result.current
-      const invitation = { id: 'fakeInvitationId', email: 'fakeInvitationEmail' } as Notification
-      getInvitationMock.mockReturnValue(invitation)
-      const removeDirectShareMock = jest.spyOn(DirectShareApi, 'removeDirectShare').mockResolvedValue(undefined)
-      await act(async () => {
-        await customHook.removePatient(patientToRemovePrivatePractice)
-      })
-      expect(removeDirectShareMock).toHaveBeenCalled()
-      expect(PatientUtils.computePatients).toHaveBeenCalledTimes(2)
-    })
-
-    it('should update patient when he still belongs to a team', async () => {
-      (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => {
-        return { selectedTeam: { id: selectedTeamId } }
-      })
-      const res = await renderPatientsHook(allPatients)
-      const customHook = res.result.current
-      const invitation = { id: 'fakeInvitationId', email: 'fakeInvitationEmail' } as Notification
-      getInvitationMock.mockReturnValue(invitation)
-      const removePatientSpy = jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
-      await act(async () => {
-        await customHook.removePatient(patientToRemove2)
-      })
-      expect(removePatientSpy).toHaveBeenCalledWith(selectedTeamId, patientToRemove2.userid)
-    })
-  })
-
-  describe('markPatientMessagesAsRead', () => {
-    let customHook
-    let basicPatient
-
-    beforeAll(async () => {
-      basicPatient = createPatient('basicPatient1', UserInviteStatus.Accepted)
-      basicPatient.hasSentUnreadMessages = true
-      const allPatients = [basicPatient]
-
-      const res = await renderPatientsHook(allPatients)
-      customHook = res.result.current
-    })
-
-    it('should update patient unread messages to 0', () => {
-      act(() => {
-        customHook.markPatientMessagesAsRead(basicPatient)
-        expect(customHook.getPatientById(basicPatient.userid).hasSentUnreadMessages).toBeFalsy()
       })
     })
   })

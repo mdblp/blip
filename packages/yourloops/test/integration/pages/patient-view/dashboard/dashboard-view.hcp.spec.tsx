@@ -90,7 +90,6 @@ describe('Dashboard view for HCP', () => {
     mockChatAPI()
     mockMedicalFilesAPI(myThirdTeamId, myThirdTeamName)
     mockDataAPI()
-    localStorage.setItem('selectedTeamId', myThirdTeamId)
   })
 
   it('should render correct components when navigating to a patient not scoped on the private team', async () => {

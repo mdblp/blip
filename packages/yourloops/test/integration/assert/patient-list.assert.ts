@@ -96,7 +96,7 @@ export const checkPatientListPendingTab = async (router: Router) => {
   expect(dataGridPendingRows).toHaveTextContent('Invite sent byDateEmailActionsYann BlancMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
 
   await userEvent.click(within(dataGridPendingRows).getAllByRole('row')[1])
-  expect(router.state.location.pathname).toEqual(`/teams/${myThirdTeamId}/patients`) // Todo: Maybe the URL should precise that these are the pending patients?
+  expect(router.state.location.pathname).toEqual(`/teams/${myThirdTeamId}/patients`)
 }
 
 export const checkPatientListCurrentTab = async () => {

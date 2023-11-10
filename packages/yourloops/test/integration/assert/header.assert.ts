@@ -30,7 +30,6 @@ import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { type Team } from '../../../lib/team'
 import userEvent from '@testing-library/user-event'
 import { PRIVATE_TEAM_NAME } from '../../../lib/team/team.hook'
-import PatientApi from '../../../lib/patient/patient.api'
 
 interface TeamMenuInfo {
   selectedTeamName?: string
