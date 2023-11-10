@@ -203,7 +203,7 @@ class MedicalDataService {
       this.medicalData.confidentialModes = this.medicalData.confidentialModes.concat(data.confidentialModes)
     }
     if (data.deviceParametersChanges) {
-      this.medicalData.deviceParametersChanges = this.medicalData.deviceParametersChanges.concat(data.deviceParametersChanges)
+      this.medicalData.deviceParametersChanges = data.deviceParametersChanges
     }
     if (data.messages) {
       this.medicalData.messages = this.medicalData.messages.concat(data.messages)
@@ -215,7 +215,7 @@ class MedicalDataService {
       this.medicalData.physicalActivities = this.medicalData.physicalActivities.concat(data.physicalActivities)
     }
     if (data.pumpSettings) {
-      this.medicalData.pumpSettings = this.medicalData.pumpSettings.concat(data.pumpSettings)
+      this.medicalData.pumpSettings = data.pumpSettings
     }
     if (data.reservoirChanges) {
       this.medicalData.reservoirChanges = this.medicalData.reservoirChanges.concat(data.reservoirChanges)
