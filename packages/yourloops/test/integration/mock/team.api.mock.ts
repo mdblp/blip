@@ -41,7 +41,12 @@ import {
   userTimFirstName,
   userTimFullName,
   userTimId,
-  userTimLastName, userYdrisEmail, userYdrisFirstName, userYdrisFullName, userYdrisId, userYdrisLastName
+  userTimLastName,
+  userYdrisEmail,
+  userYdrisFirstName,
+  userYdrisFullName,
+  userYdrisId,
+  userYdrisLastName
 } from './auth0.hook.mock'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'

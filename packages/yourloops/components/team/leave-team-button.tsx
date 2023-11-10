@@ -57,6 +57,7 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
 
   const leaveTeamAsPatient = async (): Promise<void> => {
     await PatientApi.removePatient(team.id, user.id)
+    alert.success(t('team-page-leave-success'))
     metrics.send('team_management', 'leave_team')
     refreshTeams()
   }

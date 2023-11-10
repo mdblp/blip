@@ -47,9 +47,10 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const { cancel: cancelInvite } = useNotification()
   const { user } = useAuth()
   const { filters } = usePatientListContext()
-  const { teamId } = useParams()
+  const { teamId: teamIdFromParam } = useParams()
   const alert = useAlert()
   const isUserHcp = user.isUserHcp()
+  const teamId = teamIdFromParam ?? localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
 
   const [patients, setPatients] = useState<Patient[]>([])
   const [initialized, setInitialized] = useState<boolean>(false)
