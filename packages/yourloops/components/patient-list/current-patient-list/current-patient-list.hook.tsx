@@ -43,7 +43,7 @@ import {
   sortByFlag,
   sortByLastDataUpdate,
   sortByMonitoringAlertsCount,
-  sortByUserName,
+  sortByUserName
 } from '../utils/sort-comparators.util'
 import {
   ActionsCell,

@@ -764,6 +764,7 @@ const checkDefaultColumnsDisplay = () => {
   expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
 }
+
 const checkTooltipsColumnHeader = async (dataGridRows) => {
   const tooltipTextMonitoringAlerts = 'Hover over the icons to learn more'
   const tooltipTextMessages = 'Messages'
