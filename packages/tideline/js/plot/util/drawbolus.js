@@ -321,23 +321,6 @@ function drawBolus(pool, opts = {}) {
           })
         }
       }
-    },
-    annotations: function(data /*, selection */) {
-      _.forEach(data, function(d) {
-        var annotationOpts = {
-          x: opts.xScale(d.epoch),
-          y: opts.yScale(commonbolus.getMaxValue(d)),
-          xMultiplier: -2,
-          yMultiplier: 1,
-          d: d,
-          orientation: {
-            up: true
-          }
-        }
-        if (_.isEmpty(mainGroup.select('#annotation_for_' + d.id)[0][0])) {
-          mainGroup.select('#tidelineAnnotations_bolus').call(pool.annotations(), annotationOpts)
-        }
-      })
     }
   }
 }

@@ -352,32 +352,6 @@ svg {
     stroke: @bolus;
     fill: none;
   }
-  // &.d3-path-extended {
-  //   stroke: @bolus;
-  //   &.d3-unknown-delivery-split {
-  //     stroke-dasharray: 3, 5;
-  //   }
-  // }
-  // &.d3-path-extended-triangle {
-  //   stroke: @bolus;
-  //   fill: @bolus;
-  // }
-  // &.d3-path-extended-triangle-suspended {
-  //   stroke: @bolus-undelivered;
-  //   fill: @bolus-undelivered;
-  // }
-  // &.d3-path-suspended {
-  //   stroke: @bolus-interrupted;
-  //   fill: @bolus-interrupted;
-  // }
-  // &.d3-path-extended-suspended {
-  //   stroke: @bolus-undelivered;
-  //   fill: @bolus-undelivered;
-  // }
-  // &.d3-path-suspended-triangle {
-  //   stroke: @bolus-interrupted;
-  //   fill: none;
-  // }
 }
 
 // blood glucose
@@ -577,48 +551,6 @@ text.d3-tabular-ui {
   fill: @text;
   font-size: @font-size-tabular-basal-settings;
   text-anchor: end;
-}
-
-// annotations
-.d3-circle-data-annotation {
-  fill: @background;
-  opacity: 0.5;
-}
-
-.d3-text-data-annotation {
-  font-size: @font-size-small-tooltips;
-  font-weight: bold;
-  fill: white;
-  text-anchor: middle;
-  dominant-baseline: central;
-  pointer-events: none;
-}
-
-.d3-tooltip-data-annotation {
-  pointer-events: none;
-  body {
-    margin: 0px;
-    background-color: rgba(255, 255, 255, 0);
-  }
-}
-
-.d3-div-data-annotation {
-  margin: 0px;
-  padding: 10px;
-  color: @text;
-  p {
-    margin: 5px 0px;
-    font-size: @font-size-annotations;
-    &.d3-data-annotation-lead {
-      font-style: italic;
-    }
-  }
-}
-
-.d3-polygon-data-annotation {
-  fill: @fill-lighter;
-  opacity: 0.9;
-  pointer-events: none;
 }
 
 // tooltips

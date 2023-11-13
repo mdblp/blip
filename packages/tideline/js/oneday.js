@@ -143,7 +143,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   container.scrollNav = null
   /** @type {Tooltips|null} */
   container.tooltips = null
-  container.annotations = null
   /** @type {d3.AxisScale<Date>} */
   container.xScale = d3.time.scale()
   /** @type {TidelineData} */
@@ -622,7 +621,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     nav.scrollScale = null
     nav.drag = null
     container.xScale = null
-    container.annotations = null
     container.tooltips = null
     container.mainSVG = null
     container.mainGroup = null
