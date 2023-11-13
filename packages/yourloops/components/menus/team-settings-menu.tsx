@@ -133,7 +133,7 @@ function TeamSettingsMenu(): JSX.Element {
   }
 
   const redirectToCaregivers = (): void => {
-    navigate(AppUserRoute.Caregivers)
+    navigate(`/${AppUserRoute.Caregivers}`)
     closeMenu()
   }
 

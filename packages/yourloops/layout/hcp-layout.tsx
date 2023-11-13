@@ -26,18 +26,12 @@
  */
 
 import React, { type FunctionComponent, useCallback, useMemo } from 'react'
-import { Navigate, Outlet, Route, Routes, useParams } from 'react-router-dom'
-import { PatientData } from '../components/patient-data/patient-data'
-import { CareTeamSettingsPage } from '../pages/care-team-settings/care-team-settings-page'
+import { Navigate, Outlet, useParams } from 'react-router-dom'
 import { PatientsProvider } from '../lib/patient/patients.provider'
 import { DashboardLayout } from './dashboard-layout'
-import { InvalidRoute } from '../components/invalid-route'
-import { ProfilePage } from '../pages/profile/profile-page'
-import { NotificationsPage } from '../pages/notifications/notifications-page'
-import { AppUserRoute } from '../models/enums/routes.enum'
-import { PatientListPage } from '../components/patient-list/patient-list-page'
 import { PatientListProvider } from '../lib/providers/patient-list.provider'
 import { Team, TeamContextProvider, useTeam } from '../lib/team'
+import { NotificationContextProvider } from '../lib/notifications/notification.hook'
 
 export const LOCAL_STORAGE_SELECTED_TEAM_ID_KEY = 'selectedTeamId'
 
@@ -67,7 +61,17 @@ const HcpCommonLayout: FunctionComponent = () => {
   )
 }
 
-const HcpLayout: FunctionComponent = () => {
+export const HcpLayout: FunctionComponent = () => {
+  return (
+    <NotificationContextProvider>
+      <TeamContextProvider>
+        <HcpCommonLayout />
+      </TeamContextProvider>
+    </NotificationContextProvider>
+  )
+}
+
+export const NavigateWithCorrectTeamId: FunctionComponent = () => {
   const { teams, getDefaultTeamId } = useTeam()
 
   const getFallbackTeamId = useCallback((): string => {
@@ -86,29 +90,6 @@ const HcpLayout: FunctionComponent = () => {
   }, [getFallbackTeamId])
 
   return (
-    <Routes>
-      <Route element={<HcpCommonLayout />}>
-        <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
-        <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
-        <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
-        <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
-        <Route
-          path="/teams/private"
-          element={<Navigate to={`/teams/${teamId}/patients`} replace />}
-        />
-        <Route path={AppUserRoute.PatientsList} element={<PatientListPage />} />
-        <Route path={AppUserRoute.PatientView} element={<PatientData />} />
-        <Route path="/" element={<Navigate to={`/teams/${teamId}/patients`} replace />} />
-        <Route path="*" element={<Navigate to={AppUserRoute.NotFound} replace />} />
-      </Route>
-    </Routes>
-  )
-}
-
-export const HcpLayoutWithContext: FunctionComponent = () => {
-  return (
-    <TeamContextProvider>
-      <HcpLayout />
-    </TeamContextProvider>
+    <Navigate to={`/teams/${teamId}/patients`} replace />
   )
 }

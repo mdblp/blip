@@ -26,30 +26,19 @@
  */
 
 import React, { type FC } from 'react'
-import { Route, Routes } from 'react-router-dom'
-import { PatientData } from '../components/patient-data/patient-data'
-import { CareTeamSettingsPage } from '../pages/care-team-settings/care-team-settings-page'
-import { PatientCaregiversPage } from '../pages/patient/caregivers/patient-caregivers-page'
+import { Outlet } from 'react-router-dom'
 import { TeamContextProvider } from '../lib/team'
 import { DashboardLayout } from './dashboard-layout'
-import { InvalidRoute } from '../components/invalid-route'
-import { ProfilePage } from '../pages/profile/profile-page'
-import { NotificationsPage } from '../pages/notifications/notifications-page'
-import { AppUserRoute } from '../models/enums/routes.enum'
+import { NotificationContextProvider } from '../lib/notifications/notification.hook'
 
 export const PatientLayout: FC = () => {
   return (
-    <TeamContextProvider>
-      <DashboardLayout>
-        <Routes>
-          <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
-          <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
-          <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
-          <Route path={AppUserRoute.Caregivers} element={<PatientCaregiversPage />} />
-          <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
-          <Route path="*" element={<PatientData />} />
-        </Routes>
-      </DashboardLayout>
-    </TeamContextProvider>
+    <NotificationContextProvider>
+      <TeamContextProvider>
+        <DashboardLayout>
+          <Outlet />
+        </DashboardLayout>
+      </TeamContextProvider>
+    </NotificationContextProvider>
   )
 }

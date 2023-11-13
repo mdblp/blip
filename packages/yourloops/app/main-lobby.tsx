@@ -26,7 +26,7 @@
  */
 
 import React, { type FC } from 'react'
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 
 import { ThemeProvider } from '@mui/material/styles'
@@ -39,17 +39,10 @@ import { useAuth, type User } from '../lib/auth'
 import { getTheme } from '../components/theme'
 import { DefaultSnackbarContext, SnackbarContextProvider } from '../components/utils/snackbar'
 import { Footer } from '../components/footer/footer'
-import { CompleteSignUpPage } from '../pages/signup/complete-signup-page'
-import { MainLayout } from '../layout/main-layout'
-import { TrainingPage } from '../pages/training/training'
-import { ProductLabellingPage } from '../pages/product-labelling/product-labelling-page'
-import { LoginPageLanding } from '../pages/login/login-page-landing'
 import { ALWAYS_ACCESSIBLE_ROUTES, PUBLIC_ROUTES } from '../lib/diabeloop-urls.model'
-import { VerifyEmailPage } from '../pages/login/verify-email-page'
 import { useIdleTimer } from 'react-idle-timer'
 import { ConfigService } from '../lib/config/config.service'
 import { AppRoute } from '../models/enums/routes.enum'
-import { ConsentPage } from '../pages/consent/consent-page'
 import Box from '@mui/material/Box'
 
 const muiCache = createCache({
@@ -116,7 +109,7 @@ export const MainLobby: FC = () => {
   const canDisplayApp = !isLoading && !fetchingUser && (isCurrentRoutePublic || isCurrentRouteAlwaysAccessible || user)
 
   return (
-    <React.Fragment>
+    <>
       {redirectTo
         ? <Navigate to={redirectTo} replace />
         : canDisplayApp &&
@@ -127,16 +120,7 @@ export const MainLobby: FC = () => {
               <GlobalStyles styles={{ body: { backgroundColor: 'var(--body-background-color)' } }} />
               <SnackbarContextProvider context={DefaultSnackbarContext}>
                 <Box>
-                  <Routes>
-                    <Route path={AppRoute.ProductLabelling} element={<ProductLabellingPage />} />
-                    <Route path={AppRoute.Login} element={<LoginPageLanding />} />
-                    <Route path={AppRoute.CompleteSignup} element={<CompleteSignUpPage />} />
-                    <Route path={AppRoute.RenewConsent} element={<ConsentPage messageKey="consent-renew-message" />} />
-                    <Route path={AppRoute.NewConsent} element={<ConsentPage messageKey="consent-welcome-message" />} />
-                    <Route path={AppRoute.Training} element={<TrainingPage />} />
-                    <Route path={AppRoute.VerifyEmail} element={<VerifyEmailPage />} />
-                    <Route path="*" element={<MainLayout />} />
-                  </Routes>
+                  <Outlet />
                 </Box>
               </SnackbarContextProvider>
               <Footer />
@@ -144,6 +128,6 @@ export const MainLobby: FC = () => {
           </TssCacheProvider>
         </CacheProvider>
       }
-    </React.Fragment>
+    </>
   )
 }

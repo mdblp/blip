@@ -181,7 +181,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
             }
 
             <Box display="flex" alignItems="center">
-              <Link to={AppUserRoute.Notifications} id="header-notification-link">
+              <Link to={`/${AppUserRoute.Notifications}`} id="header-notification-link">
                 <Badge
                   id="notification-count-badge"
                   aria-label={t('notification-list')}
