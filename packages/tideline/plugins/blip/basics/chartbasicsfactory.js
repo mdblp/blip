@@ -49,7 +49,7 @@ class BasicsChartNoSize extends React.Component {
   }
 
   componentDidMount() {
-    const { tidelineData, bgClasses, bgUnits, patient } = this.props
+    const { tidelineData, patient } = this.props
     if (!tidelineData.basicsData) {
       return
     }
@@ -63,7 +63,7 @@ class BasicsChartNoSize extends React.Component {
     basicsData.days = tidelineData.basicsData.days.filter(day => new Date(day.date) >= dashboardStartDate)
     basicsData.dateRange = [dashboardStartDate.toJSON(), now.toJSON()]
 
-    const dataMunger = dataMungerMkr(bgClasses, bgUnits)
+    const dataMunger = dataMungerMkr()
     const latestPump = dataMunger.getLatestPumpUploaded(this.props.tidelineData)
     basicsData.sections = basicsState(latestPump, tidelineData.latestPumpManufacturer).sections
 

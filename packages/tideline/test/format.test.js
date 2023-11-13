@@ -55,99 +55,27 @@ describe('format utility', function() {
     i18next.changeLanguage('en')
   })
 
-  describe('tooltipBG', function() {
+  describe('tooltipBGValue', function() {
     it('should be a function', function() {
-      assert.isFunction(fmt.tooltipBG)
+      assert.isFunction(fmt.tooltipBGValue)
     })
 
     it('should always return a string', function() {
-      assert.isString(fmt.tooltipBG({value: 0.9999999999999999999999999}, MGDL_UNITS))
-      assert.isString(fmt.tooltipBG({value: 0.9999999999999999999999999}, MMOLL_UNITS))
+      assert.isString(fmt.tooltipBGValue(0.9999999999999999999999999, MGDL_UNITS))
+      assert.isString(fmt.tooltipBGValue(0.9999999999999999999999999, MMOLL_UNITS))
     })
 
     it('should return an integer string when units are mg/dL', function() {
-      expect(fmt.tooltipBG({value: 0.9999999999999999999999999}, MGDL_UNITS)).to.equal('1')
+      expect(fmt.tooltipBGValue(0.9999999999999999999999999, MGDL_UNITS)).to.equal('1')
     })
 
     it('should return a float string with one decimal place when units are mmol/L', function() {
-      expect(fmt.tooltipBG({value: 0.9999999999999999999999999}, MMOLL_UNITS)).to.equal('1.0')
-      expect(fmt.tooltipBG({value: 4.2222222222222222222222222}, MMOLL_UNITS)).to.equal('4.2')
+      expect(fmt.tooltipBGValue(0.9999999999999999999999999, MMOLL_UNITS)).to.equal('1.0')
+      expect(fmt.tooltipBGValue(4.2222222222222222222222222, MMOLL_UNITS)).to.equal('4.2')
     })
 
     it('should return a float string with one decimal place when no units', function() {
-      expect(fmt.tooltipBG({value: 4.2222222222222222222222222})).to.equal('4.2')
-    })
-
-    it('should set the tooltip text to "High" for smbg values above the device threshold', function() {
-      var datum = {
-        type: 'smbg',
-        value: 601,
-        annotations: [
-          {
-            code: 'bg/out-of-range',
-            threshold: BG_CLAMP_THRESHOLD[MGDL_UNITS],
-            value: 'high'
-          }
-        ]
-      }
-
-      fmt.tooltipBG(datum)
-
-      expect(datum.tooltipText).to.equal('High')
-    })
-
-    it('should set the tooltip text to "Hi" for cbg values above the device threshold', function() {
-      var datum = {
-        type: 'cbg',
-        value: 601,
-        annotations: [
-          {
-            code: 'bg/out-of-range',
-            threshold: BG_CLAMP_THRESHOLD[MGDL_UNITS],
-            value: 'high'
-          }
-        ]
-      }
-
-      fmt.tooltipBG(datum)
-
-      expect(datum.tooltipText).to.equal('Hi')
-    })
-
-    it('should set the tooltip text to "Low" for smbg values below the device threshold', function() {
-      var datum = {
-        type: 'smbg',
-        value: 39,
-        annotations: [
-          {
-            code: 'bg/out-of-range',
-            threshold: 40,
-            value: 'low'
-          }
-        ]
-      }
-
-      fmt.tooltipBG(datum)
-
-      expect(datum.tooltipText).to.equal('Low')
-    })
-
-    it('should set the tooltip text to "Lo" for cbg values below the device threshold', function() {
-      var datum = {
-        type: 'cbg',
-        value: 39,
-        annotations: [
-          {
-            code: 'bg/out-of-range',
-            threshold: 40,
-            value: 'low'
-          }
-        ]
-      }
-
-      fmt.tooltipBG(datum)
-
-      expect(datum.tooltipText).to.equal('Lo')
+      expect(fmt.tooltipBGValue(4.2222222222222222222222222)).to.equal('4.2')
     })
   })
 
@@ -171,16 +99,6 @@ describe('format utility', function() {
 
     it('should remove right-hand zero padding where applicable', function() {
       expect(fmt.tooltipValue(1.200)).to.equal('1.2')
-    })
-  })
-
-  describe('capitalize', function() {
-    it('should be a function', function() {
-      assert.isFunction(fmt.capitalize)
-    })
-
-    it('should capitalize a string', function() {
-      expect(fmt.capitalize('foo')).to.equal('Foo')
     })
   })
 
@@ -260,61 +178,6 @@ describe('format utility', function() {
 
     it('should return an integer percentage when passed a value between 0.0 and 1.0', function() {
       expect(fmt.percentage(0.6666666666666666666666667)).to.equal('67%')
-    })
-  })
-
-  describe('timeChangeInfo', function() {
-    it('should be a function', function() {
-      assert.isFunction(fmt.timeChangeInfo)
-    })
-
-    it('should error if `to` argument is not passed', function() {
-      var err = 'You have not provided a `to` datetime string'
-      var x = '2014-01-01T01:00:00'
-      expect(fmt.timeChangeInfo.bind(fmt)).to.throw(err)
-      expect(fmt.timeChangeInfo.bind(fmt, x)).to.throw(err)
-      expect(fmt.timeChangeInfo.bind(fmt, null, x)).to.not.throw()
-    })
-
-    it('should return an object containing strings of times when both are on same day', function() {
-      var x = '2014-01-01T01:00:00'
-      var y = '2014-01-01T04:00:00'
-      var y2 = '2014-01-01T23:00:00'
-      expect(fmt.timeChangeInfo(x,y)).to.eql({type: 'Time Change', from: '1:00 am', to: '4:00 am', format: 'h:mm a'})
-      expect(fmt.timeChangeInfo(x,y2)).to.eql({type: 'Time Change', from: '1:00 am', to: '11:00 pm', format: 'h:mm a'})
-      expect(fmt.timeChangeInfo(y,y2)).to.eql({type: 'Time Change', from: '4:00 am', to: '11:00 pm', format: 'h:mm a'})
-    })
-
-    it('should label object as type Clock Drift Adjustment if difference is less than 8 minutes', function() {
-      var x = '2014-01-01T01:00:00'
-      var y = '2014-01-01T01:06:00'
-      expect(fmt.timeChangeInfo(x,y)).to.eql({type: 'Clock Drift Adjustment', from: '1:00 am', to: '1:06 am', format: 'h:mm a'})
-    })
-
-    it('should return an object containing strings of times and date when values are on different days', function() {
-      var x = '2014-01-01T01:00:00'
-      var y = '2014-01-02T04:00:00'
-      var y2 = '2014-01-30T04:00:00'
-      expect(fmt.timeChangeInfo(x,y)).to.eql({type: 'Time Change', from: 'Jan 1, 1:00 am', to: 'Jan 2, 4:00 am', format: 'MMM D, h:mm a'})
-      expect(fmt.timeChangeInfo(x,y2)).to.eql({type: 'Time Change', from: 'Jan 1, 1:00 am', to: 'Jan 30, 4:00 am', format: 'MMM D, h:mm a'})
-    })
-
-    it('should return an object containing strings of times and date when values are in different years', function() {
-      var x = '2014-12-31T04:00:00'
-      var y = '2015-01-01T01:00:00'
-      var y2 = '2015-04-15T04:25:00'
-      expect(fmt.timeChangeInfo(x,y)).to.eql({type: 'Time Change', from: 'Dec 31, 2014 4:00 am', to: 'Jan 1, 2015 1:00 am', format: 'MMM D, YYYY h:mm a'})
-      expect(fmt.timeChangeInfo(x,y2)).to.eql({type: 'Time Change', from: 'Dec 31, 2014 4:00 am', to: 'Apr 15, 2015 4:25 am', format: 'MMM D, YYYY h:mm a'})
-    })
-
-    it('should return an object containing only the `to` time when `from` arg is falsey', function() {
-      var x
-      var x1 = false
-      var x2 = null
-      var y = '2015-01-01T01:00:00'
-      expect(fmt.timeChangeInfo(x,y)).to.eql({type: 'Time Change', from: undefined, to: '1:00 am', format: 'h:mm a'})
-      expect(fmt.timeChangeInfo(x1,y)).to.eql({type: 'Time Change', from: undefined, to: '1:00 am', format: 'h:mm a'})
-      expect(fmt.timeChangeInfo(x2,y)).to.eql({type: 'Time Change', from: undefined, to: '1:00 am', format: 'h:mm a'})
     })
   })
 

@@ -179,13 +179,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     .gutterWeight(1.0)
 
   chart.arrangePools()
-  chart.setAnnotation().setTooltip()
-
-  // add annotations
-  chart.annotations.addGroup(chart.svg().select('#' + poolBG.id()), 'smbg')
-  chart.annotations.addGroup(chart.svg().select('#' + poolBolus.id()), 'bolus')
-  chart.annotations.addGroup(chart.svg().select('#' + poolBolus.id()), 'wizard')
-  chart.annotations.addGroup(chart.svg().select('#' + poolBasal.id()), 'basal')
+  chart.setTooltip()
 
   // add tooltips
   chart.tooltips.addGroup(poolMessages, {

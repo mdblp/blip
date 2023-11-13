@@ -26,9 +26,7 @@ export const MGDL_PER_MMOLL = 18.01577
  * This is to avoid superpositions of the icons in the daily view.
  * Format: Duration in milliseconds.
  */
-export const DEVICE_PARAMS_OFFSET = 30 * 60 * 1000
 export const MS_IN_DAY = 86400000
-export const MS_IN_HOUR = 3600000
 
 export const AUTOMATED_BASAL_DEVICE_MODELS = {
   Medtronic: ['1580', '1581', '1582', '1780', '1781', '1782'],
@@ -81,10 +79,4 @@ export const dateTimeFormats = {
   get H_MM_A_FORMAT() { return i18next.t('h:mm a') },
   /** @returns {string} translated 'ddd' format */
   get DDD_FORMAT() { return i18next.t('ddd') },
-  /** @returns {string} translated 'DD' format */
-  get DD_FORMAT() { return i18next.t('DD') },
-  /** @returns {string} translated 'MMM' format */
-  get MMM_FORMAT() { return i18next.t('MMM') },
-  /** @returns {string} translated 'MMM D' format */
-  get MMM_D_FORMAT() { return i18next.t('MMM D') }
 }

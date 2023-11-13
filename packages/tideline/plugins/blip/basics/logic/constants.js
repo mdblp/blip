@@ -23,22 +23,13 @@ export const CARTRIDGE_VICENTRA_CHANGE = {
   picto: cartridgeVicentra
 }
 
-export const CGM_CALCULATED = 'calculatedCGM'
-export const CGM_IN_DAY = 288
 export const MS_IN_DAY = 864e5
-export const MS_IN_HOUR = 864e5/24
-export const NO_CGM = 'noCGM'
 export const NO_SITE_CHANGE = 'noSiteChange'
-export const NOT_ENOUGH_CGM = 'notEnoughCGM'
 export const SITE_CHANGE = 'siteChange'
 export const SITE_CHANGE_RESERVOIR = 'reservoirChange'
 export const SITE_CHANGE_TUBING = 'tubingPrime'
 export const SITE_CHANGE_CANNULA = 'cannulaPrime'
 export const SECTION_TYPE_UNDECLARED = 'undeclared'
-export const INSULET = 'Insulet'
-export const TANDEM = 'Tandem'
-export const ANIMAS = 'Animas'
-export const MEDTRONIC = 'Medtronic'
 export const DIABELOOP = 'Diabeloop'
 export const SITE_CHANGE_BY_MANUFACTURER = {
   [DEFAULT_MANUFACTURER]: INFUSION_SITE_CHANGE,

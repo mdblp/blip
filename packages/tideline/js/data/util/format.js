@@ -42,22 +42,6 @@ const format = {
     }
   },
 
-  tooltipBG: function(d, units) {
-    if (d.annotations && Array.isArray(d.annotations) && d.annotations.length > 0) {
-      var annotation = d.annotations[0]
-      if (annotation.code && annotation.code === 'bg/out-of-range') {
-        var value = annotation.value
-        if (value === 'low') {
-          d.tooltipText = d.type === 'cbg' ? 'Lo' : 'Low'
-        }
-        else if (value === 'high') {
-          d.tooltipText = d.type === 'cbg' ? 'Hi' : 'High'
-        }
-      }
-    }
-    return format.tooltipBGValue(d.value, units)
-  },
-
   tooltipBGValue: function(value, units) {
     return units === MGDL_UNITS ? window.d3.format('g')(Math.round(value)) : window.d3.format('.1f')(value)
   },
@@ -128,11 +112,6 @@ const format = {
     return format.escapeHTMLString(returnedText)
   },
 
-  capitalize: function(s) {
-    // transform the first letter of string s to uppercase
-    return s[0].toUpperCase() + s.slice(1)
-  },
-
   fixFloatingPoint: function(n) {
     return Number.parseFloat(n.toFixed(3))
   },
@@ -182,51 +161,6 @@ const format = {
       d.setUTCMinutes(d.getUTCMinutes() + offset)
     }
     return window.d3.time.format.utc(f)(d).toLowerCase()
-  },
-
-  /**
-   * Given two timestamps return an object containing a timechange
-   *
-   * @param {String} from - date string
-   * @param {String} to - date string (required)
-   * @return {Object} containing keys from, to, type, format
-   */
-  timeChangeInfo: function(from, to) {
-    if (!to) { // guard statement
-      throw new Error('You have not provided a `to` datetime string')
-    }
-
-    // the "from" and "to" fields of a time change are always timezone-naive
-    // timestamps by definition (b/c they are device-relative time)
-    // but some (versions) of (some) browsers like to coerce timestamps without TZ info into local time
-    // and we need to prevent that, so we use moment.utc and then use the UTC
-    // variant of all JS Date methods to ensure consistency across browsers
-    var fromDate = from ? moment.utc(from).toDate() : undefined
-    var toDate = moment.utc(to).toDate()
-    var type = 'Time Change'
-
-    var format = 'h:mm a'
-    if (fromDate && toDate) {
-      if (fromDate.getUTCFullYear() !== toDate.getUTCFullYear()) {
-        format = 'MMM D, YYYY h:mm a'
-      } else if (
-        fromDate.getUTCMonth() !== toDate.getUTCMonth() ||
-        fromDate.getUTCDay() !== toDate.getUTCDay()
-      ) {
-        format = 'MMM D, h:mm a'
-      }
-
-      if (Math.abs(toDate - fromDate) <= (8*(60*1000))) { // Clock Drift Adjustment if less than 8 minutes
-        type = 'Clock Drift Adjustment'
-      }
-    }
-
-    return {
-      type: type,
-      from: fromDate ? moment.utc(fromDate).format(format): undefined,
-      to: moment.utc(toDate).format(format),
-      format: format
-    }
   },
 
   /**

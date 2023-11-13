@@ -27,7 +27,6 @@ import bows from 'bows'
 import moment from 'moment-timezone'
 
 import { MS_IN_DAY } from './data/util/constants'
-import mkAnnotation from './plot/util/annotations/annotation'
 import Tooltips from './plot/util/tooltips/tooltip'
 
 /**
@@ -545,20 +544,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       })
       .call(nav.drag)
 
-    return container
-  }
-
-  container.setAnnotation = function() {
-    const annotationGroup = container.mainGroup.append('g')
-      .attr({
-        'id': 'tidelineAnnotationsOuter',
-        'clip-path': 'url(#mainClipPath)'
-      })
-      .append('g')
-      .attr('id', 'tidelineAnnotations')
-
-    container.annotations = mkAnnotation(container, annotationGroup).id(annotationGroup.attr('id'))
-    container.pools.forEach((pool) => pool.annotations(container.annotations))
     return container
   }
 

@@ -22,12 +22,9 @@ import moment from 'moment-timezone'
 import './format.test'
 import './datetime.test'
 import './constants.test'
-import './tidelinedata.test'
-import './basalutil.test'
 import './categorize.test'
 
 /* js/plot/ */
-import './annotations.test'
 import './commonbolus.test'
 import './device.test'
 
@@ -35,15 +32,12 @@ import './device.test'
 // ====================================
 
 /* plugins/ */
-import './basics_classifiers.test'
 import './basics_datamunger.test'
-import './nurseshark.test'
 
 import './blip/components/logic/actions.test.js'
 import './blip/components/sitechange/Selector.test.js'
 import './blip/components/BasicsUtils.test.js'
 
 window.d3 = require('d3')
-window.d3.chart = require('d3.chart')
 
 moment.locale('en')

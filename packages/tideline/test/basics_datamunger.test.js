@@ -23,13 +23,6 @@ import togglableState from '../plugins/blip/basics/TogglableState'
 import datamunger from '../plugins/blip/basics/logic/datamunger'
 
 describe('basics datamunger', function() {
-  var bgClasses = {
-    veryLow: 10,
-    low: 20,
-    target: 30,
-    high: 40,
-    veryHigh: 50
-  }
   var oneWeekDates = [{
     date: '2015-09-07',
     type: 'past'
@@ -75,7 +68,7 @@ describe('basics datamunger', function() {
     }
   }
 
-  var dm = datamunger(bgClasses)
+  var dm = datamunger()
   it('should return an object', function() {
     assert.isObject(dm)
   })
@@ -383,70 +376,6 @@ describe('basics datamunger', function() {
         days: oneWeekDates
       }
       expect(dm.infusionSiteHistory(bd2, 'reservoirChange')).to.deep.equal(res2)
-    })
-  })
-
-  describe('_summarizeTagFn', function() {
-    it('should be a function', function() {
-      assert.isFunction(dm._summarizeTagFn)
-    })
-
-    it('should return a function that can be used with _.each to summarize tags from subtotals', function() {
-      var dataObj = {
-        dataByDate: {
-          '2015-01-01': {
-            subtotals: {
-              foo: 2,
-              bar: 3
-            }
-          },
-          '2015-01-02': {
-            subtotals: {
-              foo: 10,
-              bar: 10
-            }
-          },
-          '2015-01-03': {
-            subtotals: {
-              foo: 0,
-              bar: 0
-            }
-          }
-        }
-      }
-      var summary = {total: 25}
-      _.forEach(['foo', 'bar'], dm._summarizeTagFn(dataObj, summary))
-      expect(summary).to.deep.equal({
-        total: 25,
-        foo: {count: 12, percentage: 0.48},
-        bar: {count: 13, percentage: 0.52}
-      })
-    })
-  })
-
-  describe('_averageExcludingMostRecentDay', function() {
-    it('should be a function', function() {
-      assert.isFunction(dm._averageExcludingMostRecentDay)
-    })
-
-    it('should calculate an average excluding the most recent day if data exists for it', function() {
-      var dataObj = {
-        dataByDate: {
-          '2015-01-01': {
-            total: 2
-          },
-          '2015-01-02': {
-            total: 9
-          },
-          '2015-01-03': {
-            total: 16
-          },
-          '2015-01-04': {
-            total: 1
-          }
-        }
-      }
-      expect(dm._averageExcludingMostRecentDay(dataObj, 28, '2015-01-04')).to.equal(9)
     })
   })
 
