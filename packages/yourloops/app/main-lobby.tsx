@@ -60,27 +60,20 @@ export const MainLobby: FC = () => {
   // const canDisplayApp = !isLoading && (isCurrentRoutePublic || isCurrentRouteAlwaysAccessible)
   // const canDisplayApp = !isLoading && (isCurrentRoutePublic || isCurrentRouteAlwaysAccessible || user)
 
-  console.log('rendering lobby')
   return (
-    <>
-      {/*{canDisplayApp ? (*/}
-      <CacheProvider value={muiCache}>
-        <TssCacheProvider value={tssCache}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <GlobalStyles styles={{ body: { backgroundColor: 'var(--body-background-color)' } }} />
-            <SnackbarContextProvider context={DefaultSnackbarContext}>
-              <Box>
-                <Outlet />
-              </Box>
-            </SnackbarContextProvider>
-            <Footer />
-          </ThemeProvider>
-        </TssCacheProvider>
-      </CacheProvider>
-      {/*)*/}
-      {/*: <Outlet />*/}
-      {/*}*/}
-    </>
+    <CacheProvider value={muiCache}>
+      <TssCacheProvider value={tssCache}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <GlobalStyles styles={{ body: { backgroundColor: 'var(--body-background-color)' } }} />
+          <SnackbarContextProvider context={DefaultSnackbarContext}>
+            <Box>
+              <Outlet />
+            </Box>
+          </SnackbarContextProvider>
+          <Footer />
+        </ThemeProvider>
+      </TssCacheProvider>
+    </CacheProvider>
   )
 }

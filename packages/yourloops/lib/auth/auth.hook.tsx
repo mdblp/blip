@@ -56,7 +56,7 @@ import { type SignupForm } from './models/signup-form.model'
 import { type ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
 import { v4 as uuidv4 } from 'uuid'
 import { sanitizeBgUnit } from './user.util'
-import { useLoaderData, useRouteLoaderData } from 'react-router-dom'
+import { useLoaderData, useLocation, useRouteLoaderData } from 'react-router-dom'
 import { useIdleTimer } from 'react-idle-timer'
 import { ConfigService } from '../config/config.service'
 
@@ -70,7 +70,9 @@ export function AuthContextImpl(): AuthContext {
     isAuthenticated,
     getAccessTokenWithPopup
   } = useAuth0()
-  const userFromLoader = useRouteLoaderData('user-route') as User
+  const { pathname } = useLocation()
+  const urlPrefix = pathname.split('/')[1]
+  const userFromLoader = useRouteLoaderData(`user-${urlPrefix}`) as User
   // const userFromLoader = useLoaderData() as User
   const [user, setUser] = useState<User>(userFromLoader)
   // const [fetchingUser, setFetchingUser] = useState<boolean>(false)

@@ -47,18 +47,12 @@ export default class PatientUtils {
     return patientsAsITeamMembers.map(patientAsITeamMember => mapITeamMemberToPatient(patientAsITeamMember))
   }
 
-  static async computePatients(userId: string, userRole: UserRole, teamId?: string): Promise<Patient[]> {
-    switch (userRole) {
-      case UserRole.Hcp:
-        if (!teamId) {
-          throw Error('Cannot retrieve scoped patients when no team id is given')
-        }
-        return await PatientApi.getPatientsForHcp(userId, teamId)
-      case UserRole.Caregiver:
-        return await PatientUtils.retrievePatients()
-      default:
-        throw Error(`Cannot retrieve patients with user having role ${userRole}`)
-    }
+  static async computePatientsForHcp(userId: string, userRole: UserRole, teamId: string): Promise<Patient[]> {
+    return await PatientApi.getPatientsForHcp(userId, teamId)
+  }
+
+  static async computePatientsForCaregiver(): Promise<Patient[]> {
+    return await PatientUtils.retrievePatients()
   }
 
   static async fetchMetrics(patients: Patient[], teamId: string, userId: string): Promise<PatientMetrics[]> {

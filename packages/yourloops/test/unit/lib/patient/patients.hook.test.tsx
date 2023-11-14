@@ -51,7 +51,7 @@ describe('Patients hook', () => {
   const getInvitationMock = jest.fn()
   const refreshTeamsMock = jest.fn()
   const refreshSentInvitationsMock = jest.fn()
-  const computePatientsSpy = jest.spyOn(PatientUtils, 'computePatients')
+  const computePatientsSpy = jest.spyOn(PatientUtils, 'computePatientsForHcp')
 
   beforeAll(() => {
     computePatientsSpy.mockReset();
@@ -90,7 +90,7 @@ describe('Patients hook', () => {
   })
 
   async function renderPatientsHook(patients: Patient[]) {
-    jest.spyOn(PatientUtils, 'computePatients').mockResolvedValue(patients)
+    jest.spyOn(PatientUtils, 'computePatientsForHcp').mockResolvedValue(patients)
     const hook = renderHook(() => usePatientsProviderCustomHook())
     await waitFor(() => {
       expect(hook.result.current.patients).toBeDefined()

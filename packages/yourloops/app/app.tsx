@@ -49,7 +49,7 @@ import { TrainingPage } from '../pages/training/training'
 import { VerifyEmailPage } from '../pages/login/verify-email-page'
 import { InvalidRoute } from '../components/invalid-route'
 import { UserRole } from '../lib/auth/models/enums/user-role.enum'
-import { CaregiverLayout } from '../layout/caregiver-layout'
+import { CaregiverLayout, CaregiverLayoutWithPatientsProviders } from '../layout/caregiver-layout'
 import { PatientLayout } from '../layout/patient-layout'
 import { ProfilePage } from '../pages/profile/profile-page'
 import { NotificationsPage } from '../pages/notifications/notifications-page'
@@ -93,7 +93,6 @@ const retrieveUser = async (user: User | null) => {
   if (!user || AuthService.hasUserBeenRetrieved()) {
     return AuthService.getUser()
   }
-  console.log('retrieving user')
   const userMetadata = await UserApi.getUserMetadata(user.id)
   if (userMetadata) {
     user.profile = userMetadata.profile
@@ -247,39 +246,15 @@ const Root: FC = () => {
   )
 }
 
-// const Toto: FC = () => {
-//   const { userId } = useParams()
-//   const { user } = useAuth()
-//   const { isLoading, isAuthenticated } = useAuth0()
-//
-//   const hasDoneLoginProcess = isLoading || isAuthenticated
-//   const hasRetrievedUser = !!user
-//
-//   console.log('toto outlet', hasRetrievedUser)
-//
-//   return (
-//     <>
-//       {hasRetrievedUser && userId && <Outlet />}
-//       {hasRetrievedUser && !userId && <Navigate to={`/hcps/${user.id}`} replace />}
-//       {!hasDoneLoginProcess && <Navigate to="/login" replace />}
-//       {!hasRetrievedUser && hasDoneLoginProcess && <SpinningLoader className="centered-spinning-loader" />}
-//     </>
-//   )
-// }
-
 const getHcpLayout = () => {
   return [
     {
       path: ':userId',
       element: <HcpLayout />,
-      // shouldRevalidate: () => {
-      //   return false
-      // },
       loader: async ({ params }) => {
         if (!HttpService.isServiceAvailable()) {
           return redirect('/')
         }
-        console.log('retrieving teams')
         const teams = await TeamApi.getTeams(params.userId, UserRole.Hcp)
         if (!teams.length) {
           throw Error('Error when retrieving teams')
@@ -287,8 +262,6 @@ const getHcpLayout = () => {
         return teams
       },
       id: 'teams-route',
-      // errorElement: <div>Could not retrieve teams</div>,
-      // children: [
       children: [
         ...COMMON_LOGGED_ROUTES,
         {
@@ -304,10 +277,9 @@ const getHcpLayout = () => {
                 if (!params.teamId) {
                   return null
                 }
-                console.log('retrieving patients')
-                return PatientUtils.computePatients(params.userId, UserRole.Hcp, params.teamId)
+                return PatientUtils.computePatientsForHcp(params.userId, UserRole.Hcp, params.teamId)
               },
-              id: 'patients-route',
+              id: 'patients-route-for-hcp',
               children: [
                 { path: '', element: <PatientListPage /> },
                 { path: ':patientId/*', element: <PatientData /> }
@@ -315,20 +287,12 @@ const getHcpLayout = () => {
             },
             { path: ':teamId', element: <CareTeamSettingsPage /> },
             { path: 'private', element: <Navigate to="/teams/private/patients" replace /> },
-            // { path: '', element: <div>toto</div> },
             { path: '', element: <NavigateWithCorrectTeamId /> }
           ]
         },
-        // { path: AppUserRoute.CareTeamSettings, element: <CareTeamSettingsPage /> },
-        // { path: 'teams/private', element: <Navigate to="/teams/private/patients" replace /> },
-        // { path: AppUserRoute.PatientsList, element: <PatientListPage /> },
-        // { path: AppUserRoute.PatientView, element: <PatientData /> },
-        // { path: '', element: <NavigateWithCorrectTeamId /> },
         { path: '*', element: <Navigate to={AppUserRoute.NotFound} replace /> }
       ]
     }
-    // ]
-// }
   ]
 }
 
@@ -338,8 +302,21 @@ const getCaregiverLayout = () => {
       element: <CaregiverLayout />,
       children: [
         ...COMMON_LOGGED_ROUTES,
-        { path: AppUserRoute.PatientsList, element: <PatientListPage /> },
-        { path: AppUserRoute.PatientView, element: <PatientData /> },
+        {
+          path: AppUserRoute.PatientsList,
+          element: <CaregiverLayoutWithPatientsProviders />,
+          loader: async () => {
+            if (!HttpService.isServiceAvailable()) {
+              return redirect('/')
+            }
+            return await PatientUtils.computePatientsForCaregiver()
+          },
+          id: 'patients-route-for-caregivers',
+          children: [
+            { path: '', element: <PatientListPage /> },
+            { path: ':patientId/*', element: <PatientData /> }
+          ]
+        },
         { path: '', element: <Navigate to={AppUserRoute.PrivatePatientsList} replace /> },
         { path: '*', element: <Navigate to={AppUserRoute.NotFound} replace /> }
       ]
@@ -361,6 +338,20 @@ const getPatientLayout = () => {
   ]
 }
 
+const userLoader = async (currentRoleRoute: UserRole) => {
+  const isAuthenticated = AuthService.isAuthenticated()
+  if (!isAuthenticated) {
+    return redirect('/login')
+  }
+  const user = AuthService.getUser()
+  if (user.role !== currentRoleRoute) {
+    redirect('/login')
+  }
+  checkFirstSignup(user)
+  checkConsent(user)
+  return await retrieveUser(user)
+}
+
 const router = createBrowserRouter([
   {
     element: <Root />,
@@ -378,22 +369,19 @@ const router = createBrowserRouter([
       {
         path: 'hcps/',
         loader: async () => {
-          const isAuthenticated = AuthService.isAuthenticated()
-          if (!isAuthenticated) {
-            return redirect('/login')
-          }
-          const user = AuthService.getUser()
-          if (!user.isUserHcp()) {
-            return redirect('/login')
-          }
-          checkFirstSignup(user)
-          checkConsent(user)
-          return await retrieveUser(user)
+          return userLoader(UserRole.Hcp)
         },
-        id: 'user-route',
+        id: 'user-hcps',
         children: getHcpLayout()
       },
-      { path: 'caregivers/:userId', children: getCaregiverLayout() },
+      {
+        path: 'caregivers/:userId',
+        loader: async () => {
+          return userLoader(UserRole.Caregiver)
+        },
+        id: 'user-caregivers',
+        children: getCaregiverLayout()
+      },
       { path: 'patients/:userId', children: getPatientLayout() },
       { path: '*', element: <Navigate to={AppRoute.Login} replace /> }
     ]

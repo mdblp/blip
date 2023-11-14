@@ -37,7 +37,7 @@ import { useAuth } from '../auth'
 import { type PatientsContextResult } from './models/patients-context-result.model'
 import { type Patient } from './models/patient.model'
 import { usePatientListContext } from '../providers/patient-list.provider'
-import { useParams, useRevalidator, useRouteLoaderData } from 'react-router-dom'
+import { useLocation, useParams, useRevalidator, useRouteLoaderData } from 'react-router-dom'
 import { PRIVATE_TEAM_ID } from '../team/team.hook'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 
@@ -48,7 +48,10 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const { teamId: teamIdFromParam } = useParams()
   const isUserHcp = user.isUserHcp()
   const teamId = teamIdFromParam ?? localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
-  const patientsBasicInfos = useRouteLoaderData('patients-route') as Patient[]
+  const { pathname } = useLocation()
+  const urlPrefix = pathname.split('/')[1]
+  // const patientsBasicInfos = useRouteLoaderData('toto') as Patient[]
+  const patientsBasicInfos = useRouteLoaderData(`patients-route-for-${urlPrefix}`) as Patient[]
   const { revalidate: refreshPatientsInfo } = useRevalidator()
 
   const [patients, setPatients] = useState<Patient[]>(patientsBasicInfos)

@@ -27,41 +27,33 @@
 
 import React, { type FunctionComponent } from 'react'
 import { Outlet } from 'react-router-dom'
-import { PatientsProvider } from '../lib/patient/patients.provider'
 import { DashboardLayout } from './dashboard-layout'
-import { PatientListProvider } from '../lib/providers/patient-list.provider'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from './hcp-layout'
 import { PRIVATE_TEAM_ID } from '../lib/team/team.hook'
 import { NotificationContextProvider } from '../lib/notifications/notification.hook'
+import { AuthContextProvider } from '../lib/auth'
+import { PatientsProvider } from '../lib/patient/patients.provider'
+import { PatientListProvider } from '../lib/providers/patient-list.provider'
 
 export const CaregiverLayout: FunctionComponent = () => {
   localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, PRIVATE_TEAM_ID)
   return (
-    <NotificationContextProvider>
-      <PatientListProvider>
-        <PatientsProvider>
-          <DashboardLayout>
-            <Outlet />
-          </DashboardLayout>
-        </PatientsProvider>
-      </PatientListProvider>
-    </NotificationContextProvider>
+    <AuthContextProvider>
+      <NotificationContextProvider>
+        <DashboardLayout>
+          <Outlet />
+        </DashboardLayout>
+      </NotificationContextProvider>
+    </AuthContextProvider>
   )
 }
 
-// export const CaregiverLayout: FunctionComponent = () => {
-//   localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, PRIVATE_TEAM_ID)
-//   return (
-//     <Routes>
-//       <Route element={<CaregiverCommonLayout />}>
-//         <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
-//         <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
-//         <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
-//         <Route path={AppUserRoute.PatientsList} element={<PatientListPage />} />
-//         <Route path={AppUserRoute.PatientView} element={<PatientData />} />
-//         <Route path="/" element={<Navigate to={AppUserRoute.PrivatePatientsList} replace />} />
-//         <Route path="*" element={<Navigate to={AppUserRoute.NotFound} replace />} />
-//       </Route>
-//     </Routes>
-//   )
-// }
+export const CaregiverLayoutWithPatientsProviders: FunctionComponent = () => {
+  return (
+    <PatientListProvider>
+      <PatientsProvider>
+          <Outlet />
+      </PatientsProvider>
+    </PatientListProvider>
+  )
+}

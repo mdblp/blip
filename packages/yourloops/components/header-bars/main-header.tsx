@@ -124,7 +124,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
     if (user.isUserPatient()) {
       return `/patients/${user.id}/${AppUserRoute.Notifications}`
     }
-    if (user.isUserHcp()) {
+    if (user.isUserCaregiver()) {
       return `/caregivers/${user.id}/${AppUserRoute.Notifications}`
     }
   }
