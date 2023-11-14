@@ -32,7 +32,6 @@ import {
   CGM_READINGS_ONE_DAY,
   DIABELOOP,
   getPumpVocabularies,
-  MS_IN_DAY,
   NO_CGM,
   NO_SITE_CHANGE,
   NOT_ENOUGH_CGM,
@@ -41,7 +40,7 @@ import {
   SITE_CHANGE,
   SITE_CHANGE_RESERVOIR
 } from '../constants'
-import { applyOffset } from 'medical-domain'
+import { applyOffset, MS_IN_DAY } from 'medical-domain'
 
 const t = i18next.t.bind(i18next)
 

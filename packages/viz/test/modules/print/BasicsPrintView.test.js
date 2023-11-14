@@ -19,14 +19,13 @@ import _ from 'lodash'
 import * as sinon from 'sinon'
 import { expect } from 'chai'
 
-import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
+import { MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
 import BasicsPrintView from '../../../src/modules/print/BasicsPrintView'
 import PrintView from '../../../src/modules/print/PrintView'
 import { patient } from '../../../data/patient/profiles'
 import * as settings from '../../../data/patient/settings'
 
 import { basicsData as data } from '../../../data/print/fixtures'
-import { MS_IN_HOUR } from '../../../src/utils/constants'
 
 import {
   DEFAULT_FONT_SIZE,
@@ -97,24 +96,24 @@ describe('BasicsPrintView', () => {
     } } },
     readingsInRange: { data: {
       raw: {
-        target: MS_IN_HOUR * 3,
-        veryLow: MS_IN_HOUR
+        target: TimeService.MS_IN_HOUR * 3,
+        veryLow: TimeService.MS_IN_HOUR
       },
-      total: { value: MS_IN_HOUR * 4 }
+      total: { value: TimeService.MS_IN_HOUR * 4 }
     } },
     timeInRange: { data: {
       raw: {
-        target: MS_IN_HOUR * 3,
-        veryLow: MS_IN_HOUR
+        target: TimeService.MS_IN_HOUR * 3,
+        veryLow: TimeService.MS_IN_HOUR
       },
-      total: { value: MS_IN_HOUR * 4 }
+      total: { value: TimeService.MS_IN_HOUR * 4 }
     } },
     timeInAuto: { data: {
       raw: {
-        manual: MS_IN_HOUR * 3,
-        automated: MS_IN_HOUR * 7
+        manual: TimeService.MS_IN_HOUR * 3,
+        automated: TimeService.MS_IN_HOUR * 7
       },
-      total: { value: MS_IN_HOUR * 10 }
+      total: { value: TimeService.MS_IN_HOUR * 10 }
     } },
     totalInsulin: { data: { raw: {
       basal: 10,

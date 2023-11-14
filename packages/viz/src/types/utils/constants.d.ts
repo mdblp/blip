@@ -6,9 +6,6 @@ export namespace springConfig {
     export { PRECISION as precision };
 }
 export const LBS_PER_KG: 2.2046226218;
-export const MS_IN_DAY: 86400000;
-export const MS_IN_HOUR: number;
-export const MS_IN_MIN: number;
 export const CGM_READINGS_ONE_DAY: 288;
 export const CGM_DATA_KEY: "cbg";
 export const BGM_DATA_KEY: "smbg";

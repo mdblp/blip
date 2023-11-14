@@ -21,7 +21,7 @@ import { range } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
 import moment from 'moment-timezone'
 
-import { classifyBgValue, MMOLL_UNITS } from 'medical-domain'
+import { classifyBgValue, MMOLL_UNITS, TimeService } from 'medical-domain'
 
 import { PrintView } from 'dumb'
 import { calculateBasalPath, getBasalSequencePaths } from '../render/basal'
@@ -47,7 +47,7 @@ import {
 } from '../../utils/datetime'
 import { formatBgValue, formatDecimalNumber, formatPercentage, removeTrailingZeroes } from '../../utils/format'
 
-import { AUTOMATED_DELIVERY, MS_IN_MIN, SCHEDULED_DELIVERY } from '../../utils/constants'
+import { AUTOMATED_DELIVERY, SCHEDULED_DELIVERY } from '../../utils/constants'
 
 const t = i18next.t.bind(i18next)
 
@@ -869,7 +869,7 @@ class DailyPrintView extends PrintView {
 
     const labeledSchedules = []
     _.forEach(basal, datum => {
-      if (datum.subType === 'scheduled' && datum.rate > 0 && datum.duration >= 60 * MS_IN_MIN) {
+      if (datum.subType === 'scheduled' && datum.rate > 0 && datum.duration >= 60 * TimeService.MS_IN_MIN) {
         const newRate = currentSchedule.rate !== datum.rate
 
         if (newRate) {
