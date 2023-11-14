@@ -77,8 +77,6 @@ function plotBasal(pool, opts = defaults) {
         return
       }
 
-      basal.addAnnotations(_.filter(currentData, 'annotations'))
-
       const basalSegments = d3.select(this)
         .selectAll('.d3-basal-group')
         .data(currentData, (d) => d.id)
@@ -360,28 +358,6 @@ function plotBasal(pool, opts = defaults) {
       edge: res.edge
     })
   }
-
-  basal.addAnnotations = function(data) {
-    const yScale = pool.yScale()
-    for (let i = 0; i < data.length; ++i) {
-      const d = data[i]
-      const annotationOpts = {
-        x: basal.xPosition(d),
-        y: yScale(0),
-        xMultiplier: 2,
-        yMultiplier: 1,
-        orientation: {
-          up: true
-        },
-        d: d
-      }
-      if (_.isNil(mainGroup.select('#annotation_for_' + d.id)[0][0])) {
-        mainGroup.select('#tidelineAnnotations_basal')
-          .call(pool.annotations(), annotationOpts)
-      }
-    }
-  }
-
   return basal
 }
 
