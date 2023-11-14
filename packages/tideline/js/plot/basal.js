@@ -45,10 +45,10 @@ function getBasalPathGroupType(datum) {
  * @return {Array} groups of alternating 'automated' and 'manual' datums
  */
 function getBasalPathGroups(basals) {
-  var basalPathGroups = []
-  var currentPathType
+  const basalPathGroups = []
+  let currentPathType = ''
   _.forEach(basals, datum => {
-    var pathType = getBasalPathGroupType(datum)
+    const pathType = getBasalPathGroupType(datum)
     if (pathType !== currentPathType) {
       currentPathType = pathType
       basalPathGroups.push([])

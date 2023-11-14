@@ -22,7 +22,7 @@ import togglableState from '../plugins/blip/basics/TogglableState'
 import datamunger from '../plugins/blip/basics/logic/datamunger'
 
 describe('basics datamunger', function() {
-  var oneWeekDates = [{
+  const oneWeekDates = [{
     date: '2015-09-07',
     type: 'past'
   }, {
@@ -44,12 +44,12 @@ describe('basics datamunger', function() {
     date: '2015-09-13',
     type: 'future'
   }]
-  var countSiteChangesByDay = {
+  const countSiteChangesByDay = {
     '2015-09-05': {count: 1},
     '2015-09-08': {count: 1, data: 'a'},
     '2015-09-12': {count: 2, data: 'b'}
   }
-  var siteChangeSections = {
+  const siteChangeSections = {
     siteChanges: {
       id: 'siteChanges',
       togglable: togglableState.off,
@@ -67,7 +67,7 @@ describe('basics datamunger', function() {
     }
   }
 
-  var dm = datamunger()
+  const dm = datamunger()
   it('should return an object', function() {
     assert.isObject(dm)
   })
@@ -78,12 +78,12 @@ describe('basics datamunger', function() {
     })
 
     it('should return null without latest pump', function() {
-      var basicsData = {
+      const basicsData = {
         data: {},
         sections: siteChangeSections
       }
 
-      var patient = {
+      const patient = {
         profile: {
           fullName: 'Jill Jellyfish'
         },
@@ -96,14 +96,14 @@ describe('basics datamunger', function() {
     })
 
     it('should return that a user has set their site change source settings', function() {
-      var basicsData = {
+      const basicsData = {
         data: {
           [constants.SITE_CHANGE_RESERVOIR]: {dataByDate: countSiteChangesByDay}
         },
         days: oneWeekDates,
         sections: siteChangeSections
       }
-      var patient = {
+      const patient = {
         profile: {
           fullName: 'Jill Jellyfish'
         },
@@ -117,7 +117,7 @@ describe('basics datamunger', function() {
     })
 
     it('should return that a user has not set their site change source settings', function() {
-      var basicsData = {
+      const basicsData = {
         data: {
           [constants.SITE_CHANGE_RESERVOIR]: {dataByDate: countSiteChangesByDay}
         },
@@ -125,7 +125,7 @@ describe('basics datamunger', function() {
         sections: siteChangeSections
       }
 
-      var patient = {
+      const patient = {
         profile: {
           fullName: 'Jill Jellyfish'
         },
@@ -137,7 +137,7 @@ describe('basics datamunger', function() {
     })
 
     it('should set siteChanges type to reservoirChange', function() {
-      var basicsData = {
+      const basicsData = {
         data: {
           [constants.SITE_CHANGE_RESERVOIR]: {dataByDate: countSiteChangesByDay}
         },
@@ -145,7 +145,7 @@ describe('basics datamunger', function() {
         sections: siteChangeSections
       }
 
-      var patient = {
+      const patient = {
         profile: {
           fullName: 'Jill Jellyfish'
         },
@@ -160,7 +160,7 @@ describe('basics datamunger', function() {
   })
 
   describe('infusionSiteHistory', function() {
-    var bd = {
+    const bd = {
       data: {reservoirChange: {dataByDate: countSiteChangesByDay}},
       days: oneWeekDates
     }
@@ -169,7 +169,7 @@ describe('basics datamunger', function() {
     })
 
     it('should return an object keyed by date; value is object with attrs type, count, daysSince', function() {
-      var res = {}
+      const res = {}
       oneWeekDates.forEach(function(d) {
         res[d.date] = {type: d.type === 'future' ? d.type : 'noSiteChange'}
       })
@@ -180,19 +180,19 @@ describe('basics datamunger', function() {
     })
 
     it('should properly calculate the daysSince for the first infusion site change', function() {
-      var res2 = {}
+      const res2 = {}
       oneWeekDates.forEach(function(d) {
         res2[d.date] = {type: d.type === 'future' ? d.type : 'noSiteChange'}
       })
       res2['2015-09-08'] = {type: 'siteChange', count: 1, daysSince: 7, data: 'a'}
       res2['2015-09-12'] = {type: 'siteChange', count: 1, daysSince: 4, data: 'b'}
       res2.hasChangeHistory = true
-      var countSiteChangesByDay2 = {
+      const countSiteChangesByDay2 = {
         '2015-09-01': {count: 1},
         '2015-09-08': {count: 1, data: 'a'},
         '2015-09-12': {count: 1, data: 'b'}
       }
-      var bd2 = {
+      const bd2 = {
         data: {reservoirChange: {dataByDate: countSiteChangesByDay2}},
         days: oneWeekDates
       }
@@ -206,8 +206,8 @@ describe('basics datamunger', function() {
     })
 
     describe('crossfilter utils per datatype', function() {
-      var then = '2015-01-01T00:00:00.000Z'
-      var bd = {
+      const then = '2015-01-01T00:00:00.000Z'
+      const bd = {
         data: {
           basal: {data: [{type: 'basal', deliveryType: 'temp', normalTime: then, displayOffset: 0}]},
           bolus: {data: [{type: 'bolus', normalTime: then, displayOffset: 0}]},
