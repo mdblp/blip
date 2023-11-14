@@ -73,6 +73,7 @@ import {
   type BgClasses,
   defaultMedicalDataOptions,
   defaultBgClasses,
+  DEFAULT_BG_BOUNDS,
   type TimePrefs
 } from './domains/models/medical/medical-data-options.model'
 import * as TimeService from './domains/repositories/time/time.service'
@@ -142,6 +143,7 @@ export {
   type ZenMode,
   type WeekDaysFilter,
   defaultMedicalDataOptions,
+  DEFAULT_BG_BOUNDS,
   defaultBgClasses,
   TimeService,
   MGDL_UNITS,
