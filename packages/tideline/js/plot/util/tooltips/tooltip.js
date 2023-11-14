@@ -259,46 +259,6 @@ function Tooltips(container, tooltipsGroup) {
     }
   }
 
-  this.addFixedTooltip = function(opts) {
-    opts = opts || {}
-    currentTranslation = container.currentTranslation()
-    var atLeftEdge = isAtLeftEdge(locationInWindow(opts.xPosition(opts.datum)))
-    var atRightEdge = isAtRightEdge(locationInWindow(opts.xPosition(opts.datum)))
-
-    var shape = opts.shape
-    if (shape) {
-      var group = tooltipGroups[opts.datum.type].append('g')
-        .attr({
-          id: 'tooltip_' + opts.datum.id,
-          class: 'd3-tooltip d3-' + opts.datum.type,
-          transform: 'translate(' + opts.xPosition(opts.datum) + ',' + opts.yPosition(opts.datum) + ')'
-        })
-      var tooltipShape = group.append('use')
-        .attr({
-          'x': 0,
-          'y': 0,
-          'xlink:href': '#' + shapes[shape].id + '_' + opts.cssClass
-        })
-      if (opts.orientation) {
-        if (atLeftEdge) {
-          shapes[shape].orientations[opts.orientation.leftEdge](tooltipShape)
-        }
-        else if (atRightEdge) {
-          shapes[shape].orientations[opts.orientation.rightEdge](tooltipShape)
-        }
-        else {
-          shapes[shape].orientations[opts.orientation['default']](tooltipShape)
-        }
-      }
-      else {
-        shapes[shape].orientations.normal(tooltipShape)
-      }
-      if (shapes[shape].addText) {
-        shapes[shape].addText(group, opts)
-      }
-    }
-  }
-
   this.addGroup = function(pool, opts) {
     var type = opts.type, shape
     if (opts.shape) {
