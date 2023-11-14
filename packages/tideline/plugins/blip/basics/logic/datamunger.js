@@ -17,10 +17,9 @@
 
 import _ from 'lodash'
 import crossfilter from 'crossfilter2'
-import { MS_IN_DAY } from 'medical-domain'
+import { applyOffset, MS_IN_DAY } from 'medical-domain'
 import * as constants from './constants'
 import togglableState from '../TogglableState'
-import { applyOffset } from 'medical-domain'
 
 function dataMunger() {
   return {
@@ -61,16 +60,16 @@ function dataMunger() {
     },
 
     infusionSiteHistory: function(basicsData, type) {
-      var infusionSitesPerDay = basicsData.data[type].dataByDate
-      var allDays = basicsData.days
-      var infusionSiteHistory = {}
-      var hasChangeHistory = false
+      const infusionSitesPerDay = basicsData.data[type].dataByDate
+      const allDays = basicsData.days
+      const infusionSiteHistory = {}
+      let hasChangeHistory = false
       // daysSince does *not* start at zero because we have to look back to the
       // most recent infusion site change prior to the basics-restricted time domain
-      var priorSiteChange = _.findLast(_.keys(infusionSitesPerDay), function(date) {
+      const priorSiteChange = _.findLast(_.keys(infusionSitesPerDay), function(date) {
         return date < allDays[0].date
       })
-      var daysSince = (Date.parse(allDays[0].date) - Date.parse(priorSiteChange))/MS_IN_DAY - 1
+      let daysSince = (Date.parse(allDays[0].date) - Date.parse(priorSiteChange))/MS_IN_DAY - 1
       _.forEach(allDays, function(day) {
         if (day.type === 'future') {
           infusionSiteHistory[day.date] = {type: 'future'}
@@ -129,14 +128,14 @@ function dataMunger() {
       }
 
       dataObj.byLocalDate = dataObj.cf.dimension(getLocalDate)
-      var dataByLocalDate = dataObj.byLocalDate.group().reduce(
+      const dataByLocalDate = dataObj.byLocalDate.group().reduce(
         reduceAddMaker(),
         reduceRemoveMaker(),
         reduceInitialMaker()
       ).all()
-      var dataByDateHash = {}
-      for (var j = 0; j < dataByLocalDate.length; ++j) {
-        var day = dataByLocalDate[j]
+      const dataByDateHash = {}
+      for (let j = 0; j < dataByLocalDate.length; ++j) {
+        const day = dataByLocalDate[j]
         dataByDateHash[day.key] = day.value
       }
       dataObj.dataByDate = dataByDateHash
