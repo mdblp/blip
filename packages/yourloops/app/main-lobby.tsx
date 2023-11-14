@@ -26,22 +26,17 @@
  */
 
 import React, { type FC } from 'react'
-import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { useAuth0 } from '@auth0/auth0-react'
+import { Outlet } from 'react-router-dom'
 
 import { ThemeProvider } from '@mui/material/styles'
 import { CacheProvider } from '@emotion/react'
 import { GlobalStyles, TssCacheProvider } from 'tss-react'
 import createCache from '@emotion/cache'
 import CssBaseline from '@mui/material/CssBaseline'
-
-import { useAuth, type User } from '../lib/auth'
 import { getTheme } from '../components/theme'
 import { DefaultSnackbarContext, SnackbarContextProvider } from '../components/utils/snackbar'
 import { Footer } from '../components/footer/footer'
 import { ALWAYS_ACCESSIBLE_ROUTES, PUBLIC_ROUTES } from '../lib/diabeloop-urls.model'
-import { useIdleTimer } from 'react-idle-timer'
-import { ConfigService } from '../lib/config/config.service'
 import { AppRoute } from '../models/enums/routes.enum'
 import Box from '@mui/material/Box'
 
@@ -58,76 +53,34 @@ tssCache.compat = true
 const isRoutePublic = (route: string): boolean => PUBLIC_ROUTES.includes(route as AppRoute)
 const isRouteAlwaysAccessible = (route: string): boolean => ALWAYS_ACCESSIBLE_ROUTES.includes(route as AppRoute)
 
-export const getRedirectUrl = (route: string, user: User, isAuthenticated: boolean): string | undefined => {
-  const routeIsPublic = isRoutePublic(route)
-  const renewConsentPath = route === AppRoute.RenewConsent || route === AppRoute.NewConsent
-  const trainingPath = route === AppRoute.Training
-  const isCurrentRouteAlwaysAccessible = isRouteAlwaysAccessible(route as AppRoute)
-  if (routeIsPublic && !isCurrentRouteAlwaysAccessible && isAuthenticated) {
-    return '/'
-  }
-  if (!isAuthenticated && !routeIsPublic && !isCurrentRouteAlwaysAccessible) {
-    return AppRoute.Login
-  }
-  if (route !== AppRoute.CompleteSignup && isAuthenticated && user && user.isFirstLogin()) {
-    return AppRoute.CompleteSignup
-  }
-  if (!renewConsentPath && user && user.hasToAcceptNewConsent()) {
-    return AppRoute.NewConsent
-  }
-  if (!renewConsentPath && user && user.hasToRenewConsent()) {
-    return AppRoute.RenewConsent
-  }
-  if (!trainingPath && route !== AppRoute.CompleteSignup && !renewConsentPath && user && user.hasToDisplayTrainingInfoPage()) {
-    return AppRoute.Training
-  }
-  return undefined
-}
-
 export const MainLobby: FC = () => {
-  const { isLoading, isAuthenticated } = useAuth0()
-  const { fetchingUser, isLoggedIn, logout, user } = useAuth()
-  const location = useLocation()
-  const currentRoute = location.pathname
   const theme = getTheme()
-  const isCurrentRoutePublic = isRoutePublic(currentRoute)
-  const isCurrentRouteAlwaysAccessible = isRouteAlwaysAccessible(currentRoute)
 
-  const onIdle = (): void => {
-    if (isLoggedIn) {
-      logout(true)
-    }
-  }
 
-  useIdleTimer({ timeout: ConfigService.getIdleTimeout(), onIdle })
+  // const canDisplayApp = !isLoading && (isCurrentRoutePublic || isCurrentRouteAlwaysAccessible)
+  // const canDisplayApp = !isLoading && (isCurrentRoutePublic || isCurrentRouteAlwaysAccessible || user)
 
-  if ((!isCurrentRoutePublic || !isCurrentRouteAlwaysAccessible) && isLoading) {
-    return <React.Fragment />
-  }
-
-  const redirectTo = getRedirectUrl(currentRoute, user, isAuthenticated)
-  const canDisplayApp = !isLoading && !fetchingUser && (isCurrentRoutePublic || isCurrentRouteAlwaysAccessible || user)
-
+  console.log('rendering lobby')
   return (
     <>
-      {redirectTo
-        ? <Navigate to={redirectTo} replace />
-        : canDisplayApp &&
-        <CacheProvider value={muiCache}>
-          <TssCacheProvider value={tssCache}>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <GlobalStyles styles={{ body: { backgroundColor: 'var(--body-background-color)' } }} />
-              <SnackbarContextProvider context={DefaultSnackbarContext}>
-                <Box>
-                  <Outlet />
-                </Box>
-              </SnackbarContextProvider>
-              <Footer />
-            </ThemeProvider>
-          </TssCacheProvider>
-        </CacheProvider>
-      }
+      {/*{canDisplayApp ? (*/}
+      <CacheProvider value={muiCache}>
+        <TssCacheProvider value={tssCache}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <GlobalStyles styles={{ body: { backgroundColor: 'var(--body-background-color)' } }} />
+            <SnackbarContextProvider context={DefaultSnackbarContext}>
+              <Box>
+                <Outlet />
+              </Box>
+            </SnackbarContextProvider>
+            <Footer />
+          </ThemeProvider>
+        </TssCacheProvider>
+      </CacheProvider>
+      {/*)*/}
+      {/*: <Outlet />*/}
+      {/*}*/}
     </>
   )
 }

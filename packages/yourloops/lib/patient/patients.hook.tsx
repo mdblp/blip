@@ -34,12 +34,10 @@ import PatientUtils from './patient.util'
 import PatientApi from './patient.api'
 import DirectShareApi from '../share/direct-share.api'
 import { useAuth } from '../auth'
-import { errorTextFromException } from '../utils'
 import { type PatientsContextResult } from './models/patients-context-result.model'
 import { type Patient } from './models/patient.model'
 import { usePatientListContext } from '../providers/patient-list.provider'
-import { useAlert } from '../../components/utils/snackbar'
-import { useParams } from 'react-router-dom'
+import { useParams, useRevalidator, useRouteLoaderData } from 'react-router-dom'
 import { PRIVATE_TEAM_ID } from '../team/team.hook'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 
@@ -48,53 +46,38 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const { user } = useAuth()
   const { filters } = usePatientListContext()
   const { teamId: teamIdFromParam } = useParams()
-  const alert = useAlert()
   const isUserHcp = user.isUserHcp()
   const teamId = teamIdFromParam ?? localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
+  const patientsBasicInfos = useRouteLoaderData('patients-route') as Patient[]
+  const { revalidate: refreshPatientsInfo } = useRevalidator()
 
-  const [patients, setPatients] = useState<Patient[]>([])
-  const [initialized, setInitialized] = useState<boolean>(false)
+  const [patients, setPatients] = useState<Patient[]>(patientsBasicInfos)
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
   const teamIdForWhichPatientsAreFetched = useRef(null)
 
-  const fetchPatientsMetrics = useCallback(async (allPatients: Patient[], selectedTeamId: string): Promise<void> => {
-    const metrics = await PatientUtils.fetchMetrics(allPatients, selectedTeamId, user.id)
-    if (!metrics) {
+  const fetchPatientsMetrics = useCallback((selectedTeamId: string) => {
+    if (!isUserHcp || !patientsBasicInfos) {
       return
     }
 
-    const updatedPatients = PatientUtils.getUpdatedPatientsWithMetrics(allPatients, metrics)
-    setPatients(updatedPatients)
-  }, [user.id])
+    if (!patientsBasicInfos.length) {
+      setPatients([])
+      return
+    }
 
-  const fetchPatients = useCallback((selectedTeamId: string) => {
-    PatientUtils.computePatients(user, selectedTeamId)
-      .then((computedPatients: Patient[]) => {
-        setPatients(computedPatients)
-        return computedPatients
-      })
-      .catch((reason: unknown) => {
-        const message = errorTextFromException(reason)
-        alert.error(message)
-        setPatients([])
-      })
-      .finally(() => {
-        setInitialized(true)
-        setRefreshInProgress(false)
-      })
-      .then(async (computedPatients: Patient[]) => {
-        if (!isUserHcp || !computedPatients) {
-          return
-        }
+    PatientUtils.fetchMetrics(patientsBasicInfos, selectedTeamId, user.id).then(metrics => {
+      if (!metrics) {
+        return
+      }
+      const updatedPatients = PatientUtils.getUpdatedPatientsWithMetrics(patientsBasicInfos, metrics)
+      setPatients(updatedPatients)
+    })
 
-        await fetchPatientsMetrics(computedPatients, selectedTeamId)
-      })
-    // Need to rewrite the alert component, or it triggers infinite loop...
-  }, [alert, fetchPatientsMetrics, isUserHcp, user])
+  }, [isUserHcp, patientsBasicInfos, user.id])
 
   const refresh = (): void => {
     setRefreshInProgress(true)
-    fetchPatients(teamId)
+    refreshPatientsInfo()
   }
 
   const updatePatient = useCallback((patient: Patient) => {
@@ -181,15 +164,14 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
     const selectedTeamId = teamId ?? localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
     if (user && teamIdForWhichPatientsAreFetched.current !== selectedTeamId) {
       teamIdForWhichPatientsAreFetched.current = selectedTeamId
-      fetchPatients(selectedTeamId)
+      fetchPatientsMetrics(selectedTeamId)
     }
-  }, [fetchPatients, initialized, teamId, user])
+  }, [fetchPatientsMetrics, teamId, user])
 
   return {
     patients: patientList,
     pendingPatientsCount,
     allNonPendingPatientsForSelectedTeamCount,
-    initialized,
     refreshInProgress,
     getPatientByEmail,
     getPatientById,

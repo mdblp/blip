@@ -56,6 +56,9 @@ import { type SignupForm } from './models/signup-form.model'
 import { type ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
 import { v4 as uuidv4 } from 'uuid'
 import { sanitizeBgUnit } from './user.util'
+import { useLoaderData, useRouteLoaderData } from 'react-router-dom'
+import { useIdleTimer } from 'react-idle-timer'
+import { ConfigService } from '../config/config.service'
 
 const ReactAuthContext = createContext({} as AuthContext)
 const log = bows('AuthHook')
@@ -65,11 +68,32 @@ export function AuthContextImpl(): AuthContext {
     logout: auth0logout,
     user: auth0user,
     isAuthenticated,
-    getAccessTokenSilently,
     getAccessTokenWithPopup
   } = useAuth0()
-  const [user, setUser] = useState<User | null>(null)
-  const [fetchingUser, setFetchingUser] = useState<boolean>(false)
+  const userFromLoader = useRouteLoaderData('user-route') as User
+  // const userFromLoader = useLoaderData() as User
+  const [user, setUser] = useState<User>(userFromLoader)
+  // const [fetchingUser, setFetchingUser] = useState<boolean>(false)
+
+  const updateUserLanguage = (user: User): void => {
+    const languageCode = user.preferences?.displayLanguageCode
+    if (languageCode && availableLanguageCodes.includes(languageCode) && languageCode !== getCurrentLang()) {
+      changeLanguage(languageCode)
+    }
+  }
+
+  if (user.role !== UserRole.Unset) {
+    updateUserLanguage(user)
+    metrics.setUser(user)
+  }
+
+  const onIdle = (): void => {
+    if (isLoggedIn) {
+      logout(true)
+    }
+  }
+
+  useIdleTimer({ timeout: ConfigService.getIdleTimeout(), onIdle })
 
   const isLoggedIn = useMemo<boolean>(() => isAuthenticated && !!user, [isAuthenticated, user])
 
@@ -156,43 +180,6 @@ export function AuthContextImpl(): AuthContext {
     refreshUser()
   }
 
-  const updateUserLanguage = (user: User): void => {
-    const languageCode = user.preferences?.displayLanguageCode
-    if (languageCode && availableLanguageCodes.includes(languageCode) && languageCode !== getCurrentLang()) {
-      changeLanguage(languageCode)
-    }
-  }
-
-  const getUserInfo = useCallback(async () => {
-    try {
-      setFetchingUser(true)
-      const user = new User(auth0user as AuthenticatedUser)
-
-      if (user.role !== UserRole.Unset) {
-        const userMetadata = await UserApi.getUserMetadata(user.id)
-        if (userMetadata) {
-          user.profile = userMetadata.profile
-          user.preferences = userMetadata.preferences
-          user.settings = userMetadata.settings
-          if (!user.settings) {
-            user.settings = {}
-          }
-          user.settings.units = {
-            bg: sanitizeBgUnit(userMetadata.settings?.units?.bg)
-          }
-        }
-        updateUserLanguage(user)
-        metrics.setUser(user)
-      }
-
-      setUser(user)
-      HttpService.setTraceToken(uuidv4())
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setFetchingUser(false)
-    }
-  }, [auth0user])
 
   const getLogoutRedirectUrl = (isIdle = false): string => {
     const defaultUrl = `${window.location.origin}/login`
@@ -254,20 +241,9 @@ export function AuthContextImpl(): AuthContext {
     await getAccessTokenWithPopup({ authorizationParams: { ignoreCache: true } })
   }
 
-  useEffect(() => {
-    (async () => {
-      if (isAuthenticated && !user) {
-        const getAccessToken = async (): Promise<string> => await getAccessTokenSilently()
-        HttpService.setGetAccessTokenMethod(getAccessToken)
-        await getUserInfo()
-      }
-    })()
-  }, [getAccessTokenSilently, getUserInfo, isAuthenticated, user])
-
   return {
     user,
     isLoggedIn,
-    fetchingUser,
     updateProfile,
     updatePreferences,
     updateSettings,

@@ -36,7 +36,7 @@ import { useTranslation } from 'react-i18next'
 import { type TeamEditModalContentProps } from '../../pages/hcp/types'
 import { useAlert } from '../utils/snackbar'
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import TeamUtils from '../../lib/team/team.util'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import IconButton from '@mui/material/IconButton'
@@ -82,7 +82,8 @@ export const TeamScopeMenu: FunctionComponent = () => {
   } = classes()
   const { getMedicalTeams, getPrivateTeam, createTeam, getTeam } = useTeam()
 
-  const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
+  const { teamId: teamIdFromParams, userId } = useParams()
+  const teamId = teamIdFromParams ?? localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
   const selectedTeam = getTeam(teamId)
   const alert = useAlert()
   const navigate = useNavigate()
@@ -105,7 +106,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
 
   const onSelectTeam = (teamId: string): void => {
     if (teamId !== selectedTeam.id) {
-      navigate(`/teams/${teamId}/patients`)
+      navigate(`/hcps/${userId}/teams/${teamId}/patients`)
     }
     closeMenu()
   }
@@ -119,7 +120,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
     if (createdTeam) {
       try {
         const newTeam = await createTeam(createdTeam as Team)
-        navigate(`/teams/${newTeam.id}`)
+        navigate(`/hcps/${userId}/teams/${newTeam.id}`)
         alert.success(t('team-page-success-create'))
       } catch (reason: unknown) {
         alert.error(t('team-page-failed-create'))

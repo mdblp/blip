@@ -28,13 +28,13 @@ import HttpService, { ErrorMessageStatus } from '../http/http.service'
 import { type INotification } from '../notifications/models/i-notification.model'
 import { getCurrentLang } from '../language'
 import bows from 'bows'
-import { type User } from '../auth'
 import { type TeamMemberRole } from './models/enums/team-member-role.enum'
 import { type Team } from './models/team.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import { type ITeam } from './models/i-team.model'
 import { TeamType } from './models/enums/team-type.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
+import { UserRole } from '../auth/models/enums/user-role.enum'
 
 const log = bows('Team API')
 
@@ -76,8 +76,8 @@ export const PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE = 'patient-already-in
 const PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
 
 export default class TeamApi {
-  static async getTeams(user: User): Promise<Team[]> {
-    const url = TeamApi.getTeamsApiUrl(user)
+  static async getTeams(userId: string, userRole: UserRole): Promise<Team[]> {
+    const url = TeamApi.getTeamsApiUrl(userId, userRole)
     try {
       const { data } = await HttpService.get<Team[]>({ url })
       return data
@@ -177,12 +177,12 @@ export default class TeamApi {
     }
   }
 
-  private static getTeamsApiUrl(user: User): string {
-    const isUserHcp = user.isUserHcp()
-    if (!isUserHcp && !user.isUserPatient()) {
-      throw Error(`User with role ${user.role} cannot retrieve teams`)
+  private static getTeamsApiUrl(userId: string, userRole: UserRole): string {
+    const isUserHcp = userRole === UserRole.Hcp
+    if (!isUserHcp && userRole !== UserRole.Patient) {
+      throw Error(`User with role ${userRole} cannot retrieve teams`)
     }
     const userRoute = isUserHcp ? HCP_ROUTE : PATIENTS_ROUTE
-    return `/bff/v1/${userRoute}/${user.id}/teams`
+    return `/bff/v1/${userRoute}/${userId}/teams`
   }
 }

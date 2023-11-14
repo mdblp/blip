@@ -26,16 +26,10 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { PatientsProvider } from '../lib/patient/patients.provider'
 import { DashboardLayout } from './dashboard-layout'
-import { InvalidRoute } from '../components/invalid-route'
-import { ProfilePage } from '../pages/profile/profile-page'
-import { NotificationsPage } from '../pages/notifications/notifications-page'
-import { AppUserRoute } from '../models/enums/routes.enum'
-import { PatientListPage } from '../components/patient-list/patient-list-page'
 import { PatientListProvider } from '../lib/providers/patient-list.provider'
-import { PatientData } from '../components/patient-data/patient-data'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from './hcp-layout'
 import { PRIVATE_TEAM_ID } from '../lib/team/team.hook'
 import { NotificationContextProvider } from '../lib/notifications/notification.hook'

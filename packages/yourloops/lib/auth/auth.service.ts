@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,19 +25,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
-import usePatientsProviderCustomHook from './patients.hook'
-import { type PatientsContextResult } from './models/patients-context-result.model'
+import User from './models/user.model'
 
-const PatientsContext = createContext<PatientsContextResult>({} as PatientsContextResult)
+export default class AuthService {
+  private static authenticated: boolean
+  private static userBeenRetrieved: boolean
+  private static user: User
 
-export const PatientsProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
-  const patientsProviderCustomHook = usePatientsProviderCustomHook()
+  static setIsLoggedIn(isLoggedIn: boolean): void {
+    AuthService.authenticated = isLoggedIn
+  }
 
-  return <PatientsContext.Provider value={patientsProviderCustomHook}>{children}</PatientsContext.Provider>
+  static setHasUserBeenRetrieved(userHasBeenRetrieved: boolean): void {
+    AuthService.userBeenRetrieved = userHasBeenRetrieved
+  }
 
-}
+  static setUser(user: User): void {
+    AuthService.user = user
+  }
 
-export function usePatientsContext(): PatientsContextResult {
-  return useContext(PatientsContext)
+  static isAuthenticated(): boolean {
+    return AuthService.authenticated
+  }
+
+  static hasUserBeenRetrieved(): boolean {
+    return AuthService.userBeenRetrieved
+  }
+
+  static getUser(): User {
+    return AuthService.user
+  }
+
+
 }

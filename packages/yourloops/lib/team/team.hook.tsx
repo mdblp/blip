@@ -25,19 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, {
-  createContext,
-  type FunctionComponent,
-  type PropsWithChildren,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState
-} from 'react'
+import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
 import _ from 'lodash'
-
-import { errorTextFromException } from '../utils'
 import metrics from '../metrics'
 import { useAuth } from '../auth'
 import { useNotification } from '../notifications/notification.hook'
@@ -50,7 +39,8 @@ import { type ITeam } from './models/i-team.model'
 import { TeamMemberRole } from './models/enums/team-member-role.enum'
 import { UserInviteStatus } from './models/enums/user-invite-status.enum'
 import { TeamType } from './models/enums/team-type.enum'
-import SpinningLoader from '../../components/loaders/spinning-loader'
+import { useLoaderData, useRevalidator, useRouteLoaderData } from 'react-router-dom'
+import User from '../auth/models/user.model'
 
 const ReactTeamContext = createContext<TeamContext>({} as TeamContext)
 
@@ -60,11 +50,13 @@ export const PRIVATE_TEAM_NAME = 'private'
 function TeamContextImpl(): TeamContext {
   const authHook = useAuth()
   const notificationHook = useNotification()
-  const [teams, setTeams] = useState<Team[]>([])
-  const [initialized, setInitialized] = useState<boolean>(false)
-  const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const shouldMakeInitialApiCallToGetTeams = useRef(true)
+  const teams = useRouteLoaderData('teams-route') as Team[]
+  // console.log(teamsFromLoader)
+  const { revalidate: refresh } = useRevalidator()
+  // const [teams, setTeams] = useState<Team[]>(teamsFromLoader ?? [])
+  // const [initialized, setInitialized] = useState<boolean>(!!teamsFromLoader)
+  // const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
+  // const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const user = authHook.user
   if (!user) {
@@ -75,26 +67,22 @@ function TeamContextImpl(): TeamContext {
     return teams.find((t) => t.id === teamId) ?? null
   }
 
-  const fetchTeams = useCallback(() => {
-    TeamApi.getTeams(user)
-      .then((teams: Team[]) => {
-        setTeams(teams)
-        setErrorMessage(null)
-      })
-      .catch((reason: unknown) => {
-        const message = errorTextFromException(reason)
-        setErrorMessage(message)
-      })
-      .finally(() => {
-        setInitialized(true)
-        setRefreshInProgress(false)
-      })
-  }, [user])
+  // const fetchTeams = useCallback(() => {
+  //   TeamApi.getTeams(user)
+  //     .then((teams: Team[]) => {
+  //       setTeams(teams)
+  //       setErrorMessage(null)
+  //     })
+  //     .catch((reason: unknown) => {
+  //       const message = errorTextFromException(reason)
+  //       setErrorMessage(message)
+  //     })
+  //     .finally(() => {
+  //       setInitialized(true)
+  //       setRefreshInProgress(false)
+  //     })
+  // }, [user])
 
-  const refresh = (): void => {
-    setRefreshInProgress(true)
-    fetchTeams()
-  }
 
   const getMedicalTeams = (): Team[] => {
     return getTeamsByType(TeamType.medical)
@@ -117,8 +105,10 @@ function TeamContextImpl(): TeamContext {
   }
 
   const inviteMember = async (team: Team, username: string, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
-    const result = await TeamApi.inviteMember(user.id, team.id, username, role)
-    setTeams(result.teams)
+    await TeamApi.inviteMember(user.id, team.id, username, role)
+    // const result = await TeamApi.inviteMember(user.id, team.id, username, role)
+    // setTeams(result.teams)
+    refresh()
   }
 
   const createTeam = async (team: Partial<Team>): Promise<ITeam> => {
@@ -202,18 +192,11 @@ function TeamContextImpl(): TeamContext {
     refresh()
   }
 
-  useEffect(() => {
-    if (!initialized && shouldMakeInitialApiCallToGetTeams.current) {
-      shouldMakeInitialApiCallToGetTeams.current = false
-      fetchTeams()
-    }
-  }, [initialized, fetchTeams])
-
   return {
     teams,
-    initialized,
-    errorMessage,
-    refreshInProgress,
+    // initialized,
+    // errorMessage,
+    // refreshInProgress,
     refresh,
     getTeam,
     getMedicalTeams,
@@ -232,9 +215,10 @@ function TeamContextImpl(): TeamContext {
 
 export const TeamContextProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const context = TeamContextImpl()
-  return context.initialized
-    ? <ReactTeamContext.Provider value={context}>{children}</ReactTeamContext.Provider>
-    : <SpinningLoader className="centered-spinning-loader" />
+  return <ReactTeamContext.Provider value={context}>{children}</ReactTeamContext.Provider>
+  // return context.initialized
+  //   ? <ReactTeamContext.Provider value={context}>{children}</ReactTeamContext.Provider>
+  //   : <SpinningLoader className="centered-spinning-loader" />
 }
 
 export const useTeam = (): TeamContext => {

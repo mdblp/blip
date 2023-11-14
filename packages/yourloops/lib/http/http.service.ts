@@ -58,6 +58,10 @@ export default class HttpService {
     return await HttpService.retrieveAccessToken()
   }
 
+  static isServiceAvailable(): boolean {
+    return !!HttpService.retrieveAccessToken
+  }
+
   static getTraceToken(): string {
     return HttpService.traceToken
   }

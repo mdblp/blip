@@ -42,6 +42,7 @@ import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../lib/auth/models/auth0-erro
 import { setPageTitle } from '../../lib/utils'
 
 export const LoginPageLanding: FunctionComponent = () => {
+  console.log('In login page')
   const { t } = useTranslation('yourloops')
   const { error } = useAuth0()
   const navigate = useNavigate()

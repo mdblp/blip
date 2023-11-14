@@ -29,8 +29,6 @@
 import 'core-js/stable'
 
 import React from 'react'
-
-import config from '../lib/config/config'
 import { init as i18nInit } from '../lib/language'
 import initCookiesConsentListener from '../lib/cookies-manager'
 import initDayJS from '../lib/dayjs'
@@ -56,7 +54,8 @@ i18nInit().then(() => {
   initTheme()
 
   const root = createRoot(div)
-  root.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />)
+  root.render(<Yourloops />)
+  // root.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />)
 
   window.onerror = (event, source, lineno, colno, error) => {
     if (source && !source.endsWith('.js')) {

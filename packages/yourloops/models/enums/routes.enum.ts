@@ -35,7 +35,7 @@ export enum AppUserRoute {
   Device = '/device',
   Dashboard = '/dashboard',
   Home = '/home',
-  NotFound = '/not-found',
+  NotFound = 'not-found',
   Notifications = 'notifications',
   Patient = '/patient',
   Preferences = 'preferences',

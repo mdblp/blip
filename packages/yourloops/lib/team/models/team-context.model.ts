@@ -33,11 +33,11 @@ import { type ITeam } from './i-team.model'
 export interface TeamContext {
   teams: Array<Readonly<Team>>
   /** true if an initial team fetch has been done */
-  initialized: boolean
-  /** true if the teams are being retrieved */
-  refreshInProgress: boolean
-  /** The error message set if there is any error */
-  errorMessage: string | null
+  // initialized: boolean
+  // /** true if the teams are being retrieved */
+  // refreshInProgress: boolean
+  // /** The error message set if there is any error */
+  // errorMessage: string | null
   /**
    * Refresh the team list & members.
    */

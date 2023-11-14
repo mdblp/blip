@@ -36,7 +36,6 @@ import { type Settings } from './settings.model'
  * The auth provider hook return values.
  */
 export interface AuthContext {
-  fetchingUser: boolean
   flagPatient: (userId: string) => Promise<void> // Flag or un-flag one patient
   getFlagPatients: () => string[]
   isLoggedIn: boolean

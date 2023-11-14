@@ -27,7 +27,7 @@
 
 import React, { Dispatch, type FC, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 
 import { type Theme, useTheme } from '@mui/material/styles'
@@ -98,6 +98,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
   const theme = useTheme()
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const { userId } = useParams()
   const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
 
   const getSelectedTab = (): HcpNavigationTab | false => {
@@ -113,6 +114,18 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
   const appBarRefCallback = (appMainHeaderElement: HTMLHeadElement): void => {
     if (appMainHeaderElement) {
       setMainHeaderHeight(appMainHeaderElement.offsetHeight ?? 0)
+    }
+  }
+
+  const buildNotificationRoute = (): string => {
+    if (user.isUserHcp()) {
+      return `/hcps/${user.id}/${AppUserRoute.Notifications}`
+    }
+    if (user.isUserPatient()) {
+      return `/patients/${user.id}/${AppUserRoute.Notifications}`
+    }
+    if (user.isUserHcp()) {
+      return `/caregivers/${user.id}/${AppUserRoute.Notifications}`
     }
   }
 
@@ -163,7 +176,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                   label={t('header-tab-patients')}
                   value={HcpNavigationTab.Patients}
                   onClick={() => {
-                    navigate(`${AppUserRoute.Teams}/${teamId}/patients`)
+                    navigate(`/hcps/${userId}${AppUserRoute.Teams}/${teamId}/patients`)
                   }}
                 />
                 {teamId !== PRIVATE_TEAM_ID &&
@@ -173,7 +186,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                     label={t('header-tab-care-team-settings')}
                     value={HcpNavigationTab.CareTeam}
                     onClick={() => {
-                      navigate(`${AppUserRoute.Teams}/${teamId}`)
+                      navigate(`/hcps/${userId}${AppUserRoute.Teams}/${teamId}`)
                     }}
                   />
                 }
@@ -181,7 +194,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
             }
 
             <Box display="flex" alignItems="center">
-              <Link to={`/${AppUserRoute.Notifications}`} id="header-notification-link">
+              <Link to={buildNotificationRoute()} id="header-notification-link">
                 <Badge
                   id="notification-count-badge"
                   aria-label={t('notification-list')}
@@ -194,11 +207,11 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
               </Link>
               <div className={separator} />
               {!user?.isUserCaregiver() &&
-                <React.Fragment>
+                <>
                   {user.isUserPatient() && <TeamSettingsMenu />}
                   {user.isUserHcp() && <TeamScopeMenu />}
                   <div className={separator} />
-                </React.Fragment>
+                </>
               }
               <UserMenu />
             </Box>
