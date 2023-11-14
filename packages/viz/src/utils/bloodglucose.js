@@ -17,8 +17,7 @@
 
 import _ from 'lodash'
 
-import { MS_IN_MIN } from './constants'
-
+import { TimeService } from 'medical-domain'
 import { formatBgValue } from './format.js'
 
 import i18next from 'i18next'
@@ -130,5 +129,5 @@ export function weightedCGMCount(data) {
  */
 export function cgmSampleFrequency(datum) {
   const deviceId = _.get(datum, 'deviceId', '')
-  return deviceId.indexOf('AbbottFreeStyleLibre') === 0 ? 15 * MS_IN_MIN : 5 * MS_IN_MIN
+  return deviceId.indexOf('AbbottFreeStyleLibre') === 0 ? 15 * TimeService.MS_IN_MIN : 5 * TimeService.MS_IN_MIN
 }

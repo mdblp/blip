@@ -43,24 +43,6 @@ describe('constants', () => {
     })
   })
 
-  describe('MS_IN_DAY', () => {
-    it('should be `864e5`', () => {
-      expect(constants.MS_IN_DAY).to.equal(864e5)
-    })
-  })
-
-  describe('MS_IN_HOUR', () => {
-    it('should be `864e5 / 24`', () => {
-      expect(constants.MS_IN_HOUR).to.equal(864e5 / 24)
-    })
-  })
-
-  describe('MS_IN_MIN', () => {
-    it('should be `MS_IN_HOUR / 60`', () => {
-      expect(constants.MS_IN_MIN).to.equal(constants.MS_IN_HOUR / 60)
-    })
-  })
-
   describe('CGM_DATA_KEY', () => {
     it('should be `cbg`', () => {
       expect(constants.CGM_DATA_KEY).to.equal('cbg')

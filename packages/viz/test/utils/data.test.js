@@ -4,8 +4,6 @@ import { expect } from 'chai'
 import { MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
 import DataUtil from '../../src/utils/data'
 import * as Types from '../../data/types'
-import { MS_IN_HOUR, MS_IN_MIN } from '../../src/utils/constants'
-
 /* eslint-disable max-len, no-underscore-dangle */
 
 describe('DataUtil', () => {
@@ -13,7 +11,7 @@ describe('DataUtil', () => {
   let dataUtil
 
   const basalDatumOverlappingStart = new Types.Basal({
-    duration: MS_IN_HOUR * 2,
+    duration: TimeService.MS_IN_HOUR * 2,
     deviceTime: '2018-01-31T23:00:00',
     source: 'Medtronic',
     deviceModel: '1780',
@@ -22,7 +20,7 @@ describe('DataUtil', () => {
   })
 
   const basalDatumOverlappingEnd = new Types.Basal({
-    duration: MS_IN_HOUR * 3,
+    duration: TimeService.MS_IN_HOUR * 3,
     deviceTime: '2018-02-01T22:00:00',
     source: 'Medtronic',
     deviceModel: '1780',
@@ -32,7 +30,7 @@ describe('DataUtil', () => {
 
   const basalData = [
     new Types.Basal({
-      duration: MS_IN_HOUR,
+      duration: TimeService.MS_IN_HOUR,
       deviceTime: '2018-02-01T01:00:00',
       source: 'Medtronic',
       deviceModel: '1780',
@@ -40,7 +38,7 @@ describe('DataUtil', () => {
       rate: 0.25
     }),
     new Types.Basal({
-      duration: MS_IN_HOUR,
+      duration: TimeService.MS_IN_HOUR,
       deviceTime: '2018-02-01T02:00:00',
       source: 'Medtronic',
       deviceModel: '1780',
@@ -48,7 +46,7 @@ describe('DataUtil', () => {
       rate: 0.75
     }),
     new Types.Basal({
-      duration: MS_IN_HOUR,
+      duration: TimeService.MS_IN_HOUR,
       deviceTime: '2018-02-01T03:00:00',
       source: 'Medtronic',
       deviceModel: '1780',
@@ -56,7 +54,7 @@ describe('DataUtil', () => {
       rate: 0.5
     }),
     new Types.Basal({
-      duration: MS_IN_HOUR,
+      duration: TimeService.MS_IN_HOUR,
       deviceTime: '2018-02-03T03:00:00',
       source: 'Medtronic',
       deviceModel: '1780',
@@ -1085,13 +1083,13 @@ describe('DataUtil', () => {
     it('should return the duration of sensor usage and total duration of the endpoint range', () => {
       dataUtil.endpoints = dayEndpoints
       expect(dataUtil.getSensorUsage()).to.eql({
-        sensorUsage: MS_IN_MIN * 55, // 3 * 15m for libre readings, 2 * 5m for dex readings
+        sensorUsage: TimeService.MS_IN_MIN * 55, // 3 * 15m for libre readings, 2 * 5m for dex readings
         total: TimeService.MS_IN_DAY
       })
 
       dataUtil.endpoints = twoWeekEndpoints
       expect(dataUtil.getSensorUsage()).to.eql({
-        sensorUsage: MS_IN_MIN * (55 + 5 + 15),
+        sensorUsage: TimeService.MS_IN_MIN * (55 + 5 + 15),
         total: TimeService.MS_IN_DAY * 14
       })
     })
@@ -1163,12 +1161,12 @@ describe('DataUtil', () => {
     it('should return the time in range data when viewing 1 day', () => {
       dataUtil.endpoints = dayEndpoints
       expect(dataUtil.getTimeInRangeData()).to.eql({
-        veryLow: MS_IN_MIN * 15,
-        low: MS_IN_MIN * 15,
-        target: MS_IN_MIN * 15,
-        high: MS_IN_MIN * 5,
-        veryHigh: MS_IN_MIN * 5,
-        total: MS_IN_MIN * 55
+        veryLow: TimeService.MS_IN_MIN * 15,
+        low: TimeService.MS_IN_MIN * 15,
+        target: TimeService.MS_IN_MIN * 15,
+        high: TimeService.MS_IN_MIN * 5,
+        veryHigh: TimeService.MS_IN_MIN * 5,
+        total: TimeService.MS_IN_MIN * 55
       })
     })
 
@@ -1178,12 +1176,12 @@ describe('DataUtil', () => {
       const result = dataUtil.getTimeInRangeData()
       const totalDuration = result.total
       expect(result).to.eql({
-        veryLow: (MS_IN_MIN * 15) / totalDuration * TimeService.MS_IN_DAY,
-        low: (MS_IN_MIN * 15) / totalDuration * TimeService.MS_IN_DAY,
-        target: (MS_IN_MIN * (15 + 5)) / totalDuration * TimeService.MS_IN_DAY,
-        high: (MS_IN_MIN * 5) / totalDuration * TimeService.MS_IN_DAY,
-        veryHigh: (MS_IN_MIN * 5) / totalDuration * TimeService.MS_IN_DAY,
-        total: MS_IN_MIN * (55 + 5)
+        veryLow: (TimeService.MS_IN_MIN * 15) / totalDuration * TimeService.MS_IN_DAY,
+        low: (TimeService.MS_IN_MIN * 15) / totalDuration * TimeService.MS_IN_DAY,
+        target: (TimeService.MS_IN_MIN * (15 + 5)) / totalDuration * TimeService.MS_IN_DAY,
+        high: (TimeService.MS_IN_MIN * 5) / totalDuration * TimeService.MS_IN_DAY,
+        veryHigh: (TimeService.MS_IN_MIN * 5) / totalDuration * TimeService.MS_IN_DAY,
+        total: TimeService.MS_IN_MIN * (55 + 5)
       })
     })
   })

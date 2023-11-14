@@ -38,7 +38,7 @@ import { getBasalPathGroups } from '../../../src/utils/basal'
 import { formatDecimalNumber, formatBgValue } from '../../../src/utils/format'
 
 import Doc from '../../helpers/pdfDoc'
-import { MS_IN_HOUR } from '../../../src/utils/constants'
+import { TimeService } from 'medical-domain'
 
 describe('DailyPrintView', () => {
   let Renderer
@@ -357,18 +357,18 @@ describe('DailyPrintView', () => {
         } } },
         timeInRange: { data: {
           raw: {
-            target: MS_IN_HOUR * 3,
-            veryLow: MS_IN_HOUR
+            target: TimeService.MS_IN_HOUR * 3,
+            veryLow: TimeService.MS_IN_HOUR
           },
-          total: { value: MS_IN_HOUR * 4 }
+          total: { value: TimeService.MS_IN_HOUR * 4 }
         } },
         totalInsulin: { data: { raw: {
           basal: 10,
           bolus: 20
         } } },
         timeInAuto: { data: { raw: {
-          manual: MS_IN_HOUR * 3,
-          automated: MS_IN_HOUR * 7
+          manual: TimeService.MS_IN_HOUR * 3,
+          automated: TimeService.MS_IN_HOUR * 7
         } } }
       }
       Renderer.renderSummary(args)
