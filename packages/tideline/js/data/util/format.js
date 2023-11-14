@@ -149,51 +149,6 @@ const format = {
   },
 
   /**
-   * Given two timestamps return an object containing a timechange
-   *
-   * @param {String} from - date string
-   * @param {String} to - date string (required)
-   * @return {Object} containing keys from, to, type, format
-   */
-  timeChangeInfo: function(from, to) {
-    if (!to) { // guard statement
-      throw new Error('You have not provided a `to` datetime string')
-    }
-
-    // the "from" and "to" fields of a time change are always timezone-naive
-    // timestamps by definition (b/c they are device-relative time)
-    // but some (versions) of (some) browsers like to coerce timestamps without TZ info into local time
-    // and we need to prevent that, so we use moment.utc and then use the UTC
-    // variant of all JS Date methods to ensure consistency across browsers
-    var fromDate = from ? moment.utc(from).toDate() : undefined
-    var toDate = moment.utc(to).toDate()
-    var type = 'Time Change'
-
-    var format = 'h:mm a'
-    if (fromDate && toDate) {
-      if (fromDate.getUTCFullYear() !== toDate.getUTCFullYear()) {
-        format = 'MMM D, YYYY h:mm a'
-      } else if (
-        fromDate.getUTCMonth() !== toDate.getUTCMonth() ||
-        fromDate.getUTCDay() !== toDate.getUTCDay()
-      ) {
-        format = 'MMM D, h:mm a'
-      }
-
-      if (Math.abs(toDate - fromDate) <= (8*(60*1000))) { // Clock Drift Adjustment if less than 8 minutes
-        type = 'Clock Drift Adjustment'
-      }
-    }
-
-    return {
-      type: type,
-      from: fromDate ? moment.utc(fromDate).format(format): undefined,
-      to: moment.utc(toDate).format(format),
-      format: format
-    }
-  },
-
-  /**
    * @param {moment.Moment} m The datetime (moment) to display
    * @returns {string} The formated DDDD_MMMM_D_FORMAT datetime
    */
