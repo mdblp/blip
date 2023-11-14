@@ -21,7 +21,6 @@ import moment from 'moment-timezone'
 
 import * as constants from '../data/util/constants'
 import format from '../data/util/format'
-import BasalUtil from '../data/basalutil'
 
 const defaults = {
   opacity: 0.6,
@@ -31,11 +30,41 @@ const defaults = {
   defaultSource: 'default'
 }
 
+/**
+ * getBasalPathGroupType
+ * @param {Object} basal - single basal datum
+ * @return {String} the path group type
+ */
+function getBasalPathGroupType(datum) {
+  return datum.deliveryType === 'automated' ? 'automated' : 'manual'
+}
+
+/**
+ * getBasalPathGroups
+ * @param {Array} basals - Array of preprocessed Tidepool basal objects
+ * @return {Array} groups of alternating 'automated' and 'manual' datums
+ */
+function getBasalPathGroups(basals) {
+  var basalPathGroups = []
+  var currentPathType
+  _.forEach(basals, datum => {
+    var pathType = getBasalPathGroupType(datum)
+    if (pathType !== currentPathType) {
+      currentPathType = pathType
+      basalPathGroups.push([])
+    }
+    _.last(basalPathGroups).push(datum)
+  })
+
+  return basalPathGroups
+}
+
+
+
 function plotBasal(pool, opts = defaults) {
   const d3 = window.d3
 
   const t = i18next.t.bind(i18next)
-  const basalUtil = new BasalUtil()
 
   opts = _.defaults(opts, defaults)
 
@@ -95,7 +124,7 @@ function plotBasal(pool, opts = defaults) {
       basal.addRectToPool(basalSegmentGroups, true)
 
       // split data into groups when delivery type changes to generate unique path elements for each group
-      const basalPathGroups = basalUtil.getBasalPathGroups(currentData)
+      const basalPathGroups = getBasalPathGroups(currentData)
       const renderGroupMarkers = basalPathGroups.length > 1
 
       const basalPathsGroup = selection
@@ -109,7 +138,7 @@ function plotBasal(pool, opts = defaults) {
 
       _.forEach(basalPathGroups, (data /*, index */) => {
         const id = data[0].id
-        const pathType = basalUtil.getBasalPathGroupType(data[0])
+        const pathType = getBasalPathGroupType(data[0])
 
         const paths = basalPathsGroup
           .selectAll(`.d3-basal.d3-path-basal.d3-path-basal-${pathType}-${id}`)
