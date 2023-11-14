@@ -57,12 +57,8 @@ const CarbsStatItem: FunctionComponent<TotalCarbsStatProps> = (props) => {
         </>
 
         : <div className={styles.total}>
-                <span className={styles.value}>
-                  {value}
-                </span>
-          <span className={styles.suffix}>
-                  {Unit.Gram}
-                </span>
+          <span className={styles.value}>{value}</span>
+          <span className={styles.suffix}>{Unit.Gram}</span>
         </div>
       }
     </Box>

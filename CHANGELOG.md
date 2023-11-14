@@ -2,6 +2,10 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## 3.0.6-beta - UNRELEASED
+### Engineering use
+- YLP-2696 Fix some Sonarcloud bugs and code smells
+
 ## 3.0.5-beta - 2023-07-12
 ### Added
 - YLP-2292 Display rescue carbs and manual bolus in the trends view for DBLG1 patient
@@ -39,7 +43,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-2631 Calls made to /harbour/errors do not always give an error message
 - YLP-2672 Error code given by the front should be findable in kibana
 - YLP-2680 Conversion error in alarm tooltips in mmol/L
-- YLP-2696 Fix some Sonarcloud bugs and code smells
 
 ## 3.0.4 - 2023-08-23
 ### Added
