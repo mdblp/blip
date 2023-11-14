@@ -16,7 +16,7 @@
  */
 
 import categorizer from '../../data/util/categorize'
-import { MGDL_UNITS } from '../../data/util/constants'
+import { MGDL_UNITS } from 'medical-domain'
 
 function bgBoundary(bgClasses, bgUnits = MGDL_UNITS) {
   var categorizeBg = categorizer(bgClasses, bgUnits)

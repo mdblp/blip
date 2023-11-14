@@ -24,7 +24,7 @@ import _ from 'lodash'
 
 import utils from './util/utils'
 import categorizer from '../data/util/categorize'
-import { MGDL_UNITS, DEFAULT_BG_BOUNDS } from '../data/util/constants'
+import { MGDL_UNITS, DEFAULT_BG_BOUNDS } from 'medical-domain'
 
 const defaults = {
   bgUnits: MGDL_UNITS,

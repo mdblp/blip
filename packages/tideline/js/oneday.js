@@ -26,7 +26,8 @@ import _ from 'lodash'
 import bows from 'bows'
 import moment from 'moment-timezone'
 
-import { MS_IN_DAY } from './data/util/constants'
+import { MS_IN_DAY } from 'medical-domain'
+
 import Tooltips from './plot/util/tooltips/tooltip'
 
 /**

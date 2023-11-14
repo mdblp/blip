@@ -18,46 +18,10 @@
 import i18next from 'i18next'
 import moment from 'moment-timezone'
 
-import { MGDL_UNITS, MMOLL_UNITS, MGDL_PER_MMOLL, dateTimeFormats } from './constants'
+import { MGDL_UNITS } from 'medical-domain'
+import { dateTimeFormats } from './constants'
 
 const format = {
-  /**
-   * convertBG is a common util function to convert bg values
-   * to/from "mg/dL" and "mmol/L"
-   * @param {number} value The value to convert
-   * @param {"mg/dL"|"mmol/L"} unit The unit of the passed value
-   * @return: The converted value in the opposite unit
-   */
-  convertBG: (value, unit) => {
-    if (value < 0) {
-      throw new Error('Invalid glycemia value')
-    }
-    switch (unit) {
-      case MGDL_UNITS:
-        return Math.round(10.0 * value / MGDL_PER_MMOLL) / 10
-      case MMOLL_UNITS:
-        return Math.round(value * MGDL_PER_MMOLL)
-      default:
-        throw new Error('Invalid parameter unit')
-    }
-  },
-
-  tooltipBG: function(d, units) {
-    if (d.annotations && Array.isArray(d.annotations) && d.annotations.length > 0) {
-      var annotation = d.annotations[0]
-      if (annotation.code && annotation.code === 'bg/out-of-range') {
-        var value = annotation.value
-        if (value === 'low') {
-          d.tooltipText = d.type === 'cbg' ? 'Lo' : 'Low'
-        }
-        else if (value === 'high') {
-          d.tooltipText = d.type === 'cbg' ? 'Hi' : 'High'
-        }
-      }
-    }
-    return format.tooltipBGValue(d.value, units)
-  },
-
   tooltipBGValue: function(value, units) {
     return units === MGDL_UNITS ? window.d3.format('g')(Math.round(value)) : window.d3.format('.1f')(value)
   },

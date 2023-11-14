@@ -15,7 +15,6 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from 'lodash'
 import { assert, expect } from 'chai'
 
 import * as constants from '../plugins/blip/basics/logic/constants'
@@ -71,34 +70,6 @@ describe('basics datamunger', function() {
   var dm = datamunger()
   it('should return an object', function() {
     assert.isObject(dm)
-  })
-
-  describe('getLatestPumpUploaded', function() {
-    it('should be a function', function() {
-      assert.isFunction(dm.getLatestPumpUploaded)
-    })
-
-    it('should return a pump with proper data', function() {
-      var patientData = {
-        medicalData: {
-          pumpSettings: [
-            {
-              source: constants.INSULET
-            }
-          ]
-        }
-      }
-      expect(dm.getLatestPumpUploaded(patientData)).to.equal(constants.INSULET)
-    })
-
-    it('should return null without proper data', function() {
-      var patientData = {
-        medicalData: {
-          pumpSettings: []
-        }
-      }
-      expect(dm.getLatestPumpUploaded(patientData)).to.equal(null)
-    })
   })
 
   describe('processInfusionSiteHistory', function() {

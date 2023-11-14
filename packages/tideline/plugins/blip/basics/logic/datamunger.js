@@ -17,19 +17,13 @@
 
 import _ from 'lodash'
 import crossfilter from 'crossfilter2'
-import moment from 'moment-timezone'
-
+import { MS_IN_DAY } from 'medical-domain'
 import * as constants from './constants'
 import togglableState from '../TogglableState'
-import { applyOffset, MGDL_UNITS } from 'medical-domain'
+import { applyOffset } from 'medical-domain'
 
 function dataMunger() {
   return {
-    getLatestPumpUploaded: function(patientData) {
-      const pumpSettings = patientData.medicalData.pumpSettings[0]
-      return _.get(pumpSettings, 'source', null)
-    },
-
     processInfusionSiteHistory: function(basicsData, latestPump, patient) {
       if (!latestPump) {
         basicsData.data.reservoirChange = {
@@ -76,7 +70,7 @@ function dataMunger() {
       var priorSiteChange = _.findLast(_.keys(infusionSitesPerDay), function(date) {
         return date < allDays[0].date
       })
-      var daysSince = (Date.parse(allDays[0].date) - Date.parse(priorSiteChange))/constants.MS_IN_DAY - 1
+      var daysSince = (Date.parse(allDays[0].date) - Date.parse(priorSiteChange))/MS_IN_DAY - 1
       _.forEach(allDays, function(day) {
         if (day.type === 'future') {
           infusionSiteHistory[day.date] = {type: 'future'}
@@ -104,7 +98,7 @@ function dataMunger() {
     _buildCrossfilterUtils: function(dataObj) {
 
       function getLocalDate(d) {
-        return moment.utc(d.normalTime).add(d.displayOffset, 'minutes').toDate().toISOString().slice(0,10)
+        return applyOffset(d.normalTime, d.displayOffset).toISOString().slice(0,10)
       }
 
       function reduceAddMaker() {
