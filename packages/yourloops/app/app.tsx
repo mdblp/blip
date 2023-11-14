@@ -139,10 +139,10 @@ const COMMON_ROUTES = [
         return redirect(`/hcps/${user.id}/teams`)
       }
       if (user.isUserPatient()) {
-        return redirect(`/patients/${user.id}`)
+        return redirect(`/patients/${user.id}/dashboard`)
       }
       if (user.isUserCaregiver()) {
-        return redirect(`/caregivers/${user.id}`)
+        return redirect(`/caregivers/${user.id}/teams/private/patients`)
       }
       throw Error(`Could not get role for user ${JSON.stringify(user)}`)
     },
@@ -261,7 +261,7 @@ const getHcpLayout = () => {
         }
         return teams
       },
-      id: 'teams-route',
+      id: 'teams-hcps',
       children: [
         ...COMMON_LOGGED_ROUTES,
         {
@@ -328,6 +328,17 @@ const getPatientLayout = () => {
   return [
     {
       element: <PatientLayout />,
+      loader: async ({ params }) => {
+        if (!HttpService.isServiceAvailable()) {
+          return redirect('/')
+        }
+        const teams = await TeamApi.getTeams(params.userId, UserRole.Patient)
+        if (!teams.length) {
+          throw Error('Error when retrieving teams')
+        }
+        return teams
+      },
+      id: 'teams-patients',
       children: [
         ...COMMON_LOGGED_ROUTES,
         { path: AppUserRoute.Caregivers, element: <PatientCaregiversPage /> },
@@ -382,7 +393,14 @@ const router = createBrowserRouter([
         id: 'user-caregivers',
         children: getCaregiverLayout()
       },
-      { path: 'patients/:userId', children: getPatientLayout() },
+      {
+        path: 'patients/:userId',
+        loader: async () => {
+          return userLoader(UserRole.Patient)
+        },
+        id: 'user-patients',
+        children: getPatientLayout()
+      },
       { path: '*', element: <Navigate to={AppRoute.Login} replace /> }
     ]
   }

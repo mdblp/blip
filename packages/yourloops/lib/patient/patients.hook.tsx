@@ -50,7 +50,6 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const teamId = teamIdFromParam ?? localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
   const { pathname } = useLocation()
   const urlPrefix = pathname.split('/')[1]
-  // const patientsBasicInfos = useRouteLoaderData('toto') as Patient[]
   const patientsBasicInfos = useRouteLoaderData(`patients-route-for-${urlPrefix}`) as Patient[]
   const { revalidate: refreshPatientsInfo } = useRevalidator()
 

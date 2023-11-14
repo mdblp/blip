@@ -30,15 +30,18 @@ import { Outlet } from 'react-router-dom'
 import { TeamContextProvider } from '../lib/team'
 import { DashboardLayout } from './dashboard-layout'
 import { NotificationContextProvider } from '../lib/notifications/notification.hook'
+import { AuthContextProvider } from '../lib/auth'
 
 export const PatientLayout: FC = () => {
   return (
-    <NotificationContextProvider>
-      <TeamContextProvider>
-        <DashboardLayout>
-          <Outlet />
-        </DashboardLayout>
-      </TeamContextProvider>
-    </NotificationContextProvider>
+    <AuthContextProvider>
+      <NotificationContextProvider>
+        <TeamContextProvider>
+          <DashboardLayout>
+            <Outlet />
+          </DashboardLayout>
+        </TeamContextProvider>
+      </NotificationContextProvider>
+    </AuthContextProvider>
   )
 }
