@@ -2,12 +2,10 @@
  * formatBgValue
  * @param {Number} val - integer or float blood glucose value in either mg/dL or mmol/L
  * @param {Object} bgPrefs - object containing bgUnits String and bgBounds Object
- * @param {Object} [outOfRangeThresholds] - optional thresholds for `low` and `high` values;
- *                                          derived from annotations in PwD's data, so may not exist
  *
  * @return {String} formatted blood glucose value
  */
-export function formatBgValue(val: number, bgPrefs: any, outOfRangeThresholds?: any): string;
+export function formatBgValue(val: number, bgPrefs: any): string;
 /**
  * formatDecimalNumber
  * @param {Number} val - numeric value to format

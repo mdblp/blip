@@ -111,10 +111,4 @@ export function isOverride(insulinEvent: any): boolean;
  * @return {Boolean} whether the bolus programmed was smaller than the calculated recommendation
  */
 export function isUnderride(insulinEvent: any): boolean;
-/**
- * getAnnoations
- * @param {Object} insulinEvent - a Tidebool bolus or wizard object
- *
- * @returns {Array} array of annotations for the bolus or an empty array
- */
-export function getAnnotations(insulinEvent: any): any[];
+

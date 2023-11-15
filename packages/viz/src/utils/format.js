@@ -38,40 +38,18 @@
 
 import _ from 'lodash'
 import { format } from 'd3-format'
-import i18next from 'i18next'
-import { convertBG, MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
+import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 import { formatLocalizedFromUTC, getHourMinuteFormat } from './datetime'
-import { BG_HIGH, BG_LOW } from './constants'
 
 /**
  * formatBgValue
  * @param {Number} val - integer or float blood glucose value in either mg/dL or mmol/L
  * @param {Object} bgPrefs - object containing bgUnits String and bgBounds Object
- * @param {Object} [outOfRangeThresholds] - optional thresholds for `low` and `high` values;
- *                                          derived from annotations in PwD's data, so may not exist
  *
  * @return {String} formatted blood glucose value
  */
-export function formatBgValue(val, bgPrefs, outOfRangeThresholds) {
+export function formatBgValue(val, bgPrefs) {
   const units = _.get(bgPrefs, 'bgUnits', MGDL_UNITS)
-  if (!_.isEmpty(outOfRangeThresholds)) {
-    let lowThreshold = outOfRangeThresholds.low
-    let highThreshold = outOfRangeThresholds.high
-    if (units === MMOLL_UNITS) {
-      if (lowThreshold) {
-        lowThreshold = convertBG(lowThreshold, MGDL_UNITS)
-      }
-      if (highThreshold) {
-        highThreshold = convertBG(highThreshold, MGDL_UNITS)
-      }
-    }
-    if (lowThreshold && val < lowThreshold) {
-      return i18next.t(BG_LOW)
-    }
-    if (highThreshold && val > highThreshold) {
-      return i18next.t(BG_HIGH)
-    }
-  }
   if (units === MMOLL_UNITS) {
     return format('.1f')(val)
   }
