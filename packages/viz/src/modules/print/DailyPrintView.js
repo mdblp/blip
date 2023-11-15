@@ -28,7 +28,6 @@ import { calculateBasalPath, getBasalSequencePaths } from '../render/basal'
 import getBolusPaths from '../render/bolus'
 import { getBasalPathGroups, getBasalPathGroupType } from '../../utils/basal'
 import { getPumpVocabulary, isAutomatedBasalDevice } from '../../utils/device'
-import { getOutOfRangeThreshold } from '../../utils/bloodglucose'
 import {
   getBolusFromInsulinEvent,
   getCarbs,
@@ -695,7 +694,7 @@ class DailyPrintView extends PrintView {
     _.forEach(smbgs, (smbg) => {
       const xPos = xScale(smbg.utc)
       const yPos = bgScale(smbg.value)
-      const smbgLabel = formatBgValue(smbg.value, this.bgPrefs, getOutOfRangeThreshold(smbg))
+      const smbgLabel = formatBgValue(smbg.value, this.bgPrefs)
       const labelWidth = this.doc.widthOfString(smbgLabel)
       const labelOffsetX = labelWidth / 2
       let labelStartX = xPos - labelOffsetX
