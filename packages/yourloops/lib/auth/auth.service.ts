@@ -32,8 +32,8 @@ export default class AuthService {
   private static userBeenRetrieved: boolean
   private static user: User
 
-  static setIsLoggedIn(isLoggedIn: boolean): void {
-    AuthService.authenticated = isLoggedIn
+  static setIsAuthenticated(authenticated: boolean): void {
+    AuthService.authenticated = authenticated
   }
 
   static setHasUserBeenRetrieved(userHasBeenRetrieved: boolean): void {

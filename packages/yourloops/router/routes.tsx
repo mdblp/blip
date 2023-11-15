@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { createBrowserRouter, Navigate, redirect } from 'react-router-dom'
+import { createBrowserRouter, Navigate, Outlet, redirect } from 'react-router-dom'
 
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
@@ -34,19 +34,10 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import 'branding/global.css'
 import 'classes.css'
-import { AppRoute, AppUserRoute } from '../models/enums/routes.enum'
-import { ProductLabellingPage } from '../pages/product-labelling/product-labelling-page'
-import { LoginPageLanding } from '../pages/login/login-page-landing'
-import { CompleteSignUpPage } from '../pages/signup/complete-signup-page'
-import { ConsentPage } from '../pages/consent/consent-page'
-import { TrainingPage } from '../pages/training/training'
-import { VerifyEmailPage } from '../pages/login/verify-email-page'
-import { InvalidRoute } from '../components/invalid-route'
+import { AppUserRoute } from '../models/enums/routes.enum'
 import { UserRole } from '../lib/auth/models/enums/user-role.enum'
 import { CaregiverLayout, CaregiverLayoutWithPatientsProviders } from '../layout/caregiver-layout'
 import { PatientLayout } from '../layout/patient-layout'
-import { ProfilePage } from '../pages/profile/profile-page'
-import { NotificationsPage } from '../pages/notifications/notifications-page'
 import { CareTeamSettingsPage } from '../pages/care-team-settings/care-team-settings-page'
 import { PatientListPage } from '../components/patient-list/patient-list-page'
 import { PatientData } from '../components/patient-data/patient-data'
@@ -57,92 +48,11 @@ import { HcpLayout, NavigateWithCorrectTeamId, PatientListProviders } from '../l
 import PatientUtils from '../lib/patient/patient.util'
 import HttpService from '../lib/http/http.service'
 import AuthService from '../lib/auth/auth.service'
-import { checkConsent, checkFirstSignup, checkTraining, retrieveUser, userLoader } from './loaders'
+import { userLoader } from './loaders'
 import { RouterRoot } from './root'
+import { AuthLayout, UserLayout } from '../layout/user-layout'
+import { COMMON_LOGGED_ROUTES, COMMON_ROUTES } from './common-routes'
 
-const COMMON_ROUTES = [
-  {
-    path: AppRoute.ProductLabelling,
-    loader: async () => {
-      const user = AuthService.getUser()
-      checkFirstSignup(user)
-      checkConsent(user)
-      checkTraining(user)
-      return null
-    },
-    element: <ProductLabellingPage />
-  },
-  {
-    path: AppRoute.Login,
-    loader: async () => {
-      const isAuthenticated = AuthService.isAuthenticated()
-      const user = AuthService.getUser()
-      if (!isAuthenticated) {
-        return null
-      }
-      checkFirstSignup(user)
-      checkConsent(user)
-      checkTraining(user)
-      if (user.isUserHcp()) {
-        return redirect(`/hcps/${user.id}/teams`)
-      }
-      if (user.isUserPatient()) {
-        return redirect(`/patients/${user.id}/dashboard`)
-      }
-      if (user.isUserCaregiver()) {
-        return redirect(`/caregivers/${user.id}/teams/private/patients`)
-      }
-      throw Error(`Could not get role for user ${JSON.stringify(user)}`)
-    },
-    element: <LoginPageLanding />
-  },
-  { path: AppRoute.CompleteSignup, element: <CompleteSignUpPage /> },
-  {
-    path: AppRoute.RenewConsent,
-    loader: async () => {
-      const user = AuthService.getUser()
-      checkFirstSignup(user)
-      return null
-    },
-    element: <ConsentPage messageKey="consent-renew-message" />
-  },
-  {
-    path: AppRoute.NewConsent,
-    loader: async () => {
-      const user = AuthService.getUser()
-      checkFirstSignup(user)
-      return null
-    },
-    element: <ConsentPage messageKey="consent-welcome-message" />
-  },
-  {
-    path: AppRoute.Training,
-    loader: async () => {
-      const user = AuthService.getUser()
-      checkFirstSignup(user)
-      checkConsent(user)
-      return null
-    },
-    element: <TrainingPage />
-  },
-  {
-    path: AppRoute.VerifyEmail,
-    loader: async () => {
-      const user = AuthService.getUser()
-      checkFirstSignup(user)
-      checkConsent(user)
-      checkTraining(user)
-      return null
-    },
-    element: <VerifyEmailPage />
-  }
-]
-
-const COMMON_LOGGED_ROUTES = [
-  { path: AppUserRoute.Preferences, element: <ProfilePage /> },
-  { path: AppUserRoute.Notifications, element: <NotificationsPage /> },
-  { path: AppUserRoute.NotFound, element: <InvalidRoute /> }
-]
 
 const getHcpRoutes = () => {
   return [
@@ -247,46 +157,102 @@ const getPatientRoutes = () => {
   ]
 }
 
-const buildRouter = () => {
+const getLoggedInRoutes = () => {
+  return {
+    element: <AuthLayout />,
+    loader: userLoader,
+    id: 'user-route',
+    children: [
+      {
+        element: <UserLayout />,
+        id: 'teams-route',
+        loader: async () => {
+          const user = AuthService.getUser()
+          if (user.isUserCaregiver()) {
+            return null
+          }
+          const teams = await TeamApi.getTeams(AuthService.getUser().id, user.role)
+          if (!teams.length) {
+            throw Error('Error when retrieving teams')
+          }
+          return teams
+        },
+        children: [
+          ...COMMON_LOGGED_ROUTES,
+          {
+            path: 'teams',
+            children: [
+              { path: 'private', element: <Navigate to="/teams/private/patients" replace /> },
+              { path: ':teamId', element: <CareTeamSettingsPage /> },
+              {
+                path: ':teamId/patients',
+                element: <PatientListProviders />,
+                loader: async ({ params }) => {
+                  if (!params.teamId) {
+                    return null
+                  }
+                  const user = AuthService.getUser()
+                  if (user.isUserHcp()) {
+                    return PatientUtils.computePatientsForHcp(params.userId, UserRole.Hcp, params.teamId)
+                  }
+                  return await PatientUtils.computePatientsForCaregiver()
+                },
+                id: 'patients-route',
+                children: [
+                  { path: '', element: <PatientListPage /> },
+                  { path: ':patientId/*', element: <PatientData /> }
+                ]
+              },
+              {
+                path: '',
+                element: <NavigateWithCorrectTeamId />
+              }
+
+            ]
+          },
+          {
+            path: '',
+            loader: () => {
+              const user = AuthService.getUser()
+              if (user.isUserPatient()) {
+                return redirect(AppUserRoute.Dashboard)
+              }
+              return null
+            },
+            element: <NavigateWithCorrectTeamId />
+          },
+          {
+            path: '*',
+            element: <Outlet />,
+            loader: () => {
+              const user = AuthService.getUser()
+              if (!user.isUserPatient()) {
+                return redirect(AppUserRoute.NotFound)
+              }
+              return null
+            },
+            children: [
+              { path: AppUserRoute.Caregivers, element: <PatientCaregiversPage /> },
+              { path: AppUserRoute.CareTeamSettings, element: <CareTeamSettingsPage /> },
+              { path: '*', element: <PatientData /> }
+            ]
+          }
+        ]
+      }]
+  }
+}
+
+export const buildRoutes = () => {
   return createBrowserRouter([
     {
+      path: '',
       element: <RouterRoot />,
-      loader: async () => {
-        const isAuthenticated = AuthService.isAuthenticated()
-        if (!isAuthenticated) {
-          return null
-        }
-        const user = AuthService.getUser()
-        return await retrieveUser(user)
-      },
-      errorElement: <SpinningLoader className="centered-spinning-loader" />,
+      // errorElement: <SpinningLoader className="centered-spinning-loader" />,
       children: [
         ...COMMON_ROUTES,
-        {
-          path: 'hcps/',
-          loader: async () => {
-            return userLoader(UserRole.Hcp)
-          },
-          id: 'user-hcps',
-          children: getHcpRoutes()
-        },
-        {
-          path: 'caregivers/:userId',
-          loader: async () => {
-            return userLoader(UserRole.Caregiver)
-          },
-          id: 'user-caregivers',
-          children: getCaregiverRoutes()
-        },
-        {
-          path: 'patients/:userId',
-          loader: async () => {
-            return userLoader(UserRole.Patient)
-          },
-          id: 'user-patients',
-          children: getPatientRoutes()
-        },
-        { path: '*', element: <Navigate to={AppRoute.Login} replace /> }
+        getLoggedInRoutes(),
+        { path: 'loading', element: <SpinningLoader className="centered-spinning-loader" /> }
+        // { path: '*', element: <Navigate to={AppRoute.Login} replace /> }
       ]
     }
   ])

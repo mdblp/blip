@@ -31,20 +31,17 @@ import { DashboardLayout } from './dashboard-layout'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from './hcp-layout'
 import { PRIVATE_TEAM_ID } from '../lib/team/team.hook'
 import { NotificationContextProvider } from '../lib/notifications/notification.hook'
-import { AuthContextProvider } from '../lib/auth'
 import { PatientsProvider } from '../lib/patient/patients.provider'
 import { PatientListProvider } from '../lib/providers/patient-list.provider'
 
 export const CaregiverLayout: FunctionComponent = () => {
   localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, PRIVATE_TEAM_ID)
   return (
-    <AuthContextProvider>
-      <NotificationContextProvider>
-        <DashboardLayout>
-          <Outlet />
-        </DashboardLayout>
-      </NotificationContextProvider>
-    </AuthContextProvider>
+    <NotificationContextProvider>
+      <DashboardLayout>
+        <Outlet />
+      </DashboardLayout>
+    </NotificationContextProvider>
   )
 }
 
@@ -52,7 +49,7 @@ export const CaregiverLayoutWithPatientsProviders: FunctionComponent = () => {
   return (
     <PatientListProvider>
       <PatientsProvider>
-          <Outlet />
+        <Outlet />
       </PatientsProvider>
     </PatientListProvider>
   )

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, useEffect } from 'react'
+import React, { type FC, useEffect, useRef } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 
 import '@fontsource/roboto/300.css'
@@ -41,25 +41,55 @@ import AuthService from '../lib/auth/auth.service'
 import { AuthenticatedUser } from '../lib/auth/models/authenticated-user.model'
 import { v4 as uuidv4 } from 'uuid'
 import { MainLobby } from '../app/main-lobby'
+import { useNavigate } from 'react-router-dom'
 
 
 export const AuthSynchronizer: FC = () => {
   const { isAuthenticated, user, getAccessTokenSilently, isLoading } = useAuth0()
+  const navigate = useNavigate()
+  const ref = useRef(true)
+  const firstRender = ref.current;
+  ref.current = false
 
-  AuthService.setIsLoggedIn(isAuthenticated)
+  AuthService.setIsAuthenticated(isAuthenticated)
   if (user && !AuthService.getUser()) {
-    AuthService.setUser(new User(user as AuthenticatedUser))
+    const authUser = new User(user as AuthenticatedUser)
+    AuthService.setUser(authUser)
   }
 
   useEffect(() => {
-    const getAccessToken = async (): Promise<string> => await getAccessTokenSilently()
-    HttpService.setGetAccessTokenMethod(getAccessToken)
-    HttpService.setTraceToken(uuidv4())
-  }, [getAccessTokenSilently])
+    if (!isAuthenticated) {
+      getAccessTokenSilently()
+        .then(() => {
+          AuthService.setIsAuthenticated(true)
+        })
+        .catch(() => {
+          // This happens when we try to silently login but we don't have enough info
+        })
+    }
+  }, [getAccessTokenSilently, isAuthenticated]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const getAccessToken = async (): Promise<string> => await getAccessTokenSilently()
+      HttpService.setGetAccessTokenMethod(getAccessToken)
+      HttpService.setTraceToken(uuidv4())
+      const authUser = AuthService.getUser()
+      if (authUser.isUserHcp()) {
+        navigate(`/teams`)
+      }
+      if (authUser.isUserPatient()) {
+        navigate(`/dashboard`)
+      }
+      if (authUser.isUserCaregiver()) {
+        navigate(`/teams/private/patients`)
+      }
+    }
+  }, [getAccessTokenSilently, isAuthenticated, navigate, user])
 
   return (
     <>
-      {!isLoading &&
+      {!firstRender && !isLoading &&
         <>
           <MetricsLocationListener />
           <MainLobby />

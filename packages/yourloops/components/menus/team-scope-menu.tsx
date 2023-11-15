@@ -82,7 +82,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
   } = classes()
   const { getMedicalTeams, getPrivateTeam, createTeam, getTeam } = useTeam()
 
-  const { teamId: teamIdFromParams, userId } = useParams()
+  const { teamId: teamIdFromParams } = useParams()
   const teamId = teamIdFromParams ?? localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
   const selectedTeam = getTeam(teamId)
   const alert = useAlert()
@@ -106,7 +106,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
 
   const onSelectTeam = (teamId: string): void => {
     if (teamId !== selectedTeam.id) {
-      navigate(`/hcps/${userId}/teams/${teamId}/patients`)
+      navigate(`/teams/${teamId}/patients`)
     }
     closeMenu()
   }
@@ -120,7 +120,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
     if (createdTeam) {
       try {
         const newTeam = await createTeam(createdTeam as Team)
-        navigate(`/hcps/${userId}/teams/${newTeam.id}`)
+        navigate(`/teams/${newTeam.id}`)
         alert.success(t('team-page-success-create'))
       } catch (reason: unknown) {
         alert.error(t('team-page-failed-create'))

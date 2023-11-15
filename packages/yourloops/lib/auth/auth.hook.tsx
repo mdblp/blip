@@ -29,9 +29,7 @@ import React, {
   createContext,
   type FunctionComponent,
   type PropsWithChildren,
-  useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState
 } from 'react'
@@ -42,7 +40,6 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { type HcpProfession } from './models/enums/hcp-profession.enum'
 import { zendeskLogout } from '../zendesk'
 import User from './models/user.model'
-import HttpService from '../http/http.service'
 import UserApi from './user.api'
 import { availableLanguageCodes, changeLanguage, getCurrentLang } from '../language'
 import metrics from '../metrics'
@@ -51,12 +48,10 @@ import { type Preferences } from './models/preferences.model'
 import { type Profile } from './models/profile.model'
 import { type Settings } from './models/settings.model'
 import { UserRole } from './models/enums/user-role.enum'
-import { type AuthenticatedUser, IDLE_USER_QUERY_PARAM } from './models/authenticated-user.model'
+import { IDLE_USER_QUERY_PARAM } from './models/authenticated-user.model'
 import { type SignupForm } from './models/signup-form.model'
 import { type ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
-import { v4 as uuidv4 } from 'uuid'
-import { sanitizeBgUnit } from './user.util'
-import { useLoaderData, useLocation, useRouteLoaderData } from 'react-router-dom'
+import { useRouteLoaderData } from 'react-router-dom'
 import { useIdleTimer } from 'react-idle-timer'
 import { ConfigService } from '../config/config.service'
 
@@ -70,12 +65,9 @@ export function AuthContextImpl(): AuthContext {
     isAuthenticated,
     getAccessTokenWithPopup
   } = useAuth0()
-  const { pathname } = useLocation()
-  const urlPrefix = pathname.split('/')[1]
-  const userFromLoader = useRouteLoaderData(`user-${urlPrefix}`) as User
-  // const userFromLoader = useLoaderData() as User
+  const userFromLoader = useRouteLoaderData('user-route') as User
+
   const [user, setUser] = useState<User>(userFromLoader)
-  // const [fetchingUser, setFetchingUser] = useState<boolean>(false)
 
   const updateUserLanguage = (user: User): void => {
     const languageCode = user.preferences?.displayLanguageCode

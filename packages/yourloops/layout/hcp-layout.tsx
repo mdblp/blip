@@ -33,13 +33,14 @@ import { PatientListProvider } from '../lib/providers/patient-list.provider'
 import { Team, TeamContextProvider, useTeam } from '../lib/team'
 import { NotificationContextProvider } from '../lib/notifications/notification.hook'
 import { AppUserRoute } from '../models/enums/routes.enum'
-import { AuthContextProvider } from '../lib/auth'
+import { useAuth } from '../lib/auth'
+import { PRIVATE_TEAM_ID } from '../lib/team/team.hook'
 
 export const LOCAL_STORAGE_SELECTED_TEAM_ID_KEY = 'selectedTeamId'
 
 export const NavigateWithCorrectTeamId: FunctionComponent = () => {
+  const { user } = useAuth()
   const { teams, getDefaultTeamId } = useTeam()
-  const { userId } = useParams()
 
   const getFallbackTeamId = useCallback((): string => {
     const localStorageTeamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
@@ -53,11 +54,15 @@ export const NavigateWithCorrectTeamId: FunctionComponent = () => {
   }, [getDefaultTeamId, teams])
 
   const teamId = useMemo(() => {
+    if (user.isUserCaregiver()) {
+      localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, PRIVATE_TEAM_ID)
+      return PRIVATE_TEAM_ID
+    }
     return getFallbackTeamId()
-  }, [getFallbackTeamId])
+  }, [getFallbackTeamId, user])
 
   return (
-    <Navigate to={`/hcps/${userId}/teams/${teamId}/patients`} replace />
+    <Navigate to={`/teams/${teamId}/patients`} replace />
   )
 }
 
@@ -84,15 +89,13 @@ export const HcpLayout: FunctionComponent = () => {
   return (
     <>
       {pageValid ? (
-        <AuthContextProvider>
-          <NotificationContextProvider>
-            <TeamContextProvider>
-              <DashboardLayout>
-                <Outlet />
-              </DashboardLayout>
-            </TeamContextProvider>
-          </NotificationContextProvider>
-        </AuthContextProvider>
+        <NotificationContextProvider>
+          <TeamContextProvider>
+            <DashboardLayout>
+              <Outlet />
+            </DashboardLayout>
+          </TeamContextProvider>
+        </NotificationContextProvider>
       ) : (
         <Navigate to={AppUserRoute.NotFound} replace />
       )}

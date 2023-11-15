@@ -39,8 +39,7 @@ import { type ITeam } from './models/i-team.model'
 import { TeamMemberRole } from './models/enums/team-member-role.enum'
 import { UserInviteStatus } from './models/enums/user-invite-status.enum'
 import { TeamType } from './models/enums/team-type.enum'
-import { useLoaderData, useLocation, useRevalidator, useRouteLoaderData } from 'react-router-dom'
-import User from '../auth/models/user.model'
+import { useRevalidator, useRouteLoaderData } from 'react-router-dom'
 
 const ReactTeamContext = createContext<TeamContext>({} as TeamContext)
 
@@ -50,9 +49,7 @@ export const PRIVATE_TEAM_NAME = 'private'
 function TeamContextImpl(): TeamContext {
   const authHook = useAuth()
   const notificationHook = useNotification()
-  const { pathname } = useLocation()
-  const urlPrefix = pathname.split('/')[1]
-  const teams = useRouteLoaderData(`teams-${urlPrefix}`) as Team[]
+  const teams = useRouteLoaderData('teams-route') as Team[]
   // console.log(teamsFromLoader)
   const { revalidate: refresh } = useRevalidator()
   // const [teams, setTeams] = useState<Team[]>(teamsFromLoader ?? [])

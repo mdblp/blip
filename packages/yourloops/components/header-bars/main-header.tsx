@@ -119,13 +119,13 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
 
   const buildNotificationRoute = (): string => {
     if (user.isUserHcp()) {
-      return `/hcps/${user.id}/${AppUserRoute.Notifications}`
+      return `/${AppUserRoute.Notifications}`
     }
     if (user.isUserPatient()) {
-      return `/patients/${user.id}/${AppUserRoute.Notifications}`
+      return `/${AppUserRoute.Notifications}`
     }
     if (user.isUserCaregiver()) {
-      return `/caregivers/${user.id}/${AppUserRoute.Notifications}`
+      return `/${AppUserRoute.Notifications}`
     }
   }
 
@@ -176,7 +176,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                   label={t('header-tab-patients')}
                   value={HcpNavigationTab.Patients}
                   onClick={() => {
-                    navigate(`/hcps/${userId}${AppUserRoute.Teams}/${teamId}/patients`)
+                    navigate(`${AppUserRoute.Teams}/${teamId}/patients`)
                   }}
                 />
                 {teamId !== PRIVATE_TEAM_ID &&
@@ -186,7 +186,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                     label={t('header-tab-care-team-settings')}
                     value={HcpNavigationTab.CareTeam}
                     onClick={() => {
-                      navigate(`/hcps/${userId}${AppUserRoute.Teams}/${teamId}`)
+                      navigate(`${AppUserRoute.Teams}/${teamId}`)
                     }}
                   />
                 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,22 +25,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
-import { RouterProvider } from 'react-router-dom'
+import React, { type FunctionComponent } from 'react'
+import { AuthContextProvider, useAuth } from '../lib/auth'
+import { HcpLayout } from './hcp-layout'
+import { CaregiverLayout } from './caregiver-layout'
+import { PatientLayout } from './patient-layout'
+import { Outlet } from 'react-router-dom'
+import { useAuth0 } from '@auth0/auth0-react'
 
-import '@fontsource/roboto/300.css'
-import '@fontsource/roboto/400.css'
-import '@fontsource/roboto/500.css'
-import '@fontsource/roboto/700.css'
-import 'branding/global.css'
-import 'classes.css'
-import SpinningLoader from '../components/loaders/spinning-loader'
-import { buildRoutes } from '../router/routes'
 
-const routes = buildRoutes()
+export const UserLayout: FunctionComponent = () => {
+  const { user } = useAuth()
 
-export const Yourloops: FC = () => {
   return (
-    <RouterProvider router={routes} fallbackElement={<SpinningLoader className="centered-spinning-loader" />} />
+    <>
+      {user.isUserHcp() &&
+        <HcpLayout />
+      }
+      {user.isUserCaregiver() &&
+        <CaregiverLayout />
+      }
+      {user.isUserPatient() &&
+        <PatientLayout />
+      }
+    </>
   )
+}
+
+
+export const AuthLayout: FunctionComponent = () => {
+  const { isAuthenticated } = useAuth0()
+
+  return <>
+    {isAuthenticated &&
+      <AuthContextProvider><Outlet /></AuthContextProvider>
+    }
+  </>
 }

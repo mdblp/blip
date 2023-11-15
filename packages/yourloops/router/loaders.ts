@@ -54,38 +54,59 @@ export const retrieveUser = async (user: User | null) => {
   return user
 }
 
+export const checkUserHasARole = (user: User | null) => {
+  if (!user || (user.role !== UserRole.Hcp && user.role !== UserRole.Caregiver && user.role !== UserRole.Patient)) {
+    return redirect('/loading')
+  }
+  return null
+}
+
+export const checkUserIsNotPatient = (user: User) => {
+  if (user.role === UserRole.Patient) {
+    return redirect('/dashboard')
+  }
+  return null
+}
 
 export const checkFirstSignup = (user: User | null) => {
   if (user && user.isFirstLogin()) {
-    redirect(AppRoute.CompleteSignup)
+    return redirect(AppRoute.CompleteSignup)
   }
 }
 
 export const checkConsent = (user: User | null) => {
   if (user && user.hasToAcceptNewConsent()) {
-    redirect(AppRoute.NewConsent)
+    return redirect(AppRoute.NewConsent)
   }
   if (user && user.hasToRenewConsent()) {
-    redirect(AppRoute.RenewConsent)
+    return redirect(AppRoute.RenewConsent)
   }
 }
 
 export const checkTraining = (user: User | null) => {
   if (user && user.hasToDisplayTrainingInfoPage()) {
-    redirect(AppRoute.NewConsent)
+    return redirect(AppRoute.NewConsent)
   }
 }
 
-export const userLoader = async (currentRoleRoute: UserRole) => {
+export const userLoader = async () => {
   const isAuthenticated = AuthService.isAuthenticated()
   if (!isAuthenticated) {
-    return redirect('/login')
+    return redirect('/loading')
   }
   const user = AuthService.getUser()
-  if (user.role !== currentRoleRoute) {
-    redirect('/login')
+  const userRetrieved = await retrieveUser(user)
+  const redirectToLogin = checkUserHasARole(user)
+  if (redirectToLogin) {
+    return redirectToLogin
   }
-  checkFirstSignup(user)
-  checkConsent(user)
-  return await retrieveUser(user)
+  const redirectFirstSignup = checkFirstSignup(user)
+  if (redirectFirstSignup) {
+    return redirectFirstSignup
+  }
+  const redirectFirstConsent = checkConsent(user)
+  if (redirectFirstConsent) {
+    return redirectFirstConsent
+  }
+  return userRetrieved
 }
