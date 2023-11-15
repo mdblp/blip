@@ -83,7 +83,6 @@ export const HcpLayout: FunctionComponent = () => {
   updateLocalStorage()
   return (
     <>
-      {/*{!teamId}*/}
       {pageValid ? (
         <AuthContextProvider>
           <NotificationContextProvider>

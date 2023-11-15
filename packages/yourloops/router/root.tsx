@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,46 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
-import { Outlet } from 'react-router-dom'
+import React, { FC } from 'react'
+import { Auth0Provider } from '@auth0/auth0-react'
+import appConfig from '../lib/config/config'
+import { AuthSynchronizer } from './auth-synchronizer'
 
-import { ThemeProvider } from '@mui/material/styles'
-import { CacheProvider } from '@emotion/react'
-import { GlobalStyles, TssCacheProvider } from 'tss-react'
-import createCache from '@emotion/cache'
-import CssBaseline from '@mui/material/CssBaseline'
-import { getTheme } from '../components/theme'
-import { DefaultSnackbarContext, SnackbarContextProvider } from '../components/utils/snackbar'
-import { Footer } from '../components/footer/footer'
-import Box from '@mui/material/Box'
 
-const muiCache = createCache({
-  key: 'mui',
-  prepend: true
-})
-
-const tssCache = createCache({
-  key: 'tss'
-})
-tssCache.compat = true
-
-export const MainLobby: FC = () => {
-  const theme = getTheme()
-
+export const RouterRoot: FC = () => {
+  const redirectUri = window.location.origin
   return (
-    <CacheProvider value={muiCache}>
-      <TssCacheProvider value={tssCache}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <GlobalStyles styles={{ body: { backgroundColor: 'var(--body-background-color)' } }} />
-          <SnackbarContextProvider context={DefaultSnackbarContext}>
-            <Box>
-              <Outlet />
-            </Box>
-          </SnackbarContextProvider>
-          <Footer />
-        </ThemeProvider>
-      </TssCacheProvider>
-    </CacheProvider>
+    <Auth0Provider
+      domain={appConfig.AUTH0_DOMAIN}
+      issuer={appConfig.AUTH0_ISSUER}
+      clientId={appConfig.AUTH0_CLIENT_ID}
+      useRefreshTokensFallback
+      authorizationParams={{
+        redirect_uri: redirectUri,
+        audience: 'https://api-ext.your-loops.com'
+      }}
+      useRefreshTokens
+    >
+      <AuthSynchronizer />
+    </Auth0Provider>
   )
 }
