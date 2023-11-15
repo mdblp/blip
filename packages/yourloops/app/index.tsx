@@ -39,6 +39,7 @@ import OnError from './error'
 import { BrowserRouter } from 'react-router-dom'
 import initAxios from '../lib/http/axios.service'
 import { createRoot } from 'react-dom/client'
+import config from '../lib/config/config'
 
 i18nInit().then(() => {
   let div = document.getElementById('app')
@@ -54,8 +55,7 @@ i18nInit().then(() => {
   initTheme()
 
   const root = createRoot(div)
-  root.render(<Yourloops />)
-  // root.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />)
+  root.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />)
 
   window.onerror = (event, source, lineno, colno, error) => {
     if (source && !source.endsWith('.js')) {

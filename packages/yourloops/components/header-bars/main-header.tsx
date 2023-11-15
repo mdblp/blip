@@ -27,7 +27,7 @@
 
 import React, { Dispatch, type FC, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 
 import { type Theme, useTheme } from '@mui/material/styles'
@@ -98,7 +98,6 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
   const theme = useTheme()
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const { userId } = useParams()
   const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
 
   const getSelectedTab = (): HcpNavigationTab | false => {
@@ -114,18 +113,6 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
   const appBarRefCallback = (appMainHeaderElement: HTMLHeadElement): void => {
     if (appMainHeaderElement) {
       setMainHeaderHeight(appMainHeaderElement.offsetHeight ?? 0)
-    }
-  }
-
-  const buildNotificationRoute = (): string => {
-    if (user.isUserHcp()) {
-      return `/${AppUserRoute.Notifications}`
-    }
-    if (user.isUserPatient()) {
-      return `/${AppUserRoute.Notifications}`
-    }
-    if (user.isUserCaregiver()) {
-      return `/${AppUserRoute.Notifications}`
     }
   }
 
@@ -194,7 +181,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
             }
 
             <Box display="flex" alignItems="center">
-              <Link to={buildNotificationRoute()} id="header-notification-link">
+              <Link to={`/${AppUserRoute.Notifications}`} id="header-notification-link">
                 <Badge
                   id="notification-count-badge"
                   aria-label={t('notification-list')}

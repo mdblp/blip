@@ -50,12 +50,7 @@ function TeamContextImpl(): TeamContext {
   const authHook = useAuth()
   const notificationHook = useNotification()
   const teams = useRouteLoaderData('teams-route') as Team[]
-  // console.log(teamsFromLoader)
   const { revalidate: refresh } = useRevalidator()
-  // const [teams, setTeams] = useState<Team[]>(teamsFromLoader ?? [])
-  // const [initialized, setInitialized] = useState<boolean>(!!teamsFromLoader)
-  // const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
-  // const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const user = authHook.user
   if (!user) {
@@ -65,23 +60,6 @@ function TeamContextImpl(): TeamContext {
   const getTeam = (teamId: string): Team | null => {
     return teams.find((t) => t.id === teamId) ?? null
   }
-
-  // const fetchTeams = useCallback(() => {
-  //   TeamApi.getTeams(user)
-  //     .then((teams: Team[]) => {
-  //       setTeams(teams)
-  //       setErrorMessage(null)
-  //     })
-  //     .catch((reason: unknown) => {
-  //       const message = errorTextFromException(reason)
-  //       setErrorMessage(message)
-  //     })
-  //     .finally(() => {
-  //       setInitialized(true)
-  //       setRefreshInProgress(false)
-  //     })
-  // }, [user])
-
 
   const getMedicalTeams = (): Team[] => {
     return getTeamsByType(TeamType.medical)
@@ -105,8 +83,6 @@ function TeamContextImpl(): TeamContext {
 
   const inviteMember = async (team: Team, username: string, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
     await TeamApi.inviteMember(user.id, team.id, username, role)
-    // const result = await TeamApi.inviteMember(user.id, team.id, username, role)
-    // setTeams(result.teams)
     refresh()
   }
 
@@ -193,9 +169,6 @@ function TeamContextImpl(): TeamContext {
 
   return {
     teams,
-    // initialized,
-    // errorMessage,
-    // refreshInProgress,
     refresh,
     getTeam,
     getMedicalTeams,
@@ -215,9 +188,6 @@ function TeamContextImpl(): TeamContext {
 export const TeamContextProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const context = TeamContextImpl()
   return <ReactTeamContext.Provider value={context}>{children}</ReactTeamContext.Provider>
-  // return context.initialized
-  //   ? <ReactTeamContext.Provider value={context}>{children}</ReactTeamContext.Provider>
-  //   : <SpinningLoader className="centered-spinning-loader" />
 }
 
 export const useTeam = (): TeamContext => {

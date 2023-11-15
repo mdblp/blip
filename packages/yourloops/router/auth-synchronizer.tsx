@@ -27,13 +27,6 @@
 
 import React, { type FC, useEffect, useRef } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
-
-import '@fontsource/roboto/300.css'
-import '@fontsource/roboto/400.css'
-import '@fontsource/roboto/500.css'
-import '@fontsource/roboto/700.css'
-import 'branding/global.css'
-import 'classes.css'
 import { User } from '../lib/auth'
 import MetricsLocationListener from '../components/MetricsLocationListener'
 import HttpService from '../lib/http/http.service'
@@ -47,7 +40,7 @@ import { useNavigate } from 'react-router-dom'
 export const AuthSynchronizer: FC = () => {
   const { isAuthenticated, user, getAccessTokenSilently, isLoading } = useAuth0()
   const navigate = useNavigate()
-  const ref = useRef(true)
+  const ref = useRef(true) // TODO TIM: Check that it is really necessary
   const firstRender = ref.current;
   ref.current = false
 
