@@ -121,62 +121,10 @@ describe('constants', () => {
     })
   })
 
-  describe('INSULET', () => {
-    it('should be `Insulet`', () => {
-      expect(constants.INSULET).to.equal('Insulet')
-    })
-  })
-
-  describe('TANDEM', () => {
-    it('should be `Tandem`', () => {
-      expect(constants.TANDEM).to.equal('Tandem')
-    })
-  })
-
-  describe('ANIMAS', () => {
-    it('should be `Animas`', () => {
-      expect(constants.ANIMAS).to.equal('Animas')
-    })
-  })
-
-  describe('MEDTRONIC', () => {
-    it('should be `Medtronic`', () => {
-      expect(constants.MEDTRONIC).to.equal('Medtronic')
-    })
-  })
-
   describe('pumpVocabulary', () => {
     it('should define common terms per device manufacturer', () => {
       const pumpVocabulary = constants.getPumpVocabularies()
       expect(pumpVocabulary).to.eql({
-        [constants.ANIMAS]: {
-          [constants.SITE_CHANGE_RESERVOIR]: 'Go Rewind',
-          [constants.SITE_CHANGE_TUBING]: 'Go Prime',
-          [constants.SITE_CHANGE_CANNULA]: 'Fill Cannula',
-          [constants.AUTOMATED_DELIVERY]: 'Automated',
-          [constants.SCHEDULED_DELIVERY]: 'Manual'
-        },
-        [constants.INSULET]: {
-          [constants.SITE_CHANGE_RESERVOIR]: 'Change Pod',
-          [constants.SITE_CHANGE_TUBING]: 'Activate Pod',
-          [constants.SITE_CHANGE_CANNULA]: 'Prime',
-          [constants.AUTOMATED_DELIVERY]: 'Automated',
-          [constants.SCHEDULED_DELIVERY]: 'Manual'
-        },
-        [constants.MEDTRONIC]: {
-          [constants.SITE_CHANGE_RESERVOIR]: 'Rewind',
-          [constants.SITE_CHANGE_TUBING]: 'Prime',
-          [constants.SITE_CHANGE_CANNULA]: 'Prime Cannula',
-          [constants.AUTOMATED_DELIVERY]: 'Auto Mode',
-          [constants.SCHEDULED_DELIVERY]: 'Manual'
-        },
-        [constants.TANDEM]: {
-          [constants.SITE_CHANGE_RESERVOIR]: 'Change Cartridge',
-          [constants.SITE_CHANGE_TUBING]: 'Fill Tubing',
-          [constants.SITE_CHANGE_CANNULA]: 'Fill Cannula',
-          [constants.AUTOMATED_DELIVERY]: 'Automated',
-          [constants.SCHEDULED_DELIVERY]: 'Manual'
-        },
         [constants.DIABELOOP]: {
           [constants.SITE_CHANGE_RESERVOIR]: 'Change Cartridge',
           [constants.SITE_CHANGE_TUBING]: 'Fill Tubing',
@@ -199,7 +147,6 @@ describe('constants', () => {
   describe('AUTOMATED_BASAL_DEVICE_MODELS', () => {
     it('should define automated basal models per device manufacturer', () => {
       expect(constants.AUTOMATED_BASAL_DEVICE_MODELS).to.eql({
-        [constants.MEDTRONIC]: ['1580', '1581', '1582', '1780', '1781', '1782'],
         [constants.DIABELOOP]: true
       })
     })

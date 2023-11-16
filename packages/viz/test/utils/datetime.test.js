@@ -139,16 +139,6 @@ describe('datetime', () => {
     })
   })
 
-  describe('formatBirthdate', () => {
-    it('should be a function', () => {
-      assert.isFunction(datetime.formatBirthdate)
-    })
-
-    it('should format birthdate extracted from normal patient object', () => {
-      expect(datetime.formatBirthdate(patient)).to.equal('Jan 31, 1983')
-    })
-  })
-
   describe('formatClocktimeFromMsPer24', () => {
     const twoTwentyAfternoonMs = 1000 * 60 * 60 * 14 + 1000 * 60 * 20
     const errorMsg = 'First argument must be a value in milliseconds per twenty-four hour day!'
