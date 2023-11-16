@@ -2,10 +2,6 @@ export namespace components {
   export { WarmUpTooltip }
 }
 export namespace utils {
-  namespace basal {
-    export { getGroupDurations }
-    export { getTotalBasalFromEndpoints }
-  }
   namespace bg {
     export { formatBgValue }
     export { reshapeBgClassesToBgBounds }
@@ -39,8 +35,6 @@ import createPrintPDFPackage from './types/modules/print'
 import { getLongDayHourFormat } from './types/utils/datetime'
 import { formatParameterValue } from './types/utils/format'
 import WarmUpTooltip from './types/components/daily/warmuptooltip/WarmUpTooltip'
-import { getGroupDurations } from './types/utils/basal'
-import { getTotalBasalFromEndpoints } from './types/utils/basal'
 import { formatBgValue } from './types/utils/format'
 import { reshapeBgClassesToBgBounds } from './types/utils/bloodglucose'
 import { selectDailyViewData } from './types/utils/print/data'

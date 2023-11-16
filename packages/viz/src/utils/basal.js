@@ -17,8 +17,6 @@
 
 import _ from 'lodash'
 
-import { formatInsulin, formatDecimalNumber } from './format'
-import { ONE_HR } from './datetime'
 
 /**
 * getBasalSequences
@@ -162,71 +160,6 @@ export function getGroupDurations(data, s, e) {
       segment.duration
     ])
   }
-
-  return durations
-}
-
-/**
- * Calculate the total insulin dose delivered in a given basal segment
- * @param {Number} duration Duration of segment in milliseconds
- * @param {Number} rate Basal rate of segment
- */
-export function getSegmentDose(duration, rate) {
-  const hours = duration / ONE_HR
-  return Number.parseFloat(formatDecimalNumber(hours * rate, 3))
-}
-
-/**
- * Get total basal delivered for a given time range
- * @param {object[]} data Array of Tidepool basal data
- * @param {string[]} endpoints ISO date strings for the start, end of the range, in that order
- * @return {string} Formatted total insulin dose
- */
-export function getTotalBasalFromEndpoints(data, endpoints) {
-  const start = new Date(endpoints[0])
-  const end = new Date(endpoints[1])
-  let dose = 0
-
-  _.forEach(data, (datum, index) => {
-    let duration = datum.duration
-    if (index === 0) {
-      // handle first segment, which may have started before the start endpoint
-      duration = _.min([new Date(datum.normalEnd) - start, datum.duration])
-    } else if (index === data.length - 1) {
-      // handle last segment, which may go past the end endpoint
-      duration = _.min([end - new Date(datum.normalTime), datum.duration])
-    }
-    dose += getSegmentDose(duration, datum.rate)
-  })
-
-  return formatInsulin(dose)
-}
-
-/**
- * Get automated and manual basal delivery time for a given time range
- * @param {Array} data Array of Tidepool basal data
- * @param {[]String} enpoints ISO date strings for the start, end of the range, in that order
- * @return {Number} Formatted total insulin dose
- */
-export function getBasalGroupDurationsFromEndpoints(data, endpoints) {
-  const start = new Date(endpoints[0])
-  const end = new Date(endpoints[1])
-  const durations = {
-    automated: 0,
-    manual: 0
-  }
-
-  _.forEach(data, (datum, index) => {
-    let duration = datum.duration
-    if (index === 0) {
-      // handle first segment, which may have started before the start endpoint
-      duration = _.min([new Date(datum.normalEnd) - start, datum.duration])
-    } else if (index === data.length - 1) {
-      // handle last segment, which may go past the end endpoint
-      duration = _.min([end - new Date(datum.normalTime), datum.duration])
-    }
-    durations[getBasalPathGroupType(datum)] += duration
-  })
 
   return durations
 }

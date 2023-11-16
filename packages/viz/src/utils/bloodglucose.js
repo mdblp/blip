@@ -17,7 +17,6 @@
 
 import _ from 'lodash'
 
-import { TimeService } from 'medical-domain'
 import { formatBgValue } from './format.js'
 
 import i18next from 'i18next'
@@ -106,15 +105,4 @@ export function weightedCGMCount(data) {
 
     return total + datumWeight
   }, 0)
-}
-
-/**
- * Get the CGM sample frequency in milliseconds from a CGM data point. Most devices default at a
- * 5 minute interval, but others, such as the Abbot FreeStyle Libre, sample every 15 mins
- *
- * @param {Array} datum - a cgm data point
- */
-export function cgmSampleFrequency(datum) {
-  const deviceId = _.get(datum, 'deviceId', '')
-  return deviceId.indexOf('AbbottFreeStyleLibre') === 0 ? 15 * TimeService.MS_IN_MIN : 5 * TimeService.MS_IN_MIN
 }

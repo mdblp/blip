@@ -1,10 +1,6 @@
 export const BG_HIGH: "High";
 export const BG_LOW: "Low";
-export namespace springConfig {
-    export { STIFFNESS as stiffness };
-    export { DAMPING as damping };
-    export { PRECISION as precision };
-}
+
 export const LBS_PER_KG: 2.2046226218;
 export const CGM_READINGS_ONE_DAY: 288;
 export const CGM_DATA_KEY: "cbg";
@@ -20,13 +16,7 @@ export const SITE_CHANGE_CANNULA: "cannulaPrime";
 export const AUTOMATED_DELIVERY: "automatedDelivery";
 export const SCHEDULED_DELIVERY: "scheduledDelivery";
 export const SECTION_TYPE_UNDECLARED: "undeclared";
-export const INSULET: "Insulet";
-export const TANDEM: "Tandem";
-export const ANIMAS: "Animas";
-export const MEDTRONIC: "Medtronic";
 export const DIABELOOP: "Diabeloop";
-export const ROCHE: "Roche";
-export const VICENTRA: "Vicentra";
 export const DEFAULT_MANUFACTURER: "default";
 export function getPumpVocabularies(): {
     Animas: {

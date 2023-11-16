@@ -35,23 +35,3 @@ export function getEndpoints(data: any[], s: string, e: string, optionalExtents?
  * @returns {Object} The durations (in ms) keyed by basal group type
  */
 export function getGroupDurations(data: any[], s: string, e: string): any;
-/**
- * Calculate the total insulin dose delivered in a given basal segment
- * @param {Number} duration Duration of segment in milliseconds
- * @param {Number} rate Basal rate of segment
- */
-export function getSegmentDose(duration: number, rate: number): number;
-/**
- * Get total basal delivered for a given time range
- * @param {object[]} data Array of Tidepool basal data
- * @param {string[]} endpoints ISO date strings for the start, end of the range, in that order
- * @return {string} Formatted total insulin dose
- */
-export function getTotalBasalFromEndpoints(data: object[], endpoints: string[]): string;
-/**
- * Get automated and manual basal delivery time for a given time range
- * @param {Array} data Array of Tidepool basal data
- * @param {[]String} enpoints ISO date strings for the start, end of the range, in that order
- * @return {Number} Formatted total insulin dose
- */
-export function getBasalGroupDurationsFromEndpoints(data: any[], endpoints: any): number;
