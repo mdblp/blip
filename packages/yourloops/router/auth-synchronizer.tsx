@@ -83,7 +83,6 @@ export const AuthSynchronizer: FC = () => {
       return
     }
     const fromUrl = searchParams.get('from')
-    console.log('fromUrl', fromUrl)
     if (fromUrl && fromUrl !== '/') {
       navigate(fromUrl)
       return

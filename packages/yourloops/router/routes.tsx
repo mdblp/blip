@@ -33,7 +33,11 @@ import { PatientListPage } from '../components/patient-list/patient-list-page'
 import { PatientData } from '../components/patient-data/patient-data'
 import { PatientCaregiversPage } from '../pages/patient/caregivers/patient-caregivers-page'
 import TeamApi from '../lib/team/team.api'
-import { NavigateWithCorrectTeamId, PatientListProviders, ValidateTeamId } from '../layout/hcp-layout'
+import {
+  LOCAL_STORAGE_SELECTED_TEAM_ID_KEY,
+  PatientListProviders,
+  ValidateTeamId
+} from '../layout/hcp-layout'
 import PatientUtils from '../lib/patient/patient.util'
 import AuthService from '../lib/auth/auth.service'
 import { userLoader } from './loaders'
@@ -42,6 +46,10 @@ import { AuthLayout, UserLayout } from '../layout/user-layout'
 import { COMMON_LOGGED_ROUTES, COMMON_ROUTES } from './common-routes'
 import PatientApi from '../lib/patient/patient.api'
 import SpinningLoader from '../components/loaders/spinning-loader'
+import { PRIVATE_TEAM_ID } from '../lib/team/team.hook'
+import { Team } from '../lib/team'
+import { TeamType } from '../lib/team/models/enums/team-type.enum'
+import TeamUtils from '../lib/team/team.util'
 
 const getLoggedInRoutes = () => {
   return {
@@ -68,7 +76,28 @@ const getLoggedInRoutes = () => {
           {
             path: 'teams',
             children: [
-              { path: '', element: <NavigateWithCorrectTeamId /> },
+              {
+                path: '',
+                loader: async () => {
+                  const user = AuthService.getUser()
+                  const teams = await TeamApi.getTeams(AuthService.getUser().id, user.role) //This call should be cached
+                  if (!teams) {
+                    throw Error('Could not retrieve teams')
+                  }
+                  const localStorageTeamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
+                  const isTeamIdValid = teams.some(team => team.id === localStorageTeamId)
+                  if (isTeamIdValid){
+                    return redirect(`${localStorageTeamId}/patients`)
+                  }
+                  const medicalTeams = teams.filter((team: Team) => team.type === TeamType.medical)
+                  if (!medicalTeams.length){
+                    localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, PRIVATE_TEAM_ID)
+                    return redirect('private/patients')
+                  }
+                  const firstTeamId = TeamUtils.sortTeamsByName(medicalTeams)[0].id
+                  return redirect(`${firstTeamId}/patients`)
+                },
+              },
               { path: 'private', element: <Navigate to="/teams/private/patients" replace /> },
               {
                 path: ':teamId',

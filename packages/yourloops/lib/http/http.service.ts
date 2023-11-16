@@ -28,6 +28,8 @@
 import axios, { type AxiosError, type AxiosRequestConfig, type AxiosResponse } from 'axios'
 import HttpStatus from './models/enums/http-status.enum'
 import { t } from '../language'
+import { AxiosCacheInstance, setupCache } from 'axios-cache-interceptor'
+import { onFulfilled } from './axios.service'
 
 interface Args {
   url: string
@@ -45,6 +47,7 @@ export enum ErrorMessageStatus {
 export default class HttpService {
   private static retrieveAccessToken: () => Promise<string>
   private static traceToken: string
+  private static axiosWithCache: AxiosCacheInstance
 
   static setGetAccessTokenMethod(accessTokenMethod: () => Promise<string>): void {
     HttpService.retrieveAccessToken = accessTokenMethod
@@ -58,18 +61,18 @@ export default class HttpService {
     return await HttpService.retrieveAccessToken()
   }
 
-  static isServiceAvailable(): boolean {
-    return !!HttpService.retrieveAccessToken
-  }
-
   static getTraceToken(): string {
     return HttpService.traceToken
+  }
+
+  static setAxiosInstanceWithCache(axiosCache: AxiosCacheInstance): void {
+    HttpService.axiosWithCache = axiosCache
   }
 
   static async get<T>(args: Args): Promise<AxiosResponse<T>> {
     const { url, config } = args
     try {
-      return await axios.get<T>(url, { ...config })
+      return await HttpService.axiosWithCache.get<T>(url, { ...config })
     } catch (error) {
       throw HttpService.handleError(error as AxiosError)
     }

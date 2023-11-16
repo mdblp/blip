@@ -29,6 +29,7 @@ import axios, { AxiosHeaders, type InternalAxiosRequestConfig } from 'axios'
 import HttpService from './http.service'
 import { HttpHeaderKeys } from './models/enums/http-header-keys.enum'
 import appConfig from '../config/config'
+import { setupCache } from 'axios-cache-interceptor'
 
 export const onFulfilled = async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
   if (config.params?.noHeader) {
@@ -49,11 +50,15 @@ export const onFulfilled = async (config: InternalAxiosRequestConfig): Promise<I
 }
 
 function initAxios(): void {
+  const axiosWithCache = setupCache(axios, { cacheTakeover: false })
+  axiosWithCache.defaults.baseURL = appConfig.API_HOST
   axios.defaults.baseURL = appConfig.API_HOST
   /**
    * We use axios request interceptor to set the access token into headers each request the app send
    */
   axios.interceptors.request.use(onFulfilled)
+  axiosWithCache.interceptors.request.use(onFulfilled)
+  HttpService.setAxiosInstanceWithCache(axiosWithCache)
 }
 
 export default initAxios

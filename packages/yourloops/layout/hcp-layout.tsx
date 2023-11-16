@@ -26,7 +26,7 @@
  */
 
 import React, { type FunctionComponent, useCallback, useMemo } from 'react'
-import { Navigate, Outlet, useLoaderData, useLocation, useParams } from 'react-router-dom'
+import { Navigate, Outlet, useLoaderData, useParams } from 'react-router-dom'
 import { PatientsProvider } from '../lib/patient/patients.provider'
 import { DashboardLayout } from './dashboard-layout'
 import { PatientListProvider } from '../lib/providers/patient-list.provider'
@@ -37,43 +37,6 @@ import { useAuth } from '../lib/auth'
 import { PRIVATE_TEAM_ID } from '../lib/team/team.hook'
 
 export const LOCAL_STORAGE_SELECTED_TEAM_ID_KEY = 'selectedTeamId'
-
-export const NavigateWithCorrectTeamId: FunctionComponent = () => {
-  const { user } = useAuth()
-  const { getDefaultTeamId, getTeam } = useTeam()
-  const { pathname } = useLocation()
-
-  const getFallbackTeamId = useCallback((): string => {
-    const localStorageTeamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
-    const isTeamIdValid = getTeam(localStorageTeamId)
-    if (isTeamIdValid) {
-      return localStorageTeamId
-    }
-    const defaultTeamId = getDefaultTeamId()
-    localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, defaultTeamId)
-    return defaultTeamId
-  }, [getDefaultTeamId, getTeam])
-
-  const getTeamId = useCallback(() => {
-    if (user.isUserCaregiver()) {
-      localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, PRIVATE_TEAM_ID)
-      return PRIVATE_TEAM_ID
-    }
-    return getFallbackTeamId()
-  }, [getFallbackTeamId, user])
-
-  const pathToNavigate = useMemo(() => {
-    if (pathname === '/teams/' || pathname === '/teams') {
-      return `${getTeamId()}/patients`
-    }
-    return `/teams/${getTeamId()}/patients`
-  }, [getTeamId, pathname])
-
-  console.log('Current pathname', pathname)
-  console.log('Navigating to correct team', pathToNavigate)
-
-  return <Navigate to={pathToNavigate} replace />
-}
 
 export const ValidateTeamId: FunctionComponent = () => {
   const { user } = useAuth()
