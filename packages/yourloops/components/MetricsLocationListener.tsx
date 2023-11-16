@@ -29,8 +29,6 @@ import _ from 'lodash'
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 
-import '@fontsource/roboto'
-import 'branding/global.css'
 
 import metrics from '../lib/metrics'
 

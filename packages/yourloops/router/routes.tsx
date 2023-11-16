@@ -176,7 +176,7 @@ const getLoggedInRoutes = () => {
 }
 
 export const buildRoutes = () => {
-  return createBrowserRouter([
+  return [
     {
       path: '',
       element: <RouterRoot />,
@@ -186,5 +186,9 @@ export const buildRoutes = () => {
         { path: 'loading', element: <SpinningLoader className="centered-spinning-loader" /> }
       ]
     }
-  ])
+  ]
+}
+
+export const buildRouterContent = () => {
+  return createBrowserRouter(buildRoutes())
 }

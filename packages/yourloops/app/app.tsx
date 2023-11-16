@@ -28,6 +28,8 @@
 import React, { type FC } from 'react'
 import { RouterProvider } from 'react-router-dom'
 
+import '@fontsource/roboto'
+import 'branding/global.css'
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
@@ -35,9 +37,9 @@ import '@fontsource/roboto/700.css'
 import 'branding/global.css'
 import 'classes.css'
 import SpinningLoader from '../components/loaders/spinning-loader'
-import { buildRoutes } from '../router/routes'
+import { buildRouterContent } from '../router/routes'
 
-const routes = buildRoutes()
+const routes = buildRouterContent()
 
 export const Yourloops: FC = () => {
   return <RouterProvider router={routes} fallbackElement={<SpinningLoader className="centered-spinning-loader" />} />

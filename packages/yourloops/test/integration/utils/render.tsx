@@ -26,21 +26,12 @@
  */
 
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
-import { AuthContextProvider } from '../../../lib/auth'
-import { MainLayout } from '../../../layout/main-layout'
 import { render } from '@testing-library/react'
 import React from 'react'
+import { buildRoutes } from '../../../router/routes'
 
-const renderMainLobby = (initialEntry: string) => {
-  const router = createMemoryRouter(
-    [
-      {
-        path: '*',
-        element: <AuthContextProvider>
-          <MainLayout />
-        </AuthContextProvider>
-      }
-    ],
+const renderRouter = (initialEntry: string) => {
+  const router = createMemoryRouter(buildRoutes(),
     {
       initialEntries: [initialEntry],
       initialIndex: 0
@@ -52,5 +43,5 @@ const renderMainLobby = (initialEntry: string) => {
 }
 
 export const renderPage = (url: string) => {
-  return renderMainLobby(url)
+  return renderRouter(url)
 }

@@ -29,6 +29,8 @@ import { i18nOptions, init as i18nInit } from '../../lib/language'
 import yourloopsEn from '../../../../locales/en/yourloops.json'
 import translationEn from '../../../../locales/en/translation.json'
 import parameterEn from '../../../../locales/en/parameter.json'
+import React from 'react'
+import { AuthSynchronizer as MockAuthSynchronizer } from '../../router/auth-synchronizer'
 
 const options = i18nOptions
 options.resources.en.yourloops = yourloopsEn
@@ -42,4 +44,18 @@ i18nInit(options).then(() => {
   console.error(reason)
 })
 
-jest.mock('@auth0/auth0-react')
+jest.mock('@auth0/auth0-react', () => ({
+  Auth0Provider: ({ children }) => {
+    children
+  },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  withAuthenticationRequired: ((component, _) => component),
+  useAuth0: jest.fn()
+}))
+
+// Mocking Auth0Provider was a failure, so the parent component was mocked instead
+jest.mock('../../router/root', () => ({
+  RouterRoot: () => {
+    return <MockAuthSynchronizer />
+  }
+}));

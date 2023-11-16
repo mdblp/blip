@@ -94,7 +94,6 @@ export const userLoader = async ({ request }) => {
   if (!isAuthenticated) {
     const params = new URLSearchParams()
     params.set("from", new URL(request.url).pathname)
-    console.log('redirect')
     return redirect(`/loading?${params.toString()}`)
   }
   const user = AuthService.getUser()

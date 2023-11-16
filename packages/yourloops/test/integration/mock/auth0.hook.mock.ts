@@ -63,6 +63,7 @@ export const mockAuth0Hook = (role: UserRole = UserRole.Hcp, userId = loggedInUs
       [AuthenticatedUserMetadata.Roles]: [role]
     },
     getAccessTokenWithPopup: getAccessTokenWithPopupMock,
-    logout: logoutMock
+    logout: logoutMock,
+    getAccessTokenSilently: jest.fn()
   })
 }

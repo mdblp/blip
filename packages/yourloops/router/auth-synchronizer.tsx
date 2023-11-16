@@ -37,12 +37,13 @@ import { MainLayout } from '../layout/main-layout'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AppRoute } from '../models/enums/routes.enum'
 
-
 export const AuthSynchronizer: FC = () => {
+  console.log('toto')
   const { isAuthenticated, user, getAccessTokenSilently, isLoading } = useAuth0()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
 
+  console.log(isAuthenticated)
   const ref = useRef(true) // TODO TIM: Check that it is really necessary
   const firstRender = ref.current
   ref.current = false
