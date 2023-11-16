@@ -102,15 +102,19 @@ const getLoggedInRoutes = () => {
               {
                 path: ':teamId',
                 loader: async ({ params }) => {
+                  const paramTeamId = params.teamId
                   const user = AuthService.getUser()
                   if (user.isUserCaregiver()) {
-                    return redirect('/private')
+                    localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, PRIVATE_TEAM_ID)
+                    if (paramTeamId !== PRIVATE_TEAM_ID) {
+                      return redirect('private/patients')
+                    }
+                    return null
                   }
                   const teams = await TeamApi.getTeams(AuthService.getUser().id, user.role) //This call should be cached
                   if (!teams) {
                     throw Error('Could not retrieve teams')
                   }
-                  const paramTeamId = params.teamId
                   const isParamTeamIdValid = teams.some(team => team.id === paramTeamId)
                   if (isParamTeamIdValid) {
                     localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, paramTeamId)

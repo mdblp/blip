@@ -31,7 +31,6 @@ import { DashboardLayout } from './dashboard-layout'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from './hcp-layout'
 import { PRIVATE_TEAM_ID } from '../lib/team/team.hook'
 import { NotificationContextProvider } from '../lib/notifications/notification.hook'
-import { PatientsProvider } from '../lib/patient/patients.provider'
 import { PatientListProvider } from '../lib/providers/patient-list.provider'
 
 export const CaregiverLayout: FunctionComponent = () => {
@@ -39,18 +38,10 @@ export const CaregiverLayout: FunctionComponent = () => {
   return (
     <NotificationContextProvider>
       <DashboardLayout>
-        <Outlet />
+        <PatientListProvider>
+          <Outlet />
+        </PatientListProvider>
       </DashboardLayout>
     </NotificationContextProvider>
-  )
-}
-
-export const CaregiverLayoutWithPatientsProviders: FunctionComponent = () => {
-  return (
-    <PatientListProvider>
-      <PatientsProvider>
-        <Outlet />
-      </PatientsProvider>
-    </PatientListProvider>
   )
 }
