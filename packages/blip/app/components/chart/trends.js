@@ -217,7 +217,7 @@ class Trends extends React.Component {
       }
     }
 
-    const currentCbgData = tidelineData.grouped.cbg.filter((v) => (
+    const currentCbgData = tidelineData.medicalData.cbg.filter((v) => (
       activeDaysArray.includes(v.isoWeekday) && localDates.includes(v.localDate)
     ))
     currentCbgData.sort((a, b) => a.epoch - b.epoch)

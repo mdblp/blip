@@ -35,7 +35,6 @@ type PhysicalActivity = BaseDatum & Duration & {
   type: DatumType.PhysicalActivity
   guid: string
   reportedIntensity: Intensity
-  eventId: string
   inputTime: string
   duration: {
     units: DurationUnit
