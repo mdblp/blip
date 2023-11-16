@@ -56,7 +56,7 @@ export const retrieveUser = async (user: User | null) => {
 
 export const checkUserHasARole = (user: User | null) => {
   if (!user || (user.role !== UserRole.Hcp && user.role !== UserRole.Caregiver && user.role !== UserRole.Patient)) {
-    return redirect('/loading')
+    return redirect('/login')
   }
   return null
 }
@@ -89,10 +89,13 @@ export const checkTraining = (user: User | null) => {
   }
 }
 
-export const userLoader = async () => {
+export const userLoader = async ({ request }) => {
   const isAuthenticated = AuthService.isAuthenticated()
   if (!isAuthenticated) {
-    return redirect('/loading')
+    const params = new URLSearchParams()
+    params.set("from", new URL(request.url).pathname)
+    console.log('redirect')
+    return redirect(`/loading?${params.toString()}`)
   }
   const user = AuthService.getUser()
   const userRetrieved = await retrieveUser(user)

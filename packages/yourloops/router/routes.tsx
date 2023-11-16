@@ -28,20 +28,20 @@
 import React from 'react'
 import { createBrowserRouter, Navigate, Outlet, redirect } from 'react-router-dom'
 import { AppUserRoute } from '../models/enums/routes.enum'
-import { UserRole } from '../lib/auth/models/enums/user-role.enum'
 import { CareTeamSettingsPage } from '../pages/care-team-settings/care-team-settings-page'
 import { PatientListPage } from '../components/patient-list/patient-list-page'
 import { PatientData } from '../components/patient-data/patient-data'
 import { PatientCaregiversPage } from '../pages/patient/caregivers/patient-caregivers-page'
-import SpinningLoader from '../components/loaders/spinning-loader'
 import TeamApi from '../lib/team/team.api'
-import { NavigateWithCorrectTeamId, PatientListProviders } from '../layout/hcp-layout'
+import { NavigateWithCorrectTeamId, PatientListProviders, ValidateTeamId } from '../layout/hcp-layout'
 import PatientUtils from '../lib/patient/patient.util'
 import AuthService from '../lib/auth/auth.service'
 import { userLoader } from './loaders'
 import { RouterRoot } from './root'
 import { AuthLayout, UserLayout } from '../layout/user-layout'
 import { COMMON_LOGGED_ROUTES, COMMON_ROUTES } from './common-routes'
+import PatientApi from '../lib/patient/patient.api'
+import SpinningLoader from '../components/loaders/spinning-loader'
 
 const getLoggedInRoutes = () => {
   return {
@@ -68,37 +68,42 @@ const getLoggedInRoutes = () => {
           {
             path: 'teams',
             children: [
+              { path: '', element: <NavigateWithCorrectTeamId /> },
               { path: 'private', element: <Navigate to="/teams/private/patients" replace /> },
-              { path: ':teamId', element: <CareTeamSettingsPage /> },
               {
-                path: ':teamId/patients',
-                element: <PatientListProviders />,
-                loader: async ({ params }) => {
-                  if (!params.teamId) {
-                    return null
-                  }
-                  const user = AuthService.getUser()
-                  if (user.isUserHcp()) {
-                    return PatientUtils.computePatientsForHcp(params.userId, UserRole.Hcp, params.teamId)
-                  }
-                  return await PatientUtils.computePatientsForCaregiver()
-                },
-                id: 'patients-route',
+                path: ':teamId',
+                element: <ValidateTeamId />,
                 children: [
-                  { path: '', element: <PatientListPage /> },
-                  { path: ':patientId/*', element: <PatientData /> }
+                  { path: '', element: <CareTeamSettingsPage /> },
+                  {
+                    path: 'patients',
+                    element: <PatientListProviders />,
+                    // errorElement: <ErrorBoundary/>,
+                    errorElement: <div>Could not retrieve patients</div>,
+                    loader: async ({ params }) => {
+                      if (!params.teamId) {
+                        return null
+                      }
+                      const user = AuthService.getUser()
+                      if (user.isUserHcp()) {
+                        return PatientApi.getPatientsForHcp(user.id, params.teamId)
+                      }
+                      return await PatientUtils.computePatientsForCaregiver()
+                    },
+                    id: 'patients-route',
+                    children: [
+                      { path: '', element: <PatientListPage /> },
+                      { path: ':patientId/*', element: <PatientData /> }
+                    ]
+                  }
                 ]
-              },
-              {
-                path: '',
-                element: <NavigateWithCorrectTeamId />
               }
-
             ]
           },
           {
             path: '',
             loader: () => {
+              console.log('here 1')
               const user = AuthService.getUser()
               if (user.isUserPatient()) {
                 return redirect(AppUserRoute.Dashboard)
@@ -113,6 +118,7 @@ const getLoggedInRoutes = () => {
             loader: () => {
               const user = AuthService.getUser()
               if (!user.isUserPatient()) {
+                console.log('here 3')
                 return redirect(AppUserRoute.NotFound)
               }
               return null

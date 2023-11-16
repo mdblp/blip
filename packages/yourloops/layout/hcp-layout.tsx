@@ -26,7 +26,7 @@
  */
 
 import React, { type FunctionComponent, useCallback, useMemo } from 'react'
-import { Navigate, Outlet, useLoaderData, useParams } from 'react-router-dom'
+import { Navigate, Outlet, useLoaderData, useLocation, useParams } from 'react-router-dom'
 import { PatientsProvider } from '../lib/patient/patients.provider'
 import { DashboardLayout } from './dashboard-layout'
 import { PatientListProvider } from '../lib/providers/patient-list.provider'
@@ -41,6 +41,7 @@ export const LOCAL_STORAGE_SELECTED_TEAM_ID_KEY = 'selectedTeamId'
 export const NavigateWithCorrectTeamId: FunctionComponent = () => {
   const { user } = useAuth()
   const { teams, getDefaultTeamId } = useTeam()
+  const { pathname } = useLocation()
 
   const getFallbackTeamId = useCallback((): string => {
     const localStorageTeamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
@@ -53,7 +54,7 @@ export const NavigateWithCorrectTeamId: FunctionComponent = () => {
     return defaultTeamId
   }, [getDefaultTeamId, teams])
 
-  const teamId = useMemo(() => {
+  const getTeamId = useCallback(() => {
     if (user.isUserCaregiver()) {
       localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, PRIVATE_TEAM_ID)
       return PRIVATE_TEAM_ID
@@ -61,9 +62,47 @@ export const NavigateWithCorrectTeamId: FunctionComponent = () => {
     return getFallbackTeamId()
   }, [getFallbackTeamId, user])
 
-  return (
-    <Navigate to={`/teams/${teamId}/patients`} replace />
-  )
+  const pathToNavigate = useMemo(() => {
+    if (pathname === '/teams/' || pathname === '/teams') {
+      return `${getTeamId()}/patients`
+    }
+    return `/teams/${getTeamId()}/patients`
+  }, [getTeamId, pathname])
+
+  console.log('Current pathname', pathname)
+  console.log('Navigating to correct team', pathToNavigate)
+
+  return <Navigate to={pathToNavigate} replace />
+}
+
+export const ValidateTeamId: FunctionComponent = () => {
+  const { user } = useAuth()
+  const { teamId } = useParams()
+  const { teams, getDefaultTeamId } = useTeam()
+
+  const getFallbackTeamId = useCallback((): string => {
+    const selectedTeamId = teamId ?? localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
+    const isTeamIdValid = teams.some((team: Team) => team.id === selectedTeamId)
+    if (isTeamIdValid) {
+      localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, selectedTeamId)
+      return selectedTeamId
+    }
+    const defaultTeamId = getDefaultTeamId()
+    localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, defaultTeamId)
+    return defaultTeamId
+  }, [getDefaultTeamId, teamId, teams])
+
+  const correctTeamId = useMemo(() => {
+    if (user.isUserCaregiver()) {
+      localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, PRIVATE_TEAM_ID)
+      return PRIVATE_TEAM_ID
+    }
+    return getFallbackTeamId()
+  }, [getFallbackTeamId, user])
+
+  return <>
+    {teamId !== correctTeamId ? <Navigate to={`/teams/${correctTeamId}/patients`} replace /> : <Outlet />}
+  </>
 }
 
 export const HcpLayout: FunctionComponent = () => {

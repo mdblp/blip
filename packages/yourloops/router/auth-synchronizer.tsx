@@ -34,14 +34,20 @@ import AuthService from '../lib/auth/auth.service'
 import { AuthenticatedUser } from '../lib/auth/models/authenticated-user.model'
 import { v4 as uuidv4 } from 'uuid'
 import { MainLobby } from '../app/main-lobby'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { AppRoute } from '../models/enums/routes.enum'
 
 
 export const AuthSynchronizer: FC = () => {
   const { isAuthenticated, user, getAccessTokenSilently, isLoading } = useAuth0()
+  const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
+  const { pathname } = useLocation()
+
+  console.log('pathname', pathname)
+
   const ref = useRef(true) // TODO TIM: Check that it is really necessary
-  const firstRender = ref.current;
+  const firstRender = ref.current
   ref.current = false
 
   AuthService.setIsAuthenticated(isAuthenticated)
@@ -57,28 +63,46 @@ export const AuthSynchronizer: FC = () => {
           AuthService.setIsAuthenticated(true)
         })
         .catch(() => {
+          navigate(AppRoute.Login)
           // This happens when we try to silently login but we don't have enough info
         })
     }
-  }, [getAccessTokenSilently, isAuthenticated]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
       const getAccessToken = async (): Promise<string> => await getAccessTokenSilently()
       HttpService.setGetAccessTokenMethod(getAccessToken)
       HttpService.setTraceToken(uuidv4())
-      const authUser = AuthService.getUser()
-      if (authUser.isUserHcp()) {
-        navigate(`/teams`)
-      }
-      if (authUser.isUserPatient()) {
-        navigate(`/dashboard`)
-      }
-      if (authUser.isUserCaregiver()) {
-        navigate(`/teams/private/patients`)
-      }
     }
-  }, [getAccessTokenSilently, isAuthenticated, navigate, user])
+  }, [getAccessTokenSilently, isAuthenticated])
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      return
+    }
+    const fromUrl = searchParams.get('from')
+    console.log('fromUrl', fromUrl)
+    if (fromUrl && fromUrl !== '/') {
+      navigate(fromUrl)
+      return
+    }
+    const authUser = AuthService.getUser()
+    if (authUser.isUserHcp()) {
+      navigate('/teams')
+      return
+    }
+    if (authUser.isUserPatient()) {
+      navigate('/dashboard')
+      return
+    }
+    if (authUser.isUserCaregiver()) {
+      navigate('/teams/private/patients')
+      return
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]) // This is necessary to avoid useless renders and extra APIs calls
 
   return (
     <>

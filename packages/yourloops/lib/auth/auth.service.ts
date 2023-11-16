@@ -55,6 +55,4 @@ export default class AuthService {
   static getUser(): User {
     return AuthService.user
   }
-
-
 }

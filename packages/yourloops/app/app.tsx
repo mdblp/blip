@@ -40,7 +40,5 @@ import { buildRoutes } from '../router/routes'
 const routes = buildRoutes()
 
 export const Yourloops: FC = () => {
-  return (
-    <RouterProvider router={routes} fallbackElement={<SpinningLoader className="centered-spinning-loader" />} />
-  )
+  return <RouterProvider router={routes} fallbackElement={<SpinningLoader className="centered-spinning-loader" />} />
 }

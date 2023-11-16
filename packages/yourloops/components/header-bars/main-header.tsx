@@ -163,6 +163,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                   label={t('header-tab-patients')}
                   value={HcpNavigationTab.Patients}
                   onClick={() => {
+                    console.log(`${AppUserRoute.Teams}/${teamId}/patients`)
                     navigate(`${AppUserRoute.Teams}/${teamId}/patients`)
                   }}
                 />
