@@ -63,17 +63,17 @@ export const buildLayoutColumns = (layoutColumnWidths: number[], chartAreaWidth:
 
   switch (layoutColumnType) {
     case LayoutColumnType.Percentage: {
-      const columns: LayoutColumn[] = []
-      layoutColumnWidths.reduce((combinedWidths, value, index) => {
+      const columnsWithCombinedWidth = layoutColumnWidths.reduce((accumulator: { columns: LayoutColumn[], combinedWidths: number }, value, index) => {
         const columnWidth = availableWidth * value / 100
-        columns.push({
-          x: leftEdge + (gutter * index) + combinedWidths,
+        accumulator.columns.push({
+          x: leftEdge + (gutter * index) + accumulator.combinedWidths,
           y: docY,
           width: columnWidth
         })
-        return combinedWidths + columnWidth
-      }, 0)
-      return columns
+        accumulator.combinedWidths = accumulator.combinedWidths + columnWidth
+        return accumulator
+      }, { columns: [], combinedWidths: 0 })
+      return columnsWithCombinedWidth.columns
     }
 
     case LayoutColumnType.Equal:

@@ -39,18 +39,16 @@ const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) =
   const { annotations, title, shouldDisplayInfoTooltip } = props
 
   return (
-    <>
-      <Box
-        data-testid="cbg-percentage-title"
-        display="flex"
-        alignItems="center"
-      >
-        {title}
-        {shouldDisplayInfoTooltip &&
-          <StatTooltip annotations={annotations} />
-        }
-      </Box>
-    </>
+    <Box
+      data-testid="cbg-percentage-title"
+      display="flex"
+      alignItems="center"
+    >
+      {title}
+      {shouldDisplayInfoTooltip &&
+        <StatTooltip annotations={annotations} />
+      }
+    </Box>
   )
 }
 

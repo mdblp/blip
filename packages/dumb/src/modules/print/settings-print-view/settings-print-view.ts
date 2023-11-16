@@ -84,7 +84,7 @@ export class SettingsPrintView extends PrintView<PdfSettingsData> {
       }
     })
 
-    this.renderTable(tableData.columns, tableData.rows, {
+    this.renderTable({
       columnsDefaults: {
         zebra: optionalParams?.zebra ?? false,
         headerFill: false,
@@ -92,7 +92,7 @@ export class SettingsPrintView extends PrintView<PdfSettingsData> {
       },
       flexColumn: 'start',
       showHeaders: optionalParams?.showHeaders ?? false
-    })
+    }, tableData.columns, tableData.rows)
   }
 
   private readonly getDataByDataType = (type: PdfSettingsDataType): CgmConfig | DeviceConfig | PumpConfig | undefined => {
