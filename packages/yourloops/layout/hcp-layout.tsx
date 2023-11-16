@@ -25,48 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useCallback, useMemo } from 'react'
+import React, { type FunctionComponent } from 'react'
 import { Navigate, Outlet, useLoaderData, useParams } from 'react-router-dom'
 import { PatientsProvider } from '../lib/patient/patients.provider'
 import { DashboardLayout } from './dashboard-layout'
 import { PatientListProvider } from '../lib/providers/patient-list.provider'
-import { Team, TeamContextProvider, useTeam } from '../lib/team'
+import { Team, TeamContextProvider } from '../lib/team'
 import { NotificationContextProvider } from '../lib/notifications/notification.hook'
 import { AppUserRoute } from '../models/enums/routes.enum'
-import { useAuth } from '../lib/auth'
-import { PRIVATE_TEAM_ID } from '../lib/team/team.hook'
 
 export const LOCAL_STORAGE_SELECTED_TEAM_ID_KEY = 'selectedTeamId'
-
-export const ValidateTeamId: FunctionComponent = () => {
-  const { user } = useAuth()
-  const { teamId } = useParams()
-  const { teams, getDefaultTeamId } = useTeam()
-
-  const getFallbackTeamId = useCallback((): string => {
-    const selectedTeamId = teamId ?? localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
-    const isTeamIdValid = teams.some((team: Team) => team.id === selectedTeamId)
-    if (isTeamIdValid) {
-      localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, selectedTeamId)
-      return selectedTeamId
-    }
-    const defaultTeamId = getDefaultTeamId()
-    localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, defaultTeamId)
-    return defaultTeamId
-  }, [getDefaultTeamId, teamId, teams])
-
-  const correctTeamId = useMemo(() => {
-    if (user.isUserCaregiver()) {
-      localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, PRIVATE_TEAM_ID)
-      return PRIVATE_TEAM_ID
-    }
-    return getFallbackTeamId()
-  }, [getFallbackTeamId, user])
-
-  return <>
-    {teamId !== correctTeamId ? <Navigate to={`/teams/${correctTeamId}/patients`} replace /> : <Outlet />}
-  </>
-}
 
 export const HcpLayout: FunctionComponent = () => {
   const { teamId } = useParams()
@@ -94,7 +62,9 @@ export const HcpLayout: FunctionComponent = () => {
         <NotificationContextProvider>
           <TeamContextProvider>
             <DashboardLayout>
-              <Outlet />
+              <PatientListProvider>
+                <Outlet />
+              </PatientListProvider>
             </DashboardLayout>
           </TeamContextProvider>
         </NotificationContextProvider>
@@ -102,15 +72,5 @@ export const HcpLayout: FunctionComponent = () => {
         <Navigate to={AppUserRoute.NotFound} replace />
       )}
     </>
-  )
-}
-
-export const PatientListProviders: FunctionComponent = () => {
-  return (
-    <PatientListProvider>
-      <PatientsProvider>
-        <Outlet />
-      </PatientsProvider>
-    </PatientListProvider>
   )
 }

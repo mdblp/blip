@@ -27,7 +27,7 @@
 
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import { AuthContextProvider } from '../../../lib/auth'
-import { MainLobby } from '../../../app/main-lobby'
+import { MainLayout } from '../../../layout/main-layout'
 import { render } from '@testing-library/react'
 import React from 'react'
 
@@ -37,7 +37,7 @@ const renderMainLobby = (initialEntry: string) => {
       {
         path: '*',
         element: <AuthContextProvider>
-          <MainLobby />
+          <MainLayout />
         </AuthContextProvider>
       }
     ],

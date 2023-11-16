@@ -116,6 +116,19 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
     }
   }
 
+  const getUserDefaultUrl = () => {
+    if (user.isUserPatient()) {
+      return '/dashboard'
+    }
+    if (user.isUserCaregiver()) {
+      return '/teams/private/patients'
+    }
+    if (user.isUserHcp()) {
+      return `/teams/${teamId}/patients`
+    }
+    return '/'
+  }
+
   return (
     <AppBar
       id="app-main-header"
@@ -143,7 +156,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
             width="100%"
           >
             <Box display="flex" alignItems="center">
-              <Link to="/">
+              <Link to={getUserDefaultUrl()}>
                 <Avatar
                   id="header-main-logo"
                   aria-label={t('alt-img-logo')}

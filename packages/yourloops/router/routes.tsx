@@ -33,11 +33,7 @@ import { PatientListPage } from '../components/patient-list/patient-list-page'
 import { PatientData } from '../components/patient-data/patient-data'
 import { PatientCaregiversPage } from '../pages/patient/caregivers/patient-caregivers-page'
 import TeamApi from '../lib/team/team.api'
-import {
-  LOCAL_STORAGE_SELECTED_TEAM_ID_KEY,
-  PatientListProviders,
-  ValidateTeamId
-} from '../layout/hcp-layout'
+import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../layout/hcp-layout'
 import PatientUtils from '../lib/patient/patient.util'
 import AuthService from '../lib/auth/auth.service'
 import { userLoader } from './loaders'
@@ -50,6 +46,7 @@ import { PRIVATE_TEAM_ID } from '../lib/team/team.hook'
 import { Team } from '../lib/team'
 import { TeamType } from '../lib/team/models/enums/team-type.enum'
 import TeamUtils from '../lib/team/team.util'
+import { PatientsProvider } from '../lib/patient/patients.provider'
 
 const getLoggedInRoutes = () => {
   return {
@@ -80,35 +77,58 @@ const getLoggedInRoutes = () => {
                 path: '',
                 loader: async () => {
                   const user = AuthService.getUser()
+                  if (user.isUserCaregiver()) {
+                    return redirect('/private')
+                  }
                   const teams = await TeamApi.getTeams(AuthService.getUser().id, user.role) //This call should be cached
                   if (!teams) {
                     throw Error('Could not retrieve teams')
                   }
                   const localStorageTeamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
                   const isTeamIdValid = teams.some(team => team.id === localStorageTeamId)
-                  if (isTeamIdValid){
+                  if (isTeamIdValid) {
                     return redirect(`${localStorageTeamId}/patients`)
                   }
                   const medicalTeams = teams.filter((team: Team) => team.type === TeamType.medical)
-                  if (!medicalTeams.length){
+                  if (!medicalTeams.length) {
+                    localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, PRIVATE_TEAM_ID)
+                    return redirect('private/patients')
+                  }
+                  const firstTeamId = TeamUtils.sortTeamsByName(medicalTeams)[0].id
+                  return redirect(`${firstTeamId}/patients`)
+                }
+              },
+              { path: 'private', element: <Navigate to="/teams/private/patients" replace /> },
+              {
+                path: ':teamId',
+                loader: async ({ params }) => {
+                  const user = AuthService.getUser()
+                  if (user.isUserCaregiver()) {
+                    return redirect('/private')
+                  }
+                  const teams = await TeamApi.getTeams(AuthService.getUser().id, user.role) //This call should be cached
+                  if (!teams) {
+                    throw Error('Could not retrieve teams')
+                  }
+                  const paramTeamId = params.teamId
+                  const isParamTeamIdValid = teams.some(team => team.id === paramTeamId)
+                  if (isParamTeamIdValid) {
+                    localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, paramTeamId)
+                    return null
+                  }
+                  const medicalTeams = teams.filter((team: Team) => team.type === TeamType.medical)
+                  if (!medicalTeams.length) {
                     localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, PRIVATE_TEAM_ID)
                     return redirect('private/patients')
                   }
                   const firstTeamId = TeamUtils.sortTeamsByName(medicalTeams)[0].id
                   return redirect(`${firstTeamId}/patients`)
                 },
-              },
-              { path: 'private', element: <Navigate to="/teams/private/patients" replace /> },
-              {
-                path: ':teamId',
-                element: <ValidateTeamId />,
                 children: [
                   { path: '', element: <CareTeamSettingsPage /> },
                   {
                     path: 'patients',
-                    element: <PatientListProviders />,
-                    // errorElement: <ErrorBoundary/>,
-                    errorElement: <div>Could not retrieve patients</div>,
+                    element: <PatientsProvider><Outlet /></PatientsProvider>,
                     loader: async ({ params }) => {
                       if (!params.teamId) {
                         return null
@@ -156,12 +176,10 @@ export const buildRoutes = () => {
     {
       path: '',
       element: <RouterRoot />,
-      // errorElement: <SpinningLoader className="centered-spinning-loader" />,
       children: [
         ...COMMON_ROUTES,
         getLoggedInRoutes(),
         { path: 'loading', element: <SpinningLoader className="centered-spinning-loader" /> }
-        // { path: '*', element: <Navigate to={AppRoute.Login} replace /> }
       ]
     }
   ])

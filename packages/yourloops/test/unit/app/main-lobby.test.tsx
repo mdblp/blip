@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import type User from '../../../lib/auth/models/user.model'
-import { getRedirectUrl } from '../../../app/main-lobby'
+import { getRedirectUrl } from '../../../layout/main-layout'
 
 describe('Main lobby', () => {
   describe('getRedirectUrl', () => {

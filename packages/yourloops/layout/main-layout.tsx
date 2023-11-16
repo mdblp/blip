@@ -48,7 +48,7 @@ const tssCache = createCache({
 })
 tssCache.compat = true
 
-export const MainLobby: FC = () => {
+export const MainLayout: FC = () => {
   const theme = getTheme()
 
   return (

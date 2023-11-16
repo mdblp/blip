@@ -33,18 +33,15 @@ import HttpService from '../lib/http/http.service'
 import AuthService from '../lib/auth/auth.service'
 import { AuthenticatedUser } from '../lib/auth/models/authenticated-user.model'
 import { v4 as uuidv4 } from 'uuid'
-import { MainLobby } from '../app/main-lobby'
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { MainLayout } from '../layout/main-layout'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AppRoute } from '../models/enums/routes.enum'
 
 
 export const AuthSynchronizer: FC = () => {
   const { isAuthenticated, user, getAccessTokenSilently, isLoading } = useAuth0()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
-  const { pathname } = useLocation()
-
-  console.log('pathname', pathname)
 
   const ref = useRef(true) // TODO TIM: Check that it is really necessary
   const firstRender = ref.current
@@ -108,7 +105,7 @@ export const AuthSynchronizer: FC = () => {
       {!firstRender && !isLoading &&
         <>
           <MetricsLocationListener />
-          <MainLobby />
+          <MainLayout />
         </>
       }
     </>
