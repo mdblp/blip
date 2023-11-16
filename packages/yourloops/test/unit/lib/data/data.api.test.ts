@@ -31,13 +31,11 @@ import DataApi from '../../../../lib/data/data.api'
 import { type GetPatientDataOptions } from '../../../../lib/data/models/get-patient-data-options.model'
 import { type User } from '../../../../lib/auth'
 import { sortBy } from 'lodash'
-import { type PatientData, type PatientDatum } from '../../../../lib/data/models/patient-datum.model'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { type MessageNote } from '../../../../lib/data/models/message-note.model'
-import { type IUser } from '../../../../lib/data/models/i-user.model'
 import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
 import { HttpHeaderValues } from '../../../../lib/http/models/enums/http-header-values.enum'
-import { Unit } from 'medical-domain'
+import { MedicalData, Unit } from 'medical-domain'
 
 describe('Data API', () => {
   const patientId = 'patientId'
@@ -67,54 +65,37 @@ describe('Data API', () => {
 
   describe('getPatientData', () => {
     it('should get patient data', async () => {
-      const data: PatientData = [{ id: 'id' } as PatientDatum]
+      const data: MedicalData = {
+        basal: [],
+        cbg: [],
+        confidentialModes: [],
+        deviceParametersChanges: [],
+        meals: [],
+        messages: [],
+        physicalActivities: [],
+        pumpSettings: [],
+        reservoirChanges: [],
+        smbg: [],
+        timezoneChanges: [],
+        uploads: [],
+        warmUps: [],
+        wizards: [],
+        zenModes: [],
+        bolus: []
+      }
       const options: GetPatientDataOptions = {
         startDate: '2022-02-20',
         endDate: '2022-02-25',
-        withPumpSettings: true
+        withPumpSettings: true,
+        bgUnits: 'mmol/L'
       }
       jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
       const response = await DataApi.getPatientData({ userid: patientId } as Patient, options)
       expect(response).toEqual(data)
       expect(HttpService.get).toHaveBeenCalledWith({
-        url: `/data/v1/dataV2/${patientId}`,
+        url: `/data/v2/all/${patientId}`,
         config: { params: options }
       })
-    })
-  })
-
-  describe('getMessages', () => {
-    it('should get patient messages', async () => {
-      const data: MessageNote[] = [{ userid: patientId } as MessageNote]
-      const options: GetPatientDataOptions = {
-        startDate: '2022-02-20',
-        endDate: '2022-02-25'
-      }
-      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
-      const response = await DataApi.getMessages({ userid: patientId } as IUser, options)
-      expect(response).toEqual(data)
-      expect(HttpService.get).toHaveBeenCalledWith({
-        url: `/message/v1/notes/${patientId}`,
-        config: {
-          params: {
-            starttime: options.startDate,
-            endtime: options.endDate
-          }
-        }
-      })
-    })
-
-    it('should return an empty array if there is no messages', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
-      const response = await DataApi.getMessages({ userid: patientId } as IUser)
-      expect(response).toEqual([])
-    })
-
-    it('should throw an error if http call fails', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
-      await expect(async () => {
-        await DataApi.getMessages({ userid: patientId } as IUser)
-      }).rejects.toThrow('This error was thrown by a mock on purpose')
     })
   })
 

@@ -30,7 +30,7 @@ import { patient1Info, patient2Info } from '../data/patient.api.data'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import moment from 'moment-timezone'
 import userEvent from '@testing-library/user-event'
-import { type Data, mockDataAPI } from '../mock/data.api.mock'
+import { mockDataAPI, noData } from '../mock/data.api.mock'
 
 const checkPatientNavBarCommon = (patientNavBar: BoundFunctions<typeof queries>) => {
   expect(patientNavBar.getByRole('tablist')).toHaveTextContent('DashboardDailyTrendsDevice')
@@ -95,7 +95,7 @@ export const checkPatientSwitch = async () => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
   expect(screen.getByTestId('patient-dashboard')).toBeInTheDocument()
 
-  mockDataAPI({} as Data)
+  mockDataAPI(noData)
   fireEvent.mouseDown(within(secondaryHeader).getByText(patient1Info.profile.fullName))
   fireEvent.click(within(screen.getByRole('listbox')).getByText(patient2Info.profile.fullName))
 

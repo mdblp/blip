@@ -124,6 +124,7 @@ const normalizeParameters = (rawParams: Array<Record<string, unknown>>, opts: Me
 }
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): PumpSettings => {
+  console.error("this method should not have been called")
   const base = BaseDatumService.normalize(rawData, opts)
   const payload = (rawData?.payload ?? {}) as Record<string, unknown>
   const rawCgm = (payload?.cgm ?? {}) as Record<string, unknown>
