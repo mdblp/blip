@@ -40,19 +40,19 @@ export const LOCAL_STORAGE_SELECTED_TEAM_ID_KEY = 'selectedTeamId'
 
 export const NavigateWithCorrectTeamId: FunctionComponent = () => {
   const { user } = useAuth()
-  const { teams, getDefaultTeamId } = useTeam()
+  const { getDefaultTeamId, getTeam } = useTeam()
   const { pathname } = useLocation()
 
   const getFallbackTeamId = useCallback((): string => {
     const localStorageTeamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
-    const isTeamIdValid = teams.some((team: Team) => team.id === localStorageTeamId)
+    const isTeamIdValid = getTeam(localStorageTeamId)
     if (isTeamIdValid) {
       return localStorageTeamId
     }
     const defaultTeamId = getDefaultTeamId()
     localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, defaultTeamId)
     return defaultTeamId
-  }, [getDefaultTeamId, teams])
+  }, [getDefaultTeamId, getTeam])
 
   const getTeamId = useCallback(() => {
     if (user.isUserCaregiver()) {

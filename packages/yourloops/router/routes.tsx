@@ -101,18 +101,6 @@ const getLoggedInRoutes = () => {
             ]
           },
           {
-            path: '',
-            loader: () => {
-              console.log('here 1')
-              const user = AuthService.getUser()
-              if (user.isUserPatient()) {
-                return redirect(AppUserRoute.Dashboard)
-              }
-              return null
-            },
-            element: <NavigateWithCorrectTeamId />
-          },
-          {
             path: '*',
             element: <Outlet />,
             loader: () => {

@@ -55,7 +55,6 @@ i18nInit().then(() => {
   initTheme()
 
   const root = createRoot(div)
-  // root.render( <Yourloops />)
   root.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />)
 
   window.onerror = (event, source, lineno, colno, error) => {
