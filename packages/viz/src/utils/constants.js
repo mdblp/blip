@@ -22,12 +22,6 @@ const t = i18next.t.bind(i18next)
 export const BG_HIGH = 'High'
 export const BG_LOW = 'Low'
 
-const STIFFNESS = 180
-const DAMPING = 40
-const PRECISION = 0.1
-
-export const springConfig = { stiffness: STIFFNESS, damping: DAMPING, precision: PRECISION }
-
 export const LBS_PER_KG = 2.2046226218
 
 export const CGM_READINGS_ONE_DAY = 288
@@ -48,44 +42,10 @@ export const SCHEDULED_DELIVERY = 'scheduledDelivery'
 
 export const SECTION_TYPE_UNDECLARED = 'undeclared'
 
-export const INSULET = 'Insulet'
-export const TANDEM = 'Tandem'
-export const ANIMAS = 'Animas'
-export const MEDTRONIC = 'Medtronic'
 export const DIABELOOP = 'Diabeloop'
-export const ROCHE = 'Roche'
-export const VICENTRA = 'Vicentra'
 export const DEFAULT_MANUFACTURER = 'default'
 
 export const getPumpVocabularies = () => ({
-  [ANIMAS]: {
-    [SITE_CHANGE_RESERVOIR]: t('Go Rewind'),
-    [SITE_CHANGE_TUBING]: t('Go Prime'),
-    [SITE_CHANGE_CANNULA]: t('Fill Cannula'),
-    [AUTOMATED_DELIVERY]: t('Automated'),
-    [SCHEDULED_DELIVERY]: t('Manual')
-  },
-  [INSULET]: {
-    [SITE_CHANGE_RESERVOIR]: t('Change Pod'),
-    [SITE_CHANGE_TUBING]: t('Activate Pod'),
-    [SITE_CHANGE_CANNULA]: t('Prime'),
-    [AUTOMATED_DELIVERY]: t('Automated'),
-    [SCHEDULED_DELIVERY]: t('Manual')
-  },
-  [MEDTRONIC]: {
-    [SITE_CHANGE_RESERVOIR]: t('Rewind'),
-    [SITE_CHANGE_TUBING]: t('Prime'),
-    [SITE_CHANGE_CANNULA]: t('Prime Cannula'),
-    [AUTOMATED_DELIVERY]: t('Auto Mode'),
-    [SCHEDULED_DELIVERY]: t('Manual')
-  },
-  [TANDEM]: {
-    [SITE_CHANGE_RESERVOIR]: t('Change Cartridge'),
-    [SITE_CHANGE_TUBING]: t('Fill Tubing'),
-    [SITE_CHANGE_CANNULA]: t('Fill Cannula'),
-    [AUTOMATED_DELIVERY]: t('Automated'),
-    [SCHEDULED_DELIVERY]: t('Manual')
-  },
   [DIABELOOP]: {
     [SITE_CHANGE_RESERVOIR]: t('Change Cartridge'),
     [SITE_CHANGE_TUBING]: t('Fill Tubing'),
@@ -103,6 +63,5 @@ export const getPumpVocabularies = () => ({
 })
 
 export const AUTOMATED_BASAL_DEVICE_MODELS = {
-  [MEDTRONIC]: ['1580', '1581', '1582', '1780', '1781', '1782'],
   [DIABELOOP]: true
 }

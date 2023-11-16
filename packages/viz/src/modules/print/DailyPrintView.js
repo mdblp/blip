@@ -32,13 +32,9 @@ import {
   getBolusFromInsulinEvent,
   getCarbs,
   getDelivered,
-  getExtendedPercentage,
-  getMaxDuration,
-  getMaxValue,
-  getNormalPercentage
+  getMaxValue
 } from '../../utils/bolus'
 import {
-  formatDuration,
   formatLocalizedFromUTC,
   getHourMinuteFormatNoSpace,
   getLongFormat,
@@ -209,11 +205,7 @@ class DailyPrintView extends PrintView {
     const maxBolusStack = _.max(_.map(
       _.keys(threeHrBinnedBoluses),
       (key) => {
-        const totalLines = _.reduce(threeHrBinnedBoluses[key], (lines, insulinEvent) => {
-          const bolus = getBolusFromInsulinEvent(insulinEvent)
-          if (bolus.extended || bolus.expectedExtended) {
-            return lines + 2
-          }
+        const totalLines = _.reduce(threeHrBinnedBoluses[key], (lines) => {
           return lines + 1
         }, 0)
         return totalLines
@@ -836,20 +828,6 @@ class DailyPrintView extends PrintView {
           removeTrailingZeroes(formatDecimalNumber(getDelivered(bolus), 2)),
           { align: 'right' }
         )
-
-        if (bolus.extended) {
-          const normalPercentage = getNormalPercentage(bolus)
-          const extendedPercentage = getExtendedPercentage(bolus)
-          const durationText = `${formatDuration(getMaxDuration(bolus))}`
-          const percentagesText = Number.isNaN(normalPercentage) ?
-            `over ${durationText}` : `${extendedPercentage} ${durationText}`
-          this.doc.text(
-            percentagesText,
-            groupXPos,
-            yPos.update(),
-            { indent: 2, width: groupWidth }
-          )
-        }
         yPos.update()
       })
     })
@@ -1150,26 +1128,6 @@ class DailyPrintView extends PrintView {
     cursor += this.bolusWidth + legendItemLabelOffset
     this.doc.fillColor('black').text(t('Interrupted'), cursor, legendTextMiddle)
     cursor += this.doc.widthOfString(t('Interrupted')) + legendItemLeftOffset * 2
-
-    // extended bolus
-    const extendedBolusXScale = scaleLinear()
-      .domain([0, 10])
-      .range([cursor, cursor + 10])
-    const extendedPaths = getBolusPaths(
-      {
-        normal: 5,
-        extended: 5,
-        duration: 10,
-        utc: 0
-      },
-      extendedBolusXScale,
-      legendBolusYScale,
-      bolusOpts
-    )
-    _.forEach(extendedPaths, (path) => {
-      this.renderEventPath(path)
-    })
-    cursor += this.bolusWidth / 2 + 10 + legendItemLabelOffset
 
     // carbohydrates
     this.doc.circle(cursor, legendVerticalMiddle, this.carbRadius)

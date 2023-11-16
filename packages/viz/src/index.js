@@ -21,7 +21,6 @@ import WarmUpTooltip from './components/daily/warmuptooltip/WarmUpTooltip'
 
 import { formatBgValue, formatParameterValue } from './utils/format'
 import { reshapeBgClassesToBgBounds } from './utils/bloodglucose'
-import { getGroupDurations, getTotalBasalFromEndpoints } from './utils/basal'
 import { isAutomatedBasalDevice } from './utils/device'
 import { addDuration, getLocalizedCeiling, getLongDayHourFormat, getTimezoneFromTimePrefs } from './utils/datetime'
 import {
@@ -43,10 +42,6 @@ const components = {
 }
 
 const utils = {
-  basal: {
-    getGroupDurations,
-    getTotalBasalFromEndpoints
-  },
   bg: {
     formatBgValue,
     reshapeBgClassesToBgBounds

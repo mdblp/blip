@@ -153,20 +153,6 @@ export function getTimezoneFromTimePrefs(timePrefs) {
 }
 
 /**
- * formatBirthdate
- * @param {Object} patient - Tidepool patient object containing profile
- *
- * @return {String} formatted birthdate, e.g., 'Jul 4, 1975'; empty String if none found
- */
-export function formatBirthdate(patient) {
-  const birthday = _.get(patient, 'profile.patient.birthday', '')
-  if (birthday) {
-    return moment.utc(birthday).format(t('birthday-format'))
-  }
-  return ''
-}
-
-/**
  * formatClocktimeFromMsPer24
  * @param {number} milliseconds - positive integer representing a time of day
  *                            in milliseconds within a 24-hr day

@@ -22,10 +22,4 @@ export function generateBgRangeLabels(bgPrefs: any, opts?: {}): any;
  * @return {Integer} count - the weighted count
  */
 export function weightedCGMCount(data: any[]): Integer;
-/**
- * Get the CGM sample frequency in milliseconds from a CGM data point. Most devices default at a
- * 5 minute interval, but others, such as the Abbot FreeStyle Libre, sample every 15 mins
- *
- * @param {Array} datum - a cgm data point
- */
-export function cgmSampleFrequency(datum: any[]): number;
+

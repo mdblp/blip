@@ -20,7 +20,6 @@ import moment from 'moment-timezone'
 import crossfilter from 'crossfilter2'
 import i18next from 'i18next'
 
-import generateClassifiers from '../classifiers'
 import { getPumpVocabulary, isAutomatedBasalDevice } from '../device'
 import { generateBgRangeLabels, weightedCGMCount } from '../bloodglucose'
 
@@ -202,35 +201,14 @@ export function processInfusionSiteHistory(data) {
  * Generate crossfilter reducers for classifying data records
  *
  * @param {Object} dataObj - the data object to reduce
- * @param {String} type - the data type
- * @param {Object} bgPrefs - bgPrefs object containing viz-style bgBounds
  */
-function buildCrossfilterUtils(dataObj, type, bgPrefs) {
-  /* eslint-disable no-param-reassign */
-  const classifiers = generateClassifiers(bgPrefs)
-
+function buildCrossfilterUtils(dataObj) {
+  /* eslint-enable no-param-reassign */
   const getLocalDate = (datum) => (
     applyOffset(datum.normalTime, datum.displayOffset).toISOString().slice(0, 10)
   )
 
-  const reduceAddMaker = (classifier) => {
-    if (classifier) {
-      return function reduceAdd(p, v) {
-        const tags = classifier(v)
-        if (!_.isEmpty(tags)) {
-          ++p.total
-          _.forEach(tags, tag => {
-            if (p.subtotals[tag]) {
-              p.subtotals[tag] += 1
-            } else {
-              p.subtotals[tag] = 1
-            }
-          })
-        }
-        p.data.push(v)
-        return p
-      }
-    }
+  const reduceAddMaker = () => {
     return function reduceAdd(p, v) {
       ++p.count
       p.data.push(v)
@@ -238,20 +216,7 @@ function buildCrossfilterUtils(dataObj, type, bgPrefs) {
     }
   }
 
-  const reduceRemoveMaker = (classifier) => {
-    if (classifier) {
-      return function reduceRemove(p, v) {
-        const tags = classifier(v)
-        if (!_.isEmpty(tags)) {
-          --p.total
-          _.forEach(tags, tag => {
-            p.subtotals[tag] -= 1
-          })
-        }
-        _.remove(p.data, d => (d.id === v.id))
-        return p
-      }
-    }
+  const reduceRemoveMaker = () => {
     return function reduceRemove(p, v) {
       --p.count
       _.remove(p.data, d => (d.id === v.id))
@@ -259,16 +224,7 @@ function buildCrossfilterUtils(dataObj, type, bgPrefs) {
     }
   }
 
-  const reduceInitialMaker = (classifier) => {
-    if (classifier) {
-      return function reduceInitial() {
-        return {
-          total: 0,
-          subtotals: {},
-          data: []
-        }
-      }
-    }
+  const reduceInitialMaker = () => {
     return function reduceInitial() {
       return {
         count: 0,
@@ -278,12 +234,11 @@ function buildCrossfilterUtils(dataObj, type, bgPrefs) {
   }
 
   dataObj.byLocalDate = dataObj.cf.dimension(getLocalDate)
-  const classifier = classifiers[type]
 
   const dataByLocalDate = dataObj.byLocalDate.group().reduce(
-    reduceAddMaker(classifier),
-    reduceRemoveMaker(classifier),
-    reduceInitialMaker(classifier)
+    reduceAddMaker(),
+    reduceRemoveMaker(),
+    reduceInitialMaker()
   ).all()
   const dataByDateHash = {}
   for (let j = 0; j < dataByLocalDate.length; ++j) {
@@ -293,49 +248,6 @@ function buildCrossfilterUtils(dataObj, type, bgPrefs) {
   dataObj.dataByDate = dataByDateHash
   /* eslint-enable no-param-reassign */
 }
-
-/**
- * Generate function to process summary breakdowns for section data
- *
- * @param {Object} dataObj
- * @param {Object} summary
- * @returns {Function}
- */
-export function summarizeTagFn(dataObj, summary) {
-  /* eslint-disable no-param-reassign */
-  return tag => {
-    summary[tag] = {
-      count: _.reduce(
-        _.keys(dataObj.dataByDate),
-        (p, date) => (p + (dataObj.dataByDate[date].subtotals[tag] || 0)),
-        0,
-      )
-    }
-    summary[tag].percentage = summary[tag].count / summary.total
-  }
-  /* eslint-enable no-param-reassign */
-}
-
-/**
- * Get the average number of data events per day excluding the most recent
- *
- * @param {Object} dataObj
- * @param {Number} total
- * @param {String} mostRecentDay
- * @returns
- */
-export function averageExcludingMostRecentDay(dataObj, total, mostRecentDay) {
-  const mostRecentTotal = dataObj.dataByDate[mostRecentDay] ?
-    dataObj.dataByDate[mostRecentDay].total : 0
-  const numDaysExcludingMostRecent = dataObj.dataByDate[mostRecentDay] ?
-    _.keys(dataObj.dataByDate).length - 1 : _.keys(dataObj.dataByDate).length
-
-  // TODO: if we end up using this, do we care that this averages only over # of days that
-  // *have* data? e.g., if you have a random day in the middle w/no boluses,
-  // that day (that 0) will be excluded from average
-  return (total - mostRecentTotal) / numDaysExcludingMostRecent
-}
-
 /**
  * Define sections and dimensions used in the basics view
  *
@@ -399,7 +311,6 @@ export function defineBasicsSections(bgPrefs, manufacturer, deviceModel) {
           { key: 'total', label: t('Avg per day'), average: true, primary: true },
           { key: 'wizard', label: t('Calculator'), percentage: true },
           { key: 'correction', label: t('Correction'), percentage: true },
-          { key: 'extended', label: t('Extended'), percentage: true },
           { key: 'interrupted', label: t('Interrupted'), percentage: true },
           { key: 'override', label: t('Override'), percentage: true },
           { key: 'underride', label: t('Underride'), percentage: true }
@@ -479,10 +390,9 @@ export function defineBasicsSections(bgPrefs, manufacturer, deviceModel) {
  *
  * @export
  * @param {Object} data - the preprocessed basics data object
- * @param {Object} bgPrefs - bgPrefs object containing viz-style bgBounds
  * @returns {Object} basicsData - the revised data object
  */
-export function reduceByDay(data, bgPrefs) {
+export function reduceByDay(data) {
   const basicsData = _.cloneDeep(data)
 
   _.forEach(basicsData.data, (_value, type) => {
@@ -490,7 +400,7 @@ export function reduceByDay(data, bgPrefs) {
 
     if (_.includes([SITE_CHANGE_RESERVOIR], type)) {
       typeObj.cf = crossfilter(typeObj.data)
-      buildCrossfilterUtils(typeObj, type, bgPrefs)
+      buildCrossfilterUtils(typeObj)
     }
 
     basicsData.data[type] = typeObj

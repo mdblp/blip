@@ -63,13 +63,6 @@ export function getTimezoneFromTimePrefs(timePrefs: {
     timezoneName: string;
 }): string;
 /**
- * formatBirthdate
- * @param {Object} patient - Tidepool patient object containing profile
- *
- * @return {String} formatted birthdate, e.g., 'Jul 4, 1975'; empty String if none found
- */
-export function formatBirthdate(patient: any): string;
-/**
  * formatClocktimeFromMsPer24
  * @param {number} milliseconds - positive integer representing a time of day
  *                            in milliseconds within a 24-hr day
