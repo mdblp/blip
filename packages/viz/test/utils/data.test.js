@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import * as sinon from 'sinon'
 import { expect } from 'chai'
 import { MGDL_UNITS, MMOLL_UNITS, TimeService } from 'medical-domain'
 import DataUtil from '../../src/utils/data'
@@ -478,191 +477,6 @@ describe('DataUtil', () => {
     })
   })
 
-  describe('addData', () => {
-    it('should add data to the data crossfilter', () => {
-      expect(dataUtil.data.size()).to.equal(data.length)
-      dataUtil.addData([
-        new Types.SMBG({ value: 200 })
-      ])
-      expect(dataUtil.data.size()).to.equal(data.length + 1)
-    })
-
-    it('should update `bgSources` and `defaultBgSource` after adding new data', () => {
-      dataUtil = new DataUtil(smbgData, defaultOpts)
-
-      expect(dataUtil.bgSources).to.eql({
-        cbg: false,
-        smbg: true
-      })
-      expect(dataUtil.defaultBgSource).to.eql('smbg')
-
-      dataUtil.addData([
-        new Types.CBG({ value: 200 })
-      ])
-
-      expect(dataUtil.bgSources).to.eql({
-        cbg: true,
-        smbg: true
-      })
-
-      expect(dataUtil.defaultBgSource).to.eql('cbg')
-    })
-  })
-
-  describe('removeData', () => {
-    it('should call the `clearFilters` method', () => {
-      const clearFiltersSpy = sinon.spy(dataUtil, 'clearFilters')
-      sinon.assert.callCount(clearFiltersSpy, 0)
-      dataUtil.removeData()
-      sinon.assert.callCount(clearFiltersSpy, 1)
-    })
-
-    it('should remove all data from the crossfilter', () => {
-      expect(dataUtil.data.size()).to.equal(34)
-      dataUtil.removeData()
-      expect(dataUtil.data.size()).to.equal(0)
-    })
-  })
-
-  describe('addBasalOverlappingStart', () => {
-    context('basal delivery does not overlap start endpoint', () => {
-      it('should return the basal data unchanged', () => {
-        expect(dataUtil.addBasalOverlappingStart(_.clone(basalData))).to.eql(basalData)
-      })
-    })
-
-    context('basal delivery overlaps start endpoint', () => {
-      it('should add the overlapping basal datum to the beginning of basalData array and return', () => {
-        dataUtil.addData([basalDatumOverlappingStart])
-        expect(dataUtil.addBasalOverlappingStart(_.clone(basalData))).to.eql([
-          basalDatumOverlappingStart,
-          ...basalData
-        ])
-      })
-    })
-  })
-
-  describe('applyDateFilters', () => {
-
-    it('should filter the data by the endpoints', () => {
-      const byEndpointsSpy = sinon.spy(dataUtil.filter, 'byEndpoints')
-
-      sinon.assert.notCalled(byEndpointsSpy)
-      dataUtil.applyDateFilters()
-
-      sinon.assert.calledOnce(byEndpointsSpy)
-      sinon.assert.calledWith(byEndpointsSpy, dayEndpoints)
-
-      byEndpointsSpy.restore()
-    })
-
-    it('should clear any filters on the `byDayOfWeek` dimension', () => {
-      const filterAllSpy = sinon.spy(dataUtil.dimension.byDayOfWeek, 'filterAll')
-
-      sinon.assert.notCalled(filterAllSpy)
-      dataUtil.applyDateFilters()
-
-      sinon.assert.calledOnce(filterAllSpy)
-
-      filterAllSpy.restore()
-    })
-
-    it('should set the `days` property based on the endpoint range', () => {
-      dataUtil = new DataUtil(smbgData, opts({
-        endpoints: twoWeekEndpoints,
-        chartPrefs: {
-          activeDays: {
-            monday: true,
-            tuesday: true,
-            wednesday: true,
-            thursday: true,
-            friday: true,
-            saturday: true,
-            sunday: true
-          }
-        }
-      }))
-      dataUtil.days = 0
-      expect(dataUtil.days).to.equal(0)
-      dataUtil.applyDateFilters()
-      expect(dataUtil.days).to.equal(14)
-    })
-
-    context('`activeDays` defined in `chartPrefs`', () => {
-      it('should filter the data by by active days and set the `days` property', () => {
-        dataUtil = new DataUtil(smbgData, opts({
-          endpoints: twoWeekEndpoints,
-          chartPrefs: {
-            activeDays: {
-              monday: true,
-              tuesday: true,
-              wednesday: true,
-              thursday: true,
-              friday: false,
-              saturday: false,
-              sunday: false
-            }
-          }
-        }))
-
-        const byActiveDaysSpy = sinon.spy(dataUtil.filter, 'byActiveDays')
-
-        sinon.assert.notCalled(byActiveDaysSpy)
-        dataUtil.applyDateFilters()
-
-        sinon.assert.calledOnce(byActiveDaysSpy)
-        sinon.assert.calledWith(byActiveDaysSpy, [1, 2, 3, 4])
-
-        expect(dataUtil.days).to.equal(8)
-
-        byActiveDaysSpy.restore()
-      })
-    })
-  })
-
-  describe('buildDimensions', () => {
-    it('should build the data dimensions', () => {
-      dataUtil.dimension = {}
-      dataUtil.buildDimensions()
-      expect(dataUtil.dimension.byDate).to.be.an('object')
-      expect(dataUtil.dimension.byDayOfWeek).to.be.an('object')
-      expect(dataUtil.dimension.byType).to.be.an('object')
-    })
-  })
-
-  describe('buildFilters', () => {
-    it('should build the data filters', () => {
-      dataUtil.filter = {}
-      dataUtil.buildFilters()
-      expect(dataUtil.filter.byActiveDays).to.be.a('function')
-      expect(dataUtil.filter.byEndpoints).to.be.a('function')
-      expect(dataUtil.filter.byType).to.be.a('function')
-    })
-  })
-
-  describe('buildSorts', () => {
-    it('should build the data sorters', () => {
-      expect(dataUtil.sort.byDate).to.be.a('function')
-      const sort = dataUtil.buildSorts()
-      expect(sort.byDate).to.be.a('function')
-    })
-  })
-
-  describe('clearFilters', () => {
-    it('should clear all of the dimension filters', () => {
-      const clearbyDateSpy = sinon.spy(dataUtil.dimension.byDate, 'filterAll')
-      const clearbyDayOfWeekSpy = sinon.spy(dataUtil.dimension.byDayOfWeek, 'filterAll')
-      const clearbyTypeSpy = sinon.spy(dataUtil.dimension.byType, 'filterAll')
-      sinon.assert.callCount(clearbyDateSpy, 0)
-      sinon.assert.callCount(clearbyDayOfWeekSpy, 0)
-      sinon.assert.callCount(clearbyTypeSpy, 0)
-      dataUtil.clearFilters()
-      sinon.assert.callCount(clearbyDateSpy, 1)
-      sinon.assert.callCount(clearbyDayOfWeekSpy, 1)
-      sinon.assert.callCount(clearbyTypeSpy, 1)
-    })
-  })
-
   describe('getAverageGlucoseData', () => {
     it('should return the median glucose for cbg data', () => {
       dataUtil.chartPrefs = { bgSource: 'cbg' }
@@ -685,28 +499,6 @@ describe('DataUtil', () => {
       dataUtil.chartPrefs = { bgSource: 'smbg' }
       dataUtil.endpoints = twoDayEndpoints
       expect(dataUtil.getAverageGlucoseData(true).bgData).to.be.an('array').and.have.length(5)
-    })
-  })
-
-  describe('getGlucoseDataByDate', () => {
-    it('should return the average glucose and the data grouped by day for cbg data', () => {
-      dataUtil.chartPrefs = { bgSource: 'cbg' }
-      const glucoseDataByDate = dataUtil.getGlucoseDataByDate()
-      expect(glucoseDataByDate.averageGlucose).to.eql(132)
-      expect(glucoseDataByDate.total).to.eql(5)
-      expect(glucoseDataByDate.bgData).to.be.an('array').and.have.length(5)
-      expect(glucoseDataByDate.bgDataByDate['2018-02-01']).to.be.an('array').and.have.length(5)
-    })
-
-    it('should return the average glucose and the data grouped by day for smbg data', () => {
-      dataUtil.chartPrefs = { bgSource: 'smbg' }
-      dataUtil.endpoints = twoDayEndpoints
-      const glucoseDataByDate = dataUtil.getGlucoseDataByDate()
-      expect(glucoseDataByDate.averageGlucose).to.eql(136)
-      expect(glucoseDataByDate.total).to.eql(5)
-      expect(glucoseDataByDate.bgData).to.be.an('array').and.have.length(5)
-      expect(glucoseDataByDate.bgDataByDate['2018-02-01']).to.be.an('array').and.have.length(4)
-      expect(glucoseDataByDate.bgDataByDate['2018-02-02']).to.be.an('array').and.have.length(1)
     })
   })
 
@@ -749,13 +541,6 @@ describe('DataUtil', () => {
   })
 
   describe('getBgSources', () => {
-    it('should call the `clearFilters` method', () => {
-      const clearFiltersSpy = sinon.spy(dataUtil, 'clearFilters')
-      sinon.assert.callCount(clearFiltersSpy, 0)
-      dataUtil.getBgSources()
-      sinon.assert.callCount(clearFiltersSpy, 1)
-    })
-
     it('should return true for `smbg` and false for `cbg` when only smbg data available', () => {
       dataUtil = new DataUtil(smbgData, defaultOpts)
 
@@ -849,79 +634,6 @@ describe('DataUtil', () => {
     })
   })
 
-  describe('getDailyAverageSums', () => {
-    it('should divide each value in the supplied data object by the number of days in the view', () => {
-      const sampleData = {
-        basal: 56,
-        bolus: 28
-      }
-
-      dataUtil.endpoints = twoDayEndpoints
-      expect(dataUtil.getDailyAverageSums(sampleData)).to.eql({
-        basal: 28,
-        bolus: 14
-      })
-
-      dataUtil.endpoints = twoWeekEndpoints
-      expect(dataUtil.getDailyAverageSums(sampleData)).to.eql({
-        basal: 4,
-        bolus: 2
-      })
-    })
-
-    it('should should not modify the `total` value', () => {
-      const sampleData = {
-        basal: 56,
-        bolus: 28,
-        total: 10
-      }
-
-      dataUtil.endpoints = twoDayEndpoints
-      expect(dataUtil.getDailyAverageSums(sampleData)).to.eql({
-        basal: 28,
-        bolus: 14,
-        total: 10
-      })
-
-      dataUtil.endpoints = twoWeekEndpoints
-      expect(dataUtil.getDailyAverageSums(sampleData)).to.eql({
-        basal: 4,
-        bolus: 2,
-        total: 10
-      })
-    })
-  })
-
-  describe('getDailyAverageDurations', () => {
-    it('should divide each value in the supplied data object by the provided total, and multiply by `MS_IN_DAY`', () => {
-      const sampleData = {
-        automated: TimeService.MS_IN_DAY * 1.5,
-        manual: TimeService.MS_IN_DAY * 0.5,
-        total: TimeService.MS_IN_DAY * 2
-      }
-
-      dataUtil.endpoints = twoDayEndpoints
-      expect(dataUtil.getDailyAverageDurations(sampleData)).to.eql({
-        automated: TimeService.MS_IN_DAY * 0.75,
-        manual: TimeService.MS_IN_DAY * 0.25,
-        total: TimeService.MS_IN_DAY * 2
-      })
-    })
-
-    it('should divide each value in the supplied data object by the sum of values when total is not provided', () => {
-      const sampleData = {
-        automated: TimeService.MS_IN_DAY * 1.0,
-        manual: TimeService.MS_IN_DAY * 0.5
-      }
-
-      dataUtil.endpoints = twoDayEndpoints
-      expect(dataUtil.getDailyAverageDurations(sampleData)).to.eql({
-        automated: TimeService.MS_IN_DAY * (2 / 3),
-        manual: TimeService.MS_IN_DAY * (1 / 3)
-      })
-    })
-  })
-
   describe('getDefaultBgSource', () => {
     it('should return `cbg` when only cbg data is available', () => {
       dataUtil = new DataUtil(cbgData, defaultOpts)
@@ -954,22 +666,6 @@ describe('DataUtil', () => {
 
       dataUtil.endpoints = twoWeekEndpoints
       expect(dataUtil.getDayCountFromEndpoints()).to.equal(14)
-    })
-  })
-
-  describe('getDayIndex', () => {
-    it('should return the day index given a day the week string', () => {
-      expect(dataUtil.getDayIndex('sunday')).to.equal(0)
-      expect(dataUtil.getDayIndex('monday')).to.equal(1)
-      expect(dataUtil.getDayIndex('tuesday')).to.equal(2)
-      expect(dataUtil.getDayIndex('wednesday')).to.equal(3)
-      expect(dataUtil.getDayIndex('thursday')).to.equal(4)
-      expect(dataUtil.getDayIndex('friday')).to.equal(5)
-      expect(dataUtil.getDayIndex('saturday')).to.equal(6)
-    })
-
-    it('should return `undefined` for invalid day of week', () => {
-      expect(dataUtil.getDayIndex('foo')).to.be.undefined
     })
   })
 

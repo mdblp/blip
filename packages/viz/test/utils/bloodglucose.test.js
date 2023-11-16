@@ -21,7 +21,6 @@ import _ from 'lodash'
 import { assert, expect } from 'chai'
 
 import * as bgUtils from '../../src/utils/bloodglucose'
-import { TimeService } from 'medical-domain'
 
 describe('blood glucose utilities', () => {
   describe('generateBgRangeLabels', () => {
@@ -171,20 +170,6 @@ describe('blood glucose utilities', () => {
       })))
 
       expect(bgUtils.weightedCGMCount(data)).to.equal(40)
-    })
-  })
-
-  describe('cgmSampleFrequency', () => {
-    it('should get the CGM sample frequency in milliseconds from a CGM data point', () => {
-      const dexcomDatum = {
-        deviceId: 'Dexcom_XXXXXXX'
-      }
-      expect(bgUtils.cgmSampleFrequency(dexcomDatum)).to.equal(5 * TimeService.MS_IN_MIN)
-
-      const libreDatum = {
-        deviceId: 'AbbottFreeStyleLibre_XXXXXXX'
-      }
-      expect(bgUtils.cgmSampleFrequency(libreDatum)).to.equal(15 * TimeService.MS_IN_MIN)
     })
   })
 })

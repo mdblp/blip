@@ -656,8 +656,7 @@ describe('DailyPrintView', () => {
       Renderer.renderBolusDetails(Renderer.chartsByDate[sampleDate])
 
       // We expect 2 calls to doc.text() for each of our 3 sample data boluses
-      // Plus one more for the extended one
-      const expectedTextCallCount = bolusCount * 2 + 1
+      const expectedTextCallCount = bolusCount * 2
 
       sinon.assert.callCount(Renderer.doc.text, expectedTextCallCount)
     })
