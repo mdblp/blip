@@ -48,28 +48,7 @@ declare class DataUtil {
   set endpoints(arg: any)
   set bgPrefs(arg: any)
 
-  addData(data: any): void
-  removeData(): void
-  addBasalOverlappingStart(basalData: any): any
-  applyDateFilters(): void
-  buildDimensions: () => void
-  buildFilters: () => void
-
-  buildSorts(): {
-    byDate: (array: Array<{ epoch: number }>) => Array<{ epoch: number }>
-  }
-
-  clearFilters: () => void
   getAverageGlucoseData: (returnBgData?: boolean) => {
-    averageGlucose: any
-    total: any
-  }
-
-  /**
-   * Returns the average glucose data
-   * with the average glucose data by date
-   */
-  getGlucoseDataByDate: () => {
     averageGlucose: any
     total: any
   }
@@ -79,7 +58,6 @@ declare class DataUtil {
    * @param {Array} bolus Array of bolus data
    * @param {Array} basal Array of basal data
    */
-  getNumDaysWithInsulin(bolus: any[], basal: any[]): number
 
   getBasalBolusData(): {
     basal: number
@@ -112,11 +90,8 @@ declare class DataUtil {
     insufficientData?: undefined
   }
 
-  getDailyAverageSums: (data: any) => any
-  getDailyAverageDurations: (data: any) => any
   getDefaultBgSource: () => string
   getDayCountFromEndpoints: () => number
-  getDayIndex: (day: any) => any
   getGlucoseManagementIndicatorData: () => {
     glucoseManagementIndicator: number
     insufficientData: boolean
@@ -164,15 +139,4 @@ declare class DataUtil {
       level: number
     }
   }
-
-  /**
-   * Retreive the patient weight from the pump settings, null if not present
-   * @returns {{ name: 'WEIGHT', value: string, unit: string, level: number } | null}
-   */
-  getWeight(): {
-    name: 'WEIGHT'
-    value: string
-    unit: string
-    level: number
-  } | null
 }

@@ -209,7 +209,7 @@ export const usePatientData = (): usePatientDataResult => {
       if (patientData && patientData.cbg.length > 0) {
         const medicalDataUpdated = medicalData
         medicalDataUpdated.add(patientData)
-        const dataUtil = new DataUtil(medicalData.data, {
+        const dataUtil = new DataUtil(medicalData.medicalData, {
           bgPrefs,
           timePrefs,
           endpoints: medicalData.endpoints
@@ -245,7 +245,7 @@ export const usePatientData = (): usePatientDataResult => {
       if (patientData && patientData.cbg.length > 0) {
         const medicalDataUpdated = medicalData
         medicalDataUpdated.add(patientData)
-        const dataUtilUpdated = new DataUtil(medicalDataUpdated.data, {
+        const dataUtilUpdated = new DataUtil(medicalDataUpdated.medicalData, {
           bgPrefs,
           timePrefs,
           endpoints: medicalDataUpdated.endpoints
@@ -269,7 +269,7 @@ export const usePatientData = (): usePatientDataResult => {
         return
       }
       const medicalDataRetrieved = patientDataUtils.current.buildMedicalData(patientData)
-      const dataUtil = new DataUtil(medicalDataRetrieved.data, {
+      const dataUtil = new DataUtil(medicalDataRetrieved.medicalData, {
         bgPrefs,
         timePrefs,
         endpoints: medicalDataRetrieved.endpoints
@@ -290,7 +290,7 @@ export const usePatientData = (): usePatientDataResult => {
         return
       }
       const medicalData = patientDataUtils.current.buildMedicalData(patientData)
-      const dataUtil = new DataUtil(medicalData.data, {
+      const dataUtil = new DataUtil(medicalData.medicalData, {
         bgPrefs,
         timePrefs,
         endpoints: medicalData.endpoints
@@ -310,7 +310,7 @@ export const usePatientData = (): usePatientDataResult => {
 
   useEffect(() => {
     if (medicalData) {
-      const dataUtil = new DataUtil(medicalData.data, {
+      const dataUtil = new DataUtil(medicalData.medicalData, {
         bgPrefs,
         timePrefs,
         endpoints: medicalData.endpoints
