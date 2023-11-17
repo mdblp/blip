@@ -27,19 +27,20 @@
 
 import React, { type FunctionComponent } from 'react'
 import Link from '@mui/material/Link'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useRouteLoaderData } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
-import { type User } from '../../lib/auth'
 import { footerStyle } from './footer'
+import User from '../../lib/auth/models/user.model'
 
-const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) => {
+const AccompanyingDocumentLinks: FunctionComponent = () => {
+  const userFromLoader = useRouteLoaderData('user-route') as User
   const { t } = useTranslation('yourloops')
   const { classes: { link, separator } } = footerStyle()
 
   return (
-    <React.Fragment>
+    <>
       <Link
         data-testid="product-labelling-link"
         component={RouterLink}
@@ -53,13 +54,13 @@ const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) 
       <Link
         data-testid="training-link"
         target="_blank"
-        href={diabeloopExternalUrls.training(user?.role)}
+        href={diabeloopExternalUrls.training(userFromLoader?.role)}
         rel="nofollow"
         className={link}
       >
         {t('training')}
       </Link>
-    </React.Fragment>
+    </>
   )
 }
 

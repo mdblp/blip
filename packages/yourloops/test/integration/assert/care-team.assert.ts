@@ -112,7 +112,7 @@ export const checkGiveAdminRole = async () => {
   expect(roleCheckBoxNotAdmin).toHaveProperty('checked', false)
 
   jest.spyOn(TeamApi, 'changeMemberRole').mockResolvedValueOnce(null)
-  expect(TeamApi.getTeams).toHaveBeenCalledTimes(1)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(3)
   await userEvent.click(roleCheckBoxNotAdmin)
   expect(TeamApi.changeMemberRole).toHaveBeenCalledWith({
     teamId: myThirdTeamId,
@@ -120,7 +120,7 @@ export const checkGiveAdminRole = async () => {
     email: userTimEmail,
     role: TeamMemberRole.admin
   })
-  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(4)
 }
 
 export const checkRemoveAdminRole = async () => {
@@ -130,7 +130,7 @@ export const checkRemoveAdminRole = async () => {
   expect(roleCheckBoxNotAdmin).toHaveProperty('checked', true)
 
   jest.spyOn(TeamApi, 'changeMemberRole').mockResolvedValueOnce(null)
-  expect(TeamApi.getTeams).toHaveBeenCalledTimes(1)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(3)
   await userEvent.click(roleCheckBoxNotAdmin)
   expect(TeamApi.changeMemberRole).toHaveBeenCalledWith({
     teamId: myFirstTeamId,
@@ -138,7 +138,7 @@ export const checkRemoveAdminRole = async () => {
     email: userTimEmail,
     role: TeamMemberRole.member
   })
-  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(4)
 }
 
 export const checkNotTeamAdmin = async () => {

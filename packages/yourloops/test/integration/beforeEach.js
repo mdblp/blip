@@ -54,8 +54,4 @@ jest.mock('@auth0/auth0-react', () => ({
 }))
 
 // Mocking Auth0Provider was a failure, so the parent component was mocked instead
-jest.mock('../../router/root', () => ({
-  RouterRoot: () => {
-    return <MockAuthSynchronizer />
-  }
-}));
+jest.mock('../../router/root')

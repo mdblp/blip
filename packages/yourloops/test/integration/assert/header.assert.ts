@@ -140,13 +140,13 @@ export const changeTeamScope = async (currentTeamName: string, wantedTeamName: s
 }
 
 export const checkBannerLanguageChange = async () => {
-  expect(await screen.findByRole('banner')).toHaveTextContent('Ceci est le texte de la bannière en français')
+  expect(await screen.findByRole('banner')).toHaveTextContent('This is the banner text in english')
 
   fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: 'English' }))
+  fireEvent.click(screen.getByRole('option', { name: 'Español' }))
   const saveButton = screen.getByRole('button', { name: 'Save' })
 
   await userEvent.click(saveButton)
 
-  expect(await screen.findByRole('banner')).toHaveTextContent('This is the banner text in english')
+  expect(await screen.findByRole('banner')).toHaveTextContent('Este es el texto del banner en español')
 }

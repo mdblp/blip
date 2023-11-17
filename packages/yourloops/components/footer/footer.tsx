@@ -40,7 +40,6 @@ import Link from '@mui/material/Link'
 import Tooltip from '@mui/material/Tooltip'
 
 import { diabeloopExternalUrls, ROUTES_REQUIRING_LANGUAGE_SELECTOR } from '../../lib/diabeloop-urls.model'
-import { useAuth } from '../../lib/auth'
 import config from '../../lib/config/config'
 import metrics from '../../lib/metrics'
 import LanguageSelector from '../language-select'
@@ -215,7 +214,6 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
 
 export const Footer: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
-  const { user } = useAuth()
   const { pathname } = useLocation()
   const { classes } = footerStyle()
 
@@ -244,10 +242,10 @@ export const Footer: FunctionComponent = () => {
               <LanguageSelector />
               <Box className={`${classes.separator} ${classes.languageSeparator}`}>|</Box>
             </Box>
-            <AccompanyingDocumentLinks user={user} />
+            <AccompanyingDocumentLinks />
           </Box>
           : <Box id="footer-accompanying-documents-box" className={classes.documentBox}>
-            <AccompanyingDocumentLinks user={user} />
+            <AccompanyingDocumentLinks />
             <Box className={classes.separator}>|</Box>
           </Box>
         }

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, useEffect, useRef } from 'react'
+import React, { type FC, useEffect } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import { User } from '../lib/auth'
 import MetricsLocationListener from '../components/MetricsLocationListener'
@@ -34,19 +34,16 @@ import AuthService from '../lib/auth/auth.service'
 import { AuthenticatedUser } from '../lib/auth/models/authenticated-user.model'
 import { v4 as uuidv4 } from 'uuid'
 import { MainLayout } from '../layout/main-layout'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { AppRoute } from '../models/enums/routes.enum'
 
 export const AuthSynchronizer: FC = () => {
-  console.log('toto')
   const { isAuthenticated, user, getAccessTokenSilently, isLoading } = useAuth0()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
-
-  console.log(isAuthenticated)
-  const ref = useRef(true) // TODO TIM: Check that it is really necessary
-  const firstRender = ref.current
-  ref.current = false
+  const { pathname } = useLocation()
+  console.log(pathname)
+  console.log(searchParams)
 
   AuthService.setIsAuthenticated(isAuthenticated)
   if (user && !AuthService.getUser()) {
@@ -103,7 +100,7 @@ export const AuthSynchronizer: FC = () => {
 
   return (
     <>
-      {!firstRender && !isLoading &&
+      {!isLoading &&
         <>
           <MetricsLocationListener />
           <MainLayout />

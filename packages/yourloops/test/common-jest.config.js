@@ -93,7 +93,7 @@ module.exports = {
     BUILD_CONFIG: {
       BANNER_ENABLED: false,
       BANNER_LABEL_EN: 'This is the banner text in english',
-      BANNER_LABEL_ES: 'Es banero text es en espanol!',
+      BANNER_LABEL_ES: 'Este es el texto del banner en español',
       BANNER_LABEL_DE: 'Eine frauen este un apfel und un kartofel salad',
       BANNER_LABEL_FR: 'Ceci est le texte de la bannière en français',
       BANNER_LABEL_IT: 'Ciao bella spaghetti',

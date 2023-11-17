@@ -28,6 +28,11 @@
 import * as auth0Mock from '@auth0/auth0-react'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { AuthenticatedUserMetadata } from '../../../lib/auth/models/enums/authenticated-user-metadata.enum'
+import { Auth0ContextInterface } from '@auth0/auth0-react/src/auth0-context'
+import React, { createContext, useContext, useState } from 'react'
+import { AuthSynchronizer } from '../../../router/auth-synchronizer'
+import * as MockRouterRoot from '../../../router/root'
+import AuthService from '../../../lib/auth/auth.service'
 
 export const loggedInUserId = 'loggedInUserId'
 export const loggedInUserEmail = 'yann.blanc@example.com'
@@ -52,10 +57,31 @@ export const userYdrisFullName = `${userYdrisFirstName} ${userYdrisLastName}`
 export const getAccessTokenWithPopupMock = jest.fn()
 export const logoutMock = jest.fn()
 
-export const mockAuth0Hook = (role: UserRole = UserRole.Hcp, userId = loggedInUserId) => {
-  (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-    isAuthenticated: true,
-    isLoading: false,
+interface MockAuth0ContextProviderProps {
+  role: UserRole,
+  userId: string,
+  children: React.ReactNode
+}
+
+const MockAuth0Context = createContext<Auth0ContextInterface>({} as Auth0ContextInterface)
+
+const useMockAuth0Hook = (role: UserRole = UserRole.Hcp, userId = loggedInUserId): Auth0ContextInterface => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  const getAccessTokenSilently = (): Promise<unknown> => {
+    setIsAuthenticated(true)
+    setIsLoading(false)
+    return Promise.resolve(null)
+  }
+
+  return {
+    getIdTokenClaims: jest.fn(),
+    handleRedirectCallback: jest.fn(),
+    loginWithPopup: jest.fn(),
+    loginWithRedirect: jest.fn(),
+    isAuthenticated,
+    isLoading,
     user: {
       email: loggedInUserEmail,
       email_verified: true,
@@ -64,6 +90,33 @@ export const mockAuth0Hook = (role: UserRole = UserRole.Hcp, userId = loggedInUs
     },
     getAccessTokenWithPopup: getAccessTokenWithPopupMock,
     logout: logoutMock,
-    getAccessTokenSilently: jest.fn()
-  })
+    //@ts-ignore
+    getAccessTokenSilently: getAccessTokenSilently
+  }
+}
+
+const MockAuth0ContextProvider = (props: MockAuth0ContextProviderProps): JSX.Element => {
+  const context = useMockAuth0Hook(props.role, props.userId)
+  return <MockAuth0Context.Provider value={context}>{props.children}</MockAuth0Context.Provider>
+}
+
+const useMockAuth0 = (): Auth0ContextInterface => {
+  return useContext(MockAuth0Context)
+}
+
+export const mockAuth0Hook = (role: UserRole = UserRole.Hcp, userId = loggedInUserId) => {
+  AuthService.setUser(null)
+  AuthService.setHasUserBeenRetrieved(null)
+  AuthService.setIsAuthenticated(null);
+  (MockRouterRoot.RouterRoot as jest.Mock) = jest.fn().mockImplementation(() => {
+    return <MockAuth0ContextProvider
+      role={role}
+      userId={userId}
+    >
+      <AuthSynchronizer />
+    </MockAuth0ContextProvider>
+  });
+  (auth0Mock.useAuth0 as jest.Mock).mockImplementation(() => {
+    return useMockAuth0()
+  });
 }

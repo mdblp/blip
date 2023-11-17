@@ -41,7 +41,6 @@ import { type HcpProfession } from './models/enums/hcp-profession.enum'
 import { zendeskLogout } from '../zendesk'
 import User from './models/user.model'
 import UserApi from './user.api'
-import { availableLanguageCodes, changeLanguage, getCurrentLang } from '../language'
 import metrics from '../metrics'
 import { type AuthContext } from './models/auth-context.model'
 import { type Preferences } from './models/preferences.model'
@@ -68,18 +67,6 @@ export function AuthContextImpl(): AuthContext {
   const userFromLoader = useRouteLoaderData('user-route') as User
 
   const [user, setUser] = useState<User>(userFromLoader)
-
-  const updateUserLanguage = (user: User): void => {
-    const languageCode = user.preferences?.displayLanguageCode
-    if (languageCode && availableLanguageCodes.includes(languageCode) && languageCode !== getCurrentLang()) {
-      changeLanguage(languageCode)
-    }
-  }
-
-  if (user.role !== UserRole.Unset) {
-    updateUserLanguage(user)
-    metrics.setUser(user)
-  }
 
   const onIdle = (): void => {
     if (isLoggedIn) {

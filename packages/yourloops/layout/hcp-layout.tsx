@@ -27,7 +27,6 @@
 
 import React, { type FunctionComponent } from 'react'
 import { Navigate, Outlet, useLoaderData, useParams } from 'react-router-dom'
-import { PatientsProvider } from '../lib/patient/patients.provider'
 import { DashboardLayout } from './dashboard-layout'
 import { PatientListProvider } from '../lib/providers/patient-list.provider'
 import { Team, TeamContextProvider } from '../lib/team'

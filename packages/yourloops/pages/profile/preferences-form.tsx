@@ -52,6 +52,7 @@ const PreferencesForm: FunctionComponent = () => {
   const { profileForm, updateProfileForm } = useProfilePageState()
   const { classes } = profileFormCommonClasses()
 
+  console.log('IN PREF FORM')
   return (
     <React.Fragment>
       <Box className={classes.categoryLabel}>

@@ -66,6 +66,24 @@ const getLoggedInRoutes = () => {
           if (!teams.length) {
             throw Error('Error when retrieving teams')
           }
+          if (!user.isUserHcp()) {
+            return teams
+          }
+          const localStorageTeamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
+          if (localStorageTeamId) {
+            const isTeamIdValid = teams.some(team => team.id === localStorageTeamId)
+            if (isTeamIdValid) {
+              localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, localStorageTeamId)
+              return teams
+            }
+          }
+          const medicalTeams = teams.filter((team: Team) => team.type === TeamType.medical)
+          if (!medicalTeams.length) {
+            localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, PRIVATE_TEAM_ID)
+            return redirect('private/patients')
+          }
+          const firstTeamId = TeamUtils.sortTeamsByName(medicalTeams)[0].id
+          localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, firstTeamId)
           return teams
         },
         children: [

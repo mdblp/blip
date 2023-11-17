@@ -50,7 +50,6 @@ tssCache.compat = true
 
 export const MainLayout: FC = () => {
   const theme = getTheme()
-
   return (
     <CacheProvider value={muiCache}>
       <TssCacheProvider value={tssCache}>

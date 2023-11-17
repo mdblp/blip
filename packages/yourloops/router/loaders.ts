@@ -32,6 +32,9 @@ import { User } from '../lib/auth'
 import UserApi from '../lib/auth/user.api'
 import { sanitizeBgUnit } from '../lib/auth/user.util'
 import { AppRoute } from '../models/enums/routes.enum'
+import i18next from 'i18next'
+import { availableLanguageCodes, getCurrentLang } from '../lib/language'
+import metrics from '../lib/metrics'
 
 export const retrieveUser = async (user: User | null) => {
   if (!user || AuthService.hasUserBeenRetrieved()) {
@@ -51,6 +54,13 @@ export const retrieveUser = async (user: User | null) => {
   }
   AuthService.setUser(user)
   AuthService.setHasUserBeenRetrieved(true)
+  if (user.role !== UserRole.Unset) {
+    const languageCode = user.preferences?.displayLanguageCode
+    if (languageCode && availableLanguageCodes.includes(languageCode) && languageCode !== getCurrentLang()) {
+      await i18next.changeLanguage()
+      metrics.setUser(user)
+    }
+  }
   return user
 }
 
