@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2021-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,23 +25,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const commonJestConfig = require('../common-jest.config')
-module.exports = {
-  ...commonJestConfig,
+import { useAuth0 } from '@auth0/auth0-react'
+import { zendeskLogout } from '../zendesk'
+import metrics from '../metrics'
+import { IDLE_USER_QUERY_PARAM } from './models/authenticated-user.model'
 
-  // bail: true,
+type UseLogOutReturns = (isIdle?: boolean) => Promise<void>
 
-  displayName: 'yourloops integration',
+export function useLogout(): UseLogOutReturns {
+  const {
+    logout: auth0logout
+  } = useAuth0()
 
-  maxWorkers: 4,
 
-  globalSetup: '<rootDir>/global-setup.js',
+  const getLogoutRedirectUrl = (isIdle = false): string => {
+    const defaultUrl = `${window.location.origin}/login`
 
-  // The glob patterns Jest uses to detect test files
-  testMatch: [
-    '<rootDir>/**/*.spec.tsx'
-  ],
+    if (isIdle) {
+      return `${defaultUrl}?${IDLE_USER_QUERY_PARAM}=true`
+    }
+    return defaultUrl
+  }
 
-  testTimeout: 200000
+  const logout = async (isIdle = false): Promise<void> => {
+    try {
+      zendeskLogout()
+      const redirectUrl = getLogoutRedirectUrl(isIdle)
+      metrics.resetUser()
+      await auth0logout({ logoutParams: { returnTo: redirectUrl } })
+    } catch (err) {
+      console.error('An error happened when logging out', err)
+    }
+  }
+
+  return logout
 }

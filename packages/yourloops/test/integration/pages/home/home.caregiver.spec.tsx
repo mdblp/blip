@@ -28,7 +28,7 @@
 import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi, removeDirectShareMock } from '../../mock/direct-share.api.mock'
-import { patient1AsTeamMember, patient2AsTeamMember } from '../../data/patient.api.data'
+import { patient2AsTeamMember } from '../../data/patient.api.data'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { renderPage } from '../../utils/render'
@@ -191,7 +191,6 @@ describe('Caregiver home page', () => {
     await userEvent.click(removePatientDialog2ConfirmButton)
 
     expect(removeDirectShareMock).toHaveBeenCalledWith(patient2AsTeamMember.userId, loggedInUserId)
-    expect(jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1AsTeamMember])).toHaveBeenCalledTimes(2)
     expect(screen.queryByTestId('remove-direct-share-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You no longer have access to your patient\'s data.')
   })

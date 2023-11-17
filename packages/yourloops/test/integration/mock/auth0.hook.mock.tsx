@@ -55,11 +55,18 @@ export const userYdrisFirstName = 'Ydris'
 export const userYdrisLastName = 'Rebibane'
 export const userYdrisFullName = `${userYdrisFirstName} ${userYdrisLastName}`
 export const getAccessTokenWithPopupMock = jest.fn()
+export const getAccessTokenSilentlyMock = jest.fn().mockRejectedValue(new Error('This error is thrown on purpose to simulate a non logged user'))
 export const logoutMock = jest.fn()
+export const loginWithRedirectMock = jest.fn()
 
 interface MockAuth0ContextProviderProps {
   role: UserRole,
   userId: string,
+  children: React.ReactNode
+}
+
+interface MockAuth0ContextProviderUnloggedProps {
+  error?: Error
   children: React.ReactNode
 }
 
@@ -95,8 +102,30 @@ const useMockAuth0Hook = (role: UserRole = UserRole.Hcp, userId = loggedInUserId
   }
 }
 
+const useMockAuth0HookUnlogged = (error: Error = null): Auth0ContextInterface => {
+  return {
+    error,
+    getIdTokenClaims: jest.fn(),
+    handleRedirectCallback: jest.fn(),
+    loginWithPopup: jest.fn(),
+    loginWithRedirect: loginWithRedirectMock,
+    isAuthenticated: false,
+    isLoading: false,
+    user: undefined,
+    getAccessTokenWithPopup: getAccessTokenWithPopupMock,
+    logout: logoutMock,
+    //@ts-ignore
+    getAccessTokenSilently: getAccessTokenSilentlyMock
+  }
+}
+
 const MockAuth0ContextProvider = (props: MockAuth0ContextProviderProps): JSX.Element => {
   const context = useMockAuth0Hook(props.role, props.userId)
+  return <MockAuth0Context.Provider value={context}>{props.children}</MockAuth0Context.Provider>
+}
+
+const MockAuth0ContextProviderUnlogged = (props: MockAuth0ContextProviderUnloggedProps): JSX.Element => {
+  const context = useMockAuth0HookUnlogged(props.error)
   return <MockAuth0Context.Provider value={context}>{props.children}</MockAuth0Context.Provider>
 }
 
@@ -115,6 +144,20 @@ export const mockAuth0Hook = (role: UserRole = UserRole.Hcp, userId = loggedInUs
     >
       <AuthSynchronizer />
     </MockAuth0ContextProvider>
+  });
+  (auth0Mock.useAuth0 as jest.Mock).mockImplementation(() => {
+    return useMockAuth0()
+  });
+}
+
+export const mockAuth0HookUnlogged = (error: Error = null) => {
+  AuthService.setUser(null)
+  AuthService.setHasUserBeenRetrieved(null)
+  AuthService.setIsAuthenticated(null);
+  (MockRouterRoot.RouterRoot as jest.Mock) = jest.fn().mockImplementation(() => {
+    return <MockAuth0ContextProviderUnlogged error={error}>
+      <AuthSynchronizer />
+    </MockAuth0ContextProviderUnlogged>
   });
   (auth0Mock.useAuth0 as jest.Mock).mockImplementation(() => {
     return useMockAuth0()

@@ -28,8 +28,9 @@
 import axios, { type AxiosError, type AxiosRequestConfig, type AxiosResponse } from 'axios'
 import HttpStatus from './models/enums/http-status.enum'
 import { t } from '../language'
-import { AxiosCacheInstance, setupCache } from 'axios-cache-interceptor'
-import { onFulfilled } from './axios.service'
+import { AxiosCacheInstance } from 'axios-cache-interceptor'
+import { CacheProperties } from 'axios-cache-interceptor/src/cache/cache'
+import { GET_TEAMS_CACHE_ID } from '../team/team.api'
 
 interface Args {
   url: string
@@ -69,10 +70,16 @@ export default class HttpService {
     HttpService.axiosWithCache = axiosCache
   }
 
-  static async get<T>(args: Args): Promise<AxiosResponse<T>> {
+  static async get<T>(args: Args, cacheId: string | null = null): Promise<AxiosResponse<T>> {
     const { url, config } = args
+    const cache = cacheId ? { id: cacheId } : false
+
+    console.log(url)
     try {
-      return await HttpService.axiosWithCache.get<T>(url, { ...config })
+      return await HttpService.axiosWithCache.get<T>(url, {
+        ...config,
+        cache: cache as Partial<CacheProperties<T, never>>
+      })
     } catch (error) {
       throw HttpService.handleError(error as AxiosError)
     }
@@ -81,6 +88,7 @@ export default class HttpService {
   static async post<R, P = undefined>(argsWithPayload: ArgsWithPayload<P>, excludedErrorCodes?: number[]): Promise<AxiosResponse<R>> {
     const { url, payload, config } = argsWithPayload
     try {
+      await HttpService.axiosWithCache.storage.remove(GET_TEAMS_CACHE_ID)
       return await axios.post<R, AxiosResponse<R>, P>(url, payload, { ...config })
     } catch (error) {
       throw HttpService.handleError(error as AxiosError, excludedErrorCodes)
@@ -90,6 +98,7 @@ export default class HttpService {
   static async put<R, P = undefined>(argsWithPayload: ArgsWithPayload<P>): Promise<AxiosResponse<R>> {
     const { url, payload, config } = argsWithPayload
     try {
+      await HttpService.axiosWithCache.storage.remove(GET_TEAMS_CACHE_ID)
       return await axios.put<R, AxiosResponse<R>, P>(url, payload, { ...config })
     } catch (error) {
       throw HttpService.handleError(error as AxiosError)
@@ -99,6 +108,7 @@ export default class HttpService {
   static async delete(args: Args): Promise<AxiosResponse> {
     const { url, config } = args
     try {
+      await HttpService.axiosWithCache.storage.remove(GET_TEAMS_CACHE_ID)
       return await axios.delete(url, { ...config })
     } catch (error) {
       throw HttpService.handleError(error as AxiosError)

@@ -27,6 +27,8 @@
 
 import i18next from 'i18next'
 import { Unit } from 'medical-domain'
+import { zendeskLogout } from '../zendesk'
+import metrics from '../metrics'
 
 const t = i18next.t.bind(i18next)
 

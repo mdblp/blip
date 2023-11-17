@@ -36,12 +36,12 @@ import StepLabel from '@mui/material/StepLabel'
 import Typography from '@mui/material/Typography'
 import SignUpProfileForm from './signup-profile-form'
 import SignUpConsent from './signup-consent'
-import { useAuth } from '../../lib/auth'
 import SignUpAccountSelector from './signup-account-selector'
 import { SignupCompleteMessage } from './signup-complete-message'
+import { useLogout } from '../../lib/auth/logout.hook'
 
 export interface SignUpFormProps {
-  handleBack: () => void
+  handleBack: () => Promise<void>
   handleNext: () => void
 }
 
@@ -57,7 +57,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 export const SignUpStepper: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { classes: { stepper } } = useStyles()
-  const { logout } = useAuth()
+  const logout = useLogout()
   const steps = ['select-account-type', 'consent', 'create-profile']
   const [activeStep, setActiveStep] = useState(0)
 
@@ -65,11 +65,11 @@ export const SignUpStepper: FunctionComponent = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1)
   }
 
-  const handleBack = (): void => {
+  const handleBack = async (): Promise<void> => {
     if (activeStep > 0) {
       setActiveStep((prevActiveStep) => prevActiveStep - 1)
     } else {
-      logout()
+      await logout()
     }
   }
 

@@ -27,7 +27,6 @@
 
 import type User from './user.model'
 import { type HcpProfession } from './enums/hcp-profession.enum'
-import { type SignupForm } from './signup-form.model'
 import { type Preferences } from './preferences.model'
 import { type Profile } from './profile.model'
 import { type Settings } from './settings.model'
@@ -39,9 +38,7 @@ export interface AuthContext {
   flagPatient: (userId: string) => Promise<void> // Flag or un-flag one patient
   getFlagPatients: () => string[]
   isLoggedIn: boolean
-  logout: (isIdle?: boolean) => void
   setFlagPatients: (userIds: string[]) => Promise<void> // Set the flagged patient
-  completeSignup: (signupForm: SignupForm) => Promise<void>
   switchRoleToHCP: (feedbackConsent: boolean, hcpProfession: HcpProfession) => Promise<void> // Switch user role from caregiver to hcp
   updatePreferences: (preferences: Preferences) => Promise<void>
   updateProfile: (profile: Profile) => Promise<void>

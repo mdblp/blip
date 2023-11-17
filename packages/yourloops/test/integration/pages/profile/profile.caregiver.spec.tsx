@@ -68,7 +68,7 @@ describe('Profile page for caregiver', () => {
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
   const changeUserRoleToHcpMock = jest.spyOn(UserApi, 'changeUserRoleToHcp').mockResolvedValue(undefined)
 
-  beforeAll(() => {
+  beforeEach(() => {
     mockAuth0Hook(UserRole.Caregiver)
     mockAuthApi()
     mockUserApi().mockUserDataFetch({ profile, preferences, settings })

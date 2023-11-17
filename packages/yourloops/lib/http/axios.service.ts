@@ -31,6 +31,8 @@ import { HttpHeaderKeys } from './models/enums/http-header-keys.enum'
 import appConfig from '../config/config'
 import { setupCache } from 'axios-cache-interceptor'
 
+const A_MINUTE_IN_MS = 1000 * 60 // ms * s
+
 export const onFulfilled = async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
   if (config.params?.noHeader) {
     delete config.params.noHeader
@@ -50,7 +52,7 @@ export const onFulfilled = async (config: InternalAxiosRequestConfig): Promise<I
 }
 
 function initAxios(): void {
-  const axiosWithCache = setupCache(axios, { cacheTakeover: false })
+  const axiosWithCache = setupCache(axios, { cacheTakeover: false, ttl: A_MINUTE_IN_MS })
   axiosWithCache.defaults.baseURL = appConfig.API_HOST
   axios.defaults.baseURL = appConfig.API_HOST
   /**

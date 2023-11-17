@@ -39,7 +39,7 @@ import AuthService from '../lib/auth/auth.service'
 import { userLoader } from './loaders'
 import { RouterRoot } from './root'
 import { AuthLayout, UserLayout } from '../layout/user-layout'
-import { COMMON_LOGGED_ROUTES, COMMON_ROUTES } from './common-routes'
+import { COMMON_LOGGED_ROUTES, COMMON_LOGGED_ROUTES_NO_HEADER, COMMON_ROUTES } from './common-routes'
 import PatientApi from '../lib/patient/patient.api'
 import SpinningLoader from '../components/loaders/spinning-loader'
 import { PRIVATE_TEAM_ID } from '../lib/team/team.hook'
@@ -55,6 +55,23 @@ const getLoggedInRoutes = () => {
     id: 'user-route',
     children: [
       {
+        path: '',
+        loader: async () => {
+          const user = AuthService.getUser()
+          if (user.isUserHcp()) {
+            return redirect('/teams')
+          }
+          if (user.isUserPatient()) {
+            return redirect('/dashboard')
+          }
+          if (user.isUserCaregiver()) {
+            return redirect('/teams/private/patients')
+          }
+          return null
+        }
+      },
+      ...COMMON_LOGGED_ROUTES_NO_HEADER,
+      {
         element: <UserLayout />,
         id: 'teams-route',
         loader: async () => {
@@ -62,7 +79,7 @@ const getLoggedInRoutes = () => {
           if (user.isUserCaregiver()) {
             return null
           }
-          const teams = await TeamApi.getTeams(AuthService.getUser().id, user.role)
+          const teams = await TeamApi.getTeams(AuthService.getUser().id, user.role, true)
           if (!teams.length) {
             throw Error('Error when retrieving teams')
           }
@@ -129,7 +146,7 @@ const getLoggedInRoutes = () => {
                     }
                     return null
                   }
-                  const teams = await TeamApi.getTeams(AuthService.getUser().id, user.role) //This call should be cached
+                  const teams = await TeamApi.getTeams(AuthService.getUser().id, user.role, true) //This call should be cached
                   if (!teams) {
                     throw Error('Could not retrieve teams')
                   }
@@ -177,7 +194,6 @@ const getLoggedInRoutes = () => {
             loader: () => {
               const user = AuthService.getUser()
               if (!user.isUserPatient()) {
-                console.log('here 3')
                 return redirect(AppUserRoute.NotFound)
               }
               return null

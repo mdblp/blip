@@ -40,12 +40,18 @@ import metrics from '../../lib/metrics'
 import { useSignUpFormState } from './signup-formstate-context'
 import { availableCountries } from '../../lib/language'
 import { HcpProfessionList } from '../../lib/auth/models/enums/hcp-profession.enum'
-import { useAuth } from '../../lib/auth'
+import { SignupForm } from '../../lib/auth'
 import { useAlert } from '../../components/utils/snackbar'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
 import { type SignUpFormProps } from './signup-stepper'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { SignupFormKey } from './models/enums/signup-form-key.enum'
+import { Profile } from '../../lib/auth/models/profile.model'
+import { Preferences } from '../../lib/auth/models/preferences.model'
+import { Settings } from '../../lib/auth/models/settings.model'
+import UserApi from '../../lib/auth/user.api'
+import AuthService from '../../lib/auth/auth.service'
+import { useAuth0 } from '@auth0/auth0-react'
 
 interface Errors {
   firstName: boolean
@@ -55,7 +61,7 @@ interface Errors {
 }
 
 const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
-  const { completeSignup } = useAuth()
+  const { user: auth0user, getAccessTokenWithPopup } = useAuth0()
   const alert = useAlert()
   const { t } = useTranslation('yourloops')
   const { signupForm, updateForm } = useSignUpFormState()
@@ -103,6 +109,46 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
     return !err
   }
 
+  const completeSignup = async (signupForm: SignupForm): Promise<void> => {
+    const now = new Date().toISOString()
+    const profile: Profile = {
+      email: auth0user.email,
+      fullName: `${signupForm.profileFirstname} ${signupForm.profileLastname}`,
+      firstName: signupForm.profileFirstname,
+      lastName: signupForm.profileLastname,
+      termsOfUse: { acceptanceTimestamp: now, isAccepted: signupForm.terms },
+      privacyPolicy: { acceptanceTimestamp: now, isAccepted: signupForm.privacyPolicy }
+    }
+    if (signupForm.accountRole === UserRole.Hcp) {
+      profile.contactConsent = { acceptanceTimestamp: now, isAccepted: signupForm.feedback }
+      profile.hcpProfession = signupForm.hcpProfession
+      profile.hcpConfirmAck = { acceptanceTimestamp: now, isAccepted: signupForm.hcpConfirmAck }
+    }
+    const preferences: Preferences = { displayLanguageCode: signupForm.preferencesLanguage }
+    const settings: Settings = { country: signupForm.profileCountry }
+
+    const user = AuthService.getUser()
+
+    await UserApi.completeUserSignup(user.id, {
+      email: auth0user.email,
+      role: signupForm.accountRole,
+      preferences,
+      profile,
+      settings
+    })
+
+    await refreshToken() // Refreshing access token to get the new role in it
+
+    user.role = signupForm.accountRole
+    user.preferences = preferences
+    user.profile = profile
+    user.settings = settings
+  }
+
+  const refreshToken = async (): Promise<void> => {
+    await getAccessTokenWithPopup({ authorizationParams: { ignoreCache: true } })
+  }
+
   const onFinishSignup = async (): Promise<void> => {
     if (validateFirstname() && validateLastname() && validateCountry() && validateHcpProfession()) {
       try {
@@ -132,7 +178,9 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         required
         error={errors.firstName}
         onBlur={validateFirstname}
-        onChange={event => { updateForm(SignupFormKey.ProfileFirstname, event.target.value) }}
+        onChange={event => {
+          updateForm(SignupFormKey.ProfileFirstname, event.target.value)
+        }}
         helperText={errors.firstName && t('required-field')}
       />
       <TextField
@@ -144,7 +192,9 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         required
         error={errors.lastName}
         onBlur={validateLastname}
-        onChange={event => { updateForm(SignupFormKey.ProfileLastname, event.target.value) }}
+        onChange={event => {
+          updateForm(SignupFormKey.ProfileLastname, event.target.value)
+        }}
         helperText={errors.lastName && t('required-field')}
       />
       <FormControl
@@ -160,7 +210,9 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
           data-testid="country-selector"
           value={signupForm.profileCountry}
           onBlur={validateCountry}
-          onChange={event => { updateForm(SignupFormKey.ProfileCountry, event.target.value) }}
+          onChange={event => {
+            updateForm(SignupFormKey.ProfileCountry, event.target.value)
+          }}
         >
           {availableCountries.map((item) => (
             <MenuItem id={`signup-country-menuitem-${item.code}`} key={item.code} value={item.code}>
@@ -184,7 +236,9 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
             data-testid="hcp-profession-selector"
             value={signupForm.hcpProfession ?? ''}
             onBlur={validateHcpProfession}
-            onChange={event => { updateForm(SignupFormKey.HcpProfession, event.target.value) }}
+            onChange={event => {
+              updateForm(SignupFormKey.HcpProfession, event.target.value)
+            }}
           >
             {HcpProfessionList.map((item) => (
               <MenuItem id={`signup-hcp-profession-menuitem-${item}`} key={item} value={item}>

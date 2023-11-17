@@ -49,6 +49,7 @@ import { makeStyles } from 'tss-react/mui'
 import { type Theme } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
 import { setPageTitle } from '../../lib/utils'
+import { useLogout } from '../../lib/auth/logout.hook'
 
 const classes = makeStyles()((theme: Theme) => ({
   appBar: {
@@ -66,7 +67,7 @@ export const VerifyEmailPage: FunctionComponent = () => {
   const { classes: { appBar, desktopLogo } } = classes()
   const { loginWithRedirect, getAccessTokenSilently } = useAuth0()
   const { t } = useTranslation()
-  const { logout } = useAuth()
+  const logout = useLogout()
   const alert = useAlert()
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(true)
   const navigate = useNavigate()
@@ -75,14 +76,14 @@ export const VerifyEmailPage: FunctionComponent = () => {
     window.open(config.CONTACT_SUPPORT_WEB_URL, '_blank')
   }
 
-  const logoutUser = (): void => {
-    logout()
+  const logoutUser = async (): Promise<void> => {
+    await logout()
   }
 
   const goToAppHome = async (): Promise<void> => {
     try {
       if (!isUserLoggedIn) {
-        navigate('/')
+        navigate('/login')
         return
       }
       await getAccessTokenSilently()

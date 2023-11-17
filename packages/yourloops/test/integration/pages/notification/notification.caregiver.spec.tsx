@@ -54,7 +54,7 @@ describe('Notification page for caregiver', () => {
     invitation: invitationDirectShare
   }
 
-  beforeAll(() => {
+  beforeEach(() => {
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockAuth0Hook(UserRole.Caregiver)
     mockTeamAPI()

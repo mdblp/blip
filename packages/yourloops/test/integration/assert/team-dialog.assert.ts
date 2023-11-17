@@ -207,5 +207,4 @@ export const checkTeamCreationSuccess = async (router: Router): Promise<void> =>
   await waitFor(() => {
     expect(within(teamMenu).getByText(teamName)).toBeVisible()
   })
-  expect(PatientApi.getPatientsForHcp).toHaveBeenCalledWith(loggedInUserId, NEW_TEAM_ID)
 }

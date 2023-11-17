@@ -58,7 +58,7 @@ describe('Signup stepper as caregiver', () => {
     termsOfUse: { isAccepted: true, acceptanceTimestamp: expect.any(String) }
   }
 
-  beforeAll(() => {
+  beforeEach(() => {
     mockAuth0Hook(UserRole.Unset)
   })
 

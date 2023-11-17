@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
+import React, { type FC, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 
 import { ThemeProvider } from '@mui/material/styles'
@@ -34,9 +34,10 @@ import { GlobalStyles, TssCacheProvider } from 'tss-react'
 import createCache from '@emotion/cache'
 import CssBaseline from '@mui/material/CssBaseline'
 import { getTheme } from '../components/theme'
-import { DefaultSnackbarContext, SnackbarContextProvider } from '../components/utils/snackbar'
+import { DefaultSnackbarContext, SnackbarContextProvider, useAlert } from '../components/utils/snackbar'
 import { Footer } from '../components/footer/footer'
 import Box from '@mui/material/Box'
+import { useAuth0 } from '@auth0/auth0-react'
 
 const muiCache = createCache({
   key: 'mui',
@@ -48,6 +49,20 @@ const tssCache = createCache({
 })
 tssCache.compat = true
 
+const AuthError: FC = () => {
+  const { error } = useAuth0()
+  const { error: displayError } = useAlert()
+
+  useEffect(() => {
+    if (error) {
+      displayError(error.message)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]) // Including displayError creates an infinite loop
+
+  return null
+}
+
 export const MainLayout: FC = () => {
   const theme = getTheme()
   return (
@@ -57,6 +72,7 @@ export const MainLayout: FC = () => {
           <CssBaseline />
           <GlobalStyles styles={{ body: { backgroundColor: 'var(--body-background-color)' } }} />
           <SnackbarContextProvider context={DefaultSnackbarContext}>
+            <AuthError />
             <Box>
               <Outlet />
             </Box>

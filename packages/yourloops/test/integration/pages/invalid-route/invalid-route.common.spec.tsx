@@ -40,12 +40,15 @@ describe('Invalid Route', () => {
   const lastName = 'lastName'
 
   beforeAll(() => {
-    mockAuth0Hook()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockNotificationAPI()
     mockTeamAPI()
     mockPatientApiForHcp()
     mockDirectShareApi()
+  })
+
+  beforeEach(() => {
+    mockAuth0Hook()
   })
 
   it('should render correct components when navigating to an unknown route and redirect to \'/\' when clicking on home link', async () => {

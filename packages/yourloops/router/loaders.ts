@@ -71,17 +71,11 @@ export const checkUserHasARole = (user: User | null) => {
   return null
 }
 
-export const checkUserIsNotPatient = (user: User) => {
-  if (user.role === UserRole.Patient) {
-    return redirect('/dashboard')
-  }
-  return null
-}
-
 export const checkFirstSignup = (user: User | null) => {
   if (user && user.isFirstLogin()) {
     return redirect(AppRoute.CompleteSignup)
   }
+  return null
 }
 
 export const checkConsent = (user: User | null) => {
@@ -91,12 +85,14 @@ export const checkConsent = (user: User | null) => {
   if (user && user.hasToRenewConsent()) {
     return redirect(AppRoute.RenewConsent)
   }
+  return null
 }
 
 export const checkTraining = (user: User | null) => {
   if (user && user.hasToDisplayTrainingInfoPage()) {
     return redirect(AppRoute.NewConsent)
   }
+  return null
 }
 
 export const userLoader = async ({ request }) => {
@@ -119,6 +115,10 @@ export const userLoader = async ({ request }) => {
   const redirectFirstConsent = checkConsent(user)
   if (redirectFirstConsent) {
     return redirectFirstConsent
+  }
+  const redirectTraining = checkTraining(user)
+  if (redirectTraining) {
+    return redirectTraining
   }
   return userRetrieved
 }

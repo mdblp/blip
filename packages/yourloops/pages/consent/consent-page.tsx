@@ -29,7 +29,7 @@ import React, { type FC, useMemo, useState } from 'react'
 import _ from 'lodash'
 import bows from 'bows'
 import { useTranslation } from 'react-i18next'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useRouteLoaderData } from 'react-router-dom'
 
 import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
@@ -47,6 +47,8 @@ import { useAuth } from '../../lib/auth'
 import appConfig from '../../lib/config/config'
 import { type Profile } from '../../lib/auth/models/profile.model'
 import { ConsentForm } from '../../components/consents'
+import { useLogout } from '../../lib/auth/logout.hook'
+import User from '../../lib/auth/models/user.model'
 
 interface ConsentProps {
   messageKey: string
@@ -90,6 +92,7 @@ export const ConsentPage: FC<ConsentProps> = (props) => {
   const navigate = useNavigate()
   const location = useLocation()
   const auth = useAuth()
+  const logout = useLogout()
   const { classes } = style()
   const [policyAccepted, setPolicyAccepted] = useState(false)
   const [termsAccepted, setTermsAccepted] = useState(false)
@@ -107,7 +110,7 @@ export const ConsentPage: FC<ConsentProps> = (props) => {
 
     const onDecline = (): void => {
       try {
-        auth.logout()
+        logout()
       } catch (reason) {
         console.error('logout', reason)
       }

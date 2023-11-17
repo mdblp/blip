@@ -33,50 +33,44 @@ import React, {
   useMemo,
   useState
 } from 'react'
-import bows from 'bows'
 import _ from 'lodash'
 
 import { useAuth0 } from '@auth0/auth0-react'
 import { type HcpProfession } from './models/enums/hcp-profession.enum'
-import { zendeskLogout } from '../zendesk'
 import User from './models/user.model'
 import UserApi from './user.api'
-import metrics from '../metrics'
 import { type AuthContext } from './models/auth-context.model'
 import { type Preferences } from './models/preferences.model'
 import { type Profile } from './models/profile.model'
 import { type Settings } from './models/settings.model'
 import { UserRole } from './models/enums/user-role.enum'
-import { IDLE_USER_QUERY_PARAM } from './models/authenticated-user.model'
-import { type SignupForm } from './models/signup-form.model'
 import { type ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
 import { useRouteLoaderData } from 'react-router-dom'
 import { useIdleTimer } from 'react-idle-timer'
 import { ConfigService } from '../config/config.service'
+import { useLogout } from './logout.hook'
 
 const ReactAuthContext = createContext({} as AuthContext)
-const log = bows('AuthHook')
 
 export function AuthContextImpl(): AuthContext {
   const {
-    logout: auth0logout,
-    user: auth0user,
     isAuthenticated,
     getAccessTokenWithPopup
   } = useAuth0()
+  const logout = useLogout()
   const userFromLoader = useRouteLoaderData('user-route') as User
 
   const [user, setUser] = useState<User>(userFromLoader)
 
-  const onIdle = (): void => {
+  const isLoggedIn = useMemo<boolean>(() => isAuthenticated && !!user, [isAuthenticated, user])
+
+  const onIdle = async (): Promise<void> => {
     if (isLoggedIn) {
-      logout(true)
+      await logout(true)
     }
   }
 
   useIdleTimer({ timeout: ConfigService.getIdleTimeout(), onIdle })
-
-  const isLoggedIn = useMemo<boolean>(() => isAuthenticated && !!user, [isAuthenticated, user])
 
   const getUser = (): User => {
     if (!user) {
@@ -161,63 +155,6 @@ export function AuthContextImpl(): AuthContext {
     refreshUser()
   }
 
-
-  const getLogoutRedirectUrl = (isIdle = false): string => {
-    const defaultUrl = `${window.location.origin}/login`
-
-    if (isIdle) {
-      return `${defaultUrl}?${IDLE_USER_QUERY_PARAM}=true`
-    }
-    return defaultUrl
-  }
-
-  const logout = (isIdle = false): void => {
-    try {
-      zendeskLogout()
-      const redirectUrl = getLogoutRedirectUrl(isIdle)
-      auth0logout({ logoutParams: { returnTo: redirectUrl } })
-      metrics.resetUser()
-    } catch (err) {
-      log.error('logout', err)
-    }
-  }
-
-  const completeSignup = async (signupForm: SignupForm): Promise<void> => {
-    const now = new Date().toISOString()
-    const profile: Profile = {
-      email: auth0user.email,
-      fullName: `${signupForm.profileFirstname} ${signupForm.profileLastname}`,
-      firstName: signupForm.profileFirstname,
-      lastName: signupForm.profileLastname,
-      termsOfUse: { acceptanceTimestamp: now, isAccepted: signupForm.terms },
-      privacyPolicy: { acceptanceTimestamp: now, isAccepted: signupForm.privacyPolicy }
-    }
-    if (signupForm.accountRole === UserRole.Hcp) {
-      profile.contactConsent = { acceptanceTimestamp: now, isAccepted: signupForm.feedback }
-      profile.hcpProfession = signupForm.hcpProfession
-      profile.hcpConfirmAck = { acceptanceTimestamp: now, isAccepted: signupForm.hcpConfirmAck }
-    }
-    const preferences: Preferences = { displayLanguageCode: signupForm.preferencesLanguage }
-    const settings: Settings = { country: signupForm.profileCountry }
-
-    const user = getUser()
-
-    await UserApi.completeUserSignup(user.id, {
-      email: auth0user.email,
-      role: signupForm.accountRole,
-      preferences,
-      profile,
-      settings
-    })
-
-    await refreshToken() // Refreshing access token to get the new role in it
-
-    user.role = signupForm.accountRole
-    user.preferences = preferences
-    user.profile = profile
-    user.settings = settings
-  }
-
   const refreshToken = async (): Promise<void> => {
     await getAccessTokenWithPopup({ authorizationParams: { ignoreCache: true } })
   }
@@ -228,8 +165,6 @@ export function AuthContextImpl(): AuthContext {
     updateProfile,
     updatePreferences,
     updateSettings,
-    logout,
-    completeSignup,
     flagPatient,
     setFlagPatients,
     getFlagPatients,

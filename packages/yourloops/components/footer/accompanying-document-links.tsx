@@ -35,7 +35,7 @@ import { footerStyle } from './footer'
 import User from '../../lib/auth/models/user.model'
 
 const AccompanyingDocumentLinks: FunctionComponent = () => {
-  const userFromLoader = useRouteLoaderData('user-route') as User
+  const user = useRouteLoaderData('user-route') as User
   const { t } = useTranslation('yourloops')
   const { classes: { link, separator } } = footerStyle()
 
@@ -54,7 +54,7 @@ const AccompanyingDocumentLinks: FunctionComponent = () => {
       <Link
         data-testid="training-link"
         target="_blank"
-        href={diabeloopExternalUrls.training(userFromLoader?.role)}
+        href={diabeloopExternalUrls.training(user?.role)}
         rel="nofollow"
         className={link}
       >

@@ -36,7 +36,7 @@ import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-
 import { buildPatient, buildTeamMemberFromPatient } from '../../data/patient-builder.data'
 
 describe('Training page when new training available', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     const profile = {
       email: 'test@it.com',
       firstName: 'Alain',
@@ -61,6 +61,7 @@ describe('Training page when new training available', () => {
       expect(router.state.location.pathname).toEqual('/training')
     })
 
+    expect(await screen.findByTestId('training-container')).toBeVisible()
     expect(screen.getByText('New training available, please read what\'s new before continuing on YourLoops.')).toBeVisible()
     const openButton = screen.getByText('Open training')
     expect(openButton).toBeEnabled()
@@ -77,7 +78,7 @@ describe('Training page when new training available', () => {
     expect(confirmButton).toBeEnabled()
     await userEvent.click(confirmButton)
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/new-consent')
+      expect(router.state.location.pathname).toEqual('/dashboard')
     })
   })
 })

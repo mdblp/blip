@@ -46,6 +46,8 @@ import { patient2AsTeamMember } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { testDailyViewTooltipsAndValuesMgdl } from '../../../use-cases/patient-data-visualisation'
+import * as auth0Mock from '@auth0/auth0-react'
+import { loginWithRedirectMock } from '../../../mock/auth0.hook.mock'
 
 describe('Daily view for anyone', () => {
   const dailyRoute = AppUserRoute.Daily

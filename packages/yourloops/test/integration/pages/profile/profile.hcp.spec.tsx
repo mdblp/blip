@@ -69,13 +69,16 @@ describe('Profile page for hcp', () => {
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
 
   beforeAll(() => {
-    mockAuth0Hook()
     mockAuthApi()
     mockUserApi().mockUserDataFetch({ profile, preferences, settings })
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
     mockPatientApiForHcp()
+  })
+
+  beforeEach(() => {
+    mockAuth0Hook()
   })
 
   it('should render profile page for a French HCP and be able to edit his profile and change his password', async () => {

@@ -25,25 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as auth0Mock from '@auth0/auth0-react'
 import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import userEvent from '@testing-library/user-event'
 import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
+import { loginWithRedirectMock, mockAuth0HookUnlogged } from '../../mock/auth0.hook.mock'
 
 jest.mock('@mui/material/useMediaQuery', () => {
   return () => true
 })
 
 describe('Login page mobile view', () => {
-  const loginWithRedirectMock = jest.fn()
-  beforeAll(() => {
-    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-      isAuthenticated: false,
-      isLoading: false,
-      user: undefined,
-      loginWithRedirect: loginWithRedirectMock
-    })
+  beforeEach(() => {
+    mockAuth0HookUnlogged()
   })
 
   it('should render entire page with correct elements', async () => {

@@ -31,16 +31,11 @@ import { renderPage } from '../../utils/render'
 import userEvent from '@testing-library/user-event'
 import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../../../lib/auth/models/auth0-error.model'
 import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
+import { loginWithRedirectMock, mockAuth0HookUnlogged } from '../../mock/auth0.hook.mock'
 
 describe('Login page desktop view', () => {
-  const loginWithRedirectMock = jest.fn()
-  beforeAll(() => {
-    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-      isAuthenticated: false,
-      isLoading: false,
-      user: undefined,
-      loginWithRedirect: loginWithRedirectMock
-    })
+  beforeEach(() => {
+    mockAuth0HookUnlogged()
   })
 
   it('should render entire page with correct elements', async () => {
@@ -101,23 +96,15 @@ describe('Login page desktop view', () => {
   })
 
   it('should show a snackbar alert if auth0 returns an error', async () => {
-    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-      error: Error('Hi there, i\'m an error !!')
-    })
+    mockAuth0HookUnlogged(Error('Hi there, i\'m an error !!'))
+
     renderPage('/')
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Hi there, i\'m an error !!')
   })
 
   it('should display an alert if the user is inactive', async () => {
-    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-      isAuthenticated: false,
-      isLoading: false,
-      user: undefined,
-      loginWithRedirect: loginWithRedirectMock
-    })
-
     renderPage('/login?idle=true')
 
-    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Your session has expired due to inactivity. Please login again.')
+    expect(await screen.findByTestId('alert-snackbar')).toHaveTextContent('Your session has expired due to inactivity. Please login again.')
   })
 })

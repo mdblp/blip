@@ -63,7 +63,7 @@ describe('Signup stepper as hcp', () => {
     hcpProfession: HcpProfession.nurse
   }
 
-  beforeAll(() => {
+  beforeEach(() => {
     mockAuth0Hook(UserRole.Unset)
   })
 

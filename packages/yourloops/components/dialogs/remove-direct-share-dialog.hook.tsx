@@ -57,9 +57,6 @@ const useRemoveDirectShareDialog = (onClose: OnCloseRemoveDirectShareDialog): Re
         const viewerId = isCurrentUserCaregiver ? currentUser.id : userToRemove.id
 
         await DirectShareApi.removeDirectShare(patientId, viewerId)
-        if (isCurrentUserCaregiver) {
-          patientsHook.refresh()
-        }
       }
 
       const successAlertKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-success' : 'modal-patient-remove-caregiver-success'

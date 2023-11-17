@@ -57,6 +57,7 @@ import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { getUserName } from '../../lib/auth/user.util'
+import { useLogout } from '../../lib/auth/logout.hook'
 
 const classes = makeStyles()((theme: Theme) => ({
   typography: {
@@ -74,7 +75,8 @@ const MENU_MAX_WIDTH_PX = 250
 
 function UserMenu(): JSX.Element {
   const { t } = useTranslation('yourloops')
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
+  const logout = useLogout()
   const { classes: { menu, typography } } = classes()
   const navigate = useNavigate()
   const theme = useTheme()
@@ -112,8 +114,8 @@ function UserMenu(): JSX.Element {
     closeMenu()
   }
 
-  const onClickLogout = (): void => {
-    logout()
+  const onClickLogout = async (): Promise<void> => {
+    await logout()
     closeMenu()
   }
 

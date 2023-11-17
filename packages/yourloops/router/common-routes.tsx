@@ -43,7 +43,7 @@ import React from 'react'
 export const COMMON_ROUTES = [
   {
     path: AppRoute.ProductLabelling,
-    loader: async () => {
+    loader: () => {
       const user = AuthService.getUser()
       const redirectToSignup = checkFirstSignup(user)
       if (redirectToSignup) {
@@ -59,7 +59,7 @@ export const COMMON_ROUTES = [
   },
   {
     path: AppRoute.Login,
-    loader: async () => {
+    loader: () => {
       const isAuthenticated = AuthService.isAuthenticated()
       const user = AuthService.getUser()
       if (!isAuthenticated) {
@@ -92,36 +92,8 @@ export const COMMON_ROUTES = [
   },
   { path: AppRoute.CompleteSignup, element: <CompleteSignUpPage /> },
   {
-    path: AppRoute.RenewConsent,
-    loader: async () => {
-      const user = AuthService.getUser()
-      return checkFirstSignup(user)
-    },
-    element: <ConsentPage messageKey="consent-renew-message" />
-  },
-  {
-    path: AppRoute.NewConsent,
-    loader: async () => {
-      const user = AuthService.getUser()
-      return checkFirstSignup(user)
-    },
-    element: <ConsentPage messageKey="consent-welcome-message" />
-  },
-  {
-    path: AppRoute.Training,
-    loader: async () => {
-      const user = AuthService.getUser()
-      const redirectToSignup = checkFirstSignup(user)
-      if (redirectToSignup) {
-        return redirectToSignup
-      }
-      return checkConsent(user)
-    },
-    element: <TrainingPage />
-  },
-  {
     path: AppRoute.VerifyEmail,
-    loader: async () => {
+    loader: () => {
       const user = AuthService.getUser()
       const redirectToSignup = checkFirstSignup(user)
       if (redirectToSignup) {
@@ -140,5 +112,70 @@ export const COMMON_ROUTES = [
 export const COMMON_LOGGED_ROUTES = [
   { path: AppUserRoute.Preferences, element: <ProfilePage /> },
   { path: AppUserRoute.Notifications, element: <NotificationsPage /> },
+  {
+    path: AppRoute.RenewConsent,
+    loader: () => {
+      const user = AuthService.getUser()
+      return checkFirstSignup(user)
+    },
+    element: <ConsentPage messageKey="consent-renew-message" />
+  },
+  {
+    path: AppRoute.NewConsent,
+    loader: () => {
+      const user = AuthService.getUser()
+      return checkFirstSignup(user)
+    },
+    element: <ConsentPage messageKey="consent-welcome-message" />
+  },
+  {
+    path: AppRoute.Training,
+    loader: () => {
+      const user = AuthService.getUser()
+      if (user && user.hasToDisplayTrainingInfoPage()) {
+        return null
+      }
+      const redirectToSignup = checkFirstSignup(user)
+      if (redirectToSignup) {
+        return redirectToSignup
+      }
+      return checkConsent(user)
+    },
+    element: <TrainingPage />
+  },
   { path: AppUserRoute.NotFound, element: <InvalidRoute /> }
+]
+
+export const COMMON_LOGGED_ROUTES_NO_HEADER = [
+  {
+    path: AppRoute.RenewConsent,
+    loader: () => {
+      const user = AuthService.getUser()
+      return checkFirstSignup(user)
+    },
+    element: <ConsentPage messageKey="consent-renew-message" />
+  },
+  {
+    path: AppRoute.NewConsent,
+    loader: () => {
+      const user = AuthService.getUser()
+      return checkFirstSignup(user)
+    },
+    element: <ConsentPage messageKey="consent-welcome-message" />
+  },
+  {
+    path: AppRoute.Training,
+    loader: () => {
+      const user = AuthService.getUser()
+      if (user && user.hasToDisplayTrainingInfoPage()) {
+        return null
+      }
+      const redirectToSignup = checkFirstSignup(user)
+      if (redirectToSignup) {
+        return redirectToSignup
+      }
+      return checkConsent(user)
+    },
+    element: <TrainingPage />
+  }
 ]

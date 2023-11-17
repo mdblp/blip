@@ -25,28 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as auth0Mock from '@auth0/auth0-react'
-import { getAccessTokenWithPopupMock, logoutMock } from '../../mock/auth0.hook.mock'
+import { getAccessTokenSilentlyMock, logoutMock, mockAuth0HookUnlogged } from '../../mock/auth0.hook.mock'
 import { renderPage } from '../../utils/render'
 import { screen, waitFor, within } from '@testing-library/react'
 import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
 import userEvent from '@testing-library/user-event'
-import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../../../lib/auth/models/auth0-error.model'
 import { AppRoute } from '../../../../models/enums/routes.enum'
+import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../../../lib/auth/models/auth0-error.model'
 
 describe('Verify email page', () => {
   it('should display a description of the email verification process with options', async () => {
-    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-      isAuthenticated: false,
-      isLoading: false,
-      user: null,
-      getAccessTokenWithPopup: getAccessTokenWithPopupMock,
-      logout: logoutMock,
-      getAccessTokenSilently: jest.fn().mockRejectedValue({ error_description: AUTH0_ERROR_EMAIL_NOT_VERIFIED })
-    })
+    mockAuth0HookUnlogged()
+    getAccessTokenSilentlyMock.mockRejectedValue({ error_description: AUTH0_ERROR_EMAIL_NOT_VERIFIED })
     window.open = jest.fn()
 
     const router = renderPage(AppRoute.VerifyEmail)
+
+    expect(await screen.findByTestId('footer')).toBeVisible()
+
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual(AppRoute.VerifyEmail)
     })

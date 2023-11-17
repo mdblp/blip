@@ -86,7 +86,7 @@ export const ProfilePage: FunctionComponent = () => {
             <ProfileForm />
           </ProfilePageContextProvider>
 
-          {UserRole.Caregiver === user.role &&
+          {user.isUserCaregiver() &&
             <Link
               data-testid="switch-role-link"
               component="button"

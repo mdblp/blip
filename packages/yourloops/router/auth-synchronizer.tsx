@@ -52,7 +52,7 @@ export const AuthSynchronizer: FC = () => {
   }
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated && pathname !== AppRoute.VerifyEmail) {
       getAccessTokenSilently()
         .then(() => {
           AuthService.setIsAuthenticated(true)
@@ -63,7 +63,7 @@ export const AuthSynchronizer: FC = () => {
         })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -74,6 +74,7 @@ export const AuthSynchronizer: FC = () => {
   }, [getAccessTokenSilently, isAuthenticated])
 
   useEffect(() => {
+    console.log(isAuthenticated)
     if (!isAuthenticated) {
       return
     }
@@ -95,6 +96,7 @@ export const AuthSynchronizer: FC = () => {
       navigate('/teams/private/patients')
       return
     }
+    navigate(AppRoute.CompleteSignup)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]) // This is necessary to avoid useless renders and extra APIs calls
 

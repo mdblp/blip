@@ -75,11 +75,14 @@ const PATIENTS_ROUTE = 'patients'
 export const PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE = 'patient-already-invited-in-team'
 const PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
 
+export const GET_TEAMS_CACHE_ID= 'get-teams'
+
 export default class TeamApi {
-  static async getTeams(userId: string, userRole: UserRole): Promise<Team[]> {
+  static async getTeams(userId: string, userRole: UserRole, useCache: boolean = false): Promise<Team[]> {
     const url = TeamApi.getTeamsApiUrl(userId, userRole)
+    const cacheId = useCache ? GET_TEAMS_CACHE_ID : null
     try {
-      const { data } = await HttpService.get<Team[]>({ url })
+      const { data } = await HttpService.get<Team[]>({ url }, cacheId)
       return data
     } catch (err) {
       const error = err as Error

@@ -79,11 +79,11 @@ export const checkRemoveMember = async () => {
   expect(confirmDialog).toHaveTextContent('Remove member from teamRemove the member Tim Canu from the team A - MyThirdTeam - to be deleted?CancelConfirm')
 
   jest.spyOn(TeamApi, 'removeMember').mockResolvedValueOnce(null)
-  expect(TeamApi.getTeams).toHaveBeenCalledTimes(1)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
   const confirmButton = within(confirmDialog).getByRole('button', { name: 'Confirm' })
   await userEvent.click(confirmButton)
   expect(TeamApi.removeMember).toHaveBeenCalledWith({ teamId: myThirdTeamId, userId: userTimId, email: userTimEmail })
-  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(4)
 
   const cancelButton = within(confirmDialog).getByRole('button', { name: 'Cancel' })
   await userEvent.click(cancelButton) //Surprisingly the dialog is still present (legacy code from component?)
@@ -112,7 +112,7 @@ export const checkGiveAdminRole = async () => {
   expect(roleCheckBoxNotAdmin).toHaveProperty('checked', false)
 
   jest.spyOn(TeamApi, 'changeMemberRole').mockResolvedValueOnce(null)
-  expect(TeamApi.getTeams).toHaveBeenCalledTimes(3)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
   await userEvent.click(roleCheckBoxNotAdmin)
   expect(TeamApi.changeMemberRole).toHaveBeenCalledWith({
     teamId: myThirdTeamId,
@@ -130,7 +130,7 @@ export const checkRemoveAdminRole = async () => {
   expect(roleCheckBoxNotAdmin).toHaveProperty('checked', true)
 
   jest.spyOn(TeamApi, 'changeMemberRole').mockResolvedValueOnce(null)
-  expect(TeamApi.getTeams).toHaveBeenCalledTimes(3)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
   await userEvent.click(roleCheckBoxNotAdmin)
   expect(TeamApi.changeMemberRole).toHaveBeenCalledWith({
     teamId: myFirstTeamId,
@@ -158,11 +158,11 @@ export const checkDeleteTeam = async () => {
   expect(confirmDialog).toHaveTextContent('Leave and delete a care teamMySecondTeamSince you are the only member in this team, MySecondTeam will be permanently deleted if you leave it.You will no longer have access to your patients data. This action can\'t be undone.CancelLeave and delete team')
 
   jest.spyOn(TeamApi, 'deleteTeam').mockResolvedValueOnce(null)
-  expect(TeamApi.getTeams).toHaveBeenCalledTimes(1)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
   const deleteTeambutton = within(confirmDialog).getByRole('button', { name: 'Leave and delete team' })
   await userEvent.click(deleteTeambutton)
   expect(TeamApi.deleteTeam).toHaveBeenCalledWith(mySecondTeamId)
-  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(6)
 }
 
 export const checkLeaveTeamHcp = async () => {
@@ -173,11 +173,11 @@ export const checkLeaveTeamHcp = async () => {
   expect(confirmDialog).toHaveTextContent('Leave a care teamMyFirstTeamAre you sure you want to leave this care team?You will no longer have access to your patients data.CancelLeave team')
 
   jest.spyOn(TeamApi, 'leaveTeam').mockResolvedValueOnce(null)
-  expect(TeamApi.getTeams).toHaveBeenCalledTimes(1)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
   const leaveTeambutton = within(confirmDialog).getByRole('button', { name: 'Leave team' })
   await userEvent.click(leaveTeambutton)
   expect(TeamApi.leaveTeam).toHaveBeenCalledWith(loggedInUserId, myFirstTeamId)
-  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(6)
 }
 
 export const checkLeaveTeamPatient = async () => {
@@ -188,11 +188,11 @@ export const checkLeaveTeamPatient = async () => {
   expect(confirmDialog).toHaveTextContent('Leave a care teamMyFirstTeamAre you sure you want to leave this care team?CancelLeave team')
 
   jest.spyOn(PatientApi, 'removePatient').mockResolvedValueOnce(null)
-  expect(TeamApi.getTeams).toHaveBeenCalledTimes(1)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
   const leaveTeambutton = within(confirmDialog).getByRole('button', { name: 'Leave team' })
   await userEvent.click(leaveTeambutton)
   expect(PatientApi.removePatient).toHaveBeenCalledWith(myFirstTeamId, patient1Id)
-  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(5)
 }
 
 export const checkCareTeamMembers = () => {

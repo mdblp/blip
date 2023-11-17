@@ -25,21 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as auth0Mock from '@auth0/auth0-react'
 import userEvent from '@testing-library/user-event'
 import { act, screen, waitFor } from '@testing-library/react'
 import i18n from 'i18next'
 import { renderPage } from '../../utils/render'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
+import { mockAuth0HookUnlogged } from '../../mock/auth0.hook.mock'
 
 describe('Product labelling page', () => {
-  beforeAll(() => {
-    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-      isAuthenticated: false,
-      isLoading: false,
-      user: undefined
-    })
+  beforeEach(() => {
+    mockAuth0HookUnlogged(jest.fn())
   })
 
   it('should render product labelling with the right selected language and version', async () => {
