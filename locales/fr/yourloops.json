@@ -117,7 +117,7 @@
   "avg-daily-declared-carbs": "Moy. quoti. glucides déclarés",
   "avg-daily-estimated-carbs": "Moy. quoti. glucides estimés",
   "avg-intakes": "Nb. moyen de resucrages par jour",
-  "avg-number-of-injections": "Avg. number of bolus",
+  "avg-number-of-injections": "Nb. moyen de bolus",
   "avg-recommended-carbs": "Moy. glucides recommandés",
   "avg-time-loop": "Temps moy. quotidien en loop mode",
   "avg-time-loop-how-calculate": "**Comment nous calculons cela **:\n\n**(%)** est la durée en loop mode ON ou OFF divisée par la durée totale du débit basal sur cette période.\n\n**(durée)** est le temps moyen passé en loop mode ON ou OFF.",
