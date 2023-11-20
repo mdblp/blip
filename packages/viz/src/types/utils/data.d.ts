@@ -70,14 +70,7 @@ declare class DataUtil {
   }
 
   getCarbsData: () => {
-    nDays: number
-    wizardCarbs: any
-    foodCarbs: any
-    totalCarbs: any
     totalCarbsPerDay: number
-    foodCarbsPerDay: number
-    wizardCarbsPerDay: number
-    total: any
   }
 
   getCoefficientOfVariationData: () => {

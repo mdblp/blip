@@ -83,14 +83,7 @@ class DataUtil {
     const stats = CarbsStatisticsService.getCarbsData(this.rawData.meals, this.rawData.wizards, this.days
       , dateFilter)
     return {
-      nDays: this.days,
-      wizardCarbs: stats.mealCarbsPerDay * this.days,
-      foodCarbs: stats.rescueCarbsPerDay * this.days,
-      totalCarbs: stats.totalCarbsPerDay * this.days,
-      totalCarbsPerDay: stats.totalCarbsPerDay,
-      foodCarbsPerDay: stats.rescueCarbsPerDay,
-      wizardCarbsPerDay: stats.mealCarbsPerDay,
-      total: stats.totalMealCarbsWithRescueCarbsEntries
+      totalCarbsPerDay: stats.totalCarbsPerDay
     }
   }
 
