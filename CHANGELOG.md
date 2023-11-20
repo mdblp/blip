@@ -2,6 +2,11 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## 3.0.6-beta - 2023-11-10
+### Engineering use
+- YLP-2476 Use tide-whisperer v2: route /all.
+- YLP-2696 Fix some Sonarcloud bugs and code smells
+
 ## 3.0.5-beta - 2023-07-12
 ### Added
 - YLP-2292 Display rescue carbs and manual bolus in the trends view for DBLG1 patient
@@ -10,7 +15,6 @@ It is based on Tidepool Blip 1.27.
 ### Changed
 - YLP-2227 Adjustment of the stats on carbs of the dashboard
 - YLP-2484 Remove level column in device change parameter history
-- YLP-2572 Prevent patient from adding the same caregiver to their list twice
 - YLP-2609 Moved patient monitoring alerts configuration to a dedicated view for HCP
 - YLP-2610 Direct link from Monitoring alerts card to "Target & alerts" view
 - YLP-2630 As a user, I would like to be notified with a banner when there are ongoing issues with yourloops
@@ -24,6 +28,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Fixed
 - YLP-2438 Inconsistency in the daily view between carbs displayed on the graph and Total carbs in the statistics panel
+- YLP-2572 Prevent patient from adding the same caregiver to their list twice
 - YLP-2627 "Last data update" column is not sorting properly
 - YLP-2642 Disabled Google Translate automated translation to avoid React crashes in notification page
 - YLP-2643 Disabled Google Translate automated translation to avoid React crashes in training page

@@ -94,12 +94,13 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
 
   const updateMedicalReportList = (payload: MedicalReport): void => {
     const index = medicalReports.findIndex((medicalReport) => medicalReport.id === payload.id)
+    const medicalReportsUpdated = Array.from(medicalReports)
     if (index > -1) {
-      medicalReports.splice(index, 1, payload)
+      medicalReportsUpdated.splice(index, 1, payload)
     } else {
-      medicalReports.push(payload)
+      medicalReportsUpdated.push(payload)
     }
-    setMedicalReports(medicalReports)
+    setMedicalReports(medicalReportsUpdated)
     closeMedicalReportEditDialog()
   }
 

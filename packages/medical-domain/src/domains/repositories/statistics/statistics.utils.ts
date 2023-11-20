@@ -25,9 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type WeekDaysFilter } from '../../models/time/date-filter.model'
 import type DateFilter from '../../models/time/date-filter.model'
-import { defaultWeekDaysFilter } from '../../models/time/date-filter.model'
+import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../models/time/date-filter.model'
 import { HoursRange } from '../../models/statistics/satistics.model'
 
 export const getWeekDaysFilter = (dateFilter: DateFilter): WeekDaysFilter => dateFilter.weekDays ?? defaultWeekDaysFilter

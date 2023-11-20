@@ -60,8 +60,8 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   }
   if (rawData.biphasicId) {
     bolus.biphasicId = rawData.biphasicId as string
-  } else if (rawData.eventId) {
-    bolus.biphasicId = rawData.eventId as string
+  } else if (rawData.guid) {
+    bolus.biphasicId = rawData.guid as string
   }
 
   return bolus

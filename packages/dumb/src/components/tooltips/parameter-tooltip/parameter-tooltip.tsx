@@ -63,10 +63,10 @@ export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props
   const renderParameter = (parameter: Parameter): JSX.Element => {
     const parameterId = parameter.id
     const hasPreviousValue = !!parameter.previousValue
-    const formattedPreviousValue = hasPreviousValue && formatParameterValue(parameter.previousValue, parameter.units)
+    const formattedPreviousValue = hasPreviousValue && formatParameterValue(parameter.previousValue, parameter.unit)
     const valueClasses = hasPreviousValue ? styles.value : `${styles.value} ${styles['value-no-prev']}`
     const displayHour = moment.tz(parameter.epoch, parameter.timezone).format(hourMinuteFormat)
-    const value = formatParameterValue(parameter.value, parameter.units)
+    const value = formatParameterValue(parameter.value, parameter.unit)
 
     return (
       <React.Fragment key={parameterId}>
@@ -103,7 +103,7 @@ export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props
               data-testid={'parameter-units'}
               className={commonStyles.units}
         >
-          {t(parameter.units)}
+          {t(parameter.unit)}
         </span>
       </React.Fragment>
     )
