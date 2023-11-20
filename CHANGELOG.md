@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## 3.0.6-beta - 2023-11-10
 ### Engineering use
 - YLP-2476 Use tide-whisperer v2: route /all.
+- YLP-2574 Create tool tips independently of the name of the columns
 - YLP-2696 Fix some Sonarcloud bugs and code smells
 
 ## 3.0.5-beta - 2023-07-12
@@ -37,7 +38,6 @@ It is based on Tidepool Blip 1.27.
 
 ### Engineering use
 - YLP-2573 Create a dedicated message for the caregiver when the account creation is complete
-- YLP-2574 Create tool tips independently of the name of the columns
 - YLP-2594 Handle release branches in GitHub CI workflow
 - YLP-2595 Update deprecated GitHub Actions to Node 16
 - YLP-2596 Add visual regression tests
