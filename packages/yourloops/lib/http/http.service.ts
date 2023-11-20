@@ -31,6 +31,7 @@ import { t } from '../language'
 import { AxiosCacheInstance } from 'axios-cache-interceptor'
 import { CacheProperties } from 'axios-cache-interceptor/src/cache/cache'
 import { GET_TEAMS_CACHE_ID } from '../team/team.api'
+import { GET_USER_CACHE_ID } from '../auth/user.api'
 
 interface Args {
   url: string
@@ -89,6 +90,7 @@ export default class HttpService {
     const { url, payload, config } = argsWithPayload
     try {
       await HttpService.axiosWithCache.storage.remove(GET_TEAMS_CACHE_ID)
+      await HttpService.axiosWithCache.storage.remove(GET_USER_CACHE_ID)
       return await axios.post<R, AxiosResponse<R>, P>(url, payload, { ...config })
     } catch (error) {
       throw HttpService.handleError(error as AxiosError, excludedErrorCodes)
@@ -99,6 +101,7 @@ export default class HttpService {
     const { url, payload, config } = argsWithPayload
     try {
       await HttpService.axiosWithCache.storage.remove(GET_TEAMS_CACHE_ID)
+      await HttpService.axiosWithCache.storage.remove(GET_USER_CACHE_ID)
       return await axios.put<R, AxiosResponse<R>, P>(url, payload, { ...config })
     } catch (error) {
       throw HttpService.handleError(error as AxiosError)
@@ -109,6 +112,7 @@ export default class HttpService {
     const { url, config } = args
     try {
       await HttpService.axiosWithCache.storage.remove(GET_TEAMS_CACHE_ID)
+      await HttpService.axiosWithCache.storage.remove(GET_USER_CACHE_ID)
       return await axios.delete(url, { ...config })
     } catch (error) {
       throw HttpService.handleError(error as AxiosError)

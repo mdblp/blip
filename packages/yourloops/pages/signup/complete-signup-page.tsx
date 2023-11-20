@@ -70,7 +70,7 @@ export const CompleteSignUpPage: FunctionComponent = () => {
       >
         <Grid item xs={12}>
           <SignUpFormStateProvider>
-            <Card id="card-signup" className={classes.card} elevation={4}>
+            <Card data-testid="card-signup" id="card-signup" className={classes.card} elevation={4}>
               <CardMedia className={classes.logoHeader}>
                 <img src={`/branding_${appConfig.BRANDING}_logo.svg`} height={35} alt={t('alt-img-logo')} />
               </CardMedia>

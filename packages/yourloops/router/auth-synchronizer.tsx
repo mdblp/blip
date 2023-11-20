@@ -27,7 +27,6 @@
 
 import React, { type FC, useEffect } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
-import { User } from '../lib/auth'
 import MetricsLocationListener from '../components/MetricsLocationListener'
 import HttpService from '../lib/http/http.service'
 import AuthService from '../lib/auth/auth.service'
@@ -36,28 +35,33 @@ import { v4 as uuidv4 } from 'uuid'
 import { MainLayout } from '../layout/main-layout'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { AppRoute } from '../models/enums/routes.enum'
+import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../lib/auth/models/auth0-error.model'
 
 export const AuthSynchronizer: FC = () => {
-  const { isAuthenticated, user, getAccessTokenSilently, isLoading } = useAuth0()
+  const { isAuthenticated, user: authUser, getAccessTokenSilently, isLoading } = useAuth0()
+  console.log(isAuthenticated)
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const { pathname } = useLocation()
   console.log(pathname)
-  console.log(searchParams)
 
   AuthService.setIsAuthenticated(isAuthenticated)
-  if (user && !AuthService.getUser()) {
-    const authUser = new User(user as AuthenticatedUser)
-    AuthService.setUser(authUser)
+  if (authUser && !AuthService.getAuthUser()) {
+    AuthService.setAuthUser(authUser as AuthenticatedUser)
   }
 
   useEffect(() => {
-    if (!isAuthenticated && pathname !== AppRoute.VerifyEmail) {
+    if (!isAuthenticated) {
       getAccessTokenSilently()
         .then(() => {
-          AuthService.setIsAuthenticated(true)
+          // Nothing to do
         })
-        .catch(() => {
+        .catch((error) => {
+          const errorDescription = error.error_description
+          if (errorDescription === AUTH0_ERROR_EMAIL_NOT_VERIFIED) {
+            navigate(AppRoute.VerifyEmail)
+            return
+          }
           navigate(AppRoute.Login)
           // This happens when we try to silently login but we don't have enough info
         })
@@ -79,20 +83,41 @@ export const AuthSynchronizer: FC = () => {
       return
     }
     const fromUrl = searchParams.get('from')
+    console.log('fromUrl', fromUrl)
     if (fromUrl && fromUrl !== '/') {
       navigate(fromUrl)
       return
     }
-    const authUser = AuthService.getUser()
-    if (authUser.isUserHcp()) {
+    const user = AuthService.getUser()
+    if (!user) {
+      navigate('/')
+      return
+    }
+    if (user.isFirstLogin()) {
+      navigate(AppRoute.CompleteSignup)
+      return
+    }
+    if (user.hasToAcceptNewConsent()) {
+      navigate(AppRoute.NewConsent)
+      return
+    }
+    if (user.hasToRenewConsent()) {
+      navigate(AppRoute.RenewConsent)
+      return
+    }
+    if (user.hasToDisplayTrainingInfoPage()) {
+      navigate(AppRoute.Training)
+      return
+    }
+    if (user.isUserHcp()) {
       navigate('/teams')
       return
     }
-    if (authUser.isUserPatient()) {
+    if (user.isUserPatient()) {
       navigate('/dashboard')
       return
     }
-    if (authUser.isUserCaregiver()) {
+    if (user.isUserCaregiver()) {
       navigate('/teams/private/patients')
       return
     }

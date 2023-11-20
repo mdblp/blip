@@ -39,7 +39,7 @@ describe('Verify email page', () => {
     getAccessTokenSilentlyMock.mockRejectedValue({ error_description: AUTH0_ERROR_EMAIL_NOT_VERIFIED })
     window.open = jest.fn()
 
-    const router = renderPage(AppRoute.VerifyEmail)
+    const router = renderPage('/')
 
     expect(await screen.findByTestId('footer')).toBeVisible()
 

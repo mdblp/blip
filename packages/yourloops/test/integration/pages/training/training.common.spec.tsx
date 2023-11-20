@@ -52,7 +52,7 @@ describe('Training page when new training available', () => {
     const patientAsTeamMember = buildTeamMemberFromPatient(notAckTrainingPatient, undefined, 'team-id', UserInviteStatus.Accepted)
     mockPatientLogin(patientAsTeamMember)
     mockAuth0Hook(UserRole.Patient)
-    mockUserApi()
+    mockUserApi().mockUserDataFetch({ profile })
   })
 
   it('should render a button opening the training, then a checkbox and a validate button', async () => {

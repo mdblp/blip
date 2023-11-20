@@ -37,6 +37,8 @@ import { type ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hc
 
 const log = bows('User API')
 
+export const GET_USER_CACHE_ID = 'get-teams'
+
 export default class UserApi {
   static async changeUserRoleToHcp(userId: string, payload: ChangeUserRoleToHcpPayload): Promise<void> {
     await HttpService.post({
@@ -55,7 +57,7 @@ export default class UserApi {
 
   static async getUserMetadata(userId: string): Promise<UserMetadata | undefined> {
     try {
-      const { data } = await HttpService.get<UserMetadata>({ url: `/metadata/${userId}` })
+      const { data } = await HttpService.get<UserMetadata>({ url: `/metadata/${userId}` }, GET_USER_CACHE_ID)
       return data
     } catch (err) {
       const error = err as Error

@@ -25,25 +25,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { Outlet } from 'react-router-dom'
-import { DashboardLayout } from './dashboard-layout'
-import { PatientListProvider } from '../lib/providers/patient-list.provider'
-import { TeamContextProvider } from '../lib/team'
-import { NotificationContextProvider } from '../lib/notifications/notification.hook'
+import { screen, waitFor } from '@testing-library/react'
+import { mockAuth0Hook } from '../mock/auth0.hook.mock'
+import { renderPage } from '../utils/render'
+import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
+import { AppUserRoute } from '../../../models/enums/routes.enum'
+import { mockNotificationAPI } from '../mock/notification.api.mock'
+import { mockUserApi } from '../mock/user.api.mock'
+import { patient1Id } from '../data/patient.api.data'
+import { mockPatientApiForCaregivers } from '../mock/patient.api.mock'
+import { mockDirectShareApi } from '../mock/direct-share.api.mock'
 
-export const LOCAL_STORAGE_SELECTED_TEAM_ID_KEY = 'selectedTeamId'
+describe('Router for caregiver', () => {
 
-export const HcpLayout: FunctionComponent = () => {
-  return (
-    <NotificationContextProvider>
-      <TeamContextProvider>
-        <DashboardLayout>
-          <PatientListProvider>
-            <Outlet />
-          </PatientListProvider>
-        </DashboardLayout>
-      </TeamContextProvider>
-    </NotificationContextProvider>
-  )
-}
+  const mockCaregiverUser = () => {
+    const firstName = 'Eric'
+    const lastName = 'Ard'
+    mockAuth0Hook(UserRole.Caregiver)
+    mockNotificationAPI()
+    mockDirectShareApi()
+    mockUserApi().mockUserDataFetch({ firstName, lastName })
+    mockPatientApiForCaregivers()
+  }
+
+  it('should not be to access /patient/:patientId/dashboard', async () => {
+    mockCaregiverUser()
+
+    const router = renderPage(`/patients/${patient1Id}${AppUserRoute.Dashboard}`)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual('/not-found')
+    })
+
+    expect(await screen.findByText('Page not found')).toBeVisible()
+  })
+})

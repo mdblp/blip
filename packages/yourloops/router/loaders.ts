@@ -36,10 +36,13 @@ import i18next from 'i18next'
 import { availableLanguageCodes, getCurrentLang } from '../lib/language'
 import metrics from '../lib/metrics'
 
-export const retrieveUser = async (user: User | null) => {
-  if (!user || AuthService.hasUserBeenRetrieved()) {
-    return AuthService.getUser()
+export const retrieveUser = async () => {
+  const userRetrieved = AuthService.getUser()
+  if (userRetrieved) {
+    return userRetrieved
   }
+  const authUser = AuthService.getAuthUser()
+  const user = new User(authUser)
   const userMetadata = await UserApi.getUserMetadata(user.id)
   if (userMetadata) {
     user.profile = userMetadata.profile
@@ -53,7 +56,6 @@ export const retrieveUser = async (user: User | null) => {
     }
   }
   AuthService.setUser(user)
-  AuthService.setHasUserBeenRetrieved(true)
   if (user.role !== UserRole.Unset) {
     const languageCode = user.preferences?.displayLanguageCode
     if (languageCode && availableLanguageCodes.includes(languageCode) && languageCode !== getCurrentLang()) {
@@ -62,13 +64,6 @@ export const retrieveUser = async (user: User | null) => {
     }
   }
   return user
-}
-
-export const checkUserHasARole = (user: User | null) => {
-  if (!user || (user.role !== UserRole.Hcp && user.role !== UserRole.Caregiver && user.role !== UserRole.Patient)) {
-    return redirect('/login')
-  }
-  return null
 }
 
 export const checkFirstSignup = (user: User | null) => {
@@ -90,7 +85,7 @@ export const checkConsent = (user: User | null) => {
 
 export const checkTraining = (user: User | null) => {
   if (user && user.hasToDisplayTrainingInfoPage()) {
-    return redirect(AppRoute.NewConsent)
+    return redirect(AppRoute.Training)
   }
   return null
 }
@@ -102,23 +97,22 @@ export const userLoader = async ({ request }) => {
     params.set("from", new URL(request.url).pathname)
     return redirect(`/loading?${params.toString()}`)
   }
-  const user = AuthService.getUser()
-  const userRetrieved = await retrieveUser(user)
-  const redirectToLogin = checkUserHasARole(user)
-  if (redirectToLogin) {
-    return redirectToLogin
-  }
-  const redirectFirstSignup = checkFirstSignup(user)
-  if (redirectFirstSignup) {
-    return redirectFirstSignup
-  }
-  const redirectFirstConsent = checkConsent(user)
-  if (redirectFirstConsent) {
-    return redirectFirstConsent
-  }
-  const redirectTraining = checkTraining(user)
-  if (redirectTraining) {
-    return redirectTraining
-  }
-  return userRetrieved
+  const user = await retrieveUser()
+  // const redirectToLogin = checkUserHasARole(user)
+  // if (redirectToLogin) {
+  //   return redirectToLogin
+  // }
+  // const redirectFirstSignup = checkFirstSignup(user)
+  // if (redirectFirstSignup) {
+  //   return redirectFirstSignup
+  // }
+  // const redirectFirstConsent = checkConsent(user)
+  // if (redirectFirstConsent) {
+  //   return redirectFirstConsent
+  // }
+  // const redirectTraining = checkTraining(user)
+  // if (redirectTraining) {
+  //   return redirectTraining
+  // }
+  return user
 }

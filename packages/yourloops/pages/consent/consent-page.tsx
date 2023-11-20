@@ -132,7 +132,7 @@ export const ConsentPage: FC<ConsentProps> = (props) => {
     }
 
     return (
-      <Container maxWidth="sm" className={classes.mainContainer}>
+      <Container maxWidth="sm" className={classes.mainContainer} data-testid="consent-page">
         <Grid
           container
           spacing={0}

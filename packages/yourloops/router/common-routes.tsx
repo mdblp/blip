@@ -27,7 +27,7 @@
 
 import { AppRoute, AppUserRoute } from '../models/enums/routes.enum'
 import AuthService from '../lib/auth/auth.service'
-import { checkConsent, checkFirstSignup, checkTraining } from './loaders'
+import { retrieveUser } from './loaders'
 import { ProductLabellingPage } from '../pages/product-labelling/product-labelling-page'
 import { redirect } from 'react-router-dom'
 import { LoginPageLanding } from '../pages/login/login-page-landing'
@@ -43,50 +43,15 @@ import React from 'react'
 export const COMMON_ROUTES = [
   {
     path: AppRoute.ProductLabelling,
-    loader: () => {
-      const user = AuthService.getUser()
-      const redirectToSignup = checkFirstSignup(user)
-      if (redirectToSignup) {
-        return redirectToSignup
-      }
-      const redirectToConsent = checkConsent(user)
-      if (redirectToConsent) {
-        return redirectToConsent
-      }
-      return checkTraining(user)
-    },
     element: <ProductLabellingPage />
   },
   {
     path: AppRoute.Login,
     loader: () => {
-      const isAuthenticated = AuthService.isAuthenticated()
-      const user = AuthService.getUser()
-      if (!isAuthenticated) {
-        return null
+      if (AuthService.isAuthenticated()) {
+        return redirect('/')
       }
-      const redirectToSignup = checkFirstSignup(user)
-      if (redirectToSignup) {
-        return redirectToSignup
-      }
-      const redirectToConsent = checkConsent(user)
-      if (redirectToConsent) {
-        return redirectToConsent
-      }
-      const redirectToTraining = checkTraining(user)
-      if (redirectToTraining) {
-        return redirectToTraining
-      }
-      if (user.isUserHcp()) {
-        return redirect(`/teams`)
-      }
-      if (user.isUserPatient()) {
-        return redirect(`/dashboard`)
-      }
-      if (user.isUserCaregiver()) {
-        return redirect(`/teams/private/patients`)
-      }
-      throw Error(`Could not get role for user ${JSON.stringify(user)}`)
+      return null
     },
     element: <LoginPageLanding />
   },
@@ -94,16 +59,10 @@ export const COMMON_ROUTES = [
   {
     path: AppRoute.VerifyEmail,
     loader: () => {
-      const user = AuthService.getUser()
-      const redirectToSignup = checkFirstSignup(user)
-      if (redirectToSignup) {
-        return redirectToSignup
+      if (AuthService.isAuthenticated()) {
+        return redirect('/')
       }
-      const redirectToConsent = checkConsent(user)
-      if (redirectToConsent) {
-        return redirectToConsent
-      }
-      return checkTraining(user)
+      return null
     },
     element: <VerifyEmailPage />
   }
@@ -112,69 +71,40 @@ export const COMMON_ROUTES = [
 export const COMMON_LOGGED_ROUTES = [
   { path: AppUserRoute.Preferences, element: <ProfilePage /> },
   { path: AppUserRoute.Notifications, element: <NotificationsPage /> },
-  {
-    path: AppRoute.RenewConsent,
-    loader: () => {
-      const user = AuthService.getUser()
-      return checkFirstSignup(user)
-    },
-    element: <ConsentPage messageKey="consent-renew-message" />
-  },
-  {
-    path: AppRoute.NewConsent,
-    loader: () => {
-      const user = AuthService.getUser()
-      return checkFirstSignup(user)
-    },
-    element: <ConsentPage messageKey="consent-welcome-message" />
-  },
-  {
-    path: AppRoute.Training,
-    loader: () => {
-      const user = AuthService.getUser()
-      if (user && user.hasToDisplayTrainingInfoPage()) {
-        return null
-      }
-      const redirectToSignup = checkFirstSignup(user)
-      if (redirectToSignup) {
-        return redirectToSignup
-      }
-      return checkConsent(user)
-    },
-    element: <TrainingPage />
-  },
   { path: AppUserRoute.NotFound, element: <InvalidRoute /> }
 ]
 
 export const COMMON_LOGGED_ROUTES_NO_HEADER = [
   {
     path: AppRoute.RenewConsent,
-    loader: () => {
-      const user = AuthService.getUser()
-      return checkFirstSignup(user)
+    loader: async () => {
+      const user = await retrieveUser()
+      if (!user.hasToRenewConsent()) {
+        return redirect('/')
+      }
+      return null
     },
     element: <ConsentPage messageKey="consent-renew-message" />
   },
   {
     path: AppRoute.NewConsent,
-    loader: () => {
-      const user = AuthService.getUser()
-      return checkFirstSignup(user)
+    loader: async () => {
+      const user = await retrieveUser()
+      if (!user.hasToAcceptNewConsent()) {
+        return redirect('/')
+      }
+      return null
     },
     element: <ConsentPage messageKey="consent-welcome-message" />
   },
   {
     path: AppRoute.Training,
-    loader: () => {
-      const user = AuthService.getUser()
-      if (user && user.hasToDisplayTrainingInfoPage()) {
-        return null
+    loader: async () => {
+      const user = await retrieveUser()
+      if (!user.hasToDisplayTrainingInfoPage()) {
+        return redirect('/')
       }
-      const redirectToSignup = checkFirstSignup(user)
-      if (redirectToSignup) {
-        return redirectToSignup
-      }
-      return checkConsent(user)
+      return null
     },
     element: <TrainingPage />
   }

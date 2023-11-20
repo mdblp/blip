@@ -50,6 +50,7 @@ import { type Theme } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
 import { setPageTitle } from '../../lib/utils'
 import { useLogout } from '../../lib/auth/logout.hook'
+import AuthService from '../../lib/auth/auth.service'
 
 const classes = makeStyles()((theme: Theme) => ({
   appBar: {
@@ -104,6 +105,9 @@ export const VerifyEmailPage: FunctionComponent = () => {
 
   useEffect(() => {
     getAccessTokenSilently()
+      .then(() => {
+        navigate('/')
+      })
       .catch((error: Error) => {
         if (error.message === AUTH0_ERROR_LOGIN_REQUIRED) {
           setIsUserLoggedIn(false)

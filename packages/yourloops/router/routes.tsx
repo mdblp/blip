@@ -27,7 +27,7 @@
 
 import React from 'react'
 import { createBrowserRouter, Navigate, Outlet, redirect } from 'react-router-dom'
-import { AppUserRoute } from '../models/enums/routes.enum'
+import { AppRoute, AppUserRoute } from '../models/enums/routes.enum'
 import { CareTeamSettingsPage } from '../pages/care-team-settings/care-team-settings-page'
 import { PatientListPage } from '../components/patient-list/patient-list-page'
 import { PatientData } from '../components/patient-data/patient-data'
@@ -36,7 +36,7 @@ import TeamApi from '../lib/team/team.api'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../layout/hcp-layout'
 import PatientUtils from '../lib/patient/patient.util'
 import AuthService from '../lib/auth/auth.service'
-import { userLoader } from './loaders'
+import { checkConsent, checkFirstSignup, checkTraining, retrieveUser, userLoader } from './loaders'
 import { RouterRoot } from './root'
 import { AuthLayout, UserLayout } from '../layout/user-layout'
 import { COMMON_LOGGED_ROUTES, COMMON_LOGGED_ROUTES_NO_HEADER, COMMON_ROUTES } from './common-routes'
@@ -47,6 +47,7 @@ import { Team } from '../lib/team'
 import { TeamType } from '../lib/team/models/enums/team-type.enum'
 import TeamUtils from '../lib/team/team.util'
 import { PatientsProvider } from '../lib/patient/patients.provider'
+import { User } from '../lib/auth'
 
 const getLoggedInRoutes = () => {
   return {
@@ -57,7 +58,20 @@ const getLoggedInRoutes = () => {
       {
         path: '',
         loader: async () => {
-          const user = AuthService.getUser()
+          const authUser = new User(AuthService.getAuthUser())
+          const redirectFirstSignup = checkFirstSignup(authUser)
+          if (redirectFirstSignup) {
+            return redirectFirstSignup
+          }
+          const user = await retrieveUser()
+          const redirectFirstConsent = checkConsent(user)
+          if (redirectFirstConsent) {
+            return redirectFirstConsent
+          }
+          const redirectTraining = checkTraining(user)
+          if (redirectTraining) {
+            return redirectTraining
+          }
           if (user.isUserHcp()) {
             return redirect('/teams')
           }
@@ -67,7 +81,7 @@ const getLoggedInRoutes = () => {
           if (user.isUserCaregiver()) {
             return redirect('/teams/private/patients')
           }
-          return null
+          return redirect(AppRoute.CompleteSignup)
         }
       },
       ...COMMON_LOGGED_ROUTES_NO_HEADER,
@@ -75,11 +89,11 @@ const getLoggedInRoutes = () => {
         element: <UserLayout />,
         id: 'teams-route',
         loader: async () => {
-          const user = AuthService.getUser()
+          const user = await retrieveUser()
           if (user.isUserCaregiver()) {
             return null
           }
-          const teams = await TeamApi.getTeams(AuthService.getUser().id, user.role, true)
+          const teams = await TeamApi.getTeams(AuthService.getUser().id, user.role)
           if (!teams.length) {
             throw Error('Error when retrieving teams')
           }
@@ -111,7 +125,7 @@ const getLoggedInRoutes = () => {
               {
                 path: '',
                 loader: async () => {
-                  const user = AuthService.getUser()
+                  const user = await retrieveUser()
                   if (user.isUserCaregiver()) {
                     return redirect('/private')
                   }
@@ -138,7 +152,7 @@ const getLoggedInRoutes = () => {
                 path: ':teamId',
                 loader: async ({ params }) => {
                   const paramTeamId = params.teamId
-                  const user = AuthService.getUser()
+                  const user = await retrieveUser()
                   if (user.isUserCaregiver()) {
                     localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, PRIVATE_TEAM_ID)
                     if (paramTeamId !== PRIVATE_TEAM_ID) {
@@ -146,7 +160,7 @@ const getLoggedInRoutes = () => {
                     }
                     return null
                   }
-                  const teams = await TeamApi.getTeams(AuthService.getUser().id, user.role, true) //This call should be cached
+                  const teams = await TeamApi.getTeams(AuthService.getUser().id, user.role) //This call should be cached
                   if (!teams) {
                     throw Error('Could not retrieve teams')
                   }
@@ -172,7 +186,10 @@ const getLoggedInRoutes = () => {
                       if (!params.teamId) {
                         return null
                       }
-                      const user = AuthService.getUser()
+                      const user = await retrieveUser()
+                      if (user.isUserPatient()) {
+                        return redirect(AppUserRoute.Dashboard)
+                      }
                       if (user.isUserHcp()) {
                         return PatientApi.getPatientsForHcp(user.id, params.teamId)
                       }
@@ -191,8 +208,8 @@ const getLoggedInRoutes = () => {
           {
             path: '*',
             element: <Outlet />,
-            loader: () => {
-              const user = AuthService.getUser()
+            loader: async () => {
+              const user = await retrieveUser()
               if (!user.isUserPatient()) {
                 return redirect(AppUserRoute.NotFound)
               }

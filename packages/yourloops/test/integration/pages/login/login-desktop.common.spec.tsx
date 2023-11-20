@@ -99,7 +99,7 @@ describe('Login page desktop view', () => {
     mockAuth0HookUnlogged(Error('Hi there, i\'m an error !!'))
 
     renderPage('/')
-    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Hi there, i\'m an error !!')
+    expect(await screen.findByTestId('alert-snackbar')).toHaveTextContent('Hi there, i\'m an error !!')
   })
 
   it('should display an alert if the user is inactive', async () => {

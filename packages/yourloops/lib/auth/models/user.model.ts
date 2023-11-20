@@ -60,11 +60,6 @@ export default class User {
     this.latestTrainingDate = new Date(config.LATEST_TRAINING ?? 0)
   }
 
-  private static getId(sub: string): string {
-    const parsedSub = sub.split('|')
-    return parsedSub[parsedSub.length - 1]
-  }
-
   get firstName(): string {
     return this.profile?.firstName ?? ''
   }
@@ -85,12 +80,9 @@ export default class User {
     return REGEX_BIRTHDATE.test(birthday) ? birthday : ''
   }
 
-  private getRawBirthday(): string {
-    const birthday = this.profile?.patient?.birthday
-    if (birthday && birthday.length > 0 && birthday.includes('T')) {
-      return birthday.split('T')[0]
-    }
-    return birthday
+  private static getId(sub: string): string {
+    const parsedSub = sub.split('|')
+    return parsedSub[parsedSub.length - 1]
   }
 
   isUserHcp(): boolean {
@@ -130,7 +122,7 @@ export default class User {
    * @returns a boolean indicating if a new training is available
    */
   newTrainingAvailable(): boolean {
-    if (this.profile?.trainingAck) {
+    if (this.profile?.trainingAck && this.profile?.trainingAck?.isAccepted) {
       // A `null` is fine here, because `new Date(null).valueOf() === 0`
       const acceptDate = new Date(this.profile.trainingAck.acceptanceTimestamp)
       if (!Number.isFinite(acceptDate.getTime())) {
@@ -157,7 +149,7 @@ export default class User {
     if (!this.profile?.termsOfUse || !this.profile.privacyPolicy) {
       return true
     }
-    return (this.checkConsent(this.profile.termsOfUse) || this.checkConsent(this.profile.privacyPolicy))
+    return this.checkConsent(this.profile.termsOfUse) || this.checkConsent(this.profile.privacyPolicy)
   }
 
   isFirstLogin(): boolean {
@@ -165,7 +157,7 @@ export default class User {
   }
 
   hasToAcceptNewConsent(): boolean {
-    return this.isUserPatient() && !this.isFirstLogin() && this.shouldAcceptConsent()
+    return this.isUserPatient() && this.shouldAcceptConsent()
   }
 
   hasToRenewConsent(): boolean {
@@ -174,5 +166,13 @@ export default class User {
 
   hasToDisplayTrainingInfoPage(): boolean {
     return this.newTrainingAvailable()
+  }
+
+  private getRawBirthday(): string {
+    const birthday = this.profile?.patient?.birthday
+    if (birthday && birthday.length > 0 && birthday.includes('T')) {
+      return birthday.split('T')[0]
+    }
+    return birthday
   }
 }

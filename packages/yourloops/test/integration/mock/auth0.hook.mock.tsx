@@ -135,7 +135,7 @@ const useMockAuth0 = (): Auth0ContextInterface => {
 
 export const mockAuth0Hook = (role: UserRole = UserRole.Hcp, userId = loggedInUserId) => {
   AuthService.setUser(null)
-  AuthService.setHasUserBeenRetrieved(null)
+  AuthService.setAuthUser(null)
   AuthService.setIsAuthenticated(null);
   (MockRouterRoot.RouterRoot as jest.Mock) = jest.fn().mockImplementation(() => {
     return <MockAuth0ContextProvider
@@ -152,7 +152,7 @@ export const mockAuth0Hook = (role: UserRole = UserRole.Hcp, userId = loggedInUs
 
 export const mockAuth0HookUnlogged = (error: Error = null) => {
   AuthService.setUser(null)
-  AuthService.setHasUserBeenRetrieved(null)
+  AuthService.setAuthUser(null)
   AuthService.setIsAuthenticated(null);
   (MockRouterRoot.RouterRoot as jest.Mock) = jest.fn().mockImplementation(() => {
     return <MockAuth0ContextProviderUnlogged error={error}>
