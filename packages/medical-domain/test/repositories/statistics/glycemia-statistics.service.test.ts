@@ -230,7 +230,7 @@ describe('GlycemiaStatisticsService getReadingsInRangeData', () => {
     expect(stats).toEqual({
       veryLow: 1 / 2,
       low: 1 / 2,
-      target: 2 / 2,
+      target: 1,
       high: 1 / 2,
       veryHigh: 1 / 2,
       total: 6

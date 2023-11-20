@@ -87,7 +87,7 @@ describe('basics datamunger', function() {
 
     it('should return a pump with proper data', function() {
       var patientData = {
-        grouped: {
+        medicalData: {
           pumpSettings: [
             {
               source: constants.INSULET
@@ -100,7 +100,7 @@ describe('basics datamunger', function() {
 
     it('should return null without proper data', function() {
       var patientData = {
-        grouped: {
+        medicalData: {
           pumpSettings: []
         }
       }

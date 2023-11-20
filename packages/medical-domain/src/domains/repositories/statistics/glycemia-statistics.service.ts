@@ -71,7 +71,7 @@ export function classifyBgValue(bgBounds: BgBounds, bgValue: number, classificat
 }
 
 const cgmSampleFrequency = (cgmDeviceName: string): number => (
-  cgmDeviceName.indexOf('AbbottFreeStyleLibre') === 0 ? 15 * MS_IN_MIN : 5 * MS_IN_MIN
+  cgmDeviceName.startsWith('AbbottFreeStyleLibre') ? 15 * MS_IN_MIN : 5 * MS_IN_MIN
 )
 
 const getCgmTotalDuration = (cbgData: Cbg[]): number => (

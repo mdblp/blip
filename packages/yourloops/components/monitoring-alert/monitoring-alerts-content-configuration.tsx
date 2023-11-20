@@ -279,7 +279,7 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
                   disabled={displayInReadonly}
                   key={`out-of-range-${outOfRangeThreshold.value}`}
                   id="out-of-range"
-                  defaultValue={`${outOfRangeThreshold.value}%` ?? ''}
+                  defaultValue={outOfRangeThreshold.value ? `${outOfRangeThreshold.value}%` : ''}
                   values={PERCENTAGES}
                   error={outOfRangeThreshold.error}
                   onSelect={(value) => {
@@ -361,7 +361,7 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
                   disabled={displayInReadonly}
                   key={`hypo-threshold-${hypoThreshold.value}`}
                   id="hypo-threshold"
-                  defaultValue={`${hypoThreshold.value}%` ?? ''}
+                  defaultValue={hypoThreshold.value ? `${hypoThreshold.value}%` : ''}
                   values={PERCENTAGES}
                   error={hypoThreshold.error}
                   onSelect={(value) => {
@@ -394,7 +394,7 @@ function MonitoringAlertsContentConfiguration(props: MonitoringAlertsContentConf
                   disabled={displayInReadonly}
                   key={`tir-dropdown-${nonDataTxThreshold.value}`}
                   id="non-data"
-                  defaultValue={`${nonDataTxThreshold.value}%` ?? ''}
+                  defaultValue={nonDataTxThreshold.value ? `${nonDataTxThreshold.value}%` : ''}
                   values={PERCENTAGES.slice(0, 10)}
                   error={nonDataTxThreshold.error}
                   onSelect={(value) => {
