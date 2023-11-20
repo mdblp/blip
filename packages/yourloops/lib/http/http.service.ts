@@ -71,6 +71,11 @@ export default class HttpService {
     HttpService.axiosWithCache = axiosCache
   }
 
+  static async removeCache(): Promise<void> {
+    await HttpService.axiosWithCache.storage.remove(GET_TEAMS_CACHE_ID)
+    await HttpService.axiosWithCache.storage.remove(GET_USER_CACHE_ID)
+  }
+
   static async get<T>(args: Args, cacheId: string | null = null): Promise<AxiosResponse<T>> {
     const { url, config } = args
     const cache = cacheId ? { id: cacheId } : false
@@ -89,8 +94,7 @@ export default class HttpService {
   static async post<R, P = undefined>(argsWithPayload: ArgsWithPayload<P>, excludedErrorCodes?: number[]): Promise<AxiosResponse<R>> {
     const { url, payload, config } = argsWithPayload
     try {
-      await HttpService.axiosWithCache.storage.remove(GET_TEAMS_CACHE_ID)
-      await HttpService.axiosWithCache.storage.remove(GET_USER_CACHE_ID)
+      await HttpService.removeCache()
       return await axios.post<R, AxiosResponse<R>, P>(url, payload, { ...config })
     } catch (error) {
       throw HttpService.handleError(error as AxiosError, excludedErrorCodes)
@@ -100,8 +104,7 @@ export default class HttpService {
   static async put<R, P = undefined>(argsWithPayload: ArgsWithPayload<P>): Promise<AxiosResponse<R>> {
     const { url, payload, config } = argsWithPayload
     try {
-      await HttpService.axiosWithCache.storage.remove(GET_TEAMS_CACHE_ID)
-      await HttpService.axiosWithCache.storage.remove(GET_USER_CACHE_ID)
+      await HttpService.removeCache()
       return await axios.put<R, AxiosResponse<R>, P>(url, payload, { ...config })
     } catch (error) {
       throw HttpService.handleError(error as AxiosError)
@@ -111,8 +114,7 @@ export default class HttpService {
   static async delete(args: Args): Promise<AxiosResponse> {
     const { url, config } = args
     try {
-      await HttpService.axiosWithCache.storage.remove(GET_TEAMS_CACHE_ID)
-      await HttpService.axiosWithCache.storage.remove(GET_USER_CACHE_ID)
+      await HttpService.removeCache()
       return await axios.delete(url, { ...config })
     } catch (error) {
       throw HttpService.handleError(error as AxiosError)

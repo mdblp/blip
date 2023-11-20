@@ -134,7 +134,6 @@ const useMockAuth0 = (): Auth0ContextInterface => {
 }
 
 export const mockAuth0Hook = (role: UserRole = UserRole.Hcp, userId = loggedInUserId) => {
-  AuthService.setUser(null)
   AuthService.setAuthUser(null)
   AuthService.setIsAuthenticated(null);
   (MockRouterRoot.RouterRoot as jest.Mock) = jest.fn().mockImplementation(() => {
@@ -151,7 +150,6 @@ export const mockAuth0Hook = (role: UserRole = UserRole.Hcp, userId = loggedInUs
 }
 
 export const mockAuth0HookUnlogged = (error: Error = null) => {
-  AuthService.setUser(null)
   AuthService.setAuthUser(null)
   AuthService.setIsAuthenticated(null);
   (MockRouterRoot.RouterRoot as jest.Mock) = jest.fn().mockImplementation(() => {

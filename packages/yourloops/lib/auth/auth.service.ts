@@ -26,22 +26,16 @@
  */
 
 import User from './models/user.model'
-import { AuthenticatedUser } from './models/authenticated-user.model'
 
 export default class AuthService {
   private static authenticated: boolean
-  private static user: User
-  private static authUser: AuthenticatedUser // This is the user retrieved from auth0
+  private static authUser: User // This is the user retrieved from auth0
 
   static setIsAuthenticated(authenticated: boolean): void {
     AuthService.authenticated = authenticated
   }
 
-  static setUser(user: User): void {
-    AuthService.user = user
-  }
-
-  static setAuthUser(authUser: AuthenticatedUser): void {
+  static setAuthUser(authUser: User): void {
     AuthService.authUser = authUser
   }
 
@@ -49,11 +43,7 @@ export default class AuthService {
     return AuthService.authenticated
   }
 
-  static getUser(): User {
-    return AuthService.user
-  }
-
-  static getAuthUser(): AuthenticatedUser {
+  static getAuthUser(): User {
     return AuthService.authUser
   }
 }

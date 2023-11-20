@@ -33,7 +33,6 @@ import React, {
   useMemo,
   useState
 } from 'react'
-import _ from 'lodash'
 
 import { useAuth0 } from '@auth0/auth0-react'
 import { type HcpProfession } from './models/enums/hcp-profession.enum'
@@ -45,10 +44,11 @@ import { type Profile } from './models/profile.model'
 import { type Settings } from './models/settings.model'
 import { UserRole } from './models/enums/user-role.enum'
 import { type ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
-import { useRouteLoaderData } from 'react-router-dom'
+import { useRevalidator, useRouteLoaderData } from 'react-router-dom'
 import { useIdleTimer } from 'react-idle-timer'
 import { ConfigService } from '../config/config.service'
 import { useLogout } from './logout.hook'
+import HttpService from '../http/http.service'
 
 const ReactAuthContext = createContext({} as AuthContext)
 
@@ -58,9 +58,9 @@ export function AuthContextImpl(): AuthContext {
     getAccessTokenWithPopup
   } = useAuth0()
   const logout = useLogout()
-  const userFromLoader = useRouteLoaderData('user-route') as User
+  const user = useRouteLoaderData('user-route') as User
 
-  const [user, setUser] = useState<User>(userFromLoader)
+  const { revalidate } = useRevalidator()
 
   const isLoggedIn = useMemo<boolean>(() => isAuthenticated && !!user, [isAuthenticated, user])
 
@@ -79,26 +79,27 @@ export function AuthContextImpl(): AuthContext {
     return user
   }
 
-  const refreshUser = (): void => {
-    setUser(_.cloneDeep(user))
+  const refreshUser = async (): Promise<void> => {
+    await HttpService.removeCache()
+    revalidate()
   }
 
   const updatePreferences = async (preferences: Preferences): Promise<void> => {
     const user = getUser()
     user.preferences = await UserApi.updatePreferences(user.id, preferences)
-    refreshUser()
+    await refreshUser()
   }
 
   const updateProfile = async (profile: Profile): Promise<void> => {
     const user = getUser()
     user.profile = await UserApi.updateProfile(user.id, profile)
-    refreshUser()
+    await refreshUser()
   }
 
   const updateSettings = async (settings: Settings): Promise<void> => {
     const user = getUser()
     user.settings = await UserApi.updateSettings(user.id, settings)
-    refreshUser()
+    await refreshUser()
   }
 
   const flagPatient = async (userId: string): Promise<void> => {
@@ -120,7 +121,7 @@ export function AuthContextImpl(): AuthContext {
     }
 
     user.preferences = await UserApi.updatePreferences(user.id, user.preferences)
-    refreshUser()
+    await refreshUser()
   }
 
   const setFlagPatients = async (userIds: string[]): Promise<void> => {
@@ -130,7 +131,7 @@ export function AuthContextImpl(): AuthContext {
     }
     user.preferences.patientsStarred = userIds
     user.preferences = await UserApi.updatePreferences(user.id, user.preferences)
-    refreshUser()
+    await refreshUser()
   }
 
   const getFlagPatients = (): string[] => {
@@ -152,7 +153,7 @@ export function AuthContextImpl(): AuthContext {
 
     user.role = UserRole.Hcp
     user.profile = { ...user.profile, ...payload }
-    refreshUser()
+    await refreshUser()
   }
 
   const refreshToken = async (): Promise<void> => {

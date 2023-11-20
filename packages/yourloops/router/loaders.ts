@@ -37,12 +37,7 @@ import { availableLanguageCodes, getCurrentLang } from '../lib/language'
 import metrics from '../lib/metrics'
 
 export const retrieveUser = async () => {
-  const userRetrieved = AuthService.getUser()
-  if (userRetrieved) {
-    return userRetrieved
-  }
-  const authUser = AuthService.getAuthUser()
-  const user = new User(authUser)
+  const user = AuthService.getAuthUser()
   const userMetadata = await UserApi.getUserMetadata(user.id)
   if (userMetadata) {
     user.profile = userMetadata.profile
@@ -55,7 +50,6 @@ export const retrieveUser = async () => {
       bg: sanitizeBgUnit(userMetadata.settings?.units?.bg)
     }
   }
-  AuthService.setUser(user)
   if (user.role !== UserRole.Unset) {
     const languageCode = user.preferences?.displayLanguageCode
     if (languageCode && availableLanguageCodes.includes(languageCode) && languageCode !== getCurrentLang()) {
@@ -97,22 +91,5 @@ export const userLoader = async ({ request }) => {
     params.set("from", new URL(request.url).pathname)
     return redirect(`/loading?${params.toString()}`)
   }
-  const user = await retrieveUser()
-  // const redirectToLogin = checkUserHasARole(user)
-  // if (redirectToLogin) {
-  //   return redirectToLogin
-  // }
-  // const redirectFirstSignup = checkFirstSignup(user)
-  // if (redirectFirstSignup) {
-  //   return redirectFirstSignup
-  // }
-  // const redirectFirstConsent = checkConsent(user)
-  // if (redirectFirstConsent) {
-  //   return redirectFirstConsent
-  // }
-  // const redirectTraining = checkTraining(user)
-  // if (redirectTraining) {
-  //   return redirectTraining
-  // }
-  return user
+  return await retrieveUser()
 }

@@ -40,7 +40,7 @@ import metrics from '../../lib/metrics'
 import { useSignUpFormState } from './signup-formstate-context'
 import { availableCountries } from '../../lib/language'
 import { HcpProfessionList } from '../../lib/auth/models/enums/hcp-profession.enum'
-import { SignupForm } from '../../lib/auth'
+import { SignupForm, User } from '../../lib/auth'
 import { useAlert } from '../../components/utils/snackbar'
 import SignupStepperActionButtons from './signup-stepper-action-buttons'
 import { type SignUpFormProps } from './signup-stepper'
@@ -52,6 +52,7 @@ import { Settings } from '../../lib/auth/models/settings.model'
 import UserApi from '../../lib/auth/user.api'
 import AuthService from '../../lib/auth/auth.service'
 import { useAuth0 } from '@auth0/auth0-react'
+import { useRouteLoaderData } from 'react-router-dom'
 
 interface Errors {
   firstName: boolean
@@ -73,6 +74,7 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
     hcpProfession: false
   })
   const [saving, setSaving] = useState<boolean>(false)
+  const user = useRouteLoaderData('user-route') as User
 
   const isFormEmpty = useMemo<boolean>(() => {
     return !_.some(errors) &&
@@ -126,8 +128,6 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
     }
     const preferences: Preferences = { displayLanguageCode: signupForm.preferencesLanguage }
     const settings: Settings = { country: signupForm.profileCountry }
-
-    const user = AuthService.getUser()
 
     await UserApi.completeUserSignup(user.id, {
       email: auth0user.email,

@@ -47,7 +47,6 @@ import { Team } from '../lib/team'
 import { TeamType } from '../lib/team/models/enums/team-type.enum'
 import TeamUtils from '../lib/team/team.util'
 import { PatientsProvider } from '../lib/patient/patients.provider'
-import { User } from '../lib/auth'
 
 const getLoggedInRoutes = () => {
   return {
@@ -58,7 +57,7 @@ const getLoggedInRoutes = () => {
       {
         path: '',
         loader: async () => {
-          const authUser = new User(AuthService.getAuthUser())
+          const authUser = AuthService.getAuthUser()
           const redirectFirstSignup = checkFirstSignup(authUser)
           if (redirectFirstSignup) {
             return redirectFirstSignup
@@ -89,11 +88,11 @@ const getLoggedInRoutes = () => {
         element: <UserLayout />,
         id: 'teams-route',
         loader: async () => {
-          const user = await retrieveUser()
+          const user = AuthService.getAuthUser()
           if (user.isUserCaregiver()) {
             return null
           }
-          const teams = await TeamApi.getTeams(AuthService.getUser().id, user.role)
+          const teams = await TeamApi.getTeams(user.id, user.role)
           if (!teams.length) {
             throw Error('Error when retrieving teams')
           }
@@ -125,11 +124,11 @@ const getLoggedInRoutes = () => {
               {
                 path: '',
                 loader: async () => {
-                  const user = await retrieveUser()
+                  const user = AuthService.getAuthUser()
                   if (user.isUserCaregiver()) {
                     return redirect('/private')
                   }
-                  const teams = await TeamApi.getTeams(AuthService.getUser().id, user.role) //This call should be cached
+                  const teams = await TeamApi.getTeams(user.id, user.role)
                   if (!teams) {
                     throw Error('Could not retrieve teams')
                   }
@@ -152,7 +151,7 @@ const getLoggedInRoutes = () => {
                 path: ':teamId',
                 loader: async ({ params }) => {
                   const paramTeamId = params.teamId
-                  const user = await retrieveUser()
+                  const user = AuthService.getAuthUser()
                   if (user.isUserCaregiver()) {
                     localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, PRIVATE_TEAM_ID)
                     if (paramTeamId !== PRIVATE_TEAM_ID) {
@@ -160,7 +159,7 @@ const getLoggedInRoutes = () => {
                     }
                     return null
                   }
-                  const teams = await TeamApi.getTeams(AuthService.getUser().id, user.role) //This call should be cached
+                  const teams = await TeamApi.getTeams(user.id, user.role)
                   if (!teams) {
                     throw Error('Could not retrieve teams')
                   }
@@ -186,7 +185,7 @@ const getLoggedInRoutes = () => {
                       if (!params.teamId) {
                         return null
                       }
-                      const user = await retrieveUser()
+                      const user = AuthService.getAuthUser()
                       if (user.isUserPatient()) {
                         return redirect(AppUserRoute.Dashboard)
                       }
@@ -208,8 +207,8 @@ const getLoggedInRoutes = () => {
           {
             path: '*',
             element: <Outlet />,
-            loader: async () => {
-              const user = await retrieveUser()
+            loader: () => {
+              const user = AuthService.getAuthUser()
               if (!user.isUserPatient()) {
                 return redirect(AppUserRoute.NotFound)
               }

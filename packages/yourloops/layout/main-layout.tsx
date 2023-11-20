@@ -51,7 +51,6 @@ tssCache.compat = true
 
 const AuthError: FC = () => {
   const { error } = useAuth0()
-  console.log(error)
   const { error: displayError } = useAlert()
 
   useEffect(() => {

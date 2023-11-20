@@ -55,7 +55,6 @@ export const COMMON_ROUTES = [
     },
     element: <LoginPageLanding />
   },
-  { path: AppRoute.CompleteSignup, element: <CompleteSignUpPage /> },
   {
     path: AppRoute.VerifyEmail,
     loader: () => {
@@ -86,6 +85,7 @@ export const COMMON_LOGGED_ROUTES_NO_HEADER = [
     },
     element: <ConsentPage messageKey="consent-renew-message" />
   },
+  { path: AppRoute.CompleteSignup, element: <CompleteSignUpPage /> },
   {
     path: AppRoute.NewConsent,
     loader: async () => {

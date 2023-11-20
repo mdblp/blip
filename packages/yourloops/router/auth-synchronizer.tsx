@@ -33,22 +33,23 @@ import AuthService from '../lib/auth/auth.service'
 import { AuthenticatedUser } from '../lib/auth/models/authenticated-user.model'
 import { v4 as uuidv4 } from 'uuid'
 import { MainLayout } from '../layout/main-layout'
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useRouteLoaderData, useSearchParams } from 'react-router-dom'
 import { AppRoute } from '../models/enums/routes.enum'
 import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../lib/auth/models/auth0-error.model'
+import { User } from '../lib/auth'
+import { isBrowserOfficiallySupported } from '../lib/browser'
 
 export const AuthSynchronizer: FC = () => {
-  const { isAuthenticated, user: authUser, getAccessTokenSilently, isLoading } = useAuth0()
+  const { isAuthenticated, user: authUser, getAccessTokenSilently, isLoading, loginWithRedirect } = useAuth0()
+  console.log(authUser)
   console.log(isAuthenticated)
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const { pathname } = useLocation()
+  const user = useRouteLoaderData('user-route') as User
   console.log(pathname)
 
   AuthService.setIsAuthenticated(isAuthenticated)
-  if (authUser && !AuthService.getAuthUser()) {
-    AuthService.setAuthUser(authUser as AuthenticatedUser)
-  }
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -57,12 +58,23 @@ export const AuthSynchronizer: FC = () => {
           // Nothing to do
         })
         .catch((error) => {
+          console.log(error)
           const errorDescription = error.error_description
           if (errorDescription === AUTH0_ERROR_EMAIL_NOT_VERIFIED) {
             navigate(AppRoute.VerifyEmail)
             return
           }
-          navigate(AppRoute.Login)
+          if (isBrowserOfficiallySupported()) {
+            navigate(AppRoute.Login)
+          } else {
+            // loginWithRedirect().then(toto => {
+            //   console.log(toto)
+            // })
+            //   .catch(error => {
+            //     console.log(error)
+            //   })
+            // navigate('/')
+          }
           // This happens when we try to silently login but we don't have enough info
         })
     }
@@ -78,6 +90,12 @@ export const AuthSynchronizer: FC = () => {
   }, [getAccessTokenSilently, isAuthenticated])
 
   useEffect(() => {
+    if (authUser) {
+      AuthService.setAuthUser(new User(authUser as AuthenticatedUser))
+    }
+  }, [authUser])
+
+  useEffect(() => {
     console.log(isAuthenticated)
     if (!isAuthenticated) {
       return
@@ -88,7 +106,6 @@ export const AuthSynchronizer: FC = () => {
       navigate(fromUrl)
       return
     }
-    const user = AuthService.getUser()
     if (!user) {
       navigate('/')
       return
