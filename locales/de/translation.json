@@ -1,6 +1,6 @@
 {
   " reports the data.": " die Daten meldet.",
-  "%-I:%M %p": "%-Hh:%M",
+  "%-I:%M %p": "%-Hh%M",
   "%b %-d, %Y": "%-d %b %Y",
   "* This BG value was higher than your device could record. Your actual BG value is higher than it appears here.": "* Dieser Glukosewert war höher, als Ihr Gerät aufzeichnen konnte. Ihr tatsächlicher Glukosewert ist höher als hier angezeigt.",
   "* This BG value was lower than your device could record. Your actual BG value is lower than it appears here.": "* Dieser Glukosewert war niedriger, als Ihr Gerät aufzeichnen konnte. Ihr tatsächlicher Glukosewert ist niedriger als hier angezeigt.",
