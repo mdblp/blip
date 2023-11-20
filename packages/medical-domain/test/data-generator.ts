@@ -200,7 +200,6 @@ function createRandomPhysicalActivity(date?: Date): PhysicalActivity {
     type: DatumType.PhysicalActivity,
     guid: faker.string.uuid(),
     reportedIntensity: faker.helpers.arrayElement(Object.values(Intensity)),
-    eventId: faker.string.uuid(),
     inputTime
   }
 }

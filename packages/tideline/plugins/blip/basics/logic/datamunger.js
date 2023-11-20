@@ -29,7 +29,7 @@ function dataMunger(bgClasses, bgUnits = MGDL_UNITS) {
 
   return {
     getLatestPumpUploaded: function(patientData) {
-      const pumpSettings = patientData.grouped.pumpSettings[0]
+      const pumpSettings = patientData.medicalData.pumpSettings[0]
       return _.get(pumpSettings, 'source', null)
     },
 

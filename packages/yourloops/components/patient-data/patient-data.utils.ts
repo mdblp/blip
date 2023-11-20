@@ -33,7 +33,6 @@ import MedicalDataService, { type BgUnit, type MedicalData, Source, type TimePre
 import config from '../../lib/config/config'
 import { PatientView } from '../../enum/patient-view.enum'
 import { type GetPatientDataOptions } from '../../lib/data/models/get-patient-data-options.model'
-import { type PatientData } from '../../lib/data/models/patient-datum.model'
 
 interface GetDatetimeBoundsArgs {
   currentPatientView: PatientView
@@ -66,7 +65,7 @@ export class PatientDataUtils {
     this.timePrefs = timePrefs
   }
 
-  buildMedicalData(data: PatientData): MedicalDataService {
+  buildMedicalData(data: MedicalData): MedicalDataService {
     const medicalData = new MedicalDataService()
     medicalData.opts = {
       defaultSource: Source.Diabeloop,
@@ -121,7 +120,7 @@ export class PatientDataUtils {
     return moment.utc(medicalData.endpoints[1]).valueOf() - TimeService.MS_IN_DAY / 2
   }
 
-  async loadDataRange({ start, end }: DateRange): Promise<PatientData | null> {
+  async loadDataRange({ start, end }: DateRange): Promise<MedicalData | null> {
     const rangeDisplay = {
       start: moment.utc(start.valueOf()).startOf('day'),
       end: moment.utc(end.valueOf()).startOf('day').add(1, 'day')
@@ -133,7 +132,7 @@ export class PatientDataUtils {
     return null
   }
 
-  async retrievePatientData(): Promise<PatientData | null> {
+  async retrievePatientData(): Promise<MedicalData | null> {
     const dataRange = await DataApi.getPatientDataRange(this.patient.userid)
 
     if (!dataRange) {
@@ -150,7 +149,8 @@ export class PatientDataUtils {
 
     const patientData = await this.fetchPatientData({
       startDate: initialLoadingDates[0].toISOString(),
-      withPumpSettings: true
+      withPumpSettings: true,
+      bgUnits: this.bgUnits
     })
 
     this.partialDataLoad = new PartialDataLoad(
@@ -161,24 +161,48 @@ export class PatientDataUtils {
     return patientData
   }
 
-  private async fetchPatientDataRanges(dateRange: DateRange): Promise<PatientData> {
+  private async fetchPatientDataRanges(dateRange: DateRange): Promise<MedicalData> {
     const ranges = this.partialDataLoad.getMissingRanges(dateRange)
+    const aggregatedData: MedicalData = {
+      alarmEvents: [],
+      basal: [],
+      bolus: [],
+      cbg: [],
+      confidentialModes: [],
+      deviceParametersChanges: [],
+      messages: [],
+      meals: [],
+      physicalActivities: [],
+      pumpSettings: [],
+      reservoirChanges: [],
+      smbg: [],
+      warmUps: [],
+      wizards: [],
+      zenModes: [],
+      timezoneChanges: []
+    }
     const promises = []
+    const medicalDataKeys = Object.keys(aggregatedData)
     ranges.forEach(range => {
       promises.push(this.fetchPatientData({
         startDate: range.start.toISOString(),
-        endDate: range.end.toISOString()
+        endDate: range.end.toISOString(),
+        bgUnits: this.bgUnits
       }))
     })
     const results = await Promise.all(promises)
-    return results.flat()
+    results.forEach(dataRange => {
+      medicalDataKeys.forEach((key) => {
+        if (dataRange[key]) {
+          aggregatedData[key] = aggregatedData[key].concat(dataRange[key])
+        }
+      })
+    })
+    return aggregatedData
   }
 
-  private async fetchPatientData(options: GetPatientDataOptions): Promise<PatientData> {
-    const [patientData, messagesNotes] = await Promise.all([
-      DataApi.getPatientData(this.patient, options),
-      DataApi.getMessages(this.patient, options)
-    ])
-    return [...patientData, ...messagesNotes] as PatientData
+  private async fetchPatientData(options: GetPatientDataOptions): Promise<MedicalData> {
+    return await DataApi.getPatientData(this.patient, options)
   }
 }
+

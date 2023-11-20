@@ -28,7 +28,7 @@
 import { screen, waitFor } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../../mock/team.api.mock'
-import { mockDataAPI } from '../../../mock/data.api.mock'
+import { completeDailyViewDataMmol, mockDataAPI } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { mockChatAPI } from '../../../mock/chat.api.mock'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
@@ -58,7 +58,6 @@ describe('Daily view for HCP', () => {
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForHcp()
     mockChatAPI()
-    mockDataAPI()
   })
 
   afterEach(() => {
@@ -95,6 +94,7 @@ describe('Daily view for HCP', () => {
       lastName,
       settings: { units: { bg: Unit.MmolPerLiter } }
     })
+    mockDataAPI(completeDailyViewDataMmol)
 
     const router = renderPage(dailyRoute)
     await waitFor(() => {

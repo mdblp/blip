@@ -778,9 +778,9 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   }
 
   container.createMessage = async (message) => {
-    container.tidelineData.add([message])
+    container.tidelineData.addMessage(message)
     // We can assume chart.tidelineData.grouped.message is an array
-    const tdMessage = container.tidelineData.grouped.message.find((d) => d.id === message.id)
+    const tdMessage = container.tidelineData.medicalData.messages.find((d) => d.id === message.id)
     if (typeof tdMessage === 'object') {
       container.emitter.emit('messageCreated', tdMessage)
       return true
