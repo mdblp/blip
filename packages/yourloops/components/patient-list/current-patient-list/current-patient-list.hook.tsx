@@ -192,7 +192,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       {
         type: 'number',
         field: PatientListColumns.TimeInRange,
-        headerName: t('column-header-time-in-range'),
+        headerName: t('time-in-range'),
         description: t('time-in-range-tooltip'),
         headerAlign: 'left',
         align: 'left',
