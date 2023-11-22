@@ -37,7 +37,7 @@ export enum PatientListColumns {
   Flag = 'flag',
   Gender = 'gender',
   GlucoseManagementIndicator = 'glucose-management-indicator',
-  Hypoglycemia = 'hypoglycemia',
+  BelowRange = 'below-range',
   LastDataUpdate = 'last-data-update',
   Messages = 'messages',
   MonitoringAlerts = 'monitoring-alerts',

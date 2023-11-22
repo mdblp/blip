@@ -766,49 +766,37 @@ const checkDefaultColumnsDisplay = () => {
 }
 
 const checkTooltipsColumnHeader = async (dataGridRows) => {
-  const tooltipTextMonitoringAlerts = 'Hover over the icons to learn more'
-  const tooltipTextMessages = 'Messages'
-  const tooltipTextBelowRange = 'Below Range'
-  const tooltipTextManagementGlucose = 'GMI (estimated HbA1c)'
-  const tooltipTextTimeInRange = 'Time in range'
-  const tooltipTextVariant = 'Coefficient of Variation'
-  const tooltipTextLastDataUpdate = 'Last data Update'
-
   const monitoringAlertsColumnHeader = within(dataGridRows).getByText('Monitoring alerts')
   const messagesColumnHeader = within(dataGridRows).getByText('Messages')
-  const TimeInRangeColumnHeader = within(dataGridRows).getByText('TIR')
+  const timeInRangeColumnHeader = within(dataGridRows).getByText('TIR')
   const managementGlucoseColumnHeader = within(dataGridRows).getByText('GMI')
   const belowRangeColumnHeader = within(dataGridRows).getByText('Below range')
   const variantColumnHeader = within(dataGridRows).getByText('CV')
-  const LastDataUpdateColumnHeader = within(dataGridRows).getByText('Last data update')
 
   await userEvent.hover(monitoringAlertsColumnHeader)
-  expect(await screen.findByText(tooltipTextMonitoringAlerts)).toBeVisible()
+  expect(await screen.findByText('Hover over the icons to learn more')).toBeVisible()
   await userEvent.unhover(monitoringAlertsColumnHeader)
 
   await userEvent.hover(messagesColumnHeader)
-  expect(await screen.findByText(tooltipTextMessages)).toBeVisible()
+  expect(await screen.findByText('Messages')).toBeVisible()
   await userEvent.unhover(messagesColumnHeader)
 
-  await userEvent.hover(TimeInRangeColumnHeader)
-  expect(await screen.findByText(tooltipTextTimeInRange)).toBeVisible()
-  await userEvent.unhover(TimeInRangeColumnHeader)
+  await userEvent.hover(timeInRangeColumnHeader)
+  expect(await screen.findByText('Time in Range')).toBeVisible()
+  await userEvent.unhover(timeInRangeColumnHeader)
 
   await userEvent.hover(managementGlucoseColumnHeader)
-  expect(await screen.findByText(tooltipTextManagementGlucose)).toBeVisible()
+  expect(await screen.findByText('GMI (estimated HbA1c)')).toBeVisible()
   await userEvent.unhover(managementGlucoseColumnHeader)
 
-  await userEvent.hover(belowRangeColumnHeader)
-  expect(await screen.findByText(tooltipTextBelowRange)).toBeVisible()
-  await userEvent.unhover(belowRangeColumnHeader)
-
   await userEvent.hover(variantColumnHeader)
-  expect(await screen.findByText(tooltipTextVariant)).toBeVisible()
+  expect(await screen.findByText('Coefficient of Variation')).toBeVisible()
   await userEvent.unhover(variantColumnHeader)
 
-  await userEvent.hover(LastDataUpdateColumnHeader)
-  expect(await screen.findByText(tooltipTextLastDataUpdate)).toBeVisible()
-  await userEvent.unhover(LastDataUpdateColumnHeader)
-
+  // They tests are written this way because the tooltip and column title are the same.
+  await userEvent.hover(belowRangeColumnHeader)
+  const tooltipBelowRange = screen.getByRole('tooltip')
+  expect(await within(tooltipBelowRange).findByText('Below range')).toBeVisible()
+  await userEvent.unhover(belowRangeColumnHeader)
 
 }

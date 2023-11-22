@@ -104,7 +104,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         [PatientListColumns.Messages]: patient.hasSentUnreadMessages,
         [PatientListColumns.TimeInRange]: patient.glycemiaIndicators?.timeInRange,
         [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators?.glucoseManagementIndicator,
-        [PatientListColumns.Hypoglycemia]: patient.glycemiaIndicators?.hypoglycemia,
+        [PatientListColumns.BelowRange]: patient.glycemiaIndicators?.hypoglycemia,
         [PatientListColumns.Variance]: patient.glycemiaIndicators?.coefficientOfVariation,
         [PatientListColumns.Actions]: patient
       }
@@ -193,7 +193,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         type: 'number',
         field: PatientListColumns.TimeInRange,
         headerName: t('column-header-time-in-range'),
-        description: t('time-in-range'),
+        description: t('time-in-range-tooltip'),
         headerAlign: 'left',
         align: 'left',
         valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value),
@@ -228,8 +228,8 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       },
       {
         type: 'number',
-        field: PatientListColumns.Hypoglycemia,
-        headerName: t('hypoglycemia'),
+        field: PatientListColumns.BelowRange,
+        headerName: t('below-range'),
         description: t('below-range-tooltip'),
         headerAlign: 'left',
         align: 'left',
