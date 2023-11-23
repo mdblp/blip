@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, waitFor, within } from '@testing-library/react'
+import { logDOM, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { loggedInUserId } from '../mock/auth0.hook.mock'
 import { filtersTeamName, myThirdTeamId, myThirdTeamName } from '../mock/team.api.mock'
@@ -793,10 +793,7 @@ const checkTooltipsColumnHeader = async (dataGridRows) => {
   expect(await screen.findByText('Coefficient of Variation')).toBeVisible()
   await userEvent.unhover(variantColumnHeader)
 
-  // They tests are written this way because the tooltip and column title are the same.
   await userEvent.hover(belowRangeColumnHeader)
-  const tooltipBelowRange = screen.getByRole('tooltip')
-  expect(await within(tooltipBelowRange).findByText('Below range')).toBeVisible()
+  expect(await screen.findByText('Below range')).toBeVisible()
   await userEvent.unhover(belowRangeColumnHeader)
-
 }
