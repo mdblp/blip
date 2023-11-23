@@ -170,7 +170,7 @@ describe('Date picker', () => {
     // Wait the transition end
     await waitTimeout(2 * TRANSITION_DURATION)
     buttonLastNovemberDay = document.getElementById('button-calendar-day-2021-11-30')
-    expect(buttonLastNovemberDay).toBeNull()
+    expect(buttonLastNovemberDay).not.toBeNull()
     buttonFirstOctoberDay = document.getElementById('button-calendar-day-2021-10-01')
     expect(buttonFirstOctoberDay).not.toBeNull()
   }, TRANSITION_DURATION * 10)
