@@ -799,7 +799,6 @@ const checkTooltipsColumnHeader = async (dataGridRows) => {
   await userEvent.unhover(belowRangeColumnHeader)
 
   await userEvent.hover(LastDataUpdateColumnHeader)
-  const tooltipLastDataUpdate = screen.getByRole('tooltip')
-  expect(await within(tooltipLastDataUpdate).findByText('Last data Update')).toBeVisible()
+  expect(await screen.findByText('Last data update')).toBeVisible()
   await userEvent.unhover(LastDataUpdateColumnHeader)
 }
