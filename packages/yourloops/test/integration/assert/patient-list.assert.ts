@@ -772,6 +772,7 @@ const checkTooltipsColumnHeader = async (dataGridRows) => {
   const managementGlucoseColumnHeader = within(dataGridRows).getByText('GMI')
   const belowRangeColumnHeader = within(dataGridRows).getByText('Below range')
   const variantColumnHeader = within(dataGridRows).getByText('CV')
+  const LastDataUpdateColumnHeader = within(dataGridRows).getByText('Last data update')
 
   await userEvent.hover(monitoringAlertsColumnHeader)
   expect(await screen.findByText('Hover over the icons to learn more')).toBeVisible()
@@ -782,7 +783,7 @@ const checkTooltipsColumnHeader = async (dataGridRows) => {
   await userEvent.unhover(messagesColumnHeader)
 
   await userEvent.hover(timeInRangeColumnHeader)
-  expect(await screen.findByText('Time in Range')).toBeVisible()
+  expect(await screen.findByText('Time In Range')).toBeVisible()
   await userEvent.unhover(timeInRangeColumnHeader)
 
   await userEvent.hover(managementGlucoseColumnHeader)
@@ -796,4 +797,8 @@ const checkTooltipsColumnHeader = async (dataGridRows) => {
   await userEvent.hover(belowRangeColumnHeader)
   expect(await screen.findByText('Below range')).toBeVisible()
   await userEvent.unhover(belowRangeColumnHeader)
+
+  await userEvent.hover(LastDataUpdateColumnHeader)
+  expect(await screen.findByText('Last data Update')).toBeVisible()
+  await userEvent.unhover(LastDataUpdateColumnHeader)
 }
