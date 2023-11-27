@@ -1,7 +1,7 @@
 {
   " reports the data.": " reports the data.",
   "%-I:%M %p": "",
-  "%b %-d, %Y": "%b %-d, %Y",
+  "%b %-d, %Y": "%Y/%b/%-d",
   "* This BG value was higher than your device could record. Your actual BG value is higher than it appears here.": "*血糖値が記録可能な数値を超えており、実際の血糖値は表示されている数値より高いです。",
   "* This BG value was lower than your device could record. Your actual BG value is lower than it appears here.": "*血糖値が記録可能な数値を下回っており、実際の血糖値は表示されている数値より低いです。",
   "**Avg. Daily Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view.": "**平均日次インスリン**全ての基礎レートおよびボーラス（U）の合計から、表示されている日数を割ったもの。",
