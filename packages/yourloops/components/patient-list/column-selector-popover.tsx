@@ -103,8 +103,8 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
       checked: updatedColumnsModel[PatientListColumns.GlucoseManagementIndicator]
     },
     {
-      name: PatientListColumns.Hypoglycemia,
-      checked: updatedColumnsModel[PatientListColumns.Hypoglycemia]
+      name: PatientListColumns.BelowRange,
+      checked: updatedColumnsModel[PatientListColumns.BelowRange]
     },
     {
       name: PatientListColumns.Variance,
