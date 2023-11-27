@@ -772,7 +772,7 @@ const checkTooltipsColumnHeader = async (dataGridRows) => {
   const managementGlucoseColumnHeader = within(dataGridRows).getByText('GMI')
   const belowRangeColumnHeader = within(dataGridRows).getByText('Below range')
   const variantColumnHeader = within(dataGridRows).getByText('CV')
-  const LastDataUpdateColumnHeader = within(dataGridRows).getByText('Last data update')
+  const lastDataUpdateColumnHeader = within(dataGridRows).getByText('Last data update')
 
   await userEvent.hover(monitoringAlertsColumnHeader)
   expect(await screen.findByText('Hover over the icons to learn more')).toBeVisible()
@@ -795,10 +795,12 @@ const checkTooltipsColumnHeader = async (dataGridRows) => {
   await userEvent.unhover(variantColumnHeader)
 
   await userEvent.hover(belowRangeColumnHeader)
-  expect(await screen.findByText('Below range')).toBeVisible()
+  // Using `findByRole()` instead of `findByText()` because the tooltip has the same name as the column header
+  expect(await screen.findByRole('tooltip', { name: 'Below range' })).toBeVisible()
   await userEvent.unhover(belowRangeColumnHeader)
 
-  await userEvent.hover(LastDataUpdateColumnHeader)
-  expect(await screen.findByText('Last data update')).toBeVisible()
-  await userEvent.unhover(LastDataUpdateColumnHeader)
+  await userEvent.hover(lastDataUpdateColumnHeader)
+  // Using `findByRole()` instead of `findByText()` because the tooltip has the same name as the column header
+  expect(await screen.findByRole('tooltip', { name: 'Last data update' })).toBeVisible()
+  await userEvent.unhover(lastDataUpdateColumnHeader)
 }
