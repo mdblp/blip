@@ -29,7 +29,7 @@ import React, { type FunctionComponent } from 'react'
 import { TrendsSvgContainerSized as TrendsSvgContainer } from '../trends-svg-container/trends-svg-container'
 import { type BgPrefs } from '../../../../models/blood-glucose.model'
 import type MedicalDataService from 'medical-domain'
-import { type Cbg, type WeekDaysFilter, DatumType, Unit } from 'medical-domain'
+import { type Cbg, type WeekDaysFilter, Unit } from 'medical-domain'
 import { type OnSelectDateFunction } from '../../../../models/on-select-date-function.model'
 import { extent } from 'd3-array'
 
@@ -62,7 +62,7 @@ export const TrendsContainer: FunctionComponent<TrendsContainerProps> = (props) 
   const upperBound = yScaleClampTop[bgPrefs.bgUnits]
   // The `MedicalDataService.grouped` getter does not allow stricter typing
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  const bgDomain = extent(medicalData.grouped[DatumType.Cbg] as Cbg[], (datum: Cbg) => datum.value)
+  const bgDomain = extent(medicalData.medicalData.cbg, (datum: Cbg) => datum.value)
   const veryLowThreshold = bgPrefs.bgBounds?.veryLowThreshold
   const lowerBound = bgDomain[0] && veryLowThreshold && bgDomain[0] > veryLowThreshold ? veryLowThreshold : bgDomain[0] ?? 0
   const yScaleDomain = [lowerBound, upperBound]

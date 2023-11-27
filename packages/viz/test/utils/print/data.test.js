@@ -146,7 +146,7 @@ describe('print data utils', () => {
         zenModes: [],
         timezoneChanges: []
       }
-      tidelineData.add([])
+      tidelineData.add()
     })
 
     beforeEach(() => {

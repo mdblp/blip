@@ -29,7 +29,6 @@ import { makeStyles } from 'tss-react/mui'
 
 export const usePatientListStyles = makeStyles()((theme) => {
   const dataGridBorder = `1px solid ${theme.palette.divider}`
-  const dataGridHeaderFontWeight = 500
 
   return {
     mandatoryCellBorder: {
@@ -38,9 +37,6 @@ export const usePatientListStyles = makeStyles()((theme) => {
     },
     customFooter: {
       borderTop: dataGridBorder
-    },
-    customColumnHeader: {
-      fontWeight: dataGridHeaderFontWeight
     }
   }
 })

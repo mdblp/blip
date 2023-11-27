@@ -151,7 +151,7 @@ export class CBG extends Common {
 
     this.deviceTime = opts.deviceTime
     this.deviceId = opts.deviceId
-    this.units = opts.units
+    this.unit = opts.units
     this.value = opts.value
     this.localDate = opts.localDate
 
@@ -226,7 +226,7 @@ export class Settings extends Common {
     this.carbRatio = opts.carbRatio
     this.deviceTime = opts.deviceTime
     this.insulinSensitivity = opts.insulinSensitivity
-    this.units = opts.units
+    this.unit = opts.units
 
     this.time = this.makeTime()
     this.normalTime = this.makeNormalTime()
@@ -249,7 +249,7 @@ export class SMBG extends Common {
     this.type = 'smbg'
 
     this.deviceTime = opts.deviceTime
-    this.units = opts.units
+    this.unit = opts.units
     this.value = opts.value
     this.localDate = opts.localDate
 

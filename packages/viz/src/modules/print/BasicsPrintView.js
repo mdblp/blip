@@ -286,10 +286,10 @@ class BasicsPrintView extends PrintView {
         }
       }).reverse()
 
-      this.renderTable(tableColumns, rows, {
+      this.renderTable({
         showHeaders: false,
         bottomMargin: 15
-      })
+      }, tableColumns, rows)
     } else {
       this.setFill(this.colors.lightGrey)
 
@@ -447,10 +447,10 @@ class BasicsPrintView extends PrintView {
             : `${formatDecimalNumber(secondary[key2], 1)} U`
         }
 
-        this.renderTable(tableColumns, rows, {
+        this.renderTable({
           showHeaders: false,
           bottomMargin: 15
-        })
+        }, tableColumns, rows)
       }
     }
   }
@@ -614,10 +614,10 @@ class BasicsPrintView extends PrintView {
       }
     ]
 
-    this.renderTable(tableColumns, rows, {
+    this.renderTable({
       showHeaders: false,
       bottomMargin: 15
-    })
+    }, tableColumns, rows)
 
     this.setFill()
   }
@@ -694,9 +694,7 @@ class BasicsPrintView extends PrintView {
         pageIndex: this.currentPageIndex
       }
 
-      this.renderTable(this.calendar.columns, rows, {
-        bottomMargin
-      })
+      this.renderTable({ bottomMargin }, this.calendar.columns, rows)
     }
   }
 

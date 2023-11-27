@@ -42,7 +42,7 @@ interface Parameter {
   timezone: string
   name: string
   level: string
-  units: Unit
+  unit: Unit
   value: string
   previousValue: string
   lastUpdateDate: string

@@ -29,9 +29,10 @@ import { isValidDateQueryParam, PatientDataUtils } from '../../../../components/
 import { createPatient } from '../../common/utils'
 import MedicalDataService, { TimeService, Unit } from 'medical-domain'
 import DataApi from '../../../../lib/data/data.api'
-import { dataRangeMock, messagesMock, patientDataMock } from './patient-data.mock'
+import { dataRangeMock, patientDataMock } from './patient-data.mock'
 import PartialDataLoad from 'blip/app/core/lib/partial-data-load'
 import { PatientView } from '../../../../enum/patient-view.enum'
+import { medicalServiceResult, mockdataFromApi } from './data.mock'
 
 function createNewPatientDataUtils(): PatientDataUtils {
   return new PatientDataUtils({
@@ -54,7 +55,6 @@ describe('Patient data utils', () => {
   describe('PatientDataUtils class', () => {
     jest.spyOn(DataApi, 'getPatientDataRange').mockResolvedValue(dataRangeMock)
     jest.spyOn(DataApi, 'getPatientData').mockResolvedValue(patientDataMock)
-    jest.spyOn(DataApi, 'getMessages').mockResolvedValue(messagesMock)
 
     describe('Class instance', () => {
       it('should create a new instance of PatientDataUtils', () => {
@@ -64,7 +64,7 @@ describe('Patient data utils', () => {
       })
     })
 
-    describe('retrievePatientDate', () => {
+    describe('retrievePatientData', () => {
       it('should return null if patient has no data range', async () => {
         jest.spyOn(DataApi, 'getPatientDataRange').mockResolvedValueOnce(null)
         const patientDataUtils = createNewPatientDataUtils()
@@ -73,9 +73,11 @@ describe('Patient data utils', () => {
         expect(patientDataUtils.partialDataLoad instanceof PartialDataLoad).toBeFalsy()
       })
       it('should retrieve patient data', async () => {
+        const data = { is: 'this', test: 'really', useful: '?' }
+        jest.spyOn(DataApi, 'getPatientData').mockResolvedValueOnce(data)
         const patientDataUtils = createNewPatientDataUtils()
         const patientData = await patientDataUtils.retrievePatientData()
-        expect(patientData).toEqual([...patientDataMock, ...messagesMock])
+        expect(patientData).toEqual(data)
         expect(patientDataUtils.partialDataLoad instanceof PartialDataLoad).toBeTruthy()
       })
     })
@@ -84,8 +86,9 @@ describe('Patient data utils', () => {
       it('should build and return medical data service instance', async () => {
         const patientDataUtils = createNewPatientDataUtils()
         await patientDataUtils.retrievePatientData()
-        const medicalData = patientDataUtils.buildMedicalData(patientDataMock)
+        const medicalData = patientDataUtils.buildMedicalData(mockdataFromApi)
         expect(medicalData instanceof MedicalDataService).toBeTruthy()
+        expect(medicalData.medicalData).toEqual(medicalServiceResult)
         expect(Object.keys(medicalData.medicalData).length).toEqual(16)
       })
     })
