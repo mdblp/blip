@@ -407,13 +407,15 @@ export const checkPatientListHideShowColumns = async () => {
   expect(screen.getByRole('columnheader', { name: 'System' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Messages' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'Time In Range' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'GMI (estimated HbA1c)' })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'TIR' })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'GMI' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Below range' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'Coefficient of Variation' })).toBeVisible()
+  expect(screen.getByRole('columnheader', { name: 'CV' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
 
-  expect(dataGridCurrentRows).toHaveTextContent('PatientAgeDate of birthGenderSystemMonitoring alertsMessagesTIRGMI (estimated HbA1c)Below rangeCVLast data updateActionsFlag patient patient1@diabeloop.frPatient1 Groby43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient2@diabeloop.frPatient2 Rouis43Jan 1, 1980FemaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient3@diabeloop.frPatient3 Srairi43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient-mmol@diabeloop.frPatientMmol Perotto43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/A')
+  await checkTooltipsColumnHeader(dataGridCurrentRows)
+
+  expect(dataGridCurrentRows).toHaveTextContent('PatientAgeDate of birthGenderSystemMonitoring alertsMessagesTIRGMIBelow rangeCVLast data updateActionsFlag patient patient1@diabeloop.frPatient1 Groby43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient2@diabeloop.frPatient2 Rouis43Jan 1, 1980FemaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient3@diabeloop.frPatient3 Srairi43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient-mmol@diabeloop.frPatientMmol Perotto43Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/A')
 
   await userEvent.click(columnSettingsButton)
   const columnSettingsPopoverForReset = screen.getByRole('presentation')
@@ -755,10 +757,50 @@ const checkDefaultColumnsDisplay = () => {
   expect(screen.getByRole('columnheader', { name: 'Monitoring alerts' })).toBeVisible()
   expect(screen.queryByRole('columnheader', { name: 'System' })).not.toBeInTheDocument()
   expect(screen.getByRole('columnheader', { name: 'Messages' })).toBeVisible()
-  expect(screen.getByRole('columnheader', { name: 'Time In Range' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'GMI (estimated HbA1c of last 14 days)' })).not.toBeInTheDocument()
+  expect(screen.getByRole('columnheader', { name: 'TIR' })).toBeVisible()
+  expect(screen.queryByRole('columnheader', { name: 'GMI' })).not.toBeInTheDocument()
   expect(screen.getByRole('columnheader', { name: 'Below range' })).toBeVisible()
-  expect(screen.queryByRole('columnheader', { name: 'Coefficient of Variation' })).not.toBeInTheDocument()
+  expect(screen.queryByRole('columnheader', { name: 'CV' })).not.toBeInTheDocument()
   expect(screen.getByRole('columnheader', { name: 'Last data update' })).toBeVisible()
   expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeVisible()
+}
+
+const checkTooltipsColumnHeader = async (dataGridRows) => {
+  const monitoringAlertsColumnHeader = within(dataGridRows).getByText('Monitoring alerts')
+  const messagesColumnHeader = within(dataGridRows).getByText('Messages')
+  const timeInRangeColumnHeader = within(dataGridRows).getByText('TIR')
+  const managementGlucoseColumnHeader = within(dataGridRows).getByText('GMI')
+  const belowRangeColumnHeader = within(dataGridRows).getByText('Below range')
+  const variantColumnHeader = within(dataGridRows).getByText('CV')
+  const lastDataUpdateColumnHeader = within(dataGridRows).getByText('Last data update')
+
+  await userEvent.hover(monitoringAlertsColumnHeader)
+  expect(await screen.findByText('Hover over the icons to learn more')).toBeVisible()
+  await userEvent.unhover(monitoringAlertsColumnHeader)
+
+  await userEvent.hover(messagesColumnHeader)
+  expect(await screen.findByText('Messages')).toBeVisible()
+  await userEvent.unhover(messagesColumnHeader)
+
+  await userEvent.hover(timeInRangeColumnHeader)
+  expect(await screen.findByText('Time In Range')).toBeVisible()
+  await userEvent.unhover(timeInRangeColumnHeader)
+
+  await userEvent.hover(managementGlucoseColumnHeader)
+  expect(await screen.findByText('GMI (estimated HbA1c)')).toBeVisible()
+  await userEvent.unhover(managementGlucoseColumnHeader)
+
+  await userEvent.hover(variantColumnHeader)
+  expect(await screen.findByText('Coefficient of Variation')).toBeVisible()
+  await userEvent.unhover(variantColumnHeader)
+
+  await userEvent.hover(belowRangeColumnHeader)
+  // Using `findByRole()` instead of `findByText()` because the tooltip has the same name as the column header
+  expect(await screen.findByRole('tooltip', { name: 'Below range' })).toBeVisible()
+  await userEvent.unhover(belowRangeColumnHeader)
+
+  await userEvent.hover(lastDataUpdateColumnHeader)
+  // Using `findByRole()` instead of `findByText()` because the tooltip has the same name as the column header
+  expect(await screen.findByRole('tooltip', { name: 'Last data update' })).toBeVisible()
+  await userEvent.unhover(lastDataUpdateColumnHeader)
 }
