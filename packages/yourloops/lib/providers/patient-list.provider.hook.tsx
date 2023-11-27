@@ -48,7 +48,7 @@ const DEFAULT_COLUMNS_HCP = [
   PatientListColumns.MonitoringAlerts,
   PatientListColumns.Messages,
   PatientListColumns.TimeInRange,
-  PatientListColumns.Hypoglycemia,
+  PatientListColumns.BelowRange,
   PatientListColumns.LastDataUpdate,
   PatientListColumns.Actions
 ]
@@ -58,7 +58,7 @@ const DEFAULT_COLUMNS_CAREGIVER = [
   PatientListColumns.Patient,
   PatientListColumns.DateOfBirth,
   PatientListColumns.TimeInRange,
-  PatientListColumns.Hypoglycemia,
+  PatientListColumns.BelowRange,
   PatientListColumns.LastDataUpdate,
   PatientListColumns.Actions
 ]
@@ -87,7 +87,7 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     [PatientListColumns.Messages]: isUserHcp ? getColumnPreference(PatientListColumns.Messages) : false,
     [PatientListColumns.TimeInRange]: getColumnPreference(PatientListColumns.TimeInRange),
     [PatientListColumns.GlucoseManagementIndicator]: getColumnPreference(PatientListColumns.GlucoseManagementIndicator),
-    [PatientListColumns.Hypoglycemia]: getColumnPreference(PatientListColumns.Hypoglycemia),
+    [PatientListColumns.BelowRange]: getColumnPreference(PatientListColumns.BelowRange),
     [PatientListColumns.Variance]: getColumnPreference(PatientListColumns.Variance),
     [PatientListColumns.Actions]: true
   })
