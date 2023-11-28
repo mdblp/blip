@@ -64,7 +64,7 @@ export const StatTooltip: FunctionComponent<StatTooltipProps> = (props) => {
         <div data-testid="stat-tooltip-content" className={styles.container}>
           {annotations.map((message, index) =>
             <div key={`message-${index}`}>
-              <ReactMarkdown className={styles.message} linkTarget="_blank">
+              <ReactMarkdown className={styles.message}>
                 {message}
               </ReactMarkdown>
               {index !== annotations.length - 1 &&
