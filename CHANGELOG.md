@@ -3,9 +3,13 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.0.6-beta - 2023-11-10
+### Changed
+- YLP-2574 Create tool tips independently of the name of the columns
+
 ### Engineering use
 - YLP-2476 Use tide-whisperer v2: route /all.
 - YLP-2696 Fix some Sonarcloud bugs and code smells
+- YLP-2697 App routing should reveal data dependencies
 - YLP-2697 App routing should reveal data dependencies
 
 ### Changed
