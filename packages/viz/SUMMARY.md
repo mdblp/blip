@@ -7,7 +7,6 @@
     + [app & directory structure](docs/DirectoryStructure.md)
     + [code style](docs/CodeStyle.md)
 + [per-view documentation](docs/views/README.md)
-    + [Device Settings view](src/components/settings/README.md)
     + [Trends view](docs/views/Trends.md)
 + [usage of dependencies](docs/deps/README.md)
     + [D3](docs/deps/D3.md)
