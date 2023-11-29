@@ -454,6 +454,7 @@
   "send": "Send",
   "sensor-usage": "Sensor Usage",
   "sensor-usage-tooltip": "**Sensor Usage:** Time the {{cbgLabel}} collected data, divided by the total time represented in this view.",
+  "sensor-warmup": "Sensor warmup",
   "severe-hypoglycemia": "Severe hypoglycemia",
   "severe-hypoglycemia-below": "Severe hypoglycemia below:",
   "severe-hypoglycemia-threshold": "Severe hypoglycemia threshold",

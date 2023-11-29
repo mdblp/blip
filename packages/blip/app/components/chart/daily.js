@@ -33,7 +33,8 @@ import {
   FoodTooltip,
   ParameterTooltip,
   PhysicalTooltip,
-  ReservoirTooltip
+  ReservoirTooltip,
+  WarmUpTooltip
 } from 'dumb'
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
@@ -45,8 +46,6 @@ import metrics from 'yourloops/lib/metrics'
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
  * @typedef { import('../../index').DatePicker } DatePicker
  */
-
-const WarmUpTooltip = vizComponents.WarmUpTooltip
 
 class DailyChart extends React.Component {
   static propTypes = {
@@ -632,15 +631,13 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <WarmUpTooltip
-        datum={datum.data}
         position={{
           top: datum.top,
           left: datum.left
         }}
         side={datum.side}
-        bgPrefs={datum.bgPrefs}
         timePrefs={datum.timePrefs}
-      />)
+        warmup={datum.data}/>)
     this.setState({ tooltip })
   }
 
