@@ -50,6 +50,7 @@ interface WarmupTooltipProps {
   side: Side
   timePrefs: TimePrefs
 }
+
 export const WarmUpTooltip: FC<WarmupTooltipProps> = (props) => {
   const {  warmup, position, side, timePrefs } = props
   const { t } = useTranslation('main')

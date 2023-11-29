@@ -311,7 +311,7 @@ const ignoredTransKeyInYourLoopsFiles = [
   'Pump version',
   'Serial Number',
   'Setting',
-  'Time In Range',
+  'Time In Range'
 ]
 
 /**
