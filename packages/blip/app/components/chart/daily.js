@@ -23,7 +23,6 @@ import ReactResizeDetector from 'react-resize-detector'
 import i18next from 'i18next'
 import { chartDailyFactory } from 'tideline'
 import { TimeService } from 'medical-domain'
-import { components as vizComponents } from 'tidepool-viz'
 import Footer from './footer'
 import {
   AlarmEventTooltip,

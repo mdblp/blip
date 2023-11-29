@@ -1,6 +1,3 @@
-export namespace components {
-  export { WarmUpTooltip }
-}
 export namespace utils {
   namespace basal {
     export { getGroupDurations }
@@ -38,7 +35,6 @@ export namespace utils {
 import createPrintPDFPackage from './types/modules/print'
 import { getLongDayHourFormat } from './types/utils/datetime'
 import { formatParameterValue } from './types/utils/format'
-import WarmUpTooltip from './types/components/daily/warmuptooltip/WarmUpTooltip'
 import { getGroupDurations } from './types/utils/basal'
 import { getTotalBasalFromEndpoints } from './types/utils/basal'
 import { formatBgValue } from './types/utils/format'
