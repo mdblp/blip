@@ -72,7 +72,6 @@ const utils = {
 }
 
 export {
-  components,
   utils,
   createPrintPDFPackage,
   getLongDayHourFormat,
