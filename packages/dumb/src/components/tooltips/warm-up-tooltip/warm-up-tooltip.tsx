@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import moment from 'moment-timezone'
-import { BgPrefs, Tooltip } from '../../../index'
+import { Tooltip } from '../../../index'
 import React, { FC } from 'react'
 import { TimePrefs } from 'medical-domain'
 import {

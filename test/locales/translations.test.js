@@ -279,7 +279,9 @@ const ignoredTransKeyForYourLoops = [
   'total-declared-carbs',
   'total-estimated-carbs',
   'time-loop-tooltip',
-  'tooltip-total-derived-carbs'
+  'tooltip-total-derived-carbs',
+  'sensor-warmup',
+  'sensor-warmup-session-end'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
@@ -309,7 +311,7 @@ const ignoredTransKeyInYourLoopsFiles = [
   'Pump version',
   'Serial Number',
   'Setting',
-  'Time In Range'
+  'Time In Range',
 ]
 
 /**
