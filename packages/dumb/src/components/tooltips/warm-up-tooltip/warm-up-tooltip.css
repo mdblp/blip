@@ -27,40 +27,12 @@
 @import '../../../styles/colors.css';
 
 .container {
-    opacity: 1;
-    min-width: 80px;
-    margin: 2px 0;
-    composes: smallSize from '../../../styles/typography.css';
-    line-height: 20px;
-    display: flex;
-    flex-direction: column;
-    max-height: 480px;
-    overflow-y: hidden;
+  composes: containerFlex from '../../../styles/tooltip-common.css';
+  max-width: 250px;
 }
 
-.date {
-    text-align: right;
-}
-
-.label {
-    font-weight: bold;
-}
 .labelEnd {
     font-weight: normal;
     display: flex;
     flex-direction: row;
 }
-.labelEndText {
-    /* Add a margin right here to be sure we have a minimal gap with the time */
-    margin-right: 1em;
-}
-.labelEndTime {
-    margin-left: auto;
-}
-
-.title {
-    composes: smallSize from '../../../styles/typography.css';
-    text-align: right;
-}
-
-

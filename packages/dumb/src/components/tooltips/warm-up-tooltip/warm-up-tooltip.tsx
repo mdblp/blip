@@ -43,6 +43,9 @@ import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import styles from '../warm-up-tooltip/warm-up-tooltip.css'
 import WarmUp from 'medical-domain/dist/src/domains/models/medical/datum/warm-up.model'
 import { getHourMinuteFormat } from '../../../utils/datetime/datetime.util'
+import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import colors from '../../../styles/colors.css'
+import Box from '@mui/material/Box'
 
 interface WarmupTooltipProps {
   warmup: WarmUp
@@ -59,6 +62,7 @@ export const WarmUpTooltip: FC<WarmupTooltipProps> = (props) => {
   return (
     <Tooltip
         position={position}
+        borderColor={colors.deviceEvent}
         dateTitle={getDateTitleForBaseDatum(warmup, timePrefs)}
         side={side || COMMON_TOOLTIP_SIDE}
         tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
@@ -67,13 +71,12 @@ export const WarmUpTooltip: FC<WarmupTooltipProps> = (props) => {
         borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
         offset={DEFAULT_TOOLTIP_OFFSET}
         content={
-          <div id="sensor-warmup-container" className={styles.container}>
-            <div id="sensor-warmup-title" className={styles.label}>{t('sensor-warmup')}</div>
-            <div id="sensor-warmup-session-end" className={styles.labelEnd}>
-              <span id="sensor-warmup-session-end-text" className={styles.labelEndText}>{t('sensor-warmup-session-end')}</span>
-              <span id="sensor-warmup-session-end-hour" className={styles.labelEndTime}>{endTime}</span>
-            </div>
-          </div>
+          <Box className={styles.container}>
+            <TooltipLine label={t('sensor-warmup')} isBold/>
+            <Box className={styles.labelEnd}>
+              <TooltipLine label={t('sensor-warmup-session-end')} value={endTime}/>
+            </Box>
+          </Box>
         }
     />
   )
