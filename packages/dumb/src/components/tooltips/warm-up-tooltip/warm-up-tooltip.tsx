@@ -40,12 +40,10 @@ import {
 } from '../common/tooltip/tooltip'
 import { useTranslation } from 'react-i18next'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import styles from '../warm-up-tooltip/warm-up-tooltip.css'
 import WarmUp from 'medical-domain/dist/src/domains/models/medical/datum/warm-up.model'
 import { getHourMinuteFormat } from '../../../utils/datetime/datetime.util'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import colors from '../../../styles/colors.css'
-import Box from '@mui/material/Box'
 
 interface WarmupTooltipProps {
   warmup: WarmUp
@@ -71,12 +69,10 @@ export const WarmUpTooltip: FC<WarmupTooltipProps> = (props) => {
         borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
         offset={DEFAULT_TOOLTIP_OFFSET}
         content={
-          <Box className={styles.container}>
-            <TooltipLine label={t('sensor-warmup')} isBold/>
-            <Box className={styles.labelEnd}>
-              <TooltipLine label={t('sensor-warmup-session-end')} value={endTime}/>
-            </Box>
-          </Box>
+          <>
+            <TooltipLine label={t('sensor-warmup')} isBold />
+            <TooltipLine label={t('sensor-warmup-session-end')} value={endTime} />
+          </>
         }
     />
   )
