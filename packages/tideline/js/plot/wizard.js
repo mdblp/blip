@@ -49,16 +49,6 @@ function plotWizard(pool, opts = defaults) {
         d3.select(this).selectAll('g.d3-wizard-group').remove()
         return
       }
-      const withAnnotations = _.filter(currentData, (d) => {
-        if (d.annotations) {
-          return true
-        } else if (d.bolus) {
-          return Boolean(d.bolus.annotations)
-        }
-        return false
-      })
-
-      drawBolus.annotations(withAnnotations)
 
       const wizards = d3.select(this)
         .selectAll('g.d3-wizard-group')

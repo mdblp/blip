@@ -33,4 +33,3 @@ export function deviceName(manufacturer) {
   }
   return _.get(DEVICE_DISPLAY_NAME_BY_MANUFACTURER, manufacturer, manufacturer)
 }
-

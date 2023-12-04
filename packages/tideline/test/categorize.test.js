@@ -16,7 +16,7 @@
  */
 
 import { assert, expect } from 'chai'
-import { MGDL_UNITS, MMOLL_UNITS, DEFAULT_BG_BOUNDS } from '../js/data/util/constants'
+import { MGDL_UNITS, MMOLL_UNITS, DEFAULT_BG_BOUNDS } from 'medical-domain'
 
 import categorizer from '../js/data/util/categorize'
 

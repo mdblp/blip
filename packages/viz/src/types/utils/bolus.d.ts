@@ -42,27 +42,6 @@ export function getDelivered(insulinEvent: any): number;
  */
 export function getDuration(insulinEvent: any): number;
 /**
- * getExtended
- * @param {Object} insulinEvent - a Tidepool wizard or bolus object
- *
- * @return {Number} units of insulin delivered over an extended duration
- */
-export function getExtended(insulinEvent: any): number;
-/**
- * getExtendedPercentage
- * @param {Object} insulinEvent - a Tidepool bolus or wizard object
- *
- * @return {string|number} percentage of combo bolus delivered later
- */
-export function getExtendedPercentage(insulinEvent: any): string | number;
-/**
- * getMaxDuration
- * @param {Object} insulinEvent - a Tidepool bolus or wizard object
- *
- * @return {Number} duration value in milliseconds
- */
-export function getMaxDuration(insulinEvent: any): number;
-/**
  * getMaxValue
  * @param {Object} insulinEvent - a Tidepool bolus or wizard object
  *
@@ -84,13 +63,6 @@ export function getNormalPercentage(insulinEvent: any): string | number;
  */
 export function getTotalBolus(insulinEvents: any[]): number;
 /**
- * hasExtended
- * @param {Object} insulinEvent - a Tidepool bolus or wizard object
- *
- * @return {Boolean} whether the bolus has an extended delivery portion
- */
-export function hasExtended(insulinEvent: any): boolean;
-/**
  * isInterruptedBolus
  * @param {Object} insulinEvent - a Tidepool bolus or wizard object
  *
@@ -111,10 +83,4 @@ export function isOverride(insulinEvent: any): boolean;
  * @return {Boolean} whether the bolus programmed was smaller than the calculated recommendation
  */
 export function isUnderride(insulinEvent: any): boolean;
-/**
- * getAnnoations
- * @param {Object} insulinEvent - a Tidebool bolus or wizard object
- *
- * @returns {Array} array of annotations for the bolus or an empty array
- */
-export function getAnnotations(insulinEvent: any): any[];
+

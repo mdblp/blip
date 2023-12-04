@@ -16,9 +16,6 @@
  */
 
 import _ from 'lodash'
-import i18next from 'i18next'
-
-import format from '../../../../js/data/util/format'
 
 /**
  * Get the count value associated with this day
@@ -106,20 +103,4 @@ export function getPathToSelected() {
   }
 
   return null
-}
-
-export function labelGenerator(opts) {
-  const t = i18next.t.bind(i18next)
-  var bgClasses = opts.bgClasses
-  var bgUnits = ' ' + opts.bgUnits
-
-  return {
-    bg: {
-      verylow: t('below') + ' ' + format.tooltipBGValue(bgClasses.veryLow, opts.bgUnits) + bgUnits,
-      low: t('between') + ' ' + format.tooltipBGValue(bgClasses.veryLow, opts.bgUnits) + ' - ' + format.tooltipBGValue(bgClasses.low, opts.bgUnits) + bgUnits,
-      target: t('between') + ' ' + format.tooltipBGValue(bgClasses.low, opts.bgUnits) + ' - ' + format.tooltipBGValue(bgClasses.target, opts.bgUnits) + bgUnits,
-      high: t('between') + ' ' + format.tooltipBGValue(bgClasses.target, opts.bgUnits) + ' - ' + format.tooltipBGValue(bgClasses.high, opts.bgUnits) + bgUnits,
-      veryhigh: t('above') + ' ' + format.tooltipBGValue(bgClasses.high, opts.bgUnits) + bgUnits
-    }
-  }
 }

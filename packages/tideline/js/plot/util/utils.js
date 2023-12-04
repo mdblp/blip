@@ -1,5 +1,3 @@
-import dt from '../../data/util/datetime'
-
 const utils = {
   xPos: function(d, opts) {
     if (typeof d.epoch === 'number') {
@@ -24,7 +22,7 @@ const utils = {
         msfactor *= 60 * 60
         break
     }
-    const end = Date.parse(dt.addDuration(start, d.duration.value * msfactor))
+    const end = new Date(start + d.duration.value * msfactor)
     return { start, end , duration: end - start}
   },
 

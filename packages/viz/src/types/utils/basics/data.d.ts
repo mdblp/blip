@@ -42,23 +42,6 @@ export function getInfusionSiteHistory(basicsData: any, type: string): any;
  */
 export function processInfusionSiteHistory(data: any): any;
 /**
- * Generate function to process summary breakdowns for section data
- *
- * @param {Object} dataObj
- * @param {Object} summary
- * @returns {Function}
- */
-export function summarizeTagFn(dataObj: any, summary: any): Function;
-/**
- * Get the average number of data events per day excluding the most recent
- *
- * @param {Object} dataObj
- * @param {Number} total
- * @param {String} mostRecentDay
- * @returns
- */
-export function averageExcludingMostRecentDay(dataObj: any, total: number, mostRecentDay: string): number;
-/**
  * Define sections and dimensions used in the basics view
  *
  * @param {Object} bgPrefs - bgPrefs object containing viz-style bgBounds
@@ -70,10 +53,9 @@ export function defineBasicsSections(bgPrefs: any, manufacturer: any, deviceMode
  *
  * @export
  * @param {Object} data - the preprocessed basics data object
- * @param {Object} bgPrefs - bgPrefs object containing viz-style bgBounds
  * @returns {Object} basicsData - the revised data object
  */
-export function reduceByDay(data: any, bgPrefs: any): any;
+export function reduceByDay(data: any): any;
 /**
  * Generate the day labels based on the days supplied by the processed basics view data
  *
