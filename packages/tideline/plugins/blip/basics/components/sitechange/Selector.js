@@ -171,26 +171,6 @@ class Selector extends React.Component {
   subAction(pump, action) {
     const t = i18next.t.bind(i18next)
     const pumpVocabulary = {
-      [constants.ANIMAS]: {
-        [constants.SITE_CHANGE_RESERVOIR]: 'Go Rewind',
-        [constants.SITE_CHANGE_TUBING]: 'Go Prime',
-        [constants.SITE_CHANGE_CANNULA]: 'Fill Cannula'
-      },
-      [constants.INSULET]: {
-        [constants.SITE_CHANGE_RESERVOIR]: 'Change Pod',
-        [constants.SITE_CHANGE_TUBING]: 'Activate Pod',
-        [constants.SITE_CHANGE_CANNULA]: 'Prime'
-      },
-      [constants.MEDTRONIC]: {
-        [constants.SITE_CHANGE_RESERVOIR]: 'Rewind',
-        [constants.SITE_CHANGE_TUBING]: 'Prime',
-        [constants.SITE_CHANGE_CANNULA]: 'Prime Cannula'
-      },
-      [constants.TANDEM]: {
-        [constants.SITE_CHANGE_RESERVOIR]: 'Change Cartridge',
-        [constants.SITE_CHANGE_TUBING]: 'Fill Tubing',
-        [constants.SITE_CHANGE_CANNULA]: 'Fill Cannula'
-      },
       [constants.DIABELOOP]: {
         [constants.SITE_CHANGE_RESERVOIR]: t('Change Cartridge'),
         [constants.SITE_CHANGE_TUBING]: t('Fill Tubing'),

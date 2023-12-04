@@ -34,13 +34,6 @@ export function getSimpleHourFormatSpace(): any;
  */
 export function getLongFormat(): any;
 /**
- * Moment format for:
- * - English: 'MMM D, YYYY h:mm a'
- * - French: 'D MMM YYYY, H:mm'
- * @returns {string} Format according to translation
- */
-export function getLongDayHourFormat(): string;
-/**
  * addDuration
  * @param {String} datetime - an ISO date string
  * @param {Number} duration - milliseconds to add to date
@@ -62,13 +55,6 @@ export function getTimezoneFromTimePrefs(timePrefs: {
     timezoneAware: boolean;
     timezoneName: string;
 }): string;
-/**
- * formatBirthdate
- * @param {Object} patient - Tidepool patient object containing profile
- *
- * @return {String} formatted birthdate, e.g., 'Jul 4, 1975'; empty String if none found
- */
-export function formatBirthdate(patient: any): string;
 /**
  * formatClocktimeFromMsPer24
  * @param {number} milliseconds - positive integer representing a time of day
@@ -124,15 +110,6 @@ export function formatLocalizedFromUTC(utc: string | number | Date | moment.Mome
  * @return {Number} Integer hammertime (i.e., UTC time in milliseconds)
  */
 export function getHammertimeFromDatumWithTimePrefs(datum: any, timePrefs: any): number;
-/**
- * getLocalizedCeiling
- * @param {string} utc - Zulu timestamp (Integer hammertime also OK)
- * @param {object} timePrefs - object containing timezoneAware Boolean and timezoneName String
- *
- * @return {Date} a JavaScript Date, the closest (future) midnight according to timePrefs;
- *                  if utc is already local midnight, returns utc
- */
-export function getLocalizedCeiling(utc: string, timePrefs: object): Date;
 export const THIRTY_MINS: 1800000;
 export const ONE_HR: 3600000;
 export const THREE_HRS: 10800000;

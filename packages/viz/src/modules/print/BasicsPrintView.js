@@ -76,7 +76,7 @@ class BasicsPrintView extends PrintView {
       _.get(pumpSettings, 'payload.device.name')
     )
 
-    this.data = reduceByDay(this.data, this.bgPrefs)
+    this.data = reduceByDay(this.data)
 
     const averageDailyCarbs = _.get(this.data, 'stats.carbs.data.raw.totalCarbsPerDay')
     const totalDailyDose = _.get(this.data, 'stats.averageDailyDose.data.raw.totalInsulin')

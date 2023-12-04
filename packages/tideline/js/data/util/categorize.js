@@ -14,37 +14,19 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
+import { MGDL_UNITS, defaultBgClasses, classifyBgValue } from 'medical-domain'
 
-import _ from 'lodash'
-import { MGDL_UNITS, DEFAULT_BG_BOUNDS } from './constants'
 
 function categorizer(bgClasses = {}, bgUnits = MGDL_UNITS) {
-  var classes = _.cloneDeep(bgClasses)
-  var defaults = {
-    veryLow: DEFAULT_BG_BOUNDS[bgUnits].veryLow,
-    low: DEFAULT_BG_BOUNDS[bgUnits].targetLower,
-    target: DEFAULT_BG_BOUNDS[bgUnits].targetUpper,
-    high: DEFAULT_BG_BOUNDS[bgUnits].veryHigh
+  const finalBgBounds = {
+    veryLowThreshold: bgClasses.veryLow ? bgClasses.veryLow : defaultBgClasses[bgUnits].veryLow,
+    targetLowerBound: bgClasses.low ? bgClasses.low : defaultBgClasses[bgUnits].low,
+    targetUpperBound: bgClasses.target ? bgClasses.target : defaultBgClasses[bgUnits].target,
+    veryHighThreshold: bgClasses.high ? bgClasses.high : defaultBgClasses[bgUnits].high
   }
 
-  _.defaults(classes, defaults)
-
   return function (d) {
-    if (d.value < classes.veryLow) {
-      return 'verylow'
-    }
-    if (d.value >= classes.veryLow && d.value < classes.low) {
-      return 'low'
-    }
-    if (d.value >= classes.low && d.value <= classes.target) {
-      return 'target'
-    }
-    if (d.value > classes.target && d.value <= classes.high) {
-      return 'high'
-    }
-    if (d.value > classes.high) {
-      return 'veryhigh'
-    }
+    return classifyBgValue(finalBgBounds, d.value, 'fiveWay').toLowerCase()
   }
 }
 

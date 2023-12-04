@@ -454,7 +454,6 @@ class MedicalDataService {
       start = getStartOfDay(first.epoch, first.timezone)
       end = getEndOfDay(lastTime, last.timezone)
       this._datumOpts.timePrefs.timezoneName = last.timezone
-      this._datumOpts.timePrefs.timezoneOffset = -last.displayOffset
     }
 
     if (this._datumOpts.dateRange) {
