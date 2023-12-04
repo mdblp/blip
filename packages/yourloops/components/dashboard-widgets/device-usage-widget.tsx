@@ -187,9 +187,6 @@ export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
         <SensorUsageStat total={total} usage={sensorUsage} />
         <Divider variant="fullWidth" className={classes.divider} />
         <BasicsChart
-          bgClasses={bgPrefs.bgClasses}
-          bgUnits={bgPrefs.bgUnits}
-          onSelectDay={() => null}
           patient={patient}
           tidelineData={medicalDataService}
           timePrefs={timePrefs}

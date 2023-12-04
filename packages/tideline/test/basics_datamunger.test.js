@@ -18,7 +18,6 @@
 import { assert, expect } from 'chai'
 
 import * as constants from '../plugins/blip/basics/logic/constants'
-import togglableState from '../plugins/blip/basics/TogglableState'
 import datamunger from '../plugins/blip/basics/logic/datamunger'
 
 describe('basics datamunger', function() {
@@ -52,8 +51,6 @@ describe('basics datamunger', function() {
   const siteChangeSections = {
     siteChanges: {
       id: 'siteChanges',
-      togglable: togglableState.off,
-      settingsTogglable: togglableState.closed,
       selectorOptions: {
         primary: { key: constants.SITE_CHANGE_RESERVOIR, label: 'Reservoir Change' },
         rows: [

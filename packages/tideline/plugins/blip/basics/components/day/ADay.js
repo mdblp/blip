@@ -20,7 +20,6 @@ class ADay extends React.Component {
     isFirst: PropTypes.bool.isRequired,
     mostRecent: PropTypes.bool.isRequired,
     onHover: PropTypes.func.isRequired,
-    subtotalType: PropTypes.string,
     type: PropTypes.string.isRequired
   }
 
@@ -36,7 +35,7 @@ class ADay extends React.Component {
    * @return {boolean}
    */
   shouldComponentUpdate(nextProps) {
-    if (nextProps.subtotalType !== this.props.subtotalType || nextProps.chartWidth !== this.props.chartWidth) {
+    if (nextProps.chartWidth !== this.props.chartWidth) {
       return true
     }
     return false
@@ -104,7 +103,6 @@ class ADay extends React.Component {
         chartWidth: this.props.chartWidth,
         data: this.props.data,
         date,
-        subtotalType: this.props.subtotalType
       })
     }
 

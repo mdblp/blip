@@ -20,18 +20,20 @@ import i18next from 'i18next'
 import PropTypes from 'prop-types'
 import React from 'react'
 import './less/basics.less'
-import basicsState from './logic/state'
-import basicsActions from './logic/actions'
 import dataMungerMkr from './logic/datamunger'
 import { SECTION_TYPE_UNDECLARED } from './logic/constants'
 import Section from './components/DashboardSection'
-import togglableState from './TogglableState'
+import {
+  SITE_CHANGE_BY_MANUFACTURER,
+  SITE_CHANGE_RESERVOIR,
+} from './logic/constants'
+import { PumpManufacturer } from 'medical-domain'
+import SiteChange from './components/chart/SiteChange'
+import InfusionHoverDisplay from './components/day/hover/InfusionHoverDisplay'
+
 
 class BasicsChartNoSize extends React.Component {
   static propTypes = {
-    bgClasses: PropTypes.object.isRequired,
-    bgUnits: PropTypes.string.isRequired,
-    onSelectDay: PropTypes.func.isRequired,
     patient: PropTypes.object.isRequired,
     tidelineData: PropTypes.object.isRequired,
     size: PropTypes.object,
@@ -44,7 +46,7 @@ class BasicsChartNoSize extends React.Component {
     this.state = {
       basicsData: null,
       data: null,
-      sections: null
+      siteChanges: null
     }
   }
 
@@ -64,10 +66,24 @@ class BasicsChartNoSize extends React.Component {
     basicsData.dateRange = [dashboardStartDate.toJSON(), now.toJSON()]
 
     const dataMunger = dataMungerMkr()
-    const medicalData = this.props.tidelineData.medicalData
-    const latestPump = medicalData.pumpSettings.length >0 ? medicalData.pumpSettings[0].source : null
-
-    basicsData.sections = basicsState(latestPump, tidelineData.latestPumpManufacturer).sections
+    const medicalData = tidelineData.medicalData
+    const latestPump = medicalData.pumpSettings.length > 0 ? medicalData.pumpSettings[0].source : null
+    const manufacturer = tidelineData.latestPumpManufacturer
+    const siteChangesTitle = _.get(
+      _.get(SITE_CHANGE_BY_MANUFACTURER, manufacturer, SITE_CHANGE_BY_MANUFACTURER[PumpManufacturer.Default]),
+      'label'
+    )
+    basicsData.siteChanges =  {
+      active: true,
+      chart: React.createFactory(SiteChange),
+      hasHover: true,
+      hoverDisplay: React.createFactory(InfusionHoverDisplay),
+      id: 'siteChanges',
+      index: 1,
+      noDataMessage: '',
+      title: i18next.t(siteChangesTitle),
+      type: SITE_CHANGE_RESERVOIR
+    }
 
     dataMunger.reduceByDay(basicsData)
 
@@ -76,25 +92,19 @@ class BasicsChartNoSize extends React.Component {
     }
 
     this.adjustSectionsBasedOnAvailableData(basicsData)
-    basicsActions.bindApp(this)
-    this.setState({ basicsData, sections: basicsData.sections, data: basicsData.data })
-  }
-
-  componentWillUnmount() {
-    basicsActions.bindApp(null)
+    this.setState({ basicsData, siteChanges: basicsData.siteChanges, data: basicsData.data })
   }
 
   adjustSectionsBasedOnAvailableData(basicsData) {
     const insulinDataAvailable = this.insulinDataAvailable(basicsData)
     const noPumpDataMessage = i18next.t('This section requires data from an insulin pump, so there\'s nothing to display.')
 
-    if (basicsData.sections.siteChanges.type !== SECTION_TYPE_UNDECLARED) {
-      if (!this.hasSectionData(basicsData, basicsData.sections.siteChanges.type)) {
-        basicsData.sections.siteChanges.active = false
-        basicsData.sections.siteChanges.message = noPumpDataMessage
-        basicsData.sections.siteChanges.settingsTogglable = togglableState.off
+    if (basicsData.siteChanges.type !== SECTION_TYPE_UNDECLARED) {
+      if (!this.hasSectionData(basicsData, basicsData.siteChanges.type)) {
+        basicsData.siteChanges.active = false
+        basicsData.siteChanges.message = noPumpDataMessage
         if (!insulinDataAvailable) {
-          basicsData.sections.siteChanges.noDataMessage = null
+          basicsData.siteChanges.noDataMessage = null
         }
       }
     }
@@ -120,44 +130,29 @@ class BasicsChartNoSize extends React.Component {
 
   render() {
     const { basicsData } = this.state
-    return <div data-testid="chart-basics-factory">{basicsData && this.renderColumn('right')}</div>
+    return <div data-testid="chart-basics-factory">{basicsData && this.renderColumn()}</div>
   }
 
-  renderColumn(columnSide) {
-    const { timePrefs, bgClasses, bgUnits } = this.props
-    const { basicsData, data, sections: basicsSections } = this.state
+  renderColumn() {
+    const { timePrefs } = this.props
+    const { basicsData, data, siteChanges } = this.state
     const tz = timePrefs.timezoneName
-    const sections = []
-    for (const key in basicsSections) {
-      const section = _.cloneDeep(basicsSections[key])
-      section.name = key
-      sections.push(section)
-    }
-    const column = _.sortBy(_.filter(sections, { column: columnSide }), 'index')
-
-    return _.map(column, (section) => {
-      return (
+    return (
         <Section
-          key={section.name}
-          bgClasses={bgClasses}
-          bgUnits={bgUnits}
-          chart={section.chart}
+          key={siteChanges.name}
+          chart={siteChanges.chart}
           chartWidth={0}
           data={data}
           days={basicsData.days}
-          labels={section.labels}
-          name={section.name}
-          onSelectDay={this.props.onSelectDay}
-          open={section.open}
-          togglable={section.togglable}
-          section={section}
-          title={section.title}
-          settingsTogglable={section.settingsTogglable}
+          labels={siteChanges.labels}
+          name={siteChanges.name}
+          open={siteChanges.open}
+          section={siteChanges}
+          title={siteChanges.title}
           timezone={tz}
           trackMetric={this.props.trackMetric}
         />
-      )
-    })
+    )
   }
 }
 

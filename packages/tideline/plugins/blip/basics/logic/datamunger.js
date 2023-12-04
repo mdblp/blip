@@ -19,7 +19,6 @@ import _ from 'lodash'
 import crossfilter from 'crossfilter2'
 import { applyOffset, MS_IN_DAY } from 'medical-domain'
 import * as constants from './constants'
-import togglableState from '../TogglableState'
 
 function dataMunger() {
   return {
@@ -35,7 +34,7 @@ function dataMunger() {
       const hasSiteChangeSourceSettings = _.get(patient, 'settings.siteChangeSource', false) !== false
       const fullName = _.get(patient, 'profile.fullName', null)
 
-      basicsData.sections.siteChanges.selectorMetaData = {
+      basicsData.siteChanges.selectorMetaData = {
         latestPump: latestPump,
         hasSiteChangeSourceSettings,
         patientName: fullName
@@ -51,9 +50,8 @@ function dataMunger() {
           basicsData.data.reservoirChange.infusionSiteHistory = this.infusionSiteHistory(basicsData, constants.SITE_CHANGE_RESERVOIR)
         }
 
-        basicsData.sections.siteChanges.type = constants.SITE_CHANGE_RESERVOIR
-        basicsData.sections.siteChanges.selector = null
-        basicsData.sections.siteChanges.settingsTogglable = togglableState.off
+        basicsData.siteChanges.type = constants.SITE_CHANGE_RESERVOIR
+        basicsData.siteChanges.selector = null
 
         // Keep the others below for the tests, takes too much time to update them:
       }
@@ -134,8 +132,7 @@ function dataMunger() {
         reduceInitialMaker()
       ).all()
       const dataByDateHash = {}
-      for (let j = 0; j < dataByLocalDate.length; ++j) {
-        const day = dataByLocalDate[j]
+      for (const day of dataByLocalDate) {
         dataByDateHash[day.key] = day.value
       }
       dataObj.dataByDate = dataByDateHash
