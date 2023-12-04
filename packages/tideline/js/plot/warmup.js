@@ -67,8 +67,8 @@ function plotWarmUp(pool, opts) {
         .enter()
         .append('g')
         .attr({
-          class: 'd3-warmup-group',
-          id: (d) => `warmup_group_${d.id}`,
+          'class': 'd3-warmup-group',
+          'id': (d) => `warmup_group_${d.id}`,
           'data-testid': (d) => `warmup_group_${d.guid}`
         })
 
