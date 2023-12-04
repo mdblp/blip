@@ -89,7 +89,7 @@ const useStyles = makeStyles()((theme) => ({
 }))
 
 export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
-  const { bgPrefs, timePrefs, patient, medicalDataService, dateFilter } = props
+  const { timePrefs, patient, medicalDataService, dateFilter } = props
   const { t } = useTranslation()
   const { classes } = useStyles()
   const trackMetric = metrics.send

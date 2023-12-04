@@ -136,7 +136,7 @@ CalendarContainer.propTypes = {
   timezone: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
   trackMetric: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired
 }
 
 export default CalendarContainer

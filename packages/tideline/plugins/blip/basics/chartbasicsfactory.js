@@ -25,7 +25,7 @@ import { SECTION_TYPE_UNDECLARED } from './logic/constants'
 import Section from './components/DashboardSection'
 import {
   SITE_CHANGE_BY_MANUFACTURER,
-  SITE_CHANGE_RESERVOIR,
+  SITE_CHANGE_RESERVOIR
 } from './logic/constants'
 import { PumpManufacturer } from 'medical-domain'
 import SiteChange from './components/chart/SiteChange'
@@ -138,20 +138,20 @@ class BasicsChartNoSize extends React.Component {
     const { basicsData, data, siteChanges } = this.state
     const tz = timePrefs.timezoneName
     return (
-        <Section
-          key={siteChanges.name}
-          chart={siteChanges.chart}
-          chartWidth={0}
-          data={data}
-          days={basicsData.days}
-          labels={siteChanges.labels}
-          name={siteChanges.name}
-          open={siteChanges.open}
-          section={siteChanges}
-          title={siteChanges.title}
-          timezone={tz}
-          trackMetric={this.props.trackMetric}
-        />
+      <Section
+        key={siteChanges.name}
+        chart={siteChanges.chart}
+        chartWidth={0}
+        data={data}
+        days={basicsData.days}
+        labels={siteChanges.labels}
+        name={siteChanges.name}
+        open={siteChanges.open}
+        section={siteChanges}
+        title={siteChanges.title}
+        timezone={tz}
+        trackMetric={this.props.trackMetric}
+      />
     )
   }
 }

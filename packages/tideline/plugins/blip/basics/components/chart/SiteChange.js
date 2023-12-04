@@ -44,7 +44,7 @@ function SiteChange(props) {
 
 SiteChange.propTypes = {
   data: PropTypes.object.isRequired,
-  date: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired
 }
 
 export default SiteChange

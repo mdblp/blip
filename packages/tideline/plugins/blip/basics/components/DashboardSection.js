@@ -15,7 +15,6 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from 'lodash'
 import cx from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -35,7 +34,7 @@ class DashboardSection extends React.Component {
       PropTypes.string,
       PropTypes.func
     ]).isRequired,
-    trackMetric: PropTypes.func.isRequired,
+    trackMetric: PropTypes.func.isRequired
   }
 
   static defaultProps = {}

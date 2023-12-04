@@ -102,7 +102,7 @@ class ADay extends React.Component {
       chart = this.props.chart({
         chartWidth: this.props.chartWidth,
         data: this.props.data,
-        date,
+        date
       })
     }
 

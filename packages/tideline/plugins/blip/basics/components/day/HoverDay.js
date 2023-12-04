@@ -10,11 +10,11 @@ const t = i18next.t.bind(i18next)
 class HoverDay extends React.Component {
   getCount = () => {
     if (_.isEmpty(this.props.data) ||
-    _.isEmpty(this.props.data.dataByDate[this.props.date])) {
-    return 0
-  }
-  var dateData = this.props.data.dataByDate[this.props.date]
-  return dateData.total || 0
+      _.isEmpty(this.props.data.dataByDate[this.props.date])) {
+      return 0
+    }
+    var dateData = this.props.data.dataByDate[this.props.date]
+    return dateData.total || 0
   }
 
   mouseEnter = () => {
