@@ -53,6 +53,7 @@ import {
   PHYSICAL_ACTIVITY_TIME,
   RESERVOIR_CHANGE_ID,
   SMBG_ID,
+  WARMUP_01_ID,
   WIZARD_NEGATIVE_OVERRIDE_ID,
   WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME,
   WIZARD_POSITIVE_OVERRIDE_ID,
@@ -119,6 +120,7 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID}`, '12:15 pmAlarm 11000Sensor session expiredThe sensor session has expired.IMPORTANT If loop mode was running, it will stop within the next 30 minutes.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID}`, '12:20 pmAlert 20102A sudden rise in glycemia has been notedA sudden rise in glycemia was detected.IMPORTANT this alert is triggered only if loop mode is activated.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_URGENT_LOW_SOON_ID}`, '12:25 pmAlert 10112Urgent low soonThe transmitter predicts that your sensor glucose will be at or below 55 mg/dL in 20 minutes.IMPORTANT this alert is triggered only if loop mode is deactivated.')
+  await checkTidelineContainerElementTooltip(`warmup_group_${WARMUP_01_ID}`,'6:00 pmSensor warmupSession end6:00 pm')
 }
 
 export const checkDailyTidelineContainerTooltipsMmolL = async () => {

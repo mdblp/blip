@@ -43,6 +43,7 @@ import utils from './util/utils'
  * @param {{ onParameterHover: (p: any) => void, onParameterOut: () => void, tidelineData: MedicalDataService }} opts
  * @returns {(data: Datum[]) => void}
  */
+
 function plotWarmUp(pool, opts) {
   const d3 = window.d3
   const width = 40
@@ -67,7 +68,8 @@ function plotWarmUp(pool, opts) {
         .append('g')
         .attr({
           class: 'd3-warmup-group',
-          id: (d) => `warmup_group_${d.id}`
+          id: (d) => `warmup_group_${d.id}`,
+          'data-testid': (d) => `warmup_group_${d.guid}`
         })
 
       warmUpGroup.append('image').attr({
