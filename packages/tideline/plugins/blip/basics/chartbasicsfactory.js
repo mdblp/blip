@@ -21,9 +21,9 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import './less/basics.less'
 import dataMungerMkr from './logic/datamunger'
-import { SECTION_TYPE_UNDECLARED } from './logic/constants'
 import Section from './components/DashboardSection'
 import {
+  SECTION_TYPE_UNDECLARED,
   SITE_CHANGE_BY_MANUFACTURER,
   SITE_CHANGE_RESERVOIR
 } from './logic/constants'
@@ -37,7 +37,6 @@ class BasicsChartNoSize extends React.Component {
     patient: PropTypes.object.isRequired,
     tidelineData: PropTypes.object.isRequired,
     size: PropTypes.object,
-    timePrefs: PropTypes.object.isRequired,
     trackMetric: PropTypes.func.isRequired
   }
 
@@ -134,9 +133,7 @@ class BasicsChartNoSize extends React.Component {
   }
 
   renderColumn() {
-    const { timePrefs } = this.props
     const { basicsData, data, siteChanges } = this.state
-    const tz = timePrefs.timezoneName
     return (
       <Section
         key={siteChanges.name}
@@ -149,7 +146,6 @@ class BasicsChartNoSize extends React.Component {
         open={siteChanges.open}
         section={siteChanges}
         title={siteChanges.title}
-        timezone={tz}
         trackMetric={this.props.trackMetric}
       />
     )

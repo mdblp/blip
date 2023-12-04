@@ -35,10 +35,7 @@ class ADay extends React.Component {
    * @return {boolean}
    */
   shouldComponentUpdate(nextProps) {
-    if (nextProps.chartWidth !== this.props.chartWidth) {
-      return true
-    }
-    return false
+    return nextProps.chartWidth !== this.props.chartWidth
   }
 
   isASiteChangeEvent = () => {

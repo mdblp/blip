@@ -29,7 +29,6 @@ class DashboardSection extends React.Component {
     days: PropTypes.array.isRequired,
     name: PropTypes.string.isRequired,
     section: PropTypes.object.isRequired,
-    timezone: PropTypes.string.isRequired,
     title: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.func
@@ -51,11 +50,9 @@ class DashboardSection extends React.Component {
           days={this.props.days}
           hasHover={section.hasHover}
           hoverDisplay={section.hoverDisplay}
-          sectionId={section.id}
-          timezone={this.props.timezone}
           type={section.type}
           trackMetric={this.props.trackMetric}
-          title={section.title} />
+        />
       )
     }
     else {

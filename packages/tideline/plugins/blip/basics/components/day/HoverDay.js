@@ -13,7 +13,7 @@ class HoverDay extends React.Component {
       _.isEmpty(this.props.data.dataByDate[this.props.date])) {
       return 0
     }
-    var dateData = this.props.data.dataByDate[this.props.date]
+    const dateData = this.props.data.dataByDate[this.props.date]
     return dateData.total || 0
   }
 
@@ -29,7 +29,7 @@ class HoverDay extends React.Component {
     const { type, date } = this.props
     const containerClass = `Calendar-day--${type} Calendar-day--HOVER`
 
-    var display = <div className="Calendar-day-text">{this.getCount()}</div>
+    let display = <div className="Calendar-day-text">{this.getCount()}</div>
 
     if (this.props.hoverDisplay) {
       display = this.props.hoverDisplay({ data: this.props.data, date, trackMetric: this.props.trackMetric })
@@ -55,9 +55,7 @@ HoverDay.propTypes = {
   dayAbbrevMask: PropTypes.string,
   hoverDisplay: PropTypes.func,
   onHover: PropTypes.func.isRequired,
-  timezone: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
   trackMetric: PropTypes.func.isRequired
 }
 

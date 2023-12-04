@@ -101,9 +101,7 @@ class CalendarContainer extends React.Component {
             date={day.date}
             hoverDisplay={this.props.hoverDisplay}
             onHover={this.onHover}
-            timezone={this.props.timezone}
             type={this.props.type}
-            title={this.props.title}
             trackMetric={this.props.trackMetric}
           />
         )
@@ -132,11 +130,8 @@ CalendarContainer.propTypes = {
   days: PropTypes.array.isRequired,
   hasHover: PropTypes.bool.isRequired,
   hoverDisplay: PropTypes.func,
-  sectionId: PropTypes.string.isRequired,
-  timezone: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
-  trackMetric: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired
+  trackMetric: PropTypes.func.isRequired
 }
 
 export default CalendarContainer
