@@ -1618,7 +1618,6 @@ describe('MedicalDataService', () => {
       timePrefs: {
         timezoneAware: true,
         timezoneName: 'Europe/Paris',
-        timezoneOffset: 60
       }
     }
 

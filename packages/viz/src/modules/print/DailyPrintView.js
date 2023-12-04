@@ -21,25 +21,20 @@ import { range } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
 import moment from 'moment-timezone'
 
-import { classifyBgValue, MMOLL_UNITS } from 'medical-domain'
+import { classifyBgValue, MMOLL_UNITS, TimeService } from 'medical-domain'
 
 import { PrintView } from 'dumb'
 import { calculateBasalPath, getBasalSequencePaths } from '../render/basal'
 import getBolusPaths from '../render/bolus'
 import { getBasalPathGroups, getBasalPathGroupType } from '../../utils/basal'
 import { getPumpVocabulary, isAutomatedBasalDevice } from '../../utils/device'
-import { getOutOfRangeThreshold } from '../../utils/bloodglucose'
 import {
   getBolusFromInsulinEvent,
   getCarbs,
   getDelivered,
-  getExtendedPercentage,
-  getMaxDuration,
-  getMaxValue,
-  getNormalPercentage
+  getMaxValue
 } from '../../utils/bolus'
 import {
-  formatDuration,
   formatLocalizedFromUTC,
   getHourMinuteFormatNoSpace,
   getLongFormat,
@@ -47,7 +42,7 @@ import {
 } from '../../utils/datetime'
 import { formatBgValue, formatDecimalNumber, formatPercentage, removeTrailingZeroes } from '../../utils/format'
 
-import { AUTOMATED_DELIVERY, MS_IN_MIN, SCHEDULED_DELIVERY } from '../../utils/constants'
+import { AUTOMATED_DELIVERY, SCHEDULED_DELIVERY } from '../../utils/constants'
 
 const t = i18next.t.bind(i18next)
 
@@ -210,11 +205,7 @@ class DailyPrintView extends PrintView {
     const maxBolusStack = _.max(_.map(
       _.keys(threeHrBinnedBoluses),
       (key) => {
-        const totalLines = _.reduce(threeHrBinnedBoluses[key], (lines, insulinEvent) => {
-          const bolus = getBolusFromInsulinEvent(insulinEvent)
-          if (bolus.extended || bolus.expectedExtended) {
-            return lines + 2
-          }
+        const totalLines = _.reduce(threeHrBinnedBoluses[key], (lines) => {
           return lines + 1
         }, 0)
         return totalLines
@@ -695,7 +686,7 @@ class DailyPrintView extends PrintView {
     _.forEach(smbgs, (smbg) => {
       const xPos = xScale(smbg.utc)
       const yPos = bgScale(smbg.value)
-      const smbgLabel = formatBgValue(smbg.value, this.bgPrefs, getOutOfRangeThreshold(smbg))
+      const smbgLabel = formatBgValue(smbg.value, this.bgPrefs)
       const labelWidth = this.doc.widthOfString(smbgLabel)
       const labelOffsetX = labelWidth / 2
       let labelStartX = xPos - labelOffsetX
@@ -837,20 +828,6 @@ class DailyPrintView extends PrintView {
           removeTrailingZeroes(formatDecimalNumber(getDelivered(bolus), 2)),
           { align: 'right' }
         )
-
-        if (bolus.extended) {
-          const normalPercentage = getNormalPercentage(bolus)
-          const extendedPercentage = getExtendedPercentage(bolus)
-          const durationText = `${formatDuration(getMaxDuration(bolus))}`
-          const percentagesText = Number.isNaN(normalPercentage) ?
-            `over ${durationText}` : `${extendedPercentage} ${durationText}`
-          this.doc.text(
-            percentagesText,
-            groupXPos,
-            yPos.update(),
-            { indent: 2, width: groupWidth }
-          )
-        }
         yPos.update()
       })
     })
@@ -869,7 +846,7 @@ class DailyPrintView extends PrintView {
 
     const labeledSchedules = []
     _.forEach(basal, datum => {
-      if (datum.subType === 'scheduled' && datum.rate > 0 && datum.duration >= 60 * MS_IN_MIN) {
+      if (datum.subType === 'scheduled' && datum.rate > 0 && datum.duration >= 60 * TimeService.MS_IN_MIN) {
         const newRate = currentSchedule.rate !== datum.rate
 
         if (newRate) {
@@ -1151,26 +1128,6 @@ class DailyPrintView extends PrintView {
     cursor += this.bolusWidth + legendItemLabelOffset
     this.doc.fillColor('black').text(t('Interrupted'), cursor, legendTextMiddle)
     cursor += this.doc.widthOfString(t('Interrupted')) + legendItemLeftOffset * 2
-
-    // extended bolus
-    const extendedBolusXScale = scaleLinear()
-      .domain([0, 10])
-      .range([cursor, cursor + 10])
-    const extendedPaths = getBolusPaths(
-      {
-        normal: 5,
-        extended: 5,
-        duration: 10,
-        utc: 0
-      },
-      extendedBolusXScale,
-      legendBolusYScale,
-      bolusOpts
-    )
-    _.forEach(extendedPaths, (path) => {
-      this.renderEventPath(path)
-    })
-    cursor += this.bolusWidth / 2 + 10 + legendItemLabelOffset
 
     // carbohydrates
     this.doc.circle(cursor, legendVerticalMiddle, this.carbRadius)

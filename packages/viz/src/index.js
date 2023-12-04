@@ -17,32 +17,13 @@
 
 import './styles/colors.css'
 
-import { formatBgValue, formatParameterValue } from './utils/format'
 import { reshapeBgClassesToBgBounds } from './utils/bloodglucose'
-import { getGroupDurations, getTotalBasalFromEndpoints } from './utils/basal'
-import { isAutomatedBasalDevice } from './utils/device'
-import { addDuration, getLocalizedCeiling, getLongDayHourFormat, getTimezoneFromTimePrefs } from './utils/datetime'
-import {
-  commonStats,
-  getStatAnnotations,
-  getStatData,
-  getStatDefinition,
-  getStatTitle,
-  statBgSourceLabels,
-  statFetchMethods,
-  statTypes
-} from './utils/stat'
 import DataUtil from './utils/data'
 import createPrintPDFPackage from './modules/print'
 import { generatePDFStats, generatePumpSettings, selectDailyViewData } from './utils/print/data'
 
 const utils = {
-  basal: {
-    getGroupDurations,
-    getTotalBasalFromEndpoints
-  },
   bg: {
-    formatBgValue,
     reshapeBgClassesToBgBounds
   },
   data: {
@@ -50,30 +31,10 @@ const utils = {
     generatePumpSettings,
     generatePDFStats,
     DataUtil
-  },
-  datetime: {
-    addDuration,
-    getLocalizedCeiling,
-    getTimezoneFromTimePrefs
-  },
-  device: {
-    isAutomatedBasalDevice
-  },
-  stat: {
-    commonStats,
-    getStatAnnotations,
-    getStatData,
-    getStatDefinition,
-    getStatTitle,
-    statBgSourceLabels,
-    statFetchMethods,
-    statTypes
   }
 }
 
 export {
   utils,
-  createPrintPDFPackage,
-  getLongDayHourFormat,
-  formatParameterValue
+  createPrintPDFPackage
 }
