@@ -69,7 +69,8 @@ const ignoredTransKeysForBlip = [
   'Date',
   'Level',
   'Parameter',
-  'Parameters History'
+  'Parameters History',
+  'Reservoir changes'
 ]
 const ignoredTransKeyInBlipFiles = [
   '${physicalActivity.reportedIntensity}-pa',

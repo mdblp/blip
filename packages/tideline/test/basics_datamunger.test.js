@@ -53,12 +53,7 @@ describe('basics datamunger', function() {
       id: 'siteChanges',
       selectorOptions: {
         primary: { key: constants.SITE_CHANGE_RESERVOIR, label: 'Reservoir Change' },
-        rows: [
-          [
-            { key: constants.SITE_CHANGE_TUBING, label: 'Tube Primes' },
-            { key: constants.SITE_CHANGE_CANNULA, label: 'Cannula Fills' }
-          ]
-        ]
+        rows: []
       },
       type: constants.SITE_CHANGE_RESERVOIR
     }
