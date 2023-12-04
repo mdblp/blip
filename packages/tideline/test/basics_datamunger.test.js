@@ -48,15 +48,13 @@ describe('basics datamunger', function() {
     '2015-09-08': {count: 1, data: 'a'},
     '2015-09-12': {count: 2, data: 'b'}
   }
-  const siteChangeSections = {
-    siteChanges: {
-      id: 'siteChanges',
-      selectorOptions: {
-        primary: { key: constants.SITE_CHANGE_RESERVOIR, label: 'Reservoir Change' },
-        rows: []
-      },
-      type: constants.SITE_CHANGE_RESERVOIR
-    }
+  const siteChanges = {
+    id: 'siteChanges',
+    selectorOptions: {
+      primary: { key: constants.SITE_CHANGE_RESERVOIR, label: 'Reservoir Change' },
+      rows: []
+    },
+    type: constants.SITE_CHANGE_RESERVOIR
   }
 
   const dm = datamunger()
@@ -72,7 +70,7 @@ describe('basics datamunger', function() {
     it('should return null without latest pump', function() {
       const basicsData = {
         data: {},
-        sections: siteChangeSections
+        siteChanges
       }
 
       const patient = {
@@ -93,7 +91,7 @@ describe('basics datamunger', function() {
           [constants.SITE_CHANGE_RESERVOIR]: {dataByDate: countSiteChangesByDay}
         },
         days: oneWeekDates,
-        sections: siteChangeSections
+        siteChanges
       }
       const patient = {
         profile: {
@@ -105,7 +103,7 @@ describe('basics datamunger', function() {
       }
 
       dm.processInfusionSiteHistory(basicsData, constants.DIABELOOP, patient)
-      expect(basicsData.sections.siteChanges.selectorMetaData.hasSiteChangeSourceSettings).to.equal(true)
+      expect(basicsData.siteChanges.selectorMetaData.hasSiteChangeSourceSettings).to.equal(true)
     })
 
     it('should return that a user has not set their site change source settings', function() {
@@ -114,7 +112,7 @@ describe('basics datamunger', function() {
           [constants.SITE_CHANGE_RESERVOIR]: {dataByDate: countSiteChangesByDay}
         },
         days: oneWeekDates,
-        sections: siteChangeSections
+        siteChanges
       }
 
       const patient = {
@@ -125,7 +123,7 @@ describe('basics datamunger', function() {
       }
 
       dm.processInfusionSiteHistory(basicsData, constants.DIABELOOP, patient)
-      expect(basicsData.sections.siteChanges.selectorMetaData.hasSiteChangeSourceSettings).to.equal(false)
+      expect(basicsData.siteChanges.selectorMetaData.hasSiteChangeSourceSettings).to.equal(false)
     })
 
     it('should set siteChanges type to reservoirChange', function() {
@@ -134,7 +132,7 @@ describe('basics datamunger', function() {
           [constants.SITE_CHANGE_RESERVOIR]: {dataByDate: countSiteChangesByDay}
         },
         days: oneWeekDates,
-        sections: siteChangeSections
+        siteChanges
       }
 
       const patient = {
@@ -147,7 +145,7 @@ describe('basics datamunger', function() {
       }
 
       dm.processInfusionSiteHistory(basicsData, constants.DIABELOOP, patient)
-      expect(basicsData.sections.siteChanges.type).to.equal(constants.SITE_CHANGE_RESERVOIR)
+      expect(basicsData.siteChanges.type).to.equal(constants.SITE_CHANGE_RESERVOIR)
     })
   })
 
