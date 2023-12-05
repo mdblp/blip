@@ -106,7 +106,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
 
   const onSelectTeam = (teamId: string): void => {
     if (teamId !== selectedTeam.id) {
-      navigate(`/${AppUserRoute.Teams}/${teamId}/${AppUserRoute.Patients}`)
+      navigate(`${AppUserRoute.Teams}/${teamId}${AppUserRoute.Patients}`)
     }
     closeMenu()
   }

@@ -161,7 +161,7 @@ export const usePatientData = (): usePatientDataResult => {
   const changePatient = (patient: Patient): void => {
     patientDataUtils.current.changePatient(patient)
     setMedicalData(null)
-    navigate(`/${AppUserRoute.Teams}/${teamId}/${AppUserRoute.Patients}/${patient.userid}${getRouteByPatientView(currentPatientView)}`)
+    navigate(`${AppUserRoute.Teams}/${teamId}${AppUserRoute.Patients}/${patient.userid}${getRouteByPatientView(currentPatientView)}`)
   }
 
   const getMsRangeByPatientView = (patientView: PatientView, patientMedicalData: MedicalDataService): number => {
