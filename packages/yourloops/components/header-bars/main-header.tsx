@@ -50,7 +50,7 @@ import { AppUserRoute } from '../../models/enums/routes.enum'
 import { Banner } from './banner'
 import { ConfigService } from '../../lib/config/config.service'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
-import TeamUtils from '../../lib/team/team.util'
+import TeamUtils, { PRIVATE_TEAM_ID } from '../../lib/team/team.util'
 
 interface MainHeaderProps {
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
@@ -101,7 +101,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
   const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
 
   const getSelectedTab = (): HcpNavigationTab | false => {
-    if (pathname.includes('patients') || pathname.includes('private')) {
+    if (pathname.includes('patients') || pathname.includes(PRIVATE_TEAM_ID)) {
       return HcpNavigationTab.Patients
     }
     if (pathname.includes('teams')) {

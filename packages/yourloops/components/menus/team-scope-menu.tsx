@@ -51,6 +51,7 @@ import Divider from '@mui/material/Divider'
 import AddIcon from '@mui/icons-material/Add'
 import TeamInformationEditDialog from '../../pages/hcp/team-information-edit-dialog'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
+import { AppUserRoute } from '../../models/enums/routes.enum'
 
 const classes = makeStyles()((theme: Theme) => ({
   sectionTitle: {
@@ -105,7 +106,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
 
   const onSelectTeam = (teamId: string): void => {
     if (teamId !== selectedTeam.id) {
-      navigate(`/teams/${teamId}/patients`)
+      navigate(`/${AppUserRoute.Teams}/${teamId}/${AppUserRoute.Patients}`)
     }
     closeMenu()
   }
