@@ -13,7 +13,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2696 Fix some Sonarcloud bugs and code smells
 - YLP-2697 App routing should reveal data dependencies
 
-## 3.0.5-beta - 2023-07-12
+## 3.0.5 - 2023-11-02
 ### Added
 - YLP-2292 Display rescue carbs and manual bolus in the trends view for DBLG1 patient
 - YLP-2299 Display DBLG1 events in Daily view
