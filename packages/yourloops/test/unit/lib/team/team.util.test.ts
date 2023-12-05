@@ -27,7 +27,6 @@
 
 import { buildTeam } from '../../common/utils'
 import TeamUtils from '../../../../lib/team/team.util'
-import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
 
 describe('TeamUtils', () => {
   describe('sortTeamsByName', () => {
