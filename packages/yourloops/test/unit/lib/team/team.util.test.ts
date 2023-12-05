@@ -44,11 +44,8 @@ describe('TeamUtils', () => {
 
   describe('isPrivate', () => {
     it('should check whether the given team is the private team', () => {
-      const team = buildTeam('teamId', [])
-      const privateTeam = buildTeam('private', undefined, undefined, TeamType.private)
-
-      expect(TeamUtils.isPrivate(team)).toEqual(false)
-      expect(TeamUtils.isPrivate(privateTeam)).toEqual(true)
+      expect(TeamUtils.isPrivate('teamId')).toEqual(false)
+      expect(TeamUtils.isPrivate('private')).toEqual(true)
     })
   })
 })

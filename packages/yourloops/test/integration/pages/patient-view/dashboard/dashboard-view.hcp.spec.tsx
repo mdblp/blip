@@ -47,7 +47,6 @@ import PatientApi from '../../../../../lib/patient/patient.api'
 import { Unit } from 'medical-domain'
 import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { type Settings } from '../../../../../lib/auth/models/settings.model'
-import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.hook'
 import { UserInviteStatus } from '../../../../../lib/team/models/enums/user-invite-status.enum'
 import {
   type AppMainLayoutHcpParams,
@@ -73,6 +72,7 @@ import {
 import { testChatWidgetForHcp } from '../../../use-cases/communication-system'
 import { ConfigService } from '../../../../../lib/config/config.service'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 
 describe('Dashboard view for HCP', () => {
   const patientDashboardRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Dashboard}`

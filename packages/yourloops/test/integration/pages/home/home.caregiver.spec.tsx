@@ -42,7 +42,7 @@ import PatientApi from '../../../../lib/patient/patient.api'
 import { checkPatientListHeaderCaregiver } from '../../assert/patient-list.assert'
 import { buildPatientAsTeamMember } from '../../data/patient-builder.data'
 import moment from 'moment-timezone'
-import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
+import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'

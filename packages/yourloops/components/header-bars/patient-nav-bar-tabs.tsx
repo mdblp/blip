@@ -37,7 +37,7 @@ import GetAppIcon from '@mui/icons-material/GetApp'
 import { PatientView } from '../../enum/patient-view.enum'
 import { useAuth } from '../../lib/auth'
 import { useParams } from 'react-router-dom'
-import { PRIVATE_TEAM_ID } from '../../lib/team/team.hook'
+import TeamUtils from '../../lib/team/team.util'
 
 interface PatientNavBarTabsProps {
   currentPatientView: PatientView
@@ -124,7 +124,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
             root: classes.root
           }}
         />
-        {user.isUserHcp() && teamId !== PRIVATE_TEAM_ID &&
+        {user.isUserHcp() && !TeamUtils.isPrivate(teamId) &&
           <Tab
             className={classes.tab}
             value={PatientView.TargetAndAlerts}

@@ -183,7 +183,7 @@ export const usePatientData = (): usePatientDataResult => {
     setMsRange(newMsRange)
 
     const route = getRouteByPatientView(patientView)
-    navigate(`..${route}`, { relative: "path" })
+    navigate(`..${route}`, { relative: 'path' })
   }
 
   const updateChartPrefs = (chartPrefs: ChartPrefs): void => {

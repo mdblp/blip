@@ -39,7 +39,7 @@ import { mockUserApi } from '../../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.hook'
+import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 
 describe('Daily view for caregiver', () => {
   const firstName = 'Caregiver firstName'

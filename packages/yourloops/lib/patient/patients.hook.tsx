@@ -40,8 +40,8 @@ import { type Patient } from './models/patient.model'
 import { usePatientListContext } from '../providers/patient-list.provider'
 import { useAlert } from '../../components/utils/snackbar'
 import { useParams } from 'react-router-dom'
-import { PRIVATE_TEAM_ID } from '../team/team.hook'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
+import { PRIVATE_TEAM_ID } from '../team/team.util'
 
 export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const { cancel: cancelInvite } = useNotification()

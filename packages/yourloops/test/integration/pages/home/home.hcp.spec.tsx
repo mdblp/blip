@@ -38,7 +38,6 @@ import PatientApi from '../../../../lib/patient/patient.api'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
-import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
 import {
   testPatientListForHcp,
   testPatientListForHcpPrivateTeam,
@@ -50,6 +49,7 @@ import { Unit } from 'medical-domain'
 import NotificationApi from '../../../../lib/notifications/notification.api'
 import { type Router } from '../../models/router.model'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
+import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'

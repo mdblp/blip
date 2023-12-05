@@ -39,8 +39,8 @@ import { testDeviceSettingsVisualisation } from '../../../use-cases/device-setti
 import { testDeviceSettingsNavigationForCaregiver } from '../../../use-cases/device-settings-navigation'
 import { testAppMainLayoutForCaregiver } from '../../../use-cases/app-main-layout-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.hook'
 import { act } from '@testing-library/react'
+import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 
 describe('Device view for Caregiver', () => {
   const firstName = 'Caregiver firstName'

@@ -52,7 +52,7 @@ import {
   testPatientNavBarForPatientAndCaregiver
 } from '../../../use-cases/patient-data-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.hook'
+import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 
 describe('Dashboard view for caregiver', () => {
   const patientDashboardRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Dashboard}`

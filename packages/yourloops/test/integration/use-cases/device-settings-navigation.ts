@@ -28,7 +28,7 @@
 import { checkNavigationToDailyView } from '../assert/device-view.assert'
 import { patient1Id } from '../data/patient.api.data'
 import { myThirdTeamId } from '../mock/team.api.mock'
-import { PRIVATE_TEAM_ID } from '../../../lib/team/team.hook'
+import { PRIVATE_TEAM_ID } from '../../../lib/team/team.util'
 
 export const testDeviceSettingsNavigationForHcp = async (router) => {
   await checkNavigationToDailyView(router, `/teams/${myThirdTeamId}/patients/${patient1Id}/daily`)

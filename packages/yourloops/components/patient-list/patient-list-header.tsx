@@ -54,7 +54,7 @@ import { PatientFiltersPopover } from './patient-filters-popover'
 import { PatientListHeaderFiltersLabel } from './patient-list-header-filters-label'
 import { ColumnSelectorPopover } from './column-selector-popover'
 import { useParams } from 'react-router-dom'
-import { PRIVATE_TEAM_ID } from '../../lib/team/team.hook'
+import TeamUtils from '../../lib/team/team.util'
 
 interface PatientListHeaderProps {
   selectedTab: PatientListTabs
@@ -100,7 +100,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
   const [showAddPatientDialog, setShowAddPatientDialog] = useState<boolean>(false)
   const [teamCodeDialogSelectedTeam, setTeamCodeDialogSelectedTeam] = useState<Team | null>(null)
   const { teamId } = useParams()
-  const isSelectedTeamPrivate = teamId === PRIVATE_TEAM_ID
+  const isSelectedTeamPrivate = TeamUtils.isPrivate(teamId)
 
   const filtersRef = useRef<HTMLButtonElement>(null)
   const columnsRef = useRef<HTMLButtonElement>(null)

@@ -62,7 +62,7 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
 
   const getSuccessAlertMessage = (): string => {
     const team = getTeam(teamId)
-    if (TeamUtils.isPrivate(team)) {
+    if (TeamUtils.isPrivate(team.id)) {
       return t('alert-remove-private-practice-success', { patientName })
     }
     return t('alert-remove-patient-from-team-success', { teamName: team.name, patientName })

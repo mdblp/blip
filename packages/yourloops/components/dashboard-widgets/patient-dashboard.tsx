@@ -46,10 +46,11 @@ import MedicalFilesWidget from './medical-files/medical-files-widget'
 import MonitoringAlertsCard from '../monitoring-alert/monitoring-alerts-card'
 import { makeStyles } from 'tss-react/mui'
 import ChatWidget from '../chat/chat-widget'
-import { PRIVATE_TEAM_ID, useTeam } from '../../lib/team/team.hook'
 import { DEFAULT_DASHBOARD_TIME_RANGE_DAYS } from '../patient-data/patient-data.utils'
 import { DeviceUsageWidget } from './device-usage-widget'
 import { useParams } from 'react-router-dom'
+import TeamUtils from '../../lib/team/team.util'
+import { useTeam } from '../../lib/team'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
@@ -107,7 +108,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
   }
 
   const dateFilter = computeDateFilter(medicalData)
-  const isSelectedTeamPrivate = teamId === PRIVATE_TEAM_ID
+  const isSelectedTeamPrivate = TeamUtils.isPrivate(teamId)
   const isCaregiver = user.isUserCaregiver()
   const isPatientWithNoTeams = user.isUserPatient() && getMedicalTeams().length === 0
 

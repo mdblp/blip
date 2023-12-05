@@ -51,7 +51,7 @@ import { useAuth } from '../../lib/auth'
 import { DeviceView } from '../../pages/patient-view/device/device-view'
 import { setPageTitle } from '../../lib/utils'
 import { TargetAndAlertsView } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
-import { PRIVATE_TEAM_ID } from '../../lib/team/team.hook'
+import TeamUtils from '../../lib/team/team.util'
 
 export const PatientData: FunctionComponent = () => {
   const alert = useAlert()
@@ -227,7 +227,7 @@ export const PatientData: FunctionComponent = () => {
                     }
                   />
                   {
-                    user.isUserHcp() && teamId !== PRIVATE_TEAM_ID &&
+                    user.isUserHcp() && !TeamUtils.isPrivate(teamId) &&
                     <Route
                       path={AppUserRoute.TargetAndAlerts}
                       element={

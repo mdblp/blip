@@ -39,7 +39,7 @@ import {
   PrivateTeamOrCaregiverPatientList
 } from './current-patient-list/private-team-or-caregiver-patient-list/private-team-or-caregiver-patient-list'
 import { useParams } from 'react-router-dom'
-import { PRIVATE_TEAM_ID } from '../../lib/team/team.hook'
+import TeamUtils from '../../lib/team/team.util'
 
 export const PatientListPage: FunctionComponent = () => {
   const theme = useTheme()
@@ -55,7 +55,7 @@ export const PatientListPage: FunctionComponent = () => {
     setInputSearch
   } = usePatientListHook()
 
-  const isCaregiverUserOrPrivateTeam = teamId === PRIVATE_TEAM_ID
+  const isCaregiverUserOrPrivateTeam = TeamUtils.isPrivate(teamId)
 
   setPageTitle(t('header-tab-patients'))
 

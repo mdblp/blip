@@ -58,7 +58,7 @@ import {
   testMonitoringAlertsParametersTeamMember
 } from '../../use-cases/monitoring-alerts-parameters-management'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.hook'
+import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
 
 describe('HCP care team settings page', () => {
   const firstName = 'Jacques'

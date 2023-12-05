@@ -41,7 +41,7 @@ import { mockUserApi } from '../../../mock/user.api.mock'
 import { patient2Id } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.hook'
+import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 
 describe('Trends view for caregiver', () => {
   const firstName = 'HCP firstName'

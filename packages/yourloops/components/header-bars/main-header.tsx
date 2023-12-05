@@ -50,7 +50,7 @@ import { AppUserRoute } from '../../models/enums/routes.enum'
 import { Banner } from './banner'
 import { ConfigService } from '../../lib/config/config.service'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
-import { PRIVATE_TEAM_ID } from '../../lib/team/team.hook'
+import TeamUtils from '../../lib/team/team.util'
 
 interface MainHeaderProps {
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
@@ -166,7 +166,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                     navigate(`${AppUserRoute.Teams}/${teamId}/patients`)
                   }}
                 />
-                {teamId !== PRIVATE_TEAM_ID &&
+                {!TeamUtils.isPrivate(teamId) &&
                   <StyledTab
                     data-testid="main-header-hcp-care-team-settings-tab"
                     className={tab}

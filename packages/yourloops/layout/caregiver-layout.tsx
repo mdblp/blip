@@ -37,7 +37,7 @@ import { PatientListPage } from '../components/patient-list/patient-list-page'
 import { PatientListProvider } from '../lib/providers/patient-list.provider'
 import { PatientData } from '../components/patient-data/patient-data'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from './hcp-layout'
-import { PRIVATE_TEAM_ID } from '../lib/team/team.hook'
+import { PRIVATE_TEAM_ID } from '../lib/team/team.util'
 
 const CaregiverCommonLayout: FunctionComponent = () => {
   return (
