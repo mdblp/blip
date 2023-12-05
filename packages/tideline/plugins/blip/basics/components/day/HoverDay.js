@@ -4,7 +4,7 @@ import React from 'react'
 import moment from 'moment-timezone'
 
 import { getCount } from '../BasicsUtils'
-import { MS_IN_DAY } from '../../logic/constants'
+import { MS_IN_DAY } from 'medical-domain'
 
 const t = i18next.t.bind(i18next)
 
