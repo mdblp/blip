@@ -32,10 +32,6 @@ import './commonbolus.test'
 /* plugins/ */
 import './basics_datamunger.test'
 
-import './blip/components/logic/actions.test.js'
-import './blip/components/sitechange/Selector.test.js'
-import './blip/components/BasicsUtils.test.js'
-
 window.d3 = require('d3')
 
 moment.locale('en')
