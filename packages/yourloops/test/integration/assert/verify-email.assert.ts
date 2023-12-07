@@ -98,15 +98,6 @@ export const checkVerifyEmailResultSuccessContinueButton = async () => {
   expect(screen.getByText('Connect')).toBeVisible()
 }
 
-// export const checkVerifyEmailResultSuccessContinueButtonAuthenticated = async () => {
-//   const pageContent = within(screen.getByTestId('verify-email-result-content'))
-//   const continueButton = pageContent.getByRole('button', { name: 'Continue' })
-//
-//   await userEvent.click(continueButton)
-//   expect(screen.getByText('zzz')).toBeVisible()
-//   // expect(screen.getByText('Connect')).toBeVisible()
-// }
-
 export const checkVerifyEmailResultErrorContent = () => {
   const pageContent = within(screen.getByTestId('verify-email-result-content'))
   expect(pageContent.getByTestId('wrong-icon')).toBeVisible()
