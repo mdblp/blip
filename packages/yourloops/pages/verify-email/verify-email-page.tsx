@@ -45,25 +45,12 @@ import {
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Avatar from '@mui/material/Avatar'
-import { makeStyles } from 'tss-react/mui'
-import { type Theme } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
 import { setPageTitle } from '../../lib/utils'
-
-const classes = makeStyles()((theme: Theme) => ({
-  appBar: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    zIndex: theme.zIndex.drawer + 1,
-    backgroundColor: theme.palette.common.white,
-    color: 'var(--text-color-primary)'
-  },
-  desktopLogo: {
-    width: 140
-  }
-}))
+import { useVerifyEmailStyles } from './verify-email.styles'
 
 export const VerifyEmailPage: FunctionComponent = () => {
-  const { classes: { appBar, desktopLogo } } = classes()
+  const { classes: { appBar, desktopLogo } } = useVerifyEmailStyles()
   const { loginWithRedirect, getAccessTokenSilently } = useAuth0()
   const { t } = useTranslation()
   const { logout } = useAuth()
