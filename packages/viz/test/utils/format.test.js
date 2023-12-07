@@ -116,25 +116,6 @@ describe('format', () => {
     })
   })
 
-  describe('formatInsulin', () => {
-    it('should be a function', () => {
-      assert.isFunction(format.formatInsulin)
-    })
-
-    it('should return a single digit fixed point float for integers', () => {
-      expect(format.formatInsulin(5)).to.equal('5.0')
-    })
-
-    it('should include hundredths for insulin with hundredths precision', () => {
-      expect(format.formatInsulin(5.05)).to.equal('5.05')
-    })
-
-    it('should include thousandths for insulin with thousandths precision', () => {
-      expect(format.formatInsulin(0.375)).to.equal('0.38')
-      expect(format.formatInsulin(3.820003)).to.equal('3.82')
-    })
-  })
-
   describe('formatPercentage', () => {
     it('should be a function', () => {
       assert.isFunction(format.formatPercentage)

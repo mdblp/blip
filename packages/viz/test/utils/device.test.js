@@ -18,38 +18,23 @@
 import _ from 'lodash'
 import { expect } from 'chai'
 
-import { ANIMAS, TANDEM, INSULET, MEDTRONIC, DIABELOOP, getPumpVocabularies } from '../../src/utils/constants'
+import { DIABELOOP } from '../../src/utils/constants'
 
 import * as device from '../../src/utils/device'
 
 describe('device utility functions', () => {
   describe('isAutomatedBasalDevice', () => {
-    it('should return `true` for an upload record for a pump with automated basal delivery capabilities', () => {
-      expect(device.isAutomatedBasalDevice(MEDTRONIC, '1780')).to.be.true
-    })
-
     it('should return `true` for an upload record for a DBLG1 system with automated basal delivery capabilities', () => {
       expect(device.isAutomatedBasalDevice(DIABELOOP, 'DBLG1')).to.be.true
-    })
-
-    it('should return `false` for an upload record for a pump without automated basal delivery capabilities', () => {
-      expect(device.isAutomatedBasalDevice(MEDTRONIC, '723')).to.be.false
     })
   })
 
   describe('getPumpVocabulary', () => {
     it('should return a pump terminology vocabulary, with default fallbacks for missing keys', () => {
       const manufacturers = [
-        ANIMAS,
-        INSULET,
-        MEDTRONIC,
-        TANDEM,
         DIABELOOP,
         'default'
       ]
-
-      const pumpVocabularies = getPumpVocabularies()
-
       _.forEach(manufacturers, manufacturer => {
         const pumpVocabulary = device.getPumpVocabulary(manufacturer)
         expect(pumpVocabulary, manufacturer).to.have.all.keys([
@@ -60,14 +45,6 @@ describe('device utility functions', () => {
           'scheduledDelivery'
         ])
       })
-
-      // Medtronic should have it's own unique key for automated basal delivery
-      expect(device.getPumpVocabulary(MEDTRONIC).automatedDelivery).to.equal(pumpVocabularies[MEDTRONIC].automatedDelivery)
-
-      // Animas, Tandem, and Insulet should fall back to a default value
-      expect(device.getPumpVocabulary(ANIMAS).automatedDelivery).to.equal(pumpVocabularies.default.automatedDelivery)
-      expect(device.getPumpVocabulary(TANDEM).automatedDelivery).to.equal(pumpVocabularies.default.automatedDelivery)
-      expect(device.getPumpVocabulary(INSULET).automatedDelivery).to.equal(pumpVocabularies.default.automatedDelivery)
     })
   })
 })

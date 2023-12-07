@@ -85,27 +85,12 @@ function drawBolus(pool, opts = {}) {
 
   const halfWidth = opts.width / 2
   const top = opts.yScale.range()[0]
-  const mainGroup = pool.parent()
 
   const xPosition = (d) => opts.xScale(d.epoch) - halfWidth
-  const computePathHeight = (d) => {
-    const base = opts.yScale(d.extended) + opts.bolusStroke / 2
-    if (d.extended === 0) {
-      return base - opts.bolusStroke
-    }
-    return base
-  }
 
   const triangleLeft = (x) => { return x + halfWidth - opts.triangleOffset }
   const triangleRight = (x) => { return x + halfWidth + opts.triangleOffset }
   const triangleMiddle = (x) => { return x + halfWidth }
-
-  const extendedTriangle = (x, y) => {
-    const top = (x + opts.triangleSize) + ' ' + (y + opts.triangleSize/2)
-    const bottom = (x + opts.triangleSize) + ' ' + (y - opts.triangleSize/2)
-    const point = x + ' ' + y
-    return 'M' + top + 'L' + bottom + 'L' + point + 'Z'
-  }
 
   const underrideTriangle = (x, y) =>
     triangleLeft(x) + ',' + (y + opts.markerHeight/2) + ' ' +
@@ -227,85 +212,6 @@ function drawBolus(pool, opts = {}) {
           id: (d) => `bolus_override_polygon_${commonbolus.getBolus(d).id}`
         })
     },
-    extended: function(extended) {
-      // extended "arm" of square- and dual-wave boluses
-      extended.append('path')
-        .attr({
-          'd': function(d) {
-            d = commonbolus.getBolus(d)
-            var rightEdge = xPosition(d) + opts.width
-            var doseHeight = computePathHeight(d)
-            var doseEnd = opts.xScale(d.epoch + commonbolus.getMaxDuration(d))
-            return 'M' + rightEdge + ' ' + doseHeight + 'L' + doseEnd + ' ' + doseHeight
-          },
-          'stroke-width': opts.bolusStroke,
-          'class': 'd3-path-extended d3-bolus',
-          'id': function(d) {
-            d = commonbolus.getBolus(d)
-            return 'bolus_' + d.id
-          }
-        })
-
-      // triangle
-      extended.append('path')
-        .attr({
-          'd': function(d) {
-            d = commonbolus.getBolus(d)
-            var doseHeight = computePathHeight(d)
-            var doseEnd = opts.xScale(d.epoch + commonbolus.getMaxDuration(d)) - opts.triangleSize
-            return extendedTriangle(doseEnd, doseHeight)
-          },
-          'stroke-width': opts.bolusStroke,
-          'class': function(d) {
-            d = commonbolus.getBolus(d)
-
-            if (d.expectedExtended) {
-              return 'd3-path-extended-triangle-suspended d3-bolus'
-            }
-
-            return 'd3-path-extended-triangle d3-bolus'
-          },
-          'id': function(d) {
-            d = commonbolus.getBolus(d)
-            return 'bolus_' + d.id
-          }
-        })
-    },
-    extendedSuspended: function(suspended) {
-      // red marker indicating where suspend happened
-      suspended.append('path')
-        .attr({
-          'd': function(d) {
-            d = commonbolus.getBolus(d)
-            var doseHeight = computePathHeight(d)
-            var rightEdge = opts.xScale(d.epoch + d.duration)
-            var pathEnd = rightEdge + opts.suspendMarkerWidth
-
-            return 'M' + rightEdge + ' ' + doseHeight + 'L' + pathEnd + ' ' + doseHeight
-          },
-          'stroke-width': opts.bolusStroke,
-          'class': 'd3-path-suspended d3-bolus'
-        })
-
-      // now, light-blue path representing undelivered extended bolus
-      suspended.append('path')
-        .attr({
-          'd': function(d) {
-            d = commonbolus.getBolus(d)
-            var doseHeight = computePathHeight(d)
-            var pathEnd = opts.xScale(d.epoch + d.duration) + opts.suspendMarkerWidth
-            var doseEnd = opts.xScale(d.epoch + d.expectedDuration)
-
-            return 'M' + pathEnd + ' ' + doseHeight + 'L' + doseEnd + ' ' + doseHeight
-          },
-          'stroke-width': opts.bolusStroke,
-          'class': 'd3-path-extended-suspended d3-bolus',
-          'id': function(d) {
-            d = commonbolus.getBolus(d)
-            return 'bolus_' + d.id
-          }
-        })
-    },
     tooltip: {
       add: function(d, rect) {
         if (_.get(opts, 'onBolusHover', false)) {
@@ -322,23 +228,6 @@ function drawBolus(pool, opts = {}) {
           })
         }
       }
-    },
-    annotations: function(data /*, selection */) {
-      _.forEach(data, function(d) {
-        var annotationOpts = {
-          x: opts.xScale(d.epoch),
-          y: opts.yScale(commonbolus.getMaxValue(d)),
-          xMultiplier: -2,
-          yMultiplier: 1,
-          d: d,
-          orientation: {
-            up: true
-          }
-        }
-        if (_.isEmpty(mainGroup.select('#annotation_for_' + d.id)[0][0])) {
-          mainGroup.select('#tidelineAnnotations_bolus').call(pool.annotations(), annotationOpts)
-        }
-      })
     }
   }
 }

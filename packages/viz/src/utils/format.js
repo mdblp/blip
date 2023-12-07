@@ -38,40 +38,17 @@
 
 import _ from 'lodash'
 import { format } from 'd3-format'
-import i18next from 'i18next'
-import { convertBG, MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
-import { formatLocalizedFromUTC, getHourMinuteFormat } from './datetime'
-import { BG_HIGH, BG_LOW } from './constants'
+import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 
 /**
  * formatBgValue
  * @param {Number} val - integer or float blood glucose value in either mg/dL or mmol/L
  * @param {Object} bgPrefs - object containing bgUnits String and bgBounds Object
- * @param {Object} [outOfRangeThresholds] - optional thresholds for `low` and `high` values;
- *                                          derived from annotations in PwD's data, so may not exist
  *
  * @return {String} formatted blood glucose value
  */
-export function formatBgValue(val, bgPrefs, outOfRangeThresholds) {
+export function formatBgValue(val, bgPrefs) {
   const units = _.get(bgPrefs, 'bgUnits', MGDL_UNITS)
-  if (!_.isEmpty(outOfRangeThresholds)) {
-    let lowThreshold = outOfRangeThresholds.low
-    let highThreshold = outOfRangeThresholds.high
-    if (units === MMOLL_UNITS) {
-      if (lowThreshold) {
-        lowThreshold = convertBG(lowThreshold, MGDL_UNITS)
-      }
-      if (highThreshold) {
-        highThreshold = convertBG(highThreshold, MGDL_UNITS)
-      }
-    }
-    if (lowThreshold && val < lowThreshold) {
-      return i18next.t(BG_LOW)
-    }
-    if (highThreshold && val > highThreshold) {
-      return i18next.t(BG_HIGH)
-    }
-  }
   if (units === MMOLL_UNITS) {
     return format('.1f')(val)
   }
@@ -96,23 +73,6 @@ export function formatDecimalNumber(val, places) {
   return format(`.${places}f`)(val)
 }
 
-
-/**
- * Format insulin value
- *
- * @param {number} val - numeric value to format
- * @returns {string} numeric value formatted for the precision of insulin dosing
- */
-export function formatInsulin(val) {
-  let decimalLength = 1
-  const qtyString = val.toString()
-  if (qtyString.indexOf('.') !== -1) {
-    const length = qtyString.split('.')[1].length
-    decimalLength = _.min([length, 2])
-  }
-  return formatDecimalNumber(val, decimalLength)
-}
-
 /**
  * formatPercentage
  * @param {Number} val - raw decimal proportion, range of 0.0 to 1.0
@@ -127,84 +87,10 @@ export function formatPercentage(val, precision = 0) {
 }
 
 /**
- * Format Input Time
- * @param {string|number|Date|moment.Moment} utcTime Zulu timestamp (Integer hammertime also OK)
- * @param {{timezoneAware: boolean, timezoneName?: string}} timePrefs
- *
- * @return {string} The formated time for input time in the terminal
- */
-export function formatInputTime(utcTime, timePrefs) {
-  return formatLocalizedFromUTC(utcTime, timePrefs, getHourMinuteFormat())
-}
-
-/**
  * removeTrailingZeroes
  * @param {string} val formatted decimal value, may have trailing zeroes *
  * @return {string} formatted decimal value w/o trailing zero-indexes
  */
 export function removeTrailingZeroes(val) {
   return val.replace(/\.0+$/, '')
-}
-
-/**
- * Format the device parameter values.
- * @param {string | number} value The parameter value
- * @param {string} units The parameter units
- * @returns {string} The formated parameter
- */
-export function formatParameterValue(value, units) {
-  /** @type {number} */
-  let nValue
-  /** @type {string} */
-  let ret
-  if (typeof value === 'string') {
-    if (_.includes(value, '.')) {
-      nValue = Number.parseFloat(value)
-    } else {
-      nValue = Number.parseInt(value, 10)
-    }
-  } else if (typeof value === 'number') {
-    nValue = value
-  }
-
-  let nDecimals = 0
-  switch (units) {
-    case '%': // Percent, thanks captain obvious.
-    case 'min': // Minutes
-      break
-    case 'g': // Grams
-    case 'kg':
-    case 'U': // Insulin dose
-    case MMOLL_UNITS:
-    case MGDL_UNITS:
-      nDecimals = 1
-      break
-    case 'U/g':
-      nDecimals = 3
-      break
-    default:
-      nDecimals = 2
-      break
-  }
-
-  if (Number.isNaN(nValue)) {
-    // Like formatPercentage() but we do not want to pad the '%' character.
-    ret = '--'
-  } else if (Number.isInteger(nValue) && nDecimals === 0) {
-    ret = nValue.toString(10)
-  } else {
-    const aValue = Math.abs(nValue)
-    // I did not use formatDecimalNumber() because some of our parameters are x10e-4,
-    // so they are displayed as "0.00"
-    if (aValue < Number.EPSILON) {
-      ret = nValue.toFixed(1) // Value ~= 0
-    } else if (aValue < 1e-2 || aValue > 9999) {
-      ret = nValue.toExponential(2)
-    } else {
-      ret = nValue.toFixed(nDecimals)
-    }
-  }
-
-  // `${value} | ${ret}`; // Debug
-  return ret
 }

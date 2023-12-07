@@ -161,79 +161,6 @@ export class CBG extends Common {
   }
 }
 
-export class Message extends Common {
-  constructor(opts = {}) {
-    super(opts)
-
-    _.defaults(opts, {
-      messageText: 'This is a note.',
-      parentMessage: null,
-      time: new Date().toISOString()
-    })
-
-    this.type = 'message'
-
-    this.time = opts.time
-    const dt = new Date(this.time)
-    const offsetMinutes = dt.getTimezoneOffset()
-    dt.setUTCMinutes(dt.getUTCMinutes() - offsetMinutes)
-    this.normalTime = dt.toISOString()
-    this.epoch = dt.valueOf()
-
-    this.messageText = opts.messageText
-    this.parentMessage = opts.parentMessage
-  }
-}
-
-export class Settings extends Common {
-  constructor(opts = {}) {
-    super(opts)
-
-    _.defaults(opts, {
-      activeBasalSchedule: 'standard',
-      basalSchedules: [{
-        name: 'standard',
-        value: [{
-          start: 0,
-          rate: 1.0
-        }]
-      }],
-      bgTarget: [{
-        high: 100,
-        low: 80,
-        start: 0
-      }],
-      carbRatio: [{
-        amount: 15,
-        start: 0
-      }],
-      deviceTime: this.makeDeviceTime(),
-      insulinSensitivity: [{
-        amount: 50,
-        start: 0
-      }],
-      units: {
-        carb: 'grams',
-        bg: MGDL_UNITS
-      }
-    })
-
-    this.type = 'settings'
-
-    this.activeBasalSchedule = opts.activeBasalSchedule
-    this.basalSchedules = opts.basalSchedules
-    this.bgTarget = opts.bgTarget
-    this.carbRatio = opts.carbRatio
-    this.deviceTime = opts.deviceTime
-    this.insulinSensitivity = opts.insulinSensitivity
-    this.unit = opts.units
-
-    this.time = this.makeTime()
-    this.normalTime = this.makeNormalTime()
-    this.epoch = Date.parse(this.normalTime)
-  }
-}
-
 export class SMBG extends Common {
   constructor(opts = {}) {
     super(opts)
@@ -376,9 +303,7 @@ export const types = {
   CBG,
   DeviceEvent,
   Food,
-  Message,
   PumpSettings,
-  Settings,
   SMBG,
   Wizard
 }

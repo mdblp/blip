@@ -1,6 +1,6 @@
 {
   "name": "yourloops",
-  "version": "3.0.5-beta",
+  "version": "3.0.6-beta",
   "private": true,
   "description": "Blip is a web app for type 1 diabetes (T1D) built on top of the [Tidepool](http://tidepool.org/) platform.",
   "repository": {
@@ -10,6 +10,10 @@
     "packages/*"
   ],
   "scripts": {
+    "bump-version": "VERSION=$VERSION npm run bump-version:workspace && npm run bump-version:server && npm run bump-version:cloudfront-dist",
+    "bump-version:cloudfront-dist": "cd cloudfront-dist/deployment && npm version $VERSION --no-git-tag-version",
+    "bump-version:server": "cd server && npm version $VERSION --no-git-tag-version",
+    "bump-version:workspace": "npm version $VERSION --no-git-tag-version && npm version $VERSION --no-git-tag-version --workspaces",
     "mrproper": "npm run mrproper --workspaces",
     "postmrproper": "rm -rf deploy node_modules cloudfront-dist/deployment/node_modules server/node_modules",
     "clean": "npm run clean --workspaces --if-present",
@@ -81,8 +85,8 @@
     "@types/d3-array": "^3.2.0",
     "@types/d3-format": "^3.0.3",
     "@types/d3-scale": "^4.0.6",
-    "@types/d3-time-format": "^4.0.1",
-    "@types/jest": "^29.5.7",
+    "@types/d3-time-format": "^4.0.3",
+    "@types/jest": "^29.5.11",
     "@types/lodash": "^4.14.200",
     "@types/mini-css-extract-plugin": "^2.3.0",
     "@types/mocha": "^10.0.2",
@@ -91,10 +95,10 @@
     "@types/react-dom": "^18.2.13",
     "@types/react-router-dom": "^5.3.3",
     "@types/sinon": "^17.0.0",
-    "@types/uuid": "^9.0.6",
+    "@types/uuid": "^9.0.7",
     "@types/voilab-pdf-table": "^0.5.2",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
-    "@typescript-eslint/parser": "^6.7.5",
+    "@typescript-eslint/parser": "^6.12.0",
     "babel-jest": "^29.7.0",
     "babel-loader": "^9.1.3",
     "chai": "^4.3.10",

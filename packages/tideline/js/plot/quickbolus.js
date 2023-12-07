@@ -46,8 +46,6 @@ function plotQuickBolus(pool, opts = defaults) {
     selection.each(function(data) {
       // filter out boluses with wizard
       const currentData = _.filter(data, (d) => _.isEmpty(d.wizard))
-      drawBolus.annotations(_.filter(currentData, 'annotations'))
-
       const boluses = d3.select(this)
         .selectAll('g.d3-bolus-group')
         .data(currentData, (d) => d.id)

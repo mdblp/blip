@@ -40,7 +40,7 @@ export interface GridRowModel {
   [PatientListColumns.Messages]?: boolean
   [PatientListColumns.TimeInRange]?: number
   [PatientListColumns.GlucoseManagementIndicator]?: number
-  [PatientListColumns.Hypoglycemia]?: number
+  [PatientListColumns.BelowRange]?: number
   [PatientListColumns.Variance]?: number
   [PatientListColumns.LastDataUpdate]?: string
   [PatientListColumns.Actions]: Patient

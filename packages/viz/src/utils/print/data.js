@@ -53,7 +53,7 @@ function processBolusRange(dataByDate) {
   )
   return extent(boluses, (d) => {
     const bolus = d.bolus ? d.bolus : d
-    return bolus.normal + (bolus.extended ?? 0)
+    return bolus.normal
   })
 }
 

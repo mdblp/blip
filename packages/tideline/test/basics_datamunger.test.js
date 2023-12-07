@@ -15,22 +15,13 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from 'lodash'
 import { assert, expect } from 'chai'
 
 import * as constants from '../plugins/blip/basics/logic/constants'
-import togglableState from '../plugins/blip/basics/TogglableState'
 import datamunger from '../plugins/blip/basics/logic/datamunger'
 
 describe('basics datamunger', function() {
-  var bgClasses = {
-    veryLow: 10,
-    low: 20,
-    target: 30,
-    high: 40,
-    veryHigh: 50
-  }
-  var oneWeekDates = [{
+  const oneWeekDates = [{
     date: '2015-09-07',
     type: 'past'
   }, {
@@ -52,60 +43,23 @@ describe('basics datamunger', function() {
     date: '2015-09-13',
     type: 'future'
   }]
-  var countSiteChangesByDay = {
+  const countSiteChangesByDay = {
     '2015-09-05': {count: 1},
     '2015-09-08': {count: 1, data: 'a'},
     '2015-09-12': {count: 2, data: 'b'}
   }
-  var siteChangeSections = {
-    siteChanges: {
-      id: 'siteChanges',
-      togglable: togglableState.off,
-      settingsTogglable: togglableState.closed,
-      selectorOptions: {
-        primary: { key: constants.SITE_CHANGE_RESERVOIR, label: 'Reservoir Change' },
-        rows: [
-          [
-            { key: constants.SITE_CHANGE_TUBING, label: 'Tube Primes' },
-            { key: constants.SITE_CHANGE_CANNULA, label: 'Cannula Fills' }
-          ]
-        ]
-      },
-      type: constants.SITE_CHANGE_RESERVOIR
-    }
+  const siteChanges = {
+    id: 'siteChanges',
+    selectorOptions: {
+      primary: { key: constants.SITE_CHANGE_RESERVOIR, label: 'Reservoir Change' },
+      rows: []
+    },
+    type: constants.SITE_CHANGE_RESERVOIR
   }
 
-  var dm = datamunger(bgClasses)
+  const dm = datamunger()
   it('should return an object', function() {
     assert.isObject(dm)
-  })
-
-  describe('getLatestPumpUploaded', function() {
-    it('should be a function', function() {
-      assert.isFunction(dm.getLatestPumpUploaded)
-    })
-
-    it('should return a pump with proper data', function() {
-      var patientData = {
-        medicalData: {
-          pumpSettings: [
-            {
-              source: constants.INSULET
-            }
-          ]
-        }
-      }
-      expect(dm.getLatestPumpUploaded(patientData)).to.equal(constants.INSULET)
-    })
-
-    it('should return null without proper data', function() {
-      var patientData = {
-        medicalData: {
-          pumpSettings: []
-        }
-      }
-      expect(dm.getLatestPumpUploaded(patientData)).to.equal(null)
-    })
   })
 
   describe('processInfusionSiteHistory', function() {
@@ -114,14 +68,12 @@ describe('basics datamunger', function() {
     })
 
     it('should return null without latest pump', function() {
-      var basicsData = {
+      const basicsData = {
         data: {},
-        sections: siteChangeSections
+        siteChanges
       }
 
-      var perms = { root: { } }
-
-      var patient = {
+      const patient = {
         profile: {
           fullName: 'Jill Jellyfish'
         },
@@ -130,21 +82,18 @@ describe('basics datamunger', function() {
         }
       }
 
-      expect(dm.processInfusionSiteHistory(basicsData, null, patient, perms)).to.equal(null)
+      expect(dm.processInfusionSiteHistory(basicsData, null, patient)).to.equal(null)
     })
 
     it('should return that a user has set their site change source settings', function() {
-      var basicsData = {
+      const basicsData = {
         data: {
           [constants.SITE_CHANGE_RESERVOIR]: {dataByDate: countSiteChangesByDay}
         },
         days: oneWeekDates,
-        sections: siteChangeSections
+        siteChanges
       }
-
-      var perms = { root: { } }
-
-      var patient = {
+      const patient = {
         profile: {
           fullName: 'Jill Jellyfish'
         },
@@ -153,94 +102,40 @@ describe('basics datamunger', function() {
         }
       }
 
-      dm.processInfusionSiteHistory(basicsData, constants.INSULET, patient, perms)
-      expect(basicsData.sections.siteChanges.selectorMetaData.hasSiteChangeSourceSettings).to.equal(true)
+      dm.processInfusionSiteHistory(basicsData, constants.DIABELOOP, patient)
+      expect(basicsData.siteChanges.selectorMetaData.hasSiteChangeSourceSettings).to.equal(true)
     })
 
     it('should return that a user has not set their site change source settings', function() {
-      var basicsData = {
+      const basicsData = {
         data: {
           [constants.SITE_CHANGE_RESERVOIR]: {dataByDate: countSiteChangesByDay}
         },
         days: oneWeekDates,
-        sections: siteChangeSections
+        siteChanges
       }
 
-      var perms = { root: { } }
-
-      var patient = {
+      const patient = {
         profile: {
           fullName: 'Jill Jellyfish'
         },
         settings: {}
       }
 
-      dm.processInfusionSiteHistory(basicsData, constants.INSULET, patient, perms)
-      expect(basicsData.sections.siteChanges.selectorMetaData.hasSiteChangeSourceSettings).to.equal(false)
-    })
-
-    it('should set siteChanges type to cannulaPrime', function() {
-      var basicsData = {
-        data: {
-          [constants.SITE_CHANGE_CANNULA]: {dataByDate: countSiteChangesByDay},
-          [constants.SITE_CHANGE_TUBING]: {dataByDate: countSiteChangesByDay}
-        },
-        days: oneWeekDates,
-        sections: siteChangeSections
-      }
-
-      var perms = { root: { } }
-
-      var patient = {
-        profile: {
-          fullName: 'Jill Jellyfish'
-        },
-        settings: {
-          siteChangeSource: constants.SITE_CHANGE_CANNULA
-        }
-      }
-
-      dm.processInfusionSiteHistory(basicsData, constants.TANDEM, patient, perms)
-      expect(basicsData.sections.siteChanges.type).to.equal(constants.SITE_CHANGE_CANNULA)
-    })
-
-    it('should set siteChanges type to tubingPrime', function() {
-      var basicsData = {
-        data: {
-          [constants.SITE_CHANGE_CANNULA]: {dataByDate: countSiteChangesByDay},
-          [constants.SITE_CHANGE_TUBING]: {dataByDate: countSiteChangesByDay}
-        },
-        days: oneWeekDates,
-        sections: siteChangeSections
-      }
-
-      var perms = { root: { } }
-
-      var patient = {
-        profile: {
-          fullName: 'Jill Jellyfish'
-        },
-        settings: {
-          siteChangeSource: constants.SITE_CHANGE_TUBING
-        }
-      }
-
-      dm.processInfusionSiteHistory(basicsData, constants.TANDEM, patient, perms)
-      expect(basicsData.sections.siteChanges.type).to.equal(constants.SITE_CHANGE_TUBING)
+      dm.processInfusionSiteHistory(basicsData, constants.DIABELOOP, patient)
+      expect(basicsData.siteChanges.selectorMetaData.hasSiteChangeSourceSettings).to.equal(false)
     })
 
     it('should set siteChanges type to reservoirChange', function() {
-      var basicsData = {
+      const basicsData = {
         data: {
           [constants.SITE_CHANGE_RESERVOIR]: {dataByDate: countSiteChangesByDay}
         },
         days: oneWeekDates,
-        sections: siteChangeSections
+        siteChanges
       }
 
-      var perms = { root: { } }
-
-      var patient = {
+      const patient = {
         profile: {
           fullName: 'Jill Jellyfish'
         },
@@ -249,91 +144,13 @@ describe('basics datamunger', function() {
         }
       }
 
-      dm.processInfusionSiteHistory(basicsData, constants.INSULET, patient, perms)
-      expect(basicsData.sections.siteChanges.type).to.equal(constants.SITE_CHANGE_RESERVOIR)
-    })
-
-    var pumps = [constants.ANIMAS, constants.MEDTRONIC, constants.TANDEM]
-    pumps.forEach(function(pump) {
-      it('should set siteChanges type to undeclared, and settings to be open, when no preference has been saved and pump is ' + pump, function() {
-        var basicsData = {
-          data: {
-            [constants.SITE_CHANGE_CANNULA]: {dataByDate: countSiteChangesByDay},
-            [constants.SITE_CHANGE_TUBING]: {dataByDate: countSiteChangesByDay}
-          },
-          days: oneWeekDates,
-          sections: siteChangeSections
-        }
-
-        var perms = { root: { } }
-
-        var patient = {
-          profile: {
-            fullName: 'Jill Jellyfish'
-          },
-          settings: {}
-        }
-
-        dm.processInfusionSiteHistory(basicsData, pump, patient, perms)
-        expect(basicsData.sections.siteChanges.type).to.equal(constants.SECTION_TYPE_UNDECLARED)
-        expect(basicsData.sections.siteChanges.settingsTogglable).to.equal(togglableState.open)
-      })
-
-      it('should set siteChanges type to undeclared, and settings to be open, when saved preference is not allowed for ' + pump, function() {
-        var basicsData = {
-          data: {
-            [constants.SITE_CHANGE_CANNULA]: {dataByDate: countSiteChangesByDay},
-            [constants.SITE_CHANGE_TUBING]: {dataByDate: countSiteChangesByDay}
-          },
-          days: oneWeekDates,
-          sections: siteChangeSections
-        }
-
-        var perms = { root: { } }
-
-        var patient = {
-          profile: {
-            fullName: 'Jill Jellyfish'
-          },
-          settings: {
-            siteChangeSource: constants.SITE_CHANGE_RESERVOIR
-          }
-        }
-
-        dm.processInfusionSiteHistory(basicsData, pump, patient, perms)
-        expect(basicsData.sections.siteChanges.type).to.equal(constants.SECTION_TYPE_UNDECLARED)
-        expect(basicsData.sections.siteChanges.settingsTogglable).to.equal(togglableState.open)
-      })
-    })
-
-    it('should set siteChanges type to reservoirChange, and settings to be off, when saved preference is ' + constants.SITE_CHANGE_CANNULA + ' and pump is ' + constants.INSULET, function() {
-      var basicsData = {
-        data: {
-          [constants.SITE_CHANGE_RESERVOIR]: {dataByDate: countSiteChangesByDay}
-        },
-        days: oneWeekDates,
-        sections: siteChangeSections
-      }
-
-      var perms = { root: { } }
-
-      var patient = {
-        profile: {
-          fullName: 'Jill Jellyfish'
-        },
-        settings: {
-          siteChangeSource: constants.SITE_CHANGE_CANNULA
-        }
-      }
-
-      dm.processInfusionSiteHistory(basicsData, constants.INSULET, patient, perms)
-      expect(basicsData.sections.siteChanges.type).to.equal(constants.SITE_CHANGE_RESERVOIR)
-      expect(basicsData.sections.siteChanges.settingsTogglable).to.equal(togglableState.off)
+      dm.processInfusionSiteHistory(basicsData, constants.DIABELOOP, patient)
+      expect(basicsData.siteChanges.type).to.equal(constants.SITE_CHANGE_RESERVOIR)
     })
   })
 
   describe('infusionSiteHistory', function() {
-    var bd = {
+    const bd = {
       data: {reservoirChange: {dataByDate: countSiteChangesByDay}},
       days: oneWeekDates
     }
@@ -342,7 +159,7 @@ describe('basics datamunger', function() {
     })
 
     it('should return an object keyed by date; value is object with attrs type, count, daysSince', function() {
-      var res = {}
+      const res = {}
       oneWeekDates.forEach(function(d) {
         res[d.date] = {type: d.type === 'future' ? d.type : 'noSiteChange'}
       })
@@ -353,87 +170,23 @@ describe('basics datamunger', function() {
     })
 
     it('should properly calculate the daysSince for the first infusion site change', function() {
-      var res2 = {}
+      const res2 = {}
       oneWeekDates.forEach(function(d) {
         res2[d.date] = {type: d.type === 'future' ? d.type : 'noSiteChange'}
       })
       res2['2015-09-08'] = {type: 'siteChange', count: 1, daysSince: 7, data: 'a'}
       res2['2015-09-12'] = {type: 'siteChange', count: 1, daysSince: 4, data: 'b'}
       res2.hasChangeHistory = true
-      var countSiteChangesByDay2 = {
+      const countSiteChangesByDay2 = {
         '2015-09-01': {count: 1},
         '2015-09-08': {count: 1, data: 'a'},
         '2015-09-12': {count: 1, data: 'b'}
       }
-      var bd2 = {
+      const bd2 = {
         data: {reservoirChange: {dataByDate: countSiteChangesByDay2}},
         days: oneWeekDates
       }
       expect(dm.infusionSiteHistory(bd2, 'reservoirChange')).to.deep.equal(res2)
-    })
-  })
-
-  describe('_summarizeTagFn', function() {
-    it('should be a function', function() {
-      assert.isFunction(dm._summarizeTagFn)
-    })
-
-    it('should return a function that can be used with _.each to summarize tags from subtotals', function() {
-      var dataObj = {
-        dataByDate: {
-          '2015-01-01': {
-            subtotals: {
-              foo: 2,
-              bar: 3
-            }
-          },
-          '2015-01-02': {
-            subtotals: {
-              foo: 10,
-              bar: 10
-            }
-          },
-          '2015-01-03': {
-            subtotals: {
-              foo: 0,
-              bar: 0
-            }
-          }
-        }
-      }
-      var summary = {total: 25}
-      _.forEach(['foo', 'bar'], dm._summarizeTagFn(dataObj, summary))
-      expect(summary).to.deep.equal({
-        total: 25,
-        foo: {count: 12, percentage: 0.48},
-        bar: {count: 13, percentage: 0.52}
-      })
-    })
-  })
-
-  describe('_averageExcludingMostRecentDay', function() {
-    it('should be a function', function() {
-      assert.isFunction(dm._averageExcludingMostRecentDay)
-    })
-
-    it('should calculate an average excluding the most recent day if data exists for it', function() {
-      var dataObj = {
-        dataByDate: {
-          '2015-01-01': {
-            total: 2
-          },
-          '2015-01-02': {
-            total: 9
-          },
-          '2015-01-03': {
-            total: 16
-          },
-          '2015-01-04': {
-            total: 1
-          }
-        }
-      }
-      expect(dm._averageExcludingMostRecentDay(dataObj, 28, '2015-01-04')).to.equal(9)
     })
   })
 
@@ -443,8 +196,8 @@ describe('basics datamunger', function() {
     })
 
     describe('crossfilter utils per datatype', function() {
-      var then = '2015-01-01T00:00:00.000Z'
-      var bd = {
+      const then = '2015-01-01T00:00:00.000Z'
+      const bd = {
         data: {
           basal: {data: [{type: 'basal', deliveryType: 'temp', normalTime: then, displayOffset: 0}]},
           bolus: {data: [{type: 'bolus', normalTime: then, displayOffset: 0}]},

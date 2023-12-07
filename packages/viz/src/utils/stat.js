@@ -218,14 +218,6 @@ export const getStatData = (data, type, opts = {}) => {
           units: t('g'),
           name: 'title', // Not use, to make propstype happy
           displayLine: false
-        },
-        {
-          id: 'food',
-          value: data.foodCarbsPerDay,
-          valueString: formatDecimalNumber(data.foodCarbsPerDay),
-          units: t('g'),
-          name: t('Rescuecarbs'),
-          displayLine: true // Display in Lines widget
         }
       ]
 

@@ -28,7 +28,7 @@
 import React, { type FunctionComponent } from 'react'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import type MedicalDataService from 'medical-domain'
-import { type DateFilter, type MedicalData, type TimePrefs } from 'medical-domain'
+import { type DateFilter, type MedicalData } from 'medical-domain'
 import { type BgPrefs } from 'dumb'
 import Grid from '@mui/material/Grid'
 import AccessTime from '@mui/icons-material/AccessTime'
@@ -56,7 +56,6 @@ interface PatientDashboardProps {
   loading: boolean
   medicalDataService: MedicalDataService
   patient: Patient
-  timePrefs: TimePrefs
 }
 
 const useStyle = makeStyles()((theme) => ({
@@ -71,8 +70,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
   const {
     bgPrefs,
     medicalDataService,
-    patient,
-    timePrefs
+    patient
   } = props
   const { user } = useAuth()
   const { selectedTeam } = useSelectedTeamContext()
@@ -156,11 +154,9 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
 
       <Grid item xs={gridWidgetSize}>
         <DeviceUsageWidget
-          bgPrefs={bgPrefs}
           dateFilter={dateFilter}
           medicalDataService={medicalDataService}
           patient={patient}
-          timePrefs={timePrefs}
         />
       </Grid>
 
