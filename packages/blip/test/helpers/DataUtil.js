@@ -22,7 +22,6 @@ export default class DataUtil {
       manufacturer: 'Animas'
     }
 
-    this.addData = sinon.stub()
 
     this.getAverageGlucoseData = sinon.stub().returns({
       averageGlucose: Number.NaN,

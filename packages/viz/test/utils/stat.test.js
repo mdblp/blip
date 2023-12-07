@@ -423,14 +423,7 @@ describe('stat', () => {
 
     it('should format and return `carbs` data', () => {
       const data = {
-        nDays: 1,
-        wizardCarbs: 6,
-        foodCarbs: 16,
-        totalCarbs: 22,
-        totalCarbsPerDay: 22,
-        foodCarbsPerDay: 16,
-        wizardCarbsPerDay: 6,
-        total: 5
+        totalCarbsPerDay: 22
       }
 
       const statData = stat.getStatData(data, commonStats.carbs, opts)
@@ -869,14 +862,7 @@ describe('stat', () => {
 
     it('should define the `carbs` stat', () => {
       const data = {
-        nDays: 1,
-        wizardCarbs: 6,
-        foodCarbs: 16,
-        totalCarbs: 22,
-        totalCarbsPerDay: 22,
-        foodCarbsPerDay: 16,
-        wizardCarbsPerDay: 6,
-        total: 5
+        totalCarbsPerDay: 22
       }
       const def = stat.getStatDefinition(data, commonStats.carbs, opts)
       expect(def).to.include.all.keys(commonStatProperties)

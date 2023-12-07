@@ -113,7 +113,7 @@ export const PatientData: FunctionComponent = () => {
   }, [patient])
 
   return (
-    <React.Fragment>
+    <>
       <PatientNavBar
         currentPatientView={currentPatientView}
         currentPatient={patient}
@@ -123,10 +123,10 @@ export const PatientData: FunctionComponent = () => {
         }}
         onSwitchPatient={changePatient}
       />
-      <React.Fragment>
+      <>
         {loadingData
           ? <SpinningLoader className="centered-spinning-loader" />
-          : <React.Fragment>
+          : <>
             {!medicalData?.hasDiabetesData() &&
               <Box
                 display="flex"
@@ -149,7 +149,7 @@ export const PatientData: FunctionComponent = () => {
               </Box>
             }
             {medicalData?.hasDiabetesData() &&
-              <React.Fragment>
+              <>
                 <Routes>
                   <Route
                     path={AppUserRoute.Dashboard}
@@ -158,7 +158,6 @@ export const PatientData: FunctionComponent = () => {
                         bgPrefs={bgPrefs}
                         medicalDataService={medicalData}
                         patient={patient}
-                        timePrefs={timePrefs}
                         loading={refreshingData}
                       />
                     }
@@ -166,7 +165,7 @@ export const PatientData: FunctionComponent = () => {
                   <Route
                     path={AppUserRoute.Daily}
                     element={
-                      <React.Fragment>
+                      <>
                         <Daily
                           bgPrefs={bgPrefs}
                           timePrefs={timePrefs}
@@ -197,7 +196,7 @@ export const PatientData: FunctionComponent = () => {
                             />
                           }
                         </>
-                      </React.Fragment>
+                      </>
                     }
                   />
                   <Route
@@ -252,11 +251,11 @@ export const PatientData: FunctionComponent = () => {
                     }}
                   />
                 }
-              </React.Fragment>
+              </>
             }
-          </React.Fragment>
+          </>
         }
-      </React.Fragment>
-    </React.Fragment>
+      </>
+    </>
   )
 }

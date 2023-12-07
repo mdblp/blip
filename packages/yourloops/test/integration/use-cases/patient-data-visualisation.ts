@@ -28,8 +28,8 @@
 import {
   checkPatientStatistics,
   checkPatientStatisticsNoData,
-  checkPatientStatisticsWithTwoWeeksOldData,
   checkPatientStatisticsTrendsView,
+  checkPatientStatisticsWithTwoWeeksOldData
 } from '../assert/patient-statistics.assert'
 import { checkPatientDashboardLayout, type PatientDashboardLayoutParams } from '../assert/layout.assert'
 import {
@@ -49,6 +49,19 @@ import {
 } from '../assert/medical-widget.assert'
 import { checkMonitoringAlertsCard, checkMonitoringAlertsCardNoData } from '../assert/monitoring-alerts.assert'
 import { checkTrendsStatsWidgetsTooltips } from '../assert/trends-view.assert'
+import {
+  checkDailyStatsWidgetsTooltips,
+  checkDailyTidelineContainerTooltipsMgdl,
+  checkDailyTidelineContainerTooltipsMmolL,
+  checkDailyTimeInRangeStatsWidgetsMgdl,
+  checkDailyTimeInRangeStatsWidgetsMmolL,
+  checkTotalCarbsStatContent
+} from '../assert/daily-view.assert'
+import {
+  checkAverageGlucoseStatWidget,
+  checkStandardDeviationStatWidget,
+  checkTimeInRangeStatsTitle
+} from '../assert/stats.assert'
 
 export const testDashboardDataVisualisationForHcp = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
@@ -88,7 +101,7 @@ export const testDashboardDataVisualisationPrivateTeamNoData = async (patientDas
   await checkDeviceUsageWidgetNoData()
 }
 
-export const testTrensdsDataVisualisationForHCP = async () => {
+export const testTrendsDataVisualisationForHCP = async () => {
   await checkPatientStatisticsTrendsView()
   await checkTrendsStatsWidgetsTooltips()
 }
@@ -111,4 +124,34 @@ export const testEmptyMedicalFilesWidgetForHcp = async () => {
 
 export const testSwitchPatientCorrectDataDisplay = async () => {
   await checkPatientSwitch()
+}
+
+export const testDailyViewTooltipsAndValuesMgdl = async () => {
+  await checkTotalCarbsStatContent()
+
+  // Check the tooltips
+  await checkDailyTidelineContainerTooltipsMgdl()
+  await checkDailyStatsWidgetsTooltips()
+
+  // Check the time in range stats widgets
+  await checkDailyTimeInRangeStatsWidgetsMgdl()
+  await checkTimeInRangeStatsTitle()
+
+  await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
+  await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
+}
+
+export const testDailyViewTooltipsAndValuesMmolL = async () => {
+  await checkTotalCarbsStatContent()
+
+  // Check the tooltips
+  await checkDailyTidelineContainerTooltipsMmolL()
+  await checkDailyStatsWidgetsTooltips()
+
+  // Check the time in range stats widgets
+  await checkDailyTimeInRangeStatsWidgetsMmolL()
+  await checkTimeInRangeStatsTitle()
+
+  await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mmol/L6')
+  await checkStandardDeviationStatWidget('(2-10)mmol/L4')
 }

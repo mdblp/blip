@@ -1,4 +1,4 @@
-FROM node:lts-alpine as base
+FROM node:lts-alpine AS base
 RUN \
   apk update && \
   apk  upgrade && \
@@ -7,7 +7,7 @@ RUN \
 ENV CHROME_BIN=/usr/bin/chromium-browser
 
 # Create this target to avoid doing an npm install at each tests
-FROM base as test-base
+FROM base AS test-base
 WORKDIR /app
 COPY package.json .npmrc ./
 ARG npm_token
@@ -16,6 +16,6 @@ RUN \
   chown -R node:node /app && \
   npm install
 
-FROM test-base as test
+FROM test-base AS test
 COPY . .
 RUN npm test

@@ -38,8 +38,6 @@ import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): PhysicalActivity => {
   const base = BaseDatumService.normalize(rawData, opts)
   const duration = DurationService.normalize(rawData, opts)
-  const isValidRawDataEventId = typeof rawData.eventId === 'string' && rawData.eventId.trim() !== ''
-  const eventId = isValidRawDataEventId ? rawData.eventId as string : base.id
   const isValidRawDataInputTime = typeof rawData.inputTime === 'string' && rawData.inputTime.trim() !== ''
   const inputTime = isValidRawDataInputTime ? rawData.inputTime as string : base.normalTime
   const physicalActivity: PhysicalActivity = {
@@ -48,7 +46,6 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     type: DatumType.PhysicalActivity,
     guid: rawData.guid as string,
     reportedIntensity: rawData.reportedIntensity as Intensity,
-    eventId,
     inputTime
   }
   return physicalActivity
@@ -59,10 +56,10 @@ const deduplicate = (data: PhysicalActivity[], _opts: MedicalDataOptions): Physi
   const eventIdGroups = data.reduce((previous, current: PhysicalActivity) => {
     // For each eventID take the most recent item
     if (
-      previous[current.eventId] === undefined ||
-      previous[current.eventId].inputTime < current.inputTime
+      previous[current.guid] === undefined ||
+      previous[current.guid].inputTime < current.inputTime
     ) {
-      previous[current.eventId] = current
+      previous[current.guid] = current
     }
     return previous
   }, initialGroups)

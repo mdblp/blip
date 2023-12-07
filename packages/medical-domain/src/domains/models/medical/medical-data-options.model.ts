@@ -57,7 +57,6 @@ interface BgClasses {
 interface TimePrefs {
   timezoneAware: boolean
   timezoneName: string
-  timezoneOffset?: number
 }
 
 const DEFAULT_BG_BOUNDS = {
@@ -127,7 +126,6 @@ const defaultMedicalDataOptions: MedicalDataOptions = {
   timePrefs: {
     timezoneAware: true,
     timezoneName: 'UTC',
-    timezoneOffset: 0
   }
 }
 

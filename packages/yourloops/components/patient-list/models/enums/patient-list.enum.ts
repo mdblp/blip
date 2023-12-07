@@ -33,11 +33,11 @@ export enum PatientListTabs {
 export enum PatientListColumns {
   Actions = 'actions',
   Age = 'age',
+  BelowRange = 'below-range',
   DateOfBirth = 'date-of-birth',
   Flag = 'flag',
   Gender = 'gender',
   GlucoseManagementIndicator = 'glucose-management-indicator',
-  Hypoglycemia = 'hypoglycemia',
   LastDataUpdate = 'last-data-update',
   Messages = 'messages',
   MonitoringAlerts = 'monitoring-alerts',

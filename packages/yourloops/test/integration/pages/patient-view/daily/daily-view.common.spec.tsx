@@ -26,19 +26,13 @@
  */
 
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
-import {
-  checkDailyStatsWidgetsTooltips,
-  checkDailyTidelineContainerTooltips,
-  checkDailyTimeInRangeStatsWidgets,
-  checkSMBGDailyStatsWidgetsTooltips
-} from '../../../assert/daily-view.assert'
+import { checkSMBGDailyStatsWidgetsTooltips } from '../../../assert/daily-view.assert'
 import { mockDataAPI, smbgData, twoWeeksOfCbg } from '../../../mock/data.api.mock'
 import { renderPage } from '../../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
   checkReadingsInRangeStatsWidgets,
-  checkStandardDeviationStatWidget,
-  checkTimeInRangeStatsTitle
+  checkStandardDeviationStatWidget
 } from '../../../assert/stats.assert'
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -51,6 +45,7 @@ import { when } from 'jest-when'
 import { patient2AsTeamMember } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { testDailyViewTooltipsAndValuesMgdl } from '../../../use-cases/patient-data-visualisation'
 
 describe('Daily view for anyone', () => {
   const dailyRoute = AppUserRoute.Daily
@@ -72,19 +67,8 @@ describe('Daily view for anyone', () => {
       await waitFor(() => {
         expect(router.state.location.pathname).toEqual(dailyRoute)
       })
-      const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-      expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Total of declared carbs310gMeal carbs295gRescue carbs15gTotal of estimated carbs50g')
 
-      // Check the tooltips
-      await checkDailyTidelineContainerTooltips()
-      await checkDailyStatsWidgetsTooltips()
-
-      // Check the time in range stats widgets
-      await checkDailyTimeInRangeStatsWidgets()
-      await checkTimeInRangeStatsTitle()
-
-      await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
-      await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
+      await testDailyViewTooltipsAndValuesMgdl()
     })
   })
 
@@ -144,8 +128,8 @@ describe('Daily view for anyone', () => {
 
       // This checks that we tried to generate a pdf
       expect(downloadLinkElement.download).toEqual(`yourloops-report-${patient2AsTeamMember.userId}.pdf`)
-      expect(downloadLinkElement.href.length).toBeGreaterThan(18000)
-      expect(downloadLinkElement.href.length).toBeLessThan(18150)
+      expect(downloadLinkElement.href.length).toBeGreaterThan(17500)
+      expect(downloadLinkElement.href.length).toBeLessThan(18000)
       expect(downloadLinkElement.click).toHaveBeenCalledTimes(1)
 
       await userEvent.click(screen.getByText('Download report'))

@@ -35,6 +35,8 @@ export interface GetPatientDataOptions {
   endDate?: string
   /** Does the result should include the latest pumpSettings ? */
   withPumpSettings?: boolean
+  /** bg Units for the current user **/
+  bgUnits: string
 }
 
 /**

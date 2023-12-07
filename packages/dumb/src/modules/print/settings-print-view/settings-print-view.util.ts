@@ -68,6 +68,8 @@ const TABLE_COLUMNS: SettingsTableColumn[] = [
   }
 ]
 
+type TableData = CgmConfig | DeviceConfig | PumpConfig
+
 const getTimePrefs = (timezone = TIMEZONE_UTC): TimePrefs => {
   const timezoneName = timezone === TIMEZONE_UTC ? new Intl.DateTimeFormat().resolvedOptions().timeZone : timezone
 
@@ -100,7 +102,7 @@ const getTextByDataTableType = (type: PdfSettingsDataType): string => {
   }
 }
 
-const getSubTextByDataTableType = (type: PdfSettingsDataType, data: CgmConfig | DeviceConfig | PumpConfig): string | undefined => {
+const getSubTextByDataTableType = (type: PdfSettingsDataType, data: TableData): string | undefined => {
   switch (type) {
     case PdfSettingsDataType.Cgm:
       return
@@ -110,7 +112,7 @@ const getSubTextByDataTableType = (type: PdfSettingsDataType, data: CgmConfig | 
   }
 }
 
-const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: CgmConfig | DeviceConfig | PumpConfig, timePrefs: TimePrefs): SettingsTableRow[] => {
+const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData, timePrefs: TimePrefs): SettingsTableRow[] => {
   const longDayFormat = getLongDayFormat()
 
   switch (type) {
@@ -182,7 +184,7 @@ export const getDeviceMetadata = (settingsData: PdfSettingsData, timePrefs: Time
   }
 }
 
-export const getTableDataByDataType = (type: PdfSettingsDataType, data: CgmConfig | DeviceConfig | PumpConfig, timezone?: string, date?: string): SettingsTable => {
+export const getTableDataByDataType = (type: PdfSettingsDataType, data: TableData, timezone?: string, date?: string): SettingsTable => {
   const timePrefs = getTimePrefs(timezone)
   const text = getTextByDataTableType(type)
   const subText = getSubTextByDataTableType(type, data)

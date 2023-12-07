@@ -163,7 +163,7 @@ export const usePatientData = (): usePatientDataResult => {
   const changePatient = (patient: Patient): void => {
     patientDataUtils.current.changePatient(patient)
     setMedicalData(null)
-    navigate(`/patient/${patient.userid}/${currentPatientView}`)
+    navigate(`/patient/${patient.userid}${getRouteByPatientView(currentPatientView)}`)
   }
 
   const getMsRangeByPatientView = (patientView: PatientView, patientMedicalData: MedicalDataService): number => {
@@ -200,12 +200,16 @@ export const usePatientData = (): usePatientDataResult => {
   const handleDatetimeLocationChange = async (epochLocation: number, msRange: number): Promise<boolean> => {
     try {
       setRefreshingData(true)
-      const dateRange = patientDataUtils.current.getDateRange({ currentPatientView: currentPatientView, epochLocation, msRange })
+      const dateRange = patientDataUtils.current.getDateRange({
+        currentPatientView: currentPatientView,
+        epochLocation,
+        msRange
+      })
       const patientData = await patientDataUtils.current.loadDataRange(dateRange)
-      if (patientData && patientData.length > 0) {
+      if (patientData && patientData.cbg.length > 0) {
         const medicalDataUpdated = medicalData
         medicalDataUpdated.add(patientData)
-        const dataUtil = new DataUtil(medicalData.data, {
+        const dataUtil = new DataUtil(medicalData.medicalData, {
           bgPrefs,
           timePrefs,
           endpoints: medicalData.endpoints
@@ -238,10 +242,10 @@ export const usePatientData = (): usePatientDataResult => {
     try {
       setRefreshingData(true)
       const patientData = await patientDataUtils.current.loadDataRange(dateRange)
-      if (patientData && patientData.length > 0) {
+      if (patientData && patientData.cbg.length > 0) {
         const medicalDataUpdated = medicalData
         medicalDataUpdated.add(patientData)
-        const dataUtilUpdated = new DataUtil(medicalDataUpdated.data, {
+        const dataUtilUpdated = new DataUtil(medicalDataUpdated.medicalData, {
           bgPrefs,
           timePrefs,
           endpoints: medicalDataUpdated.endpoints
@@ -265,7 +269,7 @@ export const usePatientData = (): usePatientDataResult => {
         return
       }
       const medicalDataRetrieved = patientDataUtils.current.buildMedicalData(patientData)
-      const dataUtil = new DataUtil(medicalDataRetrieved.data, {
+      const dataUtil = new DataUtil(medicalDataRetrieved.medicalData, {
         bgPrefs,
         timePrefs,
         endpoints: medicalDataRetrieved.endpoints
@@ -286,7 +290,7 @@ export const usePatientData = (): usePatientDataResult => {
         return
       }
       const medicalData = patientDataUtils.current.buildMedicalData(patientData)
-      const dataUtil = new DataUtil(medicalData.data, {
+      const dataUtil = new DataUtil(medicalData.medicalData, {
         bgPrefs,
         timePrefs,
         endpoints: medicalData.endpoints
@@ -306,7 +310,7 @@ export const usePatientData = (): usePatientDataResult => {
 
   useEffect(() => {
     if (medicalData) {
-      const dataUtil = new DataUtil(medicalData.data, {
+      const dataUtil = new DataUtil(medicalData.medicalData, {
         bgPrefs,
         timePrefs,
         endpoints: medicalData.endpoints

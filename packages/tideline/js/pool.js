@@ -62,7 +62,6 @@ function Pool(container) {
   let yAxis = null
   /** @type {PlotType[]} */
   let plotTypes = []
-  let annotations = null
   let tooltips = null
   /** @type {AxisScaleFunc} */
   let defaultAxisScaleFn = null
@@ -81,7 +80,6 @@ function Pool(container) {
     yScale = null
     yAxis = null
     plotTypes = null
-    annotations = null
     tooltips = null
     container = null
   }
@@ -269,11 +267,6 @@ function Pool(container) {
     return this
   }
 
-  this.annotations = function(f) {
-    if (!arguments.length) return annotations
-    annotations = f
-    return this
-  }
 
   this.tooltips = function(f) {
     if (!arguments.length) return tooltips

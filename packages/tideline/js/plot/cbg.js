@@ -24,7 +24,7 @@ import _ from 'lodash'
 
 import utils from './util/utils'
 import categorizer from '../data/util/categorize'
-import { MGDL_UNITS, DEFAULT_BG_BOUNDS } from '../data/util/constants'
+import { MGDL_UNITS, DEFAULT_BG_BOUNDS } from 'medical-domain'
 
 const defaults = {
   bgUnits: MGDL_UNITS,
@@ -51,13 +51,10 @@ function plotCbg(pool, opts = defaults) {
   opts.classes = _.omit(opts.classes, ['veryLow', 'veryHigh'])
 
   const categorize = categorizer(opts.classes, opts.bgUnits)
-  const mainGroup = pool.parent()
 
   function cbg(selection) {
     opts.xScale = pool.xScale().copy()
     selection.each(function(currentData) {
-      cbg.addAnnotations(_.filter(currentData, 'annotations'))
-
       const allCBG = d3.select(this).selectAll('circle.d3-cbg').data(currentData, (d) => d.id)
       const cbgGroups = allCBG.enter()
         .append('circle')
@@ -136,27 +133,6 @@ function plotCbg(pool, opts = defaults) {
         rect: rect,
         class: categorizer(opts.classes, opts.bgUnits)(d)
       })
-    }
-  }
-
-  cbg.addAnnotations = function(data) {
-    const yScale = pool.yScale()
-    for (var i = 0; i < data.length; ++i) {
-      var d = data[i]
-      var annotationOpts = {
-        x: cbg.xPosition(d),
-        y: yScale(d.value),
-        xMultiplier: 0,
-        yMultiplier: 2,
-        orientation: {
-          down: true
-        },
-        d: d
-      }
-      if (_.isNil(mainGroup.select('#annotation_for_' + d.id)[0][0])) {
-        mainGroup.select('#tidelineAnnotations_cbg')
-          .call(pool.annotations(), annotationOpts)
-      }
     }
   }
 

@@ -17,8 +17,6 @@
 
 import _ from 'lodash'
 
-import { MS_IN_MIN } from './constants'
-
 import { formatBgValue } from './format.js'
 
 import i18next from 'i18next'
@@ -86,19 +84,6 @@ export function generateBgRangeLabels(bgPrefs, opts = {}) {
 }
 
 /**
- * getOutOfRangeThreshold
- * @param {Object} bgDatum
- * @return Object containing out of range threshold or null
- */
-export function getOutOfRangeThreshold(bgDatum) {
-  const outOfRangeAnnotation = _.find(
-    bgDatum.annotations || [], (annotation) => (annotation.code === 'bg/out-of-range')
-  )
-  return outOfRangeAnnotation ?
-    { [outOfRangeAnnotation.value]: outOfRangeAnnotation.threshold } : null
-}
-
-/**
  * Get the adjusted count of expected CGM data points for devices that do not sample at the default
  * 5 minute interval, such as the Abbot FreeStyle Libre, which samples every 15 mins
  *
@@ -120,15 +105,4 @@ export function weightedCGMCount(data) {
 
     return total + datumWeight
   }, 0)
-}
-
-/**
- * Get the CGM sample frequency in milliseconds from a CGM data point. Most devices default at a
- * 5 minute interval, but others, such as the Abbot FreeStyle Libre, sample every 15 mins
- *
- * @param {Array} datum - a cgm data point
- */
-export function cgmSampleFrequency(datum) {
-  const deviceId = _.get(datum, 'deviceId', '')
-  return deviceId.indexOf('AbbottFreeStyleLibre') === 0 ? 15 * MS_IN_MIN : 5 * MS_IN_MIN
 }

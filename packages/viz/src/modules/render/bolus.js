@@ -69,7 +69,6 @@ export function getBolusEdges(bolusWidth, bolusCenter, bolusBottom, bolusHeight)
  */
 export default function getBolusPaths(insulinEvent, xScale, yScale, {
   bolusWidth,
-  extendedLineThickness,
   interruptedLineThickness,
   triangleHeight
 }) {
@@ -146,76 +145,6 @@ export default function getBolusPaths(insulinEvent, xScale, yScale, {
       key: `delivered-${bolus.id}`,
       type: 'delivered'
     })
-  }
-
-  // this is a port of tideline's js/plot/util/drawbolus.js: extended
-  // it does the straight part of the "arm" representing the extended part of the bolus
-  // and also the triangle at the end of the "arm"
-  if (bolusUtils.hasExtended(insulinEvent)) {
-    const extendedVal = bolusUtils.getExtended(insulinEvent)
-    // yes, 4.5 is a magic number that matches the first tideline implementation
-    // the benefit of 4.5 * extendedLineThickness is that
-    // it scales with various settings for line thickness, which may vary based on render target
-    const triangleSize = 4.5 * extendedLineThickness
-    const halfTriangle = triangleSize / 2
-    const startOfTriangle = xScale(bolus.utc + bolusUtils.getMaxDuration(insulinEvent))
-      - triangleSize
-    const extendedY = yScale(extendedVal) + (extendedLineThickness / 2)
-
-    if (extendedVal > 0) {
-      paths.push({
-        d: `
-          M ${bolusCenter},${extendedY + extendedLineThickness / 2}
-          L ${bolusCenter},${extendedY - extendedLineThickness / 2}
-          L ${startOfTriangle + extendedLineThickness},${extendedY - extendedLineThickness / 2}
-          L ${startOfTriangle + extendedLineThickness},${extendedY + extendedLineThickness / 2} Z
-        `,
-        key: `extendedPath-${bolus.id}`,
-        type: 'extendedPath'
-      })
-    }
-
-    const interruptedExtended = bolusUtils.isInterruptedBolus(insulinEvent) && extendedVal > 0
-
-    if (interruptedExtended) {
-      const startOfInterrupted = xScale(bolus.utc + bolusUtils.getDuration(insulinEvent))
-
-      paths.push({
-        d: `
-          M ${startOfInterrupted},${extendedY + extendedLineThickness / 2}
-          L ${startOfInterrupted},${extendedY - extendedLineThickness / 2}
-          L ${startOfTriangle + extendedLineThickness},${extendedY - extendedLineThickness / 2}
-          L ${startOfTriangle + extendedLineThickness},${extendedY + extendedLineThickness / 2} Z
-        `,
-        key: `extendedExpectationPath-${bolus.id}`,
-        type: 'extendedExpectationPath'
-      })
-
-      const halfInterrupted = interruptedLineThickness / 2
-
-      paths.push({
-        d: `
-          M ${startOfInterrupted},${extendedY - halfInterrupted}
-          L ${startOfInterrupted - interruptedLineThickness * 2},${extendedY - halfInterrupted}
-          L ${startOfInterrupted - interruptedLineThickness * 2},${extendedY + halfInterrupted}
-          L ${startOfInterrupted},${extendedY + halfInterrupted} Z
-        `,
-        key: `extendedInterrupted-${bolus.id}`,
-        type: 'extendedInterrupted'
-      })
-    }
-
-    if (extendedVal > 0) {
-      paths.push({
-        d: `
-          M ${startOfTriangle + triangleSize},${extendedY - halfTriangle}
-          L ${startOfTriangle + triangleSize},${extendedY + halfTriangle}
-          L ${startOfTriangle},${extendedY} Z
-        `,
-        key: `extendedTriangle-${bolus.id}`,
-        type: `extendedTriangle${interruptedExtended ? 'Interrupted' : ''}`
-      })
-    }
   }
 
   // this is a (partial) port of tideline's js/plot/util/drawbolus.js: underride
