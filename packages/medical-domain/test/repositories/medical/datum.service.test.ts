@@ -199,7 +199,7 @@ describe('DatumService', () => {
       reservoirChange2
     ])
   })
-  it('should filter on dates with week days filter only for bg types', () => {
+  it('should filter on dates with week days filter for all types where isoWeekDay is provided', () => {
     const filterDate1 = new Date('2023-03-01T00:00:00.000Z') // local wednesday
     const filterDate2 = new Date('2023-03-02T00:00:00.000Z') // local thursday
     const date2 = new Date(filterDate2)
@@ -222,9 +222,8 @@ describe('DatumService', () => {
 
     const weekDaysFilter = { ...defaultWeekDaysFilter, [WeekDays.Wednesday]: false }
     const filteredData = DatumService.filterOnDate(testData, filterDate1.valueOf(), filterDate2.valueOf(), weekDaysFilter)
-    expect(filteredData.length).toEqual(4)
-    expect(filteredData).toEqual([
-      reservoirChange1, reservoirChange2,
+    expect(filteredData.length).toEqual(3)
+    expect(filteredData).toEqual([reservoirChange2,
       cbg2, smbg2
     ])
   })
@@ -271,6 +270,75 @@ describe('DatumService', () => {
       physical1, physical2,
       warmup1, warmup2,
       zen1, zen2
+    ])
+  })
+  it('should filter on week days as required', () => {
+    const ignoreThursdays = { ...defaultWeekDaysFilter, [WeekDays.Thursday]: false }
+    const filterDate1 = new Date('2023-03-01T00:00:00.000Z')
+    const filterDate2 = new Date('2023-03-02T00:00:00.000Z')
+
+    const date1 = new Date(filterDate1)
+    date1.setSeconds(-30)
+    const date2 = new Date(filterDate2)
+    date2.setSeconds(-1)
+    const date3 = new Date('2023-03-03T00:00:00.000Z')
+
+    const basal1 = createRandomBasal(date1)
+    const basal2 = createRandomBasal(date2)
+    const basal3 = createRandomBasal(date3)
+    const confidential1 = createRandomConfidentialMode(date1)
+    const confidential2 = createRandomConfidentialMode(date2)
+    const confidential3 = createRandomConfidentialMode(date3)
+    const physical1 = createRandomPhysicalActivity(date1)
+    const physical2 = createRandomPhysicalActivity(date2)
+    const physical3 = createRandomPhysicalActivity(date3)
+    const warmup1 = createRandomWarmUp(date1)
+    const warmup2 = createRandomWarmUp(date2)
+    const warmup3 = createRandomWarmUp(date3)
+    const zen1 = createRandomZenMode(date1)
+    const zen2 = createRandomZenMode(date2)
+    const zen3 = createRandomZenMode(date3)
+
+    const testData: Datum[] = [
+      basal1, basal2, basal3,
+      confidential1, confidential2, confidential3,
+      physical1, physical2, physical3,
+      warmup1, warmup2, warmup3,
+      zen1, zen2, zen3
+    ]
+
+    const filteredData = DatumService.filterOnDate(testData, filterDate1.valueOf(), filterDate2.valueOf(), ignoreThursdays)
+    expect(filteredData.length).toEqual(5)
+    expect(filteredData).toEqual([
+      basal1,
+      confidential1,
+      physical1,
+      warmup1,
+      zen1
+    ])
+  })
+  it('should not filter objects where isoWeekDay is not provided', () => {
+    const ignoreThursdays = { ...defaultWeekDaysFilter, [WeekDays.Thursday]: false }
+    const filterDate1 = new Date('2023-03-01T00:00:00.000Z')
+    const filterDate2 = new Date('2023-03-02T00:00:00.000Z')
+
+    const date1 = new Date(filterDate1)
+    date1.setSeconds(-30)
+    const date2 = new Date(filterDate2)
+    date2.setSeconds(-1)
+
+    const basal1 = createRandomBasal(date1)
+    const basal2 = createRandomBasal(date2)
+    basal2.isoWeekday = undefined
+
+    const testData: Datum[] = [
+      basal1, basal2
+    ]
+
+    const filteredData = DatumService.filterOnDate(testData, filterDate1.valueOf(), filterDate2.valueOf(), ignoreThursdays)
+    expect(filteredData.length).toEqual(2)
+    expect(filteredData).toEqual([
+      basal1, basal2
     ])
   })
 })
