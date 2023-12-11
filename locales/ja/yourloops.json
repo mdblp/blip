@@ -441,6 +441,7 @@
   "refresh": "再読込",
   "remaining-time": "残存時間",
   "remove-caregiver": "介護者を削除",
+  "remove-member": "Remove the member {{fullName}}",
   "remove-member-confirm": "チーム {{fullName}} からメンバー {{teamName}} を削除しますか？",
   "remove-member-failed": "メンバーを削除できません。しばらくしてから再度お試しください。",
   "remove-member-from-team": "チームからメンバーを削除",
