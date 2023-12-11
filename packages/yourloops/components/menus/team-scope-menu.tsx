@@ -31,13 +31,12 @@ import { makeStyles } from 'tss-react/mui'
 import { type Theme, useTheme } from '@mui/material/styles'
 import { type Team, useTeam } from '../../lib/team'
 import PersonIcon from '@mui/icons-material/Person'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { TeamType } from '../../lib/team/models/enums/team-type.enum'
 import { useTranslation } from 'react-i18next'
 import { type TeamEditModalContentProps } from '../../pages/hcp/types'
 import { useAlert } from '../utils/snackbar'
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import TeamUtils from '../../lib/team/team.util'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import IconButton from '@mui/material/IconButton'
@@ -51,6 +50,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Divider from '@mui/material/Divider'
 import AddIcon from '@mui/icons-material/Add'
 import TeamInformationEditDialog from '../../pages/hcp/team-information-edit-dialog'
+import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 
 const classes = makeStyles()((theme: Theme) => ({
@@ -81,8 +81,10 @@ export const TeamScopeMenu: FunctionComponent = () => {
       typography
     }
   } = classes()
-  const { getMedicalTeams, getPrivateTeam, createTeam, refresh: refreshTeams } = useTeam()
-  const { selectTeam, selectedTeam } = useSelectedTeamContext()
+  const { getMedicalTeams, getPrivateTeam, createTeam, getTeam } = useTeam()
+
+  const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
+  const selectedTeam = getTeam(teamId)
   const alert = useAlert()
   const navigate = useNavigate()
   const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null)
@@ -90,7 +92,6 @@ export const TeamScopeMenu: FunctionComponent = () => {
   const isMenuOpen = !!anchorEl
   const theme = useTheme()
   const isMobile: boolean = useMediaQuery(theme.breakpoints.only('xs'))
-  const { pathname } = useLocation()
 
   const privateTeam = getPrivateTeam()
   const sortedMedicalTeams = TeamUtils.sortTeamsByName(getMedicalTeams())
@@ -105,11 +106,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
 
   const onSelectTeam = (teamId: string): void => {
     if (teamId !== selectedTeam.id) {
-      selectTeam(teamId)
-
-      if (pathname !== AppUserRoute.Home) {
-        navigate(AppUserRoute.Home)
-      }
+      navigate(`${AppUserRoute.Teams}/${teamId}${AppUserRoute.Patients}`)
     }
     closeMenu()
   }
@@ -123,9 +120,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
     if (createdTeam) {
       try {
         const newTeam = await createTeam(createdTeam as Team)
-        refreshTeams()
-        selectTeam(newTeam.id, true)
-        navigate(AppUserRoute.CareTeamSettings)
+        navigate(`/teams/${newTeam.id}`)
         alert.success(t('team-page-success-create'))
       } catch (reason: unknown) {
         alert.error(t('team-page-failed-create'))

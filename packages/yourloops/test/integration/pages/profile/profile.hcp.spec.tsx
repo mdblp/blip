@@ -27,7 +27,7 @@
 
 import { renderPage } from '../../utils/render'
 import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
-import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
+import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -154,7 +154,6 @@ describe('Profile page for hcp', () => {
   })
 
   it('should show the banner and change its content when the banner is enabled and language is changed', async () => {
-    localStorage.setItem('selectedTeamId', myThirdTeamId)
     jest.spyOn(ConfigService, 'isBannerEnabled').mockReturnValue(true)
 
     const router = renderPage('/preferences')

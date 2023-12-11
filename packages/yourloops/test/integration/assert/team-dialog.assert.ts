@@ -36,7 +36,7 @@ import { loggedInUserId } from '../mock/auth0.hook.mock'
 
 export const checkCreateCareTeamDialog = async () => {
   jest.spyOn(TeamAPI, 'createTeam').mockResolvedValue(undefined)
-  const teamMenu = screen.getByLabelText('Open team selection menu')
+  const teamMenu = await screen.findByLabelText('Open team selection menu')
   await userEvent.click(teamMenu)
   await userEvent.click(screen.getByText('Create a care team'))
   const dialogTeam = screen.getByRole('dialog')
@@ -203,7 +203,7 @@ export const checkTeamCreationSuccess = async (router: Router): Promise<void> =>
 
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   expect(screen.getByText('Team successfully created.')).toBeVisible()
-  expect(router.state.location.pathname).toEqual('/team')
+  expect(router.state.location.pathname).toEqual('/teams/new-team-id')
   await waitFor(() => {
     expect(within(teamMenu).getByText(teamName)).toBeVisible()
   })

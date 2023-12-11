@@ -26,11 +26,10 @@
  */
 
 import React, { type FC } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { PatientData } from '../components/patient-data/patient-data'
 import { CareTeamSettingsPage } from '../pages/care-team-settings/care-team-settings-page'
 import { PatientCaregiversPage } from '../pages/patient/caregivers/patient-caregivers-page'
-import { PatientProvider } from '../lib/patient/patient.provider'
 import { TeamContextProvider } from '../lib/team'
 import { DashboardLayout } from './dashboard-layout'
 import { InvalidRoute } from '../components/invalid-route'
@@ -41,20 +40,16 @@ import { AppUserRoute } from '../models/enums/routes.enum'
 export const PatientLayout: FC = () => {
   return (
     <TeamContextProvider>
-      <PatientProvider>
-        <DashboardLayout>
-          <Routes>
-            <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
-            <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
-            <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
-            <Route path={AppUserRoute.Home} element={<PatientData />} />
-            <Route path={AppUserRoute.Caregivers} element={<PatientCaregiversPage />} />
-            <Route path={`${AppUserRoute.Teams}/:teamId`} element={<CareTeamSettingsPage />} />
-            <Route path="/" element={<Navigate to={AppUserRoute.Dashboard} replace />} />
-            <Route path="*" element={<PatientData />} />
-          </Routes>
-        </DashboardLayout>
-      </PatientProvider>
+      <DashboardLayout>
+        <Routes>
+          <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
+          <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
+          <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
+          <Route path={AppUserRoute.Caregivers} element={<PatientCaregiversPage />} />
+          <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
+          <Route path="*" element={<PatientData />} />
+        </Routes>
+      </DashboardLayout>
     </TeamContextProvider>
   )
 }

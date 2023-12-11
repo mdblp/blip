@@ -119,9 +119,9 @@ function plotMessage(pool, opts = {}) {
     const mTime = moment.utc(d.epoch).tz(d.timezone)
     const msgDate = format.datestamp(mTime)
     const msgTime = format.timestamp(mTime)
-    const htmlDateTime = `<span class="message-from-to">${t('{{date}} - {{time}}', { date: msgDate, time: msgTime })}</span>`
-    const htmlName = `<span class="message-author">${format.nameForDisplay(d.user)}:</span>`
-    const htmlValue = `<br><span class="message-text">${format.textPreview(d.messageText)}</span>`
+    const htmlDateTime = `<span data-testid="message-from-to" class="message-from-to">${t('{{date}} - {{time}}', { date: msgDate, time: msgTime })}</span>`
+    const htmlName = `<span data-testid="message-author" class="message-author">${format.nameForDisplay(d.user)}:</span>`
+    const htmlValue = `<br><span data-testid="message-text" class="message-text">${format.textPreview(d.messageText)}</span>`
 
     tooltip.foGroup.append('p').attr('class', 'messageTooltip').append('span').attr('class', 'secondary').html(htmlDateTime)
     tooltip.foGroup

@@ -93,8 +93,7 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
           data-testid="monitoring-alert-card-configure-button"
           data-stonlyid="monitoring-alerts-card-configure-button"
           onClick={() => {
-            const targetAndAlertsMonitoringAlertsSectionRoute = `${AppUserRoute.Patient}/${patient.userid}${AppUserRoute.TargetAndAlerts}#${MONITORING_ALERTS_SECTION_ID}`
-            navigate(targetAndAlertsMonitoringAlertsSectionRoute)
+            navigate(`..${AppUserRoute.TargetAndAlerts}#${MONITORING_ALERTS_SECTION_ID}`, { relative: 'path' })
           }}
           size="small"
         >
