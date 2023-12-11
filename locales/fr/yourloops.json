@@ -441,6 +441,7 @@
   "refresh": "Rafraîchir",
   "remaining-time": "Temps restant",
   "remove-caregiver": "Supprimer l'aidant",
+  "remove-member": "Remove the member {{fullName}}",
   "remove-member-confirm": "Supprimer le membre {{fullName}} de l'équipe {{teamName}} ?",
   "remove-member-failed": "Impossible de supprimer le membre de l'équipe. Veuillez réessayer plus tard.",
   "remove-member-from-team": "Retirer un membre de l'équipe",
