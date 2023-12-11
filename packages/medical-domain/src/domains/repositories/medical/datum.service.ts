@@ -46,7 +46,6 @@ import ZenModeService from './datum/zen-mode.service'
 import { isEpochBetweenBounds } from '../time/time.service'
 import { isBasal } from '../../models/medical/datum/basal.model'
 import { isDuration } from '../../models/medical/datum/basics/duration.model'
-import { isBg } from '../../models/medical/datum/bg.model'
 import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../models/time/date-filter.model'
 import { DatumType } from '../../models/medical/datum/enums/datum-type.enum';
 import { DeviceEventSubtype } from '../../models/medical/datum/enums/device-event-subtype.enum';
