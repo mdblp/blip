@@ -29,7 +29,7 @@ import type BaseTime from '../../../../models/medical/datum/basics/base-time.mod
 import { type DatumProcessor } from '../../../../models/medical/datum.model'
 import DatumService from '../../datum.service'
 import type Datum from '../../../../models/medical/datum.model'
-import { getNormalizedTime, getWeekDay } from '../../../time/time.service'
+import { getNormalizedTime } from '../../../time/time.service'
 import type MedicalDataOptions from '../../../../models/medical/medical-data-options.model'
 import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../../models/time/date-filter.model'
 
