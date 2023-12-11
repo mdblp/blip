@@ -36,6 +36,7 @@ interface NormalizedTime {
   epoch: number
   displayOffset: number
   normalTime: string
+  isoWeekday: WeekDays
 }
 
 interface NormalizedEndTime {
@@ -104,7 +105,8 @@ export function getNormalizedTime(strTime: string, timezone: string): Normalized
   return {
     epoch,
     displayOffset,
-    normalTime: mTime.toISOString()
+    normalTime: mTime.toISOString(),
+    isoWeekday: getWeekDay(mTime)
   }
 }
 
@@ -120,7 +122,7 @@ export function getNormalizedEnd(time: string, duration: number, unit: string): 
   }
 }
 
-function getWeekDay(mTime: moment.Moment): WeekDays {
+export function getWeekDay(mTime: moment.Moment): WeekDays {
   return mTime.locale('en').format('dddd').toLowerCase() as WeekDays
 }
 
