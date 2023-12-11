@@ -23,18 +23,12 @@ import React from 'react'
 
 import { dateTimeFormats } from '../../../../js/data/util/constants'
 
-import basicsActions from '../logic/actions'
-import { getOptionValue, getPathToSelected } from './BasicsUtils'
 import ADay from './day/ADay'
 import HoverDay from './day/HoverDay'
-import * as constants from '../logic/constants'
-import togglableState from '../TogglableState'
 
 class CalendarContainer extends React.Component {
   constructor(props) {
     super(props)
-    this.getOptionValue = getOptionValue
-    this.getPathToSelected = getPathToSelected
     this.state = {
       hoverDate: null
     }
@@ -50,34 +44,6 @@ class CalendarContainer extends React.Component {
     this.setState({ hoverDate: date })
   }
 
-  getSelectedSubtotal() {
-    var options = this.props.selectorOptions
-
-    if (options) {
-      return _.get(_.find(_.flatten(options.rows), { selected: true }), 'key', options.primary.key)
-    }
-    return null
-  }
-
-  UNSAFE_componentWillMount() {
-    var options = this.props.selectorOptions
-    var data = (this.props.type !== constants.SECTION_TYPE_UNDECLARED) ? this.props.data[this.props.type].summary : null
-
-    if (options) {
-      var rows = _.flatten(options.rows)
-      var selectedOption = _.find(rows, { selected: true }) || options.primary
-
-      // If the default selected option has no value, choose the first option that does
-      if (selectedOption.path && !this.getOptionValue(selectedOption, data)) {
-        // eslint-disable-next-line no-use-before-define
-        selectedOption = _.find(_.reject(_.union(options.primary, rows), { key: selected }), (option) => {
-          return this.getOptionValue(option, data) > 0
-        })
-        var selected = _.get(selectedOption, 'key', null)
-        this.actions.selectSubtotal(this.props.sectionId, selected)
-      }
-    }
-  }
 
   render() {
     var containerClass = cx('Calendar-container-' + this.props.type, {
@@ -87,16 +53,9 @@ class CalendarContainer extends React.Component {
     var days = this.renderDays()
     var dayLabels = this.renderDayLabels()
 
-    var selector = null
-
-    if (this.props.selector && this.props.selectorOptions && this.props.settingsTogglable !== togglableState.closed) {
-      selector = this.renderSelector()
-    }
-
     return (
       <div className="Container">
         <div className={containerClass}>
-          {selector}
           <div className="Calendar">
             <div className="weekdays">
               {dayLabels}
@@ -108,20 +67,6 @@ class CalendarContainer extends React.Component {
         </div>
       </div>
     )
-  }
-
-  renderSelector() {
-    return this.props.selector({
-      bgClasses: this.props.bgClasses,
-      bgUnits: this.props.bgUnits,
-      data: (this.props.type !== constants.SECTION_TYPE_UNDECLARED) ? this.props.data[this.props.type].summary : null,
-      selectedSubtotal: this.getSelectedSubtotal(),
-      selectorOptions: this.props.selectorOptions,
-      selectorMetaData: this.props.selectorMetaData,
-      updateBasicsSettings: this.props.updateBasicsSettings,
-      sectionId: this.props.sectionId,
-      trackMetric: this.props.trackMetric
-    })
   }
 
   renderDayLabels() {
@@ -147,23 +92,16 @@ class CalendarContainer extends React.Component {
   }
 
   renderDays() {
-    var path = this.getPathToSelected()
-
     return this.props.days.map((day, id) => {
       if (this.props.hasHover && this.state.hoverDate === day.date) {
         return (
           <HoverDay
             key={day.date}
-            data={path ? this.props.data[this.props.type][path] :
-              this.props.data[this.props.type]}
+            data={this.props.data[this.props.type]}
             date={day.date}
             hoverDisplay={this.props.hoverDisplay}
             onHover={this.onHover}
-            onSelectDay={this.props.onSelectDay}
-            subtotalType={this.getSelectedSubtotal()}
-            timezone={this.props.timezone}
             type={this.props.type}
-            title={this.props.title}
             trackMetric={this.props.trackMetric}
           />
         )
@@ -173,46 +111,27 @@ class CalendarContainer extends React.Component {
         <ADay key={day.date}
           chart={this.props.chart}
           chartWidth={this.props.chartWidth}
-          data={path ? this.props.data[this.props.type][path] :
-            this.props.data[this.props.type]}
+          data={this.props.data[this.props.type]}
           date={day.date}
           future={day.type === 'future'}
           isFirst={id === 0}
           mostRecent={day.type === 'mostRecent'}
           onHover={this.onHover}
-          subtotalType={this.getSelectedSubtotal()}
           type={this.props.type} />
       )
     })
   }
 }
 
-CalendarContainer.prototype.actions = basicsActions
-
 CalendarContainer.propTypes = {
-  bgClasses: PropTypes.object.isRequired,
-  bgUnits: PropTypes.string.isRequired,
   chart: PropTypes.func.isRequired,
   chartWidth: PropTypes.number.isRequired,
   data: PropTypes.object.isRequired,
   days: PropTypes.array.isRequired,
   hasHover: PropTypes.bool.isRequired,
   hoverDisplay: PropTypes.func,
-  onSelectDay: PropTypes.func.isRequired,
-  sectionId: PropTypes.string.isRequired,
-  selector: PropTypes.func,
-  selectorOptions: PropTypes.object,
-  selectorMetaData: PropTypes.object,
-  settingsTogglable: PropTypes.oneOf([
-    togglableState.open,
-    togglableState.closed,
-    togglableState.off
-  ]).isRequired,
-  timezone: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
-  trackMetric: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-  updateBasicsSettings: PropTypes.func
+  trackMetric: PropTypes.func.isRequired
 }
 
 export default CalendarContainer

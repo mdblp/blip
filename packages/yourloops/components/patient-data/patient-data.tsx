@@ -157,7 +157,6 @@ export const PatientData: FunctionComponent = () => {
                         bgPrefs={bgPrefs}
                         medicalDataService={medicalData}
                         patient={patient}
-                        timePrefs={timePrefs}
                         loading={refreshingData}
                       />
                     }
