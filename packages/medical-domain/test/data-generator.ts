@@ -52,7 +52,6 @@ import Intensity from '../src/domains/models/medical/datum/enums/intensity.enum'
 import PumpManufacturer from '../src/domains/models/medical/datum/enums/pump-manufacturer.enum'
 import { DeviceEventSubtype } from '../src/domains/models/medical/datum/enums/device-event-subtype.enum'
 import { getTrendsTime, getWeekDay } from '../src/domains/repositories/time/time.service'
-import WeekDays from '../src/domains/models/time/enum/weekdays.enum'
 import moment from 'moment-timezone'
 
 function createBaseData(date?: Date): Omit<BaseDatum, 'type'> {
