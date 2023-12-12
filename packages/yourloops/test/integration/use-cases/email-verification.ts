@@ -42,20 +42,20 @@ import { checkFooterForUserNotLoggedIn } from '../assert/footer.assert'
 
 export const testVerifyEmail = async () => {
   checkFooterForUserNotLoggedIn(true)
-  await checkHeaderWithLogoutButton()
+  await checkHeaderWithLogoutButton('verify-email-header')
   await checkVerifyEmailPageContent()
 }
 
 export const testVerifyEmailResultSuccess = async () => {
   checkFooterForUserNotLoggedIn(true)
-  checkHeader()
+  checkHeader('verify-email-result-header')
   checkVerifyEmailResultSuccessContent()
   await checkVerifyEmailResultSuccessContinueButton()
 }
 
 const testVerifyEmailResultErrorContent = async () => {
   checkFooterForUserNotLoggedIn(true)
-  checkHeader()
+  checkHeader('verify-email-result-header')
   checkVerifyEmailResultErrorContent()
   await checkVerifyEmailResultErrorLogoutButton()
 }

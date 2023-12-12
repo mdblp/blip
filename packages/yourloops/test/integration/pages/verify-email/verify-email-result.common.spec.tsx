@@ -40,13 +40,15 @@ import { getAccessTokenWithPopupMock, logoutMock } from '../../mock/auth0.hook.m
 import { AUTH0_ERROR_LOGIN_REQUIRED } from '../../../../lib/auth/models/auth0-error.model'
 
 describe('Verify email result page', () => {
-  (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-    isAuthenticated: false,
-    isLoading: false,
-    user: null,
-    getAccessTokenWithPopup: getAccessTokenWithPopupMock,
-    logout: logoutMock,
-    getAccessTokenSilently: jest.fn().mockRejectedValue({ error_description: AUTH0_ERROR_LOGIN_REQUIRED })
+  beforeAll(() => {
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      isAuthenticated: false,
+      isLoading: false,
+      user: null,
+      getAccessTokenWithPopup: getAccessTokenWithPopupMock,
+      logout: logoutMock,
+      getAccessTokenSilently: jest.fn().mockRejectedValue({ error_description: AUTH0_ERROR_LOGIN_REQUIRED })
+    })
   })
 
   describe('Success case', () => {

@@ -46,6 +46,7 @@ import { Auth0VerifyEmailMessage } from '../../lib/auth/models/enums/auth0-verif
 import { RightIcon } from '../../components/icons/diabeloop/right-icon'
 import { WrongIcon } from '../../components/icons/diabeloop/wrong-icon'
 import { useVerifyEmailStyles } from './verify-email.styles'
+import { useTheme } from '@mui/material/styles'
 
 const classes = makeStyles()(() => ({
   icon: {
@@ -87,6 +88,7 @@ export const VerifyEmailResultPage: FC = () => {
   const title = isSuccess ? t('verify-email-success-title') : t('verify-email-error-title')
   const infoLabel = isSuccess ? t('verify-email-success-info') : getErrorInfoLabel(message as Auth0VerifyEmailMessage)
   const buttonLabel = isSuccess ? t('button-continue') : t('button-logout')
+  const theme = useTheme()
 
   const goToAppHome = async (): Promise<void> => {
     try {
@@ -118,11 +120,10 @@ export const VerifyEmailResultPage: FC = () => {
         elevation={0}
         className={appBar}
         position="fixed"
-        data-testid="verify-email-header"
+        data-testid="verify-email-result-header"
       >
         <Toolbar>
           <Avatar
-            id="header-main-logo"
             aria-label={t('alt-img-logo')}
             variant="square"
             src={`/branding_${config.BRANDING}_logo.svg`}
@@ -140,7 +141,7 @@ export const VerifyEmailResultPage: FC = () => {
         textAlign="center"
         data-testid="verify-email-result-content"
       >
-        <GlobalStyles styles={{ body: { backgroundColor: 'white' } }} />
+        <GlobalStyles styles={{ body: { backgroundColor: theme.palette.common.white } }} />
 
         <Container maxWidth="sm">
           <Box mt={4} mb={3}>

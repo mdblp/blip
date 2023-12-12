@@ -48,6 +48,7 @@ import Avatar from '@mui/material/Avatar'
 import { useNavigate } from 'react-router-dom'
 import { setPageTitle } from '../../lib/utils'
 import { useVerifyEmailStyles } from './verify-email.styles'
+import { useTheme } from '@mui/material/styles'
 
 export const VerifyEmailPage: FunctionComponent = () => {
   const { classes: { appBar, desktopLogo } } = useVerifyEmailStyles()
@@ -57,6 +58,7 @@ export const VerifyEmailPage: FunctionComponent = () => {
   const alert = useAlert()
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(true)
   const navigate = useNavigate()
+  const theme = useTheme()
 
   const contactSupport = async (): Promise<void> => {
     window.open(config.CONTACT_SUPPORT_WEB_URL, '_blank')
@@ -135,7 +137,7 @@ export const VerifyEmailPage: FunctionComponent = () => {
         textAlign="center"
         data-testid="verify-email-content"
       >
-        <GlobalStyles styles={{ body: { backgroundColor: 'white' } }} />
+        <GlobalStyles styles={{ body: { backgroundColor: theme.palette.common.white } }} />
 
         <Container maxWidth="sm">
           <Box display="flex" justifyContent="center">

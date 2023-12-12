@@ -29,14 +29,14 @@ import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { logoutMock } from '../mock/auth0.hook.mock'
 
-export const checkHeader = () => {
-  const pageHeader = within(screen.getByTestId('verify-email-header'))
+export const checkHeader = (headerId: string) => {
+  const pageHeader = within(screen.getByTestId(headerId))
   expect(pageHeader.getByLabelText('YourLoops Logo')).toBeVisible()
 }
 
-export const checkHeaderWithLogoutButton = async () => {
-  checkHeader()
-  const headerLogoutButton = within(screen.getByTestId('verify-email-header')).getByText('Logout')
+export const checkHeaderWithLogoutButton = async (headerId: string) => {
+  checkHeader(headerId)
+  const headerLogoutButton = within(screen.getByTestId(headerId)).getByText('Logout')
   expect(headerLogoutButton).toBeEnabled()
 
   await userEvent.click(headerLogoutButton)
