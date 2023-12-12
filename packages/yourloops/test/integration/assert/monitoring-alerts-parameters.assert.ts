@@ -272,7 +272,7 @@ export const checkTeamValuesButtonMgdl = async (): Promise<void> => {
   expect(monitoringAlertsSection).toHaveTextContent('1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)A. Glycemic targetMinimum:​mg/dLMaximum:​mg/dLB. Event trigger thresholdTime spent off target5%​')
   expect(monitoringAlertsSection).toHaveTextContent('2. Severe hypoglycemiaCurrent trigger setting: 10% of time below 40 mg/dL thresholdA. Severe hypoglycemia threshold:Severe hypoglycemia below:​mg/dLB. Event trigger thresholdTime spent in severe hypoglycemia10%​')
   expect(monitoringAlertsSection).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​Discard changesSave')
-  expect(screen.getByText('The care team values have been entered. Please save the changes')).toBeVisible()
+  expect(screen.getByText('The care team values have been entered. Please save the changes.')).toBeVisible()
 
   jest.spyOn(PatientApi, 'deletePatientAlerts').mockReturnValueOnce(null)
   jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValueOnce([{
