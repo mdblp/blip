@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC } from 'react'
+import React, { FC, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Theme, useTheme } from '@mui/material/styles'
@@ -40,10 +40,31 @@ import { Save } from '@mui/icons-material'
 import { useMonitoringAlertsPatientConfiguration } from './monitoring-alerts-patient-configuration.hook'
 import { MonitoringAlertsContentConfiguration } from './monitoring-alerts-content-configuration'
 import Typography from '@mui/material/Typography'
+import Chip from '@mui/material/Chip'
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useMonitoringAlertConfigurationStyles = makeStyles()((theme: Theme) => ({
   cancelButton: {
     marginRight: theme.spacing(2)
+  }
+}))
+
+const useApplyTeamButtonStyles = makeStyles()((theme: Theme) => ({
+  applyTeamValuesButtonCheckedSaved: {
+    background: 'var(--button-care-team-values-applied-bg)',
+    color: theme.palette.success.dark,
+    fontWeight: 'bold'
+  },
+  applyTeamValuesButtonCheckedUnsaved: {
+    background: theme.palette.primary.main,
+    borderColor: theme.palette.primary.main,
+    color: theme.palette.common.white,
+    fontWeight: 'bold'
+  },
+  applyTeamValuesButtonUnchecked: {
+    background: theme.palette.common.white,
+    borderColor: theme.palette.primary.main,
+    color: theme.palette.primary.main,
+    fontWeight: 'bold'
   }
 }))
 
@@ -54,6 +75,12 @@ interface MonitoringAlertsPatientConfigurationProps {
   wasInitiallyUsingTeamAlertParameters: boolean
   onResetToTeamParameters: () => void
   onSave: (monitoringAlertsParameters: MonitoringAlertsParameters) => void
+}
+
+interface MonitoringAlertsPatientApplyTeamButtonProps {
+  useTeamValues: boolean
+  areValuesSaved: boolean
+  resetToTeamDefaultValues: () => void
 }
 
 const APPLY_CARE_TEAM_VALUES_SECTION_HEIGHT = "84px"
@@ -68,10 +95,9 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
     onSave
   }
 ) => {
-  const { classes } = useStyles()
+  const { classes } = useMonitoringAlertConfigurationStyles()
   const { t } = useTranslation()
   const { user } = useAuth()
-  const theme = useTheme()
 
   const userBgUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
 
@@ -94,23 +120,11 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
 
   return (
     <>
-      <Box height={APPLY_CARE_TEAM_VALUES_SECTION_HEIGHT}>
-        <Button
-          id="default-values-button-id"
-          variant={useTeamValues ? "contained" : "outlined"}
-          color="primary"
-          disableElevation
-          onClick={resetToTeamDefaultValues}
-          data-testid="monitoring-alert-config-reset"
-        >
-          {t('button-care-team-values')}
-        </Button>
-        {useTeamValues && !saveButtonDisabled &&
-          <Typography fontSize="12px" lineHeight="16px" color={theme.palette.info.main}>
-            {t('care-team-values-entered')}
-          </Typography>
-        }
-      </Box>
+      <MonitoringAlertsPatientApplyTeamButton
+        useTeamValues={useTeamValues}
+        areValuesSaved={saveButtonDisabled}
+        resetToTeamDefaultValues={resetToTeamDefaultValues}
+      />
       <MonitoringAlertsContentConfiguration
         bgUnit={userBgUnit}
         displayInReadonly={displayInReadonly}
@@ -120,14 +134,16 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
         onValueChange={onValueChange}
       />
       <Box display="flex" justifyContent="flex-end" margin={2}>
-        <Button
-          className={classes.cancelButton}
-          variant="outlined"
-          onClick={discardChanges}
-          data-testid="monitoring-alert-config-cancel"
-        >
-          {t('button-discard-changes')}
-        </Button>
+        {!saveButtonDisabled &&
+          <Button
+            className={classes.cancelButton}
+            variant="outlined"
+            onClick={discardChanges}
+            data-testid="monitoring-alert-config-cancel"
+          >
+            {t('button-discard-changes')}
+          </Button>
+        }
         {!displayInReadonly &&
           <LoadingButton
             loading={saveInProgress}
@@ -145,6 +161,78 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
         }
       </Box>
     </>
+  )
+}
+
+const MonitoringAlertsPatientApplyTeamButton: FC<MonitoringAlertsPatientApplyTeamButtonProps> = (
+  {
+    useTeamValues,
+    areValuesSaved,
+    resetToTeamDefaultValues
+  }
+) => {
+  const { classes } = useApplyTeamButtonStyles()
+  const { t } = useTranslation()
+  const theme = useTheme()
+
+  const applyCareTeamValuesChipLabel = useMemo(() => {
+    if (!useTeamValues) {
+      return t('button-care-team-values')
+    }
+    if (areValuesSaved) {
+      return `${t('care-team-values-applied')} ✔`
+    }
+    return t('care-team-values-applied')
+  }, [areValuesSaved, t, useTeamValues])
+
+  const applyCareTeamValuesChipClassName = useMemo(() => {
+    if (!useTeamValues) {
+      return classes.applyTeamValuesButtonUnchecked
+    }
+    if (areValuesSaved) {
+      return classes.applyTeamValuesButtonCheckedSaved
+    }
+    return classes.applyTeamValuesButtonCheckedUnsaved
+  }, [useTeamValues, areValuesSaved, classes.applyTeamValuesButtonCheckedUnsaved, classes.applyTeamValuesButtonUnchecked, classes.applyTeamValuesButtonCheckedSaved])
+
+  const applyCareTeamValuesChipVariant = useMemo(() => {
+    if (useTeamValues) {
+      return 'filled'
+    }
+    return 'outlined'
+  }, [useTeamValues])
+
+  const statusLabel = useMemo(() => {
+    if (useTeamValues) {
+      if (areValuesSaved) {
+        return t('care-team-values-applied-for-patient')
+      }
+      return t('care-team-values-entered')
+    }
+    if (areValuesSaved) {
+      return t('custom-values-applied-for-patient')
+    }
+    return t('custom-values-entered')
+  }, [areValuesSaved, t, useTeamValues])
+
+  return (
+    <Box height={APPLY_CARE_TEAM_VALUES_SECTION_HEIGHT}>
+      <Chip
+        className={applyCareTeamValuesChipClassName}
+        variant={applyCareTeamValuesChipVariant}
+        label={applyCareTeamValuesChipLabel}
+        onClick={useTeamValues ? undefined : resetToTeamDefaultValues}
+        data-testid="monitoring-alert-config-reset"
+      />
+      <Typography
+        fontSize="12px"
+        lineHeight="16px"
+        marginTop={theme.spacing(1)} color={theme.palette.info.main}
+        data-testid="monitoring-alerts-patient-status-label"
+      >
+        {statusLabel}
+      </Typography>
+    </Box>
   )
 }
 

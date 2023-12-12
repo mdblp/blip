@@ -154,14 +154,16 @@ export const useMonitoringAlertsPatientConfiguration = (
   }
 
   const discardChanges = (): void => {
-    setMonitoringValuesDisplayed({
+    const newMonitoringParametersValuesToDisplay = {
       highBg: getHighBgInitialState(),
       hypoThreshold: getHypoThresholdInitialState(),
       lowBg: getLowBgInitialState(),
       nonDataTxThreshold: getNonDataTxThresholdInitialState(),
       outOfRangeThreshold: getOutOfRangeThresholdInitialState(),
       veryLowBg: getVeryLowBgInitialState()
-    })
+    }
+    setMonitoringValuesDisplayed(newMonitoringParametersValuesToDisplay)
+    setUseTeamValues(areTeamValuesAndGivenValuesTheSame(newMonitoringParametersValuesToDisplay))
   }
 
   const shouldSaveButtonBeDisabled = useMemo(() => {

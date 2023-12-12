@@ -46,9 +46,10 @@ export const checkMonitoringAlertsLinkToTargetAndAlerts = async (): Promise<void
 export const checkContentForPatientMmol = async (): Promise<void> => {
   const monitoringAlertsSection = screen.getByTestId('monitoring-alerts-configuration-section')
 
-  expect(monitoringAlertsSection).toHaveTextContent('Apply care team values1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 2.8 mmol/L max at 7.8 mmol/L)A. Glycemic targetMinimum:​mmol/LMaximum:​mmol/LB. Event trigger thresholdTime spent off target5%​')
+  expect(monitoringAlertsSection).toHaveTextContent('Apply care team valuesCustom values applied for this patient. You can apply the default care team values.')
+  expect(monitoringAlertsSection).toHaveTextContent('1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 3 mmol/L max at 7.8 mmol/L)A. Glycemic targetMinimum:​mmol/LMaximum:​mmol/LB. Event trigger thresholdTime spent off target5%​')
   expect(monitoringAlertsSection).toHaveTextContent('2. Severe hypoglycemiaCurrent trigger setting: 10% of time below 2.2 mmol/L thresholdA. Severe hypoglycemia threshold:Severe hypoglycemia below:​mmol/LB. Event trigger thresholdTime spent in severe hypoglycemia10%​')
-  expect(monitoringAlertsSection).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​Discard changesSave')
+  expect(monitoringAlertsSection).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​Save')
 }
 
 export const checkMonitoringAlertsParametersTeamAdmin = async (): Promise<void> => {
@@ -122,7 +123,7 @@ export const checkSaveButtonForMmolForPatient = async (): Promise<void> => {
   expect(within(monitoringAlertsSection.getByTestId('low-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
   expect(within(monitoringAlertsSection.getByTestId('high-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
   expect(within(monitoringAlertsSection.getByTestId('very-low-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
-  expect(lowBgInput).toHaveValue(2.8)
+  expect(lowBgInput).toHaveValue(3)
   expect(highBgInput).toHaveValue(7.8)
   expect(veryLowBgInput).toHaveValue(2.2)
   expect(within(outOfRangeThreshold).getByRole('combobox')).toHaveTextContent('5%')
@@ -196,17 +197,18 @@ export const checkDiscardButtonForPatient = async (): Promise<void> => {
   const outOfRangeThreshold = monitoringAlertsSection.getByTestId('basic-dropdown-out-of-range-selector')
   const hypoThreshold = monitoringAlertsSection.getByTestId('basic-dropdown-hypo-threshold-selector')
   const nonDataTxThreshold = monitoringAlertsSection.getByTestId('basic-dropdown-non-data-selector')
-  const discardButton = monitoringAlertsSection.getByRole('button', { name: 'Discard changes' })
 
   expect(within(monitoringAlertsSection.getByTestId('low-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
   expect(within(monitoringAlertsSection.getByTestId('high-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
   expect(within(monitoringAlertsSection.getByTestId('very-low-bg-text-field-id')).getByText('mmol/L')).toBeVisible()
-  expect(lowBgInput).toHaveValue(2.8)
+  expect(lowBgInput).toHaveValue(3)
   expect(highBgInput).toHaveValue(7.8)
   expect(veryLowBgInput).toHaveValue(2.2)
   expect(within(outOfRangeThreshold).getByRole('combobox')).toHaveTextContent('5%')
   expect(within(hypoThreshold).getByRole('combobox')).toHaveTextContent('10%')
   expect(within(nonDataTxThreshold).getByRole('combobox')).toHaveTextContent('15%')
+  expect(monitoringAlertsSection.queryByRole('button', { name: 'Discard changes' })).not.toBeInTheDocument()
+  expect(monitoringAlertsSection.queryByRole('button', { name: 'Apply care team values' })).toBeEnabled()
 
   await userEvent.clear(lowBgInput)
   await userEvent.type(lowBgInput, '3.55')
@@ -238,22 +240,28 @@ export const checkDiscardButtonForPatient = async (): Promise<void> => {
   fireEvent.mouseDown(dropDownNonData.getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: '40%' }))
 
+  expect(monitoringAlertsSection.getByTestId('monitoring-alerts-patient-status-label')).toHaveTextContent('Custom values have been entered. Please save the changes.')
+  const discardButton = monitoringAlertsSection.getByRole('button', { name: 'Discard changes' })
   await userEvent.click(discardButton)
 
-  expect(lowBgInput).toHaveValue(2.8)
+  expect(lowBgInput).toHaveValue(3)
   expect(highBgInput).toHaveValue(7.8)
   expect(veryLowBgInput).toHaveValue(2.2)
   expect(within(outOfRangeThreshold).getByRole('combobox')).toHaveTextContent('5%')
   expect(within(hypoThreshold).getByRole('combobox')).toHaveTextContent('10%')
   expect(within(nonDataTxThreshold).getByRole('combobox')).toHaveTextContent('15%')
+  expect(monitoringAlertsSection.getByTestId('monitoring-alerts-patient-status-label')).toHaveTextContent('Custom values applied for this patient. You can apply the default care team values.')
+  expect(monitoringAlertsSection.queryByRole('button', { name: 'Apply care team values' })).toBeEnabled()
+  expect(monitoringAlertsSection.queryByRole('button', { name: 'Discard changes' })).not.toBeInTheDocument()
 }
 
 export const checkTeamValuesButtonMgdl = async (): Promise<void> => {
   const monitoringAlertsSection = screen.getByTestId('monitoring-alerts-configuration-section')
 
-  expect(monitoringAlertsSection).toHaveTextContent('Apply care team values1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)A. Glycemic targetMinimum:​mg/dLMaximum:​mg/dLB. Event trigger thresholdTime spent off target5%​')
+  expect(monitoringAlertsSection).toHaveTextContent('Apply care team valuesCustom values applied for this patient. You can apply the default care team values.')
+  expect(monitoringAlertsSection).toHaveTextContent('1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)A. Glycemic targetMinimum:​mg/dLMaximum:​mg/dLB. Event trigger thresholdTime spent off target5%​')
   expect(monitoringAlertsSection).toHaveTextContent('2. Severe hypoglycemiaCurrent trigger setting: 10% of time below 40 mg/dL thresholdA. Severe hypoglycemia threshold:Severe hypoglycemia below:​mg/dLB. Event trigger thresholdTime spent in severe hypoglycemia10%​')
-  expect(monitoringAlertsSection).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​Discard changesSave')
+  expect(monitoringAlertsSection).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​Save')
 
   const saveButton = screen.getByRole('button', { name: 'Save' })
   const careTeamValuesButton = screen.getByRole('button', { name: 'Apply care team values' })
@@ -275,7 +283,8 @@ export const checkTeamValuesButtonMgdl = async (): Promise<void> => {
 
   await userEvent.click(saveButton)
   expect(PatientApi.deletePatientAlerts).toHaveBeenCalledWith(myThirdTeamId, patient1Id)
-  expect(monitoringAlertsSection).toHaveTextContent('Apply care team values1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)A. Glycemic targetMinimum:​mg/dLMaximum:​mg/dLB. Event trigger thresholdTime spent off target5%​')
+  expect(monitoringAlertsSection).toHaveTextContent('Care team values applied ✔The care team values are applied for this patient.')
+  expect(monitoringAlertsSection).toHaveTextContent('1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)A. Glycemic targetMinimum:​mg/dLMaximum:​mg/dLB. Event trigger thresholdTime spent off target5%​')
   expect(monitoringAlertsSection).toHaveTextContent('2. Severe hypoglycemiaCurrent trigger setting: 10% of time below 40 mg/dL thresholdA. Severe hypoglycemia threshold:Severe hypoglycemia below:​mg/dLB. Event trigger thresholdTime spent in severe hypoglycemia10%​')
-  expect(monitoringAlertsSection).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​Discard changesSave')
+  expect(monitoringAlertsSection).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​Save')
 }
