@@ -27,7 +27,10 @@
 
 export enum AppUserRoute {
   Caregivers = '/caregivers',
-  CareTeamSettings = '/team',
+  CareTeamSettings = '/teams/:teamId',
+  PrivatePatientsList = '/teams/private/patients',
+  PatientsList = '/teams/:teamId/patients',
+  PatientView = '/teams/:teamId/patients/:patientId/*',
   Daily = '/daily',
   Device = '/device',
   Dashboard = '/dashboard',
@@ -35,6 +38,7 @@ export enum AppUserRoute {
   NotFound = '/not-found',
   Notifications = '/notifications',
   Patient = '/patient',
+  Patients = '/patients',
   Preferences = '/preferences',
   TargetAndAlerts = '/target-and-alerts',
   Teams = '/teams',

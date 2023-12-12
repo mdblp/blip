@@ -30,7 +30,8 @@ import { useState } from 'react'
 import { useAlert } from '../../utils/snackbar'
 import { usePatientsContext } from '../../../lib/patient/patients.provider'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
+import { useParams } from 'react-router-dom'
+import { useTeam } from '../../../lib/team'
 
 interface ReinvitePatientDialogHookProps {
   patient: Patient
@@ -42,14 +43,17 @@ interface ReinvitePatientDialogHookReturn {
   processing: boolean
 }
 
-export const useReinvitePatientDialog = ({
-  patient,
-  onSuccess
-}: ReinvitePatientDialogHookProps): ReinvitePatientDialogHookReturn => {
+export const useReinvitePatientDialog = (
+  {
+    patient,
+    onSuccess
+  }: ReinvitePatientDialogHookProps): ReinvitePatientDialogHookReturn => {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
   const { removePatient, invitePatient } = usePatientsContext()
-  const { selectedTeam } = useSelectedTeamContext()
+  const { teamId } = useParams()
+  const { getTeam } = useTeam()
+  const selectedTeam = getTeam(teamId)
 
   const [processing, setProcessing] = useState<boolean>(false)
 

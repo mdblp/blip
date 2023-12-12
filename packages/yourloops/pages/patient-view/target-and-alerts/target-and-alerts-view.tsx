@@ -34,14 +34,14 @@ import { MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-
 import { usePatientsContext } from '../../../lib/patient/patients.provider'
 import { useAlert } from '../../../components/utils/snackbar'
 import { useTranslation } from 'react-i18next'
-import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
 import Card from '@mui/material/Card'
 import { useTheme } from '@mui/material/styles'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import Divider from '@mui/material/Divider'
+import { useTeam } from '../../../lib/team'
 
 interface TargetAndAlertsViewProps {
   patient: Patient
@@ -54,7 +54,9 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
   const theme = useTheme()
   const { t } = useTranslation('yourloops')
   const { updatePatientMonitoringAlertsParameters } = usePatientsContext()
-  const { selectedTeam } = useSelectedTeamContext()
+  const { teamId } = useParams()
+  const { getTeam } = useTeam()
+  const selectedTeam = getTeam(teamId)
   const alert = useAlert()
   const { pathname, hash, key } = useLocation()
 
@@ -96,7 +98,7 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
           <Divider variant="fullWidth" sx={{
             marginBottom: theme.spacing(5),
             marginTop: theme.spacing(2)
-          }}/>
+          }} />
           <section
             data-testid="monitoring-alerts-configuration-section"
             ref={monitoringAlertsSection}

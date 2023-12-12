@@ -47,12 +47,12 @@ import PatientApi from '../../../../../lib/patient/patient.api'
 import { Unit } from 'medical-domain'
 import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { type Settings } from '../../../../../lib/auth/models/settings.model'
-import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.hook'
 import { UserInviteStatus } from '../../../../../lib/team/models/enums/user-invite-status.enum'
 import {
   type AppMainLayoutHcpParams,
   testAppMainLayoutForHcp,
-  testPatientNavBarLayoutForHcp, testPatientNavBarLayoutForHcpInPrivateTeam
+  testPatientNavBarLayoutForHcp,
+  testPatientNavBarLayoutForHcpInPrivateTeam
 } from '../../../use-cases/app-main-layout-visualisation'
 import {
   testDashboardDataVisualisationForHcp,
@@ -72,9 +72,10 @@ import {
 import { testChatWidgetForHcp } from '../../../use-cases/communication-system'
 import { ConfigService } from '../../../../../lib/config/config.service'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 
 describe('Dashboard view for HCP', () => {
-  const patientDashboardRoute = `${AppUserRoute.Patient}/${patient1Id}${AppUserRoute.Dashboard}`
+  const patientDashboardRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Dashboard}`
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
   const mgdlSettings: Settings = { units: { bg: Unit.MilligramPerDeciliter } }
@@ -89,7 +90,6 @@ describe('Dashboard view for HCP', () => {
     mockChatAPI()
     mockMedicalFilesAPI(myThirdTeamId, myThirdTeamName)
     mockDataAPI()
-    localStorage.setItem('selectedTeamId', myThirdTeamId)
   })
 
   it('should render correct components when navigating to a patient not scoped on the private team', async () => {
@@ -113,9 +113,11 @@ describe('Dashboard view for HCP', () => {
       isMonitoringAlertCardVisible: true
     }
 
-    await act(async () => {
-      renderPage(patientDashboardRoute)
+    const router = renderPage(patientDashboardRoute)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(patientDashboardRoute)
     })
+
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
     testPatientNavBarLayoutForHcp()
@@ -123,7 +125,7 @@ describe('Dashboard view for HCP', () => {
   })
 
   it('should render components with correct display when the patient has no data', async () => {
-    const patientWithNoDataDashboardRoute = `${AppUserRoute.Patient}/${noDataTransferredPatientId}${AppUserRoute.Dashboard}`
+    const patientWithNoDataDashboardRoute = `/teams/${myThirdTeamId}/patients/${noDataTransferredPatientId}${AppUserRoute.Dashboard}`
     mockDataAPI(completeDashboardData)
 
     await act(async () => {
@@ -200,7 +202,6 @@ describe('Dashboard view for HCP', () => {
 
   it('should render correct components when patient is in no medical teams', async () => {
     mockDataAPI(dataSetsWithZeroValues)
-    localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
       ...patient1Info,
       invitationStatus: UserInviteStatus.Accepted
@@ -226,7 +227,7 @@ describe('Dashboard view for HCP', () => {
     }
 
     await act(async () => {
-      renderPage(patientDashboardRoute)
+      renderPage(`/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Dashboard}`)
     })
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
@@ -237,7 +238,7 @@ describe('Dashboard view for HCP', () => {
   it('should automatically log out an idle user', async () => {
     jest.spyOn(ConfigService, 'getIdleTimeout').mockReturnValue(1000)
 
-    renderPage(`${AppUserRoute.Patient}/${patient1Id}${AppUserRoute.Dashboard}`)
+    renderPage(`/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Dashboard}`)
 
     await waitFor(() => {
       expect(logoutMock).toHaveBeenCalledWith({ logoutParams: { returnTo: 'http://localhost/login?idle=true' } })

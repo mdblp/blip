@@ -82,7 +82,7 @@
     "@testing-library/user-event": "^14.5.1",
     "@types/blob-stream": "^0.1.31",
     "@types/chai": "^4.3.9",
-    "@types/d3-array": "^3.2.0",
+    "@types/d3-array": "^3.2.1",
     "@types/d3-format": "^3.0.3",
     "@types/d3-scale": "^4.0.6",
     "@types/d3-time-format": "^4.0.3",

@@ -41,6 +41,7 @@ import { mockUserApi } from '../../../mock/user.api.mock'
 import { patient2Id } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 
 describe('Trends view for caregiver', () => {
   const firstName = 'HCP firstName'
@@ -64,7 +65,7 @@ describe('Trends view for caregiver', () => {
 
   it('should render correct layout', async () => {
     mockDataAPI(minimalTrendViewData)
-    const trendsRoute = `${AppUserRoute.Patient}/${patient2Id}${AppUserRoute.Trends}`
+    const trendsRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient2Id}${AppUserRoute.Trends}`
     const router = renderPage(trendsRoute)
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual(trendsRoute)

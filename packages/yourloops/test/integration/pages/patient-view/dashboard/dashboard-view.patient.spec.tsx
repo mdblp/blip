@@ -28,8 +28,11 @@
 import { act, waitFor } from '@testing-library/react'
 import { renderPage } from '../../../utils/render'
 import {
-  completeDashboardData, dataSetsWithZeroValues,
-  mockDataAPI, sixteenDaysOldDashboardData, twoWeeksOldDashboardData
+  completeDashboardData,
+  dataSetsWithZeroValues,
+  mockDataAPI,
+  sixteenDaysOldDashboardData,
+  twoWeeksOldDashboardData
 } from '../../../mock/data.api.mock'
 import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
@@ -45,15 +48,14 @@ import {
   mySecondTeamName
 } from '../../../mock/team.api.mock'
 import { patient1AsTeamMember, patient1Id, patient1Info } from '../../../data/patient.api.data'
-import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.hook'
 import { mockChatAPI } from '../../../mock/chat.api.mock'
 import { type AppMainLayoutParams, testAppMainLayoutForPatient } from '../../../use-cases/app-main-layout-visualisation'
 import { type PatientDashboardLayoutParams } from '../../../assert/layout.assert'
 import {
   testDashboardDataVisualisationForPatient,
   testDashboardDataVisualisationPrivateTeamNoData,
-  testDashboardDataVisualisationTwoWeeksOldData,
   testDashboardDataVisualisationSixteenDaysOldData,
+  testDashboardDataVisualisationTwoWeeksOldData,
   testEmptyMedicalFilesWidgetForPatient,
   testPatientNavBarForPatientAndCaregiver
 } from '../../../use-cases/patient-data-visualisation'
@@ -75,7 +77,6 @@ describe('Dashboard view for patient', () => {
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
     jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
     jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(iTeamOne)
-    localStorage.setItem('selectedTeamId', mySecondTeamId)
   })
 
   it('should display correct components when patient is in some medical teams', async () => {
@@ -144,7 +145,6 @@ describe('Dashboard view for patient', () => {
 
   it('should render correct components when patient is in no medical teams', async () => {
     mockDataAPI(dataSetsWithZeroValues)
-    localStorage.setItem('selectedTeamId', PRIVATE_TEAM_ID)
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildPrivateTeam()])
 
     const patientDashboardLayoutParams: PatientDashboardLayoutParams = {

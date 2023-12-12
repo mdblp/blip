@@ -41,5 +41,5 @@ export interface PatientsContextResult {
   markPatientMessagesAsRead: (patient: Patient) => void
   updatePatientMonitoringAlertsParameters: (patient: Patient) => Promise<void>
   removePatient: (patient: Patient) => Promise<void>
-  refresh: (teamId?: string) => void
+  refresh: () => void
 }

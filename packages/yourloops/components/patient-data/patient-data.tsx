@@ -27,7 +27,7 @@
 
 import React, { type FunctionComponent, useEffect, useRef, useState } from 'react'
 import { PatientNavBarMemoized as PatientNavBar } from '../header-bars/patient-nav-bar'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { PrintPDFDialog } from '../pdf/print-pdf-dialog'
 import { PatientDashboard } from '../dashboard-widgets/patient-dashboard'
@@ -51,7 +51,6 @@ import { useAuth } from '../../lib/auth'
 import { DeviceView } from '../../pages/patient-view/device/device-view'
 import { setPageTitle } from '../../lib/utils'
 import { TargetAndAlertsView } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import TeamUtils from '../../lib/team/team.util'
 
 export const PatientData: FunctionComponent = () => {
@@ -59,7 +58,7 @@ export const PatientData: FunctionComponent = () => {
   const theme = useTheme()
   const { t } = useTranslation()
   const patientIdForWhichDataHasBeenFetched = useRef(null)
-  const { selectedTeam } = useSelectedTeamContext()
+  const { teamId } = useParams()
 
   const {
     bgPrefs,
@@ -227,7 +226,7 @@ export const PatientData: FunctionComponent = () => {
                     }
                   />
                   {
-                    user.isUserHcp() && !TeamUtils.isPrivate(selectedTeam) &&
+                    user.isUserHcp() && !TeamUtils.isPrivate(teamId) &&
                     <Route
                       path={AppUserRoute.TargetAndAlerts}
                       element={
@@ -237,7 +236,8 @@ export const PatientData: FunctionComponent = () => {
                       }
                     />
                   }
-                  <Route path="*" element={<Navigate to={AppUserRoute.Dashboard} replace />} />
+                  <Route path="/" element={<Navigate to={AppUserRoute.Dashboard} replace />} />
+                  <Route path="*" element={<Navigate to={AppUserRoute.NotFound} replace />} />
                 </Routes>
                 {showPdfDialog &&
                   <PrintPDFDialog
