@@ -25,31 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as auth0Mock from '@auth0/auth0-react'
-import { getAccessTokenWithPopupMock, logoutMock } from '../../mock/auth0.hook.mock'
-import { renderPage } from '../../utils/render'
-import { waitFor } from '@testing-library/react'
-import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../../../lib/auth/models/auth0-error.model'
-import { AppRoute } from '../../../../models/enums/routes.enum'
-import { testVerifyEmail } from '../../use-cases/email-verification'
+import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon'
+import React, { ForwardedRef } from 'react'
+import { makeStyles } from 'tss-react/mui'
 
-describe('Verify email page', () => {
-  it('should display a description of the email verification process with options', async () => {
-    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-      isAuthenticated: false,
-      isLoading: false,
-      user: null,
-      getAccessTokenWithPopup: getAccessTokenWithPopupMock,
-      logout: logoutMock,
-      getAccessTokenSilently: jest.fn().mockRejectedValue({ error_description: AUTH0_ERROR_EMAIL_NOT_VERIFIED })
-    })
-    window.open = jest.fn()
+const styles = makeStyles()(() => ({
+  'cross': {
+    strokeWidth: 6,
+    strokeLinecap: 'round'
+  }
+}))
 
-    const router = renderPage(AppRoute.VerifyEmail)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(AppRoute.VerifyEmail)
-    })
-
-    await testVerifyEmail()
-  })
+export const WrongIcon = React.forwardRef((props: SvgIconProps, ref: ForwardedRef<SVGSVGElement>) => {
+  const { classes } = styles()
+  return (
+    <SvgIcon {...props} ref={ref}>
+      <svg viewBox="0 0 180 180" fill="none">
+        <rect width="180" height="180" rx="90" fill="currentColor"/>
+        <rect x="15.5" y="15.5" width="149" height="149" rx="74.5" fill="currentColor"/>
+        <rect x="15.5" y="15.5" width="149" height="149" rx="74.5" stroke="white"/>
+        <line x1="126.77" y1="57.4731" x2="57.4731" y2="126.77" stroke="white" className={classes['cross']}/>
+        <line x1="122.527" y1="126.77" x2="53.2304" y2="57.4731" stroke="white" className={classes['cross']}/>
+      </svg>
+    </SvgIcon>
+  )
 })
+
+WrongIcon.displayName = 'WrongIcon'

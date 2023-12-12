@@ -7,6 +7,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2574 Create tool tips independently of the name of the columns
 - YLP-2704 Remove settings logic from viz
 - YLP-2726 Cleanup tideline/viz packages
+- YLP-2749 Use a branded Verify Email result page instead of the Auth0 one
 
 ### Engineering use
 - YLP-2476 Use tide-whisperer v2: route /all.

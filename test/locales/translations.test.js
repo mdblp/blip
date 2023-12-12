@@ -280,7 +280,8 @@ const ignoredTransKeyForYourLoops = [
   'total-declared-carbs',
   'total-estimated-carbs',
   'time-loop-tooltip',
-  'tooltip-total-derived-carbs'
+  'tooltip-total-derived-carbs',
+  'verify-email-error-title'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
