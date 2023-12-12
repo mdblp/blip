@@ -202,8 +202,10 @@ class TrendsSubNav extends React.Component {
       'inactive': !this.props.activeDays[day]
     }) + ' ' + day
 
+    const dayFilterId = `day-filter-${day}`
+
     return (
-      <a className={dayLinkClass} key={day} onClick={this.props.onClickDay(day)}>{this.renderDayAbbrev(day)}</a>
+      <a data-testid={dayFilterId} className={dayLinkClass} key={day} onClick={this.props.onClickDay(day)}>{this.renderDayAbbrev(day)}</a>
     )
   }
 

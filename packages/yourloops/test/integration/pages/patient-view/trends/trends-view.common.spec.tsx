@@ -56,6 +56,10 @@ import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
 import { testTrendsDataVisualisationForHCP } from '../../../use-cases/patient-data-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import {
+  checkPatientStatisticsTrendsView,
+  checkPatientStatisticsTrendsViewNoMonday
+} from '../../../assert/patient-statistics.assert'
 
 describe('Trends view for anyone', () => {
   const trendsRoute = AppUserRoute.Trends
@@ -67,8 +71,11 @@ describe('Trends view for anyone', () => {
   })
 
   describe('with all kind of data', () => {
-    it('should render correct tooltips and values', async () => {
+    beforeAll(() => {
       mockDataAPI(minimalTrendViewData)
+    })
+    it('should render correct tooltips and values', async () => {
+
       const router = renderPage(trendsRoute)
       await waitFor(() => {
         expect(router.state.location.pathname).toEqual(trendsRoute)
@@ -84,11 +91,29 @@ describe('Trends view for anyone', () => {
       // Check Layout
       checkTrendsLayout()
       await checkTrendsBolusAndCarbsAverage()
-
-      await userEvent.click(screen.getByTestId('button-nav-back'))
-      expect(await screen.findByText('There is no CGM data for this time period :(')).toBeVisible()
     })
 
+    it('should filter the data on weekday if the user removes one day', async () => {
+      const router = renderPage(trendsRoute)
+      await waitFor(() => {
+        expect(router.state.location.pathname).toEqual(trendsRoute)
+      })
+      await checkPatientStatisticsTrendsView()
+      await userEvent.click(await screen.findByTestId('day-filter-monday', {}, { timeout: 3000 }))
+      await checkPatientStatisticsTrendsViewNoMonday()
+    })
+
+    it('should display no data when user navigates in the past', async () => {
+      const router = renderPage(trendsRoute)
+      await waitFor(() => {
+        expect(router.state.location.pathname).toEqual(trendsRoute)
+      })
+      await userEvent.click(await screen.findByTestId('button-nav-back', {}, { timeout: 3000 }))
+      expect(await screen.findByText('There is no CGM data for this time period :(')).toBeVisible()
+    })
+  })
+
+  describe('with cbgs to calculate GMI', () => {
     it('should render correct tooltip and values GMI', async () => {
       mockDataAPI(buildHba1cData())
       renderPage(trendsRoute)
@@ -97,15 +122,15 @@ describe('Trends view for anyone', () => {
       await checkGlucoseManagementIndicator('GMI (estimated HbA1c)7.7%')
       await checkStatTooltip(patientStatistics, 'GMI (estimated HbA1c)', GMI_TOOLTIP)
     })
+  })
 
-    describe('with time in range data', () => {
-      it('should display correct readings in range stats info', async () => {
-        mockDataAPI(timeInRangeStatsTrendViewData)
-        renderPage(trendsRoute)
+  describe('with time in range data', () => {
+    it('should display correct readings in range stats info', async () => {
+      mockDataAPI(timeInRangeStatsTrendViewData)
+      renderPage(trendsRoute)
 
-        await checkTrendsTimeInRangeStatsWidgets()
-        await checkTimeInRangeStatsTitle()
-      })
+      await checkTrendsTimeInRangeStatsWidgets()
+      await checkTimeInRangeStatsTitle()
     })
   })
 
