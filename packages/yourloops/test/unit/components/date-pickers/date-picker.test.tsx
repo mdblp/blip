@@ -33,7 +33,6 @@ import { waitTimeout } from '../../../../lib/utils'
 import DatePicker from '../../../../components/date-pickers/date-picker'
 import initDayJS from '../../../../lib/dayjs'
 import i18n from '../../../../lib/language'
-import { TRANSITION_DURATION } from '../../../../components/date-pickers/models'
 import { act, render, waitFor } from '@testing-library/react'
 
 describe('Date picker', () => {
