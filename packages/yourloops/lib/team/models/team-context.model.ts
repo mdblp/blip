@@ -51,6 +51,10 @@ export interface TeamContext {
    */
   getPrivateTeam: () => Readonly<Team>
   /**
+   * Return the first team in the team list
+   */
+  getDefaultTeamId: () => string
+  /**
    * Return the team for a teamId or null of not found
    * @param teamId The technical team id
    */

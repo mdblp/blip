@@ -442,6 +442,7 @@
   "refresh": "Refresh",
   "remaining-time": "Remaining time",
   "remove-caregiver": "Remove caregiver",
+  "remove-member": "Remove the member {{fullName}}",
   "remove-member-confirm": "Remove the member {{fullName}} from the team {{teamName}}?",
   "remove-member-failed": "Impossible to remove member. Please try again later.",
   "remove-member-from-team": "Remove member from team",

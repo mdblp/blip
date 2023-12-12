@@ -27,6 +27,6 @@
 
 import { checkTargetAndAlertsViewContent } from '../assert/target-and-alerts-view.assert'
 
-export const testTargetAndAlertsViewContent = (): void => {
-  checkTargetAndAlertsViewContent()
+export const testTargetAndAlertsViewContent = async (): Promise<void> => {
+  await checkTargetAndAlertsViewContent()
 }

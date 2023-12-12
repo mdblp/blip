@@ -27,7 +27,7 @@
 
 import { screen, waitFor } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
-import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../../mock/team.api.mock'
+import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import { minimalTrendViewData, mockDataAPI } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
@@ -75,7 +75,7 @@ describe('Trends view for HCP', () => {
         }
       }
     }
-    const trendsRoute = `${AppUserRoute.Patient}/${patient2Id}${AppUserRoute.Trends}`
+    const trendsRoute = `/teams/${myThirdTeamId}/patients/${patient2Id}${AppUserRoute.Trends}`
     const router = renderPage(trendsRoute)
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual(trendsRoute)

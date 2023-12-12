@@ -42,5 +42,5 @@ export interface PatientsContextResult {
   deletePatientMonitoringAlertsParameters: (patientId: string) => Promise<void>
   updatePatientMonitoringAlertsParameters: (patient: Patient) => Promise<void>
   removePatient: (patient: Patient) => Promise<void>
-  refresh: (teamId?: string) => void
+  refresh: () => void
 }

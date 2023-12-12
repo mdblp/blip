@@ -32,7 +32,7 @@ import { patient1Info, pendingPatient } from '../data/patient.api.data'
 import { myThirdTeamId } from '../mock/team.api.mock'
 
 export const checkAddPatientPrivateButtonTooltip = async () => {
-  const patientListHeader = screen.getByTestId('patient-list-header')
+  const patientListHeader = await screen.findByTestId('patient-list-header')
   const addPatientButton = within(patientListHeader).getByText('Add new patient')
   expect(addPatientButton).toBeVisible()
   expect(addPatientButton).toBeDisabled()

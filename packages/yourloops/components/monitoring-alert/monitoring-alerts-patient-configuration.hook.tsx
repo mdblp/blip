@@ -33,13 +33,14 @@ import {
   isInvalidPercentage
 } from './monitoring-alert-content-configuration.util'
 import { Unit } from 'medical-domain'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import { useTeam } from '../../lib/team/team.hook'
 import { type MonitoringAlertsParameters } from '../../lib/team/models/monitoring-alerts-parameters.model'
 import {
   DEFAULT_BG_UNIT,
   MonitoringValuesDisplayed,
   useMonitoringAlertsContentConfiguration
 } from './monitoring-alerts-content-configuration.hook'
+import { useParams } from 'react-router-dom'
 
 interface MonitoringAlertsPatientConfigurationHookProps {
   monitoringAlertsParameters: MonitoringAlertsParameters
@@ -69,7 +70,10 @@ export const useMonitoringAlertsPatientConfiguration = (
     wasInitiallyUsingTeamAlertParameters
   }: MonitoringAlertsPatientConfigurationHookProps
 ): MonitoringAlertsPatientConfigurationHookReturn => {
-  const { selectedTeam } = useSelectedTeamContext()
+  const { teamId } = useParams()
+  const { getTeam } = useTeam()
+
+  const selectedTeam = getTeam(teamId)
 
   const {
     monitoringValuesDisplayed,

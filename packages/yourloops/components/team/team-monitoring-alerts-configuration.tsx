@@ -38,11 +38,11 @@ import { useAlert } from '../utils/snackbar'
 import { type MonitoringAlertsParameters } from '../../lib/team/models/monitoring-alerts-parameters.model'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
 import { useAuth } from '../../lib/auth'
 import {
   MonitoringAlertsTeamConfiguration
 } from '../monitoring-alert/monitoring-alerts-team-configuration'
+import { useParams } from 'react-router-dom'
 
 export interface TeamMonitoringAlertsConfigurationProps {
   team: Team
@@ -52,11 +52,12 @@ function TeamMonitoringAlertsConfiguration(props: TeamMonitoringAlertsConfigurat
   const { team } = props
   const { classes: commonTeamClasses } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
-  const teamHook = useTeam()
   const { refresh } = usePatientsContext()
   const alert = useAlert()
   const { user } = useAuth()
-  const { selectedTeam } = useSelectedTeamContext()
+  const { teamId } = useParams()
+  const { getTeam, updateTeam } = useTeam()
+  const selectedTeam = getTeam(teamId)
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 
   const currentUserAsTeamMember = selectedTeam.members.find(member => member.userId === user.id)
@@ -66,7 +67,7 @@ function TeamMonitoringAlertsConfiguration(props: TeamMonitoringAlertsConfigurat
     team.monitoringAlertsParameters = monitoringAlertsParameters
     setSaveInProgress(true)
     try {
-      await teamHook.updateTeam(team)
+      await updateTeam(team)
       refresh()
       alert.success(t('team-update-success'))
     } catch (error) {

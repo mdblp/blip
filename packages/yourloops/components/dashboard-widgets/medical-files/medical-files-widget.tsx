@@ -31,8 +31,8 @@ import CardContent from '@mui/material/CardContent'
 import MedicalReportList from './medical-report-list'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import GenericDashboardCard from '../generic-dashboard-card'
-import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
 import { useAuth } from '../../../lib/auth'
+import { useParams } from 'react-router-dom'
 
 export interface MedicalFilesWidgetProps {
   patient: Patient
@@ -46,10 +46,10 @@ export interface CategoryProps {
 const MedicalFilesWidget: FunctionComponent<MedicalFilesWidgetProps> = (props) => {
   const { t } = useTranslation()
   const { patient } = props
-  const { selectedTeam } = useSelectedTeamContext()
+  const { teamId: selectedTeamId } = useParams()
   const { user } = useAuth()
 
-  const teamId = user.isUserHcp() ? selectedTeam.id : null
+  const teamId = user.isUserHcp() ? selectedTeamId : null
 
   return (
     <GenericDashboardCard

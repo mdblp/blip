@@ -31,7 +31,6 @@ import PatientAPI from '../../../../lib/patient/patient.api'
 import * as usePatientContextMock from '../../../../lib/patient/patients.provider'
 import * as teamHookMock from '../../../../lib/team'
 import { type Team } from '../../../../lib/team'
-import * as selectedTeamHookMock from '../../../../lib/selected-team/selected-team.provider'
 import * as alertMock from '../../../../components/utils/snackbar'
 import { buildPrivateTeam, buildTeam } from '../../common/utils'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
@@ -41,7 +40,6 @@ import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
 jest.mock('../../../../lib/patient/patients.provider')
 jest.mock('../../../../lib/team')
 jest.mock('../../../../components/utils/snackbar')
-jest.mock('../../../../lib/selected-team/selected-team.provider')
 describe('Remove patient dialog hook', () => {
   let patient: Patient
   let team: Team
@@ -63,9 +61,6 @@ describe('Remove patient dialog hook', () => {
     (alertMock.useAlert as jest.Mock).mockImplementation(() => ({
       success: onSuccessMock,
       error: jest.fn()
-    }));
-    (selectedTeamHookMock.useSelectedTeamContext as jest.Mock).mockImplementation(() => ({
-      selectedTeam: team
     }))
   })
 
