@@ -36,8 +36,12 @@ import { InvalidRoute } from '../components/invalid-route'
 import { ProfilePage } from '../pages/profile/profile-page'
 import { NotificationsPage } from '../pages/notifications/notifications-page'
 import { AppUserRoute } from '../models/enums/routes.enum'
+import PatientUtils from '../lib/patient/patient.util'
+import { useAuth } from '../lib/auth'
 
 export const PatientLayout: FC = () => {
+  const { user } = useAuth()
+  const patient = PatientUtils.mapUserToPatient(user)
   return (
     <TeamContextProvider>
       <DashboardLayout>
@@ -47,7 +51,7 @@ export const PatientLayout: FC = () => {
           <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
           <Route path={AppUserRoute.Caregivers} element={<PatientCaregiversPage />} />
           <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
-          <Route path="*" element={<PatientData />} />
+          <Route path="*" element={<PatientData patient={patient}/>} />
         </Routes>
       </DashboardLayout>
     </TeamContextProvider>

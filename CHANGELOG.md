@@ -9,6 +9,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-2726 Cleanup tideline/viz packages
 - YLP-2749 Use a branded Verify Email result page instead of the Auth0 one
 
+### Fixed
+- YLP-2758 App crashes when going back to previous page
+
 ### Engineering use
 - YLP-2476 Use tide-whisperer v2: route /all.
 - YLP-2696 Fix some Sonarcloud bugs and code smells

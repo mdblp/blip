@@ -52,8 +52,13 @@ import { DeviceView } from '../../pages/patient-view/device/device-view'
 import { setPageTitle } from '../../lib/utils'
 import { TargetAndAlertsView } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
 import TeamUtils from '../../lib/team/team.util'
+import { Patient } from '../../lib/patient/models/patient.model'
 
-export const PatientData: FunctionComponent = () => {
+interface PatientDataProps {
+  patient: Patient
+}
+
+export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: PatientDataProps) => {
   const alert = useAlert()
   const theme = useTheme()
   const { t } = useTranslation()
@@ -78,10 +83,9 @@ export const PatientData: FunctionComponent = () => {
     refreshData,
     refreshingData,
     trendsDate,
-    patient,
     timePrefs,
     updateChartPrefs
-  } = usePatientData()
+  } = usePatientData({ patient })
   const {
     showMessageCreation,
     showMessageThread,

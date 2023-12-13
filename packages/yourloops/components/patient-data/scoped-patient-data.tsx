@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,20 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Team } from '../../team'
-import { type Patient } from './patient.model'
+import React, { type FunctionComponent } from 'react'
+import { useParams } from 'react-router-dom'
+import { usePatientsContext } from '../../lib/patient/patients.provider'
+import { PatientData } from './patient-data'
+import SpinningLoader from '../loaders/spinning-loader'
 
-export interface PatientsContextResult {
-  patients: Patient[]
-  pendingPatientsCount?: number
-  allNonPendingPatientsForSelectedTeamCount?: number
-  refreshInProgress: boolean
-  getPatientByEmail: (email: string) => Patient
-  getPatientById: (userId: string) => Patient
-  searchPatients: (search: string) => Patient[]
-  invitePatient: (team: Team, username: string) => Promise<void>
-  markPatientMessagesAsRead: (patient: Patient) => void
-  updatePatientMonitoringAlertsParameters: (patient: Patient) => Promise<void>
-  removePatient: (patient: Patient) => Promise<void>
-  refresh: () => void
+export const ScopedPatientData: FunctionComponent = () => {
+  const { patientId } = useParams()
+  const { getPatientById } = usePatientsContext()
+  const patient = getPatientById(patientId)
+
+  return (
+    <>
+      {patient
+        ? <PatientData patient={patient}/>
+        : <SpinningLoader className="centered-spinning-loader" />
+      }
+    </>
+  )
 }

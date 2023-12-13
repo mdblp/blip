@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,20 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Team } from '../../team'
-import { type Patient } from './patient.model'
+import React, { type FunctionComponent } from 'react'
+import { Outlet } from 'react-router-dom'
+import { PatientsProvider } from '../lib/patient/patients.provider'
+import { DashboardLayout } from './dashboard-layout'
+import { PatientListProvider } from '../lib/providers/patient-list.provider'
 
-export interface PatientsContextResult {
-  patients: Patient[]
-  pendingPatientsCount?: number
-  allNonPendingPatientsForSelectedTeamCount?: number
-  refreshInProgress: boolean
-  getPatientByEmail: (email: string) => Patient
-  getPatientById: (userId: string) => Patient
-  searchPatients: (search: string) => Patient[]
-  invitePatient: (team: Team, username: string) => Promise<void>
-  markPatientMessagesAsRead: (patient: Patient) => void
-  updatePatientMonitoringAlertsParameters: (patient: Patient) => Promise<void>
-  removePatient: (patient: Patient) => Promise<void>
-  refresh: () => void
+export const ScopedDashboardLayout: FunctionComponent = () => {
+  return (
+    <DashboardLayout>
+      <PatientListProvider>
+        <PatientsProvider>
+          <Outlet />
+        </PatientsProvider>
+      </PatientListProvider>
+    </DashboardLayout>
+  )
 }
