@@ -45,31 +45,20 @@ import {
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Avatar from '@mui/material/Avatar'
-import { makeStyles } from 'tss-react/mui'
-import { type Theme } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
 import { setPageTitle } from '../../lib/utils'
-
-const classes = makeStyles()((theme: Theme) => ({
-  appBar: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    zIndex: theme.zIndex.drawer + 1,
-    backgroundColor: theme.palette.common.white,
-    color: 'var(--text-color-primary)'
-  },
-  desktopLogo: {
-    width: 140
-  }
-}))
+import { useVerifyEmailStyles } from './verify-email.styles'
+import { useTheme } from '@mui/material/styles'
 
 export const VerifyEmailPage: FunctionComponent = () => {
-  const { classes: { appBar, desktopLogo } } = classes()
+  const { classes: { appBar, desktopLogo } } = useVerifyEmailStyles()
   const { loginWithRedirect, getAccessTokenSilently } = useAuth0()
   const { t } = useTranslation()
   const { logout } = useAuth()
   const alert = useAlert()
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(true)
   const navigate = useNavigate()
+  const theme = useTheme()
 
   const contactSupport = async (): Promise<void> => {
     window.open(config.CONTACT_SUPPORT_WEB_URL, '_blank')
@@ -148,7 +137,7 @@ export const VerifyEmailPage: FunctionComponent = () => {
         textAlign="center"
         data-testid="verify-email-content"
       >
-        <GlobalStyles styles={{ body: { backgroundColor: 'white' } }} />
+        <GlobalStyles styles={{ body: { backgroundColor: theme.palette.common.white } }} />
 
         <Container maxWidth="sm">
           <Box display="flex" justifyContent="center">

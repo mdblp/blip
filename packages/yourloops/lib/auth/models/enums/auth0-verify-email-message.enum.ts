@@ -25,31 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as auth0Mock from '@auth0/auth0-react'
-import { getAccessTokenWithPopupMock, logoutMock } from '../../mock/auth0.hook.mock'
-import { renderPage } from '../../utils/render'
-import { waitFor } from '@testing-library/react'
-import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../../../lib/auth/models/auth0-error.model'
-import { AppRoute } from '../../../../models/enums/routes.enum'
-import { testVerifyEmail } from '../../use-cases/email-verification'
-
-describe('Verify email page', () => {
-  it('should display a description of the email verification process with options', async () => {
-    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
-      isAuthenticated: false,
-      isLoading: false,
-      user: null,
-      getAccessTokenWithPopup: getAccessTokenWithPopupMock,
-      logout: logoutMock,
-      getAccessTokenSilently: jest.fn().mockRejectedValue({ error_description: AUTH0_ERROR_EMAIL_NOT_VERIFIED })
-    })
-    window.open = jest.fn()
-
-    const router = renderPage(AppRoute.VerifyEmail)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(AppRoute.VerifyEmail)
-    })
-
-    await testVerifyEmail()
-  })
-})
+export enum Auth0VerifyEmailMessage {
+  AccessExpired = 'Access expired.',
+  AccountAlreadyVerified = 'This account is already verified.',
+  EmailCouldNotBeVerified = 'Your email address could not be verified.',
+  UrlAlreadyUsed = 'This URL can be used only once',
+  UserAccountDoesNotExist = 'User account does not exist or verification code is invalid.'
+}

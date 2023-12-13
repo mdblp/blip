@@ -52,5 +52,6 @@ export enum AppRoute {
   ProductLabelling = '/product-labelling',
   RenewConsent = '/renew-consent',
   Training = '/training',
-  VerifyEmail = '/verify-email'
+  VerifyEmail = '/verify-email',
+  VerifyEmailResult = '/verify-email-result'
 }
