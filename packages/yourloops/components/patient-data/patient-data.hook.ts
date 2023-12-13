@@ -62,14 +62,14 @@ export interface usePatientDataResult {
   trendsDate: number
 }
 
-interface usePatientDataProps {
+interface UsePatientDataProps {
   patient: Patient
 }
 
 const DATE_QUERY_PARAM_KEY = 'date'
 const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
-export const usePatientData = ({ patient }: usePatientDataProps): usePatientDataResult => {
+export const usePatientData = ({ patient }: UsePatientDataProps): usePatientDataResult => {
   const navigate = useNavigate()
   const { teamId } = useParams()
   const { user } = useAuth()

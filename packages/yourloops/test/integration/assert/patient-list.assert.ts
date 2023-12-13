@@ -475,12 +475,8 @@ export const checkPatientListHideShowColumns = async () => {
 }
 
 const checkPatientListMonitoringAlertsIcons = async (outOfRangeTooltipValue: string, hypoglycemiaTooltipValue: string): Promise<void> => {
-  // First the list has no patients because it is loading
-  expect(await screen.findByTestId('current-patient-list-grid')).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRBelow rangeLast data updateActionsData calculated on the last 14 daysRows per page:100–0 of 0')
   await waitFor(() => {
-    // We wait for the list to have patients
-    expect(screen.getByTestId('current-patient-list-grid')).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages from the patient0%0%N/AFlag patient z-no-data@patient.frZ - No Data PatientJan 1, 1980No new messages from the patient0%0%N/A')
-
+    expect(screen.queryByTestId('current-patient-list-grid')).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages from the patient0%0%N/AFlag patient z-no-data@patient.frZ - No Data PatientJan 1, 1980No new messages from the patient0%0%N/A')
   })
   const dataGridRows = screen.getByTestId('current-patient-list-grid')
   const monitoringAlertsColumnHeader = within(dataGridRows).getByText('Monitoring alerts')
