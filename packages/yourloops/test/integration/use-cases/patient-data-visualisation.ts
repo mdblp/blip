@@ -28,7 +28,7 @@
 import {
   checkPatientStatistics,
   checkPatientStatisticsNoData,
-  checkPatientStatisticsTrendsView,
+  checkPatientStatisticsTrendsView, checkPatientStatisticsTrendsViewNoMonday,
   checkPatientStatisticsWithTwoWeeksOldData
 } from '../assert/patient-statistics.assert'
 import { checkPatientDashboardLayout, type PatientDashboardLayoutParams } from '../assert/layout.assert'
@@ -62,6 +62,8 @@ import {
   checkStandardDeviationStatWidget,
   checkTimeInRangeStatsTitle
 } from '../assert/stats.assert'
+import userEvent from '@testing-library/user-event'
+import { screen } from '@testing-library/react'
 
 export const testDashboardDataVisualisationForHcp = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
@@ -154,4 +156,15 @@ export const testDailyViewTooltipsAndValuesMmolL = async () => {
 
   await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mmol/L6')
   await checkStandardDeviationStatWidget('(2-10)mmol/L4')
+}
+
+
+export const testTrendsWeekDayFilter = async () => {
+  // Start by asserting data before removing Mondays from the stats
+  await checkPatientStatisticsTrendsView()
+  // Deactivate Monday
+  await userEvent.click(screen.getByTestId('day-filter-monday'))
+  await checkPatientStatisticsTrendsViewNoMonday()
+  // Reactivate Monday
+  await userEvent.click(screen.getByTestId('day-filter-monday'))
 }
