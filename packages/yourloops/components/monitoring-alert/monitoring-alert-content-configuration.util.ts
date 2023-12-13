@@ -30,6 +30,8 @@ import { DEFAULT_BG_VALUES, DEFAULT_THRESHOLDS_IN_MGDL } from './monitoring-aler
 import { type BgValues, type Thresholds } from '../../lib/patient/models/monitoring-alerts.model'
 import { type BgUnit, Unit } from 'medical-domain'
 
+import i18next from 'i18next'
+
 export const PERCENTAGES = [...new Array(21)]
   .map((_each, index) => `${index * 5}%`).slice(1, 21)
 
@@ -37,13 +39,6 @@ export const REGEX_VALUE_BG = /^(\d)*(.)?([0-9]{1})?$/
 
 export const isInvalidPercentage = (value: number): boolean => {
   return !PERCENTAGES.includes(`${value}%`)
-}
-
-export const onBasicDropdownSelect = (value: string, setValue: React.Dispatch<{ value?: number, error: boolean }>): void => {
-  setValue({
-    value: parseFloat(value),
-    error: false
-  })
 }
 
 export const buildThresholds = (bgUnit: BgUnit): Thresholds => {
@@ -84,4 +79,19 @@ export const getConvertedValue = (value: number, currentUnit: BgUnit, requiredUn
   const isConversionRequired = currentUnit !== requiredUnit
 
   return isConversionRequired ? convertAndFormatBgValue(value, currentUnit) : value
+}
+
+export const getErrorMessage = (bgUnit: Unit.MilligramPerDeciliter | Unit.MmolPerLiter, value: number, lowValue: number, highValue: number): string | null => {
+  if (bgUnit === Unit.MilligramPerDeciliter && !(Number.isInteger(value))) {
+    return i18next.t('mandatory-integer')
+  }
+
+  if (bgUnit === Unit.MmolPerLiter && !REGEX_VALUE_BG.test(value.toString())) {
+    return i18next.t('mandatory-float-number')
+  }
+
+  if (value < lowValue || value > highValue) {
+    return i18next.t('mandatory-range', { lowValue, highValue })
+  }
+  return null
 }

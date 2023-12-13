@@ -165,6 +165,16 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
     }
   }
 
+  const deletePatientMonitoringAlertsParameters = async (patientId: string): Promise<void> => {
+    try {
+      await PatientApi.deletePatientAlerts(teamId, patientId)
+      refresh()
+    } catch (error) {
+      console.error(error)
+      throw Error(`Failed to delete monitoring alert parameters for patient with id ${patientId}`)
+    }
+  }
+
   const removePatient = async (patient: Patient): Promise<void> => {
     if (PatientUtils.isInvitationPending(patient)) {
       await cancelInvite(patient.invite.id, undefined, patient.profile.email)
@@ -196,6 +206,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
     searchPatients,
     invitePatient,
     markPatientMessagesAsRead,
+    deletePatientMonitoringAlertsParameters,
     updatePatientMonitoringAlertsParameters,
     removePatient,
     refresh

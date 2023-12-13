@@ -78,7 +78,7 @@ export const monitoringAlertsParameters: MonitoringAlertsParameters = {
 }
 export const monitoringAlertsParametersBgUnitMmol: MonitoringAlertsParameters = {
   bgUnit: Unit.MmolPerLiter,
-  lowBg: 2.8,
+  lowBg: 3.0,
   highBg: 7.8,
   outOfRangeThreshold: 5,
   veryLowBg: 2.2,
@@ -179,64 +179,66 @@ export const buildTeamThree = (): Team => {
     phone: '0476000000',
     email: 'hey@third.hey',
     address: { line1: 'Guinness Road', line2: '', zip: 'W1D 1BS', city: 'Dublin', country: 'GB' },
-    members: [{
-      userId: loggedInUserId,
-      role: TeamMemberRole.admin,
-      profile: {
-        email: loggedInUserEmail,
-        firstName: loggedInUserFirstName,
-        fullName: loggedInUserFullName,
-        hcpProfession: HcpProfession.other,
-        lastName: loggedInUserLastName,
-        privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-        termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-      } as Profile,
-      status: UserInviteStatus.Accepted,
-      email: loggedInUserEmail
-    }, {
-      userId: userTimId,
-      role: TeamMemberRole.member,
-      profile: {
-        email: userTimEmail,
-        firstName: userTimFirstName,
-        fullName: userTimFullName,
-        hcpProfession: HcpProfession.other,
-        lastName: userTimLastName,
-        privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-        termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-      } as Profile,
-      status: UserInviteStatus.Accepted,
-      email: userTimEmail
-    }, {
-      userId: userHugoId,
-      role: TeamMemberRole.member,
-      profile: {
+    members: [
+      {
+        userId: loggedInUserId,
+        role: TeamMemberRole.admin,
+        profile: {
+          email: loggedInUserEmail,
+          firstName: loggedInUserFirstName,
+          fullName: loggedInUserFullName,
+          hcpProfession: HcpProfession.other,
+          lastName: loggedInUserLastName,
+          privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+          termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+        } as Profile,
+        status: UserInviteStatus.Accepted,
+        email: loggedInUserEmail
+      },
+      {
+        userId: userTimId,
+        role: TeamMemberRole.member,
+        profile: {
+          email: userTimEmail,
+          firstName: userTimFirstName,
+          fullName: userTimFullName,
+          hcpProfession: HcpProfession.other,
+          lastName: userTimLastName,
+          privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+          termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+        } as Profile,
+        status: UserInviteStatus.Accepted,
+        email: userTimEmail
+      }, {
+        userId: userHugoId,
+        role: TeamMemberRole.member,
+        profile: {
+          email: userHugoEmail,
+          firstName: userHugoFirstName,
+          fullName: userHugoFullName,
+          hcpProfession: HcpProfession.other,
+          lastName: userHugoLastName,
+          privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+          termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+        } as Profile,
+        status: UserInviteStatus.Pending,
         email: userHugoEmail,
-        firstName: userHugoFirstName,
-        fullName: userHugoFullName,
-        hcpProfession: HcpProfession.other,
-        lastName: userHugoLastName,
-        privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-        termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-      } as Profile,
-      status: UserInviteStatus.Pending,
-      email: userHugoEmail,
-      invitationId: 'fakeInvitationId'
-    }, {
-      userId: userYdrisId,
-      role: TeamMemberRole.member,
-      profile: {
-        email: userYdrisEmail,
-        firstName: userYdrisFirstName,
-        fullName: userYdrisFullName,
-        hcpProfession: HcpProfession.other,
-        lastName: userYdrisLastName,
-        privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-        termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-      } as Profile,
-      status: UserInviteStatus.Pending,
-      email: userYdrisEmail
-    }],
+        invitationId: 'fakeInvitationId'
+      }, {
+        userId: userYdrisId,
+        role: TeamMemberRole.member,
+        profile: {
+          email: userYdrisEmail,
+          firstName: userYdrisFirstName,
+          fullName: userYdrisFullName,
+          hcpProfession: HcpProfession.other,
+          lastName: userYdrisLastName,
+          privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+          termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+        } as Profile,
+        status: UserInviteStatus.Pending,
+        email: userYdrisEmail
+      }],
     monitoringAlertsParameters
   }
 }
