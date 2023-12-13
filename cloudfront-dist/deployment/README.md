@@ -16,7 +16,7 @@ you will find below how to perform manual local deployment.
 you need to have the software below :
 
 * a node package manager: npm
-* node version >=14.0
+* node version >=16.0
 * the aws CDK cli called cdk.
 * a linux shell
 
@@ -36,7 +36,7 @@ In the directory cloudfront-dist/deployment (cd cloudfront-dist/deployment):
 1. Install or update the AWS CDK CLI from npm/yarn (requires Node.js ≥ 10.13.0). We recommend using a version in Active LTS
 
     ```bash
-    npm install -g aws-cdk@1.61.1
+    npm install -g aws-cdk
     ```
 
 2. Install NPM packages
@@ -83,3 +83,4 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 * `cdk deploy --require-approval never`      deploy this stack to your default AWS account/region
 * `cdk diff`        compare deployed stack with current state
 * `cdk synth`       emits the synthesized CloudFormation template
+* `docker run -it --dns 8.8.8.8 --env-file ./config/credential-dev.env --env-file ./config/<target env>/blip.env docker.ci.diabeloop.eu/blip:<version> -- ` allow to test the deployement script inside the docker container used by our pipeline/deployment
