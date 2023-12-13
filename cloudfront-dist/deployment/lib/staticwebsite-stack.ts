@@ -57,11 +57,15 @@ export class StaticWebSiteStack extends core.Stack {
     });
 
     // Create the Certificate
-    const cert = new acm.Certificate(this, `${id}-certificate`, {
+    // Here this construct is deprecated in v2 however still possible to use it
+    // and we cannot migrate to the  new one due to this https://github.com/aws/aws-cdk/discussions/23931
+    const cert = new acm.DnsValidatedCertificate(this, `${id}-certificate`, {
+      hostedZone: zone,
       domainName: `${props?.domainName}`,
       subjectAlternativeNames: [`${props?.altDomainName}`],
-      validation: acm.CertificateValidation.fromDns(zone)
+      region: 'us-east-1',
     });
+
 
     // Create the distribution
     const distribution = new cloudfront.CloudFrontWebDistribution(
