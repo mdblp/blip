@@ -109,10 +109,8 @@ const deduplicate = (data: Datum[], _opts: MedicalDataOptions): Datum[] => {
 export const filterOnDate = (data: Datum[], start: number, end: number, weekDaysFilter: WeekDaysFilter = defaultWeekDaysFilter): Datum[] => {
   return data.filter((dat: Datum) => {
     const epochStartInBounds = isEpochBetweenBounds(dat.epoch, start, end)
-    if (dat.isoWeekday !== undefined) {
-      if (!weekDaysFilter[dat.isoWeekday]) {
-        return false
-      }
+    if (dat.isoWeekday !== undefined && !weekDaysFilter[dat.isoWeekday]) {
+      return false
     }
     if (isBasal(dat) || isDuration(dat)) {
       const epochEndInBounds = isEpochBetweenBounds(dat.epochEnd, start, end)

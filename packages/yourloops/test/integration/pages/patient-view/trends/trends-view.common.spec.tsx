@@ -54,7 +54,10 @@ import { patient2AsTeamMember } from '../../../data/patient.api.data'
 import { buildHba1cData } from '../../../data/data-api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
-import { testTrendsDataVisualisationForHCP } from '../../../use-cases/patient-data-visualisation'
+import {
+  testTrendsDataVisualisationForHCP,
+  testTrendsWeekDayFilter
+} from '../../../use-cases/patient-data-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
   checkPatientStatisticsTrendsView,
@@ -71,18 +74,18 @@ describe('Trends view for anyone', () => {
   })
 
   describe('with all kind of data', () => {
-    beforeAll(() => {
+    it('should render trend page and statistics correctly', async () => {
       mockDataAPI(minimalTrendViewData)
-    })
-    it('should render correct tooltips and values', async () => {
-
       const router = renderPage(trendsRoute)
       await waitFor(() => {
         expect(router.state.location.pathname).toEqual(trendsRoute)
       })
-      await testTrendsDataVisualisationForHCP()
 
+      await testTrendsDataVisualisationForHCP()
       await checkTrendsTidelineContainerTooltips()
+
+      // Check days filtering
+      await testTrendsWeekDayFilter()
 
       // Check the widget
       await checkRangeSelection()
@@ -91,25 +94,11 @@ describe('Trends view for anyone', () => {
       // Check Layout
       checkTrendsLayout()
       await checkTrendsBolusAndCarbsAverage()
-    })
 
-    it('should filter the data on weekday if the user removes one day', async () => {
-      const router = renderPage(trendsRoute)
-      await waitFor(() => {
-        expect(router.state.location.pathname).toEqual(trendsRoute)
-      })
-      await checkPatientStatisticsTrendsView()
-      await userEvent.click(await screen.findByTestId('day-filter-monday', {}, { timeout: 3000 }))
-      await checkPatientStatisticsTrendsViewNoMonday()
-    })
-
-    it('should display no data when user navigates in the past', async () => {
-      const router = renderPage(trendsRoute)
-      await waitFor(() => {
-        expect(router.state.location.pathname).toEqual(trendsRoute)
-      })
-      await userEvent.click(await screen.findByTestId('button-nav-back', {}, { timeout: 3000 }))
+      // Check an information message is provided when there is not data
+      await userEvent.click(screen.getByTestId('button-nav-back'))
       expect(await screen.findByText('There is no CGM data for this time period :(')).toBeVisible()
+
     })
   })
 
