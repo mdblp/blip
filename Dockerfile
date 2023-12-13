@@ -1,9 +1,9 @@
 # This part contains the deployment source code only
-FROM node:16-alpine3.16 AS base
+FROM node:18-alpine3.19 as base
 RUN apk --no-cache update && \
     apk --no-cache upgrade && \
     apk --no-cache add curl && \
-    npm install -g npm@8.5.5
+    npm install -g npm@10.2.5
 
 FROM base AS deployment
 WORKDIR /cloudfront-dist
