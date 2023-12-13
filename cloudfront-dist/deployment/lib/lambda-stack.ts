@@ -1,20 +1,21 @@
-import * as core from '@aws-cdk/core';
-import * as lambda from '@aws-cdk/aws-lambda';
-import * as ssm from '@aws-cdk/aws-ssm';
-import * as iam from '@aws-cdk/aws-iam';
+import * as core from 'aws-cdk-lib';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import { Construct } from 'constructs';
 
 export class LambdaStack extends core.Stack {
 
   private functionName: string;
 
-  constructor(parent: core.Construct, id: string, distDir: string, props?: core.StackProps, prefix?: string) {
+  constructor(parent: Construct, id: string, distDir: string, props?: core.StackProps, prefix?: string) {
     super(parent, id, props);
 
     this.functionName = `${prefix}-blip-request-viewer`;
 
     const override = new lambda.Function(this, this.functionName, {
       functionName: this.functionName,
-      runtime: lambda.Runtime.NODEJS_16_X,    // execution environment
+      runtime: lambda.Runtime.NODEJS_18_X,    // execution environment
       code: lambda.Code.fromAsset(`${distDir}/lambda`),  // code loaded from "lambda" directory
       handler: `cloudfront-${prefix}-blip-request-viewer.handler`,                // file is "hello", function is "handler"
       role: new iam.Role(this, 'AllowLambdaServiceToAssumeRole', {
