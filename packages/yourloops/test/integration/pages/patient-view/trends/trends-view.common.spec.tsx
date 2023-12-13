@@ -59,10 +59,6 @@ import {
   testTrendsWeekDayFilter
 } from '../../../use-cases/patient-data-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import {
-  checkPatientStatisticsTrendsView,
-  checkPatientStatisticsTrendsViewNoMonday
-} from '../../../assert/patient-statistics.assert'
 
 describe('Trends view for anyone', () => {
   const trendsRoute = AppUserRoute.Trends
