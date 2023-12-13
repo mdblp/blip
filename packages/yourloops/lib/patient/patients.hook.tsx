@@ -53,9 +53,9 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const teamId = teamIdFromParam ?? localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
 
   const [patients, setPatients] = useState<Patient[]>([])
-  const [initialized, setInitialized] = useState<boolean>(false)
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
   const teamIdForWhichPatientsAreFetched = useRef(null)
+  const arePatientsRetrievedForSelectedTeamId = teamId === teamIdForWhichPatientsAreFetched.current
 
   const fetchPatientsMetrics = useCallback(async (allPatients: Patient[], selectedTeamId: string): Promise<void> => {
     const metrics = await PatientUtils.fetchMetrics(allPatients, selectedTeamId, user.id)
@@ -79,7 +79,6 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
         setPatients([])
       })
       .finally(() => {
-        setInitialized(true)
         setRefreshInProgress(false)
       })
       .then(async (computedPatients: Patient[]) => {
@@ -183,13 +182,13 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
       teamIdForWhichPatientsAreFetched.current = selectedTeamId
       fetchPatients(selectedTeamId)
     }
-  }, [fetchPatients, initialized, teamId, user])
+  }, [fetchPatients, teamId, user])
 
   return {
     patients: patientList,
     pendingPatientsCount,
     allNonPendingPatientsForSelectedTeamCount,
-    initialized,
+    initialized: arePatientsRetrievedForSelectedTeamId,
     refreshInProgress,
     getPatientByEmail,
     getPatientById,
