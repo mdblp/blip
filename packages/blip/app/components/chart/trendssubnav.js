@@ -19,6 +19,7 @@ import PropTypes from 'prop-types'
 import cx from 'classnames'
 import i18next from 'i18next'
 import { Checkbox } from '@mui/material'
+import Button from '@mui/material/Button'
 
 const t = i18next.t.bind(i18next)
 const domains = ['1 week', '2 weeks', '4 weeks', '3 months']
@@ -205,7 +206,15 @@ class TrendsSubNav extends React.Component {
     const dayFilterId = `day-filter-${day}`
 
     return (
-      <a data-testid={dayFilterId} className={dayLinkClass} key={day} onClick={this.props.onClickDay(day)}>{this.renderDayAbbrev(day)}</a>
+      <Button
+        style={{minWidth: 25, maxWidth: 25, minHeight: 25, maxHeight: 25, padding: 0}}
+        data-testid={dayFilterId}
+        className={dayLinkClass}
+        key={day}
+        onClick={this.props.onClickDay(day)}
+      >
+        {this.renderDayAbbrev(day)}
+      </Button>
     )
   }
 
