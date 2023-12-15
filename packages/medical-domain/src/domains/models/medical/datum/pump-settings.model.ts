@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type BaseDatum from './basics/base-datum.model'
+import BaseDatum from './basics/base-datum.model'
 import type PumpManufacturer from './enums/pump-manufacturer.enum'
 import { type DatumType } from './enums/datum-type.enum'
 import type Unit from './enums/unit.enum'
@@ -86,7 +86,7 @@ interface ParameterConfig {
   value: string
 }
 
-type PumpSettings = BaseDatum & {
+interface PumpSettings extends BaseDatum {
   type: DatumType.PumpSettings
   basalSchedules: object[]
   activeSchedule: string
@@ -102,5 +102,4 @@ type PumpSettings = BaseDatum & {
   }
 }
 
-export default PumpSettings
-export type { CgmConfig, DeviceConfig, ParametersChange, PumpConfig, ParameterConfig }
+export type { CgmConfig, DeviceConfig, ParametersChange, PumpConfig, ParameterConfig, PumpSettings }

@@ -25,29 +25,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon'
-import React, { ForwardedRef } from 'react'
-import { makeStyles } from 'tss-react/mui'
+import React, { FC } from 'react'
+import { ParametersChangeHistory } from '../../../../components/device/parameters-change-history'
+import { PumpSettings } from 'medical-domain'
+import { useTheme } from '@mui/material/styles'
+import { useTranslation } from 'react-i18next'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
 
-const styles = makeStyles()(() => ({
-  checkmark: {
-    strokeWidth: 6,
-    strokeLinecap: 'round'
-  }
-}))
+interface ChangeHistorySectionProps {
+  pumpSettings: PumpSettings
+  goToDailySpecificDate: (date: number) => void
+}
 
-export const RightIcon = React.forwardRef((props: SvgIconProps, ref: ForwardedRef<SVGSVGElement>) => {
-  const { classes } = styles()
+export const ChangeHistorySection: FC<ChangeHistorySectionProps> = (props) => {
+  const { goToDailySpecificDate, pumpSettings } = props
+  const theme = useTheme()
+  const { t } = useTranslation()
+  const history = pumpSettings.payload.history
+  const timezone = pumpSettings.timezone
+
   return (
-    <SvgIcon {...props} ref={ref}>
-      <svg viewBox="0 0 180 180" fill="none">
-        <rect width="180" height="180" rx="90" fill="currentColor"/>
-        <rect x="15.5" y="15.5" width="149" height="149" rx="74.5" fill="currentColor"/>
-        <rect x="15.5" y="15.5" width="149" height="149" rx="74.5" stroke="white"/>
-        <path d="M53.9465 98.6502L83.567 126.643L130.969 62.0462" stroke="white" className={classes.checkmark}/>
-      </svg>
-    </SvgIcon>
+    <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
+      <CardHeader title={t('change-history')} />
+      <CardContent>
+        <ParametersChangeHistory
+          goToDailySpecificDate={goToDailySpecificDate}
+          history={history}
+          timezone={timezone}
+        />
+      </CardContent>
+    </Card>
   )
-})
-
-RightIcon.displayName = 'RightIcon'
+}

@@ -30,24 +30,22 @@ import React, { ForwardedRef } from 'react'
 import { makeStyles } from 'tss-react/mui'
 
 const styles = makeStyles()(() => ({
-  checkmark: {
-    strokeWidth: 6,
-    strokeLinecap: 'round'
+  stroke: {
+    strokeWidth: 2,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
   }
 }))
 
-export const RightIcon = React.forwardRef((props: SvgIconProps, ref: ForwardedRef<SVGSVGElement>) => {
+export const BasalIcon = React.forwardRef((props: SvgIconProps, ref: ForwardedRef<SVGSVGElement>) => {
   const { classes } = styles()
   return (
     <SvgIcon {...props} ref={ref}>
-      <svg viewBox="0 0 180 180" fill="none">
-        <rect width="180" height="180" rx="90" fill="currentColor"/>
-        <rect x="15.5" y="15.5" width="149" height="149" rx="74.5" fill="currentColor"/>
-        <rect x="15.5" y="15.5" width="149" height="149" rx="74.5" stroke="white"/>
-        <path d="M53.9465 98.6502L83.567 126.643L130.969 62.0462" stroke="white" className={classes.checkmark}/>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 20H5.04545V12H18.9545V20H21" stroke="#1A1A19" className={classes.stroke} />
       </svg>
     </SvgIcon>
   )
 })
 
-RightIcon.displayName = 'RightIcon'
+BasalIcon.displayName = 'BasalIcon'

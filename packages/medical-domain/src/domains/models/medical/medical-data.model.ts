@@ -33,7 +33,6 @@ import type DeviceParameterChange from './datum/device-parameter-change.model'
 import type Meal from './datum/meal.model'
 import type Message from './datum/message.model'
 import type PhysicalActivity from './datum/physical-activity.model'
-import type PumpSettings from './datum/pump-settings.model'
 import type ReservoirChange from './datum/reservoir-change.model'
 import type Smbg from './datum/smbg.model'
 import type TimeZoneChange from './datum/time-zone-change.model'
@@ -41,6 +40,7 @@ import type WarmUp from './datum/warm-up.model'
 import type Wizard from './datum/wizard.model'
 import type ZenMode from './datum/zen-mode.model'
 import { AlarmEvent } from './datum/alarm-event.model';
+import { PumpSettings } from './datum/pump-settings.model'
 
 interface MedicalData {
   alarmEvents: AlarmEvent[]

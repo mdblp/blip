@@ -56,9 +56,9 @@ import {
   type PumpConfig,
   type ParametersChange,
   type PumpSettingsParameter,
-  ChangeType
+  ChangeType,
+  PumpSettings
 } from './domains/models/medical/datum/pump-settings.model'
-import type PumpSettings from './domains/models/medical/datum/pump-settings.model'
 import type ReservoirChange from './domains/models/medical/datum/reservoir-change.model'
 import type Smbg from './domains/models/medical/datum/smbg.model'
 import Source from './domains/models/medical/datum/enums/source.enum'
@@ -131,7 +131,7 @@ export {
   Prescriptor,
   PumpManufacturer,
   type PumpConfig,
-  type PumpSettings,
+  PumpSettings,
   type ReservoirChange,
   type Smbg,
   Source,

@@ -25,14 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type PumpSettings from '../../../models/medical/datum/pump-settings.model'
 import {
   type CgmConfig,
   type ChangeType,
   type DeviceConfig,
   type ParameterConfig,
   type ParametersChange,
-  type PumpConfig
+  type PumpConfig,
+  PumpSettings
 } from '../../../models/medical/datum/pump-settings.model'
 import { type DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
