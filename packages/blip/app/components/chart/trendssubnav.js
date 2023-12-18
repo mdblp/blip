@@ -198,7 +198,7 @@ class TrendsSubNav extends React.Component {
   renderDay(day) {
     const dayLinkClass = cx({
       'dayFilter': true,
-      'btn btn-chart-control': true,
+      'btn btn-chart-control day-filter': true,
       'active': this.props.activeDays[day],
       'inactive': !this.props.activeDays[day]
     }) + ' ' + day
@@ -207,7 +207,6 @@ class TrendsSubNav extends React.Component {
 
     return (
       <Button
-        style={{minWidth: 25, maxWidth: 25, minHeight: 25, maxHeight: 25, padding: 0}}
         data-testid={dayFilterId}
         className={dayLinkClass}
         key={day}
