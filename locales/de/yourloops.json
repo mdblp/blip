@@ -461,6 +461,8 @@
   "send": "Senden",
   "sensor-usage": "Verwendung des Sensors",
   "sensor-usage-tooltip": "**Verwendung des Sensors:** Zeit, in der {{cbgLabel}} Daten gesammelt hat, geteilt durch die in dieser Ansicht dargestellte Gesamtzeit.",
+  "sensor-warmup": "Sensor warmup",
+  "sensor-warmup-session-end": "Session end",
   "severe-hypoglycemia": "Schwere Hypoglykämie",
   "severe-hypoglycemia-below": "Schwere Hypoglykämie unter:",
   "severe-hypoglycemia-threshold": "Schwellenwert für schwere Hypoglykämie",
