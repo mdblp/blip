@@ -461,6 +461,8 @@
   "send": "Bolus starten",
   "sensor-usage": "Sensorgebruik",
   "sensor-usage-tooltip": "**Sensorgebruik:** tijd waarop de {{cbgLabel}} gegevens verzamelde, gedeeld door de totale tijd, weergegeven in deze weergave.",
+  "sensor-warmup": "Sensor warmup",
+  "sensor-warmup-session-end": "Session end",
   "severe-hypoglycemia": "Ernstige hypoglykemie",
   "severe-hypoglycemia-below": "Ernstige hypoglykemie onder:",
   "severe-hypoglycemia-threshold": "Grenswaarde voor ernstige hypoglykemie",
