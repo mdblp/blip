@@ -245,8 +245,6 @@
   "pdf-footer-center-text": "Diabeloop - {{appURL}}",
   "scheduled": "予定基礎レート",
   "seconds": "秒数",
-  "sensor-warmup": "センサーウォームアップ",
-  "sensor-warmup-session-end": "測定終了",
   "to": "終了日",
   "unknown": "不明",
   "week": "週",
