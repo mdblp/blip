@@ -461,6 +461,8 @@
   "send": "Enviar",
   "sensor-usage": "Uso del sensor",
   "sensor-usage-tooltip": "**Uso del sensor:** tiempo de recopilación de datos del {{cbgLabel}} dividido por el tiempo total representado en esta vista.",
+  "sensor-warmup": "Sensor warmup",
+  "sensor-warmup-session-end": "Session end",
   "severe-hypoglycemia": "Hipoglucemia grave",
   "severe-hypoglycemia-below": "Hipoglucemia grave por debajo de:",
   "severe-hypoglycemia-threshold": "Umbral de hipoglucemia grave",
