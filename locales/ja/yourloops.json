@@ -461,6 +461,8 @@
   "send": "送信",
   "sensor-usage": "センサー使用",
   "sensor-usage-tooltip": "**センサー使用**{{cbgLabel}}がデータを取得した時間から、表示されている合計時間を割ったもの。",
+  "sensor-warmup": "Sensor warmup",
+  "sensor-warmup-session-end": "Session end",
   "severe-hypoglycemia": "重度の低血糖",
   "severe-hypoglycemia-below": "重度の低血糖値：",
   "severe-hypoglycemia-threshold": "重度低血糖しきい値",
