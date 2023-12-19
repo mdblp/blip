@@ -62,6 +62,7 @@ import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
 import { getPatientFullName } from './utils/patient/patient.util'
 import { formatBirthdate, formatLocalizedFromUTC, getLongDayHourFormat, formatDate, TIMEZONE_UTC } from './utils/datetime/datetime.util'
 import { renderPageNumbers } from './utils/pdf/pdf.util'
+import { WarmUpTooltip } from './components/tooltips/warm-up-tooltip/warm-up-tooltip'
 
 export {
   formatDate,
@@ -101,5 +102,6 @@ export {
   TrendsProvider,
   formatLocalizedFromUTC,
   getLongDayHourFormat,
-  TIMEZONE_UTC
+  TIMEZONE_UTC,
+  WarmUpTooltip
 }

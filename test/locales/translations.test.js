@@ -281,7 +281,10 @@ const ignoredTransKeyForYourLoops = [
   'total-estimated-carbs',
   'time-loop-tooltip',
   'tooltip-total-derived-carbs',
-  'verify-email-error-title'
+  'verify-email-error-title',
+  'tooltip-total-derived-carbs',
+  'sensor-warmup',
+  'sensor-warmup-session-end'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',

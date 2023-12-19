@@ -16,6 +16,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-2476 Use tide-whisperer v2: route /all.
 - YLP-2696 Fix some Sonarcloud bugs and code smells
 - YLP-2697 App routing should reveal data dependencies
+- YLP-2704 Remove settings logic from viz
+- YLP-2709 Migration warm up tooltip
+- YLP-2726 Cleanup tideline/viz packages
 
 ## 3.0.5 - 2023-11-02
 ### Added
