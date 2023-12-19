@@ -69,7 +69,8 @@ const ignoredTransKeysForBlip = [
   'Date',
   'Level',
   'Parameter',
-  'Parameters History'
+  'Parameters History',
+  'Reservoir changes'
 ]
 const ignoredTransKeyInBlipFiles = [
   '${physicalActivity.reportedIntensity}-pa',
@@ -279,6 +280,8 @@ const ignoredTransKeyForYourLoops = [
   'total-declared-carbs',
   'total-estimated-carbs',
   'time-loop-tooltip',
+  'tooltip-total-derived-carbs',
+  'verify-email-error-title',
   'tooltip-total-derived-carbs',
   'sensor-warmup',
   'sensor-warmup-session-end'

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,9 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Team } from '../team'
+import { makeStyles } from 'tss-react/mui'
 
-export interface SelectedTeamContextResult {
-  selectedTeam: Team
-  selectTeam: (teamId: string, isNewTeam?: boolean) => void
-}
+export const useVerifyEmailStyles = makeStyles()((theme) => {
+  return {
+    appBar: {
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      zIndex: theme.zIndex.drawer + 1,
+      backgroundColor: theme.palette.common.white,
+      color: 'var(--text-color-primary)'
+    },
+    desktopLogo: {
+      width: 140
+    }
+  }
+})

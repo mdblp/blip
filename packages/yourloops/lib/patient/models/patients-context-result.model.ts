@@ -39,7 +39,8 @@ export interface PatientsContextResult {
   searchPatients: (search: string) => Patient[]
   invitePatient: (team: Team, username: string) => Promise<void>
   markPatientMessagesAsRead: (patient: Patient) => void
+  deletePatientMonitoringAlertsParameters: (patientId: string) => Promise<void>
   updatePatientMonitoringAlertsParameters: (patient: Patient) => Promise<void>
   removePatient: (patient: Patient) => Promise<void>
-  refresh: (teamId?: string) => void
+  refresh: () => void
 }

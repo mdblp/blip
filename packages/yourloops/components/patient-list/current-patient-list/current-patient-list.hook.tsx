@@ -56,7 +56,6 @@ import { getUserName } from '../../../lib/auth/user.util'
 import Box from '@mui/material/Box'
 import { formatBirthdate } from 'dumb'
 import { usePatientListStyles } from '../patient-list.styles'
-import { AppUserRoute } from '../../../models/enums/routes.enum'
 import { useNavigate } from 'react-router-dom'
 import { Skeleton } from '@mui/material'
 import { useAuth } from '../../../lib/auth'
@@ -292,7 +291,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
   }, [classes.mandatoryCellBorder, onClickRemovePatient, t])
 
   const onRowClick = (params: GridRowParams): void => {
-    navigate(`${AppUserRoute.Patient}/${params.id}/dashboard`)
+    navigate(`${params.id}/dashboard`)
   }
 
   return { allRows, allColumns, onRowClick }

@@ -36,9 +36,10 @@ import { type Patient } from '../../../lib/patient/models/patient.model'
 import { EmptyPatientList } from '../empty-patient-list/empty-patient-list'
 import { ReinvitePatientDialog } from '../../patient/reinvite-patient-dialog/reinvite-patient-dialog'
 import TeamCodeDialog from '../../patient/team-code-dialog'
-import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
 import { useWindowDimensions } from '../../../lib/custom-hooks/use-window-dimensions.hook'
 import { CancelInvitePatientDialog } from '../../patient/cancel-invite-patient-dialog/cancel-invite-patient-dialog'
+import { useParams } from 'react-router-dom'
+import { useTeam } from '../../../lib/team'
 
 interface PendingPatientListProps {
   patients: Patient[]
@@ -56,7 +57,9 @@ export const PendingPatientList: FunctionComponent<PendingPatientListProps> = (p
   } = usePendingPatientListHook({ patients })
   const { displayedColumns } = usePatientListContext()
   const { refreshInProgress } = usePatientsContext()
-  const { selectedTeam } = useSelectedTeamContext()
+  const { teamId } = useParams()
+  const { getTeam } = useTeam()
+  const selectedTeam = getTeam(teamId)
   const { width } = useWindowDimensions()
   const gridApiRef = useGridApiRef()
 

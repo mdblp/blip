@@ -30,7 +30,8 @@
   --chat-widget-private-msg-mine: #329f92;
   --chat-widget-private-msg-not-mine: #5abcb3;
   --footer-background-color: #eee;
-  --light-grey-border-color: #e6e6e6
+  --light-grey-border-color: #e6e6e6;
+  --button-care-team-values-applied-bg: #D3F4F0;
 }
 
 :root .diabeloop-blue {

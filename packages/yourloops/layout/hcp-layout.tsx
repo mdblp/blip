@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import React, { type FunctionComponent, useCallback, useMemo } from 'react'
+import { Navigate, Outlet, Route, Routes, useParams } from 'react-router-dom'
 import { PatientData } from '../components/patient-data/patient-data'
 import { CareTeamSettingsPage } from '../pages/care-team-settings/care-team-settings-page'
 import { PatientsProvider } from '../lib/patient/patients.provider'
@@ -34,36 +34,81 @@ import { DashboardLayout } from './dashboard-layout'
 import { InvalidRoute } from '../components/invalid-route'
 import { ProfilePage } from '../pages/profile/profile-page'
 import { NotificationsPage } from '../pages/notifications/notifications-page'
-import { useSelectedTeamContext } from '../lib/selected-team/selected-team.provider'
 import { AppUserRoute } from '../models/enums/routes.enum'
 import { PatientListPage } from '../components/patient-list/patient-list-page'
 import { PatientListProvider } from '../lib/providers/patient-list.provider'
-import TeamUtils from '../lib/team/team.util'
+import { Team, TeamContextProvider, useTeam } from '../lib/team'
 
-export const HcpLayout: FunctionComponent = () => {
-  const { selectedTeam } = useSelectedTeamContext()
+export const LOCAL_STORAGE_SELECTED_TEAM_ID_KEY = 'selectedTeamId'
+
+const HcpCommonLayout: FunctionComponent = () => {
+  const { teamId } = useParams()
+  const { teams } = useTeam()
+
+  const checkRouteIsValid = (): void => {
+    const isTeamIdValid = teamId && teams.some((team: Team) => team.id === teamId)
+    if (isTeamIdValid) {
+      localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, teamId)
+    }
+  }
+
+  if (teamId) {
+    checkRouteIsValid()
+  }
 
   return (
     <PatientListProvider>
       <PatientsProvider>
         <DashboardLayout>
-          <Routes>
-            <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
-            <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
-            <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
-            <Route path={AppUserRoute.Home} element={<PatientListPage />} />
-            <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientData />} />
-            <Route path={AppUserRoute.CareTeamSettings}
-                   element={
-                     TeamUtils.isPrivate(selectedTeam)
-                       ? <Navigate to={AppUserRoute.Home} replace />
-                       : <CareTeamSettingsPage />
-                   } />
-            <Route path="/" element={<Navigate to={AppUserRoute.Home} replace />} />
-            <Route path="*" element={<Navigate to={AppUserRoute.NotFound} replace />} />
-          </Routes>
+          <Outlet />
         </DashboardLayout>
       </PatientsProvider>
     </PatientListProvider>
+  )
+}
+
+const HcpLayout: FunctionComponent = () => {
+  const { teams, getDefaultTeamId } = useTeam()
+
+  const getFallbackTeamId = useCallback((): string => {
+    const localStorageTeamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
+    const isTeamIdValid = teams.some((team: Team) => team.id === localStorageTeamId)
+    if (isTeamIdValid) {
+      return localStorageTeamId
+    }
+    const defaultTeamId = getDefaultTeamId()
+    localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, defaultTeamId)
+    return defaultTeamId
+  }, [getDefaultTeamId, teams])
+
+  const teamId = useMemo(() => {
+    return getFallbackTeamId()
+  }, [getFallbackTeamId])
+
+  return (
+    <Routes>
+      <Route element={<HcpCommonLayout />}>
+        <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
+        <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
+        <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
+        <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
+        <Route
+          path="/teams/private"
+          element={<Navigate to={`/teams/${teamId}/patients`} replace />}
+        />
+        <Route path={AppUserRoute.PatientsList} element={<PatientListPage />} />
+        <Route path={AppUserRoute.PatientView} element={<PatientData />} />
+        <Route path="/" element={<Navigate to={`/teams/${teamId}/patients`} replace />} />
+        <Route path="*" element={<Navigate to={AppUserRoute.NotFound} replace />} />
+      </Route>
+    </Routes>
+  )
+}
+
+export const HcpLayoutWithContext: FunctionComponent = () => {
+  return (
+    <TeamContextProvider>
+      <HcpLayout />
+    </TeamContextProvider>
   )
 }

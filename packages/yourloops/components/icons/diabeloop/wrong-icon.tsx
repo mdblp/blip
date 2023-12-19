@@ -25,17 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { SelectedTeamProvider } from '../lib/selected-team/selected-team.provider'
-import { HcpLayout } from './hcp-layout'
-import { TeamContextProvider } from '../lib/team'
+import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon'
+import React, { ForwardedRef } from 'react'
+import { makeStyles } from 'tss-react/mui'
 
-export const HcpLayoutWithContext: FunctionComponent = () => {
+const styles = makeStyles()(() => ({
+  'cross': {
+    strokeWidth: 6,
+    strokeLinecap: 'round'
+  }
+}))
+
+export const WrongIcon = React.forwardRef((props: SvgIconProps, ref: ForwardedRef<SVGSVGElement>) => {
+  const { classes } = styles()
   return (
-    <TeamContextProvider>
-      <SelectedTeamProvider>
-        <HcpLayout />
-      </SelectedTeamProvider>
-    </TeamContextProvider>
+    <SvgIcon {...props} ref={ref}>
+      <svg viewBox="0 0 180 180" fill="none">
+        <rect width="180" height="180" rx="90" fill="currentColor"/>
+        <rect x="15.5" y="15.5" width="149" height="149" rx="74.5" fill="currentColor"/>
+        <rect x="15.5" y="15.5" width="149" height="149" rx="74.5" stroke="white"/>
+        <line x1="126.77" y1="57.4731" x2="57.4731" y2="126.77" stroke="white" className={classes['cross']}/>
+        <line x1="122.527" y1="126.77" x2="53.2304" y2="57.4731" stroke="white" className={classes['cross']}/>
+      </svg>
+    </SvgIcon>
   )
-}
+})
+
+WrongIcon.displayName = 'WrongIcon'

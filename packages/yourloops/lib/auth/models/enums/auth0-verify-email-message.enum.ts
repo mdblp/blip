@@ -25,39 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { useEffect, useState } from 'react'
-
-import { useTeam } from '../team'
-import PatientUtils from './patient.util'
-import PatientApi from './patient.api'
-import { useAuth } from '../auth'
-import metrics from '../metrics'
-import { type Patient } from './models/patient.model'
-import { type PatientContextResult } from './models/patient-context-result.model'
-
-export default function usePatientProviderCustomHook(): PatientContextResult {
-  const { refresh: refreshTeams } = useTeam()
-  const { user } = useAuth()
-
-  const [patient, setPatient] = useState<Patient>(null)
-  const [initialized, setInitialized] = useState<boolean>(false)
-
-  const leaveTeam = async (teamId: string): Promise<void> => {
-    await PatientApi.removePatient(teamId, patient.userid)
-    metrics.send('team_management', 'leave_team')
-    refreshTeams()
-  }
-
-  useEffect(() => {
-    if (!initialized && user) {
-      setPatient(PatientUtils.mapUserToPatient(user))
-      setInitialized(true)
-    }
-  }, [initialized, user])
-
-  return {
-    patient,
-    initialized,
-    leaveTeam
-  }
+export enum Auth0VerifyEmailMessage {
+  AccessExpired = 'Access expired.',
+  AccountAlreadyVerified = 'This account is already verified.',
+  EmailCouldNotBeVerified = 'Your email address could not be verified.',
+  UrlAlreadyUsed = 'This URL can be used only once',
+  UserAccountDoesNotExist = 'User account does not exist or verification code is invalid.'
 }

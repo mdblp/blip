@@ -37,28 +37,38 @@ import { useAuth } from '../auth'
 import { errorTextFromException } from '../utils'
 import { type PatientsContextResult } from './models/patients-context-result.model'
 import { type Patient } from './models/patient.model'
-import { useSelectedTeamContext } from '../selected-team/selected-team.provider'
 import { usePatientListContext } from '../providers/patient-list.provider'
 import { useAlert } from '../../components/utils/snackbar'
-import TeamUtils from '../team/team.util'
+import { useParams } from 'react-router-dom'
+import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
+import { PRIVATE_TEAM_ID } from '../team/team.util'
 
 export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const { cancel: cancelInvite } = useNotification()
   const { user } = useAuth()
   const { filters } = usePatientListContext()
-  const { selectedTeam } = useSelectedTeamContext()
+  const { teamId: teamIdFromParam } = useParams()
   const alert = useAlert()
-
-  const selectedTeamId = selectedTeam?.id
   const isUserHcp = user.isUserHcp()
+  const teamId = teamIdFromParam ?? localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
 
   const [patients, setPatients] = useState<Patient[]>([])
   const [initialized, setInitialized] = useState<boolean>(false)
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
   const teamIdForWhichPatientsAreFetched = useRef(null)
 
-  const fetchPatients = useCallback((teamId: string = selectedTeamId) => {
-    PatientUtils.computePatients(user, teamId)
+  const fetchPatientsMetrics = useCallback(async (allPatients: Patient[], selectedTeamId: string): Promise<void> => {
+    const metrics = await PatientUtils.fetchMetrics(allPatients, selectedTeamId, user.id)
+    if (!metrics) {
+      return
+    }
+
+    const updatedPatients = PatientUtils.getUpdatedPatientsWithMetrics(allPatients, metrics)
+    setPatients(updatedPatients)
+  }, [user.id])
+
+  const fetchPatients = useCallback((selectedTeamId: string) => {
+    PatientUtils.computePatients(user, selectedTeamId)
       .then((computedPatients: Patient[]) => {
         setPatients(computedPatients)
         return computedPatients
@@ -77,23 +87,12 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
           return
         }
 
-        await fetchPatientsMetrics(computedPatients, teamId)
+        await fetchPatientsMetrics(computedPatients, selectedTeamId)
       })
     // Need to rewrite the alert component, or it triggers infinite loop...
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, selectedTeam])
+  }, [alert, fetchPatientsMetrics, isUserHcp, user])
 
-  const fetchPatientsMetrics = async (allPatients: Patient[], teamId: string = selectedTeamId): Promise<void> => {
-    const metrics = await PatientUtils.fetchMetrics(allPatients, teamId, user.id)
-    if (!metrics) {
-      return
-    }
-
-    const updatedPatients = PatientUtils.getUpdatedPatientsWithMetrics(allPatients, metrics)
-    setPatients(updatedPatients)
-  }
-
-  const refresh = (teamId: string = selectedTeamId): void => {
+  const refresh = (): void => {
     setRefreshInProgress(true)
     fetchPatients(teamId)
   }
@@ -158,7 +157,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
 
   const updatePatientMonitoringAlertsParameters = async (patient: Patient): Promise<void> => {
     try {
-      await PatientApi.updatePatientAlerts(selectedTeam.id, patient.userid, patient.monitoringAlertsParameters)
+      await PatientApi.updatePatientAlerts(teamId, patient.userid, patient.monitoringAlertsParameters)
       refresh()
     } catch (error) {
       console.error(error)
@@ -166,24 +165,35 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
     }
   }
 
+  const deletePatientMonitoringAlertsParameters = async (patientId: string): Promise<void> => {
+    try {
+      await PatientApi.deletePatientAlerts(teamId, patientId)
+      refresh()
+    } catch (error) {
+      console.error(error)
+      throw Error(`Failed to delete monitoring alert parameters for patient with id ${patientId}`)
+    }
+  }
+
   const removePatient = async (patient: Patient): Promise<void> => {
     if (PatientUtils.isInvitationPending(patient)) {
       await cancelInvite(patient.invite.id, undefined, patient.profile.email)
     }
-    if (TeamUtils.isPrivate(selectedTeam)) {
+    if (teamId === PRIVATE_TEAM_ID) {
       await DirectShareApi.removeDirectShare(patient.userid, user.id)
     } else {
-      await PatientApi.removePatient(selectedTeamId, patient.userid)
+      await PatientApi.removePatient(teamId, patient.userid)
     }
     refresh()
   }
 
   useEffect(() => {
+    const selectedTeamId = teamId ?? localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
     if (user && teamIdForWhichPatientsAreFetched.current !== selectedTeamId) {
       teamIdForWhichPatientsAreFetched.current = selectedTeamId
-      fetchPatients()
+      fetchPatients(selectedTeamId)
     }
-  }, [fetchPatients, initialized, selectedTeamId, user])
+  }, [fetchPatients, initialized, teamId, user])
 
   return {
     patients: patientList,
@@ -196,6 +206,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
     searchPatients,
     invitePatient,
     markPatientMessagesAsRead,
+    deletePatientMonitoringAlertsParameters,
     updatePatientMonitoringAlertsParameters,
     removePatient,
     refresh

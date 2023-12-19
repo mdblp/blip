@@ -68,7 +68,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>{t('Setting')}</TableCell>
+              <TableCell>{t('Parameter')}</TableCell>
               <TableCell>{t('Value')}</TableCell>
               <TableCell align="right">{t('type-of-change')}</TableCell>
               <TableCell align="right">{t('date')}</TableCell>

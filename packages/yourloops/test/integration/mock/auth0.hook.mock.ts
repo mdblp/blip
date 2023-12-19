@@ -30,15 +30,25 @@ import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { AuthenticatedUserMetadata } from '../../../lib/auth/models/enums/authenticated-user-metadata.enum'
 
 export const loggedInUserId = 'loggedInUserId'
-export const userTimId = 'userTimId'
 export const loggedInUserEmail = 'yann.blanc@example.com'
 export const loggedInUserFirstName = 'Yann'
 export const loggedInUserLastName = 'Blanc'
+export const loggedInUserFullName = `${loggedInUserFirstName} ${loggedInUserLastName}`
+export const userTimId = 'userTimId'
 export const userTimEmail = 'tim.canu@example.com'
 export const userTimFirstName = 'Tim'
 export const userTimLastName = 'Canu'
 export const userTimFullName = `${userTimFirstName} ${userTimLastName}`
-export const loggedInUserFullName = `${loggedInUserFirstName} ${loggedInUserLastName}`
+export const userHugoId = 'userHugoId'
+export const userHugoEmail = 'hugo.rodrigues@example.com'
+export const userHugoFirstName = 'Hugo'
+export const userHugoLastName = 'Rodrigues'
+export const userHugoFullName = `${userHugoFirstName} ${userHugoLastName}`
+export const userYdrisId = 'userYdrisId'
+export const userYdrisEmail = 'ydris.rebibane@example.com'
+export const userYdrisFirstName = 'Ydris'
+export const userYdrisLastName = 'Rebibane'
+export const userYdrisFullName = `${userYdrisFirstName} ${userYdrisLastName}`
 export const getAccessTokenWithPopupMock = jest.fn()
 export const logoutMock = jest.fn()
 

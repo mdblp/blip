@@ -97,7 +97,7 @@ function TeamSettingsMenu(): JSX.Element {
   const [caregivers, setCaregivers] = React.useState<ShareUser[] | null>(null)
   const opened = !!anchorEl
 
-  const filteredTeams = teams.filter(team => !TeamUtils.isPrivate(team))
+  const filteredTeams = teams.filter(team => !TeamUtils.isPrivate(team.id))
   const [showJoinTeamDialog, setShowJoinTeamDialog] = React.useState(false)
 
   const openMenu = ({ currentTarget }: { currentTarget: HTMLElement }): void => {

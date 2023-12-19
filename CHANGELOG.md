@@ -5,15 +5,19 @@ It is based on Tidepool Blip 1.27.
 ## 3.0.6-beta - 2023-11-10
 ### Changed
 - YLP-2574 Create tool tips independently of the name of the columns
+- YLP-2704 Remove settings logic from viz
+- YLP-2726 Cleanup tideline/viz packages
+- YLP-2749 Use a branded Verify Email result page instead of the Auth0 one
 
 ### Engineering use
 - YLP-2476 Use tide-whisperer v2: route /all.
 - YLP-2696 Fix some Sonarcloud bugs and code smells
+- YLP-2697 App routing should reveal data dependencies
 - YLP-2704 Remove settings logic from viz
 - YLP-2709 Migration warm up tooltip
 - YLP-2726 Cleanup tideline/viz packages
 
-## 3.0.5-beta - 2023-07-12
+## 3.0.5 - 2023-11-02
 ### Added
 - YLP-2292 Display rescue carbs and manual bolus in the trends view for DBLG1 patient
 - YLP-2299 Display DBLG1 events in Daily view
@@ -25,6 +29,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2610 Direct link from Monitoring alerts card to "Target & alerts" view
 - YLP-2630 As a user, I would like to be notified with a banner when there are ongoing issues with yourloops
 - YLP-2633 Customisation of the monitoring alerts from "target & alerts" tab by HCP
+- YLP-2634 New behaviour of the care team setting button in the alerts customisation section
 - YLP-2652 Improve error message on app crash
 - YLP-2668 Remove icons of the tabs and widget titles
 - YLP-2670 Remove target & alerts view from "private practice"

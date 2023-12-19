@@ -28,7 +28,6 @@ class Change extends React.Component {
   static propTypes = {
     daysSince: PropTypes.number.isRequired,
     count: PropTypes.number,
-    type: PropTypes.string.isRequired,
     manufacturer: PropTypes.string.isRequired
   }
 
