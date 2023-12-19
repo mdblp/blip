@@ -475,8 +475,10 @@ export const checkPatientListHideShowColumns = async () => {
 }
 
 const checkPatientListMonitoringAlertsIcons = async (outOfRangeTooltipValue: string, hypoglycemiaTooltipValue: string): Promise<void> => {
-  const dataGridRows = await screen.findByTestId('current-patient-list-grid')
-  expect(dataGridRows).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages from the patient0%0%N/AFlag patient z-no-data@patient.frZ - No Data PatientJan 1, 1980No new messages from the patient0%0%N/A')
+  await waitFor(() => {
+    expect(screen.queryByTestId('current-patient-list-grid')).toHaveTextContent('PatientDate of birthMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frPatient1 GrobyJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frPatient2 RouisJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frPatient3 SrairiJan 1, 1980No new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPatientMmol PerottoJan 1, 1980No new messages from the patient0%0%N/AFlag patient z-no-data@patient.frZ - No Data PatientJan 1, 1980No new messages from the patient0%0%N/A')
+  })
+  const dataGridRows = screen.getByTestId('current-patient-list-grid')
   const monitoringAlertsColumnHeader = within(dataGridRows).getByText('Monitoring alerts')
   const tooltipText = 'Hover over the icons to learn more'
   expect(screen.queryByText(tooltipText)).not.toBeInTheDocument()
