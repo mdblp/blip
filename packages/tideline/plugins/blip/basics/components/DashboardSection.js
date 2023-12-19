@@ -27,7 +27,7 @@ class DashboardSection extends React.Component {
     chartWidth: PropTypes.number.isRequired,
     data: PropTypes.object.isRequired,
     days: PropTypes.array.isRequired,
-    name: PropTypes.string.isRequired,
+    name: PropTypes.string,
     section: PropTypes.object.isRequired,
     title: PropTypes.oneOfType([
       PropTypes.string,

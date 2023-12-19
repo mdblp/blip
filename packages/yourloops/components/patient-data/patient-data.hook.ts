@@ -31,7 +31,6 @@ import { type Patient } from '../../lib/patient/models/patient.model'
 import { type ChartPrefs } from '../dashboard-widgets/models/chart-prefs.model'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
-import { usePatientsContext } from '../../lib/patient/patients.provider'
 import type MedicalDataService from 'medical-domain'
 import { defaultBgClasses, type TimePrefs, TimeService, Unit } from 'medical-domain'
 import { type MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
@@ -39,7 +38,6 @@ import { type DateRange, isValidDateQueryParam, PatientDataUtils } from './patie
 import DataUtil from 'tidepool-viz/src/utils/data'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import PatientUtils from '../../lib/patient/patient.util'
 
 export interface usePatientDataResult {
   bgPrefs: BgPrefs
@@ -64,20 +62,21 @@ export interface usePatientDataResult {
   trendsDate: number
 }
 
+interface UsePatientDataProps {
+  patient: Patient
+}
+
 const DATE_QUERY_PARAM_KEY = 'date'
 const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
-export const usePatientData = (): usePatientDataResult => {
+export const usePatientData = ({ patient }: UsePatientDataProps): usePatientDataResult => {
   const navigate = useNavigate()
-  const { patientId, teamId } = useParams()
+  const { teamId } = useParams()
   const { user } = useAuth()
   const { pathname } = useLocation()
-  const { getPatientById } = usePatientsContext()
-  const isUserPatient = user.isUserPatient()
   const [searchParams, setSearchParams] = useSearchParams()
   const dailyChartRef = useRef(null)
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
-  const patient = isUserPatient ? PatientUtils.mapUserToPatient(user) : getPatientById(patientId)
   const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const bgClasses = defaultBgClasses[bgUnits]
   const bgPrefs: BgPrefs = {

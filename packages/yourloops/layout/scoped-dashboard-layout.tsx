@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,18 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
-import usePatientsProviderCustomHook from './patients.hook'
-import { type PatientsContextResult } from './models/patients-context-result.model'
+import React, { type FunctionComponent } from 'react'
+import { Outlet } from 'react-router-dom'
+import { PatientsProvider } from '../lib/patient/patients.provider'
+import { DashboardLayout } from './dashboard-layout'
+import { PatientListProvider } from '../lib/providers/patient-list.provider'
 
-const PatientsContext = createContext<PatientsContextResult>({} as PatientsContextResult)
-
-export const PatientsProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
-  const patientsProviderCustomHook = usePatientsProviderCustomHook()
-
-  return <PatientsContext.Provider value={patientsProviderCustomHook}>{children}</PatientsContext.Provider>
-}
-
-export function usePatientsContext(): PatientsContextResult {
-  return useContext(PatientsContext)
+export const ScopedDashboardLayout: FunctionComponent = () => {
+  return (
+    <DashboardLayout>
+      <PatientListProvider>
+        <PatientsProvider>
+          <Outlet />
+        </PatientsProvider>
+      </PatientListProvider>
+    </DashboardLayout>
+  )
 }

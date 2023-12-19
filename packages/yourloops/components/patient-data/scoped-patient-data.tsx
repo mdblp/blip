@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,18 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
-import usePatientsProviderCustomHook from './patients.hook'
-import { type PatientsContextResult } from './models/patients-context-result.model'
+import React, { type FunctionComponent } from 'react'
+import { useParams } from 'react-router-dom'
+import { usePatientsContext } from '../../lib/patient/patients.provider'
+import { PatientData } from './patient-data'
+import SpinningLoader from '../loaders/spinning-loader'
 
-const PatientsContext = createContext<PatientsContextResult>({} as PatientsContextResult)
+export const ScopedPatientData: FunctionComponent = () => {
+  const { patientId } = useParams()
+  const { getPatientById } = usePatientsContext()
+  const patient = getPatientById(patientId)
 
-export const PatientsProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
-  const patientsProviderCustomHook = usePatientsProviderCustomHook()
-
-  return <PatientsContext.Provider value={patientsProviderCustomHook}>{children}</PatientsContext.Provider>
-}
-
-export function usePatientsContext(): PatientsContextResult {
-  return useContext(PatientsContext)
+  return (
+    <>
+      {patient
+        ? <PatientData patient={patient}/>
+        : <SpinningLoader className="centered-spinning-loader" />
+      }
+    </>
+  )
 }

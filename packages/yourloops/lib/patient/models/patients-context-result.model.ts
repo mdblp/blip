@@ -32,7 +32,6 @@ export interface PatientsContextResult {
   patients: Patient[]
   pendingPatientsCount?: number
   allNonPendingPatientsForSelectedTeamCount?: number
-  initialized: boolean
   refreshInProgress: boolean
   getPatientByEmail: (email: string) => Patient
   getPatientById: (userId: string) => Patient
