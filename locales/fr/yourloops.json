@@ -461,6 +461,8 @@
   "send": "Envoyer",
   "sensor-usage": "Usage du capteur",
   "sensor-usage-tooltip": "**Usage du capteur :** % de temps durant lequel le capteur a enregistré des données.",
+  "sensor-warmup": "Sensor warmup",
+  "sensor-warmup-session-end": "Session end",
   "severe-hypoglycemia": "Hypoglycémie grave",
   "severe-hypoglycemia-below": "Hypoglycémie grave en dessous de :",
   "severe-hypoglycemia-threshold": "Seuil d'hypoglycémie sévère",
