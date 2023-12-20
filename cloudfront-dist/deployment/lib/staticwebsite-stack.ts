@@ -1,18 +1,19 @@
-import * as core from '@aws-cdk/core';
-import { Duration } from '@aws-cdk/core';
-import * as cloudfront from '@aws-cdk/aws-cloudfront';
-import { DnsValidatedCertificate } from '@aws-cdk/aws-certificatemanager';
-import * as iam from '@aws-cdk/aws-iam';
-import * as lambda from '@aws-cdk/aws-lambda';
-import * as rsc from '@aws-cdk/custom-resources';
-import * as s3 from '@aws-cdk/aws-s3';
-import * as s3deploy from '@aws-cdk/aws-s3-deployment';
-import * as route53 from '@aws-cdk/aws-route53';
+import * as core from 'aws-cdk-lib';
+import { Duration } from 'aws-cdk-lib';
+import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
+import * as acm from 'aws-cdk-lib/aws-certificatemanager';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as rsc from 'aws-cdk-lib/custom-resources';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
+import * as route53 from 'aws-cdk-lib/aws-route53';
+import { Construct } from 'constructs';
 import { WebStackProps } from './props/WebStackProps';
 import * as path from 'path';
 
 export class StaticWebSiteStack extends core.Stack {
-  constructor(scope: core.Construct, id: string, distDir: string, props?: WebStackProps, isUnderMaintenance=false) {
+  constructor(scope: Construct, id: string, distDir: string, props?: WebStackProps, isUnderMaintenance=false) {
     super(scope, id, props);
 
     // Create the bucket
@@ -56,12 +57,15 @@ export class StaticWebSiteStack extends core.Stack {
     });
 
     // Create the Certificate
-    const cert = new DnsValidatedCertificate(this, `${id}-certificate`, {
+    // Here this construct is deprecated in v2 however still possible to use it
+    // and we cannot migrate to the  new one due to this https://github.com/aws/aws-cdk/discussions/23931
+    const cert = new acm.DnsValidatedCertificate(this, `${id}-certificate`, {
       hostedZone: zone,
       domainName: `${props?.domainName}`,
       subjectAlternativeNames: [`${props?.altDomainName}`],
       region: 'us-east-1',
     });
+
 
     // Create the distribution
     const distribution = new cloudfront.CloudFrontWebDistribution(
