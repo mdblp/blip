@@ -13,7 +13,7 @@
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
@@ -27,9 +27,11 @@
 
 import DataAPI from '../../../lib/data/data.api'
 import moment, { type Moment } from 'moment-timezone'
-import { type PatientData } from '../../../lib/data/models/patient-datum.model'
 import { history } from '../data/data-api.data'
 import type { PatientDataRange } from '../../../lib/data/models/data-range.model'
+import { MedicalData, Smbg, Unit } from 'medical-domain'
+import Cbg from 'medical-domain/dist/src/domains/models/medical/datum/cbg.model'
+import Bg from 'medical-domain/dist/src/domains/models/medical/datum/bg.model'
 
 const WIZARD_BOLUS_UNDELIVERED_ID = 'carbBolusId'
 const WIZARD_BOLUS_UMM_ID = 'carbBolusId2'
@@ -66,6 +68,7 @@ export const ALARM_EVENT_KALEIDO_OCCLUSION_ID = 'alarmEventKaleidoOcclusionId'
 export const ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID = 'alarmEventSensorSessionExpiredId'
 export const ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID = 'alarmEventSuddenRiseInGlycemiaId'
 export const ALARM_EVENT_URGENT_LOW_SOON_ID = 'alarmEventUrgentLowSoonId'
+export const WARMUP_01_ID = 'warmup01Id'
 export const WIZARD_UNDELIVERED_INPUT_TIME = '2022-08-08T02:00:00Z'
 export const WIZARD_UMM_INPUT_TIME = '2022-08-08T18:34:00Z'
 export const WIZARD_POSITIVE_OVERRIDE_INPUT_TIME = '2022-08-08T22:45:00Z'
@@ -81,7 +84,252 @@ const yesterdayDateAsString = YESTERDAY_DATE.format('YYYY-MM-DD')
 
 export interface Data {
   dataRange: PatientDataRange
-  data: PatientData
+  data: MedicalData
+}
+
+const addMilliseconds = (time: string, milliseconds: number) => {
+  const mTime = moment.parseZone(time)
+  return moment.utc(mTime).add(milliseconds, 'milliseconds').toISOString()
+}
+
+const getWeekDay = (date) => {
+  const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', "saturday"]
+  return days[date.getDay()]
+}
+
+const convertBgMg2Mmol = (value: Bg) => {
+  const mmolVal = JSON.parse(JSON.stringify(value))
+  mmolVal.value = Math.round(10.0 * value.value / 18.01577) / 10
+  mmolVal.units = Unit.MmolPerLiter
+  return mmolVal
+}
+const convertCbgMg2Mmol = (mgValues: Cbg[]) => {
+  const mmolValues: Cbg[] = []
+  mgValues.forEach((mg) => {
+    const mMolVal = convertBgMg2Mmol(mg as Bg)
+    mMolVal.deviceName = mg.deviceName
+    mmolValues.push(mMolVal)
+  })
+  return mmolValues
+}
+
+const convertSmbgMg2Mmol = (mgValues: Smbg[]) => {
+  const mmolValues: Smbg[] = []
+  mgValues.forEach((mg: Smbg) => {
+    const mMolVal = convertBgMg2Mmol(mg as Bg)
+    mmolValues.push(mMolVal as Smbg)
+  })
+  return mmolValues
+}
+
+const cbgMockMgdL = (date, time, value) => {
+  const normalTime = new Date(`${date}T${time}.000Z`)
+  return {
+    epoch: normalTime.getTime(),
+    displayOffset: -120,
+    normalTime: `${date}T${time}.000Z`,
+    timezone: "Europe/Paris",
+    guessedTimezone: false,
+    id: `cbg_${time}`,
+    type: 'cbg',
+    source: 'Diabeloop',
+    units: 'mg/dL',
+    value: value,
+    localDate: date,
+    isoWeekday: getWeekDay(normalTime),
+    msPer24: 68700000,
+    deviceName: 'Unknown'
+  }
+}
+
+const bolusMock = (date, time) => {
+  const normalTime = new Date(`${date}T${time}.000Z`)
+  return {
+    epoch: normalTime.getTime(),
+    displayOffset: -120,
+    normalTime: `${date}T${time}.000Z`,
+    timezone: 'Europe/Paris',
+    guessedTimezone: false,
+    id: WIZARD_BOLUS_UNDELIVERED_ID,
+    type: 'bolus',
+    source: 'Diabeloop',
+    subType: 'normal',
+    normal: 2,
+    prescriptor: 'auto',
+    wizard: null
+  }
+}
+
+const wizardMock = (date, time, id, carbinput, umm) => {
+  const normalTime = new Date(`${date}T${time}.000Z`)
+  const wizard = {
+    epoch: normalTime.getTime(),
+    displayOffset: -120,
+    normalTime: `${date}T${time}.000Z`,
+    timezone: 'Europe/Paris',
+    guessedTimezone: false,
+    id: id,
+    type: 'wizard',
+    source: 'Diabeloop',
+    bolusId: WIZARD_BOLUS_UNDELIVERED_ID,
+    bolusIds: { WIZARD_BOLUS_UNDELIVERED_ID },
+    carbInput: carbinput,
+    units: 'mmol/L',
+    bolus: null
+  }
+  if (umm) {
+    wizard.inputMeal = {
+      source: 'umm'
+    }
+  }
+  return wizard
+
+}
+
+const PumpSettingsMock = (date, time) => {
+  const normalTime = new Date(`${date}T${time}.000Z`)
+  return {
+    epoch: normalTime.getTime(),
+    displayOffset: 0,
+    normalTime: `${date}T${time}.000Z`,
+    timezone: 'UTC',
+    guessedTimezone: false,
+    id: 'pump_2022-08-08_6',
+    type: 'pumpSettings',
+    source: 'Diabeloop',
+    basalSchedules: [],
+    payload: {
+      basalsecurityprofile: {},
+      cgm: {
+        apiVersion: 'v1',
+        endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00',
+        expirationDate: '2050-04-12T17:53:54+02:00',
+        manufacturer: 'Dexcom',
+        name: 'G6',
+        swVersionTransmitter: 'v1',
+        transmitterId: 'a1234'
+      },
+      device: {
+        deviceId: '1234',
+        imei: '1234567890',
+        manufacturer: 'Diabeloop',
+        name: 'DBLG1',
+        swVersion: 'beta'
+      },
+      pump: {
+        expirationDate: '2050-04-12T17:53:54+02:00',
+        manufacturer: 'VICENTRA',
+        name: 'Kaleido',
+        serialNumber: '123456',
+        swVersion: 'beta'
+      },
+      parameters: [
+        {
+          effectiveDate: '2020-01-17T08:00:00.000Z',
+          level: 1,
+          name: 'WEIGHT',
+          unit: 'kg',
+          value: 72
+        }
+      ],
+      history
+    }
+  }
+}
+
+const basalMock = (date, time, deliveryType, duration) => {
+  const startTime = new Date(`${date}T${time}.000Z`).getTime()
+  const normalEnd = addMilliseconds(`${date}T${time}.000Z`, duration)
+  const epochEnd = startTime + duration
+  return {
+    epoch: startTime,
+    displayOffset: -120,
+    normalTime: `${date}T${time}.000Z`,
+    timezone: 'Europe/Paris',
+    guessedTimezone: false,
+    id: `basal_${time}`,
+    type: 'basal',
+    source: 'Diabeloop',
+    subType: deliveryType,
+    deliveryType: deliveryType,
+    rate: 100,
+    duration: duration,
+    normalEnd: normalEnd,
+    epochEnd: epochEnd
+  }
+}
+const mealMock = (date, time) => {
+  const normalTime = new Date(`${date}T${time}.000Z`).getTime()
+  return {
+    epoch: normalTime,
+    displayOffset: -120,
+    normalTime: `${date}T${time}.000Z`,
+    timezone: 'Europe/Paris',
+    guessedTimezone: false,
+    id: 'food_19-35-00',
+    type: 'food',
+    source: 'Diabeloop',
+    meal: 'rescuecarbs',
+    nutrition: {
+      carbohydrate: {
+        net: 25,
+        units: 'grams'
+      }
+    }
+  }
+}
+
+const physActivityMock = (date, time, duration) => {
+  const startTime = new Date(`${date}T${time}.000Z`).getTime()
+  const normalEnd = addMilliseconds(`${date}T${time}.000Z`, duration * 1000)
+  const epochEnd = startTime + duration
+  return {
+    epoch: startTime,
+    displayOffset: -120,
+    normalTime: `${date}T${time}.000Z`,
+    timezone: 'Europe/Paris',
+    guessedTimezone: false,
+    id: PHYSICAL_ACTIVITY_ID,
+    type: 'physicalActivity',
+    source: 'Diabeloop',
+    duration: {
+      units: 'seconds',
+      value: duration
+    },
+    normalEnd: normalEnd,
+    epochEnd: epochEnd,
+    guid: 'pa_18',
+    reportedIntensity: 'medium',
+    inputTime: `${date}T${time}.000Z`
+  }
+}
+
+const deviceEventMock = (date, time) => {
+  const startTime = new Date(`${date}T${time}.000Z`).getTime()
+  return {
+    epoch: startTime,
+    displayOffset: 0,
+    normalTime: `${date}T${time}.000Z`,
+    timezone: 'UTC',
+    guessedTimezone: false,
+    id: PARAMETER_ID,
+    type: 'deviceEvent',
+    source: 'Diabeloop',
+    subType: 'deviceParameter',
+    params: [
+      {
+        id: PARAMETER_ID,
+        epoch: 1697961600000,
+        timezone: 'UTC',
+        name: 'MEAL_RATIO_LUNCH_FACTOR',
+        level: 1,
+        units: '%',
+        value: 100,
+        previousValue: 110,
+        lastUpdateDate: '2022-08-08T08:00:00Z'
+      }
+    ]
+  }
 }
 
 export const generateCompleteDashboardFromDate = (date: string): Data => {
@@ -92,30 +340,66 @@ export const generateCompleteDashboardFromDate = (date: string): Data => {
   const reservoirChangeDate = new Date(date)
   reservoirChangeDate.setDate(reservoirChangeDate.getDate() + 1)
   const reservoirChangeDateAsString = reservoirChangeDate.toISOString().split('T')[0]
-  const data = []
+  const data = {
+    alarmEvents: [],
+    basal: [],
+    bolus: [],
+    cbg: [],
+    confidentialModes: [],
+    deviceParametersChanges: [],
+    messages: [],
+    meals: [],
+    physicalActivities: [],
+    pumpSettings: [],
+    reservoirChanges: [],
+    smbg: [],
+    warmUps: [],
+    wizards: [],
+    zenModes: [],
+    timezoneChanges: []
+  }
+  // Insert data for each days
   // eslint-disable-next-line no-unmodified-loop-condition
   while (startDate <= endDate) {
     const date = startDate.toISOString().split('T')[0]
-    data.push(
-      { time: `${date}T17:05:00Z`, type: 'cbg', id: 'cbg_17:05:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 15, uploadId: 'osef', _userId: 'osef' },
-      { time: `${date}T17:10:00Z`, type: 'cbg', id: 'cbg_17:10:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 55, uploadId: 'osef', _userId: 'osef' },
-      { time: `${date}T17:35:00Z`, type: 'cbg', id: 'cbg_17:35:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 100, uploadId: 'osef', _userId: 'osef' },
-      { time: `${date}T17:40:00Z`, type: 'cbg', id: 'cbg_17:40:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 188, uploadId: 'osef', _userId: 'osef' },
-      { time: `${date}T18:05:00Z`, type: 'cbg', id: 'cbg_18:05:00', timezone: 'Europe/Paris', units: 'mg/dL', value: 260, uploadId: 'osef', _userId: 'osef' },
-      { time: `${date}T18:25:00Z`, type: 'bolus', id: WIZARD_BOLUS_UNDELIVERED_ID, timezone: 'Europe/Paris', prescriptor: 'auto', normal: 2, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
-      { time: `${date}T18:35:00Z`, type: 'wizard', id: WIZARD_UNDELIVERED_ID, timezone: 'Europe/Paris', units: 'mmol/L', carbInput: 30, bolus: WIZARD_BOLUS_UNDELIVERED_ID, uploadId: 'osef', _userId: 'osef' },
-      { time: `${date}T19:25:00Z`, type: 'wizard', id: WIZARD_UMM_ID, timezone: 'Europe/Paris', units: 'mmol/L', carbInput: 20, inputMeal: { source: 'umm' }, bolus: WIZARD_BOLUS_UNDELIVERED_ID, uploadId: 'osef', _userId: 'osef' },
-      { time: `${date}T16:35:00Z`, type: 'pumpSettings', id: 'pump_2022-08-08_6', timezone: 'UTC', uploadId: 'osef', payload: { basalsecurityprofile: null, cgm: { apiVersion: 'v1', endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00', expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Dexcom', name: 'G6', swVersionTransmitter: 'v1', transmitterId: 'a1234' }, device: { deviceId: '1234', imei: '1234567890', manufacturer: 'Diabeloop', name: 'DBLG1', swVersion: 'beta' }, history, parameters: [{ name: 'WEIGHT', value: '72', unit: 'kg', level: 1, effectiveDate: '2020-01-17T08:00:00Z' }], pump: { expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Vicentra', name: 'Kaleido', serialNumber: '123456', swVersion: 'beta' } }, _userId: 'osef' },
-      { time: `${date}T16:30:00Z`, type: 'basal', deliveryType: 'scheduled', duration: 7200, id: 'basal_166cc04053fac_2022-12-13_0', rate: 100, timezone: 'Europe/Paris' },
-      { time: `${date}T19:35:00Z`, type: 'basal', deliveryType: 'automated', duration: 72000, id: 'basal_166cc04053fac_2022-12-13_1', rate: 100, timezone: 'Europe/Paris' },
-      { time: `${date}T19:35:00Z`, type: 'food', id: 'food_19-35-00', meal: 'rescuecarbs', nutrition: { carbohydrate: { net: 25, units: 'grams' } }, timezone: 'Europe/Paris', uploadId: 'osef' },
-      { time: `${date}T13:00:00Z`, type: 'physicalActivity', id: PHYSICAL_ACTIVITY_ID, timezone: 'Europe/Paris', duration: { units: 'seconds', value: 1800 }, guid: 'pa_18', reportedIntensity: 'medium', uploadId: 'osef', _userId: 'osef' },
-      { time: `${date}T08:00:00Z`, type: 'deviceEvent', id: PARAMETER_ID, lastUpdateDate: '2022-08-08T08:00:00Z', level: '1', name: 'MEAL_RATIO_LUNCH_FACTOR', previousValue: '110', subType: 'deviceParameter', timezone: 'UTC', units: '%', uploadId: 'osef', value: '100', _userId: 'osef' }
+    data.cbg.push(
+      cbgMockMgdL(date, '17:05:00', 15),
+      cbgMockMgdL(date, '17:10:00', 55),
+      cbgMockMgdL(date, '17:35:00', 100),
+      cbgMockMgdL(date, '17:40:00', 188),
+      cbgMockMgdL(date, '18:05:00', 260)
     )
+    data.bolus.push(bolusMock(date, '18:25:00'))
+    data.basal.push(
+      basalMock(date, '16:30:00', 'scheduled', 7200),
+      basalMock(date, '19:35:00', 'automated', 72000)
+    )
+    data.meals.push(mealMock(date, '19:35:00'))
+    data.pumpSettings.push(PumpSettingsMock(date, '16:35:00'))
+    data.wizards.push(
+      wizardMock(date, '18:35:00', WIZARD_UNDELIVERED_ID, 30, false),
+      wizardMock(date, '19:25:00', WIZARD_UMM_ID, 20, true)
+    )
+    data.physicalActivities.push(physActivityMock(date, '13:00:00', 1800))
+    data.deviceParametersChanges.push(deviceEventMock(date, '08:00:00'))
     startDate.setDate(startDate.getDate() + 1)
   }
-  data.push(
-    { time: `${reservoirChangeDateAsString}T17:00:00Z`, type: 'deviceEvent', id: RESERVOIR_CHANGE_ID, subType: 'reservoirChange', timezone: 'Europe/Paris', uploadId: 'osef', _userId: 'osef' }
+  // And finaly add one reservoir change event
+  data.reservoirChanges.push(
+    {
+      epoch: new Date(`${reservoirChangeDateAsString}T17:00:00Z`).getTime(),
+      displayOffset: -120,
+      normalTime: `${reservoirChangeDateAsString}T17:00:00Z`,
+      timezone: 'Europe/Paris',
+      guessedTimezone: false,
+      id: RESERVOIR_CHANGE_ID,
+      type: 'deviceEvent',
+      source: 'Diabeloop',
+      subType: 'reservoirChange',
+      pump: {
+        manufacturer: 'DEFAULT'
+      }
+    }
   )
   return {
     dataRange: [`${date}T00:00:00Z`, `${moment().format('YYYY-MM-DD')}T00:00:00Z`],
@@ -127,237 +411,2623 @@ export const completeDashboardData = generateCompleteDashboardFromDate(yesterday
 export const twoWeeksOldDashboardData = generateCompleteDashboardFromDate(twoWeeksAgoDateAsString)
 export const sixteenDaysOldDashboardData = generateCompleteDashboardFromDate(sixteenDaysAgoDateAsString)
 
-export const completeDailyViewData: Data = {
-  dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],
-  data: [
-    { time: '2022-08-08T15:15:00Z', type: 'smbg', id: SMBG_ID, timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T15:30:00Z', type: 'cbg', id: CBG_ID, timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T15:35:00Z', type: 'cbg', id: 'cbg_2022-08-08T15:35:00', timezone: 'Europe/Paris', units: 'mmol/L', value: 14.7, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T15:40:00Z', type: 'cbg', id: 'cbg_2022-08-08T15:40:00', timezone: 'Europe/Paris', units: 'mmol/L', value: 14.7, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:00:00Z', type: 'cbg', id: 'cbg_2022-08-08T16:00:00', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:05:00Z', type: 'cbg', id: 'cbg_2022-08-08T16:05:00', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:10:00Z', type: 'cbg', id: 'cbg_2022-08-08T16:10:00', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:20:00Z', type: 'cbg', id: 'cbg_2022-08-08T16:20:00', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:25:00Z', type: 'cbg', id: 'cbg_2022-08-08T16:25:00', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:30:00Z', type: 'cbg', id: 'cbg_2022-08-08T16:30:00', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:35:00Z', type: 'cbg', id: 'cbg_2022-08-08T16:35:00', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:45:00Z', type: 'cbg', id: 'cbg_2022-08-08T16:45:00', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:50:00Z', type: 'cbg', id: 'cbg_2022-08-08T16:50:00', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:55:00Z', type: 'cbg', id: 'cbg_2022-08-08T16:55:00', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T17:00:00Z', type: 'cbg', id: 'cbg_2022-08-08T17:00:00', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T17:05:00Z', type: 'cbg', id: 'cbg_2022-08-08T17:05:00', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T18:25:00Z', type: 'bolus', id: WIZARD_BOLUS_UNDELIVERED_ID, timezone: 'Europe/Paris', prescriptor: 'auto', normal: 22.3, expectedNormal: 25, insulinOnBoard: 3.1843607, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T18:25:00Z', type: 'wizard', id: WIZARD_UNDELIVERED_ID, timezone: 'Europe/Paris', units: 'mmol/L', carbInput: 45, bolus: WIZARD_BOLUS_UNDELIVERED_ID, uploadId: 'osef', _userId: 'osef', inputMeal: { fat: 'yes' }, inputTime: WIZARD_UNDELIVERED_INPUT_TIME, recommended: { carb: 0, correction: 0, net: 25 } },
-    { time: '2022-08-08T18:35:00Z', type: 'bolus', id: WIZARD_BOLUS_UMM_ID, timezone: 'Europe/Paris', prescriptor: 'auto', normal: 1.3, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T18:35:00Z', type: 'wizard', id: WIZARD_UMM_ID, timezone: 'Europe/Paris', units: 'mmol/L', carbInput: 50, bolus: WIZARD_BOLUS_UMM_ID, uploadId: 'osef', _userId: 'osef', inputMeal: { source: 'umm' }, inputTime: WIZARD_UMM_INPUT_TIME },
-    { time: '2022-08-08T18:45:00Z', type: 'bolus', id: WIZARD_BOLUS_POSITIVE_OVERRIDE_ID, timezone: 'Europe/Paris', prescriptor: 'hybrid', normal: 19.35, expectedNormal: 19.35, insulinOnBoard: 3.1218212, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T18:45:00Z', type: 'wizard', id: WIZARD_POSITIVE_OVERRIDE_ID, timezone: 'Europe/Paris', units: 'mmol/L', carbInput: 100, bolus: WIZARD_BOLUS_POSITIVE_OVERRIDE_ID, uploadId: 'osef', _userId: 'osef', inputTime: WIZARD_POSITIVE_OVERRIDE_INPUT_TIME, recommended: { carb: 0, correction: 0, net: 14.35 } },
-    { time: '2022-08-08T18:55:00Z', type: 'bolus', id: WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID, timezone: 'Europe/Paris', prescriptor: 'hybrid', normal: 9.05, expectedNormal: 9.05, insulinOnBoard: 3.0588088, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T18:55:00Z', type: 'wizard', id: WIZARD_NEGATIVE_OVERRIDE_ID, timezone: 'Europe/Paris', units: 'mmol/L', carbInput: 100, bolus: WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID, uploadId: 'osef', _userId: 'osef', inputTime: WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME, recommended: { carb: 0, correction: 0, net: 10.05 } },
-    { time: '2022-08-08T16:30:00Z', type: 'basal', id: 'basal_2022-08-08_5', timezone: 'Europe/Paris', deliveryType: 'automated', duration: 1000, internalId: '3deeb71f-9b5b-496e-b0af-ef9512c2787f', rate: 0.8, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:35:00Z', type: 'pumpSettings', id: 'pump_2022-08-08_6', timezone: 'UTC', uploadId: 'osef', payload: { basalsecurityprofile: null, cgm: { apiVersion: 'v1', endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00', expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Dexcom', name: 'G6', swVersionTransmitter: 'v1', transmitterId: 'a1234' }, device: { deviceId: '1234', imei: '1234567890', manufacturer: 'Diabeloop', name: 'DBLG1', swVersion: 'beta' }, history, parameters: [{ name: 'WEIGHT', value: '72', unit: 'kg', level: 1, effectiveDate: '2020-01-17T08:00:00Z' }], pump: { expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Vicentra', name: 'Kaleido', serialNumber: '123456', swVersion: 'beta' } }, _userId: 'osef' },
-    { time: '2022-08-08T02:00:00Z', type: 'deviceEvent', id: 'deviceEvent_2022-08-08_8', timezone: 'Europe/Paris', duration: { units: 'hours', value: 2 }, guid: 'confidential_0', inputTime: '2022-08-08T02:00:00Z', subType: 'confidential', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T12:00:00Z', type: 'food', id: CARB_ID, timezone: 'Europe/Paris', meal: 'rescuecarbs', nutrition: { carbohydrate: { net: 15, units: 'grams' } }, prescribedNutrition: { carbohydrate: { net: 16, units: 'grams' } }, prescriptor: 'hybrid', uploadId: 'osef', _userId: 'osef' },
-    { time: PHYSICAL_ACTIVITY_TIME, type: 'physicalActivity', id: PHYSICAL_ACTIVITY_ID, timezone: 'Europe/Paris', duration: { units: 'seconds', value: 1800 }, guid: 'pa_18', reportedIntensity: 'medium', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T17:00:00Z', type: 'deviceEvent', id: RESERVOIR_CHANGE_ID, subType: 'reservoirChange', timezone: 'Europe/Paris', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T08:00:00Z', type: 'deviceEvent', id: PARAMETER_ID, lastUpdateDate: '2022-08-08T08:00:00Z', level: '1', name: 'MEAL_RATIO_LUNCH_FACTOR', previousValue: '110', subType: 'deviceParameter', timezone: 'UTC', units: '%', uploadId: 'osef', value: '100', _userId: 'osef' },
-    { time: '2022-08-08T09:00:00Z', type: 'deviceEvent', id: 'alarm-01', guid: ALARM_EVENT_HYPERGLYCEMIA_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '10113', alarmLabel: 'NA', alarmLevel: 'alert', alarmType: 'handset', eventId: 'Alarm7001', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T09:05:00Z', type: 'deviceEvent', id: 'alarm-011', guid: ALARM_EVENT_HYPERGLYCEMIA_OTHER_OCCURRENCE_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '10113', alarmLabel: 'NA', alarmLevel: 'alert', alarmType: 'handset', eventId: 'Alarm7001', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T09:05:00Z', type: 'deviceEvent', id: 'alarm-02', guid: ALARM_EVENT_HYPOGLYCEMIA_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '12000', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7002', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T09:10:00Z', type: 'deviceEvent', id: 'alarm-03', guid: ALARM_EVENT_INSIGHT_EMPTY_INSULIN_CARTRIDGE_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '71002', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7003', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T09:15:00Z', type: 'deviceEvent', id: 'alarm-04', guid: ALARM_EVENT_INSIGHT_EMPTY_PUMP_BATTERY_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '71001', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7004', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T09:20:00Z', type: 'deviceEvent', id: 'alarm-05', guid: ALARM_EVENT_INSIGHT_HYPOGLYCEMIA_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '10117', alarmLabel: 'NA', alarmLevel: 'alert', alarmType: 'handset', eventId: 'Alarm7005', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T09:25:00Z', type: 'deviceEvent', id: 'alarm-06', guid: ALARM_EVENT_INSIGHT_INCOMPATIBLE_ACTIONS_ON_PUMP_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '71003', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7006', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T09:30:00Z', type: 'deviceEvent', id: 'alarm-07', guid: ALARM_EVENT_INSIGHT_INSULIN_CARTRIDGE_EXPIRED_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '71020', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7007', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T09:35:00Z', type: 'deviceEvent', id: 'alarm-08', guid: ALARM_EVENT_INSIGHT_OCCLUSION_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '71004', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7008', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T09:40:00Z', type: 'deviceEvent', id: 'alarm-09', guid: ALARM_EVENT_KALEIDO_EMPTY_INSULIN_CARTRIDGE_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '41002', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7009', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T09:45:00Z', type: 'deviceEvent', id: 'alarm-10', guid: ALARM_EVENT_KALEIDO_EMPTY_PUMP_BATTERY_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '41001', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7010', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T09:50:00Z', type: 'deviceEvent', id: 'alarm-11', guid: ALARM_EVENT_KALEIDO_INSULIN_CARTRIDGE_EXPIRED_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '41003', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7011', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T09:55:00Z', type: 'deviceEvent', id: 'alarm-12', guid: ALARM_EVENT_KALEIDO_OCCLUSION_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '41004', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7012', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T10:00:00Z', type: 'deviceEvent', id: 'alarm-13', guid: ALARM_EVENT_LONG_HYPERGLYCEMIA_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '15000', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7013', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T10:05:00Z', type: 'deviceEvent', id: 'alarm-14', guid: ALARM_EVENT_LONG_HYPOGLYCEMIA_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '24000', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7014', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T10:10:00Z', type: 'deviceEvent', id: 'alarm-15', guid: ALARM_EVENT_NO_READINGS_HYPOGLYCEMIA_RISK_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '20100', alarmLabel: 'NA', alarmLevel: 'alert', alarmType: 'handset', eventId: 'Alarm7015', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T10:15:00Z', type: 'deviceEvent', id: 'alarm-16', guid: ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '11000', alarmLabel: 'NA', alarmLevel: 'alarm', alarmType: 'handset', eventId: 'Alarm7016', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T10:20:00Z', type: 'deviceEvent', id: 'alarm-17', guid: ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '20102', alarmLabel: 'NA', alarmLevel: 'alert', alarmType: 'handset', eventId: 'Alarm7017', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T10:25:00Z', type: 'deviceEvent', id: 'alarm-18', guid: ALARM_EVENT_URGENT_LOW_SOON_ID, subType: 'alarm', ackStatus: 'acknowledged', alarmCode: '10112', alarmLabel: 'NA', alarmLevel: 'alert', alarmType: 'handset', eventId: 'Alarm7018', timezone: 'Europe/Paris', updateTime: '2023-07-14T17:48:18.602Z', uploadId: 'osef', _userId: 'osef' }
-  ]
-}
-export const dataSetsWithZeroValues: Data = {
-  dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],
-  data: [
-    { time: '2022-08-08T15:30:00Z', type: 'cbg', id: CBG_ID, timezone: 'Europe/Paris', units: 'mmol/L', value: 0, uploadId: 'osef', _userId: 'osef' },
-    { time: PHYSICAL_ACTIVITY_TIME, type: 'physicalActivity', id: PHYSICAL_ACTIVITY_ID, timezone: 'Europe/Paris', duration: { units: 'seconds', value: 0 }, guid: 'pa_18', reportedIntensity: 'medium', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T17:00:00Z', type: 'deviceEvent', id: RESERVOIR_CHANGE_ID, subType: 'reservoirChange', timezone: 'Europe/Paris', uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T08:00:00Z', type: 'deviceEvent', id: PARAMETER_ID, lastUpdateDate: '2022-08-08T08:00:00Z', level: '1', name: 'MEAL_RATIO_LUNCH_FACTOR', previousValue: '110', subType: 'deviceParameter', timezone: 'UTC', units: '%', uploadId: 'osef', value: '100', _userId: 'osef' },
-    { time: '2022-08-08T16:35:00Z', type: 'pumpSettings', id: 'pump_2022-08-08_6', timezone: 'UTC', uploadId: 'osef', payload: { basalsecurityprofile: null, cgm: { apiVersion: 'v1', endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00', expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Dexcom', name: 'G6', swVersionTransmitter: 'v1', transmitterId: 'a1234' }, device: { deviceId: '1234', imei: '1234567890', manufacturer: 'Diabeloop', name: 'DBLG1', swVersion: 'beta' }, history: [], parameters: [{ level: 1, effectiveDate: '2020-01-17T08:00:00Z' }], pump: { expirationDate: '2050-04-12T17:53:54+02:00', manufacturer: 'Vicentra', name: 'Kaleido', serialNumber: '123456', swVersion: 'beta' } }, _userId: 'osef' },
-  ]
-}
-
-export const smbgData: Data = {
-  dataRange: ['2022-08-08T11:30:00Z', '2022-08-08T18:30:00Z'],
-  data: [
-    { time: '2022-08-08T15:15:00Z', type: 'smbg', id: 'smb_2022-08-08_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T15:20:00Z', type: 'smbg', id: 'smb_2022-08-08_1', timezone: 'Europe/Paris', units: 'mmol/L', value: 14.7, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T15:25:00Z', type: 'smbg', id: 'smb_2022-08-08_2', timezone: 'Europe/Paris', units: 'mmol/L', value: 14.7, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T15:30:00Z', type: 'smbg', id: 'smb_2022-08-08_3', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T15:35:00Z', type: 'smbg', id: 'smb_2022-08-08_4', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T15:40:00Z', type: 'smbg', id: 'smb_2022-08-08_5', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T15:45:00Z', type: 'smbg', id: 'smb_2022-08-08_6', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T15:50:00Z', type: 'smbg', id: 'smb_2022-08-08_7', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T15:55:00Z', type: 'smbg', id: 'smb_2022-08-08_8', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:00:00Z', type: 'smbg', id: 'smb_2022-08-08_9', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:05:00Z', type: 'smbg', id: 'smb_2022-08-08_10', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:10:00Z', type: 'smbg', id: 'smb_2022-08-08_11', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:15:00Z', type: 'smbg', id: 'smb_2022-08-08_12', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:20:00Z', type: 'smbg', id: 'smb_2022-08-08_13', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2022-08-08T16:25:00Z', type: 'smbg', id: 'smb_2022-08-08_14', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' }
-  ]
-}
-
-export const minimalTrendViewData: Data = {
-  dataRange: ['2020-01-01T00:00:00Z', '2020-01-20T00:00:00Z'],
-  data: [
-    { time: '2020-01-20T10:00:00Z', type: 'cbg', id: '2020-01-20_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.1, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 9.1, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_1', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.9, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-19T10:00:00Z', type: 'cbg', id: '2020-01-19_2', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.9, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-18T10:00:00Z', type: 'cbg', id: '2020-01-18_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 9.8, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-19T10:00:00Z', type: 'wizard', id: WIZARD_UNDELIVERED_ID, timezone: 'Europe/Paris', units: 'mmol/L', carbInput: 385, bolus: WIZARD_BOLUS_UNDELIVERED_ID, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-18T10:00:00Z', type: 'wizard', id: WIZARD_UMM_ID, timezone: 'Europe/Paris', units: 'mmol/L',inputMeal: { source: 'umm' }, carbInput: 285, bolus: WIZARD_BOLUS_UNDELIVERED_ID, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-19T10:00:00Z', type: 'food', id: 'food_19-35-00', meal: 'rescuecarbs', nutrition: { carbohydrate: { net: 385, units: 'grams' } }, timezone: 'Europe/Paris', _userId: 'osef', uploadId: 'osef' },
-    { time: '2020-01-08T16:30:00Z', type: 'basal', id: 'basal_2020_01_08_1', timezone: 'Europe/Paris', deliveryType: 'automated', duration: 400000000, internalId: '3deeb71f-9b5b-496e-b0af-ef9512c2787f', rate: 0.8, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-08T17:30:00Z', type: 'basal', id: 'basal_2020-01-08_2', timezone: 'Europe/Paris', deliveryType: 'scheduled', duration: 500000000, internalId: '3deeb71f-9b5b-496e-b0af-ef9512c2787f', rate: 0.8, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-18T02:25:00Z', type: 'bolus', id: WIZARD_BOLUS_UNDELIVERED_ID, timezone: 'Europe/Paris', prescriptor: 'manual', normal: 22.3, expectedNormal: 25, insulinOnBoard: 3.1843607, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-17T02:35:00Z', type: 'bolus', id: WIZARD_BOLUS_UMM_ID, timezone: 'Europe/Paris', prescriptor: 'manual', normal: 1.3, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-18T02:50:00Z', type: 'bolus', id: WIZARD_BOLUS_UMM_ID, timezone: 'Europe/Paris', prescriptor: 'manual', normal: 1.3, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-17T02:50:00Z', type: 'bolus', id: WIZARD_BOLUS_UMM_ID, timezone: 'Europe/Paris', prescriptor: 'manual', normal: 1.3, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-18T01:20:00Z', type: 'bolus', id: WIZARD_BOLUS_UMM_ID, timezone: 'Europe/Paris', prescriptor: 'manual', normal: 1.3, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-19T01:20:00Z', type: 'bolus', id: WIZARD_BOLUS_UMM_ID, timezone: 'Europe/Paris', prescriptor: 'manual', normal: 1.3, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-19T15:55:00Z', type: 'bolus', id: WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID, timezone: 'Europe/Paris', prescriptor: 'manual', normal: 9.05, expectedNormal: 9.05, insulinOnBoard: 3.0588088, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-20T15:45:00Z', type: 'bolus', id: WIZARD_BOLUS_POSITIVE_OVERRIDE_ID, timezone: 'Europe/Paris', prescriptor: 'manual', normal: 19.35, expectedNormal: 19.35, insulinOnBoard: 3.1218212, subType: 'normal', uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-19T10:00:00Z', type: 'food', id: 'food_19-35-00', meal: 'rescuecarbs', nutrition: { carbohydrate: { net: 385, units: 'grams' } }, timezone: 'Europe/Paris', _userId: 'osef', uploadId: 'osef' },
-    { time: '2020-01-20T09:00:00Z', type: 'food', id: 'food_19-35-00', meal: 'rescuecarbs', nutrition: { carbohydrate: { net: 128, units: 'grams' } }, timezone: 'Europe/Paris', _userId: 'osef', uploadId: 'osef' },
-    { time: '2020-01-19T19:00:00Z', type: 'food', id: 'food_19-35-00', meal: 'rescuecarbs', nutrition: { carbohydrate: { net: 150, units: 'grams' } }, timezone: 'Europe/Paris', _userId: 'osef', uploadId: 'osef' },
-    { time: '2020-01-20T22:30:00Z', type: 'food', id: 'food_19-35-00', meal: 'rescuecarbs', nutrition: { carbohydrate: { net: 450, units: 'grams' } }, timezone: 'Europe/Paris', _userId: 'osef', uploadId: 'osef' },
-  ]
-}
-
-export const timeInRangeStatsTrendViewData: Data = {
-  dataRange: ['2020-01-19T00:00:00Z', '2020-01-20T00:00:00Z'],
-  data: [
-    { time: '2020-01-20T10:00:00Z', type: 'cbg', id: '2020-01-20_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-20T11:00:00Z', type: 'cbg', id: '2020-01-20_1', timezone: 'Europe/Paris', units: 'mmol/L', value: 14.7, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-20T11:05:00Z', type: 'cbg', id: '2020-01-20_3', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-20T11:10:00Z', type: 'cbg', id: '2020-01-20_4', timezone: 'Europe/Paris', units: 'mmol/L', value: 6.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-20T11:15:00Z', type: 'cbg', id: '2020-01-20_5', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-20T11:20:00Z', type: 'cbg', id: '2020-01-20_6', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-20T11:25:00Z', type: 'cbg', id: '2020-01-20_7', timezone: 'Europe/Paris', units: 'mmol/L', value: 3.4, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-20T11:30:00Z', type: 'cbg', id: '2020-01-20_8', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-20T11:35:00Z', type: 'cbg', id: '2020-01-20_9', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-20T11:40:00Z', type: 'cbg', id: '2020-01-20_10', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-20T11:45:00Z', type: 'cbg', id: '2020-01-20_11', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-20T11:50:00Z', type: 'cbg', id: '2020-01-20_12', timezone: 'Europe/Paris', units: 'mmol/L', value: 2.2, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-20T11:55:00Z', type: 'cbg', id: '2020-01-20_13', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-20T12:00:00Z', type: 'cbg', id: '2020-01-20_14', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-20T12:05:00Z', type: 'cbg', id: '2020-01-20_15', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-20T12:10:00Z', type: 'cbg', id: '2020-01-20_16', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' }
-  ]
-}
-
-export const twoWeeksOfCbg: Data = {
-  dataRange: ['2020-01-01T00:00:00Z', '2020-01-15T23:00:00Z'],
-  data: [
-    { time: '2020-01-01T10:00:00Z', type: 'cbg', id: '2020-01-01_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-02T10:00:00Z', type: 'cbg', id: '2020-01-02_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-03T10:00:00Z', type: 'cbg', id: '2020-01-03_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-04T10:00:00Z', type: 'cbg', id: '2020-01-04_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-05T10:00:00Z', type: 'cbg', id: '2020-01-05_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-06T10:00:00Z', type: 'cbg', id: '2020-01-06_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-07T10:00:00Z', type: 'cbg', id: '2020-01-07_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-08T10:00:00Z', type: 'cbg', id: '2020-01-08_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-09T10:00:00Z', type: 'cbg', id: '2020-01-09_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-10T10:00:00Z', type: 'cbg', id: '2020-01-10_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-11T10:00:00Z', type: 'cbg', id: '2020-01-11_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-12T10:00:00Z', type: 'cbg', id: '2020-01-12_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-13T10:00:00Z', type: 'cbg', id: '2020-01-13_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-14T10:00:00Z', type: 'cbg', id: '2020-01-14_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' },
-    { time: '2020-01-15T10:00:00Z', type: 'cbg', id: '2020-01-15_0', timezone: 'Europe/Paris', units: 'mmol/L', value: 10.5, uploadId: 'osef', _userId: 'osef' }
-  ]
-}
-
 export const pumpSettingsData: Data = {
-  dataRange: ['2022-08-08T16:35:00Z', '2022-08-08T16:40:00Z'],
-  data: [
-    {
-      time: '2020-01-01T10:00:00Z',
-      type: 'pumpSettings',
-      id: 'pump_settings',
-      timezone: 'UTC',
-      uploadId: 'osef',
-      payload: {
-        basalsecurityprofile: null,
-        cgm: {
-          apiVersion: 'v1',
-          endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00',
-          expirationDate: '2050-04-12T17:53:54+02:00',
-          manufacturer: 'Dexcom',
-          name: 'G6',
-          swVersionTransmitter: 'v1',
-          transmitterId: 'a1234'
-        },
-        device: {
-          deviceId: '1234',
-          imei: '1234567890',
-          manufacturer: 'Diabeloop',
-          name: 'DBLG1',
-          swVersion: '1.0.5.25'
-        },
-        history,
-        parameters: [
-          { name: 'WEIGHT', value: '72', unit: 'kg', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'MEDIUM_MEAL_BREAKFAST', value: '36', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'MEDIUM_MEAL_DINNER', value: '96', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'PATIENT_GLYCEMIA_TARGET', value: '110', unit: 'mg/dL', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA', value: '100', unit: '%', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'PATIENT_GLY_HYPER_LIMIT', value: '180', unit: 'mg/dL', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'MEDIUM_MEAL_LUNCH', value: '96', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'PATIENT_GLY_HYPO_LIMIT', value: '75', unit: 'mg/dL', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'BOLUS_AGGRESSIVENESS_FACTOR', value: '100', unit: '%', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'SMALL_MEAL_LUNCH', value: '48', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'SMALL_MEAL_BREAKFAST', value: '18', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'MEAL_RATIO_LUNCH_FACTOR', value: '100', unit: '%', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'LARGE_MEAL_DINNER', value: '144', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'MEAL_RATIO_DINNER_FACTOR', value: '80', unit: '%', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'LARGE_MEAL_BREAKFAST', value: '54', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'MEAL_RATIO_BREAKFAST_FACTOR', value: '100', unit: '%', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'LARGE_MEAL_LUNCH', value: '144', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' },
-          { name: 'SMALL_MEAL_DINNER', value: '48', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00Z' }
-        ],
-        pump: {
-          expirationDate: '2050-04-12T17:53:54+02:00',
-          manufacturer: 'Vicentra',
-          name: 'Kaleido',
-          serialNumber: '123456',
-          swVersion: 'beta'
+  dataRange: ['2022-08-08T16:35:00.000Z', '2022-08-08T16:40:00.000Z'],
+  data: {
+    pumpSettings: [
+      {
+        normalTime: '2020-01-01T10:00:00.000Z',
+        type: 'pumpSettings',
+        id: 'pump_settings',
+        timezone: 'UTC',
+        source: 'Diabeloop',
+        payload: {
+          basalsecurityprofile: null,
+          cgm: {
+            apiVersion: 'v1',
+            endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00',
+            expirationDate: '2050-04-12T17:53:54+02:00',
+            manufacturer: 'Dexcom',
+            name: 'G6',
+            swVersionTransmitter: 'v1',
+            transmitterId: 'a1234'
+          },
+          device: {
+            deviceId: '1234',
+            imei: '1234567890',
+            manufacturer: 'Diabeloop',
+            name: 'DBLG1',
+            swVersion: '1.0.5.25'
+          },
+          history,
+          parameters: [
+            { name: 'WEIGHT', value: '72', unit: 'kg', level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
+            {
+              name: 'MEDIUM_MEAL_BREAKFAST',
+              value: '36',
+              unit: 'g',
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            { name: 'MEDIUM_MEAL_DINNER', value: '96', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
+            {
+              name: 'PATIENT_GLYCEMIA_TARGET',
+              value: '110',
+              unit: 'mg/dL',
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA',
+              value: '100',
+              unit: '%',
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'PATIENT_GLY_HYPER_LIMIT',
+              value: '180',
+              unit: 'mg/dL',
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            { name: 'MEDIUM_MEAL_LUNCH', value: '96', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
+            {
+              name: 'PATIENT_GLY_HYPO_LIMIT',
+              value: '75',
+              unit: 'mg/dL',
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'BOLUS_AGGRESSIVENESS_FACTOR',
+              value: '100',
+              unit: '%',
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            { name: 'SMALL_MEAL_LUNCH', value: '48', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
+            {
+              name: 'SMALL_MEAL_BREAKFAST',
+              value: '18',
+              unit: 'g',
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'MEAL_RATIO_LUNCH_FACTOR',
+              value: '100',
+              unit: '%',
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            { name: 'LARGE_MEAL_DINNER', value: '144', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
+            {
+              name: 'MEAL_RATIO_DINNER_FACTOR',
+              value: '80',
+              unit: '%',
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'LARGE_MEAL_BREAKFAST',
+              value: '54',
+              unit: 'g',
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'MEAL_RATIO_BREAKFAST_FACTOR',
+              value: '100',
+              unit: '%',
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            { name: 'LARGE_MEAL_LUNCH', value: '144', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
+            { name: 'SMALL_MEAL_DINNER', value: '48', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' }
+          ],
+          pump: {
+            expirationDate: '2050-04-12T17:53:54+02:00',
+            manufacturer: 'VICENTRA',
+            name: 'Kaleido',
+            serialNumber: '123456',
+            swVersion: 'beta'
+          }
         }
-      },
-      _userId: 'osef'
-    },
-    {
-      time: '2020-01-01T10:00:00Z',
+      }
+    ],
+    cbg: [{
+      normalTime: '2020-01-01T10:00:00.000Z',
       type: 'cbg',
       id: '2020-01-01_0',
       timezone: 'Europe/Paris',
       units: 'mmol/L',
       value: 10.5,
-      uploadId: 'osef',
-      _userId: 'osef'
-    }
-  ]
+      uploadId: 'osef'
+    }]
+  }
+}
+
+export const completeDailyViewData: Data = {
+  dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],
+  data: {
+    alarmEvents: [
+      {
+        "epoch": 1659949200000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T09:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-01",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T09:00:00.000Z",
+        "epochEnd": 1659949200000,
+        "subType": "alarm",
+        "guid": ALARM_EVENT_HYPERGLYCEMIA_ID,
+        "inputTime": "2022-08-08T09:00:00Z",
+        "alarm": {
+          "alarmCode": "10113",
+          "alarmLevel": "alert",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Hyperglycemia"
+      },
+      {
+        "epoch": 1659949500000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T09:05:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-011",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T09:05:00.000Z",
+        "epochEnd": 1659949500000,
+        "subType": "alarm",
+        "guid": ALARM_EVENT_HYPERGLYCEMIA_OTHER_OCCURRENCE_ID,
+        "inputTime": "2022-08-08T09:05:00Z",
+        "alarm": {
+          "alarmCode": "10113",
+          "alarmLevel": "alert",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Hyperglycemia"
+      },
+      {
+        "epoch": 1659949500000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T09:05:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-02",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T09:05:00.000Z",
+        "epochEnd": 1659949500000,
+        "subType": "alarm",
+        "guid": "alarmEventHypoglycemiaId",
+        "inputTime": "2022-08-08T09:05:00Z",
+        "alarm": {
+          "alarmCode": "12000",
+          "alarmLevel": "alarm",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Hypoglycemia"
+      },
+      {
+        "epoch": 1659949800000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T09:10:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-03",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T09:10:00.000Z",
+        "epochEnd": 1659949800000,
+        "subType": "alarm",
+        "guid": "alarmEventInsightEmptyInsulinCartridgeId",
+        "inputTime": "2022-08-08T09:10:00Z",
+        "alarm": {
+          "alarmCode": "71002",
+          "alarmLevel": "alarm",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Device"
+      },
+      {
+        "epoch": 1659950100000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T09:15:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-04",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T09:15:00.000Z",
+        "epochEnd": 1659950100000,
+        "subType": "alarm",
+        "guid": "alarmEventInsightEmptyPumpBatteryId",
+        "inputTime": "2022-08-08T09:15:00Z",
+        "alarm": {
+          "alarmCode": "71001",
+          "alarmLevel": "alarm",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Device"
+      },
+      {
+        "epoch": 1659950400000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T09:20:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-05",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T09:20:00.000Z",
+        "epochEnd": 1659950400000,
+        "subType": "alarm",
+        "guid": "alarmEventInsightHypoglycemiaId",
+        "inputTime": "2022-08-08T09:20:00Z",
+        "alarm": {
+          "alarmCode": "10117",
+          "alarmLevel": "alert",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Hypoglycemia"
+      },
+      {
+        "epoch": 1659950700000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T09:25:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-06",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T09:25:00.000Z",
+        "epochEnd": 1659950700000,
+        "subType": "alarm",
+        "guid": "alarmEventInsightIncompatibleActionsOnPumpId",
+        "inputTime": "2022-08-08T09:25:00Z",
+        "alarm": {
+          "alarmCode": "71003",
+          "alarmLevel": "alarm",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Device"
+      },
+      {
+        "epoch": 1659951000000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T09:30:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-07",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T09:30:00.000Z",
+        "epochEnd": 1659951000000,
+        "subType": "alarm",
+        "guid": "alarmEventInsightInsulinCartridgeExpiredId",
+        "inputTime": "2022-08-08T09:30:00Z",
+        "alarm": {
+          "alarmCode": "71020",
+          "alarmLevel": "alarm",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Device"
+      },
+      {
+        "epoch": 1659951300000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T09:35:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-08",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T09:35:00.000Z",
+        "epochEnd": 1659951300000,
+        "subType": "alarm",
+        "guid": "alarmEventInsightOcclusionId",
+        "inputTime": "2022-08-08T09:35:00Z",
+        "alarm": {
+          "alarmCode": "71004",
+          "alarmLevel": "alarm",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Device"
+      },
+      {
+        "epoch": 1659951600000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T09:40:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-09",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T09:40:00.000Z",
+        "epochEnd": 1659951600000,
+        "subType": "alarm",
+        "guid": "alarmEventKaleidoEmptyInsulinCartridgeId",
+        "inputTime": "2022-08-08T09:40:00Z",
+        "alarm": {
+          "alarmCode": "41002",
+          "alarmLevel": "alarm",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Device"
+      },
+      {
+        "epoch": 1659951900000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T09:45:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-10",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T09:45:00.000Z",
+        "epochEnd": 1659951900000,
+        "subType": "alarm",
+        "guid": "alarmKaleidoEventEmptyPumpBatteryId",
+        "inputTime": "2022-08-08T09:45:00Z",
+        "alarm": {
+          "alarmCode": "41001",
+          "alarmLevel": "alarm",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Device"
+      },
+      {
+        "epoch": 1659952200000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T09:50:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-11",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T09:50:00.000Z",
+        "epochEnd": 1659952200000,
+        "subType": "alarm",
+        "guid": "alarmEventKaleidoInsulinCartridgeExpiredId",
+        "inputTime": "2022-08-08T09:50:00Z",
+        "alarm": {
+          "alarmCode": "41003",
+          "alarmLevel": "alarm",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Device"
+      },
+      {
+        "epoch": 1659952500000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T09:55:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-12",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T09:55:00.000Z",
+        "epochEnd": 1659952500000,
+        "subType": "alarm",
+        "guid": "alarmEventKaleidoOcclusionId",
+        "inputTime": "2022-08-08T09:55:00Z",
+        "alarm": {
+          "alarmCode": "41004",
+          "alarmLevel": "alarm",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Device"
+      },
+      {
+        "epoch": 1659952800000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-13",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T10:00:00.000Z",
+        "epochEnd": 1659952800000,
+        "subType": "alarm",
+        "guid": "alarmEventLongHyperglycemiaId",
+        "inputTime": "2022-08-08T10:00:00Z",
+        "alarm": {
+          "alarmCode": "15000",
+          "alarmLevel": "alarm",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Hyperglycemia"
+      },
+      {
+        "epoch": 1659953100000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T10:05:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-14",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T10:05:00.000Z",
+        "epochEnd": 1659953100000,
+        "subType": "alarm",
+        "guid": "alarmEventLongHypoglycemiaId",
+        "inputTime": "2022-08-08T10:05:00Z",
+        "alarm": {
+          "alarmCode": "24000",
+          "alarmLevel": "alarm",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Hypoglycemia"
+      },
+      {
+        "epoch": 1659953400000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T10:10:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-15",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T10:10:00.000Z",
+        "epochEnd": 1659953400000,
+        "subType": "alarm",
+        "guid": "alarmEventNoReadingsHypoglycemiaRiskId",
+        "inputTime": "2022-08-08T10:10:00Z",
+        "alarm": {
+          "alarmCode": "20100",
+          "alarmLevel": "alert",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Hypoglycemia"
+      },
+      {
+        "epoch": 1659953700000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T10:15:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-16",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T10:15:00.000Z",
+        "epochEnd": 1659953700000,
+        "subType": "alarm",
+        "guid": "alarmEventSensorSessionExpiredId",
+        "inputTime": "2022-08-08T10:15:00Z",
+        "alarm": {
+          "alarmCode": "11000",
+          "alarmLevel": "alarm",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Device"
+      },
+      {
+        "epoch": 1659954000000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T10:20:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-17",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T10:20:00.000Z",
+        "epochEnd": 1659954000000,
+        "subType": "alarm",
+        "guid": "alarmEventSuddenRiseInGlycemiaId",
+        "inputTime": "2022-08-08T10:20:00Z",
+        "alarm": {
+          "alarmCode": "20102",
+          "alarmLevel": "alert",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Hyperglycemia"
+      },
+      {
+        "epoch": 1659954300000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T10:25:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-18",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T10:25:00.000Z",
+        "epochEnd": 1659954300000,
+        "subType": "alarm",
+        "guid": "alarmEventUrgentLowSoonId",
+        "inputTime": "2022-08-08T10:25:00Z",
+        "alarm": {
+          "alarmCode": "10112",
+          "alarmLevel": "alert",
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": "Hypoglycemia"
+      }
+    ],
+    basal: [
+      {
+        "epoch": 1659976200000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:30:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "basal_2022-08-08_5",
+        "type": "basal",
+        "source": "Diabeloop",
+        "subType": "automated",
+        "internalId": "3deeb71f-9b5b-496e-b0af-ef9512c2787f",
+        "deliveryType": "automated",
+        "rate": 0.8,
+        "duration": 1000,
+        "normalEnd": "2022-08-08T16:30:01.000Z",
+        "epochEnd": 1659976201000
+      }
+    ],
+    bolus: [
+      {
+        "epoch": 1659983100000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T18:25:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": WIZARD_BOLUS_UNDELIVERED_ID,
+        "type": "bolus",
+        "source": "Diabeloop",
+        "subType": "normal",
+        "normal": 22.3,
+        "prescriptor": "auto",
+        "wizard": null,
+        "expectedNormal": 25,
+        "insulinOnBoard": 3.1843607
+      },
+      {
+        "epoch": 1659983700000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T18:35:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": WIZARD_BOLUS_UMM_ID,
+        "type": "bolus",
+        "source": "Diabeloop",
+        "subType": "normal",
+        "normal": 1.3,
+        "prescriptor": "auto",
+        "wizard": null
+      },
+      {
+        "epoch": 1659984300000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T18:45:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": WIZARD_BOLUS_POSITIVE_OVERRIDE_ID,
+        "type": "bolus",
+        "source": "Diabeloop",
+        "subType": "normal",
+        "normal": 19.35,
+        "prescriptor": "hybrid",
+        "wizard": null,
+        "expectedNormal": 19.35,
+        "insulinOnBoard": 3.1218212
+      },
+      {
+        "epoch": 1659984900000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T18:55:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID,
+        "type": "bolus",
+        "source": "Diabeloop",
+        "subType": "normal",
+        "normal": 9.05,
+        "prescriptor": "hybrid",
+        "wizard": null,
+        "expectedNormal": 9.05,
+        "insulinOnBoard": 3.0588088
+      }
+    ],
+    cbg: [
+      {
+        "epoch": 1659972600000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T15:30:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": CBG_ID,
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 63000000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1659972900000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T15:35:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "cbg_2022-08-08T15:35:00",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 265,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 63300000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1659973200000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T15:40:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "cbg_2022-08-08T15:40:00",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 265,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 63600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1659974400000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "cbg_2022-08-08T16:00:00",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 117,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 64800000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1659974700000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:05:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "cbg_2022-08-08T16:05:00",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 117,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 65100000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1659975000000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:10:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "cbg_2022-08-08T16:10:00",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 117,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 65400000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1659975600000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:20:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "cbg_2022-08-08T16:20:00",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 61,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 66000000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1659975900000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:25:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "cbg_2022-08-08T16:25:00",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 61,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 66300000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1659976200000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:30:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "cbg_2022-08-08T16:30:00",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 61,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 66600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1659976500000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:35:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "cbg_2022-08-08T16:35:00",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 61,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 66900000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1659977100000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:45:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "cbg_2022-08-08T16:45:00",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 40,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 67500000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1659977400000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:50:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "cbg_2022-08-08T16:50:00",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 40,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 67800000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1659977700000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:55:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "cbg_2022-08-08T16:55:00",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 40,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 68100000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1659978000000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T17:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "cbg_2022-08-08T17:00:00",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 40,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 68400000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1659978300000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T17:05:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "cbg_2022-08-08T17:05:00",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 40,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 68700000,
+        "deviceName": "Unknown"
+      }
+    ],
+    confidentialModes: [
+      {
+        "epoch": 1659924000000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T02:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "deviceEvent_2022-08-08_8",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 2
+        },
+        "normalEnd": "2022-08-08T04:00:00.000Z",
+        "epochEnd": 1659931200000,
+        "subType": "confidential",
+        "guid": "confidential_0",
+        "inputTime": "2022-08-08T02:00:00Z"
+      }
+    ],
+    deviceParametersChanges: [
+      {
+        "epoch": 1659945600000,
+        "displayOffset": 0,
+        "normalTime": "2022-08-08T08:00:00.000Z",
+        "timezone": "UTC",
+        "guessedTimezone": false,
+        "id": "parameterId",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "subType": "deviceParameter",
+        "params": [
+          {
+            "id": "parameterId",
+            "epoch": 1659945600000,
+            "timezone": "UTC",
+            "name": "MEAL_RATIO_LUNCH_FACTOR",
+            "level": "1",
+            "unit": "%",
+            "value": "100",
+            "previousValue": "110",
+            "lastUpdateDate": "2022-08-08T08:00:00Z"
+          }
+        ]
+      }
+    ],
+    messages: [],
+    meals: [
+      {
+        "epoch": 1659960000000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T12:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "carbId",
+        "type": "food",
+        "source": "Diabeloop",
+        "meal": "rescuecarbs",
+        "nutrition": {
+          "carbohydrate": {
+            "net": 15,
+            "units": "grams"
+          }
+        },
+        "prescribedNutrition": {
+          "carbohydrate": {
+            "net": 16,
+            "units": "grams"
+          }
+        },
+        "prescriptor": "hybrid"
+      }
+    ],
+    physicalActivities: [
+      {
+        "epoch": 1659963600000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T13:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "physicalActivityId",
+        "type": "physicalActivity",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "seconds",
+          "value": 1800
+        },
+        "normalEnd": "2022-08-08T13:30:00.000Z",
+        "epochEnd": 1659965400000,
+        "guid": "pa_18",
+        "reportedIntensity": "medium",
+        "inputTime": "2022-08-08T13:00:00.000Z"
+      }
+    ],
+    pumpSettings: [
+      {
+        "epoch": 1659976500000,
+        "displayOffset": 0,
+        "normalTime": "2022-08-08T16:35:00.000Z",
+        "timezone": "UTC",
+        "guessedTimezone": false,
+        "id": "pump_2022-08-08_6",
+        "type": "pumpSettings",
+        "source": "Diabeloop",
+        "basalSchedules": [],
+        "payload": {
+          "basalsecurityprofile": {},
+          "cgm": {
+            "apiVersion": "v1",
+            "endOfLifeTransmitterDate": "2050-04-12T17:53:54+02:00",
+            "expirationDate": "2050-04-12T17:53:54+02:00",
+            "manufacturer": "Dexcom",
+            "name": "G6",
+            "swVersionTransmitter": "v1",
+            "transmitterId": "a1234"
+          },
+          "device": {
+            "deviceId": "1234",
+            "imei": "1234567890",
+            "manufacturer": "Diabeloop",
+            "name": "DBLG1",
+            "swVersion": "beta"
+          },
+          "pump": {
+            "expirationDate": "2050-04-12T17:53:54+02:00",
+            "manufacturer": "VICENTRA",
+            "name": "Kaleido",
+            "serialNumber": "123456",
+            "swVersion": "beta"
+          },
+          history,
+          "parameters": [
+            {
+              "effectiveDate": "2020-01-17T08:00:00.000Z",
+              "level": 1,
+              "name": "WEIGHT",
+              "unit": "kg",
+              "value": "72"
+            }
+          ]
+        }
+      }
+    ],
+    reservoirChanges: [
+      {
+        "epoch": 1659978000000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T17:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "reservoirChangeId",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "subType": "reservoirChange",
+        "pump": {
+          "manufacturer": "DEFAULT"
+        }
+      }
+    ],
+    smbg: [
+      {
+        "epoch": 1659971700000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T15:15:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": SMBG_ID,
+        "type": "smbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 62100000
+      }
+    ],
+    warmUps: [
+      {
+        "epoch": 1659974400000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "warmup-01",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T16:00:00.000Z",
+        "epochEnd": 1659974400000,
+        "subType": "warmup",
+        "guid": WARMUP_01_ID,
+        "inputTime": "2022-08-08T09:00:00Z",
+      }
+    ],
+    wizards: [
+      {
+        "epoch": 1659983100000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T18:25:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": WIZARD_UNDELIVERED_ID,
+        "type": "wizard",
+        "source": "Diabeloop",
+        "bolusId": WIZARD_BOLUS_UNDELIVERED_ID,
+        "bolusIds": { WIZARD_BOLUS_UNDELIVERED_ID },
+        "carbInput": 45,
+        "units": "mmol/L",
+        "bolus": null,
+        "inputTime": "2022-08-08T02:00:00Z",
+        "recommended": {
+          "carb": 0,
+          "correction": 0,
+          "net": 25
+        },
+        "inputMeal": {
+          "fat": "yes",
+          "source": "manual"
+        }
+      },
+      {
+        "epoch": 1659983700000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T18:35:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": WIZARD_UMM_ID,
+        "type": "wizard",
+        "source": "Diabeloop",
+        "bolusId": WIZARD_BOLUS_UMM_ID,
+        "bolusIds": { WIZARD_BOLUS_UMM_ID },
+        "carbInput": 50,
+        "units": "mmol/L",
+        "bolus": null,
+        "inputTime": "2022-08-08T18:34:00Z",
+        "inputMeal": {
+          "source": "umm"
+        }
+      },
+      {
+        "epoch": 1659984300000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T18:45:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": WIZARD_POSITIVE_OVERRIDE_ID,
+        "type": "wizard",
+        "source": "Diabeloop",
+        "bolusId": WIZARD_BOLUS_POSITIVE_OVERRIDE_ID,
+        "bolusIds": { WIZARD_BOLUS_POSITIVE_OVERRIDE_ID },
+        "carbInput": 100,
+        "units": "mmol/L",
+        "bolus": null,
+        "inputTime": "2022-08-08T22:45:00Z",
+        "recommended": {
+          "carb": 0,
+          "correction": 0,
+          "net": 14.35
+        }
+      },
+      {
+        "epoch": 1659984900000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T18:55:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": WIZARD_NEGATIVE_OVERRIDE_ID,
+        "type": "wizard",
+        "source": "Diabeloop",
+        "bolusId": WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID,
+        "bolusIds": { WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID },
+        "carbInput": 100,
+        "units": "mmol/L",
+        "bolus": null,
+        "inputTime": "2022-08-08T23:15:00Z",
+        "recommended": {
+          "carb": 0,
+          "correction": 0,
+          "net": 10.05
+        }
+      }
+    ],
+    "zenModes": [],
+    "timezoneChanges": []
+  }
+}
+
+export const completeDailyViewDataMmol: Data = {
+  dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],
+  data: JSON.parse(JSON.stringify(completeDailyViewData.data))
+}
+
+completeDailyViewDataMmol.data.cbg = convertCbgMg2Mmol(completeDailyViewData.data.cbg)
+completeDailyViewDataMmol.data.smbg = convertSmbgMg2Mmol(completeDailyViewData.data.smbg)
+
+export const dataSetsWithZeroValues: Data = {
+  dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],
+  data: {
+    "alarmEvents": [],
+    "basal": [],
+    "bolus": [],
+    "cbg": [
+      {
+        "epoch": 1659972600000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T15:30:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "cbgId",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 0,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 63000000,
+        "deviceName": "Unknown"
+      }
+    ],
+    "confidentialModes": [],
+    "deviceParametersChanges": [
+      {
+        "epoch": 1659945600000,
+        "displayOffset": 0,
+        "normalTime": "2022-08-08T08:00:00.000Z",
+        "timezone": "UTC",
+        "guessedTimezone": false,
+        "id": "parameterId",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "subType": "deviceParameter",
+        "params": [
+          {
+            "id": "parameterId",
+            "epoch": 1659945600000,
+            "timezone": "UTC",
+            "name": "MEAL_RATIO_LUNCH_FACTOR",
+            "level": "1",
+            "unit": "%",
+            "value": "100",
+            "previousValue": "110",
+            "lastUpdateDate": "2022-08-08T08:00:00Z"
+          }
+        ]
+      }
+    ],
+    "messages": [],
+    "meals": [],
+    "physicalActivities": [
+      {
+        "epoch": 1659963600000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T13:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "physicalActivityId",
+        "type": "physicalActivity",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "seconds",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T13:00:00.000Z",
+        "epochEnd": 1659963600000,
+        "guid": "pa_18",
+        "reportedIntensity": "medium",
+        "inputTime": "2022-08-08T13:00:00.000Z"
+      }
+    ],
+    "pumpSettings": [
+      {
+        "epoch": 1659976500000,
+        "displayOffset": 0,
+        "normalTime": "2022-08-08T16:35:00.000Z",
+        "timezone": "UTC",
+        "guessedTimezone": false,
+        "id": "pump_2022-08-08_6",
+        "type": "pumpSettings",
+        "source": "Diabeloop",
+        "basalSchedules": [],
+        "payload": {
+          "basalsecurityprofile": {},
+          "cgm": {
+            "apiVersion": "v1",
+            "endOfLifeTransmitterDate": "2050-04-12T17:53:54+02:00",
+            "expirationDate": "2050-04-12T17:53:54+02:00",
+            "manufacturer": "Dexcom",
+            "name": "G6",
+            "swVersionTransmitter": "v1",
+            "transmitterId": "a1234"
+          },
+          "device": {
+            "deviceId": "1234",
+            "imei": "1234567890",
+            "manufacturer": "Diabeloop",
+            "name": "DBLG1",
+            "swVersion": "beta"
+          },
+          "pump": {
+            "expirationDate": "2050-04-12T17:53:54+02:00",
+            "manufacturer": "VICENTRA",
+            "name": "Kaleido",
+            "serialNumber": "123456",
+            "swVersion": "beta"
+          },
+          "history": [],
+          "parameters": [
+            {
+              "effectiveDate": "2020-01-17T08:00:00.000Z",
+              "level": 1,
+              "name": ""
+            }
+          ]
+        }
+      }
+    ],
+    "reservoirChanges": [
+      {
+        "epoch": 1659978000000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T17:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "reservoirChangeId",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "subType": "reservoirChange",
+        "pump": {
+          "manufacturer": "DEFAULT"
+        }
+      }
+    ],
+    "smbg": [],
+    "warmUps": [],
+    "wizards": [],
+    "zenModes": [],
+    "timezoneChanges": []
+  }
+}
+
+export const noData: Data = {
+  dataRange: ['', ''],
+  data: []
+}
+
+export const smbgData: Data = {
+  dataRange: ['2022-08-08T11:30:00Z', '2022-08-08T18:30:00Z'],
+  data: {
+    "alarmEvents": [],
+    "basal": [],
+    "bolus": [],
+    "cbg": [],
+    "confidentialModes": [],
+    "deviceParametersChanges": [],
+    "messages": [],
+    "meals": [],
+    "physicalActivities": [],
+    "pumpSettings": [],
+    "reservoirChanges": [],
+    "smbg": [
+      {
+        "epoch": 1659971700000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T15:15:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "smb_2022-08-08_0",
+        "type": "smbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 62100000
+      },
+      {
+        "epoch": 1659972000000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T15:20:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "smb_2022-08-08_1",
+        "type": "smbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 265,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 62400000
+      },
+      {
+        "epoch": 1659972300000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T15:25:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "smb_2022-08-08_2",
+        "type": "smbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 265,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 62700000
+      },
+      {
+        "epoch": 1659972600000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T15:30:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "smb_2022-08-08_3",
+        "type": "smbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 117,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 63000000
+      },
+      {
+        "epoch": 1659972900000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T15:35:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "smb_2022-08-08_4",
+        "type": "smbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 117,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 63300000
+      },
+      {
+        "epoch": 1659973200000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T15:40:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "smb_2022-08-08_5",
+        "type": "smbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 117,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 63600000
+      },
+      {
+        "epoch": 1659973500000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T15:45:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "smb_2022-08-08_6",
+        "type": "smbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 61,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 63900000
+      },
+      {
+        "epoch": 1659973800000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T15:50:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "smb_2022-08-08_7",
+        "type": "smbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 61,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 64200000
+      },
+      {
+        "epoch": 1659974100000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T15:55:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "smb_2022-08-08_8",
+        "type": "smbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 61,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 64500000
+      },
+      {
+        "epoch": 1659974400000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "smb_2022-08-08_9",
+        "type": "smbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 61,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 64800000
+      },
+      {
+        "epoch": 1659974700000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:05:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "smb_2022-08-08_10",
+        "type": "smbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 40,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 65100000
+      },
+      {
+        "epoch": 1659975000000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:10:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "smb_2022-08-08_11",
+        "type": "smbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 40,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 65400000
+      },
+      {
+        "epoch": 1659975300000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:15:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "smb_2022-08-08_12",
+        "type": "smbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 40,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 65700000
+      },
+      {
+        "epoch": 1659975600000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:20:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "smb_2022-08-08_13",
+        "type": "smbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 40,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 66000000
+      },
+      {
+        "epoch": 1659975900000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:25:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "smb_2022-08-08_14",
+        "type": "smbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 40,
+        "localDate": "2022-08-08",
+        "isoWeekday": "monday",
+        "msPer24": 66300000
+      }
+    ],
+    "warmUps": [],
+    "wizards": [],
+    "zenModes": [],
+    "timezoneChanges": []
+  }
+}
+
+export const minimalTrendViewData: Data = {
+  dataRange: ['2020-01-01T00:00:00Z', '2020-01-20T00:00:00Z'],
+  data: {
+    "alarmEvents": [],
+    "basal": [
+      {
+        "epoch": 1578501000000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-08T16:30:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "basal_2020_01_08_1",
+        "type": "basal",
+        "source": "Diabeloop",
+        "subType": "automated",
+        "internalId": "3deeb71f-9b5b-496e-b0af-ef9512c2787f",
+        "deliveryType": "automated",
+        "rate": 0.8,
+        "duration": 400000000,
+        "normalEnd": "2020-01-13T07:36:40.000Z",
+        "epochEnd": 1578901000000
+      },
+      {
+        "epoch": 1578504600000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-08T17:30:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "basal_2020-01-08_2",
+        "type": "basal",
+        "source": "Diabeloop",
+        "subType": "scheduled",
+        "internalId": "3deeb71f-9b5b-496e-b0af-ef9512c2787f",
+        "deliveryType": "scheduled",
+        "rate": 0.8,
+        "duration": 500000000,
+        "normalEnd": "2020-01-14T12:23:20.000Z",
+        "epochEnd": 1579004600000
+      }
+    ],
+    "bolus": [
+      {
+        "epoch": 1579314300000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-18T02:25:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "carbBolusId",
+        "type": "bolus",
+        "source": "Diabeloop",
+        "subType": "normal",
+        "normal": 22.3,
+        "prescriptor": "manual",
+        "wizard": null,
+        "expectedNormal": 25,
+        "insulinOnBoard": 3.1843607
+      },
+      {
+        "epoch": 1579228500000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-17T02:35:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "carbBolusId2",
+        "type": "bolus",
+        "source": "Diabeloop",
+        "subType": "normal",
+        "normal": 1.3,
+        "prescriptor": "manual",
+        "wizard": null
+      },
+      {
+        "epoch": 1579315800000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-18T02:50:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "carbBolusId2",
+        "type": "bolus",
+        "source": "Diabeloop",
+        "subType": "normal",
+        "normal": 1.3,
+        "prescriptor": "manual",
+        "wizard": null
+      },
+      {
+        "epoch": 1579229400000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-17T02:50:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "carbBolusId2",
+        "type": "bolus",
+        "source": "Diabeloop",
+        "subType": "normal",
+        "normal": 1.3,
+        "prescriptor": "manual",
+        "wizard": null
+      },
+      {
+        "epoch": 1579310400000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-18T01:20:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "carbBolusId2",
+        "type": "bolus",
+        "source": "Diabeloop",
+        "subType": "normal",
+        "normal": 1.3,
+        "prescriptor": "manual",
+        "wizard": null
+      },
+      {
+        "epoch": 1579396800000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-19T01:20:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "carbBolusId2",
+        "type": "bolus",
+        "source": "Diabeloop",
+        "subType": "normal",
+        "normal": 1.3,
+        "prescriptor": "manual",
+        "wizard": null
+      },
+      {
+        "epoch": 1579449300000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-19T15:55:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "carbBolusId4",
+        "type": "bolus",
+        "source": "Diabeloop",
+        "subType": "normal",
+        "normal": 9.05,
+        "prescriptor": "manual",
+        "wizard": null,
+        "expectedNormal": 9.05,
+        "insulinOnBoard": 3.0588088
+      },
+      {
+        "epoch": 1579535100000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T15:45:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "carbBolusId3",
+        "type": "bolus",
+        "source": "Diabeloop",
+        "subType": "normal",
+        "normal": 19.35,
+        "prescriptor": "manual",
+        "wizard": null,
+        "expectedNormal": 19.35,
+        "insulinOnBoard": 3.1218212
+      }
+    ],
+    "cbg": [
+      {
+        "epoch": 1579514400000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 182,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579428000000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-19T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-19_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 164,
+        "localDate": "2020-01-19",
+        "isoWeekday": "sunday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579428000000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-19T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-19_1",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 196,
+        "localDate": "2020-01-19",
+        "isoWeekday": "sunday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579428000000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-19T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-19_2",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 196,
+        "localDate": "2020-01-19",
+        "isoWeekday": "sunday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579341600000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-18T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-18_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 177,
+        "localDate": "2020-01-18",
+        "isoWeekday": "saturday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      }
+    ],
+    "confidentialModes": [],
+    "deviceParametersChanges": [],
+    "messages": [],
+    "meals": [
+      {
+        "epoch": 1579428000000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-19T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "food_19-35-00",
+        "type": "food",
+        "source": "Diabeloop",
+        "meal": "rescuecarbs",
+        "nutrition": {
+          "carbohydrate": {
+            "net": 385,
+            "units": "grams"
+          }
+        },
+        "prescribedNutrition": {
+          "carbohydrate": {}
+        },
+        "prescriptor": ""
+      },
+      {
+        "epoch": 1579428000000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-19T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "food_19-35-00",
+        "type": "food",
+        "source": "Diabeloop",
+        "meal": "rescuecarbs",
+        "nutrition": {
+          "carbohydrate": {
+            "net": 385,
+            "units": "grams"
+          }
+        },
+        "prescribedNutrition": {
+          "carbohydrate": {}
+        },
+        "prescriptor": ""
+      },
+      {
+        "epoch": 1579510800000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T09:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "food_19-35-00",
+        "type": "food",
+        "source": "Diabeloop",
+        "meal": "rescuecarbs",
+        "nutrition": {
+          "carbohydrate": {
+            "net": 128,
+            "units": "grams"
+          }
+        },
+        "prescribedNutrition": {
+          "carbohydrate": {}
+        },
+        "prescriptor": ""
+      },
+      {
+        "epoch": 1579460400000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-19T19:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "food_19-35-00",
+        "type": "food",
+        "source": "Diabeloop",
+        "meal": "rescuecarbs",
+        "nutrition": {
+          "carbohydrate": {
+            "net": 150,
+            "units": "grams"
+          }
+        },
+        "prescribedNutrition": {
+          "carbohydrate": {}
+        },
+        "prescriptor": ""
+      },
+      {
+        "epoch": 1579559400000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T22:30:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "food_19-35-00",
+        "type": "food",
+        "source": "Diabeloop",
+        "meal": "rescuecarbs",
+        "nutrition": {
+          "carbohydrate": {
+            "net": 450,
+            "units": "grams"
+          }
+        },
+        "prescribedNutrition": {
+          "carbohydrate": {}
+        },
+        "prescriptor": ""
+      }
+    ],
+    "physicalActivities": [],
+    "pumpSettings": [],
+    "reservoirChanges": [],
+    "smbg": [],
+    "warmUps": [],
+    "wizards": [
+      {
+        "epoch": 1579428000000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-19T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "wizardId1",
+        "type": "wizard",
+        "source": "Diabeloop",
+        "bolusId": "carbBolusId",
+        "bolusIds": {},
+        "carbInput": 385,
+        "units": "mmol/L",
+        "bolus": null
+      },
+      {
+        "epoch": 1579341600000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-18T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "wizardId2",
+        "type": "wizard",
+        "source": "Diabeloop",
+        "bolusId": "carbBolusId",
+        "bolusIds": {},
+        "carbInput": 285,
+        "units": "mmol/L",
+        "bolus": null,
+        "inputMeal": {
+          "source": "umm"
+        }
+      }
+    ],
+    "zenModes": [],
+    "timezoneChanges": []
+  }
+}
+
+export const timeInRangeStatsTrendViewData: Data = {
+  dataRange: ['2020-01-19T00:00:00Z', '2020-01-20T00:00:00Z'],
+  data: {
+    "alarmEvents": [],
+    "basal": [],
+    "bolus": [],
+    "cbg": [
+      {
+        "epoch": 1579514400000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579518000000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T11:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_1",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 265,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 43200000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579518300000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T11:05:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_3",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 117,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 43500000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579518600000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T11:10:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_4",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 117,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 43800000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579518900000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T11:15:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_5",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 61,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 44100000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579519200000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T11:20:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_6",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 61,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 44400000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579519500000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T11:25:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_7",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 61,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 44700000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579519800000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T11:30:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_8",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 40,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 45000000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579520100000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T11:35:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_9",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 40,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 45300000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579520400000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T11:40:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_10",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 40,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 45600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579520700000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T11:45:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_11",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 40,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 45900000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579521000000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T11:50:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_12",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 40,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 46200000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579521300000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T11:55:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_13",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 46500000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579521600000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T12:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_14",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 46800000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579521900000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T12:05:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_15",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 47100000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579522200000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-20T12:10:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-20_16",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-20",
+        "isoWeekday": "monday",
+        "msPer24": 47400000,
+        "deviceName": "Unknown"
+      }
+    ],
+    "confidentialModes": [],
+    "deviceParametersChanges": [],
+    "messages": [],
+    "meals": [],
+    "physicalActivities": [],
+    "pumpSettings": [],
+    "reservoirChanges": [],
+    "smbg": [],
+    "warmUps": [],
+    "wizards": [],
+    "zenModes": [],
+    "timezoneChanges": []
+  }
+}
+
+export const twoWeeksOfCbg: Data = {
+  dataRange: ['2020-01-01T00:00:00Z', '2020-01-15T23:00:00Z'],
+  data: {
+    "alarmEvents": [],
+    "basal": [],
+    "bolus": [],
+    "cbg": [
+      {
+        "epoch": 1577872800000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-01T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-01_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-01",
+        "isoWeekday": "wednesday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1577959200000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-02T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-02_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-02",
+        "isoWeekday": "thursday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1578045600000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-03T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-03_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-03",
+        "isoWeekday": "friday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1578132000000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-04T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-04_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-04",
+        "isoWeekday": "saturday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1578218400000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-05T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-05_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-05",
+        "isoWeekday": "sunday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1578304800000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-06T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-06_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-06",
+        "isoWeekday": "monday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1578391200000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-07T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-07_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-07",
+        "isoWeekday": "tuesday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1578477600000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-08T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-08_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-08",
+        "isoWeekday": "wednesday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1578564000000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-09T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-09_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-09",
+        "isoWeekday": "thursday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1578650400000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-10T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-10_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-10",
+        "isoWeekday": "friday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1578736800000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-11T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-11_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-11",
+        "isoWeekday": "saturday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1578823200000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-12T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-12_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-12",
+        "isoWeekday": "sunday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1578909600000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-13T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-13_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-13",
+        "isoWeekday": "monday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1578996000000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-14T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-14_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-14",
+        "isoWeekday": "tuesday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      },
+      {
+        "epoch": 1579082400000,
+        "displayOffset": -60,
+        "normalTime": "2020-01-15T10:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "2020-01-15_0",
+        "type": "cbg",
+        "source": "Diabeloop",
+        "units": "mg/dL",
+        "value": 189,
+        "localDate": "2020-01-15",
+        "isoWeekday": "wednesday",
+        "msPer24": 39600000,
+        "deviceName": "Unknown"
+      }
+    ],
+    "confidentialModes": [],
+    "deviceParametersChanges": [],
+    "messages": [],
+    "meals": [],
+    "physicalActivities": [],
+    "pumpSettings": [],
+    "reservoirChanges": [],
+    "smbg": [],
+    "warmUps": [],
+    "wizards": [],
+    "zenModes": [],
+    "timezoneChanges": []
+  }
 }
 
 export const mockDataAPI = (patientData: Data = completeDailyViewData) => {
   jest.spyOn(DataAPI, 'getPatientDataRange').mockResolvedValue(patientData.dataRange)
-  jest.spyOn(DataAPI, 'getMessages').mockResolvedValue([])
   jest.spyOn(DataAPI, 'getPatientData').mockImplementation(() => Promise.resolve(patientData.data))
 }

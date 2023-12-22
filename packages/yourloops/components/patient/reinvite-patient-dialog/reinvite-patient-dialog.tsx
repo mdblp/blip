@@ -33,9 +33,10 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { LoadingButton } from '@mui/lab'
-import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
 import DialogContentText from '@mui/material/DialogContentText'
 import { useReinvitePatientDialog } from './reinvite-patient-dialog.hook'
+import { useParams } from 'react-router-dom'
+import { useTeam } from '../../../lib/team'
 
 interface ReinvitePatientDialogProps {
   patient: Patient
@@ -43,9 +44,16 @@ interface ReinvitePatientDialogProps {
   onSuccess: () => void
 }
 
-export const ReinvitePatientDialog: FunctionComponent<ReinvitePatientDialogProps> = ({ patient, onClose, onSuccess }) => {
+export const ReinvitePatientDialog: FunctionComponent<ReinvitePatientDialogProps> = (
+  {
+    patient,
+    onClose,
+    onSuccess
+  }) => {
   const { t } = useTranslation('yourloops')
-  const { selectedTeam } = useSelectedTeamContext()
+  const { teamId } = useParams()
+  const { getTeam } = useTeam()
+  const selectedTeam = getTeam(teamId)
   const {
     processing,
     handleOnClickReinvite

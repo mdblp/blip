@@ -32,7 +32,6 @@ import type User from '../../../../lib/auth/models/user.model'
 import { act, renderHook } from '@testing-library/react'
 import { usePatientData } from '../../../../components/patient-data/patient-data.hook'
 import { PatientView } from '../../../../enum/patient-view.enum'
-import type { Patient } from '../../../../lib/patient/models/patient.model'
 import { TimeService } from 'medical-domain'
 import type { ChartPrefs } from '../../../../components/dashboard-widgets/models/chart-prefs.model'
 import { createPatient } from '../../common/utils'
@@ -47,6 +46,7 @@ describe('usePatientData hook', () => {
   const useNavigateMock = jest.fn()
   const useParamHookMock = jest.fn().mockReturnValue({ patientId })
   const useLocationMock = jest.fn().mockReturnValue({ pathname: `${getUrlPrefixForHcp()}${AppUserRoute.Dashboard}` })
+  const patient = createPatient()
 
   beforeAll(() => {
     jest.spyOn(router, 'useNavigate').mockImplementation(() => useNavigateMock)
@@ -68,7 +68,7 @@ describe('usePatientData hook', () => {
 
   describe('changePatientView', () => {
     it('should change currentPatientView to Daily', async () => {
-      const { result } = renderHook(() => usePatientData())
+      const { result } = renderHook(() => usePatientData({ patient }))
       expect(result.current.currentPatientView).toEqual(PatientView.Dashboard)
       expect(result.current.msRange).toEqual(DEFAULT_MS_RANGE)
 
@@ -77,11 +77,11 @@ describe('usePatientData hook', () => {
       })
 
       expect(result.current.msRange).toEqual(TimeService.MS_IN_DAY)
-      expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp()}${AppUserRoute.Daily}`)
+      expect(useNavigateMock).toHaveBeenCalledWith(`..${AppUserRoute.Daily}`, { relative: 'path' })
     })
 
     it('should change currentPatientView to Trends', async () => {
-      const { result } = renderHook(() => usePatientData())
+      const { result } = renderHook(() => usePatientData({ patient }))
       expect(result.current.currentPatientView).toEqual(PatientView.Dashboard)
       expect(result.current.msRange).toEqual(DEFAULT_MS_RANGE)
 
@@ -90,19 +90,7 @@ describe('usePatientData hook', () => {
       })
 
       expect(result.current.msRange).toEqual(DEFAULT_MS_RANGE)
-      expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp()}${AppUserRoute.Trends}`)
-    })
-  })
-
-  describe('changePatient', () => {
-    it('should be able to change patient', () => {
-      const newPatientId = 'newPatientId'
-      const { result } = renderHook(() => usePatientData())
-      act(() => {
-        result.current.changePatient({ userid: newPatientId } as Patient)
-      })
-      expect(result.current.medicalData).toBeNull()
-      expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp(newPatientId)}${AppUserRoute.Dashboard}`)
+      expect(useNavigateMock).toHaveBeenCalledWith(`..${AppUserRoute.Trends}`, { relative: 'path' })
     })
   })
 
@@ -135,7 +123,7 @@ describe('usePatientData hook', () => {
         }
       }
 
-      const { result } = renderHook(() => usePatientData())
+      const { result } = renderHook(() => usePatientData({ patient }))
       expect(result.current.chartPrefs).toEqual(defaultChartPrefs)
 
       act(() => {
@@ -148,14 +136,14 @@ describe('usePatientData hook', () => {
   describe('goToDailySpecificDate', () => {
     it('should go to a specific date in daily chart', () => {
       const currentDate = new Date().getTime()
-      const { result } = renderHook(() => usePatientData())
+      const { result } = renderHook(() => usePatientData({ patient }))
       expect(result.current.dailyDate).toBeNull()
 
       act(() => {
         result.current.goToDailySpecificDate(currentDate)
       })
       expect(result.current.dailyDate).toEqual(currentDate)
-      expect(useNavigateMock).toHaveBeenCalledWith(`${getUrlPrefixForHcp()}${AppUserRoute.Daily}?date=${new Date(currentDate).toISOString()}`)
+      expect(useNavigateMock).toHaveBeenCalledWith(`..${AppUserRoute.Daily}?date=${new Date(currentDate).toISOString()}`, { relative: 'path' })
     })
   })
 })

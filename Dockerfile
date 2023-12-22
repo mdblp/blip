@@ -1,11 +1,11 @@
 # This part contains the deployment source code only
-FROM node:16-alpine3.16 as base
+FROM node:18-alpine3.19 as base
 RUN apk --no-cache update && \
     apk --no-cache upgrade && \
     apk --no-cache add curl && \
-    npm install -g npm@8.5.5
+    npm install -g npm@10.2.5
 
-FROM base as deployment
+FROM base AS deployment
 WORKDIR /cloudfront-dist
 COPY ./cloudfront-dist/deployment/bin ./deployment/bin
 COPY ./cloudfront-dist/deployment/lib ./deployment/lib
@@ -19,21 +19,21 @@ COPY ./cloudfront-dist/deploy.sh ./deploy.sh
 RUN cd deployment && npm install
 
 # this part contains the site content
-FROM base as content
+FROM base AS content
 WORKDIR /content
 COPY ./dist/static ./static-dist/
 COPY ./templates ./templates
 COPY ./locales ./locales
 
 # this part contains the aws lambda middleware
-FROM base as lambda
+FROM base AS lambda
 RUN apk add --no-cache openssl
 WORKDIR /server
 COPY ./server .
 RUN openssl req -nodes -new -x509 -keyout blip.key -out blip.cert -subj "/C=FR/ST=France/L=Grenoble/O=Diabeloop/OU=Platforms/CN=platforms@diabeloop.fr"
 RUN npm install
 
-FROM base as final
+FROM base AS final
 RUN \
   apk add --no-cache --virtual .user-deps shadow && \
   apk --no-cache add bash && \

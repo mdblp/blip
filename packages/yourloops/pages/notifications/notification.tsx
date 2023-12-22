@@ -230,10 +230,10 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
     try {
       await notifications.accept(notification)
       metrics.send('invitation', 'accept_invitation', notification.metricsType)
-      if (!isADirectInvitation) {
-        teamHook.refresh()
-      } else {
+      if (isADirectInvitation) {
         patientsHook.refresh()
+      } else {
+        teamHook.refresh()
       }
       alert.success(t('accept-notification-success', { name: inviterName }))
       refreshReceivedInvitations()

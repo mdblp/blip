@@ -416,7 +416,7 @@ describe('basics data utils', () => {
         },
         days: [{ date: '2015-01-01', type: 'past' }, { date: '2015-01-02', type: 'mostRecent' }]
       }
-      const result = dataUtils.reduceByDay(bd, bgPrefs[MGDL_UNITS])
+      const result = dataUtils.reduceByDay(bd)
       const types = ['reservoirChange']
       _.forEach(types, type => {
         it(`should build crossfilter utils for ${type}`, () => {
@@ -426,65 +426,6 @@ describe('basics data utils', () => {
         it(`should build a \`dataByDate\` object for ${type} with *only* localDates with data as keys`, () => {
           expect(_.keys(result.data[type].dataByDate)).to.deep.equal(['2015-01-01'])
         })
-      })
-    })
-
-    describe('summarizeTagFn', () => {
-      it('should return a function that can be used with _.each to summarize tags from subtotals', () => {
-        const dataObj = {
-          dataByDate: {
-            '2015-01-01': {
-              subtotals: {
-                foo: 2,
-                bar: 3
-              }
-            },
-            '2015-01-02': {
-              subtotals: {
-                foo: 10,
-                bar: 10
-              }
-            },
-            '2015-01-03': {
-              subtotals: {
-                foo: 0,
-                bar: 0
-              }
-            }
-          }
-        }
-
-        const summary = { total: 25 }
-
-        _.forEach(['foo', 'bar'], dataUtils.summarizeTagFn(dataObj, summary))
-
-        expect(summary).to.deep.equal({
-          total: 25,
-          foo: { count: 12, percentage: 0.48 },
-          bar: { count: 13, percentage: 0.52 }
-        })
-      })
-    })
-
-    describe('averageExcludingMostRecentDay', () => {
-      it('should calculate an average excluding the most recent day if data exists for it', () => {
-        const dataObj = {
-          dataByDate: {
-            '2015-01-01': {
-              total: 2
-            },
-            '2015-01-02': {
-              total: 9
-            },
-            '2015-01-03': {
-              total: 16
-            },
-            '2015-01-04': {
-              total: 1
-            }
-          }
-        }
-        expect(dataUtils.averageExcludingMostRecentDay(dataObj, 28, '2015-01-04')).to.equal(9)
       })
     })
   })

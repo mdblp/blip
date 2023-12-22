@@ -31,14 +31,12 @@ import { type Patient } from '../../lib/patient/models/patient.model'
 import { type ChartPrefs } from '../dashboard-widgets/models/chart-prefs.model'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
-import { usePatientsContext } from '../../lib/patient/patients.provider'
 import type MedicalDataService from 'medical-domain'
 import { defaultBgClasses, type TimePrefs, TimeService, Unit } from 'medical-domain'
 import { type MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
 import { type DateRange, isValidDateQueryParam, PatientDataUtils } from './patient-data.utils'
 import DataUtil from 'tidepool-viz/src/utils/data'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
-import { usePatientContext } from '../../lib/patient/patient.provider'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 
 export interface usePatientDataResult {
@@ -64,23 +62,21 @@ export interface usePatientDataResult {
   trendsDate: number
 }
 
+interface UsePatientDataProps {
+  patient: Patient
+}
+
 const DATE_QUERY_PARAM_KEY = 'date'
 const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
-export const usePatientData = (): usePatientDataResult => {
+export const usePatientData = ({ patient }: UsePatientDataProps): usePatientDataResult => {
   const navigate = useNavigate()
-  const paramHook = useParams()
-  const { patientId } = paramHook
+  const { teamId } = useParams()
   const { user } = useAuth()
   const { pathname } = useLocation()
-  const { getPatientById } = usePatientsContext()
-  const patientHook = usePatientContext()
   const [searchParams, setSearchParams] = useSearchParams()
   const dailyChartRef = useRef(null)
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
-  const isUserPatient = user.isUserPatient()
-  const urlPrefix = isUserPatient ? '' : `/patient/${patientId}`
-  const patient = isUserPatient ? patientHook.patient : getPatientById(patientId)
   const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const bgClasses = defaultBgClasses[bgUnits]
   const bgPrefs: BgPrefs = {
@@ -127,6 +123,7 @@ export const usePatientData = (): usePatientDataResult => {
   }))
 
   const currentPatientView = useMemo<PatientView>(() => {
+    const urlPrefix = pathname.substring(0, pathname.lastIndexOf('/'))
     const routeWithoutUrlPrefix = pathname.replace(urlPrefix, '')
 
     switch (routeWithoutUrlPrefix) {
@@ -141,7 +138,7 @@ export const usePatientData = (): usePatientDataResult => {
       case AppUserRoute.TargetAndAlerts:
         return PatientView.TargetAndAlerts
     }
-  }, [pathname, urlPrefix])
+  }, [pathname])
 
   const getRouteByPatientView = (view: PatientView): AppUserRoute => {
     switch (view) {
@@ -163,7 +160,7 @@ export const usePatientData = (): usePatientDataResult => {
   const changePatient = (patient: Patient): void => {
     patientDataUtils.current.changePatient(patient)
     setMedicalData(null)
-    navigate(`/patient/${patient.userid}${getRouteByPatientView(currentPatientView)}`)
+    navigate(`${AppUserRoute.Teams}/${teamId}${AppUserRoute.Patients}/${patient.userid}${getRouteByPatientView(currentPatientView)}`)
   }
 
   const getMsRangeByPatientView = (patientView: PatientView, patientMedicalData: MedicalDataService): number => {
@@ -185,7 +182,7 @@ export const usePatientData = (): usePatientDataResult => {
     setMsRange(newMsRange)
 
     const route = getRouteByPatientView(patientView)
-    navigate(`${urlPrefix}${route}`)
+    navigate(`..${route}`, { relative: 'path' })
   }
 
   const updateChartPrefs = (chartPrefs: ChartPrefs): void => {
@@ -194,7 +191,7 @@ export const usePatientData = (): usePatientDataResult => {
 
   const goToDailySpecificDate = (date: number | Date): void => {
     setDailyDate(date instanceof Date ? date.valueOf() : date)
-    navigate(`${urlPrefix}/${PatientView.Daily}?date=${new Date(date).toISOString()}`)
+    navigate(`../${PatientView.Daily}?date=${new Date(date).toISOString()}`, { relative: 'path' })
   }
 
   const handleDatetimeLocationChange = async (epochLocation: number, msRange: number): Promise<boolean> => {
@@ -206,10 +203,10 @@ export const usePatientData = (): usePatientDataResult => {
         msRange
       })
       const patientData = await patientDataUtils.current.loadDataRange(dateRange)
-      if (patientData && patientData.length > 0) {
+      if (patientData && patientData.cbg.length > 0) {
         const medicalDataUpdated = medicalData
         medicalDataUpdated.add(patientData)
-        const dataUtil = new DataUtil(medicalData.data, {
+        const dataUtil = new DataUtil(medicalData.medicalData, {
           bgPrefs,
           timePrefs,
           endpoints: medicalData.endpoints
@@ -242,10 +239,10 @@ export const usePatientData = (): usePatientDataResult => {
     try {
       setRefreshingData(true)
       const patientData = await patientDataUtils.current.loadDataRange(dateRange)
-      if (patientData && patientData.length > 0) {
+      if (patientData && patientData.cbg.length > 0) {
         const medicalDataUpdated = medicalData
         medicalDataUpdated.add(patientData)
-        const dataUtilUpdated = new DataUtil(medicalDataUpdated.data, {
+        const dataUtilUpdated = new DataUtil(medicalDataUpdated.medicalData, {
           bgPrefs,
           timePrefs,
           endpoints: medicalDataUpdated.endpoints
@@ -269,7 +266,7 @@ export const usePatientData = (): usePatientDataResult => {
         return
       }
       const medicalDataRetrieved = patientDataUtils.current.buildMedicalData(patientData)
-      const dataUtil = new DataUtil(medicalDataRetrieved.data, {
+      const dataUtil = new DataUtil(medicalDataRetrieved.medicalData, {
         bgPrefs,
         timePrefs,
         endpoints: medicalDataRetrieved.endpoints
@@ -290,7 +287,7 @@ export const usePatientData = (): usePatientDataResult => {
         return
       }
       const medicalData = patientDataUtils.current.buildMedicalData(patientData)
-      const dataUtil = new DataUtil(medicalData.data, {
+      const dataUtil = new DataUtil(medicalData.medicalData, {
         bgPrefs,
         timePrefs,
         endpoints: medicalData.endpoints
@@ -310,7 +307,7 @@ export const usePatientData = (): usePatientDataResult => {
 
   useEffect(() => {
     if (medicalData) {
-      const dataUtil = new DataUtil(medicalData.data, {
+      const dataUtil = new DataUtil(medicalData.medicalData, {
         bgPrefs,
         timePrefs,
         endpoints: medicalData.endpoints

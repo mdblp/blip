@@ -108,17 +108,6 @@ export function getSimpleHourFormatSpace() {
 export function getLongFormat() {
   return t('ddd, MMM D, Y')
 }
-
-/**
- * Moment format for:
- * - English: 'MMM D, YYYY h:mm a'
- * - French: 'D MMM YYYY, H:mm'
- * @returns {string} Format according to translation
- */
-export function getLongDayHourFormat() {
-  return t('MMM D, YYYY h:mm a')
-}
-
 /**
  * addDuration
  * @param {String} datetime - an ISO date string
@@ -150,20 +139,6 @@ export function getTimezoneFromTimePrefs(timePrefs) {
     return timePrefs.timezoneName ?? getBrowserTimezone() ?? 'UTC'
   }
   return 'UTC'
-}
-
-/**
- * formatBirthdate
- * @param {Object} patient - Tidepool patient object containing profile
- *
- * @return {String} formatted birthdate, e.g., 'Jul 4, 1975'; empty String if none found
- */
-export function formatBirthdate(patient) {
-  const birthday = _.get(patient, 'profile.patient.birthday', '')
-  if (birthday) {
-    return moment.utc(birthday).format(t('birthday-format'))
-  }
-  return ''
 }
 
 /**
@@ -340,28 +315,4 @@ export function getHammertimeFromDatumWithTimePrefs(datum, timePrefs) {
     )
   }
   return hammertime
-}
-
-/**
- * getLocalizedCeiling
- * @param {string} utc - Zulu timestamp (Integer hammertime also OK)
- * @param {object} timePrefs - object containing timezoneAware Boolean and timezoneName String
- *
- * @return {Date} a JavaScript Date, the closest (future) midnight according to timePrefs;
- *                  if utc is already local midnight, returns utc
- */
-export function getLocalizedCeiling(utc, timePrefs) {
-  if (utc instanceof Date) {
-    throw new Error('`utc` must be a ISO-formatted String timestamp or integer hammertime!')
-  }
-  const timezone = getTimezoneFromTimePrefs(timePrefs)
-  const startOfDay = moment.utc(utc)
-    .tz(timezone)
-    .startOf('day')
-
-  const utcHammertime = (typeof utc === 'string') ? Date.parse(utc) : utc
-  if (startOfDay.valueOf() === utcHammertime) {
-    return startOfDay.toDate()
-  }
-  return startOfDay.add(1, 'day').toDate()
 }

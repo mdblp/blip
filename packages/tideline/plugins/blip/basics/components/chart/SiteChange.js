@@ -19,7 +19,7 @@ import _ from 'lodash'
 import PropTypes from 'prop-types'
 import React from 'react'
 
-import { SITE_CHANGE_RESERVOIR, SITE_CHANGE } from '../../logic/constants'
+import { SITE_CHANGE } from '../../logic/constants'
 import Change from '../sitechange/Change'
 import NoChange from '../sitechange/NoChange'
 import { PumpManufacturer } from 'medical-domain'
@@ -29,14 +29,13 @@ function SiteChange(props) {
     return props.data.infusionSiteHistory[props.date]
   }
 
-  const type = props.subtotalType ?? SITE_CHANGE_RESERVOIR
   const value = getValue()
   const manufacturer = _.get(_.last(value.data), 'pump.manufacturer', PumpManufacturer.Default)
   value.count = value.count ?? 1 //default value
   // Reservoir Change
   const siteChangeComponent =
     value.type === SITE_CHANGE ? (
-      <Change daysSince={value.daysSince} count={value.count} type={type} manufacturer={manufacturer} />
+      <Change daysSince={value.daysSince} count={value.count} manufacturer={manufacturer} />
     ) : (
       <NoChange />
     )
@@ -45,8 +44,7 @@ function SiteChange(props) {
 
 SiteChange.propTypes = {
   data: PropTypes.object.isRequired,
-  date: PropTypes.string.isRequired,
-  subtotalType: PropTypes.string
+  date: PropTypes.string.isRequired
 }
 
 export default SiteChange

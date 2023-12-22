@@ -139,16 +139,6 @@ describe('datetime', () => {
     })
   })
 
-  describe('formatBirthdate', () => {
-    it('should be a function', () => {
-      assert.isFunction(datetime.formatBirthdate)
-    })
-
-    it('should format birthdate extracted from normal patient object', () => {
-      expect(datetime.formatBirthdate(patient)).to.equal('Jan 31, 1983')
-    })
-  })
-
   describe('formatClocktimeFromMsPer24', () => {
     const twoTwentyAfternoonMs = 1000 * 60 * 60 * 14 + 1000 * 60 * 20
     const errorMsg = 'First argument must be a value in milliseconds per twenty-four hour day!'
@@ -480,34 +470,6 @@ describe('datetime', () => {
       expect(fn).to.throw(
         'Check your input datum; could not parse `normalTime` or `deviceTime` with Date.parse.'
       )
-    })
-  })
-
-  describe('getLocalizedCeiling', () => {
-    const timePrefs = { timezoneAware: true, timezoneName: 'US/Pacific' }
-    it('should be a function', () => {
-      assert.isFunction(datetime.getLocalizedCeiling)
-    })
-
-    it('should error if passed a JavaScript Date for the `utc` param', () => {
-      const fn = () => { datetime.getLocalizedCeiling(new Date()) }
-      expect(fn)
-        .to.throw('`utc` must be a ISO-formatted String timestamp or integer hammertime!')
-    })
-
-    it('should return the ceiling (= next midnight) for a datetime in a given timezone', () => {
-      const dt = '2016-03-15T14:25:00.000Z'
-      expect(datetime.getLocalizedCeiling(dt, timePrefs).toISOString())
-        .to.equal('2016-03-16T07:00:00.000Z')
-      const asInteger = Date.parse(dt)
-      expect(datetime.getLocalizedCeiling(asInteger, timePrefs).toISOString())
-        .to.equal('2016-03-16T07:00:00.000Z')
-    })
-
-    it('should return the same datetime if it already is a midnight in given timezone', () => {
-      const dt = '2016-03-15T07:00:00.000Z'
-      expect(datetime.getLocalizedCeiling(dt, timePrefs).toISOString())
-        .to.equal(dt)
     })
   })
 })

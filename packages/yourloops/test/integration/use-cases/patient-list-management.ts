@@ -44,7 +44,7 @@ import { checkPatientFiltersForPrivateTeam } from '../assert/patient-filters.ass
 import { type Router } from '../models/router.model'
 
 export const testPatientListForHcp = async (router: Router) => {
-  checkPatientListHeaderForHcp()
+  await checkPatientListHeaderForHcp()
   await checkPatientListTooltipsMgDL()
   await checkPatientListTooltipsNoData()
   await checkPatientListColumnSort()

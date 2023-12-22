@@ -32,11 +32,21 @@ import {
   loggedInUserFullName,
   loggedInUserId,
   loggedInUserLastName,
+  userHugoEmail,
+  userHugoFirstName,
+  userHugoFullName,
+  userHugoId,
+  userHugoLastName,
   userTimEmail,
   userTimFirstName,
   userTimFullName,
   userTimId,
-  userTimLastName
+  userTimLastName,
+  userYdrisEmail,
+  userYdrisFirstName,
+  userYdrisFullName,
+  userYdrisId,
+  userYdrisLastName
 } from './auth0.hook.mock'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
@@ -48,8 +58,8 @@ import { type Profile } from '../../../lib/auth/models/profile.model'
 import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/monitoring-alert/monitoring-alert.default'
 import { type ITeam } from '../../../lib/team/models/i-team.model'
 import { Unit } from 'medical-domain'
-import { PRIVATE_TEAM_ID, PRIVATE_TEAM_NAME } from '../../../lib/team/team.hook'
 import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
+import { PRIVATE_TEAM_ID, PRIVATE_TEAM_NAME } from '../../../lib/team/team.util'
 
 const {
   minVeryLowBg,
@@ -68,7 +78,7 @@ export const monitoringAlertsParameters: MonitoringAlertsParameters = {
 }
 export const monitoringAlertsParametersBgUnitMmol: MonitoringAlertsParameters = {
   bgUnit: Unit.MmolPerLiter,
-  lowBg: 2.8,
+  lowBg: 3.0,
   highBg: 7.8,
   outOfRangeThreshold: 5,
   veryLowBg: 2.2,
@@ -113,7 +123,22 @@ export const buildTeamOne = (): Team => {
       } as Profile,
       status: UserInviteStatus.Accepted,
       email: loggedInUserEmail
-    }]
+    }, {
+      userId: userTimId,
+      role: TeamMemberRole.admin,
+      profile: {
+        email: userTimEmail,
+        firstName: userTimFirstName,
+        fullName: userTimFullName,
+        hcpProfession: HcpProfession.other,
+        lastName: userTimLastName,
+        privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+        termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+      } as Profile,
+      status: UserInviteStatus.Accepted,
+      email: userTimEmail
+    }],
+    monitoringAlertsParameters
   }
 }
 
@@ -154,35 +179,66 @@ export const buildTeamThree = (): Team => {
     phone: '0476000000',
     email: 'hey@third.hey',
     address: { line1: 'Guinness Road', line2: '', zip: 'W1D 1BS', city: 'Dublin', country: 'GB' },
-    members: [{
-      userId: loggedInUserId,
-      role: TeamMemberRole.admin,
-      profile: {
-        email: loggedInUserEmail,
-        firstName: loggedInUserFirstName,
-        fullName: loggedInUserFullName,
-        hcpProfession: HcpProfession.other,
-        lastName: loggedInUserLastName,
-        privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-        termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-      } as Profile,
-      status: UserInviteStatus.Accepted,
-      email: loggedInUserEmail
-    }, {
-      userId: userTimId,
-      role: TeamMemberRole.member,
-      profile: {
-        email: userTimEmail,
-        firstName: userTimFirstName,
-        fullName: userTimFullName,
-        hcpProfession: HcpProfession.other,
-        lastName: userTimLastName,
-        privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-        termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-      } as Profile,
-      status: UserInviteStatus.Accepted,
-      email: userTimEmail
-    }],
+    members: [
+      {
+        userId: loggedInUserId,
+        role: TeamMemberRole.admin,
+        profile: {
+          email: loggedInUserEmail,
+          firstName: loggedInUserFirstName,
+          fullName: loggedInUserFullName,
+          hcpProfession: HcpProfession.other,
+          lastName: loggedInUserLastName,
+          privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+          termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+        } as Profile,
+        status: UserInviteStatus.Accepted,
+        email: loggedInUserEmail
+      },
+      {
+        userId: userTimId,
+        role: TeamMemberRole.member,
+        profile: {
+          email: userTimEmail,
+          firstName: userTimFirstName,
+          fullName: userTimFullName,
+          hcpProfession: HcpProfession.other,
+          lastName: userTimLastName,
+          privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+          termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+        } as Profile,
+        status: UserInviteStatus.Accepted,
+        email: userTimEmail
+      }, {
+        userId: userHugoId,
+        role: TeamMemberRole.member,
+        profile: {
+          email: userHugoEmail,
+          firstName: userHugoFirstName,
+          fullName: userHugoFullName,
+          hcpProfession: HcpProfession.other,
+          lastName: userHugoLastName,
+          privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+          termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+        } as Profile,
+        status: UserInviteStatus.Pending,
+        email: userHugoEmail,
+        invitationId: 'fakeInvitationId'
+      }, {
+        userId: userYdrisId,
+        role: TeamMemberRole.member,
+        profile: {
+          email: userYdrisEmail,
+          firstName: userYdrisFirstName,
+          fullName: userYdrisFullName,
+          hcpProfession: HcpProfession.other,
+          lastName: userYdrisLastName,
+          privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+          termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+        } as Profile,
+        status: UserInviteStatus.Pending,
+        email: userYdrisEmail
+      }],
     monitoringAlertsParameters
   }
 }
@@ -198,7 +254,7 @@ export const buildFiltersTeam = (): Team => {
     address: { line1: 'Vaucansson', line2: '', zip: '380000', city: 'Grenoble', country: 'FR' },
     members: [{
       userId: loggedInUserId,
-      role: TeamMemberRole.admin,
+      role: TeamMemberRole.member,
       profile: {
         email: loggedInUserEmail,
         firstName: loggedInUserFirstName,
@@ -210,7 +266,22 @@ export const buildFiltersTeam = (): Team => {
       } as Profile,
       status: UserInviteStatus.Accepted,
       email: 'filters@user.com'
-    }]
+    }, {
+      userId: userTimId,
+      role: TeamMemberRole.admin,
+      profile: {
+        email: userTimEmail,
+        firstName: userTimFirstName,
+        fullName: userTimFullName,
+        hcpProfession: HcpProfession.other,
+        lastName: userTimLastName,
+        privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+        termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+      } as Profile,
+      status: UserInviteStatus.Accepted,
+      email: userTimEmail
+    }],
+    monitoringAlertsParameters
   }
 }
 

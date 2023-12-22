@@ -36,19 +36,26 @@ import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
 import {
   completeDashboardData,
-  mockDataAPI, sixteenDaysOldDashboardData,
+  mockDataAPI,
+  sixteenDaysOldDashboardData,
   twoWeeksOldDashboardData
 } from '../../../mock/data.api.mock'
-import { type AppMainLayoutParams, testAppMainLayoutForCaregiver } from '../../../use-cases/app-main-layout-visualisation'
+import {
+  type AppMainLayoutParams,
+  testAppMainLayoutForCaregiver
+} from '../../../use-cases/app-main-layout-visualisation'
 import { type PatientDashboardLayoutParams } from '../../../assert/layout.assert'
 import {
-  testDashboardDataVisualisationPrivateTeam, testDashboardDataVisualisationTwoWeeksOldData,
-  testDashboardDataVisualisationSixteenDaysOldData, testPatientNavBarForPatientAndCaregiver
+  testDashboardDataVisualisationPrivateTeam,
+  testDashboardDataVisualisationSixteenDaysOldData,
+  testDashboardDataVisualisationTwoWeeksOldData,
+  testPatientNavBarForPatientAndCaregiver
 } from '../../../use-cases/patient-data-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 
 describe('Dashboard view for caregiver', () => {
-  const patientDashboardRoute = `${AppUserRoute.Patient}/${patient1Id}${AppUserRoute.Dashboard}`
+  const patientDashboardRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Dashboard}`
   const firstName = 'Caregiver firstName'
   const lastName = 'Caregiver lastName'
 

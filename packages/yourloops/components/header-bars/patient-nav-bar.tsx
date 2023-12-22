@@ -80,7 +80,7 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
   const { classes } = styles()
 
   const goBackHome = (): void => {
-    navigate('/')
+    navigate(`../..`, { relative: 'path' })
   }
 
   return (

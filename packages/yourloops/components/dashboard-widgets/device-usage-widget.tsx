@@ -40,21 +40,18 @@ import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import { BasicsChart } from 'tideline'
 import type MedicalDataService from 'medical-domain'
-import { type DateFilter, GlycemiaStatisticsService, type PumpSettings, type TimePrefs } from 'medical-domain'
+import { type DateFilter, GlycemiaStatisticsService, type PumpSettings } from 'medical-domain'
 import metrics from '../../lib/metrics'
 import GenericDashboardCard from './generic-dashboard-card'
 import { SensorUsageStat } from '../statistics/sensor-usage-stat'
 import { formatParameterValue, getPumpSettingsParameterList, sortHistory } from '../device/utils/device.utils'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { type BgPrefs } from 'dumb'
 import { formatDateWithMomentLongFormat } from '../../lib/utils'
 
 interface DeviceUsageWidgetProps {
-  bgPrefs: BgPrefs
   dateFilter: DateFilter
   medicalDataService: MedicalDataService
   patient: Patient
-  timePrefs: TimePrefs
 }
 
 const useStyles = makeStyles()((theme) => ({
@@ -89,11 +86,11 @@ const useStyles = makeStyles()((theme) => ({
 }))
 
 export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
-  const { bgPrefs, timePrefs, patient, medicalDataService, dateFilter } = props
+  const { patient, medicalDataService, dateFilter } = props
   const { t } = useTranslation()
   const { classes } = useStyles()
   const trackMetric = metrics.send
-  const pumpSettings = [...medicalDataService.grouped.pumpSettings].pop() as PumpSettings
+  const pumpSettings = medicalDataService.medicalData.pumpSettings.slice(-1)[0] as PumpSettings
   const {
     total,
     sensorUsage
@@ -187,12 +184,8 @@ export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
         <SensorUsageStat total={total} usage={sensorUsage} />
         <Divider variant="fullWidth" className={classes.divider} />
         <BasicsChart
-          bgClasses={bgPrefs.bgClasses}
-          bgUnits={bgPrefs.bgUnits}
-          onSelectDay={() => null}
           patient={patient}
           tidelineData={medicalDataService}
-          timePrefs={timePrefs}
           trackMetric={trackMetric}
         />
       </CardContent>

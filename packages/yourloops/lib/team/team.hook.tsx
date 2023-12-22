@@ -54,9 +54,6 @@ import SpinningLoader from '../../components/loaders/spinning-loader'
 
 const ReactTeamContext = createContext<TeamContext>({} as TeamContext)
 
-export const PRIVATE_TEAM_ID = 'private'
-export const PRIVATE_TEAM_NAME = 'private'
-
 function TeamContextImpl(): TeamContext {
   const authHook = useAuth()
   const notificationHook = useNotification()
@@ -101,11 +98,19 @@ function TeamContextImpl(): TeamContext {
   }
 
   const getPrivateTeam = (): Team => {
-    return teams.find((team: Team) => TeamUtils.isPrivate(team))
+    return teams.find((team: Team) => TeamUtils.isPrivate(team.id))
   }
 
   const getTeamsByType = (type: TeamType): Team[] => {
     return teams.filter((team: Team) => team.type === type)
+  }
+
+  const getDefaultTeamId = (): string => {
+    const medicalTeams = getMedicalTeams()
+    if (medicalTeams.length) {
+      return TeamUtils.sortTeamsByName(medicalTeams)[0].id
+    }
+    return getPrivateTeam().id
   }
 
   const inviteMember = async (team: Team, username: string, role: TeamMemberRole.admin | TeamMemberRole.member): Promise<void> => {
@@ -210,6 +215,7 @@ function TeamContextImpl(): TeamContext {
     getTeam,
     getMedicalTeams,
     getPrivateTeam,
+    getDefaultTeamId,
     inviteMember,
     createTeam,
     updateTeam,

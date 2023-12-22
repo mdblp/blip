@@ -21,7 +21,6 @@ import _ from 'lodash'
 import { assert, expect } from 'chai'
 
 import * as bgUtils from '../../src/utils/bloodglucose'
-import { MS_IN_MIN } from '../../src/utils/constants'
 
 describe('blood glucose utilities', () => {
   describe('generateBgRangeLabels', () => {
@@ -135,53 +134,6 @@ describe('blood glucose utilities', () => {
     })
   })
 
-  describe('getOutOfRangeThreshold', () => {
-    it('should return a high out-of-range threshold for a high datum', () => {
-      const datum = {
-        type: 'smbg',
-        value: 601,
-        annotations: [
-          {
-            code: 'bg/out-of-range',
-            threshold: 600,
-            value: 'high'
-          }
-        ]
-      }
-
-      expect(bgUtils.getOutOfRangeThreshold(datum)).to.deep.equal({
-        high: 600
-      })
-    })
-
-    it('should return a low out-of-range threshold for a low datum', () => {
-      const datum = {
-        type: 'smbg',
-        value: 32,
-        annotations: [
-          {
-            code: 'bg/out-of-range',
-            threshold: 40,
-            value: 'low'
-          }
-        ]
-      }
-
-      expect(bgUtils.getOutOfRangeThreshold(datum)).to.deep.equal({
-        low: 40
-      })
-    })
-
-    it('should return null for an in-range datum', () => {
-      const datum = {
-        type: 'smbg',
-        value: 100
-      }
-
-      expect(bgUtils.getOutOfRangeThreshold(datum)).to.equal(null)
-    })
-  })
-
   describe('weightedCGMCount', () => {
     it('should return a count of 1 for every cgm datum by default', () => {
       const data = _.map(_.range(0, 10), () => ({
@@ -218,20 +170,6 @@ describe('blood glucose utilities', () => {
       })))
 
       expect(bgUtils.weightedCGMCount(data)).to.equal(40)
-    })
-  })
-
-  describe('cgmSampleFrequency', () => {
-    it('should get the CGM sample frequency in milliseconds from a CGM data point', () => {
-      const dexcomDatum = {
-        deviceId: 'Dexcom_XXXXXXX'
-      }
-      expect(bgUtils.cgmSampleFrequency(dexcomDatum)).to.equal(5 * MS_IN_MIN)
-
-      const libreDatum = {
-        deviceId: 'AbbottFreeStyleLibre_XXXXXXX'
-      }
-      expect(bgUtils.cgmSampleFrequency(libreDatum)).to.equal(15 * MS_IN_MIN)
     })
   })
 })

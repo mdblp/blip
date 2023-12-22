@@ -27,10 +27,17 @@
 
 import { checkNavigationToDailyView } from '../assert/device-view.assert'
 import { patient1Id } from '../data/patient.api.data'
+import { myThirdTeamId } from '../mock/team.api.mock'
+import { PRIVATE_TEAM_ID } from '../../../lib/team/team.util'
 
-export const testDeviceSettingsNavigationForHcpAndCaregiver = async (router) => {
-  await checkNavigationToDailyView(router, `/patient/${patient1Id}/daily`)
+export const testDeviceSettingsNavigationForHcp = async (router) => {
+  await checkNavigationToDailyView(router, `/teams/${myThirdTeamId}/patients/${patient1Id}/daily`)
 }
+
+export const testDeviceSettingsNavigationForCaregiver = async (router) => {
+  await checkNavigationToDailyView(router, `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}/daily`)
+}
+
 export const testDeviceSettingsNavigationForPatient = async (router) => {
   await checkNavigationToDailyView(router, '/daily')
 }

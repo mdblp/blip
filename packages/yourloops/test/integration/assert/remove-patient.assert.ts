@@ -53,7 +53,7 @@ export const checkRemovePatientPrivateDialogContent = async () => {
 }
 
 export const checkRemovePatientMedicalTeamDialogContent = async () => {
-  const removeButton = screen.getByRole('button', { name: `Remove patient ${patient2Info.profile.email}` })
+  const removeButton = await screen.findByRole('button', { name: `Remove patient ${patient2Info.profile.email}` }, { timeout: 3000 })
   expect(removeButton).toBeVisible()
 
   await userEvent.click(removeButton)

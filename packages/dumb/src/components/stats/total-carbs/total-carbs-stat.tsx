@@ -35,6 +35,7 @@ export interface TotalCarbsStatProps {
   annotations?: string[]
   value: number
 }
+
 const CarbsStatItem: FunctionComponent<TotalCarbsStatProps> = (props) => {
   const { annotations, value, title } = props
   return (
@@ -49,23 +50,16 @@ const CarbsStatItem: FunctionComponent<TotalCarbsStatProps> = (props) => {
 
       {!value
         ? <>
-          <div className={styles['disabled-line']}/>
+          <div className={styles['disabled-line']} />
           <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
             --
           </Box>
         </>
 
-        : <>
-          <div className={styles.total}>
-                <span className={styles.value}>
-                  {value}
-                </span>
-            <span className={styles.suffix}>
-                  {Unit.Gram}
-                </span>
-          </div>
-        </>
-
+        : <div className={styles.total}>
+          <span className={styles.value}>{value}</span>
+          <span className={styles.suffix}>{Unit.Gram}</span>
+        </div>
       }
     </Box>
   )

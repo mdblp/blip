@@ -74,6 +74,7 @@ const deduplicate = (data: Wizard[], _opts: MedicalDataOptions): Wizard[] => {
   // group wizards by normal time
   const initialGroups: Record<string, Wizard[]> = {}
   const timeGroups = data.reduce((previous, current: Wizard) => {
+    current.bolusIds = new Set<string>([current.bolusId])
     if (previous[current.normalTime] === undefined) {
       previous[current.normalTime] = []
     }
