@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.6-beta - 2023-11-10
+## 3.1.1-beta - 2023-12-22
 ### Changed
 - YLP-2574 Create tool tips independently of the name of the columns
 - YLP-2704 Remove settings logic from viz
@@ -20,7 +20,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2709 Migration warm up tooltip
 - YLP-2726 Cleanup tideline/viz packages
 
-## 3.0.5 - 2023-11-02
+## 3.1.0 - 2023-12-15
 ### Added
 - YLP-2292 Display rescue carbs and manual bolus in the trends view for DBLG1 patient
 - YLP-2299 Display DBLG1 events in Daily view
