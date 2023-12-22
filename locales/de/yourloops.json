@@ -122,6 +122,8 @@
   "avg-time-loop": "Ø Tägliche Zeit im Loop-Modus",
   "avg-time-loop-how-calculate": "**Wie wir dies berechnen**:\n\n(%) ist die Dauer im Loop-Modus an (ON) oder aus (OFF), geteilt durch die Gesamtdauer der Basalwerte für diesen Zeitraum.\n\n**(Zeit)** ist die durchschnittliche im Loop-Modus an (ON) oder aus (OFF) verbrachte Zeit.",
   "avg-time-loop-tooltip": "**Zeit im Loop-Modus**: Tagesdurchschnitt der im automatischen Basalratenmodus verbrachten Zeit.",
+  "below-range": "Unterhalb des Zielbereichs",
+  "below-range-tooltip": "Unterhalb des Zielbereichs",
   "birthplace": "Geburtsort",
   "brand-name": "YourLoops",
   "breadcrumb-home": "Startseite",

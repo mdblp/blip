@@ -122,6 +122,8 @@
   "avg-time-loop": "Prom. tiempo diario en modo loop",
   "avg-time-loop-how-calculate": "**Cómo se calcula**:\n\n(%) es la duración del modo loop en ON u OFF dividida entre la duración total de las basales de este periodo de tiempo.\n\n**(tiempo)** es el tiempo promedio diario con el modo loop en ON u OFF.",
   "avg-time-loop-tooltip": "**Tiempo en modo loop**: promedio diario de tiempo dedicado a la administración basal automatizada.",
+  "below-range": "Inferior al intervalo",
+  "below-range-tooltip": "Inferior al intervalo",
   "birthplace": "Lugar de nacimiento",
   "brand-name": "YourLoops",
   "breadcrumb-home": "Inicio",
