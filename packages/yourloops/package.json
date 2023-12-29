@@ -42,7 +42,7 @@
     "@mui/x-data-grid": "^6.18.2",
     "axios": "^1.6.0",
     "bows": "^1.7.2",
-    "core-js": "^3.33.0",
+    "core-js": "^3.35.0",
     "dayjs": "^1.11.10",
     "emoji-picker-react": "^4.5.16",
     "html-react-parser": "^4.2.9",
