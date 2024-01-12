@@ -43,12 +43,6 @@
       "main": {},
       "params": {},
       "yourloops": {}
-    },
-    "ja": {
-      "name": "日本語",
-      "main": {},
-      "params": {},
-      "yourloops": {}
     }
   },
   "countries": {
@@ -69,12 +63,6 @@
     },
     "FR": {
       "name": "France"
-    },
-    "JA": {
-      "name": "Japan"
-    },
-    "GB": {
-      "name": "United Kingdom"
     },
     "IT": {
       "name": "Italy"
