@@ -132,7 +132,7 @@ describe('Auth hook', () => {
       ...profile,
       privacyPolicy: { acceptanceTimestamp: new Date().toISOString(), isAccepted: true }
     }
-    const updatedSettings: Settings = { ...settings, country: CountryCodes.UnitedKingdom }
+    const updatedSettings: Settings = { ...settings, country: CountryCodes.Italy }
 
     beforeAll(() => {
       jest.spyOn(UserApi, 'updateProfile').mockResolvedValueOnce(updatedProfile)
