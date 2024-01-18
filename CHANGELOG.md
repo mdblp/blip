@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## 3.1.1-beta - 2023-12-22
 ### Changed
 - YLP-2574 Create tool tips independently of the name of the columns
+- YLP-2586 Display height in device parameters
 - YLP-2749 Use a branded Verify Email result page instead of the Auth0 one
 
 ### Fixed

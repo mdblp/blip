@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -85,6 +85,7 @@ export const formatParameterValue = (value: string | number, units: string | Uni
   switch (units) {
     case Unit.Percent:
     case Unit.Minute:
+    case Unit.Centimeter:
       break
     case Unit.Gram:
     case Unit.Kilogram:
