@@ -2,14 +2,12 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.1.1-beta - 2023-12-22
+## 3.2.0-beta - 2024-01-22
 ### Changed
 - YLP-2122 Remove JP and GB from the list of countries
 - YLP-2574 Create tool tips independently of the name of the columns
-- YLP-2704 Remove settings logic from viz
-- YLP-2724 Filter on weekday for all data types where the information (weekday) is available
 - YLP-2586 Display height in device parameters
-- YLP-2726 Cleanup tideline/viz packages
+- YLP-2724 Filter on weekday for all data types where the information (weekday) is available
 - YLP-2749 Use a branded Verify Email result page instead of the Auth0 one
 
 ### Fixed
