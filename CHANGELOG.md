@@ -6,6 +6,7 @@ It is based on Tidepool Blip 1.27.
 ### Changed
 - YLP-2122 Remove JP and GB from the list of countries
 - YLP-2574 Create tool tips independently of the name of the columns
+- YLP-2586 Display height in device parameters
 - YLP-2749 Use a branded Verify Email result page instead of the Auth0 one
 
 ### Fixed
