@@ -132,7 +132,7 @@ describe('Profile page for patient', () => {
   })
 
   it('should render profile page without specific INS fields when patient is not french', async () => {
-    settings.country = CountryCodes.UnitedKingdom
+    settings.country = CountryCodes.Italy
     mockUserApi().mockUserDataFetch({ profile, preferences, settings })
     await act(async () => {
       renderPage('/preferences')
