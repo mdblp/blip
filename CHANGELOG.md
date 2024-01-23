@@ -7,6 +7,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2122 Remove JP and GB from the list of countries
 - YLP-2574 Create tool tips independently of the name of the columns
 - YLP-2586 Display height in device parameters
+- YLP-2724 Filter on weekday for all data types where the information (weekday) is available
 - YLP-2749 Use a branded Verify Email result page instead of the Auth0 one
 
 ### Fixed

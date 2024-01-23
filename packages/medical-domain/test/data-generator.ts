@@ -51,10 +51,12 @@ import Unit from '../src/domains/models/medical/datum/enums/unit.enum'
 import Intensity from '../src/domains/models/medical/datum/enums/intensity.enum'
 import PumpManufacturer from '../src/domains/models/medical/datum/enums/pump-manufacturer.enum'
 import { DeviceEventSubtype } from '../src/domains/models/medical/datum/enums/device-event-subtype.enum'
-import { getTrendsTime } from '../src/domains/repositories/time/time.service'
+import { getTrendsTime, getWeekDay } from '../src/domains/repositories/time/time.service'
+import moment from 'moment-timezone'
 
 function createBaseData(date?: Date): Omit<BaseDatum, 'type'> {
   const pastDate = date ?? faker.date.recent({ days: 20 })
+  const mTime = moment.tz(pastDate.valueOf(), 'Europe/Paris')
   return {
     id: faker.string.uuid(),
     source: Source.Diabeloop,
@@ -62,7 +64,8 @@ function createBaseData(date?: Date): Omit<BaseDatum, 'type'> {
     epoch: pastDate.valueOf(),
     displayOffset: -60,
     normalTime: pastDate.toISOString(),
-    guessedTimezone: false
+    guessedTimezone: false,
+    isoWeekday: getWeekDay(mTime)
   }
 }
 

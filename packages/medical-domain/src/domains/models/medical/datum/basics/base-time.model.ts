@@ -26,10 +26,12 @@
  */
 
 import { isRecord } from '../../../../utils/typeguard.utils'
+import WeekDays from '../../../time/enum/weekdays.enum'
 
 interface BaseTime {
   timezone: string
   normalTime: string
+  isoWeekday: WeekDays
   epoch: number
   displayOffset: number
   guessedTimezone: boolean

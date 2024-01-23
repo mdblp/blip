@@ -41,7 +41,7 @@ const normalize = (rawData: Record<string, unknown>, _opts: MedicalDataOptions):
   const out: BaseTime = {
     ...getNormalizedTime(rawData.time, timezone),
     timezone,
-    guessedTimezone: false
+    guessedTimezone: false,
   }
   return out
 }
