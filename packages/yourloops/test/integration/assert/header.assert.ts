@@ -29,7 +29,7 @@ import { type BoundFunctions, fireEvent, type queries, screen, within } from '@t
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { type Team } from '../../../lib/team'
 import userEvent from '@testing-library/user-event'
-import { PRIVATE_TEAM_NAME } from '../../../lib/team/team.hook'
+import { PRIVATE_TEAM_NAME } from '../../../lib/team/team.util'
 
 interface TeamMenuInfo {
   selectedTeamName?: string

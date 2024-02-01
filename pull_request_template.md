@@ -1,6 +1,6 @@
 ## Checklist
 - [ ] PR name contains the Jira ticket number
-- [ ] Changelog updated
+- [ ] Changelog updated (Jira tickets are correctly sorted)
 - [ ] Code tested (unit tests and integration tests)
 - [ ] No console errors/warnings in integration tests
 - [ ] No translation files updated (except for English files)

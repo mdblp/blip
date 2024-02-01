@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import * as cdk from '@aws-cdk/core';
+import * as cdk from 'aws-cdk-lib';
 import { StaticWebSiteStack } from '../lib/staticwebsite-stack';
 import { LambdaStack } from '../lib/lambda-stack';
 import * as path from 'path';

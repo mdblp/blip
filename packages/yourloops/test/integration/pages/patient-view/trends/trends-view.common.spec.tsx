@@ -54,7 +54,10 @@ import { patient2AsTeamMember } from '../../../data/patient.api.data'
 import { buildHba1cData } from '../../../data/data-api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
-import { testTrendsDataVisualisationForHCP } from '../../../use-cases/patient-data-visualisation'
+import {
+  testTrendsDataVisualisationForHCP,
+  testTrendsWeekDayFilter
+} from '../../../use-cases/patient-data-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
 describe('Trends view for anyone', () => {
@@ -67,15 +70,18 @@ describe('Trends view for anyone', () => {
   })
 
   describe('with all kind of data', () => {
-    it('should render correct tooltips and values', async () => {
+    it('should render trend page and statistics correctly', async () => {
       mockDataAPI(minimalTrendViewData)
       const router = renderPage(trendsRoute)
       await waitFor(() => {
         expect(router.state.location.pathname).toEqual(trendsRoute)
       })
-      await testTrendsDataVisualisationForHCP()
 
+      await testTrendsDataVisualisationForHCP()
       await checkTrendsTidelineContainerTooltips()
+
+      // Check days filtering
+      await testTrendsWeekDayFilter()
 
       // Check the widget
       await checkRangeSelection()
@@ -85,10 +91,14 @@ describe('Trends view for anyone', () => {
       checkTrendsLayout()
       await checkTrendsBolusAndCarbsAverage()
 
+      // Check an information message is provided when there is not data
       await userEvent.click(screen.getByTestId('button-nav-back'))
       expect(await screen.findByText('There is no CGM data for this time period :(')).toBeVisible()
-    })
 
+    })
+  })
+
+  describe('with cbgs to calculate GMI', () => {
     it('should render correct tooltip and values GMI', async () => {
       mockDataAPI(buildHba1cData())
       renderPage(trendsRoute)
@@ -97,15 +107,15 @@ describe('Trends view for anyone', () => {
       await checkGlucoseManagementIndicator('GMI (estimated HbA1c)7.7%')
       await checkStatTooltip(patientStatistics, 'GMI (estimated HbA1c)', GMI_TOOLTIP)
     })
+  })
 
-    describe('with time in range data', () => {
-      it('should display correct readings in range stats info', async () => {
-        mockDataAPI(timeInRangeStatsTrendViewData)
-        renderPage(trendsRoute)
+  describe('with time in range data', () => {
+    it('should display correct readings in range stats info', async () => {
+      mockDataAPI(timeInRangeStatsTrendViewData)
+      renderPage(trendsRoute)
 
-        await checkTrendsTimeInRangeStatsWidgets()
-        await checkTimeInRangeStatsTitle()
-      })
+      await checkTrendsTimeInRangeStatsWidgets()
+      await checkTimeInRangeStatsTitle()
     })
   })
 

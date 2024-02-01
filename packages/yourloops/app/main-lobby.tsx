@@ -45,12 +45,13 @@ import { TrainingPage } from '../pages/training/training'
 import { ProductLabellingPage } from '../pages/product-labelling/product-labelling-page'
 import { LoginPageLanding } from '../pages/login/login-page-landing'
 import { ALWAYS_ACCESSIBLE_ROUTES, PUBLIC_ROUTES } from '../lib/diabeloop-urls.model'
-import { VerifyEmailPage } from '../pages/login/verify-email-page'
+import { VerifyEmailPage } from '../pages/verify-email/verify-email-page'
 import { useIdleTimer } from 'react-idle-timer'
 import { ConfigService } from '../lib/config/config.service'
 import { AppRoute } from '../models/enums/routes.enum'
 import { ConsentPage } from '../pages/consent/consent-page'
 import Box from '@mui/material/Box'
+import { VerifyEmailResultPage } from '../pages/verify-email/verify-email-result-page'
 
 const muiCache = createCache({
   key: 'mui',
@@ -135,6 +136,7 @@ export const MainLobby: FC = () => {
                     <Route path={AppRoute.NewConsent} element={<ConsentPage messageKey="consent-welcome-message" />} />
                     <Route path={AppRoute.Training} element={<TrainingPage />} />
                     <Route path={AppRoute.VerifyEmail} element={<VerifyEmailPage />} />
+                    <Route path={AppRoute.VerifyEmailResult} element={<VerifyEmailResultPage />} />
                     <Route path="*" element={<MainLayout />} />
                   </Routes>
                 </Box>

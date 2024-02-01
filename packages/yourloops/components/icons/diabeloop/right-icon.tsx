@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,18 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
-import { type SelectedTeamContextResult } from './selected-team-context.model'
-import { useSelectedTeamProviderCustomHook } from './selected-team.hook'
+import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon'
+import React, { ForwardedRef } from 'react'
+import { makeStyles } from 'tss-react/mui'
 
-const SelectedTeamContext = createContext<SelectedTeamContextResult>({} as SelectedTeamContextResult)
+const styles = makeStyles()(() => ({
+  'checkmark': {
+    strokeWidth: 6,
+    strokeLinecap: 'round'
+  }
+}))
 
-export const SelectedTeamProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
-  const selectedTeamProviderCustomHook = useSelectedTeamProviderCustomHook()
+export const RightIcon = React.forwardRef((props: SvgIconProps, ref: ForwardedRef<SVGSVGElement>) => {
+  const { classes } = styles()
+  return (
+    <SvgIcon {...props} ref={ref}>
+      <svg viewBox="0 0 180 180" fill="none">
+        <rect width="180" height="180" rx="90" fill="currentColor"/>
+        <rect x="15.5" y="15.5" width="149" height="149" rx="74.5" fill="currentColor"/>
+        <rect x="15.5" y="15.5" width="149" height="149" rx="74.5" stroke="white"/>
+        <path d="M53.9465 98.6502L83.567 126.643L130.969 62.0462" stroke="white" className={classes['checkmark']}/>
+      </svg>
+    </SvgIcon>
+  )
+})
 
-  return <SelectedTeamContext.Provider value={selectedTeamProviderCustomHook}>{children}</SelectedTeamContext.Provider>
-}
-
-export function useSelectedTeamContext(): SelectedTeamContextResult {
-  return useContext(SelectedTeamContext)
-}
+RightIcon.displayName = 'RightIcon'

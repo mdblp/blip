@@ -28,11 +28,52 @@
 import {
   checkCareTeamInformation,
   checkCareTeamMembers,
-  checkCareTeamMonitoringAlertsConfiguration
+  checkCareTeamMonitoringAlertsConfiguration,
+  checkDeleteTeam,
+  checkGiveAdminRole,
+  checkLeaveTeamHcp,
+  checkLeaveTeamPatient,
+  checkNotTeamAdmin,
+  checkRemoveAdminRole,
+  checkRemoveMember,
+  checkRemoveOurselvesFromTheMembers,
+  checkRemovePendingMemberInvitedByOurselves,
+  checkRemovePendingMemberNotInvitedByOurselves
 } from '../assert/care-team.assert'
 
 export const testCareTeamLayout = async () => {
   await checkCareTeamInformation()
   checkCareTeamMembers()
   checkCareTeamMonitoringAlertsConfiguration()
+}
+
+export const testRemoveTeamMember = async () => {
+  await checkRemoveMember()
+  await checkRemoveOurselvesFromTheMembers()
+  await checkRemovePendingMemberNotInvitedByOurselves()
+  await checkRemovePendingMemberInvitedByOurselves()
+}
+
+export const testGiveTeamMemberAdminRole = async () => {
+  await checkGiveAdminRole()
+}
+
+export const testRemoveTeamMemberAdminRole = async () => {
+  await checkRemoveAdminRole()
+}
+
+export const testDeleteTeam = async () => {
+  await checkDeleteTeam()
+}
+
+export const testLeaveTeamHcp = async () => {
+  await checkLeaveTeamHcp()
+}
+
+export const testLeaveTeamPatient = async () => {
+  await checkLeaveTeamPatient()
+}
+
+export const testNotTeamAdmin = async () => {
+  await checkNotTeamAdmin()
 }

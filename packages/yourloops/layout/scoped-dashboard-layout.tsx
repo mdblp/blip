@@ -25,21 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
-import SpinningLoader from '../../components/loaders/spinning-loader'
-import usePatientProviderCustomHook from './patient.hook'
-import { type PatientContextResult } from './models/patient-context-result.model'
+import React, { type FunctionComponent } from 'react'
+import { Outlet } from 'react-router-dom'
+import { PatientsProvider } from '../lib/patient/patients.provider'
+import { DashboardLayout } from './dashboard-layout'
+import { PatientListProvider } from '../lib/providers/patient-list.provider'
 
-const PatientContext = createContext<PatientContextResult>({} as PatientContextResult)
-
-export const PatientProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
-  const patientProviderCustomHook = usePatientProviderCustomHook()
-
-  return patientProviderCustomHook.initialized
-    ? <PatientContext.Provider value={patientProviderCustomHook}>{children}</PatientContext.Provider>
-    : <SpinningLoader className="centered-spinning-loader" />
-}
-
-export function usePatientContext(): PatientContextResult {
-  return useContext(PatientContext)
+export const ScopedDashboardLayout: FunctionComponent = () => {
+  return (
+    <DashboardLayout>
+      <PatientListProvider>
+        <PatientsProvider>
+          <Outlet />
+        </PatientsProvider>
+      </PatientListProvider>
+    </DashboardLayout>
+  )
 }

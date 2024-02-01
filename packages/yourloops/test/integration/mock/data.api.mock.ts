@@ -68,6 +68,7 @@ export const ALARM_EVENT_KALEIDO_OCCLUSION_ID = 'alarmEventKaleidoOcclusionId'
 export const ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID = 'alarmEventSensorSessionExpiredId'
 export const ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID = 'alarmEventSuddenRiseInGlycemiaId'
 export const ALARM_EVENT_URGENT_LOW_SOON_ID = 'alarmEventUrgentLowSoonId'
+export const WARMUP_01_ID = 'warmup01Id'
 export const WIZARD_UNDELIVERED_INPUT_TIME = '2022-08-08T02:00:00Z'
 export const WIZARD_UMM_INPUT_TIME = '2022-08-08T18:34:00Z'
 export const WIZARD_POSITIVE_OVERRIDE_INPUT_TIME = '2022-08-08T22:45:00Z'
@@ -1567,8 +1568,28 @@ export const completeDailyViewData: Data = {
         "msPer24": 62100000
       }
     ],
-    "warmUps": [],
-    "wizards": [
+    warmUps: [
+      {
+        "epoch": 1659974400000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T16:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "warmup-01",
+        "type": "deviceEvent",
+        "source": "Diabeloop",
+        "duration": {
+          "units": "hours",
+          "value": 0
+        },
+        "normalEnd": "2022-08-08T16:00:00.000Z",
+        "epochEnd": 1659974400000,
+        "subType": "warmup",
+        "guid": WARMUP_01_ID,
+        "inputTime": "2022-08-08T09:00:00Z",
+      }
+    ],
+    wizards: [
       {
         "epoch": 1659983100000,
         "displayOffset": -120,
@@ -2113,6 +2134,7 @@ export const minimalTrendViewData: Data = {
         "displayOffset": -60,
         "normalTime": "2020-01-18T02:25:00.000Z",
         "timezone": "Europe/Paris",
+        "isoWeekday": "saturday",
         "guessedTimezone": false,
         "id": "carbBolusId",
         "type": "bolus",
@@ -2318,6 +2340,7 @@ export const minimalTrendViewData: Data = {
         "displayOffset": -60,
         "normalTime": "2020-01-19T10:00:00.000Z",
         "timezone": "Europe/Paris",
+        "isoWeekday": "sunday",
         "guessedTimezone": false,
         "id": "food_19-35-00",
         "type": "food",
@@ -2338,6 +2361,7 @@ export const minimalTrendViewData: Data = {
         "epoch": 1579428000000,
         "displayOffset": -60,
         "normalTime": "2020-01-19T10:00:00.000Z",
+        "isoWeekday": "sunday",
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "food_19-35-00",
@@ -2359,6 +2383,7 @@ export const minimalTrendViewData: Data = {
         "epoch": 1579510800000,
         "displayOffset": -60,
         "normalTime": "2020-01-20T09:00:00.000Z",
+        "isoWeekday": "monday",
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "food_19-35-00",
@@ -2380,6 +2405,7 @@ export const minimalTrendViewData: Data = {
         "epoch": 1579460400000,
         "displayOffset": -60,
         "normalTime": "2020-01-19T19:00:00.000Z",
+        "isoWeekday": "sunday",
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "food_19-35-00",
@@ -2401,6 +2427,7 @@ export const minimalTrendViewData: Data = {
         "epoch": 1579559400000,
         "displayOffset": -60,
         "normalTime": "2020-01-20T22:30:00.000Z",
+        "isoWeekday": "monday",
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "food_19-35-00",
@@ -2429,6 +2456,7 @@ export const minimalTrendViewData: Data = {
         "epoch": 1579428000000,
         "displayOffset": -60,
         "normalTime": "2020-01-19T10:00:00.000Z",
+        "isoWeekday": "sunday",
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "wizardId1",
@@ -2444,6 +2472,7 @@ export const minimalTrendViewData: Data = {
         "epoch": 1579341600000,
         "displayOffset": -60,
         "normalTime": "2020-01-18T10:00:00.000Z",
+        "isoWeekday": "saturday",
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "wizardId2",

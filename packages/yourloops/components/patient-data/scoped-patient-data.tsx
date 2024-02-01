@@ -26,16 +26,22 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { SelectedTeamProvider } from '../lib/selected-team/selected-team.provider'
-import { HcpLayout } from './hcp-layout'
-import { TeamContextProvider } from '../lib/team'
+import { useParams } from 'react-router-dom'
+import { usePatientsContext } from '../../lib/patient/patients.provider'
+import { PatientData } from './patient-data'
+import SpinningLoader from '../loaders/spinning-loader'
 
-export const HcpLayoutWithContext: FunctionComponent = () => {
+export const ScopedPatientData: FunctionComponent = () => {
+  const { patientId } = useParams()
+  const { getPatientById } = usePatientsContext()
+  const patient = getPatientById(patientId)
+
   return (
-    <TeamContextProvider>
-      <SelectedTeamProvider>
-        <HcpLayout />
-      </SelectedTeamProvider>
-    </TeamContextProvider>
+    <>
+      {patient
+        ? <PatientData patient={patient}/>
+        : <SpinningLoader className="centered-spinning-loader" />
+      }
+    </>
   )
 }

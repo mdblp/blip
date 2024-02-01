@@ -28,8 +28,8 @@
 import { type Team, TEAM_CODE_LENGTH } from './models/team.model'
 import { TeamMemberRole } from './models/enums/team-member-role.enum'
 import { UserInviteStatus } from './models/enums/user-invite-status.enum'
-import { PRIVATE_TEAM_ID } from './team.hook'
-
+export const PRIVATE_TEAM_ID = 'private'
+export const PRIVATE_TEAM_NAME = 'private'
 /**
  * Get the team code for display - Can be use with partial code.
  * @param code 9 digit string team code
@@ -73,8 +73,8 @@ export default class TeamUtils {
     return teams.sort((teamA: Team, teamB: Team) => teamA.name.localeCompare(teamB.name))
   }
 
-  static isPrivate(team: Team): boolean {
-    return team?.id === PRIVATE_TEAM_ID
+  static isPrivate(teamId: string): boolean {
+    return teamId === PRIVATE_TEAM_ID
   }
 
   static formatTeamNameForTestId(teamName: string): string {

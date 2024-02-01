@@ -36,7 +36,7 @@ import Button from '@mui/material/Button'
 import GetAppIcon from '@mui/icons-material/GetApp'
 import { PatientView } from '../../enum/patient-view.enum'
 import { useAuth } from '../../lib/auth'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
+import { useParams } from 'react-router-dom'
 import TeamUtils from '../../lib/team/team.util'
 
 interface PatientNavBarTabsProps {
@@ -76,7 +76,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
   const { t } = useTranslation()
   const { classes } = styles()
   const { user } = useAuth()
-  const { selectedTeam } = useSelectedTeamContext()
+  const { teamId } = useParams()
 
   const getSelectedTab = (): PatientView => {
     return currentPatientView ?? PatientView.Dashboard
@@ -124,7 +124,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
             root: classes.root
           }}
         />
-        {user.isUserHcp() && !TeamUtils.isPrivate(selectedTeam) &&
+        {user.isUserHcp() && !TeamUtils.isPrivate(teamId) &&
           <Tab
             className={classes.tab}
             value={PatientView.TargetAndAlerts}

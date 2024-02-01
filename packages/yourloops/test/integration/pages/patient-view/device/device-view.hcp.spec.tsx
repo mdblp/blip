@@ -27,7 +27,7 @@
 
 import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
-import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../../mock/team.api.mock'
+import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { patient1Id } from '../../../data/patient.api.data'
@@ -38,14 +38,14 @@ import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../use-cases/app-main-layout-visualisation'
 import { testDeviceSettingsVisualisation } from '../../../use-cases/device-settings-visualisation'
-import { testDeviceSettingsNavigationForHcpAndCaregiver } from '../../../use-cases/device-settings-navigation'
+import { testDeviceSettingsNavigationForHcp } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
 describe('Device view for HCP', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
-  const deviceRoute = `${AppUserRoute.Patient}/${patient1Id}${AppUserRoute.Device}`
+  const deviceRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Device}`
 
   beforeEach(() => {
     mockWindowResizer()
@@ -88,6 +88,6 @@ describe('Device view for HCP', () => {
     await act(async () => {
       router = renderPage(deviceRoute)
     })
-    await testDeviceSettingsNavigationForHcpAndCaregiver(router)
+    await testDeviceSettingsNavigationForHcp(router)
   })
 })

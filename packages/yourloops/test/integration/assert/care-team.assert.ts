@@ -26,8 +26,30 @@
  */
 
 import { screen, within } from '@testing-library/react'
-import { myThirdTeamAddress, myThirdTeamCode, myThirdTeamName, myThirdTeamPhoneNumber } from '../mock/team.api.mock'
-import { loggedInUserEmail, loggedInUserFullName, userTimEmail, userTimFullName } from '../mock/auth0.hook.mock'
+import {
+  myFirstTeamId,
+  mySecondTeamId,
+  myThirdTeamAddress,
+  myThirdTeamCode,
+  myThirdTeamId,
+  myThirdTeamName,
+  myThirdTeamPhoneNumber
+} from '../mock/team.api.mock'
+import {
+  loggedInUserEmail,
+  loggedInUserFullName,
+  loggedInUserId,
+  userHugoFullName,
+  userTimEmail,
+  userTimFullName,
+  userTimId,
+  userYdrisFullName
+} from '../mock/auth0.hook.mock'
+import userEvent from '@testing-library/user-event'
+import TeamApi from '../../../lib/team/team.api'
+import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
+import PatientApi from '../../../lib/patient/patient.api'
+import { patient1Id } from '../data/patient.api.data'
 
 export const checkCareTeamInformation = async () => {
   const teamInformationSection = within(await screen.findByTestId('team-information'))
@@ -46,10 +68,137 @@ export const checkCareTeamInformation = async () => {
   expect(teamInformationSection.getByText(myThirdTeamAddress)).toBeVisible()
 }
 
+export const checkRemoveMember = async () => {
+  const teamMembersTable = await screen.findByRole('table')
+  expect(teamMembersTable).toHaveTextContent(/^MemberEmailAdminYann Blancyann.blanc@example.comTim Canutim.canu@example.com--pending-user-iconhugo.rodrigues@example.com--pending-user-iconydris.rebibane@example.com$/)
+
+  const removeMemberButton = screen.getByRole('button', { name: `Remove the member ${userTimFullName}` })
+  await userEvent.click(removeMemberButton)
+
+  const confirmDialog = screen.getByRole('dialog')
+  expect(confirmDialog).toHaveTextContent('Remove member from teamRemove the member Tim Canu from the team A - MyThirdTeam - to be deleted?CancelConfirm')
+
+  jest.spyOn(TeamApi, 'removeMember').mockResolvedValueOnce(null)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(1)
+  const confirmButton = within(confirmDialog).getByRole('button', { name: 'Confirm' })
+  await userEvent.click(confirmButton)
+  expect(TeamApi.removeMember).toHaveBeenCalledWith({ teamId: myThirdTeamId, userId: userTimId, email: userTimEmail })
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
+
+  const cancelButton = within(confirmDialog).getByRole('button', { name: 'Cancel' })
+  await userEvent.click(cancelButton) //Surprisingly the dialog is still present (legacy code from component?)
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+}
+
+export const checkRemoveOurselvesFromTheMembers = async () => {
+  const removeMemberButton = screen.getByRole('button', { name: `Remove the member ${loggedInUserFullName}` })
+  expect(removeMemberButton).toBeDisabled()
+}
+
+export const checkRemovePendingMemberNotInvitedByOurselves = async () => {
+  const removeMemberButton = screen.getByRole('button', { name: `Remove the member ${userYdrisFullName}` })
+  expect(removeMemberButton).toBeDisabled()
+}
+
+export const checkRemovePendingMemberInvitedByOurselves = async () => {
+  const removeMemberButton = screen.getByRole('button', { name: `Remove the member ${userHugoFullName}` })
+  expect(removeMemberButton).toBeEnabled()
+}
+
+export const checkGiveAdminRole = async () => {
+  const memberToUpdateRow = await screen.findByTestId(`member-row-${userTimId}`)
+  const roleCheckBoxNotAdmin = within(memberToUpdateRow).getByRole('checkbox')
+  expect(roleCheckBoxNotAdmin).toBeEnabled()
+  expect(roleCheckBoxNotAdmin).toHaveProperty('checked', false)
+
+  jest.spyOn(TeamApi, 'changeMemberRole').mockResolvedValueOnce(null)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(1)
+  await userEvent.click(roleCheckBoxNotAdmin)
+  expect(TeamApi.changeMemberRole).toHaveBeenCalledWith({
+    teamId: myThirdTeamId,
+    userId: userTimId,
+    email: userTimEmail,
+    role: TeamMemberRole.admin
+  })
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
+}
+
+export const checkRemoveAdminRole = async () => {
+  const memberToUpdateRow = await screen.findByTestId(`member-row-${userTimId}`)
+  const roleCheckBoxNotAdmin = within(memberToUpdateRow).getByRole('checkbox')
+  expect(roleCheckBoxNotAdmin).toBeEnabled()
+  expect(roleCheckBoxNotAdmin).toHaveProperty('checked', true)
+
+  jest.spyOn(TeamApi, 'changeMemberRole').mockResolvedValueOnce(null)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(1)
+  await userEvent.click(roleCheckBoxNotAdmin)
+  expect(TeamApi.changeMemberRole).toHaveBeenCalledWith({
+    teamId: myFirstTeamId,
+    userId: userTimId,
+    email: userTimEmail,
+    role: TeamMemberRole.member
+  })
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
+}
+
+export const checkNotTeamAdmin = async () => {
+  const memberToUpdateRow = await screen.findByTestId(`member-row-${userTimId}`)
+  const roleCheckBoxNotAdmin = within(memberToUpdateRow).getByRole('checkbox')
+  expect(roleCheckBoxNotAdmin).toBeDisabled()
+}
+
+export const checkDeleteTeam = async () => {
+  const teamMembersTable = await screen.findByRole('table')
+  expect(teamMembersTable).toHaveTextContent('MemberEmailAdminYourloops UI 28.0 HCP 0yann.blanc@example.com')
+
+  const leaveTeamButton = screen.getByRole('button', { name: 'Leave team' })
+  await userEvent.click(leaveTeamButton)
+
+  const confirmDialog = screen.getByRole('dialog')
+  expect(confirmDialog).toHaveTextContent('Leave and delete a care teamMySecondTeamSince you are the only member in this team, MySecondTeam will be permanently deleted if you leave it.You will no longer have access to your patients data. This action can\'t be undone.CancelLeave and delete team')
+
+  jest.spyOn(TeamApi, 'deleteTeam').mockResolvedValueOnce(null)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(1)
+  const deleteTeambutton = within(confirmDialog).getByRole('button', { name: 'Leave and delete team' })
+  await userEvent.click(deleteTeambutton)
+  expect(TeamApi.deleteTeam).toHaveBeenCalledWith(mySecondTeamId)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
+}
+
+export const checkLeaveTeamHcp = async () => {
+  const leaveTeamButton = await screen.findByRole('button', { name: 'Leave team' })
+  await userEvent.click(leaveTeamButton)
+
+  const confirmDialog = screen.getByRole('dialog')
+  expect(confirmDialog).toHaveTextContent('Leave a care teamMyFirstTeamAre you sure you want to leave this care team?You will no longer have access to your patients data.CancelLeave team')
+
+  jest.spyOn(TeamApi, 'leaveTeam').mockResolvedValueOnce(null)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(1)
+  const leaveTeambutton = within(confirmDialog).getByRole('button', { name: 'Leave team' })
+  await userEvent.click(leaveTeambutton)
+  expect(TeamApi.leaveTeam).toHaveBeenCalledWith(loggedInUserId, myFirstTeamId)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
+}
+
+export const checkLeaveTeamPatient = async () => {
+  const leaveTeamButton = await screen.findByRole('button', { name: 'Leave team' })
+  await userEvent.click(leaveTeamButton)
+
+  const confirmDialog = screen.getByRole('dialog')
+  expect(confirmDialog).toHaveTextContent('Leave a care teamMyFirstTeamAre you sure you want to leave this care team?CancelLeave team')
+
+  jest.spyOn(PatientApi, 'removePatient').mockResolvedValueOnce(null)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(1)
+  const leaveTeambutton = within(confirmDialog).getByRole('button', { name: 'Leave team' })
+  await userEvent.click(leaveTeambutton)
+  expect(PatientApi.removePatient).toHaveBeenCalledWith(myFirstTeamId, patient1Id)
+  expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
+}
+
 export const checkCareTeamMembers = () => {
   const teamMembersSection = within(screen.getByTestId('team-members'))
 
-  expect(teamMembersSection.getByText('Members (2)')).toBeVisible()
+  expect(teamMembersSection.getByText('Members (4)')).toBeVisible()
   expect(teamMembersSection.getByText('Leave team')).toBeVisible()
   expect(teamMembersSection.getByText('Leave team')).toBeEnabled()
   expect(teamMembersSection.getByText('Add healthcare professional')).toBeVisible()
@@ -62,8 +211,9 @@ export const checkCareTeamMonitoringAlertsConfiguration = () => {
   const monitoringAlertsConfigurationSection = screen.getByTestId('team-monitoring-alerts-configuration')
 
   expect(within(monitoringAlertsConfigurationSection).getByText('Monitoring alerts configuration')).toBeVisible()
-  expect(within(monitoringAlertsConfigurationSection).getByText('Save')).toBeVisible()
-  expect(within(monitoringAlertsConfigurationSection).getByText('Save')).toBeEnabled()
+  const saveButton = within(monitoringAlertsConfigurationSection).getByRole('button', { name: 'Save' })
+  expect(saveButton).toBeVisible()
+  expect(saveButton).toBeDisabled() // No monitoring value has been changed, button should be disabled
 
   expect(monitoringAlertsConfigurationSection).toHaveTextContent('Monitoring alerts configuration1. Time away from target range')
   expect(monitoringAlertsConfigurationSection).toHaveTextContent('1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)A. Glycemic targetMinimum:​mg/dLMaximum:​mg/dLDefault: min at 70 mg/dL and max at 180 mg/dLB. Event trigger thresholdTime spent off target5%​Default: 50%')

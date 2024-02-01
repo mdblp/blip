@@ -27,38 +27,29 @@
 
 import React, { type FunctionComponent } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { PatientsProvider } from '../lib/patient/patients.provider'
-import { DashboardLayout } from './dashboard-layout'
 import { InvalidRoute } from '../components/invalid-route'
 import { ProfilePage } from '../pages/profile/profile-page'
 import { NotificationsPage } from '../pages/notifications/notifications-page'
 import { AppUserRoute } from '../models/enums/routes.enum'
 import { PatientListPage } from '../components/patient-list/patient-list-page'
-import { PatientListProvider } from '../lib/providers/patient-list.provider'
-import { PatientData } from '../components/patient-data/patient-data'
+import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from './hcp-layout'
+import { PRIVATE_TEAM_ID } from '../lib/team/team.util'
+import { ScopedPatientData } from '../components/patient-data/scoped-patient-data'
+import { ScopedDashboardLayout } from './scoped-dashboard-layout'
 
 export const CaregiverLayout: FunctionComponent = () => {
+  localStorage.setItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY, PRIVATE_TEAM_ID)
   return (
-    <PatientListProvider>
-      <PatientsProvider>
-        <DashboardLayout>
-          <Routes>
-            <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
-            <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
-            <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
-            <Route path={`${AppUserRoute.Patient}/:patientId/*`} element={<PatientData />} />
-            <Route path={AppUserRoute.Home} element={<PatientListPage />} />
-            <Route
-              path="/"
-              element={<Navigate to={AppUserRoute.Home} replace />}
-            />
-            <Route
-              path="*"
-              element={<Navigate to={AppUserRoute.NotFound} replace />}
-            />
-          </Routes>
-        </DashboardLayout>
-      </PatientsProvider>
-    </PatientListProvider>
+    <Routes>
+      <Route element={<ScopedDashboardLayout />}>
+        <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
+        <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
+        <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
+        <Route path={AppUserRoute.PatientsList} element={<PatientListPage />} />
+        <Route path={AppUserRoute.PatientView} element={<ScopedPatientData />} />
+        <Route path="/" element={<Navigate to={AppUserRoute.PrivatePatientsList} replace />} />
+        <Route path="*" element={<Navigate to={AppUserRoute.NotFound} replace />} />
+      </Route>
+    </Routes>
   )
 }

@@ -130,9 +130,10 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
   }
 
   return (
-    <React.Fragment>
+    <>
       <StyledTableRow
         id={`member-row-${rowId}`}
+        data-testid={`member-row-${rowId}`}
         className={classes.tableRow}
         hover
       >
@@ -191,8 +192,10 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
               data-testid="remove-member-button"
               className={classes.deleteCell}
               disabled={removeMemberDisabled}
-              aria-label="remove-member-button"
-              onClick={() => { setShowConfirmRemoveDialog(true) }}
+              aria-label={t('remove-member', { fullName: teamMember.profile?.fullName })}
+              onClick={() => {
+                setShowConfirmRemoveDialog(true)
+              }}
               size="large">
               <PersonRemoveIcon />
             </IconButton>
@@ -204,11 +207,13 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
           title={t('remove-member-from-team')}
           label={t('remove-member-confirm', { fullName: teamMember.profile?.fullName, teamName: team.name })}
           inProgress={userUpdateInProgress}
-          onClose={() => { setShowConfirmRemoveDialog(false) }}
+          onClose={() => {
+            setShowConfirmRemoveDialog(false)
+          }}
           onConfirm={deleteMember}
         />
       }
-    </React.Fragment>
+    </>
   )
 }
 

@@ -46,10 +46,11 @@ import MedicalFilesWidget from './medical-files/medical-files-widget'
 import MonitoringAlertsCard from '../monitoring-alert/monitoring-alerts-card'
 import { makeStyles } from 'tss-react/mui'
 import ChatWidget from '../chat/chat-widget'
-import { useSelectedTeamContext } from '../../lib/selected-team/selected-team.provider'
-import { PRIVATE_TEAM_ID, useTeam } from '../../lib/team/team.hook'
 import { DEFAULT_DASHBOARD_TIME_RANGE_DAYS } from '../patient-data/patient-data.utils'
 import { DeviceUsageWidget } from './device-usage-widget'
+import { useParams } from 'react-router-dom'
+import TeamUtils from '../../lib/team/team.util'
+import { useTeam } from '../../lib/team'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
@@ -73,7 +74,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
     patient
   } = props
   const { user } = useAuth()
-  const { selectedTeam } = useSelectedTeamContext()
+  const { teamId } = useParams()
   const { getMedicalTeams } = useTeam()
   const { medicalData } = medicalDataService
   const { t } = useTranslation()
@@ -105,7 +106,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
   }
 
   const dateFilter = computeDateFilter(medicalData)
-  const isSelectedTeamPrivate = selectedTeam?.id === PRIVATE_TEAM_ID
+  const isSelectedTeamPrivate = TeamUtils.isPrivate(teamId)
   const isCaregiver = user.isUserCaregiver()
   const isPatientWithNoTeams = user.isUserPatient() && getMedicalTeams().length === 0
 
@@ -135,7 +136,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
         display="flex"
         alignItems="center"
       >
-        <AccessTime fontSize="small"/>
+        <AccessTime fontSize="small" />
         <Typography
           variant="subtitle2"
           sx={{ marginLeft: theme.spacing(1), fontStyle: 'italic' }}
@@ -164,9 +165,9 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
         <>
           <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
             {user.isUserHcp() &&
-              <MonitoringAlertsCard patient={patient}/>
+              <MonitoringAlertsCard patient={patient} />
             }
-            <MedicalFilesWidget patient={patient}/>
+            <MedicalFilesWidget patient={patient} />
           </Grid>
 
           <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>

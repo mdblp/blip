@@ -17,16 +17,10 @@
 
 import './styles/colors.css'
 
-import WarmUpTooltip from './components/daily/warmuptooltip/WarmUpTooltip'
-
 import { reshapeBgClassesToBgBounds } from './utils/bloodglucose'
 import DataUtil from './utils/data'
 import createPrintPDFPackage from './modules/print'
 import { generatePDFStats, generatePumpSettings, selectDailyViewData } from './utils/print/data'
-
-const components = {
-  WarmUpTooltip
-}
 
 const utils = {
   bg: {
@@ -41,7 +35,6 @@ const utils = {
 }
 
 export {
-  components,
   utils,
   createPrintPDFPackage
 }

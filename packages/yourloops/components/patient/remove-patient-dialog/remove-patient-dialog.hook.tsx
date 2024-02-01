@@ -32,7 +32,7 @@ import { usePatientsContext } from '../../../lib/patient/patients.provider'
 import { useTeam } from '../../../lib/team'
 import TeamUtils from '../../../lib/team/team.util'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { useSelectedTeamContext } from '../../../lib/selected-team/selected-team.provider'
+import { useParams } from 'react-router-dom'
 
 interface RemovePatientDialogHookProps {
   onClose: () => void
@@ -50,8 +50,7 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
   const alert = useAlert()
   const { removePatient } = usePatientsContext()
   const { getTeam } = useTeam()
-  const { selectedTeam } = useSelectedTeamContext()
-  const selectedTeamId = selectedTeam.id
+  const { teamId } = useParams()
 
   const [processing, setProcessing] = useState<boolean>(false)
 
@@ -62,8 +61,8 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
   const patientName = userName ? t('user-name', userName) : patient.profile.email
 
   const getSuccessAlertMessage = (): string => {
-    const team = getTeam(selectedTeamId)
-    if (TeamUtils.isPrivate(team)) {
+    const team = getTeam(teamId)
+    if (TeamUtils.isPrivate(team.id)) {
       return t('alert-remove-private-practice-success', { patientName })
     }
     return t('alert-remove-patient-from-team-success', { teamName: team.name, patientName })
