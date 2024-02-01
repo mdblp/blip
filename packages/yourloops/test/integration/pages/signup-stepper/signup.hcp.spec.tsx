@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -113,6 +113,6 @@ describe('Signup stepper as hcp', () => {
     )
     expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })
     const completedAccountMessage = screen.getByTestId('message-complete-account')
-    expect(completedAccountMessage).toHaveTextContent('Clicking the continue button will take you to your dashboard. You can then add your patients, and also join care teams')
+    expect(completedAccountMessage).toHaveTextContent('Clicking the continue button will take you to your dashboard. You can then join or create care teams, and invite your patients so as to share their data.')
   })
 })
