@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -83,7 +83,7 @@ export const checkVerifyEmailPageContent = async () => {
 export const checkVerifyEmailResultSuccessContent = () => {
   const pageContent = within(screen.getByTestId('verify-email-result-content'))
   expect(pageContent.getByTestId('right-icon')).toBeVisible()
-  expect(pageContent.getByText('Your e-mail address was verified')).toBeVisible()
+  expect(pageContent.getByText('Your e-mail address was verified.')).toBeVisible()
   expect(pageContent.getByText('You can now continue to YourLoops.')).toBeVisible()
   const continueButton = pageContent.getByRole('button', { name: 'Continue' })
   expect(continueButton).toBeVisible()
@@ -101,14 +101,14 @@ export const checkVerifyEmailResultSuccessContinueButton = async () => {
 export const checkVerifyEmailResultErrorContent = () => {
   const pageContent = within(screen.getByTestId('verify-email-result-content'))
   expect(pageContent.getByTestId('wrong-icon')).toBeVisible()
-  expect(pageContent.getByText('Your e-mail address could not be verified')).toBeVisible()
+  expect(pageContent.getByText('Your e-mail address could not be verified.')).toBeVisible()
   const logoutButton = pageContent.getByRole('button', { name: 'Logout' })
   expect(logoutButton).toBeVisible()
 }
 
 export const checkVerifyEmailResultErrorLinkExpiredLabel = () => {
   const pageContent = within(screen.getByTestId('verify-email-result-content'))
-  expect(pageContent.getByText('This verification link is expired.')).toBeVisible()
+  expect(pageContent.getByText('This verification link has expired.')).toBeVisible()
 }
 
 export const checkVerifyEmailResultErrorLinkAlreadyUsedLabel = () => {

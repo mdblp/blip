@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -151,7 +151,7 @@ describe('Profile page for caregiver', () => {
     expect(within(consequencesDialog).getByText('Invite your patients to share their data')).toBeVisible()
     expect(within(consequencesDialog).getByText('Invite other healthcare professionals')).toBeVisible()
     expect(within(consequencesDialog).getByRole('button', { name: 'Cancel' })).toBeVisible()
-    const switchButton = within(consequencesDialog).getByRole('button', { name: 'Switch to Professional' })
+    const switchButton = within(consequencesDialog).getByRole('button', { name: 'Switch to Professional account' })
     await userEvent.click(switchButton)
 
     // Second dialog (privacy and terms)
@@ -205,14 +205,14 @@ describe('Profile page for caregiver', () => {
 
     // Second dialog
     await userEvent.click(changeRoleButton)
-    await userEvent.click(screen.getByRole('button', { name: 'Switch to Professional' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Switch to Professional account' }))
     const consentDialog = screen.getByRole('dialog')
     await userEvent.click(within(consentDialog).getByRole('button', { name: 'Decline' }))
     expect(consentDialog).not.toBeVisible()
 
     // Third dialog
     await userEvent.click(changeRoleButton)
-    await userEvent.click(screen.getByRole('button', { name: 'Switch to Professional' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Switch to Professional account' }))
     await userEvent.click(screen.getByLabelText('Privacy policy checkbox'))
     await userEvent.click(screen.getByLabelText('Terms checkbox'))
     await userEvent.click(screen.getByRole('button', { name: 'Accept' }))
