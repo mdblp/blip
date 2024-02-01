@@ -216,7 +216,7 @@
   "current-trigger-setting-data": "Paramètre actuel du seuil de déclenchement : {{nonDataThreshold}}% des données non transmises sur la période",
   "current-trigger-setting-hypoglycemia": "Paramètre actuel du seuil de déclenchement : {{hypoThreshold}}% du temps en dessous du seuil de {{veryLowBg}} {{bgUnit}}",
   "current-trigger-setting-tir": "Paramètre actuel du seuil de déclenchement : {{tir}}% du temps hors cible (min à {{lowBg}} {{bgUnit}}, max à {{highBg}} {{bgUnit}})",
-  "custom-values-entered": "Custom values have been entered. Please save the changes.",
+  "custom-values-entered": "Des valeurs personnalisées ont été saisies. Veuillez enregistrer les modifications.",
   "custom-values-applied-for-patient": "Custom values are applied for this patient. You can apply the default care team values.",
   "daily": "Quotidien",
   "daily-rescue-carbs-and-manual-bolus": "Resucrages et bolus manuels (nb. de fois par jour en moyenne)",
