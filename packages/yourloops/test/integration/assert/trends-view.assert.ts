@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,7 @@ import userEvent from '@testing-library/user-event'
 import { checkStatTooltip } from './stats.assert'
 
 const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Daily average of the time spent in range, based on CGM readings.How we calculate this: (%) is the number of readings in range divided by all readings for this time period. (time) is number of readings in range multiplied by the CGM sample frequency.'
-const READINGS_IN_RANGE_TOOLTIP = 'Readings In Range: Daily average of the number of BGM readings.Derived from 15 BGM readings.'
+const READINGS_IN_RANGE_TOOLTIP = 'Readings In Range: Number of BGM readings.Derived from 15 BGM readings.'
 const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added together, divided by the number of readings.'
 const AVG_GLUCOSE_BGM_TOOLTIP = 'Avg. Glucose (BGM): All BGM glucose values added together, divided by the number of readings.'
 const SENSOR_USAGE_TOOLTIP = 'Sensor Usage: Time the CGM collected data, divided by the total time represented in this view.'
@@ -40,8 +40,8 @@ const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard dev
 const LOOP_MODE_TOOLTIP = 'Time In Loop Mode: Daily average of the time spent in automated basal delivery.How we calculate this: (%) is the duration in loop mode ON or OFF divided by the total duration of basals for this time period. (time) is the average daily time spent in loop mode ON or OFF.'
 const AVG_DAILY_CARBS_DECLARED_TOOLTIP = 'Avg. Daily declared carbs: All carb entries added together (meals and rescue carbs), then divided by the number of days in this view.Derived from 7 carb entries, including rescue carbs.'
 const AVG_DAILY_CARBS_ESTIMATED_TOOLTIP = 'Avg. Daily estimated carbs: Total of estimated carbs from unannounced meals, then divided by the number of days in this view.Derived from 5 unannounced meal(s).'
-export const GMI_TOOLTIP_EMPTY_VALUE = 'GMI (Glucose Management Indicator): Tells you what your approximate A1C level is likely to be, based on the average glucose level from your CGM readings.Why is this stat empty? There is not enough data present in this view to calculate it.'
-export const GMI_TOOLTIP = 'GMI (Glucose Management Indicator): Tells you what your approximate A1C level is likely to be, based on the average glucose level from your CGM readings.'
+export const GMI_TOOLTIP_EMPTY_VALUE = 'GMI (Glucose Management Indicator): Tells you what your calculated HbA1c level is likely to be, based on the average glucose level from your CGM readings.Why is this stat empty? There is not enough data present in this view to calculate it.'
+export const GMI_TOOLTIP = 'GMI (Glucose Management Indicator): Tells you what your calculated HbA1c level is likely to be, based on the average glucose level from your CGM readings.'
 
 export const checkTrendsTidelineContainerTooltips = async () => {
   // Test tooltips when hovering a cbg slice
@@ -194,7 +194,7 @@ export const checkTrendsBolusAndCarbsAverage = async () => {
   expect(within(wrapper).getAllByTestId('carbs-and-bolus-cell')).toHaveLength(8)
 
   const caption = within(wrapper).getByTestId('rescue-carbs-and-manual-bolus-average-caption')
-  expect(caption).toHaveTextContent('Avg. daily nb. of times rescue carbs takenAvg. daily nb. of manual bolus')
+  expect(caption).toHaveTextContent('Avg. times per day that rescue carbs have been taken Avg. nb. of manual boluses per day')
 
   const carbsCells = within(wrapper).getAllByTestId('rescue-carbs-cell')
   const bolusCells = within(wrapper).getAllByTestId('manual-bolus-cell')
