@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,11 +30,11 @@ import { screen } from '@testing-library/react'
 export const checkMonitoringAlertsCard = async () => {
   const monitoringAlertsCard = screen.getByTestId('monitoring-alerts-card')
   expect(monitoringAlertsCard).toBeVisible()
-  expect(monitoringAlertsCard).toHaveTextContent('Monitoring alertsCurrent monitoring alertsTime spent out of the target range10%Severe hypoglycemia20%Data not transmitted30%')
+  expect(monitoringAlertsCard).toHaveTextContent('Monitoring alertsCurrent monitoring alertsTime spent out of the target range10%Severe hypoglycemia alert20%Data not transmitted30%')
 }
 
 export const checkMonitoringAlertsCardNoData = async () => {
   const monitoringAlertsCard = screen.getByTestId('monitoring-alerts-card')
   expect(monitoringAlertsCard).toBeVisible()
-  expect(monitoringAlertsCard).toHaveTextContent('Monitoring alerts (+1)Current monitoring alertsTime spent out of the target rangeN/ASevere hypoglycemiaN/AData not transmitted100%')
+  expect(monitoringAlertsCard).toHaveTextContent('Monitoring alerts (+1)Current monitoring alertsTime spent out of the target rangeN/ASevere hypoglycemia alertN/AData not transmitted100%')
 }
