@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.2.0-rc2 - 2024-02-08
+## 3.2.0-rc3 - 2024-02-08
 ### Changed
 - YLP-2122 Remove JP and GB from the list of countries
 - YLP-2574 Create tool tips independently of the name of the columns
