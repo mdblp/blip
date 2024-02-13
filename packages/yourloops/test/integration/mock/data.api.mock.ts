@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -13,7 +13,7 @@
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
@@ -29,9 +29,30 @@ import DataAPI from '../../../lib/data/data.api'
 import moment, { type Moment } from 'moment-timezone'
 import { history } from '../data/data-api.data'
 import type { PatientDataRange } from '../../../lib/data/models/data-range.model'
-import { MedicalData, Smbg, Unit } from 'medical-domain'
+import {
+  AlarmCode,
+  AlarmEventType,
+  AlarmLevel,
+  BolusSubtype,
+  DatumType,
+  DurationUnit,
+  MedicalData,
+  Prescriptor,
+  PumpManufacturer,
+  Smbg,
+  Source,
+  Unit,
+  Wizard,
+  WizardInputMealFat,
+  WizardInputMealSource
+} from 'medical-domain'
 import Cbg from 'medical-domain/dist/src/domains/models/medical/datum/cbg.model'
 import Bg from 'medical-domain/dist/src/domains/models/medical/datum/bg.model'
+import {
+  DeviceEventSubtype
+} from 'medical-domain/dist/src/domains/models/medical/datum/enums/device-event-subtype.enum'
+import WeekDays from 'medical-domain/dist/src/domains/models/time/enum/weekdays.enum'
+import Intensity from 'medical-domain/dist/src/domains/models/medical/datum/enums/intensity.enum'
 
 const WIZARD_BOLUS_UNDELIVERED_ID = 'carbBolusId'
 const WIZARD_BOLUS_UMM_ID = 'carbBolusId2'
@@ -162,24 +183,27 @@ const bolusMock = (date, time) => {
 
 const wizardMock = (date, time, id, carbinput, umm) => {
   const normalTime = new Date(`${date}T${time}.000Z`)
-  const wizard = {
+  const wizard: Wizard = {
     epoch: normalTime.getTime(),
     displayOffset: -120,
     normalTime: `${date}T${time}.000Z`,
+    inputTime: `${date}T${time}.000Z`,
     timezone: 'Europe/Paris',
     guessedTimezone: false,
     id: id,
-    type: 'wizard',
-    source: 'Diabeloop',
+    type: DatumType.Wizard,
+    source: Source.Diabeloop,
     bolusId: WIZARD_BOLUS_UNDELIVERED_ID,
-    bolusIds: { WIZARD_BOLUS_UNDELIVERED_ID },
+    bolusIds: new Set(WIZARD_BOLUS_UNDELIVERED_ID),
     carbInput: carbinput,
     units: 'mmol/L',
-    bolus: null
+    bolus: null,
+    isoWeekday: WeekDays.Wednesday
   }
   if (umm) {
     wizard.inputMeal = {
-      source: 'umm'
+      source: WizardInputMealSource.Umm,
+      fat: WizardInputMealFat.No
     }
   }
   return wizard
@@ -217,7 +241,6 @@ const PumpSettingsMock = (date, time) => {
         swVersion: 'beta'
       },
       pump: {
-        expirationDate: '2050-04-12T17:53:54+02:00',
         manufacturer: 'VICENTRA',
         name: 'Kaleido',
         serialNumber: '123456',
@@ -323,7 +346,7 @@ const deviceEventMock = (date, time) => {
         timezone: 'UTC',
         name: 'MEAL_RATIO_LUNCH_FACTOR',
         level: 1,
-        units: '%',
+        units: Unit.Percent,
         value: 100,
         previousValue: 110,
         lastUpdateDate: '2022-08-08T08:00:00Z'
@@ -417,10 +440,14 @@ export const pumpSettingsData: Data = {
     pumpSettings: [
       {
         normalTime: '2020-01-01T10:00:00.000Z',
-        type: 'pumpSettings',
+        type: DatumType.PumpSettings,
         id: 'pump_settings',
         timezone: 'UTC',
-        source: 'Diabeloop',
+        source: Source.Diabeloop,
+        isoWeekday: WeekDays.Sunday,
+        epoch: 0,
+        displayOffset: 0,
+        guessedTimezone: false,
         payload: {
           basalsecurityprofile: null,
           cgm: {
@@ -441,94 +468,93 @@ export const pumpSettingsData: Data = {
           },
           history,
           parameters: [
-            { name: 'WEIGHT', value: '72', unit: 'kg', level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
+            { name: 'WEIGHT', value: '72', unit: Unit.Kilogram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
             {
               name: 'MEDIUM_MEAL_BREAKFAST',
               value: '36',
-              unit: 'g',
+              unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
-            { name: 'MEDIUM_MEAL_DINNER', value: '96', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
+            { name: 'MEDIUM_MEAL_DINNER', value: '96', unit: Unit.Gram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
             {
               name: 'PATIENT_GLYCEMIA_TARGET',
               value: '110',
-              unit: 'mg/dL',
+              unit: Unit.MilligramPerDeciliter,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
               name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA',
               value: '100',
-              unit: '%',
+              unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
               name: 'PATIENT_GLY_HYPER_LIMIT',
               value: '180',
-              unit: 'mg/dL',
+              unit: Unit.MilligramPerDeciliter,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
-            { name: 'MEDIUM_MEAL_LUNCH', value: '96', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
+            { name: 'MEDIUM_MEAL_LUNCH', value: '96', unit: Unit.Gram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
             {
               name: 'PATIENT_GLY_HYPO_LIMIT',
               value: '75',
-              unit: 'mg/dL',
+              unit: Unit.MilligramPerDeciliter,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
               name: 'BOLUS_AGGRESSIVENESS_FACTOR',
               value: '100',
-              unit: '%',
+              unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
-            { name: 'SMALL_MEAL_LUNCH', value: '48', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
+            { name: 'SMALL_MEAL_LUNCH', value: '48', unit: Unit.Gram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
             {
               name: 'SMALL_MEAL_BREAKFAST',
               value: '18',
-              unit: 'g',
+              unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
               name: 'MEAL_RATIO_LUNCH_FACTOR',
               value: '100',
-              unit: '%',
+              unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
-            { name: 'LARGE_MEAL_DINNER', value: '144', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
+            { name: 'LARGE_MEAL_DINNER', value: '144', unit: Unit.Gram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
             {
               name: 'MEAL_RATIO_DINNER_FACTOR',
               value: '80',
-              unit: '%',
+              unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
               name: 'LARGE_MEAL_BREAKFAST',
               value: '54',
-              unit: 'g',
+              unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
               name: 'MEAL_RATIO_BREAKFAST_FACTOR',
               value: '100',
-              unit: '%',
+              unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
-            { name: 'LARGE_MEAL_LUNCH', value: '144', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
-            { name: 'SMALL_MEAL_DINNER', value: '48', unit: 'g', level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' }
+            { name: 'LARGE_MEAL_LUNCH', value: '144', unit: Unit.Gram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
+            { name: 'SMALL_MEAL_DINNER', value: '48', unit: Unit.Gram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' }
           ],
           pump: {
-            expirationDate: '2050-04-12T17:53:54+02:00',
-            manufacturer: 'VICENTRA',
+            manufacturer: PumpManufacturer.Vicentra,
             name: 'Kaleido',
             serialNumber: '123456',
             swVersion: 'beta'
@@ -538,12 +564,19 @@ export const pumpSettingsData: Data = {
     ],
     cbg: [{
       normalTime: '2020-01-01T10:00:00.000Z',
-      type: 'cbg',
+      type: DatumType.Cbg,
       id: '2020-01-01_0',
       timezone: 'Europe/Paris',
-      units: 'mmol/L',
+      units: Unit.MmolPerLiter,
       value: 10.5,
-      uploadId: 'osef'
+      isoWeekday: WeekDays.Wednesday,
+      epoch: 0,
+      displayOffset: 0,
+      guessedTimezone: false,
+      source: Source.Diabeloop,
+      localDate: '',
+      msPer24: 0,
+      deviceName: ''
     }]
   }
 }
@@ -559,25 +592,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-01",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T09:00:00.000Z",
-        "epochEnd": 1659949200000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": ALARM_EVENT_HYPERGLYCEMIA_ID,
         "inputTime": "2022-08-08T09:00:00Z",
         "alarm": {
-          "alarmCode": "10113",
-          "alarmLevel": "alert",
+          "alarmCode": AlarmCode.Hyperglycemia,
+          "alarmLevel": AlarmLevel.Alert,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Hyperglycemia"
+        "alarmEventType": AlarmEventType.Hyperglycemia,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659949500000,
@@ -586,25 +614,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-011",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T09:05:00.000Z",
-        "epochEnd": 1659949500000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": ALARM_EVENT_HYPERGLYCEMIA_OTHER_OCCURRENCE_ID,
         "inputTime": "2022-08-08T09:05:00Z",
         "alarm": {
-          "alarmCode": "10113",
-          "alarmLevel": "alert",
+          "alarmCode": AlarmCode.Hyperglycemia,
+          "alarmLevel": AlarmLevel.Alert,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Hyperglycemia"
+        "alarmEventType": AlarmEventType.Hyperglycemia,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659949500000,
@@ -613,25 +636,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-02",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T09:05:00.000Z",
-        "epochEnd": 1659949500000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmEventHypoglycemiaId",
         "inputTime": "2022-08-08T09:05:00Z",
         "alarm": {
-          "alarmCode": "12000",
-          "alarmLevel": "alarm",
+          "alarmCode": AlarmCode.Hypoglycemia,
+          "alarmLevel": AlarmLevel.Alarm,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Hypoglycemia"
+        "alarmEventType": AlarmEventType.Hypoglycemia,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659949800000,
@@ -640,25 +658,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-03",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T09:10:00.000Z",
-        "epochEnd": 1659949800000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmEventInsightEmptyInsulinCartridgeId",
         "inputTime": "2022-08-08T09:10:00Z",
         "alarm": {
-          "alarmCode": "71002",
-          "alarmLevel": "alarm",
+          "alarmCode": AlarmCode.InsightEmptyInsulinCartridge,
+          "alarmLevel": AlarmLevel.Alarm,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Device"
+        "alarmEventType": AlarmEventType.Device,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659950100000,
@@ -667,25 +680,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-04",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T09:15:00.000Z",
-        "epochEnd": 1659950100000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmEventInsightEmptyPumpBatteryId",
         "inputTime": "2022-08-08T09:15:00Z",
         "alarm": {
-          "alarmCode": "71001",
-          "alarmLevel": "alarm",
+          "alarmCode": AlarmCode.InsightEmptyPumpBattery,
+          "alarmLevel": AlarmLevel.Alarm,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Device"
+        "alarmEventType": AlarmEventType.Device,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659950400000,
@@ -694,25 +702,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-05",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T09:20:00.000Z",
-        "epochEnd": 1659950400000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmEventInsightHypoglycemiaId",
         "inputTime": "2022-08-08T09:20:00Z",
         "alarm": {
-          "alarmCode": "10117",
-          "alarmLevel": "alert",
+          "alarmCode": AlarmCode.InsightHypoglycemia,
+          "alarmLevel": AlarmLevel.Alert,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Hypoglycemia"
+        "alarmEventType": AlarmEventType.Hypoglycemia,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659950700000,
@@ -721,25 +724,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-06",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T09:25:00.000Z",
-        "epochEnd": 1659950700000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmEventInsightIncompatibleActionsOnPumpId",
         "inputTime": "2022-08-08T09:25:00Z",
         "alarm": {
-          "alarmCode": "71003",
-          "alarmLevel": "alarm",
+          "alarmCode": AlarmCode.InsightIncompatibleActionsOnPump,
+          "alarmLevel": AlarmLevel.Alarm,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Device"
+        "alarmEventType": AlarmEventType.Device,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659951000000,
@@ -748,25 +746,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-07",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T09:30:00.000Z",
-        "epochEnd": 1659951000000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmEventInsightInsulinCartridgeExpiredId",
         "inputTime": "2022-08-08T09:30:00Z",
         "alarm": {
-          "alarmCode": "71020",
-          "alarmLevel": "alarm",
+          "alarmCode": AlarmCode.InsightInsulinCartridgeExpired,
+          "alarmLevel": AlarmLevel.Alarm,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Device"
+        "alarmEventType": AlarmEventType.Device,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659951300000,
@@ -775,25 +768,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-08",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T09:35:00.000Z",
-        "epochEnd": 1659951300000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmEventInsightOcclusionId",
         "inputTime": "2022-08-08T09:35:00Z",
         "alarm": {
-          "alarmCode": "71004",
-          "alarmLevel": "alarm",
+          "alarmCode": AlarmCode.InsightOcclusion,
+          "alarmLevel": AlarmLevel.Alarm,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Device"
+        "alarmEventType": AlarmEventType.Device,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659951600000,
@@ -802,25 +790,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-09",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T09:40:00.000Z",
-        "epochEnd": 1659951600000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmEventKaleidoEmptyInsulinCartridgeId",
         "inputTime": "2022-08-08T09:40:00Z",
         "alarm": {
-          "alarmCode": "41002",
-          "alarmLevel": "alarm",
+          "alarmCode": AlarmCode.KaleidoEmptyInsulinCartridge,
+          "alarmLevel": AlarmLevel.Alarm,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Device"
+        "alarmEventType": AlarmEventType.Device,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659951900000,
@@ -829,25 +812,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-10",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T09:45:00.000Z",
-        "epochEnd": 1659951900000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmKaleidoEventEmptyPumpBatteryId",
         "inputTime": "2022-08-08T09:45:00Z",
         "alarm": {
-          "alarmCode": "41001",
-          "alarmLevel": "alarm",
+          "alarmCode": AlarmCode.KaleidoEmptyPumpBattery,
+          "alarmLevel": AlarmLevel.Alarm,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Device"
+        "alarmEventType": AlarmEventType.Device,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659952200000,
@@ -856,25 +834,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-11",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T09:50:00.000Z",
-        "epochEnd": 1659952200000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmEventKaleidoInsulinCartridgeExpiredId",
         "inputTime": "2022-08-08T09:50:00Z",
         "alarm": {
-          "alarmCode": "41003",
-          "alarmLevel": "alarm",
+          "alarmCode": AlarmCode.KaleidoInsulinCartridgeExpired,
+          "alarmLevel": AlarmLevel.Alarm,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Device"
+        "alarmEventType": AlarmEventType.Device,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659952500000,
@@ -883,25 +856,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-12",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T09:55:00.000Z",
-        "epochEnd": 1659952500000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmEventKaleidoOcclusionId",
         "inputTime": "2022-08-08T09:55:00Z",
         "alarm": {
-          "alarmCode": "41004",
-          "alarmLevel": "alarm",
+          "alarmCode": AlarmCode.KaleidoOcclusion,
+          "alarmLevel": AlarmLevel.Alarm,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Device"
+        "alarmEventType": AlarmEventType.Device,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659952800000,
@@ -910,25 +878,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-13",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T10:00:00.000Z",
-        "epochEnd": 1659952800000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmEventLongHyperglycemiaId",
         "inputTime": "2022-08-08T10:00:00Z",
         "alarm": {
-          "alarmCode": "15000",
-          "alarmLevel": "alarm",
+          "alarmCode": AlarmCode.LongHyperglycemia,
+          "alarmLevel": AlarmLevel.Alarm,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Hyperglycemia"
+        "alarmEventType": AlarmEventType.Hyperglycemia,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659953100000,
@@ -937,25 +900,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-14",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T10:05:00.000Z",
-        "epochEnd": 1659953100000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmEventLongHypoglycemiaId",
         "inputTime": "2022-08-08T10:05:00Z",
         "alarm": {
-          "alarmCode": "24000",
-          "alarmLevel": "alarm",
+          "alarmCode": AlarmCode.LongHypoglycemia,
+          "alarmLevel": AlarmLevel.Alarm,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Hypoglycemia"
+        "alarmEventType": AlarmEventType.Hypoglycemia,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659953400000,
@@ -964,25 +922,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-15",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T10:10:00.000Z",
-        "epochEnd": 1659953400000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmEventNoReadingsHypoglycemiaRiskId",
         "inputTime": "2022-08-08T10:10:00Z",
         "alarm": {
-          "alarmCode": "20100",
-          "alarmLevel": "alert",
+          "alarmCode": AlarmCode.NoReadingsHypoglycemiaRisk,
+          "alarmLevel": AlarmLevel.Alert,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Hypoglycemia"
+        "alarmEventType": AlarmEventType.Hypoglycemia,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659953700000,
@@ -991,25 +944,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-16",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T10:15:00.000Z",
-        "epochEnd": 1659953700000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmEventSensorSessionExpiredId",
         "inputTime": "2022-08-08T10:15:00Z",
         "alarm": {
-          "alarmCode": "11000",
-          "alarmLevel": "alarm",
+          "alarmCode": AlarmCode.SensorSessionExpired,
+          "alarmLevel": AlarmLevel.Alarm,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Device"
+        "alarmEventType": AlarmEventType.Device,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659954000000,
@@ -1018,25 +966,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-17",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T10:20:00.000Z",
-        "epochEnd": 1659954000000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmEventSuddenRiseInGlycemiaId",
         "inputTime": "2022-08-08T10:20:00Z",
         "alarm": {
-          "alarmCode": "20102",
-          "alarmLevel": "alert",
+          "alarmCode": AlarmCode.SuddenRiseInGlycemia,
+          "alarmLevel": AlarmLevel.Alert,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Hyperglycemia"
+        "alarmEventType": AlarmEventType.Hyperglycemia,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659954300000,
@@ -1045,25 +988,20 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "alarm-18",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "duration": {
-          "units": "hours",
-          "value": 0
-        },
-        "normalEnd": "2022-08-08T10:25:00.000Z",
-        "epochEnd": 1659954300000,
-        "subType": "alarm",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
         "guid": "alarmEventUrgentLowSoonId",
         "inputTime": "2022-08-08T10:25:00Z",
         "alarm": {
-          "alarmCode": "10112",
-          "alarmLevel": "alert",
+          "alarmCode": AlarmCode.UrgentLowSoon,
+          "alarmLevel": AlarmLevel.Alert,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
-        "alarmEventType": "Hypoglycemia"
+        "alarmEventType": AlarmEventType.Hypoglycemia,
+        "isoWeekday": WeekDays.Sunday
       }
     ],
     basal: [
@@ -1074,15 +1012,16 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "basal_2022-08-08_5",
-        "type": "basal",
-        "source": "Diabeloop",
+        "type": DatumType.Basal,
+        "source": Source.Diabeloop,
         "subType": "automated",
         "internalId": "3deeb71f-9b5b-496e-b0af-ef9512c2787f",
         "deliveryType": "automated",
         "rate": 0.8,
         "duration": 1000,
         "normalEnd": "2022-08-08T16:30:01.000Z",
-        "epochEnd": 1659976201000
+        "epochEnd": 1659976201000,
+        "isoWeekday": WeekDays.Sunday
       }
     ],
     bolus: [
@@ -1093,14 +1032,15 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": WIZARD_BOLUS_UNDELIVERED_ID,
-        "type": "bolus",
-        "source": "Diabeloop",
-        "subType": "normal",
+        "type": DatumType.Bolus,
+        "source": Source.Diabeloop,
+        "subType": BolusSubtype.Normal,
         "normal": 22.3,
-        "prescriptor": "auto",
+        "prescriptor": Prescriptor.Auto,
         "wizard": null,
         "expectedNormal": 25,
-        "insulinOnBoard": 3.1843607
+        "insulinOnBoard": 3.1843607,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659983700000,
@@ -1109,12 +1049,13 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": WIZARD_BOLUS_UMM_ID,
-        "type": "bolus",
-        "source": "Diabeloop",
-        "subType": "normal",
+        "type": DatumType.Bolus,
+        "source": Source.Diabeloop,
+        "subType": BolusSubtype.Normal,
         "normal": 1.3,
-        "prescriptor": "auto",
-        "wizard": null
+        "prescriptor": Prescriptor.Auto,
+        "wizard": null,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659984300000,
@@ -1123,14 +1064,15 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": WIZARD_BOLUS_POSITIVE_OVERRIDE_ID,
-        "type": "bolus",
-        "source": "Diabeloop",
-        "subType": "normal",
+        "type": DatumType.Bolus,
+        "source": Source.Diabeloop,
+        "subType": BolusSubtype.Normal,
         "normal": 19.35,
-        "prescriptor": "hybrid",
+        "prescriptor": Prescriptor.Hybrid,
         "wizard": null,
         "expectedNormal": 19.35,
-        "insulinOnBoard": 3.1218212
+        "insulinOnBoard": 3.1218212,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1659984900000,
@@ -1139,14 +1081,15 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID,
-        "type": "bolus",
-        "source": "Diabeloop",
-        "subType": "normal",
+        "type": DatumType.Bolus,
+        "source": Source.Diabeloop,
+        "subType": BolusSubtype.Normal,
         "normal": 9.05,
-        "prescriptor": "hybrid",
+        "prescriptor": Prescriptor.Hybrid,
         "wizard": null,
         "expectedNormal": 9.05,
-        "insulinOnBoard": 3.0588088
+        "insulinOnBoard": 3.0588088,
+        "isoWeekday": WeekDays.Sunday
       }
     ],
     cbg: [
@@ -1157,12 +1100,12 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": CBG_ID,
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 63000000,
         "deviceName": "Unknown"
       },
@@ -1173,12 +1116,12 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbg_2022-08-08T15:35:00",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 265,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 63300000,
         "deviceName": "Unknown"
       },
@@ -1189,12 +1132,12 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbg_2022-08-08T15:40:00",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 265,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 63600000,
         "deviceName": "Unknown"
       },
@@ -1205,12 +1148,12 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbg_2022-08-08T16:00:00",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 117,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 64800000,
         "deviceName": "Unknown"
       },
@@ -1221,12 +1164,12 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbg_2022-08-08T16:05:00",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 117,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 65100000,
         "deviceName": "Unknown"
       },
@@ -1237,12 +1180,12 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbg_2022-08-08T16:10:00",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 117,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 65400000,
         "deviceName": "Unknown"
       },
@@ -1253,12 +1196,12 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbg_2022-08-08T16:20:00",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 61,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 66000000,
         "deviceName": "Unknown"
       },
@@ -1269,12 +1212,12 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbg_2022-08-08T16:25:00",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 61,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 66300000,
         "deviceName": "Unknown"
       },
@@ -1285,12 +1228,12 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbg_2022-08-08T16:30:00",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 61,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 66600000,
         "deviceName": "Unknown"
       },
@@ -1301,12 +1244,12 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbg_2022-08-08T16:35:00",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 61,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 66900000,
         "deviceName": "Unknown"
       },
@@ -1317,12 +1260,12 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbg_2022-08-08T16:45:00",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 40,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 67500000,
         "deviceName": "Unknown"
       },
@@ -1333,12 +1276,12 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbg_2022-08-08T16:50:00",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 40,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 67800000,
         "deviceName": "Unknown"
       },
@@ -1349,12 +1292,12 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbg_2022-08-08T16:55:00",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 40,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 68100000,
         "deviceName": "Unknown"
       },
@@ -1365,12 +1308,12 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbg_2022-08-08T17:00:00",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 40,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 68400000,
         "deviceName": "Unknown"
       },
@@ -1381,12 +1324,12 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbg_2022-08-08T17:05:00",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 40,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 68700000,
         "deviceName": "Unknown"
       }
@@ -1399,17 +1342,18 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "deviceEvent_2022-08-08_8",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
         "duration": {
-          "units": "hours",
+          "units": DurationUnit.Hours,
           "value": 2
         },
         "normalEnd": "2022-08-08T04:00:00.000Z",
         "epochEnd": 1659931200000,
-        "subType": "confidential",
+        "subType": DeviceEventSubtype.Confidential,
         "guid": "confidential_0",
-        "inputTime": "2022-08-08T02:00:00Z"
+        "inputTime": "2022-08-08T02:00:00Z",
+        "isoWeekday": WeekDays.Sunday
       }
     ],
     deviceParametersChanges: [
@@ -1420,9 +1364,9 @@ export const completeDailyViewData: Data = {
         "timezone": "UTC",
         "guessedTimezone": false,
         "id": "parameterId",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "subType": "deviceParameter",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.DeviceParameter,
         "params": [
           {
             "id": "parameterId",
@@ -1430,12 +1374,13 @@ export const completeDailyViewData: Data = {
             "timezone": "UTC",
             "name": "MEAL_RATIO_LUNCH_FACTOR",
             "level": "1",
-            "unit": "%",
+            "unit": Unit.Percent,
             "value": "100",
             "previousValue": "110",
             "lastUpdateDate": "2022-08-08T08:00:00Z"
           }
-        ]
+        ],
+        "isoWeekday": WeekDays.Sunday
       }
     ],
     messages: [],
@@ -1447,8 +1392,8 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "carbId",
-        "type": "food",
-        "source": "Diabeloop",
+        "type": DatumType.Food,
+        "source": Source.Diabeloop,
         "meal": "rescuecarbs",
         "nutrition": {
           "carbohydrate": {
@@ -1462,7 +1407,7 @@ export const completeDailyViewData: Data = {
             "units": "grams"
           }
         },
-        "prescriptor": "hybrid"
+        "prescriptor": Prescriptor.Hybrid
       }
     ],
     physicalActivities: [
@@ -1473,17 +1418,18 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "physicalActivityId",
-        "type": "physicalActivity",
-        "source": "Diabeloop",
+        "type": DatumType.PhysicalActivity,
+        "source": Source.Diabeloop,
         "duration": {
-          "units": "seconds",
+          "units": DurationUnit.Seconds,
           "value": 1800
         },
         "normalEnd": "2022-08-08T13:30:00.000Z",
         "epochEnd": 1659965400000,
         "guid": "pa_18",
-        "reportedIntensity": "medium",
-        "inputTime": "2022-08-08T13:00:00.000Z"
+        "reportedIntensity": Intensity.Medium,
+        "inputTime": "2022-08-08T13:00:00.000Z",
+        "isoWeekday": WeekDays.Sunday
       }
     ],
     pumpSettings: [
@@ -1494,9 +1440,10 @@ export const completeDailyViewData: Data = {
         "timezone": "UTC",
         "guessedTimezone": false,
         "id": "pump_2022-08-08_6",
-        "type": "pumpSettings",
-        "source": "Diabeloop",
+        "type": DatumType.PumpSettings,
+        "source": Source.Diabeloop,
         "basalSchedules": [],
+        "isoWeekday": WeekDays.Sunday,
         "payload": {
           "basalsecurityprofile": {},
           "cgm": {
@@ -1511,13 +1458,12 @@ export const completeDailyViewData: Data = {
           "device": {
             "deviceId": "1234",
             "imei": "1234567890",
-            "manufacturer": "Diabeloop",
+            "manufacturer": Source.Diabeloop,
             "name": "DBLG1",
             "swVersion": "beta"
           },
           "pump": {
-            "expirationDate": "2050-04-12T17:53:54+02:00",
-            "manufacturer": "VICENTRA",
+            "manufacturer": PumpManufacturer.Vicentra,
             "name": "Kaleido",
             "serialNumber": "123456",
             "swVersion": "beta"
@@ -1528,10 +1474,10 @@ export const completeDailyViewData: Data = {
               "effectiveDate": "2020-01-17T08:00:00.000Z",
               "level": 1,
               "name": "WEIGHT",
-              "unit": "kg",
+              "unit": Unit.Kilogram,
               "value": "72"
             }
-          ]
+          ],
         }
       }
     ],
@@ -1543,11 +1489,11 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "reservoirChangeId",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "subType": "reservoirChange",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.ReservoirChange,
         "pump": {
-          "manufacturer": "DEFAULT"
+          "manufacturer": PumpManufacturer.Default
         }
       }
     ],
@@ -1559,12 +1505,12 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": SMBG_ID,
-        "type": "smbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Smbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 62100000
       }
     ],
@@ -1576,17 +1522,18 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "warmup-01",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
         "duration": {
-          "units": "hours",
+          "units": DurationUnit.Hours,
           "value": 0
         },
         "normalEnd": "2022-08-08T16:00:00.000Z",
         "epochEnd": 1659974400000,
-        "subType": "warmup",
+        "subType": DeviceEventSubtype.Warmup,
         "guid": WARMUP_01_ID,
         "inputTime": "2022-08-08T09:00:00Z",
+        "isoWeekday": WeekDays.Sunday
       }
     ],
     wizards: [
@@ -1597,10 +1544,10 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": WIZARD_UNDELIVERED_ID,
-        "type": "wizard",
-        "source": "Diabeloop",
+        "type": DatumType.Wizard,
+        "source": Source.Diabeloop,
         "bolusId": WIZARD_BOLUS_UNDELIVERED_ID,
-        "bolusIds": { WIZARD_BOLUS_UNDELIVERED_ID },
+        "bolusIds": new Set(WIZARD_BOLUS_UNDELIVERED_ID),
         "carbInput": 45,
         "units": "mmol/L",
         "bolus": null,
@@ -1611,9 +1558,10 @@ export const completeDailyViewData: Data = {
           "net": 25
         },
         "inputMeal": {
-          "fat": "yes",
-          "source": "manual"
-        }
+          "fat": WizardInputMealFat.Yes,
+          "source": WizardInputMealSource.Manual
+        },
+        "isoWeekday": WeekDays.Thursday
       },
       {
         "epoch": 1659983700000,
@@ -1622,17 +1570,19 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": WIZARD_UMM_ID,
-        "type": "wizard",
-        "source": "Diabeloop",
+        "type": DatumType.Wizard,
+        "source": Source.Diabeloop,
         "bolusId": WIZARD_BOLUS_UMM_ID,
-        "bolusIds": { WIZARD_BOLUS_UMM_ID },
+        "bolusIds": new Set(WIZARD_BOLUS_UMM_ID),
         "carbInput": 50,
         "units": "mmol/L",
         "bolus": null,
         "inputTime": "2022-08-08T18:34:00Z",
         "inputMeal": {
-          "source": "umm"
-        }
+          "source": WizardInputMealSource.Umm,
+          "fat": WizardInputMealFat.No
+        },
+        "isoWeekday": WeekDays.Thursday
       },
       {
         "epoch": 1659984300000,
@@ -1641,10 +1591,10 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": WIZARD_POSITIVE_OVERRIDE_ID,
-        "type": "wizard",
-        "source": "Diabeloop",
+        "type": DatumType.Wizard,
+        "source": Source.Diabeloop,
         "bolusId": WIZARD_BOLUS_POSITIVE_OVERRIDE_ID,
-        "bolusIds": { WIZARD_BOLUS_POSITIVE_OVERRIDE_ID },
+        "bolusIds": new Set(WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID),
         "carbInput": 100,
         "units": "mmol/L",
         "bolus": null,
@@ -1653,7 +1603,8 @@ export const completeDailyViewData: Data = {
           "carb": 0,
           "correction": 0,
           "net": 14.35
-        }
+        },
+        "isoWeekday": WeekDays.Thursday
       },
       {
         "epoch": 1659984900000,
@@ -1662,10 +1613,10 @@ export const completeDailyViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": WIZARD_NEGATIVE_OVERRIDE_ID,
-        "type": "wizard",
-        "source": "Diabeloop",
+        "type": DatumType.Wizard,
+        "source": Source.Diabeloop,
         "bolusId": WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID,
-        "bolusIds": { WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID },
+        "bolusIds": new Set(WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID),
         "carbInput": 100,
         "units": "mmol/L",
         "bolus": null,
@@ -1674,7 +1625,8 @@ export const completeDailyViewData: Data = {
           "carb": 0,
           "correction": 0,
           "net": 10.05
-        }
+        },
+        "isoWeekday": WeekDays.Thursday
       }
     ],
     "zenModes": [],
@@ -1704,12 +1656,12 @@ export const dataSetsWithZeroValues: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbgId",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 0,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 63000000,
         "deviceName": "Unknown"
       }
@@ -1723,9 +1675,9 @@ export const dataSetsWithZeroValues: Data = {
         "timezone": "UTC",
         "guessedTimezone": false,
         "id": "parameterId",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "subType": "deviceParameter",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Confidential,
         "params": [
           {
             "id": "parameterId",
@@ -1733,7 +1685,7 @@ export const dataSetsWithZeroValues: Data = {
             "timezone": "UTC",
             "name": "MEAL_RATIO_LUNCH_FACTOR",
             "level": "1",
-            "unit": "%",
+            "unit": Unit.Percent,
             "value": "100",
             "previousValue": "110",
             "lastUpdateDate": "2022-08-08T08:00:00Z"
@@ -1751,17 +1703,18 @@ export const dataSetsWithZeroValues: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "physicalActivityId",
-        "type": "physicalActivity",
-        "source": "Diabeloop",
+        "type": DatumType.PhysicalActivity,
+        "source": Source.Diabeloop,
         "duration": {
-          "units": "seconds",
+          "units": DurationUnit.Seconds,
           "value": 0
         },
         "normalEnd": "2022-08-08T13:00:00.000Z",
         "epochEnd": 1659963600000,
         "guid": "pa_18",
-        "reportedIntensity": "medium",
-        "inputTime": "2022-08-08T13:00:00.000Z"
+        "reportedIntensity": Intensity.Medium,
+        "inputTime": "2022-08-08T13:00:00.000Z",
+        "isoWeekday": WeekDays.Sunday
       }
     ],
     "pumpSettings": [
@@ -1772,8 +1725,9 @@ export const dataSetsWithZeroValues: Data = {
         "timezone": "UTC",
         "guessedTimezone": false,
         "id": "pump_2022-08-08_6",
-        "type": "pumpSettings",
-        "source": "Diabeloop",
+        "type": DatumType.PumpSettings,
+        "source": Source.Diabeloop,
+        "isoWeekday": WeekDays.Sunday
         "basalSchedules": [],
         "payload": {
           "basalsecurityprofile": {},
@@ -1789,13 +1743,12 @@ export const dataSetsWithZeroValues: Data = {
           "device": {
             "deviceId": "1234",
             "imei": "1234567890",
-            "manufacturer": "Diabeloop",
+            "manufacturer": Source.Diabeloop,
             "name": "DBLG1",
             "swVersion": "beta"
           },
           "pump": {
-            "expirationDate": "2050-04-12T17:53:54+02:00",
-            "manufacturer": "VICENTRA",
+            "manufacturer": PumpManufacturer.Vicentra,
             "name": "Kaleido",
             "serialNumber": "123456",
             "swVersion": "beta"
@@ -1805,9 +1758,11 @@ export const dataSetsWithZeroValues: Data = {
             {
               "effectiveDate": "2020-01-17T08:00:00.000Z",
               "level": 1,
-              "name": ""
+              "name": "",
+              "unit": Unit.Kilogram,
+              "value": "2"
             }
-          ]
+          ],
         }
       }
     ],
@@ -1819,12 +1774,16 @@ export const dataSetsWithZeroValues: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "reservoirChangeId",
-        "type": "deviceEvent",
-        "source": "Diabeloop",
-        "subType": "reservoirChange",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.ReservoirChange,
         "pump": {
-          "manufacturer": "DEFAULT"
-        }
+          "manufacturer": PumpManufacturer.Default,
+          "name": "",
+          "serialNumber": "",
+          "swVersion": ""
+        },
+        "isoWeekday": WeekDays.Thursday
       }
     ],
     "smbg": [],
@@ -1862,12 +1821,12 @@ export const smbgData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "smb_2022-08-08_0",
-        "type": "smbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Smbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 62100000
       },
       {
@@ -1877,12 +1836,12 @@ export const smbgData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "smb_2022-08-08_1",
-        "type": "smbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Smbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 265,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 62400000
       },
       {
@@ -1892,12 +1851,12 @@ export const smbgData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "smb_2022-08-08_2",
-        "type": "smbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Smbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 265,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 62700000
       },
       {
@@ -1907,12 +1866,12 @@ export const smbgData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "smb_2022-08-08_3",
-        "type": "smbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Smbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 117,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 63000000
       },
       {
@@ -1922,12 +1881,12 @@ export const smbgData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "smb_2022-08-08_4",
-        "type": "smbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Smbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 117,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 63300000
       },
       {
@@ -1937,12 +1896,12 @@ export const smbgData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "smb_2022-08-08_5",
-        "type": "smbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Smbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 117,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 63600000
       },
       {
@@ -1952,12 +1911,12 @@ export const smbgData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "smb_2022-08-08_6",
-        "type": "smbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Smbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 61,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 63900000
       },
       {
@@ -1967,12 +1926,12 @@ export const smbgData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "smb_2022-08-08_7",
-        "type": "smbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Smbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 61,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 64200000
       },
       {
@@ -1982,12 +1941,12 @@ export const smbgData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "smb_2022-08-08_8",
-        "type": "smbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Smbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 61,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 64500000
       },
       {
@@ -1997,12 +1956,12 @@ export const smbgData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "smb_2022-08-08_9",
-        "type": "smbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Smbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 61,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 64800000
       },
       {
@@ -2012,12 +1971,12 @@ export const smbgData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "smb_2022-08-08_10",
-        "type": "smbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Smbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 40,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 65100000
       },
       {
@@ -2027,12 +1986,12 @@ export const smbgData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "smb_2022-08-08_11",
-        "type": "smbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Smbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 40,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 65400000
       },
       {
@@ -2042,12 +2001,12 @@ export const smbgData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "smb_2022-08-08_12",
-        "type": "smbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Smbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 40,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 65700000
       },
       {
@@ -2057,12 +2016,12 @@ export const smbgData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "smb_2022-08-08_13",
-        "type": "smbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Smbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 40,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 66000000
       },
       {
@@ -2072,12 +2031,12 @@ export const smbgData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "smb_2022-08-08_14",
-        "type": "smbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Smbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 40,
         "localDate": "2022-08-08",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 66300000
       }
     ],
@@ -2100,15 +2059,16 @@ export const minimalTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "basal_2020_01_08_1",
-        "type": "basal",
-        "source": "Diabeloop",
+        "type": DatumType.Basal,
+        "source": Source.Diabeloop,
         "subType": "automated",
         "internalId": "3deeb71f-9b5b-496e-b0af-ef9512c2787f",
         "deliveryType": "automated",
         "rate": 0.8,
         "duration": 400000000,
         "normalEnd": "2020-01-13T07:36:40.000Z",
-        "epochEnd": 1578901000000
+        "epochEnd": 1578901000000,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1578504600000,
@@ -2117,15 +2077,16 @@ export const minimalTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "basal_2020-01-08_2",
-        "type": "basal",
-        "source": "Diabeloop",
+        "type": DatumType.Basal,
+        "source": Source.Diabeloop,
         "subType": "scheduled",
         "internalId": "3deeb71f-9b5b-496e-b0af-ef9512c2787f",
         "deliveryType": "scheduled",
         "rate": 0.8,
         "duration": 500000000,
         "normalEnd": "2020-01-14T12:23:20.000Z",
-        "epochEnd": 1579004600000
+        "epochEnd": 1579004600000,
+        "isoWeekday": WeekDays.Sunday
       }
     ],
     "bolus": [
@@ -2134,14 +2095,14 @@ export const minimalTrendViewData: Data = {
         "displayOffset": -60,
         "normalTime": "2020-01-18T02:25:00.000Z",
         "timezone": "Europe/Paris",
-        "isoWeekday": "saturday",
+        "isoWeekday": WeekDays.Saturday,
         "guessedTimezone": false,
         "id": "carbBolusId",
-        "type": "bolus",
-        "source": "Diabeloop",
-        "subType": "normal",
+        "type": DatumType.Bolus,
+        "source": Source.Diabeloop,
+        "subType": BolusSubtype.Normal,
         "normal": 22.3,
-        "prescriptor": "manual",
+        "prescriptor": Prescriptor.Manual,
         "wizard": null,
         "expectedNormal": 25,
         "insulinOnBoard": 3.1843607
@@ -2153,12 +2114,13 @@ export const minimalTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "carbBolusId2",
-        "type": "bolus",
-        "source": "Diabeloop",
-        "subType": "normal",
+        "type": DatumType.Bolus,
+        "source": Source.Diabeloop,
+        "subType": BolusSubtype.Normal,
         "normal": 1.3,
-        "prescriptor": "manual",
-        "wizard": null
+        "prescriptor": Prescriptor.Manual,
+        "wizard": null,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1579315800000,
@@ -2167,12 +2129,13 @@ export const minimalTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "carbBolusId2",
-        "type": "bolus",
-        "source": "Diabeloop",
-        "subType": "normal",
+        "type": DatumType.Bolus,
+        "source": Source.Diabeloop,
+        "subType": BolusSubtype.Normal,
         "normal": 1.3,
-        "prescriptor": "manual",
-        "wizard": null
+        "prescriptor": Prescriptor.Manual,
+        "wizard": null,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1579229400000,
@@ -2181,12 +2144,13 @@ export const minimalTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "carbBolusId2",
-        "type": "bolus",
-        "source": "Diabeloop",
-        "subType": "normal",
+        "type": DatumType.Bolus,
+        "source": Source.Diabeloop,
+        "subType": BolusSubtype.Normal,
         "normal": 1.3,
-        "prescriptor": "manual",
-        "wizard": null
+        "prescriptor": Prescriptor.Manual,
+        "wizard": null,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1579310400000,
@@ -2195,12 +2159,13 @@ export const minimalTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "carbBolusId2",
-        "type": "bolus",
-        "source": "Diabeloop",
-        "subType": "normal",
+        "type": DatumType.Bolus,
+        "source": Source.Diabeloop,
+        "subType": BolusSubtype.Normal,
         "normal": 1.3,
-        "prescriptor": "manual",
-        "wizard": null
+        "prescriptor": Prescriptor.Manual,
+        "wizard": null,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1579396800000,
@@ -2209,12 +2174,13 @@ export const minimalTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "carbBolusId2",
-        "type": "bolus",
-        "source": "Diabeloop",
-        "subType": "normal",
+        "type": DatumType.Bolus,
+        "source": Source.Diabeloop,
+        "subType": BolusSubtype.Normal,
         "normal": 1.3,
-        "prescriptor": "manual",
-        "wizard": null
+        "prescriptor": Prescriptor.Manual,
+        "wizard": null,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1579449300000,
@@ -2223,14 +2189,15 @@ export const minimalTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "carbBolusId4",
-        "type": "bolus",
-        "source": "Diabeloop",
-        "subType": "normal",
+        "type": DatumType.Bolus,
+        "source": Source.Diabeloop,
+        "subType": BolusSubtype.Normal,
         "normal": 9.05,
-        "prescriptor": "manual",
+        "prescriptor": Prescriptor.Manual,
         "wizard": null,
         "expectedNormal": 9.05,
-        "insulinOnBoard": 3.0588088
+        "insulinOnBoard": 3.0588088,
+        "isoWeekday": WeekDays.Sunday
       },
       {
         "epoch": 1579535100000,
@@ -2239,14 +2206,15 @@ export const minimalTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "carbBolusId3",
-        "type": "bolus",
-        "source": "Diabeloop",
-        "subType": "normal",
+        "type": DatumType.Bolus,
+        "source": Source.Diabeloop,
+        "subType": BolusSubtype.Normal,
         "normal": 19.35,
-        "prescriptor": "manual",
+        "prescriptor": Prescriptor.Manual,
         "wizard": null,
         "expectedNormal": 19.35,
-        "insulinOnBoard": 3.1218212
+        "insulinOnBoard": 3.1218212,
+        "isoWeekday": WeekDays.Sunday
       }
     ],
     "cbg": [
@@ -2257,12 +2225,12 @@ export const minimalTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 182,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2273,12 +2241,12 @@ export const minimalTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-19_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 164,
         "localDate": "2020-01-19",
-        "isoWeekday": "sunday",
+        "isoWeekday": WeekDays.Sunday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2289,12 +2257,12 @@ export const minimalTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-19_1",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 196,
         "localDate": "2020-01-19",
-        "isoWeekday": "sunday",
+        "isoWeekday": WeekDays.Sunday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2305,12 +2273,12 @@ export const minimalTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-19_2",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 196,
         "localDate": "2020-01-19",
-        "isoWeekday": "sunday",
+        "isoWeekday": WeekDays.Sunday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2321,12 +2289,12 @@ export const minimalTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-18_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 177,
         "localDate": "2020-01-18",
-        "isoWeekday": "saturday",
+        "isoWeekday": WeekDays.Saturday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       }
@@ -2340,11 +2308,11 @@ export const minimalTrendViewData: Data = {
         "displayOffset": -60,
         "normalTime": "2020-01-19T10:00:00.000Z",
         "timezone": "Europe/Paris",
-        "isoWeekday": "sunday",
+        "isoWeekday": WeekDays.Sunday,
         "guessedTimezone": false,
         "id": "food_19-35-00",
-        "type": "food",
-        "source": "Diabeloop",
+        "type": DatumType.Food,
+        "source": Source.Diabeloop,
         "meal": "rescuecarbs",
         "nutrition": {
           "carbohydrate": {
@@ -2353,20 +2321,23 @@ export const minimalTrendViewData: Data = {
           }
         },
         "prescribedNutrition": {
-          "carbohydrate": {}
+          "carbohydrate": {
+            "net": 128,
+            "units": "grams"
+          }
         },
-        "prescriptor": ""
+        "prescriptor": Prescriptor.Hybrid
       },
       {
         "epoch": 1579428000000,
         "displayOffset": -60,
         "normalTime": "2020-01-19T10:00:00.000Z",
-        "isoWeekday": "sunday",
+        "isoWeekday": WeekDays.Sunday,
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "food_19-35-00",
-        "type": "food",
-        "source": "Diabeloop",
+        "type": DatumType.Food,
+        "source": Source.Diabeloop,
         "meal": "rescuecarbs",
         "nutrition": {
           "carbohydrate": {
@@ -2375,20 +2346,23 @@ export const minimalTrendViewData: Data = {
           }
         },
         "prescribedNutrition": {
-          "carbohydrate": {}
+          "carbohydrate": {
+            "net": 128,
+            "units": "grams"
+          }
         },
-        "prescriptor": ""
+        "prescriptor": Prescriptor.Hybrid
       },
       {
         "epoch": 1579510800000,
         "displayOffset": -60,
         "normalTime": "2020-01-20T09:00:00.000Z",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "food_19-35-00",
-        "type": "food",
-        "source": "Diabeloop",
+        "type": DatumType.Food,
+        "source": Source.Diabeloop,
         "meal": "rescuecarbs",
         "nutrition": {
           "carbohydrate": {
@@ -2397,20 +2371,23 @@ export const minimalTrendViewData: Data = {
           }
         },
         "prescribedNutrition": {
-          "carbohydrate": {}
+          "carbohydrate": {
+            "net": 2,
+            "units": Unit.Gram
+          }
         },
-        "prescriptor": ""
+        "prescriptor": Prescriptor.Auto
       },
       {
         "epoch": 1579460400000,
         "displayOffset": -60,
         "normalTime": "2020-01-19T19:00:00.000Z",
-        "isoWeekday": "sunday",
+        "isoWeekday": WeekDays.Sunday,
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "food_19-35-00",
-        "type": "food",
-        "source": "Diabeloop",
+        "type": DatumType.Food,
+        "source": Source.Diabeloop,
         "meal": "rescuecarbs",
         "nutrition": {
           "carbohydrate": {
@@ -2419,20 +2396,23 @@ export const minimalTrendViewData: Data = {
           }
         },
         "prescribedNutrition": {
-          "carbohydrate": {}
+          "carbohydrate": {
+            "net": 2,
+            "units": Unit.Gram
+          }
         },
-        "prescriptor": ""
+        "prescriptor": Prescriptor.Manual
       },
       {
         "epoch": 1579559400000,
         "displayOffset": -60,
         "normalTime": "2020-01-20T22:30:00.000Z",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "food_19-35-00",
-        "type": "food",
-        "source": "Diabeloop",
+        "type": DatumType.Food,
+        "source": Source.Diabeloop,
         "meal": "rescuecarbs",
         "nutrition": {
           "carbohydrate": {
@@ -2456,14 +2436,15 @@ export const minimalTrendViewData: Data = {
         "epoch": 1579428000000,
         "displayOffset": -60,
         "normalTime": "2020-01-19T10:00:00.000Z",
-        "isoWeekday": "sunday",
+        "inputTime": "2020-01-19T10:00:00.000Z",
+        "isoWeekday": WeekDays.Sunday,
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "wizardId1",
-        "type": "wizard",
-        "source": "Diabeloop",
+        "type": DatumType.Wizard,
+        "source": Source.Diabeloop,
         "bolusId": "carbBolusId",
-        "bolusIds": {},
+        "bolusIds": new Set(),
         "carbInput": 385,
         "units": "mmol/L",
         "bolus": null
@@ -2472,19 +2453,21 @@ export const minimalTrendViewData: Data = {
         "epoch": 1579341600000,
         "displayOffset": -60,
         "normalTime": "2020-01-18T10:00:00.000Z",
-        "isoWeekday": "saturday",
+        "inputTime": "2020-01-18T10:00:00.000Z",
+        "isoWeekday": WeekDays.Saturday,
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "wizardId2",
-        "type": "wizard",
-        "source": "Diabeloop",
+        "type": DatumType.Wizard,
+        "source": Source.Diabeloop,
         "bolusId": "carbBolusId",
-        "bolusIds": {},
+        "bolusIds": new Set(),
         "carbInput": 285,
         "units": "mmol/L",
         "bolus": null,
         "inputMeal": {
-          "source": "umm"
+          "source": WizardInputMealSource.Umm,
+          "fat": WizardInputMealFat.No
         }
       }
     ],
@@ -2507,12 +2490,12 @@ export const timeInRangeStatsTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2523,12 +2506,12 @@ export const timeInRangeStatsTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_1",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 265,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 43200000,
         "deviceName": "Unknown"
       },
@@ -2539,12 +2522,12 @@ export const timeInRangeStatsTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_3",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 117,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 43500000,
         "deviceName": "Unknown"
       },
@@ -2555,12 +2538,12 @@ export const timeInRangeStatsTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_4",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 117,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 43800000,
         "deviceName": "Unknown"
       },
@@ -2571,12 +2554,12 @@ export const timeInRangeStatsTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_5",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 61,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 44100000,
         "deviceName": "Unknown"
       },
@@ -2587,12 +2570,12 @@ export const timeInRangeStatsTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_6",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 61,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 44400000,
         "deviceName": "Unknown"
       },
@@ -2603,12 +2586,12 @@ export const timeInRangeStatsTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_7",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 61,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 44700000,
         "deviceName": "Unknown"
       },
@@ -2619,12 +2602,12 @@ export const timeInRangeStatsTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_8",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 40,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 45000000,
         "deviceName": "Unknown"
       },
@@ -2635,12 +2618,12 @@ export const timeInRangeStatsTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_9",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 40,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 45300000,
         "deviceName": "Unknown"
       },
@@ -2651,12 +2634,12 @@ export const timeInRangeStatsTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_10",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 40,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 45600000,
         "deviceName": "Unknown"
       },
@@ -2667,12 +2650,12 @@ export const timeInRangeStatsTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_11",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 40,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 45900000,
         "deviceName": "Unknown"
       },
@@ -2683,12 +2666,12 @@ export const timeInRangeStatsTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_12",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 40,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 46200000,
         "deviceName": "Unknown"
       },
@@ -2699,12 +2682,12 @@ export const timeInRangeStatsTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_13",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 46500000,
         "deviceName": "Unknown"
       },
@@ -2715,12 +2698,12 @@ export const timeInRangeStatsTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_14",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 46800000,
         "deviceName": "Unknown"
       },
@@ -2731,12 +2714,12 @@ export const timeInRangeStatsTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_15",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 47100000,
         "deviceName": "Unknown"
       },
@@ -2747,12 +2730,12 @@ export const timeInRangeStatsTrendViewData: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-20_16",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-20",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 47400000,
         "deviceName": "Unknown"
       }
@@ -2786,12 +2769,12 @@ export const twoWeeksOfCbg: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-01_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-01",
-        "isoWeekday": "wednesday",
+        "isoWeekday": WeekDays.Wednesday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2802,12 +2785,12 @@ export const twoWeeksOfCbg: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-02_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-02",
-        "isoWeekday": "thursday",
+        "isoWeekday": WeekDays.Thursday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2818,12 +2801,12 @@ export const twoWeeksOfCbg: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-03_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-03",
-        "isoWeekday": "friday",
+        "isoWeekday": WeekDays.Friday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2834,12 +2817,12 @@ export const twoWeeksOfCbg: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-04_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-04",
-        "isoWeekday": "saturday",
+        "isoWeekday": WeekDays.Saturday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2850,12 +2833,12 @@ export const twoWeeksOfCbg: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-05_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-05",
-        "isoWeekday": "sunday",
+        "isoWeekday": WeekDays.Sunday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2866,12 +2849,12 @@ export const twoWeeksOfCbg: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-06_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-06",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2882,12 +2865,12 @@ export const twoWeeksOfCbg: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-07_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-07",
-        "isoWeekday": "tuesday",
+        "isoWeekday": WeekDays.Tuesday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2898,12 +2881,12 @@ export const twoWeeksOfCbg: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-08_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-08",
-        "isoWeekday": "wednesday",
+        "isoWeekday": WeekDays.Wednesday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2914,12 +2897,12 @@ export const twoWeeksOfCbg: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-09_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-09",
-        "isoWeekday": "thursday",
+        "isoWeekday": WeekDays.Thursday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2930,12 +2913,12 @@ export const twoWeeksOfCbg: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-10_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-10",
-        "isoWeekday": "friday",
+        "isoWeekday": WeekDays.Friday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2946,12 +2929,12 @@ export const twoWeeksOfCbg: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-11_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-11",
-        "isoWeekday": "saturday",
+        "isoWeekday": WeekDays.Saturday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2962,12 +2945,12 @@ export const twoWeeksOfCbg: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-12_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-12",
-        "isoWeekday": "sunday",
+        "isoWeekday": WeekDays.Sunday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2978,12 +2961,12 @@ export const twoWeeksOfCbg: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-13_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-13",
-        "isoWeekday": "monday",
+        "isoWeekday": WeekDays.Monday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -2994,12 +2977,12 @@ export const twoWeeksOfCbg: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-14_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-14",
-        "isoWeekday": "tuesday",
+        "isoWeekday": WeekDays.Tuesday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       },
@@ -3010,12 +2993,12 @@ export const twoWeeksOfCbg: Data = {
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "2020-01-15_0",
-        "type": "cbg",
-        "source": "Diabeloop",
-        "units": "mg/dL",
+        "type": DatumType.Cbg,
+        "source": Source.Diabeloop,
+        "units": Unit.MilligramPerDeciliter,
         "value": 189,
         "localDate": "2020-01-15",
-        "isoWeekday": "wednesday",
+        "isoWeekday": WeekDays.Wednesday,
         "msPer24": 39600000,
         "deviceName": "Unknown"
       }
