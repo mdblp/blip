@@ -2,6 +2,8 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## 3.3.0-beta - 2024-02-14
+
 ## 3.2.0-beta - 2023-12-22
 ### Changed
 - YLP-2122 Remove JP and GB from the list of countries
