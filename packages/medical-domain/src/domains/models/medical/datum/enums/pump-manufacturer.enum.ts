@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,6 +29,7 @@ enum PumpManufacturer {
   Dana = 'DANA',
   Default = 'DEFAULT',
   Roche = 'ROCHE',
+  Terumo = 'TERUMO',
   Vicentra = 'VICENTRA'
 }
 

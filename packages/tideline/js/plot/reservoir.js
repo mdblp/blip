@@ -17,9 +17,26 @@
 
 import _ from 'lodash'
 
-import { SITE_CHANGE_BY_MANUFACTURER } from '../../plugins/blip/basics/logic/constants'
 import utils from './util/utils'
 import { PumpManufacturer } from 'medical-domain'
+import danaPumpIcon from 'dana-pump.svg'
+import insightPumpIcon from 'insight-pump.svg'
+import kaleidoPumpIcon from 'kaleido-pump.svg'
+import medisafePumpIcon from 'medisafe-pump.svg'
+
+const getReservoirChangeIcon = (pumpManufacturer) => {
+  switch (pumpManufacturer) {
+    case PumpManufacturer.Dana:
+      return danaPumpIcon
+    case PumpManufacturer.Roche:
+      return insightPumpIcon
+    case PumpManufacturer.Terumo:
+      return medisafePumpIcon
+    case PumpManufacturer.Vicentra:
+    default:
+      return kaleidoPumpIcon
+  }
+}
 
 function plotReservoirChange(pool, opts) {
   const d3 = window.d3
@@ -27,10 +44,6 @@ function plotReservoirChange(pool, opts) {
   const width = 40
 
   const xPos = (d) => opts.xScale(d.epoch)
-  const getPicto = (d) => {
-    const change = _.get(SITE_CHANGE_BY_MANUFACTURER, _.get(d, 'pump.manufacturer', PumpManufacturer.Default), SITE_CHANGE_BY_MANUFACTURER[PumpManufacturer.Default])
-    return change.picto
-  }
 
   function reservoir(selection) {
     opts.xScale = pool.xScale().copy()
@@ -65,7 +78,7 @@ function plotReservoirChange(pool, opts) {
           'y': 0,
           width,
           height,
-          'xlink:href': (d) => getPicto(d)
+          'xlink:href': (reservoirChange) => getReservoirChangeIcon(reservoirChange.pump.manufacturer)
         })
 
       allReservoirs.exit().remove()

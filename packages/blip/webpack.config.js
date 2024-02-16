@@ -129,6 +129,10 @@ const resolve = {
     'infusion.png': path.resolve(__dirname, '../../branding/sitechange/infusion.png'),
     'cartridge-vicentra.png': path.resolve(__dirname, '../../branding/sitechange/cartridge-vicentra.png'),
     'warmup-dexcom.svg': path.resolve(__dirname, '../../branding/warmup/warmup-dexcom.svg'),
+    'dana-pump.svg': path.resolve(__dirname, '../../branding/pump/dana-pump.svg'),
+    'insight-pump.svg': path.resolve(__dirname, '../../branding/pump/insight-pump.svg'),
+    'kaleido-pump.svg': path.resolve(__dirname, '../../branding/pump/kaleido-pump.svg'),
+    'medisafe-pump.svg': path.resolve(__dirname, '../../branding/pump/medisafe-pump.svg'),
     'jaFont-Regular.ttf': path.resolve(__dirname, '../../branding/fonts/noto/NotoSerifJP-Regular.ttf'),
     'jaFont-Bold.ttf': path.resolve(__dirname, '../../branding/fonts/noto/NotoSerifJP-Bold.ttf')
   },
