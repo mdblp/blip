@@ -1727,7 +1727,7 @@ export const dataSetsWithZeroValues: Data = {
         "id": "pump_2022-08-08_6",
         "type": DatumType.PumpSettings,
         "source": Source.Diabeloop,
-        "isoWeekday": WeekDays.Sunday
+        "isoWeekday": WeekDays.Sunday,
         "basalSchedules": [],
         "payload": {
           "basalsecurityprofile": {},
