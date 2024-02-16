@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -53,6 +53,7 @@ import { setPageTitle } from '../../lib/utils'
 import { TargetAndAlertsView } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
 import TeamUtils from '../../lib/team/team.util'
 import { Patient } from '../../lib/patient/models/patient.model'
+import { getPageTitleByPatientView } from './patient-data.utils'
 
 interface PatientDataProps {
   patient: Patient
@@ -101,7 +102,8 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
 
-  setPageTitle(t(currentPatientView))
+  const pageTitle = getPageTitleByPatientView(currentPatientView)
+  setPageTitle(pageTitle)
 
   useEffect(() => {
     if (patient.userid !== patientIdForWhichDataHasBeenFetched.current) {
