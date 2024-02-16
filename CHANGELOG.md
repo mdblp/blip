@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-# 3.3.0-beta - 2024-02-13
+## 3.3.0-beta - 2024-02-14
 ### Changed
 - YLP-2851 Remove pump cartridge expiration date from Device view and PDF report
 
