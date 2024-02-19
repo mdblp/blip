@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -161,9 +161,6 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
       }, {
         label: t('Pump version'),
         value: pump.swVersion
-      }, {
-        label: t('Pump cartridge expiration date'),
-        value: pump.expirationDate ? formatLocalizedFromUTC(pump.expirationDate, timePrefs, longDayFormat) : t('N/A')
       }]
   }
 }

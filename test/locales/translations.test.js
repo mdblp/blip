@@ -310,7 +310,6 @@ const ignoredTransKeyInYourLoopsFiles = [
   'Parameter',
   'Product',
   'Pump',
-  'Pump cartridge expiration date',
   'Pump version',
   'Serial Number',
   'Setting',

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,9 +60,9 @@ export interface PumpSettingsParameter {
   level: number
   name: string
   unit: Unit
-  previousUnit: Unit
   value: string
-  previousValue: string
+  previousUnit?: Unit
+  previousValue?: string
 }
 
 interface ParametersChange {
@@ -71,7 +71,6 @@ interface ParametersChange {
 }
 
 interface PumpConfig {
-  expirationDate?: string
   manufacturer: PumpManufacturer
   name: string
   serialNumber: string

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -236,9 +236,6 @@ describe('Settings print view util', () => {
       }, {
         label: 'Pump version',
         value: 'beta'
-      }, {
-        label: 'Cartridge expiration',
-        value: 'Apr 12, 2035'
       }])
     })
   })
