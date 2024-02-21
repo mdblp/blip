@@ -577,7 +577,7 @@
   "verify-email-details-4": "別のメールアドレスでログインしますか？<underline>再度ログインしてください。</underline>",
   "verify-email-error-title": "Your e-mail address could not be verified.",
   "verify-email-success-info": "You can now continue to YourLoops.",
-  "verify-email-success-title": "Your e-mail address was verified.",
+  "verify-email-success-title": "メールアドレスが認証されました。",
   "verify-email-title": "メールアドレスの確認",
   "very-low-bg-input": "超低血糖入力",
   "weight": "体重",
