@@ -26,9 +26,9 @@
  */
 
 enum PumpManufacturer {
-  Dana = 'DANA',
   Default = 'DEFAULT',
   Roche = 'ROCHE',
+  Sooil = 'SOOIL',
   Terumo = 'TERUMO',
   Vicentra = 'VICENTRA'
 }

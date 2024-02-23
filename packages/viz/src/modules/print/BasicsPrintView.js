@@ -688,7 +688,7 @@ class BasicsPrintView extends PrintView {
 
   getPumpIconByManufacturer(manufacturer) {
     switch (manufacturer) {
-      case PumpManufacturer.Dana:
+      case PumpManufacturer.Sooil:
         return Images.danaPumpIcon
       case PumpManufacturer.Vicentra:
         return Images.kaleidoPumpIcon

@@ -26,7 +26,7 @@ import medisafePumpIcon from 'medisafe-pump.svg'
 
 const getReservoirChangeIcon = (pumpManufacturer) => {
   switch (pumpManufacturer) {
-    case PumpManufacturer.Dana:
+    case PumpManufacturer.Sooil:
       return danaPumpIcon
     case PumpManufacturer.Roche:
       return insightPumpIcon
