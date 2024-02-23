@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -236,7 +236,6 @@ function createRandomPumpSettings(date?: Date): PumpSettings {
       parameters: [],
       history: [],
       pump: {
-        expirationDate: faker.date.future().toISOString(),
         manufacturer: PumpManufacturer.Default,
         name: '',
         serialNumber: faker.string.uuid(),
@@ -252,7 +251,6 @@ function createRandomReservoirChange(date?: Date): ReservoirChange {
     type: DatumType.DeviceEvent,
     subType: DeviceEventSubtype.ReservoirChange,
     pump: {
-      expirationDate: faker.date.future().toISOString(),
       manufacturer: PumpManufacturer.Default,
       name: '',
       serialNumber: faker.string.uuid(),

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -351,7 +351,6 @@ class MedicalDataService {
     const pump = latestPumpSettings.payload.pump
     this.medicalData.reservoirChanges = this.medicalData.reservoirChanges.map((reservoirChange: ReservoirChange) => {
       reservoirChange.pump = {
-        expirationDate: pump.expirationDate,
         name: pump.name,
         serialNumber: pump.serialNumber,
         swVersion: pump.swVersion,
