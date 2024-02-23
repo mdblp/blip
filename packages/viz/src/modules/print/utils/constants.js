@@ -17,10 +17,10 @@ export const SMALL_FONT_SIZE = 8
 export const EXTRA_SMALL_FONT_SIZE = 6
 export const Images = {
   logo: null,
-  siteChangeCannulaImage: null,
-  siteChangeReservoirImage: null,
-  siteChangeTubingImage: null,
-  siteChangeReservoirDiabeloopImage: null
+  kaleidoPumpIcon: null,
+  danaPumpIcon: null,
+  insightPumpIcon: null,
+  medisafePumpIcon: null
 }
 /** @type {{[x:string]: {regularName:string;regular:false|null|ArrayBuffer;boldName:string;bold:false|null|ArrayBuffer;}}} */
 export const Fonts = {
