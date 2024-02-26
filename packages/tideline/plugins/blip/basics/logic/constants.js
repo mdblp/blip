@@ -25,7 +25,7 @@ export const SITE_CHANGE_CANNULA = 'cannulaPrime'
 export const SECTION_TYPE_UNDECLARED = 'undeclared'
 export const DIABELOOP = 'Diabeloop'
 export const SITE_CHANGE_BY_MANUFACTURER = {
-  [PumpManufacturer.Default]: RESERVOIR_CHANGE_INSIGHT,
+  [PumpManufacturer.Default]: RESERVOIR_CHANGE_KALEIDO,
   [PumpManufacturer.Roche]: RESERVOIR_CHANGE_INSIGHT,
   [PumpManufacturer.Vicentra]: RESERVOIR_CHANGE_KALEIDO,
   [PumpManufacturer.Sooil]: RESERVOIR_CHANGE_DANA,

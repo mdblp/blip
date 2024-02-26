@@ -690,14 +690,14 @@ class BasicsPrintView extends PrintView {
     switch (manufacturer) {
       case PumpManufacturer.Sooil:
         return Images.danaPumpIcon
-      case PumpManufacturer.Vicentra:
-        return Images.kaleidoPumpIcon
       case PumpManufacturer.Terumo:
         return Images.medisafePumpIcon
       case PumpManufacturer.Roche:
+        return Images.insightPumpIcon
+      case PumpManufacturer.Vicentra:
       case PumpManufacturer.Default:
       default:
-        return Images.insightPumpIcon
+        return Images.kaleidoPumpIcon
     }
   }
 
