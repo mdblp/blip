@@ -1,15 +1,19 @@
 import { PumpManufacturer } from 'medical-domain'
 
 export const RESERVOIR_CHANGE_DANA = {
+  label: 'Infusion site changes',
   class: 'Change--reservoir--dana'
 }
 export const RESERVOIR_CHANGE_INSIGHT = {
+  label: 'Infusion site changes',
   class: 'Change--reservoir--insight'
 }
 export const RESERVOIR_CHANGE_KALEIDO = {
+  label: 'Infusion site changes',
   class: 'Change--reservoir--kaleido'
 }
 export const RESERVOIR_CHANGE_MEDISAFE = {
+  label: 'Infusion site changes',
   class: 'Change--reservoir--medisafe'
 }
 
