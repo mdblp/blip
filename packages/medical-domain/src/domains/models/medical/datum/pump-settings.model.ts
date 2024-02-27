@@ -72,6 +72,7 @@ interface ParametersChange {
 
 interface PumpConfig {
   manufacturer: PumpManufacturer
+  product: string
   name: string
   serialNumber: string
   swVersion: string

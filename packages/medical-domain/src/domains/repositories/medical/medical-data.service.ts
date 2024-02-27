@@ -352,6 +352,7 @@ class MedicalDataService {
     this.medicalData.reservoirChanges = this.medicalData.reservoirChanges.map((reservoirChange: ReservoirChange) => {
       reservoirChange.pump = {
         name: pump.name,
+        product: pump.product,
         serialNumber: pump.serialNumber,
         swVersion: pump.swVersion,
         manufacturer: this.latestPumpManufacturer as PumpManufacturer

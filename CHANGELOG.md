@@ -6,6 +6,7 @@ It is based on Tidepool Blip 1.27.
 ### Changed
 - YLP-2824 Display pump logos based on manufacturer
 - YLP-2851 Remove pump cartridge expiration date from Device view and PDF report
+- YLP-2850 Add product name (model) in pump information card
 
 ## 3.2.0 - 2024-02-15
 ### Changed
