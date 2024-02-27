@@ -232,6 +232,9 @@ describe('Settings print view util', () => {
         label: 'Manufacturer',
         value: 'VICENTRA'
       }, {
+        label: "Product",
+        value: "Kaleido",
+    },{
         label: 'Serial number',
         value: '123456'
       }, {
