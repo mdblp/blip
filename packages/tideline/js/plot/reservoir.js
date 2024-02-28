@@ -25,7 +25,8 @@ import kaleidoPumpIcon from 'kaleido-pump.svg'
 import medisafePumpIcon from 'medisafe-pump.svg'
 
 const getReservoirChangeIcon = (pumpManufacturer) => {
-  switch (pumpManufacturer) {
+  const manufacturerUpperCase = pumpManufacturer.toUpperCase()
+  switch (manufacturerUpperCase) {
     case PumpManufacturer.Sooil:
       return danaPumpIcon
     case PumpManufacturer.Roche:

@@ -687,7 +687,8 @@ class BasicsPrintView extends PrintView {
   }
 
   getPumpIconByManufacturer(manufacturer) {
-    switch (manufacturer) {
+    const manufacturerUppercase = manufacturer.toUpperCase()
+    switch (manufacturerUppercase) {
       case PumpManufacturer.Sooil:
         return Images.danaPumpIcon
       case PumpManufacturer.Terumo:

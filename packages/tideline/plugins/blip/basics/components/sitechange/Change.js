@@ -50,7 +50,7 @@ class Change extends React.Component {
     const manufacturerClass = _.get(
       _.get(
         SITE_CHANGE_BY_MANUFACTURER,
-        this.props.manufacturer,
+        this.props.manufacturer.toUpperCase(),
         SITE_CHANGE_BY_MANUFACTURER[PumpManufacturer.Default]),
       'class')
 
