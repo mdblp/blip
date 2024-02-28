@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -52,7 +52,7 @@ interface ReservoirTooltipProps {
 }
 
 enum ChangeType {
-  InfusionSite = 'site',
+  Cartridge = 'cartridge',
   Reservoir = 'reservoir'
 }
 
@@ -64,20 +64,22 @@ export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props
   const getChangeTypeByManufacturer = (manufacturer: PumpManufacturer): ChangeType => {
     const manufacturerUpperCase = manufacturer.toUpperCase()
     switch (manufacturerUpperCase) {
+      case PumpManufacturer.Sooil:
+        return ChangeType.Reservoir
       case PumpManufacturer.Vicentra:
       case PumpManufacturer.Roche:
-        return ChangeType.Reservoir
+      case PumpManufacturer.Terumo:
       case PumpManufacturer.Default:
       default:
-        return ChangeType.InfusionSite
+        return ChangeType.Cartridge
     }
   }
 
   const manufacturer = reservoir.pump?.manufacturer || PumpManufacturer.Default
   const changeType: ChangeType = getChangeTypeByManufacturer(manufacturer)
   const label = (changeType === ChangeType.Reservoir)
-    ? t('Reservoir Change')
-    : t('Infusion site change')
+    ? t('Reservoir change')
+    : t('Cartridge change')
 
   return (
     <Tooltip

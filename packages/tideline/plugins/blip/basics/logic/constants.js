@@ -1,23 +1,20 @@
-import infusion from 'infusion.png'
-import cartridge from 'cartridge.png'
-import cartridgeVicentra from 'cartridge-vicentra.png'
 import { PumpManufacturer } from 'medical-domain'
 
-// labels have to be translated
-export const INFUSION_SITE_CHANGE = {
+export const RESERVOIR_CHANGE_DANA = {
   label: 'Infusion site changes',
-  class: 'Change--site',
-  picto: infusion
+  class: 'Change--reservoir--dana'
 }
-export const CARTRIDGE_CHANGE = {
-  label: 'Reservoir changes',
-  class: 'Change--reservoir',
-  picto: cartridge
+export const RESERVOIR_CHANGE_INSIGHT = {
+  label: 'Infusion site changes',
+  class: 'Change--reservoir--insight'
 }
-export const CARTRIDGE_VICENTRA_CHANGE = {
-  label: 'Reservoir changes',
-  class: 'Change--reservoir--vicentra',
-  picto: cartridgeVicentra
+export const RESERVOIR_CHANGE_KALEIDO = {
+  label: 'Infusion site changes',
+  class: 'Change--reservoir--kaleido'
+}
+export const RESERVOIR_CHANGE_MEDISAFE = {
+  label: 'Infusion site changes',
+  class: 'Change--reservoir--medisafe'
 }
 
 export const NO_SITE_CHANGE = 'noSiteChange'
@@ -28,7 +25,9 @@ export const SITE_CHANGE_CANNULA = 'cannulaPrime'
 export const SECTION_TYPE_UNDECLARED = 'undeclared'
 export const DIABELOOP = 'Diabeloop'
 export const SITE_CHANGE_BY_MANUFACTURER = {
-  [PumpManufacturer.Default]: INFUSION_SITE_CHANGE,
-  [PumpManufacturer.Roche]: CARTRIDGE_CHANGE,
-  [PumpManufacturer.Vicentra]: CARTRIDGE_VICENTRA_CHANGE
+  [PumpManufacturer.Default]: RESERVOIR_CHANGE_KALEIDO,
+  [PumpManufacturer.Roche]: RESERVOIR_CHANGE_INSIGHT,
+  [PumpManufacturer.Vicentra]: RESERVOIR_CHANGE_KALEIDO,
+  [PumpManufacturer.Sooil]: RESERVOIR_CHANGE_DANA,
+  [PumpManufacturer.Terumo]: RESERVOIR_CHANGE_MEDISAFE
 }
