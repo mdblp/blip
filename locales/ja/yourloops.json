@@ -296,6 +296,7 @@
   "information": "基本情報",
   "initial-hba1c": "初期HbA1c",
   "invalid-code": "コードが無効です。",
+  "invalid-email": "無効なメールアドレスです。（特殊文字は使用できません）",
   "invalid-phone-number": "有効な電話番号を入力してください。",
   "invalid-zipcode": "有効な郵便番号を入力してください。",
   "invite-sent-by": "招待者",
