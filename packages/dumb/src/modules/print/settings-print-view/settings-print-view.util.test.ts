@@ -36,6 +36,24 @@ import { type ParameterConfig, PumpManufacturer, Unit } from 'medical-domain'
 import { type ParameterSettingsTableRow } from '../../../models/print/pdf-settings-table.model'
 import { type PdfSettingsData } from '../../../models/print/pdf-data.model'
 
+const labelColumn = {
+  id: 'label',
+  headerFill: false,
+  cache: false,
+  align: 'left',
+  width: 150,
+  header: ''
+}
+
+const valueColumn = {
+  id: 'value',
+  headerFill: false,
+  cache: false,
+  align: 'right',
+  width: 150,
+  header: ''
+}
+
 describe('Settings print view util', () => {
   const timezone = 'Europe/Paris'
 
@@ -114,21 +132,7 @@ describe('Settings print view util', () => {
         subText: undefined,
         note: undefined
       })
-      expect(result.columns).toEqual([{
-        id: 'label',
-        headerFill: false,
-        cache: false,
-        align: 'left',
-        width: 150,
-        header: ''
-      }, {
-        id: 'value',
-        headerFill: false,
-        cache: false,
-        align: 'right',
-        width: 150,
-        header: ''
-      }])
+      expect(result.columns).toEqual([labelColumn, valueColumn])
       expect(result.rows).toEqual([{
         label: 'Manufacturer',
         value: 'Dexcom'
@@ -166,21 +170,7 @@ describe('Settings print view util', () => {
         subText: '- DBLG1',
         note: undefined
       })
-      expect(result.columns).toEqual([{
-        id: 'label',
-        headerFill: false,
-        cache: false,
-        align: 'left',
-        width: 150,
-        header: ''
-      }, {
-        id: 'value',
-        headerFill: false,
-        cache: false,
-        align: 'right',
-        width: 150,
-        header: ''
-      }])
+      expect(result.columns).toEqual([labelColumn, valueColumn])
       expect(result.rows).toEqual([{
         label: 'Manufacturer',
         value: 'Diabeloop'
@@ -213,21 +203,7 @@ describe('Settings print view util', () => {
         subText: '- Kaleido',
         note: undefined
       })
-      expect(result.columns).toEqual([{
-        id: 'label',
-        headerFill: false,
-        cache: false,
-        align: 'left',
-        width: 150,
-        header: ''
-      }, {
-        id: 'value',
-        headerFill: false,
-        cache: false,
-        align: 'right',
-        width: 150,
-        header: ''
-      }])
+      expect(result.columns).toEqual([labelColumn, valueColumn])
       expect(result.rows).toEqual([{
         label: 'Manufacturer',
         value: 'VICENTRA'
