@@ -100,6 +100,7 @@ const normalizePump = (rawPump: Record<string, unknown> | null): PumpConfig => {
   const manufacturer = (rawPump?.manufacturer ?? '') as string
   return {
     manufacturer: manufacturer?.toUpperCase() as PumpManufacturer || notAvailableLabel,
+    product: (rawPump?.product ?? notAvailableLabel) as string,
     name: (rawPump?.name ?? notAvailableLabel) as string,
     serialNumber: (rawPump?.serialNumber ?? notAvailableLabel) as string,
     swVersion: (rawPump?.swVersion ?? notAvailableLabel) as string

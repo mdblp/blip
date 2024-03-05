@@ -59,6 +59,14 @@ export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
       <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
+            <Typography variant="body2">{t('Product')}</Typography>
+            <Typography variant="body2" className="bold">{pump.product ? pump.product : t('N/A')}</Typography>
+          </Box>
+        </ListItemText>
+      </ListItem>
+      <ListItem divider className="list-item">
+        <ListItemText>
+          <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Serial Number')}</Typography>
             <Typography variant="body2" className="bold">{pump.serialNumber ? pump.serialNumber : t('N/A')}</Typography>
           </Box>

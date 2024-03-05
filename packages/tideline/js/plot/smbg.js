@@ -68,7 +68,7 @@ function plotSmbg(pool, opts = defaults) {
           'cy': smbg.yPosition,
           'r': smbg.radius,
           'id': smbg.id,
-          'data-testid': smbg.id,
+          'data-testid': smbg.dataTestId,
           'class': getBgBoundaryClass
         })
         .classed({'d3-smbg': true, 'd3-circle-smbg': true})
@@ -108,6 +108,10 @@ function plotSmbg(pool, opts = defaults) {
 
   smbg.id = function(d) {
     return 'smbg_' + d.id
+  }
+
+  smbg.dataTestId = function(d) {
+    return `smbg_group_${d.id}`
   }
 
   smbg.addTooltip = function(d, rect) {

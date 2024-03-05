@@ -156,6 +156,9 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
         label: t('Manufacturer'),
         value: pump.manufacturer
       }, {
+          label: t('Product'),
+          value: pump.product
+        },{
         label: t('Serial Number'),
         value: pump.serialNumber
       }, {
