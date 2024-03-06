@@ -246,6 +246,7 @@ const PumpSettingsMock = (date, time) => {
       },
       pump: {
         manufacturer: 'VICENTRA',
+        product: "testPump",
         name: 'Kaleido',
         serialNumber: '123456',
         swVersion: 'beta'
@@ -559,6 +560,7 @@ export const pumpSettingsData: Data = {
           ],
           pump: {
             manufacturer: PumpManufacturer.Vicentra,
+            product: "testPump",
             name: 'Kaleido',
             serialNumber: '123456',
             swVersion: 'beta'
