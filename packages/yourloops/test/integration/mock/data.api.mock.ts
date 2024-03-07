@@ -89,6 +89,10 @@ export const ALARM_EVENT_KALEIDO_OCCLUSION_ID = 'alarmEventKaleidoOcclusionId'
 export const ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID = 'alarmEventSensorSessionExpiredId'
 export const ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID = 'alarmEventSuddenRiseInGlycemiaId'
 export const ALARM_EVENT_URGENT_LOW_SOON_ID = 'alarmEventUrgentLowSoonId'
+export const ALARM_EVENT_DANA_EMPTY_PUMP_BATTERY_ID = 'alarmEventDanaEmptyPumpBatteryId'
+export const ALARM_EVENT_DANA_EMPTY_RESERVOIR_ID = 'alarmEventDanaEmptyReservoirId'
+export const ALARM_EVENT_DANA_INCOMPATIBLE_ACTIONS_ON_PUMP_ID = 'alarmEventDanaIncompatibleActionsOnPumpId'
+export const ALARM_EVENT_DANA_OCCLUSION_ID = 'alarmEventDanaOcclusionId'
 export const WARMUP_01_ID = 'warmup01Id'
 export const WIZARD_UNDELIVERED_INPUT_TIME = '2022-08-08T02:00:00Z'
 export const WIZARD_UMM_INPUT_TIME = '2022-08-08T18:34:00Z'
@@ -641,7 +645,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmEventHypoglycemiaId",
+        "guid": ALARM_EVENT_HYPOGLYCEMIA_ID,
         "inputTime": "2022-08-08T09:05:00Z",
         "alarm": {
           "alarmCode": AlarmCode.Hypoglycemia,
@@ -663,7 +667,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmEventInsightEmptyInsulinCartridgeId",
+        "guid": ALARM_EVENT_INSIGHT_EMPTY_INSULIN_CARTRIDGE_ID,
         "inputTime": "2022-08-08T09:10:00Z",
         "alarm": {
           "alarmCode": AlarmCode.InsightEmptyInsulinCartridge,
@@ -685,7 +689,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmEventInsightEmptyPumpBatteryId",
+        "guid": ALARM_EVENT_INSIGHT_EMPTY_PUMP_BATTERY_ID,
         "inputTime": "2022-08-08T09:15:00Z",
         "alarm": {
           "alarmCode": AlarmCode.InsightEmptyPumpBattery,
@@ -707,7 +711,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmEventInsightHypoglycemiaId",
+        "guid": ALARM_EVENT_INSIGHT_HYPOGLYCEMIA_ID,
         "inputTime": "2022-08-08T09:20:00Z",
         "alarm": {
           "alarmCode": AlarmCode.InsightHypoglycemia,
@@ -729,7 +733,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmEventInsightIncompatibleActionsOnPumpId",
+        "guid": ALARM_EVENT_INSIGHT_INCOMPATIBLE_ACTIONS_ON_PUMP_ID,
         "inputTime": "2022-08-08T09:25:00Z",
         "alarm": {
           "alarmCode": AlarmCode.InsightIncompatibleActionsOnPump,
@@ -751,7 +755,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmEventInsightInsulinCartridgeExpiredId",
+        "guid": ALARM_EVENT_INSIGHT_INSULIN_CARTRIDGE_EXPIRED_ID,
         "inputTime": "2022-08-08T09:30:00Z",
         "alarm": {
           "alarmCode": AlarmCode.InsightInsulinCartridgeExpired,
@@ -773,7 +777,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmEventInsightOcclusionId",
+        "guid": ALARM_EVENT_INSIGHT_OCCLUSION_ID,
         "inputTime": "2022-08-08T09:35:00Z",
         "alarm": {
           "alarmCode": AlarmCode.InsightOcclusion,
@@ -795,7 +799,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmEventKaleidoEmptyInsulinCartridgeId",
+        "guid": ALARM_EVENT_KALEIDO_EMPTY_INSULIN_CARTRIDGE_ID,
         "inputTime": "2022-08-08T09:40:00Z",
         "alarm": {
           "alarmCode": AlarmCode.KaleidoEmptyInsulinCartridge,
@@ -817,7 +821,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmKaleidoEventEmptyPumpBatteryId",
+        "guid": ALARM_EVENT_KALEIDO_EMPTY_PUMP_BATTERY_ID,
         "inputTime": "2022-08-08T09:45:00Z",
         "alarm": {
           "alarmCode": AlarmCode.KaleidoEmptyPumpBattery,
@@ -839,7 +843,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmEventKaleidoInsulinCartridgeExpiredId",
+        "guid": ALARM_EVENT_KALEIDO_INSULIN_CARTRIDGE_EXPIRED_ID,
         "inputTime": "2022-08-08T09:50:00Z",
         "alarm": {
           "alarmCode": AlarmCode.KaleidoInsulinCartridgeExpired,
@@ -861,7 +865,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmEventKaleidoOcclusionId",
+        "guid": ALARM_EVENT_KALEIDO_OCCLUSION_ID,
         "inputTime": "2022-08-08T09:55:00Z",
         "alarm": {
           "alarmCode": AlarmCode.KaleidoOcclusion,
@@ -883,7 +887,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmEventLongHyperglycemiaId",
+        "guid": ALARM_EVENT_LONG_HYPERGLYCEMIA_ID,
         "inputTime": "2022-08-08T10:00:00Z",
         "alarm": {
           "alarmCode": AlarmCode.LongHyperglycemia,
@@ -905,7 +909,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmEventLongHypoglycemiaId",
+        "guid": ALARM_EVENT_LONG_HYPOGLYCEMIA_ID,
         "inputTime": "2022-08-08T10:05:00Z",
         "alarm": {
           "alarmCode": AlarmCode.LongHypoglycemia,
@@ -927,7 +931,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmEventNoReadingsHypoglycemiaRiskId",
+        "guid": ALARM_EVENT_NO_READINGS_HYPOGLYCEMIA_RISK_ID,
         "inputTime": "2022-08-08T10:10:00Z",
         "alarm": {
           "alarmCode": AlarmCode.NoReadingsHypoglycemiaRisk,
@@ -949,7 +953,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmEventSensorSessionExpiredId",
+        "guid": ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID,
         "inputTime": "2022-08-08T10:15:00Z",
         "alarm": {
           "alarmCode": AlarmCode.SensorSessionExpired,
@@ -971,7 +975,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmEventSuddenRiseInGlycemiaId",
+        "guid": ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID,
         "inputTime": "2022-08-08T10:20:00Z",
         "alarm": {
           "alarmCode": AlarmCode.SuddenRiseInGlycemia,
@@ -993,7 +997,7 @@ export const completeDailyViewData: Data = {
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "subType": DeviceEventSubtype.Alarm,
-        "guid": "alarmEventUrgentLowSoonId",
+        "guid": ALARM_EVENT_URGENT_LOW_SOON_ID,
         "inputTime": "2022-08-08T10:25:00Z",
         "alarm": {
           "alarmCode": AlarmCode.UrgentLowSoon,
@@ -1003,6 +1007,94 @@ export const completeDailyViewData: Data = {
           "updateTime": "2023-07-14T17:48:18.602Z"
         },
         "alarmEventType": AlarmEventType.Hypoglycemia,
+        "isoWeekday": WeekDays.Sunday
+      },
+      {
+        "epoch": 1659954300000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T10:30:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-19",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
+        "guid": ALARM_EVENT_DANA_EMPTY_PUMP_BATTERY_ID,
+        "inputTime": "2022-08-08T10:30:00Z",
+        "alarm": {
+          "alarmCode": AlarmCode.DanaEmptyPumpBattery,
+          "alarmLevel": AlarmLevel.Alarm,
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": AlarmEventType.Device,
+        "isoWeekday": WeekDays.Sunday
+      },
+      {
+        "epoch": 1659954300000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T10:35:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-20",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
+        "guid": ALARM_EVENT_DANA_EMPTY_RESERVOIR_ID,
+        "inputTime": "2022-08-08T10:35:00Z",
+        "alarm": {
+          "alarmCode": AlarmCode.DanaEmptyReservoir,
+          "alarmLevel": AlarmLevel.Alarm,
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": AlarmEventType.Device,
+        "isoWeekday": WeekDays.Sunday
+      },
+      {
+        "epoch": 1659954300000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T10:40:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-21",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
+        "guid": ALARM_EVENT_DANA_INCOMPATIBLE_ACTIONS_ON_PUMP_ID,
+        "inputTime": "2022-08-08T10:40:00Z",
+        "alarm": {
+          "alarmCode": AlarmCode.DanaIncompatibleActionsOnPump,
+          "alarmLevel": AlarmLevel.Alarm,
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": AlarmEventType.Device,
+        "isoWeekday": WeekDays.Sunday
+      },
+      {
+        "epoch": 1659954300000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T10:45:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-22",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
+        "guid": ALARM_EVENT_DANA_OCCLUSION_ID,
+        "inputTime": "2022-08-08T10:45:00Z",
+        "alarm": {
+          "alarmCode": AlarmCode.DanaOcclusion,
+          "alarmLevel": AlarmLevel.Alarm,
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": AlarmEventType.Device,
         "isoWeekday": WeekDays.Sunday
       }
     ],

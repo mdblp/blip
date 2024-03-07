@@ -28,6 +28,10 @@
 import { BoundFunctions, queries, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {
+  ALARM_EVENT_DANA_EMPTY_PUMP_BATTERY_ID,
+  ALARM_EVENT_DANA_EMPTY_RESERVOIR_ID,
+  ALARM_EVENT_DANA_INCOMPATIBLE_ACTIONS_ON_PUMP_ID,
+  ALARM_EVENT_DANA_OCCLUSION_ID,
   ALARM_EVENT_HYPERGLYCEMIA_ID,
   ALARM_EVENT_HYPOGLYCEMIA_ID,
   ALARM_EVENT_INSIGHT_EMPTY_INSULIN_CARTRIDGE_ID,
@@ -120,6 +124,10 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID}`, '12:15 pmAlarm 11000Sensor session expiredThe sensor session has expired.IMPORTANT: If loop mode was ON, it will stop within the next 30 minutes.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID}`, '12:20 pmAlert 20102A sudden rise in glycemia has been notedA sudden rise in glycemia was detected.IMPORTANT: this alert is triggered only if loop mode is ON.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_URGENT_LOW_SOON_ID}`, '12:25 pmAlert 10112Urgent low soonThe transmitter predicts that your glucose will be at or below 55 mg/dL in 20 minutes.IMPORTANT: this alert is triggered only if loop mode is OFF.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_DANA_EMPTY_PUMP_BATTERY_ID}`, '12:30 pmAlarm 51001Pump battery emptyThe pump battery is empty.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_DANA_EMPTY_RESERVOIR_ID}`, '12:35 pmAlarm 51002Reservoir emptyThere is no insulin left in the reservoir.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_DANA_INCOMPATIBLE_ACTIONS_ON_PUMP_ID}`, '12:40 pmAlarm 51003Incompatible action on the pumpCertain actions on the pump are not supported. Loop mode is now OFF and cannot be restarted for up to 3 hours.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_DANA_OCCLUSION_ID}`, '12:45 pmAlarm 51004OcclusionAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.')
   await checkTidelineContainerElementTooltip(`warmup_group_${WARMUP_01_ID}`,'6:00 pmSensor warmupSession end6:00 pm')
 }
 
