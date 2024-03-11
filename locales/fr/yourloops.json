@@ -443,6 +443,7 @@
   "profile-updated": "Profil mis à jour",
   "progression-proposal": "Proposition de progression",
   "ratio-dose": "Ratio dose",
+  "readings-in-range-bgm-daily-average": "**Mesures dans l'objectif :** Moyenne quotidienne du nombre de {{smbgLabel}} mesures.",
   "refresh": "Rafraîchir",
   "remaining-time": "Temps restant",
   "remove-caregiver": "Supprimer l'aidant",
