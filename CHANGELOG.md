@@ -16,6 +16,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2586 Display height in device parameters
 - YLP-2724 Filter on weekday for all data types where the information (weekday) is available
 - YLP-2749 Use a branded Verify Email result page instead of the Auth0 one
+- YLP-2912 Hide UMM-related information
 
 ### Fixed
 - YLP-2758 App crashes when going back to previous page

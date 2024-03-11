@@ -97,7 +97,7 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip('poolBolus_confidential_group', 'Confidential mode')
   await checkTidelineContainerElementTooltip('poolBasal_confidential_group', 'Confidential mode')
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_UNDELIVERED_ID}`, `8:25 pmMealCarbs45gHigh fat mealEntered at ${moment(WIZARD_UNDELIVERED_INPUT_TIME).format('h:mm a')}IOB3.18ULoop modeBolus TypeStandardRecommended25.0UUndelivered2.70UDelivered22.3U`)
-  await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_UMM_ID}`, `8:35 pmUnannounced mealEstimated carbs50gEntered at ${moment(WIZARD_UMM_INPUT_TIME).format('h:mm a')}Loop modeBolus TypeStandardDelivered1.3U`)
+  await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_UMM_ID}`, `8:35 pmCarbs50gEntered at ${moment(WIZARD_UMM_INPUT_TIME).format('h:mm a')}Loop modeBolus TypeStandardDelivered1.3U`)
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_POSITIVE_OVERRIDE_ID}`, `8:45 pmMealCarbs100gEntered at ${moment(WIZARD_POSITIVE_OVERRIDE_INPUT_TIME).format('h:mm a')}IOB3.12ULoop modeBolus TypeStandardRecommended14.35UOverride+5.00UDelivered19.35U`)
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_NEGATIVE_OVERRIDE_ID}`, `8:55 pmMealCarbs100gEntered at ${moment(WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME).format('h:mm a')}IOB3.06ULoop modeBolus TypeStandardRecommended10.05UOverride−1.0UDelivered9.05U`)
   await checkTidelineContainerElementTooltip(`carb_group_${CARB_ID}`, '2:00 pmRecommended16gConfirmed15g')
@@ -199,7 +199,7 @@ export const checkDailyTimeInRangeStatsWidgetsMmolL = async () => {
 
 export const checkTotalCarbsStatContent = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Total of declared carbs310gMeal carbs295gRescue carbs15gTotal of estimated carbs50g')
+  expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Total of declared carbs310gMeal carbs295gRescue carbs15g')
 }
 
 const checkDailyTimeInRangeStatsWidgetsPercentages = (patientStatistics: BoundFunctions<typeof queries>) => {

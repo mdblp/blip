@@ -26,6 +26,7 @@ import _ from 'lodash'
 import utils from './util/utils'
 import commonbolus from './util/commonbolus'
 import drawbolus from './util/drawbolus'
+import { WizardInputMealSource } from 'medical-domain'
 
 const defaults = {
   width: 12
@@ -53,6 +54,7 @@ function plotWizard(pool, opts = defaults) {
       const wizards = d3.select(this)
         .selectAll('g.d3-wizard-group')
         .data(currentData, (d) => d.id)
+        // .filter((d) => d.inputMeal?.source !== WizardInputMealSource.Umm)
 
       let wizardGroups = wizards.enter()
         .append('g')
@@ -72,12 +74,16 @@ function plotWizard(pool, opts = defaults) {
       const carbs = wizardGroups.filter((/** @type {Datum} */ d) => {
         // truthiness working for us here
         // don't want carbInputs of 0 included in filter!
-        return d.carbInput
+        // + Hiding the display of UMM-related data
+        return d.carbInput && d.inputMeal?.source !== WizardInputMealSource.Umm
       })
 
       drawBolus.carb(carbs)
 
-      const boluses = wizardGroups.filter((/** @type {Datum} */ d) => _.isObject(d.bolus))
+      const boluses = wizardGroups.filter((/** @type {Datum} */ d) => {
+        // Hiding the display of UMM-related data
+        return _.isObject(d.bolus) && d.inputMeal?.source !== WizardInputMealSource.Umm
+      })
       drawBolus.bolus(boluses)
 
       // boluses where programmed differs from delivered

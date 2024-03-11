@@ -1771,7 +1771,8 @@ export const dataSetsWithZeroValues: Data = {
         "id": "parameterId",
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
-        "subType": DeviceEventSubtype.Confidential,
+        "subType": DeviceEventSubtype.DeviceParameter,
+        "isoWeekday": WeekDays.Monday,
         "params": [
           {
             "id": "parameterId",
