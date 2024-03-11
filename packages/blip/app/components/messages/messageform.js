@@ -258,7 +258,11 @@ class MessageForm extends React.Component {
 
       if (canEditTimestamp) {
         editLink = (
-          <a className="messageform-change-datetime" href="" onClick={this.handleShowEditDate}>
+          <a
+            className="messageform-change-datetime"
+            href="" onClick={this.handleShowEditDate}
+            data-testid="change-datetime-link"
+          >
             {t('Change')}
           </a>
         )
@@ -281,8 +285,8 @@ class MessageForm extends React.Component {
   renderEditableDate() {
     return (
       <div>
-        <input type="time" value={this.state.time} className="messageform-time" onChange={this.handleTimeChange} />
-        <input type="date" value={this.state.date} className="messageform-date" onChange={this.handleDateChange} />
+        <input data-testid="message-time-input" type="time" value={this.state.time} className="messageform-time" onChange={this.handleTimeChange} />
+        <input data-testid="message-date-input" type="date" value={this.state.date} className="messageform-date" onChange={this.handleDateChange} />
       </div>
     )
   }
