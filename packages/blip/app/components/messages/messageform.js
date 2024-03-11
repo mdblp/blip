@@ -235,6 +235,10 @@ class MessageForm extends React.Component {
       return _.isEmpty(msg)
     }
 
+    if (!date || !time) {
+      return true
+    }
+
     if (changeDateTime) {
       return formFields.editableText === msg && date === originalDate && time === originaltime
     }
