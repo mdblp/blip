@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,7 +41,7 @@ interface SortComparator extends GridComparatorFn<string> {
   (value1: string, value2: string): number
 }
 
-export const sortByUserName: PatientSortComparator = (patient1, patient2): number => {
+export const sortByUserName: PatientSortComparator = (patient1: Patient, patient2: Patient): number => {
   const patient1FullName = getUserName(patient1.profile.firstName, patient1.profile.lastName, patient1.profile.fullName)
   const patient2FullName = getUserName(patient2.profile.firstName, patient2.profile.lastName, patient2.profile.fullName)
   return patient1FullName.localeCompare(patient2FullName)
