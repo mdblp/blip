@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -65,7 +65,8 @@ const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
     lang: user.preferences?.displayLanguageCode ?? getCurrentLang(),
     lastName: user.lastName,
     sex: user.profile?.patient?.sex ?? undefined,
-    units: user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
+    units: user.settings?.units?.bg ?? Unit.MilligramPerDeciliter,
+    country: user.settings.country
   })
   const [saving, setSaving] = useState<boolean>(false)
 
@@ -109,7 +110,8 @@ const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
 
   const updatedSettings: Settings = {
     ...user.settings,
-    units: { bg: profileForm.units }
+    units: { bg: profileForm.units },
+    country: profileForm.country
   }
   const updatedPreferences: Preferences = {
     ...user.preferences,

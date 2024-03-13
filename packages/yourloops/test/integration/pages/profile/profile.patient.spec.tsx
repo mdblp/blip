@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -106,6 +106,7 @@ describe('Profile page for patient', () => {
     expect(fields.genderSelect).toHaveTextContent('Male')
     expect(fields.hba1cInput).toHaveValue('7.5%')
     expect(saveButton).toBeDisabled()
+    expect(screen.queryByTestId('country-selector')).not.toBeInTheDocument()
 
     fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
     fireEvent.click(screen.getByRole('option', { name: 'English' }))
