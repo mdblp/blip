@@ -37,12 +37,16 @@ import {
 } from '../mock/team.api.mock'
 import {
   loggedInUserEmail,
+  loggedInUserFirstName,
   loggedInUserFullName,
   loggedInUserId,
+  loggedInUserLastName,
   userHugoFullName,
   userTimEmail,
+  userTimFirstName,
   userTimFullName,
   userTimId,
+  userTimLastName,
   userYdrisFullName
 } from '../mock/auth0.hook.mock'
 import userEvent from '@testing-library/user-event'
@@ -70,7 +74,7 @@ export const checkCareTeamInformation = async () => {
 
 export const checkRemoveMember = async () => {
   const teamMembersTable = await screen.findByRole('table')
-  expect(teamMembersTable).toHaveTextContent(/^MemberEmailAdminYann Blancyann.blanc@example.comTim Canutim.canu@example.com--pending-user-iconhugo.rodrigues@example.com--pending-user-iconydris.rebibane@example.com$/)
+  expect(teamMembersTable).toHaveTextContent(/^MemberEmailAdminBlanc Yannyann.blanc@example.comCanu Timtim.canu@example.com--pending-user-iconhugo.rodrigues@example.com--pending-user-iconydris.rebibane@example.com$/)
 
   const removeMemberButton = screen.getByRole('button', { name: `Remove the member ${userTimFullName}` })
   await userEvent.click(removeMemberButton)
@@ -149,7 +153,7 @@ export const checkNotTeamAdmin = async () => {
 
 export const checkDeleteTeam = async () => {
   const teamMembersTable = await screen.findByRole('table')
-  expect(teamMembersTable).toHaveTextContent('MemberEmailAdminYourloops UI 28.0 HCP 0yann.blanc@example.com')
+  expect(teamMembersTable).toHaveTextContent('MemberEmailAdminHCP 0 Yourloops UI 28.0yann.blanc@example.com')
 
   const leaveTeamButton = screen.getByRole('button', { name: 'Leave team' })
   await userEvent.click(leaveTeamButton)
@@ -204,7 +208,7 @@ export const checkCareTeamMembers = () => {
   expect(teamMembersSection.getByText('Add healthcare professional')).toBeVisible()
   expect(teamMembersSection.getByText('Add healthcare professional')).toBeEnabled()
 
-  expect(screen.getByTestId('team-members-list-table')).toHaveTextContent(`MemberEmailAdmin${loggedInUserFullName}${loggedInUserEmail}${userTimFullName}${userTimEmail}`)
+  expect(screen.getByTestId('team-members-list-table')).toHaveTextContent(`MemberEmailAdmin${loggedInUserLastName} ${loggedInUserFirstName}${loggedInUserEmail}${userTimLastName} ${userTimFirstName}${userTimEmail}`)
 }
 
 export const checkCareTeamMonitoringAlertsConfiguration = () => {

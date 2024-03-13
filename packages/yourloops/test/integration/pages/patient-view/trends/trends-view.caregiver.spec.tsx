@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -72,6 +72,6 @@ describe('Trends view for caregiver', () => {
     })
     expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
     checkPatientNavBarAsCaregiver()
-    await checkCaregiverLayout(`${firstName} ${lastName}`)
+    await checkCaregiverLayout(`${lastName} ${firstName}`)
   })
 })
