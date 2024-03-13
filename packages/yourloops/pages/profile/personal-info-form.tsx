@@ -92,47 +92,45 @@ const PersonalInfoForm: FunctionComponent = () => {
       </Box>
 
       {user.isUserHcp() &&
-        <>
-          <Box className={classes.inputContainer}>
-            <Box className={classes.formInput}>
-              <BasicDropdownWithValidation
-                onSelect={(value: string) => {
-                  updateProfileForm(ProfileFormKey.hcpProfession, value)
-                }}
-                defaultValue={profileForm.hcpProfession}
-                disabledValues={[HcpProfession.empty]}
-                values={HcpProfessionList.filter(item => item !== HcpProfession.empty)}
-                id="profession"
-                inputTranslationKey="hcp-profession"
-                errorTranslationKey="profession-dialog-title"
-              />
-            </Box>
-            <FormControl
-              margin="normal"
-              variant="standard"
-            >
-              <FormGroup>
-                <InputLabel>
-                  {t('country')}
-                </InputLabel>
-                <Select
-                  label={t('country')}
-                  data-testid="country-selector"
-                  value={profileForm.country}
-                  onChange={event => {
-                    updateProfileForm(ProfileFormKey.country, event.target.value)
-                  }}
-                >
-                  {availableCountries.map((item) => (
-                    <MenuItem id={`signup-country-menuitem-${item.code}`} key={item.code} value={item.code}>
-                      {t(item.name)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormGroup>
-            </FormControl>
+        <Box className={classes.inputContainer}>
+          <Box className={classes.formInput}>
+            <BasicDropdownWithValidation
+              onSelect={(value: string) => {
+                updateProfileForm(ProfileFormKey.hcpProfession, value)
+              }}
+              defaultValue={profileForm.hcpProfession}
+              disabledValues={[HcpProfession.empty]}
+              values={HcpProfessionList.filter(item => item !== HcpProfession.empty)}
+              id="profession"
+              inputTranslationKey="hcp-profession"
+              errorTranslationKey="profession-dialog-title"
+            />
           </Box>
-        </>
+          <FormControl
+            margin="normal"
+            variant="standard"
+          >
+            <FormGroup>
+              <InputLabel>
+                {t('country')}
+              </InputLabel>
+              <Select
+                label={t('country')}
+                data-testid="country-selector"
+                value={profileForm.country}
+                onChange={event => {
+                  updateProfileForm(ProfileFormKey.country, event.target.value)
+                }}
+              >
+                {availableCountries.map((item) => (
+                  <MenuItem id={`signup-country-menuitem-${item.code}`} key={item.code} value={item.code}>
+                    {t(item.name)}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormGroup>
+          </FormControl>
+        </Box>
       }
 
       {user.isUserPatient() && <PatientProfileForm />}
