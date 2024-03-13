@@ -9,6 +9,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-2851 Remove pump cartridge expiration date from Device view and PDF report
 - YLP-2859 Display alarms from Dana-i5 pump
 
+### Fixed
+- YLP-2951 Patient data not accessible (infinite loading)
+
 ## 3.2.0 - 2024-02-15
 ### Changed
 - YLP-2122 Remove JP and GB from the list of countries
