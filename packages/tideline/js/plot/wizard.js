@@ -53,8 +53,8 @@ function plotWizard(pool, opts = defaults) {
 
       const wizards = d3.select(this)
         .selectAll('g.d3-wizard-group')
+        .filter((d) => d.inputMeal?.source !== WizardInputMealSource.Umm)
         .data(currentData, (d) => d.id)
-        // .filter((d) => d.inputMeal?.source !== WizardInputMealSource.Umm)
 
       let wizardGroups = wizards.enter()
         .append('g')

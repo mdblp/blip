@@ -52,6 +52,7 @@ import {
   ALARM_EVENT_URGENT_LOW_SOON_ID,
   CARB_ID,
   CBG_ID,
+  CONFIDENTIAL_MODE_ID,
   PARAMETER_ID,
   PHYSICAL_ACTIVITY_ID,
   PHYSICAL_ACTIVITY_TIME,
@@ -92,10 +93,10 @@ const checkTidelineContainerElementTooltip = async (id: string, expectedTextCont
 }
 
 export const checkDailyTidelineContainerTooltipsMgdl = async () => {
-  expect(await screen.findByTestId('poolBG_confidential_group', {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
-  await checkTidelineContainerElementTooltip('poolBG_confidential_group', 'Confidential mode')
-  await checkTidelineContainerElementTooltip('poolBolus_confidential_group', 'Confidential mode')
-  await checkTidelineContainerElementTooltip('poolBasal_confidential_group', 'Confidential mode')
+  expect(await screen.findByTestId(`poolBG_confidential_group_${CONFIDENTIAL_MODE_ID}`, {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
+  await checkTidelineContainerElementTooltip(`poolBG_confidential_group_${CONFIDENTIAL_MODE_ID}`, 'Confidential mode')
+  await checkTidelineContainerElementTooltip(`poolBolus_confidential_group_${CONFIDENTIAL_MODE_ID}`, 'Confidential mode')
+  await checkTidelineContainerElementTooltip(`poolBasal_confidential_group_${CONFIDENTIAL_MODE_ID}`, 'Confidential mode')
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_UNDELIVERED_ID}`, `8:25 pmMealCarbs45gHigh fat mealEntered at ${moment(WIZARD_UNDELIVERED_INPUT_TIME).format('h:mm a')}IOB3.18ULoop modeBolus TypeStandardRecommended25.0UUndelivered2.70UDelivered22.3U`)
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_UMM_ID}`, `8:35 pmCarbs50gEntered at ${moment(WIZARD_UMM_INPUT_TIME).format('h:mm a')}Loop modeBolus TypeStandardDelivered1.3U`)
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_POSITIVE_OVERRIDE_ID}`, `8:45 pmMealCarbs100gEntered at ${moment(WIZARD_POSITIVE_OVERRIDE_INPUT_TIME).format('h:mm a')}IOB3.12ULoop modeBolus TypeStandardRecommended14.35UOverride+5.00UDelivered19.35U`)

@@ -70,6 +70,7 @@ export const PHYSICAL_ACTIVITY_ID = 'physicalActivityId'
 export const PHYSICAL_ACTIVITY_TIME = '2022-08-08T13:00:00Z'
 export const RESERVOIR_CHANGE_ID = 'reservoirChangeId'
 export const PARAMETER_ID = 'parameterId'
+export const CONFIDENTIAL_MODE_ID = 'deviceEvent_2022-08-08_8'
 export const ALARM_EVENT_HYPERGLYCEMIA_ID = 'alarmEventHyperglycemiaId'
 export const ALARM_EVENT_HYPERGLYCEMIA_OTHER_OCCURRENCE_ID = 'alarmEventHyperglycemiaOtherOccurrenceId'
 export const ALARM_EVENT_HYPOGLYCEMIA_ID = 'alarmEventHypoglycemiaId'
@@ -1435,7 +1436,7 @@ export const completeDailyViewData: Data = {
         "normalTime": "2022-08-08T02:00:00.000Z",
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
-        "id": "deviceEvent_2022-08-08_8",
+        "id": CONFIDENTIAL_MODE_ID,
         "type": DatumType.DeviceEvent,
         "source": Source.Diabeloop,
         "duration": {
