@@ -123,7 +123,7 @@ const PersonalInfoForm: FunctionComponent = () => {
                 }}
               >
                 {availableCountries.map((item) => (
-                  <MenuItem id={`signup-country-menuitem-${item.code}`} key={item.code} value={item.code}>
+                  <MenuItem key={item.code} value={item.code}>
                     {t(item.name)}
                   </MenuItem>
                 ))}
