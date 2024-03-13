@@ -26,7 +26,6 @@ import _ from 'lodash'
 import utils from './util/utils'
 import commonbolus from './util/commonbolus'
 import drawbolus from './util/drawbolus'
-import { WizardInputMealSource } from 'medical-domain'
 
 const defaults = {
   width: 12
@@ -53,7 +52,6 @@ function plotWizard(pool, opts = defaults) {
 
       const wizards = d3.select(this)
         .selectAll('g.d3-wizard-group')
-        .filter((d) => d.inputMeal?.source !== WizardInputMealSource.Umm)
         .data(currentData, (d) => d.id)
 
       let wizardGroups = wizards.enter()
@@ -71,19 +69,11 @@ function plotWizard(pool, opts = defaults) {
         return d3.descending(commonbolus.getMaxValue(bolusA), commonbolus.getMaxValue(bolusB))
       })
 
-      const carbs = wizardGroups.filter((/** @type {Datum} */ d) => {
-        // truthiness working for us here
-        // don't want carbInputs of 0 included in filter!
-        // + Hiding the display of UMM-related data
-        return d.carbInput && d.inputMeal?.source !== WizardInputMealSource.Umm
-      })
+      const carbs = wizardGroups.filter((/** @type {Datum} */ d) => d.carbInput)
 
       drawBolus.carb(carbs)
 
-      const boluses = wizardGroups.filter((/** @type {Datum} */ d) => {
-        // Hiding the display of UMM-related data
-        return _.isObject(d.bolus) && d.inputMeal?.source !== WizardInputMealSource.Umm
-      })
+      const boluses = wizardGroups.filter((/** @type {Datum} */ d) => _.isObject(d.bolus))
       drawBolus.bolus(boluses)
 
       // boluses where programmed differs from delivered
