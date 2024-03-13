@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2851 Remove pump cartridge expiration date from Device view and PDF report
 - YLP-2859 Display alarms from Dana-i5 pump
 - YLP-2863 As an HCP, I want to be able to change my country in my profile settings
+- YLP-2868 As a HCP/caregiver, I want to see my patient listed by alphabetical order based on the last name
 
 ### Fixed
 - YLP-2951 Patient data not accessible (infinite loading)

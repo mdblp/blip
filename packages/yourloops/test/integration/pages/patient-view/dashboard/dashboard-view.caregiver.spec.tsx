@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -71,7 +71,7 @@ describe('Dashboard view for caregiver', () => {
     mockDataAPI(completeDashboardData)
     const appMainLayoutParams: AppMainLayoutParams = {
       footerHasLanguageSelector: false,
-      loggedInUserFullName: `${firstName} ${lastName}`
+      loggedInUserFullName: `${lastName} ${firstName}`
     }
 
     const patientDashboardLayoutParams: PatientDashboardLayoutParams = {

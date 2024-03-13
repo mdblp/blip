@@ -93,7 +93,7 @@ describe('Profile page for patient', () => {
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/preferences')
     })
-    await checkPatientLayout(`${profile.firstName} ${profile.lastName}`)
+    await checkPatientLayout(`${profile.lastName} ${profile.firstName}`)
     const fields = checkPatientProfilePage()
     const saveButton = screen.getByRole('button', { name: 'Save' })
 

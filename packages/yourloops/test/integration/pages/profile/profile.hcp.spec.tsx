@@ -90,7 +90,7 @@ describe('Profile page for hcp', () => {
     const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
-        loggedInUserFullName: `${profile.firstName} ${profile.lastName}`,
+        loggedInUserFullName: `${profile.lastName} ${profile.firstName}`,
         teamMenuInfo: {
           selectedTeamName: myThirdTeamName,
           isSelectedTeamPrivate: false,

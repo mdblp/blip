@@ -90,7 +90,7 @@ describe('Profile page for caregiver', () => {
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/preferences')
     })
-    await checkCaregiverLayout(`${profile.firstName} ${profile.lastName}`)
+    await checkCaregiverLayout(`${profile.lastName} ${profile.firstName}`)
     const fields = checkCaregiverProfilePage()
     const saveButton = screen.getByRole('button', { name: 'Save' })
 
