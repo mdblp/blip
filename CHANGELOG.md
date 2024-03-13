@@ -10,6 +10,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-2859 Display alarms from Dana-i5 pump
 - YLP-2863 As an HCP, I want to be able to change my country in my profile settings
 
+### Fixed
+- YLP-2951 Patient data not accessible (infinite loading)
+
 ## 3.2.0 - 2024-02-15
 ### Changed
 - YLP-2122 Remove JP and GB from the list of countries
