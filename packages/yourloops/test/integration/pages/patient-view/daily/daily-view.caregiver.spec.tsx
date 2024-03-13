@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -70,6 +70,6 @@ describe('Daily view for caregiver', () => {
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsCaregiver()
-    await checkCaregiverLayout(`${firstName} ${lastName}`)
+    await checkCaregiverLayout(`${lastName} ${firstName}`)
   })
 })
