@@ -59,8 +59,6 @@ function bolusClass(b, baseClass) {
       return `${baseClass} d3-bolus-meal`
     case BolusTypes.micro:
       return `${baseClass} d3-bolus-micro`
-    case BolusTypes.umm:
-      return `${baseClass} d3-bolus-umm`
   }
   return baseClass
 }
@@ -111,21 +109,8 @@ function drawBolus(pool, opts = {}) {
         const bolusValue = d.bolus ? commonbolus.getProgrammed(d) : 0
         return opts.yScale(bolusValue) - r - (bolusValue ? opts.carbPadding : 0)
       }
-      const isUmm = (d) => d?.inputMeal?.source === 'umm'
-      const carbCircleClass = (d) => {
-        const baseClass = 'd3-circle-carbs d3-carbs'
-        if (isUmm(d)) {
-          return `${baseClass} d3-carbs-umm`
-        }
-        return baseClass
-      }
-      const carbTextClass = (d) => {
-        const baseClass = 'd3-carbs-text'
-        if (isUmm(d)) {
-          return `${baseClass} d3-carbs-text-estimated`
-        }
-        return `${baseClass} d3-carbs-text-meal`
-      }
+      const carbCircleClass = 'd3-circle-carbs d3-carbs'
+      const carbTextClass = 'd3-carbs-text d3-carbs-text-meal'
       carbs.append('circle')
         .attr({
           'cx': xPos,

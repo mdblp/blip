@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -102,10 +102,8 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   const {
     rescueCarbsPerDay,
     totalMealCarbsWithRescueCarbsEntries,
-    estimatedCarbsPerDay,
     totalCarbsPerDay,
     mealCarbsPerDay,
-    totalRescueCarbsEntries
   } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
 
   const { averageGlucose } = GlycemiaStatisticsService.getAverageGlucoseData(selectedBgData, dateFilter)
@@ -158,9 +156,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           totalMealCarbsWithRescueCarbsEntries={totalMealCarbsWithRescueCarbsEntries}
           totalCarbsPerDay={Math.round(totalCarbsPerDay*10)/10}
           rescueCarbsPerDay={Math.round(rescueCarbsPerDay*10)/10}
-          estimatedCarbsPerDay={Math.round(estimatedCarbsPerDay)}
           mealCarbsPerDay={Math.round(mealCarbsPerDay*10)/10}
-          totalRescueCarbsEntries={totalRescueCarbsEntries}
         />
         <Divider className={classes.divider}/>
         <TotalInsulinStat

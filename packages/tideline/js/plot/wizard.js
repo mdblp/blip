@@ -69,11 +69,7 @@ function plotWizard(pool, opts = defaults) {
         return d3.descending(commonbolus.getMaxValue(bolusA), commonbolus.getMaxValue(bolusB))
       })
 
-      const carbs = wizardGroups.filter((/** @type {Datum} */ d) => {
-        // truthiness working for us here
-        // don't want carbInputs of 0 included in filter!
-        return d.carbInput
-      })
+      const carbs = wizardGroups.filter((/** @type {Datum} */ d) => d.carbInput)
 
       drawBolus.carb(carbs)
 

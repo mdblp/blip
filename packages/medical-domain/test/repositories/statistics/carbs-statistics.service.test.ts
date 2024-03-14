@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -45,7 +45,6 @@ describe('getCarbsData', () => {
     const expected = {
       mealCarbsPerDay: 25,
       rescueCarbsPerDay: 25,
-      estimatedCarbsPerDay: 25,
       totalCarbsPerDay: 50,
       totalMealCarbsWithRescueCarbsEntries: 10,
       totalRescueCarbsEntries: 5
@@ -60,7 +59,6 @@ describe('getCarbsData', () => {
     const carbsData = CarbsStatisticsService.getCarbsData(mealData, wizardData, 2, dateFilterTwoDays)
     const expected = {
       mealCarbsPerDay: 2.5,
-      estimatedCarbsPerDay: 2.5,
       rescueCarbsPerDay: 2.5,
       totalCarbsPerDay: 5,
       totalMealCarbsWithRescueCarbsEntries: 2,
