@@ -98,6 +98,7 @@ describe('Profile page for caregiver', () => {
     expect(fields.lastNameInput).toHaveValue(profile.lastName)
     expect(fields.unitsSelect).toHaveTextContent(settings.units.bg)
     expect(fields.languageSelect).toHaveTextContent('Français')
+    expect(screen.queryByTestId('country-selector')).not.toBeInTheDocument()
     expect(saveButton).toBeDisabled()
 
     fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
