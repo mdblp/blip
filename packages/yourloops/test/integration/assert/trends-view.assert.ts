@@ -38,8 +38,7 @@ const STANDARD_DEVIATION_TOOLTIP = 'SD (Standard Deviation): How far values are 
 const STANDARD_DEVIATION_BGM_TOOLTIP = 'SD (Standard Deviation): How far values are from the average.Derived from 15 BGM readings.'
 const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
 const LOOP_MODE_TOOLTIP = 'Time In Loop Mode: Daily average of the time spent in automated basal delivery.How we calculate this: (%) is the duration in loop mode ON or OFF divided by the total duration of basals for this time period. (time) is the average daily time spent in loop mode ON or OFF.'
-const AVG_DAILY_CARBS_DECLARED_TOOLTIP = 'Avg. Daily declared carbs: All carb entries added together (meals and rescue carbs), then divided by the number of days in this view.Derived from 7 carb entries, including rescue carbs.'
-const AVG_DAILY_CARBS_ESTIMATED_TOOLTIP = 'Avg. Daily estimated carbs: Total of estimated carbs from unannounced meals, then divided by the number of days in this view.Derived from 5 unannounced meal(s).'
+const AVG_DAILY_CARBS_DECLARED_TOOLTIP = 'Avg. Daily declared carbs: All carb entries added together (meals and rescue carbs), then divided by the number of days in this view.Derived from 6 carb entries, including rescue carbs.'
 export const GMI_TOOLTIP_EMPTY_VALUE = 'GMI (Glucose Management Indicator): Tells you what your calculated HbA1c level is likely to be, based on the average glucose level from your CGM readings.Why is this stat empty? There is not enough data present in this view to calculate it.'
 export const GMI_TOOLTIP = 'GMI (Glucose Management Indicator): Tells you what your calculated HbA1c level is likely to be, based on the average glucose level from your CGM readings.'
 
@@ -89,7 +88,6 @@ export const checkTrendsStatsWidgetsTooltips = async () => {
   await checkStatTooltip(patientStatistics, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'CV (CGM)', CV_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Avg. Daily declared carbs', AVG_DAILY_CARBS_DECLARED_TOOLTIP)
-  await checkStatTooltip(patientStatistics, 'Avg. Daily estimated carbs', AVG_DAILY_CARBS_ESTIMATED_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'GMI (estimated HbA1c)', GMI_TOOLTIP_EMPTY_VALUE)
   await checkStatTooltip(patientStatistics, 'Avg. Daily Time In Loop Mode', LOOP_MODE_TOOLTIP)
 }

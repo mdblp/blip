@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,17 +30,12 @@ import type Wizard from '../../models/medical/datum/wizard.model'
 import type DateFilter from '../../models/time/date-filter.model'
 import MealService from '../medical/datum/meal.service'
 import WizardService from '../medical/datum/wizard.service'
-import {
-  getWeekDaysFilter,
-  sumValues,
-  buildHoursRangeMap,
-  roundValue
-} from './statistics.utils'
+import { buildHoursRangeMap, getWeekDaysFilter, roundValue, sumValues } from './statistics.utils'
 import {
   type CarbsStatistics,
   RescueCarbsAveragePerRange,
-  RescueCarbsAverageStatistics } from '../../models/statistics/carbs-statistics.model'
-import { WizardInputMealSource } from '../../models/medical/datum/enums/wizard-input-meal-source.enum'
+  RescueCarbsAverageStatistics
+} from '../../models/statistics/carbs-statistics.model'
 import { getHours } from '../time/time.service'
 import { HoursRange } from '../../models/statistics/satistics.model'
 
@@ -48,12 +43,8 @@ import { HoursRange } from '../../models/statistics/satistics.model'
 function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter): CarbsStatistics {
   const filteredMeal = MealService.filterOnDate(meal, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const filteredWizard = WizardService.filterOnDate(wizard, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  const filteredEstimatedCarbs = filteredWizard.filter(estimatedCarb => estimatedCarb.inputMeal)
-    .filter((wizard) => wizard.inputMeal?.source === WizardInputMealSource.Umm)
   const rescueCarbsData = filteredMeal.map(meal => meal.nutrition.carbohydrate.net)
   const mealData = filteredWizard.map(wizard => wizard.carbInput)
-  const estimatedCarbsData = filteredEstimatedCarbs.map(wizard => wizard.carbInput)
-  const estimatedCarbs = sumValues(estimatedCarbsData)
   const mealCarbs = sumValues(mealData)
   const rescueCarbs = sumValues(rescueCarbsData)
   const totalEntriesMealCarbWithRescueCarbs = rescueCarbsData.length + mealData.length
@@ -62,7 +53,6 @@ function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilte
   return {
     mealCarbsPerDay: mealCarbs / numDays,
     rescueCarbsPerDay: rescueCarbs / numDays,
-    estimatedCarbsPerDay: estimatedCarbs / numDays,
     totalMealCarbsWithRescueCarbsEntries: totalEntriesMealCarbWithRescueCarbs,
     totalCarbsPerDay: totalCarbs / numDays,
     totalRescueCarbsEntries

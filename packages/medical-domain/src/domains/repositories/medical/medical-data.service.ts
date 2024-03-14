@@ -68,6 +68,7 @@ import type PumpSettings from '../../models/medical/datum/pump-settings.model'
 import type PumpManufacturer from '../../models/medical/datum/enums/pump-manufacturer.enum'
 import WizardService from './datum/wizard.service'
 import AlarmEventService from './datum/alarm-event.service';
+import { WizardInputMealSource } from '../../models/medical/datum/enums/wizard-input-meal-source.enum'
 
 class MedicalDataService {
   medicalData: MedicalData = {
@@ -233,6 +234,7 @@ class MedicalDataService {
       this.medicalData.zenModes = this.medicalData.zenModes.concat(data.zenModes)
     }
 
+    this.removeUmmBolus()
     this.deduplicate()
     this.join()
     this.setTimeZones()
@@ -352,6 +354,7 @@ class MedicalDataService {
     this.medicalData.reservoirChanges = this.medicalData.reservoirChanges.map((reservoirChange: ReservoirChange) => {
       reservoirChange.pump = {
         name: pump.name,
+        product: pump.product,
         serialNumber: pump.serialNumber,
         swVersion: pump.swVersion,
         manufacturer: this.latestPumpManufacturer as PumpManufacturer
@@ -515,6 +518,10 @@ class MedicalDataService {
     }
 
     this.fills = fillData
+  }
+
+  private removeUmmBolus() {
+    this.medicalData.wizards = this.medicalData.wizards.filter((wizard: Wizard) => wizard.inputMeal?.source !== WizardInputMealSource.Umm)
   }
 }
 

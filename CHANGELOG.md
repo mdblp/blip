@@ -5,7 +5,14 @@ It is based on Tidepool Blip 1.27.
 ## 3.3.0-beta - 2024-02-14
 ### Changed
 - YLP-2824 Display pump logos based on manufacturer
+- YLP-2850 Add product name (model) in pump information card
 - YLP-2851 Remove pump cartridge expiration date from Device view and PDF report
+- YLP-2859 Display alarms from Dana-i5 pump
+- YLP-2863 As an HCP, I want to be able to change my country in my profile settings
+- YLP-2868 As a HCP/caregiver, I want to see my patient listed by alphabetical order based on the last name
+
+### Fixed
+- YLP-2951 Patient data not accessible (infinite loading)
 
 ## 3.2.0 - 2024-02-15
 ### Changed
@@ -14,6 +21,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2586 Display height in device parameters
 - YLP-2724 Filter on weekday for all data types where the information (weekday) is available
 - YLP-2749 Use a branded Verify Email result page instead of the Auth0 one
+- YLP-2912 Hide UMM-related information
 
 ### Fixed
 - YLP-2758 App crashes when going back to previous page

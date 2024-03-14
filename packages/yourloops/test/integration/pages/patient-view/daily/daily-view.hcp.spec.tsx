@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -70,7 +70,7 @@ describe('Daily view for HCP', () => {
     const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
-        loggedInUserFullName: `${firstName} ${lastName}`,
+        loggedInUserFullName: `${lastName} ${firstName}`,
         teamMenuInfo: {
           selectedTeamName: myThirdTeamName,
           isSelectedTeamPrivate: false,

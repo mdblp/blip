@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,6 +41,12 @@ import PatientProfileForm from './patient-form'
 import { useProfilePageState } from './profile-page-context'
 import { profileFormCommonClasses } from './css-classes'
 import { ProfileFormKey } from './models/enums/profile-form-key.enum'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import Select from '@mui/material/Select'
+import { availableCountries } from '../../lib/language'
+import MenuItem from '@mui/material/MenuItem'
+import FormGroup from '@mui/material/FormGroup'
 
 const PersonalInfoForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
@@ -63,7 +69,9 @@ const PersonalInfoForm: FunctionComponent = () => {
           label={t('first-name')}
           variant="standard"
           value={profileForm.firstName}
-          onChange={event => { updateProfileForm(ProfileFormKey.firstName, event.target.value) }}
+          onChange={event => {
+            updateProfileForm(ProfileFormKey.firstName, event.target.value)
+          }}
           error={errors.firstName}
           helperText={errors.firstName && t('required-field')}
           className={classes.formInput}
@@ -74,7 +82,9 @@ const PersonalInfoForm: FunctionComponent = () => {
           label={t('last-name')}
           variant="standard"
           value={profileForm.lastName}
-          onChange={event => { updateProfileForm(ProfileFormKey.lastName, event.target.value) }}
+          onChange={event => {
+            updateProfileForm(ProfileFormKey.lastName, event.target.value)
+          }}
           error={errors.lastName}
           helperText={errors.lastName && t('required-field')}
           className={classes.formInput}
@@ -85,7 +95,9 @@ const PersonalInfoForm: FunctionComponent = () => {
         <Box className={classes.inputContainer}>
           <Box className={classes.formInput}>
             <BasicDropdownWithValidation
-              onSelect={(value: string) => { updateProfileForm(ProfileFormKey.hcpProfession, value) }}
+              onSelect={(value: string) => {
+                updateProfileForm(ProfileFormKey.hcpProfession, value)
+              }}
               defaultValue={profileForm.hcpProfession}
               disabledValues={[HcpProfession.empty]}
               values={HcpProfessionList.filter(item => item !== HcpProfession.empty)}
@@ -94,6 +106,30 @@ const PersonalInfoForm: FunctionComponent = () => {
               errorTranslationKey="profession-dialog-title"
             />
           </Box>
+          <FormControl
+            margin="normal"
+            variant="standard"
+          >
+            <FormGroup>
+              <InputLabel>
+                {t('country')}
+              </InputLabel>
+              <Select
+                label={t('country')}
+                data-testid="country-selector"
+                value={profileForm.country}
+                onChange={event => {
+                  updateProfileForm(ProfileFormKey.country, event.target.value)
+                }}
+              >
+                {availableCountries.map((item) => (
+                  <MenuItem key={item.code} value={item.code}>
+                    {t(item.name)}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormGroup>
+          </FormControl>
         </Box>
       }
 

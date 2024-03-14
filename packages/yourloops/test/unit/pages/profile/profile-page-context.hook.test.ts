@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -134,7 +134,8 @@ describe('Profile page context hook', () => {
           role: UserRole.Patient,
           isUserHcp: () => false,
           isUserCaregiver: () => false,
-          isUserPatient: () => true
+          isUserPatient: () => true,
+          settings
         } as User
       }
     })

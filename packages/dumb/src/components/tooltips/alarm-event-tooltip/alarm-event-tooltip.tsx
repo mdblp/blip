@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -93,6 +93,12 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
 
   const getContentTitleByCode = (alarmCode: AlarmCode): string => {
     switch (alarmCode) {
+      case AlarmCode.DanaEmptyPumpBattery:
+        return t('alarm-dana-empty-pump-battery-title')
+      case AlarmCode.DanaEmptyReservoir:
+        return t('alarm-dana-empty-reservoir-title')
+      case AlarmCode.DanaIncompatibleActionsOnPump:
+        return t('alarm-dana-incompatible-actions-on-pump-title')
       case AlarmCode.Hyperglycemia:
       case AlarmCode.LongHyperglycemia:
         return t('alarm-hyperglycemia-title')
@@ -110,6 +116,7 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
       case AlarmCode.InsightInsulinCartridgeExpired:
       case AlarmCode.KaleidoInsulinCartridgeExpired:
         return t('alarm-insulin-cartridge-expired-title')
+      case AlarmCode.DanaOcclusion:
       case AlarmCode.InsightOcclusion:
       case AlarmCode.KaleidoOcclusion:
         return t('alarm-occlusion-title')
@@ -168,6 +175,14 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
     const convertedValue = getDefaultConvertedValue(alarmCode, bgUnit)
 
     switch (alarmCode) {
+      case AlarmCode.DanaEmptyPumpBattery:
+        return [t('alarm-dana-empty-pump-battery-description')]
+      case AlarmCode.DanaEmptyReservoir:
+        return [t('alarm-dana-empty-reservoir-description')]
+      case AlarmCode.DanaIncompatibleActionsOnPump:
+        return [t('alarm-dana-incompatible-actions-on-pump-description')]
+      case AlarmCode.DanaOcclusion:
+        return [t('alarm-dana-occlusion-description')]
       case AlarmCode.Hyperglycemia:
         return [t('alarm-hyperglycemia-description', {
           value: convertedValue,
