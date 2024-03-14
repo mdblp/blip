@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,6 +29,7 @@ import { type HcpProfession } from '../../../lib/auth/models/enums/hcp-professio
 import { type LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
 import { type BgUnit } from 'medical-domain'
 import { type Gender } from '../../../lib/auth/models/enums/gender.enum'
+import type { CountryCodes } from '../../../lib/auth/models/country.model'
 
 export interface ProfileForm {
   birthday: string | undefined
@@ -40,6 +41,7 @@ export interface ProfileForm {
   lastName: string
   sex: Gender | undefined
   units: BgUnit
+  country: CountryCodes
 }
 
 export type ProfileErrors = Record<string, boolean>
