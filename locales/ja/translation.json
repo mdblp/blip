@@ -65,7 +65,7 @@
   "Correction": "補正",
   "DOB: {{birthdate}}": "生年月日{{birthdate}}",
   "Daily Charts": "日次グラフ",
-  "Daily Dose ÷ Weight": "1日インスリン量÷重量",
+  "Daily Dose ÷ Weight": "1日インスリン投与量÷体重",
   "Date": "日時",
   "Delivered": "投与済",
   "Derived from _**{{total}}**_ {{smbgLabel}} readings.": "_**{{total}}**_ {{smbgLabel}}測定から算出",
