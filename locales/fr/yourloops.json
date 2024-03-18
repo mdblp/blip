@@ -412,6 +412,7 @@
   "no-patient": "Aucun patient",
   "no-patient-data": "Aucune donnée pour le patient {{patientName}}",
   "no-settings-on-device-alert-message": "Cette vue montre les paramètres actuels, l'historique des changements et les informations de l'appareil, mais il semble que le système n'ait pas encore envoyé de données.",
+  "not-a-medical-device": "Pas un dispositif médical",
   "not-logged-in": "Vous n'êtes pas connecté·e",
   "notification": "Notification",
   "notification-caregiver-invite-by-patient": "<strong>{{firstName}}{{lastName}}</strong> souhaite partager ses données avec vous.",
