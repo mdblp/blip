@@ -24,13 +24,9 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import {
-  createRandomBolus,
-  createWizardData
-} from '../../../data-generator'
+import { createWizardData } from '../../../data-generator'
 import WizardService from '../../../../src/domains/repositories/medical/datum/wizard.service'
 import { Bolus, defaultMedicalDataOptions } from '../../../../src'
-import { expectation } from 'sinon'
 
 describe('deduplicate', () => {
   it('should return a deduplicated array based on normal time', () => {
