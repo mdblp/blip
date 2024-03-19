@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -46,6 +46,8 @@ import metrics from '../../lib/metrics'
 import LanguageSelector from '../language-select'
 import AccompanyingDocumentLinks from './accompanying-document-links'
 import { type AppRoute } from '../../models/enums/routes.enum'
+import { getCurrentLang } from '../../lib/language'
+import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 
 export const footerStyle = makeStyles({ name: 'footer-component-styles' })((theme: Theme) => {
   return {
@@ -172,6 +174,9 @@ export const footerStyle = makeStyles({ name: 'footer-component-styles' })((them
         textAlign: 'center'
       }
     },
+    medicalDeviceWarning: {
+      paddingRight: theme.spacing(4)
+    },
     rightBox: {
       display: 'flex',
       justifyContent: 'right',
@@ -219,6 +224,9 @@ export const Footer: FunctionComponent = () => {
   const { pathname } = useLocation()
   const { classes } = footerStyle()
 
+  const currentLanguage = getCurrentLang()
+  const shouldDisplayMedicalDeviceWarning = currentLanguage === LanguageCodes.Ja
+
   const handleShowCookieBanner = (): void => {
     if (typeof window.openAxeptioCookies === 'function') {
       window.openAxeptioCookies()
@@ -236,6 +244,11 @@ export const Footer: FunctionComponent = () => {
       <Box className={`${classes.sideBox} ${classes.leftBox}`}>
         <Box className={classes.supportButton} />
       </Box>
+
+      {shouldDisplayMedicalDeviceWarning &&
+        <Box className={classes.medicalDeviceWarning}>{t('not-a-medical-device')}</Box>
+      }
+
       <Box className={classes.centerBox}>
         {ROUTES_REQUIRING_LANGUAGE_SELECTOR.includes(pathname as AppRoute)
           ? <Box className={classes.firstLine}>
