@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -59,6 +59,7 @@ import { usePatientListStyles } from '../patient-list.styles'
 import { useNavigate } from 'react-router-dom'
 import { Skeleton } from '@mui/material'
 import { useAuth } from '../../../lib/auth'
+import { Moment } from 'moment-timezone'
 
 interface CurrentPatientListProps {
   patients: Patient[]
@@ -99,7 +100,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
         [PatientListColumns.MonitoringAlerts]: patient,
         [PatientListColumns.System]: patient.settings.system ?? noDataLabel,
-        [PatientListColumns.LastDataUpdate]: PatientUtils.getLastUploadDate(patient.medicalData, noDataLabel),
+        [PatientListColumns.LastDataUpdate]: PatientUtils.getLastUploadDate(patient.medicalData),
         [PatientListColumns.Messages]: patient.hasSentUnreadMessages,
         [PatientListColumns.TimeInRange]: patient.glycemiaIndicators?.timeInRange,
         [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators?.glucoseManagementIndicator,
@@ -209,7 +210,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       {
         type: 'number',
         field: PatientListColumns.GlucoseManagementIndicator,
-        headerName:t('column-header-glucose-management'),
+        headerName: t('column-header-glucose-management'),
         description: t('glucose-management-indicator'),
         headerAlign: 'left',
         align: 'left',
@@ -269,12 +270,13 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         headerName: t('last-data-update'),
         description: t('last-data-update-tooltip'),
         sortComparator: sortByLastDataUpdate,
-        renderCell: (params: GridRenderCellParams<GridRowModel, string>) => {
+        renderCell: (params: GridRenderCellParams<GridRowModel, Moment | null>) => {
           const value = params.value
-          return value ?? <Skeleton data-testid="last-data-update-cell-skeleton"
-                                    variant="rounded"
-                                    width={150}
-                                    height={SKELETON_HEIGHT_PX} />
+          return value === undefined ? <Skeleton data-testid="last-data-update-cell-skeleton"
+                                                 variant="rounded"
+                                                 width={150}
+                                                 height={SKELETON_HEIGHT_PX} />
+            : (value ? value.format('lll') : noDataLabel)
         }
       },
       {
@@ -288,7 +290,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         }
       }
     ]
-  }, [classes.mandatoryCellBorder, onClickRemovePatient, t])
+  }, [classes.mandatoryCellBorder, noDataLabel, onClickRemovePatient, t])
 
   const onRowClick = (params: GridRowParams): void => {
     navigate(`${params.id}/dashboard`)
