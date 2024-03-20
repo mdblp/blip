@@ -272,11 +272,11 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         sortComparator: sortByLastDataUpdate,
         renderCell: (params: GridRenderCellParams<GridRowModel, Moment | null>) => {
           const value = params.value
-          return value === undefined ? <Skeleton data-testid="last-data-update-cell-skeleton"
-                                                 variant="rounded"
-                                                 width={150}
-                                                 height={SKELETON_HEIGHT_PX} />
-            : (value ? value.format('lll') : noDataLabel)
+          if (value === undefined) {
+            return <Skeleton data-testid="last-data-update-cell-skeleton" variant="rounded" width={150}
+                             height={SKELETON_HEIGHT_PX} />
+          }
+          return value ? value.format('lll') : noDataLabel
         }
       },
       {
