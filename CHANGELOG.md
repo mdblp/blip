@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2859 Display alarms from Dana-i5 pump
 - YLP-2863 As an HCP, I want to be able to change my country in my profile settings
 - YLP-2868 As a HCP/caregiver, I want to see my patient listed by alphabetical order based on the last name
+- YLP-2937 Add Japanese language
 
 ### Fixed
 - YLP-2951 Patient data not accessible (infinite loading)
