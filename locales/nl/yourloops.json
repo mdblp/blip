@@ -450,6 +450,7 @@
   "profile-updated": "Profiel bijgewerkt",
   "progression-proposal": "Progressievoorstel",
   "ratio-dose": "Verhouding",
+  "readings-in-range-bgm-daily-average": "**Metingen in bereik:** dagelijks gemiddelde van het aantal {{smbgLabel}} metingen.",
   "refresh": "Vernieuwen",
   "remaining-time": "Resterende tijd",
   "remove-caregiver": "Verzorger verwijderen",
