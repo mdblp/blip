@@ -14,6 +14,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Fixed
 - YLP-2951 Patient data not accessible (infinite loading)
+- YLP-2967 Broken wizard (bolus + meal) display in the Daily view
 
 ## 3.2.0 - 2024-02-15
 ### Changed
