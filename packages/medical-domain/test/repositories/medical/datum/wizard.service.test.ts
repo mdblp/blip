@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,11 +24,9 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import {
-  createWizardData
-} from '../../../data-generator'
+import { createWizardData } from '../../../data-generator'
 import WizardService from '../../../../src/domains/repositories/medical/datum/wizard.service'
-import { defaultMedicalDataOptions } from '../../../../src/domains/models/medical/medical-data-options.model'
+import { Bolus, defaultMedicalDataOptions } from '../../../../src'
 
 describe('deduplicate', () => {
   it('should return a deduplicated array based on normal time', () => {
@@ -74,11 +72,43 @@ describe('deduplicate', () => {
       expectedWizard1,
       expectedWizard2
     ]
-    const dedupWizards = WizardService.deduplicate(wizardData, defaultMedicalDataOptions)
+
+    const bolusData = [{ id: 'bolus1' }, { id: 'bolus2' }, { id: 'bolus3' }] as Bolus[]
+    const dedupWizards = WizardService.deduplicate(wizardData, bolusData, defaultMedicalDataOptions)
     const expectedWizards = [
       { ...expectedWizard1, ...{ bolusIds: new Set<string>(['bolus1', 'bolus2', 'bolus3']) } },
       expectedWizard2
     ]
     expect(dedupWizards).toEqual(expectedWizards)
+  })
+
+  it('should not keep wizards with invalid boluses', () => {
+    const normalTime = '2023-07-24T08:00:00.000Z'
+    const wizardData = [
+      {
+        ...createWizardData(),
+        ...{
+          normalTime: normalTime,
+          inputTime: '2023-07-24T08:00:00.000Z',
+          bolusId: 'bolus1',
+          bolusIds: new Set<string>(['bolus1'])
+        }
+      },
+      {
+        ...createWizardData(),
+        ...{
+          normalTime: normalTime,
+          inputTime: '2023-07-24T08:00:02.000Z',
+          bolusId: 'bolus2',
+          bolusIds: new Set<string>(['bolus2'])
+        }
+      }
+    ]
+    const bolusData = [{ id: 'bolus2' }] as Bolus[]
+
+    const result = WizardService.deduplicate(wizardData, bolusData, defaultMedicalDataOptions)
+
+    expect(result[0].bolusId).toEqual('bolus2')
+    expect(result[0].bolusIds).toEqual(new Set<string>(['bolus1', 'bolus2']))
   })
 })
