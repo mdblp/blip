@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,6 @@
  */
 
 import type Wizard from '../../../models/medical/datum/wizard.model'
-import { type DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import DatumService from '../datum.service'
 import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
@@ -34,6 +33,8 @@ import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import { type WizardInputMealFat } from '../../../models/medical/datum/enums/wizard-input-meal-fat.enum'
 import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
 import { WizardInputMealSource } from '../../../models/medical/datum/enums/wizard-input-meal-source.enum'
+import Bolus from '../../../models/medical/datum/bolus.model'
+import { WizardDatumProcessor } from '../../../models/medical/datum/wizard-datum-processor.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Wizard => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -70,7 +71,11 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   return wizard
 }
 
-const deduplicate = (data: Wizard[], _opts: MedicalDataOptions): Wizard[] => {
+const isBolusValid = (bolusId: string, bolusData: Bolus[]): boolean => {
+  return bolusData.some((bolus: Bolus) => bolus.id === bolusId)
+}
+
+const deduplicate = (data: Wizard[], bolusData: Bolus[], _opts: MedicalDataOptions): Wizard[] => {
   // group wizards by normal time
   const initialGroups: Record<string, Wizard[]> = {}
   const timeGroups = data.reduce((previous, current: Wizard) => {
@@ -88,7 +93,14 @@ const deduplicate = (data: Wizard[], _opts: MedicalDataOptions): Wizard[] => {
     }
     const uniqueWizard = value.reduce((max: Wizard, val: Wizard) => {
       max.bolusIds.add(val.bolusId)
-      if (val.inputTime > max.inputTime) {
+
+      const isValBolusValid = isBolusValid(val.bolusId, bolusData)
+      const isMaxBolusValid = isBolusValid(max.bolusId, bolusData)
+
+      if (!isValBolusValid) {
+        return max
+      }
+      if (!isMaxBolusValid || val.inputTime > max.inputTime) {
         return { ...val, bolusIds: max.bolusIds }
       }
       return max
@@ -101,7 +113,7 @@ const filterOnDate = (data: Wizard[], start: number, end: number, weekDaysFilter
   return DatumService.filterOnDate(data, start, end, weekDaysFilter) as Wizard[]
 }
 
-const WizardService: DatumProcessor<Wizard> = {
+const WizardService: WizardDatumProcessor<Wizard> = {
   normalize,
   deduplicate,
   filterOnDate

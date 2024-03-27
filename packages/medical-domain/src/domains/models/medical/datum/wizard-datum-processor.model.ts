@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum LanguageCodes {
-  De = 'de',
-  En = 'en',
-  Es = 'es',
-  Fr = 'fr',
-  It = 'it',
-  Ja = 'ja',
-  Nl = 'nl'
+import type MedicalDataOptions from '../medical-data-options.model'
+import type { WeekDaysFilter } from '../../time/date-filter.model'
+import Bolus from './bolus.model'
+
+export interface WizardDatumProcessor<T> {
+  normalize: (rawData: Record<string, unknown>, opts: MedicalDataOptions) => T
+  deduplicate: (data: T[], bolusData: Bolus[], opts: MedicalDataOptions) => T[]
+  filterOnDate: (data: T[], start: number, end: number, weekDaysFilter: WeekDaysFilter) => T[]
 }

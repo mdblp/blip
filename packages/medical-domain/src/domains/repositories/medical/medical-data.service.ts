@@ -311,7 +311,7 @@ class MedicalDataService {
   private deduplicate(): void {
     this.medicalData.basal = BasalService.deduplicate(this.medicalData.basal, this._datumOpts)
     this.medicalData.bolus = BolusService.deduplicate(this.medicalData.bolus, this._datumOpts)
-    this.medicalData.wizards = WizardService.deduplicate(this.medicalData.wizards, this._datumOpts)
+    this.medicalData.wizards = WizardService.deduplicate(this.medicalData.wizards, this.medicalData.bolus, this._datumOpts)
     this.medicalData.physicalActivities = PhysicalActivityService.deduplicate(this.medicalData.physicalActivities, this._datumOpts)
   }
 
