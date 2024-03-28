@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 import PatientApi from './patient.api'
 import { mapITeamMemberToPatient } from '../../components/patient/utils'
-import moment from 'moment-timezone'
+import moment, { Moment } from 'moment-timezone'
 import { type Patient, type PatientMetrics } from './models/patient.model'
 import { UserInviteStatus } from '../team/models/enums/user-invite-status.enum'
 import { type User } from '../auth'
@@ -193,22 +193,22 @@ export default class PatientUtils {
     return value || value === 0 ? `${Math.round(value * 10) / 10}%` : t('N/A')
   }
 
-  static getLastUploadDate(medicalData: MedicalData, noDataLabel: string): string {
+  static getLastUploadDate(medicalData: MedicalData): Moment | null {
     if (!medicalData) {
       return null
     }
 
     const dataEndDate = medicalData.range?.endDate
     if (!dataEndDate) {
-      return noDataLabel
+      return null
     }
 
     const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
     const mLastUpload = moment.tz(dataEndDate, browserTimezone)
     if (!mLastUpload.isValid()) {
-      return noDataLabel
+      return null
     }
 
-    return mLastUpload.format('lll')
+    return mLastUpload
   }
 }
