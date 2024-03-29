@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.3.0-rc2 - 2024-03-27
+## 3.3.0 - 2024-04-05
 ### Changed
 - YLP-2824 Display pump logos based on manufacturer
 - YLP-2850 Add product name (model) in pump information card
