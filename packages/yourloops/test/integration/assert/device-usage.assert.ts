@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,6 +29,13 @@ import { screen, within } from '@testing-library/react'
 import { checkTooltip } from './stats.assert'
 import { RESERVOIR_CHANGE_13_DAYS_AGO_DATE, RESERVOIR_CHANGE_TODAY_DATE } from '../mock/data.api.mock'
 import userEvent from '@testing-library/user-event'
+import moment from 'moment-timezone'
+import format from '../../../../tideline/js/data/util/format'
+
+const reservoirChangeDate = new Date()
+reservoirChangeDate.setHours(17)
+reservoirChangeDate.setMinutes(0)
+const reservoirChangeDateAsString = reservoirChangeDate.toISOString().split('T')
 
 export const checkDeviceUsageWidget = async () => {
   const deviceUsageWidget = within(screen.getByTestId('device-usage-card'))
@@ -39,7 +46,7 @@ export const checkDeviceUsageWidget = async () => {
   expect(await deviceUsageWidget.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changes')
   const reservoirChange = deviceUsageWidget.getByTestId('reservoir-change')
   await userEvent.hover(reservoirChange)
-  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${RESERVOIR_CHANGE_TODAY_DATE.format('MMM D')}6:00 pm`)
+  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${RESERVOIR_CHANGE_TODAY_DATE.format('MMM D')}${format.timestamp(reservoirChangeDateAsString, moment.tz('Europe/Paris').utcOffset())}`)
 }
 
 export const checkDeviceUsageWidgetWithTwoWeeksOldData = async () => {
@@ -51,7 +58,7 @@ export const checkDeviceUsageWidgetWithTwoWeeksOldData = async () => {
   expect(await deviceUsageWidget.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changes')
   const reservoirChange = deviceUsageWidget.getByTestId('reservoir-change')
   await userEvent.hover(reservoirChange)
-  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${RESERVOIR_CHANGE_13_DAYS_AGO_DATE.format('MMM D')}6:00 pm`)
+  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${RESERVOIR_CHANGE_13_DAYS_AGO_DATE.format('MMM D')}${format.timestamp(reservoirChangeDateAsString, moment.tz('Europe/Paris').utcOffset())}`)
 }
 
 export const checkDeviceUsageWidgetNoData = async () => {
