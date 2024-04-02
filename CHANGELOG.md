@@ -6,7 +6,7 @@ It is based on Tidepool Blip 1.27.
 ### Engineering use
 - YLP-2948 Updated failing tests because of the time change
 
-## 3.3.0 - 2024-04-05
+## 3.3.0 - 2024-04-02
 ### Changed
 - YLP-2824 Display pump logos based on manufacturer
 - YLP-2850 Add product name (model) in pump information card
