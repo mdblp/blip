@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,7 +39,7 @@ export const checkDeviceUsageWidget = async () => {
   expect(await deviceUsageWidget.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changes')
   const reservoirChange = deviceUsageWidget.getByTestId('reservoir-change')
   await userEvent.hover(reservoirChange)
-  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${RESERVOIR_CHANGE_TODAY_DATE.format('MMM D')}6:00 pm`)
+  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${RESERVOIR_CHANGE_TODAY_DATE.format('MMM D')}7:00 pm`)
 }
 
 export const checkDeviceUsageWidgetWithTwoWeeksOldData = async () => {
@@ -51,7 +51,7 @@ export const checkDeviceUsageWidgetWithTwoWeeksOldData = async () => {
   expect(await deviceUsageWidget.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changes')
   const reservoirChange = deviceUsageWidget.getByTestId('reservoir-change')
   await userEvent.hover(reservoirChange)
-  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${RESERVOIR_CHANGE_13_DAYS_AGO_DATE.format('MMM D')}6:00 pm`)
+  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${RESERVOIR_CHANGE_13_DAYS_AGO_DATE.format('MMM D')}7:00 pm`)
 }
 
 export const checkDeviceUsageWidgetNoData = async () => {
