@@ -6,6 +6,9 @@ It is based on Tidepool Blip 1.27.
 ### Changed
 - YLP-3075 As a user, I want to be able to choose Japan or UK country
 
+### Engineering use
+- YLP-2948 Updated failing tests because of the time change
+
 ## 3.3.0 - 2024-04-05
 ### Changed
 - YLP-2824 Display pump logos based on manufacturer
