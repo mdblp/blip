@@ -6,6 +6,8 @@
   "**Readings In Range:** Daily average of the number of {{smbgLabel}} readings.": "**RIR：** {{smbgLabel}}測定が目標範囲内に収まっていた数の日次平均。",
   "**Time In Loop Mode:** Daily average of the time spent in automated basal delivery.": "**Loopモードの時間：** 自動基礎レート投与の日次平均。",
   "**Time In Loop Mode:** Time spent in automated basal delivery.": "**Loopモードの時間：** 自動基礎レート投与の時間。",
+  "**Time In Range:** Daily average of the time spent in range, based on {{cbgLabel}} readings.": "**TIR：** {{cbgLabel}} 測定を基に目標範囲内に収まっていた時間の日次平均。",
+  "**Time In Range:** Time spent in range, based on {{cbgLabel}} readings.": "**TIR**{{cbgLabel}} 測定を基に目標範囲内に収まっていた時間。",
   "**Total Insulin:** All basal and bolus insulin delivery (in Units) added together": "**合計インスリン：** 基礎レートおよびボーラス投与（U）の合計。",
   "**Total Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view": "**合計日次インスリン**全ての基礎レートおよびボーラス（U）の合計。",
   "100% of Readings": "全測定",
