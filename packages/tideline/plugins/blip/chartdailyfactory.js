@@ -114,17 +114,26 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
       spans: [{
         text: t('Glucose'),
         className: 'label-main'
-      }, {
-        text: ` (${t(chart.options.bgUnits)})`,
-        className: 'label-light'
-      }, {
-        text: ` & ${t('Events')}`,
-        className: 'label-main'
       }],
       baseline: options.labelBaseline
     }])
     .legends([{ name: 'bg', baseline: options.labelBaseline }])
     .heightRatio(2.15)
+    .gutterWeight(1.0)
+
+  // Events data pool
+  /** @type {Pool} */
+  const poolEvents = new Pool(chart)
+  chart.addPool(poolEvents)
+  poolEvents.id('poolEvents', chart.poolGroup)
+    .labels([{
+      spans: [{
+        text: t('Events'),
+        className: 'label-main'
+      }],
+      baseline: options.labelBaseline
+    }])
+    .heightRatio(0.5)
     .gutterWeight(1.0)
 
   // carbs and boluses data pool
@@ -191,6 +200,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     type: 'message',
     shape: 'generic'
   })
+  chart.tooltips.addGroup(poolEvents, {
+    type: 'event',
+    shape: 'generic'
+  })
   chart.tooltips.addGroup(poolBG, {
     type: 'cbg',
     classes: ['d3-bg-low', 'd3-bg-target', 'd3-bg-high']
@@ -243,34 +256,40 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     ]
   }))
 
-  poolBG.addPlotType({ type: 'deviceEvent' }, plotZenModeEvent(poolBG, {
+  poolEvents.addPlotType({ type: 'fill' }, fill(poolMessages, {
+    emitter,
+    isDaily: true,
+    cursor: 'cell'
+  }))
+
+  poolEvents.addPlotType({ type: 'deviceEvent' }, plotZenModeEvent(poolEvents, {
     tidelineData
   }))
 
-  poolBG.addPlotType({ type: 'physicalActivity' }, plotPhysicalActivity(poolBG, {
+  poolEvents.addPlotType({ type: 'physicalActivity' }, plotPhysicalActivity(poolEvents, {
     onPhysicalHover: options.onPhysicalHover,
     onPhysicalOut: options.onTooltipOut,
     tidelineData
   }))
 
-  poolBG.addPlotType({ type: 'deviceEvent' }, plotReservoirChange(poolBG, {
+  poolEvents.addPlotType({ type: 'deviceEvent' }, plotReservoirChange(poolEvents, {
     onReservoirHover: options.onReservoirHover,
     onReservoirOut: options.onTooltipOut
   }))
 
-  poolBG.addPlotType({ type: 'deviceEvent' }, plotDeviceParameterChange(poolBG, {
+  poolEvents.addPlotType({ type: 'deviceEvent' }, plotDeviceParameterChange(poolEvents, {
     tidelineData,
     onParameterHover: options.onParameterHover,
     onParameterOut: options.onTooltipOut
   }))
 
-  poolBG.addPlotType({ type: 'deviceEvent' }, plotWarmUp(poolBG, {
+  poolEvents.addPlotType({ type: 'deviceEvent' }, plotWarmUp(poolEvents, {
     tidelineData,
     onWarmUpHover: options.onWarmUpHover,
     onWarmUpOut: options.onTooltipOut
   }))
 
-  poolBG.addPlotType({ type: 'deviceEvent' }, plotAlarmEvent(poolBG, {
+  poolEvents.addPlotType({ type: 'deviceEvent' }, plotAlarmEvent(poolEvents, {
     tidelineData,
     onAlarmEventHover: options.onAlarmEventHover,
     onAlarmEventOut: options.onTooltipOut

@@ -41,7 +41,7 @@ function drawPhysicalActivity(pool, opts) {
         'x': xPos,
         'y': _.constant(0),
         'width': calculateWidth,
-        'height': _.constant(offset),
+        'height': pool.height() - 5,
         'xlink:href': picto
       })
     },

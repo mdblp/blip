@@ -42,7 +42,7 @@ function plotDeviceParameterChange(pool, opts) {
 
   _.defaults(opts, defaults)
 
-  const offset = pool.height() / 5
+  const offset = pool.height() - 5
   const width = 40
 
   const xPos = (/** @type {Datum} */ d) => utils.xPos(d, opts) - (width / 2)
@@ -73,7 +73,7 @@ function plotDeviceParameterChange(pool, opts) {
       parameterGroup.append('image')
         .attr({
           'x': xPos,
-          'y': 0,
+          'y': pool.height() / 2 - opts.size / 2,
           width,
           'height': offset,
           'xlink:href': picto,
