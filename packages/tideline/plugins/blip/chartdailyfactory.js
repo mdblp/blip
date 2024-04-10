@@ -256,7 +256,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     ]
   }))
 
-  poolEvents.addPlotType({ type: 'fill' }, fill(poolMessages, {
+  poolEvents.addPlotType({ type: 'fill' }, fill(poolEvents, {
     emitter,
     isDaily: true,
     cursor: 'cell'
