@@ -114,6 +114,9 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
       spans: [{
         text: t('Glucose'),
         className: 'label-main'
+      }, {
+        text: ` (${t(chart.options.bgUnits)})`,
+        className: 'label-light'
       }],
       baseline: options.labelBaseline
     }])
