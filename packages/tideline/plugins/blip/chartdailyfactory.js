@@ -295,6 +295,13 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     onAlarmEventOut: options.onTooltipOut
   }))
 
+  // Add confidential mode to Events pool: Must be the last in the pool to mask stuff below
+  poolEvents.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolEvents, {
+    tidelineData,
+    onConfidentialHover: options.onConfidentialHover,
+    onConfidentialOut: options.onTooltipOut
+  }))
+
   // add CBG data to BG pool
   poolBG.addPlotType({ type: 'cbg' }, plotCbg(poolBG, {
     bgUnits: chart.options.bgUnits,
@@ -350,7 +357,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     onBolusOut: options.onTooltipOut
   }))
 
-  // Add confidential mode to BG pool: Must be the last in the pool to mask stuff below
+  // Add confidential mode to Bolus pool: Must be the last in the pool to mask stuff below
   poolBolus.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolBolus, {
     tidelineData,
     onConfidentialHover: options.onConfidentialHover,
@@ -367,7 +374,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     defaultSource: tidelineData.opts.defaultSource
   }))
 
-  // Add confidential mode to BG pool: Must be the last in the pool to mask stuff below
+  // Add confidential mode to Basal pool: Must be the last in the pool to mask stuff below
   poolBasal.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolBasal, {
     tidelineData,
     onConfidentialHover: options.onConfidentialHover,

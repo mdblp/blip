@@ -3,6 +3,7 @@ import hyperglycemiaEventIcon from 'hyperglycemia-event.svg'
 import hypoglycemiaEventIcon from 'hypoglycemia-event.svg'
 import utils from './util/utils'
 import { AlarmEventType } from 'medical-domain'
+import { DEFAULT_IMAGE_MARGIN, DEFAULT_OPTIONS_SIZE } from './util/eventsConstants'
 
 const D3_ALARM_EVENT_ID = 'alarmEvent'
 
@@ -19,10 +20,12 @@ const getAlarmEventImage = (alarmEventType) => {
 
 function plotAlarmEvent(pool, opts) {
   const d3 = window.d3
-  const height = pool.height() / 5
+  const height = pool.height() - DEFAULT_IMAGE_MARGIN
   const width = 40
 
   const xPos = (d) => opts.xScale(d.epoch)
+
+  opts.size = opts.size ?? DEFAULT_OPTIONS_SIZE
 
   return (selection) => {
     opts.xScale = pool.xScale().copy()
@@ -53,7 +56,7 @@ function plotAlarmEvent(pool, opts) {
 
       alarmEventGroup.append('image').attr({
         'x': (d) => xPos(d) - (width / 2),
-        'y': 0,
+        'y': pool.height() / 2 - opts.size / 2,
         width,
         height,
         'xlink:href': (alarmEvent) => getAlarmEventImage(alarmEvent.alarmEventType)

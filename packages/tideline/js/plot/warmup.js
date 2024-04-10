@@ -26,10 +26,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import _ from 'lodash'
-
 import warmUpDexcom from 'warmup-dexcom.svg'
 import utils from './util/utils'
+import { DEFAULT_IMAGE_MARGIN, DEFAULT_OPTIONS_SIZE } from './util/eventsConstants'
 
 /**
  * @typedef {import("../tidelinedata").default} MedicalDataService
@@ -48,8 +47,10 @@ function plotWarmUp(pool, opts) {
   const d3 = window.d3
   const width = 40
 
+  opts.size = opts.size ?? DEFAULT_OPTIONS_SIZE
+
   function warmUp(selection) {
-    const offset = pool.height() / 5
+    const offset = pool.height() - DEFAULT_IMAGE_MARGIN
     const xScale = pool.xScale().copy()
     selection.each(function () {
       const warmUpEvents = pool.filterDataForRender(opts.tidelineData.medicalData.warmUps)
@@ -74,7 +75,7 @@ function plotWarmUp(pool, opts) {
 
       warmUpGroup.append('image').attr({
         'x': (d) => xScale(d.epoch),
-        'y': _.constant(0),
+        'y': pool.height() / 2 - opts.size / 2,
         width,
         'height': offset,
         'xlink:href': warmUpDexcom

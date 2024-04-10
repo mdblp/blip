@@ -1,0 +1,2 @@
+export const DEFAULT_OPTIONS_SIZE = 30
+export const DEFAULT_IMAGE_MARGIN = 8
