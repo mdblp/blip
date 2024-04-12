@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -48,20 +48,23 @@ const getPercentagePrecision = (percentage: number): number => {
 }
 
 export const buildSimpleValueProps = (format: string, total: number, value: number): SimpleValueProps => {
+  const className = styles.statEnabled
+  const suffix = Unit.Percent
+
   if (value >= 0) {
     if (format === StatFormats.Cv) {
       return {
-        className: value <= COEFFICIENT_OF_VARIATION_TARGET_HIGH_THRESHOLD ? styles.coefficientVariationTarget : styles.coefficientVariationHigh,
+        className,
         value: formatDecimalNumber(value),
-        suffix: Unit.Percent
+        suffix
       }
     }
 
     if (format === StatFormats.Gmi) {
       return {
-        className: styles.statEnabled,
+        className,
         value: formatDecimalNumber(value, 1),
-        suffix: Unit.Percent
+        suffix
       }
     }
   }
@@ -69,9 +72,9 @@ export const buildSimpleValueProps = (format: string, total: number, value: numb
   if (format === StatFormats.Percentage && total >= 0) {
     const percentage = total === 0 ? 0 : (value / total) * 100
     return {
-      className: styles.statEnabled,
+      className,
       value: formatDecimalNumber(percentage, getPercentagePrecision(percentage)),
-      suffix: Unit.Percent
+      suffix
     }
   }
 

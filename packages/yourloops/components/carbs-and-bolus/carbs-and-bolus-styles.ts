@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,8 +29,8 @@ import { makeStyles } from 'tss-react/mui'
 import { Theme } from '@mui/material/styles'
 
 export const LIGHT_BORDER = '1px solid #e7e7e7'
-export const RESCUE_CARBS_COLOR = '#E98D7C'
-export const MANUAL_BOLUS_COLOR = '#8C65D6'
+export const RESCUE_CARBS_COLOR = '#e12a4e'
+export const MANUAL_BOLUS_COLOR = '#035271'
 
 export const useCarbsAndBolusStyles = makeStyles()((theme: Theme) => ({
   cell: {

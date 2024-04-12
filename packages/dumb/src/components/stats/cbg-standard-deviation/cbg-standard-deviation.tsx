@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -48,6 +48,23 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
   const standardDeviationMin = averageGlucose - standardDeviation
   const standardDeviationMax = averageGlucose + standardDeviation
 
+
+  // const getValueColor = (value: number, bgClasses: BgClasses) => {
+  //   if (value < bgClasses.low) {
+  //     return styles.parenthesesLowColor
+  //   }
+  //
+  //   if (value > bgClasses.high) {
+  //     return styles.parenthesesHighColor
+  //   }
+  //
+  //   return styles.parenthesesTargetColor
+  // }
+
+  // const valueBasedStyles = {
+  //   min: getValueColor(standardDeviationMin, bgClasses),
+  //   max: getValueColor(standardDeviationMax, bgClasses)
+  // }
   const valueBasedStyles = {
     min: computeCBGStyle(standardDeviationMin, bgClasses),
     max: computeCBGStyle(standardDeviationMax, bgClasses)
@@ -65,8 +82,10 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
               <span className={styles['title-value']}>
                 (
                 <span className={`${valueBasedStyles.min.color} ${styles.spacing}`}>{standardDeviationMin}</span>
+                {/*<span className={`${valueBasedStyles.min} ${styles.spacing}`}>{standardDeviationMin}</span>*/}
                 -
                 <span className={`${valueBasedStyles.max.color} ${styles.spacing}`}>{standardDeviationMax}</span>
+                {/*<span className={`${valueBasedStyles.max} ${styles.spacing}`}>{standardDeviationMax}</span>*/}
                 )
               </span>
             </>
