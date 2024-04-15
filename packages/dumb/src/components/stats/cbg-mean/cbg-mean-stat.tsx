@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -43,7 +43,7 @@ export interface CBGMeanStatProps {
 
 const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
   const { bgClasses, title, tooltipValue, units, value } = props
-  const valueBasedStyles = computeCBGStyle(value, bgClasses)
+  const valueBasedStyles = computeCBGStyle(value, bgClasses, true)
   const bgClassesBarStyle = computeBgClassesBarStyle(bgClasses)
 
   return (

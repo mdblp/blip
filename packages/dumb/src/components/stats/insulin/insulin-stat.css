@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 .titleTotal {
-  color: #0096D1;
+  color: var(--text-medium-contrast);
   margin-left: 4px;
   font-size: 20px;
 }
@@ -56,12 +56,8 @@
   color: var(--text-medium-contrast);
 }
 
-.rowsTotalInsulin-basal {
-  color: var(--basal-automated);
-}
-
-.rowsTotalInsulin-bolus {
-  color: var(--bolus-meal);
+.rowsTotalInsulin {
+  color: var(--text-medium-contrast);
 }
 
 .outputValueDisabled {

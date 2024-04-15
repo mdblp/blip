@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -133,12 +133,12 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
                 <Chip
                   label={`${entry.value > 0 ? entry.valueString : '0'} ${entry.units}`}
                   variant="outlined"
-                  className={`${styles[`rowsTotalInsulin-${entry.id}`]}`}
+                  className={styles.rowsTotalInsulin}
                   size="small"
                   sx={{ marginRight: theme.spacing(2) }}
                 />
                 <Box
-                  className={`${styles.rowPercent} ${styles[`rowsTotalInsulin-${entry.id}`]}`}
+                  className={`${styles.rowPercent} ${styles.rowsTotalInsulin}`}
                   width="50px"
                   alignItems={entry.value === 0 ? 'center' : 'baseline'}
                 >

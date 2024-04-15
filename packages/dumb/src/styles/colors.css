@@ -27,12 +27,12 @@
 
 :root {
   --basal: #a4a4a4;
-  --basal-automated: #3a90a4;
+  --basal-automated: var(--info-color-main);
   --basal-over: #b1b1b1;
   --text-on-basal: white;
   --text-on-basal-automated: white;
   --text-basal: #a4a4a4;
-  --text-basal-automated: var(--info-color-20);
+  --text-basal-automated: var(--info-color-main);
   --bolus: var(--blip-color-primary-light);
   --bolus-ride: white;
   --bolus-undelivered: var(--error-color-main);
@@ -98,7 +98,7 @@
   bolusManual: var(--bolus-manual);
   basal: #19A0D7;
   basalHeader: #DCF1F9;
-  basalAutomated: var(--info-color-20);
+  basalAutomated: var(--info-color-main);
   basalManual: #A8C8D4;
   bolusUmm: #21C6B6;
   statDark: #27385B;
