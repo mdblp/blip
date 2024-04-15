@@ -82,7 +82,7 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
         >
           <Typography
             variant="caption"
-            sx={{ color: '#fafdff' }}
+            sx={{ color: theme.palette.common.white }}
             data-testid="rescue-carbs-cell"
           >
             {numberOfIntakes > 0 ? numberOfIntakes : ''}

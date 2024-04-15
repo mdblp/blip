@@ -29,8 +29,8 @@ import { makeStyles } from 'tss-react/mui'
 import { Theme } from '@mui/material/styles'
 
 export const LIGHT_BORDER = '1px solid #e7e7e7'
-export const RESCUE_CARBS_COLOR = '#e12a4e'
-export const MANUAL_BOLUS_COLOR = '#035271'
+export const RESCUE_CARBS_COLOR = 'var(--error-color-main)'
+export const MANUAL_BOLUS_COLOR = 'var(--dark-blue-main)'
 
 export const useCarbsAndBolusStyles = makeStyles()((theme: Theme) => ({
   cell: {
