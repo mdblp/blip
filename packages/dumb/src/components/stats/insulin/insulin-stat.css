@@ -25,16 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 .titleTotal {
-  color: var(--text-medium-contrast);
   margin-left: 4px;
   font-size: 20px;
+}
+
+.valueColor {
+  color: var(--text-medium-contrast);
 }
 
 .titleSuffix {
   padding-left: 1px;
   margin-right: 4px;
   font-size: 12px;
-  color: var(--text-medium-contrast);
 }
 
 .rowTitle {
@@ -53,11 +55,6 @@
 
 .rowPercent .rowPercentUnits {
   font-size: 12px;
-  color: var(--text-medium-contrast);
-}
-
-.rowsTotalInsulin {
-  color: var(--text-medium-contrast);
 }
 
 .outputValueDisabled {
@@ -76,11 +73,9 @@
   font-size: 20px;
   opacity: 1;
   display: inline-block;
-  color: var(--text-medium-contrast);
 }
 
 .dailyDoseUnits {
   font-size: 12px;
   padding-left: 1px;
-  color: var(--text-medium-contrast);
 }

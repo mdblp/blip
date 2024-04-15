@@ -37,7 +37,6 @@
   --bolus-ride: white;
   --bolus-undelivered: var(--error-color-main);
   --bolus-meal: var(--success-color-main);
-  /*--bolus-umm: #21C6B6;*/
   --bolus-micro: var(--info-color-50);
   --bolus-manual: var(--dark-blue-main);
   --carbs: var(--success-color-main);

@@ -31,8 +31,6 @@ import { EMPTY_DATA_PLACEHOLDER, StatFormats } from '../../../models/stats.model
 import { type SimpleValueProps } from '../common/simple-value'
 import { Unit } from 'medical-domain'
 
-const COEFFICIENT_OF_VARIATION_TARGET_HIGH_THRESHOLD = 36
-
 const MINIMUM_PERCENTAGE_VALUE = 0
 const MAXIMUM_PERCENTAGE_VALUE = 0.5
 const PERCENTAGE_PRECISION_BREAKPOINT = 0.05

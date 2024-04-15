@@ -218,8 +218,6 @@ function Pool(container) {
     dataTestId = x
     const group = mainSVG.select(`#${id}`)
     group.attr('data-testid', dataTestId)
-    // selection.get
-    // group = selection.append('g').attr('data-testid', dataTestId)
     return this
   }
 
