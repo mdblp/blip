@@ -89,33 +89,33 @@
   --muted: #C1C9D6;
 }
 
+/* Using raw color codes here for the PDF export to understand the variables */
 :export {
-  bolus: #178A7F;
+  bolus: #21c6b6;
   bolusHeader: #EBF7FC;
-  bolusMeal: var(--bolus-meal);
-  bolusMicro: var(--bolus-micro);
-  bolusManual: var(--bolus-manual);
+  bolusMeal: #21c6b6;
+  bolusMicro: #80D1F1;
+  bolusManual: #035271;
   basal: #19A0D7;
   basalHeader: #DCF1F9;
-  basalAutomated: var(--info-color-main);
+  basalAutomated: #009bd6;
   basalManual: #A8C8D4;
-  bolusUmm: #21C6B6;
   statDark: #27385B;
   statDefault: #727375;
   statDisabled: #E7E9EE;
-  veryLow: var(--error-color-main);
-  low: var(--error-color-light);
-  target: var(--info-color-main);
-  high: var(--warning-color-light);
-  veryHigh: var(--warning-color-main);
+  veryLow: #e12a4e;
+  low: #e85f7a;
+  target: #009bd6;
+  high: #f5a861;
+  veryHigh: #f28b2d;
   insulin: #0096D1;
   white: #FFFFFF;
   axis: #E7E9EE;
   muted: #C1C9D6;
-  rescuecarbs: var(--rescuecarbs);
+  rescuecarbs: #e12a4e;
   deviceEvent: #727375;
-  hyperglycemia: var(--warning-color-main);
-  hypoglycemia: var(--error-color-main);
+  hyperglycemia: #f28b2d;
+  hypoglycemia: #e12a4e;
   physicalActivity: #00D3E6;
   confidentialMode: #B4B4B4;
   smbg: #6480FB;
