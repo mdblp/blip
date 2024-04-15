@@ -500,7 +500,6 @@ class MedicalDataService {
             id: `fill-${isoStr.replace(/[^\w\s]|_/g, '')}`,
             time: isoStr,
             timezone,
-            fillColor: classes[hour],
             startsAtMidnight: hour === 0
           },
           this._datumOpts

@@ -31,11 +31,11 @@ svg.statWheelTimeInAuto {
 }
 
 svg.statWheelTimeInAuto g.onColor rect.legendBackground {
-  fill: var(--basal-automated, #12d3d8);
+  fill: var(--basal-automated);
 }
 
 svg.statWheelTimeInAuto g.onColor text.legendLabelText {
-  fill: var(--text-on-basal-automated, black);
+  fill: var(--text-on-basal-automated);
 }
 
 svg.statWheelTimeInAuto g.offColor rect.legendBackground {
@@ -43,15 +43,15 @@ svg.statWheelTimeInAuto g.offColor rect.legendBackground {
 }
 
 svg.statWheelTimeInAuto g.offColor text.legendLabelText {
-  fill: var(--text-on-basal, black);
+  fill: var(--text-on-basal);
 }
 
 svg.statWheelTimeInAuto g.labelOnValueUnits tspan.legendLabelValue, svg.statWheelTimeInAuto g.labelOnValueUnits text.labelRawValue {
-  fill: var(--text-basal-automated, black);
+  fill: var(--info-color-50);
 }
 
 svg.statWheelTimeInAuto g.labelOffValueUnits tspan.legendLabelValue, svg.statWheelTimeInAuto g.labelOffValueUnits text.labelRawValue {
-  fill: var(--text-basal, black);
+  fill: var(--text-basal);
 }
 
 svg.donutChart text.legendLabelText, svg.donutChart text.labelRawValue {
@@ -82,9 +82,9 @@ svg.donutChart tspan.legendLabelPercent {
 }
 
 svg.statWheelTimeInAuto .onEllipse {
-  fill: var(--basal-automated, #12d3d8);
+  fill: var(--basal-automated);
 }
 
 svg.statWheelTimeInAuto .offEllipse {
-  fill: var(--basal, rgb(168, 200, 212));
+  fill: var(--basal);
 }

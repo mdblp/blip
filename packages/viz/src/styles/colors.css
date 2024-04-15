@@ -16,13 +16,11 @@
  */
 
 :root {
-  --basal: #a4a4a4;
-  --basal-automated: var(--info-color-main);
-  --basal-over: #b1b1b1;
-  --text-on-basal: white;
-  --text-on-basal-automated: white;
+  --basal: var(--grey-25);
+  --basal-automated: var(--info-color-20);
+  --text-on-basal: var(--text-color-primary);
+  --text-on-basal-automated: var(--text-color-primary);
   --text-basal: #a4a4a4;
-  --text-basal-automated: var(--info-color-main);
   --bolus: var(--blip-color-primary-light);
   --bolus-ride: white;
   --bolus-undelivered: var(--error-color-main);
@@ -84,9 +82,9 @@
   bolusMeal: var(--success-color-main);
   bolusMicro: var(--bolus-micro);
   bolusManual: var(--dark-blue-main);
-  basal: #19A0D7;
+  basal: #D5D5D5;
   basalHeader: #DCF1F9;
-  basalAutomated: var(--info-color-main);
+  basalAutomated: #CCEDF9;
   basalManual: #A8C8D4;
   statDark: #27385B;
   statDefault: #727375;

@@ -264,11 +264,11 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     isDaily: true,
     guidelines: [
       {
-        class: 'd3-line-bg-threshold',
+        class: 'd3-line-bg-threshold-low',
         height: chart.options.bgClasses.low
       },
       {
-        class: 'd3-line-bg-threshold',
+        class: 'd3-line-bg-threshold-high',
         height: chart.options.bgClasses.target
       }
     ]

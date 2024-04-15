@@ -387,7 +387,7 @@ class BasicsPrintView extends PrintView {
         ]
 
         const ratioColors = {
-          basal: this.colors.basal,
+          basal: this.colors.basalAutomated,
           bolus: this.colors.bolus,
           automated: this.colors.basalAutomated,
           manual: this.colors.basal

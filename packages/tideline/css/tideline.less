@@ -147,23 +147,8 @@ svg {
 
 // pool background rectangles
 .d3-rect-fill {
-  &.d3-fill-darker {
-    fill: @fill-darker;
-  }
-  &.d3-fill-darkest {
-    fill: @fill-darkest;
-  }
-  &.d3-fill-dark {
-    fill: @fill-dark;
-  }
-  &.d3-fill-light {
-    fill: @fill-light;
-  }
-  &.d3-fill-lighter {
-    fill: @fill-lighter;
-  }
-  &.d3-fill-lightest {
-    fill: @fill-lightest;
+  &.d3-fill-background {
+    fill: @background-daily;
   }
   &.d3-fill-trends {
     fill: @fill-trends;
@@ -171,21 +156,23 @@ svg {
   &.d3-fill-target {
     fill: @fill-target;
   }
-
-  &.d3-fill-midnight {
-    fill: white;
+  &.d3-fill-vertical-line {
+    fill: @fill-darker;
   }
 }
 
 // guidelines
 .d3-line-guide {
   stroke: white;
-  stroke-width: 2px;
+  stroke-width: 1px;
   &.d3-line-trends {
     stroke-width: 1px;
   }
-  &.d3-line-bg-threshold {
-    stroke-dasharray: 3, 5;
+  &.d3-line-bg-threshold-high {
+    stroke: @bg-high;
+  }
+  &.d3-line-bg-threshold-low {
+    stroke: @bg-low;
   }
   &.d3-line-bg-threshold-trends {
     stroke-dasharray: 9, 9;
