@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -49,8 +49,8 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
   const standardDeviationMax = averageGlucose + standardDeviation
 
   const valueBasedStyles = {
-    min: computeCBGStyle(standardDeviationMin, bgClasses),
-    max: computeCBGStyle(standardDeviationMax, bgClasses)
+    min: computeCBGStyle(standardDeviationMin, bgClasses, true),
+    max: computeCBGStyle(standardDeviationMax, bgClasses, true)
   }
   const bgClassesBarStyle = computeBgClassesBarStyle(bgClasses)
 

@@ -101,9 +101,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   /** @type {Pool} */
   const poolMessages = new Pool(chart)
   chart.addPool(poolMessages)
+  const poolMessagesId = 'poolMessages'
   poolMessages
     .id('poolMessages', chart.poolGroup)
-    .dataTestId('messages-section', chart.poolGroup)
+    .dataTestId('messages-section', poolMessagesId)
     .heightRatio(0.5)
     .gutterWeight(0.0)
 
@@ -111,9 +112,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   /** @type {Pool} */
   const poolBG = new Pool(chart)
   chart.addPool(poolBG)
+  const poolBGId = 'poolBG'
   poolBG
     .id('poolBG', chart.poolGroup)
-    .dataTestId('bg-section', chart.poolGroup)
+    .dataTestId('bg-section', poolBGId)
     .labels([{
       spans: [{
         text: t('Glucose'),
@@ -132,9 +134,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   /** @type {Pool} */
   const poolEvents = new Pool(chart)
   chart.addPool(poolEvents)
+  const poolEventsId = 'poolEvents'
   poolEvents
     .id('poolEvents', chart.poolGroup)
-    .dataTestId('events-section', chart.poolGroup)
+    .dataTestId('events-section', poolEventsId)
     .labels([{
       spans: [{
         text: t('Events'),
@@ -149,9 +152,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   /** @type {Pool} */
   const poolBolus = new Pool(chart)
   chart.addPool(poolBolus)
+  const poolBolusId = 'poolBolus'
   poolBolus
     .id('poolBolus', chart.poolGroup)
-    .dataTestId('bolus-section', chart.poolGroup)
+    .dataTestId('bolus-section', poolBolusId)
     .labels([{
       spans: [{
         text: t('Bolus'),
@@ -182,9 +186,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   /** @type {Pool} */
   const poolBasal = new Pool(chart)
   chart.addPool(poolBasal)
+  const poolBasalId = 'poolBasal'
   poolBasal
     .id('poolBasal', chart.poolGroup)
-    .dataTestId('basal-section', chart.poolGroup)
+    .dataTestId('basal-section', poolBasalId)
     .labels([{
       main: t('Basal Rates'),
       light: ` (${t('U')}/${t('abbrev_duration_hour')})`,
@@ -259,11 +264,11 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     isDaily: true,
     guidelines: [
       {
-        class: 'd3-line-bg-threshold',
+        class: 'd3-line-bg-threshold-low',
         height: chart.options.bgClasses.low
       },
       {
-        class: 'd3-line-bg-threshold',
+        class: 'd3-line-bg-threshold-high',
         height: chart.options.bgClasses.target
       }
     ]
