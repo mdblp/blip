@@ -28,6 +28,7 @@
 import React, { type FunctionComponent } from 'react'
 import styles from './cbg-standard-deviation.css'
 import stylesCbgCommon from '../common/cbg-common.css'
+import commonStyles from '../../../styles/stat-common.css'
 import Box from '@mui/material/Box'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { computeBgClassesBarStyle, computeCBGStyle } from '../common/cbg-utils'
@@ -58,7 +59,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
     <Box data-testid="cbg-standard-deviation-stat">
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Box display="flex">
-          {title}
+          <span className={commonStyles.title}>{title}</span>
           {!Number.isNaN(standardDeviation) &&
             <>
               &nbsp;

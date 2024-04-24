@@ -218,10 +218,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     type: 'message',
     shape: 'generic'
   })
-  chart.tooltips.addGroup(poolEvents, {
-    type: 'event',
-    shape: 'generic'
-  })
   chart.tooltips.addGroup(poolBG, {
     type: 'cbg',
     classes: ['d3-bg-low', 'd3-bg-target', 'd3-bg-high']
@@ -275,9 +271,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   }))
 
   poolEvents.addPlotType({ type: 'fill' }, fill(poolEvents, {
-    emitter,
-    isDaily: true,
-    cursor: 'cell'
+    isDaily: true
   }))
 
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotZenModeEvent(poolEvents, {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -55,7 +55,8 @@ export const useCBGPercentageBar = (props: CBGPercentageBarHookProps): CBGPercen
   const rectangleBackgroundClass = isDisabled ? cbgTimeStatStyles['disabled-rectangle'] : stylesColors[`${id}-background`]
   const labelClass = isDisabled ? cbgTimeStatStyles['disabled-label'] : stylesColors[`${id}-color`]
   const rectangleClasses = `${cbgTimeStatStyles.rectangle} ${rectangleBackgroundClass}`
-  const barClasses = `${cbgTimeStatStyles['bar-value']} ${labelClass}`
+  const durationBackgroundClasses =  isDisabled ? cbgTimeStatStyles['disabled-duration'] : stylesColors[`${id}-duration-background`]
+  const barClasses = `${cbgTimeStatStyles['bar-value']} ${durationBackgroundClasses}`
   const percentageClasses = `${cbgTimeStatStyles['percentage-value']} ${labelClass}`
 
   const barValue = useMemo(() => {

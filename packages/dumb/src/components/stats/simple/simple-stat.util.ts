@@ -46,13 +46,11 @@ const getPercentagePrecision = (percentage: number): number => {
 }
 
 export const buildSimpleValueProps = (format: string, total: number, value: number): SimpleValueProps => {
-  const className = styles.statEnabled
   const suffix = Unit.Percent
 
   if (value >= 0) {
     if (format === StatFormats.Cv) {
       return {
-        className,
         value: formatDecimalNumber(value),
         suffix
       }
@@ -60,7 +58,6 @@ export const buildSimpleValueProps = (format: string, total: number, value: numb
 
     if (format === StatFormats.Gmi) {
       return {
-        className,
         value: formatDecimalNumber(value, 1),
         suffix
       }
@@ -70,7 +67,6 @@ export const buildSimpleValueProps = (format: string, total: number, value: numb
   if (format === StatFormats.Percentage && total >= 0) {
     const percentage = total === 0 ? 0 : (value / total) * 100
     return {
-      className,
       value: formatDecimalNumber(percentage, getPercentagePrecision(percentage)),
       suffix
     }

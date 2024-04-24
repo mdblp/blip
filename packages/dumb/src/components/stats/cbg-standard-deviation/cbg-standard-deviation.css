@@ -44,5 +44,5 @@
 }
 
 .value {
-  color: var(--text-medium-contrast)
+  font-weight: bold;
 }

@@ -48,10 +48,12 @@ svg.statWheelTimeInAuto g.offColor text.legendLabelText {
 
 svg.statWheelTimeInAuto g.labelOnValueUnits tspan.legendLabelValue, svg.statWheelTimeInAuto g.labelOnValueUnits text.labelRawValue {
   fill: var(--info-color-50);
+  font-weight: bold;
 }
 
 svg.statWheelTimeInAuto g.labelOffValueUnits tspan.legendLabelValue, svg.statWheelTimeInAuto g.labelOffValueUnits text.labelRawValue {
   fill: var(--text-basal);
+  font-weight: bold;
 }
 
 svg.donutChart text.legendLabelText, svg.donutChart text.labelRawValue {
@@ -70,8 +72,8 @@ svg.donutChart tspan.legendLabelValue {
 }
 
 svg.donutChart tspan.legendLabelUnits {
-  fill: rgb(114, 115, 117);
   font-size: 12px;
+  font-weight: bold;
   letter-spacing: normal;
 }
 
