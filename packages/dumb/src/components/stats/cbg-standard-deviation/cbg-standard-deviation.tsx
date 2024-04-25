@@ -58,8 +58,8 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
   return (
     <Box data-testid="cbg-standard-deviation-stat">
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Box display="flex">
-          <span className={commonStyles.title}>{title}</span>
+        <Box display="flex" className={commonStyles.title}>
+          {title}
           {!Number.isNaN(standardDeviation) &&
             <>
               &nbsp;
