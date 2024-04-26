@@ -49,7 +49,3 @@
 .statDisabled {
   color: var(--stat-disabled);
 }
-
-.statEnabled {
-  color: var(--text-medium-contrast);
-}

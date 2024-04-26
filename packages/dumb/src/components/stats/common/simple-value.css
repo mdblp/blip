@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,6 +29,7 @@
   line-height: 1;
   display: flex;
   justify-content: space-between;
+  font-weight: bold;
 }
 
 .data {
@@ -45,7 +46,6 @@
 .suffix {
   composes: smallSize from '../../../styles/typography.css';
   color: var(--stat--default);
-  font-weight: normal;
   position: relative;
   bottom: 1px;
   padding-left: 1px;

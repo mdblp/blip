@@ -29,14 +29,14 @@
   font-size: 20px;
 }
 
-.valueColor {
-  color: var(--text-medium-contrast);
-}
-
 .titleSuffix {
   padding-left: 1px;
   margin-right: 4px;
   font-size: 12px;
+}
+
+.boldValue {
+  font-weight: bold;
 }
 
 .rowTitle {
@@ -46,6 +46,7 @@
 .rowPercent {
   display: flex;
   justify-content: flex-end;
+  font-weight: bold;
 }
 
 .rowPercent .rowPercentValue {
@@ -63,6 +64,7 @@
   display: inline-block;
   margin-right: 4px;
   color: var(--muted);
+  font-weight: bold;
 }
 
 .outputValue {
@@ -73,6 +75,7 @@
   font-size: 20px;
   opacity: 1;
   display: inline-block;
+  font-weight: bold;
 }
 
 .dailyDoseUnits {
