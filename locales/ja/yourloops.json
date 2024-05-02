@@ -33,6 +33,8 @@
   "alarm-alert-loop-mode-deactivated-description": "重要：このアラートはloopモードがOFFの場合にのみ、発生します。",
   "alarm-alert-with-code": "アラート {{code}}",
   "alarm-at-time": "{{alarmTime}}",
+  "alarm-dana-empty-pump-battery-description": "ポンプ電池残量切れです。",
+  "alarm-dana-empty-pump-battery-title": "ポンプ電池残量切れ",
   "alarm-hyperglycemia-description": "G6の測定値が設定可能なしきい値（初期設定では{{value}}{{unit}}）を超えています。",
   "alarm-hyperglycemia-title": "高血糖",
   "alarm-hypoglycemia-description": "血糖値が {{value}} {{unit}} 以下です。",
