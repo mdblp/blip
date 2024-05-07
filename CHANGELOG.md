@@ -11,6 +11,9 @@ It is based on Tidepool Blip 1.27.
 ### Engineering use
 - YLP-2948 Updated failing tests because of the time change
 
+### Fixed
+- YLP-2527 Number of meal Carbs hidden behind a bolus bar
+
 ## 3.3.0 - 2024-04-05
 ### Changed
 - YLP-2824 Display pump logos based on manufacturer
