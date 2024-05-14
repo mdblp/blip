@@ -106,6 +106,7 @@ function drawFill(pool, opts = defaults) {
           id: function(d) {
             return d.id
           },
+          'data-testid': function(d){return d.id},
           class: 'd3-fill d3-rect-fill d3-fill-background'
         })
         .on('click', function(fillRect) {
