@@ -225,7 +225,7 @@
   "custom-values-entered": "Custom values have been entered. Please save the changes.",
   "custom-values-applied-for-patient": "Custom values are applied for this patient. You can apply the default care team values.",
   "daily": "Daily",
-  "daily-rescue-carbs-and-manual-bolus": "Rescue carbs intakes & manual bolus (Avg. daily number of times)",
+  "daily-rescue-carbs-and-manual-bolus": "Rescue carbs intakes & manual bolus over {{numberOfDays}} days",
   "dashboard": "Dashboard",
   "data-not-transmitted": "Data not transmitted",
   "data-not-transmitted-tooltip1": "Data not transmitted: {{percentage}}",
