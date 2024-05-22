@@ -49,7 +49,7 @@ function plotQuickBolus(pool, opts = defaults) {
       const boluses = d3.select(this)
         .selectAll('g.d3-bolus-group')
         .data(currentData, (d) => d.id)
-      
+
       const bolusGroups = boluses.enter()
         .append('g')
         .attr({
