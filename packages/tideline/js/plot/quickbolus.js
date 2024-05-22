@@ -49,13 +49,13 @@ function plotQuickBolus(pool, opts = defaults) {
       const boluses = d3.select(this)
         .selectAll('g.d3-bolus-group')
         .data(currentData, (d) => d.id)
-
+      
       const bolusGroups = boluses.enter()
         .append('g')
         .attr({
           'class': 'd3-bolus-group',
           'id': (d) => `bolus_group_${d.id}`,
-          'data-testid': 'd3-bolus-group'
+          'data-testid': (d) => `${d.prescriptor === 'manual' ? 'd3-bolus-group-manual': 'd3-bolus-group' }`
         })
         .sort((a, b) => {
           // sort by size so smaller boluses are drawn last
