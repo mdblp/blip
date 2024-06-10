@@ -7,6 +7,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2866 Display events in a dedicated section in Daily view
 - YLP-2974 Update colors in Daily and Trends views to match DBL theme
 - YLP-3019 New design for stats
+- YLP-3075 As a user, I want to be able to choose Japan or UK country
 
 ### Engineering use
 - YLP-2948 Updated failing tests because of the time change
