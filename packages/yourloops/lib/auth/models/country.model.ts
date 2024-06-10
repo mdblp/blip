@@ -36,10 +36,10 @@ export enum CountryCodes {
   France = 'FR',
   Germany = 'DE',
   Italy = 'IT',
+  Japan = 'JP',
   Netherlands = 'NL',
   Spain = 'SP',
   Switzerland = 'CH',
   UnitedKingdom = 'UK',
-  Japan = 'JP',
   Unknown = ''
 }
