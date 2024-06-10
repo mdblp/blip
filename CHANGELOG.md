@@ -2,6 +2,10 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## 3.3.0-TERUMO - 2024-06-12
+### Changed
+- YLP-3075 As a user, I want to be able to choose Japan or UK country
+
 ## 3.3.0 - 2024-04-05
 ### Changed
 - YLP-2824 Display pump logos based on manufacturer
