@@ -94,6 +94,9 @@ export const ALARM_EVENT_DANA_EMPTY_PUMP_BATTERY_ID = 'alarmEventDanaEmptyPumpBa
 export const ALARM_EVENT_DANA_EMPTY_RESERVOIR_ID = 'alarmEventDanaEmptyReservoirId'
 export const ALARM_EVENT_DANA_INCOMPATIBLE_ACTIONS_ON_PUMP_ID = 'alarmEventDanaIncompatibleActionsOnPumpId'
 export const ALARM_EVENT_DANA_OCCLUSION_ID = 'alarmEventDanaOcclusionId'
+export const ALARM_EVENT_MEDISAFE_EMPTY_PUMP_BATTERY_ID = 'alarmEventMedisafeEmptyPumpBatteryId'
+export const ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID = 'alarmEventMedisafeEmptyReservoirId'
+export const ALARM_EVENT_MEDISAFE_OCCLUSION_ID = 'alarmEventMedisafeOcclusionId'
 export const WARMUP_01_ID = 'warmup01Id'
 export const WIZARD_UNDELIVERED_INPUT_TIME = '2022-08-08T02:00:00Z'
 export const WIZARD_UMM_INPUT_TIME = '2022-08-08T18:34:00Z'
@@ -1090,6 +1093,72 @@ export const completeDailyViewData: Data = {
         "inputTime": "2022-08-08T10:45:00Z",
         "alarm": {
           "alarmCode": AlarmCode.DanaOcclusion,
+          "alarmLevel": AlarmLevel.Alarm,
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": AlarmEventType.Device,
+        "isoWeekday": WeekDays.Sunday
+      },
+      {
+        "epoch": 1659954300000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T01:50:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-23",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
+        "guid": ALARM_EVENT_MEDISAFE_EMPTY_PUMP_BATTERY_ID,
+        "inputTime": "2022-08-08T10:45:00Z",
+        "alarm": {
+          "alarmCode": AlarmCode.MedisafeEmptyPumpBattery,
+          "alarmLevel": AlarmLevel.Alarm,
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": AlarmEventType.Device,
+        "isoWeekday": WeekDays.Sunday
+      },
+      {
+        "epoch": 1659954300000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T18:55:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-24",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
+        "guid": ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID,
+        "inputTime": "2022-08-08T10:45:00Z",
+        "alarm": {
+          "alarmCode": AlarmCode.MedisafeEmptyPumpReservoir,
+          "alarmLevel": AlarmLevel.Alarm,
+          "alarmType": "handset",
+          "ackStatus": "acknowledged",
+          "updateTime": "2023-07-14T17:48:18.602Z"
+        },
+        "alarmEventType": AlarmEventType.Device,
+        "isoWeekday": WeekDays.Sunday
+      },
+      {
+        "epoch": 1659954300000,
+        "displayOffset": -120,
+        "normalTime": "2022-08-08T19:00:00.000Z",
+        "timezone": "Europe/Paris",
+        "guessedTimezone": false,
+        "id": "alarm-25",
+        "type": DatumType.DeviceEvent,
+        "source": Source.Diabeloop,
+        "subType": DeviceEventSubtype.Alarm,
+        "guid": ALARM_EVENT_MEDISAFE_OCCLUSION_ID,
+        "inputTime": "2022-08-08T10:45:00Z",
+        "alarm": {
+          "alarmCode": AlarmCode.MedisafeOcclusion,
           "alarmLevel": AlarmLevel.Alarm,
           "alarmType": "handset",
           "ackStatus": "acknowledged",
