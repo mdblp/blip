@@ -89,6 +89,7 @@ const ignoredTransKeyForYourLoops = [
   'France',
   'Germany',
   'Italy',
+  'Japan',
   'Netherlands',
   'Spain',
   'Switzerland',
