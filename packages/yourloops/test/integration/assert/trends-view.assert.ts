@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import{ screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { checkStatTooltip } from './stats.assert'
 
@@ -188,7 +188,17 @@ export const checkTrendsLayout = () => {
 
 export const checkTrendsBolusAndCarbsAverage = async () => {
   const wrapper = screen.getByTestId('rescue-carbs-and-manual-bolus-average')
+  const rescueCarbsAndManualBolusTitle = screen.getByTestId("title-rescue-carbs-and-manual-bolus-average")
+
   expect(wrapper).toBeVisible()
+
+  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent("Rescue carbs intakes & manual bolus over 2 weeks")
+  const mondayButton= screen.getByRole('button', { name: 'M' })
+
+  await userEvent.click(mondayButton)
+  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent("Rescue carbs intakes & manual bolus over 12 days")
+  await userEvent.click(mondayButton)
+
   expect(within(wrapper).getAllByTestId('carbs-and-bolus-cell')).toHaveLength(8)
 
   const caption = within(wrapper).getByTestId('rescue-carbs-and-manual-bolus-average-caption')
@@ -216,6 +226,7 @@ export const checkTrendsBolusAndCarbsAverage = async () => {
 
   const oneWeekButton = screen.getByRole('button', { name: '1 week' })
   await userEvent.click(oneWeekButton)
+  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent("Rescue carbs intakes & manual bolus over 1 week")
 
   expect(bolusCells[0]).toHaveTextContent('0.3')
   expect(bolusCells[1]).toHaveTextContent('0.6')

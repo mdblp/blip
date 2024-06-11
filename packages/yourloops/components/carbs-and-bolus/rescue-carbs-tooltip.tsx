@@ -40,6 +40,7 @@ export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }>
     <Box
       className={classes.hoverTooltip}
       sx={{ border: `2px solid ${RESCUE_CARBS_COLOR}` }}
+      data-testid="rescue-carbs-tooltip"
     >
       <div className={`${classes.tooltipTail} rescue-carbs`} />
       <Typography
@@ -48,18 +49,22 @@ export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }>
       >
         {t('rescue-carbs')}
       </Typography>
-      <Box className="content">
+      <Box className="content" data-testid="rescue-carbs-tooltip-content">
         <div className="flex-justify-between-align-center">
-          <Typography variant="body2">{t('avg-intakes')}</Typography>
-          <Typography variant="body2">{rescueCarbs.numberOfIntakes}</Typography>
+          <Typography variant="body2">{t('number-of-rescue-carbs')}</Typography>
+          <Typography variant="body2">{rescueCarbs.numberOfRescueCarbs}</Typography>
         </div>
         <div className="flex-justify-between-align-center">
-          <Typography variant="body2">{t('avg-confirmed-carbs')}</Typography>
+          <Typography variant="body2">{t('number-of-rescue-carbs-modified')}</Typography>
           <Typography variant="body2">{rescueCarbs.confirmedCarbs}g</Typography>
         </div>
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">{t('avg-recommended-carbs')}</Typography>
           <Typography variant="body2">{rescueCarbs.recommendedCarbs}g</Typography>
+        </div>
+        <div className="flex-justify-between-align-center">
+          <Typography variant="body2">Override</Typography>
+          <Typography variant="body2">{rescueCarbs.overrideCarbsTotal}g</Typography>
         </div>
       </Box>
     </Box>
