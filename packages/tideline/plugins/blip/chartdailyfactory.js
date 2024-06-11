@@ -347,6 +347,14 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     isDaily: true
   }))
 
+  // quick bolus data to wizard pool
+  poolBolus.addPlotType({ type: 'bolus' }, plotQuickbolus(poolBolus, {
+    subdueOpacity: 0.4,
+    timezoneAware: chart.options.timePrefs.timezoneAware,
+    onBolusHover: options.onBolusHover,
+    onBolusOut: options.onTooltipOut
+  }))
+
   // add wizard data to wizard pool
   poolBolus.addPlotType({ type: 'wizard' }, plotWizard(poolBolus, {
     subdueOpacity: 0.4,
@@ -359,14 +367,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     timezoneAware: chart.options.timePrefs.timezoneAware,
     onCarbHover: options.onCarbHover,
     onCarbOut: options.onTooltipOut
-  }))
-
-  // quick bolus data to wizard pool
-  poolBolus.addPlotType({ type: 'bolus' }, plotQuickbolus(poolBolus, {
-    subdueOpacity: 0.4,
-    timezoneAware: chart.options.timePrefs.timezoneAware,
-    onBolusHover: options.onBolusHover,
-    onBolusOut: options.onTooltipOut
   }))
 
   // Add confidential mode to Bolus pool: Must be the last in the pool to mask stuff below
