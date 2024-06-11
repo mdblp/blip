@@ -121,18 +121,28 @@ function getRescueCarbsAverageStatistics(meals: Meal[], numberOfDays: number, da
 }
 
 function getRescueCarbsAveragePerRange(meals: Meal[], numberOfDays: number): RescueCarbsAveragePerRange {
+  const numberOfRescueCarbs = meals.length
+
   const confirmedCarbsTotal = meals.reduce((totalCarbs, meal) => totalCarbs + meal.nutrition.carbohydrate.net, 0)
+
   const recommendedCarbsTotal = meals.reduce((totalCarbs, meal) => {
+    console.log(meal)
     if (meal.prescribedNutrition) {
-      return totalCarbs + (meal.prescribedNutrition.carbohydrate.net ?? 0)
+
+      return totalCarbs + meal.prescribedNutrition.carbohydrate.net
     }
-    return totalCarbs
+    else{
+      return 0
+    }
   }, 0)
-  const numberOfIntakes = meals.length / numberOfDays
+
+  const overrideCarbsTotal = confirmedCarbsTotal - recommendedCarbsTotal
+
   return {
-    confirmedCarbs: roundValue(confirmedCarbsTotal / numberOfDays, 1),
-    recommendedCarbs: roundValue(recommendedCarbsTotal / numberOfDays, 1),
-    numberOfIntakes: roundValue(numberOfIntakes, 1)
+    numberOfRescueCarbs,
+    confirmedCarbs: confirmedCarbsTotal,
+    recommendedCarbs: recommendedCarbsTotal,
+    overrideCarbsTotal: roundValue(overrideCarbsTotal / numberOfDays,1)
   }
 }
 
