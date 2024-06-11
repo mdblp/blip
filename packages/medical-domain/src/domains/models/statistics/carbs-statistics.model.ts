@@ -36,9 +36,10 @@ export interface CarbsStatistics {
 }
 
 export interface RescueCarbsAveragePerRange {
-  numberOfIntakes: number
+  numberOfRescueCarbs: number
   confirmedCarbs: number
   recommendedCarbs: number
+  overrideCarbsTotal: number
 }
 
 export type RescueCarbsAverageStatistics = Map<HoursRange, RescueCarbsAveragePerRange>
