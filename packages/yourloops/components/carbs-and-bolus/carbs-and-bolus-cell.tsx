@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -82,7 +82,7 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
         >
           <Typography
             variant="caption"
-            sx={{ color: '#444444' }}
+            sx={{ color: theme.palette.common.white }}
             data-testid="rescue-carbs-cell"
           >
             {numberOfIntakes > 0 ? numberOfIntakes : ''}

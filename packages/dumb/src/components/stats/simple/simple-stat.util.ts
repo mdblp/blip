@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,8 +31,6 @@ import { EMPTY_DATA_PLACEHOLDER, StatFormats } from '../../../models/stats.model
 import { type SimpleValueProps } from '../common/simple-value'
 import { Unit } from 'medical-domain'
 
-const COEFFICIENT_OF_VARIATION_TARGET_HIGH_THRESHOLD = 36
-
 const MINIMUM_PERCENTAGE_VALUE = 0
 const MAXIMUM_PERCENTAGE_VALUE = 0.5
 const PERCENTAGE_PRECISION_BREAKPOINT = 0.05
@@ -48,20 +46,20 @@ const getPercentagePrecision = (percentage: number): number => {
 }
 
 export const buildSimpleValueProps = (format: string, total: number, value: number): SimpleValueProps => {
+  const suffix = Unit.Percent
+
   if (value >= 0) {
     if (format === StatFormats.Cv) {
       return {
-        className: value <= COEFFICIENT_OF_VARIATION_TARGET_HIGH_THRESHOLD ? styles.coefficientVariationTarget : styles.coefficientVariationHigh,
         value: formatDecimalNumber(value),
-        suffix: Unit.Percent
+        suffix
       }
     }
 
     if (format === StatFormats.Gmi) {
       return {
-        className: styles.statEnabled,
         value: formatDecimalNumber(value, 1),
-        suffix: Unit.Percent
+        suffix
       }
     }
   }
@@ -69,9 +67,8 @@ export const buildSimpleValueProps = (format: string, total: number, value: numb
   if (format === StatFormats.Percentage && total >= 0) {
     const percentage = total === 0 ? 0 : (value / total) * 100
     return {
-      className: styles.statEnabled,
       value: formatDecimalNumber(percentage, getPercentagePrecision(percentage)),
-      suffix: Unit.Percent
+      suffix
     }
   }
 

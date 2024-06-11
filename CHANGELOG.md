@@ -2,7 +2,17 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.3.0-beta - 2024-02-14
+## 3.4.0-beta - 2024-04-05
+### Changed
+- YLP-2866 Display events in a dedicated section in Daily view
+- YLP-2974 Update colors in Daily and Trends views to match DBL theme
+- YLP-3019 New design for stats
+- YLP-3075 As a user, I want to be able to choose Japan or UK country
+
+### Engineering use
+- YLP-2948 Updated failing tests because of the time change
+
+## 3.3.0 - 2024-04-05
 ### Changed
 - YLP-2824 Display pump logos based on manufacturer
 - YLP-2850 Add product name (model) in pump information card
@@ -14,6 +24,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Fixed
 - YLP-2951 Patient data not accessible (infinite loading)
+- YLP-2967 Broken wizard (bolus + meal) display in the Daily view
 
 ## 3.2.0 - 2024-02-15
 ### Changed

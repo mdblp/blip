@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2023, Diabeloop
+ * Copyright (c) 2020-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,6 +27,7 @@
 
 import React, { type FunctionComponent, memo } from 'react'
 import styles from './loop-mode-stat.css'
+import commonStyles from '../../../styles/stat-common.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import Box from '@mui/material/Box'
 import { LoopModePercentageDetail } from './loop-mode-percentage-detail'
@@ -58,7 +59,7 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
 
   return (
     <div data-testid="loop-mode-stat">
-      <Box className={styles.title}>
+      <Box className={commonStyles.title}>
         {title}
         <StatTooltip annotations={annotations}/>
       </Box>

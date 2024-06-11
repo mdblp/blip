@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,24 +41,28 @@ interface BgClassesBarStyle {
 
 const CBG_BAR_WIDTH_IN_PERCENTAGE = 100
 
-export const computeCBGStyle = (value: number, bgClasses: BgClasses): CBGStyle => {
+export const computeCBGStyle = (value: number, bgClasses: BgClasses, usePrimaryColors = false): CBGStyle => {
   const veryLowValue = bgClasses.veryLow
   const lowValue = bgClasses.low
   const targetValue = bgClasses.target
   const highValue = bgClasses.high
+
+  const highColor = usePrimaryColors ? styles['high-color-primary'] : styles['high-color']
+  const lowColor = usePrimaryColors ? styles['low-color-primary'] : styles['low-color']
+
   if (value < veryLowValue) {
-    return { backgroundColor: styles['low-background'], color: styles['low-color'], left: '0' }
+    return { color: lowColor, backgroundColor: styles['low-background'], left: '0' }
   }
   if (value > highValue) {
-    return { color: styles['high-color'], backgroundColor: styles['high-background'], left: '100%' }
+    return { color: highColor, backgroundColor: styles['high-background'], left: '100%' }
   }
   const cbgBarRange = highValue - veryLowValue // Number of value included in the cbg bar range (default is from 54 to 250)
   const left = `${Math.round(((value - veryLowValue) * CBG_BAR_WIDTH_IN_PERCENTAGE) / cbgBarRange)}%`
   if (value > targetValue) {
-    return { color: styles['high-color'], backgroundColor: styles['high-background'], left }
+    return { color: highColor, backgroundColor: styles['high-background'], left }
   }
   if (value < lowValue) {
-    return { color: styles['low-color'], backgroundColor: styles['low-background'], left }
+    return { color: lowColor, backgroundColor: styles['low-background'], left }
   }
   return { color: styles['target-color'], backgroundColor: styles['target-background'], left }
 }

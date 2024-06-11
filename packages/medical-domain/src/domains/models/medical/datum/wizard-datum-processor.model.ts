@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,81 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import "../../../styles/colors.css";
+import type MedicalDataOptions from '../medical-data-options.model'
+import type { WeekDaysFilter } from '../../time/date-filter.model'
+import Bolus from './bolus.model'
 
-.title {
-  margin-left: 4px;
-}
-
-.veryHigh-background {
-  background-color: var(--bg-very-high);
-}
-
-.high-background {
-  background-color: var(--bg-high);
-}
-
-.target-background {
-  background-color: var(--bg-target);
-}
-
-.low-background {
-  background-color: var(--bg-low);
-}
-
-.veryLow-background {
-  background-color: var(--bg-very-low);
-}
-
-.veryHigh-duration-background {
-  background-color: var(--warning-color-10);
-  border-color: var(--warning-color-20);
-}
-
-.high-duration-background {
-  background-color: var(--warning-color-5);
-  border-color: var(--warning-color-20);
-}
-
-.target-duration-background {
-  background-color: var(--info-color-10);
-  border-color: var(--info-color-20);
-}
-
-.low-duration-background {
-  background-color: var(--error-color-5);
-  border-color: var(--error-color-20);
-}
-
-.veryLow-duration-background {
-  background-color: var(--error-color-10);
-  border-color: var(--error-color-20);
-}
-
-.veryHigh-color {
-  color: var(--bg-very-high);
-}
-
-.high-color {
-  color: var(--bg-high);
-}
-
-.high-color-primary {
-  color: var(--bg-very-high);
-}
-
-.target-color {
-  color: var(--bg-target);
-}
-
-.low-color {
-  color: var(--bg-low);
-}
-
-.low-color-primary {
-  color: var(--bg-very-low);
-}
-
-.veryLow-color {
-  color: var(--bg-very-low);
+export interface WizardDatumProcessor<T> {
+  normalize: (rawData: Record<string, unknown>, opts: MedicalDataOptions) => T
+  deduplicate: (data: T[], bolusData: Bolus[], opts: MedicalDataOptions) => T[]
+  filterOnDate: (data: T[], start: number, end: number, weekDaysFilter: WeekDaysFilter) => T[]
 }

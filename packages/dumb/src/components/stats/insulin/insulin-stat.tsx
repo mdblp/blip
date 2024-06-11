@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,6 +26,7 @@
  */
 import React, { type FunctionComponent, memo } from 'react'
 import styles from './insulin-stat.css'
+import commonStyles from '../../../styles/stat-common.css'
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import { t } from 'i18next'
@@ -94,7 +95,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
         justifyContent="space-between"
         alignItems="center"
       >
-        <Box>
+        <Box className={commonStyles.title}>
           {isDailyPage ? t('total-insulin') : t('average-daily-total-insulin')}
           <StatTooltip
             annotations={annotations}
@@ -104,6 +105,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           display="flex"
           justifyContent="space-between"
           alignItems={isDisabledTotalInsuline}
+          className={styles.boldValue}
         >
           <span className={styles.titleTotal}>
             {totalInsulin}
@@ -120,7 +122,6 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
               display="flex"
               justifyContent="space-between"
               alignItems="center"
-              sx={{ marginLeft: theme.spacing(1) }}
             >
               <div>
                 {entry.title}
@@ -133,12 +134,11 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
                 <Chip
                   label={`${entry.value > 0 ? entry.valueString : '0'} ${entry.units}`}
                   variant="outlined"
-                  className={`${styles[`rowsTotalInsulin-${entry.id}`]}`}
                   size="small"
                   sx={{ marginRight: theme.spacing(2) }}
                 />
                 <Box
-                  className={`${styles.rowPercent} ${styles[`rowsTotalInsulin-${entry.id}`]}`}
+                  className={styles.rowPercent}
                   width="50px"
                   alignItems={entry.value === 0 ? 'center' : 'baseline'}
                 >
@@ -159,7 +159,6 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           display="flex"
           justifyContent="space-between"
           alignItems="center"
-          sx={{ marginLeft: theme.spacing(1) }}
         >
           <span>
             {t('weight')}
@@ -167,6 +166,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           <Box
             display="flex"
             alignItems={isDisabledWeight ? 'center' : 'baseline'}
+            className={styles.boldValue}
           >
             <span className={getOutputValueClasses()}>
               {weight}
@@ -180,12 +180,12 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           display="flex"
           justifyContent="space-between"
           alignItems="center"
-          sx={{ marginLeft: theme.spacing(1) }}
         >
           {t('ratio-dose')}
           <Box
             display="flex"
             alignItems={isDisabledWeight ? 'center' : 'baseline'}
+            className={styles.boldValue}
           >
             <span className={getOutputValueClasses()}>
               {getDailyDosePerWeight()}
