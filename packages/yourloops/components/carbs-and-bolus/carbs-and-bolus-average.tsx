@@ -62,13 +62,31 @@ export const CarbsAndBolusAverage: FC<CarbsAndBolusAverageProps> = ({ medicalDat
   const rescueCarbsStats = CarbsStatisticsService.getRescueCarbsAverageStatistics(medicalData.meals, numberOfDays, dateFilter)
   const manualBolusStats = BasalBolusStatisticsService.getManualBolusAverageStatistics(medicalData.bolus, numberOfDays, dateFilter)
 
+  const numberOfDaysSelected = (): string => {
+    if (numberOfDays === 7){
+      return t('preset-dates-range-1week')
+    }
+    else if(numberOfDays === 14){
+      return t('preset-dates-range-2weeks')
+    }
+    else if(numberOfDays === 28){
+      return t('preset-dates-range-4weeks')
+    }
+    else if (numberOfDays === 90) {
+      return t('preset-dates-range-3months')
+    }
+    else {
+      return t('number-of-day-selected', { numberOfDays })
+    }
+  }
+
   return (
     <Box
       margin="32px 10px 32px 40px"
       data-testid="rescue-carbs-and-manual-bolus-average"
     >
-      <Typography sx={{ fontWeight: 500, marginBottom: theme.spacing(1) }}>
-        {t('daily-rescue-carbs-and-manual-bolus',{numberOfDays} )}
+      <Typography sx={{ fontWeight: 500, marginBottom: theme.spacing(1) }} data-testid="title-rescue-carbs-and-manual-bolus-average">
+        {t('daily-rescue-carbs-and-manual-bolus',{ numberOfDays: numberOfDaysSelected() })}
       </Typography>
       <Box display="flex">
         <CarbsAndBolusCell
