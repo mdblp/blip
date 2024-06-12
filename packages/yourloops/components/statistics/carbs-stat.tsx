@@ -54,6 +54,7 @@ export const CarbsStat: FunctionComponent<CarbsStatProps> = (props) => {
         title={t(isDailyPage ? 'total-declared-carbs' : 'avg-daily-declared-carbs')}
         annotations={declaredCarbsAnnotation}
         value={totalCarbsPerDay}
+        isTitleBold={true}
       />
       <CarbsStatItem
         title={t('meal-carbs')}

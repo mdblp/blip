@@ -24,18 +24,9 @@
 import _ from 'lodash'
 
 const defaults = {
-  classes: {
-    0: 'darkest',
-    3: 'dark',
-    6: 'lighter',
-    9: 'light',
-    12: 'lightest',
-    15: 'lighter',
-    18: 'dark',
-    21: 'darker'
-  },
   duration: 3,
-  midnightWidth: 3,
+  midnightWidth: 1,
+  verticalLinesWidth: 0.5,
   gutter: 0,
   fillClass: '',
   isDaily: false,
@@ -76,8 +67,8 @@ function drawFill(pool, opts = defaults) {
       fills.enter()
         .append('rect')
         .attr({
-          cursor: opts.cursor ? opts.cursor : 'auto',
-          x: function(d, i) {
+          'cursor': opts.cursor ? opts.cursor : 'auto',
+          'x': function(d, i) {
             // dataGutter is the extra space on the right & left edges
             // of each "pool" in weekly view
             if (opts.dataGutter) {
@@ -87,14 +78,14 @@ function drawFill(pool, opts = defaults) {
             }
             return fill.xPosition(d)
           },
-          y: function() {
+          'y': function() {
             if (opts.gutter.top) {
               return opts.gutter.top
             }
 
             return opts.gutter
           },
-          width: function(d, i) {
+          'width': function(d, i) {
             // dataGutter is the extra space on the right & left edges
             // of each "pool" in weekly view
             if (opts.dataGutter) {
@@ -104,7 +95,7 @@ function drawFill(pool, opts = defaults) {
             }
             return fill.width(d)
           },
-          height: function() {
+          'height': function() {
             if (opts.gutter.top) {
               return pool.height() - opts.gutter.top - opts.gutter.bottom
             }
@@ -112,12 +103,11 @@ function drawFill(pool, opts = defaults) {
             return pool.height() - 2 * opts.gutter
 
           },
-          id: function(d) {
+          'id': function(d) {
             return d.id
           },
-          class: function(d) {
-            return 'd3-fill d3-rect-fill d3-fill-' + d.fillColor
-          }
+          'data-testid': function(d){return d.id},
+          'class': 'd3-fill d3-rect-fill d3-fill-background'
         })
         .on('click', function(fillRect) {
           if (opts.emitter) {
@@ -126,6 +116,8 @@ function drawFill(pool, opts = defaults) {
             opts.emitter.emit('clickInPool', { offsetX, datum: fillRect })
           }
         })
+
+      fill.drawVerticalLines(selection, currentData)
 
       fills.exit().remove()
 
@@ -163,7 +155,7 @@ function drawFill(pool, opts = defaults) {
             id: function(d) {
               return d.id
             },
-            class: 'd3-fill d3-rect-fill d3-fill-midnight'
+            class: 'd3-rect-fill d3-fill-vertical-line'
           })
       }
     })
@@ -191,6 +183,41 @@ function drawFill(pool, opts = defaults) {
         x2: opts.xScale.range()[1],
         y1: (d) => yScale(d.height),
         y2: (d) => yScale(d.height)
+      })
+  }
+
+  fill.drawVerticalLines = function (selection, currentData) {
+    selection
+      .selectAll('#' + pool.id() + '_verticalLines')
+      .data(currentData, (d) => d.id)
+      .enter()
+      .append('rect')
+      .attr({
+        x: function(d) {
+          const pos = fill.xPosition(d)
+          return pos - (opts.verticalLinesWidth / 2)
+        },
+        y: function() {
+          if (opts.gutter.top) {
+            return opts.gutter.top
+          }
+
+          return opts.gutter
+
+        },
+        width: opts.verticalLinesWidth,
+        height: function() {
+          if (opts.gutter.top) {
+            return pool.height() - opts.gutter.top - opts.gutter.bottom
+          }
+
+          return pool.height() - 2 * opts.gutter
+
+        },
+        id: function(d) {
+          return d.id
+        },
+        class: 'd3-rect-fill d3-fill-vertical-line'
       })
   }
 

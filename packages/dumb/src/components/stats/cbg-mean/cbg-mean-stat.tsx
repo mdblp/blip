@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,6 +28,7 @@
 import React, { type FunctionComponent } from 'react'
 import styles from '../common/cbg-common.css'
 import stylesCbgMeanStat from './cbg-mean-stat.css'
+import commonStyles from '../../../styles/stat-common.css'
 import Box from '@mui/material/Box'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { computeBgClassesBarStyle, computeCBGStyle } from '../common/cbg-utils'
@@ -43,13 +44,13 @@ export interface CBGMeanStatProps {
 
 const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
   const { bgClasses, title, tooltipValue, units, value } = props
-  const valueBasedStyles = computeCBGStyle(value, bgClasses)
+  const valueBasedStyles = computeCBGStyle(value, bgClasses, true)
   const bgClassesBarStyle = computeBgClassesBarStyle(bgClasses)
 
   return (
     <Box data-testid="cbg-mean-stat">
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <div>
+        <div className={commonStyles.title}>
           {title}
           <StatTooltip annotations={[tooltipValue]} />
         </div>
@@ -83,7 +84,7 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
                 style={{ left: valueBasedStyles.left }}
               />
             </div>
-            <Box className={valueBasedStyles.color} fontSize="20px" marginLeft="auto">
+            <Box className={valueBasedStyles.color} fontSize="20px" fontWeight="bold" marginLeft="auto">
               {value}
             </Box>
           </>

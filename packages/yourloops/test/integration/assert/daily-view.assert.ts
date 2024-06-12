@@ -46,6 +46,9 @@ import {
   ALARM_EVENT_KALEIDO_OCCLUSION_ID,
   ALARM_EVENT_LONG_HYPERGLYCEMIA_ID,
   ALARM_EVENT_LONG_HYPOGLYCEMIA_ID,
+  ALARM_EVENT_MEDISAFE_EMPTY_PUMP_BATTERY_ID,
+  ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID,
+  ALARM_EVENT_MEDISAFE_OCCLUSION_ID,
   ALARM_EVENT_NO_READINGS_HYPOGLYCEMIA_RISK_ID,
   ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID,
   ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID,
@@ -127,6 +130,9 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_DANA_EMPTY_RESERVOIR_ID}`, '12:35 pmAlarm 51002Reservoir emptyThere is no insulin left in the reservoir.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_DANA_INCOMPATIBLE_ACTIONS_ON_PUMP_ID}`, '12:40 pmAlarm 51003Incompatible action on the pumpCertain actions on the pump are not supported. Loop mode is now OFF and cannot be restarted for up to 3 hours.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_DANA_OCCLUSION_ID}`, '12:45 pmAlarm 51004OcclusionAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_EMPTY_PUMP_BATTERY_ID}`, '3:50 amAlarm 91001Pump battery emptyThe pump battery is empty.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID}`, '8:55 pmAlarm 91002Reservoir emptyThere is no insulin left in the reservoir.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`, '9:00 pmAlarm 91004OcclusionAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.')
   await checkTidelineContainerElementTooltip(`warmup_group_${WARMUP_01_ID}`,'6:00 pmSensor warmupSession end6:00 pm')
 }
 

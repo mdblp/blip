@@ -74,8 +74,7 @@ class DashboardSection extends React.Component {
       })
     } else if (this.props.title) {
       var headerClasses = cx({
-        'SectionHeader--nodata': section.noData,
-        'selectable': true
+        'SectionHeader--nodata': section.noData
       })
       titleContainer = (
         <h3 className={headerClasses}>{this.props.title}</h3>

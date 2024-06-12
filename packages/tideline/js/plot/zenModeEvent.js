@@ -43,7 +43,7 @@ function plotZenMode(pool, opts = {}) {
   const calculateWidth = (d) => utils.calculateWidth(d, opts)
 
   const height = pool.height()
-  const offset = height / 5 /2
+  const offset = height / 2
 
   function zenModeEvent(selection) {
     opts.xScale = pool.xScale().copy()

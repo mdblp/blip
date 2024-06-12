@@ -19,6 +19,7 @@ import _ from 'lodash'
 
 import picto from '../../img/parameter.png'
 import utils from './util/utils'
+import { DEFAULT_IMAGE_MARGIN, DEFAULT_OPTIONS_SIZE } from './util/eventsConstants'
 
 /**
  * @typedef {import("../tidelinedata").default} MedicalDataService
@@ -37,12 +38,13 @@ function plotDeviceParameterChange(pool, opts) {
   const defaults = {
     r: 14,
     padding: 4,
-    xScale: pool.xScale().copy()
+    xScale: pool.xScale().copy(),
+    size: DEFAULT_OPTIONS_SIZE
   }
 
   _.defaults(opts, defaults)
 
-  const offset = pool.height() / 5
+  const offset = pool.height() - DEFAULT_IMAGE_MARGIN
   const width = 40
 
   const xPos = (/** @type {Datum} */ d) => utils.xPos(d, opts) - (width / 2)
@@ -73,7 +75,7 @@ function plotDeviceParameterChange(pool, opts) {
       parameterGroup.append('image')
         .attr({
           'x': xPos,
-          'y': 0,
+          'y': pool.height() / 2 - opts.size / 2,
           width,
           'height': offset,
           'xlink:href': picto,

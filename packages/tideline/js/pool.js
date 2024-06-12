@@ -44,6 +44,7 @@ function Pool(container) {
 
   let mainSVG = d3.select('#' + container.id())
   let id = ''
+  let dataTestId = ''
   let yPosition = 0
   let gutterWeight = 0
   /** @type {Labels} Chart name for the user */
@@ -209,6 +210,14 @@ function Pool(container) {
     if (!arguments.length) return id
     id = x
     group = selection.append('g').attr('id', id)
+    return this
+  }
+
+  this.dataTestId = function(x, id) {
+    if (!arguments.length) return dataTestId
+    dataTestId = x
+    const group = mainSVG.select(`#${id}`)
+    group.attr('data-testid', dataTestId)
     return this
   }
 
