@@ -67,8 +67,8 @@ function drawFill(pool, opts = defaults) {
       fills.enter()
         .append('rect')
         .attr({
-          cursor: opts.cursor ? opts.cursor : 'auto',
-          x: function(d, i) {
+          'cursor': opts.cursor ? opts.cursor : 'auto',
+          'x': function(d, i) {
             // dataGutter is the extra space on the right & left edges
             // of each "pool" in weekly view
             if (opts.dataGutter) {
@@ -78,14 +78,14 @@ function drawFill(pool, opts = defaults) {
             }
             return fill.xPosition(d)
           },
-          y: function() {
+          'y': function() {
             if (opts.gutter.top) {
               return opts.gutter.top
             }
 
             return opts.gutter
           },
-          width: function(d, i) {
+          'width': function(d, i) {
             // dataGutter is the extra space on the right & left edges
             // of each "pool" in weekly view
             if (opts.dataGutter) {
@@ -95,7 +95,7 @@ function drawFill(pool, opts = defaults) {
             }
             return fill.width(d)
           },
-          height: function() {
+          'height': function() {
             if (opts.gutter.top) {
               return pool.height() - opts.gutter.top - opts.gutter.bottom
             }
@@ -103,10 +103,11 @@ function drawFill(pool, opts = defaults) {
             return pool.height() - 2 * opts.gutter
 
           },
-          id: function(d) {
+          'id': function(d) {
             return d.id
           },
-          class: 'd3-fill d3-rect-fill d3-fill-background'
+          'data-testid': function(d){return d.id},
+          'class': 'd3-fill d3-rect-fill d3-fill-background'
         })
         .on('click', function(fillRect) {
           if (opts.emitter) {
