@@ -1,6 +1,6 @@
 {
   "name": "staticwebsite-cdk",
-  "version": "3.3.0-TERUMO",
+  "version": "3.3.0-terumo",
   "bin": {
     "staticwebsite-cdk": "bin/staticwebsite-cdk.js"
   },

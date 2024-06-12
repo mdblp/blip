@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.3.0-TERUMO - 2024-06-12
+## 3.3.0-terumo - 2024-06-12
 ### Changed
 - YLP-3075 As a user, I want to be able to choose Japan or UK country
 - YLP-3087 As a user, I want to see the medisafe pump event in yourloops
