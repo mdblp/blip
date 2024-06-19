@@ -8,10 +8,15 @@ It is based on Tidepool Blip 1.27.
 - YLP-2974 Update colors in Daily and Trends views to match DBL theme
 - YLP-2992 As a user, I want to see the daily numbers of rescue carbs intake / manual boluses and not the average
 - YLP-3019 New design for stats
+- YLP-3075 As a user, I want to be able to choose Japan or UK country
+- YLP-3087 As a user, I want to see the medisafe pump event in yourloops
 
 
 ### Engineering use
 - YLP-2948 Updated failing tests because of the time change
+
+### Fixed
+- YLP-2527 Number of meal Carbs hidden behind a bolus bar
 
 ## 3.3.0 - 2024-04-05
 ### Changed
