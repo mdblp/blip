@@ -1,1 +1,23 @@
-{}
+{
+  "BOLUS_AGGRESSIVENESS_FACTOR": "Agressiviteit bij hyperglykemie",
+  "HEIGHT": "Lengte",
+  "LARGE_MEAL_BREAKFAST": "Ontbijt - Groot",
+  "LARGE_MEAL_DINNER": "Avondmaal - Groot",
+  "LARGE_MEAL_LUNCH": "Lunch - Groot",
+  "MEAL_RATIO_BREAKFAST": "Ontbijtverhouding",
+  "MEAL_RATIO_BREAKFAST_FACTOR": "Agressiviteit voor ontbijt",
+  "MEAL_RATIO_DINNER_FACTOR": "Agressiviteit voor avondmaal",
+  "MEAL_RATIO_LUNCH_FACTOR": "Agressiviteit voor lunch",
+  "MEDIUM_MEAL_BREAKFAST": "Ontbijt - Gemiddeld",
+  "MEDIUM_MEAL_DINNER": "Avondmaal - Gemiddeld",
+  "MEDIUM_MEAL_LUNCH": "Lunch - Gemiddeld",
+  "PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA": "Agressiviteit bij normoglykemie",
+  "PATIENT_GLYCEMIA_TARGET": "Streefwaarde van de glucosespiegel",
+  "PATIENT_GLY_HYPER_LIMIT": "Grenswaarde voor hyperglykemie",
+  "PATIENT_GLY_HYPO_LIMIT": "Grenswaarde voor hypoglykemie",
+  "SMALL_MEAL_BREAKFAST": "Ontbijt - Klein",
+  "SMALL_MEAL_DINNER": "Avondmaal - Klein",
+  "SMALL_MEAL_LUNCH": "Lunch - Klein",
+  "TOTAL_INSULIN_FOR_24H": "Totale dagelijkse insulinedosis",
+  "WEIGHT": "Gewicht"
+}

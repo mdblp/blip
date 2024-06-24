@@ -1,1 +1,23 @@
-{}
+{
+  "BOLUS_AGGRESSIVENESS_FACTOR": "Aggressività in iperglicemia",
+  "HEIGHT": "Taglia",
+  "LARGE_MEAL_BREAKFAST": "Colazione - grande",
+  "LARGE_MEAL_DINNER": "Cena - grande",
+  "LARGE_MEAL_LUNCH": "Pranzo - grande",
+  "MEAL_RATIO_BREAKFAST": "Rapporto colazione",
+  "MEAL_RATIO_BREAKFAST_FACTOR": "Aggressività a colazione",
+  "MEAL_RATIO_DINNER_FACTOR": "Aggressività a cena",
+  "MEAL_RATIO_LUNCH_FACTOR": "Aggressività a pranzo",
+  "MEDIUM_MEAL_BREAKFAST": "Colazione - media",
+  "MEDIUM_MEAL_DINNER": "Cena - media",
+  "MEDIUM_MEAL_LUNCH": "Pranzo - medio",
+  "PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA": "Aggressività in normoglicemia",
+  "PATIENT_GLYCEMIA_TARGET": "Livello glicemico ideale",
+  "PATIENT_GLY_HYPER_LIMIT": "Soglia di iperglicemia",
+  "PATIENT_GLY_HYPO_LIMIT": "Soglia di ipoglicemia",
+  "SMALL_MEAL_BREAKFAST": "Colazione - piccola",
+  "SMALL_MEAL_DINNER": "Cena - piccola",
+  "SMALL_MEAL_LUNCH": "Pranzo - piccolo",
+  "TOTAL_INSULIN_FOR_24H": "Quantità di insulina giornaliera",
+  "WEIGHT": "Peso"
+}

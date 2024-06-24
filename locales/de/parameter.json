@@ -1,2 +1,23 @@
 {
+  "BOLUS_AGGRESSIVENESS_FACTOR": "Aggressivität bei Hyperglykämie",
+  "HEIGHT": "Größe",
+  "LARGE_MEAL_BREAKFAST": "Frühstück - Groß",
+  "LARGE_MEAL_DINNER": "Abendessen - Groß",
+  "LARGE_MEAL_LUNCH": "Mittagessen - Groß",
+  "MEAL_RATIO_BREAKFAST": "Frühstück-KH-Faktor",
+  "MEAL_RATIO_BREAKFAST_FACTOR": "Aggressivität zum Frühstück",
+  "MEAL_RATIO_DINNER_FACTOR": "Aggressivität zum Abendessen",
+  "MEAL_RATIO_LUNCH_FACTOR": "Aggressivität zum Mittagessen",
+  "MEDIUM_MEAL_BREAKFAST": "Frühstück - Mittel",
+  "MEDIUM_MEAL_DINNER": "Abendessen - Mittel",
+  "MEDIUM_MEAL_LUNCH": "Mittagessen - Mittel",
+  "PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA": "Aggressivität bei Normoglykämie",
+  "PATIENT_GLYCEMIA_TARGET": "Glukose-Zielwert",
+  "PATIENT_GLY_HYPER_LIMIT": "Hyperglykämie Schwellenwert",
+  "PATIENT_GLY_HYPO_LIMIT": "Hypoglykämie Schwellenwert",
+  "SMALL_MEAL_BREAKFAST": "Frühstück- Klein",
+  "SMALL_MEAL_DINNER": "Abendessen - Klein",
+  "SMALL_MEAL_LUNCH": "Mittagessen - Klein",
+  "TOTAL_INSULIN_FOR_24H": "Tages-Gesamt-Insulindosis",
+  "WEIGHT": "Körpergewicht"
 }

@@ -1,2 +1,23 @@
 {
+  "BOLUS_AGGRESSIVENESS_FACTOR": "Réactivité en hyperglycémie",
+  "HEIGHT": "Taille",
+  "LARGE_MEAL_BREAKFAST": "Petit-déjeuner - grand",
+  "LARGE_MEAL_DINNER": "Dîner - grand",
+  "LARGE_MEAL_LUNCH": "Déjeuner - grand",
+  "MEAL_RATIO_BREAKFAST": "Ratio petit-déjeuner",
+  "MEAL_RATIO_BREAKFAST_FACTOR": "Réactivité du petit déjeuner",
+  "MEAL_RATIO_DINNER_FACTOR": "Réactivité du dîner",
+  "MEAL_RATIO_LUNCH_FACTOR": "Réactivité du déjeuner",
+  "MEDIUM_MEAL_BREAKFAST": "Petit-déjeuner - moyen",
+  "MEDIUM_MEAL_DINNER": "Dîner - moyen",
+  "MEDIUM_MEAL_LUNCH": "Déjeuner - moyen",
+  "PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA": "Réactivité en normoglycémie",
+  "PATIENT_GLYCEMIA_TARGET": "Objectif cible de glycémie",
+  "PATIENT_GLY_HYPER_LIMIT": "Seuil d'hyperglycémie",
+  "PATIENT_GLY_HYPO_LIMIT": "Seuil d'hypoglycémie",
+  "SMALL_MEAL_BREAKFAST": "Petit-déjeuner - petit",
+  "SMALL_MEAL_DINNER": "Dîner - petit",
+  "SMALL_MEAL_LUNCH": "Déjeuner - petit",
+  "TOTAL_INSULIN_FOR_24H": "Insuline Totale sur 24h",
+  "WEIGHT": "Poids"
 }

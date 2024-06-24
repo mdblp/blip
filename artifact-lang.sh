@@ -10,8 +10,7 @@ function retrieveLanguageParameters() {
   OWNER=${GIT_OWNER:-mdblp}
   REPO=translations
   # GIT_BRANCH can be a branch or a tag
-  # GIT_BRANCH=master
-  GIT_BRANCH=dblp.0.5.0
+  GIT_BRANCH=master
 
   if [ -n "${GIT_TOKEN:-}" ]; then
     echo "Having GIT_TOKEN, fetching parameters translation"

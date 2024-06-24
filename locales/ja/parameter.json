@@ -1,1 +1,23 @@
-{}
+{
+  "BOLUS_AGGRESSIVENESS_FACTOR": "高血糖における応答性",
+  "HEIGHT": "身長",
+  "LARGE_MEAL_BREAKFAST": "朝食-多量",
+  "LARGE_MEAL_DINNER": "夕食-多量",
+  "LARGE_MEAL_LUNCH": "昼食-多量",
+  "MEAL_RATIO_BREAKFAST": "Breakfast ratio",
+  "MEAL_RATIO_BREAKFAST_FACTOR": "朝食の応答性",
+  "MEAL_RATIO_DINNER_FACTOR": "夕食時の応答性",
+  "MEAL_RATIO_LUNCH_FACTOR": "昼食時の応答性",
+  "MEDIUM_MEAL_BREAKFAST": "標準的な朝食量",
+  "MEDIUM_MEAL_DINNER": "標準的な夕食量",
+  "MEDIUM_MEAL_LUNCH": "標準的な昼食量",
+  "PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA": "正常血糖における応答性",
+  "PATIENT_GLYCEMIA_TARGET": "目標血糖値",
+  "PATIENT_GLY_HYPER_LIMIT": "高血糖しきい値",
+  "PATIENT_GLY_HYPO_LIMIT": "低血糖しきい値",
+  "SMALL_MEAL_BREAKFAST": "朝食-少量",
+  "SMALL_MEAL_DINNER": "夕食-少量",
+  "SMALL_MEAL_LUNCH": "昼食-少量",
+  "TOTAL_INSULIN_FOR_24H": "一日の総インスリン投与量",
+  "WEIGHT": "体重"
+}
