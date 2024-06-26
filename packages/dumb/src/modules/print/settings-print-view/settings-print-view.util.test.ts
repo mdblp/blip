@@ -59,23 +59,23 @@ describe('Settings print view util', () => {
 
   const level1Parameters = [{
     level: 1,
-    name: 'MEDIUM_MEAL_LUNCH',
+    name: 'Lunch - average',
     unit: Unit.Gram,
     value: '96.0'
   }, {
     level: 1,
-    name: 'WEIGHT',
+    name: 'Weight',
     unit: Unit.Kilogram,
     value: '78.0'
   }, {
     level: 1,
-    name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA',
+    name: 'Aggressiveness in normoglycemia',
     unit: Unit.Percent,
     value: '97'
   }]
   const level2Parameters = [{
     level: 2,
-    name: 'IOB_TAU_S',
+    name: 'Height',
     unit: Unit.Minute,
     value: '80'
   }]
@@ -276,21 +276,21 @@ describe('Settings print view util', () => {
 
       expect(result.get(1)).toEqual([
         {
-          ...level1Parameters[0],
-          rawData: 'MEDIUM_MEAL_LUNCH'
+          ...level1Parameters[2],
+          rawData: 'Aggressiveness in normoglycemia'
         },
         {
-          ...level1Parameters[2],
-          rawData: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA'
+          ...level1Parameters[0],
+          rawData: 'Lunch - average'
         },
         {
           ...level1Parameters[1],
-          rawData: 'WEIGHT'
+          rawData: 'Weight'
         }
       ])
       expect(result.get(2)).toEqual([{
         ...level2Parameters[0],
-        rawData: 'IOB_TAU_S'
+        rawData: 'Height'
       }])
       expect(result.get(3)).toBeUndefined()
       expect(result.get(0)).toBeUndefined()
