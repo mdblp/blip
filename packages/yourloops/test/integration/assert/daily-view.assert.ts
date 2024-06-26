@@ -46,6 +46,9 @@ import {
   ALARM_EVENT_KALEIDO_OCCLUSION_ID,
   ALARM_EVENT_LONG_HYPERGLYCEMIA_ID,
   ALARM_EVENT_LONG_HYPOGLYCEMIA_ID,
+  ALARM_EVENT_MEDISAFE_EMPTY_PUMP_BATTERY_ID,
+  ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID,
+  ALARM_EVENT_MEDISAFE_OCCLUSION_ID,
   ALARM_EVENT_NO_READINGS_HYPOGLYCEMIA_RISK_ID,
   ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID,
   ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID,
@@ -102,7 +105,7 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip(`carb_group_${CARB_ID}`, '2:00 pmRecommended16gConfirmed15g')
   await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_ID}`, `3:00 pmPhysical ActivityIntensitymoderateDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_TIME).format('h')}:00 pm`)
   await checkTidelineContainerElementTooltip(`reservoir_group_${RESERVOIR_CHANGE_ID}`, '7:00 pmCartridge change')
-  await checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, '10:00 am10:00 amMEAL_RATIO_LUNCH_FACTOR110→100%')
+  await checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, '10:00 am10:00 amAggressiveness for lunch110→100%')
   await checkTidelineContainerElementTooltip(`cbg_${CBG_ID}`, '5:30 pmGlucose189')
   await checkTidelineContainerElementTooltip(`smbg_group_${SMBG_ID}`, '5:15 pmGlucose189Calibration')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_HYPERGLYCEMIA_ID}`, '11:00 amAlert 10113HyperglycemiaG6 readings are above a configurable threshold (250 mg/dL by default).IMPORTANT: this alert is triggered only if loop mode is OFF.Occurred multiple times with a frequency of 30 minutes or less:at 11:05 am')
@@ -127,6 +130,9 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_DANA_EMPTY_RESERVOIR_ID}`, '12:35 pmAlarm 51002Reservoir emptyThere is no insulin left in the reservoir.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_DANA_INCOMPATIBLE_ACTIONS_ON_PUMP_ID}`, '12:40 pmAlarm 51003Incompatible action on the pumpCertain actions on the pump are not supported. Loop mode is now OFF and cannot be restarted for up to 3 hours.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_DANA_OCCLUSION_ID}`, '12:45 pmAlarm 51004OcclusionAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_EMPTY_PUMP_BATTERY_ID}`, '3:50 amAlarm 91001Pump battery emptyThe pump battery is empty.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID}`, '8:55 pmAlarm 91002Reservoir emptyThere is no insulin left in the reservoir.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`, '9:00 pmAlarm 91004OcclusionAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.')
   await checkTidelineContainerElementTooltip(`warmup_group_${WARMUP_01_ID}`,'6:00 pmSensor warmupSession end6:00 pm')
 }
 
@@ -142,7 +148,7 @@ export const checkDailyTidelineContainerTooltipsMmolL = async () => {
   await checkTidelineContainerElementTooltip(`carb_group_${CARB_ID}`, '2:00 pmRecommended16gConfirmed15g')
   await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_ID}`, `3:00 pmPhysical ActivityIntensitymoderateDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_TIME).format('h')}:00 pm`)
   await checkTidelineContainerElementTooltip(`reservoir_group_${RESERVOIR_CHANGE_ID}`, '7:00 pmCartridge change')
-  await checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, '10:00 am10:00 amMEAL_RATIO_LUNCH_FACTOR110→100%')
+  await checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, '10:00 am10:00 amAggressiveness for lunch110→100%')
   await checkTidelineContainerElementTooltip(`cbg_${CBG_ID}`, '5:30 pmGlucose10.5')
   await checkTidelineContainerElementTooltip(`smbg_group_${SMBG_ID}`, '5:15 pmGlucose10.5Calibration')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_HYPERGLYCEMIA_ID}`, '11:00 amAlert 10113HyperglycemiaG6 readings are above a configurable threshold (13.9 mmol/L by default).IMPORTANT: this alert is triggered only if loop mode is OFF.Occurred multiple times with a frequency of 30 minutes or less:at 11:05 am')

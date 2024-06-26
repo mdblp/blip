@@ -73,8 +73,14 @@
     "IT": {
       "name": "Italy"
     },
+    "JP": {
+      "name": "Japan"
+    },
     "NL": {
       "name": "Netherlands"
+    },
+    "UK": {
+      "name": "United Kingdom"
     }
   }
 }

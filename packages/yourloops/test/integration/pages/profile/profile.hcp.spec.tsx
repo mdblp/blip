@@ -130,6 +130,12 @@ describe('Profile page for hcp', () => {
     fireEvent.click(screen.getByRole('option', { name: 'Nurse' }))
 
     fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
+    fireEvent.click(screen.getByRole('option', { name: 'Japan' }))
+
+    fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
+    fireEvent.click(screen.getByRole('option', { name: 'United Kingdom' }))
+
+    fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
     fireEvent.click(screen.getByRole('option', { name: 'Austria' }))
 
     await userEvent.clear(fields.firstNameInput)

@@ -94,9 +94,11 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
   const getContentTitleByCode = (alarmCode: AlarmCode): string => {
     switch (alarmCode) {
       case AlarmCode.DanaEmptyPumpBattery:
-        return t('alarm-dana-empty-pump-battery-title')
+      case AlarmCode.MedisafeEmptyPumpBattery:
+        return t('pump-battery-empty')
       case AlarmCode.DanaEmptyReservoir:
-        return t('alarm-dana-empty-reservoir-title')
+      case AlarmCode.MedisafeEmptyPumpReservoir:
+        return t('reservoir-empty')
       case AlarmCode.DanaIncompatibleActionsOnPump:
         return t('alarm-dana-incompatible-actions-on-pump-title')
       case AlarmCode.Hyperglycemia:
@@ -119,6 +121,7 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
       case AlarmCode.DanaOcclusion:
       case AlarmCode.InsightOcclusion:
       case AlarmCode.KaleidoOcclusion:
+      case AlarmCode.MedisafeOcclusion:
         return t('alarm-occlusion-title')
       case AlarmCode.KaleidoEmptyInsulinCartridge:
         return t('alarm-kaleido-empty-insulin-cartridge-title')
@@ -176,12 +179,15 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
 
     switch (alarmCode) {
       case AlarmCode.DanaEmptyPumpBattery:
-        return [t('alarm-dana-empty-pump-battery-description')]
+      case AlarmCode.MedisafeEmptyPumpBattery:
+        return [t('the-pump-battery-is-empty')]
       case AlarmCode.DanaEmptyReservoir:
-        return [t('alarm-dana-empty-reservoir-description')]
+      case AlarmCode.MedisafeEmptyPumpReservoir:
+        return [t('no-insulin-left-in-reservoir')]
       case AlarmCode.DanaIncompatibleActionsOnPump:
         return [t('alarm-dana-incompatible-actions-on-pump-description')]
       case AlarmCode.DanaOcclusion:
+      case AlarmCode.MedisafeOcclusion:
         return [t('alarm-dana-occlusion-description')]
       case AlarmCode.Hyperglycemia:
         return [t('alarm-hyperglycemia-description', {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -36,8 +36,10 @@ export enum CountryCodes {
   France = 'FR',
   Germany = 'DE',
   Italy = 'IT',
+  Japan = 'JP',
   Netherlands = 'NL',
   Spain = 'SP',
   Switzerland = 'CH',
+  UnitedKingdom = 'UK',
   Unknown = ''
 }
