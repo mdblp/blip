@@ -10,6 +10,9 @@ It is based on Tidepool Blip 1.27.
 ### Engineering use
 - YLP-2948 Updated failing tests because of the time change
 
+### Fixed
+- YLP-3104 Fix parameters locales issues (move the locale files in the repo)
+
 ## 3.3.0 - 2024-04-05
 ### Changed
 - YLP-2824 Display pump logos based on manufacturer
