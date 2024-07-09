@@ -72,14 +72,14 @@ describe('getCarbsData', () => {
       const meals = buildMealData(bgDataSourceTwoWeeks)
       const rescueCarbs = CarbsStatisticsService.getRescueCarbsAverageStatistics(meals, 14, dateFilterTwoWeeks)
       const expected: RescueCarbsAverageStatistics = new Map([
-        [HoursRange.MidnightToThree, { confirmedCarbs: 1.1, numberOfIntakes: 0.2, recommendedCarbs: 0.4 }],
-        [HoursRange.ThreeToSix, { confirmedCarbs: 1.1, numberOfIntakes: 0.2, recommendedCarbs: 1.8 }],
-        [HoursRange.SixToNine, { confirmedCarbs: 0, numberOfIntakes: 0, recommendedCarbs: 0 }],
-        [HoursRange.NineToTwelve, { confirmedCarbs: 0, numberOfIntakes: 0, recommendedCarbs: 0 }],
-        [HoursRange.TwelveToFifteen, { confirmedCarbs: 1.1, numberOfIntakes: 0.2, recommendedCarbs: 0.9 }],
-        [HoursRange.FifteenToEighteen, { confirmedCarbs: 0, numberOfIntakes: 0, recommendedCarbs: 0 }],
-        [HoursRange.EighteenToTwentyOne, { confirmedCarbs: 1.1, numberOfIntakes: 0.2, recommendedCarbs: 1.1 }],
-        [HoursRange.TwentyOneToMidnight, { confirmedCarbs: 1.1, numberOfIntakes: 0.2, recommendedCarbs: 1.9 }]
+        [HoursRange.MidnightToThree, { confirmedCarbs: 1.1, numberOfRescueCarbs: 0.2, recommendedCarbs: 0.4, override: '0' }],
+        [HoursRange.ThreeToSix, { confirmedCarbs: 1.1, numberOfRescueCarbs: 0.2, recommendedCarbs: 1.8, override: '0'  }],
+        [HoursRange.SixToNine, { confirmedCarbs: 0, numberOfRescueCarbs: 0, recommendedCarbs: 0, override: '0' }],
+        [HoursRange.NineToTwelve, { confirmedCarbs: 0, numberOfRescueCarbs: 0, recommendedCarbs: 0, override: '0' }],
+        [HoursRange.TwelveToFifteen, { confirmedCarbs: 1.1, numberOfRescueCarbs: 0.2, recommendedCarbs: 0.9, override: '0'  }],
+        [HoursRange.FifteenToEighteen, { confirmedCarbs: 0, numberOfRescueCarbs: 0, recommendedCarbs: 0, override: '0'  }],
+        [HoursRange.EighteenToTwentyOne, { confirmedCarbs: 1.1, numberOfRescueCarbs: 0.2, recommendedCarbs: 1.1, override: '0'  }],
+        [HoursRange.TwentyOneToMidnight, { confirmedCarbs: 1.1, numberOfRescueCarbs: 0.2, recommendedCarbs: 1.9, override: '0'  }]
       ])
       expect(rescueCarbs).toEqual(expected)
     })

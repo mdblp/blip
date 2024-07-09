@@ -38,7 +38,7 @@ import {
 } from '../../models/statistics/carbs-statistics.model'
 import { getHours } from '../time/time.service'
 import { HoursRange } from '../../models/statistics/satistics.model'
-
+import { formatInsulin } from 'dumb/dist/src/utils/format/format.util'
 
 function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter): CarbsStatistics {
   const filteredMeal = MealService.filterOnDate(meal, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
@@ -61,7 +61,6 @@ function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilte
 
 function getRescueCarbsAverageStatistics(meals: Meal[], numberOfDays: number, dateFilter: DateFilter): RescueCarbsAverageStatistics {
   const carbsMap = buildHoursRangeMap<Meal>()
-
   const midnightToThree = carbsMap.get(HoursRange.MidnightToThree) as Meal[]
   const threeToSix = carbsMap.get(HoursRange.ThreeToSix) as Meal[]
   const sixToNine = carbsMap.get(HoursRange.SixToNine) as Meal[]
@@ -109,26 +108,33 @@ function getRescueCarbsAverageStatistics(meals: Meal[], numberOfDays: number, da
   })
 
   return new Map([
-    [HoursRange.MidnightToThree, getRescueCarbsAveragePerRange(midnightToThree, numberOfDays)],
-    [HoursRange.ThreeToSix, getRescueCarbsAveragePerRange(threeToSix, numberOfDays)],
-    [HoursRange.SixToNine, getRescueCarbsAveragePerRange(sixToNine, numberOfDays)],
-    [HoursRange.NineToTwelve, getRescueCarbsAveragePerRange(nineToTwelve, numberOfDays)],
-    [HoursRange.TwelveToFifteen, getRescueCarbsAveragePerRange(twelveToFifteen, numberOfDays)],
-    [HoursRange.FifteenToEighteen, getRescueCarbsAveragePerRange(fifteenToEighteen, numberOfDays)],
-    [HoursRange.EighteenToTwentyOne, getRescueCarbsAveragePerRange(eighteenToTwentyOne, numberOfDays)],
-    [HoursRange.TwentyOneToMidnight, getRescueCarbsAveragePerRange(twentyOneToMidnight, numberOfDays)]
+    [HoursRange.MidnightToThree, getRescueCarbsAveragePerRange(midnightToThree)],
+    [HoursRange.ThreeToSix, getRescueCarbsAveragePerRange(threeToSix)],
+    [HoursRange.SixToNine, getRescueCarbsAveragePerRange(sixToNine)],
+    [HoursRange.NineToTwelve, getRescueCarbsAveragePerRange(nineToTwelve)],
+    [HoursRange.TwelveToFifteen, getRescueCarbsAveragePerRange(twelveToFifteen)],
+    [HoursRange.FifteenToEighteen, getRescueCarbsAveragePerRange(fifteenToEighteen)],
+    [HoursRange.EighteenToTwentyOne, getRescueCarbsAveragePerRange(eighteenToTwentyOne)],
+    [HoursRange.TwentyOneToMidnight, getRescueCarbsAveragePerRange(twentyOneToMidnight)]
   ])
 }
 
-function getRescueCarbsAveragePerRange(meals: Meal[], numberOfDays: number): RescueCarbsAveragePerRange {
+function getRescueCarbsAveragePerRange(meals: Meal[]): RescueCarbsAveragePerRange {
   const numberOfRescueCarbs = meals.length
 
-  const confirmedCarbsTotal = meals.reduce((totalCarbs, meal) => totalCarbs + meal.nutrition.carbohydrate.net, 0)
+  const confirmedCarbs = meals.reduce((totalCarbs, meal) => totalCarbs + meal.nutrition.carbohydrate.net, 0)
 
-  const recommendedCarbsTotal = meals.reduce((totalCarbs, meal) => {
-    console.log(meal)
+  const numberOfRecommendedCarbs = meals.map((meal) => {
+    if (meal.prescribedNutrition){
+      return meal.prescribedNutrition.carbohydrate.net
+    }
+    else {
+      return undefined
+    }
+  })
+
+  const recommendedCarbsValues = meals.reduce((totalCarbs, meal) => {
     if (meal.prescribedNutrition) {
-
       return totalCarbs + meal.prescribedNutrition.carbohydrate.net
     }
     else{
@@ -136,13 +142,18 @@ function getRescueCarbsAveragePerRange(meals: Meal[], numberOfDays: number): Res
     }
   }, 0)
 
-  const overrideCarbsTotal = confirmedCarbsTotal - recommendedCarbsTotal
+  console.log("recommended",recommendedCarbsValues)
+  console.log("confirmed",confirmedCarbs)
+
+  const recommendedCarbs = roundValue(recommendedCarbsValues / numberOfRecommendedCarbs.length)
+  const overrideValues = formatInsulin(confirmedCarbs - recommendedCarbsValues )
+  const override = confirmedCarbs > recommendedCarbsValues ? `+${overrideValues}` : overrideValues
 
   return {
     numberOfRescueCarbs,
-    confirmedCarbs: confirmedCarbsTotal,
-    recommendedCarbs: recommendedCarbsTotal,
-    overrideCarbsTotal: roundValue(overrideCarbsTotal / numberOfDays,1)
+    confirmedCarbs,
+    recommendedCarbs,
+    override
   }
 }
 
