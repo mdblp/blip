@@ -56,6 +56,8 @@ import styles from './alarm-event-tooltip.css'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { useTheme } from '@mui/material/styles'
+import { Device } from '../../../models/device.model'
+import { isDBLG1, isDBLG2, isDeviceVersionHigherOrEqual } from '../../../utils/device/device.utils'
 
 interface AlarmEventTooltipProps {
   alarmEvent: AlarmEvent
@@ -63,6 +65,7 @@ interface AlarmEventTooltipProps {
   side: Side
   bgPrefs: BgPrefs
   timePrefs: TimePrefs
+  device: Device
 }
 
 const DEFAULT_UNIT = MGDL_UNITS
@@ -75,7 +78,7 @@ const NO_READINGS_HYPOGLYCEMIA_RISK_DEFAULT_VALUE_MGDL = 100
 const URGENT_LOW_SOON_DEFAULT_VALUE_MGDL = 55
 
 export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
-  const { alarmEvent, bgPrefs, position, side, timePrefs } = props
+  const { alarmEvent, bgPrefs, position, side, timePrefs, device } = props
   const { t } = useTranslation('main')
   const theme = useTheme()
 
@@ -92,6 +95,7 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
   }
 
   const getContentTitleByCode = (alarmCode: AlarmCode): string => {
+    const isRecentDevice = isDBLG2(device.name) || (isDBLG1(device.name) && isDeviceVersionHigherOrEqual(device, 1, 17))
     switch (alarmCode) {
       case AlarmCode.DanaEmptyPumpBattery:
       case AlarmCode.MedisafeEmptyPumpBattery:
@@ -103,10 +107,10 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
         return t('alarm-dana-incompatible-actions-on-pump-title')
       case AlarmCode.Hyperglycemia:
       case AlarmCode.LongHyperglycemia:
-        return t('alarm-hyperglycemia-title')
+        return isRecentDevice ? t('alarm-hyperglycemia-title-new') : t('alarm-hyperglycemia-title-old')
       case AlarmCode.Hypoglycemia:
       case AlarmCode.LongHypoglycemia:
-        return t('alarm-hypoglycemia-title')
+        return isRecentDevice ? t('alarm-hypoglycemia-title-new') : t('alarm-hypoglycemia-title-old')
       case AlarmCode.InsightHypoglycemia:
         return t('alarm-insight-hypoglycemia-title')
       case AlarmCode.InsightEmptyInsulinCartridge:
@@ -128,11 +132,11 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
       case AlarmCode.KaleidoEmptyPumpBattery:
         return t('alarm-kaleido-empty-pump-battery-title')
       case AlarmCode.NoReadingsHypoglycemiaRisk:
-        return t('alarm-no-readings-hypoglycemia-risk-title')
+        return isRecentDevice ? t('alarm-no-readings-hypoglycemia-risk-title-new') : t('alarm-no-readings-hypoglycemia-risk-title-old')
       case AlarmCode.SensorSessionExpired:
         return t('alarm-sensor-session-expired-title')
       case AlarmCode.SuddenRiseInGlycemia:
-        return t('alarm-sudden-rise-glycemia-title')
+        return isRecentDevice ? t('alarm-sudden-rise-glycemia-title-new') : t('alarm-sudden-rise-glycemia-title-old')
       case AlarmCode.UrgentLowSoon:
         return t('alarm-urgent-low-soon-title')
       default:
@@ -176,6 +180,7 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
   const getContentTextByCode = (alarmCode: AlarmCode): string[] => {
     const bgUnit = bgPrefs.bgUnits
     const convertedValue = getDefaultConvertedValue(alarmCode, bgUnit)
+    const isRecentDevice = isDBLG2(device.name) || (isDBLG1(device.name) && isDeviceVersionHigherOrEqual(device, 1, 17))
 
     switch (alarmCode) {
       case AlarmCode.DanaEmptyPumpBattery:
@@ -223,7 +228,10 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
       case AlarmCode.KaleidoOcclusion:
         return [t('alarm-kaleido-occlusion-description'), t('alarm-pump-cannot-deliver-insulin-description')]
       case AlarmCode.LongHyperglycemia:
-        return [t('alarm-long-hyperglycemia-description', {
+        return isRecentDevice ? [t('alarm-long-hyperglycemia-description-new', {
+          value: convertedValue,
+          unit: bgUnit
+        })] : [t('alarm-long-hyperglycemia-description-old', {
           value: convertedValue,
           unit: bgUnit
         })]
@@ -274,9 +282,9 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={styles.container}>
-          <TooltipLine label={contentTitle} isBold/>
+          <TooltipLine label={contentTitle} isBold />
           {contentTextArray.map((textLine: string) => (
-            <TooltipLine label={textLine} key={textLine}/>
+            <TooltipLine label={textLine} key={textLine} />
           ))}
 
           {alarmEvent.otherOccurrencesDate &&
@@ -287,7 +295,8 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
                 paddingLeft={theme.spacing(1)}
                 borderLeft={`2px solid ${borderColor}`}
               >
-                <TooltipLine label={t('alarm-multiple-occurrences', { maxFrequency: GROUP_ALARMS_THRESHOLD_MINUTES })}/>
+                <TooltipLine
+                  label={t('alarm-multiple-occurrences', { maxFrequency: GROUP_ALARMS_THRESHOLD_MINUTES })} />
               </Box>
               {alarmEvent.otherOccurrencesDate.map((dateTime: string) => {
                 const occurrenceDateTitle = getDateTitle(dateTime, alarmEvent, timePrefs)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -36,7 +36,7 @@ import {
   checkTrendsTimeInRangeStatsWidgets,
   GMI_TOOLTIP
 } from '../../../assert/trends-view.assert'
-import { minimalTrendViewData, mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../../mock/data.api.mock'
+import { mockDataAPI, smbgData, timeInRangeStatsTrendViewData } from '../../../mock/data.api.mock'
 import { renderPage } from '../../../utils/render'
 import {
   checkAverageGlucoseStatWidget,
@@ -59,6 +59,7 @@ import {
   testTrendsWeekDayFilter
 } from '../../../use-cases/patient-data-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
 
 describe('Trends view for anyone', () => {
   const trendsRoute = AppUserRoute.Trends
@@ -71,7 +72,7 @@ describe('Trends view for anyone', () => {
 
   describe('with all kind of data', () => {
     it('should render trend page and statistics correctly', async () => {
-      mockDataAPI(minimalTrendViewData)
+      mockDataAPI(getMinimalTrendViewData())
       const router = renderPage(trendsRoute)
       await waitFor(() => {
         expect(router.state.location.pathname).toEqual(trendsRoute)

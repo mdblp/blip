@@ -50,7 +50,7 @@ import {
 import { checkMonitoringAlertsCard, checkMonitoringAlertsCardNoData } from '../assert/monitoring-alerts.assert'
 import { checkTrendsStatsWidgetsTooltips } from '../assert/trends-view.assert'
 import {
-  checkDailyStatsWidgetsTooltips,
+  checkDailyStatsWidgetsTooltips, checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware,
   checkDailyTidelineContainerTooltipsMgdl,
   checkDailyTidelineContainerTooltipsMmolL,
   checkDailyTimeInRangeStatsWidgetsMgdl,
@@ -141,6 +141,10 @@ export const testDailyViewTooltipsAndValuesMgdl = async () => {
 
   await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
   await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
+}
+
+export const testDailyViewTooltipsForDBLG2OrRecentSoftware = async () => {
+  await checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware()
 }
 
 export const testDailyViewTooltipsAndValuesMmolL = async () => {
