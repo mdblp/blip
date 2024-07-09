@@ -36,6 +36,7 @@ import styles from 'dumb/src/components/tooltips/common/tooltip-line/tooltip-lin
 export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }> = ({ rescueCarbs }) => {
   const { classes } = useCarbsAndBolusStyles()
   const { t } = useTranslation()
+  const override = Math.sign(rescueCarbs.override) === 1 ? `+${rescueCarbs.override}` : rescueCarbs.override
 
 
   return (
@@ -54,11 +55,11 @@ export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }>
       <Box className="content" data-testid="rescue-carbs-tooltip-content">
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">{t('number-of-rescue-carbs')}</Typography>
-          <Typography variant="body2">{rescueCarbs.numberOfRescueCarbs}</Typography>
+          <Typography variant="body2">{rescueCarbs.totalNumberOfRescueCarbs}</Typography>
         </div>
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">{t('number-of-rescue-carbs-modified')}</Typography>
-          <Typography variant="body2">{rescueCarbs.confirmedCarbs}g</Typography>
+          <Typography variant="body2">{rescueCarbs.confirmedCarbs}</Typography>
         </div>
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">{t('recommended-carbs')}</Typography>
@@ -66,7 +67,7 @@ export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }>
         </div>
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">Override</Typography>
-          <Typography variant="body2" className={styles.colorUndelivered}> {rescueCarbs.override}g</Typography>
+          <Typography variant="body2" className={styles.colorUndelivered}> {override}g</Typography>
         </div>
       </Box>
     </Box>

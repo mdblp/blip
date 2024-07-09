@@ -30,7 +30,7 @@ import type Wizard from '../../models/medical/datum/wizard.model'
 import type DateFilter from '../../models/time/date-filter.model'
 import MealService from '../medical/datum/meal.service'
 import WizardService from '../medical/datum/wizard.service'
-import { buildHoursRangeMap, getWeekDaysFilter, roundValue, sumValues } from './statistics.utils'
+import { buildHoursRangeMap, getWeekDaysFilter, sumValues } from './statistics.utils'
 import {
   type CarbsStatistics,
   RescueCarbsAveragePerRange,
@@ -38,7 +38,6 @@ import {
 } from '../../models/statistics/carbs-statistics.model'
 import { getHours } from '../time/time.service'
 import { HoursRange } from '../../models/statistics/satistics.model'
-import { formatInsulin } from 'dumb/dist/src/utils/format/format.util'
 
 function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter): CarbsStatistics {
   const filteredMeal = MealService.filterOnDate(meal, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
@@ -120,40 +119,28 @@ function getRescueCarbsAverageStatistics(meals: Meal[], numberOfDays: number, da
 }
 
 function getRescueCarbsAveragePerRange(meals: Meal[]): RescueCarbsAveragePerRange {
-  const numberOfRescueCarbs = meals.length
+  const totalNumberOfRescueCarbs = meals.length
 
-  const confirmedCarbs = meals.reduce((totalCarbs, meal) => totalCarbs + meal.nutrition.carbohydrate.net, 0)
+  const confirmedCarbs = meals.map((meal) =>  meal.nutrition.carbohydrate.net).length
+  const recommendedCarbs = meals.map((meal) => meal.prescribedNutrition?.carbohydrate.net).length
 
-  const numberOfRecommendedCarbs = meals.map((meal) => {
-    if (meal.prescribedNutrition){
-      return meal.prescribedNutrition.carbohydrate.net
-    }
-    else {
-      return undefined
-    }
-  })
 
-  const recommendedCarbsValues = meals.reduce((totalCarbs, meal) => {
-    if (meal.prescribedNutrition) {
-      return totalCarbs + meal.prescribedNutrition.carbohydrate.net
+  const overrideValues = meals.reduce(( totalCarbs, meal) => {
+    if(meal.prescribedNutrition){
+      return totalCarbs + ( meal.nutrition.carbohydrate.net - meal.prescribedNutrition.carbohydrate.net)
     }
     else{
       return 0
     }
   }, 0)
 
-  console.log("recommended",recommendedCarbsValues)
-  console.log("confirmed",confirmedCarbs)
-
-  const recommendedCarbs = roundValue(recommendedCarbsValues / numberOfRecommendedCarbs.length)
-  const overrideValues = formatInsulin(confirmedCarbs - recommendedCarbsValues )
-  const override = confirmedCarbs > recommendedCarbsValues ? `+${overrideValues}` : overrideValues
+  console.log("override",overrideValues)
 
   return {
-    numberOfRescueCarbs,
+    totalNumberOfRescueCarbs,
     confirmedCarbs,
     recommendedCarbs,
-    override
+    override: overrideValues / totalNumberOfRescueCarbs
   }
 }
 

@@ -36,7 +36,7 @@ import {
   ManualBolusAverageStatistics,
   type TotalInsulinAndWeightStatistics
 } from '../../models/statistics/basal-bolus-statistics.model'
-import { buildHoursRangeMap, getWeekDaysFilter } from './statistics.utils'
+import { buildHoursRangeMap, getWeekDaysFilter, roundValue } from './statistics.utils'
 import type PumpSettings from '../../models/medical/datum/pump-settings.model'
 import { type ParameterConfig } from '../../models/medical/datum/pump-settings.model'
 import { type TimeInAutoStatistics } from '../../models/statistics/time-in-auto.model'
@@ -190,11 +190,11 @@ function getManualBolusAverageStatistics(boluses: Bolus[], numberOfDays: number,
 }
 
 function getManualBolusAveragePerRange(boluses: Bolus[]): ManualBolusAveragePerRange {
-  const confirmedDose = boluses.reduce((totalDose, bolus) => totalDose + (bolus.normal ?? 0), 0)
+  const confirmedDoseValues = boluses.reduce((totalDose, bolus) => totalDose + (bolus.normal ?? 0), 0)
   const numberOfInjections = boluses.length
 
   return {
-    confirmedDose,
+    confirmedDose: roundValue(confirmedDoseValues / numberOfInjections),
     numberOfInjections
   }
 }
