@@ -63,6 +63,8 @@ import { getPatientFullName } from './utils/patient/patient.util'
 import { formatBirthdate, formatLocalizedFromUTC, getLongDayHourFormat, formatDate, TIMEZONE_UTC, formatCurrentDate } from './utils/datetime/datetime.util'
 import { renderPageNumbers } from './utils/pdf/pdf.util'
 import { WarmUpTooltip } from './components/tooltips/warm-up-tooltip/warm-up-tooltip'
+import { Device } from './models/device.model'
+import { buildDevice } from './utils/device/device.utils'
 
 export {
   formatDate,
@@ -79,6 +81,8 @@ export {
   CBGStandardDeviation,
   CBGStatType,
   ConfidentialTooltip,
+  Device,
+  buildDevice,
   FocusedRangeLabels,
   FoodTooltip,
   formatCurrentDate,

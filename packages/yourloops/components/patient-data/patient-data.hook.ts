@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BgPrefs } from 'dumb'
+import { type BgPrefs, buildDevice, Device } from 'dumb'
 import { PatientView } from '../../enum/patient-view.enum'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { type ChartPrefs } from '../dashboard-widgets/models/chart-prefs.model'
@@ -47,6 +47,7 @@ export interface usePatientDataResult {
   currentPatientView: PatientView
   dailyChartRef: MutableRefObject<DailyChartRef>
   dailyDate: number
+  device?: Device
   fetchPatientData: () => Promise<void>
   goToDailySpecificDate: (date: number | Date) => void
   handleDatetimeLocationChange: (epochLocation: number, msRange: number) => Promise<boolean>
@@ -325,6 +326,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
     chartPrefs,
     dailyChartRef,
     dailyDate,
+    device: buildDevice(medicalData),
     fetchPatientData,
     goToDailySpecificDate,
     handleDatetimeLocationChange,
