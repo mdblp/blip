@@ -10,6 +10,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-3075 As a user, I want to be able to choose Japan or UK country
 - YLP-3087 As a user, I want to see the medisafe pump event in yourloops
 
+### Fixed
+- YLP-2936 DBLG1 pdf settings are the ones of the current date
+
 ### Engineering use
 - YLP-2948 Updated failing tests because of the time change
 

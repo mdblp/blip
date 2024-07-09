@@ -299,7 +299,6 @@ const ignoredTransKeyInYourLoopsFiles = [
   'IMEI',
   'Identifier',
   'Name',
-  'Parameters',
   'params|${parameter.name}',
   'Device',
   'Unit',
@@ -315,6 +314,7 @@ const ignoredTransKeyInYourLoopsFiles = [
   'Pump version',
   'Serial Number',
   'Setting',
+  'Settings on day',
   'Time In Range'
 ]
 

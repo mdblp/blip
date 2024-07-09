@@ -35,6 +35,7 @@ import {
 import i18next from 'i18next'
 import textTable from 'text-table'
 import { sortByDate } from '../../patient-list/utils/sort-comparators.util'
+import { formatCurrentDate } from 'dumb/dist/src/utils/datetime/datetime.util'
 
 const t = i18next.t.bind(i18next)
 export const PARAMETER_STRING_MAX_WIDTH = 250
@@ -48,7 +49,7 @@ export const copySettingsToClipboard = async (lastUploadDate: string, device: De
     [t('IMEI'), device.imei],
     [t('Software version'), device.swVersion]]
   ) as string
-  const parametersText = `\n\n-- ${t('Parameters')} --\n`
+  const parametersText = `\n\n-- ${t('Settings on day', { day: formatCurrentDate() })} --\n`
   const parametersTable = [[
     t('Name'),
     t('Value'),
