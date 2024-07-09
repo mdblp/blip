@@ -17,6 +17,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Fixed
 - YLP-2527 Number of meal Carbs hidden behind a bolus bar
+- YLP-3104 Fix parameters locales issues (move the locale files in the repo)
 
 ## 3.3.0 - 2024-04-05
 ### Changed
