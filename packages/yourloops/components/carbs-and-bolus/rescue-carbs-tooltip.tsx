@@ -31,15 +31,17 @@ import Box from '@mui/material/Box'
 import { RESCUE_CARBS_COLOR, useCarbsAndBolusStyles } from './carbs-and-bolus-styles'
 import { useTranslation } from 'react-i18next'
 import { RescueCarbsAveragePerRange } from 'medical-domain'
+import styles from 'dumb/src/components/tooltips/common/tooltip-line/tooltip-line.css'
 
 export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }> = ({ rescueCarbs }) => {
   const { classes } = useCarbsAndBolusStyles()
   const { t } = useTranslation()
 
+
   return (
     <Box
       className={classes.hoverTooltip}
-      sx={{ border: `2px solid ${RESCUE_CARBS_COLOR}` }}
+      sx={{ border: `2px solid ${RESCUE_CARBS_COLOR}`, width:290 }}
       data-testid="rescue-carbs-tooltip"
     >
       <div className={`${classes.tooltipTail} rescue-carbs`} />
@@ -59,12 +61,12 @@ export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }>
           <Typography variant="body2">{rescueCarbs.confirmedCarbs}g</Typography>
         </div>
         <div className="flex-justify-between-align-center">
-          <Typography variant="body2">{t('avg-recommended-carbs')}</Typography>
+          <Typography variant="body2">{t('recommended-carbs')}</Typography>
           <Typography variant="body2">{rescueCarbs.recommendedCarbs}g</Typography>
         </div>
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">Override</Typography>
-          <Typography variant="body2">{rescueCarbs.overrideCarbsTotal}g</Typography>
+          <Typography variant="body2" className={styles.colorUndelivered}> {rescueCarbs.override}g</Typography>
         </div>
       </Box>
     </Box>
