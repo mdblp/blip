@@ -29,6 +29,7 @@ import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import moment from 'moment-timezone'
 import { pumpSettingsData } from '../mock/data.api.mock'
+import { formatCurrentDate } from 'dumb'
 
 export const checkDeviceSettingsContent = () => {
   const deviceSettings = screen.getByTestId('device-settings-container')
@@ -48,8 +49,8 @@ export const checkCopyTextButton = async () => {
   await userEvent.click(copyTextButton)
 
   const date = moment.tz(pumpSettingsData.data.pumpSettings[0].normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
-  const copiedStringToPaste = `${date}\n\n-- DBL --\nManufacturer      Diabeloop\nIdentifier        1234\nIMEI              1234567890\nSoftware version  1.0.5.25\n\n-- Settings --\nName                             Value  Unit\nBreakfast - average               36.0  g\nLunch - average                   96.0  g\nDinner - average                  96.0  g\nWeight                            72.0  kg\nHyperglycemia threshold          180.0  mg/dL\nHypoglycemia threshold            75.0  mg/dL\nTarget glucose level             110.0  mg/dL\nAggressiveness in normoglycemia    100  %\nAggressiveness in hyperglycemia    100  %\nAggressiveness for breakfast       100  %\nAggressiveness for lunch           100  %\nAggressiveness for dinner           80  %\nBreakfast - small                 18.0  g\nBreakfast - large                 54.0  g\nLunch - small                     48.0  g\nLunch - large                    144.0  g\nDinner - small                    48.0  g\nDinner - large                   144.0  g`
-  expect(navigator.clipboard.writeText). toHaveBeenCalledWith(expect.stringContaining(copiedStringToPaste))
+  const copiedStringToPaste = `${date}\n\n-- DBL --\nManufacturer      Diabeloop\nIdentifier        1234\nIMEI              1234567890\nSoftware version  1.0.5.25\n\n-- Settings on ${formatCurrentDate()} --\nName                             Value  Unit\nBreakfast - average               36.0  g\nLunch - average                   96.0  g\nDinner - average                  96.0  g\nWeight                            72.0  kg\nHyperglycemia threshold          180.0  mg/dL\nHypoglycemia threshold            75.0  mg/dL\nTarget glucose level             110.0  mg/dL\nAggressiveness in normoglycemia    100  %\nAggressiveness in hyperglycemia    100  %\nAggressiveness for breakfast       100  %\nAggressiveness for lunch           100  %\nAggressiveness for dinner           80  %\nBreakfast - small                 18.0  g\nBreakfast - large                 54.0  g\nLunch - small                     48.0  g\nLunch - large                    144.0  g\nDinner - small                    48.0  g\nDinner - large                   144.0  g`
+  expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringContaining(copiedStringToPaste))
 }
 
 export const checkNavigationToDailyView = async (router, route: string) => {

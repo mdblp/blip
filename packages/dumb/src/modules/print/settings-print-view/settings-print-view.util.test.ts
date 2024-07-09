@@ -35,6 +35,7 @@ import { PdfSettingsDataType } from '../../../models/enums/pdf-settings-data-typ
 import { type ParameterConfig, PumpManufacturer, Unit } from 'medical-domain'
 import { type ParameterSettingsTableRow } from '../../../models/print/pdf-settings-table.model'
 import { type PdfSettingsData } from '../../../models/print/pdf-data.model'
+import { formatCurrentDate } from '../../../utils/datetime/datetime.util'
 
 const labelColumn = {
   id: 'label',
@@ -227,7 +228,7 @@ describe('Settings print view util', () => {
       const result = getDeviceParametersTableData(level1Parameters as ParameterSettingsTableRow[], tableParameters, timezone)
 
       expect(result.heading).toEqual({
-        text: 'Settings'
+        text: `Settings on ${formatCurrentDate()}`
       })
       expect(result.columns).toEqual([{
         id: 'name',
@@ -257,7 +258,7 @@ describe('Settings print view util', () => {
       const result = getDeviceParametersTableData(level2Parameters as ParameterSettingsTableRow[], tableParameters, timezone)
 
       expect(result.heading).toEqual({
-        text: 'Settings',
+        text: `Settings on ${formatCurrentDate()}`,
         subText: '- Advanced'
       })
     })
