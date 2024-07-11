@@ -30,6 +30,7 @@ enum Unit {
   InsulinUnit = 'U',
   InsulinUnitPerGram = 'U/g',
   Gram = 'g',
+  Grams = 'grams',
   Kilogram = 'kg',
   MilligramPerDeciliter = 'mg/dL',
   Minute = 'min',

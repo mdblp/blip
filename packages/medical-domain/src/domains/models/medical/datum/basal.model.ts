@@ -32,7 +32,6 @@ import { DatumType } from './enums/datum-type.enum'
 type Basal = BaseDatum & {
   type: DatumType.Basal
   subType: string
-  internalId: string
   deliveryType: string
   duration: number
   rate: number

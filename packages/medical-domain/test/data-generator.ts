@@ -112,7 +112,6 @@ function createRandomBasal(date?: Date, hours?: number): Basal {
     ...baseData,
     type: DatumType.Basal,
     subType: 'automated',
-    internalId: faker.string.uuid(),
     deliveryType: 'automated',
     duration,
     rate: faker.number.float({ min: 0, max: 1, precision: 0.01 }),
