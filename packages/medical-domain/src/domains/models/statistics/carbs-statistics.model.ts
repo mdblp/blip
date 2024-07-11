@@ -38,7 +38,7 @@ export interface CarbsStatistics {
 export interface RescueCarbsAveragePerRange {
   totalNumberOfRescueCarbs: number
   confirmedCarbs: number
-  recommendedCarbs: number
+  averageRecommendedCarb: number
   override: number
 }
 

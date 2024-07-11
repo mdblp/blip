@@ -63,7 +63,7 @@ export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }>
         </div>
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">{t('recommended-carbs')}</Typography>
-          <Typography variant="body2">{rescueCarbs.recommendedCarbs}g</Typography>
+          <Typography variant="body2">{rescueCarbs.averageRecommendedCarb}g</Typography>
         </div>
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">Override</Typography>
