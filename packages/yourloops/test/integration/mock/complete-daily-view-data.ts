@@ -670,7 +670,6 @@ export const getCompleteDailyViewData = (deviceName: string = "DBLG1", softwareV
           "type": DatumType.Basal,
           "source": Source.Diabeloop,
           "subType": "automated",
-          "internalId": "3deeb71f-9b5b-496e-b0af-ef9512c2787f",
           "deliveryType": "automated",
           "rate": 0.8,
           "duration": 1000,
