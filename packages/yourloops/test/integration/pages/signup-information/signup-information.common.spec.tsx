@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,34 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum AppUserRoute {
-  Caregivers = '/caregivers',
-  CareTeamSettings = '/teams/:teamId',
-  PrivatePatientsList = '/teams/private/patients',
-  PatientsList = '/teams/:teamId/patients',
-  PatientView = '/teams/:teamId/patients/:patientId/*',
-  Daily = '/daily',
-  Device = '/device',
-  Dashboard = '/dashboard',
-  Home = '/home',
-  NotFound = '/not-found',
-  Notifications = '/notifications',
-  Patient = '/patient',
-  Patients = '/patients',
-  Preferences = '/preferences',
-  TargetAndAlerts = '/target-and-alerts',
-  Teams = '/teams',
-  Trends = '/trends'
-}
+import * as auth0Mock from '@auth0/auth0-react'
+import { renderPage } from '../../utils/render'
+import { AppRoute } from '../../../../models/enums/routes.enum'
+import { waitFor } from '@testing-library/react'
+import { testSignupInformation } from '../../use-cases/signup-information'
 
-export enum AppRoute {
-  CompleteSignup = '/complete-signup',
-  Login = '/login',
-  NewConsent = '/new-consent',
-  ProductLabelling = '/product-labelling',
-  RenewConsent = '/renew-consent',
-  SignupInformation = '/signup-information',
-  Training = '/training',
-  VerifyEmail = '/verify-email',
-  VerifyEmailResult = '/verify-email-result'
-}
+describe('Signup information page', () => {
+  const loginWithRedirectMock = jest.fn()
+  beforeAll(() => {
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      isAuthenticated: false,
+      isLoading: false,
+      user: undefined,
+      loginWithRedirect: loginWithRedirectMock
+    })
+  })
+
+  it('should render the page with correct elements', async () => {
+    const router = renderPage(AppRoute.SignupInformation)
+
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(AppRoute.SignupInformation)
+    })
+
+    await testSignupInformation(loginWithRedirectMock)
+  })
+})
