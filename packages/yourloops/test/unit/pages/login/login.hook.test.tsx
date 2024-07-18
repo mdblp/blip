@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,34 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum AppUserRoute {
-  Caregivers = '/caregivers',
-  CareTeamSettings = '/teams/:teamId',
-  PrivatePatientsList = '/teams/private/patients',
-  PatientsList = '/teams/:teamId/patients',
-  PatientView = '/teams/:teamId/patients/:patientId/*',
-  Daily = '/daily',
-  Device = '/device',
-  Dashboard = '/dashboard',
-  Home = '/home',
-  NotFound = '/not-found',
-  Notifications = '/notifications',
-  Patient = '/patient',
-  Patients = '/patients',
-  Preferences = '/preferences',
-  TargetAndAlerts = '/target-and-alerts',
-  Teams = '/teams',
-  Trends = '/trends'
-}
+import * as router from 'react-router'
+import { act, renderHook } from '@testing-library/react'
+import { useLogin } from '../../../../pages/login/login.hook'
+import { AppRoute } from '../../../../models/enums/routes.enum'
 
-export enum AppRoute {
-  CompleteSignup = '/complete-signup',
-  Login = '/login',
-  NewConsent = '/new-consent',
-  ProductLabelling = '/product-labelling',
-  RenewConsent = '/renew-consent',
-  SignupInformation = '/signup-information',
-  Training = '/training',
-  VerifyEmail = '/verify-email',
-  VerifyEmailResult = '/verify-email-result'
-}
+describe('Login hook', () => {
+  const useNavigateMock = jest.fn()
+
+  beforeAll(() => {
+    jest.spyOn(router, 'useNavigate').mockImplementation(() => useNavigateMock)
+  })
+
+  describe('redirectToSignupInformation', () => {
+    it('should redirect to the Signup Information page', () => {
+      const { result } = renderHook(() => useLogin())
+
+      act(() => {
+        result.current.redirectToSignupInformation()
+      })
+
+      expect(useNavigateMock).toHaveBeenCalledWith(AppRoute.SignupInformation)
+    })
+  })
+})

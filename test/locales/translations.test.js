@@ -291,7 +291,8 @@ const ignoredTransKeyForYourLoops = [
   'verify-email-error-title',
   'tooltip-total-derived-carbs',
   'sensor-warmup',
-  'sensor-warmup-session-end'
+  'sensor-warmup-session-end',
+  'signup-information-message-2'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
