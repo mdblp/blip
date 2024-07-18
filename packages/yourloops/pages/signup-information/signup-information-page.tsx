@@ -87,7 +87,7 @@ export const SignupInformationPage: FC = () => {
         <Grid item xs={12}>
             <Card className={classes.card} elevation={4}>
               <CardMedia className={classes.logoHeader}>
-                <img src={`/branding_${appConfig.BRANDING}_logo.svg`} height={35} alt={t('alt-img-logo')} />
+                <img src={`/branding_${appConfig.BRANDING}_logo.svg`} height={35} alt={t('alt-img-logo')} data-testid="yourloops-logo" />
               </CardMedia>
               <CardContent className={classes.cardContent}>
                 <Box
@@ -126,6 +126,7 @@ export const SignupInformationPage: FC = () => {
                   <Box marginRight={2}>
                     <Button
                       variant="outlined"
+                      data-testid="cancel-button"
                       onClick={onClickCancelButton}
                     >
                       {t('button-cancel')}
