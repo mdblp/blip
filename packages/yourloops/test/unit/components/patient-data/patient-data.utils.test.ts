@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -112,6 +112,22 @@ describe('Patient data utils', () => {
         expect(trendsDateRange.end.toISOString()).toEqual('2023-04-02T00:00:00.000Z')
         expect(dailyDateRange.start.toISOString()).toEqual('2023-02-28T00:00:00.000Z')
         expect(dailyDateRange.end.toISOString()).toEqual('2023-03-02T00:00:00.000Z')
+      })
+    })
+
+    describe('getInitialDate', () => {
+      it('should return the latest data date if it is before today\'s date', () => {
+        const patientDataUtils = createNewPatientDataUtils()
+        const medicalData = { endpoints: ['2022-01-01', '2022-01-10'] }
+        const latestDataTimestamp = 1641729600000
+        expect(patientDataUtils.getInitialDate(medicalData as MedicalDataService)).toEqual(latestDataTimestamp)
+      })
+
+      it('should return today\'s date if the latest data date is in the future', () => {
+        const patientDataUtils = createNewPatientDataUtils()
+        const medicalData = { endpoints: ['2072-01-01', '2072-01-10'] }
+        const latestDataTimestamp = 3219566400000
+        expect(patientDataUtils.getInitialDate(medicalData as MedicalDataService)).not.toEqual(latestDataTimestamp)
       })
     })
   })

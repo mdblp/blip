@@ -135,7 +135,12 @@ export class PatientDataUtils {
   }
 
   getInitialDate(medicalData: MedicalDataService): number {
-    return moment.utc(medicalData.endpoints[1]).valueOf() - TimeService.MS_IN_DAY / 2
+    const latestDataDate = moment.utc(medicalData.endpoints[1])
+    // To mimic the behavior of the medical data endpoints, today's date is tomorrow at 12AM
+    const todayDate = moment(new Date()).add(1, 'day').startOf('day')
+
+    const dateToDisplay = todayDate.isBefore(latestDataDate) ? todayDate : latestDataDate
+    return dateToDisplay.valueOf() - TimeService.MS_IN_DAY / 2
   }
 
   async loadDataRange({ start, end }: DateRange): Promise<MedicalData | null> {

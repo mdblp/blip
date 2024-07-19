@@ -15,6 +15,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3141 As a user, I want my alarms messages to be the same as my device's
 
 ### Fixed
+- YLP-2632 Data is uploaded with a date in the future
 - YLP-2936 DBLG1 pdf settings are the ones of the current date
 
 ### Engineering use
