@@ -311,7 +311,8 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   poolEvents.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolEvents, {
     tidelineData,
     onConfidentialHover: options.onConfidentialHover,
-    onConfidentialOut: options.onTooltipOut
+    onConfidentialOut: options.onTooltipOut,
+    hideLabel: true
   }))
 
   // add CBG data to BG pool
