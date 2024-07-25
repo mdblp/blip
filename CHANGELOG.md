@@ -21,6 +21,7 @@ It is based on Tidepool Blip 1.27.
 ### Engineering use
 - YLP-2948 Updated failing tests because of the time change
 - YLP-3144 Cleanup basal internalId field
+- YLP-3172 Hide Confidential Mode label on Events graph
 
 ### Fixed
 - YLP-2527 Number of meal Carbs hidden behind a bolus bar
