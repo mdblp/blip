@@ -17,7 +17,7 @@
 
 :root {
   --basal: var(--grey-25);
-  --basal-automated: var(--info-color-20);
+  --basal-automated: var(--info-color-50);
   --text-on-basal: var(--text-color-primary);
   --text-on-basal-automated: var(--text-color-primary);
   --text-basal: #a4a4a4;
@@ -84,7 +84,7 @@
   bolusManual: var(--dark-blue-main);
   basal: #D5D5D5;
   basalHeader: #DCF1F9;
-  basalAutomated: #CCEDF9;
+  basalAutomated: #80D1F1;
   basalManual: #A8C8D4;
   statDark: #27385B;
   statDefault: #727375;
