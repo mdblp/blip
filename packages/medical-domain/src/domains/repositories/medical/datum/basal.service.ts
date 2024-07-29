@@ -46,7 +46,6 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     ...base,
     type: DatumType.Basal,
     subType: rawData.deliveryType as string,
-    internalId: rawData.internalId as string,
     deliveryType: rawData.deliveryType as string,
     rate: rawData.rate as number,
     duration,

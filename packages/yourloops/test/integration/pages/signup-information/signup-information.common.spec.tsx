@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,17 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum Unit {
-  Centimeter = 'cm',
-  InsulinUnit = 'U',
-  InsulinUnitPerGram = 'U/g',
-  Gram = 'g',
-  Grams = 'grams',
-  Kilogram = 'kg',
-  MilligramPerDeciliter = 'mg/dL',
-  Minute = 'min',
-  MmolPerLiter = 'mmol/L',
-  Percent = '%'
-}
+import * as auth0Mock from '@auth0/auth0-react'
+import { renderPage } from '../../utils/render'
+import { AppRoute } from '../../../../models/enums/routes.enum'
+import { waitFor } from '@testing-library/react'
+import { testSignupInformation } from '../../use-cases/signup-information'
 
-export default Unit
+describe('Signup information page', () => {
+  const loginWithRedirectMock = jest.fn()
+  beforeAll(() => {
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      isAuthenticated: false,
+      isLoading: false,
+      user: undefined,
+      loginWithRedirect: loginWithRedirectMock
+    })
+  })
+
+  it('should render the page with correct elements', async () => {
+    const router = renderPage(AppRoute.SignupInformation)
+
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(AppRoute.SignupInformation)
+    })
+
+    await testSignupInformation(loginWithRedirectMock)
+  })
+})

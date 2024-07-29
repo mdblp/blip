@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,17 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum Unit {
-  Centimeter = 'cm',
-  InsulinUnit = 'U',
-  InsulinUnitPerGram = 'U/g',
-  Gram = 'g',
-  Grams = 'grams',
-  Kilogram = 'kg',
-  MilligramPerDeciliter = 'mg/dL',
-  Minute = 'min',
-  MmolPerLiter = 'mmol/L',
-  Percent = '%'
+export interface Device {
+  name: string,
+  majorVersion: number
+  minorVersion: number
 }
-
-export default Unit

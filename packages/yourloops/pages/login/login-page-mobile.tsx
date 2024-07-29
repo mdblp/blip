@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,6 +41,7 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
+import { useLogin } from './login.hook'
 
 const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
   button: {
@@ -76,10 +77,7 @@ const LoginPageMobile: FunctionComponent = () => {
   const { loginWithRedirect } = useAuth0()
   const { t, i18n } = useTranslation()
   const { classes, theme } = styles()
-
-  const redirectToSignup = async (): Promise<void> => {
-    await loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })
-  }
+  const { redirectToSignupInformation } = useLogin()
 
   return (
     <React.Fragment>
@@ -139,7 +137,7 @@ const LoginPageMobile: FunctionComponent = () => {
             data-testid="register-button"
             variant="outlined"
             disableElevation
-            onClick={redirectToSignup}
+            onClick={redirectToSignupInformation}
             className={classes.button}
             sx={{ marginBlock: theme.spacing(3) }}
           >

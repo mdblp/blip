@@ -25,7 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { formatLocalizedFromUTC, getLongDayFormat, TIMEZONE_UTC } from '../../../utils/datetime/datetime.util'
+import {
+  formatCurrentDate,
+  formatLocalizedFromUTC,
+  getLongDayFormat,
+  TIMEZONE_UTC
+} from '../../../utils/datetime/datetime.util'
 import {
   type CgmConfig,
   type DeviceConfig,
@@ -201,7 +206,7 @@ export const getDeviceParametersTableData = (parameters: ParameterSettingsTableR
   width: number
 }, timezone?: string, date?: string): ParameterSettingsTable => {
   const timePrefs = getTimePrefs(timezone)
-  const text = t('Parameters')
+  const text = t('Settings on day', { day: formatCurrentDate() })
   const subText = tableParameters.level !== 1 ? `- ${t('Advanced')}` : undefined
 
   const heading = getTableHeading(text, timePrefs, subText, date)

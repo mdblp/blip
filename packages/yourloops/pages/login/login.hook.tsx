@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,17 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum Unit {
-  Centimeter = 'cm',
-  InsulinUnit = 'U',
-  InsulinUnitPerGram = 'U/g',
-  Gram = 'g',
-  Grams = 'grams',
-  Kilogram = 'kg',
-  MilligramPerDeciliter = 'mg/dL',
-  Minute = 'min',
-  MmolPerLiter = 'mmol/L',
-  Percent = '%'
+import { AppRoute } from '../../models/enums/routes.enum'
+import { useNavigate } from 'react-router-dom'
+
+interface LoginHookReturn {
+  redirectToSignupInformation: () => void
 }
 
-export default Unit
+export const useLogin = (): LoginHookReturn => {
+  const navigate = useNavigate()
+
+  const redirectToSignupInformation = () => {
+    navigate(AppRoute.SignupInformation)
+  }
+
+  return { redirectToSignupInformation }
+}

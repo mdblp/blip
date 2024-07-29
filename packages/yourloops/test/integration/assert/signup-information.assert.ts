@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,17 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum Unit {
-  Centimeter = 'cm',
-  InsulinUnit = 'U',
-  InsulinUnitPerGram = 'U/g',
-  Gram = 'g',
-  Grams = 'grams',
-  Kilogram = 'kg',
-  MilligramPerDeciliter = 'mg/dL',
-  Minute = 'min',
-  MmolPerLiter = 'mmol/L',
-  Percent = '%'
+import { screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+
+export const checkSignupInformationPageContent = async () => {
+  const pageContent = within(screen.getByTestId('signup-information-content'))
+  const alert = pageContent.getByTestId('signup-information-alert')
+
+  expect(pageContent.getByAltText('YourLoops Logo')).toBeVisible()
+  expect(pageContent.getByText('Signup information')).toBeVisible()
+  expect(pageContent.getByText('You are about to create a healthcare professional or caregiver account.')).toBeVisible()
+  expect(alert).toHaveTextContent('If you are a patient, your account will be created when you initialize your DBL. You must not create an account here.Please contact your DBL supplier for further information.')
+  expect(pageContent.getByRole('button', { name: 'Cancel' })).toBeVisible()
 }
 
-export default Unit
+export const checkRegisterButton = async (loginWithRedirectMock: jest.Mock) => {
+  const pageContent = within(screen.getByTestId('signup-information-content'))
+  const registerButton = pageContent.getByRole('button', { name: 'Register' })
+  await userEvent.click(registerButton)
+  expect(loginWithRedirectMock).toHaveBeenCalledWith(expect.objectContaining({ authorizationParams: { screen_hint: 'signup' } }))
+}

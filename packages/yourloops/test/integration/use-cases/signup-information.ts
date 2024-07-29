@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,17 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum Unit {
-  Centimeter = 'cm',
-  InsulinUnit = 'U',
-  InsulinUnitPerGram = 'U/g',
-  Gram = 'g',
-  Grams = 'grams',
-  Kilogram = 'kg',
-  MilligramPerDeciliter = 'mg/dL',
-  Minute = 'min',
-  MmolPerLiter = 'mmol/L',
-  Percent = '%'
-}
+import { checkFooterForUserNotLoggedIn } from '../assert/footer.assert'
+import { checkRegisterButton, checkSignupInformationPageContent } from '../assert/signup-information.assert'
 
-export default Unit
+export const testSignupInformation = async (loginWithRedirectMock: jest.Mock) => {
+  checkFooterForUserNotLoggedIn(true)
+  await checkSignupInformationPageContent()
+  await checkRegisterButton(loginWithRedirectMock)
+}

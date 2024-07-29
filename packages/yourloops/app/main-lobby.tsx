@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -52,6 +52,7 @@ import { AppRoute } from '../models/enums/routes.enum'
 import { ConsentPage } from '../pages/consent/consent-page'
 import Box from '@mui/material/Box'
 import { VerifyEmailResultPage } from '../pages/verify-email/verify-email-result-page'
+import { SignupInformationPage } from '../pages/signup-information/signup-information-page'
 
 const muiCache = createCache({
   key: 'mui',
@@ -131,6 +132,7 @@ export const MainLobby: FC = () => {
                   <Routes>
                     <Route path={AppRoute.ProductLabelling} element={<ProductLabellingPage />} />
                     <Route path={AppRoute.Login} element={<LoginPageLanding />} />
+                    <Route path={AppRoute.SignupInformation} element={<SignupInformationPage />}/>
                     <Route path={AppRoute.CompleteSignup} element={<CompleteSignUpPage />} />
                     <Route path={AppRoute.RenewConsent} element={<ConsentPage messageKey="consent-renew-message" />} />
                     <Route path={AppRoute.NewConsent} element={<ConsentPage messageKey="consent-welcome-message" />} />

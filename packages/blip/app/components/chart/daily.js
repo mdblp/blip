@@ -257,6 +257,7 @@ class DailyChart extends React.Component {
 class Daily extends React.Component {
   static propTypes = {
     patient: PropTypes.object.isRequired,
+    device: PropTypes.object,
     bgPrefs: PropTypes.object.isRequired,
     timePrefs: PropTypes.object.isRequired,
     epochLocation: PropTypes.number.isRequired,
@@ -652,6 +653,7 @@ class Daily extends React.Component {
         side={datum.side}
         bgPrefs={datum.bgPrefs}
         timePrefs={datum.timePrefs}
+        device={this.props.device}
       />)
     this.setState({ tooltip })
   }
