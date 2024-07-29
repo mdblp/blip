@@ -70,7 +70,7 @@ describe('getCarbsData', () => {
   describe('getRescueCarbsAverageStatistics', () => {
     it('should return a map with ranges of hours and rescue carbs average statistics', () => {
       const meals = buildMealData(bgDataSourceTwoWeeks)
-      const rescueCarbs = CarbsStatisticsService.getRescueCarbsAverageStatistics(meals, 14, dateFilterTwoWeeks)
+      const rescueCarbs = CarbsStatisticsService.getRescueCarbsAverageStatistics(meals, dateFilterTwoWeeks)
       const expected: RescueCarbsAverageStatistics = new Map([
         [HoursRange.MidnightToThree, { averageRecommendedCarb: 5, confirmedCarbs: 0, override: 0, totalNumberOfRescueCarbs: 3 }],
         [HoursRange.ThreeToSix, { averageRecommendedCarb: 5, confirmedCarbs: 0, override: 0, totalNumberOfRescueCarbs: 3 }],
