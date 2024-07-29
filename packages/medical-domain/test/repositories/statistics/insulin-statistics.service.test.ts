@@ -96,7 +96,7 @@ describe('getManualBolusAverageStatistics', () => {
     const boluses = buildBolusData(manualBolusData)
     const manualBoluses = BasalBolusStatisticsService.getManualBolusAverageStatistics(boluses, dateFilterTwoWeeks)
     const expected: ManualBolusAverageStatistics = new Map([
-      [HoursRange.MidnightToThree, { confirmedDose: 3, numberOfInjections: 2}],
+      [HoursRange.MidnightToThree, { confirmedDose: 3, numberOfInjections: 2 }],
       [HoursRange.ThreeToSix, { confirmedDose: 5, numberOfInjections: 1 }],
       [HoursRange.SixToNine, { confirmedDose: 0, numberOfInjections: 0 }],
       [HoursRange.NineToTwelve, { confirmedDose: 0, numberOfInjections: 0 }],
