@@ -58,7 +58,7 @@ function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilte
   }
 }
 
-function getRescueCarbsAverageStatistics(meals: Meal[], numberOfDays: number, dateFilter: DateFilter): RescueCarbsAverageStatistics {
+function getRescueCarbsAverageStatistics(meals: Meal[], dateFilter: DateFilter): RescueCarbsAverageStatistics {
   const carbsMap = buildHoursRangeMap<Meal>()
   const midnightToThree = carbsMap.get(HoursRange.MidnightToThree) as Meal[]
   const threeToSix = carbsMap.get(HoursRange.ThreeToSix) as Meal[]
@@ -119,7 +119,7 @@ function getRescueCarbsAverageStatistics(meals: Meal[], numberOfDays: number, da
 
 function getRescueCarbsAveragePerRange(meals: Meal[]): RescueCarbsAveragePerRange {
   const totalNumberOfRescueCarbs = meals.length
-  console.log("##################",meals)
+
 
   const confirmedCarbs = meals.map((meal) => {
     if (meal.prescribedNutrition === undefined) {
@@ -128,8 +128,6 @@ function getRescueCarbsAveragePerRange(meals: Meal[]): RescueCarbsAveragePerRang
       return 0
     }
   }).filter((confirmedCarb) => confirmedCarb !== 0).length
-  console.log('confirmedCarbs',confirmedCarbs)
-  console.log('#####################')
 
   const recommendedCarbs = meals.map((meal) => {
     if (meal.prescribedNutrition && meal.nutrition) {
@@ -137,8 +135,6 @@ function getRescueCarbsAveragePerRange(meals: Meal[]): RescueCarbsAveragePerRang
     }
     return 0
   }).filter((recommendedCarbs) => recommendedCarbs !== 0)
-  console.log('recommendedCarbs',recommendedCarbs)
-  console.log('#####################')
 
   const averageRecommendedCarb = recommendedCarbs.reduce((totalCarbs, recommendedCarb) => totalCarbs + recommendedCarb, 0) / recommendedCarbs.length
 
@@ -149,10 +145,8 @@ function getRescueCarbsAveragePerRange(meals: Meal[]): RescueCarbsAveragePerRang
       return 0
     }
   }, 0)
-  console.log("overrideValues",overrideValues)
 
   const override = overrideValues.reduce((totalOverride, override) => totalOverride + override, 0) / recommendedCarbs.length
-
   const averageRecommendedCarbIsEmpty = recommendedCarbs.length === 0 ? 0 : averageRecommendedCarb
   const overrideIsEmpty = recommendedCarbs.length === 0 ? 0 : override
 
@@ -167,7 +161,7 @@ function getRescueCarbsAveragePerRange(meals: Meal[]): RescueCarbsAveragePerRang
 
 interface CarbsStatisticsAdapter {
   getCarbsData: (meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter) => CarbsStatistics
-  getRescueCarbsAverageStatistics: (meals: Meal[], numberOfDays: number, dateFilter: DateFilter) => RescueCarbsAverageStatistics
+  getRescueCarbsAverageStatistics: (meals: Meal[], dateFilter: DateFilter) => RescueCarbsAverageStatistics
 }
 
 export const CarbsStatisticsService: CarbsStatisticsAdapter = {
