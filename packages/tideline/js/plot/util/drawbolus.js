@@ -22,7 +22,8 @@ const BolusTypes = {
   meal: 1,
   micro: 2,
   manual: 3,
-  umm: 4
+  pen: 4,
+  umm: 5
 }
 
 /**
@@ -37,7 +38,10 @@ function bolusToLegend(b) {
     return BolusTypes.meal
   }
   const bolus = commonbolus.getBolus(b)
-  if (bolus.subType === 'pen' || bolus.prescriptor === 'manual') {
+  if (bolus.subType === 'pen') {
+    return BolusTypes.pen
+  }
+  if (bolus.prescriptor === 'manual') {
     return BolusTypes.manual
   }
   if (bolus.subType === 'biphasic') {
@@ -59,6 +63,8 @@ function bolusClass(b, baseClass) {
       return `${baseClass} d3-bolus-meal`
     case BolusTypes.micro:
       return `${baseClass} d3-bolus-micro`
+    case BolusTypes.pen:
+      return `${baseClass} d3-bolus-pen`
   }
   return baseClass
 }

@@ -54,6 +54,8 @@ export const WIZARD_BOLUS_UNDELIVERED_ID = 'carbBolusId'
 export const WIZARD_BOLUS_UMM_ID = 'carbBolusId2'
 export const WIZARD_BOLUS_POSITIVE_OVERRIDE_ID = 'carbBolusId3'
 export const WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID = 'carbBolusId4'
+export const PEN_BOLUS_ID = 'penBolusId'
+export const MANUAL_BOLUS_ID = 'manualBolusId'
 
 export const CBG_ID = 'cbgId'
 export const SMBG_ID = 'smbgId'
