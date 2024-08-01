@@ -20,7 +20,6 @@ It is based on Tidepool Blip 1.27.
 - YLP-2632 Data is uploaded with a date in the future
 - YLP-2936 DBLG1 pdf settings are the ones of the current date
 
-
 ### Engineering use
 - YLP-2948 Updated failing tests because of the time change
 - YLP-3144 Cleanup basal internalId field
