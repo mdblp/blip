@@ -106,54 +106,51 @@ function getRescueCarbsAverageStatistics(meals: Meal[], dateFilter: DateFilter):
   })
 
   return new Map([
-    [HoursRange.MidnightToThree, getRescueCarbsAveragePerRange(midnightToThree)],
-    [HoursRange.ThreeToSix, getRescueCarbsAveragePerRange(threeToSix)],
-    [HoursRange.SixToNine, getRescueCarbsAveragePerRange(sixToNine)],
-    [HoursRange.NineToTwelve, getRescueCarbsAveragePerRange(nineToTwelve)],
-    [HoursRange.TwelveToFifteen, getRescueCarbsAveragePerRange(twelveToFifteen)],
-    [HoursRange.FifteenToEighteen, getRescueCarbsAveragePerRange(fifteenToEighteen)],
-    [HoursRange.EighteenToTwentyOne, getRescueCarbsAveragePerRange(eighteenToTwentyOne)],
-    [HoursRange.TwentyOneToMidnight, getRescueCarbsAveragePerRange(twentyOneToMidnight)]
+    [HoursRange.MidnightToThree, getRescueCarbsComputations(midnightToThree)],
+    [HoursRange.ThreeToSix, getRescueCarbsComputations(threeToSix)],
+    [HoursRange.SixToNine, getRescueCarbsComputations(sixToNine)],
+    [HoursRange.NineToTwelve, getRescueCarbsComputations(nineToTwelve)],
+    [HoursRange.TwelveToFifteen, getRescueCarbsComputations(twelveToFifteen)],
+    [HoursRange.FifteenToEighteen, getRescueCarbsComputations(fifteenToEighteen)],
+    [HoursRange.EighteenToTwentyOne, getRescueCarbsComputations(eighteenToTwentyOne)],
+    [HoursRange.TwentyOneToMidnight, getRescueCarbsComputations(twentyOneToMidnight)]
   ])
 }
 
-function getRescueCarbsAveragePerRange(meals: Meal[]): RescueCarbsAveragePerRange {
-  const totalNumberOfRescueCarbs = meals.length
+function getRescueCarbsComputations(rescueCarbs: Meal[]): RescueCarbsAveragePerRange {
+  const numberOfRescueCarbs = rescueCarbs.length
 
-  const confirmedCarbs = meals.map((meal) => {
-    if (meal.prescribedNutrition === undefined) {
-      return meal.nutrition.carbohydrate.net
-    } else {
-      return 0
+  const numberOfModifiedCarbs = rescueCarbs.filter((meal) => meal.prescribedNutrition).length
+
+  const { totalNumberOfRecommendCarbs, numberOfRecommendedCarbs, totalRecommendedCarbsOverride } = rescueCarbs.reduce((acc, meal) => {
+    if (meal.prescribedNutrition) { // If we are in a recommended carb
+      const recommendedCarb = meal?.prescribedNutrition?.carbohydrate.net ?? 0
+      return {
+        totalNumberOfRecommendCarbs: acc.totalNumberOfRecommendCarbs + recommendedCarb ,
+        numberOfRecommendedCarbs: acc.numberOfRecommendedCarbs + 1,
+        totalRecommendedCarbsOverride: acc.totalRecommendedCarbsOverride + meal.nutrition.carbohydrate.net - recommendedCarb
+      }
     }
-  }).filter((confirmedCarb) => confirmedCarb !== 0).length
+    return acc
+  }, { totalNumberOfRecommendCarbs: 0, numberOfRecommendedCarbs: 0, totalRecommendedCarbsOverride: 0 })
 
-  const recommendedCarbs = meals.map((meal) => {
-    if (meal.prescribedNutrition && meal.nutrition) {
-      return meal.prescribedNutrition.carbohydrate.net
+  if (totalNumberOfRecommendCarbs === 0) {
+    return {
+      numberOfRescueCarbs,
+      numberOfModifiedCarbs,
+      averageRecommendedCarb: 0,
+      rescueCarbsOverrideAverage: 0
     }
-    return 0
-  }).filter((recommendedCarbs) => recommendedCarbs !== 0)
+  }
 
-  const averageRecommendedCarb = recommendedCarbs.reduce((totalCarbs, recommendedCarb) => totalCarbs + recommendedCarb, 0) / recommendedCarbs.length
-
-  const overrideValues = meals.map((meal) => {
-    if (meal.prescribedNutrition) {
-      return meal.nutrition.carbohydrate.net - meal.prescribedNutrition.carbohydrate.net
-    } else {
-      return 0
-    }
-  }, 0)
-
-  const override = overrideValues.reduce((totalOverride, override) => totalOverride + override, 0) / recommendedCarbs.length
-  const averageRecommendedCarbIsEmpty = recommendedCarbs.length === 0 ? 0 : averageRecommendedCarb
-  const overrideIsEmpty = recommendedCarbs.length === 0 ? 0 : override
+  const averageRecommendedCarb = numberOfRecommendedCarbs / totalNumberOfRecommendCarbs
+  const override = totalRecommendedCarbsOverride / totalNumberOfRecommendCarbs
 
   return {
-    totalNumberOfRescueCarbs,
-    confirmedCarbs,
-    averageRecommendedCarb: roundValue(averageRecommendedCarbIsEmpty,2),
-    override: roundValue(overrideIsEmpty,1)
+    numberOfRescueCarbs,
+    numberOfModifiedCarbs,
+    averageRecommendedCarb: roundValue(averageRecommendedCarb, 2),
+    rescueCarbsOverrideAverage: roundValue(override, 1)
   }
 }
 

@@ -46,9 +46,9 @@ interface CarbsAndBolusCellProps {
 export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
   const { time, manualBolus, rescueCarbs, sx } = props
   const { classes, theme } = useCarbsAndBolusStyles()
-  const { totalNumberOfRescueCarbs } = rescueCarbs
+  const { numberOfRescueCarbs } = rescueCarbs
   const { numberOfInjections } = manualBolus
-  const carbsCellBackgroundColor = totalNumberOfRescueCarbs > 0 ? RESCUE_CARBS_COLOR : theme.palette.grey[200]
+  const carbsCellBackgroundColor = numberOfRescueCarbs > 0 ? RESCUE_CARBS_COLOR : theme.palette.grey[200]
   const bolusCellBackgroundColor = numberOfInjections > 0 ? MANUAL_BOLUS_COLOR : theme.palette.grey[200]
   const [cellOnHover, setCellOnHover] = useState<TypeOfCell>(undefined)
 
@@ -85,9 +85,9 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
             variant="caption"
             sx={{ color: theme.palette.common.white }}
           >
-            {totalNumberOfRescueCarbs > 0 ? totalNumberOfRescueCarbs : ''}
+            {numberOfRescueCarbs > 0 ? numberOfRescueCarbs : ''}
           </Typography>
-          {totalNumberOfRescueCarbs > 0 && cellOnHover === TypeOfCell.RescueCarbs &&
+          {numberOfRescueCarbs > 0 && cellOnHover === TypeOfCell.RescueCarbs &&
             <RescueCarbsTooltip rescueCarbs={rescueCarbs} />
           }
         </Box>

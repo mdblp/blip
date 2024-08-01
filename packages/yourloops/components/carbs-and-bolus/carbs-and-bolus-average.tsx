@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,9 +38,11 @@ import {
   CarbsStatisticsService,
   DateFilter,
   HoursRange,
-  MedicalData, TimeService
+  MedicalData,
+  TimeService
 } from 'medical-domain'
 import { CarbsAndBolusTimeRange } from './models/carbs-and-bolus.model'
+import { NB_OF_DAYS_IN_A_MONTH, NB_OF_DAYS_IN_A_WEEK } from '../../constants/days'
 
 interface CarbsAndBolusAverageProps {
   dateFilter: DateFilter
@@ -63,21 +65,19 @@ export const CarbsAndBolusAverage: FC<CarbsAndBolusAverageProps> = ({ medicalDat
   const manualBolusStats = BasalBolusStatisticsService.getManualBolusAverageStatistics(medicalData.bolus, dateFilter)
 
   const numberOfDaysSelected = (): string => {
-    if (numberOfDays === 7){
+    if (NB_OF_DAYS_IN_A_WEEK) {
       return t('preset-dates-range-1week')
     }
-    else if(numberOfDays === 14){
+    if (numberOfDays === NB_OF_DAYS_IN_A_WEEK * 2) {
       return t('preset-dates-range-2weeks')
     }
-    else if(numberOfDays === 28){
+    if (numberOfDays === NB_OF_DAYS_IN_A_WEEK * 4) {
       return t('preset-dates-range-4weeks')
     }
-    else if (numberOfDays === 90) {
+    if (numberOfDays === NB_OF_DAYS_IN_A_MONTH * 3) {
       return t('preset-dates-range-3months')
     }
-    else {
-      return t('number-of-day-selected', { numberOfDays })
-    }
+    return t('number-of-day-selected', { numberOfDays })
   }
 
   return (
@@ -85,8 +85,9 @@ export const CarbsAndBolusAverage: FC<CarbsAndBolusAverageProps> = ({ medicalDat
       margin="32px 10px 32px 40px"
       data-testid="rescue-carbs-and-manual-bolus-average"
     >
-      <Typography sx={{ fontWeight: 500, marginBottom: theme.spacing(1) }} data-testid="title-rescue-carbs-and-manual-bolus-average">
-        {t('daily-rescue-carbs-and-manual-bolus',{ numberOfDays: numberOfDaysSelected() })}
+      <Typography sx={{ fontWeight: 500, marginBottom: theme.spacing(1) }}
+                  data-testid="title-rescue-carbs-and-manual-bolus-average">
+        {t('daily-rescue-carbs-and-manual-bolus', { numberOfDays: numberOfDaysSelected() })}
       </Typography>
       <Box display="flex">
         <CarbsAndBolusCell

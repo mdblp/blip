@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -36,13 +36,14 @@ import styles from 'dumb/src/components/tooltips/common/tooltip-line/tooltip-lin
 export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }> = ({ rescueCarbs }) => {
   const { classes } = useCarbsAndBolusStyles()
   const { t } = useTranslation()
-  const override = Math.sign(rescueCarbs.override) === 1 ? `+${rescueCarbs.override}` : rescueCarbs.override
+  const override = Math.sign(rescueCarbs.rescueCarbsOverrideAverage) === 1 ? `+${rescueCarbs.rescueCarbsOverrideAverage}` : rescueCarbs.rescueCarbsOverrideAverage
 
 
   return (
     <Box
       className={classes.hoverTooltip}
-      sx={{ border: `2px solid ${RESCUE_CARBS_COLOR}`, width:290 }}
+      width={290}
+      sx={{ border: `2px solid ${RESCUE_CARBS_COLOR}` }}
       data-testid="rescue-carbs-tooltip"
     >
       <div className={`${classes.tooltipTail} rescue-carbs`} />
@@ -55,11 +56,11 @@ export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }>
       <Box className="content" data-testid="rescue-carbs-tooltip-content">
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">{t('number-of-rescue-carbs')}</Typography>
-          <Typography variant="body2">{rescueCarbs.totalNumberOfRescueCarbs}</Typography>
+          <Typography variant="body2">{rescueCarbs.numberOfRescueCarbs}</Typography>
         </div>
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">{t('number-of-rescue-carbs-modified')}</Typography>
-          <Typography variant="body2">{rescueCarbs.confirmedCarbs}</Typography>
+          <Typography variant="body2">{rescueCarbs.numberOfModifiedCarbs}</Typography>
         </div>
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">{t('recommended-carbs')}</Typography>
