@@ -122,19 +122,19 @@ function getRescueCarbsComputations(rescueCarbs: Meal[]): RescueCarbsAveragePerR
 
   const numberOfModifiedCarbs = rescueCarbs.filter((meal) => meal.prescribedNutrition).length
 
-  const { totalNumberOfRecommendCarbs, numberOfRecommendedCarbs, totalRecommendedCarbsOverride } = rescueCarbs.reduce((acc, meal) => {
+  const { sumOfRecommendCarbs, numberOfRecommendedCarbs, sumOfRecommendedCarbsOverride } = rescueCarbs.reduce((acc, meal) => {
     if (meal.prescribedNutrition) { // If we are in a recommended carb
       const recommendedCarb = meal?.prescribedNutrition?.carbohydrate.net ?? 0
       return {
-        totalNumberOfRecommendCarbs: acc.totalNumberOfRecommendCarbs + recommendedCarb ,
+        sumOfRecommendCarbs: acc.sumOfRecommendCarbs + recommendedCarb ,
         numberOfRecommendedCarbs: acc.numberOfRecommendedCarbs + 1,
-        totalRecommendedCarbsOverride: acc.totalRecommendedCarbsOverride + meal.nutrition.carbohydrate.net - recommendedCarb
+        sumOfRecommendedCarbsOverride: acc.sumOfRecommendedCarbsOverride + meal.nutrition.carbohydrate.net - recommendedCarb
       }
     }
     return acc
-  }, { totalNumberOfRecommendCarbs: 0, numberOfRecommendedCarbs: 0, totalRecommendedCarbsOverride: 0 })
+  }, { sumOfRecommendCarbs: 0, numberOfRecommendedCarbs: 0, sumOfRecommendedCarbsOverride: 0 })
 
-  if (totalNumberOfRecommendCarbs === 0) {
+  if (numberOfRecommendedCarbs === 0) {
     return {
       numberOfRescueCarbs,
       numberOfModifiedCarbs,
@@ -142,15 +142,12 @@ function getRescueCarbsComputations(rescueCarbs: Meal[]): RescueCarbsAveragePerR
       rescueCarbsOverrideAverage: 0
     }
   }
-
-  const averageRecommendedCarb = numberOfRecommendedCarbs / totalNumberOfRecommendCarbs
-  const override = totalRecommendedCarbsOverride / totalNumberOfRecommendCarbs
-
+  
   return {
     numberOfRescueCarbs,
     numberOfModifiedCarbs,
-    averageRecommendedCarb: roundValue(averageRecommendedCarb, 2),
-    rescueCarbsOverrideAverage: roundValue(override, 1)
+    averageRecommendedCarb: roundValue(sumOfRecommendCarbs / numberOfRecommendedCarbs, 2),
+    rescueCarbsOverrideAverage: roundValue(sumOfRecommendedCarbsOverride / numberOfRecommendedCarbs, 1)
   }
 }
 
