@@ -120,11 +120,10 @@ function getRescueCarbsAverageStatistics(meals: Meal[], dateFilter: DateFilter):
 function getRescueCarbsAveragePerRange(meals: Meal[]): RescueCarbsAveragePerRange {
   const totalNumberOfRescueCarbs = meals.length
 
-
   const confirmedCarbs = meals.map((meal) => {
     if (meal.prescribedNutrition === undefined) {
       return meal.nutrition.carbohydrate.net
-    }else{
+    } else {
       return 0
     }
   }).filter((confirmedCarb) => confirmedCarb !== 0).length
