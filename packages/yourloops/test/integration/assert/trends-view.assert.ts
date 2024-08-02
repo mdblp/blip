@@ -192,17 +192,17 @@ export const checkTrendsBolusAndCarbsAverage = async () => {
 
   expect(wrapper).toBeVisible()
 
-  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent("Rescue carb intakes & manual boluses over a period of 2 weeks")
+  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent("Rescue carb intakes & manual & pen bolus over a period of 2 weeks")
   const mondayButton= screen.getByRole('button', { name: 'M' })
 
   await userEvent.click(mondayButton)
-  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent("Rescue carb intakes & manual boluses over a period of 12 days")
+  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent("Rescue carb intakes & manual & pen bolus over a period of 12 days")
   await userEvent.click(mondayButton)
 
   expect(within(wrapper).getAllByTestId('carbs-and-bolus-cell')).toHaveLength(8)
 
   const caption = within(wrapper).getByTestId('rescue-carbs-and-manual-bolus-average-caption')
-  expect(caption).toHaveTextContent('Avg. times per day that rescue carbs have been taken Avg. nb. of manual boluses per day')
+  expect(caption).toHaveTextContent('Number of rescue carbs per dayNumber of manual & pen bolus per day')
 
   const carbsCells = within(wrapper).getAllByTestId('rescue-carbs-cell')
   const bolusCells = within(wrapper).getAllByTestId('manual-bolus-cell')
@@ -226,7 +226,7 @@ export const checkTrendsBolusAndCarbsAverage = async () => {
 
   const oneWeekButton = screen.getByRole('button', { name: '1 week' })
   await userEvent.click(oneWeekButton)
-  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent("Rescue carb intakes & manual boluses over a period of 1 week")
+  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent("Rescue carb intakes & manual & pen bolus over a period of 1 week")
 
   expect(bolusCells[0]).toHaveTextContent('2')
   expect(bolusCells[1]).toHaveTextContent('4')
