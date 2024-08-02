@@ -72,14 +72,14 @@ describe('getCarbsData', () => {
       const meals = buildMealData(bgDataSourceTwoWeeks)
       const rescueCarbs = CarbsStatisticsService.getRescueCarbsAverageStatistics(meals, dateFilterTwoWeeks)
       const expected: RescueCarbsAverageStatistics = new Map([
-        [HoursRange.MidnightToThree, { averageRecommendedCarb: 5, numberOfModifiedCarbs: 0, rescueCarbsOverrideAverage: 0, numberOfRescueCarbs: 3 }],
-        [HoursRange.ThreeToSix, { averageRecommendedCarb: 5, numberOfModifiedCarbs: 0, rescueCarbsOverrideAverage: 0, numberOfRescueCarbs: 3 }],
+        [HoursRange.MidnightToThree, { averageRecommendedCarb: 2, numberOfModifiedCarbs: 3, rescueCarbsOverrideAverage: 3, numberOfRescueCarbs: 3 }],
+        [HoursRange.ThreeToSix, { averageRecommendedCarb: 2, numberOfModifiedCarbs: 3, rescueCarbsOverrideAverage: 3, numberOfRescueCarbs: 3 }],
         [HoursRange.SixToNine, { averageRecommendedCarb: 0, numberOfModifiedCarbs: 0, rescueCarbsOverrideAverage: 0, numberOfRescueCarbs: 0 }],
         [HoursRange.NineToTwelve, { averageRecommendedCarb: 0, numberOfModifiedCarbs: 0, rescueCarbsOverrideAverage: 0, numberOfRescueCarbs: 0 }],
-        [HoursRange.TwelveToFifteen, { averageRecommendedCarb: 5, numberOfModifiedCarbs: 0, rescueCarbsOverrideAverage: 0, numberOfRescueCarbs: 3 }],
+        [HoursRange.TwelveToFifteen, { averageRecommendedCarb: 2, numberOfModifiedCarbs: 3, rescueCarbsOverrideAverage: 3, numberOfRescueCarbs: 3 }],
         [HoursRange.FifteenToEighteen, { averageRecommendedCarb: 0, numberOfModifiedCarbs: 0, rescueCarbsOverrideAverage: 0, numberOfRescueCarbs: 0 }],
-        [HoursRange.EighteenToTwentyOne, { averageRecommendedCarb: 5, numberOfModifiedCarbs: 0, rescueCarbsOverrideAverage: 0, numberOfRescueCarbs: 3 }],
-        [HoursRange.TwentyOneToMidnight, { averageRecommendedCarb: 5, numberOfModifiedCarbs: 0, rescueCarbsOverrideAverage: 0, numberOfRescueCarbs: 3 }]
+        [HoursRange.EighteenToTwentyOne, { averageRecommendedCarb: 2, numberOfModifiedCarbs: 3, rescueCarbsOverrideAverage: 3, numberOfRescueCarbs: 3 }],
+        [HoursRange.TwentyOneToMidnight, { averageRecommendedCarb: 2, numberOfModifiedCarbs: 3, rescueCarbsOverrideAverage: 3, numberOfRescueCarbs: 3 }]
       ])
       expect(rescueCarbs).toEqual(expected)
     })

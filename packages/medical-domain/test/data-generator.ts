@@ -180,7 +180,7 @@ function createMealData(date?: Date): Meal {
     },
     prescribedNutrition: {
       carbohydrate: {
-        net: 5,
+        net: 2,
         units: Unit.Gram
       }
     },

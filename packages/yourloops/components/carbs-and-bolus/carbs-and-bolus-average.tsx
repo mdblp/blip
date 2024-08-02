@@ -65,7 +65,7 @@ export const CarbsAndBolusAverage: FC<CarbsAndBolusAverageProps> = ({ medicalDat
   const manualBolusStats = BasalBolusStatisticsService.getManualBolusAverageStatistics(medicalData.bolus, dateFilter)
 
   const numberOfDaysSelected = (): string => {
-    if (NB_OF_DAYS_IN_A_WEEK) {
+    if (numberOfDays === NB_OF_DAYS_IN_A_WEEK) {
       return t('preset-dates-range-1week')
     }
     if (numberOfDays === NB_OF_DAYS_IN_A_WEEK * 2) {
