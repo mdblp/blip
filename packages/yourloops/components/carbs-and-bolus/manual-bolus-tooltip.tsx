@@ -46,11 +46,11 @@ export const ManualBolusTooltip: FC<{ manualBolus: ManualBolusAveragePerRange }>
         variant="subtitle2"
         className="header"
       >
-        {t('manual-bolus')}
+        {t('manual-pen-bolus')}
       </Typography>
       <Box className="content">
         <div className="flex-justify-between-align-center">
-          <Typography variant="body2">{t('number-of-injections')}</Typography>
+          <Typography variant="body2">{t('number-of-bolus')}</Typography>
           <Typography variant="body2">{manualBolus.numberOfInjections}</Typography>
         </div>
         <div className="flex-justify-between-align-center">
