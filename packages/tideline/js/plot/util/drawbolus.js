@@ -17,6 +17,7 @@
 
 import _ from 'lodash'
 import commonbolus from './commonbolus'
+import { BolusSubtype, DatumType, Prescriptor, WizardInputMealSource } from 'medical-domain'
 
 const BolusTypes = {
   meal: 1,
@@ -31,20 +32,20 @@ const BolusTypes = {
  * @returns {number} The type of bolus
  */
 function bolusToLegend(b) {
-  if (b.type === 'wizard') {
-    if (b?.inputMeal?.source === 'umm') {
+  if (b.type === DatumType.Wizard) {
+    if (b?.inputMeal?.source === WizardInputMealSource.Umm) {
       return BolusTypes.umm
     }
     return BolusTypes.meal
   }
   const bolus = commonbolus.getBolus(b)
-  if (bolus.subType === 'pen') {
+  if (bolus.subType === BolusSubtype.Pen) {
     return BolusTypes.pen
   }
-  if (bolus.prescriptor === 'manual') {
+  if (bolus.prescriptor === Prescriptor.Manual) {
     return BolusTypes.manual
   }
-  if (bolus.subType === 'biphasic') {
+  if (bolus.subType === BolusSubtype.Biphasic) {
     return BolusTypes.meal
   }
   return BolusTypes.micro
