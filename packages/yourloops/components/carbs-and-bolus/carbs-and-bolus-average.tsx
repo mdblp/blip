@@ -87,7 +87,7 @@ export const CarbsAndBolusAverage: FC<CarbsAndBolusAverageProps> = ({ medicalDat
     >
       <Typography sx={{ fontWeight: 500, marginBottom: theme.spacing(1) }}
                   data-testid="title-rescue-carbs-and-manual-bolus-average">
-        {t('daily-rescue-carbs-and-manual-bolus', { numberOfDays: numberOfDaysSelected() })}
+        {t('daily-rescue-carbs-and-manual-and-pen-bolus', { numberOfDays: numberOfDaysSelected() })}
       </Typography>
       <Box display="flex">
         <CarbsAndBolusCell
