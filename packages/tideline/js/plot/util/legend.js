@@ -32,12 +32,12 @@ const BOLUS_LEGEND_COMMON_CLASSES = 'd3-bolus d3-rect-bolus-legend'
 const ICON_TYPE_CIRCLE = 'circle'
 const ICON_TYPE_SQUARE = 'rect'
 
-const SQUARE_WIDTH_FACTOR = 1.5
-
 const getLegendIcon = (iconType, customClasses, customWidthFactor = 1) => {
+  const widthFactor = iconType === ICON_TYPE_SQUARE ? 1.5 : 1
+
   return {
     create: function (opts) {
-      opts.widths.push(opts.SHAPE_WIDTH * customWidthFactor)
+      opts.widths.push(opts.SHAPE_WIDTH * customWidthFactor * widthFactor)
       return opts.selection.append(iconType)
         .attr({
           class: customClasses
@@ -45,22 +45,6 @@ const getLegendIcon = (iconType, customClasses, customWidthFactor = 1) => {
     },
     type: iconType
   }
-}
-
-const getLegendCircle = (customClasses, customWidthFactor = 1) => {
-  return getLegendIcon(ICON_TYPE_CIRCLE, customClasses, customWidthFactor)
-}
-
-const getLegendSquare = (customClasses) => {
-  return getLegendIcon(ICON_TYPE_SQUARE, customClasses, SQUARE_WIDTH_FACTOR)
-}
-
-const getBolusLegendClasses = (customClass) => {
-  return `${BOLUS_LEGEND_COMMON_CLASSES} ${customClass}`
-}
-
-const getBgLegendClasses = (customClass) => {
-  return `${BG_LEGEND_COMMON_CLASSES} ${customClass}`
 }
 
 const legend = {
@@ -137,11 +121,11 @@ const legend = {
       },
       type: 'text'
     },
-    getLegendCircle(getBgLegendClasses('d3-bg-very-high')),
-    getLegendCircle(getBgLegendClasses('d3-bg-high')),
-    getLegendCircle(getBgLegendClasses('d3-bg-target')),
-    getLegendCircle(getBgLegendClasses('d3-bg-low')),
-    getLegendCircle(getBgLegendClasses('d3-bg-very-low')),
+    getLegendIcon(ICON_TYPE_CIRCLE, `${BG_LEGEND_COMMON_CLASSES} d3-bg-very-high`),
+    getLegendIcon(ICON_TYPE_CIRCLE, `${BG_LEGEND_COMMON_CLASSES} d3-bg-high`),
+    getLegendIcon(ICON_TYPE_CIRCLE, `${BG_LEGEND_COMMON_CLASSES} d3-bg-target`),
+    getLegendIcon(ICON_TYPE_CIRCLE, `${BG_LEGEND_COMMON_CLASSES} d3-bg-low`),
+    getLegendIcon(ICON_TYPE_CIRCLE, `${BG_LEGEND_COMMON_CLASSES} d3-bg-very-low`),
     {
       create: function (opts) {
         return opts.selection.append('text')
@@ -186,7 +170,7 @@ const legend = {
       type: 'text'
     },
     // Meal Bolus
-    getLegendSquare(getBolusLegendClasses('d3-bolus-meal')),
+    getLegendIcon(ICON_TYPE_SQUARE, `${BOLUS_LEGEND_COMMON_CLASSES} d3-bolus-meal`),
     {
       create: (opts) => {
         return opts.selection.append('text')
@@ -202,7 +186,7 @@ const legend = {
       type: 'text'
     },
     // Micro Bolus
-    getLegendSquare(getBolusLegendClasses('d3-bolus-micro')),
+    getLegendIcon(ICON_TYPE_SQUARE, `${BOLUS_LEGEND_COMMON_CLASSES} d3-bolus-micro`),
     {
       create: function (opts) {
         return opts.selection.append('text')
@@ -218,7 +202,7 @@ const legend = {
       type: 'text'
     },
     // Manual Bolus
-    getLegendSquare(getBolusLegendClasses('d3-bolus-manual')),
+    getLegendIcon(ICON_TYPE_SQUARE, `${BOLUS_LEGEND_COMMON_CLASSES} d3-bolus-manual`),
     {
       create: function (opts) {
         return opts.selection.append('text')
@@ -234,7 +218,7 @@ const legend = {
       type: 'text'
     },
     // Pen Bolus
-    getLegendSquare(getBolusLegendClasses('d3-bolus-pen')),
+    getLegendIcon(ICON_TYPE_SQUARE, `${BOLUS_LEGEND_COMMON_CLASSES} d3-bolus-pen`),
     {
       create: function (opts) {
         return opts.selection.append('text')
@@ -250,7 +234,7 @@ const legend = {
       type: 'text'
     },
     // Undelivered
-    getLegendSquare(getBolusLegendClasses('d3-bolus-undelivered')),
+    getLegendIcon(ICON_TYPE_SQUARE, `${BOLUS_LEGEND_COMMON_CLASSES} d3-bolus-undelivered`),
     {
       create: function (opts) {
         return opts.selection.append('text')
@@ -313,7 +297,7 @@ const legend = {
     }
   ].reverse(),
   carbs: [
-    getLegendCircle('d3-circle-carbs-legend'),
+    getLegendIcon(ICON_TYPE_CIRCLE, 'd3-circle-carbs-legend'),
     {
       create: function (opts) {
         return opts.selection.append('text')
@@ -328,7 +312,7 @@ const legend = {
       },
       type: 'text'
     },
-    getLegendCircle('d3-circle-rescuecarbs-legend', 1.5),
+    getLegendIcon(ICON_TYPE_CIRCLE, 'd3-circle-rescuecarbs-legend', 1.5),
     {
       create: function (opts) {
         return opts.selection.append('text')
