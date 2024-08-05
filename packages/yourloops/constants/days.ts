@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,21 +25,5 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { HoursRange } from './satistics.model'
-
-export interface CarbsStatistics {
-  totalCarbsPerDay: number
-  rescueCarbsPerDay: number
-  mealCarbsPerDay: number
-  totalMealCarbsWithRescueCarbsEntries: number
-  totalRescueCarbsEntries: number
-}
-
-export interface RescueCarbsAveragePerRange {
-  numberOfRescueCarbs: number
-  numberOfModifiedCarbs: number
-  averageRecommendedCarb: number
-  rescueCarbsOverrideAverage: number
-}
-
-export type RescueCarbsAverageStatistics = Map<HoursRange, RescueCarbsAveragePerRange>
+export const NB_OF_DAYS_IN_A_WEEK = 7
+export const NB_OF_DAYS_IN_A_MONTH = 30
