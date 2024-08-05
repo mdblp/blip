@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,8 +29,10 @@ import { type ParameterConfig } from '../medical/datum/pump-settings.model'
 import { HoursRange } from './satistics.model'
 
 export interface BasalBolusStatistics {
-  bolus: number
-  basal: number
+  totalMealBoluses: number
+  totalManualBoluses: number
+  totalPenBoluses: number
+  totalCorrectiveBolusesAndBasals: number
   total: number
 }
 

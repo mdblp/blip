@@ -115,15 +115,17 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
     : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
 
   const {
-    bolus,
-    basal,
+    totalMealBoluses,
+    totalManualBoluses,
+    totalPenBoluses,
+    totalCorrectiveBolusesAndBasals,
     total: basalBolusTotal
-  } = BasalBolusStatisticsService.getBasalBolusData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter)
+  } = BasalBolusStatisticsService.getBasalBolusData(medicalData.basal, medicalData.bolus, medicalData.wizards, numberOfDays, dateFilter)
 
   const {
     weight,
     totalInsulin: dailyDose
-  } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, numberOfDays, dateFilter, medicalData.pumpSettings)
+  } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, medicalData.wizards, numberOfDays, dateFilter, medicalData.pumpSettings)
 
   const {
     automatedBasalDuration,
@@ -160,8 +162,10 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
         />
         <Divider className={classes.divider}/>
         <TotalInsulinStat
-          basal={basal}
-          bolus={bolus}
+          totalMealBoluses={totalMealBoluses}
+          totalManualBoluses={totalManualBoluses}
+          totalPenBoluses={totalPenBoluses}
+          totalCorrectiveBolusesAndBasals={totalCorrectiveBolusesAndBasals}
           totalInsulin={basalBolusTotal}
           weight={weight}
           dailyDose={dailyDose}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,6 +30,7 @@ import { createMealData, createRandomBasal, createRandomBolus, createWizardData 
 import {
   type Basal,
   type Bolus,
+  BolusSubtype,
   type Meal,
   Prescriptor,
   type Wizard,
@@ -38,7 +39,7 @@ import {
 } from '../../src'
 
 type BgDataRange = Array<[Date, string, number?]>
-type BolusDataRange = Array<[Date, number, Prescriptor?]>
+type BolusDataRange = Array<[Date, number, Prescriptor?, BolusSubtype?]>
 type BasalDataRange = Array<[Date, number, number, string]>
 const abbottDevice = 'AbbottFreeStyleLibre-XXX-XXXX'
 const dexcomDevice = 'Dexcom-XXX-XXXX'
@@ -91,10 +92,10 @@ export const basalsData: BasalDataRange = [
 ]
 
 export const bolusData: BolusDataRange = [
-  [new Date('2018-02-01T01:00:00Z'), 4],
-  [new Date('2018-02-01T02:00:00Z'), 5],
-  [new Date('2018-02-01T03:00:00Z'), 6],
-  [new Date('2018-02-03T03:00:00Z'), 4]
+  [new Date('2018-02-01T01:00:00Z'), 4,undefined, BolusSubtype.Pen],
+  [new Date('2018-02-01T02:00:00Z'), 5,undefined, BolusSubtype.Normal],
+  [new Date('2018-02-01T03:00:00Z'), 6,undefined, BolusSubtype.Biphasic],
+  [new Date('2018-02-03T03:00:00Z'), 4,undefined, BolusSubtype.Normal]
 ]
 
 export const manualBolusData: BolusDataRange = [
@@ -183,7 +184,7 @@ export const buildBasalsData = (basalsData: BasalDataRange): Basal[] => (
 export const buildBolusData = (bolusData: BolusDataRange): Bolus[] => (
   bolusData.map((bolus) => (
     {
-      ...createRandomBolus(bolus[0]),
+      ...createRandomBolus(bolus[0], bolus[3]),
       normal: bolus[1],
       prescriptor: bolus[2] ?? Prescriptor.Auto
     }

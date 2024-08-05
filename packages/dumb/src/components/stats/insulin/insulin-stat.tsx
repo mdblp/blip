@@ -84,7 +84,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   }
 
   const getPercentage = (value: number): string => {
-    const res = Math.round(100 * value / totalInsulin)
+    const res = Math.round(1000 * value / totalInsulin) / 10
     return res > 0 ? res.toString(10) : EMPTY_DATA_PLACEHOLDER
   }
 
@@ -96,7 +96,9 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
         alignItems="center"
       >
         <Box className={commonStyles.title}>
-          {isDailyPage ? t('total-insulin') : t('average-daily-total-insulin')}
+          {isDailyPage ? (<span>{t('total-insulin')}<span className={styles.insulinUnit}>{t('insulin-unit-u')}</span></span>)
+            : (<span>{t('average-daily-total-insulin')}<span className={styles.insulinUnit}>{t('insulin-unit-u')}</span></span>)
+          }
           <StatTooltip
             annotations={annotations}
           />
@@ -108,10 +110,11 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
           className={styles.boldValue}
         >
           <span className={styles.titleTotal}>
-            {totalInsulin}
-          </span>
-          <span className={styles.titleSuffix}>
-            U
+            <Chip
+              label={totalInsulin}
+              variant="outlined"
+              size="small"
+            />
           </span>
         </Box>
       </Box>
@@ -135,7 +138,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
                   label={`${entry.value > 0 ? entry.valueString : '0'} ${entry.units}`}
                   variant="outlined"
                   size="small"
-                  sx={{ marginRight: theme.spacing(2) }}
+                  sx={{ marginRight: theme.spacing(1) }}
                 />
                 <Box
                   className={styles.rowPercent}

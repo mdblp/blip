@@ -120,11 +120,11 @@ function createRandomBasal(date?: Date, hours?: number): Basal {
   }
 }
 
-function createRandomBolus(date?: Date): Bolus {
+function createRandomBolus(date?: Date, subType?: BolusSubtype): Bolus {
   return {
     ...createBaseData(date),
     type: DatumType.Bolus,
-    subType: faker.helpers.arrayElement(Object.values(BolusSubtype)),
+    subType: subType ?? faker.helpers.arrayElement(Object.values(BolusSubtype)),
     normal: 0,
     prescriptor: Prescriptor.Auto,
     wizard: null

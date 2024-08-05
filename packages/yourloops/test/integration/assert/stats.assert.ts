@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,7 @@ import { type BoundFunctions, type queries, screen, waitFor, within } from '@tes
 
 export const checkStatTooltip = async (patientStatistics: BoundFunctions<typeof queries>, infoIconLabel: string, expectedTextContent: string) => {
   const element = patientStatistics.getByText(infoIconLabel)
-  const infoIcon = within(element).getByTestId('info-icon')
+  const infoIcon = within(element.parentElement).getByTestId('info-icon')
   await userEvent.hover(infoIcon)
   const tooltip = await screen.findByTestId('stat-tooltip-content')
   expect(tooltip).toHaveTextContent(expectedTextContent)
@@ -50,7 +50,7 @@ const hoverOnCBGPercentageStat = async (patientStatistics: BoundFunctions<typeof
 export const checkTooltip = (element: BoundFunctions<typeof queries>, labelToQuery: string) => {
   const stat = element.getByText(labelToQuery)
   expect(stat).toBeVisible()
-  expect(within(stat).queryByTestId('info-icon')).toBeInTheDocument()
+  expect(within(stat.parentElement).queryByTestId('info-icon')).toBeInTheDocument()
 }
 
 export const checkTimeInRangeStatsTitle = async () => {
