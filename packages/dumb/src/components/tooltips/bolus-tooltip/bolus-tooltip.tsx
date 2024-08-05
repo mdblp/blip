@@ -109,7 +109,7 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
       case BolusType.Micro:
         return t('Micro Bolus')
       case BolusType.Pen:
-        return t('Pen Bolus')
+        return t('bolus_pen')
       default:
         return ''
     }
