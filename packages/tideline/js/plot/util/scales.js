@@ -212,7 +212,7 @@ function createScaleBasal(data, pool) {
 export function createYAxisBasal(tidelineData, pool) {
   const d3 = window.d3
   const scale = createScaleBasal(tidelineData.medicalData.basal, pool)
-  const basalTickValues = [0, 1, 3, 5]
+  const basalTickValues = [0, 1, 3]
 
   const axis = d3.svg.axis()
     .scale(scale)
