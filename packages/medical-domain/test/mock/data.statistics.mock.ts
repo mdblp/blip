@@ -27,7 +27,15 @@
 
 import type DateFilter from '../../src/domains/models/time/date-filter.model'
 import { createMealData, createRandomBasal, createRandomBolus, createWizardData } from '../data-generator'
-import { type Basal, type Bolus, type Meal, WizardInputMealFat, WizardInputMealSource, type Wizard,  Prescriptor, Unit } from '../../src'
+import {
+  type Basal,
+  type Bolus,
+  type Meal,
+  Prescriptor,
+  type Wizard,
+  WizardInputMealFat,
+  WizardInputMealSource
+} from '../../src'
 
 type BgDataRange = Array<[Date, string, number?]>
 type BolusDataRange = Array<[Date, number, Prescriptor?]>
@@ -100,7 +108,7 @@ export const manualBolusData: BolusDataRange = [
   [new Date('2018-02-03T11:33:00.000Z'), 2, Prescriptor.Manual],
   [new Date('2018-02-03T17:33:00.000Z'), 3],
   [new Date('2018-02-03T21:33:00.000Z'), 2, Prescriptor.Manual],
-  [new Date('2018-02-11T00:33:00.000Z'), 3.2],
+  [new Date('2018-02-11T00:33:00.000Z'), 3.2, Prescriptor.Manual],
   [new Date('2018-02-11T04:33:00.000Z'), 4],
   [new Date('2018-02-11T11:33:00.000Z'), 2],
   [new Date('2018-02-11T17:33:00.000Z'), 4, Prescriptor.Manual],
@@ -142,9 +150,7 @@ export const buildMealData = (data: BgDataRange): Meal[] => (
     {
       ...createMealData(mealData[0]),
       deviceName: mealData[1],
-      prescribedNutrition: mealData[2]
-        ? { carbohydrate: { net: mealData[2], units: Unit.Gram } }
-        : undefined
+      prescriptor: Prescriptor.Hybrid
     }
   ))
 )

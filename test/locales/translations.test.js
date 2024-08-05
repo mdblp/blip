@@ -451,7 +451,6 @@ describe('Locales tests', () => {
         missingTranslations.push(key)
       }
     }
-
     expect(unusedTranslations, `Unused translations: ${JSON.stringify(unusedTranslations)}`).to.be.empty
     expect(missingTranslations, `Missing translations: ${JSON.stringify(missingTranslations)}`).to.be.empty
   })
