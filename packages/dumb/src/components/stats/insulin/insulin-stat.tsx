@@ -84,7 +84,8 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   }
 
   const getPercentage = (value: number): string => {
-    const res = Math.round(1000 * value / totalInsulin) / 10
+    // We multiply by ten and divide by ten for the rounding
+    const res = Math.round(100 * 10 * value / totalInsulin) / 10
     return res > 0 ? res.toString(10) : EMPTY_DATA_PLACEHOLDER
   }
 

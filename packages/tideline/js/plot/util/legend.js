@@ -225,7 +225,7 @@ const legend = {
           .attr({
             class: 'd3-pool-legend'
           })
-          .text(t('Pen Bolus'))
+          .text(t('bolus_pen'))
           .each(function () {
             opts.widths.push(this.getBoundingClientRect().width - legend.SHAPE_MARGIN)
             opts.textHeight = this.getBoundingClientRect().height

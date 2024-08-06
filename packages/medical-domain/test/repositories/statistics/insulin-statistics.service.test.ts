@@ -79,7 +79,7 @@ describe('getBasalBolusData', () => {
     expect(basalBolusData).toEqual(expectBasalBolusData)
   })
 
-  it('should return tehe avg daily total basal and bolus insulin delivery when viewing more than 1 day', () => {
+  it('should return the avg daily total basal and bolus insulin delivery when viewing more than 1 day', () => {
     const basals = buildBasalsData(basalsData)
     const bolus = buildBolusData(bolusData)
 

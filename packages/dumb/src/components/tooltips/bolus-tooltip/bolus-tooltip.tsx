@@ -109,7 +109,7 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
       case BolusType.Correction:
         return t('Correction')
       case BolusType.Pen:
-        return t('Pen Bolus')
+        return t('bolus_pen')
       default:
         return ''
     }

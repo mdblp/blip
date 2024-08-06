@@ -80,7 +80,8 @@ const ignoredTransKeyInBlipFiles = [
   'params|${row.name}',
   '${titleType} Above Range',
   '${titleType} Below Range',
-  '${titleType} In Range'
+  '${titleType} In Range',
+  'Micro Bolus'
 ]
 const ignoredTransKeyForYourLoops = [
   // Countries (from locales/languages.json)
