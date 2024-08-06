@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,5 +29,6 @@ export enum BolusType {
   Manual = 'Manual',
   Meal = 'Meal',
   Micro = 'Micro',
+  Pen = 'Pen',
   Umm = 'Umm'
 }

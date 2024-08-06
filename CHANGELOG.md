@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## 3.4.0-beta - 2024-04-05
 ### Added
 - YLP-2958 Information page before user signup
+- YLP-3007 Display pen boluses in Daily view
 
 ### Changed
 - YLP-2866 Display events in a dedicated section in Daily view
