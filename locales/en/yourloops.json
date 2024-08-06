@@ -331,6 +331,7 @@
   "mandatory-range": "Enter a number between {{lowValue}} and {{highValue}}",
   "manual-pen-bolus": "Manual and pen bolus",
   "manual-bolus-number": "Number of manual & pen bolus per day",
+  "manual-bolus": "Manual bolus",
   "manual-flag": "Manual flag",
   "maximum": "Maximum",
   "meal-bolus": "Meal bolus",
