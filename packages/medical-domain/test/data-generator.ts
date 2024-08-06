@@ -177,7 +177,13 @@ function createMealData(date?: Date): Meal {
         net: 5,
         units: Unit.Gram
       }
-    }
+    },
+    prescribedNutrition: {
+      carbohydrate: {
+        net: 2,
+        units: Unit.Gram
+      }
+    },
   }
 }
 

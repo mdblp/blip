@@ -18,18 +18,19 @@
 import _ from 'lodash'
 
 import format from '../../data/util/format'
+import { DatumType } from 'medical-domain'
 
 const commonBolus = {
   getBolus: (b) => {
-    if (b.type === 'wizard' && !_.isEmpty(b.bolus)) {
+    if (b.type === DatumType.Wizard && !_.isEmpty(b.bolus)) {
       return b.bolus
-    } else if (b.type === 'bolus') {
+    } else if (b.type === DatumType.Bolus) {
       return b
     }
     return null
   },
   getRecommended: function(d) {
-    if (d.type !== 'wizard' || _.isEmpty(d.recommended)) {
+    if (d.type !== DatumType.Wizard || _.isEmpty(d.recommended)) {
       return Number.NaN
     }
     if (Number.isFinite(d.recommended.net)) {
@@ -50,7 +51,7 @@ const commonBolus = {
       return Number.NaN
     }
     let rec = 0
-    if (d.type === 'wizard') {
+    if (d.type === DatumType.Wizard) {
       rec = this.getRecommended(d)
       if (Number.isNaN(rec)) {
         rec = 0

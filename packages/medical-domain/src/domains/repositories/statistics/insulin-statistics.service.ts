@@ -126,7 +126,7 @@ function getAutomatedAndManualBasalDuration(basalsData: Basal[], dateFilter: Dat
   }
 }
 
-function getManualBolusAverageStatistics(boluses: Bolus[], numberOfDays: number, dateFilter: DateFilter): ManualBolusAverageStatistics {
+function getManualBolusAverageStatistics(boluses: Bolus[], dateFilter: DateFilter): ManualBolusAverageStatistics {
   const carbsMap = buildHoursRangeMap<Bolus>()
 
   const midnightToThree = carbsMap.get(HoursRange.MidnightToThree)as Bolus[]
@@ -178,23 +178,24 @@ function getManualBolusAverageStatistics(boluses: Bolus[], numberOfDays: number,
   })
 
   return new Map([
-    [HoursRange.MidnightToThree, getManualBolusAveragePerRange(midnightToThree, numberOfDays)],
-    [HoursRange.ThreeToSix, getManualBolusAveragePerRange(threeToSix, numberOfDays)],
-    [HoursRange.SixToNine, getManualBolusAveragePerRange(sixToNine, numberOfDays)],
-    [HoursRange.NineToTwelve, getManualBolusAveragePerRange(nineToTwelve, numberOfDays)],
-    [HoursRange.TwelveToFifteen, getManualBolusAveragePerRange(twelveToFifteen, numberOfDays)],
-    [HoursRange.FifteenToEighteen, getManualBolusAveragePerRange(fifteenToEighteen, numberOfDays)],
-    [HoursRange.EighteenToTwentyOne, getManualBolusAveragePerRange(eighteenToTwentyOne, numberOfDays)],
-    [HoursRange.TwentyOneToMidnight, getManualBolusAveragePerRange(twentyOneToMidnight, numberOfDays)]
+    [HoursRange.MidnightToThree, getManualBolusAveragePerRange(midnightToThree)],
+    [HoursRange.ThreeToSix, getManualBolusAveragePerRange(threeToSix)],
+    [HoursRange.SixToNine, getManualBolusAveragePerRange(sixToNine)],
+    [HoursRange.NineToTwelve, getManualBolusAveragePerRange(nineToTwelve)],
+    [HoursRange.TwelveToFifteen, getManualBolusAveragePerRange(twelveToFifteen)],
+    [HoursRange.FifteenToEighteen, getManualBolusAveragePerRange(fifteenToEighteen)],
+    [HoursRange.EighteenToTwentyOne, getManualBolusAveragePerRange(eighteenToTwentyOne)],
+    [HoursRange.TwentyOneToMidnight, getManualBolusAveragePerRange(twentyOneToMidnight)]
   ])
 }
 
-function getManualBolusAveragePerRange(boluses: Bolus[], numberOfDays: number): ManualBolusAveragePerRange {
-  const confirmedDoseTotal = boluses.reduce((totalDose, bolus) => totalDose + (bolus.normal ?? 0), 0)
-  const numberOfInjections = boluses.length / numberOfDays
+function getManualBolusAveragePerRange(boluses: Bolus[]): ManualBolusAveragePerRange {
+  const confirmedDoseValues = boluses.reduce((totalDose, bolus) => totalDose + (bolus.normal ?? 0), 0)
+  const numberOfInjections = boluses.length
+  const confirmedDose = numberOfInjections === 0 ? 0 : roundValue (confirmedDoseValues / numberOfInjections)
   return {
-    confirmedDose: roundValue(confirmedDoseTotal / numberOfDays, 1),
-    numberOfInjections: roundValue(numberOfInjections, 1)
+    confirmedDose,
+    numberOfInjections
   }
 }
 
@@ -202,7 +203,7 @@ interface BasalBolusStatisticsAdapter {
   getBasalBolusData: (basals: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter) => BasalBolusStatistics
   getTotalInsulinAndWeightData: (basals: Basal[], bolus: Bolus[], numDays: number, dateFilter: DateFilter, pumpSettings: PumpSettings[]) => TotalInsulinAndWeightStatistics
   getAutomatedAndManualBasalDuration: (basalsData: Basal[], dateFilter: DateFilter) => TimeInAutoStatistics
-  getManualBolusAverageStatistics: (boluses: Bolus[], numberOfDays: number, dateFilter: DateFilter) => ManualBolusAverageStatistics
+  getManualBolusAverageStatistics: (boluses: Bolus[], dateFilter: DateFilter) => ManualBolusAverageStatistics
 }
 
 export const BasalBolusStatisticsService: BasalBolusStatisticsAdapter = {

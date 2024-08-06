@@ -5,10 +5,12 @@ It is based on Tidepool Blip 1.27.
 ## 3.4.0-beta - 2024-04-05
 ### Added
 - YLP-2958 Information page before user signup
+- YLP-3007 Display pen boluses in Daily view
 
 ### Changed
 - YLP-2866 Display events in a dedicated section in Daily view
 - YLP-2974 Update colors in Daily and Trends views to match DBL theme
+- YLP-2992 As a user, I want to see the daily numbers of rescue carbs intake / manual boluses and not the average
 - YLP-3019 New design for stats
 - YLP-3075 As a user, I want to be able to choose Japan or UK country
 - YLP-3087 As a user, I want to see the medisafe pump event in yourloops
