@@ -106,8 +106,8 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
         return t('Manual Bolus')
       case BolusType.Meal:
         return t('Meal Bolus')
-      case BolusType.Micro:
-        return t('Micro Bolus')
+      case BolusType.Correction:
+        return t('Correction')
       case BolusType.Pen:
         return t('Pen Bolus')
       default:
@@ -121,8 +121,8 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
         return colors.bolusManual
       case BolusType.Meal:
         return colors.bolusMeal
-      case BolusType.Micro:
-        return colors.bolusMicro
+      case BolusType.Correction:
+        return colors.bolusCorrection
       case BolusType.Pen:
         return colors.bolusPen
       default:

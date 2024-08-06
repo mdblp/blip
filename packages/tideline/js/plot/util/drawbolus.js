@@ -21,7 +21,7 @@ import { BolusSubtype, DatumType, Prescriptor, WizardInputMealSource } from 'med
 
 const BolusTypes = {
   meal: 1,
-  micro: 2,
+  correction: 2,
   manual: 3,
   pen: 4,
   umm: 5
@@ -48,7 +48,7 @@ function bolusToLegend(b) {
   if (bolus.subType === BolusSubtype.Biphasic) {
     return BolusTypes.meal
   }
-  return BolusTypes.micro
+  return BolusTypes.correction
 }
 
 /**
@@ -62,8 +62,8 @@ function bolusClass(b, baseClass) {
       return `${baseClass} d3-bolus-manual`
     case BolusTypes.meal:
       return `${baseClass} d3-bolus-meal`
-    case BolusTypes.micro:
-      return `${baseClass} d3-bolus-micro`
+    case BolusTypes.correction:
+      return `${baseClass} d3-bolus-correction`
     case BolusTypes.pen:
       return `${baseClass} d3-bolus-pen`
   }
@@ -145,7 +145,7 @@ function drawBolus(pool, opts = {}) {
           x: (d) => xPosition(commonbolus.getBolus(d)),
           y: (d) => opts.yScale(commonbolus.getDelivered(d)),
           width: (d) => {
-            if (bolusToLegend(d) === BolusTypes.micro) {
+            if (bolusToLegend(d) === BolusTypes.correction) {
               return opts.width / 2
             }
             return opts.width
@@ -162,7 +162,7 @@ function drawBolus(pool, opts = {}) {
           x: (d) => xPosition(commonbolus.getBolus(d)),
           y: (d) => opts.yScale(commonbolus.getProgrammed(d)),
           width: (d) => {
-            if (bolusToLegend(d) === BolusTypes.micro) {
+            if (bolusToLegend(d) === BolusTypes.correction) {
               return opts.width / 2
             }
             return opts.width

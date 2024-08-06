@@ -185,15 +185,15 @@ const legend = {
       },
       type: 'text'
     },
-    // Micro Bolus
-    getLegendIcon(ICON_TYPE_SQUARE, `${BOLUS_LEGEND_COMMON_CLASSES} d3-bolus-micro`),
+    // Correction Bolus
+    getLegendIcon(ICON_TYPE_SQUARE, `${BOLUS_LEGEND_COMMON_CLASSES} d3-bolus-correction`),
     {
       create: function (opts) {
         return opts.selection.append('text')
           .attr({
             class: 'd3-pool-legend'
           })
-          .text(t('Micro Bolus'))
+          .text(t('Correction'))
           .each(function () {
             opts.widths.push(this.getBoundingClientRect().width - legend.SHAPE_MARGIN)
             opts.textHeight = this.getBoundingClientRect().height
