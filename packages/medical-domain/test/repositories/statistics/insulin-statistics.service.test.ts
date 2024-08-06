@@ -74,7 +74,9 @@ describe('getBasalBolusData', () => {
       totalManualBoluses: 0,
       totalMealBoluses: 0,
       totalPenBoluses: 4,
-      total: 20.5
+      total: 20.5,
+      basal: 1.5,
+      bolus: 19
     }
     expect(basalBolusData).toEqual(expectBasalBolusData)
   })
@@ -89,7 +91,9 @@ describe('getBasalBolusData', () => {
       totalManualBoluses: 0,
       totalMealBoluses: 0,
       totalPenBoluses: 2,
-      total: 12.75
+      total: 12.75,
+      basal: 1.25,
+      bolus: 11.5
     }
     expect(basalBolusData).toEqual(expectBasalBolusData)
   })

@@ -69,6 +69,8 @@ function getWeight(allPumpSettings: PumpSettings[]): ParameterConfig | undefined
 function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], mealBoluses: Wizard[], numDays: number, dateFilter: DateFilter): BasalBolusStatistics {
   if (numDays === 0) {
     return {
+      bolus:0,
+      basal:0,
       totalMealBoluses:0,
       totalManualBoluses:0,
       totalPenBoluses:0,
@@ -80,7 +82,7 @@ function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], mealBoluses: Wiz
   // Basal computing
   const filteredBasal = BasalService.filterOnDate(basalsData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const basalsResampled = resamplingDuration(filteredBasal, dateFilter.start, dateFilter.end)
-  const basalTotal = basalsResampled.reduce((accumulator, basal) => accumulator + (basal.duration / 3_600_000 * basal.rate), 0)
+  const totalBasal = basalsResampled.reduce((accumulator, basal) => accumulator + (basal.duration / 3_600_000 * basal.rate), 0)
 
   // Bolus computing
   const filteredBolus = BolusService.filterOnDate(bolus, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
@@ -92,7 +94,7 @@ function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], mealBoluses: Wiz
     return total
   }, 0)
 
-  const correctiveBolusesTotal = filteredBolus.reduce((total, bolus) => {
+  const totalCorrectiveBoluses = filteredBolus.reduce((total, bolus) => {
     if (bolus.prescriptor === Prescriptor.Auto || bolus.prescriptor === Prescriptor.Hybrid) {
       return total + bolus.normal
     }
@@ -113,10 +115,13 @@ function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], mealBoluses: Wiz
     return total
   }, 0)
 
-  const totalCorrectiveBolusesAndBasal = basalTotal + correctiveBolusesTotal
+  const totalCorrectiveBolusesAndBasal = totalBasal + totalCorrectiveBoluses
   const total = totalMealBoluses + totalManualBoluses + totalPenBoluses + totalCorrectiveBolusesAndBasal
+  const totalBoluses = totalMealBoluses + totalManualBoluses + totalPenBoluses + totalCorrectiveBoluses
 
   return {
+    bolus: totalBoluses / numDays,
+    basal: totalBasal / numDays,
     totalMealBoluses: totalMealBoluses / numDays,
     totalManualBoluses: totalManualBoluses / numDays,
     totalPenBoluses: totalPenBoluses / numDays,
