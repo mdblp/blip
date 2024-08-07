@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,6 +27,7 @@
 
 import { type PatientListColumns, type PendingPatientListColumns } from './enums/patient-list.enum'
 import { type Patient } from '../../../lib/patient/models/patient.model'
+import { Moment } from 'moment-timezone'
 
 export interface GridRowModel {
   id: string
@@ -42,7 +43,7 @@ export interface GridRowModel {
   [PatientListColumns.GlucoseManagementIndicator]?: number
   [PatientListColumns.BelowRange]?: number
   [PatientListColumns.Variance]?: number
-  [PatientListColumns.LastDataUpdate]?: string
+  [PatientListColumns.LastDataUpdate]?: Moment | null
   [PatientListColumns.Actions]: Patient
 }
 

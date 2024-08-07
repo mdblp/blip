@@ -28,10 +28,7 @@
 import { type GridComparatorFn } from '@mui/x-data-grid'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { getUserName } from '../../../lib/auth/user.util'
-import moment from 'moment-timezone'
-import i18next from 'i18next'
-
-const t = i18next.t.bind(i18next)
+import moment, { Moment } from 'moment-timezone'
 
 interface PatientSortComparator extends GridComparatorFn<Patient> {
   (patient1: Patient, patient2: Patient): number
@@ -39,6 +36,10 @@ interface PatientSortComparator extends GridComparatorFn<Patient> {
 
 interface SortComparator extends GridComparatorFn<string> {
   (value1: string, value2: string): number
+}
+
+interface MomentSortComparator extends GridComparatorFn<Moment | null> {
+  (value1: Moment | null, value2: Moment | null): number
 }
 
 export const sortByUserName: PatientSortComparator = (patient1: Patient, patient2: Patient): number => {
@@ -102,16 +103,13 @@ export const sortByMonitoringAlertsCount: PatientSortComparator = (patient1: Pat
   return 0
 }
 
-export const sortByLastDataUpdate: SortComparator = (date1AsString: string, date2AsString: string): number => {
-  const noDataLabel = t('N/A')
-  if (date2AsString === noDataLabel) {
+export const sortByLastDataUpdate: MomentSortComparator = (date1: Moment | null, date2: Moment | null): number => {
+  if (!date2) {
     return 1
   }
-  if (date1AsString === noDataLabel) {
+  if (!date1) {
     return -1
   }
-  const lastDataUpdateAsDate1 = new Date(date1AsString).getTime()
-  const lastDataUpdateAsDate2 = new Date(date2AsString).getTime()
 
-  return lastDataUpdateAsDate1 - lastDataUpdateAsDate2
+  return date1.isAfter(date2) ? 1 : -1
 }
