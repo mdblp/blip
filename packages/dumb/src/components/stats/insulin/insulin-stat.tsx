@@ -97,7 +97,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
         alignItems="center"
       >
         <Box className={commonStyles.title}>
-          {isDailyPage ? t('total-insulin'): t('average-daily-total-insulin')}
+          {isDailyPage ? t('total-insulin') : t('average-daily-total-insulin')}
           <StatTooltip
             annotations={annotations}
           />
