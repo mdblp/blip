@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -68,11 +68,15 @@ describe('getBasalBolusData', () => {
     const basals = buildBasalsData(basalsData)
     const bolus = buildBolusData(bolusData)
 
-    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, 1, dateFilterOneDay)
+    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, [], 1, dateFilterOneDay)
     const expectBasalBolusData = {
+      totalCorrectiveBolusesAndBasals: 16.5,
+      totalManualBoluses: 0,
+      totalMealBoluses: 0,
+      totalPenBoluses: 4,
+      total: 20.5,
       basal: 1.5,
-      bolus: 15,
-      total: 16.5
+      bolus: 19
     }
     expect(basalBolusData).toEqual(expectBasalBolusData)
   })
@@ -81,11 +85,15 @@ describe('getBasalBolusData', () => {
     const basals = buildBasalsData(basalsData)
     const bolus = buildBolusData(bolusData)
 
-    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, 2, dateFilterTwoWeeks)
+    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, [], 2, dateFilterTwoWeeks)
     const expectBasalBolusData = {
+      totalCorrectiveBolusesAndBasals: 10.75,
+      totalManualBoluses: 0,
+      totalMealBoluses: 0,
+      totalPenBoluses: 2,
+      total: 12.75,
       basal: 1.25,
-      bolus: 9.5,
-      total: 10.75
+      bolus: 11.5
     }
     expect(basalBolusData).toEqual(expectBasalBolusData)
   })

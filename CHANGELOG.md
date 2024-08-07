@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## 3.4.0-beta - 2024-04-05
 ### Added
 - YLP-2958 Information page before user signup
+- YLP-3005 As a User, I want to have an organized total of insulin doses
 - YLP-3007 Display pen boluses in Daily view
 
 ### Changed
@@ -17,6 +18,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3141 As a user, I want my alarms messages to be the same as my device's
 - YLP-3163 As a user, I want to see the basal insulin more precisely in the daily view
 - YLP-3165 Update basal color
+- YLP-3177 As a user, I want to see that "micro boluses" are now called "correction boluses"
 
 ### Fixed
 - YLP-2632 Data is uploaded with a date in the future

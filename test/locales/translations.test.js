@@ -80,7 +80,8 @@ const ignoredTransKeyInBlipFiles = [
   'params|${row.name}',
   '${titleType} Above Range',
   '${titleType} Below Range',
-  '${titleType} In Range'
+  '${titleType} In Range',
+  'Micro Bolus'
 ]
 const ignoredTransKeyForYourLoops = [
   // Countries (from locales/languages.json)
@@ -211,6 +212,8 @@ const ignoredTransKeyForYourLoops = [
   'alert-invite-patient-failed-already-invited',
   'alert-reinvite-patient-failure',
   'alert-reinvite-patient-from-team-success',
+  'Basal',
+  'Bolus',
   'current-trigger-setting-hypoglycemia',
   'current-trigger-setting-tir',
   'product-labelling',
@@ -220,6 +223,7 @@ const ignoredTransKeyForYourLoops = [
   'optional',
   'training-body',
   'refresh',
+  'insulin-unit-u',
   'login-page-desktop-info-1',
   'login-page-desktop-info-2',
   'login-page-desktop-info-3',

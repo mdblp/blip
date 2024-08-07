@@ -49,7 +49,7 @@ export const getBolusType = (insulinEvent: Bolus | Wizard): BolusType => {
   if (bolus?.subType === BolusSubtype.Biphasic) {
     return BolusType.Meal
   }
-  return BolusType.Micro
+  return BolusType.Correction
 }
 
 export const getDelivered = (bolus: Bolus): number => {

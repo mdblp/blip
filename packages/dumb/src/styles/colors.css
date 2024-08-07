@@ -35,7 +35,7 @@
   --bolus-ride: white;
   --bolus-undelivered: var(--error-color-main);
   --bolus-meal: var(--success-color-main);
-  --bolus-micro: var(--info-color-50);
+  --bolus-correction: var(--info-color-50);
   --bolus-manual: var(--dark-blue-main);
   --bolus-pen: var(--purple-main);
   --carbs: var(--success-color-main);
@@ -93,7 +93,7 @@
   bolus: #21c6b6;
   bolusHeader: #EBF7FC;
   bolusMeal: #21c6b6;
-  bolusMicro: #80D1F1;
+  bolusCorrection: #80D1F1;
   bolusManual: #035271;
   bolusPen: #85529C;
   basal: #D5D5D5;

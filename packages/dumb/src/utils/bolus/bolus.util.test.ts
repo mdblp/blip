@@ -54,7 +54,7 @@ describe('BolusUtil', function () {
       expect(getBolusType(bolusPen)).toEqual(BolusType.Pen)
       expect(getBolusType(bolusManualPrescriptor)).toEqual(BolusType.Manual)
       expect(getBolusType(bolusBiphasic)).toEqual(BolusType.Meal)
-      expect(getBolusType(defaultBolus)).toEqual(BolusType.Micro)
+      expect(getBolusType(defaultBolus)).toEqual(BolusType.Correction)
     })
   })
 

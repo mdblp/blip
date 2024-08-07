@@ -66,7 +66,7 @@ class DataUtil {
 
   getBasalBolusData() {
     const dateFilter = this.dateFilter()
-    return BasalBolusStatisticsService.getBasalBolusData(this.rawData.basal, this.rawData.bolus, this.days, dateFilter)
+    return BasalBolusStatisticsService.getBasalBolusData(this.rawData.basal, this.rawData.bolus, this.rawData.wizards, this.days, dateFilter)
   }
 
   getBgSources = () => {
@@ -164,7 +164,7 @@ class DataUtil {
 
   getTotalInsulinAndWeightData() {
     const dateFilter = this.dateFilter()
-    return BasalBolusStatisticsService.getTotalInsulinAndWeightData(this.rawData.basal, this.rawData.bolus, this.days, dateFilter, this.rawData.pumpSettings)
+    return BasalBolusStatisticsService.getTotalInsulinAndWeightData(this.rawData.basal, this.rawData.bolus, this.rawData.wizards, this.days, dateFilter, this.rawData.pumpSettings)
   }
 }
 
