@@ -66,22 +66,26 @@ export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props
       valueString: String(convertToPercentage(totalCorrectiveBolusesAndBasals)),
       units: Unit.InsulinUnit,
       title: t('basal-and-correction-bolus')
-    },
-    {
+    }
+  ]
+  if (totalManualBoluses > 0) {
+    data.push({
       id: 'manual',
       value: convertToPercentage(totalManualBoluses),
       valueString: String(convertToPercentage(totalManualBoluses)),
       units: Unit.InsulinUnit,
       title: t('manual-bolus')
-    },
-    {
+    })
+  }
+  if (totalPenBoluses > 0) {
+    data.push({
       id: 'pen',
       value: convertToPercentage(totalPenBoluses),
       valueString: String(convertToPercentage(totalPenBoluses)),
       units: Unit.InsulinUnit,
       title: t('pen-bolus')
-    }
-  ]
+    })
+  }
   const weightValue = !weight ? '--' : +weight.value
   return (
     <InsulinStat
