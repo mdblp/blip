@@ -40,7 +40,7 @@
     "@mui/lab": "^5.0.0-alpha.151",
     "@mui/material": "^5.14.16",
     "@mui/x-data-grid": "^6.18.2",
-    "axios": "^1.6.0",
+    "axios": "^1.7.4",
     "bows": "^1.7.2",
     "core-js": "^3.33.0",
     "dayjs": "^1.11.10",
