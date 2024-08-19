@@ -27,7 +27,7 @@
 
 :root {
   --basal: var(--grey-25);
-  --basal-automated: var(--info-color-20);
+  --basal-automated: var(--info-color-50);
   --text-on-basal: var(--text-color-primary);
   --text-on-basal-automated: var(--text-color-primary);
   --text-basal: #a4a4a4;
@@ -35,8 +35,9 @@
   --bolus-ride: white;
   --bolus-undelivered: var(--error-color-main);
   --bolus-meal: var(--success-color-main);
-  --bolus-micro: var(--info-color-50);
+  --bolus-correction: var(--info-color-50);
   --bolus-manual: var(--dark-blue-main);
+  --bolus-pen: var(--purple-main);
   --carbs: var(--success-color-main);
   --carbs-text: white;
   --carbs-light-text: white;
@@ -92,11 +93,12 @@
   bolus: #21c6b6;
   bolusHeader: #EBF7FC;
   bolusMeal: #21c6b6;
-  bolusMicro: #80D1F1;
+  bolusCorrection: #80D1F1;
   bolusManual: #035271;
+  bolusPen: #85529C;
   basal: #D5D5D5;
   basalHeader: #DCF1F9;
-  basalAutomated: #CCEDF9;
+  basalAutomated: #80D1F1;
   basalManual: #A8C8D4;
   statDark: #27385B;
   statDefault: #727375;

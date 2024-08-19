@@ -230,6 +230,7 @@ svg {
   font-size: @font-size-small;
   dominant-baseline: central;
   text-anchor: middle;
+  font-weight: bold;
   &.d3-carbs-text-meal {
     fill: var(--carbs-light-text, @text);
   }
@@ -302,13 +303,16 @@ svg {
   &.d3-bolus-umm {
     fill: @bolus-umm
   }
-  &.d3-bolus-micro {
-    fill: @bolus-micro !important;
+  &.d3-bolus-correction {
+    fill: @bolus-correction !important;
     opacity: 0.6;
   }
   &.d3-bolus-manual {
     fill: @bolus-manual !important;
   }
+  &.d3-bolus-pen {
+      fill: @bolus-pen !important;
+    }
   &.d3-bolus-undelivered {
     fill: @bolus-undelivered !important;
   }

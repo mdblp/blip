@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,15 +31,20 @@ import Box from '@mui/material/Box'
 import { RESCUE_CARBS_COLOR, useCarbsAndBolusStyles } from './carbs-and-bolus-styles'
 import { useTranslation } from 'react-i18next'
 import { RescueCarbsAveragePerRange } from 'medical-domain'
+import styles from 'dumb/src/components/tooltips/common/tooltip-line/tooltip-line.css'
 
 export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }> = ({ rescueCarbs }) => {
   const { classes } = useCarbsAndBolusStyles()
   const { t } = useTranslation()
+  const override = Math.sign(rescueCarbs.rescueCarbsOverrideAverage) === 1 ? `+${rescueCarbs.rescueCarbsOverrideAverage}` : rescueCarbs.rescueCarbsOverrideAverage
+
 
   return (
     <Box
       className={classes.hoverTooltip}
+      width={290}
       sx={{ border: `2px solid ${RESCUE_CARBS_COLOR}` }}
+      data-testid="rescue-carbs-tooltip"
     >
       <div className={`${classes.tooltipTail} rescue-carbs`} />
       <Typography
@@ -48,18 +53,22 @@ export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }>
       >
         {t('rescue-carbs')}
       </Typography>
-      <Box className="content">
+      <Box className="content" data-testid="rescue-carbs-tooltip-content">
         <div className="flex-justify-between-align-center">
-          <Typography variant="body2">{t('avg-intakes')}</Typography>
-          <Typography variant="body2">{rescueCarbs.numberOfIntakes}</Typography>
+          <Typography variant="body2">{t('number-of-rescue-carbs')}</Typography>
+          <Typography variant="body2">{rescueCarbs.numberOfRescueCarbs}</Typography>
         </div>
         <div className="flex-justify-between-align-center">
-          <Typography variant="body2">{t('avg-confirmed-carbs')}</Typography>
-          <Typography variant="body2">{rescueCarbs.confirmedCarbs}g</Typography>
+          <Typography variant="body2">{t('number-of-rescue-carbs-modified')}</Typography>
+          <Typography variant="body2">{rescueCarbs.numberOfModifiedCarbs}</Typography>
         </div>
         <div className="flex-justify-between-align-center">
-          <Typography variant="body2">{t('avg-recommended-carbs')}</Typography>
-          <Typography variant="body2">{rescueCarbs.recommendedCarbs}g</Typography>
+          <Typography variant="body2">{t('recommended-carbs')}</Typography>
+          <Typography variant="body2">{rescueCarbs.averageRecommendedCarb}g</Typography>
+        </div>
+        <div className="flex-justify-between-align-center">
+          <Typography variant="body2">{t('override')}</Typography>
+          <Typography variant="body2" className={styles.colorUndelivered}> {override}g</Typography>
         </div>
       </Box>
     </Box>

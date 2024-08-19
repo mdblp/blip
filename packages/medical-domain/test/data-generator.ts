@@ -112,7 +112,6 @@ function createRandomBasal(date?: Date, hours?: number): Basal {
     ...baseData,
     type: DatumType.Basal,
     subType: 'automated',
-    internalId: faker.string.uuid(),
     deliveryType: 'automated',
     duration,
     rate: faker.number.float({ min: 0, max: 1, precision: 0.01 }),
@@ -121,11 +120,11 @@ function createRandomBasal(date?: Date, hours?: number): Basal {
   }
 }
 
-function createRandomBolus(date?: Date): Bolus {
+function createRandomBolus(date?: Date, subType?: BolusSubtype): Bolus {
   return {
     ...createBaseData(date),
     type: DatumType.Bolus,
-    subType: faker.helpers.arrayElement(Object.values(BolusSubtype)),
+    subType: subType ?? faker.helpers.arrayElement(Object.values(BolusSubtype)),
     normal: 0,
     prescriptor: Prescriptor.Auto,
     wizard: null
@@ -178,7 +177,13 @@ function createMealData(date?: Date): Meal {
         net: 5,
         units: Unit.Gram
       }
-    }
+    },
+    prescribedNutrition: {
+      carbohydrate: {
+        net: 2,
+        units: Unit.Gram
+      }
+    },
   }
 }
 

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import{ screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { checkStatTooltip } from './stats.assert'
 
@@ -188,41 +188,52 @@ export const checkTrendsLayout = () => {
 
 export const checkTrendsBolusAndCarbsAverage = async () => {
   const wrapper = screen.getByTestId('rescue-carbs-and-manual-bolus-average')
+  const rescueCarbsAndManualBolusTitle = screen.getByTestId("title-rescue-carbs-and-manual-bolus-average")
+
   expect(wrapper).toBeVisible()
+
+  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent("Rescue carb intakes & manual & pen bolus over a period of 2 weeks")
+  const mondayButton= screen.getByRole('button', { name: 'M' })
+
+  await userEvent.click(mondayButton)
+  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent("Rescue carb intakes & manual & pen bolus over a period of 12 days")
+  await userEvent.click(mondayButton)
+
   expect(within(wrapper).getAllByTestId('carbs-and-bolus-cell')).toHaveLength(8)
 
   const caption = within(wrapper).getByTestId('rescue-carbs-and-manual-bolus-average-caption')
-  expect(caption).toHaveTextContent('Avg. times per day that rescue carbs have been taken Avg. nb. of manual boluses per day')
+  expect(caption).toHaveTextContent('Number of rescue carbs per dayNumber of manual & pen bolus per day')
 
   const carbsCells = within(wrapper).getAllByTestId('rescue-carbs-cell')
   const bolusCells = within(wrapper).getAllByTestId('manual-bolus-cell')
 
-  expect(carbsCells[0]).toBeEmptyDOMElement()
-  expect(bolusCells[0]).toHaveTextContent('0.1')
-  expect(carbsCells[1]).toBeEmptyDOMElement()
-  expect(bolusCells[1]).toHaveTextContent('0.3')
-  expect(carbsCells[2]).toBeEmptyDOMElement()
-  expect(bolusCells[2]).toBeEmptyDOMElement()
-  expect(carbsCells[3]).toHaveTextContent('0.2')
-  expect(bolusCells[3]).toBeEmptyDOMElement()
-  expect(carbsCells[4]).toBeEmptyDOMElement()
-  expect(bolusCells[4]).toBeEmptyDOMElement()
-  expect(carbsCells[5]).toBeEmptyDOMElement()
-  expect(bolusCells[5]).toHaveTextContent('0.1')
-  expect(carbsCells[6]).toHaveTextContent('0.1')
-  expect(bolusCells[6]).toBeEmptyDOMElement()
-  expect(carbsCells[7]).toHaveTextContent('0.1')
-  expect(bolusCells[7]).toBeEmptyDOMElement()
+  expect(carbsCells[0]).toHaveTextContent('')
+  expect(bolusCells[0]).toHaveTextContent('2')
+  expect(carbsCells[1]).toHaveTextContent('')
+  expect(bolusCells[1]).toHaveTextContent('4')
+  expect(carbsCells[2]).toHaveTextContent('')
+  expect(bolusCells[2]).toHaveTextContent('')
+  expect(carbsCells[3]).toHaveTextContent('3')
+  expect(bolusCells[3]).toHaveTextContent('')
+  expect(carbsCells[4]).toHaveTextContent('')
+  expect(bolusCells[4]).toHaveTextContent('')
+  expect(carbsCells[5]).toHaveTextContent('')
+  expect(bolusCells[5]).toHaveTextContent('2')
+  expect(carbsCells[6]).toHaveTextContent('1')
+  expect(bolusCells[6]).toHaveTextContent('')
+  expect(carbsCells[7]).toHaveTextContent('1')
+  expect(bolusCells[7]).toHaveTextContent('')
 
   const oneWeekButton = screen.getByRole('button', { name: '1 week' })
   await userEvent.click(oneWeekButton)
+  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent("Rescue carb intakes & manual & pen bolus over a period of 1 week")
 
-  expect(bolusCells[0]).toHaveTextContent('0.3')
-  expect(bolusCells[1]).toHaveTextContent('0.6')
-  expect(carbsCells[3]).toHaveTextContent('0.4')
-  expect(bolusCells[5]).toHaveTextContent('0.3')
-  expect(carbsCells[6]).toHaveTextContent('0.1')
-  expect(carbsCells[7]).toHaveTextContent('0.1')
+  expect(bolusCells[0]).toHaveTextContent('2')
+  expect(bolusCells[1]).toHaveTextContent('4')
+  expect(carbsCells[3]).toHaveTextContent('3')
+  expect(bolusCells[5]).toHaveTextContent('2')
+  expect(carbsCells[6]).toHaveTextContent('1')
+  expect(carbsCells[7]).toHaveTextContent('1')
 }
 
 export const checkReadings100 = async () => {

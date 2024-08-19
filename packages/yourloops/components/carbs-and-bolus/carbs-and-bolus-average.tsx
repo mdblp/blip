@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,9 +38,11 @@ import {
   CarbsStatisticsService,
   DateFilter,
   HoursRange,
-  MedicalData, TimeService
+  MedicalData,
+  TimeService
 } from 'medical-domain'
 import { CarbsAndBolusTimeRange } from './models/carbs-and-bolus.model'
+import { NB_OF_DAYS_IN_A_MONTH, NB_OF_DAYS_IN_A_WEEK } from '../../constants/days'
 
 interface CarbsAndBolusAverageProps {
   dateFilter: DateFilter
@@ -59,16 +61,33 @@ export const CarbsAndBolusAverage: FC<CarbsAndBolusAverageProps> = ({ medicalDat
   const { t } = useTranslation()
   const { classes } = useStyles()
   const numberOfDays = TimeService.getNumberOfDays(dateFilter.start, dateFilter.end, dateFilter.weekDays)
-  const rescueCarbsStats = CarbsStatisticsService.getRescueCarbsAverageStatistics(medicalData.meals, numberOfDays, dateFilter)
-  const manualBolusStats = BasalBolusStatisticsService.getManualBolusAverageStatistics(medicalData.bolus, numberOfDays, dateFilter)
+  const rescueCarbsStats = CarbsStatisticsService.getRescueCarbsAverageStatistics(medicalData.meals, dateFilter)
+  const manualBolusStats = BasalBolusStatisticsService.getManualBolusAverageStatistics(medicalData.bolus, dateFilter)
+
+  const numberOfDaysSelected = (): string => {
+    if (numberOfDays === NB_OF_DAYS_IN_A_WEEK) {
+      return t('preset-dates-range-1week')
+    }
+    if (numberOfDays === NB_OF_DAYS_IN_A_WEEK * 2) {
+      return t('preset-dates-range-2weeks')
+    }
+    if (numberOfDays === NB_OF_DAYS_IN_A_WEEK * 4) {
+      return t('preset-dates-range-4weeks')
+    }
+    if (numberOfDays === NB_OF_DAYS_IN_A_MONTH * 3) {
+      return t('preset-dates-range-3months')
+    }
+    return t('number-of-day-selected', { numberOfDays })
+  }
 
   return (
     <Box
       margin="32px 10px 32px 40px"
       data-testid="rescue-carbs-and-manual-bolus-average"
     >
-      <Typography sx={{ fontWeight: 500, marginBottom: theme.spacing(1) }}>
-        {t('daily-rescue-carbs-and-manual-bolus')}
+      <Typography sx={{ fontWeight: 500, marginBottom: theme.spacing(1) }}
+                  data-testid="title-rescue-carbs-and-manual-bolus-average">
+        {t('daily-rescue-carbs-and-manual-and-pen-bolus', { numberOfDays: numberOfDaysSelected() })}
       </Typography>
       <Box display="flex">
         <CarbsAndBolusCell

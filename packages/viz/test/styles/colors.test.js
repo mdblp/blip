@@ -7,7 +7,7 @@ describe('colors', () => {
   it('should export all required colors', () => {
     expect(colors.bolus).to.equal('#178A7F')
     expect(colors.bolusMeal).to.equal('var(--bolus-meal)')
-    expect(colors.bolusMicro).to.equal('var(--bolus-micro)')
+    expect(colors.bolusCorrection).to.equal('var(--bolus-correction)')
     expect(colors.bolusManual).to.equal('var(--bolus-manual)')
     expect(colors.basal).to.equal('#19A0D7')
     expect(colors.basalHeader).to.equal('#DCF1F9')

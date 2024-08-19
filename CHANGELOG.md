@@ -3,18 +3,35 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.4.0-beta - 2024-04-05
+### Added
+- YLP-2958 Information page before user signup
+- YLP-3005 As a User, I want to have an organized total of insulin doses
+- YLP-3007 Display pen boluses in Daily view
+
 ### Changed
 - YLP-2866 Display events in a dedicated section in Daily view
 - YLP-2974 Update colors in Daily and Trends views to match DBL theme
+- YLP-2992 As a user, I want to see the daily numbers of rescue carbs intake / manual boluses and not the average
 - YLP-3019 New design for stats
 - YLP-3075 As a user, I want to be able to choose Japan or UK country
 - YLP-3087 As a user, I want to see the medisafe pump event in yourloops
+- YLP-3141 As a user, I want my alarms messages to be the same as my device's
+- YLP-3163 As a user, I want to see the basal insulin more precisely in the daily view
+- YLP-3165 Update basal color
+- YLP-3177 As a user, I want to see that "micro boluses" are now called "correction boluses"
+
+### Fixed
+- YLP-2632 Data is uploaded with a date in the future
+- YLP-2936 DBLG1 pdf settings are the ones of the current date
 
 ### Engineering use
 - YLP-2948 Updated failing tests because of the time change
+- YLP-3144 Cleanup basal internalId field
+- YLP-3172 Hide Confidential Mode label on Events graph
 
 ### Fixed
 - YLP-2527 Number of meal Carbs hidden behind a bolus bar
+- YLP-3104 Fix parameters locales issues (move the locale files in the repo)
 
 ## 3.3.0 - 2024-04-05
 ### Changed

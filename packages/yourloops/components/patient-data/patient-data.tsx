@@ -74,6 +74,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     currentPatientView,
     dailyDate,
     dailyChartRef,
+    device,
     fetchPatientData,
     goToDailySpecificDate,
     handleDatetimeLocationChange,
@@ -173,6 +174,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                       <>
                         <Daily
                           bgPrefs={bgPrefs}
+                          device={device}
                           timePrefs={timePrefs}
                           patient={patient}
                           tidelineData={medicalData}

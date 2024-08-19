@@ -27,6 +27,8 @@
 .titleTotal {
   margin-left: 4px;
   font-size: 20px;
+  margin-right: 58px;
+  font-weight: normal;
 }
 
 .titleSuffix {
@@ -37,6 +39,11 @@
 
 .boldValue {
   font-weight: bold;
+}
+
+.insulinUnit {
+  font-weight: normal;
+  margin-left: 4px;
 }
 
 .rowTitle {

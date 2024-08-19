@@ -26,7 +26,15 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { type Bolus, DatumType, Prescriptor, type TimePrefs, type Wizard, WizardInputMealFat } from 'medical-domain'
+import {
+  type Bolus,
+  BolusSubtype,
+  DatumType,
+  Prescriptor,
+  type TimePrefs,
+  type Wizard,
+  WizardInputMealFat
+} from 'medical-domain'
 import { Tooltip } from '../../../index'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import {
@@ -98,8 +106,10 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
         return t('Manual Bolus')
       case BolusType.Meal:
         return t('Meal Bolus')
-      case BolusType.Micro:
-        return t('Micro Bolus')
+      case BolusType.Correction:
+        return t('Correction')
+      case BolusType.Pen:
+        return t('bolus_pen')
       default:
         return ''
     }
@@ -111,8 +121,10 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
         return colors.bolusManual
       case BolusType.Meal:
         return colors.bolusMeal
-      case BolusType.Micro:
-        return colors.bolusMicro
+      case BolusType.Correction:
+        return colors.bolusCorrection
+      case BolusType.Pen:
+        return colors.bolusPen
       default:
         return ''
     }
@@ -154,7 +166,7 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
           {shouldDisplayPrescriptor &&
             <TooltipLine label={t('Prescribed by Loop Mode')} />
           }
-          {bolusSubType &&
+          {bolusSubType && bolusSubType !== BolusSubtype.Pen &&
             <TooltipLine label={t('bolus_type')} value={t(`bolus_${bolusSubType}`)} />
           }
           {isWizard && (shouldDisplayOverride || shouldDisplayRecommended) && <div className={styles.dividerSmall} />}

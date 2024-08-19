@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,9 +60,11 @@ import { PrintView } from './modules/print/print-view/print-view'
 import { LayoutColumnType } from './models/enums/layout-column-type.enum'
 import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
 import { getPatientFullName } from './utils/patient/patient.util'
-import { formatBirthdate, formatLocalizedFromUTC, getLongDayHourFormat, formatDate, TIMEZONE_UTC } from './utils/datetime/datetime.util'
+import { formatBirthdate, formatLocalizedFromUTC, getLongDayHourFormat, formatDate, TIMEZONE_UTC, formatCurrentDate } from './utils/datetime/datetime.util'
 import { renderPageNumbers } from './utils/pdf/pdf.util'
 import { WarmUpTooltip } from './components/tooltips/warm-up-tooltip/warm-up-tooltip'
+import { Device } from './models/device.model'
+import { buildDevice } from './utils/device/device.utils'
 
 export {
   formatDate,
@@ -79,8 +81,11 @@ export {
   CBGStandardDeviation,
   CBGStatType,
   ConfidentialTooltip,
+  Device,
+  buildDevice,
   FocusedRangeLabels,
   FoodTooltip,
+  formatCurrentDate,
   formatBirthdate,
   getPatientFullName,
   AlarmEventTooltip,

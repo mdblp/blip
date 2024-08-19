@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -51,10 +51,10 @@ describe('BolusUtil', function () {
       } as Bolus
 
       expect(getBolusType(wizard)).toEqual(BolusType.Meal)
-      expect(getBolusType(bolusPen)).toEqual(BolusType.Manual)
+      expect(getBolusType(bolusPen)).toEqual(BolusType.Pen)
       expect(getBolusType(bolusManualPrescriptor)).toEqual(BolusType.Manual)
       expect(getBolusType(bolusBiphasic)).toEqual(BolusType.Meal)
-      expect(getBolusType(defaultBolus)).toEqual(BolusType.Micro)
+      expect(getBolusType(defaultBolus)).toEqual(BolusType.Correction)
     })
   })
 

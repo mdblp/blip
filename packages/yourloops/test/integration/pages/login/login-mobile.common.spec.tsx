@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,9 +60,9 @@ describe('Login page mobile view', () => {
     expect(screen.getByAltText('YourLoops brand colors')).toBeVisible()
     expect(screen.getByTestId('page-title')).toHaveTextContent('All you need for efficient data sharing and visualization')
     expect(screen.getByTestId('header-main-logo')).toBeVisible()
-    expect(screen.getByRole('button', { name: 'Register' })).toBeVisible()
-    expect(screen.getByRole('button', { name: 'Connect' })).toBeVisible()
-    expect(screen.queryByTestId('language-selector')).toBeVisible()
+    expect(registerButton).toBeVisible()
+    expect(loginButton).toBeVisible()
+    expect(languageSelector).toBeVisible()
 
     checkFooterForUserNotLoggedIn(false)
 
@@ -70,9 +70,6 @@ describe('Login page mobile view', () => {
     fireEvent.mouseDown(within(languageSelector).getByRole('combobox', { hidden: true }))
     await userEvent.click(screen.getByText('Français'))
     expect(moreInfoLink).not.toBeVisible()
-
-    await userEvent.click(registerButton)
-    expect(loginWithRedirectMock).toHaveBeenCalledWith(expect.objectContaining({ authorizationParams: { screen_hint: 'signup' } }))
 
     await userEvent.click(loginButton)
     expect(loginWithRedirectMock).toHaveBeenCalled()

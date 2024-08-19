@@ -57,7 +57,7 @@ export const useCarbsAndBolusStyles = makeStyles()((theme: Theme) => ({
     left: 108,
     zIndex: 1,
     borderRadius: '4px',
-    width: '250px',
+    width: '290px',
     backgroundColor: theme.palette.common.white,
     '& .header': {
       backgroundColor: theme.palette.grey[200],
