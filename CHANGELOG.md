@@ -21,17 +21,16 @@ It is based on Tidepool Blip 1.27.
 - YLP-3177 As a user, I want to see that "micro boluses" are now called "correction boluses"
 
 ### Fixed
+- YLP-2527 Number of meal Carbs hidden behind a bolus bar
 - YLP-2632 Data is uploaded with a date in the future
 - YLP-2936 DBLG1 pdf settings are the ones of the current date
+- YLP-3104 Fix parameters locales issues (move the locale files in the repo)
+- YLP-3196 Fix zendesk widget
 
 ### Engineering use
 - YLP-2948 Updated failing tests because of the time change
 - YLP-3144 Cleanup basal internalId field
 - YLP-3172 Hide Confidential Mode label on Events graph
-
-### Fixed
-- YLP-2527 Number of meal Carbs hidden behind a bolus bar
-- YLP-3104 Fix parameters locales issues (move the locale files in the repo)
 
 ## 3.3.0 - 2024-04-05
 ### Changed

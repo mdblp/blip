@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { isZendeskActive, zendeskLogin, zendeskLogout, zendeskAllowCookies } from '../../../lib/zendesk'
+import { isZendeskActive, zendeskLogout, zendeskAllowCookies } from '../../../lib/zendesk'
 
 describe('Zendesk', () => {
   beforeEach(() => {
@@ -54,22 +54,6 @@ describe('Zendesk', () => {
     expect(s.mock.calls[0]).toEqual(['webWidget', 'logout'])
     expect(s.mock.calls[1]).toEqual(['webWidget', 'clear'])
     expect(s.mock.calls[2]).toEqual(['webWidget', 'reset'])
-  })
-
-  it('should not ask zendesk to login if cookies are not accepted', () => {
-    const s = jest.fn()
-    window.zE = s
-    zendeskLogin()
-    expect(s).toHaveBeenCalledTimes(0)
-  })
-
-  it('should ask zendesk login if cookies are accepted', () => {
-    zendeskAllowCookies(true)
-    const s = jest.fn()
-    window.zE = s
-    zendeskLogin()
-    expect(s).toHaveBeenCalledTimes(1)
-    expect(s.mock.calls[0]).toEqual(['webWidget', 'helpCenter:reauthenticate'])
   })
 
   it('should notice zendesk about the cookies policy: accept', () => {

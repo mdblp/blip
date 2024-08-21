@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -49,26 +49,12 @@ export function isZendeskAllowCookies(): boolean {
 }
 
 /**
- * Ask zendesk to login the user
- *
- * Login routine is implemented in `templates/zendesk.js`
- */
-export function zendeskLogin(): void {
-  if (allowCookies && isZendeskActive()) {
-    log.info('reauthenticate')
-    window.zE('webWidget', 'helpCenter:reauthenticate')
-  }
-}
-
-/**
  * Logout the user for zendesk
  */
 export function zendeskLogout(): void {
   if (isZendeskActive()) {
     log.info('logout')
-    window.zE('webWidget', 'logout')
-    window.zE('webWidget', 'clear')
-    window.zE('webWidget', 'reset')
+    window.zE('messenger', 'logoutUser')
   }
 }
 
@@ -79,7 +65,7 @@ export function zendeskAllowCookies(allow: boolean): void {
   allowCookies = allow
   if (isZendeskActive()) {
     log.info('Allow cookies')
-    window.zE('webWidget', 'updateSettings', { cookies: allow })
+    window.zE('messenger:set', 'cookies', allow)
 
     if (!allowCookies) {
       zendeskLogout()
@@ -93,7 +79,7 @@ export function zendeskAllowCookies(allow: boolean): void {
  */
 export function zendeskLocale(lang: string): void {
   if (isZendeskActive()) {
-    window.zE('webWidget', 'setLocale', lang)
+    window.zE('messenger:set', 'locale', lang)
   }
 }
 
@@ -102,7 +88,7 @@ export function zendeskLocale(lang: string): void {
  */
 export function zendeskTrackWidgetOpen(): void {
   if (isZendeskActive()) {
-    window.zE('webWidget:on', 'open', () => {
+    window.zE('messenger:on', 'open', () => {
       throttleMetricsOpenWidget('support', 'open_zendesk_widget')
     })
   }
