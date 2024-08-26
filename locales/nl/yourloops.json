@@ -120,7 +120,7 @@
   "average-daily-total-insulin": "Gem. dagelijkse totale insulinedosis",
   "average-glucose": "Gem. glucose ({{bgSourceLabel}})",
   "average-glucose-tooltip": "**Gem. glucose ({{bgSourceLabel}}):** alle {{bgSourceLabel}} glucosewaarden bij elkaar opgeteld, gedeeld door het aantal metingen.",
-  "avg-daily-carbs": "Gemiddelde dagelijkse koolhydraten",
+  "avg-daily-carbs": "Gem. dagelijkse koolhydraten",
   "avg-daily-declared-carbs": "Gem. dagelijkse aangegeven KH",
   "avg-time-loop": "Gem. dagelijkse tijd in loop-modus",
   "avg-time-loop-how-calculate": "**Hoe we dit berekenen**:\n\n(%) is de duur in de loop-modus ON of OFF gedeeld door de totale duur van de basale doseringen voor deze tijdsperiode.\n\n**(tijd)** is de gemiddelde dagelijkse tijd die is besteed in de loop-modus ON of OFF.",
