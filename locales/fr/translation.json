@@ -155,7 +155,7 @@
   "The Basics": "Aperçu",
   "There is no {{displayType}} data for this time period :(": "Il n'y a pas de données {{displayType}} pour cette période : (",
   "This section requires data from a blood-glucose meter, so there's nothing to display.": "Rien à afficher pour le moment !",
-  "This section requires data from an insulin pump, so there's nothing to display.": "Rien à afficher pour le moment !",
+  "This section requires data from an insulin pump, so there's nothing to display.": "Rien à afficher !",
   "Time Above Range": "Temps au dessus de la cible",
   "Time Below Range": "Temps en dessous de la cible",
   "Time Change": "Changement d'heure",
