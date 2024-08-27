@@ -62,7 +62,7 @@
   "alarm-kaleido-insulin-cartridge-expired-description": "Ihre Pumpe ist stehen geblieben, weil die Insulinkartusche abgelaufen ist.",
   "alarm-kaleido-occlusion-description": "Die Pumpe ist gestoppt, weil sie eine Verstopfung festgestellt hat.",
   "alarm-long-hyperglycemia-description-new": "Hyperglykämie während eines Zeitraums",
-  "alarm-long-hyperglycemia-description-old": "Die G6-Werte sind seit mehr als 20 Minuten höher als {{Wert}} {{Einheit}}.",
+  "alarm-long-hyperglycemia-description-old": "Die G6-Werte sind seit mehr als 20 Minuten höher als {{value}} {{unit}}.",
   "alarm-long-hypoglycemia-description": "Ihr G6-Wert liegt seit mindestens 25 Minuten unter {{value}} {{unit}}.",
   "alarm-loop-mode-activated-description": "WICHTIG: Dieser Alarm wird nur dann ausgelöst, wenn der Loop-Modus AN (ON) ist.",
   "alarm-loop-mode-deactivated-description": "WICHTIG: Dieser Alarm wird nur dann ausgelöst, wenn der Loop-Modus AUS (OFF) ist.",
