@@ -489,7 +489,7 @@
   "signup": "S'inscrire",
   "signup-information": "Informations d'inscription",
   "signup-information-message-1": "Vous êtes sur le point de créer un compte de professionnel de la santé ou d'aidant.",
-  "signup-information-message-2": "<strong>Si vous êtes un patient</strong>, votre compte sera créé quand vous initialiserez votre DBL.. <strong> Vous ne devez pas créer de compte ici.</strong>",
+  "signup-information-message-2": "<strong>Si vous êtes un patient</strong>, votre compte sera créé quand vous initialiserez votre DBL.<strong> Vous ne devez pas créer de compte ici.</strong>",
   "signup-information-message-3": "Veuillez contacter votre fournisseur DBL pour plus d'informations.",
   "signup-radiolabel-caregiver-body": "Accédez aux données de suivi du diabète de patient·e·s en tant qu'aidant ou proche.",
   "signup-radiolabel-hcp-body": "Accédez aux données de suivi du diabète de vos patient·e·s. Rejoignez ou créez une équipe de soins pour votre service ou cabinet.",
