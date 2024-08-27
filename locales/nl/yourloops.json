@@ -52,7 +52,7 @@
   "alarm-insight-incompatible-actions-on-pump-description": "Sommige acties van de pomp worden niet ondersteund. De loop-modus is nu uitgeschakeld en kan maximaal 3 uur niet opnieuw worden gestart.",
   "alarm-insight-incompatible-actions-on-pump-title": "Incompatibele acties op de pomp",
   "alarm-insight-insulin-cartridge-expired-description": "De insulinecartridge is vervallen. Plaats een nieuwe cartridge.",
-  "alarm-insight-loop-mode-deactivated-description": "BELANGRIJK: dit alarm wordt alleen afgegeven als loop-modus op OFF staat.",
+  "alarm-insight-loop-mode-deactivated-description": "BELANGRIJK: deze waarschuwing wordt alleen geactiveerd als loop modus OFF staat.",
   "alarm-insight-occlusion-description": "De insuline kan niet vrij doorstromen. Wijzig de gehele infusieset. Als de melding nogmaals wordt weergegeven, moet je de cartridge eveneens vervangen.",
   "alarm-insulin-cartridge-expired-title": "De insulinecartridge is vervallen",
   "alarm-kaleido-empty-insulin-cartridge-description": "Je pomp is gestopt omdat de insulinecartridge leeg is.",
