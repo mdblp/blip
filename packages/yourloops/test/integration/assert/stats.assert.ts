@@ -91,6 +91,11 @@ export const checkStandardDeviationStatWidget = async (expectedTextContent: stri
   expect(patientStatistics.getByTestId('cbg-standard-deviation-stat')).toHaveTextContent(expectedTextContent)
 }
 
+export const checkTotalInsulinStatWidget = async (expectedTextContent: string) => {
+  const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
+  expect(patientStatistics.getByTestId('container-insulin-stats')).toHaveTextContent(expectedTextContent)
+}
+
 export const checkGlucoseManagementIndicator = async (expectedTextContent: string) => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
   expect(patientStatistics.getByTestId('glucose-management-indicator-stat')).toHaveTextContent(expectedTextContent)
