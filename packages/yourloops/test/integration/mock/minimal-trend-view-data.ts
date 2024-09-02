@@ -204,6 +204,22 @@ export const getMinimalTrendViewData =() : Data => {
           "expectedNormal": 19.35,
           "insulinOnBoard": 3.1218212,
           "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1579535100000,
+          "displayOffset": -60,
+          "normalTime": "2020-01-20T16:50:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": "penBolusId",
+          "type": DatumType.Bolus,
+          "source": Source.Diabeloop,
+          "subType": BolusSubtype.Pen,
+          "normal": 5,
+          "prescriptor": Prescriptor.Manual,
+          "wizard": null,
+          "expectedNormal": 6,
+          "isoWeekday": WeekDays.Sunday
         }
       ],
       "cbg": [

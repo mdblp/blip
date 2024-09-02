@@ -102,7 +102,7 @@ function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], mealBoluses: Wiz
   }, 0)
 
   const totalManualBoluses = filteredBolus.reduce((total, bolus) => {
-    if (bolus.prescriptor === Prescriptor.Manual) {
+    if (bolus.prescriptor === Prescriptor.Manual && bolus.subType != BolusSubtype.Pen) {
       return total + bolus.normal
     }
     return total
