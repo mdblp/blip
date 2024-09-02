@@ -92,10 +92,10 @@ export const basalsData: BasalDataRange = [
 ]
 
 export const bolusData: BolusDataRange = [
-  [new Date('2018-02-01T01:00:00Z'), 4,undefined, BolusSubtype.Pen],
-  [new Date('2018-02-01T02:00:00Z'), 5,undefined, BolusSubtype.Normal],
-  [new Date('2018-02-01T03:00:00Z'), 6,undefined, BolusSubtype.Biphasic],
-  [new Date('2018-02-03T03:00:00Z'), 4,undefined, BolusSubtype.Normal]
+  [new Date('2018-02-01T01:00:00Z'), 4, undefined, BolusSubtype.Pen],
+  [new Date('2018-02-01T02:00:00Z'), 5, undefined, BolusSubtype.Normal],
+  [new Date('2018-02-01T03:00:00Z'), 6, undefined, BolusSubtype.Biphasic],
+  [new Date('2018-02-03T03:00:00Z'), 4, undefined, BolusSubtype.Normal]
 ]
 
 export const manualBolusData: BolusDataRange = [
@@ -161,7 +161,7 @@ export const buildWizardData = (data: BgDataRange): Wizard[] => (
     {
       ...createWizardData(wizardData[0]),
       deviceName: wizardData[1],
-      inputMeal:{
+      inputMeal: {
         fat: WizardInputMealFat.No,
         source: WizardInputMealSource.Umm
       }

@@ -218,7 +218,7 @@ export const checkTrendsBolusAndCarbsAverage = async () => {
   expect(carbsCells[4]).toHaveTextContent('')
   expect(bolusCells[4]).toHaveTextContent('')
   expect(carbsCells[5]).toHaveTextContent('')
-  expect(bolusCells[5]).toHaveTextContent('2')
+  expect(bolusCells[5]).toHaveTextContent('3')
   expect(carbsCells[6]).toHaveTextContent('1')
   expect(bolusCells[6]).toHaveTextContent('')
   expect(carbsCells[7]).toHaveTextContent('1')
@@ -231,7 +231,7 @@ export const checkTrendsBolusAndCarbsAverage = async () => {
   expect(bolusCells[0]).toHaveTextContent('2')
   expect(bolusCells[1]).toHaveTextContent('4')
   expect(carbsCells[3]).toHaveTextContent('3')
-  expect(bolusCells[5]).toHaveTextContent('2')
+  expect(bolusCells[5]).toHaveTextContent('3')
   expect(carbsCells[6]).toHaveTextContent('1')
   expect(carbsCells[7]).toHaveTextContent('1')
 }

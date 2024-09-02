@@ -28,7 +28,8 @@
 import {
   checkPatientStatistics,
   checkPatientStatisticsNoData,
-  checkPatientStatisticsTrendsView, checkPatientStatisticsTrendsViewNoMonday,
+  checkPatientStatisticsTrendsView,
+  checkPatientStatisticsTrendsViewNoMonday,
   checkPatientStatisticsWithTwoWeeksOldData
 } from '../assert/patient-statistics.assert'
 import { checkPatientDashboardLayout, type PatientDashboardLayoutParams } from '../assert/layout.assert'
@@ -50,7 +51,8 @@ import {
 import { checkMonitoringAlertsCard, checkMonitoringAlertsCardNoData } from '../assert/monitoring-alerts.assert'
 import { checkTrendsStatsWidgetsTooltips } from '../assert/trends-view.assert'
 import {
-  checkDailyStatsWidgetsTooltips, checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware,
+  checkDailyStatsWidgetsTooltips,
+  checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware,
   checkDailyTidelineContainerTooltipsMgdl,
   checkDailyTidelineContainerTooltipsMmolL,
   checkDailyTimeInRangeStatsWidgetsMgdl,
@@ -60,7 +62,8 @@ import {
 import {
   checkAverageGlucoseStatWidget,
   checkStandardDeviationStatWidget,
-  checkTimeInRangeStatsTitle
+  checkTimeInRangeStatsTitle,
+  checkTotalInsulinStatWidget
 } from '../assert/stats.assert'
 import userEvent from '@testing-library/user-event'
 import { screen } from '@testing-library/react'
@@ -141,6 +144,7 @@ export const testDailyViewTooltipsAndValuesMgdl = async () => {
 
   await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
   await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
+  await checkTotalInsulinStatWidget('Total Insulin111.8 UMeal bolus50.7 U45.3%Basal & correction bolus52 U46.5%Manual bolus5.1 U4.6%Pen bolus4.1 U3.7%')
 }
 
 export const testDailyViewTooltipsForDBLG2OrRecentSoftware = async () => {

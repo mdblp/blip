@@ -19,6 +19,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3163 As a user, I want to see the basal insulin more precisely in the daily view
 - YLP-3165 Update basal color
 - YLP-3177 As a user, I want to see that "micro boluses" are now called "correction boluses"
+- YLP-3211 Manual bolus insulin total should not contain pen bolus insulin
 
 ### Fixed
 - YLP-2632 Data is uploaded with a date in the future
