@@ -2,7 +2,9 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.4.0-beta - 2024-04-05
+## 3.5.0-beta - 2024-09-03
+
+## 3.4.0 - 2024-09-06
 ### Added
 - YLP-2958 Information page before user signup
 - YLP-3005 As a User, I want to have an organized total of insulin doses
