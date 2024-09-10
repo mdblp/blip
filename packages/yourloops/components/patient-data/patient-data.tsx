@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -52,8 +52,14 @@ import { DeviceView } from '../../pages/patient-view/device/device-view'
 import { setPageTitle } from '../../lib/utils'
 import { TargetAndAlertsView } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
 import TeamUtils from '../../lib/team/team.util'
+import { Patient } from '../../lib/patient/models/patient.model'
+import { getPageTitleByPatientView } from './patient-data.utils'
 
-export const PatientData: FunctionComponent = () => {
+interface PatientDataProps {
+  patient: Patient
+}
+
+export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: PatientDataProps) => {
   const alert = useAlert()
   const theme = useTheme()
   const { t } = useTranslation()
@@ -68,6 +74,7 @@ export const PatientData: FunctionComponent = () => {
     currentPatientView,
     dailyDate,
     dailyChartRef,
+    device,
     fetchPatientData,
     goToDailySpecificDate,
     handleDatetimeLocationChange,
@@ -78,10 +85,9 @@ export const PatientData: FunctionComponent = () => {
     refreshData,
     refreshingData,
     trendsDate,
-    patient,
     timePrefs,
     updateChartPrefs
-  } = usePatientData()
+  } = usePatientData({ patient })
   const {
     showMessageCreation,
     showMessageThread,
@@ -97,7 +103,8 @@ export const PatientData: FunctionComponent = () => {
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
 
-  setPageTitle(t(currentPatientView))
+  const pageTitle = getPageTitleByPatientView(currentPatientView)
+  setPageTitle(pageTitle)
 
   useEffect(() => {
     if (patient.userid !== patientIdForWhichDataHasBeenFetched.current) {
@@ -167,6 +174,7 @@ export const PatientData: FunctionComponent = () => {
                       <>
                         <Daily
                           bgPrefs={bgPrefs}
+                          device={device}
                           timePrefs={timePrefs}
                           patient={patient}
                           tidelineData={medicalData}

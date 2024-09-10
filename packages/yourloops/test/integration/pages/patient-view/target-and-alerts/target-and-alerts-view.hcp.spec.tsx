@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -65,7 +65,7 @@ describe('Target and alerts view for HCP', () => {
     const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
-        loggedInUserFullName: `${firstName} ${lastName}`,
+        loggedInUserFullName: `${lastName} ${firstName}`,
         teamMenuInfo: {
           selectedTeamName: myThirdTeamName,
           isSelectedTeamPrivate: false,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -58,6 +58,6 @@ describe('Daily view for patient', () => {
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsPatient()
-    await checkPatientLayout(`${patient2AsTeamMember.profile.firstName} ${patient2AsTeamMember.profile.lastName}`)
+    await checkPatientLayout(`${patient2AsTeamMember.profile.lastName} ${patient2AsTeamMember.profile.firstName}`)
   })
 })

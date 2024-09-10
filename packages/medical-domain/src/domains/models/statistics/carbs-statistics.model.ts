@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,15 +31,15 @@ export interface CarbsStatistics {
   totalCarbsPerDay: number
   rescueCarbsPerDay: number
   mealCarbsPerDay: number
-  estimatedCarbsPerDay: number
   totalMealCarbsWithRescueCarbsEntries: number
   totalRescueCarbsEntries: number
 }
 
 export interface RescueCarbsAveragePerRange {
-  numberOfIntakes: number
-  confirmedCarbs: number
-  recommendedCarbs: number
+  numberOfRescueCarbs: number
+  numberOfModifiedCarbs: number
+  averageRecommendedCarb: number
+  rescueCarbsOverrideAverage: number
 }
 
 export type RescueCarbsAverageStatistics = Map<HoursRange, RescueCarbsAveragePerRange>

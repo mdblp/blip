@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -45,7 +45,11 @@ import { when } from 'jest-when'
 import { patient2AsTeamMember } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { testDailyViewTooltipsAndValuesMgdl } from '../../../use-cases/patient-data-visualisation'
+import {
+  testDailyViewTooltipsAndValuesMgdl,
+  testDailyViewTooltipsForDBLG2OrRecentSoftware
+} from '../../../use-cases/patient-data-visualisation'
+import { getCompleteDailyViewData } from '../../../mock/complete-daily-view-data'
 
 describe('Daily view for anyone', () => {
   const dailyRoute = AppUserRoute.Daily
@@ -69,6 +73,30 @@ describe('Daily view for anyone', () => {
       })
 
       await testDailyViewTooltipsAndValuesMgdl()
+    })
+  })
+
+  describe('with DBLG2 device', () => {
+    it('should render correct tooltips and values', async () => {
+      mockDataAPI(getCompleteDailyViewData("DBLG2", "1.1.0"))
+      const router = renderPage(dailyRoute)
+      await waitFor(() => {
+        expect(router.state.location.pathname).toEqual(dailyRoute)
+      })
+
+      await testDailyViewTooltipsForDBLG2OrRecentSoftware()
+    })
+  })
+
+  describe('with recent software version device (>1.17)', () => {
+    it('should render correct tooltips and values', async () => {
+      mockDataAPI(getCompleteDailyViewData("DBLG1", "1.17"))
+      const router = renderPage(dailyRoute)
+      await waitFor(() => {
+        expect(router.state.location.pathname).toEqual(dailyRoute)
+      })
+
+      await testDailyViewTooltipsForDBLG2OrRecentSoftware()
     })
   })
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -93,7 +93,7 @@ describe('Profile page for patient', () => {
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/preferences')
     })
-    await checkPatientLayout(`${profile.firstName} ${profile.lastName}`)
+    await checkPatientLayout(`${profile.lastName} ${profile.firstName}`)
     const fields = checkPatientProfilePage()
     const saveButton = screen.getByRole('button', { name: 'Save' })
 
@@ -106,6 +106,7 @@ describe('Profile page for patient', () => {
     expect(fields.genderSelect).toHaveTextContent('Male')
     expect(fields.hba1cInput).toHaveValue('7.5%')
     expect(saveButton).toBeDisabled()
+    expect(screen.queryByTestId('country-selector')).not.toBeInTheDocument()
 
     fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
     fireEvent.click(screen.getByRole('option', { name: 'English' }))
@@ -132,7 +133,7 @@ describe('Profile page for patient', () => {
   })
 
   it('should render profile page without specific INS fields when patient is not french', async () => {
-    settings.country = CountryCodes.UnitedKingdom
+    settings.country = CountryCodes.Italy
     mockUserApi().mockUserDataFetch({ profile, preferences, settings })
     await act(async () => {
       renderPage('/preferences')

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,6 +28,7 @@
 import React, { type FunctionComponent } from 'react'
 import styles from './cbg-standard-deviation.css'
 import stylesCbgCommon from '../common/cbg-common.css'
+import commonStyles from '../../../styles/stat-common.css'
 import Box from '@mui/material/Box'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { computeBgClassesBarStyle, computeCBGStyle } from '../common/cbg-utils'
@@ -49,15 +50,15 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
   const standardDeviationMax = averageGlucose + standardDeviation
 
   const valueBasedStyles = {
-    min: computeCBGStyle(standardDeviationMin, bgClasses),
-    max: computeCBGStyle(standardDeviationMax, bgClasses)
+    min: computeCBGStyle(standardDeviationMin, bgClasses, true),
+    max: computeCBGStyle(standardDeviationMax, bgClasses, true)
   }
   const bgClassesBarStyle = computeBgClassesBarStyle(bgClasses)
 
   return (
     <Box data-testid="cbg-standard-deviation-stat">
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Box display="flex">
+        <Box display="flex" className={commonStyles.title}>
           {title}
           {!Number.isNaN(standardDeviation) &&
             <>

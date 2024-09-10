@@ -101,7 +101,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   /** @type {Pool} */
   const poolMessages = new Pool(chart)
   chart.addPool(poolMessages)
-  poolMessages.id('poolMessages', chart.poolGroup)
+  const poolMessagesId = 'poolMessages'
+  poolMessages
+    .id('poolMessages', chart.poolGroup)
+    .dataTestId('messages-section', poolMessagesId)
     .heightRatio(0.5)
     .gutterWeight(0.0)
 
@@ -109,7 +112,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   /** @type {Pool} */
   const poolBG = new Pool(chart)
   chart.addPool(poolBG)
-  poolBG.id('poolBG', chart.poolGroup)
+  const poolBGId = 'poolBG'
+  poolBG
+    .id('poolBG', chart.poolGroup)
+    .dataTestId('bg-section', poolBGId)
     .labels([{
       spans: [{
         text: t('Glucose'),
@@ -117,9 +123,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
       }, {
         text: ` (${t(chart.options.bgUnits)})`,
         className: 'label-light'
-      }, {
-        text: ` & ${t('Events')}`,
-        className: 'label-main'
       }],
       baseline: options.labelBaseline
     }])
@@ -127,11 +130,32 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     .heightRatio(2.15)
     .gutterWeight(1.0)
 
+  // Events data pool
+  /** @type {Pool} */
+  const poolEvents = new Pool(chart)
+  chart.addPool(poolEvents)
+  const poolEventsId = 'poolEvents'
+  poolEvents
+    .id('poolEvents', chart.poolGroup)
+    .dataTestId('events-section', poolEventsId)
+    .labels([{
+      spans: [{
+        text: t('Events'),
+        className: 'label-main'
+      }],
+      baseline: options.labelBaseline
+    }])
+    .heightRatio(0.5)
+    .gutterWeight(1.0)
+
   // carbs and boluses data pool
   /** @type {Pool} */
   const poolBolus = new Pool(chart)
   chart.addPool(poolBolus)
-  poolBolus.id('poolBolus', chart.poolGroup)
+  const poolBolusId = 'poolBolus'
+  poolBolus
+    .id('poolBolus', chart.poolGroup)
+    .dataTestId('bolus-section', poolBolusId)
     .labels([{
       spans: [{
         text: t('Bolus'),
@@ -162,7 +186,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   /** @type {Pool} */
   const poolBasal = new Pool(chart)
   chart.addPool(poolBasal)
-  poolBasal.id('poolBasal', chart.poolGroup)
+  const poolBasalId = 'poolBasal'
+  poolBasal
+    .id('poolBasal', chart.poolGroup)
+    .dataTestId('basal-section', poolBasalId)
     .labels([{
       main: t('Basal Rates'),
       light: ` (${t('U')}/${t('abbrev_duration_hour')})`,
@@ -233,47 +260,59 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     isDaily: true,
     guidelines: [
       {
-        class: 'd3-line-bg-threshold',
+        class: 'd3-line-bg-threshold-low',
         height: chart.options.bgClasses.low
       },
       {
-        class: 'd3-line-bg-threshold',
+        class: 'd3-line-bg-threshold-high',
         height: chart.options.bgClasses.target
       }
     ]
   }))
 
-  poolBG.addPlotType({ type: 'deviceEvent' }, plotZenModeEvent(poolBG, {
+  poolEvents.addPlotType({ type: 'fill' }, fill(poolEvents, {
+    isDaily: true
+  }))
+
+  poolEvents.addPlotType({ type: 'deviceEvent' }, plotZenModeEvent(poolEvents, {
     tidelineData
   }))
 
-  poolBG.addPlotType({ type: 'physicalActivity' }, plotPhysicalActivity(poolBG, {
+  poolEvents.addPlotType({ type: 'physicalActivity' }, plotPhysicalActivity(poolEvents, {
     onPhysicalHover: options.onPhysicalHover,
     onPhysicalOut: options.onTooltipOut,
     tidelineData
   }))
 
-  poolBG.addPlotType({ type: 'deviceEvent' }, plotReservoirChange(poolBG, {
+  poolEvents.addPlotType({ type: 'deviceEvent' }, plotReservoirChange(poolEvents, {
     onReservoirHover: options.onReservoirHover,
     onReservoirOut: options.onTooltipOut
   }))
 
-  poolBG.addPlotType({ type: 'deviceEvent' }, plotDeviceParameterChange(poolBG, {
+  poolEvents.addPlotType({ type: 'deviceEvent' }, plotDeviceParameterChange(poolEvents, {
     tidelineData,
     onParameterHover: options.onParameterHover,
     onParameterOut: options.onTooltipOut
   }))
 
-  poolBG.addPlotType({ type: 'deviceEvent' }, plotWarmUp(poolBG, {
+  poolEvents.addPlotType({ type: 'deviceEvent' }, plotWarmUp(poolEvents, {
     tidelineData,
     onWarmUpHover: options.onWarmUpHover,
     onWarmUpOut: options.onTooltipOut
   }))
 
-  poolBG.addPlotType({ type: 'deviceEvent' }, plotAlarmEvent(poolBG, {
+  poolEvents.addPlotType({ type: 'deviceEvent' }, plotAlarmEvent(poolEvents, {
     tidelineData,
     onAlarmEventHover: options.onAlarmEventHover,
     onAlarmEventOut: options.onTooltipOut
+  }))
+
+  // Add confidential mode to Events pool: Must be the last in the pool to mask stuff below
+  poolEvents.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolEvents, {
+    tidelineData,
+    onConfidentialHover: options.onConfidentialHover,
+    onConfidentialOut: options.onTooltipOut,
+    hideLabel: true
   }))
 
   // add CBG data to BG pool
@@ -309,6 +348,14 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     isDaily: true
   }))
 
+  // quick bolus data to wizard pool
+  poolBolus.addPlotType({ type: 'bolus' }, plotQuickbolus(poolBolus, {
+    subdueOpacity: 0.4,
+    timezoneAware: chart.options.timePrefs.timezoneAware,
+    onBolusHover: options.onBolusHover,
+    onBolusOut: options.onTooltipOut
+  }))
+
   // add wizard data to wizard pool
   poolBolus.addPlotType({ type: 'wizard' }, plotWizard(poolBolus, {
     subdueOpacity: 0.4,
@@ -323,15 +370,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     onCarbOut: options.onTooltipOut
   }))
 
-  // quick bolus data to wizard pool
-  poolBolus.addPlotType({ type: 'bolus' }, plotQuickbolus(poolBolus, {
-    subdueOpacity: 0.4,
-    timezoneAware: chart.options.timePrefs.timezoneAware,
-    onBolusHover: options.onBolusHover,
-    onBolusOut: options.onTooltipOut
-  }))
-
-  // Add confidential mode to BG pool: Must be the last in the pool to mask stuff below
+  // Add confidential mode to Bolus pool: Must be the last in the pool to mask stuff below
   poolBolus.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolBolus, {
     tidelineData,
     onConfidentialHover: options.onConfidentialHover,
@@ -348,7 +387,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     defaultSource: tidelineData.opts.defaultSource
   }))
 
-  // Add confidential mode to BG pool: Must be the last in the pool to mask stuff below
+  // Add confidential mode to Basal pool: Must be the last in the pool to mask stuff below
   poolBasal.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolBasal, {
     tidelineData,
     onConfidentialHover: options.onConfidentialHover,

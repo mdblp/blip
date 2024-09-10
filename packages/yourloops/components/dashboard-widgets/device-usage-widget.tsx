@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -57,7 +57,7 @@ interface DeviceUsageWidgetProps {
 const useStyles = makeStyles()((theme) => ({
   sectionTitles: {
     fontSize: 'var(--section-title-font-size)',
-    fontWeight: 'var(--section-title-font-weight)',
+    fontWeight: 'bold',
     lineHeight: 'var(--section-title-line-height)',
     margin: 'var(--section-title-margin)',
     color: 'var(--section-title-color)'
@@ -66,7 +66,6 @@ const useStyles = makeStyles()((theme) => ({
     fontSize: '13px',
     fontWeight: 300,
     lineHeight: '15px',
-    color: '#444444'
   },
   tableRows: {
     '&:nth-of-type(odd)': {

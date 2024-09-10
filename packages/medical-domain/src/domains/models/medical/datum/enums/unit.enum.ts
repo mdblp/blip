@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,10 +26,12 @@
  */
 
 enum Unit {
+  Centimeter = 'cm',
   InsulinUnit = 'U',
   InsulinUnitPerGram = 'U/g',
-  Kilogram = 'kg',
   Gram = 'g',
+  Grams = 'grams',
+  Kilogram = 'kg',
   MilligramPerDeciliter = 'mg/dL',
   Minute = 'min',
   MmolPerLiter = 'mmol/L',

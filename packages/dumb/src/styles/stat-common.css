@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,6 +33,7 @@
   white-space: nowrap;
   margin-top: .25em;
   color: var(--stat--default);
+  font-weight: bold;
 }
 
 .statWrapper {
@@ -56,4 +57,8 @@
   align-items: flex-start;
   justify-content: space-between;
   margin: var(--section-title-margin);
+}
+
+.title {
+  font-weight: bold;
 }

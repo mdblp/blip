@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,16 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 .titleTotal {
-  color: #0096D1;
   margin-left: 4px;
   font-size: 20px;
+  margin-right: 58px;
+  font-weight: normal;
 }
 
 .titleSuffix {
   padding-left: 1px;
   margin-right: 4px;
   font-size: 12px;
-  color: var(--text-medium-contrast);
+}
+
+.boldValue {
+  font-weight: bold;
+}
+
+.insulinUnit {
+  font-weight: normal;
+  margin-left: 4px;
 }
 
 .rowTitle {
@@ -44,6 +53,7 @@
 .rowPercent {
   display: flex;
   justify-content: flex-end;
+  font-weight: bold;
 }
 
 .rowPercent .rowPercentValue {
@@ -53,15 +63,6 @@
 
 .rowPercent .rowPercentUnits {
   font-size: 12px;
-  color: var(--text-medium-contrast);
-}
-
-.rowsTotalInsulin-basal {
-  color: var(--basal-automated);
-}
-
-.rowsTotalInsulin-bolus {
-  color: var(--bolus-meal);
 }
 
 .outputValueDisabled {
@@ -70,6 +71,7 @@
   display: inline-block;
   margin-right: 4px;
   color: var(--muted);
+  font-weight: bold;
 }
 
 .outputValue {
@@ -80,11 +82,10 @@
   font-size: 20px;
   opacity: 1;
   display: inline-block;
-  color: var(--text-medium-contrast);
+  font-weight: bold;
 }
 
 .dailyDoseUnits {
   font-size: 12px;
   padding-left: 1px;
-  color: var(--text-medium-contrast);
 }

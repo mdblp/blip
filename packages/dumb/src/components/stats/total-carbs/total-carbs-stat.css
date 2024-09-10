@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,7 +35,6 @@
 }
 
 .carbs {
-  padding-left: 10px;
   margin-top: 4px;
 }
 
@@ -43,7 +42,7 @@
   line-height: 1;
   justify-content: space-between;
   margin-left: auto;
-  color: var(--text-medium-contrast);
+  font-weight: bold;
 }
 
 .value {
@@ -55,11 +54,15 @@
 .suffix {
   composes: smallSize from '../../../styles/typography.css';
   color: var(--stat--default);
-  font-weight: normal;
   position: relative;
   bottom: 1px;
   padding-left: 1px;
 }
+
 .disabled-label {
   color: var(--muted);
+}
+
+.titleBold {
+  font-weight: bold;
 }

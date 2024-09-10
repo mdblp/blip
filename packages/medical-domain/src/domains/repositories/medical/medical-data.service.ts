@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -67,6 +67,7 @@ import {
 import type PumpManufacturer from '../../models/medical/datum/enums/pump-manufacturer.enum'
 import WizardService from './datum/wizard.service'
 import AlarmEventService from './datum/alarm-event.service';
+import { WizardInputMealSource } from '../../models/medical/datum/enums/wizard-input-meal-source.enum'
 import { PumpSettings } from '../../models/medical/datum/pump-settings.model'
 
 class MedicalDataService {
@@ -233,6 +234,7 @@ class MedicalDataService {
       this.medicalData.zenModes = this.medicalData.zenModes.concat(data.zenModes)
     }
 
+    this.removeUmmBolus()
     this.deduplicate()
     this.join()
     this.setTimeZones()
@@ -309,7 +311,7 @@ class MedicalDataService {
   private deduplicate(): void {
     this.medicalData.basal = BasalService.deduplicate(this.medicalData.basal, this._datumOpts)
     this.medicalData.bolus = BolusService.deduplicate(this.medicalData.bolus, this._datumOpts)
-    this.medicalData.wizards = WizardService.deduplicate(this.medicalData.wizards, this._datumOpts)
+    this.medicalData.wizards = WizardService.deduplicate(this.medicalData.wizards, this.medicalData.bolus, this._datumOpts)
     this.medicalData.physicalActivities = PhysicalActivityService.deduplicate(this.medicalData.physicalActivities, this._datumOpts)
   }
 
@@ -351,8 +353,8 @@ class MedicalDataService {
     const pump = latestPumpSettings.payload.pump
     this.medicalData.reservoirChanges = this.medicalData.reservoirChanges.map((reservoirChange: ReservoirChange) => {
       reservoirChange.pump = {
-        expirationDate: pump.expirationDate,
         name: pump.name,
+        product: pump.product,
         serialNumber: pump.serialNumber,
         swVersion: pump.swVersion,
         manufacturer: this.latestPumpManufacturer as PumpManufacturer
@@ -498,7 +500,6 @@ class MedicalDataService {
             id: `fill-${isoStr.replace(/[^\w\s]|_/g, '')}`,
             time: isoStr,
             timezone,
-            fillColor: classes[hour],
             startsAtMidnight: hour === 0
           },
           this._datumOpts
@@ -516,6 +517,10 @@ class MedicalDataService {
     }
 
     this.fills = fillData
+  }
+
+  private removeUmmBolus() {
+    this.medicalData.wizards = this.medicalData.wizards.filter((wizard: Wizard) => wizard.inputMeal?.source !== WizardInputMealSource.Umm)
   }
 }
 

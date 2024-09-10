@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,6 +26,10 @@
  */
 
 export enum AlarmCode {
+  DanaEmptyPumpBattery = '51001',
+  DanaEmptyReservoir = '51002',
+  DanaIncompatibleActionsOnPump = '51003',
+  DanaOcclusion = '51004',
   Hyperglycemia = '10113',
   Hypoglycemia = '12000',
   InsightEmptyInsulinCartridge = '71002',
@@ -40,6 +44,9 @@ export enum AlarmCode {
   KaleidoOcclusion = '41004',
   LongHyperglycemia = '15000',
   LongHypoglycemia = '24000',
+  MedisafeEmptyPumpBattery = '91001',
+  MedisafeEmptyPumpReservoir = '91002',
+  MedisafeOcclusion = '91004',
   NoReadingsHypoglycemiaRisk = '20100',
   SensorSessionExpired = '11000',
   SuddenRiseInGlycemia = '20102',

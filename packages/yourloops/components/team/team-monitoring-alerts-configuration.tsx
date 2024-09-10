@@ -35,11 +35,13 @@ import TuneIcon from '@mui/icons-material/Tune'
 import { commonComponentStyles } from '../common'
 import { type Team, useTeam } from '../../lib/team'
 import { useAlert } from '../utils/snackbar'
-import MonitoringAlertsContentConfiguration from '../monitoring-alert/monitoring-alerts-content-configuration'
 import { type MonitoringAlertsParameters } from '../../lib/team/models/monitoring-alerts-parameters.model'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 import { useAuth } from '../../lib/auth'
+import {
+  MonitoringAlertsTeamConfiguration
+} from '../monitoring-alert/monitoring-alerts-team-configuration'
 import { useParams } from 'react-router-dom'
 
 export interface TeamMonitoringAlertsConfigurationProps {
@@ -88,7 +90,7 @@ function TeamMonitoringAlertsConfiguration(props: TeamMonitoringAlertsConfigurat
       </div>
 
       <Box paddingX={3}>
-        <MonitoringAlertsContentConfiguration
+        <MonitoringAlertsTeamConfiguration
           displayInReadonly={!isCurrentUserTeamAdmin}
           monitoringAlertsParameters={team.monitoringAlertsParameters}
           onSave={save}

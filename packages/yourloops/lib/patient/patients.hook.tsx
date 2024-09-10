@@ -53,7 +53,6 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const teamId = teamIdFromParam ?? localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
 
   const [patients, setPatients] = useState<Patient[]>([])
-  const [initialized, setInitialized] = useState<boolean>(false)
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
   const teamIdForWhichPatientsAreFetched = useRef(null)
 
@@ -79,7 +78,6 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
         setPatients([])
       })
       .finally(() => {
-        setInitialized(true)
         setRefreshInProgress(false)
       })
       .then(async (computedPatients: Patient[]) => {
@@ -165,6 +163,16 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
     }
   }
 
+  const deletePatientMonitoringAlertsParameters = async (patientId: string): Promise<void> => {
+    try {
+      await PatientApi.deletePatientAlerts(teamId, patientId)
+      refresh()
+    } catch (error) {
+      console.error(error)
+      throw Error(`Failed to delete monitoring alert parameters for patient with id ${patientId}`)
+    }
+  }
+
   const removePatient = async (patient: Patient): Promise<void> => {
     if (PatientUtils.isInvitationPending(patient)) {
       await cancelInvite(patient.invite.id, undefined, patient.profile.email)
@@ -178,24 +186,24 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
   }
 
   useEffect(() => {
-    const selectedTeamId = teamId ?? localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
-    if (user && teamIdForWhichPatientsAreFetched.current !== selectedTeamId) {
-      teamIdForWhichPatientsAreFetched.current = selectedTeamId
-      fetchPatients(selectedTeamId)
+    if (user && teamIdForWhichPatientsAreFetched.current !== teamId) {
+      teamIdForWhichPatientsAreFetched.current = teamId
+      setRefreshInProgress(true)
+      fetchPatients(teamId)
     }
-  }, [fetchPatients, initialized, teamId, user])
+  }, [fetchPatients, teamId, user])
 
   return {
     patients: patientList,
     pendingPatientsCount,
     allNonPendingPatientsForSelectedTeamCount,
-    initialized,
-    refreshInProgress,
+    refreshInProgress: refreshInProgress || teamIdForWhichPatientsAreFetched.current !== teamId,
     getPatientByEmail,
     getPatientById,
     searchPatients,
     invitePatient,
     markPatientMessagesAsRead,
+    deletePatientMonitoringAlertsParameters,
     updatePatientMonitoringAlertsParameters,
     removePatient,
     refresh

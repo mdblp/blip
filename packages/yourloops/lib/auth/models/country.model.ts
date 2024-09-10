@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,7 +33,6 @@ export interface Country {
 export enum CountryCodes {
   Austria = 'AT',
   Belgium = 'BE',
-  UnitedKingdom = 'GB',
   France = 'FR',
   Germany = 'DE',
   Italy = 'IT',
@@ -41,5 +40,6 @@ export enum CountryCodes {
   Netherlands = 'NL',
   Spain = 'SP',
   Switzerland = 'CH',
+  UnitedKingdom = 'UK',
   Unknown = ''
 }

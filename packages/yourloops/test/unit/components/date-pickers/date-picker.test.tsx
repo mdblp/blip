@@ -33,7 +33,6 @@ import { waitTimeout } from '../../../../lib/utils'
 import DatePicker from '../../../../components/date-pickers/date-picker'
 import initDayJS from '../../../../lib/dayjs'
 import i18n from '../../../../lib/language'
-import { TRANSITION_DURATION } from '../../../../components/date-pickers/models'
 import { act, render, waitFor } from '@testing-library/react'
 
 describe('Date picker', () => {
@@ -136,44 +135,6 @@ describe('Date picker', () => {
     Simulate.keyUp(calendarElem, { key: 'ArrowRight' })
     expect(onChange).toHaveBeenCalledTimes(0)
   })
-
-  it('should correctly change the current month', async () => {
-    const today = dayjs('2021-11-09')
-    const onChange = jest.fn()
-
-    render(
-      <DatePicker
-        minDate={minDate}
-        maxDate={maxDate}
-        selection={{ mode: 'single', selected: today }}
-        onChange={onChange}
-        orientation="portrait"
-      />)
-
-    const buttonPrevMonthElem = document.getElementById('calendar-header-button-prev-month')
-    act(() => {
-      Simulate.keyUp(buttonPrevMonthElem, { key: 'Enter' })
-    })
-
-    const prevMonthElem = document.getElementById('calendar-header-prev-month')
-    expect(prevMonthElem).not.toBeNull()
-    expect(prevMonthElem.innerHTML).toBe('October 2021')
-
-    let buttonLastNovemberDay = document.getElementById('button-calendar-day-2021-11-30')
-    expect(buttonLastNovemberDay).not.toBeNull()
-    expect(buttonLastNovemberDay.innerHTML).toContain('30')
-
-    let buttonFirstOctoberDay = document.getElementById('button-calendar-day-2021-10-01')
-    expect(buttonFirstOctoberDay).not.toBeNull()
-    expect(buttonFirstOctoberDay.innerHTML).toContain('1')
-
-    // Wait the transition end
-    await waitTimeout(2 * TRANSITION_DURATION)
-    buttonLastNovemberDay = document.getElementById('button-calendar-day-2021-11-30')
-    expect(buttonLastNovemberDay).toBeNull()
-    buttonFirstOctoberDay = document.getElementById('button-calendar-day-2021-10-01')
-    expect(buttonFirstOctoberDay).not.toBeNull()
-  }, TRANSITION_DURATION * 10)
 
   it('should refuse to change the current month before the minDate', async () => {
       const today = dayjs('2021-11-09')

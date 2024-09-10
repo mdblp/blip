@@ -70,17 +70,17 @@
     "FR": {
       "name": "France"
     },
-    "JA": {
-      "name": "Japan"
-    },
-    "GB": {
-      "name": "United Kingdom"
-    },
     "IT": {
       "name": "Italy"
     },
+    "JP": {
+      "name": "Japan"
+    },
     "NL": {
       "name": "Netherlands"
+    },
+    "UK": {
+      "name": "United Kingdom"
     }
   }
 }

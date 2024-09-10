@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -68,11 +68,15 @@ describe('getBasalBolusData', () => {
     const basals = buildBasalsData(basalsData)
     const bolus = buildBolusData(bolusData)
 
-    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, 1, dateFilterOneDay)
+    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, [], 1, dateFilterOneDay)
     const expectBasalBolusData = {
+      totalCorrectiveBolusesAndBasals: 16.5,
+      totalManualBoluses: 0,
+      totalMealBoluses: 0,
+      totalPenBoluses: 4,
+      total: 20.5,
       basal: 1.5,
-      bolus: 15,
-      total: 16.5
+      bolus: 19
     }
     expect(basalBolusData).toEqual(expectBasalBolusData)
   })
@@ -81,11 +85,15 @@ describe('getBasalBolusData', () => {
     const basals = buildBasalsData(basalsData)
     const bolus = buildBolusData(bolusData)
 
-    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, 2, dateFilterTwoWeeks)
+    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, [], 2, dateFilterTwoWeeks)
     const expectBasalBolusData = {
+      totalCorrectiveBolusesAndBasals: 10.75,
+      totalManualBoluses: 0,
+      totalMealBoluses: 0,
+      totalPenBoluses: 2,
+      total: 12.75,
       basal: 1.25,
-      bolus: 9.5,
-      total: 10.75
+      bolus: 11.5
     }
     expect(basalBolusData).toEqual(expectBasalBolusData)
   })
@@ -94,16 +102,16 @@ describe('getBasalBolusData', () => {
 describe('getManualBolusAverageStatistics', () => {
   it('should return a map with ranges of hours and manual bolus average statistics', () => {
     const boluses = buildBolusData(manualBolusData)
-    const manualBoluses = BasalBolusStatisticsService.getManualBolusAverageStatistics(boluses, 14, dateFilterTwoWeeks)
+    const manualBoluses = BasalBolusStatisticsService.getManualBolusAverageStatistics(boluses, dateFilterTwoWeeks)
     const expected: ManualBolusAverageStatistics = new Map([
-      [HoursRange.MidnightToThree, { confirmedDose: 0.1, numberOfInjections: 0.1 }],
-      [HoursRange.ThreeToSix, { confirmedDose: 0.4, numberOfInjections: 0.1 }],
+      [HoursRange.MidnightToThree, { confirmedDose: 3, numberOfInjections: 2 }],
+      [HoursRange.ThreeToSix, { confirmedDose: 5, numberOfInjections: 1 }],
       [HoursRange.SixToNine, { confirmedDose: 0, numberOfInjections: 0 }],
       [HoursRange.NineToTwelve, { confirmedDose: 0, numberOfInjections: 0 }],
-      [HoursRange.TwelveToFifteen, { confirmedDose: 0.3, numberOfInjections: 0.1 }],
+      [HoursRange.TwelveToFifteen, { confirmedDose: 2, numberOfInjections: 2 }],
       [HoursRange.FifteenToEighteen, { confirmedDose: 0, numberOfInjections: 0 }],
-      [HoursRange.EighteenToTwentyOne, { confirmedDose: 0.5, numberOfInjections: 0.1 }],
-      [HoursRange.TwentyOneToMidnight, { confirmedDose: 0.3, numberOfInjections: 0.2 }]
+      [HoursRange.EighteenToTwentyOne, { confirmedDose: 4, numberOfInjections: 2 }],
+      [HoursRange.TwentyOneToMidnight, { confirmedDose: 1, numberOfInjections: 3 }]
     ])
     expect(manualBoluses).toEqual(expected)
   })

@@ -14,23 +14,40 @@
   --error-color-light: #e85f7a;
   --error-color-dark: #9d1d36;
   --error-color-background: #FCEAED;
+  --error-color-50: #f095A6;
+  --error-color-20: #F9D4DC;
+  --error-color-10: #FCEAED;
+  --error-color-5 : #FDF4F6;
 
   --warning-color-main: #f28b2d;
   --warning-color-light: #f5a861;
   --warning-color-dark: #a9611f;
   --warning-color-background: #FEF3EA;
+  --warning-color-50: #f9c596;
+  --warning-color-20: #FCE8D5;
+  --warning-color-10: #FEF3EA;
+  --warning-color-5: #FEF9F4;
 
   --info-color-main: #009bd6;
   --info-color-light: #40bae9;
   --info-color-dark: #006c95;
   --info-color-background: #E6F6FD;
+  --info-color-50: #80D1F1;
+  --info-color-20: #CCEDF9;
+  --info-color-10: #E6F6FD;
+
+  --dark-blue-main: #035271;
+  --purple-main: #85529C;
+
+  --grey-25: #D5D5D5;
 
   /* Components */
   --card-header-background-color: #eee;
   --chat-widget-private-msg-mine: #329f92;
   --chat-widget-private-msg-not-mine: #5abcb3;
   --footer-background-color: #eee;
-  --light-grey-border-color: #e6e6e6
+  --light-grey-border-color: #e6e6e6;
+  --button-care-team-values-applied-bg: #D3F4F0;
 }
 
 :root .diabeloop-blue {

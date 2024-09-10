@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,6 +31,6 @@ export enum LanguageCodes {
   Es = 'es',
   Fr = 'fr',
   It = 'it',
-  Nl = 'nl',
-  Jp = 'jp'
+  Ja = 'ja',
+  Nl = 'nl'
 }

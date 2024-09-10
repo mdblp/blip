@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,13 +40,16 @@ export const getBolusType = (insulinEvent: Bolus | Wizard): BolusType => {
     return BolusType.Meal
   }
   const bolus = getBolusFromInsulinEvent(insulinEvent)
-  if (bolus?.subType === BolusSubtype.Pen || bolus?.prescriptor === Prescriptor.Manual) {
+  if (bolus?.subType === BolusSubtype.Pen) {
+    return BolusType.Pen
+  }
+  if (bolus?.prescriptor === Prescriptor.Manual) {
     return BolusType.Manual
   }
   if (bolus?.subType === BolusSubtype.Biphasic) {
     return BolusType.Meal
   }
-  return BolusType.Micro
+  return BolusType.Correction
 }
 
 export const getDelivered = (bolus: Bolus): number => {

@@ -18,6 +18,7 @@
 import _ from 'lodash'
 
 import picto from '../../../img/physicalactivity.png'
+import { DEFAULT_IMAGE_MARGIN, DEFAULT_OPTIONS_SIZE } from './eventsConstants'
 
 function drawPhysicalActivity(pool, opts) {
   const height = pool.height() - 20
@@ -25,6 +26,8 @@ function drawPhysicalActivity(pool, opts) {
 
   const calculateWidth = (d) => opts.xScale(d.epochEnd) - opts.xScale(d.epoch)
   const xPos = (d) => opts.xScale(d.epoch)
+
+  opts.size = opts.size ?? DEFAULT_OPTIONS_SIZE
 
   return {
     picto: function (pa) {
@@ -39,9 +42,9 @@ function drawPhysicalActivity(pool, opts) {
 
       pa.append('image').attr({
         'x': xPos,
-        'y': _.constant(0),
+        'y': pool.height() / 2 - opts.size / 2,
         'width': calculateWidth,
-        'height': _.constant(offset),
+        'height': pool.height() - DEFAULT_IMAGE_MARGIN,
         'xlink:href': picto
       })
     },

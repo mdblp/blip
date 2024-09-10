@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -90,7 +90,7 @@ describe('Profile page for hcp', () => {
     const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
-        loggedInUserFullName: `${profile.firstName} ${profile.lastName}`,
+        loggedInUserFullName: `${profile.lastName} ${profile.firstName}`,
         teamMenuInfo: {
           selectedTeamName: myThirdTeamName,
           isSelectedTeamPrivate: false,
@@ -99,7 +99,7 @@ describe('Profile page for hcp', () => {
       }
     }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
-    const expectedSettings = { ...settings, units: { bg: Unit.MilligramPerDeciliter } }
+    const expectedSettings = { units: { bg: Unit.MilligramPerDeciliter }, country: CountryCodes.Austria }
     const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(expectedProfile)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
     const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
@@ -128,6 +128,15 @@ describe('Profile page for hcp', () => {
 
     fireEvent.mouseDown(within(screen.getByTestId('dropdown-profession-selector')).getByRole('combobox'))
     fireEvent.click(screen.getByRole('option', { name: 'Nurse' }))
+
+    fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
+    fireEvent.click(screen.getByRole('option', { name: 'Japan' }))
+
+    fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
+    fireEvent.click(screen.getByRole('option', { name: 'United Kingdom' }))
+
+    fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
+    fireEvent.click(screen.getByRole('option', { name: 'Austria' }))
 
     await userEvent.clear(fields.firstNameInput)
     await userEvent.clear(fields.lastNameInput)

@@ -17,7 +17,7 @@
 
 import _ from 'lodash'
 
-import { MGDL_UNITS, TimeService } from 'medical-domain'
+import { DatumType, MGDL_UNITS, TimeService } from 'medical-domain'
 
 import dblDevice from './pumpSettings/diabeloop/device.json'
 import dblParamHistory from './pumpSettings/diabeloop/deviceHistory.json'
@@ -234,7 +234,7 @@ export class Wizard extends Common {
       value: 5.0
     })
 
-    this.type = 'wizard'
+    this.type = DatumType.Wizard
 
     this.bgTarget = opts.bgTarget
     this.bolus = opts.bolus ? opts.bolus : new Bolus({

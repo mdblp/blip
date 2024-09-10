@@ -30,10 +30,10 @@ import { arrayBufferToBase64 } from './utils/functions'
 
 // TO_DO have a configuration variable to support specific branding or not like done e.g. in Blip
 // branding should make use of artifact.sh to download specific branding artifacts such as images
-import siteChangeCannulaImage from './images/sitechange-cannula.png'
-import siteChangeReservoirImage from './images/sitechange-reservoir.png'
-import siteChangeTubingImage from './images/sitechange-tubing.png'
-import siteChangeReservoirDiabeloopImage from './images/diabeloop/sitechange-cartridge.png'
+import kaleidoPumpIcon from '../../../../../branding/pump/png/kaleido-pump.png'
+import danaPumpIcon from '../../../../../branding/pump/png/dana-pump.png'
+import insightPumpIcon from '../../../../../branding/pump/png/insight-pump.png'
+import medisafePumpIcon from '../../../../../branding/pump/png/medisafe-pump.png'
 import jaFontRegular from 'jaFont-Regular.ttf'
 import jaFontBold from 'jaFont-Bold.ttf'
 
@@ -61,48 +61,48 @@ async function loadImages() {
     constants.Images.logo = imageStr
   }
 
-  if (constants.Images.siteChangeCannulaImage === null) {
-    if (siteChangeCannulaImage.startsWith(base64Flag)) {
-      imageStr = siteChangeCannulaImage
+  if (constants.Images.kaleidoPumpIcon === null) {
+    if (kaleidoPumpIcon.startsWith(base64Flag)) {
+      imageStr = kaleidoPumpIcon
     } else {
-      const response = await fetch(siteChangeCannulaImage)
+      const response = await fetch(kaleidoPumpIcon)
       const buffer = await response.arrayBuffer()
       imageStr = base64Flag + arrayBufferToBase64(buffer)
     }
-    constants.Images.siteChangeCannulaImage = imageStr
+    constants.Images.kaleidoPumpIcon = imageStr
   }
 
-  if (constants.Images.siteChangeReservoirImage === null) {
-    if (siteChangeReservoirImage.startsWith(base64Flag)) {
-      imageStr = siteChangeReservoirImage
+  if (constants.Images.danaPumpIcon === null) {
+    if (danaPumpIcon.startsWith(base64Flag)) {
+      imageStr = danaPumpIcon
     } else {
-      const response = await fetch(siteChangeReservoirImage)
+      const response = await fetch(danaPumpIcon)
       const buffer = await response.arrayBuffer()
       imageStr = base64Flag + arrayBufferToBase64(buffer)
     }
-    constants.Images.siteChangeReservoirImage = imageStr
+    constants.Images.danaPumpIcon = imageStr
   }
 
-  if (constants.Images.siteChangeTubingImage === null) {
-    if (siteChangeTubingImage.startsWith(base64Flag)) {
-      imageStr = siteChangeTubingImage
+  if (constants.Images.insightPumpIcon === null) {
+    if (insightPumpIcon.startsWith(base64Flag)) {
+      imageStr = insightPumpIcon
     } else {
-      const response = await fetch(siteChangeTubingImage)
+      const response = await fetch(insightPumpIcon)
       const buffer = await response.arrayBuffer()
       imageStr = base64Flag + arrayBufferToBase64(buffer)
     }
-    constants.Images.siteChangeTubingImage = imageStr
+    constants.Images.insightPumpIcon = imageStr
   }
 
-  if (constants.Images.siteChangeReservoirDiabeloopImage === null) {
-    if (siteChangeReservoirDiabeloopImage.startsWith(base64Flag)) {
-      imageStr = siteChangeReservoirDiabeloopImage
+  if (constants.Images.medisafePumpIcon === null) {
+    if (medisafePumpIcon.startsWith(base64Flag)) {
+      imageStr = kaleidoPumpIcon
     } else {
-      const response = await fetch(siteChangeReservoirDiabeloopImage)
+      const response = await fetch(medisafePumpIcon)
       const buffer = await response.arrayBuffer()
       imageStr = base64Flag + arrayBufferToBase64(buffer)
     }
-    constants.Images.siteChangeReservoirDiabeloopImage = imageStr
+    constants.Images.medisafePumpIcon = imageStr
   }
 }
 

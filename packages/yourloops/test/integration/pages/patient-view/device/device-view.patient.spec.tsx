@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -63,7 +63,7 @@ describe('Device view for Patient', () => {
     await act(async () => {
       renderPage(deviceRoute)
     })
-    await testAppMainLayoutForPatient({ loggedInUserFullName: `${firstName} ${lastName}` })
+    await testAppMainLayoutForPatient({ loggedInUserFullName: `${lastName} ${firstName}` })
   })
 
   it('should display correct parameters', async () => {

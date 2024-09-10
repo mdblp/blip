@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -45,7 +45,6 @@ describe('getCarbsData', () => {
     const expected = {
       mealCarbsPerDay: 25,
       rescueCarbsPerDay: 25,
-      estimatedCarbsPerDay: 25,
       totalCarbsPerDay: 50,
       totalMealCarbsWithRescueCarbsEntries: 10,
       totalRescueCarbsEntries: 5
@@ -60,7 +59,6 @@ describe('getCarbsData', () => {
     const carbsData = CarbsStatisticsService.getCarbsData(mealData, wizardData, 2, dateFilterTwoDays)
     const expected = {
       mealCarbsPerDay: 2.5,
-      estimatedCarbsPerDay: 2.5,
       rescueCarbsPerDay: 2.5,
       totalCarbsPerDay: 5,
       totalMealCarbsWithRescueCarbsEntries: 2,
@@ -72,16 +70,16 @@ describe('getCarbsData', () => {
   describe('getRescueCarbsAverageStatistics', () => {
     it('should return a map with ranges of hours and rescue carbs average statistics', () => {
       const meals = buildMealData(bgDataSourceTwoWeeks)
-      const rescueCarbs = CarbsStatisticsService.getRescueCarbsAverageStatistics(meals, 14, dateFilterTwoWeeks)
+      const rescueCarbs = CarbsStatisticsService.getRescueCarbsAverageStatistics(meals, dateFilterTwoWeeks)
       const expected: RescueCarbsAverageStatistics = new Map([
-        [HoursRange.MidnightToThree, { confirmedCarbs: 1.1, numberOfIntakes: 0.2, recommendedCarbs: 0.4 }],
-        [HoursRange.ThreeToSix, { confirmedCarbs: 1.1, numberOfIntakes: 0.2, recommendedCarbs: 1.8 }],
-        [HoursRange.SixToNine, { confirmedCarbs: 0, numberOfIntakes: 0, recommendedCarbs: 0 }],
-        [HoursRange.NineToTwelve, { confirmedCarbs: 0, numberOfIntakes: 0, recommendedCarbs: 0 }],
-        [HoursRange.TwelveToFifteen, { confirmedCarbs: 1.1, numberOfIntakes: 0.2, recommendedCarbs: 0.9 }],
-        [HoursRange.FifteenToEighteen, { confirmedCarbs: 0, numberOfIntakes: 0, recommendedCarbs: 0 }],
-        [HoursRange.EighteenToTwentyOne, { confirmedCarbs: 1.1, numberOfIntakes: 0.2, recommendedCarbs: 1.1 }],
-        [HoursRange.TwentyOneToMidnight, { confirmedCarbs: 1.1, numberOfIntakes: 0.2, recommendedCarbs: 1.9 }]
+        [HoursRange.MidnightToThree, { averageRecommendedCarb: 2, numberOfModifiedCarbs: 3, rescueCarbsOverrideAverage: 3, numberOfRescueCarbs: 3 }],
+        [HoursRange.ThreeToSix, { averageRecommendedCarb: 2, numberOfModifiedCarbs: 3, rescueCarbsOverrideAverage: 3, numberOfRescueCarbs: 3 }],
+        [HoursRange.SixToNine, { averageRecommendedCarb: 0, numberOfModifiedCarbs: 0, rescueCarbsOverrideAverage: 0, numberOfRescueCarbs: 0 }],
+        [HoursRange.NineToTwelve, { averageRecommendedCarb: 0, numberOfModifiedCarbs: 0, rescueCarbsOverrideAverage: 0, numberOfRescueCarbs: 0 }],
+        [HoursRange.TwelveToFifteen, { averageRecommendedCarb: 2, numberOfModifiedCarbs: 3, rescueCarbsOverrideAverage: 3, numberOfRescueCarbs: 3 }],
+        [HoursRange.FifteenToEighteen, { averageRecommendedCarb: 0, numberOfModifiedCarbs: 0, rescueCarbsOverrideAverage: 0, numberOfRescueCarbs: 0 }],
+        [HoursRange.EighteenToTwentyOne, { averageRecommendedCarb: 2, numberOfModifiedCarbs: 3, rescueCarbsOverrideAverage: 3, numberOfRescueCarbs: 3 }],
+        [HoursRange.TwentyOneToMidnight, { averageRecommendedCarb: 2, numberOfModifiedCarbs: 3, rescueCarbsOverrideAverage: 3, numberOfRescueCarbs: 3 }]
       ])
       expect(rescueCarbs).toEqual(expected)
     })

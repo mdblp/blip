@@ -39,28 +39,16 @@ import parse from 'parse-svg-path'
 import translate from 'translate-svg-path'
 import serialize from 'serialize-svg-path'
 
-import {
-  CGM_DATA_KEY,
-  NO_SITE_CHANGE,
-  SITE_CHANGE,
-  SITE_CHANGE_CANNULA,
-  SITE_CHANGE_RESERVOIR,
-  SITE_CHANGE_TUBING
-} from '../../utils/constants'
+import { CGM_DATA_KEY, NO_SITE_CHANGE, SITE_CHANGE } from '../../utils/constants'
 
 import { Images } from './utils/constants'
+import { PumpManufacturer } from 'medical-domain'
 
 const t = i18next.t.bind(i18next)
 
 class BasicsPrintView extends PrintView {
   constructor(doc, data, opts) {
     super(doc, data, opts)
-
-    this.siteChangeImages = {
-      [SITE_CHANGE_CANNULA]: Images.siteChangeCannulaImage,
-      [SITE_CHANGE_RESERVOIR]: Images.siteChangeReservoirDiabeloopImage,
-      [SITE_CHANGE_TUBING]: Images.siteChangeTubingImage
-    }
 
     const pumpSettings = data.data.pumpSettings.data[0]
     this.source = _.get(pumpSettings, 'source', '').toLowerCase()
@@ -399,7 +387,7 @@ class BasicsPrintView extends PrintView {
         ]
 
         const ratioColors = {
-          basal: this.colors.basal,
+          basal: this.colors.basalAutomated,
           bolus: this.colors.bolus,
           automated: this.colors.basalAutomated,
           manual: this.colors.basal
@@ -698,6 +686,22 @@ class BasicsPrintView extends PrintView {
     }
   }
 
+  getPumpIconByManufacturer(manufacturer) {
+    const manufacturerUppercase = manufacturer.toUpperCase()
+    switch (manufacturerUppercase) {
+      case PumpManufacturer.Sooil:
+        return Images.danaPumpIcon
+      case PumpManufacturer.Terumo:
+        return Images.medisafePumpIcon
+      case PumpManufacturer.Roche:
+        return Images.insightPumpIcon
+      case PumpManufacturer.Vicentra:
+      case PumpManufacturer.Default:
+      default:
+        return Images.kaleidoPumpIcon
+    }
+  }
+
   renderCalendarCell(tb, data, draw, column, pos, padding) {
     if (draw) {
       const {
@@ -750,7 +754,6 @@ class BasicsPrintView extends PrintView {
         if (isSiteChange) {
           const daysSinceLabel = daysSince === 1 ? t('day') : t('days')
 
-          const siteChangeType = this.data.sections.siteChanges.type
           const imageWidth = width / 3
           const imagePadding = (width - imageWidth) / 1.3
 
@@ -772,7 +775,9 @@ class BasicsPrintView extends PrintView {
 
           this.setFill()
 
-          this.doc.image(this.siteChangeImages[siteChangeType], xPos + imagePadding, this.doc.y + imageWidth / 2, {
+          const pumpManufacturer = this.data.data.pumpSettings.data[0].payload.pump.manufacturer
+          const pumpIcon = this.getPumpIconByManufacturer(pumpManufacturer)
+          this.doc.image(pumpIcon, xPos + imagePadding, this.doc.y + imageWidth / 2, {
             width: imageWidth
           })
 

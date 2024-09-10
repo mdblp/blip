@@ -25,9 +25,20 @@ import _ from 'lodash'
 import utils from './util/utils'
 import commonbolus from './util/commonbolus'
 import drawbolus from './util/drawbolus'
+import { BolusSubtype, Prescriptor } from 'medical-domain'
 
 const defaults = {
   width: 12
+}
+
+const getDataTestId = (d) => {
+  if (d.subType === BolusSubtype.Pen) {
+    return `bolus_pen_${d.id}`
+  }
+  if (d.prescriptor === Prescriptor.Manual) {
+    return `bolus_manual_${d.id}`
+  }
+  return 'd3-bolus-group'
 }
 
 /**
@@ -55,7 +66,7 @@ function plotQuickBolus(pool, opts = defaults) {
         .attr({
           'class': 'd3-bolus-group',
           'id': (d) => `bolus_group_${d.id}`,
-          'data-testid': 'd3-bolus-group'
+          'data-testid': (d) => getDataTestId(d)
         })
         .sort((a, b) => {
           // sort by size so smaller boluses are drawn last

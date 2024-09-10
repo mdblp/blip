@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -99,8 +99,8 @@ const normalizePump = (rawPump: Record<string, unknown> | null): PumpConfig => {
   const notAvailableLabel = t('N/A')
   const manufacturer = (rawPump?.manufacturer ?? '') as string
   return {
-    expirationDate: rawPump?.expirationDate as string ?? null,
     manufacturer: manufacturer?.toUpperCase() as PumpManufacturer || notAvailableLabel,
+    product: (rawPump?.product ?? notAvailableLabel) as string,
     name: (rawPump?.name ?? notAvailableLabel) as string,
     serialNumber: (rawPump?.serialNumber ?? notAvailableLabel) as string,
     swVersion: (rawPump?.swVersion ?? notAvailableLabel) as string

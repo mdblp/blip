@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -150,7 +150,7 @@ describe('CBGPercentageBarChart hook', () => {
       days: 0,
       type: CBGStatType.ReadingsInRange
     }))
-    expect(thirdHook.current.annotations).toEqual(['**Readings In Range:** Daily average of the number of BGM readings.'])
+    expect(thirdHook.current.annotations).toEqual(['**Readings In Range:** Number of BGM readings.'])
 
     const { result: fourthHook } = renderHook(() => useCBGPercentageBarChartHook({
       ...defaultProps,

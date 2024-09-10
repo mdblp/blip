@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,6 +28,7 @@
 import React, { type FunctionComponent } from 'react'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import Box from '@mui/material/Box'
+import commonStyles from '../../../styles/stat-common.css'
 
 interface CBGPercentageTitleProps {
   annotations: string[]
@@ -43,6 +44,7 @@ const CBGPercentageTitle: FunctionComponent<CBGPercentageTitleProps> = (props) =
       data-testid="cbg-percentage-title"
       display="flex"
       alignItems="center"
+      className={commonStyles.title}
     >
       {title}
       {shouldDisplayInfoTooltip &&

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,6 +29,7 @@ import {
   checkPatientStatistics,
   checkPatientStatisticsNoData,
   checkPatientStatisticsTrendsView,
+  checkPatientStatisticsTrendsViewNoMonday,
   checkPatientStatisticsWithTwoWeeksOldData
 } from '../assert/patient-statistics.assert'
 import { checkPatientDashboardLayout, type PatientDashboardLayoutParams } from '../assert/layout.assert'
@@ -51,6 +52,7 @@ import { checkMonitoringAlertsCard, checkMonitoringAlertsCardNoData } from '../a
 import { checkTrendsStatsWidgetsTooltips } from '../assert/trends-view.assert'
 import {
   checkDailyStatsWidgetsTooltips,
+  checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware,
   checkDailyTidelineContainerTooltipsMgdl,
   checkDailyTidelineContainerTooltipsMmolL,
   checkDailyTimeInRangeStatsWidgetsMgdl,
@@ -60,8 +62,11 @@ import {
 import {
   checkAverageGlucoseStatWidget,
   checkStandardDeviationStatWidget,
-  checkTimeInRangeStatsTitle
+  checkTimeInRangeStatsTitle,
+  checkTotalInsulinStatWidget
 } from '../assert/stats.assert'
+import userEvent from '@testing-library/user-event'
+import { screen } from '@testing-library/react'
 
 export const testDashboardDataVisualisationForHcp = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
@@ -139,6 +144,11 @@ export const testDailyViewTooltipsAndValuesMgdl = async () => {
 
   await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
   await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
+  await checkTotalInsulinStatWidget('Total Insulin111.8 UMeal bolus50.7 U45.3%Basal & correction bolus52 U46.5%Manual bolus5.1 U4.6%Pen bolus4.1 U3.7%')
+}
+
+export const testDailyViewTooltipsForDBLG2OrRecentSoftware = async () => {
+  await checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware()
 }
 
 export const testDailyViewTooltipsAndValuesMmolL = async () => {
@@ -154,4 +164,15 @@ export const testDailyViewTooltipsAndValuesMmolL = async () => {
 
   await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mmol/L6')
   await checkStandardDeviationStatWidget('(2-10)mmol/L4')
+}
+
+
+export const testTrendsWeekDayFilter = async () => {
+  // Start by asserting data before removing Mondays from the stats
+  await checkPatientStatisticsTrendsView()
+  // Deactivate Monday
+  await userEvent.click(screen.getByTestId('day-filter-monday'))
+  await checkPatientStatisticsTrendsViewNoMonday()
+  // Reactivate Monday
+  await userEvent.click(screen.getByTestId('day-filter-monday'))
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -149,7 +149,7 @@ const Tooltip: FunctionComponent<TooltipProps> = (
         </div>
       }
       {content &&
-        <div id="tooltip-daily-content" className={styles.content}>
+        <div data-testid="tooltip-daily-content" className={styles.content}>
           <span>{content}</span>
           <TooltipTail
             borderColor={borderColor}

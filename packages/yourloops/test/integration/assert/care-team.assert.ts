@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,12 +37,16 @@ import {
 } from '../mock/team.api.mock'
 import {
   loggedInUserEmail,
+  loggedInUserFirstName,
   loggedInUserFullName,
   loggedInUserId,
+  loggedInUserLastName,
   userHugoFullName,
   userTimEmail,
+  userTimFirstName,
   userTimFullName,
   userTimId,
+  userTimLastName,
   userYdrisFullName
 } from '../mock/auth0.hook.mock'
 import userEvent from '@testing-library/user-event'
@@ -70,7 +74,7 @@ export const checkCareTeamInformation = async () => {
 
 export const checkRemoveMember = async () => {
   const teamMembersTable = await screen.findByRole('table')
-  expect(teamMembersTable).toHaveTextContent(/^MemberEmailAdminYann Blancyann.blanc@example.comTim Canutim.canu@example.com--pending-user-iconhugo.rodrigues@example.com--pending-user-iconydris.rebibane@example.com$/)
+  expect(teamMembersTable).toHaveTextContent(/^MemberEmailAdminBlanc Yannyann.blanc@example.comCanu Timtim.canu@example.com--pending-user-iconhugo.rodrigues@example.com--pending-user-iconydris.rebibane@example.com$/)
 
   const removeMemberButton = screen.getByRole('button', { name: `Remove the member ${userTimFullName}` })
   await userEvent.click(removeMemberButton)
@@ -149,7 +153,7 @@ export const checkNotTeamAdmin = async () => {
 
 export const checkDeleteTeam = async () => {
   const teamMembersTable = await screen.findByRole('table')
-  expect(teamMembersTable).toHaveTextContent('MemberEmailAdminYourloops UI 28.0 HCP 0yann.blanc@example.com')
+  expect(teamMembersTable).toHaveTextContent('MemberEmailAdminHCP 0 Yourloops UI 28.0yann.blanc@example.com')
 
   const leaveTeamButton = screen.getByRole('button', { name: 'Leave team' })
   await userEvent.click(leaveTeamButton)
@@ -204,18 +208,19 @@ export const checkCareTeamMembers = () => {
   expect(teamMembersSection.getByText('Add healthcare professional')).toBeVisible()
   expect(teamMembersSection.getByText('Add healthcare professional')).toBeEnabled()
 
-  expect(screen.getByTestId('team-members-list-table')).toHaveTextContent(`MemberEmailAdmin${loggedInUserFullName}${loggedInUserEmail}${userTimFullName}${userTimEmail}`)
+  expect(screen.getByTestId('team-members-list-table')).toHaveTextContent(`MemberEmailAdmin${loggedInUserLastName} ${loggedInUserFirstName}${loggedInUserEmail}${userTimLastName} ${userTimFirstName}${userTimEmail}`)
 }
 
 export const checkCareTeamMonitoringAlertsConfiguration = () => {
   const monitoringAlertsConfigurationSection = screen.getByTestId('team-monitoring-alerts-configuration')
 
   expect(within(monitoringAlertsConfigurationSection).getByText('Monitoring alerts configuration')).toBeVisible()
-  expect(within(monitoringAlertsConfigurationSection).getByText('Save')).toBeVisible()
-  expect(within(monitoringAlertsConfigurationSection).getByText('Save')).toBeEnabled()
+  const saveButton = within(monitoringAlertsConfigurationSection).getByRole('button', { name: 'Save' })
+  expect(saveButton).toBeVisible()
+  expect(saveButton).toBeDisabled() // No monitoring value has been changed, button should be disabled
 
   expect(monitoringAlertsConfigurationSection).toHaveTextContent('Monitoring alerts configuration1. Time away from target range')
-  expect(monitoringAlertsConfigurationSection).toHaveTextContent('1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)A. Glycemic targetMinimum:​mg/dLMaximum:​mg/dLDefault: min at 70 mg/dL and max at 180 mg/dLB. Event trigger thresholdTime spent off target5%​Default: 50%')
-  expect(monitoringAlertsConfigurationSection).toHaveTextContent('2. Severe hypoglycemiaCurrent trigger setting: 10% of time below 40 mg/dL thresholdA. Severe hypoglycemia threshold:Severe hypoglycemia below:​mg/dLDefault: 54 mg/dLB. Event trigger thresholdTime spent in severe hypoglycemia10%​Default: 5%')
+  expect(monitoringAlertsConfigurationSection).toHaveTextContent('1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)A. Glycemic targetMinimum​mg/dLMaximum​mg/dLDefault: min at 70 mg/dL and max at 180 mg/dLB. Event trigger thresholdTime spent off target5%​Default: 50%')
+  expect(monitoringAlertsConfigurationSection).toHaveTextContent('2. Severe hypoglycemiaCurrent trigger setting: 10% of time below 40 mg/dL thresholdA. Severe hypoglycemia threshold:Severe hypoglycemia below​mg/dLDefault: 54 mg/dLB. Event trigger thresholdTime spent in severe hypoglycemia10%​Default: 5%')
   expect(monitoringAlertsConfigurationSection).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​Default: 50%')
 }

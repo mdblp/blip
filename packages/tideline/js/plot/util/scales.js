@@ -149,7 +149,10 @@ function createScaleBolus(data, pool) {
   }, 0)
   const bolusDomain = [0, maxValue]
   const bolusRange = [poolHeight, bolusRatio * poolHeight]
-  return d3.scale.sqrt().domain(bolusDomain).range(bolusRange)
+  return d3.scale
+    .sqrt()
+    .domain(bolusDomain)
+    .range(bolusRange)
 }
 
 /**
@@ -191,10 +194,13 @@ export function createYAxisBolus(tidelineData, pool) {
  */
 function createScaleBasal(data, pool) {
   const d3 = window.d3
-  const scale = d3.scale.linear()
-  scale.domain([0, d3.max(data, (d) => d.rate) * 1.1])
-  scale.rangeRound([pool.height(), 0])
-  return scale
+  const basalDomain = [0, d3.max(data, (d) => d.rate) * 1.1]
+  const basalRange = [pool.height(), 0]
+
+  return d3.scale
+    .sqrt()
+    .domain(basalDomain)
+    .range(basalRange)
 }
 
 /**
@@ -206,11 +212,14 @@ function createScaleBasal(data, pool) {
 export function createYAxisBasal(tidelineData, pool) {
   const d3 = window.d3
   const scale = createScaleBasal(tidelineData.medicalData.basal, pool)
+  const basalTickValues = [0, 1, 3]
+
   const axis = d3.svg.axis()
     .scale(scale)
     .orient('left')
     .outerTickSize(0)
     .ticks(2)
+    .tickValues(basalTickValues)
 
   return { axis, scale }
 }

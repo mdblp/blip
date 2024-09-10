@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -89,6 +89,11 @@ export const checkAverageGlucoseStatWidget = async (expectedTextContent: string)
 export const checkStandardDeviationStatWidget = async (expectedTextContent: string) => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
   expect(patientStatistics.getByTestId('cbg-standard-deviation-stat')).toHaveTextContent(expectedTextContent)
+}
+
+export const checkTotalInsulinStatWidget = async (expectedTextContent: string) => {
+  const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
+  expect(patientStatistics.getByTestId('container-insulin-stats')).toHaveTextContent(expectedTextContent)
 }
 
 export const checkGlucoseManagementIndicator = async (expectedTextContent: string) => {

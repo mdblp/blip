@@ -1,6 +1,6 @@
 {
   "name": "blip-dev-server",
-  "version": "3.0.6-beta",
+  "version": "3.5.0-beta",
   "private": true,
   "scripts": {
     "server": "node server",
@@ -19,7 +19,7 @@
   "dependencies": {
     "body-parser": "1.19.0",
     "compression": "1.7.4",
-    "express": "4.17.3",
+    "express": "4.19.2",
     "handlebars": "^4.7.6",
     "helmet": "^3.22.0",
     "lodash": "^4.17.21",

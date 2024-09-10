@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,12 +28,12 @@
 import React, { type FunctionComponent } from 'react'
 import {
   type Bolus,
+  BolusSubtype,
   DatumType,
   Prescriptor,
   type TimePrefs,
   type Wizard,
-  WizardInputMealFat,
-  WizardInputMealSource
+  WizardInputMealFat
 } from 'medical-domain'
 import { Tooltip } from '../../../index'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
@@ -92,7 +92,6 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
   const carbs = (bolus as Wizard).carbInput
   const fatMeal = (bolus as Wizard).inputMeal?.fat
   const isFatMeal = fatMeal === WizardInputMealFat.Yes
-  const isUmm = (bolus as Wizard).inputMeal?.source === WizardInputMealSource.Umm
   const inputTime = (bolus as Wizard).inputTime
   const recommended = getRecommended(bolus as Wizard)
   const suggested = Number.isFinite(recommended) ? recommended : null
@@ -107,10 +106,12 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
         return t('Manual Bolus')
       case BolusType.Meal:
         return t('Meal Bolus')
-      case BolusType.Micro:
-        return t('Micro Bolus')
-      case BolusType.Umm:
-        return t('Unannounced Meal Bolus')
+      case BolusType.Correction:
+        return t('Correction')
+      case BolusType.Pen:
+        return t('bolus_pen')
+      default:
+        return ''
     }
   }
 
@@ -120,10 +121,12 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
         return colors.bolusManual
       case BolusType.Meal:
         return colors.bolusMeal
-      case BolusType.Micro:
-        return colors.bolusMicro
-      case BolusType.Umm:
-        return colors.bolusUmm
+      case BolusType.Correction:
+        return colors.bolusCorrection
+      case BolusType.Pen:
+        return colors.bolusPen
+      default:
+        return ''
     }
   }
 
@@ -148,7 +151,7 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
       content={
         <div className={styles.container} id="bolus-tooltip-content">
           {isWizard && carbs &&
-            <TooltipLine label={isUmm ? t('Estimated carbs') : t('Carbs')} value={carbs} units={t('g')} />
+            <TooltipLine label={t('Carbs')} value={carbs} units={t('g')} />
           }
           {isWizard && isFatMeal &&
             <TooltipLine label={t('High fat meal')}></TooltipLine>
@@ -163,7 +166,7 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
           {shouldDisplayPrescriptor &&
             <TooltipLine label={t('Prescribed by Loop Mode')} />
           }
-          {bolusSubType &&
+          {bolusSubType && bolusSubType !== BolusSubtype.Pen &&
             <TooltipLine label={t('bolus_type')} value={t(`bolus_${bolusSubType}`)} />
           }
           {isWizard && (shouldDisplayOverride || shouldDisplayRecommended) && <div className={styles.dividerSmall} />}

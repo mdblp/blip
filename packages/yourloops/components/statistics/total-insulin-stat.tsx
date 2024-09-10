@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,8 +32,10 @@ import { InsulinStat } from 'dumb'
 import { convertToPercentage } from './statistics.util'
 
 interface TotalInsulinStatProps {
-  basal: number
-  bolus: number
+  totalMealBoluses: number
+  totalManualBoluses: number
+  totalPenBoluses: number
+  totalCorrectiveBolusesAndBasals: number
   totalInsulin: number
   dailyDose: number
   weight?: ParameterConfig
@@ -41,8 +43,10 @@ interface TotalInsulinStatProps {
 
 export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   const {
-    basal,
-    bolus,
+    totalMealBoluses,
+    totalManualBoluses,
+    totalPenBoluses,
+    totalCorrectiveBolusesAndBasals,
     totalInsulin,
     dailyDose,
     weight
@@ -50,20 +54,38 @@ export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props
 
   const data = [
     {
-      id: 'bolus',
-      value: convertToPercentage(bolus),
-      valueString: String(convertToPercentage(bolus)),
+      id: 'meal',
+      value: convertToPercentage(totalMealBoluses),
+      valueString: String(convertToPercentage(totalMealBoluses)),
       units: Unit.InsulinUnit,
-      title: t('Bolus')
+      title: t('meal-bolus')
     },
     {
       id: 'basal',
-      value: convertToPercentage(basal),
-      valueString: String(convertToPercentage(basal)),
+      value: convertToPercentage(totalCorrectiveBolusesAndBasals),
+      valueString: String(convertToPercentage(totalCorrectiveBolusesAndBasals)),
       units: Unit.InsulinUnit,
-      title: t('Basal')
+      title: t('basal-and-correction-bolus')
     }
   ]
+  if (totalManualBoluses > 0) {
+    data.push({
+      id: 'manual',
+      value: convertToPercentage(totalManualBoluses),
+      valueString: String(convertToPercentage(totalManualBoluses)),
+      units: Unit.InsulinUnit,
+      title: t('manual-bolus')
+    })
+  }
+  if (totalPenBoluses > 0) {
+    data.push({
+      id: 'pen',
+      value: convertToPercentage(totalPenBoluses),
+      valueString: String(convertToPercentage(totalPenBoluses)),
+      units: Unit.InsulinUnit,
+      title: t('pen-bolus')
+    })
+  }
   const weightValue = !weight ? '--' : +weight.value
   return (
     <InsulinStat

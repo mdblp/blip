@@ -80,7 +80,8 @@ const ignoredTransKeyInBlipFiles = [
   'params|${row.name}',
   '${titleType} Above Range',
   '${titleType} Below Range',
-  '${titleType} In Range'
+  '${titleType} In Range',
+  'Micro Bolus'
 ]
 const ignoredTransKeyForYourLoops = [
   // Countries (from locales/languages.json)
@@ -89,6 +90,7 @@ const ignoredTransKeyForYourLoops = [
   'France',
   'Germany',
   'Italy',
+  'Japan',
   'Netherlands',
   'Spain',
   'Switzerland',
@@ -155,10 +157,19 @@ const ignoredTransKeyForYourLoops = [
   'alarm-alert-loop-mode-deactivated-description',
   'alarm-alert-with-code',
   'alarm-at-time',
+  'the-pump-battery-is-empty',
+  'pump-battery-empty',
+  'no-insulin-left-in-reservoir',
+  'reservoir-empty',
+  'alarm-dana-incompatible-actions-on-pump-description',
+  'alarm-dana-incompatible-actions-on-pump-title',
+  'alarm-dana-occlusion-description',
   'alarm-hyperglycemia-description',
-  'alarm-hyperglycemia-title',
+  'alarm-hyperglycemia-title-old',
+  'alarm-hyperglycemia-title-new',
   'alarm-hypoglycemia-description',
-  'alarm-hypoglycemia-title',
+  'alarm-hypoglycemia-title-old',
+  'alarm-hypoglycemia-title-new',
   'alarm-insight-empty-insulin-cartridge-description',
   'alarm-insight-empty-insulin-cartridge-title',
   'alarm-insight-empty-pump-battery-description',
@@ -177,20 +188,23 @@ const ignoredTransKeyForYourLoops = [
   'alarm-kaleido-empty-pump-battery-title',
   'alarm-kaleido-insulin-cartridge-expired-description',
   'alarm-kaleido-occlusion-description',
-  'alarm-long-hyperglycemia-description',
+  'alarm-long-hyperglycemia-description-old',
+  'alarm-long-hyperglycemia-description-new',
   'alarm-long-hypoglycemia-description',
   'alarm-loop-mode-activated-description',
   'alarm-loop-mode-deactivated-description',
   'alarm-multiple-occurrences',
   'alarm-no-readings-hypoglycemia-risk-description',
-  'alarm-no-readings-hypoglycemia-risk-title',
+  'alarm-no-readings-hypoglycemia-risk-title-old',
+  'alarm-no-readings-hypoglycemia-risk-title-new',
   'alarm-occlusion-title',
   'alarm-pump-cannot-deliver-insulin-description',
   'alarm-sensor-session-expired-description-line1',
   'alarm-sensor-session-expired-description-line2',
   'alarm-sensor-session-expired-title',
   'alarm-sudden-rise-glycemia-description',
-  'alarm-sudden-rise-glycemia-title',
+  'alarm-sudden-rise-glycemia-title-old',
+  'alarm-sudden-rise-glycemia-title-new',
   'alarm-urgent-low-soon-description',
   'alarm-urgent-low-soon-title',
   'alarm-with-code',
@@ -198,6 +212,8 @@ const ignoredTransKeyForYourLoops = [
   'alert-invite-patient-failed-already-invited',
   'alert-reinvite-patient-failure',
   'alert-reinvite-patient-from-team-success',
+  'Basal',
+  'Bolus',
   'current-trigger-setting-hypoglycemia',
   'current-trigger-setting-tir',
   'product-labelling',
@@ -207,6 +223,7 @@ const ignoredTransKeyForYourLoops = [
   'optional',
   'training-body',
   'refresh',
+  'insulin-unit-u',
   'login-page-desktop-info-1',
   'login-page-desktop-info-2',
   'login-page-desktop-info-3',
@@ -268,20 +285,18 @@ const ignoredTransKeyForYourLoops = [
   'account-created-info-2-hcp',
   'signup-unknown-step',
   'avg-daily-declared-carbs',
-  'avg-daily-estimated-carbs',
   'meal-carbs',
-  'tooltip-avg-daily-estimated-carbs',
   'tooltip-avg-daily-week-carbs',
   'tooltip-declared-derived-carbs',
-  'tooltip-estimated-derived-carbs',
-  'tooltip-estimated-week-carbs',
   'tooltip-per-day-carbs',
-  'tooltip-per-day-estimated-carbs',
   'total-declared-carbs',
-  'total-estimated-carbs',
   'time-loop-tooltip',
   'tooltip-total-derived-carbs',
-  'verify-email-error-title'
+  'verify-email-error-title',
+  'tooltip-total-derived-carbs',
+  'sensor-warmup',
+  'sensor-warmup-session-end',
+  'signup-information-message-2'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',
@@ -294,7 +309,6 @@ const ignoredTransKeyInYourLoopsFiles = [
   'IMEI',
   'Identifier',
   'Name',
-  'Parameters',
   'params|${parameter.name}',
   'Device',
   'Unit',
@@ -307,10 +321,10 @@ const ignoredTransKeyInYourLoopsFiles = [
   'Parameter',
   'Product',
   'Pump',
-  'Pump cartridge expiration date',
   'Pump version',
   'Serial Number',
   'Setting',
+  'Settings on day',
   'Time In Range'
 ]
 
@@ -441,7 +455,6 @@ describe('Locales tests', () => {
         missingTranslations.push(key)
       }
     }
-
     expect(unusedTranslations, `Unused translations: ${JSON.stringify(unusedTranslations)}`).to.be.empty
     expect(missingTranslations, `Missing translations: ${JSON.stringify(missingTranslations)}`).to.be.empty
   })

@@ -26,6 +26,27 @@ const BOLUS_RIDE_BORDER_COLOR = 'black'
 const BOLUS_RIDE_BORDER_WIDTH = 0.5
 const BOLUS_RIDE_X_LOCATION = -12
 
+const BG_LEGEND_COMMON_CLASSES = 'd3-smbg d3-circle-smbg'
+const BOLUS_LEGEND_COMMON_CLASSES = 'd3-bolus d3-rect-bolus-legend'
+
+const ICON_TYPE_CIRCLE = 'circle'
+const ICON_TYPE_SQUARE = 'rect'
+
+const getLegendIcon = (iconType, customClasses, customWidthFactor = 1) => {
+  const widthFactor = iconType === ICON_TYPE_SQUARE ? 1.5 : 1
+
+  return {
+    create: function (opts) {
+      opts.widths.push(opts.SHAPE_WIDTH * customWidthFactor * widthFactor)
+      return opts.selection.append(iconType)
+        .attr({
+          class: customClasses
+        })
+    },
+    type: iconType
+  }
+}
+
 const legend = {
   SHAPE_MARGIN: 3,
   SHAPE_WIDTH: 15.5,
@@ -100,56 +121,11 @@ const legend = {
       },
       type: 'text'
     },
-    {
-      create: function (opts) {
-        opts.widths.push(opts.SHAPE_WIDTH)
-        return opts.selection.append('circle')
-          .attr({
-            class: 'd3-smbg d3-circle-smbg d3-bg-very-high'
-          })
-      },
-      type: 'circle'
-    },
-    {
-      create: function (opts) {
-        opts.widths.push(opts.SHAPE_WIDTH)
-        return opts.selection.append('circle')
-          .attr({
-            class: 'd3-smbg d3-circle-smbg d3-bg-high'
-          })
-      },
-      type: 'circle'
-    },
-    {
-      create: function (opts) {
-        opts.widths.push(opts.SHAPE_WIDTH)
-        return opts.selection.append('circle')
-          .attr({
-            class: 'd3-smbg d3-circle-smbg d3-bg-target'
-          })
-      },
-      type: 'circle'
-    },
-    {
-      create: function (opts) {
-        opts.widths.push(opts.SHAPE_WIDTH)
-        return opts.selection.append('circle')
-          .attr({
-            class: 'd3-smbg d3-circle-smbg d3-bg-low'
-          })
-      },
-      type: 'circle'
-    },
-    {
-      create: function (opts) {
-        opts.widths.push(opts.SHAPE_WIDTH)
-        return opts.selection.append('circle')
-          .attr({
-            class: 'd3-smbg d3-circle-smbg d3-bg-very-low'
-          })
-      },
-      type: 'circle'
-    },
+    getLegendIcon(ICON_TYPE_CIRCLE, `${BG_LEGEND_COMMON_CLASSES} d3-bg-very-high`),
+    getLegendIcon(ICON_TYPE_CIRCLE, `${BG_LEGEND_COMMON_CLASSES} d3-bg-high`),
+    getLegendIcon(ICON_TYPE_CIRCLE, `${BG_LEGEND_COMMON_CLASSES} d3-bg-target`),
+    getLegendIcon(ICON_TYPE_CIRCLE, `${BG_LEGEND_COMMON_CLASSES} d3-bg-low`),
+    getLegendIcon(ICON_TYPE_CIRCLE, `${BG_LEGEND_COMMON_CLASSES} d3-bg-very-low`),
     {
       create: function (opts) {
         return opts.selection.append('text')
@@ -194,16 +170,7 @@ const legend = {
       type: 'text'
     },
     // Meal Bolus
-    {
-      create: function (opts) {
-        opts.widths.push(opts.SHAPE_WIDTH * 1.5)
-        return opts.selection.append('rect')
-          .attr({
-            class: 'd3-bolus d3-rect-bolus-legend d3-bolus-meal'
-          })
-      },
-      type: 'rect'
-    },
+    getLegendIcon(ICON_TYPE_SQUARE, `${BOLUS_LEGEND_COMMON_CLASSES} d3-bolus-meal`),
     {
       create: (opts) => {
         return opts.selection.append('text')
@@ -218,49 +185,15 @@ const legend = {
       },
       type: 'text'
     },
-    // Umm Bolus
-    {
-      create: function (opts) {
-        opts.widths.push(opts.SHAPE_WIDTH * 1.5)
-        return opts.selection.append('rect')
-          .attr({
-            class: 'd3-bolus d3-rect-bolus-legend d3-bolus-umm'
-          })
-      },
-      type: 'rect'
-    },
-    {
-      create: (opts) => {
-        return opts.selection.append('text')
-          .attr({
-            class: 'd3-pool-legend'
-          })
-          .text(t('Unannounced Meal Bolus'))
-          .each(function () {
-            opts.widths.push(this.getBoundingClientRect().width - legend.SHAPE_MARGIN)
-            opts.textHeight = this.getBoundingClientRect().height
-          })
-      },
-      type: 'text'
-    },
-    // Micro Bolus
-    {
-      create: function (opts) {
-        opts.widths.push(opts.SHAPE_WIDTH * 1.5)
-        return opts.selection.append('rect')
-          .attr({
-            class: 'd3-bolus d3-rect-bolus-legend d3-bolus-micro'
-          })
-      },
-      type: 'rect'
-    },
+    // Correction Bolus
+    getLegendIcon(ICON_TYPE_SQUARE, `${BOLUS_LEGEND_COMMON_CLASSES} d3-bolus-correction`),
     {
       create: function (opts) {
         return opts.selection.append('text')
           .attr({
             class: 'd3-pool-legend'
           })
-          .text(t('Micro Bolus'))
+          .text(t('Correction'))
           .each(function () {
             opts.widths.push(this.getBoundingClientRect().width - legend.SHAPE_MARGIN)
             opts.textHeight = this.getBoundingClientRect().height
@@ -269,16 +202,7 @@ const legend = {
       type: 'text'
     },
     // Manual Bolus
-    {
-      create: function (opts) {
-        opts.widths.push(opts.SHAPE_WIDTH * 1.5)
-        return opts.selection.append('rect')
-          .attr({
-            class: 'd3-bolus d3-rect-bolus-legend d3-bolus-manual'
-          })
-      },
-      type: 'rect'
-    },
+    getLegendIcon(ICON_TYPE_SQUARE, `${BOLUS_LEGEND_COMMON_CLASSES} d3-bolus-manual`),
     {
       create: function (opts) {
         return opts.selection.append('text')
@@ -293,17 +217,24 @@ const legend = {
       },
       type: 'text'
     },
-    // Undelivered
+    // Pen Bolus
+    getLegendIcon(ICON_TYPE_SQUARE, `${BOLUS_LEGEND_COMMON_CLASSES} d3-bolus-pen`),
     {
       create: function (opts) {
-        opts.widths.push(opts.SHAPE_WIDTH * 1.5)
-        return opts.selection.append('rect')
+        return opts.selection.append('text')
           .attr({
-            class: 'd3-bolus d3-rect-bolus-legend d3-bolus-undelivered'
+            class: 'd3-pool-legend'
+          })
+          .text(t('bolus_pen'))
+          .each(function () {
+            opts.widths.push(this.getBoundingClientRect().width - legend.SHAPE_MARGIN)
+            opts.textHeight = this.getBoundingClientRect().height
           })
       },
-      type: 'rect'
+      type: 'text'
     },
+    // Undelivered
+    getLegendIcon(ICON_TYPE_SQUARE, `${BOLUS_LEGEND_COMMON_CLASSES} d3-bolus-undelivered`),
     {
       create: function (opts) {
         return opts.selection.append('text')
@@ -366,16 +297,7 @@ const legend = {
     }
   ].reverse(),
   carbs: [
-    {
-      create: function (opts) {
-        opts.widths.push(opts.SHAPE_WIDTH)
-        return opts.selection.append('circle')
-          .attr({
-            class: 'd3-circle-carbs-legend'
-          })
-      },
-      type: 'circle'
-    },
+    getLegendIcon(ICON_TYPE_CIRCLE, 'd3-circle-carbs-legend'),
     {
       create: function (opts) {
         return opts.selection.append('text')
@@ -390,40 +312,7 @@ const legend = {
       },
       type: 'text'
     },
-    {
-      create: function (opts) {
-        opts.widths.push(opts.SHAPE_WIDTH * 1.5)
-        return opts.selection.append('circle')
-          .attr({
-            class: 'd3-circle-carbs-legend d3-carbs-umm'
-          })
-      },
-      type: 'circle'
-    },
-    {
-      create: function (opts) {
-        return opts.selection.append('text')
-          .attr({
-            class: 'd3-pool-legend'
-          })
-          .text(t('Unannounced Carbs'))
-          .each(function () {
-            opts.widths.push(this.getBoundingClientRect().width)
-            opts.textHeight = this.getBoundingClientRect().height
-          })
-      },
-      type: 'text'
-    },
-    {
-      create: function (opts) {
-        opts.widths.push(opts.SHAPE_WIDTH * 1.5)
-        return opts.selection.append('circle')
-          .attr({
-            class: 'd3-circle-rescuecarbs-legend'
-          })
-      },
-      type: 'circle'
-    },
+    getLegendIcon(ICON_TYPE_CIRCLE, 'd3-circle-rescuecarbs-legend', 1.5),
     {
       create: function (opts) {
         return opts.selection.append('text')

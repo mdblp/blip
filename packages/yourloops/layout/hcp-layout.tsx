@@ -26,18 +26,16 @@
  */
 
 import React, { type FunctionComponent, useCallback, useMemo } from 'react'
-import { Navigate, Outlet, Route, Routes, useParams } from 'react-router-dom'
-import { PatientData } from '../components/patient-data/patient-data'
+import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { CareTeamSettingsPage } from '../pages/care-team-settings/care-team-settings-page'
-import { PatientsProvider } from '../lib/patient/patients.provider'
-import { DashboardLayout } from './dashboard-layout'
 import { InvalidRoute } from '../components/invalid-route'
 import { ProfilePage } from '../pages/profile/profile-page'
 import { NotificationsPage } from '../pages/notifications/notifications-page'
 import { AppUserRoute } from '../models/enums/routes.enum'
 import { PatientListPage } from '../components/patient-list/patient-list-page'
-import { PatientListProvider } from '../lib/providers/patient-list.provider'
 import { Team, TeamContextProvider, useTeam } from '../lib/team'
+import { ScopedPatientData } from '../components/patient-data/scoped-patient-data'
+import { ScopedDashboardLayout } from './scoped-dashboard-layout'
 
 export const LOCAL_STORAGE_SELECTED_TEAM_ID_KEY = 'selectedTeamId'
 
@@ -57,13 +55,7 @@ const HcpCommonLayout: FunctionComponent = () => {
   }
 
   return (
-    <PatientListProvider>
-      <PatientsProvider>
-        <DashboardLayout>
-          <Outlet />
-        </DashboardLayout>
-      </PatientsProvider>
-    </PatientListProvider>
+    <ScopedDashboardLayout />
   )
 }
 
@@ -97,7 +89,7 @@ const HcpLayout: FunctionComponent = () => {
           element={<Navigate to={`/teams/${teamId}/patients`} replace />}
         />
         <Route path={AppUserRoute.PatientsList} element={<PatientListPage />} />
-        <Route path={AppUserRoute.PatientView} element={<PatientData />} />
+        <Route path={AppUserRoute.PatientView} element={<ScopedPatientData />} />
         <Route path="/" element={<Navigate to={`/teams/${teamId}/patients`} replace />} />
         <Route path="*" element={<Navigate to={AppUserRoute.NotFound} replace />} />
       </Route>

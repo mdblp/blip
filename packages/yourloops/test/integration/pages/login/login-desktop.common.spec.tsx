@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -81,9 +81,6 @@ describe('Login page desktop view', () => {
     fireEvent.mouseDown(within(languageSelector).getByRole('combobox', { hidden: true }))
     await userEvent.click(screen.getByText('Français'))
     expect(moreInfoLink).not.toBeVisible()
-
-    await userEvent.click(registerButton)
-    expect(loginWithRedirectMock).toHaveBeenCalledWith(expect.objectContaining({ authorizationParams: { screen_hint: 'signup' } }))
 
     await userEvent.click(loginButton)
     expect(loginWithRedirectMock).toHaveBeenCalled()

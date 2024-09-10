@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -71,10 +71,10 @@ describe('Error page', () => {
     await act(async () => {
       renderErrorPage()
     })
-    expect(screen.getByRole('dialog')).toHaveTextContent(`Sorry! Something went wrong.For a better user experience, it is advised to use Google Chrome on desktop.Please contact YourLoops support and forward them the error id:${errorId}`)
+    expect(screen.getByRole('dialog')).toHaveTextContent(`Sorry! Something went wrong.For a better user experience, it is advised to use Google Chrome on desktop.Please contact YourLoops support and forward the error ID to them:${errorId}`)
     const showMoreInfoButton = screen.getByText('Show more information')
     await userEvent.click(showMoreInfoButton)
-    expect(screen.getByRole('dialog')).toHaveTextContent(`Sorry! Something went wrong.For a better user experience, it is advised to use Google Chrome on desktop.Please contact YourLoops support and forward them the error id:${errorId}`)
+    expect(screen.getByRole('dialog')).toHaveTextContent(`Sorry! Something went wrong.For a better user experience, it is advised to use Google Chrome on desktop.Please contact YourLoops support and forward the error ID to them:${errorId}`)
     expect(screen.getByTestId('error-stacktrace')).toHaveTextContent(/fakeEvent Source: fakeSource:12:56 Error: This is the error we are supposed to throw to harbour Stack: Error: This is the error we are supposed to throw to harbour/)
     expect(ErrorApi.sendError).toHaveBeenCalledWith(expectPayload)
     expect(screen.queryByText('Show more information')).not.toBeInTheDocument()
@@ -92,6 +92,6 @@ describe('Error page', () => {
     await act(async () => {
       renderErrorPage()
     })
-    expect(screen.getByRole('dialog')).toHaveTextContent(`Sorry! Something went wrong.Please contact YourLoops support and forward them the error id:${errorId}`)
+    expect(screen.getByRole('dialog')).toHaveTextContent(`Sorry! Something went wrong.Please contact YourLoops support and forward the error ID to them:${errorId}`)
   })
 })

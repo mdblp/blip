@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,13 +28,14 @@
 import { screen, waitFor } from '@testing-library/react'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { checkPatientNavBarAsPatient } from '../../../assert/patient-nav-bar.assert'
-import { minimalTrendViewData, mockDataAPI } from '../../../mock/data.api.mock'
+import { mockDataAPI } from '../../../mock/data.api.mock'
 import { renderPage } from '../../../utils/render'
 import { checkPatientLayout } from '../../../assert/layout.assert'
 import { patient2AsTeamMember } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
 
 describe('Trends view for patient', () => {
   beforeEach(() => {
@@ -49,7 +50,7 @@ describe('Trends view for patient', () => {
   })
 
   it('should render correct layout', async () => {
-    mockDataAPI(minimalTrendViewData)
+    mockDataAPI(getMinimalTrendViewData())
     const trendsRoute = AppUserRoute.Trends
     const router = renderPage(trendsRoute)
     await waitFor(() => {
@@ -58,6 +59,6 @@ describe('Trends view for patient', () => {
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsPatient()
-    await checkPatientLayout(`${patient2AsTeamMember.profile.firstName} ${patient2AsTeamMember.profile.lastName}`)
+    await checkPatientLayout(`${patient2AsTeamMember.profile.lastName} ${patient2AsTeamMember.profile.firstName}`)
   })
 })

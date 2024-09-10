@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { formatLocalizedFromUTC, getLongDayFormat, TIMEZONE_UTC } from '../../../utils/datetime/datetime.util'
+import {
+  formatCurrentDate,
+  formatLocalizedFromUTC,
+  getLongDayFormat,
+  TIMEZONE_UTC
+} from '../../../utils/datetime/datetime.util'
 import {
   type CgmConfig,
   type DeviceConfig,
@@ -156,14 +161,14 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
         label: t('Manufacturer'),
         value: pump.manufacturer
       }, {
+          label: t('Product'),
+          value: pump.product
+        },{
         label: t('Serial Number'),
         value: pump.serialNumber
       }, {
         label: t('Pump version'),
         value: pump.swVersion
-      }, {
-        label: t('Pump cartridge expiration date'),
-        value: pump.expirationDate ? formatLocalizedFromUTC(pump.expirationDate, timePrefs, longDayFormat) : t('N/A')
       }]
   }
 }
@@ -201,7 +206,7 @@ export const getDeviceParametersTableData = (parameters: ParameterSettingsTableR
   width: number
 }, timezone?: string, date?: string): ParameterSettingsTable => {
   const timePrefs = getTimePrefs(timezone)
-  const text = t('Parameters')
+  const text = t('Settings on day', { day: formatCurrentDate() })
   const subText = tableParameters.level !== 1 ? `- ${t('Advanced')}` : undefined
 
   const heading = getTableHeading(text, timePrefs, subText, date)

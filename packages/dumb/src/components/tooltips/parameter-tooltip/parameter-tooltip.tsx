@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -121,7 +121,7 @@ export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props
       borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
-        <div id="tooltip-daily-parameters" className={styles.container}>
+        <div data-testid="tooltip-daily-parameters" className={styles.container}>
           {parameter.params.map((parameter: Parameter) => renderParameter(parameter))}
         </div>
       }

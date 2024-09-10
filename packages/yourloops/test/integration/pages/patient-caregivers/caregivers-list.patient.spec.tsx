@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -55,7 +55,7 @@ describe('Caregivers list for patient', () => {
       expect(router.state.location.pathname).toEqual(patientCaregiversRoute)
     })
 
-    await testAppMainLayoutForPatient({ loggedInUserFullName: `${patient1Info.profile.firstName} ${patient1Info.profile.lastName}` })
+    await testAppMainLayoutForPatient({ loggedInUserFullName: `${patient1Info.profile.lastName} ${patient1Info.profile.firstName}` })
     await testCaregiversVisualisation()
   })
 })

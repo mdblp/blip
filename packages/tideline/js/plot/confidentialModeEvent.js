@@ -65,7 +65,7 @@ function plotConfidentialModeEvent(pool, opts) {
         .attr({
           'class': 'd3-confidential-group',
           'id': (d) => `${poolId}_confidential_group_${d.id}`,
-          'data-testid': () => `${poolId}_confidential_group`
+          'data-testid': (d) => `${poolId}_confidential_group_${d.id}`
         })
       backGroup.append('rect')
         .attr({
@@ -83,16 +83,19 @@ function plotConfidentialModeEvent(pool, opts) {
           'id': (d) => `${poolId}_confidential_lock_${d.id}`,
           'xlink:href': lockIcon
         })
-      // display the text when no tooltip
-      backGroup.filter((d) => !displayTooltip(d))
-        .append('text')
-        .text(t('Confidential mode'))
-        .attr({
-          x: (d) => xPos(d) + (calculateWidth(d)) / 2,
-          y: ((height - imageSize) / 2) + imageSize + 5,
-          class: 'd3-confidential-text',
-          id: (d) => `${poolId}_confidential_lock_${d.id}`
-        })
+
+      if (!opts.hideLabel) {
+        // display the text when no tooltip
+        backGroup.filter((d) => !displayTooltip(d))
+          .append('text')
+          .text(t('Confidential mode'))
+          .attr({
+            x: (d) => xPos(d) + (calculateWidth(d)) / 2,
+            y: ((height - imageSize) / 2) + imageSize + 5,
+            class: 'd3-confidential-text',
+            id: (d) => `${poolId}_confidential_lock_${d.id}`
+          })
+      }
 
       events.exit().remove()
 

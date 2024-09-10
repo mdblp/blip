@@ -29,7 +29,6 @@ import Unit from './enums/unit.enum'
 import type BaseDatum from './basics/base-datum.model'
 import { isBaseDatum } from './basics/base-datum.model'
 import { DatumType } from './enums/datum-type.enum'
-import type WeekDays from '../../time/enum/weekdays.enum'
 
 const MGDL_UNITS = Unit.MilligramPerDeciliter
 const MMOLL_UNITS = Unit.MmolPerLiter
@@ -52,7 +51,6 @@ type Bg = BaseDatum & {
   value: number
   // Used for trends view
   localDate: string
-  isoWeekday: WeekDays
   msPer24: number
 }
 

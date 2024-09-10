@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -72,12 +72,13 @@ class DiabeloopExternalUrls {
 }
 
 export const diabeloopExternalUrls = new DiabeloopExternalUrls()
-export const PUBLIC_ROUTES = [AppRoute.Login, AppRoute.VerifyEmail, AppRoute.VerifyEmailResult]
+export const PUBLIC_ROUTES = [AppRoute.Login, AppRoute.VerifyEmail, AppRoute.VerifyEmailResult, AppRoute.SignupInformation]
 export const ALWAYS_ACCESSIBLE_ROUTES = [AppRoute.ProductLabelling]
 export const ROUTES_REQUIRING_LANGUAGE_SELECTOR = [
   AppRoute.RenewConsent,
   AppRoute.NewConsent,
   AppRoute.Training,
+  AppRoute.SignupInformation,
   AppRoute.CompleteSignup,
   AppRoute.ProductLabelling,
   AppRoute.VerifyEmail,

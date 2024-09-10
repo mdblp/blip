@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -51,10 +51,12 @@ import Unit from '../src/domains/models/medical/datum/enums/unit.enum'
 import Intensity from '../src/domains/models/medical/datum/enums/intensity.enum'
 import PumpManufacturer from '../src/domains/models/medical/datum/enums/pump-manufacturer.enum'
 import { DeviceEventSubtype } from '../src/domains/models/medical/datum/enums/device-event-subtype.enum'
-import { getTrendsTime } from '../src/domains/repositories/time/time.service'
+import { getTrendsTime, getWeekDay } from '../src/domains/repositories/time/time.service'
+import moment from 'moment-timezone'
 
 function createBaseData(date?: Date): Omit<BaseDatum, 'type'> {
   const pastDate = date ?? faker.date.recent({ days: 20 })
+  const mTime = moment.tz(pastDate.valueOf(), 'Europe/Paris')
   return {
     id: faker.string.uuid(),
     source: Source.Diabeloop,
@@ -62,7 +64,8 @@ function createBaseData(date?: Date): Omit<BaseDatum, 'type'> {
     epoch: pastDate.valueOf(),
     displayOffset: -60,
     normalTime: pastDate.toISOString(),
-    guessedTimezone: false
+    guessedTimezone: false,
+    isoWeekday: getWeekDay(mTime)
   }
 }
 
@@ -109,7 +112,6 @@ function createRandomBasal(date?: Date, hours?: number): Basal {
     ...baseData,
     type: DatumType.Basal,
     subType: 'automated',
-    internalId: faker.string.uuid(),
     deliveryType: 'automated',
     duration,
     rate: faker.number.float({ min: 0, max: 1, precision: 0.01 }),
@@ -118,11 +120,11 @@ function createRandomBasal(date?: Date, hours?: number): Basal {
   }
 }
 
-function createRandomBolus(date?: Date): Bolus {
+function createRandomBolus(date?: Date, subType?: BolusSubtype): Bolus {
   return {
     ...createBaseData(date),
     type: DatumType.Bolus,
-    subType: faker.helpers.arrayElement(Object.values(BolusSubtype)),
+    subType: subType ?? faker.helpers.arrayElement(Object.values(BolusSubtype)),
     normal: 0,
     prescriptor: Prescriptor.Auto,
     wizard: null
@@ -175,7 +177,13 @@ function createMealData(date?: Date): Meal {
         net: 5,
         units: Unit.Gram
       }
-    }
+    },
+    prescribedNutrition: {
+      carbohydrate: {
+        net: 2,
+        units: Unit.Gram
+      }
+    },
   }
 }
 
@@ -233,7 +241,6 @@ function createRandomPumpSettings(date?: Date): PumpSettings {
       parameters: [],
       history: [],
       pump: {
-        expirationDate: faker.date.future().toISOString(),
         manufacturer: PumpManufacturer.Default,
         name: '',
         serialNumber: faker.string.uuid(),
@@ -249,7 +256,6 @@ function createRandomReservoirChange(date?: Date): ReservoirChange {
     type: DatumType.DeviceEvent,
     subType: DeviceEventSubtype.ReservoirChange,
     pump: {
-      expirationDate: faker.date.future().toISOString(),
       manufacturer: PumpManufacturer.Default,
       name: '',
       serialNumber: faker.string.uuid(),

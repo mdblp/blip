@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,30 +30,20 @@ import type Wizard from '../../models/medical/datum/wizard.model'
 import type DateFilter from '../../models/time/date-filter.model'
 import MealService from '../medical/datum/meal.service'
 import WizardService from '../medical/datum/wizard.service'
-import {
-  getWeekDaysFilter,
-  sumValues,
-  buildHoursRangeMap,
-  roundValue
-} from './statistics.utils'
+import { buildHoursRangeMap, getWeekDaysFilter, roundValue, sumValues } from './statistics.utils'
 import {
   type CarbsStatistics,
   RescueCarbsAveragePerRange,
-  RescueCarbsAverageStatistics } from '../../models/statistics/carbs-statistics.model'
-import { WizardInputMealSource } from '../../models/medical/datum/enums/wizard-input-meal-source.enum'
+  RescueCarbsAverageStatistics
+} from '../../models/statistics/carbs-statistics.model'
 import { getHours } from '../time/time.service'
 import { HoursRange } from '../../models/statistics/satistics.model'
-
 
 function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter): CarbsStatistics {
   const filteredMeal = MealService.filterOnDate(meal, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const filteredWizard = WizardService.filterOnDate(wizard, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  const filteredEstimatedCarbs = filteredWizard.filter(estimatedCarb => estimatedCarb.inputMeal)
-    .filter((wizard) => wizard.inputMeal?.source === WizardInputMealSource.Umm)
   const rescueCarbsData = filteredMeal.map(meal => meal.nutrition.carbohydrate.net)
   const mealData = filteredWizard.map(wizard => wizard.carbInput)
-  const estimatedCarbsData = filteredEstimatedCarbs.map(wizard => wizard.carbInput)
-  const estimatedCarbs = sumValues(estimatedCarbsData)
   const mealCarbs = sumValues(mealData)
   const rescueCarbs = sumValues(rescueCarbsData)
   const totalEntriesMealCarbWithRescueCarbs = rescueCarbsData.length + mealData.length
@@ -62,16 +52,14 @@ function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilte
   return {
     mealCarbsPerDay: mealCarbs / numDays,
     rescueCarbsPerDay: rescueCarbs / numDays,
-    estimatedCarbsPerDay: estimatedCarbs / numDays,
     totalMealCarbsWithRescueCarbsEntries: totalEntriesMealCarbWithRescueCarbs,
     totalCarbsPerDay: totalCarbs / numDays,
     totalRescueCarbsEntries
   }
 }
 
-function getRescueCarbsAverageStatistics(meals: Meal[], numberOfDays: number, dateFilter: DateFilter): RescueCarbsAverageStatistics {
+function getRescueCarbsAverageStatistics(meals: Meal[], dateFilter: DateFilter): RescueCarbsAverageStatistics {
   const carbsMap = buildHoursRangeMap<Meal>()
-
   const midnightToThree = carbsMap.get(HoursRange.MidnightToThree) as Meal[]
   const threeToSix = carbsMap.get(HoursRange.ThreeToSix) as Meal[]
   const sixToNine = carbsMap.get(HoursRange.SixToNine) as Meal[]
@@ -80,7 +68,6 @@ function getRescueCarbsAverageStatistics(meals: Meal[], numberOfDays: number, da
   const fifteenToEighteen = carbsMap.get(HoursRange.FifteenToEighteen) as Meal[]
   const eighteenToTwentyOne = carbsMap.get(HoursRange.EighteenToTwentyOne) as Meal[]
   const twentyOneToMidnight = carbsMap.get(HoursRange.TwentyOneToMidnight) as Meal[]
-
   const filteredMeal = MealService.filterOnDate(meals, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   filteredMeal.forEach((meal) => {
     const hours = getHours(meal.normalTime, meal.timezone)
@@ -119,37 +106,55 @@ function getRescueCarbsAverageStatistics(meals: Meal[], numberOfDays: number, da
   })
 
   return new Map([
-    [HoursRange.MidnightToThree, getRescueCarbsAveragePerRange(midnightToThree, numberOfDays)],
-    [HoursRange.ThreeToSix, getRescueCarbsAveragePerRange(threeToSix, numberOfDays)],
-    [HoursRange.SixToNine, getRescueCarbsAveragePerRange(sixToNine, numberOfDays)],
-    [HoursRange.NineToTwelve, getRescueCarbsAveragePerRange(nineToTwelve, numberOfDays)],
-    [HoursRange.TwelveToFifteen, getRescueCarbsAveragePerRange(twelveToFifteen, numberOfDays)],
-    [HoursRange.FifteenToEighteen, getRescueCarbsAveragePerRange(fifteenToEighteen, numberOfDays)],
-    [HoursRange.EighteenToTwentyOne, getRescueCarbsAveragePerRange(eighteenToTwentyOne, numberOfDays)],
-    [HoursRange.TwentyOneToMidnight, getRescueCarbsAveragePerRange(twentyOneToMidnight, numberOfDays)]
+    [HoursRange.MidnightToThree, getRescueCarbsComputations(midnightToThree)],
+    [HoursRange.ThreeToSix, getRescueCarbsComputations(threeToSix)],
+    [HoursRange.SixToNine, getRescueCarbsComputations(sixToNine)],
+    [HoursRange.NineToTwelve, getRescueCarbsComputations(nineToTwelve)],
+    [HoursRange.TwelveToFifteen, getRescueCarbsComputations(twelveToFifteen)],
+    [HoursRange.FifteenToEighteen, getRescueCarbsComputations(fifteenToEighteen)],
+    [HoursRange.EighteenToTwentyOne, getRescueCarbsComputations(eighteenToTwentyOne)],
+    [HoursRange.TwentyOneToMidnight, getRescueCarbsComputations(twentyOneToMidnight)]
   ])
 }
 
-function getRescueCarbsAveragePerRange(meals: Meal[], numberOfDays: number): RescueCarbsAveragePerRange {
-  const confirmedCarbsTotal = meals.reduce((totalCarbs, meal) => totalCarbs + meal.nutrition.carbohydrate.net, 0)
-  const recommendedCarbsTotal = meals.reduce((totalCarbs, meal) => {
-    if (meal.prescribedNutrition) {
-      return totalCarbs + (meal.prescribedNutrition.carbohydrate.net ?? 0)
+function getRescueCarbsComputations(rescueCarbs: Meal[]): RescueCarbsAveragePerRange {
+  const numberOfRescueCarbs = rescueCarbs.length
+
+  const numberOfModifiedCarbs = rescueCarbs.filter((meal) => meal.prescribedNutrition).length
+
+  const { sumOfRecommendCarbs, numberOfRecommendedCarbs, sumOfRecommendedCarbsOverride } = rescueCarbs.reduce((acc, meal) => {
+    if (meal.prescribedNutrition) { // If we are in a recommended carb
+      const recommendedCarb = meal?.prescribedNutrition?.carbohydrate.net ?? 0
+      return {
+        sumOfRecommendCarbs: acc.sumOfRecommendCarbs + recommendedCarb ,
+        numberOfRecommendedCarbs: acc.numberOfRecommendedCarbs + 1,
+        sumOfRecommendedCarbsOverride: acc.sumOfRecommendedCarbsOverride + meal.nutrition.carbohydrate.net - recommendedCarb
+      }
     }
-    return totalCarbs
-  }, 0)
-  const numberOfIntakes = meals.length / numberOfDays
+    return acc
+  }, { sumOfRecommendCarbs: 0, numberOfRecommendedCarbs: 0, sumOfRecommendedCarbsOverride: 0 })
+
+  if (numberOfRecommendedCarbs === 0) {
+    return {
+      numberOfRescueCarbs,
+      numberOfModifiedCarbs,
+      averageRecommendedCarb: 0,
+      rescueCarbsOverrideAverage: 0
+    }
+  }
+  
   return {
-    confirmedCarbs: roundValue(confirmedCarbsTotal / numberOfDays, 1),
-    recommendedCarbs: roundValue(recommendedCarbsTotal / numberOfDays, 1),
-    numberOfIntakes: roundValue(numberOfIntakes, 1)
+    numberOfRescueCarbs,
+    numberOfModifiedCarbs,
+    averageRecommendedCarb: roundValue(sumOfRecommendCarbs / numberOfRecommendedCarbs, 2),
+    rescueCarbsOverrideAverage: roundValue(sumOfRecommendedCarbsOverride / numberOfRecommendedCarbs, 1)
   }
 }
 
 
 interface CarbsStatisticsAdapter {
   getCarbsData: (meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter) => CarbsStatistics
-  getRescueCarbsAverageStatistics: (meals: Meal[], numberOfDays: number, dateFilter: DateFilter) => RescueCarbsAverageStatistics
+  getRescueCarbsAverageStatistics: (meals: Meal[], dateFilter: DateFilter) => RescueCarbsAverageStatistics
 }
 
 export const CarbsStatisticsService: CarbsStatisticsAdapter = {

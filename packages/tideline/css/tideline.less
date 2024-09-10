@@ -147,23 +147,8 @@ svg {
 
 // pool background rectangles
 .d3-rect-fill {
-  &.d3-fill-darker {
-    fill: @fill-darker;
-  }
-  &.d3-fill-darkest {
-    fill: @fill-darkest;
-  }
-  &.d3-fill-dark {
-    fill: @fill-dark;
-  }
-  &.d3-fill-light {
-    fill: @fill-light;
-  }
-  &.d3-fill-lighter {
-    fill: @fill-lighter;
-  }
-  &.d3-fill-lightest {
-    fill: @fill-lightest;
+  &.d3-fill-background {
+    fill: @background-daily;
   }
   &.d3-fill-trends {
     fill: @fill-trends;
@@ -171,21 +156,23 @@ svg {
   &.d3-fill-target {
     fill: @fill-target;
   }
-
-  &.d3-fill-midnight {
-    fill: white;
+  &.d3-fill-vertical-line {
+    fill: @fill-darker;
   }
 }
 
 // guidelines
 .d3-line-guide {
   stroke: white;
-  stroke-width: 2px;
+  stroke-width: 1px;
   &.d3-line-trends {
     stroke-width: 1px;
   }
-  &.d3-line-bg-threshold {
-    stroke-dasharray: 3, 5;
+  &.d3-line-bg-threshold-high {
+    stroke: @bg-high;
+  }
+  &.d3-line-bg-threshold-low {
+    stroke: @bg-low;
   }
   &.d3-line-bg-threshold-trends {
     stroke-dasharray: 9, 9;
@@ -210,10 +197,6 @@ svg {
   fill: @carbs;
   stroke: @carbs;
   stroke-width: 1.5;
-  &.d3-carbs-umm {
-    fill: @carbs-umm;
-    stroke: @carbs-umm;
-  }
 }
 .d3-rect-rescuecarbs {
   fill: @rescuecarbs;
@@ -241,15 +224,13 @@ svg {
 }
 .d3-circle-carbs {
   fill: @carbs;
-  &.d3-carbs-umm {
-    fill: @carbs-umm;
-  }
 }
 .d3-carbs-text {
   fill: var(--carbs-text, @text);
   font-size: @font-size-small;
   dominant-baseline: central;
   text-anchor: middle;
+  font-weight: bold;
   &.d3-carbs-text-meal {
     fill: var(--carbs-light-text, @text);
   }
@@ -322,13 +303,16 @@ svg {
   &.d3-bolus-umm {
     fill: @bolus-umm
   }
-  &.d3-bolus-micro {
-    fill: @bolus-micro !important;
+  &.d3-bolus-correction {
+    fill: @bolus-correction !important;
     opacity: 0.6;
   }
   &.d3-bolus-manual {
     fill: @bolus-manual !important;
   }
+  &.d3-bolus-pen {
+      fill: @bolus-pen !important;
+    }
   &.d3-bolus-undelivered {
     fill: @bolus-undelivered !important;
   }

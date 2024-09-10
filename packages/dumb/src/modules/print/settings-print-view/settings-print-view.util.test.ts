@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,29 +35,48 @@ import { PdfSettingsDataType } from '../../../models/enums/pdf-settings-data-typ
 import { type ParameterConfig, PumpManufacturer, Unit } from 'medical-domain'
 import { type ParameterSettingsTableRow } from '../../../models/print/pdf-settings-table.model'
 import { type PdfSettingsData } from '../../../models/print/pdf-data.model'
+import { formatCurrentDate } from '../../../utils/datetime/datetime.util'
+
+const labelColumn = {
+  id: 'label',
+  headerFill: false,
+  cache: false,
+  align: 'left',
+  width: 150,
+  header: ''
+}
+
+const valueColumn = {
+  id: 'value',
+  headerFill: false,
+  cache: false,
+  align: 'right',
+  width: 150,
+  header: ''
+}
 
 describe('Settings print view util', () => {
   const timezone = 'Europe/Paris'
 
   const level1Parameters = [{
     level: 1,
-    name: 'MEDIUM_MEAL_LUNCH',
+    name: 'Lunch - average',
     unit: Unit.Gram,
     value: '96.0'
   }, {
     level: 1,
-    name: 'WEIGHT',
+    name: 'Weight',
     unit: Unit.Kilogram,
     value: '78.0'
   }, {
     level: 1,
-    name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA',
+    name: 'Aggressiveness in normoglycemia',
     unit: Unit.Percent,
     value: '97'
   }]
   const level2Parameters = [{
     level: 2,
-    name: 'IOB_TAU_S',
+    name: 'Height',
     unit: Unit.Minute,
     value: '80'
   }]
@@ -114,21 +133,7 @@ describe('Settings print view util', () => {
         subText: undefined,
         note: undefined
       })
-      expect(result.columns).toEqual([{
-        id: 'label',
-        headerFill: false,
-        cache: false,
-        align: 'left',
-        width: 150,
-        header: ''
-      }, {
-        id: 'value',
-        headerFill: false,
-        cache: false,
-        align: 'right',
-        width: 150,
-        header: ''
-      }])
+      expect(result.columns).toEqual([labelColumn, valueColumn])
       expect(result.rows).toEqual([{
         label: 'Manufacturer',
         value: 'Dexcom'
@@ -166,21 +171,7 @@ describe('Settings print view util', () => {
         subText: '- DBLG1',
         note: undefined
       })
-      expect(result.columns).toEqual([{
-        id: 'label',
-        headerFill: false,
-        cache: false,
-        align: 'left',
-        width: 150,
-        header: ''
-      }, {
-        id: 'value',
-        headerFill: false,
-        cache: false,
-        align: 'right',
-        width: 150,
-        header: ''
-      }])
+      expect(result.columns).toEqual([labelColumn, valueColumn])
       expect(result.rows).toEqual([{
         label: 'Manufacturer',
         value: 'Diabeloop'
@@ -200,6 +191,7 @@ describe('Settings print view util', () => {
       const pump = {
         expirationDate: '2035-04-12T15:53:54Z',
         manufacturer: PumpManufacturer.Vicentra,
+        product: 'Kaleido',
         name: 'Kaleido',
         serialNumber: '123456',
         swVersion: 'beta'
@@ -212,33 +204,19 @@ describe('Settings print view util', () => {
         subText: '- Kaleido',
         note: undefined
       })
-      expect(result.columns).toEqual([{
-        id: 'label',
-        headerFill: false,
-        cache: false,
-        align: 'left',
-        width: 150,
-        header: ''
-      }, {
-        id: 'value',
-        headerFill: false,
-        cache: false,
-        align: 'right',
-        width: 150,
-        header: ''
-      }])
+      expect(result.columns).toEqual([labelColumn, valueColumn])
       expect(result.rows).toEqual([{
         label: 'Manufacturer',
         value: 'VICENTRA'
       }, {
+        label: "Product",
+        value: "Kaleido",
+    },{
         label: 'Serial number',
         value: '123456'
       }, {
         label: 'Pump version',
         value: 'beta'
-      }, {
-        label: 'Cartridge expiration',
-        value: 'Apr 12, 2035'
       }])
     })
   })
@@ -250,7 +228,7 @@ describe('Settings print view util', () => {
       const result = getDeviceParametersTableData(level1Parameters as ParameterSettingsTableRow[], tableParameters, timezone)
 
       expect(result.heading).toEqual({
-        text: 'Settings'
+        text: `Settings on ${formatCurrentDate()}`
       })
       expect(result.columns).toEqual([{
         id: 'name',
@@ -280,7 +258,7 @@ describe('Settings print view util', () => {
       const result = getDeviceParametersTableData(level2Parameters as ParameterSettingsTableRow[], tableParameters, timezone)
 
       expect(result.heading).toEqual({
-        text: 'Settings',
+        text: `Settings on ${formatCurrentDate()}`,
         subText: '- Advanced'
       })
     })
@@ -299,21 +277,21 @@ describe('Settings print view util', () => {
 
       expect(result.get(1)).toEqual([
         {
-          ...level1Parameters[0],
-          rawData: 'MEDIUM_MEAL_LUNCH'
+          ...level1Parameters[2],
+          rawData: 'Aggressiveness in normoglycemia'
         },
         {
-          ...level1Parameters[2],
-          rawData: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA'
+          ...level1Parameters[0],
+          rawData: 'Lunch - average'
         },
         {
           ...level1Parameters[1],
-          rawData: 'WEIGHT'
+          rawData: 'Weight'
         }
       ])
       expect(result.get(2)).toEqual([{
         ...level2Parameters[0],
-        rawData: 'IOB_TAU_S'
+        rawData: 'Height'
       }])
       expect(result.get(3)).toBeUndefined()
       expect(result.get(0)).toBeUndefined()

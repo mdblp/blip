@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,12 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import{ screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { checkStatTooltip } from './stats.assert'
 
 const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Daily average of the time spent in range, based on CGM readings.How we calculate this: (%) is the number of readings in range divided by all readings for this time period. (time) is number of readings in range multiplied by the CGM sample frequency.'
-const READINGS_IN_RANGE_TOOLTIP = 'Readings In Range: Daily average of the number of BGM readings.Derived from 15 BGM readings.'
+const READINGS_IN_RANGE_TOOLTIP = 'Readings In Range: Number of BGM readings.Derived from 15 BGM readings.'
 const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added together, divided by the number of readings.'
 const AVG_GLUCOSE_BGM_TOOLTIP = 'Avg. Glucose (BGM): All BGM glucose values added together, divided by the number of readings.'
 const SENSOR_USAGE_TOOLTIP = 'Sensor Usage: Time the CGM collected data, divided by the total time represented in this view.'
@@ -38,10 +38,9 @@ const STANDARD_DEVIATION_TOOLTIP = 'SD (Standard Deviation): How far values are 
 const STANDARD_DEVIATION_BGM_TOOLTIP = 'SD (Standard Deviation): How far values are from the average.Derived from 15 BGM readings.'
 const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
 const LOOP_MODE_TOOLTIP = 'Time In Loop Mode: Daily average of the time spent in automated basal delivery.How we calculate this: (%) is the duration in loop mode ON or OFF divided by the total duration of basals for this time period. (time) is the average daily time spent in loop mode ON or OFF.'
-const AVG_DAILY_CARBS_DECLARED_TOOLTIP = 'Avg. Daily declared carbs: All carb entries added together (meals and rescue carbs), then divided by the number of days in this view.Derived from 7 carb entries, including rescue carbs.'
-const AVG_DAILY_CARBS_ESTIMATED_TOOLTIP = 'Avg. Daily estimated carbs: Total of estimated carbs from unannounced meals, then divided by the number of days in this view.Derived from 5 unannounced meal(s).'
-export const GMI_TOOLTIP_EMPTY_VALUE = 'GMI (Glucose Management Indicator): Tells you what your approximate A1C level is likely to be, based on the average glucose level from your CGM readings.Why is this stat empty? There is not enough data present in this view to calculate it.'
-export const GMI_TOOLTIP = 'GMI (Glucose Management Indicator): Tells you what your approximate A1C level is likely to be, based on the average glucose level from your CGM readings.'
+const AVG_DAILY_CARBS_DECLARED_TOOLTIP = 'Avg. Daily declared carbs: All carb entries added together (meals and rescue carbs), then divided by the number of days in this view.Derived from 6 carb entries, including rescue carbs.'
+export const GMI_TOOLTIP_EMPTY_VALUE = 'GMI (Glucose Management Indicator): Tells you what your calculated HbA1c level is likely to be, based on the average glucose level from your CGM readings.Why is this stat empty? There is not enough data present in this view to calculate it.'
+export const GMI_TOOLTIP = 'GMI (Glucose Management Indicator): Tells you what your calculated HbA1c level is likely to be, based on the average glucose level from your CGM readings.'
 
 export const checkTrendsTidelineContainerTooltips = async () => {
   // Test tooltips when hovering a cbg slice
@@ -89,7 +88,6 @@ export const checkTrendsStatsWidgetsTooltips = async () => {
   await checkStatTooltip(patientStatistics, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'CV (CGM)', CV_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Avg. Daily declared carbs', AVG_DAILY_CARBS_DECLARED_TOOLTIP)
-  await checkStatTooltip(patientStatistics, 'Avg. Daily estimated carbs', AVG_DAILY_CARBS_ESTIMATED_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'GMI (estimated HbA1c)', GMI_TOOLTIP_EMPTY_VALUE)
   await checkStatTooltip(patientStatistics, 'Avg. Daily Time In Loop Mode', LOOP_MODE_TOOLTIP)
 }
@@ -190,41 +188,52 @@ export const checkTrendsLayout = () => {
 
 export const checkTrendsBolusAndCarbsAverage = async () => {
   const wrapper = screen.getByTestId('rescue-carbs-and-manual-bolus-average')
+  const rescueCarbsAndManualBolusTitle = screen.getByTestId("title-rescue-carbs-and-manual-bolus-average")
+
   expect(wrapper).toBeVisible()
+
+  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent("Rescue carb intakes & manual & pen bolus over a period of 2 weeks")
+  const mondayButton= screen.getByRole('button', { name: 'M' })
+
+  await userEvent.click(mondayButton)
+  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent("Rescue carb intakes & manual & pen bolus over a period of 12 days")
+  await userEvent.click(mondayButton)
+
   expect(within(wrapper).getAllByTestId('carbs-and-bolus-cell')).toHaveLength(8)
 
   const caption = within(wrapper).getByTestId('rescue-carbs-and-manual-bolus-average-caption')
-  expect(caption).toHaveTextContent('Avg. daily nb. of times rescue carbs takenAvg. daily nb. of manual bolus')
+  expect(caption).toHaveTextContent('Number of rescue carbs per dayNumber of manual & pen bolus per day')
 
   const carbsCells = within(wrapper).getAllByTestId('rescue-carbs-cell')
   const bolusCells = within(wrapper).getAllByTestId('manual-bolus-cell')
 
-  expect(carbsCells[0]).toBeEmptyDOMElement()
-  expect(bolusCells[0]).toHaveTextContent('0.1')
-  expect(carbsCells[1]).toBeEmptyDOMElement()
-  expect(bolusCells[1]).toHaveTextContent('0.3')
-  expect(carbsCells[2]).toBeEmptyDOMElement()
-  expect(bolusCells[2]).toBeEmptyDOMElement()
-  expect(carbsCells[3]).toHaveTextContent('0.2')
-  expect(bolusCells[3]).toBeEmptyDOMElement()
-  expect(carbsCells[4]).toBeEmptyDOMElement()
-  expect(bolusCells[4]).toBeEmptyDOMElement()
-  expect(carbsCells[5]).toBeEmptyDOMElement()
-  expect(bolusCells[5]).toHaveTextContent('0.1')
-  expect(carbsCells[6]).toHaveTextContent('0.1')
-  expect(bolusCells[6]).toBeEmptyDOMElement()
-  expect(carbsCells[7]).toHaveTextContent('0.1')
-  expect(bolusCells[7]).toBeEmptyDOMElement()
+  expect(carbsCells[0]).toHaveTextContent('')
+  expect(bolusCells[0]).toHaveTextContent('2')
+  expect(carbsCells[1]).toHaveTextContent('')
+  expect(bolusCells[1]).toHaveTextContent('4')
+  expect(carbsCells[2]).toHaveTextContent('')
+  expect(bolusCells[2]).toHaveTextContent('')
+  expect(carbsCells[3]).toHaveTextContent('3')
+  expect(bolusCells[3]).toHaveTextContent('')
+  expect(carbsCells[4]).toHaveTextContent('')
+  expect(bolusCells[4]).toHaveTextContent('')
+  expect(carbsCells[5]).toHaveTextContent('')
+  expect(bolusCells[5]).toHaveTextContent('3')
+  expect(carbsCells[6]).toHaveTextContent('1')
+  expect(bolusCells[6]).toHaveTextContent('')
+  expect(carbsCells[7]).toHaveTextContent('1')
+  expect(bolusCells[7]).toHaveTextContent('')
 
   const oneWeekButton = screen.getByRole('button', { name: '1 week' })
   await userEvent.click(oneWeekButton)
+  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent("Rescue carb intakes & manual & pen bolus over a period of 1 week")
 
-  expect(bolusCells[0]).toHaveTextContent('0.3')
-  expect(bolusCells[1]).toHaveTextContent('0.6')
-  expect(carbsCells[3]).toHaveTextContent('0.4')
-  expect(bolusCells[5]).toHaveTextContent('0.3')
-  expect(carbsCells[6]).toHaveTextContent('0.1')
-  expect(carbsCells[7]).toHaveTextContent('0.1')
+  expect(bolusCells[0]).toHaveTextContent('2')
+  expect(bolusCells[1]).toHaveTextContent('4')
+  expect(carbsCells[3]).toHaveTextContent('3')
+  expect(bolusCells[5]).toHaveTextContent('3')
+  expect(carbsCells[6]).toHaveTextContent('1')
+  expect(carbsCells[7]).toHaveTextContent('1')
 }
 
 export const checkReadings100 = async () => {

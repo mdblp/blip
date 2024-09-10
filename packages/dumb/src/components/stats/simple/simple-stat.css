@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -46,18 +46,6 @@
   overflow: visible;
 }
 
-.coefficientVariationTarget {
-  color: var(--bg-target);
-}
-
-.coefficientVariationHigh {
-  color: var(--bg-high);
-}
-
 .statDisabled {
   color: var(--stat-disabled);
-}
-
-.statEnabled {
-  color: var(--text-medium-contrast);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, waitFor } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import {
   getAccessTokenWithPopupMock,
   loggedInUserEmail,
@@ -85,6 +85,13 @@ describe('Signup stepper as caregiver', () => {
     await checkProfileStep(firstName, lastName)
     expect(screen.queryByTestId('hcp-profession-selector')).not.toBeInTheDocument()
     expect(createButton).not.toBeDisabled()
+
+    fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
+    fireEvent.click(screen.getByRole('option', { name: 'United Kingdom' }))
+
+    fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
+    fireEvent.click(screen.getByRole('option', { name: 'Japan' }))
+
     await userEvent.click(createButton)
     expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(
       loggedInUserId,
@@ -92,7 +99,7 @@ describe('Signup stepper as caregiver', () => {
         role: UserRole.Caregiver,
         profile: expectedProfile,
         preferences: { displayLanguageCode: 'en' },
-        settings: { country: CountryCodes.France }
+        settings: { country: CountryCodes.Japan }
       })
     )
     expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })

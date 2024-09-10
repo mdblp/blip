@@ -2,19 +2,76 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.0.6-beta - 2023-11-10
+## 3.5.0-beta - 2024-09-03
+
+## 3.4.0 - 2024-09-06
+### Added
+- YLP-2958 Information page before user signup
+- YLP-3005 As a User, I want to have an organized total of insulin doses
+- YLP-3007 Display pen boluses in Daily view
+
 ### Changed
+- YLP-2866 Display events in a dedicated section in Daily view
+- YLP-2974 Update colors in Daily and Trends views to match DBL theme
+- YLP-2992 As a user, I want to see the daily numbers of rescue carbs intake / manual boluses and not the average
+- YLP-3019 New design for stats
+- YLP-3075 As a user, I want to be able to choose Japan or UK country
+- YLP-3087 As a user, I want to see the medisafe pump event in yourloops
+- YLP-3141 As a user, I want my alarms messages to be the same as my device's
+- YLP-3163 As a user, I want to see the basal insulin more precisely in the daily view
+- YLP-3165 Update basal color
+- YLP-3177 As a user, I want to see that "micro boluses" are now called "correction boluses"
+- YLP-3211 Manual bolus insulin total should not contain pen bolus insulin
+
+### Fixed
+- YLP-2632 Data is uploaded with a date in the future
+- YLP-2936 DBLG1 pdf settings are the ones of the current date
+
+### Engineering use
+- YLP-2948 Updated failing tests because of the time change
+- YLP-3144 Cleanup basal internalId field
+- YLP-3172 Hide Confidential Mode label on Events graph
+
+### Fixed
+- YLP-2527 Number of meal Carbs hidden behind a bolus bar
+- YLP-3104 Fix parameters locales issues (move the locale files in the repo)
+
+## 3.3.0 - 2024-04-05
+### Changed
+- YLP-2824 Display pump logos based on manufacturer
+- YLP-2850 Add product name (model) in pump information card
+- YLP-2851 Remove pump cartridge expiration date from Device view and PDF report
+- YLP-2859 Display alarms from Dana-i5 pump
+- YLP-2863 As an HCP, I want to be able to change my country in my profile settings
+- YLP-2868 As a HCP/caregiver, I want to see my patient listed by alphabetical order based on the last name
+- YLP-2937 Add Japanese language
+
+### Fixed
+- YLP-2951 Patient data not accessible (infinite loading)
+- YLP-2967 Broken wizard (bolus + meal) display in the Daily view
+
+## 3.2.0 - 2024-02-15
+### Changed
+- YLP-2122 Remove JP and GB from the list of countries
 - YLP-2574 Create tool tips independently of the name of the columns
-- YLP-2704 Remove settings logic from viz
-- YLP-2726 Cleanup tideline/viz packages
+- YLP-2586 Display height in device parameters
+- YLP-2724 Filter on weekday for all data types where the information (weekday) is available
 - YLP-2749 Use a branded Verify Email result page instead of the Auth0 one
+- YLP-2912 Hide UMM-related information
+
+### Fixed
+- YLP-2758 App crashes when going back to previous page
+- YLP-2849 Tab title is not translated on "Target & alerts" view
 
 ### Engineering use
 - YLP-2476 Use tide-whisperer v2: route /all.
 - YLP-2696 Fix some Sonarcloud bugs and code smells
 - YLP-2697 App routing should reveal data dependencies
+- YLP-2704 Remove settings logic from viz
+- YLP-2709 Migration warm up tooltip
+- YLP-2726 Cleanup tideline/viz packages
 
-## 3.0.5 - 2023-11-02
+## 3.1.0 - 2023-12-15
 ### Added
 - YLP-2292 Display rescue carbs and manual bolus in the trends view for DBLG1 patient
 - YLP-2299 Display DBLG1 events in Daily view
@@ -26,6 +83,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2610 Direct link from Monitoring alerts card to "Target & alerts" view
 - YLP-2630 As a user, I would like to be notified with a banner when there are ongoing issues with yourloops
 - YLP-2633 Customisation of the monitoring alerts from "target & alerts" tab by HCP
+- YLP-2634 New behaviour of the care team setting button in the alerts customisation section
 - YLP-2652 Improve error message on app crash
 - YLP-2668 Remove icons of the tabs and widget titles
 - YLP-2670 Remove target & alerts view from "private practice"

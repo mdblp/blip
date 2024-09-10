@@ -32,13 +32,13 @@ export interface PatientsContextResult {
   patients: Patient[]
   pendingPatientsCount?: number
   allNonPendingPatientsForSelectedTeamCount?: number
-  initialized: boolean
   refreshInProgress: boolean
   getPatientByEmail: (email: string) => Patient
   getPatientById: (userId: string) => Patient
   searchPatients: (search: string) => Patient[]
   invitePatient: (team: Team, username: string) => Promise<void>
   markPatientMessagesAsRead: (patient: Patient) => void
+  deletePatientMonitoringAlertsParameters: (patientId: string) => Promise<void>
   updatePatientMonitoringAlertsParameters: (patient: Patient) => Promise<void>
   removePatient: (patient: Patient) => Promise<void>
   refresh: () => void

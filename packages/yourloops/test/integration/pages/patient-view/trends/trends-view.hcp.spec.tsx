@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import { screen, waitFor } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
-import { minimalTrendViewData, mockDataAPI } from '../../../mock/data.api.mock'
+import { mockDataAPI } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { mockChatAPI } from '../../../mock/chat.api.mock'
@@ -40,6 +40,7 @@ import { patient2Id } from '../../../data/patient.api.data'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../use-cases/app-main-layout-visualisation'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
 
 describe('Trends view for HCP', () => {
   const firstName = 'HCP firstName'
@@ -62,12 +63,12 @@ describe('Trends view for HCP', () => {
   })
 
   it('should render correct layout', async () => {
-    mockDataAPI(minimalTrendViewData)
+    mockDataAPI(getMinimalTrendViewData())
 
     const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
-        loggedInUserFullName: `${firstName} ${lastName}`,
+        loggedInUserFullName: `${lastName} ${firstName}`,
         teamMenuInfo: {
           selectedTeamName: myThirdTeamName,
           isSelectedTeamPrivate: false,

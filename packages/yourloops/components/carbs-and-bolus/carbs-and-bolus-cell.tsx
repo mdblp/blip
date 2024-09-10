@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -46,9 +46,9 @@ interface CarbsAndBolusCellProps {
 export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
   const { time, manualBolus, rescueCarbs, sx } = props
   const { classes, theme } = useCarbsAndBolusStyles()
-  const { numberOfIntakes } = rescueCarbs
+  const { numberOfRescueCarbs } = rescueCarbs
   const { numberOfInjections } = manualBolus
-  const carbsCellBackgroundColor = numberOfIntakes > 0 ? RESCUE_CARBS_COLOR : theme.palette.grey[200]
+  const carbsCellBackgroundColor = numberOfRescueCarbs > 0 ? RESCUE_CARBS_COLOR : theme.palette.grey[200]
   const bolusCellBackgroundColor = numberOfInjections > 0 ? MANUAL_BOLUS_COLOR : theme.palette.grey[200]
   const [cellOnHover, setCellOnHover] = useState<TypeOfCell>(undefined)
 
@@ -79,15 +79,15 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
           sx={{ backgroundColor: carbsCellBackgroundColor }}
           onMouseEnter={() => openPopover(TypeOfCell.RescueCarbs)}
           onMouseLeave={closePopover}
+          data-testid="rescue-carbs-cell"
         >
           <Typography
             variant="caption"
-            sx={{ color: '#444444' }}
-            data-testid="rescue-carbs-cell"
+            sx={{ color: theme.palette.common.white }}
           >
-            {numberOfIntakes > 0 ? numberOfIntakes : ''}
+            {numberOfRescueCarbs > 0 ? numberOfRescueCarbs : ''}
           </Typography>
-          {numberOfIntakes > 0 && cellOnHover === TypeOfCell.RescueCarbs &&
+          {numberOfRescueCarbs > 0 && cellOnHover === TypeOfCell.RescueCarbs &&
             <RescueCarbsTooltip rescueCarbs={rescueCarbs} />
           }
         </Box>

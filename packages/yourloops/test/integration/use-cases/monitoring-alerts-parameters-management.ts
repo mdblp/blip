@@ -26,25 +26,23 @@
  */
 
 import {
-  checkMonitoringAlertsContentForPatientMgdl,
-  checkMonitoringAlertsContentForPatientMmol,
-  checkMonitoringAlertsDialogDefaultButtonMgdl,
-  checkMonitoringAlertsForPatientDiscardButton,
-  checkMonitoringAlertsForPatientSaveButtonMmol,
+  checkContentForPatientMmol,
+  checkTeamValuesButtonMgdl,
+  checkDiscardButtonForPatient,
+  checkSaveButtonForMmolForPatient,
   checkMonitoringAlertsLinkToTargetAndAlerts,
   checkMonitoringAlertsParametersTeamAdmin,
-  checkMonitoringAlertsParametersTeamMember
+  checkMonitoringAlertsParametersTeamMember,
 } from '../assert/monitoring-alerts-parameters.assert'
 
 export const testMonitoringAlertsParametersConfigurationForPatientMgdl = async (): Promise<void> => {
-  await checkMonitoringAlertsContentForPatientMgdl()
-  await checkMonitoringAlertsDialogDefaultButtonMgdl()
+  await checkTeamValuesButtonMgdl()
 }
 
 export const testMonitoringAlertsParametersConfigurationForPatientMmol = async (): Promise<void> => {
-  await checkMonitoringAlertsContentForPatientMmol()
-  await checkMonitoringAlertsForPatientDiscardButton()
-  await checkMonitoringAlertsForPatientSaveButtonMmol()
+  await checkContentForPatientMmol()
+  await checkDiscardButtonForPatient()
+  await checkSaveButtonForMmolForPatient()
 }
 
 export const testMonitoringAlertsParametersTeamAdmin = async (): Promise<void> => {

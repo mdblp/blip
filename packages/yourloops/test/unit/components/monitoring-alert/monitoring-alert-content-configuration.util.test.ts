@@ -27,7 +27,7 @@
 import {
   buildBgValues,
   buildThresholds,
-  getConvertedValue
+  getConvertedValue, getErrorMessage
 } from '../../../../components/monitoring-alert/monitoring-alert-content-configuration.util'
 import { Unit } from 'medical-domain'
 
@@ -116,6 +116,48 @@ describe('MonitoringAlertsContentConfiguration util', function () {
     it('should convert the value and format it', () => {
       expect(getConvertedValue(179, Unit.MilligramPerDeciliter, Unit.MmolPerLiter)).toEqual(9.9)
       expect(getConvertedValue(9.9, Unit.MmolPerLiter, Unit.MilligramPerDeciliter)).toEqual(178)
+    })
+  })
+
+  describe('getErrorMessage', () => {
+    it('should return no error messages when monitoring values are correct', () => {
+      const value = 10
+      const lowValue = 5
+      const highValue = 15
+
+      const errorMessage = getErrorMessage(Unit.MilligramPerDeciliter, value, lowValue, highValue)
+
+      expect(errorMessage).toBeNull()
+    })
+
+    it('should return an error message expecting integer values if BG unit is mg/dL', () => {
+      const value = 10.1
+      const lowValue = 5
+      const highValue = 15
+
+      const errorMessage = getErrorMessage(Unit.MilligramPerDeciliter, value, lowValue, highValue)
+
+      expect(errorMessage).toBe('mandatory-integer')
+    })
+
+    it('should return an error message expecting float values if BG unit is mmol/L', () => {
+      const value = 10.485
+      const lowValue = 5
+      const highValue = 15
+
+      const errorMessage = getErrorMessage(Unit.MmolPerLiter, value, lowValue, highValue)
+
+      expect(errorMessage).toBe('mandatory-float-number')
+    })
+
+    it('should return an error if values are out of range', () => {
+      const value = 20
+      const lowValue = 5
+      const highValue = 15
+
+      const errorMessage = getErrorMessage(Unit.MilligramPerDeciliter, value, lowValue, highValue)
+
+      expect(errorMessage).toBe('mandatory-range')
     })
   })
 })

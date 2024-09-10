@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,27 +31,29 @@ svg.statWheelTimeInAuto {
 }
 
 svg.statWheelTimeInAuto g.onColor rect.legendBackground {
-  fill: var(--basal-automated, #12d3d8);
+  fill: var(--basal-automated);
 }
 
 svg.statWheelTimeInAuto g.onColor text.legendLabelText {
-  fill: var(--text-on-basal-automated, black);
+  fill: var(--text-on-basal-automated);
 }
 
 svg.statWheelTimeInAuto g.offColor rect.legendBackground {
-  fill: var(--basal, rgb(168, 200, 212));
+  fill: var(--basal);
 }
 
 svg.statWheelTimeInAuto g.offColor text.legendLabelText {
-  fill: var(--text-on-basal, black);
+  fill: var(--text-on-basal);
 }
 
 svg.statWheelTimeInAuto g.labelOnValueUnits tspan.legendLabelValue, svg.statWheelTimeInAuto g.labelOnValueUnits text.labelRawValue {
-  fill: var(--text-basal-automated, black);
+  fill: var(--info-color-50);
+  font-weight: bold;
 }
 
 svg.statWheelTimeInAuto g.labelOffValueUnits tspan.legendLabelValue, svg.statWheelTimeInAuto g.labelOffValueUnits text.labelRawValue {
-  fill: var(--text-basal, black);
+  fill: var(--text-basal);
+  font-weight: bold;
 }
 
 svg.donutChart text.legendLabelText, svg.donutChart text.labelRawValue {
@@ -70,8 +72,8 @@ svg.donutChart tspan.legendLabelValue {
 }
 
 svg.donutChart tspan.legendLabelUnits {
-  fill: rgb(114, 115, 117);
   font-size: 12px;
+  font-weight: bold;
   letter-spacing: normal;
 }
 
@@ -82,9 +84,9 @@ svg.donutChart tspan.legendLabelPercent {
 }
 
 svg.statWheelTimeInAuto .onEllipse {
-  fill: var(--basal-automated, #12d3d8);
+  fill: var(--basal-automated);
 }
 
 svg.statWheelTimeInAuto .offEllipse {
-  fill: var(--basal, rgb(168, 200, 212));
+  fill: var(--basal);
 }

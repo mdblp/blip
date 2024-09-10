@@ -28,16 +28,13 @@
 import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
 import usePatientsProviderCustomHook from './patients.hook'
 import { type PatientsContextResult } from './models/patients-context-result.model'
-import SpinningLoader from '../../components/loaders/spinning-loader'
 
 const PatientsContext = createContext<PatientsContextResult>({} as PatientsContextResult)
 
 export const PatientsProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const patientsProviderCustomHook = usePatientsProviderCustomHook()
 
-  return patientsProviderCustomHook.initialized
-    ? <PatientsContext.Provider value={patientsProviderCustomHook}>{children}</PatientsContext.Provider>
-    : <SpinningLoader className="centered-spinning-loader" />
+  return <PatientsContext.Provider value={patientsProviderCustomHook}>{children}</PatientsContext.Provider>
 }
 
 export function usePatientsContext(): PatientsContextResult {

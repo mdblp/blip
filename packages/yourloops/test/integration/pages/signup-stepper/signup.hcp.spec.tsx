@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -99,6 +99,12 @@ describe('Signup stepper as hcp', () => {
     fireEvent.mouseDown(within(hcpProfessionSelector).getByRole('combobox', { hidden: true }))
     await userEvent.click(screen.getByText('Nurse'))
 
+    fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
+    fireEvent.click(screen.getByRole('option', { name: 'Japan' }))
+
+    fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
+    fireEvent.click(screen.getByRole('option', { name: 'United Kingdom' }))
+
     expect(createButton).not.toBeDisabled()
     await userEvent.click(screen.getByText('Create account'))
 
@@ -108,11 +114,11 @@ describe('Signup stepper as hcp', () => {
         role: UserRole.Hcp,
         profile: expectedProfile,
         preferences: { displayLanguageCode: 'en' },
-        settings: { country: CountryCodes.France }
+        settings: { country: CountryCodes.UnitedKingdom }
       })
     )
     expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })
     const completedAccountMessage = screen.getByTestId('message-complete-account')
-    expect(completedAccountMessage).toHaveTextContent('Clicking the continue button will take you to your dashboard. You can then add your patients, and also join care teams')
+    expect(completedAccountMessage).toHaveTextContent('Clicking the continue button will take you to your dashboard. You can then join or create care teams, and invite your patients so as to share their data.')
   })
 })

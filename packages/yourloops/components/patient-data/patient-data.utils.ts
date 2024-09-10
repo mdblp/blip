@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,6 +33,7 @@ import MedicalDataService, { type BgUnit, type MedicalData, Source, type TimePre
 import config from '../../lib/config/config'
 import { PatientView } from '../../enum/patient-view.enum'
 import { type GetPatientDataOptions } from '../../lib/data/models/get-patient-data-options.model'
+import i18next from 'i18next'
 
 interface GetDatetimeBoundsArgs {
   currentPatientView: PatientView
@@ -45,9 +46,26 @@ export interface DateRange {
   end: Moment
 }
 
+const t = i18next.t.bind(i18next)
+
 export function isValidDateQueryParam(queryParam: string): boolean {
   const date = new Date(queryParam)
   return !isNaN(date.getTime())
+}
+
+export const getPageTitleByPatientView = (view: PatientView): string => {
+  switch (view) {
+    case PatientView.Daily:
+      return t('daily')
+    case PatientView.Dashboard:
+      return t('dashboard')
+    case PatientView.Device:
+      return t('device')
+    case PatientView.TargetAndAlerts:
+      return t('target-and-alerts')
+    case PatientView.Trends:
+      return t('trends')
+  }
 }
 
 export const DEFAULT_DASHBOARD_TIME_RANGE_DAYS = 14
@@ -117,7 +135,12 @@ export class PatientDataUtils {
   }
 
   getInitialDate(medicalData: MedicalDataService): number {
-    return moment.utc(medicalData.endpoints[1]).valueOf() - TimeService.MS_IN_DAY / 2
+    const latestDataDate = moment.utc(medicalData.endpoints[1])
+    // To mimic the behavior of the medical data endpoints, today's date is tomorrow at 12AM
+    const todayDate = moment(new Date()).add(1, 'day').startOf('day')
+
+    const dateToDisplay = todayDate.isBefore(latestDataDate) ? todayDate : latestDataDate
+    return dateToDisplay.valueOf() - TimeService.MS_IN_DAY / 2
   }
 
   async loadDataRange({ start, end }: DateRange): Promise<MedicalData | null> {

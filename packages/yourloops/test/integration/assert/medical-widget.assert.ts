@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -50,13 +50,13 @@ export const getMedicalFilesWidget = async (): Promise<HTMLElement> => {
 
 export const checkMedicalReportContentForHcp = async (medicalFilesWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
   const medicalFilesWidget = await getMedicalFilesWidget()
-  expect(medicalFilesWidget).toHaveTextContent(`Medical filesMedical report-1 2022-01-10Created by Vishnou Lapaix${medicalFilesWidgetParams.selectedTeamName}Medical report-2 2022-01-02Created by Vishnou Lapaix${medicalFilesWidgetParams.selectedTeamName}New`)
+  expect(medicalFilesWidget).toHaveTextContent(`Medical filesMedical report-1 2022-01-10Created by Lapaix Vishnou${medicalFilesWidgetParams.selectedTeamName}Medical report-2 2022-01-02Created by Lapaix Vishnou${medicalFilesWidgetParams.selectedTeamName}New`)
 }
 
 export const checkMedicalReportContentForPatient = async (medicalFilesWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
   const medicalFilesWidget = await getMedicalFilesWidget()
   expect(MedicalFilesApi.getMedicalReports).toHaveBeenCalledWith(medicalFilesWidgetParams.selectedPatientId, null)
-  expect(medicalFilesWidget).toHaveTextContent('Medical filesMedical report-1 2022-01-10Created by Vishnou LapaixMySecondTeamMedical report-2 2022-01-02Created by Vishnou LapaixMySecondTeam')
+  expect(medicalFilesWidget).toHaveTextContent('Medical filesMedical report-1 2022-01-10Created by Lapaix VishnouMySecondTeamMedical report-2 2022-01-02Created by Lapaix VishnouMySecondTeam')
   expect(within(medicalFilesWidget).queryByRole('button', { name: 'Delete Medical report 2022-01-02' })).not.toBeInTheDocument()
 }
 
@@ -110,12 +110,12 @@ export const checkMedicalReportCreate = async (medicalFileWidgetParams: MedicalF
   })
   expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Medical report successfully saved')
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  expect(medicalFilesWidget).toHaveTextContent(`Medical filesMedical report-1 2022-01-10Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}Medical report-2 2022-01-02Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}Medical report-3 01-01-2023Created by HCP firstName HCP lastName${medicalFileWidgetParams.selectedTeamName}New`)
+  expect(medicalFilesWidget).toHaveTextContent(`Medical filesMedical report-1 2022-01-10Created by Lapaix Vishnou${medicalFileWidgetParams.selectedTeamName}Medical report-2 2022-01-02Created by Lapaix Vishnou${medicalFileWidgetParams.selectedTeamName}Medical report-3 01-01-2023Created by HCP lastName HCP firstName${medicalFileWidgetParams.selectedTeamName}New`)
 }
 
 export const checkMedicalReportUpdate = async (medicalFileWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
   const medicalFilesWidget = await getMedicalFilesWidget()
-  const medicalReportButton = within(medicalFilesWidget).getByRole('button', { name: `Medical report-3 01-01-2023 Created by HCP firstName HCP lastName ${medicalFileWidgetParams.selectedTeamName}` })
+  const medicalReportButton = within(medicalFilesWidget).getByRole('button', { name: `Medical report-3 01-01-2023 Created by HCP lastName HCP firstName ${medicalFileWidgetParams.selectedTeamName}` })
   await userEvent.click(medicalReportButton)
   const createdMedicalReportDialogEdit = screen.getByRole('dialog')
   expect(createdMedicalReportDialogEdit).toHaveTextContent('Edit medical report 31. Diagnosisfake diagnosis​2. Progression proposalfake progression proposal​3. Training subjectfake training subject​CancelSave')
@@ -150,7 +150,7 @@ export const checkMedicalReportUpdate = async (medicalFileWidgetParams: MedicalF
 
 export const checkMedicalReportConsult = async (medicalFileWidgetParams: MedicalFilesWidgetParams): Promise<void> => {
   const medicalFilesWidget = await getMedicalFilesWidget()
-  const medicalReportButton = within(medicalFilesWidget).getByRole('button', { name: `Medical report-2 2022-01-02 Created by Vishnou Lapaix ${medicalFileWidgetParams.selectedTeamName}` })
+  const medicalReportButton = within(medicalFilesWidget).getByRole('button', { name: `Medical report-2 2022-01-02 Created by Lapaix Vishnou ${medicalFileWidgetParams.selectedTeamName}` })
   await userEvent.click(medicalReportButton)
   const medicalReportDialog = screen.getByRole('dialog')
   expect(medicalReportDialog).toHaveTextContent('Consult medical report 21. Diagnosiswhatever diagnosis 2 ​2. Progression proposalwhatever proposal 2​3. Training subjecthere is the subject 2​Close')
@@ -179,7 +179,7 @@ export const checkMedicalReportDelete = async (medicalFileWidgetParams: MedicalF
   expect(MedicalFilesApi.deleteMedicalReport).toHaveBeenCalledWith(MEDICAL_REPORT_TO_CREATE_ID)
   expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Medical report successfully deleted')
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  expect(medicalFilesWidget).toHaveTextContent(`Medical filesMedical report-1 2022-01-10Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}Medical report-2 2022-01-02Created by Vishnou Lapaix${medicalFileWidgetParams.selectedTeamName}New`)
+  expect(medicalFilesWidget).toHaveTextContent(`Medical filesMedical report-1 2022-01-10Created by Lapaix Vishnou${medicalFileWidgetParams.selectedTeamName}Medical report-2 2022-01-02Created by Lapaix Vishnou${medicalFileWidgetParams.selectedTeamName}New`)
 }
 
 export const checkEmptyMedicalFilesWidgetForPatient = async (): Promise<void> => {

@@ -127,14 +127,20 @@ a.btn-chart {
   }
 }
 
-.btn-chart-control,
-a.btn-chart-control {
+.btn-chart-control {
   font-weight: normal;
   background-color: var(--blip-color-secondary-alt);
   color: @purple-highcontrast;
   border: none;
   margin: 0 @spacing-tiny;
 
+  &.day-filter {
+    min-width: 25px;
+    max-width: 25px;
+    min-height: 25px;
+    max-height: 25px;
+    padding: 0px;
+  }
   &:hover,
   &:focus,
   &:active {
@@ -146,3 +152,4 @@ a.btn-chart-control {
     color: @white-color;
   }
 }
+

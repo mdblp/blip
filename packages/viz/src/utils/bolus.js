@@ -21,6 +21,7 @@
 import _ from 'lodash'
 
 import { formatDecimalNumber, formatPercentage } from './format'
+import { DatumType } from 'medical-domain'
 
 /**
  * fixFloatingPoint
@@ -53,7 +54,7 @@ export function getBolusFromInsulinEvent(insulinEvent) {
  *                  Number.NaN if bolus calculator not used; null if no carbInput
  */
 export function getCarbs(insulinEvent) {
-  if (insulinEvent.type !== 'wizard') {
+  if (insulinEvent.type !== DatumType.Wizard) {
     return Number.NaN
   }
   return _.get(insulinEvent, 'carbInput', null)
@@ -67,7 +68,7 @@ export function getCarbs(insulinEvent) {
  */
 export function getProgrammed(insulinEvent) {
   let bolus = insulinEvent
-  if (_.get(insulinEvent, 'type') === 'wizard') {
+  if (_.get(insulinEvent, 'type') === DatumType.Wizard) {
     bolus = getBolusFromInsulinEvent(insulinEvent)
     if (!(Number.isFinite(bolus.normal))) {
       return Number.NaN
@@ -106,7 +107,7 @@ export function getRecommended(insulinEvent) {
  */
 export function getDelivered(insulinEvent) {
   let bolus = insulinEvent
-  if (_.get(insulinEvent, 'type') === 'wizard') {
+  if (_.get(insulinEvent, 'type') === DatumType.Wizard) {
     bolus = getBolusFromInsulinEvent(insulinEvent)
     if (!_.inRange(bolus.normal, Infinity)) {
       return Number.NaN
@@ -123,7 +124,7 @@ export function getDelivered(insulinEvent) {
  */
 export function getDuration(insulinEvent) {
   let bolus = insulinEvent
-  if (_.get(insulinEvent, 'type') === 'wizard') {
+  if (_.get(insulinEvent, 'type') === DatumType.Wizard) {
     bolus = getBolusFromInsulinEvent(insulinEvent)
   }
   // don't want truthiness here because want to return duration
@@ -142,7 +143,7 @@ export function getDuration(insulinEvent) {
  */
 export function getMaxValue(insulinEvent) {
   let bolus = insulinEvent
-  if (_.get(insulinEvent, 'type') === 'wizard') {
+  if (_.get(insulinEvent, 'type') === DatumType.Wizard) {
     bolus = getBolusFromInsulinEvent(insulinEvent)
     return bolus.expectedNormal || 0
   }
@@ -159,7 +160,7 @@ export function getMaxValue(insulinEvent) {
  */
 export function getNormalPercentage(insulinEvent) {
   let bolus = insulinEvent
-  if (_.get(insulinEvent, 'type') === 'wizard') {
+  if (_.get(insulinEvent, 'type') === DatumType.Wizard) {
     bolus = getBolusFromInsulinEvent(insulinEvent)
   }
   if (!(bolus.normal || bolus.expectedNormal)) {

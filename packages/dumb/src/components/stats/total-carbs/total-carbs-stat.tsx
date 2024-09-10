@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,12 +34,16 @@ export interface TotalCarbsStatProps {
   title: string
   annotations?: string[]
   value: number
+  isTitleBold?: boolean
 }
 
 const CarbsStatItem: FunctionComponent<TotalCarbsStatProps> = (props) => {
-  const { annotations, value, title } = props
+  const { annotations, isTitleBold, value, title } = props
   return (
-    <Box className={`${styles.row} ${annotations ? null : styles.carbs}`} data-testid={"estimatedCarbs"}>
+    <Box
+      className={`${styles.row} ${annotations ? null : styles.carbs} ${isTitleBold ? styles.titleBold : null}`}
+      data-testid="estimatedCarbs"
+    >
       {title}
 
       {annotations &&

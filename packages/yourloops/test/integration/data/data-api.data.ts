@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,308 +26,253 @@
  */
 
 import moment from 'moment-timezone'
+import { ChangeType, ParametersChange, Unit } from 'medical-domain'
 
-export const history = [
+export const history: ParametersChange[] = [
   {
     changeDate: '2022-11-01T00:00:00Z',
     parameters: [
       {
         name: 'BOLUS_AGGRESSIVENESS_FACTOR',
         value: '143',
-        unit: '%',
+        unit: Unit.Percent,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'LARGE_MEAL_BREAKFAST',
         value: '150',
-        unit: 'g',
+        unit: Unit.Gram,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'LARGE_MEAL_DINNER',
         value: '150',
-        unit: 'g',
+        unit: Unit.Gram,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'LARGE_MEAL_LUNCH',
         value: '70',
-        unit: 'g',
+        unit: Unit.Gram,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'MEAL_RATIO_BREAKFAST_FACTOR',
         value: '100',
-        unit: '%',
+        unit: Unit.Percent,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'MEAL_RATIO_BREAKFAST_FACTOR',
         value: '110',
-        unit: '%',
+        unit: Unit.Percent,
         level: 1,
         effectiveDate: '2022-11-02T17:00:40Z',
-        changeType: 'updated',
+        changeType: ChangeType.Updated,
         previousValue: '100',
-        previousUnit: '%',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        previousUnit: Unit.Percent,
       },
       {
         name: 'MEAL_RATIO_BREAKFAST_FACTOR',
         value: '100',
-        unit: '%',
+        unit: Unit.Percent,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'updated',
+        changeType: ChangeType.Updated,
         previousValue: '110',
-        previousUnit: '%',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        previousUnit: Unit.Percent,
       },
       {
         name: 'MEAL_RATIO_DINNER_FACTOR',
         value: '100',
-        unit: '%',
+        unit: Unit.Percent,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'MEAL_RATIO_DINNER_FACTOR',
         value: '90',
-        unit: '%',
+        unit: Unit.Percent,
         level: 1,
         effectiveDate: '2022-11-02T17:00:40Z',
-        changeType: 'updated',
+        changeType: ChangeType.Updated,
         previousValue: '100',
-        previousUnit: '%',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        previousUnit: Unit.Percent,
       },
       {
         name: 'MEAL_RATIO_DINNER_FACTOR',
         value: '100',
-        unit: '%',
+        unit: Unit.Percent,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'updated',
+        changeType: ChangeType.Updated,
         previousValue: '90',
-        previousUnit: '%',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        previousUnit: Unit.Percent,
       },
       {
         name: 'MEAL_RATIO_LUNCH_FACTOR',
         value: '130',
-        unit: '%',
+        unit: Unit.Percent,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'MEAL_RATIO_LUNCH_FACTOR',
         value: '90',
-        unit: '%',
+        unit: Unit.Percent,
         level: 1,
         effectiveDate: '2022-11-07T14:01:14Z',
-        changeType: 'updated',
+        changeType: ChangeType.Updated,
         previousValue: '130',
-        previousUnit: '%',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        previousUnit: Unit.Percent,
       },
       {
         name: 'MEDIUM_MEAL_BREAKFAST',
         value: '70',
-        unit: 'g',
+        unit: Unit.Gram,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'MEDIUM_MEAL_DINNER',
         value: '60',
-        unit: 'g',
+        unit: Unit.Gram,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'MEDIUM_MEAL_LUNCH',
         value: '50',
-        unit: 'g',
+        unit: Unit.Gram,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA',
         value: '100',
-        unit: '%',
+        unit: Unit.Percent,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'PATIENT_GLYCEMIA_TARGET',
         value: '100.0',
-        unit: 'mg/dL',
+        unit: Unit.MilligramPerDeciliter,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'PATIENT_GLY_HYPER_LIMIT',
         value: '180.1',
-        unit: 'mg/dL',
+        unit: Unit.MilligramPerDeciliter,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'PATIENT_GLY_HYPER_LIMIT',
         value: '140',
-        unit: 'mg/dL',
+        unit: Unit.MilligramPerDeciliter,
         level: 1,
         effectiveDate: '2022-11-02T07:00:00Z',
-        changeType: 'updated',
+        changeType: ChangeType.Updated,
         previousValue: '180.1',
-        previousUnit: 'mg/dL',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        previousUnit: Unit.MilligramPerDeciliter,
       },
       {
         name: 'PATIENT_GLY_HYPER_LIMIT',
         value: '180.1',
-        unit: 'mg/dL',
+        unit: Unit.MilligramPerDeciliter,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'updated',
+        changeType: ChangeType.Updated,
         previousValue: '140',
-        previousUnit: 'mg/dL',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        previousUnit: Unit.MilligramPerDeciliter,
       },
       {
         name: 'PATIENT_GLY_HYPO_LIMIT',
         value: '70',
-        unit: 'mg/dL',
+        unit: Unit.MilligramPerDeciliter,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'PATIENT_GLY_HYPO_LIMIT',
         value: '60',
-        unit: 'mg/dL',
+        unit: Unit.MilligramPerDeciliter,
         level: 1,
         effectiveDate: '2022-11-02T07:00:00Z',
-        changeType: 'updated',
+        changeType: ChangeType.Updated,
         previousValue: '70',
-        previousUnit: 'mg/dL',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        previousUnit: Unit.MilligramPerDeciliter,
       },
       {
         name: 'PATIENT_GLY_HYPO_LIMIT',
         value: '70',
-        unit: 'mg/dL',
+        unit: Unit.MilligramPerDeciliter,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'updated',
+        changeType: ChangeType.Updated,
         previousValue: '60',
-        previousUnit: 'mg/dL',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        previousUnit: Unit.MilligramPerDeciliter,
       },
       {
         name: 'SMALL_MEAL_BREAKFAST',
         value: '15',
-        unit: 'g',
+        unit: Unit.Gram,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'SMALL_MEAL_DINNER',
         value: '20',
-        unit: 'g',
+        unit: Unit.Gram,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'SMALL_MEAL_LUNCH',
         value: '30',
-        unit: 'g',
+        unit: Unit.Gram,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'TOTAL_INSULIN_FOR_24H',
         value: '53',
-        unit: 'U',
+        unit: Unit.InsulinUnit,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       },
       {
         name: 'WEIGHT',
         value: '69.0',
-        unit: 'kg',
+        unit: Unit.Kilogram,
         level: 1,
         effectiveDate: '2022-11-01T00:00:00Z',
-        changeType: 'added',
-        timestamp: '2022-11-01T00:00:00Z',
-        timezone: 'UTC'
+        changeType: ChangeType.Added,
       }
     ]
   }
@@ -346,7 +291,6 @@ export const reservoirChanges = [
     subType: 'reservoirChange',
     uploadId: 'e00d2c6c2bf7eaf141bae9926a635dd0',
     pump: {
-      expirationDate: '2021-01-31T04:13:00Z',
       manufacturer: 'ROCHE',
       name: 'Pump0001',
       serialNumber: '123456789',

@@ -46,19 +46,6 @@ $ npm install
 
 ## Build and deployment
 
-### Artifact: Fetch branding images & translations
-
-Simplest method, will do everything needed in one command.
-To be able to retreive theses files, a github personal token is mandatory (env GIT_TOKEN)
-See https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token
-
-```bash
-$ source artifact-lang.sh
-retrieveLanguageParameters
-```
-
-This script is used by the continuous build system, but it can be use standalone.
-
 ### Configuration
 To configure blip to the desired environment source one config in the `config` directory.
 Example for a dev build:

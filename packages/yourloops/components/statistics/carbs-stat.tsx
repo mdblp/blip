@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,9 +33,7 @@ export interface CarbsStatProps {
   totalCarbsPerDay: number
   rescueCarbsPerDay: number
   mealCarbsPerDay: number
-  estimatedCarbsPerDay: number
   totalMealCarbsWithRescueCarbsEntries: number
-  totalRescueCarbsEntries: number
 }
 
 export const CarbsStat: FunctionComponent<CarbsStatProps> = (props) => {
@@ -43,15 +41,12 @@ export const CarbsStat: FunctionComponent<CarbsStatProps> = (props) => {
     totalCarbsPerDay,
     totalMealCarbsWithRescueCarbsEntries,
     rescueCarbsPerDay,
-    estimatedCarbsPerDay,
     mealCarbsPerDay,
-    totalRescueCarbsEntries
   } = props
   const { t } = useTranslation('main')
   const location = useLocation()
   const isDailyPage = location.pathname.includes('daily')
   const declaredCarbsAnnotation = [t(isDailyPage ? 'tooltip-per-day-carbs' : 'tooltip-avg-daily-week-carbs'), t('tooltip-declared-derived-carbs', { total: totalMealCarbsWithRescueCarbsEntries })]
-  const estimatedCarbsAnnotation = [t(isDailyPage ? 'tooltip-per-day-estimated-carbs' : 'tooltip-avg-daily-estimated-carbs'), t('tooltip-estimated-derived-carbs', { ummMeals: totalRescueCarbsEntries })]
 
   return (
     <div data-testid="total-carbs-stat">
@@ -59,6 +54,7 @@ export const CarbsStat: FunctionComponent<CarbsStatProps> = (props) => {
         title={t(isDailyPage ? 'total-declared-carbs' : 'avg-daily-declared-carbs')}
         annotations={declaredCarbsAnnotation}
         value={totalCarbsPerDay}
+        isTitleBold={true}
       />
       <CarbsStatItem
         title={t('meal-carbs')}
@@ -67,11 +63,6 @@ export const CarbsStat: FunctionComponent<CarbsStatProps> = (props) => {
       <CarbsStatItem
         title={t('rescue-carbs')}
         value={rescueCarbsPerDay}
-      />
-      <CarbsStatItem
-        title={t(isDailyPage ? 'total-estimated-carbs' : 'avg-daily-estimated-carbs')}
-        annotations={estimatedCarbsAnnotation}
-        value={estimatedCarbsPerDay}
       />
     </div>
   )

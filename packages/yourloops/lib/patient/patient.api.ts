@@ -103,6 +103,12 @@ export default class PatientApi {
     })
   }
 
+  static async deletePatientAlerts(teamId: string, patientId: string): Promise<void> {
+    await HttpService.delete({
+      url: `/crew/v0/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`
+    })
+  }
+
   static async removePatient(teamId: string, userId: string): Promise<void> {
     await HttpService.delete({ url: `/crew/v0/teams/${teamId}/patients/${userId}` })
   }

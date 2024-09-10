@@ -1,4 +1,4 @@
-import * as core from '@aws-cdk/core';
+import * as core from 'aws-cdk-lib';
 
 export interface WebStackProps extends core.StackProps {
     domainName?: string;

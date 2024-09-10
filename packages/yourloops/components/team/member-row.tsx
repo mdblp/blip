@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -44,6 +44,7 @@ import ConfirmDialog from '../dialogs/confirm-dialog'
 import TeamUtils from '../../lib/team/team.util'
 import { UserInviteStatus } from '../../lib/team/models/enums/user-invite-status.enum'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
+import { getUserName } from '../../lib/auth/user.util'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   checkboxTableCellBody: {
@@ -98,7 +99,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
     (loggedInUserId === currentUserId && TeamUtils.isUserTheOnlyAdministrator(team, loggedInUserId)) ||
     userUpdateInProgress
   const removeMemberDisabled = !loggedInUserIsAdmin || userUpdateInProgress || loggedInUserId === currentUserId ||
-    (teamMember.status === UserInviteStatus.Pending && !teamMember.invitationId) // This condition basically means that the logged in user did not invite the pending user
+    (teamMember.status === UserInviteStatus.Pending && !teamMember.invitationId) // This condition basically means that the logged-in user did not invite the pending user
 
   const switchRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const isAdmin = event.target.checked
@@ -144,7 +145,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
         >
           {currentUserIsPending
             ? ('--')
-            : (teamMember.profile?.fullName)
+            : (getUserName(teamMember.profile?.firstName, teamMember.profile?.lastName, teamMember.profile?.fullName))
           }
         </StyledTableCell>
         <StyledTableCell

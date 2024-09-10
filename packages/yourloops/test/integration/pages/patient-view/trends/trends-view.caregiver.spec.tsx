@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import { screen, waitFor } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../../mock/team.api.mock'
-import { minimalTrendViewData, mockDataAPI } from '../../../mock/data.api.mock'
+import { mockDataAPI } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
 import { mockMedicalFilesAPI } from '../../../mock/medical-files.api.mock'
@@ -42,6 +42,7 @@ import { patient2Id } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
+import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
 
 describe('Trends view for caregiver', () => {
   const firstName = 'HCP firstName'
@@ -64,7 +65,7 @@ describe('Trends view for caregiver', () => {
   })
 
   it('should render correct layout', async () => {
-    mockDataAPI(minimalTrendViewData)
+    mockDataAPI(getMinimalTrendViewData())
     const trendsRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient2Id}${AppUserRoute.Trends}`
     const router = renderPage(trendsRoute)
     await waitFor(() => {
@@ -72,6 +73,6 @@ describe('Trends view for caregiver', () => {
     })
     expect(await screen.findByTestId('patient-nav-bar')).toBeVisible()
     checkPatientNavBarAsCaregiver()
-    await checkCaregiverLayout(`${firstName} ${lastName}`)
+    await checkCaregiverLayout(`${lastName} ${firstName}`)
   })
 })

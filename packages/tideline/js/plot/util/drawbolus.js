@@ -17,12 +17,14 @@
 
 import _ from 'lodash'
 import commonbolus from './commonbolus'
+import { BolusSubtype, DatumType, Prescriptor, WizardInputMealSource } from 'medical-domain'
 
 const BolusTypes = {
   meal: 1,
-  micro: 2,
+  correction: 2,
   manual: 3,
-  umm: 4
+  pen: 4,
+  umm: 5
 }
 
 /**
@@ -30,20 +32,23 @@ const BolusTypes = {
  * @returns {number} The type of bolus
  */
 function bolusToLegend(b) {
-  if (b.type === 'wizard') {
-    if (b?.inputMeal?.source === 'umm') {
+  if (b.type === DatumType.Wizard) {
+    if (b?.inputMeal?.source === WizardInputMealSource.Umm) {
       return BolusTypes.umm
     }
     return BolusTypes.meal
   }
   const bolus = commonbolus.getBolus(b)
-  if (bolus.subType === 'pen' || bolus.prescriptor === 'manual') {
+  if (bolus.subType === BolusSubtype.Pen) {
+    return BolusTypes.pen
+  }
+  if (bolus.prescriptor === Prescriptor.Manual) {
     return BolusTypes.manual
   }
-  if (bolus.subType === 'biphasic') {
+  if (bolus.subType === BolusSubtype.Biphasic) {
     return BolusTypes.meal
   }
-  return BolusTypes.micro
+  return BolusTypes.correction
 }
 
 /**
@@ -57,10 +62,10 @@ function bolusClass(b, baseClass) {
       return `${baseClass} d3-bolus-manual`
     case BolusTypes.meal:
       return `${baseClass} d3-bolus-meal`
-    case BolusTypes.micro:
-      return `${baseClass} d3-bolus-micro`
-    case BolusTypes.umm:
-      return `${baseClass} d3-bolus-umm`
+    case BolusTypes.correction:
+      return `${baseClass} d3-bolus-correction`
+    case BolusTypes.pen:
+      return `${baseClass} d3-bolus-pen`
   }
   return baseClass
 }
@@ -111,21 +116,8 @@ function drawBolus(pool, opts = {}) {
         const bolusValue = d.bolus ? commonbolus.getProgrammed(d) : 0
         return opts.yScale(bolusValue) - r - (bolusValue ? opts.carbPadding : 0)
       }
-      const isUmm = (d) => d?.inputMeal?.source === 'umm'
-      const carbCircleClass = (d) => {
-        const baseClass = 'd3-circle-carbs d3-carbs'
-        if (isUmm(d)) {
-          return `${baseClass} d3-carbs-umm`
-        }
-        return baseClass
-      }
-      const carbTextClass = (d) => {
-        const baseClass = 'd3-carbs-text'
-        if (isUmm(d)) {
-          return `${baseClass} d3-carbs-text-estimated`
-        }
-        return `${baseClass} d3-carbs-text-meal`
-      }
+      const carbCircleClass = 'd3-circle-carbs d3-carbs'
+      const carbTextClass = 'd3-carbs-text d3-carbs-text-meal'
       carbs.append('circle')
         .attr({
           'cx': xPos,
@@ -153,7 +145,7 @@ function drawBolus(pool, opts = {}) {
           x: (d) => xPosition(commonbolus.getBolus(d)),
           y: (d) => opts.yScale(commonbolus.getDelivered(d)),
           width: (d) => {
-            if (bolusToLegend(d) === BolusTypes.micro) {
+            if (bolusToLegend(d) === BolusTypes.correction) {
               return opts.width / 2
             }
             return opts.width
@@ -170,7 +162,7 @@ function drawBolus(pool, opts = {}) {
           x: (d) => xPosition(commonbolus.getBolus(d)),
           y: (d) => opts.yScale(commonbolus.getProgrammed(d)),
           width: (d) => {
-            if (bolusToLegend(d) === BolusTypes.micro) {
+            if (bolusToLegend(d) === BolusTypes.correction) {
               return opts.width / 2
             }
             return opts.width

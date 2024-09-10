@@ -41,6 +41,7 @@ export interface Patient extends Partial<PatientMetrics> {
   monitoringAlertsParameters?: MonitoringAlertsParameters
   invitationStatus?: UserInviteStatus
   invite?: PatientInvite
+  isUsingTeamAlertParameters?: boolean
   hasSentUnreadMessages: boolean
   flagged?: boolean
 }

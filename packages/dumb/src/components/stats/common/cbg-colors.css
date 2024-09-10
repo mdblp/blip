@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -51,6 +51,31 @@
   background-color: var(--bg-very-low);
 }
 
+.veryHigh-duration-background {
+  background-color: var(--warning-color-10);
+  border-color: var(--warning-color-20);
+}
+
+.high-duration-background {
+  background-color: var(--warning-color-5);
+  border-color: var(--warning-color-20);
+}
+
+.target-duration-background {
+  background-color: var(--info-color-10);
+  border-color: var(--info-color-20);
+}
+
+.low-duration-background {
+  background-color: var(--error-color-5);
+  border-color: var(--error-color-20);
+}
+
+.veryLow-duration-background {
+  background-color: var(--error-color-10);
+  border-color: var(--error-color-20);
+}
+
 .veryHigh-color {
   color: var(--bg-very-high);
 }
@@ -59,12 +84,20 @@
   color: var(--bg-high);
 }
 
+.high-color-primary {
+  color: var(--bg-very-high);
+}
+
 .target-color {
   color: var(--bg-target);
 }
 
 .low-color {
   color: var(--bg-low);
+}
+
+.low-color-primary {
+  color: var(--bg-very-low);
 }
 
 .veryLow-color {

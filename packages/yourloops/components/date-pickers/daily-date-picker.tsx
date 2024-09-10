@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2023, Diabeloop
+ * Copyright (c) 2014-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -87,6 +87,7 @@ export const DailyDatePicker: FunctionComponent<DailyDatePickerProps> = (props) 
       </IconButton>
       <TextField
         id="daily-chart-title-date"
+        data-testid="daily-chart-title-date"
         onClick={() => { setIsOpen(true) }}
         variant="standard"
         value={displayedDate}

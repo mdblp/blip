@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,7 +33,6 @@ import Typography from '@mui/material/Typography'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { GenericListCard } from './generic-list-card'
-import { formatDateWithMomentLongFormat } from '../../lib/utils'
 
 interface PumpInfoProps {
   pump: PumpConfig
@@ -60,26 +59,24 @@ export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
       <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="body2">{t('Serial Number')}</Typography>
-            <Typography variant="body2" className="bold">{pump.serialNumber ? pump.serialNumber : t('N/A')}</Typography>
+            <Typography variant="body2">{t('Product')}</Typography>
+            <Typography variant="body2" className="bold">{pump.product ? pump.product : t('N/A')}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="body2">{t('Pump version')}</Typography>
-            <Typography variant="body2" className="bold">{pump.swVersion ? pump.swVersion : t('N/A')}</Typography>
+            <Typography variant="body2">{t('Serial Number')}</Typography>
+            <Typography variant="body2" className="bold">{pump.serialNumber ? pump.serialNumber : t('N/A')}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
-      <ListItem>
-        <ListItemText className="list-item">
+      <ListItem className="list-item">
+        <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="body2">{t('Pump cartridge expiration date')}</Typography>
-            <Typography variant="body2" className="bold">
-              {pump.expirationDate ? formatDateWithMomentLongFormat(new Date(pump.expirationDate)) : t('N/A')}
-            </Typography>
+            <Typography variant="body2">{t('Pump version')}</Typography>
+            <Typography variant="body2" className="bold">{pump.swVersion ? pump.swVersion : t('N/A')}</Typography>
           </Box>
         </ListItemText>
       </ListItem>

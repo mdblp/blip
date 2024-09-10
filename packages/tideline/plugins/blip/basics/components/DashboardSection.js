@@ -27,7 +27,7 @@ class DashboardSection extends React.Component {
     chartWidth: PropTypes.number.isRequired,
     data: PropTypes.object.isRequired,
     days: PropTypes.array.isRequired,
-    name: PropTypes.string.isRequired,
+    name: PropTypes.string,
     section: PropTypes.object.isRequired,
     title: PropTypes.oneOfType([
       PropTypes.string,
@@ -74,8 +74,7 @@ class DashboardSection extends React.Component {
       })
     } else if (this.props.title) {
       var headerClasses = cx({
-        'SectionHeader--nodata': section.noData,
-        'selectable': true
+        'SectionHeader--nodata': section.noData
       })
       titleContainer = (
         <h3 className={headerClasses}>{this.props.title}</h3>

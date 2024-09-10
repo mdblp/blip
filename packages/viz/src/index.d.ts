@@ -1,6 +1,3 @@
-export namespace components {
-  export { WarmUpTooltip }
-}
 export namespace utils {
   namespace bg {
     export { reshapeBgClassesToBgBounds }
@@ -13,7 +10,6 @@ export namespace utils {
   }
 }
 import createPrintPDFPackage from './types/modules/print'
-import WarmUpTooltip from './types/components/daily/warmuptooltip/WarmUpTooltip'
 import { reshapeBgClassesToBgBounds } from './types/utils/bloodglucose'
 import { selectDailyViewData } from './types/utils/print/data'
 import { generatePumpSettings } from './types/utils/print/data'

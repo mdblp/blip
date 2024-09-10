@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,24 +26,22 @@
  */
 
 :root {
-  --basal: #a4a4a4;
-  --basal-automated: #3a90a4;
-  --basal-over: #b1b1b1;
-  --text-on-basal: white;
-  --text-on-basal-automated: white;
+  --basal: var(--grey-25);
+  --basal-automated: var(--info-color-50);
+  --text-on-basal: var(--text-color-primary);
+  --text-on-basal-automated: var(--text-color-primary);
   --text-basal: #a4a4a4;
-  --text-basal-automated: #3a90a4;
   --bolus: var(--blip-color-primary-light);
   --bolus-ride: white;
-  --bolus-undelivered: #E98D7C;
-  --bolus-meal: #178A7F;
-  --bolus-umm: #21C6B6;
-  --bolus-micro: #9A78BD;
-  --bolus-manual: #8C65D6;
-  --carbs: #178A7F;
-  --carbs-text: black;
+  --bolus-undelivered: var(--error-color-main);
+  --bolus-meal: var(--success-color-main);
+  --bolus-correction: var(--info-color-50);
+  --bolus-manual: var(--dark-blue-main);
+  --bolus-pen: var(--purple-main);
+  --carbs: var(--success-color-main);
+  --carbs-text: white;
   --carbs-light-text: white;
-  --rescuecarbs: #E98D7C;
+  --rescuecarbs: var(--error-color-main);
   --collapsible--border: #EDEDED;
   --table-stripe--light: #F7F7F7;
   --table-stripe--dark: #ECECEC;
@@ -68,11 +66,11 @@
   --text-medium-contrast: #727375;
   --text-high-contrast: #281946;
   --text-black: #000000;
-  --bg-very-low: #DA3A1B;
-  --bg-low: #E98D7C;
-  --bg-target: #9FCC93;
-  --bg-high: #F9D83E;
-  --bg-very-high: #FFA700;
+  --bg-very-low: var(--error-color-main);
+  --bg-low: var(--error-color-light);
+  --bg-target: var(--info-color-main);
+  --bg-high: var(--warning-color-light);
+  --bg-very-high: var(--warning-color-main);
   --text-hover: #00D3D9;
   --blue-green-light: #12D3D8;
   --gray-medium: #989897;
@@ -90,33 +88,34 @@
   --muted: #C1C9D6;
 }
 
+/* Using raw color codes here for the PDF export to understand the variables */
 :export {
-  bolus: #178A7F;
+  bolus: #21c6b6;
   bolusHeader: #EBF7FC;
-  bolusMeal: var(--bolus-meal);
-  bolusMicro: var(--bolus-micro);
-  bolusManual: var(--bolus-manual);
-  basal: #19A0D7;
+  bolusMeal: #21c6b6;
+  bolusCorrection: #80D1F1;
+  bolusManual: #035271;
+  bolusPen: #85529C;
+  basal: #D5D5D5;
   basalHeader: #DCF1F9;
-  basalAutomated: #00D3E6;
+  basalAutomated: #80D1F1;
   basalManual: #A8C8D4;
-  bolusUmm: #21C6B6;
   statDark: #27385B;
   statDefault: #727375;
   statDisabled: #E7E9EE;
-  veryLow: #DA3A1B;
-  low: #E98D7C;
-  target: #9FCC93;
-  high: #F9D83E;
-  veryHigh: #FFA700;
+  veryLow: #e12a4e;
+  low: #e85f7a;
+  target: #009bd6;
+  high: #f5a861;
+  veryHigh: #f28b2d;
   insulin: #0096D1;
   white: #FFFFFF;
   axis: #E7E9EE;
   muted: #C1C9D6;
-  rescuecarbs: #FA9494;
+  rescuecarbs: #e12a4e;
   deviceEvent: #727375;
-  hyperglycemia: var(--warning-color-main);
-  hypoglycemia: var(--error-color-main);
+  hyperglycemia: #f28b2d;
+  hypoglycemia: #e12a4e;
   physicalActivity: #00D3E6;
   confidentialMode: #B4B4B4;
   smbg: #6480FB;

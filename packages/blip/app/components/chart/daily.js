@@ -23,7 +23,6 @@ import ReactResizeDetector from 'react-resize-detector'
 import i18next from 'i18next'
 import { chartDailyFactory } from 'tideline'
 import { TimeService } from 'medical-domain'
-import { components as vizComponents } from 'tidepool-viz'
 import Footer from './footer'
 import {
   AlarmEventTooltip,
@@ -33,7 +32,8 @@ import {
   FoodTooltip,
   ParameterTooltip,
   PhysicalTooltip,
-  ReservoirTooltip
+  ReservoirTooltip,
+  WarmUpTooltip
 } from 'dumb'
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
@@ -45,8 +45,6 @@ import metrics from 'yourloops/lib/metrics'
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
  * @typedef { import('../../index').DatePicker } DatePicker
  */
-
-const WarmUpTooltip = vizComponents.WarmUpTooltip
 
 class DailyChart extends React.Component {
   static propTypes = {
@@ -259,6 +257,7 @@ class DailyChart extends React.Component {
 class Daily extends React.Component {
   static propTypes = {
     patient: PropTypes.object.isRequired,
+    device: PropTypes.object,
     bgPrefs: PropTypes.object.isRequired,
     timePrefs: PropTypes.object.isRequired,
     epochLocation: PropTypes.number.isRequired,
@@ -632,15 +631,13 @@ class Daily extends React.Component {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <WarmUpTooltip
-        datum={datum.data}
         position={{
           top: datum.top,
           left: datum.left
         }}
         side={datum.side}
-        bgPrefs={datum.bgPrefs}
         timePrefs={datum.timePrefs}
-      />)
+        warmup={datum.data}/>)
     this.setState({ tooltip })
   }
 
@@ -656,6 +653,7 @@ class Daily extends React.Component {
         side={datum.side}
         bgPrefs={datum.bgPrefs}
         timePrefs={datum.timePrefs}
+        device={this.props.device}
       />)
     this.setState({ tooltip })
   }

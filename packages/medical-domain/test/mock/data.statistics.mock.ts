@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,10 +27,19 @@
 
 import type DateFilter from '../../src/domains/models/time/date-filter.model'
 import { createMealData, createRandomBasal, createRandomBolus, createWizardData } from '../data-generator'
-import { type Basal, type Bolus, type Meal, WizardInputMealFat, WizardInputMealSource, type Wizard,  Prescriptor, Unit } from '../../src'
+import {
+  type Basal,
+  type Bolus,
+  BolusSubtype,
+  type Meal,
+  Prescriptor,
+  type Wizard,
+  WizardInputMealFat,
+  WizardInputMealSource
+} from '../../src'
 
 type BgDataRange = Array<[Date, string, number?]>
-type BolusDataRange = Array<[Date, number, Prescriptor?]>
+type BolusDataRange = Array<[Date, number, Prescriptor?, BolusSubtype?]>
 type BasalDataRange = Array<[Date, number, number, string]>
 const abbottDevice = 'AbbottFreeStyleLibre-XXX-XXXX'
 const dexcomDevice = 'Dexcom-XXX-XXXX'
@@ -83,10 +92,10 @@ export const basalsData: BasalDataRange = [
 ]
 
 export const bolusData: BolusDataRange = [
-  [new Date('2018-02-01T01:00:00Z'), 4],
-  [new Date('2018-02-01T02:00:00Z'), 5],
-  [new Date('2018-02-01T03:00:00Z'), 6],
-  [new Date('2018-02-03T03:00:00Z'), 4]
+  [new Date('2018-02-01T01:00:00Z'), 4, undefined, BolusSubtype.Pen],
+  [new Date('2018-02-01T02:00:00Z'), 5, undefined, BolusSubtype.Normal],
+  [new Date('2018-02-01T03:00:00Z'), 6, undefined, BolusSubtype.Biphasic],
+  [new Date('2018-02-03T03:00:00Z'), 4, undefined, BolusSubtype.Normal]
 ]
 
 export const manualBolusData: BolusDataRange = [
@@ -100,7 +109,7 @@ export const manualBolusData: BolusDataRange = [
   [new Date('2018-02-03T11:33:00.000Z'), 2, Prescriptor.Manual],
   [new Date('2018-02-03T17:33:00.000Z'), 3],
   [new Date('2018-02-03T21:33:00.000Z'), 2, Prescriptor.Manual],
-  [new Date('2018-02-11T00:33:00.000Z'), 3.2],
+  [new Date('2018-02-11T00:33:00.000Z'), 3.2, Prescriptor.Manual],
   [new Date('2018-02-11T04:33:00.000Z'), 4],
   [new Date('2018-02-11T11:33:00.000Z'), 2],
   [new Date('2018-02-11T17:33:00.000Z'), 4, Prescriptor.Manual],
@@ -142,9 +151,7 @@ export const buildMealData = (data: BgDataRange): Meal[] => (
     {
       ...createMealData(mealData[0]),
       deviceName: mealData[1],
-      prescribedNutrition: mealData[2]
-        ? { carbohydrate: { net: mealData[2], units: Unit.Gram } }
-        : undefined
+      prescriptor: Prescriptor.Hybrid
     }
   ))
 )
@@ -154,7 +161,7 @@ export const buildWizardData = (data: BgDataRange): Wizard[] => (
     {
       ...createWizardData(wizardData[0]),
       deviceName: wizardData[1],
-      inputMeal:{
+      inputMeal: {
         fat: WizardInputMealFat.No,
         source: WizardInputMealSource.Umm
       }
@@ -177,7 +184,7 @@ export const buildBasalsData = (basalsData: BasalDataRange): Basal[] => (
 export const buildBolusData = (bolusData: BolusDataRange): Bolus[] => (
   bolusData.map((bolus) => (
     {
-      ...createRandomBolus(bolus[0]),
+      ...createRandomBolus(bolus[0], bolus[3]),
       normal: bolus[1],
       prescriptor: bolus[2] ?? Prescriptor.Auto
     }
