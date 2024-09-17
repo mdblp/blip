@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -80,7 +80,7 @@ export const patient1Info: Patient = buildPatient({
     lastName: 'Groby',
     sex: Gender.Male
   },
-  settings: defaultSettings
+  settings: { ...defaultSettings, system: 'DBLG2' }
 })
 
 export const patient1Metrics: PatientMetrics = buildPatientMetrics({ userId: patient1Id })
