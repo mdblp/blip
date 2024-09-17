@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,42 +33,20 @@ import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import { CurrentParametersSection } from './sections/current-parameters-section'
 import Typography from '@mui/material/Typography'
-import MenuList from '@mui/material/MenuList'
-import MenuItem from '@mui/material/MenuItem'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import { ContentCopy, History, PhonelinkSetup } from '@mui/icons-material'
-import ListItemText from '@mui/material/ListItemText'
-import Divider from '@mui/material/Divider'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
-import { makeStyles } from 'tss-react/mui'
 import { SafetyBasalProfileSection } from './sections/safety-basal-profile-section'
 import { ChangeHistorySection } from './sections/change-history-section'
-import { BasalIcon } from '../../../components/icons/diabeloop/basal-icon'
+import { DeviceViewMenu } from './device-view-menu'
+import { DeviceViewSection } from '../../../models/enums/device-view-section.enum'
 
 interface DeviceViewProps {
   goToDailySpecificDate: (date: number) => void
   medicalData: MedicalDataService
 }
 
-const useStyles = makeStyles()((theme) => ({
-  menuTitle: {
-    fontWeight: 'bold',
-    paddingLeft: theme.spacing(2)
-  }
-}))
-
-enum DeviceViewSection {
-  ChangeHistory = 'ChangeHistory',
-  CurrentParameters = 'CurrentParameters',
-  SafetyBasalProfile = 'SafetyBasalProfile'
-}
-
 export const DeviceView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecificDate }) => {
   const { t } = useTranslation()
   const theme = useTheme()
-  const { classes } = useStyles()
   const [selectedSection, setSelectedSection] = useState(DeviceViewSection.CurrentParameters)
   const pumpSettings = medicalData.medicalData.pumpSettings.at(-1)
 
@@ -87,51 +65,14 @@ export const DeviceView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecific
         <>
           <Grid container spacing={3}>
             <Grid item xs={3}>
-              <Card variant="outlined">
-                <CardContent>
-                  <MenuList>
-                    <Typography className={classes.menuTitle}>Devices</Typography>
-                    <Divider variant="middle" sx={{
-                      paddingTop: theme.spacing(1)
-                    }} />
-                    <MenuItem
-                      selected={isSelected(DeviceViewSection.CurrentParameters)}
-                      onClick={() => selectSection(DeviceViewSection.CurrentParameters)}
-                      sx={{ marginTop: theme.spacing(2) }}
-                    >
-                      <ListItemIcon>
-                        <PhonelinkSetup fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText>Current parameters</ListItemText>
-                    </MenuItem>
-                    <MenuItem
-                      selected={isSelected(DeviceViewSection.SafetyBasalProfile)}
-                      onClick={() => selectSection(DeviceViewSection.SafetyBasalProfile)}
-                    >
-                      <ListItemIcon>
-                        <BasalIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText>Safety basal profile</ListItemText>
-                    </MenuItem>
-                    <MenuItem
-                      selected={isSelected(DeviceViewSection.ChangeHistory)}
-                      onClick={() => selectSection(DeviceViewSection.ChangeHistory)}
-                    >
-                      <ListItemIcon>
-                        <History fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText>Change history</ListItemText>
-                    </MenuItem>
-                  </MenuList>
-                </CardContent>
-              </Card>
+              <DeviceViewMenu selectedSection={selectedSection} selectSection={selectSection} />
             </Grid>
             <Grid item xs={9}>
               {
                 isSelected(DeviceViewSection.CurrentParameters) ?
                   <CurrentParametersSection pumpSettings={pumpSettings} />
                   : isSelected(DeviceViewSection.SafetyBasalProfile) ?
-                    <SafetyBasalProfileSection></SafetyBasalProfileSection>
+                    <SafetyBasalProfileSection />
                     : isSelected(DeviceViewSection.ChangeHistory) ?
                       <ChangeHistorySection
                         goToDailySpecificDate={goToDailySpecificDate}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.parameterRow:last-child td {
-  border-bottom: none;
-}
 
-.header {
-  background-color: var(--primary-color-background);
+export enum DeviceViewSection {
+  ChangeHistory = 'ChangeHistory',
+  CurrentParameters = 'CurrentParameters',
+  SafetyBasalProfile = 'SafetyBasalProfile'
 }
