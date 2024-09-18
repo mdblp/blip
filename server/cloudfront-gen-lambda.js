@@ -176,6 +176,9 @@ function genOutputFile() {
   hash.update(configJs)
   const configHash = `sha512-${hash.digest('base64')}`
 
+  // TODO
+  // const assetLinksJson =
+
   const templateParameters = {
     ...blipConfig,
     DISTRIB_FILES: distribFiles,

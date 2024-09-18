@@ -91,6 +91,20 @@ exports.handler = async (event, context, callback) => {
       body: ver
     };
     return callback(null, response);
+  } else if (requestURI === `${basePath}.well-known/assetlinks.json`) {
+    // TODO
+    const assetLinks = `{{ VERSION }}`;
+    const response = {
+      status: 200,
+      statusDescription: 'OK',
+      headers: {
+        'cache-control': [{ key: 'Cache-Control', value: 'max-age=3600' }],
+        'content-type': [{ key: 'Content-Type', value: 'text/javascript; charset=utf-8' }],
+        'strict-transport-security': [{ key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' }],
+      },
+      body: ver
+    };
+    return callback(null, response);
   }
 
   // Process the request normally

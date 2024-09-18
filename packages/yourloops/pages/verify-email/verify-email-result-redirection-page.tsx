@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,35 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum AppUserRoute {
-  Caregivers = '/caregivers',
-  CareTeamSettings = '/teams/:teamId',
-  PrivatePatientsList = '/teams/private/patients',
-  PatientsList = '/teams/:teamId/patients',
-  PatientView = '/teams/:teamId/patients/:patientId/*',
-  Daily = '/daily',
-  Device = '/device',
-  Dashboard = '/dashboard',
-  Home = '/home',
-  NotFound = '/not-found',
-  Notifications = '/notifications',
-  Patient = '/patient',
-  Patients = '/patients',
-  Preferences = '/preferences',
-  TargetAndAlerts = '/target-and-alerts',
-  Teams = '/teams',
-  Trends = '/trends'
-}
+import React, { FC } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { AppRoute } from '../../models/enums/routes.enum'
 
-export enum AppRoute {
-  CompleteSignup = '/complete-signup',
-  Login = '/login',
-  NewConsent = '/new-consent',
-  ProductLabelling = '/product-labelling',
-  RenewConsent = '/renew-consent',
-  SignupInformation = '/signup-information',
-  Training = '/training',
-  VerifyEmail = '/verify-email',
-  VerifyEmailResult = '/verify-email-result',
-  VerifyEmailResultRedirect = '/verify-email-result-redirect'
+export const VerifyEmailResultRedirectPage: FC = () => {
+  const navigate = useNavigate()
+
+  const appLink = 'intent://verify-email-result#Intent;scheme=https;host=www.android-qa.your-loops.dev;package=com.diabeloop.dblg2.debug;end;';
+  // const fallbackLink = 'https://www.android-qa.your-loops.dev/verify-email-result';
+
+  // Tente d'ouvrir l'application
+  // @ts-ignore
+  window.location = appLink;
+
+  // Si l'application n'est pas installée, redirige vers le lien de fallback après 2 secondes
+  setTimeout(() => {
+    navigate(AppRoute.VerifyEmailResult)
+  }, 2000);
+
+  return (<></>)
 }

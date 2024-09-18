@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.diabeloop.dblg2.debug",
+      "sha256_cert_fingerprints": ["BF:9E:ED:21:49:27:97:0F:FF:EF:E9:67:C1:7D:E0:BA:F6:41:64:0F:85:C1:63:FE:D5:85:77:07:C1:B0:D9:5A"]
+    }
+  }
+]
