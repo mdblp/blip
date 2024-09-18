@@ -74,7 +74,7 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
   sortHistory(history)
 
   return (
-    <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
+    <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="current-parameters-section">
       <CardHeader
         title={t('devices-and-current-parameters')}
         subheader={`${t('last-upload:')} ${lastUploadDate}`}

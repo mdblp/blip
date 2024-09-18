@@ -41,7 +41,7 @@ import { makeStyles } from 'tss-react/mui'
 import { DeviceViewSection } from '../../../models/enums/device-view-section.enum'
 import { useTranslation } from 'react-i18next'
 
-interface DeviceViewMenuProps {
+interface DevicesViewMenuProps {
   selectedSection: DeviceViewSection
   selectSection: (section: DeviceViewSection) => void
 }
@@ -56,14 +56,14 @@ const useStyles = makeStyles()((theme) => ({
   }
 }))
 
-export const DeviceViewMenu: FC<DeviceViewMenuProps> = (props) => {
+export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
   const theme = useTheme()
   const { t } = useTranslation()
   const { classes } = useStyles()
   const { selectedSection, selectSection } = props
 
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" data-testid="devices-view-menu">
       <CardContent>
         <MenuList>
           <Typography className={classes.menuTitle}>{t('devices')}</Typography>

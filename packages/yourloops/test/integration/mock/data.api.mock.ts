@@ -31,6 +31,7 @@ import { history } from '../data/data-api.data'
 import type { PatientDataRange } from '../../../lib/data/models/data-range.model'
 import {
   DatumType,
+  DeviceSystem,
   DurationUnit,
   MedicalData,
   PumpManufacturer,
@@ -226,7 +227,6 @@ const PumpSettingsMock = (date, time) => {
     id: 'pump_2022-08-08_6',
     type: 'pumpSettings',
     source: 'Diabeloop',
-    basalSchedules: [],
     payload: {
       cgm: {
         apiVersion: 'v1',
@@ -467,7 +467,7 @@ export const pumpSettingsData: Data = {
             deviceId: '1234',
             imei: '1234567890',
             manufacturer: 'Diabeloop',
-            name: 'DBLG1',
+            name: DeviceSystem.Dblg1,
             swVersion: '1.0.5.25'
           },
           history,
@@ -599,6 +599,13 @@ export const pumpSettingsData: Data = {
             name: 'Kaleido',
             serialNumber: '123456',
             swVersion: 'beta'
+          },
+          securityBasals: {
+            rates: [
+              { rate: 1, start: 0 },
+              { rate: 2, start: 510 },
+              { rate: 0.4, start: 840 }
+            ]
           }
         }
       }
@@ -717,7 +724,6 @@ export const dataSetsWithZeroValues: Data = {
         "type": DatumType.PumpSettings,
         "source": Source.Diabeloop,
         "isoWeekday": WeekDays.Sunday,
-        "basalSchedules": [],
         "payload": {
           "cgm": {
             "apiVersion": "v1",
@@ -732,7 +738,7 @@ export const dataSetsWithZeroValues: Data = {
             "deviceId": "1234",
             "imei": "1234567890",
             "manufacturer": Source.Diabeloop,
-            "name": "DBLG1",
+            "name": DeviceSystem.Dblg1,
             "swVersion": "beta"
           },
           "pump": {

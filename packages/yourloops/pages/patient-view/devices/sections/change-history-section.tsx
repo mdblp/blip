@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -47,7 +47,7 @@ export const ChangeHistorySection: FC<ChangeHistorySectionProps> = (props) => {
   const timezone = pumpSettings.timezone
 
   return (
-    <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
+    <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="change-history-section">
       <CardHeader title={t('change-history')} />
       <CardContent>
         <ParametersChangeHistory

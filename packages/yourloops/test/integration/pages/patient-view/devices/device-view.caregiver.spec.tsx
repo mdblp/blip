@@ -35,18 +35,18 @@ import { mockUserApi } from '../../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
-import { testDeviceSettingsVisualisation } from '../../../use-cases/device-settings-visualisation'
+import { testDevicesVisualisation } from '../../../use-cases/device-settings-visualisation'
 import { testDeviceSettingsNavigationForCaregiver } from '../../../use-cases/device-settings-navigation'
 import { testAppMainLayoutForCaregiver } from '../../../use-cases/app-main-layout-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { act } from '@testing-library/react'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 
-describe('Device view for Caregiver', () => {
+describe('Devices view for Caregiver', () => {
   const firstName = 'Caregiver firstName'
   const lastName = 'Caregiver lastName'
 
-  const deviceRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Devices}`
+  const devicesRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Devices}`
 
   beforeEach(() => {
     mockWindowResizer()
@@ -59,21 +59,21 @@ describe('Device view for Caregiver', () => {
   })
 
   it('should render correct layout', async () => {
-    renderPage(deviceRoute)
+    renderPage(devicesRoute)
     await testAppMainLayoutForCaregiver({ loggedInUserFullName: `${lastName} ${firstName}` })
   })
 
   it('should display correct parameters', async () => {
     await act(async () => {
-      renderPage(deviceRoute)
+      renderPage(devicesRoute)
     })
-    await testDeviceSettingsVisualisation()
+    await testDevicesVisualisation()
   })
 
   it('should navigate to daily page when clicking on the daily button', async () => {
     let router
     await act(async () => {
-      router = renderPage(deviceRoute)
+      router = renderPage(devicesRoute)
     })
     await testDeviceSettingsNavigationForCaregiver(router)
   })

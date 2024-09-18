@@ -106,7 +106,7 @@ export const SafetyBasalProfileSection: FC<SafetyBasalProfileSectionProps> = ({ 
   const noDataMessage = deviceSystem === DeviceSystem.Dblg1 ? t('safety-basal-profile-values-not-available-update-dblg1') : t('safety-basal-profile-values-not-available')
 
   return (
-    <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
+    <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="safety-basal-profile-section">
       <CardHeader title={t('safety-basal-profile')} />
       <CardContent>
         {isSafetyBasalAvailable

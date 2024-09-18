@@ -27,50 +27,60 @@
 
 import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { patient1Id } from '../../../data/patient.api.data'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
 import { renderPage } from '../../../utils/render'
 import { mockUserApi } from '../../../mock/user.api.mock'
-import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
+import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
-import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
-import { mockTeamAPI } from '../../../mock/team.api.mock'
-import { testAppMainLayoutForPatient } from '../../../use-cases/app-main-layout-visualisation'
-import { testDeviceSettingsVisualisation } from '../../../use-cases/device-settings-visualisation'
-import { testDeviceSettingsNavigationForPatient } from '../../../use-cases/device-settings-navigation'
+import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../use-cases/app-main-layout-visualisation'
+import { testDevicesVisualisation } from '../../../use-cases/device-settings-visualisation'
+import { testDeviceSettingsNavigationForHcp } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
-describe('Device view for Patient', () => {
-  const firstName = 'patient firstName'
-  const lastName = 'patient lastName'
+describe('Device view for HCP', () => {
+  const firstName = 'HCP firstName'
+  const lastName = 'HCP lastName'
 
-  const deviceRoute = AppUserRoute.Devices
+  const deviceRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Devices}`
 
   beforeEach(() => {
     mockWindowResizer()
-    mockAuth0Hook(UserRole.Patient, patient1Id)
+    mockAuth0Hook()
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForPatients()
+    mockPatientApiForHcp()
     mockDataAPI(pumpSettingsData)
   })
 
   it('should render correct layout', async () => {
+    const appMainLayoutParams: AppMainLayoutHcpParams = {
+      footerHasLanguageSelector: false,
+      headerInfo: {
+        loggedInUserFullName: `${lastName} ${firstName}`,
+        teamMenuInfo: {
+          selectedTeamName: myThirdTeamName,
+          isSelectedTeamPrivate: false,
+          availableTeams: buildAvailableTeams()
+        }
+      }
+    }
     await act(async () => {
       renderPage(deviceRoute)
     })
-    await testAppMainLayoutForPatient({ loggedInUserFullName: `${lastName} ${firstName}` })
+    await testAppMainLayoutForHcp(appMainLayoutParams)
   })
 
   it('should display correct parameters', async () => {
     await act(async () => {
       renderPage(deviceRoute)
     })
-    await testDeviceSettingsVisualisation()
+    await testDevicesVisualisation()
   })
 
   it('should navigate to daily page when clicking on the daily button', async () => {
@@ -78,6 +88,6 @@ describe('Device view for Patient', () => {
     await act(async () => {
       router = renderPage(deviceRoute)
     })
-    await testDeviceSettingsNavigationForPatient(router)
+    await testDeviceSettingsNavigationForHcp(router)
   })
 })

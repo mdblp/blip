@@ -86,7 +86,7 @@ describe('Settings print view util', () => {
     const timePrefs = { timezoneAware: true, timezoneName: 'Europe/Paris' }
 
     it('should fallback on the default values when there is no data', () => {
-      const emptyData = { activeSchedule: undefined, deviceSerialNumber: undefined }
+      const emptyData = { deviceSerialNumber: undefined }
 
       expect(getDeviceMetadata(emptyData as PdfSettingsData, timePrefs)).toEqual({
         schedule: 'unknown',
@@ -96,18 +96,16 @@ describe('Settings print view util', () => {
     })
 
     it('should compute the metadata', () => {
-      const activeSchedule = 'active schedule'
       const deviceSerialNumber = 'ABCDEFG'
 
       const fullData = {
-        activeSchedule,
         deviceSerialNumber,
         normalTime: '2016-09-23T23:00:00.000Z',
         deviceTime: '2016-09-23T19:00:00Z'
       }
 
       expect(getDeviceMetadata(fullData as PdfSettingsData, timePrefs)).toEqual({
-        schedule: activeSchedule,
+        schedule: 'unknown',
         uploaded: 'Sep 24, 2016',
         serial: deviceSerialNumber
       })

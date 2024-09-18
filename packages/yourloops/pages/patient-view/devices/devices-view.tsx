@@ -36,7 +36,7 @@ import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import { SafetyBasalProfileSection } from './sections/safety-basal-profile-section'
 import { ChangeHistorySection } from './sections/change-history-section'
-import { DeviceViewMenu } from './device-view-menu'
+import { DevicesViewMenu } from './devices-view-menu'
 import { DeviceViewSection } from '../../../models/enums/device-view-section.enum'
 
 interface DeviceViewProps {
@@ -44,7 +44,7 @@ interface DeviceViewProps {
   medicalData: MedicalDataService
 }
 
-export const DeviceView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecificDate }) => {
+export const DevicesView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecificDate }) => {
   const { t } = useTranslation()
   const theme = useTheme()
   const [selectedSection, setSelectedSection] = useState(DeviceViewSection.CurrentParameters)
@@ -65,7 +65,7 @@ export const DeviceView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecific
         <>
           <Grid container spacing={3}>
             <Grid item xs={3}>
-              <DeviceViewMenu selectedSection={selectedSection} selectSection={selectSection} />
+              <DevicesViewMenu selectedSection={selectedSection} selectSection={selectSection} />
             </Grid>
             <Grid item xs={9}>
               {

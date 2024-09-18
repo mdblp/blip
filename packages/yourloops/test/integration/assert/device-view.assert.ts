@@ -31,10 +31,15 @@ import moment from 'moment-timezone'
 import { pumpSettingsData } from '../mock/data.api.mock'
 import { formatCurrentDate } from 'dumb'
 
-export const checkDeviceSettingsContent = () => {
-  const deviceSettings = screen.getByTestId('device-settings-container')
+export const checkDevicesMenuLayout = () => {
+  const devicesMenu = screen.getByTestId('devices-view-menu')
+  expect(devicesMenu).toHaveTextContent('DevicesCurrent parametersSafety basal profileChange history')
+}
+
+export const checkCurrentParametersContent = () => {
+  const deviceSettings = screen.getByTestId('current-parameters-section')
   const date = moment.tz(pumpSettingsData.data.pumpSettings[0].normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
-  expect(deviceSettings).toHaveTextContent(`DeviceLast update: ${date}Copy as textDBLG1ManufacturerDiabeloopIdentifier1234IMEI1234567890Software version1.0.5.25PumpManufacturerVICENTRAProducttestPumpSerial number123456Pump versionbetaCGMManufacturerDexcomProductG6Sensor expirationApr 12, 2050Transmitter software versionv1Transmitter IDa1234Transmitter expirationApr 12, 2050SettingValueUnitBreakfast - average36.0gLunch - average96.0gDinner - average96.0gWeight72.0kgHyperglycemia threshold180.0mg/dLHypoglycemia threshold75.0mg/dLTarget glucose level110.0mg/dLAggressiveness in normoglycemia100%Aggressiveness in hyperglycemia100%Aggressiveness for breakfast100%Aggressiveness for lunch100%Aggressiveness for dinner80%Breakfast - small18.0gBreakfast - large54.0gLunch - small48.0gLunch - large144.0gDinner - small48.0gDinner - large144.0gChange historySettingValueType of changeDateTue, Nov 1, 2022 1:00 AMAggressiveness for lunch130 %90 %UpdatedMon, Nov 7, 2022 3:01 PMAggressiveness for breakfast100 %110 %UpdatedWed, Nov 2, 2022 6:00 PMAggressiveness for dinner100 %90 %UpdatedWed, Nov 2, 2022 6:00 PMHyperglycemia threshold180.1 mg/dL140.0 mg/dLUpdatedWed, Nov 2, 2022 8:00 AMHypoglycemia threshold70.0 mg/dL60.0 mg/dLUpdatedWed, Nov 2, 2022 8:00 AMAggressiveness in hyperglycemia143 %AddedTue, Nov 1, 2022 1:00 AMBreakfast - large150.0 gAddedTue, Nov 1, 2022 1:00 AMDinner - large150.0 gAddedTue, Nov 1, 2022 1:00 AMLunch - large70.0 gAddedTue, Nov 1, 2022 1:00 AMAggressiveness for breakfast100 %AddedTue, Nov 1, 2022 1:00 AMAggressiveness for breakfast110 %100 %UpdatedTue, Nov 1, 2022 1:00 AMAggressiveness for dinner100 %AddedTue, Nov 1, 2022 1:00 AMAggressiveness for dinner90 %100 %UpdatedTue, Nov 1, 2022 1:00 AMAggressiveness for lunch130 %AddedTue, Nov 1, 2022 1:00 AMBreakfast - average70.0 gAddedTue, Nov 1, 2022 1:00 AMDinner - average60.0 gAddedTue, Nov 1, 2022 1:00 AMLunch - average50.0 gAddedTue, Nov 1, 2022 1:00 AMAggressiveness in normoglycemia100 %AddedTue, Nov 1, 2022 1:00 AMTarget glucose level100.0 mg/dLAddedTue, Nov 1, 2022 1:00 AMHyperglycemia threshold180.1 mg/dLAddedTue, Nov 1, 2022 1:00 AMHyperglycemia threshold140.0 mg/dL180.1 mg/dLUpdatedTue, Nov 1, 2022 1:00 AMHypoglycemia threshold70.0 mg/dLAddedTue, Nov 1, 2022 1:00 AMHypoglycemia threshold60.0 mg/dL70.0 mg/dLUpdatedTue, Nov 1, 2022 1:00 AMBreakfast - small15.0 gAddedTue, Nov 1, 2022 1:00 AMDinner - small20.0 gAddedTue, Nov 1, 2022 1:00 AMLunch - small30.0 gAddedTue, Nov 1, 2022 1:00 AMTotal Daily Insulin53.0 UAddedTue, Nov 1, 2022 1:00 AMWeight69.0 kgAddedTue, Nov 1, 2022 1:00 AM`)
+  expect(deviceSettings).toHaveTextContent(`Devices and current parametersLast update: ${date}Copy as textDBLG1ManufacturerDiabeloopIdentifier1234IMEI1234567890Software version1.0.5.25PumpManufacturerVICENTRAProducttestPumpSerial number123456Pump versionbetaCGMManufacturerDexcomProductG6Sensor expirationApr 12, 2050Transmitter software versionv1Transmitter IDa1234Transmitter expirationApr 12, 2050SettingValueUnitBreakfast - average36.0gLunch - average96.0gDinner - average96.0gWeight72.0kgHyperglycemia threshold180.0mg/dLHypoglycemia threshold75.0mg/dLTarget glucose level110.0mg/dLAggressiveness in normoglycemia100%Aggressiveness in hyperglycemia100%Aggressiveness for breakfast100%Aggressiveness for lunch100%Aggressiveness for dinner80%Breakfast - small18.0gBreakfast - large54.0gLunch - small48.0gLunch - large144.0gDinner - small48.0gDinner - large144.0g`)
 }
 
 export const checkCopyTextButton = async () => {
@@ -51,6 +56,24 @@ export const checkCopyTextButton = async () => {
   const date = moment.tz(pumpSettingsData.data.pumpSettings[0].normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
   const copiedStringToPaste = `${date}\n\n-- DBL --\nManufacturer      Diabeloop\nIdentifier        1234\nIMEI              1234567890\nSoftware version  1.0.5.25\n\n-- Settings on ${formatCurrentDate()} --\nName                             Value  Unit\nBreakfast - average               36.0  g\nLunch - average                   96.0  g\nDinner - average                  96.0  g\nWeight                            72.0  kg\nHyperglycemia threshold          180.0  mg/dL\nHypoglycemia threshold            75.0  mg/dL\nTarget glucose level             110.0  mg/dL\nAggressiveness in normoglycemia    100  %\nAggressiveness in hyperglycemia    100  %\nAggressiveness for breakfast       100  %\nAggressiveness for lunch           100  %\nAggressiveness for dinner           80  %\nBreakfast - small                 18.0  g\nBreakfast - large                 54.0  g\nLunch - small                     48.0  g\nLunch - large                    144.0  g\nDinner - small                    48.0  g\nDinner - large                   144.0  g`
   expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringContaining(copiedStringToPaste))
+}
+
+export const checkSafetyBasalProfileContent = async () => {
+  const safetyBasalProfileButton = within(screen.getByTestId('devices-view-menu')).getByText('Safety basal profile')
+  await userEvent.click(safetyBasalProfileButton)
+
+  const changeHistorySection = screen.getByTestId('safety-basal-profile-section')
+  expect(changeHistorySection).toBeVisible()
+  expect(changeHistorySection).toHaveTextContent('Safety basal profileStart timeEnd timeBasal rate12:00 am8:30 am1 U/h8:30 am2:00 pm2 U/h2:00 pm12:00 am0.4 U/h')
+}
+
+export const checkChangeHistoryContent = async () => {
+  const changeHistoryButton = within(screen.getByTestId('devices-view-menu')).getByText('Change history')
+  await userEvent.click(changeHistoryButton)
+
+  const changeHistorySection = screen.getByTestId('change-history-section')
+  expect(changeHistorySection).toBeVisible()
+  expect(changeHistorySection).toHaveTextContent('Change historySettingValueType of changeDateTue, Nov 1, 2022 1:00 AMAggressiveness for lunch130 %90 %UpdatedMon, Nov 7, 2022 3:01 PMAggressiveness for breakfast100 %110 %UpdatedWed, Nov 2, 2022 6:00 PMAggressiveness for dinner100 %90 %UpdatedWed, Nov 2, 2022 6:00 PMHyperglycemia threshold180.1 mg/dL140.0 mg/dLUpdatedWed, Nov 2, 2022 8:00 AMHypoglycemia threshold70.0 mg/dL60.0 mg/dLUpdatedWed, Nov 2, 2022 8:00 AMAggressiveness in hyperglycemia143 %AddedTue, Nov 1, 2022 1:00 AMBreakfast - large150.0 gAddedTue, Nov 1, 2022 1:00 AMDinner - large150.0 gAddedTue, Nov 1, 2022 1:00 AMLunch - large70.0 gAddedTue, Nov 1, 2022 1:00 AMAggressiveness for breakfast100 %AddedTue, Nov 1, 2022 1:00 AMAggressiveness for breakfast110 %100 %UpdatedTue, Nov 1, 2022 1:00 AMAggressiveness for dinner100 %AddedTue, Nov 1, 2022 1:00 AMAggressiveness for dinner90 %100 %UpdatedTue, Nov 1, 2022 1:00 AMAggressiveness for lunch130 %AddedTue, Nov 1, 2022 1:00 AMBreakfast - average70.0 gAddedTue, Nov 1, 2022 1:00 AMDinner - average60.0 gAddedTue, Nov 1, 2022 1:00 AMLunch - average50.0 gAddedTue, Nov 1, 2022 1:00 AMAggressiveness in normoglycemia100 %AddedTue, Nov 1, 2022 1:00 AMTarget glucose level100.0 mg/dLAddedTue, Nov 1, 2022 1:00 AMHyperglycemia threshold180.1 mg/dLAddedTue, Nov 1, 2022 1:00 AMHyperglycemia threshold140.0 mg/dL180.1 mg/dLUpdatedTue, Nov 1, 2022 1:00 AMHypoglycemia threshold70.0 mg/dLAddedTue, Nov 1, 2022 1:00 AMHypoglycemia threshold60.0 mg/dL70.0 mg/dLUpdatedTue, Nov 1, 2022 1:00 AMBreakfast - small15.0 gAddedTue, Nov 1, 2022 1:00 AMDinner - small20.0 gAddedTue, Nov 1, 2022 1:00 AMLunch - small30.0 gAddedTue, Nov 1, 2022 1:00 AMTotal Daily Insulin53.0 UAddedTue, Nov 1, 2022 1:00 AMWeight69.0 kgAddedTue, Nov 1, 2022 1:00 AM')
 }
 
 export const checkNavigationToDailyView = async (router, route: string) => {

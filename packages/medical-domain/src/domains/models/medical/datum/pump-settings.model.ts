@@ -98,8 +98,6 @@ interface SecurityBasalConfig {
 
 interface PumpSettings extends BaseDatum {
   type: DatumType.PumpSettings
-  basalSchedules: object[]
-  activeSchedule: string
   deviceId: string
   deviceTime: string
   payload: {

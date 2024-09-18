@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,9 +25,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkCopyTextButton, checkDeviceSettingsContent } from '../assert/device-view.assert'
+import {
+  checkChangeHistoryContent,
+  checkCopyTextButton,
+  checkCurrentParametersContent,
+  checkDevicesMenuLayout,
+  checkSafetyBasalProfileContent
+} from '../assert/device-view.assert'
 
-export const testDeviceSettingsVisualisation = async () => {
-  checkDeviceSettingsContent()
+export const testDevicesVisualisation = async () => {
+  testDevicesMenuLayout()
+  await testCurrentParametersVisualisation()
+  await testBasalSafetyProfileVisualisation()
+  await testChangeHistoryVisualisation()
+}
+
+const testDevicesMenuLayout = () => {
+  checkDevicesMenuLayout()
+}
+
+const testCurrentParametersVisualisation = async () => {
+  checkCurrentParametersContent()
   await checkCopyTextButton()
 }
+
+const testBasalSafetyProfileVisualisation = async () => {
+  await checkSafetyBasalProfileContent()
+}
+
+const testChangeHistoryVisualisation = async () => {
+  await checkChangeHistoryContent()
+}
+

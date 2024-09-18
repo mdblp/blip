@@ -146,10 +146,8 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const pumpSettings: PumpSettings = {
     ...base,
     type: DatumType.PumpSettings,
-    activeSchedule: rawData.activeSchedule as string,
     deviceId: rawData.deviceId as string,
     deviceTime: rawData.deviceTime as string,
-    basalSchedules: (rawData?.basalSchedules ?? []) as object[],
     payload: {
       cgm: normalizeCgm(rawCgm),
       device: normalizeDevice(rawDevice),
