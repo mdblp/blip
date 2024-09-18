@@ -45,7 +45,7 @@ describe('Device view for HCP', () => {
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
-  const deviceRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Device}`
+  const deviceRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Devices}`
 
   beforeEach(() => {
     mockWindowResizer()

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -76,7 +76,7 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
   return (
     <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
       <CardHeader
-        title={t('device')}
+        title={t('devices-and-current-parameters')}
         subheader={`${t('last-upload:')} ${lastUploadDate}`}
         action={
           <Button

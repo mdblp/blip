@@ -46,7 +46,7 @@ describe('Device view for Patient', () => {
   const firstName = 'patient firstName'
   const lastName = 'patient lastName'
 
-  const deviceRoute = AppUserRoute.Device
+  const deviceRoute = AppUserRoute.Devices
 
   beforeEach(() => {
     mockWindowResizer()

@@ -225,7 +225,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                     }
                   />
                   <Route
-                    path={AppUserRoute.Device}
+                    path={AppUserRoute.Devices}
                     element={
                       <DeviceView
                         goToDailySpecificDate={goToDailySpecificDate}

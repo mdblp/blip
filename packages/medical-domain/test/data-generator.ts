@@ -221,7 +221,6 @@ function createRandomPumpSettings(date?: Date): PumpSettings {
     deviceId: faker.string.uuid(),
     deviceTime: faker.date.past().toISOString(),
     payload: {
-      basalsecurityprofile: {},
       cgm: {
         apiVersion: faker.system.semver(),
         endOfLifeTransmitterDate: faker.date.future().toISOString(),

@@ -72,7 +72,10 @@ export const DeviceView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecific
                 isSelected(DeviceViewSection.CurrentParameters) ?
                   <CurrentParametersSection pumpSettings={pumpSettings} />
                   : isSelected(DeviceViewSection.SafetyBasalProfile) ?
-                    <SafetyBasalProfileSection />
+                    <SafetyBasalProfileSection
+                      safetyBasalConfig={pumpSettings.payload.securityBasals}
+                      deviceSystem={pumpSettings.payload.device.name}
+                    />
                     : isSelected(DeviceViewSection.ChangeHistory) ?
                       <ChangeHistorySection
                         goToDailySpecificDate={goToDailySpecificDate}

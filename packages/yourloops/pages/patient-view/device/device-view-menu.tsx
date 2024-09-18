@@ -39,6 +39,7 @@ import Card from '@mui/material/Card'
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import { DeviceViewSection } from '../../../models/enums/device-view-section.enum'
+import { useTranslation } from 'react-i18next'
 
 interface DeviceViewMenuProps {
   selectedSection: DeviceViewSection
@@ -49,11 +50,15 @@ const useStyles = makeStyles()((theme) => ({
   menuTitle: {
     fontWeight: 'bold',
     paddingLeft: theme.spacing(2)
+  },
+  menuItemText: {
+    whiteSpace: 'pre-line',
   }
 }))
 
 export const DeviceViewMenu: FC<DeviceViewMenuProps> = (props) => {
   const theme = useTheme()
+  const { t } = useTranslation()
   const { classes } = useStyles()
   const { selectedSection, selectSection } = props
 
@@ -61,7 +66,7 @@ export const DeviceViewMenu: FC<DeviceViewMenuProps> = (props) => {
     <Card variant="outlined">
       <CardContent>
         <MenuList>
-          <Typography className={classes.menuTitle}>Devices</Typography>
+          <Typography className={classes.menuTitle}>{t('devices')}</Typography>
           <Divider variant="middle" sx={{
             paddingTop: theme.spacing(1)
           }} />
@@ -73,7 +78,7 @@ export const DeviceViewMenu: FC<DeviceViewMenuProps> = (props) => {
             <ListItemIcon>
               <PhonelinkSetup fontSize="small" />
             </ListItemIcon>
-            <ListItemText>Current parameters</ListItemText>
+            <ListItemText className={classes.menuItemText}>{t('current-parameters')}</ListItemText>
           </MenuItem>
           <MenuItem
             selected={selectedSection === DeviceViewSection.SafetyBasalProfile}
@@ -83,7 +88,7 @@ export const DeviceViewMenu: FC<DeviceViewMenuProps> = (props) => {
             <ListItemIcon>
               <BasalIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText>Safety basal profile</ListItemText>
+            <ListItemText className={classes.menuItemText}>{t('safety-basal-profile')}</ListItemText>
           </MenuItem>
           <MenuItem
             selected={selectedSection === DeviceViewSection.ChangeHistory}
@@ -93,7 +98,7 @@ export const DeviceViewMenu: FC<DeviceViewMenuProps> = (props) => {
             <ListItemIcon>
               <History fontSize="small" />
             </ListItemIcon>
-            <ListItemText>Change history</ListItemText>
+            <ListItemText className={classes.menuItemText}>{t('change-history')}</ListItemText>
           </MenuItem>
         </MenuList>
       </CardContent>

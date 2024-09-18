@@ -228,7 +228,6 @@ const PumpSettingsMock = (date, time) => {
     source: 'Diabeloop',
     basalSchedules: [],
     payload: {
-      basalsecurityprofile: {},
       cgm: {
         apiVersion: 'v1',
         endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00',
@@ -455,7 +454,6 @@ export const pumpSettingsData: Data = {
         displayOffset: 0,
         guessedTimezone: false,
         payload: {
-          basalsecurityprofile: null,
           cgm: {
             apiVersion: 'v1',
             endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00',
@@ -721,7 +719,6 @@ export const dataSetsWithZeroValues: Data = {
         "isoWeekday": WeekDays.Sunday,
         "basalSchedules": [],
         "payload": {
-          "basalsecurityprofile": {},
           "cgm": {
             "apiVersion": "v1",
             "endOfLifeTransmitterDate": "2050-04-12T17:53:54+02:00",
