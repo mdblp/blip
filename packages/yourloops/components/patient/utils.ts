@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -45,7 +45,7 @@ export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
     },
     settings: {
       a1c: iTeamMember.settings?.a1c,
-      system: 'DBLG1'
+      system: iTeamMember.settings?.system
     },
     flagged: undefined,
     medicalData: iTeamMember.medicalData,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,4 +38,5 @@ export interface Settings {
     rawdate: string
     value: string
   }
+  system?: string
 }
