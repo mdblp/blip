@@ -35,7 +35,8 @@ import {
   dateFilterTwoWeeks,
   dateFilterTwoDays,
   MS_IN_HOUR,
-  manualBolusData
+  manualBolusData,
+  buildSingleWizardData
 } from '../../mock/data.statistics.mock'
 import { ManualBolusAverageStatistics } from '../../../src/domains/models/statistics/basal-bolus-statistics.model'
 
@@ -67,16 +68,17 @@ describe('getBasalBolusData', () => {
   it('should return the total basal and bolus insulin delivery when viewing 1 day', () => {
     const basals = buildBasalsData(basalsData)
     const bolus = buildBolusData(bolusData)
+    const wizard = buildSingleWizardData(bolus[0].id)
 
-    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, [], 1, dateFilterOneDay)
+    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, [wizard], 1, dateFilterOneDay)
     const expectBasalBolusData = {
       totalCorrectiveBolusesAndBasals: 16.5,
       totalManualBoluses: 0,
-      totalMealBoluses: 0,
+      totalMealBoluses: 1,
       totalPenBoluses: 4,
-      total: 20.5,
+      total: 21.5,
       basal: 1.5,
-      bolus: 19
+      bolus: 20
     }
     expect(basalBolusData).toEqual(expectBasalBolusData)
   })
