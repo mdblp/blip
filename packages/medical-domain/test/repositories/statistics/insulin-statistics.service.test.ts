@@ -86,16 +86,17 @@ describe('getBasalBolusData', () => {
   it('should return the avg daily total basal and bolus insulin delivery when viewing more than 1 day', () => {
     const basals = buildBasalsData(basalsData)
     const bolus = buildBolusData(bolusData)
+    const wizard = buildSingleWizardData(bolus[0].id)
 
-    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, [], 2, dateFilterTwoWeeks)
+    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, [wizard], 2, dateFilterTwoWeeks)
     const expectBasalBolusData = {
       totalCorrectiveBolusesAndBasals: 10.75,
       totalManualBoluses: 0,
-      totalMealBoluses: 0,
+      totalMealBoluses: 0.5,
       totalPenBoluses: 2,
-      total: 12.75,
+      total: 13.25,
       basal: 1.25,
-      bolus: 11.5
+      bolus: 12
     }
     expect(basalBolusData).toEqual(expectBasalBolusData)
   })

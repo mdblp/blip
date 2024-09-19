@@ -94,10 +94,11 @@ export const basalsData: BasalDataRange = [
 ]
 
 export const bolusData: BolusDataRange = [
-  [new Date('2018-02-01T04:00:00Z'), 1, Prescriptor.Auto, BolusSubtype.Normal],
+  [new Date('2018-02-01T03:00:00Z'), 1, Prescriptor.Auto, BolusSubtype.Normal],
   [new Date('2018-02-01T01:00:00Z'), 4, undefined, BolusSubtype.Pen],
   [new Date('2018-02-01T02:00:00Z'), 5, undefined, BolusSubtype.Normal],
   [new Date('2018-02-01T03:00:00Z'), 6, undefined, BolusSubtype.Biphasic],
+  [new Date('2018-02-03T03:00:00Z'), 4, undefined, BolusSubtype.Normal]
 ]
 
 export const manualBolusData: BolusDataRange = [
