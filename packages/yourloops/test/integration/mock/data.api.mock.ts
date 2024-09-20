@@ -658,7 +658,7 @@ export const pumpSettingsDblg1WithoutSecurityBasalData: Data = {
             imei: '1234567890',
             manufacturer: 'Diabeloop',
             name: DeviceSystem.Dblg1,
-            swVersion: '1.0.5.25'
+            swVersion: '1.2.3'
           },
           history,
           parameters: [
@@ -842,7 +842,7 @@ export const pumpSettingsDblg2WithoutSecurityBasalData: Data = {
             imei: '1234567890',
             manufacturer: 'Diabeloop',
             name: DeviceSystem.Dblg2,
-            swVersion: '1.0.5.25'
+            swVersion: '1.2.3'
           },
           history,
           parameters: [
