@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -66,7 +66,8 @@ describe('Patient utils', () => {
           glucoseManagementIndicator: 0
         },
         unreadMessages: 5,
-        medicalData: { range: { startDate: '', endDate: '' } }
+        medicalData: { range: { startDate: '', endDate: '' } },
+        settings: { system: 'DBLG1' }
       }
       teamMember.unreadMessages = 4
       const patient: Patient = {
