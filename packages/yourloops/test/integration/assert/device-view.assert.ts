@@ -77,8 +77,11 @@ export const checkChangeHistoryContent = async () => {
 }
 
 export const checkNavigationToDailyView = async (router, route: string) => {
-  const deviceSettings = screen.getByTestId('device-settings-container')
-  const parameterTable = within(deviceSettings).getByTestId('history-parameter-table')
+  const changeHistoryButton = within(screen.getByTestId('devices-view-menu')).getByText('Change history')
+  await userEvent.click(changeHistoryButton)
+
+  const changeHistorySection = screen.getByTestId('change-history-section')
+  const parameterTable = within(changeHistorySection).getByTestId('history-parameter-table')
   const goToDailyButton = within(parameterTable).getByTestId('daily-button-link-2022-11-01T00:00:00Z')
   await userEvent.click(goToDailyButton)
   expect(router.state.location.pathname).toEqual(route)
