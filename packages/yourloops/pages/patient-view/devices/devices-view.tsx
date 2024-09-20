@@ -62,31 +62,29 @@ export const DevicesView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecifi
     <Container data-testid="device-settings-container" maxWidth="xl">
       {medicalData.medicalData.pumpSettings.length > 0
         ?
-        <>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              <DevicesViewMenu selectedSection={selectedSection} selectSection={selectSection} />
-            </Grid>
-            <Grid item xs={9}>
-              {
-                isSelected(DeviceViewSection.CurrentParameters) ?
-                  <CurrentParametersSection pumpSettings={pumpSettings} />
-                  : isSelected(DeviceViewSection.SafetyBasalProfile) ?
-                    <SafetyBasalProfileSection
-                      safetyBasalConfig={pumpSettings.payload.securityBasals}
-                      deviceSystem={pumpSettings.payload.device.name}
-                    />
-                    : isSelected(DeviceViewSection.ChangeHistory) ?
-                      <ChangeHistorySection
-                        goToDailySpecificDate={goToDailySpecificDate}
-                        pumpSettings={pumpSettings}
-                      />
-                      : <></>
-              }
-
-            </Grid>
+        <Grid container spacing={3}>
+          <Grid item xs={3}>
+            <DevicesViewMenu selectedSection={selectedSection} selectSection={selectSection} />
           </Grid>
-        </>
+          <Grid item xs={9}>
+            {
+              isSelected(DeviceViewSection.CurrentParameters) ?
+                <CurrentParametersSection pumpSettings={pumpSettings} />
+                : isSelected(DeviceViewSection.SafetyBasalProfile) ?
+                  <SafetyBasalProfileSection
+                    safetyBasalConfig={pumpSettings.payload.securityBasals}
+                    deviceSystem={pumpSettings.payload.device.name}
+                  />
+                  : isSelected(DeviceViewSection.ChangeHistory) ?
+                    <ChangeHistorySection
+                      goToDailySpecificDate={goToDailySpecificDate}
+                      pumpSettings={pumpSettings}
+                    />
+                    : <></>
+            }
+
+          </Grid>
+        </Grid>
         : <Box
           display="flex"
           justifyContent="center"

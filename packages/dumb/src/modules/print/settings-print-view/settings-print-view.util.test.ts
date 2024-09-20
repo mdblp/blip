@@ -32,7 +32,7 @@ import {
   getTableDataByDataType
 } from './settings-print-view.util'
 import { PdfSettingsDataType } from '../../../models/enums/pdf-settings-data-type.enum'
-import { type ParameterConfig, PumpManufacturer, Unit } from 'medical-domain'
+import { DeviceSystem, type ParameterConfig, PumpManufacturer, Unit } from 'medical-domain'
 import { type ParameterSettingsTableRow } from '../../../models/print/pdf-settings-table.model'
 import { type PdfSettingsData } from '../../../models/print/pdf-data.model'
 import { formatCurrentDate } from '../../../utils/datetime/datetime.util'
@@ -158,7 +158,7 @@ describe('Settings print view util', () => {
         deviceId: '1234',
         imei: '1234567890',
         manufacturer: 'Diabeloop',
-        name: 'DBLG1',
+        name: DeviceSystem.Dblg1,
         swVersion: 'beta'
       }
 
