@@ -28,7 +28,12 @@
 import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
-import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
+import {
+  mockDataAPI,
+  pumpSettingsData,
+  pumpSettingsDblg1WithoutSecurityBasalData,
+  pumpSettingsDblg2WithoutSecurityBasalData
+} from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { patient1Id } from '../../../data/patient.api.data'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
@@ -37,7 +42,11 @@ import { mockUserApi } from '../../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../use-cases/app-main-layout-visualisation'
-import { testDevicesVisualisation } from '../../../use-cases/device-settings-visualisation'
+import {
+  testDevicesVisualisation,
+  testEmptySafetyBasalProfileDblg1ErrorMessage,
+  testEmptySafetyBasalProfileGenericErrorMessage
+} from '../../../use-cases/device-settings-visualisation'
 import { testDeviceSettingsNavigationForHcp } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
@@ -89,5 +98,23 @@ describe('Device view for HCP', () => {
       router = renderPage(deviceRoute)
     })
     await testDeviceSettingsNavigationForHcp(router)
+  })
+
+  it('should display a generic error message if the basal safety profile is not available', async () => {
+    mockDataAPI(pumpSettingsDblg2WithoutSecurityBasalData)
+
+    await act(async () => {
+      renderPage(deviceRoute)
+    })
+    await testEmptySafetyBasalProfileGenericErrorMessage()
+  })
+
+  it('should display a DBLG1-oriented error message if the basal safety profile is not available for a DBLG1 patient', async () => {
+    mockDataAPI(pumpSettingsDblg1WithoutSecurityBasalData)
+
+    await act(async () => {
+      renderPage(deviceRoute)
+    })
+    await testEmptySafetyBasalProfileDblg1ErrorMessage()
   })
 })

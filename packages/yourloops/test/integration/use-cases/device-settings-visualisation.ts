@@ -30,7 +30,8 @@ import {
   checkCopyTextButton,
   checkCurrentParametersContent,
   checkDevicesMenuLayout,
-  checkSafetyBasalProfileContent
+  checkSafetyBasalProfileContent,
+  checkSafetyBasalProfileErrorMessage
 } from '../assert/device-view.assert'
 
 export const testDevicesVisualisation = async () => {
@@ -38,6 +39,14 @@ export const testDevicesVisualisation = async () => {
   await testCurrentParametersVisualisation()
   await testBasalSafetyProfileVisualisation()
   await testChangeHistoryVisualisation()
+}
+
+export const testEmptySafetyBasalProfileGenericErrorMessage = async () => {
+  await checkSafetyBasalProfileErrorMessage('The safety basal profile values are not available.')
+}
+
+export const testEmptySafetyBasalProfileDblg1ErrorMessage = async () => {
+  await checkSafetyBasalProfileErrorMessage('The safety basal profile values are not available due to an outdated software version of the DBLG1. Updating the software version may resolve the issue.')
 }
 
 const testDevicesMenuLayout = () => {
@@ -56,4 +65,3 @@ const testBasalSafetyProfileVisualisation = async () => {
 const testChangeHistoryVisualisation = async () => {
   await checkChangeHistoryContent()
 }
-
