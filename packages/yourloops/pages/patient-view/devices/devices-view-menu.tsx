@@ -74,6 +74,7 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
             selected={selectedSection === DeviceViewSection.CurrentParameters}
             onClick={() => selectSection(DeviceViewSection.CurrentParameters)}
             sx={{ marginTop: theme.spacing(2), paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
+            data-testid="current-parameters-menu-button"
           >
             <ListItemIcon>
               <PhonelinkSetup fontSize="small" />
@@ -84,6 +85,7 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
             selected={selectedSection === DeviceViewSection.SafetyBasalProfile}
             onClick={() => selectSection(DeviceViewSection.SafetyBasalProfile)}
             sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
+            data-testid="safety-basal-profile-menu-button"
           >
             <ListItemIcon>
               <BasalIcon fontSize="small" />
@@ -94,6 +96,7 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
             selected={selectedSection === DeviceViewSection.ChangeHistory}
             onClick={() => selectSection(DeviceViewSection.ChangeHistory)}
             sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
+            data-testid="change-history-menu-button"
           >
             <ListItemIcon>
               <History fontSize="small" />

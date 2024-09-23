@@ -111,7 +111,7 @@ export const SafetyBasalProfileSection: FC<SafetyBasalProfileSectionProps> = ({ 
       <CardContent>
         {isSafetyBasalAvailable
           ? <Card variant="outlined">
-            <TableContainer>
+            <TableContainer data-testid="safety-basal-profile-table">
               <Table>
                 <TableHead>
                   <TableRow className={classes.header}>
