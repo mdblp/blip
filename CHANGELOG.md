@@ -6,6 +6,9 @@ It is based on Tidepool Blip 1.27.
 ### Added
 - YLP-3128 As an HCP, I want to see which device is used by each patient
 
+### Fixed
+- YLP-3255 TDD calculated on 24 hours is wrong
+
 ## 3.4.0 - 2024-09-06
 ### Added
 - YLP-2958 Information page before user signup

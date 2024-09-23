@@ -31,12 +31,14 @@ import {
   type Basal,
   type Bolus,
   BolusSubtype,
+  DatumType,
   type Meal,
   Prescriptor,
   type Wizard,
   WizardInputMealFat,
   WizardInputMealSource
 } from '../../src'
+import WeekDays from '../../src/domains/models/time/enum/weekdays.enum'
 
 type BgDataRange = Array<[Date, string, number?]>
 type BolusDataRange = Array<[Date, number, Prescriptor?, BolusSubtype?]>
@@ -92,6 +94,7 @@ export const basalsData: BasalDataRange = [
 ]
 
 export const bolusData: BolusDataRange = [
+  [new Date('2018-02-01T03:00:00Z'), 1, Prescriptor.Auto, BolusSubtype.Normal],
   [new Date('2018-02-01T01:00:00Z'), 4, undefined, BolusSubtype.Pen],
   [new Date('2018-02-01T02:00:00Z'), 5, undefined, BolusSubtype.Normal],
   [new Date('2018-02-01T03:00:00Z'), 6, undefined, BolusSubtype.Biphasic],
@@ -190,3 +193,17 @@ export const buildBolusData = (bolusData: BolusDataRange): Bolus[] => (
     }
   ))
 )
+
+export const buildSingleWizardData = (bolusId: string): Wizard => {
+  return {
+    id: 'wizard-id',
+    type: DatumType.Wizard,
+    bolusId: bolusId,
+    isoWeekday: WeekDays.Friday,
+    normalTime: '2018-02-01T03:00:00.000Z',
+    epoch: 1517454000000,
+    bolus: {
+      normal: 1
+    }
+  } as Wizard
+}

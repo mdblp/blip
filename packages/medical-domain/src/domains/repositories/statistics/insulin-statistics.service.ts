@@ -94,7 +94,17 @@ function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], mealBoluses: Wiz
     return total
   }, 0)
 
-  const totalCorrectiveBoluses = filteredBolus.reduce((total, bolus) => {
+  const filteredMealBolusesIds = filteredMealBoluses.map((mealBolus) => mealBolus.bolusId)
+
+  const filteredBolusesWithoutMeals = filteredBolus.reduce((bolusesWithoutMeals, bolus) => {
+    const isMealBolus = filteredMealBolusesIds.includes(bolus.id)
+    if (!isMealBolus) {
+      bolusesWithoutMeals.push(bolus)
+    }
+    return bolusesWithoutMeals
+  }, [] as Bolus[])
+
+  const totalCorrectiveBoluses = filteredBolusesWithoutMeals.reduce((total, bolus) => {
     if (bolus.prescriptor === Prescriptor.Auto || bolus.prescriptor === Prescriptor.Hybrid) {
       return total + bolus.normal
     }
