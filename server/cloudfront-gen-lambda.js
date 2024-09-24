@@ -233,7 +233,7 @@ function withFilesList(err, files) {
     process.exitCode = 1
     return
   }
-  const selectedFiles = ["'config.js', 'version', 'well-known/assetlinks.json'"]
+  const selectedFiles = ["'config.js', 'version', '.well-known/assetlinks.json'"]
   for (const file of files) {
     const filename = path.basename(file)
     if (filename === 'index.html') {
