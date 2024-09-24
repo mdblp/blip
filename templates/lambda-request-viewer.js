@@ -92,8 +92,7 @@ exports.handler = async (event, context, callback) => {
     };
     return callback(null, response);
   } else if (requestURI === `${basePath}.well-known/assetlinks.json`) {
-    // TODO
-    const assetLinks = `{{ VERSION }}`;
+    const assetLinksJson = `{{ ASSETLINKS_JSON }}`;
     const response = {
       status: 200,
       statusDescription: 'OK',
@@ -102,7 +101,7 @@ exports.handler = async (event, context, callback) => {
         'content-type': [{ key: 'Content-Type', value: 'text/javascript; charset=utf-8' }],
         'strict-transport-security': [{ key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' }],
       },
-      body: ver
+      body: assetLinksJson
     };
     return callback(null, response);
   }

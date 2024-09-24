@@ -20,6 +20,7 @@ const handlebars = require('handlebars')
 const blipConfig = require('./config.app')
 const { getDistDir } = require('./gen-utils')
 const locales = require('../locales/languages.json')
+const assetlinksJson = require('../public/.well-known/assetlinks.json')
 
 const reZendesk = /(^\s+<!-- Start of support Zendesk Widget script -->\n)(.*\n)*(^\s+<!-- End of support Zendesk Widget script -->)/m
 const reTrackerUrl = /const u = '(.*)'/
@@ -172,12 +173,16 @@ function genOutputFile() {
 
   let configJs = `window.config = ${JSON.stringify(blipConfig, null, 2)};`
   console.log('Using config:', configJs)
-  const hash = crypto.createHash('sha512')
-  hash.update(configJs)
-  const configHash = `sha512-${hash.digest('base64')}`
+  const hashForConfig = crypto.createHash('sha512')
+  hashForConfig.update(configJs)
+  const configHash = `sha512-${hashForConfig.digest('base64')}`
 
   // TODO
-  // const assetLinksJson =
+  const assetLinksJson = `window.config = ${JSON.stringify(assetlinksJson, null, 2)};`
+  console.log('Using assetlinks:', assetLinksJson)
+  // const hashForAssetlinks = crypto.createHash('sha512')
+  // hashForAssetlinks.update(configJs)
+  // const assetlinksHash = `sha512-${hashForAssetlinks.digest('base64')}`
 
   const templateParameters = {
     ...blipConfig,
@@ -185,6 +190,8 @@ function genOutputFile() {
     INDEX_HTML: '',
     CONFIG_JS: configJs,
     CONFIG_HASH: configHash,
+    ASSETLINKS_JSON: assetlinksJson,
+    // ASSETLINKS_HASH: assetlinksHash,
     TARGET_ENVIRONMENT: blipConfig.TARGET_ENVIRONMENT.toLowerCase(),
     FEATURE_POLICY: featurePolicy.join(';'),
     GEN_DATE: new Date().toISOString(),
@@ -226,7 +233,7 @@ function withFilesList(err, files) {
     process.exitCode = 1
     return
   }
-  const selectedFiles = ["'config.js', 'version'"]
+  const selectedFiles = ["'config.js', 'version', 'well-known/assetlinks.json'"]
   for (const file of files) {
     const filename = path.basename(file)
     if (filename === 'index.html') {
