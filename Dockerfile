@@ -22,6 +22,7 @@ RUN cd deployment && npm install
 FROM base AS content
 WORKDIR /content
 COPY ./dist/static ./static-dist/
+COPY ./dist/public ./public-dist/
 COPY ./templates ./templates
 COPY ./locales ./locales
 
@@ -64,6 +65,7 @@ COPY --from=lambda --chown=node:node /server ./server
 COPY --from=deployment --chown=node:node /cloudfront-dist ./cloudfront-dist
 COPY --from=deployment --chown=node:node /cloudfront-dist/deploy.sh ./deploy.sh
 COPY --from=content --chown=node:node /content/static-dist ./static
+COPY --from=content --chown=node:node /content/public-dist ./public
 COPY --from=content --chown=node:node /content/templates ./templates
 COPY --from=content --chown=node:node /content/locales ./locales
 ENTRYPOINT [ "/bin/bash" ]
