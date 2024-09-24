@@ -54,6 +54,5 @@ export enum AppRoute {
   SignupInformation = '/signup-information',
   Training = '/training',
   VerifyEmail = '/verify-email',
-  VerifyEmailResult = '/verify-email-result',
-  VerifyEmailResultRedirect = '/verify-email-result-redirect'
+  VerifyEmailResult = '/verify-email-result'
 }
