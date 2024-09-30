@@ -9,6 +9,11 @@ const crypto = require('crypto');
 const zlib = require('zlib');
 const path = require('path');
 
+const ANDROID_ASSETLINKS_URI = '/.well-known/assetlinks.json'
+const INDEX_HTML_URI = 'index.html'
+const CONFIG_JS_URI = 'config.js'
+const VERSION_URI = 'version'
+
 exports.handler = async (event, context, callback) => {
   const basePath = '/';
   const blipFiles = [{{ DISTRIB_FILES }}];
@@ -17,6 +22,21 @@ exports.handler = async (event, context, callback) => {
 
   let requestURI = path.normalize(`/${request.uri}`);
   const filename = path.basename(request.uri);
+
+  if (requestURI === ANDROID_ASSETLINKS_URI) {
+    const assetLinksJson = `{{ ASSETLINKS_JSON }}`;
+    const response = {
+      status: 200,
+      statusDescription: 'OK',
+      headers: {
+        'cache-control': [{ key: 'Cache-Control', value: 'max-age=3600' }],
+        'content-type': [{ key: 'Content-Type', value: 'application/json' }],
+        'strict-transport-security': [{ key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' }],
+      },
+      body: assetLinksJson
+    };
+    return callback(null, response);
+  }
 
   if (filename.length > 0 && blipFiles.includes(filename)) {
     if (path.dirname(requestURI) !== basePath) {
@@ -38,7 +58,8 @@ exports.handler = async (event, context, callback) => {
     requestURI = basePath;
   }
 
-  if (requestURI === basePath || requestURI === `${basePath}index.html`) {
+  if (requestURI === basePath || requestURI === `${basePath}${INDEX_HTML_URI}`) {
+    // Warning: do not remove this value `nonce`, it is used in the computed value of `indexHTML`
     const nonce = crypto.randomBytes(16).toString('base64');
     const indexHTML = `{{ INDEX_HTML }}`;
     const buffer = zlib.gzipSync(indexHTML);
@@ -65,7 +86,7 @@ exports.handler = async (event, context, callback) => {
     };
     return callback(null, response);
 
-  } else if (requestURI === `${basePath}config.js`) {
+  } else if (requestURI === `${basePath}${CONFIG_JS_URI}`) {
     const configJS = `{{ CONFIG_JS }}`;
     const response = {
       status: 200,
@@ -78,7 +99,7 @@ exports.handler = async (event, context, callback) => {
       body: configJS
     };
     return callback(null, response);
-  } else if (requestURI === `${basePath}version`) {
+  } else if (requestURI === `${basePath}${VERSION_URI}`) {
     const ver = `{{ VERSION }}`;
     const response = {
       status: 200,
@@ -89,19 +110,6 @@ exports.handler = async (event, context, callback) => {
         'strict-transport-security': [{ key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' }],
       },
       body: ver
-    };
-    return callback(null, response);
-  } else if (requestURI === `${basePath}.well-known/assetlinks.json`) {
-    const assetLinksJson = `{{ ASSETLINKS_JSON }}`;
-    const response = {
-      status: 200,
-      statusDescription: 'OK',
-      headers: {
-        'cache-control': [{ key: 'Cache-Control', value: 'max-age=3600' }],
-        'content-type': [{ key: 'Content-Type', value: 'text/json; charset=utf-8' }],
-        'strict-transport-security': [{ key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' }],
-      },
-      body: assetLinksJson
     };
     return callback(null, response);
   }

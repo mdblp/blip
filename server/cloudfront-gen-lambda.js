@@ -32,8 +32,6 @@ const reCookieBanner = /(^\s+<!-- Start of cookie-banner -->\n)(.*\n)*(^\s+<!-- 
 const reUrl = /(^https?:\/\/[^/]+).*/
 const reDashCase = /[A-Z](?:(?=[^A-Z])|[A-Z]*(?=[A-Z][^A-Z]|$))/g
 const scriptConfigJs = '<script defer type="text/javascript" src="config.js" integrity="{{CONFIG_HASH}}" crossorigin="anonymous"></script>'
-// const scriptAssetlinksJson = '<script defer type="text/json" src=".well-known/assetlinks.json" crossorigin="anonymous"></script>'
-const scriptAssetlinksJson = '<script defer type="text/json" src=".well-known/assetlinks.json" integrity="{{ASSETLINKS_HASH}}" crossorigin="anonymous"></script>'
 const outputFilenameTemplate = 'cloudfront-{{ TARGET_ENVIRONMENT }}-blip-request-viewer.js'
 
 const featurePolicy = [
@@ -181,9 +179,6 @@ function genOutputFile() {
 
   const assetLinksJson = JSON.stringify(assetlinksJson, null, 2)
   console.log('Using assetlinks:', assetLinksJson)
-  const hashForAssetlinks = crypto.createHash('sha512')
-  hashForAssetlinks.update(assetLinksJson)
-  const assetlinksHash = `sha512-${hashForAssetlinks.digest('base64')}`
 
   const templateParameters = {
     ...blipConfig,
@@ -192,7 +187,6 @@ function genOutputFile() {
     CONFIG_JS: configJs,
     CONFIG_HASH: configHash,
     ASSETLINKS_JSON: assetLinksJson,
-    ASSETLINKS_HASH: assetlinksHash,
     TARGET_ENVIRONMENT: blipConfig.TARGET_ENVIRONMENT.toLowerCase(),
     FEATURE_POLICY: featurePolicy.join(';'),
     GEN_DATE: new Date().toISOString(),
@@ -442,6 +436,5 @@ if (blipConfig.COOKIE_BANNER_CLIENT_ID !== 'disabled') {
 fs.readdir(`${distDir}/static`, withFilesList)
 fs.readFile(templateFilename, { encoding: 'utf-8' }, withTemplate)
 indexHtml = indexHtml.replace(/(<!-- config -->)/, scriptConfigJs)
-indexHtml = indexHtml.replace(/(<!-- assetlinks -->)/, scriptAssetlinksJson)
 indexHtml = indexHtml.replace(/<(script)/g, '<$1 nonce="${nonce}"')
 genOutputFile()
