@@ -126,6 +126,7 @@
   "avg-time-loop-how-calculate": "**計算方法:**\n\n(%)は、loopモードONまたはOFF時の期間から同期間の基礎レートの合計持続時間を割ったものです。\n\n**(時間)**は、loopモードがONまたはOFF時の一日あたりの平均時間です。",
   "avg-time-loop-tooltip": "**Loopモードの時間：** 自動基礎レート投与の日次平均。",
   "basal-and-correction-bolus": "基礎レート及び補正ボーラス",
+  "basal-rate-unit": "U/h",
   "below-range": "Time Below Range",
   "below-range-tooltip": "Time Below Range",
   "birthplace": "出生地",
