@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -52,7 +52,7 @@ export const ParameterList: FC<ParameterListProps> = ({ parameters }) => {
     <Card variant="outlined">
       <TableContainer>
         <Table>
-          <TableHead>
+          <TableHead className={classes.header}>
             <TableRow>
               <TableCell>{t('Parameter')}</TableCell>
               <TableCell align="right">{t('Value')}</TableCell>

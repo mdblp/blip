@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,7 +42,6 @@ export interface PdfSettingsData extends PdfData {
   timezone?: string
   normalTime?: string
   deviceTime?: string
-  activeSchedule?: string
   deviceSerialNumber?: string
   payload?: {
     device?: DeviceConfig

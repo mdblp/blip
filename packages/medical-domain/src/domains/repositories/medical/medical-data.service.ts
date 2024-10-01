@@ -64,11 +64,11 @@ import {
   toISOString,
   twoWeeksAgo
 } from '../time/time.service'
-import type PumpSettings from '../../models/medical/datum/pump-settings.model'
 import type PumpManufacturer from '../../models/medical/datum/enums/pump-manufacturer.enum'
 import WizardService from './datum/wizard.service'
 import AlarmEventService from './datum/alarm-event.service';
 import { WizardInputMealSource } from '../../models/medical/datum/enums/wizard-input-meal-source.enum'
+import { PumpSettings } from '../../models/medical/datum/pump-settings.model'
 
 class MedicalDataService {
   medicalData: MedicalData = {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { DeviceSystem } from 'medical-domain'
+
 export interface PatientSettings {
   a1c?: {
     date: string
     value: string
   }
-  system?: string
+  system?: DeviceSystem
 }

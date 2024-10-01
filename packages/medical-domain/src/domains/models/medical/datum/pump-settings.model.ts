@@ -25,10 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type BaseDatum from './basics/base-datum.model'
+import BaseDatum from './basics/base-datum.model'
 import type PumpManufacturer from './enums/pump-manufacturer.enum'
 import { type DatumType } from './enums/datum-type.enum'
 import type Unit from './enums/unit.enum'
+import { DeviceSystem } from './enums/device-system.enum'
 
 export enum ChangeType {
   Added = 'added',
@@ -50,7 +51,7 @@ interface DeviceConfig {
   deviceId: string
   imei: string
   manufacturer: string
-  name: string
+  name: DeviceSystem
   swVersion: string
 }
 
@@ -86,21 +87,27 @@ interface ParameterConfig {
   value: string
 }
 
-type PumpSettings = BaseDatum & {
+interface SecurityBasalRate {
+  rate: number
+  start: number
+}
+
+interface SecurityBasalConfig {
+  rates: SecurityBasalRate[]
+}
+
+interface PumpSettings extends BaseDatum {
   type: DatumType.PumpSettings
-  basalSchedules: object[]
-  activeSchedule: string
   deviceId: string
   deviceTime: string
   payload: {
-    basalsecurityprofile: object
     cgm: CgmConfig
     device: DeviceConfig
-    parameters: ParameterConfig[]
     history: ParametersChange[]
+    parameters: ParameterConfig[]
     pump: PumpConfig
+    securityBasals: SecurityBasalConfig
   }
 }
 
-export default PumpSettings
-export type { CgmConfig, DeviceConfig, ParametersChange, PumpConfig, ParameterConfig }
+export type { CgmConfig, DeviceConfig, ParametersChange, PumpConfig, ParameterConfig, PumpSettings, SecurityBasalConfig, SecurityBasalRate }

@@ -30,7 +30,7 @@ import React, { ForwardedRef } from 'react'
 import { makeStyles } from 'tss-react/mui'
 
 const styles = makeStyles()(() => ({
-  'cross': {
+  cross: {
     strokeWidth: 6,
     strokeLinecap: 'round'
   }
@@ -44,8 +44,8 @@ export const WrongIcon = React.forwardRef((props: SvgIconProps, ref: ForwardedRe
         <rect width="180" height="180" rx="90" fill="currentColor"/>
         <rect x="15.5" y="15.5" width="149" height="149" rx="74.5" fill="currentColor"/>
         <rect x="15.5" y="15.5" width="149" height="149" rx="74.5" stroke="white"/>
-        <line x1="126.77" y1="57.4731" x2="57.4731" y2="126.77" stroke="white" className={classes['cross']}/>
-        <line x1="122.527" y1="126.77" x2="53.2304" y2="57.4731" stroke="white" className={classes['cross']}/>
+        <line x1="126.77" y1="57.4731" x2="57.4731" y2="126.77" stroke="white" className={classes.cross}/>
+        <line x1="122.527" y1="126.77" x2="53.2304" y2="57.4731" stroke="white" className={classes.cross}/>
       </svg>
     </SvgIcon>
   )

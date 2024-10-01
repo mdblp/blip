@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,40 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
-import type MedicalDataService from 'medical-domain'
-import Container from '@mui/material/Container'
-import { useTranslation } from 'react-i18next'
-import { useTheme } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import { DeviceSettings } from '../../../components/device/device-settings'
-import Typography from '@mui/material/Typography'
-
-interface DeviceViewProps {
-  goToDailySpecificDate: (date: number) => void
-  medicalData: MedicalDataService
-}
-
-export const DeviceView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecificDate }) => {
-  const { t } = useTranslation()
-  const theme = useTheme()
-
-  return (
-    <Container data-testid="device-settings-container">
-      {medicalData.medicalData.pumpSettings.length > 0
-        ? <DeviceSettings
-          goToDailySpecificDate={goToDailySpecificDate}
-          medicalData={medicalData}
-        />
-        : <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          marginTop={theme.spacing(4)}
-        >
-          <Typography fontWeight={500}>{t('no-settings-on-device-alert-message')}</Typography>
-        </Box>
-      }
-    </Container>
-  )
+export enum DeviceSystem {
+  Dblg1 = 'DBLG1',
+  Dblg2 = 'DBLG2'
 }

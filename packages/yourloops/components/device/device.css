@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,4 +27,8 @@
 
 .parameterRow:last-child td {
   border-bottom: none;
+}
+
+.header {
+  background-color: var(--primary-color-background);
 }
