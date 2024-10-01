@@ -64,7 +64,7 @@ export const checkSafetyBasalProfileContent = async () => {
 
   const changeHistorySection = screen.getByTestId('safety-basal-profile-section')
   expect(changeHistorySection).toBeVisible()
-  expect(changeHistorySection).toHaveTextContent('Safety basal profileStart timeEnd timeBasal rate12:00 am8:30 am1 U/h8:30 am2:00 pm2 U/h2:00 pm12:00 am0.4 U/h')
+  expect(changeHistorySection).toHaveTextContent('Safety basal profileStart timeEnd timeBasal rate12:00 AM8:30 AM1 U/h8:30 AM2:00 PM2 U/h2:00 PM12:00 AM0.4 U/h')
 }
 
 export const checkSafetyBasalProfileErrorMessage = async (errorMessage: string) => {
