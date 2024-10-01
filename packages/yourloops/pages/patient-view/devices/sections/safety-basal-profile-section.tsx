@@ -79,11 +79,25 @@ export const SafetyBasalProfileSection: FC<SafetyBasalProfileSectionProps> = ({ 
     const hours = Math.floor(startInMinutes / MINUTES_IN_ONE_HOUR)
     const minutes = startInMinutes % MINUTES_IN_ONE_HOUR
 
-    return moment().hours(hours).minutes(minutes).format('h:mm a')
+    return moment().hours(hours).minutes(minutes).format('LT')
+  }
+
+  const getRatesSortedByStartTime = (rates: SecurityBasalRate[]): SecurityBasalRate[] => {
+    return rates.sort((a: SecurityBasalRate, b: SecurityBasalRate) => {
+        if (a.start === b.start) {
+          return 0
+        }
+        if (a.start > b.start) {
+          return 1
+        }
+        return -1
+      })
   }
 
   const getSafetyBasalItems = (safetyBasalConfig: SecurityBasalConfig): SafetyBasalItem[] => {
-    const items = safetyBasalConfig.rates.map((rate: SecurityBasalRate) => ({
+    const sortedRates = getRatesSortedByStartTime(safetyBasalConfig.rates)
+
+    const items = sortedRates.map((rate: SecurityBasalRate) => ({
       rate: getRateLabel(rate.rate),
       startTime: getDisplayTime(rate.start),
       endTime: ''
