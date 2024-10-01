@@ -126,6 +126,7 @@
   "avg-time-loop-how-calculate": "**Comment nous calculons cela **:\n\n**(%)** est la durée en loop mode ON ou OFF divisée par la durée totale du débit basal sur cette période.\n\n**(durée)** est le temps moyen passé en loop mode ON ou OFF.",
   "avg-time-loop-tooltip": "**Temps en loop mode** : Moyenne quotidienne du temps passé en loop mode.",
   "basal-and-correction-bolus": "Basale & bolus de correction",
+  "basal-rate-unit": "U/h",
   "below-range": "Sous l'intervalle cible",
   "below-range-tooltip": "Sous l'intervalle cible",
   "birthplace": "Lieu de naissance",
