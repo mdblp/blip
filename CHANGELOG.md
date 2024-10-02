@@ -7,6 +7,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2408 Display basal safety profile in Devices view
 - YLP-3128 As an HCP, I want to see which device is used by each patient
 
+## 3.4.1 - 2024-09-25
 ### Fixed
 - YLP-3255 TDD calculated on 24 hours is wrong
 
@@ -30,17 +31,15 @@ It is based on Tidepool Blip 1.27.
 - YLP-3211 Manual bolus insulin total should not contain pen bolus insulin
 
 ### Fixed
+- YLP-2527 Number of meal Carbs hidden behind a bolus bar
 - YLP-2632 Data is uploaded with a date in the future
 - YLP-2936 DBLG1 pdf settings are the ones of the current date
+- YLP-3104 Fix parameters locales issues (move the locale files in the repo)
 
 ### Engineering use
 - YLP-2948 Updated failing tests because of the time change
 - YLP-3144 Cleanup basal internalId field
 - YLP-3172 Hide Confidential Mode label on Events graph
-
-### Fixed
-- YLP-2527 Number of meal Carbs hidden behind a bolus bar
-- YLP-3104 Fix parameters locales issues (move the locale files in the repo)
 
 ## 3.3.0 - 2024-04-05
 ### Changed
