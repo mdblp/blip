@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 export enum PatientView {
   Daily = 'daily',
   Dashboard = 'dashboard',
-  Device = 'device',
+  Devices = 'devices',
   TargetAndAlerts = 'targetAndAlerts',
   Trends = 'trends'
 }

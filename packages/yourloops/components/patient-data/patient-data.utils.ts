@@ -59,8 +59,8 @@ export const getPageTitleByPatientView = (view: PatientView): string => {
       return t('daily')
     case PatientView.Dashboard:
       return t('dashboard')
-    case PatientView.Device:
-      return t('device')
+    case PatientView.Devices:
+      return t('devices')
     case PatientView.TargetAndAlerts:
       return t('target-and-alerts')
     case PatientView.Trends:

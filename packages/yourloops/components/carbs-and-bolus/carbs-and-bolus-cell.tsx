@@ -60,7 +60,6 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
     setCellOnHover(undefined)
   }
 
-
   return (
     <Box
       width="12.5%"

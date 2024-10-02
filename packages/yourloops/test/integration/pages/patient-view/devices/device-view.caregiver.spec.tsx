@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
@@ -33,51 +32,49 @@ import { patient1Id } from '../../../data/patient.api.data'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
 import { renderPage } from '../../../utils/render'
 import { mockUserApi } from '../../../mock/user.api.mock'
-import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
+import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
-import { mockTeamAPI } from '../../../mock/team.api.mock'
-import { testAppMainLayoutForPatient } from '../../../use-cases/app-main-layout-visualisation'
-import { testDeviceSettingsVisualisation } from '../../../use-cases/device-settings-visualisation'
-import { testDeviceSettingsNavigationForPatient } from '../../../use-cases/device-settings-navigation'
+import { testDevicesVisualisation } from '../../../use-cases/device-settings-visualisation'
+import { testDeviceSettingsNavigationForCaregiver } from '../../../use-cases/device-settings-navigation'
+import { testAppMainLayoutForCaregiver } from '../../../use-cases/app-main-layout-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { act } from '@testing-library/react'
+import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 
-describe('Device view for Patient', () => {
-  const firstName = 'patient firstName'
-  const lastName = 'patient lastName'
+describe('Devices view for Caregiver', () => {
+  const firstName = 'Caregiver firstName'
+  const lastName = 'Caregiver lastName'
 
-  const deviceRoute = AppUserRoute.Device
+  const devicesRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Devices}`
 
   beforeEach(() => {
     mockWindowResizer()
-    mockAuth0Hook(UserRole.Patient, patient1Id)
+    mockAuth0Hook(UserRole.Caregiver)
     mockNotificationAPI()
     mockDirectShareApi()
-    mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForPatients()
+    mockPatientApiForCaregivers()
     mockDataAPI(pumpSettingsData)
   })
 
   it('should render correct layout', async () => {
-    await act(async () => {
-      renderPage(deviceRoute)
-    })
-    await testAppMainLayoutForPatient({ loggedInUserFullName: `${lastName} ${firstName}` })
+    renderPage(devicesRoute)
+    await testAppMainLayoutForCaregiver({ loggedInUserFullName: `${lastName} ${firstName}` })
   })
 
   it('should display correct parameters', async () => {
     await act(async () => {
-      renderPage(deviceRoute)
+      renderPage(devicesRoute)
     })
-    await testDeviceSettingsVisualisation()
+    await testDevicesVisualisation()
   })
 
   it('should navigate to daily page when clicking on the daily button', async () => {
     let router
     await act(async () => {
-      router = renderPage(deviceRoute)
+      router = renderPage(devicesRoute)
     })
-    await testDeviceSettingsNavigationForPatient(router)
+    await testDeviceSettingsNavigationForCaregiver(router)
   })
 })

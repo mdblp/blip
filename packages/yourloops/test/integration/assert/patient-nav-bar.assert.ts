@@ -66,7 +66,7 @@ export const checkPatientNavBarAsPatient = () => {
 
 export const checkPatientDropdown = async (initialPatient: Patient, patientToSwitchTo: Patient) => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-  const initialPatientHeaderContent = `Patient${initialPatient.profile.lastName} ${initialPatient.profile.firstName}Date of birth:${moment(initialPatient.profile.birthdate).format('L')}Diabetes type:Type 1Gender:MaleHbA1c:fakeA1cValue% (05/26/2023)Email:patient1@diabeloop.frDashboardDailyTrendsTarget & alertsDeviceDownload report`
+  const initialPatientHeaderContent = `Patient${initialPatient.profile.lastName} ${initialPatient.profile.firstName}Date of birth:${moment(initialPatient.profile.birthdate).format('L')}Diabetes type:Type 1Gender:MaleHbA1c:fakeA1cValue% (05/26/2023)Email:patient1@diabeloop.frDashboardDailyTrendsTarget & alertsDevicesDownload report`
   expect(secondaryHeader).toHaveTextContent(initialPatientHeaderContent)
 
   fireEvent.mouseDown(within(secondaryHeader).getByText(`${patient1Info.profile.lastName} ${patient1Info.profile.firstName}`))
@@ -75,7 +75,7 @@ export const checkPatientDropdown = async (initialPatient: Patient, patientToSwi
   const secondPatientDateOfBirth = moment(patientToSwitchTo.profile.birthdate).format('L')
   const secondPatientName = `${patientToSwitchTo.profile.lastName} ${patientToSwitchTo.profile.firstName}`
   const secondaryHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
-  const secondPatientHeaderContent = `Patient${secondPatientName}Date of birth:${secondPatientDateOfBirth}Diabetes type:Type 1Gender:FemaleHbA1c:8.9% (11/21/2023)Email:patient2@diabeloop.frDashboardDailyTrendsTarget & alertsDeviceDownload report`
+  const secondPatientHeaderContent = `Patient${secondPatientName}Date of birth:${secondPatientDateOfBirth}Diabetes type:Type 1Gender:FemaleHbA1c:8.9% (11/21/2023)Email:patient2@diabeloop.frDashboardDailyTrendsTarget & alertsDevicesDownload report`
   await waitFor(() => {
     expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContent)
   })
@@ -88,7 +88,7 @@ export const checkPatientDropdown = async (initialPatient: Patient, patientToSwi
 
 export const checkPatientNavBarForPatientAndCaregiver = async () => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-  expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDeviceDownload report')
+  expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDevicesDownload report')
 }
 
 export const checkPatientSwitch = async () => {

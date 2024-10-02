@@ -134,8 +134,8 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
         return PatientView.Trends
       case AppUserRoute.Dashboard:
         return PatientView.Dashboard
-      case AppUserRoute.Device:
-        return PatientView.Device
+      case AppUserRoute.Devices:
+        return PatientView.Devices
       case AppUserRoute.TargetAndAlerts:
         return PatientView.TargetAndAlerts
     }
@@ -147,8 +147,8 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
         return AppUserRoute.Daily
       case PatientView.Dashboard:
         return AppUserRoute.Dashboard
-      case PatientView.Device:
-        return AppUserRoute.Device
+      case PatientView.Devices:
+        return AppUserRoute.Devices
       case PatientView.TargetAndAlerts:
         return AppUserRoute.TargetAndAlerts
       case PatientView.Trends:

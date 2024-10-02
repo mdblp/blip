@@ -183,7 +183,7 @@ export const getDeviceMetadata = (settingsData: PdfSettingsData, timePrefs: Time
   const uploadedTime = utcTime ? formatLocalizedFromUTC(utcTime, timePrefs, getLongDayFormat()) : ''
 
   return {
-    schedule: settingsData.activeSchedule ?? t('unknown'),
+    schedule: t('unknown'),
     uploaded: uploadedTime.length > 0 ? uploadedTime : t('unknown'),
     serial: settingsData.deviceSerialNumber ?? t('unknown')
   }
