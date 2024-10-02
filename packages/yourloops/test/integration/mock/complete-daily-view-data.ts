@@ -1130,10 +1130,8 @@ export const getCompleteDailyViewData = (deviceName: string = "DBLG1", softwareV
           "id": "pump_2022-08-08_6",
           "type": DatumType.PumpSettings,
           "source": Source.Diabeloop,
-          "basalSchedules": [],
           "isoWeekday": WeekDays.Sunday,
           "payload": {
-            "basalsecurityprofile": {},
             "cgm": {
               "apiVersion": "v1",
               "endOfLifeTransmitterDate": "2050-04-12T17:53:54+02:00",

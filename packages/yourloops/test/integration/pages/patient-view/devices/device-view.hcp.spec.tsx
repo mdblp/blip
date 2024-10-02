@@ -25,49 +25,71 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
-import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
+import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
+import {
+  mockDataAPI,
+  pumpSettingsData,
+  pumpSettingsDblg1WithoutSecurityBasalData,
+  pumpSettingsDblg2WithoutSecurityBasalData
+} from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { patient1Id } from '../../../data/patient.api.data'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
 import { renderPage } from '../../../utils/render'
 import { mockUserApi } from '../../../mock/user.api.mock'
-import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
+import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
-import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
-import { testDeviceSettingsVisualisation } from '../../../use-cases/device-settings-visualisation'
-import { testDeviceSettingsNavigationForCaregiver } from '../../../use-cases/device-settings-navigation'
-import { testAppMainLayoutForCaregiver } from '../../../use-cases/app-main-layout-visualisation'
+import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../use-cases/app-main-layout-visualisation'
+import {
+  testDevicesVisualisation,
+  testEmptySafetyBasalProfileDblg1ErrorMessage,
+  testEmptySafetyBasalProfileGenericErrorMessage
+} from '../../../use-cases/device-settings-visualisation'
+import { testDeviceSettingsNavigationForHcp } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { act } from '@testing-library/react'
-import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 
-describe('Device view for Caregiver', () => {
-  const firstName = 'Caregiver firstName'
-  const lastName = 'Caregiver lastName'
+describe('Device view for HCP', () => {
+  const firstName = 'HCP firstName'
+  const lastName = 'HCP lastName'
 
-  const deviceRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Device}`
+  const deviceRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Devices}`
 
   beforeEach(() => {
     mockWindowResizer()
-    mockAuth0Hook(UserRole.Caregiver)
+    mockAuth0Hook()
     mockNotificationAPI()
     mockDirectShareApi()
+    mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForCaregivers()
+    mockPatientApiForHcp()
     mockDataAPI(pumpSettingsData)
   })
 
   it('should render correct layout', async () => {
-    renderPage(deviceRoute)
-    await testAppMainLayoutForCaregiver({ loggedInUserFullName: `${lastName} ${firstName}` })
+    const appMainLayoutParams: AppMainLayoutHcpParams = {
+      footerHasLanguageSelector: false,
+      headerInfo: {
+        loggedInUserFullName: `${lastName} ${firstName}`,
+        teamMenuInfo: {
+          selectedTeamName: myThirdTeamName,
+          isSelectedTeamPrivate: false,
+          availableTeams: buildAvailableTeams()
+        }
+      }
+    }
+    await act(async () => {
+      renderPage(deviceRoute)
+    })
+    await testAppMainLayoutForHcp(appMainLayoutParams)
   })
 
   it('should display correct parameters', async () => {
     await act(async () => {
       renderPage(deviceRoute)
     })
-    await testDeviceSettingsVisualisation()
+    await testDevicesVisualisation()
   })
 
   it('should navigate to daily page when clicking on the daily button', async () => {
@@ -75,6 +97,24 @@ describe('Device view for Caregiver', () => {
     await act(async () => {
       router = renderPage(deviceRoute)
     })
-    await testDeviceSettingsNavigationForCaregiver(router)
+    await testDeviceSettingsNavigationForHcp(router)
+  })
+
+  it('should display a generic error message if the basal safety profile is not available', async () => {
+    mockDataAPI(pumpSettingsDblg2WithoutSecurityBasalData)
+
+    await act(async () => {
+      renderPage(deviceRoute)
+    })
+    await testEmptySafetyBasalProfileGenericErrorMessage()
+  })
+
+  it('should display a DBLG1-oriented error message if the basal safety profile is not available for a DBLG1 patient', async () => {
+    mockDataAPI(pumpSettingsDblg1WithoutSecurityBasalData)
+
+    await act(async () => {
+      renderPage(deviceRoute)
+    })
+    await testEmptySafetyBasalProfileDblg1ErrorMessage()
   })
 })

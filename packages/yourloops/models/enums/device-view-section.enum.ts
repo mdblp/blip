@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,43 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  checkChangeHistoryContent,
-  checkCopyTextButton,
-  checkCurrentParametersContent,
-  checkDevicesMenuLayout,
-  checkSafetyBasalProfileContent,
-  checkSafetyBasalProfileErrorMessage
-} from '../assert/device-view.assert'
 
-export const testDevicesVisualisation = async () => {
-  testDevicesMenuLayout()
-  await testCurrentParametersVisualisation()
-  await testBasalSafetyProfileVisualisation()
-  await testChangeHistoryVisualisation()
-}
-
-export const testEmptySafetyBasalProfileGenericErrorMessage = async () => {
-  await checkSafetyBasalProfileErrorMessage('The safety basal profile values are not available.')
-}
-
-export const testEmptySafetyBasalProfileDblg1ErrorMessage = async () => {
-  await checkSafetyBasalProfileErrorMessage('The safety basal profile values are not available due to an outdated software version of the DBLG1. Updating the software version may resolve the issue.')
-}
-
-const testDevicesMenuLayout = () => {
-  checkDevicesMenuLayout()
-}
-
-const testCurrentParametersVisualisation = async () => {
-  checkCurrentParametersContent()
-  await checkCopyTextButton()
-}
-
-const testBasalSafetyProfileVisualisation = async () => {
-  await checkSafetyBasalProfileContent()
-}
-
-const testChangeHistoryVisualisation = async () => {
-  await checkChangeHistoryContent()
+export enum DeviceViewSection {
+  ChangeHistory = 'ChangeHistory',
+  CurrentParameters = 'CurrentParameters',
+  SafetyBasalProfile = 'SafetyBasalProfile'
 }

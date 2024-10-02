@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,43 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  checkChangeHistoryContent,
-  checkCopyTextButton,
-  checkCurrentParametersContent,
-  checkDevicesMenuLayout,
-  checkSafetyBasalProfileContent,
-  checkSafetyBasalProfileErrorMessage
-} from '../assert/device-view.assert'
+import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon'
+import React, { ForwardedRef } from 'react'
+import { makeStyles } from 'tss-react/mui'
 
-export const testDevicesVisualisation = async () => {
-  testDevicesMenuLayout()
-  await testCurrentParametersVisualisation()
-  await testBasalSafetyProfileVisualisation()
-  await testChangeHistoryVisualisation()
-}
+const styles = makeStyles()(() => ({
+  stroke: {
+    strokeWidth: 2,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round'
+  }
+}))
 
-export const testEmptySafetyBasalProfileGenericErrorMessage = async () => {
-  await checkSafetyBasalProfileErrorMessage('The safety basal profile values are not available.')
-}
+export const BasalIcon = React.forwardRef((props: SvgIconProps, ref: ForwardedRef<SVGSVGElement>) => {
+  const { classes } = styles()
+  return (
+    <SvgIcon {...props} ref={ref}>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 20H5.04545V12H18.9545V20H21" stroke="#1A1A19" className={classes.stroke} />
+      </svg>
+    </SvgIcon>
+  )
+})
 
-export const testEmptySafetyBasalProfileDblg1ErrorMessage = async () => {
-  await checkSafetyBasalProfileErrorMessage('The safety basal profile values are not available due to an outdated software version of the DBLG1. Updating the software version may resolve the issue.')
-}
-
-const testDevicesMenuLayout = () => {
-  checkDevicesMenuLayout()
-}
-
-const testCurrentParametersVisualisation = async () => {
-  checkCurrentParametersContent()
-  await checkCopyTextButton()
-}
-
-const testBasalSafetyProfileVisualisation = async () => {
-  await checkSafetyBasalProfileContent()
-}
-
-const testChangeHistoryVisualisation = async () => {
-  await checkChangeHistoryContent()
-}
+BasalIcon.displayName = 'BasalIcon'

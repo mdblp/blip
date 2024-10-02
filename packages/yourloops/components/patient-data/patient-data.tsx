@@ -48,12 +48,12 @@ import { useDailyNotes } from './daily-notes.hook'
 import metrics from '../../lib/metrics'
 import DailyNotes from 'blip/app/components/messages'
 import { useAuth } from '../../lib/auth'
-import { DeviceView } from '../../pages/patient-view/device/device-view'
 import { setPageTitle } from '../../lib/utils'
 import { TargetAndAlertsView } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
 import TeamUtils from '../../lib/team/team.util'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { getPageTitleByPatientView } from './patient-data.utils'
+import { DevicesView } from '../../pages/patient-view/devices/devices-view'
 
 interface PatientDataProps {
   patient: Patient
@@ -225,9 +225,9 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                     }
                   />
                   <Route
-                    path={AppUserRoute.Device}
+                    path={AppUserRoute.Devices}
                     element={
-                      <DeviceView
+                      <DevicesView
                         goToDailySpecificDate={goToDailySpecificDate}
                         medicalData={medicalData}
                       />
