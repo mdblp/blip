@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -141,12 +141,12 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
         }
         <Tab
           className={classes.tab}
-          value={PatientView.Device}
+          value={PatientView.Devices}
           data-testid="device-tab"
           iconPosition="start"
-          label={t('device')}
+          label={t('devices')}
           onClick={() => {
-            onChangePatientView(PatientView.Device)
+            onChangePatientView(PatientView.Devices)
           }}
           classes={{
             root: classes.root

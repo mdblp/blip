@@ -32,7 +32,7 @@ import {
   getTableDataByDataType
 } from './settings-print-view.util'
 import { PdfSettingsDataType } from '../../../models/enums/pdf-settings-data-type.enum'
-import { type ParameterConfig, PumpManufacturer, Unit } from 'medical-domain'
+import { DeviceSystem, type ParameterConfig, PumpManufacturer, Unit } from 'medical-domain'
 import { type ParameterSettingsTableRow } from '../../../models/print/pdf-settings-table.model'
 import { type PdfSettingsData } from '../../../models/print/pdf-data.model'
 import { formatCurrentDate } from '../../../utils/datetime/datetime.util'
@@ -86,7 +86,7 @@ describe('Settings print view util', () => {
     const timePrefs = { timezoneAware: true, timezoneName: 'Europe/Paris' }
 
     it('should fallback on the default values when there is no data', () => {
-      const emptyData = { activeSchedule: undefined, deviceSerialNumber: undefined }
+      const emptyData = { deviceSerialNumber: undefined }
 
       expect(getDeviceMetadata(emptyData as PdfSettingsData, timePrefs)).toEqual({
         schedule: 'unknown',
@@ -96,18 +96,16 @@ describe('Settings print view util', () => {
     })
 
     it('should compute the metadata', () => {
-      const activeSchedule = 'active schedule'
       const deviceSerialNumber = 'ABCDEFG'
 
       const fullData = {
-        activeSchedule,
         deviceSerialNumber,
         normalTime: '2016-09-23T23:00:00.000Z',
         deviceTime: '2016-09-23T19:00:00Z'
       }
 
       expect(getDeviceMetadata(fullData as PdfSettingsData, timePrefs)).toEqual({
-        schedule: activeSchedule,
+        schedule: 'unknown',
         uploaded: 'Sep 24, 2016',
         serial: deviceSerialNumber
       })
@@ -160,7 +158,7 @@ describe('Settings print view util', () => {
         deviceId: '1234',
         imei: '1234567890',
         manufacturer: 'Diabeloop',
-        name: 'DBLG1',
+        name: DeviceSystem.Dblg1,
         swVersion: 'beta'
       }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import React, { type FC } from 'react'
-import type MedicalDataService from 'medical-domain'
+import type { PumpSettings } from 'medical-domain'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
@@ -36,24 +36,20 @@ import FileCopyIcon from '@mui/icons-material/FileCopy'
 import { useTheme } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import { makeStyles } from 'tss-react/mui'
-import { DeviceInfoTable } from './device-info-table'
-import { PumpInfoTable } from './pump-info-table'
-import { CgmInfoTable } from './cgm-info-table'
-import { ParameterList } from './parameter-list'
-import { ParametersChangeHistory } from './parameters-change-history'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
+import { DeviceInfoTable } from '../../../../components/device/device-info-table'
+import { PumpInfoTable } from '../../../../components/device/pump-info-table'
+import { CgmInfoTable } from '../../../../components/device/cgm-info-table'
+import { ParameterList } from '../../../../components/device/parameter-list'
 import moment from 'moment/moment'
 import {
   copySettingsToClipboard,
   formatParameters,
-  sortParameterList,
-  sortHistory
-} from './utils/device.utils'
+  sortHistory,
+  sortParameterList
+} from '../../../../components/device/utils/device.utils'
 
-interface DeviceSettingsProps {
-  goToDailySpecificDate: (date: number) => void
-  medicalData: MedicalDataService
+interface CurrentParametersSectionProps {
+  pumpSettings: PumpSettings
 }
 
 const useStyles = makeStyles()(() => ({
@@ -62,11 +58,10 @@ const useStyles = makeStyles()(() => ({
   }
 }))
 
-export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDailySpecificDate }) => {
+export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pumpSettings }) => {
   const theme = useTheme()
   const { classes } = useStyles()
   const { t } = useTranslation()
-  const pumpSettings = medicalData.medicalData.pumpSettings.at(-1)
   const { device, pump, cgm, parameters, history } = pumpSettings.payload
   const lastUploadDate = moment.tz(pumpSettings.normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
 
@@ -79,9 +74,9 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
   sortHistory(history)
 
   return (
-    <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
+    <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="current-parameters-section">
       <CardHeader
-        title={t('device')}
+        title={t('devices-and-current-parameters')}
         subheader={`${t('last-upload:')} ${lastUploadDate}`}
         action={
           <Button
@@ -112,14 +107,6 @@ export const DeviceSettings: FC<DeviceSettingsProps> = ({ medicalData, goToDaily
             <ParameterList parameters={parameters} />
           </Grid>
         </Grid>
-        <Box marginTop={5}>
-          <Typography variant="h5" sx={{ marginBlock: theme.spacing(2) }}>{t('change-history')}</Typography>
-          <ParametersChangeHistory
-            goToDailySpecificDate={goToDailySpecificDate}
-            history={history}
-            timezone={pumpSettings.timezone}
-          />
-        </Box>
       </CardContent>
     </Card>
   )

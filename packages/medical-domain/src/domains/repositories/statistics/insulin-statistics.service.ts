@@ -37,8 +37,7 @@ import {
   type TotalInsulinAndWeightStatistics
 } from '../../models/statistics/basal-bolus-statistics.model'
 import { buildHoursRangeMap, getWeekDaysFilter, roundValue } from './statistics.utils'
-import type PumpSettings from '../../models/medical/datum/pump-settings.model'
-import { type ParameterConfig } from '../../models/medical/datum/pump-settings.model'
+import { type ParameterConfig, PumpSettings } from '../../models/medical/datum/pump-settings.model'
 import { type TimeInAutoStatistics } from '../../models/statistics/time-in-auto.model'
 import { BolusSubtype, Prescriptor } from '../../../index'
 import { getHours, MS_IN_DAY } from '../time/time.service'

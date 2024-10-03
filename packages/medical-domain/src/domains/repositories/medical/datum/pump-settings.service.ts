@@ -25,14 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type PumpSettings from '../../../models/medical/datum/pump-settings.model'
 import {
   type CgmConfig,
   type ChangeType,
   type DeviceConfig,
   type ParameterConfig,
   type ParametersChange,
-  type PumpConfig
+  type PumpConfig,
+  PumpSettings,
+  SecurityBasalConfig,
+  SecurityBasalRate
 } from '../../../models/medical/datum/pump-settings.model'
 import { type DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
@@ -44,6 +46,7 @@ import type Unit from '../../../models/medical/datum/enums/unit.enum'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../../models/time/date-filter.model'
 import i18next from 'i18next'
+import { DeviceSystem } from '../../../models/medical/datum/enums/device-system.enum'
 
 const t = i18next.t.bind(i18next)
 
@@ -90,7 +93,7 @@ const normalizeDevice = (rawDevice: Record<string, unknown>): DeviceConfig => {
     deviceId: (rawDevice?.deviceId ?? '') as string,
     imei: (rawDevice?.imei ?? '') as string,
     manufacturer: (rawDevice?.manufacturer ?? '') as string,
-    name: (rawDevice?.name ?? '') as string,
+    name: (rawDevice?.name ?? '') as DeviceSystem,
     swVersion: (rawDevice?.swVersion ?? '') as string
   }
 }
@@ -123,6 +126,12 @@ const normalizeParameters = (rawParams: Array<Record<string, unknown>>, opts: Me
   })
 }
 
+const normalizeSecurityBasals = (rawSecurityBasals: Record<string, unknown>): SecurityBasalConfig => {
+  return {
+    rates: (rawSecurityBasals.rates ?? []) as SecurityBasalRate[],
+  }
+}
+
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): PumpSettings => {
   console.error("this method should not have been called")
   const base = BaseDatumService.normalize(rawData, opts)
@@ -132,21 +141,20 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const rawPump = payload?.pump as Record<string, unknown> ?? null
   const rawHistory = (payload?.history ?? []) as Array<Record<string, unknown>>
   const rawParams = (payload?.parameters ?? []) as Array<Record<string, unknown>>
+  const rawSecurityBasals = (payload?.securityBasals ?? {}) as Record<string, unknown>
 
   const pumpSettings: PumpSettings = {
     ...base,
     type: DatumType.PumpSettings,
-    activeSchedule: rawData.activeSchedule as string,
     deviceId: rawData.deviceId as string,
     deviceTime: rawData.deviceTime as string,
-    basalSchedules: (rawData?.basalSchedules ?? []) as object[],
     payload: {
-      basalsecurityprofile: (payload?.basalsecurityprofile ?? {}) as object,
       cgm: normalizeCgm(rawCgm),
       device: normalizeDevice(rawDevice),
       pump: normalizePump(rawPump),
       history: normalizeHistory(rawHistory, opts),
-      parameters: normalizeParameters(rawParams, opts)
+      parameters: normalizeParameters(rawParams, opts),
+      securityBasals: normalizeSecurityBasals(rawSecurityBasals)
     }
   }
   return pumpSettings

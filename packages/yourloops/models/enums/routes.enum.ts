@@ -32,7 +32,7 @@ export enum AppUserRoute {
   PatientsList = '/teams/:teamId/patients',
   PatientView = '/teams/:teamId/patients/:patientId/*',
   Daily = '/daily',
-  Device = '/device',
+  Devices = '/devices',
   Dashboard = '/dashboard',
   Home = '/home',
   NotFound = '/not-found',
