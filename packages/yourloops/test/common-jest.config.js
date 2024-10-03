@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -116,7 +116,8 @@ module.exports = {
       YLPZ_RA_LAD_001_ES_REV: '0',
       YLPZ_RA_LAD_001_IT_REV: '0',
       YLPZ_RA_LAD_001_DE_REV: '0',
-      IDLE_TIMEOUT_MS: 1800000
+      IDLE_TIMEOUT_MS: 1800000,
+      DBLG2_ALLOWED_APP_MODE: 'debug'
     }
   },
 
