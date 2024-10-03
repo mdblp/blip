@@ -296,7 +296,9 @@ const ignoredTransKeyForYourLoops = [
   'tooltip-total-derived-carbs',
   'sensor-warmup',
   'sensor-warmup-session-end',
-  'signup-information-message-2'
+  'signup-information-message-2',
+  'device',
+  'safety-basal-profile-values-not-available'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   'yourloops|${s}',

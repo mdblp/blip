@@ -26,7 +26,7 @@
  */
 
 import { type CountryCodes } from './country.model'
-import { type BgUnit } from 'medical-domain'
+import { type BgUnit, DeviceSystem } from 'medical-domain'
 
 export interface Settings {
   units?: {
@@ -38,5 +38,5 @@ export interface Settings {
     rawdate: string
     value: string
   }
-  system?: string
+  system?: DeviceSystem
 }

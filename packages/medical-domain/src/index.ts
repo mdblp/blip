@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -56,9 +56,11 @@ import {
   type PumpConfig,
   type ParametersChange,
   type PumpSettingsParameter,
-  ChangeType
+  ChangeType,
+  PumpSettings,
+  SecurityBasalRate,
+  SecurityBasalConfig
 } from './domains/models/medical/datum/pump-settings.model'
-import type PumpSettings from './domains/models/medical/datum/pump-settings.model'
 import type ReservoirChange from './domains/models/medical/datum/reservoir-change.model'
 import type Smbg from './domains/models/medical/datum/smbg.model'
 import Source from './domains/models/medical/datum/enums/source.enum'
@@ -92,6 +94,7 @@ import { HoursRange } from './domains/models/statistics/satistics.model'
 import { RescueCarbsAveragePerRange } from './domains/models/statistics/carbs-statistics.model'
 import { ManualBolusAveragePerRange } from './domains/models/statistics/basal-bolus-statistics.model'
 import { GROUP_ALARMS_THRESHOLD_MINUTES } from './domains/repositories/medical/datum/alarm-event.service'
+import { DeviceSystem } from './domains/models/medical/datum/enums/device-system.enum'
 
 export {
   AlarmCode,
@@ -120,6 +123,7 @@ export {
   type Datum,
   type DeviceConfig,
   type DeviceParameterChange,
+  DeviceSystem,
   type DurationValue,
   DurationUnit,
   type Meal,
@@ -131,8 +135,10 @@ export {
   Prescriptor,
   PumpManufacturer,
   type PumpConfig,
-  type PumpSettings,
+  PumpSettings,
   type ReservoirChange,
+  SecurityBasalRate,
+  SecurityBasalConfig,
   type Smbg,
   Source,
   type TimePrefs,

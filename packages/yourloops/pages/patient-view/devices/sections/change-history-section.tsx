@@ -25,43 +25,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  checkChangeHistoryContent,
-  checkCopyTextButton,
-  checkCurrentParametersContent,
-  checkDevicesMenuLayout,
-  checkSafetyBasalProfileContent,
-  checkSafetyBasalProfileErrorMessage
-} from '../assert/device-view.assert'
+import React, { FC } from 'react'
+import { ParametersChangeHistory } from '../../../../components/device/parameters-change-history'
+import { PumpSettings } from 'medical-domain'
+import { useTheme } from '@mui/material/styles'
+import { useTranslation } from 'react-i18next'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
 
-export const testDevicesVisualisation = async () => {
-  testDevicesMenuLayout()
-  await testCurrentParametersVisualisation()
-  await testBasalSafetyProfileVisualisation()
-  await testChangeHistoryVisualisation()
+interface ChangeHistorySectionProps {
+  pumpSettings: PumpSettings
+  goToDailySpecificDate: (date: number) => void
 }
 
-export const testEmptySafetyBasalProfileGenericErrorMessage = async () => {
-  await checkSafetyBasalProfileErrorMessage('The safety basal profile values are not available.')
-}
+export const ChangeHistorySection: FC<ChangeHistorySectionProps> = (props) => {
+  const { goToDailySpecificDate, pumpSettings } = props
+  const theme = useTheme()
+  const { t } = useTranslation()
+  const history = pumpSettings.payload.history
+  const timezone = pumpSettings.timezone
 
-export const testEmptySafetyBasalProfileDblg1ErrorMessage = async () => {
-  await checkSafetyBasalProfileErrorMessage('The safety basal profile values are not available due to an outdated software version of the DBLG1. Updating the software version may resolve the issue.')
-}
-
-const testDevicesMenuLayout = () => {
-  checkDevicesMenuLayout()
-}
-
-const testCurrentParametersVisualisation = async () => {
-  checkCurrentParametersContent()
-  await checkCopyTextButton()
-}
-
-const testBasalSafetyProfileVisualisation = async () => {
-  await checkSafetyBasalProfileContent()
-}
-
-const testChangeHistoryVisualisation = async () => {
-  await checkChangeHistoryContent()
+  return (
+    <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="change-history-section">
+      <CardHeader title={t('change-history')} />
+      <CardContent>
+        <ParametersChangeHistory
+          goToDailySpecificDate={goToDailySpecificDate}
+          history={history}
+          timezone={timezone}
+        />
+      </CardContent>
+    </Card>
+  )
 }

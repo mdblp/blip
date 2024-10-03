@@ -216,12 +216,9 @@ function createRandomPumpSettings(date?: Date): PumpSettings {
   return {
     ...createBaseData(date),
     type: DatumType.PumpSettings,
-    basalSchedules: [],
-    activeSchedule: '',
     deviceId: faker.string.uuid(),
     deviceTime: faker.date.past().toISOString(),
     payload: {
-      basalsecurityprofile: {},
       cgm: {
         apiVersion: faker.system.semver(),
         endOfLifeTransmitterDate: faker.date.future().toISOString(),
