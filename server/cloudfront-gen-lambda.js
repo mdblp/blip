@@ -20,7 +20,13 @@ const handlebars = require('handlebars')
 const blipConfig = require('./config.app')
 const { getDistDir } = require('./gen-utils')
 const locales = require('../locales/languages.json')
-const assetlinksJson = require('../public/.well-known/assetlinks.json')
+const assetlinksJsonDebug = require('../public/.well-known/assetlinks.debug.json')
+const assetlinksJsonPreprod = require('../public/.well-known/assetlinks.preprod.json')
+const assetlinksJsonProd = require('../public/.well-known/assetlinks.prod.json')
+
+const DBLG2_ALLOWED_APP_MODE_DEBUG = 'debug'
+const DBLG2_ALLOWED_APP_MODE_PREPROD = 'preprod'
+const DBLG2_ALLOWED_APP_MODE_PROD = 'prod'
 
 const reZendesk = /(^\s+<!-- Start of support Zendesk Widget script -->\n)(.*\n)*(^\s+<!-- End of support Zendesk Widget script -->)/m
 const reTrackerUrl = /const u = '(.*)'/
@@ -166,6 +172,18 @@ function genContentSecurityPolicy() {
   return csp
 }
 
+function getAssetLinksJsonFile(dblg2AllowedAppMode) {
+  switch (dblg2AllowedAppMode) {
+    case DBLG2_ALLOWED_APP_MODE_PROD:
+      return assetlinksJsonProd
+    case DBLG2_ALLOWED_APP_MODE_PREPROD:
+      return assetlinksJsonPreprod
+    case DBLG2_ALLOWED_APP_MODE_DEBUG:
+    default:
+      return assetlinksJsonDebug
+  }
+}
+
 function genOutputFile() {
   if (lambdaTemplate === null || indexHtml === null || distribFiles === null) {
     return
@@ -177,7 +195,8 @@ function genOutputFile() {
   hashForConfig.update(configJs)
   const configHash = `sha512-${hashForConfig.digest('base64')}`
 
-  const assetLinksJson = JSON.stringify(assetlinksJson, null, 2)
+  const assetLinksJsonFile = getAssetLinksJsonFile(blipConfig.DBLG2_ALLOWED_APP_MODE)
+  const assetLinksJson = JSON.stringify(assetLinksJsonFile, null, 2)
   console.log('Using assetlinks:', assetLinksJson)
 
   const templateParameters = {

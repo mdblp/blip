@@ -4,7 +4,9 @@
     "target": {
       "namespace": "android_app",
       "package_name": "com.diabeloop.dblg2.debug",
-      "sha256_cert_fingerprints": ["BF:9E:ED:21:49:27:97:0F:FF:EF:E9:67:C1:7D:E0:BA:F6:41:64:0F:85:C1:63:FE:D5:85:77:07:C1:B0:D9:5A"]
+      "sha256_cert_fingerprints": [
+        "E3:39:92:C9:39:AF:92:8E:24:16:73:61:90:05:15:81:5A:38:03:D9:49:1F:41:B5:08:87:D9:9B:1D:31:96:0A"
+      ]
     }
   }
 ]

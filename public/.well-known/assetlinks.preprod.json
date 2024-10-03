@@ -1,0 +1,21 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.diabeloop.dblg2.beta",
+      "sha256_cert_fingerprints": ["BF:9E:ED:21:49:27:97:0F:FF:EF:E9:67:C1:7D:E0:BA:F6:41:64:0F:85:C1:63:FE:D5:85:77:07:C1:B0:D9:5A"]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.diabeloop.dblg2",
+      "sha256_cert_fingerprints": [
+        "BF:9E:ED:21:49:27:97:0F:FF:EF:E9:67:C1:7D:E0:BA:F6:41:64:0F:85:C1:63:FE:D5:85:77:07:C1:B0:D9:5A",
+        "47:6A:3B:B1:90:0C:02:AD:04:3A:85:EE:AE:DC:0C:C5:EC:29:D6:E6:64:A4:F7:27:DC:2D:F6:8C:5E:67:B2:63"
+      ]
+    }
+  }
+]

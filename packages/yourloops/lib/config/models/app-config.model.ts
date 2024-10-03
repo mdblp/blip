@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -63,4 +63,5 @@ export interface AppConfig {
   YLPZ_RA_LAD_001_ES_REV: string
   YLPZ_RA_LAD_001_DE_REV: string
   IDLE_TIMEOUT_MS: number
+  DBLG2_ALLOWED_APP_MODE: string
 }
