@@ -21,7 +21,7 @@
     "copy-css": "npm run copy-files -w dumb",
     "prebuild": "rm -rf dist",
     "build": "npm run build -w medical-domain -w dumb -w yourloops",
-    "postbuild": "ls -al && mkdir dist && cp -r public dist && mv packages/yourloops/dist dist/static && ls -al dist",
+    "postbuild": "mkdir dist && cp -r public dist && mv packages/yourloops/dist dist/static",
     "gen-robot": "node server/gen-robot-txt.js",
     "gen-sitemap": "node server/gen-sitemap-xml.js",
     "gen-lambda": "cd server && npm install && node cloudfront-gen-lambda.js",
