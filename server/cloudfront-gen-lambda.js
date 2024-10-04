@@ -20,9 +20,9 @@ const handlebars = require('handlebars')
 const blipConfig = require('./config.app')
 const { getDistDir } = require('./gen-utils')
 const locales = require('../locales/languages.json')
-const assetlinksJsonDebug = require('../public/.well-known/assetlinks.debug.json')
-const assetlinksJsonPreprod = require('../public/.well-known/assetlinks.preprod.json')
-const assetlinksJsonProd = require('../public/.well-known/assetlinks.prod.json')
+const assetlinksJsonDebug = require('../public/assetlinks/assetlinks.debug.json')
+const assetlinksJsonPreprod = require('../public/assetlinks/assetlinks.preprod.json')
+const assetlinksJsonProd = require('../public/assetlinks/assetlinks.prod.json')
 
 const DBLG2_ALLOWED_APP_MODE_DEBUG = 'debug'
 const DBLG2_ALLOWED_APP_MODE_PREPROD = 'preprod'
