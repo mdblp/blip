@@ -256,7 +256,7 @@ jobs:
 
       - name: Upload yourloops build
         if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist/
@@ -355,7 +355,7 @@ jobs:
             release-helper gen-dep-report --deep-dep 'blip,dumb,medical-domain,tideline,tidepool-viz' "${{ env.soupFileName }}"
 
       - name: Upload soup file on artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: soup-list
           path: blip-${{ needs.publish.outputs.version }}-soup.md
