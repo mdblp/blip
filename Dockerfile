@@ -65,7 +65,7 @@ COPY --from=lambda --chown=node:node /server ./server
 COPY --from=deployment --chown=node:node /cloudfront-dist ./cloudfront-dist
 COPY --from=deployment --chown=node:node /cloudfront-dist/deploy.sh ./deploy.sh
 COPY --from=content --chown=node:node /content/static-dist ./static
-COPY --from=content --chown=node:node /content/public-dist ./public
+COPY --from=content --chown=root:root --chmod=755 /content/public-dist ./public
 COPY --from=content --chown=node:node /content/templates ./templates
 COPY --from=content --chown=node:node /content/locales ./locales
 ENTRYPOINT [ "/bin/bash" ]
