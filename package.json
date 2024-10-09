@@ -21,7 +21,7 @@
     "copy-css": "npm run copy-files -w dumb",
     "prebuild": "rm -rf dist",
     "build": "npm run build -w medical-domain -w dumb -w yourloops",
-    "postbuild": "mkdir dist && cp -r public dist && mv packages/yourloops/dist dist/static",
+    "postbuild": "mkdir dist && mv packages/yourloops/dist dist/static",
     "gen-robot": "node server/gen-robot-txt.js",
     "gen-sitemap": "node server/gen-sitemap-xml.js",
     "gen-lambda": "cd server && npm install && node cloudfront-gen-lambda.js",
@@ -55,7 +55,7 @@
     "build-yourloops": "npm run build -w yourloops",
     "prebuild-dev": "rm -rf dist",
     "build-dev": "NODE_OPTIONS='--max-old-space-size=4096 --trace-deprecation' npm run build-dev -w yourloops",
-    "postbuild-dev": "mkdir dist && cp -r public dist && mv packages/yourloops/dist dist/static",
+    "postbuild-dev": "mkdir dist && mv packages/yourloops/dist dist/static",
     "start-dev": "npm run copy-css && bash -c 'source config/.env.sh && npm run start-dev -w yourloops'",
     "sort-translations": "node ./locales/translations-sorter.js"
   },

@@ -20,13 +20,7 @@ const handlebars = require('handlebars')
 const blipConfig = require('./config.app')
 const { getDistDir } = require('./gen-utils')
 const locales = require('../locales/languages.json')
-const assetlinksJsonDebug = require('../public/assetlinks/assetlinks.debug.json')
-const assetlinksJsonPreprod = require('../public/assetlinks/assetlinks.preprod.json')
-const assetlinksJsonProd = require('../public/assetlinks/assetlinks.prod.json')
-
-const DBLG2_ALLOWED_APP_MODE_DEBUG = 'debug'
-const DBLG2_ALLOWED_APP_MODE_PREPROD = 'preprod'
-const DBLG2_ALLOWED_APP_MODE_PROD = 'prod'
+const assetlinksJson = require('../public/mobile-apps/assetlinks.json')
 
 const reZendesk = /(^\s+<!-- Start of support Zendesk Widget script -->\n)(.*\n)*(^\s+<!-- End of support Zendesk Widget script -->)/m
 const reTrackerUrl = /const u = '(.*)'/
@@ -172,18 +166,6 @@ function genContentSecurityPolicy() {
   return csp
 }
 
-function getAssetLinksJsonFile(dblg2AllowedAppMode) {
-  switch (dblg2AllowedAppMode) {
-    case DBLG2_ALLOWED_APP_MODE_PROD:
-      return assetlinksJsonProd
-    case DBLG2_ALLOWED_APP_MODE_PREPROD:
-      return assetlinksJsonPreprod
-    case DBLG2_ALLOWED_APP_MODE_DEBUG:
-    default:
-      return assetlinksJsonDebug
-  }
-}
-
 function genOutputFile() {
   if (lambdaTemplate === null || indexHtml === null || distribFiles === null) {
     return
@@ -195,9 +177,8 @@ function genOutputFile() {
   hashForConfig.update(configJs)
   const configHash = `sha512-${hashForConfig.digest('base64')}`
 
-  const assetLinksJsonFile = getAssetLinksJsonFile(blipConfig.DBLG2_ALLOWED_APP_MODE)
-  const assetLinksJson = JSON.stringify(assetLinksJsonFile, null, 2)
-  console.log('Using assetlinks:', assetLinksJson)
+  const assetLinksJsonStringified = JSON.stringify(assetlinksJson, null, 2)
+  console.log('Using assetlinks:', assetLinksJsonStringified)
 
   const templateParameters = {
     ...blipConfig,
@@ -205,7 +186,7 @@ function genOutputFile() {
     INDEX_HTML: '',
     CONFIG_JS: configJs,
     CONFIG_HASH: configHash,
-    ASSETLINKS_JSON: assetLinksJson,
+    ASSETLINKS_JSON: assetLinksJsonStringified,
     TARGET_ENVIRONMENT: blipConfig.TARGET_ENVIRONMENT.toLowerCase(),
     FEATURE_POLICY: featurePolicy.join(';'),
     GEN_DATE: new Date().toISOString(),
