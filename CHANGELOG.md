@@ -7,6 +7,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-2408 Display basal safety profile in Devices view
 - YLP-3128 As an HCP, I want to see which device is used by each patient
 
+### Changed
+- YLP-3262 Allow redirection to DBLG2 app from YourLoops
+
 ## 3.4.1 - 2024-09-25
 ### Fixed
 - YLP-3255 TDD calculated on 24 hours is wrong
