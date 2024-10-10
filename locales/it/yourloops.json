@@ -126,6 +126,7 @@
   "avg-time-loop-how-calculate": "**Metodo di calcolo**:\n\n(%) è la durata in modalità loop ON o OFF divisa per la durata complessiva dei valori basali per questo periodo.\n\n**(tempo)** è il tempo medio giornaliero trascorso in modalità loop ON o OFF.",
   "avg-time-loop-tooltip": "**Tempo in modalità loop**: media giornaliera del tempo trascorso in erogazione basale automatizzata.",
   "basal-and-correction-bolus": "Bolo basale e di correzione",
+  "basal-rate-unit": "U/h",
   "below-range": "Sotto l'intervallo",
   "below-range-tooltip": "Sotto l'intervallo",
   "birthplace": "Luogo di nascita",
