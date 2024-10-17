@@ -21,6 +21,7 @@ It is based on Tidepool Blip 1.27.
 ## 3.5.0 - 2024-11-06
 ### Changed
 - YLP-3310 Display Physical Activity below other events in Daily view
+- YLP-3145 As a yourloops user i want to do a csv export
 
 ### Fixed
 - YLP-3300 Legend in "rescue carbs & manual bolus intakes" table is not consistent with what is displayed

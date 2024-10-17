@@ -36,6 +36,7 @@ import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import { HttpHeaderValues } from '../http/models/enums/http-header-values.enum'
 import { MedicalData, Unit } from 'medical-domain'
 import type { PatientDataRange } from './models/data-range.model'
+import { CsvReportModel } from './models/csv-report.model'
 
 const log = bows('Data API')
 
@@ -75,16 +76,19 @@ export default class DataApi {
     })
   }
 
-  static async exportData(user: User, patientId: string, startDate: string, endDate: string): Promise<string> {
+  static async exportData(user: User, patientId: string, startDate: string, endDate: string): Promise<CsvReportModel> {
     const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
-    const { data } = await HttpService.get<string>({
-      url: `/export/${patientId}`,
+    const response = await HttpService.get<Blob>({
+      url: `/v0/export/${patientId}`,
       config: {
         headers: { [HttpHeaderKeys.contentType]: HttpHeaderValues.csv },
+        responseType: "blob",
         params: { bgUnits, startDate, endDate }
       }
     })
-    return data
+    const data = response.data
+    const filename = response.headers['content-disposition'].split('filename=')[1];
+    return { Data: data, Name: filename }
   }
 
   static async getMessageThread(messageId: string): Promise<MessageNote[]> {
