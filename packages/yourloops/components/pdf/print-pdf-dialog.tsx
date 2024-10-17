@@ -59,6 +59,7 @@ import { useAuth } from '../../lib/auth'
 import metrics from '../../lib/metrics'
 import { useAlert } from '../utils/snackbar'
 import { type DateRange } from '../patient-data/patient-data.utils'
+import { CsvReportModel } from '../../lib/data/models/csv-report.model'
 
 export type Presets = '1week' | '2weeks' | '4weeks' | '3months'
 
@@ -212,9 +213,9 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
     downloadFile(pdfUrl, `yourloops-report-${patientId}.pdf`)
   }
 
-  const downloadCsv = (csv: string, patientId: string): void => {
-    const url = window.URL.createObjectURL(new Blob([...csv], { type: 'application/zip' }))
-    downloadFile(url, `yourloops-report-${patientId}.csv`)
+  const downloadCsv = (report: CsvReportModel): void => {
+    const url = window.URL.createObjectURL(new Blob([report.Data]))
+    downloadFile(url, report.Name)
   }
 
   const generatePdf = async (): Promise<string> => {
@@ -247,9 +248,10 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
     return url
   }
 
-  const generateCsv = async (): Promise<string> => {
+  const generateCsv = async (): Promise<CsvReportModel> => {
     const startDate = moment.utc(pdfOptions.start).startOf('day').toISOString()
     const endDate = moment.utc(pdfOptions.end).endOf('day').toISOString()
+    console.log("test1")
     return await DataApi.exportData(user, patient.userid, startDate, endDate)
   }
 
@@ -261,7 +263,8 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
           downloadPdf(await generatePdf(), patient.userid)
           break
         case OutputFormat.Csv:
-          downloadCsv(await generateCsv(), patient.userid)
+          console.log("test0")
+          downloadCsv(await generateCsv())
           break
       }
       metrics.send('export_data', `save_report_${pdfOptions.format}`, pdfOptions.preset ?? 'custom')
