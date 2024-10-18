@@ -263,7 +263,6 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
           downloadPdf(await generatePdf(), patient.userid)
           break
         case OutputFormat.Csv:
-          console.log("test0")
           downloadCsv(await generateCsv())
           break
       }
