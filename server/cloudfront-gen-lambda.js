@@ -20,6 +20,7 @@ const handlebars = require('handlebars')
 const blipConfig = require('./config.app')
 const { getDistDir } = require('./gen-utils')
 const locales = require('../locales/languages.json')
+const assetlinksJson = require('../public/mobile-apps/assetlinks.json')
 
 const reZendesk = /(^\s+<!-- Start of support Zendesk Widget script -->\n)(.*\n)*(^\s+<!-- End of support Zendesk Widget script -->)/m
 const reTrackerUrl = /const u = '(.*)'/
@@ -172,9 +173,12 @@ function genOutputFile() {
 
   let configJs = `window.config = ${JSON.stringify(blipConfig, null, 2)};`
   console.log('Using config:', configJs)
-  const hash = crypto.createHash('sha512')
-  hash.update(configJs)
-  const configHash = `sha512-${hash.digest('base64')}`
+  const hashForConfig = crypto.createHash('sha512')
+  hashForConfig.update(configJs)
+  const configHash = `sha512-${hashForConfig.digest('base64')}`
+
+  const assetLinksJsonStringified = JSON.stringify(assetlinksJson, null, 2)
+  console.log('Using assetlinks:', assetLinksJsonStringified)
 
   const templateParameters = {
     ...blipConfig,
@@ -182,6 +186,7 @@ function genOutputFile() {
     INDEX_HTML: '',
     CONFIG_JS: configJs,
     CONFIG_HASH: configHash,
+    ASSETLINKS_JSON: assetLinksJsonStringified,
     TARGET_ENVIRONMENT: blipConfig.TARGET_ENVIRONMENT.toLowerCase(),
     FEATURE_POLICY: featurePolicy.join(';'),
     GEN_DATE: new Date().toISOString(),
