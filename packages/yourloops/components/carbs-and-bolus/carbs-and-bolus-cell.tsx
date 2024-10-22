@@ -35,12 +35,13 @@ import { LIGHT_BORDER, MANUAL_BOLUS_COLOR, RESCUE_CARBS_COLOR, useCarbsAndBolusS
 import { RescueCarbsTooltip } from './rescue-carbs-tooltip'
 import { ManualBolusTooltip } from './manual-bolus-tooltip'
 import { ManualBolusAveragePerRange, RescueCarbsAveragePerRange } from 'medical-domain'
+import { formatClocktimeFromMsPer24, getSimpleHourFormatSpace } from 'dumb'
 
 interface CarbsAndBolusCellProps {
   manualBolus: ManualBolusAveragePerRange
   rescueCarbs: RescueCarbsAveragePerRange
   sx?: SxProps<Theme>
-  time: string
+  time: number
 }
 
 export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
@@ -60,6 +61,8 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
     setCellOnHover(undefined)
   }
 
+  const displayTime = formatClocktimeFromMsPer24(time, getSimpleHourFormatSpace())
+
   return (
     <Box
       width="12.5%"
@@ -70,7 +73,7 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
         variant="caption"
         sx={{ marginLeft: theme.spacing(0.5) }}
       >
-        {time}
+        {displayTime}
       </Typography>
       <Box className={classes.cellsWrapper}>
         <Box

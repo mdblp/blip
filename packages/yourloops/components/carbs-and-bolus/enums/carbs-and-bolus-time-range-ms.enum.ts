@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,13 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum CarbsAndBolusTimeRange {
-  Midnight = '0h',
-  Three = '3h',
-  Six = '6h',
-  Nine = '9h',
-  Twelve = '12h',
-  Fifteen = '15h',
-  Eighteen = '18h',
-  TwentyOne = '21h'
+const ONE_HOUR_MS = 3600000
+
+export enum CarbsAndBolusTimeRangeMs {
+  Midnight = 0 * ONE_HOUR_MS,
+  Three = 3 * ONE_HOUR_MS,
+  Six = 6 * ONE_HOUR_MS,
+  Nine = 9 * ONE_HOUR_MS,
+  Twelve = 12 * ONE_HOUR_MS,
+  Fifteen = 15 * ONE_HOUR_MS,
+  Eighteen = 18 * ONE_HOUR_MS,
+  TwentyOne = 21 * ONE_HOUR_MS,
 }
