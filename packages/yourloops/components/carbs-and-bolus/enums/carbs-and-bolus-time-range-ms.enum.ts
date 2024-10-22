@@ -25,15 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-const ONE_HOUR_MS = 3600000
-
 export enum CarbsAndBolusTimeRangeMs {
-  Midnight = 0 * ONE_HOUR_MS,
-  Three = 3 * ONE_HOUR_MS,
-  Six = 6 * ONE_HOUR_MS,
-  Nine = 9 * ONE_HOUR_MS,
-  Twelve = 12 * ONE_HOUR_MS,
-  Fifteen = 15 * ONE_HOUR_MS,
-  Eighteen = 18 * ONE_HOUR_MS,
-  TwentyOne = 21 * ONE_HOUR_MS,
+  Midnight = 0,         //  0 * ONE_HOUR_MS (ONE_HOUR_MS = 3600000)
+  Three = 10800000,     //  3 * ONE_HOUR_MS
+  Six = 21600000,       //  6 * ONE_HOUR_MS
+  Nine = 32400000,      //  9 * ONE_HOUR_MS
+  Twelve = 43200000,    // 12 * ONE_HOUR_MS
+  Fifteen = 54000000,   // 15 * ONE_HOUR_MS
+  Eighteen = 64800000,  // 18 * ONE_HOUR_MS
+  TwentyOne = 75600000, // 21 * ONE_HOUR_MS
 }
