@@ -26,7 +26,13 @@
  */
 
 import type DateFilter from '../../src/domains/models/time/date-filter.model'
-import { createMealData, createRandomBasal, createRandomBolus, createWizardData } from '../data-generator'
+import {
+  createRescueCarbsData,
+  createRandomBasal,
+  createRandomBolus,
+  createWizardData,
+  createRescueCarbsNonModifiedData
+} from '../data-generator'
 import {
   type Basal,
   type Bolus,
@@ -149,12 +155,32 @@ export const dateFilterTwoWeeks: DateFilter = {
   end: new Date('2018-02-15T00:00:00.000Z').valueOf()
 }
 
-export const buildMealData = (data: BgDataRange): Meal[] => (
+export const buildRescueCarbsData = (data: BgDataRange): Meal[] => (
   data.map((mealData) => (
     {
-      ...createMealData(mealData[0]),
+      ...createRescueCarbsData(mealData[0]),
       deviceName: mealData[1],
       prescriptor: Prescriptor.Hybrid
+    }
+  ))
+)
+
+export const buildRescueCarbsManualData = (data: BgDataRange): Meal[] => (
+  data.map((mealData) => (
+    {
+      ...createRescueCarbsNonModifiedData(mealData[0]),
+      deviceName: mealData[1],
+      prescriptor: Prescriptor.Manual
+    }
+  ))
+)
+
+export const buildRescueCarbsAutomatedData = (data: BgDataRange): Meal[] => (
+  data.map((mealData) => (
+    {
+      ...createRescueCarbsNonModifiedData(mealData[0]),
+      deviceName: mealData[1],
+      prescriptor: Prescriptor.Auto
     }
   ))
 )

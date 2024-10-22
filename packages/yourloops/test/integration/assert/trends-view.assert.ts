@@ -213,26 +213,38 @@ export const checkTrendsBolusAndCarbsAverage = async () => {
   expect(bolusCells[1]).toHaveTextContent('4')
   expect(carbsCells[2]).toHaveTextContent('')
   expect(bolusCells[2]).toHaveTextContent('')
-  expect(carbsCells[3]).toHaveTextContent('3')
+  expect(carbsCells[3]).toHaveTextContent('1')
   expect(bolusCells[3]).toHaveTextContent('')
-  expect(carbsCells[4]).toHaveTextContent('')
+  expect(carbsCells[4]).toHaveTextContent('1')
   expect(bolusCells[4]).toHaveTextContent('')
   expect(carbsCells[5]).toHaveTextContent('')
   expect(bolusCells[5]).toHaveTextContent('3')
-  expect(carbsCells[6]).toHaveTextContent('1')
+  expect(carbsCells[6]).toHaveTextContent('2')
   expect(bolusCells[6]).toHaveTextContent('')
   expect(carbsCells[7]).toHaveTextContent('1')
   expect(bolusCells[7]).toHaveTextContent('')
 
+  const carbsCell = carbsCells[6]
+  await userEvent.hover(carbsCell)
+  const rescueCarbsTooltip = screen.getByTestId('rescue-carbs-tooltip')
+  expect(rescueCarbsTooltip).toHaveTextContent('Rescue carbsNumber of rescue carbs2Number of rescue carbs modified0Avg. Recommended carbs128gOverride 0g')
+  await userEvent.unhover(carbsCell)
+
+  const bolusCell = bolusCells[5]
+  await userEvent.hover(bolusCell)
+  const bolusTooltip = screen.getByTestId('manual-bolus-tooltip')
+  expect(bolusTooltip).toHaveTextContent('Manual and pen bolusTotal number of bolus3Avg. Confirmed dose11U')
+  await userEvent.unhover(bolusCell)
+
   const oneWeekButton = screen.getByRole('button', { name: '1 week' })
   await userEvent.click(oneWeekButton)
-  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent("Rescue carb intakes & manual & pen bolus over a period of 1 week")
+  expect(rescueCarbsAndManualBolusTitle).toHaveTextContent('Rescue carb intakes & manual & pen bolus over a period of 1 week')
 
   expect(bolusCells[0]).toHaveTextContent('2')
   expect(bolusCells[1]).toHaveTextContent('4')
-  expect(carbsCells[3]).toHaveTextContent('3')
+  expect(carbsCells[3]).toHaveTextContent('1')
   expect(bolusCells[5]).toHaveTextContent('3')
-  expect(carbsCells[6]).toHaveTextContent('1')
+  expect(carbsCells[6]).toHaveTextContent('2')
   expect(carbsCells[7]).toHaveTextContent('1')
 }
 
