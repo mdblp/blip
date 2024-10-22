@@ -29,35 +29,24 @@ import React, { type FC, useState } from 'react'
 import parse from 'html-react-parser'
 import { getCurrentLang } from '../../lib/language'
 import i18n from 'i18next'
-import rawHtmlEN from './raw-html/EN'
-import rawHtmlFR from './raw-html/FR'
-import rawHtmlES from './raw-html/ES'
-import rawHtmlDE from './raw-html/DE'
-import rawHtmlNL from './raw-html/NL'
-import rawHtmlIT from './raw-html/IT'
 import Box from '@mui/material/Box'
 import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 import { setPageTitle } from '../../lib/utils'
 import { useTranslation } from 'react-i18next'
+import config from '../../lib/config/config'
 
 export const ProductLabellingPage: FC = () => {
   const { t } = useTranslation()
   const getHtml = (): string => {
-    switch (getCurrentLang()) {
-      case LanguageCodes.De:
-        return rawHtmlDE
-      case LanguageCodes.Es:
-        return rawHtmlES
-      case LanguageCodes.Fr:
-        return rawHtmlFR
-      case LanguageCodes.Nl:
-        return rawHtmlNL
-      case LanguageCodes.It:
-        return rawHtmlIT
-      case LanguageCodes.En:
-      default:
-        return rawHtmlEN
+    let locale = 'en'
+    if (Object.values(LanguageCodes).includes(getCurrentLang())) {
+      locale = getCurrentLang()
     }
+    return `
+        <object type="application/pdf"
+            data="${config.ASSETS_URL}intended-use.${locale}.pdf"
+            width="100%" height="100%"
+        />`
   }
 
   const [html, setHtml] = useState<string>(getHtml())
@@ -69,7 +58,7 @@ export const ProductLabellingPage: FC = () => {
   setPageTitle(t('product-labelling'))
 
   return (
-    <Box marginBottom={2}>
+    <Box marginBottom={2} width="100%" height="100%">
       {parse(html)}
     </Box>
   )
