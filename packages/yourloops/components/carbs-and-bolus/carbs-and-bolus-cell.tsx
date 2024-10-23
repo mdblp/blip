@@ -62,6 +62,7 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
   }
 
   const displayTime = formatClocktimeFromMsPer24(time, getSimpleHourFormatSpace())
+  const displayTimeWithoutSpaces = displayTime.replace(/\s+/g, '')
 
   return (
     <Box
@@ -81,7 +82,7 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
           sx={{ backgroundColor: carbsCellBackgroundColor }}
           onMouseEnter={() => openPopover(TypeOfCell.RescueCarbs)}
           onMouseLeave={closePopover}
-          data-testid="rescue-carbs-cell"
+          data-testid={`rescue-carbs-cell-${displayTimeWithoutSpaces}`}
         >
           <Typography
             variant="caption"
@@ -103,7 +104,7 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
           <Typography
             variant="caption"
             sx={{ color: theme.palette.common.white }}
-            data-testid="manual-bolus-cell"
+            data-testid={`manual-bolus-cell-${displayTimeWithoutSpaces}`}
           >
             {numberOfInjections > 0 ? numberOfInjections : ''}
           </Typography>
