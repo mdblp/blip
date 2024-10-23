@@ -202,7 +202,7 @@ export const checkTrendsBolusAndCarbsAverage = async () => {
   expect(within(wrapper).getAllByTestId('carbs-and-bolus-cell')).toHaveLength(8)
 
   const caption = within(wrapper).getByTestId('rescue-carbs-and-manual-bolus-average-caption')
-  expect(caption).toHaveTextContent('Number of rescue carbs per dayNumber of manual & pen bolus per day')
+  expect(caption).toHaveTextContent('Number of rescue carbsNumber of manual & pen bolus')
 
   const carbsCells = within(wrapper).getAllByTestId('rescue-carbs-cell')
   const bolusCells = within(wrapper).getAllByTestId('manual-bolus-cell')
