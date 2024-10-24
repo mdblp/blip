@@ -322,13 +322,13 @@ export const getMinimalTrendViewData =() : Data => {
           "nutrition": {
             "carbohydrate": {
               "net": 385,
-              "units": "grams"
+              "units": Unit.Grams
             }
           },
           "prescribedNutrition": {
             "carbohydrate": {
               "net": 128,
-              "units": "grams"
+              "units": Unit.Grams
             }
           },
           "prescriptor": Prescriptor.Hybrid
@@ -336,7 +336,7 @@ export const getMinimalTrendViewData =() : Data => {
         {
           "epoch": 1579428000000,
           "displayOffset": -60,
-          "normalTime": "2020-01-19T10:00:00.000Z",
+          "normalTime": "2020-01-19T12:00:00.000Z",
           "isoWeekday": WeekDays.Sunday,
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
@@ -347,13 +347,13 @@ export const getMinimalTrendViewData =() : Data => {
           "nutrition": {
             "carbohydrate": {
               "net": 385,
-              "units": "grams"
+              "units": Unit.Grams
             }
           },
           "prescribedNutrition": {
             "carbohydrate": {
               "net": 128,
-              "units": "grams"
+              "units": Unit.Grams
             }
           },
           "prescriptor": Prescriptor.Hybrid
@@ -361,7 +361,7 @@ export const getMinimalTrendViewData =() : Data => {
         {
           "epoch": 1579510800000,
           "displayOffset": -60,
-          "normalTime": "2020-01-20T09:00:00.000Z",
+          "normalTime": "2020-01-20T18:00:00.000Z",
           "isoWeekday": WeekDays.Monday,
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
@@ -372,13 +372,7 @@ export const getMinimalTrendViewData =() : Data => {
           "nutrition": {
             "carbohydrate": {
               "net": 128,
-              "units": "grams"
-            }
-          },
-          "prescribedNutrition": {
-            "carbohydrate": {
-              "net": 2,
-              "units": Unit.Gram
+              "units": Unit.Grams
             }
           },
           "prescriptor": Prescriptor.Auto
@@ -397,13 +391,13 @@ export const getMinimalTrendViewData =() : Data => {
           "nutrition": {
             "carbohydrate": {
               "net": 150,
-              "units": "grams"
+              "units": Unit.Grams
             }
           },
           "prescribedNutrition": {
             "carbohydrate": {
               "net": 2,
-              "units": Unit.Gram
+              "units": Unit.Grams
             }
           },
           "prescriptor": Prescriptor.Manual
@@ -422,13 +416,16 @@ export const getMinimalTrendViewData =() : Data => {
           "nutrition": {
             "carbohydrate": {
               "net": 450,
-              "units": "grams"
+              "units": Unit.Grams
             }
           },
           "prescribedNutrition": {
-            "carbohydrate": {}
+            "carbohydrate": {
+              "net": 400,
+              "units": Unit.Grams
+            }
           },
-          "prescriptor": ""
+          "prescriptor": Prescriptor.Hybrid
         }
       ],
       "physicalActivities": [],
