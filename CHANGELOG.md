@@ -10,6 +10,9 @@ It is based on Tidepool Blip 1.27.
 ### Changed
 - YLP-3262 Allow redirection to DBLG2 app from YourLoops
 
+### Fixed
+- YLP-3303 Rescue carbs tooltip in "Rescue carbs & manual bolus intakes" table is wrong
+
 ## 3.4.1 - 2024-09-25
 ### Fixed
 - YLP-3255 TDD calculated on 24 hours is wrong

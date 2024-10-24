@@ -30,7 +30,7 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { RESCUE_CARBS_COLOR, useCarbsAndBolusStyles } from './carbs-and-bolus-styles'
 import { useTranslation } from 'react-i18next'
-import { RescueCarbsAveragePerRange } from 'medical-domain'
+import { RescueCarbsAveragePerRange, Unit } from 'medical-domain'
 import styles from 'dumb/src/components/tooltips/common/tooltip-line/tooltip-line.css'
 
 export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }> = ({ rescueCarbs }) => {
@@ -64,11 +64,11 @@ export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }>
         </div>
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">{t('recommended-carbs')}</Typography>
-          <Typography variant="body2">{rescueCarbs.averageRecommendedCarb}g</Typography>
+          <Typography variant="body2">{rescueCarbs.averageRecommendedCarb}{Unit.Gram}</Typography>
         </div>
         <div className="flex-justify-between-align-center">
           <Typography variant="body2">{t('override')}</Typography>
-          <Typography variant="body2" className={styles.colorUndelivered}> {override}g</Typography>
+          <Typography variant="body2" className={styles.colorUndelivered}>{override}{Unit.Gram}</Typography>
         </div>
       </Box>
     </Box>
