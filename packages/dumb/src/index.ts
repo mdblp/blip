@@ -60,7 +60,16 @@ import { PrintView } from './modules/print/print-view/print-view'
 import { LayoutColumnType } from './models/enums/layout-column-type.enum'
 import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
 import { getPatientFullName } from './utils/patient/patient.util'
-import { formatBirthdate, formatLocalizedFromUTC, getLongDayHourFormat, formatDate, TIMEZONE_UTC, formatCurrentDate } from './utils/datetime/datetime.util'
+import {
+  formatBirthdate,
+  formatLocalizedFromUTC,
+  getLongDayHourFormat,
+  formatDate,
+  TIMEZONE_UTC,
+  formatCurrentDate,
+  formatClocktimeFromMsPer24,
+  getSimpleHourFormatSpace
+} from './utils/datetime/datetime.util'
 import { renderPageNumbers } from './utils/pdf/pdf.util'
 import { WarmUpTooltip } from './components/tooltips/warm-up-tooltip/warm-up-tooltip'
 import { Device } from './models/device.model'
@@ -87,7 +96,9 @@ export {
   FoodTooltip,
   formatCurrentDate,
   formatBirthdate,
+  formatClocktimeFromMsPer24,
   getPatientFullName,
+  getSimpleHourFormatSpace,
   AlarmEventTooltip,
   formatBgValue,
   LayoutColumnType,
