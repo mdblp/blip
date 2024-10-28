@@ -3,7 +3,6 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.5.0-rc1 - 2024-11-06
-
 ### Fixed
 - YLP-3303 Rescue carbs tooltip in "Rescue carbs & manual bolus intakes" table is wrong
 
