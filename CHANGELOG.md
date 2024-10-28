@@ -3,6 +3,9 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.5.0-rc1 - 2024-11-06
+### Changed
+- YLP-3310 Display Physical Activity below other events in Daily view
+
 ### Fixed
 - YLP-3300 Legend in "rescue carbs & manual bolus intakes" table is not consistent with what is displayed
 - YLP-3303 Rescue carbs tooltip in "Rescue carbs & manual bolus intakes" table is wrong
