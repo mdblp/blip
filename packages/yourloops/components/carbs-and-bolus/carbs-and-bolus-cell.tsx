@@ -35,12 +35,13 @@ import { LIGHT_BORDER, MANUAL_BOLUS_COLOR, RESCUE_CARBS_COLOR, useCarbsAndBolusS
 import { RescueCarbsTooltip } from './rescue-carbs-tooltip'
 import { ManualBolusTooltip } from './manual-bolus-tooltip'
 import { ManualBolusAveragePerRange, RescueCarbsAveragePerRange } from 'medical-domain'
+import { formatClocktimeFromMsPer24, getSimpleHourFormatSpace } from 'dumb'
 
 interface CarbsAndBolusCellProps {
   manualBolus: ManualBolusAveragePerRange
   rescueCarbs: RescueCarbsAveragePerRange
   sx?: SxProps<Theme>
-  time: string
+  time: number
 }
 
 export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
@@ -60,6 +61,8 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
     setCellOnHover(undefined)
   }
 
+  const displayTime = formatClocktimeFromMsPer24(time, getSimpleHourFormatSpace())
+  const displayTimeWithoutSpaces = displayTime.replace(/\s+/g, '')
 
   return (
     <Box
@@ -71,7 +74,7 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
         variant="caption"
         sx={{ marginLeft: theme.spacing(0.5) }}
       >
-        {time}
+        {displayTime}
       </Typography>
       <Box className={classes.cellsWrapper}>
         <Box
@@ -79,7 +82,7 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
           sx={{ backgroundColor: carbsCellBackgroundColor }}
           onMouseEnter={() => openPopover(TypeOfCell.RescueCarbs)}
           onMouseLeave={closePopover}
-          data-testid="rescue-carbs-cell"
+          data-testid={`rescue-carbs-cell-${displayTimeWithoutSpaces}`}
         >
           <Typography
             variant="caption"
@@ -101,7 +104,7 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
           <Typography
             variant="caption"
             sx={{ color: theme.palette.common.white }}
-            data-testid="manual-bolus-cell"
+            data-testid={`manual-bolus-cell-${displayTimeWithoutSpaces}`}
           >
             {numberOfInjections > 0 ? numberOfInjections : ''}
           </Typography>
