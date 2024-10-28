@@ -35,13 +35,14 @@ import { setPageTitle } from '../../lib/utils'
 import { useTranslation } from 'react-i18next'
 import config from '../../lib/config/config'
 
+const DEFAULT_LANG = LanguageCodes.En
+
 export const ProductLabellingPage: FC = () => {
   const { t } = useTranslation()
   const getHtml = (): string => {
-    let locale = 'en'
-    if (Object.values(LanguageCodes).includes(getCurrentLang())) {
-      locale = getCurrentLang()
-    }
+    const hasCurrentLang = Object.values(LanguageCodes).includes(getCurrentLang())
+    const locale = hasCurrentLang ? getCurrentLang() : DEFAULT_LANG
+
     return `
         <object type="application/pdf"
             data="${config.ASSETS_URL}intended-use.${locale}.pdf"
@@ -58,7 +59,7 @@ export const ProductLabellingPage: FC = () => {
   setPageTitle(t('product-labelling'))
 
   return (
-    <Box marginBottom={2} width="100%" height="100%">
+    <Box marginBottom={2} sx={{ width: '100%', height: '100%' }}>
       {parse(html)}
     </Box>
   )
