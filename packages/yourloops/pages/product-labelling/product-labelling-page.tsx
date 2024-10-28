@@ -44,7 +44,9 @@ export const ProductLabellingPage: FC = () => {
     const locale = hasCurrentLang ? getCurrentLang() : DEFAULT_LANG
 
     return `
-        <object type="application/pdf"
+        <object
+            role="document"
+            type="application/pdf"
             data="${config.ASSETS_URL}intended-use.${locale}.pdf"
             width="100%" height="100%"
         />`
