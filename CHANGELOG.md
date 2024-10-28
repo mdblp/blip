@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Changed
 - YLP-3262 Allow redirection to DBLG2 app from YourLoops
+- YLP-3310 Display Physical Activity below other events in Daily view
 
 ### Fixed
 - YLP-3303 Rescue carbs tooltip in "Rescue carbs & manual bolus intakes" table is wrong
