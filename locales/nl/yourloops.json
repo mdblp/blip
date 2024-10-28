@@ -126,7 +126,6 @@
   "avg-time-loop-how-calculate": "**Hoe we dit berekenen**:\n\n(%) is de duur in de loop-modus ON of OFF gedeeld door de totale duur van de basale doseringen voor deze tijdsperiode.\n\n**(tijd)** is de gemiddelde dagelijkse tijd die is besteed in de loop-modus ON of OFF.",
   "avg-time-loop-tooltip": "**Tijd in loop-modus**: dagelijks gemiddelde van de tijd die is besteed aan automatische basale toediening.",
   "basal-and-correction-bolus": "Basaal & correctiebolus",
-  "basal-rate-unit": "U/h",
   "below-range": "Beneden bereik",
   "below-range-tooltip": "Beneden bereik",
   "birthplace": "Geboorteplaats",
