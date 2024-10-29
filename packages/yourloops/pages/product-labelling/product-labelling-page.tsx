@@ -26,7 +26,6 @@
  */
 
 import React, { type FC, useState } from 'react'
-import parse from 'html-react-parser'
 import { getCurrentLang } from '../../lib/language'
 import i18n from 'i18next'
 import Box from '@mui/material/Box'
