@@ -72,7 +72,7 @@ export const ProductLabellingPage: FC = () => {
     <Box marginBottom={2} sx={{ width: '100%', height: '100%' }}>
       <object
         aria-label={t('product-labelling')}
-        role="document"
+        data-testid="udipdf"
         type="application/pdf"
         data={filePath}
         width="100%" height="100%"

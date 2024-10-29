@@ -54,7 +54,7 @@ describe('Product labelling page', () => {
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/product-labelling')
     })
-    const udi = screen.getByRole('document')
+    const udi = screen.getByTestId('udipdf')
     // doc name should be `YLPZ-RA-LAD-001-fr-Rev${global.BUILD_CONFIG.YLPZ_RA_LAD_001_FR_REV as string}
     expect(udi).toHaveAttribute('data', 'fake-urlYLPZ-RA-LAD-001-en-Rev9.pdf')
     expect(udi).toHaveAttribute('type', 'application/pdf')
@@ -64,27 +64,27 @@ describe('Product labelling page', () => {
     act(() => {
       i18n.changeLanguage(LanguageCodes.Fr)
     })
-    expect(screen.getByRole('document')).toHaveAttribute('data', 'fake-urlYLPZ-RA-LAD-001-fr-Rev9.pdf')
+    expect(screen.getByTestId('udipdf')).toHaveAttribute('data', 'fake-urlYLPZ-RA-LAD-001-fr-Rev9.pdf')
 
     act(() => {
       i18n.changeLanguage(LanguageCodes.Nl)
     })
-    expect(screen.getByRole('document')).toHaveAttribute('data', 'fake-urlYLPZ-RA-LAD-001-nl-Rev6.pdf')
+    expect(screen.getByTestId('udipdf')).toHaveAttribute('data', 'fake-urlYLPZ-RA-LAD-001-nl-Rev6.pdf')
 
     act(() => {
       i18n.changeLanguage(LanguageCodes.Es)
     })
-    expect(screen.getByRole('document')).toHaveAttribute('data', 'fake-urlYLPZ-RA-LAD-001-es-Rev6.pdf')
+    expect(screen.getByTestId('udipdf')).toHaveAttribute('data', 'fake-urlYLPZ-RA-LAD-001-es-Rev6.pdf')
 
     act(() => {
       i18n.changeLanguage(LanguageCodes.It)
     })
-    expect(screen.getByRole('document')).toHaveAttribute('data', 'fake-urlYLPZ-RA-LAD-001-it-Rev6.pdf')
+    expect(screen.getByTestId('udipdf')).toHaveAttribute('data', 'fake-urlYLPZ-RA-LAD-001-it-Rev6.pdf')
 
     act(() => {
       i18n.changeLanguage(LanguageCodes.De)
     })
-    expect(screen.getByRole('document')).toHaveAttribute('data', 'fake-urlYLPZ-RA-LAD-001-de-Rev6.pdf')
+    expect(screen.getByTestId('udipdf')).toHaveAttribute('data', 'fake-urlYLPZ-RA-LAD-001-de-Rev6.pdf')
 
   })
 })
