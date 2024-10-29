@@ -10,6 +10,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-3300 Legend in "rescue carbs & manual bolus intakes" table is not consistent with what is displayed
 - YLP-3303 Rescue carbs tooltip in "Rescue carbs & manual bolus intakes" table is wrong
 
+### Engineering use
+- YLP-3306 embed product labeling document (pdf) in yourloops
+
 ## 3.4.1 - 2024-09-25
 ### Fixed
 - YLP-3255 TDD calculated on 24 hours is wrong

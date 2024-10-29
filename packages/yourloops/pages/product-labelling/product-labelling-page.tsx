@@ -26,51 +26,59 @@
  */
 
 import React, { type FC, useState } from 'react'
-import parse from 'html-react-parser'
 import { getCurrentLang } from '../../lib/language'
 import i18n from 'i18next'
-import rawHtmlEN from './raw-html/EN'
-import rawHtmlFR from './raw-html/FR'
-import rawHtmlES from './raw-html/ES'
-import rawHtmlDE from './raw-html/DE'
-import rawHtmlNL from './raw-html/NL'
-import rawHtmlIT from './raw-html/IT'
 import Box from '@mui/material/Box'
 import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 import { setPageTitle } from '../../lib/utils'
 import { useTranslation } from 'react-i18next'
+import config from '../../lib/config/config'
+
+const getFileName = (): string => {
+  switch (getCurrentLang()) {
+    case LanguageCodes.Fr :
+      return config.YLPZ_RA_LAD_FR
+    case LanguageCodes.De :
+      return config.YLPZ_RA_LAD_DE
+    case LanguageCodes.Nl :
+      return config.YLPZ_RA_LAD_NL
+    case LanguageCodes.It :
+      return config.YLPZ_RA_LAD_IT
+    case LanguageCodes.Es :
+      return config.YLPZ_RA_LAD_ES
+    // default to english
+    case LanguageCodes.En :
+    default:
+      return config.YLPZ_RA_LAD_EN
+  }
+}
+
+const  getFilePath = (): string => {
+  return `${config.ASSETS_URL}${getFileName()}.pdf`
+}
 
 export const ProductLabellingPage: FC = () => {
   const { t } = useTranslation()
-  const getHtml = (): string => {
-    switch (getCurrentLang()) {
-      case LanguageCodes.De:
-        return rawHtmlDE
-      case LanguageCodes.Es:
-        return rawHtmlES
-      case LanguageCodes.Fr:
-        return rawHtmlFR
-      case LanguageCodes.Nl:
-        return rawHtmlNL
-      case LanguageCodes.It:
-        return rawHtmlIT
-      case LanguageCodes.En:
-      default:
-        return rawHtmlEN
-    }
-  }
 
-  const [html, setHtml] = useState<string>(getHtml())
+  const [filePath, setFilePath] = useState(getFilePath())
 
   i18n.on('languageChanged', () => {
-    setHtml(getHtml)
+    setFilePath(getFilePath())
   })
 
   setPageTitle(t('product-labelling'))
 
   return (
-    <Box marginBottom={2}>
-      {parse(html)}
+    <Box marginBottom={2} sx={{ width: '100%', height: '100%' }}>
+      <object
+        aria-label={t('product-labelling')}
+        data-testid="udipdf"
+        type="application/pdf"
+        data={filePath}
+        width="100%" height="100%"
+      >
+        {t('product-labelling')}
+      </object>
     </Box>
   )
 }
