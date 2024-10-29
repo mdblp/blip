@@ -38,8 +38,6 @@ const getFileName = (): string => {
   switch (getCurrentLang()) {
     case LanguageCodes.Fr :
       return config.YLPZ_RA_LAD_FR
-    case LanguageCodes.En :
-      return config.YLPZ_RA_LAD_EN
     case LanguageCodes.De :
       return config.YLPZ_RA_LAD_DE
     case LanguageCodes.Nl :
@@ -48,6 +46,8 @@ const getFileName = (): string => {
       return config.YLPZ_RA_LAD_IT
     case LanguageCodes.Es :
       return config.YLPZ_RA_LAD_ES
+    // default to english
+    case LanguageCodes.En :
     default:
       return config.YLPZ_RA_LAD_EN
   }
