@@ -55,21 +55,11 @@ const getFileName = (): string => {
 }
 
 const  getFilePath = (): string => {
-  return `${config.ASSETS_URL}${getFileName()}`
+  return `${config.ASSETS_URL}${getFileName()}.pdf`
 }
+
 export const ProductLabellingPage: FC = () => {
   const { t } = useTranslation()
-  const getHtml = (): string => {
-
-    return `
-        <object
-            role="document"
-            type="application/pdf"
-            data="${getFilePath()}.pdf"
-            width="100%" height="100%"
-        />`
-  }
-
 
   const [filePath, setFilePath] = useState(getFilePath())
 
