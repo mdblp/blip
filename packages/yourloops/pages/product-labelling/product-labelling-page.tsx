@@ -35,7 +35,7 @@ import { setPageTitle } from '../../lib/utils'
 import { useTranslation } from 'react-i18next'
 import config from '../../lib/config/config'
 
-function getFileName(): string {
+const getFileName = (): string => {
   switch (getCurrentLang()) {
     case LanguageCodes.Fr :
       return config.YLPZ_RA_LAD_FR
@@ -53,6 +53,10 @@ function getFileName(): string {
       return config.YLPZ_RA_LAD_EN
   }
 }
+
+const  getFilePath = (): string => {
+  return `${config.ASSETS_URL}${getFileName()}`
+}
 export const ProductLabellingPage: FC = () => {
   const { t } = useTranslation()
   const getHtml = (): string => {
@@ -61,23 +65,28 @@ export const ProductLabellingPage: FC = () => {
         <object
             role="document"
             type="application/pdf"
-            data="${config.ASSETS_URL}${getFileName()}.pdf"
+            data="${getFilePath()}.pdf"
             width="100%" height="100%"
         />`
   }
 
 
-  const [html, setHtml] = useState<string>(getHtml())
+  const [filePath, setFilePath] = useState(getFilePath())
 
   i18n.on('languageChanged', () => {
-    setHtml(getHtml)
+    setFilePath(getFilePath())
   })
 
   setPageTitle(t('product-labelling'))
 
   return (
     <Box marginBottom={2} sx={{ width: '100%', height: '100%' }}>
-      {parse(html)}
+      <object
+        role="document"
+        type="application/pdf"
+        data={filePath}
+        width="100%" height="100%"
+      />
     </Box>
   )
 }
