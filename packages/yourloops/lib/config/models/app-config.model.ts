@@ -56,11 +56,11 @@ export interface AppConfig {
   AUTH0_DOMAIN: string
   AUTH0_ISSUER: string
   AUTH0_CLIENT_ID: string
-  YLPZ_RA_LAD_001_FR_REV: string
-  YLPZ_RA_LAD_001_EN_REV: string
-  YLPZ_RA_LAD_001_NL_REV: string
-  YLPZ_RA_LAD_001_IT_REV: string
-  YLPZ_RA_LAD_001_ES_REV: string
-  YLPZ_RA_LAD_001_DE_REV: string
+  YLPZ_RA_LAD_FR: string
+  YLPZ_RA_LAD_EN: string
+  YLPZ_RA_LAD_NL: string
+  YLPZ_RA_LAD_IT: string
+  YLPZ_RA_LAD_ES: string
+  YLPZ_RA_LAD_DE: string
   IDLE_TIMEOUT_MS: number
 }
