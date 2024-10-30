@@ -110,12 +110,12 @@ module.exports = {
       LATEST_RELEASE: '2000-01-01',
       API_HOST: 'http://localhost:8009',
       BRANDING: 'diabeloop/blue',
-      YLPZ_RA_LAD_001_FR_REV: '1',
-      YLPZ_RA_LAD_001_EN_REV: '3',
-      YLPZ_RA_LAD_001_NL_REV: '0',
-      YLPZ_RA_LAD_001_ES_REV: '0',
-      YLPZ_RA_LAD_001_IT_REV: '0',
-      YLPZ_RA_LAD_001_DE_REV: '0',
+      YLPZ_RA_LAD_FR: 'YLPZ-RA-LAD-001-fr-Rev9',
+      YLPZ_RA_LAD_EN: 'YLPZ-RA-LAD-001-en-Rev9',
+      YLPZ_RA_LAD_NL: 'YLPZ-RA-LAD-001-nl-Rev6',
+      YLPZ_RA_LAD_IT: 'YLPZ-RA-LAD-001-it-Rev6',
+      YLPZ_RA_LAD_ES: 'YLPZ-RA-LAD-001-es-Rev6',
+      YLPZ_RA_LAD_DE: 'YLPZ-RA-LAD-001-de-Rev6',
       IDLE_TIMEOUT_MS: 1800000
     }
   },

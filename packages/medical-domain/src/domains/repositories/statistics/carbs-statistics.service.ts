@@ -32,12 +32,15 @@ import MealService from '../medical/datum/meal.service'
 import WizardService from '../medical/datum/wizard.service'
 import { buildHoursRangeMap, getWeekDaysFilter, roundValue, sumValues } from './statistics.utils'
 import {
-  type CarbsStatistics,
+  type CarbsStatistics, RecommendedRescueCarbsStatistics,
   RescueCarbsAveragePerRange,
   RescueCarbsAverageStatistics
 } from '../../models/statistics/carbs-statistics.model'
 import { getHours } from '../time/time.service'
 import { HoursRange } from '../../models/statistics/satistics.model'
+import Prescriptor from '../../models/medical/datum/enums/prescriptor.enum'
+
+const RECOMMENDED_PRESCRIPTOR_VALUES = [Prescriptor.Auto, Prescriptor.Hybrid]
 
 function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter): CarbsStatistics {
   const filteredMeal = MealService.filterOnDate(meal, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
@@ -117,37 +120,57 @@ function getRescueCarbsAverageStatistics(meals: Meal[], dateFilter: DateFilter):
   ])
 }
 
-function getRescueCarbsComputations(rescueCarbs: Meal[]): RescueCarbsAveragePerRange {
-  const numberOfRescueCarbs = rescueCarbs.length
+function getRescueCarbsRecommendedStats(recommendedRescueCarbs: Meal[]): RecommendedRescueCarbsStatistics {
+  const { totalCarbsValue, totalOverrideValue } = recommendedRescueCarbs.reduce((acc, rescueCarb) => {
+    const actualValue = rescueCarb.nutrition.carbohydrate.net
 
-  const numberOfModifiedCarbs = rescueCarbs.filter((meal) => meal.prescribedNutrition).length
-
-  const { sumOfRecommendCarbs, numberOfRecommendedCarbs, sumOfRecommendedCarbsOverride } = rescueCarbs.reduce((acc, meal) => {
-    if (meal.prescribedNutrition) { // If we are in a recommended carb
-      const recommendedCarb = meal?.prescribedNutrition?.carbohydrate.net ?? 0
+    if (rescueCarb.prescriptor === Prescriptor.Auto) {
       return {
-        sumOfRecommendCarbs: acc.sumOfRecommendCarbs + recommendedCarb ,
-        numberOfRecommendedCarbs: acc.numberOfRecommendedCarbs + 1,
-        sumOfRecommendedCarbsOverride: acc.sumOfRecommendedCarbsOverride + meal.nutrition.carbohydrate.net - recommendedCarb
+        totalCarbsValue: acc.totalCarbsValue + actualValue,
+        totalOverrideValue: acc.totalOverrideValue
       }
     }
-    return acc
-  }, { sumOfRecommendCarbs: 0, numberOfRecommendedCarbs: 0, sumOfRecommendedCarbsOverride: 0 })
 
-  if (numberOfRecommendedCarbs === 0) {
+    const recommendedValue = rescueCarb.prescribedNutrition?.carbohydrate.net ?? 0
+    const overrideValue = actualValue - recommendedValue
+
     return {
-      numberOfRescueCarbs,
-      numberOfModifiedCarbs,
-      averageRecommendedCarb: 0,
-      rescueCarbsOverrideAverage: 0
+      totalCarbsValue: acc.totalCarbsValue + recommendedValue,
+      totalOverrideValue: acc.totalOverrideValue + overrideValue
     }
-  }
-  
+  }, { totalCarbsValue: 0, totalOverrideValue: 0 })
+
+  const count = recommendedRescueCarbs.length
+  const hasRecommendedCarbs = count > 0
+  const averageValue = hasRecommendedCarbs ? roundValue(totalCarbsValue / count, 2) : 0
+  const averageOverride = hasRecommendedCarbs ? roundValue(totalOverrideValue / count, 1) : 0
+
   return {
-    numberOfRescueCarbs,
-    numberOfModifiedCarbs,
-    averageRecommendedCarb: roundValue(sumOfRecommendCarbs / numberOfRecommendedCarbs, 2),
-    rescueCarbsOverrideAverage: roundValue(sumOfRecommendedCarbsOverride / numberOfRecommendedCarbs, 1)
+    averageValue,
+    averageOverride
+  }
+}
+
+function getRescueCarbsComputations(rescueCarbs: Meal[]): RescueCarbsAveragePerRange {
+  const rescueCarbsCount = rescueCarbs.length
+
+  const modifiedCarbs = rescueCarbs.filter((rescueCarb) => {
+    const prescribedCarbValue = rescueCarb.prescribedNutrition?.carbohydrate.net
+    const actualCarbValue = rescueCarb.nutrition.carbohydrate.net
+    const isModifiedCarbValue = !!prescribedCarbValue && prescribedCarbValue !== actualCarbValue
+
+    return rescueCarb.prescriptor === Prescriptor.Hybrid && isModifiedCarbValue
+  })
+  const modifiedCarbsCount = modifiedCarbs.length
+
+  const recommendedCarbs = rescueCarbs.filter((rescueCarb) => rescueCarb.prescriptor && RECOMMENDED_PRESCRIPTOR_VALUES.includes(rescueCarb.prescriptor))
+  const recommendedStats = getRescueCarbsRecommendedStats(recommendedCarbs)
+
+  return {
+    numberOfRescueCarbs: rescueCarbsCount,
+    numberOfModifiedCarbs: modifiedCarbsCount,
+    averageRecommendedCarb: recommendedStats.averageValue,
+    rescueCarbsOverrideAverage: recommendedStats.averageOverride
   }
 }
 

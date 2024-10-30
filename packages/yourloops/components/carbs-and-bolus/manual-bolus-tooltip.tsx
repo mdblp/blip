@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,6 +40,7 @@ export const ManualBolusTooltip: FC<{ manualBolus: ManualBolusAveragePerRange }>
     <Box
       className={classes.hoverTooltip}
       sx={{ border: `2px solid ${MANUAL_BOLUS_COLOR}` }}
+      data-testid="manual-bolus-tooltip"
     >
       <div className={`${classes.tooltipTail} manual-bolus`} />
       <Typography

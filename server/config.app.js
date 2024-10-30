@@ -91,12 +91,12 @@ const config = {
   AUTH0_DOMAIN: process.env.AUTH0_DOMAIN || 'yourloops-dev.eu.auth0.com',
   AUTH0_ISSUER: process.env.AUTH0_ISSUER || process.env.AUTH0_DOMAIN,
   AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID || 'HDp2TbUBxOeR6A9dEfII94HfzmUokQK6',
-  YLPZ_RA_LAD_001_FR_REV: stringOption(process.env.YLPZ_RA_LAD_001_FR_REV, '1'),
-  YLPZ_RA_LAD_001_EN_REV: stringOption(process.env.YLPZ_RA_LAD_001_EN_REV, '1'),
-  YLPZ_RA_LAD_001_NL_REV: stringOption(process.env.YLPZ_RA_LAD_001_NL_REV, '0'),
-  YLPZ_RA_LAD_001_IT_REV: stringOption(process.env.YLPZ_RA_LAD_001_IT_REV, '0'),
-  YLPZ_RA_LAD_001_ES_REV: stringOption(process.env.YLPZ_RA_LAD_001_ES_REV, '0'),
-  YLPZ_RA_LAD_001_DE_REV: stringOption(process.env.YLPZ_RA_LAD_001_DE_REV, '0'),
+  YLPZ_RA_LAD_FR: process.env.YLPZ_RA_LAD_FR,
+  YLPZ_RA_LAD_EN: process.env.YLPZ_RA_LAD_EN,
+  YLPZ_RA_LAD_NL: process.env.YLPZ_RA_LAD_NL,
+  YLPZ_RA_LAD_IT: process.env.YLPZ_RA_LAD_IT,
+  YLPZ_RA_LAD_ES: process.env.YLPZ_RA_LAD_ES,
+  YLPZ_RA_LAD_DE: process.env.YLPZ_RA_LAD_DE,
   IDLE_TIMEOUT_MS: process.env.IDLE_TIMEOUT_MS || 1800000
 }
 

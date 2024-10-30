@@ -27,7 +27,16 @@
 
 import { faker } from '@faker-js/faker'
 import type Bolus from '../src/domains/models/medical/datum/bolus.model'
-import { AlarmCode, AlarmEvent, AlarmEventType, AlarmLevel, BolusSubtype, DatumType, Prescriptor } from '../src'
+import {
+  AlarmCode,
+  AlarmEvent,
+  AlarmEventType,
+  AlarmLevel,
+  BolusSubtype,
+  DatumType,
+  DeviceSystem,
+  Prescriptor
+} from '../src'
 import type Basal from '../src/domains/models/medical/datum/basal.model'
 import type Cbg from '../src/domains/models/medical/datum/cbg.model'
 import { bgUnits } from '../src/domains/models/medical/datum/bg.model'
@@ -38,7 +47,7 @@ import type DeviceParameterChange from '../src/domains/models/medical/datum/devi
 import type Meal from '../src/domains/models/medical/datum/meal.model'
 import type Message from '../src/domains/models/medical/datum/message.model'
 import type PhysicalActivity from '../src/domains/models/medical/datum/physical-activity.model'
-import type PumpSettings from '../src/domains/models/medical/datum/pump-settings.model'
+import type { PumpSettings } from '../src/domains/models/medical/datum/pump-settings.model'
 import type ReservoirChange from '../src/domains/models/medical/datum/reservoir-change.model'
 import type Smbg from '../src/domains/models/medical/datum/smbg.model'
 import type WarmUp from '../src/domains/models/medical/datum/warm-up.model'
@@ -167,7 +176,7 @@ function createRandomDeviceParameterChange(date?: Date): DeviceParameterChange {
   }
 }
 
-function createMealData(date?: Date): Meal {
+function createRescueCarbsData(date?: Date): Meal {
   return {
     ...createBaseData(date),
     type: DatumType.Food,
@@ -184,6 +193,20 @@ function createMealData(date?: Date): Meal {
         units: Unit.Gram
       }
     },
+  }
+}
+
+function createRescueCarbsNonModifiedData(date?: Date): Meal {
+  return {
+    ...createBaseData(date),
+    type: DatumType.Food,
+    meal: 'rescuecarbs',
+    nutrition: {
+      carbohydrate: {
+        net: 5,
+        units: Unit.Gram
+      }
+    }
   }
 }
 
@@ -235,7 +258,7 @@ function createRandomPumpSettings(date?: Date): PumpSettings {
         deviceId: faker.string.uuid(),
         imei: '',
         manufacturer: '',
-        name: '',
+        name: DeviceSystem.Dblg1,
         swVersion: faker.system.semver()
       },
       parameters: [],
@@ -244,7 +267,11 @@ function createRandomPumpSettings(date?: Date): PumpSettings {
         manufacturer: PumpManufacturer.Default,
         name: '',
         serialNumber: faker.string.uuid(),
-        swVersion: faker.system.semver()
+        swVersion: faker.system.semver(),
+        product: ''
+      },
+      securityBasals: {
+        rates: []
       }
     }
   }
@@ -259,7 +286,8 @@ function createRandomReservoirChange(date?: Date): ReservoirChange {
       manufacturer: PumpManufacturer.Default,
       name: '',
       serialNumber: faker.string.uuid(),
-      swVersion: faker.system.semver()
+      swVersion: faker.system.semver(),
+      product: ''
     }
   }
 }
@@ -320,7 +348,7 @@ function createRandomDatum(type: DatumType, subtype?: DeviceEventSubtype, date?:
           throw new Error('unknown type')
       }
     case DatumType.Food:
-      return createMealData(date)
+      return createRescueCarbsData(date)
     case DatumType.Message:
       return createRandomMessage(date)
     case DatumType.PhysicalActivity:
@@ -339,7 +367,7 @@ function createRandomDatum(type: DatumType, subtype?: DeviceEventSubtype, date?:
 export default createRandomDatum
 export {
   createRandomBasal, createRandomBolus, createRandomCbg, createRandomConfidentialMode,
-  createRandomDeviceParameterChange, createMealData, createRandomMessage,
+  createRandomDeviceParameterChange, createRescueCarbsData, createRescueCarbsNonModifiedData, createRandomMessage,
   createRandomPhysicalActivity, createRandomPumpSettings, createRandomReservoirChange,
   createRandomSmbg, createRandomWarmUp, createWizardData, createRandomZenMode
 }
