@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.5.0-rc1 - 2024-11-06
+## 3.5.0-rc2 - 2024-11-06
 ### Changed
 - YLP-3310 Display Physical Activity below other events in Daily view
 
