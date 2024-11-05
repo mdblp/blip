@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.5.0-beta - 2024-09-03
+## 3.6.0-beta - 2024-09-03
 ### Added
 - YLP-2408 Display basal safety profile in Devices view
 - YLP-3128 As an HCP, I want to see which device is used by each patient
