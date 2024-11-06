@@ -52,6 +52,7 @@ import PumpManufacturer from './domains/models/medical/datum/enums/pump-manufact
 import {
   type CgmConfig,
   type DeviceConfig,
+  type MobileAppConfig,
   type ParameterConfig,
   type PumpConfig,
   type ParametersChange,
@@ -129,6 +130,7 @@ export {
   type Meal,
   type MedicalData,
   type Message,
+  type MobileAppConfig,
   type Parameter,
   type ParameterConfig,
   type PhysicalActivity,

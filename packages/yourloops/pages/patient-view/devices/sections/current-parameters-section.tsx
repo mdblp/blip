@@ -26,7 +26,7 @@
  */
 
 import React, { type FC } from 'react'
-import type { PumpSettings } from 'medical-domain'
+import { DeviceSystem, PumpSettings } from 'medical-domain'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
@@ -47,6 +47,7 @@ import {
   sortHistory,
   sortParameterList
 } from '../../../../components/device/utils/device.utils'
+import { MobileAppInfoTable } from '../../../../components/device/mobile-app-info-table'
 
 interface CurrentParametersSectionProps {
   pumpSettings: PumpSettings
@@ -62,7 +63,7 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
   const theme = useTheme()
   const { classes } = useStyles()
   const { t } = useTranslation()
-  const { device, pump, cgm, parameters, history } = pumpSettings.payload
+  const { device, pump, cgm, parameters, history, mobileApplication } = pumpSettings.payload
   const lastUploadDate = moment.tz(pumpSettings.normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
 
   const onClickCopyButton = async (): Promise<void> => {
@@ -102,6 +103,10 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
             <DeviceInfoTable device={device} />
             <PumpInfoTable pump={pump} />
             <CgmInfoTable cgm={cgm} />
+            {device.name == DeviceSystem.Dblg2
+              ? <MobileAppInfoTable app={mobileApplication} />
+              : null
+            }
           </Grid>
           <Grid item xs={12} sm={6} data-testid="parameters-container">
             <ParameterList parameters={parameters} />

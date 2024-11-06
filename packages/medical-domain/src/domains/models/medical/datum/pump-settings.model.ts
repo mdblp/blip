@@ -53,6 +53,9 @@ interface DeviceConfig {
   manufacturer: string
   name: DeviceSystem
   swVersion: string
+  operatingSystem: string
+  osVersion: string
+  smartphoneModel: string
 }
 
 export interface PumpSettingsParameter {
@@ -96,6 +99,12 @@ interface SecurityBasalConfig {
   rates: SecurityBasalRate[]
 }
 
+interface MobileAppConfig {
+  manufacturer: string
+  identifier: string
+  swVersion:string
+}
+
 interface PumpSettings extends BaseDatum {
   type: DatumType.PumpSettings
   deviceId: string
@@ -107,7 +116,8 @@ interface PumpSettings extends BaseDatum {
     parameters: ParameterConfig[]
     pump: PumpConfig
     securityBasals: SecurityBasalConfig
+    mobileApplication: MobileAppConfig
   }
 }
 
-export type { CgmConfig, DeviceConfig, ParametersChange, PumpConfig, ParameterConfig, PumpSettings, SecurityBasalConfig, SecurityBasalRate }
+export type { CgmConfig, DeviceConfig, ParametersChange, PumpConfig, ParameterConfig, PumpSettings, SecurityBasalConfig, SecurityBasalRate, MobileAppConfig }

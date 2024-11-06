@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import React, { type FC } from 'react'
-import { type DeviceConfig, DeviceSystem } from 'medical-domain'
+import type { MobileAppConfig } from 'medical-domain'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
@@ -34,20 +34,21 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { GenericListCard } from './generic-list-card'
 
-interface DeviceInfoProps {
-  device: DeviceConfig
+interface MobileApplicationInfoProps {
+  app: MobileAppConfig
 }
 
-export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
+export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app }) => {
   const { t } = useTranslation()
-  const title = device.name == DeviceSystem.Dblg1 ? device.name : device.smartphoneModel
+
   return (
-    <GenericListCard title={title} data-testid="settings-table-terminal">
+    <GenericListCard title={t('Algorithm')} data-testid="settings-table-pump">
       <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Manufacturer')}</Typography>
-            <Typography variant="body2" className="bold">{device.manufacturer}</Typography>
+            <Typography variant="body2" className="bold"
+                        sx={{ textTransform: 'uppercase' }}>{app.manufacturer ?? t('N/A')}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
@@ -55,46 +56,18 @@ export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Identifier')}</Typography>
-            <Typography variant="body2" className="bold">{device.deviceId}</Typography>
+            <Typography variant="body2" className="bold">{app.identifier ?? t('N/A')}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="body2">{t('IMEI')}</Typography>
-            <Typography variant="body2" className="bold">{device.imei}</Typography>
+            <Typography variant="body2">{t('Software version')}</Typography>
+            <Typography variant="body2" className="bold">{app.swVersion ?? t('N/A')}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
-      {device.name == DeviceSystem.Dblg1
-        ? <ListItem divider className="list-item">
-          <ListItemText className="list-item">
-            <Box display="flex" justifyContent="space-between">
-              <Typography variant="body2">{t('Software version')}</Typography>
-              <Typography variant="body2" className="bold">{device.swVersion}</Typography>
-            </Box>
-          </ListItemText>
-        </ListItem>
-        : <>
-          <ListItem divider className="list-item">
-            <ListItemText className="list-item">
-              <Box display="flex" justifyContent="space-between">
-                <Typography variant="body2">{t('Operating system')}</Typography>
-                <Typography variant="body2" className="bold">{device.operatingSystem}</Typography>
-              </Box>
-            </ListItemText>
-          </ListItem>
-          <ListItem divider className="list-item">
-            <ListItemText className="list-item">
-              <Box display="flex" justifyContent="space-between">
-                <Typography variant="body2">{t('Os version')}</Typography>
-                <Typography variant="body2" className="bold">{device.osVersion}</Typography>
-              </Box>
-            </ListItemText>
-          </ListItem>
-        </>
-      }
     </GenericListCard>
   )
 }
