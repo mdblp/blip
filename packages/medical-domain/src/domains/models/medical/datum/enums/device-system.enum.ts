@@ -1,9 +1,5 @@
 /*
-<<<<<<<< HEAD:packages/medical-domain/src/domains/models/medical/datum/enums/device-system.enum.ts
  * Copyright (c) 2024, Diabeloop
-========
- * Copyright (c) 2023-2024, Diabeloop
->>>>>>>> release/v3.5.0:packages/yourloops/components/carbs-and-bolus/enums/carbs-and-bolus-time-range-ms.enum.ts
  *
  * All rights reserved.
  *
