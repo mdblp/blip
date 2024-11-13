@@ -42,7 +42,7 @@ import { testDevicesVisualisation } from '../../../use-cases/device-settings-vis
 import { testDeviceSettingsNavigationForPatient } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
-describe('Device view for Patient', () => {
+describe('Device view for G1 Patient', () => {
   const firstName = 'patient firstName'
   const lastName = 'patient lastName'
 

@@ -40,9 +40,9 @@ interface DeviceInfoProps {
 
 export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
   const { t } = useTranslation()
-  const title = device.name == DeviceSystem.Dblg1 ? device.name : device.smartphoneModel
+  const name = device.name == DeviceSystem.Dblg1 ? device.name : device.smartphoneModel
   return (
-    <GenericListCard title={title} data-testid="settings-table-terminal">
+    <GenericListCard title={t('Phone')} data-testid="settings-table-terminal">
       <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
@@ -54,28 +54,39 @@ export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
       <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="body2">{t('Identifier')}</Typography>
-            <Typography variant="body2" className="bold">{device.deviceId}</Typography>
-          </Box>
-        </ListItemText>
-      </ListItem>
-      <ListItem divider className="list-item">
-        <ListItemText>
-          <Box display="flex" justifyContent="space-between">
-            <Typography variant="body2">{t('IMEI')}</Typography>
-            <Typography variant="body2" className="bold">{device.imei}</Typography>
+            <Typography variant="body2">{t('Product name')}</Typography>
+            <Typography variant="body2" className="bold">{name}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
       {device.name == DeviceSystem.Dblg1
-        ? <ListItem divider className="list-item">
-          <ListItemText className="list-item">
-            <Box display="flex" justifyContent="space-between">
-              <Typography variant="body2">{t('Software version')}</Typography>
-              <Typography variant="body2" className="bold">{device.swVersion}</Typography>
-            </Box>
-          </ListItemText>
-        </ListItem>
+        ?
+        <>
+          <ListItem divider className="list-item">
+            <ListItemText>
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="body2">{t('Identifier')}</Typography>
+                <Typography variant="body2" className="bold">{device.deviceId}</Typography>
+              </Box>
+            </ListItemText>
+          </ListItem>
+          <ListItem divider className="list-item">
+            <ListItemText>
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="body2">{t('IMEI')}</Typography>
+                <Typography variant="body2" className="bold">{device.imei}</Typography>
+              </Box>
+            </ListItemText>
+          </ListItem>
+          <ListItem divider className="list-item">
+            <ListItemText className="list-item">
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="body2">{t('Software version')}</Typography>
+                <Typography variant="body2" className="bold">{device.swVersion}</Typography>
+              </Box>
+            </ListItemText>
+          </ListItem>
+        </>
         : <>
           <ListItem divider className="list-item">
             <ListItemText className="list-item">
@@ -88,7 +99,7 @@ export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
           <ListItem divider className="list-item">
             <ListItemText className="list-item">
               <Box display="flex" justifyContent="space-between">
-                <Typography variant="body2">{t('Os version')}</Typography>
+                <Typography variant="body2">{t('Sdk version')}</Typography>
                 <Typography variant="body2" className="bold">{device.osVersion}</Typography>
               </Box>
             </ListItemText>

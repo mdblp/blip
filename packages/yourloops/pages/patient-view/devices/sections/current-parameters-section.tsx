@@ -101,12 +101,11 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
         >
           <Grid item xs={12} sm={6}>
             <DeviceInfoTable device={device} />
+            {device.name == DeviceSystem.Dblg2
+              && <MobileAppInfoTable app={mobileApplication} />
+            }
             <PumpInfoTable pump={pump} />
             <CgmInfoTable cgm={cgm} />
-            {device.name == DeviceSystem.Dblg2
-              ? <MobileAppInfoTable app={mobileApplication} />
-              : null
-            }
           </Grid>
           <Grid item xs={12} sm={6} data-testid="parameters-container">
             <ParameterList parameters={parameters} />
