@@ -42,6 +42,12 @@ export const checkCurrentParametersContent = () => {
   expect(deviceSettings).toHaveTextContent(`Devices and current parametersLast update: ${date}Copy as textDBLG1ManufacturerDiabeloopIdentifier1234IMEI1234567890Software version1.0.5.25PumpManufacturerVICENTRAProducttestPumpSerial number123456Pump versionbetaCGMManufacturerDexcomProductG6Sensor expirationApr 12, 2050Transmitter software versionv1Transmitter IDa1234Transmitter expirationApr 12, 2050SettingValueUnitBreakfast - average36.0gLunch - average96.0gDinner - average96.0gWeight72.0kgHyperglycemia threshold180.0mg/dLHypoglycemia threshold75.0mg/dLTarget glucose level110.0mg/dLAggressiveness in normoglycemia100%Aggressiveness in hyperglycemia100%Aggressiveness for breakfast100%Aggressiveness for lunch100%Aggressiveness for dinner80%Breakfast - small18.0gBreakfast - large54.0gLunch - small48.0gLunch - large144.0gDinner - small48.0gDinner - large144.0g`)
 }
 
+export const checkG2CurrentParametersContent = () => {
+  const deviceSettings = screen.getByTestId('current-parameters-section')
+  const date = moment.tz(pumpSettingsData.data.pumpSettings[0].normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
+  expect(deviceSettings).toHaveTextContent(`Devices and current parametersLast update: ${date}Copy as textDBLG1ManufacturerDiabeloopIdentifier1234IMEI1234567890Software version1.0.5.25PumpManufacturerVICENTRAProducttestPumpSerial number123456Pump versionbetaCGMManufacturerDexcomProductG6Sensor expirationApr 12, 2050Transmitter software versionv1Transmitter IDa1234Transmitter expirationApr 12, 2050SettingValueUnitBreakfast - average36.0gLunch - average96.0gDinner - average96.0gWeight72.0kgHyperglycemia threshold180.0mg/dLHypoglycemia threshold75.0mg/dLTarget glucose level110.0mg/dLAggressiveness in normoglycemia100%Aggressiveness in hyperglycemia100%Aggressiveness for breakfast100%Aggressiveness for lunch100%Aggressiveness for dinner80%Breakfast - small18.0gBreakfast - large54.0gLunch - small48.0gLunch - large144.0gDinner - small48.0gDinner - large144.0g`)
+}
+
 export const checkCopyTextButton = async () => {
   const writeText = jest.fn()
   Object.assign(navigator, {

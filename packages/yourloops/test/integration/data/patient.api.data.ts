@@ -42,10 +42,13 @@ import {
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 import { loggedInUserId } from '../mock/auth0.hook.mock'
 import { buildPatient, buildPatientMetrics, buildTeamMemberFromPatient } from './patient-builder.data'
+import { DeviceSystem } from 'medical-domain'
 
 export const patient1Id = 'patient1Id'
 export const patient2Id = 'patient2Id'
 export const patient3Id = 'patient3Id'
+export const patientG2Id = 'patientG2Id'
+
 export const unreadMessagesPatientId = 'unreadMessagesPatientId'
 export const patientWithMmolId = 'patientWithMmolId'
 export const timeSpentOutOfTargetRangePatientId = 'timeSpentOutOfTargetRangePatientId'
@@ -57,7 +60,7 @@ const pendingPatientId = 'pending-patient'
 const defaultMonitoringAlertsParameters = monitoringAlertsParameters
 
 const defaultSettings: PatientSettings = {
-  system: 'DBLG1'
+  system: DeviceSystem.Dblg1
 }
 
 const defaultMonitoringAlerts: MonitoringAlerts = {
@@ -80,7 +83,7 @@ export const patient1Info: Patient = buildPatient({
     lastName: 'Groby',
     sex: Gender.Male
   },
-  settings: { ...defaultSettings, system: 'DBLG2' }
+  settings: { ...defaultSettings, system: DeviceSystem.Dblg2 }
 })
 
 export const patient1Metrics: PatientMetrics = buildPatientMetrics({ userId: patient1Id })

@@ -26,7 +26,7 @@
  */
 
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
-import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
+import { mockDataAPI, pumpSettingsData, pumpSettingsDblg2 } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { patient1Id } from '../../../data/patient.api.data'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
@@ -35,7 +35,7 @@ import { mockUserApi } from '../../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
-import { testDevicesVisualisation } from '../../../use-cases/device-settings-visualisation'
+import { testDevicesVisualisation, testG2DevicesVisualisation } from '../../../use-cases/device-settings-visualisation'
 import { testDeviceSettingsNavigationForCaregiver } from '../../../use-cases/device-settings-navigation'
 import { testAppMainLayoutForCaregiver } from '../../../use-cases/app-main-layout-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
@@ -63,11 +63,20 @@ describe('Devices view for Caregiver', () => {
     await testAppMainLayoutForCaregiver({ loggedInUserFullName: `${lastName} ${firstName}` })
   })
 
-  it('should display correct parameters', async () => {
+  it('should display correct parameters when having g1 share', async () => {
     await act(async () => {
       renderPage(devicesRoute)
     })
     await testDevicesVisualisation()
+  })
+
+  it('should display correct parameters when having g2 share', async () => {
+    mockDataAPI(pumpSettingsDblg2)
+
+    await act(async () => {
+      renderPage(devicesRoute)
+    })
+    await testG2DevicesVisualisation()
   })
 
   it('should navigate to daily page when clicking on the daily button', async () => {
