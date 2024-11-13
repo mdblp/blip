@@ -123,7 +123,14 @@ class DataUtil {
       if (!device) {
         return noPumpData
       }
-
+      const mobileApplication = pumpSettings?.payload?.mobileApplication
+      //TODO: ask celia
+      if (mobileApplication) {
+        return {
+          deviceModel: mobileApplication.name,
+          manufacturer: mobileApplication.manufacturer
+        }
+      }
       return {
         deviceModel: device.name,
         manufacturer: device.manufacturer

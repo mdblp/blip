@@ -33,7 +33,7 @@ import {
 } from '../../../utils/datetime/datetime.util'
 import {
   type CgmConfig,
-  type DeviceConfig,
+  type DeviceConfig, MobileAppConfig,
   type ParameterConfig,
   type PumpConfig,
   type TimePrefs
@@ -73,7 +73,7 @@ const TABLE_COLUMNS: SettingsTableColumn[] = [
   }
 ]
 
-type TableData = CgmConfig | DeviceConfig | PumpConfig
+type TableData = CgmConfig | DeviceConfig | PumpConfig | MobileAppConfig
 
 const getTimePrefs = (timezone = TIMEZONE_UTC): TimePrefs => {
   const timezoneName = timezone === TIMEZONE_UTC ? new Intl.DateTimeFormat().resolvedOptions().timeZone : timezone
@@ -104,16 +104,19 @@ const getTextByDataTableType = (type: PdfSettingsDataType): string => {
       return t('Device')
     case PdfSettingsDataType.Pump:
       return t('Pump')
+    case PdfSettingsDataType.MobileApplication:
+      return t('Mobile application')
   }
 }
 
 const getSubTextByDataTableType = (type: PdfSettingsDataType, data: TableData): string | undefined => {
   switch (type) {
     case PdfSettingsDataType.Cgm:
+    case PdfSettingsDataType.MobileApplication:
       return
     case PdfSettingsDataType.Device:
     case PdfSettingsDataType.Pump:
-      return `- ${data.name}`
+      return `- ${data.name}` //TODO: ask celia
   }
 }
 
@@ -169,6 +172,18 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
       }, {
         label: t('Pump version'),
         value: pump.swVersion
+      }]
+    case PdfSettingsDataType.MobileApplication:
+      const mobileApp = data as MobileAppConfig
+      return [{
+        label: t('Manufacturer'),
+        value: mobileApp.manufacturer
+      }, {
+        label: t('Name'),
+        value: mobileApp.name
+      },{
+        label: t('Software version'),
+        value: mobileApp.swVersion
       }]
   }
 }

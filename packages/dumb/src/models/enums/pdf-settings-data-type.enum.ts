@@ -28,5 +28,6 @@
 export enum PdfSettingsDataType {
   Cgm = 'Cgm',
   Device = 'Device',
-  Pump = 'Pump'
+  Pump = 'Pump',
+  MobileApplication = 'MobileApplication',
 }
