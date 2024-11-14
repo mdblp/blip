@@ -123,9 +123,10 @@ class DataUtil {
       if (!device) {
         return noPumpData
       }
+
       const mobileApplication = pumpSettings?.payload?.mobileApplication
-      //TODO: ask celia
-      if (mobileApplication) {
+      //TODO: ask celia for the constant
+      if (mobileApplication?.identifier === 'DBLG2') {
         return {
           deviceModel: mobileApplication.name,
           manufacturer: mobileApplication.manufacturer
