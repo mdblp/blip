@@ -1020,6 +1020,8 @@ export const pumpSettingsDblg2WithoutSecurityBasalData: Data = {
     pumpSettings: [
       {
         normalTime: '2020-01-01T10:00:00.000Z',
+        deviceId: '1234',
+        deviceTime: '2020-01-01T10:00:00.000Z',
         type: DatumType.PumpSettings,
         id: 'pump_settings',
         timezone: 'UTC',
@@ -1044,7 +1046,9 @@ export const pumpSettingsDblg2WithoutSecurityBasalData: Data = {
             name: DeviceSystem.Dblg2,
             operatingSystem: 'Android',
             osVersion: '14',
-            smartphoneModel: 'A25'
+            smartphoneModel: 'A25',
+            imei : '',
+            swVersion: ''
           },
           history,
           parameters: [

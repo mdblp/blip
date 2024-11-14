@@ -33,7 +33,9 @@ import {
 } from '../../../utils/datetime/datetime.util'
 import {
   type CgmConfig,
-  type DeviceConfig, DeviceSystem, MobileAppConfig,
+  type DeviceConfig,
+  DeviceSystem,
+  MobileAppConfig,
   type ParameterConfig,
   type PumpConfig,
   type TimePrefs
@@ -101,7 +103,7 @@ const getTextByDataTableType = (type: PdfSettingsDataType): string => {
     case PdfSettingsDataType.Cgm:
       return t('CGM')
     case PdfSettingsDataType.Device:
-      return t('Device')
+      return t('phone')
     case PdfSettingsDataType.Pump:
       return t('Pump')
     case PdfSettingsDataType.MobileApplication:
@@ -115,9 +117,15 @@ const getSubTextByDataTableType = (type: PdfSettingsDataType, data: TableData): 
     case PdfSettingsDataType.MobileApplication:
       return
     case PdfSettingsDataType.Device:
+      const deviceData = data as DeviceConfig
+      if (deviceData.name === DeviceSystem.Dblg2) {
+        return
+      } else {
+        return `- ${deviceData.name}`
+      }
     case PdfSettingsDataType.Pump:
-      const dataWithType = data as DeviceConfig | PumpConfig
-      return `- ${dataWithType.name}`
+      const pumpData = data as PumpConfig
+      return `- ${pumpData.name}`
   }
 }
 
