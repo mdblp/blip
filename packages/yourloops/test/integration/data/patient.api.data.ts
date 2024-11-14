@@ -47,7 +47,7 @@ import { DeviceSystem } from 'medical-domain'
 export const patient1Id = 'patient1Id'
 export const patient2Id = 'patient2Id'
 export const patient3Id = 'patient3Id'
-export const patientG2Id = 'patientG2Id'
+export const patientg2Id = 'patientG2Id'
 
 export const unreadMessagesPatientId = 'unreadMessagesPatientId'
 export const patientWithMmolId = 'patientWithMmolId'

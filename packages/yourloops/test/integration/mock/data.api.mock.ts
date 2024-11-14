@@ -629,12 +629,15 @@ export const pumpSettingsData: Data = {
   }
 }
 
+
 export const pumpSettingsDblg2: Data = {
   dataRange: ['2022-08-08T16:35:00.000Z', '2022-08-08T16:40:00.000Z'],
   data: {
     pumpSettings: [
       {
         normalTime: '2020-01-01T10:00:00.000Z',
+        deviceId: '1234',
+        deviceTime: '2020-01-01T10:00:00.000Z',
         type: DatumType.PumpSettings,
         id: 'pump_settings',
         timezone: 'UTC',
@@ -659,7 +662,9 @@ export const pumpSettingsDblg2: Data = {
             name: DeviceSystem.Dblg2,
             operatingSystem: 'Android',
             osVersion: '14',
-            smartphoneModel: 'A25'
+            smartphoneModel: 'A25',
+            swVersion: '',
+            imei: ''
           },
           history,
           parameters: [
@@ -788,12 +793,12 @@ export const pumpSettingsDblg2: Data = {
             manufacturer: PumpManufacturer.Vicentra,
             product: "testPump",
             name: 'Kaleido',
+            swVersion: 'beta',
             serialNumber: '123456',
-            swVersion: 'beta'
           },
           mobileApplication: {
             manufacturer: Source.Diabeloop,
-            name: DeviceSystem.Dblg2,
+            identifier: DeviceSystem.Dblg2,
             swVersion: '1.0.0'
           },
           securityBasals: {
@@ -1173,7 +1178,7 @@ export const pumpSettingsDblg2WithoutSecurityBasalData: Data = {
           },
           mobileApplication: {
             manufacturer: Source.Diabeloop,
-            name: DeviceSystem.Dblg2,
+            identifier: DeviceSystem.Dblg2,
             swVersion: '1.0.0'
           },
           securityBasals: { rates: null }

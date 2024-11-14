@@ -67,7 +67,7 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
   const lastUploadDate = moment.tz(pumpSettings.normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
 
   const onClickCopyButton = async (): Promise<void> => {
-    await copySettingsToClipboard(lastUploadDate, device, parameters)
+    await copySettingsToClipboard(lastUploadDate, device, parameters, mobileApplication)
   }
 
   sortParameterList(parameters)

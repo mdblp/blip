@@ -29,7 +29,7 @@ import {
   checkChangeHistoryContent,
   checkCopyTextButton,
   checkCurrentParametersContent,
-  checkDevicesMenuLayout, checkG2CurrentParametersContent,
+  checkDevicesMenuLayout, checkG2CopyTextButton, checkG2CurrentParametersContent,
   checkSafetyBasalProfileContent,
   checkSafetyBasalProfileErrorMessage
 } from '../assert/device-view.assert'
@@ -67,7 +67,7 @@ const testCurrentParametersVisualisation = async () => {
 
 const testG2CurrentParametersVisualisation = async () => {
   checkG2CurrentParametersContent()
-  await checkCopyTextButton()
+  await checkG2CopyTextButton()
 }
 
 const testBasalSafetyProfileVisualisation = async () => {
