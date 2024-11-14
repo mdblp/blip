@@ -42,7 +42,7 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app }) => {
   const { t } = useTranslation()
 
   return (
-    <GenericListCard title={t('Mobile application')} data-testid="settings-table-pump">
+    <GenericListCard title={t('mobile-application')} data-testid="settings-table-mobileapp">
       <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">

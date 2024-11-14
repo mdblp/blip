@@ -105,7 +105,7 @@ const getTextByDataTableType = (type: PdfSettingsDataType): string => {
     case PdfSettingsDataType.Pump:
       return t('Pump')
     case PdfSettingsDataType.MobileApplication:
-      return t('Mobile application')
+      return t('mobile-application')
   }
 }
 

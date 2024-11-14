@@ -42,7 +42,7 @@ export const PARAMETER_STRING_MAX_WIDTH = 250
 
 export const copySettingsToClipboard = async (lastUploadDate: string, device: DeviceConfig, parameters: ParameterConfig[], mobileApp: MobileAppConfig): Promise<void> => {
   const lastUploadDateText = `${lastUploadDate}\n\n`
-  const deviceText = `-- ${t('Phone')} --\n`
+  const deviceText = `-- ${t('phone')} --\n`
   let deviceTableText = ''
   let mobileAppText = ''
   let mobileAppTableText = ''
@@ -50,7 +50,7 @@ export const copySettingsToClipboard = async (lastUploadDate: string, device: De
   if (device.name == DeviceSystem.Dblg1) {
     deviceTableText = textTable([
       [t('Manufacturer'), device.manufacturer],
-      [t('Product Name'), device.name],
+      [t('Product'), device.name],
       [t('Identifier'), device.deviceId],
       [t('IMEI'), device.imei],
       [t('Software version'), device.swVersion]]
@@ -60,11 +60,11 @@ export const copySettingsToClipboard = async (lastUploadDate: string, device: De
   if (device.name == DeviceSystem.Dblg2) {
     deviceTableText = textTable([
       [t('Manufacturer'), device.manufacturer],
-      [t('Product Name'), device.smartphoneModel],
-      [t('Operating system'), device.operatingSystem],
-      [t('Sdk version'), device.osVersion]
+      [t('Product'), device.smartphoneModel],
+      [t('operating-system'), device.operatingSystem],
+      [t('sdk-version'), device.osVersion]
     ]) as string
-    mobileAppText = `\n\n-- ${t('Mobile application')} --\n`
+    mobileAppText = `\n\n-- ${t('mobile-application')} --\n`
     mobileAppTableText = textTable([
       [t('Manufacturer'), mobileApp.manufacturer],
       [t('Name'), mobileApp.identifier],

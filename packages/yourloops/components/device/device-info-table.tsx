@@ -42,7 +42,7 @@ export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
   const { t } = useTranslation()
   const name = device.name == DeviceSystem.Dblg1 ? device.name : device.smartphoneModel
   return (
-    <GenericListCard title={t('Phone')} data-testid="settings-table-terminal">
+    <GenericListCard title={t('phone')} data-testid="settings-table-terminal">
       <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
@@ -54,7 +54,7 @@ export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
       <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="body2">{t('Product name')}</Typography>
+            <Typography variant="body2">{t('Product')}</Typography>
             <Typography variant="body2" className="bold">{name}</Typography>
           </Box>
         </ListItemText>
@@ -91,7 +91,7 @@ export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
           <ListItem divider className="list-item">
             <ListItemText className="list-item">
               <Box display="flex" justifyContent="space-between">
-                <Typography variant="body2">{t('Operating system')}</Typography>
+                <Typography variant="body2">{t('operating-system')}</Typography>
                 <Typography variant="body2" className="bold">{device.operatingSystem}</Typography>
               </Box>
             </ListItemText>
@@ -99,7 +99,7 @@ export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
           <ListItem divider className="list-item">
             <ListItemText className="list-item">
               <Box display="flex" justifyContent="space-between">
-                <Typography variant="body2">{t('Sdk version')}</Typography>
+                <Typography variant="body2">{t('sdk-version')}</Typography>
                 <Typography variant="body2" className="bold">{device.osVersion}</Typography>
               </Box>
             </ListItemText>
