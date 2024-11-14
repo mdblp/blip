@@ -70,6 +70,7 @@ export class SettingsPrintView extends PrintView<PdfSettingsData> {
 
   render(): void {
     this.renderTableSection(PdfSettingsDataType.Device)
+    this.renderTableSection(PdfSettingsDataType.MobileApplication)
     this.renderTableSection(PdfSettingsDataType.Pump)
     this.renderTableSection(PdfSettingsDataType.Cgm)
     this.renderDeviceParametersTableSection()
