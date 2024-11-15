@@ -26,7 +26,7 @@
  */
 
 import React, { type FC } from 'react'
-import { type DeviceConfig, DeviceSystem } from 'medical-domain'
+import { type DeviceConfig } from 'medical-domain'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
@@ -40,9 +40,9 @@ interface DeviceInfoProps {
 
 export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
   const { t } = useTranslation()
-  const name = device.name == DeviceSystem.Dblg1 ? device.name : device.smartphoneModel
+
   return (
-    <GenericListCard title={t('phone')} data-testid="settings-table-terminal">
+    <GenericListCard title={device.name} data-testid="settings-table-terminal">
       <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
@@ -54,58 +54,27 @@ export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
       <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="body2">{t('Product')}</Typography>
-            <Typography variant="body2" className="bold">{name}</Typography>
+            <Typography variant="body2">{t('Identifier')}</Typography>
+            <Typography variant="body2" className="bold">{device.deviceId}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
-      {device.name == DeviceSystem.Dblg1
-        ?
-        <>
-          <ListItem divider className="list-item">
-            <ListItemText>
-              <Box display="flex" justifyContent="space-between">
-                <Typography variant="body2">{t('Identifier')}</Typography>
-                <Typography variant="body2" className="bold">{device.deviceId}</Typography>
-              </Box>
-            </ListItemText>
-          </ListItem>
-          <ListItem divider className="list-item">
-            <ListItemText>
-              <Box display="flex" justifyContent="space-between">
-                <Typography variant="body2">{t('IMEI')}</Typography>
-                <Typography variant="body2" className="bold">{device.imei}</Typography>
-              </Box>
-            </ListItemText>
-          </ListItem>
-          <ListItem divider className="list-item">
-            <ListItemText className="list-item">
-              <Box display="flex" justifyContent="space-between">
-                <Typography variant="body2">{t('Software version')}</Typography>
-                <Typography variant="body2" className="bold">{device.swVersion}</Typography>
-              </Box>
-            </ListItemText>
-          </ListItem>
-        </>
-        : <>
-          <ListItem divider className="list-item">
-            <ListItemText className="list-item">
-              <Box display="flex" justifyContent="space-between">
-                <Typography variant="body2">{t('operating-system')}</Typography>
-                <Typography variant="body2" className="bold">{device.operatingSystem}</Typography>
-              </Box>
-            </ListItemText>
-          </ListItem>
-          <ListItem divider className="list-item">
-            <ListItemText className="list-item">
-              <Box display="flex" justifyContent="space-between">
-                <Typography variant="body2">{t('sdk-version')}</Typography>
-                <Typography variant="body2" className="bold">{device.osVersion}</Typography>
-              </Box>
-            </ListItemText>
-          </ListItem>
-        </>
-      }
+      <ListItem divider className="list-item">
+        <ListItemText>
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="body2">{t('IMEI')}</Typography>
+            <Typography variant="body2" className="bold">{device.imei}</Typography>
+          </Box>
+        </ListItemText>
+      </ListItem>
+      <ListItem>
+        <ListItemText className="list-item">
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="body2">{t('Software version')}</Typography>
+            <Typography variant="body2" className="bold">{device.swVersion}</Typography>
+          </Box>
+        </ListItemText>
+      </ListItem>
     </GenericListCard>
   )
 }

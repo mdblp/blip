@@ -103,7 +103,7 @@ const getTextByDataTableType = (type: PdfSettingsDataType): string => {
     case PdfSettingsDataType.Cgm:
       return t('CGM')
     case PdfSettingsDataType.Device:
-      return t('phone')
+      return t('Device')
     case PdfSettingsDataType.Pump:
       return t('Pump')
     case PdfSettingsDataType.MobileApplication:
@@ -154,35 +154,19 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
         value: formatLocalizedFromUTC((data as CgmConfig).endOfLifeTransmitterDate, timePrefs, longDayFormat)
       }]
     case PdfSettingsDataType.Device:
-      if ((data as DeviceConfig).name == DeviceSystem.Dblg2) {
-        return [{
-          label: t('Manufacturer'),
-          value: (data as DeviceConfig).manufacturer
-        }, {
-          label: t('Product'),
-          value: (data as DeviceConfig).smartphoneModel
-        }, {
-          label: t('operating-system'),
-          value: (data as DeviceConfig).operatingSystem
-        }, {
-          label: t('sdk-version'),
-          value: (data as DeviceConfig).osVersion
-        }]
-      } else {
-        return [{
-          label: t('Manufacturer'),
-          value: (data as DeviceConfig).manufacturer
-        }, {
-          label: t('Identifier'),
-          value: (data as DeviceConfig).deviceId
-        }, {
-          label: t('IMEI'),
-          value: (data as DeviceConfig).imei
-        }, {
-          label: t('Software version'),
-          value: (data as DeviceConfig).swVersion
-        }]
-      }
+      return [{
+        label: t('Manufacturer'),
+        value: (data as DeviceConfig).manufacturer
+      }, {
+        label: t('Identifier'),
+        value: (data as DeviceConfig).deviceId
+      }, {
+        label: t('IMEI'),
+        value: (data as DeviceConfig).imei
+      }, {
+        label: t('Software version'),
+        value: (data as DeviceConfig).swVersion
+      }]
     case PdfSettingsDataType.Pump:
       const pump = data as PumpConfig
       return [{

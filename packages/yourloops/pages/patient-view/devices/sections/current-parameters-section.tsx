@@ -100,8 +100,10 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
           rowSpacing={4}
         >
           <Grid item xs={12} sm={6}>
-            <DeviceInfoTable device={device} />
-            {device.name == DeviceSystem.Dblg2
+            {device.name == DeviceSystem.Dblg1
+              && <DeviceInfoTable device={device} />
+            }
+            {device.name.toUpperCase() == DeviceSystem.Dblg2
               && <MobileAppInfoTable app={mobileApplication} />
             }
             <PumpInfoTable pump={pump} />

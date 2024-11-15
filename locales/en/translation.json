@@ -69,6 +69,7 @@
   "Date": "Date",
   "Delivered": "Delivered",
   "Derived from _**{{total}}**_ {{smbgLabel}} readings.": "Derived from _**{{total}}**_ {{smbgLabel}} readings.",
+  "Device": "DBL",
   "Duration": "Duration",
   "Edit": "Edit",
   "Entered at": "Entered at",

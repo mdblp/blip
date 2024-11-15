@@ -29,7 +29,14 @@ import { type PdfDocumentOverridden } from '../../../models/print/pdf-override.m
 import { type PdfSettingsData } from '../../../models/print/pdf-data.model'
 import { type PrintViewParams } from '../../../models/print/print-view-params.model'
 import { PrintView } from '../print-view/print-view'
-import { type CgmConfig, type DeviceConfig, MobileAppConfig, type PumpConfig, type TimePrefs } from 'medical-domain'
+import {
+  type CgmConfig,
+  type DeviceConfig,
+  DeviceSystem,
+  MobileAppConfig,
+  type PumpConfig,
+  type TimePrefs
+} from 'medical-domain'
 import { type DeviceMetadata } from '../../../models/device-metadata.model'
 import i18next from 'i18next'
 import {
@@ -69,8 +76,10 @@ export class SettingsPrintView extends PrintView<PdfSettingsData> {
   }
 
   render(): void {
-    this.renderTableSection(PdfSettingsDataType.Device)
-    if ( this.data.payload?.mobileApplication?.identifier === 'DBLG2') {
+    if ( this.data.payload?.device?.name === DeviceSystem.Dblg1) {
+      this.renderTableSection(PdfSettingsDataType.Device)
+    }
+    if ( this.data.payload?.mobileApplication?.identifier.toUpperCase() === DeviceSystem.Dblg2) {
       this.renderTableSection(PdfSettingsDataType.MobileApplication)
     }
     this.renderTableSection(PdfSettingsDataType.Pump)
