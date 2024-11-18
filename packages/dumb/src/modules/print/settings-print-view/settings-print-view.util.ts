@@ -116,16 +116,18 @@ const getSubTextByDataTableType = (type: PdfSettingsDataType, data: TableData): 
     case PdfSettingsDataType.Cgm:
     case PdfSettingsDataType.MobileApplication:
       return
-    case PdfSettingsDataType.Device:
+    case PdfSettingsDataType.Device: {
       const deviceData = data as DeviceConfig
       if (deviceData.name === DeviceSystem.Dblg2) {
         return
       } else {
         return `- ${deviceData.name}`
       }
-    case PdfSettingsDataType.Pump:
+    }
+    case PdfSettingsDataType.Pump: {
       const pumpData = data as PumpConfig
       return `- ${pumpData.name}`
+    }
   }
 }
 
@@ -182,7 +184,7 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
         label: t('Pump version'),
         value: pump.swVersion
       }]
-    case PdfSettingsDataType.MobileApplication:
+    case PdfSettingsDataType.MobileApplication: {
       const mobileApp = data as MobileAppConfig
       return [{
         label: t('Manufacturer'),
@@ -194,6 +196,7 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
         label: t('Software version'),
         value: mobileApp.swVersion
       }]
+    }
   }
 }
 
