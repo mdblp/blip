@@ -1212,13 +1212,15 @@ class DailyPrintView extends PrintView {
         [suspend]
       ]
     }
+
+    cursor += 50 + legendItemLabelOffset
+    this.doc.fillColor('black').text(t('Basals'), cursor, legendTextMiddle)
+
     this.renderBasalPaths({
       basalScale: legendBasalYScale,
       data,
       xScale: legendBasalXScale
     })
-    cursor += 50 + legendItemLabelOffset
-    this.doc.fillColor('black').text(t('Basals'), cursor, legendTextMiddle)
 
     return this
   }
