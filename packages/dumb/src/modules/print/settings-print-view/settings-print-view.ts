@@ -76,10 +76,10 @@ export class SettingsPrintView extends PrintView<PdfSettingsData> {
   }
 
   render(): void {
-    if ( this.data.payload?.device?.name === DeviceSystem.Dblg1) {
+    if (this.data.payload?.device?.name === DeviceSystem.Dblg1) {
       this.renderTableSection(PdfSettingsDataType.Device)
     }
-    if ( this.data.payload?.mobileApplication?.identifier.toUpperCase() === DeviceSystem.Dblg2) {
+    if (this.data.payload?.mobileApplication?.identifier.toUpperCase() === DeviceSystem.Dblg2) {
       this.renderTableSection(PdfSettingsDataType.MobileApplication)
     }
     this.renderTableSection(PdfSettingsDataType.Pump)

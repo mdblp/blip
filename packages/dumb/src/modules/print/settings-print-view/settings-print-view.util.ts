@@ -120,9 +120,8 @@ const getSubTextByDataTableType = (type: PdfSettingsDataType, data: TableData): 
       const deviceData = data as DeviceConfig
       if (deviceData.name === DeviceSystem.Dblg2) {
         return
-      } else {
-        return `- ${deviceData.name}`
       }
+      return `- ${deviceData.name}`
     }
     case PdfSettingsDataType.Pump: {
       const pumpData = data as PumpConfig

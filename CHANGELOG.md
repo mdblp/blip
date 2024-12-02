@@ -5,8 +5,8 @@ It is based on Tidepool Blip 1.27.
 ## 3.6.0-beta - 2024-09-03
 ### Added
 - YLP-2408 Display basal safety profile in Devices view
-- YLP-3128 As an HCP, I want to see which device is used by each patient
 - YLP-2821 As a DBLG2 user, I want to be able to see the device tab
+- YLP-3128 As an HCP, I want to see which device is used by each patient
 
 ### Changed
 - YLP-3262 Allow redirection to DBLG2 app from YourLoops
