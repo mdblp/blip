@@ -34,6 +34,8 @@ import {
 import {
   type CgmConfig,
   type DeviceConfig,
+  DeviceSystem,
+  MobileAppConfig,
   type ParameterConfig,
   type PumpConfig,
   type TimePrefs
@@ -73,7 +75,7 @@ const TABLE_COLUMNS: SettingsTableColumn[] = [
   }
 ]
 
-type TableData = CgmConfig | DeviceConfig | PumpConfig
+type TableData = CgmConfig | DeviceConfig | PumpConfig | MobileAppConfig
 
 const getTimePrefs = (timezone = TIMEZONE_UTC): TimePrefs => {
   const timezoneName = timezone === TIMEZONE_UTC ? new Intl.DateTimeFormat().resolvedOptions().timeZone : timezone
@@ -104,16 +106,27 @@ const getTextByDataTableType = (type: PdfSettingsDataType): string => {
       return t('Device')
     case PdfSettingsDataType.Pump:
       return t('Pump')
+    case PdfSettingsDataType.MobileApplication:
+      return t('mobile-application')
   }
 }
 
 const getSubTextByDataTableType = (type: PdfSettingsDataType, data: TableData): string | undefined => {
   switch (type) {
     case PdfSettingsDataType.Cgm:
+    case PdfSettingsDataType.MobileApplication:
       return
-    case PdfSettingsDataType.Device:
-    case PdfSettingsDataType.Pump:
-      return `- ${data.name}`
+    case PdfSettingsDataType.Device: {
+      const deviceData = data as DeviceConfig
+      if (deviceData.name === DeviceSystem.Dblg2) {
+        return
+      }
+      return `- ${deviceData.name}`
+    }
+    case PdfSettingsDataType.Pump: {
+      const pumpData = data as PumpConfig
+      return `- ${pumpData.name}`
+    }
   }
 }
 
@@ -170,6 +183,19 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
         label: t('Pump version'),
         value: pump.swVersion
       }]
+    case PdfSettingsDataType.MobileApplication: {
+      const mobileApp = data as MobileAppConfig
+      return [{
+        label: t('Manufacturer'),
+        value: mobileApp.manufacturer
+      }, {
+        label: t('Name'),
+        value: mobileApp.identifier
+      },{
+        label: t('Software version'),
+        value: mobileApp.swVersion
+      }]
+    }
   }
 }
 

@@ -29,7 +29,14 @@ import { type PdfDocumentOverridden } from '../../../models/print/pdf-override.m
 import { type PdfSettingsData } from '../../../models/print/pdf-data.model'
 import { type PrintViewParams } from '../../../models/print/print-view-params.model'
 import { PrintView } from '../print-view/print-view'
-import { type CgmConfig, type DeviceConfig, type PumpConfig, type TimePrefs } from 'medical-domain'
+import {
+  type CgmConfig,
+  type DeviceConfig,
+  DeviceSystem,
+  MobileAppConfig,
+  type PumpConfig,
+  type TimePrefs
+} from 'medical-domain'
 import { type DeviceMetadata } from '../../../models/device-metadata.model'
 import i18next from 'i18next'
 import {
@@ -69,7 +76,12 @@ export class SettingsPrintView extends PrintView<PdfSettingsData> {
   }
 
   render(): void {
-    this.renderTableSection(PdfSettingsDataType.Device)
+    if (this.data.payload?.device?.name === DeviceSystem.Dblg1) {
+      this.renderTableSection(PdfSettingsDataType.Device)
+    }
+    if (this.data.payload?.mobileApplication?.identifier.toUpperCase() === DeviceSystem.Dblg2) {
+      this.renderTableSection(PdfSettingsDataType.MobileApplication)
+    }
     this.renderTableSection(PdfSettingsDataType.Pump)
     this.renderTableSection(PdfSettingsDataType.Cgm)
     this.renderDeviceParametersTableSection()
@@ -95,7 +107,7 @@ export class SettingsPrintView extends PrintView<PdfSettingsData> {
     }, tableData.columns, tableData.rows)
   }
 
-  private readonly getDataByDataType = (type: PdfSettingsDataType): CgmConfig | DeviceConfig | PumpConfig | undefined => {
+  private readonly getDataByDataType = (type: PdfSettingsDataType): CgmConfig | DeviceConfig | PumpConfig | MobileAppConfig | undefined => {
     switch (type) {
       case PdfSettingsDataType.Cgm:
         return this.data.payload?.cgm
@@ -103,6 +115,8 @@ export class SettingsPrintView extends PrintView<PdfSettingsData> {
         return this.data.payload?.device
       case PdfSettingsDataType.Pump:
         return this.data.payload?.pump
+      case PdfSettingsDataType.MobileApplication:
+        return this.data.payload?.mobileApplication
     }
   }
 

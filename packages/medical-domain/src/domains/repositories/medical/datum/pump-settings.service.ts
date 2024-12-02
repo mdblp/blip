@@ -28,7 +28,7 @@
 import {
   type CgmConfig,
   type ChangeType,
-  type DeviceConfig,
+  type DeviceConfig, MobileAppConfig,
   type ParameterConfig,
   type ParametersChange,
   type PumpConfig,
@@ -94,7 +94,10 @@ const normalizeDevice = (rawDevice: Record<string, unknown>): DeviceConfig => {
     imei: (rawDevice?.imei ?? '') as string,
     manufacturer: (rawDevice?.manufacturer ?? '') as string,
     name: (rawDevice?.name ?? '') as DeviceSystem,
-    swVersion: (rawDevice?.swVersion ?? '') as string
+    swVersion: (rawDevice?.swVersion ?? '') as string,
+    smartphoneModel: (rawDevice?.smartphoneModel ?? '') as string,
+    osVersion: (rawDevice?.osVersion ?? '') as string,
+    operatingSystem: (rawDevice?.operatingSystem ?? '') as string
   }
 }
 
@@ -107,6 +110,15 @@ const normalizePump = (rawPump: Record<string, unknown> | null): PumpConfig => {
     name: (rawPump?.name ?? notAvailableLabel) as string,
     serialNumber: (rawPump?.serialNumber ?? notAvailableLabel) as string,
     swVersion: (rawPump?.swVersion ?? notAvailableLabel) as string
+  }
+}
+
+const normalizeMobileApplication = (rawMobileApplication: Record<string, unknown> | null): MobileAppConfig => {
+  const notAvailableLabel = t('N/A')
+  return {
+    manufacturer: (rawMobileApplication?.manufacturer ?? '') as string,
+    identifier: (rawMobileApplication?.identifier ?? '') as string,
+    swVersion: (rawMobileApplication?.swVersion ?? notAvailableLabel) as string
   }
 }
 
@@ -142,7 +154,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const rawHistory = (payload?.history ?? []) as Array<Record<string, unknown>>
   const rawParams = (payload?.parameters ?? []) as Array<Record<string, unknown>>
   const rawSecurityBasals = (payload?.securityBasals ?? {}) as Record<string, unknown>
-
+  const rawMobileApplication = (payload?.mobileApplication ?? {}) as Record<string, unknown>
   const pumpSettings: PumpSettings = {
     ...base,
     type: DatumType.PumpSettings,
@@ -154,7 +166,8 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
       pump: normalizePump(rawPump),
       history: normalizeHistory(rawHistory, opts),
       parameters: normalizeParameters(rawParams, opts),
-      securityBasals: normalizeSecurityBasals(rawSecurityBasals)
+      securityBasals: normalizeSecurityBasals(rawSecurityBasals),
+      mobileApplication: normalizeMobileApplication(rawMobileApplication)
     }
   }
   return pumpSettings

@@ -159,7 +159,10 @@ describe('Settings print view util', () => {
         imei: '1234567890',
         manufacturer: 'Diabeloop',
         name: DeviceSystem.Dblg1,
-        swVersion: 'beta'
+        swVersion: 'beta',
+        operatingSystem: '',
+        osVersion: '',
+        smartphoneModel: ''
       }
 
       const result = getTableDataByDataType(PdfSettingsDataType.Device, device, timezone)

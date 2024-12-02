@@ -30,7 +30,7 @@ import {
   type DeviceConfig,
   type ParameterConfig,
   type PumpConfig,
-  type BasicData
+  type BasicData, MobileAppConfig
 } from 'medical-domain'
 
 export interface PdfData {
@@ -47,6 +47,7 @@ export interface PdfSettingsData extends PdfData {
     device?: DeviceConfig
     pump?: PumpConfig
     cgm?: CgmConfig
+    mobileApplication?: MobileAppConfig
     parameters?: ParameterConfig[]
   }
   originalDate: string

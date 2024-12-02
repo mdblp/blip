@@ -26,7 +26,7 @@
  */
 
 import {
-  type DeviceConfig,
+  type DeviceConfig, DeviceSystem, MobileAppConfig,
   type ParameterConfig,
   type ParametersChange,
   type PumpSettingsParameter,
@@ -40,15 +40,14 @@ import { formatCurrentDate } from 'dumb/dist/src/utils/datetime/datetime.util'
 const t = i18next.t.bind(i18next)
 export const PARAMETER_STRING_MAX_WIDTH = 250
 
-export const copySettingsToClipboard = async (lastUploadDate: string, device: DeviceConfig, parameters: ParameterConfig[]): Promise<void> => {
+export const copySettingsToClipboard = async (lastUploadDate: string, device: DeviceConfig, parameters: ParameterConfig[], mobileApp: MobileAppConfig): Promise<void> => {
   const lastUploadDateText = `${lastUploadDate}\n\n`
   const deviceText = `-- ${t('Device')} --\n`
-  const deviceTableText = textTable([
-    [t('Manufacturer'), device.manufacturer],
-    [t('Identifier'), device.deviceId],
-    [t('IMEI'), device.imei],
-    [t('Software version'), device.swVersion]]
-  ) as string
+  let deviceTableText = ''
+  let mobileAppText = ''
+  let mobileAppTableText = ''
+  let rawText = ''
+
   const parametersText = `\n\n-- ${t('Settings on day', { day: formatCurrentDate() })} --\n`
   const parametersTable = [[
     t('Name'),
@@ -59,7 +58,27 @@ export const copySettingsToClipboard = async (lastUploadDate: string, device: De
     parametersTable.push([t(`params|${parameter.name}`), parameter.value, parameter.unit])
   })
 
-  const rawText = `${lastUploadDateText}${deviceText}${deviceTableText}${parametersText}${textTable(parametersTable, { align: ['l', 'r', 'l'] })}`
+  if (device.name == DeviceSystem.Dblg1) {
+    deviceTableText = textTable([
+      [t('Manufacturer'), device.manufacturer],
+      [t('Identifier'), device.deviceId],
+      [t('IMEI'), device.imei],
+      [t('Software version'), device.swVersion]]
+    ) as string
+    rawText = `${lastUploadDateText}${deviceText}${deviceTableText}${parametersText}${textTable(parametersTable, { align: ['l', 'r', 'l'] })}`
+
+  }
+
+  if (device.name.toUpperCase() == DeviceSystem.Dblg2) {
+    mobileAppText = `-- ${t('mobile-application')} --\n`
+    mobileAppTableText = textTable([
+      [t('Manufacturer'), mobileApp.manufacturer],
+      [t('Name'), mobileApp.identifier],
+      [t('Software version'), mobileApp.swVersion],
+    ]) as string
+    rawText = `${lastUploadDateText}${mobileAppText}${mobileAppTableText}${parametersText}${textTable(parametersTable, { align: ['l', 'r', 'l'] })}`
+
+  }
 
   try {
     await navigator.clipboard.writeText(rawText)
