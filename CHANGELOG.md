@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Changed
 - YLP-3262 Allow redirection to DBLG2 app from YourLoops
+- YLP-3332 Rename "Pump settings" page of PDF export to "Settings"
 
 ### Fixed
 - YLP-2543 PDF report legend label font color is wrong

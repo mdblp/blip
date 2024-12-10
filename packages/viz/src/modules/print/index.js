@@ -190,7 +190,7 @@ export function createPrintView(type, data, opts, doc) {
       Renderer = utils.SettingsPrintView
 
       renderOpts = _.assign(renderOpts, {
-        title: t('Pump Settings')
+        title: t('settings')
       })
       break
 
