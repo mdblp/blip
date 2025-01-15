@@ -81,13 +81,13 @@ export default class DataApi {
     const response = await HttpService.get<Blob>({
       url: `/v0/export/${patientId}`,
       config: {
-        headers: { [HttpHeaderKeys.contentType]: HttpHeaderValues.csv },
+        headers: { [HttpHeaderKeys.contentType]: HttpHeaderValues.zip },
         responseType: "blob",
         params: { bgUnits, startDate, endDate }
       }
     })
     const data = response.data
-    const filename = response.headers['content-disposition'].split('filename=')[1];
+    const filename = response.headers[HttpHeaderKeys.contentDisposition].split('filename=')[1];
     return { Data: data, Name: filename }
   }
 

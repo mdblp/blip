@@ -251,7 +251,6 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
   const generateCsv = async (): Promise<CsvReportModel> => {
     const startDate = moment.utc(pdfOptions.start).startOf('day').toISOString()
     const endDate = moment.utc(pdfOptions.end).endOf('day').toISOString()
-    console.log("test1")
     return await DataApi.exportData(user, patient.userid, startDate, endDate)
   }
 
@@ -269,7 +268,7 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
       metrics.send('export_data', `save_report_${pdfOptions.format}`, pdfOptions.preset ?? 'custom')
       onClose()
     } catch (err) {
-      alert.error(err)
+      alert.error(err.message)
       metrics.send('export_data', `save_report$_${pdfOptions.format}`, 'error')
     } finally {
       setBuildingPdf(false)

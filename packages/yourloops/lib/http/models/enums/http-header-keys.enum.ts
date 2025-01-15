@@ -27,6 +27,7 @@
 
 export enum HttpHeaderKeys {
   contentType = 'Content-Type',
+  contentDisposition = 'content-disposition',
   sessionToken = 'x-tidepool-session-token',
   traceToken = 'x-tidepool-trace-session',
   language = 'x-tidepool-language',
