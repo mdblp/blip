@@ -29,7 +29,7 @@ import React, { type FunctionComponent, useEffect, useRef, useState } from 'reac
 import { PatientNavBarMemoized as PatientNavBar } from '../header-bars/patient-nav-bar'
 import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import { PrintPDFDialog } from '../pdf/print-pdf-dialog'
+import { PrintReportDialog } from '../pdf/print-report-dialog'
 import { PatientDashboard } from '../dashboard-widgets/patient-dashboard'
 import Daily from 'blip/app/components/chart/daily'
 import Trends from 'blip/app/components/chart/trends'
@@ -248,7 +248,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                   <Route path="*" element={<Navigate to={AppUserRoute.NotFound} replace />} />
                 </Routes>
                 {showPdfDialog &&
-                  <PrintPDFDialog
+                  <PrintReportDialog
                     bgPrefs={bgPrefs}
                     defaultPreset={'1week'}
                     medicalData={medicalData}
