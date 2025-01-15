@@ -68,7 +68,7 @@ export enum OutputFormat {
   Pdf = 'pdf'
 }
 
-export interface PrintPDFOptions {
+export interface ReportOptions {
   /** Print start date (ISO day ex: 2022-02-10) */
   start: string
   /** Print end date (ISO day ex: 2022-02-10) */
@@ -77,7 +77,7 @@ export interface PrintPDFOptions {
   format: OutputFormat
 }
 
-interface PrintPDFDialogProps {
+interface PrintReportDialogProps {
   bgPrefs: BgPrefs
   defaultPreset?: Presets
   medicalData: MedicalDataService
@@ -118,7 +118,7 @@ const printOptionsStyle = makeStyles({ name: 'dialog-pdf-options' })((theme: The
   }
 })
 
-function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs, format: OutputFormat): PrintPDFOptions {
+function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs, format: OutputFormat): ReportOptions {
   const end = maxDate.format('YYYY-MM-DD')
   let start: Dayjs
   switch (preset) {
@@ -142,7 +142,7 @@ function getDatesFromPreset(preset: Presets, minDate: Dayjs, maxDate: Dayjs, for
   return { start: start.format('YYYY-MM-DD'), end, preset, format }
 }
 
-export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
+export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
   const { defaultPreset, onClose, medicalData, bgPrefs, patient, updateDataForGivenRange } = props
   const { t } = useTranslation('yourloops')
   const theme = useTheme()
@@ -171,33 +171,33 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
     return { minDate: mi, maxDate: ma }
   }, [medicalData, customStartDate])
 
-  const [pdfOptions, setPDFOptions] = useState<PrintPDFOptions>(getDatesFromPreset(defaultPreset || DEFAULT_PRESET, minDate, maxDate, OutputFormat.Pdf))
-  const [buildingPdf, setBuildingPdf] = useState<boolean>(false)
+  const [reportOptions, setReportOptions] = useState<ReportOptions>(getDatesFromPreset(defaultPreset || DEFAULT_PRESET, minDate, maxDate, OutputFormat.Pdf))
+  const [buildingReport, setBuildingReport] = useState<boolean>(false)
   const { start, end, displayedDates } = useMemo(() => {
-    const startDate = customStartDate ?? dayjs(pdfOptions.start, { utc: true })
-    const endDate = customStartDate ?? dayjs(pdfOptions.end, { utc: true })
+    const startDate = customStartDate ?? dayjs(reportOptions.start, { utc: true })
+    const endDate = customStartDate ?? dayjs(reportOptions.end, { utc: true })
     const displayed = `${startDate.format('ll')} → ${endDate.format('ll')}`
     return { start: startDate, end: endDate, displayedDates: displayed }
-  }, [pdfOptions, customStartDate])
+  }, [reportOptions, customStartDate])
 
   const handleClickPreset = (preset: Presets): void => {
-    setPDFOptions(getDatesFromPreset(preset, minDate, maxDate, pdfOptions.format))
+    setReportOptions(getDatesFromPreset(preset, minDate, maxDate, reportOptions.format))
   }
 
   const handleChangeCustomDate = (d: Dayjs): void => {
     if (customStartDate) {
       const startDate = customStartDate.isBefore(d) ? customStartDate.format('YYYY-MM-DD') : d.format('YYYY-MM-DD')
       const endDate = customStartDate.isBefore(d) ? d.format('YYYY-MM-DD') : customStartDate.format('YYYY-MM-DD')
-      setPDFOptions({ start: startDate, end: endDate, format: pdfOptions.format })
+      setReportOptions({ start: startDate, end: endDate, format: reportOptions.format })
       setCustomStartDate(null)
     } else {
       setCustomStartDate(d)
     }
   }
 
-  const presetSelected = pdfOptions.preset
+  const presetSelected = reportOptions.preset
   const handleOutputFormat = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setPDFOptions({ ...pdfOptions, format: event.target.value as OutputFormat })
+    setReportOptions({ ...reportOptions, format: event.target.value as OutputFormat })
   }
 
   const downloadFile = (url: string, fileName: string): void => {
@@ -219,9 +219,9 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
   }
 
   const generatePdf = async (): Promise<string> => {
-    const start = moment.tz(pdfOptions.start, medicalData.getTimezoneAt(TimeService.getEpoch(pdfOptions.start))).startOf('day')
-    const timezone = medicalData.getTimezoneAt(TimeService.getEpoch(pdfOptions.end))
-    const end = moment.tz(pdfOptions.end, timezone).endOf('day')
+    const start = moment.tz(reportOptions.start, medicalData.getTimezoneAt(TimeService.getEpoch(reportOptions.start))).startOf('day')
+    const timezone = medicalData.getTimezoneAt(TimeService.getEpoch(reportOptions.end))
+    const end = moment.tz(reportOptions.end, timezone).endOf('day')
     const endPDFDate = end.toISOString()
     const timePrefs = {
       timezoneAware: true,
@@ -238,7 +238,7 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
     const pdfData = {
       basics: medicalDataUpdated.generateBasicsData(start.toISOString(), end.toISOString()),
       daily: vizUtils.data.selectDailyViewData(medicalDataUpdated, start, end),
-      settings: !pdfOptions.preset && lastPumpSettings
+      settings: !reportOptions.preset && lastPumpSettings
         ? vizUtils.data.generatePumpSettings(lastPumpSettings, end)
         : lastPumpSettings
     }
@@ -249,15 +249,15 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
   }
 
   const generateCsv = async (): Promise<CsvReportModel> => {
-    const startDate = moment.utc(pdfOptions.start).startOf('day').toISOString()
-    const endDate = moment.utc(pdfOptions.end).endOf('day').toISOString()
+    const startDate = moment.utc(reportOptions.start).startOf('day').toISOString()
+    const endDate = moment.utc(reportOptions.end).endOf('day').toISOString()
     return await DataApi.exportData(user, patient.userid, startDate, endDate)
   }
 
   const onClickDownload = async (): Promise<void> => {
     try {
-      setBuildingPdf(true)
-      switch (pdfOptions.format) {
+      setBuildingReport(true)
+      switch (reportOptions.format) {
         case OutputFormat.Pdf:
           downloadPdf(await generatePdf(), patient.userid)
           break
@@ -265,13 +265,13 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
           downloadCsv(await generateCsv())
           break
       }
-      metrics.send('export_data', `save_report_${pdfOptions.format}`, pdfOptions.preset ?? 'custom')
+      metrics.send('export_data', `save_report_${reportOptions.format}`, reportOptions.preset ?? 'custom')
       onClose()
     } catch (err) {
       alert.error(err.message)
-      metrics.send('export_data', `save_report$_${pdfOptions.format}`, 'error')
+      metrics.send('export_data', `save_report$_${reportOptions.format}`, 'error')
     } finally {
-      setBuildingPdf(false)
+      setBuildingReport(false)
     }
   }
 
@@ -281,8 +281,8 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
       fullScreen={fullScreen}
       open
       onClose={onClose}
-      data-start={pdfOptions.start}
-      data-end={pdfOptions.end}
+      data-start={reportOptions.start}
+      data-end={reportOptions.end}
       maxWidth={false}
     >
       <DialogContent>
@@ -371,7 +371,7 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
 
           <RadioGroup
             id="pdf-options-output-format"
-            value={pdfOptions.format}
+            value={reportOptions.format}
             row
             onChange={handleOutputFormat}
           >
@@ -404,7 +404,7 @@ export const PrintPDFDialog: FC<PrintPDFDialogProps> = (props) => {
         <LoadingButton
           data-testid="pdf-options-button-download"
           disabled={!!customStartDate}
-          loading={buildingPdf}
+          loading={buildingReport}
           color="primary"
           variant="contained"
           disableElevation
