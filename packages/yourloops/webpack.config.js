@@ -141,7 +141,7 @@ for (const branding of brandings) {
   })
 }
 plugins.push(
-  new CopyWebpackPlugin({ patterns: [...patterns, { from: '../../branding/palette.css', to: 'palette.css' }] })
+  new CopyWebpackPlugin({ patterns: [...patterns, { from: '../../branding/palette.css', to: 'palette.css' },  { from: '../../branding/palette.css', to: 'palette.[contenthash].css' }] })
 )
 
 /** @type {webpack.Configuration & { devServer: { [index: string]: any; }}} */

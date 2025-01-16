@@ -31,8 +31,10 @@ const reCookieBanner = /(^\s+<!-- Start of cookie-banner -->\n)(.*\n)*(^\s+<!-- 
 
 const reUrl = /(^https?:\/\/[^/]+).*/
 const reDashCase = /[A-Z](?:(?=[^A-Z])|[A-Z]*(?=[A-Z][^A-Z]|$))/g
-const scriptConfigJs = '<script defer type="text/javascript" src="config.js" integrity="{{CONFIG_HASH}}" crossorigin="anonymous"></script>'
 const outputFilenameTemplate = 'cloudfront-{{ TARGET_ENVIRONMENT }}-blip-request-viewer.js'
+let configJs = `window.config = ${JSON.stringify(blipConfig, null, 2)};`
+const configMd5 = getHash(configJs)
+const scriptConfigJs = `<script defer type="text/javascript" src="config.${configMd5}.js" integrity="{{CONFIG_HASH}}" crossorigin="anonymous"></script>`
 
 const featurePolicy = [
   "accelerometer 'none'",
@@ -185,8 +187,6 @@ function genOutputFile() {
   if (lambdaTemplate === null || indexHtml === null || distribFiles === null) {
     return
   }
-
-  let configJs = `window.config = ${JSON.stringify(blipConfig, null, 2)};`
   console.log('Using config:', configJs)
   const hashForConfig = crypto.createHash('sha512')
   hashForConfig.update(configJs)
@@ -200,6 +200,7 @@ function genOutputFile() {
     DISTRIB_FILES: distribFiles,
     INDEX_HTML: '',
     CONFIG_JS: configJs,
+    CONFIG_JS_MD5: configMd5,
     CONFIG_HASH: configHash,
     ASSETLINKS_JSON: assetLinksJsonStringified,
     TARGET_ENVIRONMENT: blipConfig.TARGET_ENVIRONMENT.toLowerCase(),
@@ -243,7 +244,7 @@ function withFilesList(err, files) {
     process.exitCode = 1
     return
   }
-  const selectedFiles = ["'config.js', 'version'"]
+  const selectedFiles = [`'config.${configMd5}.js', 'version'`]
   for (const file of files) {
     const filename = path.basename(file)
     if (filename === 'index.html') {
@@ -447,6 +448,29 @@ if (blipConfig.COOKIE_BANNER_CLIENT_ID !== 'disabled') {
   console.info('- Cookie banner is disabled')
   indexHtml = indexHtml.replace(reCookieBanner, '$1  <!-- disabled -->\n$3')
 }
+
+/*Add hash for palette.css file*/
+let paletteDir = path.resolve(`/dist/static`)
+fs.readdir(paletteDir, (err, files) => {
+  if (err) {
+    return console.error('Unable to scan directory /dist/static: ' + err)
+  }
+
+  // Filter and find the file starting with 'palette'
+  // Regular expression to match palette.<md5>.css
+  const md5Pattern = /^palette\.[\da-f]{20}\.css$/i
+
+  // Find the file matching the pattern
+  let md5File = files.find(file => md5Pattern.test(file))
+
+  if(md5File) {
+    console.log('Palette md5 file found, serving md5 file in index.html')
+    let rePalette = /(.*)(palette\.css)(.*)/m
+    indexHtml = indexHtml.replace(rePalette, `$1${md5File}$3`)
+  } else {
+    console.log('No file starting with "palette" found, service default palette file without hash')
+  }
+})
 
 fs.readdir(`${distDir}/static`, withFilesList)
 fs.readFile(templateFilename, { encoding: 'utf-8' }, withTemplate)

@@ -11,7 +11,7 @@ const path = require('path');
 
 const ANDROID_ASSETLINKS_URI = '/.well-known/assetlinks.json'
 const INDEX_HTML_URI = 'index.html'
-const CONFIG_JS_URI = 'config.js'
+const CONFIG_JS_URI = `config.{{ CONFIG_JS_MD5 }}.js`
 const VERSION_URI = 'version'
 
 exports.handler = async (event, context, callback) => {
