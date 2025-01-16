@@ -81,10 +81,13 @@ describe('CloudFront Lambda Generator', function () {
   })
 
   it('Should return the config.md5.js', async () => {
-    const configFileName = indexHTML.match(/^.*(config\.[\da-f]{20}\.js).*$/i)
-    if (!configFileName) {
+    console.log(indexHTML)
+    const match = indexHTML.match(/.*(config\.[\da-f]{20}\.js).*/i)
+    if (!match) {
       expect.fail('config file name not found')
     }
+    const configFileName = match[1]
+    console.log(configFileName)
     testBase.Records[0].cf.request.uri = `/${configFileName}`
     const response = await handler(testBase, null)
     expect(response).to.be.an('object')

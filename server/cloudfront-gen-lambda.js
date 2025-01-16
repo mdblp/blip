@@ -465,8 +465,7 @@ fs.readdir(paletteDir, (err, files) => {
 
   if(md5File) {
     console.log('Palette md5 file found, serving md5 file in index.html')
-    let rePalette = /(.*)(palette\.css)(.*)/m
-    indexHtml = indexHtml.replace(rePalette, `$1${md5File}$3`)
+    indexHtml = indexHtml.replace('palette.css', `${md5File}`)
   } else {
     console.log('No file starting with "palette" found, service default palette file without hash')
   }
