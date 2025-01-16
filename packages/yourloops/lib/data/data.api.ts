@@ -87,7 +87,10 @@ export default class DataApi {
       }
     })
     const data = response.data
-    const filename = response.headers[HttpHeaderKeys.contentDisposition].split('filename=')[1];
+    let filename = "report.zip"
+    if (response.headers !== undefined && response.headers[HttpHeaderKeys.contentDisposition] !== undefined) {
+      filename = response.headers[HttpHeaderKeys.contentDisposition].split('filename=')[1];
+    }
     return { Data: data, Name: filename }
   }
 
