@@ -36,6 +36,7 @@ import { type MessageNote } from '../../../../lib/data/models/message-note.model
 import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
 import { HttpHeaderValues } from '../../../../lib/http/models/enums/http-header-values.enum'
 import { MedicalData, Unit } from 'medical-domain'
+import { CsvReportModel } from '../../../../lib/data/models/csv-report.model'
 
 describe('Data API', () => {
   const patientId = 'patientId'
@@ -112,20 +113,24 @@ describe('Data API', () => {
   })
 
   describe('exportData', () => {
-    const data = {} as Blob
-    jest.spyOn(HttpService, 'get').mockResolvedValue({ data } as AxiosResponse)
+    const report = {
+      Data : {} as Blob,
+      Name : "report.zip"
+    } as CsvReportModel
+    jest.spyOn(HttpService, 'get').mockResolvedValue({ data: report.Data }  as AxiosResponse)
     it('should get a blob with data in mg/dL if the user have no unit set', async () => {
       const bgUnits = Unit.MilligramPerDeciliter
       const startDate = '2022-02-02'
       const endDate = '2022-02-05'
 
       const response = await DataApi.exportData({} as User, patientId, startDate, endDate)
-      expect(response).toEqual(data)
+      expect(response).toEqual(report)
       expect(HttpService.get).toHaveBeenCalledWith({
-        url: `/export/${patientId}`,
+        url: `/v0/export/${patientId}`,
         config: {
-          headers: { [HttpHeaderKeys.contentType]: HttpHeaderValues.csv },
-          params: { bgUnits, startDate, endDate }
+          headers: { [HttpHeaderKeys.contentType]: HttpHeaderValues.zip },
+          params: { bgUnits, startDate, endDate },
+          responseType: "blob",
         }
       })
     })
@@ -141,12 +146,13 @@ describe('Data API', () => {
         startDate,
         endDate
       )
-      expect(response).toEqual(data)
+      expect(response).toEqual(report)
       expect(HttpService.get).toHaveBeenCalledWith({
-        url: `/export/${patientId}`,
+        url: `/v0/export/${patientId}`,
         config: {
-          headers: { [HttpHeaderKeys.contentType]: HttpHeaderValues.csv },
-          params: { bgUnits, startDate, endDate }
+          headers: { [HttpHeaderKeys.contentType]: HttpHeaderValues.zip },
+          params: { bgUnits, startDate, endDate },
+          responseType: "blob",
         }
       })
     })
