@@ -7,6 +7,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2408 Display basal safety profile in Devices view
 - YLP-2821 As a DBLG2 user, I want to be able to see the device tab
 - YLP-3128 As an HCP, I want to see which device is used by each patient
+- YLP-3145 As a yourloops user i want to do a csv export
 
 ### Changed
 - YLP-3262 Allow redirection to DBLG2 app from YourLoops
@@ -21,7 +22,6 @@ It is based on Tidepool Blip 1.27.
 ## 3.5.0 - 2024-11-06
 ### Changed
 - YLP-3310 Display Physical Activity below other events in Daily view
-- YLP-3145 As a yourloops user i want to do a csv export
 
 ### Fixed
 - YLP-3300 Legend in "rescue carbs & manual bolus intakes" table is not consistent with what is displayed
