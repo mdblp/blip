@@ -14,6 +14,9 @@ It is based on Tidepool Blip 1.27.
 ### Fixed
 - YLP-2543 PDF report legend label font color is wrong
 
+### Engineering use
+- YLP-3242 Cache-busting for static files in blip
+
 ## 3.5.0 - 2024-11-06
 ### Changed
 - YLP-3310 Display Physical Activity below other events in Daily view
