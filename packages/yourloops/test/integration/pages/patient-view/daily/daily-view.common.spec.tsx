@@ -121,7 +121,7 @@ describe('Daily view for anyone', () => {
 
       mockDataAPI(twoWeeksOfCbg)
 
-      const httpGetSpy = jest.spyOn(DataApi, 'exportData').mockResolvedValue('')
+      const httpGetSpy = jest.spyOn(DataApi, 'exportData').mockResolvedValue({ Data : {} as Blob, Name : 'report.zip' })
 
       renderPage(dailyRoute)
 
@@ -174,7 +174,7 @@ describe('Daily view for anyone', () => {
       await userEvent.click(generateReportDialogFirstCsv.getByText('Download'))
 
       // This checks for CSV generation
-      expect(downloadLinkElement.download).toEqual(`yourloops-report-${patient2AsTeamMember.userId}.csv`)
+      expect(downloadLinkElement.download).toEqual(`report.zip`)
       expect(downloadLinkElement.click).toHaveBeenCalledTimes(2)
       expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), patient2AsTeamMember.userId, '2020-01-02T00:00:00.000Z', '2020-01-15T23:59:59.999Z')
     })
