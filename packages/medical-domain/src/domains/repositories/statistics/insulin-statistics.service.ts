@@ -88,7 +88,7 @@ function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], mealBoluses: Wiz
   const filteredMealBoluses = WizardService.filterOnDate(mealBoluses, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const totalMealBoluses = filteredMealBoluses.reduce((total, mealBolus) => {
     if (mealBolus.bolus) {
-      return total + mealBolus.bolus.normal
+      return mealBolus.bolusPart2 ? total + mealBolus.bolus.normal + mealBolus.bolusPart2.normal : total + mealBolus.bolus.normal
     }
     return total
   }, 0)
