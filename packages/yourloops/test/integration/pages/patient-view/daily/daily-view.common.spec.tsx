@@ -50,6 +50,7 @@ import {
   testDailyViewTooltipsForDBLG2OrRecentSoftware
 } from '../../../use-cases/patient-data-visualisation'
 import { getCompleteDailyViewData } from '../../../mock/complete-daily-view-data'
+import { t } from '../../../../../lib/language'
 
 describe('Daily view for anyone', () => {
   const dailyRoute = AppUserRoute.Daily
@@ -122,7 +123,6 @@ describe('Daily view for anyone', () => {
       mockDataAPI(twoWeeksOfCbg)
 
       const httpGetSpy = jest.spyOn(DataApi, 'exportData').mockResolvedValue({ Data : {} as Blob, Name : 'report.zip' })
-
       renderPage(dailyRoute)
 
       const generateReportButton = await screen.findByText('Download report')
@@ -177,6 +177,66 @@ describe('Daily view for anyone', () => {
       expect(downloadLinkElement.download).toEqual(`report.zip`)
       expect(downloadLinkElement.click).toHaveBeenCalledTimes(2)
       expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), patient2AsTeamMember.userId, '2020-01-02T00:00:00.000Z', '2020-01-15T23:59:59.999Z')
+    })
+
+    it('should display an alert when CSV report generation failed', async () => {
+      dayjs.extend(weekArrayPlugin)
+      dayjs.extend(weekdaysPlugin)
+
+      const downloadLinkElement = {
+        click: jest.fn(),
+        remove: jest.fn(),
+        download: '',
+        href: ''
+      }
+
+      mockDataAPI(twoWeeksOfCbg)
+
+      const httpGetSpy = jest.spyOn(DataApi, 'exportData').mockRejectedValue(new Error(t('error-http-40x')))
+      renderPage(dailyRoute)
+
+      const generateReportButton = await screen.findByText('Download report')
+      expect(generateReportButton).toBeVisible()
+
+      await userEvent.click(screen.getByText('Download report'))
+
+      const generateReportDialog = within(screen.getByRole('dialog'))
+      expect(generateReportDialog.getByText('Download report')).toBeVisible()
+      expect(generateReportDialog.getByText('Choose a fixed period')).toBeVisible()
+      expect(generateReportDialog.getByRole('button', { name: '1 week' })).toHaveAttribute('aria-selected', 'true')
+      expect(generateReportDialog.getByRole('button', { name: '2 weeks' })).toHaveAttribute('aria-selected', 'false')
+      expect(generateReportDialog.getByRole('button', { name: '4 weeks' })).toHaveAttribute('aria-selected', 'false')
+      expect(generateReportDialog.getByRole('button', { name: '3 months' })).toHaveAttribute('aria-selected', 'false')
+      expect(generateReportDialog.getByText('or a customized period')).toBeVisible()
+      expect(generateReportDialog.getByTestId('button-calendar-day-2020-01-15')).toHaveAttribute('aria-selected', 'true')
+      expect(generateReportDialog.getByTestId('button-calendar-day-2020-01-09')).toHaveAttribute('aria-selected', 'true')
+      expect(generateReportDialog.getByTestId('button-calendar-day-2020-01-08')).toHaveAttribute('aria-selected', 'false')
+      expect(generateReportDialog.getByText('Choose an output format')).toBeVisible()
+      expect(generateReportDialog.getByRole('radio', { name: 'PDF' })).toBeChecked()
+      expect(generateReportDialog.getByRole('radio', { name: 'CSV' })).not.toBeChecked()
+      expect(generateReportDialog.getByText('Cancel')).toBeVisible()
+
+      const createElementSpy = jest.spyOn(document, 'createElement')
+      const appendChildSpy = jest.spyOn(document.body, 'appendChild')
+
+      when(createElementSpy).calledWith('a').mockReturnValueOnce(downloadLinkElement as unknown as HTMLElement)
+      when(appendChildSpy).calledWith(downloadLinkElement).mockReturnValueOnce(null)
+
+      await userEvent.click(generateReportDialog.getByRole('radio', { name: 'CSV' }))
+      await userEvent.click(generateReportDialog.getByRole('button', { name: '2 weeks' }))
+      expect(generateReportDialog.getByTestId('button-calendar-day-2020-01-01')).toHaveAttribute('aria-selected', 'false')
+      expect(generateReportDialog.getByTestId('button-calendar-day-2020-01-02')).toHaveAttribute('aria-selected', 'true')
+      expect(generateReportDialog.getByTestId('button-calendar-day-2020-01-15')).toHaveAttribute('aria-selected', 'true')
+
+      when(createElementSpy).calledWith('a').mockReturnValueOnce(downloadLinkElement as unknown as HTMLElement)
+      when(appendChildSpy).calledWith(downloadLinkElement).mockReturnValueOnce(null)
+
+      await userEvent.click(generateReportDialog.getByText('Download'))
+
+      // This checks for CSV generation
+      expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), patient2AsTeamMember.userId, '2020-01-02T00:00:00.000Z', '2020-01-15T23:59:59.999Z')
+      expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('An error occurred. Please contact support for assistance')
+
     })
   })
 
