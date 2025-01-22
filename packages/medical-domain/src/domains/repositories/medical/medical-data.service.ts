@@ -340,14 +340,11 @@ class MedicalDataService {
         wizard.bolus = sourceBolus.bolus
 
         /*if the bolus is biphasic, let's link the second bolus to the wizard*/
-        if (wizard.bolus.biphasicId) {
-          for(let i = 0; i < this.medicalData.bolus.length; i++ ){
-            const bolus = this.medicalData.bolus[i]
-            if (bolus.biphasicId == wizard.bolus?.biphasicId && bolus.id != wizard.bolus?.id) {
-              wizard.bolusPart2 = bolus
-              break;
-            }
-          }
+        const bolus = wizard.bolus
+        if (bolus.biphasicId) {
+          wizard.bolusPart2 = this.medicalData.bolus.find(
+            item => item.biphasicId === bolus.biphasicId && item.id !== bolus.id
+          ) ?? null;
         }
       }
       return wizard
