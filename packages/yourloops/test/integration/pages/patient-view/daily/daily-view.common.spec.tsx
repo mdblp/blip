@@ -51,6 +51,7 @@ import {
 } from '../../../use-cases/patient-data-visualisation'
 import { getCompleteDailyViewData } from '../../../mock/complete-daily-view-data'
 import { t } from '../../../../../lib/language'
+import { checkReportDialogPresets } from '../../../assert/report-dialog.assert'
 
 describe('Daily view for anyone', () => {
   const dailyRoute = AppUserRoute.Daily
@@ -130,28 +131,14 @@ describe('Daily view for anyone', () => {
 
       await userEvent.click(screen.getByText('Download report'))
 
-      const generateReportDialogFirstPdf = within(screen.getByRole('dialog'))
-      expect(generateReportDialogFirstPdf.getByText('Download report')).toBeVisible()
-      expect(generateReportDialogFirstPdf.getByText('Choose a fixed period')).toBeVisible()
-      expect(generateReportDialogFirstPdf.getByRole('button', { name: '1 week' })).toHaveAttribute('aria-selected', 'true')
-      expect(generateReportDialogFirstPdf.getByRole('button', { name: '2 weeks' })).toHaveAttribute('aria-selected', 'false')
-      expect(generateReportDialogFirstPdf.getByRole('button', { name: '4 weeks' })).toHaveAttribute('aria-selected', 'false')
-      expect(generateReportDialogFirstPdf.getByRole('button', { name: '3 months' })).toHaveAttribute('aria-selected', 'false')
-      expect(generateReportDialogFirstPdf.getByText('or a customized period')).toBeVisible()
-      expect(generateReportDialogFirstPdf.getByTestId('button-calendar-day-2020-01-15')).toHaveAttribute('aria-selected', 'true')
-      expect(generateReportDialogFirstPdf.getByTestId('button-calendar-day-2020-01-09')).toHaveAttribute('aria-selected', 'true')
-      expect(generateReportDialogFirstPdf.getByTestId('button-calendar-day-2020-01-08')).toHaveAttribute('aria-selected', 'false')
-      expect(generateReportDialogFirstPdf.getByText('Choose an output format')).toBeVisible()
-      expect(generateReportDialogFirstPdf.getByRole('radio', { name: 'PDF' })).toBeChecked()
-      expect(generateReportDialogFirstPdf.getByRole('radio', { name: 'CSV' })).not.toBeChecked()
-      expect(generateReportDialogFirstPdf.getByText('Cancel')).toBeVisible()
+      checkReportDialogPresets()
 
       const createElementSpy = jest.spyOn(document, 'createElement')
       const appendChildSpy = jest.spyOn(document.body, 'appendChild')
 
       when(createElementSpy).calledWith('a').mockReturnValueOnce(downloadLinkElement as unknown as HTMLElement)
       when(appendChildSpy).calledWith(downloadLinkElement).mockReturnValueOnce(null)
-
+      const generateReportDialogFirstPdf = within(screen.getByRole('dialog'))
       await userEvent.click(generateReportDialogFirstPdf.getByText('Download'))
 
       // This checks that we tried to generate a pdf
@@ -200,21 +187,7 @@ describe('Daily view for anyone', () => {
 
       await userEvent.click(screen.getByText('Download report'))
 
-      const generateReportDialog = within(screen.getByRole('dialog'))
-      expect(generateReportDialog.getByText('Download report')).toBeVisible()
-      expect(generateReportDialog.getByText('Choose a fixed period')).toBeVisible()
-      expect(generateReportDialog.getByRole('button', { name: '1 week' })).toHaveAttribute('aria-selected', 'true')
-      expect(generateReportDialog.getByRole('button', { name: '2 weeks' })).toHaveAttribute('aria-selected', 'false')
-      expect(generateReportDialog.getByRole('button', { name: '4 weeks' })).toHaveAttribute('aria-selected', 'false')
-      expect(generateReportDialog.getByRole('button', { name: '3 months' })).toHaveAttribute('aria-selected', 'false')
-      expect(generateReportDialog.getByText('or a customized period')).toBeVisible()
-      expect(generateReportDialog.getByTestId('button-calendar-day-2020-01-15')).toHaveAttribute('aria-selected', 'true')
-      expect(generateReportDialog.getByTestId('button-calendar-day-2020-01-09')).toHaveAttribute('aria-selected', 'true')
-      expect(generateReportDialog.getByTestId('button-calendar-day-2020-01-08')).toHaveAttribute('aria-selected', 'false')
-      expect(generateReportDialog.getByText('Choose an output format')).toBeVisible()
-      expect(generateReportDialog.getByRole('radio', { name: 'PDF' })).toBeChecked()
-      expect(generateReportDialog.getByRole('radio', { name: 'CSV' })).not.toBeChecked()
-      expect(generateReportDialog.getByText('Cancel')).toBeVisible()
+      checkReportDialogPresets()
 
       const createElementSpy = jest.spyOn(document, 'createElement')
       const appendChildSpy = jest.spyOn(document.body, 'appendChild')
@@ -222,8 +195,10 @@ describe('Daily view for anyone', () => {
       when(createElementSpy).calledWith('a').mockReturnValueOnce(downloadLinkElement as unknown as HTMLElement)
       when(appendChildSpy).calledWith(downloadLinkElement).mockReturnValueOnce(null)
 
+      const generateReportDialog = within(screen.getByRole('dialog'))
       await userEvent.click(generateReportDialog.getByRole('radio', { name: 'CSV' }))
       await userEvent.click(generateReportDialog.getByRole('button', { name: '2 weeks' }))
+
       expect(generateReportDialog.getByTestId('button-calendar-day-2020-01-01')).toHaveAttribute('aria-selected', 'false')
       expect(generateReportDialog.getByTestId('button-calendar-day-2020-01-02')).toHaveAttribute('aria-selected', 'true')
       expect(generateReportDialog.getByTestId('button-calendar-day-2020-01-15')).toHaveAttribute('aria-selected', 'true')
