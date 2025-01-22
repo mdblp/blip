@@ -96,7 +96,7 @@ function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], mealBoluses: Wiz
   const filteredMealBolusesIds = filteredMealBoluses.map((mealBolus) => mealBolus.bolusId)
 
   const filteredBolusesWithoutMeals = filteredBolus.reduce((bolusesWithoutMeals, bolus) => {
-    const isMealBolus = filteredMealBolusesIds.includes(bolus.id)
+    const isMealBolus = filteredMealBolusesIds.includes(bolus.id) || bolus.biphasicId
     if (!isMealBolus) {
       bolusesWithoutMeals.push(bolus)
     }
