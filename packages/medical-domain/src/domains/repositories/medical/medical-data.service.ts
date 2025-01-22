@@ -69,7 +69,6 @@ import WizardService from './datum/wizard.service'
 import AlarmEventService from './datum/alarm-event.service';
 import { WizardInputMealSource } from '../../models/medical/datum/enums/wizard-input-meal-source.enum'
 import { PumpSettings } from '../../models/medical/datum/pump-settings.model'
-import { forEach } from 'lodash'
 
 class MedicalDataService {
   medicalData: MedicalData = {
@@ -342,7 +341,6 @@ class MedicalDataService {
 
         /*if the bolus is biphasic, let's link the second bolus to the wizard*/
         if (wizard.bolus.biphasicId) {
-          /*foreach bolus, wizard.bolus.biphasicId == bolus.biphasicId && wizard.bolus.id != bolus.id */
           for(let i = 0; i < this.medicalData.bolus.length; i++ ){
             const bolus = this.medicalData.bolus[i]
             if (bolus.biphasicId == wizard.bolus?.biphasicId && bolus.id != wizard.bolus?.id) {
