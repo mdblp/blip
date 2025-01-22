@@ -1,6 +1,5 @@
-
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,8 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-export enum HttpHeaderValues {
-  json = 'application/json',
-  zip = 'application/zip',
+export interface CsvReportModel {
+  Data: Blob
+  Name: string
 }
