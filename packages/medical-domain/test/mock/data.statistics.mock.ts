@@ -27,11 +27,11 @@
 
 import type DateFilter from '../../src/domains/models/time/date-filter.model'
 import {
-  createRescueCarbsData,
   createRandomBasal,
   createRandomBolus,
-  createWizardData,
-  createRescueCarbsNonModifiedData
+  createRescueCarbsData,
+  createRescueCarbsNonModifiedData,
+  createWizardData
 } from '../data-generator'
 import {
   type Basal,
@@ -47,7 +47,7 @@ import {
 import WeekDays from '../../src/domains/models/time/enum/weekdays.enum'
 
 type BgDataRange = Array<[Date, string, number?]>
-type BolusDataRange = Array<[Date, number, Prescriptor?, BolusSubtype?]>
+type BolusDataRange = Array<[Date, number, Prescriptor?, BolusSubtype?, string?]>
 type BasalDataRange = Array<[Date, number, number, string]>
 const abbottDevice = 'AbbottFreeStyleLibre-XXX-XXXX'
 const dexcomDevice = 'Dexcom-XXX-XXXX'
@@ -101,6 +101,8 @@ export const basalsData: BasalDataRange = [
 
 export const bolusData: BolusDataRange = [
   [new Date('2018-02-01T03:00:00Z'), 1, Prescriptor.Auto, BolusSubtype.Normal],
+  [new Date('2018-02-01T04:00:00Z'), 0.5, Prescriptor.Auto, BolusSubtype.Biphasic, "biphasic1"],
+  [new Date('2018-02-01T04:30:00Z'), 0.5, Prescriptor.Auto, BolusSubtype.Biphasic, "biphasic1"],
   [new Date('2018-02-01T01:00:00Z'), 4, undefined, BolusSubtype.Pen],
   [new Date('2018-02-01T02:00:00Z'), 5, undefined, BolusSubtype.Normal],
   [new Date('2018-02-01T03:00:00Z'), 6, undefined, BolusSubtype.Biphasic],
@@ -215,7 +217,8 @@ export const buildBolusData = (bolusData: BolusDataRange): Bolus[] => (
     {
       ...createRandomBolus(bolus[0], bolus[3]),
       normal: bolus[1],
-      prescriptor: bolus[2] ?? Prescriptor.Auto
+      prescriptor: bolus[2] ?? Prescriptor.Auto,
+      biphasicId: bolus[4]
     }
   ))
 )

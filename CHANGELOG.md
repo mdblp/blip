@@ -13,6 +13,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Fixed
 - YLP-2543 PDF report legend label font color is wrong
+- YLP-3390 Meal bolus calculation not taking into account second part of biphasic bolus
 
 ### Engineering use
 - YLP-3242 Cache-busting for static files in blip
