@@ -1,11 +1,11 @@
 name: Front CI
 
 on:
-  on: workflow_dispatch
   push:
     branches: [ 'main', 'release/**', 'pre-release/**' ]
   pull_request:
     branches: [ 'main', 'release/**', 'pre-release/**' ]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
