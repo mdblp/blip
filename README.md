@@ -195,6 +195,9 @@ Et voila, the deployment starts. Of course you need credentials for the aws acco
 
 ## Documentation for developers
 
+[how to test the GitHub workflow](docs/howto-manualy-run-a-workflow.md)
+
+
 :warning: this part below contains deprecated contents, inhereted from tidepool
 
 + [Blip developer guide](docs/StartHere.md)
