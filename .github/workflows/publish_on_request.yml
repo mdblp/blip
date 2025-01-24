@@ -47,7 +47,7 @@ jobs:
         run: nice bash build.sh
 
       - name: Upload yourloops build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist/
@@ -66,7 +66,7 @@ jobs:
           ref: ${{ steps.comment-branch.outputs.head_ref }}
 
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
 
       - name: Get yourloops version from changelog
         uses: addnab/docker-run-action@v3
