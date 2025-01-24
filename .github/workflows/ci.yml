@@ -1,6 +1,7 @@
 name: Front CI
 
 on:
+  on: workflow_dispatch
   push:
     branches: [ 'main', 'release/**', 'pre-release/**' ]
   pull_request:
