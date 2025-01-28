@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,33 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  type CgmConfig,
-  type DeviceConfig,
-  type ParameterConfig,
-  type PumpConfig,
-  type BasicData,
-  MobileAppConfig,
-  SecurityBasalConfig
-} from 'medical-domain'
-
-export interface PdfData {
-  basics?: BasicData
-}
-
-export interface PdfSettingsData extends PdfData {
-  source: string
-  timezone?: string
-  normalTime?: string
-  deviceTime?: string
-  deviceSerialNumber?: string
-  payload?: {
-    device?: DeviceConfig
-    pump?: PumpConfig
-    cgm?: CgmConfig
-    mobileApplication?: MobileAppConfig
-    parameters?: ParameterConfig[]
-    securityBasals?: SecurityBasalConfig
-  }
-  originalDate: string
+export interface SafetyBasalItem {
+  rate: string,
+  startTime: string,
+  endTime: string
 }

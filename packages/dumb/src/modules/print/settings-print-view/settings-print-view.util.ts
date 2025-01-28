@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,13 +38,14 @@ import {
   MobileAppConfig,
   type ParameterConfig,
   type PumpConfig,
+  SecurityBasalConfig,
   type TimePrefs
 } from 'medical-domain'
 import i18next from 'i18next'
 import {
   type AlignType,
   type ParameterSettingsTable,
-  type ParameterSettingsTableRow,
+  type ParameterSettingsTableRow, SafetyBasalProfileTableRow,
   type SettingsTable,
   type SettingsTableColumn,
   type SettingsTableRow
@@ -75,7 +76,7 @@ const TABLE_COLUMNS: SettingsTableColumn[] = [
   }
 ]
 
-type TableData = CgmConfig | DeviceConfig | PumpConfig | MobileAppConfig
+type TableData = CgmConfig | DeviceConfig | PumpConfig | MobileAppConfig | SecurityBasalConfig
 
 const getTimePrefs = (timezone = TIMEZONE_UTC): TimePrefs => {
   const timezoneName = timezone === TIMEZONE_UTC ? new Intl.DateTimeFormat().resolvedOptions().timeZone : timezone
@@ -259,6 +260,35 @@ export const getDeviceParametersTableData = (parameters: ParameterSettingsTableR
   }]
 
   return { heading, columns, rows: parameters }
+}
+
+export const getSafetyBasalProfileTableData = (rates: SafetyBasalProfileTableRow[], width: number, timezone?: string, date?: string) => {
+  const timePrefs = getTimePrefs(timezone)
+  const text = t('Safety basal profile')
+
+  const heading = getTableHeading(text, timePrefs, formatCurrentDate(), date)
+
+  const columns = [{
+    id: 'startTime',
+    header: t('start-time'),
+    cache: false,
+    align: 'left' as AlignType,
+    width: (width * 0.3)
+  }, {
+    id: 'endTime',
+    header: t('end-time'),
+    cache: false,
+    align: 'left' as AlignType,
+    width: (width * 0.3)
+  }, {
+    id: 'rate',
+    header: t('basal-rate'),
+    cache: false,
+    align: 'right' as AlignType,
+    width: (width * 0.4)
+  }]
+
+  return { heading, columns, rows: rates }
 }
 
 export const getParametersByLevel = (parameters?: ParameterConfig[]): Map<number, ParameterSettingsTableRow[]> => {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,6 +35,7 @@ import {
   DeviceSystem,
   MobileAppConfig,
   type PumpConfig,
+  SecurityBasalConfig,
   type TimePrefs
 } from 'medical-domain'
 import { type DeviceMetadata } from '../../../models/device-metadata.model'
@@ -43,14 +44,17 @@ import {
   getDeviceMetadata,
   getDeviceParametersTableData,
   getParametersByLevel,
+  getSafetyBasalProfileTableData,
   getTableDataByDataType
 } from './settings-print-view.util'
 import {
   type BasicSettingsTable,
   type ParameterSettingsTableRow,
+  SafetyBasalProfileTableRow,
   type SettingsTableColumn
 } from '../../../models/print/pdf-settings-table.model'
 import { PdfSettingsDataType } from '../../../models/enums/pdf-settings-data-type.enum'
+import { getSafetyBasalItems } from '../../../utils/safety-basal-profile/safety-basal-profile.util'
 
 const t = i18next.t.bind(i18next)
 
@@ -85,10 +89,14 @@ export class SettingsPrintView extends PrintView<PdfSettingsData> {
     this.renderTableSection(PdfSettingsDataType.Pump)
     this.renderTableSection(PdfSettingsDataType.Cgm)
     this.renderDeviceParametersTableSection()
+    this.renderSafetyBasalProfileTableSection()
     this.resetText()
   }
 
-  private renderSettingsSection(tableData: BasicSettingsTable, width: number, optionalParams?: { zebra: boolean, showHeaders: boolean }): void {
+  private renderSettingsSection(tableData: BasicSettingsTable, width: number, optionalParams?: {
+    zebra: boolean,
+    showHeaders: boolean
+  }): void {
     this.renderTableHeading(tableData.heading, {
       columnsDefaults: {
         width,
@@ -107,7 +115,7 @@ export class SettingsPrintView extends PrintView<PdfSettingsData> {
     }, tableData.columns, tableData.rows)
   }
 
-  private readonly getDataByDataType = (type: PdfSettingsDataType): CgmConfig | DeviceConfig | PumpConfig | MobileAppConfig | undefined => {
+  private readonly getDataByDataType = (type: PdfSettingsDataType): CgmConfig | DeviceConfig | PumpConfig | MobileAppConfig | SecurityBasalConfig | undefined => {
     switch (type) {
       case PdfSettingsDataType.Cgm:
         return this.data.payload?.cgm
@@ -161,5 +169,19 @@ export class SettingsPrintView extends PrintView<PdfSettingsData> {
 
       this.renderSettingsSection(tableData, this.chartArea.width, { zebra: true, showHeaders: true })
     })
+  }
+
+  private renderSafetyBasalProfileTableSection(): void {
+    const safetyBasalProfile = this.data.payload?.securityBasals ?? null
+    if (!safetyBasalProfile || !safetyBasalProfile.rates || safetyBasalProfile?.rates?.length < 1) {
+      return
+    }
+
+    const originalDate = this.data.originalDate ? this.data.normalTime : undefined
+
+    const safetyBasalItems = getSafetyBasalItems(safetyBasalProfile)
+    const tableData = getSafetyBasalProfileTableData(safetyBasalItems as SafetyBasalProfileTableRow[], this.chartArea.width, this.data.timezone, originalDate)
+
+    this.renderSettingsSection(tableData, this.chartArea.width, { zebra: true, showHeaders: true })
   }
 }
