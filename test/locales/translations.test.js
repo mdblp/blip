@@ -70,7 +70,8 @@ const ignoredTransKeysForBlip = [
   'Level',
   'Parameter',
   'Parameters History',
-  'Reservoir changes'
+  'Reservoir changes',
+  'Safety basal profile'
 ]
 const ignoredTransKeyInBlipFiles = [
   '${physicalActivity.reportedIntensity}-pa',
@@ -212,6 +213,7 @@ const ignoredTransKeyForYourLoops = [
   'alert-invite-patient-failed-already-invited',
   'alert-reinvite-patient-failure',
   'alert-reinvite-patient-from-team-success',
+  'basal-rate-unit',
   'Basal',
   'Bolus',
   'current-trigger-setting-hypoglycemia',

@@ -173,7 +173,9 @@ export class SettingsPrintView extends PrintView<PdfSettingsData> {
 
   private renderSafetyBasalProfileTableSection(): void {
     const safetyBasalProfile = this.data.payload?.securityBasals ?? null
-    if (!safetyBasalProfile || !safetyBasalProfile.rates || safetyBasalProfile?.rates?.length < 1) {
+    const isSafetyBasalAvailable = !!safetyBasalProfile?.rates?.length && safetyBasalProfile?.rates?.length < 1
+
+    if (!isSafetyBasalAvailable) {
       return
     }
 

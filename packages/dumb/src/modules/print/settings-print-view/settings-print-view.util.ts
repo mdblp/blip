@@ -264,7 +264,7 @@ export const getDeviceParametersTableData = (parameters: ParameterSettingsTableR
 
 export const getSafetyBasalProfileTableData = (rates: SafetyBasalProfileTableRow[], width: number, timezone?: string, date?: string) => {
   const timePrefs = getTimePrefs(timezone)
-  const text = t('Safety basal profile')
+  const text = t('safety-basal-profile')
 
   const heading = getTableHeading(text, timePrefs, formatCurrentDate(), date)
 
