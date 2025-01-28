@@ -7,6 +7,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2408 Display basal safety profile in Devices view
 - YLP-2821 As a DBLG2 user, I want to be able to see the device tab
 - YLP-3128 As an HCP, I want to see which device is used by each patient
+- YLP-3145 As a yourloops user I want to do a csv export
 
 ### Changed
 - YLP-3262 Allow redirection to DBLG2 app from YourLoops
@@ -14,6 +15,10 @@ It is based on Tidepool Blip 1.27.
 
 ### Fixed
 - YLP-2543 PDF report legend label font color is wrong
+- YLP-3390 Meal bolus calculation not taking into account second part of biphasic bolus
+
+### Engineering use
+- YLP-3242 Cache-busting for static files in blip
 
 ## 3.5.0 - 2024-11-06
 ### Changed

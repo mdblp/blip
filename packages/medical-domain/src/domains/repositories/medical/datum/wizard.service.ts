@@ -47,6 +47,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     carbInput: rawData.carbInput as number,
     units: rawData.units as string,
     bolus: null,
+    bolusPart2: null,
     inputTime: rawData.inputTime as string
   }
   if (rawData?.recommended) {

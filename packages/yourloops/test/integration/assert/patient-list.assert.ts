@@ -416,7 +416,7 @@ export const checkPatientListHideShowColumns = async () => {
 
   await checkTooltipsColumnHeader(dataGridCurrentRows)
 
-  expect(dataGridCurrentRows).toHaveTextContent('PatientAgeDate of birthGenderSystemMonitoring alertsMessagesTIRGMIBelow rangeCVLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient144Jan 1, 1980MaleDBLG2No new messages from the patient0%N/A0%N/AN/AFlag patient z-no-data@patient.frPatient Z - No Data44Jan 1, 1980FemaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient-mmol@diabeloop.frPerotto PatientMmol44Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient2@diabeloop.frRouis Patient244Jan 1, 1980FemaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient3@diabeloop.frSrairi Patient344Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/A')
+  expect(dataGridCurrentRows).toHaveTextContent('PatientAgeDate of birthGenderSystemMonitoring alertsMessagesTIRGMIBelow rangeCVLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient145Jan 1, 1980MaleDBLG2No new messages from the patient0%N/A0%N/AN/AFlag patient z-no-data@patient.frPatient Z - No Data45Jan 1, 1980FemaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient-mmol@diabeloop.frPerotto PatientMmol45Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient2@diabeloop.frRouis Patient245Jan 1, 1980FemaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient3@diabeloop.frSrairi Patient345Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/A')
 
   await userEvent.click(columnSettingsButton)
   const columnSettingsPopoverForReset = screen.getByRole('presentation')

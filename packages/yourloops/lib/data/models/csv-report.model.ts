@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,31 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import type BaseDatum from './basics/base-datum.model'
-import type Bolus from './bolus.model'
-import { type DatumType } from './enums/datum-type.enum'
-import { type WizardInputMealFat } from './enums/wizard-input-meal-fat.enum'
-import { type WizardInputMealSource } from './enums/wizard-input-meal-source.enum'
-
-export type Wizard = BaseDatum & {
-  type: DatumType.Wizard
-  bolusId: string
-  bolusIds: Set<string>
-  carbInput: number
-  units: string
-  bolus: Bolus | null
-  bolusPart2: Bolus | null
-  recommended?: {
-    carb: number
-    correction: number
-    net: number
-  }
-  inputTime: string
-  inputMeal?: {
-    fat: WizardInputMealFat
-    source: WizardInputMealSource
-  }
+export interface CsvReportModel {
+  Data: Blob
+  Name: string
 }
-
-export default Wizard
