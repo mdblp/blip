@@ -483,6 +483,7 @@
   "reset": "Zurücksetzen",
   "safety-basal-profile": "Sicherheits-Basalrate",
   "safety-basal-profile-values-not-available": "Die Sicherheits-Basalrate sind nicht verfügbar.",
+  "safety-basal-profile-values-not-available-update-dblg1": "Die Werte des basalen Sicherheitsprofils sind aufgrund einer veralteten Softwareversion des DBLG1 nicht verfügbar. Eine Aktualisierung der Softwareversion kann das Problem beheben.",
   "security": "Sicherheit",
   "select-account-type": "Kontotyp auswählen",
   "send": "Senden",
