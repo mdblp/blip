@@ -35,7 +35,6 @@ import {
   DeviceSystem,
   MobileAppConfig,
   type PumpConfig,
-  SecurityBasalConfig,
   type TimePrefs
 } from 'medical-domain'
 import { type DeviceMetadata } from '../../../models/device-metadata.model'
