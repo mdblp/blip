@@ -33,13 +33,14 @@ describe('SafetyBasalProfileUtil', () => {
     it('should compute end times correctly', () => {
       const securityBasalConfig: SecurityBasalConfig = {
         rates: [
-          {
-            rate: 1,
-            start: 0
-          },
+
           {
             rate: 1.6,
             start: 510
+          },
+          {
+            rate: 1,
+            start: 0
           },
           {
             rate: 0.4,

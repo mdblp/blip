@@ -115,7 +115,7 @@ export class SettingsPrintView extends PrintView<PdfSettingsData> {
     }, tableData.columns, tableData.rows)
   }
 
-  private readonly getDataByDataType = (type: PdfSettingsDataType): CgmConfig | DeviceConfig | PumpConfig | MobileAppConfig | SecurityBasalConfig | undefined => {
+  private readonly getDataByDataType = (type: PdfSettingsDataType): CgmConfig | DeviceConfig | PumpConfig | MobileAppConfig | undefined => {
     switch (type) {
       case PdfSettingsDataType.Cgm:
         return this.data.payload?.cgm
