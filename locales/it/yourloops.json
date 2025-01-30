@@ -483,6 +483,7 @@
   "reset": "Reimposta",
   "safety-basal-profile": "Profilo basale di sicurezza",
   "safety-basal-profile-values-not-available": "I valori del profilo basale di sicurezza non sono disponibili.",
+  "safety-basal-profile-values-not-available-update-dblg1": "I valori del Profilo basale di sicurezza non sono disponibili a causa di una versione software obsoleta del DBLG1. L'aggiornamento della versione del software può risolvere il problema.",
   "security": "Sicurezza",
   "select-account-type": "Seleziona il tipo di account",
   "send": "Invia",
