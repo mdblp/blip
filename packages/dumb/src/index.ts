@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -74,6 +74,8 @@ import { renderPageNumbers } from './utils/pdf/pdf.util'
 import { WarmUpTooltip } from './components/tooltips/warm-up-tooltip/warm-up-tooltip'
 import { Device } from './models/device.model'
 import { buildDevice } from './utils/device/device.utils'
+import { SafetyBasalItem } from './models/safety-basal-item.model'
+import { getSafetyBasalItems } from './utils/safety-basal-profile/safety-basal-profile.util'
 
 export {
   formatDate,
@@ -119,5 +121,7 @@ export {
   formatLocalizedFromUTC,
   getLongDayHourFormat,
   TIMEZONE_UTC,
-  WarmUpTooltip
+  WarmUpTooltip,
+  SafetyBasalItem,
+  getSafetyBasalItems
 }

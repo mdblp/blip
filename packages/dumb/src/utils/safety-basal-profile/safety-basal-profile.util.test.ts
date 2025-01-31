@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,33 +25,48 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  type CgmConfig,
-  type DeviceConfig,
-  type ParameterConfig,
-  type PumpConfig,
-  type BasicData,
-  MobileAppConfig,
-  SecurityBasalConfig
-} from 'medical-domain'
+import { SecurityBasalConfig } from 'medical-domain'
+import { getSafetyBasalItems } from './safety-basal-profile.util'
 
-export interface PdfData {
-  basics?: BasicData
-}
+describe('SafetyBasalProfileUtil', () => {
+  describe('getSafetyBasalItems', () => {
+    it('should compute end times correctly', () => {
+      const securityBasalConfig: SecurityBasalConfig = {
+        rates: [
 
-export interface PdfSettingsData extends PdfData {
-  source: string
-  timezone?: string
-  normalTime?: string
-  deviceTime?: string
-  deviceSerialNumber?: string
-  payload?: {
-    device?: DeviceConfig
-    pump?: PumpConfig
-    cgm?: CgmConfig
-    mobileApplication?: MobileAppConfig
-    parameters?: ParameterConfig[]
-    securityBasals?: SecurityBasalConfig
-  }
-  originalDate: string
-}
+          {
+            rate: 1.6,
+            start: 510
+          },
+          {
+            rate: 1,
+            start: 0
+          },
+          {
+            rate: 0.4,
+            start: 840
+          }
+        ]
+      }
+
+      const result = getSafetyBasalItems(securityBasalConfig)
+      expect(result).toEqual([
+        {
+          rate: '1 U/h',
+          startTime: '12:00 AM',
+          endTime: '8:30 AM'
+        },
+        {
+          rate: '1.6 U/h',
+          startTime: '8:30 AM',
+          endTime: '2:00 PM'
+        },
+        {
+          rate: '0.4 U/h',
+          startTime: '2:00 PM',
+          endTime: '12:00 AM'
+        }
+      ])
+    })
+  })
+})
