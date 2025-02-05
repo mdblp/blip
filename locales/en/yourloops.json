@@ -353,6 +353,7 @@
   "menu-contact-support": "Customer support",
   "messages": "Messages",
   "minimum": "Minimum",
+  "mobile-application": "Mobile application",
   "modal-add-caregiver": "Add a caregiver",
   "modal-add-patient": "Invite a patient to {{selectedCareTeam}}",
   "modal-add-patient-info": "To invite a patient to share their data with another care team, you must first select the care team in the dropdown menu at the top right of YourLoops.",

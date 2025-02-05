@@ -629,6 +629,207 @@ export const pumpSettingsData: Data = {
   }
 }
 
+
+export const pumpSettingsDblg2: Data = {
+  dataRange: ['2022-08-08T16:35:00.000Z', '2022-08-08T16:40:00.000Z'],
+  data: {
+    pumpSettings: [
+      {
+        normalTime: '2020-01-01T10:00:00.000Z',
+        deviceId: '1234',
+        deviceTime: '2020-01-01T10:00:00.000Z',
+        type: DatumType.PumpSettings,
+        id: 'pump_settings',
+        timezone: 'UTC',
+        source: Source.Diabeloop,
+        isoWeekday: WeekDays.Sunday,
+        epoch: 0,
+        displayOffset: 0,
+        guessedTimezone: false,
+        payload: {
+          cgm: {
+            apiVersion: 'v1',
+            endOfLifeTransmitterDate: '2050-04-12T17:53:54+02:00',
+            expirationDate: '2050-04-12T17:53:54+02:00',
+            manufacturer: 'Dexcom',
+            name: 'G6',
+            swVersionTransmitter: 'v1',
+            transmitterId: 'a1234'
+          },
+          device: {
+            deviceId: '1234',
+            manufacturer: 'Samsung',
+            name: DeviceSystem.Dblg2,
+            operatingSystem: 'Android',
+            osVersion: '14',
+            smartphoneModel: 'A25',
+            swVersion: '',
+            imei: ''
+          },
+          history,
+          parameters: [
+            { name: 'WEIGHT', value: '72', unit: Unit.Kilogram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
+            {
+              name: 'MEDIUM_MEAL_BREAKFAST',
+              value: '36',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'MEDIUM_MEAL_DINNER',
+              value: '96',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'PATIENT_GLYCEMIA_TARGET',
+              value: '110',
+              unit: Unit.MilligramPerDeciliter,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA',
+              value: '100',
+              unit: Unit.Percent,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'PATIENT_GLY_HYPER_LIMIT',
+              value: '180',
+              unit: Unit.MilligramPerDeciliter,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'MEDIUM_MEAL_LUNCH',
+              value: '96',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'PATIENT_GLY_HYPO_LIMIT',
+              value: '75',
+              unit: Unit.MilligramPerDeciliter,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'BOLUS_AGGRESSIVENESS_FACTOR',
+              value: '100',
+              unit: Unit.Percent,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'SMALL_MEAL_LUNCH',
+              value: '48',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'SMALL_MEAL_BREAKFAST',
+              value: '18',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'MEAL_RATIO_LUNCH_FACTOR',
+              value: '100',
+              unit: Unit.Percent,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'LARGE_MEAL_DINNER',
+              value: '144',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'MEAL_RATIO_DINNER_FACTOR',
+              value: '80',
+              unit: Unit.Percent,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'LARGE_MEAL_BREAKFAST',
+              value: '54',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'MEAL_RATIO_BREAKFAST_FACTOR',
+              value: '100',
+              unit: Unit.Percent,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'LARGE_MEAL_LUNCH',
+              value: '144',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: 'SMALL_MEAL_DINNER',
+              value: '48',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            }
+          ],
+          pump: {
+            manufacturer: PumpManufacturer.Vicentra,
+            product: "testPump",
+            name: 'Kaleido',
+            swVersion: 'beta',
+            serialNumber: '123456',
+          },
+          mobileApplication: {
+            manufacturer: Source.Diabeloop,
+            identifier: DeviceSystem.Dblg2,
+            swVersion: '1.0.0'
+          },
+          securityBasals: {
+            rates: [
+              { rate: 1, start: 0 },
+              { rate: 2, start: 510 },
+              { rate: 0.4, start: 840 }
+            ]
+          }
+        }
+      }
+    ],
+    cbg: [{
+      normalTime: '2020-01-01T10:00:00.000Z',
+      type: DatumType.Cbg,
+      id: '2020-01-01_0',
+      timezone: 'Europe/Paris',
+      units: Unit.MmolPerLiter,
+      value: 10.5,
+      isoWeekday: WeekDays.Wednesday,
+      epoch: 0,
+      displayOffset: 0,
+      guessedTimezone: false,
+      source: Source.Diabeloop,
+      localDate: '',
+      msPer24: 0,
+      deviceName: ''
+    }]
+  }
+}
+
 export const pumpSettingsDblg1WithoutSecurityBasalData: Data = {
   dataRange: ['2022-08-08T16:35:00.000Z', '2022-08-08T16:40:00.000Z'],
   data: {
@@ -819,6 +1020,8 @@ export const pumpSettingsDblg2WithoutSecurityBasalData: Data = {
     pumpSettings: [
       {
         normalTime: '2020-01-01T10:00:00.000Z',
+        deviceId: '1234',
+        deviceTime: '2020-01-01T10:00:00.000Z',
         type: DatumType.PumpSettings,
         id: 'pump_settings',
         timezone: 'UTC',
@@ -839,10 +1042,13 @@ export const pumpSettingsDblg2WithoutSecurityBasalData: Data = {
           },
           device: {
             deviceId: '1234',
-            imei: '1234567890',
-            manufacturer: 'Diabeloop',
+            manufacturer: 'Samsung',
             name: DeviceSystem.Dblg2,
-            swVersion: '1.2.3'
+            operatingSystem: 'Android',
+            osVersion: '14',
+            smartphoneModel: 'A25',
+            imei : '',
+            swVersion: ''
           },
           history,
           parameters: [
@@ -973,6 +1179,11 @@ export const pumpSettingsDblg2WithoutSecurityBasalData: Data = {
             name: 'Kaleido',
             serialNumber: '123456',
             swVersion: 'beta'
+          },
+          mobileApplication: {
+            manufacturer: Source.Diabeloop,
+            identifier: DeviceSystem.Dblg2,
+            swVersion: '1.0.0'
           },
           securityBasals: { rates: null }
         }

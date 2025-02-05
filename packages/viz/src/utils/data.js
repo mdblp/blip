@@ -2,7 +2,7 @@ import moment from 'moment-timezone'
 import _ from 'lodash'
 import bows from 'bows'
 
-import { TimeService, DateFilter, BasalBolusStatisticsService, GlycemiaStatisticsService, CarbsStatisticsService
+import { TimeService, DateFilter, BasalBolusStatisticsService, GlycemiaStatisticsService, CarbsStatisticsService, DeviceSystem
 } from 'medical-domain'
 import { reshapeBgClassesToBgBounds } from './bloodglucose'
 
@@ -124,6 +124,13 @@ class DataUtil {
         return noPumpData
       }
 
+      const mobileApplication = pumpSettings?.payload?.mobileApplication
+      if (mobileApplication?.identifier === DeviceSystem.Dblg2) {
+        return {
+          deviceModel: mobileApplication.name,
+          manufacturer: mobileApplication.manufacturer
+        }
+      }
       return {
         deviceModel: device.name,
         manufacturer: device.manufacturer

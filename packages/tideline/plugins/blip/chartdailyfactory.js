@@ -274,7 +274,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     isDaily: true
   }))
 
-  poolEvents.addPlotType({ type: 'deviceEvent' }, plotZenModeEvent(poolEvents, {
+  poolEvents.addPlotType({ type: 'zenMode' }, plotZenModeEvent(poolEvents, {
     tidelineData
   }))
 

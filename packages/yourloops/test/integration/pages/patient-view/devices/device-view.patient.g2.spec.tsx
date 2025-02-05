@@ -27,9 +27,9 @@
 
 import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
-import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
+import { mockDataAPI, pumpSettingsDblg2 } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
-import { patient1Id } from '../../../data/patient.api.data'
+import { patientg2Id } from '../../../data/patient.api.data'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
 import { renderPage } from '../../../utils/render'
 import { mockUserApi } from '../../../mock/user.api.mock'
@@ -38,25 +38,25 @@ import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
 import { mockTeamAPI } from '../../../mock/team.api.mock'
 import { testAppMainLayoutForPatient } from '../../../use-cases/app-main-layout-visualisation'
-import { testDevicesVisualisation } from '../../../use-cases/device-settings-visualisation'
+import { testG2DevicesVisualisation } from '../../../use-cases/device-settings-visualisation'
 import { testDeviceSettingsNavigationForPatient } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
-describe('Device view for Patient', () => {
-  const firstName = 'patient firstName'
-  const lastName = 'patient lastName'
+describe('Device view for G2 Patient', () => {
+  const firstName = 'patient g2 firstName'
+  const lastName = 'patient g2 lastName'
 
   const deviceRoute = AppUserRoute.Devices
 
   beforeEach(() => {
     mockWindowResizer()
-    mockAuth0Hook(UserRole.Patient, patient1Id)
+    mockAuth0Hook(UserRole.Patient, patientg2Id)
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForPatients()
-    mockDataAPI(pumpSettingsData)
+    mockDataAPI(pumpSettingsDblg2)
   })
 
   it('should render correct layout', async () => {
@@ -70,7 +70,7 @@ describe('Device view for Patient', () => {
     await act(async () => {
       renderPage(deviceRoute)
     })
-    await testDevicesVisualisation()
+    await testG2DevicesVisualisation()
   })
 
   it('should navigate to daily page when clicking on the daily button', async () => {

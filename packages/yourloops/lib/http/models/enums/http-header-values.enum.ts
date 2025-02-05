@@ -28,5 +28,5 @@
 
 export enum HttpHeaderValues {
   json = 'application/json',
-  csv = 'application/csv',
+  zip = 'application/zip',
 }

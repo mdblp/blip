@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024, Diabeloop
+ * Copyright (c) 2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,43 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-export interface AppConfig {
-  BANNER_ENABLED: boolean
-  BANNER_LABEL_EN: string
-  BANNER_LABEL_ES: string
-  BANNER_LABEL_DE: string
-  BANNER_LABEL_FR: string
-  BANNER_LABEL_IT: string
-  BANNER_LABEL_NL: string
-  VERSION: string
-  API_HOST: string
-  BRANDING: string
-  DOMAIN_NAME?: string
-  DEV: boolean
-  TEST: boolean
-  LATEST_TERMS?: string
-  LATEST_TRAINING?: string
-  LATEST_RELEASE?: string
-  SUPPORT_WEB_ADDRESS?: string
-  CONTACT_SUPPORT_WEB_URL: string
-  ASSETS_URL?: string | null
-  METRICS_SERVICE?: string | null
-  TERMS_PRIVACY_DATE?: string
-  STONLY_WID: string
-  COOKIE_BANNER_CLIENT_ID: string
-  SESSION_TIMEOUT: number
-  YLP820_BASAL_TIME: number
-  CBG_BUCKETS_ENABLED: boolean
-  ECPS_ENABLED: boolean
-  AUTH0_DOMAIN: string
-  AUTH0_ISSUER: string
-  AUTH0_CLIENT_ID: string
-  YLPZ_RA_LAD_FR: string
-  YLPZ_RA_LAD_EN: string
-  YLPZ_RA_LAD_NL: string
-  YLPZ_RA_LAD_IT: string
-  YLPZ_RA_LAD_ES: string
-  YLPZ_RA_LAD_DE: string
-  IDLE_TIMEOUT_MS: number
+export interface CsvReportModel {
+  Data: Blob
+  Name: string
 }

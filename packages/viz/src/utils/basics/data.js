@@ -252,6 +252,8 @@ function buildCrossfilterUtils(dataObj) {
  * Define sections and dimensions used in the basics view
  *
  * @param {Object} bgPrefs - bgPrefs object containing viz-style bgBounds
+ * @param manufacturer
+ * @param deviceModel
  * @returns {Object} sections
  */
 export function defineBasicsSections(bgPrefs, manufacturer, deviceModel) {

@@ -338,6 +338,14 @@ class MedicalDataService {
         const bolusWizard = { ...wizard, ...{ bolus: null } } as Wizard
         this.medicalData.bolus[sourceBolus.idx].wizard = bolusWizard
         wizard.bolus = sourceBolus.bolus
+
+        /*if the bolus is biphasic, let's link the second bolus to the wizard*/
+        const bolus = wizard.bolus
+        if (bolus.biphasicId) {
+          wizard.bolusPart2 = this.medicalData.bolus.find(
+            item => item.biphasicId === bolus.biphasicId && item.id !== bolus.id
+          ) ?? null;
+        }
       }
       return wizard
     })

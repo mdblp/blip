@@ -41,7 +41,7 @@ import createRandomDatum from '../../data-generator'
 import type BasicData from '../../../src/domains/repositories/medical/basics-data.service'
 import * as BasiscsDataService from '../../../src/domains/repositories/medical/basics-data.service'
 import * as TimeService from '../../../src/domains/repositories/time/time.service'
-import crypto from 'crypto'
+import * as crypto from "crypto"
 import { DatumType } from '../../../src'
 import { DeviceEventSubtype } from '../../../src/domains/models/medical/datum/enums/device-event-subtype.enum'
 

@@ -69,16 +69,17 @@ describe('getBasalBolusData', () => {
     const basals = buildBasalsData(basalsData)
     const bolus = buildBolusData(bolusData)
     const wizard = buildSingleWizardData(bolus[0].id)
+    const biphasicWizard = buildSingleWizardData(bolus[1].id)
 
-    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, [wizard], 1, dateFilterOneDay)
+    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, [wizard, biphasicWizard], 1, dateFilterOneDay)
     const expectBasalBolusData = {
       totalCorrectiveBolusesAndBasals: 16.5,
       totalManualBoluses: 0,
-      totalMealBoluses: 1,
+      totalMealBoluses: 2,
       totalPenBoluses: 4,
-      total: 21.5,
+      total: 22.5,
       basal: 1.5,
-      bolus: 20
+      bolus: 21
     }
     expect(basalBolusData).toEqual(expectBasalBolusData)
   })
