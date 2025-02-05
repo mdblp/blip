@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -88,7 +88,11 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
     dashboardStartDate.setDate(now.getDate() - DEFAULT_DASHBOARD_TIME_RANGE_DAYS)
     const dateRangeData = [...data.smbg, ...data.cbg]
     const localDates = dateRangeData
-      .filter(bgData => new Date(bgData.normalTime) >= dashboardStartDate)
+      .filter(bgData => {
+        const dataDate = new Date(bgData.normalTime)
+
+        return dataDate >= dashboardStartDate && dataDate <= now
+      })
       .map((bgData) => bgData.normalTime)
       .sort((a, b) => a.localeCompare(b))
     const dateRangeSet = new Set(localDates)

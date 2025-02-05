@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,6 +34,7 @@ import config from '../../lib/config/config'
 import { PatientView } from '../../enum/patient-view.enum'
 import { type GetPatientDataOptions } from '../../lib/data/models/get-patient-data-options.model'
 import i18next from 'i18next'
+import { PatientDataRange } from '../../lib/data/models/data-range.model'
 
 interface GetDatetimeBoundsArgs {
   currentPatientView: PatientView
@@ -155,6 +156,27 @@ export class PatientDataUtils {
     return null
   }
 
+  getTwoWeeksAgoDate(date: Moment): Moment {
+    return date.clone().startOf('week').subtract(2, 'weeks').subtract(1, 'day')
+  }
+
+  getInitialLoadingDates(dataRange: PatientDataRange): Moment[] {
+    const end = moment.utc(dataRange[1]).startOf('day')
+
+    const today = moment.utc()
+    if (today.isBefore(end)) {
+      return [
+        this.getTwoWeeksAgoDate(today),
+        today
+      ]
+    }
+
+    return [
+      this.getTwoWeeksAgoDate(end),
+      end
+    ]
+  }
+
   async retrievePatientData(): Promise<MedicalData | null> {
     const dataRange = await DataApi.getPatientDataRange(this.patient.userid)
 
@@ -165,10 +187,8 @@ export class PatientDataUtils {
     const start = moment.utc(dataRange[0]).startOf('day')
     const end = moment.utc(dataRange[1]).startOf('day')
 
-    const initialLoadingDates = [
-      end.clone().startOf('week').subtract(2, 'weeks').subtract(1, 'day'),
-      end
-    ]
+
+    const initialLoadingDates = this.getInitialLoadingDates(dataRange)
 
     const patientData = await this.fetchPatientData({
       startDate: initialLoadingDates[0].toISOString(),

@@ -16,6 +16,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Fixed
 - YLP-2543 PDF report legend label font color is wrong
+- YLP-3166 Dashboard is displayed on the last 2 weeks of data instead of 2 weeks until today
 - YLP-3390 Meal bolus calculation not taking into account second part of biphasic bolus
 
 ### Engineering use
