@@ -595,7 +595,6 @@
   "use-supported-browser": "Voor een betere gebruikerservaring wordt aanbevolen om Google Chrome te gebruiken op desktops.",
   "user-account-already-verified": "Deze account is al gecontroleerd.",
   "user-account-does-not-exist": "De gebruikersaccount bestaat niet.",
-  "user-name": "{{lastName}} {{firstName}}",
   "variance": "CV",
   "verification-link-already-used": "De verificatielink is reeds gebruikt.",
   "verification-link-expired": "De verificatielink is verlopen.",
