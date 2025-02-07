@@ -220,7 +220,6 @@
   "created-by-unknown": "Creado por un usuario desconocido",
   "current": "Actual",
   "current-monitoring-alerts": "Alertas de monitorización actuales",
-  "current-parameters": "Ajustes",
   "current-trigger-setting-data": "Ajuste actual de generación de alertas: un {{nonDataThreshold}} % de los datos no se transmitieron durante el periodo",
   "current-trigger-setting-hypoglycemia": "Ajuste actual de generación de alertas: un {{hypoThreshold}} % del tiempo por debajo del umbral de {{veryLowBg}} {{bgUnit}}",
   "current-trigger-setting-tir": "Ajuste actual de generación de alertas: un {{tir}} % del tiempo fuera del objetivo (mín. a {{lowBg}} {{bgUnit}}, máx. a {{highBg}} {{bgUnit}})",
