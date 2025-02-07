@@ -595,7 +595,6 @@
   "use-supported-browser": "Per una migliore esperienza d’utilizzo si consiglia di utilizzare Google Chrome sul desktop.",
   "user-account-already-verified": "Questo account è già verificato.",
   "user-account-does-not-exist": "L'account utente non esiste.",
-  "user-name": "{{lastName}} {{firstName}}",
   "variance": "CV",
   "verification-link-already-used": "Questo link di verifica è già stato utilizzato.",
   "verification-link-expired": "Questo link di verifica è scaduto.",
