@@ -220,7 +220,6 @@
   "created-by-unknown": "Erstellt von unbekanntem Benutzer",
   "current": "Aktuell",
   "current-monitoring-alerts": "Aktuelle Monitoring-Warnungen",
-  "current-parameters": "Einstellung",
   "current-trigger-setting-data": "Aktuelle Auslöseeinstellung: wenn {{nonDataThreshold}} % der Daten im Zeitraum nicht übermittelt werden",
   "current-trigger-setting-hypoglycemia": "Aktuelle Auslöseeinstellung: wenn {{hypoThreshold}} % der Zeit unter dem Schwellenwert {{veryLowBg}} {{bgUnit}} verbracht werden",
   "current-trigger-setting-tir": "Aktuelle Auslöseeinstellung: wenn {{tir}} % der Zeit außerhalb des Zielbereichs verbracht werden (min. {{lowBg}} {{bgUnit}}, max. {{highBg}} {{bgUnit}})",
