@@ -220,7 +220,6 @@
   "created-by-unknown": "Créé par un utilisateur inconnu",
   "current": "En cours",
   "current-monitoring-alerts": "Alertes de suivi en cours",
-  "current-parameters": "Paramètres",
   "current-trigger-setting-data": "Paramètre actuel du seuil de déclenchement : {{nonDataThreshold}}% des données non transmises sur la période",
   "current-trigger-setting-hypoglycemia": "Paramètre actuel du seuil de déclenchement : {{hypoThreshold}}% du temps en dessous du seuil de {{veryLowBg}} {{bgUnit}}",
   "current-trigger-setting-tir": "Paramètre actuel du seuil de déclenchement : {{tir}}% du temps hors cible (min à {{lowBg}} {{bgUnit}}, max à {{highBg}} {{bgUnit}})",
