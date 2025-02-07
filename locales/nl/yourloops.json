@@ -220,7 +220,6 @@
   "created-by-unknown": "Aangemaakt door onbekende gebruiker",
   "current": "Huidige",
   "current-monitoring-alerts": "Huidige monitoringwaarschuwingen",
-  "current-parameters": "Instellingen",
   "current-trigger-setting-data": "Huidige triggerinstelling: {{nonDataThreshold}}% van gegevens niet verzonden in de periode",
   "current-trigger-setting-hypoglycemia": "Huidige triggerinstelling: {{hypoThreshold}}% van tijd onder {{veryLowBg}} {{bgUnit}} drempel",
   "current-trigger-setting-tir": "Huidige triggerinstelling: {{tir}}% van tijd van doel af (min bij {{lowBg}} {{bgUnit}} max bij {{highBg}} {{bgUnit}})",
