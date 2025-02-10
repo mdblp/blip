@@ -33,7 +33,7 @@ import { formatCurrentDate } from 'dumb'
 
 export const checkDevicesMenuLayout = () => {
   const devicesMenu = screen.getByTestId('devices-view-menu')
-  expect(devicesMenu).toHaveTextContent('DevicesCurrent settingsSafety basal profileChange history')
+  expect(devicesMenu).toHaveTextContent('DevicesCurrent settingsBasal safety profileChange history')
 }
 
 export const checkCurrentParametersContent = () => {
@@ -82,21 +82,21 @@ export const checkG2CopyTextButton = async () => {
 }
 
 export const checkSafetyBasalProfileContent = async () => {
-  const safetyBasalProfileButton = within(screen.getByTestId('devices-view-menu')).getByText('Safety basal profile')
+  const safetyBasalProfileButton = within(screen.getByTestId('devices-view-menu')).getByText('Basal safety profile')
   await userEvent.click(safetyBasalProfileButton)
 
   const changeHistorySection = screen.getByTestId('safety-basal-profile-section')
   expect(changeHistorySection).toBeVisible()
-  expect(changeHistorySection).toHaveTextContent('Safety basal profileStart timeEnd timeBasal rate12:00 AM8:30 AM1 U/h8:30 AM2:00 PM2 U/h2:00 PM12:00 AM0.4 U/h')
+  expect(changeHistorySection).toHaveTextContent('Basal safety profileStart timeEnd timeBasal rate12:00 AM8:30 AM1 U/h8:30 AM2:00 PM2 U/h2:00 PM12:00 AM0.4 U/h')
 }
 
 export const checkSafetyBasalProfileErrorMessage = async (errorMessage: string) => {
-  const safetyBasalProfileButton = within(screen.getByTestId('devices-view-menu')).getByText('Safety basal profile')
+  const safetyBasalProfileButton = within(screen.getByTestId('devices-view-menu')).getByText('Basal safety profile')
   await userEvent.click(safetyBasalProfileButton)
 
   const changeHistorySection = screen.getByTestId('safety-basal-profile-section')
   expect(changeHistorySection).toBeVisible()
-  expect(changeHistorySection).toHaveTextContent(`Safety basal profile${errorMessage}`)
+  expect(changeHistorySection).toHaveTextContent(`Basal safety profile${errorMessage}`)
 }
 
 export const checkChangeHistoryContent = async () => {
