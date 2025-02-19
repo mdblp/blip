@@ -1,6 +1,6 @@
 {
   "name": "staticwebsite-cdk",
-  "version": "3.6.0-rc1",
+  "version": "3.6.0",
   "bin": {
     "staticwebsite-cdk": "bin/staticwebsite-cdk.js"
   },
