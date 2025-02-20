@@ -39,7 +39,7 @@ import TableBody from '@mui/material/TableBody'
 import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
 import { DeviceSystem, SecurityBasalConfig } from 'medical-domain'
-import { getSafetyBasalItems, SafetyBasalItem } from 'dumb'
+import { isSafetyBasalAvailable, getSafetyBasalItems, SafetyBasalItem } from 'dumb'
 
 interface SafetyBasalProfileSectionProps {
   safetyBasalConfig: SecurityBasalConfig
@@ -62,8 +62,7 @@ export const SafetyBasalProfileSection: FC<SafetyBasalProfileSectionProps> = ({ 
   const { t } = useTranslation()
   const { classes } = useStyles()
 
-  const isSafetyBasalAvailable = safetyBasalConfig.rates?.length > 0
-  const safetyBasalItems = isSafetyBasalAvailable ? getSafetyBasalItems(safetyBasalConfig) : []
+  const safetyBasalItems = isSafetyBasalAvailable(safetyBasalConfig) ? getSafetyBasalItems(safetyBasalConfig) : []
 
   const noDataMessage = deviceSystem === DeviceSystem.Dblg1 ? t('safety-basal-profile-values-not-available-update-dblg1') : t('safety-basal-profile-values-not-available')
 

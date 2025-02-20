@@ -53,7 +53,10 @@ import {
   type SettingsTableColumn
 } from '../../../models/print/pdf-settings-table.model'
 import { PdfSettingsDataType } from '../../../models/enums/pdf-settings-data-type.enum'
-import { getSafetyBasalItems } from '../../../utils/safety-basal-profile/safety-basal-profile.util'
+import {
+  getSafetyBasalItems,
+  isSafetyBasalAvailable
+} from '../../../utils/safety-basal-profile/safety-basal-profile.util'
 
 const t = i18next.t.bind(i18next)
 
@@ -172,9 +175,9 @@ export class SettingsPrintView extends PrintView<PdfSettingsData> {
 
   private renderSafetyBasalProfileTableSection(): void {
     const safetyBasalProfile = this.data.payload?.securityBasals ?? null
-    const isSafetyBasalAvailable = !!safetyBasalProfile?.rates?.length && safetyBasalProfile?.rates?.length > 0
+    // const isSafetyBasalAvailable = !!safetyBasalProfile?.rates?.length && safetyBasalProfile?.rates?.length > 0
 
-    if (!isSafetyBasalAvailable) {
+    if (!safetyBasalProfile || !isSafetyBasalAvailable(safetyBasalProfile)) {
       return
     }
 
