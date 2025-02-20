@@ -62,7 +62,7 @@ export const SafetyBasalProfileSection: FC<SafetyBasalProfileSectionProps> = ({ 
   const { t } = useTranslation()
   const { classes } = useStyles()
 
-  const isSafetyBasalAvailable = safetyBasalConfig.rates?.length > 1
+  const isSafetyBasalAvailable = safetyBasalConfig.rates?.length >= 1
   const safetyBasalItems = isSafetyBasalAvailable ? getSafetyBasalItems(safetyBasalConfig) : []
 
   const noDataMessage = deviceSystem === DeviceSystem.Dblg1 ? t('safety-basal-profile-values-not-available-update-dblg1') : t('safety-basal-profile-values-not-available')
