@@ -1,6 +1,6 @@
 {
   "name": "dumb",
-  "version": "3.6.0-rc2",
+  "version": "3.6.0",
   "description": "Yourloops package for exposing dumb components",
   "author": {
     "name": "Diabeloop",
