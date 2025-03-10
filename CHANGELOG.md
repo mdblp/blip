@@ -3,6 +3,9 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.7.0-beta - 2025-03-05
+### Changed
+- YLP-3478 udpate the front of the maintenance page
+
 ### Fixed
 - YLP-3290 Top banner is hiding the top part of note creation popup
 
