@@ -39,7 +39,7 @@ import TableBody from '@mui/material/TableBody'
 import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
 import { DeviceSystem, SecurityBasalConfig } from 'medical-domain'
-import { getSafetyBasalItems, SafetyBasalItem } from 'dumb'
+import { isSafetyBasalAvailable, getSafetyBasalItems, SafetyBasalItem } from 'dumb'
 
 interface SafetyBasalProfileSectionProps {
   safetyBasalConfig: SecurityBasalConfig
@@ -62,8 +62,8 @@ export const SafetyBasalProfileSection: FC<SafetyBasalProfileSectionProps> = ({ 
   const { t } = useTranslation()
   const { classes } = useStyles()
 
-  const isSafetyBasalAvailable = safetyBasalConfig.rates?.length > 1
-  const safetyBasalItems = isSafetyBasalAvailable ? getSafetyBasalItems(safetyBasalConfig) : []
+  const hasSafetyBasal = isSafetyBasalAvailable(safetyBasalConfig)
+  const safetyBasalItems = hasSafetyBasal ? getSafetyBasalItems(safetyBasalConfig) : []
 
   const noDataMessage = deviceSystem === DeviceSystem.Dblg1 ? t('safety-basal-profile-values-not-available-update-dblg1') : t('safety-basal-profile-values-not-available')
 
@@ -71,7 +71,7 @@ export const SafetyBasalProfileSection: FC<SafetyBasalProfileSectionProps> = ({ 
     <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="safety-basal-profile-section">
       <CardHeader title={t('safety-basal-profile')} />
       <CardContent>
-        {isSafetyBasalAvailable
+        {hasSafetyBasal
           ? <Card variant="outlined">
             <TableContainer data-testid="safety-basal-profile-table">
               <Table>

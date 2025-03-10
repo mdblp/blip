@@ -2,7 +2,11 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.6.0-beta - 2024-09-03
+## 3.7.0-beta - 2025-03-05
+### Fixed
+- YLP-3290 Top banner is hiding the top part of note creation popup
+
+## 3.6.0 - 2025-02-20
 ### Added
 - YLP-2408 Display basal safety profile in Devices view
 - YLP-2692 Display basal safety profile in the PDF report
@@ -16,7 +20,6 @@ It is based on Tidepool Blip 1.27.
 
 ### Fixed
 - YLP-2543 PDF report legend label font color is wrong
-- YLP-3290 Top banner is hiding the top part of note creation popup
 - YLP-3390 Meal bolus calculation not taking into account second part of biphasic bolus
 
 ### Engineering use
