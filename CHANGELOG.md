@@ -2,7 +2,9 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.6.0-beta - 2024-09-03
+## 3.7.0-beta - 2025-03-05
+
+## 3.6.0 - 2025-02-20
 ### Added
 - YLP-2408 Display basal safety profile in Devices view
 - YLP-2692 Display basal safety profile in the PDF report

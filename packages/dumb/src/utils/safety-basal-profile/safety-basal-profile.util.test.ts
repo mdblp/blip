@@ -26,7 +26,7 @@
  */
 
 import { SecurityBasalConfig } from 'medical-domain'
-import { getSafetyBasalItems } from './safety-basal-profile.util'
+import { getSafetyBasalItems, isSafetyBasalAvailable } from './safety-basal-profile.util'
 
 describe('SafetyBasalProfileUtil', () => {
   describe('getSafetyBasalItems', () => {
@@ -69,4 +69,38 @@ describe('SafetyBasalProfileUtil', () => {
       ])
     })
   })
+
+  describe('isSafetyBasalAvailable', () => {
+    it('should return true if there are rates, false in other cases', () => {
+      const securityBasalConfigNoValue: SecurityBasalConfig = {
+        rates: []
+      }
+      const securityBasalConfigOneValue: SecurityBasalConfig = {
+        rates: [{ rate: 1.6, start: 510 }]
+      }
+      const securityBasalConfigMultipleValues: SecurityBasalConfig = {
+        rates: [
+          {
+            rate: 1.6,
+            start: 510
+          },
+          {
+            rate: 1,
+            start: 0
+          },
+          {
+            rate: 0.4,
+            start: 840
+          }
+        ]
+      }
+
+      expect(isSafetyBasalAvailable(null as unknown as SecurityBasalConfig)).toEqual(false)
+      expect(isSafetyBasalAvailable(undefined as unknown as SecurityBasalConfig)).toEqual(false)
+      expect(isSafetyBasalAvailable({} as unknown as SecurityBasalConfig)).toEqual(false)
+      expect(isSafetyBasalAvailable(securityBasalConfigNoValue)).toEqual(false)
+      expect(isSafetyBasalAvailable(securityBasalConfigOneValue)).toEqual(true)
+      expect(isSafetyBasalAvailable(securityBasalConfigMultipleValues)).toEqual(true)
+    })
+  });
 })

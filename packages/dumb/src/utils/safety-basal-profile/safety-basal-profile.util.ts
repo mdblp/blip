@@ -79,3 +79,7 @@ export const getSafetyBasalItems = (safetyBasalConfig: SecurityBasalConfig): Saf
 
   return items
 }
+
+export const isSafetyBasalAvailable = (safetyBasalConfig?: SecurityBasalConfig): boolean => {
+  return !!safetyBasalConfig && safetyBasalConfig.rates?.length > 0
+}
