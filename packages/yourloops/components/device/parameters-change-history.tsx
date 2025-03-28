@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -99,6 +99,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                       <Typography
                         variant="body2"
                         sx={{ color: theme.palette.primary.main }}
+                        data-testid={`header-group-${parametersChange.changeDate}`}
                       >
                         {formatDateWithMomentLongFormat(new Date(parametersChange.changeDate), 'llll', timezone)}
                       </Typography>
