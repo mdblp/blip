@@ -77,7 +77,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
           <TableBody>
             {history.map((parametersChange, historyCurrentIndex) => (
               <React.Fragment key={`${parametersChange.changeDate}-${historyCurrentIndex}`}>
-                <TableRow sx={{ backgroundColor: 'var(--primary-color-background)' }} className="change-date-row">
+                <TableRow sx={{ backgroundColor: 'var(--primary-color-background)' }} className="change-date-row" data-testid={`change-date-row-${historyCurrentIndex}`}>
                   <TableCell colSpan={5}>
                     <Box
                       display="flex"
