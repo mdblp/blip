@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,8 @@ import { renderPage } from '../../utils/render'
 import { AppRoute } from '../../../../models/enums/routes.enum'
 import { waitFor } from '@testing-library/react'
 import {
-  testVerifyEmailResultErrorAccountAlreadyVerified, testVerifyEmailResultErrorAccountDoesNotExist,
+  testVerifyEmailResultErrorAccountAlreadyVerified,
+  testVerifyEmailResultErrorAccountDoesNotExist,
   testVerifyEmailResultErrorEmailNotVerifiedOrGenericError,
   testVerifyEmailResultErrorLinkAlreadyUsed,
   testVerifyEmailResultErrorLinkExpired,
@@ -37,7 +38,7 @@ import {
 } from '../../use-cases/email-verification'
 import * as auth0Mock from '@auth0/auth0-react'
 import { getAccessTokenWithPopupMock, logoutMock } from '../../mock/auth0.hook.mock'
-import { AUTH0_ERROR_LOGIN_REQUIRED } from '../../../../lib/auth/models/auth0-error.model'
+import { Auth0Error } from '../../../../lib/auth/models/enums/auth0-error.enum'
 
 describe('Verify email result page', () => {
   beforeAll(() => {
@@ -47,7 +48,7 @@ describe('Verify email result page', () => {
       user: null,
       getAccessTokenWithPopup: getAccessTokenWithPopupMock,
       logout: logoutMock,
-      getAccessTokenSilently: jest.fn().mockRejectedValue({ error_description: AUTH0_ERROR_LOGIN_REQUIRED })
+      getAccessTokenSilently: jest.fn().mockRejectedValue({ error_description: Auth0Error.LoginRequired })
     })
   })
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -268,7 +268,8 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
       metrics.send('export_data', `save_report_${reportOptions.format}`, reportOptions.preset ?? 'custom')
       onClose()
     } catch (err) {
-      alert.error(err.message)
+      console.error(err.message)
+      alert.error(t('error-http-40x'))
       metrics.send('export_data', `save_report$_${reportOptions.format}`, 'error')
     } finally {
       setBuildingReport(false)

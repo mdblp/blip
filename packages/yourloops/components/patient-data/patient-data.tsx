@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -112,7 +112,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
       fetchPatientData()
         .catch((err) => {
           console.log(err)
-          alert.error(err.toString())
+          alert.error(t('error-http-40x'))
         })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,9 +29,9 @@ import * as auth0Mock from '@auth0/auth0-react'
 import { getAccessTokenWithPopupMock, logoutMock } from '../../mock/auth0.hook.mock'
 import { renderPage } from '../../utils/render'
 import { waitFor } from '@testing-library/react'
-import { AUTH0_ERROR_EMAIL_NOT_VERIFIED } from '../../../../lib/auth/models/auth0-error.model'
 import { AppRoute } from '../../../../models/enums/routes.enum'
 import { testVerifyEmail } from '../../use-cases/email-verification'
+import { Auth0Error } from '../../../../lib/auth/models/enums/auth0-error.enum'
 
 describe('Verify email page', () => {
   it('should display a description of the email verification process with options', async () => {
@@ -41,7 +41,7 @@ describe('Verify email page', () => {
       user: null,
       getAccessTokenWithPopup: getAccessTokenWithPopupMock,
       logout: logoutMock,
-      getAccessTokenSilently: jest.fn().mockRejectedValue({ error_description: AUTH0_ERROR_EMAIL_NOT_VERIFIED })
+      getAccessTokenSilently: jest.fn().mockRejectedValue({ error_description: Auth0Error.EmailNotVerified })
     })
     window.open = jest.fn()
 
