@@ -60,6 +60,8 @@ import metrics from '../../lib/metrics'
 import { useAlert } from '../utils/snackbar'
 import { type DateRange } from '../patient-data/patient-data.utils'
 import { CsvReportModel } from '../../lib/data/models/csv-report.model'
+import { logError } from '../../utils/error.util'
+import { errorTextFromException } from '../../lib/utils'
 
 export type Presets = '1week' | '2weeks' | '4weeks' | '3months'
 
@@ -268,7 +270,9 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
       metrics.send('export_data', `save_report_${reportOptions.format}`, reportOptions.preset ?? 'custom')
       onClose()
     } catch (err) {
-      console.error(err.message)
+      const errorMessage = errorTextFromException(err)
+      logError(errorMessage, 'print-report')
+
       alert.error(t('error-http-40x'))
       metrics.send('export_data', `save_report$_${reportOptions.format}`, 'error')
     } finally {

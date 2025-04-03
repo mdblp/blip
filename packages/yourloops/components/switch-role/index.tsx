@@ -38,6 +38,8 @@ import SwitchRoleConsequencesDialog from './consequences-dialog'
 import SwitchRoleConsentDialog from './consent-dialog'
 import SwitchRoleProfessionDialog from './profession-dialog'
 import { useNavigate } from 'react-router-dom'
+import { logError } from '../../utils/error.util'
+import { errorTextFromException } from '../../lib/utils'
 
 const log = bows('SwitchRoleDialogs')
 
@@ -66,9 +68,11 @@ const SwitchRoleDialogs: FunctionComponent<SwitchRoleDialogsProps> = (props) => 
       alert.success(t('switch-role-success'))
       navigate('/')
     } catch (reason: unknown) {
+      const errorMessage = errorTextFromException(reason)
+      logError(errorMessage, 'switch-hcp')
+
       setInProgress(false)
       alert.error(t('modal-switch-hcp-failure'))
-      log.error('switchRoleToHCP', reason)
     }
   }
 

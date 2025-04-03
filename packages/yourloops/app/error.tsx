@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,6 @@
 
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { browserName, browserVersion } from 'react-device-detect'
 
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
@@ -39,14 +38,11 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
-import metrics from '../lib/metrics'
-import ErrorApi from '../lib/error/error.api'
 import { v4 as uuidv4 } from 'uuid'
-import moment from 'moment-timezone'
-import { useLocation } from 'react-router-dom'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import { isBrowserOfficiallySupported } from '../lib/browser'
+import { logError } from '../utils/error.util'
 
 interface OnErrorProps {
   event: Event | string
@@ -66,7 +62,6 @@ const classes = makeStyles()(() => ({
 function OnError(props: OnErrorProps): JSX.Element {
   const { t } = useTranslation('yourloops')
   const theme = useTheme()
-  const location = useLocation()
   const [showMore, setShowMore] = React.useState(false)
   const fullScreen = useMediaQuery(theme.breakpoints.down('lg'))
   const { classes: style } = classes()
@@ -79,20 +74,8 @@ function OnError(props: OnErrorProps): JSX.Element {
   }, [])
 
   React.useEffect(() => {
-    try {
-      metrics.send('error', 'app-crash', completeErrorMessage)
-      ErrorApi.sendError({
-        browserName,
-        browserVersion,
-        date: moment(new Date()).format('DD/MM/YYYY'),
-        err: completeErrorMessage,
-        errorId,
-        path: location.pathname
-      })
-    } catch (err) {
-      console.error(err)
-    }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    logError(completeErrorMessage, 'app-crash')
+  }, [])
 
   const handleOK = (): void => {
     window.location.replace('/')

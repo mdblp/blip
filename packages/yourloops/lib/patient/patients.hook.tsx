@@ -43,6 +43,7 @@ import { useParams } from 'react-router-dom'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 import { PRIVATE_TEAM_ID } from '../team/team.util'
 import { useTranslation } from 'react-i18next'
+import { logError } from '../../utils/error.util'
 
 export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const { t } = useTranslation()
@@ -76,7 +77,8 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
       })
       .catch((reason: unknown) => {
         const message = errorTextFromException(reason)
-        console.error(message)
+        logError(message, 'fetch-patients')
+
         alert.error(t('error-http-40x'))
         setPatients([])
       })

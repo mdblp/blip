@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -46,6 +46,8 @@ import SignupStepperActionButtons from './signup-stepper-action-buttons'
 import { type SignUpFormProps } from './signup-stepper'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { SignupFormKey } from './models/enums/signup-form-key.enum'
+import { logError } from '../../utils/error.util'
+import { errorTextFromException } from '../../lib/utils'
 
 interface Errors {
   firstName: boolean
@@ -111,6 +113,9 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         metrics.send('registration', 'create_profile', signupForm.accountRole)
         handleNext()
       } catch (err) {
+        const errorMessage = errorTextFromException(err)
+        logError(errorMessage, 'complete-signup')
+
         alert.error(t('profile-update-failed'))
         setSaving(false)
       }

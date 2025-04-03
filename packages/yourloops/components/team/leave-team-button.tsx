@@ -40,6 +40,8 @@ import { useTheme } from '@mui/material/styles'
 import PatientApi from '../../lib/patient/patient.api'
 import metrics from '../../lib/metrics'
 import { AppUserRoute } from '../../models/enums/routes.enum'
+import { logError } from '../../utils/error.util'
+import { errorTextFromException } from '../../lib/utils'
 
 export interface LeaveTeamButtonProps {
   team: Team
@@ -78,6 +80,9 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
           navigate(`/teams/${defaultTeamId}/patients`)
         }
       } catch (reason: unknown) {
+        const errorMessage = errorTextFromException(reason)
+        logError(errorMessage, 'leave-team')
+
         const message = TeamUtils.teamHasOnlyOneMember(team) && !user.isUserPatient()
           ? t('team-page-failure-deleted')
           : t('team-page-failed-leave')

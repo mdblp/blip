@@ -54,6 +54,7 @@ import { useAlert } from '../utils/snackbar'
 import { errorTextFromException } from '../../lib/utils'
 import TeamUtils from '../../lib/team/team.util'
 import { TeamMemberRole, type TypeTeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
+import { logError } from '../../utils/error.util'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   checkboxTableCellHeader: {
@@ -102,6 +103,8 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
         alert.success(t('team-page-success-invite-hcp', { email: member.email }))
       } catch (reason: unknown) {
         const errorMessage = errorTextFromException(reason)
+        logError(errorMessage, 'team-invite-hcp')
+
         alert.error(t('team-page-failed-invite-hcp', { errorMessage }))
       }
     }

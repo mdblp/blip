@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,6 +42,8 @@ import Divider from '@mui/material/Divider'
 import {
   MonitoringAlertsPatientConfiguration
 } from '../../../components/monitoring-alert/monitoring-alerts-patient-configuration'
+import { logError } from '../../../utils/error.util'
+import { errorTextFromException } from '../../../lib/utils'
 
 interface TargetAndAlertsViewProps {
   patient: Patient
@@ -80,7 +82,9 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
       alert.success(t('patient-update-success'))
       setSaveInProgress(false)
     } catch (error) {
-      console.error(error)
+      const errorMessage = errorTextFromException(error)
+      logError(errorMessage, 'update-patient-monitoring-alerts-parameters')
+
       alert.error(t('patient-update-error'))
       setSaveInProgress(false)
     }
@@ -93,7 +97,9 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
       alert.success(t('patient-update-success'))
       setSaveInProgress(false)
     } catch (error) {
-      console.error(error)
+      const errorMessage = errorTextFromException(error)
+      logError(errorMessage, 'patient-update-monitoring-parameters')
+
       alert.error(t('patient-update-error'))
       setSaveInProgress(false)
     }
