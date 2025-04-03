@@ -27,7 +27,6 @@
 
 import React, { type FunctionComponent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import bows from 'bows'
 
 import { type HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
 import { type SwitchRoleDialogsProps, SwitchRoleToHcpSteps } from './models'

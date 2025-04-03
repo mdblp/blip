@@ -173,7 +173,7 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
     return { minDate: mi, maxDate: ma }
   }, [medicalData, customStartDate])
 
-  const [reportOptions, setReportOptions] = useState<ReportOptions>(getDatesFromPreset(defaultPreset || DEFAULT_PRESET, minDate, maxDate, OutputFormat.Pdf))
+  const [reportOptions, setReportOptions] = useState<ReportOptions>(getDatesFromPreset(defaultPreset ?? DEFAULT_PRESET, minDate, maxDate, OutputFormat.Pdf))
   const [buildingReport, setBuildingReport] = useState<boolean>(false)
   const { start, end, displayedDates } = useMemo(() => {
     const startDate = customStartDate ?? dayjs(reportOptions.start, { utc: true })
