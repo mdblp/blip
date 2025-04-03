@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,6 +32,7 @@ import { useMedicalReportEditDialog } from '../../../../components/dialogs/medic
 import MedicalFilesApi from '../../../../lib/medical-files/medical-files.api'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import * as teamHookMock from '../../../../lib/team'
+import ErrorApi from '../../../../lib/error/error.api'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../components/utils/snackbar')
@@ -265,6 +266,8 @@ describe('MedicalReportEditDialog hook', () => {
     })
 
     it('should create successfully medical record', async () => {
+      jest.spyOn(ErrorApi, 'sendError').mockResolvedValue()
+
       const firstName = 'Sandy'
       const lastName = 'Kilos';
       (authHookMock.useAuth as jest.Mock).mockImplementation(() => ({
