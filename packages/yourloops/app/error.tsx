@@ -75,7 +75,7 @@ function OnError(props: OnErrorProps): JSX.Element {
 
   React.useEffect(() => {
     logError(completeErrorMessage, 'app-crash')
-  }, [])
+  }, [completeErrorMessage])
 
   const handleOK = (): void => {
     window.location.replace('/')

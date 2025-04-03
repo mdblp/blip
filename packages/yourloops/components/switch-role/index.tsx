@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,8 +40,6 @@ import SwitchRoleProfessionDialog from './profession-dialog'
 import { useNavigate } from 'react-router-dom'
 import { logError } from '../../utils/error.util'
 import { errorTextFromException } from '../../lib/utils'
-
-const log = bows('SwitchRoleDialogs')
 
 const SwitchRoleDialogs: FunctionComponent<SwitchRoleDialogsProps> = (props) => {
   const { t } = useTranslation('yourloops')
