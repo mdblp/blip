@@ -89,6 +89,7 @@ describe('Login page desktop view', () => {
   it('should redirect to verify-email page if the user has not yet confirmed his email', async () => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       error: Error(Auth0Error.EmailNotVerified),
+      getAccessTokenSilently: jest.fn().mockRejectedValue(Auth0Error.EmailNotVerified)
     })
     const router = renderPage('/')
     await waitFor(() => {
@@ -109,7 +110,7 @@ describe('Login page desktop view', () => {
       error: Error(Auth0Error.AccountFlaggedForDeletion)
     })
     renderPage('/')
-    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Your account has been flagged for deletion.')
+    expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You no longer have access to this application. Please contact the support if you think this an error.')
   })
 
   it('should display an alert if the user is inactive', async () => {
