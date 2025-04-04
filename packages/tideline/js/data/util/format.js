@@ -145,7 +145,7 @@ const format = {
     if (offset) {
       d.setUTCMinutes(d.getUTCMinutes() + offset)
     }
-    return window.d3.time.format.utc(f)(d).toLowerCase()
+    return window.d3.utcFormat(f)(d).toLowerCase()
   },
 
   /**
