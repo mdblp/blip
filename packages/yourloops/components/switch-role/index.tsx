@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,6 @@
 
 import React, { type FunctionComponent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import bows from 'bows'
 
 import { type HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
 import { type SwitchRoleDialogsProps, SwitchRoleToHcpSteps } from './models'
@@ -38,8 +37,8 @@ import SwitchRoleConsequencesDialog from './consequences-dialog'
 import SwitchRoleConsentDialog from './consent-dialog'
 import SwitchRoleProfessionDialog from './profession-dialog'
 import { useNavigate } from 'react-router-dom'
-
-const log = bows('SwitchRoleDialogs')
+import { logError } from '../../utils/error.util'
+import { errorTextFromException } from '../../lib/utils'
 
 const SwitchRoleDialogs: FunctionComponent<SwitchRoleDialogsProps> = (props) => {
   const { t } = useTranslation('yourloops')
@@ -66,9 +65,11 @@ const SwitchRoleDialogs: FunctionComponent<SwitchRoleDialogsProps> = (props) => 
       alert.success(t('switch-role-success'))
       navigate('/')
     } catch (reason: unknown) {
+      const errorMessage = errorTextFromException(reason)
+      logError(errorMessage, 'switch-hcp')
+
       setInProgress(false)
       alert.error(t('modal-switch-hcp-failure'))
-      log.error('switchRoleToHCP', reason)
     }
   }
 

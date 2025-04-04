@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,6 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const AUTH0_ERROR_CONSENT_REQUIRED = 'Consent required'
-export const AUTH0_ERROR_EMAIL_NOT_VERIFIED = 'Please verify your email before logging in.'
-export const AUTH0_ERROR_LOGIN_REQUIRED = 'Login required'
+export enum Auth0Error {
+  ConsentRequired = 'Consent required',
+  EmailNotVerified = 'Please verify your email before logging in.',
+  LoginRequired = 'Login required',
+  AccountFlaggedForDeletion = 'Your account has been flagged for deletion.',
+}

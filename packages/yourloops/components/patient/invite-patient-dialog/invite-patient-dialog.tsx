@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,7 +39,7 @@ import Link from '@mui/material/Link'
 import TextField from '@mui/material/TextField'
 import Alert from '@mui/material/Alert'
 
-import { REGEX_EMAIL } from '../../../lib/utils'
+import { errorTextFromException, REGEX_EMAIL } from '../../../lib/utils'
 import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
 import { usePatientsContext } from '../../../lib/patient/patients.provider'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
@@ -49,6 +49,7 @@ import { useAlert } from '../../utils/snackbar'
 import { PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE } from '../../../lib/patient/patient.api'
 import { LoadingButton } from '@mui/lab'
 import { useParams } from 'react-router-dom'
+import { logError } from '../../../utils/error.util'
 
 export interface AddDialogProps {
   onClose: () => void
@@ -115,6 +116,9 @@ export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose
         alert.error(t('alert-invite-patient-failed-already-invited'))
         return
       }
+      const errorMessage = errorTextFromException(err)
+      logError(errorMessage, 'invite-patient')
+
       alert.error(t('alert-invite-patient-failed'))
       setInProgress(false)
     }

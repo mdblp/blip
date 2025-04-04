@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,6 +38,8 @@ import Button from '@mui/material/Button'
 import { useAlert } from '../../utils/snackbar'
 import { getNumericCode } from '../../../lib/team/team-code.utils'
 import { LoadingButton } from '@mui/lab'
+import { logError } from '../../../utils/error.util'
+import { errorTextFromException } from '../../../lib/utils'
 
 export interface ConfirmTeamProps {
   onClickCancel: () => void
@@ -79,6 +81,9 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
         }
         onCompleteStep(team)
       } catch (err) {
+        const errorMessage = errorTextFromException(err)
+        logError(errorMessage, 'join-team')
+
         alert.error(t('modal-patient-add-team-failure'))
       } finally {
         setIsInProgress(false)

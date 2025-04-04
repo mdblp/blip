@@ -48,7 +48,8 @@ import { useAlert } from '../utils/snackbar'
 import { useAuth } from '../../lib/auth'
 import LeaveTeamButton from './leave-team-button'
 import TeamUtils from '../../lib/team/team.util'
-import { PhonePrefixCode } from '../../lib/utils'
+import { errorTextFromException, PhonePrefixCode } from '../../lib/utils'
+import { logError } from '../../utils/error.util'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   body: {
@@ -102,6 +103,9 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
         await teamHook.updateTeam(editedTeam as Team)
         alert.success(t('team-page-success-edit'))
       } catch (reason: unknown) {
+        const errorMessage = errorTextFromException(reason)
+        logError(errorMessage, 'team-information-edit')
+
         alert.error(t('team-page-failed-edit'))
       }
     }

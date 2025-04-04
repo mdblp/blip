@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -48,12 +48,13 @@ import { useDailyNotes } from './daily-notes.hook'
 import metrics from '../../lib/metrics'
 import DailyNotes from 'blip/app/components/messages'
 import { useAuth } from '../../lib/auth'
-import { setPageTitle } from '../../lib/utils'
+import { errorTextFromException, setPageTitle } from '../../lib/utils'
 import { TargetAndAlertsView } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
 import TeamUtils from '../../lib/team/team.util'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { getPageTitleByPatientView } from './patient-data.utils'
 import { DevicesView } from '../../pages/patient-view/devices/devices-view'
+import { logError } from '../../utils/error.util'
 
 interface PatientDataProps {
   patient: Patient
@@ -111,8 +112,10 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
       patientIdForWhichDataHasBeenFetched.current = patient.userid
       fetchPatientData()
         .catch((err) => {
-          console.log(err)
-          alert.error(err.toString())
+          const errorMessage = errorTextFromException(err)
+          logError(errorMessage, 'fetch-patient-data')
+
+          alert.error(t('error-http-40x'))
         })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,7 +32,7 @@ import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import { useAuth } from '../../../lib/auth'
 import metrics from '../../../lib/metrics'
-import { setPageTitle } from '../../../lib/utils'
+import { errorTextFromException, setPageTitle } from '../../../lib/utils'
 import { useNotification } from '../../../lib/notifications/notification.hook'
 import { type ShareUser } from '../../../lib/share/models/share-user.model'
 import { useAlert } from '../../../components/utils/snackbar'
@@ -46,6 +46,7 @@ import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { type Notification } from '../../../lib/notifications/models/notification.model'
 import { type AddDialogContentProps } from './models/add-dialog-content-props.model'
 import SpinningLoader from '../../../components/loaders/spinning-loader'
+import { logError } from '../../../utils/error.util'
 
 export const PatientCaregiversPage: FC = () => {
   const { t } = useTranslation('yourloops')
@@ -84,6 +85,9 @@ export const PatientCaregiversPage: FC = () => {
           alert.error(t('alert-invite-caregiver-failed-user-is-patient'))
           return
         }
+        const errorMessage = errorTextFromException(reason)
+        logError(errorMessage, 'invite-caregiver')
+
         alert.error(t('alert-invite-caregiver-failed'))
       }
     }

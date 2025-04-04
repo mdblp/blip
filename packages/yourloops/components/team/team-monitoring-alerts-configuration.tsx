@@ -43,6 +43,8 @@ import {
   MonitoringAlertsTeamConfiguration
 } from '../monitoring-alert/monitoring-alerts-team-configuration'
 import { useParams } from 'react-router-dom'
+import { logError } from '../../utils/error.util'
+import { errorTextFromException } from '../../lib/utils'
 
 export interface TeamMonitoringAlertsConfigurationProps {
   team: Team
@@ -71,7 +73,9 @@ function TeamMonitoringAlertsConfiguration(props: TeamMonitoringAlertsConfigurat
       refresh()
       alert.success(t('team-update-success'))
     } catch (error) {
-      console.error(error)
+      const errorMessage = errorTextFromException(error)
+      logError(errorMessage, 'team-monitoring-alerts-update')
+
       alert.error(t('team-update-error'))
     } finally {
       setSaveInProgress(false)

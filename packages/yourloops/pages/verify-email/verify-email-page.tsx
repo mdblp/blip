@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,11 +37,6 @@ import { GlobalStyles } from 'tss-react'
 import Link from '@mui/material/Link'
 import { useAuth } from '../../lib/auth'
 import { useAlert } from '../../components/utils/snackbar'
-import {
-  AUTH0_ERROR_CONSENT_REQUIRED,
-  AUTH0_ERROR_EMAIL_NOT_VERIFIED,
-  AUTH0_ERROR_LOGIN_REQUIRED
-} from '../../lib/auth/models/auth0-error.model'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Avatar from '@mui/material/Avatar'
@@ -49,6 +44,7 @@ import { useNavigate } from 'react-router-dom'
 import { setPageTitle } from '../../lib/utils'
 import { useVerifyEmailStyles } from './verify-email.styles'
 import { useTheme } from '@mui/material/styles'
+import { Auth0Error } from '../../lib/auth/models/enums/auth0-error.enum'
 
 export const VerifyEmailPage: FunctionComponent = () => {
   const { classes: { appBar, desktopLogo } } = useVerifyEmailStyles()
@@ -78,11 +74,11 @@ export const VerifyEmailPage: FunctionComponent = () => {
       await loginWithRedirect()
     } catch (error) {
       const errorDescription = error.error_description
-      if (errorDescription === AUTH0_ERROR_EMAIL_NOT_VERIFIED) {
+      if (errorDescription === Auth0Error.EmailNotVerified) {
         alert.warning(t('alert-email-not-verified'))
         return
       }
-      if (errorDescription === AUTH0_ERROR_CONSENT_REQUIRED) {
+      if (errorDescription === Auth0Error.ConsentRequired) {
         await loginWithRedirect()
         return
       }
@@ -93,7 +89,7 @@ export const VerifyEmailPage: FunctionComponent = () => {
   useEffect(() => {
     getAccessTokenSilently()
       .catch((error: Error) => {
-        if (error.message === AUTH0_ERROR_LOGIN_REQUIRED) {
+      if (error.message === Auth0Error.LoginRequired) {
           setIsUserLoggedIn(false)
         }
       })

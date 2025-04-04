@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,13 +40,13 @@ import { makeStyles } from 'tss-react/mui'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 import { setPageTitle } from '../../lib/utils'
-import { AUTH0_ERROR_CONSENT_REQUIRED, AUTH0_ERROR_LOGIN_REQUIRED } from '../../lib/auth/models/auth0-error.model'
 import { useAuth } from '../../lib/auth'
 import { Auth0VerifyEmailMessage } from '../../lib/auth/models/enums/auth0-verify-email-message.enum'
 import { RightIcon } from '../../components/icons/diabeloop/right-icon'
 import { WrongIcon } from '../../components/icons/diabeloop/wrong-icon'
 import { useVerifyEmailStyles } from './verify-email.styles'
 import { useTheme } from '@mui/material/styles'
+import { Auth0Error } from '../../lib/auth/models/enums/auth0-error.enum'
 
 const classes = makeStyles()(() => ({
   icon: {
@@ -96,11 +96,11 @@ export const VerifyEmailResultPage: FC = () => {
       await loginWithRedirect()
     } catch (error) {
       const errorDescription = error.error_description
-      if (errorDescription === AUTH0_ERROR_LOGIN_REQUIRED) {
+      if (errorDescription === Auth0Error.LoginRequired) {
         navigate('/')
         return
       }
-      if (errorDescription === AUTH0_ERROR_CONSENT_REQUIRED) {
+      if (errorDescription === Auth0Error.ConsentRequired) {
         await loginWithRedirect()
         return
       }

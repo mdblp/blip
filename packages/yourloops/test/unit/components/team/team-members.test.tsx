@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,6 +39,7 @@ import { ThemeProvider } from '@mui/material/styles'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { MemoryRouter } from 'react-router-dom'
+import ErrorApi from '../../../../lib/error/error.api'
 
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')
@@ -134,6 +135,8 @@ describe('TeamMembers', () => {
   })
 
   it('should call teamHook when inviting a member and fail when an error is thrown', async () => {
+    jest.spyOn(ErrorApi, 'sendError').mockResolvedValue()
+
     const email = 'fake@email.com'
     inviteMemberMock.mockRejectedValueOnce(Error('This is a mock error thrown on purpose'))
     render(getTeamMembersJSX())
