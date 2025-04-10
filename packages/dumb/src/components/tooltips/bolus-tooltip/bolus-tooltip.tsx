@@ -49,7 +49,6 @@ import { BolusType } from '../../../models/enums/bolus-type.enum'
 import { useTranslation } from 'react-i18next'
 import colors from '../../../styles/colors.css'
 import {
-  COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
   COMMON_TOOLTIP_TAIL_WIDTH,
   DEFAULT_TOOLTIP_BORDER_WIDTH,

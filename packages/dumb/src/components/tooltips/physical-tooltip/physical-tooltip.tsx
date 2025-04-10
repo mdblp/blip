@@ -27,7 +27,6 @@
 
 import React, { type FunctionComponent } from 'react'
 import {
-  COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
   COMMON_TOOLTIP_TAIL_WIDTH,
   DEFAULT_TOOLTIP_BORDER_WIDTH,

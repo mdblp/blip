@@ -32,7 +32,6 @@ import styles from './confidential-tooltip.css'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import {
-  COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
   COMMON_TOOLTIP_TAIL_WIDTH,
   DEFAULT_TOOLTIP_BORDER_WIDTH,

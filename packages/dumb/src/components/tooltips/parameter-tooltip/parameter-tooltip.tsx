@@ -34,7 +34,6 @@ import { formatParameterValue } from '../../../utils/format/format.util'
 import { getHourMinuteFormat } from '../../../utils/datetime/datetime.util'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import {
-  COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
   COMMON_TOOLTIP_TAIL_WIDTH,
   DEFAULT_TOOLTIP_BORDER_WIDTH,
