@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -62,7 +62,7 @@ export const WarmUpTooltip: FC<WarmupTooltipProps> = (props) => {
         position={position}
         borderColor={colors.deviceEvent}
         dateTitle={getDateTitleForBaseDatum(warmup, timePrefs)}
-        side={side || COMMON_TOOLTIP_SIDE}
+        side={side}
         tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
         tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
         tail={DEFAULT_TOOLTIP_TAIL}

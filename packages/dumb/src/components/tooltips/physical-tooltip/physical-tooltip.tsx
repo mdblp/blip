@@ -73,7 +73,7 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
   return (
     <Tooltip
       position={position}
-      side={side || COMMON_TOOLTIP_SIDE}
+      side={side}
       borderColor={colors.physicalActivity}
       dateTitle={getDateTitleForBaseDatum(physicalActivity, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}

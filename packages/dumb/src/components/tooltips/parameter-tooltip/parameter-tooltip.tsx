@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -112,7 +112,7 @@ export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props
   return (
     <Tooltip
       position={position}
-      side={side || COMMON_TOOLTIP_SIDE}
+      side={side}
       borderColor={colors.deviceEvent}
       dateTitle={getDateTitleForBaseDatum(parameter, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}

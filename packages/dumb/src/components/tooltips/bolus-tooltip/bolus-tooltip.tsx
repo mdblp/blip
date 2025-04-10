@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -142,7 +142,7 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
       title={bolusTypeTitle}
       borderColor={color}
       position={position}
-      side={side || COMMON_TOOLTIP_SIDE}
+      side={side}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tail={DEFAULT_TOOLTIP_TAIL}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -55,7 +55,7 @@ export const ConfidentialTooltip: FunctionComponent<ConfidentialTooltipProps> = 
   return (
     <Tooltip
       position={position}
-      side={side || COMMON_TOOLTIP_SIDE}
+      side={side}
       borderColor={colors.confidentialMode}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}

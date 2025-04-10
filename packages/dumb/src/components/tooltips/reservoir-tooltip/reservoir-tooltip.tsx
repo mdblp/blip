@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -84,7 +84,7 @@ export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props
   return (
     <Tooltip
       position={position}
-      side={side || COMMON_TOOLTIP_SIDE}
+      side={side}
       borderColor={colors.deviceEvent}
       dateTitle={getDateTitleForBaseDatum(reservoir, timePrefs)}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}

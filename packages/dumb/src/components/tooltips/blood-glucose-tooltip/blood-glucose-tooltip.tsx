@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -72,7 +72,7 @@ export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = 
   return (
     <Tooltip
       position={position}
-      side={side || COMMON_TOOLTIP_SIDE}
+      side={side}
       borderColor={colors[bgClass] || colors.bolus}
       dateTitle={getDateTitleForBaseDatum(data, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -66,7 +66,7 @@ export const FoodTooltip: FunctionComponent<FoodTooltipProps> = (props) => {
   return (
     <Tooltip
       position={position}
-      side={side || COMMON_TOOLTIP_SIDE}
+      side={side}
       borderColor={colors.rescuecarbs}
       dateTitle={getDateTitleForBaseDatum(food, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}

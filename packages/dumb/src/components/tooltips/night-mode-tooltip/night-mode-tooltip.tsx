@@ -73,7 +73,7 @@ export const NightModeTooltip: FC<NightModeTooltipProps> = (props) => {
       position={position}
       borderColor={colors.bolusManual}
       dateTitle={getDateTitleForBaseDatum(nightMode, timePrefs)}
-      side={side || COMMON_TOOLTIP_SIDE}
+      side={side}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tail={DEFAULT_TOOLTIP_TAIL}
