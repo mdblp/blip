@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,57 +25,55 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import {
+import { DurationUnit, type DurationValue, type NightMode, TimePrefs } from 'medical-domain'
+import Tooltip, {
   COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
   COMMON_TOOLTIP_TAIL_WIDTH,
   DEFAULT_TOOLTIP_BORDER_WIDTH,
   DEFAULT_TOOLTIP_OFFSET,
   DEFAULT_TOOLTIP_TAIL,
-  type Position,
-  type Side
+  Position,
+  Side
 } from '../common/tooltip/tooltip'
-import { Tooltip } from '../../../index'
-import commonStyles from '../../../styles/tooltip-common.css'
-import { formatInputTime } from '../../../utils/format/format.util'
-import colors from '../../../styles/colors.css'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { convertValueToMinutes } from '../../../utils/datetime/datetime.util'
-import { DurationUnit, type DurationValue, type PhysicalActivity, type TimePrefs } from 'medical-domain'
+import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import colors from '../../../styles/colors.css'
+import commonStyles from '../../../styles/tooltip-common.css'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { convertValueToHours } from '../../../utils/datetime/datetime.util'
 
-interface PhysicalTooltipProps {
-  physicalActivity: PhysicalActivity
+interface NightModeTooltipProps {
+  nightMode: NightMode
   position: Position
   side: Side
   timePrefs: TimePrefs
 }
 
-export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) => {
-  const { physicalActivity, position, side, timePrefs } = props
+export const NightModeTooltip: FC<NightModeTooltipProps> = (props) => {
+  const { nightMode, position, side, timePrefs } = props
   const { t } = useTranslation('main')
 
-  const getDurationInMinutes = (): DurationValue => {
-    const units = physicalActivity?.duration?.units
-    const duration = physicalActivity?.duration?.value
-    const value = convertValueToMinutes(duration, units)
+  const getDurationInHours = (): DurationValue => {
+    const units = nightMode?.duration?.units
+    const duration = nightMode?.duration?.value
+    const value = convertValueToHours(duration, units)
 
     return {
-      units: DurationUnit.Minutes,
+      units: DurationUnit.Hours,
       value
     }
   }
 
-  const duration = getDurationInMinutes()
+  const duration = getDurationInHours()
 
   return (
     <Tooltip
       position={position}
+      borderColor={colors.bolusManual}
+      dateTitle={getDateTitleForBaseDatum(nightMode, timePrefs)}
       side={side || COMMON_TOOLTIP_SIDE}
-      borderColor={colors.physicalActivity}
-      dateTitle={getDateTitleForBaseDatum(physicalActivity, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tail={DEFAULT_TOOLTIP_TAIL}
@@ -83,13 +81,8 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>
-          <TooltipLine label={t('Physical Activity')} isBold />
-          <TooltipLine label={t('Intensity')} value={t(`${physicalActivity.reportedIntensity}-pa`)} />
+          <TooltipLine label={t('night-mode')} isBold />
           <TooltipLine label={t('Duration')} value={`${duration.value} ${t(duration.units)}`} />
-          {
-            physicalActivity.inputTime &&
-            <TooltipLine label={t('Entered at')} value={formatInputTime(physicalActivity.inputTime, timePrefs)} />
-          }
         </div>
       }
     />

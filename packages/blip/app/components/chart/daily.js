@@ -30,6 +30,7 @@ import {
   BolusTooltip,
   ConfidentialTooltip,
   FoodTooltip,
+  NightModeTooltip,
   ParameterTooltip,
   PhysicalTooltip,
   ReservoirTooltip,
@@ -72,6 +73,7 @@ class DailyChart extends React.Component {
     onParameterHover: PropTypes.func.isRequired,
     onWarmUpHover: PropTypes.func.isRequired,
     onAlarmEventHover: PropTypes.func.isRequired,
+    onNightModeHover: PropTypes.func.isRequired,
     onConfidentialHover: PropTypes.func.isRequired,
     onTooltipOut: PropTypes.func.isRequired,
     onChartMounted: PropTypes.func.isRequired,
@@ -95,6 +97,7 @@ class DailyChart extends React.Component {
       'onConfidentialHover',
       'onWarmUpHover',
       'onAlarmEventHover',
+      'onNightModeHover',
       'onTooltipOut',
       'trackMetric'
     ]
@@ -337,7 +340,8 @@ class Daily extends React.Component {
 
     return (
       <div id="tidelineMain" className="daily">
-        <Box data-testid="daily-view-content" className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
+        <Box data-testid="daily-view-content" className="container-box-outer patient-data-content-outer" display="flex"
+             flexDirection="column">
           <Box display="flex">
             {this.state.chartMounted &&
               <DailyDatePicker
@@ -384,6 +388,7 @@ class Daily extends React.Component {
                   onWarmUpHover={this.handleWarmUpHover}
                   onAlarmEventHover={this.handleAlarmEventHover}
                   onConfidentialHover={this.handleConfidentialHover}
+                  onNightModeHover={this.handleNightModeHover}
                   onTooltipOut={this.handleTooltipOut}
                   onChartMounted={this.onChartMounted}
                   trackMetric={trackMetric}
@@ -637,7 +642,7 @@ class Daily extends React.Component {
         }}
         side={datum.side}
         timePrefs={datum.timePrefs}
-        warmup={datum.data}/>)
+        warmup={datum.data} />)
     this.setState({ tooltip })
   }
 
@@ -654,6 +659,21 @@ class Daily extends React.Component {
         bgPrefs={datum.bgPrefs}
         timePrefs={datum.timePrefs}
         device={this.props.device}
+      />)
+    this.setState({ tooltip })
+  }
+
+  handleNightModeHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum)
+    const tooltip = (
+      <NightModeTooltip
+        nightMode={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        timePrefs={datum.timePrefs}
       />)
     this.setState({ tooltip })
   }
