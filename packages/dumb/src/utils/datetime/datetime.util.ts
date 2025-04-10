@@ -43,6 +43,7 @@ export const TWENTY_FOUR_HRS = ONE_HOUR_MS * 24
 const ONE_HOUR_S = 3600
 const ONE_HOUR_MN = 60
 const ONE_MINUTE_S = 60
+const ONE_MINUTE_MS = 60000
 
 /**
  * getHourMinuteFormat
@@ -249,6 +250,8 @@ export const formatDateToUtc = (date: string, format: string): string => {
 
 export const convertValueToMinutes = (durationValue: number, durationUnit: DurationUnit): number => {
   switch (durationUnit) {
+    case DurationUnit.Milliseconds:
+      return Math.round(durationValue / ONE_MINUTE_MS)
     case DurationUnit.Seconds:
       return Math.round(durationValue / ONE_MINUTE_S)
     case DurationUnit.Hours:
