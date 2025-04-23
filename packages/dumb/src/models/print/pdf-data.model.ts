@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,9 @@ import {
   type DeviceConfig,
   type ParameterConfig,
   type PumpConfig,
-  type BasicData, MobileAppConfig
+  type BasicData,
+  MobileAppConfig,
+  SecurityBasalConfig
 } from 'medical-domain'
 
 export interface PdfData {
@@ -49,6 +51,7 @@ export interface PdfSettingsData extends PdfData {
     cgm?: CgmConfig
     mobileApplication?: MobileAppConfig
     parameters?: ParameterConfig[]
+    securityBasals?: SecurityBasalConfig
   }
   originalDate: string
 }

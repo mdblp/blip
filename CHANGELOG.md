@@ -2,15 +2,25 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.6.0-beta - 2024-09-03
+## 3.7.0-beta - 2025-03-05
+### Changed
+- YLP-3478 Update the front of the maintenance page
+- YLP-3522 Handle accounts marked for deletion
+
+### Fixed
+- YLP-3290 Top banner is hiding the top part of note creation popup
+
+## 3.6.0 - 2025-02-20
 ### Added
 - YLP-2408 Display basal safety profile in Devices view
+- YLP-2692 Display basal safety profile in the PDF report
 - YLP-2821 As a DBLG2 user, I want to be able to see the device tab
 - YLP-3128 As an HCP, I want to see which device is used by each patient
 - YLP-3145 As a yourloops user I want to do a csv export
 
 ### Changed
 - YLP-3262 Allow redirection to DBLG2 app from YourLoops
+- YLP-3332 Rename "Pump settings" page of PDF export to "Settings"
 
 ### Fixed
 - YLP-2543 PDF report legend label font color is wrong

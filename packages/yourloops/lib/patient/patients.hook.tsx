@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,8 +42,11 @@ import { useAlert } from '../../components/utils/snackbar'
 import { useParams } from 'react-router-dom'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 import { PRIVATE_TEAM_ID } from '../team/team.util'
+import { useTranslation } from 'react-i18next'
+import { logError } from '../../utils/error.util'
 
 export default function usePatientsProviderCustomHook(): PatientsContextResult {
+  const { t } = useTranslation()
   const { cancel: cancelInvite } = useNotification()
   const { user } = useAuth()
   const { filters } = usePatientListContext()
@@ -74,7 +77,9 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
       })
       .catch((reason: unknown) => {
         const message = errorTextFromException(reason)
-        alert.error(message)
+        logError(message, 'fetch-patients')
+
+        alert.error(t('error-http-40x'))
         setPatients([])
       })
       .finally(() => {
@@ -88,7 +93,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
         await fetchPatientsMetrics(computedPatients, selectedTeamId)
       })
     // Need to rewrite the alert component, or it triggers infinite loop...
-  }, [alert, fetchPatientsMetrics, isUserHcp, user])
+  }, [alert, fetchPatientsMetrics, isUserHcp, t, user])
 
   const refresh = (): void => {
     setRefreshInProgress(true)

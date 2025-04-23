@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -49,6 +49,8 @@ import {
 import { getSortedMedicalReports } from './medical-report-list.util'
 import { MedicalReportItem } from './medical-report-item'
 import Typography from '@mui/material/Typography'
+import { logError } from '../../../utils/error.util'
+import { errorTextFromException } from '../../../lib/utils'
 
 const useStyle = makeStyles()(() => ({
   categoryTitle: {
@@ -117,7 +119,10 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
         .then(medicalReports => {
           setMedicalReports(medicalReports)
         })
-        .catch(() => {
+        .catch((err) => {
+          const errorMessage = errorTextFromException(err)
+          logError(errorMessage, 'get-medical-reports')
+
           setMedicalReports([])
           alert.error(t('medical-reports-get-failed'))
         })

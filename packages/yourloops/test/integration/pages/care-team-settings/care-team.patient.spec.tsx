@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,7 +40,7 @@ import { mockDataAPI } from '../../mock/data.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 
-describe('HCP care team settings page', () => {
+describe('Patient care team settings page', () => {
   const firstName = 'Jacques'
   const lastName = 'Xellerre'
 

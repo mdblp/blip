@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,6 +60,8 @@ import metrics from '../../lib/metrics'
 import { useAlert } from '../utils/snackbar'
 import { type DateRange } from '../patient-data/patient-data.utils'
 import { CsvReportModel } from '../../lib/data/models/csv-report.model'
+import { logError } from '../../utils/error.util'
+import { errorTextFromException } from '../../lib/utils'
 
 export type Presets = '1week' | '2weeks' | '4weeks' | '3months'
 
@@ -171,7 +173,7 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
     return { minDate: mi, maxDate: ma }
   }, [medicalData, customStartDate])
 
-  const [reportOptions, setReportOptions] = useState<ReportOptions>(getDatesFromPreset(defaultPreset || DEFAULT_PRESET, minDate, maxDate, OutputFormat.Pdf))
+  const [reportOptions, setReportOptions] = useState<ReportOptions>(getDatesFromPreset(defaultPreset ?? DEFAULT_PRESET, minDate, maxDate, OutputFormat.Pdf))
   const [buildingReport, setBuildingReport] = useState<boolean>(false)
   const { start, end, displayedDates } = useMemo(() => {
     const startDate = customStartDate ?? dayjs(reportOptions.start, { utc: true })
@@ -268,7 +270,10 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
       metrics.send('export_data', `save_report_${reportOptions.format}`, reportOptions.preset ?? 'custom')
       onClose()
     } catch (err) {
-      alert.error(err.message)
+      const errorMessage = errorTextFromException(err)
+      logError(errorMessage, 'print-report')
+
+      alert.error(t('error-http-40x'))
       metrics.send('export_data', `save_report$_${reportOptions.format}`, 'error')
     } finally {
       setBuildingReport(false)

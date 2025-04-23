@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -63,6 +63,7 @@ import { testMedicalWidgetForPatient } from '../../../use-cases/medical-reports-
 import { testChatWidgetForPatient } from '../../../use-cases/communication-system'
 import { testJoinTeam } from '../../../use-cases/teams-management'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import ErrorApi from '../../../../../lib/error/error.api'
 
 describe('Dashboard view for patient', () => {
   const patientDashboardRoute = AppUserRoute.Dashboard
@@ -134,6 +135,7 @@ describe('Dashboard view for patient', () => {
   })
 
   it('should be able to join a team', async () => {
+    jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
     const router = renderPage(patientDashboardRoute)
 
     await waitFor(() => {

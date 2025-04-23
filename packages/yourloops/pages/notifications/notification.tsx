@@ -47,6 +47,7 @@ import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { type IUser } from '../../lib/data/models/i-user.model'
 import { NotificationType } from '../../lib/notifications/models/enums/notification-type.enum'
 import { JoinTeamDialog } from '../../components/dialogs/join-team/join-team-dialog'
+import { logError } from '../../utils/error.util'
 
 export interface NotificationSpanProps {
   id: string
@@ -238,8 +239,9 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
       alert.success(t('accept-notification-success', { name: inviterName }))
       refreshReceivedInvitations()
     } catch (reason: unknown) {
-      console.error(reason)
       const errorMessage = errorTextFromException(reason)
+      logError(errorMessage, 'notification-accept-invitation')
+
       alert.error(t(errorMessage))
       setInProgress(false)
       notifications.update()
@@ -261,6 +263,8 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
       metrics.send('invitation', 'decline_invitation', notification.metricsType)
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
+      logError(errorMessage, 'notification-decline-invitation')
+
       alert.error(t(errorMessage))
       setInProgress(false)
       notifications.update()
@@ -276,6 +280,8 @@ export const Notification: FunctionComponent<NotificationProps> = (props) => {
       onCloseDialog()
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
+      logError(errorMessage, 'notification-patient-add-team')
+
       alert.error(t('modal-patient-add-team-failure', { errorMessage }))
     }
   }

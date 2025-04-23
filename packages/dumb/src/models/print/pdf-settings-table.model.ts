@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,12 +39,11 @@ export interface SettingsTableColumn {
   header: string
 }
 
-export interface BasicSettingsTableRow extends Record<string, string | number> {
-  value: string
-}
+export interface BasicSettingsTableRow { [key: string]: string | number }
 
 export interface SettingsTableRow extends BasicSettingsTableRow {
   label: string
+  value: string
 }
 
 export interface ParameterSettingsTableRow extends BasicSettingsTableRow {
@@ -52,6 +51,13 @@ export interface ParameterSettingsTableRow extends BasicSettingsTableRow {
   name: string
   unit: Unit
   level: number
+  value: string
+}
+
+export interface SafetyBasalProfileTableRow extends BasicSettingsTableRow {
+  startTime: string
+  endTime: string
+  rate: string
 }
 
 interface SettingsTableData<T> {

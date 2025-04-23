@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -52,6 +52,7 @@ import {
 import { getCompleteDailyViewData } from '../../../mock/complete-daily-view-data'
 import { t } from '../../../../../lib/language'
 import { checkReportDialogPresets } from '../../../assert/report-dialog.assert'
+import ErrorApi from '../../../../../lib/error/error.api'
 
 describe('Daily view for anyone', () => {
   const dailyRoute = AppUserRoute.Daily
@@ -169,6 +170,7 @@ describe('Daily view for anyone', () => {
     it('should display an alert when CSV report generation failed', async () => {
       dayjs.extend(weekArrayPlugin)
       dayjs.extend(weekdaysPlugin)
+      jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
 
       const downloadLinkElement = {
         click: jest.fn(),

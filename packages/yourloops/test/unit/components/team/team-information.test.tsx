@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,6 +38,7 @@ import * as teamHookMock from '../../../../lib/team'
 import * as alertHookMock from '../../../../components/utils/snackbar'
 import { PhonePrefixCode } from '../../../../lib/utils'
 import { MemoryRouter } from 'react-router-dom'
+import ErrorApi from '../../../../lib/error/error.api'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
@@ -175,6 +176,7 @@ describe('TeamInformation', () => {
   })
 
   it('should show error message when team edit failed', async () => {
+    jest.spyOn(ErrorApi, 'sendError').mockResolvedValue()
     updateTeamMock.mockRejectedValue(Error('This error has been thrown by a mock on purpose'))
     render(getTeamInformationJSX())
     await editTeamInfo()

@@ -353,6 +353,7 @@
   "menu-contact-support": "カスタマーサポート",
   "messages": "メッセージ",
   "minimum": "最小値：",
+  "mobile-application": "モバイルアプリ",
   "modal-add-caregiver": "サポーター",
   "modal-add-patient": "{{selectedCareTeam}}に患者を招待する。",
   "modal-add-patient-info": "患者のデータを他のケアチームと共有するには、YourLoopsページ右上のドロップダウンメニューからケアチームを選択します。",

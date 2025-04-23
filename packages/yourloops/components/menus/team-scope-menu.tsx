@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -52,6 +52,8 @@ import AddIcon from '@mui/icons-material/Add'
 import TeamInformationEditDialog from '../../pages/hcp/team-information-edit-dialog'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 import { AppUserRoute } from '../../models/enums/routes.enum'
+import { logError } from '../../utils/error.util'
+import { errorTextFromException } from '../../lib/utils'
 
 const classes = makeStyles()((theme: Theme) => ({
   sectionTitle: {
@@ -123,6 +125,9 @@ export const TeamScopeMenu: FunctionComponent = () => {
         navigate(`/teams/${newTeam.id}`)
         alert.success(t('team-page-success-create'))
       } catch (reason: unknown) {
+        const errorMessage = errorTextFromException(reason)
+        logError(errorMessage, 'team-create')
+
         alert.error(t('team-page-failed-create'))
       }
     }

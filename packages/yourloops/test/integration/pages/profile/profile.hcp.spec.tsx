@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -50,6 +50,7 @@ import {
   testBannerLanguageUpdate
 } from '../../use-cases/app-main-layout-visualisation'
 import { ConfigService } from '../../../../lib/config/config.service'
+import ErrorApi from '../../../../lib/error/error.api'
 
 describe('Profile page for hcp', () => {
   const profile: Profile = {
@@ -79,6 +80,8 @@ describe('Profile page for hcp', () => {
   })
 
   it('should render profile page for a French HCP and be able to edit his profile and change his password', async () => {
+    jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
+
     const expectedProfile = {
       ...profile,
       firstName: 'Jean',

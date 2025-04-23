@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,19 +37,13 @@ import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import TableBody from '@mui/material/TableBody'
 import { makeStyles } from 'tss-react/mui'
-import moment from 'moment/moment'
 import { useTranslation } from 'react-i18next'
-import { DeviceSystem, SecurityBasalConfig, SecurityBasalRate } from 'medical-domain'
+import { DeviceSystem, SecurityBasalConfig } from 'medical-domain'
+import { isSafetyBasalAvailable, getSafetyBasalItems, SafetyBasalItem } from 'dumb'
 
 interface SafetyBasalProfileSectionProps {
   safetyBasalConfig: SecurityBasalConfig
   deviceSystem: DeviceSystem
-}
-
-interface SafetyBasalItem {
-  rate: string,
-  startTime: string,
-  endTime: string
 }
 
 const useStyles = makeStyles()(() => ({
@@ -63,59 +57,13 @@ const useStyles = makeStyles()(() => ({
   }
 }))
 
-const MINUTES_IN_ONE_HOUR = 60
-const TWENTY_FOUR_HOURS_IN_MINUTES = 24 * MINUTES_IN_ONE_HOUR
-
 export const SafetyBasalProfileSection: FC<SafetyBasalProfileSectionProps> = ({ safetyBasalConfig, deviceSystem }) => {
   const theme = useTheme()
   const { t } = useTranslation()
   const { classes } = useStyles()
 
-  const getRateLabel = (rateValue: number) => {
-    return `${rateValue} ${t('basal-rate-unit')}`
-  }
-
-  const getDisplayTime = (startInMinutes: number) => {
-    const hours = Math.floor(startInMinutes / MINUTES_IN_ONE_HOUR)
-    const minutes = startInMinutes % MINUTES_IN_ONE_HOUR
-
-    return moment().hours(hours).minutes(minutes).format('LT')
-  }
-
-  const getRatesSortedByStartTime = (rates: SecurityBasalRate[]): SecurityBasalRate[] => {
-    return rates.sort((a: SecurityBasalRate, b: SecurityBasalRate) => {
-        if (a.start === b.start) {
-          return 0
-        }
-        if (a.start > b.start) {
-          return 1
-        }
-        return -1
-      })
-  }
-
-  const getSafetyBasalItems = (safetyBasalConfig: SecurityBasalConfig): SafetyBasalItem[] => {
-    const sortedRates = getRatesSortedByStartTime(safetyBasalConfig.rates)
-
-    const items = sortedRates.map((rate: SecurityBasalRate) => ({
-      rate: getRateLabel(rate.rate),
-      startTime: getDisplayTime(rate.start),
-      endTime: ''
-    }))
-
-    items.forEach((item, index) => {
-      if (index === items.length - 1) {
-        item.endTime = getDisplayTime(TWENTY_FOUR_HOURS_IN_MINUTES)
-        return
-      }
-      item.endTime = items[index + 1].startTime
-    })
-
-    return items
-  }
-
-  const isSafetyBasalAvailable = safetyBasalConfig.rates?.length > 1
-  const safetyBasalItems = isSafetyBasalAvailable ? getSafetyBasalItems(safetyBasalConfig) : []
+  const hasSafetyBasal = isSafetyBasalAvailable(safetyBasalConfig)
+  const safetyBasalItems = hasSafetyBasal ? getSafetyBasalItems(safetyBasalConfig) : []
 
   const noDataMessage = deviceSystem === DeviceSystem.Dblg1 ? t('safety-basal-profile-values-not-available-update-dblg1') : t('safety-basal-profile-values-not-available')
 
@@ -123,7 +71,7 @@ export const SafetyBasalProfileSection: FC<SafetyBasalProfileSectionProps> = ({ 
     <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="safety-basal-profile-section">
       <CardHeader title={t('safety-basal-profile')} />
       <CardContent>
-        {isSafetyBasalAvailable
+        {hasSafetyBasal
           ? <Card variant="outlined">
             <TableContainer data-testid="safety-basal-profile-table">
               <Table>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,19 +33,19 @@ import { formatCurrentDate } from 'dumb'
 
 export const checkDevicesMenuLayout = () => {
   const devicesMenu = screen.getByTestId('devices-view-menu')
-  expect(devicesMenu).toHaveTextContent('DevicesCurrent parametersSafety basal profileChange history')
+  expect(devicesMenu).toHaveTextContent('DevicesCurrent settingsBasal safety profileChange history')
 }
 
 export const checkCurrentParametersContent = () => {
   const deviceSettings = screen.getByTestId('current-parameters-section')
   const date = moment.tz(pumpSettingsData.data.pumpSettings[0].normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
-  expect(deviceSettings).toHaveTextContent(`Devices and current parametersLast update: ${date}Copy as textDBLG1ManufacturerDiabeloopIdentifier1234IMEI1234567890Software version1.0.5.25PumpManufacturerVICENTRAProducttestPumpSerial number123456Pump versionbetaCGMManufacturerDexcomProductG6Sensor expirationApr 12, 2050Transmitter software versionv1Transmitter IDa1234Transmitter expirationApr 12, 2050SettingValueUnitBreakfast - average36.0gLunch - average96.0gDinner - average96.0gWeight72.0kgHyperglycemia threshold180.0mg/dLHypoglycemia threshold75.0mg/dLTarget glucose level110.0mg/dLAggressiveness in normoglycemia100%Aggressiveness in hyperglycemia100%Aggressiveness for breakfast100%Aggressiveness for lunch100%Aggressiveness for dinner80%Breakfast - small18.0gBreakfast - large54.0gLunch - small48.0gLunch - large144.0gDinner - small48.0gDinner - large144.0g`)
+  expect(deviceSettings).toHaveTextContent(`Devices and current settingsLast update: ${date}Copy as textDBLG1ManufacturerDiabeloopIdentifier1234IMEI1234567890Software version1.0.5.25PumpManufacturerVICENTRAProducttestPumpSerial number123456Pump versionbetaCGMManufacturerDexcomProductG6Sensor expirationApr 12, 2050Transmitter software versionv1Transmitter IDa1234Transmitter expirationApr 12, 2050SettingValueUnitBreakfast - average36.0gLunch - average96.0gDinner - average96.0gWeight72.0kgHyperglycemia threshold180.0mg/dLHypoglycemia threshold75.0mg/dLTarget glucose level110.0mg/dLAggressiveness in normoglycemia100%Aggressiveness in hyperglycemia100%Aggressiveness for breakfast100%Aggressiveness for lunch100%Aggressiveness for dinner80%Breakfast - small18.0gBreakfast - large54.0gLunch - small48.0gLunch - large144.0gDinner - small48.0gDinner - large144.0g`)
 }
 
 export const checkG2CurrentParametersContent = () => {
   const deviceSettings = screen.getByTestId('current-parameters-section')
   const date = moment.tz(pumpSettingsData.data.pumpSettings[0].normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
-  expect(deviceSettings).toHaveTextContent(`Devices and current parametersLast update: ${date}Copy as textMobile applicationManufacturerDiabeloopNameDBLG2Software version1.0.0PumpManufacturerVICENTRAProducttestPumpSerial number123456Pump versionbetaCGMManufacturerDexcomProductG6Sensor expirationApr 12, 2050Transmitter software versionv1Transmitter IDa1234Transmitter expirationApr 12, 2050SettingValueUnitBreakfast - average36.0gLunch - average96.0gDinner - average96.0gWeight72.0kgHyperglycemia threshold180.0mg/dLHypoglycemia threshold75.0mg/dLTarget glucose level110.0mg/dLAggressiveness in normoglycemia100%Aggressiveness in hyperglycemia100%Aggressiveness for breakfast100%Aggressiveness for lunch100%Aggressiveness for dinner80%Breakfast - small18.0gBreakfast - large54.0gLunch - small48.0gLunch - large144.0gDinner - small48.0gDinner - large144.0g`)
+  expect(deviceSettings).toHaveTextContent(`Devices and current settingsLast update: ${date}Copy as textMobile applicationManufacturerDiabeloopNameDBLG2Software version1.0.0PumpManufacturerVICENTRAProducttestPumpSerial number123456Pump versionbetaCGMManufacturerDexcomProductG6Sensor expirationApr 12, 2050Transmitter software versionv1Transmitter IDa1234Transmitter expirationApr 12, 2050SettingValueUnitBreakfast - average36.0gLunch - average96.0gDinner - average96.0gWeight72.0kgHyperglycemia threshold180.0mg/dLHypoglycemia threshold75.0mg/dLTarget glucose level110.0mg/dLAggressiveness in normoglycemia100%Aggressiveness in hyperglycemia100%Aggressiveness for breakfast100%Aggressiveness for lunch100%Aggressiveness for dinner80%Breakfast - small18.0gBreakfast - large54.0gLunch - small48.0gLunch - large144.0gDinner - small48.0gDinner - large144.0g`)
 }
 
 export const checkCopyTextButton = async () => {
@@ -82,21 +82,21 @@ export const checkG2CopyTextButton = async () => {
 }
 
 export const checkSafetyBasalProfileContent = async () => {
-  const safetyBasalProfileButton = within(screen.getByTestId('devices-view-menu')).getByText('Safety basal profile')
+  const safetyBasalProfileButton = within(screen.getByTestId('devices-view-menu')).getByText('Basal safety profile')
   await userEvent.click(safetyBasalProfileButton)
 
   const changeHistorySection = screen.getByTestId('safety-basal-profile-section')
   expect(changeHistorySection).toBeVisible()
-  expect(changeHistorySection).toHaveTextContent('Safety basal profileStart timeEnd timeBasal rate12:00 AM8:30 AM1 U/h8:30 AM2:00 PM2 U/h2:00 PM12:00 AM0.4 U/h')
+  expect(changeHistorySection).toHaveTextContent('Basal safety profileStart timeEnd timeBasal rate12:00 AM8:30 AM1 U/h8:30 AM2:00 PM2 U/h2:00 PM12:00 AM0.4 U/h')
 }
 
 export const checkSafetyBasalProfileErrorMessage = async (errorMessage: string) => {
-  const safetyBasalProfileButton = within(screen.getByTestId('devices-view-menu')).getByText('Safety basal profile')
+  const safetyBasalProfileButton = within(screen.getByTestId('devices-view-menu')).getByText('Basal safety profile')
   await userEvent.click(safetyBasalProfileButton)
 
   const changeHistorySection = screen.getByTestId('safety-basal-profile-section')
   expect(changeHistorySection).toBeVisible()
-  expect(changeHistorySection).toHaveTextContent(`Safety basal profile${errorMessage}`)
+  expect(changeHistorySection).toHaveTextContent(`Basal safety profile${errorMessage}`)
 }
 
 export const checkChangeHistoryContent = async () => {

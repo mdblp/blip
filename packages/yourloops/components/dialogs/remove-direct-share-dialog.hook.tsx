@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,6 +33,8 @@ import { useNotification } from '../../lib/notifications/notification.hook'
 import { type OnCloseRemoveDirectShareDialog, type UserToRemove } from './remove-direct-share-dialog'
 import { type Notification } from '../../lib/notifications/models/notification.model'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
+import { logError } from '../../utils/error.util'
+import { errorTextFromException } from '../../lib/utils'
 
 interface RemoveDirectShareDialogHookReturn {
   removeDirectShare: (userToRemove: UserToRemove, currentUser: User) => Promise<void>
@@ -67,7 +69,9 @@ const useRemoveDirectShareDialog = (onClose: OnCloseRemoveDirectShareDialog): Re
 
       onClose(!invitation)
     } catch (reason) {
-      console.error(`Remove direct share failed, reason: ${reason}`)
+      const errorMessage = errorTextFromException(reason)
+      logError(errorMessage, 'remove-direct-share')
+
       const errorAlertKey = isCurrentUserCaregiver ? 'modal-caregiver-remove-patient-failure' : 'modal-patient-remove-caregiver-failure'
       alert.error(t(errorAlertKey))
     }

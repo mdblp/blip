@@ -31,7 +31,7 @@ import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import DialogTitle from '@mui/material/DialogTitle'
 import Link from '@mui/material/Link'
-import { setPageTitle } from '../../lib/utils'
+import { errorTextFromException, setPageTitle } from '../../lib/utils'
 import { useAuth } from '../../lib/auth'
 import metrics from '../../lib/metrics'
 import SwitchRoleDialogs from '../../components/switch-role'
@@ -44,6 +44,7 @@ import { Lock } from '@mui/icons-material'
 import { Divider } from '@mui/material'
 import { AuthApi } from '../../lib/auth/auth.api'
 import { useAlert } from '../../components/utils/snackbar'
+import { logError } from '../../utils/error.util'
 
 export const ProfilePage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
@@ -67,7 +68,9 @@ export const ProfilePage: FunctionComponent = () => {
       await AuthApi.sendResetPasswordEmail(user.email)
       alert.success(t('alert-change-password-email-success'))
     } catch (reason: unknown) {
-      console.error(reason)
+      const errorMessage = errorTextFromException(reason)
+      logError(errorMessage, 'change-password')
+
       alert.error(t('alert-change-password-email-failed'))
     }
   }

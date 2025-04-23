@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -49,11 +49,11 @@ export const testG2DevicesVisualisation = async () => {
 }
 
 export const testEmptySafetyBasalProfileGenericErrorMessage = async () => {
-  await checkSafetyBasalProfileErrorMessage('The safety basal profile values are not available.')
+  await checkSafetyBasalProfileErrorMessage('The basal safety profile values are not available.')
 }
 
 export const testEmptySafetyBasalProfileDblg1ErrorMessage = async () => {
-  await checkSafetyBasalProfileErrorMessage('The safety basal profile values are not available due to an outdated software version of the DBLG1. Updating the software version may resolve the issue.')
+  await checkSafetyBasalProfileErrorMessage('The basal safety profile values are not available due to an outdated software version of the DBLG1. Updating the software version may resolve the issue.')
 }
 
 const testDevicesMenuLayout = () => {

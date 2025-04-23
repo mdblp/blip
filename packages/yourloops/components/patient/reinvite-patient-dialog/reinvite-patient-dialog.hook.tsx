@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,6 +32,8 @@ import { usePatientsContext } from '../../../lib/patient/patients.provider'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { useParams } from 'react-router-dom'
 import { useTeam } from '../../../lib/team'
+import { logError } from '../../../utils/error.util'
+import { errorTextFromException } from '../../../lib/utils'
 
 interface ReinvitePatientDialogHookProps {
   patient: Patient
@@ -72,6 +74,9 @@ export const useReinvitePatientDialog = (
         ))
       onSuccess()
     } catch (err) {
+      const errorMessage = errorTextFromException(err)
+      logError(errorMessage, 'reinvite-patient')
+
       alert.error(t('alert-reinvite-patient-failure', {
         patientEmail
       }))
