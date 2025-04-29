@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,7 +42,13 @@ import { formatInputTime } from '../../../utils/format/format.util'
 import colors from '../../../styles/colors.css'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { convertValueToMinutes } from '../../../utils/datetime/datetime.util'
-import { DurationUnit, type DurationValue, type PhysicalActivity, type TimePrefs } from 'medical-domain'
+import {
+  DurationUnit,
+  type DurationValue,
+  type PhysicalActivity,
+  PhysicalActivityName,
+  type TimePrefs
+} from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 
@@ -55,7 +61,7 @@ interface PhysicalTooltipProps {
 
 export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) => {
   const { physicalActivity, position, side, timePrefs } = props
-  const { t } = useTranslation('main')
+  const { t } = useTranslation()
 
   const getDurationInMinutes = (): DurationValue => {
     const units = props.physicalActivity?.duration?.units
@@ -69,6 +75,14 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
   }
 
   const duration = getDurationInMinutes()
+
+  const getDisplayName = (name: string): string => {
+    const nameUppercase = name.toUpperCase()
+    if (name && Object.values(PhysicalActivityName).includes(nameUppercase as PhysicalActivityName)) {
+      return t(`params|${nameUppercase}`)
+    }
+    return t(`params|${PhysicalActivityName.AerobicDefault}`)
+  }
 
   return (
     <Tooltip
@@ -84,6 +98,10 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
       content={
         <div className={commonStyles.containerFlex}>
           <TooltipLine label={t('Physical Activity')} isBold />
+          {
+            physicalActivity.name !== "" &&
+            <TooltipLine label={t('Name')} value={getDisplayName(physicalActivity.name)} />
+          }
           <TooltipLine label={t('Intensity')} value={t(`${physicalActivity.reportedIntensity}-pa`)} />
           <TooltipLine label={t('Duration')} value={`${duration.value} ${t(duration.units)}`} />
           {

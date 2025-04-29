@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -449,7 +449,8 @@ const testData = {
       "epochEnd": 1698567720000,
       "guid": "physicalActivity-16974144000000003",
       "reportedIntensity": "low",
-      "inputTime": "2021-01-15T08:21:47Z"
+      "inputTime": "2021-01-15T08:21:47Z",
+      "name": ""
     },
     {
       "id": "318b802601eed0eeb8076a4ed4aa9c5b",
@@ -467,7 +468,8 @@ const testData = {
       "epochEnd": 1698395050000,
       "guid": "physicalActivity-16974144000000002",
       "reportedIntensity": "low",
-      "inputTime": "2021-01-13T08:02:18Z"
+      "inputTime": "2021-01-13T08:02:18Z",
+      "name": ""
     }
   ],
   pumpSettings: [

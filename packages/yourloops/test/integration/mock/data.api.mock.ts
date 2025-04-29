@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -66,7 +66,9 @@ export const WIZARD_POSITIVE_OVERRIDE_ID = 'wizardId3'
 export const WIZARD_NEGATIVE_OVERRIDE_ID = 'wizardId4'
 export const CARB_ID = 'carbId'
 export const PHYSICAL_ACTIVITY_ID = 'physicalActivityId'
+export const PHYSICAL_ACTIVITY_WITHOUT_NAME_ID = 'physicalActivityId2'
 export const PHYSICAL_ACTIVITY_TIME = '2022-08-08T13:00:00Z'
+export const PHYSICAL_ACTIVITY_WITHOUT_NAME_TIME = '2022-08-08T14:00:00Z'
 export const RESERVOIR_CHANGE_ID = 'reservoirChangeId'
 export const PARAMETER_ID = 'parameterId'
 export const CONFIDENTIAL_MODE_ID = 'deviceEvent_2022-08-08_8'
@@ -1289,7 +1291,8 @@ export const dataSetsWithZeroValues: Data = {
         "guid": "pa_18",
         "reportedIntensity": Intensity.Medium,
         "inputTime": "2022-08-08T13:00:00.000Z",
-        "isoWeekday": WeekDays.Sunday
+        "isoWeekday": WeekDays.Sunday,
+        "name": "SWIMMING"
       }
     ],
     "pumpSettings": [

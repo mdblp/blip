@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,22 +33,23 @@ import type PhysicalActivity from '../../../models/medical/datum/physical-activi
 import { type DatumProcessor } from '../../../models/medical/datum.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import DatumService from '../datum.service'
-import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
+import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../../models/time/date-filter.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): PhysicalActivity => {
   const base = BaseDatumService.normalize(rawData, opts)
   const duration = DurationService.normalize(rawData, opts)
   const isValidRawDataInputTime = typeof rawData.inputTime === 'string' && rawData.inputTime.trim() !== ''
   const inputTime = isValidRawDataInputTime ? rawData.inputTime as string : base.normalTime
-  const physicalActivity: PhysicalActivity = {
+  const name = rawData.name as string
+  return {
     ...base,
     ...duration,
     type: DatumType.PhysicalActivity,
     guid: rawData.guid as string,
     reportedIntensity: rawData.reportedIntensity as Intensity,
-    inputTime
+    inputTime,
+    name
   }
-  return physicalActivity
 }
 
 const deduplicate = (data: PhysicalActivity[], _opts: MedicalDataOptions): PhysicalActivity[] => {
