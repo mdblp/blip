@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2024-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -1117,7 +1117,29 @@ export const getCompleteDailyViewData = (deviceName: string = "DBLG1", softwareV
           "guid": "pa_18",
           "reportedIntensity": Intensity.Medium,
           "inputTime": "2022-08-08T13:00:00.000Z",
-          "isoWeekday": WeekDays.Sunday
+          "isoWeekday": WeekDays.Sunday,
+          "name": "RUNNING"
+        },
+        {
+          "epoch": 1659967200000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T14:00:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": "physicalActivityId2",
+          "type": DatumType.PhysicalActivity,
+          "source": Source.Diabeloop,
+          "duration": {
+            "units": DurationUnit.Seconds,
+            "value": 1800
+          },
+          "normalEnd": "2022-08-08T14:30:00.000Z",
+          "epochEnd": 1659969000000,
+          "guid": "pa_19",
+          "reportedIntensity": Intensity.Medium,
+          "inputTime": "2022-08-08T14:00:00.000Z",
+          "isoWeekday": WeekDays.Sunday,
+          "name": ""
         }
       ],
       pumpSettings: [
