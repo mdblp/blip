@@ -48,6 +48,8 @@ import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { SignupFormKey } from './models/enums/signup-form-key.enum'
 import { logError } from '../../utils/error.util'
 import { errorTextFromException } from '../../lib/utils'
+import InputAdornment from '@mui/material/InputAdornment'
+import SearchIcon from '@mui/icons-material/Search'
 
 interface Errors {
   firstName: boolean
@@ -129,7 +131,11 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
       justifyContent="center"
     >
       <TextField
-        data-testid="first-name"
+        InputProps={{
+          inputProps: {
+            "data-testid":"first-name"
+          }
+        }}
         aria-label={t('first-name')}
         margin="normal"
         label={t('first-name')}
@@ -141,7 +147,11 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
         helperText={errors.firstName && t('required-field')}
       />
       <TextField
-        data-testid="last-name"
+        InputProps={{
+          inputProps: {
+            "data-testid":"last-name"
+          }
+        }}
         aria-label={t('last-name')}
         margin="normal"
         label={t('last-name')}
