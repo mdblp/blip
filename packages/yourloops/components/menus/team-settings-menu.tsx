@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -56,6 +56,7 @@ import TeamUtils from '../../lib/team/team.util'
 import Button from '@mui/material/Button'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE } from '../../lib/team/team.api'
+import { logError } from '../../utils/error.util'
 
 const classes = makeStyles()((theme: Theme) => ({
   teamIcon: {
@@ -153,6 +154,9 @@ function TeamSettingsMenu(): JSX.Element {
       setShowJoinTeamDialog(false)
     } catch (reason: unknown) {
       const error = reason as Error
+      const errorMessage = errorTextFromException(reason)
+      logError(errorMessage, 'patient-add-team')
+
       const message = getErrorMessage(error)
       alert.error(message)
       setShowJoinTeamDialog(false)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,6 +30,8 @@ import { useState } from 'react'
 import { useAlert } from '../../utils/snackbar'
 import { usePatientsContext } from '../../../lib/patient/patients.provider'
 import { type Patient } from '../../../lib/patient/models/patient.model'
+import { logError } from '../../../utils/error.util'
+import { errorTextFromException } from '../../../lib/utils'
 
 interface CancelInvitePatientDialogHookProps {
   onClose: () => void
@@ -55,6 +57,9 @@ export const useCancelInvitePatientDialog = ({ patient, onClose }: CancelInviteP
       alert.info(t('alert-remove-patient-pending-invite-success'))
       onClose()
     } catch (err) {
+      const errorMessage = errorTextFromException(err)
+      logError(errorMessage, 'remove-patient')
+
       alert.error(t('alert-remove-patient-failure'))
       setProcessing(false)
     }

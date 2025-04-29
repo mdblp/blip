@@ -45,6 +45,7 @@ import TeamUtils from '../../lib/team/team.util'
 import { UserInviteStatus } from '../../lib/team/models/enums/user-invite-status.enum'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 import { getUserName } from '../../lib/auth/user.util'
+import { logError } from '../../utils/error.util'
 
 const useStyles = makeStyles()((theme: Theme) => ({
   checkboxTableCellBody: {
@@ -109,6 +110,8 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
       await teamHook.changeMemberRole(teamMember, isAdmin ? TeamMemberRole.admin : TeamMemberRole.member, team.id)
     } catch (reason: unknown) {
       const errorMessage = errorTextFromException(reason)
+      logError(errorMessage, 'update-member-role')
+
       alert.error(t('team-page-failed-update-role', { errorMessage }))
     } finally {
       setUserUpdateInProgress(false)
@@ -122,7 +125,9 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
       await teamHook.removeMember(teamMember, team.id)
       alert.success(t('remove-member-success'))
     } catch (reason: unknown) {
-      console.error(reason)
+      const errorMessage = errorTextFromException(reason)
+      logError(errorMessage, 'remove-member')
+
       alert.error(t('remove-member-failed'))
     } finally {
       setUserUpdateInProgress(false)

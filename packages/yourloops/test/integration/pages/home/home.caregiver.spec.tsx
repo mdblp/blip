@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -43,6 +43,7 @@ import { checkPatientListHeaderCaregiver } from '../../assert/patient-list.asser
 import { buildPatientAsTeamMember } from '../../data/patient-builder.data'
 import moment from 'moment-timezone'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
+import ErrorApi from '../../../../lib/error/error.api'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
@@ -198,6 +199,7 @@ describe('Caregiver home page', () => {
 
   it('should display an error message if patient removal failed', async () => {
     jest.spyOn(DirectShareApi, 'removeDirectShare').mockRejectedValueOnce('This error was thrown by a mock on purpose')
+    jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
 
     await act(async () => {
       renderPage('/')

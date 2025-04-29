@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,6 +33,8 @@ import { useTeam } from '../../../lib/team'
 import TeamUtils from '../../../lib/team/team.util'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { useParams } from 'react-router-dom'
+import { errorTextFromException } from '../../../lib/utils'
+import { logError } from '../../../utils/error.util'
 
 interface RemovePatientDialogHookProps {
   onClose: () => void
@@ -76,6 +78,9 @@ const useRemovePatientDialog = ({ patient, onClose }: RemovePatientDialogHookPro
       alert.success(message)
       onClose()
     } catch (err) {
+      const errorMessage = errorTextFromException(err)
+      logError(errorMessage, 'remove-patient')
+
       alert.error(t('alert-remove-patient-failure'))
       setProcessing(false)
     }

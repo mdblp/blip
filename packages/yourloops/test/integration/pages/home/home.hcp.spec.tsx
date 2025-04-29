@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -50,6 +50,7 @@ import NotificationApi from '../../../../lib/notifications/notification.api'
 import { type Router } from '../../models/router.model'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
+import ErrorApi from '../../../../lib/error/error.api'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -145,6 +146,7 @@ describe('HCP home page', () => {
   })
 
   it('should be able to manage patients when scoped on a medical team', async () => {
+    jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
     await renderHomePage(thirdTeamPatientsList)
 
     await testPatientManagementMedicalTeam()
@@ -157,6 +159,7 @@ describe('HCP home page', () => {
   })
 
   it('should be able to create a team when on the home page', async () => {
+    jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
     const router = await renderHomePage(thirdTeamPatientsList)
 
     await testTeamCreation(router)

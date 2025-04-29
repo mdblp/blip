@@ -75,7 +75,7 @@ import { WarmUpTooltip } from './components/tooltips/warm-up-tooltip/warm-up-too
 import { Device } from './models/device.model'
 import { buildDevice } from './utils/device/device.utils'
 import { SafetyBasalItem } from './models/safety-basal-item.model'
-import { getSafetyBasalItems } from './utils/safety-basal-profile/safety-basal-profile.util'
+import { isSafetyBasalAvailable, getSafetyBasalItems } from './utils/safety-basal-profile/safety-basal-profile.util'
 
 export {
   formatDate,
@@ -123,5 +123,6 @@ export {
   TIMEZONE_UTC,
   WarmUpTooltip,
   SafetyBasalItem,
+  isSafetyBasalAvailable,
   getSafetyBasalItems
 }

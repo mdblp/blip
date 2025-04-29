@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,6 +34,7 @@ import useRemoveDirectShareDialog from '../../../../components/dialogs/remove-di
 import * as alertMock from '../../../../components/utils/snackbar'
 import { type User } from '../../../../lib/auth'
 import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
+import ErrorApi from '../../../../lib/error/error.api'
 
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/notifications/notification.hook')
@@ -91,6 +92,7 @@ describe('Remove direct share dialog hook', () => {
     })
 
     it('should show error and not close the dialog if the removal fails', async () => {
+      jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
       cancelInvitationMock.mockRejectedValueOnce('Error')
 
       const { result } = renderHook(() => useRemoveDirectShareDialog(onClose))
@@ -120,6 +122,7 @@ describe('Remove direct share dialog hook', () => {
     })
 
     it('should show error and not close the dialog if the removal fails', async () => {
+      jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
       removeDirectShareMock.mockRejectedValueOnce('Error')
 
       const { result } = renderHook(() => useRemoveDirectShareDialog(onClose))
@@ -150,6 +153,7 @@ describe('Remove direct share dialog hook', () => {
     })
 
     it('should show error and not close the dialog when the removal fails', async () => {
+      jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
       removeDirectShareMock.mockRejectedValueOnce('Error')
 
       const { result } = renderHook(() => useRemoveDirectShareDialog(onClose))

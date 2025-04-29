@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -50,6 +50,7 @@ import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockAuthApi } from '../../mock/auth.api.mock'
 import { Unit } from 'medical-domain'
+import ErrorApi from '../../../../lib/error/error.api'
 
 describe('Profile page for caregiver', () => {
   const profile: Profile = {
@@ -80,6 +81,8 @@ describe('Profile page for caregiver', () => {
   })
 
   it('should render profile page for a caregiver and be able to change his password and change his role to HCP', async () => {
+    jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
+
     const expectedProfile = { ...profile, firstName: 'Jean', lastName: 'Talue', fullName: 'Jean Talue' }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
     const expectedSettings = { ...settings, units: { bg: Unit.MilligramPerDeciliter } }

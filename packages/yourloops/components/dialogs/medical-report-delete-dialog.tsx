@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,6 +39,8 @@ import MedicalFilesApi from '../../lib/medical-files/medical-files.api'
 import { useAlert } from '../utils/snackbar'
 import { type MedicalReport } from '../../lib/medical-files/models/medical-report.model'
 import { LoadingButton } from '@mui/lab'
+import { logError } from '../../utils/error.util'
+import { errorTextFromException } from '../../lib/utils'
 
 export interface MedicalReportDeleteDialogProps {
   onClose: () => void
@@ -61,7 +63,9 @@ export default function MedicalReportDeleteDialog({ onClose, medicalReport, onDe
       alert.success(t('medical-report-delete-success'))
       onDelete(medicalReport.id)
     } catch (err) {
-      console.log(err)
+      const errorMessage = errorTextFromException(err)
+      logError(errorMessage, 'medical-report-delete')
+
       setInProgress(false)
       alert.error(t('medical-report-delete-failed'))
     }

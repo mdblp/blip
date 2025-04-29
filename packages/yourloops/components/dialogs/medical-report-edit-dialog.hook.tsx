@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,6 +34,8 @@ import { useAlert } from '../utils/snackbar'
 import { useAuth } from '../../lib/auth'
 import { type MedicalReport } from '../../lib/medical-files/models/medical-report.model'
 import { useTeam } from '../../lib/team'
+import { logError } from '../../utils/error.util'
+import { errorTextFromException } from '../../lib/utils'
 
 interface MedicalReportEditDialogHookProps extends CategoryProps {
   onSaved: (payload: MedicalReport) => void
@@ -109,7 +111,9 @@ export function useMedicalReportEditDialog(props: MedicalReportEditDialogHookPro
       alert.success(t('medical-report-save-success'))
       onSaved(payload)
     } catch (err) {
-      console.log(err)
+      const errorMessage = errorTextFromException(err)
+      logError(errorMessage, 'medical-report-save')
+
       setInProgress(false)
       alert.error(t('medical-report-save-failed'))
     }
