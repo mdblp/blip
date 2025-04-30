@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,7 +34,6 @@ import { formatParameterValue } from '../../../utils/format/format.util'
 import { getHourMinuteFormat } from '../../../utils/datetime/datetime.util'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import {
-  COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
   COMMON_TOOLTIP_TAIL_WIDTH,
   DEFAULT_TOOLTIP_BORDER_WIDTH,
@@ -112,7 +111,7 @@ export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props
   return (
     <Tooltip
       position={position}
-      side={side || COMMON_TOOLTIP_SIDE}
+      side={side}
       borderColor={colors.deviceEvent}
       dateTitle={getDateTitleForBaseDatum(parameter, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}

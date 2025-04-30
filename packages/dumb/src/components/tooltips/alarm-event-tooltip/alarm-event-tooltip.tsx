@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,6 @@
  */
 
 import {
-  COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
   COMMON_TOOLTIP_TAIL_WIDTH,
   DEFAULT_TOOLTIP_BORDER_WIDTH,
@@ -274,7 +273,7 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
       borderColor={borderColor}
       dateTitle={getDateTitleForBaseDatum(alarmEvent, timePrefs)}
       title={title}
-      side={side || COMMON_TOOLTIP_SIDE}
+      side={side}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tail={DEFAULT_TOOLTIP_TAIL}

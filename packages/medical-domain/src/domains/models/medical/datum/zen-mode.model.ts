@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,10 +28,11 @@
 import type BaseDatum from './basics/base-datum.model'
 import type Duration from './basics/duration.model'
 import { type DatumType } from './enums/datum-type.enum'
+import { DeviceEventSubtype } from './enums/device-event-subtype.enum'
 
 type ZenMode = BaseDatum & Duration & {
   type: DatumType.DeviceEvent
-  subType: 'zen'
+  subType: DeviceEventSubtype.Zen
   guid: string
   inputTime: string
 }

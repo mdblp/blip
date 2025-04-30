@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -57,6 +57,7 @@ import {
   CBG_ID,
   CONFIDENTIAL_MODE_ID,
   MANUAL_BOLUS_ID,
+  NIGHT_MODE_ID,
   PARAMETER_ID,
   PEN_BOLUS_ID,
   PHYSICAL_ACTIVITY_ID,
@@ -167,6 +168,11 @@ export const checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware = async ()
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_EMPTY_PUMP_BATTERY_ID}`, '3:50 amAlarm 91001Pump battery emptyThe pump battery is empty.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID}`, '8:55 pmAlarm 91002Reservoir emptyThere is no insulin left in the reservoir.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`, '9:00 pmAlarm 91004OcclusionAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.')
+}
+
+export const checkDailyTidelineContainerTooltipsDblg2 = async () => {
+  expect(await screen.findByTestId(`nightMode_group_${NIGHT_MODE_ID}`, {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
+  await checkTidelineContainerElementTooltip(`nightMode_group_${NIGHT_MODE_ID}`, '11:00 pmNight modeDuration10 hours')
 }
 
 export const checkDailyTidelineContainerTooltipsMmolL = async () => {

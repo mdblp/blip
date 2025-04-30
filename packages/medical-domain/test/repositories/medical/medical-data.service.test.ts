@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -432,6 +432,24 @@ const testData = {
       prescriptor: ''
     }
   ],
+  nightModes: [{
+    "id": "f6509511da396bd945f129240b0f4539",
+    "type": "deviceEvent",
+    "source": "Diabeloop",
+    "timezone": "Europe/Paris",
+    "normalTime": "2023-10-29T08:22:00.000Z",
+    "epoch": 1698567720000,
+    "displayOffset": 60,
+    "duration": {
+      "units": "milliseconds",
+      "value": 32400000
+    },
+    "normalEnd": "2023-10-29T08:22:00.000Z",
+    "epochEnd": 1698567720000,
+    "guid": "df8e18ec-ff2f-40ff-9d14-8cd55db5aa0c_night_1742425200000",
+    "subType": "night",
+    "inputTime": "2021-01-15T08:21:47Z"
+  }],
   physicalActivities: [
     {
       "id": "f6509511da396bd945f129240b0f4538",

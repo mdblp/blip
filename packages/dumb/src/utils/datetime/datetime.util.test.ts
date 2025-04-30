@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,8 @@
  */
 
 import {
-  addDuration,
+  addDuration, convertValueToHours,
+  convertValueToMinutes,
   formatClocktimeFromMsPer24,
   formatDate,
   formatDuration,
@@ -34,7 +35,7 @@ import {
   getTimezoneFromTimePrefs,
   ONE_HOUR_MS
 } from './datetime.util'
-import { type TimePrefs } from 'medical-domain'
+import { DurationUnit, type TimePrefs } from 'medical-domain'
 
 const ONE_MIN_MS = 6e4
 
@@ -314,6 +315,42 @@ describe('DatetimeUtil', () => {
 
     it('should return empty string when given param is undefined', () => {
       expect(formatDate(undefined)).toBe('')
+    })
+  })
+
+  describe('convertValueToMinutes', () => {
+    it('should convert milliseconds to minutes', () => {
+      expect(convertValueToMinutes(120000, DurationUnit.Milliseconds)).toBe(2)
+    })
+
+    it('should convert seconds to minutes', () => {
+      expect(convertValueToMinutes(120, DurationUnit.Seconds)).toBe(2)
+    })
+
+    it('should convert hours to minutes', () => {
+      expect(convertValueToMinutes(2, DurationUnit.Hours)).toBe(120)
+    })
+
+    it('should return the same value for minutes', () => {
+      expect(convertValueToMinutes(30, DurationUnit.Minutes)).toBe(30)
+    })
+  })
+
+  describe('convertValueToHours', () => {
+    it('should convert milliseconds to hours', () => {
+      expect(convertValueToHours(7200000, DurationUnit.Milliseconds)).toBe(2)
+    })
+
+    it('should convert seconds to hours', () => {
+      expect(convertValueToHours(7200, DurationUnit.Seconds)).toBe(2)
+    })
+
+    it('should convert minutes to hours', () => {
+      expect(convertValueToHours(120, DurationUnit.Minutes)).toBe(2)
+    })
+
+    it('should return the same value for hours', () => {
+      expect(convertValueToHours(2, DurationUnit.Hours)).toBe(2)
     })
   })
 })

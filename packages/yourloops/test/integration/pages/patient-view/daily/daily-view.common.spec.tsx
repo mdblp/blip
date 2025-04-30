@@ -47,12 +47,14 @@ import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
   testDailyViewTooltipsAndValuesMgdl,
-  testDailyViewTooltipsForDBLG2OrRecentSoftware
+  testDailyViewTooltipsForDblg2,
+  testDailyViewTooltipsForRecentSoftware
 } from '../../../use-cases/patient-data-visualisation'
-import { getCompleteDailyViewData } from '../../../mock/complete-daily-view-data'
+import { getCompleteDailyViewData, getCompleteDailyViewDataDblg2 } from '../../../mock/complete-daily-view-data'
 import { t } from '../../../../../lib/language'
 import { checkReportDialogPresets } from '../../../assert/report-dialog.assert'
 import ErrorApi from '../../../../../lib/error/error.api'
+import { DeviceSystem } from 'medical-domain'
 
 describe('Daily view for anyone', () => {
   const dailyRoute = AppUserRoute.Daily
@@ -81,25 +83,25 @@ describe('Daily view for anyone', () => {
 
   describe('with DBLG2 device', () => {
     it('should render correct tooltips and values', async () => {
-      mockDataAPI(getCompleteDailyViewData("DBLG2", "1.1.0"))
+      mockDataAPI(getCompleteDailyViewDataDblg2(DeviceSystem.Dblg2, "1.1.0"))
       const router = renderPage(dailyRoute)
       await waitFor(() => {
         expect(router.state.location.pathname).toEqual(dailyRoute)
       })
 
-      await testDailyViewTooltipsForDBLG2OrRecentSoftware()
+      await testDailyViewTooltipsForDblg2()
     })
   })
 
   describe('with recent software version device (>1.17)', () => {
     it('should render correct tooltips and values', async () => {
-      mockDataAPI(getCompleteDailyViewData("DBLG1", "1.17"))
+      mockDataAPI(getCompleteDailyViewData(DeviceSystem.Dblg1, "1.17"))
       const router = renderPage(dailyRoute)
       await waitFor(() => {
         expect(router.state.location.pathname).toEqual(dailyRoute)
       })
 
-      await testDailyViewTooltipsForDBLG2OrRecentSoftware()
+      await testDailyViewTooltipsForRecentSoftware()
     })
   })
 

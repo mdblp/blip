@@ -47,7 +47,7 @@ function plotZenMode(pool, opts = {}) {
 
   function zenModeEvent(selection) {
     opts.xScale = pool.xScale().copy()
-    selection.each(function() {
+    selection.each(function () {
       const zenEvents = pool.filterDataForRender(opts.tidelineData.medicalData.zenModes)
       if (zenEvents.length < 1) {
         d3.select(this).selectAll('g.d3-event-group').remove()
@@ -74,18 +74,19 @@ function plotZenMode(pool, opts = {}) {
           class: 'd3-rect-zen d3-zen',
           id: (d) => `zen_${d.id}`
         })
-      zenGroup.append('circle').attr({
-        'cx': (d) => xPos(d) + calculateWidth(d)/2,
-        'cy': offset,
-        'r': opts.r,
-        'stroke-width': 0,
-        'class': 'd3-circle-zen',
-        'id': (d) => `zen_circle_${d.id}`
-      })
+      zenGroup.append('circle')
+        .attr({
+          'cx': (d) => xPos(d) + calculateWidth(d) / 2,
+          'cy': offset,
+          'r': opts.r,
+          'stroke-width': 0,
+          'class': 'd3-circle-zen',
+          'id': (d) => `zen_circle_${d.id}`
+        })
       zenGroup.append('text')
         .text('ZEN')
         .attr({
-          x: (d) => xPos(d) + calculateWidth(d)/2,
+          x: (d) => xPos(d) + calculateWidth(d) / 2,
           y: offset,
           class: 'd3-zen-text',
           id: (d) => `zen_text_${d.id}`

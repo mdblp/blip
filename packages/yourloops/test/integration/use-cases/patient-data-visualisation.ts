@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -52,6 +52,7 @@ import { checkMonitoringAlertsCard, checkMonitoringAlertsCardNoData } from '../a
 import { checkTrendsStatsWidgetsTooltips } from '../assert/trends-view.assert'
 import {
   checkDailyStatsWidgetsTooltips,
+  checkDailyTidelineContainerTooltipsDblg2,
   checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware,
   checkDailyTidelineContainerTooltipsMgdl,
   checkDailyTidelineContainerTooltipsMmolL,
@@ -147,7 +148,12 @@ export const testDailyViewTooltipsAndValuesMgdl = async () => {
   await checkTotalInsulinStatWidget('Total Insulin61.1 UMeal bolus50.7 U83%Basal & correction bolus1.3 U2.1%Manual bolus5.1 U8.3%Pen bolus4.1 U6.7%')
 }
 
-export const testDailyViewTooltipsForDBLG2OrRecentSoftware = async () => {
+export const testDailyViewTooltipsForDblg2 = async () => {
+  await checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware()
+  await checkDailyTidelineContainerTooltipsDblg2()
+}
+
+export const testDailyViewTooltipsForRecentSoftware = async () => {
   await checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware()
 }
 

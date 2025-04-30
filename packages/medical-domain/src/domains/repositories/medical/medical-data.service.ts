@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -80,6 +80,7 @@ class MedicalDataService {
     deviceParametersChanges: [],
     messages: [],
     meals: [],
+    nightModes: [],
     physicalActivities: [],
     pumpSettings: [],
     reservoirChanges: [],
@@ -211,6 +212,9 @@ class MedicalDataService {
     }
     if (data.meals) {
       this.medicalData.meals = this.medicalData.meals.concat(data.meals)
+    }
+    if (data.nightModes) {
+      this.medicalData.nightModes = this.medicalData.nightModes.concat(data.nightModes)
     }
     if (data.physicalActivities) {
       this.medicalData.physicalActivities = this.medicalData.physicalActivities.concat(data.physicalActivities)

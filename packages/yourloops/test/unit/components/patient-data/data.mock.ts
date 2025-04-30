@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -263,6 +263,7 @@ export const medicalServiceResult = {
       "prescriptor": ""
     }
   ],
+  nightModes: [],
   physicalActivities: [],
   pumpSettings: [],
   reservoirChanges: [],
