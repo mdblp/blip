@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -144,7 +144,7 @@ export const testDailyViewTooltipsAndValuesMgdl = async () => {
 
   await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
   await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
-  await checkTotalInsulinStatWidget('Total Insulin61.1 UMeal bolus50.7 U83%Basal & correction bolus1.3 U2.1%Manual bolus5.1 U8.3%Pen bolus4.1 U6.7%')
+  await checkTotalInsulinStatWidget('Total Insulin61.1 UMeal bolus83 %50.7 UBasal & correction bolus2.1 %1.3 UManual bolus8.3 %5.1 UPen bolus6.7 %4.1 U')
 }
 
 export const testDailyViewTooltipsForDBLG2OrRecentSoftware = async () => {
