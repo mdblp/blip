@@ -50,6 +50,7 @@ import { NightMode } from './domains/models/medical/datum/night-mode.model'
 import type PhysicalActivity from './domains/models/medical/datum/physical-activity.model'
 import Prescriptor from './domains/models/medical/datum/enums/prescriptor.enum'
 import PumpManufacturer from './domains/models/medical/datum/enums/pump-manufacturer.enum'
+import { PhysicalActivityName } from './domains/models/medical/datum/enums/physical-activity-name.enum'
 import {
   type CgmConfig,
   ChangeType,
@@ -136,6 +137,7 @@ export {
   type Parameter,
   type ParameterConfig,
   type PhysicalActivity,
+  PhysicalActivityName,
   Prescriptor,
   PumpManufacturer,
   type PumpConfig,

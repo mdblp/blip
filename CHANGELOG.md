@@ -8,10 +8,14 @@ It is based on Tidepool Blip 1.27.
 
 ### Changed
 - YLP-3478 Update the front of the maintenance page
+- YLP-3486 Add physical activity name in tooltip
 - YLP-3522 Handle accounts marked for deletion
 
 ### Fixed
 - YLP-3290 Top banner is hiding the top part of note creation popup
+
+### Engineering
+- YLP-3542 Update blip AWS Lambda Node version to > 18
 
 ## 3.6.0 - 2025-02-20
 ### Added

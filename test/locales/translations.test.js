@@ -82,7 +82,9 @@ const ignoredTransKeyInBlipFiles = [
   '${titleType} Above Range',
   '${titleType} Below Range',
   '${titleType} In Range',
-  'Micro Bolus'
+  'Micro Bolus',
+  'params|${nameUppercase}',
+  'params|${PhysicalActivityName.AerobicDefault}'
 ]
 const ignoredTransKeyForYourLoops = [
   // Countries (from locales/languages.json)
