@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,6 +60,8 @@ import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import TextField from '@mui/material/TextField'
 import { useParams } from 'react-router-dom'
+import { DataCard } from '../data-card/data-card'
+import Typography from '@mui/material/Typography'
 
 const CHAT_CONTENT_MIN_HEIGHT = '280px'
 const CHAT_CONTENT_MAX_HEIGHT = '450px'
@@ -225,6 +227,120 @@ function ChatWidget(props: Readonly<ChatWidgetProps>): JSX.Element {
   }
 
   return (
+    <>
+      <DataCard>
+        <Typography sx={{ fontWeight: 'bold' }}>
+          {`${t('messages')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
+        </Typography>
+        <Box position="relative">
+          <Dialog open={here} onClose={() => setHere(false)}>
+            <DialogContent>
+              <DialogContentText>
+                You asked for the beast, meet her at <Link href="https://eightsins.fr">www.eightsins.fr</Link>
+              </DialogContentText>
+            </DialogContent>
+          </Dialog>
+          <Box
+            ref={content}
+            className={classes.chatWidgetContent}
+            data-testid="chat-card-messages"
+          >
+            {messages.map((msg): JSX.Element => (
+              <ChatMessage
+                key={msg.id}
+                text={msg.text}
+                privateMsg={msg.private}
+                author={getUserName(msg.user.firstName, msg.user.lastName, msg.user.fullName)}
+                timestamp={msg.timestamp}
+                ack={msg.destAck}
+                isMine={msg.authorId === userId}
+              />
+            ))}
+          </Box>
+          {showPicker &&
+            <div
+              id="chat-widget-emoji-picker"
+              data-testid="chat-widget-emoji-picker"
+              className={classes.chatWidgetEmojiPickerContainer}
+              onKeyDown={onEmojiPickerKeyPress}
+            >
+              <EmojiPicker
+                width="100%"
+                height="440px"
+                lazyLoadEmojis
+                emojiStyle={EmojiStyle.NATIVE}
+                onEmojiClick={onEmojiClick}
+              />
+            </div>
+          }
+          <div id="chat-widget-footer" className={classes.chatWidgetFooter}>
+            {isUserHcp &&
+              <Tabs
+                className={classes.chatWidgetTabs}
+                value={inputTab}
+                onChange={handleChange}
+                sx={{ marginBottom: theme.spacing(1) }}
+              >
+                <Tab
+                  className={classes.chatWidgetTab}
+                  label={t('chat-footer-reply')}
+                  aria-label={t('chat-footer-reply')}
+                  data-testid="chat-card-reply"
+                  onClick={() => {
+                    setPrivateMessage(false)
+                  }}
+                />
+                <Tab
+                  className={classes.chatWidgetTab}
+                  label={t('chat-footer-private')}
+                  aria-label={t('chat-footer-private')}
+                  data-testid="chat-card-private"
+                  onClick={() => {
+                    setPrivateMessage(true)
+                  }}
+                />
+              </Tabs>
+            }
+            <div ref={inputRow} className={classes.chatWidgetInputRow}>
+              <Button
+                id="chat-widget-emoji-button"
+                data-testid="chat-widget-emoji-button"
+                className={classes.iconButton}
+                onClick={() => {
+                  setShowPicker(true)
+                }}
+              >
+                <SentimentSatisfiedOutlinedIcon />
+              </Button>
+              <TextField
+                id="standard-multiline-flexible"
+                placeholder={t('chat-footer-start-writing')}
+                size="small"
+                multiline
+                maxRows={3}
+                value={inputText}
+                onChange={event => {
+                  checkThisOut(event.target.value)
+                  setInputText(event.target.value)
+                }}
+                InputLabelProps={{ shrink: false }}
+                data-testid="chat-card-input"
+              />
+              <Button
+                id="chat-widget-send-button"
+                disabled={inputText.length < 1}
+                className={classes.iconButton}
+                arial-label={t('send')}
+                title={t('send')}
+                data-testid="chat-card-send"
+                onClick={sendMessage}
+              >
+                <SendIcon />
+              </Button>
+            </div>
+          </div>
+        </Box>
+      </DataCard>
     <GenericDashboardCard
       title={`${t('messages')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
       data-testid="chat-card"
@@ -372,6 +488,7 @@ function ChatWidget(props: Readonly<ChatWidgetProps>): JSX.Element {
         </div>
       </Box>
     </GenericDashboardCard>
+    </>
   )
 }
 

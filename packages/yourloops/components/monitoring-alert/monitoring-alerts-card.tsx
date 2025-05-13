@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,6 +42,7 @@ import { useNavigate } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { MONITORING_ALERTS_SECTION_ID } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
+import { DataCard } from '../data-card/data-card'
 
 const monitoringAlertsCardStyles = makeStyles()((theme) => {
   return {
@@ -83,6 +84,85 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
   const numberOfMonitoringAlertsLabel = buildNumberOfMonitoringAlertsLabel()
 
   return (
+    <>
+    <DataCard data-testid="monitoring-alerts-card">
+      <Typography sx={{ fontWeight: 'bold' }}>
+        {`${t('monitoring-alerts')}${numberOfMonitoringAlertsLabel}`}
+      </Typography>
+      {patient.monitoringAlerts
+        ? <>
+          <Typography className={`${noActiveMonitoringAlert ? '' : classes.alertColor} bold`}>
+            {t('current-monitoring-alerts')}
+          </Typography>
+          <Box
+            id="time-away-target-monitoring-alert-id"
+            display="flex"
+            justifyContent="space-between"
+            fontSize="13px"
+            className={timeSpentAwayFromTargetActive ? classes.alertColor : ''}
+          >
+            {t('time-out-of-range-target')}
+            <Box>
+              {PatientUtils.formatPercentageValue(patient.monitoringAlerts.timeSpentAwayFromTargetRate)}
+            </Box>
+          </Box>
+          <Box
+            id="severe-hypo-monitoring-alert-id"
+            display="flex"
+            fontSize="13px"
+            justifyContent="space-between"
+            className={frequencyOfSevereHypoglycemiaActive ? classes.alertColor : ''}
+          >
+            {t('alert-hypoglycemic')}
+            <Box>
+              {PatientUtils.formatPercentageValue(patient.monitoringAlerts.frequencyOfSevereHypoglycemiaRate)}
+            </Box>
+          </Box>
+          <Box
+            id="non-data-transmission-monitoring-alert-id"
+            display="flex"
+            justifyContent="space-between"
+            fontSize="13px"
+            className={nonDataTransmissionActive ? classes.alertColor : ''}
+          >
+            {t('data-not-transmitted')}
+            <Box>
+              {PatientUtils.formatPercentageValue(patient.monitoringAlerts.nonDataTransmissionRate)}
+            </Box>
+          </Box>
+        </>
+        : <Box>
+          <Box sx={{ paddingTop: theme.spacing(1) }}>
+            <Skeleton variant="rounded"
+                      width={SKELETON_TITLE_WIDTH}
+                      height={SKELETON_TITLE_HEIGHT} />
+          </Box>
+
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            sx={{ paddingTop: theme.spacing(1) }}
+          >
+            <MonitoringAlertsCardSkeletonValue />
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            sx={{ paddingTop: theme.spacing(1) }}
+          >
+            <MonitoringAlertsCardSkeletonValue />
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            sx={{ paddingTop: theme.spacing(1) }}
+          >
+            <MonitoringAlertsCardSkeletonValue />
+          </Box>
+        </Box>
+      }
+    </DataCard>
+
     <GenericDashboardCard
       title={`${t('monitoring-alerts')}${numberOfMonitoringAlertsLabel}`}
       data-testid="monitoring-alerts-card"
@@ -178,6 +258,7 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
 
       </CardContent>
     </GenericDashboardCard>
+    </>
   )
 }
 

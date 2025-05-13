@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,9 +29,7 @@ import React, { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
-import CardContent from '@mui/material/CardContent'
 import Divider from '@mui/material/Divider'
-import Grid from '@mui/material/Grid'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -42,11 +40,12 @@ import { BasicsChart } from 'tideline'
 import type MedicalDataService from 'medical-domain'
 import { type DateFilter, GlycemiaStatisticsService, type PumpSettings } from 'medical-domain'
 import metrics from '../../lib/metrics'
-import GenericDashboardCard from './generic-dashboard-card'
 import { SensorUsageStat } from '../statistics/sensor-usage-stat'
 import { formatParameterValue, getPumpSettingsParameterList, sortHistory } from '../device/utils/device.utils'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { formatDateWithMomentLongFormat } from '../../lib/utils'
+import { DataCard } from '../data-card/data-card'
+import styles from 'dumb/dist/src/components/stats/common/simple-value.css'
 
 interface DeviceUsageWidgetProps {
   dateFilter: DateFilter
@@ -65,7 +64,7 @@ const useStyles = makeStyles()((theme) => ({
   sectionContent: {
     fontSize: '13px',
     fontWeight: 300,
-    lineHeight: '15px',
+    lineHeight: '15px'
   },
   tableRows: {
     '&:nth-of-type(odd)': {
@@ -81,6 +80,12 @@ const useStyles = makeStyles()((theme) => ({
   },
   parameterChangesTable: {
     maxHeight: 200
+  },
+  test: {
+    opacity: 1,
+    display: 'inline-block',
+    marginRight: '4px',
+    fontWeight: 'bold',
   }
 }))
 
@@ -97,15 +102,15 @@ export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
 
   const deviceData = {
     cgm: {
-      label: `${t('CGM')}:`,
+      label: t('CGM'),
       value: pumpSettings?.payload.cgm ? `${pumpSettings.payload.cgm.manufacturer} ${pumpSettings.payload.cgm.name}` : ''
     },
     device: {
-      label: `${t('dbl')}:`,
+      label: t('dbl'),
       value: pumpSettings?.payload.device.manufacturer ?? ''
     },
     pump: {
-      label: `${t('Pump')}:`,
+      label: t('Pump'),
       value: pumpSettings?.payload.pump.manufacturer ?? ''
     }
   }
@@ -115,71 +120,72 @@ export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
   }
 
   return (
-    <GenericDashboardCard
-      title={t('device-usage')}
-      data-testid="device-usage-card"
-    >
-      <CardContent>
-        <Box data-testid="device-usage-device-list">
-          <Typography className={classes.sectionTitles}>{t('devices')}</Typography>
-          <Grid className={classes.sectionContent} container spacing={1}>
-            {Object.keys(deviceData).map(
-              (key) =>
-                <React.Fragment key={key}>
-                  <Grid item xs={6}>
-                    <Box paddingLeft={2}>
-                      {deviceData[key].label}
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6}>
+    <>
+      <DataCard data-testid="device-usage-device-list">
+        <Typography className={classes.sectionTitles}>{t('devices')}</Typography>
+        {Object.keys(deviceData).map(
+          (key) =>
+            <React.Fragment key={key}>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                {deviceData[key].label}
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  className={styles.boldValue}
+                >
+                  <span className={classes.test}>
                     {deviceData[key].value}
-                  </Grid>
-                </React.Fragment>
-            )}
-          </Grid>
-        </Box>
+                  </span>
+                </Box>
+              </Box>
+            </React.Fragment>
+        )}
+      </DataCard>
 
-        <Divider variant="fullWidth" className={classes.divider} />
+      <DataCard data-testid="device-usage-updates">
+        <Typography className={classes.sectionTitles}>
+          {t('last-updates')}
+        </Typography>
+        <TableContainer
+          data-testid="device-usage-updates-list"
+          className={classes.parameterChangesTable}
+        >
+          <Table>
+            <TableBody className={classes.sectionContent}>
+              {pumpSettings && getPumpSettingsParameterList(pumpSettings.payload.history).map((parameter) => (
+                <TableRow
+                  key={`${parameter.name}-${parameter.effectiveDate}-${parameter.previousValue}`}
+                  data-param={parameter.name}
+                  data-testid={parameter.name}
+                  data-changetype={parameter.changeType}
+                  data-isodate={parameter.effectiveDate}
+                  className={`${classes.tableRows} parameter-update`}
+                >
+                  <TableCell className={`${classes.sectionContent} ${classes.tableCell}`}>
+                    {formatDateWithMomentLongFormat(new Date(parameter.effectiveDate), 'lll', pumpSettings.timezone)}
+                  </TableCell>
+                  <TableCell className={`${classes.sectionContent} ${classes.tableCell}`}>
+                    {t(`params|${parameter.name}`)} (
+                    {parameter.previousValue &&
+                      <>
+                        {formatParameterValue(parameter.previousValue, parameter.previousUnit)}{parameter.previousUnit}
+                        <span> ➞ </span>
+                      </>
+                    }
+                    {formatParameterValue(parameter.value, parameter.unit)}{parameter.unit})
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </DataCard>
 
-        <Box data-testid="device-usage-updates">
-          <Typography className={classes.sectionTitles}>
-            {t('last-updates')}
-          </Typography>
-          <TableContainer
-            data-testid="device-usage-updates-list"
-            className={classes.parameterChangesTable}
-          >
-            <Table>
-              <TableBody className={classes.sectionContent}>
-                {pumpSettings && getPumpSettingsParameterList(pumpSettings.payload.history).map((parameter) => (
-                  <TableRow
-                    key={`${parameter.name}-${parameter.effectiveDate}-${parameter.previousValue}`}
-                    data-param={parameter.name}
-                    data-testid={parameter.name}
-                    data-changetype={parameter.changeType}
-                    data-isodate={parameter.effectiveDate}
-                    className={`${classes.tableRows} parameter-update`}
-                  >
-                    <TableCell className={`${classes.sectionContent} ${classes.tableCell}`}>
-                      {formatDateWithMomentLongFormat(new Date(parameter.effectiveDate), 'lll', pumpSettings.timezone)}
-                    </TableCell>
-                    <TableCell className={`${classes.sectionContent} ${classes.tableCell}`}>
-                      {t(`params|${parameter.name}`)} (
-                      {parameter.previousValue &&
-                        <>
-                          {formatParameterValue(parameter.previousValue, parameter.previousUnit)}{parameter.previousUnit}
-                          <span> ➞ </span>
-                        </>
-                      }
-                      {formatParameterValue(parameter.value, parameter.unit)}{parameter.unit})
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
-        <Divider variant="fullWidth" className={classes.divider} />
+      <DataCard>
         <SensorUsageStat total={total} usage={sensorUsage} />
         <Divider variant="fullWidth" className={classes.divider} />
         <BasicsChart
@@ -187,6 +193,7 @@ export const DeviceUsageWidget: FC<DeviceUsageWidgetProps> = (props) => {
           tidelineData={medicalDataService}
           trackMetric={trackMetric}
         />
-      </CardContent>
-    </GenericDashboardCard>)
+      </DataCard>
+    </>
+  )
 }

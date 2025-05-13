@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,6 +33,8 @@ import { type Patient } from '../../../lib/patient/models/patient.model'
 import GenericDashboardCard from '../generic-dashboard-card'
 import { useAuth } from '../../../lib/auth'
 import { useParams } from 'react-router-dom'
+import { DataCard } from '../../data-card/data-card'
+import Typography from '@mui/material/Typography'
 
 export interface MedicalFilesWidgetProps {
   patient: Patient
@@ -52,14 +54,12 @@ const MedicalFilesWidget: FunctionComponent<MedicalFilesWidgetProps> = (props) =
   const teamId = user.isUserHcp() ? selectedTeamId : null
 
   return (
-    <GenericDashboardCard
-      title={t('medical-files')}
-      data-testid="medical-files-card"
-    >
-      <CardContent>
-        <MedicalReportList teamId={teamId} patientId={patient.userid} />
-      </CardContent>
-    </GenericDashboardCard>
+    <DataCard data-testid="medical-files-card">
+      <Typography sx={{ fontWeight: 'bold' }}>
+        {t('medical-files')}
+      </Typography>
+      <MedicalReportList teamId={teamId} patientId={patient.userid} />
+    </DataCard>
   )
 }
 

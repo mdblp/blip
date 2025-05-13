@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,27 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import GenericDashboardCard from './generic-dashboard-card'
-import { useTranslation } from 'react-i18next'
-import CardContent from '@mui/material/CardContent'
-import { PatientStatistics, type PatientStatisticsProps } from '../statistics/patient-statistics'
+import React, { FC, PropsWithChildren } from 'react'
+import Box from '@mui/material/Box'
+import { makeStyles } from 'tss-react/mui'
 
-export const PatientStatisticsWidget: FunctionComponent<PatientStatisticsProps> = (props) => {
-  const { t } = useTranslation()
-  const { medicalData, bgPrefs, dateFilter } = props
+const useStyles = makeStyles()((theme) => ({
+  widgetGroup: {
+    backgroundColor: theme.palette.background.paper,
+    border: '1px solid var(--light-grey-border-color)',
+    borderRadius: theme.spacing(3),
+    marginBottom: '12px',
+    padding: '20px'
+  }
+}))
+
+export const DataCard: FC<PropsWithChildren> = ({ children }) => {
+  const { classes } = useStyles()
 
   return (
-    <GenericDashboardCard
-      title={t('patient-statistics')}
-    >
-      <CardContent>
-        <PatientStatistics
-          medicalData={medicalData}
-          bgPrefs={bgPrefs}
-          dateFilter={dateFilter}
-        />
-      </CardContent>
-    </GenericDashboardCard>
+    <Box className={classes.widgetGroup}>
+      {children}
+    </Box>
   )
 }
