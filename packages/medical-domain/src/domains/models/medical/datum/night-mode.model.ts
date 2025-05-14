@@ -25,12 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum DeviceEventSubtype {
-  Alarm = 'alarm',
-  Confidential = 'confidential',
-  DeviceParameter = 'deviceParameter',
-  Night = 'night',
-  ReservoirChange = 'reservoirChange',
-  Warmup = 'warmup',
-  Zen = 'zen',
+import type BaseDatum from './basics/base-datum.model'
+import type Duration from './basics/duration.model'
+import { type DatumType } from './enums/datum-type.enum'
+import { DeviceEventSubtype } from './enums/device-event-subtype.enum'
+
+export type NightMode = BaseDatum & Duration & {
+  type: DatumType.DeviceEvent
+  subType: DeviceEventSubtype.Night
+  guid: string
+  inputTime: string
 }

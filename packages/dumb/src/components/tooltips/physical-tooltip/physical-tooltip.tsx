@@ -27,7 +27,6 @@
 
 import React, { type FunctionComponent } from 'react'
 import {
-  COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
   COMMON_TOOLTIP_TAIL_WIDTH,
   DEFAULT_TOOLTIP_BORDER_WIDTH,
@@ -64,8 +63,8 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
   const { t } = useTranslation()
 
   const getDurationInMinutes = (): DurationValue => {
-    const units = props.physicalActivity?.duration?.units
-    const duration = props.physicalActivity?.duration?.value
+    const units = physicalActivity.duration.units
+    const duration = physicalActivity.duration.value
     const value = convertValueToMinutes(duration, units)
 
     return {
@@ -87,7 +86,7 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
   return (
     <Tooltip
       position={position}
-      side={side || COMMON_TOOLTIP_SIDE}
+      side={side}
       borderColor={colors.physicalActivity}
       dateTitle={getDateTitleForBaseDatum(physicalActivity, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
@@ -99,7 +98,7 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
         <div className={commonStyles.containerFlex}>
           <TooltipLine label={t('Physical Activity')} isBold />
           {
-            physicalActivity.name !== "" &&
+            physicalActivity.name && physicalActivity.name !== "" &&
             <TooltipLine label={t('Name')} value={getDisplayName(physicalActivity.name)} />
           }
           <TooltipLine label={t('Intensity')} value={t(`${physicalActivity.reportedIntensity}-pa`)} />

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -78,7 +78,7 @@ interface TooltipProps {
 const Tooltip: FunctionComponent<TooltipProps> = (
   {
     tail = DEFAULT_TOOLTIP_TAIL,
-    side = 'left',
+    side = COMMON_TOOLTIP_SIDE,
     tailWidth = 7,
     tailHeight = 8,
     borderColor = 'black',

@@ -30,10 +30,15 @@ import {
   AlarmEventType,
   AlarmLevel,
   BolusSubtype,
-  DatumType, DurationUnit,
-  Prescriptor, PumpManufacturer,
+  DatumType,
+  DeviceSystem,
+  DurationUnit,
+  Prescriptor,
+  PumpManufacturer,
   Source,
-  Unit, WizardInputMealFat, WizardInputMealSource
+  Unit,
+  WizardInputMealFat,
+  WizardInputMealSource
 } from 'medical-domain'
 import {
   DeviceEventSubtype
@@ -72,9 +77,12 @@ import {
   CONFIDENTIAL_MODE_ID,
   Data,
   MANUAL_BOLUS_ID,
+  NIGHT_MODE_ID,
   PEN_BOLUS_ID,
   SMBG_ID,
-  WARMUP_01_ID, WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID, WIZARD_BOLUS_POSITIVE_OVERRIDE_ID,
+  WARMUP_01_ID,
+  WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID,
+  WIZARD_BOLUS_POSITIVE_OVERRIDE_ID,
   WIZARD_BOLUS_UMM_ID,
   WIZARD_BOLUS_UNDELIVERED_ID,
   WIZARD_NEGATIVE_OVERRIDE_ID,
@@ -83,9 +91,43 @@ import {
   WIZARD_UNDELIVERED_ID
 } from './data.api.mock'
 
-export const getCompleteDailyViewData = (deviceName: string = "DBLG1", softwareVersion: string = "1.15.0"): Data => {
+export const getCompleteDailyViewDataDblg2 = (deviceName: DeviceSystem = DeviceSystem.Dblg2, softwareVersion: string = "1.15.0"): Data => {
+  const completeData = getCompleteDailyViewData(deviceName, softwareVersion)
+  const data = completeData.data
+
+  data.nightModes[0] = {
+    "epoch": 1659945600000,
+    "displayOffset": -120,
+    "normalTime": "2022-08-08T21:00:00.000Z",
+    "timezone": "Europe/Paris",
+    "guessedTimezone": false,
+    "id": NIGHT_MODE_ID,
+    "type": DatumType.DeviceEvent,
+    "source": Source.Diabeloop,
+    "subType": DeviceEventSubtype.Night,
+    "duration": {
+      "units": DurationUnit.Seconds,
+      "value": 36000
+    },
+    "normalEnd": "2022-08-07T08:00:00.000Z",
+    "epochEnd": 1659949200000,
+    "guid": NIGHT_MODE_ID,
+    "inputTime": "2022-08-08T08:00:00Z",
+    "isoWeekday": WeekDays.Sunday
+  }
+
+  data.pumpSettings[0].payload.mobileApplication = {
+    manufacturer: "Diabeloop",
+    identifier: "xxx",
+    swVersion: "1.2.3"
+  }
+
+  return completeData
+}
+
+export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem.Dblg1, softwareVersion: string = "1.15.0"): Data => {
   return {
-    dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],
+    dataRange: ['2022-08-08T15:00:00Z', '2022-08-09T18:40:00Z'],
     data: {
       alarmEvents: [
         {
@@ -1086,18 +1128,20 @@ export const getCompleteDailyViewData = (deviceName: string = "DBLG1", softwareV
           "nutrition": {
             "carbohydrate": {
               "net": 15,
-              "units": "grams"
+              "units": Unit.Grams
             }
           },
           "prescribedNutrition": {
             "carbohydrate": {
               "net": 16,
-              "units": "grams"
+              "units": Unit.Grams
             }
           },
-          "prescriptor": Prescriptor.Hybrid
+          "prescriptor": Prescriptor.Hybrid,
+          "isoWeekday": WeekDays.Friday
         }
       ],
+      nightModes: [],
       physicalActivities: [
         {
           "epoch": 1659963600000,
@@ -1153,6 +1197,8 @@ export const getCompleteDailyViewData = (deviceName: string = "DBLG1", softwareV
           "type": DatumType.PumpSettings,
           "source": Source.Diabeloop,
           "isoWeekday": WeekDays.Sunday,
+          "deviceId": "1234",
+          "deviceTime": "2022-08-08T16:35:00.000Z",
           "payload": {
             "cgm": {
               "apiVersion": "v1",
@@ -1169,14 +1215,24 @@ export const getCompleteDailyViewData = (deviceName: string = "DBLG1", softwareV
               "manufacturer": Source.Diabeloop,
               "name": deviceName,
               "swVersion": softwareVersion,
+              "operatingSystem": "Android",
+              "osVersion": "12",
+              "smartphoneModel": "X",
             },
             "pump": {
               "manufacturer": PumpManufacturer.Vicentra,
               "name": "Kaleido",
               "serialNumber": "123456",
-              "swVersion": "beta"
+              "swVersion": "beta",
+              "product": "zzz",
             },
             history,
+            securityBasals: { rates: null },
+            mobileApplication: {
+              "manufacturer": "",
+              "identifier": "",
+              "swVersion": "",
+            },
             "parameters": [
               {
                 "effectiveDate": "2020-01-17T08:00:00.000Z",
@@ -1201,8 +1257,13 @@ export const getCompleteDailyViewData = (deviceName: string = "DBLG1", softwareV
           "source": Source.Diabeloop,
           "subType": DeviceEventSubtype.ReservoirChange,
           "pump": {
-            "manufacturer": PumpManufacturer.Default
-          }
+            "manufacturer": PumpManufacturer.Default,
+            "product": "xxx",
+            "swVersion": "xxx",
+            "serialNumber": "123456",
+            "name": "Kaleido"
+          },
+          "isoWeekday": WeekDays.Sunday
         }
       ],
       smbg: [
@@ -1259,6 +1320,7 @@ export const getCompleteDailyViewData = (deviceName: string = "DBLG1", softwareV
           "carbInput": 45,
           "units": "mmol/L",
           "bolus": null,
+          "bolusPart2": null,
           "inputTime": "2022-08-08T02:00:00Z",
           "recommended": {
             "carb": 0,
@@ -1285,6 +1347,7 @@ export const getCompleteDailyViewData = (deviceName: string = "DBLG1", softwareV
           "carbInput": 50,
           "units": "mmol/L",
           "bolus": null,
+          "bolusPart2": null,
           "inputTime": "2022-08-08T18:34:00Z",
           "inputMeal": {
             "source": WizardInputMealSource.Umm,
@@ -1306,6 +1369,7 @@ export const getCompleteDailyViewData = (deviceName: string = "DBLG1", softwareV
           "carbInput": 100,
           "units": "mmol/L",
           "bolus": null,
+          "bolusPart2": null,
           "inputTime": "2022-08-08T22:45:00Z",
           "recommended": {
             "carb": 0,
@@ -1328,6 +1392,7 @@ export const getCompleteDailyViewData = (deviceName: string = "DBLG1", softwareV
           "carbInput": 100,
           "units": "mmol/L",
           "bolus": null,
+          "bolusPart2": null,
           "inputTime": "2022-08-08T23:15:00Z",
           "recommended": {
             "carb": 0,

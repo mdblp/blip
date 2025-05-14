@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,55 +25,54 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { Tooltip } from '../../../index'
-import colors from '../../../styles/colors.css'
-import { convertBgClassesToBgBounds, getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import commonStyles from '../../../styles/tooltip-common.css'
-import { formatBgValue } from '../../../utils/format/format.util'
-import {
+import { DurationUnit, type DurationValue, type NightMode, TimePrefs } from 'medical-domain'
+import Tooltip, {
   COMMON_TOOLTIP_TAIL_HEIGHT,
   COMMON_TOOLTIP_TAIL_WIDTH,
   DEFAULT_TOOLTIP_BORDER_WIDTH,
   DEFAULT_TOOLTIP_OFFSET,
   DEFAULT_TOOLTIP_TAIL,
-  type Position,
-  type Side
+  Position,
+  Side
 } from '../common/tooltip/tooltip'
-import { type BgPrefs } from '../../../models/blood-glucose.model'
-import { type Cbg, ClassificationType, type Smbg, type TimePrefs } from 'medical-domain'
+import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import colors from '../../../styles/colors.css'
+import commonStyles from '../../../styles/tooltip-common.css'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
-import { TooltipColor } from '../../../models/enums/tooltip-color.enum'
+import { convertValueToHours } from '../../../utils/datetime/datetime.util'
 
-interface BloodGlucoseTooltipProps {
-  bgPrefs: BgPrefs
-  data: Cbg | Smbg
+interface NightModeTooltipProps {
+  nightMode: NightMode
   position: Position
   side: Side
   timePrefs: TimePrefs
-  isSmbg?: boolean
 }
 
-export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = (props) => {
-  const { bgPrefs, data, position, side, timePrefs, isSmbg } = props
+export const NightModeTooltip: FC<NightModeTooltipProps> = (props) => {
+  const { nightMode, position, side, timePrefs } = props
   const { t } = useTranslation('main')
 
-  const formattedValue = formatBgValue(data.value, bgPrefs.bgUnits)
+  const getDurationInHours = (): DurationValue => {
+    const units = nightMode.duration.units
+    const duration = nightMode.duration.value
+    const value = convertValueToHours(duration, units)
 
-  const bgClass = getBgClass(
-    convertBgClassesToBgBounds(bgPrefs.bgClasses),
-    data.value,
-    ClassificationType.FiveWay
-  )
+    return {
+      units: DurationUnit.Hours,
+      value
+    }
+  }
+
+  const duration = getDurationInHours()
 
   return (
     <Tooltip
       position={position}
+      borderColor={colors.bolusManual}
+      dateTitle={getDateTitleForBaseDatum(nightMode, timePrefs)}
       side={side}
-      borderColor={colors[bgClass] || colors.bolus}
-      dateTitle={getDateTitleForBaseDatum(data, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tail={DEFAULT_TOOLTIP_TAIL}
@@ -81,11 +80,8 @@ export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = 
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>
-          <TooltipLine label={t('BG')} value={formattedValue} isBold />
-          {
-            isSmbg &&
-            <TooltipLine label={t('Calibration')} customColor={TooltipColor.DarkGray} />
-          }
+          <TooltipLine label={t('night-mode')} isBold />
+          <TooltipLine label={t('Duration')} value={`${duration.value} ${t(duration.units)}`} />
         </div>
       }
     />

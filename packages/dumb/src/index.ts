@@ -76,6 +76,7 @@ import { Device } from './models/device.model'
 import { buildDevice } from './utils/device/device.utils'
 import { SafetyBasalItem } from './models/safety-basal-item.model'
 import { isSafetyBasalAvailable, getSafetyBasalItems } from './utils/safety-basal-profile/safety-basal-profile.util'
+import { NightModeTooltip } from './components/tooltips/night-mode-tooltip/night-mode-tooltip'
 
 export {
   formatDate,
@@ -105,6 +106,7 @@ export {
   formatBgValue,
   LayoutColumnType,
   LoopModeStat,
+  NightModeTooltip,
   ParameterTooltip,
   PhysicalTooltip,
   PrintView,
