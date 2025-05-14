@@ -63,8 +63,8 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
   const { t } = useTranslation()
 
   const getDurationInMinutes = (): DurationValue => {
-    const units = physicalActivity?.duration?.units
-    const duration = physicalActivity?.duration?.value
+    const units = physicalActivity.duration.units
+    const duration = physicalActivity.duration.value
     const value = convertValueToMinutes(duration, units)
 
     return {
@@ -98,7 +98,7 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
         <div className={commonStyles.containerFlex}>
           <TooltipLine label={t('Physical Activity')} isBold />
           {
-            physicalActivity.name !== "" &&
+            physicalActivity.name && physicalActivity.name !== "" &&
             <TooltipLine label={t('Name')} value={getDisplayName(physicalActivity.name)} />
           }
           <TooltipLine label={t('Intensity')} value={t(`${physicalActivity.reportedIntensity}-pa`)} />

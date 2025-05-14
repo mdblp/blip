@@ -55,8 +55,8 @@ export const NightModeTooltip: FC<NightModeTooltipProps> = (props) => {
   const { t } = useTranslation('main')
 
   const getDurationInHours = (): DurationValue => {
-    const units = nightMode?.duration?.units
-    const duration = nightMode?.duration?.value
+    const units = nightMode.duration.units
+    const duration = nightMode.duration.value
     const value = convertValueToHours(duration, units)
 
     return {
