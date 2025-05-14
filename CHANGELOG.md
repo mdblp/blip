@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3478 Update the front of the maintenance page
 - YLP-3486 Add physical activity name in tooltip
 - YLP-3522 Handle accounts marked for deletion
+- YLP-3547 Swap unit and percentage in insulin card
 
 ### Fixed
 - YLP-3290 Top banner is hiding the top part of note creation popup
