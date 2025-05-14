@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,6 +41,7 @@ import type Wizard from './datum/wizard.model'
 import type ZenMode from './datum/zen-mode.model'
 import { AlarmEvent } from './datum/alarm-event.model';
 import { PumpSettings } from './datum/pump-settings.model'
+import { NightMode } from './datum/night-mode.model'
 
 interface MedicalData {
   alarmEvents: AlarmEvent[]
@@ -51,6 +52,7 @@ interface MedicalData {
   deviceParametersChanges: DeviceParameterChange[]
   meals: Meal[]
   messages: Message[]
+  nightModes: NightMode[]
   physicalActivities: PhysicalActivity[]
   pumpSettings: PumpSettings[]
   reservoirChanges: ReservoirChange[]

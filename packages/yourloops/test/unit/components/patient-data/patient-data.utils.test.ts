@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -89,7 +89,7 @@ describe('Patient data utils', () => {
         const medicalData = patientDataUtils.buildMedicalData(mockdataFromApi)
         expect(medicalData instanceof MedicalDataService).toBeTruthy()
         expect(medicalData.medicalData).toEqual(medicalServiceResult)
-        expect(Object.keys(medicalData.medicalData).length).toEqual(16)
+        expect(Object.keys(medicalData.medicalData).length).toEqual(17)
       })
     })
 

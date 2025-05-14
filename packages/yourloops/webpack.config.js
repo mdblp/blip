@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -70,6 +70,7 @@ const alias = {
   'device-event.svg': path.resolve(__dirname, '../../branding/alarm-event/device-event.svg'),
   'hyperglycemia-event.svg': path.resolve(__dirname, '../../branding/alarm-event/hyperglycemia-event.svg'),
   'hypoglycemia-event.svg': path.resolve(__dirname, '../../branding/alarm-event/hypoglycemia-event.svg'),
+  'night-mode.svg': path.resolve(__dirname, '../../branding/night-mode/night-mode.svg'),
   'dana-pump.svg': path.resolve(__dirname, '../../branding/pump/dana-pump.svg'),
   'insight-pump.svg': path.resolve(__dirname, '../../branding/pump/insight-pump.svg'),
   'kaleido-pump.svg': path.resolve(__dirname, '../../branding/pump/kaleido-pump.svg'),

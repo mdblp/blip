@@ -46,6 +46,7 @@ import { type DurationValue } from './domains/models/medical/datum/basics/durati
 import DurationUnit from './domains/models/medical/datum/enums/duration-unit.enum'
 import type Meal from './domains/models/medical/datum/meal.model'
 import type Message from './domains/models/medical/datum/message.model'
+import { NightMode } from './domains/models/medical/datum/night-mode.model'
 import type PhysicalActivity from './domains/models/medical/datum/physical-activity.model'
 import Prescriptor from './domains/models/medical/datum/enums/prescriptor.enum'
 import PumpManufacturer from './domains/models/medical/datum/enums/pump-manufacturer.enum'
@@ -132,6 +133,7 @@ export {
   type MedicalData,
   type Message,
   type MobileAppConfig,
+  type NightMode,
   type Parameter,
   type ParameterConfig,
   type PhysicalActivity,
