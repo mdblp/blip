@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -48,8 +48,8 @@ export const checkPatientLayout = async (fullName: string, needFooterLanguageSel
 export const checkPatientDashboardLayout = async (patientDashboardLayout: PatientDashboardLayoutParams) => {
   const dashboard = within(await screen.findByTestId('patient-dashboard'))
   expect(dashboard.getByText('Data calculated on the last 14 days')).toBeVisible()
-  expect(dashboard.getByText('Patient statistics')).toBeVisible()
-  expect(dashboard.getByText('Device Usage')).toBeVisible()
+  expect(dashboard.getByText('Avg. Daily Time In Range')).toBeVisible()
+  expect(dashboard.getByText('Devices')).toBeVisible()
 
   if (patientDashboardLayout.isChatCardVisible) {
     expect(dashboard.queryByTestId('chat-card')).toBeVisible()

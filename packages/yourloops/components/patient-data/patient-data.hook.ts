@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import { type BgPrefs, buildDevice, Device } from 'dumb'
 import { PatientView } from '../../enum/patient-view.enum'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { type ChartPrefs } from '../dashboard-widgets/models/chart-prefs.model'
+import { type ChartPrefs } from '../dashboard-cards/models/chart-prefs.model'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
 import type MedicalDataService from 'medical-domain'
