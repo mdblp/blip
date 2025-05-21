@@ -54,7 +54,6 @@ import { PatientStatistics } from '../statistics/patient-statistics'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
-  loading: boolean
   medicalDataService: MedicalDataService
   patient: Patient
 }

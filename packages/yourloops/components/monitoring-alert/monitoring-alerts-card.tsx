@@ -123,7 +123,7 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
             className={timeSpentAwayFromTargetActive ? classes.alertColor : ''}
           >
             {t('time-out-of-range-target')}
-            {!!patient.monitoringAlerts.timeSpentAwayFromTargetRate
+            {patient.monitoringAlerts.timeSpentAwayFromTargetRate
               ? <SimpleValue {...timeSpentAwayFromTargetRateProps} />
               : <Typography sx={{ fontWeight: 'bold' }}>
                 {t('N/A')}
@@ -137,7 +137,7 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
             className={frequencyOfSevereHypoglycemiaActive ? classes.alertColor : ''}
           >
             {t('alert-hypoglycemic')}
-            {!!patient.monitoringAlerts.frequencyOfSevereHypoglycemiaRate
+            {patient.monitoringAlerts.frequencyOfSevereHypoglycemiaRate
               ? <SimpleValue {...frequencyOfSevereHypoglycemiaRateProps} />
               : <Typography sx={{ fontWeight: 'bold' }}>
                 {t('N/A')}
@@ -151,7 +151,7 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
             className={nonDataTransmissionActive ? classes.alertColor : ''}
           >
             {t('data-not-transmitted')}
-            {!!patient.monitoringAlerts.nonDataTransmissionRate
+            {patient.monitoringAlerts.nonDataTransmissionRate
               ? <SimpleValue {...nonDataTransmissionRateProps} />
               : <Typography sx={{ fontWeight: 'bold' }}>
                 {t('N/A')}
