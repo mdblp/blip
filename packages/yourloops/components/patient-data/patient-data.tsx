@@ -30,7 +30,7 @@ import { PatientNavBarMemoized as PatientNavBar } from '../header-bars/patient-n
 import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { PrintReportDialog } from '../pdf/print-report-dialog'
-import { PatientDashboard } from '../dashboard-widgets/patient-dashboard'
+import { PatientDashboard } from '../dashboard-cards/patient-dashboard'
 import Daily from 'blip/app/components/chart/daily'
 import Trends from 'blip/app/components/chart/trends'
 import SpinningLoader from '../loaders/spinning-loader'

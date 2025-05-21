@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,42 +25,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { useTranslation } from 'react-i18next'
-import CardContent from '@mui/material/CardContent'
-import MedicalReportList from './medical-report-list'
-import { type Patient } from '../../../lib/patient/models/patient.model'
-import GenericDashboardCard from '../generic-dashboard-card'
-import { useAuth } from '../../../lib/auth'
-import { useParams } from 'react-router-dom'
+import React, { FC } from 'react'
+import { SensorUsageStat } from '../../statistics/sensor-usage-stat'
+import Divider from '@mui/material/Divider'
 import { DataCard } from '../../data-card/data-card'
-import Typography from '@mui/material/Typography'
+import { Patient } from '../../../lib/patient/models/patient.model'
+import MedicalDataService from 'medical-domain'
+import metrics from '../../../lib/metrics'
+import { makeStyles } from 'tss-react/mui'
+import { BasicsChart } from 'tideline'
 
-export interface MedicalFilesWidgetProps {
+interface DevicesUsageCardProps {
   patient: Patient
+  medicalDataService: MedicalDataService
+  sensorUsage: number
+  totalUsage: number
 }
 
-export interface CategoryProps {
-  teamId?: string
-  patientId: string
-}
+const useStyles = makeStyles()((theme) => ({
+  divider: {
+    margin: theme.spacing(1, 0)
+  }
+}))
 
-const MedicalFilesWidget: FunctionComponent<MedicalFilesWidgetProps> = (props) => {
-  const { t } = useTranslation()
-  const { patient } = props
-  const { teamId: selectedTeamId } = useParams()
-  const { user } = useAuth()
-
-  const teamId = user.isUserHcp() ? selectedTeamId : null
+export const DevicesUsageCard: FC<DevicesUsageCardProps> = (props) => {
+  const { patient, medicalDataService, sensorUsage, totalUsage } = props
+  const { classes } = useStyles()
+  const trackMetric = metrics.send
 
   return (
-    <DataCard data-testid="medical-files-card">
-      <Typography sx={{ fontWeight: 'bold' }}>
-        {t('medical-files')}
-      </Typography>
-      <MedicalReportList teamId={teamId} patientId={patient.userid} />
+    <DataCard>
+      <SensorUsageStat total={totalUsage} usage={sensorUsage} />
+      <Divider variant="fullWidth" className={classes.divider} />
+      <BasicsChart
+        patient={patient}
+        tidelineData={medicalDataService}
+        trackMetric={trackMetric}
+      />
     </DataCard>
   )
 }
-
-export default MedicalFilesWidget

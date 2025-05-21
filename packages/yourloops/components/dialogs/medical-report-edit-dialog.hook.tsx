@@ -29,7 +29,7 @@ import { type Dispatch, type SetStateAction, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import MedicalFilesApi from '../../lib/medical-files/medical-files.api'
-import { type CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'
+import { type CategoryProps } from '../dashboard-cards/medical-files/medical-files-card'
 import { useAlert } from '../utils/snackbar'
 import { useAuth } from '../../lib/auth'
 import { type MedicalReport } from '../../lib/medical-files/models/medical-report.model'
