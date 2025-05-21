@@ -228,7 +228,7 @@ function ChatWidget(props: Readonly<ChatWidgetProps>): JSX.Element {
   }
 
   return (
-    <DataCard>
+    <DataCard data-testid="chat-card">
       <Box
         display="flex"
         justifyContent="space-between"
