@@ -26,7 +26,7 @@
  */
 
 import React, { FC, PropsWithChildren } from 'react'
-import Box from '@mui/material/Box'
+import Box, { BoxProps } from '@mui/material/Box'
 import { makeStyles } from 'tss-react/mui'
 
 const useStyles = makeStyles()((theme) => ({
@@ -39,11 +39,11 @@ const useStyles = makeStyles()((theme) => ({
   }
 }))
 
-export const DataCard: FC<PropsWithChildren> = ({ children }) => {
+export const DataCard: FC<PropsWithChildren & BoxProps> = ({ children, ...props }) => {
   const { classes } = useStyles()
 
   return (
-    <Box className={classes.widgetGroup}>
+    <Box className={classes.widgetGroup} {...props}>
       {children}
     </Box>
   )
