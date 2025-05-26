@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,7 +42,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 
-import { type CategoryProps } from '../dashboard-widgets/medical-files/medical-files-widget'
+import { type CategoryProps } from '../dashboard-cards/medical-files/medical-files-card'
 import { useMedicalReportEditDialog } from './medical-report-edit-dialog.hook'
 import { type MedicalReport } from '../../lib/medical-files/models/medical-report.model'
 import { LoadingButton } from '@mui/lab'

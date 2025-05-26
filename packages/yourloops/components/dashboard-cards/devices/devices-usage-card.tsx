@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,27 +25,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import GenericDashboardCard from './generic-dashboard-card'
-import { useTranslation } from 'react-i18next'
-import CardContent from '@mui/material/CardContent'
-import { PatientStatistics, type PatientStatisticsProps } from '../statistics/patient-statistics'
+import React, { FC } from 'react'
+import { SensorUsageStat } from '../../statistics/sensor-usage-stat'
+import Divider from '@mui/material/Divider'
+import { DataCard } from '../../data-card/data-card'
+import { Patient } from '../../../lib/patient/models/patient.model'
+import MedicalDataService from 'medical-domain'
+import metrics from '../../../lib/metrics'
+import { makeStyles } from 'tss-react/mui'
+import { BasicsChart } from 'tideline'
 
-export const PatientStatisticsWidget: FunctionComponent<PatientStatisticsProps> = (props) => {
-  const { t } = useTranslation()
-  const { medicalData, bgPrefs, dateFilter } = props
+interface DevicesUsageCardProps {
+  patient: Patient
+  medicalDataService: MedicalDataService
+  sensorUsage: number
+  totalUsage: number
+}
+
+const useStyles = makeStyles()((theme) => ({
+  divider: {
+    margin: theme.spacing(1, 0)
+  }
+}))
+
+export const DevicesUsageCard: FC<DevicesUsageCardProps> = (props) => {
+  const { patient, medicalDataService, sensorUsage, totalUsage } = props
+  const { classes } = useStyles()
+  const trackMetric = metrics.send
 
   return (
-    <GenericDashboardCard
-      title={t('patient-statistics')}
-    >
-      <CardContent>
-        <PatientStatistics
-          medicalData={medicalData}
-          bgPrefs={bgPrefs}
-          dateFilter={dateFilter}
-        />
-      </CardContent>
-    </GenericDashboardCard>
+    <DataCard data-testid="devices-usage-card">
+      <SensorUsageStat total={totalUsage} usage={sensorUsage} />
+      <Divider variant="fullWidth" className={classes.divider} />
+      <BasicsChart
+        patient={patient}
+        tidelineData={medicalDataService}
+        trackMetric={trackMetric}
+      />
+    </DataCard>
   )
 }
