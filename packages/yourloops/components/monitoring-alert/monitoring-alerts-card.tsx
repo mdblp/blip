@@ -40,9 +40,8 @@ import { AppUserRoute } from '../../models/enums/routes.enum'
 import { MONITORING_ALERTS_SECTION_ID } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import { DataCard } from '../data-card/data-card'
-import { SimpleValue } from 'dumb/dist/src/components/stats/common/simple-value'
 import { buildSimpleValueProps } from 'dumb/dist/src/components/stats/simple/simple-stat.util'
-import { StatFormats } from 'dumb'
+import { SimpleValue, StatFormats } from 'dumb'
 
 const monitoringAlertsCardStyles = makeStyles()((theme) => {
   return {
