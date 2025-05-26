@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,34 +38,37 @@ reservoirChangeDate.setMinutes(0)
 const reservoirChangeDateAsString = reservoirChangeDate.toISOString().split('T')
 
 export const checkDeviceUsageWidget = async () => {
-  const deviceUsageWidget = within(screen.getByTestId('device-usage-card'))
-  checkTooltip(deviceUsageWidget, 'Sensor Usage')
-  expect(deviceUsageWidget.getByTestId('sensor-usage-stat')).toHaveTextContent('Sensor Usage3%')
-  expect(deviceUsageWidget.getByTestId('device-usage-device-list')).toHaveTextContent('DevicesCGM:Dexcom G6DBL:DiabeloopPump:VICENTRA')
-  expect(deviceUsageWidget.getByTestId('device-usage-updates')).toHaveTextContent('Last updatesNov 7, 2022 3:01 PMAggressiveness for lunch (130% ➞ 90%)Nov 2, 2022 6:00 PMAggressiveness for breakfast (100% ➞ 110%)Nov 2, 2022 6:00 PMAggressiveness for dinner (100% ➞ 90%)Nov 2, 2022 8:00 AMHyperglycemia threshold (180.1mg/dL ➞ 140.0mg/dL)Nov 2, 2022 8:00 AMHypoglycemia threshold (70.0mg/dL ➞ 60.0mg/dL)Nov 1, 2022 1:00 AMAggressiveness in hyperglycemia (143%)Nov 1, 2022 1:00 AMBreakfast - large (150.0g)Nov 1, 2022 1:00 AMDinner - large (150.0g)Nov 1, 2022 1:00 AMLunch - large (70.0g)Nov 1, 2022 1:00 AMAggressiveness for breakfast (100%)Nov 1, 2022 1:00 AMAggressiveness for breakfast (110% ➞ 100%)Nov 1, 2022 1:00 AMAggressiveness for dinner (100%)Nov 1, 2022 1:00 AMAggressiveness for dinner (90% ➞ 100%)Nov 1, 2022 1:00 AMAggressiveness for lunch (130%)Nov 1, 2022 1:00 AMBreakfast - average (70.0g)Nov 1, 2022 1:00 AMDinner - average (60.0g)Nov 1, 2022 1:00 AMLunch - average (50.0g)Nov 1, 2022 1:00 AMAggressiveness in normoglycemia (100%)Nov 1, 2022 1:00 AMTarget glucose level (100.0mg/dL)Nov 1, 2022 1:00 AMHyperglycemia threshold (180.1mg/dL)Nov 1, 2022 1:00 AMHyperglycemia threshold (140.0mg/dL ➞ 180.1mg/dL)Nov 1, 2022 1:00 AMHypoglycemia threshold (70.0mg/dL)Nov 1, 2022 1:00 AMHypoglycemia threshold (60.0mg/dL ➞ 70.0mg/dL)Nov 1, 2022 1:00 AMBreakfast - small (15.0g)Nov 1, 2022 1:00 AMDinner - small (20.0g)Nov 1, 2022 1:00 AMLunch - small (30.0g)Nov 1, 2022 1:00 AMTotal Daily Insulin (53.0U)Nov 1, 2022 1:00 AMWeight (69.0kg)')
-  expect(await deviceUsageWidget.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changes')
-  const reservoirChange = deviceUsageWidget.getByTestId('reservoir-change')
+  const devicesUsageCard = within(screen.getByTestId('devices-usage-card'))
+  checkTooltip(devicesUsageCard, 'Sensor Usage')
+  expect(devicesUsageCard.getByTestId('sensor-usage-stat')).toHaveTextContent('Sensor Usage3%')
+
+  expect(screen.getByTestId('device-usage-device-list')).toHaveTextContent('DevicesCGMDexcom G6DBLDiabeloopPumpVICENTRA')
+  expect(screen.getByTestId('device-usage-updates')).toHaveTextContent('Last updatesNov 7, 2022 3:01 PMAggressiveness for lunch (130% ➞ 90%)Nov 2, 2022 6:00 PMAggressiveness for breakfast (100% ➞ 110%)Nov 2, 2022 6:00 PMAggressiveness for dinner (100% ➞ 90%)Nov 2, 2022 8:00 AMHyperglycemia threshold (180.1mg/dL ➞ 140.0mg/dL)Nov 2, 2022 8:00 AMHypoglycemia threshold (70.0mg/dL ➞ 60.0mg/dL)Nov 1, 2022 1:00 AMAggressiveness in hyperglycemia (143%)Nov 1, 2022 1:00 AMBreakfast - large (150.0g)Nov 1, 2022 1:00 AMDinner - large (150.0g)Nov 1, 2022 1:00 AMLunch - large (70.0g)Nov 1, 2022 1:00 AMAggressiveness for breakfast (100%)Nov 1, 2022 1:00 AMAggressiveness for breakfast (110% ➞ 100%)Nov 1, 2022 1:00 AMAggressiveness for dinner (100%)Nov 1, 2022 1:00 AMAggressiveness for dinner (90% ➞ 100%)Nov 1, 2022 1:00 AMAggressiveness for lunch (130%)Nov 1, 2022 1:00 AMBreakfast - average (70.0g)Nov 1, 2022 1:00 AMDinner - average (60.0g)Nov 1, 2022 1:00 AMLunch - average (50.0g)Nov 1, 2022 1:00 AMAggressiveness in normoglycemia (100%)Nov 1, 2022 1:00 AMTarget glucose level (100.0mg/dL)Nov 1, 2022 1:00 AMHyperglycemia threshold (180.1mg/dL)Nov 1, 2022 1:00 AMHyperglycemia threshold (140.0mg/dL ➞ 180.1mg/dL)Nov 1, 2022 1:00 AMHypoglycemia threshold (70.0mg/dL)Nov 1, 2022 1:00 AMHypoglycemia threshold (60.0mg/dL ➞ 70.0mg/dL)Nov 1, 2022 1:00 AMBreakfast - small (15.0g)Nov 1, 2022 1:00 AMDinner - small (20.0g)Nov 1, 2022 1:00 AMLunch - small (30.0g)Nov 1, 2022 1:00 AMTotal Daily Insulin (53.0U)Nov 1, 2022 1:00 AMWeight (69.0kg)')
+  expect(await screen.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changes')
+  const reservoirChange = screen.getByTestId('reservoir-change')
   await userEvent.hover(reservoirChange)
-  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${RESERVOIR_CHANGE_TODAY_DATE.format('MMM D')}${format.timestamp(reservoirChangeDateAsString, moment.tz('Europe/Paris').utcOffset())}`)
+  expect(screen.getByTestId('calendar-day-hover')).toHaveTextContent(`${RESERVOIR_CHANGE_TODAY_DATE.format('MMM D')}${format.timestamp(reservoirChangeDateAsString, moment.tz('Europe/Paris').utcOffset())}`)
 }
 
 export const checkDeviceUsageWidgetWithTwoWeeksOldData = async () => {
-  const deviceUsageWidget = within(screen.getByTestId('device-usage-card'))
-  checkTooltip(deviceUsageWidget, 'Sensor Usage')
-  expect(deviceUsageWidget.getByTestId('sensor-usage-stat')).toHaveTextContent('Sensor Usage2%')
-  expect(deviceUsageWidget.getByTestId('device-usage-device-list')).toHaveTextContent('DevicesCGM:Dexcom G6DBL:DiabeloopPump:VICENTRA')
-  expect(deviceUsageWidget.getByTestId('device-usage-updates')).toHaveTextContent('Last updatesNov 7, 2022 3:01 PMAggressiveness for lunch (130% ➞ 90%)Nov 2, 2022 6:00 PMAggressiveness for breakfast (100% ➞ 110%)Nov 2, 2022 6:00 PMAggressiveness for dinner (100% ➞ 90%)Nov 2, 2022 8:00 AMHyperglycemia threshold (180.1mg/dL ➞ 140.0mg/dL)Nov 2, 2022 8:00 AMHypoglycemia threshold (70.0mg/dL ➞ 60.0mg/dL)Nov 1, 2022 1:00 AMAggressiveness in hyperglycemia (143%)Nov 1, 2022 1:00 AMBreakfast - large (150.0g)Nov 1, 2022 1:00 AMDinner - large (150.0g)Nov 1, 2022 1:00 AMLunch - large (70.0g)Nov 1, 2022 1:00 AMAggressiveness for breakfast (100%)Nov 1, 2022 1:00 AMAggressiveness for breakfast (110% ➞ 100%)Nov 1, 2022 1:00 AMAggressiveness for dinner (100%)Nov 1, 2022 1:00 AMAggressiveness for dinner (90% ➞ 100%)Nov 1, 2022 1:00 AMAggressiveness for lunch (130%)Nov 1, 2022 1:00 AMBreakfast - average (70.0g)Nov 1, 2022 1:00 AMDinner - average (60.0g)Nov 1, 2022 1:00 AMLunch - average (50.0g)Nov 1, 2022 1:00 AMAggressiveness in normoglycemia (100%)Nov 1, 2022 1:00 AMTarget glucose level (100.0mg/dL)Nov 1, 2022 1:00 AMHyperglycemia threshold (180.1mg/dL)Nov 1, 2022 1:00 AMHyperglycemia threshold (140.0mg/dL ➞ 180.1mg/dL)Nov 1, 2022 1:00 AMHypoglycemia threshold (70.0mg/dL)Nov 1, 2022 1:00 AMHypoglycemia threshold (60.0mg/dL ➞ 70.0mg/dL)Nov 1, 2022 1:00 AMBreakfast - small (15.0g)Nov 1, 2022 1:00 AMDinner - small (20.0g)Nov 1, 2022 1:00 AMLunch - small (30.0g)Nov 1, 2022 1:00 AMTotal Daily Insulin (53.0U)Nov 1, 2022 1:00 AMWeight (69.0kg)')
-  expect(await deviceUsageWidget.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changes')
-  const reservoirChange = deviceUsageWidget.getByTestId('reservoir-change')
+  const devicesUsageCard = within(screen.getByTestId('devices-usage-card'))
+  checkTooltip(devicesUsageCard, 'Sensor Usage')
+  expect(devicesUsageCard.getByTestId('sensor-usage-stat')).toHaveTextContent('Sensor Usage2%')
+
+  expect(screen.getByTestId('device-usage-device-list')).toHaveTextContent('DevicesCGMDexcom G6DBLDiabeloopPumpVICENTRA')
+  expect(screen.getByTestId('device-usage-updates')).toHaveTextContent('Last updatesNov 7, 2022 3:01 PMAggressiveness for lunch (130% ➞ 90%)Nov 2, 2022 6:00 PMAggressiveness for breakfast (100% ➞ 110%)Nov 2, 2022 6:00 PMAggressiveness for dinner (100% ➞ 90%)Nov 2, 2022 8:00 AMHyperglycemia threshold (180.1mg/dL ➞ 140.0mg/dL)Nov 2, 2022 8:00 AMHypoglycemia threshold (70.0mg/dL ➞ 60.0mg/dL)Nov 1, 2022 1:00 AMAggressiveness in hyperglycemia (143%)Nov 1, 2022 1:00 AMBreakfast - large (150.0g)Nov 1, 2022 1:00 AMDinner - large (150.0g)Nov 1, 2022 1:00 AMLunch - large (70.0g)Nov 1, 2022 1:00 AMAggressiveness for breakfast (100%)Nov 1, 2022 1:00 AMAggressiveness for breakfast (110% ➞ 100%)Nov 1, 2022 1:00 AMAggressiveness for dinner (100%)Nov 1, 2022 1:00 AMAggressiveness for dinner (90% ➞ 100%)Nov 1, 2022 1:00 AMAggressiveness for lunch (130%)Nov 1, 2022 1:00 AMBreakfast - average (70.0g)Nov 1, 2022 1:00 AMDinner - average (60.0g)Nov 1, 2022 1:00 AMLunch - average (50.0g)Nov 1, 2022 1:00 AMAggressiveness in normoglycemia (100%)Nov 1, 2022 1:00 AMTarget glucose level (100.0mg/dL)Nov 1, 2022 1:00 AMHyperglycemia threshold (180.1mg/dL)Nov 1, 2022 1:00 AMHyperglycemia threshold (140.0mg/dL ➞ 180.1mg/dL)Nov 1, 2022 1:00 AMHypoglycemia threshold (70.0mg/dL)Nov 1, 2022 1:00 AMHypoglycemia threshold (60.0mg/dL ➞ 70.0mg/dL)Nov 1, 2022 1:00 AMBreakfast - small (15.0g)Nov 1, 2022 1:00 AMDinner - small (20.0g)Nov 1, 2022 1:00 AMLunch - small (30.0g)Nov 1, 2022 1:00 AMTotal Daily Insulin (53.0U)Nov 1, 2022 1:00 AMWeight (69.0kg)')
+  expect(await screen.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changes')
+  const reservoirChange = screen.getByTestId('reservoir-change')
   await userEvent.hover(reservoirChange)
-  expect(deviceUsageWidget.getByTestId('calendar-day-hover')).toHaveTextContent(`${RESERVOIR_CHANGE_13_DAYS_AGO_DATE.format('MMM D')}${format.timestamp(reservoirChangeDateAsString, moment.tz('Europe/Paris').utcOffset())}`)
+  expect(screen.getByTestId('calendar-day-hover')).toHaveTextContent(`${RESERVOIR_CHANGE_13_DAYS_AGO_DATE.format('MMM D')}${format.timestamp(reservoirChangeDateAsString, moment.tz('Europe/Paris').utcOffset())}`)
 }
 
 export const checkDeviceUsageWidgetNoData = async () => {
-  const deviceUsageWidget = within(screen.getByTestId('device-usage-card'))
-  checkTooltip(deviceUsageWidget, 'Sensor Usage')
-  expect(deviceUsageWidget.getByTestId('sensor-usage-stat')).toHaveTextContent('Sensor Usage0%')
-  expect(deviceUsageWidget.getByTestId('device-usage-device-list')).toHaveTextContent('DevicesCGM:Dexcom G6DBL:DiabeloopPump:VICENTRA')
-  expect(deviceUsageWidget.getByTestId('device-usage-updates')).toHaveTextContent('Last updates')
-  expect(await deviceUsageWidget.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changesNothing to display!')
+  const devicesUsageCard = within(screen.getByTestId('devices-usage-card'))
+  checkTooltip(devicesUsageCard, 'Sensor Usage')
+  expect(devicesUsageCard.getByTestId('sensor-usage-stat')).toHaveTextContent('Sensor Usage0%')
+
+  expect(screen.getByTestId('device-usage-device-list')).toHaveTextContent('DevicesCGMDexcom G6DBLDiabeloopPumpVICENTRA')
+  expect(screen.getByTestId('device-usage-updates')).toHaveTextContent('Last updates')
+  expect(await screen.findByTestId('chart-basics-factory', {}, { timeout: 3000 })).toHaveTextContent('Cartridge changesNothing to display!')
 }

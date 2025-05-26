@@ -54,7 +54,7 @@ export const DevicesUsageCard: FC<DevicesUsageCardProps> = (props) => {
   const trackMetric = metrics.send
 
   return (
-    <DataCard>
+    <DataCard data-testid="devices-usage-card">
       <SensorUsageStat total={totalUsage} usage={sensorUsage} />
       <Divider variant="fullWidth" className={classes.divider} />
       <BasicsChart

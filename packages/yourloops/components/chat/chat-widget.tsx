@@ -234,6 +234,7 @@ function ChatWidget(props: Readonly<ChatWidgetProps>): JSX.Element {
         justifyContent="space-between"
         alignItems="center"
         sx={{ paddingBottom: theme.spacing(1) }}
+        data-testid="chat-widget-header"
       >
         <Typography sx={{ fontWeight: 'bold', paddingBottom: '8px' }}>
           {`${t('messages')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
