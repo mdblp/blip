@@ -48,8 +48,6 @@ import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { SignupFormKey } from './models/enums/signup-form-key.enum'
 import { logError } from '../../utils/error.util'
 import { errorTextFromException } from '../../lib/utils'
-import InputAdornment from '@mui/material/InputAdornment'
-import SearchIcon from '@mui/icons-material/Search'
 
 interface Errors {
   firstName: boolean
