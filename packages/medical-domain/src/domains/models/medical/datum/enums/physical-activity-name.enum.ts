@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,12 +25,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum DeviceEventSubtype {
-  Alarm = 'alarm',
-  Confidential = 'confidential',
-  DeviceParameter = 'deviceParameter',
-  Night = 'night',
-  ReservoirChange = 'reservoirChange',
-  Warmup = 'warmup',
-  Zen = 'zen',
+export enum PhysicalActivityName {
+  AerobicDefault = 'AEROBIC_DEFAULT',
+  AmericanFootball = 'AMERICAN_FOOTBALL',
+  Anaerobic = 'ANAEROBIC',
+  Badminton = 'BADMINTON',
+  Baseball = 'BASEBALL',
+  Basketball = 'BASKET_BALL',
+  Combat = 'COMBAT',
+  ConstructionWork = 'CONSTRUCTION_WORK',
+  Cycling = 'CYCLING',
+  Dancing = 'DANCING',
+  Golf = 'GOLF',
+  Gymnastics = 'GYMNASTICS',
+  Handball = 'HANDBALL',
+  Hiking = 'HIKING',
+  Hockey = 'HOCKEY',
+  HouseholdChores = 'HOUSEHOLD_CHORES',
+  Judo = 'JUDO',
+  Mixed = 'MIXED',
+  MotorSport = 'MOTORSPORT',
+  NordicSkiing = 'NORDIC_SKIING',
+  Rowing = 'ROWING',
+  Rugby = 'RUGBY',
+  Running = 'RUNNING',
+  Skating = 'SKATING',
+  Skiing = 'SKIING',
+  Soccer = 'SOCCER',
+  Squash = 'SQUASH',
+  Swimming = 'SWIMMING',
+  Tennis = 'TENNIS',
+  Volleyball = 'VOLLEY_BALL',
+  Walking = 'WALKING',
+  WeightLifting = 'WEIGHTLIFTING',
+  Wrestling = 'WRESTLING',
 }

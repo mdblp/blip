@@ -41,6 +41,7 @@ import plotQuickbolus from '../../js/plot/quickbolus'
 import plotBasal from '../../js/plot/basal'
 import plotMessage from '../../js/plot/message'
 import plotTimeChange from '../../js/plot/timechange'
+import plotNightMode from '../../js/plot/nightModeEvent'
 
 /**
  * @typedef {import('../../js/tidelinedata').default } MedicalDataService
@@ -278,6 +279,12 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     tidelineData
   }))
 
+  poolEvents.addPlotType({ type: 'nightMode' }, plotNightMode(poolEvents, {
+    tidelineData,
+    onNightModeHover: options.onNightModeHover,
+    onNightModeOut: options.onTooltipOut
+  }))
+
   poolEvents.addPlotType({ type: 'physicalActivity' }, plotPhysicalActivity(poolEvents, {
     onPhysicalHover: options.onPhysicalHover,
     onPhysicalOut: options.onTooltipOut,
@@ -380,7 +387,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   // setup axis & main y scale
   poolBasal.axisScaleFn(createYAxisBasal)
   // add background fill rectangles to basal pool
-  poolBasal.addPlotType({ type: 'fill' }, fill(poolBasal, {endpoints: chart.endpoints, isDaily: true}))
+  poolBasal.addPlotType({ type: 'fill' }, fill(poolBasal, { endpoints: chart.endpoints, isDaily: true }))
 
   // add basal data to basal pool
   poolBasal.addPlotType({ type: 'basal' }, plotBasal(poolBasal, {

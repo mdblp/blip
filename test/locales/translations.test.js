@@ -82,7 +82,9 @@ const ignoredTransKeyInBlipFiles = [
   '${titleType} Above Range',
   '${titleType} Below Range',
   '${titleType} In Range',
-  'Micro Bolus'
+  'Micro Bolus',
+  'params|${nameUppercase}',
+  'params|${PhysicalActivityName.AerobicDefault}'
 ]
 const ignoredTransKeyForYourLoops = [
   // Countries (from locales/languages.json)
@@ -154,6 +156,7 @@ const ignoredTransKeyForYourLoops = [
   // Others
   // TODO
   'accompanying-documents',
+  'account-flagged-for-deletion',
   'alarm-alert-loop-mode-activated-description',
   'alarm-alert-loop-mode-deactivated-description',
   'alarm-alert-with-code',
@@ -231,6 +234,7 @@ const ignoredTransKeyForYourLoops = [
   'login-page-desktop-info-3',
   'login-page-desktop-title',
   'login-page-mobile-title',
+  'night-mode',
   'end-date',
   'remaining-time',
   'time-in-range-cgm-daily-average',
