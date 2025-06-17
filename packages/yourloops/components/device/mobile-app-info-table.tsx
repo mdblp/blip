@@ -73,7 +73,7 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device
       <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="body2">{t('Activation code')}</Typography>
+            <Typography variant="body2">{t('activation-code')}</Typography>
             <Typography variant="body2" className="bold">{app.activationCode ?? t('N/A')}</Typography>
           </Box>
         </ListItemText>
@@ -89,7 +89,7 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device
       <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="body2">{t('Smartphone model')}</Typography>
+            <Typography variant="body2">{t('smartphone-model')}</Typography>
             <Typography variant="body2" className="bold">{device.smartphoneModel ?? t('N/A')}</Typography>
           </Box>
         </ListItemText>
@@ -97,7 +97,7 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device
       <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="body2">{t('Smartphone OS version')}</Typography>
+            <Typography variant="body2">{t('smartphone-os-version')}</Typography>
             <Typography variant="body2" className="bold">{device.osVersion ?? t('N/A')}</Typography>
           </Box>
         </ListItemText>

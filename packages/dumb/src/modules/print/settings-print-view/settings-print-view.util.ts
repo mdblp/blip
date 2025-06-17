@@ -197,7 +197,7 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
         value: mobileApp.swVersion
       },
       {
-        label: t('Activation code'),
+        label: t('activation-code'),
         value: mobileApp.activationCode
       },
       {
