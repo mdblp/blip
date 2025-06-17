@@ -26,8 +26,7 @@
  */
 
 import React, { type FC } from 'react'
-import { type DeviceConfig } from 'medical-domain'
-import { type MobileAppConfig } from 'medical-domain'
+import { type DeviceConfig, MobileAppConfig } from 'medical-domain'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
@@ -94,7 +93,7 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device
           </Box>
         </ListItemText>
       </ListItem>
-      <ListItem divider className="list-item">
+      <ListItem>
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('smartphone-os-version')}</Typography>
