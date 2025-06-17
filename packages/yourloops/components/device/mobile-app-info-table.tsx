@@ -97,7 +97,7 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device
       <ListItem divider className="list-item">
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="body2">{t('Smartphone os version')}</Typography>
+            <Typography variant="body2">{t('Smartphone OS version')}</Typography>
             <Typography variant="body2" className="bold">{device.osVersion ?? t('N/A')}</Typography>
           </Box>
         </ListItemText>
