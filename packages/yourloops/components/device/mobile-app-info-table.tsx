@@ -26,7 +26,8 @@
  */
 
 import React, { type FC } from 'react'
-import type { DeviceConfig, MobileAppConfig } from 'medical-domain'
+import { type DeviceConfig } from 'medical-domain'
+import { type MobileAppConfig } from 'medical-domain'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
@@ -57,7 +58,7 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Name')}</Typography>
-            <Typography variant="body2" className="bold">{app.identifier ?? t('N/A')}</Typography>
+            <Typography variant="body2" className="bold">{device.name ?? t('N/A')}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
@@ -74,6 +75,14 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Activation code')}</Typography>
             <Typography variant="body2" className="bold">{app.activationCode ?? t('N/A')}</Typography>
+          </Box>
+        </ListItemText>
+      </ListItem>
+      <ListItem divider className="list-item">
+        <ListItemText>
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="body2">{t('Identifier')}</Typography>
+            <Typography variant="body2" className="bold">{app.identifier ?? t('N/A')}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
