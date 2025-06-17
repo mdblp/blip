@@ -26,7 +26,7 @@
  */
 
 import React, { type FC } from 'react'
-import type { MobileAppConfig } from 'medical-domain'
+import { type DeviceConfig, MobileAppConfig } from 'medical-domain'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
@@ -35,10 +35,11 @@ import Box from '@mui/material/Box'
 import { GenericListCard } from './generic-list-card'
 
 interface MobileApplicationInfoProps {
-  app: MobileAppConfig
+  app: MobileAppConfig,
+  device: DeviceConfig
 }
 
-export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app }) => {
+export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device }) => {
   const { t } = useTranslation()
 
   return (
@@ -56,7 +57,7 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app }) => {
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Name')}</Typography>
-            <Typography variant="body2" className="bold">{app.identifier ?? t('N/A')}</Typography>
+            <Typography variant="body2" className="bold">{device.name ?? t('N/A')}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
@@ -65,6 +66,38 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app }) => {
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('Software version')}</Typography>
             <Typography variant="body2" className="bold">{app.swVersion ?? t('N/A')}</Typography>
+          </Box>
+        </ListItemText>
+      </ListItem>
+      <ListItem divider className="list-item">
+        <ListItemText>
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="body2">{t('activation-code')}</Typography>
+            <Typography variant="body2" className="bold">{app.activationCode ?? t('N/A')}</Typography>
+          </Box>
+        </ListItemText>
+      </ListItem>
+      <ListItem divider className="list-item">
+        <ListItemText>
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="body2">{t('Identifier')}</Typography>
+            <Typography variant="body2" className="bold">{app.identifier ?? t('N/A')}</Typography>
+          </Box>
+        </ListItemText>
+      </ListItem>
+      <ListItem divider className="list-item">
+        <ListItemText>
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="body2">{t('smartphone-model')}</Typography>
+            <Typography variant="body2" className="bold">{device.smartphoneModel ?? t('N/A')}</Typography>
+          </Box>
+        </ListItemText>
+      </ListItem>
+      <ListItem>
+        <ListItemText>
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="body2">{t('smartphone-os-version')}</Typography>
+            <Typography variant="body2" className="bold">{device.osVersion ?? t('N/A')}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
