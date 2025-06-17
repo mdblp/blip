@@ -191,10 +191,18 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
         value: mobileApp.manufacturer
       }, {
         label: t('Name'),
-        value: mobileApp.identifier
+        value: DeviceSystem.Dblg2
       },{
         label: t('Software version'),
         value: mobileApp.swVersion
+      },
+      {
+        label: t('Activation code'),
+        value: mobileApp.activationCode
+      },
+      {
+        label: t('Identifier'),
+        value: mobileApp.identifier
       }]
     }
   }
