@@ -99,7 +99,7 @@ export const CartridgeChangesStat: FC<CartridgeChangesStatProps> = (props) => {
 
       const durationSinceLastChange = getDurationSinceLastChange(reservoirChange)
       const duration = durationSinceLastChange?.duration
-      const durationAsString = durationSinceLastChange ? duration.toString() : t('--')
+      const durationAsString = durationSinceLastChange ? duration.toString() : '--'
       const durationUnit = durationSinceLastChange ? getDurationUnitTranslation(durationSinceLastChange.unit, duration !== 1) : ''
 
       return {
