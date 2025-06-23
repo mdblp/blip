@@ -25,32 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  type MedicalReport
-} from '../../../../../lib/medical-files/models/medical-report.model'
-import {
-  getMedicalReportDate
-} from '../../../../../components/dashboard-cards/medical-files/medical-report-list.util'
+import React, { type FC } from 'react'
+import type MedicalDataService from 'medical-domain'
+import { type DateFilter, GlycemiaStatisticsService, type PumpSettings } from 'medical-domain'
+import { sortHistory } from '../../device/utils/device.utils'
+import { type Patient } from '../../../lib/patient/models/patient.model'
+import { DeviceListCard } from './device-list-card'
+import { LastUpdatesCard } from './last-updates-card'
+import { DevicesUsageCard } from './devices-usage-card'
 
-describe('Medical Report list util', () => {
-  describe('getMedicalReportDate', () => {
-    it('should return correct date when no index is given', async () => {
-      const medicalReport: MedicalReport = {
-        id: 'fakeId',
-        authorId: 'fakeAuthorId',
-        creationDate: '2023-02-15T10:00:000Z',
-        patientId: 'PatientId',
-        teamId: 'teamId',
-        diagnosis: 'diag1',
-        progressionProposal: 'proposal1',
-        trainingSubject: 'training1',
-        authorFirstName: 'fakeFirstName',
-        authorLastName: 'fakeLastName',
-        number: 10
-      }
-      const dateReceived = getMedicalReportDate(medicalReport)
+interface DeviceUsageWidgetProps {
+  dateFilter: DateFilter
+  medicalDataService: MedicalDataService
+  patient: Patient
+}
 
-      expect(dateReceived).toEqual('2023-02-15')
-    })
-  })
-})
+export const DevicesColumn: FC<DeviceUsageWidgetProps> = (props) => {
+  const { patient, medicalDataService, dateFilter } = props
+  const pumpSettings = medicalDataService.medicalData.pumpSettings.slice(-1)[0] as PumpSettings
+  const {
+    total,
+    sensorUsage
+  } = GlycemiaStatisticsService.getSensorUsage(medicalDataService.medicalData.cbg, dateFilter)
+
+  if (pumpSettings) {
+    sortHistory(pumpSettings.payload.history)
+  }
+
+  return (
+    <>
+      <DeviceListCard
+        pumpSettings={pumpSettings}
+      />
+      <LastUpdatesCard
+        pumpSettings={pumpSettings}
+      />
+      <DevicesUsageCard
+        patient={patient}
+        medicalDataService={medicalDataService}
+        sensorUsage={sensorUsage}
+        totalUsage={total}
+      />
+    </>
+  )
+}

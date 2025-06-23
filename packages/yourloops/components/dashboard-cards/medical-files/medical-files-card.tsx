@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,46 +25,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
-import { makeStyles } from 'tss-react/mui'
+import React, { type FunctionComponent } from 'react'
+import { useTranslation } from 'react-i18next'
+import MedicalReportList from './medical-report-list'
+import { type Patient } from '../../../lib/patient/models/patient.model'
+import { useAuth } from '../../../lib/auth'
+import { useParams } from 'react-router-dom'
+import { DataCard } from '../../data-card/data-card'
+import Typography from '@mui/material/Typography'
+import { useTheme } from '@mui/material/styles'
 
-interface GenericDashboardCardProps {
-  action?: JSX.Element
-  title: string
-  width?: string
-  ['data-testid']?: string
+export interface MedicalFilesCardProps {
+  patient: Patient
 }
 
-const useStyles = makeStyles()((theme) => ({
-  header: {
-    backgroundColor: 'var(--card-header-background-color)',
-    height: 58,
-    textTransform: 'uppercase'
-  },
-  headerTitle: {
-    marginLeft: theme.spacing(2),
-    fontSize: '14px',
-    fontWeight: 600
-  }
-}))
+export interface CategoryProps {
+  teamId?: string
+  patientId: string
+}
 
-const GenericDashboardCard: FunctionComponent<PropsWithChildren<GenericDashboardCardProps>> = (props) => {
-  const { classes } = useStyles()
+const MedicalFilesCard: FunctionComponent<MedicalFilesCardProps> = (props) => {
+  const { t } = useTranslation()
+  const { patient } = props
+  const { teamId: selectedTeamId } = useParams()
+  const { user } = useAuth()
+  const theme = useTheme()
+
+  const teamId = user.isUserHcp() ? selectedTeamId : null
 
   return (
-    <Card data-testid={props['data-testid']}>
-      <CardHeader
-        data-testid="card-header"
-        className={classes.header}
-        classes={{ title: classes.headerTitle }}
-        title={props.title}
-        action={props.action}
-      />
-      {props.children}
-    </Card>
+    <DataCard data-testid="medical-files-card">
+      <Typography sx={{ fontWeight: 'bold', paddingBottom: theme.spacing(1) }}>
+        {t('medical-files')}
+      </Typography>
+      <MedicalReportList teamId={teamId} patientId={patient.userid} />
+    </DataCard>
   )
 }
 
-export default GenericDashboardCard
+export default MedicalFilesCard

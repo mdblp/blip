@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,42 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { useTranslation } from 'react-i18next'
-import CardContent from '@mui/material/CardContent'
-import MedicalReportList from './medical-report-list'
-import { type Patient } from '../../../lib/patient/models/patient.model'
-import GenericDashboardCard from '../generic-dashboard-card'
-import { useAuth } from '../../../lib/auth'
-import { useParams } from 'react-router-dom'
+import React, { FC, PropsWithChildren } from 'react'
+import Box, { BoxProps } from '@mui/material/Box'
+import { makeStyles } from 'tss-react/mui'
 
-export interface MedicalFilesWidgetProps {
-  patient: Patient
-}
+const useStyles = makeStyles()((theme) => ({
+  widgetGroup: {
+    backgroundColor: theme.palette.background.paper,
+    border: '1px solid var(--light-grey-border-color)',
+    borderRadius: theme.spacing(3),
+    marginBottom: '12px',
+    padding: '20px'
+  }
+}))
 
-export interface CategoryProps {
-  teamId?: string
-  patientId: string
-}
-
-const MedicalFilesWidget: FunctionComponent<MedicalFilesWidgetProps> = (props) => {
-  const { t } = useTranslation()
-  const { patient } = props
-  const { teamId: selectedTeamId } = useParams()
-  const { user } = useAuth()
-
-  const teamId = user.isUserHcp() ? selectedTeamId : null
+export const DataCard: FC<PropsWithChildren & BoxProps> = ({ children, ...props }) => {
+  const { classes } = useStyles()
 
   return (
-    <GenericDashboardCard
-      title={t('medical-files')}
-      data-testid="medical-files-card"
-    >
-      <CardContent>
-        <MedicalReportList teamId={teamId} patientId={patient.userid} />
-      </CardContent>
-    </GenericDashboardCard>
+    <Box className={classes.widgetGroup} {...props}>
+      {children}
+    </Box>
   )
 }
-
-export default MedicalFilesWidget
