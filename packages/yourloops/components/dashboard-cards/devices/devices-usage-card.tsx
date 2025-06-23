@@ -35,7 +35,6 @@ import { makeStyles } from 'tss-react/mui'
 import { CartridgeChangesStat } from '../../statistics/cartridge-changes-stat'
 
 interface DevicesUsageCardProps {
-  patient: Patient
   dateFilter: DateFilter
   goToDailySpecificDate: (date: Date) => void
   medicalDataService: MedicalDataService

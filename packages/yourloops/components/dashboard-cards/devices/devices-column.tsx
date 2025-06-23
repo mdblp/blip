@@ -29,7 +29,6 @@ import React, { type FC } from 'react'
 import type MedicalDataService from 'medical-domain'
 import { type DateFilter, GlycemiaStatisticsService, type PumpSettings } from 'medical-domain'
 import { sortHistory } from '../../device/utils/device.utils'
-import { type Patient } from '../../../lib/patient/models/patient.model'
 import { DeviceListCard } from './device-list-card'
 import { LastUpdatesCard } from './last-updates-card'
 import { DevicesUsageCard } from './devices-usage-card'
@@ -38,11 +37,10 @@ interface DeviceUsageWidgetProps {
   dateFilter: DateFilter
   goToDailySpecificDate: (date: Date) => void
   medicalDataService: MedicalDataService
-  patient: Patient
 }
 
 export const DevicesColumn: FC<DeviceUsageWidgetProps> = (props) => {
-  const { dateFilter, goToDailySpecificDate, medicalDataService, patient } = props
+  const { dateFilter, goToDailySpecificDate, medicalDataService } = props
   const pumpSettings = medicalDataService.medicalData.pumpSettings.slice(-1)[0] as PumpSettings
   const {
     total,
@@ -62,7 +60,6 @@ export const DevicesColumn: FC<DeviceUsageWidgetProps> = (props) => {
         pumpSettings={pumpSettings}
       />
       <DevicesUsageCard
-        patient={patient}
         dateFilter={dateFilter}
         goToDailySpecificDate={goToDailySpecificDate}
         medicalDataService={medicalDataService}

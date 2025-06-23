@@ -159,7 +159,6 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
           dateFilter={dateFilter}
           goToDailySpecificDate={goToDailySpecificDate}
           medicalDataService={medicalDataService}
-          patient={patient}
         />
       </Grid>
 
