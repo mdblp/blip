@@ -28,7 +28,6 @@
 import { screen, within } from '@testing-library/react'
 import { checkTooltip } from './stats.assert'
 import { RESERVOIR_CHANGE_13_DAYS_AGO_DATE, RESERVOIR_CHANGE_TODAY_DATE } from '../mock/data.api.mock'
-import userEvent from '@testing-library/user-event'
 import moment from 'moment-timezone'
 import format from '../../../../tideline/js/data/util/format'
 
