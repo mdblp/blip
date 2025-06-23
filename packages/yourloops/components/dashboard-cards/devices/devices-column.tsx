@@ -36,12 +36,13 @@ import { DevicesUsageCard } from './devices-usage-card'
 
 interface DeviceUsageWidgetProps {
   dateFilter: DateFilter
+  goToDailySpecificDate: (date: Date) => void
   medicalDataService: MedicalDataService
   patient: Patient
 }
 
 export const DevicesColumn: FC<DeviceUsageWidgetProps> = (props) => {
-  const { patient, medicalDataService, dateFilter } = props
+  const { dateFilter, goToDailySpecificDate, medicalDataService, patient } = props
   const pumpSettings = medicalDataService.medicalData.pumpSettings.slice(-1)[0] as PumpSettings
   const {
     total,
@@ -62,6 +63,8 @@ export const DevicesColumn: FC<DeviceUsageWidgetProps> = (props) => {
       />
       <DevicesUsageCard
         patient={patient}
+        dateFilter={dateFilter}
+        goToDailySpecificDate={goToDailySpecificDate}
         medicalDataService={medicalDataService}
         sensorUsage={sensorUsage}
         totalUsage={total}

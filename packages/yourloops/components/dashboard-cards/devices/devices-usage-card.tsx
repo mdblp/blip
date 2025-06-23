@@ -30,13 +30,14 @@ import { SensorUsageStat } from '../../statistics/sensor-usage-stat'
 import Divider from '@mui/material/Divider'
 import { DataCard } from '../../data-card/data-card'
 import { Patient } from '../../../lib/patient/models/patient.model'
-import MedicalDataService from 'medical-domain'
-import metrics from '../../../lib/metrics'
+import MedicalDataService, { type DateFilter } from 'medical-domain'
 import { makeStyles } from 'tss-react/mui'
-import { BasicsChart } from 'tideline'
+import { CartridgeChangesStat } from '../../statistics/cartridge-changes-stat'
 
 interface DevicesUsageCardProps {
   patient: Patient
+  dateFilter: DateFilter
+  goToDailySpecificDate: (date: Date) => void
   medicalDataService: MedicalDataService
   sensorUsage: number
   totalUsage: number
@@ -49,18 +50,17 @@ const useStyles = makeStyles()((theme) => ({
 }))
 
 export const DevicesUsageCard: FC<DevicesUsageCardProps> = (props) => {
-  const { patient, medicalDataService, sensorUsage, totalUsage } = props
+  const { medicalDataService, sensorUsage, totalUsage, dateFilter, goToDailySpecificDate } = props
   const { classes } = useStyles()
-  const trackMetric = metrics.send
 
   return (
     <DataCard data-testid="devices-usage-card">
       <SensorUsageStat total={totalUsage} usage={sensorUsage} />
       <Divider variant="fullWidth" className={classes.divider} />
-      <BasicsChart
-        patient={patient}
-        tidelineData={medicalDataService}
-        trackMetric={trackMetric}
+      <CartridgeChangesStat
+        dateFilter={dateFilter}
+        goToDailySpecificDate={goToDailySpecificDate}
+        reservoirChanges={medicalDataService.medicalData.reservoirChanges}
       />
     </DataCard>
   )
