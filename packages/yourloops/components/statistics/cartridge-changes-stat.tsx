@@ -112,7 +112,7 @@ export const CartridgeChangesStat: FC<CartridgeChangesStatProps> = (props) => {
     })
 
   return (
-    <>
+    <Box data-testid="cartridge-changes-stat">
       <Typography sx={{ fontWeight: 'bold', paddingBottom: theme.spacing(1) }}>
         {t('Infusion site changes')}
       </Typography>
@@ -145,6 +145,6 @@ export const CartridgeChangesStat: FC<CartridgeChangesStatProps> = (props) => {
             </React.Fragment>
         ) :
         <Typography color="text.secondary">{t('no-cartridge-changes')}</Typography>}
-    </>
+    </Box>
   )
 }
