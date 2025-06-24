@@ -70,7 +70,6 @@ export const VerifyEmailPage: FunctionComponent = () => {
         navigate('/')
         return
       }
-      await getAccessTokenSilently()
       await loginWithRedirect()
     } catch (error) {
       const errorDescription = error.error_description

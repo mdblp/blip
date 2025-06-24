@@ -92,7 +92,6 @@ export const VerifyEmailResultPage: FC = () => {
 
   const goToAppHome = async (): Promise<void> => {
     try {
-      await getAccessTokenSilently()
       await loginWithRedirect()
     } catch (error) {
       const errorDescription = error.error_description
