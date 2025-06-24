@@ -48,7 +48,7 @@ import { Auth0Error } from '../../lib/auth/models/enums/auth0-error.enum'
 
 export const VerifyEmailPage: FunctionComponent = () => {
   const { classes: { appBar, desktopLogo } } = useVerifyEmailStyles()
-  const { loginWithRedirect } = useAuth0()
+  const { loginWithRedirect, getAccessTokenSilently } = useAuth0()
   const { t } = useTranslation()
   const { logout } = useAuth()
   const alert = useAlert()
