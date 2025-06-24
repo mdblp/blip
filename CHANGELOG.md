@@ -16,6 +16,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Engineering
 - YLP-3542 Update blip AWS Lambda Node version to > 18
+- YLP-3607 Modify the "verify-email" page to work with auth0 MFA
 
 ## 3.6.0 - 2025-02-20
 ### Added
