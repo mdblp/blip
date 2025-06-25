@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,20 +41,19 @@ import {
   RESPONSIVE_GRID_FULL_WIDTH,
   RESPONSIVE_GRID_HALF_WIDTH
 } from '../../css/css-utils'
-import { PatientStatisticsWidget } from './patient-statistics-widget'
-import MedicalFilesWidget from './medical-files/medical-files-widget'
+import MedicalFilesCard from './medical-files/medical-files-card'
 import MonitoringAlertsCard from '../monitoring-alert/monitoring-alerts-card'
 import { makeStyles } from 'tss-react/mui'
 import ChatWidget from '../chat/chat-widget'
 import { DEFAULT_DASHBOARD_TIME_RANGE_DAYS } from '../patient-data/patient-data.utils'
-import { DeviceUsageWidget } from './device-usage-widget'
+import { DevicesColumn } from './devices/devices-column'
 import { useParams } from 'react-router-dom'
 import TeamUtils from '../../lib/team/team.util'
 import { useTeam } from '../../lib/team'
+import { PatientStatistics } from '../statistics/patient-statistics'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
-  loading: boolean
   medicalDataService: MedicalDataService
   patient: Patient
 }
@@ -146,7 +145,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
       </Grid>
 
       <Grid item xs={gridWidgetSize}>
-        <PatientStatisticsWidget
+        <PatientStatistics
           medicalData={medicalData}
           bgPrefs={bgPrefs}
           dateFilter={dateFilter}
@@ -154,7 +153,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
       </Grid>
 
       <Grid item xs={gridWidgetSize}>
-        <DeviceUsageWidget
+        <DevicesColumn
           dateFilter={dateFilter}
           medicalDataService={medicalDataService}
           patient={patient}
@@ -167,7 +166,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
             {user.isUserHcp() &&
               <MonitoringAlertsCard patient={patient} />
             }
-            <MedicalFilesWidget patient={patient} />
+            <MedicalFilesCard patient={patient} />
           </Grid>
 
           <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>

@@ -39,7 +39,7 @@ import { useAuth } from '../../../lib/auth'
 import MedicalFilesApi from '../../../lib/medical-files/medical-files.api'
 import MedicalReportEditDialog from '../../dialogs/medical-report-edit-dialog'
 import MedicalReportDeleteDialog from '../../dialogs/medical-report-delete-dialog'
-import { type CategoryProps } from './medical-files-widget'
+import { type CategoryProps } from './medical-files-card'
 import { useAlert } from '../../utils/snackbar'
 import SpinningLoader from '../../loaders/spinning-loader'
 import {
