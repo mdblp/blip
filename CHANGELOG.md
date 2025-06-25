@@ -11,6 +11,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3486 Add physical activity name in tooltip
 - YLP-3522 Handle accounts marked for deletion
 - YLP-3549 Update dashboard cards UI
+- YLP-3574 Meal bolus correction display
 
 ### Fixed
 - YLP-3290 Top banner is hiding the top part of note creation popup
