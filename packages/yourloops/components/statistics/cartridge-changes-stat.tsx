@@ -124,6 +124,7 @@ export const CartridgeChangesStat: FC<CartridgeChangesStatProps> = (props) => {
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
+                data-testid="cartridge-change-item"
               >
                 <Button
                   variant="text"
