@@ -61,7 +61,7 @@ export const VerifyEmailResultPage: FC = () => {
   const { classes: { appBar, desktopLogo } } = useVerifyEmailStyles()
   const { classes: { icon } } = classes()
   const { t } = useTranslation()
-  const { loginWithRedirect, getAccessTokenSilently } = useAuth0()
+  const { loginWithRedirect } = useAuth0()
   const { logout } = useAuth()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -92,7 +92,6 @@ export const VerifyEmailResultPage: FC = () => {
 
   const goToAppHome = async (): Promise<void> => {
     try {
-      await getAccessTokenSilently()
       await loginWithRedirect()
     } catch (error) {
       const errorDescription = error.error_description

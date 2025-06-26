@@ -41,7 +41,8 @@ describe('Verify email page', () => {
       user: null,
       getAccessTokenWithPopup: getAccessTokenWithPopupMock,
       logout: logoutMock,
-      getAccessTokenSilently: jest.fn().mockRejectedValue({ error_description: Auth0Error.EmailNotVerified })
+      getAccessTokenSilently: jest.fn().mockRejectedValue({ error_description: Auth0Error.EmailNotVerified }),
+      loginWithRedirect: jest.fn().mockRejectedValue({ error_description: Auth0Error.EmailNotVerified }),
     })
     window.open = jest.fn()
 
