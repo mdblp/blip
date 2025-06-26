@@ -33,6 +33,7 @@ import Typography from '@mui/material/Typography'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { GenericListCard } from './generic-list-card'
+import { formatCode } from '../../utils/format.utils'
 
 interface MobileApplicationInfoProps {
   app: MobileAppConfig,
@@ -73,7 +74,7 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device
         <ListItemText>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="body2">{t('activation-code')}</Typography>
-            <Typography variant="body2" className="bold">{app.activationCode ?? t('N/A')}</Typography>
+            <Typography variant="body2" className="bold">{formatCode(app.activationCode) ?? t('N/A')}</Typography>
           </Box>
         </ListItemText>
       </ListItem>
