@@ -131,6 +131,7 @@ export const CartridgeChangesStat: FC<CartridgeChangesStatProps> = (props) => {
                   size="medium"
                   startIcon={<OpenInNewIcon />}
                   onClick={() => goToDailySpecificDate(changeItem.timeAsDate)}
+                  data-testid="go-to-daily-button"
                 >
                   {changeItem.timeToDisplay}
                 </Button>
