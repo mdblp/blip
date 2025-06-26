@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3478 Update the front of the maintenance page
 - YLP-3486 Add physical activity name in tooltip
 - YLP-3522 Handle accounts marked for deletion
+- YLP-3549 Update dashboard cards UI
 
 ### Fixed
 - YLP-3290 Top banner is hiding the top part of note creation popup
@@ -17,6 +18,7 @@ It is based on Tidepool Blip 1.27.
 ### Engineering
 - YLP-3542 Update blip AWS Lambda Node version to > 18
 - YLP-3607 Modify the "verify-email" page to work with auth0 MFA
+- YLP-3633 Add data tests id for end to end tests
 
 ## 3.6.0 - 2025-02-20
 ### Added
