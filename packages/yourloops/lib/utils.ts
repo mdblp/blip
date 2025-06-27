@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,7 +31,7 @@ import moment, { type LongDateFormatKey } from 'moment-timezone'
 import { type IUser } from './data/models/i-user.model'
 import { type Settings } from './auth/models/settings.model'
 import { CountryCodes } from './auth/models/country.model'
-import { Unit } from 'medical-domain'
+import { DurationUnit, Unit } from 'medical-domain'
 import { TIMEZONE_UTC } from 'dumb'
 
 // Matches the Amazon SES emails rules (only 7-bit ASCII)
@@ -156,6 +156,24 @@ export function setPageTitle(prefix?: string, metricsTitle?: string): void {
 
 export function formatDateWithMomentLongFormat(date?: Date, key: LongDateFormatKey = 'll', timezone: string = TIMEZONE_UTC): string {
   return moment.utc(date).tz(timezone).format(moment.localeData().longDateFormat(key)).toString()
+}
+
+export function formatDurationToBiggestUnit(timeInMilliseconds: number): { duration: number, unit: DurationUnit } {
+  const duration = moment.duration(timeInMilliseconds)
+
+  if (duration.days() > 0) {
+    return { duration: duration.days(), unit: DurationUnit.Days }
+  }
+  if (duration.hours() > 0) {
+    return { duration: duration.hours(), unit: DurationUnit.Hours }
+  }
+  if (duration.minutes() > 0) {
+    return { duration: duration.minutes(), unit: DurationUnit.Minutes }
+  }
+  if (duration.seconds() > 0) {
+    return { duration: duration.seconds(), unit: DurationUnit.Seconds }
+  }
+  return { duration: duration.milliseconds(), unit: DurationUnit.Milliseconds }
 }
 
 export function isEllipsisActive(element: HTMLElement | null): boolean | undefined {

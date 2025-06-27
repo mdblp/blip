@@ -8,6 +8,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Changed
 - YLP-3478 Update the front of the maintenance page
+- YLP-3480 Update cartridge changes UI
 - YLP-3486 Add physical activity name in tooltip
 - YLP-3522 Handle accounts marked for deletion
 - YLP-3549 Update dashboard cards UI

@@ -1,4 +1,3 @@
-import './unit/app/core/constants.test.js'
 import './unit/utils/utils.test.js'
 import './unit/utils/personutils.test.js'
 import './unit/components/chart/stats.test.js'

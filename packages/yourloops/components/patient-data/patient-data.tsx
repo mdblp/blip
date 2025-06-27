@@ -167,6 +167,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                         bgPrefs={bgPrefs}
                         medicalDataService={medicalData}
                         patient={patient}
+                        goToDailySpecificDate={goToDailySpecificDate}
                       />
                     }
                   />

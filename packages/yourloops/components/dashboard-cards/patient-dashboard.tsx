@@ -56,6 +56,7 @@ interface PatientDashboardProps {
   bgPrefs: BgPrefs
   medicalDataService: MedicalDataService
   patient: Patient
+  goToDailySpecificDate: (date: Date) => void
 }
 
 const useStyle = makeStyles()((theme) => ({
@@ -69,6 +70,7 @@ const useStyle = makeStyles()((theme) => ({
 export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props) => {
   const {
     bgPrefs,
+    goToDailySpecificDate,
     medicalDataService,
     patient
   } = props
@@ -155,8 +157,8 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
       <Grid item xs={gridWidgetSize}>
         <DevicesColumn
           dateFilter={dateFilter}
+          goToDailySpecificDate={goToDailySpecificDate}
           medicalDataService={medicalDataService}
-          patient={patient}
         />
       </Grid>
 
