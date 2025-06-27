@@ -27,7 +27,7 @@
 
 import { useTranslation } from 'react-i18next'
 import React, { createRef, useEffect, useState } from 'react'
-import { getDisplayTeamCode, REGEX_TEAM_CODE_DISPLAY, type Team, useTeam } from '../../../lib/team'
+import { REGEX_TEAM_CODE_DISPLAY, type Team, useTeam } from '../../../lib/team'
 import Box from '@mui/material/Box'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -40,6 +40,7 @@ import { getNumericCode } from '../../../lib/team/team-code.utils'
 import { LoadingButton } from '@mui/lab'
 import { logError } from '../../../utils/error.util'
 import { errorTextFromException } from '../../../lib/utils'
+import { formatCode } from '../../../utils/format.utils'
 
 export interface ConfirmTeamProps {
   onClickCancel: () => void
@@ -60,7 +61,7 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
 
   const handleChangeCode = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const numericCode = getNumericCode(event.target.value)
-    const displayCode = getDisplayTeamCode(numericCode)
+    const displayCode = formatCode(numericCode)
     setIdCode(displayCode)
     setNumericCode(numericCode)
   }

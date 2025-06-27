@@ -31,6 +31,9 @@
  * @returns `123 - 456 - 789`
  */
 export function formatCode(code: string): string {
+  if (code === undefined || code === null || code === "") {
+    return ""
+  }
   const SEP_POS = [2, 5]
   let displayCode = ''
   const codeLen = code.length

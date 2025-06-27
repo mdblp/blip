@@ -31,15 +31,12 @@ import { type TeamContext } from './models/team-context.model'
 
 import { TeamContextProvider, useTeam } from './team.hook'
 
-import { getDisplayTeamCode } from './team.util'
-
 export {
   type Team,
   type TeamMember,
   type TeamContext,
   TeamContextProvider,
   useTeam,
-  getDisplayTeamCode,
   TEAM_CODE_LENGTH,
   REGEX_TEAM_CODE,
   REGEX_TEAM_CODE_DISPLAY
