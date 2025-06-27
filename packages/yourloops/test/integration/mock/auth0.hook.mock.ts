@@ -50,6 +50,7 @@ export const userYdrisFirstName = 'Ydris'
 export const userYdrisLastName = 'Rebibane'
 export const userYdrisFullName = `${userYdrisFirstName} ${userYdrisLastName}`
 export const getAccessTokenWithPopupMock = jest.fn()
+export const loginWithRedirect = jest.fn()
 export const logoutMock = jest.fn()
 
 export const mockAuth0Hook = (role: UserRole = UserRole.Hcp, userId = loggedInUserId) => {

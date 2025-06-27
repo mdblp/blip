@@ -72,6 +72,7 @@ export const PHYSICAL_ACTIVITY_WITHOUT_NAME_ID = 'physicalActivityId2'
 export const PHYSICAL_ACTIVITY_TIME = '2022-08-08T13:00:00Z'
 export const PHYSICAL_ACTIVITY_WITHOUT_NAME_TIME = '2022-08-08T14:00:00Z'
 export const RESERVOIR_CHANGE_ID = 'reservoirChangeId'
+export const RESERVOIR_CHANGE2_ID = 'reservoirChangeId2'
 export const PARAMETER_ID = 'parameterId'
 export const CONFIDENTIAL_MODE_ID = 'deviceEvent_2022-08-08_8'
 export const ALARM_EVENT_HYPERGLYCEMIA_ID = 'alarmEventHyperglycemiaId'
@@ -392,7 +393,7 @@ export const generateCompleteDashboardFromDate = (date: string): Data => {
     zenModes: [],
     timezoneChanges: []
   }
-  // Insert data for each days
+  // Insert data for each day
   // eslint-disable-next-line no-unmodified-loop-condition
   while (startDate <= endDate) {
     const date = startDate.toISOString().split('T')[0]
@@ -418,7 +419,7 @@ export const generateCompleteDashboardFromDate = (date: string): Data => {
     data.deviceParametersChanges.push(deviceEventMock(date, '08:00:00'))
     startDate.setDate(startDate.getDate() + 1)
   }
-  // And finaly add one reservoir change event
+  // And finally add the reservoir change events
   data.reservoirChanges.push(
     {
       epoch: new Date(`${reservoirChangeDateAsString}T17:00:00Z`).getTime(),
@@ -427,6 +428,20 @@ export const generateCompleteDashboardFromDate = (date: string): Data => {
       timezone: 'Europe/Paris',
       guessedTimezone: false,
       id: RESERVOIR_CHANGE_ID,
+      type: 'deviceEvent',
+      source: 'Diabeloop',
+      subType: 'reservoirChange',
+      pump: {
+        manufacturer: 'DEFAULT'
+      }
+    },
+    {
+      epoch: new Date(`${reservoirChangeDateAsString}T15:00:00Z`).getTime(),
+      displayOffset: -120,
+      normalTime: `${reservoirChangeDateAsString}T15:00:00Z`,
+      timezone: 'Europe/Paris',
+      guessedTimezone: false,
+      id: RESERVOIR_CHANGE2_ID,
       type: 'deviceEvent',
       source: 'Diabeloop',
       subType: 'reservoirChange',

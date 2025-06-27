@@ -193,6 +193,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const goToDailySpecificDate = (date: number | Date): void => {
     setDailyDate(date instanceof Date ? date.valueOf() : date)
     navigate(`../${PatientView.Daily}?date=${new Date(date).toISOString()}`, { relative: 'path' })
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleDatetimeLocationChange = async (epochLocation: number, msRange: number): Promise<boolean> => {

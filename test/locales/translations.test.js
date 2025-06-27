@@ -71,7 +71,11 @@ const ignoredTransKeysForBlip = [
   'Parameter',
   'Parameters History',
   'Reservoir changes',
-  'Safety basal profile'
+  'Safety basal profile',
+  'millisecond',
+  'milliseconds',
+  'days',
+  'second'
 ]
 const ignoredTransKeyInBlipFiles = [
   '${physicalActivity.reportedIntensity}-pa',
@@ -333,7 +337,13 @@ const ignoredTransKeyInYourLoopsFiles = [
   'Serial Number',
   'Setting',
   'Settings on day',
-  'Time In Range'
+  'Time In Range',
+  'Infusion site changes',
+  'days',
+  'hours',
+  'minutes',
+  'seconds',
+  'milliseconds'
 ]
 
 /**

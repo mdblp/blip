@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,6 +31,7 @@ import { enableFetchMocks } from 'jest-fetch-mock'
 // Mocking the `scroll` method as it is not implemented in jsdom (used by the Chat widget component)
 Element.prototype.scroll = jest.fn()
 window.scroll = jest.fn()
+window.scrollTo = jest.fn()
 // Mocking the `scrollIntoView` method as it is not implemented in jsdom (used by the Target & alerts page)
 Element.prototype.scrollIntoView = jest.fn()
 
