@@ -53,7 +53,6 @@ export const Banner: FC = () => {
         textAlign="center"
         dangerouslySetInnerHTML={{ __html: ConfigService.getBannerLabel() }}
       >
-        {/*{ConfigService.getBannerLabel()}*/}
       </Typography>
     </Box>
   )
