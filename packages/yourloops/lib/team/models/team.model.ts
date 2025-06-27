@@ -30,7 +30,6 @@ import { type TeamType } from './enums/team-type.enum'
 import { type PostalAddress } from './postal-address.model'
 import { type MonitoringAlertsParameters } from './monitoring-alerts-parameters.model'
 
-export const TEAM_CODE_LENGTH = 9
 export const REGEX_TEAM_CODE = /^[0-9]{9}$/
 export const REGEX_TEAM_CODE_DISPLAY = /^[0-9]{3} - [0-9]{3} - [0-9]{3}$/
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,18 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type TeamMember } from './models/team-member.model'
-import { REGEX_TEAM_CODE, REGEX_TEAM_CODE_DISPLAY, type Team } from './models/team.model'
-import { type TeamContext } from './models/team-context.model'
-
-import { TeamContextProvider, useTeam } from './team.hook'
-
-export {
-  type Team,
-  type TeamMember,
-  type TeamContext,
-  TeamContextProvider,
-  useTeam,
-  REGEX_TEAM_CODE,
-  REGEX_TEAM_CODE_DISPLAY
+/**
+ * Format a 'OTP style" code for display
+ * @param code 9 digit string code
+ * @returns `123 - 456 - 789`
+ */
+export function formatCode(code: string): string {
+  if (code === undefined || code === null || code === "") {
+    return ""
+  }
+  const SEP_POS = [2, 5]
+  let displayCode = ''
+  const codeLen = code.length
+  for (let i = 0; i < codeLen; i++) {
+    displayCode += code[i]
+    if (SEP_POS.includes(i) && i + 1 < codeLen) {
+      displayCode += ' - '
+    }
+  }
+  return displayCode
 }
