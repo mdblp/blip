@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Team, TEAM_CODE_LENGTH } from './models/team.model'
+import { type Team } from './models/team.model'
 import { TeamMemberRole } from './models/enums/team-member-role.enum'
 import { UserInviteStatus } from './models/enums/user-invite-status.enum'
 export const PRIVATE_TEAM_ID = 'private'

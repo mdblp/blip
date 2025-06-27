@@ -26,7 +26,7 @@
  */
 
 import { type TeamMember } from './models/team-member.model'
-import { REGEX_TEAM_CODE, REGEX_TEAM_CODE_DISPLAY, type Team, TEAM_CODE_LENGTH } from './models/team.model'
+import { REGEX_TEAM_CODE, REGEX_TEAM_CODE_DISPLAY, type Team } from './models/team.model'
 import { type TeamContext } from './models/team-context.model'
 
 import { TeamContextProvider, useTeam } from './team.hook'
@@ -37,7 +37,6 @@ export {
   type TeamContext,
   TeamContextProvider,
   useTeam,
-  TEAM_CODE_LENGTH,
   REGEX_TEAM_CODE,
   REGEX_TEAM_CODE_DISPLAY
 }
