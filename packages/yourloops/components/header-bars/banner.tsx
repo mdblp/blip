@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -51,8 +51,9 @@ export const Banner: FC = () => {
         color={theme.palette.common.white}
         variant="subtitle2"
         textAlign="center"
+        dangerouslySetInnerHTML={{ __html: ConfigService.getBannerLabel() }}
       >
-        {ConfigService.getBannerLabel()}
+        {/*{ConfigService.getBannerLabel()}*/}
       </Typography>
     </Box>
   )
