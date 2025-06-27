@@ -69,6 +69,8 @@ interface BolusTooltipProps {
   timePrefs: TimePrefs
 }
 
+const MINIMAL_OVERRIDE = 0.1
+
 export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
   const { bolus, position, side, timePrefs } = props
   const { t } = useTranslation('main')
@@ -94,9 +96,11 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
   const inputTime = (bolus as Wizard).inputTime
   const recommended = getRecommended(bolus as Wizard)
   const suggested = Number.isFinite(recommended) ? recommended : null
-  const override = formatInsulin(programmed - recommended)
+
+  const rawOverride = programmed - recommended
+  const override = formatInsulin(rawOverride)
   const overrideValue = programmed > recommended ? `+${override}` : override.toString()
-  const shouldDisplayOverride = Number.isFinite(programmed) && Number.isFinite(recommended) && programmed !== recommended
+  const shouldDisplayOverride = Number.isFinite(programmed) && Number.isFinite(recommended) && Math.abs(rawOverride) >= MINIMAL_OVERRIDE
   const shouldDisplayRecommended = (isInterrupted || shouldDisplayOverride) && suggested !== null
 
   const getTitleByBolusType = (bolusType: BolusType): string => {

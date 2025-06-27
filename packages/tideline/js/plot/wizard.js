@@ -31,6 +31,8 @@ const defaults = {
   width: 12
 }
 
+const MINIMAL_OVERRIDE = 0.1 // Minimum override value to be considered an override
+
 /**
  * @param {Pool} pool
  * @param {typeof defaults} opts
@@ -88,7 +90,8 @@ function plotWizard(pool, opts = defaults) {
       const underride = boluses.filter((d) => {
         const r = commonbolus.getRecommended(d)
         const p = commonbolus.getProgrammed(d)
-        return Number.isFinite(r) && Number.isFinite(p) && p < r
+        const underrideValue = Math.abs(p - r)
+        return Number.isFinite(r) && Number.isFinite(p) && p < r && underrideValue >= MINIMAL_OVERRIDE
       })
       drawBolus.underride(underride)
 
@@ -96,7 +99,8 @@ function plotWizard(pool, opts = defaults) {
       const override = boluses.filter((d) => {
         const r = commonbolus.getRecommended(d)
         const p = commonbolus.getProgrammed(d)
-        return Number.isFinite(r) && Number.isFinite(p) && p > r
+        const overrideValue = Math.abs(p - r)
+        return Number.isFinite(r) && Number.isFinite(p) && p > r && overrideValue >= MINIMAL_OVERRIDE
       })
       drawBolus.override(override)
 
