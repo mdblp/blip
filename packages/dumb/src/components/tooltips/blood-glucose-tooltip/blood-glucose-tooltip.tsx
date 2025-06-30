@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,7 +33,6 @@ import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { formatBgValue } from '../../../utils/format/format.util'
 import {
-  COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
   COMMON_TOOLTIP_TAIL_WIDTH,
   DEFAULT_TOOLTIP_BORDER_WIDTH,
@@ -43,7 +42,7 @@ import {
   type Side
 } from '../common/tooltip/tooltip'
 import { type BgPrefs } from '../../../models/blood-glucose.model'
-import { type Cbg, type Smbg, type TimePrefs, ClassificationType } from 'medical-domain'
+import { type Cbg, ClassificationType, type Smbg, type TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { TooltipColor } from '../../../models/enums/tooltip-color.enum'
@@ -72,7 +71,7 @@ export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = 
   return (
     <Tooltip
       position={position}
-      side={side || COMMON_TOOLTIP_SIDE}
+      side={side}
       borderColor={colors[bgClass] || colors.bolus}
       dateTitle={getDateTitleForBaseDatum(data, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}

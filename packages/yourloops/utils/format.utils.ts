@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,46 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, type PropsWithChildren } from 'react'
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
-import { makeStyles } from 'tss-react/mui'
-
-interface GenericDashboardCardProps {
-  action?: JSX.Element
-  title: string
-  width?: string
-  ['data-testid']?: string
-}
-
-const useStyles = makeStyles()((theme) => ({
-  header: {
-    backgroundColor: 'var(--card-header-background-color)',
-    height: 58,
-    textTransform: 'uppercase'
-  },
-  headerTitle: {
-    marginLeft: theme.spacing(2),
-    fontSize: '14px',
-    fontWeight: 600
+/**
+ * Format a 'OTP style" code for display
+ * @param code 9 digit string code
+ * @returns `123 - 456 - 789`
+ */
+export function formatCode(code: string): string {
+  if (code === undefined || code === null || code === "") {
+    return ""
   }
-}))
-
-const GenericDashboardCard: FunctionComponent<PropsWithChildren<GenericDashboardCardProps>> = (props) => {
-  const { classes } = useStyles()
-
-  return (
-    <Card data-testid={props['data-testid']}>
-      <CardHeader
-        data-testid="card-header"
-        className={classes.header}
-        classes={{ title: classes.headerTitle }}
-        title={props.title}
-        action={props.action}
-      />
-      {props.children}
-    </Card>
-  )
+  const SEP_POS = [2, 5]
+  let displayCode = ''
+  const codeLen = code.length
+  for (let i = 0; i < codeLen; i++) {
+    displayCode += code[i]
+    if (SEP_POS.includes(i) && i + 1 < codeLen) {
+      displayCode += ' - '
+    }
+  }
+  return displayCode
 }
-
-export default GenericDashboardCard

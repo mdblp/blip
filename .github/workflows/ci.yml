@@ -315,7 +315,9 @@ jobs:
           context: .
           push: true
           platforms: linux/arm64,linux/amd64
-          tags: ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}
+          tags: |
+            ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}+${{ github.sha }}
+            ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}
 
       - name: Creating new github tag
         uses: rickstaa/action-create-tag@v1

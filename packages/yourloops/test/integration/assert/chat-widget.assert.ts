@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -43,7 +43,7 @@ export const checkChatWidgetMessageReadingForPatient = async (): Promise<void> =
   const chatCard = dashboard.queryByTestId('chat-card')
   expect(chatCard).toHaveTextContent('Messages MyFirstTeam​This is a message sent to the team MyFirstTeam')
 
-  const chatCardHeaderTeamDropdown = within(within(chatCard).getByTestId('card-header')).getByText(myFirstTeamName)
+  const chatCardHeaderTeamDropdown = within(within(chatCard).getByTestId('chat-widget-header')).getByText(myFirstTeamName)
   checkDropdownBadge(true)
 
   fireEvent.mouseDown(chatCardHeaderTeamDropdown)
@@ -77,7 +77,7 @@ export const checkChatWidgetMessageSending = async (teamId): Promise<void> => {
 const checkDropdownBadge = (isVisible: boolean): void => {
   const dashboard = within(screen.getByTestId('patient-dashboard'))
   const chatCard = dashboard.queryByTestId('chat-card')
-  const chatCardHeader = within(within(chatCard).getByTestId('card-header'))
+  const chatCardHeader = within(within(chatCard).getByTestId('chat-widget-header'))
   const badge = chatCardHeader.getByTestId('unread-messages-badge')
 
   const array = new Array(badge.children.length).fill('')

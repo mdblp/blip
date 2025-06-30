@@ -73,8 +73,12 @@ export const copySettingsToClipboard = async (lastUploadDate: string, device: De
     mobileAppText = `-- ${t('mobile-application')} --\n`
     mobileAppTableText = textTable([
       [t('Manufacturer'), mobileApp.manufacturer],
-      [t('Name'), mobileApp.identifier],
+      [t('Name'), device.name],
       [t('Software version'), mobileApp.swVersion],
+      [t('activation-code'), mobileApp.activationCode],
+      [t('Identifier'), mobileApp.identifier],
+      [t('smartphone-model'), device.smartphoneModel],
+      [t('smartphone-os-version'), device.osVersion],
     ]) as string
     rawText = `${lastUploadDateText}${mobileAppText}${mobileAppTableText}${parametersText}${textTable(parametersTable, { align: ['l', 'r', 'l'] })}`
 

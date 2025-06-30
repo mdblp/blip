@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -54,6 +54,7 @@ import { TotalInsulinStat } from './total-insulin-stat'
 import { MS_IN_DAY } from 'medical-domain'
 import { makeStyles } from 'tss-react/mui'
 import { CarbsStat } from './carbs-stat'
+import { DataCard } from '../data-card/data-card'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -65,13 +66,6 @@ const useStyles = makeStyles()((theme) => ({
   divider: {
     marginBlock: theme.spacing(1),
     backgroundColor: 'var(--light-grey-border-color)'
-  },
-  widgetGroup: {
-    backgroundColor: theme.palette.background.paper,
-    border: '1px solid var(--light-grey-border-color)',
-    borderRadius: theme.spacing(3),
-    marginBottom: '12px',
-    padding: '20px'
   }
 }))
 
@@ -137,7 +131,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
 
   return (
     <Box data-testid="patient-statistics">
-      <Box className={classes.widgetGroup}>
+      <DataCard>
         <CBGPercentageBarChart
           bgType={bgType}
           cbgStatType={cbgStatType}
@@ -151,9 +145,9 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
             <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage}/>
           </>
         }
-      </Box>
+      </DataCard>
 
-      <Box className={classes.widgetGroup}>
+      <DataCard>
         <CarbsStat
           totalMealCarbsWithRescueCarbsEntries={totalMealCarbsWithRescueCarbsEntries}
           totalCarbsPerDay={Math.round(totalCarbsPerDay*10)/10}
@@ -170,16 +164,18 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           weight={weight}
           dailyDose={dailyDose}
         />
-      </Box>
-      <Box className={classes.widgetGroup}>
+      </DataCard>
+
+      <DataCard>
         <LoopModeStat
           automatedBasalDuration={automatedBasalDuration}
           manualBasalDuration={manualBasalDuration}
           manualPercentage={manualPercentage}
           automatedPercentage={automatedPercentage}
         />
-      </Box>
-      <Box className={classes.widgetGroup}>
+      </DataCard>
+
+      <DataCard>
         <AverageGlucoseStat
           averageGlucose={averageGlucose}
           bgPrefs={bgPrefs}
@@ -201,7 +197,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
             <GlucoseManagementIndicator glucoseManagementIndicator={glucoseManagementIndicator}/>
           </>
         }
-      </Box>
+      </DataCard>
     </Box>
   )
 }

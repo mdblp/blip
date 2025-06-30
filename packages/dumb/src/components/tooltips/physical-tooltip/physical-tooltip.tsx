@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,6 @@
 
 import React, { type FunctionComponent } from 'react'
 import {
-  COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
   COMMON_TOOLTIP_TAIL_WIDTH,
   DEFAULT_TOOLTIP_BORDER_WIDTH,
@@ -42,7 +41,13 @@ import { formatInputTime } from '../../../utils/format/format.util'
 import colors from '../../../styles/colors.css'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { convertValueToMinutes } from '../../../utils/datetime/datetime.util'
-import { DurationUnit, type DurationValue, type PhysicalActivity, type TimePrefs } from 'medical-domain'
+import {
+  DurationUnit,
+  type DurationValue,
+  type PhysicalActivity,
+  PhysicalActivityName,
+  type TimePrefs
+} from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 
@@ -55,11 +60,11 @@ interface PhysicalTooltipProps {
 
 export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) => {
   const { physicalActivity, position, side, timePrefs } = props
-  const { t } = useTranslation('main')
+  const { t } = useTranslation()
 
   const getDurationInMinutes = (): DurationValue => {
-    const units = props.physicalActivity?.duration?.units
-    const duration = props.physicalActivity?.duration?.value
+    const units = physicalActivity.duration.units
+    const duration = physicalActivity.duration.value
     const value = convertValueToMinutes(duration, units)
 
     return {
@@ -70,10 +75,18 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
 
   const duration = getDurationInMinutes()
 
+  const getDisplayName = (name: string): string => {
+    const nameUppercase = name.toUpperCase()
+    if (name && Object.values(PhysicalActivityName).includes(nameUppercase as PhysicalActivityName)) {
+      return t(`params|${nameUppercase}`)
+    }
+    return t(`params|${PhysicalActivityName.AerobicDefault}`)
+  }
+
   return (
     <Tooltip
       position={position}
-      side={side || COMMON_TOOLTIP_SIDE}
+      side={side}
       borderColor={colors.physicalActivity}
       dateTitle={getDateTitleForBaseDatum(physicalActivity, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
@@ -84,6 +97,10 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
       content={
         <div className={commonStyles.containerFlex}>
           <TooltipLine label={t('Physical Activity')} isBold />
+          {
+            physicalActivity.name && physicalActivity.name !== "" &&
+            <TooltipLine label={t('Name')} value={getDisplayName(physicalActivity.name)} />
+          }
           <TooltipLine label={t('Intensity')} value={t(`${physicalActivity.reportedIntensity}-pa`)} />
           <TooltipLine label={t('Duration')} value={`${duration.value} ${t(duration.units)}`} />
           {

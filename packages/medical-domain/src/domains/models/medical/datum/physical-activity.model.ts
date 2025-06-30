@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,6 +40,7 @@ type PhysicalActivity = BaseDatum & Duration & {
     units: DurationUnit
     value: number
   }
+  name: string
 }
 
 export default PhysicalActivity

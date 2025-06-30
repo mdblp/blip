@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import { type BgPrefs, buildDevice, Device } from 'dumb'
 import { PatientView } from '../../enum/patient-view.enum'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { type ChartPrefs } from '../dashboard-widgets/models/chart-prefs.model'
+import { type ChartPrefs } from '../dashboard-cards/models/chart-prefs.model'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
 import type MedicalDataService from 'medical-domain'
@@ -193,6 +193,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const goToDailySpecificDate = (date: number | Date): void => {
     setDailyDate(date instanceof Date ? date.valueOf() : date)
     navigate(`../${PatientView.Daily}?date=${new Date(date).toISOString()}`, { relative: 'path' })
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleDatetimeLocationChange = async (epochLocation: number, msRange: number): Promise<boolean> => {

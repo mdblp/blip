@@ -20,17 +20,10 @@ import moment from 'moment-timezone'
 
 /* js/data/ */
 import './format.test'
-import './constants.test'
 import './categorize.test'
 
 /* js/plot/ */
 import './commonbolus.test'
-
-// DOM required
-// ====================================
-
-/* plugins/ */
-import './basics_datamunger.test'
 
 window.d3 = require('d3')
 
