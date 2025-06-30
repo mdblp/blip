@@ -293,6 +293,10 @@ jobs:
           expand: 'false'
           export: 'false'
 
+      - name: Set short commit sha
+        id: short-commit-compute
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -316,13 +320,18 @@ jobs:
           push: true
           platforms: linux/arm64,linux/amd64
           tags: |
-            ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}.${{ github.sha }}
+            ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
             ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}
 
       - name: Creating new github tag
         uses: rickstaa/action-create-tag@v1
         with:
           tag: v${{ steps.changelog-version.outputs.semver }}
+          force_push_tag: true
+      - name: Creating new github tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: v${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
           force_push_tag: true
 
   documentation:
