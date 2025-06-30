@@ -116,6 +116,7 @@ const normalizePump = (rawPump: Record<string, unknown> | null): PumpConfig => {
 const normalizeMobileApplication = (rawMobileApplication: Record<string, unknown> | null): MobileAppConfig => {
   const notAvailableLabel = t('N/A')
   return {
+    activationCode: (rawMobileApplication?.activationCode ?? '') as string,
     manufacturer: (rawMobileApplication?.manufacturer ?? '') as string,
     identifier: (rawMobileApplication?.identifier ?? '') as string,
     swVersion: (rawMobileApplication?.swVersion ?? notAvailableLabel) as string

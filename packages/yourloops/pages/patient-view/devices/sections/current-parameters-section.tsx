@@ -104,7 +104,7 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
               && <DeviceInfoTable device={device} />
             }
             {device.name.toUpperCase() == DeviceSystem.Dblg2
-              && <MobileAppInfoTable app={mobileApplication} />
+              && <MobileAppInfoTable app={mobileApplication} device={device} />
             }
             <PumpInfoTable pump={pump} />
             <CgmInfoTable cgm={cgm} />

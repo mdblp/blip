@@ -818,8 +818,9 @@ export const pumpSettingsDblg2: Data = {
             serialNumber: '123456',
           },
           mobileApplication: {
+            activationCode: '123456789',
             manufacturer: Source.Diabeloop,
-            identifier: DeviceSystem.Dblg2,
+            identifier: 'ee2bfb587758',
             swVersion: '1.0.0'
           },
           securityBasals: {
