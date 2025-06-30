@@ -1,0 +1,68 @@
+name: Crowdin Download Translations
+on:
+  workflow_dispatch:
+
+jobs:
+  sources-download:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download source strings (English)
+        uses: crowdin/github-action@v2
+        with:
+          upload_sources: false
+          upload_translations: false
+          download_sources: true
+          download_translations: false
+          export_only_approved: true
+          skip_untranslated_strings: false
+          skip_untranslated_files: false
+          pull_request_title: 'Crowdin i18n: Source updates'
+          localization_branch_name: 'i18n/source_updates'
+          commit_message: 'Crowdin i18n: Source updates'
+          pull_request_labels: 'crowdin'
+          github_user_name: dblBot
+          github_user_email: platforms@diabeloop.fr
+          gpg_private_key: ${{ secrets.DBLBOT_GPG_PRIVATE_KEY }}
+          gpg_passphrase: ${{ secrets.DBLBOT_GPG_PASSPHRASE }}
+          base_url: 'https://diabeloop.crowdin.com'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+  translations-download:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download translations strings
+        uses: crowdin/github-action@v2
+        with:
+          upload_sources: false
+          upload_translations: false
+          download_sources: false
+          download_translations: true
+          export_only_approved: true
+          skip_untranslated_strings: false
+          skip_untranslated_files: false
+          pull_request_title: 'Crowdin i18n: Translation updates'
+          localization_branch_name: 'i18n/translation_updates'
+          commit_message: 'Crowdin i18n: Translation updates'
+          pull_request_labels: 'crowdin'
+          github_user_name: dblBot
+          github_user_email: platforms@diabeloop.fr
+          gpg_private_key: ${{ secrets.DBLBOT_GPG_PRIVATE_KEY }}
+          gpg_passphrase: ${{ secrets.DBLBOT_GPG_PASSPHRASE }}
+          base_url: 'https://diabeloop.crowdin.com'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
