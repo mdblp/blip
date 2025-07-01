@@ -25,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export const convertToPercentage = (number: number): number => {
+
+export const roundToOneDecimal = (number: number): number => {
   return Math.round(number * 10) / 10
 }
