@@ -71,7 +71,7 @@ describe('getBasalBolusData', () => {
     const wizard = buildSingleWizardData(bolus[0].id)
     const biphasicWizard = buildSingleWizardData(bolus[1].id)
 
-    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, [wizard, biphasicWizard], 1, dateFilterOneDay)
+    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, [wizard, biphasicWizard], 1, dateFilterOneDay, 0)
     const expectBasalBolusData = {
       totalCorrectiveBolusesAndBasals: 16.5,
       totalManualBoluses: 0,
@@ -79,7 +79,8 @@ describe('getBasalBolusData', () => {
       totalPenBoluses: 4,
       total: 22.5,
       basal: 1.5,
-      bolus: 21
+      bolus: 21,
+      estimatedTotalInsulin: 0
     }
     expect(basalBolusData).toEqual(expectBasalBolusData)
   })
@@ -89,7 +90,7 @@ describe('getBasalBolusData', () => {
     const bolus = buildBolusData(bolusData)
     const wizard = buildSingleWizardData(bolus[0].id)
 
-    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, [wizard], 2, dateFilterTwoWeeks)
+    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, [wizard], 2, dateFilterTwoWeeks, 0)
     const expectBasalBolusData = {
       totalCorrectiveBolusesAndBasals: 10.75,
       totalManualBoluses: 0,
@@ -97,7 +98,8 @@ describe('getBasalBolusData', () => {
       totalPenBoluses: 2,
       total: 13.25,
       basal: 1.25,
-      bolus: 12
+      bolus: 12,
+      estimatedTotalInsulin: 0
     }
     expect(basalBolusData).toEqual(expectBasalBolusData)
   })
