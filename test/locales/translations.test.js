@@ -31,9 +31,13 @@ const { expect } = require('chai')
 const blipEnglish = Object.keys(require('../../locales/en/translation.json'))
 const ylpEnglish = Object.keys(require('../../locales/en/yourloops.json'))
 
+//const reFuncTranslate = /[^a-zA-Z0-9]t\((["`'])([^`'"]+)\1\s*(,[^)]+)?\)/
+const reExtractTranslationKeys = /[^a-zA-Z0-9]t\(['"](.*?)['"](.*?)\)/g
+
 const reFuncTranslate1 = /[^a-zA-Z0-9]t\("([^"]+)"\s*(,[^)]+)?\)/
 const reFuncTranslate2 = /[^a-zA-Z0-9]t\('([^']+)'\s*(,[^)]+)?\)/
 const reFuncTranslate3 = /[^a-zA-Z0-9]t\(`([^`]+)`\s*(,[^)]+)?\)/
+
 
 /** Keys to ignore (used in <Trans /> or composed keys or others mechanism) */
 const ignoredTransKeysForBlip = [
@@ -78,6 +82,7 @@ const ignoredTransKeysForBlip = [
   'second'
 ]
 const ignoredTransKeyInBlipFiles = [
+  'D',
   '${physicalActivity.reportedIntensity}-pa',
   'bolus_${bolusType}',
   'bolus_${bolusSubType}',
@@ -311,39 +316,9 @@ const ignoredTransKeyForYourLoops = [
   'safety-basal-profile-values-not-available'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
-  'yourloops|${s}',
-  'gender-${patient.profile.sex.toLocaleLowerCase()}',
   // Documentation!
   'translate-me',
-  'translate-{{someone}}',
-  'Software version',
-  'Manufacturer',
-  'IMEI',
-  'Identifier',
-  'Name',
-  'params|${parameter.name}',
-  'Device',
-  'Unit',
-  'Value',
-  'Cgm sensor expiration date',
-  'Cgm transmitter id',
-  'Cgm transmitter end of life',
-  'Cgm transmitter software version',
-  'Level',
-  'Parameter',
-  'Product',
-  'Pump',
-  'Pump version',
-  'Serial Number',
-  'Setting',
-  'Settings on day',
-  'Time In Range',
-  'Infusion site changes',
-  'days',
-  'hours',
-  'minutes',
-  'seconds',
-  'milliseconds'
+  'translate-{{someone}}'
 ]
 
 /**
@@ -386,13 +361,16 @@ async function getTranslations(file) {
   /** @type {string[]} */
   const trKeys = []
   for (const line of lines) {
-    // console.log(line);
-    let match = reFuncTranslate1.exec(line) ?? reFuncTranslate2.exec(line) ?? reFuncTranslate3.exec(line)
+    console.log(line)
+    const match = [...line.matchAll(reExtractTranslationKeys)]
     if (match !== null) {
-      const trKey = match[1]
-      if (typeof trKey === 'string') {
+      //const trKey = match[1]
+      match.forEach(match => console.log(match[1]))
+      const translationKeys = match.map(match => match[1])
+      translationKeys.forEach(trKey => {
+        console.log('Found translation key:', trKey)
         trKeys.push(trKey)
-      }
+      })
     }
   }
   return trKeys
@@ -408,7 +386,7 @@ async function getTrKeys(files) {
   const trKeys = []
   for (const file of files) {
     const keys = await getTranslations(file)
-    // console.log({ file, trKeys });
+    //console.log({ file, trKeys })
     for (const key of keys) {
       // Avoid Double entries
       if (!trKeys.includes(key)) {
@@ -452,12 +430,17 @@ describe('Locales tests', () => {
         missingTranslations.push(key)
       }
     }
-    expect(unusedTranslations, 'Unused translations').to.be.empty
-    expect(missingTranslations, 'Missing translations').to.be.empty
+    expect(unusedTranslations, `Unused translations: ${JSON.stringify(unusedTranslations)}`).to.be.empty
+    expect(missingTranslations, `Missing translations: ${JSON.stringify(missingTranslations)}`).to.be.empty
   })
 
   it('should find all translations from yourloops.json', async () => {
+    //pages/notifications
     const allFiles = await getFiles(path.resolve(`${__dirname}/../../packages/yourloops`))
+    //const  allFiles = []
+    const dumbFiles = await getFiles(path.resolve(`${__dirname}/../../packages/dumb`))
+    //console.log(dumbFiles.length)
+    allFiles.push(...dumbFiles)
     const trKeys = await getTrKeys(allFiles)
     /** @type {string[]} */
     const unusedTranslations = []
@@ -469,7 +452,7 @@ describe('Locales tests', () => {
       }
     }
     for (const key of trKeys) {
-      if (!ylpEnglish.includes(key) && !ignoredTransKeyInYourLoopsFiles.includes(key)) {
+      if (!blipEnglish.includes(key) && !ylpEnglish.includes(key) && !ignoredTransKeyInYourLoopsFiles.includes(key)) {
         missingTranslations.push(key)
       }
     }
