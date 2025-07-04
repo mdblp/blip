@@ -31,13 +31,7 @@ const { expect } = require('chai')
 const blipEnglish = Object.keys(require('../../locales/en/translation.json'))
 const ylpEnglish = Object.keys(require('../../locales/en/yourloops.json'))
 
-//const reFuncTranslate = /[^a-zA-Z0-9]t\((["`'])([^`'"]+)\1\s*(,[^)]+)?\)/
 const reExtractTranslationKeys = /[^a-zA-Z0-9]t\(['"](.*?)['"](.*?)\)/g
-
-const reFuncTranslate1 = /[^a-zA-Z0-9]t\("([^"]+)"\s*(,[^)]+)?\)/
-const reFuncTranslate2 = /[^a-zA-Z0-9]t\('([^']+)'\s*(,[^)]+)?\)/
-const reFuncTranslate3 = /[^a-zA-Z0-9]t\(`([^`]+)`\s*(,[^)]+)?\)/
-
 
 /** Keys to ignore (used in <Trans /> or composed keys or others mechanism) */
 const ignoredTransKeysForBlip = [
