@@ -464,17 +464,17 @@ export function disableEmptySections(data) {
     switch (sectionKey) {
       case 'basals':
       case 'boluses':
-        emptyText = t("This section requires data from an insulin pump, so there's nothing to display.")
+        emptyText = t('nothing-to-display')
         break
 
       case 'siteChanges':
         emptyText = section.type === SECTION_TYPE_UNDECLARED
-          ? t("Please choose a preferred site change source from the 'Basics' web view to view this data.")
-          : t("This section requires data from an insulin pump, so there's nothing to display.")
+          ? t('select-view-to-see-data')
+          : t('nothing-to-display')
         break
 
       case 'fingersticks':
-        emptyText = t("This section requires data from a blood-glucose meter, so there's nothing to display.")
+        emptyText = t('nothing-to-display')
         break
 
       case 'bgDistribution':

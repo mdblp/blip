@@ -109,24 +109,21 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
     : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
 
   const {
-    totalMealBoluses,
-    totalManualBoluses,
-    totalPenBoluses,
-    totalCorrectiveBolusesAndBasals,
-    total: basalBolusTotal
-  } = BasalBolusStatisticsService.getBasalBolusData(medicalData.basal, medicalData.bolus, medicalData.wizards, numberOfDays, dateFilter)
-
-  const {
-    weight,
-    totalInsulin: dailyDose
-  } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, medicalData.wizards, numberOfDays, dateFilter, medicalData.pumpSettings)
-
-  const {
     automatedBasalDuration,
     manualBasalDuration,
     manualPercentage,
     automatedPercentage
   } = BasalBolusStatisticsService.getAutomatedAndManualBasalDuration(medicalData.basal, dateFilter)
+
+  const {
+    weight,
+    totalMealBoluses,
+    totalManualBoluses,
+    totalPenBoluses,
+    totalCorrectiveBolusesAndBasals,
+    totalInsulin,
+    estimatedTotalInsulin,
+  } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, medicalData.wizards, numberOfDays, dateFilter, medicalData.pumpSettings, automatedBasalDuration)
 
 
   return (
@@ -160,9 +157,9 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           totalManualBoluses={totalManualBoluses}
           totalPenBoluses={totalPenBoluses}
           totalCorrectiveBolusesAndBasals={totalCorrectiveBolusesAndBasals}
-          totalInsulin={basalBolusTotal}
+          totalInsulin={totalInsulin}
+          estimatedTotalInsulin={estimatedTotalInsulin}
           weight={weight}
-          dailyDose={dailyDose}
         />
       </DataCard>
 
