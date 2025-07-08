@@ -39,7 +39,7 @@ import { DEFAULT_IMAGE_MARGIN, DEFAULT_OPTIONS_SIZE } from './util/eventsConstan
 /**
  *
  * @param {Pool} pool
- * @param {{ onParameterHover: (p: any) => void, onParameterOut: () => void, tidelineData: MedicalDataService }} opts
+ * @param {{ onParameterHover: (p: any) => void, onParameterOut: () => void, warmUps: MedicalDataService }} opts
  * @returns {(data: Datum[]) => void}
  */
 
@@ -53,7 +53,7 @@ function plotWarmUp(pool, opts) {
     const offset = pool.height() - DEFAULT_IMAGE_MARGIN
     const xScale = pool.xScale().copy()
     selection.each(function () {
-      const warmUpEvents = pool.filterDataForRender(opts.tidelineData.medicalData.warmUps)
+      const warmUpEvents = pool.filterDataForRender(opts.warmUps)
       if (warmUpEvents.length < 1) {
         d3.select(this).selectAll('g.d3-warmup-group').remove()
         return

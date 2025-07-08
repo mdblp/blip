@@ -61,6 +61,7 @@
   --bg-high: var(--warning-color-50);
   --bg-very-high: var(--warning-color-main);
   --night-mode: var(--info-color-10);
+  --event-superposition: var(--info-color-main);
   --text-hover: #00D3D9;
   --blue-green-light: #12D3D8;
   --gray-medium: #989897;

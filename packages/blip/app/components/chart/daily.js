@@ -29,6 +29,7 @@ import {
   BloodGlucoseTooltip,
   BolusTooltip,
   ConfidentialTooltip,
+  EventsSuperpositionPopover,
   FoodTooltip,
   NightModeTooltip,
   ParameterTooltip,
@@ -76,6 +77,7 @@ class DailyChart extends React.Component {
     onNightModeHover: PropTypes.func.isRequired,
     onConfidentialHover: PropTypes.func.isRequired,
     onTooltipOut: PropTypes.func.isRequired,
+    onEventSuperpositionClick: PropTypes.func.isRequired,
     onChartMounted: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired
   }
@@ -99,6 +101,7 @@ class DailyChart extends React.Component {
       'onAlarmEventHover',
       'onNightModeHover',
       'onTooltipOut',
+      'onEventSuperpositionClick',
       'trackMetric'
     ]
 
@@ -389,6 +392,7 @@ class Daily extends React.Component {
                   onConfidentialHover={this.handleConfidentialHover}
                   onNightModeHover={this.handleNightModeHover}
                   onTooltipOut={this.handleTooltipOut}
+                  onEventSuperpositionClick={this.handleEventSuperpositionClick}
                   onChartMounted={this.onChartMounted}
                   trackMetric={trackMetric}
                   ref={this.chartRef}
@@ -686,6 +690,24 @@ class Daily extends React.Component {
           left: datum.left
         }}
         side={datum.side}
+      />)
+    this.setState({ tooltip })
+  }
+
+  handleEventSuperpositionClick = (datum) => {
+    this.updateDatumHoverForTooltip(datum)
+    const tooltip = (
+      <EventsSuperpositionPopover
+        superpositionEvent={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        anchorElement={datum.htmlEvent}
+        timePrefs={datum.timePrefs}
+        bgPrefs={datum.bgPrefs}
+        device={this.props.device}
       />)
     this.setState({ tooltip })
   }

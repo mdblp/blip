@@ -98,6 +98,7 @@ import { RescueCarbsAveragePerRange } from './domains/models/statistics/carbs-st
 import { ManualBolusAveragePerRange } from './domains/models/statistics/basal-bolus-statistics.model'
 import { GROUP_ALARMS_THRESHOLD_MINUTES } from './domains/repositories/medical/datum/alarm-event.service'
 import { DeviceSystem } from './domains/models/medical/datum/enums/device-system.enum'
+import { DeviceEventSubtype } from './domains/models/medical/datum/enums/device-event-subtype.enum'
 
 export {
   AlarmCode,
@@ -125,6 +126,7 @@ export {
   type DateFilter,
   type Datum,
   type DeviceConfig,
+  DeviceEventSubtype,
   type DeviceParameterChange,
   DeviceSystem,
   type DurationValue,

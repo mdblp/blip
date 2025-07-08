@@ -52,10 +52,8 @@ function plotReservoirChange(pool, opts) {
   function reservoir(selection) {
     opts.xScale = pool.xScale().copy()
 
-    selection.each(function(currentData) {
-      const filteredData = _.filter(currentData, {
-        subType: 'reservoirChange'
-      })
+    selection.each(function() {
+      const filteredData = opts.reservoirChanges
 
       if (filteredData.length < 1) {
         // Remove previous data

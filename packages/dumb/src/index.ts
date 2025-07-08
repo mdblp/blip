@@ -38,6 +38,7 @@ import {
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
 import { CBGStatType, StatFormats } from './models/stats.model'
 import { ConfidentialTooltip } from './components/tooltips/confidential-tooltip/confidential-tooltip'
+import { EventsSuperpositionPopover } from './components/tooltips/events-superposition-popover/events-superposition-popover'
 import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
 import { formatBgValue } from './utils/format/format.util'
 import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
@@ -78,6 +79,7 @@ import { SafetyBasalItem } from './models/safety-basal-item.model'
 import { isSafetyBasalAvailable, getSafetyBasalItems } from './utils/safety-basal-profile/safety-basal-profile.util'
 import { NightModeTooltip } from './components/tooltips/night-mode-tooltip/night-mode-tooltip'
 import { SimpleValue } from './components/stats/common/simple-value'
+import { getSuperpositionEvents, getDataWithoutSuperpositionEvents } from './utils/events/events.util'
 
 export {
   formatDate,
@@ -96,6 +98,7 @@ export {
   ConfidentialTooltip,
   Device,
   buildDevice,
+  EventsSuperpositionPopover,
   FocusedRangeLabels,
   FoodTooltip,
   formatCurrentDate,
@@ -128,5 +131,7 @@ export {
   SafetyBasalItem,
   isSafetyBasalAvailable,
   getSafetyBasalItems,
-  SimpleValue
+  SimpleValue,
+  getDataWithoutSuperpositionEvents,
+  getSuperpositionEvents
 }

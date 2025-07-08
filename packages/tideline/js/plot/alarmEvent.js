@@ -48,7 +48,7 @@ function plotAlarmEvent(pool, opts) {
     opts.xScale = pool.xScale().copy()
 
     selection.each(function() {
-      const alarmEvents = pool.filterDataForRender(opts.tidelineData.medicalData.alarmEvents)
+      const alarmEvents = pool.filterDataForRender(opts.alarmEvents)
       const alarmEventGroupSelector = `d3-${D3_ALARM_EVENT_ID}-group`
 
       if (alarmEvents.length < 1) {

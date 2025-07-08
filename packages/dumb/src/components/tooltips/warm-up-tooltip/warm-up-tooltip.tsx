@@ -24,7 +24,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import moment from 'moment-timezone'
 import { Tooltip } from '../../../index'
 import React, { FC } from 'react'
 import { TimePrefs } from 'medical-domain'
@@ -37,12 +36,11 @@ import {
   Position,
   Side
 } from '../common/tooltip/tooltip'
-import { useTranslation } from 'react-i18next'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import WarmUp from 'medical-domain/dist/src/domains/models/medical/datum/warm-up.model'
-import { getHourMinuteFormat } from '../../../utils/datetime/datetime.util'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import colors from '../../../styles/colors.css'
+import { getWarmUpDescription, getWarmUpEndTime, getWarmUpTitle } from '../../../utils/warm-up/warm-up.util'
 
 interface WarmupTooltipProps {
   warmup: WarmUp
@@ -53,8 +51,7 @@ interface WarmupTooltipProps {
 
 export const WarmUpTooltip: FC<WarmupTooltipProps> = (props) => {
   const {  warmup, position, side, timePrefs } = props
-  const { t } = useTranslation('main')
-  const endTime = moment.tz(warmup.epochEnd, warmup.timezone).format(getHourMinuteFormat())
+  const endTime = getWarmUpEndTime(warmup.epochEnd, warmup.timezone)
 
   return (
     <Tooltip
@@ -69,8 +66,8 @@ export const WarmUpTooltip: FC<WarmupTooltipProps> = (props) => {
         offset={DEFAULT_TOOLTIP_OFFSET}
         content={
           <>
-            <TooltipLine label={t('sensor-warmup')} isBold />
-            <TooltipLine label={t('sensor-warmup-session-end')} value={endTime} />
+            <TooltipLine label={getWarmUpTitle()} isBold />
+            <TooltipLine label={getWarmUpDescription()} value={endTime} />
           </>
         }
     />
