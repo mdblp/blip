@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.7.0-rc2 - 2025-07-08
+## 3.7.0-rc3 - 2025-07-09
 ### Added
 - YLP-3151 Display Night mode events in Daily view
 
