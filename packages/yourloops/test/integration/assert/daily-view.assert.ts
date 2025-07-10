@@ -78,6 +78,7 @@ import {
 } from '../mock/data.api.mock'
 import moment from 'moment-timezone'
 import { checkStatTooltip } from './stats.assert'
+import { getTranslation } from '../../utils/i18n'
 
 const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Time spent in range, based on CGM readings.How we calculate this: (%) is the number of readings in range divided by all readings for this time period. (time) is 24 hours multiplied by % in range.'
 const READINGS_IN_RANGE_TOOLTIP = 'Readings In Range: Number of BGM readings.Derived from 15 BGM readings.'
@@ -220,8 +221,8 @@ export const checkDailyStatsWidgetsTooltips = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
   await checkStatTooltip(patientStatistics, 'Time In Range', TIME_IN_RANGE_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Avg. Glucose (CGM)', AVG_GLUCOSE_TOOLTIP)
-  await checkStatTooltip(patientStatistics, 'Total Insulin Delivered', TOTAL_INSULIN_TOOLTIP)
-  await checkStatTooltip(patientStatistics, 'Estimated Total Insulin Requirement', ESTIMATED_TOTAL_INSULIN_TOOLTIP)
+  await checkStatTooltip(patientStatistics, getTranslation('total-insulin'), TOTAL_INSULIN_TOOLTIP)
+  await checkStatTooltip(patientStatistics, getTranslation('estimated-total-insulin'), ESTIMATED_TOTAL_INSULIN_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Time In Loop Mode', TIME_IN_LOOP_MODE_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Total of declared carbs', TOTAL_CARBS_DECLARED_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)

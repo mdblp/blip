@@ -718,7 +718,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "subType": "automated",
           "deliveryType": "automated",
           "rate": 0.8,
-          "duration": 1000, // TODO: change here to having a day duration
+          "duration": 1000,
           "normalEnd": "2022-08-08T16:30:01.000Z",
           "epochEnd": 1659976201000,
           "isoWeekday": WeekDays.Sunday
