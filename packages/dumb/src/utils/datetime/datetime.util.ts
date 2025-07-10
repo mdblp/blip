@@ -274,6 +274,21 @@ export const convertValueToHours = (durationValue: number, durationUnit: Duratio
   }
 }
 
+export const isDurationLowerThanOneHour = (durationValue: number, durationUnit: DurationUnit): boolean => {
+  switch (durationUnit) {
+    case DurationUnit.Milliseconds:
+      return durationValue < ONE_HOUR_MS
+    case DurationUnit.Seconds:
+      return durationValue < ONE_HOUR_S
+    case DurationUnit.Minutes:
+      return durationValue < ONE_HOUR_MN
+    case DurationUnit.Hours:
+      return durationValue < 1
+    default:
+      return false
+  }
+}
+
 /**
  * formatClocktimeFromMsPer24
  * @param {number} milliseconds - positive integer representing a time of day
