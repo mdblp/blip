@@ -1,6 +1,6 @@
 {
   "name": "blip-dev-server",
-  "version": "3.7.0-rc2",
+  "version": "3.7.0-rc3",
   "private": true,
   "scripts": {
     "server": "node server",
