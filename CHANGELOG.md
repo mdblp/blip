@@ -15,6 +15,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3574 Meal bolus correction display
 - YLP-3636 Update banner to display HTML content
 - YLP-3652 Do not display INSULIN_TYPE_USED in parameters list
+- YLP-3653 Handle night mode events lasting less than 1 hour
 
 ### Fixed
 - YLP-3290 Top banner is hiding the top part of note creation popup
