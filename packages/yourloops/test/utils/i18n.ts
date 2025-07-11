@@ -61,7 +61,7 @@ export function getTranslation(key: string, locale: Locale = 'en'): string {
     case 'fr':
       return frTranslation[key] ?? key;
     default:
-      throw new Error(`Locale ${locale} has not been implemented yet`);
+      throw new Error('Invalid local type it is en or fr');
   }
 }
 
