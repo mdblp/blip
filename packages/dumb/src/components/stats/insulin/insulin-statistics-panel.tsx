@@ -129,7 +129,7 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
         justifyContent="space-between"
         alignItems="center"
       >
-        <Box className={commonStyles.title}>
+        <Box>
           {isDailyPage ? t('estimated-total-insulin') : t('average-daily-estimated-total-insulin')}
           <StatTooltip
             annotations={annotationsForEstimatedTotalInsulin}
