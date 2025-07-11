@@ -38,7 +38,7 @@
     "immutability-helper": "^3.1.1",
     "memorystream": "^0.3.1",
     "parse-svg-path": "0.1.2",
-    "pdfkit": "^0.13.0",
+    "pdfkit": "^0.15.1",
     "react-markdown": "^9.0.1",
     "serialize-svg-path": "0.1.0",
     "stream-browserify": "^3.0.0",
