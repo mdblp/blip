@@ -34,7 +34,7 @@ export type Locale = 'en' | 'fr';
  * Utility function to load a JSON
  */
 function loadJson(relativePath: string): Record<string, string> {
-  const fullPath = path.resolve(new URL('.', import.meta.url).pathname, relativePath);
+  const fullPath = path.resolve(__dirname, relativePath);
   const raw = fs.readFileSync(fullPath, 'utf-8');
   return JSON.parse(raw);
 }
