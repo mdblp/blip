@@ -122,3 +122,159 @@ describe('getManualBolusAverageStatistics', () => {
     expect(manualBoluses).toEqual(expected)
   })
 })
+
+describe('getTotalInsulinAndWeightData', () => {
+  it('should return insulin statistics with weight when pump settings include weight parameter', () => {
+    const basals = buildBasalsData(basalsData)
+    const bolus = buildBolusData(bolusData)
+    const wizard = buildSingleWizardData(bolus[0].id)
+    const pumpSettings = [{
+      id: 'pump-1',
+      epoch: dateFilterOneDay.start,
+      payload: {
+        parameters: [
+          { name: 'WEIGHT', value: 70, unit: 'kg' }
+        ]
+      }
+    }] as any[]
+
+    const result = BasalBolusStatisticsService.getTotalInsulinAndWeightData(
+      basals, bolus, [wizard], 1, dateFilterOneDay, pumpSettings, 0
+    )
+
+    expect(result.weight).toEqual({ name: 'WEIGHT', value: 70, unit: 'kg' })
+    expect(result.totalInsulin).toBe(21.5)
+    expect(result.basal).toBe(1.5)
+    expect(result.bolus).toBe(20)
+  })
+
+  it('should return insulin statistics with undefined weight when pump settings do not include weight', () => {
+    const basals = buildBasalsData(basalsData)
+    const bolus = buildBolusData(bolusData)
+    const wizard = buildSingleWizardData(bolus[0].id)
+    const pumpSettings = [{
+      id: 'pump-1',
+      epoch: dateFilterOneDay.start,
+      payload: {
+        parameters: []
+      }
+    }] as any[]
+
+    const result = BasalBolusStatisticsService.getTotalInsulinAndWeightData(
+      basals, bolus, [wizard], 1, dateFilterOneDay, pumpSettings, 0
+    )
+
+    expect(result.weight).toBeUndefined()
+  })
+})
+
+describe('Estimated Total Insulin Calculation', () => {
+  it('should calculate estimated total insulin when automated basal duration is greater than 80%', () => {
+    const basals = buildBasalsData(basalsData)
+    const bolus = buildBolusData(bolusData)
+    const wizard = buildSingleWizardData(bolus[0].id)
+    // 86400000ms = 1 day, so 80% = 69120000ms
+    const automatedBasalDuration = 75_000_000 // > 80% of one day 75000000
+
+    const result = BasalBolusStatisticsService.getBasalBolusData(
+      basals, bolus, [wizard], 1, dateFilterOneDay, automatedBasalDuration
+    )
+
+    expect(result.estimatedTotalInsulin).toBeGreaterThan(0)
+    expect(result.estimatedTotalInsulin).toBe(24.768) // (21.5 * 86400000) / 75000000
+  })
+
+  it('should return 0 for estimated total insulin when automated basal duration is less than 80%', () => {
+    const basals = buildBasalsData(basalsData)
+    const bolus = buildBolusData(bolusData)
+    const wizard = buildSingleWizardData(bolus[0].id)
+    // Less than 80% of one day
+    const automatedBasalDuration = 60000000 // < 80% of one day
+
+    const result = BasalBolusStatisticsService.getBasalBolusData(
+      basals, bolus, [wizard], 1, dateFilterOneDay, automatedBasalDuration
+    )
+
+    expect(result.estimatedTotalInsulin).toBe(0)
+  })
+
+  it('should return 0 for estimated total insulin when automated basal duration is 0', () => {
+    const basals = buildBasalsData(basalsData)
+    const bolus = buildBolusData(bolusData)
+    const wizard = buildSingleWizardData(bolus[0].id)
+
+    const result = BasalBolusStatisticsService.getBasalBolusData(
+      basals, bolus, [wizard], 1, dateFilterOneDay, 0
+    )
+
+    expect(result.estimatedTotalInsulin).toBe(0)
+  })
+
+  it('should calculate estimated total insulin correctly for multiple days', () => {
+    const basals = buildBasalsData(basalsData)
+    const bolus = buildBolusData(bolusData)
+    const wizard = buildSingleWizardData(bolus[0].id)
+    // For 2 days, 80% = 138240000ms
+    const automatedBasalDuration = 150000000 // > 80% of two days
+
+    const result = BasalBolusStatisticsService.getBasalBolusData(
+      basals, bolus, [wizard], 2, dateFilterTwoDays, automatedBasalDuration
+    )
+
+    expect(result.estimatedTotalInsulin).toBeGreaterThan(0)
+    // Should be divided by numDays in the final result
+    expect(result.estimatedTotalInsulin).toBe(6.48) // 22.5 * 86400000 / 150000000 / 2
+  })
+})
+
+describe('Edge Cases', () => {
+  it('should handle empty data arrays gracefully', () => {
+    const result = BasalBolusStatisticsService.getBasalBolusData(
+      [], [], [], 1, dateFilterOneDay, 0
+    )
+
+    expect(result).toEqual({
+      bolus: 0,
+      basal: 0,
+      totalMealBoluses: 0,
+      totalManualBoluses: 0,
+      totalPenBoluses: 0,
+      totalCorrectiveBolusesAndBasals: 0,
+      estimatedTotalInsulin: 0,
+      total: 0
+    })
+  })
+
+  it('should handle zero days gracefully', () => {
+    const basals = buildBasalsData(basalsData)
+    const bolus = buildBolusData(bolusData)
+    const wizard = buildSingleWizardData(bolus[0].id)
+
+    const result = BasalBolusStatisticsService.getBasalBolusData(
+      basals, bolus, [wizard], 0, dateFilterOneDay, 0
+    )
+
+    expect(result).toEqual({
+      bolus: 0,
+      basal: 0,
+      totalMealBoluses: 0,
+      totalManualBoluses: 0,
+      totalPenBoluses: 0,
+      totalCorrectiveBolusesAndBasals: 0,
+      estimatedTotalInsulin: 0,
+      total: 0
+    })
+  })
+
+  it('should return undefined weight when pump settings array is empty', () => {
+    const basals = buildBasalsData(basalsData)
+    const bolus = buildBolusData(bolusData)
+    const wizard = buildSingleWizardData(bolus[0].id)
+
+    const result = BasalBolusStatisticsService.getTotalInsulinAndWeightData(
+      basals, bolus, [wizard], 1, dateFilterOneDay, [], 0
+    )
+
+    expect(result.weight).toBeUndefined()
+  })
+})
