@@ -35,27 +35,27 @@ import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { useLocation } from 'react-router-dom'
 import { EMPTY_DATA_PLACEHOLDER } from '../../../models/stats.model'
 import { useTheme } from '@mui/material/styles'
+import { roundToOneDecimal } from 'yourloops/components/statistics/statistics.util'
 
-interface TotalInsulinPropsData {
+interface InsulinStatistic {
   id: string
   title: string
   units: string
   value: number
-  valueString: string
 }
 
-export interface TotalInsulinStatProps {
-  data: TotalInsulinPropsData[]
+export interface InsulinStatisticsPanelProps {
+  data: InsulinStatistic[]
   totalInsulin: number
+  estimatedTotalInsulin: number
   weight: number | string
-  dailyDose: number
 }
 
-const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
+const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (props) => {
   const {
     data,
     totalInsulin,
-    dailyDose,
+    estimatedTotalInsulin,
     weight
   } = props
   const theme = useTheme()
@@ -64,9 +64,14 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   const isDashboardPage = location.pathname.includes('dashboard')
   const insulinAnnotations = isDailyPage ? t('total-insulin-days-tooltip') : t('average-daily-insulin-tooltip')
   const annotations = [insulinAnnotations, t('total-insulin-how-calculate-tooltip')]
+
+  const estimatedTotalInsulinCalculationAnnotation = isDailyPage ? t('estimated-total-insulin-how-calculate-tooltip') : t('estimated-total-insulin-avg-how-calculate-tooltip')
+  const annotationsForEstimatedTotalInsulin = [t('estimated-total-insulin-tooltip'), estimatedTotalInsulinCalculationAnnotation]
   if (data.length === 0) {
     annotations.push(t('tooltip-empty-stat'))
+    annotationsForEstimatedTotalInsulin.push(t('tooltip-empty-stat'))
   }
+
   const isDisabledWeight = weight === EMPTY_DATA_PLACEHOLDER
   const isDisabledTotalInsuline = totalInsulin === 0 ? 'center' : 'baseline'
 
@@ -74,7 +79,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
     if (weight === EMPTY_DATA_PLACEHOLDER) {
       return EMPTY_DATA_PLACEHOLDER
     }
-    const value = dailyDose / +weight
+    const value = totalInsulin / +weight
     return value > 0 && Number.isFinite(value) ? formatDecimalNumber(value, 2) : EMPTY_DATA_PLACEHOLDER
   }
 
@@ -85,9 +90,11 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
 
   const getPercentage = (value: number): string => {
     // We multiply by ten and divide by ten for the rounding
-    const res = Math.round(100 * 10 * value / totalInsulin) / 10
+    const res = Math.round(100 * 10 * value / roundToOneDecimal(totalInsulin)) / 10
     return res > 0 ? res.toString(10) : EMPTY_DATA_PLACEHOLDER
   }
+
+  const estimatedTotalInsulinValue = estimatedTotalInsulin > 0 ? estimatedTotalInsulin : EMPTY_DATA_PLACEHOLDER
 
   return (
     <div data-testid="container-insulin-stats">
@@ -110,7 +117,33 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
         >
           <span className={styles.titleTotal}>
             <Chip
-              label={`${totalInsulin} ${t('insulin-unit-u')}`}
+              label={`${roundToOneDecimal(totalInsulin)} ${t('insulin-unit-u')}`}
+              variant="outlined"
+              size="small"
+            />
+          </span>
+        </Box>
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Box>
+          {isDailyPage ? t('estimated-total-insulin') : t('average-daily-estimated-total-insulin')}
+          <StatTooltip
+            annotations={annotationsForEstimatedTotalInsulin}
+          />
+        </Box>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems={isDisabledTotalInsuline}
+          className={styles.boldValue}
+        >
+          <span className={styles.titleTotal}>
+            <Chip
+              label={`${estimatedTotalInsulinValue} ${t('insulin-unit-u')}`}
               variant="outlined"
               size="small"
             />
@@ -134,7 +167,7 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
                 alignItems="center"
               >
                 <Chip
-                  label={`${entry.value > 0 ? entry.valueString : '0'} ${entry.units}`}
+                  label={`${entry.value > 0 ? entry.value : '0'} ${entry.units}`}
                   variant="outlined"
                   size="small"
                   sx={{ marginRight: theme.spacing(1) }}
@@ -202,4 +235,4 @@ const InsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
   )
 }
 
-export const InsulinStatMemoized = memo(InsulinStat)
+export const InsulinStatisticPanelMemoized = memo(InsulinStatisticsPanel)

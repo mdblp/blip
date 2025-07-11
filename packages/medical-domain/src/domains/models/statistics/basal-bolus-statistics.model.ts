@@ -35,6 +35,7 @@ export interface BasalBolusStatistics {
   totalManualBoluses: number
   totalPenBoluses: number
   totalCorrectiveBolusesAndBasals: number
+  estimatedTotalInsulin: number
   total: number
 }
 
@@ -45,7 +46,14 @@ export interface ManualBolusAveragePerRange {
 
 export type ManualBolusAverageStatistics = Map<HoursRange, ManualBolusAveragePerRange>
 
-export interface TotalInsulinAndWeightStatistics {
+export interface TotalInsulinStatisticsAndWeight {
+  bolus: number
+  basal: number
+  totalMealBoluses: number
+  totalManualBoluses: number
+  totalPenBoluses: number
+  totalCorrectiveBolusesAndBasals: number
   totalInsulin: number
+  estimatedTotalInsulin: number
   weight?: ParameterConfig
 }
