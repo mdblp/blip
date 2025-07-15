@@ -28,8 +28,8 @@
 import React, { type FunctionComponent } from 'react'
 import { t } from 'i18next'
 import { type ParameterConfig, Unit } from 'medical-domain'
-import { InsulinStat } from 'dumb'
-import { convertToPercentage } from './statistics.util'
+import { InsulinStatisticsPanel } from 'dumb'
+import { roundToOneDecimal } from './statistics.util'
 
 interface TotalInsulinStatProps {
   totalMealBoluses: number
@@ -37,7 +37,7 @@ interface TotalInsulinStatProps {
   totalPenBoluses: number
   totalCorrectiveBolusesAndBasals: number
   totalInsulin: number
-  dailyDose: number
+  estimatedTotalInsulin: number
   weight?: ParameterConfig
 }
 
@@ -48,22 +48,20 @@ export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props
     totalPenBoluses,
     totalCorrectiveBolusesAndBasals,
     totalInsulin,
-    dailyDose,
+    estimatedTotalInsulin,
     weight
   } = props
 
   const data = [
     {
       id: 'meal',
-      value: convertToPercentage(totalMealBoluses),
-      valueString: String(convertToPercentage(totalMealBoluses)),
+      value: roundToOneDecimal(totalMealBoluses),
       units: Unit.InsulinUnit,
       title: t('meal-bolus')
     },
     {
       id: 'basal',
-      value: convertToPercentage(totalCorrectiveBolusesAndBasals),
-      valueString: String(convertToPercentage(totalCorrectiveBolusesAndBasals)),
+      value: roundToOneDecimal(totalCorrectiveBolusesAndBasals),
       units: Unit.InsulinUnit,
       title: t('basal-and-correction-bolus')
     }
@@ -71,8 +69,7 @@ export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props
   if (totalManualBoluses > 0) {
     data.push({
       id: 'manual',
-      value: convertToPercentage(totalManualBoluses),
-      valueString: String(convertToPercentage(totalManualBoluses)),
+      value: roundToOneDecimal(totalManualBoluses),
       units: Unit.InsulinUnit,
       title: t('manual-bolus')
     })
@@ -80,19 +77,18 @@ export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props
   if (totalPenBoluses > 0) {
     data.push({
       id: 'pen',
-      value: convertToPercentage(totalPenBoluses),
-      valueString: String(convertToPercentage(totalPenBoluses)),
+      value: roundToOneDecimal(totalPenBoluses),
       units: Unit.InsulinUnit,
       title: t('pen-bolus')
     })
   }
   const weightValue = !weight ? '--' : +weight.value
   return (
-    <InsulinStat
+    <InsulinStatisticsPanel
       data={data}
-      totalInsulin={convertToPercentage(totalInsulin)}
+      totalInsulin={totalInsulin}
+      estimatedTotalInsulin={roundToOneDecimal(estimatedTotalInsulin)}
       weight={weightValue}
-      dailyDose={dailyDose}
     />
   )
 }

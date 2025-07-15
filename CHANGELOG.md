@@ -2,6 +2,10 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## 3.8.0-beta - 2025-07-11
+### Added
+- YLP-3589 add new estimated total insulin statistic
+
 ## 3.7.0 - 2025-07-10
 ### Added
 - YLP-3151 Display Night mode events in Daily view
