@@ -28,7 +28,6 @@
 import { type BoundFunctions, fireEvent, type queries, screen, waitFor, within } from '@testing-library/react'
 import { patient1Info, patient2Info } from '../data/patient.api.data'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import moment from 'moment-timezone'
 import userEvent from '@testing-library/user-event'
 import { mockDataAPI, noData } from '../mock/data.api.mock'
 
@@ -72,7 +71,6 @@ export const checkPatientDropdown = async (initialPatient: Patient, patientToSwi
   fireEvent.mouseDown(within(secondaryHeader).getByText(`${patient1Info.profile.lastName} ${patient1Info.profile.firstName}`))
   fireEvent.click(within(screen.getByRole('listbox')).getByText(`${patient2Info.profile.lastName} ${patient2Info.profile.firstName}`))
 
-  const secondPatientDateOfBirth = moment(patientToSwitchTo.profile.birthdate).format('L')
   const secondPatientName = `${patientToSwitchTo.profile.lastName} ${patientToSwitchTo.profile.firstName}`
   const secondaryHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
   const secondPatientHeaderContent = `Patient${secondPatientName}DashboardDailyTrendsPatient profileDevicesDownload report`
