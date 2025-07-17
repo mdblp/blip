@@ -197,7 +197,7 @@ export const PatientPersonalInformation: FC<InformationSectionProps> = (props) =
                 <MonitorWeightIcon sx={{ color: 'text.secondary' }} />
                 <Box>
                   <Typography variant="body2" color="text.secondary">
-                    {t('weight')}
+                    {t('params|WEIGHT')}
                   </Typography>
                   <Typography variant="body2">
                     {`${patient.profile.weight?.value || t('N/A')} ${patient.profile.weight?.unit || ''}`}
@@ -210,7 +210,7 @@ export const PatientPersonalInformation: FC<InformationSectionProps> = (props) =
                 <HeightIcon sx={{ color: 'text.secondary' }} />
                 <Box>
                   <Typography variant="body2" color="text.secondary">
-                    {t('height')}
+                    {t('params|HEIGHT')}
                   </Typography>
                   <Typography variant="body2">
                     {`${patient.profile.height?.value || t('N/A')} ${patient.profile.height?.unit || ''}`}
@@ -252,7 +252,7 @@ export const PatientPersonalInformation: FC<InformationSectionProps> = (props) =
                 <BasalIcon data-testid="basal-icon" sx={{ color: 'text.secondary' }} />
                 <Box>
                   <Typography variant="body2" color="text.secondary">
-                    {t('insulin-type')}
+                    {t('params|INSULIN_TYPE')}
                   </Typography>
                   <Typography variant="body2">
                     {`${patient.settings.insulinType || t('N/A')}`}

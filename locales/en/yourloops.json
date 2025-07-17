@@ -172,6 +172,7 @@
   "button-team-add-member": "Add healthcare professional",
   "button-team-leave": "Leave team",
   "button-validate": "Validate",
+  "cannula-size": "Cannula size",
   "care-team-membership": "Teams I belong to:",
   "care-team-no-membership": "No care teams",
   "care-team-values-applied": "Care team values applied",
@@ -275,6 +276,7 @@
   "estimated-total-insulin-avg-how-calculate-tooltip": "**How we calculate this:**  All basal and bolus insulin delivery during closed-loop period (in Units) added together, normalised for 24h, and divided by the number of days in this view.",
   "estimated-total-insulin-how-calculate-tooltip": "**How we calculate this:** All basal and bolus insulin delivery during closed-loop period (in Units) added together, and normalised for 24h",
   "event-trigger-threshold": "Event trigger threshold",
+  "equipment-date": "Equipment date",
   "feedback-checkbox": "Feedback checkbox",
   "filter-cannot-apply-pending-tab": "Filters cannot be applied on Pending tab",
   "filter-data-not-transmitted": "Filter patients having a \"Data not transmitted\" monitoring alert",
@@ -619,6 +621,6 @@
   "verify-email-success-title": "Your e-mail address was verified.",
   "verify-email-title": "Verify your email address",
   "very-low-bg-input": "Very low blood glucose input",
-  "weight": "Weight",
-  "yesterday": "Yesterday"
+  "yesterday": "Yesterday",
+  "years-old": "years old"
 }

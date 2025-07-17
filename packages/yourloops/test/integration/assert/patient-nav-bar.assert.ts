@@ -75,7 +75,7 @@ export const checkPatientDropdown = async (initialPatient: Patient, patientToSwi
   const secondPatientDateOfBirth = moment(patientToSwitchTo.profile.birthdate).format('L')
   const secondPatientName = `${patientToSwitchTo.profile.lastName} ${patientToSwitchTo.profile.firstName}`
   const secondaryHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
-  const secondPatientHeaderContent = `Patient${secondPatientName}Date of birth:${secondPatientDateOfBirth}Diabetes type:Type 1Gender:FemaleHbA1c:8.9% (11/21/2023)Email:patient2@diabeloop.frDashboardDailyTrendsTarget & alertsDevicesDownload report`
+  const secondPatientHeaderContent = `Patient${secondPatientName}DashboardDailyTrendsPatient profileDevicesDownload report`
   await waitFor(() => {
     expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContent)
   })
