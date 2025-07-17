@@ -80,7 +80,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
   const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const bgClasses = defaultBgClasses[bgUnits]
-  const bgPrefs: BgPrefs = {
+  const bgPrefs: BgPrefs = patient.diabeticProfile?.bloodGlucosePreference || {
     bgUnits,
     bgClasses,
     bgBounds: {

@@ -33,16 +33,21 @@ import CardContent from '@mui/material/CardContent'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
-import { formatBirthdate } from 'dumb'
+import Grid from '@mui/material/Grid'
+import { formatBirthdate, formatDate } from 'dumb'
 import { Patient } from '../../../../lib/patient/models/patient.model'
 import PatientUtils from '../../../../lib/patient/patient.util'
 import EmailIcon from '@mui/icons-material/Email'
 import PersonIcon from '@mui/icons-material/Person'
 import CakeIcon from '@mui/icons-material/Cake'
-import ScienceIcon from '@mui/icons-material/Science'
+import SquareFootIcon from '@mui/icons-material/SquareFoot';
 import ScaleIcon from '@mui/icons-material/Scale'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import HeightIcon from '@mui/icons-material/Height';
+import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
+import MonitorWeightIcon from '@mui/icons-material/MonitorWeight';
+import StraightenIcon from '@mui/icons-material/Straighten';
 import Divider from '@mui/material/Divider'
+import { BasalIcon } from '../../../../components/icons/diabeloop/basal-icon'
 
 interface InformationSectionProps {
   patient: Patient
@@ -52,6 +57,7 @@ export const PatientPersonalInformation: FC<InformationSectionProps> = (props) =
   const { patient } = props
   const theme = useTheme()
   const { t } = useTranslation()
+  patient.medicalData?.range?.startDate
 
   const getGender = (): string => {
     return PatientUtils.getGenderLabel(patient.profile.sex)
@@ -96,7 +102,7 @@ export const PatientPersonalInformation: FC<InformationSectionProps> = (props) =
       age--
     }
 
-    return `${age} ${t('years old')}`
+    return `${age} ${t('years-old')}`
   }
 
   return (
@@ -119,10 +125,10 @@ export const PatientPersonalInformation: FC<InformationSectionProps> = (props) =
             </Avatar>
             <Box>
               <Typography variant="body2" color="text.secondary">
-                {t('patient')}
+                {`${t('patient')} ${t(patient.diabeticProfile?.name)}`}
               </Typography>
               <Typography variant="h6" fontWeight="medium">
-                {`${patient.profile.firstName || ''} ${patient.profile.lastName || ''}`.trim() || t('N/A')}
+                {`${patient.profile.firstName || ''}, ${patient.profile.lastName || ''}`.trim() || t('N/A')}
               </Typography>
             </Box>
           </Box>
@@ -130,83 +136,143 @@ export const PatientPersonalInformation: FC<InformationSectionProps> = (props) =
             marginBottom: theme.spacing(5),
             marginTop: theme.spacing(2)
           }} />
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              {/* Date of birth */}
+              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
+                <CakeIcon sx={{ color: 'text.secondary' }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('date-of-birth')}
+                  </Typography>
+                  <Typography variant="body2">
+                    {`${formatBirthdate(patient.profile.birthdate)} (${getAge()})`}
+                  </Typography>
+                </Box>
+              </Box>
 
-          {/* Email */}
-          <Box display="flex" alignItems="center" gap={2}>
-            <EmailIcon sx={{ color: 'text.secondary' }} />
-            <Box>
-              <Typography variant="body2" color="text.secondary">
-                {t('email')}
-              </Typography>
-              <Typography variant="body2">
-                {patient.profile.email || t('N/A')}
-              </Typography>
-            </Box>
-          </Box>
+              {/* Gender */}
+              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
+                <PersonIcon sx={{ color: 'text.secondary' }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('gender')}
+                  </Typography>
+                  <Typography variant="body2">
+                    {getGender()}
+                  </Typography>
+                </Box>
+              </Box>
 
-          {/* Gender */}
-          <Box display="flex" alignItems="center" gap={2}>
-            <PersonIcon sx={{ color: 'text.secondary' }} />
-            <Box>
-              <Typography variant="body2" color="text.secondary">
-                {t('gender')}
-              </Typography>
-              <Typography variant="body2">
-                {getGender()}
-              </Typography>
-            </Box>
-          </Box>
+              {/* Email */}
+              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
+                <EmailIcon sx={{ color: 'text.secondary' }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('email')}
+                  </Typography>
+                  <Typography variant="body2">
+                    {patient.profile.email || t('N/A')}
+                  </Typography>
+                </Box>
+              </Box>
 
-          {/* Date of birth */}
-          <Box display="flex" alignItems="center" gap={2}>
-            <CakeIcon sx={{ color: 'text.secondary' }} />
-            <Box>
-              <Typography variant="body2" color="text.secondary">
-                {t('date-of-birth')}
-              </Typography>
-              <Typography variant="body2">
-                {formatBirthdate(patient.profile.birthdate)}
-              </Typography>
-            </Box>
-          </Box>
 
-          {/* Age */}
-          <Box display="flex" alignItems="center" gap={2}>
-            <AccessTimeIcon sx={{ color: 'text.secondary' }} />
-            <Box>
-              <Typography variant="body2" color="text.secondary">
-                {t('age')}
-              </Typography>
-              <Typography variant="body2">
-                {getAge()}
-              </Typography>
-            </Box>
-          </Box>
+              {/* Equipment Date */}
+              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
+                <PhoneAndroidIcon sx={{ color: 'text.secondary' }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('equipment-date')}
+                  </Typography>
+                  <Typography variant="body2">
+                    {formatDate(patient.medicalData?.range?.startDate) || t('N/A')}
+                  </Typography>
+                </Box>
+              </Box>
 
-          {/* HbA1c */}
-          <Box display="flex" alignItems="center" gap={2}>
-            <ScienceIcon sx={{ color: 'text.secondary' }} />
-            <Box>
-              <Typography variant="body2" color="text.secondary">
-                {t('hbA1c')}
-              </Typography>
-              <Typography variant="body2">
-                {getHbA1c()}
-              </Typography>
-            </Box>
-          </Box>
-          {/* glycemia units */}
-          <Box display="flex" alignItems="center" gap={2}>
-            <ScaleIcon sx={{ color: 'text.secondary' }} />
-            <Box>
-              <Typography variant="body2" color="text.secondary">
-                {t('glycemia-units')}
-              </Typography>
-              <Typography variant="body2">
-                {getDbUnits()}
-              </Typography>
-            </Box>
-          </Box>
+              {/* Weight */}
+              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
+                <MonitorWeightIcon sx={{ color: 'text.secondary' }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('weight')}
+                  </Typography>
+                  <Typography variant="body2">
+                    {`${patient.profile.weight?.value || t('N/A')} ${patient.profile.weight?.unit || ''}`}
+                  </Typography>
+                </Box>
+              </Box>
+
+              {/* Height */}
+              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
+                <HeightIcon sx={{ color: 'text.secondary' }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('height')}
+                  </Typography>
+                  <Typography variant="body2">
+                    {`${patient.profile.height?.value || t('N/A')} ${patient.profile.height?.unit || ''}`}
+                  </Typography>
+                </Box>
+              </Box>
+
+            </Grid>
+            <Grid item xs={6}>
+
+              {/* HbA1c */}
+              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
+                <StraightenIcon sx={{ color: 'text.secondary' }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('hbA1c')}
+                  </Typography>
+                  <Typography variant="body2">
+                    {getHbA1c()}
+                  </Typography>
+                </Box>
+              </Box>
+
+              {/* glycemia units */}
+              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
+                <ScaleIcon sx={{ color: 'text.secondary' }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('glycemia-units')}
+                  </Typography>
+                  <Typography variant="body2">
+                    {getDbUnits()}
+                  </Typography>
+                </Box>
+              </Box>
+
+              {/* insulin type */}
+              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
+                <BasalIcon sx={{ color: 'text.secondary' }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('insulin-type')}
+                  </Typography>
+                  <Typography variant="body2">
+                    {`${patient.settings.insulinType || t('N/A')}`}
+                  </Typography>
+                </Box>
+              </Box>
+
+              {/* cannula size */}
+              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
+                <SquareFootIcon sx={{ color: 'text.secondary' }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('cannula-size')}
+                  </Typography>
+                  <Typography variant="body2">
+                    {`${patient.settings.cannulaSize?.value || t('N/A')} ${patient.settings.cannulaSize?.unit || ''}`}
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
         </Box>
       </CardContent>
     </Card>
