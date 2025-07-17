@@ -57,7 +57,6 @@ export const PatientPersonalInformation: FC<InformationSectionProps> = (props) =
   const { patient } = props
   const theme = useTheme()
   const { t } = useTranslation()
-  patient.medicalData?.range?.startDate
 
   const getGender = (): string => {
     return PatientUtils.getGenderLabel(patient.profile.sex)
