@@ -41,7 +41,7 @@ export const checkPatientNavBarAsHcp = () => {
   const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
   expect(patientNavBar.getByTestId('subnav-patient-list')).toBeVisible()
   expect(patientNavBar.getByTestId('patient-dropdown')).toBeVisible()
-  expect(patientNavBar.getByRole('tablist')).toHaveTextContent('DashboardDailyTrendsTarget & alertsDevice')
+  expect(patientNavBar.getByRole('tablist')).toHaveTextContent('DashboardDailyTrendsPatient profileDevices')
   expect(patientNavBar.getByText('Download report')).toBeVisible()
 }
 
@@ -66,7 +66,7 @@ export const checkPatientNavBarAsPatient = () => {
 
 export const checkPatientDropdown = async (initialPatient: Patient, patientToSwitchTo: Patient) => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-  const initialPatientHeaderContent = `Patient${initialPatient.profile.lastName} ${initialPatient.profile.firstName}Date of birth:${moment(initialPatient.profile.birthdate).format('L')}Diabetes type:Type 1Gender:MaleHbA1c:fakeA1cValue% (05/26/2023)Email:patient1@diabeloop.frDashboardDailyTrendsTarget & alertsDevicesDownload report`
+  const initialPatientHeaderContent = `Patient${initialPatient.profile.lastName} ${initialPatient.profile.firstName}DashboardDailyTrendsPatient profileDevicesDownload report`
   expect(secondaryHeader).toHaveTextContent(initialPatientHeaderContent)
 
   fireEvent.mouseDown(within(secondaryHeader).getByText(`${patient1Info.profile.lastName} ${patient1Info.profile.firstName}`))

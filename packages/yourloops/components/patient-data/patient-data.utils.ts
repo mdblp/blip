@@ -62,7 +62,7 @@ export const getPageTitleByPatientView = (view: PatientView): string => {
     case PatientView.Devices:
       return t('devices')
     case PatientView.PatientProfile:
-      return t('target-and-alerts')
+      return t('patient-profile')
     case PatientView.Trends:
       return t('trends')
   }

@@ -113,6 +113,7 @@ export const PatientPersonalInformation: FC<InformationSectionProps> = (props) =
           {/* Patient Header with Avatar */}
           <Box display="flex" alignItems="center" gap={2}>
             <Avatar
+              data-testid="patient-avatar"
               sx={{
                 width: 56,
                 height: 56,
@@ -248,7 +249,7 @@ export const PatientPersonalInformation: FC<InformationSectionProps> = (props) =
 
               {/* insulin type */}
               <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
-                <BasalIcon sx={{ color: 'text.secondary' }} />
+                <BasalIcon data-testid="basal-icon" sx={{ color: 'text.secondary' }} />
                 <Box>
                   <Typography variant="body2" color="text.secondary">
                     {t('insulin-type')}
