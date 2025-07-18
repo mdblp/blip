@@ -225,7 +225,7 @@ export const PatientPersonalInformation: FC<InformationSectionProps> = (props) =
                 <StraightenIcon sx={{ color: 'text.secondary' }} />
                 <Box>
                   <Typography variant="body2" color="text.secondary">
-                    {t('hbA1c')}
+                    {t('hba1c')}
                   </Typography>
                   <Typography variant="body2">
                     {getHbA1c()}
