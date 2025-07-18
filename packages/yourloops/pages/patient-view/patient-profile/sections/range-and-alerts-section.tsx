@@ -27,10 +27,10 @@
 
 import React, { FC, useEffect, useRef, useState } from 'react'
 import Container from '@mui/material/Container'
-import { Patient } from '../../../lib/patient/models/patient.model'
-import { MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
-import { usePatientsContext } from '../../../lib/patient/patients.provider'
-import { useAlert } from '../../../components/utils/snackbar'
+import { Patient } from '../../../../lib/patient/models/patient.model'
+import { MonitoringAlertsParameters } from '../../../../lib/team/models/monitoring-alerts-parameters.model'
+import { usePatientsContext } from '../../../../lib/patient/patients.provider'
+import { useAlert } from '../../../../components/utils/snackbar'
 import { useTranslation } from 'react-i18next'
 import Card from '@mui/material/Card'
 import { useTheme } from '@mui/material/styles'
@@ -41,17 +41,17 @@ import { useLocation } from 'react-router-dom'
 import Divider from '@mui/material/Divider'
 import {
   MonitoringAlertsPatientConfiguration
-} from '../../../components/monitoring-alert/monitoring-alerts-patient-configuration'
-import { logError } from '../../../utils/error.util'
-import { errorTextFromException } from '../../../lib/utils'
+} from '../../../../components/monitoring-alert/monitoring-alerts-patient-configuration'
+import { logError } from '../../../../utils/error.util'
+import { errorTextFromException } from '../../../../lib/utils'
 
-interface TargetAndAlertsViewProps {
+interface RangeAndAlertsSectionProps {
   patient: Patient
 }
 
 export const MONITORING_ALERTS_SECTION_ID = 'monitoring-alerts'
 
-export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
+export const RangeAndAlertsSection: FC<RangeAndAlertsSectionProps> = (props) => {
   const { patient } = props
   const theme = useTheme()
   const { t } = useTranslation('yourloops')
@@ -108,7 +108,7 @@ export const TargetAndAlertsView: FC<TargetAndAlertsViewProps> = (props) => {
   return (
     <Container data-testid="target-and-alerts-container">
       <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
-        <CardHeader title={t('target-and-alerts')} />
+        <CardHeader title={t('range-and-alerts')} />
         <CardContent>
           <Divider variant="fullWidth" sx={{
             marginBottom: theme.spacing(5),

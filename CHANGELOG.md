@@ -4,7 +4,12 @@ It is based on Tidepool Blip 1.27.
 
 ## 3.8.0-beta - 2025-07-11
 ### Added
+- YLP-2344 Patient profile information page for HCPs only
 - YLP-3589 add new estimated total insulin statistic
+
+### Changed
+- YLP-2347 Display patient monitoring parameters in the patient profile page
+- YLP-3651 Transfer the patient information displayed in the banner in the patient profile page
 
 ## 3.7.0 - 2025-07-10
 ### Added

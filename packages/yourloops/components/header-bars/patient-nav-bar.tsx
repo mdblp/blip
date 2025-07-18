@@ -32,7 +32,6 @@ import { useAuth } from '../../lib/auth'
 import { makeStyles } from 'tss-react/mui'
 import { type Theme } from '@mui/material/styles'
 import { PatientNavBarTabs } from './patient-nav-bar-tabs'
-import { PatientNavBarInfoList } from './patient-nav-bar-info-list'
 import { PatientNavBarSelect } from './patient-nav-bar-select'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { useNavigate } from 'react-router-dom'
@@ -97,7 +96,6 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
               currentPatient={currentPatient}
               onSwitchPatient={onSwitchPatient}
             />
-            <PatientNavBarInfoList patient={currentPatient} />
           </Box>
         </Box>
       }

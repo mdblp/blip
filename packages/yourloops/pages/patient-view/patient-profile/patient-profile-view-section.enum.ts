@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,17 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { DeviceSystem } from 'medical-domain'
-
-export interface PatientSettings {
-  a1c?: {
-    date: string
-    value: string
-  }
-  system?: DeviceSystem
-  insulinType?: string
-  cannulaSize?: {
-    value: number
-    unit: string
-  }
+export enum PatientProfileViewSection {
+  Information = 'Information',
+  RangeAndAlerts = 'RangeAndAlerts',
 }

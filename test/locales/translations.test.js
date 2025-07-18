@@ -312,7 +312,11 @@ const ignoredTransKeyForYourLoops = [
 const ignoredTransKeyInYourLoopsFiles = [
   // Documentation!
   'translate-me',
-  'translate-{{someone}}'
+  'translate-{{someone}}',
+  // Keys that are prefixed with namespace "params|"
+  'params|HEIGHT',
+  'params|INSULIN_TYPE',
+  'params|WEIGHT'
 ]
 
 /**
@@ -355,14 +359,14 @@ async function getTranslations(file) {
   /** @type {string[]} */
   const trKeys = []
   for (const line of lines) {
-    console.log(line)
+    //console.log(line)
     const match = [...line.matchAll(reExtractTranslationKeys)]
     if (match !== null) {
       //const trKey = match[1]
-      match.forEach(match => console.log(match[1]))
+      //match.forEach(match => console.log(match[1]))
       const translationKeys = match.map(match => match[1])
       translationKeys.forEach(trKey => {
-        console.log('Found translation key:', trKey)
+        //console.log('Found translation key:', trKey)
         trKeys.push(trKey)
       })
     }
@@ -451,6 +455,6 @@ describe('Locales tests', () => {
       }
     }
     expect(unusedTranslations, `Unused translations: ${JSON.stringify(unusedTranslations)}`).to.be.empty
-    expect(missingTranslations, `Missing translations: ${JSON.stringify(missingTranslations)}`).to.be.empty
+    expect(missingTranslations, `Missing translations: ${JSON.stringify(missingTranslations)} in translation.json or yourloops.json`).to.be.empty
   })
 })

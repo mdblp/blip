@@ -37,7 +37,7 @@ import { useTheme } from '@mui/material/styles'
 import { MonitoringAlertsCardSkeletonValue } from './monitoring-alerts-card-skeleton-value'
 import { useNavigate } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import { MONITORING_ALERTS_SECTION_ID } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
+import { MONITORING_ALERTS_SECTION_ID } from '../../pages/patient-view/patient-profile/sections/range-and-alerts-section'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import { DataCard } from '../data-card/data-card'
 import { buildSimpleValueProps } from 'dumb/dist/src/components/stats/simple/simple-stat.util'
@@ -104,7 +104,7 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
             data-testid="monitoring-alert-card-configure-button"
             data-stonlyid="monitoring-alerts-card-configure-button"
             onClick={() => {
-              navigate(`..${AppUserRoute.TargetAndAlerts}#${MONITORING_ALERTS_SECTION_ID}`, { relative: 'path' })
+              navigate(`..${AppUserRoute.PatientProfile}#${MONITORING_ALERTS_SECTION_ID}`, { relative: 'path' })
             }}
             size="small"
           >

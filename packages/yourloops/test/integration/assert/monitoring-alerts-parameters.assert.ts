@@ -33,13 +33,17 @@ import PatientApi from '../../../lib/patient/patient.api'
 import { buildTeamThree, myThirdTeamId } from '../mock/team.api.mock'
 import TeamApi from '../../../lib/team/team.api'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
+import { getTranslation } from '../../utils/i18n'
 
 export const checkMonitoringAlertsLinkToTargetAndAlerts = async (): Promise<void> => {
   const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring alerts')
   await userEvent.click(configureMonitoringAlertsButton)
 
+  const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range-and-alerts'))
+  await userEvent.click(menuButton)
+
   const targetAndAlertsContent = screen.getByTestId('target-and-alerts-container')
-  expect(targetAndAlertsContent).toHaveTextContent('Target & alerts')
+  expect(targetAndAlertsContent).toHaveTextContent(getTranslation('range-and-alerts'))
   expect(targetAndAlertsContent).toHaveTextContent('Monitoring alertsSet manually each value or apply care team values.')
 }
 

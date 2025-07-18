@@ -80,7 +80,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
   const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const bgClasses = defaultBgClasses[bgUnits]
-  const bgPrefs: BgPrefs = {
+  const bgPrefs: BgPrefs = patient.diabeticProfile?.bloodGlucosePreference || {
     bgUnits,
     bgClasses,
     bgBounds: {
@@ -136,8 +136,8 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
         return PatientView.Dashboard
       case AppUserRoute.Devices:
         return PatientView.Devices
-      case AppUserRoute.TargetAndAlerts:
-        return PatientView.TargetAndAlerts
+      case AppUserRoute.PatientProfile:
+        return PatientView.PatientProfile
     }
   }, [pathname])
 
@@ -149,8 +149,8 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
         return AppUserRoute.Dashboard
       case PatientView.Devices:
         return AppUserRoute.Devices
-      case PatientView.TargetAndAlerts:
-        return AppUserRoute.TargetAndAlerts
+      case PatientView.PatientProfile:
+        return AppUserRoute.PatientProfile
       case PatientView.Trends:
         return AppUserRoute.Trends
     }
