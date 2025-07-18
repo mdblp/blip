@@ -40,12 +40,12 @@ import PatientUtils from '../../../../lib/patient/patient.util'
 import EmailIcon from '@mui/icons-material/Email'
 import PersonIcon from '@mui/icons-material/Person'
 import CakeIcon from '@mui/icons-material/Cake'
-import SquareFootIcon from '@mui/icons-material/SquareFoot';
+import SquareFootIcon from '@mui/icons-material/SquareFoot'
 import ScaleIcon from '@mui/icons-material/Scale'
-import HeightIcon from '@mui/icons-material/Height';
-import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
-import MonitorWeightIcon from '@mui/icons-material/MonitorWeight';
-import StraightenIcon from '@mui/icons-material/Straighten';
+import HeightIcon from '@mui/icons-material/Height'
+import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid'
+import MonitorWeightIcon from '@mui/icons-material/MonitorWeight'
+import StraightenIcon from '@mui/icons-material/Straighten'
 import Divider from '@mui/material/Divider'
 import { BasalIcon } from '../../../../components/icons/diabeloop/basal-icon'
 
