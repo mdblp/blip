@@ -26,9 +26,10 @@
  */
 
 import { screen } from '@testing-library/react'
+import { getTranslation } from '../../utils/i18n'
 
 export const checkTargetAndAlertsViewContent = async (): Promise<void> => {
   const targetAndAlertsContent = await screen.findByTestId('target-and-alerts-container')
-  expect(targetAndAlertsContent).toHaveTextContent('Target & alerts')
+  expect(targetAndAlertsContent).toHaveTextContent(getTranslation('range-and-alerts'))
   expect(targetAndAlertsContent).toHaveTextContent('Monitoring alertsSet manually each value or apply care team values.')
 }
