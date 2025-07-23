@@ -8,7 +8,7 @@ const helmet = require('helmet')
 const bodyParser = require('body-parser')
 const compression = require('compression')
 const morgan = require('morgan')
-const request = require('request')
+const axios = require('axios')
 
 let httpPort = 3000
 let httpsPort = 3002
@@ -77,27 +77,19 @@ function redirectMiddleware(req, res, next) {
       }
     ]
   }
-  const options = {
-    method: 'POST',
-    url: `${lambdaUrl}/2015-03-31/functions/func/invocations`,
+  axios.post(`${lambdaUrl}/2015-03-31/functions/func/invocations`, payload, {
     headers: {
       'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
-  }
-  request(options, (error, response) => {
-    if (error) {
-      console.error(error)
-      res.status(500).send('lambda middleware issue')
-      next(error)
-    } else {
-      const resBody = JSON.parse(response.body)
+    }
+  })
+    .then((response) => {
+      const resBody = response.data
       if (resBody.status !== undefined) {
-        // set headers
+        // Set headers
         for (const hd in resBody.headers) {
           res.header(hd, resBody.headers[hd][0].value)
         }
-        // set body
+        // Set body
         if (resBody.bodyEncoding === 'base64') {
           const b = Buffer.from(resBody.body, 'base64')
           res.status(resBody.status).send(b)
@@ -107,8 +99,12 @@ function redirectMiddleware(req, res, next) {
       } else {
         return next()
       }
-    }
-  })
+    })
+    .catch((error) => {
+      console.error(error)
+      res.status(500).send('lambda middleware issue')
+      next(error)
+    })
 }
 
 /**
@@ -135,9 +131,11 @@ async function stopServer(app) {
   }
 }
 
+// Load the static directory
 const staticDir = getStaticDir(`${__dirname}/../dist/static`)
-
 fetchFilesList(staticDir)
+
+// Load the configuration
 const app = express()
 app.use(morgan(':date[iso] :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]'))
 app.use(compression())
@@ -145,6 +143,8 @@ app.use(helmet())
 app.use(bodyParser.json({
   type: ['json', 'application/csp-report']
 }))
+
+
 app.post('/event/csp-report/violation', (req, res) => {
   const now = new Date().toISOString()
   if (req.body) {
@@ -154,11 +154,13 @@ app.post('/event/csp-report/violation', (req, res) => {
   }
   res.status(204).end()
 })
+
 app.use(redirectMiddleware)
 app.use(express.static(staticDir, {
   maxAge: '1d', // 1 day
   index: false
 }))
+
 
 if (httpPort) {
   httpServer = http.createServer(app).listen(httpPort, () => {
@@ -186,7 +188,7 @@ if (httpsPort) {
   })
 }
 
-// Handle simple process kill
+// Handle a simple process kill
 process.once('SIGTERM', async () => {
   await stopServer(app)
 })
