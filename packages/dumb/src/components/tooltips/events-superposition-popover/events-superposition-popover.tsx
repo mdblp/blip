@@ -67,6 +67,7 @@ export const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (
       case DeviceEventSubtype.Alarm:
         return getAlarmEventTitle(event as AlarmEvent)
       case DeviceEventSubtype.DeviceParameter:
+        // TODO To update
         return 'Device Parameter'
       case DeviceEventSubtype.ReservoirChange:
         return getReservoirChangeTitle(event as unknown as ReservoirChange)
@@ -129,7 +130,7 @@ export const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (
             <React.Fragment key={index}>
               <Grid container>
                 <Grid item xs={2}>
-                  <Box>
+                  <Box className={styles.icon}>
                     <img src={getIcon(event)} alt="Event icon" />
                   </Box>
                 </Grid>

@@ -28,3 +28,8 @@
 .title {
   font-weight: bold;
 }
+
+.icon {
+  width: 36px;
+  height: 36px;
+}
