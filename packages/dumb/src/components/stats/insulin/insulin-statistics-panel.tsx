@@ -112,10 +112,10 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
           alignItems="baseline"
           className={styles.row}
         >
-          <span className={styles.rowPercentValue}>
+          <span className={styles.rowValue}>
             {roundToOneDecimal(totalInsulin)}
           </span>
-          <span className={styles.rowPercentUnits}>
+          <span className={styles.rowUnits}>
             {t('insulin-unit-u')}
           </span>
         </Box>
@@ -137,10 +137,10 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
           alignItems="baseline"
           className={styles.row}
         >
-          <span className={styles.rowPercentValue}>
+          <span className={styles.rowValue}>
             {estimatedTotalInsulinValue}
           </span>
-          <span className={styles.rowPercentUnits}>
+          <span className={styles.rowUnits}>
             {t('insulin-unit-u')}
           </span>
         </Box>
@@ -173,10 +173,10 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
                   width="50px"
                   alignItems="baseline"
                 >
-                  <span className={styles.rowPercentValue}>
+                  <span className={styles.rowValue}>
                     {entry.value > 0 ? entry.value : '0'}
                   </span>
-                  <span className={styles.rowPercentUnits}>
+                  <span className={styles.rowUnits}>
                    {entry.units}
                   </span>
                 </Box>
