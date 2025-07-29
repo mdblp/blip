@@ -41,7 +41,11 @@ import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import colors from '../../../styles/colors.css'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
-import { convertValueToHours } from '../../../utils/datetime/datetime.util'
+import {
+  convertValueToHours,
+  convertValueToMinutes,
+  isDurationLowerThanOneHour
+} from '../../../utils/datetime/datetime.util'
 
 interface NightModeTooltipProps {
   nightMode: NightMode
@@ -54,18 +58,26 @@ export const NightModeTooltip: FC<NightModeTooltipProps> = (props) => {
   const { nightMode, position, side, timePrefs } = props
   const { t } = useTranslation('main')
 
-  const getDurationInHours = (): DurationValue => {
+  const getDuration = (): DurationValue => {
     const units = nightMode.duration.units
     const duration = nightMode.duration.value
-    const value = convertValueToHours(duration, units)
 
+    if (isDurationLowerThanOneHour(duration, units)) {
+      const value = convertValueToMinutes(duration, units)
+      return {
+        units: DurationUnit.Minutes,
+        value
+      }
+    }
+
+    const value = convertValueToHours(duration, units)
     return {
       units: DurationUnit.Hours,
       value
     }
   }
 
-  const duration = getDurationInHours()
+  const duration = getDuration()
 
   return (
     <Tooltip

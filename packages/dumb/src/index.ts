@@ -43,7 +43,7 @@ import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
 import { formatBgValue } from './utils/format/format.util'
 import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
 import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
-import { InsulinStatMemoized as InsulinStat } from './components/stats/insulin/insulin-stat'
+import { InsulinStatisticPanelMemoized as InsulinStatisticsPanel } from './components/stats/insulin/insulin-statistics-panel'
 import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mode-stat/loop-mode-stat'
 import { CarbsStatItemMemoized as CarbsStatItem } from './components/stats/total-carbs/total-carbs-stat'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
@@ -120,7 +120,7 @@ export {
   SimpleStat,
   StatTooltip,
   Tooltip,
-  InsulinStat,
+  InsulinStatisticsPanel,
   CarbsStatItem,
   TrendsContainer,
   TrendsProvider,

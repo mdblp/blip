@@ -127,12 +127,12 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
         {user.isUserHcp() && !TeamUtils.isPrivate(teamId) &&
           <Tab
             className={classes.tab}
-            value={PatientView.TargetAndAlerts}
-            data-testid="target-and-alerts-tab"
+            value={PatientView.PatientProfile}
+            data-testid="patient-profile-tab"
             iconPosition="start"
-            label={t('target-and-alerts')}
+            label={t('patient-profile')}
             onClick={() => {
-              onChangePatientView(PatientView.TargetAndAlerts)
+              onChangePatientView(PatientView.PatientProfile)
             }}
             classes={{
               root: classes.root

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,17 +25,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { DeviceSystem } from 'medical-domain'
+import fs from 'fs';
+import path from 'path';
 
-export interface PatientSettings {
-  a1c?: {
-    date: string
-    value: string
-  }
-  system?: DeviceSystem
-  insulinType?: string
-  cannulaSize?: {
-    value: number
-    unit: string
+export type Locale = 'en' | 'fr';
+
+/**
+ * Utility function to load a JSON
+ */
+function loadJson(relativePath: string): Record<string, string> {
+  const fullPath = path.resolve(__dirname, relativePath);
+  const raw = fs.readFileSync(fullPath, 'utf-8');
+  return JSON.parse(raw);
+}
+
+// load en Translation
+const enTranslation = {
+  ...loadJson('../../../../locales/en/yourloops.json'),
+  ...loadJson('../../../../locales/en/translation.json'),
+  ...loadJson('../../../../locales/en/parameter.json')
+};
+
+// load fr Translation
+const frTranslation = {
+  ...loadJson('../../../../locales/fr/yourloops.json'),
+  ...loadJson('../../../../locales/fr/translation.json'),
+  ...loadJson('../../../../locales/fr/parameter.json')
+};
+
+//
+export function getTranslation(key: string, locale: Locale = 'en'): string {
+  switch (locale) {
+    case 'en':
+      return enTranslation[key] ?? key;
+    case 'fr':
+      return frTranslation[key] ?? key;
+    default:
+      throw new Error('Invalid local type it is en or fr');
   }
 }
+
+
