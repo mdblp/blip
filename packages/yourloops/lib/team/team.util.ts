@@ -25,28 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Team, TEAM_CODE_LENGTH } from './models/team.model'
+import { type Team } from './models/team.model'
 import { TeamMemberRole } from './models/enums/team-member-role.enum'
 import { UserInviteStatus } from './models/enums/user-invite-status.enum'
 export const PRIVATE_TEAM_ID = 'private'
 export const PRIVATE_TEAM_NAME = 'private'
-/**
- * Get the team code for display - Can be use with partial code.
- * @param code 9 digit string team code
- * @returns `123 - 456 - 789`
- */
-export function getDisplayTeamCode(code: string): string {
-  const SEP_POS = [2, 5]
-  let displayCode = ''
-  const codeLen = Math.min(code.length, TEAM_CODE_LENGTH)
-  for (let i = 0; i < codeLen; i++) {
-    displayCode += code[i]
-    if (SEP_POS.includes(i) && i + 1 < codeLen) {
-      displayCode += ' - '
-    }
-  }
-  return displayCode
-}
 
 export default class TeamUtils {
   static isUserTheOnlyAdministrator = (team: Team, userId: string): boolean => {

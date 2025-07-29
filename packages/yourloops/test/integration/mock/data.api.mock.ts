@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -55,6 +55,7 @@ export const WIZARD_BOLUS_UNDELIVERED_ID = 'carbBolusId'
 export const WIZARD_BOLUS_UMM_ID = 'carbBolusId2'
 export const WIZARD_BOLUS_POSITIVE_OVERRIDE_ID = 'carbBolusId3'
 export const WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID = 'carbBolusId4'
+export const WIZARD_BOLUS_LOW_OVERRIDE_ID = 'carbBolusId5'
 export const PEN_BOLUS_ID = 'penBolusId'
 export const MANUAL_BOLUS_ID = 'manualBolusId'
 
@@ -64,10 +65,14 @@ export const WIZARD_UNDELIVERED_ID = 'wizardId1'
 export const WIZARD_UMM_ID = 'wizardId2'
 export const WIZARD_POSITIVE_OVERRIDE_ID = 'wizardId3'
 export const WIZARD_NEGATIVE_OVERRIDE_ID = 'wizardId4'
+export const WIZARD_LOW_OVERRIDE_ID = 'wizardId5'
 export const CARB_ID = 'carbId'
 export const PHYSICAL_ACTIVITY_ID = 'physicalActivityId'
+export const PHYSICAL_ACTIVITY_WITHOUT_NAME_ID = 'physicalActivityId2'
 export const PHYSICAL_ACTIVITY_TIME = '2022-08-08T13:00:00Z'
+export const PHYSICAL_ACTIVITY_WITHOUT_NAME_TIME = '2022-08-08T14:00:00Z'
 export const RESERVOIR_CHANGE_ID = 'reservoirChangeId'
+export const RESERVOIR_CHANGE2_ID = 'reservoirChangeId2'
 export const PARAMETER_ID = 'parameterId'
 export const CONFIDENTIAL_MODE_ID = 'deviceEvent_2022-08-08_8'
 export const ALARM_EVENT_HYPERGLYCEMIA_ID = 'alarmEventHyperglycemiaId'
@@ -96,10 +101,12 @@ export const ALARM_EVENT_DANA_OCCLUSION_ID = 'alarmEventDanaOcclusionId'
 export const ALARM_EVENT_MEDISAFE_EMPTY_PUMP_BATTERY_ID = 'alarmEventMedisafeEmptyPumpBatteryId'
 export const ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID = 'alarmEventMedisafeEmptyReservoirId'
 export const ALARM_EVENT_MEDISAFE_OCCLUSION_ID = 'alarmEventMedisafeOcclusionId'
+export const NIGHT_MODE_ID = 'nightModeId'
 export const WARMUP_01_ID = 'warmup01Id'
 export const WIZARD_UNDELIVERED_INPUT_TIME = '2022-08-08T02:00:00Z'
 export const WIZARD_POSITIVE_OVERRIDE_INPUT_TIME = '2022-08-08T22:45:00Z'
 export const WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME = '2022-08-08T23:15:00Z'
+export const WIZARD_LOW_OVERRIDE_INPUT_TIME = '2022-08-08T22:45:00Z'
 export const YESTERDAY_DATE: Moment = moment().subtract(1, 'days')
 export const RESERVOIR_CHANGE_TODAY_DATE: Moment = moment()
 export const TWO_WEEKS_AGO_DATE: Moment = moment().subtract(14, 'days')
@@ -386,7 +393,7 @@ export const generateCompleteDashboardFromDate = (date: string): Data => {
     zenModes: [],
     timezoneChanges: []
   }
-  // Insert data for each days
+  // Insert data for each day
   // eslint-disable-next-line no-unmodified-loop-condition
   while (startDate <= endDate) {
     const date = startDate.toISOString().split('T')[0]
@@ -412,7 +419,7 @@ export const generateCompleteDashboardFromDate = (date: string): Data => {
     data.deviceParametersChanges.push(deviceEventMock(date, '08:00:00'))
     startDate.setDate(startDate.getDate() + 1)
   }
-  // And finaly add one reservoir change event
+  // And finally add the reservoir change events
   data.reservoirChanges.push(
     {
       epoch: new Date(`${reservoirChangeDateAsString}T17:00:00Z`).getTime(),
@@ -421,6 +428,20 @@ export const generateCompleteDashboardFromDate = (date: string): Data => {
       timezone: 'Europe/Paris',
       guessedTimezone: false,
       id: RESERVOIR_CHANGE_ID,
+      type: 'deviceEvent',
+      source: 'Diabeloop',
+      subType: 'reservoirChange',
+      pump: {
+        manufacturer: 'DEFAULT'
+      }
+    },
+    {
+      epoch: new Date(`${reservoirChangeDateAsString}T15:00:00Z`).getTime(),
+      displayOffset: -120,
+      normalTime: `${reservoirChangeDateAsString}T15:00:00Z`,
+      timezone: 'Europe/Paris',
+      guessedTimezone: false,
+      id: RESERVOIR_CHANGE2_ID,
       type: 'deviceEvent',
       source: 'Diabeloop',
       subType: 'reservoirChange',
@@ -797,8 +818,9 @@ export const pumpSettingsDblg2: Data = {
             serialNumber: '123456',
           },
           mobileApplication: {
+            activationCode: '123456789',
             manufacturer: Source.Diabeloop,
-            identifier: DeviceSystem.Dblg2,
+            identifier: 'ee2bfb587758',
             swVersion: '1.0.0'
           },
           securityBasals: {
@@ -1289,7 +1311,8 @@ export const dataSetsWithZeroValues: Data = {
         "guid": "pa_18",
         "reportedIntensity": Intensity.Medium,
         "inputTime": "2022-08-08T13:00:00.000Z",
-        "isoWeekday": WeekDays.Sunday
+        "isoWeekday": WeekDays.Sunday,
+        "name": "SWIMMING"
       }
     ],
     "pumpSettings": [

@@ -30,7 +30,7 @@ import { PatientNavBarMemoized as PatientNavBar } from '../header-bars/patient-n
 import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { PrintReportDialog } from '../pdf/print-report-dialog'
-import { PatientDashboard } from '../dashboard-widgets/patient-dashboard'
+import { PatientDashboard } from '../dashboard-cards/patient-dashboard'
 import Daily from 'blip/app/components/chart/daily'
 import Trends from 'blip/app/components/chart/trends'
 import SpinningLoader from '../loaders/spinning-loader'
@@ -49,12 +49,12 @@ import metrics from '../../lib/metrics'
 import DailyNotes from 'blip/app/components/messages'
 import { useAuth } from '../../lib/auth'
 import { errorTextFromException, setPageTitle } from '../../lib/utils'
-import { TargetAndAlertsView } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
 import TeamUtils from '../../lib/team/team.util'
 import { Patient } from '../../lib/patient/models/patient.model'
 import { getPageTitleByPatientView } from './patient-data.utils'
 import { DevicesView } from '../../pages/patient-view/devices/devices-view'
 import { logError } from '../../utils/error.util'
+import { PatientProfileView } from '../../pages/patient-view/patient-profile/patient-profile-view'
 
 interface PatientDataProps {
   patient: Patient
@@ -167,7 +167,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                         bgPrefs={bgPrefs}
                         medicalDataService={medicalData}
                         patient={patient}
-                        loading={refreshingData}
+                        goToDailySpecificDate={goToDailySpecificDate}
                       />
                     }
                   />
@@ -239,9 +239,9 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                   {
                     user.isUserHcp() && !TeamUtils.isPrivate(teamId) &&
                     <Route
-                      path={AppUserRoute.TargetAndAlerts}
+                      path={AppUserRoute.PatientProfile}
                       element={
-                        <TargetAndAlertsView
+                        <PatientProfileView
                           patient={patient}
                         />
                       }

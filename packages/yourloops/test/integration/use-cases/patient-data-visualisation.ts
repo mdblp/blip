@@ -52,6 +52,7 @@ import { checkMonitoringAlertsCard, checkMonitoringAlertsCardNoData } from '../a
 import { checkTrendsStatsWidgetsTooltips } from '../assert/trends-view.assert'
 import {
   checkDailyStatsWidgetsTooltips,
+  checkDailyTidelineContainerTooltipsDblg2,
   checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware,
   checkDailyTidelineContainerTooltipsMgdl,
   checkDailyTidelineContainerTooltipsMmolL,
@@ -144,10 +145,15 @@ export const testDailyViewTooltipsAndValuesMgdl = async () => {
 
   await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
   await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
-  await checkTotalInsulinStatWidget('Total Insulin61.1 UMeal bolus83 %50.7 UBasal & correction bolus2.1 %1.3 UManual bolus8.3 %5.1 UPen bolus6.7 %4.1 U')
+  await checkTotalInsulinStatWidget('Total Delivered Insulin71.2 UEstimated total insulin requirement-- UMeal bolus60.8 U85.4%Basal & correction bolus1.3 U1.8%Manual bolus5.1 U7.2%Pen bolus4.1 U5.8%')
 }
 
-export const testDailyViewTooltipsForDBLG2OrRecentSoftware = async () => {
+export const testDailyViewTooltipsForDblg2 = async () => {
+  await checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware()
+  await checkDailyTidelineContainerTooltipsDblg2()
+}
+
+export const testDailyViewTooltipsForRecentSoftware = async () => {
   await checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware()
 }
 

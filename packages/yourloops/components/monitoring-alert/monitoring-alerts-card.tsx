@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,17 +31,17 @@ import { useTranslation } from 'react-i18next'
 import { makeStyles } from 'tss-react/mui'
 import { Box, IconButton, Skeleton } from '@mui/material'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
-import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import { useAuth } from '../../lib/auth'
 import { useTheme } from '@mui/material/styles'
 import { MonitoringAlertsCardSkeletonValue } from './monitoring-alerts-card-skeleton-value'
-import PatientUtils from '../../lib/patient/patient.util'
 import { useNavigate } from 'react-router-dom'
 import { AppUserRoute } from '../../models/enums/routes.enum'
-import { MONITORING_ALERTS_SECTION_ID } from '../../pages/patient-view/target-and-alerts/target-and-alerts-view'
+import { MONITORING_ALERTS_SECTION_ID } from '../../pages/patient-view/patient-profile/sections/range-and-alerts-section'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
+import { DataCard } from '../data-card/data-card'
+import { buildSimpleValueProps } from 'dumb/dist/src/components/stats/simple/simple-stat.util'
+import { SimpleValue, StatFormats } from 'dumb'
 
 const monitoringAlertsCardStyles = makeStyles()((theme) => {
   return {
@@ -82,102 +82,113 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
 
   const numberOfMonitoringAlertsLabel = buildNumberOfMonitoringAlertsLabel()
 
-  return (
-    <GenericDashboardCard
-      title={`${t('monitoring-alerts')}${numberOfMonitoringAlertsLabel}`}
-      data-testid="monitoring-alerts-card"
-      action={user.isUserHcp() &&
-        <IconButton
-          id="configure-icon-button-id"
-          aria-label={t('configure-monitoring-alerts')}
-          data-testid="monitoring-alert-card-configure-button"
-          data-stonlyid="monitoring-alerts-card-configure-button"
-          onClick={() => {
-            navigate(`..${AppUserRoute.TargetAndAlerts}#${MONITORING_ALERTS_SECTION_ID}`, { relative: 'path' })
-          }}
-          size="small"
-        >
-          <SettingsOutlinedIcon />
-        </IconButton>
-      }
-    >
-      <CardContent>
-        {patient.monitoringAlerts
-          ? <>
-            <Typography className={`${noActiveMonitoringAlert ? '' : classes.alertColor} bold`}>
-              {t('current-monitoring-alerts')}
-            </Typography>
-            <Box
-              id="time-away-target-monitoring-alert-id"
-              display="flex"
-              justifyContent="space-between"
-              fontSize="13px"
-              className={timeSpentAwayFromTargetActive ? classes.alertColor : ''}
-            >
-              {t('time-out-of-range-target')}
-              <Box>
-                {PatientUtils.formatPercentageValue(patient.monitoringAlerts.timeSpentAwayFromTargetRate)}
-              </Box>
-            </Box>
-            <Box
-              id="severe-hypo-monitoring-alert-id"
-              display="flex"
-              fontSize="13px"
-              justifyContent="space-between"
-              className={frequencyOfSevereHypoglycemiaActive ? classes.alertColor : ''}
-            >
-              {t('alert-hypoglycemic')}
-              <Box>
-                {PatientUtils.formatPercentageValue(patient.monitoringAlerts.frequencyOfSevereHypoglycemiaRate)}
-              </Box>
-            </Box>
-            <Box
-              id="non-data-transmission-monitoring-alert-id"
-              display="flex"
-              justifyContent="space-between"
-              fontSize="13px"
-              className={nonDataTransmissionActive ? classes.alertColor : ''}
-            >
-              {t('data-not-transmitted')}
-              <Box>
-                {PatientUtils.formatPercentageValue(patient.monitoringAlerts.nonDataTransmissionRate)}
-              </Box>
-            </Box>
-          </>
-          : <Box>
-            <Box sx={{ paddingTop: theme.spacing(1) }}>
-              <Skeleton variant="rounded"
-                        width={SKELETON_TITLE_WIDTH}
-                        height={SKELETON_TITLE_HEIGHT} />
-            </Box>
+  const timeSpentAwayFromTargetRateProps = buildSimpleValueProps(StatFormats.Percentage, 100, patient.monitoringAlerts.timeSpentAwayFromTargetRate)
+  const frequencyOfSevereHypoglycemiaRateProps = buildSimpleValueProps(StatFormats.Percentage, 100, patient.monitoringAlerts.frequencyOfSevereHypoglycemiaRate)
+  const nonDataTransmissionRateProps = buildSimpleValueProps(StatFormats.Percentage, 100, patient.monitoringAlerts.nonDataTransmissionRate)
 
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              sx={{ paddingTop: theme.spacing(1) }}
-            >
-              <MonitoringAlertsCardSkeletonValue />
-            </Box>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              sx={{ paddingTop: theme.spacing(1) }}
-            >
-              <MonitoringAlertsCardSkeletonValue />
-            </Box>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              sx={{ paddingTop: theme.spacing(1) }}
-            >
-              <MonitoringAlertsCardSkeletonValue />
-            </Box>
+  return (
+    <DataCard data-testid="monitoring-alerts-card">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ paddingBottom: theme.spacing(1) }}
+      >
+        <Typography sx={{ fontWeight: 'bold' }}>
+          {`${t('monitoring-alerts')}${numberOfMonitoringAlertsLabel}`}
+        </Typography>
+        {user.isUserHcp() &&
+          <IconButton
+            id="configure-icon-button-id"
+            aria-label={t('configure-monitoring-alerts')}
+            data-testid="monitoring-alert-card-configure-button"
+            data-stonlyid="monitoring-alerts-card-configure-button"
+            onClick={() => {
+              navigate(`..${AppUserRoute.PatientProfile}#${MONITORING_ALERTS_SECTION_ID}`, { relative: 'path' })
+            }}
+            size="small"
+          >
+            <SettingsOutlinedIcon />
+          </IconButton>
+        }
+      </Box>
+
+      {patient.monitoringAlerts
+        ? <>
+          <Box
+            id="time-away-target-monitoring-alert-id"
+            display="flex"
+            justifyContent="space-between"
+            className={timeSpentAwayFromTargetActive ? classes.alertColor : ''}
+          >
+            {t('time-out-of-range-target')}
+            {patient.monitoringAlerts.timeSpentAwayFromTargetRate
+              ? <SimpleValue {...timeSpentAwayFromTargetRateProps} />
+              : <Typography sx={{ fontWeight: 'bold' }}>
+                {t('N/A')}
+              </Typography>
+            }
+          </Box>
+          <Box
+            id="severe-hypo-monitoring-alert-id"
+            display="flex"
+            justifyContent="space-between"
+            className={frequencyOfSevereHypoglycemiaActive ? classes.alertColor : ''}
+          >
+            {t('alert-hypoglycemic')}
+            {patient.monitoringAlerts.frequencyOfSevereHypoglycemiaRate
+              ? <SimpleValue {...frequencyOfSevereHypoglycemiaRateProps} />
+              : <Typography sx={{ fontWeight: 'bold' }}>
+                {t('N/A')}
+              </Typography>
+            }
+          </Box>
+          <Box
+            id="non-data-transmission-monitoring-alert-id"
+            display="flex"
+            justifyContent="space-between"
+            className={nonDataTransmissionActive ? classes.alertColor : ''}
+          >
+            {t('data-not-transmitted')}
+            {patient.monitoringAlerts.nonDataTransmissionRate
+              ? <SimpleValue {...nonDataTransmissionRateProps} />
+              : <Typography sx={{ fontWeight: 'bold' }}>
+                {t('N/A')}
+              </Typography>
+            }
+          </Box>
+        </>
+        : <Box>
+          <Box sx={{ paddingTop: theme.spacing(1) }}>
+            <Skeleton variant="rounded"
+                      width={SKELETON_TITLE_WIDTH}
+                      height={SKELETON_TITLE_HEIGHT} />
           </Box>
 
-        }
-
-      </CardContent>
-    </GenericDashboardCard>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            sx={{ paddingTop: theme.spacing(1) }}
+          >
+            <MonitoringAlertsCardSkeletonValue />
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            sx={{ paddingTop: theme.spacing(1) }}
+          >
+            <MonitoringAlertsCardSkeletonValue />
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            sx={{ paddingTop: theme.spacing(1) }}
+          >
+            <MonitoringAlertsCardSkeletonValue />
+          </Box>
+        </Box>
+      }
+    </DataCard>
   )
 }
 

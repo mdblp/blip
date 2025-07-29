@@ -1,6 +1,6 @@
 {
   "name": "tideline",
-  "version": "3.7.0-beta",
+  "version": "3.8.0-beta",
   "description": "Tidepool's timeline data visualization",
   "repository": {
     "type": "git",

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -49,7 +49,6 @@ import { BolusType } from '../../../models/enums/bolus-type.enum'
 import { useTranslation } from 'react-i18next'
 import colors from '../../../styles/colors.css'
 import {
-  COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
   COMMON_TOOLTIP_TAIL_WIDTH,
   DEFAULT_TOOLTIP_BORDER_WIDTH,
@@ -69,6 +68,8 @@ interface BolusTooltipProps {
   position: Position
   timePrefs: TimePrefs
 }
+
+const MINIMAL_OVERRIDE = 0.1
 
 export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
   const { bolus, position, side, timePrefs } = props
@@ -95,9 +96,11 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
   const inputTime = (bolus as Wizard).inputTime
   const recommended = getRecommended(bolus as Wizard)
   const suggested = Number.isFinite(recommended) ? recommended : null
-  const override = formatInsulin(programmed - recommended)
+
+  const rawOverride = programmed - recommended
+  const override = formatInsulin(rawOverride)
   const overrideValue = programmed > recommended ? `+${override}` : override.toString()
-  const shouldDisplayOverride = Number.isFinite(programmed) && Number.isFinite(recommended) && programmed !== recommended
+  const shouldDisplayOverride = Number.isFinite(programmed) && Number.isFinite(recommended) && Math.abs(rawOverride) >= MINIMAL_OVERRIDE
   const shouldDisplayRecommended = (isInterrupted || shouldDisplayOverride) && suggested !== null
 
   const getTitleByBolusType = (bolusType: BolusType): string => {
@@ -142,7 +145,7 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
       title={bolusTypeTitle}
       borderColor={color}
       position={position}
-      side={side || COMMON_TOOLTIP_SIDE}
+      side={side}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tail={DEFAULT_TOOLTIP_TAIL}

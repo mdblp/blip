@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,27 +40,29 @@ import { ClassificationType } from './domains/models/statistics/enum/bg-classifi
 import { type BgBounds, type CbgRangeStatistics } from './domains/models/statistics/glycemia-statistics.model'
 import type ConfidentialMode from './domains/models/medical/datum/confidential-mode.model'
 import { DatumType } from './domains/models/medical/datum/enums/datum-type.enum'
-import { type Parameter } from './domains/models/medical/datum/device-parameter-change.model'
 import type DeviceParameterChange from './domains/models/medical/datum/device-parameter-change.model'
+import { type Parameter } from './domains/models/medical/datum/device-parameter-change.model'
 import { type DurationValue } from './domains/models/medical/datum/basics/duration.model'
 import DurationUnit from './domains/models/medical/datum/enums/duration-unit.enum'
 import type Meal from './domains/models/medical/datum/meal.model'
 import type Message from './domains/models/medical/datum/message.model'
+import { NightMode } from './domains/models/medical/datum/night-mode.model'
 import type PhysicalActivity from './domains/models/medical/datum/physical-activity.model'
 import Prescriptor from './domains/models/medical/datum/enums/prescriptor.enum'
 import PumpManufacturer from './domains/models/medical/datum/enums/pump-manufacturer.enum'
+import { PhysicalActivityName } from './domains/models/medical/datum/enums/physical-activity-name.enum'
 import {
   type CgmConfig,
+  ChangeType,
   type DeviceConfig,
   type MobileAppConfig,
   type ParameterConfig,
-  type PumpConfig,
   type ParametersChange,
-  type PumpSettingsParameter,
-  ChangeType,
+  type PumpConfig,
   PumpSettings,
-  SecurityBasalRate,
-  SecurityBasalConfig
+  type PumpSettingsParameter,
+  SecurityBasalConfig,
+  SecurityBasalRate
 } from './domains/models/medical/datum/pump-settings.model'
 import type ReservoirChange from './domains/models/medical/datum/reservoir-change.model'
 import type Smbg from './domains/models/medical/datum/smbg.model'
@@ -74,12 +76,13 @@ import MedicalDataService from './domains/repositories/medical/medical-data.serv
 import { convertBG } from './domains/repositories/medical/datum/cbg.service'
 import {
   type BgClasses,
-  defaultMedicalDataOptions,
-  defaultBgClasses,
   DEFAULT_BG_BOUNDS,
+  defaultBgClasses,
+  defaultMedicalDataOptions,
   type TimePrefs
 } from './domains/models/medical/medical-data-options.model'
 import * as TimeService from './domains/repositories/time/time.service'
+import { applyOffset, MS_IN_DAY } from './domains/repositories/time/time.service'
 import type DateFilter from './domains/models/time/date-filter.model'
 import { type WeekDaysFilter } from './domains/models/time/date-filter.model'
 import type MedicalData from './domains/models/medical/medical-data.model'
@@ -90,7 +93,6 @@ import {
 import type BasicData from './domains/repositories/medical/basics-data.service'
 import { CarbsStatisticsService } from './domains/repositories/statistics/carbs-statistics.service'
 import { BasalBolusStatisticsService } from './domains/repositories/statistics/insulin-statistics.service'
-import { applyOffset, MS_IN_DAY } from './domains/repositories/time/time.service'
 import { HoursRange } from './domains/models/statistics/satistics.model'
 import { RescueCarbsAveragePerRange } from './domains/models/statistics/carbs-statistics.model'
 import { ManualBolusAveragePerRange } from './domains/models/statistics/basal-bolus-statistics.model'
@@ -131,9 +133,11 @@ export {
   type MedicalData,
   type Message,
   type MobileAppConfig,
+  type NightMode,
   type Parameter,
   type ParameterConfig,
   type PhysicalActivity,
+  PhysicalActivityName,
   Prescriptor,
   PumpManufacturer,
   type PumpConfig,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -61,8 +61,8 @@ export const getPageTitleByPatientView = (view: PatientView): string => {
       return t('dashboard')
     case PatientView.Devices:
       return t('devices')
-    case PatientView.TargetAndAlerts:
-      return t('target-and-alerts')
+    case PatientView.PatientProfile:
+      return t('patient-profile')
     case PatientView.Trends:
       return t('trends')
   }
@@ -195,6 +195,7 @@ export class PatientDataUtils {
       deviceParametersChanges: [],
       messages: [],
       meals: [],
+      nightModes: [],
       physicalActivities: [],
       pumpSettings: [],
       reservoirChanges: [],

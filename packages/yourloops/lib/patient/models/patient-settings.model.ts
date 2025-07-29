@@ -33,4 +33,9 @@ export interface PatientSettings {
     value: string
   }
   system?: DeviceSystem
+  insulinType?: string
+  cannulaSize?: {
+    value: number
+    unit: string
+  }
 }
