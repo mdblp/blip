@@ -55,9 +55,17 @@
   font-weight: bold;
 }
 
-.row .rowValue {
+.rowPercentValue {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
   font-size: 20px;
+  opacity: 1;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.rowPercentUnits {
+  font-size: 12px;
+  padding-left: 1px;
 }
 
 .outputValueDisabled {
