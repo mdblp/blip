@@ -19,6 +19,8 @@ import _ from 'lodash'
 
 import utils from './util/utils'
 
+const D3_ZEN_MODE_ID = 'event'
+
 /**
  * @typedef {import("../tidelinedata").default} MedicalDataService
  * @typedef {import("../tidelinedata").Datum} Datum
@@ -49,8 +51,10 @@ function plotZenMode(pool, opts = {}) {
     opts.xScale = pool.xScale().copy()
     selection.each(function () {
       const zenEvents = pool.filterDataForRender(opts.tidelineData.medicalData.zenModes)
+      const zenModeGroupSelector = `d3-${D3_ZEN_MODE_ID}-group`
+
       if (zenEvents.length < 1) {
-        d3.select(this).selectAll('g.d3-event-group').remove()
+        d3.select(this).selectAll(`g.${zenModeGroupSelector}`).remove()
         return
       }
 
@@ -58,11 +62,13 @@ function plotZenMode(pool, opts = {}) {
         .selectAll('g.d3-event-group')
         .data(zenEvents, (d) => d.id)
 
+      const zenModePlotPrefixId = `${D3_ZEN_MODE_ID}_group`
       const zenGroup = zenModeEvent.enter()
         .append('g')
         .attr({
-          class: 'd3-event-group',
-          id: (d) => `event_group_${d.id}`
+          'class': zenModeGroupSelector,
+          'id': (d) => `${zenModePlotPrefixId}_${d.id}`,
+          'data-testid': (data) => `${zenModePlotPrefixId}_${data.guid}`
         })
 
       zenGroup.append('rect')
@@ -93,6 +99,15 @@ function plotZenMode(pool, opts = {}) {
         })
 
       zenModeEvent.exit().remove()
+
+      selection.selectAll(`.${zenModeGroupSelector}`).on('mouseover', function () {
+        opts.onZenModeHover({
+          data: d3.select(this).datum(),
+          rect: utils.getTooltipContainer(this)
+        })
+      })
+
+      selection.selectAll(`.${zenModeGroupSelector}`).on('mouseout', opts.onZenModeOut)
     })
   }
 

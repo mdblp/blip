@@ -74,7 +74,8 @@ import {
   WIZARD_UNDELIVERED_ID,
   WIZARD_UNDELIVERED_INPUT_TIME,
   WIZARD_LOW_OVERRIDE_INPUT_TIME,
-  WIZARD_LOW_OVERRIDE_ID
+  WIZARD_LOW_OVERRIDE_ID,
+  ZEN_MODE_ID
 } from '../mock/data.api.mock'
 import moment from 'moment-timezone'
 import { checkStatTooltip } from './stats.assert'
@@ -146,6 +147,7 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID}`, '8:55 pmAlarm 91002Reservoir emptyThere is no insulin left in the reservoir.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`, '9:00 pmAlarm 91004OcclusionAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.')
   await checkTidelineContainerElementTooltip(`warmup_group_${WARMUP_01_ID}`,'6:00 pmSensor warmupSession end6:00 pm')
+  await checkTidelineContainerElementTooltip(`event_group_${ZEN_MODE_ID}`,'11:00 pmZen modeDuration2 hours')
 }
 
 export const checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware = async () => {

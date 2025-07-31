@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## 3.8.0-beta - 2025-07-11
 ### Added
 - YLP-2344 Patient profile information page for HCPs only
+- YLP-3333 Tooltip for Zen mode in Daily view
 - YLP-3589 add new estimated total insulin statistic
 
 ### Changed

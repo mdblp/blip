@@ -41,6 +41,7 @@ import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-pi
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import metrics from 'yourloops/lib/metrics'
+import { ZenModeTooltip } from 'dumb/dist/src/components/tooltips/zen-mode-tooltip/zen-mode-tooltip'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -74,6 +75,7 @@ class DailyChart extends React.Component {
     onWarmUpHover: PropTypes.func.isRequired,
     onAlarmEventHover: PropTypes.func.isRequired,
     onNightModeHover: PropTypes.func.isRequired,
+    onZenModeHover: PropTypes.func.isRequired,
     onConfidentialHover: PropTypes.func.isRequired,
     onTooltipOut: PropTypes.func.isRequired,
     onChartMounted: PropTypes.func.isRequired,
@@ -98,6 +100,7 @@ class DailyChart extends React.Component {
       'onWarmUpHover',
       'onAlarmEventHover',
       'onNightModeHover',
+      'onZenModeHover',
       'onTooltipOut',
       'trackMetric'
     ]
@@ -388,6 +391,7 @@ class Daily extends React.Component {
                   onAlarmEventHover={this.handleAlarmEventHover}
                   onConfidentialHover={this.handleConfidentialHover}
                   onNightModeHover={this.handleNightModeHover}
+                  onZenModeHover={this.handleZenModeHover}
                   onTooltipOut={this.handleTooltipOut}
                   onChartMounted={this.onChartMounted}
                   trackMetric={trackMetric}
@@ -667,6 +671,21 @@ class Daily extends React.Component {
     const tooltip = (
       <NightModeTooltip
         nightMode={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        timePrefs={datum.timePrefs}
+      />)
+    this.setState({ tooltip })
+  }
+
+  handleZenModeHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum)
+    const tooltip = (
+      <ZenModeTooltip
+        zenMode={datum.data}
         position={{
           top: datum.top,
           left: datum.left
