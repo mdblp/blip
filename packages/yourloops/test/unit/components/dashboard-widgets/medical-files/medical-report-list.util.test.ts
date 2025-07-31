@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,7 @@ import {
 } from '../../../../../lib/medical-files/models/medical-report.model'
 import {
   getMedicalReportDate
-} from '../../../../../components/dashboard-widgets/medical-files/medical-report-list.util'
+} from '../../../../../components/dashboard-cards/medical-files/medical-report-list.util'
 
 describe('Medical Report list util', () => {
   describe('getMedicalReportDate', () => {

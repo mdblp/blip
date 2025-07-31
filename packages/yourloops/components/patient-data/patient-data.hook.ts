@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import { type BgPrefs, buildDevice, Device } from 'dumb'
 import { PatientView } from '../../enum/patient-view.enum'
 import { type Patient } from '../../lib/patient/models/patient.model'
-import { type ChartPrefs } from '../dashboard-widgets/models/chart-prefs.model'
+import { type ChartPrefs } from '../dashboard-cards/models/chart-prefs.model'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
 import type MedicalDataService from 'medical-domain'
@@ -80,7 +80,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
   const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const bgClasses = defaultBgClasses[bgUnits]
-  const bgPrefs: BgPrefs = {
+  const bgPrefs: BgPrefs = patient.diabeticProfile?.bloodGlucosePreference || {
     bgUnits,
     bgClasses,
     bgBounds: {
@@ -136,8 +136,8 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
         return PatientView.Dashboard
       case AppUserRoute.Devices:
         return PatientView.Devices
-      case AppUserRoute.TargetAndAlerts:
-        return PatientView.TargetAndAlerts
+      case AppUserRoute.PatientProfile:
+        return PatientView.PatientProfile
     }
   }, [pathname])
 
@@ -149,8 +149,8 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
         return AppUserRoute.Dashboard
       case PatientView.Devices:
         return AppUserRoute.Devices
-      case PatientView.TargetAndAlerts:
-        return AppUserRoute.TargetAndAlerts
+      case PatientView.PatientProfile:
+        return AppUserRoute.PatientProfile
       case PatientView.Trends:
         return AppUserRoute.Trends
     }
@@ -193,6 +193,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const goToDailySpecificDate = (date: number | Date): void => {
     setDailyDate(date instanceof Date ? date.valueOf() : date)
     navigate(`../${PatientView.Daily}?date=${new Date(date).toISOString()}`, { relative: 'path' })
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleDatetimeLocationChange = async (epochLocation: number, msRange: number): Promise<boolean> => {

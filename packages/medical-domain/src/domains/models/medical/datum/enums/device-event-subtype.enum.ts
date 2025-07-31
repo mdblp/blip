@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,6 +29,7 @@ export enum DeviceEventSubtype {
   Alarm = 'alarm',
   Confidential = 'confidential',
   DeviceParameter = 'deviceParameter',
+  Night = 'night',
   ReservoirChange = 'reservoirChange',
   Warmup = 'warmup',
   Zen = 'zen',

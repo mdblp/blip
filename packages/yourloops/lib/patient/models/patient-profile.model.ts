@@ -34,4 +34,16 @@ export interface PatientProfile {
   lastName?: string
   email: string
   sex: Gender
+  weight?: Weight
+  height?: Height
+}
+
+export interface Weight  {
+  value: number
+  unit: string
+}
+
+export interface Height {
+  value: number
+  unit: string
 }

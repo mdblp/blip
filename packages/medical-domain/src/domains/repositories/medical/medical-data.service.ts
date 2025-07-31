@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -68,7 +68,14 @@ import type PumpManufacturer from '../../models/medical/datum/enums/pump-manufac
 import WizardService from './datum/wizard.service'
 import AlarmEventService from './datum/alarm-event.service';
 import { WizardInputMealSource } from '../../models/medical/datum/enums/wizard-input-meal-source.enum'
-import { PumpSettings } from '../../models/medical/datum/pump-settings.model'
+import {
+  ParameterConfig,
+  ParametersChange,
+  PumpSettings,
+  PumpSettingsParameter
+} from '../../models/medical/datum/pump-settings.model'
+
+const EXCLUDED_PARAMETERS = ['INSULIN_TYPE_USED']
 
 class MedicalDataService {
   medicalData: MedicalData = {
@@ -80,6 +87,7 @@ class MedicalDataService {
     deviceParametersChanges: [],
     messages: [],
     meals: [],
+    nightModes: [],
     physicalActivities: [],
     pumpSettings: [],
     reservoirChanges: [],
@@ -212,6 +220,9 @@ class MedicalDataService {
     if (data.meals) {
       this.medicalData.meals = this.medicalData.meals.concat(data.meals)
     }
+    if (data.nightModes) {
+      this.medicalData.nightModes = this.medicalData.nightModes.concat(data.nightModes)
+    }
     if (data.physicalActivities) {
       this.medicalData.physicalActivities = this.medicalData.physicalActivities.concat(data.physicalActivities)
     }
@@ -235,6 +246,7 @@ class MedicalDataService {
     }
 
     this.removeUmmBolus()
+    this.filterParameters()
     this.deduplicate()
     this.join()
     this.setTimeZones()
@@ -529,6 +541,25 @@ class MedicalDataService {
 
   private removeUmmBolus() {
     this.medicalData.wizards = this.medicalData.wizards.filter((wizard: Wizard) => wizard.inputMeal?.source !== WizardInputMealSource.Umm)
+  }
+
+  private removeExcludedParameters(parametersList: ParameterConfig[]) {
+    return parametersList.filter((parameter) => {
+      return !EXCLUDED_PARAMETERS.includes(parameter.name)
+    })
+  }
+
+  private filterParameters() {
+    this.medicalData.pumpSettings = this.medicalData.pumpSettings.map((pumpSettings: PumpSettings) => {
+      pumpSettings.payload.parameters = this.removeExcludedParameters(pumpSettings.payload.parameters)
+
+      pumpSettings.payload.history = pumpSettings.payload.history.map((historyItem: ParametersChange) => {
+        historyItem.parameters = this.removeExcludedParameters(historyItem.parameters) as PumpSettingsParameter[]
+        return historyItem
+      })
+
+      return pumpSettings
+    })
   }
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,6 +39,11 @@ export const THREE_HRS = ONE_HOUR_MS * 3
 export const TIMEZONE_UTC = 'UTC'
 export const THIRTY_MINS = ONE_HOUR_MS / 2
 export const TWENTY_FOUR_HRS = ONE_HOUR_MS * 24
+
+const ONE_HOUR_S = 3600
+const ONE_HOUR_MN = 60
+const ONE_MINUTE_S = 60
+const ONE_MINUTE_MS = 60000
 
 /**
  * getHourMinuteFormat
@@ -245,12 +250,42 @@ export const formatDateToUtc = (date: string, format: string): string => {
 
 export const convertValueToMinutes = (durationValue: number, durationUnit: DurationUnit): number => {
   switch (durationUnit) {
+    case DurationUnit.Milliseconds:
+      return Math.round(durationValue / ONE_MINUTE_MS)
     case DurationUnit.Seconds:
-      return Math.round(durationValue / 60)
+      return Math.round(durationValue / ONE_MINUTE_S)
     case DurationUnit.Hours:
-      return durationValue * 60
+      return durationValue * ONE_HOUR_MN
     default:
       return durationValue
+  }
+}
+
+export const convertValueToHours = (durationValue: number, durationUnit: DurationUnit): number => {
+  switch (durationUnit) {
+    case DurationUnit.Milliseconds:
+      return Math.round(durationValue / ONE_HOUR_MS)
+    case DurationUnit.Seconds:
+      return Math.round(durationValue / ONE_HOUR_S)
+    case DurationUnit.Minutes:
+      return Math.round(durationValue / ONE_HOUR_MN)
+    default:
+      return durationValue
+  }
+}
+
+export const isDurationLowerThanOneHour = (durationValue: number, durationUnit: DurationUnit): boolean => {
+  switch (durationUnit) {
+    case DurationUnit.Milliseconds:
+      return durationValue < ONE_HOUR_MS
+    case DurationUnit.Seconds:
+      return durationValue < ONE_HOUR_S
+    case DurationUnit.Minutes:
+      return durationValue < ONE_HOUR_MN
+    case DurationUnit.Hours:
+      return durationValue < 1
+    default:
+      return false
   }
 }
 

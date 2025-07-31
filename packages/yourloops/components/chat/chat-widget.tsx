@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -45,7 +45,6 @@ import Box from '@mui/material/Box'
 import Select, { type SelectChangeEvent } from '@mui/material/Select'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import MenuItem from '@mui/material/MenuItem'
-import GenericDashboardCard from '../dashboard-widgets/generic-dashboard-card'
 import FormGroup from '@mui/material/FormGroup'
 import TeamUtils from '../../lib/team/team.util'
 import { getUserName } from '../../lib/auth/user.util'
@@ -60,6 +59,8 @@ import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import TextField from '@mui/material/TextField'
 import { useParams } from 'react-router-dom'
+import { DataCard } from '../data-card/data-card'
+import Typography from '@mui/material/Typography'
 
 const CHAT_CONTENT_MIN_HEIGHT = '280px'
 const CHAT_CONTENT_MAX_HEIGHT = '450px'
@@ -75,7 +76,9 @@ const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) 
       }
     },
     chatWidgetContent: {
-      padding: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
       minHeight: CHAT_CONTENT_MIN_HEIGHT,
       maxHeight: CHAT_CONTENT_MAX_HEIGHT,
       overflowY: 'auto',
@@ -83,7 +86,7 @@ const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) 
     },
     chatWidgetFooter: {
       borderTop: `1px solid ${theme.palette.divider}`,
-      paddingBlock: theme.spacing(1)
+      paddingTop: theme.spacing(1)
     },
     chatWidgetEmojiPickerContainer: {
       position: 'absolute',
@@ -105,7 +108,7 @@ const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) 
       display: 'flex',
       alignItems: 'center',
       background: theme.palette.common.white,
-      paddingBlock: theme.spacing(1)
+      paddingTop: theme.spacing(1)
     },
     teamDropdown: {
       borderRadius: '28px',
@@ -225,44 +228,54 @@ function ChatWidget(props: Readonly<ChatWidgetProps>): JSX.Element {
   }
 
   return (
-    <GenericDashboardCard
-      title={`${t('messages')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
-      data-testid="chat-card"
-      action={isUserPatient &&
-        <FormGroup>
-          <Badge color="primary" variant="dot" invisible={hasNoUnreadMessages()} data-testid="unread-messages-badge">
-            <Select
-              data-testid="chat-widget-team-scope"
-              defaultValue={teamId}
-              IconComponent={KeyboardArrowDownIcon}
-              onChange={onTeamSelected}
-              variant="outlined"
-              className={classes.teamDropdown}
-            >
-              {
-                teams.map((team, index) =>
-                  <MenuItem
-                    key={index}
-                    data-testid={`chat-widget-team-scope-menu-${TeamUtils.formatTeamNameForTestId(team.name)}-option`}
-                    value={team.id}
-                  >
-                    {team.name}
-                    {unreadMessagesByTeamForPatient?.[team.id] &&
-                      <Badge
-                        variant="dot"
-                        color="primary"
-                        sx={{ p: 0.5 }}
-                        data-testid={`unread-messages-badge-team-${team.id}`}
-                      />
-                    }
-                  </MenuItem>
-                )
-              }
-            </Select>
-          </Badge>
-        </FormGroup>
-      }
-    >
+    <DataCard data-testid="chat-card">
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ paddingBottom: theme.spacing(1) }}
+        data-testid="chat-widget-header"
+      >
+        <Typography sx={{ fontWeight: 'bold', paddingBottom: '8px' }}>
+          {`${t('messages')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
+        </Typography>
+        {isUserPatient &&
+          <FormGroup>
+            <Badge color="primary" variant="dot" invisible={hasNoUnreadMessages()}
+                   data-testid="unread-messages-badge">
+              <Select
+                data-testid="chat-widget-team-scope"
+                defaultValue={teamId}
+                IconComponent={KeyboardArrowDownIcon}
+                onChange={onTeamSelected}
+                variant="outlined"
+                className={classes.teamDropdown}
+              >
+                {
+                  teams.map((team, index) =>
+                    <MenuItem
+                      key={index}
+                      data-testid={`chat-widget-team-scope-menu-${TeamUtils.formatTeamNameForTestId(team.name)}-option`}
+                      value={team.id}
+                    >
+                      {team.name}
+                      {unreadMessagesByTeamForPatient?.[team.id] &&
+                        <Badge
+                          variant="dot"
+                          color="primary"
+                          sx={{ p: 0.5 }}
+                          data-testid={`unread-messages-badge-team-${team.id}`}
+                        />
+                      }
+                    </MenuItem>
+                  )
+                }
+              </Select>
+            </Badge>
+          </FormGroup>
+        }
+      </Box>
+
       <Box position="relative">
         <Dialog open={here} onClose={() => setHere(false)}>
           <DialogContent>
@@ -371,7 +384,7 @@ function ChatWidget(props: Readonly<ChatWidgetProps>): JSX.Element {
           </div>
         </div>
       </Box>
-    </GenericDashboardCard>
+    </DataCard>
   )
 }
 

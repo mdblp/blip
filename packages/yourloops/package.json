@@ -1,6 +1,6 @@
 {
   "name": "yourloops",
-  "version": "3.7.0-beta",
+  "version": "3.8.0-beta",
   "private": true,
   "description": "Blip is a web app for type 1 diabetes (T1D).",
   "repository": {
@@ -20,7 +20,7 @@
     "build-prod": "NODE_ENV=production webpack --mode=production",
     "prebuild-dev": "npm run clean",
     "build-dev": "NODE_ENV=development webpack --mode=development",
-    "start-dev": "NODE_ENV=development NODE_OPTIONS='--max-old-space-size=4096' USE_WEBPACK_DEV_SERVER=true webpack serve --host 0.0.0.0",
+    "start-dev": "NODE_ENV=development NODE_OPTIONS='--max-old-space-size=4096' USE_WEBPACK_DEV_SERVER=true webpack serve --host ::",
     "test": "npm run unit-test && npm run integration-test",
     "unit-test": "jest --config=test/unit/jest.config.js",
     "integration-test": "jest --config=test/integration/jest.config.js",

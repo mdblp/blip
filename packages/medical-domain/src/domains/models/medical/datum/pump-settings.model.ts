@@ -100,6 +100,7 @@ interface SecurityBasalConfig {
 }
 
 interface MobileAppConfig {
+  activationCode: string
   manufacturer: string
   identifier: string
   swVersion:string

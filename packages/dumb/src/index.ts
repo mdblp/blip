@@ -42,7 +42,7 @@ import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
 import { formatBgValue } from './utils/format/format.util'
 import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
 import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
-import { InsulinStatMemoized as InsulinStat } from './components/stats/insulin/insulin-stat'
+import { InsulinStatisticPanelMemoized as InsulinStatisticsPanel } from './components/stats/insulin/insulin-statistics-panel'
 import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mode-stat/loop-mode-stat'
 import { CarbsStatItemMemoized as CarbsStatItem } from './components/stats/total-carbs/total-carbs-stat'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
@@ -76,6 +76,8 @@ import { Device } from './models/device.model'
 import { buildDevice } from './utils/device/device.utils'
 import { SafetyBasalItem } from './models/safety-basal-item.model'
 import { isSafetyBasalAvailable, getSafetyBasalItems } from './utils/safety-basal-profile/safety-basal-profile.util'
+import { NightModeTooltip } from './components/tooltips/night-mode-tooltip/night-mode-tooltip'
+import { SimpleValue } from './components/stats/common/simple-value'
 
 export {
   formatDate,
@@ -105,6 +107,7 @@ export {
   formatBgValue,
   LayoutColumnType,
   LoopModeStat,
+  NightModeTooltip,
   ParameterTooltip,
   PhysicalTooltip,
   PrintView,
@@ -114,7 +117,7 @@ export {
   SimpleStat,
   StatTooltip,
   Tooltip,
-  InsulinStat,
+  InsulinStatisticsPanel,
   CarbsStatItem,
   TrendsContainer,
   TrendsProvider,
@@ -124,5 +127,6 @@ export {
   WarmUpTooltip,
   SafetyBasalItem,
   isSafetyBasalAvailable,
-  getSafetyBasalItems
+  getSafetyBasalItems,
+  SimpleValue
 }

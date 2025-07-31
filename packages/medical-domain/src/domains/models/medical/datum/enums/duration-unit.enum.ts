@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,6 +26,7 @@
  */
 
 enum DurationUnit {
+  Days = 'days',
   Hours = 'hours',
   Minutes = 'minutes',
   Seconds = 'seconds',

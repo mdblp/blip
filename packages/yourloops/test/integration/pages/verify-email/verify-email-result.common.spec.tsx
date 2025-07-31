@@ -47,6 +47,7 @@ describe('Verify email result page', () => {
       isLoading: false,
       user: null,
       getAccessTokenWithPopup: getAccessTokenWithPopupMock,
+      loginWithRedirect: jest.fn().mockRejectedValue({ error_description: Auth0Error.LoginRequired }),
       logout: logoutMock,
       getAccessTokenSilently: jest.fn().mockRejectedValue({ error_description: Auth0Error.LoginRequired })
     })

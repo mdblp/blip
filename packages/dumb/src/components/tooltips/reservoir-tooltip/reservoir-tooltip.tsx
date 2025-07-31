@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,6 @@ import React, { type FunctionComponent } from 'react'
 import i18next from 'i18next'
 import commonStyles from '../../../styles/tooltip-common.css'
 import {
-  COMMON_TOOLTIP_SIDE,
   COMMON_TOOLTIP_TAIL_HEIGHT,
   COMMON_TOOLTIP_TAIL_WIDTH,
   DEFAULT_TOOLTIP_BORDER_WIDTH,
@@ -84,7 +83,7 @@ export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props
   return (
     <Tooltip
       position={position}
-      side={side || COMMON_TOOLTIP_SIDE}
+      side={side}
       borderColor={colors.deviceEvent}
       dateTitle={getDateTitleForBaseDatum(reservoir, timePrefs)}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}

@@ -1,0 +1,32 @@
+name: Crowdin Upload Translations
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  upload-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upload translations to Crowdin
+        uses: crowdin/github-action@v2
+        with:
+          upload_sources: true
+          upload_translations: false
+          import_eq_suggestions: true
+          download_sources: false
+          download_translations: false
+          export_only_approved: false
+          github_user_name: dblBot
+          github_user_email: platforms@diabeloop.fr
+          gpg_private_key: ${{ secrets.DBLBOT_GPG_PRIVATE_KEY }}
+          gpg_passphrase: ${{ secrets.DBLBOT_GPG_PASSPHRASE }}
+          base_url: 'https://diabeloop.crowdin.com'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
