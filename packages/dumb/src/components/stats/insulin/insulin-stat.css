@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,9 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 .titleTotal {
-  margin-left: 4px;
   font-size: 20px;
-  margin-right: 58px;
   font-weight: normal;
 }
 
@@ -48,21 +46,26 @@
 
 .rowTitle {
   color: var(--stat--default);
+  font-weight: bold;
 }
 
-.rowPercent {
+.row {
   display: flex;
   justify-content: flex-end;
   font-weight: bold;
 }
 
-.rowPercent .rowPercentValue {
+.rowValue {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
   font-size: 20px;
+  opacity: 1;
+  display: inline-block;
+  font-weight: bold;
 }
 
-.rowPercent .rowPercentUnits {
+.rowUnits {
   font-size: 12px;
+  padding-left: 1px;
 }
 
 .outputValueDisabled {

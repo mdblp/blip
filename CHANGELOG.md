@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Changed
 - YLP-2347 Display patient monitoring parameters in the patient profile page
+- YLP-3547 Swap unit and percentage in insulin card
 - YLP-3651 Transfer the patient information displayed in the banner in the patient profile page
 
 ## 3.7.0 - 2025-07-10

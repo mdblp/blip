@@ -145,7 +145,7 @@ export const testDailyViewTooltipsAndValuesMgdl = async () => {
 
   await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
   await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
-  await checkTotalInsulinStatWidget('Total Delivered Insulin71.2 UEstimated total insulin requirement-- UMeal bolus60.8 U85.4%Basal & correction bolus1.3 U1.8%Manual bolus5.1 U7.2%Pen bolus4.1 U5.8%')
+  await checkTotalInsulinStatWidget('Total Delivered Insulin71.2UEstimated total insulin requirement--UMeal bolus85.4 %60.8UBasal & correction bolus1.8 %1.3UManual bolus7.2 %5.1UPen bolus5.8 %4.1U')
 }
 
 export const testDailyViewTooltipsForDblg2 = async () => {
