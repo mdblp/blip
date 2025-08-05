@@ -18,6 +18,7 @@
 import _ from 'lodash'
 import i18next from 'i18next'
 import moment from 'moment-timezone'
+import * as d3 from 'd3'
 
 import * as constants from '../data/util/constants'
 import timeChangeImage from '../../img/timechange/timechange.svg'
@@ -37,7 +38,6 @@ const defaults = {
  * @return {object}      time change object
  */
 function plotTimeChange(pool, opts = {}) {
-  const d3 = window.d3
   _.defaults(opts, defaults)
 
   function timechange(selection) {
@@ -52,10 +52,12 @@ function plotTimeChange(pool, opts = {}) {
       const timechangeGroup = timechanges
         .enter()
         .append('g')
-        .attr({
-          class: 'd3-timechange-group',
-          id: d => `timechange_${d.id}`
-        })
+        // .attr({
+        //   class: 'd3-timechange-group',
+        //   id: d => `timechange_${d.id}`
+        // })
+        .classed('d3-timechange-group', true)
+        .attr('id', d => `timechange_${d.id}`)
 
       timechange.addTimeChangeToPool(timechangeGroup)
 
@@ -67,14 +69,20 @@ function plotTimeChange(pool, opts = {}) {
     opts.xScale = pool.xScale().copy()
     selection
       .append('image')
-      .attr({
-        'xlink:href': timeChangeImage,
-        'x': timechange.xPositionCorner,
-        'y': timechange.yPositionCorner,
-        'width': opts.size,
-        'height': opts.size
-      })
-      .classed({ 'd3-image': true, 'd3-timechange': true })
+      // .attr({
+      //   'xlink:href': timeChangeImage,
+      //   'x': timechange.xPositionCorner,
+      //   'y': timechange.yPositionCorner,
+      //   'width': opts.size,
+      //   'height': opts.size
+      // })
+      .classed('d3-image', true)
+      .classed('d3-timechange', true)
+      .attr('xlink:href', timeChangeImage)
+      .attr('x', timechange.xPositionCorner)
+      .attr('y', timechange.yPositionCorner)
+      .attr('width', opts.size)
+      .attr('height', opts.size)
 
     selection.on('mouseover', timechange.displayTooltip)
     selection.on('mouseout', timechange.removeTooltip)

@@ -19,6 +19,7 @@ import _ from 'lodash'
 import i18next from 'i18next'
 import bows from 'bows'
 import moment from 'moment-timezone'
+import * as d3 from 'd3'
 
 import format from '../data/util/format'
 import postItImage from '../../img/message/post_it.svg'
@@ -30,7 +31,6 @@ function plotMessage(pool, opts = {}) {
   const NEW_NOTE_X = 0
   const NEW_NOTE_Y = 45
 
-  const d3 = window.d3
   const t = i18next.t.bind(i18next)
   const defaults = {
     previewLength: 50,
@@ -48,6 +48,7 @@ function plotMessage(pool, opts = {}) {
     opts.xScale = pool.xScale().copy()
 
     selection.each(function (currentData) {
+      console.log({ currentDataMessage: currentData })
       const messages = d3
         .select(this)
         .selectAll('g.d3-message-group')
@@ -56,11 +57,15 @@ function plotMessage(pool, opts = {}) {
       const messageGroups = messages
         .enter()
         .append('g')
-        .attr({
-          class: 'd3-message-group',
-          id: function (d) {
-            return 'message_' + d.id
-          }
+        // .attr({
+        //   class: 'd3-message-group',
+        //   id: function (d) {
+        //     return 'message_' + d.id
+        //   }
+        // })
+        .classed('d3-message-group', true)
+        .attr('id', function (d) {
+          return 'message_' + d.id
         })
 
       message.addMessageToPool(messageGroups)
@@ -72,63 +77,82 @@ function plotMessage(pool, opts = {}) {
   message.addMessageToPool = function (selection) {
     opts.xScale = pool.xScale().copy()
 
-    selection.append('rect').attr({
-      x: message.highlightXPosition,
-      y: message.highlightYPosition,
-      width: opts.size + opts.highlightWidth * 2,
-      height: opts.size + opts.highlightWidth * 2,
-      class: 'd3-rect-message hidden'
-    })
+    selection
+      .append('rect')
+    //   .attr({
+    //   x: message.highlightXPosition,
+    //   y: message.highlightYPosition,
+    //   width: opts.size + opts.highlightWidth * 2,
+    //   height: opts.size + opts.highlightWidth * 2,
+    //   class: 'd3-rect-message hidden'
+    // })
+      .classed('d3-rect-message hidden', true)
+      .attr('x', message.highlightXPosition)
+      .attr('y', message.highlightYPosition)
+      .attr('width', opts.size + opts.highlightWidth * 2)
+      .attr('height', opts.size + opts.highlightWidth * 2)
 
     selection
       .append('image')
-      .attr({
-        'xlink:href': postItImage,
-        'cursor': 'pointer',
-        'x': message.xPosition,
-        'y': message.yPosition,
-        'width': opts.size,
-        'height': opts.size
-      })
-      .classed({ 'd3-image': true, 'd3-message': true })
+      // .attr({
+      //   'xlink:href': postItImage,
+      //   'cursor': 'pointer',
+      //   'x': message.xPosition,
+      //   'y': message.yPosition,
+      //   'width': opts.size,
+      //   'height': opts.size
+      // })
+      .classed('d3-image d3-message', true)
+      .attr('href', postItImage) // updated from xlink:href to href
+      .attr('x', message.xPosition)
+      .attr('y', message.yPosition)
+      .style('cursor', 'pointer')
+      .attr('width', opts.size)
+      .attr('height', opts.size)
 
     selection.on('mouseover', message.displayTooltip)
     selection.on('mouseout', message.removeTooltip)
-    selection.on('click', function clickMessage(d) {
-      log.debug('Message clicked!', d)
-      d3.event.stopPropagation() // silence the click-and-drag listener
-      opts.emitter.emit('messageThread', d.id)
+    selection.on('click', function (event, datum) {
+      log.debug('Message clicked!', datum)
+      event.stopPropagation() // silence the click-and-drag listener
+      opts.emitter.emit('messageThread', datum.id)
       d3.select(this).selectAll('.d3-rect-message').classed('hidden', false)
     })
   }
 
-  message.displayTooltip = (d) => {
-    d3.select('#message_' + d.id + ' image')
+  message.displayTooltip = (event, datum) => {
+    d3.select('#message_' + datum.id + ' image')
 
     const tooltips = pool.tooltips()
 
     const tooltip = tooltips.addForeignObjTooltip({
       cssClass: 'svg-tooltip-message',
-      datum: _.assign(d, { type: 'message' }), // we're currently using the message pool to display the tooltip
+      datum: _.assign(datum, { type: 'message' }), // we're currently using the message pool to display the tooltip
       shape: 'generic',
       xPosition: message.xPositionCenter,
       yPosition: message.yPositionCenter
     })
 
     const foGroup = tooltip.foGroup
-    const mTime = moment.utc(d.epoch).tz(d.timezone)
+    const mTime = moment.utc(datum.epoch).tz(datum.timezone)
     const msgDate = format.datestamp(mTime)
     const msgTime = format.timestamp(mTime)
     const htmlDateTime = `<span data-testid="message-from-to" class="message-from-to">${t('{{date}} - {{time}}', { date: msgDate, time: msgTime })}</span>`
-    const htmlName = `<span data-testid="message-author" class="message-author">${format.nameForDisplay(d.user)}:</span>`
-    const htmlValue = `<br><span data-testid="message-text" class="message-text">${format.textPreview(d.messageText)}</span>`
+    const htmlName = `<span data-testid="message-author" class="message-author">${format.nameForDisplay(datum.user)}:</span>`
+    const htmlValue = `<br><span data-testid="message-text" class="message-text">${format.textPreview(datum.messageText)}</span>`
 
-    tooltip.foGroup.append('p').attr('class', 'messageTooltip').append('span').attr('class', 'secondary').html(htmlDateTime)
     tooltip.foGroup
       .append('p')
-      .attr('class', 'messageTooltip')
+      .classed('messageTooltip', true)
       .append('span')
-      .attr('class', 'secondary')
+      .classed('secondary', true)
+      .html(htmlDateTime)
+    tooltip.foGroup
+      .append('p')
+      // .attr('class', 'messageTooltip')
+      .classed('messageTooltip', true)
+      .append('span')
+      .classed('secondary', true)
       .html(htmlName + htmlValue)
 
     const dims = tooltips.foreignObjDimensions(foGroup)
@@ -137,7 +161,7 @@ function plotMessage(pool, opts = {}) {
     tooltips.anchorForeignObj(d3.select(foGroup.node().parentNode), {
       w: dims.width + opts.tooltipPadding,
       h: dims.height,
-      x: message.xPositionCenter(d),
+      x: message.xPositionCenter(datum),
       y: -dims.height,
       orientation: {
         default: 'leftAndDown',
@@ -156,13 +180,17 @@ function plotMessage(pool, opts = {}) {
   message.updateMessageInPool = function (selection) {
     opts.xScale = pool.xScale().copy()
 
-    selection.select('rect.d3-rect-message').attr({
-      x: message.highlightXPosition
-    })
+    selection.select('rect.d3-rect-message')
+    //   .attr({
+    //   x: message.highlightXPosition
+    // })
+      .attr('x', message.highlightXPosition)
 
-    selection.select('image').attr({
-      x: message.xPosition
-    })
+    selection.select('image')
+    //   .attr({
+    //   x: message.xPosition
+    // })
+      .attr('x', message.xPosition)
   }
 
   message.setUpMessageCreation = function () {
@@ -175,7 +203,8 @@ function plotMessage(pool, opts = {}) {
       const messageGroup = mainGroup
         .select('#poolMessages_message')
         .append('g')
-        .attr('class', 'd3-message-group d3-new')
+        // .attr('class', 'd3-message-group d3-new')
+        .classed('d3-message-group d3-new', true)
         .attr('id', `message_${d.id}`)
         .datum(d)
       message.addMessageToPool(messageGroup)
@@ -196,33 +225,54 @@ function plotMessage(pool, opts = {}) {
       return
     }
 
-    var newNote = d3.select('#tidelineLabels').append('image').attr({
-      'id': 'newNoteIcon',
-      'class': 'newNoteIcon',
-      'xlink:href': newNoteImg,
-      'cursor': 'pointer',
-      'x': NEW_NOTE_X,
-      'y': NEW_NOTE_Y,
-      'width': NEW_NOTE_WIDTH,
-      'height': NEW_NOTE_HEIGHT
-    })
+    var newNote = d3
+      .select('#tidelineLabels')
+      .append('image')
+    //   .attr({
+    //   'id': 'newNoteIcon',
+    //   'class': 'newNoteIcon',
+    //   'xlink:href': newNoteImg,
+    //   'cursor': 'pointer',
+    //   'x': NEW_NOTE_X,
+    //   'y': NEW_NOTE_Y,
+    //   'width': NEW_NOTE_WIDTH,
+    //   'height': NEW_NOTE_HEIGHT
+    // })
+      .classed('newNoteIcon', true)
+      .attr('id', 'newNoteIcon')
+      .attr('href', newNoteImg)
+      .attr('x', NEW_NOTE_X)
+      .attr('y', NEW_NOTE_Y)
+      .style('cursor', 'pointer')
+      .attr('width', NEW_NOTE_WIDTH)
+      .attr('height', NEW_NOTE_HEIGHT)
+      // .addMessageToPool()
+
+    message.addMessageToPool(newNote)
 
     newNote.on('mouseover', function () {
       d3.select('#tidelineLabels')
         .append('text')
-        .attr({
-          class: 'newNoteText',
-          x: NEW_NOTE_X + 1,
-          y: NEW_NOTE_Y + 43
-        })
+        // .attr({
+        //   class: 'newNoteText',
+        //   x: NEW_NOTE_X + 1,
+        //   y: NEW_NOTE_Y + 43
+        // })
+        .classed('newNoteText', true)
+        .attr('x', NEW_NOTE_X + 1)
+        .attr('y', NEW_NOTE_Y + 43)
         .text(t('New'))
+
       d3.select('#tidelineLabels')
         .append('text')
-        .attr({
-          class: 'newNoteText',
-          x: NEW_NOTE_X + 1,
-          y: NEW_NOTE_Y + 56
-        })
+        // .attr({
+        //   class: 'newNoteText',
+        //   x: NEW_NOTE_X + 1,
+        //   y: NEW_NOTE_Y + 56
+        // })
+        .classed('newNoteText', true)
+        .attr('x', NEW_NOTE_X + 1)
+        .attr('y', NEW_NOTE_Y + 56)
         .text(t('note'))
     })
     newNote.on('mouseout', function () {
@@ -236,6 +286,9 @@ function plotMessage(pool, opts = {}) {
   })
 
   message.highlightXPosition = (d) => {
+    if (!d) {
+      return
+    }
     return opts.xScale(d.epoch) - opts.size / 2 - opts.highlightWidth
   }
 
@@ -244,6 +297,9 @@ function plotMessage(pool, opts = {}) {
   }
 
   message.xPosition = (d) => {
+    if (!d) {
+      return
+    }
     return opts.xScale(d.epoch) - opts.size / 2
   }
 

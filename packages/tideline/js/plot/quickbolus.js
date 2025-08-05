@@ -21,6 +21,7 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 
 import utils from './util/utils'
 import commonbolus from './util/commonbolus'
@@ -31,6 +32,11 @@ const defaults = {
   width: 12
 }
 
+/**
+ * Get the data-testid attribute value based on bolus type
+ * @param {object} d - The bolus data
+ * @returns {string} - The data-testid value
+ */
 const getDataTestId = (d) => {
   if (d.subType === BolusSubtype.Pen) {
     return `bolus_pen_${d.id}`
@@ -42,44 +48,53 @@ const getDataTestId = (d) => {
 }
 
 /**
- * @param {Pool} pool
- * @param {typeof defaults} opts
- * @returns
+ * Plot quick boluses (boluses without wizard data)
+ * @param {Pool} pool - The pool to render into
+ * @param {typeof defaults} opts - Configuration options
+ * @returns {Function} - The bolus plotting function
  */
 function plotQuickBolus(pool, opts = defaults) {
-  const d3 = window.d3
-
   _.defaults(opts, defaults)
 
   function bolus(selection) {
-    const drawBolus = drawbolus(pool, { ...opts, yScale: pool.yScale(), xScale: pool.xScale().copy() })
+    console.log({ selection })
+    const drawBolus = drawbolus(pool, {
+      ...opts,
+      yScale: pool.yScale(),
+      xScale: pool.xScale().copy()
+    })
 
     selection.each(function(data) {
       // filter out boluses with wizard
       const currentData = _.filter(data, (d) => _.isEmpty(d.wizard))
+
+      // Select all bolus groups and bind data
       const boluses = d3.select(this)
         .selectAll('g.d3-bolus-group')
         .data(currentData, (d) => d.id)
 
-      const bolusGroups = boluses.enter()
-        .append('g')
-        .attr({
-          'class': 'd3-bolus-group',
-          'id': (d) => `bolus_group_${d.id}`,
-          'data-testid': (d) => getDataTestId(d)
-        })
+      const bolusGroups = boluses
+        .join('g')
+        .classed('d3-bolus-group', true)
+        .attr('id', (d) => `bolus_group_${d.id}`)
+        .attr('data-testid', (d) => getDataTestId(d))
         .sort((a, b) => {
           // sort by size so smaller boluses are drawn last
           return d3.descending(commonbolus.getMaxValue(a), commonbolus.getMaxValue(b))
         })
+        .merge(boluses) // Merge enter and update selections
 
+      // Handle exit selection
+      boluses.exit().remove()
+
+      // Draw normal boluses (with delivered > 0)
       const normal = bolusGroups.filter((bolus) => {
         const d = commonbolus.getDelivered(bolus)
         return Number.isFinite(d) && d > 0
       })
       drawBolus.bolus(normal)
 
-      // boluses where programmed differs from delivered
+      // Draw boluses where programmed differs from delivered
       const undelivered = bolusGroups.filter((bolus) => {
         const d = commonbolus.getDelivered(bolus)
         const p = commonbolus.getProgrammed(bolus)
@@ -87,19 +102,19 @@ function plotQuickBolus(pool, opts = defaults) {
       })
       drawBolus.undelivered(undelivered)
 
-      boluses.exit().remove()
-
+      // Set up highlight behavior
       const highlight = pool.highlight('.d3-wizard-group, .d3-bolus-group', opts)
 
-      // tooltips
-      selection.selectAll('.d3-bolus-group').on('mouseover', function(d) {
-        highlight.on(d3.select(this))
-        drawBolus.tooltip.add(d, utils.getTooltipContainer(this))
-      })
-      selection.selectAll('.d3-bolus-group').on('mouseout', function(d) {
-        highlight.off()
-        drawBolus.tooltip.remove(d)
-      })
+      // Set up tooltip event handlers
+      selection.selectAll('.d3-bolus-group')
+        .on('mouseover', function(event, d) {
+          highlight.on(d3.select(this))
+          drawBolus.tooltip.add(d, utils.getTooltipContainer(this))
+        })
+        .on('mouseout', function(event, d) {
+          highlight.off()
+          drawBolus.tooltip.remove(d)
+        })
     })
   }
 

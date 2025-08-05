@@ -32,11 +32,10 @@ function Tooltips(container, tooltipsGroup) {
   function defineShape(shape, cssClass) {
     // add an SVG <defs> at the root of the tooltipsGroup for later <use>
     var shapeGroup = tooltipDefs.append('g')
-      .attr({
-        class: shape.mainClass + ' ' + cssClass,
-        id: shape.id + '_' + cssClass,
-        viewBox: shape.viewBox
-      })
+      .classed(shape.mainClass + ' ' + cssClass, true)
+      .attr('id', shape.id + '_' + cssClass)
+      .attr('viewBox', shape.viewBox)
+
     _.forEach(shape.els, function(el) {
       shapeGroup.append(el.el)
         .attr(el.attrs)
@@ -75,6 +74,7 @@ function Tooltips(container, tooltipsGroup) {
 
   this.addForeignObjTooltip = function(opts) {
     opts = opts || {}
+    console.log({ optsFromTooltip: opts })
     currentTranslation = container.currentTranslation()
     var atLeftEdge = isAtLeftEdge(locationInWindow(opts.xPosition(opts.datum)))
     var atRightEdge = isAtRightEdge(locationInWindow(opts.xPosition(opts.datum)))
@@ -101,25 +101,33 @@ function Tooltips(container, tooltipsGroup) {
         translation = defaultTranslation
       }
       var group = tooltipGroups[opts.datum.type].append('g')
-        .attr({
-          id: 'tooltip_' + opts.datum.id,
-          class: 'd3-tooltip d3-' + opts.datum.type + ' ' + shapes[shape].mainClass + ' ' + opts.cssClass,
-          transform: translation
-        })
+        // .attr({
+        //   id: 'tooltip_' + opts.datum.id,
+        //   class: 'd3-tooltip d3-' + opts.datum.type + ' ' + shapes[shape].mainClass + ' ' + opts.cssClass,
+        //   transform: translation
+        // })
+        .classed('d3-tooltip d3-' + opts.datum.type + ' ' + shapes[shape].mainClass + ' ' + opts.cssClass, true)
+        .attr('id', 'tooltip_' + opts.datum.id)
+        .attr('transform', translation)
+
       var foGroup = group.append('foreignObject')
-        .attr({
-          // need to set an initial width to give the HTML something to shape itself in relation to
-          width: 200,
-          // hide the foreignObject initially so that the resizing isn't visible
-          visibility: 'hidden',
-          class: 'svg-tooltip-fo'
-        })
+        // .attr({
+        //   // need to set an initial width to give the HTML something to shape itself in relation to
+        //   width: 200,
+        //   // hide the foreignObject initially so that the resizing isn't visible
+        //   visibility: 'hidden',
+        //   class: 'svg-tooltip-fo'
+        // })
+        .classed('svg-tooltip-fo', true)
+        .attr('width', 200)
+        .attr('visibility', 'hidden')
         .append('xhtml:div')
-        .attr({
-          // bolus(/wizard) tooltips use completely different CSS
-          // with a different main div class passed as an opt
-          class: opts.div ? opts.div : 'tooltip-div'
-        })
+        // .attr({
+        //   // bolus(/wizard) tooltips use completely different CSS
+        //   // with a different main div class passed as an opt
+        //   class: opts.div ? opts.div : 'tooltip-div'
+        // })
+        .classed(opts.div ? opts.div : 'tooltip-div', true)
       return {
         foGroup: foGroup,
         edge: atLeftEdge ? 'left': atRightEdge ? 'right': null
@@ -184,11 +192,15 @@ function Tooltips(container, tooltipsGroup) {
   }
 
   this.setForeignObjDimensions = function(selection, opts) {
-    selection.attr({
-      width: opts.w,
-      height: opts.h,
-      visibility: 'visible'
-    })
+    selection
+    //   .attr({
+    //   width: opts.w,
+    //   height: opts.h,
+    //   visibility: 'visible'
+    // })
+      .attr('width', opts.w)
+      .attr('height', opts.h)
+      .attr('visibility', 'visible')
   }
 
   this.anchorForeignObj = function(selection, opts) {
@@ -241,6 +253,7 @@ function Tooltips(container, tooltipsGroup) {
     var widths = []
     foGroup.selectAll('span')
       .each(function() {
+        console.log({ width: d3.select(this) })
         widths.push(d3.select(this)[0][0].getBoundingClientRect().width)
       })
     foGroup.selectAll('table')

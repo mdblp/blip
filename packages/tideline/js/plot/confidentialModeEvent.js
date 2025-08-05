@@ -16,6 +16,7 @@
  */
 import i18next from 'i18next'
 import _ from 'lodash'
+import * as d3 from 'd3'
 
 import lockIcon from 'lock.svg'
 import utils from './util/utils'
@@ -33,7 +34,6 @@ import utils from './util/utils'
  * @returns
  */
 function plotConfidentialModeEvent(pool, opts) {
-  const d3 = window.d3
   const t = i18next.t.bind(i18next)
   const height = pool.height() - 2
   const imageSize = 24
@@ -48,6 +48,48 @@ function plotConfidentialModeEvent(pool, opts) {
   const displayTooltip = (d) => (utils.getDuration(d).duration < maxSizeWithTooltip)
 
   function confidentialModeEvent(selection) {
+    const confidentialEvents = pool.filterDataForRender(opts.tidelineData.medicalData.confidentialModes)
+    if (confidentialEvents.length < 1) {
+      d3.select(this).selectAll('g.d3-confidential-group').remove()
+      return
+    }
+
+    const events = d3.select(this)
+      .selectAll('g.d3-confidential-group')
+      .data(confidentialEvents, (d) => d.id)
+
+    const backGroup = events
+      .join('g')
+      .classed('d3-confidential-group', true)
+      .attr('id', (d) => `${poolId}_confidential_group_${d.id}`)
+      .attr('data-testid', (d) => `${poolId}_confidential_group_${d.id}`)
+
+    const itemWithRectangle = backGroup
+      .append('rect')
+      .classed('d3-back-confidential d3-confidential', true)
+      .attr('id', (d) => `${poolId}_confidential_back_${d.id}`)
+      .attr('x', xPos)
+      .attr('y', 1)
+      .attr('width', calculateWidth)
+      .attr('height', height)
+
+    const itemWithRectangleAndImage = itemWithRectangle.append('image')
+      .attr('id', (d) => `${poolId}_confidential_lock_${d.id}`)
+      .attr('x', (d) => xPos(d) + (calculateWidth(d) - imageSize) / 2)
+      .attr('y', (height - imageSize) / 2)
+      .attr('xlink:href', lockIcon)
+
+    if (!opts.hideLabel) {
+      // display the text when no tooltip
+      itemWithRectangleAndImage.filter((d) => !displayTooltip(d))
+        .append('text')
+        .text(t('Confidential mode'))
+        .classed('d3-confidential-text', true)
+        .attr('id', (d) => `${poolId}_confidential_lock_${d.id}`)
+        .attr('x', (d) => xPos(d) + (calculateWidth(d)) / 2)
+        .attr('y', ((height - imageSize) / 2) + imageSize + 5)
+    }
+
     selection.each(function () {
       const confidentialEvents = pool.filterDataForRender(opts.tidelineData.medicalData.confidentialModes)
 
@@ -62,52 +104,71 @@ function plotConfidentialModeEvent(pool, opts) {
 
       const backGroup = events.enter()
         .append('g')
-        .attr({
-          'class': 'd3-confidential-group',
-          'id': (d) => `${poolId}_confidential_group_${d.id}`,
-          'data-testid': (d) => `${poolId}_confidential_group_${d.id}`
-        })
+        // .attr({
+        //   'class': 'd3-confidential-group',
+        //   'id': (d) => `${poolId}_confidential_group_${d.id}`,
+        //   'data-testid': (d) => `${poolId}_confidential_group_${d.id}`
+        // })
+        .classed('d3-confidential-group', true)
+        .attr('id', (d) => `${poolId}_confidential_group_${d.id}`)
+        .attr('data-testid', (d) => `${poolId}_confidential_group_${d.id}`)
+
       backGroup.append('rect')
-        .attr({
-          x: xPos,
-          y: 1,
-          width: calculateWidth,
-          height,
-          class: 'd3-back-confidential d3-confidential',
-          id: (d) => `${poolId}_confidential_back_${d.id}`
-        })
+        // .attr({
+        //   x: xPos,
+        //   y: 1,
+        //   width: calculateWidth,
+        //   height,
+        //   class: 'd3-back-confidential d3-confidential',
+        //   id: (d) => `${poolId}_confidential_back_${d.id}`
+        // })
+        .classed('d3-back-confidential d3-confidential', true)
+        .attr('id', (d) => `${poolId}_confidential_back_${d.id}`)
+        .attr('x', xPos)
+        .attr('y', 1)
+        .attr('width', calculateWidth)
+        .attr('height', height)
+
       backGroup.append('image')
-        .attr({
-          'x': (d) => xPos(d) + (calculateWidth(d) - imageSize) / 2,
-          'y': (height - imageSize) / 2,
-          'id': (d) => `${poolId}_confidential_lock_${d.id}`,
-          'xlink:href': lockIcon
-        })
+        // .attr({
+        //   'x': (d) => xPos(d) + (calculateWidth(d) - imageSize) / 2,
+        //   'y': (height - imageSize) / 2,
+        //   'id': (d) => `${poolId}_confidential_lock_${d.id}`,
+        //   'xlink:href': lockIcon
+        // })
+        .attr('id', (d) => `${poolId}_confidential_lock_${d.id}`)
+        .attr('x', (d) => xPos(d) + (calculateWidth(d) - imageSize) / 2)
+        .attr('y', (height - imageSize) / 2)
+        .attr('xlink:href', lockIcon)
 
       if (!opts.hideLabel) {
         // display the text when no tooltip
         backGroup.filter((d) => !displayTooltip(d))
           .append('text')
           .text(t('Confidential mode'))
-          .attr({
-            x: (d) => xPos(d) + (calculateWidth(d)) / 2,
-            y: ((height - imageSize) / 2) + imageSize + 5,
-            class: 'd3-confidential-text',
-            id: (d) => `${poolId}_confidential_lock_${d.id}`
-          })
+          // .attr({
+          //   x: (d) => xPos(d) + (calculateWidth(d)) / 2,
+          //   y: ((height - imageSize) / 2) + imageSize + 5,
+          //   class: 'd3-confidential-text',
+          //   id: (d) => `${poolId}_confidential_lock_${d.id}`
+          // })
+          .classed('d3-confidential-text', true)
+          .attr('id', (d) => `${poolId}_confidential_lock_${d.id}`)
+          .attr('x', (d) => xPos(d) + (calculateWidth(d)) / 2)
+          .attr('y', ((height - imageSize) / 2) + imageSize + 5)
       }
 
       events.exit().remove()
 
       // tooltips
-      selection.selectAll('.d3-confidential-group').on('mouseover', function (d) {
+      selection.selectAll('.d3-confidential-group').on('mouseover', function (event, d) {
         const {duration} = utils.getDuration(d)
         if ( duration < maxSizeWithTooltip) {
           confidentialModeEvent.addTooltip(d, utils.getTooltipContainer(this))
         }
       })
 
-      selection.selectAll('.d3-confidential-group').on('mouseout', function (d) {
+      selection.selectAll('.d3-confidential-group').on('mouseout', function (event, d) {
         confidentialModeEvent.remove(d)
       })
     })

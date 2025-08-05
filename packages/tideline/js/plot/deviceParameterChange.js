@@ -66,21 +66,30 @@ function plotDeviceParameterChange(pool, opts) {
 
       const parameterGroup = allParameters.enter()
         .append('g')
-        .attr({
-          'class': 'd3-param-group',
-          'id': (d) => `param_group_${d.id}`,
-          'data-testid': (d) => `param_group_${d.id}`
-        })
+        // .attr({
+        //   'class': 'd3-param-group',
+        //   'id': (d) => `param_group_${d.id}`,
+        //   'data-testid': (d) => `param_group_${d.id}`
+        // })
+        .classed('d3-param-group', true)
+        .attr('id', (d) => `param_group_${d.id}`)
+        .attr('data-testid', (d) => `param_group_${d.id}`)
 
       parameterGroup.append('image')
-        .attr({
-          'x': xPos,
-          'y': pool.height() / 2 - opts.size / 2,
-          width,
-          'height': offset,
-          'xlink:href': picto,
-          'data-testid': `param_group_img`
-        })
+        // .attr({
+        //   'x': xPos,
+        //   'y': pool.height() / 2 - opts.size / 2,
+        //   width,
+        //   'height': offset,
+        //   'xlink:href': picto,
+        //   'data-testid': `param_group_img`
+        // })
+        .attr('x', xPos)
+        .attr('y', pool.height() / 2 - opts.size / 2)
+        .attr('width', width)
+        .attr('height', offset)
+        .attr('xlink:href', picto)
+        .attr('data-testid', `param_group_img`)
 
       allParameters.exit().remove()
 

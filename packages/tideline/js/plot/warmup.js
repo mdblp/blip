@@ -26,6 +26,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import * as d3 from 'd3'
 import warmUpDexcom from 'warmup-dexcom.svg'
 import utils from './util/utils'
 import { DEFAULT_IMAGE_MARGIN, DEFAULT_OPTIONS_SIZE } from './util/eventsConstants'
@@ -44,7 +45,6 @@ import { DEFAULT_IMAGE_MARGIN, DEFAULT_OPTIONS_SIZE } from './util/eventsConstan
  */
 
 function plotWarmUp(pool, opts) {
-  const d3 = window.d3
   const width = 40
 
   opts.size = opts.size ?? DEFAULT_OPTIONS_SIZE
@@ -67,19 +67,29 @@ function plotWarmUp(pool, opts) {
       const warmUpGroup = allWarmUps
         .enter()
         .append('g')
-        .attr({
-          'class': 'd3-warmup-group',
-          'id': (d) => `warmup_group_${d.id}`,
-          'data-testid': (d) => `warmup_group_${d.guid}`
-        })
+        // .attr({
+        //   'class': 'd3-warmup-group',
+        //   'id': (d) => `warmup_group_${d.id}`,
+        //   'data-testid': (d) => `warmup_group_${d.guid}`
+        // })
+        .classed('d3-warmup-group', true)
+        .attr('id', (d) => `warmup_group_${d.id}`)
+        .attr('data-testid', (d) => `warmup_group_${d.guid}`)
 
-      warmUpGroup.append('image').attr({
-        'x': (d) => xScale(d.epoch),
-        'y': pool.height() / 2 - opts.size / 2,
-        width,
-        'height': offset,
-        'xlink:href': warmUpDexcom
-      })
+      warmUpGroup
+        .append('image')
+      //   .attr({
+      //   'x': (d) => xScale(d.epoch),
+      //   'y': pool.height() / 2 - opts.size / 2,
+      //   width,
+      //   'height': offset,
+      //   'xlink:href': warmUpDexcom
+      // })
+        .attr('x', (d) => xScale(d.epoch))
+        .attr('y', pool.height() / 2 - opts.size / 2)
+        .attr('width', width)
+        .attr('height', offset)
+        .attr('xlink:href', warmUpDexcom)
 
       allWarmUps.exit().remove()
 

@@ -41,7 +41,7 @@ const defaults = {
  * @returns
  */
 function drawFill(pool, opts = defaults) {
-  const d3 = window.d3
+  // const d3 = window.d3
 
   _.defaults(opts, defaults)
 
@@ -64,62 +64,98 @@ function drawFill(pool, opts = defaults) {
         .data(currentData, (d) => d.id)
 
 
-      fills.enter()
-        .append('rect')
-        .attr({
-          'cursor': opts.cursor ? opts.cursor : 'auto',
-          'x': function(d, i) {
-            // dataGutter is the extra space on the right & left edges
-            // of each "pool" in weekly view
-            if (opts.dataGutter) {
-              if (i === currentData.length - 1) {
-                return fill.xPosition(d) - opts.dataGutter
-              }
-            }
-            return fill.xPosition(d)
-          },
-          'y': function() {
-            if (opts.gutter.top) {
-              return opts.gutter.top
-            }
-
-            return opts.gutter
-          },
-          'width': function(d, i) {
-            // dataGutter is the extra space on the right & left edges
-            // of each "pool" in weekly view
-            if (opts.dataGutter) {
-              if ((i === 0) || (i === currentData.length - 1)) {
-                return fill.width(d) + opts.dataGutter
-              }
-            }
-            return fill.width(d)
-          },
-          'height': function() {
-            if (opts.gutter.top) {
-              return pool.height() - opts.gutter.top - opts.gutter.bottom
-            }
-
-            return pool.height() - 2 * opts.gutter
-
-          },
-          'id': function(d) {
-            return d.id
-          },
-          'data-testid': function(d){return d.id},
-          'class': 'd3-fill d3-rect-fill d3-fill-background'
+      fills
+        // .enter()
+        // .append('rect')
+        .join('rect')
+        // .attr({
+        //   // 'cursor': opts.cursor ? opts.cursor : 'auto',
+        //   'x': function(d, i) {
+        //     // dataGutter is the extra space on the right & left edges
+        //     // of each "pool" in weekly view
+        //     if (opts.dataGutter) {
+        //       if (i === currentData.length - 1) {
+        //         return fill.xPosition(d) - opts.dataGutter
+        //       }
+        //     }
+        //     return fill.xPosition(d)
+        //   },
+        //   'y': function() {
+        //     if (opts.gutter.top) {
+        //       return opts.gutter.top
+        //     }
+        //
+        //     return opts.gutter
+        //   },
+        //   'width': function(d, i) {
+        //     // dataGutter is the extra space on the right & left edges
+        //     // of each "pool" in weekly view
+        //     if (opts.dataGutter) {
+        //       if ((i === 0) || (i === currentData.length - 1)) {
+        //         return fill.width(d) + opts.dataGutter
+        //       }
+        //     }
+        //     return fill.width(d)
+        //   },
+        //   'height': function() {
+        //     if (opts.gutter.top) {
+        //       return pool.height() - opts.gutter.top - opts.gutter.bottom
+        //     }
+        //
+        //     return pool.height() - 2 * opts.gutter
+        //
+        //   },
+          // 'id': function(d) {
+          //   return d.id
+          // },
+          // 'data-testid': function(d){return d.id},
+          // 'class': 'd3-fill d3-rect-fill d3-fill-background'
+        // })
+        .classed('d3-fill d3-rect-fill d3-fill-background', true)
+        .style('cursor', opts.cursor || 'auto')
+        .attr('id', function(d) {
+          return d.id
         })
-        .on('click', function(fillRect) {
+        .attr('data-testid', function(d) { return d.id })
+        .attr('x', function(d, i) {
+          // dataGutter is the extra space on the right & left edges
+          // of each "pool" in weekly view
+          if (opts.dataGutter) {
+            if (i === currentData.length - 1) {
+              return fill.xPosition(d) - opts.dataGutter
+            }
+          }
+          return fill.xPosition(d)
+        })
+        .attr('y', opts.gutter.top || opts.gutter)
+        .attr('width', function(d, i) {
+          // dataGutter is the extra space on the right & left edges
+          // of each "pool" in weekly view
+          if (opts.dataGutter) {
+            if ((i === 0) || (i === currentData.length - 1)) {
+              return fill.width(d) + opts.dataGutter
+            }
+          }
+          return fill.width(d)
+        })
+        .attr('height', function() {
+          if (opts.gutter.top) {
+            return pool.height() - opts.gutter.top - opts.gutter.bottom
+          }
+
+          return pool.height() - 2 * opts.gutter
+        })
+        .on('click', function(event, fillRect) {
           if (opts.emitter) {
             const parentContainer = document.getElementById('newNoteIcon').getBoundingClientRect()
-            const offsetX = d3.event.clientX - parentContainer.right
+            const offsetX = event.clientX - parentContainer.right
             opts.emitter.emit('clickInPool', { offsetX, datum: fillRect })
           }
         })
 
       fill.drawVerticalLines(selection, currentData)
 
-      fills.exit().remove()
+      // fills.exit().remove()
 
       // Add midnight markers
       if (opts.isDaily) {
@@ -127,35 +163,54 @@ function drawFill(pool, opts = defaults) {
           .data(_.filter(currentData, {startsAtMidnight: true}), function(d) {
             return d.id
           })
-          .enter()
-          .append('rect')
-          .attr({
-            x: function(d) {
-              var pos
-              pos = fill.xPosition(d)
-              return pos - (opts.midnightWidth/2)
-            },
-            y: function() {
-              if (opts.gutter.top) {
-                return opts.gutter.top
-              }
+          // .enter()
+          // .append('rect')
+          .join('rect')
+          // .attr({
+          //   x: function(d) {
+          //     var pos
+          //     pos = fill.xPosition(d)
+          //     return pos - (opts.midnightWidth/2)
+          //   },
+          //   y: function() {
+          //     if (opts.gutter.top) {
+          //       return opts.gutter.top
+          //     }
+          //
+          //     return opts.gutter
+          //
+          //   },
+          //   width: opts.midnightWidth,
+          //   height: function() {
+          //     if (opts.gutter.top) {
+          //       return pool.height() - opts.gutter.top - opts.gutter.bottom
+          //     }
+          //
+          //     return pool.height() - 2 * opts.gutter
+          //
+          //   },
+          //   id: function(d) {
+          //     return d.id
+          //   },
+          //   class: 'd3-rect-fill d3-fill-vertical-line'
+          // })
+          .classed('d3-rect-fill d3-fill-vertical-line', true)
+          .attr('id', function(d) {
+            return d.id
+          })
+          .attr('x', function(d) {
+            var pos
+            pos = fill.xPosition(d)
+            return pos - (opts.midnightWidth/2)
+          })
+          .attr('y', opts.gutter.top || opts.gutter)
+          .attr('width', opts.midnightWidth)
+          .attr('height', function() {
+            if (opts.gutter.top) {
+              return pool.height() - opts.gutter.top - opts.gutter.bottom
+            }
 
-              return opts.gutter
-
-            },
-            width: opts.midnightWidth,
-            height: function() {
-              if (opts.gutter.top) {
-                return pool.height() - opts.gutter.top - opts.gutter.bottom
-              }
-
-              return pool.height() - 2 * opts.gutter
-
-            },
-            id: function(d) {
-              return d.id
-            },
-            class: 'd3-rect-fill d3-fill-vertical-line'
+            return pool.height() - 2 * opts.gutter
           })
       }
     })
@@ -172,52 +227,87 @@ function drawFill(pool, opts = defaults) {
   fill.drawGuidelines = function() {
     const yScale = pool.yScale()
     var linesGroup = pool.group().selectAll('#' + pool.id() + '_guidelines').data([opts.guidelines])
-    linesGroup.enter().append('g').attr('id', pool.id() + '_guidelines')
-    linesGroup.selectAll('line')
+    // linesGroup.enter().append('g').attr('id', pool.id() + '_guidelines')
+    const g = linesGroup
+      .join('g')
+      // .enter()
+      // .append('g')
+      .attr('id', pool.id() + '_guidelines')
+    const lines = g
+      .selectAll('line')
       .data(opts.guidelines)
-      .enter()
-      .append('line')
-      .attr({
-        class: function(d) { return 'd3-line-guide ' + d['class'] },
-        x1: opts.xScale.range()[0],
-        x2: opts.xScale.range()[1],
-        y1: (d) => yScale(d.height),
-        y2: (d) => yScale(d.height)
-      })
+      // .enter()
+      // .append('line')
+      .join('line')
+      // .attr({
+      //   class: function(d) { return 'd3-line-guide ' + d['class'] },
+      //   x1: opts.xScale.range()[0],
+      //   x2: opts.xScale.range()[1],
+      //   y1: (d) => yScale(d.height),
+      //   y2: (d) => yScale(d.height)
+      // })
+      // .classed(function(d) { return 'd3-line-guide ' + d['class'] }, true)
+      .attr('x1', opts.xScale.range()[0])
+      .attr('x2', opts.xScale.range()[1])
+      .attr('y1', (d) => yScale(d.height))
+      .attr('y2', (d) => yScale(d.height))
+      .classed('d3-line-guide', true)
+
+    lines.each(function(d) {
+      this.classList.add(d['class'])
+    })
   }
 
   fill.drawVerticalLines = function (selection, currentData) {
     selection
       .selectAll('#' + pool.id() + '_verticalLines')
       .data(currentData, (d) => d.id)
-      .enter()
-      .append('rect')
-      .attr({
-        x: function(d) {
-          const pos = fill.xPosition(d)
-          return pos - (opts.verticalLinesWidth / 2)
-        },
-        y: function() {
-          if (opts.gutter.top) {
-            return opts.gutter.top
-          }
+      // .enter()
+      // .append('rect')
+      .join('rect')
+      // .attr({
+      //   x: function(d) {
+      //     const pos = fill.xPosition(d)
+      //     return pos - (opts.verticalLinesWidth / 2)
+      //   },
+      //   y: function() {
+      //     if (opts.gutter.top) {
+      //       return opts.gutter.top
+      //     }
+      //
+      //     return opts.gutter
+      //
+      //   },
+      //   width: opts.verticalLinesWidth,
+      //   height: function() {
+      //     if (opts.gutter.top) {
+      //       return pool.height() - opts.gutter.top - opts.gutter.bottom
+      //     }
+      //
+      //     return pool.height() - 2 * opts.gutter
+      //
+      //   },
+      //   id: function(d) {
+      //     return d.id
+      //   },
+      //   class: 'd3-rect-fill d3-fill-vertical-line'
+      // })
+      .classed('d3-rect-fill d3-fill-vertical-line', true)
+      .attr('id', function(d) {
+        return d.id
+      })
+      .attr('x', function(d) {
+        const pos = fill.xPosition(d)
+        return pos - (opts.verticalLinesWidth / 2)
+      })
+      .attr('y', opts.gutter.top || opts.gutter)
+      .attr('width', opts.verticalLinesWidth)
+      .attr('height', function() {
+        if (opts.gutter.top) {
+          return pool.height() - opts.gutter.top - opts.gutter.bottom
+        }
 
-          return opts.gutter
-
-        },
-        width: opts.verticalLinesWidth,
-        height: function() {
-          if (opts.gutter.top) {
-            return pool.height() - opts.gutter.top - opts.gutter.bottom
-          }
-
-          return pool.height() - 2 * opts.gutter
-
-        },
-        id: function(d) {
-          return d.id
-        },
-        class: 'd3-rect-fill d3-fill-vertical-line'
+        return pool.height() - 2 * opts.gutter
       })
   }
 

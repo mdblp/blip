@@ -70,11 +70,14 @@ const shapes = {
       var boundingBox = used[0][0].getBoundingClientRect()
       var usedTransform = used.attr('transform').split(' ')
       selection.append('text')
-        .attr({
-          x: boundingBox.width/2 - (_.includes(usedTransform, 'scale(-1,1)') ? boundingBox.width : 0),
-          y: -boundingBox.height/2 + (_.includes(usedTransform, 'scale(1,-1)') ? boundingBox.height : 0),
-          class: 'd3-tooltip-text'
-        })
+        // .attr({
+        //   x: boundingBox.width/2 - (_.includes(usedTransform, 'scale(-1,1)') ? boundingBox.width : 0),
+        //   y: -boundingBox.height/2 + (_.includes(usedTransform, 'scale(1,-1)') ? boundingBox.height : 0),
+        //   class: 'd3-tooltip-text'
+        // })
+        .classed('d3-tooltip-text', true)
+        .attr('x', boundingBox.width/2 - (_.includes(usedTransform, 'scale(-1,1)') ? boundingBox.width : 0))
+        .attr('y', -boundingBox.height/2 + (_.includes(usedTransform, 'scale(1,-1)') ? boundingBox.height : 0))
         .text(opts.datum.tooltipText ? opts.datum.tooltipText : opts.datum.value)
     }
   },
@@ -146,10 +149,13 @@ const shapes = {
     },
     offset: function(selection, opts) {
       if (!arguments.length) return 4
-      selection.attr({
-        x: opts.x,
-        y: opts.y
-      })
+      selection
+      //   .attr({
+      //   x: opts.x,
+      //   y: opts.y
+      // })
+        .attr('x', opts.x)
+        .attr('y', opts.y)
     }
   },
   generic: {
@@ -208,10 +214,13 @@ const shapes = {
     },
     offset: function(selection, opts) {
       if (!arguments.length) return 8
-      selection.attr({
-        x: opts.x,
-        y: opts.y
-      })
+      selection
+      //   .attr({
+      //   x: opts.x,
+      //   y: opts.y
+      // })
+        .attr('x', opts.x)
+        .attr('y', opts.y)
     }
   },
   range: {
@@ -274,10 +283,13 @@ const shapes = {
       if (!arguments.length) {
         return 40
       }
-      selection.attr({
-        x: opts.x,
-        y: opts.y
-      })
+      selection
+      //   .attr({
+      //   x: opts.x,
+      //   y: opts.y
+      // })
+        .attr('x', opts.x)
+        .attr('y', opts.y)
     },
     offsetY: _.constant(10)
   }

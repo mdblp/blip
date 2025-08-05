@@ -65,19 +65,29 @@ function plotAlarmEvent(pool, opts) {
       const alarmEventGroup = allAlarmEvents
         .enter()
         .append('g')
-        .attr({
-          'class': alarmEventGroupSelector,
-          'id': (data) => `${alarmEventPlotPrefixId}_${data.id}`,
-          'data-testid': (data) => `${alarmEventPlotPrefixId}_${data.guid}`
-        })
+        // .attr({
+        //   'class': alarmEventGroupSelector,
+        //   'id': (data) => `${alarmEventPlotPrefixId}_${data.id}`,
+        //   'data-testid': (data) => `${alarmEventPlotPrefixId}_${data.guid}`
+        // })
+        .classed(alarmEventGroupSelector, true)
+        .attr('id', (data) => `${alarmEventPlotPrefixId}_${data.id}`)
+        .attr('data-testid', (data) => `${alarmEventPlotPrefixId}_${data.guid}`)
 
-      alarmEventGroup.append('image').attr({
-        'x': (d) => xPos(d) - (width / 2),
-        'y': pool.height() / 2 - opts.size / 2,
-        width,
-        height,
-        'xlink:href': (alarmEvent) => getAlarmEventImage(alarmEvent.alarmEventType)
-      })
+      alarmEventGroup
+        .append('image')
+      //   .attr({
+      //   'x': (d) => xPos(d) - (width / 2),
+      //   'y': pool.height() / 2 - opts.size / 2,
+      //   width,
+      //   height,
+      //   'xlink:href': (alarmEvent) => getAlarmEventImage(alarmEvent.alarmEventType)
+      // })
+        .attr('x', (d) => xPos(d) - (width / 2))
+        .attr('y', pool.height() / 2 - opts.size / 2)
+        .attr('width', width)
+        .attr('height', height)
+        .attr('xlink:href', (alarmEvent) => getAlarmEventImage(alarmEvent.alarmEventType))
 
       allAlarmEvents.exit().remove()
 

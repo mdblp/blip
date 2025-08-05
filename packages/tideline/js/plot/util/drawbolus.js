@@ -16,6 +16,7 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 import commonbolus from './commonbolus'
 import { BolusSubtype, DatumType, Prescriptor, WizardInputMealSource } from 'medical-domain'
 
@@ -66,10 +67,17 @@ function bolusClass(b, baseClass) {
       return `${baseClass} d3-bolus-correction`
     case BolusTypes.pen:
       return `${baseClass} d3-bolus-pen`
+    default:
+      return baseClass
   }
-  return baseClass
 }
 
+/**
+ * Creates bolus drawing utilities
+ * @param {object} pool - The pool to render into
+ * @param {object} opts - Configuration options
+ * @returns {object} - Collection of bolus drawing functions
+ */
 function drawBolus(pool, opts = {}) {
   const defaults = {
     width: 12,
@@ -93,21 +101,25 @@ function drawBolus(pool, opts = {}) {
 
   const xPosition = (d) => opts.xScale(d.epoch) - halfWidth
 
-  const triangleLeft = (x) => { return x + halfWidth - opts.triangleOffset }
-  const triangleRight = (x) => { return x + halfWidth + opts.triangleOffset }
-  const triangleMiddle = (x) => { return x + halfWidth }
+  const triangleLeft = (x) => x + halfWidth - opts.triangleOffset
+  const triangleRight = (x) => x + halfWidth + opts.triangleOffset
+  const triangleMiddle = (x) => x + halfWidth
 
   const underrideTriangle = (x, y) =>
-    triangleLeft(x) + ',' + (y + opts.markerHeight/2) + ' ' +
-    triangleMiddle(x) + ',' + (y + opts.markerHeight/2 + opts.triangleHeight) + ' ' +
-    triangleRight(x) + ',' + (y + opts.markerHeight/2)
+    `${triangleLeft(x)},${y + opts.markerHeight/2} ` +
+    `${triangleMiddle(x)},${y + opts.markerHeight/2 + opts.triangleHeight} ` +
+    `${triangleRight(x)},${y + opts.markerHeight/2}`
 
   const overrideTriangle = (x, y) =>
-    triangleLeft(x) + ',' + (y + opts.markerHeight/2) + ' ' +
-    triangleMiddle(x) + ',' + (y + opts.markerHeight/2 - opts.triangleHeight) + ' ' +
-    triangleRight(x) + ',' + (y + opts.markerHeight/2)
+    `${triangleLeft(x)},${y + opts.markerHeight/2} ` +
+    `${triangleMiddle(x)},${y + opts.markerHeight/2 - opts.triangleHeight} ` +
+    `${triangleRight(x)},${y + opts.markerHeight/2}`
 
   return {
+    /**
+     * Draw carbohydrate circles
+     * @param {d3.Selection} carbs - D3 selection of carb elements
+     */
     carb: function(carbs) {
       const xPos = (d) => xPosition(d) + halfWidth
       const yScaleCarbs = (ci) => opts.yScaleCarbs ? opts.yScaleCarbs(ci) : opts.r
@@ -116,95 +128,109 @@ function drawBolus(pool, opts = {}) {
         const bolusValue = d.bolus ? commonbolus.getProgrammed(d) : 0
         return opts.yScale(bolusValue) - r - (bolusValue ? opts.carbPadding : 0)
       }
-      const carbCircleClass = 'd3-circle-carbs d3-carbs'
-      const carbTextClass = 'd3-carbs-text d3-carbs-text-meal'
+
       carbs.append('circle')
-        .attr({
-          'cx': xPos,
-          'cy': yPos,
-          'r': (d) => yScaleCarbs(d.carbInput),
-          'stroke-width': 0,
-          'data-testid': 'carbs-meals',
-          'class': carbCircleClass,
-          'id': (d) => `carbs_circle_${d.id}`
-        })
+        .attr('cx', xPos)
+        .attr('cy', yPos)
+        .attr('r', (d) => yScaleCarbs(d.carbInput))
+        .attr('stroke-width', 0)
+        .attr('data-testid', 'carbs-meals')
+        .attr('id', (d) => `carbs_circle_${d.id}`)
+        .attr('class', 'd3-circle-carbs d3-carbs')
 
       carbs.append('text')
         .text((d) => d.carbInput)
-        .attr({
-          x: xPos,
-          y: yPos,
-          class: carbTextClass,
-          id: (d) => `carbs_text_${d.id}`
-        })
+        .attr('x', xPos)
+        .attr('y', yPos)
+        .attr('id', (d) => `carbs_text_${d.id}`)
+        .attr('class', 'd3-carbs-text d3-carbs-text-meal')
     },
+
+    /**
+     * Draw bolus rectangles
+     * @param {d3.Selection} boluses - D3 selection of bolus elements
+     */
     bolus: function(boluses) {
       // delivered amount of bolus
       boluses.append('rect')
-        .attr({
-          x: (d) => xPosition(commonbolus.getBolus(d)),
-          y: (d) => opts.yScale(commonbolus.getDelivered(d)),
-          width: (d) => {
-            if (bolusToLegend(d) === BolusTypes.correction) {
-              return opts.width / 2
-            }
-            return opts.width
-          },
-          height: (d) => top - opts.yScale(commonbolus.getDelivered(d)),
-          class: (b) => bolusClass(b, 'd3-bolus d3-rect-bolus'),
-          id: (d) => `bolus_${commonbolus.getBolus(d).id}`
+        .attr('x', (d) => xPosition(commonbolus.getBolus(d)))
+        .attr('y', (d) => opts.yScale(commonbolus.getDelivered(d)))
+        .attr('width', (d) => {
+          if (bolusToLegend(d) === BolusTypes.correction) {
+            return opts.width / 2
+          }
+          return opts.width
         })
+        .attr('height', (d) => top - opts.yScale(commonbolus.getDelivered(d)))
+        .attr('id', (d) => `bolus_${commonbolus.getBolus(d).id}`)
+        .attr('class', (b) => bolusClass(b, 'd3-bolus d3-rect-bolus'))
     },
+
+    /**
+     * Draw undelivered bolus portions
+     * @param {d3.Selection} undelivered - D3 selection of undelivered elements
+     */
     undelivered: function(undelivered) {
       // draw color in the undelivered portion
       undelivered.append('rect')
-        .attr({
-          x: (d) => xPosition(commonbolus.getBolus(d)),
-          y: (d) => opts.yScale(commonbolus.getProgrammed(d)),
-          width: (d) => {
-            if (bolusToLegend(d) === BolusTypes.correction) {
-              return opts.width / 2
-            }
-            return opts.width
-          },
-          height: (b) => {
-            const d = commonbolus.getDelivered(b)
-            const m = commonbolus.getProgrammed(b)
-            return opts.yScale(d) - opts.yScale(m)
-          },
-          class: 'd3-rect-undelivered d3-bolus',
-          id: (b) => `${b.type}_undelivered_${b.id}`
+        .attr('x', (d) => xPosition(commonbolus.getBolus(d)))
+        .attr('y', (d) => opts.yScale(commonbolus.getProgrammed(d)))
+        .attr('width', (d) => {
+          if (bolusToLegend(d) === BolusTypes.correction) {
+            return opts.width / 2
+          }
+          return opts.width
         })
+        .attr('height', (b) => {
+          const d = commonbolus.getDelivered(b)
+          const m = commonbolus.getProgrammed(b)
+          return opts.yScale(d) - opts.yScale(m)
+        })
+        .attr('id', (b) => `${b.type}_undelivered_${b.id}`)
+        .attr('class', 'd3-rect-undelivered d3-bolus')
     },
+
+    /**
+     * Draw underride triangles
+     * @param {d3.Selection} underride - D3 selection of underride elements
+     */
     underride: function(underride) {
       underride.append('polygon')
-        .attr({
-          x: (d) => xPosition(commonbolus.getBolus(d)),
-          y: (d) => opts.yScale(commonbolus.getProgrammed(d)),
-          points: function(d) {
-            const bolus = commonbolus.getBolus(d)
-            return underrideTriangle(xPosition(bolus), opts.yScale(commonbolus.getProgrammed(d)))
-          },
-          class: 'd3-polygon-ride d3-bolus',
-          id: (d) => `bolus_ride_polygon_${commonbolus.getBolus(d).id}`
+        .attr('x', (d) => xPosition(commonbolus.getBolus(d)))
+        .attr('y', (d) => opts.yScale(commonbolus.getProgrammed(d)))
+        .attr('points', function(d) {
+          const bolus = commonbolus.getBolus(d)
+          return underrideTriangle(xPosition(bolus), opts.yScale(commonbolus.getProgrammed(d)))
         })
+        .attr('id', (d) => `bolus_ride_polygon_${commonbolus.getBolus(d).id}`)
+        .attr('class', 'd3-polygon-ride d3-bolus')
     },
+
+    /**
+     * Draw override triangles
+     * @param {d3.Selection} override - D3 selection of override elements
+     */
     override: function(override) {
       override.append('polygon')
-        .attr({
-          x: (d) => xPosition(commonbolus.getBolus(d)),
-          y: function(d) {
-            return opts.yScale(commonbolus.getRecommended(d)) - opts.markerHeight
-          },
-          points: function(d) {
-            const bolus = commonbolus.getBolus(d)
-            return overrideTriangle(xPosition(bolus), opts.yScale(commonbolus.getRecommended(d)) - opts.markerHeight)
-          },
-          class: 'd3-polygon-ride d3-bolus',
-          id: (d) => `bolus_override_polygon_${commonbolus.getBolus(d).id}`
+        .attr('x', (d) => xPosition(commonbolus.getBolus(d)))
+        .attr('y', (d) => opts.yScale(commonbolus.getRecommended(d)) - opts.markerHeight)
+        .attr('points', (d) => {
+          const bolus = commonbolus.getBolus(d)
+          return overrideTriangle(xPosition(bolus), opts.yScale(commonbolus.getRecommended(d)) - opts.markerHeight)
         })
+        .attr('id', (d) => `bolus_override_polygon_${commonbolus.getBolus(d).id}`)
+        .attr('class', 'd3-polygon-ride d3-bolus')
     },
+
+    /**
+     * Tooltip handling functions
+     */
     tooltip: {
+      /**
+       * Add tooltip for bolus
+       * @param {object} d - The data point
+       * @param {HTMLElement} rect - The container element
+       */
       add: function(d, rect) {
         if (_.get(opts, 'onBolusHover', false)) {
           opts.onBolusHover({
@@ -213,6 +239,11 @@ function drawBolus(pool, opts = {}) {
           })
         }
       },
+
+      /**
+       * Remove tooltip for bolus
+       * @param {object} d - The data point
+       */
       remove: function(d) {
         if (_.get(opts, 'onBolusOut', false)) {
           opts.onBolusOut({

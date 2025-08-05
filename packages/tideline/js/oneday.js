@@ -25,6 +25,7 @@
 import _ from 'lodash'
 import bows from 'bows'
 import moment from 'moment-timezone'
+import * as d3 from 'd3'
 
 import { MS_IN_DAY } from 'medical-domain'
 
@@ -36,7 +37,6 @@ import Tooltips from './plot/util/tooltips/tooltip'
  * @returns {OneDay} The chart manager displaying one day of diabetes data.
  */
 function oneDay(emitter, options = { trackMetric: _.noop }) {
-  const d3 = window.d3
   /** @type {Console} */
   const log = bows('OneDay')
 
@@ -92,33 +92,47 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   let scrollHandleTrigger = true
 
   function container(selection) {
+    // container.mainSVG = selection.append('svg').style('width', '100%')
     container.mainSVG = selection.append('svg')
     container.mainGroup = container.mainSVG.append('g').attr('id', 'tidelineMainSVG')
     // update SVG dimensions and ID
-    container.mainSVG.attr({
-      id: id,
-      width: width,
-      height: height
-    })
+    container.mainSVG
+    //   .attr({
+    //   id: id,
+    //   width: width,
+    //   height: height
+    // })
+      .attr('id', id)
+      .attr('width', width)
+      .attr('height', height)
 
-    container.poolGroup = container.mainGroup.append('g').attr('id', 'tidelinePools').attr('clip-path', 'url(#mainClipPath)')
+    container.poolGroup = container.mainGroup
+      .append('g')
+      .attr('id', 'tidelinePools')
+      .attr('clip-path', 'url(#mainClipPath)')
     container.mainGroup.append('g').attr('id', 'tidelineLabels')
     container.mainGroup.append('g').attr('id', 'tidelineYAxes')
 
     if (nav.scrollNav) {
-      container.scrollNav = container.mainGroup.append('g')
-        .attr('class', 'x scroll')
+      container.scrollNav = container.mainGroup
+        .append('g')
+        .classed('x scroll', true)
+        // .attr('class', 'x scroll')
         .attr('id', 'tidelineScrollNav')
     }
     container.mainSVG.insert('clipPath', '#tidelineMainSVG')
       .attr('id', 'mainClipPath')
       .append('rect')
-      .attr({
-        x: axisGutter,
-        y: 0,
-        width: container.width() - axisGutter,
-        height: container.height()
-      })
+      // .attr({
+      //   x: axisGutter,
+      //   y: 0,
+      //   width: container.width() - axisGutter,
+      //   height: container.height()
+      // })
+      .attr('x', axisGutter)
+      .attr('y', 0)
+      .attr('width', container.width() - axisGutter)
+      .attr('height', container.height())
     log.debug('Container initialized')
   }
 
@@ -145,7 +159,8 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   /** @type {Tooltips|null} */
   container.tooltips = null
   /** @type {d3.AxisScale<Date>} */
-  container.xScale = d3.time.scale()
+  // container.xScale = d3.time.scale()
+  container.xScale = d3.scaleTime()
   /** @type {MedicalDataService} */
   container.tidelineData = null
   container.throttleTrackMetric = _.throttle(options.trackMetric, 10000)
@@ -204,30 +219,44 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
 
     const currentPosition = container.xScale(domain.center)
     const wantedPosition = container.xScale(date)
+    console.log({ currentPosition, wantedPosition})
     let translationAmount = wantedPosition - currentPosition
     if (nav.currentTranslation - translationAmount < 0) {
       translationAmount = nav.currentTranslation
     } else if (nav.currentTranslation - translationAmount > nav.maxTranslation) {
       translationAmount = nav.currentTranslation - nav.maxTranslation
     }
+    console.log({translationAmount})
 
-    let nUgly = 0
+    // let nUgly = 0
     nav.currentTranslation -= translationAmount
     container.inTransition(true)
-    container.mainGroup.transition()
+    container.mainGroup
+      .transition()
       .duration(transitionDelay)
       .tween('zoom', () => {
         const ix = d3.interpolate(nav.currentTranslation + translationAmount, nav.currentTranslation)
         return (t) => {
           if (nav.pan !== null) {
-            nav.pan.translate([ix(t), 0])
+            // nav.pan.translate([ix(t), 0])
+            console.log({ ix: ix(t) })
+
+            // container.mainGroup.call(nav.pan.translateBy, ix(t), 0)
+            nav.pan.scaleBy(container.mainGroup, container.xScale)
+            container.mainGroup.call(nav.pan.transform, d3.zoomIdentity.translate(ix(t), 0))
+
+            // nav.pan.translateBy(container.mainGroup, ix(t), 0)
             // Trigger the zoom events on nav.pan
-            nav.pan.event(container.mainGroup)
+            // TODO To fix
+            // nav.pan.event(container.mainGroup)
+            // container.mainGroup.call(nav.pan.transform, d3.zoomIdentity)
           }
         }
       })
-      .each(() => ++nUgly)
-      .each('end', () => {
+      // .each(() => ++nUgly)
+      // .each('end', () => {
+      // Update the calendar date after the transition ends
+      .on('end', () => {
         if (container.mainSVG === null) {
           // Callback after destroy
           // we must do nothing
@@ -236,10 +265,10 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
         }
         // this ugly solution courtesy of the man himself:
         // https://groups.google.com/forum/#!msg/d3-js/WC_7Xi6VV50/j1HK0vIWI-EJ
-        if (!--nUgly) {
+        // if (!--nUgly) {
           container.navString(true)
           container.inTransition(false)
-        }
+        // }
       })
   }
 
@@ -249,7 +278,9 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   }
 
   container.panBack = function() {
+    console.log('Pan back')
     const domain = container.getCurrentDomain()
+    console.log({ domain, newDate: new Date(domain.center.valueOf() - MS_IN_DAY) })
     container.panToDate(new Date(domain.center.valueOf() - MS_IN_DAY))
   }
 
@@ -359,7 +390,8 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
 
     nav.maxTranslation = -xScale(container.endpoints[0]) + axisGutter
     if (nav.scrollNav) {
-      nav.scrollScale = d3.time.scale.utc()
+      // nav.scrollScale = d3.time.scale.utc()
+      nav.scrollScale = d3.scaleUtc()
         .domain([container.endpoints[0], container.initialEndpoints[0]])
         .range([axisGutter + nav.scrollThumbRadius, width - nav.scrollThumbRadius])
     }
@@ -376,6 +408,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
    * @param {boolean} force True to force a re-render after new data where loaded from the API
    */
   container.renderPoolsData = function(force = false) {
+    console.log('Rendering pools data')
     if (force || container.isUpdateRenderedDataRangeNeeded()) {
       container.updateRenderedData()
       if (renderedData.length > 0) {
@@ -395,9 +428,11 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
    * 'zoomstart' & 'zoomend' events used by dailyX to change the transparency
    * of the sticky date.
    */
-  container.onZoomStart = () => container.emitter.emit('zoomstart')
+  // container.onZoomStart = () => container.emitter.emit('zoomstart')
+  container.onZoomStart = () => container.emitter.emit('start')
 
-  container.onZoom = () => {
+  container.onZoom = (event) => {
+    console.log('on zoom')
     const { xScale, pools, mainGroup, loadingInProgress } = container
 
     if (loadingInProgress) {
@@ -405,10 +440,16 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     }
 
     const { maxTranslation } = nav
-    /** @type {d3.D3ZoomEvent} */
-    const e = d3.event
+    // /** @type {d3.D3ZoomEvent} */
+    // const e = d3.event
     /** @type {number} */
-    let translateX = e.translate[0]
+    // let translateX = event.translate[0]
+    let translateX = event.transform.x
+
+    if (Number.isNaN(translateX)) {
+      return
+    }
+    console.log({translateX, maxTranslation})
 
     if (translateX < 0) {
       translateX = 0
@@ -417,7 +458,11 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     }
 
     nav.latestTranslation = translateX
-    nav.pan.translate([translateX, 0])
+    // nav.pan.translate([translateX, 0])
+    console.log({event })
+    // nav.pan.scaleTo(event.transform.rescaleX(container.xScale))
+    // nav.pan.translateTo(container.mainGroup, translateX, 0)
+    console.log('Translating')
     for (let i = 0; i < pools.length; i++) {
       pools[i].pan(translateX)
     }
@@ -428,7 +473,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     mainGroup.select('#tidelineTooltips').attr('transform', `translate(${translateX},0)`)
     mainGroup.select('#tidelineAnnotations').attr('transform', `translate(${translateX},0)`)
     if (scrollHandleTrigger) {
-      mainGroup.select('.scrollThumb').transition().ease('linear').attr('x', (d) => {
+      mainGroup.select('.scrollThumb').transition().ease(d3.easeLinear).attr('x', (d) => {
         d.x = nav.scrollScale(domain[0])
         return d.x - nav.scrollThumbRadius
       })
@@ -462,25 +507,32 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
 
   container.setNav = function() {
     const { xScale } = container
-    nav.pan = d3.behavior.zoom()
-    nav.pan.scaleExtent([1, 1])
-    nav.pan.x(xScale)
-    nav.pan.on('zoomstart', container.onZoomStart)
-    nav.pan.on('zoom', container.onZoom)
-    nav.pan.on('zoomend', container.onZoomEnd)
+    // nav.pan = d3.behavior.zoom()
+    nav.pan = d3.zoom().scaleExtent([1, 1])
+    // TODO Check if this is useful
+    // nav.pan.x(xScale)
+    // nav.pan.rescaleX(xScale)
+    // nav.pan.on('zoomstart', container.onZoomStart)
+    nav.pan.on('start', container.onZoomStart)
+    nav.pan.on('zoom', (event) => container.onZoom(event))
+    // nav.pan.on('zoomend', container.onZoomEnd)
+    nav.pan.on('end', container.onZoomEnd)
+
     container.mainGroup.call(nav.pan)
 
     return container
   }
 
   /** Drag on the scrollbar below the daily graph */
-  container.onDragStart = () => {
+  container.onDragStart = (event) => {
     // silence the click-and-drag listener
-    d3.event.sourceEvent.stopPropagation()
+    console.log(event)
+    event.sourceEvent.stopPropagation()
     // Used by dailyX to make the 'stickyLabel' (previous day date) transparent:
     container.inTransition(true)
   }
-  container.onDrag = function(/** @type {{x: Number, y: number}} */ dragValues) {
+  container.onDrag = function(event, /** @type {{x: Number, y: number}} */ dragValues) {
+    console.log('on drag', event, dragValues)
     if (container.loadingInProgress) {
       return
     }
@@ -489,7 +541,7 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     const dxLeftest = nav.scrollScale.range()[0]
     const dxRightest = nav.scrollScale.range()[1]
 
-    dragValues.x += d3.event.dx
+    dragValues.x += event.dx
     if (dragValues.x > dxRightest) {
       dragValues.x = dxRightest
     } else if (dragValues.x < dxLeftest) {
@@ -501,8 +553,11 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     const date = nav.scrollScale.invert(dragValues.x)
     nav.currentTranslation += -container.xScale(date) + axisGutter
     scrollHandleTrigger = false
-    nav.pan.translate([nav.currentTranslation, 0])
-    nav.pan.event(container.mainGroup)
+    // nav.pan.translate([nav.currentTranslation, 0])
+    nav.pan.translateExtent([nav.currentTranslation, 0])
+    // TODO To fix
+    // nav.pan.event(container.mainGroup)
+    container.mainGroup.call(nav.pan.transform, d3.zoomIdentity)
   }
 
   container.onDragEnd = () => {
@@ -515,33 +570,48 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
     container.scrollNav.selectAll('line').remove()
     container.scrollNav.attr('transform', 'translate(0,' + (height - (nav.scrollNavHeight * 2/5)) + ')')
       .insert('line', '.scrollThumb')
-      .attr({
-        'stroke-width': nav.scrollGutterHeight,
-        // add and subtract 1/2 of scrollGutterHeight because radius of linecap is 1/2 of stroke-width
-        'x1': axisGutter + nav.scrollGutterHeight/2,
-        'x2': width - nav.scrollGutterHeight/2,
-        'y1': 0,
-        'y2': 0
-      })
+      // .attr({
+      //   'stroke-width': nav.scrollGutterHeight,
+      //   // add and subtract 1/2 of scrollGutterHeight because radius of linecap is 1/2 of stroke-width
+      //   'x1': axisGutter + nav.scrollGutterHeight/2,
+      //   'x2': width - nav.scrollGutterHeight/2,
+      //   'y1': 0,
+      //   'y2': 0
+      // })
+      .attr('stroke-width', nav.scrollGutterHeight)
+      .attr('x1', axisGutter + nav.scrollGutterHeight/2)
+      .attr('x2', width - nav.scrollGutterHeight/2)
+      .attr('y1', 0)
+      .attr('y2', 0)
 
-    nav.drag = d3.behavior.drag()
-      .origin((d) => d)
-      .on('dragstart', container.onDragStart)
+    // nav.drag = d3.behavior.drag()
+    nav.drag = d3
+      .drag()
+      .subject((d) => d)
+      // .on('dragstart', container.onDragStart)
+      .on('start', (event) => container.onDragStart(event))
       .on('drag', container.onDrag)
-      .on('dragend', container.onDragEnd)
+      // .on('dragend', container.onDragEnd)
+      .on('end', container.onDragEnd)
 
     container.scrollNav.selectAll('rect')
       .data([{x: nav.scrollScale(container.initialEndpoints[0]), y: 0}])
       .enter()
       .append('rect')
-      .attr({
-        x: (d) => d.x - nav.scrollThumbRadius,
-        y: -nav.scrollThumbRadius/3,
-        width: nav.scrollThumbRadius * 2,
-        height: nav.scrollThumbRadius/3 * 2,
-        rx: nav.scrollThumbRadius/3,
-        class: 'scrollThumb'
-      })
+      // .attr({
+      //   x: (d) => d.x - nav.scrollThumbRadius,
+      //   y: -nav.scrollThumbRadius/3,
+      //   width: nav.scrollThumbRadius * 2,
+      //   height: nav.scrollThumbRadius/3 * 2,
+      //   rx: nav.scrollThumbRadius/3,
+      //   class: 'scrollThumb'
+      // })
+      .attr('x', (d) => d.x - nav.scrollThumbRadius)
+      .attr('y', -nav.scrollThumbRadius/3)
+      .attr('rx', nav.scrollThumbRadius/3)
+      .attr('width', nav.scrollThumbRadius * 2)
+      .attr('height', nav.scrollThumbRadius/3 * 2)
+      .classed('scrollThumb', true)
       .call(nav.drag)
 
     return container
@@ -570,8 +640,12 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
         const transitionDelay = Math.abs(domain.center.valueOf() - newDateMS) > MS_IN_DAY ? transitionDelaySlow : transitionDelayFast
         container.panToDate(new Date(newDateMS), transitionDelay)
       } else {
-        nav.pan.translate([0,0])
-        nav.pan.event(container.mainGroup)
+        // nav.pan.translate([0,0])
+        nav.pan
+          .translateExtent([0,0])
+          .call(nav.pan.transform, d3.zoomIdentity)
+        // TODO TO FIX
+        // nav.pan.event(container.mainGroup)
       }
     } else if (typeof epochLocation === 'number') {
       // This may look counter intuitive at first
@@ -587,28 +661,39 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
 
       const start = new Date(epochLocation - MS_IN_DAY/2)
       nav.currentTranslation = -container.xScale(start) + axisGutter
-      nav.pan.translate([nav.currentTranslation, 0])
-      nav.pan.event(container.mainGroup)
+      // nav.pan.translate([nav.currentTranslation, 0])
+      nav.pan
+        .translateExtent([nav.currentTranslation, 0])
+      container.mainGroup.call(nav.pan.transform, d3.zoomIdentity)
+      // TODO TO FIX
+      // nav.pan.event(container.mainGroup)
     }
   }
 
   container.destroy = function() {
     log.info('Destroying chart container...')
-    container.mainSVG.attr({ display: 'none', id: 'tidelineMainSVGDeleted' })
+    container.mainSVG
+      // .attr({ display: 'none', id: 'tidelineMainSVGDeleted' })
+      .attr('id', 'tidelineMainSVGDeleted')
+      .style('display', 'none')
     // Cancel any navigated in progress
     container.throttleNavigated.cancel()
     // Cancel any trackMetric in progress
     container.throttleTrackMetric.cancel()
     if (nav.pan !== null) {
       // d3 has no function to un-subsribe to an event
-      nav.pan.on('zoomstart', _.noop)
+      // nav.pan.on('zoomstart', _.noop)
+      nav.pan.on('start', _.noop)
       nav.pan.on('zoom', _.noop)
-      nav.pan.on('zoomend', _.noop)
+      // nav.pan.on('zoomend', _.noop)
+      nav.pan.on('end', _.noop)
     }
     if (nav.drag !== null) {
-      nav.drag.on('dragstart', _.noop)
+      // nav.drag.on('dragstart', _.noop)
+      nav.drag.on('start', _.noop)
       nav.drag.on('drag', _.noop)
-      nav.drag.on('dragend', _.noop)
+      // nav.drag.on('dragend', _.noop)
+      nav.drag.on('end', _.noop)
     }
     container.emitter.removeAllListeners()
     container.mainSVG.remove()

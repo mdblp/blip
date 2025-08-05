@@ -16,6 +16,7 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 import utils from './util/utils'
 import drawPhysicalActivity from './util/drawphysicalactivity'
 
@@ -26,13 +27,13 @@ import drawPhysicalActivity from './util/drawphysicalactivity'
  */
 
 /**
- *
- * @param {Pool} pool
- * @param {{ tidelineData: MedicalDataService}} opts
+ * Plots physical activity events in the diabetes management timeline
+ * @param {Pool} pool - The pool to render into
+ * @param {{ tidelineData: MedicalDataService}} opts - Configuration options
+ * @returns {Function} - The physical activity plotting function
  */
 function plotPhysicalActivity(pool, opts) {
   return function physicalActivityEvent(selection) {
-    const d3 = window.d3
     opts.xScale = pool.xScale().copy()
     const drawPa = drawPhysicalActivity(pool, opts)
 
@@ -44,44 +45,38 @@ function plotPhysicalActivity(pool, opts) {
         return
       }
 
-      const physicalActivty = d3
-        .select(this)
+      // Select all physical activity groups and bind data
+      const physicalActivity = d3.select(this)
         .selectAll('g.d3-pa-group')
-        .data(physicalActivities, (d) => d.id)
+        .data(physicalActivities, d => d.id)
 
-      const paGroups = physicalActivty
-        .enter()
-        .append('g')
-        .attr({
-          'class': 'd3-pa-group',
-          'id': (d) => `pa_group_${d.id}`,
-          'data-testid': (d) => `pa_group_${d.id}`
-        })
+      // Handle exit selection
+      physicalActivity.exit().remove()
 
+      // Create new physical activity groups for entering data
+      const paGroups = physicalActivity
+        .join('g')
+        .classed('d3-pa-group', true)
+        .attr('id', d => `pa_group_${d.id}`)
+        .attr('data-testid', d => `pa_group_${d.id}`)
+
+      // Filter for activities with reported intensity
       const intensity = paGroups.filter(d => !_.isEmpty(d.reportedIntensity))
       drawPa.picto(intensity)
       drawPa.activity(intensity)
 
-      physicalActivty.exit().remove()
-
-      // highlight is disabled for now but we may decide to use it later one
-      // var highlight = pool.highlight('.d3-pa-group', opts);
-
-      // tooltips
-      selection.selectAll('.d3-pa-group').on('mouseover', function(d) {
-        if (d.reportedIntensity) {
-          drawPa.tooltip.add(d, utils.getTooltipContainer(this))
-        }
-        // highlight is disabled for now but we may decide to use it later one
-        // highlight.on(d3.select(this));
-      })
-      selection.selectAll('.d3-pa-group').on('mouseout', function(d) {
-        if (d.reportedIntensity) {
-          drawPa.tooltip.remove(d)
-        }
-        // highlight is disabled for now but we may decide to use it later one
-        // highlight.off();
-      })
+      // Set up tooltip event handlers
+      selection.selectAll('.d3-pa-group')
+        .on('mouseover', function(event, d) {
+          if (d.reportedIntensity) {
+            drawPa.tooltip.add(d, utils.getTooltipContainer(this))
+          }
+        })
+        .on('mouseout', function(event, d) {
+          if (d.reportedIntensity) {
+            drawPa.tooltip.remove(d)
+          }
+        })
     })
   }
 }
