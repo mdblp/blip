@@ -34,7 +34,6 @@ const defaults = {
 function axesDaily(pool, opts = defaults) {
 
   _.defaults(opts, defaults)
-  console.log({opts})
 
   let mainGroup = pool.parent()
   let stickyLabel = mainGroup.select('#tidelineLabels')
@@ -90,6 +89,7 @@ function axesDaily(pool, opts = defaults) {
    * @param {number} date MS since epoch
    */
   function updateStickyLabel(date) {
+    console.log('updateStickyLabel', date)
     const timezone = opts.tidelineData.getTimezoneAt(date)
     const startDate = moment.tz(date, timezone)
     if (startDate.isValid()) {
@@ -110,18 +110,17 @@ function axesDaily(pool, opts = defaults) {
   }
 
   // ** Events listeners **
-  opts.emitter.on('inTransition', onTransition)
+  // opts.emitter.on('inTransition', onTransition)
   // opts.emitter.on('zoomstart', () => onTransition(true))
-  opts.emitter.on('start', () => onTransition(true))
+  opts.emitter.on('zoomstart', () => onTransition(true))
   // opts.emitter.on('zoomend', () => onTransition(false))
-  opts.emitter.on('end', () => onTransition(false))
+  opts.emitter.on('zoomend', () => onTransition(false))
   opts.emitter.on('dailyx-navigated', updateStickyLabel)
 
   function dailyx(selection) {
     opts.xScale = pool.xScale().copy()
 
     selection.each(function(currentData) {
-      console.log({ currentData })
       const ticks = selection.selectAll('g.d3-axis.' + opts['class'])
         .data(currentData, (d) => d.id)
 

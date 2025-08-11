@@ -50,7 +50,7 @@ const defaults = {
 function plotSmbg(pool, opts = defaults) {
   _.defaults(opts, defaults)
 
-  var getBgBoundaryClass = bgBoundaryClass(opts.classes, opts.bgUnits)
+  const getBgBoundaryClass = bgBoundaryClass(opts.classes, opts.bgUnits)
 
   function smbg(selection) {
     opts.xScale = pool.xScale().copy()
@@ -70,7 +70,7 @@ function plotSmbg(pool, opts = defaults) {
         //   'data-testid': smbg.dataTestId,
         //   'class': getBgBoundaryClass
         // })
-        .classed(getBgBoundaryClass, true)
+        .attr('class', getBgBoundaryClass)
         .classed('d3-smbg', true)
         .classed('d3-circle-smbg', true)
         .attr('id', smbg.id)

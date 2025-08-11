@@ -100,7 +100,8 @@ function Tooltips(container, tooltipsGroup) {
       else {
         translation = defaultTranslation
       }
-      var group = tooltipGroups[opts.datum.type].append('g')
+      var group = tooltipGroups[opts.datum.type]
+        .append('g')
         // .attr({
         //   id: 'tooltip_' + opts.datum.id,
         //   class: 'd3-tooltip d3-' + opts.datum.type + ' ' + shapes[shape].mainClass + ' ' + opts.cssClass,
@@ -129,7 +130,7 @@ function Tooltips(container, tooltipsGroup) {
         // })
         .classed(opts.div ? opts.div : 'tooltip-div', true)
       return {
-        foGroup: foGroup,
+        foGroup,
         edge: atLeftEdge ? 'left': atRightEdge ? 'right': null
       }
     }
@@ -187,7 +188,9 @@ function Tooltips(container, tooltipsGroup) {
         attrs.transform = opts.rightEdgeTranslation
       }
       tooltipGroup.insert(el.el, '.svg-tooltip-fo')
-        .attr(attrs)
+        .attr('points', attrs.points)
+        .attr('transform', attrs.transform)
+        .attr('class', attrs.class)
     })
   }
 
@@ -253,22 +256,22 @@ function Tooltips(container, tooltipsGroup) {
     var widths = []
     foGroup.selectAll('span')
       .each(function() {
-        console.log({ width: d3.select(this) })
-        widths.push(d3.select(this)[0][0].getBoundingClientRect().width)
+        widths.push(d3.select(this)._groups[0][0].getBoundingClientRect().width)
       })
     foGroup.selectAll('table')
       .each(function() {
-        widths.push(d3.select(this)[0][0].getBoundingClientRect().width)
+        widths.push(d3.select(this)._groups[0][0].getBoundingClientRect().width)
       })
     foGroup.selectAll('div.title.wider')
       .each(function() {
-        widths.push(d3.select(this)[0][0].getBoundingClientRect().width - 20)
+        widths.push(d3.select(this)._groups[0][0].getBoundingClientRect().width - 20)
       })
+
     return {
       width: d3.max(widths),
       // getBoundingClientRect returns a larger height than the div
       // not sure why, but offsetHeight is perfect
-      height: foGroup[0][0].offsetHeight
+      height: foGroup._groups[0][0].offsetHeight
     }
   }
 

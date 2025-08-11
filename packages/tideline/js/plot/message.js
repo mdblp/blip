@@ -48,7 +48,6 @@ function plotMessage(pool, opts = {}) {
     opts.xScale = pool.xScale().copy()
 
     selection.each(function (currentData) {
-      console.log({ currentDataMessage: currentData })
       const messages = d3
         .select(this)
         .selectAll('g.d3-message-group')
@@ -121,13 +120,11 @@ function plotMessage(pool, opts = {}) {
   }
 
   message.displayTooltip = (event, datum) => {
-    d3.select('#message_' + datum.id + ' image')
-
     const tooltips = pool.tooltips()
 
     const tooltip = tooltips.addForeignObjTooltip({
       cssClass: 'svg-tooltip-message',
-      datum: _.assign(datum, { type: 'message' }), // we're currently using the message pool to display the tooltip
+      datum: { ...datum, type: 'message' },
       shape: 'generic',
       xPosition: message.xPositionCenter,
       yPosition: message.yPositionCenter
@@ -137,28 +134,30 @@ function plotMessage(pool, opts = {}) {
     const mTime = moment.utc(datum.epoch).tz(datum.timezone)
     const msgDate = format.datestamp(mTime)
     const msgTime = format.timestamp(mTime)
+
     const htmlDateTime = `<span data-testid="message-from-to" class="message-from-to">${t('{{date}} - {{time}}', { date: msgDate, time: msgTime })}</span>`
     const htmlName = `<span data-testid="message-author" class="message-author">${format.nameForDisplay(datum.user)}:</span>`
     const htmlValue = `<br><span data-testid="message-text" class="message-text">${format.textPreview(datum.messageText)}</span>`
 
-    tooltip.foGroup
+    foGroup
       .append('p')
       .classed('messageTooltip', true)
       .append('span')
       .classed('secondary', true)
       .html(htmlDateTime)
-    tooltip.foGroup
+
+    foGroup
       .append('p')
-      // .attr('class', 'messageTooltip')
       .classed('messageTooltip', true)
       .append('span')
       .classed('secondary', true)
       .html(htmlName + htmlValue)
 
     const dims = tooltips.foreignObjDimensions(foGroup)
-    // foGroup.node().parentNode is the <foreignObject> itself
-    // because foGroup is actually the top-level <xhtml:div> element
-    tooltips.anchorForeignObj(d3.select(foGroup.node().parentNode), {
+
+    const foreignObj = d3.select(foGroup.node().parentNode)
+
+    tooltips.anchorForeignObj(foreignObj, {
       w: dims.width + opts.tooltipPadding,
       h: dims.height,
       x: message.xPositionCenter(datum),
@@ -173,7 +172,7 @@ function plotMessage(pool, opts = {}) {
     })
   }
 
-  message.removeTooltip = (d) => {
+  message.removeTooltip = (event, d) => {
     d3.select('#tooltip_' + d.id).remove()
   }
 

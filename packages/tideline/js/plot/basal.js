@@ -393,58 +393,78 @@ function plotBasal(pool, opts = defaults) {
    * Generate tooltip HTML content
    * @param {d3.Selection} group - The tooltip group
    * @param {Object} datum - The data point
-   * @param {boolean} showSheduledLabel - Whether to show scheduled label
+   * @param {boolean} showScheduledLabel - Whether to show scheduled label
    */
-  basal.tooltipHtml = function(group, datum, showSheduledLabel) {
+  basal.tooltipHtml = function(group, datum, showScheduledLabel) {
     const { AUTOMATED_BASAL_LABELS, SCHEDULED_BASAL_LABELS } = constants
     const H_MM_A_FORMAT = constants.dateTimeFormats.H_MM_A_FORMAT
     /** @type {string} */
     const source = _.get(datum, 'source', opts.defaultSource)
+
+    // Clear any existing content
+    group.selectAll('*').remove()
 
     switch (datum.deliveryType) {
       case 'temp':
         group.append('p')
           .append('span')
           .html(`<span class="plain">${t('Temp basal of')}</span> ` + basal.tempPercentage(datum))
+
         if (datum.suppressed) {
-          group.append('p')
-            .append('span')
-            .attr('class', 'secondary')
-            .html(basal.rateString(getDeliverySuppressed(datum.suppressed), 'secondary') + ' '+ t('scheduled'))
+          const suppressedDelivery = getDeliverySuppressed(datum.suppressed)
+          if (suppressedDelivery) {
+            group.append('p')
+              .append('span')
+              .attr('class', 'secondary')
+              .html(basal.rateString(suppressedDelivery, 'secondary') + ' ' + t('scheduled'))
+          }
         }
         break
+
       case 'suspend':
         group.append('p')
           .append('span')
-          .html('<span class="plain">Pump suspended</span>')
+          .html(`<span class="plain">${t('Pump suspended')}</span>`)
+
         if (datum.suppressed) {
-          group.append('p')
-            .append('span')
-            .attr('class', 'secondary')
-            .html(basal.rateString(getDeliverySuppressed(datum.suppressed), 'secondary') + ' '+ t('scheduled'))
+          const suppressedDelivery = getDeliverySuppressed(datum.suppressed)
+          if (suppressedDelivery) {
+            group.append('p')
+              .append('span')
+              .attr('class', 'secondary')
+              .html(basal.rateString(suppressedDelivery, 'secondary') + ' ' + t('scheduled'))
+          }
         }
         break
-      case 'automated':
-        group.append('p')
-          .append('span')
-          .html('<span class="plain muted">' + _.get(AUTOMATED_BASAL_LABELS, source, AUTOMATED_BASAL_LABELS.default) + ':</span> ' +
-          basal.rateString(datum, 'plain'))
-        break
-      default: {
-        const label = showSheduledLabel ? '<span class="plain muted">' + _.get(SCHEDULED_BASAL_LABELS, source, SCHEDULED_BASAL_LABELS.default) + ':</span> ' : ''
-        group.append('p')
-          .append('span')
-          .html(label + basal.rateString(datum, 'plain'))
-      }}
 
+      case 'automated':
+        const automatedLabel = _.get(AUTOMATED_BASAL_LABELS, source, AUTOMATED_BASAL_LABELS.default)
+        group.append('p')
+          .append('span')
+          .html(`<span class="plain muted">${automatedLabel}:</span> ` + basal.rateString(datum, 'plain'))
+        break
+
+      default: {
+        const scheduledLabel = showScheduledLabel
+          ? `<span class="plain muted">${_.get(SCHEDULED_BASAL_LABELS, source, SCHEDULED_BASAL_LABELS.default)}:</span> `
+          : ''
+        group.append('p')
+          .append('span')
+          .html(scheduledLabel + basal.rateString(datum, 'plain'))
+        break
+      }
+    }
+
+    // Add time range information
     const mBegin = moment.tz(datum.epoch, datum.timezone)
     const begin = mBegin.format(H_MM_A_FORMAT)
     const end = moment.tz(datum.epochEnd, datum.timezone).format(H_MM_A_FORMAT)
-    const html = `<span class="fromto">${t('from')}</span> ${begin} <span class="fromto">${t('to')}</span> ${end}`
+    const timeRangeHtml = `<span class="fromto">${t('from')}</span> ${begin} <span class="fromto">${t('to')}</span> ${end}`
+
     group.append('p')
       .append('span')
       .attr('class', 'secondary')
-      .html(html)
+      .html(timeRangeHtml)
   }
 
   /**

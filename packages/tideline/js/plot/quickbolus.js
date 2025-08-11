@@ -57,7 +57,6 @@ function plotQuickBolus(pool, opts = defaults) {
   _.defaults(opts, defaults)
 
   function bolus(selection) {
-    console.log({ selection })
     const drawBolus = drawbolus(pool, {
       ...opts,
       yScale: pool.yScale(),

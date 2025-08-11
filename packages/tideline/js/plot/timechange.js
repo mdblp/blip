@@ -88,11 +88,11 @@ function plotTimeChange(pool, opts = {}) {
     selection.on('mouseout', timechange.removeTooltip)
   }
 
-  timechange.removeTooltip = (d) => {
+  timechange.removeTooltip = (event, d) => {
     d3.select(`#tooltip_${d.id}`).remove()
   }
 
-  timechange.displayTooltip = (d) => {
+  timechange.displayTooltip = (event, d) => {
     const t = i18next.t.bind(i18next)
     const mFrom = moment.tz(d.from.time, d.from.timeZoneName)
     const mTo = moment.tz(d.to.time, d.to.timeZoneName)
