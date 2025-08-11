@@ -424,7 +424,7 @@ function plotBasal(pool, opts = defaults) {
       case 'suspend':
         group.append('p')
           .append('span')
-          .html(`<span class="plain">${t('Pump suspended')}</span>`)
+          .html('<span class="plain">Pump suspended</span>')
 
         if (datum.suppressed) {
           const suppressedDelivery = getDeliverySuppressed(datum.suppressed)
