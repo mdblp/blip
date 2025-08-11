@@ -17,13 +17,14 @@
 
 import i18next from 'i18next'
 import moment from 'moment-timezone'
+import * as d3 from 'd3'
 
 import { MGDL_UNITS } from 'medical-domain'
 import { dateTimeFormats } from './constants'
 
 const format = {
   tooltipBGValue: function(value, units) {
-    return units === MGDL_UNITS ? window.d3.format('g')(Math.round(value)) : window.d3.format('.1f')(value)
+    return units === MGDL_UNITS ? d3.format('g')(Math.round(value)) : d3.format('.1f')(value)
   },
 
   tooltipValue: function(x) {
@@ -31,7 +32,7 @@ const format = {
       return '0.0'
     }
 
-    var formatted = window.d3.format('.3f')(x)
+    var formatted = d3.format('.3f')(x)
     // remove zero-padding on the right
     while (formatted[formatted.length - 1] === '0') {
       formatted = formatted.slice(0, formatted.length - 1)
@@ -106,7 +107,7 @@ const format = {
       return '-- %'
     }
 
-    return window.d3.format('%')(f)
+    return d3.format('%')(f)
   },
 
   /**
@@ -145,7 +146,7 @@ const format = {
     if (offset) {
       d.setUTCMinutes(d.getUTCMinutes() + offset)
     }
-    return window.d3.time.format.utc(f)(d).toLowerCase()
+    return d3.time.format.utc(f)(d).toLowerCase()
   },
 
   /**
