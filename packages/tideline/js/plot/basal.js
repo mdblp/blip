@@ -438,6 +438,7 @@ function plotBasal(pool, opts = defaults) {
         break
 
       case 'automated':
+        // eslint-disable-next-line no-case-declarations
         const automatedLabel = _.get(AUTOMATED_BASAL_LABELS, source, AUTOMATED_BASAL_LABELS.default)
         group.append('p')
           .append('span')

@@ -16,7 +16,6 @@
  */
 
 import _ from 'lodash'
-import * as d3 from 'd3'
 import commonbolus from './commonbolus'
 import { BolusSubtype, DatumType, Prescriptor, WizardInputMealSource } from 'medical-domain'
 

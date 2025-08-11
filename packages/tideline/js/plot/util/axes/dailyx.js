@@ -40,7 +40,7 @@ function axesDaily(pool, opts = defaults) {
     .append('g')
     .classed('d3-axis', true)
     .call((g) => {
-        g.append('text')
+      g.append('text')
         .classed('d3-day-label', true)
         .attr('x', opts.leftEdge)
         .attr('y', pool.height() - opts.tickLength * opts.longTickMultiplier)
