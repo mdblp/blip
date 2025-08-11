@@ -41,8 +41,6 @@ const defaults = {
  * @returns
  */
 function drawFill(pool, opts = defaults) {
-  // const d3 = window.d3
-
   _.defaults(opts, defaults)
 
   function fill(selection) {
@@ -65,52 +63,7 @@ function drawFill(pool, opts = defaults) {
 
 
       fills
-        // .enter()
-        // .append('rect')
         .join('rect')
-        // .attr({
-        //   // 'cursor': opts.cursor ? opts.cursor : 'auto',
-        //   'x': function(d, i) {
-        //     // dataGutter is the extra space on the right & left edges
-        //     // of each "pool" in weekly view
-        //     if (opts.dataGutter) {
-        //       if (i === currentData.length - 1) {
-        //         return fill.xPosition(d) - opts.dataGutter
-        //       }
-        //     }
-        //     return fill.xPosition(d)
-        //   },
-        //   'y': function() {
-        //     if (opts.gutter.top) {
-        //       return opts.gutter.top
-        //     }
-        //
-        //     return opts.gutter
-        //   },
-        //   'width': function(d, i) {
-        //     // dataGutter is the extra space on the right & left edges
-        //     // of each "pool" in weekly view
-        //     if (opts.dataGutter) {
-        //       if ((i === 0) || (i === currentData.length - 1)) {
-        //         return fill.width(d) + opts.dataGutter
-        //       }
-        //     }
-        //     return fill.width(d)
-        //   },
-        //   'height': function() {
-        //     if (opts.gutter.top) {
-        //       return pool.height() - opts.gutter.top - opts.gutter.bottom
-        //     }
-        //
-        //     return pool.height() - 2 * opts.gutter
-        //
-        //   },
-          // 'id': function(d) {
-          //   return d.id
-          // },
-          // 'data-testid': function(d){return d.id},
-          // 'class': 'd3-fill d3-rect-fill d3-fill-background'
-        // })
         .classed('d3-fill d3-rect-fill d3-fill-background', true)
         .style('cursor', opts.cursor || 'auto')
         .attr('id', function(d) {
@@ -163,37 +116,7 @@ function drawFill(pool, opts = defaults) {
           .data(_.filter(currentData, {startsAtMidnight: true}), function(d) {
             return d.id
           })
-          // .enter()
-          // .append('rect')
           .join('rect')
-          // .attr({
-          //   x: function(d) {
-          //     var pos
-          //     pos = fill.xPosition(d)
-          //     return pos - (opts.midnightWidth/2)
-          //   },
-          //   y: function() {
-          //     if (opts.gutter.top) {
-          //       return opts.gutter.top
-          //     }
-          //
-          //     return opts.gutter
-          //
-          //   },
-          //   width: opts.midnightWidth,
-          //   height: function() {
-          //     if (opts.gutter.top) {
-          //       return pool.height() - opts.gutter.top - opts.gutter.bottom
-          //     }
-          //
-          //     return pool.height() - 2 * opts.gutter
-          //
-          //   },
-          //   id: function(d) {
-          //     return d.id
-          //   },
-          //   class: 'd3-rect-fill d3-fill-vertical-line'
-          // })
           .classed('d3-rect-fill d3-fill-vertical-line', true)
           .attr('id', function(d) {
             return d.id
@@ -227,26 +150,13 @@ function drawFill(pool, opts = defaults) {
   fill.drawGuidelines = function() {
     const yScale = pool.yScale()
     var linesGroup = pool.group().selectAll('#' + pool.id() + '_guidelines').data([opts.guidelines])
-    // linesGroup.enter().append('g').attr('id', pool.id() + '_guidelines')
     const g = linesGroup
       .join('g')
-      // .enter()
-      // .append('g')
       .attr('id', pool.id() + '_guidelines')
     const lines = g
       .selectAll('line')
       .data(opts.guidelines)
-      // .enter()
-      // .append('line')
       .join('line')
-      // .attr({
-      //   class: function(d) { return 'd3-line-guide ' + d['class'] },
-      //   x1: opts.xScale.range()[0],
-      //   x2: opts.xScale.range()[1],
-      //   y1: (d) => yScale(d.height),
-      //   y2: (d) => yScale(d.height)
-      // })
-      // .classed(function(d) { return 'd3-line-guide ' + d['class'] }, true)
       .attr('x1', opts.xScale.range()[0])
       .attr('x2', opts.xScale.range()[1])
       .attr('y1', (d) => yScale(d.height))
@@ -262,36 +172,7 @@ function drawFill(pool, opts = defaults) {
     selection
       .selectAll('#' + pool.id() + '_verticalLines')
       .data(currentData, (d) => d.id)
-      // .enter()
-      // .append('rect')
       .join('rect')
-      // .attr({
-      //   x: function(d) {
-      //     const pos = fill.xPosition(d)
-      //     return pos - (opts.verticalLinesWidth / 2)
-      //   },
-      //   y: function() {
-      //     if (opts.gutter.top) {
-      //       return opts.gutter.top
-      //     }
-      //
-      //     return opts.gutter
-      //
-      //   },
-      //   width: opts.verticalLinesWidth,
-      //   height: function() {
-      //     if (opts.gutter.top) {
-      //       return pool.height() - opts.gutter.top - opts.gutter.bottom
-      //     }
-      //
-      //     return pool.height() - 2 * opts.gutter
-      //
-      //   },
-      //   id: function(d) {
-      //     return d.id
-      //   },
-      //   class: 'd3-rect-fill d3-fill-vertical-line'
-      // })
       .classed('d3-rect-fill d3-fill-vertical-line', true)
       .attr('id', function(d) {
         return d.id

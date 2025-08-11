@@ -136,13 +136,11 @@ class DailyChart extends React.Component {
   }
 
   mountChart() {
-    console.log('Mount chart')
     if (this.state.chart === null && !this.unmountingInProgress) {
       const { tidelineData, epochLocation } = this.props
       this.log.debug('Mounting...')
       const chart = chartDailyFactory(this.refNode.current, tidelineData, _.pick(this.props, this.chartOpts))
       this.setState({ chart }, () => {
-        console.log('Calling setAtDate with epochLocation:', epochLocation)
         this.state.chart.setAtDate(epochLocation)
         this.bindEvents()
         this.props.onChartMounted()
@@ -151,7 +149,6 @@ class DailyChart extends React.Component {
   }
 
   unmountChart(recreate = false) {
-    console.log('Unmount chart', { recreate })
     const { chart } = this.state
     if (chart !== null && !this.unmountingInProgress) {
       this.unmountingInProgress = true
@@ -208,10 +205,8 @@ class DailyChart extends React.Component {
     const { loading } = this.props
     const { chart } = this.state
     const needRecreate = loading || chart?.isInTransition() === true
-    console.log('Handle window resize', { loading, needRecreate, isInTransition: chart?.isInTransition() })
     if (!needRecreate) {
       this.viewHasBeenInitialized = true
-      console.log('Handle window resize: re-creating chart')
       this.reCreateChart()
     } else {
       this.log.info('Delaying chart re-creation: loading or transition in progress')
@@ -487,9 +482,7 @@ class Daily extends React.Component {
    */
   handleDatetimeLocationChange = (epoch) => {
     const { loading } = this.props
-    console.log({ epoch, loading })
     if (!loading) {
-      console.log({ title: this.getTitle(epoch) })
       this.setState({ title: this.getTitle(epoch), atMostRecent: this.isAtMostRecent(epoch) })
       this.props.onDatetimeLocationChange(epoch, TimeService.MS_IN_DAY).then((dataLoaded) => {
         if (dataLoaded && this.chartRef.current !== null) {

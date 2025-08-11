@@ -16,12 +16,11 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 
 import shapes from './shapes'
 
 function Tooltips(container, tooltipsGroup) {
-  const d3 = window.d3
-
   var id, tooltipGroups = {}, defs = {}
 
   var HOURS_IN_DAY = 24, EDGE_THRESHOLD = 5

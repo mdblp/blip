@@ -89,7 +89,6 @@ function axesDaily(pool, opts = defaults) {
    * @param {number} date MS since epoch
    */
   function updateStickyLabel(date) {
-    console.log('updateStickyLabel', date)
     const timezone = opts.tidelineData.getTimezoneAt(date)
     const startDate = moment.tz(date, timezone)
     if (startDate.isValid()) {

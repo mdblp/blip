@@ -15,6 +15,8 @@
  * == BSD2 LICENSE ==
  */
 
+import * as d3 from 'd3'
+
 import deviceEventIcon from 'device-event.svg'
 import hyperglycemiaEventIcon from 'hyperglycemia-event.svg'
 import hypoglycemiaEventIcon from 'hypoglycemia-event.svg'
@@ -36,7 +38,6 @@ const getAlarmEventImage = (alarmEventType) => {
 }
 
 function plotAlarmEvent(pool, opts) {
-  const d3 = window.d3
   const height = pool.height() - DEFAULT_IMAGE_MARGIN
   const width = 40
 
@@ -65,24 +66,12 @@ function plotAlarmEvent(pool, opts) {
       const alarmEventGroup = allAlarmEvents
         .enter()
         .append('g')
-        // .attr({
-        //   'class': alarmEventGroupSelector,
-        //   'id': (data) => `${alarmEventPlotPrefixId}_${data.id}`,
-        //   'data-testid': (data) => `${alarmEventPlotPrefixId}_${data.guid}`
-        // })
         .classed(alarmEventGroupSelector, true)
         .attr('id', (data) => `${alarmEventPlotPrefixId}_${data.id}`)
         .attr('data-testid', (data) => `${alarmEventPlotPrefixId}_${data.guid}`)
 
       alarmEventGroup
         .append('image')
-      //   .attr({
-      //   'x': (d) => xPos(d) - (width / 2),
-      //   'y': pool.height() / 2 - opts.size / 2,
-      //   width,
-      //   height,
-      //   'xlink:href': (alarmEvent) => getAlarmEventImage(alarmEvent.alarmEventType)
-      // })
         .attr('x', (d) => xPos(d) - (width / 2))
         .attr('y', pool.height() / 2 - opts.size / 2)
         .attr('width', width)

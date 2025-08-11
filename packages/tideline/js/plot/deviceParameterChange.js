@@ -16,6 +16,7 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 
 import picto from '../../img/parameter.png'
 import utils from './util/utils'
@@ -34,7 +35,6 @@ import { DEFAULT_IMAGE_MARGIN, DEFAULT_OPTIONS_SIZE } from './util/eventsConstan
  * @returns {(data: Datum[]) => void}
  */
 function plotDeviceParameterChange(pool, opts) {
-  const d3 = window.d3
   const defaults = {
     r: 14,
     padding: 4,
@@ -66,24 +66,11 @@ function plotDeviceParameterChange(pool, opts) {
 
       const parameterGroup = allParameters.enter()
         .append('g')
-        // .attr({
-        //   'class': 'd3-param-group',
-        //   'id': (d) => `param_group_${d.id}`,
-        //   'data-testid': (d) => `param_group_${d.id}`
-        // })
         .classed('d3-param-group', true)
         .attr('id', (d) => `param_group_${d.id}`)
         .attr('data-testid', (d) => `param_group_${d.id}`)
 
       parameterGroup.append('image')
-        // .attr({
-        //   'x': xPos,
-        //   'y': pool.height() / 2 - opts.size / 2,
-        //   width,
-        //   'height': offset,
-        //   'xlink:href': picto,
-        //   'data-testid': `param_group_img`
-        // })
         .attr('x', xPos)
         .attr('y', pool.height() / 2 - opts.size / 2)
         .attr('width', width)
