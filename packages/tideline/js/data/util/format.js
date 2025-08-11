@@ -107,7 +107,7 @@ const format = {
       return '-- %'
     }
 
-    return d3.format('%')(f)
+    return d3.format('.0%')(f)
   },
 
   /**
