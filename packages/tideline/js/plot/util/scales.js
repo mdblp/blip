@@ -65,7 +65,6 @@ function createScaleBG(tidelineData, pool, extent, pad) {
 
   const range = [pool.height() - pad, pad]
   const domain = [0, Math.min(extent[1], maxCBG)]
-  // const scale = d3.scale.linear()
   const scale = d3.scaleLinear()
 
   scale.domain(domain).range(range)

@@ -52,10 +52,6 @@ function plotTimeChange(pool, opts = {}) {
       const timechangeGroup = timechanges
         .enter()
         .append('g')
-        // .attr({
-        //   class: 'd3-timechange-group',
-        //   id: d => `timechange_${d.id}`
-        // })
         .classed('d3-timechange-group', true)
         .attr('id', d => `timechange_${d.id}`)
 
@@ -69,13 +65,6 @@ function plotTimeChange(pool, opts = {}) {
     opts.xScale = pool.xScale().copy()
     selection
       .append('image')
-      // .attr({
-      //   'xlink:href': timeChangeImage,
-      //   'x': timechange.xPositionCorner,
-      //   'y': timechange.yPositionCorner,
-      //   'width': opts.size,
-      //   'height': opts.size
-      // })
       .classed('d3-image', true)
       .classed('d3-timechange', true)
       .attr('xlink:href', timeChangeImage)

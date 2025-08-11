@@ -70,23 +70,11 @@ function plotReservoirChange(pool, opts) {
 
       const reservoirGroup = allReservoirs.enter()
         .append('g')
-        // .attr({
-        //   'class': 'd3-reservoir-group',
-        //   'id': (d) => `reservoir_group_${d.id}`,
-        //   'data-testid': (d) => `reservoir_group_${d.id}`
-        // })
         .classed('d3-reservoir-group', true)
         .attr('id', (d) => `reservoir_group_${d.id}`)
         .attr('data-testid', (d) => `reservoir_group_${d.id}`)
       reservoirGroup
         .append('image')
-        // .attr({
-        //   'x': (d) => xPos(d) - (width / 2) ,
-        //   'y': pool.height() / 2 - opts.size / 2,
-        //   width,
-        //   height,
-        //   'xlink:href': (reservoirChange) => getReservoirChangeIcon(reservoirChange.pump.manufacturer)
-        // })
         .attr('x', (d) => xPos(d) - (width / 2))
         .attr('y', pool.height() / 2 - opts.size / 2)
         .attr('width', width)

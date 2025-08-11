@@ -38,34 +38,13 @@ function axesDaily(pool, opts = defaults) {
   let mainGroup = pool.parent()
   let stickyLabel = mainGroup.select('#tidelineLabels')
     .append('g')
-    // .attr('class', 'd3-axis')
     .classed('d3-axis', true)
     .call((g) => {
         g.append('text')
-        // .attr({
-        //   class: 'd3-day-label',
-        //   x: opts.leftEdge,
-        //   // this is the same as dailyx.dayYPosition
-        //   // we just don't have a datum to pass here
-        //   y: pool.height() - opts.tickLength * opts.longTickMultiplier
-        // })
         .classed('d3-day-label', true)
         .attr('x', opts.leftEdge)
         .attr('y', pool.height() - opts.tickLength * opts.longTickMultiplier)
     })
-    // .append('text')
-
-    // .attr({
-    //   class: 'd3-day-label',
-    //   x: opts.leftEdge,
-    //   // this is the same as dailyx.dayYPosition
-    //   // we just don't have a datum to pass here
-    //   y: pool.height() - opts.tickLength * opts.longTickMultiplier
-    // })
-
-    // .classed('d3-day-label', true)
-    // .attr('x', opts.leftEdge)
-    // .attr('y', pool.height() - opts.tickLength * opts.longTickMultiplier)
 
   /**
    * While 'inTransition' there is a lots of 'zoomstart' / 'zoomend' events
@@ -109,10 +88,7 @@ function axesDaily(pool, opts = defaults) {
   }
 
   // ** Events listeners **
-  // opts.emitter.on('inTransition', onTransition)
-  // opts.emitter.on('zoomstart', () => onTransition(true))
   opts.emitter.on('zoomstart', () => onTransition(true))
-  // opts.emitter.on('zoomend', () => onTransition(false))
   opts.emitter.on('zoomend', () => onTransition(false))
   opts.emitter.on('dailyx-navigated', updateStickyLabel)
 
@@ -125,29 +101,15 @@ function axesDaily(pool, opts = defaults) {
 
       const tickGroups = ticks.enter()
         .append('g')
-        // .attr({
-        //   class: 'd3-axis ' + opts['class']
-        // })
         .classed('d3-axis ' + opts['class'], true)
 
       tickGroups.append('line')
-        // .attr({
-        //   x1: dailyx.xPosition,
-        //   x2: dailyx.xPosition,
-        //   y1: pool.height(),
-        //   y2: dailyx.tickLength
-        // })
         .attr('x1', dailyx.xPosition)
         .attr('x2', dailyx.xPosition)
         .attr('y1', pool.height())
         .attr('y2', dailyx.tickLength)
 
       tickGroups.append('text')
-        // .attr({
-        //   id: (d) => `x-axis-hour-${d.epoch}`,
-        //   x: dailyx.textXPosition,
-        //   y: pool.height() - opts.textShiftY
-        // })
         .attr('id', (d) => `x-axis-hour-${d.epoch}`)
         .attr('x', dailyx.textXPosition)
         .attr('y', pool.height() - opts.textShiftY)
@@ -165,12 +127,6 @@ function axesDaily(pool, opts = defaults) {
           return display
         })
         .append('text')
-        // .attr({
-        //   id: (d) => `x-axis-day-${d.epoch}`,
-        //   class: 'd3-day-label',
-        //   x: dailyx.textXPosition,
-        //   y: dailyx.dayYPosition
-        // })
         .classed('d3-day-label', true)
         .attr('id', (d) => `x-axis-day-${d.epoch}`)
         .attr('x', dailyx.textXPosition)

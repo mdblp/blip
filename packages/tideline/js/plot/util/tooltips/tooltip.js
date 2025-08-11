@@ -101,32 +101,19 @@ function Tooltips(container, tooltipsGroup) {
       }
       var group = tooltipGroups[opts.datum.type]
         .append('g')
-        // .attr({
-        //   id: 'tooltip_' + opts.datum.id,
-        //   class: 'd3-tooltip d3-' + opts.datum.type + ' ' + shapes[shape].mainClass + ' ' + opts.cssClass,
-        //   transform: translation
-        // })
         .classed('d3-tooltip d3-' + opts.datum.type + ' ' + shapes[shape].mainClass + ' ' + opts.cssClass, true)
         .attr('id', 'tooltip_' + opts.datum.id)
         .attr('transform', translation)
 
       var foGroup = group.append('foreignObject')
-        // .attr({
-        //   // need to set an initial width to give the HTML something to shape itself in relation to
-        //   width: 200,
-        //   // hide the foreignObject initially so that the resizing isn't visible
-        //   visibility: 'hidden',
-        //   class: 'svg-tooltip-fo'
-        // })
         .classed('svg-tooltip-fo', true)
+        // need to set an initial width to give the HTML something to shape itself in relation to
         .attr('width', 200)
+        // hide the foreignObject initially so that the resizing isn't visible
         .attr('visibility', 'hidden')
         .append('xhtml:div')
-        // .attr({
-        //   // bolus(/wizard) tooltips use completely different CSS
-        //   // with a different main div class passed as an opt
-        //   class: opts.div ? opts.div : 'tooltip-div'
-        // })
+        // bolus(/wizard) tooltips use completely different CSS
+        // with a different main div class passed as an option
         .classed(opts.div ? opts.div : 'tooltip-div', true)
       return {
         foGroup,
@@ -195,11 +182,6 @@ function Tooltips(container, tooltipsGroup) {
 
   this.setForeignObjDimensions = function(selection, opts) {
     selection
-    //   .attr({
-    //   width: opts.w,
-    //   height: opts.h,
-    //   visibility: 'visible'
-    // })
       .attr('width', opts.w)
       .attr('height', opts.h)
       .attr('visibility', 'visible')

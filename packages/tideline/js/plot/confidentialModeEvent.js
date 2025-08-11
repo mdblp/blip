@@ -104,24 +104,11 @@ function plotConfidentialModeEvent(pool, opts) {
 
       const backGroup = events.enter()
         .append('g')
-        // .attr({
-        //   'class': 'd3-confidential-group',
-        //   'id': (d) => `${poolId}_confidential_group_${d.id}`,
-        //   'data-testid': (d) => `${poolId}_confidential_group_${d.id}`
-        // })
         .classed('d3-confidential-group', true)
         .attr('id', (d) => `${poolId}_confidential_group_${d.id}`)
         .attr('data-testid', (d) => `${poolId}_confidential_group_${d.id}`)
 
       backGroup.append('rect')
-        // .attr({
-        //   x: xPos,
-        //   y: 1,
-        //   width: calculateWidth,
-        //   height,
-        //   class: 'd3-back-confidential d3-confidential',
-        //   id: (d) => `${poolId}_confidential_back_${d.id}`
-        // })
         .classed('d3-back-confidential d3-confidential', true)
         .attr('id', (d) => `${poolId}_confidential_back_${d.id}`)
         .attr('x', xPos)
@@ -130,12 +117,6 @@ function plotConfidentialModeEvent(pool, opts) {
         .attr('height', height)
 
       backGroup.append('image')
-        // .attr({
-        //   'x': (d) => xPos(d) + (calculateWidth(d) - imageSize) / 2,
-        //   'y': (height - imageSize) / 2,
-        //   'id': (d) => `${poolId}_confidential_lock_${d.id}`,
-        //   'xlink:href': lockIcon
-        // })
         .attr('id', (d) => `${poolId}_confidential_lock_${d.id}`)
         .attr('x', (d) => xPos(d) + (calculateWidth(d) - imageSize) / 2)
         .attr('y', (height - imageSize) / 2)
@@ -146,12 +127,6 @@ function plotConfidentialModeEvent(pool, opts) {
         backGroup.filter((d) => !displayTooltip(d))
           .append('text')
           .text(t('Confidential mode'))
-          // .attr({
-          //   x: (d) => xPos(d) + (calculateWidth(d)) / 2,
-          //   y: ((height - imageSize) / 2) + imageSize + 5,
-          //   class: 'd3-confidential-text',
-          //   id: (d) => `${poolId}_confidential_lock_${d.id}`
-          // })
           .classed('d3-confidential-text', true)
           .attr('id', (d) => `${poolId}_confidential_lock_${d.id}`)
           .attr('x', (d) => xPos(d) + (calculateWidth(d)) / 2)

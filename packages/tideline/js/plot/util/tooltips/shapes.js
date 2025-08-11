@@ -70,11 +70,6 @@ const shapes = {
       var boundingBox = used[0][0].getBoundingClientRect()
       var usedTransform = used.attr('transform').split(' ')
       selection.append('text')
-        // .attr({
-        //   x: boundingBox.width/2 - (_.includes(usedTransform, 'scale(-1,1)') ? boundingBox.width : 0),
-        //   y: -boundingBox.height/2 + (_.includes(usedTransform, 'scale(1,-1)') ? boundingBox.height : 0),
-        //   class: 'd3-tooltip-text'
-        // })
         .classed('d3-tooltip-text', true)
         .attr('x', boundingBox.width/2 - (_.includes(usedTransform, 'scale(-1,1)') ? boundingBox.width : 0))
         .attr('y', -boundingBox.height/2 + (_.includes(usedTransform, 'scale(1,-1)') ? boundingBox.height : 0))
@@ -150,10 +145,6 @@ const shapes = {
     offset: function(selection, opts) {
       if (!arguments.length) return 4
       selection
-      //   .attr({
-      //   x: opts.x,
-      //   y: opts.y
-      // })
         .attr('x', opts.x)
         .attr('y', opts.y)
     }
@@ -215,10 +206,6 @@ const shapes = {
     offset: function(selection, opts) {
       if (!arguments.length) return 8
       selection
-      //   .attr({
-      //   x: opts.x,
-      //   y: opts.y
-      // })
         .attr('x', opts.x)
         .attr('y', opts.y)
     }
@@ -284,10 +271,6 @@ const shapes = {
         return 40
       }
       selection
-      //   .attr({
-      //   x: opts.x,
-      //   y: opts.y
-      // })
         .attr('x', opts.x)
         .attr('y', opts.y)
     },

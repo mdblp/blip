@@ -67,24 +67,12 @@ function plotWarmUp(pool, opts) {
       const warmUpGroup = allWarmUps
         .enter()
         .append('g')
-        // .attr({
-        //   'class': 'd3-warmup-group',
-        //   'id': (d) => `warmup_group_${d.id}`,
-        //   'data-testid': (d) => `warmup_group_${d.guid}`
-        // })
         .classed('d3-warmup-group', true)
         .attr('id', (d) => `warmup_group_${d.id}`)
         .attr('data-testid', (d) => `warmup_group_${d.guid}`)
 
       warmUpGroup
         .append('image')
-      //   .attr({
-      //   'x': (d) => xScale(d.epoch),
-      //   'y': pool.height() / 2 - opts.size / 2,
-      //   width,
-      //   'height': offset,
-      //   'xlink:href': warmUpDexcom
-      // })
         .attr('x', (d) => xScale(d.epoch))
         .attr('y', pool.height() / 2 - opts.size / 2)
         .attr('width', width)

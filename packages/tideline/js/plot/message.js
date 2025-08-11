@@ -56,12 +56,6 @@ function plotMessage(pool, opts = {}) {
       const messageGroups = messages
         .enter()
         .append('g')
-        // .attr({
-        //   class: 'd3-message-group',
-        //   id: function (d) {
-        //     return 'message_' + d.id
-        //   }
-        // })
         .classed('d3-message-group', true)
         .attr('id', function (d) {
           return 'message_' + d.id
@@ -78,13 +72,6 @@ function plotMessage(pool, opts = {}) {
 
     selection
       .append('rect')
-    //   .attr({
-    //   x: message.highlightXPosition,
-    //   y: message.highlightYPosition,
-    //   width: opts.size + opts.highlightWidth * 2,
-    //   height: opts.size + opts.highlightWidth * 2,
-    //   class: 'd3-rect-message hidden'
-    // })
       .classed('d3-rect-message hidden', true)
       .attr('x', message.highlightXPosition)
       .attr('y', message.highlightYPosition)
@@ -93,14 +80,6 @@ function plotMessage(pool, opts = {}) {
 
     selection
       .append('image')
-      // .attr({
-      //   'xlink:href': postItImage,
-      //   'cursor': 'pointer',
-      //   'x': message.xPosition,
-      //   'y': message.yPosition,
-      //   'width': opts.size,
-      //   'height': opts.size
-      // })
       .classed('d3-image d3-message', true)
       .attr('href', postItImage) // updated from xlink:href to href
       .attr('x', message.xPosition)
@@ -180,15 +159,9 @@ function plotMessage(pool, opts = {}) {
     opts.xScale = pool.xScale().copy()
 
     selection.select('rect.d3-rect-message')
-    //   .attr({
-    //   x: message.highlightXPosition
-    // })
       .attr('x', message.highlightXPosition)
 
     selection.select('image')
-    //   .attr({
-    //   x: message.xPosition
-    // })
       .attr('x', message.xPosition)
   }
 
@@ -202,7 +175,6 @@ function plotMessage(pool, opts = {}) {
       const messageGroup = mainGroup
         .select('#poolMessages_message')
         .append('g')
-        // .attr('class', 'd3-message-group d3-new')
         .classed('d3-message-group d3-new', true)
         .attr('id', `message_${d.id}`)
         .datum(d)
@@ -227,16 +199,6 @@ function plotMessage(pool, opts = {}) {
     var newNote = d3
       .select('#tidelineLabels')
       .append('image')
-    //   .attr({
-    //   'id': 'newNoteIcon',
-    //   'class': 'newNoteIcon',
-    //   'xlink:href': newNoteImg,
-    //   'cursor': 'pointer',
-    //   'x': NEW_NOTE_X,
-    //   'y': NEW_NOTE_Y,
-    //   'width': NEW_NOTE_WIDTH,
-    //   'height': NEW_NOTE_HEIGHT
-    // })
       .classed('newNoteIcon', true)
       .attr('id', 'newNoteIcon')
       .attr('href', newNoteImg)
@@ -245,18 +207,12 @@ function plotMessage(pool, opts = {}) {
       .style('cursor', 'pointer')
       .attr('width', NEW_NOTE_WIDTH)
       .attr('height', NEW_NOTE_HEIGHT)
-      // .addMessageToPool()
 
     message.addMessageToPool(newNote)
 
     newNote.on('mouseover', function () {
       d3.select('#tidelineLabels')
         .append('text')
-        // .attr({
-        //   class: 'newNoteText',
-        //   x: NEW_NOTE_X + 1,
-        //   y: NEW_NOTE_Y + 43
-        // })
         .classed('newNoteText', true)
         .attr('x', NEW_NOTE_X + 1)
         .attr('y', NEW_NOTE_Y + 43)
@@ -264,11 +220,6 @@ function plotMessage(pool, opts = {}) {
 
       d3.select('#tidelineLabels')
         .append('text')
-        // .attr({
-        //   class: 'newNoteText',
-        //   x: NEW_NOTE_X + 1,
-        //   y: NEW_NOTE_Y + 56
-        // })
         .classed('newNoteText', true)
         .attr('x', NEW_NOTE_X + 1)
         .attr('y', NEW_NOTE_Y + 56)

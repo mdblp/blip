@@ -108,8 +108,6 @@ function drawFill(pool, opts = defaults) {
 
       fill.drawVerticalLines(selection, currentData)
 
-      // fills.exit().remove()
-
       // Add midnight markers
       if (opts.isDaily) {
         selection.selectAll('rect.d3-fill-midnight')

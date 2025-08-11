@@ -39,9 +39,6 @@ const getLegendIcon = (iconType, customClasses, customWidthFactor = 1) => {
     create: function (opts) {
       opts.widths.push(opts.SHAPE_WIDTH * customWidthFactor * widthFactor)
       return opts.selection.append(iconType)
-        // .attr({
-        //   class: customClasses
-        // })
         .classed(customClasses, true)
     },
     type: iconType
@@ -57,17 +54,8 @@ const legend = {
         opts.widths.push(4 * rectLoopMode + legend.SHAPE_MARGIN)
         const g = opts.selection
           .append('g')
-          // .attr({ class: 'd3-basal d3-basal-loop-mode-off' })
           .classed('d3-basal d3-basal-loop-mode-off', true)
         g.append('rect')
-        //   .attr({
-        //   class: 'd3-basal-background',
-        //   x: -rectLoopMode * 4,
-        //   y: -rectLoopMode,
-        //   width: rectLoopMode * 4,
-        //   height: rectLoopMode * 2,
-        //   rx: rectLoopMode / 2.0
-        // })
           .classed('d3-basal-background', true)
           .attr('x', -rectLoopMode * 4)
           .attr('y', -rectLoopMode)
@@ -75,10 +63,6 @@ const legend = {
           .attr('height', rectLoopMode * 2)
           .attr('rx', rectLoopMode / 2.0)
         g.append('text')
-        //   .attr({
-        //   class: 'd3-basal-label',
-        //   transform: `translate(${-rectLoopMode * 2}, ${-rectLoopMode / 2.0})`
-        // })
           .classed('d3-basal-label', true)
           .attr('transform', `translate(${-rectLoopMode * 2}, ${-rectLoopMode / 2.0})`)
           .text(t('M_Label'))
@@ -91,18 +75,9 @@ const legend = {
         opts.widths.push(4 * rectLoopMode + legend.SHAPE_MARGIN)
         const g = opts.selection
           .append('g')
-          // .attr({ class: 'd3-basal d3-basal-loop-mode' })
           .classed('d3-basal d3-basal-loop-mode', true)
         g
           .append('rect')
-        //   .attr({
-        //   class: 'd3-basal-background',
-        //   x: -rectLoopMode * 4,
-        //   y: -rectLoopMode,
-        //   width: rectLoopMode * 4,
-        //   height: rectLoopMode * 2,
-        //   rx: rectLoopMode / 2.0
-        // })
           .classed('d3-basal-background', true)
           .attr('x', -rectLoopMode * 4)
           .attr('y', -rectLoopMode)
@@ -111,10 +86,6 @@ const legend = {
           .attr('rx', rectLoopMode / 2.0)
         g
           .append('text')
-        //   .attr({
-        //   class: 'd3-basal-label',
-        //   transform: `translate(${-rectLoopMode * 2}, ${-rectLoopMode / 2.0})`
-        // })
           .classed('d3-basal-label', true)
           .attr('transform', `translate(${-rectLoopMode * 2}, ${-rectLoopMode / 2.0})`)
           .text(t('Loop mode'))
@@ -126,9 +97,6 @@ const legend = {
     {
       create: (opts) => {
         return opts.selection.append('text')
-          // .attr({
-          //   class: 'd3-pool-legend'
-          // })
           .classed('d3-pool-legend', true)
           .text(t('Loop mode status'))
           .each(function () {
@@ -143,9 +111,6 @@ const legend = {
     {
       create: function (opts) {
         return opts.selection.append('text')
-          // .attr({
-          //   class: 'd3-pool-legend'
-          // })
           .classed('d3-pool-legend', true)
           .text(t('high'))
           .each(function () {
@@ -163,9 +128,6 @@ const legend = {
     {
       create: function (opts) {
         return opts.selection.append('text')
-          // .attr({
-          //   class: 'd3-pool-legend d3-pool-legend-space'
-          // })
           .classed('d3-pool-legend d3-pool-legend-space', true)
           .text(t('low') + ' ')
           .each(function () {
@@ -177,9 +139,6 @@ const legend = {
     {
       create: function (opts) {
         return opts.selection.append('text')
-          // .attr({
-          //   class: 'd3-pool-legend d3-pool-legend-dexcom'
-          // })
           .classed('d3-pool-legend d3-pool-legend-dexcom', true)
           .text('Dexcom CGM -')
           .each(function () {
@@ -194,9 +153,6 @@ const legend = {
     {
       create: (opts) => {
         return opts.selection.append('text')
-          // .attr({
-          //   class: 'd3-pool-legend'
-          // })
           .classed('d3-pool-legend', true)
           .text(t('Bolus Legend'))
           .each(function () {
@@ -211,9 +167,6 @@ const legend = {
     {
       create: (opts) => {
         return opts.selection.append('text')
-          // .attr({
-          //   class: 'd3-pool-legend'
-          // })
           .classed('d3-pool-legend', true)
           .text(t('Meal Bolus'))
           .each(function () {
@@ -228,9 +181,6 @@ const legend = {
     {
       create: function (opts) {
         return opts.selection.append('text')
-          // .attr({
-          //   class: 'd3-pool-legend'
-          // })
           .classed('d3-pool-legend', true)
           .text(t('Correction'))
           .each(function () {
@@ -245,9 +195,6 @@ const legend = {
     {
       create: function (opts) {
         return opts.selection.append('text')
-          // .attr({
-          //   class: 'd3-pool-legend'
-          // })
           .classed('d3-pool-legend', true)
           .text(t('Manual Bolus'))
           .each(function () {
@@ -262,9 +209,6 @@ const legend = {
     {
       create: function (opts) {
         return opts.selection.append('text')
-          // .attr({
-          //   class: 'd3-pool-legend'
-          // })
           .classed('d3-pool-legend', true)
           .text(t('bolus_pen'))
           .each(function () {
@@ -279,9 +223,6 @@ const legend = {
     {
       create: function (opts) {
         return opts.selection.append('text')
-          // .attr({
-          //   class: 'd3-pool-legend'
-          // })
           .classed('d3-pool-legend', true)
           .text(t('Undelivered'))
           .each(function () {
@@ -297,19 +238,8 @@ const legend = {
         opts.widths.push(25)
         const g = opts.selection
           .append('g')
-          // .attr({ class: 'd3-bolus d3-rect-bolus-legend' })
           .classed('d3-bolus d3-rect-bolus-legend', true)
         g.append('path')
-          // .attr({
-          //   'd': function () {
-          //     const x = BOLUS_RIDE_X_LOCATION
-          //     const y = -12
-          //     return `M ${x} ${y} l 5 5 l -10 0 z`
-          //   },
-          //   'fill': BOLUS_RIDE_COLOR,
-          //   'stroke': BOLUS_RIDE_BORDER_COLOR,
-          //   'stroke-width': BOLUS_RIDE_BORDER_WIDTH
-          // })
           .attr('d', function () {
             const x = BOLUS_RIDE_X_LOCATION
             const y = -12
@@ -320,16 +250,6 @@ const legend = {
           .attr('stroke-width', BOLUS_RIDE_BORDER_WIDTH)
 
         g.append('path')
-          // .attr({
-          //   'd': function () {
-          //     const x = BOLUS_RIDE_X_LOCATION
-          //     const y = 0
-          //     return `M ${x} ${y} l 5 -5 l -10 0 z`
-          //   },
-          //   'fill': BOLUS_RIDE_COLOR,
-          //   'stroke': BOLUS_RIDE_BORDER_COLOR,
-          //   'stroke-width': BOLUS_RIDE_BORDER_WIDTH
-          // })
           .attr('d', function () {
             const x = BOLUS_RIDE_X_LOCATION
             const y = 0
@@ -345,9 +265,6 @@ const legend = {
     {
       create: function (opts) {
         return opts.selection.append('text')
-          // .attr({
-          //   class: 'd3-pool-legend'
-          // })
           .classed('d3-pool-legend', true)
           .text(t('Override'))
           .each(function () {
@@ -363,9 +280,6 @@ const legend = {
     {
       create: function (opts) {
         return opts.selection.append('text')
-          // .attr({
-          //   class: 'd3-pool-legend'
-          // })
           .classed('d3-pool-legend', true)
           .text(t('Carbs'))
           .each(function () {
@@ -379,9 +293,6 @@ const legend = {
     {
       create: function (opts) {
         return opts.selection.append('text')
-          // .attr({
-          //   class: 'd3-pool-legend'
-          // })
           .classed('d3-pool-legend', true)
           .text(t('Rescuecarbs'))
           .each(function () {
@@ -423,11 +334,6 @@ const legend = {
           const w = this.cumWidth(opts.widths, i)
           const r = (this.SHAPE_WIDTH - this.SHAPE_MARGIN * 2) / 2
           created
-          //   .attr({
-          //   cx: -(w + 2 * r),
-          //   cy: -opts.textHeight / 4,
-          //   r: r
-          // })
             .attr('cx',  -(w + 2 * r))
             .attr('cy', -opts.textHeight / 4)
             .attr('r', r)
@@ -435,24 +341,14 @@ const legend = {
       } else if (fn.type === 'rect') {
         const side = this.SHAPE_WIDTH - this.SHAPE_MARGIN * 2
         created
-        //   .attr({
-        //   width: side,
-        //   height: side
-        // })
           .attr('width', side)
           .attr('height', side)
         if (opts.widths[i - 1]) {
           const w = this.cumWidth(opts.widths, i)
           created
-          //   .attr({
-          //   x: -w - this.SHAPE_WIDTH
-          // })
             .attr('x', -w - this.SHAPE_WIDTH)
         } else {
           created
-          //   .attr({
-          //   x: -side - 1.5
-          // })
             .attr('x', -side - 1.5)
         }
       }

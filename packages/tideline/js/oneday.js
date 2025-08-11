@@ -92,7 +92,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   let scrollHandleTrigger = true
 
   function container(selection) {
-    // container.mainSVG = selection.append('svg').style('width', '100%')
     container.mainSVG = selection.append('svg')
     container.mainGroup = container.mainSVG.append('g').attr('id', 'tidelineMainSVG')
     // update SVG dimensions and ID
@@ -112,7 +111,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
       container.scrollNav = container.mainGroup
         .append('g')
         .classed('x scroll', true)
-        // .attr('class', 'x scroll')
         .attr('id', 'tidelineScrollNav')
     }
     container.mainSVG.insert('clipPath', '#tidelineMainSVG')
@@ -148,7 +146,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
   /** @type {Tooltips|null} */
   container.tooltips = null
   /** @type {d3.AxisScale<Date>} */
-  // container.xScale = d3.time.scale()
   container.xScale = d3.scaleTime()
   /** @type {MedicalDataService} */
   container.tidelineData = null
@@ -354,14 +351,12 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
 
   // chainable methods
   container.setAxes = function() {
-    // const { xScale } = container
     // set the domain and range for the main tideline x-scale
     container.xScale.domain([container.initialEndpoints[0], container.initialEndpoints[1]])
     container.xScale.range([axisGutter, width])
 
     nav.maxTranslation = -container.xScale(container.endpoints[0]) + axisGutter
     if (nav.scrollNav) {
-      // nav.scrollScale = d3.time.scale.utc()
       nav.scrollScale = d3.scaleUtc()
         .domain([container.endpoints[0], container.initialEndpoints[0]])
         .range([axisGutter + nav.scrollThumbRadius, width - nav.scrollThumbRadius])
@@ -398,7 +393,6 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
    * 'zoomstart' & 'zoomend' events used by dailyX to change the transparency
    * of the sticky date.
    */
-  // container.onZoomStart = () => container.emitter.emit('zoomstart')
   container.onZoomStart = () => container.emitter.emit('zoomstart')
 
   container.onZoom = (event) => {
@@ -410,10 +404,8 @@ function oneDay(emitter, options = { trackMetric: _.noop }) {
 
     const { maxTranslation } = nav
     // /** @type {d3.D3ZoomEvent} */
-    // const e = d3.event
     const transform = event.transform
     /** @type {number} */
-    // let translateX = event.translate[0]
     let translateX = transform.x
 
     if (Number.isNaN(translateX)) {
