@@ -20,6 +20,7 @@
 import _ from 'lodash'
 import { expect } from 'chai'
 import * as d3 from 'd3'
+import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 import * as dataUtils from '../../../src/utils/basics/data'
 import * as Types from '../../../data/types'
 
