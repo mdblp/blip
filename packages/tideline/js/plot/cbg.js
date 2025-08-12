@@ -63,7 +63,7 @@ function plotCbg(pool, opts = {}) {
         enter => enter.append('circle')
           .classed('d3-cbg', true)
           .attr('id', d => `cbg_${d.id}`)
-          .attr('data-testid', d => `cbg_${d.guid}`)
+          .attr('data-testid', d => `cbg_${d.id}`)
           .attr('cx', cbg.xPosition)
           .attr('cy', cbg.yPosition)
           .attr('r', opts.radius),
