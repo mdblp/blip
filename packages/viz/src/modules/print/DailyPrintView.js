@@ -18,7 +18,6 @@
 import _ from 'lodash'
 import i18next from 'i18next'
 import * as d3 from 'd3'
-import { range } from 'd3-array'
 import moment from 'moment-timezone'
 
 import { classifyBgValue, MMOLL_UNITS, TimeService } from 'medical-domain'
@@ -995,7 +994,7 @@ class DailyPrintView extends PrintView {
       -1,
       -2.25
     ]
-    _.forEach(_.map(range(0, 16, 2), (d) => ([d, d - 7])), (pair) => {
+    _.forEach(_.map(d3.range(0, 16, 2), (d) => ([d, d - 7])), (pair) => {
       const [horizOffset, vertOffset] = pair
       const adjustedVertOffset = vertOffset + vertOffsetAdjustments[horizOffset / 2]
       let fill
