@@ -234,7 +234,7 @@ function Tooltips(container, tooltipsGroup) {
   this.foreignObjDimensions = function(foGroup) {
     // when content is centered, can't use getBoundingClientRect to get width on div
     // need to get it on components instead, and use widest one
-    var widths = []
+    let widths = []
     foGroup.selectAll('span')
       .each(function() {
         widths.push(d3.select(this)._groups[0][0].getBoundingClientRect().width)

@@ -32,7 +32,7 @@ const format = {
       return '0.0'
     }
 
-    var formatted = d3.format('.3f')(x)
+    let formatted = d3.format('.3f')(x)
     // remove zero-padding on the right
     while (formatted[formatted.length - 1] === '0') {
       formatted = formatted.slice(0, formatted.length - 1)
