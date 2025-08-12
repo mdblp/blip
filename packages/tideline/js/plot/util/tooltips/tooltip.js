@@ -73,15 +73,14 @@ function Tooltips(container, tooltipsGroup) {
 
   this.addForeignObjTooltip = function(opts) {
     opts = opts || {}
-    console.log({ optsFromTooltip: opts })
     currentTranslation = container.currentTranslation()
-    var atLeftEdge = isAtLeftEdge(locationInWindow(opts.xPosition(opts.datum)))
-    var atRightEdge = isAtRightEdge(locationInWindow(opts.xPosition(opts.datum)))
-    var shape = opts.shape
-    var translation
+    const atLeftEdge = isAtLeftEdge(locationInWindow(opts.xPosition(opts.datum)))
+    const atRightEdge = isAtRightEdge(locationInWindow(opts.xPosition(opts.datum)))
+    const shape = opts.shape
+    let translation
 
     if (shape) {
-      var defaultTranslation = 'translate(' + opts.xPosition(opts.datum) +
+      const defaultTranslation = 'translate(' + opts.xPosition(opts.datum) +
         ',' + opts.yPosition(opts.datum) + ')'
       // applies to shapes without orientation (e.g., basal)
       if (!shapes[shape].orientations) {
@@ -99,13 +98,13 @@ function Tooltips(container, tooltipsGroup) {
       else {
         translation = defaultTranslation
       }
-      var group = tooltipGroups[opts.datum.type]
+      const group = tooltipGroups[opts.datum.type]
         .append('g')
         .classed('d3-tooltip d3-' + opts.datum.type + ' ' + shapes[shape].mainClass + ' ' + opts.cssClass, true)
         .attr('id', 'tooltip_' + opts.datum.id)
         .attr('transform', translation)
 
-      var foGroup = group.append('foreignObject')
+      const foGroup = group.append('foreignObject')
         .classed('svg-tooltip-fo', true)
         // need to set an initial width to give the HTML something to shape itself in relation to
         .attr('width', 200)
