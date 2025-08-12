@@ -16,7 +16,7 @@
  */
 
 /* eslint-disable max-len */
-import { timeParse } from 'd3-time-format'
+import * as d3 from 'd3'
 import { assert, expect } from 'chai'
 import * as sinon from 'sinon'
 
@@ -227,7 +227,7 @@ describe('datetime', () => {
     })
 
     it('should properly format the current date', () => {
-      expect(timeParse('%b %-d, %Y')(datetime.formatCurrentDate())).to.not.be.null
+      expect(d3.timeParse('%b %-d, %Y')(datetime.formatCurrentDate())).to.not.be.null
     })
   })
 
