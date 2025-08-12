@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,8 +27,8 @@
 
 import { formatLocalizedFromUTC, getHourMinuteFormat } from '../datetime/datetime.util'
 import { type BgUnit, type TimePrefs, Unit } from 'medical-domain'
-import { format } from 'd3-format'
 import { min } from 'lodash'
+import * as d3 from 'd3'
 
 const NO_VALUE_STRING = '--'
 
@@ -72,7 +72,7 @@ export const formatBgValue = (value: number, bgUnits?: BgUnit): string => {
   const isUnitMmolPerLiter = unit === Unit.MmolPerLiter
 
   const valueFormat = isUnitMmolPerLiter ? ONE_DIGIT_STRING_FORMAT : NO_DIGIT_STRING_FORMAT
-  return format(valueFormat)(value)
+  return d3.format(valueFormat)(value)
 }
 
 const convertValueToNumber = (value: string | number): number => {
@@ -112,9 +112,9 @@ const getDecimalsCount = (unit: Unit): number => {
  */
 export const formatDecimalNumber = (val: number, places = 0): string => {
   if (!places) {
-    return format('d')(val)
+    return d3.format('d')(val)
   }
-  return format(`.${places}f`)(val)
+  return d3.format(`.${places}f`)(val)
 }
 
 export const formatInsulin = (value: number): string => {
