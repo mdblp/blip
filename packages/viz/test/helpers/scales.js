@@ -15,16 +15,16 @@
  * == BSD2 LICENSE ==
  */
 
-import { scaleLinear } from 'd3-scale'
+import * as d3 from 'd3'
 
 const trendsWidth = 864
 const trendsHeight = 360
 
-const trendsXScale = scaleLinear()
+const trendsXScale = d3.scaleLinear()
   .domain([0, 864e5])
   .range([0, trendsWidth])
 
-const trendsYScale = scaleLinear()
+const trendsYScale = d3.scaleLinear()
   .domain([40, 400])
   .range([trendsHeight, 0])
   .clamp(true)
@@ -34,15 +34,15 @@ const trends = { trendsWidth, trendsHeight, trendsXScale, trendsYScale }
 const detailWidth = 864
 const detailHeight = 100
 
-const detailXScale = scaleLinear()
+const detailXScale = d3.scaleLinear()
   .domain([0, 864e5])
   .range([0, detailWidth])
 
-const detailBasalScale = scaleLinear()
+const detailBasalScale = d3.scaleLinear()
   .domain([0, 5])
   .range([detailHeight, 0])
 
-const detailBolusScale = scaleLinear()
+const detailBolusScale = d3.scaleLinear()
   .domain([0, 15])
   .range([detailHeight, 0])
 

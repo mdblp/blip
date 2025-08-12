@@ -17,8 +17,8 @@
 
 import _ from 'lodash'
 import i18next from 'i18next'
+import * as d3 from 'd3'
 import { range } from 'd3-array'
-import { scaleLinear } from 'd3-scale'
 import moment from 'moment-timezone'
 
 import { classifyBgValue, MMOLL_UNITS, TimeService } from 'medical-domain'
@@ -240,25 +240,25 @@ class DailyPrintView extends PrintView {
     // Calculate the maximum BG yScale value
     this.bgScaleYLimit = _.min([this.data.bgRange[1], this.bgBounds.veryHighThreshold])
 
-    dateChart.bgScale = scaleLinear() // eslint-disable-line no-param-reassign
+    dateChart.bgScale = d3.scaleLinear() // eslint-disable-line no-param-reassign
       .domain([0, this.bgScaleYLimit])
       .range([
         dateChart.topEdge + notesEtc + bgEtcChart + this.cbgRadius,
         dateChart.topEdge + notesEtc - this.cbgRadius
       ])
-    dateChart.bolusScale = scaleLinear() // eslint-disable-line no-param-reassign
+    dateChart.bolusScale = d3.scaleLinear() // eslint-disable-line no-param-reassign
       .domain([0, this.data.bolusRange[1] ?? 0])
       .range([
         dateChart.topEdge + notesEtc + bgEtcChart,
         dateChart.topEdge + notesEtc + (bgEtcChart / 3)
       ])
-    dateChart.basalScale = scaleLinear() // eslint-disable-line no-param-reassign
+    dateChart.basalScale = d3.scaleLinear() // eslint-disable-line no-param-reassign
       .domain([0, this.data.basalRange[1]])
       .range([
         dateChart.bottomEdge - belowBasal,
         dateChart.bottomEdge - belowBasal - basalChart
       ])
-    dateChart.xScale = scaleLinear() // eslint-disable-line no-param-reassign
+    dateChart.xScale = d3.scaleLinear() // eslint-disable-line no-param-reassign
       .domain([dateChart.bounds[0], dateChart.bounds[1]])
       // TODO: change to this.bolusWidth / 2 assuming boluses will be wider than cbgs
       .range([this.chartArea.leftEdge + this.cbgRadius, this.rightEdge - this.cbgRadius])
@@ -1039,12 +1039,12 @@ class DailyPrintView extends PrintView {
       interruptedLineThickness: this.interruptedLineThickness,
       triangleHeight: this.triangleHeight
     }
-    const legendBolusYScale = scaleLinear()
+    const legendBolusYScale = d3.scaleLinear()
       .domain([0, 10])
       .range([legendTop + legendHeight - legendHeight / 4, legendTop + legendHeight / 4])
 
     // (normal) bolus
-    const normalBolusXScale = scaleLinear()
+    const normalBolusXScale = d3.scaleLinear()
       .domain([0, 10])
       .range([cursor, cursor + 10])
     const normalPaths = getBolusPaths(
@@ -1061,7 +1061,7 @@ class DailyPrintView extends PrintView {
     cursor += this.doc.widthOfString(t('Bolus')) + legendItemLeftOffset * 2
 
     // underride & override boluses
-    const rideBolusXScale = scaleLinear()
+    const rideBolusXScale = d3.scaleLinear()
       .domain([0, 10])
       .range([cursor, cursor + 10])
     const overridePaths = getBolusPaths(
@@ -1109,7 +1109,7 @@ class DailyPrintView extends PrintView {
     cursor += this.doc.widthOfString(t('Override up & down')) + legendItemLeftOffset * 2
 
     // interrupted bolus
-    const interruptedBolusXScale = scaleLinear()
+    const interruptedBolusXScale = d3.scaleLinear()
       .domain([0, 10])
       .range([cursor, cursor + 10])
     const interruptedPaths = getBolusPaths(
@@ -1146,11 +1146,11 @@ class DailyPrintView extends PrintView {
     cursor += this.doc.widthOfString(t('Carbs')) + legendItemLeftOffset * 2
 
     /* basals */
-    const legendBasalYScale = scaleLinear()
+    const legendBasalYScale = d3.scaleLinear()
       .domain([0, 2.5])
       .range([legendTop + legendHeight - legendHeight / 4, legendTop + legendHeight / 4.5])
 
-    const legendBasalXScale = scaleLinear()
+    const legendBasalXScale = d3.scaleLinear()
       .domain([0, 10])
       .range([cursor, cursor + 50])
 
