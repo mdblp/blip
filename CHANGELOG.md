@@ -12,6 +12,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-3547 Swap unit and percentage in insulin card
 - YLP-3651 Transfer the patient information displayed in the banner in the patient profile page
 
+### Engineering
+- YLP-3672 D3 version update
+
 ## 3.7.0 - 2025-07-10
 ### Added
 - YLP-3151 Display Night mode events in Daily view

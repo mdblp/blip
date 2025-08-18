@@ -22,6 +22,7 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 
 import utils from './util/utils'
 import commonbolus from './util/commonbolus'
@@ -34,17 +35,20 @@ const defaults = {
 const MINIMAL_OVERRIDE = 0.1 // Minimum override value to be considered an override
 
 /**
- * @param {Pool} pool
- * @param {typeof defaults} opts
- * @returns
+ * Plot wizard data (bolus with carb input)
+ * @param {Pool} pool - The pool to render into
+ * @param {typeof defaults} opts - Configuration options
+ * @returns {Function} - The wizard plotting function
  */
 function plotWizard(pool, opts = defaults) {
-  const d3 = window.d3
-
   _.defaults(opts, defaults)
 
   function wizard(selection) {
-    const drawBolus = drawbolus(pool, { ...opts, yScale: pool.yScale(), xScale: pool.xScale().copy() })
+    const drawBolus = drawbolus(pool, {
+      ...opts,
+      yScale: pool.yScale(),
+      xScale: pool.xScale().copy()
+    })
 
     selection.each(function(/** @type {Datum[]} */ currentData) {
       if (currentData.length < 1) {
@@ -52,42 +56,45 @@ function plotWizard(pool, opts = defaults) {
         return
       }
 
+      // Select all wizard groups and bind data
       const wizards = d3.select(this)
         .selectAll('g.d3-wizard-group')
-        .data(currentData, (d) => d.id)
+        .data(currentData, d => d.id)
 
-      let wizardGroups = wizards.enter()
-        .append('g')
-        .attr({
-          'class': 'd3-wizard-group',
-          'data-testid': (d) => `wizard_group_${d.id}`,
-          'id': (d) => `wizard_group_${d.id}`
+      // Handle exit selection
+      wizards.exit().remove()
+
+      // Create new wizard groups for entering data
+      const wizardGroups = wizards
+        .join('g')
+        .classed('d3-wizard-group', true)
+        .attr('id', d => `wizard_group_${d.id}`)
+        .attr('data-testid', d => `wizard_group_${d.id}`)
+        .sort((/** @type {Datum} */ a, /** @type {Datum} */ b) => {
+          // Sort by size so smaller boluses are drawn last
+          const bolusA = a.bolus ?? a
+          const bolusB = b.bolus ?? b
+          return d3.descending(commonbolus.getMaxValue(bolusA), commonbolus.getMaxValue(bolusB))
         })
 
-      // sort by size so smaller boluses are drawn last
-      wizardGroups = wizardGroups.sort((/** @type {Datum} */ a, /** @type {Datum} */ b) => {
-        const bolusA = a.bolus ?? a
-        const bolusB = b.bolus ?? b
-        return d3.descending(commonbolus.getMaxValue(bolusA), commonbolus.getMaxValue(bolusB))
-      })
-
-      const carbs = wizardGroups.filter((/** @type {Datum} */ d) => d.carbInput)
-
+      // Filter for elements with carb input
+      const carbs = wizardGroups.filter(/** @type {Datum} */ d => d.carbInput)
       drawBolus.carb(carbs)
 
-      const boluses = wizardGroups.filter((/** @type {Datum} */ d) => _.isObject(d.bolus))
+      // Filter for elements with bolus data
+      const boluses = wizardGroups.filter(/** @type {Datum} */ d => _.isObject(d.bolus))
       drawBolus.bolus(boluses)
 
-      // boluses where programmed differs from delivered
-      const undelivered = boluses.filter((bolus) => {
+      // Filter for boluses where programmed differs from delivered
+      const undelivered = boluses.filter(bolus => {
         const d = commonbolus.getDelivered(bolus)
         const p = commonbolus.getProgrammed(bolus)
         return Number.isFinite(d) && Number.isFinite(p) && p > d
       })
       drawBolus.undelivered(undelivered)
 
-      // boluses where recommended > delivered
-      const underride = boluses.filter((d) => {
+      // Filter for boluses where recommended > delivered (underride)
+      const underride = boluses.filter(d => {
         const r = commonbolus.getRecommended(d)
         const p = commonbolus.getProgrammed(d)
         const underrideValue = Math.abs(p - r)
@@ -95,8 +102,8 @@ function plotWizard(pool, opts = defaults) {
       })
       drawBolus.underride(underride)
 
-      // boluses where delivered > recommended
-      const override = boluses.filter((d) => {
+      // Filter for boluses where delivered > recommended (override)
+      const override = boluses.filter(d => {
         const r = commonbolus.getRecommended(d)
         const p = commonbolus.getProgrammed(d)
         const overrideValue = Math.abs(p - r)
@@ -104,25 +111,23 @@ function plotWizard(pool, opts = defaults) {
       })
       drawBolus.override(override)
 
-      wizards.exit().remove()
-
+      // Set up highlight behavior
       const highlight = pool.highlight('.d3-wizard-group, .d3-bolus-group', opts)
 
-      // tooltips
-      selection.selectAll('.d3-wizard-group').on('mouseover', function(d) {
-        if (d.bolus) {
-          drawBolus.tooltip.add(d, utils.getTooltipContainer(this))
-        }
-
-        highlight.on(d3.select(this))
-      })
-      selection.selectAll('.d3-wizard-group').on('mouseout', function(d) {
-        if (d.bolus) {
-          drawBolus.tooltip.remove(d)
-        }
-
-        highlight.off()
-      })
+      // Set up tooltip event handlers
+      selection.selectAll('.d3-wizard-group')
+        .on('mouseover', function(event, d) {
+          if (d.bolus) {
+            drawBolus.tooltip.add(d, utils.getTooltipContainer(this))
+          }
+          highlight.on(d3.select(this))
+        })
+        .on('mouseout', function(event, d) {
+          if (d.bolus) {
+            drawBolus.tooltip.remove(d)
+          }
+          highlight.off()
+        })
     })
   }
 

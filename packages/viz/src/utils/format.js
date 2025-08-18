@@ -37,7 +37,7 @@
  */
 
 import _ from 'lodash'
-import { format } from 'd3-format'
+import * as d3 from 'd3'
 import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 
 /**
@@ -50,9 +50,9 @@ import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 export function formatBgValue(val, bgPrefs) {
   const units = _.get(bgPrefs, 'bgUnits', MGDL_UNITS)
   if (units === MMOLL_UNITS) {
-    return format('.1f')(val)
+    return d3.format('.1f')(val)
   }
-  return format('d')(val)
+  return d3.format('d')(val)
 }
 
 /**
@@ -68,9 +68,9 @@ export function formatDecimalNumber(val, places) {
     return 0
   }
   if (_.isNil(places)) {
-    return format('d')(val)
+    return d3.format('d')(val)
   }
-  return format(`.${places}f`)(val)
+  return d3.format(`.${places}f`)(val)
 }
 
 /**
@@ -83,7 +83,7 @@ export function formatPercentage(val, precision = 0) {
   if (Number.isNaN(val)) {
     return '--%'
   }
-  return format(`.${precision}%`)(val)
+  return d3.format(`.${precision}%`)(val)
 }
 
 /**

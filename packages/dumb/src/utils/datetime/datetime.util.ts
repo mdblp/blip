@@ -29,7 +29,7 @@ import _ from 'lodash'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
 import { DurationUnit, type TimePrefs } from 'medical-domain'
-import { timeFormat } from 'd3-time-format'
+import * as d3 from 'd3'
 
 const t = i18next.t.bind(i18next)
 
@@ -137,7 +137,7 @@ export const formatDate = (date?: string): string => {
 }
 
 export const formatCurrentDate = (): string => {
-  return timeFormat(t('%b %-d, %Y'))(new Date())
+  return d3.timeFormat(t('%b %-d, %Y'))(new Date())
 }
 
 export const formatDateRange = (startDate: string, endDate: string, format: string, timezone: string | undefined = 'UTC'): string => {
