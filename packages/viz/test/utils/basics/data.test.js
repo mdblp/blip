@@ -19,7 +19,7 @@
 
 import _ from 'lodash'
 import { expect } from 'chai'
-import { utcDay } from 'd3-time'
+import * as d3 from 'd3'
 import { MGDL_UNITS, MMOLL_UNITS } from 'medical-domain'
 import * as dataUtils from '../../../src/utils/basics/data'
 import * as Types from '../../../data/types'
@@ -123,7 +123,7 @@ describe('basics data utils', () => {
 
         expect(dataUtils.determineBgDistributionSource({
           data: { smbg: { data: smbg }, cbg: { data: cbg } },
-          dateRange: [utcDay.floor(now), utcDay.ceil(now)]
+          dateRange: [d3.utcDay.floor(now), d3.utcDay.ceil(now)]
         })).to.deep.equal({
           cgmStatus: 'calculatedCGM',
           source: 'cbg'
@@ -134,7 +134,7 @@ describe('basics data utils', () => {
 
         expect(dataUtils.determineBgDistributionSource({
           data: { smbg: { data: smbg }, cbg: { data: cbg } },
-          dateRange: [utcDay.floor(now), utcDay.ceil(now)]
+          dateRange: [d3.utcDay.floor(now), d3.utcDay.ceil(now)]
         })).to.deep.equal({
           cgmStatus: 'notEnoughCGM',
           source: 'smbg'
@@ -162,7 +162,7 @@ describe('basics data utils', () => {
 
         expect(dataUtils.determineBgDistributionSource({
           data: { smbg: { data: smbg }, cbg: { data: cbg } },
-          dateRange: [utcDay.floor(now), utcDay.ceil(now)]
+          dateRange: [d3.utcDay.floor(now), d3.utcDay.ceil(now)]
         })).to.deep.equal({
           cgmStatus: 'calculatedCGM',
           source: 'cbg'
@@ -173,7 +173,7 @@ describe('basics data utils', () => {
 
         expect(dataUtils.determineBgDistributionSource({
           data: { smbg: { data: smbg }, cbg: { data: cbg } },
-          dateRange: [utcDay.floor(now), utcDay.ceil(now)]
+          dateRange: [d3.utcDay.floor(now), d3.utcDay.ceil(now)]
         })).to.deep.equal({
           cgmStatus: 'notEnoughCGM',
           source: 'smbg'
@@ -210,7 +210,7 @@ describe('basics data utils', () => {
 
         expect(dataUtils.determineBgDistributionSource({
           data: { smbg: { data: smbg }, cbg: { data: cbg } },
-          dateRange: [utcDay.floor(now), utcDay.ceil(now)]
+          dateRange: [d3.utcDay.floor(now), d3.utcDay.ceil(now)]
         })).to.deep.equal({
           cgmStatus: 'calculatedCGM',
           source: 'cbg'
@@ -221,7 +221,7 @@ describe('basics data utils', () => {
 
         expect(dataUtils.determineBgDistributionSource({
           data: { smbg: { data: smbg }, cbg: { data: cbg } },
-          dateRange: [utcDay.floor(now), utcDay.ceil(now)]
+          dateRange: [d3.utcDay.floor(now), d3.utcDay.ceil(now)]
         })).to.deep.equal({
           cgmStatus: 'notEnoughCGM',
           source: 'smbg'
@@ -238,7 +238,7 @@ describe('basics data utils', () => {
         ]
         expect(dataUtils.determineBgDistributionSource({
           data: { smbg: { data: smbg }, cbg: { data: [] } },
-          dateRange: [utcDay.floor(now), utcDay.ceil(now)]
+          dateRange: [d3.utcDay.floor(now), d3.utcDay.ceil(now)]
         })).to.deep.equal({
           cgmStatus: 'noCGM',
           source: 'smbg'
@@ -258,7 +258,7 @@ describe('basics data utils', () => {
         ]
         expect(dataUtils.determineBgDistributionSource({
           data: { smbg: { data: smbg }, cbg: { data: cbg } },
-          dateRange: [utcDay.floor(now), utcDay.ceil(now)]
+          dateRange: [d3.utcDay.floor(now), d3.utcDay.ceil(now)]
         })).to.deep.equal({
           cgmStatus: 'notEnoughCGM',
           source: 'smbg'
@@ -276,7 +276,7 @@ describe('basics data utils', () => {
 
         expect(dataUtils.determineBgDistributionSource({
           data: { smbg: { data: smbg }, cbg: { data: cbg } },
-          dateRange: [utcDay.floor(now), utcDay.ceil(now)]
+          dateRange: [d3.utcDay.floor(now), d3.utcDay.ceil(now)]
         })).to.deep.equal({
           cgmStatus: 'notEnoughCGM',
           source: null
@@ -292,7 +292,7 @@ describe('basics data utils', () => {
 
         expect(dataUtils.determineBgDistributionSource({
           data: { smbg: { data: smbg }, cbg: { data: cbg } },
-          dateRange: [utcDay.floor(now), utcDay.ceil(now)]
+          dateRange: [d3.utcDay.floor(now), d3.utcDay.ceil(now)]
         })).to.deep.equal({
           cgmStatus: 'noCGM',
           source: null

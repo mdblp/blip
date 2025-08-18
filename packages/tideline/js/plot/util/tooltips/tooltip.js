@@ -16,12 +16,11 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 
 import shapes from './shapes'
 
 function Tooltips(container, tooltipsGroup) {
-  const d3 = window.d3
-
   var id, tooltipGroups = {}, defs = {}
 
   var HOURS_IN_DAY = 24, EDGE_THRESHOLD = 5
@@ -32,11 +31,10 @@ function Tooltips(container, tooltipsGroup) {
   function defineShape(shape, cssClass) {
     // add an SVG <defs> at the root of the tooltipsGroup for later <use>
     var shapeGroup = tooltipDefs.append('g')
-      .attr({
-        class: shape.mainClass + ' ' + cssClass,
-        id: shape.id + '_' + cssClass,
-        viewBox: shape.viewBox
-      })
+      .classed(shape.mainClass + ' ' + cssClass, true)
+      .attr('id', shape.id + '_' + cssClass)
+      .attr('viewBox', shape.viewBox)
+
     _.forEach(shape.els, function(el) {
       shapeGroup.append(el.el)
         .attr(el.attrs)
@@ -76,13 +74,13 @@ function Tooltips(container, tooltipsGroup) {
   this.addForeignObjTooltip = function(opts) {
     opts = opts || {}
     currentTranslation = container.currentTranslation()
-    var atLeftEdge = isAtLeftEdge(locationInWindow(opts.xPosition(opts.datum)))
-    var atRightEdge = isAtRightEdge(locationInWindow(opts.xPosition(opts.datum)))
-    var shape = opts.shape
-    var translation
+    const atLeftEdge = isAtLeftEdge(locationInWindow(opts.xPosition(opts.datum)))
+    const atRightEdge = isAtRightEdge(locationInWindow(opts.xPosition(opts.datum)))
+    const shape = opts.shape
+    let translation
 
     if (shape) {
-      var defaultTranslation = 'translate(' + opts.xPosition(opts.datum) +
+      const defaultTranslation = 'translate(' + opts.xPosition(opts.datum) +
         ',' + opts.yPosition(opts.datum) + ')'
       // applies to shapes without orientation (e.g., basal)
       if (!shapes[shape].orientations) {
@@ -100,28 +98,24 @@ function Tooltips(container, tooltipsGroup) {
       else {
         translation = defaultTranslation
       }
-      var group = tooltipGroups[opts.datum.type].append('g')
-        .attr({
-          id: 'tooltip_' + opts.datum.id,
-          class: 'd3-tooltip d3-' + opts.datum.type + ' ' + shapes[shape].mainClass + ' ' + opts.cssClass,
-          transform: translation
-        })
-      var foGroup = group.append('foreignObject')
-        .attr({
-          // need to set an initial width to give the HTML something to shape itself in relation to
-          width: 200,
-          // hide the foreignObject initially so that the resizing isn't visible
-          visibility: 'hidden',
-          class: 'svg-tooltip-fo'
-        })
+      const group = tooltipGroups[opts.datum.type]
+        .append('g')
+        .classed('d3-tooltip d3-' + opts.datum.type + ' ' + shapes[shape].mainClass + ' ' + opts.cssClass, true)
+        .attr('id', 'tooltip_' + opts.datum.id)
+        .attr('transform', translation)
+
+      const foGroup = group.append('foreignObject')
+        .classed('svg-tooltip-fo', true)
+        // need to set an initial width to give the HTML something to shape itself in relation to
+        .attr('width', 200)
+        // hide the foreignObject initially so that the resizing isn't visible
+        .attr('visibility', 'hidden')
         .append('xhtml:div')
-        .attr({
-          // bolus(/wizard) tooltips use completely different CSS
-          // with a different main div class passed as an opt
-          class: opts.div ? opts.div : 'tooltip-div'
-        })
+        // bolus(/wizard) tooltips use completely different CSS
+        // with a different main div class passed as an option
+        .classed(opts.div ? opts.div : 'tooltip-div', true)
       return {
-        foGroup: foGroup,
+        foGroup,
         edge: atLeftEdge ? 'left': atRightEdge ? 'right': null
       }
     }
@@ -179,16 +173,17 @@ function Tooltips(container, tooltipsGroup) {
         attrs.transform = opts.rightEdgeTranslation
       }
       tooltipGroup.insert(el.el, '.svg-tooltip-fo')
-        .attr(attrs)
+        .attr('points', attrs.points)
+        .attr('transform', attrs.transform)
+        .attr('class', attrs.class)
     })
   }
 
   this.setForeignObjDimensions = function(selection, opts) {
-    selection.attr({
-      width: opts.w,
-      height: opts.h,
-      visibility: 'visible'
-    })
+    selection
+      .attr('width', opts.w)
+      .attr('height', opts.h)
+      .attr('visibility', 'visible')
   }
 
   this.anchorForeignObj = function(selection, opts) {
@@ -238,24 +233,25 @@ function Tooltips(container, tooltipsGroup) {
   this.foreignObjDimensions = function(foGroup) {
     // when content is centered, can't use getBoundingClientRect to get width on div
     // need to get it on components instead, and use widest one
-    var widths = []
+    let widths = []
     foGroup.selectAll('span')
       .each(function() {
-        widths.push(d3.select(this)[0][0].getBoundingClientRect().width)
+        widths.push(d3.select(this)._groups[0][0].getBoundingClientRect().width)
       })
     foGroup.selectAll('table')
       .each(function() {
-        widths.push(d3.select(this)[0][0].getBoundingClientRect().width)
+        widths.push(d3.select(this)._groups[0][0].getBoundingClientRect().width)
       })
     foGroup.selectAll('div.title.wider')
       .each(function() {
-        widths.push(d3.select(this)[0][0].getBoundingClientRect().width - 20)
+        widths.push(d3.select(this)._groups[0][0].getBoundingClientRect().width - 20)
       })
+
     return {
       width: d3.max(widths),
       // getBoundingClientRect returns a larger height than the div
       // not sure why, but offsetHeight is perfect
-      height: foGroup[0][0].offsetHeight
+      height: foGroup._groups[0][0].offsetHeight
     }
   }
 

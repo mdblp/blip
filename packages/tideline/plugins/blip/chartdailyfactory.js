@@ -1,6 +1,7 @@
 /*
  * == BSD2 LICENSE ==
  * Copyright (c) 2014, Tidepool Project
+ * Copyright (c) 2022, Diabeloop
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the associated License, which is identical to the BSD 2-Clause
@@ -18,6 +19,7 @@
 import i18next from 'i18next'
 import _ from 'lodash'
 import { EventEmitter } from 'events'
+import * as d3 from 'd3'
 
 import { MGDL_UNITS } from 'medical-domain'
 
@@ -48,7 +50,6 @@ import plotNightMode from '../../js/plot/nightModeEvent'
  * @typedef {import('../../js/pool').default } Pool
  */
 
-
 /**
  * Create a 'One Day' chart object that is a wrapper around Tideline components
  * @param {HTMLElement} parentElement The div parent element
@@ -57,7 +58,6 @@ import plotNightMode from '../../js/plot/nightModeEvent'
  * @returns {function}
  */
 function chartDailyFactory(parentElement, tidelineData, options = {}) {
-  const d3 = window.d3
   const t = i18next.t.bind(i18next)
 
   const defaults = {

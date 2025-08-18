@@ -16,6 +16,7 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 
 const shapeutil = {
   // for polygons
@@ -54,7 +55,6 @@ const shapeutil = {
     return x + ',' + y + ' '
   },
   translationFromViewBox: function(group, opts) {
-    const d3 = window.d3
     var def = group.attr('xlink:href')
     var coords = this.getViewBoxCoords(d3.select(def).attr('viewBox'))
     var x, y
