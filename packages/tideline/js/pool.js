@@ -16,6 +16,7 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 
 import legendDefs from './plot/util/legend'
 
@@ -37,8 +38,6 @@ import legendDefs from './plot/util/legend'
  * @param {OneDay} container OneDay container
  */
 function Pool(container) {
-  const d3 = window.d3
-
   const minHeight = 20
   const maxHeight = 300
 
@@ -102,8 +101,8 @@ function Pool(container) {
       if (type in container.dataFill) {
         const data = _.filter(poolData, { type })
         const dataGroup = group.selectAll(`#${id}_${name}`).data([data])
-        dataGroup.enter().append('g').attr('id', `${id}_${name}`)
-        dataGroup.call(plotType.plot)
+        const dataGroupWithId = dataGroup.join('g').attr('id', `${id}_${name}`)
+        dataGroupWithId.call(plotType.plot)
       } else {
         console.warn(`Pool: ${type} not in dataFill`, { type, name, dataFill: container.dataFill })
       }
@@ -156,11 +155,10 @@ function Pool(container) {
     labels.forEach((label, labelIndex) => {
       const y = (yPosition - label.baseline).toString(10)
       const labelGroup = mainSVG.select('#tidelineLabels').append('text')
-      labelGroup.attr({
-        id: `${id}_label_${labelIndex}`,
-        class: 'd3-pool-label',
-        transform: `translate(${x},${y})`
-      })
+      labelGroup
+        .classed('d3-pool-label', true)
+        .attr('id', `${id}_label_${labelIndex}`)
+        .attr('transform', `translate(${x},${y})`)
       label.spans.forEach((tspan, spanIndex) => {
         labelGroup.append('tspan')
           .attr('class', tspan.className)
@@ -179,10 +177,8 @@ function Pool(container) {
       const y = (yPosition - legend.baseline).toString(10)
       const legendGroup = mainSVG.select('#tidelineLabels')
         .append('g')
-        .attr({
-          id: `${id}_legend_${legend.name}`,
-          transform: `translate(${x},${y})`
-        })
+        .attr('id', `${id}_legend_${legend.name}`)
+        .attr('transform', `translate(${x},${y})`)
       legendDefs.draw(legendGroup, legend.name)
     })
   })

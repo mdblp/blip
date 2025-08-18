@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -72,9 +72,6 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
     annotationsForEstimatedTotalInsulin.push(t('tooltip-empty-stat'))
   }
 
-  const isDisabledWeight = weight === EMPTY_DATA_PLACEHOLDER
-  const isDisabledTotalInsuline = totalInsulin === 0 ? 'center' : 'baseline'
-
   const getDailyDosePerWeight = (): string | number => {
     if (weight === EMPTY_DATA_PLACEHOLDER) {
       return EMPTY_DATA_PLACEHOLDER
@@ -112,15 +109,14 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
         <Box
           display="flex"
           justifyContent="space-between"
-          alignItems={isDisabledTotalInsuline}
-          className={styles.boldValue}
+          alignItems="baseline"
+          className={styles.row}
         >
-          <span className={styles.titleTotal}>
-            <Chip
-              label={`${roundToOneDecimal(totalInsulin)} ${t('insulin-unit-u')}`}
-              variant="outlined"
-              size="small"
-            />
+          <span className={styles.rowValue}>
+            {roundToOneDecimal(totalInsulin)}
+          </span>
+          <span className={styles.rowUnits}>
+            {t('insulin-unit-u')}
           </span>
         </Box>
       </Box>
@@ -138,15 +134,14 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
         <Box
           display="flex"
           justifyContent="space-between"
-          alignItems={isDisabledTotalInsuline}
-          className={styles.boldValue}
+          alignItems="baseline"
+          className={styles.row}
         >
-          <span className={styles.titleTotal}>
-            <Chip
-              label={`${estimatedTotalInsulinValue} ${t('insulin-unit-u')}`}
-              variant="outlined"
-              size="small"
-            />
+          <span className={styles.rowValue}>
+            {estimatedTotalInsulinValue}
+          </span>
+          <span className={styles.rowUnits}>
+            {t('insulin-unit-u')}
           </span>
         </Box>
       </Box>
@@ -167,21 +162,22 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
                 alignItems="center"
               >
                 <Chip
-                  label={`${entry.value > 0 ? entry.value : '0'} ${entry.units}`}
+                  label={`${getPercentage(Math.max(entry.value, 0))} %`}
                   variant="outlined"
                   size="small"
                   sx={{ marginRight: theme.spacing(1) }}
                 />
                 <Box
-                  className={styles.rowPercent}
+                  className={styles.row}
+                  display="flex"
                   width="50px"
-                  alignItems={entry.value === 0 ? 'center' : 'baseline'}
+                  alignItems="baseline"
                 >
-                  <span className={styles.rowPercentValue}>
-                    {getPercentage(Math.max(entry.value, 0))}
+                  <span className={styles.rowValue}>
+                    {entry.value > 0 ? entry.value : '0'}
                   </span>
-                  <span className={styles.rowPercentUnits}>
-                    %
+                  <span className={styles.rowUnits}>
+                   {entry.units}
                   </span>
                 </Box>
               </Box>
@@ -200,7 +196,7 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
           </span>
           <Box
             display="flex"
-            alignItems={isDisabledWeight ? 'center' : 'baseline'}
+            alignItems="baseline"
             className={styles.boldValue}
           >
             <span className={getOutputValueClasses()}>
@@ -219,7 +215,7 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
           {t('ratio-dose')}
           <Box
             display="flex"
-            alignItems={isDisabledWeight ? 'center' : 'baseline'}
+            alignItems="baseline"
             className={styles.boldValue}
           >
             <span className={getOutputValueClasses()}>

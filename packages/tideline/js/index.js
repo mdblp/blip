@@ -18,7 +18,6 @@
 import chartDailyFactory from '../plugins/blip/chartdailyfactory'
 
 window.d3 = require('d3')
-window.d3.chart = require('d3.chart')
 
 export {
   chartDailyFactory

@@ -21,6 +21,7 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 
 import utils from './util/utils'
 import bgBoundaryClass from './util/bgboundary'
@@ -47,11 +48,9 @@ const defaults = {
  * @returns
  */
 function plotSmbg(pool, opts = defaults) {
-  const d3 = window.d3
-
   _.defaults(opts, defaults)
 
-  var getBgBoundaryClass = bgBoundaryClass(opts.classes, opts.bgUnits)
+  const getBgBoundaryClass = bgBoundaryClass(opts.classes, opts.bgUnits)
 
   function smbg(selection) {
     opts.xScale = pool.xScale().copy()
@@ -63,15 +62,14 @@ function plotSmbg(pool, opts = defaults) {
         })
       circles.enter()
         .append('circle')
-        .attr({
-          'cx': smbg.xPosition,
-          'cy': smbg.yPosition,
-          'r': smbg.radius,
-          'id': smbg.id,
-          'data-testid': smbg.dataTestId,
-          'class': getBgBoundaryClass
-        })
-        .classed({'d3-smbg': true, 'd3-circle-smbg': true})
+        .attr('class', getBgBoundaryClass)
+        .classed('d3-smbg', true)
+        .classed('d3-circle-smbg', true)
+        .attr('id', smbg.id)
+        .attr('data-testid', smbg.dataTestId)
+        .attr('cx', smbg.xPosition)
+        .attr('cy', smbg.yPosition)
+        .attr('r', smbg.radius)
 
       circles.exit().remove()
 

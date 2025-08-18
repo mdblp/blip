@@ -16,14 +16,26 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 import nightModeIcon from 'night-mode.svg'
 
 import utils from './util/utils'
 
+/**
+ * @typedef {import("../tidelinedata").default} MedicalDataService
+ * @typedef {import("../tidelinedata").Datum} Datum
+ * @typedef {import("../pool").default} Pool
+ */
+
 const D3_NIGHT_MODE_ID = 'nightMode'
 
+/**
+ * Plots night mode events in the diabetes management timeline
+ * @param {Pool} pool - The pool to render into
+ * @param {{ tidelineData: MedicalDataService, r: number, xScale: (d: number) => number, onNightModeHover: Function, onNightModeOut: Function }} opts - Configuration options
+ * @returns {Function} - The night mode plotting function
+ */
 function plotNightMode(pool, opts = {}) {
-  const d3 = window.d3
   const defaults = {
     r: 14,
     xScale: pool.xScale().copy()
@@ -50,49 +62,47 @@ function plotNightMode(pool, opts = {}) {
         return
       }
 
-      const allNightModes = d3
-        .select(this)
+      // Select all night mode event groups and bind data
+      const allNightModes = d3.select(this)
         .selectAll(`g.d3-${D3_NIGHT_MODE_ID}`)
         .data(nightModeEvents, (d) => d.id)
 
-      const nightModePlotPrefixId = `${D3_NIGHT_MODE_ID}_group`
-      const nightModeGroup = allNightModes
-        .enter()
-        .append('g')
-        .attr({
-          'class': nightModeGroupSelector,
-          'id': (d) => `${nightModePlotPrefixId}_${d.id}`,
-          'data-testid': (data) => `${nightModePlotPrefixId}_${data.guid}`
-        })
-
-      nightModeGroup.append('rect')
-        .attr({
-          x: xPos,
-          y: 0,
-          width: calculateWidth,
-          height,
-          class: 'd3-rect-night d3-night'
-        })
-
-      nightModeGroup.append('image')
-        .attr({
-          'x': (d) => xPos(d) + calculateWidth(d) / 2 - width / 2,
-          'y': offset,
-          width,
-          'height': height / 2,
-          'xlink:href': nightModeIcon
-        })
-
+      // Handle exit selection
       allNightModes.exit().remove()
 
-      selection.selectAll(`.${nightModeGroupSelector}`).on('mouseover', function () {
-        opts.onNightModeHover({
-          data: d3.select(this).datum(),
-          rect: utils.getTooltipContainer(this)
-        })
-      })
+      // Create new night mode groups for entering data
+      const nightModePlotPrefixId = `${D3_NIGHT_MODE_ID}_group`
+      const nightModeGroup = allNightModes
+        .join('g')
+        .classed(nightModeGroupSelector, true)
+        .attr('id', (d) => `${nightModePlotPrefixId}_${d.id}`)
+        .attr('data-testid', (d) => `${nightModePlotPrefixId}_${d.guid}`)
 
-      selection.selectAll(`.${nightModeGroupSelector}`).on('mouseout', opts.onNightModeOut)
+      // Add background rectangle
+      nightModeGroup.append('rect')
+        .classed('d3-rect-night d3-night', true)
+        .attr('x', xPos)
+        .attr('y', 0)
+        .attr('width', calculateWidth)
+        .attr('height', height)
+
+      // Add night mode icon
+      nightModeGroup.append('image')
+        .attr('x', (d) => xPos(d) + calculateWidth(d) / 2 - width / 2)
+        .attr('y', offset)
+        .attr('width', width)
+        .attr('height', height / 2)
+        .attr('href', nightModeIcon)
+
+      // Set up event handlers
+      selection.selectAll(`.${nightModeGroupSelector}`)
+        .on('mouseover', function(event, d) {
+          opts.onNightModeHover({
+            data: d,
+            rect: utils.getTooltipContainer(this)
+          })
+        })
+        .on('mouseout', opts.onNightModeOut)
     })
   }
 }

@@ -28,8 +28,9 @@
 import _ from 'lodash'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
-import { DurationUnit, type TimePrefs } from 'medical-domain'
-import { timeFormat } from 'd3-time-format'
+import { DurationUnit, type DurationValue, type TimePrefs } from 'medical-domain'
+import * as d3 from 'd3'
+import Duration from 'medical-domain/dist/src/domains/models/medical/datum/basics/duration.model'
 
 const t = i18next.t.bind(i18next)
 
@@ -137,7 +138,7 @@ export const formatDate = (date?: string): string => {
 }
 
 export const formatCurrentDate = (): string => {
-  return timeFormat(t('%b %-d, %Y'))(new Date())
+  return d3.timeFormat(t('%b %-d, %Y'))(new Date())
 }
 
 export const formatDateRange = (startDate: string, endDate: string, format: string, timezone: string | undefined = 'UTC'): string => {
@@ -286,6 +287,25 @@ export const isDurationLowerThanOneHour = (durationValue: number, durationUnit: 
       return durationValue < 1
     default:
       return false
+  }
+}
+
+export const getDuration = (datumWithDuration: Duration): DurationValue => {
+  const units = datumWithDuration.duration.units
+  const duration = datumWithDuration.duration.value
+
+  if (isDurationLowerThanOneHour(duration, units)) {
+    const value = convertValueToMinutes(duration, units)
+    return {
+      units: DurationUnit.Minutes,
+      value
+    }
+  }
+
+  const value = convertValueToHours(duration, units)
+  return {
+    units: DurationUnit.Hours,
+    value
   }
 }
 

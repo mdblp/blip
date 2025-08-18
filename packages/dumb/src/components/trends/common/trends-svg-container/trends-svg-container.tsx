@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 import React, { type FunctionComponent, useMemo } from 'react'
 import { withResizeDetector } from 'react-resize-detector'
-import { scaleLinear } from 'd3-scale'
+import * as d3 from 'd3'
 import { type BgBounds, TimeService, type WeekDaysFilter } from 'medical-domain'
 import { NoDataLabel } from '../no-data-label/no-data-label'
 import { CbgDateTracesAnimationContainer } from '../../cbg/cbg-date-trace/cbg-date-traces-animation-container'
@@ -99,12 +99,12 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
 
   const sliceWidth = (width - CHART_WIDTH) / 56
 
-  const xScale = useMemo(() => scaleLinear().domain([0, TimeService.MS_IN_DAY]).range([
+  const xScale = useMemo(() => d3.scaleLinear().domain([0, TimeService.MS_IN_DAY]).range([
     MARGINS.left + Math.round(SMBG_OPTS.maxR),
     width - MARGINS.right - Math.round(SMBG_OPTS.maxR)
   ]), [width])
 
-  const yScale = useMemo(() => scaleLinear().domain(yScaleDomain).clamp(true).range([
+  const yScale = useMemo(() => d3.scaleLinear().domain(yScaleDomain).clamp(true).range([
     height - MARGINS.bottom - BUMPERS.bottom,
     MARGINS.top + BUMPERS.top
   ]), [height, yScaleDomain])

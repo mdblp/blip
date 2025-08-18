@@ -20,48 +20,72 @@ import _ from 'lodash'
 import picto from '../../../img/physicalactivity.png'
 import { DEFAULT_IMAGE_MARGIN, DEFAULT_OPTIONS_SIZE } from './eventsConstants'
 
+/**
+ * @typedef {import("../../tidelinedata").Datum} Datum
+ * @typedef {import("../../pool").default} Pool
+ */
+
+/**
+ * Creates drawing functions for physical activity events
+ * @param {Pool} pool - The pool to render into
+ * @param {Object} opts - Configuration options
+ * @returns {Object} - Drawing functions for physical activity visualization
+ */
 function drawPhysicalActivity(pool, opts) {
   const height = pool.height() - 20
   const offset = height / 5
 
-  const calculateWidth = (d) => opts.xScale(d.epochEnd) - opts.xScale(d.epoch)
-  const xPos = (d) => opts.xScale(d.epoch)
+  const calculateWidth = (/** @type {Datum} */ d) => opts.xScale(d.epochEnd) - opts.xScale(d.epoch)
+  const xPos = (/** @type {Datum} */ d) => opts.xScale(d.epoch)
 
   opts.size = opts.size ?? DEFAULT_OPTIONS_SIZE
 
   return {
-    picto: function (pa) {
-      pa.append('rect').attr({
-        x: xPos,
-        y: _.constant(0),
-        width: calculateWidth,
-        height: _.constant(offset),
-        class: 'd3-rect-pa d3-pa',
-        id: (d) => `pa_img_${d.id}`
-      })
+    /**
+     * Draw pictogram for physical activity
+     * @param {d3.Selection} pa - D3 selection of physical activity elements
+     */
+    picto: function(pa) {
+      pa.append('rect')
+        .classed('d3-rect-pa d3-pa', true)
+        .attr('id', (d) => `pa_img_${d.id}`)
+        .attr('x', xPos)
+        .attr('y', _.constant(0))
+        .attr('width', calculateWidth)
+        .attr('height', _.constant(offset))
 
-      pa.append('image').attr({
-        'x': xPos,
-        'y': pool.height() / 2 - opts.size / 2,
-        'width': calculateWidth,
-        'height': pool.height() - DEFAULT_IMAGE_MARGIN,
-        'xlink:href': picto
-      })
+      pa.append('image')
+        .attr('x', xPos)
+        .attr('y', pool.height() / 2 - opts.size / 2)
+        .attr('width', calculateWidth)
+        .attr('height', pool.height() - DEFAULT_IMAGE_MARGIN)
+        .attr('href', picto)
     },
 
-    activity: function (pa) {
-      pa.append('rect').attr({
-        x: xPos,
-        y: _.constant(offset),
-        width: calculateWidth,
-        height: _.constant(pool.height() - offset),
-        class: 'd3-rect-pa d3-pa',
-        id: (d) => `pa_rect_${d.id}`
-      })
+    /**
+     * Draw activity rectangle for physical activity
+     * @param {d3.Selection} pa - D3 selection of physical activity elements
+     */
+    activity: function(pa) {
+      pa.append('rect')
+        .classed('d3-rect-pa d3-pa', true)
+        .attr('id', (d) => `pa_rect_${d.id}`)
+        .attr('x', xPos)
+        .attr('y', _.constant(offset))
+        .attr('width', calculateWidth)
+        .attr('height', _.constant(pool.height() - offset))
     },
 
+    /**
+     * Tooltip handling functions
+     */
     tooltip: {
-      add: function (d, rect) {
+      /**
+       * Add tooltip to physical activity
+       * @param {Datum} d - Physical activity data
+       * @param {HTMLElement} rect - Container element for tooltip positioning
+       */
+      add: function(d, rect) {
         if (_.get(opts, 'onPhysicalHover', false)) {
           opts.onPhysicalHover({
             data: d,
@@ -69,7 +93,12 @@ function drawPhysicalActivity(pool, opts) {
           })
         }
       },
-      remove: function (d) {
+
+      /**
+       * Remove tooltip from physical activity
+       * @param {Datum} d - Physical activity data
+       */
+      remove: function(d) {
         if (_.get(opts, 'onPhysicalOut', false)) {
           opts.onPhysicalOut({
             data: d
