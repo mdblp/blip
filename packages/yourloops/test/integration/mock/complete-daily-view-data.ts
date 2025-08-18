@@ -90,7 +90,8 @@ import {
   WIZARD_NEGATIVE_OVERRIDE_ID,
   WIZARD_POSITIVE_OVERRIDE_ID,
   WIZARD_UMM_ID,
-  WIZARD_UNDELIVERED_ID
+  WIZARD_UNDELIVERED_ID,
+  ZEN_MODE_ID
 } from './data.api.mock'
 
 export const getCompleteDailyViewDataDblg2 = (deviceName: DeviceSystem = DeviceSystem.Dblg2, softwareVersion: string = "1.15.0"): Data => {
@@ -1444,7 +1445,28 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "isoWeekday": WeekDays.Thursday
         },
       ],
-      "zenModes": [],
+      "zenModes": [
+        {
+          "epoch": 1659945600000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T21:00:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": ZEN_MODE_ID,
+          "type": DatumType.DeviceEvent,
+          "source": Source.Diabeloop,
+          "subType": DeviceEventSubtype.Zen,
+          "duration": {
+            "units": DurationUnit.Seconds,
+            "value": 7200
+          },
+          "normalEnd": "2022-08-07T08:00:00.000Z",
+          "epochEnd": 1659949200000,
+          "guid": ZEN_MODE_ID,
+          "inputTime": "2022-08-08T08:00:00Z",
+          "isoWeekday": WeekDays.Sunday
+        }
+      ],
       "timezoneChanges": []
     }
   }

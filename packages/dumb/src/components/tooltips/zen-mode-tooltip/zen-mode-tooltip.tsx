@@ -25,42 +25,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type NightMode, TimePrefs } from 'medical-domain'
+import React, { FC } from 'react'
 import Tooltip, {
   COMMON_TOOLTIP_TAIL_HEIGHT,
-  COMMON_TOOLTIP_TAIL_WIDTH,
-  DEFAULT_TOOLTIP_BORDER_WIDTH,
-  DEFAULT_TOOLTIP_OFFSET,
-  DEFAULT_TOOLTIP_TAIL,
-  Position,
-  Side
+  COMMON_TOOLTIP_TAIL_WIDTH, DEFAULT_TOOLTIP_BORDER_WIDTH, DEFAULT_TOOLTIP_OFFSET,
+  DEFAULT_TOOLTIP_TAIL, Position, Side
 } from '../common/tooltip/tooltip'
-import React, { FC } from 'react'
-import { useTranslation } from 'react-i18next'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import colors from '../../../styles/colors.css'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { TimePrefs, ZenMode } from 'medical-domain'
 import { getDuration } from '../../../utils/datetime/datetime.util'
+import { useTranslation } from 'react-i18next'
 
-interface NightModeTooltipProps {
-  nightMode: NightMode
+interface ZenModeTooltipProps {
+  zenMode: ZenMode
   position: Position
   side: Side
   timePrefs: TimePrefs
 }
 
-export const NightModeTooltip: FC<NightModeTooltipProps> = (props) => {
-  const { nightMode, position, side, timePrefs } = props
+export const ZenModeTooltip: FC<ZenModeTooltipProps> = (props) => {
+  const { zenMode, position, side, timePrefs } = props
   const { t } = useTranslation('main')
 
-  const duration = getDuration(nightMode)
+  const duration = getDuration(zenMode)
 
   return (
     <Tooltip
       position={position}
-      borderColor={colors.bolusManual}
-      dateTitle={getDateTitleForBaseDatum(nightMode, timePrefs)}
+      borderColor={colors.zenMode}
+      dateTitle={getDateTitleForBaseDatum(zenMode, timePrefs)}
       side={side}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
@@ -69,7 +65,7 @@ export const NightModeTooltip: FC<NightModeTooltipProps> = (props) => {
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>
-          <TooltipLine label={t('night-mode')} isBold />
+          <TooltipLine label={t('zen-mode')} isBold />
           <TooltipLine label={t('Duration')} value={`${duration.value} ${t(duration.units)}`} />
         </div>
       }

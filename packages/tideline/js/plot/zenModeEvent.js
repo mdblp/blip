@@ -20,6 +20,8 @@ import * as d3 from 'd3'
 
 import utils from './util/utils'
 
+const D3_ZEN_MODE_ID = 'event'
+
 /**
  * @typedef {import("../tidelinedata").default} MedicalDataService
  * @typedef {import("../tidelinedata").Datum} Datum
@@ -50,8 +52,10 @@ function plotZenMode(pool, opts = {}) {
     opts.xScale = pool.xScale().copy()
     selection.each(function () {
       const zenEvents = pool.filterDataForRender(opts.tidelineData.medicalData.zenModes)
+      const zenModeGroupSelector = `d3-${D3_ZEN_MODE_ID}-group`
+
       if (zenEvents.length < 1) {
-        d3.select(this).selectAll('g.d3-event-group').remove()
+        d3.select(this).selectAll(`g.${zenModeGroupSelector}`).remove()
         return
       }
 
@@ -63,11 +67,14 @@ function plotZenMode(pool, opts = {}) {
       // Handle exit selection
       zenModeEvent.exit().remove()
 
+      const zenModePlotPrefixId = `${D3_ZEN_MODE_ID}_group`
+
       // Create new zen mode groups for entering data
       const zenGroup = zenModeEvent
         .join('g')
-        .classed('d3-event-group', true)
-        .attr('id', (d) => `event_group_${d.id}`)
+        .classed(zenModeGroupSelector, true)
+        .attr('id', (d) => `${zenModePlotPrefixId}_${d.id}`)
+        .attr('data-testid', (d) =>  `${zenModePlotPrefixId}_${d.guid}`)
 
       // Add background rectangle
       zenGroup.append('rect')
@@ -96,6 +103,15 @@ function plotZenMode(pool, opts = {}) {
         .attr('y', offset)
         .attr('text-anchor', 'middle') // Center text horizontally
         .attr('dominant-baseline', 'central') // Center text vertically
+
+      selection.selectAll(`.${zenModeGroupSelector}`).on('mouseover', function () {
+        opts.onZenModeHover({
+          data: d3.select(this).datum(),
+          rect: utils.getTooltipContainer(this)
+        })
+      })
+
+      selection.selectAll(`.${zenModeGroupSelector}`).on('mouseout', opts.onZenModeOut)
     })
   }
 

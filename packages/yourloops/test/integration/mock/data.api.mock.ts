@@ -103,6 +103,7 @@ export const ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID = 'alarmEventMedisafeEmptyR
 export const ALARM_EVENT_MEDISAFE_OCCLUSION_ID = 'alarmEventMedisafeOcclusionId'
 export const NIGHT_MODE_ID = 'nightModeId'
 export const WARMUP_01_ID = 'warmup01Id'
+export const ZEN_MODE_ID = 'zenModeId'
 export const WIZARD_UNDELIVERED_INPUT_TIME = '2022-08-08T02:00:00Z'
 export const WIZARD_POSITIVE_OVERRIDE_INPUT_TIME = '2022-08-08T22:45:00Z'
 export const WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME = '2022-08-08T23:15:00Z'
