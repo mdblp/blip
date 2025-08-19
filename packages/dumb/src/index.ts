@@ -38,7 +38,9 @@ import {
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
 import { CBGStatType, StatFormats } from './models/stats.model'
 import { ConfidentialTooltip } from './components/tooltips/confidential-tooltip/confidential-tooltip'
-import { EventsSuperpositionPopover } from './components/tooltips/events-superposition-popover/events-superposition-popover'
+import {
+  EventSuperpositionPopoverMemoized as EventsSuperpositionPopover
+} from './components/tooltips/events-superposition-popover/events-superposition-popover'
 import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
 import { formatBgValue } from './utils/format/format.util'
 import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'

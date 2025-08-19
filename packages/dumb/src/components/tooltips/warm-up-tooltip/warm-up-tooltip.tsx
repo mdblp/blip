@@ -37,7 +37,7 @@ import {
   Side
 } from '../common/tooltip/tooltip'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import WarmUp from 'medical-domain/dist/src/domains/models/medical/datum/warm-up.model'
+import { WarmUp } from 'medical-domain'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import colors from '../../../styles/colors.css'
 import { getWarmUpDescription, getWarmUpEndTime, getWarmUpTitle } from '../../../utils/warm-up/warm-up.util'

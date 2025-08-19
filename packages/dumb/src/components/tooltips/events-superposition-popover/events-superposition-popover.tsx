@@ -28,15 +28,11 @@
 import React, { FC } from 'react'
 import { DatumWithSubType, SuperpositionEvent } from '../../../models/superposition-event.model'
 import Popover from '@mui/material/Popover'
-import { AlarmEvent, DeviceEventSubtype, ReservoirChange, TimePrefs } from 'medical-domain'
+import { AlarmEvent, DeviceEventSubtype, DeviceParameterChange, ReservoirChange, TimePrefs } from 'medical-domain'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import { computeDateValue, getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import {
-  getAlarmEventIcon,
-  getAlarmEventTitle,
-  getAlarmEventDescription
-} from '../../../utils/alarm-event/alarm-event.util'
+import { getAlarmEventIcon, getAlarmEventTitle } from '../../../utils/alarm-event/alarm-event.util'
 import { useTranslation } from 'react-i18next'
 import { getReservoirChangeIcon, getReservoirChangeTitle } from '../../../utils/reservoir-change/reservoir-change.util'
 import warmUpIcon from 'warmup-dexcom.svg'
@@ -46,29 +42,34 @@ import { BgPrefs } from '../../../models/blood-glucose.model'
 import { Device } from '../../../models/device.model'
 import Divider from '@mui/material/Divider'
 import { useTheme } from '@mui/material/styles'
-import { getWarmUpDescription, getWarmUpEndTime, getWarmUpTitle } from '../../../utils/warm-up/warm-up.util'
+import { getWarmUpTitle } from '../../../utils/warm-up/warm-up.util'
 import WarmUp from 'medical-domain/dist/src/domains/models/medical/datum/warm-up.model'
+import { WarmUpContent } from './contents/warmup-content'
+import { AlarmEventContent } from './contents/alarm-content'
+import { ParameterChangeContent } from './contents/parameter-change-content'
 
 interface EventsSuperpositionPopoverProps {
   superpositionEvent: SuperpositionEvent
   device: Device
-  anchorElement: Element
+  htmlElement: Element
   timePrefs: TimePrefs
   bgPrefs: BgPrefs
+  onClose: () => void
 }
 
-export const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) => {
+const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) => {
   const { t } = useTranslation('main')
   const theme = useTheme()
-  const { anchorElement, bgPrefs, device, superpositionEvent, timePrefs } = props
+  const { htmlElement, bgPrefs, device, superpositionEvent, timePrefs, onClose } = props
+  const [anchorElement, setAnchorElement] = React.useState<Element | null>(htmlElement)
+  const open = Boolean(anchorElement)
 
   const getTitle = (event: DatumWithSubType): string => {
     switch (event.subType) {
       case DeviceEventSubtype.Alarm:
         return getAlarmEventTitle(event as AlarmEvent)
       case DeviceEventSubtype.DeviceParameter:
-        // TODO To update
-        return 'Device Parameter'
+        return t('settings-change')
       case DeviceEventSubtype.ReservoirChange:
         return getReservoirChangeTitle(event as unknown as ReservoirChange)
       case DeviceEventSubtype.Warmup:
@@ -78,22 +79,20 @@ export const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (
     }
   }
 
-  const getContent = (event: DatumWithSubType): string[] => {
+  const getContent = (event: DatumWithSubType): JSX.Element => {
     switch (event.subType) {
       case DeviceEventSubtype.Alarm:
-        const alarmEventCode = (event as AlarmEvent).alarm.alarmCode
-        return getAlarmEventDescription(alarmEventCode, device, bgPrefs)
+        const alarmEvent = event as AlarmEvent
+        return <AlarmEventContent alarmEvent={alarmEvent} device={device} bgPrefs={bgPrefs} />
       case DeviceEventSubtype.DeviceParameter:
-        // TODO To update
-        return []
-      case DeviceEventSubtype.ReservoirChange:
-        return []
+        const parameterChange = event as DeviceParameterChange
+        return <ParameterChangeContent parameterChange={parameterChange} />
       case DeviceEventSubtype.Warmup:
-        // TODO To rework (should not be displayed in 2 lines)
         const warmUpEvent = event as WarmUp
-        return [getWarmUpDescription(), getWarmUpEndTime(warmUpEvent.epochEnd, warmUpEvent.timezone)]
+        return <WarmUpContent warmUpEvent={warmUpEvent} />
+      case DeviceEventSubtype.ReservoirChange:
       default:
-        return []
+        return <></>
     }
   }
 
@@ -114,20 +113,30 @@ export const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (
     }
   }
 
+  const handleClose = () => {
+    // Making sure to remove the focus from the clicked element to avoid an aria-hidden issue
+    const clickedElement = document.activeElement as HTMLElement
+    clickedElement?.blur()
+
+    setAnchorElement(null)
+    onClose()
+  }
+
   return (
     <Popover
-      open
       anchorEl={anchorElement}
       anchorOrigin={{
         vertical: 'bottom',
-        horizontal: 'left'
+        horizontal: 'right'
       }}
       transformOrigin={{ vertical: -10, horizontal: 0 }}
+      onClose={handleClose}
+      open={open}
     >
-      <Box sx={{ m: 2, fontSize: "small", minWidth: "250px" }}>
+      <Box sx={{ m: 2, fontSize: "small", minWidth: "250px", maxWidth: "320px" }}>
         {superpositionEvent.events.map((event: DatumWithSubType, index: number) => {
           return (
-            <React.Fragment key={index}>
+            <React.Fragment key={event.id}>
               <Grid container>
                 <Grid item xs={2}>
                   <Box className={styles.icon}>
@@ -145,13 +154,7 @@ export const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (
                       <span className={styles.title}>{getTitle(event)}</span>
                       <span>{computeDateValue(getDateTitleForBaseDatum(event, timePrefs))}</span>
                     </Box>
-                    <Box>
-                      {getContent(event).map((line: string, lineIndex: number) => (
-                        <Box key={lineIndex} className={styles.contentLine}>
-                          {line}
-                        </Box>
-                      ))}
-                    </Box>
+                    {getContent(event)}
                   </Box>
                 </Grid>
               </Grid>
@@ -163,3 +166,5 @@ export const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (
     </Popover>
   )
 }
+
+export const EventSuperpositionPopoverMemoized = React.memo(EventsSuperpositionPopover)

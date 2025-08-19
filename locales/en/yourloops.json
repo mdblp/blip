@@ -502,6 +502,7 @@
   "sensor-usage-tooltip": "**Sensor Usage:** Time the {{cbgLabel}} collected data, divided by the total time represented in this view.",
   "sensor-warmup": "Sensor warmup",
   "sensor-warmup-session-end": "Session end",
+  "settings-change": "Settings change",
   "severe-hypoglycemia": "Severe hypoglycemia",
   "severe-hypoglycemia-below": "Severe hypoglycemia below",
   "severe-hypoglycemia-threshold": "Severe hypoglycemia threshold",

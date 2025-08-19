@@ -513,7 +513,8 @@ class Daily extends React.Component {
     const { epochLocation, bgPrefs } = this.props
     const rect = datum.rect
     // range here is -12 to 12
-    const hoursOffset = (datum.data.epoch - epochLocation) / TimeService.MS_IN_HOUR
+    const datumEpoch = datum.data.eventsCount ? datum.data.events[0].epoch : datum.data.epoch
+    const hoursOffset = (datumEpoch - epochLocation) / TimeService.MS_IN_HOUR
     datum.top = rect.top + rect.height / 2
     if (hoursOffset > 5) {
       datum.side = 'left'
@@ -718,15 +719,11 @@ class Daily extends React.Component {
     const tooltip = (
       <EventsSuperpositionPopover
         superpositionEvent={datum.data}
-        position={{
-          top: datum.top,
-          left: datum.left
-        }}
-        side={datum.side}
-        anchorElement={datum.htmlEvent}
+        htmlElement={datum.htmlEvent.currentTarget}
         timePrefs={datum.timePrefs}
         bgPrefs={datum.bgPrefs}
         device={this.props.device}
+        onClose={this.handleTooltipOut}
       />)
     this.setState({ tooltip })
   }

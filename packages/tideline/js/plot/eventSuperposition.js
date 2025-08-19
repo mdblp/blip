@@ -1,11 +1,28 @@
+/*
+ * == BSD2 LICENSE ==
+ * Copyright (c) 2022, Diabeloop
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the associated License, which is identical to the BSD 2-Clause
+ * License as published by the Open Source Initiative at opensource.org.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the License for more details.
+ *
+ * You should have received a copy of the License along with this program; if
+ * not, you can obtain one from Diabeloop at diabeloop.com.
+ * == BSD2 LICENSE ==
+ */
+
 import _ from 'lodash'
 import utils from './util/utils'
 import { DEFAULT_OPTIONS_SIZE } from './util/eventsConstants'
+import * as d3 from 'd3'
 
 const D3_SUPERPOSITION_ID = 'eventSuperposition'
 
 function plotEventSuperposition(pool, opts = {}) {
-  const d3 = window.d3
   const defaults = {
     r: 14,
     xScale: pool.xScale().copy()
@@ -14,7 +31,6 @@ function plotEventSuperposition(pool, opts = {}) {
   _.defaults(opts, defaults)
 
   const xPos = (/** @type {Datum} */ d) => utils.xPos(d, opts)
-
   const height = pool.height()
   const offset = height / 2
 
@@ -27,56 +43,53 @@ function plotEventSuperposition(pool, opts = {}) {
       const eventSuperpositionItems = opts.eventSuperpositionItems
       const eventSuperpositionSelector = `d3-${D3_SUPERPOSITION_ID}-group`
 
-      if (eventSuperpositionItems.length < 1) {
+      if (!eventSuperpositionItems || eventSuperpositionItems.length < 1) {
         d3.select(this).selectAll(`g.${eventSuperpositionSelector}`).remove()
         return
       }
 
-      const allEventSuperpositionItems = d3
-        .select(this)
+      const allEventSuperpositionItems = d3.select(this)
         .selectAll(`g.d3-${D3_SUPERPOSITION_ID}`)
-        .data(eventSuperpositionItems, (d) => d.id)
+        .data(eventSuperpositionItems, d => d.id)
 
       const eventSuperpositionPlotPrefixId = `${D3_SUPERPOSITION_ID}_group`
       const eventSuperpositionGroup = allEventSuperpositionItems
         .enter()
         .append('g')
-        .attr({
-          'class': eventSuperpositionSelector,
-          'id': (d) => `${eventSuperpositionPlotPrefixId}_${d.id}`,
-          'data-testid': (data) => `${eventSuperpositionPlotPrefixId}_${data.guid}`
-        })
+        .attr('class', eventSuperpositionSelector)
+        .attr('id', d => `${eventSuperpositionPlotPrefixId}_${d.id}`)
+        .attr('data-testid', d => `${eventSuperpositionPlotPrefixId}_${d.guid}`)
 
       eventSuperpositionGroup.append('circle')
-        .attr({
-          'cx': (d) => xPos(d),
-          'cy': offset,
-          'r': opts.r,
-          'stroke-width': 0,
-          'class': 'd3-superposition-circle',
-          'id': (d) => `event_superposition_circle_${d.events[0].id}`
-        })
+        .attr('cx', d => xPos(d))
+        .attr('cy', offset)
+        .attr('r', opts.r)
+        .attr('stroke-width', 0)
+        .attr('class', 'd3-superposition-circle')
+        .attr('id', d => `event_superposition_circle_${d.events[0].id}`)
+
       eventSuperpositionGroup.append('text')
-        .text((d) => d.eventsCount)
-        .attr({
-          x: (d) => xPos(d),
-          y: offset,
-          class: 'd3-superposition-text',
-          id: (d) => `event_superposition_text_${d.events[0].id}`
-        })
+        .text(d => d.eventsCount)
+        .attr('x', d => xPos(d))
+        .attr('y', offset)
+        .attr('class', 'd3-superposition-text')
+        .attr('id', d => `event_superposition_text_${d.events[0].id}`)
 
       allEventSuperpositionItems.exit().remove()
 
-      selection.selectAll(`.${eventSuperpositionSelector}`).on('click', function (event) {
-        console.log({ event })
-        opts.onEventSuperpositionClick({
-          data: d3.select(this).datum(),
-          rect: utils.getTooltipContainer(this),
-          htmlEvent: event
-        })
-      })
+      d3.select(this)
+        .selectAll(`.${eventSuperpositionSelector}`)
+        .on('click', function (event) {
+          // Making sure to remove the focus from the clicked element to avoid an aria-hidden issue
+          const clickedElement = document.activeElement
+          clickedElement.blur()
 
-      // selection.selectAll(`.${eventSuperpositionSelector}`).on('mouseout', opts.onEventSuperpositionOut)
+          opts.onEventSuperpositionClick({
+            data: d3.select(this).datum(),
+            rect: utils.getTooltipContainer(this),
+            htmlEvent: event
+          })
+        })
     })
   }
 }

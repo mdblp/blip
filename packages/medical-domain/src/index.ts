@@ -99,6 +99,7 @@ import { ManualBolusAveragePerRange } from './domains/models/statistics/basal-bo
 import { GROUP_ALARMS_THRESHOLD_MINUTES } from './domains/repositories/medical/datum/alarm-event.service'
 import { DeviceSystem } from './domains/models/medical/datum/enums/device-system.enum'
 import { DeviceEventSubtype } from './domains/models/medical/datum/enums/device-event-subtype.enum'
+import WarmUp from './domains/models/medical/datum/warm-up.model'
 
 export {
   AlarmCode,
@@ -169,6 +170,7 @@ export {
   CarbsStatisticsService,
   type ParametersChange,
   type PumpSettingsParameter,
+  WarmUp,
   ChangeType,
   BasalBolusStatisticsService,
   MS_IN_DAY,
