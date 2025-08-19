@@ -66,14 +66,14 @@ function plotEventSuperposition(pool, opts = {}) {
         .attr('r', opts.r)
         .attr('stroke-width', 0)
         .attr('class', 'd3-superposition-circle')
-        .attr('id', d => `event_superposition_circle_${d.events[0].id}`)
+        .attr('id', d => `event_superposition_circle_${d.events[0]?.id}`)
 
       eventSuperpositionGroup.append('text')
         .text(d => d.eventsCount)
         .attr('x', d => xPos(d))
         .attr('y', offset)
         .attr('class', 'd3-superposition-text')
-        .attr('id', d => `event_superposition_text_${d.events[0].id}`)
+        .attr('id', d => `event_superposition_text_${d.events[0]?.id}`)
 
       allEventSuperpositionItems.exit().remove()
 

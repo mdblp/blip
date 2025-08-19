@@ -28,7 +28,14 @@
 import React, { FC } from 'react'
 import { DatumWithSubType, SuperpositionEvent } from '../../../models/superposition-event.model'
 import Popover from '@mui/material/Popover'
-import { AlarmEvent, DeviceEventSubtype, DeviceParameterChange, ReservoirChange, TimePrefs } from 'medical-domain'
+import {
+  AlarmEvent,
+  DeviceEventSubtype,
+  DeviceParameterChange,
+  ReservoirChange,
+  TimePrefs,
+  WarmUp
+} from 'medical-domain'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import { computeDateValue, getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
@@ -43,7 +50,6 @@ import { Device } from '../../../models/device.model'
 import Divider from '@mui/material/Divider'
 import { useTheme } from '@mui/material/styles'
 import { getWarmUpTitle } from '../../../utils/warm-up/warm-up.util'
-import WarmUp from 'medical-domain/dist/src/domains/models/medical/datum/warm-up.model'
 import { WarmUpContent } from './contents/warmup-content'
 import { AlarmEventContent } from './contents/alarm-content'
 import { ParameterChangeContent } from './contents/parameter-change-content'
@@ -108,7 +114,7 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
       case DeviceEventSubtype.DeviceParameter:
         return parameterChangeIcon
       case DeviceEventSubtype.ReservoirChange: {
-        const pumpManufacturer = (event as ReservoirChange).pump.manufacturer
+        const pumpManufacturer = (event as ReservoirChange).pump?.manufacturer
         return getReservoirChangeIcon(pumpManufacturer)
       }
       case DeviceEventSubtype.Warmup:
