@@ -81,15 +81,18 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
 
   const getContent = (event: DatumWithSubType): JSX.Element => {
     switch (event.subType) {
-      case DeviceEventSubtype.Alarm:
+      case DeviceEventSubtype.Alarm: {
         const alarmEvent = event as AlarmEvent
         return <AlarmEventContent alarmEvent={alarmEvent} device={device} bgPrefs={bgPrefs} />
-      case DeviceEventSubtype.DeviceParameter:
+      }
+      case DeviceEventSubtype.DeviceParameter: {
         const parameterChange = event as DeviceParameterChange
         return <ParameterChangeContent parameterChange={parameterChange} />
-      case DeviceEventSubtype.Warmup:
+      }
+      case DeviceEventSubtype.Warmup: {
         const warmUpEvent = event as WarmUp
         return <WarmUpContent warmUpEvent={warmUpEvent} />
+      }
       case DeviceEventSubtype.ReservoirChange:
       default:
         return <></>
@@ -98,14 +101,16 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
 
   const getIcon = (event: DatumWithSubType): string => {
     switch (event.subType) {
-      case DeviceEventSubtype.Alarm:
+      case DeviceEventSubtype.Alarm: {
         const alarmEventType = (event as AlarmEvent).alarmEventType
         return getAlarmEventIcon(alarmEventType)
+      }
       case DeviceEventSubtype.DeviceParameter:
         return parameterChangeIcon
-      case DeviceEventSubtype.ReservoirChange:
+      case DeviceEventSubtype.ReservoirChange: {
         const pumpManufacturer = (event as ReservoirChange).pump.manufacturer
         return getReservoirChangeIcon(pumpManufacturer)
+      }
       case DeviceEventSubtype.Warmup:
         return warmUpIcon
       default:
@@ -140,7 +145,7 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
               <Grid container>
                 <Grid item xs={2}>
                   <Box className={styles.icon}>
-                    <img src={getIcon(event)} alt="Event icon" />
+                    <img src={getIcon(event)} alt={t('event-icon')} />
                   </Box>
                 </Grid>
                 <Grid item xs={10}>

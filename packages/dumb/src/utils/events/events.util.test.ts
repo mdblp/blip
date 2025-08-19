@@ -26,7 +26,7 @@
  */
 
 import { getDataWithoutSuperpositionEvents, getSuperpositionEvents } from './events.util'
-import { type DatumWithSubType } from '../../models/superposition-event.model'
+import { type DatumWithSubType, type SuperpositionEvent } from '../../models/superposition-event.model'
 import MedicalDataService from 'medical-domain'
 import moment from 'moment-timezone'
 

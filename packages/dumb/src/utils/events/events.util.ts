@@ -40,7 +40,7 @@ export const getSuperpositionEvents = (medicalData: MedicalDataService): Superpo
   const warmUps = allData.warmUps
 
   const allEvents = [...alarmEvents, ...parameterChanges, ...reservoirChanges, ...warmUps]
-  const sortedEvents = allEvents.sort((a: DatumWithSubType, b: DatumWithSubType) => {
+  const sortedEvents = [...allEvents].sort((a: DatumWithSubType, b: DatumWithSubType) => {
     return moment(a.normalTime).valueOf() - moment(b.normalTime).valueOf()
   })
 

@@ -187,13 +187,13 @@ export const getAlarmEventDescription = (alarmCode: AlarmCode, device: Device, b
 
 export const getAlarmEventIcon = (alarmEventType: AlarmEventType): string => {
   switch (alarmEventType) {
-    case AlarmEventType.Device:
-    default:
-      return alarmEventDeviceIcon
     case AlarmEventType.Hyperglycemia:
       return alarmEventHyperIcon
     case AlarmEventType.Hypoglycemia:
       return alarmEventHypoIcon
+    case AlarmEventType.Device:
+    default:
+      return alarmEventDeviceIcon
   }
 }
 

@@ -26,7 +26,7 @@
  */
 import { Tooltip } from '../../../index'
 import React, { FC } from 'react'
-import { TimePrefs } from 'medical-domain'
+import { TimePrefs, WarmUp } from 'medical-domain'
 import {
   COMMON_TOOLTIP_TAIL_HEIGHT,
   COMMON_TOOLTIP_TAIL_WIDTH,
@@ -37,7 +37,6 @@ import {
   Side
 } from '../common/tooltip/tooltip'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { WarmUp } from 'medical-domain'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import colors from '../../../styles/colors.css'
 import { getWarmUpDescription, getWarmUpEndTime, getWarmUpTitle } from '../../../utils/warm-up/warm-up.util'
