@@ -81,9 +81,9 @@ describe('Events util', () => {
 
   describe('getDataWithoutSuperpositionEvents', () => {
     it('should remove events that are part of superposition groups', () => {
-      const data = [makeEvent('a'), makeEvent('b'), makeEvent('c')]
+      const data = [makeEvent('a', 0), makeEvent('b', 10), makeEvent('c', 60)]
       const superpositionEvents: SuperpositionEvent[] = [
-        { eventsCount: 2, events: [makeEvent('a'), makeEvent('b')], normalTime: '2025-01-01T00:00:00Z' }
+        { eventsCount: 2, events: [makeEvent('a', 0), makeEvent('b', 0)], normalTime: '2025-01-01T00:00:00Z' }
       ]
 
       const result = getDataWithoutSuperpositionEvents(data, superpositionEvents)
@@ -92,7 +92,7 @@ describe('Events util', () => {
     })
 
     it('should return all data if no events are superposed', () => {
-      const data = [makeEvent('a'), makeEvent('b')]
+      const data = [makeEvent('a', 0), makeEvent('b', 120)]
       const superpositionEvents: SuperpositionEvent[] = []
 
       const result = getDataWithoutSuperpositionEvents(data, superpositionEvents)
@@ -100,9 +100,9 @@ describe('Events util', () => {
     })
 
     it('should return empty array if all data are superposed', () => {
-      const data = [makeEvent('a'), makeEvent('b')]
+      const data = [makeEvent('a', 0), makeEvent('b', 0)]
       const superpositionEvents: SuperpositionEvent[] = [
-        { eventsCount: 2, events: [makeEvent('a'), makeEvent('b')], normalTime: '2025-01-01T00:00:00Z' }
+        { eventsCount: 2, events: [makeEvent('a', 0), makeEvent('b', 0)], normalTime: '2025-01-01T00:00:00Z' }
       ]
 
       const result = getDataWithoutSuperpositionEvents(data, superpositionEvents)
