@@ -355,14 +355,14 @@ const deviceEventMock = (date, time) => {
     params: [
       {
         id: PARAMETER_ID,
-        epoch: 1697961600000,
+        epoch: startTime,
         timezone: 'UTC',
         name: 'MEAL_RATIO_LUNCH_FACTOR',
         level: 1,
         units: Unit.Percent,
         value: 100,
         previousValue: 110,
-        lastUpdateDate: '2022-08-08T08:00:00Z'
+        lastUpdateDate: `${date}T${time}.000Z`
       }
     ]
   }
@@ -417,7 +417,7 @@ export const generateCompleteDashboardFromDate = (date: string): Data => {
       wizardMock(date, '19:25:00', WIZARD_UMM_ID, 20, true)
     )
     data.physicalActivities.push(physActivityMock(date, '13:00:00', 1800))
-    data.deviceParametersChanges.push(deviceEventMock(date, '08:00:00'))
+    data.deviceParametersChanges.push(deviceEventMock(date, '16:00:00'))
     startDate.setDate(startDate.getDate() + 1)
   }
   // And finally add the reservoir change events

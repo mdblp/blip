@@ -136,7 +136,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659949200000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:00:00.000Z",
+          "normalTime": "2022-08-08T00:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-01",
@@ -158,7 +158,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659949500000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:05:00.000Z",
+          "normalTime": "2022-08-08T00:10:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-011",
@@ -180,7 +180,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659949500000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:05:00.000Z",
+          "normalTime": "2022-08-08T01:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-02",
@@ -202,7 +202,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659949800000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:10:00.000Z",
+          "normalTime": "2022-08-08T01:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-03",
@@ -224,7 +224,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659950100000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:15:00.000Z",
+          "normalTime": "2022-08-08T02:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-04",
@@ -246,7 +246,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659950400000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:20:00.000Z",
+          "normalTime": "2022-08-08T02:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-05",
@@ -268,7 +268,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659950700000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:25:00.000Z",
+          "normalTime": "2022-08-08T03:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-06",
@@ -290,7 +290,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659951000000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:30:00.000Z",
+          "normalTime": "2022-08-08T03:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-07",
@@ -312,7 +312,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659951300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:35:00.000Z",
+          "normalTime": "2022-08-08T04:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-08",
@@ -334,7 +334,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659951600000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:40:00.000Z",
+          "normalTime": "2022-08-08T04:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-09",
@@ -356,7 +356,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659951900000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:45:00.000Z",
+          "normalTime": "2022-08-08T05:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-10",
@@ -378,7 +378,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659952200000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:50:00.000Z",
+          "normalTime": "2022-08-08T05:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-11",
@@ -400,7 +400,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659952500000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:55:00.000Z",
+          "normalTime": "2022-08-08T06:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-12",
@@ -422,7 +422,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659952800000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:00:00.000Z",
+          "normalTime": "2022-08-08T06:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-13",
@@ -444,7 +444,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659953100000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:05:00.000Z",
+          "normalTime": "2022-08-08T07:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-14",
@@ -466,7 +466,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659953400000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:10:00.000Z",
+          "normalTime": "2022-08-08T07:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-15",
@@ -488,7 +488,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659953700000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:15:00.000Z",
+          "normalTime": "2022-08-08T08:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-16",
@@ -510,7 +510,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954000000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:20:00.000Z",
+          "normalTime": "2022-08-08T08:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-17",
@@ -532,7 +532,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:25:00.000Z",
+          "normalTime": "2022-08-08T09:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-18",
@@ -554,7 +554,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:30:00.000Z",
+          "normalTime": "2022-08-08T09:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-19",
@@ -576,7 +576,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:35:00.000Z",
+          "normalTime": "2022-08-08T10:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-20",
@@ -598,7 +598,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:40:00.000Z",
+          "normalTime": "2022-08-08T10:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-21",
@@ -620,7 +620,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:45:00.000Z",
+          "normalTime": "2022-08-08T11:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-22",
@@ -642,7 +642,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T01:50:00.000Z",
+          "normalTime": "2022-08-08T11:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-23",
@@ -664,7 +664,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T18:55:00.000Z",
+          "normalTime": "2022-08-08T12:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-24",
@@ -686,7 +686,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T19:00:00.000Z",
+          "normalTime": "2022-08-08T12:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-25",
@@ -1110,7 +1110,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659945600000,
           "displayOffset": 0,
-          "normalTime": "2022-08-08T08:00:00.000Z",
+          "normalTime": "2022-08-08T16:00:00.000Z",
           "timezone": "UTC",
           "guessedTimezone": false,
           "id": "parameterId",
@@ -1307,7 +1307,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659974400000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T16:00:00.000Z",
+          "normalTime": "2022-08-08T16:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "warmup-01",
@@ -1317,8 +1317,8 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
             "units": DurationUnit.Hours,
             "value": 0
           },
-          "normalEnd": "2022-08-08T16:00:00.000Z",
-          "epochEnd": 1659974400000,
+          "normalEnd": "2022-08-08T16:30:00.000Z",
+          "epochEnd": 1659985200000,
           "subType": DeviceEventSubtype.Warmup,
           "guid": WARMUP_01_ID,
           "inputTime": "2022-08-08T09:00:00Z",
