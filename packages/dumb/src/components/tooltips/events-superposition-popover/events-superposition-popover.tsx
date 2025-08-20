@@ -140,11 +140,11 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
         vertical: 'bottom',
         horizontal: 'right'
       }}
-      transformOrigin={{ vertical: -10, horizontal: 0 }}
+      transformOrigin={{ vertical: -10, horizontal: 25 }}
       onClose={handleClose}
       open={open}
     >
-      <Box sx={{ m: 2, fontSize: "small", minWidth: "250px", maxWidth: "320px" }}>
+      <Box sx={{ m: 2, fontSize: "small", minWidth: "250px", maxWidth: "320px", maxHeight: "300px" }}>
         {superpositionEvent.events.map((event: DatumWithSubType, index: number) => {
           return (
             <React.Fragment key={event.id}>
