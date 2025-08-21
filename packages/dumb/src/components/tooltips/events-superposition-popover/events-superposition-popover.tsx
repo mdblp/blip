@@ -77,7 +77,7 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
       case DeviceEventSubtype.DeviceParameter:
         return t('settings-change')
       case DeviceEventSubtype.ReservoirChange:
-        return getReservoirChangeTitle(event as unknown as ReservoirChange)
+        return getReservoirChangeTitle(event as ReservoirChange)
       case DeviceEventSubtype.Warmup:
         return getWarmUpTitle()
       default:
@@ -141,7 +141,14 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
       open={open}
       data-testid={`events-superposition-popover-${superpositionEvent.firstEventId}`}
     >
-      <Box sx={{ m: 2, fontSize: "small", minWidth: "250px", maxWidth: "320px", maxHeight: "300px" }}>
+      <Box
+        sx={{
+          m: 2,
+          fontSize: "small",
+          minWidth: "250px",
+          maxWidth: "320px",
+          maxHeight: "300px"
+        }}>
         {superpositionEvent.events.map((event: DatumWithSubType, index: number) => {
           return (
             <React.Fragment key={event.id}>
@@ -168,7 +175,8 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
                   </Box>
                 </Grid>
               </Grid>
-              {index < superpositionEvent.events.length - 1 && <Divider sx={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(2) }} />}
+              {index < superpositionEvent.events.length - 1 &&
+                <Divider sx={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(2) }} />}
             </React.Fragment>
           )
         })}

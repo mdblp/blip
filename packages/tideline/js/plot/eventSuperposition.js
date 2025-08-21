@@ -22,6 +22,12 @@ import * as d3 from 'd3'
 
 const D3_SUPERPOSITION_ID = 'eventSuperposition'
 
+const SEVERITY_CLASS_MAP = {
+  red: 'd3-superposition-circle-red',
+  orange: 'd3-superposition-circle-orange',
+  grey: 'd3-superposition-circle-grey'
+}
+
 function plotEventSuperposition(pool, opts = {}) {
   const defaults = {
     r: 14,
@@ -64,17 +70,7 @@ function plotEventSuperposition(pool, opts = {}) {
         .attr('cy', offset)
         .attr('r', opts.r)
         .attr('stroke-width', 0)
-        .attr('class', (d) => {
-          if (d.severity === 'red') {
-            return 'd3-superposition-circle-red'
-          }
-          if (d.severity === 'orange') {
-            return 'd3-superposition-circle-orange'
-          }
-          if (d.severity === 'grey') {
-            return 'd3-superposition-circle-grey'
-          }
-        })
+        .attr('class', (d) => SEVERITY_CLASS_MAP[d.severity])
 
       eventSuperpositionGroup.append('text')
         .text(d => d.eventsCount)

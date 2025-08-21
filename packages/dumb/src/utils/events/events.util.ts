@@ -53,9 +53,8 @@ export const getSuperpositionEvents = (medicalData: MedicalDataService): Superpo
 
     if (isEventWithinTimeRange) {
       const lastEventSeverity = lastEvent.severity
-      const shouldUpdateSeverity = severity !== lastEvent.severity && lastEventSeverity !== SuperpositionEventSeverity.Red && (severity === SuperpositionEventSeverity.Red || lastEventSeverity === SuperpositionEventSeverity.Grey)
 
-      if (shouldUpdateSeverity) {
+      if (shouldUpdateSeverity(severity, lastEventSeverity)) {
         lastEvent.severity = severity
       }
 
@@ -100,4 +99,18 @@ const getEventSeverity = (event: DatumWithSubType): SuperpositionEventSeverity =
     default:
       return SuperpositionEventSeverity.Grey
   }
+}
+
+const shouldUpdateSeverity = (currentSeverity: SuperpositionEventSeverity, previousSeverity: SuperpositionEventSeverity): boolean => {
+  const isSameSeverity = currentSeverity === previousSeverity
+  const isPreviousMaximumSeverity = previousSeverity === SuperpositionEventSeverity.Red
+  const isPreviousLowestSeverity = previousSeverity === SuperpositionEventSeverity.Grey
+  const isCurrentMaximumSeverity = currentSeverity === SuperpositionEventSeverity.Red
+  const isCurrentLowestSeverity = currentSeverity === SuperpositionEventSeverity.Grey
+
+  if (isSameSeverity || isPreviousMaximumSeverity || isCurrentLowestSeverity) {
+    return false
+  }
+
+  return isCurrentMaximumSeverity || isPreviousLowestSeverity
 }
