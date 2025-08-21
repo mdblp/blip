@@ -52,15 +52,22 @@ describe('Events util', () => {
         makeEvent('alarm2', 45),
         makeEvent('res1', 20),
         makeEvent('warm1', 40),
-        makeEvent('param1', 10)
+        makeEvent('param1', 10),
+        makeEvent('param2', 30)
       ]
 
       const result = getSuperpositionEvents(mockMedicalData(events))
       expect(result).toHaveLength(2)
+
       expect(result[0].eventsCount).toBe(3)
       expect(result[0].events.map(e => e.id)).toEqual(['alarm1', 'param1', 'res1'])
-      expect(result[1].eventsCount).toBe(2)
-      expect(result[1].events.map(e => e.id)).toEqual(['warm1', 'alarm2'])
+      expect(result[0].normalTime).toEqual('2025-01-01T00:00:00.000Z')
+      expect(result[0].firstEventId).toEqual('alarm1')
+
+      expect(result[1].eventsCount).toBe(3)
+      expect(result[1].events.map(e => e.id)).toEqual(['param2', 'warm1', 'alarm2'])
+      expect(result[1].normalTime).toEqual('2025-01-01T00:30:00.000Z')
+      expect(result[1].firstEventId).toEqual('param2')
     })
 
     it('should ignore single events (return only groups with more than one event)', () => {
@@ -83,7 +90,7 @@ describe('Events util', () => {
     it('should remove events that are part of superposition groups', () => {
       const data = [makeEvent('a', 0), makeEvent('b', 10), makeEvent('c', 60)]
       const superpositionEvents: SuperpositionEvent[] = [
-        { eventsCount: 2, events: [makeEvent('a', 0), makeEvent('b', 0)], normalTime: '2025-01-01T00:00:00Z' }
+        { eventsCount: 2, events: [makeEvent('a', 0), makeEvent('b', 0)], normalTime: '2025-01-01T00:00:00Z', firstEventId: 'a' }
       ]
 
       const result = getDataWithoutSuperpositionEvents(data, superpositionEvents)
@@ -102,7 +109,7 @@ describe('Events util', () => {
     it('should return empty array if all data are superposed', () => {
       const data = [makeEvent('a', 0), makeEvent('b', 0)]
       const superpositionEvents: SuperpositionEvent[] = [
-        { eventsCount: 2, events: [makeEvent('a', 0), makeEvent('b', 0)], normalTime: '2025-01-01T00:00:00Z' }
+        { eventsCount: 2, events: [makeEvent('a', 0), makeEvent('b', 0)], normalTime: '2025-01-01T00:00:00Z', firstEventId: 'a' }
       ]
 
       const result = getDataWithoutSuperpositionEvents(data, superpositionEvents)

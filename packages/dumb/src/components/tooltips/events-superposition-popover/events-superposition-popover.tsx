@@ -143,6 +143,7 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
       transformOrigin={{ vertical: -10, horizontal: 25 }}
       onClose={handleClose}
       open={open}
+      data-testid={`events-superposition-popover-${superpositionEvent.firstEventId}`}
     >
       <Box sx={{ m: 2, fontSize: "small", minWidth: "250px", maxWidth: "320px", maxHeight: "300px" }}>
         {superpositionEvent.events.map((event: DatumWithSubType, index: number) => {

@@ -55,7 +55,8 @@ export const getSuperpositionEvents = (medicalData: MedicalDataService): Superpo
       acc.push({
         eventsCount: 1,
         events: [event],
-        normalTime: event.normalTime
+        normalTime: event.normalTime,
+        firstEventId: event.id
       })
     }
 

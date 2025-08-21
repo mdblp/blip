@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BoundFunctions, queries, screen, within } from '@testing-library/react'
+import { BoundFunctions, fireEvent, queries, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {
   ALARM_EVENT_DANA_EMPTY_PUMP_BATTERY_ID,
@@ -75,7 +75,7 @@ import {
   WIZARD_UNDELIVERED_INPUT_TIME,
   WIZARD_LOW_OVERRIDE_INPUT_TIME,
   WIZARD_LOW_OVERRIDE_ID,
-  ZEN_MODE_ID
+  ZEN_MODE_ID, EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID
 } from '../mock/data.api.mock'
 import moment from 'moment-timezone'
 import { checkStatTooltip } from './stats.assert'
@@ -236,6 +236,24 @@ export const checkSMBGDailyStatsWidgetsTooltips = async () => {
   await checkStatTooltip(patientStatistics, 'Readings In Range', READINGS_IN_RANGE_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Avg. Glucose (BGM)', AVG_GLUCOSE_BGM_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Standard Deviation', STANDARD_DEVIATION_BGM_TOOLTIP)
+}
+
+export const checkEventsSuperposition = async () => {
+  const eventSuperposition = screen.getByTestId(`eventSuperposition_group_${EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`)
+  expect(eventSuperposition).toBeVisible()
+  expect(eventSuperposition).toHaveTextContent('6')
+
+  fireEvent.click(eventSuperposition)
+  const popover = screen.getByTestId(`events-superposition-popover-${EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`)
+  expect(popover).toBeVisible()
+
+  const alarmEventMedisafeOcclusionContent = 'Alarm 910043:00 pmAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.'
+  const alarmEventUrgentLowSoonContent = 'Alert 101123:10 pmThe transmitter predicts that your glucose will be at or below 55 mg/dL in 20 minutes.IMPORTANT: this alert is triggered only if loop mode is OFF.'
+  const alarmEventSuddenRiseInGlycemiaContent = 'Alert 201023:20 pmA sudden rise in glycemia was detected.IMPORTANT: this alert is triggered only if loop mode is ON.'
+  const warmupContent = 'Sensor warmup3:05 pmSession end9:00 pm'
+  const reservoirChangeContent = 'Cartridge change3:15 pm'
+
+  expect(popover).toHaveTextContent(`${alarmEventMedisafeOcclusionContent}${warmupContent}${alarmEventUrgentLowSoonContent}${reservoirChangeContent}${alarmEventSuddenRiseInGlycemiaContent}`)
 }
 
 export const checkDailyTimeInRangeStatsWidgetsMgdl = async () => {

@@ -33,4 +33,5 @@ export interface SuperpositionEvent {
   eventsCount: number
   events: DatumWithSubType[]
   normalTime: string
+  firstEventId: string
 }
