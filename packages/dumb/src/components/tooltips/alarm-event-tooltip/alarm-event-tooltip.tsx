@@ -34,23 +34,22 @@ import {
   Position,
   Side
 } from '../common/tooltip/tooltip'
-import { AlarmEvent, AlarmEventType, GROUP_ALARMS_THRESHOLD_MINUTES, TimePrefs } from 'medical-domain'
+import { AlarmEvent, TimePrefs } from 'medical-domain'
 import React, { FC } from 'react'
 import { BgPrefs, Tooltip } from '../../../index'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
-import { useTranslation } from 'react-i18next'
-import colors from '../../../styles/colors.css'
-import { computeDateValue, getDateTitle, getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util';
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util';
 import styles from './alarm-event-tooltip.css'
-import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { useTheme } from '@mui/material/styles'
 import { Device } from '../../../models/device.model'
 import {
   getAlarmEventDescription,
   getAlarmEventTitle,
+  getBorderColor,
   getContentTitleByCode
 } from '../../../utils/alarm-event/alarm-event.util'
+import { AlarmMultipleOccurrences } from './alarm-multiple-occurrences/alarm-multiple-occurrences'
 
 interface AlarmEventTooltipProps {
   alarmEvent: AlarmEvent
@@ -63,20 +62,7 @@ interface AlarmEventTooltipProps {
 
 export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
   const { alarmEvent, bgPrefs, position, side, timePrefs, device } = props
-  const { t } = useTranslation('main')
   const theme = useTheme()
-
-  const getBorderColor = (alarmEventType: AlarmEventType): string => {
-    switch (alarmEventType) {
-      case AlarmEventType.Hyperglycemia:
-        return colors.hyperglycemia
-      case AlarmEventType.Hypoglycemia:
-        return colors.hypoglycemia
-      case AlarmEventType.Device:
-      default:
-        return colors.deviceEvent
-    }
-  }
 
   const borderColor = getBorderColor(alarmEvent.alarmEventType)
   const alarmCode = alarmEvent.alarm.alarmCode
@@ -107,20 +93,7 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
           {alarmEvent.otherOccurrencesDate &&
             <>
               <Divider sx={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(2) }} variant="middle" />
-              <Box
-                marginBottom={theme.spacing(1)}
-                paddingLeft={theme.spacing(1)}
-                borderLeft={`2px solid ${borderColor}`}
-              >
-                <TooltipLine
-                  label={t('alarm-multiple-occurrences', { maxFrequency: GROUP_ALARMS_THRESHOLD_MINUTES })} />
-              </Box>
-              {alarmEvent.otherOccurrencesDate.map((dateTime: string) => {
-                const occurrenceDateTitle = getDateTitle(dateTime, alarmEvent, timePrefs)
-                const formattedDateTime = computeDateValue(occurrenceDateTitle)
-                const occurrenceLine = t('alarm-at-time', { alarmTime: formattedDateTime })
-                return <TooltipLine label={occurrenceLine} key={dateTime} />
-              })}
+              <AlarmMultipleOccurrences alarmEvent={alarmEvent} timePrefs={timePrefs} />
             </>
           }
         </div>

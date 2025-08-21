@@ -25,40 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC } from 'react'
-import Box from '@mui/material/Box'
-import { AlarmEvent, TimePrefs } from 'medical-domain'
-import styles from '../events-superposition-popover.css'
-import { getAlarmEventDescription } from '../../../../utils/alarm-event/alarm-event.util'
-import { Device } from '../../../../models/device.model'
-import { BgPrefs } from '../../../../models/blood-glucose.model'
-import {
-  AlarmMultipleOccurrences
-} from '../../alarm-event-tooltip/alarm-multiple-occurrences/alarm-multiple-occurrences'
-
-interface AlarmEventContentProps {
-  alarmEvent: AlarmEvent
-  device: Device
-  bgPrefs: BgPrefs
-  timePrefs: TimePrefs
-}
-
-export const AlarmEventContent: FC<AlarmEventContentProps> = (props) => {
-  const { alarmEvent, device, bgPrefs, timePrefs } = props
-
-  const alarmEventCode = alarmEvent.alarm.alarmCode
-  const description = getAlarmEventDescription(alarmEventCode, device, bgPrefs)
-
-  return (
-    <>
-      {description.map((line: string, lineIndex: number) => (
-        <Box key={lineIndex} className={styles.contentLine}>
-          {line}
-        </Box>
-      ))}
-      {alarmEvent.otherOccurrencesDate &&
-        <AlarmMultipleOccurrences alarmEvent={alarmEvent} timePrefs={timePrefs} />
-      }
-      </>
-  )
+export enum SuperpositionEventSeverity {
+  Red = 'red',
+  Orange = 'orange',
+  Grey = 'grey',
 }

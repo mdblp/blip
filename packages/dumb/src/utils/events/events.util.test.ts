@@ -27,20 +27,30 @@
 
 import { getDataWithoutSuperpositionEvents, getSuperpositionEvents } from './events.util'
 import { type DatumWithSubType, type SuperpositionEvent } from '../../models/superposition-event.model'
-import MedicalDataService from 'medical-domain'
+import MedicalDataService, { AlarmEvent, AlarmEventType, DeviceEventSubtype } from 'medical-domain'
 import moment from 'moment-timezone'
+import { SuperpositionEventSeverity } from '../../models/enums/superposition-event-severity.enum'
 
-const makeEvent = (id: string, minutesOffset: number): DatumWithSubType => ({
-  id,
-  normalTime: moment('2025-01-01T00:00:00Z').add(minutesOffset, 'minutes').toISOString(),
-} as DatumWithSubType)
+const makeEvent = (id: string, minutesOffset: number, subType: DeviceEventSubtype, alarmType?: AlarmEventType): DatumWithSubType => {
+  const event = {
+    id,
+    normalTime: moment('2025-01-01T00:00:00Z').add(minutesOffset, 'minutes').toISOString(),
+    subType
+  } as DatumWithSubType
+
+  if (subType === DeviceEventSubtype.Alarm && alarmType) {
+    (event as AlarmEvent).alarmEventType = alarmType
+  }
+
+  return event
+}
 
 const mockMedicalData = (events: DatumWithSubType[]) => ({
   medicalData: {
-    alarmEvents: events.filter(e => e.id.startsWith('alarm')),
-    deviceParametersChanges: events.filter(e => e.id.startsWith('param')),
-    reservoirChanges: events.filter(e => e.id.startsWith('res')),
-    warmUps: events.filter(e => e.id.startsWith('warm')),
+    alarmEvents: events.filter(event => event.subType === DeviceEventSubtype.Alarm),
+    deviceParametersChanges: events.filter(event => event.subType === DeviceEventSubtype.DeviceParameter),
+    reservoirChanges: events.filter(event => event.subType === DeviceEventSubtype.ReservoirChange),
+    warmUps: events.filter(event => event.subType === DeviceEventSubtype.Warmup)
   }
 } as MedicalDataService)
 
@@ -48,32 +58,43 @@ describe('Events util', () => {
   describe('getSuperpositionEvents', () => {
     it('should group events within 30 minutes into superposition events', () => {
       const events = [
-        makeEvent('alarm1', 0),
-        makeEvent('alarm2', 45),
-        makeEvent('res1', 20),
-        makeEvent('warm1', 40),
-        makeEvent('param1', 10),
-        makeEvent('param2', 30)
+        makeEvent('alarm1', 0, DeviceEventSubtype.Alarm, AlarmEventType.Hyperglycemia),
+        makeEvent('alarm2', 45, DeviceEventSubtype.Alarm, AlarmEventType.Hypoglycemia),
+        makeEvent('res1', 20, DeviceEventSubtype.ReservoirChange),
+        makeEvent('warm1', 40, DeviceEventSubtype.Warmup),
+        makeEvent('param1', 10, DeviceEventSubtype.DeviceParameter),
+        makeEvent('param2', 30, DeviceEventSubtype.DeviceParameter),
+        makeEvent('alarm3', 120, DeviceEventSubtype.Alarm, AlarmEventType.Device),
+        makeEvent('param3', 121, DeviceEventSubtype.DeviceParameter),
+        makeEvent('param4', 122, DeviceEventSubtype.DeviceParameter),
       ]
 
       const result = getSuperpositionEvents(mockMedicalData(events))
-      expect(result).toHaveLength(2)
+      expect(result).toHaveLength(3)
 
       expect(result[0].eventsCount).toBe(3)
       expect(result[0].events.map(e => e.id)).toEqual(['alarm1', 'param1', 'res1'])
       expect(result[0].normalTime).toEqual('2025-01-01T00:00:00.000Z')
       expect(result[0].firstEventId).toEqual('alarm1')
+      expect(result[0].severity).toEqual(SuperpositionEventSeverity.Orange)
 
       expect(result[1].eventsCount).toBe(3)
       expect(result[1].events.map(e => e.id)).toEqual(['param2', 'warm1', 'alarm2'])
       expect(result[1].normalTime).toEqual('2025-01-01T00:30:00.000Z')
       expect(result[1].firstEventId).toEqual('param2')
+      expect(result[1].severity).toEqual(SuperpositionEventSeverity.Red)
+
+      expect(result[2].eventsCount).toBe(3)
+      expect(result[2].events.map(e => e.id)).toEqual(['alarm3', 'param3', 'param4'])
+      expect(result[2].normalTime).toEqual('2025-01-01T02:00:00.000Z')
+      expect(result[2].firstEventId).toEqual('alarm3')
+      expect(result[2].severity).toEqual(SuperpositionEventSeverity.Grey)
     })
 
     it('should ignore single events (return only groups with more than one event)', () => {
       const events = [
-        makeEvent('alarm1', 0),
-        makeEvent('param1', 40)
+        makeEvent('alarm1', 0, DeviceEventSubtype.Alarm, AlarmEventType.Hyperglycemia),
+        makeEvent('param1', 40, DeviceEventSubtype.DeviceParameter)
       ]
 
       const result = getSuperpositionEvents(mockMedicalData(events))
@@ -88,9 +109,15 @@ describe('Events util', () => {
 
   describe('getDataWithoutSuperpositionEvents', () => {
     it('should remove events that are part of superposition groups', () => {
-      const data = [makeEvent('a', 0), makeEvent('b', 10), makeEvent('c', 60)]
+      const data = [makeEvent('a', 0, DeviceEventSubtype.Warmup), makeEvent('b', 10, DeviceEventSubtype.Warmup), makeEvent('c', 60, DeviceEventSubtype.Warmup)]
       const superpositionEvents: SuperpositionEvent[] = [
-        { eventsCount: 2, events: [makeEvent('a', 0), makeEvent('b', 0)], normalTime: '2025-01-01T00:00:00Z', firstEventId: 'a' }
+        {
+          eventsCount: 2,
+          events: [makeEvent('a', 0, DeviceEventSubtype.Warmup), makeEvent('b', 0, DeviceEventSubtype.Warmup)],
+          normalTime: '2025-01-01T00:00:00Z',
+          firstEventId: 'a',
+          severity: SuperpositionEventSeverity.Grey
+        }
       ]
 
       const result = getDataWithoutSuperpositionEvents(data, superpositionEvents)
@@ -99,7 +126,7 @@ describe('Events util', () => {
     })
 
     it('should return all data if no events are superposed', () => {
-      const data = [makeEvent('a', 0), makeEvent('b', 120)]
+      const data = [makeEvent('a', 0, DeviceEventSubtype.Warmup), makeEvent('b', 120, DeviceEventSubtype.Warmup)]
       const superpositionEvents: SuperpositionEvent[] = []
 
       const result = getDataWithoutSuperpositionEvents(data, superpositionEvents)
@@ -107,9 +134,15 @@ describe('Events util', () => {
     })
 
     it('should return empty array if all data are superposed', () => {
-      const data = [makeEvent('a', 0), makeEvent('b', 0)]
+      const data = [makeEvent('a', 0, DeviceEventSubtype.Warmup), makeEvent('b', 0, DeviceEventSubtype.Warmup)]
       const superpositionEvents: SuperpositionEvent[] = [
-        { eventsCount: 2, events: [makeEvent('a', 0), makeEvent('b', 0)], normalTime: '2025-01-01T00:00:00Z', firstEventId: 'a' }
+        {
+          eventsCount: 2,
+          events: [makeEvent('a', 0, DeviceEventSubtype.Warmup), makeEvent('b', 0, DeviceEventSubtype.Warmup)],
+          normalTime: '2025-01-01T00:00:00Z',
+          firstEventId: 'a',
+          severity: SuperpositionEventSeverity.Grey
+        }
       ]
 
       const result = getDataWithoutSuperpositionEvents(data, superpositionEvents)

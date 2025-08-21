@@ -64,7 +64,17 @@ function plotEventSuperposition(pool, opts = {}) {
         .attr('cy', offset)
         .attr('r', opts.r)
         .attr('stroke-width', 0)
-        .attr('class', 'd3-superposition-circle')
+        .attr('class', (d) => {
+          if (d.severity === 'red') {
+            return 'd3-superposition-circle-red'
+          }
+          if (d.severity === 'orange') {
+            return 'd3-superposition-circle-orange'
+          }
+          if (d.severity === 'grey') {
+            return 'd3-superposition-circle-grey'
+          }
+        })
 
       eventSuperpositionGroup.append('text')
         .text(d => d.eventsCount)
@@ -77,10 +87,6 @@ function plotEventSuperposition(pool, opts = {}) {
       d3.select(this)
         .selectAll(`.${eventSuperpositionSelector}`)
         .on('click', function (event) {
-          // Making sure to remove the focus from the clicked element to avoid an aria-hidden issue
-          const clickedElement = document.activeElement
-          clickedElement.blur()
-
           opts.onEventSuperpositionClick({
             data: d3.select(this).datum(),
             rect: utils.getTooltipContainer(this),

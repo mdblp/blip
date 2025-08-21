@@ -89,7 +89,7 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
     switch (event.subType) {
       case DeviceEventSubtype.Alarm: {
         const alarmEvent = event as AlarmEvent
-        return <AlarmEventContent alarmEvent={alarmEvent} device={device} bgPrefs={bgPrefs} />
+        return <AlarmEventContent alarmEvent={alarmEvent} device={device} bgPrefs={bgPrefs} timePrefs={timePrefs} />
       }
       case DeviceEventSubtype.DeviceParameter: {
         const parameterChange = event as DeviceParameterChange
@@ -125,10 +125,6 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
   }
 
   const handleClose = () => {
-    // Making sure to remove the focus from the clicked element to avoid an aria-hidden issue
-    const clickedElement = document.activeElement as HTMLElement
-    clickedElement?.blur()
-
     setAnchorElement(null)
     onClose()
   }
@@ -166,7 +162,9 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
                       <span className={styles.title}>{getTitle(event)}</span>
                       <span>{computeDateValue(getDateTitleForBaseDatum(event, timePrefs))}</span>
                     </Box>
-                    {getContent(event)}
+                    <Box sx={{ fontSize: "12px" }}>
+                      {getContent(event)}
+                    </Box>
                   </Box>
                 </Grid>
               </Grid>

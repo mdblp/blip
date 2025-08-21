@@ -25,9 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import MedicalDataService from 'medical-domain'
+import MedicalDataService, { AlarmEvent, AlarmEventType, DeviceEventSubtype } from 'medical-domain'
 import moment from 'moment-timezone'
 import { DatumWithSubType, SuperpositionEvent } from '../../models/superposition-event.model'
+import { SuperpositionEventSeverity } from '../../models/enums/superposition-event-severity.enum'
 
 const SUPERPOSITION_TIME_FRAME_MN = 30
 
@@ -48,7 +49,16 @@ export const getSuperpositionEvents = (medicalData: MedicalDataService): Superpo
     const lastEvent = acc[acc.length - 1]
     const isEventWithinTimeRange = lastEvent && moment(event.normalTime).isBefore(moment(lastEvent.normalTime).add(SUPERPOSITION_TIME_FRAME_MN, 'minutes'))
 
+    const severity = getEventSeverity(event)
+
     if (isEventWithinTimeRange) {
+      const lastEventSeverity = lastEvent.severity
+      const shouldUpdateSeverity = severity !== lastEvent.severity && lastEventSeverity !== SuperpositionEventSeverity.Red && (severity === SuperpositionEventSeverity.Red || lastEventSeverity === SuperpositionEventSeverity.Grey)
+
+      if (shouldUpdateSeverity) {
+        lastEvent.severity = severity
+      }
+
       lastEvent.events.push(event)
       lastEvent.eventsCount++
     } else {
@@ -56,7 +66,8 @@ export const getSuperpositionEvents = (medicalData: MedicalDataService): Superpo
         eventsCount: 1,
         events: [event],
         normalTime: event.normalTime,
-        firstEventId: event.id
+        firstEventId: event.id,
+        severity
       })
     }
 
@@ -72,4 +83,21 @@ export const getDataWithoutSuperpositionEvents = (data: DatumWithSubType[], supe
     .map((event: DatumWithSubType) => event.id)
 
   return data.filter((datum: DatumWithSubType) => !allSuperpositionEventIds.includes(datum.id))
+}
+
+const getEventSeverity = (event: DatumWithSubType): SuperpositionEventSeverity => {
+  if (event.subType !== DeviceEventSubtype.Alarm) {
+    return SuperpositionEventSeverity.Grey
+  }
+
+  const alarmEvent = event as AlarmEvent
+  switch (alarmEvent.alarmEventType) {
+    case AlarmEventType.Hyperglycemia:
+      return SuperpositionEventSeverity.Orange
+    case AlarmEventType.Hypoglycemia:
+      return SuperpositionEventSeverity.Red
+    case AlarmEventType.Device:
+    default:
+      return SuperpositionEventSeverity.Grey
+  }
 }

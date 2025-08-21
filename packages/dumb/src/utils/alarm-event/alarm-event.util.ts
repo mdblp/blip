@@ -33,6 +33,7 @@ import alarmEventDeviceIcon from 'device-event.svg'
 import alarmEventHyperIcon from 'hyperglycemia-event.svg'
 import alarmEventHypoIcon from 'hypoglycemia-event.svg'
 import { BgPrefs } from '../../models/blood-glucose.model'
+import colors from '../../styles/colors.css'
 
 const t = i18next.t.bind(i18next)
 
@@ -194,6 +195,18 @@ export const getAlarmEventIcon = (alarmEventType: AlarmEventType): string => {
     case AlarmEventType.Device:
     default:
       return alarmEventDeviceIcon
+  }
+}
+
+export const getBorderColor = (alarmEventType: AlarmEventType): string => {
+  switch (alarmEventType) {
+    case AlarmEventType.Hyperglycemia:
+      return colors.hyperglycemia
+    case AlarmEventType.Hypoglycemia:
+      return colors.hypoglycemia
+    case AlarmEventType.Device:
+    default:
+      return colors.deviceEvent
   }
 }
 

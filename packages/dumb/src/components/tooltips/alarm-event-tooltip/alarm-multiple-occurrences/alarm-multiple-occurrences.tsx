@@ -27,38 +27,42 @@
 
 import React, { FC } from 'react'
 import Box from '@mui/material/Box'
-import { AlarmEvent, TimePrefs } from 'medical-domain'
-import styles from '../events-superposition-popover.css'
-import { getAlarmEventDescription } from '../../../../utils/alarm-event/alarm-event.util'
-import { Device } from '../../../../models/device.model'
-import { BgPrefs } from '../../../../models/blood-glucose.model'
-import {
-  AlarmMultipleOccurrences
-} from '../../alarm-event-tooltip/alarm-multiple-occurrences/alarm-multiple-occurrences'
+import { AlarmEvent, GROUP_ALARMS_THRESHOLD_MINUTES, TimePrefs } from 'medical-domain'
+import { TooltipLine } from '../../common/tooltip-line/tooltip-line'
+import { computeDateValue, getDateTitle } from '../../../../utils/tooltip/tooltip.util'
+import { useTheme } from '@mui/material/styles'
+import { useTranslation } from 'react-i18next'
+import { getBorderColor } from '../../../../utils/alarm-event/alarm-event.util'
 
-interface AlarmEventContentProps {
+interface AlarmMultipleOccurrencesProps {
   alarmEvent: AlarmEvent
-  device: Device
-  bgPrefs: BgPrefs
   timePrefs: TimePrefs
 }
 
-export const AlarmEventContent: FC<AlarmEventContentProps> = (props) => {
-  const { alarmEvent, device, bgPrefs, timePrefs } = props
+export const AlarmMultipleOccurrences: FC<AlarmMultipleOccurrencesProps> = (props) => {
+  const { alarmEvent, timePrefs } = props
+  const theme = useTheme()
+  const { t } = useTranslation('main')
 
-  const alarmEventCode = alarmEvent.alarm.alarmCode
-  const description = getAlarmEventDescription(alarmEventCode, device, bgPrefs)
+  const borderColor = getBorderColor(alarmEvent.alarmEventType)
 
   return (
     <>
-      {description.map((line: string, lineIndex: number) => (
-        <Box key={lineIndex} className={styles.contentLine}>
-          {line}
-        </Box>
-      ))}
-      {alarmEvent.otherOccurrencesDate &&
-        <AlarmMultipleOccurrences alarmEvent={alarmEvent} timePrefs={timePrefs} />
-      }
-      </>
+      <Box
+        marginTop={theme.spacing(1)}
+        marginBottom={theme.spacing(1)}
+        paddingLeft={theme.spacing(1)}
+        borderLeft={`2px solid ${borderColor}`}
+      >
+        <TooltipLine
+          label={t('alarm-multiple-occurrences', { maxFrequency: GROUP_ALARMS_THRESHOLD_MINUTES })} />
+      </Box>
+      {alarmEvent.otherOccurrencesDate?.map((dateTime: string) => {
+        const occurrenceDateTitle = getDateTitle(dateTime, alarmEvent, timePrefs)
+        const formattedDateTime = computeDateValue(occurrenceDateTitle)
+        const occurrenceLine = t('alarm-at-time', { alarmTime: formattedDateTime })
+        return <TooltipLine label={occurrenceLine} key={dateTime} />
+      })}
+    </>
   )
 }

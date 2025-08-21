@@ -247,13 +247,13 @@ export const checkEventsSuperposition = async () => {
   const popover = screen.getByTestId(`events-superposition-popover-${EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`)
   expect(popover).toBeVisible()
 
-  const alarmEventMedisafeOcclusionContent = 'Alarm 910043:00 pmAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.'
+  const alarmEventMedisafeOcclusionContentMultipleOccurrences = 'Alarm 910043:00 pmAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.Occurred multiple times with a frequency of 30 minutes or less:at 3:02 pm'
   const alarmEventUrgentLowSoonContent = 'Alert 101123:10 pmThe transmitter predicts that your glucose will be at or below 55 mg/dL in 20 minutes.IMPORTANT: this alert is triggered only if loop mode is OFF.'
   const alarmEventSuddenRiseInGlycemiaContent = 'Alert 201023:20 pmA sudden rise in glycemia was detected.IMPORTANT: this alert is triggered only if loop mode is ON.'
   const warmupContent = 'Sensor warmup3:05 pmSession end9:00 pm'
   const reservoirChangeContent = 'Cartridge change3:15 pm'
 
-  expect(popover).toHaveTextContent(`${alarmEventMedisafeOcclusionContent}${warmupContent}${alarmEventUrgentLowSoonContent}${reservoirChangeContent}${alarmEventSuddenRiseInGlycemiaContent}`)
+  expect(popover).toHaveTextContent(`${alarmEventMedisafeOcclusionContentMultipleOccurrences}${warmupContent}${alarmEventUrgentLowSoonContent}${reservoirChangeContent}${alarmEventSuddenRiseInGlycemiaContent}`)
 }
 
 export const checkDailyTimeInRangeStatsWidgetsMgdl = async () => {

@@ -26,6 +26,7 @@
  */
 
 import { Datum, DeviceEventSubtype } from 'medical-domain'
+import { SuperpositionEventSeverity } from './enums/superposition-event-severity.enum'
 
 export type DatumWithSubType = Datum & { subType: DeviceEventSubtype }
 
@@ -34,4 +35,5 @@ export interface SuperpositionEvent {
   events: DatumWithSubType[]
   normalTime: string
   firstEventId: string
+  severity: SuperpositionEventSeverity
 }
