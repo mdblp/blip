@@ -76,7 +76,7 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
       return ''
     }
     const value = totalInsulin / +weight
-    return value > 0 && Number.isFinite(value) ? formatDecimalNumber(value, 2) : ''
+    return value > 0 && Number.isFinite (value) ? formatDecimalNumber(value, 2) : ''
   }
 
   const getOutputValueClasses = (): string => {
