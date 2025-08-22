@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,44 +25,51 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.row {
-  display: flex;
-  align-items: center;
-  color: var(--stat--default);
-  composes: largeSize from '../../../styles/typography.css';
-  line-height: 1;
-  white-space: nowrap;
+import React, { FC } from 'react'
+import Box from '@mui/material/Box'
+import styles from '../insulin/insulin-stat.css'
+import commonStyles from '../../../styles/stat-common.css'
+import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
+
+interface StatLineProps {
+  title: string
+  value: string | number
+  units: string
+  valueClasses: string
+  isBold?: boolean
+  annotations?: string[]
 }
 
-.carbs {
-  margin-top: 4px;
-}
+export const StatLine: FC<StatLineProps> = (props) => {
+  const { title, value, units, valueClasses, annotations, isBold } = props
 
-.total {
-  line-height: 1;
-  justify-content: space-between;
-  margin-left: auto;
-  font-weight: bold;
-}
-
-.value {
-  composes: extraLargeSize from '../../../styles/typography.css';
-  opacity: 1;
-  display: inline-block;
-}
-
-.suffix {
-  composes: smallSize from '../../../styles/typography.css';
-  color: var(--stat--default);
-  position: relative;
-  bottom: 1px;
-  padding-left: 1px;
-}
-
-.disabled-label {
-  color: var(--muted);
-}
-
-.titleBold {
-  font-weight: bold;
+  return (
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+    >
+      <Box className={isBold ? commonStyles.title : ''}>
+        {title}
+        {annotations && <StatTooltip annotations={annotations} />}
+      </Box>
+      {value ?
+        <Box
+          display="flex"
+          alignItems="baseline"
+          className={styles.boldValue}
+        >
+        <span className={valueClasses}>
+          {value}
+        </span>
+          <span className={styles.rowUnits}>
+          {units}
+        </span>
+        </Box>
+        : <Box className={styles.disabledLabel} fontSize="24px" marginLeft="auto">
+            --
+          </Box>
+      }
+    </Box>
+  )
 }
