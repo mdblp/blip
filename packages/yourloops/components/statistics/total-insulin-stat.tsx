@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -82,7 +82,7 @@ export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props
       title: t('pen-bolus')
     })
   }
-  const weightValue = !weight ? '--' : +weight.value
+  const weightValue = !weight ? '' : +weight.value
   return (
     <InsulinStatisticsPanel
       data={data}

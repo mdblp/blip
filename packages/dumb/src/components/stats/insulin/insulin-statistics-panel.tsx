@@ -72,11 +72,11 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
   }
 
   const getDailyDosePerWeight = (): string | number => {
-    if (weight === EMPTY_DATA_PLACEHOLDER) {
+    if (weight === '') {
       return ''
     }
     const value = totalInsulin / +weight
-    return value > 0 && Number.isFinite(value) ? formatDecimalNumber(value, 2) : ''
+    return value > 0 && Number.isFinite (value) ? formatDecimalNumber(value, 2) : ''
   }
 
   const getOutputValueClasses = (): string => {
