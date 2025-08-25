@@ -44,6 +44,8 @@ import plotBasal from '../../js/plot/basal'
 import plotMessage from '../../js/plot/message'
 import plotTimeChange from '../../js/plot/timechange'
 import plotNightMode from '../../js/plot/nightModeEvent'
+import plotEventSuperposition from '../../js/plot/eventSuperposition'
+import { getDataWithoutSuperpositionEvents, getSuperpositionEvents } from 'dumb'
 
 /**
  * @typedef {import('../../js/tidelinedata').default } MedicalDataService
@@ -293,27 +295,40 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     tidelineData
   }))
 
+
+  const eventSuperpositionItems = getSuperpositionEvents(tidelineData)
+  const alarmEvents = getDataWithoutSuperpositionEvents(tidelineData.medicalData.alarmEvents, eventSuperpositionItems)
+  const parameterChanges = getDataWithoutSuperpositionEvents(tidelineData.medicalData.deviceParametersChanges, eventSuperpositionItems)
+  const reservoirChanges = getDataWithoutSuperpositionEvents(tidelineData.medicalData.reservoirChanges, eventSuperpositionItems)
+  const warmUps = getDataWithoutSuperpositionEvents(tidelineData.medicalData.warmUps, eventSuperpositionItems)
+
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotReservoirChange(poolEvents, {
+    reservoirChanges,
     onReservoirHover: options.onReservoirHover,
     onReservoirOut: options.onTooltipOut
   }))
 
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotDeviceParameterChange(poolEvents, {
-    tidelineData,
+    parameterChanges,
     onParameterHover: options.onParameterHover,
     onParameterOut: options.onTooltipOut
   }))
 
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotWarmUp(poolEvents, {
-    tidelineData,
+    warmUps,
     onWarmUpHover: options.onWarmUpHover,
     onWarmUpOut: options.onTooltipOut
   }))
 
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotAlarmEvent(poolEvents, {
-    tidelineData,
+    alarmEvents,
     onAlarmEventHover: options.onAlarmEventHover,
     onAlarmEventOut: options.onTooltipOut
+  }))
+
+  poolEvents.addPlotType({ type: 'deviceEvent' }, plotEventSuperposition(poolEvents, {
+    onEventSuperpositionClick: options.onEventSuperpositionClick,
+    eventSuperpositionItems
   }))
 
   // Add confidential mode to Events pool: Must be the last in the pool to mask stuff below

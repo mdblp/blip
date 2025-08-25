@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,37 +25,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.container {
-  composes: smallSize from '../../../styles/typography.css';
-  composes: container from '../../../styles/tooltip-common.css';
-  line-height: 20px;
-  display: grid;
-  grid-template-columns: repeat(5, auto);
-  column-gap: .4em;
-  max-height: 480px;
-  overflow-y: hidden;
+import React, { FC } from 'react'
+import Box from '@mui/material/Box'
+import { AlarmEvent, TimePrefs } from 'medical-domain'
+import styles from '../events-superposition-popover.css'
+import { getAlarmEventDescription } from '../../../../utils/alarm-event/alarm-event.util'
+import { Device } from '../../../../models/device.model'
+import { BgPrefs } from '../../../../models/blood-glucose.model'
+import {
+  AlarmMultipleOccurrences
+} from '../../alarm-event-tooltip/alarm-multiple-occurrences/alarm-multiple-occurrences'
+
+interface AlarmEventContentProps {
+  alarmEvent: AlarmEvent
+  device: Device
+  bgPrefs: BgPrefs
+  timePrefs: TimePrefs
 }
 
-.date {
-  text-align: right;
-}
+export const AlarmEventContent: FC<AlarmEventContentProps> = (props) => {
+  const { alarmEvent, device, bgPrefs, timePrefs } = props
 
-.label {
-  font-weight: bold;
-}
+  const alarmEventCode = alarmEvent.alarm.alarmCode
+  const description = getAlarmEventDescription(alarmEventCode, device, bgPrefs)
 
-.previous {
-  text-align: right;
-  white-space: nowrap;
-}
-
-.value {
-  font-weight: bold;
-  color: var(--activeValue);
-  text-align: right;
-}
-
-.value-no-prev {
-  grid-column-start: 3;
-  grid-column-end: span 3;
+  return (
+    <>
+      {description.map((line: string, lineIndex: number) => (
+        <Box key={lineIndex} className={styles.contentLine}>
+          {line}
+        </Box>
+      ))}
+      {alarmEvent.otherOccurrencesDate &&
+        <AlarmMultipleOccurrences alarmEvent={alarmEvent} timePrefs={timePrefs} />
+      }
+      </>
+  )
 }

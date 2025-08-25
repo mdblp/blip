@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,37 +25,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.container {
-  composes: smallSize from '../../../styles/typography.css';
-  composes: container from '../../../styles/tooltip-common.css';
-  line-height: 20px;
-  display: grid;
-  grid-template-columns: repeat(5, auto);
-  column-gap: .4em;
-  max-height: 480px;
-  overflow-y: hidden;
+import i18next from 'i18next'
+import moment from 'moment-timezone'
+import { getHourMinuteFormat } from '../datetime/datetime.util'
+
+const t = i18next.t.bind(i18next)
+
+export const getWarmUpTitle = () => {
+  return t('sensor-warmup')
 }
 
-.date {
-  text-align: right;
+export const getWarmUpDescription = (): string => {
+  return t('sensor-warmup-session-end')
 }
 
-.label {
-  font-weight: bold;
+export const getWarmUpEndTime = (epochEnd: number, timezone: string) => {
+  return moment.tz(epochEnd, timezone).format(getHourMinuteFormat())
 }
 
-.previous {
-  text-align: right;
-  white-space: nowrap;
-}
-
-.value {
-  font-weight: bold;
-  color: var(--activeValue);
-  text-align: right;
-}
-
-.value-no-prev {
-  grid-column-start: 3;
-  grid-column-end: span 3;
-}

@@ -58,6 +58,7 @@ import {
   checkDailyTidelineContainerTooltipsMmolL,
   checkDailyTimeInRangeStatsWidgetsMgdl,
   checkDailyTimeInRangeStatsWidgetsMmolL,
+  checkEventsSuperposition,
   checkTotalCarbsStatContent
 } from '../assert/daily-view.assert'
 import {
@@ -135,9 +136,10 @@ export const testSwitchPatientCorrectDataDisplay = async () => {
 export const testDailyViewTooltipsAndValuesMgdl = async () => {
   await checkTotalCarbsStatContent()
 
-  // Check the tooltips
+  // Check the tooltips and data on the chart
   await checkDailyTidelineContainerTooltipsMgdl()
   await checkDailyStatsWidgetsTooltips()
+  await checkEventsSuperposition()
 
   // Check the time in range stats widgets
   await checkDailyTimeInRangeStatsWidgetsMgdl()

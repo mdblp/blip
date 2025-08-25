@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,37 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.container {
-  composes: smallSize from '../../../styles/typography.css';
-  composes: container from '../../../styles/tooltip-common.css';
-  line-height: 20px;
-  display: grid;
-  grid-template-columns: repeat(5, auto);
-  column-gap: .4em;
-  max-height: 480px;
-  overflow-y: hidden;
+import React, { FC } from 'react'
+import Box from '@mui/material/Box'
+import styles from '../events-superposition-popover.css'
+import { WarmUp } from 'medical-domain'
+import { getWarmUpDescription, getWarmUpEndTime } from '../../../../utils/warm-up/warm-up.util'
+
+interface WarmupContentProps {
+  warmUpEvent: WarmUp
 }
 
-.date {
-  text-align: right;
-}
+export const WarmUpContent: FC<WarmupContentProps> = (props) => {
+  const { warmUpEvent } = props
 
-.label {
-  font-weight: bold;
-}
-
-.previous {
-  text-align: right;
-  white-space: nowrap;
-}
-
-.value {
-  font-weight: bold;
-  color: var(--activeValue);
-  text-align: right;
-}
-
-.value-no-prev {
-  grid-column-start: 3;
-  grid-column-end: span 3;
+  return (
+    <Box display="flex" justifyContent="space-between">
+      <span className={styles.contentLine}>
+        {getWarmUpDescription()}
+      </span>
+      <span className={styles.contentLine}>
+        {getWarmUpEndTime(warmUpEvent.epochEnd, warmUpEvent.timezone)}
+      </span>
+    </Box>
+  )
 }

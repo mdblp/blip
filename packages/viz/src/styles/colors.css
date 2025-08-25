@@ -65,6 +65,8 @@
   --blue-green-light: #12D3D8;
   --gray-medium: #989897;
   --gray-dark: #4E4E4F;
+  --red-main: var(--error-color-main);
+  --orange-main: var(--warning-color-main);
   --white: #FFFFFF;
   --brand-purple: #627CFF;
   --brand-purple-dark: #281946;
