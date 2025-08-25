@@ -7,6 +7,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2344 Patient profile information page for HCPs only
 - YLP-3333 Tooltip for Zen mode in Daily view
 - YLP-3589 add new estimated total insulin statistic
+- YLP-3611 Manage events superposition in Daily view
 
 ### Changed
 - YLP-2347 Display patient monitoring parameters in the patient profile page

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,37 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.container {
-  composes: smallSize from '../../../styles/typography.css';
-  composes: container from '../../../styles/tooltip-common.css';
-  line-height: 20px;
-  display: grid;
-  grid-template-columns: repeat(5, auto);
-  column-gap: .4em;
-  max-height: 480px;
-  overflow-y: hidden;
-}
+import { Datum, DeviceEventSubtype } from 'medical-domain'
+import { SuperpositionEventSeverity } from './enums/superposition-event-severity.enum'
 
-.date {
-  text-align: right;
-}
+export type DatumWithSubType = Datum & { subType: DeviceEventSubtype }
 
-.label {
-  font-weight: bold;
-}
-
-.previous {
-  text-align: right;
-  white-space: nowrap;
-}
-
-.value {
-  font-weight: bold;
-  color: var(--activeValue);
-  text-align: right;
-}
-
-.value-no-prev {
-  grid-column-start: 3;
-  grid-column-end: span 3;
+export interface SuperpositionEvent {
+  eventsCount: number
+  events: DatumWithSubType[]
+  normalTime: string
+  firstEventId: string
+  severity: SuperpositionEventSeverity
 }

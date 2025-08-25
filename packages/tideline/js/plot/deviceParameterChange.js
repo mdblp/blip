@@ -31,7 +31,7 @@ import { DEFAULT_IMAGE_MARGIN, DEFAULT_OPTIONS_SIZE } from './util/eventsConstan
 /**
  *
  * @param {Pool} pool
- * @param {{r: number, padding: number, onParameterHover: (p: any) => void, onParameterOut: () => void, tidelineData: MedicalDataService, xScale: (d: number) => number }} opts
+ * @param {{r: number, padding: number, onParameterHover: (p: any) => void, onParameterOut: () => void, parameterChanges: MedicalDataService, xScale: (d: number) => number }} opts
  * @returns {(data: Datum[]) => void}
  */
 function plotDeviceParameterChange(pool, opts) {
@@ -54,7 +54,7 @@ function plotDeviceParameterChange(pool, opts) {
     selection.each(function() {
       /*We are always cleaning param-group because of multiple rendering when navigating between days*/
       d3.select(this).selectAll('g.d3-param-group').remove()
-      const deviceParameters = pool.filterDataForRender(opts.tidelineData.medicalData.deviceParametersChanges)
+      const deviceParameters = pool.filterDataForRender(opts.parameterChanges)
       if (deviceParameters.length < 1) {
         return
       }

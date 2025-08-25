@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,37 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.container {
-  composes: smallSize from '../../../styles/typography.css';
-  composes: container from '../../../styles/tooltip-common.css';
-  line-height: 20px;
-  display: grid;
-  grid-template-columns: repeat(5, auto);
-  column-gap: .4em;
-  max-height: 480px;
-  overflow-y: hidden;
+import React, { FC } from 'react'
+import { type DeviceParameterChange, Parameter } from 'medical-domain'
+import { ParameterChangeLine } from '../../parameter-tooltip/parameter-change-line'
+import Box from '@mui/material/Box'
+import styles from '../../parameter-tooltip/parameter-tooltip.css'
+
+interface ParameterChangeContentProps {
+  parameterChange: DeviceParameterChange
 }
 
-.date {
-  text-align: right;
-}
+export const ParameterChangeContent: FC<ParameterChangeContentProps> = (props) => {
+  const { parameterChange } = props
 
-.label {
-  font-weight: bold;
-}
-
-.previous {
-  text-align: right;
-  white-space: nowrap;
-}
-
-.value {
-  font-weight: bold;
-  color: var(--activeValue);
-  text-align: right;
-}
-
-.value-no-prev {
-  grid-column-start: 3;
-  grid-column-end: span 3;
+  return (
+    <Box className={styles.container}>
+      {parameterChange.params.map((parameter: Parameter) =>
+        <ParameterChangeLine
+          key={parameter.id}
+          parameter={parameter}
+        />
+      )}
+    </Box>
+  )
 }

@@ -29,6 +29,7 @@ import {
   BloodGlucoseTooltip,
   BolusTooltip,
   ConfidentialTooltip,
+  EventsSuperpositionPopover,
   FoodTooltip,
   NightModeTooltip,
   ParameterTooltip,
@@ -78,6 +79,7 @@ class DailyChart extends React.Component {
     onZenModeHover: PropTypes.func.isRequired,
     onConfidentialHover: PropTypes.func.isRequired,
     onTooltipOut: PropTypes.func.isRequired,
+    onEventSuperpositionClick: PropTypes.func.isRequired,
     onChartMounted: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired
   }
@@ -102,6 +104,7 @@ class DailyChart extends React.Component {
       'onNightModeHover',
       'onZenModeHover',
       'onTooltipOut',
+      'onEventSuperpositionClick',
       'trackMetric'
     ]
 
@@ -393,6 +396,7 @@ class Daily extends React.Component {
                   onNightModeHover={this.handleNightModeHover}
                   onZenModeHover={this.handleZenModeHover}
                   onTooltipOut={this.handleTooltipOut}
+                  onEventSuperpositionClick={this.handleEventSuperpositionClick}
                   onChartMounted={this.onChartMounted}
                   trackMetric={trackMetric}
                   ref={this.chartRef}
@@ -509,7 +513,8 @@ class Daily extends React.Component {
     const { epochLocation, bgPrefs } = this.props
     const rect = datum.rect
     // range here is -12 to 12
-    const hoursOffset = (datum.data.epoch - epochLocation) / TimeService.MS_IN_HOUR
+    const datumEpoch = datum.data.eventsCount ? datum.data.events[0].epoch : datum.data.epoch
+    const hoursOffset = (datumEpoch - epochLocation) / TimeService.MS_IN_HOUR
     datum.top = rect.top + rect.height / 2
     if (hoursOffset > 5) {
       datum.side = 'left'
@@ -705,6 +710,20 @@ class Daily extends React.Component {
           left: datum.left
         }}
         side={datum.side}
+      />)
+    this.setState({ tooltip })
+  }
+
+  handleEventSuperpositionClick = (datum) => {
+    this.updateDatumHoverForTooltip(datum)
+    const tooltip = (
+      <EventsSuperpositionPopover
+        superpositionEvent={datum.data}
+        htmlElement={datum.htmlEvent.currentTarget}
+        timePrefs={datum.timePrefs}
+        bgPrefs={datum.bgPrefs}
+        device={this.props.device}
+        onClose={this.handleTooltipOut}
       />)
     this.setState({ tooltip })
   }

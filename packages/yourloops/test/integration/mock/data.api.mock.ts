@@ -101,6 +101,13 @@ export const ALARM_EVENT_DANA_OCCLUSION_ID = 'alarmEventDanaOcclusionId'
 export const ALARM_EVENT_MEDISAFE_EMPTY_PUMP_BATTERY_ID = 'alarmEventMedisafeEmptyPumpBatteryId'
 export const ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID = 'alarmEventMedisafeEmptyReservoirId'
 export const ALARM_EVENT_MEDISAFE_OCCLUSION_ID = 'alarmEventMedisafeOcclusionId'
+export const EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID = 'eventSuperpositionAlarmEventMedisafeOcclusionId'
+export const EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID_2 = 'eventSuperpositionAlarmEventMedisafeOcclusionId2'
+export const EVENT_SUPERPOSITION_ALARM_EVENT_URGENT_LOW_SOON_ID = 'eventSuperpositionAlarmEventUrgentLowSoonId'
+export const EVENT_SUPERPOSITION_ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID = 'eventSuperpositionAlarmEventSuddenRiseInGlycemiaId'
+export const EVENT_SUPERPOSITION_WARMUP_ID = 'eventSuperpositionWarmupId'
+export const EVENT_SUPERPOSITION_RESERVOIR_CHANGE_ID = 'eventSuperpositionReservoirChangeId'
+export const EVENT_SUPERPOSITION_PARAMETER_CHANGE_ID = 'eventSuperpositionParameterChangeId'
 export const NIGHT_MODE_ID = 'nightModeId'
 export const WARMUP_01_ID = 'warmup01Id'
 export const ZEN_MODE_ID = 'zenModeId'
@@ -355,14 +362,14 @@ const deviceEventMock = (date, time) => {
     params: [
       {
         id: PARAMETER_ID,
-        epoch: 1697961600000,
+        epoch: startTime,
         timezone: 'UTC',
         name: 'MEAL_RATIO_LUNCH_FACTOR',
         level: 1,
         units: Unit.Percent,
         value: 100,
         previousValue: 110,
-        lastUpdateDate: '2022-08-08T08:00:00Z'
+        lastUpdateDate: `${date}T${time}.000Z`
       }
     ]
   }
@@ -417,7 +424,7 @@ export const generateCompleteDashboardFromDate = (date: string): Data => {
       wizardMock(date, '19:25:00', WIZARD_UMM_ID, 20, true)
     )
     data.physicalActivities.push(physActivityMock(date, '13:00:00', 1800))
-    data.deviceParametersChanges.push(deviceEventMock(date, '08:00:00'))
+    data.deviceParametersChanges.push(deviceEventMock(date, '16:00:00'))
     startDate.setDate(startDate.getDate() + 1)
   }
   // And finally add the reservoir change events
