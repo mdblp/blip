@@ -29,7 +29,7 @@ import React, { type FunctionComponent } from 'react'
 import { CBGPercentageBarMemoized as CBGPercentageBar } from '../cbg-percentage-bar/cbg-percentage-bar'
 import { TimeInRangeTitleMemoized as TimeInRangeTitle } from '../time-in-range-title'
 import { useTimeInRangeChartHook } from './time-in-range-chart.hook'
-import { type CBGStatType } from '../../../../models/stats.model'
+import { CBGStatType } from '../../../../models/stats.model'
 import { StatLegendMemoized as StatLegend } from '../../stat-legend/stat-legend'
 import Box from '@mui/material/Box'
 import { type BgPrefs } from '../../../../models/blood-glucose.model'
@@ -66,6 +66,7 @@ const TimeInRangeChart: FunctionComponent<TimeInRangeChartProps> = (props) => {
         annotations={annotations}
         title={title}
         shouldDisplayInfoTooltip={!hoveredStatId}
+        type={CBGStatType.TimeInRange}
       />
       <Box
         onMouseLeave={() => {
@@ -79,7 +80,7 @@ const TimeInRangeChart: FunctionComponent<TimeInRangeChartProps> = (props) => {
         <CBGPercentageBar {...cbgStatsProps.lowStat} />
         <CBGPercentageBar {...cbgStatsProps.veryLowStat} />
       </Box>
-      <StatLegend units={bgPrefs.bgUnits} legend={legendValues} />
+      <StatLegend units={bgPrefs.bgUnits} legend={legendValues} type={CBGStatType.TimeInRange} />
     </Box>
   )
 }

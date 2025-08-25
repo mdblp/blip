@@ -29,19 +29,21 @@ import React, { type FunctionComponent } from 'react'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import Box from '@mui/material/Box'
 import commonStyles from '../../../styles/stat-common.css'
+import { CBGStatType } from '../../../models/stats.model'
 
 interface TimeInRangeTitleProps {
   annotations: string[]
   title: string
   shouldDisplayInfoTooltip: boolean
+  type: CBGStatType
 }
 
 const TimeInRangeTitle: FunctionComponent<TimeInRangeTitleProps> = (props) => {
-  const { annotations, title, shouldDisplayInfoTooltip } = props
+  const { annotations, title, shouldDisplayInfoTooltip, type } = props
 
   return (
     <Box
-      data-testid="time-in-range-title"
+      data-testid={`${type}-title`}
       display="flex"
       alignItems="center"
       className={commonStyles.title}

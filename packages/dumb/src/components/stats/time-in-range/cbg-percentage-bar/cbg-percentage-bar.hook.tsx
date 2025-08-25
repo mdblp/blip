@@ -62,6 +62,7 @@ export const useCBGPercentageBar = (props: CBGPercentageBarHookProps): CBGPercen
   const barValue = useMemo(() => {
     switch (type) {
       case CBGStatType.TimeInRange:
+      case CBGStatType.TimeInTightRange:
         return formatDuration(value, true)
       case CBGStatType.ReadingsInRange:
         return (Math.round(value * 10) / 10).toString()

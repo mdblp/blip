@@ -30,18 +30,20 @@ import styles from './stat-legend.css'
 import Box from '@mui/material/Box'
 import { StatLegendElement } from './stat-legend-element'
 import { type BgUnit } from 'medical-domain'
+import { CBGStatType } from '../../../models/stats.model'
 
 interface StatLegendProps {
   units: BgUnit
   legend: { className: string; value: string }[]
+  type: CBGStatType
 }
 
 const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
-  const { legend, units } = props
+  const { legend, units, type } = props
 
   return (
     <Box
-      data-testid="time-in-range-stats-legends"
+      data-testid={`${type}-stats-legends`}
       display="flex"
       justifyContent="space-between"
     >

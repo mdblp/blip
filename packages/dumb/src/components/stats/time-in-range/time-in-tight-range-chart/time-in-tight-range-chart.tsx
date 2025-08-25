@@ -63,10 +63,11 @@ export const TimeInTightRangeChart: FC<TimeInTightRangeChartProps> = (props) => 
         annotations={annotations}
         title={title}
         shouldDisplayInfoTooltip={true}
+        type={CBGStatType.TimeInTightRange}
       />
       <Box marginBottom={1}>
         <CBGPercentageBarMemoized
-          type={CBGStatType.TimeInRange}
+          type={CBGStatType.TimeInTightRange}
           id={StatLevel.Target}
           isDisabled={isDisabled}
           onMouseEnter={() => {}}
@@ -75,7 +76,7 @@ export const TimeInTightRangeChart: FC<TimeInTightRangeChartProps> = (props) => 
           value={data.value}
         />
       </Box>
-      <StatLegend units={bgPrefs.bgUnits} legend={legendValues} />
+      <StatLegend units={bgPrefs.bgUnits} legend={legendValues} type={CBGStatType.TimeInTightRange} />
     </Box>
   )
 }
