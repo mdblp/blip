@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -213,6 +213,28 @@ describe('GlycemiaStatisticsService getTimeInRangeData', () => {
   })
 })
 
+describe('GlycemiaStatisticsService getTimeInTightRangeData', () => {
+  it('should return time in tight range when viewing one day', () => {
+    const stats = GlycemiaStatisticsService.getTimeInTightRangeData(cbgData,1, dateFilterOneDay)
+    expect(stats).toEqual({
+      // 1 value with Abbott device = 15 mn
+      value: MS_IN_MIN * 15,
+      total: MS_IN_MIN * 15 * 3 + MS_IN_MIN * 5 * 2
+    })
+  })
+
+  it('should return time in tight range when viewing more than 1 day', () => {
+    const stats = GlycemiaStatisticsService.getTimeInTightRangeData(cbgData, 3, dateFilterThreeDays)
+    const expectedTotalMinutes = (15 * 3 + 5 * 6)
+
+    expect(stats).toEqual({
+      // 1 value with Abbott device + 2 values with Dexcom device = 15 + 5 * 2 mn
+      value: (15 + 5 * 2) / expectedTotalMinutes * MS_IN_DAY,
+      total: expectedTotalMinutes * MS_IN_MIN
+    })
+  })
+})
+
 describe('GlycemiaStatisticsService getReadingsInRangeData', () => {
   it('should return readings in range when viewing one day', () => {
     const stats = GlycemiaStatisticsService.getReadingsInRangeData(smbgData, bgBounds, 1, dateFilterOneDay)
@@ -381,6 +403,7 @@ describe('GlycemiaStatisticsService getGlucoseManagementIndicatorData', () => {
     })
   })
 })
+
 describe('GlycemiaStatisticsService getStandardDevData', () => {
   it('should return the average glucose and standard deviation when viewing one day', () => {
     const statsCbg = GlycemiaStatisticsService.getStandardDevData(cbgData, dateFilterOneDay)

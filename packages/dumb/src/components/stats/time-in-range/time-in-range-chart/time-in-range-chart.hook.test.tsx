@@ -30,7 +30,7 @@ import { type TimeInRangeChartHookProps, useTimeInRangeChartHook } from './time-
 import { waitFor } from '@testing-library/dom'
 import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../../models/stats.model'
 import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
-import { DatumType } from 'medical-domain'
+import { DatumType, Unit } from 'medical-domain'
 
 describe('CBGPercentageBarChart hook', () => {
   const veryHighStatValue = 100
@@ -67,6 +67,22 @@ describe('CBGPercentageBarChart hook', () => {
     data,
     days: 2,
     type: CBGStatType.TimeInRange,
+    bgPrefs: {
+      bgBounds: {
+        veryHighThreshold: 250,
+        targetUpperBound: 180,
+        targetLowerBound: 70,
+        veryLowThreshold: 54
+      },
+      bgUnits: Unit.MilligramPerDeciliter,
+      bgClasses: {
+        [StatLevel.VeryHigh]: 250,
+        [StatLevel.High]: 180,
+        [StatLevel.Target]: 70,
+        [StatLevel.Low]: 54,
+        [StatLevel.VeryLow]: 0
+      }
+    },
   }
 
   it('should return correct cbgStatsProps', () => {
