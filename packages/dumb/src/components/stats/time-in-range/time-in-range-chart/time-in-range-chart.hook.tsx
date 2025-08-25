@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,20 +27,22 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type CBGPercentageBarProps } from './cbg-percentage-bar'
-import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
-import { ensureNumeric } from '../stats.util'
+import { type CBGPercentageBarProps } from '../cbg-percentage-bar/cbg-percentage-bar'
+import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../../models/stats.model'
+import { ensureNumeric } from '../../stats.util'
 import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
 import { type BgType, DatumType } from 'medical-domain'
+import { BgPrefs } from '../../../../models/blood-glucose.model'
 
-export interface CBGPercentageBarChartHookProps {
+export interface TimeInRangeChartHookProps {
   bgType: BgType
   data: TimeInRangeData
   days: number
   type: CBGStatType
+  bgPrefs: BgPrefs
 }
 
-interface CBGPercentageBarChartHookReturn {
+interface TimeInRangeChartHookReturn {
   annotations: string[]
   cbgStatsProps: {
     veryHighStat: CBGPercentageBarProps
@@ -52,13 +54,14 @@ interface CBGPercentageBarChartHookReturn {
   hoveredStatId: StatLevel | null
   onMouseLeave: () => void
   title: string
+  legendValues: { className: string, value: string }[]
 }
 
 const TITLE_TYPE_READINGS = 'Readings'
 const TITLE_TYPE_TIME = 'Time'
 
-export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookProps): CBGPercentageBarChartHookReturn => {
-  const { type, days, data, bgType } = props
+export const useTimeInRangeChartHook = (props: TimeInRangeChartHookProps): TimeInRangeChartHookReturn => {
+  const { type, days, data, bgType, bgPrefs } = props
   const { t } = useTranslation('main')
   const [hoveredStatId, setHoveredStatId] = useState<StatLevel | null>(null)
 
@@ -180,11 +183,22 @@ export const useCBGPercentageBarChartHook = (props: CBGPercentageBarChartHookPro
     veryLowStat: getCBGPercentageBarProps(StatLevel.VeryLow)
   }
 
+  const bgClasses = bgPrefs.bgClasses
+
+  const legendValues = [
+    { className: 'very-low', value: `<${Math.round(bgClasses.veryLow)}` },
+    { className: 'low', value: `${Math.round(bgClasses.veryLow)}-${Math.round(bgClasses.low)}` },
+    { className: 'target', value: `${Math.round(bgClasses.low)}-${Math.round(bgClasses.target)}` },
+    { className: 'high', value: `${Math.round(bgClasses.target)}-${Math.round(bgClasses.high)}` },
+    { className: 'very-high', value: `>${Math.round(bgClasses.high)}` }
+  ]
+
   return ({
     annotations,
     cbgStatsProps,
     onMouseLeave,
     hoveredStatId,
-    title
+    title,
+    legendValues
   })
 }

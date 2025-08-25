@@ -30,9 +30,8 @@ import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip
 import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
 import { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
 import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
-import {
-  CBGPercentageBarChartMemoized as CBGPercentageBarChart
-} from './components/stats/cbg-percentage/cbg-percentage-bar-chart'
+import { TimeInRangeChartMemoized as TimeInRangeChart } from './components/stats/time-in-range/time-in-range-chart/time-in-range-chart'
+import { TimeInTightRangeChart } from './components/stats/time-in-range/time-in-tight-range-chart/time-in-tight-range-chart'
 import {
   CbgStandardDeviationMemoized as CBGStandardDeviation
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
@@ -93,7 +92,6 @@ export {
   BolusTooltip,
   CbgDateTraceLabel,
   CBGMeanStat,
-  CBGPercentageBarChart,
   CBGStandardDeviation,
   CBGStatType,
   ConfidentialTooltip,
@@ -120,6 +118,8 @@ export {
   SettingsPrintView,
   SimpleStat,
   StatTooltip,
+  TimeInRangeChart,
+  TimeInTightRangeChart,
   Tooltip,
   InsulinStatisticsPanel,
   TrendsContainer,

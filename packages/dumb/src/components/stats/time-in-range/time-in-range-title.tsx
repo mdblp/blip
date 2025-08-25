@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,69 +25,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import "../../../styles/colors.css";
+import React, { type FunctionComponent } from 'react'
+import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
+import Box from '@mui/material/Box'
+import commonStyles from '../../../styles/stat-common.css'
 
-.bar {
-  display: flex;
-  align-items: center;
-  width: calc(100% - 60px);
-  position: relative;
+interface TimeInRangeTitleProps {
+  annotations: string[]
+  title: string
+  shouldDisplayInfoTooltip: boolean
 }
 
-.bar-value {
-  border-radius: 20px;
-  border-style: solid;
-  border-width: thin;
-  padding-left: 3px;
-  padding-right: 3px;
-  font-size: 12px;
-  position: absolute;
-  right: 0;
+const TimeInRangeTitle: FunctionComponent<TimeInRangeTitleProps> = (props) => {
+  const { annotations, title, shouldDisplayInfoTooltip } = props
+
+  return (
+    <Box
+      data-testid="time-in-range-title"
+      display="flex"
+      alignItems="center"
+      className={commonStyles.title}
+    >
+      {title}
+      {shouldDisplayInfoTooltip &&
+        <StatTooltip annotations={annotations} />
+      }
+    </Box>
+  )
 }
 
-.disabled-label {
-  color: var(--muted);
-  border-color: var(--muted);
-}
-
-.disabled-duration {
-  border-color: var(--muted);
-  background-color: var(--muted);
-}
-
-.disabled-rectangle {
-  background-color: var(--muted);
-}
-
-.line {
-  height: 5px;
-  background-color: var(--stat-disabled);
-  flex-grow: 1;
-}
-
-.percentage-symbol {
-  font-size: 12px;
-  font-weight: bold;
-  margin-top: 5px;
-}
-
-.percentage-value {
-  font-size: 22px;
-  margin-left: auto;
-  margin-right: 2px;
-  font-weight: bold;
-}
-
-.rectangle {
-  height: 28px;
-  border-radius: 16px;
-}
-
-.stat {
-  display: flex;
-  align-items: center;
-}
-
-.title {
-  margin-left: 4px;
-}
+export const TimeInRangeTitleMemoized = React.memo(TimeInRangeTitle)

@@ -26,12 +26,7 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import {
-  type BgPrefs,
-  CBGPercentageBarChart,
-  CBGStatType,
-  LoopModeStat
-} from 'dumb'
+import { type BgPrefs, CBGStatType, LoopModeStat, TimeInRangeChart, TimeInTightRangeChart } from 'dumb'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
@@ -43,6 +38,7 @@ import {
   DatumType,
   GlycemiaStatisticsService,
   type MedicalData,
+  MS_IN_DAY,
   TimeService
 } from 'medical-domain'
 import { GlucoseManagementIndicator } from './glucose-management-indicator-stat'
@@ -51,10 +47,10 @@ import { CoefficientOfVariation } from './coefficient-of-variation-stat'
 import { StandardDeviationStat } from './standard-deviation-stat'
 import { AverageGlucoseStat } from './average-glucose-stat'
 import { TotalInsulinStat } from './total-insulin-stat'
-import { MS_IN_DAY } from 'medical-domain'
 import { makeStyles } from 'tss-react/mui'
 import { CarbsStat } from './carbs-stat'
 import { DataCard } from '../data-card/data-card'
+import { useTheme } from '@mui/material/styles'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -73,6 +69,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   const { medicalData, bgPrefs, dateFilter } = props
   const { classes } = useStyles()
   const location = useLocation()
+  const theme = useTheme()
 
   const cbgSelected = medicalData.cbg.length > 0
   const bgType: BgType = cbgSelected ? DatumType.Cbg : DatumType.Smbg
@@ -104,9 +101,11 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   const { coefficientOfVariation } = GlycemiaStatisticsService.getCoefficientOfVariationData(selectedBgData, dateFilter)
   const { glucoseManagementIndicator } = GlycemiaStatisticsService.getGlucoseManagementIndicatorData(medicalData.cbg, bgUnits, dateFilter)
 
-  const cbgPercentageBarChartData = cbgStatType === CBGStatType.TimeInRange
+  const timeInRangeChartData = cbgStatType === CBGStatType.TimeInRange
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
     : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
+
+  const timeInTightRangeData = GlycemiaStatisticsService.getTimeInTightRangeData(medicalData.cbg, numberOfDays, dateFilter)
 
   const {
     automatedBasalDuration,
@@ -129,18 +128,25 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   return (
     <Box data-testid="patient-statistics">
       <DataCard>
-        <CBGPercentageBarChart
+        <TimeInRangeChart
           bgType={bgType}
           cbgStatType={cbgStatType}
-          data={cbgPercentageBarChartData}
+          data={timeInRangeChartData}
           bgPrefs={bgPrefs}
           days={numberOfDays}
         />
+        <Box marginTop={theme.spacing(3)}>
+          <TimeInTightRangeChart
+            data={timeInTightRangeData}
+            days={numberOfDays}
+            bgPrefs={bgPrefs}
+          />
+        </Box>
         {isTrendsView &&
-          <>
+          <Box marginTop={theme.spacing(2)}>
             <Divider className={classes.divider}/>
             <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage}/>
-          </>
+          </Box>
         }
       </DataCard>
 

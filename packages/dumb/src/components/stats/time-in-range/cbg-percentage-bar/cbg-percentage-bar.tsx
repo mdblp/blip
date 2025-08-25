@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 import React, { type FunctionComponent } from 'react'
 import styles from './cbg-percentage-bar.css'
-import { type CBGStatType, type StatLevel } from '../../../models/stats.model'
+import { type CBGStatType, type StatLevel } from '../../../../models/stats.model'
 import { useCBGPercentageBar } from './cbg-percentage-bar.hook'
 
 export interface CBGPercentageBarProps {

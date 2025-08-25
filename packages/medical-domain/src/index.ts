@@ -88,7 +88,8 @@ import { type WeekDaysFilter } from './domains/models/time/date-filter.model'
 import type MedicalData from './domains/models/medical/medical-data.model'
 import {
   classifyBgValue,
-  GlycemiaStatisticsService
+  GlycemiaStatisticsService,
+  TIGHT_RANGE_BOUNDS
 } from './domains/repositories/statistics/glycemia-statistics.service'
 import type BasicData from './domains/repositories/medical/basics-data.service'
 import { CarbsStatisticsService } from './domains/repositories/statistics/carbs-statistics.service'
@@ -174,6 +175,7 @@ export {
   ChangeType,
   BasalBolusStatisticsService,
   MS_IN_DAY,
-  GROUP_ALARMS_THRESHOLD_MINUTES
+  GROUP_ALARMS_THRESHOLD_MINUTES,
+  TIGHT_RANGE_BOUNDS
 }
 export default MedicalDataService

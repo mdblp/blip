@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,9 +27,9 @@
 
 import { useMemo } from 'react'
 import cbgTimeStatStyles from './cbg-percentage-bar.css'
-import stylesColors from '../common/cbg-colors.css'
-import { formatDuration } from '../../../utils/datetime/datetime.util'
-import { CBGStatType } from '../../../models/stats.model'
+import stylesColors from '../../common/cbg-colors.css'
+import { formatDuration } from '../../../../utils/datetime/datetime.util'
+import { CBGStatType } from '../../../../models/stats.model'
 
 export interface CBGPercentageBarHookProps {
   type: CBGStatType

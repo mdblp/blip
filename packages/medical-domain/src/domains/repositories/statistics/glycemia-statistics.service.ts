@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -45,6 +45,11 @@ import type Bg from '../../models/medical/datum/bg.model'
 import { type BgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../models/medical/datum/bg.model'
 import { getWeekDaysFilter, sumValues } from './statistics.utils'
 
+export const TIGHT_RANGE_BOUNDS = {
+  lower: 70,
+  upper: 140
+}
+
 export function classifyBgValue(bgBounds: BgBounds, bgValue: number, classificationType: ClassificationType): keyof CbgRangeStatistics {
   if (bgValue <= 0) {
     throw new Error('You must provide a positive, numerical blood glucose value to categorize!')
@@ -68,6 +73,10 @@ export function classifyBgValue(bgBounds: BgBounds, bgValue: number, classificat
     return 'high'
   }
   return 'target'
+}
+
+const isInTightRange = (bgValue: number): boolean => {
+  return bgValue >= TIGHT_RANGE_BOUNDS.lower && bgValue <= TIGHT_RANGE_BOUNDS.upper
 }
 
 const cgmSampleFrequency = (cgmDeviceName: string): number => (
@@ -109,6 +118,35 @@ function getTimeInRangeData(cbgData: Cbg[], bgBounds: BgBounds, numDays: number,
       target: durationInRange.target / durationInRange.total * MS_IN_DAY,
       high: durationInRange.high / durationInRange.total * MS_IN_DAY,
       veryHigh: durationInRange.veryHigh / durationInRange.total * MS_IN_DAY,
+      total: durationInRange.total
+    }
+  }
+  return durationInRange
+}
+
+function getTimeInTightRangeData(cbgData: Cbg[], numDays: number, dateFilter: DateFilter): { value: number, total: number } {
+  const filteredCbg = CbgService.filterOnDate(cbgData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  const durationInRange = filteredCbg.reduce(
+    (result, cbg) => {
+      const isInRange = isInTightRange(cbg.value)
+      const duration = cgmSampleFrequency(cbg.deviceName)
+
+      if (isInRange) {
+        result.value += duration
+      }
+
+      result.total += duration
+      return result
+    },
+    {
+      value: 0,
+      total: 0
+    }
+  )
+
+  if (numDays > 1) {
+    return {
+      value: durationInRange.value / durationInRange.total * MS_IN_DAY,
       total: durationInRange.total
     }
   }
@@ -263,6 +301,7 @@ function getStandardDevData(bgData: Cbg[] | Smbg[], dateFilter: DateFilter): Sta
 export interface GlycemiaStatisticsAdapter {
   getReadingsInRangeData: (smbgData: Smbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter) => CbgRangeStatistics
   getTimeInRangeData: (cbgData: Cbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter) => CbgRangeStatistics
+  getTimeInTightRangeData: (cbgData: Cbg[], numDays: number, dateFilter: DateFilter) => { value: number, total: number }
   getSensorUsage: (cbgData: Cbg[], dateFilter: DateFilter) => SensorUsageStatistics
   getAverageGlucoseData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => AverageGlucoseStatistics
   getCoefficientOfVariationData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => CoefficientOfVariationStatistics
@@ -273,6 +312,7 @@ export interface GlycemiaStatisticsAdapter {
 export const GlycemiaStatisticsService: GlycemiaStatisticsAdapter = {
   getReadingsInRangeData,
   getTimeInRangeData,
+  getTimeInTightRangeData,
   getSensorUsage,
   getAverageGlucoseData,
   getCoefficientOfVariationData,
