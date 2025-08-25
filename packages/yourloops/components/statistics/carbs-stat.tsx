@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,8 @@
 import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
-import { CarbsStatItem } from 'dumb'
+import { StatLine } from 'dumb/dist/src/components/stats/stat-line/stat-line'
+import styles from 'dumb/dist/src/components/stats/insulin/insulin-stat.css'
 
 export interface CarbsStatProps {
   totalCarbsPerDay: number
@@ -45,24 +46,33 @@ export const CarbsStat: FunctionComponent<CarbsStatProps> = (props) => {
   } = props
   const { t } = useTranslation('main')
   const location = useLocation()
+
   const isDailyPage = location.pathname.includes('daily')
   const declaredCarbsAnnotation = [t(isDailyPage ? 'tooltip-per-day-carbs' : 'tooltip-avg-daily-week-carbs'), t('tooltip-declared-derived-carbs', { total: totalMealCarbsWithRescueCarbsEntries })]
+  const totalCarbsTitle = isDailyPage ? t('total-declared-carbs') : t('avg-daily-declared-carbs')
+  const carbsUnit = t('gram-unit')
 
   return (
     <div data-testid="total-carbs-stat">
-      <CarbsStatItem
-        title={t(isDailyPage ? 'total-declared-carbs' : 'avg-daily-declared-carbs')}
-        annotations={declaredCarbsAnnotation}
+      <StatLine
+        title={totalCarbsTitle}
         value={totalCarbsPerDay}
-        isTitleBold={true}
+        units={carbsUnit}
+        valueClasses={styles.rowValue}
+        isBold={true}
+        annotations={declaredCarbsAnnotation}
       />
-      <CarbsStatItem
+      <StatLine
         title={t('meal-carbs')}
         value={mealCarbsPerDay}
+        units={carbsUnit}
+        valueClasses={styles.rowValue}
       />
-      <CarbsStatItem
+      <StatLine
         title={t('rescue-carbs')}
         value={rescueCarbsPerDay}
+        units={carbsUnit}
+        valueClasses={styles.rowValue}
       />
     </div>
   )

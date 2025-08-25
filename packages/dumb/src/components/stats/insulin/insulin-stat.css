@@ -92,3 +92,7 @@
   font-size: 12px;
   padding-left: 1px;
 }
+
+.disabledLabel {
+  color: var(--muted);
+}
