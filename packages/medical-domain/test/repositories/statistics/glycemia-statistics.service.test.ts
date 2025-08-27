@@ -208,7 +208,7 @@ describe('GlycemiaStatisticsService getTimeInRangeData', () => {
       target: (15 + 5) / expectedTotalMinutes * MS_IN_DAY,
       high: 5 / expectedTotalMinutes * MS_IN_DAY,
       veryHigh: 5 / expectedTotalMinutes * MS_IN_DAY,
-      total: expectedTotalMinutes * MS_IN_MIN
+      total: MS_IN_DAY
     })
   })
 })
@@ -230,7 +230,7 @@ describe('GlycemiaStatisticsService getTimeInTightRangeData', () => {
     expect(stats).toEqual({
       // 1 value with Abbott device + 2 values with Dexcom device = 15 + 5 * 2 mn
       value: (15 + 5 * 2) / expectedTotalMinutes * MS_IN_DAY,
-      total: expectedTotalMinutes * MS_IN_MIN
+      total: MS_IN_DAY
     })
   })
 })

@@ -28,7 +28,7 @@
 import React, { FC } from 'react'
 import Box from '@mui/material/Box'
 import { TimeInRangeTitleMemoized as TimeInRangeTitle } from '../time-in-range-title'
-import { CBGPercentageBarMemoized } from '../cbg-percentage-bar/cbg-percentage-bar'
+import { CBGPercentageBarMemoized as CbgPercentageBarChart } from '../cbg-percentage-bar/cbg-percentage-bar'
 import { CBGStatType, StatLevel } from '../../../../models/stats.model'
 import { useTranslation } from 'react-i18next'
 import { StatLegendMemoized as StatLegend } from '../../stat-legend/stat-legend'
@@ -66,7 +66,7 @@ export const TimeInTightRangeChart: FC<TimeInTightRangeChartProps> = (props) => 
         type={CBGStatType.TimeInTightRange}
       />
       <Box marginBottom={1}>
-        <CBGPercentageBarMemoized
+        <CbgPercentageBarChart
           type={CBGStatType.TimeInTightRange}
           id={StatLevel.Target}
           isDisabled={isDisabled}

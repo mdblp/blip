@@ -112,13 +112,15 @@ function getTimeInRangeData(cbgData: Cbg[], bgBounds: BgBounds, numDays: number,
   )
 
   if (numDays > 1) {
+    // If the period is more than 1 day, we return the average daily time in range
+    // Which means the total duration is one day in ms (MS_IN_DAY)
     return {
       veryLow: durationInRange.veryLow / durationInRange.total * MS_IN_DAY,
       low: durationInRange.low / durationInRange.total * MS_IN_DAY,
       target: durationInRange.target / durationInRange.total * MS_IN_DAY,
       high: durationInRange.high / durationInRange.total * MS_IN_DAY,
       veryHigh: durationInRange.veryHigh / durationInRange.total * MS_IN_DAY,
-      total: durationInRange.total
+      total: MS_IN_DAY
     }
   }
   return durationInRange
@@ -145,9 +147,11 @@ function getTimeInTightRangeData(cbgData: Cbg[], numDays: number, dateFilter: Da
   )
 
   if (numDays > 1) {
+    // If the period is more than 1 day, we return the average daily time in range
+    // Which means the total duration is one day in ms (MS_IN_DAY)
     return {
       value: durationInRange.value / durationInRange.total * MS_IN_DAY,
-      total: durationInRange.total
+      total: MS_IN_DAY
     }
   }
   return durationInRange

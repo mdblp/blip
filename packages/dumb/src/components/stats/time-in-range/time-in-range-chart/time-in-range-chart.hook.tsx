@@ -157,7 +157,7 @@ export const useTimeInRangeChartHook = (props: TimeInRangeChartHookProps): TimeI
     ]
   }, [data.high, data.low, data.target, data.veryHigh, data.veryLow, t, type])
 
-  const total = dataArray.map(data => data.value).reduce((sum: number, value: number) => sum + value)
+  const total = data.total
 
   const getCBGPercentageBarProps = (id: string): CBGPercentageBarProps => {
     const stat = dataArray.find(timeInRange => timeInRange.id === id)
