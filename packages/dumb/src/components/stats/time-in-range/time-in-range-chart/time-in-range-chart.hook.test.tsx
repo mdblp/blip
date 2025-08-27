@@ -38,7 +38,7 @@ describe('CBGPercentageBarChart hook', () => {
   const targetStatValue = 150
   const lowStatValue = 250
   const veryLowStatValue = 50
-  const total = veryLowStatValue + lowStatValue + targetStatValue + highStatValue + veryHighStatValue
+  const total = 1000
   const createCBGTimeData = (id: StatLevel, title: string, value: number): CBGPercentageData => {
     return { id, title, value }
   }
@@ -54,11 +54,6 @@ describe('CBGPercentageBarChart hook', () => {
     target: targetStatValue,
     low: lowStatValue,
     veryLow: veryLowStatValue,
-    /*
-    TODO waiting YLP-2141 (https://diabeloop.atlassian.net/browse/YLP-2141)
-     This stat is not calculated correctly in blip code, need to fix this when we will migrate data calculation to yourloops
-     Currently it's computed with sum of each bound
-     */
     total: 1000
   }
 
