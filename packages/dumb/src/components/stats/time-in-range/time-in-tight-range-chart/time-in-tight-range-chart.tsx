@@ -38,7 +38,7 @@ import { TIGHT_RANGE_BOUNDS } from 'medical-domain'
 interface TimeInTightRangeChartProps {
   data: { value: number, total: number }
   days: number,
-  bgPrefs: BgPrefs,
+  bgPrefs: BgPrefs
 }
 
 export const TimeInTightRangeChart: FC<TimeInTightRangeChartProps> = (props) => {
@@ -51,8 +51,9 @@ export const TimeInTightRangeChart: FC<TimeInTightRangeChartProps> = (props) => 
     [t('time-in-tight-range-cgm-one-day'), t('compute-oneday-time-in-tight-range')] :
     [t('time-in-tight-range-cgm-daily-average'), t('compute-ndays-time-in-tight-range', { cbgLabel: t('CGM') })]
 
+  const bounds = TIGHT_RANGE_BOUNDS[bgPrefs.bgUnits]
   const legendValues = [
-    { className: 'target', value: `${Math.round(TIGHT_RANGE_BOUNDS.lower)}-${Math.round(TIGHT_RANGE_BOUNDS.upper)}` }
+    { className: 'target', value: `${Math.round(bounds.lower)}-${Math.round(bounds.upper)}` }
   ]
 
   const isDisabled = data.value === 0 && data.total === 0

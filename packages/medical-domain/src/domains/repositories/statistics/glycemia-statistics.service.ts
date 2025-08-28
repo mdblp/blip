@@ -46,8 +46,14 @@ import { type BgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../models/medical/datum
 import { getWeekDaysFilter, sumValues } from './statistics.utils'
 
 export const TIGHT_RANGE_BOUNDS = {
-  lower: 70,
-  upper: 140
+  [MGDL_UNITS]: {
+    lower: 70,
+    upper: 140
+  },
+  [MMOLL_UNITS]: {
+    lower: 3.5,
+    upper: 7.8
+  }
 }
 
 export function classifyBgValue(bgBounds: BgBounds, bgValue: number, classificationType: ClassificationType): keyof CbgRangeStatistics {
@@ -75,8 +81,9 @@ export function classifyBgValue(bgBounds: BgBounds, bgValue: number, classificat
   return 'target'
 }
 
-const isInTightRange = (bgValue: number): boolean => {
-  return bgValue >= TIGHT_RANGE_BOUNDS.lower && bgValue <= TIGHT_RANGE_BOUNDS.upper
+const isInTightRange = (bgValue: number, units: BgUnit): boolean => {
+  const bounds = TIGHT_RANGE_BOUNDS[units]
+  return bgValue >= bounds.lower && bgValue <= bounds.upper
 }
 
 const cgmSampleFrequency = (cgmDeviceName: string): number => (
@@ -126,11 +133,11 @@ function getTimeInRangeData(cbgData: Cbg[], bgBounds: BgBounds, numDays: number,
   return durationInRange
 }
 
-function getTimeInTightRangeData(cbgData: Cbg[], numDays: number, dateFilter: DateFilter): { value: number, total: number } {
+function getTimeInTightRangeData(cbgData: Cbg[], units: BgUnit, numDays: number, dateFilter: DateFilter): { value: number, total: number } {
   const filteredCbg = CbgService.filterOnDate(cbgData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const durationInRange = filteredCbg.reduce(
     (result, cbg) => {
-      const isInRange = isInTightRange(cbg.value)
+      const isInRange = isInTightRange(cbg.value, units)
       const duration = cgmSampleFrequency(cbg.deviceName)
 
       if (isInRange) {
@@ -305,7 +312,7 @@ function getStandardDevData(bgData: Cbg[] | Smbg[], dateFilter: DateFilter): Sta
 export interface GlycemiaStatisticsAdapter {
   getReadingsInRangeData: (smbgData: Smbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter) => CbgRangeStatistics
   getTimeInRangeData: (cbgData: Cbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter) => CbgRangeStatistics
-  getTimeInTightRangeData: (cbgData: Cbg[], numDays: number, dateFilter: DateFilter) => { value: number, total: number }
+  getTimeInTightRangeData: (cbgData: Cbg[], units: BgUnit, numDays: number, dateFilter: DateFilter) => { value: number, total: number }
   getSensorUsage: (cbgData: Cbg[], dateFilter: DateFilter) => SensorUsageStatistics
   getAverageGlucoseData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => AverageGlucoseStatistics
   getCoefficientOfVariationData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => CoefficientOfVariationStatistics

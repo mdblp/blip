@@ -105,7 +105,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
     ? GlycemiaStatisticsService.getTimeInRangeData(medicalData.cbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
     : GlycemiaStatisticsService.getReadingsInRangeData(medicalData.smbg, bgPrefs.bgBounds, numberOfDays, dateFilter)
 
-  const timeInTightRangeData = GlycemiaStatisticsService.getTimeInTightRangeData(medicalData.cbg, numberOfDays, dateFilter)
+  const timeInTightRangeData = GlycemiaStatisticsService.getTimeInTightRangeData(medicalData.cbg, bgUnits, numberOfDays, dateFilter)
 
   const {
     automatedBasalDuration,
