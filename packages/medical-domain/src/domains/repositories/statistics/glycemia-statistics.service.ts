@@ -51,7 +51,7 @@ export const TIGHT_RANGE_BOUNDS = {
     upper: 140
   },
   [MMOLL_UNITS]: {
-    lower: 3.5,
+    lower: 3.9,
     upper: 7.8
   }
 }
