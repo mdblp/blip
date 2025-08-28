@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,47 +29,34 @@ import React, { type FunctionComponent, memo } from 'react'
 import styles from './stat-legend.css'
 import Box from '@mui/material/Box'
 import { StatLegendElement } from './stat-legend-element'
-import { type BgClasses, type BgUnit } from 'medical-domain'
+import { type BgUnit } from 'medical-domain'
+import { CBGStatType } from '../../../models/stats.model'
 
 interface StatLegendProps {
-  bgClasses: BgClasses
   units: BgUnit
+  legend: { className: string; value: string }[]
+  type: CBGStatType
 }
 
 const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
-  const { bgClasses, units } = props
-  const veryLowValue = Math.round(bgClasses.veryLow)
-  const lowValue = Math.round(bgClasses.low)
-  const targetValue = Math.round(bgClasses.target)
-  const highValue = Math.round(bgClasses.high)
+  const { legend, units, type } = props
 
   return (
     <Box
-      data-testid="cbg-percentage-stats-legends"
+      data-testid={`${type}-stats-legends`}
       display="flex"
       justifyContent="space-between"
     >
       <ul className={styles['stat-legend']}>
-        <StatLegendElement
-          cbgClassName="very-low"
-          value={`<${veryLowValue}`}
-        />
-        <StatLegendElement
-          cbgClassName="low"
-          value={`${veryLowValue}-${lowValue}`}
-        />
-        <StatLegendElement
-          cbgClassName="target"
-          value={`${lowValue}-${targetValue}`}
-        />
-        <StatLegendElement
-          cbgClassName="high"
-          value={`${targetValue}-${highValue}`}
-        />
-        <StatLegendElement
-          cbgClassName="very-high"
-          value={`>${highValue}`}
-        />
+        {
+          legend.map((legend: { className: string, value: string }) => (
+            <StatLegendElement
+              key={legend.className}
+              cbgClassName={legend.className}
+              value={legend.value}
+            />
+          ))
+        }
       </ul>
       <Box fontSize="12px">
         {units}

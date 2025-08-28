@@ -14,7 +14,7 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
-import { MGDL_UNITS, defaultBgClasses, classifyBgValue } from 'medical-domain'
+import { MGDL_UNITS, defaultBgClasses, classifyBgValueWithTightRange } from 'medical-domain'
 
 
 function categorizer(bgClasses = {}, bgUnits = MGDL_UNITS) {
@@ -26,7 +26,7 @@ function categorizer(bgClasses = {}, bgUnits = MGDL_UNITS) {
   }
 
   return function (d) {
-    return classifyBgValue(finalBgBounds, d.value, 'fiveWay').toLowerCase()
+    return classifyBgValueWithTightRange(finalBgBounds, d.value, 'fiveWay').toLowerCase()
   }
 }
 

@@ -69,6 +69,7 @@
   --bg-very-low: var(--error-color-main);
   --bg-low: var(--error-color-light);
   --bg-target: var(--info-color-main);
+  --bg-tight-range: var(--info-color-light);
   --bg-high: var(--warning-color-light);
   --bg-very-high: var(--warning-color-main);
   --text-hover: #00D3D9;

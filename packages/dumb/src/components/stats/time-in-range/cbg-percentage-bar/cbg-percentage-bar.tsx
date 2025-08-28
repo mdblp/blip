@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 import React, { type FunctionComponent } from 'react'
 import styles from './cbg-percentage-bar.css'
-import { type CBGStatType, type StatLevel } from '../../../models/stats.model'
+import { type CBGStatType, type StatLevel } from '../../../../models/stats.model'
 import { useCBGPercentageBar } from './cbg-percentage-bar.hook'
 
 export interface CBGPercentageBarProps {
@@ -38,10 +38,11 @@ export interface CBGPercentageBarProps {
   title: string
   total: number
   value: number
+  isReducedSize?: boolean
 }
 
 const CBGPercentageBar: FunctionComponent<CBGPercentageBarProps> = (props) => {
-  const { type, id, isDisabled, onMouseEnter, title, total, value } = props
+  const { type, id, isDisabled, onMouseEnter, title, total, value, isReducedSize } = props
 
   const {
     barClasses,
@@ -50,7 +51,7 @@ const CBGPercentageBar: FunctionComponent<CBGPercentageBarProps> = (props) => {
     percentage,
     percentageClasses,
     rectangleClasses
-  } = useCBGPercentageBar({ type, id, isDisabled, total, value })
+  } = useCBGPercentageBar({ type, id, isDisabled, total, value, isReducedSize })
 
   return (
     <div

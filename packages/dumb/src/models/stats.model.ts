@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,6 +35,7 @@ export enum CBGStatType {
   StandardDeviation = 'standardDev',
   TimeInAuto = 'timeInAuto',
   TimeInRange = 'timeInRange',
+  TimeInTightRange = 'timeInTightRange',
   TotalInsulin = 'totalInsulin',
 }
 
@@ -49,7 +50,8 @@ export enum StatLevel {
   High = 'high',
   Target = 'target',
   Low = 'low',
-  VeryLow = 'veryLow'
+  VeryLow = 'veryLow',
+  TightRange = 'tightRange',
 }
 
 export enum StatFormats {

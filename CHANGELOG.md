@@ -8,6 +8,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3333 Tooltip for Zen mode in Daily view
 - YLP-3589 add new estimated total insulin statistic
 - YLP-3611 Manage events superposition in Daily view
+- YLP-3616 Time In Tight Range (TITR) statistic
 
 ### Changed
 - YLP-2347 Display patient monitoring parameters in the patient profile page

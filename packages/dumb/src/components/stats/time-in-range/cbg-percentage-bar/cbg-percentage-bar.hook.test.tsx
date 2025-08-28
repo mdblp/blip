@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import { renderHook } from '@testing-library/react'
-import { CBGStatType } from '../../../models/stats.model'
+import { CBGStatType } from '../../../../models/stats.model'
 import { type CBGPercentageBarHookProps, useCBGPercentageBar } from './cbg-percentage-bar.hook'
 
 describe('CBGPercentageBar hook', () => {

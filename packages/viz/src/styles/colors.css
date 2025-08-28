@@ -58,6 +58,7 @@
   --bg-very-low: var(--error-color-main);
   --bg-low: var(--error-color-50);
   --bg-target: var(--info-color-main);
+  --bg-tight-range: var(--info-color-light);
   --bg-high: var(--warning-color-50);
   --bg-very-high: var(--warning-color-main);
   --night-mode: var(--info-color-10);

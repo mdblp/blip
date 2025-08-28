@@ -259,13 +259,19 @@ export const checkEventsSuperposition = async () => {
 export const checkDailyTimeInRangeStatsWidgetsMgdl = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
   checkDailyTimeInRangeStatsWidgetsPercentages(patientStatistics)
-  expect(patientStatistics.getByTestId('cbg-percentage-stats-legends')).toHaveTextContent('<5454-7070-180180-250>250mg/dL')
+  expect(patientStatistics.getByTestId('timeInRange-stats-legends')).toHaveTextContent('<5454-7070-180180-250>250mg/dL')
+
+  expect(patientStatistics.getByTestId('cbg-percentage-stat-tightRange-timeInTightRange')).toHaveTextContent('15m20%')
+  expect(patientStatistics.getByTestId('timeInTightRange-stats-legends')).toHaveTextContent('70-140mg/dL')
 }
 
 export const checkDailyTimeInRangeStatsWidgetsMmolL = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
   checkDailyTimeInRangeStatsWidgetsPercentages(patientStatistics)
-  expect(patientStatistics.getByTestId('cbg-percentage-stats-legends')).toHaveTextContent('<33-44-1010-14>14mmol/L')
+  expect(patientStatistics.getByTestId('timeInRange-stats-legends')).toHaveTextContent('<33-44-1010-14>14mmol/L')
+
+  expect(patientStatistics.getByTestId('cbg-percentage-stat-tightRange-timeInTightRange')).toHaveTextContent('15m20%')
+  expect(patientStatistics.getByTestId('timeInTightRange-stats-legends')).toHaveTextContent('4-8mmol/L')
 }
 
 export const checkTotalCarbsStatContent = async () => {
