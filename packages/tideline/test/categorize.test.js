@@ -60,8 +60,8 @@ describe('Categorize', function() {
       it('should categorize 69 as "low"', function(){
         expect(defaultCategorizer({value:69})).to.equal('low')
       })
-      it('should categorize 70 as "target"', function(){
-        expect(defaultCategorizer({value:70})).to.equal('target')
+      it('should categorize 70 as "tightrange"', function(){
+        expect(defaultCategorizer({value:70})).to.equal('tightrange')
       })
       it('should categorize 180 as "target"', function(){
         expect(defaultCategorizer({value:180})).to.equal('target')
@@ -86,8 +86,8 @@ describe('Categorize', function() {
       it('should categorize 79 as "low"', function(){
         expect(alternateCategorizer({value:79})).to.equal('low')
       })
-      it('should categorize 80 as "target"', function(){
-        expect(alternateCategorizer({value:80})).to.equal('target')
+      it('should categorize 80 as "tightrange"', function(){
+        expect(alternateCategorizer({value:80})).to.equal('tightrange')
       })
       it('should categorize 150 as "target"', function(){
         expect(alternateCategorizer({value:150})).to.equal('target')
@@ -112,8 +112,8 @@ describe('Categorize', function() {
       it('should categorize 69 as "low"', function(){
         expect(noConfigCategorizer({value:69})).to.equal('low')
       })
-      it('should categorize 70 as "target"', function(){
-        expect(noConfigCategorizer({value:70})).to.equal('target')
+      it('should categorize 70 as "tightrange"', function(){
+        expect(noConfigCategorizer({value:70})).to.equal('tightrange')
       })
       it('should categorize 180 as "target"', function(){
         expect(noConfigCategorizer({value:180})).to.equal('target')
@@ -138,8 +138,8 @@ describe('Categorize', function() {
       it('should categorize 3.8 as "low"', function(){
         expect(mmollCategorizer({value:3.8})).to.equal('low')
       })
-      it('should categorize 3.9 as "target"', function(){
-        expect(mmollCategorizer({value:3.9})).to.equal('target')
+      it('should categorize 3.9 as "tightrange"', function(){
+        expect(mmollCategorizer({value:3.9})).to.equal('tightrange')
       })
       it('should categorize 10.0 as "target"', function(){
         expect(mmollCategorizer({value:10.0})).to.equal('target')
