@@ -38,10 +38,11 @@ export interface CBGPercentageBarProps {
   title: string
   total: number
   value: number
+  isReducedSize?: boolean
 }
 
 const CBGPercentageBar: FunctionComponent<CBGPercentageBarProps> = (props) => {
-  const { type, id, isDisabled, onMouseEnter, title, total, value } = props
+  const { type, id, isDisabled, onMouseEnter, title, total, value, isReducedSize } = props
 
   const {
     barClasses,
@@ -50,7 +51,7 @@ const CBGPercentageBar: FunctionComponent<CBGPercentageBarProps> = (props) => {
     percentage,
     percentageClasses,
     rectangleClasses
-  } = useCBGPercentageBar({ type, id, isDisabled, total, value })
+  } = useCBGPercentageBar({ type, id, isDisabled, total, value, isReducedSize })
 
   return (
     <div

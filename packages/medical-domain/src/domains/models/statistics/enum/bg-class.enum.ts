@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,74 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-@import "../../../../styles/colors.css";
-
-.bar {
-  display: flex;
-  align-items: center;
-  width: calc(100% - 60px);
-  position: relative;
-}
-
-.bar-value {
-  border-radius: 20px;
-  border-style: solid;
-  border-width: thin;
-  padding-left: 3px;
-  padding-right: 3px;
-  font-size: 12px;
-  position: absolute;
-  right: 0;
-}
-
-.disabled-label {
-  color: var(--muted);
-  border-color: var(--muted);
-}
-
-.disabled-duration {
-  border-color: var(--muted);
-  background-color: var(--muted);
-}
-
-.disabled-rectangle {
-  background-color: var(--muted);
-}
-
-.line {
-  height: 5px;
-  background-color: var(--stat-disabled);
-  flex-grow: 1;
-}
-
-.percentage-symbol {
-  font-size: 12px;
-  font-weight: bold;
-  margin-top: 5px;
-}
-
-.percentage-value {
-  font-size: 22px;
-  margin-left: auto;
-  margin-right: 2px;
-  font-weight: bold;
-}
-
-.rectangle {
-  height: 28px;
-  border-radius: 16px;
-}
-
-.rectangle-reduced {
-  height: 20px;
-  border-radius: 16px;
-}
-
-.stat {
-  display: flex;
-  align-items: center;
-}
-
-.title {
-  margin-left: 4px;
+export enum BgClass {
+  High = 'high',
+  Low = 'low',
+  Target = 'target',
+  VeryHigh = 'veryHigh',
+  VeryLow = 'veryLow',
 }

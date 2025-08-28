@@ -34,6 +34,7 @@ import type Basal from './domains/models/medical/datum/basal.model'
 import type BaseDatum from './domains/models/medical/datum/basics/base-datum.model'
 import type Bolus from './domains/models/medical/datum/bolus.model'
 import { BolusSubtype } from './domains/models/medical/datum/enums/bolus-subtype.enum'
+import { BgClass } from './domains/models/statistics/enum/bg-class.enum'
 import { type BgType, type BgUnit, MGDL_UNITS, MMOLL_UNITS } from './domains/models/medical/datum/bg.model'
 import type Cbg from './domains/models/medical/datum/cbg.model'
 import { ClassificationType } from './domains/models/statistics/enum/bg-classification.enum'
@@ -88,6 +89,7 @@ import { type WeekDaysFilter } from './domains/models/time/date-filter.model'
 import type MedicalData from './domains/models/medical/medical-data.model'
 import {
   classifyBgValue,
+  classifyBgValueWithTightRange,
   GlycemiaStatisticsService,
   TIGHT_RANGE_BOUNDS
 } from './domains/repositories/statistics/glycemia-statistics.service'
@@ -114,6 +116,7 @@ export {
   type Basal,
   type BaseDatum,
   type BgBounds,
+  BgClass,
   type BgClasses,
   type BgType,
   type BgUnit,
@@ -165,6 +168,7 @@ export {
   MGDL_UNITS,
   MMOLL_UNITS,
   classifyBgValue,
+  classifyBgValueWithTightRange,
   convertBG,
   GlycemiaStatisticsService,
   type BasicData,

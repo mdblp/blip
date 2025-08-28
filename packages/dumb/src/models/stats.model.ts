@@ -50,7 +50,8 @@ export enum StatLevel {
   High = 'high',
   Target = 'target',
   Low = 'low',
-  VeryLow = 'veryLow'
+  VeryLow = 'veryLow',
+  TightRange = 'tightRange',
 }
 
 export enum StatFormats {

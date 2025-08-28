@@ -37,6 +37,7 @@ export interface CBGPercentageBarHookProps {
   isDisabled: boolean
   total: number
   value: number
+  isReducedSize?: boolean
 }
 
 interface CBGPercentageBarHookReturn {
@@ -49,12 +50,13 @@ interface CBGPercentageBarHookReturn {
 }
 
 export const useCBGPercentageBar = (props: CBGPercentageBarHookProps): CBGPercentageBarHookReturn => {
-  const { type, id, isDisabled, total, value } = props
+  const { type, id, isDisabled, total, value, isReducedSize } = props
   const hasValues = total !== 0
   const percentage = hasValues ? Math.round(value / total * 100) : 0
   const rectangleBackgroundClass = isDisabled ? cbgTimeStatStyles['disabled-rectangle'] : stylesColors[`${id}-background`]
   const labelClass = isDisabled ? cbgTimeStatStyles['disabled-label'] : stylesColors[`${id}-color`]
-  const rectangleClasses = `${cbgTimeStatStyles.rectangle} ${rectangleBackgroundClass}`
+  const rectangleShapeClass = isReducedSize ? cbgTimeStatStyles['rectangle-reduced'] : cbgTimeStatStyles.rectangle
+  const rectangleClasses = `${rectangleShapeClass} ${rectangleBackgroundClass}`
   const durationBackgroundClasses =  isDisabled ? cbgTimeStatStyles['disabled-duration'] : stylesColors[`${id}-duration-background`]
   const barClasses = `${cbgTimeStatStyles['bar-value']} ${durationBackgroundClasses}`
   const percentageClasses = `${cbgTimeStatStyles['percentage-value']} ${labelClass}`

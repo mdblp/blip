@@ -53,7 +53,7 @@ export const TimeInTightRangeChart: FC<TimeInTightRangeChartProps> = (props) => 
 
   const bounds = TIGHT_RANGE_BOUNDS[bgPrefs.bgUnits]
   const legendValues = [
-    { className: 'target', value: `${Math.round(bounds.lower)}-${Math.round(bounds.upper)}` }
+    { className: 'tight-range', value: `${Math.round(bounds.lower)}-${Math.round(bounds.upper)}` }
   ]
 
   const isDisabled = data.value === 0 && data.total === 0
@@ -69,12 +69,13 @@ export const TimeInTightRangeChart: FC<TimeInTightRangeChartProps> = (props) => 
       <Box marginBottom={1}>
         <CbgPercentageBarChart
           type={CBGStatType.TimeInTightRange}
-          id={StatLevel.Target}
+          id={StatLevel.TightRange}
           isDisabled={isDisabled}
           onMouseEnter={() => {}}
           title={title}
           total={data.total}
           value={data.value}
+          isReducedSize={true}
         />
       </Box>
       <StatLegend units={bgPrefs.bgUnits} legend={legendValues} type={CBGStatType.TimeInTightRange} />

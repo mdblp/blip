@@ -44,6 +44,8 @@ import type DateFilter from '../../models/time/date-filter.model'
 import type Bg from '../../models/medical/datum/bg.model'
 import { type BgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../models/medical/datum/bg.model'
 import { getWeekDaysFilter, sumValues } from './statistics.utils'
+import { DEFAULT_BG_BOUNDS } from '../../models/medical/medical-data-options.model'
+import { BgClass } from '../../models/statistics/enum/bg-class.enum'
 
 export const TIGHT_RANGE_BOUNDS = {
   [MGDL_UNITS]: {
@@ -63,22 +65,35 @@ export function classifyBgValue(bgBounds: BgBounds, bgValue: number, classificat
   const { veryLowThreshold, targetLowerBound, targetUpperBound, veryHighThreshold } = bgBounds
   if (classificationType === ClassificationType.FiveWay) {
     if (bgValue < veryLowThreshold) {
-      return 'veryLow'
+      return BgClass.VeryLow
     } else if (bgValue >= veryLowThreshold && bgValue < targetLowerBound) {
-      return 'low'
+      return BgClass.Low
     } else if (bgValue > targetUpperBound && bgValue <= veryHighThreshold) {
-      return 'high'
+      return BgClass.High
     } else if (bgValue > veryHighThreshold) {
-      return 'veryHigh'
+      return BgClass.VeryHigh
     }
-    return 'target'
+    return BgClass.Target
   }
   if (bgValue < targetLowerBound) {
-    return 'low'
+    return BgClass.Low
   } else if (bgValue > targetUpperBound) {
-    return 'high'
+    return BgClass.High
   }
-  return 'target'
+  return BgClass.Target
+}
+
+export function classifyBgValueWithTightRange(bgBounds: BgBounds, bgValue: number, classificationType: ClassificationType): string {
+  const classification = classifyBgValue(bgBounds, bgValue, classificationType)
+  if (classification !== BgClass.Target) {
+    return classification
+  }
+
+  const units = bgBounds.veryLowThreshold === DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow ? MGDL_UNITS : MMOLL_UNITS
+  if (isInTightRange(bgValue, units)) {
+    return 'tightRange'
+  }
+  return BgClass.Target
 }
 
 const isInTightRange = (bgValue: number, units: BgUnit): boolean => {
@@ -133,7 +148,10 @@ function getTimeInRangeData(cbgData: Cbg[], bgBounds: BgBounds, numDays: number,
   return durationInRange
 }
 
-function getTimeInTightRangeData(cbgData: Cbg[], units: BgUnit, numDays: number, dateFilter: DateFilter): { value: number, total: number } {
+function getTimeInTightRangeData(cbgData: Cbg[], units: BgUnit, numDays: number, dateFilter: DateFilter): {
+  value: number,
+  total: number
+} {
   const filteredCbg = CbgService.filterOnDate(cbgData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
   const durationInRange = filteredCbg.reduce(
     (result, cbg) => {
@@ -312,7 +330,10 @@ function getStandardDevData(bgData: Cbg[] | Smbg[], dateFilter: DateFilter): Sta
 export interface GlycemiaStatisticsAdapter {
   getReadingsInRangeData: (smbgData: Smbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter) => CbgRangeStatistics
   getTimeInRangeData: (cbgData: Cbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter) => CbgRangeStatistics
-  getTimeInTightRangeData: (cbgData: Cbg[], units: BgUnit, numDays: number, dateFilter: DateFilter) => { value: number, total: number }
+  getTimeInTightRangeData: (cbgData: Cbg[], units: BgUnit, numDays: number, dateFilter: DateFilter) => {
+    value: number,
+    total: number
+  }
   getSensorUsage: (cbgData: Cbg[], dateFilter: DateFilter) => SensorUsageStatistics
   getAverageGlucoseData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => AverageGlucoseStatistics
   getCoefficientOfVariationData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => CoefficientOfVariationStatistics

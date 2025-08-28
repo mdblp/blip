@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,12 +31,4 @@ export interface BgPrefs {
   bgUnits: BgUnit
   bgBounds?: BgBounds
   bgClasses: BgClasses
-}
-
-export enum BgClass {
-  High = 'high',
-  Low = 'low',
-  Target = 'target',
-  VeryHigh = 'veryHigh',
-  VeryLow = 'veryLow',
 }
