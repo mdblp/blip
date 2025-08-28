@@ -104,7 +104,7 @@ function plotCbg(pool, opts = {}) {
               d3Select.classed('d3-bg-low-focus', true)
               break
             case 'target':
-              case 'tightRange':
+            case 'tightRange':
               d3Select.classed('d3-bg-target-focus', true)
               break
             case 'high':
