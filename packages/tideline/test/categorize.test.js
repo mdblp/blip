@@ -86,8 +86,8 @@ describe('Categorize', function() {
       it('should categorize 79 as "low"', function(){
         expect(alternateCategorizer({value:79})).to.equal('low')
       })
-      it('should categorize 80 as "tightrange"', function(){
-        expect(alternateCategorizer({value:80})).to.equal('tightrange')
+      it('should categorize 80 as "target"', function(){
+        expect(alternateCategorizer({value:80})).to.equal('target')
       })
       it('should categorize 150 as "target"', function(){
         expect(alternateCategorizer({value:150})).to.equal('target')
