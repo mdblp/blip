@@ -78,12 +78,14 @@ function plotCbg(pool, opts = {}) {
       const cbgVeryLow = cbgGroups.filter(d => categorize(d) === 'verylow')
       const cbgLow = cbgGroups.filter(d => categorize(d) === 'low')
       const cbgTarget = cbgGroups.filter(d => categorize(d) === 'target')
+      const cbgTightRange = cbgGroups.filter(d => categorize(d) === 'tightrange')
       const cbgHigh = cbgGroups.filter(d => categorize(d) === 'high')
       const cbgVeryHigh = cbgGroups.filter(d => categorize(d) === 'veryhigh')
 
       cbgVeryLow.classed('d3-circle-cbg d3-bg-very-low', true)
       cbgLow.classed('d3-circle-cbg d3-bg-low', true)
       cbgTarget.classed('d3-circle-cbg d3-bg-target', true)
+      cbgTightRange.classed('d3-circle-cbg d3-bg-tight-range', true)
       cbgHigh.classed('d3-circle-cbg d3-bg-high', true)
       cbgVeryHigh.classed('d3-circle-cbg d3-bg-very-high', true)
 
@@ -102,6 +104,7 @@ function plotCbg(pool, opts = {}) {
               d3Select.classed('d3-bg-low-focus', true)
               break
             case 'target':
+            case 'tightRange':
               d3Select.classed('d3-bg-target-focus', true)
               break
             case 'high':
