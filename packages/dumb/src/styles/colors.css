@@ -105,8 +105,11 @@
   statDisabled: #E7E9EE;
   veryLow: #e12a4e;
   low: #e85f7a;
+  lowBackground: #FDF4F6;
   target: #009bd6;
+  targetBackground: #F2FAFD;
   high: #f5a861;
+  highBackground: #FEF9F4;
   veryHigh: #f28b2d;
   insulin: #0096D1;
   white: #FFFFFF;

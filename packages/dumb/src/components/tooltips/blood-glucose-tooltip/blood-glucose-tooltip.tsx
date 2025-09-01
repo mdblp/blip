@@ -41,7 +41,7 @@ import {
   type Position,
   type Side
 } from '../common/tooltip/tooltip'
-import { type BgPrefs } from '../../../models/blood-glucose.model'
+import { BgClass, type BgPrefs } from '../../../models/blood-glucose.model'
 import { type Cbg, ClassificationType, type Smbg, type TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
@@ -68,11 +68,25 @@ export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = 
     ClassificationType.FiveWay
   )
 
+  const getColorClass = (bgClass: BgClass) => {
+    switch (bgClass) {
+      case BgClass.Low:
+      case BgClass.VeryLow:
+        return colors.lowBackground
+      case BgClass.High:
+      case BgClass.VeryHigh:
+        return colors.highBackground
+      case BgClass.Target:
+      default:
+        return colors.targetBackground
+    }
+  }
+
   return (
     <Tooltip
       position={position}
       side={side}
-      borderColor={colors[bgClass] || colors.bolus}
+      borderColor={getColorClass(bgClass)}
       dateTitle={getDateTitleForBaseDatum(data, timePrefs)}
       tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
       tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}

@@ -28,9 +28,10 @@
 import React, { type FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './tooltip.css'
 import useTooltip from './tooltip.hook'
-import TooltipTail from '../tooltip-tail/tooltip-tail'
 import { type TimePrefs } from 'medical-domain'
 import { computeDateValue } from '../../../../utils/tooltip/tooltip.util';
+import Box from '@mui/material/Box'
+
 
 export interface Offset {
   top: number
@@ -77,10 +78,10 @@ interface TooltipProps {
 
 const Tooltip: FunctionComponent<TooltipProps> = (
   {
-    tail = DEFAULT_TOOLTIP_TAIL,
+    // tail = DEFAULT_TOOLTIP_TAIL,
     side = COMMON_TOOLTIP_SIDE,
     tailWidth = 7,
-    tailHeight = 8,
+    // tailHeight = 8,
     borderColor = 'black',
     borderWidth = DEFAULT_TOOLTIP_BORDER_WIDTH,
     offset: initialOffset = DEFAULT_TOOLTIP_OFFSET,
@@ -117,51 +118,76 @@ const Tooltip: FunctionComponent<TooltipProps> = (
   }, [dateTitle])
 
   return (
-    <div
-      className={styles.tooltip}
+    // <div
+    //   className={styles.tooltip}
+    //   data-testid="tooltip"
+    //   style={{
+    //     top: offset?.top ?? 0,
+    //     left: offset?.left ?? 0,
+    //     backgroundColor,
+    //     borderColor,
+    //     borderWidth: `${borderWidth}px`,
+    //     visibility: offset ? 'visible' : 'hidden'
+    //   }}
+    //   ref={elementRef}
+    // >
+    //   {(title ?? dateValue) &&
+    //     <div id="tooltip-daily-title" className={styles.title}>
+    //       <div id="tooltip-daily-title-content" className={styles.titleContent}>
+    //         {dateValue && <span id="tooltip-daily-title-date" className={styles.titleDate}>{dateValue}</span>}
+    //         {title && <span id="tooltip-daily-title-text">{title}</span>}
+    //       </div>
+    //       {tail && !content &&
+    //         <TooltipTail
+    //           borderColor={borderColor}
+    //           borderSide={borderSide}
+    //           marginOuterValue={marginOuterValue}
+    //           tailElementRef={tailElementRef}
+    //           tailHeight={tailHeight}
+    //           tailWidth={tailWidth}
+    //         />
+    //       }
+    //     </div>
+    //   }
+    //   {content &&
+    //     <div data-testid="tooltip-daily-content" className={styles.content}>
+    //       <span>{content}</span>
+    //       <TooltipTail
+    //         borderColor={borderColor}
+    //         borderSide={borderSide}
+    //         marginOuterValue={marginOuterValue}
+    //         tailElementRef={tailElementRef}
+    //         tailHeight={tailHeight}
+    //         tailWidth={tailWidth}
+    //       />
+    //     </div>
+    //   }
+    // </div>
+    <Box
       data-testid="tooltip"
-      style={{
+      className={styles.tooltip}
+      ref={elementRef}
+      sx={{
         top: offset?.top ?? 0,
         left: offset?.left ?? 0,
-        backgroundColor,
-        borderColor,
-        borderWidth: `${borderWidth}px`,
-        visibility: offset ? 'visible' : 'hidden'
+        // visibility: offset ? 'visible' : 'hidden'
+        visibility: 'visible'
       }}
-      ref={elementRef}
     >
       {(title ?? dateValue) &&
-        <div id="tooltip-daily-title" className={styles.title}>
-          <div id="tooltip-daily-title-content" className={styles.titleContent}>
-            {dateValue && <span id="tooltip-daily-title-date" className={styles.titleDate}>{dateValue}</span>}
-            {title && <span id="tooltip-daily-title-text">{title}</span>}
-          </div>
-          {tail && !content &&
-            <TooltipTail
-              borderColor={borderColor}
-              borderSide={borderSide}
-              marginOuterValue={marginOuterValue}
-              tailElementRef={tailElementRef}
-              tailHeight={tailHeight}
-              tailWidth={tailWidth}
-            />
-          }
-        </div>
+        <Box className={styles.title} sx={{
+          backgroundColor: borderColor
+        }}>
+          {dateValue && <span id="tooltip-daily-title-date" className={styles.titleDate}>{dateValue}</span>}
+          {title && <span id="tooltip-daily-title-text" className={styles.titleValue}>{title}</span>}
+        </Box>
       }
       {content &&
-        <div data-testid="tooltip-daily-content" className={styles.content}>
+        <Box data-testid="tooltip-daily-content" className={styles.content}>
           <span>{content}</span>
-          <TooltipTail
-            borderColor={borderColor}
-            borderSide={borderSide}
-            marginOuterValue={marginOuterValue}
-            tailElementRef={tailElementRef}
-            tailHeight={tailHeight}
-            tailWidth={tailWidth}
-          />
-        </div>
+        </Box>
       }
-    </div>
+    </Box>
   )
 }
 
