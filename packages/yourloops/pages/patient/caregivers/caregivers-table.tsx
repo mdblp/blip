@@ -119,7 +119,6 @@ function CaregiversTable(props: CaregiverTableProps): JSX.Element {
 
   const onCloseRemoveCaregiverDialog = (shouldRefresh: boolean): void => {
     setCaregiverToRemove(null)
-    // TODO: ask Célia
     if (shouldRefresh) {
       props.fetchCaregivers(user.id)
     }
