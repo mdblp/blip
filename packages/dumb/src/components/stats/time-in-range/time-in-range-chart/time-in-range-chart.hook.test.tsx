@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,11 +26,11 @@
  */
 
 import { act, renderHook } from '@testing-library/react'
-import { type CBGPercentageBarChartHookProps, useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
+import { type TimeInRangeChartHookProps, useTimeInRangeChartHook } from './time-in-range-chart.hook'
 import { waitFor } from '@testing-library/dom'
-import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../models/stats.model'
+import { type CBGPercentageData, CBGStatType, StatLevel } from '../../../../models/stats.model'
 import { type TimeInRangeData } from 'tidepool-viz/src/types/utils/data'
-import { DatumType } from 'medical-domain'
+import { DatumType, Unit } from 'medical-domain'
 
 describe('CBGPercentageBarChart hook', () => {
   const veryHighStatValue = 100
@@ -38,7 +38,7 @@ describe('CBGPercentageBarChart hook', () => {
   const targetStatValue = 150
   const lowStatValue = 250
   const veryLowStatValue = 50
-  const total = veryLowStatValue + lowStatValue + targetStatValue + highStatValue + veryHighStatValue
+  const total = 1000
   const createCBGTimeData = (id: StatLevel, title: string, value: number): CBGPercentageData => {
     return { id, title, value }
   }
@@ -54,24 +54,35 @@ describe('CBGPercentageBarChart hook', () => {
     target: targetStatValue,
     low: lowStatValue,
     veryLow: veryLowStatValue,
-    /*
-    TODO waiting YLP-2141 (https://diabeloop.atlassian.net/browse/YLP-2141)
-     This stat is not calculated correctly in blip code, need to fix this when we will migrate data calculation to yourloops
-     Currently it's computed with sum of each bound
-     */
     total: 1000
   }
 
-  const defaultProps: CBGPercentageBarChartHookProps = {
+  const defaultProps: TimeInRangeChartHookProps = {
     bgType: DatumType.Cbg,
     data,
     days: 2,
     type: CBGStatType.TimeInRange,
+    bgPrefs: {
+      bgBounds: {
+        veryHighThreshold: 250,
+        targetUpperBound: 180,
+        targetLowerBound: 70,
+        veryLowThreshold: 54
+      },
+      bgUnits: Unit.MilligramPerDeciliter,
+      bgClasses: {
+        [StatLevel.VeryHigh]: 250,
+        [StatLevel.High]: 180,
+        [StatLevel.Target]: 70,
+        [StatLevel.Low]: 54,
+        [StatLevel.VeryLow]: 0
+      }
+    },
   }
 
   it('should return correct cbgStatsProps', () => {
     const props = { ...defaultProps }
-    const { result } = renderHook(() => useCBGPercentageBarChartHook(props))
+    const { result } = renderHook(() => useTimeInRangeChartHook(props))
     expect(result.current.cbgStatsProps).toEqual({
       veryHighStat: {
         type: CBGStatType.TimeInRange,
@@ -112,26 +123,26 @@ describe('CBGPercentageBarChart hook', () => {
   })
 
   it('should compute the right title', () => {
-    const { result: firstHook } = renderHook(() => useCBGPercentageBarChartHook({ ...defaultProps }))
+    const { result: firstHook } = renderHook(() => useTimeInRangeChartHook({ ...defaultProps }))
     expect(firstHook.current.title).toEqual('Avg. Daily Time In Range')
 
-    const { result: secondHook } = renderHook(() => useCBGPercentageBarChartHook({ ...defaultProps, days: 0 }))
+    const { result: secondHook } = renderHook(() => useTimeInRangeChartHook({ ...defaultProps, days: 0 }))
     expect(secondHook.current.title).toEqual('Time In Range')
 
-    const { result: thirdHook } = renderHook(() => useCBGPercentageBarChartHook({
+    const { result: thirdHook } = renderHook(() => useTimeInRangeChartHook({
       ...defaultProps,
       type: CBGStatType.ReadingsInRange
     }))
     expect(thirdHook.current.title).toEqual('Avg. Daily Readings In Range')
 
-    const { result: fourthHook } = renderHook(() => useCBGPercentageBarChartHook({
+    const { result: fourthHook } = renderHook(() => useTimeInRangeChartHook({
       ...defaultProps,
       days: 0,
       type: CBGStatType.ReadingsInRange
     }))
     expect(fourthHook.current.title).toEqual('Readings In Range')
 
-    const { result: fifthHook } = renderHook(() => useCBGPercentageBarChartHook({
+    const { result: fifthHook } = renderHook(() => useTimeInRangeChartHook({
       ...defaultProps,
       bgType: DatumType.Smbg
     }))
@@ -139,20 +150,20 @@ describe('CBGPercentageBarChart hook', () => {
   })
 
   it('should compute the right annotations', () => {
-    const { result: firstHook } = renderHook(() => useCBGPercentageBarChartHook({ ...defaultProps }))
+    const { result: firstHook } = renderHook(() => useTimeInRangeChartHook({ ...defaultProps }))
     expect(firstHook.current.annotations).toEqual(['**Time In Range:** Daily average of the time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is number of readings in range multiplied by the CGM sample frequency.'])
 
-    const { result: secondHook } = renderHook(() => useCBGPercentageBarChartHook({ ...defaultProps, days: 0 }))
+    const { result: secondHook } = renderHook(() => useTimeInRangeChartHook({ ...defaultProps, days: 0 }))
     expect(secondHook.current.annotations).toEqual(['**Time In Range:** Time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is 24 hours multiplied by % in range.'])
 
-    const { result: thirdHook } = renderHook(() => useCBGPercentageBarChartHook({
+    const { result: thirdHook } = renderHook(() => useTimeInRangeChartHook({
       ...defaultProps,
       days: 0,
       type: CBGStatType.ReadingsInRange
     }))
     expect(thirdHook.current.annotations).toEqual(['**Readings In Range:** Number of BGM readings.'])
 
-    const { result: fourthHook } = renderHook(() => useCBGPercentageBarChartHook({
+    const { result: fourthHook } = renderHook(() => useTimeInRangeChartHook({
       ...defaultProps,
       bgType: DatumType.Smbg
     }))
@@ -162,7 +173,7 @@ describe('CBGPercentageBarChart hook', () => {
   it('onMouseOver and OnMouseLeave should return correct values', async () => {
     const props = { ...defaultProps }
     const defaultTitle = 'Avg. Daily Time In Range'
-    const { result } = renderHook(() => useCBGPercentageBarChartHook(props))
+    const { result } = renderHook(() => useTimeInRangeChartHook(props))
     expect(result.current.hoveredStatId).toBeNull()
     expect(result.current.title).toEqual(defaultTitle)
     await act(async () => {

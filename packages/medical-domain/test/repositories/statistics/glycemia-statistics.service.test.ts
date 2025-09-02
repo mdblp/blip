@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,10 @@ import { type BgBounds } from '../../../src/domains/models/statistics/glycemia-s
 import type Cbg from '../../../src/domains/models/medical/datum/cbg.model'
 import Unit from '../../../src/domains/models/medical/datum/enums/unit.enum'
 import type Smbg from '../../../src/domains/models/medical/datum/smbg.model'
-import { GlycemiaStatisticsService, classifyBgValue } from '../../../src/domains/repositories/statistics/glycemia-statistics.service'
+import {
+  classifyBgValue,
+  GlycemiaStatisticsService
+} from '../../../src/domains/repositories/statistics/glycemia-statistics.service'
 import { MS_IN_DAY, MS_IN_MIN } from '../../../src/domains/repositories/time/time.service'
 import { createRandomCbg, createRandomSmbg } from '../../data-generator'
 import { ClassificationType } from '../../../src/domains/models/statistics/enum/bg-classification.enum'
@@ -40,6 +43,7 @@ import {
   dateFilterTwoDays,
   dateFilterTwoWeeks
 } from '../../mock/data.statistics.mock'
+import { MGDL_UNITS } from '../../../src'
 
 const buildCbgData = (data: Array<[Date, number, string]>): Cbg[] => (
   data.map((cbgData) => (
@@ -208,7 +212,29 @@ describe('GlycemiaStatisticsService getTimeInRangeData', () => {
       target: (15 + 5) / expectedTotalMinutes * MS_IN_DAY,
       high: 5 / expectedTotalMinutes * MS_IN_DAY,
       veryHigh: 5 / expectedTotalMinutes * MS_IN_DAY,
-      total: expectedTotalMinutes * MS_IN_MIN
+      total: MS_IN_DAY
+    })
+  })
+})
+
+describe('GlycemiaStatisticsService getTimeInTightRangeData', () => {
+  it('should return time in tight range when viewing one day', () => {
+    const stats = GlycemiaStatisticsService.getTimeInTightRangeData(cbgData, MGDL_UNITS, 1, dateFilterOneDay)
+    expect(stats).toEqual({
+      // 1 value with Abbott device = 15 mn
+      value: MS_IN_MIN * 15,
+      total: MS_IN_MIN * 15 * 3 + MS_IN_MIN * 5 * 2
+    })
+  })
+
+  it('should return time in tight range when viewing more than 1 day', () => {
+    const stats = GlycemiaStatisticsService.getTimeInTightRangeData(cbgData, MGDL_UNITS, 3, dateFilterThreeDays)
+    const expectedTotalMinutes = (15 * 3 + 5 * 6)
+
+    expect(stats).toEqual({
+      // 1 value with Abbott device + 2 values with Dexcom device = 15 + 5 * 2 mn
+      value: (15 + 5 * 2) / expectedTotalMinutes * MS_IN_DAY,
+      total: MS_IN_DAY
     })
   })
 })
@@ -381,6 +407,7 @@ describe('GlycemiaStatisticsService getGlucoseManagementIndicatorData', () => {
     })
   })
 })
+
 describe('GlycemiaStatisticsService getStandardDevData', () => {
   it('should return the average glucose and standard deviation when viewing one day', () => {
     const statsCbg = GlycemiaStatisticsService.getStandardDevData(cbgData, dateFilterOneDay)

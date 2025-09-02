@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,16 +26,16 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { CBGPercentageBarMemoized as CBGPercentageBar } from './cbg-percentage-bar'
-import { CbgPercentageTitleMemoized as CbgPercentageTitle } from './cbg-percentage-title'
-import { useCBGPercentageBarChartHook } from './cbg-percentage-bar-chart.hook'
-import { type CBGStatType } from '../../../models/stats.model'
-import { StatLegendMemoized as StatLegend } from '../stat-legend/stat-legend'
+import { CBGPercentageBarMemoized as CBGPercentageBar } from '../cbg-percentage-bar/cbg-percentage-bar'
+import { TimeInRangeTitleMemoized as TimeInRangeTitle } from '../time-in-range-title'
+import { useTimeInRangeChartHook } from './time-in-range-chart.hook'
+import { CBGStatType } from '../../../../models/stats.model'
+import { StatLegendMemoized as StatLegend } from '../../stat-legend/stat-legend'
 import Box from '@mui/material/Box'
-import { type BgPrefs } from '../../../models/blood-glucose.model'
+import { type BgPrefs } from '../../../../models/blood-glucose.model'
 import { type BgType, type CbgRangeStatistics } from 'medical-domain'
 
-interface CBGPercentageBarChartProps {
+interface TimeInRangeChartProps {
   bgType: BgType
   bgPrefs: BgPrefs
   cbgStatType: CBGStatType
@@ -43,27 +43,30 @@ interface CBGPercentageBarChartProps {
   days: number
 }
 
-const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (props) => {
+const TimeInRangeChart: FunctionComponent<TimeInRangeChartProps> = (props) => {
   const { bgPrefs, bgType, cbgStatType, data, days } = props
   const {
     annotations,
     cbgStatsProps,
     hoveredStatId,
     onMouseLeave,
-    title
-  } = useCBGPercentageBarChartHook({
+    title,
+    legendValues
+  } = useTimeInRangeChartHook({
     bgType,
     data,
     days,
-    type: cbgStatType
+    type: cbgStatType,
+    bgPrefs
   })
 
   return (
-    <Box data-testid="cbg-percentage-bar-chart">
-      <CbgPercentageTitle
+    <Box data-testid="time-in-range-chart">
+      <TimeInRangeTitle
         annotations={annotations}
         title={title}
         shouldDisplayInfoTooltip={!hoveredStatId}
+        type={CBGStatType.TimeInRange}
       />
       <Box
         onMouseLeave={() => {
@@ -77,8 +80,8 @@ const CBGPercentageBarChart: FunctionComponent<CBGPercentageBarChartProps> = (pr
         <CBGPercentageBar {...cbgStatsProps.lowStat} />
         <CBGPercentageBar {...cbgStatsProps.veryLowStat} />
       </Box>
-      <StatLegend bgClasses={bgPrefs.bgClasses} units={bgPrefs.bgUnits} />
+      <StatLegend units={bgPrefs.bgUnits} legend={legendValues} type={CBGStatType.TimeInRange} />
     </Box>
   )
 }
-export const CBGPercentageBarChartMemoized = React.memo(CBGPercentageBarChart)
+export const TimeInRangeChartMemoized = React.memo(TimeInRangeChart)

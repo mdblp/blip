@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BgBounds, type BgClasses, type BgUnit } from 'medical-domain'
-
-export interface BgPrefs {
-  bgUnits: BgUnit
-  bgBounds?: BgBounds
-  bgClasses: BgClasses
+export enum BgClass {
+  High = 'high',
+  Low = 'low',
+  Target = 'target',
+  VeryHigh = 'veryHigh',
+  VeryLow = 'veryLow',
 }
