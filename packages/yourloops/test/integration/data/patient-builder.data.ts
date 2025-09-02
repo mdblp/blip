@@ -55,6 +55,8 @@ export const buildPatient = (params: {
   settings?: Partial<PatientSettings>
   flagged?: boolean
   hasSentUnreadMessages?: boolean
+  glycemiaIndicators?: GlycemiaIndicators
+  medicalData?: MedicalData
 }): Patient => {
   return {
     profile: {
@@ -73,7 +75,9 @@ export const buildPatient = (params: {
     hasSentUnreadMessages: params.hasSentUnreadMessages || false,
     monitoringAlertsParameters: params.monitoringAlertsParameters,
     invitationStatus: UserInviteStatus.Accepted,
-    userid: params.userid
+    userid: params.userid,
+    glycemiaIndicators: params.glycemiaIndicators,
+    medicalData: params.medicalData
   }
 }
 
