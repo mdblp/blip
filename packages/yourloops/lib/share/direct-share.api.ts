@@ -54,8 +54,8 @@ export default class DirectShareApi {
     }
   }
 
-  static async getDirectShares(): Promise<ShareUser[]> {
-    const { data } = await HttpService.get<DirectShareAPI[]>({ url: '/v0/my-direct-shares' })
+  static async getDirectShares(userId: string): Promise<ShareUser[]> {
+    const { data } = await HttpService.get<DirectShareAPI[]>({ url: `/bff/v1/patients/${userId}/caregivers-info` })
     return DirectShareApi.mapShareUser(data)
   }
 
