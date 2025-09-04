@@ -36,7 +36,6 @@ export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }>
   const { t } = useTranslation()
   const override = Math.sign(rescueCarbs.rescueCarbsOverrideAverage) === 1 ? `+${rescueCarbs.rescueCarbsOverrideAverage}` : rescueCarbs.rescueCarbsOverrideAverage
 
-
   return (
     <Tooltip
       position={DEFAULT_TOOLTIP_POSITION}
@@ -48,8 +47,9 @@ export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }>
           <TooltipLine label={t('number-of-rescue-carbs')} value={rescueCarbs.numberOfRescueCarbs} />
           <TooltipLine label={t('number-of-rescue-carbs-modified')} value={rescueCarbs.numberOfModifiedCarbs} />
           <TooltipLine label={t('recommended-carbs')} value={rescueCarbs.averageRecommendedCarb} units={t('g')} />
-          {override && override !== 0 &&
-            <TooltipLine label={t('override')} value={override} units={t('g')} customColor={TooltipColor.Undelivered} isBold />
+          {!!override &&
+            <TooltipLine label={t('override')} value={override} units={t('g')} customColor={TooltipColor.Undelivered}
+                         isBold />
           }
         </div>
       }

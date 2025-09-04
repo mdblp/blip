@@ -41,6 +41,7 @@ interface TooltipLineProps {
 
 export const TooltipLine: FunctionComponent<TooltipLineProps> = (props) => {
   const { customColor, isBold, label, value, units } = props
+  const isValueDefined = value || value === 0
 
   const getClassByTooltipColor = (tooltipColor: TooltipColor): string => {
     switch (tooltipColor) {
@@ -61,7 +62,7 @@ export const TooltipLine: FunctionComponent<TooltipLineProps> = (props) => {
   return (
     <div className={getGlobalClasses()}>
       <span>{label}</span>
-      {value &&
+      {isValueDefined &&
         <Box flexDirection="row" sx={{ ml: 1 }}>
           <span>{value}</span>
           {units && <span className={styles.units}>{units}</span>}

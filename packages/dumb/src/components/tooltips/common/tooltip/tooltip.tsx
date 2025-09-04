@@ -113,7 +113,7 @@ const Tooltip: FunctionComponent<TooltipProps> = (
           paddingY: 2
         }}>
           {title && <span className={styles.titleValue}>{title}</span>}
-          {dateValue && <span className={styles.titleDate}>{dateValue}</span>}
+          {dateValue && <span className={styles.titleDate} data-testid="tooltip-title-date">{dateValue}</span>}
         </Box>
       }
       {content &&
