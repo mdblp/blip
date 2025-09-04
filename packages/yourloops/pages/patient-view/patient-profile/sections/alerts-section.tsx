@@ -45,13 +45,13 @@ import {
 import { logError } from '../../../../utils/error.util'
 import { errorTextFromException } from '../../../../lib/utils'
 
-interface RangeAndAlertsSectionProps {
+interface AlertsSectionProps {
   patient: Patient
 }
 
 export const MONITORING_ALERTS_SECTION_ID = 'monitoring-alerts'
 
-export const RangeAndAlertsSection: FC<RangeAndAlertsSectionProps> = (props) => {
+export const AlertsSection: FC<AlertsSectionProps> = (props) => {
   const { patient } = props
   const theme = useTheme()
   const { t } = useTranslation('yourloops')
@@ -106,24 +106,14 @@ export const RangeAndAlertsSection: FC<RangeAndAlertsSectionProps> = (props) => 
   }
 
   return (
-    <Container data-testid="target-and-alerts-container">
+    <Container data-testid="alerts-container">
       <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
-        <CardHeader title={t('range-and-alerts')} />
+        <CardHeader title={t('monitoring-alerts')} />
         <CardContent>
-          <Divider variant="fullWidth" sx={{
-            marginBottom: theme.spacing(5),
-            marginTop: theme.spacing(2)
-          }} />
           <section
             data-testid="monitoring-alerts-configuration-section"
             ref={monitoringAlertsSection}
           >
-            <Typography
-              variant="h6"
-              paddingBottom={theme.spacing(1)}
-            >
-              {t('monitoring-alerts')}
-            </Typography>
             <Typography
               variant="body2"
               paddingBottom={theme.spacing(2)}
