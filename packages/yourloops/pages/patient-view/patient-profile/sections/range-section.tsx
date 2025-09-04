@@ -35,22 +35,23 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import { useLocation } from 'react-router-dom'
-import Divider from '@mui/material/Divider'
 
 interface RangeSectionProps {
   patient: Patient
 }
 
-export const MONITORING_Range_SECTION_ID = 'monitoring-Range'
+export const RANGE_SECTION_ID = 'range'
 
-// TODO: ask in review: should we ahve a convention for having Suffix Section
+// TODO: ask in review: should we have a convention  i.e having Suffix called Section in name and in file name ?
 export const RangeSection: FC<RangeSectionProps> = (props) => {
+  // JUST FOR NOW !
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { patient } = props
   const theme = useTheme()
   const { t } = useTranslation('yourloops')
   const { pathname, hash, key } = useLocation()
 
-  const monitoringRangeSection = useRef<HTMLElement>(null)
+  const rangeSection = useRef<HTMLElement>(null)
 
 
   useEffect(() => {
@@ -59,8 +60,8 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
     }
 
     const sectionId = hash.replace('#', '')
-    if (monitoringRangeSection && sectionId === MONITORING_Range_SECTION_ID) {
-      monitoringRangeSection.current.scrollIntoView({ behavior: 'smooth' })
+    if (rangeSection && sectionId === RANGE_SECTION_ID) {
+      rangeSection.current.scrollIntoView({ behavior: 'smooth' })
     }
   }, [pathname, hash, key])
 
@@ -72,7 +73,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
         <CardContent>
           <section
             data-testid="range-configuration-section"
-            ref={monitoringRangeSection}
+            ref={rangeSection}
           >
             <Typography
               variant="body2"

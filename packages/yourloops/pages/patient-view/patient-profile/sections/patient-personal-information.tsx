@@ -46,7 +46,6 @@ import HeightIcon from '@mui/icons-material/Height'
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid'
 import MonitorWeightIcon from '@mui/icons-material/MonitorWeight'
 import StraightenIcon from '@mui/icons-material/Straighten'
-import Divider from '@mui/material/Divider'
 import { BasalIcon } from '../../../../components/icons/diabeloop/basal-icon'
 
 interface InformationSectionProps {

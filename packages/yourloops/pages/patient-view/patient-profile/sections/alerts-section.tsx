@@ -38,7 +38,6 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import { useLocation } from 'react-router-dom'
-import Divider from '@mui/material/Divider'
 import {
   MonitoringAlertsPatientConfiguration
 } from '../../../../components/monitoring-alert/monitoring-alerts-patient-configuration'
