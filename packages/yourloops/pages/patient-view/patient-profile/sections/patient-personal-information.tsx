@@ -46,7 +46,6 @@ import HeightIcon from '@mui/icons-material/Height'
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid'
 import MonitorWeightIcon from '@mui/icons-material/MonitorWeight'
 import StraightenIcon from '@mui/icons-material/Straighten'
-import Divider from '@mui/material/Divider'
 import { BasalIcon } from '../../../../components/icons/diabeloop/basal-icon'
 
 interface InformationSectionProps {
@@ -132,10 +131,6 @@ export const PatientPersonalInformation: FC<InformationSectionProps> = (props) =
               </Typography>
             </Box>
           </Box>
-          <Divider variant="fullWidth" sx={{
-            marginBottom: theme.spacing(5),
-            marginTop: theme.spacing(2)
-          }} />
           <Grid container spacing={2}>
             <Grid item xs={6}>
               {/* Date of birth */}
