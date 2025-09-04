@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 .units {
   composes: units from '../../../../styles/tooltip-common.css';
-  margin-left: 10px;
+  margin-left: 4px;
 }
 
 .colorUndelivered {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,39 +26,27 @@
  */
 
 import React, { FC } from 'react'
-import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
-import { MANUAL_BOLUS_COLOR, useCarbsAndBolusStyles } from './carbs-and-bolus-styles'
 import { useTranslation } from 'react-i18next'
 import { ManualBolusAveragePerRange } from 'medical-domain'
+import { Tooltip, TooltipLine, TooltipSide } from 'dumb'
+import { DEFAULT_TOOLTIP_POSITION, useCarbsAndBolusStyles } from './carbs-and-bolus-styles'
 
 export const ManualBolusTooltip: FC<{ manualBolus: ManualBolusAveragePerRange }> = ({ manualBolus }) => {
   const { classes } = useCarbsAndBolusStyles()
   const { t } = useTranslation()
 
   return (
-    <Box
-      className={classes.hoverTooltip}
-      sx={{ border: `2px solid ${MANUAL_BOLUS_COLOR}` }}
-      data-testid="manual-bolus-tooltip"
-    >
-      <div className={`${classes.tooltipTail} manual-bolus`} />
-      <Typography
-        variant="subtitle2"
-        className="header"
-      >
-        {t('manual-pen-bolus')}
-      </Typography>
-      <Box className="content">
-        <div className="flex-justify-between-align-center">
-          <Typography variant="body2">{t('number-of-bolus')}</Typography>
-          <Typography variant="body2">{manualBolus.numberOfInjections}</Typography>
+    <Tooltip
+      position={DEFAULT_TOOLTIP_POSITION}
+      side={TooltipSide.Right}
+      backgroundColor={"var(--dark-blue-background)"}
+      title={t('manual-pen-bolus')}
+      content={
+        <div className={classes.containerFlexLarge} >
+            <TooltipLine label={t('number-of-bolus')} value={manualBolus.numberOfInjections} />
+            <TooltipLine label={t('confirmed-dose')} value={manualBolus.confirmedDose} units={t('insulin-unit-u')} />
         </div>
-        <div className="flex-justify-between-align-center">
-          <Typography variant="body2">{t('confirmed-dose')}</Typography>
-          <Typography variant="body2">{manualBolus.confirmedDose}U</Typography>
-        </div>
-      </Box>
-    </Box>
+      }
+    />
   )
 }

@@ -27,31 +27,26 @@
 
 import React, { type FunctionComponent } from 'react'
 import commonStyles from '../../../styles/tooltip-common.css'
-import {
-  COMMON_TOOLTIP_TAIL_HEIGHT,
-  COMMON_TOOLTIP_TAIL_WIDTH,
-  DEFAULT_TOOLTIP_BORDER_WIDTH,
-  DEFAULT_TOOLTIP_OFFSET,
-  DEFAULT_TOOLTIP_TAIL,
-  type Position,
-  type Side
-} from '../common/tooltip/tooltip'
+import { DEFAULT_TOOLTIP_OFFSET, type Position } from '../common/tooltip/tooltip'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { type ReservoirChange, type TimePrefs } from 'medical-domain'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { getReservoirChangeTitle } from '../../../utils/reservoir-change/reservoir-change.util'
+import { useTranslation } from 'react-i18next'
+import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
 
 interface ReservoirTooltipProps {
   reservoir: ReservoirChange
   position: Position
-  side: Side
+  side: TooltipSide
   timePrefs: TimePrefs
 }
 
 export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props) => {
   const { reservoir, position, side, timePrefs } = props
+  const { t } = useTranslation()
 
   const label = getReservoirChangeTitle(reservoir)
 
@@ -59,12 +54,9 @@ export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props
     <Tooltip
       position={position}
       side={side}
-      borderColor={colors.deviceEvent}
+      title={t('Pump')}
+      backgroundColor={colors.greyBackground}
       dateTitle={getDateTitleForBaseDatum(reservoir, timePrefs)}
-      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
-      tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
-      tail={DEFAULT_TOOLTIP_TAIL}
-      borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>

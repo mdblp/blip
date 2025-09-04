@@ -27,14 +27,14 @@
 
 .tooltip {
   display: block;
-  composes: defaultSize from '../../../../styles/typography.css';
+  composes: smallSize from '../../../../styles/typography.css';
   background-color: #FFFFFF;
-  /*border: solid;*/
   pointer-events: none;
   position: absolute;
   border-radius: 24px;
   box-shadow: 4px 4px 20px -5px rgba(2, 57, 79, 0.12);
-  min-width: 100px;
+  overflow: hidden;
+  z-index: 10;
 }
 
 .content {
@@ -47,33 +47,11 @@
   box-sizing: border-box;
 }
 
-.title {
-  composes: mediumContrastText from '../../../../styles/typography.css';
-  composes: content;
-  /*background-color: var(--tooltip-title-bg);*/
-}
-
-.titleContent {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  width: 100%;
-  column-gap: 0.5em;
-}
-
 .titleDate {
-  margin-right: auto;
+  margin-left: auto;
+  padding-left: 8px;
 }
 
 .titleValue {
   font-weight: bold;
-}
-
-.tail {
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-color: transparent;
-  position: absolute;
 }

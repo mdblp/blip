@@ -26,11 +26,7 @@
  */
 
 import React, { FC } from 'react'
-import Tooltip, {
-  COMMON_TOOLTIP_TAIL_HEIGHT,
-  COMMON_TOOLTIP_TAIL_WIDTH, DEFAULT_TOOLTIP_BORDER_WIDTH, DEFAULT_TOOLTIP_OFFSET,
-  DEFAULT_TOOLTIP_TAIL, Position, Side
-} from '../common/tooltip/tooltip'
+import Tooltip, { DEFAULT_TOOLTIP_OFFSET, Position } from '../common/tooltip/tooltip'
 import colors from '../../../styles/colors.css'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import commonStyles from '../../../styles/tooltip-common.css'
@@ -38,11 +34,12 @@ import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { TimePrefs, ZenMode } from 'medical-domain'
 import { getDuration } from '../../../utils/datetime/datetime.util'
 import { useTranslation } from 'react-i18next'
+import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
 
 interface ZenModeTooltipProps {
   zenMode: ZenMode
   position: Position
-  side: Side
+  side: TooltipSide
   timePrefs: TimePrefs
 }
 
@@ -55,17 +52,13 @@ export const ZenModeTooltip: FC<ZenModeTooltipProps> = (props) => {
   return (
     <Tooltip
       position={position}
-      borderColor={colors.zenMode}
+      backgroundColor={colors.greenBackground}
+      title={t('zen-mode')}
       dateTitle={getDateTitleForBaseDatum(zenMode, timePrefs)}
       side={side}
-      tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
-      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
-      tail={DEFAULT_TOOLTIP_TAIL}
-      borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>
-          <TooltipLine label={t('zen-mode')} isBold />
           <TooltipLine label={t('Duration')} value={`${duration.value} ${t(duration.units)}`} />
         </div>
       }

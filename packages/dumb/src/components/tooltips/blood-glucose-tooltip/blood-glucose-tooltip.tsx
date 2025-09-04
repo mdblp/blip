@@ -32,26 +32,19 @@ import { convertBgClassesToBgBounds, getBgClass } from '../../../utils/blood-glu
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { formatBgValue } from '../../../utils/format/format.util'
-import {
-  COMMON_TOOLTIP_TAIL_HEIGHT,
-  COMMON_TOOLTIP_TAIL_WIDTH,
-  DEFAULT_TOOLTIP_BORDER_WIDTH,
-  DEFAULT_TOOLTIP_OFFSET,
-  DEFAULT_TOOLTIP_TAIL,
-  type Position,
-  type Side
-} from '../common/tooltip/tooltip'
-import { BgClass, type BgPrefs } from '../../../models/blood-glucose.model'
-import { type Cbg, ClassificationType, type Smbg, type TimePrefs } from 'medical-domain'
+import { DEFAULT_TOOLTIP_OFFSET, type Position } from '../common/tooltip/tooltip'
+import { type BgPrefs } from '../../../models/blood-glucose.model'
+import { BgClass, type Cbg, ClassificationType, type Smbg, type TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { TooltipColor } from '../../../models/enums/tooltip-color.enum'
+import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
 
 interface BloodGlucoseTooltipProps {
   bgPrefs: BgPrefs
   data: Cbg | Smbg
   position: Position
-  side: Side
+  side: TooltipSide
   timePrefs: TimePrefs
   isSmbg?: boolean
 }
@@ -72,13 +65,13 @@ export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = 
     switch (bgClass) {
       case BgClass.Low:
       case BgClass.VeryLow:
-        return colors.lowBackground
+        return colors.redBackground
       case BgClass.High:
       case BgClass.VeryHigh:
-        return colors.highBackground
+        return colors.orangeBackground
       case BgClass.Target:
       default:
-        return colors.targetBackground
+        return colors.blueBackground
     }
   }
 
@@ -86,12 +79,9 @@ export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = 
     <Tooltip
       position={position}
       side={side}
-      borderColor={getColorClass(bgClass)}
+      backgroundColor={getColorClass(bgClass)}
+      title={t('glycemia')}
       dateTitle={getDateTitleForBaseDatum(data, timePrefs)}
-      tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
-      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
-      tail={DEFAULT_TOOLTIP_TAIL}
-      borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>

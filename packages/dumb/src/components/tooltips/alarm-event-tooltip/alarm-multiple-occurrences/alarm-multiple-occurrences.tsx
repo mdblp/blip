@@ -32,7 +32,7 @@ import { TooltipLine } from '../../common/tooltip-line/tooltip-line'
 import { computeDateValue, getDateTitle } from '../../../../utils/tooltip/tooltip.util'
 import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
-import { getBorderColor } from '../../../../utils/alarm-event/alarm-event.util'
+import { getBackgroundColor } from '../../../../utils/alarm-event/alarm-event.util'
 
 interface AlarmMultipleOccurrencesProps {
   alarmEvent: AlarmEvent
@@ -44,7 +44,7 @@ export const AlarmMultipleOccurrences: FC<AlarmMultipleOccurrencesProps> = (prop
   const theme = useTheme()
   const { t } = useTranslation('main')
 
-  const borderColor = getBorderColor(alarmEvent.alarmEventType)
+  const borderColor = getBackgroundColor(alarmEvent.alarmEventType)
 
   return (
     <>

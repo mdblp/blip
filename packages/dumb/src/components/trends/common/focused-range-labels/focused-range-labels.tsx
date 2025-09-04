@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,9 +30,10 @@ import React, { type FunctionComponent } from 'react'
 import styles from './focused-range-labels.css'
 import { formatClocktimeFromMsPer24 } from '../../../../utils/datetime/datetime.util'
 import { formatBgValue } from '../../../../utils/format/format.util'
-import Tooltip from '../../../tooltips/common/tooltip/tooltip'
 import { useTrendsContext } from '../../../../provider/trends.provider'
 import { type BgUnit } from 'medical-domain'
+import { TooltipSide } from '../../../../models/enums/tooltip-side.enum'
+import { TrendsTooltip } from '../tooltip/trends-tooltip'
 
 interface FocusedRangeLabelsProps {
   bgUnit: BgUnit
@@ -40,8 +41,6 @@ interface FocusedRangeLabelsProps {
 
 const BOTTOM_OFFSET = -5
 const TOP_OFFSET = 5
-const TOP_SIDE = 'top'
-const BOTTOM_SIDE = 'bottom'
 const TRANSPARENT_COLOR = 'transparent'
 
 export const FocusedRangeLabels: FunctionComponent<FocusedRangeLabelsProps> = (props) => {
@@ -75,40 +74,34 @@ export const FocusedRangeLabels: FunctionComponent<FocusedRangeLabelsProps> = (p
 
   return (
     <div className={styles.container} data-testid="trends-tooltips">
-      <Tooltip
+      <TrendsTooltip
         title={
           <span className={styles.timeLabel}>{timeFrom} - {timeTo}</span>
         }
-        borderWidth={0}
         position={dateTooltipPosition}
-        side={BOTTOM_SIDE}
-        tail={false}
+        side={TooltipSide.Bottom}
       />
-      <Tooltip
+      <TrendsTooltip
         content={
           <span className={styles.number}>
             {topSegmentBgValue}
           </span>
         }
         backgroundColor={TRANSPARENT_COLOR}
-        borderColor={TRANSPARENT_COLOR}
         offset={{ left: 0, top: TOP_OFFSET }}
         position={topRangeSegmentTooltipPosition}
-        side={TOP_SIDE}
-        tail={false}
+        side={TooltipSide.Top}
       />
-      <Tooltip
+      <TrendsTooltip
         content={
           <span className={styles.number}>
             {bottomSegmentBgValue}
           </span>
         }
         backgroundColor={TRANSPARENT_COLOR}
-        borderColor={TRANSPARENT_COLOR}
         offset={{ left: 0, top: BOTTOM_OFFSET }}
         position={bottomRangeSegmentTooltipPosition}
-        side={BOTTOM_SIDE}
-        tail={false}
+        side={TooltipSide.Bottom}
       />
     </div>
   )

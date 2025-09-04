@@ -26,13 +26,10 @@
  */
 
 import React, { type FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
-import styles from './tooltip.css'
-import useTooltip from './tooltip.hook'
+import styles from './trends-tooltip.css'
 import { type TimePrefs } from 'medical-domain'
 import { computeDateValue } from '../../../../utils/tooltip/tooltip.util';
-import Box from '@mui/material/Box'
-import { TooltipSide } from '../../../../models/enums/tooltip-side.enum'
-
+import { useTrendsTooltip } from './trends-tooltip.hook'
 
 export interface Offset {
   top: number
@@ -52,7 +49,9 @@ export interface DateTitle {
   timePrefs: TimePrefs
 }
 
-export const COMMON_TOOLTIP_SIDE = TooltipSide.Right
+export type Side = 'top' | 'right' | 'bottom' | 'left'
+
+export const COMMON_TOOLTIP_SIDE = 'right'
 
 export const DEFAULT_TOOLTIP_OFFSET = { top: 0, left: 0 }
 
@@ -62,11 +61,12 @@ interface TooltipProps {
   content?: string | JSX.Element
   position: Position
   offset?: Offset
-  side: TooltipSide
+  tail?: boolean
+  side: Side
   backgroundColor?: string
 }
 
-const Tooltip: FunctionComponent<TooltipProps> = (
+export const TrendsTooltip: FunctionComponent<TooltipProps> = (
   {
     side = COMMON_TOOLTIP_SIDE,
     offset: initialOffset = DEFAULT_TOOLTIP_OFFSET,
@@ -82,47 +82,46 @@ const Tooltip: FunctionComponent<TooltipProps> = (
 
   const {
     calculateOffset,
-  } = useTooltip({ position, offset: initialOffset, side })
+  } = useTrendsTooltip({ position, offset: initialOffset, side })
 
   const elementRef = useRef<HTMLDivElement>(null)
+  const tailElementRef = useRef<HTMLDivElement>(null)
   const [offset, setOffset] = useState<Offset | null>(null)
 
   useEffect(() => {
-    const { top, left } = calculateOffset(elementRef.current)
+    const { top, left } = calculateOffset(elementRef.current, tailElementRef.current)
     setOffset({ top, left })
-  }, [calculateOffset, elementRef])
+  }, [calculateOffset, elementRef, tailElementRef])
 
   const dateValue = useMemo(() => {
     return computeDateValue(dateTitle)
   }, [dateTitle])
 
   return (
-    <Box
-      data-testid="tooltip"
+    <div
       className={styles.tooltip}
-      ref={elementRef}
-      sx={{
+      data-testid="tooltip"
+      style={{
         top: offset?.top ?? 0,
         left: offset?.left ?? 0,
+        backgroundColor,
         visibility: offset ? 'visible' : 'hidden'
       }}
+      ref={elementRef}
     >
       {(title ?? dateValue) &&
-        <Box className={styles.content} sx={{
-          backgroundColor,
-          paddingY: 2
-        }}>
-          {title && <span className={styles.titleValue}>{title}</span>}
-          {dateValue && <span className={styles.titleDate}>{dateValue}</span>}
-        </Box>
+        <div id="tooltip-daily-title" className={styles.title}>
+          <div id="tooltip-daily-title-content" className={styles.titleContent}>
+            {dateValue && <span id="tooltip-daily-title-date" className={styles.titleDate}>{dateValue}</span>}
+            {title && <span id="tooltip-daily-title-text">{title}</span>}
+          </div>
+        </div>
       }
       {content &&
-        <Box data-testid="tooltip-daily-content" className={styles.content} sx={{ paddingY: 1 }}>
+        <div data-testid="tooltip-daily-content" className={styles.content}>
           <span>{content}</span>
-        </Box>
+        </div>
       }
-    </Box>
+    </div>
   )
 }
-
-export default Tooltip
