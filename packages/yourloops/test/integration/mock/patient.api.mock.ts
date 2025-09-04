@@ -27,12 +27,12 @@
 
 import PatientApi from '../../../lib/patient/patient.api'
 import {
-  patient1AsTeamMember,
-  patient2AsTeamMember,
-  patient3AsTeamMember,
+  patient1Info,
+  patient2Info,
+  patient3Info,
   PATIENTS_INFO_BY_TEAMID,
   PATIENTS_METRICS_BY_TEAMID,
-  pendingPatientAsTeamMember
+  pendingPatient
 } from '../data/patient.api.data'
 
 export const mockPatientApiForPatients = () => {
@@ -40,7 +40,7 @@ export const mockPatientApiForPatients = () => {
 }
 
 export const mockPatientApiForCaregivers = () => {
-  jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1AsTeamMember, patient2AsTeamMember, patient3AsTeamMember, pendingPatientAsTeamMember])
+  jest.spyOn(PatientApi, 'getPatientsForCaregivers').mockResolvedValue([patient1Info, patient2Info, patient3Info, pendingPatient])
   jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
 }
 export const mockPatientApiForHcp = () => {

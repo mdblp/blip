@@ -30,5 +30,5 @@ import { type BgBounds, type BgClasses, type BgUnit } from 'medical-domain'
 export interface BgPrefs {
   bgUnits: BgUnit
   bgBounds?: BgBounds
-  bgClasses: BgClasses
+  bgClasses: BgClasses // Thresholds for each class
 }
