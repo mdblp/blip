@@ -50,22 +50,15 @@ interface InvitePatientPayload extends InvitePatientArgs {
 }
 
 export default class PatientApi {
-  static async getPatients(): Promise<ITeamMember[]> {
-    try {
-      const { data } = await HttpService.get<ITeamMember[]>({ url: '/v0/my-patients' })
-      return data
-    } catch (err) {
-      const error = err as Error
-      if (error.message === ErrorMessageStatus.NotFound) {
-        log.info('No patients')
-        return []
-      }
-      throw err
-    }
-  }
+
 
   static async getPatientsForHcp(userId: string, teamId: string): Promise<Patient[]> {
     const { data } = await HttpService.get<Patient[]>({ url: `/bff/v1/hcps/${userId}/teams/${teamId}/patients-info` })
+    return data
+  }
+
+  static async getPatientsForCaregivers(userId: string): Promise<Patient[]> {
+    const { data } = await HttpService.get<Patient[]>({ url: `/bff/v1/caregivers/${userId}/patients-info` })
     return data
   }
 

@@ -79,7 +79,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const dailyChartRef = useRef(null)
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
   const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
-  const bgClasses = defaultBgClasses[bgUnits]
+  const bgClasses = defaultBgClasses[bgUnits] // used to class the blood glucose values in the chart
   const bgPrefs: BgPrefs = patient.diabeticProfile?.bloodGlucosePreference || {
     bgUnits,
     bgClasses,

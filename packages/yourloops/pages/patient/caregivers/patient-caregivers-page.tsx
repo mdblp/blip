@@ -113,8 +113,8 @@ export const PatientCaregiversPage: FC = () => {
     }, [])
   }, [sentInvitations])
 
-  const fetchCaregivers = useCallback(async (): Promise<void> => {
-    await DirectShareApi.getDirectShares()
+  const fetchCaregivers = useCallback(async (userId: string): Promise<void> => {
+    await DirectShareApi.getDirectShares(userId)
       .catch((reason: unknown) => {
         console.error(reason)
 
@@ -130,7 +130,7 @@ export const PatientCaregiversPage: FC = () => {
   useEffect(() => {
     if (sentInvitationsFetched.current !== sentInvitations) {
       sentInvitationsFetched.current = sentInvitations
-      fetchCaregivers()
+      fetchCaregivers(user.id)
     }
   }, [fetchCaregivers, sentInvitations, user.id])
 

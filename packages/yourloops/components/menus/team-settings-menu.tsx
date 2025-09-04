@@ -115,7 +115,7 @@ function TeamSettingsMenu(): JSX.Element {
         patientIdForWhichDataHasBeenFetched.current = user.id
 
         try {
-          setCaregivers(await DirectShareApi.getDirectShares())
+          setCaregivers(await DirectShareApi.getDirectShares(user.id))
         } catch (error) {
           setCaregivers([])
         }
