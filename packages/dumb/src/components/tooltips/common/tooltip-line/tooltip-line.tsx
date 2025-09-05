@@ -41,7 +41,7 @@ interface TooltipLineProps {
 
 export const TooltipLine: FunctionComponent<TooltipLineProps> = (props) => {
   const { customColor, isBold, label, value, units } = props
-  const isValueDefined = value || value === 0
+  const isValueDefined = value !== undefined && value !== null
 
   const getClassByTooltipColor = (tooltipColor: TooltipColor): string => {
     switch (tooltipColor) {

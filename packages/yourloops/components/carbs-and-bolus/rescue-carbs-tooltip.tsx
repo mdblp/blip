@@ -47,7 +47,7 @@ export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }>
           <TooltipLine label={t('number-of-rescue-carbs')} value={rescueCarbs.numberOfRescueCarbs} />
           <TooltipLine label={t('number-of-rescue-carbs-modified')} value={rescueCarbs.numberOfModifiedCarbs} />
           <TooltipLine label={t('recommended-carbs')} value={rescueCarbs.averageRecommendedCarb} units={t('g')} />
-          {!!override &&
+          {rescueCarbs.rescueCarbsOverrideAverage !== 0 &&
             <TooltipLine label={t('override')} value={override} units={t('g')} customColor={TooltipColor.Undelivered}
                          isBold />
           }
