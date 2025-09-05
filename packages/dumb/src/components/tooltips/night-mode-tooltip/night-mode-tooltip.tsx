@@ -26,15 +26,7 @@
  */
 
 import { type NightMode, TimePrefs } from 'medical-domain'
-import Tooltip, {
-  COMMON_TOOLTIP_TAIL_HEIGHT,
-  COMMON_TOOLTIP_TAIL_WIDTH,
-  DEFAULT_TOOLTIP_BORDER_WIDTH,
-  DEFAULT_TOOLTIP_OFFSET,
-  DEFAULT_TOOLTIP_TAIL,
-  Position,
-  Side
-} from '../common/tooltip/tooltip'
+import Tooltip, { DEFAULT_TOOLTIP_OFFSET, Position } from '../common/tooltip/tooltip'
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
@@ -42,11 +34,12 @@ import colors from '../../../styles/colors.css'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { getDuration } from '../../../utils/datetime/datetime.util'
+import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
 
 interface NightModeTooltipProps {
   nightMode: NightMode
   position: Position
-  side: Side
+  side: TooltipSide
   timePrefs: TimePrefs
 }
 
@@ -59,17 +52,13 @@ export const NightModeTooltip: FC<NightModeTooltipProps> = (props) => {
   return (
     <Tooltip
       position={position}
-      borderColor={colors.bolusManual}
+      backgroundColor={colors.darkBlueBackground}
+      title={t('night-mode')}
       dateTitle={getDateTitleForBaseDatum(nightMode, timePrefs)}
       side={side}
-      tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
-      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
-      tail={DEFAULT_TOOLTIP_TAIL}
-      borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>
-          <TooltipLine label={t('night-mode')} isBold />
           <TooltipLine label={t('Duration')} value={`${duration.value} ${t(duration.units)}`} />
         </div>
       }

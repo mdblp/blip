@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,42 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.container {
-  opacity: 1;
-  min-width: 80px;
-  margin: 2px 0;
-}
-
-.containerFlex {
-  composes: container;
-  display: flex;
-  flex-direction: column;
-  min-width: 120px;
-}
-
-.containerFlexLarge {
-  composes: containerFlex;
-  min-width: 160px;
-}
-
-.row {
-  composes: smallSize from '../styles/typography.css';
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  line-height: 20px;
-}
-
-.rowBold {
-  composes: row;
-  font-weight: bold;
-}
-
-.units {
-  min-width: 0.7em;
-}
-
-.dividerLarge {
-  height: 4px;
-  margin: 5px -10px;
+export enum TooltipSide {
+  Bottom = 'bottom',
+  Left = 'left',
+  Right = 'right',
+  Top = 'top'
 }

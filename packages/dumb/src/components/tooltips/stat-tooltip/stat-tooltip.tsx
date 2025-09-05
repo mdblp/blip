@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -43,10 +43,11 @@ const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: 'white',
     color: 'var(--stat--default)',
-    border: '1px solid rgb(114, 115, 117)',
     fontSize: '12px',
     lineHeight: '20px',
-    borderWidth: '2px'
+    borderRadius: '24px',
+    boxShadow: '4px 4px 20px -5px rgba(2, 57, 79, 0.12)',
+    margin: '8px'
   }
 }))
 

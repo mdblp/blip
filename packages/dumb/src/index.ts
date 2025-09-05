@@ -40,7 +40,7 @@ import { ConfidentialTooltip } from './components/tooltips/confidential-tooltip/
 import {
   EventSuperpositionPopoverMemoized as EventsSuperpositionPopover
 } from './components/tooltips/events-superposition-popover/events-superposition-popover'
-import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
+import { RescueCarbsTooltip } from './components/tooltips/rescue-carbs-tooltip/rescue-carbs-tooltip'
 import { formatBgValue } from './utils/format/format.util'
 import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
 import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
@@ -49,6 +49,9 @@ import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mo
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
 import Tooltip from './components/tooltips/common/tooltip/tooltip'
+import { TooltipLine } from './components/tooltips/common/tooltip-line/tooltip-line'
+import { TooltipColor } from './models/enums/tooltip-color.enum'
+import { TooltipSide } from './models/enums/tooltip-side.enum'
 import { AverageDailyDoseStatMemoized as AverageDailyDoseStat } from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 import { type BgPrefs } from './models/blood-glucose.model'
@@ -99,7 +102,6 @@ export {
   buildDevice,
   EventsSuperpositionPopover,
   FocusedRangeLabels,
-  FoodTooltip,
   formatCurrentDate,
   formatBirthdate,
   formatClocktimeFromMsPer24,
@@ -121,6 +123,9 @@ export {
   TimeInRangeChart,
   TimeInTightRangeChart,
   Tooltip,
+  TooltipColor,
+  TooltipLine,
+  TooltipSide,
   InsulinStatisticsPanel,
   TrendsContainer,
   TrendsProvider,
@@ -128,6 +133,7 @@ export {
   getLongDayHourFormat,
   TIMEZONE_UTC,
   WarmUpTooltip,
+  RescueCarbsTooltip,
   SafetyBasalItem,
   isSafetyBasalAvailable,
   getSafetyBasalItems,

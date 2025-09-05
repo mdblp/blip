@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,43 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, type RefObject } from 'react'
-import _ from 'lodash'
-import styles from '../tooltip/tooltip.css'
-
-interface TooltipTailProps {
-  borderColor: string
-  borderSide: string
-  marginOuterValue: string
-  tailHeight: number
-  tailElementRef: RefObject<HTMLDivElement>
-  tailWidth: number
+.tooltip {
+  display: block;
+  composes: defaultSize from '../../../../styles/typography.css';
+  background-color: #FFFFFF;
+  pointer-events: none;
+  position: absolute;
+  border-radius: 4px;
 }
 
-const TooltipTail: FunctionComponent<TooltipTailProps> = (props) => {
-  const {
-    borderColor,
-    borderSide,
-    marginOuterValue,
-    tailHeight,
-    tailElementRef,
-    tailWidth
-  } = props
-
-  return (
-    <div>
-      <div
-        ref={tailElementRef}
-        className={styles.tail}
-        style={{
-          marginTop: `-${tailHeight}px`,
-          marginLeft: marginOuterValue,
-          borderWidth: `${tailHeight}px ${2 * tailWidth}px`,
-          [`border${_.upperFirst(borderSide)}Color`]: borderColor
-        }}
-      />
-    </div>
-  )
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px 10px;
+  box-sizing: border-box;
 }
 
-export default TooltipTail
+.title {
+  composes: mediumContrastText from '../../../../styles/typography.css';
+  composes: content;
+  background-color: var(--tooltip-title-bg);
+}
+
+.titleContent {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  width: 100%;
+  column-gap: 0.5em;
+}
+
+.titleDate {
+  margin-right: auto;
+}

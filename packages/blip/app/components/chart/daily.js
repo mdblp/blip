@@ -30,7 +30,7 @@ import {
   BolusTooltip,
   ConfidentialTooltip,
   EventsSuperpositionPopover,
-  FoodTooltip,
+  RescueCarbsTooltip,
   NightModeTooltip,
   ParameterTooltip,
   PhysicalTooltip,
@@ -582,7 +582,7 @@ class Daily extends React.Component {
   handleCarbHover = (datum) => {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
-      <FoodTooltip
+      <RescueCarbsTooltip
         food={datum.data}
         position={{
           top: datum.top,

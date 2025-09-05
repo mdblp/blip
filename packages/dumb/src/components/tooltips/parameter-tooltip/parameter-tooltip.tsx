@@ -29,39 +29,31 @@ import React, { type FunctionComponent } from 'react'
 import styles from './parameter-tooltip.css'
 import { Tooltip } from '../../../index'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import {
-  COMMON_TOOLTIP_TAIL_HEIGHT,
-  COMMON_TOOLTIP_TAIL_WIDTH,
-  DEFAULT_TOOLTIP_BORDER_WIDTH,
-  DEFAULT_TOOLTIP_OFFSET,
-  DEFAULT_TOOLTIP_TAIL,
-  type Position,
-  type Side
-} from '../common/tooltip/tooltip'
+import { DEFAULT_TOOLTIP_OFFSET, type Position } from '../common/tooltip/tooltip'
 import colors from '../../../styles/colors.css'
 import { type DeviceParameterChange, type Parameter, type TimePrefs } from 'medical-domain'
 import { ParameterChangeLine } from './parameter-change-line'
+import { useTranslation } from 'react-i18next'
+import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
 
 interface ParameterTooltipProps {
   parameter: DeviceParameterChange
   position: Position
-  side: Side
+  side: TooltipSide
   timePrefs: TimePrefs
 }
 
 export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props) => {
   const { parameter, position, side, timePrefs } = props
+  const { t } = useTranslation()
 
   return (
     <Tooltip
       position={position}
       side={side}
-      borderColor={colors.deviceEvent}
+      title={t('settings-change')}
+      backgroundColor={colors.greyBackground}
       dateTitle={getDateTitleForBaseDatum(parameter, timePrefs)}
-      tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
-      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
-      tail={DEFAULT_TOOLTIP_TAIL}
-      borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div data-testid="tooltip-daily-parameters" className={styles.container}>

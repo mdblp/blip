@@ -25,15 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  COMMON_TOOLTIP_TAIL_HEIGHT,
-  COMMON_TOOLTIP_TAIL_WIDTH,
-  DEFAULT_TOOLTIP_BORDER_WIDTH,
-  DEFAULT_TOOLTIP_OFFSET,
-  DEFAULT_TOOLTIP_TAIL,
-  Position,
-  Side
-} from '../common/tooltip/tooltip'
+import { DEFAULT_TOOLTIP_OFFSET, Position } from '../common/tooltip/tooltip'
 import { AlarmEvent, TimePrefs } from 'medical-domain'
 import React, { FC } from 'react'
 import { BgPrefs, Tooltip } from '../../../index'
@@ -46,15 +38,16 @@ import { Device } from '../../../models/device.model'
 import {
   getAlarmEventDescription,
   getAlarmEventTitle,
-  getBorderColor,
+  getBackgroundColor,
   getContentTitleByCode
 } from '../../../utils/alarm-event/alarm-event.util'
 import { AlarmMultipleOccurrences } from './alarm-multiple-occurrences/alarm-multiple-occurrences'
+import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
 
 interface AlarmEventTooltipProps {
   alarmEvent: AlarmEvent
   position: Position
-  side: Side
+  side: TooltipSide
   bgPrefs: BgPrefs
   timePrefs: TimePrefs
   device: Device
@@ -64,7 +57,7 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
   const { alarmEvent, bgPrefs, position, side, timePrefs, device } = props
   const theme = useTheme()
 
-  const borderColor = getBorderColor(alarmEvent.alarmEventType)
+  const backgroundColor = getBackgroundColor(alarmEvent.alarmEventType)
   const alarmCode = alarmEvent.alarm.alarmCode
   const title = getAlarmEventTitle(alarmEvent)
 
@@ -74,14 +67,10 @@ export const AlarmEventTooltip: FC<AlarmEventTooltipProps> = (props) => {
   return (
     <Tooltip
       position={position}
-      borderColor={borderColor}
+      backgroundColor={backgroundColor}
       dateTitle={getDateTitleForBaseDatum(alarmEvent, timePrefs)}
       title={title}
       side={side}
-      tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
-      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
-      tail={DEFAULT_TOOLTIP_TAIL}
-      borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={styles.container}>

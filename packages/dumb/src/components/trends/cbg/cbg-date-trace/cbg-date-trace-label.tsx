@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2023, Diabeloop
+ * Copyright (c) 2017-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,10 +28,11 @@
 import React, { type FunctionComponent } from 'react'
 
 import styles from './cbg-date-trace-label.css'
-import Tooltip from '../../../tooltips/common/tooltip/tooltip'
 import { useTranslation } from 'react-i18next'
 import { formatDateToUtc } from '../../../../utils/datetime/datetime.util'
 import { useTrendsContext } from '../../../../provider/trends.provider'
+import { TooltipSide } from '../../../../models/enums/tooltip-side.enum'
+import { TrendsTooltip } from '../../common/tooltip/trends-tooltip'
 
 export const CbgDateTraceLabel: FunctionComponent = () => {
   const { focusedCbgDateTrace } = useTrendsContext()
@@ -50,12 +51,10 @@ export const CbgDateTraceLabel: FunctionComponent = () => {
 
   return (
     <div className={styles.container} data-testid="cbg-date-trace-tooltip">
-      <Tooltip
+      <TrendsTooltip
         title={<span className={styles.dateLabel}>{formattedDate}</span>}
-        borderWidth={0}
         position={tooltipPosition}
-        side="bottom"
-        tail={false}
+        side={TooltipSide.Bottom}
       />
     </div>
   )

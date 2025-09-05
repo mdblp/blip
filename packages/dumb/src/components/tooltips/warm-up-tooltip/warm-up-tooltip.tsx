@@ -27,48 +27,38 @@
 import { Tooltip } from '../../../index'
 import React, { FC } from 'react'
 import { TimePrefs, WarmUp } from 'medical-domain'
-import {
-  COMMON_TOOLTIP_TAIL_HEIGHT,
-  COMMON_TOOLTIP_TAIL_WIDTH,
-  DEFAULT_TOOLTIP_BORDER_WIDTH,
-  DEFAULT_TOOLTIP_OFFSET,
-  DEFAULT_TOOLTIP_TAIL,
-  Position,
-  Side
-} from '../common/tooltip/tooltip'
+import { DEFAULT_TOOLTIP_OFFSET, Position } from '../common/tooltip/tooltip'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import colors from '../../../styles/colors.css'
 import { getWarmUpDescription, getWarmUpEndTime, getWarmUpTitle } from '../../../utils/warm-up/warm-up.util'
+import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
+import commonStyles from '../../../styles/tooltip-common.css'
 
 interface WarmupTooltipProps {
   warmup: WarmUp
   position: Position
-  side: Side
+  side: TooltipSide
   timePrefs: TimePrefs
 }
 
 export const WarmUpTooltip: FC<WarmupTooltipProps> = (props) => {
-  const {  warmup, position, side, timePrefs } = props
+  const { warmup, position, side, timePrefs } = props
   const endTime = getWarmUpEndTime(warmup.epochEnd, warmup.timezone)
 
   return (
     <Tooltip
-        position={position}
-        borderColor={colors.deviceEvent}
-        dateTitle={getDateTitleForBaseDatum(warmup, timePrefs)}
-        side={side}
-        tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
-        tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
-        tail={DEFAULT_TOOLTIP_TAIL}
-        borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
-        offset={DEFAULT_TOOLTIP_OFFSET}
-        content={
-          <>
-            <TooltipLine label={getWarmUpTitle()} isBold />
-            <TooltipLine label={getWarmUpDescription()} value={endTime} />
-          </>
-        }
+      position={position}
+      backgroundColor={colors.greyBackground}
+      title={getWarmUpTitle()}
+      dateTitle={getDateTitleForBaseDatum(warmup, timePrefs)}
+      side={side}
+      offset={DEFAULT_TOOLTIP_OFFSET}
+      content={
+        <div className={commonStyles.containerFlexLarge}>
+          <TooltipLine label={getWarmUpDescription()} value={endTime} />
+        </div>
+      }
     />
   )
 }

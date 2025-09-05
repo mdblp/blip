@@ -198,15 +198,15 @@ export const getAlarmEventIcon = (alarmEventType: AlarmEventType): string => {
   }
 }
 
-export const getBorderColor = (alarmEventType: AlarmEventType): string => {
+export const getBackgroundColor = (alarmEventType: AlarmEventType): string => {
   switch (alarmEventType) {
     case AlarmEventType.Hyperglycemia:
-      return colors.hyperglycemia
+      return colors.orangeBackground
     case AlarmEventType.Hypoglycemia:
-      return colors.hypoglycemia
+      return colors.redBackground
     case AlarmEventType.Device:
     default:
-      return colors.deviceEvent
+      return colors.greyBackground
   }
 }
 

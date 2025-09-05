@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -223,13 +223,13 @@ export const checkTrendsBolusAndCarbsAverage = async () => {
 
   const carbsCell = within(wrapper).getByTestId('rescue-carbs-cell-6pm')
   await userEvent.hover(carbsCell)
-  const rescueCarbsTooltip = screen.getByTestId('rescue-carbs-tooltip')
-  expect(rescueCarbsTooltip).toHaveTextContent('Rescue carbsNumber of rescue carbs2Number of rescue carbs modified0Avg. Recommended carbs128gOverride0g')
+  const rescueCarbsTooltip = screen.getByTestId('tooltip')
+  expect(rescueCarbsTooltip).toHaveTextContent('Rescue carbsNumber of rescue carbs2Number of rescue carbs modified0Avg. Recommended carbs128g')
   await userEvent.unhover(carbsCell)
 
   const bolusCell = within(wrapper).getByTestId('manual-bolus-cell-3pm')
   await userEvent.hover(bolusCell)
-  const bolusTooltip = screen.getByTestId('manual-bolus-tooltip')
+  const bolusTooltip = screen.getByTestId('tooltip')
   expect(bolusTooltip).toHaveTextContent('Manual and pen bolusTotal number of bolus3Avg. Confirmed dose11U')
   await userEvent.unhover(bolusCell)
 

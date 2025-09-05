@@ -7,3 +7,8 @@
 - [ ] Code formatted on every file
 - [ ] Copyright added on every file
 - [ ] End-to-end tests successful on CI
+
+---
+
+:camera: UI screenshot (if applicable):
+

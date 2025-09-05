@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,51 +26,33 @@
  */
 
 import React, { FC } from 'react'
-import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
-import { RESCUE_CARBS_COLOR, useCarbsAndBolusStyles } from './carbs-and-bolus-styles'
+import { DEFAULT_TOOLTIP_POSITION, useCarbsAndBolusStyles } from './carbs-and-bolus-styles'
 import { useTranslation } from 'react-i18next'
-import { RescueCarbsAveragePerRange, Unit } from 'medical-domain'
-import styles from 'dumb/src/components/tooltips/common/tooltip-line/tooltip-line.css'
+import { RescueCarbsAveragePerRange } from 'medical-domain'
+import { Tooltip, TooltipColor, TooltipLine, TooltipSide } from 'dumb'
 
 export const RescueCarbsTooltip: FC<{ rescueCarbs: RescueCarbsAveragePerRange }> = ({ rescueCarbs }) => {
   const { classes } = useCarbsAndBolusStyles()
   const { t } = useTranslation()
   const override = Math.sign(rescueCarbs.rescueCarbsOverrideAverage) === 1 ? `+${rescueCarbs.rescueCarbsOverrideAverage}` : rescueCarbs.rescueCarbsOverrideAverage
 
-
   return (
-    <Box
-      className={classes.hoverTooltip}
-      width={290}
-      sx={{ border: `2px solid ${RESCUE_CARBS_COLOR}` }}
-      data-testid="rescue-carbs-tooltip"
-    >
-      <div className={`${classes.tooltipTail} rescue-carbs`} />
-      <Typography
-        variant="subtitle2"
-        className="header"
-      >
-        {t('rescue-carbs')}
-      </Typography>
-      <Box className="content" data-testid="rescue-carbs-tooltip-content">
-        <div className="flex-justify-between-align-center">
-          <Typography variant="body2">{t('number-of-rescue-carbs')}</Typography>
-          <Typography variant="body2">{rescueCarbs.numberOfRescueCarbs}</Typography>
+    <Tooltip
+      position={DEFAULT_TOOLTIP_POSITION}
+      side={TooltipSide.Right}
+      backgroundColor={"var(--error-color-10)"}
+      title={t('rescue-carbs')}
+      content={
+        <div className={classes.containerFlexLarge}>
+          <TooltipLine label={t('number-of-rescue-carbs')} value={rescueCarbs.numberOfRescueCarbs} />
+          <TooltipLine label={t('number-of-rescue-carbs-modified')} value={rescueCarbs.numberOfModifiedCarbs} />
+          <TooltipLine label={t('recommended-carbs')} value={rescueCarbs.averageRecommendedCarb} units={t('g')} />
+          {rescueCarbs.rescueCarbsOverrideAverage !== 0 &&
+            <TooltipLine label={t('override')} value={override} units={t('g')} customColor={TooltipColor.Undelivered}
+                         isBold />
+          }
         </div>
-        <div className="flex-justify-between-align-center">
-          <Typography variant="body2">{t('number-of-rescue-carbs-modified')}</Typography>
-          <Typography variant="body2">{rescueCarbs.numberOfModifiedCarbs}</Typography>
-        </div>
-        <div className="flex-justify-between-align-center">
-          <Typography variant="body2">{t('recommended-carbs')}</Typography>
-          <Typography variant="body2">{rescueCarbs.averageRecommendedCarb}{Unit.Gram}</Typography>
-        </div>
-        <div className="flex-justify-between-align-center">
-          <Typography variant="body2">{t('override')}</Typography>
-          <Typography variant="body2" className={styles.colorUndelivered}>{override}{Unit.Gram}</Typography>
-        </div>
-      </Box>
-    </Box>
+      }
+    />
   )
 }

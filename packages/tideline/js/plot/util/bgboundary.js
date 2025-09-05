@@ -32,6 +32,9 @@ function bgBoundary(bgClasses, bgUnits = MGDL_UNITS) {
       else if (category === 'target') {
         return 'd3-bg-target'
       }
+      else if (category === 'tightrange') {
+        return 'd3-bg-tight-range'
+      }
       else if (category === 'high') {
         return 'd3-bg-high'
       }
