@@ -141,5 +141,8 @@
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1",
     "webpack-subresource-integrity": "^5.1.0"
+  },
+  "dependencies": {
+    "react-draggable": "^4.5.0"
   }
 }
