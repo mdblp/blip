@@ -39,12 +39,12 @@ export const checkMonitoringAlertsLinkToTargetAndAlerts = async (): Promise<void
   const configureMonitoringAlertsButton = await screen.findByLabelText('Configure monitoring alerts')
   await userEvent.click(configureMonitoringAlertsButton)
 
-  const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range-and-alerts'))
+  const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('alerts'))
   await userEvent.click(menuButton)
 
-  const targetAndAlertsContent = screen.getByTestId('target-and-alerts-container')
-  expect(targetAndAlertsContent).toHaveTextContent(getTranslation('range-and-alerts'))
-  expect(targetAndAlertsContent).toHaveTextContent('Monitoring alertsSet manually each value or apply care team values.')
+  const alertsContent = screen.getByTestId('alerts-container')
+  expect(alertsContent).toHaveTextContent(getTranslation('monitoring-alerts'))
+  expect(alertsContent).toHaveTextContent('Monitoring alertsSet manually each value or apply care team values.')
 }
 
 export const checkContentForPatientMmol = async (): Promise<void> => {

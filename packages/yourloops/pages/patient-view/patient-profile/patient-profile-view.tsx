@@ -28,11 +28,12 @@
 import React, { type FC, useState } from 'react'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
-import { PatientPersonalInformation } from './sections/patient-personal-information'
+import { PatientPersonalInformationSection } from './sections/patient-personal-information-section'
 import { PatientProfileViewMenu } from './patient-profile-view-menu'
 import { PatientProfileViewSection } from './patient-profile-view-section.enum'
-import { RangeAndAlertsSection } from './sections/range-and-alerts-section'
+import { AlertsSection } from './sections/alerts-section'
 import { Patient } from '../../../lib/patient/models/patient.model'
+import { RangeSection } from './sections/range-section'
 
 interface PatientProfileViewProps {
   patient : Patient
@@ -58,12 +59,15 @@ export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => 
         <Grid item xs={9}>
           {
             isSelected(PatientProfileViewSection.Information) ?
-              <PatientPersonalInformation patient={patient} />
-              : isSelected(PatientProfileViewSection.RangeAndAlerts) ?
-                <RangeAndAlertsSection
+              <PatientPersonalInformationSection patient={patient} />
+              : isSelected(PatientProfileViewSection.Range) ?
+                <RangeSection
                   patient={patient}
                 />
-                : <></>
+                : isSelected(PatientProfileViewSection.Alerts) ?
+                  <AlertsSection
+                    patient={patient}
+                  /> : <></>
           }
 
         </Grid>
