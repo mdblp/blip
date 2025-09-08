@@ -52,7 +52,7 @@ interface InformationSectionProps {
   patient: Patient
 }
 
-export const PatientPersonalInformation: FC<InformationSectionProps> = (props) => {
+export const PatientPersonalInformationSection: FC<InformationSectionProps> = (props) => {
   const { patient } = props
   const theme = useTheme()
   const { t } = useTranslation()
