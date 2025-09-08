@@ -24,18 +24,14 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import HttpService, { ErrorMessageStatus } from '../http/http.service'
-import bows from 'bows'
+import HttpService from '../http/http.service'
 import { type INotification } from '../notifications/models/i-notification.model'
 import { getCurrentLang } from '../language'
 import { UserRole } from '../auth/models/enums/user-role.enum'
-import { type ITeamMember } from '../team/models/i-team-member.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
 import { type Patient, type PatientMetrics } from './models/patient.model'
 import { type MonitoringAlertsParameters } from '../team/models/monitoring-alerts-parameters.model'
-
-const log = bows('Patient API')
 
 export const PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE = 'patient-already-in-team'
 const PATIENT_ALREADY_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
