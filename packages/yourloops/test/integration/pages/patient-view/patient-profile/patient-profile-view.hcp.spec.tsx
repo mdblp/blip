@@ -40,7 +40,7 @@ import {
   testMonitoringAlertsParametersConfigurationForPatientMgdl,
   testMonitoringAlertsParametersConfigurationForPatientMmol
 } from '../../../use-cases/monitoring-alerts-parameters-management'
-import { testTargetAndAlertsViewContent } from '../../../use-cases/target-and-alerts-management'
+import { testAlertsViewContent } from '../../../use-cases/range-and-alerts-management'
 import { testPatientPersonalInformation } from '../../../use-cases/patient-personal-information-management'
 import { Settings } from '../../../../../lib/auth/models/settings.model'
 import { Unit } from 'medical-domain'
@@ -55,7 +55,7 @@ describe('Patient profile view for HCP', () => {
   const patientTargetAndAlertsRouteMmoL = `/teams/${myThirdTeamId}/patients/${patientWithMmolId}${AppUserRoute.PatientProfile}`
   const patientProfileRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.PatientProfile}`
 
-  describe('Range and alerts section', () => {
+  describe('Alerts section', () => {
     beforeEach(() => {
       mockAuth0Hook()
       mockNotificationAPI()
@@ -86,10 +86,10 @@ describe('Patient profile view for HCP', () => {
       await act(async () => {
         renderPage(patientProfileRoute)
       })
-      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range-and-alerts'))
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('alerts'))
       await userEvent.click(menuButton)
 
-      await testTargetAndAlertsViewContent()
+      await testAlertsViewContent()
       await testMonitoringAlertsParametersConfigurationForPatientMgdl()
     })
 
@@ -101,10 +101,10 @@ describe('Patient profile view for HCP', () => {
         renderPage(patientTargetAndAlertsRouteMmoL)
       })
 
-      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range-and-alerts'))
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('alerts'))
       await userEvent.click(menuButton)
 
-      await testTargetAndAlertsViewContent()
+      await testAlertsViewContent()
       await testMonitoringAlertsParametersConfigurationForPatientMmol()
     })
   })

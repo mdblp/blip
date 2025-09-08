@@ -28,8 +28,8 @@
 import { screen } from '@testing-library/react'
 import { getTranslation } from '../../utils/i18n'
 
-export const checkTargetAndAlertsViewContent = async (): Promise<void> => {
-  const targetAndAlertsContent = await screen.findByTestId('target-and-alerts-container')
-  expect(targetAndAlertsContent).toHaveTextContent(getTranslation('range-and-alerts'))
-  expect(targetAndAlertsContent).toHaveTextContent('Monitoring alertsSet manually each value or apply care team values.')
+export const checkAlertsViewContent = async (): Promise<void> => {
+  const alertsContent = await screen.findByTestId('alerts-container')
+  expect(alertsContent).toHaveTextContent(getTranslation('monitoring-alerts'))
+  expect(alertsContent).toHaveTextContent('Monitoring alertsSet manually each value or apply care team values.')
 }
