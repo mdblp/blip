@@ -12,8 +12,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-3616 Time In Tight Range (TITR) statistic
 
 ### Changed
-- YLP-2419 Use new route for caregivers from harbour (remove my-patients and my-direct-shares)
 - YLP-2347 Display patient monitoring parameters in the patient profile page
+- YLP-2419 Use new route for caregivers from harbour (remove my-patients and my-direct-shares)
 - YLP-3547 Swap unit and percentage in insulin card
 - YLP-3576 Keep 14 days of data starting from yesterday in trends and dashboard view
 - YLP-3640 New UI for tooltips in Daily view
