@@ -150,7 +150,7 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
             minWidth: "250px",
             maxWidth: "320px",
             maxHeight: "300px",
-            cursor: "pointer"
+            cursor: "grab"
           }}>
           {superpositionEvent.events.map((event: DatumWithSubType, index: number) => {
             return (
