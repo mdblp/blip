@@ -27,11 +27,12 @@
 
 import { useCallback, useMemo } from 'react'
 import { type Offset, type Position } from './trends-tooltip'
+import { TooltipSide } from '../../../../models/enums/tooltip-side.enum'
 
 export interface TooltipHookProps {
   offset: Offset
   position: Position
-  side: 'top' | 'right' | 'bottom' | 'left'
+  side: TooltipSide
 }
 
 export interface TooltipHookReturn {
@@ -52,7 +53,7 @@ export const useTrendsTooltip = (props: TooltipHookProps): TooltipHookReturn => 
 
       let horizontalOffset = offset.left ?? (offset.horizontal ?? 0)
 
-      if (side === 'left') {
+      if (side === TooltipSide.Left) {
         horizontalOffset = -horizontalOffset
       }
 
@@ -68,19 +69,19 @@ export const useTrendsTooltip = (props: TooltipHookProps): TooltipHookReturn => 
         let leftOffset
         let topOffset
         switch (side) {
-          case 'top':
+          case TooltipSide.Top:
             leftOffset = -tooltipRect.width / 2
             topOffset = -tooltipRect.height
             break
-          case 'bottom':
+          case TooltipSide.Bottom:
             leftOffset = -tooltipRect.width / 2
             topOffset = 0
             break
-          case 'right':
+          case TooltipSide.Right:
             leftOffset = 0
             topOffset = -tooltipRect.height / 2
             break
-          case 'left':
+          case TooltipSide.Left:
           default:
             leftOffset = -tooltipRect.width
             topOffset = -tooltipRect.height / 2

@@ -30,6 +30,7 @@ import styles from './trends-tooltip.css'
 import { type TimePrefs } from 'medical-domain'
 import { computeDateValue } from '../../../../utils/tooltip/tooltip.util';
 import { useTrendsTooltip } from './trends-tooltip.hook'
+import { TooltipSide } from '../../../../models/enums/tooltip-side.enum'
 
 export interface Offset {
   top: number
@@ -49,9 +50,9 @@ export interface DateTitle {
   timePrefs: TimePrefs
 }
 
-export type Side = 'top' | 'right' | 'bottom' | 'left'
+// export type Side = 'top' | 'right' | 'bottom' | 'left'
 
-export const COMMON_TOOLTIP_SIDE = 'right'
+export const COMMON_TOOLTIP_SIDE = TooltipSide.Right
 
 export const DEFAULT_TOOLTIP_OFFSET = { top: 0, left: 0 }
 
@@ -62,7 +63,7 @@ interface TooltipProps {
   position: Position
   offset?: Offset
   tail?: boolean
-  side: Side
+  side: TooltipSide
   backgroundColor?: string
 }
 
