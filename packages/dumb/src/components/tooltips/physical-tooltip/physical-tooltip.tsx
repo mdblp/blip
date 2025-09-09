@@ -26,15 +26,7 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import {
-  COMMON_TOOLTIP_TAIL_HEIGHT,
-  COMMON_TOOLTIP_TAIL_WIDTH,
-  DEFAULT_TOOLTIP_BORDER_WIDTH,
-  DEFAULT_TOOLTIP_OFFSET,
-  DEFAULT_TOOLTIP_TAIL,
-  type Position,
-  type Side
-} from '../common/tooltip/tooltip'
+import { DEFAULT_TOOLTIP_OFFSET, type Position } from '../common/tooltip/tooltip'
 import { Tooltip } from '../../../index'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { formatInputTime } from '../../../utils/format/format.util'
@@ -50,11 +42,12 @@ import {
 } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
 
 interface PhysicalTooltipProps {
   physicalActivity: PhysicalActivity
   position: Position
-  side: Side
+  side: TooltipSide
   timePrefs: TimePrefs
 }
 
@@ -87,16 +80,12 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
     <Tooltip
       position={position}
       side={side}
-      borderColor={colors.physicalActivity}
+      title={t('Physical Activity')}
+      backgroundColor={colors.blueBackground}
       dateTitle={getDateTitleForBaseDatum(physicalActivity, timePrefs)}
-      tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
-      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
-      tail={DEFAULT_TOOLTIP_TAIL}
-      borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
-        <div className={commonStyles.containerFlex}>
-          <TooltipLine label={t('Physical Activity')} isBold />
+        <div className={commonStyles.containerFlexLarge}>
           {
             physicalActivity.name && physicalActivity.name !== "" &&
             <TooltipLine label={t('Name')} value={getDisplayName(physicalActivity.name)} />

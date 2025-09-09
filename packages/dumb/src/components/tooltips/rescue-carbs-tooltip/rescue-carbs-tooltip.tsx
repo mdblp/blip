@@ -26,15 +26,7 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import {
-  COMMON_TOOLTIP_TAIL_HEIGHT,
-  COMMON_TOOLTIP_TAIL_WIDTH,
-  DEFAULT_TOOLTIP_BORDER_WIDTH,
-  DEFAULT_TOOLTIP_OFFSET,
-  DEFAULT_TOOLTIP_TAIL,
-  type Position,
-  type Side
-} from '../common/tooltip/tooltip'
+import { DEFAULT_TOOLTIP_OFFSET, type Position } from '../common/tooltip/tooltip'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
@@ -42,15 +34,16 @@ import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { type Meal, Prescriptor, type TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
 
-interface FoodTooltipProps {
+interface RescueCarbsTooltipProps {
   food: Meal
   position: Position
-  side: Side
+  side: TooltipSide
   timePrefs: TimePrefs
 }
 
-export const FoodTooltip: FunctionComponent<FoodTooltipProps> = (props) => {
+export const RescueCarbsTooltip: FunctionComponent<RescueCarbsTooltipProps> = (props) => {
   const { food, position, side, timePrefs } = props
   const { t } = useTranslation('main')
 
@@ -66,12 +59,9 @@ export const FoodTooltip: FunctionComponent<FoodTooltipProps> = (props) => {
     <Tooltip
       position={position}
       side={side}
-      borderColor={colors.rescuecarbs}
+      title={t('rescue-carbs')}
+      backgroundColor={colors.redBackground}
       dateTitle={getDateTitleForBaseDatum(food, timePrefs)}
-      tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
-      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
-      tail={DEFAULT_TOOLTIP_TAIL}
-      borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>

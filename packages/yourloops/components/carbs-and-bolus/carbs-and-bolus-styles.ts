@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,6 +32,8 @@ export const LIGHT_BORDER = '1px solid #e7e7e7'
 export const RESCUE_CARBS_COLOR = 'var(--error-color-main)'
 export const MANUAL_BOLUS_COLOR = 'var(--dark-blue-main)'
 
+export const DEFAULT_TOOLTIP_POSITION = { top: 0, left: 85 }
+
 export const useCarbsAndBolusStyles = makeStyles()((theme: Theme) => ({
   cell: {
     borderRadius: theme.spacing(1),
@@ -52,36 +54,11 @@ export const useCarbsAndBolusStyles = makeStyles()((theme: Theme) => ({
     gap: 10,
     paddingBlock: theme.spacing(2)
   },
-  hoverTooltip: {
-    position: 'absolute',
-    left: 108,
-    zIndex: 1,
-    borderRadius: '4px',
-    width: '290px',
-    backgroundColor: theme.palette.common.white,
-    '& .header': {
-      backgroundColor: theme.palette.grey[200],
-      padding: theme.spacing(1, 2)
-    },
-    '& .content': {
-      padding: theme.spacing(1, 2)
-    }
-  },
-  tooltipTail: {
-    width: 0,
-    height: 0,
-    borderTop: '10px solid transparent',
-    borderBottom: '10px solid transparent',
-    position: 'absolute',
-    '&.rescue-carbs': {
-      top: 46,
-      left: -16,
-      borderRight: `15px solid ${RESCUE_CARBS_COLOR}`
-    },
-    '&.manual-bolus': {
-      top: 38,
-      left: -16,
-      borderRight: `15px solid ${MANUAL_BOLUS_COLOR}`
-    }
+  containerFlexLarge: {
+    opacity: 1,
+    margin: '2px 0',
+    display: 'flex',
+    flexDirection: 'column',
+    minWidth: '160px',
   }
 }))

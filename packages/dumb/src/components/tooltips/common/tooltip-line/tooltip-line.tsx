@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,6 +29,7 @@ import React, { type FunctionComponent } from 'react'
 import commonStyles from '../../../../styles/tooltip-common.css'
 import styles from './tooltip-line.css'
 import { TooltipColor } from '../../../../models/enums/tooltip-color.enum'
+import Box from '@mui/material/Box'
 
 interface TooltipLineProps {
   label: string
@@ -40,6 +41,7 @@ interface TooltipLineProps {
 
 export const TooltipLine: FunctionComponent<TooltipLineProps> = (props) => {
   const { customColor, isBold, label, value, units } = props
+  const isValueDefined = value !== undefined && value !== null
 
   const getClassByTooltipColor = (tooltipColor: TooltipColor): string => {
     switch (tooltipColor) {
@@ -59,9 +61,13 @@ export const TooltipLine: FunctionComponent<TooltipLineProps> = (props) => {
 
   return (
     <div className={getGlobalClasses()}>
-      <div className={commonStyles.label}>{label}</div>
-      {value && <div className={commonStyles.value}>{value}</div>}
-      {units && <div className={styles.units}>{units}</div>}
+      <span>{label}</span>
+      {isValueDefined &&
+        <Box flexDirection="row" sx={{ ml: 1 }}>
+          <span>{value}</span>
+          {units && <span className={styles.units}>{units}</span>}
+        </Box>
+      }
     </div>
   )
 }
