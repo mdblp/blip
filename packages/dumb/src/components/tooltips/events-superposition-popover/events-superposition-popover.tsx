@@ -38,6 +38,7 @@ import {
 } from 'medical-domain'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
+import Draggable from 'react-draggable'
 import { computeDateValue, getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { getAlarmEventIcon, getAlarmEventTitle } from '../../../utils/alarm-event/alarm-event.util'
 import { useTranslation } from 'react-i18next'
@@ -130,58 +131,61 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
   }
 
   return (
-    <Popover
-      anchorEl={anchorElement}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right'
-      }}
-      transformOrigin={{ vertical: -10, horizontal: 25 }}
-      onClose={handleClose}
-      open={open}
-      data-testid={`events-superposition-popover-${superpositionEvent.firstEventId}`}
-    >
-      <Box
-        sx={{
-          m: 2,
-          fontSize: "small",
-          minWidth: "250px",
-          maxWidth: "320px",
-          maxHeight: "300px"
-        }}>
-        {superpositionEvent.events.map((event: DatumWithSubType, index: number) => {
-          return (
-            <React.Fragment key={event.id}>
-              <Grid container>
-                <Grid item xs={2}>
-                  <Box className={styles.icon}>
-                    <img src={getIcon(event)} alt={t('event-icon')} />
-                  </Box>
-                </Grid>
-                <Grid item xs={10}>
-                  <Box>
-                    <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      sx={{ marginBottom: theme.spacing(1) }}
-                    >
-                      <span className={styles.title}>{getTitle(event)}</span>
-                      <span>{computeDateValue(getDateTitleForBaseDatum(event, timePrefs))}</span>
+    <Draggable>
+      <Popover
+        anchorEl={anchorElement}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right'
+        }}
+        transformOrigin={{ vertical: -10, horizontal: 25 }}
+        onClose={handleClose}
+        open={open}
+        data-testid={`events-superposition-popover-${superpositionEvent.firstEventId}`}
+      >
+        <Box
+          sx={{
+            m: 2,
+            fontSize: "small",
+            minWidth: "250px",
+            maxWidth: "320px",
+            maxHeight: "300px",
+            cursor: "grab"
+          }}>
+          {superpositionEvent.events.map((event: DatumWithSubType, index: number) => {
+            return (
+              <React.Fragment key={event.id}>
+                <Grid container>
+                  <Grid item xs={2}>
+                    <Box className={styles.icon}>
+                      <img src={getIcon(event)} alt={t('event-icon')} />
                     </Box>
-                    <Box sx={{ fontSize: "12px" }}>
-                      {getContent(event)}
+                  </Grid>
+                  <Grid item xs={10}>
+                    <Box>
+                      <Box
+                        display="flex"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        sx={{ marginBottom: theme.spacing(1) }}
+                      >
+                        <span className={styles.title}>{getTitle(event)}</span>
+                        <span>{computeDateValue(getDateTitleForBaseDatum(event, timePrefs))}</span>
+                      </Box>
+                      <Box sx={{ fontSize: "12px" }}>
+                        {getContent(event)}
+                      </Box>
                     </Box>
-                  </Box>
+                  </Grid>
                 </Grid>
-              </Grid>
-              {index < superpositionEvent.events.length - 1 &&
-                <Divider sx={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(2) }} />}
-            </React.Fragment>
-          )
-        })}
-      </Box>
-    </Popover>
+                {index < superpositionEvent.events.length - 1 &&
+                  <Divider sx={{ marginTop: theme.spacing(2), marginBottom: theme.spacing(2) }} />}
+              </React.Fragment>
+            )
+          })}
+        </Box>
+      </Popover>
+    </Draggable>
   )
 }
 
