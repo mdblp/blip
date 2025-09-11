@@ -40,7 +40,6 @@ import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import { DeviceViewSection } from '../../../models/enums/device-view-section.enum'
 import { useTranslation } from 'react-i18next'
-import { DeviceConfig } from 'medical-domain'
 
 interface DevicesViewMenuProps {
   shouldDisplaySafetyBasalProfile: boolean
