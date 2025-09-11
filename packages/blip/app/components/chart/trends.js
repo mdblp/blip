@@ -141,6 +141,16 @@ class Trends extends React.Component {
     this.startDate = new Date(tidelineData.endpoints[0])
     /** @type {Date} */
     this.endDate = new Date(tidelineData.endpoints[1])
+
+    /*Since changing trends behavior is hard, we modify the endDate to get expected behavior.
+    Expected behavior is having yestarday's data in the 2 weeks preset, and not today's data as it's done
+    before this fix. The fix is just removing one day to endDate if we detect data for the current day.
+    We add +1 to now because tidelineData.endpoints[1] (endDate) is set to tomorrow midnight to take the whole day.*/
+    const now = new Date()
+    if (this.endDate.getDay() === now.getDay() + 1 && this.endDate.getMonth() === now.getMonth()) {
+      this.endDate.setDate(this.endDate.getDate() - 1)
+    }
+
     /** Max range in ms */
     this.maxRange = this.endDate.valueOf() - this.startDate.valueOf()
     this.log.debug({ startDate: this.startDate, endDate: this.endDate, maxRange: this.maxRange })

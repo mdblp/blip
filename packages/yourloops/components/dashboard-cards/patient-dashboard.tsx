@@ -83,26 +83,69 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
 
   const isMobileBreakpoint: boolean = useMediaQuery(theme.breakpoints.only('xs'))
 
+  /** Compute the date filter to be applied to the statistics and devices cards.
+   *
+   * We're showing 14 days of data, excluding the current day.
+   * So in the nominal case, we're showing from today-15 to today-1 days of data.
+   *
+   * If we're not having data for today, yesterday or the day before yesterday, we extend the range backwards
+   * to still show 14 days of data.
+   *
+   * @param data the medical data to compute the date filter from
+   * @returns the date filter to be applied to the statistics and devices cards
+   */
   const computeDateFilter = (data: MedicalData): DateFilter => {
     const now = new Date()
-    const dashboardStartDate = new Date()
-    dashboardStartDate.setDate(now.getDate() - DEFAULT_DASHBOARD_TIME_RANGE_DAYS)
     const dateRangeData = [...data.smbg, ...data.cbg]
     const localDates = dateRangeData
-      .filter(bgData => new Date(bgData.normalTime) >= dashboardStartDate)
       .map((bgData) => bgData.normalTime)
       .sort((a, b) => a.localeCompare(b))
+
+    /* If we have data */
+    if (localDates.length > 0) {
+      const mostRecentDate = new Date(localDates[localDates.length - 1])
+      /* If we have data for today, we can just return the nominal range */
+      if (mostRecentDate.getDate() == now.getDate() && mostRecentDate.getMonth() == now.getMonth()) {
+        /* If we have data for today, we can just return the nominal range
+        * Nominal range for 14 days of data is:
+        * Start: today - 14 days => with 0h 0 min 0 sec 0 ms to get the full day of this first day
+        * End: today - 1 day with 23h 59 min 59 sec 999ms to get the full day of yesterday */
+        const startDate = new Date()
+        const endDate = new Date()
+        startDate.setDate(startDate.getDate() - DEFAULT_DASHBOARD_TIME_RANGE_DAYS)
+        startDate.setHours(0, 0, 0, 0)
+        endDate.setDate(endDate.getDate() - 1)
+        endDate.setHours(23, 59, 59, 999)
+        console.log(`startDate=${startDate.toISOString()} endDate=${endDate.toISOString()}`)
+        return {
+          start: startDate.valueOf(),
+          end: endDate.valueOf()
+        }
+      } else {
+        /* If we have no data for today, we can just get the mostRecentDate as endDate and the last 14 days
+         from this date as startDate.
+         Start: mostRecentDate with 23h 59 min 59 sec 999ms to get the full day of last day of data
+         End: mostRecentDate - 13 days, since we include mostRecentDate data */
+        const endDate = mostRecentDate
+        endDate.setHours(23, 59, 59, 999)
+        const startDate = new Date(mostRecentDate)
+        startDate.setDate(startDate.getDate() - DEFAULT_DASHBOARD_TIME_RANGE_DAYS + 1)
+        startDate.setHours(0, 0, 0, 0)
+        console.log(`startDate=${startDate.toISOString()} endDate=${endDate.toISOString()}`)
+        return {
+          start: startDate.valueOf(),
+          end: endDate.valueOf()
+        }
+      }
+    }
+
+    /* If we don't have data return 0 */
     const dateRangeSet = new Set(localDates)
     if (dateRangeSet.size === 0) {
       return {
         start: 0,
         end: 0
       }
-    }
-    const dataRangeArray = Array.from(dateRangeSet)
-    return {
-      start: new Date(dataRangeArray[0]).valueOf(),
-      end: new Date(dataRangeArray.pop()).valueOf()
     }
   }
 
