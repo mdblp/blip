@@ -27,7 +27,7 @@
 
 import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
-import { mockDataAPI, pumpSettingsData } from '../../../mock/data.api.mock'
+import { mockDataAPI, pumpSettingsData, pumpSettingsDblg1Mobigo } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { patient1Id } from '../../../data/patient.api.data'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
@@ -38,7 +38,10 @@ import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
 import { mockTeamAPI } from '../../../mock/team.api.mock'
 import { testAppMainLayoutForPatient } from '../../../use-cases/app-main-layout-visualisation'
-import { testDevicesVisualisation } from '../../../use-cases/device-settings-visualisation'
+import {
+  testDevicesMenuLayoutForMobigoDevice,
+  testDevicesVisualisation
+} from '../../../use-cases/device-settings-visualisation'
 import { testDeviceSettingsNavigationForPatient } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 
@@ -79,5 +82,14 @@ describe('Device view for G1 Patient', () => {
       router = renderPage(deviceRoute)
     })
     await testDeviceSettingsNavigationForPatient(router)
+  })
+
+  it('should hide the basal safety profile menu for a DBLG1/Mobigo+ patients', async () => {
+    mockDataAPI(pumpSettingsDblg1Mobigo)
+
+    await act(async () => {
+      renderPage(deviceRoute)
+    })
+    testDevicesMenuLayoutForMobigoDevice()
   })
 })

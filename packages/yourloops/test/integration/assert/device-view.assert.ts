@@ -31,9 +31,14 @@ import moment from 'moment-timezone'
 import { pumpSettingsData } from '../mock/data.api.mock'
 import { formatCurrentDate } from 'dumb'
 
-export const checkDevicesMenuLayout = () => {
+export const checkDevicesMenuLayoutWithBasalSafetyProfile = () => {
   const devicesMenu = screen.getByTestId('devices-view-menu')
   expect(devicesMenu).toHaveTextContent('DevicesCurrent settingsBasal safety profileChange history')
+}
+
+export const checkDevicesMenuLayoutWithoutBasalSafetyProfile = () => {
+  const devicesMenu = screen.getByTestId('devices-view-menu')
+  expect(devicesMenu).toHaveTextContent('DevicesCurrent settingsChange history')
 }
 
 export const checkCurrentParametersContent = () => {
@@ -85,18 +90,18 @@ export const checkSafetyBasalProfileContent = async () => {
   const safetyBasalProfileButton = within(screen.getByTestId('devices-view-menu')).getByText('Basal safety profile')
   await userEvent.click(safetyBasalProfileButton)
 
-  const changeHistorySection = screen.getByTestId('safety-basal-profile-section')
-  expect(changeHistorySection).toBeVisible()
-  expect(changeHistorySection).toHaveTextContent('Basal safety profileStart timeEnd timeBasal rate12:00 AM8:30 AM1 U/h8:30 AM2:00 PM2 U/h2:00 PM12:00 AM0.4 U/h')
+  const safetyBasalProfileSection = screen.getByTestId('safety-basal-profile-section')
+  expect(safetyBasalProfileSection).toBeVisible()
+  expect(safetyBasalProfileSection).toHaveTextContent('Basal safety profileStart timeEnd timeBasal rate12:00 AM8:30 AM1 U/h8:30 AM2:00 PM2 U/h2:00 PM12:00 AM0.4 U/h')
 }
 
 export const checkSafetyBasalProfileErrorMessage = async (errorMessage: string) => {
   const safetyBasalProfileButton = within(screen.getByTestId('devices-view-menu')).getByText('Basal safety profile')
   await userEvent.click(safetyBasalProfileButton)
 
-  const changeHistorySection = screen.getByTestId('safety-basal-profile-section')
-  expect(changeHistorySection).toBeVisible()
-  expect(changeHistorySection).toHaveTextContent(`Basal safety profile${errorMessage}`)
+  const safetyBasalProfileSection = screen.getByTestId('safety-basal-profile-section')
+  expect(safetyBasalProfileSection).toBeVisible()
+  expect(safetyBasalProfileSection).toHaveTextContent(`Basal safety profile${errorMessage}`)
 }
 
 export const checkChangeHistoryContent = async () => {

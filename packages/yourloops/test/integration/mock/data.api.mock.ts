@@ -860,7 +860,7 @@ export const pumpSettingsDblg2: Data = {
   }
 }
 
-export const pumpSettingsDblg1WithoutSecurityBasalData: Data = {
+export const pumpSettingsDblg1Mobigo: Data = {
   dataRange: ['2022-08-08T16:35:00.000Z', '2022-08-08T16:40:00.000Z'],
   data: {
     pumpSettings: [
@@ -885,7 +885,7 @@ export const pumpSettingsDblg1WithoutSecurityBasalData: Data = {
             transmitterId: 'a1234'
           },
           device: {
-            deviceId: '1234',
+            deviceId: 'mobigo1234567890',
             imei: '1234567890',
             manufacturer: 'Diabeloop',
             name: DeviceSystem.Dblg1,
