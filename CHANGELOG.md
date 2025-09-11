@@ -15,6 +15,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2347 Display patient monitoring parameters in the patient profile page
 - YLP-3547 Swap unit and percentage in insulin card
 - YLP-3640 New UI for tooltips in Daily view
+- YLP-3642 Hide the 'basal safety profile' menu for mobigo+ users
 - YLP-3651 Transfer the patient information displayed in the banner in the patient profile page
 - YLP-3687 Update insulin stats order
 

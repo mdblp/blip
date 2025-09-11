@@ -26,7 +26,7 @@
  */
 
 import React, { type FC, useState } from 'react'
-import type MedicalDataService from 'medical-domain'
+import MedicalDataService, { DeviceConfig } from 'medical-domain'
 import Container from '@mui/material/Container'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
@@ -42,6 +42,10 @@ import { DeviceViewSection } from '../../../models/enums/device-view-section.enu
 interface DeviceViewProps {
   goToDailySpecificDate: (date: number) => void
   medicalData: MedicalDataService
+}
+
+function isBasalSafetyProfileAvailable(device : DeviceConfig) : boolean {
+  return !device.deviceId.startsWith('mobigo');
 }
 
 export const DevicesView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecificDate }) => {
@@ -64,7 +68,11 @@ export const DevicesView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecifi
         ?
         <Grid container spacing={3}>
           <Grid item xs={3}>
-            <DevicesViewMenu selectedSection={selectedSection} selectSection={selectSection} />
+            <DevicesViewMenu
+              selectedSection={selectedSection}
+              selectSection={selectSection}
+              shouldDisplaySafetyBasalProfile={isBasalSafetyProfileAvailable(pumpSettings.payload.device)}
+            />
           </Grid>
           <Grid item xs={9}>
             {
