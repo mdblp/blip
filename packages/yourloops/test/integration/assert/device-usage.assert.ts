@@ -27,7 +27,7 @@
 
 import { screen, within } from '@testing-library/react'
 import { checkTooltip } from './stats.assert'
-import { RESERVOIR_CHANGE_13_DAYS_AGO_DATE, RESERVOIR_CHANGE_TODAY_DATE } from '../mock/data.api.mock'
+import { RESERVOIR_CHANGE_13_DAYS_AGO_DATE } from '../mock/data.api.mock'
 
 const reservoirChangeDate = new Date()
 reservoirChangeDate.setHours(17)
