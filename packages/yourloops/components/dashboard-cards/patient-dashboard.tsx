@@ -104,38 +104,39 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
     /* If we have data */
     if (localDates.length > 0) {
       const mostRecentDate = new Date(localDates[localDates.length - 1])
+      const earliestDate = new Date(localDates[0])
+      let startDate: Date
+      let endDate: Date
+
       /* If we have data for today, we can just return the nominal range */
       if (mostRecentDate.getDate() == now.getDate() && mostRecentDate.getMonth() == now.getMonth()) {
         /* If we have data for today, we can just return the nominal range
         * Nominal range for 14 days of data is:
         * Start: today - 14 days => with 0h 0 min 0 sec 0 ms to get the full day of this first day
         * End: today - 1 day with 23h 59 min 59 sec 999ms to get the full day of yesterday */
-        const startDate = new Date()
-        const endDate = new Date()
+        startDate = new Date()
+        endDate = new Date()
         startDate.setDate(startDate.getDate() - DEFAULT_DASHBOARD_TIME_RANGE_DAYS)
-        startDate.setHours(0, 0, 0, 0)
         endDate.setDate(endDate.getDate() - 1)
-        endDate.setHours(23, 59, 59, 999)
-        console.log(`startDate=${startDate.toISOString()} endDate=${endDate.toISOString()}`)
-        return {
-          start: startDate.valueOf(),
-          end: endDate.valueOf()
-        }
       } else {
         /* If we have no data for today, we can just get the mostRecentDate as endDate and the last 14 days
          from this date as startDate.
          Start: mostRecentDate with 23h 59 min 59 sec 999ms to get the full day of last day of data
          End: mostRecentDate - 13 days, since we include mostRecentDate data */
-        const endDate = mostRecentDate
-        endDate.setHours(23, 59, 59, 999)
-        const startDate = new Date(mostRecentDate)
+        startDate = new Date(mostRecentDate)
+        endDate = new Date(mostRecentDate)
         startDate.setDate(startDate.getDate() - DEFAULT_DASHBOARD_TIME_RANGE_DAYS + 1)
+      }
+      startDate.setHours(0, 0, 0, 0)
+      endDate.setHours(23, 59, 59, 999)
+      // If we don't have data for the full range, adjust startDate to earliest available
+      if (startDate < earliestDate) {
+        startDate.setTime(earliestDate.getTime())
         startDate.setHours(0, 0, 0, 0)
-        console.log(`startDate=${startDate.toISOString()} endDate=${endDate.toISOString()}`)
-        return {
-          start: startDate.valueOf(),
-          end: endDate.valueOf()
-        }
+      }
+      return {
+        start: startDate.valueOf(),
+        end: endDate.valueOf()
       }
     }
 

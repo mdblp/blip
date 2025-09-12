@@ -29,7 +29,7 @@ import { act, waitFor } from '@testing-library/react'
 import { logoutMock, mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import {
-  completeDashboardData,
+  oneDayDashboardData,
   dataSetsWithZeroValues,
   mockDataAPI,
   sixteenDaysOldDashboardData,
@@ -94,7 +94,7 @@ describe('Dashboard view for HCP', () => {
 
   it('should render correct components when navigating to a patient not scoped on the private team', async () => {
     const selectedTeamName = myThirdTeamName
-    mockDataAPI(completeDashboardData)
+    mockDataAPI(oneDayDashboardData)
 
     const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
@@ -126,7 +126,7 @@ describe('Dashboard view for HCP', () => {
 
   it('should render components with correct display when the patient has no data', async () => {
     const patientWithNoDataDashboardRoute = `/teams/${myThirdTeamId}/patients/${noDataTransferredPatientId}${AppUserRoute.Dashboard}`
-    mockDataAPI(completeDashboardData)
+    mockDataAPI(oneDayDashboardData)
 
     await act(async () => {
       renderPage(patientWithNoDataDashboardRoute)
@@ -136,7 +136,7 @@ describe('Dashboard view for HCP', () => {
   })
 
   it('should be able to switch from patient to patient', async () => {
-    mockDataAPI(completeDashboardData)
+    mockDataAPI(oneDayDashboardData)
 
     await act(async () => {
       renderPage(patientDashboardRoute)
@@ -147,7 +147,7 @@ describe('Dashboard view for HCP', () => {
 
   it('should be able to manage medical reports', async () => {
     const selectedTeamName = myThirdTeamName
-    mockDataAPI(completeDashboardData)
+    mockDataAPI(oneDayDashboardData)
 
     const medicalFilesWidgetParams: MedicalFilesWidgetParams = {
       selectedPatientId: patient1Id,

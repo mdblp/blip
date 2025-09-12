@@ -28,7 +28,7 @@
 import { act, waitFor } from '@testing-library/react'
 import { renderPage } from '../../../utils/render'
 import {
-  completeDashboardData,
+  oneDayDashboardData,
   dataSetsWithZeroValues,
   mockDataAPI,
   sixteenDaysOldDashboardData,
@@ -81,7 +81,7 @@ describe('Dashboard view for patient', () => {
   })
 
   it('should display correct components when patient is in some medical teams', async () => {
-    mockDataAPI(completeDashboardData)
+    mockDataAPI(oneDayDashboardData)
     const appMainLayoutParams: AppMainLayoutParams = {
       footerHasLanguageSelector: false,
       loggedInUserFullName: `${lastName} ${firstName}`

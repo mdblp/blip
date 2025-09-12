@@ -468,7 +468,7 @@ export const generateCompleteDashboardFromDate = (date: string): Data => {
   }
 }
 
-export const completeDashboardData = generateCompleteDashboardFromDate(yesterdayDateAsString)
+export const oneDayDashboardData = generateCompleteDashboardFromDate(yesterdayDateAsString)
 export const twoWeeksOldDashboardData = generateCompleteDashboardFromDate(twoWeeksAgoDateAsString)
 export const sixteenDaysOldDashboardData = generateCompleteDashboardFromDate(sixteenDaysAgoDateAsString)
 
@@ -1267,7 +1267,7 @@ export const dataSetsWithZeroValues: Data = {
         "type": DatumType.Cbg,
         "source": Source.Diabeloop,
         "units": Unit.MilligramPerDeciliter,
-        "value": 0,
+        "value": 1,
         "localDate": "2022-08-08",
         "isoWeekday": WeekDays.Monday,
         "msPer24": 63000000,
