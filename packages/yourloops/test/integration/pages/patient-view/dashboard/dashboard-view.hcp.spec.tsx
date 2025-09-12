@@ -30,7 +30,7 @@ import { logoutMock, mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import {
   oneDayDashboardData,
-  dataSetsWithZeroValues,
+  smallDataSet,
   mockDataAPI,
   sixteenDaysOldDashboardData,
   twoWeeksOldDashboardData
@@ -201,7 +201,7 @@ describe('Dashboard view for HCP', () => {
   })
 
   it('should render correct components when patient is in no medical teams', async () => {
-    mockDataAPI(dataSetsWithZeroValues)
+    mockDataAPI(smallDataSet)
     jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
       ...patient1Info,
       invitationStatus: UserInviteStatus.Accepted

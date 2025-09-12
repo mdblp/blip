@@ -1250,7 +1250,7 @@ export const completeDailyViewDataMmol: Data = {
 completeDailyViewDataMmol.data.cbg = convertCbgMg2Mmol(getCompleteDailyViewData().data.cbg)
 completeDailyViewDataMmol.data.smbg = convertSmbgMg2Mmol(getCompleteDailyViewData().data.smbg)
 
-export const dataSetsWithZeroValues: Data = {
+export const smallDataSet: Data = {
   dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],
   data: {
     "alarmEvents": [],
@@ -1260,14 +1260,14 @@ export const dataSetsWithZeroValues: Data = {
       {
         "epoch": 1659972600000,
         "displayOffset": -120,
-        "normalTime": "2022-08-08T15:30:00.000Z",
+        "normalTime": "2022-01-08T15:30:00.000Z",
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbgId",
         "type": DatumType.Cbg,
         "source": Source.Diabeloop,
         "units": Unit.MilligramPerDeciliter,
-        "value": 1,
+        "value": 0,
         "localDate": "2022-08-08",
         "isoWeekday": WeekDays.Monday,
         "msPer24": 63000000,
