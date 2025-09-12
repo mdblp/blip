@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -190,7 +190,6 @@ function getAutomatedAndManualBasalDuration(basalsData: Basal[], dateFilter: Dat
     manualBasalDuration: manualBasalPerDay ,
     automatedPercentage,
     manualPercentage
-
   }
 }
 

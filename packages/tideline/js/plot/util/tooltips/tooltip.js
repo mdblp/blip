@@ -268,7 +268,7 @@ function Tooltips(container, tooltipsGroup) {
       .attr('id', this.id() + '_' + type)
       .attr('transform', poolGroup.attr('transform'))
     pool.tooltips(this)
-    if (shapes[shape].fixed) {
+    if (shapes[shape]?.fixed) {
       _.forEach(opts.classes, function(cl) {
         if (shapes[shape]) {
           defineShape(shapes[shape], cl)

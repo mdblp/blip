@@ -26,14 +26,15 @@ import { TimeService } from 'medical-domain'
 import Footer from './footer'
 import {
   AlarmEventTooltip,
+  BasalTooltip,
   BloodGlucoseTooltip,
   BolusTooltip,
   ConfidentialTooltip,
   EventsSuperpositionPopover,
-  RescueCarbsTooltip,
   NightModeTooltip,
   ParameterTooltip,
   PhysicalTooltip,
+  RescueCarbsTooltip,
   ReservoirTooltip,
   WarmUpTooltip
 } from 'dumb'
@@ -66,6 +67,7 @@ class DailyChart extends React.Component {
     // other handlers
     onDatetimeLocationChange: PropTypes.func.isRequired,
     onTransition: PropTypes.func.isRequired,
+    onBasalHover: PropTypes.func.isRequired,
     onBolusHover: PropTypes.func.isRequired,
     onSMBGHover: PropTypes.func.isRequired,
     onCBGHover: PropTypes.func.isRequired,
@@ -91,6 +93,7 @@ class DailyChart extends React.Component {
       'bgClasses',
       'bgUnits',
       'timePrefs',
+      'onBasalHover',
       'onBolusHover',
       'onSMBGHover',
       'onCBGHover',
@@ -385,6 +388,7 @@ class Daily extends React.Component {
                   onTransition={this.handleInTransition}
                   onBolusHover={this.handleBolusHover}
                   onSMBGHover={this.handleSMBGHover}
+                  onBasalHover={this.handleBasalHover}
                   onCBGHover={this.handleCBGHover}
                   onCarbHover={this.handleCarbHover}
                   onReservoirHover={this.handleReservoirHover}
@@ -529,6 +533,22 @@ class Daily extends React.Component {
   }
 
   handleTooltipOut = () => this.setState({ tooltip: null }) // Tips for debug use: _.noop;
+
+  handleBasalHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum)
+    const tooltip = (
+      <BasalTooltip
+        basal={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        bgPrefs={datum.bgPrefs}
+        timePrefs={datum.timePrefs}
+      />)
+    this.setState({ tooltip })
+  }
 
   handleBolusHover = (datum) => {
     this.updateDatumHoverForTooltip(datum)

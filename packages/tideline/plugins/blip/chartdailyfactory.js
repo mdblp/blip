@@ -408,7 +408,9 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   // add basal data to basal pool
   poolBasal.addPlotType({ type: 'basal' }, plotBasal(poolBasal, {
-    defaultSource: tidelineData.opts.defaultSource
+    defaultSource: tidelineData.opts.defaultSource,
+    onBasalHover: options.onBasalHover,
+    onBasalOut: options.onTooltipOut
   }))
 
   // Add confidential mode to Basal pool: Must be the last in the pool to mask stuff below

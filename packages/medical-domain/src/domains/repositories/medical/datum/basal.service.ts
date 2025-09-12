@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,7 +32,8 @@ import { addMilliseconds } from '../../time/time.service'
 import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import DatumService from '../datum.service'
-import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
+import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../../models/time/date-filter.model'
+import { BasalDeliveryType } from '../../../models/medical/datum/enums/basal-delivery-type.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Basal => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -45,8 +46,8 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const basal: Basal = {
     ...base,
     type: DatumType.Basal,
-    subType: rawData.deliveryType as string,
-    deliveryType: rawData.deliveryType as string,
+    subType: rawData.deliveryType as BasalDeliveryType,
+    deliveryType: rawData.deliveryType as BasalDeliveryType,
     rate: rawData.rate as number,
     duration,
     normalEnd,
@@ -72,8 +73,8 @@ const deduplicate = (data: Basal[], opts: MedicalDataOptions): Basal[] => {
       tempBasal.rate === basal.rate
     )
     if (tempBasalFound) {
-      tempBasalFound.subType = 'automated'
-      tempBasalFound.deliveryType = 'automated'
+      tempBasalFound.subType = BasalDeliveryType.Automated
+      tempBasalFound.deliveryType = BasalDeliveryType.Automated
       tempBasalFound.replace = basal.id
       basal.duration = 0
       basal.replacedBy = tempBasalFound.id

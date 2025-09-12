@@ -32,6 +32,7 @@ import { AlarmEventType } from './domains/models/medical/datum/enums/alarm-event
 import { AlarmLevel } from './domains/models/medical/datum/enums/alarm-level.enum'
 import type Basal from './domains/models/medical/datum/basal.model'
 import type BaseDatum from './domains/models/medical/datum/basics/base-datum.model'
+import { BasalDeliveryType } from './domains/models/medical/datum/enums/basal-delivery-type.enum'
 import type Bolus from './domains/models/medical/datum/bolus.model'
 import { BolusSubtype } from './domains/models/medical/datum/enums/bolus-subtype.enum'
 import { BgClass } from './domains/models/statistics/enum/bg-class.enum'
@@ -114,6 +115,7 @@ export {
   ManualBolusAveragePerRange,
   HoursRange,
   type Basal,
+  BasalDeliveryType,
   type BaseDatum,
   type BgBounds,
   BgClass,
