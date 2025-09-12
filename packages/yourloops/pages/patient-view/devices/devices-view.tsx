@@ -44,15 +44,15 @@ interface DeviceViewProps {
   medicalData: MedicalDataService
 }
 
-function isBasalSafetyProfileAvailable(device : DeviceConfig) : boolean {
-  return !device.deviceId.startsWith('mobigo');
-}
-
 export const DevicesView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecificDate }) => {
   const { t } = useTranslation()
   const theme = useTheme()
   const [selectedSection, setSelectedSection] = useState(DeviceViewSection.CurrentParameters)
   const pumpSettings = medicalData.medicalData.pumpSettings.at(-1)
+
+  const isBasalSafetyProfileAvailable = (device : DeviceConfig) : boolean => {
+    return !device.deviceId.startsWith('mobigo');
+  }
 
   const isSelected = (section: DeviceViewSection): boolean => {
     return section === selectedSection
