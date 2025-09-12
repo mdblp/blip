@@ -29,7 +29,10 @@ import {
   checkChangeHistoryContent,
   checkCopyTextButton,
   checkCurrentParametersContent,
-  checkDevicesMenuLayout, checkG2CopyTextButton, checkG2CurrentParametersContent,
+  checkDevicesMenuLayoutWithBasalSafetyProfile,
+  checkDevicesMenuLayoutWithoutBasalSafetyProfile,
+  checkG2CopyTextButton,
+  checkG2CurrentParametersContent,
   checkSafetyBasalProfileContent,
   checkSafetyBasalProfileErrorMessage
 } from '../assert/device-view.assert'
@@ -52,12 +55,12 @@ export const testEmptySafetyBasalProfileGenericErrorMessage = async () => {
   await checkSafetyBasalProfileErrorMessage('The basal safety profile values are not available.')
 }
 
-export const testEmptySafetyBasalProfileDblg1ErrorMessage = async () => {
-  await checkSafetyBasalProfileErrorMessage('The basal safety profile values are not available due to an outdated software version of the DBLG1. Updating the software version may resolve the issue.')
+const testDevicesMenuLayout = () => {
+  checkDevicesMenuLayoutWithBasalSafetyProfile()
 }
 
-const testDevicesMenuLayout = () => {
-  checkDevicesMenuLayout()
+export const testDevicesMenuLayoutForMobigoDevice = () => {
+  checkDevicesMenuLayoutWithoutBasalSafetyProfile()
 }
 
 const testCurrentParametersVisualisation = async () => {

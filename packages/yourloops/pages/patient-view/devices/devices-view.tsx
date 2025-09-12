@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import React, { type FC, useState } from 'react'
-import type MedicalDataService from 'medical-domain'
+import MedicalDataService, { DeviceConfig, PumpSettings } from 'medical-domain'
 import Container from '@mui/material/Container'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
@@ -50,6 +50,14 @@ export const DevicesView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecifi
   const [selectedSection, setSelectedSection] = useState(DeviceViewSection.CurrentParameters)
   const pumpSettings = medicalData.medicalData.pumpSettings.at(-1)
 
+  const isBasalSafetyProfileAvailable = (pumpSettings : PumpSettings) : boolean => {
+    return !isMobiGoDevice(pumpSettings.payload.device);
+  }
+
+  const isMobiGoDevice = (device : DeviceConfig) : boolean => {
+    return device.deviceId.toLowerCase().startsWith('mobigo');
+  }
+
   const isSelected = (section: DeviceViewSection): boolean => {
     return section === selectedSection
   }
@@ -64,7 +72,11 @@ export const DevicesView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecifi
         ?
         <Grid container spacing={3}>
           <Grid item xs={3}>
-            <DevicesViewMenu selectedSection={selectedSection} selectSection={selectSection} />
+            <DevicesViewMenu
+              selectedSection={selectedSection}
+              selectSection={selectSection}
+              shouldDisplaySafetyBasalProfile={isBasalSafetyProfileAvailable(pumpSettings)}
+            />
           </Grid>
           <Grid item xs={9}>
             {
