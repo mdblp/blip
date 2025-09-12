@@ -26,7 +26,7 @@
  */
 
 import React, { type FC, useState } from 'react'
-import MedicalDataService, { DeviceConfig } from 'medical-domain'
+import MedicalDataService, { DeviceConfig, PumpSettings } from 'medical-domain'
 import Container from '@mui/material/Container'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
@@ -50,8 +50,12 @@ export const DevicesView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecifi
   const [selectedSection, setSelectedSection] = useState(DeviceViewSection.CurrentParameters)
   const pumpSettings = medicalData.medicalData.pumpSettings.at(-1)
 
-  const isBasalSafetyProfileAvailable = (device : DeviceConfig) : boolean => {
-    return !device.deviceId.startsWith('mobigo');
+  const isBasalSafetyProfileAvailable = (pumpSettings : PumpSettings) : boolean => {
+    return !isMobiGoDevice(pumpSettings.payload.device);
+  }
+
+  const isMobiGoDevice = (device : DeviceConfig) : boolean => {
+    return device.deviceId.toLowerCase().startsWith('mobigo');
   }
 
   const isSelected = (section: DeviceViewSection): boolean => {
@@ -71,7 +75,7 @@ export const DevicesView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecifi
             <DevicesViewMenu
               selectedSection={selectedSection}
               selectSection={selectSection}
-              shouldDisplaySafetyBasalProfile={isBasalSafetyProfileAvailable(pumpSettings.payload.device)}
+              shouldDisplaySafetyBasalProfile={isBasalSafetyProfileAvailable(pumpSettings)}
             />
           </Grid>
           <Grid item xs={9}>

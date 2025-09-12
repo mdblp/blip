@@ -83,7 +83,7 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
             <ListItemText className={classes.menuItemText}>{t('current-parameters')}</ListItemText>
           </MenuItem>
             {
-              shouldDisplaySafetyBasalProfile ?
+              shouldDisplaySafetyBasalProfile &&
                 <MenuItem
                     selected={selectedSection === DeviceViewSection.SafetyBasalProfile}
                   onClick={() => selectSection(DeviceViewSection.SafetyBasalProfile)}
@@ -95,7 +95,6 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
                   </ListItemIcon>
                   <ListItemText className={classes.menuItemText}>{t('safety-basal-profile')}</ListItemText>
                 </MenuItem>
-                : ''
             }
           <MenuItem
             selected={selectedSection === DeviceViewSection.ChangeHistory}

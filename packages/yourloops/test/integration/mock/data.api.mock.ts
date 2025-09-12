@@ -885,11 +885,11 @@ export const pumpSettingsDblg1Mobigo: Data = {
             transmitterId: 'a1234'
           },
           device: {
-            deviceId: 'mobigo1234567890',
+            deviceId: 'MobiGo1234567890',
             imei: '1234567890',
             manufacturer: 'Diabeloop',
             name: DeviceSystem.Dblg1,
-            swVersion: '1.2.3'
+            swVersion: '1.12.9'
           },
           history,
           parameters: [

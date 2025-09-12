@@ -118,7 +118,7 @@ describe('Device view for HCP', () => {
     await testEmptySafetyBasalProfileGenericErrorMessage()
   })
 
-  it('should hide the basal safety profile menu for a DBLG1/Mobigo+ patients', async () => {
+  it('should hide the basal safety profile menu for a DBLG1/Mobigo+ patient', async () => {
     mockDataAPI(pumpSettingsDblg1Mobigo)
 
     await act(async () => {
