@@ -72,7 +72,7 @@ export const BasalTooltip: FunctionComponent<BasalTooltipProps> = (props) => {
             ? <TooltipLine label={t('temp-basal')} />
             : <TooltipLine label={t('Loop mode status')} value={loopModeLabel} />
           }
-          <TooltipLine label={t('Delivered')} value={rateValue} units={t('U/h')} isBold />
+          <TooltipLine label={t('Delivered')} value={rateValue} units={t('basal-rate-unit')} isBold />
         </div>
       }
     />
