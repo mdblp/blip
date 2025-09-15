@@ -15,8 +15,6 @@
  * == BSD2 LICENSE ==
  */
 
-import _ from 'lodash'
-
 // when adding a shape from an image supplied by designer
 // viewBox attribute should be copied exactly from svg image
 import shapeutil from '../shapeutil'
