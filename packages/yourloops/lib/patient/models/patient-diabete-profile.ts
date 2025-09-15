@@ -28,6 +28,7 @@
 
 
 import { BgPrefs } from 'dumb'
+import type { BgUnit } from 'medical-domain'
 
 export interface DiabeticProfile {
   name: DiabeticProfileType
@@ -38,4 +39,24 @@ export enum DiabeticProfileType {
   DT1DT2 = 'type1-type2',
   DT1Pregnancy = 'dt1-pregnancy',
   Custom = 'custom',
+}
+
+
+// Data structure used only to communicate with the backend
+export interface DiabeticProfilePayload {
+  name: DiabeticProfileType
+  bloodGlucosePreference ?: BloodGlucosePreferencePayload
+}
+
+interface BloodGlucosePreferencePayload {
+  units: BgUnit
+  range: RangesPayload
+}
+
+interface RangesPayload {
+  bgClamp: number,
+  targetLowerBound: number,
+  targetUpperBound: number,
+  veryHighThreshold: number,
+  veryLowThreshold: number
 }

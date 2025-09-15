@@ -32,6 +32,7 @@ import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
 import { type Patient, type PatientMetrics } from './models/patient.model'
 import { type MonitoringAlertsParameters } from '../team/models/monitoring-alerts-parameters.model'
+import { DiabeticProfile, DiabeticProfilePayload } from './models/patient-diabete-profile'
 
 export const PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE = 'patient-already-in-team'
 const PATIENT_ALREADY_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
@@ -44,6 +45,7 @@ interface InvitePatientArgs {
 interface InvitePatientPayload extends InvitePatientArgs {
   role: UserRole
 }
+
 
 export default class PatientApi {
 
@@ -100,5 +102,27 @@ export default class PatientApi {
 
   static async removePatient(teamId: string, userId: string): Promise<void> {
     await HttpService.delete({ url: `/crew/v0/teams/${teamId}/patients/${userId}` })
+  }
+
+  static async updatePatientDiabeticProfile(patientId: string, diabeticProfile: DiabeticProfile): Promise<void> {
+    // map to payload structure expected by backend
+    const payload: DiabeticProfilePayload = {
+      name : diabeticProfile.name,
+      bloodGlucosePreference: {
+        units :  diabeticProfile.bloodGlucosePreference.bgUnits,
+        range : {
+          bgClamp : diabeticProfile.bloodGlucosePreference.bgClasses.veryHigh,
+          veryLowThreshold : diabeticProfile.bloodGlucosePreference.bgBounds.veryLowThreshold,
+          targetLowerBound : diabeticProfile.bloodGlucosePreference.bgBounds.targetLowerBound,
+          targetUpperBound : diabeticProfile.bloodGlucosePreference.bgBounds.targetUpperBound,
+          veryHighThreshold : diabeticProfile.bloodGlucosePreference.bgBounds.veryHighThreshold
+        }
+      }
+    }
+
+    await HttpService.put<void, DiabeticProfilePayload>({
+      url: `/metadata/${patientId}/diabetic-profile`,
+      payload: payload
+    })
   }
 }

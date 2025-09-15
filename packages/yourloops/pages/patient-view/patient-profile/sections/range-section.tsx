@@ -46,6 +46,7 @@ import { useAlert } from '../../../../components/utils/snackbar'
 import { DiabeticProfile, DiabeticProfileType } from '../../../../lib/patient/models/patient-diabete-profile'
 import { Unit } from 'medical-domain'
 import Chip from '@mui/material/Chip'
+import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 
 interface RangeSectionProps {
   patient: Patient
@@ -86,11 +87,12 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
   const rangeSection = useRef<HTMLElement>(null)
-
   const [selectedPatientType, setSelectedPatientType] = useState<DiabeticProfileType>(patient.diabeticProfile.name)
   const [selectedDiabeticProfile, setSelectedDiabeticProfile] = useState<DiabeticProfile>(patient.diabeticProfile)
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
   const [errors, setErrors] = useState<ValidationErrors>(DEFAULT_ERROR_STATE)
+  const { updatePatientDiabeticProfile } = usePatientsContext()
+
   const patientTypes = [
     { type: DiabeticProfileType.DT1DT2, label: t('type-1-and-2') },
     { type: DiabeticProfileType.DT1Pregnancy, label: t('pregnancy-type-1') },
@@ -202,7 +204,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
     setSaveInProgress(true)
     try {
-      //await updatePatientMonitoringAlertsParameters(patient)
+      await updatePatientDiabeticProfile(patient.userid, selectedDiabeticProfile)
       patient.diabeticProfile = selectedDiabeticProfile
       alert.success(t('patient-update-success'))
       setSaveInProgress(false)
