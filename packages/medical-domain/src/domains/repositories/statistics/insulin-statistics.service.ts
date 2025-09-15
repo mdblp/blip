@@ -184,7 +184,6 @@ function getAutomatedAndManualBasalDuration(basalsData: Basal[], dateFilter: Dat
   const automatedPercentage = Math.round(100 * automatedBasalPerDay / total)
   const manualPercentage = Math.round(100 * manualBasalPerDay / total)
 
-
   return {
     automatedBasalDuration: automatedBasalPerDay ,
     manualBasalDuration: manualBasalPerDay ,
