@@ -109,7 +109,7 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
       let endDate: Date
 
       /* If we have data for today, we can just return the nominal range */
-      if (mostRecentDate.getDate() == now.getDate() && mostRecentDate.getMonth() == now.getMonth()) {
+      if (mostRecentDate.getDate() === now.getDate() && mostRecentDate.getMonth() === now.getMonth()) {
         /* If we have data for today, we can just return the nominal range
         * Nominal range for 14 days of data is:
         * Start: today - 14 days => with 0h 0 min 0 sec 0 ms to get the full day of this first day

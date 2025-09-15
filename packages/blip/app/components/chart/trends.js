@@ -147,7 +147,7 @@ class Trends extends React.Component {
     before this fix. The fix is just removing one day to endDate if we detect data for the current day.
     We add +1 to now because tidelineData.endpoints[1] (endDate) is set to tomorrow midnight to take the whole day.*/
     const now = new Date()
-    if (this.endDate.getDay() === now.getDay() + 1 && this.endDate.getMonth() === now.getMonth()) {
+    if (this.endDate.getDate() === now.getDate() + 1 && this.endDate.getMonth() === now.getMonth()) {
       this.endDate.setDate(this.endDate.getDate() - 1)
     }
 
