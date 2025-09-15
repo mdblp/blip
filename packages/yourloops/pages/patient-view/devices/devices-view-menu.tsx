@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2024-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,6 +42,7 @@ import { DeviceViewSection } from '../../../models/enums/device-view-section.enu
 import { useTranslation } from 'react-i18next'
 
 interface DevicesViewMenuProps {
+  shouldDisplaySafetyBasalProfile: boolean
   selectedSection: DeviceViewSection
   selectSection: (section: DeviceViewSection) => void
 }
@@ -60,7 +61,7 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
   const theme = useTheme()
   const { t } = useTranslation()
   const { classes } = useStyles()
-  const { selectedSection, selectSection } = props
+  const { selectedSection, selectSection, shouldDisplaySafetyBasalProfile } = props
 
   return (
     <Card variant="outlined" data-testid="devices-view-menu">
@@ -81,17 +82,20 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
             </ListItemIcon>
             <ListItemText className={classes.menuItemText}>{t('current-parameters')}</ListItemText>
           </MenuItem>
-          <MenuItem
-            selected={selectedSection === DeviceViewSection.SafetyBasalProfile}
-            onClick={() => selectSection(DeviceViewSection.SafetyBasalProfile)}
-            sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
-            data-testid="safety-basal-profile-menu-button"
-          >
-            <ListItemIcon>
-              <BasalIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText className={classes.menuItemText}>{t('safety-basal-profile')}</ListItemText>
-          </MenuItem>
+            {
+              shouldDisplaySafetyBasalProfile &&
+                <MenuItem
+                    selected={selectedSection === DeviceViewSection.SafetyBasalProfile}
+                  onClick={() => selectSection(DeviceViewSection.SafetyBasalProfile)}
+                  sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
+                  data-testid="safety-basal-profile-menu-button"
+                >
+                  <ListItemIcon>
+                    <BasalIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText className={classes.menuItemText}>{t('safety-basal-profile')}</ListItemText>
+                </MenuItem>
+            }
           <MenuItem
             selected={selectedSection === DeviceViewSection.ChangeHistory}
             onClick={() => selectSection(DeviceViewSection.ChangeHistory)}
