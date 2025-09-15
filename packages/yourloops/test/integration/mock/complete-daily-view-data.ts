@@ -29,6 +29,7 @@ import {
   AlarmCode,
   AlarmEventType,
   AlarmLevel,
+  BasalDeliveryType,
   BolusSubtype,
   DatumType,
   DeviceSystem,
@@ -73,6 +74,10 @@ import {
   ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID,
   ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID,
   ALARM_EVENT_URGENT_LOW_SOON_ID,
+  BASAL_LOOP_MODE_OFF_ID,
+  BASAL_LOOP_MODE_ON_ID,
+  BASAL_MANUAL_ID,
+  BASAL_TEMP_ID,
   CBG_ID,
   CONFIDENTIAL_MODE_ID,
   Data,
@@ -129,7 +134,8 @@ export const getCompleteDailyViewDataDblg2 = (deviceName: DeviceSystem = DeviceS
   data.pumpSettings[0].payload.mobileApplication = {
     manufacturer: "Diabeloop",
     identifier: "xxx",
-    swVersion: "1.2.3"
+    swVersion: "1.2.3",
+    activationCode: "123456789"
   }
 
   return completeData
@@ -808,15 +814,66 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "normalTime": "2022-08-08T16:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
-          "id": "basal_2022-08-08_5",
+          "id": BASAL_LOOP_MODE_ON_ID,
           "type": DatumType.Basal,
           "source": Source.Diabeloop,
-          "subType": "automated",
-          "deliveryType": "automated",
+          "subType": BasalDeliveryType.Automated,
+          "deliveryType": BasalDeliveryType.Automated,
           "rate": 0.8,
           "duration": 1000,
           "normalEnd": "2022-08-08T16:30:01.000Z",
           "epochEnd": 1659976201000,
+          "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1659976200000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T16:31:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": BASAL_LOOP_MODE_OFF_ID,
+          "type": DatumType.Basal,
+          "source": Source.Diabeloop,
+          "subType": BasalDeliveryType.Scheduled,
+          "deliveryType": BasalDeliveryType.Scheduled,
+          "rate": 0.2,
+          "duration": 1000,
+          "normalEnd": "2022-08-08T16:31:01.000Z",
+          "epochEnd": 1659976260000,
+          "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1659976200000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T16:32:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": BASAL_TEMP_ID,
+          "type": DatumType.Basal,
+          "source": Source.Diabeloop,
+          "subType": BasalDeliveryType.Temporary,
+          "deliveryType": BasalDeliveryType.Temporary,
+          "rate": 0.3,
+          "duration": 1000,
+          "normalEnd": "2022-08-08T16:32:01.000Z",
+          "epochEnd": 1659976320000,
+          "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1659976200000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T16:33:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": BASAL_MANUAL_ID,
+          "type": DatumType.Basal,
+          "source": Source.Diabeloop,
+          "subType": BasalDeliveryType.Manual,
+          "deliveryType": BasalDeliveryType.Manual,
+          "rate": 0.1,
+          "duration": 1000,
+          "normalEnd": "2022-08-08T16:33:01.000Z",
+          "epochEnd": 1659976380000,
           "isoWeekday": WeekDays.Sunday
         }
       ],
@@ -1367,11 +1424,12 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
               "product": "zzz",
             },
             history,
-            securityBasals: { rates: null },
-            mobileApplication: {
+            "securityBasals": { "rates": null },
+            "mobileApplication": {
               "manufacturer": "",
               "identifier": "",
               "swVersion": "",
+              "activationCode": ""
             },
             "parameters": [
               {

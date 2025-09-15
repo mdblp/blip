@@ -124,6 +124,7 @@ function plotBasal(pool, opts = defaults) {
         .append('g')
         .classed('d3-basal-group', true)
         .attr('id', (d) => `basal_group_${d.id}`)
+        .attr('data-testid', d => `basal_group_${d.id}`)
 
       // Add rectangles to non-zero rate basal segments
       const nonZero = basalSegmentGroups.filter((d) => d.rate > 0)

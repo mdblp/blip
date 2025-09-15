@@ -53,19 +53,27 @@ import {
   ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID,
   ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID,
   ALARM_EVENT_URGENT_LOW_SOON_ID,
+  BASAL_LOOP_MODE_OFF_ID,
+  BASAL_LOOP_MODE_ON_ID,
+  BASAL_MANUAL_ID,
+  BASAL_TEMP_ID,
   CARB_ID,
   CBG_ID,
   CONFIDENTIAL_MODE_ID,
+  EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID,
   MANUAL_BOLUS_ID,
   NIGHT_MODE_ID,
   PARAMETER_ID,
   PEN_BOLUS_ID,
-  PHYSICAL_ACTIVITY_WITHOUT_NAME_ID, PHYSICAL_ACTIVITY_WITHOUT_NAME_TIME,
   PHYSICAL_ACTIVITY_ID,
   PHYSICAL_ACTIVITY_TIME,
+  PHYSICAL_ACTIVITY_WITHOUT_NAME_ID,
+  PHYSICAL_ACTIVITY_WITHOUT_NAME_TIME,
   RESERVOIR_CHANGE_ID,
   SMBG_ID,
   WARMUP_01_ID,
+  WIZARD_LOW_OVERRIDE_ID,
+  WIZARD_LOW_OVERRIDE_INPUT_TIME,
   WIZARD_NEGATIVE_OVERRIDE_ID,
   WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME,
   WIZARD_POSITIVE_OVERRIDE_ID,
@@ -73,9 +81,7 @@ import {
   WIZARD_UMM_ID,
   WIZARD_UNDELIVERED_ID,
   WIZARD_UNDELIVERED_INPUT_TIME,
-  WIZARD_LOW_OVERRIDE_INPUT_TIME,
-  WIZARD_LOW_OVERRIDE_ID,
-  ZEN_MODE_ID, EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID
+  ZEN_MODE_ID
 } from '../mock/data.api.mock'
 import moment from 'moment-timezone'
 import { checkStatTooltip } from './stats.assert'
@@ -148,6 +154,10 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`, 'Alarm 910042:30 pmOcclusionAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.')
   await checkTidelineContainerElementTooltip(`warmup_group_${WARMUP_01_ID}`,'Sensor warmup6:30 pmSession end9:00 pm')
   await checkTidelineContainerElementTooltip(`event_group_${ZEN_MODE_ID}`,'Zen mode11:00 pmDuration2 hours')
+  await checkTidelineContainerElementTooltip(`basal_group_${BASAL_LOOP_MODE_ON_ID}`,'Basal rate6:30 pmEnd time6:30 pmLoop modeONDelivered0.80U/h')
+  await checkTidelineContainerElementTooltip(`basal_group_${BASAL_LOOP_MODE_OFF_ID}`,'Basal rate6:31 pmEnd time6:31 pmLoop modeOFFDelivered0.20U/h')
+  await checkTidelineContainerElementTooltip(`basal_group_${BASAL_TEMP_ID}`,'Basal rate6:32 pmEnd time6:32 pmTemp basalDelivered0.30U/h')
+  await checkTidelineContainerElementTooltip(`basal_group_${BASAL_MANUAL_ID}`,'Basal rate6:33 pmEnd time6:33 pmLoop modeOFFDelivered0.10U/h')
 }
 
 export const checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware = async () => {
