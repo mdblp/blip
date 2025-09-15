@@ -43,28 +43,13 @@ import { Save } from '@mui/icons-material'
 import { errorTextFromException } from '../../../../lib/utils'
 import { logError } from '../../../../utils/error.util'
 import { useAlert } from '../../../../components/utils/snackbar'
-import { DiabeticProfile, DiabeticProfileType } from '../../../../lib/patient/models/patient-diabete-profile'
-import { Unit } from 'medical-domain'
+import { Unit, DiabeticProfile, DiabeticProfileType, getDefaultRangeByDiabeticProfileType } from 'medical-domain'
 import Chip from '@mui/material/Chip'
 import { usePatientsContext } from '../../../../lib/patient/patients.provider'
+import { useAuth } from '../../../../lib/auth'
 
 interface RangeSectionProps {
   patient: Patient
-}
-// TODO: add mmol/L support in medical domain
-const DEFAULT_RANGES = {
-  [DiabeticProfileType.DT1DT2]: {
-    veryHighThreshold: 250,
-    targetUpperBound: 180,
-    targetLowerBound: 70,
-    veryLowThreshold: 54
-  },
-  [DiabeticProfileType.DT1Pregnancy]: {
-    veryHighThreshold: 250,
-    targetUpperBound: 140,
-    targetLowerBound: 63,
-    veryLowThreshold: 54
-  }
 }
 
 interface ValidationErrors {
@@ -86,6 +71,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
   const theme = useTheme()
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
+  const { user } = useAuth()
   const rangeSection = useRef<HTMLElement>(null)
   const [selectedPatientType, setSelectedPatientType] = useState<DiabeticProfileType>(patient.diabeticProfile.name)
   const [selectedDiabeticProfile, setSelectedDiabeticProfile] = useState<DiabeticProfile>(patient.diabeticProfile)
@@ -109,7 +95,8 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
 
   const getDefaultDiabeticProfile = (type: DiabeticProfileType): DiabeticProfile => {
-  const ranges = DEFAULT_RANGES[type] || DEFAULT_RANGES[DiabeticProfileType.DT1DT2]
+  //TODO: update seagull to get the good units
+    const ranges = getDefaultRangeByDiabeticProfileType(type, user.settings?.units?.bg ?? Unit.MilligramPerDeciliter)
 
   return {
       name: type,
