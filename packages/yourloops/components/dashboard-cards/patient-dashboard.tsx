@@ -104,9 +104,14 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
     /* If we have data */
     if (localDates.length > 0) {
       const mostRecentDate = new Date(localDates[localDates.length - 1])
-      const earliestDate = new Date(localDates[0])
+      const oldestDate = new Date(localDates[0])
       let startDate: Date
       let endDate: Date
+
+      /*If we have data in the future, ignore it*/
+      if (mostRecentDate > now) {
+        mostRecentDate.setTime(now.getTime())
+      }
 
       /* If we have data for today, we can just return the nominal range */
       if (mostRecentDate.getDate() === now.getDate() && mostRecentDate.getMonth() === now.getMonth()) {
@@ -130,8 +135,8 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
       startDate.setHours(0, 0, 0, 0)
       endDate.setHours(23, 59, 59, 999)
       // If we don't have data for the full range, adjust startDate to earliest available
-      if (startDate < earliestDate) {
-        startDate.setTime(earliestDate.getTime())
+      if (startDate < oldestDate) {
+        startDate.setTime(oldestDate.getTime())
         startDate.setHours(0, 0, 0, 0)
       }
       return {
