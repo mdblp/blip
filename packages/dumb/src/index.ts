@@ -26,6 +26,7 @@
  */
 
 import { AlarmEventTooltip } from './components/tooltips/alarm-event-tooltip/alarm-event-tooltip'
+import { BasalTooltip } from './components/tooltips/basal-tooltip/basal-tooltip'
 import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
 import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
 import { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
@@ -89,6 +90,7 @@ export {
   StatFormats,
   renderPageNumbers,
   AverageDailyDoseStat,
+  BasalTooltip,
   buildLayoutColumns,
   type BgPrefs,
   BloodGlucoseTooltip,

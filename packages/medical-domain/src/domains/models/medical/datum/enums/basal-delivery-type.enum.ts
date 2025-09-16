@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,30 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type BaseDatum from './basics/base-datum.model'
-import { isBaseDatum } from './basics/base-datum.model'
-import { DatumType } from './enums/datum-type.enum'
-import { BasalDeliveryType } from './enums/basal-delivery-type.enum'
-
-type Basal = BaseDatum & {
-  type: DatumType.Basal
-  // FIXME: `subType` and `deliveryType` could be merged into a single `deliveryType` property
-  subType: BasalDeliveryType
-  deliveryType: BasalDeliveryType
-  duration: number
-  rate: number
-  normalEnd: string
-  epochEnd: number
-  replace?: string
-  replacedBy?: string
+export enum BasalDeliveryType {
+  Automated = 'automated',
+  Manual = 'manual',
+  Scheduled = 'scheduled',
+  Temporary = 'temp',
 }
-
-function isBasal(value: unknown): value is Basal {
-  if (!isBaseDatum(value)) {
-    return false
-  }
-  return value.type === DatumType.Basal
-}
-
-export default Basal
-export { isBasal }

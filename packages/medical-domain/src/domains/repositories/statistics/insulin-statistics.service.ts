@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -184,13 +184,11 @@ function getAutomatedAndManualBasalDuration(basalsData: Basal[], dateFilter: Dat
   const automatedPercentage = Math.round(100 * automatedBasalPerDay / total)
   const manualPercentage = Math.round(100 * manualBasalPerDay / total)
 
-
   return {
     automatedBasalDuration: automatedBasalPerDay ,
     manualBasalDuration: manualBasalPerDay ,
     automatedPercentage,
     manualPercentage
-
   }
 }
 

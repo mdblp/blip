@@ -27,17 +27,6 @@ export const AUTOMATED_BASAL_DEVICE_MODELS = {
   Diabeloop: true
 }
 
-export const AUTOMATED_BASAL_LABELS = {
-  get Medtronic() { return i18next.t('Auto Mode') },
-  get Diabeloop() { return i18next.t('Loop mode') },
-  get default() { return i18next.t('Automated') }
-}
-export const SCHEDULED_BASAL_LABELS = {
-  get Medtronic() { return i18next.t('Manual') },
-  get Diabeloop() { return i18next.t('Loop mode off') },
-  get default() { return i18next.t('Manual') }
-}
-
 export const dateTimeFormats = {
   /** @returns {string} translated 'MMMM D' format */
   get MMMM_D_FORMAT() { return i18next.t('MMMM D') },
@@ -50,7 +39,5 @@ export const dateTimeFormats = {
   /** @returns {string} translated 'dddd, h:mm a' format */
   get DDDD_H_MM_A() { return i18next.t('dddd, h:mm a') },
   /** @returns {string} translated 'h:mm a' format */
-  get H_MM_A_FORMAT() { return i18next.t('h:mm a') },
-  /** @returns {string} translated 'ddd' format */
-  get DDD_FORMAT() { return i18next.t('ddd') }
+  get H_MM_A_FORMAT() { return i18next.t('h:mm a') }
 }
