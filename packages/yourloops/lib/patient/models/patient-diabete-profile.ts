@@ -41,8 +41,8 @@ interface BloodGlucosePreferencePayload {
 
 interface RangesPayload {
   bgClamp: number,
-  targetLowerBound: number,
-  targetUpperBound: number,
-  veryHighThreshold: number,
-  veryLowThreshold: number
+  severeHyperGlycemia: number,
+  hyperGlycemia: number,
+  hypoGlycemia: number,
+  severeHypoGlycemia: number
 }

@@ -43,10 +43,18 @@ import { Save } from '@mui/icons-material'
 import { errorTextFromException } from '../../../../lib/utils'
 import { logError } from '../../../../utils/error.util'
 import { useAlert } from '../../../../components/utils/snackbar'
-import { Unit, DiabeticProfile, DiabeticProfileType, getDefaultRangeByDiabeticProfileType } from 'medical-domain'
+import {
+  type BgUnit,
+  DiabeticProfile,
+  DiabeticProfileType,
+  getDefaultRangeByDiabeticProfileType,
+  Unit
+} from 'medical-domain'
 import Chip from '@mui/material/Chip'
 import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useAuth } from '../../../../lib/auth'
+import { BgPrefs, formatBgValue } from 'dumb'
+import { convertBG } from '../../../../lib/units/units.util'
 
 interface RangeSectionProps {
   patient: Patient
@@ -66,12 +74,46 @@ const DEFAULT_ERROR_STATE: ValidationErrors = {
   severeHypoglycemia: false
 }
 
+const convertAndFormatBgValue = (value: number, currentUnit: BgUnit): number => {
+  const newUnit = currentUnit === Unit.MilligramPerDeciliter ? Unit.MmolPerLiter : Unit.MilligramPerDeciliter
+  const formattedValueString = formatBgValue(convertBG(value, currentUnit), newUnit)
+
+  return newUnit === Unit.MilligramPerDeciliter ? parseInt(formattedValueString) : parseFloat(formattedValueString)
+}
+
+export const convertIfNeeded = (bloodGlucosePreference: BgPrefs | null, requiredUnit: BgUnit): BgPrefs => {
+  if (bloodGlucosePreference?.bgUnits != requiredUnit) {
+    const currentUnit = bloodGlucosePreference?.bgUnits
+    return {
+      bgUnits: requiredUnit,
+      bgClasses: {
+        veryLow: convertAndFormatBgValue(bloodGlucosePreference.bgClasses.veryLow, currentUnit),
+        low: convertAndFormatBgValue(bloodGlucosePreference.bgClasses.low, currentUnit),
+        target: convertAndFormatBgValue(bloodGlucosePreference.bgClasses.target, currentUnit),
+        high: convertAndFormatBgValue(bloodGlucosePreference.bgClasses.high, currentUnit),
+        veryHigh: convertAndFormatBgValue(bloodGlucosePreference.bgClasses.veryHigh, currentUnit)
+      },
+      bgBounds: {
+        veryHighThreshold: convertAndFormatBgValue(bloodGlucosePreference.bgBounds.veryHighThreshold, currentUnit),
+        targetUpperBound: convertAndFormatBgValue(bloodGlucosePreference.bgBounds.targetUpperBound, currentUnit),
+        targetLowerBound: convertAndFormatBgValue(bloodGlucosePreference.bgBounds.targetLowerBound, currentUnit),
+        veryLowThreshold: convertAndFormatBgValue(bloodGlucosePreference.bgBounds.veryLowThreshold, currentUnit)
+      }
+    }
+  }
+  return bloodGlucosePreference
+}
+
 export const RangeSection: FC<RangeSectionProps> = (props) => {
   const { patient } = props
   const theme = useTheme()
   const { t } = useTranslation('yourloops')
   const alert = useAlert()
   const { user } = useAuth()
+
+  const displayedUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
+  patient.diabeticProfile.bloodGlucosePreference = convertIfNeeded(patient.diabeticProfile.bloodGlucosePreference, displayedUnit)
+
   const rangeSection = useRef<HTMLElement>(null)
   const [selectedPatientType, setSelectedPatientType] = useState<DiabeticProfileType>(patient.diabeticProfile.name)
   const [selectedDiabeticProfile, setSelectedDiabeticProfile] = useState<DiabeticProfile>(patient.diabeticProfile)
@@ -96,7 +138,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
   const getDefaultDiabeticProfile = (type: DiabeticProfileType): DiabeticProfile => {
   //TODO: update seagull to get the good units
-    const ranges = getDefaultRangeByDiabeticProfileType(type, user.settings?.units?.bg ?? Unit.MilligramPerDeciliter)
+    const ranges = getDefaultRangeByDiabeticProfileType(type, displayedUnit)
 
   return {
       name: type,
@@ -133,7 +175,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
   const handleRangeChange = (field: string, value: string): void => {
     const numericValue = parseInt(value, 10)
-    if (!isNaN(numericValue) && IsInRange(numericValue, selectedDiabeticProfile.bloodGlucosePreference.bgUnits)) {
+    if (!isNaN(numericValue) && IsInRange(numericValue, displayedUnit)) {
       setErrors(DEFAULT_ERROR_STATE)
       setSelectedDiabeticProfile(prev => {
         const updated = structuredClone(prev)
@@ -298,7 +340,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                         },
                       },
                     }}
-                    InputProps={{ endAdornment: <InputAdornment position="end">{selectedDiabeticProfile.bloodGlucosePreference.bgUnits}</InputAdornment> }}
+                    InputProps={{ endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
                   />
 
                   <TextField
@@ -330,7 +372,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                         },
                       },
                     }}
-                    InputProps={{ endAdornment: <InputAdornment position="end">{selectedDiabeticProfile.bloodGlucosePreference.bgUnits}</InputAdornment> }}
+                    InputProps={{ endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
                   />
 
                   <TextField
@@ -362,7 +404,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                         },
                       },
                     }}
-                    InputProps={{ endAdornment: <InputAdornment position="end">{selectedDiabeticProfile.bloodGlucosePreference.bgUnits}</InputAdornment> }}
+                    InputProps={{ endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
                   />
 
                   <TextField
@@ -394,7 +436,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                         },
                       },
                     }}
-                    InputProps={{ endAdornment: <InputAdornment position="end">{selectedDiabeticProfile.bloodGlucosePreference.bgUnits}</InputAdornment> }}
+                    InputProps={{ endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
                   />
                 </Box>
               </Grid>

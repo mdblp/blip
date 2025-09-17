@@ -113,10 +113,10 @@ export default class PatientApi {
         units :  diabeticProfile.bloodGlucosePreference.bgUnits,
         range : {
           bgClamp : diabeticProfile.bloodGlucosePreference.bgClasses.veryHigh,
-          veryLowThreshold : diabeticProfile.bloodGlucosePreference.bgBounds.veryLowThreshold,
-          targetLowerBound : diabeticProfile.bloodGlucosePreference.bgBounds.targetLowerBound,
-          targetUpperBound : diabeticProfile.bloodGlucosePreference.bgBounds.targetUpperBound,
-          veryHighThreshold : diabeticProfile.bloodGlucosePreference.bgBounds.veryHighThreshold
+          severeHypoGlycemia : diabeticProfile.bloodGlucosePreference.bgBounds.veryLowThreshold,
+          hypoGlycemia : diabeticProfile.bloodGlucosePreference.bgBounds.targetLowerBound,
+          hyperGlycemia : diabeticProfile.bloodGlucosePreference.bgBounds.targetUpperBound,
+          severeHyperGlycemia : diabeticProfile.bloodGlucosePreference.bgBounds.veryHighThreshold
         }
       }
     }
