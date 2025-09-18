@@ -74,6 +74,38 @@ const DEFAULT_ERROR_STATE: ValidationErrors = {
   severeHypoglycemia: false
 }
 
+
+enum FieldType {
+  SevereHyperglycemia = 'severeHyperglycemia',
+  Hyperglycemia = 'hyperglycemia',
+  Hypoglycemia = 'hypoglycemia',
+  SevereHypoglycemia = 'severeHypoglycemia'
+}
+
+// Define which fields are disabled for each diabetic profile type
+// TODO: FIELD_PERMISSIONS or FIELD_DISABLED?
+const FIELD_PERMISSIONS: Record<DiabeticProfileType, Record<FieldType, boolean>> = {
+  [DiabeticProfileType.DT1DT2]: {
+    [FieldType.SevereHyperglycemia]: true,
+    [FieldType.Hyperglycemia]: true,
+    [FieldType.Hypoglycemia]: true,
+    [FieldType.SevereHypoglycemia]: true
+  },
+  [DiabeticProfileType.DT1Pregnancy]: {
+    [FieldType.SevereHyperglycemia]: false,
+    [FieldType.Hyperglycemia]: true,
+    [FieldType.Hypoglycemia]: true,
+    [FieldType.SevereHypoglycemia]: false
+  },
+  [DiabeticProfileType.Custom]: {
+    [FieldType.SevereHyperglycemia]: false,
+    [FieldType.Hyperglycemia]: false,
+    [FieldType.Hypoglycemia]: false,
+    [FieldType.SevereHypoglycemia]: false
+  }
+}
+
+// TODO for review: where to move this function? medical domain?
 const convertAndFormatBgValue = (value: number, currentUnit: BgUnit): number => {
   const newUnit = currentUnit === Unit.MilligramPerDeciliter ? Unit.MmolPerLiter : Unit.MilligramPerDeciliter
   const formattedValueString = formatBgValue(convertBG(value, currentUnit), newUnit)
@@ -122,9 +154,9 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
   const { updatePatientDiabeticProfile } = usePatientsContext()
 
   const patientTypes = [
-    { type: DiabeticProfileType.DT1DT2, label: t('type-1-and-2') },
-    { type: DiabeticProfileType.DT1Pregnancy, label: t('pregnancy-type-1') },
-    { type: DiabeticProfileType.Custom, label: t('custom') }
+    { type: DiabeticProfileType.DT1DT2, label: t('range-profile-type-1-and-2') },
+    { type: DiabeticProfileType.DT1Pregnancy, label: t('range-profile-pregnancy-type-1') },
+    { type: DiabeticProfileType.Custom, label: t('range-profile-custom') }
   ]
 
   const hasErrorMessage = useMemo(() => {
@@ -135,9 +167,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
     return hasErrorMessage || saveInProgress
   }, [hasErrorMessage, saveInProgress])
 
-
   const getDefaultDiabeticProfile = (type: DiabeticProfileType): DiabeticProfile => {
-  //TODO: update seagull to get the good units
     const ranges = getDefaultRangeByDiabeticProfileType(type, displayedUnit)
 
   return {
@@ -162,6 +192,11 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
     setErrors(DEFAULT_ERROR_STATE)
   }
 
+  const isFieldDisabled = (type: DiabeticProfileType, field: FieldType): boolean => {
+    return FIELD_PERMISSIONS[type]?.[field] ?? false
+  }
+
+  // Validate if the value is in an acceptable range
   const IsInRange = (value: number, unit: Unit): boolean => {
     switch (unit) {
       case  Unit.MilligramPerDeciliter:
@@ -173,8 +208,8 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
     }
   }
 
-  const handleRangeChange = (field: string, value: string): void => {
-    const numericValue = parseInt(value, 10)
+  const handleRangeChange = (field: FieldType, value: string): void => {
+    const numericValue = +value
     if (!isNaN(numericValue) && IsInRange(numericValue, displayedUnit)) {
       setErrors(DEFAULT_ERROR_STATE)
       setSelectedDiabeticProfile(prev => {
@@ -182,36 +217,32 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
         // Update the appropriate field in the diabetic profile structure
         switch (field) {
-          case 'severeHyperglycemia':
+          case FieldType.SevereHyperglycemia:
             if (numericValue <= updated.bloodGlucosePreference.bgBounds.targetUpperBound) {
               setErrors({ ...errors, severeHyperglycemia: true })
-              //setErrors("Severe hyperglycemia must be greater than hyperglycemia")
               return prev
             }
             updated.bloodGlucosePreference.bgBounds.veryHighThreshold = numericValue
             updated.bloodGlucosePreference.bgClasses.high = numericValue
             break
-          case 'hyperglycemia':
+          case FieldType.Hyperglycemia:
             if ((numericValue <= updated.bloodGlucosePreference.bgBounds.targetLowerBound || numericValue >= updated.bloodGlucosePreference.bgBounds.veryHighThreshold)){
               setErrors({ ...errors, hyperglycemia: true })
-              //setErrors("Hyperglycemia must be between hypoglycemia and severe hyperglycemia")
               return prev
             }
             updated.bloodGlucosePreference.bgBounds.targetUpperBound = numericValue
             updated.bloodGlucosePreference.bgClasses.target = numericValue
             break
-          case 'hypoglycemia':
+          case FieldType.Hypoglycemia:
             if ((numericValue >= updated.bloodGlucosePreference.bgBounds.targetUpperBound || numericValue <= updated.bloodGlucosePreference.bgBounds.veryLowThreshold)){
               setErrors({ ...errors, hypoglycemia: true })
-              //setErrors("Hypoglycemia must be between severe hypoglycemia and hyperglycemia")
             }
             updated.bloodGlucosePreference.bgBounds.targetLowerBound = numericValue
             updated.bloodGlucosePreference.bgClasses.low = numericValue
             break
-          case 'severeHypoglycemia':
+          case FieldType.SevereHypoglycemia:
             if (numericValue >= updated.bloodGlucosePreference.bgBounds.targetLowerBound) {
               setErrors({ ...errors, severeHypoglycemia: true })
-              //setErrors("Severe hypoglycemia must be less than hypoglycemia")
               return prev
             }
             updated.bloodGlucosePreference.bgBounds.veryLowThreshold = numericValue
@@ -220,14 +251,8 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
         }
         return updated
       })
-
-      // If user manually changes values, switch to custom
-      if (selectedPatientType !== DiabeticProfileType.Custom) {
-        setSelectedPatientType(DiabeticProfileType.Custom)
-      }
     }
   }
-
 
   const save = async (): Promise<void> => {
 
@@ -298,7 +323,6 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                 >
                   {/* Range visualization would go here */}
                   <Typography variant="body2" color="text.secondary" p={2}>
-                    {t('glycemic-range-visualization')}
                   </Typography>
                 </Box>
               </Grid>
@@ -307,13 +331,14 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
               <Grid item xs={12} md={6}>
                 <Box display="flex" flexDirection="column" gap={1}>
                   <TextField
-                    label={t('severe-hyperglycemia')}
+                    label={t('range-severe-hyperglycemia')}
                     margin="normal"
                     type="number"
+                    disabled={isFieldDisabled(selectedPatientType, FieldType.SevereHyperglycemia)}
                     value={selectedDiabeticProfile.bloodGlucosePreference.bgBounds.veryHighThreshold}
                     error={errors.severeHyperglycemia}
                     helperText={errors.severeHyperglycemia && t('error-severe-hyperglycemia')}
-                    onChange={(e) => handleRangeChange('severeHyperglycemia', e.target.value)}
+                    onChange={(e) => handleRangeChange(FieldType.SevereHyperglycemia, e.target.value)}
                     variant="outlined"
                     sx={{
                       // Root class for the input field
@@ -344,13 +369,14 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                   />
 
                   <TextField
-                    label={t('hyperglycemia')}
+                    label={t('range-hyperglycemia')}
                     margin="normal"
                     type="number"
+                    disabled={isFieldDisabled(selectedPatientType, FieldType.Hyperglycemia)}
                     value={selectedDiabeticProfile.bloodGlucosePreference.bgBounds.targetUpperBound}
                     error={errors.hyperglycemia}
                     helperText={errors.hyperglycemia && t('error-hyperglycemia')}
-                    onChange={(e) => handleRangeChange('hyperglycemia', e.target.value)}
+                    onChange={(e) => handleRangeChange(FieldType.Hyperglycemia, e.target.value)}
                     variant="outlined"
                     sx={{
                       '& .MuiOutlinedInput-root': {
@@ -376,13 +402,14 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                   />
 
                   <TextField
-                    label={t('hypoglycemia')}
+                    label={t('range-hypoglycemia')}
                     margin="normal"
                     type="number"
+                    disabled={isFieldDisabled(selectedPatientType, FieldType.Hypoglycemia)}
                     value={selectedDiabeticProfile.bloodGlucosePreference.bgBounds.targetLowerBound}
                     error={errors.hypoglycemia}
                     helperText={errors.hypoglycemia && t('error-hypoglycemia')}
-                    onChange={(e) => handleRangeChange('hypoglycemia', e.target.value)}
+                    onChange={(e) => handleRangeChange(FieldType.Hypoglycemia, e.target.value)}
                     variant="outlined"
                     sx={{
                       '& .MuiOutlinedInput-root': {
@@ -408,13 +435,14 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                   />
 
                   <TextField
-                    label={t('severe-hypoglycemia')}
+                    label={t('range-severe-hypoglycemia')}
                     margin="normal"
                     type="number"
+                    disabled={isFieldDisabled(selectedPatientType, FieldType.SevereHypoglycemia)}
                     value={selectedDiabeticProfile.bloodGlucosePreference.bgBounds.veryLowThreshold}
                     error={errors.severeHypoglycemia}
                     helperText={errors.severeHypoglycemia && t('error-severe-hypoglycemia')}
-                    onChange={(e) => handleRangeChange('severeHypoglycemia', e.target.value)}
+                    onChange={(e) => handleRangeChange(FieldType.SevereHypoglycemia, e.target.value)}
                     variant="outlined"
                     sx={{
                       '& .MuiOutlinedInput-root': {
