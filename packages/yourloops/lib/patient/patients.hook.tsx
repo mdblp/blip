@@ -196,7 +196,6 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
       await PatientApi.updatePatientDiabeticProfile(patientId, selectedDiabeticProfile)
       refresh()
     } catch (error) {
-      console.error(error)
       throw Error(`updatePatientDiabeticProfile: failed to update patient with id ${patientId}`)
     }
   }

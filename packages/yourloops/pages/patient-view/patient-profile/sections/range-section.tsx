@@ -144,11 +144,14 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
   const { user } = useAuth()
 
   const displayedUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
-  patient.diabeticProfile.bloodGlucosePreference = convertIfNeeded(patient.diabeticProfile.bloodGlucosePreference, displayedUnit)
 
   const rangeSection = useRef<HTMLElement>(null)
   const [selectedPatientType, setSelectedPatientType] = useState<DiabeticProfileType>(patient.diabeticProfile.name)
-  const [selectedDiabeticProfile, setSelectedDiabeticProfile] = useState<DiabeticProfile>(patient.diabeticProfile)
+  const [selectedDiabeticProfile, setSelectedDiabeticProfile] = useState<DiabeticProfile>({
+    ...patient.diabeticProfile,
+    bloodGlucosePreference: convertIfNeeded(patient.diabeticProfile.bloodGlucosePreference, displayedUnit)
+  }) // make a copy to avoid direct mutation of props
+
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
   const [errors, setErrors] = useState<ValidationErrors>(DEFAULT_ERROR_STATE)
   const { updatePatientDiabeticProfile } = usePatientsContext()
@@ -236,6 +239,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
           case FieldType.Hypoglycemia:
             if ((numericValue >= updated.bloodGlucosePreference.bgBounds.targetUpperBound || numericValue <= updated.bloodGlucosePreference.bgBounds.veryLowThreshold)){
               setErrors({ ...errors, hypoglycemia: true })
+              return prev
             }
             updated.bloodGlucosePreference.bgBounds.targetLowerBound = numericValue
             updated.bloodGlucosePreference.bgClasses.low = numericValue

@@ -30,6 +30,6 @@ import { DiabeticProfileType } from './diabetic-profile-type.enum'
 
 export interface DiabeticProfile {
   name: DiabeticProfileType
-  bloodGlucosePreference ?: BgPrefs
+  bloodGlucosePreference: BgPrefs
 }
 
