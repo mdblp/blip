@@ -31,8 +31,12 @@ import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip
 import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
 import { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
 import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
-import { TimeInRangeChartMemoized as TimeInRangeChart } from './components/stats/time-in-range/time-in-range-chart/time-in-range-chart'
-import { TimeInTightRangeChart } from './components/stats/time-in-range/time-in-tight-range-chart/time-in-tight-range-chart'
+import {
+  TimeInRangeChartMemoized as TimeInRangeChart
+} from './components/stats/time-in-range/time-in-range-chart/time-in-range-chart'
+import {
+  TimeInTightRangeChart
+} from './components/stats/time-in-range/time-in-tight-range-chart/time-in-tight-range-chart'
 import {
   CbgStandardDeviationMemoized as CBGStandardDeviation
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
@@ -45,7 +49,9 @@ import { RescueCarbsTooltip } from './components/tooltips/rescue-carbs-tooltip/r
 import { formatBgValue } from './utils/format/format.util'
 import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
 import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
-import { InsulinStatisticPanelMemoized as InsulinStatisticsPanel } from './components/stats/insulin/insulin-statistics-panel'
+import {
+  InsulinStatisticPanelMemoized as InsulinStatisticsPanel
+} from './components/stats/insulin/insulin-statistics-panel'
 import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mode-stat/loop-mode-stat'
 import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
@@ -53,7 +59,9 @@ import Tooltip from './components/tooltips/common/tooltip/tooltip'
 import { TooltipLine } from './components/tooltips/common/tooltip-line/tooltip-line'
 import { TooltipColor } from './models/enums/tooltip-color.enum'
 import { TooltipSide } from './models/enums/tooltip-side.enum'
-import { AverageDailyDoseStatMemoized as AverageDailyDoseStat } from './components/stats/average-daily-dose/average-daily-dose-stat'
+import {
+  AverageDailyDoseStatMemoized as AverageDailyDoseStat
+} from './components/stats/average-daily-dose/average-daily-dose-stat'
 import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
 import { type BgPrefs } from './models/blood-glucose.model'
 import { RangeSelect } from './components/trends/cbg/range-select/range-select'
@@ -67,23 +75,23 @@ import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
 import { getPatientFullName } from './utils/patient/patient.util'
 import {
   formatBirthdate,
+  formatClocktimeFromMsPer24,
+  formatCurrentDate,
+  formatDate,
   formatLocalizedFromUTC,
   getLongDayHourFormat,
-  formatDate,
-  TIMEZONE_UTC,
-  formatCurrentDate,
-  formatClocktimeFromMsPer24,
-  getSimpleHourFormatSpace
+  getSimpleHourFormatSpace,
+  TIMEZONE_UTC
 } from './utils/datetime/datetime.util'
 import { renderPageNumbers } from './utils/pdf/pdf.util'
 import { WarmUpTooltip } from './components/tooltips/warm-up-tooltip/warm-up-tooltip'
 import { Device } from './models/device.model'
-import { buildDevice } from './utils/device/device.utils'
+import { buildDevice, isDBLG2 } from './utils/device/device.utils'
 import { SafetyBasalItem } from './models/safety-basal-item.model'
-import { isSafetyBasalAvailable, getSafetyBasalItems } from './utils/safety-basal-profile/safety-basal-profile.util'
+import { getSafetyBasalItems, isSafetyBasalAvailable } from './utils/safety-basal-profile/safety-basal-profile.util'
 import { NightModeTooltip } from './components/tooltips/night-mode-tooltip/night-mode-tooltip'
 import { SimpleValue } from './components/stats/common/simple-value'
-import { getSuperpositionEvents, getDataWithoutSuperpositionEvents } from './utils/events/events.util'
+import { getDataWithoutSuperpositionEvents, getSuperpositionEvents } from './utils/events/events.util'
 
 export {
   formatDate,
@@ -111,6 +119,7 @@ export {
   getSimpleHourFormatSpace,
   AlarmEventTooltip,
   formatBgValue,
+  isDBLG2,
   LayoutColumnType,
   LoopModeStat,
   NightModeTooltip,

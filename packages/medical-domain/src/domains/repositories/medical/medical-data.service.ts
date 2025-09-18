@@ -85,6 +85,7 @@ class MedicalDataService {
     cbg: [],
     confidentialModes: [],
     deviceParametersChanges: [],
+    iobs: [],
     messages: [],
     meals: [],
     nightModes: [],

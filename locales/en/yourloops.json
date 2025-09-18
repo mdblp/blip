@@ -322,6 +322,7 @@
   "identification-code": "Identification code",
   "information": "Information",
   "initial-hba1c": "Initial HbA1c",
+  "insulin-active": "Insulin active",
   "insulin-unit-u": "U",
   "invalid-code": "The code is invalid",
   "invalid-email": "Invalid email address (special characters are not allowed).",

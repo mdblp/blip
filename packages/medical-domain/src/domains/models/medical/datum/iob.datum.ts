@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,17 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum DatumType {
-  Basal = 'basal',
-  Bolus = 'bolus',
-  Cbg = 'cbg',
-  DeviceEvent = 'deviceEvent',
-  Fill = 'fill',
-  Food = 'food',
-  Iob = 'iob',
-  Message = 'message',
-  PhysicalActivity = 'physicalActivity',
-  PumpSettings = 'pumpSettings',
-  Smbg = 'smbg',
-  Wizard = 'wizard'
+import BaseDatum from './basics/base-datum.model'
+import { DatumType } from './enums/datum-type.enum'
+import Unit from './enums/unit.enum'
+
+export type Iob = BaseDatum & {
+  type: DatumType.Iob
+  value: number
+  units: Unit.InsulinUnit
 }

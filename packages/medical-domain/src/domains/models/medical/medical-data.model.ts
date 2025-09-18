@@ -42,6 +42,7 @@ import type ZenMode from './datum/zen-mode.model'
 import { AlarmEvent } from './datum/alarm-event.model';
 import { PumpSettings } from './datum/pump-settings.model'
 import { NightMode } from './datum/night-mode.model'
+import { Iob } from './datum/iob.datum'
 
 interface MedicalData {
   alarmEvents: AlarmEvent[]
@@ -50,6 +51,7 @@ interface MedicalData {
   cbg: Cbg[]
   confidentialModes: ConfidentialMode[]
   deviceParametersChanges: DeviceParameterChange[]
+  iobs: Iob[]
   meals: Meal[]
   messages: Message[]
   nightModes: NightMode[]
