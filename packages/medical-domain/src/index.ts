@@ -104,8 +104,8 @@ import { DeviceSystem } from './domains/models/medical/datum/enums/device-system
 import { DeviceEventSubtype } from './domains/models/medical/datum/enums/device-event-subtype.enum'
 import WarmUp from './domains/models/medical/datum/warm-up.model'
 import { DiabeticProfile } from './domains/models/medical/patient-profile/patient-profile.model'
-import { DiabeticProfileType } from './domains/models/medical/patient-profile/diabetic-profile-type.enum'
-import { getDefaultRangeByDiabeticProfileType } from "./domains/repositories/medical/patient-profile/patient-profile.service"
+import { DiabeticType } from './domains/models/medical/patient-profile/diabetic-type.enum'
+import { getDefaultRangeByDiabeticType } from "./domains/repositories/medical/patient-profile/patient-profile.service"
 
 export {
   AlarmCode,
@@ -185,7 +185,7 @@ export {
   GROUP_ALARMS_THRESHOLD_MINUTES,
   TIGHT_RANGE_BOUNDS,
   DiabeticProfile,
-  DiabeticProfileType,
-  getDefaultRangeByDiabeticProfileType
+  DiabeticType,
+  getDefaultRangeByDiabeticType
 }
 export default MedicalDataService

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum DiabeticProfileType {
+export enum DiabeticType {
   DT1DT2 = 'type1-type2',
   DT1Pregnancy = 'dt1-pregnancy',
   Custom = 'custom',

@@ -26,10 +26,10 @@
  */
 
 import { BgPrefs } from 'dumb'
-import { DiabeticProfileType } from './diabetic-profile-type.enum'
+import { DiabeticType } from './diabetic-type.enum'
 
 export interface DiabeticProfile {
-  name: DiabeticProfileType
+  type: DiabeticType
   bloodGlucosePreference: BgPrefs
 }
 

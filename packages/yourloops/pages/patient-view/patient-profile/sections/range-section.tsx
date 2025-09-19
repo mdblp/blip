@@ -36,25 +36,18 @@ import TextField from '@mui/material/TextField'
 import Grid from '@mui/material/Grid'
 import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
-import { Patient } from '../../../../lib/patient/models/patient.model'
 import { InputAdornment } from "@mui/material"
 import { LoadingButton } from '@mui/lab'
 import { Save } from '@mui/icons-material'
+import Chip from '@mui/material/Chip'
+import { Patient } from '../../../../lib/patient/models/patient.model'
 import { errorTextFromException } from '../../../../lib/utils'
 import { logError } from '../../../../utils/error.util'
 import { useAlert } from '../../../../components/utils/snackbar'
-import {
-  type BgUnit,
-  DiabeticProfile,
-  DiabeticProfileType,
-  getDefaultRangeByDiabeticProfileType,
-  Unit
-} from 'medical-domain'
-import Chip from '@mui/material/Chip'
+import { DiabeticProfile, DiabeticType, getDefaultRangeByDiabeticType, Unit } from 'medical-domain'
 import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useAuth } from '../../../../lib/auth'
-import { BgPrefs, formatBgValue } from 'dumb'
-import { convertBG } from '../../../../lib/units/units.util'
+import { convertIfNeeded } from "components/patient-data/patient-data.utils"
 
 interface RangeSectionProps {
   patient: Patient
@@ -74,7 +67,6 @@ const DEFAULT_ERROR_STATE: ValidationErrors = {
   severeHypoglycemia: false
 }
 
-
 enum FieldType {
   SevereHyperglycemia = 'severeHyperglycemia',
   Hyperglycemia = 'hyperglycemia',
@@ -82,22 +74,21 @@ enum FieldType {
   SevereHypoglycemia = 'severeHypoglycemia'
 }
 
-// Define which fields are disabled for each diabetic profile type
-// TODO: FIELD_PERMISSIONS or FIELD_DISABLED?
-const FIELD_PERMISSIONS: Record<DiabeticProfileType, Record<FieldType, boolean>> = {
-  [DiabeticProfileType.DT1DT2]: {
+// Define which fields are disabled for each diabetic type
+const DISABLED_FIELDS: Record<DiabeticType, Record<FieldType, boolean>> = {
+  [DiabeticType.DT1DT2]: {
     [FieldType.SevereHyperglycemia]: true,
     [FieldType.Hyperglycemia]: true,
     [FieldType.Hypoglycemia]: true,
     [FieldType.SevereHypoglycemia]: true
   },
-  [DiabeticProfileType.DT1Pregnancy]: {
+  [DiabeticType.DT1Pregnancy]: {
     [FieldType.SevereHyperglycemia]: false,
     [FieldType.Hyperglycemia]: true,
     [FieldType.Hypoglycemia]: true,
     [FieldType.SevereHypoglycemia]: false
   },
-  [DiabeticProfileType.Custom]: {
+  [DiabeticType.Custom]: {
     [FieldType.SevereHyperglycemia]: false,
     [FieldType.Hyperglycemia]: false,
     [FieldType.Hypoglycemia]: false,
@@ -105,37 +96,10 @@ const FIELD_PERMISSIONS: Record<DiabeticProfileType, Record<FieldType, boolean>>
   }
 }
 
-// TODO for review: where to move this function? medical domain?
-const convertAndFormatBgValue = (value: number, currentUnit: BgUnit): number => {
-  const newUnit = currentUnit === Unit.MilligramPerDeciliter ? Unit.MmolPerLiter : Unit.MilligramPerDeciliter
-  const formattedValueString = formatBgValue(convertBG(value, currentUnit), newUnit)
-
-  return newUnit === Unit.MilligramPerDeciliter ? parseInt(formattedValueString) : parseFloat(formattedValueString)
-}
-
-export const convertIfNeeded = (bloodGlucosePreference: BgPrefs | null, requiredUnit: BgUnit): BgPrefs => {
-  if (bloodGlucosePreference?.bgUnits != requiredUnit) {
-    const currentUnit = bloodGlucosePreference?.bgUnits
-    return {
-      bgUnits: requiredUnit,
-      bgClasses: {
-        veryLow: convertAndFormatBgValue(bloodGlucosePreference.bgClasses.veryLow, currentUnit),
-        low: convertAndFormatBgValue(bloodGlucosePreference.bgClasses.low, currentUnit),
-        target: convertAndFormatBgValue(bloodGlucosePreference.bgClasses.target, currentUnit),
-        high: convertAndFormatBgValue(bloodGlucosePreference.bgClasses.high, currentUnit),
-        veryHigh: convertAndFormatBgValue(bloodGlucosePreference.bgClasses.veryHigh, currentUnit)
-      },
-      bgBounds: {
-        veryHighThreshold: convertAndFormatBgValue(bloodGlucosePreference.bgBounds.veryHighThreshold, currentUnit),
-        targetUpperBound: convertAndFormatBgValue(bloodGlucosePreference.bgBounds.targetUpperBound, currentUnit),
-        targetLowerBound: convertAndFormatBgValue(bloodGlucosePreference.bgBounds.targetLowerBound, currentUnit),
-        veryLowThreshold: convertAndFormatBgValue(bloodGlucosePreference.bgBounds.veryLowThreshold, currentUnit)
-      }
-    }
-  }
-  return bloodGlucosePreference
-}
-
+const MIN_RANGE_VALUE_MGDL= 40
+const MAX_RANGE_VALUE_MGDL= 400
+const MIN_RANGE_VALUE_MMOL= 2.2
+const MAX_RANGE_VALUE_MMOL= 22.2
 export const RangeSection: FC<RangeSectionProps> = (props) => {
   const { patient } = props
   const theme = useTheme()
@@ -146,7 +110,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
   const displayedUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
 
   const rangeSection = useRef<HTMLElement>(null)
-  const [selectedPatientType, setSelectedPatientType] = useState<DiabeticProfileType>(patient.diabeticProfile.name)
+  const [selectedPatientType, setSelectedPatientType] = useState<DiabeticType>(patient.diabeticProfile.type)
   const [selectedDiabeticProfile, setSelectedDiabeticProfile] = useState<DiabeticProfile>({
     ...patient.diabeticProfile,
     bloodGlucosePreference: convertIfNeeded(patient.diabeticProfile.bloodGlucosePreference, displayedUnit)
@@ -156,10 +120,10 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
   const [errors, setErrors] = useState<ValidationErrors>(DEFAULT_ERROR_STATE)
   const { updatePatientDiabeticProfile } = usePatientsContext()
 
-  const patientTypes = [
-    { type: DiabeticProfileType.DT1DT2, label: t('range-profile-type-1-and-2') },
-    { type: DiabeticProfileType.DT1Pregnancy, label: t('range-profile-pregnancy-type-1') },
-    { type: DiabeticProfileType.Custom, label: t('range-profile-custom') }
+  const patientDiabeticProfiles = [
+    { type: DiabeticType.DT1DT2, label: t('range-profile-type-1-and-2') },
+    { type: DiabeticType.DT1Pregnancy, label: t('range-profile-pregnancy-type-1') },
+    { type: DiabeticType.Custom, label: t('range-profile-custom') }
   ]
 
   const hasErrorMessage = useMemo(() => {
@@ -170,11 +134,11 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
     return hasErrorMessage || saveInProgress
   }, [hasErrorMessage, saveInProgress])
 
-  const getDefaultDiabeticProfile = (type: DiabeticProfileType): DiabeticProfile => {
-    const ranges = getDefaultRangeByDiabeticProfileType(type, displayedUnit)
+  const getDefaultDiabeticProfile = (type: DiabeticType): DiabeticProfile => {
+    const ranges = getDefaultRangeByDiabeticType(type, displayedUnit)
 
   return {
-      name: type,
+      type: type,
       bloodGlucosePreference: {
         bgUnits: patient.diabeticProfile.bloodGlucosePreference.bgUnits,
         bgClasses: {
@@ -189,23 +153,23 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
     }
   }
 
-  const handlePatientTypeChange = (type: DiabeticProfileType): void => {
+  const handlePatientProfileChange = (type: DiabeticType): void => {
     setSelectedPatientType(type)
     setSelectedDiabeticProfile(getDefaultDiabeticProfile(type))
     setErrors(DEFAULT_ERROR_STATE)
   }
 
-  const isFieldDisabled = (type: DiabeticProfileType, field: FieldType): boolean => {
-    return FIELD_PERMISSIONS[type]?.[field] ?? false
+  const isFieldDisabled = (type: DiabeticType, field: FieldType): boolean => {
+    return DISABLED_FIELDS[type]?.[field] ?? false
   }
 
   // Validate if the value is in an acceptable range
   const IsInRange = (value: number, unit: Unit): boolean => {
     switch (unit) {
       case  Unit.MilligramPerDeciliter:
-        return value >= 40 && value <= 400
+        return value >= MIN_RANGE_VALUE_MGDL && value <= MAX_RANGE_VALUE_MGDL
       case Unit.MmolPerLiter:
-        return value >= 2.2 && value <= 22.2
+        return value >= MIN_RANGE_VALUE_MMOL && value <= MAX_RANGE_VALUE_MMOL
       default:
         return false
     }
@@ -213,49 +177,43 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
   const handleRangeChange = (field: FieldType, value: string): void => {
     const numericValue = +value
-    if (!isNaN(numericValue) && IsInRange(numericValue, displayedUnit)) {
-      setErrors(DEFAULT_ERROR_STATE)
-      setSelectedDiabeticProfile(prev => {
-        const updated = structuredClone(prev)
+    setErrors(DEFAULT_ERROR_STATE)
+    setSelectedDiabeticProfile(prev => {
+      const updated = structuredClone(prev)
 
-        // Update the appropriate field in the diabetic profile structure
-        switch (field) {
-          case FieldType.SevereHyperglycemia:
-            if (numericValue <= updated.bloodGlucosePreference.bgBounds.targetUpperBound) {
-              setErrors({ ...errors, severeHyperglycemia: true })
-              return prev
-            }
-            updated.bloodGlucosePreference.bgBounds.veryHighThreshold = numericValue
-            updated.bloodGlucosePreference.bgClasses.high = numericValue
-            break
-          case FieldType.Hyperglycemia:
-            if ((numericValue <= updated.bloodGlucosePreference.bgBounds.targetLowerBound || numericValue >= updated.bloodGlucosePreference.bgBounds.veryHighThreshold)){
-              setErrors({ ...errors, hyperglycemia: true })
-              return prev
-            }
-            updated.bloodGlucosePreference.bgBounds.targetUpperBound = numericValue
-            updated.bloodGlucosePreference.bgClasses.target = numericValue
-            break
-          case FieldType.Hypoglycemia:
-            if ((numericValue >= updated.bloodGlucosePreference.bgBounds.targetUpperBound || numericValue <= updated.bloodGlucosePreference.bgBounds.veryLowThreshold)){
-              setErrors({ ...errors, hypoglycemia: true })
-              return prev
-            }
-            updated.bloodGlucosePreference.bgBounds.targetLowerBound = numericValue
-            updated.bloodGlucosePreference.bgClasses.low = numericValue
-            break
-          case FieldType.SevereHypoglycemia:
-            if (numericValue >= updated.bloodGlucosePreference.bgBounds.targetLowerBound) {
-              setErrors({ ...errors, severeHypoglycemia: true })
-              return prev
-            }
-            updated.bloodGlucosePreference.bgBounds.veryLowThreshold = numericValue
-            updated.bloodGlucosePreference.bgClasses.veryLow = numericValue
-            break
-        }
-        return updated
-      })
-    }
+      // Update the appropriate field in the diabetic profile structure
+      switch (field) {
+        case FieldType.SevereHyperglycemia:
+          if (numericValue <= updated.bloodGlucosePreference.bgBounds.targetUpperBound || !IsInRange(numericValue, displayedUnit)) {
+            setErrors({ ...errors, severeHyperglycemia: true })
+          }
+          updated.bloodGlucosePreference.bgBounds.veryHighThreshold = numericValue
+          updated.bloodGlucosePreference.bgClasses.high = numericValue
+          break
+        case FieldType.Hyperglycemia:
+          if (numericValue <= updated.bloodGlucosePreference.bgBounds.targetLowerBound || numericValue >= updated.bloodGlucosePreference.bgBounds.veryHighThreshold){
+            setErrors({ ...errors, hyperglycemia: true })
+          }
+          updated.bloodGlucosePreference.bgBounds.targetUpperBound = numericValue
+          updated.bloodGlucosePreference.bgClasses.target = numericValue
+          break
+        case FieldType.Hypoglycemia:
+          if (numericValue >= updated.bloodGlucosePreference.bgBounds.targetUpperBound || numericValue <= updated.bloodGlucosePreference.bgBounds.veryLowThreshold){
+            setErrors({ ...errors, hypoglycemia: true })
+          }
+          updated.bloodGlucosePreference.bgBounds.targetLowerBound = numericValue
+          updated.bloodGlucosePreference.bgClasses.low = numericValue
+          break
+        case FieldType.SevereHypoglycemia:
+          if (numericValue >= updated.bloodGlucosePreference.bgBounds.targetLowerBound || !IsInRange(numericValue, displayedUnit)) {
+            setErrors({ ...errors, severeHypoglycemia: true })
+          }
+          updated.bloodGlucosePreference.bgBounds.veryLowThreshold = numericValue
+          updated.bloodGlucosePreference.bgClasses.veryLow = numericValue
+          break
+      }
+      return updated
+    })
   }
 
   const save = async (): Promise<void> => {
@@ -290,16 +248,17 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
             >
               {t('range-description')}
             </Typography>
+
             {/* Patient Type Selection */}
             <Box mb={3}>
               <Box display="flex" flexWrap="wrap" gap={1} marginTop={2}>
-                {patientTypes.map((patientType) => (
+                {patientDiabeticProfiles.map((patientType) => (
                   <Chip
                     key={patientType.type}
                     label={patientType.label}
                     variant={selectedPatientType === patientType.type ? 'filled' : 'outlined'}
                     color="primary"
-                    onClick={() => handlePatientTypeChange(patientType.type)}
+                    onClick={() => handlePatientProfileChange(patientType.type)}
                     sx={{
                       textTransform: 'none',
                       borderRadius: theme.spacing(2),
@@ -345,22 +304,17 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                     onChange={(e) => handleRangeChange(FieldType.SevereHyperglycemia, e.target.value)}
                     variant="outlined"
                     sx={{
-                      // Root class for the input field
-                      "& .MuiOutlinedInput-root": {
-                        // Class for the border around the input field
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "var(--bg-very-high)",
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: 'var(--bg-very-high)',
+                          borderWidth: '2px'
                         },
-                        "&.Mui-focused": {
-                          "& .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "var(--bg-very-high)",
-                          },
+                        '&:hover fieldset': {
+                          borderColor: 'var(--bg-very-high)'
                         },
-                        "&:hover:not(.Mui-focused)": {
-                          "& .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "var(--bg-very-high)",
-                          },
-                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: 'var(--bg-very-high)'
+                        }
                       },
                       // Class for the label of the input field
                       "& .MuiInputLabel-outlined": {

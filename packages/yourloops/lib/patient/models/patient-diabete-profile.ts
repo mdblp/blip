@@ -26,11 +26,11 @@
  */
 
 
-import { BgUnit, DiabeticProfileType } from 'medical-domain'
+import { BgUnit, DiabeticType } from 'medical-domain'
 
 // Data structure used only to communicate with the backend
 export interface DiabeticProfilePayload {
-  name: DiabeticProfileType
+  name: DiabeticType
   bloodGlucosePreference ?: BloodGlucosePreferencePayload
 }
 

@@ -26,7 +26,7 @@
  */
 
 
-import { DiabeticProfileType } from '../../../models/medical/patient-profile/diabetic-profile-type.enum'
+import { DiabeticType } from '../../../models/medical/patient-profile/diabetic-type.enum'
 import { BgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../../models/medical/datum/bg.model'
 import { BgBounds } from '../../../models/statistics/glycemia-statistics.model'
 
@@ -74,11 +74,11 @@ function getDT1PregnancyRangeByUnit(unit: BgUnit): BgBounds {
 
 // Returns the default BG range for a given diabetic profile type and BG unit
 // If no profile is found, returns the common one (DT1/DT2)
-export function getDefaultRangeByDiabeticProfileType(name: string, unit: BgUnit): BgBounds {
-  switch (name) {
-    case DiabeticProfileType.DT1DT2:
+export function getDefaultRangeByDiabeticType(type: string, unit: BgUnit): BgBounds {
+  switch (type) {
+    case DiabeticType.DT1DT2:
       return getDT1DT2RangeByUnit(unit)
-    case DiabeticProfileType.DT1Pregnancy:
+    case DiabeticType.DT1Pregnancy:
       return getDT1PregnancyRangeByUnit(unit)
     default:
       // if no profile is found, return the by default the common one (DT1/DT2)

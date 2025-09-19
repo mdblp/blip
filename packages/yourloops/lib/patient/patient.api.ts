@@ -108,7 +108,7 @@ export default class PatientApi {
   static async updatePatientDiabeticProfile(patientId: string, diabeticProfile: DiabeticProfile): Promise<void> {
     // map to payload structure expected by backend
     const payload: DiabeticProfilePayload = {
-      name : diabeticProfile.name,
+      name : diabeticProfile.type,
       bloodGlucosePreference: {
         units :  diabeticProfile.bloodGlucosePreference.bgUnits,
         range : {
