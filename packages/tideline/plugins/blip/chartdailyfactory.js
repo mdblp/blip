@@ -89,6 +89,9 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   chart.id(parentElement.id).width(width).height(height)
   d3.select(parentElement).call(chart)
+
+  const deviceName = tidelineData.medicalData.pumpSettings[0].payload.device.name
+  const isDblg2User = isDBLG2(deviceName)
   // ***
   // Setup Pools
   // ***
@@ -149,7 +152,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
       }],
       baseline: options.labelBaseline
     }])
-    .heightRatio(0.5)
+    .heightRatio(isDblg2User ? 0.5 : 0.4)
     .gutterWeight(1.0)
 
   // carbs and boluses data pool
@@ -210,8 +213,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     .heightRatio(1.0)
     .gutterWeight(1.0)
 
-  const deviceName = tidelineData.medicalData.pumpSettings[0].payload.device.name
-  const isDblg2User = isDBLG2(deviceName)
+
   // const isDblg2User = true
 
   let poolIob = null
@@ -223,8 +225,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
       .id(poolIobId, chart.poolGroup)
       .dataTestId('iob-section', poolIobId)
       .labels([{
-        main: t('active-insulin'),
-        light: ` (${t('U')})`,
         spans: [{
           text: t('active-insulin'),
           className: 'label-main'
