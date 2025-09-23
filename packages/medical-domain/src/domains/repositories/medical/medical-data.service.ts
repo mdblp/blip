@@ -85,7 +85,7 @@ class MedicalDataService {
     cbg: [],
     confidentialModes: [],
     deviceParametersChanges: [],
-    iobs: [],
+    iob: [],
     messages: [],
     meals: [],
     nightModes: [],
@@ -214,6 +214,9 @@ class MedicalDataService {
     }
     if (data.deviceParametersChanges) {
       this.medicalData.deviceParametersChanges = data.deviceParametersChanges
+    }
+    if (data.iob) {
+      this.medicalData.iob = this.medicalData.iob.concat(data.iob)
     }
     if (data.messages) {
       this.medicalData.messages = this.medicalData.messages.concat(data.messages)

@@ -31,48 +31,37 @@ import colors from '../../../styles/colors.css'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { DEFAULT_TOOLTIP_OFFSET, type Position } from '../common/tooltip/tooltip'
-import { Basal, BasalDeliveryType, type TimePrefs } from 'medical-domain'
+import { Iob, type TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
-import moment from 'moment-timezone'
+import { formatDecimalNumber } from '../../../utils/format/format.util'
 
-interface BasalTooltipProps {
-  basal: Basal
+interface IobTooltipProps {
+  data: Iob
   position: Position
   side: TooltipSide
   timePrefs: TimePrefs
 }
 
-export const BasalTooltip: FunctionComponent<BasalTooltipProps> = (props) => {
-  const { basal, position, side, timePrefs } = props
+export const IobTooltip: FunctionComponent<IobTooltipProps> = (props) => {
+  const { data, position, side, timePrefs } = props
   const { t } = useTranslation('main')
 
-  const endTime = moment.tz(basal.epochEnd, basal.timezone).format(t('h:mm a'))
-  const rateValue = Number(basal.rate).toFixed(2)
-
-  const isTemp = basal.deliveryType === BasalDeliveryType.Temporary
-  const isLoopModeOn = basal.deliveryType === BasalDeliveryType.Automated
-  const loopModeLabel = isLoopModeOn ? t('wheel-label-on') : t('wheel-label-off')
-
-  const backgroundColor = isLoopModeOn ? colors.blueBackground : colors.greyBackground
+  const formattedValue = formatDecimalNumber(data.value, 2)
 
   return (
     <Tooltip
       position={position}
       side={side}
-      backgroundColor={backgroundColor}
-      title={t('basal-rate')}
-      dateTitle={getDateTitleForBaseDatum(basal, timePrefs)}
+      backgroundColor={colors.blueBackground}
+      title={t('active-insulin')}
+      dateTitle={getDateTitleForBaseDatum(data, timePrefs)}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlexLarge}>
-          <TooltipLine label={t('end-time')} value={endTime} />
-          {isTemp
-            ? <TooltipLine label={t('temp-basal')} />
-            : <TooltipLine label={t('Loop mode status')} value={loopModeLabel} />
-          }
-          <TooltipLine label={t('Delivered')} value={rateValue} units={t('basal-rate-unit')} isBold />
+          <TooltipLine label={t('insulin-on-board')} />
+          <TooltipLine label={t('insulin')} value={formattedValue} units={data.units} isBold />
         </div>
       }
     />

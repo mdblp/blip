@@ -46,6 +46,7 @@ import type DeviceParameterChange from './domains/models/medical/datum/device-pa
 import { type Parameter } from './domains/models/medical/datum/device-parameter-change.model'
 import { type DurationValue } from './domains/models/medical/datum/basics/duration.model'
 import DurationUnit from './domains/models/medical/datum/enums/duration-unit.enum'
+import { Iob } from './domains/models/medical/datum/iob.datum'
 import type Meal from './domains/models/medical/datum/meal.model'
 import type Message from './domains/models/medical/datum/message.model'
 import { NightMode } from './domains/models/medical/datum/night-mode.model'
@@ -138,6 +139,7 @@ export {
   DeviceSystem,
   type DurationValue,
   DurationUnit,
+  Iob,
   type Meal,
   type MedicalData,
   type Message,

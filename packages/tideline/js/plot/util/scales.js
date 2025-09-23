@@ -28,7 +28,7 @@ import _ from 'lodash'
 import * as d3 from 'd3'
 
 import commonbolus from './commonbolus'
-import { convertBG, MGDL_UNITS, DEFAULT_BG_BOUNDS } from 'medical-domain'
+import { convertBG, DEFAULT_BG_BOUNDS, MGDL_UNITS } from 'medical-domain'
 import format from '../../data/util/format'
 
 /**
@@ -206,6 +206,32 @@ export function createYAxisBasal(tidelineData, pool) {
     .tickSizeOuter(0)
     .ticks(2)
     .tickValues(basalTickValues)
+
+  return { axis, scale }
+}
+
+// IOB
+function createScaleIob(maxIobValue, pool) {
+  const iobDomain = [0, maxIobValue * 1.1]
+  const iobRange = [pool.height(), 0]
+
+  return d3.scaleLinear(iobDomain, iobRange)
+}
+
+export function createYAxisIob(tidelineData, pool) {
+  const maxIobValue = d3.max(tidelineData.medicalData.iob, (d) => d.value)
+  const maxIobValueAsNumber = Number.parseFloat(maxIobValue)
+  const maxIobValueSafe = !Number.isNaN(maxIobValueAsNumber) ? maxIobValueAsNumber : 50
+  const formattedMaxIobValue = Math.ceil(maxIobValueAsNumber * 10) / 10
+
+  const scale = createScaleIob(maxIobValueSafe, pool)
+  const iobTickValues = [0, formattedMaxIobValue]
+
+  const axis = d3
+    .axisLeft(scale)
+    .tickSizeOuter(0)
+    .ticks(2)
+    .tickValues(iobTickValues)
 
   return { axis, scale }
 }

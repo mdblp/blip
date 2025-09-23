@@ -26,7 +26,7 @@ import { MGDL_UNITS } from 'medical-domain'
 import Pool from '../../js/pool'
 import oneDay from '../../js/oneday'
 import fill from '../../js/plot/util/fill'
-import { createYAxisBasal, createYAxisBG, createYAxisBolus } from '../../js/plot/util/scales'
+import { createYAxisBasal, createYAxisBG, createYAxisBolus, createYAxisIob } from '../../js/plot/util/scales'
 import axesDailyx from '../../js/plot/util/axes/dailyx'
 import plotZenModeEvent from '../../js/plot/zenModeEvent'
 import plotPhysicalActivity from '../../js/plot/physicalActivity'
@@ -46,6 +46,7 @@ import plotTimeChange from '../../js/plot/timechange'
 import plotNightMode from '../../js/plot/nightModeEvent'
 import plotEventSuperposition from '../../js/plot/eventSuperposition'
 import { getDataWithoutSuperpositionEvents, getSuperpositionEvents, isDBLG2 } from 'dumb'
+import plotIob from '../../js/plot/iob'
 
 /**
  * @typedef {import('../../js/tidelinedata').default } MedicalDataService
@@ -222,10 +223,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
       .id(poolIobId, chart.poolGroup)
       .dataTestId('iob-section', poolIobId)
       .labels([{
-        main: t('insulin-active'),
+        main: t('active-insulin'),
         light: ` (${t('U')})`,
         spans: [{
-          text: t('insulin-active'),
+          text: t('active-insulin'),
           className: 'label-main'
         }, {
           text: ` (${t('U')})`,
@@ -431,12 +432,20 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   if (isDblg2User) {
     // IOB pool
+    // setup axis & main y scale
+    poolIob?.axisScaleFn(createYAxisIob)
+
     // add background fill rectangles to IOB pool
     poolIob?.addPlotType({ type: 'fill' }, fill(poolIob, {
       isDaily: true
     }))
 
-    console.log({ xScale: poolIob?.xScale() })
+    // add IOB curve to IOB pool
+    poolIob?.addPlotType({ type: 'iob' }, plotIob(poolIob, {
+      tidelineData,
+      onIobHover: options.onIobHover,
+      onIobOut: options.onTooltipOut
+    }))
 
     // Add confidential mode to IOB pool: Must be the last in the pool to mask stuff below
     poolIob?.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolIob, {

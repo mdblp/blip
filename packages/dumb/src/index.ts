@@ -45,6 +45,7 @@ import { ConfidentialTooltip } from './components/tooltips/confidential-tooltip/
 import {
   EventSuperpositionPopoverMemoized as EventsSuperpositionPopover
 } from './components/tooltips/events-superposition-popover/events-superposition-popover'
+import { IobTooltip } from './components/tooltips/iob-tooltip/iob-tooltip'
 import { RescueCarbsTooltip } from './components/tooltips/rescue-carbs-tooltip/rescue-carbs-tooltip'
 import { formatBgValue } from './utils/format/format.util'
 import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
@@ -119,6 +120,7 @@ export {
   getSimpleHourFormatSpace,
   AlarmEventTooltip,
   formatBgValue,
+  IobTooltip,
   isDBLG2,
   LayoutColumnType,
   LoopModeStat,

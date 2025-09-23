@@ -51,7 +51,7 @@ interface MedicalData {
   cbg: Cbg[]
   confidentialModes: ConfidentialMode[]
   deviceParametersChanges: DeviceParameterChange[]
-  iobs: Iob[]
+  iob: Iob[]
   meals: Meal[]
   messages: Message[]
   nightModes: NightMode[]

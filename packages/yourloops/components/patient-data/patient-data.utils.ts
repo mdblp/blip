@@ -193,7 +193,7 @@ export class PatientDataUtils {
       cbg: [],
       confidentialModes: [],
       deviceParametersChanges: [],
-      iobs: [],
+      iob: [],
       messages: [],
       meals: [],
       nightModes: [],
