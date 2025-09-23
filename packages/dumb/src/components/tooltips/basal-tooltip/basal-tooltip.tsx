@@ -26,11 +26,10 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import commonStyles from '../../../styles/tooltip-common.css'
-import { DEFAULT_TOOLTIP_OFFSET, type Position } from '../common/tooltip/tooltip'
+import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
 import { Basal, BasalDeliveryType, type TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'

@@ -66,7 +66,7 @@ interface TooltipProps {
   backgroundColor?: string
 }
 
-const Tooltip: FunctionComponent<TooltipProps> = (
+export const Tooltip: FunctionComponent<TooltipProps> = (
   {
     side = COMMON_TOOLTIP_SIDE,
     offset: initialOffset = DEFAULT_TOOLTIP_OFFSET,
@@ -125,4 +125,4 @@ const Tooltip: FunctionComponent<TooltipProps> = (
   )
 }
 
-export default Tooltip
+// export default Tooltip

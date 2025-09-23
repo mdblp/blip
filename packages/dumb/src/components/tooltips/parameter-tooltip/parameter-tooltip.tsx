@@ -27,9 +27,8 @@
 
 import React, { type FunctionComponent } from 'react'
 import styles from './parameter-tooltip.css'
-import { Tooltip } from '../../../index'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { DEFAULT_TOOLTIP_OFFSET, type Position } from '../common/tooltip/tooltip'
+import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
 import colors from '../../../styles/colors.css'
 import { type DeviceParameterChange, type Parameter, type TimePrefs } from 'medical-domain'
 import { ParameterChangeLine } from './parameter-change-line'

@@ -26,7 +26,7 @@
  */
 
 import React, { FC } from 'react'
-import Tooltip, { DEFAULT_TOOLTIP_OFFSET, Position } from '../common/tooltip/tooltip'
+import { DEFAULT_TOOLTIP_OFFSET, Position, Tooltip } from '../common/tooltip/tooltip'
 import colors from '../../../styles/colors.css'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import commonStyles from '../../../styles/tooltip-common.css'
