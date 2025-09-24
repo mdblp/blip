@@ -34,7 +34,7 @@ import { testCaregiversVisualisation } from '../../use-cases/patient-caregivers-
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mySecondTeamId, mySecondTeamName } from '../../mock/team.api.mock'
 import { mockChatAPI } from '../../mock/chat.api.mock'
-import { completeDashboardData, mockDataAPI } from '../../mock/data.api.mock'
+import { oneDayDashboardData, mockDataAPI } from '../../mock/data.api.mock'
 import { testAppMainLayoutForPatient } from '../../use-cases/app-main-layout-visualisation'
 
 describe('Caregivers list for patient', () => {
@@ -45,7 +45,7 @@ describe('Caregivers list for patient', () => {
     mockPatientApiForPatients()
     mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
     mockChatAPI()
-    mockDataAPI(completeDashboardData)
+    mockDataAPI(oneDayDashboardData)
   })
 
   it('should display a list of caregivers and allow to manage them', async () => {

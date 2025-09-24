@@ -60,7 +60,7 @@ export const TIGHT_RANGE_BOUNDS = {
 
 export function classifyBgValue(bgBounds: BgBounds, bgValue: number, classificationType: ClassificationType): keyof CbgRangeStatistics {
   if (bgValue <= 0) {
-    throw new Error('You must provide a positive, numerical blood glucose value to categorize!')
+    throw new Error(`You must provide a positive, numerical blood glucose value to categorize! Found: ${bgValue}`)
   }
   const { veryLowThreshold, targetLowerBound, targetUpperBound, veryHighThreshold } = bgBounds
   if (classificationType === ClassificationType.FiveWay) {
