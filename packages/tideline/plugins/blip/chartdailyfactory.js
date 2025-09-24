@@ -80,6 +80,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   const width = Math.max(640, parentElement.offsetWidth)
   const height = Math.max(480, parentElement.offsetHeight)
   const emitter = new EventEmitter()
+  // set up bgClasses for current observed patient data
+  // this assignment allows us to set the Y axis value for BG depending on patient data (profile)
+  tidelineData.opts.bgClasses = options.bgClasses
+
   const chart = oneDay(emitter, options)
 
   // ***

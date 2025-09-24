@@ -25,24 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { BgPrefs } from 'dumb'
+import { DiabeticType } from './diabetic-type.enum'
 
-import { BgUnit, DiabeticType } from 'medical-domain'
-
-// Data structure used only to communicate with the backend
-export interface DiabeticProfilePayload {
-  name: DiabeticType
-  bloodGlucosePreference ?: BloodGlucosePreferencePayload
+export interface DiabeticProfile {
+  type: DiabeticType
+  bloodGlucosePreference: BgPrefs
 }
 
-interface BloodGlucosePreferencePayload {
-  units: BgUnit
-  range: RangesPayload
-}
-
-interface RangesPayload {
-  bgClamp: number,
-  severeHyperGlycemia: number,
-  hyperGlycemia: number,
-  hypoGlycemia: number,
-  severeHypoGlycemia: number
-}
