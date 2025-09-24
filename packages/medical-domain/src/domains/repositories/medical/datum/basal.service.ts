@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type Basal from '../../../models/medical/datum/basal.model'
 import { type DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import { addMilliseconds } from '../../time/time.service'
@@ -34,6 +33,7 @@ import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import DatumService from '../datum.service'
 import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../../models/time/date-filter.model'
 import { BasalDeliveryType } from '../../../models/medical/datum/enums/basal-delivery-type.enum'
+import { Basal } from '../../../models/medical/datum/basal.model'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): Basal => {
   const base = BaseDatumService.normalize(rawData, opts)

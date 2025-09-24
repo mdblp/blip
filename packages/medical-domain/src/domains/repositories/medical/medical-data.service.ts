@@ -46,7 +46,6 @@ import {
   DEFAULT_BG_BOUNDS,
   defaultMedicalDataOptions
 } from '../../models/medical/medical-data-options.model'
-import type Datum from '../../models/medical/datum.model'
 import type TimeZoneItem from '../../models/time/time-zone-item.model'
 import {
   addAtTimezone,
@@ -74,6 +73,7 @@ import {
   PumpSettings,
   PumpSettingsParameter
 } from '../../models/medical/datum/pump-settings.model'
+import { Datum } from '../../models/medical/datum.model'
 
 const EXCLUDED_PARAMETERS = ['INSULIN_TYPE_USED']
 
