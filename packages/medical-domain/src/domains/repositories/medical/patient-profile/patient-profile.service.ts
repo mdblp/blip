@@ -28,45 +28,49 @@
 
 import { DiabeticType } from '../../../models/medical/patient-profile/diabetic-type.enum'
 import { BgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../../models/medical/datum/bg.model'
-import { BgBounds } from '../../../models/statistics/glycemia-statistics.model'
+import { BG_CLAMP_THRESHOLD, BgClasses } from '../../../models/medical/medical-data-options.model'
 
-function getDT1DT2RangeByUnit(unit: BgUnit): BgBounds {
+function getDT1DT2RangeByUnit(unit: BgUnit): BgClasses {
   switch (unit) {
     case MGDL_UNITS: {
       return {
-        veryHighThreshold: 250,
-        targetUpperBound: 180,
-        targetLowerBound: 70,
-        veryLowThreshold: 54
+        veryHigh:BG_CLAMP_THRESHOLD[MGDL_UNITS],
+        high: 250,
+        target: 180,
+        low: 70,
+        veryLow: 54
       }
     }
     case MMOLL_UNITS: {
       return {
-        veryHighThreshold: 13.9,
-        targetUpperBound: 10,
-        targetLowerBound: 3.9,
-        veryLowThreshold: 3
+        veryHigh: BG_CLAMP_THRESHOLD[MMOLL_UNITS],
+        high: 13.9,
+        target: 10,
+        low: 3.9,
+        veryLow: 3
       }
     }
   }
 }
 
-function getDT1PregnancyRangeByUnit(unit: BgUnit): BgBounds {
+function getDT1PregnancyRangeByUnit(unit: BgUnit): BgClasses {
   switch (unit) {
     case MGDL_UNITS: {
       return {
-        veryHighThreshold: 250,
-        targetUpperBound: 140,
-        targetLowerBound: 63,
-        veryLowThreshold: 54
+        veryHigh:BG_CLAMP_THRESHOLD[MGDL_UNITS],
+        high: 250,
+        target: 140,
+        low: 63,
+        veryLow: 54,
       }
     }
     case MMOLL_UNITS: {
       return {
-        veryHighThreshold: 13.9,
-        targetUpperBound: 7.8,
-        targetLowerBound: 3.5,
-        veryLowThreshold: 3
+        veryHigh:BG_CLAMP_THRESHOLD[MGDL_UNITS],
+        high: 13.9,
+        target: 7.8,
+        low: 3.5,
+        veryLow: 3
       }
     }
   }
@@ -74,12 +78,11 @@ function getDT1PregnancyRangeByUnit(unit: BgUnit): BgBounds {
 
 // Returns the default BG range for a given diabetic profile type and BG unit
 // If no profile is found, returns the common one (DT1/DT2)
-export function getDefaultRangeByDiabeticType(type: string, unit: BgUnit): BgBounds {
+export function getDefaultRangeByDiabeticType(type: string, unit: BgUnit): BgClasses {
   switch (type) {
-    case DiabeticType.DT1DT2:
-      return getDT1DT2RangeByUnit(unit)
     case DiabeticType.DT1Pregnancy:
       return getDT1PregnancyRangeByUnit(unit)
+    case DiabeticType.DT1DT2:
     default:
       // if no profile is found, return the by default the common one (DT1/DT2)
       return getDT1DT2RangeByUnit(unit)

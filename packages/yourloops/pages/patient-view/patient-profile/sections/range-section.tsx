@@ -47,7 +47,7 @@ import { useAlert } from '../../../../components/utils/snackbar'
 import { DiabeticProfile, DiabeticType, getDefaultRangeByDiabeticType, Unit } from 'medical-domain'
 import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useAuth } from '../../../../lib/auth'
-import { convertIfNeeded } from "components/patient-data/patient-data.utils"
+import { convertIfNeeded } from '../../../../components/patient-data/patient-data.utils'
 
 interface RangeSectionProps {
   patient: Patient
@@ -100,6 +100,7 @@ const MIN_RANGE_VALUE_MGDL= 40
 const MAX_RANGE_VALUE_MGDL= 400
 const MIN_RANGE_VALUE_MMOL= 2.2
 const MAX_RANGE_VALUE_MMOL= 22.2
+
 export const RangeSection: FC<RangeSectionProps> = (props) => {
   const { patient } = props
   const theme = useTheme()
@@ -108,13 +109,14 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
   const { user } = useAuth()
 
   const displayedUnit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
+  const patientProfileWithDisplayUnits = {
+    ...patient.diabeticProfile,
+    bloodGlucosePreference: convertIfNeeded(patient.diabeticProfile.bloodGlucosePreference, displayedUnit)
+  }  // make a copy to avoid direct mutation of props
 
   const rangeSection = useRef<HTMLElement>(null)
   const [selectedPatientType, setSelectedPatientType] = useState<DiabeticType>(patient.diabeticProfile.type)
-  const [selectedDiabeticProfile, setSelectedDiabeticProfile] = useState<DiabeticProfile>({
-    ...patient.diabeticProfile,
-    bloodGlucosePreference: convertIfNeeded(patient.diabeticProfile.bloodGlucosePreference, displayedUnit)
-  }) // make a copy to avoid direct mutation of props
+  const [selectedDiabeticProfile, setSelectedDiabeticProfile] = useState<DiabeticProfile>(patientProfileWithDisplayUnits) // make a copy to avoid direct mutation of props
 
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
   const [errors, setErrors] = useState<ValidationErrors>(DEFAULT_ERROR_STATE)
@@ -134,28 +136,32 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
     return hasErrorMessage || saveInProgress
   }, [hasErrorMessage, saveInProgress])
 
-  const getDefaultDiabeticProfile = (type: DiabeticType): DiabeticProfile => {
-    const ranges = getDefaultRangeByDiabeticType(type, displayedUnit)
+  const getDiabeticProfileToDisplay = (type: DiabeticType): DiabeticProfile => {
 
-  return {
-      type: type,
-      bloodGlucosePreference: {
-        bgUnits: patient.diabeticProfile.bloodGlucosePreference.bgUnits,
-        bgClasses: {
-          veryHigh: 600,
-          high: ranges.veryHighThreshold,
-          target: ranges.targetUpperBound,
-          low: ranges.targetLowerBound,
-          veryLow: ranges.veryLowThreshold
-        },
-        bgBounds: ranges
+    if (patientProfileWithDisplayUnits.type == type) {
+      return patientProfileWithDisplayUnits
+    } else {
+      const ranges = getDefaultRangeByDiabeticType(type, displayedUnit)
+
+      return {
+        type: type,
+        bloodGlucosePreference: {
+          bgUnits: patient.diabeticProfile.bloodGlucosePreference.bgUnits,
+          bgClasses: ranges,
+          bgBounds: {
+            veryHighThreshold : ranges.high,
+            targetUpperBound : ranges.target,
+            targetLowerBound : ranges.low,
+            veryLowThreshold : ranges.veryLow
+          }
+        }
       }
     }
   }
 
   const handlePatientProfileChange = (type: DiabeticType): void => {
     setSelectedPatientType(type)
-    setSelectedDiabeticProfile(getDefaultDiabeticProfile(type))
+    setSelectedDiabeticProfile(getDiabeticProfileToDisplay(type))
     setErrors(DEFAULT_ERROR_STATE)
   }
 
