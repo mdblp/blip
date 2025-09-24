@@ -33,3 +33,9 @@ export const checkAlertsViewContent = async (): Promise<void> => {
   expect(alertsContent).toHaveTextContent(getTranslation('monitoring-alerts'))
   expect(alertsContent).toHaveTextContent('Monitoring alertsSet manually each value or apply care team values.')
 }
+
+export const checkRangeViewContent = async (): Promise<void> => {
+  const rangeContent = await screen.findByTestId('ranges-container')
+  expect(rangeContent).toHaveTextContent(getTranslation('range'))
+  expect(rangeContent).toHaveTextContent(getTranslation('range-description'))
+}

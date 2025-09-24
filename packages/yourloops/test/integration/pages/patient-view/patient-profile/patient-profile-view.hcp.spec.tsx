@@ -40,7 +40,7 @@ import {
   testMonitoringAlertsParametersConfigurationForPatientMgdl,
   testMonitoringAlertsParametersConfigurationForPatientMmol
 } from '../../../use-cases/monitoring-alerts-parameters-management'
-import { testAlertsViewContent } from '../../../use-cases/range-and-alerts-management'
+import { testAlertsViewContent, testRangeViewContent } from '../../../use-cases/range-and-alerts-management'
 import { testPatientPersonalInformation } from '../../../use-cases/patient-personal-information-management'
 import { Settings } from '../../../../../lib/auth/models/settings.model'
 import { Unit } from 'medical-domain'
@@ -200,4 +200,148 @@ describe('Patient profile view for HCP', () => {
     //   expect(naTexts.length).toBeGreaterThan(0)
     // })
   })
+
+  describe('Range section', () => {
+    beforeEach(() => {
+      mockAuth0Hook()
+      mockNotificationAPI()
+      mockDirectShareApi()
+      mockTeamAPI()
+      mockUserApi().mockUserDataFetch({ firstName, lastName })
+      mockPatientApiForHcp()
+      mockDataAPI()
+    })
+
+    it('should display patient range configuration section', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
+      await userEvent.click(menuButton)
+
+      // Test that the range section is rendered
+      await testRangeViewContent()
+    })
+
+    it('should display glycemia target range in mg/dL', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
+      await userEvent.click(menuButton)
+
+      // Test target range values in mg/dL
+      const targetLowerBound = await screen.findByTestId('target-lower-bound')
+      const targetUpperBound = await screen.findByTestId('target-upper-bound')
+
+      expect(targetLowerBound).toBeInTheDocument()
+      expect(targetUpperBound).toBeInTheDocument()
+      expect(screen.getByText('mg/dL')).toBeInTheDocument()
+    })
+
+    it('should display glycemia target range in mmol/L', async () => {
+      const mmolSettings: Settings = { units: { bg: Unit.MmolPerLiter } }
+      mockUserApi().mockUserDataFetch({ firstName, lastName, settings: mmolSettings })
+
+      await act(async () => {
+        renderPage(patientTargetAndAlertsRouteMmoL)
+      })
+
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
+      await userEvent.click(menuButton)
+
+      // Test target range values in mmol/L
+      const targetLowerBound = await screen.findByTestId('target-lower-bound')
+      const targetUpperBound = await screen.findByTestId('target-upper-bound')
+
+      expect(targetLowerBound).toBeInTheDocument()
+      expect(targetUpperBound).toBeInTheDocument()
+      expect(screen.getByText('mmol/L')).toBeInTheDocument()
+    })
+
+    it('should display glycemia thresholds configuration', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
+      await userEvent.click(menuButton)
+
+      // Test very low and very high thresholds
+      const veryLowThreshold = await screen.findByTestId('very-low-threshold')
+      const veryHighThreshold = await screen.findByTestId('very-high-threshold')
+
+      expect(veryLowThreshold).toBeInTheDocument()
+      expect(veryHighThreshold).toBeInTheDocument()
+    })
+
+    it('should display range visualization chart', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
+      await userEvent.click(menuButton)
+
+      // Test range visualization component
+      const rangeChart = await screen.findByTestId('range-visualization-chart')
+      expect(rangeChart).toBeInTheDocument()
+    })
+
+    it('should handle range configuration updates', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
+      await userEvent.click(menuButton)
+
+      // Test range update functionality
+      const editButton = screen.getByTestId('edit-range-button')
+      expect(editButton).toBeInTheDocument()
+
+      await userEvent.click(editButton)
+
+      // Verify edit mode is activated
+      const saveButton = await screen.findByTestId('save-range-button')
+      expect(saveButton).toBeInTheDocument()
+    })
+
+    it('should validate range bounds correctly', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
+      await userEvent.click(menuButton)
+
+      // Test that lower bound is less than upper bound
+      const targetLowerBound = await screen.findByTestId('target-lower-bound')
+      const targetUpperBound = await screen.findByTestId('target-upper-bound')
+
+      const lowerValue = parseInt(targetLowerBound.textContent || '0')
+      const upperValue = parseInt(targetUpperBound.textContent || '0')
+
+      expect(lowerValue).toBeLessThan(upperValue)
+    })
+
+    it('should display range configuration for different patient types', async () => {
+      await act(async () => {
+        renderPage(patientTargetAndAlertsRouteMmoL)
+      })
+
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
+      await userEvent.click(menuButton)
+
+      // Test that mmol/L patient has appropriate range values
+      const rangeSection = await screen.findByTestId('range-section')
+      expect(rangeSection).toBeInTheDocument()
+
+      // Verify mmol/L specific range values are displayed
+      expect(screen.getByText('mmol/L')).toBeInTheDocument()
+    })
+  })
+
 })

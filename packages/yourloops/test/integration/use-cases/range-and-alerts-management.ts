@@ -25,8 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkAlertsViewContent } from '../assert/range-and-alerts-view.assert'
+import { checkAlertsViewContent, checkRangeViewContent } from '../assert/range-and-alerts-view.assert'
 
 export const testAlertsViewContent = async (): Promise<void> => {
   await checkAlertsViewContent()
+}
+
+export const testRangeViewContent = async (): Promise<void> => {
+  await checkRangeViewContent()
 }
