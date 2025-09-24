@@ -44,10 +44,11 @@ import { Patient } from '../../../../lib/patient/models/patient.model'
 import { errorTextFromException } from '../../../../lib/utils'
 import { logError } from '../../../../utils/error.util'
 import { useAlert } from '../../../../components/utils/snackbar'
-import { DiabeticProfile, DiabeticType, getDefaultRangeByDiabeticType, Unit } from 'medical-domain'
+import { DiabeticType, getDefaultRangeByDiabeticType, Unit } from 'medical-domain'
 import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useAuth } from '../../../../lib/auth'
 import { convertIfNeeded } from '../../../../components/patient-data/patient-data.utils'
+import { DiabeticProfile } from '../../../../lib/patient/models/patient-diabete-profile'
 
 interface RangeSectionProps {
   patient: Patient
