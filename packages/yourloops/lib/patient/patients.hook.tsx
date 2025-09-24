@@ -44,6 +44,7 @@ import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 import { PRIVATE_TEAM_ID } from '../team/team.util'
 import { useTranslation } from 'react-i18next'
 import { logError } from '../../utils/error.util'
+import { DiabeticProfile } from 'medical-domain'
 
 export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const { t } = useTranslation()
@@ -190,6 +191,15 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
     refresh()
   }
 
+  const updatePatientDiabeticProfile = async (patientId: string, selectedDiabeticProfile : DiabeticProfile): Promise<void> => {
+    try {
+      await PatientApi.updatePatientDiabeticProfile(patientId, selectedDiabeticProfile)
+      refresh()
+    } catch (error) {
+      throw Error(`updatePatientDiabeticProfile: failed to update patient with id ${patientId}`)
+    }
+  }
+
   useEffect(() => {
     if (user && teamIdForWhichPatientsAreFetched.current !== teamId) {
       teamIdForWhichPatientsAreFetched.current = teamId
@@ -210,6 +220,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
     markPatientMessagesAsRead,
     deletePatientMonitoringAlertsParameters,
     updatePatientMonitoringAlertsParameters,
+    updatePatientDiabeticProfile,
     removePatient,
     refresh
   }

@@ -124,7 +124,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
             </Avatar>
             <Box>
               <Typography variant="body2" color="text.secondary">
-                {`${t('patient')} ${t(patient.diabeticProfile?.name)}`}
+                {`${t('patient')} ${t(patient.diabeticProfile?.type)}`}
               </Typography>
               <Typography variant="h6" fontWeight="medium">
                 {`${patient.profile.firstName || ''}, ${patient.profile.lastName || ''}`.trim() || t('N/A')}
