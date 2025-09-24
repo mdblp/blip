@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkTargetAndAlertsViewContent } from '../assert/target-and-alerts-view.assert'
-
-export const testTargetAndAlertsViewContent = async (): Promise<void> => {
-  await checkTargetAndAlertsViewContent()
+export enum DiabeticType {
+  DT1DT2 = 'type1-type2',
+  DT1Pregnancy = 'dt1-pregnancy',
+  Custom = 'custom',
 }

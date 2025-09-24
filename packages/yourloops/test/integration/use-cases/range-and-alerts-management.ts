@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BgBounds, type BgClasses, type BgUnit } from 'medical-domain'
+import { checkAlertsViewContent } from '../assert/range-and-alerts-view.assert'
 
-export interface BgPrefs {
-  bgUnits: BgUnit
-  bgBounds?: BgBounds
-  bgClasses: BgClasses // Thresholds for each class
+export const testAlertsViewContent = async (): Promise<void> => {
+  await checkAlertsViewContent()
 }

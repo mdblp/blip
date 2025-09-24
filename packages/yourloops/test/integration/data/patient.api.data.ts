@@ -249,12 +249,10 @@ export const pendingPatient: Patient = buildPatient({
   settings: { ...defaultSettings, a1c: { value: '8.3', date: '2022-12-16T08:18:38.473Z' } }
 })
 
-const pendingPatientMetrics: PatientMetrics = buildPatientMetrics({ userId: pendingPatientId })
+
 
 export const patient1AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient1Info, patient1Metrics, mySecondTeamId, UserInviteStatus.Accepted)
 export const patient2AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient2Info, patient2Metrics, myThirdTeamId, UserInviteStatus.Accepted)
-export const patient3AsTeamMember: ITeamMember = buildTeamMemberFromPatient(patient3Info, patient3Metrics, myThirdTeamId, UserInviteStatus.Accepted)
-export const pendingPatientAsTeamMember: ITeamMember = buildTeamMemberFromPatient(pendingPatient, pendingPatientMetrics, mySecondTeamId, UserInviteStatus.Pending)
 
 export const PATIENTS_INFO_BY_TEAMID: Record<string, Patient[]> = {
   private: [],

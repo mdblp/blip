@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,32 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type MonitoringAlerts } from '../../lib/patient/models/monitoring-alerts.model'
-import { type Patient } from '../../lib/patient/models/patient.model'
-import { type ITeamMember } from '../../lib/team/models/i-team-member.model'
-import { Gender } from '../../lib/auth/models/enums/gender.enum'
+import { BgPrefs } from 'dumb'
+import { DiabeticType } from './diabetic-type.enum'
 
-export const mapITeamMemberToPatient = (iTeamMember: ITeamMember): Patient => {
-  const birthdate = iTeamMember.profile?.patient?.birthday
-  return {
-    monitoringAlerts: iTeamMember.alarms ?? {} as MonitoringAlerts,
-    glycemiaIndicators: iTeamMember.glycemiaIndicators,
-    profile: {
-      birthdate,
-      sex: iTeamMember.profile?.patient?.sex ? iTeamMember.profile?.patient?.sex : Gender.NotDefined,
-      firstName: iTeamMember.profile?.firstName,
-      fullName: iTeamMember.profile?.fullName ?? iTeamMember.email,
-      lastName: iTeamMember.profile?.lastName,
-      email: iTeamMember.email
-    },
-    settings: {
-      a1c: iTeamMember.settings?.a1c,
-      system: iTeamMember.settings?.system
-    },
-    flagged: undefined,
-    medicalData: iTeamMember.medicalData,
-    hasSentUnreadMessages: iTeamMember.unreadMessages > 0,
-    invitationStatus: iTeamMember.invitationStatus,
-    userid: iTeamMember.userId
-  }
+export interface DiabeticProfile {
+  type: DiabeticType
+  bloodGlucosePreference: BgPrefs
 }
+

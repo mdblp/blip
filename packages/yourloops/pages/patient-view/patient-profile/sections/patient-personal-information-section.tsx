@@ -46,14 +46,13 @@ import HeightIcon from '@mui/icons-material/Height'
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid'
 import MonitorWeightIcon from '@mui/icons-material/MonitorWeight'
 import StraightenIcon from '@mui/icons-material/Straighten'
-import Divider from '@mui/material/Divider'
 import { BasalIcon } from '../../../../components/icons/diabeloop/basal-icon'
 
 interface InformationSectionProps {
   patient: Patient
 }
 
-export const PatientPersonalInformation: FC<InformationSectionProps> = (props) => {
+export const PatientPersonalInformationSection: FC<InformationSectionProps> = (props) => {
   const { patient } = props
   const theme = useTheme()
   const { t } = useTranslation()
@@ -125,17 +124,13 @@ export const PatientPersonalInformation: FC<InformationSectionProps> = (props) =
             </Avatar>
             <Box>
               <Typography variant="body2" color="text.secondary">
-                {`${t('patient')} ${t(patient.diabeticProfile?.name)}`}
+                {`${t('patient')} ${t(patient.diabeticProfile?.type)}`}
               </Typography>
               <Typography variant="h6" fontWeight="medium">
                 {`${patient.profile.firstName || ''}, ${patient.profile.lastName || ''}`.trim() || t('N/A')}
               </Typography>
             </Box>
           </Box>
-          <Divider variant="fullWidth" sx={{
-            marginBottom: theme.spacing(5),
-            marginTop: theme.spacing(2)
-          }} />
           <Grid container spacing={2}>
             <Grid item xs={6}>
               {/* Date of birth */}
