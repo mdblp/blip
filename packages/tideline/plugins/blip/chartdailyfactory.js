@@ -90,8 +90,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   chart.id(parentElement.id).width(width).height(height)
   d3.select(parentElement).call(chart)
 
-  const deviceName = tidelineData.medicalData.pumpSettings[0].payload.device.name
-  const isDblg2User = isDBLG2(deviceName)
+  const pumpSettings = tidelineData?.medicalData?.pumpSettings
+  const hasPumpSettings = pumpSettings?.length > 0
+  const isDblg2User = hasPumpSettings ? isDBLG2(pumpSettings[0].payload.device.name) : false
+
   // ***
   // Setup Pools
   // ***

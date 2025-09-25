@@ -2184,6 +2184,7 @@ export const twoWeeksOfCbg: Data = {
     ],
     "confidentialModes": [],
     "deviceParametersChanges": [],
+    "iob": [],
     "messages": [],
     "meals": [],
     "physicalActivities": [],
