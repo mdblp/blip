@@ -212,7 +212,7 @@ describe('Patient profile view for HCP', () => {
       mockDataAPI()
     })
 
-    it('should display patient range configuration section', async () => {
+    it('should be displayed', async () => {
       await act(async () => {
         renderPage(patientProfileRoute)
       })
@@ -233,12 +233,12 @@ describe('Patient profile view for HCP', () => {
       await userEvent.click(menuButton)
 
       // Test target range values in mg/dL
-      const targetLowerBound = await screen.findByTestId('target-lower-bound')
-      const targetUpperBound = await screen.findByTestId('target-upper-bound')
+      const severeHyperTextField  = await screen.findByTestId('severe-hyperglycemia-field')
+      const hyperTextField = await screen.findByTestId('hyperglycemia-field')
 
-      expect(targetLowerBound).toBeInTheDocument()
-      expect(targetUpperBound).toBeInTheDocument()
-      expect(screen.getByText('mg/dL')).toBeInTheDocument()
+      expect(severeHyperTextField).toBeVisible()
+      expect(hyperTextField).toBeVisible()
+      expect(screen.getByText('mg/dL')).toBeVisible()
     })
 
     it('should display glycemia target range in mmol/L', async () => {
@@ -253,15 +253,40 @@ describe('Patient profile view for HCP', () => {
       await userEvent.click(menuButton)
 
       // Test target range values in mmol/L
-      const targetLowerBound = await screen.findByTestId('target-lower-bound')
-      const targetUpperBound = await screen.findByTestId('target-upper-bound')
+      // Test target range values in mg/dL
+      const severeHyperTextField  = await screen.findByTestId('severe-hyperglycemia-field')
+      const hyperTextField = await screen.findByTestId('hyperglycemia-field')
 
-      expect(targetLowerBound).toBeInTheDocument()
-      expect(targetUpperBound).toBeInTheDocument()
+      expect(severeHyperTextField).toBeInTheDocument()
+      expect(hyperTextField).toBeInTheDocument()
       expect(screen.getByText('mmol/L')).toBeInTheDocument()
     })
 
-    it('should display glycemia thresholds configuration', async () => {
+    it('should display glycemia limits configuration for dt1 patient profile', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
+      await userEvent.click(menuButton)
+      const rangeSection = within(screen.getByTestId('ranges-container'))
+      // Test very low and very high thresholds
+      const veryLowThreshold = await screen.findByTestId('very-low-threshold')
+      const veryHighThreshold = await screen.findByTestId('very-high-threshold')
+
+      expect(veryLowThreshold).toBeInTheDocument()
+      expect(veryHighThreshold).toBeInTheDocument()
+
+      const dt1Chip = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('type-1-and-2'))
+      await userEvent.click(dt1Chip)
+
+      const severeHyperInput = rangeSection.getByRole('textbox', { name: getTranslation('range-severe-hyperglycemia') })
+      expect(severeHyperInput).toBeInTheDocument()
+      expect(severeHyperInput).toHaveValue('250')
+
+    })
+
+    it('should display glycemia limits configuration for dt1 pregnancy patient profile', async () => {
       await act(async () => {
         renderPage(patientProfileRoute)
       })
@@ -277,7 +302,7 @@ describe('Patient profile view for HCP', () => {
       expect(veryHighThreshold).toBeInTheDocument()
     })
 
-    it('should display range visualization chart', async () => {
+    it('should display glycemia limits configuration for custom patient profile', async () => {
       await act(async () => {
         renderPage(patientProfileRoute)
       })
@@ -285,9 +310,12 @@ describe('Patient profile view for HCP', () => {
       const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
       await userEvent.click(menuButton)
 
-      // Test range visualization component
-      const rangeChart = await screen.findByTestId('range-visualization-chart')
-      expect(rangeChart).toBeInTheDocument()
+      // Test very low and very high thresholds
+      const veryLowThreshold = await screen.findByTestId('very-low-threshold')
+      const veryHighThreshold = await screen.findByTestId('very-high-threshold')
+
+      expect(veryLowThreshold).toBeInTheDocument()
+      expect(veryHighThreshold).toBeInTheDocument()
     })
 
     it('should handle range configuration updates', async () => {
@@ -304,9 +332,8 @@ describe('Patient profile view for HCP', () => {
 
       await userEvent.click(editButton)
 
-      // Verify edit mode is activated
       const saveButton = await screen.findByTestId('save-range-button')
-      expect(saveButton).toBeInTheDocument()
+      expect(saveButton).toBeVisible()
     })
 
     it('should validate range bounds correctly', async () => {
@@ -327,21 +354,6 @@ describe('Patient profile view for HCP', () => {
       expect(lowerValue).toBeLessThan(upperValue)
     })
 
-    it('should display range configuration for different patient types', async () => {
-      await act(async () => {
-        renderPage(patientTargetAndAlertsRouteMmoL)
-      })
-
-      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
-      await userEvent.click(menuButton)
-
-      // Test that mmol/L patient has appropriate range values
-      const rangeSection = await screen.findByTestId('range-section')
-      expect(rangeSection).toBeInTheDocument()
-
-      // Verify mmol/L specific range values are displayed
-      expect(screen.getByText('mmol/L')).toBeInTheDocument()
-    })
   })
 
 })

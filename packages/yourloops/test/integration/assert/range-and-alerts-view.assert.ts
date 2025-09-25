@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import { getTranslation } from '../../utils/i18n'
 
 export const checkAlertsViewContent = async (): Promise<void> => {
@@ -38,4 +38,21 @@ export const checkRangeViewContent = async (): Promise<void> => {
   const rangeContent = await screen.findByTestId('ranges-container')
   expect(rangeContent).toHaveTextContent(getTranslation('range'))
   expect(rangeContent).toHaveTextContent(getTranslation('range-description'))
+
+  // Test patient type selection chip
+  const typeSelectionContainer = within(rangeContent).getByTestId('patient-type-selection')
+  expect(typeSelectionContainer).toBeInTheDocument()
+
+  // Verify patient type chips are present
+  const type1Type2Chip = within(typeSelectionContainer).getByText(getTranslation('type-1-and-2'))
+  const pregnancyType1Chip = within(typeSelectionContainer).getByText(getTranslation('pregnancy-type-1'))
+  const customChip = within(typeSelectionContainer).getByText(getTranslation('custom'))
+
+  expect(type1Type2Chip).toBeVisible()
+  expect(pregnancyType1Chip).toBeVisible()
+  expect(customChip).toBeVisible()
+
+  // Test range configuration form
+  const rangeConfigForm = within(rangeContent).getByTestId('range-configuration-form')
+  expect(rangeConfigForm).toBeVisible()
 }
