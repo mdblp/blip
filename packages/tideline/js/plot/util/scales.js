@@ -200,7 +200,7 @@ function createScaleBasal(data, pool) {
  */
 export function createYAxisBasal(tidelineData, pool) {
   const scale = createScaleBasal(tidelineData.medicalData.basal, pool)
-  const basalTickValues = [0, 1, 3]
+  const basalTickValues = [0, 1]
 
   const axis = d3
     .axisLeft(scale)
