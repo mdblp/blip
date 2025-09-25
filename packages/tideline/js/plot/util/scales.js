@@ -30,6 +30,7 @@ import * as d3 from 'd3'
 import commonbolus from './commonbolus'
 import { convertBG, DEFAULT_BG_BOUNDS, MGDL_UNITS } from 'medical-domain'
 import format from '../../data/util/format'
+import { getMaxIobValue } from '../../data/util/iob'
 
 /**
  * @param {MedicalDataService} tidelineData
@@ -219,12 +220,10 @@ function createScaleIob(maxIobValue, pool) {
 }
 
 export function createYAxisIob(tidelineData, pool) {
-  const maxIobValue = d3.max(tidelineData.medicalData.iob, (d) => d.value)
-  const maxIobValueAsNumber = Number.parseFloat(maxIobValue)
-  const maxIobValueSafe = !Number.isNaN(maxIobValueAsNumber) ? maxIobValueAsNumber : 50
-  const formattedMaxIobValue = Math.ceil(maxIobValueAsNumber * 10) / 10
+  const maxIobValue = getMaxIobValue(tidelineData.medicalData)
+  const scale = createScaleIob(maxIobValue, pool)
 
-  const scale = createScaleIob(maxIobValueSafe, pool)
+  const formattedMaxIobValue = Math.ceil(maxIobValue * 10) / 10
   const iobTickValues = [0, formattedMaxIobValue]
 
   const axis = d3

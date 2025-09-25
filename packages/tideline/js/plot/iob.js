@@ -25,6 +25,7 @@ import * as d3 from 'd3'
 
 import utils from './util/utils'
 import { DEFAULT_BG_BOUNDS, MGDL_UNITS } from 'medical-domain'
+import { getMaxIobValue } from '../data/util/iob'
 
 const defaults = {
   bgUnits: MGDL_UNITS,
@@ -50,10 +51,16 @@ function plotIob(pool, opts = {}) {
   function iob(selection) {
     opts.xScale = pool.xScale().copy()
     selection.each(function () {
-      const iobValues = pool.filterDataForRender(opts.tidelineData.medicalData.iob)
+      const medicalData = opts.tidelineData.medicalData
+      const iobValues = pool.filterDataForRender(medicalData.iob)
+
+      const maxIobValue = getMaxIobValue(medicalData)
+
+      const filteredIobValues = iobValues.filter(d => d.value <= maxIobValue)
+
       const allIobPoints = d3.select(this)
         .selectAll('circle.d3-iob')
-        .data(iobValues, d => d.id)
+        .data(filteredIobValues, d => d.id)
 
       // Using join pattern for enter/update/exit
       allIobPoints.join(
