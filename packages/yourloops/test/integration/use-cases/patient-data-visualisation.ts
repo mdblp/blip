@@ -58,6 +58,8 @@ import {
   checkDailyTidelineContainerTooltipsMmolL,
   checkDailyTimeInRangeStatsWidgetsMgdl,
   checkDailyTimeInRangeStatsWidgetsMmolL,
+  checkDailyViewChartsDblg1,
+  checkDailyViewChartsDblg2,
   checkEventsSuperposition,
   checkTotalCarbsStatContent
 } from '../assert/daily-view.assert'
@@ -81,7 +83,7 @@ export const testDashboardDataVisualisationNoDataForHcp = async () => {
   await checkMonitoringAlertsCardNoData()
 }
 
-export const testDashboardDataVisualisationForPatient = async (patientDashboardLayoutParams: PatientDashboardLayoutParams): Promise<void> => {
+export const testDashboardDataVisualisationForPatientOrPrivateTeam = async (patientDashboardLayoutParams: PatientDashboardLayoutParams): Promise<void> => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
   await checkPatientStatistics()
   await checkDeviceUsageWidget()
@@ -94,12 +96,6 @@ export const testDashboardDataVisualisationSixteenDaysOldData = async () => {
 export const testDashboardDataVisualisationTwoWeeksOldData = async () => {
   await checkPatientStatisticsWithTwoWeeksOldData()
   await checkDeviceUsageWidgetWithTwoWeeksOldData()
-}
-
-export const testDashboardDataVisualisationPrivateTeam = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
-  await checkPatientDashboardLayout(patientDashboardLayoutParams)
-  await checkPatientStatistics()
-  await checkDeviceUsageWidget()
 }
 
 export const testDashboardDataVisualisationPrivateTeamNoData = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
@@ -148,6 +144,14 @@ export const testDailyViewTooltipsAndValuesMgdl = async () => {
   await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
   await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
   await checkTotalInsulinStatWidget('Total Delivered Insulin71.2UMeal bolus85.4 %60.8UBasal & correction bolus1.8 %1.3UManual bolus7.2 %5.1UPen bolus5.8 %4.1UEst. total insulin requirement--')
+}
+
+export const testDailyViewChartsDblg1 = () => {
+  checkDailyViewChartsDblg1()
+}
+
+export const testDailyViewChartsDblg2 = () => {
+  checkDailyViewChartsDblg2()
 }
 
 export const testDailyViewTooltipsForDblg2 = async () => {

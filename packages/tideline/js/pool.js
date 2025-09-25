@@ -158,6 +158,7 @@ function Pool(container) {
       labelGroup
         .classed('d3-pool-label', true)
         .attr('id', `${id}_label_${labelIndex}`)
+        .attr('data-testid', `${id}-chart-label`)
         .attr('transform', `translate(${x},${y})`)
       label.spans.forEach((tspan, spanIndex) => {
         labelGroup.append('tspan')

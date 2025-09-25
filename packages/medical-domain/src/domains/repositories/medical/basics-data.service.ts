@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,8 +26,8 @@
  */
 
 import type MedicalData from '../../models/medical/medical-data.model'
-import type Datum from '../../models/medical/datum.model'
 import { findBasicsDays, toISOString } from '../time/time.service'
+import { Datum } from '../../models/medical/datum.model'
 
 interface BasicData {
   timezone: string

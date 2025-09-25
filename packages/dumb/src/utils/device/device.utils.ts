@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2024-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,15 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type MedicalDataService from 'medical-domain'
+import MedicalDataService, { DeviceSystem } from 'medical-domain'
 import { Device } from '../../models/device.model'
 
 export const isDBLG1 = (deviceName: string): boolean => {
-  return deviceName.toUpperCase() === "DBLG1"
+  return deviceName.toUpperCase() === DeviceSystem.Dblg1
 }
 
 export const isDBLG2 = (deviceName: string): boolean => {
-  return deviceName.toUpperCase() === "DBLG2"
+  return deviceName.toUpperCase() === DeviceSystem.Dblg2
 }
 
 export const isDeviceVersionHigherOrEqual = (device: Device, majorVersion: number, minorVersion: number): boolean => {

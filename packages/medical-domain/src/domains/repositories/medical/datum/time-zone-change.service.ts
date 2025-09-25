@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,8 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type DatumProcessor } from '../../../models/medical/datum.model'
-import type Datum from '../../../models/medical/datum.model'
+import { Datum, type DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
 import type TimeZoneChange from '../../../models/medical/datum/time-zone-change.model'

@@ -26,8 +26,7 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { DEFAULT_TOOLTIP_OFFSET, type Position } from '../common/tooltip/tooltip'
-import { Tooltip } from '../../../index'
+import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { formatInputTime } from '../../../utils/format/format.util'
 import colors from '../../../styles/colors.css'

@@ -26,39 +26,41 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import styles from './parameter-tooltip.css'
-import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
 import colors from '../../../styles/colors.css'
-import { type DeviceParameterChange, type Parameter, type TimePrefs } from 'medical-domain'
-import { ParameterChangeLine } from './parameter-change-line'
+import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
+import commonStyles from '../../../styles/tooltip-common.css'
+import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
+import { Iob, type TimePrefs } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
+import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
+import { formatDecimalNumber } from '../../../utils/format/format.util'
 
-interface ParameterTooltipProps {
-  parameter: DeviceParameterChange
+interface IobTooltipProps {
+  data: Iob
   position: Position
   side: TooltipSide
   timePrefs: TimePrefs
 }
 
-export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props) => {
-  const { parameter, position, side, timePrefs } = props
-  const { t } = useTranslation()
+export const IobTooltip: FunctionComponent<IobTooltipProps> = (props) => {
+  const { data, position, side, timePrefs } = props
+  const { t } = useTranslation('main')
+
+  const formattedValue = formatDecimalNumber(data.value, 2)
 
   return (
     <Tooltip
       position={position}
       side={side}
-      title={t('settings-change')}
-      backgroundColor={colors.greyBackground}
-      dateTitle={getDateTitleForBaseDatum(parameter, timePrefs)}
+      backgroundColor={colors.blueBackground}
+      title={t('active-insulin')}
+      dateTitle={getDateTitleForBaseDatum(data, timePrefs)}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
-        <div data-testid="tooltip-daily-parameters" className={styles.container}>
-          {parameter.params.map((parameter: Parameter) =>
-            <ParameterChangeLine key={parameter.id} parameter={parameter} />
-          )}
+        <div className={commonStyles.containerFlexLarge}>
+          <TooltipLine label={t('insulin-on-board')} />
+          <TooltipLine label={t('insulin')} value={formattedValue} units={data.units} isBold />
         </div>
       }
     />

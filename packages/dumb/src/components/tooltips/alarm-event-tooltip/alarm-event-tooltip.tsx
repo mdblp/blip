@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { DEFAULT_TOOLTIP_OFFSET, Position } from '../common/tooltip/tooltip'
+import { DEFAULT_TOOLTIP_OFFSET, Position, Tooltip } from '../common/tooltip/tooltip'
 import { AlarmEvent, TimePrefs } from 'medical-domain'
 import React, { FC } from 'react'
-import { BgPrefs, Tooltip } from '../../../index'
+import { BgPrefs } from '../../../index'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util';
 import styles from './alarm-event-tooltip.css'

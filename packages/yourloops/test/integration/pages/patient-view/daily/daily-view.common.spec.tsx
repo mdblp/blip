@@ -46,6 +46,8 @@ import { patient2AsTeamMember } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
+  testDailyViewChartsDblg1,
+  testDailyViewChartsDblg2,
   testDailyViewTooltipsAndValuesMgdl,
   testDailyViewTooltipsForDblg2,
   testDailyViewTooltipsForRecentSoftware
@@ -78,6 +80,7 @@ describe('Daily view for anyone', () => {
       })
 
       await testDailyViewTooltipsAndValuesMgdl()
+      testDailyViewChartsDblg1()
     })
   })
 
@@ -90,6 +93,7 @@ describe('Daily view for anyone', () => {
       })
 
       await testDailyViewTooltipsForDblg2()
+      testDailyViewChartsDblg2()
     })
   })
 

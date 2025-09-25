@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,8 +30,7 @@ import type MedicalDataOptions from '../../../../models/medical/medical-data-opt
 import BaseTimeService from './base-time.service'
 import DatumService from '../../datum.service'
 import type BaseDatum from '../../../../models/medical/datum/basics/base-datum.model'
-import type Datum from '../../../../models/medical/datum.model'
-import { type DatumProcessor } from '../../../../models/medical/datum.model'
+import { Datum, type DatumProcessor } from '../../../../models/medical/datum.model'
 import { type DatumType } from '../../../../models/medical/datum/enums/datum-type.enum'
 import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../../models/time/date-filter.model'
 

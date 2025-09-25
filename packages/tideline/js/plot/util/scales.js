@@ -28,8 +28,9 @@ import _ from 'lodash'
 import * as d3 from 'd3'
 
 import commonbolus from './commonbolus'
-import { convertBG, MGDL_UNITS, DEFAULT_BG_BOUNDS } from 'medical-domain'
+import { convertBG, DEFAULT_BG_BOUNDS, MGDL_UNITS } from 'medical-domain'
 import format from '../../data/util/format'
+import { getMaxIobValue } from '../../data/util/iob'
 
 /**
  * @param {MedicalDataService} tidelineData
@@ -199,13 +200,37 @@ function createScaleBasal(data, pool) {
  */
 export function createYAxisBasal(tidelineData, pool) {
   const scale = createScaleBasal(tidelineData.medicalData.basal, pool)
-  const basalTickValues = [0, 1, 3]
+  const basalTickValues = [0, 1]
 
   const axis = d3
     .axisLeft(scale)
     .tickSizeOuter(0)
     .ticks(2)
     .tickValues(basalTickValues)
+
+  return { axis, scale }
+}
+
+// IOB
+function createScaleIob(maxIobValue, pool) {
+  const iobDomain = [0, maxIobValue * 1.1]
+  const iobRange = [pool.height(), 0]
+
+  return d3.scaleLinear(iobDomain, iobRange)
+}
+
+export function createYAxisIob(tidelineData, pool) {
+  const maxIobValue = getMaxIobValue(tidelineData.medicalData)
+  const scale = createScaleIob(maxIobValue, pool)
+
+  const formattedMaxIobValue = Math.ceil(maxIobValue * 10) / 10
+  const iobTickValues = [0, formattedMaxIobValue]
+
+  const axis = d3
+    .axisLeft(scale)
+    .tickSizeOuter(0)
+    .ticks(2)
+    .tickValues(iobTickValues)
 
   return { axis, scale }
 }

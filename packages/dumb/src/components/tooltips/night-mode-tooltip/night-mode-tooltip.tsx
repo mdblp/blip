@@ -26,7 +26,7 @@
  */
 
 import { type NightMode, TimePrefs } from 'medical-domain'
-import Tooltip, { DEFAULT_TOOLTIP_OFFSET, Position } from '../common/tooltip/tooltip'
+import { DEFAULT_TOOLTIP_OFFSET, Position, Tooltip } from '../common/tooltip/tooltip'
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'

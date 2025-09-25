@@ -46,7 +46,6 @@ import {
   DEFAULT_BG_BOUNDS,
   defaultMedicalDataOptions
 } from '../../models/medical/medical-data-options.model'
-import type Datum from '../../models/medical/datum.model'
 import type TimeZoneItem from '../../models/time/time-zone-item.model'
 import {
   addAtTimezone,
@@ -74,6 +73,7 @@ import {
   PumpSettings,
   PumpSettingsParameter
 } from '../../models/medical/datum/pump-settings.model'
+import { Datum } from '../../models/medical/datum.model'
 
 const EXCLUDED_PARAMETERS = ['INSULIN_TYPE_USED']
 
@@ -85,6 +85,7 @@ class MedicalDataService {
     cbg: [],
     confidentialModes: [],
     deviceParametersChanges: [],
+    iob: [],
     messages: [],
     meals: [],
     nightModes: [],
@@ -213,6 +214,9 @@ class MedicalDataService {
     }
     if (data.deviceParametersChanges) {
       this.medicalData.deviceParametersChanges = data.deviceParametersChanges
+    }
+    if (data.iob) {
+      this.medicalData.iob = this.medicalData.iob.concat(data.iob)
     }
     if (data.messages) {
       this.medicalData.messages = this.medicalData.messages.concat(data.messages)

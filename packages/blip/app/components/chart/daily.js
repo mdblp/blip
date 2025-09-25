@@ -31,6 +31,7 @@ import {
   BolusTooltip,
   ConfidentialTooltip,
   EventsSuperpositionPopover,
+  IobTooltip,
   NightModeTooltip,
   ParameterTooltip,
   PhysicalTooltip,
@@ -72,6 +73,7 @@ class DailyChart extends React.Component {
     onSMBGHover: PropTypes.func.isRequired,
     onCBGHover: PropTypes.func.isRequired,
     onCarbHover: PropTypes.func.isRequired,
+    onIobHover: PropTypes.func.isRequired,
     onReservoirHover: PropTypes.func.isRequired,
     onPhysicalHover: PropTypes.func.isRequired,
     onParameterHover: PropTypes.func.isRequired,
@@ -102,6 +104,7 @@ class DailyChart extends React.Component {
       'onPhysicalHover',
       'onParameterHover',
       'onConfidentialHover',
+      'onIobHover',
       'onWarmUpHover',
       'onAlarmEventHover',
       'onNightModeHover',
@@ -397,6 +400,7 @@ class Daily extends React.Component {
                   onWarmUpHover={this.handleWarmUpHover}
                   onAlarmEventHover={this.handleAlarmEventHover}
                   onConfidentialHover={this.handleConfidentialHover}
+                  onIobHover={this.handleIobHover}
                   onNightModeHover={this.handleNightModeHover}
                   onZenModeHover={this.handleZenModeHover}
                   onTooltipOut={this.handleTooltipOut}
@@ -604,6 +608,21 @@ class Daily extends React.Component {
     const tooltip = (
       <RescueCarbsTooltip
         food={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        timePrefs={datum.timePrefs}
+      />)
+    this.setState({ tooltip })
+  }
+
+  handleIobHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum)
+    const tooltip = (
+      <IobTooltip
+        data={datum.data}
         position={{
           top: datum.top,
           left: datum.left

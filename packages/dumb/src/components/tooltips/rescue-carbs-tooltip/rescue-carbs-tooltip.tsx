@@ -26,9 +26,8 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { DEFAULT_TOOLTIP_OFFSET, type Position } from '../common/tooltip/tooltip'
+import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
 import commonStyles from '../../../styles/tooltip-common.css'
-import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { type Meal, Prescriptor, type TimePrefs } from 'medical-domain'

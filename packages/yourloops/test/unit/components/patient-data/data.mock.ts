@@ -245,6 +245,7 @@ export const medicalServiceResult = {
   ],
   confidentialModes: [],
   deviceParametersChanges: [],
+  iob: [],
   messages: [],
   meals: [
     {
