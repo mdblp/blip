@@ -88,6 +88,7 @@ import {
   EVENT_SUPERPOSITION_PARAMETER_CHANGE_ID,
   EVENT_SUPERPOSITION_RESERVOIR_CHANGE_ID,
   EVENT_SUPERPOSITION_WARMUP_ID,
+  IOB_ID,
   MANUAL_BOLUS_ID,
   NIGHT_MODE_ID,
   PEN_BOLUS_ID,
@@ -137,6 +138,22 @@ export const getCompleteDailyViewDataDblg2 = (deviceName: DeviceSystem = DeviceS
     swVersion: "1.2.3",
     activationCode: "123456789"
   }
+
+  data.iob = [
+    {
+      "epoch": 1659945600000,
+      "displayOffset": -120,
+      "normalTime": "2022-08-08T15:30:00.000Z",
+      "timezone": "Europe/Paris",
+      "guessedTimezone": false,
+      "id": IOB_ID,
+      "type": DatumType.Iob,
+      "source": Source.Diabeloop,
+      "units": Unit.InsulinUnit,
+      "value": 25,
+      "isoWeekday": WeekDays.Monday,
+    }
+  ]
 
   return completeData
 }

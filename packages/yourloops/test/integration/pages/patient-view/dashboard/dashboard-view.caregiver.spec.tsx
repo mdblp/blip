@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,8 +35,8 @@ import { mockUserApi } from '../../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
 import {
-  oneDayDashboardData,
   mockDataAPI,
+  oneDayDashboardData,
   sixteenDaysOldDashboardData,
   twoWeeksOldDashboardData
 } from '../../../mock/data.api.mock'
@@ -46,7 +46,7 @@ import {
 } from '../../../use-cases/app-main-layout-visualisation'
 import { type PatientDashboardLayoutParams } from '../../../assert/layout.assert'
 import {
-  testDashboardDataVisualisationPrivateTeam,
+  testDashboardDataVisualisationForPatientOrPrivateTeam,
   testDashboardDataVisualisationSixteenDaysOldData,
   testDashboardDataVisualisationTwoWeeksOldData,
   testPatientNavBarForPatientAndCaregiver
@@ -85,7 +85,7 @@ describe('Dashboard view for caregiver', () => {
     })
 
     await testAppMainLayoutForCaregiver(appMainLayoutParams)
-    await testDashboardDataVisualisationPrivateTeam(patientDashboardLayoutParams)
+    await testDashboardDataVisualisationForPatientOrPrivateTeam(patientDashboardLayoutParams)
     await testPatientNavBarForPatientAndCaregiver()
   })
 

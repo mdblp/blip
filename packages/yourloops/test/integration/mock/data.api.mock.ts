@@ -108,6 +108,7 @@ export const EVENT_SUPERPOSITION_ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID = 'event
 export const EVENT_SUPERPOSITION_WARMUP_ID = 'eventSuperpositionWarmupId'
 export const EVENT_SUPERPOSITION_RESERVOIR_CHANGE_ID = 'eventSuperpositionReservoirChangeId'
 export const EVENT_SUPERPOSITION_PARAMETER_CHANGE_ID = 'eventSuperpositionParameterChangeId'
+export const IOB_ID = 'iobId'
 export const NIGHT_MODE_ID = 'nightModeId'
 export const WARMUP_01_ID = 'warmup01Id'
 export const ZEN_MODE_ID = 'zenModeId'
