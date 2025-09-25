@@ -216,8 +216,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     .gutterWeight(1.0)
 
 
-  // const isDblg2User = true
-
   let poolIob = null
   if (isDblg2User) {
     poolIob = new Pool(chart)

@@ -124,5 +124,3 @@ export const Tooltip: FunctionComponent<TooltipProps> = (
     </Box>
   )
 }
-
-// export default Tooltip
