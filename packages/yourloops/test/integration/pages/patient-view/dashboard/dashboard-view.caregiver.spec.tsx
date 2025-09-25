@@ -35,7 +35,7 @@ import { mockUserApi } from '../../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
 import {
-  completeDashboardData,
+  oneDayDashboardData,
   mockDataAPI,
   sixteenDaysOldDashboardData,
   twoWeeksOldDashboardData
@@ -68,7 +68,7 @@ describe('Dashboard view for caregiver', () => {
   })
 
   it('should render correct components', async () => {
-    mockDataAPI(completeDashboardData)
+    mockDataAPI(oneDayDashboardData)
     const appMainLayoutParams: AppMainLayoutParams = {
       footerHasLanguageSelector: false,
       loggedInUserFullName: `${lastName} ${firstName}`

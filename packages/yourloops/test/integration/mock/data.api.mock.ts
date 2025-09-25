@@ -468,7 +468,7 @@ export const generateCompleteDashboardFromDate = (date: string): Data => {
   }
 }
 
-export const completeDashboardData = generateCompleteDashboardFromDate(yesterdayDateAsString)
+export const oneDayDashboardData = generateCompleteDashboardFromDate(yesterdayDateAsString)
 export const twoWeeksOldDashboardData = generateCompleteDashboardFromDate(twoWeeksAgoDateAsString)
 export const sixteenDaysOldDashboardData = generateCompleteDashboardFromDate(sixteenDaysAgoDateAsString)
 
@@ -1250,7 +1250,7 @@ export const completeDailyViewDataMmol: Data = {
 completeDailyViewDataMmol.data.cbg = convertCbgMg2Mmol(getCompleteDailyViewData().data.cbg)
 completeDailyViewDataMmol.data.smbg = convertSmbgMg2Mmol(getCompleteDailyViewData().data.smbg)
 
-export const dataSetsWithZeroValues: Data = {
+export const smallDataSet: Data = {
   dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],
   data: {
     "alarmEvents": [],
@@ -1260,7 +1260,7 @@ export const dataSetsWithZeroValues: Data = {
       {
         "epoch": 1659972600000,
         "displayOffset": -120,
-        "normalTime": "2022-08-08T15:30:00.000Z",
+        "normalTime": "2022-01-08T15:30:00.000Z",
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbgId",
