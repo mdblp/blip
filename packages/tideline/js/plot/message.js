@@ -186,6 +186,10 @@ function plotMessage(pool, opts = {}) {
         .append('g')
         .classed('d3-message-group', true)
         .attr('id', `message_${d.id}`)
+        .attr('data-testid', () => {
+          const { msgDate, msgTime } = getDateAndTime(d.epoch, d.timezone)
+          return `message-${msgDate}-${msgTime}`
+        })
         .datum(d)
       message.addMessageToPool(messageGroup)
     })
