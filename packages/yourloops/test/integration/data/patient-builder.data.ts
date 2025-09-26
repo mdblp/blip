@@ -37,6 +37,8 @@ import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-sta
 import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
+import { DiabeticProfile } from '../../../lib/patient/models/patient-diabete-profile'
+import { defaultBgClasses, DiabeticType, Unit } from 'medical-domain'
 
 const defaultGlycemiaIndicators: GlycemiaIndicators = {
   timeInRange: 0,
@@ -56,6 +58,7 @@ export const buildPatient = (params: {
   hasSentUnreadMessages?: boolean
   glycemiaIndicators?: GlycemiaIndicators
   medicalData?: MedicalData
+  diabeticProfile?: DiabeticProfile
 }): Patient => {
   return {
     profile: {
@@ -76,7 +79,20 @@ export const buildPatient = (params: {
     invitationStatus: UserInviteStatus.Accepted,
     userid: params.userid,
     glycemiaIndicators: params.glycemiaIndicators,
-    medicalData: params.medicalData
+    medicalData: params.medicalData,
+    diabeticProfile: params.diabeticProfile || {
+      type: DiabeticType.DT1DT2,
+      bloodGlucosePreference: {
+        bgUnits : Unit.MilligramPerDeciliter,
+        bgClasses: defaultBgClasses[Unit.MilligramPerDeciliter],
+        bgBounds: {
+          veryHighThreshold: defaultBgClasses[Unit.MilligramPerDeciliter].high,
+          targetUpperBound: defaultBgClasses[Unit.MilligramPerDeciliter].target,
+          targetLowerBound: defaultBgClasses[Unit.MilligramPerDeciliter].low,
+          veryLowThreshold: defaultBgClasses[Unit.MilligramPerDeciliter].veryLow
+        }
+      }
+    }
   }
 }
 

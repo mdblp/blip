@@ -33,7 +33,7 @@ import { act, renderHook } from '@testing-library/react'
 import { usePatientData } from '../../../../components/patient-data/patient-data.hook'
 import { PatientView } from '../../../../enum/patient-view.enum'
 import { TimeService } from 'medical-domain'
-import type { ChartPrefs } from '../../../../components/dashboard-widgets/models/chart-prefs.model'
+import { type ChartPrefs } from '../../../../components/dashboard-cards/models/chart-prefs.model'
 import { createPatient } from '../../common/utils'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 
