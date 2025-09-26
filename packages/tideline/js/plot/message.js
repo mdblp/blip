@@ -184,7 +184,7 @@ function plotMessage(pool, opts = {}) {
       const messageGroup = mainGroup
         .select('#poolMessages_message')
         .append('g')
-        .classed('d3-message-group d3-new', true)
+        .classed('d3-message-group', true)
         .attr('id', `message_${d.id}`)
         .datum(d)
       message.addMessageToPool(messageGroup)
