@@ -25,6 +25,13 @@ import format from '../data/util/format'
 import postItImage from '../../img/message/post_it.svg'
 import newNoteImg from '../../img/message/new.png'
 
+const getDateAndTime = (epoch, timezone) => {
+  const mTime = moment.utc(epoch).tz(timezone)
+  const msgDate = format.datestamp(mTime)
+  const msgTime = format.timestamp(mTime)
+  return { msgDate, msgTime }
+}
+
 function plotMessage(pool, opts = {}) {
   const NEW_NOTE_WIDTH = 36
   const NEW_NOTE_HEIGHT = 29
@@ -59,6 +66,10 @@ function plotMessage(pool, opts = {}) {
         .classed('d3-message-group', true)
         .attr('id', function (d) {
           return 'message_' + d.id
+        })
+        .attr('data-testid', (d) => {
+          const { msgDate, msgTime } = getDateAndTime(d.epoch, d.timezone)
+          return `message-${msgDate}-${msgTime}`
         })
 
       message.addMessageToPool(messageGroups)
@@ -110,9 +121,7 @@ function plotMessage(pool, opts = {}) {
     })
 
     const foGroup = tooltip.foGroup
-    const mTime = moment.utc(datum.epoch).tz(datum.timezone)
-    const msgDate = format.datestamp(mTime)
-    const msgTime = format.timestamp(mTime)
+    const { msgDate, msgTime } = getDateAndTime(datum.epoch, datum.timezone)
 
     const htmlDateTime = `<span data-testid="message-from-to" class="message-from-to">${t('{{date}} - {{time}}', { date: msgDate, time: msgTime })}</span>`
     const htmlName = `<span data-testid="message-author" class="message-author">${format.nameForDisplay(datum.user)}:</span>`
@@ -175,8 +184,12 @@ function plotMessage(pool, opts = {}) {
       const messageGroup = mainGroup
         .select('#poolMessages_message')
         .append('g')
-        .classed('d3-message-group d3-new', true)
+        .classed('d3-message-group', true)
         .attr('id', `message_${d.id}`)
+        .attr('data-testid', () => {
+          const { msgDate, msgTime } = getDateAndTime(d.epoch, d.timezone)
+          return `message-${msgDate}-${msgTime}`
+        })
         .datum(d)
       message.addMessageToPool(messageGroup)
     })
