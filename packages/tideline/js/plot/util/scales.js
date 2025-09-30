@@ -32,6 +32,14 @@ import { convertBG, DEFAULT_BG_BOUNDS, MGDL_UNITS } from 'medical-domain'
 import format from '../../data/util/format'
 import { getMaxIobValue } from '../../data/util/iob'
 
+const COMMON_TICK_SIZE_OUTER = 0
+
+const BASAL_TICKS_COUNT = 2
+const BOLUS_TICKS_COUNT = 2
+const IOB_TICKS_COUNT = 2
+
+const IOB_DISPLAY_PADDING_RATIO = 0.1
+
 /**
  * @param {MedicalDataService} tidelineData
  * @param {"mg/dL" | "mmol/L"} bgUnits
@@ -124,7 +132,7 @@ export function createYAxisBG(tidelineData, pool) {
 
   const axis = d3
     .axisLeft(scale)
-    .tickSizeOuter(0)
+    .tickSizeOuter(COMMON_TICK_SIZE_OUTER)
     .tickValues(ticks)
     .tickFormat(d3.format(bgTickFormat))
   return { axis, scale }
@@ -173,8 +181,8 @@ export function createYAxisBolus(tidelineData, pool) {
 
   const axis = d3
     .axisLeft(scale)
-    .tickSizeOuter(0)
-    .ticks(2)
+    .tickSizeOuter(COMMON_TICK_SIZE_OUTER)
+    .ticks(BOLUS_TICKS_COUNT)
     .tickValues(bolusTickValues)
 
   return { axis, scale }
@@ -204,8 +212,8 @@ export function createYAxisBasal(tidelineData, pool) {
 
   const axis = d3
     .axisLeft(scale)
-    .tickSizeOuter(0)
-    .ticks(2)
+    .tickSizeOuter(COMMON_TICK_SIZE_OUTER)
+    .ticks(BASAL_TICKS_COUNT)
     .tickValues(basalTickValues)
 
   return { axis, scale }
@@ -213,7 +221,8 @@ export function createYAxisBasal(tidelineData, pool) {
 
 // IOB
 function createScaleIob(maxIobValue, pool) {
-  const iobDomain = [0, maxIobValue * 1.1]
+  // We display 10% more than the max IOB value to avoid cutting the top of the curve
+  const iobDomain = [0, maxIobValue * (1 + IOB_DISPLAY_PADDING_RATIO)]
   const iobRange = [pool.height(), 0]
 
   return d3.scaleLinear(iobDomain, iobRange)
@@ -228,8 +237,8 @@ export function createYAxisIob(tidelineData, pool) {
 
   const axis = d3
     .axisLeft(scale)
-    .tickSizeOuter(0)
-    .ticks(2)
+    .tickSizeOuter(COMMON_TICK_SIZE_OUTER)
+    .ticks(IOB_TICKS_COUNT)
     .tickValues(iobTickValues)
 
   return { axis, scale }
