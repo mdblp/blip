@@ -43,13 +43,14 @@ export const SimpleValue: FunctionComponent<SimpleValueProps> = (props) => {
     valueClassName
   } = props
 
-  const classNames = className ? `${styles.data} ${className}` : styles.summaryData
+  const globalClassNames = className ? `${styles.data} ${className}` : styles.summaryData
+  const valueClassNames = valueClassName ? `${styles.value} ${valueClassName}` : styles.value
 
   return (
     <div className={styles.simpleValue}>
       {value &&
-        <div className={classNames}>
-          <span className={`${styles.value} ${valueClassName ?? ''}`}>
+        <div className={globalClassNames}>
+          <span className={valueClassNames}>
             {value}
           </span>
           <span className={styles.suffix}>

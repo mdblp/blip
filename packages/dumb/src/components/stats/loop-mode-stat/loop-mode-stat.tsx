@@ -67,7 +67,7 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
   const manualDurationSafe = ensureNumeric(manualBasalDuration)
   const manualDuration = formatDuration(manualDurationSafe, true)
 
-  const dotAlignment = automatedPercentage - DOT_OFFSET_PERCENT
+  const dotAlignment = Math.max(0, automatedPercentage - DOT_OFFSET_PERCENT)
 
   return (
     <div data-testid="loop-mode-stat">
