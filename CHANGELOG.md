@@ -24,6 +24,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Engineering
 - YLP-3672 D3 version update
+- Added data-testids to fix E2E flaky tests
 
 ## 3.7.0 - 2025-07-10
 ### Added
