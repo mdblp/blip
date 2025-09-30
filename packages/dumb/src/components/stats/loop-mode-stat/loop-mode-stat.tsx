@@ -84,7 +84,7 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
       <Grid container spacing={0} sx={{ marginTop: 1 }}>
         <Grid item xs={2}>
           <LoopModePercentageDetail
-            percentageValue={automatedPercentage.toString()}
+            percentageValue={automatedPercentage}
             duration={automatedDuration}
             valueClassName={styles.autoValueColor}
           />
@@ -100,7 +100,7 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
         </Grid>
         <Grid item xs={2}>
           <LoopModePercentageDetail
-            percentageValue={manualPercentage.toString()}
+            percentageValue={manualPercentage}
             duration={manualDuration}
           />
         </Grid>

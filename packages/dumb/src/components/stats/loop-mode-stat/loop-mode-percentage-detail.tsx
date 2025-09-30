@@ -27,23 +27,31 @@
 
 import React, { type FunctionComponent } from 'react'
 import styles from './loop-mode-stat.css'
+import { useTranslation } from 'react-i18next'
 import { SimpleValue } from '../common/simple-value'
 import { Unit } from 'medical-domain'
 import Box from '@mui/material/Box'
 
 interface LoopModePercentageDetailProps {
-  percentageValue: string
+  percentageValue: number
   duration: string
   valueClassName?: string
 }
 
 export const LoopModePercentageDetail: FunctionComponent<LoopModePercentageDetailProps> = (props) => {
   const { percentageValue, duration, valueClassName } = props
+  const { t } = useTranslation('main')
+  const isPercentageValid = !Number.isNaN(percentageValue)
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
-      <SimpleValue value={percentageValue} suffix={Unit.Percent} valueClassName={valueClassName} />
-      <Box className={styles.duration}>{duration}</Box>
+      {isPercentageValid ?
+        <>
+          <SimpleValue value={percentageValue.toString()} suffix={Unit.Percent} valueClassName={valueClassName} />
+          <Box className={styles.duration}>{duration}</Box>
+        </>
+        : <SimpleValue value={t('N/A')} suffix={''} valueClassName={valueClassName} />
+      }
     </Box>
   )
 }
