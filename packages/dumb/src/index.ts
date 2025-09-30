@@ -30,7 +30,7 @@ import { BasalTooltip } from './components/tooltips/basal-tooltip/basal-tooltip'
 import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
 import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
 import { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
-import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
+import { AverageGlucoseMemoized as AverageGlucose } from './components/stats/average-glucose/average-glucose-stat'
 import { TimeInRangeChartMemoized as TimeInRangeChart } from './components/stats/time-in-range/time-in-range-chart/time-in-range-chart'
 import { TimeInTightRangeChart } from './components/stats/time-in-range/time-in-tight-range-chart/time-in-tight-range-chart'
 import {
@@ -96,7 +96,7 @@ export {
   BloodGlucoseTooltip,
   BolusTooltip,
   CbgDateTraceLabel,
-  CBGMeanStat,
+  AverageGlucose,
   CBGStandardDeviation,
   CBGStatType,
   ConfidentialTooltip,

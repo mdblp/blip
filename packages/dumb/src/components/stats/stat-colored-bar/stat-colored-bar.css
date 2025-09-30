@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2022, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,32 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import styles from './loop-mode-stat.css'
-import { useTranslation } from 'react-i18next'
-
-interface LoopModeLabelProps {
-  className: string
-  transform: string
-  translationKey: string
+.lines {
+  display: flex;
+  position: relative;
 }
 
-export const LoopModeLabel: FunctionComponent<LoopModeLabelProps> = (props) => {
-  const { className, transform, translationKey } = props
-  const { t } = useTranslation('main')
+.line {
+  height: 4px;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  opacity: 0.5;
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
+}
 
-  return (
-    <g className={className} transform={transform}>
-      <rect className={styles.legendBackground} width="40" height="20" rx="8" />
-      <text
-        x="20"
-        y="10"
-        textAnchor="middle"
-        dominantBaseline="central"
-        className={styles.legendLabelText}
-      >
-        {t(translationKey)}
-      </text>
-    </g>
-  )
+.dot {
+  height: 13px;
+  width: 13px;
+  border-radius: 20px;
+  position: absolute;
+  margin-top: 3px;
+}
+
+.horizontal-line {
+  height: 16px;
+  width: 2px;
+  position: absolute;
+  margin-top: 2px;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,14 +27,14 @@
 
 import React, { type FunctionComponent } from 'react'
 import styles from '../common/cbg-common.css'
-import stylesCbgMeanStat from './cbg-mean-stat.css'
 import commonStyles from '../../../styles/stat-common.css'
 import Box from '@mui/material/Box'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { computeBgClassesBarStyle, computeCBGStyle } from '../common/cbg-utils'
 import { type BgClasses } from 'medical-domain'
+import { StatColoredBar } from '../stat-colored-bar/stat-colored-bar'
 
-export interface CBGMeanStatProps {
+export interface AverageGlucoseProps {
   bgClasses: BgClasses
   title: string
   tooltipValue: string
@@ -42,13 +42,13 @@ export interface CBGMeanStatProps {
   value: number
 }
 
-const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
+const AverageGlucose: FunctionComponent<AverageGlucoseProps> = (props) => {
   const { bgClasses, title, tooltipValue, units, value } = props
   const valueBasedStyles = computeCBGStyle(value, bgClasses, true)
   const bgClassesBarStyle = computeBgClassesBarStyle(bgClasses)
 
   return (
-    <Box data-testid="cbg-mean-stat">
+    <Box data-testid="average-glucose-stat">
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <div className={commonStyles.title}>
           {title}
@@ -67,23 +67,15 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
             </Box>
           </>
           : <>
-            <div className={styles.lines}>
-              <div
-                className={`${styles.line} ${styles['line-low']}`}
-                style={{ width: bgClassesBarStyle.lowWidth }}
-              />
-              <div
-                className={`${styles.line} ${styles['line-target']}`}
-                style={{ width: bgClassesBarStyle.targetWidth }}
-              />
-              <div
-                className={`${styles.line} ${styles['line-high']}`}
-              />
-              <div
-                className={`${stylesCbgMeanStat.dot} ${valueBasedStyles.backgroundColor}`}
-                style={{ left: valueBasedStyles.left }}
-              />
-            </div>
+            <StatColoredBar
+              lineColorItems={[
+                { index: 'bg-low', color: 'var(--bg-low)', widthPercent: bgClassesBarStyle.lowWidth },
+                { index: 'bg-target', color: 'var(--bg-target)', widthPercent: bgClassesBarStyle.targetWidth },
+                { index: 'bg-high', color: 'var(--bg-high)', widthPercent: bgClassesBarStyle.highWidth }
+              ]}
+              dotItem={{ color: valueBasedStyles.backgroundColor, alignmentPercent: valueBasedStyles.left }}
+              lineWidth={'calc(100% - 60px)'}
+            />
             <Box className={valueBasedStyles.color} fontSize="20px" fontWeight="bold" marginLeft="auto">
               {value}
             </Box>
@@ -94,4 +86,4 @@ const CBGMeanStat: FunctionComponent<CBGMeanStatProps> = (props) => {
   )
 }
 
-export const CBGMeanStatMemoized = React.memo(CBGMeanStat)
+export const AverageGlucoseMemoized = React.memo(AverageGlucose)
