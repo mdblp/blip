@@ -60,6 +60,19 @@ export const testRangePatientProfileDisplay = async (diabeticTypeTextKey: string
   const severeHypoInput = rangeSection.getByRole('spinbutton', { name: getTranslation('range-severe-hypoglycemia') })
   expect(severeHypoInput).toBeVisible()
   expect(severeHypoInput).toHaveValue(expectedSevereHypo)
+
+  switch (diabeticTypeTextKey) {
+    case "range-profile-type-1-and-2":
+      expect(severeHyperInput).toBeDisabled()
+      expect(hyperInput).toBeDisabled()
+      expect(hypoInput).toBeDisabled()
+      expect(severeHypoInput).toBeDisabled()
+      break
+    case "range-profile-pregnancy-type-1":
+      expect(hyperInput).toBeDisabled()
+      expect(hypoInput).toBeDisabled()
+      break
+  }
 }
 
 export const testRangeUnitDisplay = async (expectedUnit: string): Promise<void> => {
@@ -126,7 +139,7 @@ export const testRangeFormValidation = async () : Promise<void>  => {
 
   await fillRangeForm(999, 998, 997, 996)
   expect(saveButton).toBeDisabled()
-  // expect only two errors as the min max values are done on the severe hyper and severe hypo fields
+  // expect only two errors as the min max values are done on the severe hyper and severe hypo fieldsm
   expect(screen.getByText(getTranslation('error-severe-hyperglycemia'))).toBeVisible()
   expect(screen.getByText(getTranslation('error-severe-hypoglycemia'))).toBeVisible()
 
