@@ -62,8 +62,8 @@ interface ValidationErrors {
 }
 
 const DEFAULT_ERROR_STATE: ValidationErrors = {
-  hyperglycemia: false,
   severeHyperglycemia: false,
+  hyperglycemia: false,
   hypoglycemia: false,
   severeHypoglycemia: false
 }
@@ -184,37 +184,31 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
   const handleRangeChange = (field: FieldType, value: string): void => {
     const numericValue = +value
-    setErrors(DEFAULT_ERROR_STATE)
     setSelectedDiabeticProfile(prev => {
       const updated = structuredClone(prev)
-
       // Update the appropriate field in the diabetic profile structure
       switch (field) {
         case FieldType.SevereHyperglycemia:
-          if (numericValue <= updated.bloodGlucosePreference.bgBounds.targetUpperBound || !IsInRange(numericValue, displayedUnit)) {
-            setErrors({ ...errors, severeHyperglycemia: true })
-          }
+          const severeHyperglycemiaErr = numericValue <= updated.bloodGlucosePreference.bgBounds.targetUpperBound || !IsInRange(numericValue, displayedUnit);
+          setErrors({ ...errors, severeHyperglycemia: severeHyperglycemiaErr })
           updated.bloodGlucosePreference.bgBounds.veryHighThreshold = numericValue
           updated.bloodGlucosePreference.bgClasses.high = numericValue
           break
         case FieldType.Hyperglycemia:
-          if (numericValue <= updated.bloodGlucosePreference.bgBounds.targetLowerBound || numericValue >= updated.bloodGlucosePreference.bgBounds.veryHighThreshold){
-            setErrors({ ...errors, hyperglycemia: true })
-          }
+          const hyperglycemiaErr = numericValue <= updated.bloodGlucosePreference.bgBounds.targetLowerBound || numericValue >= updated.bloodGlucosePreference.bgBounds.veryHighThreshold;
+          setErrors({ ...errors, hyperglycemia: hyperglycemiaErr })
           updated.bloodGlucosePreference.bgBounds.targetUpperBound = numericValue
           updated.bloodGlucosePreference.bgClasses.target = numericValue
           break
         case FieldType.Hypoglycemia:
-          if (numericValue >= updated.bloodGlucosePreference.bgBounds.targetUpperBound || numericValue <= updated.bloodGlucosePreference.bgBounds.veryLowThreshold){
-            setErrors({ ...errors, hypoglycemia: true })
-          }
+          const hypoglycemiaErr = numericValue >= updated.bloodGlucosePreference.bgBounds.targetUpperBound || numericValue <= updated.bloodGlucosePreference.bgBounds.veryLowThreshold;
+          setErrors({ ...errors, hypoglycemia: hypoglycemiaErr })
           updated.bloodGlucosePreference.bgBounds.targetLowerBound = numericValue
           updated.bloodGlucosePreference.bgClasses.low = numericValue
           break
         case FieldType.SevereHypoglycemia:
-          if (numericValue >= updated.bloodGlucosePreference.bgBounds.targetLowerBound || !IsInRange(numericValue, displayedUnit)) {
-            setErrors({ ...errors, severeHypoglycemia: true })
-          }
+          const severeHypoglycemiaErr = numericValue >= updated.bloodGlucosePreference.bgBounds.targetLowerBound || !IsInRange(numericValue, displayedUnit);
+          setErrors({ ...errors, severeHypoglycemia: severeHypoglycemiaErr })
           updated.bloodGlucosePreference.bgBounds.veryLowThreshold = numericValue
           updated.bloodGlucosePreference.bgClasses.veryLow = numericValue
           break
@@ -224,7 +218,6 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
   }
 
   const save = async (): Promise<void> => {
-
     setSaveInProgress(true)
     try {
       await updatePatientDiabeticProfile(patient.userid, selectedDiabeticProfile)

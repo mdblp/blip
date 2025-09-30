@@ -40,7 +40,11 @@ import {
   testMonitoringAlertsParametersConfigurationForPatientMgdl,
   testMonitoringAlertsParametersConfigurationForPatientMmol
 } from '../../../use-cases/monitoring-alerts-parameters-management'
-import { testAlertsViewContent, testRangeViewContent } from '../../../use-cases/range-and-alerts-management'
+import {
+  testAlertsViewContent, testRangeFormValidation, testRangePatientProfileDisplay,
+  testRangeUnitDisplay,
+  testRangeViewContent, testSaveButtonForRanges
+} from '../../../use-cases/range-and-alerts-management'
 import { testPatientPersonalInformation } from '../../../use-cases/patient-personal-information-management'
 import { Settings } from '../../../../../lib/auth/models/settings.model'
 import { Unit } from 'medical-domain'
@@ -210,6 +214,15 @@ describe('Patient profile view for HCP', () => {
       mockUserApi().mockUserDataFetch({ firstName, lastName })
       mockPatientApiForHcp()
       mockDataAPI()
+      // defined in Node 17+, not in Jest env (Node 16)
+      // simple polyfill that works for JSON-serializable objects
+      // does not support functions, Dates, Maps, Sets, etc.
+      // see https://developer.mozilla.org/en-US/docs/Web/API/structuredClone
+      // Deep clone is a mess in JSDOM, this is a simple workaround for our use cases
+      // https://github.com/jsdom/jsdom/issues/3363
+      global.structuredClone = jest.fn(val => {
+        return JSON.parse(JSON.stringify(val));
+      });
     })
 
     it('should be displayed', async () => {
@@ -233,12 +246,8 @@ describe('Patient profile view for HCP', () => {
       await userEvent.click(menuButton)
 
       // Test target range values in mg/dL
-      const severeHyperTextField  = await screen.findByTestId('severe-hyperglycemia-field')
-      const hyperTextField = await screen.findByTestId('hyperglycemia-field')
+      await testRangeUnitDisplay('mg/dL')
 
-      expect(severeHyperTextField).toBeVisible()
-      expect(hyperTextField).toBeVisible()
-      expect(screen.getByText('mg/dL')).toBeVisible()
     })
 
     it('should display glycemia target range in mmol/L', async () => {
@@ -252,14 +261,7 @@ describe('Patient profile view for HCP', () => {
       const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
       await userEvent.click(menuButton)
 
-      // Test target range values in mmol/L
-      // Test target range values in mg/dL
-      const severeHyperTextField  = await screen.findByTestId('severe-hyperglycemia-field')
-      const hyperTextField = await screen.findByTestId('hyperglycemia-field')
-
-      expect(severeHyperTextField).toBeInTheDocument()
-      expect(hyperTextField).toBeInTheDocument()
-      expect(screen.getByText('mmol/L')).toBeInTheDocument()
+      await testRangeUnitDisplay('mmol/L')
     })
 
     it('should display glycemia limits configuration for dt1 patient profile', async () => {
@@ -269,20 +271,8 @@ describe('Patient profile view for HCP', () => {
 
       const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
       await userEvent.click(menuButton)
-      const rangeSection = within(screen.getByTestId('ranges-container'))
-      // Test very low and very high thresholds
-      const veryLowThreshold = await screen.findByTestId('very-low-threshold')
-      const veryHighThreshold = await screen.findByTestId('very-high-threshold')
 
-      expect(veryLowThreshold).toBeInTheDocument()
-      expect(veryHighThreshold).toBeInTheDocument()
-
-      const dt1Chip = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('type-1-and-2'))
-      await userEvent.click(dt1Chip)
-
-      const severeHyperInput = rangeSection.getByRole('textbox', { name: getTranslation('range-severe-hyperglycemia') })
-      expect(severeHyperInput).toBeInTheDocument()
-      expect(severeHyperInput).toHaveValue('250')
+      await  testRangePatientProfileDisplay('range-profile-type-1-and-2', 250, 180, 70, 54)
 
     })
 
@@ -294,12 +284,8 @@ describe('Patient profile view for HCP', () => {
       const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
       await userEvent.click(menuButton)
 
-      // Test very low and very high thresholds
-      const veryLowThreshold = await screen.findByTestId('very-low-threshold')
-      const veryHighThreshold = await screen.findByTestId('very-high-threshold')
+      await  testRangePatientProfileDisplay('range-profile-pregnancy-type-1', 250, 140, 63, 54)
 
-      expect(veryLowThreshold).toBeInTheDocument()
-      expect(veryHighThreshold).toBeInTheDocument()
     })
 
     it('should display glycemia limits configuration for custom patient profile', async () => {
@@ -310,12 +296,7 @@ describe('Patient profile view for HCP', () => {
       const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
       await userEvent.click(menuButton)
 
-      // Test very low and very high thresholds
-      const veryLowThreshold = await screen.findByTestId('very-low-threshold')
-      const veryHighThreshold = await screen.findByTestId('very-high-threshold')
-
-      expect(veryLowThreshold).toBeInTheDocument()
-      expect(veryHighThreshold).toBeInTheDocument()
+      await  testRangePatientProfileDisplay('range-profile-custom', 250, 180, 70, 54)
     })
 
     it('should handle range configuration updates', async () => {
@@ -325,18 +306,12 @@ describe('Patient profile view for HCP', () => {
 
       const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
       await userEvent.click(menuButton)
+      // test with the custom profile to be able to edit all values
+      await testSaveButtonForRanges()
 
-      // Test range update functionality
-      const editButton = screen.getByTestId('edit-range-button')
-      expect(editButton).toBeInTheDocument()
-
-      await userEvent.click(editButton)
-
-      const saveButton = await screen.findByTestId('save-range-button')
-      expect(saveButton).toBeVisible()
     })
 
-    it('should validate range bounds correctly', async () => {
+    it('should validate range limits correctly', async () => {
       await act(async () => {
         renderPage(patientProfileRoute)
       })
@@ -344,14 +319,7 @@ describe('Patient profile view for HCP', () => {
       const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
       await userEvent.click(menuButton)
 
-      // Test that lower bound is less than upper bound
-      const targetLowerBound = await screen.findByTestId('target-lower-bound')
-      const targetUpperBound = await screen.findByTestId('target-upper-bound')
-
-      const lowerValue = parseInt(targetLowerBound.textContent || '0')
-      const upperValue = parseInt(targetUpperBound.textContent || '0')
-
-      expect(lowerValue).toBeLessThan(upperValue)
+      await testRangeFormValidation()
     })
 
   })

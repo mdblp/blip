@@ -35,7 +35,7 @@ export const checkAlertsViewContent = async (): Promise<void> => {
 }
 
 export const checkRangeViewContent = async (): Promise<void> => {
-  const rangeContent = await screen.findByTestId('ranges-container')
+  const rangeContent = await screen.findByTestId('range-container')
   expect(rangeContent).toHaveTextContent(getTranslation('range'))
   expect(rangeContent).toHaveTextContent(getTranslation('range-description'))
 
@@ -44,9 +44,9 @@ export const checkRangeViewContent = async (): Promise<void> => {
   expect(typeSelectionContainer).toBeInTheDocument()
 
   // Verify patient type chips are present
-  const type1Type2Chip = within(typeSelectionContainer).getByText(getTranslation('type-1-and-2'))
-  const pregnancyType1Chip = within(typeSelectionContainer).getByText(getTranslation('pregnancy-type-1'))
-  const customChip = within(typeSelectionContainer).getByText(getTranslation('custom'))
+  const type1Type2Chip = within(typeSelectionContainer).getByText(getTranslation('range-profile-type-1-and-2'))
+  const pregnancyType1Chip = within(typeSelectionContainer).getByText(getTranslation('range-profile-pregnancy-type-1'))
+  const customChip = within(typeSelectionContainer).getByText(getTranslation('range-profile-custom'))
 
   expect(type1Type2Chip).toBeVisible()
   expect(pregnancyType1Chip).toBeVisible()
