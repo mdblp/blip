@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,15 +31,19 @@ import { type BgClasses } from 'medical-domain'
 interface CBGStyle {
   backgroundColor: string
   color: string
-  left: string
+  left: number
 }
 
 interface BgClassesBarStyle {
-  lowWidth: string
-  targetWidth: string
+  lowWidth: number
+  targetWidth: number
+  highWidth: number
 }
 
 const CBG_BAR_WIDTH_IN_PERCENTAGE = 100
+const LOW_CBG_COLOR = 'var(--bg-low)'
+const TARGET_CBG_COLOR = 'var(--bg-target)'
+const HIGH_CBG_COLOR = 'var(--bg-high)'
 
 export const computeCBGStyle = (value: number, bgClasses: BgClasses, usePrimaryColors = false): CBGStyle => {
   const veryLowValue = bgClasses.veryLow
@@ -51,20 +55,20 @@ export const computeCBGStyle = (value: number, bgClasses: BgClasses, usePrimaryC
   const lowColor = usePrimaryColors ? styles['low-color-primary'] : styles['low-color']
 
   if (value < veryLowValue) {
-    return { color: lowColor, backgroundColor: styles['low-background'], left: '0' }
+    return { color: lowColor, backgroundColor: LOW_CBG_COLOR, left: 0 }
   }
   if (value > highValue) {
-    return { color: highColor, backgroundColor: styles['high-background'], left: '100%' }
+    return { color: highColor, backgroundColor: HIGH_CBG_COLOR, left: 100 }
   }
   const cbgBarRange = highValue - veryLowValue // Number of value included in the cbg bar range (default is from 54 to 250)
-  const left = `${Math.round(((value - veryLowValue) * CBG_BAR_WIDTH_IN_PERCENTAGE) / cbgBarRange)}%`
+  const left = Math.round(((value - veryLowValue) * CBG_BAR_WIDTH_IN_PERCENTAGE) / cbgBarRange)
   if (value > targetValue) {
-    return { color: highColor, backgroundColor: styles['high-background'], left }
+    return { color: highColor, backgroundColor: HIGH_CBG_COLOR, left }
   }
   if (value < lowValue) {
-    return { color: lowColor, backgroundColor: styles['low-background'], left }
+    return { color: lowColor, backgroundColor: LOW_CBG_COLOR, left }
   }
-  return { color: styles['target-color'], backgroundColor: styles['target-background'], left }
+  return { color: styles['target-color'], backgroundColor: TARGET_CBG_COLOR, left }
 }
 
 export const computeBgClassesBarStyle = (bgClasses: BgClasses): BgClassesBarStyle => {
@@ -75,8 +79,10 @@ export const computeBgClassesBarStyle = (bgClasses: BgClasses): BgClassesBarStyl
   const cbgBarRange = highValue - veryLowValue
   const lowWidth = Math.round(((lowValue - veryLowValue) * CBG_BAR_WIDTH_IN_PERCENTAGE) / cbgBarRange)
   const targetWidth = Math.round(((targetValue - veryLowValue) * CBG_BAR_WIDTH_IN_PERCENTAGE) / cbgBarRange) - lowWidth
+
   return {
-    lowWidth: `${lowWidth}%`,
-    targetWidth: `${targetWidth}%`
+    lowWidth,
+    targetWidth,
+    highWidth: 100 - (lowWidth + targetWidth)
   }
 }

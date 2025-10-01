@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,36 +38,6 @@
   margin-bottom: 8px;
   margin-top: 8px;
   width: calc(100% - 60px);
-}
-
-.line {
-  height: 4px;
-  margin-bottom: 8px;
-  margin-top: 8px;
-  opacity: 0.5;
-}
-
-.lines {
-  display: flex;
-  position: relative;
-  width: calc(100% - 60px);
-}
-
-.line-low {
-  background-color: var(--bg-low);
-  border-bottom-left-radius: 20px;
-  border-top-left-radius: 20px;
-}
-
-.line-target {
-  background-color: var(--bg-target);
-}
-
-.line-high {
-  background-color: var(--bg-high);
-  border-bottom-right-radius: 20px;
-  border-top-right-radius: 20px;
-  flex-grow: 1;
 }
 
 .tooltip-icon {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BgPrefs, CBGMeanStat } from 'dumb'
+import { type BgPrefs, AverageGlucose } from 'dumb'
 import React, { type FunctionComponent } from 'react'
 import { type BgType, DatumType } from 'medical-domain'
 import { t } from 'i18next'
@@ -42,7 +42,7 @@ export const AverageGlucoseStat: FunctionComponent<AverageGlucoseStatProps> = (p
   const bgSourceLabel = bgType === DatumType.Cbg ? t('CGM') : t('BGM')
 
   return (
-      <CBGMeanStat
+      <AverageGlucose
         bgClasses={bgPrefs.bgClasses}
         title={t('average-glucose', { bgSourceLabel })}
         tooltipValue={t('average-glucose-tooltip', { bgSourceLabel })}

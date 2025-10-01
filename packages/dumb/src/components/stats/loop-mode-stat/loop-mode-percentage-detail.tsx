@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2023, Diabeloop
+ * Copyright (c) 2020-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,35 +28,30 @@
 import React, { type FunctionComponent } from 'react'
 import styles from './loop-mode-stat.css'
 import { useTranslation } from 'react-i18next'
-import { formatDuration } from '../../../utils/datetime/datetime.util'
+import { SimpleValue } from '../common/simple-value'
+import { Unit } from 'medical-domain'
+import Box from '@mui/material/Box'
 
 interface LoopModePercentageDetailProps {
-  className: string
-  percentage: number
-  transform: string
-  value: number
+  percentageValue: number
+  duration: string
+  valueClassName?: string
 }
 
 export const LoopModePercentageDetail: FunctionComponent<LoopModePercentageDetailProps> = (props) => {
-  const { className, percentage, transform, value } = props
+  const { percentageValue, duration, valueClassName } = props
   const { t } = useTranslation('main')
-  const isPercentageValid = !Number.isNaN(percentage)
+  const isPercentageValid = !Number.isNaN(percentageValue)
 
   return (
-    <g className={className} transform={transform}>
-      <text className={styles.labelValueUnits} textAnchor="middle">
-        <tspan className={styles.legendLabelValue}>{isPercentageValid ? percentage : t('N/A') }</tspan>
-        {isPercentageValid && <tspan className={styles.legendLabelUnits} dy="-4">%</tspan>}
-      </text>
-      {isPercentageValid &&
-        <text
-          className={styles.labelRawValue}
-          textAnchor="middle"
-          dy="12"
-        >
-          {formatDuration(value, true)}
-        </text>
+    <Box display="flex" flexDirection="column" alignItems="center">
+      {isPercentageValid ?
+        <>
+          <SimpleValue value={percentageValue.toString()} suffix={Unit.Percent} valueClassName={valueClassName} />
+          <Box className={styles.duration}>{duration}</Box>
+        </>
+        : <SimpleValue value={t('N/A')} suffix={''} valueClassName={valueClassName} />
       }
-    </g>
+    </Box>
   )
 }
