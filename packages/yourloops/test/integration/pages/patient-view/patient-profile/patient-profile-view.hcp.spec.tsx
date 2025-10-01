@@ -225,18 +225,6 @@ describe('Patient profile view for HCP', () => {
       });
     })
 
-    it('should be displayed', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
-
-      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
-      await userEvent.click(menuButton)
-
-      // Test that the range section is rendered
-      await testRangeViewContent()
-    })
-
     it('should display glycemia target range in mg/dL', async () => {
       await act(async () => {
         renderPage(patientProfileRoute)
@@ -244,7 +232,8 @@ describe('Patient profile view for HCP', () => {
 
       const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
       await userEvent.click(menuButton)
-
+      // Test that the range section is rendered
+      await testRangeViewContent()
       // Test target range values in mg/dL
       await testRangeUnitDisplay('mg/dL')
 
@@ -264,7 +253,7 @@ describe('Patient profile view for HCP', () => {
       await testRangeUnitDisplay('mmol/L')
     })
 
-    it('should display glycemia limits configuration for dt1 patient profile', async () => {
+    it('should display glycemia limits based on selected patient profile', async () => {
       await act(async () => {
         renderPage(patientProfileRoute)
       })
@@ -273,30 +262,9 @@ describe('Patient profile view for HCP', () => {
       await userEvent.click(menuButton)
 
       await  testRangePatientProfileDisplay('range-profile-type-1-and-2', 250, 180, 70, 54)
-
-    })
-
-    it('should display glycemia limits configuration for dt1 pregnancy patient profile', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
-
-      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
-      await userEvent.click(menuButton)
-
       await  testRangePatientProfileDisplay('range-profile-pregnancy-type-1', 250, 140, 63, 54)
-
-    })
-
-    it('should display glycemia limits configuration for custom patient profile', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
-
-      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
-      await userEvent.click(menuButton)
-
       await  testRangePatientProfileDisplay('range-profile-custom', 250, 180, 70, 54)
+
     })
 
     it('should handle range configuration updates', async () => {
