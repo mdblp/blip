@@ -28,8 +28,17 @@ import _ from 'lodash'
 import * as d3 from 'd3'
 
 import commonbolus from './commonbolus'
-import { convertBG, MGDL_UNITS, DEFAULT_BG_BOUNDS } from 'medical-domain'
+import { convertBG, DEFAULT_BG_BOUNDS, MGDL_UNITS } from 'medical-domain'
 import format from '../../data/util/format'
+import { getMaxIobValue } from '../../data/util/iob'
+
+const COMMON_TICK_SIZE_OUTER = 0
+
+const BASAL_TICKS_COUNT = 2
+const BOLUS_TICKS_COUNT = 2
+const IOB_TICKS_COUNT = 2
+
+const IOB_DISPLAY_PADDING_RATIO = 0.1
 
 /**
  * @param {MedicalDataService} tidelineData
@@ -123,7 +132,7 @@ export function createYAxisBG(tidelineData, pool) {
 
   const axis = d3
     .axisLeft(scale)
-    .tickSizeOuter(0)
+    .tickSizeOuter(COMMON_TICK_SIZE_OUTER)
     .tickValues(ticks)
     .tickFormat(d3.format(bgTickFormat))
   return { axis, scale }
@@ -172,8 +181,8 @@ export function createYAxisBolus(tidelineData, pool) {
 
   const axis = d3
     .axisLeft(scale)
-    .tickSizeOuter(0)
-    .ticks(2)
+    .tickSizeOuter(COMMON_TICK_SIZE_OUTER)
+    .ticks(BOLUS_TICKS_COUNT)
     .tickValues(bolusTickValues)
 
   return { axis, scale }
@@ -199,13 +208,38 @@ function createScaleBasal(data, pool) {
  */
 export function createYAxisBasal(tidelineData, pool) {
   const scale = createScaleBasal(tidelineData.medicalData.basal, pool)
-  const basalTickValues = [0, 1, 3]
+  const basalTickValues = [0, 1]
 
   const axis = d3
     .axisLeft(scale)
-    .tickSizeOuter(0)
-    .ticks(2)
+    .tickSizeOuter(COMMON_TICK_SIZE_OUTER)
+    .ticks(BASAL_TICKS_COUNT)
     .tickValues(basalTickValues)
+
+  return { axis, scale }
+}
+
+// IOB
+function createScaleIob(maxIobValue, pool) {
+  // We display 10% more than the max IOB value to avoid cutting the top of the curve
+  const iobDomain = [0, maxIobValue * (1 + IOB_DISPLAY_PADDING_RATIO)]
+  const iobRange = [pool.height(), 0]
+
+  return d3.scaleLinear(iobDomain, iobRange)
+}
+
+export function createYAxisIob(tidelineData, pool) {
+  const maxIobValue = getMaxIobValue(tidelineData.medicalData)
+  const scale = createScaleIob(maxIobValue, pool)
+
+  const formattedMaxIobValue = Math.ceil(maxIobValue * 10) / 10
+  const iobTickValues = [0, formattedMaxIobValue]
+
+  const axis = d3
+    .axisLeft(scale)
+    .tickSizeOuter(COMMON_TICK_SIZE_OUTER)
+    .ticks(IOB_TICKS_COUNT)
+    .tickValues(iobTickValues)
 
   return { axis, scale }
 }

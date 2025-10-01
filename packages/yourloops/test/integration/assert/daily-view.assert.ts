@@ -61,6 +61,7 @@ import {
   CBG_ID,
   CONFIDENTIAL_MODE_ID,
   EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID,
+  IOB_ID,
   MANUAL_BOLUS_ID,
   NIGHT_MODE_ID,
   PARAMETER_ID,
@@ -192,6 +193,7 @@ export const checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware = async ()
 export const checkDailyTidelineContainerTooltipsDblg2 = async () => {
   expect(await screen.findByTestId(`nightMode_group_${NIGHT_MODE_ID}`, {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
   await checkTidelineContainerElementTooltip(`nightMode_group_${NIGHT_MODE_ID}`, 'Night mode11:00 pmDuration10 hours')
+  await checkTidelineContainerElementTooltip(`iob_${IOB_ID}`,'Active insulin5:30 pmInsulin on board (IOB)Insulin25.00U')
 }
 
 export const checkDailyTidelineContainerTooltipsMmolL = async () => {
@@ -264,6 +266,33 @@ export const checkEventsSuperposition = async () => {
   const reservoirChangeContent = 'Cartridge change3:15 pm'
 
   expect(popover).toHaveTextContent(`${alarmEventMedisafeOcclusionContentMultipleOccurrences}${warmupContent}${alarmEventUrgentLowSoonContent}${reservoirChangeContent}${alarmEventSuddenRiseInGlycemiaContent}`)
+}
+
+const checkDailyViewChartsCommon = () => {
+  const glucoseChartLabel = screen.getByTestId('poolBG-chart-label')
+  expect(glucoseChartLabel).toHaveTextContent('Glucose (mg/dL)')
+
+  const eventsChartLabel = screen.getByTestId('poolEvents-chart-label')
+  expect(eventsChartLabel).toHaveTextContent('Events')
+
+  const bolusChartLabel = screen.getByTestId('poolBolus-chart-label')
+  expect(bolusChartLabel).toHaveTextContent('Bolus (U) & Carbohydrates (g)')
+
+  const basalChartLabel = screen.getByTestId('poolBasal-chart-label')
+  expect(basalChartLabel).toHaveTextContent('Basal Rates (U/h)')
+}
+
+export const checkDailyViewChartsDblg1 = () => {
+  checkDailyViewChartsCommon()
+
+  expect(screen.queryByTestId('poolIob-chart-label')).not.toBeInTheDocument()
+}
+
+export const checkDailyViewChartsDblg2 = () => {
+  checkDailyViewChartsCommon()
+
+  const iobChartLabel = screen.getByTestId('poolIob-chart-label')
+  expect(iobChartLabel).toHaveTextContent('Active insulin (U)')
 }
 
 export const checkDailyTimeInRangeStatsWidgetsMgdl = async () => {

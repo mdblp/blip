@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,8 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type Datum from '../../models/medical/datum.model'
-import { type DatumProcessor } from '../../models/medical/datum.model'
+import { Datum, type DatumProcessor } from '../../models/medical/datum.model'
 import type MedicalDataOptions from '../../models/medical/medical-data-options.model'
 import AlarmEventService from './datum/alarm-event.service'
 import BasalService from './datum/basal.service'

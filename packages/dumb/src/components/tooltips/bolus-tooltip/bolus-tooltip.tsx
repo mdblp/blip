@@ -35,7 +35,6 @@ import {
   type Wizard,
   WizardInputMealFat
 } from 'medical-domain'
-import { Tooltip } from '../../../index'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import {
   getBolusFromInsulinEvent,
@@ -48,7 +47,7 @@ import {
 import { BolusType } from '../../../models/enums/bolus-type.enum'
 import { useTranslation } from 'react-i18next'
 import colors from '../../../styles/colors.css'
-import { DEFAULT_TOOLTIP_OFFSET, type Position } from '../common/tooltip/tooltip'
+import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
 import { formatInputTime, formatInsulin } from '../../../utils/format/format.util'
 import styles from './bolus-tooltip.css'
 import commonStyles from '../../../styles/tooltip-common.css'
