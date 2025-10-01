@@ -67,7 +67,7 @@ const checkPatientListHeader = (header: HTMLElement) => {
   expect(within(header).getByLabelText('Search by first name, last name or birthdate (dd/mm/yyyy)')).toBeVisible()
   expect(within(header).getByRole('button', { name: 'Change columns settings' })).toBeVisible()
   expect(screen.getByTestId('current-patient-list-grid')).toBeVisible()
-  expect(screen.getByText('Data calculated on the last 14 days')).toBeVisible()
+  expect(screen.getByText('Data calculated on the last 14 days (current day excluded)')).toBeVisible()
   expect(screen.getByRole('tab', { name: 'Current' })).toBeVisible()
 }
 
@@ -125,7 +125,7 @@ export const checkPatientListFilters = async () => {
   expect(within(dataGridRowCurrent).getAllByRole('row')).toHaveLength(7)
 
   const lastDataUploadDate = moment.tz(hypoglycemiaPatientMetrics.medicalData.range.endDate, new Intl.DateTimeFormat().resolvedOptions().timeZone).format('lll')
-  expect(dataGridRowCurrent).toHaveTextContent(`PatientDate of birthMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Jan 1, 1980No new messages from the patient0%0%N/AFlag patient unread-messages@patient.frMessages Patient UnreadJan 1, 1980The patient has sent you new messages0%0%N/AFlag patient time-out-of-range@patient.frOut of Range Patient TimeJan 1, 1980No new messages from the patient0%0%N/AUnflag patient flagged@patient.frPatient FlaggedJan 1, 1980No new messages from the patient0%0%N/AFlag patient hypoglycemia@patient.frPatient HypoglycemiaJan 1, 1980No new messages from the patient0%0%Jan 1, 2023 9:44 AMFlag patient z-no-data@patient.frPatient Z - No DataJan 1, 1980No new messages from the patient0%0%N/AData calculated on the last 14 daysRows per page:101–6 of 6`)
+  expect(dataGridRowCurrent).toHaveTextContent(`PatientDate of birthMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Jan 1, 1980No new messages from the patient0%0%N/AFlag patient unread-messages@patient.frMessages Patient UnreadJan 1, 1980The patient has sent you new messages0%0%N/AFlag patient time-out-of-range@patient.frOut of Range Patient TimeJan 1, 1980No new messages from the patient0%0%N/AUnflag patient flagged@patient.frPatient FlaggedJan 1, 1980No new messages from the patient0%0%N/AFlag patient hypoglycemia@patient.frPatient HypoglycemiaJan 1, 1980No new messages from the patient0%0%Jan 1, 2023 9:44 AMFlag patient z-no-data@patient.frPatient Z - No DataJan 1, 1980No new messages from the patient0%0%N/AData calculated on the last 14 days (current day excluded)Rows per page:101–6 of 6`)
 
   // Check the default values
   const filtersButton = screen.getByRole('button', { name: 'Filters' })
