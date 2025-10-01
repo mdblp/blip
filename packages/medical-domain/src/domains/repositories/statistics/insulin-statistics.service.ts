@@ -27,7 +27,6 @@
 
 import type DateFilter from '../../models/time/date-filter.model'
 import type Bolus from '../../models/medical/datum/bolus.model'
-import type Basal from '../../models/medical/datum/basal.model'
 import BasalService from '../medical/datum/basal.service'
 import BolusService from '../medical/datum/bolus.service'
 import {
@@ -39,7 +38,7 @@ import {
 import { buildHoursRangeMap, getWeekDaysFilter, roundValue } from './statistics.utils'
 import { type ParameterConfig, PumpSettings } from '../../models/medical/datum/pump-settings.model'
 import { type TimeInAutoStatistics } from '../../models/statistics/time-in-auto.model'
-import { BolusSubtype, Prescriptor } from '../../../index'
+import { Basal, BolusSubtype, Prescriptor } from '../../../index'
 import { getHours, MS_IN_DAY } from '../time/time.service'
 import { HoursRange } from '../../models/statistics/satistics.model'
 import type Wizard from '../../models/medical/datum/wizard.model'
