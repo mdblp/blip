@@ -41,7 +41,7 @@ export const checkRangeViewContent = async (): Promise<void> => {
 
   // Test patient type selection chip
   const typeSelectionContainer = within(rangeContent).getByTestId('patient-type-selection')
-  expect(typeSelectionContainer).toBeInTheDocument()
+  expect(typeSelectionContainer).toBeVisible()
 
   // Verify patient type chips are present
   const type1Type2Chip = within(typeSelectionContainer).getByText(getTranslation('range-profile-type-1-and-2'))
