@@ -117,6 +117,24 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     .heightRatio(0.5)
     .gutterWeight(0.0)
 
+  // Events data pool
+  /** @type {Pool} */
+  const poolEvents = new Pool(chart)
+  chart.addPool(poolEvents)
+  const poolEventsId = 'poolEvents'
+  poolEvents
+    .id('poolEvents', chart.poolGroup)
+    .dataTestId('events-section', poolEventsId)
+    .labels([{
+      spans: [{
+        text: t('Events'),
+        className: 'label-main'
+      }],
+      baseline: options.labelBaseline
+    }])
+    .heightRatio(isDblg2User ? 0.5 : 0.4)
+    .gutterWeight(1.0)
+
   // blood glucose data pool
   /** @type {Pool} */
   const poolBG = new Pool(chart)
@@ -137,24 +155,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     }])
     .legends([{ name: 'bg', baseline: options.labelBaseline }])
     .heightRatio(2.15)
-    .gutterWeight(1.0)
-
-  // Events data pool
-  /** @type {Pool} */
-  const poolEvents = new Pool(chart)
-  chart.addPool(poolEvents)
-  const poolEventsId = 'poolEvents'
-  poolEvents
-    .id('poolEvents', chart.poolGroup)
-    .dataTestId('events-section', poolEventsId)
-    .labels([{
-      spans: [{
-        text: t('Events'),
-        className: 'label-main'
-      }],
-      baseline: options.labelBaseline
-    }])
-    .heightRatio(isDblg2User ? 0.5 : 0.4)
     .gutterWeight(1.0)
 
   // carbs and boluses data pool
