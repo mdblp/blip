@@ -73,7 +73,7 @@ export const checkPatientDropdown = async (initialPatient: Patient, patientToSwi
 
   const secondPatientName = `${patientToSwitchTo.profile.lastName} ${patientToSwitchTo.profile.firstName}`
   const secondaryHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
-  const secondPatientHeaderContent = `Patient${secondPatientName}DashboardDailyTrendsPatient profileDevicesDownload report`
+  const secondPatientHeaderContent = `Patient${secondPatientName}DashboardDailyTrendsProfileDevicesDownload report`
   await waitFor(() => {
     expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContent)
   })
