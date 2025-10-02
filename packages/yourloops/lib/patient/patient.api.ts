@@ -33,7 +33,7 @@ import HttpStatus from '../http/models/enums/http-status.enum'
 import { type Patient, type PatientMetrics } from './models/patient.model'
 import { type MonitoringAlertsParameters } from '../team/models/monitoring-alerts-parameters.model'
 import { DiabeticProfilePayload } from './models/patient-diabete-profile'
-import { type DiabeticProfile } from 'medical-domain'
+import { type DiabeticProfile } from './models/patient-diabete-profile'
 
 export const PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE = 'patient-already-in-team'
 const PATIENT_ALREADY_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict

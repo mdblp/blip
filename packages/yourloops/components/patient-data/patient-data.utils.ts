@@ -68,7 +68,7 @@ const convertAndFormatBgValue = (value: number, currentUnit: BgUnit): number => 
 }
 
 export const convertIfNeeded = (bloodGlucosePreference: BgPrefs | null, requiredUnit: BgUnit): BgPrefs => {
-  if (bloodGlucosePreference?.bgUnits != requiredUnit) {
+  if (bloodGlucosePreference != null &&  bloodGlucosePreference?.bgUnits != requiredUnit) {
     const currentUnit = bloodGlucosePreference?.bgUnits
     return {
         bgUnits: requiredUnit,
@@ -131,7 +131,6 @@ export class PatientDataUtils {
         end: this.partialDataLoad.range.end.valueOf()
       },
       bgUnits: this.bgUnits,
-      bgClasses: this.patient.diabeticProfile.bloodGlucosePreference.bgClasses,
       defaultPumpManufacturer: 'default'
     }
     medicalData.add(data)

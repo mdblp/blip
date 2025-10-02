@@ -27,7 +27,7 @@
 
 import { type Team } from '../../team'
 import { type Patient } from './patient.model'
-import { DiabeticProfile } from 'medical-domain'
+import { DiabeticProfile } from './patient-diabete-profile'
 
 export interface PatientsContextResult {
   patients: Patient[]

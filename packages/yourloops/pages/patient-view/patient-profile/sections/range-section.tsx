@@ -44,10 +44,11 @@ import { Patient } from '../../../../lib/patient/models/patient.model'
 import { errorTextFromException } from '../../../../lib/utils'
 import { logError } from '../../../../utils/error.util'
 import { useAlert } from '../../../../components/utils/snackbar'
-import { DiabeticProfile, DiabeticType, getDefaultRangeByDiabeticType, Unit } from 'medical-domain'
+import { DiabeticType, getDefaultRangeByDiabeticType, Unit } from 'medical-domain'
 import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useAuth } from '../../../../lib/auth'
 import { convertIfNeeded } from '../../../../components/patient-data/patient-data.utils'
+import { DiabeticProfile } from '../../../../lib/patient/models/patient-diabete-profile'
 
 interface RangeSectionProps {
   patient: Patient
@@ -61,8 +62,8 @@ interface ValidationErrors {
 }
 
 const DEFAULT_ERROR_STATE: ValidationErrors = {
-  hyperglycemia: false,
   severeHyperglycemia: false,
+  hyperglycemia: false,
   hypoglycemia: false,
   severeHypoglycemia: false
 }
@@ -183,37 +184,31 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
   const handleRangeChange = (field: FieldType, value: string): void => {
     const numericValue = +value
-    setErrors(DEFAULT_ERROR_STATE)
     setSelectedDiabeticProfile(prev => {
       const updated = structuredClone(prev)
-
       // Update the appropriate field in the diabetic profile structure
       switch (field) {
         case FieldType.SevereHyperglycemia:
-          if (numericValue <= updated.bloodGlucosePreference.bgBounds.targetUpperBound || !IsInRange(numericValue, displayedUnit)) {
-            setErrors({ ...errors, severeHyperglycemia: true })
-          }
+          const severeHyperglycemiaErr = numericValue <= updated.bloodGlucosePreference.bgBounds.targetUpperBound || !IsInRange(numericValue, displayedUnit);
+          setErrors({ ...errors, severeHyperglycemia: severeHyperglycemiaErr })
           updated.bloodGlucosePreference.bgBounds.veryHighThreshold = numericValue
           updated.bloodGlucosePreference.bgClasses.high = numericValue
           break
         case FieldType.Hyperglycemia:
-          if (numericValue <= updated.bloodGlucosePreference.bgBounds.targetLowerBound || numericValue >= updated.bloodGlucosePreference.bgBounds.veryHighThreshold){
-            setErrors({ ...errors, hyperglycemia: true })
-          }
+          const hyperglycemiaErr = numericValue <= updated.bloodGlucosePreference.bgBounds.targetLowerBound || numericValue >= updated.bloodGlucosePreference.bgBounds.veryHighThreshold;
+          setErrors({ ...errors, hyperglycemia: hyperglycemiaErr })
           updated.bloodGlucosePreference.bgBounds.targetUpperBound = numericValue
           updated.bloodGlucosePreference.bgClasses.target = numericValue
           break
         case FieldType.Hypoglycemia:
-          if (numericValue >= updated.bloodGlucosePreference.bgBounds.targetUpperBound || numericValue <= updated.bloodGlucosePreference.bgBounds.veryLowThreshold){
-            setErrors({ ...errors, hypoglycemia: true })
-          }
+          const hypoglycemiaErr = numericValue >= updated.bloodGlucosePreference.bgBounds.targetUpperBound || numericValue <= updated.bloodGlucosePreference.bgBounds.veryLowThreshold;
+          setErrors({ ...errors, hypoglycemia: hypoglycemiaErr })
           updated.bloodGlucosePreference.bgBounds.targetLowerBound = numericValue
           updated.bloodGlucosePreference.bgClasses.low = numericValue
           break
         case FieldType.SevereHypoglycemia:
-          if (numericValue >= updated.bloodGlucosePreference.bgBounds.targetLowerBound || !IsInRange(numericValue, displayedUnit)) {
-            setErrors({ ...errors, severeHypoglycemia: true })
-          }
+          const severeHypoglycemiaErr = numericValue >= updated.bloodGlucosePreference.bgBounds.targetLowerBound || !IsInRange(numericValue, displayedUnit);
+          setErrors({ ...errors, severeHypoglycemia: severeHypoglycemiaErr })
           updated.bloodGlucosePreference.bgBounds.veryLowThreshold = numericValue
           updated.bloodGlucosePreference.bgClasses.veryLow = numericValue
           break
@@ -223,7 +218,6 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
   }
 
   const save = async (): Promise<void> => {
-
     setSaveInProgress(true)
     try {
       await updatePatientDiabeticProfile(patient.userid, selectedDiabeticProfile)
@@ -256,7 +250,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
             </Typography>
 
             {/* Patient Type Selection */}
-            <Box mb={3}>
+            <Box data-testid="patient-type-selection" mb={3}>
               <Box display="flex" flexWrap="wrap" gap={1} marginTop={2}>
                 {patientDiabeticProfiles.map((patientType) => (
                   <Chip
@@ -298,8 +292,9 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
               {/* Right side - Range inputs */}
               <Grid item xs={12} md={6}>
-                <Box display="flex" flexDirection="column" gap={1}>
+                <Box data-testid="range-configuration-form" display="flex" flexDirection="column" gap={1}>
                   <TextField
+                    data-testid="severe-hyperglycemia-field"
                     label={t('range-severe-hyperglycemia')}
                     margin="normal"
                     type="number"
@@ -333,6 +328,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                   />
 
                   <TextField
+                    data-testid="hyperglycemia-field"
                     label={t('range-hyperglycemia')}
                     margin="normal"
                     type="number"
@@ -366,6 +362,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                   />
 
                   <TextField
+                    data-testid="hypoglycemia-field"
                     label={t('range-hypoglycemia')}
                     margin="normal"
                     type="number"
@@ -399,6 +396,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                   />
 
                   <TextField
+                    data-testid="severe-hypoglycemia-field"
                     label={t('range-severe-hypoglycemia')}
                     margin="normal"
                     type="number"

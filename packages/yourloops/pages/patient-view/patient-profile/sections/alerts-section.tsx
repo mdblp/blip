@@ -56,22 +56,10 @@ export const AlertsSection: FC<AlertsSectionProps> = (props) => {
   const { t } = useTranslation('yourloops')
   const { deletePatientMonitoringAlertsParameters, updatePatientMonitoringAlertsParameters } = usePatientsContext()
   const alert = useAlert()
-  const { pathname, hash, key } = useLocation()
 
   const monitoringAlertsSection = useRef<HTMLElement>(null)
 
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (hash === '') {
-      return
-    }
-
-    const sectionId = hash.replace('#', '')
-    if (monitoringAlertsSection && sectionId === MONITORING_ALERTS_SECTION_ID) {
-      monitoringAlertsSection.current.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [pathname, hash, key])
 
   const save = async (monitoringAlertsParameters: MonitoringAlertsParameters): Promise<void> => {
     patient.monitoringAlertsParameters = monitoringAlertsParameters

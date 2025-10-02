@@ -26,7 +26,14 @@
  */
 
 
+import { BgPrefs } from 'dumb'
 import { BgUnit, DiabeticType } from 'medical-domain'
+
+// Data structure used in the application
+export interface DiabeticProfile {
+  type: DiabeticType
+  bloodGlucosePreference: BgPrefs
+}
 
 // Data structure used only to communicate with the backend
 export interface DiabeticProfilePayload {

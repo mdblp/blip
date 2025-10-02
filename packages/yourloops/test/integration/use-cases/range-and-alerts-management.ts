@@ -25,8 +25,150 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkAlertsViewContent } from '../assert/range-and-alerts-view.assert'
+import { checkAlertsViewContent, checkRangeViewContent } from '../assert/range-and-alerts-view.assert'
+import { screen } from '@testing-library/react'
+import { within } from '@testing-library/dom'
+import { getTranslation } from '../../utils/i18n'
+import userEvent from '@testing-library/user-event'
+import PatientApi from '../../../lib/patient/patient.api'
 
 export const testAlertsViewContent = async (): Promise<void> => {
   await checkAlertsViewContent()
+}
+
+export const testRangeViewContent = async (): Promise<void> => {
+  await checkRangeViewContent()
+}
+
+export const testRangePatientProfileDisplay = async (diabeticTypeTextKey: string, expectedSevereHyper: number, expectedHyper: number, expectedHypo: number, expectedSevereHypo: number): Promise<void> => {
+  const selectedChip = within(screen.getByTestId('patient-type-selection')).getByText(getTranslation(diabeticTypeTextKey))
+  await userEvent.click(selectedChip)
+
+  const rangeSection = within(screen.getByTestId('range-container'))
+  const severeHyperInput = rangeSection.getByRole('spinbutton', { name: getTranslation('range-severe-hyperglycemia') })
+  expect(severeHyperInput).toBeVisible()
+  expect(severeHyperInput).toHaveValue(expectedSevereHyper)
+
+  const hyperInput = rangeSection.getByRole('spinbutton', { name: getTranslation('range-hyperglycemia') })
+  expect(hyperInput).toBeVisible()
+  expect(hyperInput).toHaveValue(expectedHyper)
+
+  const hypoInput = rangeSection.getByRole('spinbutton', { name: getTranslation('range-hypoglycemia') })
+  expect(hypoInput).toBeVisible()
+  expect(hypoInput).toHaveValue(expectedHypo)
+
+  const severeHypoInput = rangeSection.getByRole('spinbutton', { name: getTranslation('range-severe-hypoglycemia') })
+  expect(severeHypoInput).toBeVisible()
+  expect(severeHypoInput).toHaveValue(expectedSevereHypo)
+
+  switch (diabeticTypeTextKey) {
+    case "range-profile-type-1-and-2":
+      expect(severeHyperInput).toBeDisabled()
+      expect(hyperInput).toBeDisabled()
+      expect(hypoInput).toBeDisabled()
+      expect(severeHypoInput).toBeDisabled()
+      break
+    case "range-profile-pregnancy-type-1":
+      expect(hyperInput).toBeDisabled()
+      expect(hypoInput).toBeDisabled()
+      break
+  }
+}
+
+export const testRangeUnitDisplay = async (expectedUnit: string): Promise<void> => {
+  const rangeFields = screen.getAllByTestId(/.*-field/)
+  rangeFields.forEach(field => {
+    expect(field).toBeVisible()
+    expect(field).toHaveTextContent(expectedUnit)
+  })
+}
+
+export const testSaveButtonForRanges = async () : Promise<void>  => {
+  const selectedChip = within(screen.getByTestId('patient-type-selection')).getByText(getTranslation('range-profile-custom'))
+  await userEvent.click(selectedChip)
+
+  await fillRangeForm( 200, 150, 80, 50)
+
+  const saveButton = screen.getByRole('button', { name: getTranslation('button-save') })
+  expect(saveButton).toBeVisible()
+  await userEvent.click(saveButton)
+
+  const expectedPayload = {
+    type: "custom",
+    bloodGlucosePreference: {
+      bgUnits: "mg/dL",
+      bgBounds: {
+        veryHighThreshold: 200,
+        targetUpperBound: 150,
+        targetLowerBound : 80,
+        veryLowThreshold: 50
+      },
+      bgClasses: {
+        veryHigh: 600,
+        high: 200,
+        target: 150,
+        low: 80,
+        veryLow: 50
+      },
+    }
+  }
+
+  expect(PatientApi.updatePatientDiabeticProfile).toHaveBeenCalledWith('patient1Id', expectedPayload)
+  expect(screen.getByText('Patient update succeeded')).toBeVisible()
+}
+
+export const testRangeFormValidation = async () : Promise<void>  => {
+  const selectedChip = within(screen.getByTestId('patient-type-selection')).getByText(getTranslation('range-profile-custom'))
+  await userEvent.click(selectedChip)
+
+  // test orders Severe hyper > Hyper > Hypo > Severe hypo
+  await fillRangeForm( 100, 101, 102, 103)
+  const saveButton = screen.getByRole('button', { name: getTranslation('button-save') })
+  expect(saveButton).toBeDisabled()
+  expect(screen.getByText(getTranslation('error-severe-hyperglycemia'))).toBeVisible()
+  expect(screen.getByText(getTranslation('error-hyperglycemia'))).toBeVisible()
+  expect(screen.getByText(getTranslation('error-hypoglycemia'))).toBeVisible()
+  expect(screen.getByText(getTranslation('error-severe-hypoglycemia'))).toBeVisible()
+
+  await fillRangeForm(100, 100, 100, 100)
+  expect(saveButton).toBeDisabled()
+  expect(screen.getByText(getTranslation('error-severe-hyperglycemia'))).toBeVisible()
+  expect(screen.getByText(getTranslation('error-hyperglycemia'))).toBeVisible()
+  expect(screen.getByText(getTranslation('error-hypoglycemia'))).toBeVisible()
+  expect(screen.getByText(getTranslation('error-severe-hypoglycemia'))).toBeVisible()
+
+  await fillRangeForm(999, 998, 997, 996)
+  expect(saveButton).toBeDisabled()
+  // expect only two errors as the min max values are done on the severe hyper and severe hypo fieldsm
+  expect(screen.getByText(getTranslation('error-severe-hyperglycemia'))).toBeVisible()
+  expect(screen.getByText(getTranslation('error-severe-hypoglycemia'))).toBeVisible()
+
+}
+
+async function fillRangeForm(severeHyper: number, hyper: number, hypo: number, severeHypo: number) {
+  const rangeSection = within(screen.getByTestId('range-container'))
+
+  const severeHyperInput = rangeSection.getByRole('spinbutton', { name: getTranslation('range-severe-hyperglycemia') })
+  expect(severeHyperInput).toBeVisible()
+  await userEvent.clear(severeHyperInput)
+  await userEvent.type(severeHyperInput, severeHyper.toString())
+  expect(severeHyperInput).toHaveValue(severeHyper)
+
+  const hyperInput = rangeSection.getByRole('spinbutton', { name: getTranslation('range-hyperglycemia') })
+  expect(hyperInput).toBeVisible()
+  await userEvent.clear(hyperInput)
+  await userEvent.type(hyperInput, hyper.toString())
+  expect(hyperInput).toHaveValue(hyper)
+
+  const hypoInput = rangeSection.getByRole('spinbutton', { name: getTranslation('range-hypoglycemia') })
+  expect(hypoInput).toBeVisible()
+  await userEvent.clear(hypoInput)
+  await userEvent.type(hypoInput, hypo.toString())
+  expect(hypoInput).toHaveValue(hypo)
+
+  const severeHypoInput = rangeSection.getByRole('spinbutton', { name: getTranslation('range-severe-hypoglycemia') })
+  expect(severeHypoInput).toBeVisible()
+  await userEvent.clear(severeHypoInput)
+  await userEvent.type(severeHypoInput, severeHypo.toString())
+  expect(severeHypoInput).toHaveValue(severeHypo)
 }

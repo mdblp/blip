@@ -116,6 +116,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
     timezoneAware: true,
     timezoneName: new Intl.DateTimeFormat().resolvedOptions().timeZone // the browser timezone
   })
+  const [msRange, setMsRange] = useState<number>(DEFAULT_MS_RANGE)
 
   const patientDataUtils = useRef(new PatientDataUtils({
     patient,
@@ -155,8 +156,6 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
         return AppUserRoute.Trends
     }
   }
-
-  const [msRange, setMsRange] = useState<number>(DEFAULT_MS_RANGE)
 
   const changePatient = (patient: Patient): void => {
     patientDataUtils.current.changePatient(patient)
