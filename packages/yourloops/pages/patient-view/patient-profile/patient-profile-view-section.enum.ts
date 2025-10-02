@@ -27,5 +27,6 @@
 
 export enum PatientProfileViewSection {
   Information = 'Information',
-  RangeAndAlerts = 'RangeAndAlerts',
+  Range = 'Range',
+  Alerts = 'Alerts',
 }

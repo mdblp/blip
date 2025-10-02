@@ -24,18 +24,16 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import HttpService, { ErrorMessageStatus } from '../http/http.service'
-import bows from 'bows'
+import HttpService from '../http/http.service'
 import { type INotification } from '../notifications/models/i-notification.model'
 import { getCurrentLang } from '../language'
 import { UserRole } from '../auth/models/enums/user-role.enum'
-import { type ITeamMember } from '../team/models/i-team-member.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
 import { type Patient, type PatientMetrics } from './models/patient.model'
 import { type MonitoringAlertsParameters } from '../team/models/monitoring-alerts-parameters.model'
-
-const log = bows('Patient API')
+import { DiabeticProfilePayload } from './models/patient-diabete-profile'
+import { type DiabeticProfile } from './models/patient-diabete-profile'
 
 export const PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE = 'patient-already-in-team'
 const PATIENT_ALREADY_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
@@ -49,23 +47,17 @@ interface InvitePatientPayload extends InvitePatientArgs {
   role: UserRole
 }
 
+
 export default class PatientApi {
-  static async getPatients(): Promise<ITeamMember[]> {
-    try {
-      const { data } = await HttpService.get<ITeamMember[]>({ url: '/v0/my-patients' })
-      return data
-    } catch (err) {
-      const error = err as Error
-      if (error.message === ErrorMessageStatus.NotFound) {
-        log.info('No patients')
-        return []
-      }
-      throw err
-    }
-  }
+
 
   static async getPatientsForHcp(userId: string, teamId: string): Promise<Patient[]> {
     const { data } = await HttpService.get<Patient[]>({ url: `/bff/v1/hcps/${userId}/teams/${teamId}/patients-info` })
+    return data
+  }
+
+  static async getPatientsForCaregivers(userId: string): Promise<Patient[]> {
+    const { data } = await HttpService.get<Patient[]>({ url: `/bff/v1/caregivers/${userId}/patients-info` })
     return data
   }
 
@@ -111,5 +103,27 @@ export default class PatientApi {
 
   static async removePatient(teamId: string, userId: string): Promise<void> {
     await HttpService.delete({ url: `/crew/v0/teams/${teamId}/patients/${userId}` })
+  }
+
+  static async updatePatientDiabeticProfile(patientId: string, diabeticProfile: DiabeticProfile): Promise<void> {
+    // map to payload structure expected by backend
+    const payload: DiabeticProfilePayload = {
+      name : diabeticProfile.type,
+      bloodGlucosePreference: {
+        units :  diabeticProfile.bloodGlucosePreference.bgUnits,
+        range : {
+          bgClamp : diabeticProfile.bloodGlucosePreference.bgClasses.veryHigh,
+          severeHypoGlycemia : diabeticProfile.bloodGlucosePreference.bgBounds.veryLowThreshold,
+          hypoGlycemia : diabeticProfile.bloodGlucosePreference.bgBounds.targetLowerBound,
+          hyperGlycemia : diabeticProfile.bloodGlucosePreference.bgBounds.targetUpperBound,
+          severeHyperGlycemia : diabeticProfile.bloodGlucosePreference.bgBounds.veryHighThreshold
+        }
+      }
+    }
+
+    await HttpService.put<void, DiabeticProfilePayload>({
+      url: `/metadata/${patientId}/diabetic-profile`,
+      payload: payload
+    })
   }
 }

@@ -25,12 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
+import HttpService from '../../../../lib/http/http.service'
 import { type AxiosResponse } from 'axios'
 import { type INotification } from '../../../../lib/notifications/models/i-notification.model'
 import { getCurrentLang } from '../../../../lib/language'
 import PatientApi from '../../../../lib/patient/patient.api'
-import { type ITeamMember } from '../../../../lib/team/models/i-team-member.model'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
 
@@ -38,33 +37,6 @@ describe('PatientApi', () => {
   const userId = 'userId'
   const teamId = 'teamId'
   const email = 'email@test.com'
-
-  describe('getPatients', () => {
-    it('should get a list a patients', async () => {
-      const data: ITeamMember[] = [
-        { email: 'member1@team.com' } as ITeamMember,
-        { email: 'member2@team.com' } as ITeamMember
-      ]
-      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
-
-      const patients = await PatientApi.getPatients()
-      expect(patients).toEqual(data)
-      expect(HttpService.get).toHaveBeenCalledWith({ url: '/v0/my-patients' })
-    })
-
-    it('should return an empty array if not found', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
-      const response = await PatientApi.getPatients()
-      expect(response).toEqual([])
-    })
-
-    it('should throw an error if http call failed', async () => {
-      jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error('This error was thrown by a mock on purpose'))
-      await expect(async () => {
-        await PatientApi.getPatients()
-      }).rejects.toThrow('This error was thrown by a mock on purpose')
-    })
-  })
 
   describe('invitePatient', () => {
     it('should invite a new patient in a team and get a notification if success', async () => {

@@ -35,6 +35,7 @@ import { type GlycemiaIndicators } from './glycemia-indicators.model'
 import { type MedicalData } from '../../data/models/medical-data.model'
 import { DiabeticProfile } from './patient-diabete-profile'
 
+
 export interface Patient extends Partial<PatientMetrics> {
   readonly userid: string
   profile: PatientProfile

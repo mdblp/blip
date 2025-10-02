@@ -26,7 +26,6 @@
  */
 
 import PatientApi from './patient.api'
-import { mapITeamMemberToPatient } from '../../components/patient/utils'
 import moment from 'moment-timezone'
 import { type Patient, type PatientMetrics } from './models/patient.model'
 import { UserInviteStatus } from '../team/models/enums/user-invite-status.enum'
@@ -42,10 +41,6 @@ const t = i18next.t.bind(i18next)
 const NO_GENDER_LABEL = '-'
 
 export default class PatientUtils {
-  static async retrievePatients(): Promise<Patient[]> {
-    const patientsAsITeamMembers = await PatientApi.getPatients()
-    return patientsAsITeamMembers.map(patientAsITeamMember => mapITeamMemberToPatient(patientAsITeamMember))
-  }
 
   static async computePatients(user: User, teamId?: string): Promise<Patient[]> {
     const userRole = user.role
@@ -56,7 +51,7 @@ export default class PatientUtils {
         }
         return await PatientApi.getPatientsForHcp(user.id, teamId)
       case UserRole.Caregiver:
-        return await PatientUtils.retrievePatients()
+        return await PatientApi.getPatientsForCaregivers(user.id)
       default:
         throw Error(`Cannot retrieve patients with user having role ${user.role}`)
     }

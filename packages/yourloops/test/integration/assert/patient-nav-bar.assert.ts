@@ -40,7 +40,7 @@ export const checkPatientNavBarAsHcp = () => {
   const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
   expect(patientNavBar.getByTestId('subnav-patient-list')).toBeVisible()
   expect(patientNavBar.getByTestId('patient-dropdown')).toBeVisible()
-  expect(patientNavBar.getByRole('tablist')).toHaveTextContent('DashboardDailyTrendsPatient profileDevices')
+  expect(patientNavBar.getByRole('tablist')).toHaveTextContent('DashboardDailyTrendsProfileDevices')
   expect(patientNavBar.getByText('Download report')).toBeVisible()
 }
 
@@ -65,7 +65,7 @@ export const checkPatientNavBarAsPatient = () => {
 
 export const checkPatientDropdown = async (initialPatient: Patient, patientToSwitchTo: Patient) => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-  const initialPatientHeaderContent = `Patient${initialPatient.profile.lastName} ${initialPatient.profile.firstName}DashboardDailyTrendsPatient profileDevicesDownload report`
+  const initialPatientHeaderContent = `Patient${initialPatient.profile.lastName} ${initialPatient.profile.firstName}DashboardDailyTrendsProfileDevicesDownload report`
   expect(secondaryHeader).toHaveTextContent(initialPatientHeaderContent)
 
   fireEvent.mouseDown(within(secondaryHeader).getByText(`${patient1Info.profile.lastName} ${patient1Info.profile.firstName}`))
@@ -73,7 +73,7 @@ export const checkPatientDropdown = async (initialPatient: Patient, patientToSwi
 
   const secondPatientName = `${patientToSwitchTo.profile.lastName} ${patientToSwitchTo.profile.firstName}`
   const secondaryHeaderRefreshed = await screen.findByTestId('patient-nav-bar')
-  const secondPatientHeaderContent = `Patient${secondPatientName}DashboardDailyTrendsPatient profileDevicesDownload report`
+  const secondPatientHeaderContent = `Patient${secondPatientName}DashboardDailyTrendsProfileDevicesDownload report`
   await waitFor(() => {
     expect(secondaryHeaderRefreshed).toHaveTextContent(secondPatientHeaderContent)
   })
