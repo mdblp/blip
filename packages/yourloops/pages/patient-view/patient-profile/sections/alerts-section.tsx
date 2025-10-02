@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC, useEffect, useRef, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import Container from '@mui/material/Container'
 import { Patient } from '../../../../lib/patient/models/patient.model'
 import { MonitoringAlertsParameters } from '../../../../lib/team/models/monitoring-alerts-parameters.model'
@@ -37,7 +37,6 @@ import { useTheme } from '@mui/material/styles'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
-import { useLocation } from 'react-router-dom'
 import {
   MonitoringAlertsPatientConfiguration
 } from '../../../../components/monitoring-alert/monitoring-alerts-patient-configuration'
