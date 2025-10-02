@@ -73,11 +73,13 @@ export { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical
 export { RescueCarbsTooltip } from './components/tooltips/rescue-carbs-tooltip/rescue-carbs-tooltip'
 export { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
 export { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
+export { TimeChangeTooltip } from './components/tooltips/time-change-tooltip/time-change-tooltip'
 export { Tooltip } from './components/tooltips/common/tooltip/tooltip'
 export { TooltipLine } from './components/tooltips/common/tooltip-line/tooltip-line'
 export { TooltipColor } from './models/enums/tooltip-color.enum'
 export { TooltipSide } from './models/enums/tooltip-side.enum'
 export { WarmUpTooltip } from './components/tooltips/warm-up-tooltip/warm-up-tooltip'
+export { ZenModeTooltip } from './components/tooltips/zen-mode-tooltip/zen-mode-tooltip'
 
 // Trends
 export { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'

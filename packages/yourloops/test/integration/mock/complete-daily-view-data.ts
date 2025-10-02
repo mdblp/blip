@@ -1327,6 +1327,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "isoWeekday": WeekDays.Sunday
         }
       ],
+      iob: [],
       messages: [],
       meals: [
         {
@@ -1679,7 +1680,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "isoWeekday": WeekDays.Thursday
         },
       ],
-      "zenModes": [
+      zenModes: [
         {
           "epoch": 1659945600000,
           "displayOffset": -120,

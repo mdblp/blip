@@ -34,7 +34,6 @@ import type Message from './datum/message.model'
 import type PhysicalActivity from './datum/physical-activity.model'
 import type ReservoirChange from './datum/reservoir-change.model'
 import type Smbg from './datum/smbg.model'
-import type TimeZoneChange from './datum/time-zone-change.model'
 import type WarmUp from './datum/warm-up.model'
 import type Wizard from './datum/wizard.model'
 import type ZenMode from './datum/zen-mode.model'
@@ -43,6 +42,7 @@ import { PumpSettings } from './datum/pump-settings.model'
 import { NightMode } from './datum/night-mode.model'
 import { Iob } from './datum/iob.datum'
 import { Basal } from './datum/basal.model'
+import { TimeZoneChange } from './datum/time-zone-change.model'
 
 interface MedicalData {
   alarmEvents: AlarmEvent[]

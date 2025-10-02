@@ -22,6 +22,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3651 Transfer the patient information displayed in the banner in the patient profile page
 - YLP-3687 Update insulin stats order
 - YLP-3690 Update basal tooltip style in Daily view
+- YLP-3700 Update time change tooltip style in Daily view
 
 ### Engineering
 - YLP-3672 D3 version update
