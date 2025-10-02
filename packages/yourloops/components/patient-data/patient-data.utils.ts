@@ -64,7 +64,7 @@ const convertAndFormatBgValue = (value: number, currentUnit: BgUnit): number => 
   const newUnit = currentUnit === Unit.MilligramPerDeciliter ? Unit.MmolPerLiter : Unit.MilligramPerDeciliter
   const formattedValueString = formatBgValue(convertBG(value, currentUnit), newUnit)
 
-  return newUnit === Unit.MilligramPerDeciliter ? parseInt(formattedValueString) : parseFloat(formattedValueString)
+  return newUnit === Unit.MilligramPerDeciliter ? Number.parseInt(formattedValueString) : Number.parseFloat(formattedValueString)
 }
 
 export const convertIfNeeded = (bloodGlucosePreference: BgPrefs | null, requiredUnit: BgUnit): BgPrefs => {

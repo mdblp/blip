@@ -42,12 +42,21 @@ interface PatientProfileViewProps {
 export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => {
   const [selectedSection, setSelectedSection] = useState(PatientProfileViewSection.Information)
 
-  const isSelected = (section: PatientProfileViewSection): boolean => {
-    return section === selectedSection
-  }
-
   const selectSection = (section: PatientProfileViewSection): void => {
     setSelectedSection(section)
+  }
+
+  const getSection = (): JSX.Element => {
+    switch (selectedSection) {
+      case PatientProfileViewSection.Information:
+        return <PatientPersonalInformationSection patient={patient} />
+      case PatientProfileViewSection.Range:
+        return <RangeSection patient={patient} />
+      case PatientProfileViewSection.Alerts:
+        return <AlertsSection patient={patient} />
+      default:
+        return <></>
+    }
   }
 
   return (
@@ -57,19 +66,7 @@ export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => 
           <PatientProfileViewMenu selectedSection={selectedSection} selectSection={selectSection} />
         </Grid>
         <Grid item xs={9}>
-          {
-            isSelected(PatientProfileViewSection.Information) ?
-              <PatientPersonalInformationSection patient={patient} />
-              : isSelected(PatientProfileViewSection.Range) ?
-                <RangeSection
-                  patient={patient}
-                />
-                : isSelected(PatientProfileViewSection.Alerts) ?
-                  <AlertsSection
-                    patient={patient}
-                  /> : <></>
-          }
-
+          {getSection()}
         </Grid>
       </Grid>
     </Container>
