@@ -48,6 +48,8 @@ export const ZenModeTooltip: FC<ZenModeTooltipProps> = (props) => {
   const { t } = useTranslation('main')
 
   const duration = getDuration(zenMode)
+  const shouldDisplayTargetGlycemia = zenMode.glycemiaTarget !== null && zenMode.glycemiaTarget !== undefined
+  const glycemiaUnits = zenMode.glycemiaUnits ? zenMode.glycemiaUnits : 'N/A'
 
   return (
     <Tooltip
@@ -60,6 +62,12 @@ export const ZenModeTooltip: FC<ZenModeTooltipProps> = (props) => {
       content={
         <div className={commonStyles.containerFlex}>
           <TooltipLine label={t('Duration')} value={`${duration.value} ${t(duration.units)}`} />
+          { shouldDisplayTargetGlycemia &&
+              <TooltipLine label={t('GlycemiaTarget')} value={`${zenMode.glycemiaTarget} ${t(glycemiaUnits)}`} />
+          }
+          { shouldDisplayTargetGlycemia &&
+            <TooltipLine label={t('GlycemiaOffset')} value={`${zenMode.glycemiaOffset} ${t(glycemiaUnits)}`} />
+          }
         </div>
       }
     />

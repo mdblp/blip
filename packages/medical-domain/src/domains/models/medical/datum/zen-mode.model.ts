@@ -35,6 +35,9 @@ type ZenMode = BaseDatum & Duration & {
   subType: DeviceEventSubtype.Zen
   guid: string
   inputTime: string
+  glycemiaUnits: string  | null
+  glycemiaTarget: number | null
+  glycemiaOffset: number | null
 }
 
 export default ZenMode
