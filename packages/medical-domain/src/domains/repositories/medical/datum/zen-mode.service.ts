@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -44,7 +44,10 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     type: DatumType.DeviceEvent,
     subType: DeviceEventSubtype.Zen,
     guid: rawData.guid as string,
-    inputTime: rawData.inputTime as string
+    inputTime: rawData.inputTime as string,
+    glycemiaOffset: rawData.glycemiaOffset as number | null,
+    glycemiaTarget: rawData.glycemiaTarget as number | null,
+    glycemiaUnits: rawData.glycemiaUnits as string | null
   }
   return zenMode
 }
