@@ -51,10 +51,11 @@ import { getUserFirstName, getUserLastName } from '../../../lib/utils'
 import { SortDirection, SortFields } from './types'
 import RemoveDirectShareDialog from '../../../components/dialogs/remove-direct-share-dialog'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
+import { useAuth } from '../../../lib/auth'
 
 export interface CaregiverTableProps {
   caregivers: ShareUser[]
-  fetchCaregivers: () => void
+  fetchCaregivers: (userId: string) => void
 }
 
 const tableStyles = makeStyles({ name: 'ylp-patient-caregivers-table' })(() => {
@@ -99,6 +100,7 @@ function compareUserShare(orderBy: SortFields, order: SortDirection, a: ShareUse
 
 function CaregiversTable(props: CaregiverTableProps): JSX.Element {
   const { t } = useTranslation('yourloops')
+  const { user } = useAuth()
   const { classes } = tableStyles()
   const [orderBy, setOrderBy] = React.useState<SortFields>(SortFields.lastname)
   const [order, setOrder] = React.useState<SortDirection>(SortDirection.asc)
@@ -117,9 +119,8 @@ function CaregiversTable(props: CaregiverTableProps): JSX.Element {
 
   const onCloseRemoveCaregiverDialog = (shouldRefresh: boolean): void => {
     setCaregiverToRemove(null)
-
     if (shouldRefresh) {
-      props.fetchCaregivers()
+      props.fetchCaregivers(user.id)
     }
   }
 

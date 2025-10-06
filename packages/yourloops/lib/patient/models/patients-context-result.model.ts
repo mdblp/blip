@@ -27,6 +27,7 @@
 
 import { type Team } from '../../team'
 import { type Patient } from './patient.model'
+import { DiabeticProfile } from './patient-diabete-profile'
 
 export interface PatientsContextResult {
   patients: Patient[]
@@ -40,6 +41,7 @@ export interface PatientsContextResult {
   markPatientMessagesAsRead: (patient: Patient) => void
   deletePatientMonitoringAlertsParameters: (patientId: string) => Promise<void>
   updatePatientMonitoringAlertsParameters: (patient: Patient) => Promise<void>
+  updatePatientDiabeticProfile:(patientId : string, selectedDiabeticProfile: DiabeticProfile) => Promise<void>
   removePatient: (patient: Patient) => Promise<void>
   refresh: () => void
 }

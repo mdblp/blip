@@ -34,7 +34,7 @@ import { useAuth } from '../../lib/auth'
 import type MedicalDataService from 'medical-domain'
 import { defaultBgClasses, type TimePrefs, TimeService, Unit } from 'medical-domain'
 import { type MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
-import { type DateRange, isValidDateQueryParam, PatientDataUtils } from './patient-data.utils'
+import { convertIfNeeded, type DateRange, isValidDateQueryParam, PatientDataUtils } from './patient-data.utils'
 import DataUtil from 'tidepool-viz/src/utils/data'
 import { type DailyChartRef } from './models/daily-chart-ref.model'
 import { AppUserRoute } from '../../models/enums/routes.enum'
@@ -79,8 +79,8 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const dailyChartRef = useRef(null)
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
   const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
-  const bgClasses = defaultBgClasses[bgUnits]
-  const bgPrefs: BgPrefs = patient.diabeticProfile?.bloodGlucosePreference || {
+  const bgClasses = defaultBgClasses[bgUnits] // used to class the blood glucose values in the chart
+  const bgPrefs: BgPrefs = convertIfNeeded(patient.diabeticProfile?.bloodGlucosePreference, bgUnits) || {
     bgUnits,
     bgClasses,
     bgBounds: {
@@ -116,6 +116,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
     timezoneAware: true,
     timezoneName: new Intl.DateTimeFormat().resolvedOptions().timeZone // the browser timezone
   })
+  const [msRange, setMsRange] = useState<number>(DEFAULT_MS_RANGE)
 
   const patientDataUtils = useRef(new PatientDataUtils({
     patient,
@@ -155,8 +156,6 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
         return AppUserRoute.Trends
     }
   }
-
-  const [msRange, setMsRange] = useState<number>(DEFAULT_MS_RANGE)
 
   const changePatient = (patient: Patient): void => {
     patientDataUtils.current.changePatient(patient)

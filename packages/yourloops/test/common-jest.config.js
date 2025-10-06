@@ -108,7 +108,7 @@ module.exports = {
       YLP820_BASAL_TIME: 0,
       VERSION: '3.0.2',
       LATEST_RELEASE: '2000-01-01',
-      API_HOST: 'http://localhost:8009',
+      API_HOST: 'http://localhost:3000',
       BRANDING: 'diabeloop/blue',
       YLPZ_RA_LAD_FR: 'YLPZ-RA-LAD-001-fr-Rev9',
       YLPZ_RA_LAD_EN: 'YLPZ-RA-LAD-001-en-Rev9',
