@@ -56,7 +56,7 @@ const contentSecurityPolicy = {
   baseUri: ["'none'"],
   formAction: ["'none'"],
   defaultSrc: ["'none'"],
-  scriptSrc: ["'self'", "'strict-dynamic'", "'nonce-${nonce}'", "'unsafe-eval'"],
+  scriptSrc: ["'self'", "'strict-dynamic'", "'nonce-${nonce}'"],
   scriptSrcElem: ["'strict-dynamic'", "'nonce-${nonce}'"],
   styleSrc: ["'self'", "'unsafe-inline'"],
   imgSrc: ["'self'", 'data:'], // 'strict-dynamic' is problematic on google
