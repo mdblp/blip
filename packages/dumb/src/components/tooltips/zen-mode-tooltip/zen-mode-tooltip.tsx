@@ -54,7 +54,7 @@ export const ZenModeTooltip: FC<ZenModeTooltipProps> = (props) => {
     </div>
   )
 
-  if (zenMode.glycemiaTarget !== null && zenMode.glycemiaOffset !== null) {
+  if (zenMode.glycemiaTarget != null && zenMode.glycemiaOffset != null) {
     const glycemiaUnits = zenMode.glycemiaUnits ? zenMode.glycemiaUnits : 'N/A'
     const glycemiaInitialTarget = zenMode.glycemiaTarget - zenMode.glycemiaOffset;
     const glyOffset = zenMode.glycemiaOffset > 0 ? `+${zenMode.glycemiaOffset}` : `${zenMode.glycemiaOffset}`
