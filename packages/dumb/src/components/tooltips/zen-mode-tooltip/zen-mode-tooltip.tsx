@@ -48,8 +48,25 @@ export const ZenModeTooltip: FC<ZenModeTooltipProps> = (props) => {
   const { t } = useTranslation('main')
 
   const duration = getDuration(zenMode)
-  const shouldDisplayTargetGlycemia = zenMode.glycemiaTarget !== null && zenMode.glycemiaTarget !== undefined
-  const glycemiaUnits = zenMode.glycemiaUnits ? zenMode.glycemiaUnits : 'N/A'
+  let tooltipContent = (
+    <div className={commonStyles.containerFlex}>
+      <TooltipLine label={t('Duration')} value={`${duration.value} ${t(duration.units)}`} />
+    </div>
+  )
+
+  if (zenMode.glycemiaTarget !== null && zenMode.glycemiaOffset !== null) {
+    const glycemiaUnits = zenMode.glycemiaUnits ? zenMode.glycemiaUnits : 'N/A'
+    const glycemiaInitialTarget = zenMode.glycemiaTarget - zenMode.glycemiaOffset;
+    const glyOffset = zenMode.glycemiaOffset > 0 ? `+${zenMode.glycemiaOffset}` : `${zenMode.glycemiaOffset}`
+    tooltipContent = (
+      <div className={commonStyles.containerFlex}>
+        <TooltipLine label={t('ZenModeGlycemiaTarget')} value={`${zenMode.glycemiaTarget} ${t(glycemiaUnits)}`} isBold={true} />
+        <TooltipLine label={t('ZenModeInitialGlycemiaTarget')} value={`${glycemiaInitialTarget} ${t(glycemiaUnits)}`} />
+        <TooltipLine label={t('ZenModeGlycemiaOffset')} value={`${glyOffset} ${t(glycemiaUnits)}`} />
+        <TooltipLine label={t('Duration')} value={`${duration.value} ${t(duration.units)}`} />
+      </div>
+    )
+  }
 
   return (
     <Tooltip
@@ -59,17 +76,7 @@ export const ZenModeTooltip: FC<ZenModeTooltipProps> = (props) => {
       dateTitle={getDateTitleForBaseDatum(zenMode, timePrefs)}
       side={side}
       offset={DEFAULT_TOOLTIP_OFFSET}
-      content={
-        <div className={commonStyles.containerFlex}>
-          <TooltipLine label={t('Duration')} value={`${duration.value} ${t(duration.units)}`} />
-          { shouldDisplayTargetGlycemia &&
-              <TooltipLine label={t('GlycemiaTarget')} value={`${zenMode.glycemiaTarget} ${t(glycemiaUnits)}`} />
-          }
-          { shouldDisplayTargetGlycemia &&
-            <TooltipLine label={t('GlycemiaOffset')} value={`${zenMode.glycemiaOffset} ${t(glycemiaUnits)}`} />
-          }
-        </div>
-      }
+      content={tooltipContent}
     />
   )
 }
