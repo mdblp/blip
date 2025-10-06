@@ -82,7 +82,7 @@ import {
   WIZARD_UMM_ID,
   WIZARD_UNDELIVERED_ID,
   WIZARD_UNDELIVERED_INPUT_TIME,
-  ZEN_MODE_ID
+  ZEN_MODE_ID, ZEN_MODE_ID_WITH_GLY
 } from '../mock/data.api.mock'
 import moment from 'moment-timezone'
 import { checkStatTooltip } from './stats.assert'
@@ -155,6 +155,7 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`, 'Alarm 910042:30 pmOcclusionAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.')
   await checkTidelineContainerElementTooltip(`warmup_group_${WARMUP_01_ID}`,'Sensor warmup6:30 pmSession end9:00 pm')
   await checkTidelineContainerElementTooltip(`event_group_${ZEN_MODE_ID}`,'Zen mode11:00 pmDuration2 hours')
+  await checkTidelineContainerElementTooltip(`event_group_${ZEN_MODE_ID_WITH_GLY}`,'Zen mode10:00 pmTarget glucose level130 mg/dLSet target110 mg/dLDifference+20 mg/dLDuration2 hours')
   await checkTidelineContainerElementTooltip(`basal_group_${BASAL_LOOP_MODE_ON_ID}`,'Basal rate6:30 pmEnd time6:30 pmLoop modeONDelivered0.80U/h')
   await checkTidelineContainerElementTooltip(`basal_group_${BASAL_LOOP_MODE_OFF_ID}`,'Basal rate6:31 pmEnd time6:31 pmLoop modeOFFDelivered0.20U/h')
   await checkTidelineContainerElementTooltip(`basal_group_${BASAL_TEMP_ID}`,'Basal rate6:32 pmEnd time6:32 pmTemp basalDelivered0.30U/h')
