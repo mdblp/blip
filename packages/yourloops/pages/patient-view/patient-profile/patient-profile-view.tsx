@@ -34,6 +34,8 @@ import { PatientProfileViewSection } from './patient-profile-view-section.enum'
 import { AlertsSection } from './sections/alerts-section'
 import { Patient } from '../../../lib/patient/models/patient.model'
 import { RangeSection } from './sections/range-section'
+import { UnsavedChangesDialog } from './unsaved-changes-dialog'
+import { useUnsavedChanges } from './hooks/use-unsaved-change'
 
 interface PatientProfileViewProps {
   patient : Patient
@@ -41,24 +43,39 @@ interface PatientProfileViewProps {
 
 export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => {
   const [selectedSection, setSelectedSection] = useState(PatientProfileViewSection.Information)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+
+  const { showDialog, confirmNavigation, cancelNavigation, checkUnsavedChanges } =
+    useUnsavedChanges(hasUnsavedChanges)
 
   const selectSection = (section: PatientProfileViewSection): void => {
-    setSelectedSection(section)
+    if (selectedSection === PatientProfileViewSection.Alerts && hasUnsavedChanges) {
+      checkUnsavedChanges(() => {
+        setSelectedSection(section)
+        setHasUnsavedChanges(false)
+      })
+    } else {
+      setSelectedSection(section)
+    }
   }
 
-  const getSection = (): JSX.Element => {
+  const handleUnsavedChangesChange = (hasChanges: boolean): void => {
+    setHasUnsavedChanges(hasChanges)
+  }
+
+  const displaySelectedSection = (): JSX.Element => {
     switch (selectedSection) {
       case PatientProfileViewSection.Information:
         return <PatientPersonalInformationSection patient={patient} />
       case PatientProfileViewSection.Range:
         return <RangeSection patient={patient} />
       case PatientProfileViewSection.Alerts:
-        return <AlertsSection patient={patient} />
+        return <AlertsSection patient={patient} onUnsavedChangesChange={handleUnsavedChangesChange} />
       default:
         return <></>
     }
   }
-
+  console.log(showDialog)
   return (
     <Container data-testid="patient-profile-view-container" maxWidth="xl">
       <Grid container spacing={3}>
@@ -66,8 +83,13 @@ export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => 
           <PatientProfileViewMenu selectedSection={selectedSection} selectSection={selectSection} />
         </Grid>
         <Grid item xs={9}>
-          {getSection()}
+          {displaySelectedSection()}
         </Grid>
+        {/*<UnsavedChangesDialog*/}
+        {/*  open={showDialog}*/}
+        {/*  onConfirm={confirmNavigation}*/}
+        {/*  onClose={cancelNavigation}*/}
+        {/*/>*/}
       </Grid>
     </Container>
   )

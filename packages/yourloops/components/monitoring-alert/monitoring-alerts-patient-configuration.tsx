@@ -75,6 +75,7 @@ interface MonitoringAlertsPatientConfigurationProps {
   wasInitiallyUsingTeamAlertParameters: boolean
   onResetToTeamParameters: () => void
   onSave: (monitoringAlertsParameters: MonitoringAlertsParameters) => void
+  onUnsavedChangesChange?: (hasChanges: boolean) => void
 }
 
 interface MonitoringAlertsPatientApplyTeamButtonProps {
@@ -92,7 +93,8 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
     wasInitiallyUsingTeamAlertParameters,
     saveInProgress,
     onResetToTeamParameters,
-    onSave
+    onSave,
+    onUnsavedChangesChange
   }
 ) => {
   const { classes } = useMonitoringAlertConfigurationStyles()
@@ -109,13 +111,14 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
     discardChanges,
     save,
     setMonitoringValuesDisplayed,
-    onValueChange
+    onValueChange,
   } = useMonitoringAlertsPatientConfiguration({
     monitoringAlertsParameters,
     saveInProgress,
     userBgUnit,
     wasInitiallyUsingTeamAlertParameters,
-    onSave
+    onSave,
+    onUnsavedChangesChange
   })
 
   return (

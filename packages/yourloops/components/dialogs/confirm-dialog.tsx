@@ -37,6 +37,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import { LoadingButton } from '@mui/lab'
 
 export interface ConfirmDialogProps {
+  open?: boolean
   title: string
   label: string
   inProgress?: boolean
@@ -45,13 +46,13 @@ export interface ConfirmDialogProps {
 }
 
 export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
-  const { title, label, inProgress, onClose, onConfirm } = props
+  const { open,title, label, inProgress, onClose, onConfirm } = props
   const { t } = useTranslation('yourloops')
 
   return (
     <Dialog
       data-testid="confirm-dialog"
-      open
+      open={open ?? true}
       fullWidth
       maxWidth="sm"
       onClose={onClose}
