@@ -56,14 +56,14 @@ const contentSecurityPolicy = {
   baseUri: ["'none'"],
   formAction: ["'none'"],
   defaultSrc: ["'none'"],
-  scriptSrc: ["'strict-dynamic'", "'nonce-${nonce}'"],
+  scriptSrc: ["'strict-dynamic'", "'nonce-${nonce}'", "'unsafe-inline'", "http:", "https:"],
   scriptSrcElem: ["'strict-dynamic'", "'nonce-${nonce}'"],
   styleSrc: ["'self'", "'unsafe-inline'"],
   imgSrc: ["'self'", 'data:'], // 'strict-dynamic' is problematic on google
   fontSrc: ["'self'", 'data:'],
   connectSrc: ["'self'", 'data:', '{{ API_HOST }}'],
   frameSrc: [],
-  objectSrc: []
+  objectSrc: [],
 }
 
 /** @type {string} */
@@ -168,6 +168,7 @@ function genContentSecurityPolicy() {
   // contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_IT}.pdf`)
   // contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_DE}.pdf`)
   // contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`)
+  contentSecurityPolicy.requireTrustedTypesFor.push("'script'")
 
   let csp = ''
   for (const cspName in contentSecurityPolicy) {
