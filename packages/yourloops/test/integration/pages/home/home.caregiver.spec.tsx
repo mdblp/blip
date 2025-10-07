@@ -28,7 +28,7 @@
 import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi, removeDirectShareMock } from '../../mock/direct-share.api.mock'
-import { patient1AsTeamMember, patient2AsTeamMember } from '../../data/patient.api.data'
+import { patient1Info, patient2AsTeamMember } from '../../data/patient.api.data'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { renderPage } from '../../utils/render'
@@ -40,7 +40,7 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { checkPatientListHeaderCaregiver } from '../../assert/patient-list.assert'
-import { buildPatientAsTeamMember } from '../../data/patient-builder.data'
+import { buildPatient } from '../../data/patient-builder.data'
 import moment from 'moment-timezone'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
 import ErrorApi from '../../../../lib/error/error.api'
@@ -79,42 +79,48 @@ describe('Caregiver home page', () => {
       coefficientOfVariation: null,
       hypoglycemia: 0
     }
+    const medicalData = { range: { startDate: '2023-06-21T07:02:25.378Z', endDate: '2023-06-22T07:02:25.378Z' } }
 
-    const patient1 = buildPatientAsTeamMember({
-      userId: 'patientId1',
+    const patient1 = buildPatient({
+      userid: 'patientId1',
       profile: {
         email: 'Akim@embett.com',
         firstName: 'Akim',
         lastName: 'Embett',
         fullName: 'Akim Embett',
-        patient: { birthday: '2010-01-20T10:44:34+01:00' }
+        birthdate: '2010-01-20T10:44:34+01:00'
       },
       glycemiaIndicators,
-      medicalData: { range: { startDate: '2023-06-21T07:02:25.378Z', endDate: '2023-06-22T07:02:25.378Z' } }
+      medicalData
     })
-    const patient2 = buildPatientAsTeamMember({
-      userId: 'patientId2',
+
+    const patient2 = buildPatient({
+      userid: 'patientId2',
       profile: {
         email: 'alain@provist.com',
         firstName: 'Alain',
         lastName: 'Provist',
         fullName: 'Alain Provist',
-        patient: { birthday: '2010-01-20T10:44:34+01:00' }
+        birthdate: '2010-01-20T10:44:34+01:00'
       },
-      glycemiaIndicators
+      glycemiaIndicators,
+      medicalData
     })
-    const patient3 = buildPatientAsTeamMember({
-      userId: 'patientId3',
+
+    const patient3 = buildPatient({
+      userid: 'patientId3',
       profile: {
         email: 'annie@versaire.com',
         firstName: 'Annie',
         lastName: 'Versaire',
         fullName: 'Annie Versaire',
-        patient: { birthday: '2015-05-25T10:44:34+01:00' }
+        birthdate: '2015-05-25T10:44:34+01:00'
       },
-      glycemiaIndicators
+      glycemiaIndicators,
+      medicalData
     })
-    jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1, patient2, patient3])
+
+    jest.spyOn(PatientApi, 'getPatientsForCaregivers').mockResolvedValue([patient1, patient2, patient3])
 
     renderPage('/')
 
@@ -127,23 +133,23 @@ describe('Caregiver home page', () => {
     // Checking that all patients are displayed
     const dataGridRow = screen.getByTestId('current-patient-list-grid')
     expect(within(dataGridRow).getAllByRole('row')).toHaveLength(4)
-    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient fake@patient.emailEmbett AkimJan 20, 20100%0%Jun 22, 2023 7:02 AMFlag patient fake@patient.emailProvist AlainJan 20, 20100%0%N/AFlag patient fake@patient.emailVersaire AnnieMay 25, 20150%0%N/A`)
+    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient Akim@embett.comEmbett AkimJan 20, 20100%0%Jun 22, 2023 7:02 AMFlag patient alain@provist.comProvist AlainJan 20, 20100%0%Jun 22, 2023 7:02 AMFlag patient annie@versaire.comVersaire AnnieMay 25, 20150%0%Jun 22, 2023 7:02 AM`)
 
     const searchPatient = screen.getByPlaceholderText('Search for a patient...')
 
     // Searching by birthdate only
     await userEvent.type(searchPatient, '20/01/2010')
-    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient fake@patient.emailEmbett AkimJan 20, 20100%0%Jun 22, 2023 7:02 AMFlag patient fake@patient.emailProvist AlainJan 20, 20100%0%N/A`)
+    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient Akim@embett.comEmbett AkimJan 20, 20100%0%Jun 22, 2023 7:02 AMFlag patient alain@provist.comProvist AlainJan 20, 20100%0%Jun 22, 2023 7:02 AM`)
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and first name
     await userEvent.type(searchPatient, '20/01/2010 Aki')
-    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient fake@patient.emailEmbett AkimJan 20, 20100%0%${lastDataUploadDate}`)
+    expect(dataGridRow).toHaveTextContent(`PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient Akim@embett.comEmbett AkimJan 20, 20100%0%${lastDataUploadDate}`)
     await userEvent.clear(searchPatient)
 
     // Searching by birthdate and last name
     await userEvent.type(searchPatient, '20/01/2010provi')
-    expect(dataGridRow).toHaveTextContent('PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient fake@patient.emailProvist AlainJan 20, 20100%0%N/A')
+    expect(dataGridRow).toHaveTextContent('PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient alain@provist.comProvist AlainJan 20, 20100%0%Jun 22, 2023 7:02 AM')
   })
 
   it('should display a list of patients and allow to remove one of them', async () => {
@@ -157,8 +163,7 @@ describe('Caregiver home page', () => {
 
     const patientTableBody = screen.getByTestId('current-patient-list-grid')
     expect(within(patientTableBody).getAllByRole('row')).toHaveLength(5)
-    expect(patientTableBody).toHaveTextContent('PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Jan 1, 19800%0%N/AFlag patient pending-patient@diabeloop.frPatient PendingJan 1, 19800%0%N/AFlag patient patient2@diabeloop.frRouis Patient2Jan 1, 19800%0%N/AFlag patient patient3@diabeloop.frSrairi Patient3Jan 1, 19800%0%N/A')
-
+    expect(patientTableBody).toHaveTextContent('PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Jan 1, 1980Flag patient pending-patient@diabeloop.frPatient PendingJan 1, 1980Flag patient patient2@diabeloop.frRouis Patient2Jan 1, 1980Flag patient patient3@diabeloop.frSrairi Patient3Jan 1, 1980')
     const removePatientButton = screen.getByRole('button', { name: `Remove patient ${patient2AsTeamMember.email}` })
     expect(removePatientButton).toBeVisible()
 
@@ -192,7 +197,7 @@ describe('Caregiver home page', () => {
     await userEvent.click(removePatientDialog2ConfirmButton)
 
     expect(removeDirectShareMock).toHaveBeenCalledWith(patient2AsTeamMember.userId, loggedInUserId)
-    expect(jest.spyOn(PatientApi, 'getPatients').mockResolvedValue([patient1AsTeamMember])).toHaveBeenCalledTimes(2)
+    expect(jest.spyOn(PatientApi, 'getPatientsForCaregivers').mockResolvedValue([patient1Info])).toHaveBeenCalledTimes(2)
     expect(screen.queryByTestId('remove-direct-share-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You no longer have access to your patient\'s data.')
   })

@@ -28,11 +28,12 @@
 import React, { type FC, useState } from 'react'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
-import { PatientPersonalInformation } from './sections/patient-personal-information'
+import { PatientPersonalInformationSection } from './sections/patient-personal-information-section'
 import { PatientProfileViewMenu } from './patient-profile-view-menu'
 import { PatientProfileViewSection } from './patient-profile-view-section.enum'
-import { RangeAndAlertsSection } from './sections/range-and-alerts-section'
+import { AlertsSection } from './sections/alerts-section'
 import { Patient } from '../../../lib/patient/models/patient.model'
+import { RangeSection } from './sections/range-section'
 
 interface PatientProfileViewProps {
   patient : Patient
@@ -41,12 +42,21 @@ interface PatientProfileViewProps {
 export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => {
   const [selectedSection, setSelectedSection] = useState(PatientProfileViewSection.Information)
 
-  const isSelected = (section: PatientProfileViewSection): boolean => {
-    return section === selectedSection
-  }
-
   const selectSection = (section: PatientProfileViewSection): void => {
     setSelectedSection(section)
+  }
+
+  const getSection = (): JSX.Element => {
+    switch (selectedSection) {
+      case PatientProfileViewSection.Information:
+        return <PatientPersonalInformationSection patient={patient} />
+      case PatientProfileViewSection.Range:
+        return <RangeSection patient={patient} />
+      case PatientProfileViewSection.Alerts:
+        return <AlertsSection patient={patient} />
+      default:
+        return <></>
+    }
   }
 
   return (
@@ -56,16 +66,7 @@ export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => 
           <PatientProfileViewMenu selectedSection={selectedSection} selectSection={selectSection} />
         </Grid>
         <Grid item xs={9}>
-          {
-            isSelected(PatientProfileViewSection.Information) ?
-              <PatientPersonalInformation patient={patient} />
-              : isSelected(PatientProfileViewSection.RangeAndAlerts) ?
-                <RangeAndAlertsSection
-                  patient={patient}
-                />
-                : <></>
-          }
-
+          {getSection()}
         </Grid>
       </Grid>
     </Container>

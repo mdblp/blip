@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,11 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
-import { getTranslation } from '../../utils/i18n'
-
-export const checkTargetAndAlertsViewContent = async (): Promise<void> => {
-  const targetAndAlertsContent = await screen.findByTestId('target-and-alerts-container')
-  expect(targetAndAlertsContent).toHaveTextContent(getTranslation('range-and-alerts'))
-  expect(targetAndAlertsContent).toHaveTextContent('Monitoring alertsSet manually each value or apply care team values.')
+export enum DiabeticType {
+  DT1DT2 = 'type1-type2',
+  DT1Pregnancy = 'dt1-pregnancy',
+  Custom = 'custom',
 }

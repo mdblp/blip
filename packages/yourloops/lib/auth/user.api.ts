@@ -55,6 +55,7 @@ export default class UserApi {
 
   static async getUserMetadata(userId: string): Promise<UserMetadata | undefined> {
     try {
+      // TODO: change to /bff/v1/patients/${userId} for having diabeticProfile (return when not set)
       const { data } = await HttpService.get<UserMetadata>({ url: `/metadata/${userId}` })
       return data
     } catch (err) {
