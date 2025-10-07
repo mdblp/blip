@@ -63,7 +63,7 @@ const contentSecurityPolicy = {
   fontSrc: ["'self'", 'data:'],
   connectSrc: ["'self'", 'data:', '{{ API_HOST }}'],
   frameSrc: [],
-  objectSrc: [],
+  objectSrc: []
 }
 
 /** @type {string} */
