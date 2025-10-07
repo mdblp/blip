@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC, useMemo } from 'react'
+import React, { FC, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { type Theme, useTheme } from '@mui/material/styles'
@@ -75,7 +75,7 @@ interface MonitoringAlertsPatientConfigurationProps {
   wasInitiallyUsingTeamAlertParameters: boolean
   onResetToTeamParameters: () => void
   onSave: (monitoringAlertsParameters: MonitoringAlertsParameters) => void
-  onUnsavedChangesChange?: (hasChanges: boolean) => void
+  onUnsavedChangesChange: (hasChanges: boolean) => void
 }
 
 interface MonitoringAlertsPatientApplyTeamButtonProps {
@@ -117,9 +117,12 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
     saveInProgress,
     userBgUnit,
     wasInitiallyUsingTeamAlertParameters,
-    onSave,
-    onUnsavedChangesChange
+    onSave
   })
+
+  useEffect(() => {
+      onUnsavedChangesChange(!saveButtonDisabled)
+  }, [onUnsavedChangesChange, saveButtonDisabled]);
 
   return (
     <>

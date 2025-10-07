@@ -48,7 +48,6 @@ interface MonitoringAlertsPatientConfigurationHookProps {
   wasInitiallyUsingTeamAlertParameters: boolean
   saveInProgress?: boolean
   userBgUnit: Unit.MilligramPerDeciliter | Unit.MmolPerLiter
-  onUnsavedChangesChange?: (hasChanges: boolean) => void
 }
 
 interface MonitoringAlertsPatientConfigurationHookReturn {
@@ -68,8 +67,7 @@ export const useMonitoringAlertsPatientConfiguration = (
     saveInProgress,
     userBgUnit,
     onSave,
-    wasInitiallyUsingTeamAlertParameters,
-    onUnsavedChangesChange
+    wasInitiallyUsingTeamAlertParameters
   }: MonitoringAlertsPatientConfigurationHookProps
 ): MonitoringAlertsPatientConfigurationHookReturn => {
   const { teamId } = useParams()
@@ -174,11 +172,6 @@ export const useMonitoringAlertsPatientConfiguration = (
 
   const onValueChange = (newMonitoringParametersValuesToDisplay: MonitoringValuesDisplayed) => {
     setUseTeamValues(areTeamValuesAndGivenValuesTheSame(newMonitoringParametersValuesToDisplay))
-    // TODO: check the !saveButtonDisabled part, not sure it's needed here to indicate save in progress
-    const hasChanges = !areTeamValuesAndGivenValuesTheSame(newMonitoringParametersValuesToDisplay) || !saveButtonDisabled
-    if (onUnsavedChangesChange) {
-      onUnsavedChangesChange(hasChanges)
-    }
   }
 
   return {

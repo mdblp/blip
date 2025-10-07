@@ -43,16 +43,17 @@ export interface ConfirmDialogProps {
   inProgress?: boolean
   onClose: () => void
   onConfirm: () => void
+  confirmColor?: 'primary' | 'error'
 }
 
 export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
-  const { open,title, label, inProgress, onClose, onConfirm } = props
+  const { open,title, label, inProgress, onClose, onConfirm, confirmColor } = props
   const { t } = useTranslation('yourloops')
 
   return (
     <Dialog
       data-testid="confirm-dialog"
-      open={open ?? true}
+      open={open}
       fullWidth
       maxWidth="sm"
       onClose={onClose}
@@ -79,7 +80,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
           loading={inProgress}
           data-testid="confirm-dialog-confirm-button"
           variant="contained"
-          color="error"
+          color={confirmColor ?? "error"}
           disableElevation
           disabled={inProgress}
           onClick={onConfirm}

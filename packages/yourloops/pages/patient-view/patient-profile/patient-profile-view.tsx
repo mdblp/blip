@@ -35,7 +35,6 @@ import { AlertsSection } from './sections/alerts-section'
 import { Patient } from '../../../lib/patient/models/patient.model'
 import { RangeSection } from './sections/range-section'
 import { UnsavedChangesDialog } from './unsaved-changes-dialog'
-import { useUnsavedChanges } from './hooks/use-unsaved-change'
 
 interface PatientProfileViewProps {
   patient : Patient
@@ -44,16 +43,25 @@ interface PatientProfileViewProps {
 export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => {
   const [selectedSection, setSelectedSection] = useState(PatientProfileViewSection.Information)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  const [pendingNavigationSection, setPendingNavigationSection] = useState<PatientProfileViewSection | null>(null)
+  const [showDialog, setShowDialog] = useState(false)
 
-  const { showDialog, confirmNavigation, cancelNavigation, checkUnsavedChanges } =
-    useUnsavedChanges(hasUnsavedChanges)
+  const confirmNavigation = (): void => {
+    setShowDialog(false)
+    setSelectedSection(pendingNavigationSection)
+    setPendingNavigationSection(null)
+    setHasUnsavedChanges(false)
+  }
+
+  const cancelNavigation = (): void => {
+    setShowDialog(false)
+    setPendingNavigationSection(null)
+  }
 
   const selectSection = (section: PatientProfileViewSection): void => {
     if (selectedSection === PatientProfileViewSection.Alerts && hasUnsavedChanges) {
-      checkUnsavedChanges(() => {
-        setSelectedSection(section)
-        setHasUnsavedChanges(false)
-      })
+      setShowDialog(true)
+      setPendingNavigationSection(section)
     } else {
       setSelectedSection(section)
     }
@@ -85,11 +93,11 @@ export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => 
         <Grid item xs={9}>
           {displaySelectedSection()}
         </Grid>
-        {/*<UnsavedChangesDialog*/}
-        {/*  open={showDialog}*/}
-        {/*  onConfirm={confirmNavigation}*/}
-        {/*  onClose={cancelNavigation}*/}
-        {/*/>*/}
+        <UnsavedChangesDialog
+          open={showDialog}
+          onConfirm={confirmNavigation}
+          onClose={cancelNavigation}
+        />
       </Grid>
     </Container>
   )

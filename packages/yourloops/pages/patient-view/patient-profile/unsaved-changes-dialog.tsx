@@ -35,15 +35,16 @@ interface UnsavedChangedDialogProps {
   onClose: () => void
 }
 
-export const UnsavedChangesDialog: FC<UnsavedChangedDialogProps> = ({ onClose, onConfirm }) => {
+export const UnsavedChangesDialog: FC<UnsavedChangedDialogProps> = ({ open,onClose, onConfirm }) => {
   const { t } = useTranslation('yourloops')
   return (
     <ConfirmDialog
-      open
+      open={open}
       title={t('close-without-saving')}
       label={t('close-without-saving-warning')}
       onClose={onClose}
       onConfirm={onConfirm}
+      confirmColor="primary"
     />
   )
 }

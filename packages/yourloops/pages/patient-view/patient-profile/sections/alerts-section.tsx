@@ -45,7 +45,7 @@ import { errorTextFromException } from '../../../../lib/utils'
 
 interface AlertsSectionProps {
   patient: Patient
-  onUnsavedChangesChange?: (hasChanges: boolean) => void
+  onUnsavedChangesChange: (hasChanges: boolean) => void
 }
 
 export const MONITORING_ALERTS_SECTION_ID = 'monitoring-alerts'

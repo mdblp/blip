@@ -208,17 +208,16 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
           </StyledTableCell>
         }
       </StyledTableRow>
-      {showConfirmRemoveDialog &&
-        <ConfirmDialog
-          title={t('remove-member-from-team')}
-          label={t('remove-member-confirm', { fullName: teamMember.profile?.fullName, teamName: team.name })}
-          inProgress={userUpdateInProgress}
-          onClose={() => {
-            setShowConfirmRemoveDialog(false)
-          }}
-          onConfirm={deleteMember}
-        />
-      }
+      <ConfirmDialog
+        open={showConfirmRemoveDialog}
+        title={t('remove-member-from-team')}
+        label={t('remove-member-confirm', { fullName: teamMember.profile?.fullName, teamName: team.name })}
+        inProgress={userUpdateInProgress}
+        onClose={() => {
+          setShowConfirmRemoveDialog(false)
+        }}
+        onConfirm={deleteMember}
+      />
     </>
   )
 }
