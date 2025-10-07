@@ -49,7 +49,7 @@ const featurePolicy = [
 const contentSecurityPolicy = {
   // TODO: report-uri /event/csp-report/violation;
   // Need react >= v16 for theses directives?
-  requireTrustedTypesFor: "'script'",
+  requireTrustedTypesFor: ["'script'"],
   // "trusted-types": "default TrustedHTML TrustedScriptURL",
   blockAllMixedContent: [''],
   frameAncestors: ["'none'"],
