@@ -34,6 +34,7 @@ import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { computeBgClassesBarStyle, computeCBGStyle } from '../common/cbg-utils'
 import { type BgClasses } from 'medical-domain'
 import { StatColoredBar } from '../stat-colored-bar/stat-colored-bar'
+import { LineColor } from '../../../models/enums/line-color.enum'
 
 export interface CBGStandardDeviationProps {
   annotations: string[]
@@ -91,9 +92,9 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
           <>
             <StatColoredBar
               lineColorItems={[
-                { index: 'bg-low', color: 'var(--bg-low)', widthPercent: bgClassesBarStyle.lowWidth },
-                { index: 'bg-target', color: 'var(--bg-target)', widthPercent: bgClassesBarStyle.targetWidth },
-                { index: 'bg-high', color: 'var(--bg-high)', widthPercent: bgClassesBarStyle.highWidth }
+                { index: 'bg-low', color: LineColor.BgLow, widthPercent: bgClassesBarStyle.lowWidth },
+                { index: 'bg-target', color: LineColor.BgTarget, widthPercent: bgClassesBarStyle.targetWidth },
+                { index: 'bg-high', color: LineColor.BgHigh, widthPercent: bgClassesBarStyle.highWidth }
               ]}
               horizontalLineItems={[
                 { index: 'std-dev-min', color: valueBasedStyles.min.backgroundColor, alignmentPercent: valueBasedStyles.min.left },

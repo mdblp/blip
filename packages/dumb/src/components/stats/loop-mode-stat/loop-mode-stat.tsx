@@ -38,6 +38,7 @@ import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid'
 import { LoopModePercentageDetail } from './loop-mode-percentage-detail'
 import { StatColoredBar } from '../stat-colored-bar/stat-colored-bar'
+import { LineColor } from '../../../models/enums/line-color.enum'
 
 interface LoopModeStatProps {
   automatedBasalDuration: number
@@ -93,8 +94,8 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
           <StatColoredBar
             dotItem={{ color: 'var(--bg-target)', alignmentPercent: dotAlignment }}
             lineColorItems={[
-              { index: 'loop-mode-on', widthPercent: automatedPercentage, color: 'var(--bg-target)' },
-              { index: 'loop-mode-off', widthPercent: manualPercentage, color: 'var(--text-basal)' }
+              { index: 'loop-mode-on', widthPercent: automatedPercentage, color: LineColor.BgTarget },
+              { index: 'loop-mode-off', widthPercent: manualPercentage, color: LineColor.TextBasal }
             ]}
           />
         </Grid>
