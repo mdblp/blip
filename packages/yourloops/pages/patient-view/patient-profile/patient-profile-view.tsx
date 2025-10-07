@@ -34,7 +34,7 @@ import { PatientProfileViewSection } from './patient-profile-view-section.enum'
 import { AlertsSection } from './sections/alerts-section'
 import { Patient } from '../../../lib/patient/models/patient.model'
 import { RangeSection } from './sections/range-section'
-import { UnsavedChangesDialog } from './unsaved-changes-dialog'
+import { UnsavedChangesDialog } from './dialog/unsaved-changes-dialog'
 
 interface PatientProfileViewProps {
   patient : Patient
@@ -83,7 +83,7 @@ export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => 
         return <></>
     }
   }
-  console.log(showDialog)
+
   return (
     <Container data-testid="patient-profile-view-container" maxWidth="xl">
       <Grid container spacing={3}>

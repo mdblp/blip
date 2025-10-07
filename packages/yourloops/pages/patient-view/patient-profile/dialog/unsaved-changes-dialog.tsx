@@ -26,7 +26,7 @@
  */
 
 import React, { type FC } from 'react'
-import ConfirmDialog from '../../../components/dialogs/confirm-dialog'
+import ConfirmDialog from '../../../../components/dialogs/confirm-dialog'
 import { useTranslation } from 'react-i18next'
 
 interface UnsavedChangedDialogProps {

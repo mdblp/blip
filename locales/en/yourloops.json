@@ -191,6 +191,8 @@
   "chat-footer-private": "Private",
   "chat-footer-reply": "Reply",
   "chat-footer-start-writing": "Start typing",
+  "close-without-saving": "Data change unsaved",
+  "close-without-saving-warning" : "This page has unsaved changes, they will be lost if you close without saving.\nAre you sure you want to leave ?",
   "coefficient-of-variation": "Coefficient of Variation",
   "coefficient-of-variation-tooltip": "**CV (Coefficient of Variation):** The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.",
   "coefficient-of-variation-with-value": "CV ({{cbgLabel}})",
