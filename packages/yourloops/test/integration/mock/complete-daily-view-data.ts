@@ -1715,9 +1715,12 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
             "value": 7200
           },
           "normalEnd": "2022-08-07T08:00:00.000Z",
-          "glycemiaTarget": 130,
-          "glycemiaOffset": 20,
-          "glycemiaUnits": Unit.MilligramPerDeciliter,
+          "glycemiaTarget": {
+            "value": 130,
+            "initialValue": 110,
+            "offset": 20,
+            "units": Unit.MilligramPerDeciliter,
+          },
           "epochEnd": 1659949200000,
           "guid": ZEN_MODE_ID_WITH_GLY,
           "inputTime": "2022-08-07T08:00:00Z",

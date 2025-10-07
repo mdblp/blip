@@ -32,8 +32,8 @@ import { DeviceEventSubtype } from './enums/device-event-subtype.enum'
 
 type GlycemiaTarget = {
   offset: number
-  target: number
-  initialTarget: number
+  value: number
+  initialValue: number
   units: string
 }
 type ZenMode = BaseDatum & Duration & {
