@@ -49,14 +49,14 @@ const featurePolicy = [
 const contentSecurityPolicy = {
   // TODO: report-uri /event/csp-report/violation;
   // Need react >= v16 for theses directives?
-  // "require-trusted-types-for": "'script'",
+  "require-trusted-types-for": "'script'",
   // "trusted-types": "default TrustedHTML TrustedScriptURL",
   blockAllMixedContent: [''],
   frameAncestors: ["'none'"],
   baseUri: ["'none'"],
   formAction: ["'none'"],
   defaultSrc: ["'none'"],
-  scriptSrc: ["'strict-dynamic'", "'nonce-${nonce}'", "'unsafe-inline'", "http:", "https:"],
+  scriptSrc: ["'strict-dynamic'", "'nonce-${nonce}'", "'unsafe-inline'", "'http:'", "'https:'"],
   scriptSrcElem: ["'strict-dynamic'", "'nonce-${nonce}'"],
   styleSrc: ["'self'", "'unsafe-inline'"],
   imgSrc: ["'self'", 'data:'], // 'strict-dynamic' is problematic on google
@@ -168,7 +168,6 @@ function genContentSecurityPolicy() {
   // contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_IT}.pdf`)
   // contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_DE}.pdf`)
   // contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`)
-  contentSecurityPolicy.requireTrustedTypesFor.push("'script'")
 
   let csp = ''
   for (const cspName in contentSecurityPolicy) {
