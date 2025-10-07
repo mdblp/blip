@@ -46,7 +46,7 @@ interface LoopModeStatProps {
   automatedPercentage: number
 }
 
-const DOT_OFFSET_PERCENT = 5
+const DOT_OFFSET_PERCENT = 3
 
 const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
   const {
@@ -82,14 +82,14 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
         </Box>
       </Box>
       <Grid container spacing={0} sx={{ marginTop: 1 }}>
-        <Grid item xs={2}>
+        <Grid item xs={3}>
           <LoopModePercentageDetail
             percentageValue={automatedPercentage}
             duration={automatedDuration}
             valueClassName={styles.autoValueColor}
           />
         </Grid>
-        <Grid item xs={8} sx={{ alignSelf: 'flex-start' }}>
+        <Grid item xs={6} sx={{ alignSelf: 'flex-start' }}>
           <StatColoredBar
             dotItem={{ color: 'var(--bg-target)', alignmentPercent: dotAlignment }}
             lineColorItems={[
@@ -98,7 +98,7 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
             ]}
           />
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={3}>
           <LoopModePercentageDetail
             percentageValue={manualPercentage}
             duration={manualDuration}
