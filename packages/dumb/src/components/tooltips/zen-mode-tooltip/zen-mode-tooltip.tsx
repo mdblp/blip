@@ -74,11 +74,11 @@ export const ZenModeTooltip: FC<ZenModeTooltipProps> = (props) => {
       content={
         <div className={commonStyles.containerFlex}>
           {hasGlycemiaData &&
-            <TooltipLine label={t('ZenModeGlycemiaTarget')} value={zenMode.glycemiaTarget}
+            <TooltipLine label={t('target-glucose-level')} value={zenMode.glycemiaTarget}
                          units={zenMode.glycemiaUnits} isBold={true} /> &&
-            <TooltipLine label={t('ZenModeInitialGlycemiaTarget')} value={glycemiaInitialTarget}
+            <TooltipLine label={t('set-target')} value={glycemiaInitialTarget}
                          units={zenMode.glycemiaUnits} /> &&
-            <TooltipLine label={t('ZenModeGlycemiaOffset')} value={getFormattedGlycemiaOffset(zenMode.glycemiaOffset)}
+            <TooltipLine label={t('difference')} value={getFormattedGlycemiaOffset(zenMode.glycemiaOffset)}
                          units={zenMode.glycemiaUnits} />
           }
           <TooltipLine label={t('Duration')} value={duration.value} units={t(duration.units)} />
