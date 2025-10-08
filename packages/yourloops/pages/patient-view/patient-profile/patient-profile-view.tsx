@@ -93,11 +93,13 @@ export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => 
         <Grid item xs={9}>
           {displaySelectedSection()}
         </Grid>
-        <UnsavedChangesDialog
-          open={showDialog}
-          onConfirm={confirmNavigation}
-          onClose={cancelNavigation}
-        />
+        { showDialog &&
+          <UnsavedChangesDialog
+            open={showDialog}
+            onConfirm={confirmNavigation}
+            onClose={cancelNavigation}
+          />
+        }
       </Grid>
     </Container>
   )
