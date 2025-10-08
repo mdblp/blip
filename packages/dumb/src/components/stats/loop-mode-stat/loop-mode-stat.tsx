@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2024, Diabeloop
+ * Copyright (c) 2020-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,12 +30,15 @@ import styles from './loop-mode-stat.css'
 import commonStyles from '../../../styles/stat-common.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import Box from '@mui/material/Box'
-import { LoopModePercentageDetail } from './loop-mode-percentage-detail'
-import { LoopModeLabel } from './loop-mode-label'
-import { LoopModeGraph } from './loop-mode-graph'
 import { useLocation } from 'react-router-dom'
 import { t } from 'i18next'
+import { formatDuration } from '../../../utils/datetime/datetime.util'
 import { ensureNumeric } from '../stats.util'
+import Chip from '@mui/material/Chip'
+import Grid from '@mui/material/Grid'
+import { LoopModePercentageDetail } from './loop-mode-percentage-detail'
+import { StatColoredBar } from '../stat-colored-bar/stat-colored-bar'
+import { LineColor } from '../../../models/enums/line-color.enum'
 
 interface LoopModeStatProps {
   automatedBasalDuration: number
@@ -43,6 +46,8 @@ interface LoopModeStatProps {
   manualPercentage: number
   automatedPercentage: number
 }
+
+const DOT_OFFSET_PERCENT = 3
 
 const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
   const {
@@ -57,41 +62,50 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
   const title = t(isDailyPage ? 'time-loop' : 'avg-time-loop')
   const annotations = isDailyPage ? [t('time-loop-tooltip'), t('time-loop-how-calculate')] : [t('avg-time-loop-tooltip'), t('avg-time-loop-how-calculate')]
 
+  const automatedDurationSafe = ensureNumeric(automatedBasalDuration)
+  const automatedDuration = formatDuration(automatedDurationSafe, true)
+
+  const manualDurationSafe = ensureNumeric(manualBasalDuration)
+  const manualDuration = formatDuration(manualDurationSafe, true)
+
+  const dotAlignment = Math.max(0, automatedPercentage - DOT_OFFSET_PERCENT)
+
   return (
     <div data-testid="loop-mode-stat">
-      <Box className={commonStyles.title}>
-        {title}
-        <StatTooltip annotations={annotations}/>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box className={commonStyles.title}>
+          {title}
+          <StatTooltip annotations={annotations} />
+        </Box>
+        <Box>
+          <Chip size="small" label={t('wheel-label-on')} className={styles.automatedChip} />
+          <Chip size="small" label={t('wheel-label-off')} />
+        </Box>
       </Box>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 290 80"
-        className={`${styles.statWheelTimeInAuto} ${styles.donutChart}`}
-      >
-        <LoopModeLabel
-          className={styles.onColor}
-          transform="translate(10 15)"
-          translationKey="wheel-label-on"
-        />
-        <LoopModeLabel
-          className={styles.offColor}
-          transform="translate(240 15)"
-          translationKey="wheel-label-off"
-        />
-        <LoopModePercentageDetail
-          className={styles.labelOnValueUnits}
-          percentage={automatedPercentage}
-          transform="translate(30 63)"
-          value={ensureNumeric(automatedBasalDuration)}
-        />
-        <LoopModePercentageDetail
-          className={styles.labelOffValueUnits}
-          percentage={manualPercentage}
-          transform="translate(260 63)"
-          value={ensureNumeric(manualBasalDuration)}
-        />
-        <LoopModeGraph automatedPercentage={automatedPercentage} manualPercentage={manualPercentage}/>
-      </svg>
+      <Grid container spacing={0} sx={{ marginTop: 1 }}>
+        <Grid item xs={3}>
+          <LoopModePercentageDetail
+            percentageValue={automatedPercentage}
+            duration={automatedDuration}
+            valueClassName={styles.autoValueColor}
+          />
+        </Grid>
+        <Grid item xs={6} sx={{ alignSelf: 'flex-start' }}>
+          <StatColoredBar
+            dotItem={{ color: 'var(--bg-target)', alignmentPercent: dotAlignment }}
+            lineColorItems={[
+              { index: 'loop-mode-on', widthPercent: automatedPercentage, color: LineColor.BgTarget },
+              { index: 'loop-mode-off', widthPercent: manualPercentage, color: LineColor.TextBasal }
+            ]}
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <LoopModePercentageDetail
+            percentageValue={manualPercentage}
+            duration={manualDuration}
+          />
+        </Grid>
+      </Grid>
     </div>
   )
 }
