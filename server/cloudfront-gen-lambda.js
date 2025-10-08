@@ -56,6 +56,7 @@ const contentSecurityPolicy = {
   baseUri: ["'none'"],
   formAction: ["'none'"],
   defaultSrc: ["'none'"],
+  // eslint-disable-next-line quotes
   scriptSrc: ["'strict-dynamic'", "'nonce-${nonce}'", "'unsafe-inline'", "http:", "https:"],
   scriptSrcElem: ["'strict-dynamic'", "'nonce-${nonce}'"],
   styleSrc: ["'self'", "'unsafe-inline'"],
