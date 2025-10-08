@@ -48,16 +48,14 @@ const featurePolicy = [
 
 const contentSecurityPolicy = {
   // TODO: report-uri /event/csp-report/violation;
-  // Need react >= v16 for theses directives?
-  requireTrustedTypesFor: ["'script'"],
-  // "trusted-types": "default TrustedHTML TrustedScriptURL",
+  // requireTrustedTypesFor: ["'script'"], // pdfkit is not compatible with this also ...
   blockAllMixedContent: [''],
   frameAncestors: ["'none'"],
   baseUri: ["'none'"],
   formAction: ["'none'"],
   defaultSrc: ["'none'"],
   // eslint-disable-next-line quotes
-  scriptSrc: ["'strict-dynamic'", "'nonce-${nonce}'", "'unsafe-inline'",  "'unsafe-eval'",  "http:", "https:"], // unsafe-eval still needed by pdfkit
+  scriptSrc: ["'strict-dynamic'", "'nonce-${nonce}'", "'unsafe-inline'",  "'unsafe-eval'",  "http:", "https:"], // unsafe-eval still needed by pdfkit ...
   scriptSrcElem: ["'strict-dynamic'", "'nonce-${nonce}'"],
   styleSrc: ["'self'", "'unsafe-inline'"],
   imgSrc: ["'self'", 'data:'], // 'strict-dynamic' is problematic on google
