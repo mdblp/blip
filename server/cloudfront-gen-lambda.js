@@ -57,7 +57,7 @@ const contentSecurityPolicy = {
   formAction: ["'none'"],
   defaultSrc: ["'none'"],
   // eslint-disable-next-line quotes
-  scriptSrc: ["'strict-dynamic'", "'nonce-${nonce}'", "'unsafe-inline'",  "'unsafe-eval'",  "http:", "https:"],
+  scriptSrc: ["'strict-dynamic'", "'nonce-${nonce}'", "'unsafe-inline'",  "'unsafe-eval'",  "http:", "https:"], // unsafe-eval still needed by pdfkit
   scriptSrcElem: ["'strict-dynamic'", "'nonce-${nonce}'"],
   styleSrc: ["'self'", "'unsafe-inline'"],
   imgSrc: ["'self'", 'data:'], // 'strict-dynamic' is problematic on google
