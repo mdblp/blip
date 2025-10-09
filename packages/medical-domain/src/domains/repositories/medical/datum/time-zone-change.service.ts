@@ -76,7 +76,6 @@ const getTimeZoneChanges = (tzChanges: Datum[], opts: MedicalDataOptions): TimeZ
   if (firstTzChange === undefined || tzChanges.length === 0) {
     return []
   }
-  console.log({ tzChanges })
   let previousTimezone = firstTzChange.timezone
   let previousEpoch = firstTzChange.epoch
   return tzChanges.flatMap((d) => {
@@ -113,7 +112,6 @@ const getTimeZoneChanges = (tzChanges: Datum[], opts: MedicalDataOptions): TimeZ
     }
     previousTimezone = d.timezone
     previousEpoch = d.epoch
-    console.log( { tz: [normalize(rawTzChange, opts)] })
     return [normalize(rawTzChange, opts)]
   })
 }
