@@ -51,7 +51,7 @@ function plotTimeChange(pool, opts = {}) {
         .append('g')
         .classed('d3-timechange-group', true)
         .attr('id', d => `timechange_${d.id}`)
-        .attr('data-testid', d => `timechange_${d.id}`)
+        .attr('data-testid', d => `timechange_${d.timezone}`)
 
       timechange.addTimeChangeToPool(timechangeGroup)
 

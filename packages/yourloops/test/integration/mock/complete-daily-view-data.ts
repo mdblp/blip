@@ -104,7 +104,8 @@ import {
   WIZARD_POSITIVE_OVERRIDE_ID,
   WIZARD_UMM_ID,
   WIZARD_UNDELIVERED_ID,
-  ZEN_MODE_ID
+  ZEN_MODE_ID,
+  ZEN_MODE_TIMEZONE
 } from './data.api.mock'
 
 export const getCompleteDailyViewDataDblg2 = (deviceName: DeviceSystem = DeviceSystem.Dblg2, softwareVersion: string = "1.15.0"): Data => {
@@ -1683,9 +1684,9 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
       zenModes: [
         {
           "epoch": 1659945600000,
-          "displayOffset": -120,
-          "normalTime": "2022-08-08T21:00:00.000Z",
-          "timezone": "Europe/Paris",
+          "displayOffset": -60,
+          "normalTime": "2022-08-08T10:00:00.000Z",
+          "timezone": ZEN_MODE_TIMEZONE,
           "guessedTimezone": false,
           "id": ZEN_MODE_ID,
           "type": DatumType.DeviceEvent,
