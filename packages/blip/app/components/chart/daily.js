@@ -37,14 +37,15 @@ import {
   PhysicalTooltip,
   RescueCarbsTooltip,
   ReservoirTooltip,
-  WarmUpTooltip
+  TimeChangeTooltip,
+  WarmUpTooltip,
+  ZenModeTooltip
 } from 'dumb'
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import metrics from 'yourloops/lib/metrics'
-import { ZenModeTooltip } from 'dumb/dist/src/components/tooltips/zen-mode-tooltip/zen-mode-tooltip'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -108,6 +109,7 @@ class DailyChart extends React.Component {
       'onWarmUpHover',
       'onAlarmEventHover',
       'onNightModeHover',
+      'onTimeChangeHover',
       'onZenModeHover',
       'onTooltipOut',
       'onEventSuperpositionClick',
@@ -402,6 +404,7 @@ class Daily extends React.Component {
                   onConfidentialHover={this.handleConfidentialHover}
                   onIobHover={this.handleIobHover}
                   onNightModeHover={this.handleNightModeHover}
+                  onTimeChangeHover={this.handleTimeChangeHover}
                   onZenModeHover={this.handleZenModeHover}
                   onTooltipOut={this.handleTooltipOut}
                   onEventSuperpositionClick={this.handleEventSuperpositionClick}
@@ -715,6 +718,21 @@ class Daily extends React.Component {
     const tooltip = (
       <NightModeTooltip
         nightMode={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        timePrefs={datum.timePrefs}
+      />)
+    this.setState({ tooltip })
+  }
+
+  handleTimeChangeHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum)
+    const tooltip = (
+      <TimeChangeTooltip
+        timeChange={datum.data}
         position={{
           top: datum.top,
           left: datum.left

@@ -475,7 +475,9 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   // add timechange images to messages pool
   poolMessages.addPlotType({ type: 'deviceEvent' }, plotTimeChange(poolMessages, {
-    size: 30
+    size: 30,
+    onTimeChangeHover: options.onTimeChangeHover,
+    onTimeChangeOut: options.onTooltipOut
   }))
 
   return chart

@@ -31,6 +31,7 @@ export enum DeviceEventSubtype {
   DeviceParameter = 'deviceParameter',
   Night = 'night',
   ReservoirChange = 'reservoirChange',
+  TimeChange = 'timeChange',
   Warmup = 'warmup',
   Zen = 'zen',
 }
