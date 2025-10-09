@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,15 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-.autoValueColor {
-  color: var(--bg-target);
-}
-
-.duration {
-  font-size: small;
-}
-
-.automatedChip {
-  background-color: var(--basal-automated);
-  margin-right: 4px;
+export enum LineColor {
+  BgHigh = 'var(--bg-high)',
+  BgLow = 'var(--bg-low)',
+  BgTarget = 'var(--bg-target)',
+  TextBasal = 'var(--text-basal)'
 }
