@@ -42,11 +42,13 @@ interface ZenModeTooltipProps {
   side: TooltipSide
   timePrefs: TimePrefs
 }
+const getFormattedGlycemiaOffset = (offset: number): string => {
+  return offset > 0 ? `+${offset}` : offset.toString()
+}
 
 export const ZenModeTooltip: FC<ZenModeTooltipProps> = (props) => {
   const { zenMode, position, side, timePrefs } = props
   const { t } = useTranslation('main')
-
   const duration = getDuration(zenMode)
 
   return (
@@ -58,8 +60,17 @@ export const ZenModeTooltip: FC<ZenModeTooltipProps> = (props) => {
       side={side}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
-        <div className={commonStyles.containerFlex}>
-          <TooltipLine label={t('Duration')} value={`${duration.value} ${t(duration.units)}`} />
+        <div className={zenMode.glycemiaTarget ? commonStyles.containerFlexLarge : commonStyles.containerFlex}>
+          {zenMode.glycemiaTarget && <>
+            <TooltipLine label={t('target-glucose-level')} value={zenMode.glycemiaTarget.value}
+                         units={zenMode.glycemiaTarget.units} isBold={true} />
+            <TooltipLine label={t('set-target')} value={zenMode.glycemiaTarget.initialValue}
+                         units={zenMode.glycemiaTarget.units} />
+            <TooltipLine label={t('difference')} value={getFormattedGlycemiaOffset(zenMode.glycemiaTarget.offset)}
+                         units={zenMode.glycemiaTarget.units} />
+            </>
+          }
+          <TooltipLine label={t('Duration')} value={duration.value} units={t(duration.units)} />
         </div>
       }
     />

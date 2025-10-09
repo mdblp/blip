@@ -30,11 +30,18 @@ import type Duration from './basics/duration.model'
 import { type DatumType } from './enums/datum-type.enum'
 import { DeviceEventSubtype } from './enums/device-event-subtype.enum'
 
+type GlycemiaTarget = {
+  offset: number
+  value: number
+  initialValue: number
+  units: string
+}
 type ZenMode = BaseDatum & Duration & {
   type: DatumType.DeviceEvent
   subType: DeviceEventSubtype.Zen
   guid: string
   inputTime: string
+  glycemiaTarget: GlycemiaTarget | null
 }
 
 export default ZenMode
