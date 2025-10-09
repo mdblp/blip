@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,32 +35,34 @@ describe('CBGUtils', () => {
     low: 60,
     veryLow: 30
   }
+
   describe('computeCBGStyle', () => {
     it('should return correct left when value is inferior to very low bg', () => {
       const computedStyle = computeCBGStyle(20, bgClasses)
-      expect(computedStyle.left).toBe('0')
+      expect(computedStyle.left).toBe(0)
     })
 
     it('should return correct left when value is superior to high bg', () => {
       const computedStyle = computeCBGStyle(110, bgClasses)
-      expect(computedStyle.left).toBe('100%')
+      expect(computedStyle.left).toBe(100)
     })
 
     it('should return correct left when value is superior to low bg and inferior to target bg', () => {
       const computedStyle = computeCBGStyle(70, bgClasses)
-      expect(computedStyle.left).toBe('57%')
+      expect(computedStyle.left).toBe(57)
     })
 
     it('should return correct left when value is superior to very low bg and inferior to low bg', () => {
       const computedStyle = computeCBGStyle(50, bgClasses)
-      expect(computedStyle.left).toBe('29%')
+      expect(computedStyle.left).toBe(29)
     })
   })
+
   describe('computeBgClassesBarStyle', () => {
     it('should return correct left when value is inferior to very low bg', () => {
       const computedStyle = computeBgClassesBarStyle(bgClasses)
-      expect(computedStyle.lowWidth).toBe('43%')
-      expect(computedStyle.targetWidth).toBe('28%')
+      expect(computedStyle.lowWidth).toBe(43)
+      expect(computedStyle.targetWidth).toBe(28)
     })
   })
 })

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,11 +25,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
-import { getTranslation } from '../../utils/i18n'
+.lines {
+  display: flex;
+  position: relative;
+}
 
-export const checkTargetAndAlertsViewContent = async (): Promise<void> => {
-  const targetAndAlertsContent = await screen.findByTestId('target-and-alerts-container')
-  expect(targetAndAlertsContent).toHaveTextContent(getTranslation('range-and-alerts'))
-  expect(targetAndAlertsContent).toHaveTextContent('Monitoring alertsSet manually each value or apply care team values.')
+.line {
+  height: 4px;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  opacity: 0.5;
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.dot {
+  height: 13px;
+  width: 13px;
+  border-radius: 20px;
+  position: absolute;
+  margin-top: 3px;
+}
+
+.horizontal-line {
+  height: 16px;
+  width: 2px;
+  position: absolute;
+  margin-top: 2px;
 }

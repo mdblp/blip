@@ -4,16 +4,18 @@ It is based on Tidepool Blip 1.27.
 
 ## 3.8.0-beta - 2025-07-11
 ### Added
+- YLP-2135 As A HCP user, I can attribute to a diabetic profile to patient
 - YLP-2344 Patient profile information page for HCPs only
 - YLP-3333 Tooltip for Zen mode in Daily view
 - YLP-3580 IOB chart for DBLG2 users in Daily view
-- YLP-3589 add new estimated total insulin statistic
+- YLP-3589 Add new estimated total insulin statistic
 - YLP-3611 Manage events superposition in Daily view
 - YLP-3612 Make events superposition popover draggable
 - YLP-3616 Time In Tight Range (TITR) statistic
 
 ### Changed
 - YLP-2347 Display patient monitoring parameters in the patient profile page
+- YLP-2419 Use new route for caregivers from harbour (remove my-patients and my-direct-shares)
 - YLP-3547 Swap unit and percentage in insulin card
 - YLP-3576 Keep 14 days of data starting from yesterday in trends and dashboard view
 - YLP-3591 Change mention "Data calculated on the last 14 days"
@@ -23,6 +25,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-3687 Update insulin stats order
 - YLP-3690 Update basal tooltip style in Daily view
 - YLP-3700 Update time change tooltip style in Daily view
+- YLP-3702 Update Time In Loop Mode stat style
+- YLP-3710 Move the "EVENTS" section above the glycemia curve
 
 ### Engineering
 - YLP-3672 D3 version update

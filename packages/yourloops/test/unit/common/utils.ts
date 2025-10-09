@@ -33,7 +33,7 @@ import { type Patient } from '../../../lib/patient/models/patient.model'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 import { TeamType } from '../../../lib/team/models/enums/team-type.enum'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
-import { Unit } from 'medical-domain'
+import { DiabeticType, Unit } from 'medical-domain'
 import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 import { type MedicalData } from '../../../lib/data/models/medical-data.model'
@@ -73,6 +73,19 @@ export const createPatient = (
       lastName: profile?.lastName || 'fakeLastname',
       email: profile?.email || 'fake@email.com',
       sex: profile?.sex || Gender.Male
+    },
+    diabeticProfile: {
+      type: DiabeticType.DT1DT2,
+      bloodGlucosePreference: {
+        bgUnits: Unit.MilligramPerDeciliter,
+        bgClasses: { veryLow: 54, low: 70, target: 180, high: 250, veryHigh: 400 },
+        bgBounds:{
+          veryHighThreshold: 250,
+          targetUpperBound: 180,
+          targetLowerBound: 70,
+          veryLowThreshold: 54
+        }
+      },
     },
     settings: {
       a1c: settings?.a1c || { date: new Date().toJSON(), value: 'fakeA1cValue' },

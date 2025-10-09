@@ -37,7 +37,8 @@ import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-sta
 import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
-import { type Profile } from '../../../lib/auth/models/profile.model'
+import { DiabeticProfile } from '../../../lib/patient/models/patient-diabete-profile'
+import { defaultBgClasses, DiabeticType, Unit } from 'medical-domain'
 
 const defaultGlycemiaIndicators: GlycemiaIndicators = {
   timeInRange: 0,
@@ -55,6 +56,9 @@ export const buildPatient = (params: {
   settings?: Partial<PatientSettings>
   flagged?: boolean
   hasSentUnreadMessages?: boolean
+  glycemiaIndicators?: GlycemiaIndicators
+  medicalData?: MedicalData
+  diabeticProfile?: DiabeticProfile
 }): Patient => {
   return {
     profile: {
@@ -73,7 +77,22 @@ export const buildPatient = (params: {
     hasSentUnreadMessages: params.hasSentUnreadMessages || false,
     monitoringAlertsParameters: params.monitoringAlertsParameters,
     invitationStatus: UserInviteStatus.Accepted,
-    userid: params.userid
+    userid: params.userid,
+    glycemiaIndicators: params.glycemiaIndicators,
+    medicalData: params.medicalData,
+    diabeticProfile: params.diabeticProfile || {
+      type: DiabeticType.DT1DT2,
+      bloodGlucosePreference: {
+        bgUnits : Unit.MilligramPerDeciliter,
+        bgClasses: defaultBgClasses[Unit.MilligramPerDeciliter],
+        bgBounds: {
+          veryHighThreshold: defaultBgClasses[Unit.MilligramPerDeciliter].high,
+          targetUpperBound: defaultBgClasses[Unit.MilligramPerDeciliter].target,
+          targetLowerBound: defaultBgClasses[Unit.MilligramPerDeciliter].low,
+          veryLowThreshold: defaultBgClasses[Unit.MilligramPerDeciliter].veryLow
+        }
+      }
+    }
   }
 }
 
@@ -125,44 +144,5 @@ export const buildTeamMemberFromPatient = (patient: Patient, metrics: PatientMet
     alarms: metrics?.monitoringAlerts,
     glycemiaIndicators: metrics?.glycemiaIndicators,
     medicalData: metrics?.medicalData
-  }
-}
-
-export const buildPatientAsTeamMember = (member: Partial<ITeamMember>): ITeamMember => {
-  return {
-    userId: member.userId ?? 'fakeUserId',
-    teamId: member.teamId ?? 'fakeUserTeamId',
-    role: TeamMemberRole.patient,
-    profile: {
-      email: member.profile.email,
-      firstName: member.profile.firstName ?? 'fakeFirstName',
-      fullName: member.profile.fullName ?? 'fakeFullName',
-      lastName: member.profile.lastName ?? 'fakeLastName',
-      patient: {
-        birthday: member.profile.patient.birthday ?? '1980-01-01T10:44:34+01:00',
-        diagnosisType: member.profile.patient.diagnosisType ?? 'type1'
-      },
-      privacyPolicy: {
-        acceptanceTimestamp: member.profile.privacyPolicy?.acceptanceTimestamp ?? '2021-05-22',
-        isAccepted: member.profile.privacyPolicy?.isAccepted ?? true
-      },
-      termsOfUse: {
-        acceptanceTimestamp: member.profile.termsOfUse?.acceptanceTimestamp ?? '2021-05-22',
-        isAccepted: member.profile.termsOfUse?.isAccepted ?? true
-      },
-      trainingAck: {
-        acceptanceTimestamp: member.profile.trainingAck?.acceptanceTimestamp ?? '2022-10-11',
-        isAccepted: member.profile.trainingAck?.isAccepted ?? true
-      }
-    } as Profile,
-    settings: member.settings,
-    preferences: member.preferences,
-    invitationStatus: member.invitationStatus ?? UserInviteStatus.Accepted,
-    email: member.email ?? 'fake@patient.email',
-    idVerified: member.idVerified ?? true,
-    unreadMessages: member.unreadMessages ?? 0,
-    alarms: member.alarms,
-    glycemiaIndicators: member.glycemiaIndicators,
-    medicalData: member.medicalData || { range: { startDate: '', endDate: '' } }
   }
 }

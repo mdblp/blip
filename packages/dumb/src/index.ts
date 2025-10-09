@@ -39,7 +39,7 @@ export { SettingsPrintView } from './modules/print/settings-print-view/settings-
 export {
   AverageDailyDoseStatMemoized as AverageDailyDoseStat
 } from './components/stats/average-daily-dose/average-daily-dose-stat'
-export { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
+export { AverageGlucoseMemoized as AverageGlucose } from './components/stats/average-glucose/average-glucose-stat'
 export {
   CbgStandardDeviationMemoized as CBGStandardDeviation
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'

@@ -117,6 +117,7 @@ export {
   type TimePrefs
 } from './domains/models/medical/medical-data-options.model'
 export { type WeekDaysFilter } from './domains/models/time/date-filter.model'
+export { DiabeticType } from './domains/models/medical/patient-profile/diabetic-type.enum'
 
 // Statistics models
 export { HoursRange } from './domains/models/statistics/satistics.model'
@@ -136,5 +137,6 @@ export {
 } from './domains/repositories/statistics/glycemia-statistics.service'
 export { applyOffset, MS_IN_DAY } from './domains/repositories/time/time.service'
 export * as TimeService from './domains/repositories/time/time.service'
+export { getDefaultRangeByDiabeticType } from './domains/repositories/medical/patient-profile/patient-profile.service'
 
 export default MedicalDataService
