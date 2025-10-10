@@ -38,7 +38,7 @@ import { patient1Id, patientWithMmolId } from '../../../data/patient.api.data'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
   testMonitoringAlertsParametersConfigurationForPatientMgdl,
-  testMonitoringAlertsParametersConfigurationForPatientMmol
+  testMonitoringAlertsParametersConfigurationForPatientMmol, testUnsavedChangesOnNavigation
 } from '../../../use-cases/monitoring-alerts-parameters-management'
 import {
   testAlertsViewContent, testRangeFormValidation, testRangePatientProfileDisplay,
@@ -120,29 +120,8 @@ describe('Patient profile view for HCP', () => {
       await userEvent.click(menuButton)
 
       await testAlertsViewContent()
-      const monitoringAlertsSection = screen.getByTestId('monitoring-alerts-configuration-section')
+      await testUnsavedChangesOnNavigation()
 
-      expect(monitoringAlertsSection).toHaveTextContent('Apply care team valuesCustom values are applied for this patient. You can apply the default care team values.')
-      expect(monitoringAlertsSection).toHaveTextContent('1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)A. Glycemic targetMinimum​mg/dLMaximum​mg/dLB. Event trigger thresholdTime spent off target5%')
-      expect(monitoringAlertsSection).toHaveTextContent('2. Severe hypoglycemiaCurrent trigger setting: 10% of time below 40 mg/dL thresholdA. Severe hypoglycemia threshold:Severe hypoglycemia below​mg/dLB. Event trigger thresholdTime spent in severe hypoglycemia10%')
-      expect(monitoringAlertsSection).toHaveTextContent('3. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​Save')
-
-      const saveButton = screen.getByRole('button', { name: 'Save' })
-      expect(saveButton).toBeDisabled()
-
-      const careTeamValuesButton = screen.getByRole('button', { name: 'Apply care team values' })
-      await userEvent.click(careTeamValuesButton)
-      expect(saveButton).toBeEnabled()
-
-      // Attempt to navigate to the Range section
-      const rangeMenuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
-      await userEvent.click(rangeMenuButton)
-
-      // Verify that the unsaved changes dialog appears
-      const dialog = screen.getByTestId('confirm-dialog')
-      expect(dialog).toBeVisible()
-      expect(dialog).toHaveTextContent(getTranslation('close-without-saving'))
-      expect(dialog).toHaveTextContent('This page has unsaved changes, they will be lost if you close without saving. Are you sure you want to leave ?')
     })
   })
 
