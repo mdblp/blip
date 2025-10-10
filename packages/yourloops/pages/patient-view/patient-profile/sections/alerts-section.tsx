@@ -45,20 +45,21 @@ import { errorTextFromException } from '../../../../lib/utils'
 
 interface AlertsSectionProps {
   patient: Patient
+  onUnsavedChangesChange: (hasChanges: boolean) => void
 }
 
 export const MONITORING_ALERTS_SECTION_ID = 'monitoring-alerts'
 
 export const AlertsSection: FC<AlertsSectionProps> = (props) => {
-  const { patient } = props
+  const { patient, onUnsavedChangesChange } = props
   const theme = useTheme()
   const { t } = useTranslation('yourloops')
   const { deletePatientMonitoringAlertsParameters, updatePatientMonitoringAlertsParameters } = usePatientsContext()
   const alert = useAlert()
 
   const monitoringAlertsSection = useRef<HTMLElement>(null)
-
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
+
 
   const save = async (monitoringAlertsParameters: MonitoringAlertsParameters): Promise<void> => {
     patient.monitoringAlertsParameters = monitoringAlertsParameters
@@ -113,6 +114,7 @@ export const AlertsSection: FC<AlertsSectionProps> = (props) => {
               onSave={save}
               onResetToTeamParameters={deletePatientAlertsParameters}
               wasInitiallyUsingTeamAlertParameters={!!patient.isUsingTeamAlertParameters}
+              onUnsavedChangesChange={onUnsavedChangesChange}
             />
           </section>
         </CardContent>
