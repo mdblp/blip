@@ -105,6 +105,7 @@ import {
   WIZARD_UMM_ID,
   WIZARD_UNDELIVERED_ID,
   ZEN_MODE_ID,
+  ZEN_MODE_ID_WITH_GLY,
   ZEN_MODE_TIMEZONE
 } from './data.api.mock'
 
@@ -1700,6 +1701,32 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "epochEnd": 1659949200000,
           "guid": ZEN_MODE_ID,
           "inputTime": "2022-08-08T08:00:00Z",
+          "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1659862800,
+          "displayOffset": -120,
+          "normalTime": "2022-08-07T20:00:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": ZEN_MODE_ID_WITH_GLY,
+          "type": DatumType.DeviceEvent,
+          "source": Source.Diabeloop,
+          "subType": DeviceEventSubtype.Zen,
+          "duration": {
+            "units": DurationUnit.Seconds,
+            "value": 7200
+          },
+          "normalEnd": "2022-08-07T08:00:00.000Z",
+          "glycemiaTarget": {
+            "value": 130,
+            "initialValue": 110,
+            "offset": 20,
+            "units": Unit.MilligramPerDeciliter,
+          },
+          "epochEnd": 1659949200000,
+          "guid": ZEN_MODE_ID_WITH_GLY,
+          "inputTime": "2022-08-07T08:00:00Z",
           "isoWeekday": WeekDays.Sunday
         }
       ],
