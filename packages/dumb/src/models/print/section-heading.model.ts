@@ -26,7 +26,7 @@
  */
 
 export interface SectionHeading {
-  align: string
+  align?: "center" | "right" | "left" | "justify" | undefined;
   font: string
   fontSize: number
   moveDown: number
