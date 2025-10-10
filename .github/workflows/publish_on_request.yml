@@ -34,12 +34,12 @@ jobs:
         with:
           ref: ${{ steps.comment-branch.outputs.head_ref }}
 
-      - name: Use Node.js 16
+      - name: Use Node.js 18
         uses: actions/setup-node@v3
         with:
           cache: 'npm'
           cache-dependency-path: package-lock.json
-          node-version: 16
+          node-version: 18
       - name: Install npm dependencies
         run: npm ci
 
