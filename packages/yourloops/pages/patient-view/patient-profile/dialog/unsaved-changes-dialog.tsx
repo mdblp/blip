@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,38 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  checkContentForPatientMmol,
-  checkTeamValuesButtonMgdl,
-  checkDiscardButtonForPatient,
-  checkSaveButtonForMmolForPatient,
-  checkMonitoringAlertsLinkToTargetAndAlerts,
-  checkMonitoringAlertsParametersTeamAdmin,
-  checkMonitoringAlertsParametersTeamMember, checkUnsavedChangesOnNavigation
-} from '../assert/monitoring-alerts-parameters.assert'
+import React, { type FC } from 'react'
+import ConfirmDialog from '../../../../components/dialogs/confirm-dialog'
+import { useTranslation } from 'react-i18next'
 
-export const testMonitoringAlertsParametersConfigurationForPatientMgdl = async (): Promise<void> => {
-  await checkTeamValuesButtonMgdl()
+interface UnsavedChangesDialogProps {
+  open: boolean
+  onConfirm: () => void
+  onClose: () => void
 }
 
-export const testMonitoringAlertsParametersConfigurationForPatientMmol = async (): Promise<void> => {
-  await checkContentForPatientMmol()
-  await checkDiscardButtonForPatient()
-  await checkSaveButtonForMmolForPatient()
-}
-
-export const testMonitoringAlertsParametersTeamAdmin = async (): Promise<void> => {
-  await checkMonitoringAlertsParametersTeamAdmin()
-}
-
-export const testMonitoringAlertsParametersTeamMember = async (): Promise<void> => {
-  await checkMonitoringAlertsParametersTeamMember()
-}
-
-export const testMonitoringAlertsCardLinkToMonitoringAlertsConfiguration = async (): Promise<void> => {
-  await checkMonitoringAlertsLinkToTargetAndAlerts()
-}
-
-export const testUnsavedChangesOnNavigation = async (): Promise<void> => {
-  await checkUnsavedChangesOnNavigation()
+export const UnsavedChangesDialog: FC<UnsavedChangesDialogProps> = ({ open, onClose, onConfirm }) => {
+  const { t } = useTranslation('yourloops')
+  return (
+    <ConfirmDialog
+      open={open}
+      title={t('close-without-saving')}
+      label={t('close-without-saving-warning')}
+      onClose={onClose}
+      onConfirm={onConfirm}
+      confirmColor="primary"
+    />
+  )
 }
