@@ -119,7 +119,6 @@ function genContentSecurityPolicy() {
   if (zendeskEnabled) {
     // Assume Zendesk
     const helpUrl = blipConfig.HELP_SCRIPT_URL.replace(reUrl, '$1')
-    // contentSecurityPolicy.scriptSrc.push(helpUrl)
     contentSecurityPolicy.connectSrc.push(helpUrl)
     contentSecurityPolicy.imgSrc.push(helpUrl)
     contentSecurityPolicy.connectSrc.push('https://ekr.zdassets.com')
@@ -160,13 +159,6 @@ function genContentSecurityPolicy() {
   contentSecurityPolicy.frameSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_IT}.pdf`)
   contentSecurityPolicy.frameSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_DE}.pdf`)
   contentSecurityPolicy.frameSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`)
-
-  // contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_FR}.pdf`)
-  // contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_EN}.pdf`)
-  // contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_ES}.pdf`)
-  // contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_IT}.pdf`)
-  // contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_DE}.pdf`)
-  // contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`)
 
   let csp = ''
   for (const cspName in contentSecurityPolicy) {
