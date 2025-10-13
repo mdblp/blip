@@ -1689,7 +1689,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659945600000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:00:00.000Z",
+          "normalTime": "2022-08-08T21:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": ZEN_MODE_ID,

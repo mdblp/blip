@@ -66,6 +66,40 @@ export const TimeChangeTooltip: FC<TimeChangeTooltipProps> = (props) => {
 
   const tooltipTitle = isTimeChangeOnly ? t('Time Change') : t('Timezone Change')
 
+  const getTimeChangeContent = (): JSX.Element => {
+    return (
+      <>
+        <TooltipLine label={t('previous-time')} value={formattedPreviousTime} />
+        <TooltipLine label={t('new-time')} value={formattedNewTime} />
+      </>
+    )
+  }
+
+  const getTimezoneChangeContent = (): JSX.Element => {
+    return (
+      <Grid container spacing={1} sx={{ maxWidth: '324px' }}>
+        <Grid item xs={4}>
+          {t('previous-time')}
+        </Grid>
+        <Grid item xs={3} className={styles.value}>
+          {formattedPreviousTime}
+        </Grid>
+        <Grid item xs={5} className={styles.value}>
+          <span className={styles.timezone}>{previousTimezone}</span>
+        </Grid>
+        <Grid item xs={4}>
+          {t('new-time')}
+        </Grid>
+        <Grid item xs={3} className={styles.value}>
+          {formattedNewTime}
+        </Grid>
+        <Grid item xs={5} className={styles.value}>
+          <span className={styles.timezone}>{newTimezone}</span>
+        </Grid>
+      </Grid>
+    )
+  }
+
   return (
     <Tooltip
       position={position}
@@ -76,32 +110,7 @@ export const TimeChangeTooltip: FC<TimeChangeTooltipProps> = (props) => {
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>
-          {isTimeChangeOnly ?
-            <>
-              <TooltipLine label={t('previous-time')} value={formattedPreviousTime} />
-              <TooltipLine label={t('new-time')} value={formattedNewTime} />
-            </>
-            : <Grid container spacing={1} sx={{ maxWidth: '324px' }}>
-              <Grid item xs={4}>
-                {t('previous-time')}
-              </Grid>
-              <Grid item xs={3} className={styles.value}>
-                {formattedPreviousTime}
-              </Grid>
-              <Grid item xs={5} className={styles.value}>
-                <span className={styles.timezone}>{previousTimezone}</span>
-              </Grid>
-              <Grid item xs={4}>
-                {t('new-time')}
-              </Grid>
-              <Grid item xs={3} className={styles.value}>
-                {formattedNewTime}
-              </Grid>
-              <Grid item xs={5} className={styles.value}>
-                <span className={styles.timezone}>{newTimezone}</span>
-              </Grid>
-            </Grid>
-          }
+          {isTimeChangeOnly ? getTimeChangeContent() : getTimezoneChangeContent()}
         </div>
       }
     />
