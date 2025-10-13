@@ -122,7 +122,7 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
 
   useEffect(() => {
       onUnsavedChangesChange(!saveButtonDisabled)
-  }, [onUnsavedChangesChange, saveButtonDisabled]);
+  }, [onUnsavedChangesChange, saveButtonDisabled])
 
   return (
     <>

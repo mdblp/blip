@@ -48,7 +48,9 @@ export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => 
 
   const confirmNavigation = (): void => {
     setShowDialog(false)
-    setSelectedSection(pendingNavigationSection)
+    if (pendingNavigationSection !== null) {
+      setSelectedSection(pendingNavigationSection)
+    }
     setPendingNavigationSection(null)
     setHasUnsavedChanges(false)
   }

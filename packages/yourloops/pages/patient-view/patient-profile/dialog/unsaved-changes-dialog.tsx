@@ -29,13 +29,13 @@ import React, { type FC } from 'react'
 import ConfirmDialog from '../../../../components/dialogs/confirm-dialog'
 import { useTranslation } from 'react-i18next'
 
-interface UnsavedChangedDialogProps {
+interface UnsavedChangesDialogProps {
   open: boolean
   onConfirm: () => void
   onClose: () => void
 }
 
-export const UnsavedChangesDialog: FC<UnsavedChangedDialogProps> = ({ open,onClose, onConfirm }) => {
+export const UnsavedChangesDialog: FC<UnsavedChangesDialogProps> = ({ open, onClose, onConfirm }) => {
   const { t } = useTranslation('yourloops')
   return (
     <ConfirmDialog

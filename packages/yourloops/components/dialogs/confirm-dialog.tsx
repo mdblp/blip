@@ -47,7 +47,7 @@ export interface ConfirmDialogProps {
 }
 
 export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
-  const { open,title, label, inProgress, onClose, onConfirm, confirmColor } = props
+  const { open, title, label, inProgress, onClose, onConfirm, confirmColor } = props
   const { t } = useTranslation('yourloops')
 
   return (
