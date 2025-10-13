@@ -112,7 +112,6 @@ export const IOB_ID = 'iobId'
 export const NIGHT_MODE_ID = 'nightModeId'
 export const WARMUP_01_ID = 'warmup01Id'
 export const ZEN_MODE_ID = 'zenModeId'
-export const ZEN_MODE_TIMEZONE = 'Europe/Dublin'
 export const ZEN_MODE_ID_WITH_GLY = 'zenModeIdGly'
 export const BASAL_LOOP_MODE_ON_ID = 'basalLoopModeOnId'
 export const BASAL_LOOP_MODE_OFF_ID = 'basalLoopModeOffId'
@@ -127,6 +126,12 @@ export const RESERVOIR_CHANGE_TODAY_DATE: Moment = moment()
 export const TWO_WEEKS_AGO_DATE: Moment = moment().subtract(14, 'days')
 export const RESERVOIR_CHANGE_13_DAYS_AGO_DATE: Moment = moment().subtract(13, 'days')
 export const SIXTEEN_DAYS_AGO_DATE: Moment = moment().subtract(16, 'days')
+
+export const BASAL_TIME_CHANGE_INITAL_TIME_ID = 'basalTimezoneChangeParisId'
+export const BASAL_TIME_CHANGE_NEW_TIME_ID = 'basalTimezoneChangeDublinId'
+export const DUBLIN_TIMEZONE = 'Europe/Dublin'
+export const PARIS_TIMEZONE = 'Europe/Paris'
+
 const twoWeeksAgoDateAsString = TWO_WEEKS_AGO_DATE.format('YYYY-MM-DD')
 const sixteenDaysAgoDateAsString = SIXTEEN_DAYS_AGO_DATE.format('YYYY-MM-DD')
 const yesterdayDateAsString = YESTERDAY_DATE.format('YYYY-MM-DD')

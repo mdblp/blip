@@ -26,7 +26,7 @@
  */
 
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
-import { checkSMBGDailyStatsWidgetsTooltips } from '../../../assert/daily-view.assert'
+import { checkSMBGDailyStatsWidgetsTooltips, checkTimeChangeIndicator } from '../../../assert/daily-view.assert'
 import { mockDataAPI, smbgData, twoWeeksOfCbg } from '../../../mock/data.api.mock'
 import { renderPage } from '../../../utils/render'
 import {
@@ -52,7 +52,11 @@ import {
   testDailyViewTooltipsForDblg2,
   testDailyViewTooltipsForRecentSoftware
 } from '../../../use-cases/patient-data-visualisation'
-import { getCompleteDailyViewData, getCompleteDailyViewDataDblg2 } from '../../../mock/complete-daily-view-data'
+import {
+  getCompleteDailyViewData,
+  getCompleteDailyViewDataDblg2,
+  getTimezoneChangeData
+} from '../../../mock/complete-daily-view-data'
 import { t } from '../../../../../lib/language'
 import { checkReportDialogPresets } from '../../../assert/report-dialog.assert'
 import ErrorApi from '../../../../../lib/error/error.api'
@@ -234,6 +238,18 @@ describe('Daily view for anyone', () => {
       await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
 
       await checkSMBGDailyStatsWidgetsTooltips()
+    })
+  })
+
+  describe('with timechange data', () => {
+    it('should display a time or timezone change indicator', async () => {
+      mockDataAPI(getTimezoneChangeData())
+      const router = renderPage(dailyRoute)
+      await waitFor(() => {
+        expect(router.state.location.pathname).toEqual(dailyRoute)
+      })
+
+      await checkTimeChangeIndicator()
     })
   })
 })

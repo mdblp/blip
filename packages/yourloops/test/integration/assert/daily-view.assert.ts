@@ -57,8 +57,10 @@ import {
   BASAL_LOOP_MODE_ON_ID,
   BASAL_MANUAL_ID,
   BASAL_TEMP_ID,
+  BASAL_TIME_CHANGE_INITAL_TIME_ID,
   CARB_ID,
   CBG_ID,
+  PARIS_TIMEZONE,
   CONFIDENTIAL_MODE_ID,
   EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID,
   IOB_ID,
@@ -84,7 +86,7 @@ import {
   WIZARD_UNDELIVERED_INPUT_TIME,
   ZEN_MODE_ID,
   ZEN_MODE_ID_WITH_GLY,
-  ZEN_MODE_TIMEZONE
+  DUBLIN_TIMEZONE
 } from '../mock/data.api.mock'
 import moment from 'moment-timezone'
 import { checkStatTooltip } from './stats.assert'
@@ -156,9 +158,8 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID}`, 'Alarm 910022:00 pmReservoir emptyThere is no insulin left in the reservoir.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`, 'Alarm 910042:30 pmOcclusionAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.')
   await checkTidelineContainerElementTooltip(`warmup_group_${WARMUP_01_ID}`,'Sensor warmup6:30 pmSession end9:00 pm')
-  await checkTidelineContainerElementTooltip(`event_group_${ZEN_MODE_ID}`,'Zen mode11:00 amDuration2hours')
+  await checkTidelineContainerElementTooltip(`event_group_${ZEN_MODE_ID}`,'Zen mode12:00 pmDuration2hours')
   await checkTidelineContainerElementTooltip(`event_group_${ZEN_MODE_ID_WITH_GLY}`,'Zen mode10:00 pmTarget glucose level130mg/dLSet target110mg/dLDifference+20mg/dLDuration2hours')
-  await checkTidelineContainerElementTooltip(`timechange_${ZEN_MODE_TIMEZONE}`,'Timezone Change11:00 amPrevious time10:00 amEurope/ParisNew time11:00 amEurope/Dublin')
   await checkTidelineContainerElementTooltip(`basal_group_${BASAL_LOOP_MODE_ON_ID}`,'Basal rate6:30 pmEnd time6:30 pmLoop modeONDelivered0.80U/h')
   await checkTidelineContainerElementTooltip(`basal_group_${BASAL_LOOP_MODE_OFF_ID}`,'Basal rate6:31 pmEnd time6:31 pmLoop modeOFFDelivered0.20U/h')
   await checkTidelineContainerElementTooltip(`basal_group_${BASAL_TEMP_ID}`,'Basal rate6:32 pmEnd time6:32 pmTemp basalDelivered0.30U/h')
@@ -320,6 +321,12 @@ export const checkDailyTimeInRangeStatsWidgetsMmolL = async () => {
 export const checkTotalCarbsStatContent = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
   expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Total of declared carbs360gMeal carbs345gRescue carbs15g')
+}
+
+export const checkTimeChangeIndicator = async () => {
+  expect(await screen.findByTestId(`basal_group_${BASAL_TIME_CHANGE_INITAL_TIME_ID}`, {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
+  await checkTidelineContainerElementTooltip(`timechange_${PARIS_TIMEZONE}_${PARIS_TIMEZONE}`,'Time Change2:59 amPrevious time2:00 amNew time2:59 am')
+  await checkTidelineContainerElementTooltip(`timechange_${PARIS_TIMEZONE}_${DUBLIN_TIMEZONE}`,'Timezone Change10:30 pmPrevious time11:30 pmEurope/ParisNew time10:30 pmEurope/Dublin')
 }
 
 const checkDailyTimeInRangeStatsWidgetsPercentages = (patientStatistics: BoundFunctions<typeof queries>) => {

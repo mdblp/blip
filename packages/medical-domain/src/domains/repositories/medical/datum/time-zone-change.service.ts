@@ -94,7 +94,7 @@ const getTimeZoneChanges = (tzChanges: Datum[], opts: MedicalDataOptions): TimeZ
       }
     }
     if (d.timezone === previousTimezone) {
-      // same zone name but != timezone offet ==> Summer/Winter time changes
+      // same zone name but != timezone offset ==> Summer/Winter time changes
       const dstEpoch = getDstChange(d.timezone, previousEpoch, d.epoch)
       if (!dstEpoch) {
         previousTimezone = d.timezone
