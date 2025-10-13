@@ -240,7 +240,7 @@
   "data-not-transmitted": "Data not transmitted",
   "data-not-transmitted-tooltip1": "Data not transmitted: {{percentage}}",
   "data-not-transmitted-tooltip2": "Alert triggered when {{threshold}}% of data are not transmitted over the period considered.",
-  "data-period-text": "Data calculated on the last 14 days (current day excluded)",
+  "data-period-text": "Data calculated on the last 14 days (current day excluded). The values correspond to the average of the daily values.",
   "date": "Date",
   "date-of-birth": "Date of birth",
   "date-picker-days-range": "{{numDays}} days selected",
