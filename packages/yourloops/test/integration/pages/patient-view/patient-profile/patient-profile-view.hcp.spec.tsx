@@ -38,7 +38,7 @@ import { patient1Id, patientWithMmolId } from '../../../data/patient.api.data'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
   testMonitoringAlertsParametersConfigurationForPatientMgdl,
-  testMonitoringAlertsParametersConfigurationForPatientMmol
+  testMonitoringAlertsParametersConfigurationForPatientMmol, testUnsavedChangesOnNavigation
 } from '../../../use-cases/monitoring-alerts-parameters-management'
 import {
   testAlertsViewContent, testRangeFormValidation, testRangePatientProfileDisplay,
@@ -110,6 +110,18 @@ describe('Patient profile view for HCP', () => {
 
       await testAlertsViewContent()
       await testMonitoringAlertsParametersConfigurationForPatientMmol()
+    })
+
+    it('should handle unsaved changes when navigating away from Alerts section', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('alerts'))
+      await userEvent.click(menuButton)
+
+      await testAlertsViewContent()
+      await testUnsavedChangesOnNavigation()
+
     })
   })
 
