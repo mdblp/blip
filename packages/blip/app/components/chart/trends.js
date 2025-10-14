@@ -24,7 +24,9 @@ import { utils as vizUtils } from 'tidepool-viz'
 import { TimeService } from 'medical-domain'
 import SubNav, { weekDays } from './trendssubnav'
 import Footer from './footer'
+import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid'
 import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
 import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsContainer, TrendsProvider } from 'dumb'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
@@ -556,6 +558,16 @@ class Trends extends React.Component {
       <TrendsProvider>
         <div id="tidelineMain" className="trends grid">
           <Box data-testid="trends-view-content" className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
+            <Grid
+              item
+              xs={12}
+              display="flex"
+              alignItems="center"
+            >
+              <Alert severity="info" sx={{marginBottom: 2}}>
+                {t('data-period-text-trends')}
+              </Alert>
+            </Grid>
             <div>
               {this.getTitle()}
             </div>

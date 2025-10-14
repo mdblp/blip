@@ -31,9 +31,7 @@ import type MedicalDataService from 'medical-domain'
 import { type DateFilter, type MedicalData } from 'medical-domain'
 import { type BgPrefs } from 'dumb'
 import Grid from '@mui/material/Grid'
-import CalendarMonth from '@mui/icons-material/CalendarMonth'
 import { useTranslation } from 'react-i18next'
-import Typography from '@mui/material/Typography'
 import { useAuth } from '../../lib/auth'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import {
@@ -51,6 +49,7 @@ import { useParams } from 'react-router-dom'
 import TeamUtils from '../../lib/team/team.util'
 import { useTeam } from '../../lib/team'
 import { PatientStatistics } from '../statistics/patient-statistics'
+import Alert from '@mui/material/Alert'
 
 interface PatientDashboardProps {
   bgPrefs: BgPrefs
@@ -186,14 +185,11 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
         display="flex"
         alignItems="center"
       >
-        <CalendarMonth fontSize="small" />
-        <Typography
-          variant="subtitle2"
-          sx={{ marginLeft: theme.spacing(1), fontStyle: 'italic' }}
-        >
-          {t('data-period-text')}
-        </Typography>
+          <Alert severity="info">
+            {t('data-period-text')}
+          </Alert>
       </Grid>
+
 
       <Grid item xs={gridWidgetSize}>
         <PatientStatistics

@@ -798,7 +798,7 @@ describe('stat', () => {
       })
 
       it('should return title for `timeInAuto` stat when viewing multiple days of data', () => {
-        expect(stat.getStatTitle(commonStats.timeInAuto, multiDayOpts)).to.equal('Avg. Daily Time In Loop Mode')
+        expect(stat.getStatTitle(commonStats.timeInAuto, multiDayOpts)).to.equal('Time In Loop Mode')
       })
     })
 
@@ -808,7 +808,7 @@ describe('stat', () => {
       })
 
       it('should return title for `timeInRange` stat when viewing multiple days of data', () => {
-        expect(stat.getStatTitle(commonStats.timeInRange, multiDayOpts)).to.equal('Avg. Daily Time In Range')
+        expect(stat.getStatTitle(commonStats.timeInRange, multiDayOpts)).to.equal('Time In Range')
       })
     })
 

@@ -85,8 +85,8 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
   }
 
   const estimatedTotalInsulinValue = estimatedTotalInsulin > 0 ? estimatedTotalInsulin : ''
-  const totalInsulinTitle = isDailyPage ? t('total-insulin') : t('average-daily-total-insulin')
-  const estimatedTotalInsulinTitle = isDailyPage ? t('estimated-total-insulin') : t('average-daily-estimated-total-insulin')
+  const totalInsulinTitle = t('total-insulin')
+  const estimatedTotalInsulinTitle = t('estimated-total-insulin')
 
   return (
     <div data-testid="container-insulin-stats">
