@@ -57,8 +57,10 @@ import {
   BASAL_LOOP_MODE_ON_ID,
   BASAL_MANUAL_ID,
   BASAL_TEMP_ID,
+  BASAL_TIME_CHANGE_INITAL_TIME_ID,
   CARB_ID,
   CBG_ID,
+  PARIS_TIMEZONE,
   CONFIDENTIAL_MODE_ID,
   EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID,
   IOB_ID,
@@ -82,7 +84,9 @@ import {
   WIZARD_UMM_ID,
   WIZARD_UNDELIVERED_ID,
   WIZARD_UNDELIVERED_INPUT_TIME,
-  ZEN_MODE_ID, ZEN_MODE_ID_WITH_GLY
+  ZEN_MODE_ID,
+  ZEN_MODE_ID_WITH_GLY,
+  DUBLIN_TIMEZONE
 } from '../mock/data.api.mock'
 import moment from 'moment-timezone'
 import { checkStatTooltip } from './stats.assert'
@@ -317,6 +321,12 @@ export const checkDailyTimeInRangeStatsWidgetsMmolL = async () => {
 export const checkTotalCarbsStatContent = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
   expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Total of declared carbs360gMeal carbs345gRescue carbs15g')
+}
+
+export const checkTimeChangeIndicator = async () => {
+  expect(await screen.findByTestId(`basal_group_${BASAL_TIME_CHANGE_INITAL_TIME_ID}`, {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
+  await checkTidelineContainerElementTooltip(`timechange_${PARIS_TIMEZONE}_${PARIS_TIMEZONE}`,'Time Change2:59 amPrevious time2:00 amNew time2:59 am')
+  await checkTidelineContainerElementTooltip(`timechange_${PARIS_TIMEZONE}_${DUBLIN_TIMEZONE}`,'Timezone Change10:30 pmPrevious time11:30 pmEurope/ParisNew time10:30 pmEurope/Dublin')
 }
 
 const checkDailyTimeInRangeStatsWidgetsPercentages = (patientStatistics: BoundFunctions<typeof queries>) => {

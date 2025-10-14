@@ -78,9 +78,12 @@ import {
   BASAL_LOOP_MODE_ON_ID,
   BASAL_MANUAL_ID,
   BASAL_TEMP_ID,
+  BASAL_TIME_CHANGE_INITAL_TIME_ID,
+  BASAL_TIME_CHANGE_NEW_TIME_ID,
   CBG_ID,
   CONFIDENTIAL_MODE_ID,
   Data,
+  DUBLIN_TIMEZONE,
   EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID,
   EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID_2,
   EVENT_SUPERPOSITION_ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID,
@@ -91,6 +94,7 @@ import {
   IOB_ID,
   MANUAL_BOLUS_ID,
   NIGHT_MODE_ID,
+  PARIS_TIMEZONE,
   PEN_BOLUS_ID,
   SMBG_ID,
   WARMUP_01_ID,
@@ -104,7 +108,8 @@ import {
   WIZARD_POSITIVE_OVERRIDE_ID,
   WIZARD_UMM_ID,
   WIZARD_UNDELIVERED_ID,
-  ZEN_MODE_ID, ZEN_MODE_ID_WITH_GLY
+  ZEN_MODE_ID,
+  ZEN_MODE_ID_WITH_GLY
 } from './data.api.mock'
 
 export const getCompleteDailyViewDataDblg2 = (deviceName: DeviceSystem = DeviceSystem.Dblg2, softwareVersion: string = "1.15.0"): Data => {
@@ -1327,6 +1332,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "isoWeekday": WeekDays.Sunday
         }
       ],
+      iob: [],
       messages: [],
       meals: [
         {
@@ -1679,7 +1685,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "isoWeekday": WeekDays.Thursday
         },
       ],
-      "zenModes": [
+      zenModes: [
         {
           "epoch": 1659945600000,
           "displayOffset": -120,
@@ -1698,7 +1704,8 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "epochEnd": 1659949200000,
           "guid": ZEN_MODE_ID,
           "inputTime": "2022-08-08T08:00:00Z",
-          "isoWeekday": WeekDays.Sunday
+          "isoWeekday": WeekDays.Sunday,
+          "glycemiaTarget": null
         },
         {
           "epoch": 1659862800,
@@ -1728,6 +1735,84 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         }
       ],
       "timezoneChanges": []
+    }
+  }
+}
+
+export const getTimezoneChangeData = (): Data => {
+  return {
+    dataRange: ['2022-10-29T00:00:00Z', '2022-10-31T00:00:00Z'],
+    data: {
+      alarmEvents: [],
+      basal: [
+        {
+          "epoch": 1667082600000,
+          "displayOffset": -120,
+          "normalTime": "2022-10-29T22:30:00.000Z",
+          "timezone": PARIS_TIMEZONE,
+          "guessedTimezone": false,
+          "id": BASAL_TIME_CHANGE_INITAL_TIME_ID,
+          "type": DatumType.Basal,
+          "source": Source.Diabeloop,
+          "subType": BasalDeliveryType.Automated,
+          "deliveryType": BasalDeliveryType.Automated,
+          "rate": 0.8,
+          "duration": 1000,
+          "normalEnd": "2022-10-29T22:30:01.000Z",
+          "epochEnd": 1667082601000,
+          "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1667120400000,
+          "displayOffset": -60,
+          "normalTime": "2022-10-30T09:00:00.000Z",
+          "timezone": PARIS_TIMEZONE,
+          "guessedTimezone": false,
+          "id": BASAL_TIME_CHANGE_NEW_TIME_ID,
+          "type": DatumType.Basal,
+          "source": Source.Diabeloop,
+          "subType": BasalDeliveryType.Automated,
+          "deliveryType": BasalDeliveryType.Automated,
+          "rate": 0.8,
+          "duration": 1000,
+          "normalEnd": "2022-10-30T09:00:01.000Z",
+          "epochEnd": 1667120401000,
+          "isoWeekday": WeekDays.Sunday
+        }
+      ],
+      bolus: [],
+      cbg: [
+        {
+          "epoch": 1667169000000,
+          "displayOffset": 0,
+          "normalTime": "2022-10-30T22:30:00.000Z",
+          "timezone": DUBLIN_TIMEZONE,
+          "guessedTimezone": false,
+          "id": "cbg_id",
+          "type": DatumType.Cbg,
+          "source": Source.Diabeloop,
+          "units": Unit.MilligramPerDeciliter,
+          "value": 189,
+          "localDate": "2022-10-30",
+          "isoWeekday": WeekDays.Monday,
+          "msPer24": 63000000,
+          "deviceName": "Unknown"
+        }
+      ],
+      confidentialModes: [],
+      deviceParametersChanges: [],
+      iob: [],
+      messages: [],
+      meals: [],
+      nightModes: [],
+      physicalActivities: [],
+      pumpSettings: [],
+      reservoirChanges: [],
+      smbg: [],
+      warmUps: [],
+      wizards: [],
+      zenModes: [],
+      timezoneChanges: []
     }
   }
 }

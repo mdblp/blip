@@ -35,7 +35,6 @@ import type Message from './datum/message.model'
 import type PhysicalActivity from './datum/physical-activity.model'
 import type ReservoirChange from './datum/reservoir-change.model'
 import type Smbg from './datum/smbg.model'
-import type TimeZoneChange from './datum/time-zone-change.model'
 import type WarmUp from './datum/warm-up.model'
 import type Wizard from './datum/wizard.model'
 import type ZenMode from './datum/zen-mode.model'
@@ -44,6 +43,7 @@ import { type WeekDaysFilter } from '../time/date-filter.model'
 import { AlarmEvent } from './datum/alarm-event.model';
 import { PumpSettings } from './datum/pump-settings.model'
 import { Basal } from './datum/basal.model'
+import { TimeZoneChange } from './datum/time-zone-change.model'
 
 export type Datum = AlarmEvent | Basal | Bolus | Cbg | ConfidentialMode | DeviceParameterChange | Fill | Meal |
 Message | PhysicalActivity | PumpSettings | ReservoirChange | Smbg | Wizard |
