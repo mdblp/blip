@@ -47,18 +47,19 @@ const featurePolicy = [
 ]
 
 const contentSecurityPolicy = {
-  // TODO: report-uri /event/csp-report/violation;
-  // requireTrustedTypesFor: ["'script'"], // pdfkit is not compatible with this also ...
+  // uncomment the following line when pdfkit will be replaced by a more secure library
+  // requireTrustedTypesFor: ["'script'"],
   blockAllMixedContent: [''],
   frameAncestors: ["'none'"],
   baseUri: ["'none'"],
   formAction: ["'none'"],
   defaultSrc: ["'none'"],
+  // remove unsafe-inline and unsafe-eval when pdfkit will be replaced by a more secure library
   // eslint-disable-next-line quotes
-  scriptSrc: ["'strict-dynamic'", "'nonce-${nonce}'", "'unsafe-inline'",  "'unsafe-eval'",  "http:", "https:"], // unsafe-eval still needed by pdfkit ...
+  scriptSrc: ["'strict-dynamic'", "'nonce-${nonce}'", "'unsafe-inline'",  "'unsafe-eval'",  "http:", "https:"],
   scriptSrcElem: ["'strict-dynamic'", "'nonce-${nonce}'"],
   styleSrc: ["'self'", "'unsafe-inline'"],
-  imgSrc: ["'self'", 'data:'], // 'strict-dynamic' is problematic on google
+  imgSrc: ["'self'", 'data:'],
   fontSrc: ["'self'", 'data:'],
   connectSrc: ["'self'", 'data:', '{{ API_HOST }}'],
   frameSrc: [],
