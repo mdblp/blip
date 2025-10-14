@@ -44,15 +44,12 @@ import { Patient } from '../../../../lib/patient/models/patient.model'
 import { errorTextFromException } from '../../../../lib/utils'
 import { logError } from '../../../../utils/error.util'
 import { useAlert } from '../../../../components/utils/snackbar'
-import { DiabeticType, getDefaultRangeByDiabeticType, Unit } from 'medical-domain'
+import { DiabeticType, getDefaultRangeByDiabeticType, Unit, getDefaultAlertsByDiabeticType } from 'medical-domain'
 import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useAuth } from '../../../../lib/auth'
 import { convertIfNeeded } from '../../../../components/patient-data/patient-data.utils'
 import { DiabeticProfile } from '../../../../lib/patient/models/patient-diabete-profile'
 import { AdaptAlertsDialog } from '../dialog/adapt-alerts-dialog'
-import {
-  getDefaultAlertsByDiabeticType
-} from 'medical-domain/dist/src/domains/repositories/medical/patient-profile/patient-profile.service'
 
 interface RangeSectionProps {
   patient: Patient
