@@ -34,6 +34,7 @@ import { PatientProfileViewSection } from './patient-profile-view-section.enum'
 import { AlertsSection } from './sections/alerts-section'
 import { Patient } from '../../../lib/patient/models/patient.model'
 import { RangeSection } from './sections/range-section'
+import { UnsavedChangesDialog } from './dialog/unsaved-changes-dialog'
 
 interface PatientProfileViewProps {
   patient : Patient
@@ -41,19 +42,45 @@ interface PatientProfileViewProps {
 
 export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => {
   const [selectedSection, setSelectedSection] = useState(PatientProfileViewSection.Information)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  const [pendingNavigationSection, setPendingNavigationSection] = useState<PatientProfileViewSection | null>(null)
+  const [showDialog, setShowDialog] = useState(false)
 
-  const selectSection = (section: PatientProfileViewSection): void => {
-    setSelectedSection(section)
+  const confirmNavigation = (): void => {
+    setShowDialog(false)
+    if (pendingNavigationSection !== null) {
+      setSelectedSection(pendingNavigationSection)
+    }
+    setPendingNavigationSection(null)
+    setHasUnsavedChanges(false)
   }
 
-  const getSection = (): JSX.Element => {
+  const cancelNavigation = (): void => {
+    setShowDialog(false)
+    setPendingNavigationSection(null)
+  }
+
+  const selectSection = (section: PatientProfileViewSection): void => {
+    if (selectedSection === PatientProfileViewSection.Alerts && hasUnsavedChanges) {
+      setShowDialog(true)
+      setPendingNavigationSection(section)
+    } else {
+      setSelectedSection(section)
+    }
+  }
+
+  const handleUnsavedChangesChange = (hasChanges: boolean): void => {
+    setHasUnsavedChanges(hasChanges)
+  }
+
+  const displaySelectedSection = (): JSX.Element => {
     switch (selectedSection) {
       case PatientProfileViewSection.Information:
         return <PatientPersonalInformationSection patient={patient} />
       case PatientProfileViewSection.Range:
         return <RangeSection patient={patient} />
       case PatientProfileViewSection.Alerts:
-        return <AlertsSection patient={patient} />
+        return <AlertsSection patient={patient} onUnsavedChangesChange={handleUnsavedChangesChange} />
       default:
         return <></>
     }
@@ -66,8 +93,15 @@ export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => 
           <PatientProfileViewMenu selectedSection={selectedSection} selectSection={selectSection} />
         </Grid>
         <Grid item xs={9}>
-          {getSection()}
+          {displaySelectedSection()}
         </Grid>
+        { showDialog &&
+          <UnsavedChangesDialog
+            open={showDialog}
+            onConfirm={confirmNavigation}
+            onClose={cancelNavigation}
+          />
+        }
       </Grid>
     </Container>
   )

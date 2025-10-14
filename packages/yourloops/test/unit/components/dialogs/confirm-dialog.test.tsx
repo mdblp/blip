@@ -37,7 +37,8 @@ describe('ConfirmDialog', () => {
     label: 'fakeLabel',
     inProgress: false,
     onClose,
-    onConfirm
+    onConfirm,
+    open: true
   }
 
   function getConfirmDialogPropsJSX(props: ConfirmDialogProps = defaultProps) {
