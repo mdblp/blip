@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,9 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum ProfileFormKey {
-  birthday = 'birthday',
-  birthPlace = 'birthPlace',
+export enum UserAccountFormKey {
   country = 'country',
   feedbackAccepted = 'feedbackAccepted',
   firstName = 'firstName',

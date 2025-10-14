@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,10 +37,8 @@ interface CommonFieldsHtmlElements {
 }
 
 interface PatientFieldsHtmlElements extends CommonFieldsHtmlElements {
-  birthdayInput: HTMLElement
-  birthPlaceInput: HTMLElement
+  emailInput: HTMLElement
   genderSelect: HTMLElement
-  hba1cInput?: HTMLElement
 }
 
 interface HcpFieldsHtmlElements extends CommonFieldsHtmlElements {
@@ -80,21 +78,16 @@ export const checkCaregiverProfilePage = (): CommonFieldsHtmlElements => {
 }
 
 export const checkPatientProfilePage = (): PatientFieldsHtmlElements => {
-  const birthdayInput = screen.getByLabelText('Date of birth')
-  const birthPlaceInput = screen.getByLabelText('Birth place')
+  const emailInput = screen.getByLabelText('Email')
   const genderSelect = screen.getByLabelText('Gender')
-  const hba1cInput = screen.getByLabelText('Initial HbA1c 01/01/2020')
   const inputs = {
     ...checkCommonFields(),
-    birthdayInput,
-    birthPlaceInput,
+    emailInput,
     genderSelect,
-    hba1cInput
   }
 
   expect(within(inputs.unitsSelect).getByRole('combobox')).toHaveAttribute('aria-disabled', 'true')
-  expect(birthdayInput).toBeVisible()
-  expect(birthPlaceInput).toBeVisible()
+  expect(emailInput).toBeVisible()
   expect(genderSelect).toBeVisible()
 
   return inputs

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,7 @@ import React, { type FunctionComponent, useCallback, useMemo } from 'react'
 import { Navigate, Route, Routes, useParams } from 'react-router-dom'
 import { CareTeamSettingsPage } from '../pages/care-team-settings/care-team-settings-page'
 import { InvalidRoute } from '../components/invalid-route'
-import { ProfilePage } from '../pages/profile/profile-page'
+import { UserAccountPage } from '../pages/user-account/user-account-page'
 import { NotificationsPage } from '../pages/notifications/notifications-page'
 import { AppUserRoute } from '../models/enums/routes.enum'
 import { PatientListPage } from '../components/patient-list/patient-list-page'
@@ -81,7 +81,7 @@ const HcpLayout: FunctionComponent = () => {
     <Routes>
       <Route element={<HcpCommonLayout />}>
         <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
-        <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
+        <Route path={AppUserRoute.UserAccount} element={<UserAccountPage />} />
         <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
         <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
         <Route

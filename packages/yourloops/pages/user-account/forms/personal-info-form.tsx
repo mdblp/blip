@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,49 +28,46 @@
 import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import AccountCircle from '@mui/icons-material/AccountCircle'
-
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 
-import { useAuth } from '../../lib/auth'
-import { HcpProfession, HcpProfessionList } from '../../lib/auth/models/enums/hcp-profession.enum'
-import BasicDropdownWithValidation from '../../components/dropdown/basic-dropdown-with-validation'
-import CertifiedProfessionalIcon from '../../components/icons/certified-professional-icon'
-import PatientProfileForm from './patient-form'
-import { useProfilePageState } from './profile-page-context'
-import { profileFormCommonClasses } from './css-classes'
-import { ProfileFormKey } from './models/enums/profile-form-key.enum'
+import { useAuth } from '../../../lib/auth'
+import { HcpProfession, HcpProfessionList } from '../../../lib/auth/models/enums/hcp-profession.enum'
+import BasicDropdownWithValidation from '../../../components/dropdown/basic-dropdown-with-validation'
+import { PatientProfileForm } from './patient-account-form'
+import { useUserAccountPageState } from '../user-account-page-context'
+import { userAccountFormCommonClasses } from '../css-classes'
+import { UserAccountFormKey } from '../models/enums/profile-form-key.enum'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
-import { availableCountries } from '../../lib/language'
+import { availableCountries } from '../../../lib/language'
 import MenuItem from '@mui/material/MenuItem'
 import FormGroup from '@mui/material/FormGroup'
+import Typography from '@mui/material/Typography'
 
-const PersonalInfoForm: FunctionComponent = () => {
+export const PersonalInfoForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
-  const { profileForm, updateProfileForm, errors } = useProfilePageState()
-  const { classes } = profileFormCommonClasses()
+  const { userAccountForm, updateUserAccountForm, errors } = useUserAccountPageState()
+  const { classes } = userAccountFormCommonClasses()
+
+  const countryLabel = t('country')
+  const countryLabelId = "country-input-label"
 
   return (
     <React.Fragment>
-      <Box className={classes.categoryLabel}>
-        <AccountCircle color="primary" />
-        <strong className={classes.uppercase}>{t('personal-information')}</strong>
-        {user.frProId && <CertifiedProfessionalIcon />}
-      </Box>
+      <Typography variant="h6" sx={{ marginBottom: 2 }}>{t('personal-information')}</Typography>
 
       <Box className={classes.inputContainer}>
         <TextField
           id="profile-textfield-firstname"
           data-testid="profile-first-name"
           label={t('first-name')}
-          variant="standard"
-          value={profileForm.firstName}
+          variant="outlined"
+          value={userAccountForm.firstName}
           onChange={event => {
-            updateProfileForm(ProfileFormKey.firstName, event.target.value)
+            updateUserAccountForm(UserAccountFormKey.firstName, event.target.value)
           }}
           error={errors.firstName}
           helperText={errors.firstName && t('required-field')}
@@ -80,10 +77,10 @@ const PersonalInfoForm: FunctionComponent = () => {
           id="profile-textfield-lastname"
           data-testid="profile-last-name"
           label={t('last-name')}
-          variant="standard"
-          value={profileForm.lastName}
+          variant="outlined"
+          value={userAccountForm.lastName}
           onChange={event => {
-            updateProfileForm(ProfileFormKey.lastName, event.target.value)
+            updateUserAccountForm(UserAccountFormKey.lastName, event.target.value)
           }}
           error={errors.lastName}
           helperText={errors.lastName && t('required-field')}
@@ -96,9 +93,9 @@ const PersonalInfoForm: FunctionComponent = () => {
           <Box className={classes.formInput}>
             <BasicDropdownWithValidation
               onSelect={(value: string) => {
-                updateProfileForm(ProfileFormKey.hcpProfession, value)
+                updateUserAccountForm(UserAccountFormKey.hcpProfession, value)
               }}
-              defaultValue={profileForm.hcpProfession}
+              defaultValue={userAccountForm.hcpProfession}
               disabledValues={[HcpProfession.empty]}
               values={HcpProfessionList.filter(item => item !== HcpProfession.empty)}
               id="profession"
@@ -108,18 +105,17 @@ const PersonalInfoForm: FunctionComponent = () => {
           </Box>
           <FormControl
             margin="normal"
-            variant="standard"
+            variant="outlined"
           >
             <FormGroup>
-              <InputLabel>
-                {t('country')}
-              </InputLabel>
+              <InputLabel id={countryLabelId}>{countryLabel}</InputLabel>
               <Select
-                label={t('country')}
+                label={countryLabel}
+                labelId={countryLabelId}
                 data-testid="country-selector"
-                value={profileForm.country}
+                value={userAccountForm.country}
                 onChange={event => {
-                  updateProfileForm(ProfileFormKey.country, event.target.value)
+                  updateUserAccountForm(UserAccountFormKey.country, event.target.value)
                 }}
               >
                 {availableCountries.map((item) => (
@@ -137,5 +133,3 @@ const PersonalInfoForm: FunctionComponent = () => {
     </React.Fragment>
   )
 }
-
-export default PersonalInfoForm

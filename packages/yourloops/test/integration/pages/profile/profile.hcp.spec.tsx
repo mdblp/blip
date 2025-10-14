@@ -34,7 +34,7 @@ import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { checkHcpProfilePage, checkPasswordChangeRequest } from '../../assert/profile.assert'
 import userEvent from '@testing-library/user-event'
-import { type Profile } from '../../../../lib/auth/models/profile.model'
+import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
@@ -52,8 +52,8 @@ import {
 import { ConfigService } from '../../../../lib/config/config.service'
 import ErrorApi from '../../../../lib/error/error.api'
 
-describe('Profile page for hcp', () => {
-  const profile: Profile = {
+describe('User account page for hcp', () => {
+  const account: UserAccount = {
     email: 'djamal@alatete.com',
     firstName: 'Djamal',
     lastName: 'Alatete',
@@ -72,18 +72,18 @@ describe('Profile page for hcp', () => {
   beforeAll(() => {
     mockAuth0Hook()
     mockAuthApi()
-    mockUserApi().mockUserDataFetch({ profile, preferences, settings })
+    mockUserApi().mockUserDataFetch({ account, preferences, settings })
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
     mockPatientApiForHcp()
   })
 
-  it('should render profile page for a French HCP and be able to edit his profile and change his password', async () => {
+  it('should render user account page for a French HCP and be able to edit his profile and change his password', async () => {
     jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
 
-    const expectedProfile = {
-      ...profile,
+    const expectedUserAccount = {
+      ...account,
       firstName: 'Jean',
       lastName: 'Talue',
       fullName: 'Jean Talue',
@@ -93,7 +93,7 @@ describe('Profile page for hcp', () => {
     const appMainLayoutParams: AppMainLayoutHcpParams = {
       footerHasLanguageSelector: false,
       headerInfo: {
-        loggedInUserFullName: `${profile.lastName} ${profile.firstName}`,
+        loggedInUserFullName: `${account.lastName} ${account.firstName}`,
         teamMenuInfo: {
           selectedTeamName: myThirdTeamName,
           isSelectedTeamPrivate: false,
@@ -103,21 +103,21 @@ describe('Profile page for hcp', () => {
     }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
     const expectedSettings = { units: { bg: Unit.MilligramPerDeciliter }, country: CountryCodes.Austria }
-    const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(expectedProfile)
+    const updateUserAccountMock = jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValue(expectedUserAccount)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
     const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
 
-    const router = renderPage('/preferences')
+    const router = renderPage('/user-account')
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/preferences')
+      expect(router.state.location.pathname).toEqual('/user-account')
     })
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
     const fields = checkHcpProfilePage()
     const saveButton = screen.getByRole('button', { name: 'Save' })
 
-    expect(fields.firstNameInput).toHaveValue(profile.firstName)
-    expect(fields.lastNameInput).toHaveValue(profile.lastName)
+    expect(fields.firstNameInput).toHaveValue(account.firstName)
+    expect(fields.lastNameInput).toHaveValue(account.lastName)
     expect(fields.unitsSelect).toHaveTextContent(settings.units.bg)
     expect(fields.languageSelect).toHaveTextContent('Français')
     expect(fields.hcpProfessionSelect).toHaveTextContent('Diabetologist')
@@ -152,7 +152,7 @@ describe('Profile page for hcp', () => {
     expect(saveButton).toBeDisabled()
     expect(screen.getByRole('alert')).toBeVisible()
     expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, expectedPreferences)
-    expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId, expectedProfile)
+    expect(updateUserAccountMock).toHaveBeenCalledWith(loggedInUserId, expectedUserAccount)
     expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, expectedSettings)
 
     const profileUpdateSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
@@ -168,9 +168,9 @@ describe('Profile page for hcp', () => {
   it('should show the banner and change its content when the banner is enabled and language is changed', async () => {
     jest.spyOn(ConfigService, 'isBannerEnabled').mockReturnValue(true)
 
-    const router = renderPage('/preferences')
+    const router = renderPage('/user-account')
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/preferences')
+      expect(router.state.location.pathname).toEqual('/user-account')
     })
 
     await testBannerLanguageUpdate()

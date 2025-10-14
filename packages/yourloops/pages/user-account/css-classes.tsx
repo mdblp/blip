@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,20 +25,57 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type HcpProfession } from './enums/hcp-profession.enum'
-import { type Consent } from './consent.model'
-import { type ProfilePatientFields } from './profile-patient-fields.model'
+import { makeStyles } from 'tss-react/mui'
 
-export interface Profile {
-  email: string
-  fullName: string
-  firstName?: string
-  lastName?: string
-  patient?: ProfilePatientFields
-  termsOfUse?: Consent
-  trainingAck?: Consent
-  privacyPolicy?: Consent
-  contactConsent?: Consent
-  hcpConfirmAck?: Consent
-  hcpProfession?: HcpProfession
-}
+export const userAccountFormCommonClasses = makeStyles()((theme) => ({
+  button: {
+    marginLeft: theme.spacing(2)
+  },
+  cancelLink: {
+    textDecoration: 'unset'
+  },
+  formInput: {
+    marginTop: theme.spacing(2)
+  },
+  title: {
+    color: theme.palette.primary.main,
+    textAlign: 'center',
+    width: '100%'
+  },
+  container: {
+    backgroundColor: 'white',
+    marginTop: '32px',
+    padding: 0,
+    [theme.breakpoints.up('sm')]: {
+      border: 'solid',
+      borderRadius: theme.spacing(3),
+      borderColor: theme.palette.grey[300],
+      borderWidth: '1px',
+      padding: '0 64px'
+    }
+  },
+  uppercase: {
+    textTransform: 'uppercase'
+  },
+  inputContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    [theme.breakpoints.only('xs')]: {
+      flexDirection: 'column'
+    },
+    [theme.breakpoints.up('sm')]: {
+      '& > div': {
+        width: 'calc(50% - 16px)'
+      }
+    }
+  },
+  categoryLabel: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: theme.spacing(5),
+    '& > :nth-child(2)': {
+      marginLeft: theme.spacing(1)
+    }
+  }
+}))

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,23 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
-import { type LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
-import { type BgUnit } from 'medical-domain'
-import { type Gender } from '../../../lib/auth/models/enums/gender.enum'
-import type { CountryCodes } from '../../../lib/auth/models/country.model'
+import { type Gender } from './enums/gender.enum'
 
-export interface ProfileForm {
-  birthday: string | undefined
-  birthPlace: string
-  feedbackAccepted: boolean | undefined
-  firstName: string
-  hcpProfession: HcpProfession
-  lang: LanguageCodes
-  lastName: string
-  sex: Gender | undefined
-  units: BgUnit
-  country: CountryCodes
+export interface PatientUserAccountFields {
+  birthday?: string
+  birthPlace?: string
+  diagnosisDate?: string
+  diagnosisType?: string
+  sex?: Gender
 }
-
-export type ProfileErrors = Record<string, boolean>

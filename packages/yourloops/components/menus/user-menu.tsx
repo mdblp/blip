@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -108,7 +108,7 @@ function UserMenu(): JSX.Element {
   }
 
   const onClickSettings = (): void => {
-    navigate(AppUserRoute.Preferences)
+    navigate(AppUserRoute.UserAccount)
     closeMenu()
   }
 
@@ -166,7 +166,7 @@ function UserMenu(): JSX.Element {
               <PermContactCalendarIcon />
             </ListItemIcon>
             <Typography>
-              {t('profile-settings')}
+              {t('user-account')}
             </Typography>
           </MenuItem>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,17 +31,17 @@ import { Link as LinkRedirect } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 
-import PersonalInfoForm from './personal-info-form'
-import PreferencesForm from './preferences-form'
+import { PersonalInfoForm } from './personal-info-form'
+import { PreferencesForm } from './preferences-form'
 import { useTranslation } from 'react-i18next'
-import { useProfilePageState } from './profile-page-context'
-import { profileFormCommonClasses } from './css-classes'
+import { useUserAccountPageState } from '../user-account-page-context'
+import { userAccountFormCommonClasses } from '../css-classes'
 import { LoadingButton } from '@mui/lab'
 
-export const ProfileForm: FunctionComponent = () => {
+export const UserAccountForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
-  const { canSave, saving, saveProfile } = useProfilePageState()
-  const { classes } = profileFormCommonClasses()
+  const { canSave, saving, saveUserAccount } = useUserAccountPageState()
+  const { classes } = userAccountFormCommonClasses()
 
   return (
     <React.Fragment>
@@ -61,7 +61,7 @@ export const ProfileForm: FunctionComponent = () => {
           color="primary"
           disableElevation
           className={classes.button}
-          onClick={saveProfile}
+          onClick={saveUserAccount}
         >
           {t('button-save')}
         </LoadingButton>

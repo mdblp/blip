@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,7 +35,7 @@ import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import { checkPatientProfilePage } from '../../assert/profile.assert'
 import userEvent from '@testing-library/user-event'
-import { type Profile } from '../../../../lib/auth/models/profile.model'
+import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
@@ -46,9 +46,9 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import { Unit } from 'medical-domain'
 import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
 
-describe('Profile page for patient', () => {
-  const profile: Profile = {
-    email: 'elie@coptere.com',
+describe('User account page for patient', () => {
+  const account: UserAccount = {
+    email: 'yann.blanc@example.com',
     firstName: 'Elie',
     lastName: 'Coptere',
     fullName: 'Elie Coptere',
@@ -76,35 +76,33 @@ describe('Profile page for patient', () => {
 
   beforeAll(() => {
     mockAuth0Hook(UserRole.Patient)
-    mockUserApi().mockUserDataFetch({ profile, preferences, settings })
+    mockUserApi().mockUserDataFetch({ account, preferences, settings })
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
     mockPatientApiForPatients()
   })
 
-  it('should render profile page for a french patient and be able to edit his profile', async () => {
-    const expectedProfile = { ...profile, firstName: 'Jean', lastName: 'Tanrien', fullName: 'Jean Tanrien' }
+  it('should render user account page for a French patient and be able to edit his profile', async () => {
+    const expectedUserAccount = { ...account, firstName: 'Jean', lastName: 'Tanrien', fullName: 'Jean Tanrien' }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
-    const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(expectedProfile)
+    const updateUserAccountMock = jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValue(expectedUserAccount)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
 
-    const router = renderPage('/preferences')
+    const router = renderPage('/user-account')
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/preferences')
+      expect(router.state.location.pathname).toEqual('/user-account')
     })
-    await checkPatientLayout(`${profile.lastName} ${profile.firstName}`)
+    await checkPatientLayout(`${account.lastName} ${account.firstName}`)
     const fields = checkPatientProfilePage()
     const saveButton = screen.getByRole('button', { name: 'Save' })
 
-    expect(fields.firstNameInput).toHaveValue(profile.firstName)
-    expect(fields.lastNameInput).toHaveValue(profile.lastName)
-    expect(fields.birthdayInput).toHaveValue(profile.patient.birthday)
-    expect(fields.birthPlaceInput).toHaveValue(profile.patient.birthPlace)
+    expect(fields.firstNameInput).toHaveValue(account.firstName)
+    expect(fields.lastNameInput).toHaveValue(account.lastName)
+    expect(fields.emailInput).toHaveValue(account.email)
     expect(fields.unitsSelect).toHaveTextContent(settings.units.bg)
     expect(fields.languageSelect).toHaveTextContent('Français')
     expect(fields.genderSelect).toHaveTextContent('Male')
-    expect(fields.hba1cInput).toHaveValue('7.5%')
     expect(saveButton).toBeDisabled()
     expect(screen.queryByTestId('country-selector')).not.toBeInTheDocument()
 
@@ -122,7 +120,7 @@ describe('Profile page for patient', () => {
     expect(saveButton).toBeDisabled()
     expect(screen.getByRole('alert')).toBeVisible()
     expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, expectedPreferences)
-    expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId, expectedProfile)
+    expect(updateUserAccountMock).toHaveBeenCalledWith(loggedInUserId, expectedUserAccount)
 
     const changePasswordCategoryTitle = screen.queryByText('Security')
     expect(changePasswordCategoryTitle).not.toBeInTheDocument()
@@ -132,11 +130,11 @@ describe('Profile page for patient', () => {
     expect(changePasswordButton).not.toBeInTheDocument()
   })
 
-  it('should render profile page without specific INS fields when patient is not french', async () => {
+  it('should render profile page without specific INS fields when patient is not French', async () => {
     settings.country = CountryCodes.Italy
-    mockUserApi().mockUserDataFetch({ profile, preferences, settings })
+    mockUserApi().mockUserDataFetch({ account, preferences, settings })
     await act(async () => {
-      renderPage('/preferences')
+      renderPage('/user-account')
     })
     checkPatientProfilePage()
   })

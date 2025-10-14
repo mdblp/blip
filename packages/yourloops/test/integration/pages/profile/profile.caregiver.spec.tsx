@@ -40,7 +40,7 @@ import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForCaregivers, mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { checkCaregiverProfilePage, checkPasswordChangeRequest } from '../../assert/profile.assert'
 import userEvent from '@testing-library/user-event'
-import { type Profile } from '../../../../lib/auth/models/profile.model'
+import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
@@ -52,8 +52,8 @@ import { mockAuthApi } from '../../mock/auth.api.mock'
 import { Unit } from 'medical-domain'
 import ErrorApi from '../../../../lib/error/error.api'
 
-describe('Profile page for caregiver', () => {
-  const profile: Profile = {
+describe('User account page for caregiver', () => {
+  const account: UserAccount = {
     email: 'phil@defer.com',
     firstName: 'Phil',
     lastName: 'Defer',
@@ -72,7 +72,7 @@ describe('Profile page for caregiver', () => {
   beforeAll(() => {
     mockAuth0Hook(UserRole.Caregiver)
     mockAuthApi()
-    mockUserApi().mockUserDataFetch({ profile, preferences, settings })
+    mockUserApi().mockUserDataFetch({ account, preferences, settings })
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
@@ -80,25 +80,25 @@ describe('Profile page for caregiver', () => {
     mockPatientApiForHcp() // Do not remove this, this is needed for when the user switches role
   })
 
-  it('should render profile page for a caregiver and be able to change his password and change his role to HCP', async () => {
+  it('should render user account page for a caregiver and be able to change his password and change his role to HCP', async () => {
     jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
 
-    const expectedProfile = { ...profile, firstName: 'Jean', lastName: 'Talue', fullName: 'Jean Talue' }
+    const expectedUserAccount = { ...account, firstName: 'Jean', lastName: 'Talue', fullName: 'Jean Talue' }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
     const expectedSettings = { ...settings, units: { bg: Unit.MilligramPerDeciliter } }
-    const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(expectedProfile)
+    const updateUserAccountMock = jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValue(expectedUserAccount)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
     const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
-    const router = renderPage('/preferences')
+    const router = renderPage('/user-account')
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/preferences')
+      expect(router.state.location.pathname).toEqual('/user-account')
     })
-    await checkCaregiverLayout(`${profile.lastName} ${profile.firstName}`)
+    await checkCaregiverLayout(`${account.lastName} ${account.firstName}`)
     const fields = checkCaregiverProfilePage()
     const saveButton = screen.getByRole('button', { name: 'Save' })
 
-    expect(fields.firstNameInput).toHaveValue(profile.firstName)
-    expect(fields.lastNameInput).toHaveValue(profile.lastName)
+    expect(fields.firstNameInput).toHaveValue(account.firstName)
+    expect(fields.lastNameInput).toHaveValue(account.lastName)
     expect(fields.unitsSelect).toHaveTextContent(settings.units.bg)
     expect(fields.languageSelect).toHaveTextContent('Français')
     expect(screen.queryByTestId('country-selector')).not.toBeInTheDocument()
@@ -124,7 +124,7 @@ describe('Profile page for caregiver', () => {
     expect(saveButton).toBeDisabled()
     expect(screen.getByRole('alert')).toBeVisible()
     expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, expectedPreferences)
-    expect(updateProfileMock).toHaveBeenCalledWith(loggedInUserId, expectedProfile)
+    expect(updateUserAccountMock).toHaveBeenCalledWith(loggedInUserId, expectedUserAccount)
     expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, expectedSettings)
 
     const profileUpdateSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
@@ -139,7 +139,7 @@ describe('Profile page for caregiver', () => {
     /*******************/
     /** Changing role **/
     /*******************/
-    const changeRoleButton = screen.getByTestId('switch-role-link')
+    const changeRoleButton = screen.getByTestId('switch-role-button')
     await userEvent.click(changeRoleButton)
 
     // First dialog (consequences)
@@ -183,7 +183,7 @@ describe('Profile page for caregiver', () => {
     const validateButton = within(professionDialog).getByRole('button', { name: 'Validate' })
     expect(hcpProfessionSelect).toBeVisible()
     expect(validateButton).toBeDisabled()
-    expect(hcpProfessionSelect.textContent).toEqual('​')
+    expect(hcpProfessionSelect.textContent).toEqual('​Profession')
 
     fireEvent.mouseDown(within(screen.getByTestId('dropdown-profession-selector')).getByRole('combobox'))
     fireEvent.click(screen.getByRole('option', { name: 'Dietitian' }))
@@ -196,10 +196,10 @@ describe('Profile page for caregiver', () => {
 
   it('should close the modals when clicking on cancel or decline buttons', async () => {
     await act(async () => {
-      renderPage('/preferences')
+      renderPage('/user-account')
     })
 
-    const changeRoleButton = screen.getByTestId('switch-role-link')
+    const changeRoleButton = screen.getByTestId('switch-role-button')
     await userEvent.click(changeRoleButton)
 
     // First dialog

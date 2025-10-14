@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,8 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useMemo } from 'react'
-import { tz } from 'moment-timezone'
+import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
@@ -37,71 +36,56 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 
-import { useAuth } from '../../lib/auth'
-import { useProfilePageState } from './profile-page-context'
-import { profileFormCommonClasses } from './css-classes'
-import { ProfileFormKey } from './models/enums/profile-form-key.enum'
-import { Gender } from '../../lib/auth/models/enums/gender.enum'
-import PatientUtils from '../../lib/patient/patient.util'
+import { useAuth } from '../../../lib/auth'
+import { useUserAccountPageState } from '../user-account-page-context'
+import { userAccountFormCommonClasses } from '../css-classes'
+import { UserAccountFormKey } from '../models/enums/profile-form-key.enum'
+import { Gender } from '../../../lib/auth/models/enums/gender.enum'
+import PatientUtils from '../../../lib/patient/patient.util'
 
-const PatientProfileForm: FunctionComponent = () => {
+export const PatientProfileForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
-  const { errors, profileForm, updateProfileForm } = useProfilePageState()
-  const { classes } = profileFormCommonClasses()
+  const { errors, userAccountForm, updateUserAccountForm } = useUserAccountPageState()
+  const { classes } = userAccountFormCommonClasses()
 
-  const browserTimezone = useMemo(() => new Intl.DateTimeFormat().resolvedOptions().timeZone, [])
-
-  const a1cDate = user.settings?.a1c?.rawdate
-  const a1cValue = user.settings?.a1c?.value
+  const genderLabel = t('gender')
+  const genderLabelId = "gender-input-label"
 
   const genderIndeterminateLabel = PatientUtils.getGenderLabel(Gender.Indeterminate)
   const genderMaleLabel = PatientUtils.getGenderLabel(Gender.Male)
   const genderFemaleLabel = PatientUtils.getGenderLabel(Gender.Female)
 
   return (
-    <React.Fragment>
+    <>
       <Box className={classes.inputContainer}>
         <TextField
-          id="profile-textfield-birthdate"
-          label={t('date-of-birth')}
-          variant="standard"
-          value={profileForm.birthday}
-          onChange={event => { updateProfileForm(ProfileFormKey.birthday, event.target.value) }}
-          error={errors.birthday}
-          helperText={errors.birthday && t('required-field')}
-          className={classes.formInput}
-          inputProps={{ maxLength: '10' }}
-        />
-        <TextField
-          id="profile-textfield-birthplace"
-          label={t('birthplace')}
-          variant="standard"
-          value={profileForm.birthPlace}
-          onChange={event => { updateProfileForm(ProfileFormKey.birthPlace, event.target.value) }}
+          disabled={true}
+          id="account-textfield-email"
+          label={t('email')}
+          variant="outlined"
+          value={user.email}
           className={classes.formInput}
           inputProps={{ maxLength: '50' }}
         />
-      </Box>
-
-      <Box className={classes.inputContainer}>
         <FormControl
-          variant="standard"
+          variant="outlined"
           className={classes.formInput}
           error={errors.sex}
         >
           <InputLabel
-            id="profile-select-gender-label"
+            id={genderLabelId}
             htmlFor="profile-select-gender"
           >
-            {t('gender')}
+            {genderLabel}
           </InputLabel>
           <Select
             id="profile-select-gender"
-            labelId="profile-select-gender-label"
-            value={profileForm.sex}
+            labelId={genderLabelId}
+            label={genderLabel}
+            value={userAccountForm.sex}
             error={errors.sex}
-            onChange={event => { updateProfileForm(ProfileFormKey.sex, event.target.value) }}
+            onChange={event => { updateUserAccountForm(UserAccountFormKey.sex, event.target.value) }}
           >
             <MenuItem value={Gender.Indeterminate} aria-label={genderIndeterminateLabel}>{genderIndeterminateLabel}</MenuItem>
             <MenuItem value={Gender.Male} aria-label={genderMaleLabel}>{genderMaleLabel}</MenuItem>
@@ -109,18 +93,7 @@ const PatientProfileForm: FunctionComponent = () => {
           </Select>
           <FormHelperText>{errors.sex && t('required-field')}</FormHelperText>
         </FormControl>
-        {a1cValue && a1cDate &&
-          <TextField
-            label={t('patient-profile-hba1c', { hba1cDate: tz(a1cDate, browserTimezone).format('L') })}
-            variant="standard"
-            disabled
-            value={`${a1cValue}%`}
-            className={classes.formInput}
-          />
-        }
       </Box>
-    </React.Fragment>
+    </>
   )
 }
-
-export default PatientProfileForm

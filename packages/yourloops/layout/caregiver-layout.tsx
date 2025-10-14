@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import React, { type FunctionComponent } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { InvalidRoute } from '../components/invalid-route'
-import { ProfilePage } from '../pages/profile/profile-page'
+import { UserAccountPage } from '../pages/user-account/user-account-page'
 import { NotificationsPage } from '../pages/notifications/notifications-page'
 import { AppUserRoute } from '../models/enums/routes.enum'
 import { PatientListPage } from '../components/patient-list/patient-list-page'
@@ -43,7 +43,7 @@ export const CaregiverLayout: FunctionComponent = () => {
     <Routes>
       <Route element={<ScopedDashboardLayout />}>
         <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
-        <Route path={AppUserRoute.Preferences} element={<ProfilePage />} />
+        <Route path={AppUserRoute.UserAccount} element={<UserAccountPage />} />
         <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
         <Route path={AppUserRoute.PatientsList} element={<PatientListPage />} />
         <Route path={AppUserRoute.PatientView} element={<ScopedPatientData />} />

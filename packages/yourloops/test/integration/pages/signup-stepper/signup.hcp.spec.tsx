@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -45,13 +45,13 @@ import { renderPage } from '../../utils/render'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
-import { type Profile } from '../../../../lib/auth/models/profile.model'
+import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 
 describe('Signup stepper as hcp', () => {
   const { updateAuth0UserMetadataMock } = mockUserApi()
   const firstName = 'Lara'
   const lastName = 'Tatouille'
-  const expectedProfile: Profile = {
+  const expectedUserAccount: UserAccount = {
     email: loggedInUserEmail,
     firstName,
     lastName,
@@ -112,7 +112,7 @@ describe('Signup stepper as hcp', () => {
       loggedInUserId,
       expect.objectContaining({
         role: UserRole.Hcp,
-        profile: expectedProfile,
+        profile: expectedUserAccount,
         preferences: { displayLanguageCode: 'en' },
         settings: { country: CountryCodes.UnitedKingdom }
       })

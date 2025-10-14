@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 import { type Gender } from '../../auth/models/enums/gender.enum'
 
-export interface PatientProfile {
+export interface PatientAccount {
   birthdate?: string
   firstName?: string
   fullName: string
