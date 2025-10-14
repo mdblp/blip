@@ -57,43 +57,44 @@ export const PatientProfileForm: FunctionComponent = () => {
   const genderFemaleLabel = PatientUtils.getGenderLabel(Gender.Female)
 
   return (
-    <>
-      <Box className={classes.inputContainer}>
-        <TextField
-          disabled={true}
-          id="account-textfield-email"
-          label={t('email')}
-          variant="outlined"
-          value={user.email}
-          className={classes.formInput}
-          inputProps={{ maxLength: '50' }}
-        />
-        <FormControl
-          variant="outlined"
-          className={classes.formInput}
-          error={errors.sex}
+    <Box className={classes.inputContainer}>
+      <TextField
+        disabled={true}
+        id="account-textfield-email"
+        label={t('email')}
+        variant="outlined"
+        value={user.email}
+        className={classes.formInput}
+        inputProps={{ maxLength: '50' }}
+      />
+      <FormControl
+        variant="outlined"
+        className={classes.formInput}
+        error={errors.sex}
+      >
+        <InputLabel
+          id={genderLabelId}
+          htmlFor="profile-select-gender"
         >
-          <InputLabel
-            id={genderLabelId}
-            htmlFor="profile-select-gender"
-          >
-            {genderLabel}
-          </InputLabel>
-          <Select
-            id="profile-select-gender"
-            labelId={genderLabelId}
-            label={genderLabel}
-            value={userAccountForm.sex}
-            error={errors.sex}
-            onChange={event => { updateUserAccountForm(UserAccountFormKey.sex, event.target.value) }}
-          >
-            <MenuItem value={Gender.Indeterminate} aria-label={genderIndeterminateLabel}>{genderIndeterminateLabel}</MenuItem>
-            <MenuItem value={Gender.Male} aria-label={genderMaleLabel}>{genderMaleLabel}</MenuItem>
-            <MenuItem value={Gender.Female} aria-label={genderFemaleLabel}>{genderFemaleLabel}</MenuItem>
-          </Select>
-          <FormHelperText>{errors.sex && t('required-field')}</FormHelperText>
-        </FormControl>
-      </Box>
-    </>
+          {genderLabel}
+        </InputLabel>
+        <Select
+          id="profile-select-gender"
+          labelId={genderLabelId}
+          label={genderLabel}
+          value={userAccountForm.sex}
+          error={errors.sex}
+          onChange={event => {
+            updateUserAccountForm(UserAccountFormKey.sex, event.target.value)
+          }}
+        >
+          <MenuItem value={Gender.Indeterminate}
+                    aria-label={genderIndeterminateLabel}>{genderIndeterminateLabel}</MenuItem>
+          <MenuItem value={Gender.Male} aria-label={genderMaleLabel}>{genderMaleLabel}</MenuItem>
+          <MenuItem value={Gender.Female} aria-label={genderFemaleLabel}>{genderFemaleLabel}</MenuItem>
+        </Select>
+        <FormHelperText>{errors.sex && t('required-field')}</FormHelperText>
+      </FormControl>
+    </Box>
   )
 }

@@ -49,8 +49,8 @@ export const SecurityForm: FC = () => {
     try {
       await AuthApi.sendResetPasswordEmail(user.email)
       alert.success(t('alert-change-password-email-success'))
-    } catch (reason: unknown) {
-      const errorMessage = errorTextFromException(reason)
+    } catch (error: unknown) {
+      const errorMessage = errorTextFromException(error)
       logError(errorMessage, 'change-password')
 
       alert.error(t('alert-change-password-email-failed'))
