@@ -258,7 +258,7 @@ export class PrintView<T> {
   }
 
   getCustomTextCellStyleParameters(isHeader: boolean | undefined, column: TableColumn, cellStripe: CellStripe, padding: Padding, pos: Position): {
-    align: string,
+    align: "center" | "right" | "left" | "justify" | undefined,
     xPos: number,
     width: number,
     height: number,
