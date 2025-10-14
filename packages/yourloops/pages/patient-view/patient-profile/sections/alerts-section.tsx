@@ -28,7 +28,7 @@
 import React, { FC, useRef, useState } from 'react'
 import Container from '@mui/material/Container'
 import { Patient } from '../../../../lib/patient/models/patient.model'
-import { MonitoringAlertsParameters } from '../../../../lib/team/models/monitoring-alerts-parameters.model'
+import { MonitoringAlertsParameters } from 'medical-domain'
 import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useAlert } from '../../../../components/utils/snackbar'
 import { useTranslation } from 'react-i18next'

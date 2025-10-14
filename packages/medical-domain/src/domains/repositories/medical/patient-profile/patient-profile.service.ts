@@ -29,7 +29,7 @@
 import { DiabeticType } from '../../../models/medical/patient-profile/diabetic-type.enum'
 import { BgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../../models/medical/datum/bg.model'
 import { BG_CLAMP_THRESHOLD, BgClasses } from '../../../models/medical/medical-data-options.model'
-import type { MonitoringAlertsParameters } from 'yourloops/lib/team/models/monitoring-alerts-parameters.model'
+import type { MonitoringAlertsParameters } from '../../../models/monitoring-alerts/monitoring-alerts-parameters.model'
 
 const DEFAULT_REPORTING_PERIOD = 55
 
@@ -92,7 +92,7 @@ function getDT1DT2RangeByUnit(unit: BgUnit): BgClasses {
   }
 }
 
-// Returns the default BG range for a given diabetic profile type and BG unit
+// Returns the default Alerts for a given diabetic profile type and BG unit
 // If no profile is found, returns the common one (DT1/DT2)
 export function getDefaultAlertsByDiabeticType(type: string, unit: BgUnit): MonitoringAlertsParameters {
   switch (type) {
