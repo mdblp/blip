@@ -325,3 +325,16 @@ export const formatClocktimeFromMsPer24 = (milliseconds: number, format?: string
   const defaultFormat = getHourMinuteFormat()
   return moment.utc(milliseconds).format(format ?? defaultFormat)
 }
+
+export const getDateTimeFormat = (previousTime: moment.Moment, newTime: moment.Moment): string => {
+  if (previousTime.year() !== newTime.year()) {
+    return i18next.t('MMM D, YYYY h:mm a')
+  }
+  if (previousTime.month() !== newTime.month()) {
+    return i18next.t('MMM D, h:mm a')
+  }
+  if (previousTime.date() !== newTime.date()) {
+    return i18next.t('dddd, h:mm a')
+  }
+  return i18next.t('h:mm a')
+}

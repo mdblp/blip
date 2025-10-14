@@ -28,11 +28,12 @@
 import { Datum, type DatumProcessor } from '../../../models/medical/datum.model'
 import BaseDatumService from './basics/base-datum.service'
 import type MedicalDataOptions from '../../../models/medical/medical-data-options.model'
-import type TimeZoneChange from '../../../models/medical/datum/time-zone-change.model'
 import { getDstChange, toISOString } from '../../time/time.service'
 import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import DatumService from '../datum.service'
-import { type WeekDaysFilter, defaultWeekDaysFilter } from '../../../models/time/date-filter.model'
+import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../../models/time/date-filter.model'
+import { TimeZoneChange } from '../../../models/medical/datum/time-zone-change.model'
+import { DeviceEventSubtype } from '../../../models/medical/datum/enums/device-event-subtype.enum'
 
 const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): TimeZoneChange => {
   const base = BaseDatumService.normalize(rawData, opts)
@@ -41,7 +42,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const tzChange: TimeZoneChange = {
     ...base,
     type: DatumType.DeviceEvent,
-    subType: 'timeChange',
+    subType: DeviceEventSubtype.TimeChange,
     from: {
       time: rawFrom.time as string,
       timeZoneName: rawFrom.timeZoneName as string
@@ -93,7 +94,7 @@ const getTimeZoneChanges = (tzChanges: Datum[], opts: MedicalDataOptions): TimeZ
       }
     }
     if (d.timezone === previousTimezone) {
-      // same zone name but != timezone offet ==> Summer/Winter time changes
+      // same zone name but != timezone offset ==> Summer/Winter time changes
       const dstEpoch = getDstChange(d.timezone, previousEpoch, d.epoch)
       if (!dstEpoch) {
         previousTimezone = d.timezone

@@ -126,6 +126,12 @@ export const RESERVOIR_CHANGE_TODAY_DATE: Moment = moment()
 export const TWO_WEEKS_AGO_DATE: Moment = moment().subtract(14, 'days')
 export const RESERVOIR_CHANGE_13_DAYS_AGO_DATE: Moment = moment().subtract(13, 'days')
 export const SIXTEEN_DAYS_AGO_DATE: Moment = moment().subtract(16, 'days')
+
+export const BASAL_TIME_CHANGE_INITAL_TIME_ID = 'basalTimezoneChangeParisId'
+export const BASAL_TIME_CHANGE_NEW_TIME_ID = 'basalTimezoneChangeDublinId'
+export const DUBLIN_TIMEZONE = 'Europe/Dublin'
+export const PARIS_TIMEZONE = 'Europe/Paris'
+
 const twoWeeksAgoDateAsString = TWO_WEEKS_AGO_DATE.format('YYYY-MM-DD')
 const sixteenDaysAgoDateAsString = SIXTEEN_DAYS_AGO_DATE.format('YYYY-MM-DD')
 const yesterdayDateAsString = YESTERDAY_DATE.format('YYYY-MM-DD')

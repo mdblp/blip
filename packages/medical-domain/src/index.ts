@@ -106,6 +106,7 @@ export {
   SecurityBasalConfig,
   SecurityBasalRate
 } from './domains/models/medical/datum/pump-settings.model'
+export { type TimeZoneChange } from './domains/models/medical/datum/time-zone-change.model'
 export { WizardInputMealFat } from './domains/models/medical/datum/enums/wizard-input-meal-fat.enum'
 export { WizardInputMealSource } from './domains/models/medical/datum/enums/wizard-input-meal-source.enum'
 export {
