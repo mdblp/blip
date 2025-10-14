@@ -28,7 +28,6 @@
 import Typography from '@mui/material/Typography'
 import React, { FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import Link from '@mui/material/Link'
 import metrics from '../../../lib/metrics'
 import SwitchRoleDialogs from '../../../components/switch-role'
 import { Divider } from '@mui/material'
