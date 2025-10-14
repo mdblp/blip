@@ -31,6 +31,9 @@ import { within } from '@testing-library/dom'
 import { getTranslation } from '../../utils/i18n'
 import userEvent from '@testing-library/user-event'
 import PatientApi from '../../../lib/patient/patient.api'
+import { Unit } from 'medical-domain'
+import { myThirdTeamId } from '../mock/team.api.mock'
+import { patient1Id } from '../data/patient.api.data'
 
 export const testAlertsViewContent = async (): Promise<void> => {
   await checkAlertsViewContent()
@@ -92,7 +95,6 @@ export const testSaveButtonForRanges = async () : Promise<void>  => {
   const saveButton = screen.getByRole('button', { name: getTranslation('button-save') })
   expect(saveButton).toBeVisible()
   await userEvent.click(saveButton)
-
   const expectedPayload = {
     type: "custom",
     bloodGlucosePreference: {
@@ -114,6 +116,31 @@ export const testSaveButtonForRanges = async () : Promise<void>  => {
   }
 
   expect(PatientApi.updatePatientDiabeticProfile).toHaveBeenCalledWith('patient1Id', expectedPayload)
+
+  const dialog = screen.getByTestId('confirm-dialog')
+  expect(dialog).toBeVisible()
+  expect(dialog).toHaveTextContent(getTranslation('adapt-alerts-title'))
+  expect(dialog).toHaveTextContent(getTranslation('adapt-alerts-message'))
+
+  const keepCurrentAlertsButton = within(dialog).getByRole('button', { name: getTranslation('adapt-alerts-close') })
+  expect(keepCurrentAlertsButton).toBeVisible()
+  const adaptAlertsButton = within(dialog).getByRole('button', { name: getTranslation('adapt-alerts-confirm') })
+  expect(adaptAlertsButton).toBeVisible()
+  await userEvent.click(adaptAlertsButton)
+
+  // check the api call
+  const expectedMonitoringAlertsParameters = {
+    bgUnit: Unit.MilligramPerDeciliter,
+    lowBg: 70,
+    highBg: 180,
+    outOfRangeThreshold: 50,
+    veryLowBg: 54,
+    hypoThreshold: 5,
+    nonDataTxThreshold: 50,
+    reportingPeriod: 55
+  }
+  expect(PatientApi.updatePatientAlerts).toHaveBeenCalledWith(myThirdTeamId, patient1Id, expectedMonitoringAlertsParameters)
+
   expect(screen.getByText('Patient update succeeded')).toBeVisible()
 }
 

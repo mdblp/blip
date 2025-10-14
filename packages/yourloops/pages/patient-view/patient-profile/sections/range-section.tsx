@@ -49,6 +49,10 @@ import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useAuth } from '../../../../lib/auth'
 import { convertIfNeeded } from '../../../../components/patient-data/patient-data.utils'
 import { DiabeticProfile } from '../../../../lib/patient/models/patient-diabete-profile'
+import { AdaptAlertsDialog } from '../dialog/adapt-alerts-dialog'
+import {
+  getDefaultAlertsByDiabeticType
+} from 'medical-domain/dist/src/domains/repositories/medical/patient-profile/patient-profile.service'
 
 interface RangeSectionProps {
   patient: Patient
@@ -121,7 +125,8 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
   const [errors, setErrors] = useState<ValidationErrors>(DEFAULT_ERROR_STATE)
-  const { updatePatientDiabeticProfile } = usePatientsContext()
+  const [showDialog, setShowDialog] = useState(false)
+  const { updatePatientDiabeticProfile, updatePatientMonitoringAlertsParameters } = usePatientsContext()
 
   const patientDiabeticProfiles = [
     { type: DiabeticType.DT1DT2, label: t('range-profile-type-1-and-2') },
@@ -221,8 +226,12 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
     setSaveInProgress(true)
     try {
       await updatePatientDiabeticProfile(patient.userid, selectedDiabeticProfile)
+      if (patient.diabeticProfile.type !== selectedPatientType) {
+        setShowDialog(true)
+      } else {
+        alert.success(t('patient-update-success'))
+      }
       patient.diabeticProfile = selectedDiabeticProfile
-      alert.success(t('patient-update-success'))
       setSaveInProgress(false)
     } catch (error) {
       const errorMessage = errorTextFromException(error)
@@ -230,6 +239,24 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
       alert.error(t('patient-update-error'))
       setSaveInProgress(false)
+    }
+  }
+
+  const keepCurrentAlerts = (): void => {
+    setShowDialog(false)
+  }
+
+  const adaptAlerts = async (): Promise<void> => {
+    patient.monitoringAlertsParameters = getDefaultAlertsByDiabeticType(selectedDiabeticProfile.type, displayedUnit)
+    try {
+      await updatePatientMonitoringAlertsParameters(patient)
+      alert.success(t('patient-update-success'))
+    } catch (error) {
+      const errorMessage = errorTextFromException(error)
+      logError(errorMessage, 'update-patient-monitoring-alerts-parameters')
+      alert.error(t('patient-update-error'))
+    } finally {
+      setShowDialog(false)
     }
   }
 
@@ -446,6 +473,13 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
               >
                 {t('button-save')}
               </LoadingButton>
+              { showDialog &&
+                <AdaptAlertsDialog
+                  open={showDialog}
+                  onClose={keepCurrentAlerts}
+                  onConfirm={adaptAlerts}
+                />
+              }
             </Box>
           </section>
         </CardContent>
