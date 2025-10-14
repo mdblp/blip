@@ -51,12 +51,12 @@ export interface TableHeading {
 }
 
 export interface TableColumn {
-  align: string
+  align: "center" | "right" | "left" | "justify" | undefined
   fillStripe: FillStripe
   font: string
   fontSize: number
   header: TableHeading
-  headerAlign: string
+  headerAlign: "center" | "right" | "left" | "justify" | undefined
   headerFillStripe: FillStripe
   headerFont: string
   headerHeight: number
