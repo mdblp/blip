@@ -304,7 +304,8 @@ const ignoredTransKeyForYourLoops = [
   'sensor-warmup-session-end',
   'signup-information-message-2',
   'device',
-  'safety-basal-profile-values-not-available'
+  'safety-basal-profile-values-not-available',
+  'data-period-text-trends'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   // Documentation!
