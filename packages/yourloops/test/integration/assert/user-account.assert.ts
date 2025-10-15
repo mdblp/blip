@@ -53,7 +53,7 @@ export const checkCaregiverUserAccountLayout = () => {
   expect(screen.getByRole('button', { name: 'Change password' })).toBeEnabled()
 
   expect(screen.getByText('Professional account')).toBeVisible()
-  expect(screen.getByText('Caregivers can upgrade their account to a professional account to access enhanced features for patient monitoring.')).toBeVisible()
+  expect(screen.getByText('Caregivers can upgrade their account to a professional account. The professional account is reserved for healthcare professionals as a tool to facilitate patient care.')).toBeVisible()
   expect(screen.getByRole('button', { name: 'Switch to professional account' })).toBeEnabled()
 }
 
