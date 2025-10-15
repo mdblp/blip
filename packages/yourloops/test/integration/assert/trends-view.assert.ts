@@ -87,7 +87,7 @@ export const checkTrendsStatsWidgetsTooltips = async () => {
   await checkStatTooltip(patientStatistics, 'Sensor Usage', SENSOR_USAGE_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'CV (CGM)', CV_TOOLTIP)
-  await checkStatTooltip(patientStatistics, 'Total Carbs', AVG_DAILY_CARBS_DECLARED_TOOLTIP)
+  await checkStatTooltip(patientStatistics, 'Total of declared carbs', AVG_DAILY_CARBS_DECLARED_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'GMI (estimated HbA1c)', GMI_TOOLTIP_EMPTY_VALUE)
   await checkStatTooltip(patientStatistics, 'Time In Loop Mode', LOOP_MODE_TOOLTIP)
 }
