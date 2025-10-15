@@ -59,7 +59,7 @@ function getDT1PregnancyRangeByUnit(unit: BgUnit): BgClasses {
     }
     case MMOLL_UNITS: {
       return {
-        veryHigh:BG_CLAMP_THRESHOLD[MMOLL_UNITS],
+        veryHigh: BG_CLAMP_THRESHOLD[MMOLL_UNITS],
         high: 13.9,
         target: 7.8,
         low: 3.5,
