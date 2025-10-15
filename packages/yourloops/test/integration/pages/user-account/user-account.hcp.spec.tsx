@@ -29,11 +29,9 @@ import { renderPage } from '../../utils/render'
 import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { waitFor } from '@testing-library/react'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
-import { checkHcpProfilePage, checkPasswordChangeRequest } from '../../assert/profile.assert'
-import userEvent from '@testing-library/user-event'
 import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
@@ -51,8 +49,12 @@ import {
 } from '../../use-cases/app-main-layout-visualisation'
 import { ConfigService } from '../../../../lib/config/config.service'
 import ErrorApi from '../../../../lib/error/error.api'
+import { testHcpUserInfoUpdate, testPasswordChangeRequest } from '../../use-cases/user-account-management'
+import { AppUserRoute } from '../../../../models/enums/routes.enum'
 
 describe('User account page for hcp', () => {
+  const userAccountRoute = AppUserRoute.UserAccount
+
   const account: UserAccount = {
     email: 'djamal@alatete.com',
     firstName: 'Djamal',
@@ -107,70 +109,28 @@ describe('User account page for hcp', () => {
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
     const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
 
-    const router = renderPage('/user-account')
+    const router = renderPage(userAccountRoute)
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/user-account')
+      expect(router.state.location.pathname).toEqual(userAccountRoute)
     })
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
-    const fields = checkHcpProfilePage()
-    const saveButton = screen.getByRole('button', { name: 'Save' })
 
-    expect(fields.firstNameInput).toHaveValue(account.firstName)
-    expect(fields.lastNameInput).toHaveValue(account.lastName)
-    expect(fields.unitsSelect).toHaveTextContent(settings.units.bg)
-    expect(fields.languageSelect).toHaveTextContent('Français')
-    expect(fields.hcpProfessionSelect).toHaveTextContent('Diabetologist')
-    expect(saveButton).toBeDisabled()
+    await testHcpUserInfoUpdate()
 
-    fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
-    fireEvent.click(screen.getByRole('option', { name: 'English' }))
-
-    fireEvent.mouseDown(within(screen.getByTestId('profile-units-selector')).getByRole('combobox'))
-    fireEvent.click(screen.getByRole('option', { name: Unit.MilligramPerDeciliter }))
-
-    fireEvent.mouseDown(within(screen.getByTestId('dropdown-profession-selector')).getByRole('combobox'))
-    fireEvent.click(screen.getByRole('option', { name: 'Nurse' }))
-
-    fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
-    fireEvent.click(screen.getByRole('option', { name: 'Japan' }))
-
-    fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
-    fireEvent.click(screen.getByRole('option', { name: 'United Kingdom' }))
-
-    fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
-    fireEvent.click(screen.getByRole('option', { name: 'Austria' }))
-
-    await userEvent.clear(fields.firstNameInput)
-    await userEvent.clear(fields.lastNameInput)
-    await userEvent.type(fields.firstNameInput, 'Jean')
-    await userEvent.type(fields.lastNameInput, 'Talue')
-
-    expect(saveButton).not.toBeDisabled()
-    await userEvent.click(saveButton)
-
-    expect(saveButton).toBeDisabled()
-    expect(screen.getByRole('alert')).toBeVisible()
     expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, expectedPreferences)
     expect(updateUserAccountMock).toHaveBeenCalledWith(loggedInUserId, expectedUserAccount)
     expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, expectedSettings)
 
-    const profileUpdateSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
-    expect(profileUpdateSuccessfulSnackbar).toHaveTextContent('Profile updated')
-
-    const profileUpdateSuccessfulSnackbarCloseButton = within(profileUpdateSuccessfulSnackbar).getByTitle('Close')
-
-    await userEvent.click(profileUpdateSuccessfulSnackbarCloseButton)
-
-    await checkPasswordChangeRequest(loggedInUserEmail)
+    await testPasswordChangeRequest(loggedInUserEmail)
   })
 
   it('should show the banner and change its content when the banner is enabled and language is changed', async () => {
     jest.spyOn(ConfigService, 'isBannerEnabled').mockReturnValue(true)
 
-    const router = renderPage('/user-account')
+    const router = renderPage(userAccountRoute)
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/user-account')
+      expect(router.state.location.pathname).toEqual(userAccountRoute)
     })
 
     await testBannerLanguageUpdate()

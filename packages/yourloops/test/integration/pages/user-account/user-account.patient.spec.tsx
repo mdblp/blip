@@ -29,12 +29,10 @@ import { renderPage } from '../../utils/render'
 import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { waitFor } from '@testing-library/react'
 import { checkPatientLayout } from '../../assert/layout.assert'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
-import { checkPatientProfilePage } from '../../assert/profile.assert'
-import userEvent from '@testing-library/user-event'
 import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
@@ -45,8 +43,12 @@ import UserApi from '../../../../lib/auth/user.api'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { Unit } from 'medical-domain'
 import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
+import { AppUserRoute } from '../../../../models/enums/routes.enum'
+import { testPatientUserInfoUpdate } from '../../use-cases/user-account-management'
 
 describe('User account page for patient', () => {
+  const userAccountRoute = AppUserRoute.UserAccount
+
   const account: UserAccount = {
     email: 'yann.blanc@example.com',
     firstName: 'Elie',
@@ -89,53 +91,15 @@ describe('User account page for patient', () => {
     const updateUserAccountMock = jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValue(expectedUserAccount)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
 
-    const router = renderPage('/user-account')
+    const router = renderPage(userAccountRoute)
     await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/user-account')
+      expect(router.state.location.pathname).toEqual(userAccountRoute)
     })
     await checkPatientLayout(`${account.lastName} ${account.firstName}`)
-    const fields = checkPatientProfilePage()
-    const saveButton = screen.getByRole('button', { name: 'Save' })
 
-    expect(fields.firstNameInput).toHaveValue(account.firstName)
-    expect(fields.lastNameInput).toHaveValue(account.lastName)
-    expect(fields.emailInput).toHaveValue(account.email)
-    expect(fields.unitsSelect).toHaveTextContent(settings.units.bg)
-    expect(fields.languageSelect).toHaveTextContent('Français')
-    expect(fields.genderSelect).toHaveTextContent('Male')
-    expect(saveButton).toBeDisabled()
-    expect(screen.queryByTestId('country-selector')).not.toBeInTheDocument()
+    await testPatientUserInfoUpdate()
 
-    fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
-    fireEvent.click(screen.getByRole('option', { name: 'English' }))
-
-    await userEvent.clear(fields.firstNameInput)
-    await userEvent.clear(fields.lastNameInput)
-    await userEvent.type(fields.firstNameInput, 'Jean')
-    await userEvent.type(fields.lastNameInput, 'Tanrien')
-
-    expect(saveButton).not.toBeDisabled()
-    await userEvent.click(saveButton)
-
-    expect(saveButton).toBeDisabled()
-    expect(screen.getByRole('alert')).toBeVisible()
     expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, expectedPreferences)
     expect(updateUserAccountMock).toHaveBeenCalledWith(loggedInUserId, expectedUserAccount)
-
-    const changePasswordCategoryTitle = screen.queryByText('Security')
-    expect(changePasswordCategoryTitle).not.toBeInTheDocument()
-    const changePasswordInfoLabel = screen.queryByText('By clicking this button, you will receive an e-mail allowing you to change your password.')
-    expect(changePasswordInfoLabel).not.toBeInTheDocument()
-    const changePasswordButton = screen.queryByText('Change password')
-    expect(changePasswordButton).not.toBeInTheDocument()
-  })
-
-  it('should render profile page without specific INS fields when patient is not French', async () => {
-    settings.country = CountryCodes.Italy
-    mockUserApi().mockUserDataFetch({ account, preferences, settings })
-    await act(async () => {
-      renderPage('/user-account')
-    })
-    checkPatientProfilePage()
   })
 })
