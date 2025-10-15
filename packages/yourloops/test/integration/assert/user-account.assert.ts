@@ -128,7 +128,7 @@ export const checkCaregiverInfoUpdate = async () => {
   expect(saveButton).toBeDisabled()
 
   const accountUpdateSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
-  expect(accountUpdateSuccessfulSnackbar).toHaveTextContent('Profile updated')
+  expect(accountUpdateSuccessfulSnackbar).toHaveTextContent('User account updated')
 
   const accountUpdateSuccessfulSnackbarCloseButton = within(accountUpdateSuccessfulSnackbar).getByTitle('Close')
   await userEvent.click(accountUpdateSuccessfulSnackbarCloseButton)
@@ -168,7 +168,7 @@ export const checkHcpInfoUpdate = async () => {
   expect(saveButton).toBeDisabled()
 
   const accountUpdateSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
-  expect(accountUpdateSuccessfulSnackbar).toHaveTextContent('Profile updated')
+  expect(accountUpdateSuccessfulSnackbar).toHaveTextContent('User account updated')
 
   const accountUpdateSuccessfulSnackbarCloseButton = within(accountUpdateSuccessfulSnackbar).getByTitle('Close')
 
@@ -194,7 +194,7 @@ export const checkPatientInfoUpdate = async () => {
   expect(saveButton).toBeDisabled()
 
   const accountUpdateSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
-  expect(accountUpdateSuccessfulSnackbar).toHaveTextContent('Profile updated')
+  expect(accountUpdateSuccessfulSnackbar).toHaveTextContent('User account updated')
 
   const accountUpdateSuccessfulSnackbarCloseButton = within(accountUpdateSuccessfulSnackbar).getByTitle('Close')
 

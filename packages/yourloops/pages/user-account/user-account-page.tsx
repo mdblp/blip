@@ -27,7 +27,6 @@
 
 import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
-import Box from '@mui/material/Box'
 import { setPageTitle } from '../../lib/utils'
 import { useAuth } from '../../lib/auth'
 import { UserAccountPageContextProvider } from './user-account-page-context'
@@ -38,6 +37,8 @@ import { useTheme } from '@mui/material/styles'
 import CardContent from '@mui/material/CardContent'
 import { SecurityForm } from './forms/security-form'
 import { ProfessionalAccountForm } from './forms/professional-account-form'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
 
 export const UserAccountPage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
@@ -47,24 +48,26 @@ export const UserAccountPage: FunctionComponent = () => {
   setPageTitle(t('user-account'))
 
   return (
-    <Box marginX={12} marginY={6}>
-      <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
-        <CardHeader title={t('user-account')} />
+    <Container maxWidth="lg">
+      <Box width="100%" marginY={6}>
+        <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
+          <CardHeader title={t('user-account')} />
 
-        <CardContent>
-          <UserAccountPageContextProvider>
-            <UserAccountForm />
-          </UserAccountPageContextProvider>
+          <CardContent>
+            <UserAccountPageContextProvider>
+              <UserAccountForm />
+            </UserAccountPageContextProvider>
 
-          {!user.isUserPatient() &&
-            <SecurityForm />
-          }
+            {!user.isUserPatient() &&
+              <SecurityForm />
+            }
 
-          {user.isUserCaregiver() &&
-            <ProfessionalAccountForm />
-          }
-        </CardContent>
-      </Card>
-    </Box>
+            {user.isUserCaregiver() &&
+              <ProfessionalAccountForm />
+            }
+          </CardContent>
+        </Card>
+      </Box>
+    </Container>
   )
 }
