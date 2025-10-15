@@ -149,7 +149,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
       return {
         type: type,
         bloodGlucosePreference: {
-          bgUnits: patient.diabeticProfile.bloodGlucosePreference.bgUnits,
+          bgUnits: displayedUnit,
           bgClasses: ranges,
           bgBounds: {
             veryHighThreshold : ranges.high,
@@ -241,6 +241,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
   const keepCurrentAlerts = (): void => {
     setShowDialog(false)
+    alert.success(t('patient-update-success'))
   }
 
   const adaptAlerts = async (): Promise<void> => {
