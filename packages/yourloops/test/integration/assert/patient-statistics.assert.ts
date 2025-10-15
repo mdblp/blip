@@ -51,7 +51,7 @@ export const checkPatientStatistics = async () => {
 
 export const checkPatientStatisticsWithTwoWeeksOldData = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 4000 }))
-  expect(patientStatistics.getByTestId('time-in-range-chart')).toHaveTextContent('Avg. Daily Time In Range4h 48m20%4h 48m20%4h 48m20%4h 48m20%4h 48m20%<5454-7070-180180-250>250mg/dL')
+  expect(patientStatistics.getByTestId('time-in-range-chart')).toHaveTextContent('Time In Range4h 48m20%4h 48m20%4h 48m20%4h 48m20%4h 48m20%<5454-7070-180180-250>250mg/dL')
   expect(patientStatistics.getByTestId('time-in-tight-range-chart')).toHaveTextContent('Time In Tight Range4h 48m20%70-140mg/dL')
   expect(patientStatistics.getByTestId('cbg-standard-deviation-stat')).toHaveTextContent('Standard Deviation (34-214)mg/dL90')
   expect(patientStatistics.getByTestId('average-glucose-stat')).toHaveTextContent('Avg. Glucose (CGM)mg/dL124')
@@ -81,7 +81,7 @@ export const checkPatientStatisticsNoData = async () => {
 
 export const checkPatientStatisticsTrendsView = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  expect(patientStatistics.getByTestId('time-in-range-chart')).toHaveTextContent('Avg. Daily Time In Range0m0%14h 24m60%9h 36m40%0m0%0m0%<5454-7070-180180-250>250mg/dL')
+  expect(patientStatistics.getByTestId('time-in-range-chart')).toHaveTextContent('Time In Range0m0%14h 24m60%9h 36m40%0m0%0m0%<5454-7070-180180-250>250mg/dL')
   expect(patientStatistics.getByTestId('time-in-tight-range-chart')).toHaveTextContent('Time In Tight Range0m0%70-140mg/dL')
   expect(patientStatistics.getByTestId('cbg-standard-deviation-stat')).toHaveTextContent('Standard Deviation (169-197)mg/dL14')
   expect(patientStatistics.getByTestId('sensor-usage-stat')).toHaveTextContent('Sensor Usage0.1%')
@@ -94,7 +94,7 @@ export const checkPatientStatisticsTrendsView = async () => {
 
 export const checkPatientStatisticsTrendsViewNoMonday = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  expect(patientStatistics.getByTestId('time-in-range-chart')).toHaveTextContent('Avg. Daily Time In Range0m0%12h50%12h50%0m0%0m0%<5454-7070-180180-250>250mg/dL')
+  expect(patientStatistics.getByTestId('time-in-range-chart')).toHaveTextContent('Time In Range0m0%12h50%12h50%0m0%0m0%<5454-7070-180180-250>250mg/dL')
   expect(patientStatistics.getByTestId('time-in-tight-range-chart')).toHaveTextContent('Time In Tight Range0m0%70-140mg/dL')
   expect(patientStatistics.getByTestId('cbg-standard-deviation-stat')).toHaveTextContent('Standard Deviation (167-199)mg/dL16')
   expect(patientStatistics.getByTestId('sensor-usage-stat')).toHaveTextContent('Sensor Usage0.1%')
