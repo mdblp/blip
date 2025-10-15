@@ -59,7 +59,7 @@ function getDT1PregnancyRangeByUnit(unit: BgUnit): BgClasses {
     }
     case MMOLL_UNITS: {
       return {
-        veryHigh:BG_CLAMP_THRESHOLD[MGDL_UNITS],
+        veryHigh:BG_CLAMP_THRESHOLD[MMOLL_UNITS],
         high: 13.9,
         target: 7.8,
         low: 3.5,
@@ -112,11 +112,11 @@ function getDT1PregnancyAlertsByUnit(unit: BgUnit): MonitoringAlertsParameters {
         bgUnit: unit,
         lowBg: 63,
         highBg: 140,
-        outOfRangeThreshold : 50,
+        outOfRangeThreshold: 50,
         veryLowBg: 54,
         hypoThreshold: 5,
-        nonDataTxThreshold : 50,
-        reportingPeriod : DEFAULT_REPORTING_PERIOD,
+        nonDataTxThreshold: 50,
+        reportingPeriod: DEFAULT_REPORTING_PERIOD,
       }
     }
     case MMOLL_UNITS: {
@@ -124,11 +124,11 @@ function getDT1PregnancyAlertsByUnit(unit: BgUnit): MonitoringAlertsParameters {
         bgUnit: unit,
         lowBg: 3.5,
         highBg: 7.8,
-        outOfRangeThreshold :50,
+        outOfRangeThreshold: 50,
         veryLowBg: 3,
         hypoThreshold: 5,
-        nonDataTxThreshold : 50,
-        reportingPeriod : DEFAULT_REPORTING_PERIOD,
+        nonDataTxThreshold: 50,
+        reportingPeriod: DEFAULT_REPORTING_PERIOD,
       }
     }
   }
@@ -141,11 +141,11 @@ function getDT1DT2AlertsByUnit(unit: BgUnit): MonitoringAlertsParameters {
         bgUnit: unit,
         lowBg: 70,
         highBg: 180,
-        outOfRangeThreshold : 50,
+        outOfRangeThreshold: 50,
         veryLowBg: 54,
         hypoThreshold: 5,
-        nonDataTxThreshold : 50,
-        reportingPeriod : DEFAULT_REPORTING_PERIOD,
+        nonDataTxThreshold: 50,
+        reportingPeriod: DEFAULT_REPORTING_PERIOD,
       }
     }
     case MMOLL_UNITS: {
@@ -153,11 +153,11 @@ function getDT1DT2AlertsByUnit(unit: BgUnit): MonitoringAlertsParameters {
         bgUnit: unit,
         lowBg: 3.9,
         highBg: 10,
-        outOfRangeThreshold :50,
+        outOfRangeThreshold: 50,
         veryLowBg: 3,
         hypoThreshold: 5,
-        nonDataTxThreshold : 50,
-        reportingPeriod : DEFAULT_REPORTING_PERIOD,
+        nonDataTxThreshold: 50,
+        reportingPeriod: DEFAULT_REPORTING_PERIOD,
       }
     }
   }
