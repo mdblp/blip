@@ -442,13 +442,11 @@ export const getStatTitle = (type, opts = {}) => {
       break
 
     case commonStats.timeInAuto:
-      title = (days > 1)
-        ? t('Avg. Daily Time In Loop Mode')
-        : t('Time In Loop Mode')
+      title = t('Time In Loop Mode')
       break
 
     case commonStats.timeInRange:
-      title = (days > 1) ? t('Avg. Daily Time In Range') : t('Time In Range')
+      title = t('Time In Range')
       break
 
     case commonStats.totalInsulin:

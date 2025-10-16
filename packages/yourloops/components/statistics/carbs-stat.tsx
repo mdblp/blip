@@ -49,7 +49,7 @@ export const CarbsStat: FunctionComponent<CarbsStatProps> = (props) => {
 
   const isDailyPage = location.pathname.includes('daily')
   const declaredCarbsAnnotation = [t(isDailyPage ? 'tooltip-per-day-carbs' : 'tooltip-avg-daily-week-carbs'), t('tooltip-declared-derived-carbs', { total: totalMealCarbsWithRescueCarbsEntries })]
-  const totalCarbsTitle = isDailyPage ? t('total-declared-carbs') : t('avg-daily-declared-carbs')
+  const totalCarbsTitle = t('total-declared-carbs')
   const carbsUnit = t('gram-unit')
 
   return (

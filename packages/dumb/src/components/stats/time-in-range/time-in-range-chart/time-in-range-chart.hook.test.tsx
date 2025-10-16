@@ -124,7 +124,7 @@ describe('CBGPercentageBarChart hook', () => {
 
   it('should compute the right title', () => {
     const { result: firstHook } = renderHook(() => useTimeInRangeChartHook({ ...defaultProps }))
-    expect(firstHook.current.title).toEqual('Avg. Daily Time In Range')
+    expect(firstHook.current.title).toEqual('Time In Range')
 
     const { result: secondHook } = renderHook(() => useTimeInRangeChartHook({ ...defaultProps, days: 0 }))
     expect(secondHook.current.title).toEqual('Time In Range')
@@ -146,7 +146,7 @@ describe('CBGPercentageBarChart hook', () => {
       ...defaultProps,
       bgType: DatumType.Smbg
     }))
-    expect(fifthHook.current.title).toEqual('Avg. Daily Time In Range')
+    expect(fifthHook.current.title).toEqual('Time In Range')
   })
 
   it('should compute the right annotations', () => {
@@ -172,7 +172,7 @@ describe('CBGPercentageBarChart hook', () => {
 
   it('onMouseOver and OnMouseLeave should return correct values', async () => {
     const props = { ...defaultProps }
-    const defaultTitle = 'Avg. Daily Time In Range'
+    const defaultTitle = 'Time In Range'
     const { result } = renderHook(() => useTimeInRangeChartHook(props))
     expect(result.current.hoveredStatId).toBeNull()
     expect(result.current.title).toEqual(defaultTitle)

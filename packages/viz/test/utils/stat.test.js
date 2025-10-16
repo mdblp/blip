@@ -732,7 +732,7 @@ describe('stat', () => {
       })
 
       it('should return title for `averageDailyDose` stat when viewing multiple days of data', () => {
-        expect(stat.getStatTitle(commonStats.averageDailyDose, multiDayOpts)).to.equal('Avg. Daily Insulin')
+        expect(stat.getStatTitle(commonStats.averageDailyDose, multiDayOpts)).to.equal('Total Insulin')
       })
     })
 
@@ -742,7 +742,7 @@ describe('stat', () => {
       })
 
       it('should return title for `carbs` stat when viewing multiple days of data', () => {
-        expect(stat.getStatTitle(commonStats.carbs, multiDayOpts)).to.equal('Avg. Daily Carbs')
+        expect(stat.getStatTitle(commonStats.carbs, multiDayOpts)).to.equal('Total Carbs')
       })
     })
 
@@ -772,7 +772,7 @@ describe('stat', () => {
       })
 
       it('should return title for `readingsInRange` stat when viewing multiple days of data', () => {
-        expect(stat.getStatTitle(commonStats.readingsInRange, multiDayOpts)).to.equal('Avg. Daily Readings In Range')
+        expect(stat.getStatTitle(commonStats.readingsInRange, multiDayOpts)).to.equal('Readings In Range')
       })
     })
 
@@ -798,7 +798,7 @@ describe('stat', () => {
       })
 
       it('should return title for `timeInAuto` stat when viewing multiple days of data', () => {
-        expect(stat.getStatTitle(commonStats.timeInAuto, multiDayOpts)).to.equal('Avg. Daily Time In Loop Mode')
+        expect(stat.getStatTitle(commonStats.timeInAuto, multiDayOpts)).to.equal('Time In Loop Mode')
       })
     })
 
@@ -808,7 +808,7 @@ describe('stat', () => {
       })
 
       it('should return title for `timeInRange` stat when viewing multiple days of data', () => {
-        expect(stat.getStatTitle(commonStats.timeInRange, multiDayOpts)).to.equal('Avg. Daily Time In Range')
+        expect(stat.getStatTitle(commonStats.timeInRange, multiDayOpts)).to.equal('Time In Range')
       })
     })
 
@@ -818,7 +818,7 @@ describe('stat', () => {
       })
 
       it('should return title for `totalInsulin` stat when viewing multiple days of data', () => {
-        expect(stat.getStatTitle(commonStats.totalInsulin, multiDayOpts)).to.equal('Avg. Daily Total Insulin')
+        expect(stat.getStatTitle(commonStats.totalInsulin, multiDayOpts)).to.equal('Total Insulin')
       })
     })
   })
