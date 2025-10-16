@@ -47,8 +47,8 @@ export const checkPatientLayout = async (fullName: string, needFooterLanguageSel
 
 export const checkPatientDashboardLayout = async (patientDashboardLayout: PatientDashboardLayoutParams) => {
   const dashboard = within(await screen.findByTestId('patient-dashboard'))
-  expect(dashboard.getByText('Data calculated on the last 14 days')).toBeVisible()
-  expect(dashboard.getByText('Avg. Daily declared carbs')).toBeVisible()
+  expect(dashboard.getByText('Data calculated on the last 14 days (current day excluded). The values correspond to the average of the daily values.')).toBeVisible()
+  expect(dashboard.getByText('Total of declared carbs')).toBeVisible()
   expect(dashboard.getByText('Devices')).toBeVisible()
 
   if (patientDashboardLayout.isChatCardVisible) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,11 +28,13 @@
 import type BaseDatum from './basics/base-datum.model'
 import { isBaseDatum } from './basics/base-datum.model'
 import { DatumType } from './enums/datum-type.enum'
+import { BasalDeliveryType } from './enums/basal-delivery-type.enum'
 
-type Basal = BaseDatum & {
+export type Basal = BaseDatum & {
   type: DatumType.Basal
-  subType: string
-  deliveryType: string
+  // FIXME: `subType` and `deliveryType` could be merged into a single `deliveryType` property
+  subType: BasalDeliveryType
+  deliveryType: BasalDeliveryType
   duration: number
   rate: number
   normalEnd: string
@@ -41,12 +43,9 @@ type Basal = BaseDatum & {
   replacedBy?: string
 }
 
-function isBasal(value: unknown): value is Basal {
+export function isBasal(value: unknown): value is Basal {
   if (!isBaseDatum(value)) {
     return false
   }
   return value.type === DatumType.Basal
 }
-
-export default Basal
-export { isBasal }

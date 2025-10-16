@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -43,7 +43,7 @@ export const checkStatTooltip = async (patientStatistics: BoundFunctions<typeof 
 
 const hoverOnCBGPercentageStat = async (patientStatistics: BoundFunctions<typeof queries>, statId: string, expectedTextContent: string) => {
   await userEvent.hover(patientStatistics.getByTestId(statId))
-  expect(patientStatistics.getByTestId('cbg-percentage-title')).toHaveTextContent(expectedTextContent)
+  expect(patientStatistics.getByTestId('timeInRange-title')).toHaveTextContent(expectedTextContent)
   await userEvent.unhover(patientStatistics.getByTestId(statId))
 }
 
@@ -78,12 +78,12 @@ export const checkReadingsInRangeStatsWidgets = async () => {
   expect(patientStatistics.getByTestId('cbg-percentage-stat-target-readingsInRange')).toHaveTextContent('320%')
   expect(patientStatistics.getByTestId('cbg-percentage-stat-low-readingsInRange')).toHaveTextContent('427%')
   expect(patientStatistics.getByTestId('cbg-percentage-stat-veryLow-readingsInRange')).toHaveTextContent('533%')
-  expect(patientStatistics.getByTestId('cbg-percentage-stats-legends')).toHaveTextContent('<5454-7070-180180-250>250mg/dL')
+  expect(patientStatistics.getByTestId('timeInRange-stats-legends')).toHaveTextContent('<5454-7070-180180-250>250mg/dL')
 }
 
 export const checkAverageGlucoseStatWidget = async (expectedTextContent: string) => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  expect(patientStatistics.getByTestId('cbg-mean-stat')).toHaveTextContent(expectedTextContent)
+  expect(patientStatistics.getByTestId('average-glucose-stat')).toHaveTextContent(expectedTextContent)
 }
 
 export const checkStandardDeviationStatWidget = async (expectedTextContent: string) => {

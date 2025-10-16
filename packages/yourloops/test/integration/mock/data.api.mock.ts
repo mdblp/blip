@@ -101,8 +101,22 @@ export const ALARM_EVENT_DANA_OCCLUSION_ID = 'alarmEventDanaOcclusionId'
 export const ALARM_EVENT_MEDISAFE_EMPTY_PUMP_BATTERY_ID = 'alarmEventMedisafeEmptyPumpBatteryId'
 export const ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID = 'alarmEventMedisafeEmptyReservoirId'
 export const ALARM_EVENT_MEDISAFE_OCCLUSION_ID = 'alarmEventMedisafeOcclusionId'
+export const EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID = 'eventSuperpositionAlarmEventMedisafeOcclusionId'
+export const EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID_2 = 'eventSuperpositionAlarmEventMedisafeOcclusionId2'
+export const EVENT_SUPERPOSITION_ALARM_EVENT_URGENT_LOW_SOON_ID = 'eventSuperpositionAlarmEventUrgentLowSoonId'
+export const EVENT_SUPERPOSITION_ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID = 'eventSuperpositionAlarmEventSuddenRiseInGlycemiaId'
+export const EVENT_SUPERPOSITION_WARMUP_ID = 'eventSuperpositionWarmupId'
+export const EVENT_SUPERPOSITION_RESERVOIR_CHANGE_ID = 'eventSuperpositionReservoirChangeId'
+export const EVENT_SUPERPOSITION_PARAMETER_CHANGE_ID = 'eventSuperpositionParameterChangeId'
+export const IOB_ID = 'iobId'
 export const NIGHT_MODE_ID = 'nightModeId'
 export const WARMUP_01_ID = 'warmup01Id'
+export const ZEN_MODE_ID = 'zenModeId'
+export const ZEN_MODE_ID_WITH_GLY = 'zenModeIdGly'
+export const BASAL_LOOP_MODE_ON_ID = 'basalLoopModeOnId'
+export const BASAL_LOOP_MODE_OFF_ID = 'basalLoopModeOffId'
+export const BASAL_TEMP_ID = 'basalTempId'
+export const BASAL_MANUAL_ID = 'basalManualId'
 export const WIZARD_UNDELIVERED_INPUT_TIME = '2022-08-08T02:00:00Z'
 export const WIZARD_POSITIVE_OVERRIDE_INPUT_TIME = '2022-08-08T22:45:00Z'
 export const WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME = '2022-08-08T23:15:00Z'
@@ -112,6 +126,12 @@ export const RESERVOIR_CHANGE_TODAY_DATE: Moment = moment()
 export const TWO_WEEKS_AGO_DATE: Moment = moment().subtract(14, 'days')
 export const RESERVOIR_CHANGE_13_DAYS_AGO_DATE: Moment = moment().subtract(13, 'days')
 export const SIXTEEN_DAYS_AGO_DATE: Moment = moment().subtract(16, 'days')
+
+export const BASAL_TIME_CHANGE_INITAL_TIME_ID = 'basalTimezoneChangeParisId'
+export const BASAL_TIME_CHANGE_NEW_TIME_ID = 'basalTimezoneChangeDublinId'
+export const DUBLIN_TIMEZONE = 'Europe/Dublin'
+export const PARIS_TIMEZONE = 'Europe/Paris'
+
 const twoWeeksAgoDateAsString = TWO_WEEKS_AGO_DATE.format('YYYY-MM-DD')
 const sixteenDaysAgoDateAsString = SIXTEEN_DAYS_AGO_DATE.format('YYYY-MM-DD')
 const yesterdayDateAsString = YESTERDAY_DATE.format('YYYY-MM-DD')
@@ -354,14 +374,14 @@ const deviceEventMock = (date, time) => {
     params: [
       {
         id: PARAMETER_ID,
-        epoch: 1697961600000,
+        epoch: startTime,
         timezone: 'UTC',
         name: 'MEAL_RATIO_LUNCH_FACTOR',
         level: 1,
         units: Unit.Percent,
         value: 100,
         previousValue: 110,
-        lastUpdateDate: '2022-08-08T08:00:00Z'
+        lastUpdateDate: `${date}T${time}.000Z`
       }
     ]
   }
@@ -416,7 +436,7 @@ export const generateCompleteDashboardFromDate = (date: string): Data => {
       wizardMock(date, '19:25:00', WIZARD_UMM_ID, 20, true)
     )
     data.physicalActivities.push(physActivityMock(date, '13:00:00', 1800))
-    data.deviceParametersChanges.push(deviceEventMock(date, '08:00:00'))
+    data.deviceParametersChanges.push(deviceEventMock(date, '16:00:00'))
     startDate.setDate(startDate.getDate() + 1)
   }
   // And finally add the reservoir change events
@@ -456,7 +476,7 @@ export const generateCompleteDashboardFromDate = (date: string): Data => {
   }
 }
 
-export const completeDashboardData = generateCompleteDashboardFromDate(yesterdayDateAsString)
+export const oneDayDashboardData = generateCompleteDashboardFromDate(yesterdayDateAsString)
 export const twoWeeksOldDashboardData = generateCompleteDashboardFromDate(twoWeeksAgoDateAsString)
 export const sixteenDaysOldDashboardData = generateCompleteDashboardFromDate(sixteenDaysAgoDateAsString)
 
@@ -852,7 +872,7 @@ export const pumpSettingsDblg2: Data = {
   }
 }
 
-export const pumpSettingsDblg1WithoutSecurityBasalData: Data = {
+export const pumpSettingsDblg1Mobigo: Data = {
   dataRange: ['2022-08-08T16:35:00.000Z', '2022-08-08T16:40:00.000Z'],
   data: {
     pumpSettings: [
@@ -877,11 +897,11 @@ export const pumpSettingsDblg1WithoutSecurityBasalData: Data = {
             transmitterId: 'a1234'
           },
           device: {
-            deviceId: '1234',
+            deviceId: 'MobiGo1234567890',
             imei: '1234567890',
             manufacturer: 'Diabeloop',
             name: DeviceSystem.Dblg1,
-            swVersion: '1.2.3'
+            swVersion: '1.12.9'
           },
           history,
           parameters: [
@@ -1238,7 +1258,7 @@ export const completeDailyViewDataMmol: Data = {
 completeDailyViewDataMmol.data.cbg = convertCbgMg2Mmol(getCompleteDailyViewData().data.cbg)
 completeDailyViewDataMmol.data.smbg = convertSmbgMg2Mmol(getCompleteDailyViewData().data.smbg)
 
-export const dataSetsWithZeroValues: Data = {
+export const smallDataSet: Data = {
   dataRange: ['2022-08-08T15:00:00Z', '2022-08-08T18:40:00Z'],
   data: {
     "alarmEvents": [],
@@ -1248,7 +1268,7 @@ export const dataSetsWithZeroValues: Data = {
       {
         "epoch": 1659972600000,
         "displayOffset": -120,
-        "normalTime": "2022-08-08T15:30:00.000Z",
+        "normalTime": "2022-01-08T15:30:00.000Z",
         "timezone": "Europe/Paris",
         "guessedTimezone": false,
         "id": "cbgId",
@@ -2172,6 +2192,7 @@ export const twoWeeksOfCbg: Data = {
     ],
     "confidentialModes": [],
     "deviceParametersChanges": [],
+    "iob": [],
     "messages": [],
     "meals": [],
     "physicalActivities": [],

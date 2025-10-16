@@ -16,6 +16,7 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 
 import picto from '../../img/parameter.png'
 import utils from './util/utils'
@@ -30,11 +31,10 @@ import { DEFAULT_IMAGE_MARGIN, DEFAULT_OPTIONS_SIZE } from './util/eventsConstan
 /**
  *
  * @param {Pool} pool
- * @param {{r: number, padding: number, onParameterHover: (p: any) => void, onParameterOut: () => void, tidelineData: MedicalDataService, xScale: (d: number) => number }} opts
+ * @param {{r: number, padding: number, onParameterHover: (p: any) => void, onParameterOut: () => void, parameterChanges: MedicalDataService, xScale: (d: number) => number }} opts
  * @returns {(data: Datum[]) => void}
  */
 function plotDeviceParameterChange(pool, opts) {
-  const d3 = window.d3
   const defaults = {
     r: 14,
     padding: 4,
@@ -54,7 +54,7 @@ function plotDeviceParameterChange(pool, opts) {
     selection.each(function() {
       /*We are always cleaning param-group because of multiple rendering when navigating between days*/
       d3.select(this).selectAll('g.d3-param-group').remove()
-      const deviceParameters = pool.filterDataForRender(opts.tidelineData.medicalData.deviceParametersChanges)
+      const deviceParameters = pool.filterDataForRender(opts.parameterChanges)
       if (deviceParameters.length < 1) {
         return
       }
@@ -66,21 +66,17 @@ function plotDeviceParameterChange(pool, opts) {
 
       const parameterGroup = allParameters.enter()
         .append('g')
-        .attr({
-          'class': 'd3-param-group',
-          'id': (d) => `param_group_${d.id}`,
-          'data-testid': (d) => `param_group_${d.id}`
-        })
+        .classed('d3-param-group', true)
+        .attr('id', (d) => `param_group_${d.id}`)
+        .attr('data-testid', (d) => `param_group_${d.id}`)
 
       parameterGroup.append('image')
-        .attr({
-          'x': xPos,
-          'y': pool.height() / 2 - opts.size / 2,
-          width,
-          'height': offset,
-          'xlink:href': picto,
-          'data-testid': `param_group_img`
-        })
+        .attr('x', xPos)
+        .attr('y', pool.height() / 2 - opts.size / 2)
+        .attr('width', width)
+        .attr('height', offset)
+        .attr('xlink:href', picto)
+        .attr('data-testid', `param_group_img`)
 
       allParameters.exit().remove()
 

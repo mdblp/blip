@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,10 +27,11 @@
 
 import type BaseDatum from './basics/base-datum.model'
 import { type DatumType } from './enums/datum-type.enum'
+import { DeviceEventSubtype } from './enums/device-event-subtype.enum'
 
-type TimeZoneChange = BaseDatum & {
+export type TimeZoneChange = BaseDatum & {
   type: DatumType.DeviceEvent
-  subType: 'timeChange'
+  subType: DeviceEventSubtype.TimeChange
   from: {
     time: string
     timeZoneName: string
@@ -41,5 +42,3 @@ type TimeZoneChange = BaseDatum & {
   }
   method: string
 }
-
-export default TimeZoneChange

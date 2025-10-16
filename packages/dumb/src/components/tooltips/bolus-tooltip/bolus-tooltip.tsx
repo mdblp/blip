@@ -35,7 +35,6 @@ import {
   type Wizard,
   WizardInputMealFat
 } from 'medical-domain'
-import { Tooltip } from '../../../index'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import {
   getBolusFromInsulinEvent,
@@ -48,23 +47,17 @@ import {
 import { BolusType } from '../../../models/enums/bolus-type.enum'
 import { useTranslation } from 'react-i18next'
 import colors from '../../../styles/colors.css'
-import {
-  COMMON_TOOLTIP_TAIL_HEIGHT,
-  COMMON_TOOLTIP_TAIL_WIDTH,
-  DEFAULT_TOOLTIP_BORDER_WIDTH,
-  DEFAULT_TOOLTIP_OFFSET,
-  DEFAULT_TOOLTIP_TAIL,
-  type Position,
-  type Side
-} from '../common/tooltip/tooltip'
+import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
 import { formatInputTime, formatInsulin } from '../../../utils/format/format.util'
 import styles from './bolus-tooltip.css'
+import commonStyles from '../../../styles/tooltip-common.css'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import { TooltipColor } from '../../../models/enums/tooltip-color.enum'
+import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
 
 interface BolusTooltipProps {
   bolus: Bolus | Wizard
-  side: Side
+  side: TooltipSide
   position: Position
   timePrefs: TimePrefs
 }
@@ -121,13 +114,13 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
   const getColorByBolusType = (bolusType: BolusType): string => {
     switch (bolusType) {
       case BolusType.Manual:
-        return colors.bolusManual
+        return colors.darkBlueBackground
       case BolusType.Meal:
-        return colors.bolusMeal
+        return colors.greenBackground
       case BolusType.Correction:
-        return colors.bolusCorrection
+        return colors.blueBackground
       case BolusType.Pen:
-        return colors.bolusPen
+        return colors.purpleBackground
       default:
         return ''
     }
@@ -143,21 +136,17 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
     <Tooltip
       dateTitle={getDateTitleForBaseDatum(bolus, timePrefs)}
       title={bolusTypeTitle}
-      borderColor={color}
+      backgroundColor={color}
       position={position}
       side={side}
-      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
-      tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
-      tail={DEFAULT_TOOLTIP_TAIL}
       offset={DEFAULT_TOOLTIP_OFFSET}
-      borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       content={
-        <div className={styles.container} id="bolus-tooltip-content">
+        <div className={commonStyles.containerFlexLarge} id="bolus-tooltip-content">
           {isWizard && carbs &&
             <TooltipLine label={t('Carbs')} value={carbs} units={t('g')} />
           }
           {isWizard && isFatMeal &&
-            <TooltipLine label={t('High fat meal')}></TooltipLine>
+            <TooltipLine label={t('High fat meal')} />
           }
           {isWizard && inputTime &&
             <TooltipLine label={`${t('Entered at')} ${formatInputTime(inputTime, timePrefs)}`} />

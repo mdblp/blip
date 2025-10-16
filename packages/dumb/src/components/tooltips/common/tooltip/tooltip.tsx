@@ -28,9 +28,11 @@
 import React, { type FunctionComponent, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './tooltip.css'
 import useTooltip from './tooltip.hook'
-import TooltipTail from '../tooltip-tail/tooltip-tail'
 import { type TimePrefs } from 'medical-domain'
 import { computeDateValue } from '../../../../utils/tooltip/tooltip.util';
+import Box from '@mui/material/Box'
+import { TooltipSide } from '../../../../models/enums/tooltip-side.enum'
+
 
 export interface Offset {
   top: number
@@ -50,15 +52,9 @@ export interface DateTitle {
   timePrefs: TimePrefs
 }
 
-export type Side = 'top' | 'right' | 'bottom' | 'left'
+export const COMMON_TOOLTIP_SIDE = TooltipSide.Right
 
-export const COMMON_TOOLTIP_SIDE = 'right'
-export const COMMON_TOOLTIP_TAIL_WIDTH = 9
-export const COMMON_TOOLTIP_TAIL_HEIGHT = 17
-
-export const DEFAULT_TOOLTIP_TAIL = true
 export const DEFAULT_TOOLTIP_OFFSET = { top: 0, left: 0 }
-export const DEFAULT_TOOLTIP_BORDER_WIDTH = 2
 
 interface TooltipProps {
   title?: string | JSX.Element
@@ -66,23 +62,13 @@ interface TooltipProps {
   content?: string | JSX.Element
   position: Position
   offset?: Offset
-  tail?: boolean
-  side: Side
-  tailWidth?: number
-  tailHeight?: number
+  side: TooltipSide
   backgroundColor?: string
-  borderColor?: string
-  borderWidth?: number
 }
 
-const Tooltip: FunctionComponent<TooltipProps> = (
+export const Tooltip: FunctionComponent<TooltipProps> = (
   {
-    tail = DEFAULT_TOOLTIP_TAIL,
     side = COMMON_TOOLTIP_SIDE,
-    tailWidth = 7,
-    tailHeight = 8,
-    borderColor = 'black',
-    borderWidth = DEFAULT_TOOLTIP_BORDER_WIDTH,
     offset: initialOffset = DEFAULT_TOOLTIP_OFFSET,
     ...props
   }) => {
@@ -96,73 +82,45 @@ const Tooltip: FunctionComponent<TooltipProps> = (
 
   const {
     calculateOffset,
-    computeTailData
-  } = useTooltip({ position, offset: initialOffset, side, borderWidth, tailWidth })
+  } = useTooltip({ position, offset: initialOffset, side })
 
   const elementRef = useRef<HTMLDivElement>(null)
-  const tailElementRef = useRef<HTMLDivElement>(null)
   const [offset, setOffset] = useState<Offset | null>(null)
 
   useEffect(() => {
-    const { top, left } = calculateOffset(elementRef.current, tailElementRef.current)
+    const { top, left } = calculateOffset(elementRef.current)
     setOffset({ top, left })
-  }, [calculateOffset, elementRef, tailElementRef])
-
-  const { marginOuterValue, borderSide } = useMemo(() => {
-    return computeTailData()
-  }, [computeTailData])
+  }, [calculateOffset, elementRef])
 
   const dateValue = useMemo(() => {
     return computeDateValue(dateTitle)
   }, [dateTitle])
 
   return (
-    <div
-      className={styles.tooltip}
+    <Box
       data-testid="tooltip"
-      style={{
+      className={styles.tooltip}
+      ref={elementRef}
+      sx={{
         top: offset?.top ?? 0,
         left: offset?.left ?? 0,
-        backgroundColor,
-        borderColor,
-        borderWidth: `${borderWidth}px`,
         visibility: offset ? 'visible' : 'hidden'
       }}
-      ref={elementRef}
     >
       {(title ?? dateValue) &&
-        <div id="tooltip-daily-title" className={styles.title}>
-          <div id="tooltip-daily-title-content" className={styles.titleContent}>
-            {dateValue && <span id="tooltip-daily-title-date" className={styles.titleDate}>{dateValue}</span>}
-            {title && <span id="tooltip-daily-title-text">{title}</span>}
-          </div>
-          {tail && !content &&
-            <TooltipTail
-              borderColor={borderColor}
-              borderSide={borderSide}
-              marginOuterValue={marginOuterValue}
-              tailElementRef={tailElementRef}
-              tailHeight={tailHeight}
-              tailWidth={tailWidth}
-            />
-          }
-        </div>
+        <Box className={styles.content} sx={{
+          backgroundColor,
+          paddingY: 2
+        }}>
+          {title && <span className={styles.titleValue}>{title}</span>}
+          {dateValue && <span className={styles.titleDate} data-testid="tooltip-title-date">{dateValue}</span>}
+        </Box>
       }
       {content &&
-        <div data-testid="tooltip-daily-content" className={styles.content}>
+        <Box data-testid="tooltip-daily-content" className={styles.content} sx={{ paddingY: 1 }}>
           <span>{content}</span>
-          <TooltipTail
-            borderColor={borderColor}
-            borderSide={borderSide}
-            marginOuterValue={marginOuterValue}
-            tailElementRef={tailElementRef}
-            tailHeight={tailHeight}
-            tailWidth={tailWidth}
-          />
-        </div>
+        </Box>
       }
-    </div>
+    </Box>
   )
 }
-
-export default Tooltip

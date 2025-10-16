@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,8 +39,6 @@ describe('Tooltip hook', () => {
     const offsetHorizontal = 3500
     const mainDivLeft = 1
     const mainDivTop = 3
-    const tailDivTop = 4
-    const tailDivLeft = 4
     const offset = { top: offsetTop, left: offsetLeft, horizontal: offsetHorizontal }
     const mainDiv = {
       getBoundingClientRect: () => ({
@@ -50,19 +48,11 @@ describe('Tooltip hook', () => {
         height
       })
     } as HTMLDivElement
-    const tailDiv = {
-      getBoundingClientRect: () => ({
-        top: tailDivTop,
-        left: tailDivLeft,
-        width,
-        height
-      })
-    } as HTMLDivElement
 
     it('should return default values when mainDiv is null', () => {
       const props = { ...defaultProps, offset }
       const { result } = renderHook(() => useTooltip(props))
-      const { top, left } = result.current.calculateOffset(null, null)
+      const { top, left } = result.current.calculateOffset(null)
       expect(top).toBe(0)
       expect(left).toBe(0)
     })
@@ -70,15 +60,15 @@ describe('Tooltip hook', () => {
     it('should return correct values when side is left and tailDiv is null', () => {
       const props = { ...defaultProps, offset, side: 'left' } as TooltipHookProps
       const { result } = renderHook(() => useTooltip(props))
-      const { top, left } = result.current.calculateOffset(mainDiv, null)
+      const { top, left } = result.current.calculateOffset(mainDiv)
       expect(top).toBe(offsetTop - height / 2)
-      expect(left).toBe(-offsetLeft - width)
+      expect(left).toBe(-offsetLeft - width - 10)
     })
 
     it('should return correct values when side is top and tailDiv is null', () => {
       const props = { ...defaultProps, offset, side: 'top' } as TooltipHookProps
       const { result } = renderHook(() => useTooltip(props))
-      const { top, left } = result.current.calculateOffset(mainDiv, null)
+      const { top, left } = result.current.calculateOffset(mainDiv)
       expect(top).toBe(offsetTop - height)
       expect(left).toBe(-width / 2 + offsetLeft)
     })
@@ -86,69 +76,17 @@ describe('Tooltip hook', () => {
     it('should return correct values when side is right and tailDiv is null', () => {
       const props = { ...defaultProps, offset, side: 'right' } as TooltipHookProps
       const { result } = renderHook(() => useTooltip(props))
-      const { top, left } = result.current.calculateOffset(mainDiv, null)
+      const { top, left } = result.current.calculateOffset(mainDiv)
       expect(top).toBe(offsetTop - height / 2)
-      expect(left).toBe(offsetLeft)
+      expect(left).toBe(offsetLeft + 10)
     })
 
     it('should return correct values when side is bottom and tailDiv is null', () => {
       const props = { ...defaultProps, side: 'bottom' } as TooltipHookProps
       const { result } = renderHook(() => useTooltip(props))
-      const { top, left } = result.current.calculateOffset(mainDiv, null)
+      const { top, left } = result.current.calculateOffset(mainDiv)
       expect(top).toBe(0)
       expect(left).toBe(-width / 2)
-    })
-
-    it('should return correct values when side tailDiv is not null', () => {
-      const props = { ...defaultProps, side: 'bottom' } as TooltipHookProps
-      const { result } = renderHook(() => useTooltip(props))
-      const { top, left } = result.current.calculateOffset(mainDiv, tailDiv)
-      expect(top).toBe(-(tailDivTop + (height / 2)) + mainDivTop)
-      expect(left).toBe(-(tailDivLeft + (width / 2)) + mainDivLeft)
-    })
-  })
-
-  describe('computeTailData', () => {
-    let props = {
-      ...defaultProps,
-      dateTitle: undefined,
-      tailWidth: 50,
-      borderWidth: 20
-    } as TooltipHookProps
-    it('should return correct value when side is left', () => {
-      props = { ...props, side: 'left' }
-      const expectedMarginOuterValue = `calc(10px + ${props.borderWidth}px)`
-      const { result } = renderHook(() => useTooltip(props))
-      const { marginOuterValue, borderSide } = result.current.computeTailData()
-      expect(marginOuterValue).toEqual(expectedMarginOuterValue)
-      expect(borderSide).toEqual(props.side)
-    })
-
-    it('should return correct value when side is right', () => {
-      props = { ...props, side: 'right' }
-      const expectedMarginOuterValue = `calc(-100% - (4 * ${props.tailWidth}px - 10px)`
-      const { result } = renderHook(() => useTooltip(props))
-      const { marginOuterValue, borderSide } = result.current.computeTailData()
-      expect(marginOuterValue).toEqual(expectedMarginOuterValue)
-      expect(borderSide).toEqual(props.side)
-    })
-
-    it('should return correct value when side is top', () => {
-      props = { ...props, side: 'top' }
-      const expectedMarginOuterValue = `calc(-100% - (4 * ${props.tailWidth}px - 10px)`
-      const { result } = renderHook(() => useTooltip(props))
-      const { marginOuterValue, borderSide } = result.current.computeTailData()
-      expect(marginOuterValue).toEqual(expectedMarginOuterValue)
-      expect(borderSide).toEqual('right')
-    })
-
-    it('should return correct value when side is bottom', () => {
-      props = { ...props, side: 'bottom' }
-      const expectedMarginOuterValue = `calc(-100% - (4 * ${props.tailWidth}px - 10px)`
-      const { result } = renderHook(() => useTooltip(props))
-      const { marginOuterValue, borderSide } = result.current.computeTailData()
-      expect(marginOuterValue).toEqual(expectedMarginOuterValue)
-      expect(borderSide).toEqual('right')
     })
   })
 })

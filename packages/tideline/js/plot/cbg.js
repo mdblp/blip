@@ -21,6 +21,7 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 
 import utils from './util/utils'
 import categorizer from '../data/util/categorize'
@@ -39,14 +40,12 @@ const defaults = {
 }
 
 /**
- *
- * @param {Pool} pool
- * @param {typeof defaults} opts
- * @returns
+ * Plot continuous blood glucose data points
+ * @param {Pool} pool - The pool to render into
+ * @param {typeof defaults} opts - Configuration options
+ * @returns {Function} - The CBG plotting function
  */
-function plotCbg(pool, opts = defaults) {
-  const d3 = window.d3
-
+function plotCbg(pool, opts = {}) {
   _.defaults(opts, defaults)
   opts.classes = _.omit(opts.classes, ['veryLow', 'veryHigh'])
 
@@ -55,77 +54,108 @@ function plotCbg(pool, opts = defaults) {
   function cbg(selection) {
     opts.xScale = pool.xScale().copy()
     selection.each(function(currentData) {
-      const allCBG = d3.select(this).selectAll('circle.d3-cbg').data(currentData, (d) => d.id)
-      const cbgGroups = allCBG.enter()
-        .append('circle')
-        .attr('class', 'd3-cbg')
-        .attr({
-          'cx': cbg.xPosition,
-          'cy': cbg.yPosition,
-          'r': opts.radius,
-          'id': (d) => `cbg_${d.id}`,
-          'data-testid': (d) => `cbg_${d.id}`
-        })
-      const cbgVeryLow = cbgGroups.filter((d) => categorize(d) === 'verylow')
-      const cbgLow = cbgGroups.filter((d) => categorize(d) === 'low')
-      const cbgTarget = cbgGroups.filter((d) => categorize(d) === 'target')
-      const cbgHigh = cbgGroups.filter((d) => categorize(d) === 'high')
-      const cbgVeryHigh = cbgGroups.filter((d) => categorize(d) === 'veryhigh')
-      cbgVeryLow.classed({'d3-circle-cbg': true, 'd3-bg-very-low': true})
-      cbgLow.classed({'d3-circle-cbg': true, 'd3-bg-low': true})
-      cbgTarget.classed({'d3-circle-cbg': true, 'd3-bg-target': true})
-      cbgHigh.classed({'d3-circle-cbg': true, 'd3-bg-high': true})
-      cbgVeryHigh.classed({'d3-circle-cbg': true, 'd3-bg-very-high': true})
-      allCBG.exit().remove()
+      const allCBG = d3.select(this)
+        .selectAll('circle.d3-cbg')
+        .data(currentData, d => d.id)
 
-      var highlight = pool.highlight(allCBG)
+      // Using join pattern for enter/update/exit
+      const cbgGroups = allCBG.join(
+        enter => enter.append('circle')
+          .classed('d3-cbg', true)
+          .attr('id', d => `cbg_${d.id}`)
+          .attr('data-testid', d => `cbg_${d.id}`)
+          .attr('cx', cbg.xPosition)
+          .attr('cy', cbg.yPosition)
+          .attr('r', opts.radius),
+        update => update
+          .attr('cx', cbg.xPosition)
+          .attr('cy', cbg.yPosition)
+          .attr('r', opts.radius),
+        exit => exit.remove()
+      )
 
-      // tooltips
-      selection.selectAll('.d3-circle-cbg').on('mouseover', function () {
-        var d3Select = d3.select(this)
-        highlight.on(d3Select)
-        d3Select.attr({ r: opts.radius + 1 })
-        switch (categorize(d3Select.datum())) {
-          case 'low':
-          case 'verylow':
-            d3Select.classed({ 'd3-bg-low-focus': true })
-            break
-          case 'target':
-            d3Select.classed({ 'd3-bg-target-focus': true })
-            break
-          case 'high':
-          case 'veryhigh':
-            d3Select.classed({ 'd3-bg-high-focus': true })
-            break
-          default:
-            break
-        }
-        cbg.addTooltip(d3.select(this).datum(), utils.getTooltipContainer(this))
-      })
-      selection.selectAll('.d3-circle-cbg').on('mouseout', function () {
-        highlight.off()
-        d3.select(this).attr({ r: opts.radius })
-        d3.select(this).classed({
-          'd3-bg-low-focus': false,
-          'd3-bg-target-focus': false,
-          'd3-bg-high-focus': false
+      // Filter and apply classes for different BG categories
+      const cbgVeryLow = cbgGroups.filter(d => categorize(d) === 'verylow')
+      const cbgLow = cbgGroups.filter(d => categorize(d) === 'low')
+      const cbgTarget = cbgGroups.filter(d => categorize(d) === 'target')
+      const cbgTightRange = cbgGroups.filter(d => categorize(d) === 'tightrange')
+      const cbgHigh = cbgGroups.filter(d => categorize(d) === 'high')
+      const cbgVeryHigh = cbgGroups.filter(d => categorize(d) === 'veryhigh')
+
+      cbgVeryLow.classed('d3-circle-cbg d3-bg-very-low', true)
+      cbgLow.classed('d3-circle-cbg d3-bg-low', true)
+      cbgTarget.classed('d3-circle-cbg d3-bg-target', true)
+      cbgTightRange.classed('d3-circle-cbg d3-bg-tight-range', true)
+      cbgHigh.classed('d3-circle-cbg d3-bg-high', true)
+      cbgVeryHigh.classed('d3-circle-cbg d3-bg-very-high', true)
+
+      const highlight = pool.highlight(allCBG)
+
+      // Set up mouseover and mouseout event handlers
+      selection.selectAll('.d3-circle-cbg')
+        .on('mouseover', function(event, d) {
+          const d3Select = d3.select(this)
+          highlight.on(d3Select)
+          d3Select.attr('r', opts.radius + 1)
+
+          switch (categorize(d)) {
+            case 'low':
+            case 'verylow':
+              d3Select.classed('d3-bg-low-focus', true)
+              break
+            case 'target':
+            case 'tightRange':
+              d3Select.classed('d3-bg-target-focus', true)
+              break
+            case 'high':
+            case 'veryhigh':
+              d3Select.classed('d3-bg-high-focus', true)
+              break
+            default:
+              break
+          }
+
+          cbg.addTooltip(d, utils.getTooltipContainer(this))
         })
-        if (_.get(opts, 'onCBGOut', false)) {
-          opts.onCBGOut()
-        }
-      })
+        .on('mouseout', function() {
+          highlight.off()
+          d3.select(this)
+            .attr('r', opts.radius)
+            .classed('d3-bg-low-focus', false)
+            .classed('d3-bg-target-focus', false)
+            .classed('d3-bg-high-focus', false)
+
+          if (_.get(opts, 'onCBGOut', false)) {
+            opts.onCBGOut()
+          }
+        })
     })
   }
 
+  /**
+   * Calculate the x position for a data point
+   * @param {Object} d - The data point
+   * @returns {number} - The x coordinate
+   */
   cbg.xPosition = function(d) {
     return opts.xScale(d.epoch)
   }
 
+  /**
+   * Calculate the y position for a data point
+   * @param {Object} d - The data point
+   * @returns {number} - The y coordinate
+   */
   cbg.yPosition = function(d) {
     const yScale = pool.yScale()
     return yScale(d.value)
   }
 
+  /**
+   * Add tooltip for a data point
+   * @param {Object} d - The data point
+   * @param {HTMLElement} rect - The container element
+   */
   cbg.addTooltip = function(d, rect) {
     if (_.get(opts, 'onCBGHover', false)) {
       opts.onCBGHover({

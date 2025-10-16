@@ -16,8 +16,11 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 
 import utils from './util/utils'
+
+const D3_ZEN_MODE_ID = 'event'
 
 /**
  * @typedef {import("../tidelinedata").default} MedicalDataService
@@ -26,12 +29,12 @@ import utils from './util/utils'
  */
 
 /**
- * @param {Pool} pool
- * @param {{ tidelineData: MedicalDataService, r: number, xScale: (d: number) => number }} opts
- * @returns
+ * Plots zen mode events in the diabetes management timeline
+ * @param {Pool} pool - The pool to render into
+ * @param {{ tidelineData: MedicalDataService, r: number, xScale: (d: number) => number }} opts - Configuration options
+ * @returns {Function} - The zen mode plotting function
  */
 function plotZenMode(pool, opts = {}) {
-  const d3 = window.d3
   const defaults = {
     r: 14,
     xScale: pool.xScale().copy()
@@ -49,50 +52,66 @@ function plotZenMode(pool, opts = {}) {
     opts.xScale = pool.xScale().copy()
     selection.each(function () {
       const zenEvents = pool.filterDataForRender(opts.tidelineData.medicalData.zenModes)
+      const zenModeGroupSelector = `d3-${D3_ZEN_MODE_ID}-group`
+
       if (zenEvents.length < 1) {
-        d3.select(this).selectAll('g.d3-event-group').remove()
+        d3.select(this).selectAll(`g.${zenModeGroupSelector}`).remove()
         return
       }
 
+      // Select all zen mode event groups and bind data
       const zenModeEvent = d3.select(this)
         .selectAll('g.d3-event-group')
         .data(zenEvents, (d) => d.id)
 
-      const zenGroup = zenModeEvent.enter()
-        .append('g')
-        .attr({
-          class: 'd3-event-group',
-          id: (d) => `event_group_${d.id}`
-        })
+      // Handle exit selection
+      zenModeEvent.exit().remove()
 
+      const zenModePlotPrefixId = `${D3_ZEN_MODE_ID}_group`
+
+      // Create new zen mode groups for entering data
+      const zenGroup = zenModeEvent
+        .join('g')
+        .classed(zenModeGroupSelector, true)
+        .attr('id', (d) => `${zenModePlotPrefixId}_${d.id}`)
+        .attr('data-testid', (d) =>  `${zenModePlotPrefixId}_${d.guid}`)
+
+      // Add background rectangle
       zenGroup.append('rect')
-        .attr({
-          x: xPos,
-          y: 0,
-          width: calculateWidth,
-          height,
-          class: 'd3-rect-zen d3-zen',
-          id: (d) => `zen_${d.id}`
-        })
+        .classed('d3-rect-zen d3-zen', true)
+        .attr('id', (d) => `zen_${d.id}`)
+        .attr('x', xPos)
+        .attr('y', 0)
+        .attr('width', calculateWidth)
+        .attr('height', height)
+
+      // Add zen mode circle indicator
       zenGroup.append('circle')
-        .attr({
-          'cx': (d) => xPos(d) + calculateWidth(d) / 2,
-          'cy': offset,
-          'r': opts.r,
-          'stroke-width': 0,
-          'class': 'd3-circle-zen',
-          'id': (d) => `zen_circle_${d.id}`
-        })
+        .classed('d3-circle-zen', true)
+        .attr('id', (d) => `zen_circle_${d.id}`)
+        .attr('cx', (d) => xPos(d) + calculateWidth(d) / 2)
+        .attr('cy', offset)
+        .attr('r', opts.r)
+        .attr('stroke-width', 0)
+
+      // Add "ZEN" text
       zenGroup.append('text')
         .text('ZEN')
-        .attr({
-          x: (d) => xPos(d) + calculateWidth(d) / 2,
-          y: offset,
-          class: 'd3-zen-text',
-          id: (d) => `zen_text_${d.id}`
-        })
+        .classed('d3-zen-text', true)
+        .attr('id', (d) => `zen_text_${d.id}`)
+        .attr('x', (d) => xPos(d) + calculateWidth(d) / 2)
+        .attr('y', offset)
+        .attr('text-anchor', 'middle') // Center text horizontally
+        .attr('dominant-baseline', 'central') // Center text vertically
 
-      zenModeEvent.exit().remove()
+      selection.selectAll(`.${zenModeGroupSelector}`).on('mouseover', function () {
+        opts.onZenModeHover({
+          data: d3.select(this).datum(),
+          rect: utils.getTooltipContainer(this)
+        })
+      })
+
+      selection.selectAll(`.${zenModeGroupSelector}`).on('mouseout', opts.onZenModeOut)
     })
   }
 

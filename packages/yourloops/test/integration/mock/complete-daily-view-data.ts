@@ -29,6 +29,7 @@ import {
   AlarmCode,
   AlarmEventType,
   AlarmLevel,
+  BasalDeliveryType,
   BolusSubtype,
   DatumType,
   DeviceSystem,
@@ -73,24 +74,42 @@ import {
   ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID,
   ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID,
   ALARM_EVENT_URGENT_LOW_SOON_ID,
+  BASAL_LOOP_MODE_OFF_ID,
+  BASAL_LOOP_MODE_ON_ID,
+  BASAL_MANUAL_ID,
+  BASAL_TEMP_ID,
+  BASAL_TIME_CHANGE_INITAL_TIME_ID,
+  BASAL_TIME_CHANGE_NEW_TIME_ID,
   CBG_ID,
   CONFIDENTIAL_MODE_ID,
   Data,
+  DUBLIN_TIMEZONE,
+  EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID,
+  EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID_2,
+  EVENT_SUPERPOSITION_ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID,
+  EVENT_SUPERPOSITION_ALARM_EVENT_URGENT_LOW_SOON_ID,
+  EVENT_SUPERPOSITION_PARAMETER_CHANGE_ID,
+  EVENT_SUPERPOSITION_RESERVOIR_CHANGE_ID,
+  EVENT_SUPERPOSITION_WARMUP_ID,
+  IOB_ID,
   MANUAL_BOLUS_ID,
   NIGHT_MODE_ID,
+  PARIS_TIMEZONE,
   PEN_BOLUS_ID,
   SMBG_ID,
   WARMUP_01_ID,
+  WIZARD_BOLUS_LOW_OVERRIDE_ID,
   WIZARD_BOLUS_NEGATIVE_OVERRIDE_ID,
   WIZARD_BOLUS_POSITIVE_OVERRIDE_ID,
   WIZARD_BOLUS_UMM_ID,
   WIZARD_BOLUS_UNDELIVERED_ID,
-  WIZARD_BOLUS_LOW_OVERRIDE_ID,
   WIZARD_LOW_OVERRIDE_ID,
   WIZARD_NEGATIVE_OVERRIDE_ID,
   WIZARD_POSITIVE_OVERRIDE_ID,
   WIZARD_UMM_ID,
-  WIZARD_UNDELIVERED_ID
+  WIZARD_UNDELIVERED_ID,
+  ZEN_MODE_ID,
+  ZEN_MODE_ID_WITH_GLY
 } from './data.api.mock'
 
 export const getCompleteDailyViewDataDblg2 = (deviceName: DeviceSystem = DeviceSystem.Dblg2, softwareVersion: string = "1.15.0"): Data => {
@@ -121,8 +140,25 @@ export const getCompleteDailyViewDataDblg2 = (deviceName: DeviceSystem = DeviceS
   data.pumpSettings[0].payload.mobileApplication = {
     manufacturer: "Diabeloop",
     identifier: "xxx",
-    swVersion: "1.2.3"
+    swVersion: "1.2.3",
+    activationCode: "123456789"
   }
+
+  data.iob = [
+    {
+      "epoch": 1659945600000,
+      "displayOffset": -120,
+      "normalTime": "2022-08-08T15:30:00.000Z",
+      "timezone": "Europe/Paris",
+      "guessedTimezone": false,
+      "id": IOB_ID,
+      "type": DatumType.Iob,
+      "source": Source.Diabeloop,
+      "units": Unit.InsulinUnit,
+      "value": 25,
+      "isoWeekday": WeekDays.Monday,
+    }
+  ]
 
   return completeData
 }
@@ -135,7 +171,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659949200000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:00:00.000Z",
+          "normalTime": "2022-08-08T00:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-01",
@@ -157,7 +193,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659949500000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:05:00.000Z",
+          "normalTime": "2022-08-08T00:10:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-011",
@@ -179,7 +215,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659949500000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:05:00.000Z",
+          "normalTime": "2022-08-08T01:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-02",
@@ -201,7 +237,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659949800000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:10:00.000Z",
+          "normalTime": "2022-08-08T01:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-03",
@@ -223,7 +259,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659950100000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:15:00.000Z",
+          "normalTime": "2022-08-08T02:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-04",
@@ -245,7 +281,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659950400000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:20:00.000Z",
+          "normalTime": "2022-08-08T02:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-05",
@@ -267,7 +303,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659950700000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:25:00.000Z",
+          "normalTime": "2022-08-08T03:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-06",
@@ -289,7 +325,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659951000000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:30:00.000Z",
+          "normalTime": "2022-08-08T03:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-07",
@@ -311,7 +347,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659951300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:35:00.000Z",
+          "normalTime": "2022-08-08T04:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-08",
@@ -333,7 +369,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659951600000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:40:00.000Z",
+          "normalTime": "2022-08-08T04:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-09",
@@ -355,7 +391,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659951900000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:45:00.000Z",
+          "normalTime": "2022-08-08T05:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-10",
@@ -377,7 +413,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659952200000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:50:00.000Z",
+          "normalTime": "2022-08-08T05:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-11",
@@ -399,7 +435,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659952500000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T09:55:00.000Z",
+          "normalTime": "2022-08-08T06:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-12",
@@ -421,7 +457,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659952800000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:00:00.000Z",
+          "normalTime": "2022-08-08T06:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-13",
@@ -443,7 +479,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659953100000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:05:00.000Z",
+          "normalTime": "2022-08-08T07:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-14",
@@ -465,7 +501,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659953400000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:10:00.000Z",
+          "normalTime": "2022-08-08T07:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-15",
@@ -487,7 +523,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659953700000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:15:00.000Z",
+          "normalTime": "2022-08-08T08:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-16",
@@ -509,7 +545,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954000000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:20:00.000Z",
+          "normalTime": "2022-08-08T08:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-17",
@@ -531,7 +567,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:25:00.000Z",
+          "normalTime": "2022-08-08T09:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-18",
@@ -553,7 +589,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:30:00.000Z",
+          "normalTime": "2022-08-08T09:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-19",
@@ -575,7 +611,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:35:00.000Z",
+          "normalTime": "2022-08-08T10:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-20",
@@ -597,7 +633,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:40:00.000Z",
+          "normalTime": "2022-08-08T10:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-21",
@@ -619,7 +655,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T10:45:00.000Z",
+          "normalTime": "2022-08-08T11:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-22",
@@ -641,7 +677,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T01:50:00.000Z",
+          "normalTime": "2022-08-08T11:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-23",
@@ -663,7 +699,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T18:55:00.000Z",
+          "normalTime": "2022-08-08T12:00:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-24",
@@ -685,7 +721,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659954300000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T19:00:00.000Z",
+          "normalTime": "2022-08-08T12:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "alarm-25",
@@ -703,7 +739,95 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           },
           "alarmEventType": AlarmEventType.Device,
           "isoWeekday": WeekDays.Sunday
-        }
+        },
+        {
+          "epoch": 1659954300000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T13:00:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID,
+          "type": DatumType.DeviceEvent,
+          "source": Source.Diabeloop,
+          "subType": DeviceEventSubtype.Alarm,
+          "guid": EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID,
+          "inputTime": "2022-08-08T10:45:00Z",
+          "alarm": {
+            "alarmCode": AlarmCode.MedisafeOcclusion,
+            "alarmLevel": AlarmLevel.Alarm,
+            "alarmType": "handset",
+            "ackStatus": "acknowledged",
+            "updateTime": "2023-07-14T17:48:18.602Z"
+          },
+          "alarmEventType": AlarmEventType.Device,
+          "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1659954300000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T13:02:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID_2,
+          "type": DatumType.DeviceEvent,
+          "source": Source.Diabeloop,
+          "subType": DeviceEventSubtype.Alarm,
+          "guid": EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID_2,
+          "inputTime": "2022-08-08T10:45:00Z",
+          "alarm": {
+            "alarmCode": AlarmCode.MedisafeOcclusion,
+            "alarmLevel": AlarmLevel.Alarm,
+            "alarmType": "handset",
+            "ackStatus": "acknowledged",
+            "updateTime": "2023-07-14T17:48:18.602Z"
+          },
+          "alarmEventType": AlarmEventType.Device,
+          "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1659954300000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T13:10:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": EVENT_SUPERPOSITION_ALARM_EVENT_URGENT_LOW_SOON_ID,
+          "type": DatumType.DeviceEvent,
+          "source": Source.Diabeloop,
+          "subType": DeviceEventSubtype.Alarm,
+          "guid": EVENT_SUPERPOSITION_ALARM_EVENT_URGENT_LOW_SOON_ID,
+          "inputTime": "2022-08-08T10:25:00Z",
+          "alarm": {
+            "alarmCode": AlarmCode.UrgentLowSoon,
+            "alarmLevel": AlarmLevel.Alert,
+            "alarmType": "handset",
+            "ackStatus": "acknowledged",
+            "updateTime": "2023-07-14T17:48:18.602Z"
+          },
+          "alarmEventType": AlarmEventType.Hypoglycemia,
+          "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1659954000000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T13:20:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": EVENT_SUPERPOSITION_ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID,
+          "type": DatumType.DeviceEvent,
+          "source": Source.Diabeloop,
+          "subType": DeviceEventSubtype.Alarm,
+          "guid": EVENT_SUPERPOSITION_ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID,
+          "inputTime": "2022-08-08T10:20:00Z",
+          "alarm": {
+            "alarmCode": AlarmCode.SuddenRiseInGlycemia,
+            "alarmLevel": AlarmLevel.Alert,
+            "alarmType": "handset",
+            "ackStatus": "acknowledged",
+            "updateTime": "2023-07-14T17:48:18.602Z"
+          },
+          "alarmEventType": AlarmEventType.Hyperglycemia,
+          "isoWeekday": WeekDays.Sunday
+        },
       ],
       basal: [
         {
@@ -712,15 +836,66 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "normalTime": "2022-08-08T16:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
-          "id": "basal_2022-08-08_5",
+          "id": BASAL_LOOP_MODE_ON_ID,
           "type": DatumType.Basal,
           "source": Source.Diabeloop,
-          "subType": "automated",
-          "deliveryType": "automated",
+          "subType": BasalDeliveryType.Automated,
+          "deliveryType": BasalDeliveryType.Automated,
           "rate": 0.8,
           "duration": 1000,
           "normalEnd": "2022-08-08T16:30:01.000Z",
           "epochEnd": 1659976201000,
+          "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1659976200000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T16:31:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": BASAL_LOOP_MODE_OFF_ID,
+          "type": DatumType.Basal,
+          "source": Source.Diabeloop,
+          "subType": BasalDeliveryType.Scheduled,
+          "deliveryType": BasalDeliveryType.Scheduled,
+          "rate": 0.2,
+          "duration": 1000,
+          "normalEnd": "2022-08-08T16:31:01.000Z",
+          "epochEnd": 1659976260000,
+          "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1659976200000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T16:32:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": BASAL_TEMP_ID,
+          "type": DatumType.Basal,
+          "source": Source.Diabeloop,
+          "subType": BasalDeliveryType.Temporary,
+          "deliveryType": BasalDeliveryType.Temporary,
+          "rate": 0.3,
+          "duration": 1000,
+          "normalEnd": "2022-08-08T16:32:01.000Z",
+          "epochEnd": 1659976320000,
+          "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1659976200000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T16:33:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": BASAL_MANUAL_ID,
+          "type": DatumType.Basal,
+          "source": Source.Diabeloop,
+          "subType": BasalDeliveryType.Manual,
+          "deliveryType": BasalDeliveryType.Manual,
+          "rate": 0.1,
+          "duration": 1000,
+          "normalEnd": "2022-08-08T16:33:01.000Z",
+          "epochEnd": 1659976380000,
           "isoWeekday": WeekDays.Sunday
         }
       ],
@@ -1109,7 +1284,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659945600000,
           "displayOffset": 0,
-          "normalTime": "2022-08-08T08:00:00.000Z",
+          "normalTime": "2022-08-08T16:00:00.000Z",
           "timezone": "UTC",
           "guessedTimezone": false,
           "id": "parameterId",
@@ -1130,8 +1305,34 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
             }
           ],
           "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1659965100000,
+          "displayOffset": 0,
+          "normalTime": "2022-08-08T13:25:00.000Z",
+          "timezone": "UTC",
+          "guessedTimezone": false,
+          "id": EVENT_SUPERPOSITION_PARAMETER_CHANGE_ID,
+          "type": DatumType.DeviceEvent,
+          "source": Source.Diabeloop,
+          "subType": DeviceEventSubtype.DeviceParameter,
+          "params": [
+            {
+              "id": "parameterId",
+              "epoch": 1659965100000,
+              "timezone": "UTC",
+              "name": "MEAL_RATIO_LUNCH_FACTOR",
+              "level": "1",
+              "unit": Unit.Percent,
+              "value": "100",
+              "previousValue": "110",
+              "lastUpdateDate": "2022-08-08T08:00:00Z"
+            }
+          ],
+          "isoWeekday": WeekDays.Sunday
         }
       ],
+      iob: [],
       messages: [],
       meals: [
         {
@@ -1246,11 +1447,12 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
               "product": "zzz",
             },
             history,
-            securityBasals: { rates: null },
-            mobileApplication: {
+            "securityBasals": { "rates": null },
+            "mobileApplication": {
               "manufacturer": "",
               "identifier": "",
               "swVersion": "",
+              "activationCode": ""
             },
             "parameters": [
               {
@@ -1272,6 +1474,25 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "reservoirChangeId",
+          "type": DatumType.DeviceEvent,
+          "source": Source.Diabeloop,
+          "subType": DeviceEventSubtype.ReservoirChange,
+          "pump": {
+            "manufacturer": PumpManufacturer.Default,
+            "product": "xxx",
+            "swVersion": "xxx",
+            "serialNumber": "123456",
+            "name": "Kaleido"
+          },
+          "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1659978000000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T13:15:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": EVENT_SUPERPOSITION_RESERVOIR_CHANGE_ID,
           "type": DatumType.DeviceEvent,
           "source": Source.Diabeloop,
           "subType": DeviceEventSubtype.ReservoirChange,
@@ -1306,7 +1527,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
         {
           "epoch": 1659974400000,
           "displayOffset": -120,
-          "normalTime": "2022-08-08T16:00:00.000Z",
+          "normalTime": "2022-08-08T16:30:00.000Z",
           "timezone": "Europe/Paris",
           "guessedTimezone": false,
           "id": "warmup-01",
@@ -1316,10 +1537,30 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
             "units": DurationUnit.Hours,
             "value": 0
           },
-          "normalEnd": "2022-08-08T16:00:00.000Z",
-          "epochEnd": 1659974400000,
+          "normalEnd": "2022-08-08T16:30:00.000Z",
+          "epochEnd": 1659985200000,
           "subType": DeviceEventSubtype.Warmup,
           "guid": WARMUP_01_ID,
+          "inputTime": "2022-08-08T09:00:00Z",
+          "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1659974400000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T13:05:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": EVENT_SUPERPOSITION_WARMUP_ID,
+          "type": DatumType.DeviceEvent,
+          "source": Source.Diabeloop,
+          "duration": {
+            "units": DurationUnit.Hours,
+            "value": 0
+          },
+          "normalEnd": "2022-08-08T16:30:00.000Z",
+          "epochEnd": 1659985200000,
+          "subType": DeviceEventSubtype.Warmup,
+          "guid": EVENT_SUPERPOSITION_WARMUP_ID,
           "inputTime": "2022-08-08T09:00:00Z",
           "isoWeekday": WeekDays.Sunday
         }
@@ -1444,8 +1685,134 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "isoWeekday": WeekDays.Thursday
         },
       ],
-      "zenModes": [],
+      zenModes: [
+        {
+          "epoch": 1659945600000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T21:00:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": ZEN_MODE_ID,
+          "type": DatumType.DeviceEvent,
+          "source": Source.Diabeloop,
+          "subType": DeviceEventSubtype.Zen,
+          "duration": {
+            "units": DurationUnit.Seconds,
+            "value": 7200
+          },
+          "normalEnd": "2022-08-07T08:00:00.000Z",
+          "epochEnd": 1659949200000,
+          "guid": ZEN_MODE_ID,
+          "inputTime": "2022-08-08T08:00:00Z",
+          "isoWeekday": WeekDays.Sunday,
+          "glycemiaTarget": null
+        },
+        {
+          "epoch": 1659862800,
+          "displayOffset": -120,
+          "normalTime": "2022-08-07T20:00:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": ZEN_MODE_ID_WITH_GLY,
+          "type": DatumType.DeviceEvent,
+          "source": Source.Diabeloop,
+          "subType": DeviceEventSubtype.Zen,
+          "duration": {
+            "units": DurationUnit.Seconds,
+            "value": 7200
+          },
+          "normalEnd": "2022-08-07T08:00:00.000Z",
+          "glycemiaTarget": {
+            "value": 130,
+            "initialValue": 110,
+            "offset": 20,
+            "units": Unit.MilligramPerDeciliter,
+          },
+          "epochEnd": 1659949200000,
+          "guid": ZEN_MODE_ID_WITH_GLY,
+          "inputTime": "2022-08-07T08:00:00Z",
+          "isoWeekday": WeekDays.Sunday
+        }
+      ],
       "timezoneChanges": []
+    }
+  }
+}
+
+export const getTimezoneChangeData = (): Data => {
+  return {
+    dataRange: ['2022-10-29T00:00:00Z', '2022-10-31T00:00:00Z'],
+    data: {
+      alarmEvents: [],
+      basal: [
+        {
+          "epoch": 1667082600000,
+          "displayOffset": -120,
+          "normalTime": "2022-10-29T22:30:00.000Z",
+          "timezone": PARIS_TIMEZONE,
+          "guessedTimezone": false,
+          "id": BASAL_TIME_CHANGE_INITAL_TIME_ID,
+          "type": DatumType.Basal,
+          "source": Source.Diabeloop,
+          "subType": BasalDeliveryType.Automated,
+          "deliveryType": BasalDeliveryType.Automated,
+          "rate": 0.8,
+          "duration": 1000,
+          "normalEnd": "2022-10-29T22:30:01.000Z",
+          "epochEnd": 1667082601000,
+          "isoWeekday": WeekDays.Sunday
+        },
+        {
+          "epoch": 1667120400000,
+          "displayOffset": -60,
+          "normalTime": "2022-10-30T09:00:00.000Z",
+          "timezone": PARIS_TIMEZONE,
+          "guessedTimezone": false,
+          "id": BASAL_TIME_CHANGE_NEW_TIME_ID,
+          "type": DatumType.Basal,
+          "source": Source.Diabeloop,
+          "subType": BasalDeliveryType.Automated,
+          "deliveryType": BasalDeliveryType.Automated,
+          "rate": 0.8,
+          "duration": 1000,
+          "normalEnd": "2022-10-30T09:00:01.000Z",
+          "epochEnd": 1667120401000,
+          "isoWeekday": WeekDays.Sunday
+        }
+      ],
+      bolus: [],
+      cbg: [
+        {
+          "epoch": 1667169000000,
+          "displayOffset": 0,
+          "normalTime": "2022-10-30T22:30:00.000Z",
+          "timezone": DUBLIN_TIMEZONE,
+          "guessedTimezone": false,
+          "id": "cbg_id",
+          "type": DatumType.Cbg,
+          "source": Source.Diabeloop,
+          "units": Unit.MilligramPerDeciliter,
+          "value": 189,
+          "localDate": "2022-10-30",
+          "isoWeekday": WeekDays.Monday,
+          "msPer24": 63000000,
+          "deviceName": "Unknown"
+        }
+      ],
+      confidentialModes: [],
+      deviceParametersChanges: [],
+      iob: [],
+      messages: [],
+      meals: [],
+      nightModes: [],
+      physicalActivities: [],
+      pumpSettings: [],
+      reservoirChanges: [],
+      smbg: [],
+      warmUps: [],
+      wizards: [],
+      zenModes: [],
+      timezoneChanges: []
     }
   }
 }

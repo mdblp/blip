@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,13 +26,6 @@
  */
 
 @import "../../../styles/colors.css";
-
-.horizontal-line {
-  height: 16px;
-  width: 2px;
-  position: absolute;
-  margin-top: 2px;
-}
 
 .spacing {
   margin-left: 2px;

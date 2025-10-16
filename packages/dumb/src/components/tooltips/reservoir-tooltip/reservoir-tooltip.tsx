@@ -26,70 +26,36 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import i18next from 'i18next'
 import commonStyles from '../../../styles/tooltip-common.css'
-import {
-  COMMON_TOOLTIP_TAIL_HEIGHT,
-  COMMON_TOOLTIP_TAIL_WIDTH,
-  DEFAULT_TOOLTIP_BORDER_WIDTH,
-  DEFAULT_TOOLTIP_OFFSET,
-  DEFAULT_TOOLTIP_TAIL,
-  type Position,
-  type Side
-} from '../common/tooltip/tooltip'
-import { Tooltip } from '../../../index'
+import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
 import colors from '../../../styles/colors.css'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import { PumpManufacturer, type ReservoirChange, type TimePrefs } from 'medical-domain'
+import { type ReservoirChange, type TimePrefs } from 'medical-domain'
 import { TooltipLine } from '../common/tooltip-line/tooltip-line'
+import { getReservoirChangeTitle } from '../../../utils/reservoir-change/reservoir-change.util'
+import { useTranslation } from 'react-i18next'
+import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
 
 interface ReservoirTooltipProps {
   reservoir: ReservoirChange
   position: Position
-  side: Side
+  side: TooltipSide
   timePrefs: TimePrefs
 }
 
-enum ChangeType {
-  Cartridge = 'cartridge',
-  Reservoir = 'reservoir'
-}
-
-const t = i18next.t.bind(i18next)
-
 export const ReservoirTooltip: FunctionComponent<ReservoirTooltipProps> = (props) => {
   const { reservoir, position, side, timePrefs } = props
+  const { t } = useTranslation()
 
-  const getChangeTypeByManufacturer = (manufacturer: PumpManufacturer): ChangeType => {
-    const manufacturerUpperCase = manufacturer.toUpperCase()
-    switch (manufacturerUpperCase) {
-      case PumpManufacturer.Sooil:
-        return ChangeType.Reservoir
-      case PumpManufacturer.Vicentra:
-      case PumpManufacturer.Roche:
-      case PumpManufacturer.Terumo:
-      case PumpManufacturer.Default:
-      default:
-        return ChangeType.Cartridge
-    }
-  }
-
-  const manufacturer = reservoir.pump?.manufacturer || PumpManufacturer.Default
-  const changeType: ChangeType = getChangeTypeByManufacturer(manufacturer)
-  const label = (changeType === ChangeType.Reservoir)
-    ? t('Reservoir change')
-    : t('Cartridge change')
+  const label = getReservoirChangeTitle(reservoir)
 
   return (
     <Tooltip
       position={position}
       side={side}
-      borderColor={colors.deviceEvent}
+      title={t('Pump')}
+      backgroundColor={colors.greyBackground}
       dateTitle={getDateTitleForBaseDatum(reservoir, timePrefs)}
-      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
-      tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
-      tail={DEFAULT_TOOLTIP_TAIL}
-      borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div className={commonStyles.containerFlex}>

@@ -17,53 +17,6 @@
 
 // tooltips
 
-// cbg
-g.svg-tooltip-cbg {
-  opacity: 0.7;
-  &.d3-bg-low path.tooltip-outline {
-    fill: @bg-low;
-  }
-  &.d3-bg-target path.tooltip-outline {
-    fill: @bg-target;
-  }
-  &.d3-bg-high path.tooltip-outline {
-    fill: @bg-high;
-  }
-}
-
-// basal
-g.svg-tooltip-basal {
-  polygon {
-    fill: white;
-    opacity: 0.8;
-    stroke: @basal;
-    stroke-width: 1.5;
-  }
-  &.d3-basal-undelivered polygon {
-    stroke-dasharray: 1.5,3;
-    stroke-linecap: round;
-  }
-}
-
-// smbg
-g.svg-tooltip-smbg {
-  stroke: @trends-smbg;
-  polygon {
-    fill: white;
-    opacity: 0.7;
-    stroke-width: 1.5;
-  }
-  &.d3-bg-low {
-    stroke: @bg-low;
-  }
-  &.d3-bg-target {
-    stroke: @bg-target;
-  }
-  &.d3-bg-high {
-    stroke: @bg-high;
-  }
-}
-
 // range (& mean) overlays in trends view
 g.svg-tooltip-range {
   polygon {

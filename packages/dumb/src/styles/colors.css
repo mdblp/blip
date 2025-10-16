@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -69,6 +69,7 @@
   --bg-very-low: var(--error-color-main);
   --bg-low: var(--error-color-light);
   --bg-target: var(--info-color-main);
+  --bg-tight-range: var(--info-color-light);
   --bg-high: var(--warning-color-light);
   --bg-very-high: var(--warning-color-main);
   --text-hover: #00D3D9;
@@ -121,7 +122,15 @@
   smbg: #6480FB;
   smbgHeader: #E8ECFE;
   siteChange: #FCD144;
+  zenMode: #9FCC93;
   grey: #6D6D6D;
   lightGrey: #979797;
   darkGrey: #4E4E4F;
+  redBackground: #FCEAED;
+  blueBackground: #E6F6FD;
+  orangeBackground: #FEF3EA;
+  greyBackground: #F7F7F7;
+  darkBlueBackground: #E6EEF1;
+  purpleBackground: #F3EEF5;
+  greenBackground: #E9F9F8;
 }

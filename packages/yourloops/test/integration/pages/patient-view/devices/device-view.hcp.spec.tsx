@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,7 +31,7 @@ import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from
 import {
   mockDataAPI,
   pumpSettingsData,
-  pumpSettingsDblg1WithoutSecurityBasalData, pumpSettingsDblg2,
+  pumpSettingsDblg1Mobigo, pumpSettingsDblg2,
   pumpSettingsDblg2WithoutSecurityBasalData
 } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
@@ -44,7 +44,7 @@ import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../use-cases/app-main-layout-visualisation'
 import {
   testDevicesVisualisation,
-  testEmptySafetyBasalProfileDblg1ErrorMessage,
+  testDevicesMenuLayoutForMobigoDevice,
   testEmptySafetyBasalProfileGenericErrorMessage, testG2DevicesVisualisation
 } from '../../../use-cases/device-settings-visualisation'
 import { testDeviceSettingsNavigationForHcp } from '../../../use-cases/device-settings-navigation'
@@ -118,12 +118,12 @@ describe('Device view for HCP', () => {
     await testEmptySafetyBasalProfileGenericErrorMessage()
   })
 
-  it('should display a DBLG1-oriented error message if the basal safety profile is not available for a DBLG1 patient', async () => {
-    mockDataAPI(pumpSettingsDblg1WithoutSecurityBasalData)
+  it('should hide the basal safety profile menu for a DBLG1/Mobigo+ patient', async () => {
+    mockDataAPI(pumpSettingsDblg1Mobigo)
 
     await act(async () => {
       renderPage(deviceRoute)
     })
-    await testEmptySafetyBasalProfileDblg1ErrorMessage()
+    testDevicesMenuLayoutForMobigoDevice()
   })
 })

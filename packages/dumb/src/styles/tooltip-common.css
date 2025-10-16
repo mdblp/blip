@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,7 +35,12 @@
   composes: container;
   display: flex;
   flex-direction: column;
-  max-width: 180px;
+  min-width: 120px;
+}
+
+.containerFlexLarge {
+  composes: containerFlex;
+  min-width: 160px;
 }
 
 .row {
@@ -49,14 +54,6 @@
 .rowBold {
   composes: row;
   font-weight: bold;
-}
-
-.label {
-  flex-grow: 1;
-}
-
-.value {
-  margin-left: 20px;
 }
 
 .units {

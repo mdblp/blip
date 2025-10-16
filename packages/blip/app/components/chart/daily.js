@@ -26,15 +26,20 @@ import { TimeService } from 'medical-domain'
 import Footer from './footer'
 import {
   AlarmEventTooltip,
+  BasalTooltip,
   BloodGlucoseTooltip,
   BolusTooltip,
   ConfidentialTooltip,
-  FoodTooltip,
+  EventsSuperpositionPopover,
+  IobTooltip,
   NightModeTooltip,
   ParameterTooltip,
   PhysicalTooltip,
+  RescueCarbsTooltip,
   ReservoirTooltip,
-  WarmUpTooltip
+  TimeChangeTooltip,
+  WarmUpTooltip,
+  ZenModeTooltip
 } from 'dumb'
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
@@ -64,18 +69,22 @@ class DailyChart extends React.Component {
     // other handlers
     onDatetimeLocationChange: PropTypes.func.isRequired,
     onTransition: PropTypes.func.isRequired,
+    onBasalHover: PropTypes.func.isRequired,
     onBolusHover: PropTypes.func.isRequired,
     onSMBGHover: PropTypes.func.isRequired,
     onCBGHover: PropTypes.func.isRequired,
     onCarbHover: PropTypes.func.isRequired,
+    onIobHover: PropTypes.func.isRequired,
     onReservoirHover: PropTypes.func.isRequired,
     onPhysicalHover: PropTypes.func.isRequired,
     onParameterHover: PropTypes.func.isRequired,
     onWarmUpHover: PropTypes.func.isRequired,
     onAlarmEventHover: PropTypes.func.isRequired,
     onNightModeHover: PropTypes.func.isRequired,
+    onZenModeHover: PropTypes.func.isRequired,
     onConfidentialHover: PropTypes.func.isRequired,
     onTooltipOut: PropTypes.func.isRequired,
+    onEventSuperpositionClick: PropTypes.func.isRequired,
     onChartMounted: PropTypes.func.isRequired,
     trackMetric: PropTypes.func.isRequired
   }
@@ -87,6 +96,7 @@ class DailyChart extends React.Component {
       'bgClasses',
       'bgUnits',
       'timePrefs',
+      'onBasalHover',
       'onBolusHover',
       'onSMBGHover',
       'onCBGHover',
@@ -95,10 +105,14 @@ class DailyChart extends React.Component {
       'onPhysicalHover',
       'onParameterHover',
       'onConfidentialHover',
+      'onIobHover',
       'onWarmUpHover',
       'onAlarmEventHover',
       'onNightModeHover',
+      'onTimeChangeHover',
+      'onZenModeHover',
       'onTooltipOut',
+      'onEventSuperpositionClick',
       'trackMetric'
     ]
 
@@ -379,6 +393,7 @@ class Daily extends React.Component {
                   onTransition={this.handleInTransition}
                   onBolusHover={this.handleBolusHover}
                   onSMBGHover={this.handleSMBGHover}
+                  onBasalHover={this.handleBasalHover}
                   onCBGHover={this.handleCBGHover}
                   onCarbHover={this.handleCarbHover}
                   onReservoirHover={this.handleReservoirHover}
@@ -387,8 +402,12 @@ class Daily extends React.Component {
                   onWarmUpHover={this.handleWarmUpHover}
                   onAlarmEventHover={this.handleAlarmEventHover}
                   onConfidentialHover={this.handleConfidentialHover}
+                  onIobHover={this.handleIobHover}
                   onNightModeHover={this.handleNightModeHover}
+                  onTimeChangeHover={this.handleTimeChangeHover}
+                  onZenModeHover={this.handleZenModeHover}
                   onTooltipOut={this.handleTooltipOut}
+                  onEventSuperpositionClick={this.handleEventSuperpositionClick}
                   onChartMounted={this.onChartMounted}
                   trackMetric={trackMetric}
                   ref={this.chartRef}
@@ -505,7 +524,8 @@ class Daily extends React.Component {
     const { epochLocation, bgPrefs } = this.props
     const rect = datum.rect
     // range here is -12 to 12
-    const hoursOffset = (datum.data.epoch - epochLocation) / TimeService.MS_IN_HOUR
+    const datumEpoch = datum.data.eventsCount ? datum.data.events[0].epoch : datum.data.epoch
+    const hoursOffset = (datumEpoch - epochLocation) / TimeService.MS_IN_HOUR
     datum.top = rect.top + rect.height / 2
     if (hoursOffset > 5) {
       datum.side = 'left'
@@ -520,6 +540,22 @@ class Daily extends React.Component {
   }
 
   handleTooltipOut = () => this.setState({ tooltip: null }) // Tips for debug use: _.noop;
+
+  handleBasalHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum)
+    const tooltip = (
+      <BasalTooltip
+        basal={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        bgPrefs={datum.bgPrefs}
+        timePrefs={datum.timePrefs}
+      />)
+    this.setState({ tooltip })
+  }
 
   handleBolusHover = (datum) => {
     this.updateDatumHoverForTooltip(datum)
@@ -573,8 +609,23 @@ class Daily extends React.Component {
   handleCarbHover = (datum) => {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
-      <FoodTooltip
+      <RescueCarbsTooltip
         food={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        timePrefs={datum.timePrefs}
+      />)
+    this.setState({ tooltip })
+  }
+
+  handleIobHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum)
+    const tooltip = (
+      <IobTooltip
+        data={datum.data}
         position={{
           top: datum.top,
           left: datum.left
@@ -677,6 +728,36 @@ class Daily extends React.Component {
     this.setState({ tooltip })
   }
 
+  handleTimeChangeHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum)
+    const tooltip = (
+      <TimeChangeTooltip
+        timeChange={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        timePrefs={datum.timePrefs}
+      />)
+    this.setState({ tooltip })
+  }
+
+  handleZenModeHover = (datum) => {
+    this.updateDatumHoverForTooltip(datum)
+    const tooltip = (
+      <ZenModeTooltip
+        zenMode={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        timePrefs={datum.timePrefs}
+      />)
+    this.setState({ tooltip })
+  }
+
   handleConfidentialHover = (datum) => {
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
@@ -686,6 +767,20 @@ class Daily extends React.Component {
           left: datum.left
         }}
         side={datum.side}
+      />)
+    this.setState({ tooltip })
+  }
+
+  handleEventSuperpositionClick = (datum) => {
+    this.updateDatumHoverForTooltip(datum)
+    const tooltip = (
+      <EventsSuperpositionPopover
+        superpositionEvent={datum.data}
+        htmlElement={datum.htmlEvent.currentTarget}
+        timePrefs={datum.timePrefs}
+        bgPrefs={datum.bgPrefs}
+        device={this.props.device}
+        onClose={this.handleTooltipOut}
       />)
     this.setState({ tooltip })
   }

@@ -53,6 +53,7 @@
     "react": "18.2.0",
     "react-device-detect": "^2.2.3",
     "react-dom": "18.2.0",
+    "react-draggable": "^4.5.0",
     "react-i18next": "^13.3.0",
     "react-idle-timer": "^5.7.2",
     "react-resize-detector": "^9.1.0",

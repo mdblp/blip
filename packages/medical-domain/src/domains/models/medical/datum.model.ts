@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type Basal from './datum/basal.model'
 import type Bolus from './datum/bolus.model'
 import type Cbg from './datum/cbg.model'
 import type ConfidentialMode from './datum/confidential-mode.model'
@@ -36,7 +35,6 @@ import type Message from './datum/message.model'
 import type PhysicalActivity from './datum/physical-activity.model'
 import type ReservoirChange from './datum/reservoir-change.model'
 import type Smbg from './datum/smbg.model'
-import type TimeZoneChange from './datum/time-zone-change.model'
 import type WarmUp from './datum/warm-up.model'
 import type Wizard from './datum/wizard.model'
 import type ZenMode from './datum/zen-mode.model'
@@ -44,8 +42,10 @@ import type MedicalDataOptions from './medical-data-options.model'
 import { type WeekDaysFilter } from '../time/date-filter.model'
 import { AlarmEvent } from './datum/alarm-event.model';
 import { PumpSettings } from './datum/pump-settings.model'
+import { Basal } from './datum/basal.model'
+import { TimeZoneChange } from './datum/time-zone-change.model'
 
-type Datum = AlarmEvent | Basal | Bolus | Cbg | ConfidentialMode | DeviceParameterChange | Fill | Meal |
+export type Datum = AlarmEvent | Basal | Bolus | Cbg | ConfidentialMode | DeviceParameterChange | Fill | Meal |
 Message | PhysicalActivity | PumpSettings | ReservoirChange | Smbg | Wizard |
 ZenMode | TimeZoneChange | WarmUp
 
@@ -54,5 +54,5 @@ interface DatumProcessor<T> {
   deduplicate: (data: T[], opts: MedicalDataOptions) => T[]
   filterOnDate: (data: T[], start: number, end: number, weekDaysFilter: WeekDaysFilter) => T[]
 }
-export default Datum
+
 export type { DatumProcessor }

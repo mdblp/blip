@@ -34,7 +34,7 @@ import {
 import { generateBgRangeLabels } from '../../utils/bloodglucose'
 import { formatDecimalNumber, formatPercentage } from '../../utils/format'
 
-import { arc, pie } from 'd3-shape'
+import * as d3 from 'd3'
 import parse from 'parse-svg-path'
 import translate from 'translate-svg-path'
 import serialize from 'serialize-svg-path'
@@ -503,7 +503,7 @@ class BasicsPrintView extends PrintView {
         data: pieData
       } = data[column.id]
 
-      const arcData = pie()(_.map(pieData, d => d.value))
+      const arcData = d3.pie()(_.map(pieData, d => d.value))
 
       let rotation = 0
 
@@ -516,7 +516,7 @@ class BasicsPrintView extends PrintView {
           rotation = datum.endAngle
         }
 
-        return arc()
+        return d3.arc()
           .startAngle((d) => (d.startAngle - rotation))
           .endAngle((d) => (d.endAngle - rotation))
           .innerRadius(0)

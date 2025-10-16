@@ -28,8 +28,8 @@
 import { act, waitFor } from '@testing-library/react'
 import { renderPage } from '../../../utils/render'
 import {
-  completeDashboardData,
-  dataSetsWithZeroValues,
+  oneDayDashboardData,
+  smallDataSet,
   mockDataAPI,
   sixteenDaysOldDashboardData,
   twoWeeksOldDashboardData
@@ -52,7 +52,7 @@ import { mockChatAPI } from '../../../mock/chat.api.mock'
 import { type AppMainLayoutParams, testAppMainLayoutForPatient } from '../../../use-cases/app-main-layout-visualisation'
 import { type PatientDashboardLayoutParams } from '../../../assert/layout.assert'
 import {
-  testDashboardDataVisualisationForPatient,
+  testDashboardDataVisualisationForPatientOrPrivateTeam,
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationSixteenDaysOldData,
   testDashboardDataVisualisationTwoWeeksOldData,
@@ -81,7 +81,7 @@ describe('Dashboard view for patient', () => {
   })
 
   it('should display correct components when patient is in some medical teams', async () => {
-    mockDataAPI(completeDashboardData)
+    mockDataAPI(oneDayDashboardData)
     const appMainLayoutParams: AppMainLayoutParams = {
       footerHasLanguageSelector: false,
       loggedInUserFullName: `${lastName} ${firstName}`
@@ -100,7 +100,7 @@ describe('Dashboard view for patient', () => {
     })
 
     await testAppMainLayoutForPatient(appMainLayoutParams)
-    await testDashboardDataVisualisationForPatient(patientDashboardLayoutParams)
+    await testDashboardDataVisualisationForPatientOrPrivateTeam(patientDashboardLayoutParams)
     await testPatientNavBarForPatientAndCaregiver()
   })
 
@@ -146,7 +146,7 @@ describe('Dashboard view for patient', () => {
   })
 
   it('should render correct components when patient is in no medical teams', async () => {
-    mockDataAPI(dataSetsWithZeroValues)
+    mockDataAPI(smallDataSet)
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildPrivateTeam()])
 
     const patientDashboardLayoutParams: PatientDashboardLayoutParams = {

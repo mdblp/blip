@@ -32,7 +32,7 @@ import {
   checkSaveButtonForMmolForPatient,
   checkMonitoringAlertsLinkToTargetAndAlerts,
   checkMonitoringAlertsParametersTeamAdmin,
-  checkMonitoringAlertsParametersTeamMember,
+  checkMonitoringAlertsParametersTeamMember, checkUnsavedChangesOnNavigation
 } from '../assert/monitoring-alerts-parameters.assert'
 
 export const testMonitoringAlertsParametersConfigurationForPatientMgdl = async (): Promise<void> => {
@@ -55,4 +55,8 @@ export const testMonitoringAlertsParametersTeamMember = async (): Promise<void> 
 
 export const testMonitoringAlertsCardLinkToMonitoringAlertsConfiguration = async (): Promise<void> => {
   await checkMonitoringAlertsLinkToTargetAndAlerts()
+}
+
+export const testUnsavedChangesOnNavigation = async (): Promise<void> => {
+  await checkUnsavedChangesOnNavigation()
 }

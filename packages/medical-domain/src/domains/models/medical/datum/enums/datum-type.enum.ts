@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,6 +32,7 @@ export enum DatumType {
   DeviceEvent = 'deviceEvent',
   Fill = 'fill',
   Food = 'food',
+  Iob = 'iob',
   Message = 'message',
   PhysicalActivity = 'physicalActivity',
   PumpSettings = 'pumpSettings',

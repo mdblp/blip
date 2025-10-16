@@ -207,13 +207,33 @@ svg {
   stroke-width: 1.5;
 }
 .d3-circle-zen {
-  fill: @zentext
+  fill: @zentext;
 }
 .d3-zen-text {
   fill: #FFFFFF;
   font-size: @font-size-small;
   dominant-baseline: central;
   text-anchor: middle;
+}
+.d3-superposition-circle-red {
+  cursor: pointer;
+  fill: @event-superposition-red;
+}
+.d3-superposition-circle-orange {
+  cursor: pointer;
+  fill: @event-superposition-orange;
+}
+.d3-superposition-circle-grey {
+  cursor: pointer;
+  fill: @event-superposition-grey;
+}
+.d3-superposition-text {
+  fill: #FFFFFF;
+  font-size: @font-size-small;
+  font-weight: bold;
+  dominant-baseline: central;
+  text-anchor: middle;
+  cursor: pointer;
 }
 .d3-confidential-text {
   fill: @confidentialtext;
@@ -356,6 +376,9 @@ svg {
     &.d3-bg-target {
       fill: @bg-target;
     }
+    &.d3-bg-tight-range {
+      fill: @bg-tight-range;
+    }
     &.d3-bg-high {
       fill: @bg-high;
     }
@@ -388,6 +411,10 @@ svg {
   &.d3-bg-target {
     fill: @bg-target;
     stroke: @bg-target;
+  }
+  &.d3-bg-tight-range {
+    fill: @bg-tight-range;
+    stroke: @bg-tight-range;
   }
   &.d3-bg-high {
     fill: @bg-high;
@@ -535,6 +562,14 @@ text.d3-tabular-ui {
   }
 }
 
+.d3-iob {
+  fill: @iob;
+}
+
+.d3-iob-hover {
+  fill: @iob-hover;
+}
+
 .d3-row-label {
   dominant-baseline: central;
   fill: @text;
@@ -640,6 +675,9 @@ text.d3-tabular-ui {
       }
       &.d3-bg-target {
         fill: @bg-target;
+      }
+      &.d3-bg-tight-range {
+        fill: @bg-tight-range;
       }
       &.d3-bg-high {
         fill: @bg-high;

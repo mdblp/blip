@@ -38,9 +38,13 @@ import { patient1Id, patientWithMmolId } from '../../../data/patient.api.data'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
   testMonitoringAlertsParametersConfigurationForPatientMgdl,
-  testMonitoringAlertsParametersConfigurationForPatientMmol
+  testMonitoringAlertsParametersConfigurationForPatientMmol, testUnsavedChangesOnNavigation
 } from '../../../use-cases/monitoring-alerts-parameters-management'
-import { testTargetAndAlertsViewContent } from '../../../use-cases/target-and-alerts-management'
+import {
+  testAlertsViewContent, testRangeFormValidation, testRangePatientProfileDisplay,
+  testRangeUnitDisplay,
+  testRangeViewContent, testSaveButtonForRanges
+} from '../../../use-cases/range-and-alerts-management'
 import { testPatientPersonalInformation } from '../../../use-cases/patient-personal-information-management'
 import { Settings } from '../../../../../lib/auth/models/settings.model'
 import { Unit } from 'medical-domain'
@@ -55,7 +59,7 @@ describe('Patient profile view for HCP', () => {
   const patientTargetAndAlertsRouteMmoL = `/teams/${myThirdTeamId}/patients/${patientWithMmolId}${AppUserRoute.PatientProfile}`
   const patientProfileRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.PatientProfile}`
 
-  describe('Range and alerts section', () => {
+  describe('Alerts section', () => {
     beforeEach(() => {
       mockAuth0Hook()
       mockNotificationAPI()
@@ -86,10 +90,10 @@ describe('Patient profile view for HCP', () => {
       await act(async () => {
         renderPage(patientProfileRoute)
       })
-      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range-and-alerts'))
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('alerts'))
       await userEvent.click(menuButton)
 
-      await testTargetAndAlertsViewContent()
+      await testAlertsViewContent()
       await testMonitoringAlertsParametersConfigurationForPatientMgdl()
     })
 
@@ -101,11 +105,23 @@ describe('Patient profile view for HCP', () => {
         renderPage(patientTargetAndAlertsRouteMmoL)
       })
 
-      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range-and-alerts'))
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('alerts'))
       await userEvent.click(menuButton)
 
-      await testTargetAndAlertsViewContent()
+      await testAlertsViewContent()
       await testMonitoringAlertsParametersConfigurationForPatientMmol()
+    })
+
+    it('should handle unsaved changes when navigating away from Alerts section', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('alerts'))
+      await userEvent.click(menuButton)
+
+      await testAlertsViewContent()
+      await testUnsavedChangesOnNavigation()
+
     })
   })
 
@@ -200,4 +216,92 @@ describe('Patient profile view for HCP', () => {
     //   expect(naTexts.length).toBeGreaterThan(0)
     // })
   })
+
+  describe('Range section', () => {
+    beforeEach(() => {
+      mockAuth0Hook()
+      mockNotificationAPI()
+      mockDirectShareApi()
+      mockTeamAPI()
+      mockUserApi().mockUserDataFetch({ firstName, lastName })
+      mockPatientApiForHcp()
+      mockDataAPI()
+      // defined in Node 17+, not in Jest env (Node 16)
+      // simple polyfill that works for JSON-serializable objects
+      // does not support functions, Dates, Maps, Sets, etc.
+      // see https://developer.mozilla.org/en-US/docs/Web/API/structuredClone
+      // Deep clone is a mess in JSDOM, this is a simple workaround for our use cases
+      // https://github.com/jsdom/jsdom/issues/3363
+      global.structuredClone = jest.fn(val => {
+        return JSON.parse(JSON.stringify(val));
+      });
+    })
+
+    it('should display glycemia target range in mg/dL', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
+      await userEvent.click(menuButton)
+      // Test that the range section is rendered
+      await testRangeViewContent()
+      // Test target range values in mg/dL
+      await testRangeUnitDisplay('mg/dL')
+
+    })
+
+    it('should display glycemia target range in mmol/L', async () => {
+      const mmolSettings: Settings = { units: { bg: Unit.MmolPerLiter } }
+      mockUserApi().mockUserDataFetch({ firstName, lastName, settings: mmolSettings })
+
+      await act(async () => {
+        renderPage(patientTargetAndAlertsRouteMmoL)
+      })
+
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
+      await userEvent.click(menuButton)
+
+      await testRangeUnitDisplay('mmol/L')
+    })
+
+    it('should display glycemia limits based on selected patient profile', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
+      await userEvent.click(menuButton)
+
+      await  testRangePatientProfileDisplay('range-profile-type-1-and-2', 250, 180, 70, 54)
+      await  testRangePatientProfileDisplay('range-profile-pregnancy-type-1', 250, 140, 63, 54)
+      await  testRangePatientProfileDisplay('range-profile-custom', 250, 180, 70, 54)
+
+    })
+
+    it('should handle range configuration updates', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
+      await userEvent.click(menuButton)
+      // test with the custom profile to be able to edit all values
+      await testSaveButtonForRanges()
+
+    })
+
+    it('should validate range limits correctly', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
+      await userEvent.click(menuButton)
+
+      await testRangeFormValidation()
+    })
+
+  })
+
 })

@@ -25,10 +25,20 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 
 import commonbolus from './commonbolus'
-import { convertBG, MGDL_UNITS, DEFAULT_BG_BOUNDS } from 'medical-domain'
+import { convertBG, DEFAULT_BG_BOUNDS, MGDL_UNITS } from 'medical-domain'
 import format from '../../data/util/format'
+import { getMaxIobValue } from '../../data/util/iob'
+
+const COMMON_TICK_SIZE_OUTER = 0
+
+const BASAL_TICKS_COUNT = 2
+const BOLUS_TICKS_COUNT = 2
+const IOB_TICKS_COUNT = 2
+
+const IOB_DISPLAY_PADDING_RATIO = 0.1
 
 /**
  * @param {MedicalDataService} tidelineData
@@ -52,7 +62,6 @@ function createScaleBG(tidelineData, pool, extent, pad) {
   const MAX_CBG_MGDL = 401
   const MAX_CBG_MMOLL = convertBG(MAX_CBG_MGDL, MGDL_UNITS)
 
-  const d3 = window.d3
   /** @type {"mg/dL" | "mmol/L"} */
   const bgUnits = _.get(tidelineData, 'opts.bgUnits', MGDL_UNITS)
   /** @type {number} */
@@ -65,7 +74,7 @@ function createScaleBG(tidelineData, pool, extent, pad) {
 
   const range = [pool.height() - pad, pad]
   const domain = [0, Math.min(extent[1], maxCBG)]
-  const scale = d3.scale.linear()
+  const scale = d3.scaleLinear()
 
   scale.domain(domain).range(range)
 
@@ -112,7 +121,6 @@ function createTicksBG(tidelineData, extent) {
  * @returns {{ axis: Axis, scale: ScaleLinear }}
  */
 export function createYAxisBG(tidelineData, pool) {
-  const d3 = window.d3
   const SMBG_SIZE = 16
 
   const allBG = tidelineData.medicalData.cbg.concat(tidelineData.medicalData.smbg)
@@ -122,10 +130,9 @@ export function createYAxisBG(tidelineData, pool) {
   const ticks = createTicksBG(tidelineData, Array.from(extent))
   const bgTickFormat = tidelineData.opts.bgUnits === MGDL_UNITS ? 'd' : '.1f'
 
-  const axis = d3.svg.axis()
-    .scale(scale)
-    .orient('left')
-    .outerTickSize(0)
+  const axis = d3
+    .axisLeft(scale)
+    .tickSizeOuter(COMMON_TICK_SIZE_OUTER)
     .tickValues(ticks)
     .tickFormat(d3.format(bgTickFormat))
   return { axis, scale }
@@ -138,7 +145,6 @@ export function createYAxisBG(tidelineData, pool) {
  */
 function createScaleBolus(data, pool) {
   const bolusRatio = 0.35
-  const d3 = window.d3
   const poolHeight = pool.height()
   // for boluses the recommended can exceed the value
   /** @type {number} */
@@ -149,10 +155,8 @@ function createScaleBolus(data, pool) {
   }, 0)
   const bolusDomain = [0, maxValue]
   const bolusRange = [poolHeight, bolusRatio * poolHeight]
-  return d3.scale
-    .sqrt()
-    .domain(bolusDomain)
-    .range(bolusRange)
+
+  return d3.scaleSqrt(bolusDomain, bolusRange)
 }
 
 /**
@@ -162,8 +166,6 @@ function createScaleBolus(data, pool) {
  * @returns {{ axis: Axis, scale: ScalePower }}
  */
 export function createYAxisBolus(tidelineData, pool) {
-  const d3 = window.d3
-
   const allBolus = tidelineData.medicalData.bolus.concat(tidelineData.medicalData.wizards)
   const scale = createScaleBolus(allBolus, pool)
   // set up y-axis for bolus
@@ -177,11 +179,10 @@ export function createYAxisBolus(tidelineData, pool) {
     bolusTickValues.push(currentMax + bolusTick)
   }
 
-  const axis = d3.svg.axis()
-    .scale(scale)
-    .orient('left')
-    .outerTickSize(0)
-    .ticks(2)
+  const axis = d3
+    .axisLeft(scale)
+    .tickSizeOuter(COMMON_TICK_SIZE_OUTER)
+    .ticks(BOLUS_TICKS_COUNT)
     .tickValues(bolusTickValues)
 
   return { axis, scale }
@@ -193,14 +194,10 @@ export function createYAxisBolus(tidelineData, pool) {
  * @returns {ScaleLinear}
  */
 function createScaleBasal(data, pool) {
-  const d3 = window.d3
   const basalDomain = [0, d3.max(data, (d) => d.rate) * 1.1]
   const basalRange = [pool.height(), 0]
 
-  return d3.scale
-    .sqrt()
-    .domain(basalDomain)
-    .range(basalRange)
+  return d3.scaleSqrt(basalDomain, basalRange)
 }
 
 /**
@@ -210,16 +207,39 @@ function createScaleBasal(data, pool) {
  * @returns {{ axis: Axis, scale: ScaleLinear }}
  */
 export function createYAxisBasal(tidelineData, pool) {
-  const d3 = window.d3
   const scale = createScaleBasal(tidelineData.medicalData.basal, pool)
-  const basalTickValues = [0, 1, 3]
+  const basalTickValues = [0, 1]
 
-  const axis = d3.svg.axis()
-    .scale(scale)
-    .orient('left')
-    .outerTickSize(0)
-    .ticks(2)
+  const axis = d3
+    .axisLeft(scale)
+    .tickSizeOuter(COMMON_TICK_SIZE_OUTER)
+    .ticks(BASAL_TICKS_COUNT)
     .tickValues(basalTickValues)
+
+  return { axis, scale }
+}
+
+// IOB
+function createScaleIob(maxIobValue, pool) {
+  // We display 10% more than the max IOB value to avoid cutting the top of the curve
+  const iobDomain = [0, maxIobValue * (1 + IOB_DISPLAY_PADDING_RATIO)]
+  const iobRange = [pool.height(), 0]
+
+  return d3.scaleLinear(iobDomain, iobRange)
+}
+
+export function createYAxisIob(tidelineData, pool) {
+  const maxIobValue = getMaxIobValue(tidelineData.medicalData)
+  const scale = createScaleIob(maxIobValue, pool)
+
+  const formattedMaxIobValue = Math.ceil(maxIobValue * 10) / 10
+  const iobTickValues = [0, formattedMaxIobValue]
+
+  const axis = d3
+    .axisLeft(scale)
+    .tickSizeOuter(COMMON_TICK_SIZE_OUTER)
+    .ticks(IOB_TICKS_COUNT)
+    .tickValues(iobTickValues)
 
   return { axis, scale }
 }

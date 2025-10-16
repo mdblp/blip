@@ -24,7 +24,9 @@ import { utils as vizUtils } from 'tidepool-viz'
 import { TimeService } from 'medical-domain'
 import SubNav, { weekDays } from './trendssubnav'
 import Footer from './footer'
+import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid'
 import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
 import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsContainer, TrendsProvider } from 'dumb'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
@@ -141,6 +143,23 @@ class Trends extends React.Component {
     this.startDate = new Date(tidelineData.endpoints[0])
     /** @type {Date} */
     this.endDate = new Date(tidelineData.endpoints[1])
+
+    /*Since changing trends behavior is hard, we modify the endDate to get expected behavior.
+    Expected behavior is having yesterday's data in the 2 weeks preset, and not today's data as it's done
+    before this fix.
+    endDate will be modified by trends complex processing, so we need to modify it before that.
+    The endDate is always set to the real end date + 1 (don't ask why you might regret it) that's why
+    we're comparing it to now.getDate() + 1 and that's why we are setting it to now.getDate even if we
+    don't want current day data (vomiting face ...).
+     */
+    const now = new Date()
+    if (this.endDate.getDate() === now.getDate() + 1 && this.endDate.getMonth() === now.getMonth() ||
+    this.endDate > now) {
+      this.endDate.setDate(now.getDate())
+      this.endDate.setMonth(now.getMonth())
+      this.endDate.setFullYear(now.getFullYear())
+    }
+
     /** Max range in ms */
     this.maxRange = this.endDate.valueOf() - this.startDate.valueOf()
     this.log.debug({ startDate: this.startDate, endDate: this.endDate, maxRange: this.maxRange })
@@ -539,6 +558,16 @@ class Trends extends React.Component {
       <TrendsProvider>
         <div id="tidelineMain" className="trends grid">
           <Box data-testid="trends-view-content" className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
+            <Grid
+              item
+              xs={12}
+              display="flex"
+              alignItems="center"
+            >
+              <Alert severity="info" sx={{marginBottom: 2}}>
+                {t('data-period-text-trends')}
+              </Alert>
+            </Grid>
             <div>
               {this.getTitle()}
             </div>

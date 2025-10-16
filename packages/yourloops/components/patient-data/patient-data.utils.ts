@@ -29,11 +29,18 @@ import DataApi from '../../lib/data/data.api'
 import moment, { type Moment } from 'moment-timezone'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import PartialDataLoad from 'blip/app/core/lib/partial-data-load'
-import MedicalDataService, { type BgUnit, type MedicalData, Source, type TimePrefs, TimeService } from 'medical-domain'
+import MedicalDataService, {
+  type BgUnit, convertBG,
+  type MedicalData,
+  Source,
+  type TimePrefs,
+  TimeService, Unit
+} from 'medical-domain'
 import config from '../../lib/config/config'
 import { PatientView } from '../../enum/patient-view.enum'
 import { type GetPatientDataOptions } from '../../lib/data/models/get-patient-data-options.model'
 import i18next from 'i18next'
+import { BgPrefs, formatBgValue } from 'dumb'
 
 interface GetDatetimeBoundsArgs {
   currentPatientView: PatientView
@@ -51,6 +58,36 @@ const t = i18next.t.bind(i18next)
 export function isValidDateQueryParam(queryParam: string): boolean {
   const date = new Date(queryParam)
   return !isNaN(date.getTime())
+}
+
+const convertAndFormatBgValue = (value: number, currentUnit: BgUnit): number => {
+  const newUnit = currentUnit === Unit.MilligramPerDeciliter ? Unit.MmolPerLiter : Unit.MilligramPerDeciliter
+  const formattedValueString = formatBgValue(convertBG(value, currentUnit), newUnit)
+
+  return newUnit === Unit.MilligramPerDeciliter ? Number.parseInt(formattedValueString) : Number.parseFloat(formattedValueString)
+}
+
+export const convertIfNeeded = (bloodGlucosePreference: BgPrefs | null, requiredUnit: BgUnit): BgPrefs => {
+  if (bloodGlucosePreference != null &&  bloodGlucosePreference?.bgUnits != requiredUnit) {
+    const currentUnit = bloodGlucosePreference?.bgUnits
+    return {
+        bgUnits: requiredUnit,
+        bgClasses: {
+          veryLow: convertAndFormatBgValue(bloodGlucosePreference.bgClasses.veryLow, currentUnit),
+          low: convertAndFormatBgValue(bloodGlucosePreference.bgClasses.low, currentUnit),
+          target: convertAndFormatBgValue(bloodGlucosePreference.bgClasses.target, currentUnit),
+          high: convertAndFormatBgValue(bloodGlucosePreference.bgClasses.high, currentUnit),
+          veryHigh: convertAndFormatBgValue(bloodGlucosePreference.bgClasses.veryHigh, currentUnit)
+        },
+        bgBounds: {
+          veryHighThreshold: convertAndFormatBgValue(bloodGlucosePreference.bgBounds.veryHighThreshold, currentUnit),
+          targetUpperBound: convertAndFormatBgValue(bloodGlucosePreference.bgBounds.targetUpperBound, currentUnit),
+          targetLowerBound: convertAndFormatBgValue(bloodGlucosePreference.bgBounds.targetLowerBound, currentUnit),
+          veryLowThreshold: convertAndFormatBgValue(bloodGlucosePreference.bgBounds.veryLowThreshold, currentUnit)
+        }
+      }
+  }
+  return bloodGlucosePreference
 }
 
 export const getPageTitleByPatientView = (view: PatientView): string => {
@@ -193,6 +230,7 @@ export class PatientDataUtils {
       cbg: [],
       confidentialModes: [],
       deviceParametersChanges: [],
+      iob: [],
       messages: [],
       meals: [],
       nightModes: [],

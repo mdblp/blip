@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type Basal from './datum/basal.model'
 import type Bolus from './datum/bolus.model'
 import type Cbg from './datum/cbg.model'
 import type ConfidentialMode from './datum/confidential-mode.model'
@@ -35,13 +34,15 @@ import type Message from './datum/message.model'
 import type PhysicalActivity from './datum/physical-activity.model'
 import type ReservoirChange from './datum/reservoir-change.model'
 import type Smbg from './datum/smbg.model'
-import type TimeZoneChange from './datum/time-zone-change.model'
 import type WarmUp from './datum/warm-up.model'
 import type Wizard from './datum/wizard.model'
 import type ZenMode from './datum/zen-mode.model'
 import { AlarmEvent } from './datum/alarm-event.model';
 import { PumpSettings } from './datum/pump-settings.model'
 import { NightMode } from './datum/night-mode.model'
+import { Iob } from './datum/iob.datum'
+import { Basal } from './datum/basal.model'
+import { TimeZoneChange } from './datum/time-zone-change.model'
 
 interface MedicalData {
   alarmEvents: AlarmEvent[]
@@ -50,6 +51,7 @@ interface MedicalData {
   cbg: Cbg[]
   confidentialModes: ConfidentialMode[]
   deviceParametersChanges: DeviceParameterChange[]
+  iob: Iob[]
   meals: Meal[]
   messages: Message[]
   nightModes: NightMode[]

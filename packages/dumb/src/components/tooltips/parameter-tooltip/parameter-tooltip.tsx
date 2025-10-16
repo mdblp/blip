@@ -27,101 +27,38 @@
 
 import React, { type FunctionComponent } from 'react'
 import styles from './parameter-tooltip.css'
-import commonStyles from '../../../styles/tooltip-common.css'
-import moment from 'moment-timezone'
-import { Tooltip } from '../../../index'
-import { formatParameterValue } from '../../../utils/format/format.util'
-import { getHourMinuteFormat } from '../../../utils/datetime/datetime.util'
 import { getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
-import {
-  COMMON_TOOLTIP_TAIL_HEIGHT,
-  COMMON_TOOLTIP_TAIL_WIDTH,
-  DEFAULT_TOOLTIP_BORDER_WIDTH,
-  DEFAULT_TOOLTIP_OFFSET,
-  DEFAULT_TOOLTIP_TAIL,
-  type Position,
-  type Side
-} from '../common/tooltip/tooltip'
+import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
 import colors from '../../../styles/colors.css'
 import { type DeviceParameterChange, type Parameter, type TimePrefs } from 'medical-domain'
+import { ParameterChangeLine } from './parameter-change-line'
 import { useTranslation } from 'react-i18next'
+import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
 
 interface ParameterTooltipProps {
   parameter: DeviceParameterChange
   position: Position
-  side: Side
+  side: TooltipSide
   timePrefs: TimePrefs
 }
 
 export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props) => {
   const { parameter, position, side, timePrefs } = props
-  const { t } = useTranslation('main')
-
-  const hourMinuteFormat = getHourMinuteFormat()
-
-  const renderParameter = (parameter: Parameter): JSX.Element => {
-    const parameterId = parameter.id
-    const hasPreviousValue = !!parameter.previousValue
-    const formattedPreviousValue = hasPreviousValue && formatParameterValue(parameter.previousValue, parameter.unit)
-    const valueClasses = hasPreviousValue ? styles.value : `${styles.value} ${styles['value-no-prev']}`
-    const displayHour = moment.tz(parameter.epoch, parameter.timezone).format(hourMinuteFormat)
-    const value = formatParameterValue(parameter.value, parameter.unit)
-
-    return (
-      <React.Fragment key={parameterId}>
-        <span id={`tooltip-daily-parameter-${parameterId}-date`}
-              className={styles.date}
-        >
-          {displayHour}
-        </span>
-        <span id={`tooltip-daily-parameter-${parameterId}-name`}
-              data-testid={'parameter-name'}
-              className={styles.label}
-        >
-          {t(`params|${parameter.name}`)}
-        </span>
-        {
-          hasPreviousValue &&
-          <>
-            <span id={`tooltip-daily-parameter-${parameterId}-prev`}
-                  data-testid={'parameter-previous-value'}
-                  className={styles.previous}
-            >
-              {formattedPreviousValue}
-            </span>
-            <span id={`tooltip-daily-parameter-${parameterId}-arrow`}>&rarr;</span>
-          </>
-        }
-        <span id={`tooltip-daily-parameter-${parameterId}-value`}
-              data-testid={'parameter-value'}
-              className={valueClasses}
-        >
-          {value}
-        </span>
-        <span id={`tooltip-daily-parameter-${parameterId}-units`}
-              data-testid={'parameter-units'}
-              className={commonStyles.units}
-        >
-          {t(parameter.unit)}
-        </span>
-      </React.Fragment>
-    )
-  }
+  const { t } = useTranslation()
 
   return (
     <Tooltip
       position={position}
       side={side}
-      borderColor={colors.deviceEvent}
+      title={t('settings-change')}
+      backgroundColor={colors.greyBackground}
       dateTitle={getDateTitleForBaseDatum(parameter, timePrefs)}
-      tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
-      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
-      tail={DEFAULT_TOOLTIP_TAIL}
-      borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <div data-testid="tooltip-daily-parameters" className={styles.container}>
-          {parameter.params.map((parameter: Parameter) => renderParameter(parameter))}
+          {parameter.params.map((parameter: Parameter) =>
+            <ParameterChangeLine key={parameter.id} parameter={parameter} />
+          )}
         </div>
       }
     />

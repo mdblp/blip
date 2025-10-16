@@ -29,22 +29,14 @@ import React, { type FunctionComponent } from 'react'
 import Grid from '@mui/material/Grid'
 import LockIcon from '@mui/icons-material/LockOutlined'
 import styles from './confidential-tooltip.css'
-import { Tooltip } from '../../../index'
 import colors from '../../../styles/colors.css'
-import {
-  COMMON_TOOLTIP_TAIL_HEIGHT,
-  COMMON_TOOLTIP_TAIL_WIDTH,
-  DEFAULT_TOOLTIP_BORDER_WIDTH,
-  DEFAULT_TOOLTIP_OFFSET,
-  DEFAULT_TOOLTIP_TAIL,
-  type Position,
-  type Side
-} from '../common/tooltip/tooltip'
+import { DEFAULT_TOOLTIP_OFFSET, type Position, Tooltip } from '../common/tooltip/tooltip'
 import { useTranslation } from 'react-i18next'
+import { TooltipSide } from '../../../models/enums/tooltip-side.enum'
 
 interface ConfidentialTooltipProps {
   position: Position
-  side: Side
+  side: TooltipSide
 }
 
 export const ConfidentialTooltip: FunctionComponent<ConfidentialTooltipProps> = (props) => {
@@ -55,11 +47,7 @@ export const ConfidentialTooltip: FunctionComponent<ConfidentialTooltipProps> = 
     <Tooltip
       position={position}
       side={side}
-      borderColor={colors.confidentialMode}
-      tailWidth={COMMON_TOOLTIP_TAIL_WIDTH}
-      tailHeight={COMMON_TOOLTIP_TAIL_HEIGHT}
-      tail={DEFAULT_TOOLTIP_TAIL}
-      borderWidth={DEFAULT_TOOLTIP_BORDER_WIDTH}
+      backgroundColor={colors.confidentialMode}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <Grid container direction="row" alignItems="center" justifyContent="center">

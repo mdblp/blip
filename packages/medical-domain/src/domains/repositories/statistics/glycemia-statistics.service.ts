@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -44,30 +44,61 @@ import type DateFilter from '../../models/time/date-filter.model'
 import type Bg from '../../models/medical/datum/bg.model'
 import { type BgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../models/medical/datum/bg.model'
 import { getWeekDaysFilter, sumValues } from './statistics.utils'
+import { DEFAULT_BG_BOUNDS } from '../../models/medical/medical-data-options.model'
+import { BgClass } from '../../models/statistics/enum/bg-class.enum'
+
+export const TIGHT_RANGE_BOUNDS = {
+  [MGDL_UNITS]: {
+    lower: 70,
+    upper: 140
+  },
+  [MMOLL_UNITS]: {
+    lower: 3.9,
+    upper: 7.8
+  }
+}
 
 export function classifyBgValue(bgBounds: BgBounds, bgValue: number, classificationType: ClassificationType): keyof CbgRangeStatistics {
   if (bgValue <= 0) {
-    throw new Error('You must provide a positive, numerical blood glucose value to categorize!')
+    throw new Error(`You must provide a positive, numerical blood glucose value to categorize! Found: ${bgValue}`)
   }
   const { veryLowThreshold, targetLowerBound, targetUpperBound, veryHighThreshold } = bgBounds
   if (classificationType === ClassificationType.FiveWay) {
     if (bgValue < veryLowThreshold) {
-      return 'veryLow'
+      return BgClass.VeryLow
     } else if (bgValue >= veryLowThreshold && bgValue < targetLowerBound) {
-      return 'low'
+      return BgClass.Low
     } else if (bgValue > targetUpperBound && bgValue <= veryHighThreshold) {
-      return 'high'
+      return BgClass.High
     } else if (bgValue > veryHighThreshold) {
-      return 'veryHigh'
+      return BgClass.VeryHigh
     }
-    return 'target'
+    return BgClass.Target
   }
   if (bgValue < targetLowerBound) {
-    return 'low'
+    return BgClass.Low
   } else if (bgValue > targetUpperBound) {
-    return 'high'
+    return BgClass.High
   }
-  return 'target'
+  return BgClass.Target
+}
+
+export function classifyBgValueWithTightRange(bgBounds: BgBounds, bgValue: number, classificationType: ClassificationType): string {
+  const classification = classifyBgValue(bgBounds, bgValue, classificationType)
+  if (classification !== BgClass.Target) {
+    return classification
+  }
+
+  const units = bgBounds.veryLowThreshold === DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow ? MGDL_UNITS : MMOLL_UNITS
+  if (isInTightRange(bgValue, units)) {
+    return 'tightRange'
+  }
+  return BgClass.Target
+}
+
+const isInTightRange = (bgValue: number, units: BgUnit): boolean => {
+  const bounds = TIGHT_RANGE_BOUNDS[units]
+  return bgValue >= bounds.lower && bgValue <= bounds.upper
 }
 
 const cgmSampleFrequency = (cgmDeviceName: string): number => (
@@ -103,13 +134,49 @@ function getTimeInRangeData(cbgData: Cbg[], bgBounds: BgBounds, numDays: number,
   )
 
   if (numDays > 1) {
+    // If the period is more than 1 day, we return the average daily time in range
+    // Which means the total duration is one day in ms (MS_IN_DAY)
     return {
       veryLow: durationInRange.veryLow / durationInRange.total * MS_IN_DAY,
       low: durationInRange.low / durationInRange.total * MS_IN_DAY,
       target: durationInRange.target / durationInRange.total * MS_IN_DAY,
       high: durationInRange.high / durationInRange.total * MS_IN_DAY,
       veryHigh: durationInRange.veryHigh / durationInRange.total * MS_IN_DAY,
-      total: durationInRange.total
+      total: MS_IN_DAY
+    }
+  }
+  return durationInRange
+}
+
+function getTimeInTightRangeData(cbgData: Cbg[], units: BgUnit, numDays: number, dateFilter: DateFilter): {
+  value: number,
+  total: number
+} {
+  const filteredCbg = CbgService.filterOnDate(cbgData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  const durationInRange = filteredCbg.reduce(
+    (result, cbg) => {
+      const isInRange = isInTightRange(cbg.value, units)
+      const duration = cgmSampleFrequency(cbg.deviceName)
+
+      if (isInRange) {
+        result.value += duration
+      }
+
+      result.total += duration
+      return result
+    },
+    {
+      value: 0,
+      total: 0
+    }
+  )
+
+  if (numDays > 1) {
+    // If the period is more than 1 day, we return the average daily time in range
+    // Which means the total duration is one day in ms (MS_IN_DAY)
+    return {
+      value: durationInRange.value / durationInRange.total * MS_IN_DAY,
+      total: MS_IN_DAY
     }
   }
   return durationInRange
@@ -263,6 +330,10 @@ function getStandardDevData(bgData: Cbg[] | Smbg[], dateFilter: DateFilter): Sta
 export interface GlycemiaStatisticsAdapter {
   getReadingsInRangeData: (smbgData: Smbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter) => CbgRangeStatistics
   getTimeInRangeData: (cbgData: Cbg[], bgBounds: BgBounds, numDays: number, dateFilter: DateFilter) => CbgRangeStatistics
+  getTimeInTightRangeData: (cbgData: Cbg[], units: BgUnit, numDays: number, dateFilter: DateFilter) => {
+    value: number,
+    total: number
+  }
   getSensorUsage: (cbgData: Cbg[], dateFilter: DateFilter) => SensorUsageStatistics
   getAverageGlucoseData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => AverageGlucoseStatistics
   getCoefficientOfVariationData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => CoefficientOfVariationStatistics
@@ -273,6 +344,7 @@ export interface GlycemiaStatisticsAdapter {
 export const GlycemiaStatisticsService: GlycemiaStatisticsAdapter = {
   getReadingsInRangeData,
   getTimeInRangeData,
+  getTimeInTightRangeData,
   getSensorUsage,
   getAverageGlucoseData,
   getCoefficientOfVariationData,

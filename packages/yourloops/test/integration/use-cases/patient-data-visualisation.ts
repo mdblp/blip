@@ -58,6 +58,9 @@ import {
   checkDailyTidelineContainerTooltipsMmolL,
   checkDailyTimeInRangeStatsWidgetsMgdl,
   checkDailyTimeInRangeStatsWidgetsMmolL,
+  checkDailyViewChartsDblg1,
+  checkDailyViewChartsDblg2,
+  checkEventsSuperposition,
   checkTotalCarbsStatContent
 } from '../assert/daily-view.assert'
 import {
@@ -80,7 +83,7 @@ export const testDashboardDataVisualisationNoDataForHcp = async () => {
   await checkMonitoringAlertsCardNoData()
 }
 
-export const testDashboardDataVisualisationForPatient = async (patientDashboardLayoutParams: PatientDashboardLayoutParams): Promise<void> => {
+export const testDashboardDataVisualisationForPatientOrPrivateTeam = async (patientDashboardLayoutParams: PatientDashboardLayoutParams): Promise<void> => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
   await checkPatientStatistics()
   await checkDeviceUsageWidget()
@@ -93,12 +96,6 @@ export const testDashboardDataVisualisationSixteenDaysOldData = async () => {
 export const testDashboardDataVisualisationTwoWeeksOldData = async () => {
   await checkPatientStatisticsWithTwoWeeksOldData()
   await checkDeviceUsageWidgetWithTwoWeeksOldData()
-}
-
-export const testDashboardDataVisualisationPrivateTeam = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
-  await checkPatientDashboardLayout(patientDashboardLayoutParams)
-  await checkPatientStatistics()
-  await checkDeviceUsageWidget()
 }
 
 export const testDashboardDataVisualisationPrivateTeamNoData = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
@@ -135,9 +132,10 @@ export const testSwitchPatientCorrectDataDisplay = async () => {
 export const testDailyViewTooltipsAndValuesMgdl = async () => {
   await checkTotalCarbsStatContent()
 
-  // Check the tooltips
+  // Check the tooltips and data on the chart
   await checkDailyTidelineContainerTooltipsMgdl()
   await checkDailyStatsWidgetsTooltips()
+  await checkEventsSuperposition()
 
   // Check the time in range stats widgets
   await checkDailyTimeInRangeStatsWidgetsMgdl()
@@ -145,7 +143,15 @@ export const testDailyViewTooltipsAndValuesMgdl = async () => {
 
   await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
   await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
-  await checkTotalInsulinStatWidget('Total Delivered Insulin71.2 UEstimated total insulin requirement-- UMeal bolus60.8 U85.4%Basal & correction bolus1.3 U1.8%Manual bolus5.1 U7.2%Pen bolus4.1 U5.8%')
+  await checkTotalInsulinStatWidget('Total Delivered Insulin71.2UMeal bolus85.4 %60.8UBasal & correction bolus1.8 %1.3UManual bolus7.2 %5.1UPen bolus5.8 %4.1UEst. total insulin requirement--')
+}
+
+export const testDailyViewChartsDblg1 = () => {
+  checkDailyViewChartsDblg1()
+}
+
+export const testDailyViewChartsDblg2 = () => {
+  checkDailyViewChartsDblg2()
 }
 
 export const testDailyViewTooltipsForDblg2 = async () => {

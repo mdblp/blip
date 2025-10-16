@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,25 +29,28 @@ import React, { type FunctionComponent } from 'react'
 import styles from './simple-value.css'
 
 export interface SimpleValueProps {
-  className?: string
-  suffix: string
   value: string
+  suffix: string
+  className?: string
+  valueClassName?: string
 }
 
 export const SimpleValue: FunctionComponent<SimpleValueProps> = (props) => {
   const {
     className,
     suffix,
-    value
+    value,
+    valueClassName
   } = props
 
-  const classNames = className ? `${styles.data} ${className}` : styles.summaryData
+  const globalClassNames = className ? `${styles.data} ${className}` : styles.summaryData
+  const valueClassNames = valueClassName ? `${styles.value} ${valueClassName}` : styles.value
 
   return (
     <div className={styles.simpleValue}>
       {value &&
-        <div className={classNames}>
-          <span className={styles.value}>
+        <div className={globalClassNames}>
+          <span className={valueClassNames}>
             {value}
           </span>
           <span className={styles.suffix}>

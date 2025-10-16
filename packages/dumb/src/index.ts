@@ -25,108 +25,84 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { AlarmEventTooltip } from './components/tooltips/alarm-event-tooltip/alarm-event-tooltip'
-import { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
-import { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
-import { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
-import { CBGMeanStatMemoized as CBGMeanStat } from './components/stats/cbg-mean/cbg-mean-stat'
-import {
-  CBGPercentageBarChartMemoized as CBGPercentageBarChart
-} from './components/stats/cbg-percentage/cbg-percentage-bar-chart'
-import {
+// Models & Enums
+export { type BgPrefs } from './models/blood-glucose.model'
+export { Device } from './models/device.model'
+export { LayoutColumnType } from './models/enums/layout-column-type.enum'
+export { SafetyBasalItem } from './models/safety-basal-item.model'
+
+// Print view (PDF)
+export { PrintView } from './modules/print/print-view/print-view'
+export { SettingsPrintView } from './modules/print/settings-print-view/settings-print-view'
+
+// Stats
+export {
+  AverageDailyDoseStatMemoized as AverageDailyDoseStat
+} from './components/stats/average-daily-dose/average-daily-dose-stat'
+export { AverageGlucoseMemoized as AverageGlucose } from './components/stats/average-glucose/average-glucose-stat'
+export {
   CbgStandardDeviationMemoized as CBGStandardDeviation
 } from './components/stats/cbg-standard-deviation/cbg-standard-deviation'
-import { CBGStatType, StatFormats } from './models/stats.model'
-import { ConfidentialTooltip } from './components/tooltips/confidential-tooltip/confidential-tooltip'
-import { FoodTooltip } from './components/tooltips/food-tooltip/food-tooltip'
-import { formatBgValue } from './utils/format/format.util'
-import { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
-import { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
-import { InsulinStatisticPanelMemoized as InsulinStatisticsPanel } from './components/stats/insulin/insulin-statistics-panel'
-import { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mode-stat/loop-mode-stat'
-import { CarbsStatItemMemoized as CarbsStatItem } from './components/stats/total-carbs/total-carbs-stat'
-import { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
-import { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
-import Tooltip from './components/tooltips/common/tooltip/tooltip'
-import { AverageDailyDoseStatMemoized as AverageDailyDoseStat } from './components/stats/average-daily-dose/average-daily-dose-stat'
-import { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
-import { type BgPrefs } from './models/blood-glucose.model'
-import { RangeSelect } from './components/trends/cbg/range-select/range-select'
-import { TrendsProvider } from './provider/trends.provider'
-import { FocusedRangeLabels } from './components/trends/common/focused-range-labels/focused-range-labels'
-import { TrendsContainer } from './components/trends/common/trends-container/trends-container'
-import { SettingsPrintView } from './modules/print/settings-print-view/settings-print-view'
-import { PrintView } from './modules/print/print-view/print-view'
-import { LayoutColumnType } from './models/enums/layout-column-type.enum'
-import { buildLayoutColumns } from './modules/print/print-view/print-view.util'
-import { getPatientFullName } from './utils/patient/patient.util'
-import {
-  formatBirthdate,
-  formatLocalizedFromUTC,
-  getLongDayHourFormat,
-  formatDate,
-  TIMEZONE_UTC,
-  formatCurrentDate,
-  formatClocktimeFromMsPer24,
-  getSimpleHourFormatSpace
-} from './utils/datetime/datetime.util'
-import { renderPageNumbers } from './utils/pdf/pdf.util'
-import { WarmUpTooltip } from './components/tooltips/warm-up-tooltip/warm-up-tooltip'
-import { Device } from './models/device.model'
-import { buildDevice } from './utils/device/device.utils'
-import { SafetyBasalItem } from './models/safety-basal-item.model'
-import { isSafetyBasalAvailable, getSafetyBasalItems } from './utils/safety-basal-profile/safety-basal-profile.util'
-import { NightModeTooltip } from './components/tooltips/night-mode-tooltip/night-mode-tooltip'
-import { SimpleValue } from './components/stats/common/simple-value'
-
+export { CBGStatType, StatFormats } from './models/stats.model'
 export {
-  formatDate,
-  StatFormats,
-  renderPageNumbers,
-  AverageDailyDoseStat,
-  buildLayoutColumns,
-  type BgPrefs,
-  BloodGlucoseTooltip,
-  BolusTooltip,
-  CbgDateTraceLabel,
-  CBGMeanStat,
-  CBGPercentageBarChart,
-  CBGStandardDeviation,
-  CBGStatType,
-  ConfidentialTooltip,
-  Device,
-  buildDevice,
-  FocusedRangeLabels,
-  FoodTooltip,
-  formatCurrentDate,
+  InsulinStatisticPanelMemoized as InsulinStatisticsPanel
+} from './components/stats/insulin/insulin-statistics-panel'
+export { LoopModeStatMemoized as LoopModeStat } from './components/stats/loop-mode-stat/loop-mode-stat'
+export { SimpleStatMemoized as SimpleStat } from './components/stats/simple/simple-stat'
+export { SimpleValue } from './components/stats/common/simple-value'
+export {
+  TimeInRangeChartMemoized as TimeInRangeChart
+} from './components/stats/time-in-range/time-in-range-chart/time-in-range-chart'
+export {
+  TimeInTightRangeChart
+} from './components/stats/time-in-range/time-in-tight-range-chart/time-in-tight-range-chart'
+
+// Tooltips
+export { AlarmEventTooltip } from './components/tooltips/alarm-event-tooltip/alarm-event-tooltip'
+export { BasalTooltip } from './components/tooltips/basal-tooltip/basal-tooltip'
+export { BloodGlucoseTooltip } from './components/tooltips/blood-glucose-tooltip/blood-glucose-tooltip'
+export { BolusTooltip } from './components/tooltips/bolus-tooltip/bolus-tooltip'
+export { ConfidentialTooltip } from './components/tooltips/confidential-tooltip/confidential-tooltip'
+export {
+  EventSuperpositionPopoverMemoized as EventsSuperpositionPopover
+} from './components/tooltips/events-superposition-popover/events-superposition-popover'
+export { IobTooltip } from './components/tooltips/iob-tooltip/iob-tooltip'
+export { NightModeTooltip } from './components/tooltips/night-mode-tooltip/night-mode-tooltip'
+export { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'
+export { PhysicalTooltip } from './components/tooltips/physical-tooltip/physical-tooltip'
+export { RescueCarbsTooltip } from './components/tooltips/rescue-carbs-tooltip/rescue-carbs-tooltip'
+export { ReservoirTooltip } from './components/tooltips/reservoir-tooltip/reservoir-tooltip'
+export { StatTooltip } from './components/tooltips/stat-tooltip/stat-tooltip'
+export { TimeChangeTooltip } from './components/tooltips/time-change-tooltip/time-change-tooltip'
+export { Tooltip } from './components/tooltips/common/tooltip/tooltip'
+export { TooltipLine } from './components/tooltips/common/tooltip-line/tooltip-line'
+export { TooltipColor } from './models/enums/tooltip-color.enum'
+export { TooltipSide } from './models/enums/tooltip-side.enum'
+export { WarmUpTooltip } from './components/tooltips/warm-up-tooltip/warm-up-tooltip'
+export { ZenModeTooltip } from './components/tooltips/zen-mode-tooltip/zen-mode-tooltip'
+
+// Trends
+export { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
+export { FocusedRangeLabels } from './components/trends/common/focused-range-labels/focused-range-labels'
+export { RangeSelect } from './components/trends/cbg/range-select/range-select'
+export { TrendsContainer } from './components/trends/common/trends-container/trends-container'
+export { TrendsProvider } from './provider/trends.provider'
+
+// Utils
+export {
   formatBirthdate,
   formatClocktimeFromMsPer24,
-  getPatientFullName,
-  getSimpleHourFormatSpace,
-  AlarmEventTooltip,
-  formatBgValue,
-  LayoutColumnType,
-  LoopModeStat,
-  NightModeTooltip,
-  ParameterTooltip,
-  PhysicalTooltip,
-  PrintView,
-  RangeSelect,
-  ReservoirTooltip,
-  SettingsPrintView,
-  SimpleStat,
-  StatTooltip,
-  Tooltip,
-  InsulinStatisticsPanel,
-  CarbsStatItem,
-  TrendsContainer,
-  TrendsProvider,
+  formatCurrentDate,
+  formatDate,
   formatLocalizedFromUTC,
   getLongDayHourFormat,
-  TIMEZONE_UTC,
-  WarmUpTooltip,
-  SafetyBasalItem,
-  isSafetyBasalAvailable,
-  getSafetyBasalItems,
-  SimpleValue
-}
+  getSimpleHourFormatSpace,
+  TIMEZONE_UTC
+} from './utils/datetime/datetime.util'
+export { buildDevice, isDBLG2 } from './utils/device/device.utils'
+export { formatBgValue } from './utils/format/format.util'
+export { getDataWithoutSuperpositionEvents, getSuperpositionEvents } from './utils/events/events.util'
+export { getPatientFullName } from './utils/patient/patient.util'
+export { renderPageNumbers } from './utils/pdf/pdf.util'
+export { buildLayoutColumns } from './modules/print/print-view/print-view.util'
+export { getSafetyBasalItems, isSafetyBasalAvailable } from './utils/safety-basal-profile/safety-basal-profile.util'

@@ -40,6 +40,7 @@ import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
 import { PatientProfileViewSection } from './patient-profile-view-section.enum'
 import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
+import { ChartIcon } from '../../../components/icons/diabeloop/chart-icon'
 
 interface PatientProfileViewMenuProps {
   selectedSection: PatientProfileViewSection
@@ -82,15 +83,26 @@ export const PatientProfileViewMenu: FC<PatientProfileViewMenuProps> = (props) =
             <ListItemText className={classes.menuItemText}>{t('information')}</ListItemText>
           </MenuItem>
           <MenuItem
-            selected={selectedSection === PatientProfileViewSection.RangeAndAlerts}
-            onClick={() => selectSection(PatientProfileViewSection.RangeAndAlerts)}
+            selected={selectedSection === PatientProfileViewSection.Range}
+            onClick={() => selectSection(PatientProfileViewSection.Range)}
             sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
-            data-testid="range-and-alerts-profile-menu-button"
+            data-testid="range-profile-menu-button"
+          >
+            <ListItemIcon>
+              <ChartIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText className={classes.menuItemText}>{t('range')}</ListItemText>
+          </MenuItem>
+          <MenuItem
+            selected={selectedSection === PatientProfileViewSection.Alerts}
+            onClick={() => selectSection(PatientProfileViewSection.Alerts)}
+            sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
+            data-testid="alerts-profile-menu-button"
           >
             <ListItemIcon>
               <DesktopMacOutlinedIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText className={classes.menuItemText}>{t('range-and-alerts')}</ListItemText>
+            <ListItemText className={classes.menuItemText}>{t('alerts')}</ListItemText>
           </MenuItem>
         </MenuList>
       </CardContent>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,97 +27,95 @@
 
 import { useCallback, useMemo } from 'react'
 import { type Offset, type Position } from './tooltip'
+import { TooltipSide } from '../../../../models/enums/tooltip-side.enum'
 
 export interface TooltipHookProps {
-  borderWidth: number
   offset: Offset
   position: Position
-  side: 'top' | 'right' | 'bottom' | 'left'
-  tailWidth: number
+  side: TooltipSide
 }
 
 export interface TooltipHookReturn {
-  calculateOffset: (mainDiv: HTMLDivElement | null, tailDiv: HTMLDivElement | null) => { top: number, left: number }
-  computeTailData: () => { marginOuterValue: string, borderSide: string }
+  calculateOffset: (mainDiv: HTMLDivElement | null) => { top: number, left: number }
 }
+
+const DEFAULT_PADDING = 10
 
 const useTooltip = (props: TooltipHookProps): TooltipHookReturn => {
   const {
-    borderWidth,
     offset,
     position,
-    side,
-    tailWidth
+    side
   } = props
 
-  const calculateOffset = useCallback((mainDiv: HTMLDivElement | null, tailElement: HTMLDivElement | null) => {
-    if (mainDiv) {
-      const computedOffset = { top: 0, left: 0 }
-      const tooltipRect = mainDiv.getBoundingClientRect()
-
-      let horizontalOffset = offset.left ?? (offset.horizontal ?? 0)
-
-      if (side === 'left') {
-        horizontalOffset = -horizontalOffset
-      }
-
-      if (tailElement) {
-        const tailRect = tailElement.getBoundingClientRect()
-        const tailCenter = {
-          top: tailRect.top + (tailRect.height / 2),
-          left: tailRect.left + (tailRect.width / 2)
+  const getOffestBySide = (side: TooltipSide, width: number, height: number): { left: number, top: number } => {
+    switch (side) {
+      case TooltipSide.Top:
+        return {
+          left: -width / 2,
+          top: -height
         }
-        computedOffset.top = -tailCenter.top + tooltipRect.top + offset.top
-        computedOffset.left = -tailCenter.left + tooltipRect.left + horizontalOffset
-      } else {
-        let leftOffset
-        let topOffset
-        switch (side) {
-          case 'top':
-            leftOffset = -tooltipRect.width / 2
-            topOffset = -tooltipRect.height
-            break
-          case 'bottom':
-            leftOffset = -tooltipRect.width / 2
-            topOffset = 0
-            break
-          case 'right':
-            leftOffset = 0
-            topOffset = -tooltipRect.height / 2
-            break
-          case 'left':
-          default:
-            leftOffset = -tooltipRect.width
-            topOffset = -tooltipRect.height / 2
+      case TooltipSide.Bottom:
+        return {
+          left: -width / 2,
+          top: 0
         }
-        computedOffset.top = topOffset + offset.top
-        computedOffset.left = leftOffset + horizontalOffset
-      }
-      const top = position.top + computedOffset.top
-      const left = position.left + computedOffset.left
-      return { top, left }
+      case TooltipSide.Right:
+        return {
+          left: 0,
+          top: -height / 2
+        }
+      case TooltipSide.Left:
+      default:
+        return {
+          left: -width,
+          top: -height / 2
+        }
     }
-    return { top: 0, left: 0 }
-  }, [offset.horizontal, offset.left, offset.top, position.left, position.top, side])
+  }
 
-  const computeTailData = useCallback(() => {
-    const padding = 10
-    let marginOuterValue
-    if (side !== 'left') {
-      marginOuterValue = `calc(-100% - (4 * ${tailWidth}px - ${padding}px)`
-    } else {
-      marginOuterValue = `calc(${padding}px + ${borderWidth}px)`
+  const getHorizontalOffset = (side: TooltipSide, offset: Offset): number => {
+    const horizontalOffset = offset.left ?? (offset.horizontal ?? 0)
+    return side === TooltipSide.Left ? -horizontalOffset : horizontalOffset
+  }
+
+  const getHorizontalPadding = (side: TooltipSide): number => {
+    if (side === TooltipSide.Left) {
+      return -DEFAULT_PADDING
     }
-    const borderSide = side !== 'left' ? 'right' : 'left'
-    return { marginOuterValue, borderSide }
-  }, [side, tailWidth, borderWidth])
+    if (side === TooltipSide.Right) {
+      return DEFAULT_PADDING
+    }
+    return 0
+  }
+
+  const calculateOffset = useCallback((mainDiv: HTMLDivElement | null) => {
+    if (!mainDiv) {
+      return { top: 0, left: 0 }
+    }
+
+    const computedOffset = { top: 0, left: 0 }
+    const tooltipRect = mainDiv.getBoundingClientRect()
+
+    const horizontalOffset = getHorizontalOffset(side, offset)
+
+    const offsetBySide = getOffestBySide(side, tooltipRect.width, tooltipRect.height)
+
+    computedOffset.top = offsetBySide.top + offset.top
+    computedOffset.left = offsetBySide.left + horizontalOffset
+
+    const padding = getHorizontalPadding(side)
+
+    const top = position.top + computedOffset.top
+    const left = position.left + computedOffset.left + padding
+
+    return { top, left }
+  }, [offset, position.left, position.top, side])
 
   return useMemo(() => ({
-    calculateOffset,
-    computeTailData
+    calculateOffset
   }), [
-    calculateOffset,
-    computeTailData
+    calculateOffset
   ])
 }
 

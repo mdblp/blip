@@ -40,9 +40,9 @@
  */
 
 import _ from 'lodash'
-// using d3-time-format because time is time of data access in
+// using d3 for time formatting because time is time of data access in
 // user’s browser time, not PwD’s configured timezone
-import { utcFormat, timeFormat } from 'd3-time-format'
+import * as d3 from 'd3'
 import moment from 'moment-timezone'
 import i18next from 'i18next'
 
@@ -161,7 +161,7 @@ export function formatClocktimeFromMsPer24(milliseconds, format = getHourMinuteF
  * @return {String} formatted current date, e.g., 'Jul 4, 2017';
  */
 export function formatCurrentDate() {
-  return timeFormat(t('%b %-d, %Y'))(new Date())
+  return d3.timeFormat(t('%b %-d, %Y'))(new Date())
 }
 
 /**
@@ -173,7 +173,7 @@ export function formatCurrentDate() {
 export function formatDiagnosisDate(patient) {
   const diagnosis = _.get(patient, 'profile.patient.diagnosisDate', '')
   if (diagnosis) {
-    return utcFormat('%b %-d, %Y')(Date.parse(diagnosis))
+    return d3.utcFormat('%b %-d, %Y')(Date.parse(diagnosis))
   }
   return ''
 }

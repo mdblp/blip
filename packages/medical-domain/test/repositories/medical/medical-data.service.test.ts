@@ -414,6 +414,21 @@ const testData = {
       ]
     }
   ],
+  iob: [
+    {
+      "id":"iob_cef62a2ed0794_2020-01-04_0",
+      "isoWeekday":"friday",
+      "type":"iob",
+      "source": "Diabeloop",
+      "timezone":"Europe/Paris",
+      "guessedTimezone":false,
+      "normalTime":"2023-10-30T10:00:00.000Z",
+      "epoch":1698688800000,
+      "displayOffset":-300,
+      "units":"U",
+      "value":49
+    }
+  ],
   messages: [],
   meals: [
     {
@@ -1453,6 +1468,7 @@ describe('MedicalDataService', () => {
       start: new Date().valueOf(),
       end: new Date().valueOf()
     }
+
     beforeAll(() => {
       DatumService.normalize = datumNormalizeMock
       BasalService.deduplicate = basalDeduplicateMock
@@ -1460,9 +1476,11 @@ describe('MedicalDataService', () => {
       WizardService.deduplicate = wizardDeduplicateMock
       PhysicalActivityService.deduplicate = physicalActivityDeduplicateMock
     })
+
     afterEach(() => {
       jest.clearAllMocks()
     })
+
     it('should add data', () => {
       medicalData.add(testData)
 
@@ -1487,7 +1505,7 @@ describe('MedicalDataService', () => {
         }
       )
       testMedicalData(medicalData, expectedCount as Record<keyof MedicalData, number>)
-      expect(medicalData.timezoneList.length).toBe(6)
+      expect(medicalData.timezoneList.length).toBe(8)
       expect(medicalData.timezoneList[0]).toStrictEqual({ time: 0, timezone: 'Europe/Paris' })
       // Endpoints checks
       testEndPoints(medicalData)

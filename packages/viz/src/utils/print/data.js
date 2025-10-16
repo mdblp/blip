@@ -17,7 +17,7 @@
 
 import _ from 'lodash'
 import moment from 'moment-timezone'
-import { extent } from 'd3-array'
+import * as d3 from 'd3'
 
 import { getBasalSequences, getGroupDurations } from '../../utils/basal'
 import { isAutomatedBasalDevice } from '../../utils/device'
@@ -40,7 +40,7 @@ function processBgRange(dataByDate) {
     ),
     []
   )
-  return extent(bgs, (d) => (d.value))
+  return d3.extent(bgs, (d) => (d.value))
 }
 
 function processBolusRange(dataByDate) {
@@ -51,7 +51,7 @@ function processBolusRange(dataByDate) {
     ),
     []
   )
-  return extent(boluses, (d) => {
+  return d3.extent(boluses, (d) => {
     const bolus = d.bolus ? d.bolus : d
     return bolus.normal
   })
@@ -65,7 +65,7 @@ function processBasalRange(dataByDate) {
     ),
     []
   )
-  const rawBasalRange = extent(
+  const rawBasalRange = d3.extent(
     basals,
     (d) => (_.max([_.get(d, 'suppressed.rate', 0), d.rate]))
   )

@@ -1,6 +1,7 @@
 /*
  * == BSD2 LICENSE ==
  * Copyright (c) 2014, Tidepool Project
+ * Copyright (c) 2022, Diabeloop
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the associated License, which is identical to the BSD 2-Clause
@@ -18,13 +19,14 @@
 import i18next from 'i18next'
 import _ from 'lodash'
 import { EventEmitter } from 'events'
+import * as d3 from 'd3'
 
 import { MGDL_UNITS } from 'medical-domain'
 
 import Pool from '../../js/pool'
 import oneDay from '../../js/oneday'
 import fill from '../../js/plot/util/fill'
-import { createYAxisBasal, createYAxisBG, createYAxisBolus } from '../../js/plot/util/scales'
+import { createYAxisBasal, createYAxisBG, createYAxisBolus, createYAxisIob } from '../../js/plot/util/scales'
 import axesDailyx from '../../js/plot/util/axes/dailyx'
 import plotZenModeEvent from '../../js/plot/zenModeEvent'
 import plotPhysicalActivity from '../../js/plot/physicalActivity'
@@ -42,12 +44,14 @@ import plotBasal from '../../js/plot/basal'
 import plotMessage from '../../js/plot/message'
 import plotTimeChange from '../../js/plot/timechange'
 import plotNightMode from '../../js/plot/nightModeEvent'
+import plotEventSuperposition from '../../js/plot/eventSuperposition'
+import { getDataWithoutSuperpositionEvents, getSuperpositionEvents, isDBLG2 } from 'dumb'
+import plotIob from '../../js/plot/iob'
 
 /**
  * @typedef {import('../../js/tidelinedata').default } MedicalDataService
  * @typedef {import('../../js/pool').default } Pool
  */
-
 
 /**
  * Create a 'One Day' chart object that is a wrapper around Tideline components
@@ -57,7 +61,6 @@ import plotNightMode from '../../js/plot/nightModeEvent'
  * @returns {function}
  */
 function chartDailyFactory(parentElement, tidelineData, options = {}) {
-  const d3 = window.d3
   const t = i18next.t.bind(i18next)
 
   const defaults = {
@@ -78,6 +81,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   const width = Math.max(640, parentElement.offsetWidth)
   const height = Math.max(480, parentElement.offsetHeight)
   const emitter = new EventEmitter()
+  // set up bgClasses for current observed patient data
+  // this assignment allows us to set the Y axis value for BG depending on patient data (profile)
+  tidelineData.opts.bgClasses = options.bgClasses
+
   const chart = oneDay(emitter, options)
 
   // ***
@@ -86,6 +93,11 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   chart.id(parentElement.id).width(width).height(height)
   d3.select(parentElement).call(chart)
+
+  const pumpSettings = tidelineData?.medicalData?.pumpSettings
+  const hasPumpSettings = pumpSettings?.length > 0
+  const isDblg2User = hasPumpSettings ? isDBLG2(pumpSettings[0].payload.device.name) : false
+
   // ***
   // Setup Pools
   // ***
@@ -109,6 +121,24 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     .heightRatio(0.5)
     .gutterWeight(0.0)
 
+  // Events data pool
+  /** @type {Pool} */
+  const poolEvents = new Pool(chart)
+  chart.addPool(poolEvents)
+  const poolEventsId = 'poolEvents'
+  poolEvents
+    .id('poolEvents', chart.poolGroup)
+    .dataTestId('events-section', poolEventsId)
+    .labels([{
+      spans: [{
+        text: t('Events'),
+        className: 'label-main'
+      }],
+      baseline: options.labelBaseline
+    }])
+    .heightRatio(isDblg2User ? 0.5 : 0.4)
+    .gutterWeight(1.0)
+
   // blood glucose data pool
   /** @type {Pool} */
   const poolBG = new Pool(chart)
@@ -129,24 +159,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     }])
     .legends([{ name: 'bg', baseline: options.labelBaseline }])
     .heightRatio(2.15)
-    .gutterWeight(1.0)
-
-  // Events data pool
-  /** @type {Pool} */
-  const poolEvents = new Pool(chart)
-  chart.addPool(poolEvents)
-  const poolEventsId = 'poolEvents'
-  poolEvents
-    .id('poolEvents', chart.poolGroup)
-    .dataTestId('events-section', poolEventsId)
-    .labels([{
-      spans: [{
-        text: t('Events'),
-        className: 'label-main'
-      }],
-      baseline: options.labelBaseline
-    }])
-    .heightRatio(0.5)
     .gutterWeight(1.0)
 
   // carbs and boluses data pool
@@ -207,6 +219,29 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     .heightRatio(1.0)
     .gutterWeight(1.0)
 
+
+  let poolIob = null
+  if (isDblg2User) {
+    poolIob = new Pool(chart)
+    chart.addPool(poolIob)
+    const poolIobId = 'poolIob'
+    poolIob
+      .id(poolIobId, chart.poolGroup)
+      .dataTestId('iob-section', poolIobId)
+      .labels([{
+        spans: [{
+          text: t('active-insulin'),
+          className: 'label-main'
+        }, {
+          text: ` (${t('U')})`,
+          className: 'label-light'
+        }],
+        baseline: options.labelBaseline
+      }])
+      .heightRatio(1.5)
+      .gutterWeight(1.5)
+  }
+
   chart.arrangePools()
   chart.setTooltip()
 
@@ -218,24 +253,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   chart.tooltips.addGroup(poolMessages, {
     type: 'message',
     shape: 'generic'
-  })
-  chart.tooltips.addGroup(poolBG, {
-    type: 'cbg',
-    classes: ['d3-bg-low', 'd3-bg-target', 'd3-bg-high']
-  })
-  chart.tooltips.addGroup(poolBG, {
-    type: 'smbg'
-  })
-  chart.tooltips.addGroup(poolBolus, {
-    type: 'wizard',
-    shape: 'generic'
-  })
-  chart.tooltips.addGroup(poolBolus, {
-    type: 'bolus',
-    shape: 'generic'
-  })
-  chart.tooltips.addGroup(poolBasal, {
-    type: 'basal'
   })
 
   // ***
@@ -276,7 +293,9 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   }))
 
   poolEvents.addPlotType({ type: 'zenMode' }, plotZenModeEvent(poolEvents, {
-    tidelineData
+    tidelineData,
+    onZenModeHover: options.onZenModeHover,
+    onZenModeOut: options.onTooltipOut
   }))
 
   poolEvents.addPlotType({ type: 'nightMode' }, plotNightMode(poolEvents, {
@@ -291,27 +310,39 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     tidelineData
   }))
 
+  const eventSuperpositionItems = getSuperpositionEvents(tidelineData)
+  const alarmEvents = getDataWithoutSuperpositionEvents(tidelineData.medicalData.alarmEvents, eventSuperpositionItems)
+  const parameterChanges = getDataWithoutSuperpositionEvents(tidelineData.medicalData.deviceParametersChanges, eventSuperpositionItems)
+  const reservoirChanges = getDataWithoutSuperpositionEvents(tidelineData.medicalData.reservoirChanges, eventSuperpositionItems)
+  const warmUps = getDataWithoutSuperpositionEvents(tidelineData.medicalData.warmUps, eventSuperpositionItems)
+
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotReservoirChange(poolEvents, {
+    reservoirChanges,
     onReservoirHover: options.onReservoirHover,
     onReservoirOut: options.onTooltipOut
   }))
 
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotDeviceParameterChange(poolEvents, {
-    tidelineData,
+    parameterChanges,
     onParameterHover: options.onParameterHover,
     onParameterOut: options.onTooltipOut
   }))
 
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotWarmUp(poolEvents, {
-    tidelineData,
+    warmUps,
     onWarmUpHover: options.onWarmUpHover,
     onWarmUpOut: options.onTooltipOut
   }))
 
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotAlarmEvent(poolEvents, {
-    tidelineData,
+    alarmEvents,
     onAlarmEventHover: options.onAlarmEventHover,
     onAlarmEventOut: options.onTooltipOut
+  }))
+
+  poolEvents.addPlotType({ type: 'deviceEvent' }, plotEventSuperposition(poolEvents, {
+    onEventSuperpositionClick: options.onEventSuperpositionClick,
+    eventSuperpositionItems
   }))
 
   // Add confidential mode to Events pool: Must be the last in the pool to mask stuff below
@@ -391,7 +422,9 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   // add basal data to basal pool
   poolBasal.addPlotType({ type: 'basal' }, plotBasal(poolBasal, {
-    defaultSource: tidelineData.opts.defaultSource
+    defaultSource: tidelineData.opts.defaultSource,
+    onBasalHover: options.onBasalHover,
+    onBasalOut: options.onTooltipOut
   }))
 
   // Add confidential mode to Basal pool: Must be the last in the pool to mask stuff below
@@ -400,6 +433,31 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     onConfidentialHover: options.onConfidentialHover,
     onConfidentialOut: options.onTooltipOut
   }))
+
+  if (isDblg2User) {
+    // IOB pool
+    // setup axis & main y scale
+    poolIob?.axisScaleFn(createYAxisIob)
+
+    // add background fill rectangles to IOB pool
+    poolIob?.addPlotType({ type: 'fill' }, fill(poolIob, {
+      isDaily: true
+    }))
+
+    // add IOB curve to IOB pool
+    poolIob?.addPlotType({ type: 'iob' }, plotIob(poolIob, {
+      tidelineData,
+      onIobHover: options.onIobHover,
+      onIobOut: options.onTooltipOut
+    }))
+
+    // Add confidential mode to IOB pool: Must be the last in the pool to mask stuff below
+    poolIob?.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolIob, {
+      tidelineData,
+      onConfidentialHover: options.onConfidentialHover,
+      onConfidentialOut: options.onTooltipOut
+    }))
+  }
 
   // messages pool
   // add background fill rectangles to messages pool
@@ -417,7 +475,9 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   // add timechange images to messages pool
   poolMessages.addPlotType({ type: 'deviceEvent' }, plotTimeChange(poolMessages, {
-    size: 30
+    size: 30,
+    onTimeChangeHover: options.onTimeChangeHover,
+    onTimeChangeOut: options.onTooltipOut
   }))
 
   return chart

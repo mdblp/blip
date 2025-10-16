@@ -16,6 +16,7 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 
 import utils from './util/utils'
 import { PumpManufacturer } from 'medical-domain'
@@ -41,7 +42,6 @@ const getReservoirChangeIcon = (pumpManufacturer) => {
 }
 
 function plotReservoirChange(pool, opts) {
-  const d3 = window.d3
   const height = pool.height() - DEFAULT_IMAGE_MARGIN
   const width = 40
 
@@ -52,10 +52,8 @@ function plotReservoirChange(pool, opts) {
   function reservoir(selection) {
     opts.xScale = pool.xScale().copy()
 
-    selection.each(function(currentData) {
-      const filteredData = _.filter(currentData, {
-        subType: 'reservoirChange'
-      })
+    selection.each(function() {
+      const filteredData = opts.reservoirChanges
 
       if (filteredData.length < 1) {
         // Remove previous data
@@ -70,20 +68,16 @@ function plotReservoirChange(pool, opts) {
 
       const reservoirGroup = allReservoirs.enter()
         .append('g')
-        .attr({
-          'class': 'd3-reservoir-group',
-          'id': (d) => `reservoir_group_${d.id}`,
-          'data-testid': (d) => `reservoir_group_${d.id}`
-        })
+        .classed('d3-reservoir-group', true)
+        .attr('id', (d) => `reservoir_group_${d.id}`)
+        .attr('data-testid', (d) => `reservoir_group_${d.id}`)
       reservoirGroup
         .append('image')
-        .attr({
-          'x': (d) => xPos(d) - (width / 2) ,
-          'y': pool.height() / 2 - opts.size / 2,
-          width,
-          height,
-          'xlink:href': (reservoirChange) => getReservoirChangeIcon(reservoirChange.pump.manufacturer)
-        })
+        .attr('x', (d) => xPos(d) - (width / 2))
+        .attr('y', pool.height() / 2 - opts.size / 2)
+        .attr('width', width)
+        .attr('height', height)
+        .attr('xlink:href', (reservoirChange) => getReservoirChangeIcon(reservoirChange.pump.manufacturer))
 
       allReservoirs.exit().remove()
 
