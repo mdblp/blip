@@ -96,7 +96,7 @@ export const checkPatientUserAccountLayout = () => {
 
   expect(screen.getByText('Preferences')).toBeVisible()
   expect(screen.getByLabelText('Units')).toHaveTextContent('mg/dL')
-  expect(within(screen.getByTestId('profile-units-selector')).getByRole('combobox')).toHaveAttribute('aria-disabled', 'true')
+  expect(within(screen.getByTestId('user-account-units-selector')).getByRole('combobox')).toHaveAttribute('aria-disabled', 'true')
   expect(screen.getByLabelText('Language')).toHaveTextContent('Français')
 
   expect(screen.getByRole('button', { name: 'Cancel' })).toBeEnabled()
@@ -107,7 +107,7 @@ export const checkCaregiverInfoUpdate = async () => {
   fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: 'English' }))
 
-  fireEvent.mouseDown(within(screen.getByTestId('profile-units-selector')).getByRole('combobox'))
+  fireEvent.mouseDown(within(screen.getByTestId('user-account-units-selector')).getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: Unit.MilligramPerDeciliter }))
 
   const firstNameInput = screen.getByLabelText('First name')
@@ -138,7 +138,7 @@ export const checkHcpInfoUpdate = async () => {
   fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: 'English' }))
 
-  fireEvent.mouseDown(within(screen.getByTestId('profile-units-selector')).getByRole('combobox'))
+  fireEvent.mouseDown(within(screen.getByTestId('user-account-units-selector')).getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: Unit.MilligramPerDeciliter }))
 
   fireEvent.mouseDown(within(screen.getByTestId('dropdown-profession-selector')).getByRole('combobox'))

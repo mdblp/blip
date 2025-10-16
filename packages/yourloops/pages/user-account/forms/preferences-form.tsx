@@ -66,17 +66,16 @@ export const PreferencesForm: FunctionComponent = () => {
             disabled={user.isUserPatient()}
             labelId={unitsLabelId}
             label={unitsLabel}
-            id="profile-units-selector"
-            data-testid="profile-units-selector"
+            data-testid="user-account-units-selector"
             value={userAccountForm.units}
             onChange={event => {
               updateUserAccountForm(UserAccountFormKey.units, event.target.value as BgUnit)
             }}
           >
-            <MenuItem id="profile-units-mmoll" value={Unit.MmolPerLiter}>
+            <MenuItem data-testid="user-account-units-mmoll" value={Unit.MmolPerLiter}>
               {Unit.MmolPerLiter}
             </MenuItem>
-            <MenuItem id="profile-units-mgdl" value={Unit.MilligramPerDeciliter}>
+            <MenuItem data-testid="user-account-units-mgdl" value={Unit.MilligramPerDeciliter}>
               {Unit.MilligramPerDeciliter}
             </MenuItem>
           </Select>
@@ -86,8 +85,7 @@ export const PreferencesForm: FunctionComponent = () => {
           <Select
             labelId={languageLabelId}
             label={languageLabel}
-            id="profile-locale-selector"
-            data-testid="profile-local-selector"
+            data-testid="user-account-locale-selector"
             value={userAccountForm.lang}
             onChange={event => {
               updateUserAccountForm(UserAccountFormKey.lang, event.target.value as LanguageCodes)
@@ -105,7 +103,7 @@ export const PreferencesForm: FunctionComponent = () => {
       {user.isUserHcp() &&
         <Box marginTop={1}>
           <ConsentFeedback
-            id="profile"
+            id="user-account"
             userRole={user.role}
             checked={userAccountForm.feedbackAccepted}
             onChange={() => {

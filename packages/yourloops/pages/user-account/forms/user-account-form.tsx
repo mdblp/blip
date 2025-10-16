@@ -55,7 +55,7 @@ export const UserAccountForm: FunctionComponent = () => {
         </LinkRedirect>
         <LoadingButton
           loading={saving}
-          id="profile-button-save"
+          data-testid="user-account-save-button"
           variant="contained"
           disabled={!canSave}
           color="primary"

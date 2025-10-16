@@ -61,8 +61,7 @@ export const PersonalInfoForm: FunctionComponent = () => {
 
       <Box className={classes.inputContainer}>
         <TextField
-          id="profile-textfield-firstname"
-          data-testid="profile-first-name"
+          data-testid="user-account-first-name"
           label={t('first-name')}
           variant="outlined"
           value={userAccountForm.firstName}
@@ -74,8 +73,7 @@ export const PersonalInfoForm: FunctionComponent = () => {
           className={classes.formInput}
         />
         <TextField
-          id="profile-textfield-lastname"
-          data-testid="profile-last-name"
+          data-testid="user-account-last-name"
           label={t('last-name')}
           variant="outlined"
           value={userAccountForm.lastName}

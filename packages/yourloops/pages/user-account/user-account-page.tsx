@@ -51,7 +51,7 @@ export const UserAccountPage: FunctionComponent = () => {
     <Container maxWidth="lg">
       <Box width="100%" marginY={6}>
         <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
-          <CardHeader title={t('user-account')} />
+          <CardHeader title={t('user-account')} data-testid="user-account-title" />
 
           <CardContent>
             <UserAccountPageContextProvider>
