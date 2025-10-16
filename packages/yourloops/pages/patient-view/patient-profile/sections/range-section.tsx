@@ -50,6 +50,7 @@ import { useAuth } from '../../../../lib/auth'
 import { convertIfNeeded } from '../../../../components/patient-data/patient-data.utils'
 import { DiabeticProfile } from '../../../../lib/patient/models/patient-diabete-profile'
 import { AdaptAlertsDialog } from '../dialog/adapt-alerts-dialog'
+import { RangeVisualizationChart } from '../charts/range-visualization-chart'
 
 interface RangeSectionProps {
   patient: Patient
@@ -313,20 +314,13 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
             {/* Range Configuration */}
             <Grid container spacing={3}>
-              {/* Left side - Visual representation */}
               <Grid item xs={12} md={6}>
-                <Box
-                  sx={{
-                    position: 'relative',
-                    height: 300,
-                    border: '1px solid #e0e0e0',
-                    borderRadius: 1,
-                    overflow: 'hidden'
-                  }}
+                <Box data-testid="range-configuration-viz" display="flex" flexDirection="column" gap={1}
                 >
-                  {/* Range visualization would go here */}
-                  <Typography variant="body2" color="text.secondary" p={2}>
-                  </Typography>
+                  <RangeVisualizationChart
+                    bgBounds={selectedDiabeticProfile.bloodGlucosePreference.bgBounds}
+                    bgUnits={displayedUnit}
+                  />
                 </Box>
               </Grid>
 
