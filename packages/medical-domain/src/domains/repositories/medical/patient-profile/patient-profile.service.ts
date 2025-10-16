@@ -92,73 +92,16 @@ function getDT1DT2RangeByUnit(unit: BgUnit): BgClasses {
   }
 }
 
-// Returns the default Alerts for a given diabetic profile type and BG unit
-// If no profile is found, returns the common one (DT1/DT2)
-export function getDefaultAlertsByDiabeticType(type: string, unit: BgUnit): MonitoringAlertsParameters {
-  switch (type) {
-    case DiabeticType.DT1Pregnancy:
-      return getDT1PregnancyAlertsByUnit(unit)
-    case DiabeticType.DT1DT2:
-    default:
-      // if no profile is found, return the by default the common one (DT1/DT2)
-      return getDT1DT2AlertsByUnit(unit)
-  }
-}
-
-function getDT1PregnancyAlertsByUnit(unit: BgUnit): MonitoringAlertsParameters {
-  switch (unit) {
-    case MGDL_UNITS: {
-      return {
-        bgUnit: unit,
-        lowBg: 63,
-        highBg: 140,
-        outOfRangeThreshold: 50,
-        veryLowBg: 54,
-        hypoThreshold: 5,
-        nonDataTxThreshold: 50,
-        reportingPeriod: DEFAULT_REPORTING_PERIOD,
-      }
-    }
-    case MMOLL_UNITS: {
-      return {
-        bgUnit: unit,
-        lowBg: 3.5,
-        highBg: 7.8,
-        outOfRangeThreshold: 50,
-        veryLowBg: 3,
-        hypoThreshold: 5,
-        nonDataTxThreshold: 50,
-        reportingPeriod: DEFAULT_REPORTING_PERIOD,
-      }
-    }
-  }
-}
-
-function getDT1DT2AlertsByUnit(unit: BgUnit): MonitoringAlertsParameters {
-  switch (unit) {
-    case MGDL_UNITS: {
-      return {
-        bgUnit: unit,
-        lowBg: 70,
-        highBg: 180,
-        outOfRangeThreshold: 50,
-        veryLowBg: 54,
-        hypoThreshold: 5,
-        nonDataTxThreshold: 50,
-        reportingPeriod: DEFAULT_REPORTING_PERIOD,
-      }
-    }
-    case MMOLL_UNITS: {
-      return {
-        bgUnit: unit,
-        lowBg: 3.9,
-        highBg: 10,
-        outOfRangeThreshold: 50,
-        veryLowBg: 3,
-        hypoThreshold: 5,
-        nonDataTxThreshold: 50,
-        reportingPeriod: DEFAULT_REPORTING_PERIOD,
-      }
-    }
+// Returns the Alerts for the given blood glucose limits and BG unit
+export function createMonitoringAlertsParameters(veryLow: number, low: number, high: number, unit: BgUnit): MonitoringAlertsParameters {
+  return {
+    bgUnit: unit,
+    lowBg: low,
+    highBg: high,
+    outOfRangeThreshold: 50, // the threshold is in %
+    veryLowBg: veryLow,
+    hypoThreshold: 5,
+    nonDataTxThreshold: 50,
+    reportingPeriod: DEFAULT_REPORTING_PERIOD,
   }
 }

@@ -138,6 +138,6 @@ export {
 } from './domains/repositories/statistics/glycemia-statistics.service'
 export { applyOffset, MS_IN_DAY } from './domains/repositories/time/time.service'
 export * as TimeService from './domains/repositories/time/time.service'
-export { getDefaultRangeByDiabeticType, getDefaultAlertsByDiabeticType } from './domains/repositories/medical/patient-profile/patient-profile.service'
+export { getDefaultRangeByDiabeticType, createMonitoringAlertsParameters } from './domains/repositories/medical/patient-profile/patient-profile.service'
 
 export default MedicalDataService

@@ -44,7 +44,7 @@ import { Patient } from '../../../../lib/patient/models/patient.model'
 import { errorTextFromException } from '../../../../lib/utils'
 import { logError } from '../../../../utils/error.util'
 import { useAlert } from '../../../../components/utils/snackbar'
-import { DiabeticType, getDefaultRangeByDiabeticType, Unit, getDefaultAlertsByDiabeticType } from 'medical-domain'
+import { DiabeticType, getDefaultRangeByDiabeticType, Unit, createMonitoringAlertsParameters } from 'medical-domain'
 import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useAuth } from '../../../../lib/auth'
 import { convertIfNeeded } from '../../../../components/patient-data/patient-data.utils'
@@ -102,6 +102,8 @@ const MIN_RANGE_VALUE_MGDL= 40
 const MAX_RANGE_VALUE_MGDL= 400
 const MIN_RANGE_VALUE_MMOL= 2.2
 const MAX_RANGE_VALUE_MMOL= 22.2
+const INPUT_STEP_MGDL = 1
+const INPUT_STEP_MMOLL = 0.1
 
 export const RangeSection: FC<RangeSectionProps> = (props) => {
   const { patient } = props
@@ -245,7 +247,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
   }
 
   const adaptAlerts = async (): Promise<void> => {
-    patient.monitoringAlertsParameters = getDefaultAlertsByDiabeticType(selectedDiabeticProfile.type, displayedUnit)
+    patient.monitoringAlertsParameters = createMonitoringAlertsParameters(selectedDiabeticProfile.bloodGlucosePreference.bgClasses.veryLow, selectedDiabeticProfile.bloodGlucosePreference.bgClasses.low, selectedDiabeticProfile.bloodGlucosePreference.bgClasses.target, displayedUnit)
     try {
       await updatePatientMonitoringAlertsParameters(patient)
       alert.success(t('patient-update-success'))
@@ -257,6 +259,8 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
       setShowDialog(false)
     }
   }
+
+  const inputStep = displayedUnit === Unit.MilligramPerDeciliter ? INPUT_STEP_MGDL : INPUT_STEP_MMOLL
 
   return (
     <Container data-testid="range-container">
@@ -349,7 +353,9 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                         },
                       },
                     }}
-                    InputProps={{ endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
+                    InputProps={{
+                      inputProps: { step: inputStep },
+                      endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
                   />
 
                   <TextField
@@ -383,7 +389,9 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                         },
                       },
                     }}
-                    InputProps={{ endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
+                    InputProps={{
+                      inputProps: { step: inputStep },
+                      endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
                   />
 
                   <TextField
@@ -417,7 +425,9 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                         },
                       },
                     }}
-                    InputProps={{ endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
+                    InputProps={{
+                      inputProps: { step: inputStep },
+                      endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
                   />
 
                   <TextField
@@ -451,7 +461,9 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                         },
                       },
                     }}
-                    InputProps={{ endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
+                    InputProps={{
+                      inputProps: { step: inputStep },
+                      endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
                   />
                 </Box>
               </Grid>
@@ -471,13 +483,11 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
               >
                 {t('button-save')}
               </LoadingButton>
-              { showDialog &&
-                <AdaptAlertsDialog
-                  open={showDialog}
-                  onClose={keepCurrentAlerts}
-                  onConfirm={adaptAlerts}
-                />
-              }
+              <AdaptAlertsDialog
+                open={showDialog}
+                onClose={keepCurrentAlerts}
+                onConfirm={adaptAlerts}
+              />
             </Box>
           </section>
         </CardContent>
