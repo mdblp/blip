@@ -131,10 +131,10 @@ export const testSaveButtonForRanges = async () : Promise<void>  => {
   // check the api call
   const expectedMonitoringAlertsParameters = {
     bgUnit: Unit.MilligramPerDeciliter,
-    lowBg: 70,
-    highBg: 180,
+    lowBg: 80,
+    highBg: 150,
     outOfRangeThreshold: 50,
-    veryLowBg: 54,
+    veryLowBg: 50,
     hypoThreshold: 5,
     nonDataTxThreshold: 50,
     reportingPeriod: 55
