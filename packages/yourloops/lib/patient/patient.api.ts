@@ -31,7 +31,7 @@ import { UserRole } from '../auth/models/enums/user-role.enum'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
 import { type Patient, type PatientMetrics } from './models/patient.model'
-import { type MonitoringAlertsParameters } from '../team/models/monitoring-alerts-parameters.model'
+import { type MonitoringAlertsParameters } from 'medical-domain'
 import { DiabeticProfilePayload } from './models/patient-diabete-profile'
 import { type DiabeticProfile } from './models/patient-diabete-profile'
 

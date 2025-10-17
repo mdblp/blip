@@ -58,7 +58,7 @@ import { type Profile } from '../../../lib/auth/models/profile.model'
 import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/monitoring-alert/monitoring-alert.default'
 import { type ITeam } from '../../../lib/team/models/i-team.model'
 import { Unit } from 'medical-domain'
-import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
+import { type MonitoringAlertsParameters } from 'medical-domain'
 import { PRIVATE_TEAM_ID, PRIVATE_TEAM_NAME } from '../../../lib/team/team.util'
 
 const {

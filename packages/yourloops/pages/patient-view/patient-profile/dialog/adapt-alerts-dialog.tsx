@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,34 +25,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PatientProfile } from './patient-profile.model'
-import { type PatientSettings } from './patient-settings.model'
-import { type MonitoringAlerts } from './monitoring-alerts.model'
-import { type UserInviteStatus } from '../../team/models/enums/user-invite-status.enum'
-import { type MonitoringAlertsParameters } from 'medical-domain'
-import { type PatientInvite } from './patient-invite.model'
-import { type GlycemiaIndicators } from './glycemia-indicators.model'
-import { type MedicalData } from '../../data/models/medical-data.model'
-import { DiabeticProfile } from './patient-diabete-profile'
+import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
+import ConfirmDialog from '../../../../components/dialogs/confirm-dialog'
 
-
-export interface Patient extends Partial<PatientMetrics> {
-  readonly userid: string
-  profile: PatientProfile
-  settings: PatientSettings
-  diabeticProfile?: DiabeticProfile
-  monitoringAlertsParameters?: MonitoringAlertsParameters
-  invitationStatus?: UserInviteStatus
-  invite?: PatientInvite
-  isUsingTeamAlertParameters?: boolean
-  hasSentUnreadMessages: boolean
-  flagged?: boolean
+interface AdaptAlertsDialogProps {
+  open: boolean
+  onConfirm: () => void
+  onClose: () => void
 }
 
-export interface PatientMetrics {
-  readonly userid: string
-  monitoringAlerts?: MonitoringAlerts
-  glycemiaIndicators: GlycemiaIndicators
-  /** Patient medical data. undefined means not fetched, null if the fetch failed */
-  medicalData?: MedicalData | null
+export const AdaptAlertsDialog: FC<AdaptAlertsDialogProps> = ({ open, onClose, onConfirm }) => {
+  const { t } = useTranslation('yourloops')
+  return (
+    <ConfirmDialog
+      open={open}
+      title={t('adapt-alerts-title')}
+      label={t('adapt-alerts-message')}
+      onClose={onClose}
+      onConfirm={onConfirm}
+      onCloseLabel={t('adapt-alerts-close')}
+      onConfirmLabel={t('adapt-alerts-confirm')}
+      confirmColor="primary"
+    />
+  )
 }

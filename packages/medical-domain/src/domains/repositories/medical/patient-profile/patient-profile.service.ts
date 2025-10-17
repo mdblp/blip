@@ -29,6 +29,45 @@
 import { DiabeticType } from '../../../models/medical/patient-profile/diabetic-type.enum'
 import { BgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../../models/medical/datum/bg.model'
 import { BG_CLAMP_THRESHOLD, BgClasses } from '../../../models/medical/medical-data-options.model'
+import type { MonitoringAlertsParameters } from '../../../models/monitoring-alerts/monitoring-alerts-parameters.model'
+
+const DEFAULT_REPORTING_PERIOD = 55
+
+// Returns the default BG range for a given diabetic profile type and BG unit
+// If no profile is found, returns the common one (DT1/DT2)
+export function getDefaultRangeByDiabeticType(type: string, unit: BgUnit): BgClasses {
+  switch (type) {
+    case DiabeticType.DT1Pregnancy:
+      return getDT1PregnancyRangeByUnit(unit)
+    case DiabeticType.DT1DT2:
+    default:
+      // if no profile is found, return the by default the common one (DT1/DT2)
+      return getDT1DT2RangeByUnit(unit)
+  }
+}
+
+function getDT1PregnancyRangeByUnit(unit: BgUnit): BgClasses {
+  switch (unit) {
+    case MGDL_UNITS: {
+      return {
+        veryHigh:BG_CLAMP_THRESHOLD[MGDL_UNITS],
+        high: 250,
+        target: 140,
+        low: 63,
+        veryLow: 54,
+      }
+    }
+    case MMOLL_UNITS: {
+      return {
+        veryHigh: BG_CLAMP_THRESHOLD[MMOLL_UNITS],
+        high: 13.9,
+        target: 7.8,
+        low: 3.5,
+        veryLow: 3
+      }
+    }
+  }
+}
 
 function getDT1DT2RangeByUnit(unit: BgUnit): BgClasses {
   switch (unit) {
@@ -53,38 +92,16 @@ function getDT1DT2RangeByUnit(unit: BgUnit): BgClasses {
   }
 }
 
-function getDT1PregnancyRangeByUnit(unit: BgUnit): BgClasses {
-  switch (unit) {
-    case MGDL_UNITS: {
-      return {
-        veryHigh:BG_CLAMP_THRESHOLD[MGDL_UNITS],
-        high: 250,
-        target: 140,
-        low: 63,
-        veryLow: 54,
-      }
-    }
-    case MMOLL_UNITS: {
-      return {
-        veryHigh:BG_CLAMP_THRESHOLD[MGDL_UNITS],
-        high: 13.9,
-        target: 7.8,
-        low: 3.5,
-        veryLow: 3
-      }
-    }
-  }
-}
-
-// Returns the default BG range for a given diabetic profile type and BG unit
-// If no profile is found, returns the common one (DT1/DT2)
-export function getDefaultRangeByDiabeticType(type: string, unit: BgUnit): BgClasses {
-  switch (type) {
-    case DiabeticType.DT1Pregnancy:
-      return getDT1PregnancyRangeByUnit(unit)
-    case DiabeticType.DT1DT2:
-    default:
-      // if no profile is found, return the by default the common one (DT1/DT2)
-      return getDT1DT2RangeByUnit(unit)
+// Returns the Alerts for the given blood glucose limits and BG unit
+export function createMonitoringAlertsParameters(veryLow: number, low: number, high: number, unit: BgUnit): MonitoringAlertsParameters {
+  return {
+    bgUnit: unit,
+    lowBg: low,
+    highBg: high,
+    outOfRangeThreshold: 50, // the threshold is in %
+    veryLowBg: veryLow,
+    hypoThreshold: 5,
+    nonDataTxThreshold: 50,
+    reportingPeriod: DEFAULT_REPORTING_PERIOD,
   }
 }

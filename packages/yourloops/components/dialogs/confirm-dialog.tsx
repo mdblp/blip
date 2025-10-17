@@ -43,12 +43,17 @@ export interface ConfirmDialogProps {
   inProgress?: boolean
   onClose: () => void
   onConfirm: () => void
+  onCloseLabel?: string
+  onConfirmLabel?: string
   confirmColor?: 'primary' | 'error'
 }
 
 export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
-  const { open, title, label, inProgress, onClose, onConfirm, confirmColor } = props
+  const { open, title, label, inProgress, onClose, onConfirm, confirmColor, onCloseLabel, onConfirmLabel } = props
   const { t } = useTranslation('yourloops')
+
+  const closeLabel = onCloseLabel ?? t('button-cancel')
+  const confirmLabel = onConfirmLabel ?? t('button-confirm')
 
   return (
     <Dialog
@@ -74,7 +79,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
           variant="outlined"
           onClick={onClose}
         >
-          {t('button-cancel')}
+          {closeLabel}
         </Button>
         <LoadingButton
           loading={inProgress}
@@ -85,7 +90,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
           disabled={inProgress}
           onClick={onConfirm}
         >
-          {t('button-confirm')}
+          {confirmLabel}
         </LoadingButton>
       </DialogActions>
     </Dialog>

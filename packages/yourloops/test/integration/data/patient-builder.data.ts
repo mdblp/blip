@@ -29,7 +29,6 @@ import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-al
 import { type MedicalData } from '../../../lib/data/models/medical-data.model'
 import { type Patient, type PatientMetrics } from '../../../lib/patient/models/patient.model'
 import { type GlycemiaIndicators } from '../../../lib/patient/models/glycemia-indicators.model'
-import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
 import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
@@ -39,6 +38,7 @@ import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
 import { DiabeticProfile } from '../../../lib/patient/models/patient-diabete-profile'
 import { defaultBgClasses, DiabeticType, Unit } from 'medical-domain'
+import { type MonitoringAlertsParameters } from 'medical-domain'
 
 const defaultGlycemiaIndicators: GlycemiaIndicators = {
   timeInRange: 0,
