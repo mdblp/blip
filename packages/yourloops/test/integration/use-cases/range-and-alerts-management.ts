@@ -26,7 +26,7 @@
  */
 
 import { checkAlertsViewContent, checkRangeViewContent } from '../assert/range-and-alerts-view.assert'
-import { screen } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import { within } from '@testing-library/dom'
 import { getTranslation } from '../../utils/i18n'
 import userEvent from '@testing-library/user-event'
@@ -139,9 +139,11 @@ export const testSaveButtonForRanges = async () : Promise<void>  => {
     nonDataTxThreshold: 50,
     reportingPeriod: 55
   }
+  const closingDialogDelayInMS = 400
   expect(PatientApi.updatePatientAlerts).toHaveBeenCalledWith(myThirdTeamId, patient1Id, expectedMonitoringAlertsParameters)
-
-  expect(screen.getByText('Patient update succeeded')).toBeVisible()
+  await waitFor(() => {
+    expect(screen.getByText(getTranslation('patient-update-with-alert-success'))).toBeVisible()
+  }, { timeout: closingDialogDelayInMS })
 }
 
 export const testRangeFormValidation = async () : Promise<void>  => {
