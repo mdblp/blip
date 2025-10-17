@@ -29,6 +29,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3702 Update Time In Loop Mode stat style
 - YLP-3707 User account page new design
 - YLP-3710 Move the "EVENTS" section above the glycemia curve
+- YLP-3730 Delete "Avg. Daily" in dashboard and trends view to lighten all the frame
 
 ### Engineering
 - YLP-3672 D3 version update

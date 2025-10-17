@@ -274,7 +274,6 @@ const ignoredTransKeyForYourLoops = [
   'added',
   'deleted',
   'updated',
-  'avg-time-loop',
   'time-loop',
   'avg-time-loop-tooltip',
   'time-loop-tooltip',
@@ -287,13 +286,11 @@ const ignoredTransKeyForYourLoops = [
   'total-insulin',
   'total-insulin-days-tooltip',
   'total-insulin-how-calculate-tooltip',
-  'average-daily-total-insulin',
   'ratio-dose',
   'weight',
   'account-created-info-2-caregiver',
   'account-created-info-2-hcp',
   'signup-unknown-step',
-  'avg-daily-declared-carbs',
   'meal-carbs',
   'tooltip-avg-daily-week-carbs',
   'tooltip-declared-derived-carbs',
@@ -307,7 +304,8 @@ const ignoredTransKeyForYourLoops = [
   'sensor-warmup-session-end',
   'signup-information-message-2',
   'device',
-  'safety-basal-profile-values-not-available'
+  'safety-basal-profile-values-not-available',
+  'data-period-text-trends'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   // Documentation!

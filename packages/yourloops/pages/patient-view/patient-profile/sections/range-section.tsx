@@ -44,11 +44,12 @@ import { Patient } from '../../../../lib/patient/models/patient.model'
 import { errorTextFromException } from '../../../../lib/utils'
 import { logError } from '../../../../utils/error.util'
 import { useAlert } from '../../../../components/utils/snackbar'
-import { DiabeticType, getDefaultRangeByDiabeticType, Unit } from 'medical-domain'
+import { DiabeticType, getDefaultRangeByDiabeticType, Unit, createMonitoringAlertsParameters } from 'medical-domain'
 import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useAuth } from '../../../../lib/auth'
 import { convertIfNeeded } from '../../../../components/patient-data/patient-data.utils'
 import { DiabeticProfile } from '../../../../lib/patient/models/patient-diabete-profile'
+import { AdaptAlertsDialog } from '../dialog/adapt-alerts-dialog'
 
 interface RangeSectionProps {
   patient: Patient
@@ -101,6 +102,9 @@ const MIN_RANGE_VALUE_MGDL= 40
 const MAX_RANGE_VALUE_MGDL= 400
 const MIN_RANGE_VALUE_MMOL= 2.2
 const MAX_RANGE_VALUE_MMOL= 22.2
+const INPUT_STEP_MGDL = 1
+const INPUT_STEP_MMOLL = 0.1
+const CLOSING_DIALOG_DELAY_MS = 300
 
 export const RangeSection: FC<RangeSectionProps> = (props) => {
   const { patient } = props
@@ -121,7 +125,8 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
   const [errors, setErrors] = useState<ValidationErrors>(DEFAULT_ERROR_STATE)
-  const { updatePatientDiabeticProfile } = usePatientsContext()
+  const [showDialog, setShowDialog] = useState(false)
+  const { updatePatientDiabeticProfile, updatePatientMonitoringAlertsParameters } = usePatientsContext()
 
   const patientDiabeticProfiles = [
     { type: DiabeticType.DT1DT2, label: t('range-profile-type-1-and-2') },
@@ -147,7 +152,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
       return {
         type: type,
         bloodGlucosePreference: {
-          bgUnits: patient.diabeticProfile.bloodGlucosePreference.bgUnits,
+          bgUnits: displayedUnit,
           bgClasses: ranges,
           bgBounds: {
             veryHighThreshold : ranges.high,
@@ -221,8 +226,12 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
     setSaveInProgress(true)
     try {
       await updatePatientDiabeticProfile(patient.userid, selectedDiabeticProfile)
+      if (patient.diabeticProfile.type !== selectedPatientType) {
+        setShowDialog(true)
+      } else {
+        alert.success(t('patient-update-success'))
+      }
       patient.diabeticProfile = selectedDiabeticProfile
-      alert.success(t('patient-update-success'))
       setSaveInProgress(false)
     } catch (error) {
       const errorMessage = errorTextFromException(error)
@@ -232,6 +241,37 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
       setSaveInProgress(false)
     }
   }
+
+  const keepCurrentAlerts = (): void => {
+    setShowDialog(false)
+    showAlertSuccess(t('patient-update-success'))
+
+  }
+
+  const adaptAlerts = async (): Promise<void> => {
+    const bgClasses = selectedDiabeticProfile.bloodGlucosePreference.bgClasses
+    patient.monitoringAlertsParameters = createMonitoringAlertsParameters(bgClasses.veryLow, bgClasses.low, bgClasses.target, displayedUnit)
+    try {
+      await updatePatientMonitoringAlertsParameters(patient)
+      showAlertSuccess(t('patient-update-with-alert-success'))
+    } catch (error) {
+      const errorMessage = errorTextFromException(error)
+      logError(errorMessage, 'update-patient-monitoring-alerts-parameters')
+      alert.error(t('patient-update-error'))
+    } finally {
+      setShowDialog(false)
+    }
+  }
+
+  const showAlertSuccess= (message: string): void => {
+    // set a small delay to avoid the snackbar to be displayed under the dialog closing animation
+    // which creates a visual bug for the user
+    setTimeout(() => {
+      alert.success(message)
+    }, CLOSING_DIALOG_DELAY_MS)
+  }
+
+  const inputStep = displayedUnit === Unit.MilligramPerDeciliter ? INPUT_STEP_MGDL : INPUT_STEP_MMOLL
 
   return (
     <Container data-testid="range-container">
@@ -324,7 +364,9 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                         },
                       },
                     }}
-                    InputProps={{ endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
+                    InputProps={{
+                      inputProps: { step: inputStep },
+                      endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
                   />
 
                   <TextField
@@ -358,7 +400,9 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                         },
                       },
                     }}
-                    InputProps={{ endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
+                    InputProps={{
+                      inputProps: { step: inputStep },
+                      endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
                   />
 
                   <TextField
@@ -392,7 +436,9 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                         },
                       },
                     }}
-                    InputProps={{ endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
+                    InputProps={{
+                      inputProps: { step: inputStep },
+                      endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
                   />
 
                   <TextField
@@ -426,7 +472,9 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                         },
                       },
                     }}
-                    InputProps={{ endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
+                    InputProps={{
+                      inputProps: { step: inputStep },
+                      endAdornment: <InputAdornment position="end">{displayedUnit}</InputAdornment> }}
                   />
                 </Box>
               </Grid>
@@ -446,6 +494,11 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
               >
                 {t('button-save')}
               </LoadingButton>
+              <AdaptAlertsDialog
+                open={showDialog}
+                onClose={keepCurrentAlerts}
+                onConfirm={adaptAlerts}
+              />
             </Box>
           </section>
         </CardContent>

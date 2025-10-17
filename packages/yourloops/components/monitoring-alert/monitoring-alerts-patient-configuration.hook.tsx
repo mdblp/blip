@@ -34,7 +34,7 @@ import {
 } from './monitoring-alert-content-configuration.util'
 import { Unit } from 'medical-domain'
 import { useTeam } from '../../lib/team/team.hook'
-import { type MonitoringAlertsParameters } from '../../lib/team/models/monitoring-alerts-parameters.model'
+import { type MonitoringAlertsParameters } from 'medical-domain'
 import {
   DEFAULT_BG_UNIT,
   MonitoringValuesDisplayed,

@@ -68,7 +68,7 @@ export const useTimeInRangeChartHook = (props: TimeInRangeChartHookProps): TimeI
   const getDefaultTitle = useCallback((): string => {
     switch (type) {
       case CBGStatType.TimeInRange:
-        return days > 1 ? t('Avg. Daily Time In Range') : t('Time In Range')
+        return t('Time In Range')
       case CBGStatType.ReadingsInRange:
       default:
         return days > 1 ? t('Avg. Daily Readings In Range') : t('Readings In Range')

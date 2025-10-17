@@ -29,7 +29,7 @@ import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-al
 import { type MedicalData } from '../../../lib/data/models/medical-data.model'
 import { type Patient, type PatientMetrics } from '../../../lib/patient/models/patient.model'
 import { type GlycemiaIndicators } from '../../../lib/patient/models/glycemia-indicators.model'
-import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
+import { type MonitoringAlertsParameters } from 'medical-domain'
 import { type PatientAccount } from '../../../lib/patient/models/patient-profile.model'
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'

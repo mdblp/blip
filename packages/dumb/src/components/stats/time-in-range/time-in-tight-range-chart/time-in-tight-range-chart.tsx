@@ -46,7 +46,7 @@ export const TimeInTightRangeChart: FC<TimeInTightRangeChartProps> = (props) => 
   const { t } = useTranslation('main')
 
   const isDailyView = days <= 1
-  const title = isDailyView ? t('time-in-tight-range') : t('avg-daily-time-in-tight-range')
+  const title = t('time-in-tight-range')
   const annotations = isDailyView ?
     [t('time-in-tight-range-cgm-one-day'), t('compute-oneday-time-in-tight-range')] :
     [t('time-in-tight-range-cgm-daily-average'), t('compute-ndays-time-in-tight-range', { cbgLabel: t('CGM') })]

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,22 +25,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type TeamMember } from './team-member.model'
-import { type TeamType } from './enums/team-type.enum'
-import { type PostalAddress } from './postal-address.model'
-import { type MonitoringAlertsParameters } from 'medical-domain'
+import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
+import ConfirmDialog from '../../../../components/dialogs/confirm-dialog'
 
-export const REGEX_TEAM_CODE = /^[0-9]{9}$/
-export const REGEX_TEAM_CODE_DISPLAY = /^[0-9]{3} - [0-9]{3} - [0-9]{3}$/
+interface AdaptAlertsDialogProps {
+  open: boolean
+  onConfirm: () => void
+  onClose: () => void
+}
 
-export interface Team {
-  readonly id: string
-  name: string
-  readonly code: string
-  readonly type: TeamType
-  phone?: string
-  email?: string
-  address?: PostalAddress
-  members: TeamMember[] // Members are only set when the current logged user has the HCP role
-  monitoringAlertsParameters?: MonitoringAlertsParameters
+export const AdaptAlertsDialog: FC<AdaptAlertsDialogProps> = ({ open, onClose, onConfirm }) => {
+  const { t } = useTranslation('yourloops')
+  return (
+    <ConfirmDialog
+      open={open}
+      title={t('adapt-alerts-title')}
+      label={t('adapt-alerts-message')}
+      onClose={onClose}
+      onConfirm={onConfirm}
+      onCloseLabel={t('adapt-alerts-close')}
+      onConfirmLabel={t('adapt-alerts-confirm')}
+      confirmColor="primary"
+    />
+  )
 }

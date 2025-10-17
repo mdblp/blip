@@ -34,7 +34,7 @@ import {
 } from './monitoring-alert-content-configuration.util'
 import { type Thresholds } from '../../lib/patient/models/monitoring-alerts.model'
 import { Unit } from 'medical-domain'
-import { type MonitoringAlertsParameters } from '../../lib/team/models/monitoring-alerts-parameters.model'
+import { type MonitoringAlertsParameters } from 'medical-domain'
 
 interface MonitoringAlertsContentConfigurationHookProps {
   monitoringAlertsParameters: MonitoringAlertsParameters
