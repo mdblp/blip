@@ -125,6 +125,10 @@ export const RangeVisualizationChart: FC<RangeVisualizationChartProps> = (props)
 
     thresholds.forEach(threshold => {
       const yPos = yScale(threshold.value)
+      const chipPadding = { horizontal: 10, vertical: 4 }
+      const textWidth = threshold.textLabel.length * 6.5
+      const chipWidth = textWidth + chipPadding.horizontal * 2
+      const chipHeight = 20
 
       // Horizontal line
       g.append('line')
@@ -135,27 +139,62 @@ export const RangeVisualizationChart: FC<RangeVisualizationChartProps> = (props)
         .attr('stroke', threshold.color)
         .attr('stroke-width', 2)
 
-      // Left label
+      // Draw chip background
+      g.append('rect')
+        .attr('x', -chipWidth)
+        .attr('y', yPos - chipHeight / 2)
+        .attr('width', chipWidth)
+        .attr('height', chipHeight)
+        .attr('rx', 10)
+        .attr('ry', 10)
+        .attr('fill', threshold.color)
+        .attr('fill-opacity', 0.3)
+        .attr('stroke', threshold.color)
+        .attr('stroke-width', 1)
+
+      // Draw text
       g.append('text')
-        .attr('x', -10)
+        .attr('x', -chipWidth / 2)
         .attr('y', yPos)
         .attr('dy', '0.35em')
-        .attr('text-anchor', 'end')
-        .attr('fill', '#666')
-        .attr('font-size', '12px')
-        .text(threshold.textLabel)
+        .attr('text-anchor', 'middle')
+        //.attr('fill', threshold.color)
+        .attr('font-size', '11px')
+        //.attr('font-weight', '500')
+        .text(threshold.textLabel) // todo add translations
     })
 
-    // "In range" text label
+    // "In range" chip label
     const inRangeMidpoint = (yScale(bgBounds.targetUpperBound) + yScale(bgBounds.targetLowerBound)) / 2
+    const chipPadding = { horizontal: 10, vertical: 4 }
+    const inRangeText = t('in-range')
+    const textWidth = inRangeText.length * 6.5
+    const chipWidth = textWidth + chipPadding.horizontal * 2
+    const chipHeight = 20
+
+    // Draw chip background for "In range"
+    g.append('rect')
+      .attr('x', -chipWidth)
+      .attr('y', inRangeMidpoint - chipHeight / 2)
+      .attr('width', chipWidth)
+      .attr('height', chipHeight)
+      .attr('rx', 10)
+      .attr('ry', 10)
+      .attr('fill', 'var(--bg-target)')
+      .attr('fill-opacity', 0.3)
+      .attr('stroke', 'var(--bg-target)')
+      .attr('stroke-width', 1)
+
+    // Draw text for "In range"
     g.append('text')
-      .attr('x', -10)
+      .attr('x', -chipWidth / 2)
       .attr('y', inRangeMidpoint)
       .attr('dy', '0.35em')
-      .attr('text-anchor', 'end')
-      .attr('fill', '#666')
-      .attr('font-size', '12px')
-      .text('In range')
+      .attr('text-anchor', 'middle')
+      //.attr('fill', 'var(--bg-target)')
+      .attr('font-size', '11px')
+      //.attr('font-weight', '500')
+      .text(inRangeText)
 
     // Generate blue curve data with FIXED values
     const curveData = []
