@@ -20,7 +20,7 @@
   "main": "app/index.js",
   "types": "app/index.d.ts",
   "dependencies": {
-    "classnames": "^2.3.1",
+    "classnames": "^2.5.1",
     "prop-types": "^15.7.2"
   }
 }
