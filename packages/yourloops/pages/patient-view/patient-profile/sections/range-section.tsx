@@ -104,6 +104,7 @@ const MIN_RANGE_VALUE_MMOL= 2.2
 const MAX_RANGE_VALUE_MMOL= 22.2
 const INPUT_STEP_MGDL = 1
 const INPUT_STEP_MMOLL = 0.1
+const CLOSING_DIALOG_DELAY_MS = 300
 
 export const RangeSection: FC<RangeSectionProps> = (props) => {
   const { patient } = props
@@ -243,7 +244,12 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
   const keepCurrentAlerts = (): void => {
     setShowDialog(false)
-    alert.success(t('patient-update-success'))
+    // set a small delay to avoid the snackbar to be displayed under the dialog closing animation
+    // which creates a visual bug for the user
+    setTimeout(() => {
+      alert.success(t('patient-update-success'))
+    }, CLOSING_DIALOG_DELAY_MS)
+
   }
 
   const adaptAlerts = async (): Promise<void> => {
