@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,25 +26,25 @@
  */
 
 import UserApi from '../../../lib/auth/user.api'
-import { type Profile } from '../../../lib/auth/models/profile.model'
+import { type UserAccount } from '../../../lib/auth/models/user-account.model'
 import { type Preferences } from '../../../lib/auth/models/preferences.model'
 import { type Settings } from '../../../lib/auth/models/settings.model'
 
 interface MockUserDataFetchParams {
   firstName?: string
   lastName?: string
-  profile?: Profile
+  account?: UserAccount
   preferences?: Preferences
   settings?: Settings
 }
 
 export const mockUserApi = () => {
-  const updateProfileMock = jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(undefined)
+  const updateProfileMock = jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValue(undefined)
   const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(undefined)
   const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(undefined)
   const updateAuth0UserMetadataMock = jest.spyOn(UserApi, 'completeUserSignup').mockResolvedValue(undefined)
 
-  const mockUserDataFetch = ({ firstName, lastName, profile, settings, preferences }: MockUserDataFetchParams) => {
+  const mockUserDataFetch = ({ firstName, lastName, account, settings, preferences }: MockUserDataFetchParams) => {
     jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({
       profile: {
         firstName,
@@ -54,8 +54,8 @@ export const mockUserApi = () => {
         termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
         privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
         trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true },
-        ...profile
-      } as Profile,
+        ...account
+      } as UserAccount,
       settings: settings ?? {},
       preferences: preferences ?? {}
     })

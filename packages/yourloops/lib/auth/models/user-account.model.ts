@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,14 +27,14 @@
 
 import { type HcpProfession } from './enums/hcp-profession.enum'
 import { type Consent } from './consent.model'
-import { type ProfilePatientFields } from './profile-patient-fields.model'
+import { type PatientUserAccountFields } from './patient-user-account-fields.model'
 
-export interface Profile {
+export interface UserAccount {
   email: string
   fullName: string
   firstName?: string
   lastName?: string
-  patient?: ProfilePatientFields
+  patient?: PatientUserAccountFields
   termsOfUse?: Consent
   trainingAck?: Consent
   privacyPolicy?: Consent

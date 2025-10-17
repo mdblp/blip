@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import { type TeamMemberRole } from '../../team/models/enums/team-member-role.enum'
-import { type Profile } from '../../auth/models/profile.model'
+import { type UserAccount } from '../../auth/models/user-account.model'
 import { type INotificationType } from './enums/i-notification-type.enum'
 
 export interface INotification {
@@ -53,6 +53,6 @@ export interface INotification {
   /** Some information on the user who created this notification */
   creator: {
     userid: string
-    profile?: Profile
+    profile?: UserAccount
   }
 }

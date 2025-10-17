@@ -94,7 +94,7 @@ export function useMedicalReportEditDialog(props: MedicalReportEditDialogHookPro
           trainingSubject
         })
       } else {
-        const authorProfile = user.profile
+        const authorAccount = user.account
         const teamName = getTeam(teamId).name
         payload = await MedicalFilesApi.createMedicalReport({
           teamId,
@@ -102,8 +102,8 @@ export function useMedicalReportEditDialog(props: MedicalReportEditDialogHookPro
           diagnosis,
           progressionProposal,
           trainingSubject,
-          authorFirstName: authorProfile.firstName,
-          authorLastName: authorProfile.lastName,
+          authorFirstName: authorAccount.firstName,
+          authorLastName: authorAccount.lastName,
           teamName
         })
       }

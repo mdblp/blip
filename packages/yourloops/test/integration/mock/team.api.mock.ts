@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -54,7 +54,7 @@ import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enu
 
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 import { type Team } from '../../../lib/team'
-import { type Profile } from '../../../lib/auth/models/profile.model'
+import { type UserAccount } from '../../../lib/auth/models/user-account.model'
 import { DEFAULT_THRESHOLDS_IN_MGDL } from '../../../components/monitoring-alert/monitoring-alert.default'
 import { type ITeam } from '../../../lib/team/models/i-team.model'
 import { Unit } from 'medical-domain'
@@ -120,7 +120,7 @@ export const buildTeamOne = (): Team => {
         lastName: 'HCP 0',
         privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
         termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-      } as Profile,
+      } as UserAccount,
       status: UserInviteStatus.Accepted,
       email: loggedInUserEmail
     }, {
@@ -134,7 +134,7 @@ export const buildTeamOne = (): Team => {
         lastName: userTimLastName,
         privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
         termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-      } as Profile,
+      } as UserAccount,
       status: UserInviteStatus.Accepted,
       email: userTimEmail
     }],
@@ -162,7 +162,7 @@ export const buildTeamTwo = (): Team => {
         lastName: 'HCP 0',
         privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
         termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-      } as Profile,
+      } as UserAccount,
       status: UserInviteStatus.Accepted,
       email: loggedInUserEmail
     }],
@@ -191,7 +191,7 @@ export const buildTeamThree = (): Team => {
           lastName: loggedInUserLastName,
           privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
           termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-        } as Profile,
+        } as UserAccount,
         status: UserInviteStatus.Accepted,
         email: loggedInUserEmail
       },
@@ -206,7 +206,7 @@ export const buildTeamThree = (): Team => {
           lastName: userTimLastName,
           privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
           termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-        } as Profile,
+        } as UserAccount,
         status: UserInviteStatus.Accepted,
         email: userTimEmail
       }, {
@@ -220,7 +220,7 @@ export const buildTeamThree = (): Team => {
           lastName: userHugoLastName,
           privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
           termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-        } as Profile,
+        } as UserAccount,
         status: UserInviteStatus.Pending,
         email: userHugoEmail,
         invitationId: 'fakeInvitationId'
@@ -235,7 +235,7 @@ export const buildTeamThree = (): Team => {
           lastName: userYdrisLastName,
           privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
           termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-        } as Profile,
+        } as UserAccount,
         status: UserInviteStatus.Pending,
         email: userYdrisEmail
       }],
@@ -263,7 +263,7 @@ export const buildFiltersTeam = (): Team => {
         hcpProfession: HcpProfession.other,
         privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
         termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-      } as Profile,
+      } as UserAccount,
       status: UserInviteStatus.Accepted,
       email: 'filters@user.com'
     }, {
@@ -277,7 +277,7 @@ export const buildFiltersTeam = (): Team => {
         lastName: userTimLastName,
         privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
         termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
-      } as Profile,
+      } as UserAccount,
       status: UserInviteStatus.Accepted,
       email: userTimEmail
     }],

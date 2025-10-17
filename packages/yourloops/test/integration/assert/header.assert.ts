@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -67,7 +67,7 @@ const checkUserMenu = async (header: BoundFunctions<typeof queries>, userName: s
   await userEvent.click(header.getByText(userName))
 
   const userMenu = within(screen.getByTestId('user-menu'))
-  expect(userMenu.getByText('Profile settings')).toBeVisible()
+  expect(userMenu.getByText('User account')).toBeVisible()
   expect(userMenu.getByText('Customer support')).toBeVisible()
   expect(userMenu.getByText('Logout')).toBeVisible()
 

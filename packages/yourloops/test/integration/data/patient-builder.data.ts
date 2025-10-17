@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,7 @@ import { type MedicalData } from '../../../lib/data/models/medical-data.model'
 import { type Patient, type PatientMetrics } from '../../../lib/patient/models/patient.model'
 import { type GlycemiaIndicators } from '../../../lib/patient/models/glycemia-indicators.model'
 import { type MonitoringAlertsParameters } from '../../../lib/team/models/monitoring-alerts-parameters.model'
-import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'
+import { type PatientAccount } from '../../../lib/patient/models/patient-profile.model'
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
@@ -52,7 +52,7 @@ const defaultMedicalData = { range: { startDate: '', endDate: '' } }
 export const buildPatient = (params: {
   userid: string
   monitoringAlertsParameters?: MonitoringAlertsParameters
-  profile?: Partial<PatientProfile>
+  profile?: Partial<PatientAccount>
   settings?: Partial<PatientSettings>
   flagged?: boolean
   hasSentUnreadMessages?: boolean
