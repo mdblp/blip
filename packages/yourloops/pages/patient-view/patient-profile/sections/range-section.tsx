@@ -247,10 +247,11 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
   }
 
   const adaptAlerts = async (): Promise<void> => {
-    patient.monitoringAlertsParameters = createMonitoringAlertsParameters(selectedDiabeticProfile.bloodGlucosePreference.bgClasses.veryLow, selectedDiabeticProfile.bloodGlucosePreference.bgClasses.low, selectedDiabeticProfile.bloodGlucosePreference.bgClasses.target, displayedUnit)
+    const bgClasses = selectedDiabeticProfile.bloodGlucosePreference.bgClasses
+    patient.monitoringAlertsParameters = createMonitoringAlertsParameters(bgClasses.veryLow, bgClasses.low, bgClasses.target, displayedUnit)
     try {
       await updatePatientMonitoringAlertsParameters(patient)
-      alert.success(t('patient-update-success'))
+      alert.success(t('patient-update-with-alert-success'))
     } catch (error) {
       const errorMessage = errorTextFromException(error)
       logError(errorMessage, 'update-patient-monitoring-alerts-parameters')

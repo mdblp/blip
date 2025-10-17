@@ -471,6 +471,7 @@
   "patient-profile-hba1c": "Initial HbA1c {{hba1cDate}}",
   "patient-update-error": "Patient update failed",
   "patient-update-success": "Patient update succeeded",
+  "patient-update-with-alert-success": "Patient update succeeded and alerts changed",
   "pen-bolus": "Pen bolus",
   "pending": "Pending",
   "pending-invite": "Pending invite",
