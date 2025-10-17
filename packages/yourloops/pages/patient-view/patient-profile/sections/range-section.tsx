@@ -244,11 +244,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
   const keepCurrentAlerts = (): void => {
     setShowDialog(false)
-    // set a small delay to avoid the snackbar to be displayed under the dialog closing animation
-    // which creates a visual bug for the user
-    setTimeout(() => {
-      alert.success(t('patient-update-success'))
-    }, CLOSING_DIALOG_DELAY_MS)
+    showAlertSuccess(t('patient-update-success'))
 
   }
 
@@ -257,7 +253,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
     patient.monitoringAlertsParameters = createMonitoringAlertsParameters(bgClasses.veryLow, bgClasses.low, bgClasses.target, displayedUnit)
     try {
       await updatePatientMonitoringAlertsParameters(patient)
-      alert.success(t('patient-update-with-alert-success'))
+      showAlertSuccess(t('patient-update-with-alert-success'))
     } catch (error) {
       const errorMessage = errorTextFromException(error)
       logError(errorMessage, 'update-patient-monitoring-alerts-parameters')
@@ -265,6 +261,14 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
     } finally {
       setShowDialog(false)
     }
+  }
+
+  const showAlertSuccess= (message: string): void => {
+    // set a small delay to avoid the snackbar to be displayed under the dialog closing animation
+    // which creates a visual bug for the user
+    setTimeout(() => {
+      alert.success(message)
+    }, CLOSING_DIALOG_DELAY_MS)
   }
 
   const inputStep = displayedUnit === Unit.MilligramPerDeciliter ? INPUT_STEP_MGDL : INPUT_STEP_MMOLL
