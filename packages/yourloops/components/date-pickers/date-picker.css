@@ -1,0 +1,12 @@
+.calendarButton {
+  border: 1px solid var(--light-grey-border-color);
+  background-color: white;
+  color: black;
+  margin: 3px;
+}
+
+.calendarButton:disabled {
+  color: rgba(0, 0, 0, 0.26);
+  background-color: rgba(0, 0, 0, 0.12);
+  border: none;
+}
