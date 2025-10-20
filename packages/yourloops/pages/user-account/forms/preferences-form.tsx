@@ -72,10 +72,10 @@ export const PreferencesForm: FunctionComponent = () => {
               updateUserAccountForm(UserAccountFormKey.units, event.target.value as BgUnit)
             }}
           >
-            <MenuItem data-testid="user-account-units-mmoll" value={Unit.MmolPerLiter}>
+            <MenuItem id="user-account-units-mmoll" data-testid="user-account-units-mmoll" value={Unit.MmolPerLiter}>
               {Unit.MmolPerLiter}
             </MenuItem>
-            <MenuItem data-testid="user-account-units-mgdl" value={Unit.MilligramPerDeciliter}>
+            <MenuItem id="user-account-units-mgdl" data-testid="user-account-units-mgdl" value={Unit.MilligramPerDeciliter}>
               {Unit.MilligramPerDeciliter}
             </MenuItem>
           </Select>
