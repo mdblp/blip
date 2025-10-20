@@ -104,7 +104,7 @@ export const checkPatientUserAccountLayout = () => {
 }
 
 export const checkCaregiverInfoUpdate = async () => {
-  fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
+  fireEvent.mouseDown(within(screen.getByTestId('user-account-locale-selector')).getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: 'English' }))
 
   fireEvent.mouseDown(within(screen.getByTestId('user-account-units-selector')).getByRole('combobox'))
@@ -135,7 +135,7 @@ export const checkCaregiverInfoUpdate = async () => {
 }
 
 export const checkHcpInfoUpdate = async () => {
-  fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
+  fireEvent.mouseDown(within(screen.getByTestId('user-account-locale-selector')).getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: 'English' }))
 
   fireEvent.mouseDown(within(screen.getByTestId('user-account-units-selector')).getByRole('combobox'))
@@ -176,7 +176,7 @@ export const checkHcpInfoUpdate = async () => {
 }
 
 export const checkPatientInfoUpdate = async () => {
-  fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
+  fireEvent.mouseDown(within(screen.getByTestId('user-account-locale-selector')).getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: 'English' }))
 
   const firstNameInput = screen.getByLabelText('First name')

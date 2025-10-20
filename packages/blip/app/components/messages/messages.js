@@ -188,7 +188,7 @@ class Messages extends React.Component {
         const commentId = await addComment(comment)
 
         comment.id = commentId
-        comment.user = user.profile
+        comment.user = user.account
         this.setState({
           messages: messages.concat([comment])
         }, () => {
