@@ -123,6 +123,7 @@ const legend = {
     getLegendIcon(ICON_TYPE_CIRCLE, `${BG_LEGEND_COMMON_CLASSES} d3-bg-very-high`),
     getLegendIcon(ICON_TYPE_CIRCLE, `${BG_LEGEND_COMMON_CLASSES} d3-bg-high`),
     getLegendIcon(ICON_TYPE_CIRCLE, `${BG_LEGEND_COMMON_CLASSES} d3-bg-target`),
+    getLegendIcon(ICON_TYPE_CIRCLE, `${BG_LEGEND_COMMON_CLASSES} d3-bg-tight-range`),
     getLegendIcon(ICON_TYPE_CIRCLE, `${BG_LEGEND_COMMON_CLASSES} d3-bg-low`),
     getLegendIcon(ICON_TYPE_CIRCLE, `${BG_LEGEND_COMMON_CLASSES} d3-bg-very-low`),
     {
