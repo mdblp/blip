@@ -31,7 +31,7 @@ import { ScaleLinear } from 'd3'
 import rangeChartClasses from './range-visualization-chart.css'
 import { convertBG, MGDL_UNITS } from 'medical-domain'
 
-export const drawHorizontalLine  = (g: Selection<SVGElement, unknown, null, undefined>, xPos1: number, xPos2: number, yPos: number, color: string) => {
+export const drawHorizontalLine = (g: Selection<SVGElement, unknown, null, undefined>, xPos1: number, xPos2: number, yPos: number, color: string) => {
   g.append('line')
     .attr('x1', xPos1)
     .attr('x2', xPos2)
@@ -41,7 +41,7 @@ export const drawHorizontalLine  = (g: Selection<SVGElement, unknown, null, unde
     .attr('class', rangeChartClasses.horizontalLine)
 }
 
-export const drawInRangeBackgroundZone = (g: Selection<SVGElement, unknown, null, undefined>, xPos: number, yPos:number, width:number, height: number) => {
+export const drawInRangeBackgroundZone = (g: Selection<SVGElement, unknown, null, undefined>, xPos: number, yPos: number, width: number, height: number) => {
   // Draw the "In range" background zone (light blue)
   g.append('rect')
     .attr('x', xPos)
@@ -93,8 +93,8 @@ export const drawChip = (g: Selection<SVGElement, unknown, null, undefined>, yPo
 export const drawColoredDotsCurve = (g: Selection<SVGElement, unknown, null, undefined>, xScale: ScaleLinear<number, number>, yScale: ScaleLinear<number, number>, displayUnit: string, getColorForValue: (value: number) => string) => {
   // Generate data with FIXED values
   const curveData = []
-  const fixedMin = displayUnit == MGDL_UNITS ? 40 : convertBG(40, MGDL_UNITS)
-  const fixedMax = displayUnit == MGDL_UNITS ? 255 : convertBG(255, MGDL_UNITS)
+  const fixedMin = displayUnit === MGDL_UNITS ? 40 : convertBG(40, MGDL_UNITS)
+  const fixedMax = displayUnit === MGDL_UNITS ? 255 : convertBG(255, MGDL_UNITS)
   const fixedMid = (fixedMin + fixedMax) / 2
   const fixedAmplitude = (fixedMax - fixedMin) / 2
 

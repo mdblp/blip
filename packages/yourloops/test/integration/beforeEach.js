@@ -122,3 +122,16 @@ Object.defineProperty(globalThis.SVGElement.prototype, 'width', svgAttribute);
  * @description SVGElement.height.baseVal is not implemented in JSDOM yet.
  */
 Object.defineProperty(globalThis.SVGElement.prototype, 'height', svgAttribute);
+
+
+/**
+ * @see https://github.com/testing-library/react-testing-library/issues/651
+ * @description SVGElement.getBBOx is not implemented in JSDOM yet.
+ */
+Object.defineProperty(globalThis.SVGElement.prototype, 'getBBox', {
+  writable: true,
+  value: jest.fn().mockReturnValue({
+    x: 0,
+    y: 0,
+  }),
+});
