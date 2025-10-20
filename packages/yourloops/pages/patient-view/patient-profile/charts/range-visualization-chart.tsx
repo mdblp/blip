@@ -29,6 +29,12 @@ import React, { type FC, useEffect, useRef } from 'react'
 import * as d3 from 'd3'
 import { type BgBounds } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
+import {
+  drawChip,
+  drawColoredDotsCurve,
+  drawHorizontalLine,
+  drawInRangeBackgroundZone
+} from './range-visualization-plot'
 
 interface RangeVisualizationChartProps {
   bgBounds: BgBounds
@@ -51,7 +57,10 @@ export const RangeVisualizationChart: FC<RangeVisualizationChartProps> = (props)
     // Chart dimensions
     const width = 450
     const height = 360
+    // allow some margin for labels
     const margin = { top: 20, right: 0, bottom: 20, left: 70 }
+    // Calculate chart area dimensions taking margins into account
+    // make the chart area smaller to accommodate for labels
     const chartWidth = width - margin.left - margin.right
     const chartHeight = height - margin.top - margin.bottom
 
@@ -60,6 +69,7 @@ export const RangeVisualizationChart: FC<RangeVisualizationChartProps> = (props)
       .attr('width', width)
       .attr('height', height)
 
+    //
     const g = svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`)
 
@@ -91,134 +101,41 @@ export const RangeVisualizationChart: FC<RangeVisualizationChartProps> = (props)
       }
     }
 
-    // Draw the "In range" background zone (light blue)
-    g.append('rect')
-      .attr('x', 0)
-      .attr('y', yScale(bgBounds.targetUpperBound))
-      .attr('width', chartWidth)
-      .attr('height', yScale(bgBounds.targetLowerBound) - yScale(bgBounds.targetUpperBound))
-      .attr('fill', '#E3F2FD')
+    const inRangeHeight = yScale(bgBounds.targetLowerBound) - yScale(bgBounds.targetUpperBound)
+    drawInRangeBackgroundZone(g, 0, yScale(bgBounds.targetUpperBound), chartWidth, inRangeHeight)
 
     // Draw threshold lines with labels
     const thresholds = [
       {
         value: bgBounds.veryHighThreshold,
         color: 'var(--bg-very-high)',
-        textLabel: 'Hyper L2'
       },
       {
         value: bgBounds.targetUpperBound,
         color: 'var(--bg-high)',
-        textLabel: 'Hyper L1'
       },
       {
         value: bgBounds.targetLowerBound,
         color: 'var(--bg-low)',
-        textLabel: 'Hypo L1'
       },
       {
         value: bgBounds.veryLowThreshold,
         color: 'var(--bg-very-low)',
-        textLabel: 'Hypo L2'
       }
     ]
 
     thresholds.forEach(threshold => {
       const yPos = yScale(threshold.value)
-      const chipPadding = { horizontal: 10, vertical: 4 }
-      const textWidth = threshold.textLabel.length * 6.5
-      const chipWidth = textWidth + chipPadding.horizontal * 2
-      const chipHeight = 20
-
-      // Horizontal line
-      g.append('line')
-        .attr('x1', 0)
-        .attr('x2', chartWidth)
-        .attr('y1', yPos)
-        .attr('y2', yPos)
-        .attr('stroke', threshold.color)
-        .attr('stroke-width', 2)
-
-      // Draw chip background
-      g.append('rect')
-        .attr('x', -chipWidth)
-        .attr('y', yPos - chipHeight / 2)
-        .attr('width', chipWidth)
-        .attr('height', chipHeight)
-        .attr('rx', 10)
-        .attr('ry', 10)
-        .attr('fill', threshold.color)
-        .attr('fill-opacity', 0.3)
-        .attr('stroke', threshold.color)
-        .attr('stroke-width', 1)
-
-      // Draw text
-      g.append('text')
-        .attr('x', -chipWidth / 2)
-        .attr('y', yPos)
-        .attr('dy', '0.35em')
-        .attr('text-anchor', 'middle')
-        //.attr('fill', threshold.color)
-        .attr('font-size', '11px')
-        //.attr('font-weight', '500')
-        .text(threshold.textLabel) // todo add translations
+      drawHorizontalLine(g,0, chartWidth, yPos, threshold.color)
+      drawChip(g, yPos, threshold.value.toString(), threshold.color)
     })
 
-    // "In range" chip label
-    const inRangeMidpoint = (yScale(bgBounds.targetUpperBound) + yScale(bgBounds.targetLowerBound)) / 2
-    const chipPadding = { horizontal: 10, vertical: 4 }
-    const inRangeText = t('in-range')
-    const textWidth = inRangeText.length * 6.5
-    const chipWidth = textWidth + chipPadding.horizontal * 2
-    const chipHeight = 20
+    // "In range" chip
+    const yChipPos = (yScale(bgBounds.targetUpperBound) + yScale(bgBounds.targetLowerBound)) / 2
+    drawChip(g, yChipPos,t('in-range'), 'var(--bg-target)')
 
-    // Draw chip background for "In range"
-    g.append('rect')
-      .attr('x', -chipWidth)
-      .attr('y', inRangeMidpoint - chipHeight / 2)
-      .attr('width', chipWidth)
-      .attr('height', chipHeight)
-      .attr('rx', 10)
-      .attr('ry', 10)
-      .attr('fill', 'var(--bg-target)')
-      .attr('fill-opacity', 0.3)
-      .attr('stroke', 'var(--bg-target)')
-      .attr('stroke-width', 1)
+    drawColoredDotsCurve(g, xScale, yScale, getColorForValue)
 
-    // Draw text for "In range"
-    g.append('text')
-      .attr('x', -chipWidth / 2)
-      .attr('y', inRangeMidpoint)
-      .attr('dy', '0.35em')
-      .attr('text-anchor', 'middle')
-      //.attr('fill', 'var(--bg-target)')
-      .attr('font-size', '11px')
-      //.attr('font-weight', '500')
-      .text(inRangeText)
-
-    // Generate blue curve data with FIXED values
-    const curveData = []
-    const fixedMin = 40
-    const fixedMax = 255
-    const fixedMid = (fixedMin + fixedMax) / 2
-    const fixedAmplitude = (fixedMax - fixedMin) / 2
-
-    for (let i = 0; i <= 100; i++) {
-      const x = i
-      const y = fixedMid + fixedAmplitude * Math.sin((x / 100) * Math.PI * 3)
-      curveData.push({ x, y })
-    }
-
-    // Add dots on the blue curve with zone colors
-    g.selectAll('.dot-blue')
-      .data(curveData.filter((_, i) => i % 2 === 0))
-      .enter()
-      .append('circle')
-      .attr('class', 'dot-blue')
-      .attr('cx', d => xScale(d.x))
-      .attr('cy', d => yScale(d.y))
-      .attr('r', 4)
-      .attr('fill', d => getColorForValue(d.y))
 
   }, [bgBounds, bgUnits, t])
 
