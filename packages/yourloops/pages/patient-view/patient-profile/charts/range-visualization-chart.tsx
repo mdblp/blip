@@ -27,7 +27,6 @@
 
 import React, { type FC, useEffect, useRef } from 'react'
 import * as d3 from 'd3'
-import { type BgBounds } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
 import {
   drawChip,
@@ -35,14 +34,18 @@ import {
   drawHorizontalLine,
   drawInRangeBackgroundZone
 } from './range-visualization-plot'
+import type { BgBounds, BgUnit } from 'medical-domain'
 
 interface RangeVisualizationChartProps {
   bgBounds: BgBounds
-  bgUnits: string
+  displayedUnit: BgUnit
 }
 
+const Y_PADDING_RATIO = 0.05
+
 export const RangeVisualizationChart: FC<RangeVisualizationChartProps> = (props) => {
-  const { bgBounds, bgUnits } = props
+  const { bgBounds, displayedUnit } = props
+
   const { t } = useTranslation('yourloops')
   // use a ref to attach the svg to the DOM
   const svgRef = useRef<SVGSVGElement>(null)
@@ -74,8 +77,9 @@ export const RangeVisualizationChart: FC<RangeVisualizationChartProps> = (props)
       .attr('transform', `translate(${margin.left},${margin.top})`)
 
     // Y scale
-    const yMin = bgBounds.veryLowThreshold - 10
-    const yMax = bgBounds.veryHighThreshold + 10
+    const yPadding = (bgBounds.veryHighThreshold - bgBounds.veryLowThreshold) * Y_PADDING_RATIO
+    const yMin = bgBounds.veryLowThreshold - yPadding
+    const yMax = bgBounds.veryHighThreshold + yPadding
 
     const yScale = d3.scaleLinear()
       .domain([yMin, yMax])
@@ -83,8 +87,8 @@ export const RangeVisualizationChart: FC<RangeVisualizationChartProps> = (props)
 
     // X scale (for curve)
     const xScale = d3.scaleLinear()
-      .domain([0, 100])
-      .range([0, chartWidth])
+      .domain([0, 100])       // means " I want to draw something that progresses from start (0%) to finish (100%)
+      .range([0, chartWidth]) // across the full width of my chart. "
 
     // Function to get color based on glucose value
     const getColorForValue = (value: number): string => {
@@ -134,10 +138,9 @@ export const RangeVisualizationChart: FC<RangeVisualizationChartProps> = (props)
     const yChipPos = (yScale(bgBounds.targetUpperBound) + yScale(bgBounds.targetLowerBound)) / 2
     drawChip(g, yChipPos,t('in-range'), 'var(--bg-target)')
 
-    drawColoredDotsCurve(g, xScale, yScale, getColorForValue)
+    drawColoredDotsCurve(g, xScale, yScale, displayedUnit, getColorForValue)
 
-
-  }, [bgBounds, bgUnits, t])
+  }, [bgBounds, displayedUnit, t])
 
   return (
     <svg ref={svgRef} data-testid="range-visualization-chart" />

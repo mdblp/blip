@@ -319,7 +319,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                 >
                   <RangeVisualizationChart
                     bgBounds={selectedDiabeticProfile.bloodGlucosePreference.bgBounds}
-                    bgUnits={displayedUnit}
+                    displayedUnit={displayedUnit}
                   />
                 </Box>
               </Grid>
