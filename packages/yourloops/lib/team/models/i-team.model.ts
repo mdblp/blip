@@ -28,7 +28,7 @@
 import { type TeamType } from './enums/team-type.enum'
 import { type ITeamMember } from './i-team-member.model'
 import { type PostalAddress } from './postal-address.model'
-import { type MonitoringAlertsParameters } from './monitoring-alerts-parameters.model'
+import { type MonitoringAlertsParameters } from 'medical-domain'
 
 /**
  * Team interface (API view)
