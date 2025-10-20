@@ -69,7 +69,7 @@ export const checkHcpUserAccountLayout = () => {
   expect(screen.getByText('Preferences')).toBeVisible()
   expect(screen.getByLabelText('Units')).toHaveTextContent('mmol/L')
   expect(screen.getByLabelText('Language')).toHaveTextContent('Français')
-  expect(screen.getByTestId('profile-label-feedback')).toHaveTextContent('I agree to receive information and news from Diabeloop. (optional)')
+  expect(screen.getByTestId('user-account-label-feedback')).toHaveTextContent('I agree to receive information and news from Diabeloop. (optional)')
 
   expect(screen.getByRole('button', { name: 'Cancel' })).toBeEnabled()
   expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled()
