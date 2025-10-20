@@ -241,7 +241,6 @@ export const checkDailyStatsWidgetsTooltips = async () => {
   await checkStatTooltip(patientStatistics, 'Time In Range', TIME_IN_RANGE_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Avg. Glucose (CGM)', AVG_GLUCOSE_TOOLTIP)
   await checkStatTooltip(patientStatistics, getTranslation('total-insulin'), TOTAL_INSULIN_TOOLTIP)
-  await checkStatTooltip(patientStatistics, getTranslation('estimated-total-insulin'), ESTIMATED_TOTAL_INSULIN_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Time In Loop Mode', TIME_IN_LOOP_MODE_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Total of declared carbs', TOTAL_CARBS_DECLARED_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)

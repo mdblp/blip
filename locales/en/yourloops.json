@@ -284,7 +284,6 @@
   "estimated-total-insulin": "Est. total insulin requirement",
   "estimated-total-insulin-tooltip": "**Estimated total insulin requirement:** Estimation of the patient's total insulin requirements (both basal and bolus, in Units) over 24 hours. This estimation only takes into account the period in Loop Mode, so it is as close as possible to the patient's actual physiological needs.",
   "estimated-total-insulin-avg-how-calculate-tooltip": "**How we calculate this:**  All basal and bolus insulin delivery during closed-loop period (in Units) added together, normalised for 24h, and divided by the number of days in this view.",
-  "estimated-total-insulin-how-calculate-tooltip": "**How we calculate this:** All basal and bolus insulin delivery during closed-loop period (in Units) added together, and normalised for 24h",
   "event-icon": "Event icon",
   "event-trigger-threshold": "Event trigger threshold",
   "equipment-date": "Equipment date",
