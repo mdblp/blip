@@ -30,6 +30,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3710 Move the "EVENTS" section above the glycemia curve
 - YLP-3730 Delete "Avg. Daily" in dashboard and trends view to lighten all the frame
 - YLP-3742 Update glycemia chart legend to display tight range color
+- YLP-3743 Delete "Est. insulin requirements" in the daily view
 
 ### Engineering
 - YLP-3672 D3 version update

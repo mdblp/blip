@@ -97,7 +97,6 @@ const READINGS_IN_RANGE_TOOLTIP = 'Readings In Range: Number of BGM readings.Der
 const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added together, divided by the number of readings.'
 const AVG_GLUCOSE_BGM_TOOLTIP = 'Avg. Glucose (BGM): All BGM glucose values added together, divided by the number of readings.'
 const TOTAL_INSULIN_TOOLTIP = 'Total Delivered Insulin: All basal and bolus insulin delivery (in Units) added togetherHow we calculate this: (%) is the respective total of basal or bolus delivery divided by total insulin delivered for this time period.'
-const ESTIMATED_TOTAL_INSULIN_TOOLTIP = 'Estimated total insulin requirement: Estimation of the patient\'s total insulin requirements (both basal and bolus, in Units) over 24 hours. This estimation only takes into account the period in Loop Mode, so it is as close as possible to the patient\'s actual physiological needs.'
 const TIME_IN_LOOP_MODE_TOOLTIP = 'Time In Loop Mode: Time spent in automated basal delivery.How we calculate this: (%) is the duration in loop mode ON or OFF divided by the total duration of basals for this time period. (time) is the estimated time in each mode.'
 const TOTAL_CARBS_DECLARED_TOOLTIP = 'Total Carbs: All carb entries from meals or rescue carbs added together.Derived from 5 carb entries, including rescue carbs.'
 const STANDARD_DEVIATION_TOOLTIP = 'SD (Standard Deviation): How far values are from the average.'
@@ -241,7 +240,6 @@ export const checkDailyStatsWidgetsTooltips = async () => {
   await checkStatTooltip(patientStatistics, 'Time In Range', TIME_IN_RANGE_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Avg. Glucose (CGM)', AVG_GLUCOSE_TOOLTIP)
   await checkStatTooltip(patientStatistics, getTranslation('total-insulin'), TOTAL_INSULIN_TOOLTIP)
-  await checkStatTooltip(patientStatistics, getTranslation('estimated-total-insulin'), ESTIMATED_TOTAL_INSULIN_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Time In Loop Mode', TIME_IN_LOOP_MODE_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Total of declared carbs', TOTAL_CARBS_DECLARED_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)

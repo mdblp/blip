@@ -64,7 +64,7 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
   const insulinAnnotations = isDailyPage ? t('total-insulin-days-tooltip') : t('average-daily-insulin-tooltip')
   const annotations = [insulinAnnotations, t('total-insulin-how-calculate-tooltip')]
 
-  const estimatedTotalInsulinCalculationAnnotation = isDailyPage ? t('estimated-total-insulin-how-calculate-tooltip') : t('estimated-total-insulin-avg-how-calculate-tooltip')
+  const estimatedTotalInsulinCalculationAnnotation = t('estimated-total-insulin-avg-how-calculate-tooltip')
   const estimatedTotalInsulinAnnotations = [t('estimated-total-insulin-tooltip'), estimatedTotalInsulinCalculationAnnotation]
   if (data.length === 0) {
     annotations.push(t('tooltip-empty-stat'))
@@ -111,15 +111,18 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
         )
       })}
 
-      <Box sx={{ marginTop: theme.spacing(1) }}>
-        <StatLine
-          title={estimatedTotalInsulinTitle}
-          value={estimatedTotalInsulinValue}
-          units={t('insulin-unit-u')}
-          valueClasses={styles.rowValue}
-          annotations={estimatedTotalInsulinAnnotations}
-        />
-      </Box>
+      {!isDailyPage &&
+        <Box sx={{ marginTop: theme.spacing(1) }}>
+          <StatLine
+            title={estimatedTotalInsulinTitle}
+            value={estimatedTotalInsulinValue}
+            units={t('insulin-unit-u')}
+            valueClasses={styles.rowValue}
+            annotations={estimatedTotalInsulinAnnotations}
+          />
+        </Box>
+      }
+
       {isDashboardPage && <>
         <StatLine
           title={t('weight')}
