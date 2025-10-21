@@ -111,7 +111,7 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
         )
       })}
 
-      {!isDailyPage && <>
+      {!isDailyPage &&
         <Box sx={{ marginTop: theme.spacing(1) }}>
           <StatLine
             title={estimatedTotalInsulinTitle}
@@ -121,7 +121,6 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
             annotations={estimatedTotalInsulinAnnotations}
           />
         </Box>
-      </>
       }
 
       {isDashboardPage && <>
