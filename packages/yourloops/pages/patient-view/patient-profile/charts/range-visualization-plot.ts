@@ -51,7 +51,7 @@ export const drawInRangeBackgroundZone = (g: Selection<SVGElement, unknown, null
     .attr('fill', 'var(--info-color-10)')
 }
 
-export const drawChip = (g: Selection<SVGElement, unknown, null, undefined>, yPos: number, textLabel: string, color: string) => {
+export const drawChip = (g: Selection<SVGElement, unknown, null, undefined>, id: string, yPos: number, textLabel: string, color: string) => {
   // Measure actual text width using a temporary SVG text element
   const tempText = g.append('text')
     .attr('x', 0)
@@ -81,6 +81,7 @@ export const drawChip = (g: Selection<SVGElement, unknown, null, undefined>, yPo
 
   // Draw text
   g.append('text')
+    .attr('data-testid', `chip-${id}-text`)
     .attr('x', -chipWidth / 2)
     .attr('y', yPos)
     .attr('dy', '0.35em')

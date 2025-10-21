@@ -76,6 +76,22 @@ export const testRangePatientProfileDisplay = async (diabeticTypeTextKey: string
       expect(hypoInput).toBeDisabled()
       break
   }
+
+  const expectedLineCount = 4 // 4 thresholds
+  const chart = screen.getByTestId('range-visualization-chart')
+  expect(chart).toBeVisible()
+  expect(chart.querySelectorAll('line').length).toBe(expectedLineCount)
+  // Verify chart renders all threshold text labels with values
+  const textElements = chart.querySelectorAll('text')
+  const thresholdTexts = Array.from(textElements).map(el => el.textContent)
+
+  // Should contain threshold values with units (mg/dL by default)
+  expect(thresholdTexts).toEqual(expect.arrayContaining([
+    expect.stringContaining(expectedSevereHyper.toString()),
+    expect.stringContaining(expectedHyper.toString()),
+    expect.stringContaining(expectedHypo.toString()),
+    expect.stringContaining(expectedSevereHypo.toString())
+  ]))
 }
 
 export const testRangeUnitDisplay = async (expectedUnit: string): Promise<void> => {

@@ -111,18 +111,22 @@ export const RangeVisualizationChart: FC<RangeVisualizationChartProps> = (props)
     // Draw threshold lines with labels
     const thresholds = [
       {
+        id:"very-high",
         value: bgBounds.veryHighThreshold,
         color: 'var(--bg-very-high)',
       },
       {
+        id: "high",
         value: bgBounds.targetUpperBound,
         color: 'var(--bg-high)',
       },
       {
+        id: "low",
         value: bgBounds.targetLowerBound,
         color: 'var(--bg-low)',
       },
       {
+        id: "very-low",
         value: bgBounds.veryLowThreshold,
         color: 'var(--bg-very-low)',
       }
@@ -131,12 +135,12 @@ export const RangeVisualizationChart: FC<RangeVisualizationChartProps> = (props)
     thresholds.forEach(threshold => {
       const yPos = yScale(threshold.value)
       drawHorizontalLine(g, 0, chartWidth, yPos, threshold.color)
-      drawChip(g, yPos, threshold.value.toString(), threshold.color)
+      drawChip(g, threshold.id, yPos, threshold.value.toString(), threshold.color)
     })
 
     // "In range" chip
     const yChipPos = (yScale(bgBounds.targetUpperBound) + yScale(bgBounds.targetLowerBound)) / 2
-    drawChip(g, yChipPos, t('in-range'), 'var(--bg-target)')
+    drawChip(g,"in-range", yChipPos, t('in-range'), 'var(--bg-target)')
 
     drawColoredDotsCurve(g, xScale, yScale, displayedUnit, getColorForValue)
 
