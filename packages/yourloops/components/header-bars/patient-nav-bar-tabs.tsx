@@ -36,10 +36,17 @@ import Button from '@mui/material/Button'
 import GetAppIcon from '@mui/icons-material/GetApp'
 import { PatientView } from '../../enum/patient-view.enum'
 import { useAuth } from '../../lib/auth'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import TeamUtils from '../../lib/team/team.util'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { type Patient } from '../../lib/patient/models/patient.model'
+import Typography from '@mui/material/Typography'
+import { getUserName } from '../../lib/auth/user.util'
+import Chip from '@mui/material/Chip'
+import { DiabeticType } from 'medical-domain'
 
 interface PatientNavBarTabsProps {
+  currentPatient: Patient
   currentPatientView: PatientView
   onChangePatientView: (patientView: PatientView) => void
   onClickPrint: MouseEventHandler<HTMLButtonElement>
@@ -56,6 +63,7 @@ const styles = makeStyles()((theme: Theme) => {
       boxShadow: theme.shadows[3],
       backgroundColor: theme.palette.common.white,
       display: 'flex',
+      alignItems: 'center',
       justifyContent: 'space-between',
       paddingInline: theme.spacing(3)
     },
@@ -63,12 +71,48 @@ const styles = makeStyles()((theme: Theme) => {
       fontWeight: 'bold',
       fontSize: theme.typography.htmlFontSize,
       color: 'var(--text-color-primary)'
+    },
+    backIcon: {
+      cursor: 'pointer',
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(4),
+    },
+    leftSection: {
+      flex: 1,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-start'
+    },
+    centerSection: {
+      flex: 1,
+      display: 'flex',
+      justifyContent: 'center'
+    },
+    rightSection: {
+      flex: 1,
+      display: 'flex',
+      justifyContent: 'flex-end'
+    },
+    chip: {
+      textTransform: 'none',
+      borderRadius: theme.spacing(2),
+      minWidth: 'auto',
+      paddingX: theme.spacing(2),
+      paddingY: theme.spacing(0.5),
+      margin: theme.spacing(0, 0, 0, 4),
+      height: '26px'
     }
   }
 })
 
+interface ChipConfig {
+  label: string
+  color: 'primary' | 'pink' | 'darkBlue'
+}
+
 export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (props) => {
   const {
+    currentPatient,
     currentPatientView,
     onChangePatientView,
     onClickPrint
@@ -77,86 +121,134 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
   const { classes } = styles()
   const { user } = useAuth()
   const { teamId } = useParams()
+  const navigate = useNavigate()
 
   const getSelectedTab = (): PatientView => {
     return currentPatientView ?? PatientView.Dashboard
   }
 
+  const goBackHome = (): void => {
+    navigate(`../..`, { relative: 'path' })
+  }
+
+  const getChipConfig = (type: DiabeticType): ChipConfig => {
+    switch (type) {
+      case DiabeticType.DT1DT2:
+        return {
+          label: t('range-profile-type-1-and-2'),
+          color: 'primary'
+        }
+      case DiabeticType.DT1Pregnancy:
+        return {
+          label: t('range-profile-pregnancy-type-1'),
+          color: 'pink'
+        }
+      case DiabeticType.Custom:
+        return {
+          label: t('range-profile-custom'),
+          color: 'darkBlue'
+        }
+    }
+  }
+
+  const chipConfig = getChipConfig(currentPatient.diabeticProfile.type)
+
+
   return (
     <Box className={classes.tabsContainer}>
-      <Tabs value={getSelectedTab()} classes={{ root: classes.root }}>
-        <Tab
-          className={classes.tab}
-          value={PatientView.Dashboard}
-          data-testid="dashboard-tab"
-          iconPosition="start"
-          label={t('dashboard')}
-          onClick={() => {
-            onChangePatientView(PatientView.Dashboard)
-          }}
-          classes={{
-            root: classes.root
-          }}
+      <Box className={classes.leftSection}>
+        <ArrowBackIcon
+          data-testid="subnav-arrow-back"
+          className={classes.backIcon}
+          onClick={goBackHome}
         />
-        <Tab
-          className={classes.tab}
-          value={PatientView.Daily}
-          data-testid="daily-tab"
-          iconPosition="start"
-          label={t('daily')}
-          onClick={() => {
-            onChangePatientView(PatientView.Daily)
-          }}
-          classes={{
-            root: classes.root
-          }}
+        <Typography>
+          {getUserName(currentPatient.profile.firstName, currentPatient.profile.lastName, currentPatient.profile.fullName)}
+        </Typography>
+        <Chip
+          label={chipConfig.label}
+          variant={'filled'}
+          color={chipConfig.color}
+          className={classes.chip}
         />
-        <Tab
-          className={classes.tab}
-          value={PatientView.Trends}
-          data-testid="trends-tab"
-          iconPosition="start"
-          label={t('trends')}
-          onClick={() => {
-            onChangePatientView(PatientView.Trends)
-          }}
-          classes={{
-            root: classes.root
-          }}
-        />
-        {user.isUserHcp() && !TeamUtils.isPrivate(teamId) &&
+      </Box>
+      <Box className={classes.centerSection}>
+        <Tabs value={getSelectedTab()} classes={{ root: classes.root }}>
           <Tab
             className={classes.tab}
-            value={PatientView.PatientProfile}
-            data-testid="patient-profile-tab"
+            value={PatientView.Dashboard}
+            data-testid="dashboard-tab"
             iconPosition="start"
-            label={t('patient-profile')}
+            label={t('dashboard')}
             onClick={() => {
-              onChangePatientView(PatientView.PatientProfile)
+              onChangePatientView(PatientView.Dashboard)
             }}
             classes={{
               root: classes.root
             }}
           />
-        }
-        <Tab
-          className={classes.tab}
-          value={PatientView.Devices}
-          data-testid="device-tab"
-          iconPosition="start"
-          label={t('devices')}
-          onClick={() => {
-            onChangePatientView(PatientView.Devices)
-          }}
-          classes={{
-            root: classes.root
-          }}
-        />
-      </Tabs>
-      <Button data-testid="download-report" onClick={onClickPrint}>
-        <GetAppIcon />
-        {t('button-pdf-download-report')}
-      </Button>
+          <Tab
+            className={classes.tab}
+            value={PatientView.Daily}
+            data-testid="daily-tab"
+            iconPosition="start"
+            label={t('daily')}
+            onClick={() => {
+              onChangePatientView(PatientView.Daily)
+            }}
+            classes={{
+              root: classes.root
+            }}
+          />
+          <Tab
+            className={classes.tab}
+            value={PatientView.Trends}
+            data-testid="trends-tab"
+            iconPosition="start"
+            label={t('trends')}
+            onClick={() => {
+              onChangePatientView(PatientView.Trends)
+            }}
+            classes={{
+              root: classes.root
+            }}
+          />
+          {user.isUserHcp() && !TeamUtils.isPrivate(teamId) &&
+            <Tab
+              className={classes.tab}
+              value={PatientView.PatientProfile}
+              data-testid="patient-profile-tab"
+              iconPosition="start"
+              label={t('patient-profile')}
+              onClick={() => {
+                onChangePatientView(PatientView.PatientProfile)
+              }}
+              classes={{
+                root: classes.root
+              }}
+            />
+          }
+          <Tab
+            className={classes.tab}
+            value={PatientView.Devices}
+            data-testid="device-tab"
+            iconPosition="start"
+            label={t('devices')}
+            onClick={() => {
+              onChangePatientView(PatientView.Devices)
+            }}
+            classes={{
+              root: classes.root
+            }}
+          />
+        </Tabs>
+      </Box>
+      <Box className={classes.rightSection}>
+        <Button data-testid="download-report" onClick={onClickPrint}>
+          <GetAppIcon />
+          {t('button-pdf-download-report')}
+        </Button>
+      </Box>
     </Box>
   )
 }
