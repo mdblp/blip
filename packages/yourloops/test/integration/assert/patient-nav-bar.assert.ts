@@ -33,8 +33,6 @@ import userEvent from '@testing-library/user-event'
 const checkPatientNavBarCommon = (expectedTabListTextContent: string) => {
   const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
   expect(patientNavBar.getByTestId('subnav-patient-info')).toBeVisible()
-  // const patientHeaderContent = `${patient.profile.lastName} ${patient.profile.firstName}`
-  // expect(patientNavBar).toHaveTextContent(patientHeaderContent)
   expect(patientNavBar.getByRole('tablist')).toHaveTextContent(expectedTabListTextContent)
   expect(patientNavBar.getByText('Download report')).toBeVisible()
 }

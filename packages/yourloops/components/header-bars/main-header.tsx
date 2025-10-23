@@ -180,7 +180,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
               }
             </Box>
 
-            <Box display="flex" alignItems="center" justifyContent='flex-end' flex={1}>
+            <Box display="flex" alignItems="center" justifyContent="flex-end" flex={1}>
               <Link to={AppUserRoute.Notifications} id="header-notification-link">
                 <Badge
                   id="notification-count-badge"

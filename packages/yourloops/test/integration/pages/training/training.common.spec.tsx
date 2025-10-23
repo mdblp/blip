@@ -32,7 +32,6 @@ import { renderPage } from '../../utils/render'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-//import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { buildPatient } from '../../data/patient-builder.data'
 
 describe('Training page when new training available', () => {
