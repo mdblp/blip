@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -69,17 +69,21 @@ function BasicDropdownWithValidation<T>(props: BasicDropdownWithValidationProps<
     onSelect(event.target.value as T)
   }
 
+  const labelId = `dropdown-${id}-input-label`
+
   return (
     <FormControl
       id={`dropdown-form-${id}`}
-      variant="standard"
+      variant="outlined"
       className={classes.formControl}
     >
       <FormGroup>
-        <InputLabel id={`dropdown-${id}-input-label`}>{t(inputTranslationKey)}</InputLabel>
+        <InputLabel id={labelId}>{t(inputTranslationKey)}</InputLabel>
         <Select
           id={`dropdown-${id}-selector`}
           data-testid={`dropdown-${id}-selector`}
+          labelId={labelId}
+          label={t(inputTranslationKey)}
           value={selectedValue}
           error={disabledValues.includes(selectedValue)}
           inputProps={{ id: `dropdown-${id}-selector-input-props`, 'data-testid': `dropdown-${id}-selector-input-props` }}

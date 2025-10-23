@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,13 +26,13 @@
  */
 
 import { type TeamMemberRole } from './enums/team-member-role.enum'
-import { type Profile } from '../../auth/models/profile.model'
+import { type UserAccount } from '../../auth/models/user-account.model'
 import { type UserInviteStatus } from './enums/user-invite-status.enum'
 
 export interface TeamMember {
   userId: string
   email: string
-  profile?: Profile | null
+  profile?: UserAccount | null
   role: TeamMemberRole
   status: UserInviteStatus
   invitationId?: string

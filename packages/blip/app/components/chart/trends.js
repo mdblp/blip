@@ -574,7 +574,7 @@ class Trends extends React.Component {
             <Box className="chart-with-stats-wrapper">
               <div className="container-box-inner patient-data-content-inner light-rounded-border">
                 {this.renderSubNav()}
-                <div className="patient-data-content">
+                <div className="patient-data-content-trends">
                   {loading && <SpinningLoader className="centered-spinning-loader" />}
                   <div id="tidelineContainer" className="patient-data-chart-trends">
                     {this.renderChart()}

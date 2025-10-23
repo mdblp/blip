@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -152,7 +152,7 @@ export const ConsentFeedback: FunctionComponent<ConsentCheck> = ({ id, userRole,
 
   const checkboxFeedback = (
     <Checkbox
-      id={`${id}-checkbox-feedback`}
+      data-testid={`${id}-checkbox-feedback`}
       aria-label={t('feedback-checkbox')}
       className={classes.checkbox}
       checked={checked}

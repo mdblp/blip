@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,15 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum ProfileFormKey {
-  birthday = 'birthday',
-  birthPlace = 'birthPlace',
-  country = 'country',
-  feedbackAccepted = 'feedbackAccepted',
-  firstName = 'firstName',
-  hcpProfession = 'hcpProfession',
-  lang = 'lang',
-  lastName = 'lastName',
-  sex = 'sex',
-  units = 'units'
+import {
+  checkCaregiverInfoUpdate,
+  checkCaregiverUserAccountLayout, checkHcpInfoUpdate, checkHcpUserAccountLayout,
+  checkPasswordChangeRequest, checkPatientInfoUpdate, checkPatientUserAccountLayout
+} from '../assert/user-account.assert'
+
+export const testCaregiverUserInfoUpdate = async (): Promise<void> => {
+  checkCaregiverUserAccountLayout()
+  await checkCaregiverInfoUpdate()
 }
+
+export const testHcpUserInfoUpdate = async (): Promise<void> => {
+  checkHcpUserAccountLayout()
+  await checkHcpInfoUpdate()
+}
+
+export const testPatientUserInfoUpdate = async (): Promise<void> => {
+  checkPatientUserAccountLayout()
+  await checkPatientInfoUpdate()
+}
+
+export const testPasswordChangeRequest = async (userEmail: string): Promise<void> => {
+  await checkPasswordChangeRequest(userEmail)
+}
+
+

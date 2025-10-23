@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,108 +30,102 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../lib/auth'
 import { useMemo, useState } from 'react'
 import { getCurrentLang } from '../../lib/language'
-import { REGEX_BIRTHDATE } from '../../lib/utils'
 import { isEqual, some } from 'lodash'
-import { type ProfileErrors, type ProfileForm } from './models/profile-form.model'
-import { type ProfileFormKey } from './models/enums/profile-form-key.enum'
+import { type UserAccountErrors, type UserAccountForm } from './models/profile-form.model'
+import { type UserAccountFormKey } from './models/enums/profile-form-key.enum'
 import { HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
-import { type Profile } from '../../lib/auth/models/profile.model'
+import { UserAccount } from '../../lib/auth/models/user-account.model'
 import { type Settings } from '../../lib/auth/models/settings.model'
 import { type Preferences } from '../../lib/auth/models/preferences.model'
 import { Unit } from 'medical-domain'
 
-interface UseProfilePageContextHookReturn {
+interface UseUserAccountPageContextHookReturn {
   canSave: boolean
-  errors: ProfileErrors
-  profileForm: ProfileForm
-  saveProfile: () => Promise<void>
+  errors: UserAccountErrors
+  userAccountForm: UserAccountForm
+  saveUserAccount: () => Promise<void>
   saving: boolean
-  updateProfileForm: (key: ProfileFormKey, value: unknown) => void
+  updateUserAccountForm: (key: UserAccountFormKey, value: unknown) => void
 }
 
-const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
+const useUserAccountPageContextHook = (): UseUserAccountPageContextHookReturn => {
   const alert = useAlert()
   const { t, i18n } = useTranslation('yourloops')
-  const { user, updateProfile, updatePreferences, updateSettings } = useAuth()
+  const { user, updateUserAccount, updatePreferences, updateSettings } = useAuth()
   const isUserPatient = user.isUserPatient()
   const isUserHcp = user.isUserHcp()
 
-  const [profileForm, setProfileForm] = useState<ProfileForm>({
-    birthday: user.birthday,
-    birthPlace: user.profile?.patient?.birthPlace ?? '',
-    feedbackAccepted: !!user?.profile?.contactConsent?.isAccepted,
+  const [userAccountForm, setUserAccountForm] = useState<UserAccountForm>({
+    feedbackAccepted: !!user?.account?.contactConsent?.isAccepted,
     firstName: user.firstName,
-    hcpProfession: user.profile?.hcpProfession ?? HcpProfession.empty,
+    hcpProfession: user.account?.hcpProfession ?? HcpProfession.empty,
     lang: user.preferences?.displayLanguageCode ?? getCurrentLang(),
     lastName: user.lastName,
-    sex: user.profile?.patient?.sex ?? undefined,
+    sex: user.account?.patient?.sex ?? undefined,
     units: user.settings?.units?.bg ?? Unit.MilligramPerDeciliter,
     country: user.settings.country
   })
   const [saving, setSaving] = useState<boolean>(false)
 
-  const errors: ProfileErrors = {
-    birthday: isUserPatient && !REGEX_BIRTHDATE.test(profileForm.birthday),
-    firstName: !profileForm.firstName,
-    hcpProfession: isUserHcp && profileForm.hcpProfession === HcpProfession.empty,
-    lastName: !profileForm.lastName
+  const errors: UserAccountErrors = {
+    firstName: !userAccountForm.firstName,
+    hcpProfession: isUserHcp && userAccountForm.hcpProfession === HcpProfession.empty,
+    lastName: !userAccountForm.lastName
   }
 
-  const updatedProfile = useMemo<Profile>(() => {
-    const profile: Profile = {
-      ...user.profile,
-      firstName: profileForm.firstName,
-      lastName: profileForm.lastName,
-      fullName: `${profileForm.firstName} ${profileForm.lastName}`
+  const updatedUserAccount = useMemo<UserAccount>(() => {
+    const userAccount: UserAccount = {
+      ...user.account,
+      firstName: userAccountForm.firstName,
+      lastName: userAccountForm.lastName,
+      fullName: `${userAccountForm.firstName} ${userAccountForm.lastName}`
     }
 
     if (isUserPatient) {
-      profile.patient = {
-        ...profile.patient,
-        birthday: profileForm.birthday,
-        birthPlace: profileForm.birthPlace,
-        sex: profileForm.sex
+      userAccount.patient = {
+        ...userAccount.patient,
+        sex: userAccountForm.sex
       }
     }
 
     if (user.isUserHcp()) {
-      profile.hcpProfession = profileForm.hcpProfession
+      userAccount.hcpProfession = userAccountForm.hcpProfession
     }
 
-    if (isUserHcp && !!user?.profile?.contactConsent?.isAccepted !== profileForm.feedbackAccepted) {
-      profile.contactConsent = {
-        isAccepted: profileForm.feedbackAccepted,
+    if (isUserHcp && !!user?.account?.contactConsent?.isAccepted !== userAccountForm.feedbackAccepted) {
+      userAccount.contactConsent = {
+        isAccepted: userAccountForm.feedbackAccepted,
         acceptanceTimestamp: new Date().toISOString()
       }
     }
 
-    return profile
-  }, [isUserHcp, isUserPatient, profileForm.birthPlace, profileForm.birthday, profileForm.feedbackAccepted, profileForm.firstName, profileForm.hcpProfession, profileForm.lastName, profileForm.sex, user])
+    return userAccount
+  }, [isUserHcp, isUserPatient, userAccountForm.feedbackAccepted, userAccountForm.firstName, userAccountForm.hcpProfession, userAccountForm.lastName, userAccountForm.sex, user])
 
   const updatedSettings: Settings = {
     ...user.settings,
-    units: { bg: profileForm.units },
-    country: profileForm.country
+    units: { bg: userAccountForm.units },
+    country: userAccountForm.country
   }
   const updatedPreferences: Preferences = {
     ...user.preferences,
-    displayLanguageCode: profileForm.lang
+    displayLanguageCode: userAccountForm.lang
   }
 
-  const profileChanged: boolean = !isEqual(user.profile, updatedProfile)
+  const userAccountChanged: boolean = !isEqual(user.account, updatedUserAccount)
   const preferencesChanged: boolean = !isEqual(user.preferences, updatedPreferences)
   const settingsChanged: boolean = !isEqual(user.settings, updatedSettings)
-  const canSave: boolean = (preferencesChanged || profileChanged || settingsChanged) && !some(errors)
+  const canSave: boolean = (preferencesChanged || userAccountChanged || settingsChanged) && !some(errors)
 
-  const updateProfileForm = (key: ProfileFormKey, value: unknown): void => {
-    setProfileForm(prevState => ({ ...prevState, [key]: value }))
+  const updateUserAccountForm = (key: UserAccountFormKey, value: unknown): void => {
+    setUserAccountForm(prevState => ({ ...prevState, [key]: value }))
   }
 
-  const saveProfile = async (): Promise<void> => {
+  const saveUserAccount = async (): Promise<void> => {
     try {
       setSaving(true)
-      if (profileChanged) {
-        await updateProfile(updatedProfile)
+      if (userAccountChanged) {
+        await updateUserAccount(updatedUserAccount)
       }
 
       if (settingsChanged) {
@@ -140,7 +134,7 @@ const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
 
       if (preferencesChanged) {
         await updatePreferences(updatedPreferences)
-        await i18n.changeLanguage(profileForm.lang)
+        await i18n.changeLanguage(userAccountForm.lang)
       }
 
       alert.success(t('profile-updated'))
@@ -151,7 +145,7 @@ const useProfilePageContextHook = (): UseProfilePageContextHookReturn => {
     }
   }
 
-  return { profileForm, updateProfileForm, errors, canSave, saving, saveProfile }
+  return { userAccountForm, updateUserAccountForm, errors, canSave, saving, saveUserAccount }
 }
 
-export default useProfilePageContextHook
+export default useUserAccountPageContextHook

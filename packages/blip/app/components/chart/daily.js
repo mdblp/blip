@@ -374,7 +374,7 @@ class Daily extends React.Component {
           </Box>
           <Box className="chart-with-stats-wrapper" ref={this.refToAttachResize}>
             <div className="container-box-inner patient-data-content-inner light-rounded-border">
-              <div className="patient-data-content">
+              <div className="patient-data-content-daily">
                 {loading && <SpinningLoader className="centered-spinning-loader" />}
                 <DailyChart
                   refToAttachResize={this.refToAttachResize}
