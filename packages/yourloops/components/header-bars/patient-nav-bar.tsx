@@ -28,8 +28,6 @@
 import React, { type FunctionComponent, memo } from 'react'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import Box from '@mui/material/Box'
-// import { makeStyles } from 'tss-react/mui'
-// import { type Theme } from '@mui/material/styles'
 import { PatientNavBarTabs } from './patient-nav-bar-tabs'
 import { type PatientView } from '../../enum/patient-view.enum'
 
@@ -44,23 +42,6 @@ interface PatientNavBarProps {
   onSwitchPatient: (patient: Patient) => void
 }
 
-// const styles = makeStyles()((theme: Theme) => {
-//   return {
-//     topContainer: {
-//       backgroundColor: theme.palette.common.white,
-//       borderBottom: `1px solid ${theme.palette.divider}`,
-//       paddingBlock: theme.spacing(1),
-//       width: '100%'
-//     },
-//     backIcon: {
-//       cursor: 'pointer',
-//       marginLeft: theme.spacing(4),
-//       marginRight: theme.spacing(4),
-//       marginTop: theme.spacing(2)
-//     }
-//   }
-// })
-
 const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
   const {
     currentPatientView,
@@ -69,26 +50,8 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
     onClickPrint,
   } = props
 
-  //const { classes } = styles() to do add in current style
-
-
   return (
     <Box data-testid="patient-nav-bar" display="flex" flexDirection="column" marginBottom={3}>
-      {/*{!user.isUserPatient() &&*/}
-      {/*  <Box className={classes.topContainer}>*/}
-      {/*    <Box display="flex" paddingTop={2}>*/}
-      {/*      <ArrowBackIcon*/}
-      {/*        data-testid="subnav-arrow-back"*/}
-      {/*        className={classes.backIcon}*/}
-      {/*        onClick={goBackHome}*/}
-      {/*      />*/}
-      {/*      <PatientNavBarSelect*/}
-      {/*        currentPatient={currentPatient}*/}
-      {/*        onSwitchPatient={onSwitchPatient}*/}
-      {/*      />*/}
-      {/*    </Box>*/}
-      {/*  </Box>*/}
-      {/*}*/}
       <PatientNavBarTabs
         currentPatient={currentPatient}
         currentPatientView={currentPatientView}

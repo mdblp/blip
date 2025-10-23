@@ -28,7 +28,7 @@
 import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi, removeDirectShareMock } from '../../mock/direct-share.api.mock'
-import { patient1Info, patient2AsTeamMember } from '../../data/patient.api.data'
+import { patient1Info, patient2Info } from '../../data/patient.api.data'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { renderPage } from '../../utils/render'
@@ -164,7 +164,7 @@ describe('Caregiver home page', () => {
     const patientTableBody = screen.getByTestId('current-patient-list-grid')
     expect(within(patientTableBody).getAllByRole('row')).toHaveLength(5)
     expect(patientTableBody).toHaveTextContent('PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Jan 1, 1980Flag patient pending-patient@diabeloop.frPatient PendingJan 1, 1980Flag patient patient2@diabeloop.frRouis Patient2Jan 1, 1980Flag patient patient3@diabeloop.frSrairi Patient3Jan 1, 1980')
-    const removePatientButton = screen.getByRole('button', { name: `Remove patient ${patient2AsTeamMember.email}` })
+    const removePatientButton = screen.getByRole('button', { name: `Remove patient ${patient2Info.profile.email}` })
     expect(removePatientButton).toBeVisible()
 
     await userEvent.click(removePatientButton)
@@ -196,7 +196,7 @@ describe('Caregiver home page', () => {
 
     await userEvent.click(removePatientDialog2ConfirmButton)
 
-    expect(removeDirectShareMock).toHaveBeenCalledWith(patient2AsTeamMember.userId, loggedInUserId)
+    expect(removeDirectShareMock).toHaveBeenCalledWith(patient2Info.userid, loggedInUserId)
     expect(jest.spyOn(PatientApi, 'getPatientsForCaregivers').mockResolvedValue([patient1Info])).toHaveBeenCalledTimes(2)
     expect(screen.queryByTestId('remove-direct-share-dialog')).toBeFalsy()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('You no longer have access to your patient\'s data.')
@@ -210,7 +210,7 @@ describe('Caregiver home page', () => {
       renderPage('/')
     })
 
-    const removeButton = screen.getByRole('button', { name: `Remove patient ${patient2AsTeamMember.email}` })
+    const removeButton = screen.getByRole('button', { name: `Remove patient ${patient2Info.profile.email}` })
 
     await userEvent.click(removeButton)
 
@@ -220,7 +220,7 @@ describe('Caregiver home page', () => {
 
     await userEvent.click(confirmRemoveButton)
 
-    expect(removeDirectShareMock).toHaveBeenCalledWith(patient2AsTeamMember.userId, loggedInUserId)
+    expect(removeDirectShareMock).toHaveBeenCalledWith(patient2Info.userid, loggedInUserId)
     expect(screen.getByTestId('remove-direct-share-dialog')).toBeVisible()
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Impossible to remove patient. Please try again later.')
   })

@@ -151,12 +151,13 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
     }
   }
 
-  const chipConfig = getChipConfig(currentPatient.diabeticProfile.type)
+  const currentPatientDiabeticType = currentPatient.diabeticProfile?.type ?? DiabeticType.DT1DT2
+  const chipConfig = getChipConfig(currentPatientDiabeticType)
 
 
   return (
     <Box className={classes.tabsContainer}>
-      <Box className={classes.leftSection}>
+      <Box data-testid="subnav-patient-info" className={classes.leftSection}>
         <ArrowBackIcon
           data-testid="subnav-arrow-back"
           className={classes.backIcon}
