@@ -39,7 +39,6 @@ interface PatientNavBarProps {
   onClickDaily?: () => void
   onClickPrint?: () => void
   onClickTrends?: () => void
-  onSwitchPatient: (patient: Patient) => void
 }
 
 const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
