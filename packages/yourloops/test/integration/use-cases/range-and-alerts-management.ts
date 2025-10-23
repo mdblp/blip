@@ -153,7 +153,7 @@ export const testSaveButtonForRanges = async () : Promise<void>  => {
     veryLowBg: 50,
     hypoThreshold: 5,
     nonDataTxThreshold: 50,
-    reportingPeriod: 55
+    reportingPeriod: 168
   }
   const closingDialogDelayInMS = 400
   expect(PatientApi.updatePatientAlerts).toHaveBeenCalledWith(myThirdTeamId, patient1Id, expectedMonitoringAlertsParameters)
