@@ -158,20 +158,24 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
   return (
     <Box className={classes.tabsContainer}>
       <Box data-testid="subnav-patient-info" className={classes.leftSection}>
-        <ArrowBackIcon
-          data-testid="subnav-arrow-back"
-          className={classes.backIcon}
-          onClick={goBackHome}
-        />
-        <Typography>
-          {getUserName(currentPatient.profile.firstName, currentPatient.profile.lastName, currentPatient.profile.fullName)}
-        </Typography>
-        <Chip
-          label={chipConfig.label}
-          variant={'filled'}
-          color={chipConfig.color}
-          className={classes.chip}
-        />
+        {!user.isUserPatient() &&
+          <>
+            <ArrowBackIcon
+              data-testid="subnav-arrow-back"
+              className={classes.backIcon}
+              onClick={goBackHome}
+            />
+            <Typography>
+            {getUserName(currentPatient.profile.firstName, currentPatient.profile.lastName, currentPatient.profile.fullName)}
+            </Typography>
+            <Chip
+              label={chipConfig.label}
+              variant={'filled'}
+              color={chipConfig.color}
+              className={classes.chip}
+            />
+          </>
+        }
       </Box>
       <Box className={classes.centerSection}>
         <Tabs value={getSelectedTab()} classes={{ root: classes.root }}>
