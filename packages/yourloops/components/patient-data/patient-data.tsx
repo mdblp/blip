@@ -71,7 +71,6 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     bgPrefs,
     chartPrefs,
     changePatientView,
-    changePatient,
     currentPatientView,
     dailyDate,
     dailyChartRef,
@@ -130,7 +129,6 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
         onClickPrint={() => {
           setShowPdfDialog(true)
         }}
-        onSwitchPatient={changePatient}
       />
       <>
         {loadingData

@@ -25,42 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type BoundFunctions, fireEvent, type queries, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { patient1Info, patient2Info } from '../data/patient.api.data'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import userEvent from '@testing-library/user-event'
-import { mockDataAPI, noData } from '../mock/data.api.mock'
 
-const checkPatientNavBarCommon = (patientNavBar: BoundFunctions<typeof queries>) => {
-  expect(patientNavBar.getByRole('tablist')).toHaveTextContent('DashboardDailyTrendsDevice')
+const checkPatientNavBarCommon = (expectedTabListTextContent: string) => {
+  const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
+  expect(patientNavBar.getByTestId('subnav-patient-info')).toBeVisible()
+  expect(patientNavBar.getByRole('tablist')).toHaveTextContent(expectedTabListTextContent)
   expect(patientNavBar.getByText('Download report')).toBeVisible()
 }
 
 export const checkPatientNavBarAsHcp = () => {
-  const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
-  expect(patientNavBar.getByTestId('subnav-patient-list')).toBeVisible()
-  expect(patientNavBar.getByTestId('patient-dropdown')).toBeVisible()
-  expect(patientNavBar.getByRole('tablist')).toHaveTextContent('DashboardDailyTrendsProfileDevices')
-  expect(patientNavBar.getByText('Download report')).toBeVisible()
+  checkPatientNavBarCommon('DashboardDailyTrendsProfileDevices')
 }
 
 export const checkPatientNavBarAsHcpInPrivateTeam = () => {
-  const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
-  expect(patientNavBar.getByTestId('subnav-patient-list')).toBeVisible()
-  expect(patientNavBar.getByTestId('patient-dropdown')).toBeVisible()
-  checkPatientNavBarCommon(patientNavBar)
+  checkPatientNavBarCommon('DashboardDailyTrendsDevice')
 }
 
 export const checkPatientNavBarAsCaregiver = () => {
-  const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
-  expect(patientNavBar.getByTestId('subnav-patient-list')).toBeVisible()
-  expect(patientNavBar.getByTestId('patient-dropdown')).toBeVisible()
-  checkPatientNavBarCommon(patientNavBar)
+  checkPatientNavBarCommon('DashboardDailyTrendsDevice')
 }
 
 export const checkPatientNavBarAsPatient = () => {
-  const patientNavBar = within(screen.getByTestId('patient-nav-bar'))
-  checkPatientNavBarCommon(patientNavBar)
+  checkPatientNavBarCommon('DashboardDailyTrendsDevice')
 }
 
 export const checkPatientDropdown = async (initialPatient: Patient, patientToSwitchTo: Patient) => {
@@ -87,18 +77,4 @@ export const checkPatientDropdown = async (initialPatient: Patient, patientToSwi
 export const checkPatientNavBarForPatientAndCaregiver = async () => {
   const secondaryHeader = await screen.findByTestId('patient-nav-bar')
   expect(secondaryHeader).toHaveTextContent('DashboardDailyTrendsDevicesDownload report')
-}
-
-export const checkPatientSwitch = async () => {
-  const secondaryHeader = await screen.findByTestId('patient-nav-bar')
-  expect(screen.getByTestId('patient-dashboard')).toBeInTheDocument()
-
-  mockDataAPI(noData)
-  fireEvent.mouseDown(within(secondaryHeader).getByText(`${patient1Info.profile.lastName} ${patient1Info.profile.firstName}`))
-  fireEvent.click(within(screen.getByRole('listbox')).getByText(`${patient2Info.profile.lastName} ${patient2Info.profile.firstName}`))
-
-  expect(screen.queryByTestId('patient-dashboard')).not.toBeInTheDocument()
-  await waitFor(() => {
-    expect(screen.getByText(`No data for patient ${patient2Info.profile.fullName}`)).toBeInTheDocument()
-  })
 }

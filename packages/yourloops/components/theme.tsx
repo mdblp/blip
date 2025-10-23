@@ -162,6 +162,18 @@ export function getTheme(): Theme {
         main: getColor('--info-color-main'),
         light: getColor('--info-color-light'),
         dark: getColor('--info-color-dark')
+      },
+      pink: {
+        main: getColor('--pink-main'),
+        light: getColor('--pink-light'),
+        dark: getColor('--pink-dark'),
+        contrastText: '#fff',
+      },
+      darkBlue : {
+        main: getColor('--dark-blue-main'),
+        light: getColor('--dark-blue-light'),
+        dark: getColor('--dark-blue-dark'),
+        contrastText: '#fff',
       }
     }
   })

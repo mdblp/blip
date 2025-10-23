@@ -60,9 +60,7 @@ import {
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationSixteenDaysOldData,
   testDashboardDataVisualisationTwoWeeksOldData,
-  testEmptyMedicalFilesWidgetForHcp,
-  testPatientNavBarForHcp,
-  testSwitchPatientCorrectDataDisplay
+  testEmptyMedicalFilesWidgetForHcp
 } from '../../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForHcp } from '../../../use-cases/medical-reports-management'
 import { type MedicalFilesWidgetParams } from '../../../assert/medical-widget.assert'
@@ -133,16 +131,6 @@ describe('Dashboard view for HCP', () => {
     })
 
     await testDashboardDataVisualisationNoDataForHcp()
-  })
-
-  it('should be able to switch from patient to patient', async () => {
-    mockDataAPI(oneDayDashboardData)
-
-    await act(async () => {
-      renderPage(patientDashboardRoute)
-    })
-
-    await testPatientNavBarForHcp()
   })
 
   it('should be able to manage medical reports', async () => {
@@ -255,10 +243,4 @@ describe('Dashboard view for HCP', () => {
     await testEmptyMedicalFilesWidgetForHcp()
   })
 
-  it('should render correct patient data when changing patient in the header dropdown', async () => {
-    await act(async () => {
-      renderPage(patientDashboardRoute)
-    })
-    await testSwitchPatientCorrectDataDisplay()
-  })
 })

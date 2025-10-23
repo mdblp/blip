@@ -26,7 +26,7 @@
  */
 
 import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { patient1AsTeamMember, patient1Info } from '../../data/patient.api.data'
+import { patient1Info } from '../../data/patient.api.data'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import { renderPage } from '../../utils/render'
 import { waitFor } from '@testing-library/react'
@@ -41,7 +41,7 @@ describe('Caregivers list for patient', () => {
   const patientCaregiversRoute = '/caregivers'
 
   beforeEach(() => {
-    mockPatientLogin(patient1AsTeamMember)
+    mockPatientLogin(patient1Info)
     mockPatientApiForPatients()
     mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
     mockChatAPI()

@@ -47,7 +47,7 @@ import {
   mySecondTeamId,
   mySecondTeamName
 } from '../../../mock/team.api.mock'
-import { patient1AsTeamMember, patient1Id, patient1Info } from '../../../data/patient.api.data'
+import { patient1Id, patient1Info } from '../../../data/patient.api.data'
 import { mockChatAPI } from '../../../mock/chat.api.mock'
 import { type AppMainLayoutParams, testAppMainLayoutForPatient } from '../../../use-cases/app-main-layout-visualisation'
 import { type PatientDashboardLayoutParams } from '../../../assert/layout.assert'
@@ -71,7 +71,7 @@ describe('Dashboard view for patient', () => {
   const lastName = patient1Info.profile.lastName
 
   beforeEach(() => {
-    mockPatientLogin(patient1AsTeamMember)
+    mockPatientLogin(patient1Info)
     mockPatientApiForPatients()
     mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
     mockChatAPI()

@@ -31,13 +31,13 @@ import { mockDirectShareApi } from './direct-share.api.mock'
 import { mockTeamAPI } from './team.api.mock'
 import { mockChatAPI } from './chat.api.mock'
 import { mockMedicalFilesAPI } from './medical-files.api.mock'
-import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from './user.api.mock'
 import { mockPatientApiForPatients } from './patient.api.mock'
+import { Patient } from '../../../lib/patient/models/patient.model'
 
-export const mockPatientLogin = (patient: ITeamMember) => {
-  mockAuth0Hook(UserRole.Patient, patient.userId)
+export const mockPatientLogin = (patient: Patient) => {
+  mockAuth0Hook(UserRole.Patient, patient.userid)
   mockNotificationAPI()
   mockDirectShareApi()
   mockTeamAPI()

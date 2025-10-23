@@ -12,6 +12,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3611 Manage events superposition in Daily view
 - YLP-3612 Make events superposition popover draggable
 - YLP-3616 Time In Tight Range (TITR) statistic
+- YLP-3654 As Hcp, i can see the patient profile value in Yourloops
 
 ### Changed
 - YLP-2347 Display patient monitoring parameters in the patient profile page

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,26 +24,27 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+// the doc to add color tokens is here:
+// https://mui.com/material-ui/customization/palette/#adding-color-tokens
 
-import React, { type FunctionComponent } from 'react'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import { useTheme } from '@mui/material'
+import '@mui/material/Chip';
 
-interface PatientNavBarInfoProps {
-  fieldName: string
-  fieldValue: string
-  id?: string
+declare module '@mui/material/Chip' {
+  interface ChipPropsColorOverrides {
+    pink: true;
+    darkBlue: true;
+  }
 }
 
-export const PatientNavBarInfo: FunctionComponent<PatientNavBarInfoProps> = (props) => {
-  const { fieldName, fieldValue, id } = props
-  const theme = useTheme()
-
-  return (
-    <Box display="flex" width="calc(33.33% - 8px)">
-      <Typography data-testid={`${id}-label`} variant="caption">{fieldName}</Typography>
-      <Typography data-testid={id} marginLeft="4px" variant="caption" color={theme.palette.common.black}>{fieldValue}</Typography>
-    </Box>
-  )
+declare module '@mui/material/styles' {
+  // Palette['primary'] ensure that custom colors (pink, darkBlue) have the same structure and properties
+  // as the default primary color (like main, light, dark, contrastText)
+  interface Palette {
+    pink: Palette['primary'];
+    darkBlue: Palette['primary'];
+  }
+  interface PaletteOptions {
+    pink?: PaletteOptions['primary'];
+    darkBlue?: PaletteOptions['primary'];
+  }
 }

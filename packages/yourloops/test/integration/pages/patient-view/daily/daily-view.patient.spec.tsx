@@ -31,7 +31,7 @@ import { checkPatientNavBarAsPatient } from '../../../assert/patient-nav-bar.ass
 import { mockDataAPI } from '../../../mock/data.api.mock'
 import { renderPage } from '../../../utils/render'
 import { checkPatientLayout } from '../../../assert/layout.assert'
-import { patient2AsTeamMember } from '../../../data/patient.api.data'
+import { patient2Info } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
@@ -39,7 +39,7 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 describe('Daily view for patient', () => {
   beforeEach(() => {
     mockWindowResizer()
-    mockPatientLogin(patient2AsTeamMember)
+    mockPatientLogin(patient2Info)
     mockPatientApiForPatients()
   })
 
@@ -58,6 +58,6 @@ describe('Daily view for patient', () => {
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
     checkPatientNavBarAsPatient()
-    await checkPatientLayout(`${patient2AsTeamMember.profile.lastName} ${patient2AsTeamMember.profile.firstName}`)
+    await checkPatientLayout(`${patient2Info.profile.lastName} ${patient2Info.profile.firstName}`)
   })
 })

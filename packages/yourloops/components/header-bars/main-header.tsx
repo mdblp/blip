@@ -137,12 +137,11 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
           <Box
             alignItems="center"
             display="flex"
-            justifyContent="space-between"
             minHeight={64}
             padding={`0 ${theme.spacing(2)}`}
             width="100%"
           >
-            <Box display="flex" alignItems="center">
+            <Box display="flex" alignItems="center" justifyContent="flex-start" flex={1}>
               <Link to="/">
                 <Avatar
                   id="header-main-logo"
@@ -154,33 +153,34 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                 />
               </Link>
             </Box>
-
-            {user.isUserHcp() &&
-              <StyledTabs value={getSelectedTab()} centered>
-                <StyledTab
-                  data-testid="main-header-hcp-patients-tab"
-                  className={tab}
-                  label={t('header-tab-patients')}
-                  value={HcpNavigationTab.Patients}
-                  onClick={() => {
-                    navigate(`${AppUserRoute.Teams}/${teamId}${AppUserRoute.Patients}`)
-                  }}
-                />
-                {!TeamUtils.isPrivate(teamId) &&
+            <Box flex={2} display="flex" alignItems="center" justifyContent="center">
+              {user.isUserHcp() &&
+                <StyledTabs value={getSelectedTab()} centered>
                   <StyledTab
-                    data-testid="main-header-hcp-care-team-settings-tab"
+                    data-testid="main-header-hcp-patients-tab"
                     className={tab}
-                    label={t('header-tab-care-team-settings')}
-                    value={HcpNavigationTab.CareTeam}
+                    label={t('header-tab-patients')}
+                    value={HcpNavigationTab.Patients}
                     onClick={() => {
-                      navigate(`${AppUserRoute.Teams}/${teamId}`)
+                      navigate(`${AppUserRoute.Teams}/${teamId}${AppUserRoute.Patients}`)
                     }}
                   />
-                }
-              </StyledTabs>
-            }
+                  {!TeamUtils.isPrivate(teamId) &&
+                    <StyledTab
+                      data-testid="main-header-hcp-care-team-settings-tab"
+                      className={tab}
+                      label={t('header-tab-care-team-settings')}
+                      value={HcpNavigationTab.CareTeam}
+                      onClick={() => {
+                        navigate(`${AppUserRoute.Teams}/${teamId}`)
+                      }}
+                    />
+                  }
+                </StyledTabs>
+              }
+            </Box>
 
-            <Box display="flex" alignItems="center">
+            <Box display="flex" alignItems="center" justifyContent="flex-end" flex={1}>
               <Link to={AppUserRoute.Notifications} id="header-notification-link">
                 <Badge
                   id="notification-count-badge"
