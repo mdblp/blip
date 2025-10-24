@@ -124,8 +124,8 @@ export const getStatAnnotations = (data, type, opts = {}) => {
       break
 
     case commonStats.timeInRange:
-        annotations.push(t('**Time In Range:** Time spent in range, based on {{cbgLabel}} readings.', { cbgLabel: statBgSourceLabels.cbg }))
-        annotations.push(t('compute-oneday-time-in-range', { cbgLabel: statBgSourceLabels.cbg }))
+      annotations.push(t('**Time In Range:** Time spent in range, based on {{cbgLabel}} readings.', { cbgLabel: statBgSourceLabels.cbg }))
+      annotations.push(t('compute-oneday-time-in-range', { cbgLabel: statBgSourceLabels.cbg }))
       break
 
     case commonStats.totalInsulin:
