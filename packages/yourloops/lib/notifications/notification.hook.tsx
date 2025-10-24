@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -121,7 +121,7 @@ function NotificationContextImpl(): NotificationContext {
   }
 }
 
-// Hook for child components to get the  object
+// Hook for child components to get the object
 // and re-render when it changes.
 export function useNotification(): NotificationContext {
   return React.useContext(ReactNotificationContext)

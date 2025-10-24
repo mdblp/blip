@@ -56,6 +56,7 @@ import { type SignupForm } from './models/signup-form.model'
 import { type ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
 import { v4 as uuidv4 } from 'uuid'
 import { sanitizeBgUnit } from './user.util'
+import DblCommunicationApi from '../dbl-communication/dbl-communication.api'
 
 const ReactAuthContext = createContext({} as AuthContext)
 const log = bows('AuthHook')
@@ -163,24 +164,34 @@ export function AuthContextImpl(): AuthContext {
     }
   }
 
+  const getDblCommunicationMessages = async (user: User): Promise<void> => {
+    user.newDblCommunication = await DblCommunicationApi.getInfoPage()
+    //TODO: verify if the user has read them or not (local storage)
+  }
+
+  async function getProfile(user: User) {
+    const userMetadata = await UserApi.getUserMetadata(user.id)
+    if (userMetadata) {
+      user.account = userMetadata.profile
+      user.preferences = userMetadata.preferences
+      user.settings = userMetadata.settings
+      if (!user.settings) {
+        user.settings = {}
+      }
+      user.settings.units = {
+        bg: sanitizeBgUnit(userMetadata.settings?.units?.bg)
+      }
+    }
+  }
+
   const getUserInfo = useCallback(async () => {
     try {
       setFetchingUser(true)
       const user = new User(auth0user as AuthenticatedUser)
 
       if (user.role !== UserRole.Unset) {
-        const userMetadata = await UserApi.getUserMetadata(user.id)
-        if (userMetadata) {
-          user.account = userMetadata.profile
-          user.preferences = userMetadata.preferences
-          user.settings = userMetadata.settings
-          if (!user.settings) {
-            user.settings = {}
-          }
-          user.settings.units = {
-            bg: sanitizeBgUnit(userMetadata.settings?.units?.bg)
-          }
-        }
+        await getProfile(user)
+        await getDblCommunicationMessages(user)
         updateUserLanguage(user)
         metrics.setUser(user)
       }
