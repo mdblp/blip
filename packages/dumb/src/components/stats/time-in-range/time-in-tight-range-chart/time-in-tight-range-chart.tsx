@@ -42,7 +42,7 @@ interface TimeInTightRangeChartProps {
 }
 
 export const TimeInTightRangeChart: FC<TimeInTightRangeChartProps> = (props) => {
-  const { days, data, bgPrefs } = props
+  const { data, bgPrefs } = props
   const { t } = useTranslation('main')
 
   const title = t('time-in-tight-range')

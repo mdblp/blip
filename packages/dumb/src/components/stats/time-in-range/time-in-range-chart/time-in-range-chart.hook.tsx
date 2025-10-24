@@ -104,7 +104,7 @@ export const useTimeInRangeChartHook = (props: TimeInRangeChartHookProps): TimeI
     }
 
     return annotations
-  }, [bgType, data.total, days, t, type])
+  }, [bgType, data.total, t, type])
 
   const onStatMouseover = (id: StatLevel, barTitle: string, hasValues: boolean): void => {
     if (hasValues) {
