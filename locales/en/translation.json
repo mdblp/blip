@@ -6,7 +6,6 @@
   "**Readings In Range:** Daily average of the number of {{smbgLabel}} readings.": "**Readings In Range:** Daily average of the number of {{smbgLabel}} readings.",
   "**Time In Loop Mode:** Daily average of the time spent in automated basal delivery.": "**Time In Loop Mode:** Daily average of the time spent in automated basal delivery.",
   "**Time In Loop Mode:** Time spent in automated basal delivery.": "**Time In Loop Mode:** Time spent in automated basal delivery.",
-  "**Time In Range:** Daily average of the time spent in range, based on {{cbgLabel}} readings.": "**Time In Range:** Daily average of the time spent in range, based on {{cbgLabel}} readings.",
   "**Time In Range:** Time spent in range, based on {{cbgLabel}} readings.": "**Time In Range:** Time spent in range, based on {{cbgLabel}} readings.",
   "**Total Insulin:** All basal and bolus insulin delivery (in Units) added together": "**Total Insulin:** All basal and bolus insulin delivery (in Units) added together",
   "**Total Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view": "**Avg. Daily Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view",
