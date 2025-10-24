@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -48,6 +48,7 @@ export enum AppUserRoute {
 
 export enum AppRoute {
   CompleteSignup = '/complete-signup',
+  DblCommunication = '/dbl-communication',
   Login = '/login',
   NewConsent = '/new-consent',
   ProductLabelling = '/product-labelling',

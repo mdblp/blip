@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -131,9 +131,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
           flexDirection="column"
           width="100%"
         >
-          {ConfigService.isBannerEnabled() &&
-            <Banner />
-          }
+          <Banner />
           <Box
             alignItems="center"
             display="flex"
