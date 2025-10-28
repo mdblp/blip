@@ -37,7 +37,6 @@ import { TIGHT_RANGE_BOUNDS } from 'medical-domain'
 
 interface TimeInTightRangeChartProps {
   data: { value: number, total: number }
-  days: number,
   bgPrefs: BgPrefs
 }
 
