@@ -69,6 +69,11 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
       tooltip: t('un-removable-column')
     },
     {
+      name: PatientListColumns.PatientProfile,
+      checked: updatedColumnsModel[PatientListColumns.PatientProfile],
+      hcpOnly: true
+    },
+    {
       name: PatientListColumns.Age,
       checked: updatedColumnsModel[PatientListColumns.Age]
     },

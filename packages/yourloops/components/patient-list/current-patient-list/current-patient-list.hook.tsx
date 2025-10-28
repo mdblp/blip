@@ -59,6 +59,8 @@ import { usePatientListStyles } from '../patient-list.styles'
 import { useNavigate } from 'react-router-dom'
 import { Skeleton } from '@mui/material'
 import { useAuth } from '../../../lib/auth'
+import { DiabeticType } from 'medical-domain'
+import { PatientDiabeticProfileChip } from '../../chips/patient-diabetic-profile-chip'
 
 interface CurrentPatientListProps {
   patients: Patient[]
@@ -105,7 +107,8 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators?.glucoseManagementIndicator,
         [PatientListColumns.BelowRange]: patient.glycemiaIndicators?.hypoglycemia,
         [PatientListColumns.Variance]: patient.glycemiaIndicators?.coefficientOfVariation,
-        [PatientListColumns.Actions]: patient
+        [PatientListColumns.Actions]: patient,
+        [PatientListColumns.PatientProfile]: patient.diabeticProfile?.type ?? DiabeticType.DT1DT2
       }
     })
   }, [noDataLabel, sortedPatients])
@@ -142,6 +145,13 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
           return <Box data-email={email}>{name}</Box>
         },
         sortComparator: sortByUserName
+      },
+      {
+        field: PatientListColumns.PatientProfile,
+        headerName: t('patient-profile'),
+        renderCell: (params: GridRenderCellParams<GridRowModel, DiabeticType>) => {
+          return <PatientDiabeticProfileChip patientDiabeticType={params.value} />
+        }
       },
       {
         field: PatientListColumns.Age,

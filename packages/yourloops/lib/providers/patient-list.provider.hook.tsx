@@ -50,7 +50,8 @@ const DEFAULT_COLUMNS_HCP = [
   PatientListColumns.TimeInRange,
   PatientListColumns.BelowRange,
   PatientListColumns.LastDataUpdate,
-  PatientListColumns.Actions
+  PatientListColumns.Actions,
+  PatientListColumns.PatientProfile,
 ]
 
 const DEFAULT_COLUMNS_CAREGIVER = [
@@ -60,7 +61,7 @@ const DEFAULT_COLUMNS_CAREGIVER = [
   PatientListColumns.TimeInRange,
   PatientListColumns.BelowRange,
   PatientListColumns.LastDataUpdate,
-  PatientListColumns.Actions
+  PatientListColumns.Actions,
 ]
 
 export const usePatientListProviderHook = (): PatientListContextResult => {
@@ -89,7 +90,8 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     [PatientListColumns.GlucoseManagementIndicator]: getColumnPreference(PatientListColumns.GlucoseManagementIndicator),
     [PatientListColumns.BelowRange]: getColumnPreference(PatientListColumns.BelowRange),
     [PatientListColumns.Variance]: getColumnPreference(PatientListColumns.Variance),
-    [PatientListColumns.Actions]: true
+    [PatientListColumns.Actions]: true,
+    [PatientListColumns.PatientProfile]: getColumnPreference(PatientListColumns.PatientProfile)
   })
 
   const buildColumnsPreferencesArray = (columnsVisibilityModel: GridColumnVisibilityModel): string[] => {
