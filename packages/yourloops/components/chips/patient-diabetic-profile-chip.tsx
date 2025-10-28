@@ -31,6 +31,7 @@ import Chip from '@mui/material/Chip'
 import { makeStyles } from 'tss-react/mui'
 import type { Theme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
+import { type SxProps } from '@mui/material'
 
 const styles = makeStyles()((theme: Theme) => {
   return {
@@ -54,10 +55,11 @@ interface ChipConfig {
 
 interface PatientDiabeticProfileProps {
   patientDiabeticType: DiabeticType
+  sx?: SxProps<Theme>
 }
 
   export const PatientDiabeticProfileChip: FunctionComponent<PatientDiabeticProfileProps> = (props) =>  {
-  const { patientDiabeticType } = props
+  const { patientDiabeticType, sx } = props
   const { t } = useTranslation()
   const { classes } = styles()
 
@@ -90,6 +92,7 @@ interface PatientDiabeticProfileProps {
       variant={'filled'}
       color={chipConfig.color}
       className={classes.chip}
+      sx={sx}
     />
   )
 }

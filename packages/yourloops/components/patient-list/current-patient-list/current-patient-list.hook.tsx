@@ -149,8 +149,12 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
       {
         field: PatientListColumns.PatientProfile,
         headerName: t('patient-profile'),
+        width: 150,
+        align: 'left',
         renderCell: (params: GridRenderCellParams<GridRowModel, DiabeticType>) => {
-          return <PatientDiabeticProfileChip patientDiabeticType={params.value} />
+          return <PatientDiabeticProfileChip
+                  patientDiabeticType={params.value}
+                  sx={{ ml:'0 !important' }} /> // override default margin-left
         }
       },
       {
