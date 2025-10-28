@@ -33,6 +33,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3731 Improve the calendar object in trend and daily view
 - YLP-3742 Update glycemia chart legend to display tight range color
 - YLP-3743 Delete "Est. insulin requirements" in the daily view
+- YLP-3750 Replace how to calculate of TIR and TITR for views with several days by correct ones
 
 ### Engineering
 - YLP-3672 D3 version update
