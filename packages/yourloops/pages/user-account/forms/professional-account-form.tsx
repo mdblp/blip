@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,47 +25,49 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { Link as LinkRedirect } from 'react-router-dom'
-
+import Typography from '@mui/material/Typography'
+import React, { FC, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import metrics from '../../../lib/metrics'
+import SwitchRoleDialogs from '../../../components/switch-role'
+import { Divider } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 
-import PersonalInfoForm from './personal-info-form'
-import PreferencesForm from './preferences-form'
-import { useTranslation } from 'react-i18next'
-import { useProfilePageState } from './profile-page-context'
-import { profileFormCommonClasses } from './css-classes'
-import { LoadingButton } from '@mui/lab'
-
-export const ProfileForm: FunctionComponent = () => {
+export const ProfessionalAccountForm: FC = () => {
   const { t } = useTranslation('yourloops')
-  const { canSave, saving, saveProfile } = useProfilePageState()
-  const { classes } = profileFormCommonClasses()
+
+  const [switchRoleOpen, setSwitchRoleOpen] = useState<boolean>(false)
+
+  const handleSwitchRoleOpen = (): void => {
+    setSwitchRoleOpen(true)
+    metrics.send('switch_account', 'display_switch_preferences')
+  }
+
+  const handleSwitchRoleCancel = (): void => {
+    setSwitchRoleOpen(false)
+  }
 
   return (
-    <React.Fragment>
-      <PersonalInfoForm />
-      <PreferencesForm />
-      <Box display="flex" justifyContent="flex-end" my={3}>
-        <LinkRedirect className={classes.cancelLink} to="/">
-          <Button variant="outlined">
-            {t('button-cancel')}
+    <>
+      <Divider variant="middle" sx={{ marginY: 3 }} />
+      <Box marginY={2}>
+        <Typography variant="h6" sx={{ marginBottom: 2 }}>{t('professional-account')}</Typography>
+        <span>{t('caregiver-upgrade-account-description')}</span>
+        <Box display="flex" marginTop={2}>
+          <Button
+            data-testid="switch-role-button"
+            variant="outlined"
+            color="primary"
+            disableElevation
+            onClick={handleSwitchRoleOpen}
+          >
+            {t('modal-switch-hcp-title')}
           </Button>
-        </LinkRedirect>
-        <LoadingButton
-          loading={saving}
-          id="profile-button-save"
-          variant="contained"
-          disabled={!canSave}
-          color="primary"
-          disableElevation
-          className={classes.button}
-          onClick={saveProfile}
-        >
-          {t('button-save')}
-        </LoadingButton>
+        </Box>
       </Box>
-    </React.Fragment>
+
+      {switchRoleOpen && <SwitchRoleDialogs onCancel={handleSwitchRoleCancel} />}
+    </>
   )
 }

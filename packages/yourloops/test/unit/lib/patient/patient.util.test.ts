@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -295,7 +295,7 @@ describe('Patient utils', () => {
         preferences: {
           displayLanguageCode: LanguageCodes.En
         },
-        profile: {
+        account: {
           fullName: 'Patient 1',
           firstName: 'Patient',
           lastName: '1',
@@ -340,7 +340,7 @@ describe('Patient utils', () => {
     it('should set the sex as Not Defined if none is specified', () => {
       const user = {
         id: 'patient-id',
-        profile: {
+        account: {
           email: 'patient@email.fr',
           patient: {
             birthday: '1980-01-01T10:44:34+01:00',

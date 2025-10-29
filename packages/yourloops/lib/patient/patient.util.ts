@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -83,16 +83,16 @@ export default class PatientUtils {
   }
 
   static mapUserToPatient(user: User): Patient {
-    const profile = user.profile
+    const userAccount = user.account
     return {
       userid: user.id,
       profile: {
-        firstName: profile.firstName,
-        fullName: profile.fullName,
-        lastName: profile.lastName,
-        email: profile.email,
-        sex: profile?.patient?.sex ?? Gender.NotDefined,
-        birthdate: profile?.patient?.birthday
+        firstName: userAccount.firstName,
+        fullName: userAccount.fullName,
+        lastName: userAccount.lastName,
+        email: userAccount.email,
+        sex: userAccount?.patient?.sex ?? Gender.NotDefined,
+        birthdate: userAccount?.patient?.birthday
       },
       settings: user.settings,
       hasSentUnreadMessages: false

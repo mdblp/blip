@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -43,8 +43,8 @@ import Link from '@mui/material/Link'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import { type Profile } from '../../lib/auth/models/profile.model'
 import { setPageTitle } from '../../lib/utils'
+import { UserAccount } from '../../lib/auth/models/user-account.model'
 
 const style = makeStyles({ name: 'ylp-training-page' })((theme: Theme) => {
   return {
@@ -93,10 +93,10 @@ export const TrainingPage: FC = () => {
 
   const ackTraining = (): void => {
     const now = new Date().toISOString()
-    const updatedProfile = user.profile ? user.profile : {} as Profile
-    updatedProfile.trainingAck = { acceptanceTimestamp: now, isAccepted: true }
+    const updatedUserAccount = user.account || {} as UserAccount
+    updatedUserAccount.trainingAck = { acceptanceTimestamp: now, isAccepted: true }
 
-    auth.updateProfile(updatedProfile).catch((reason: unknown) => {
+    auth.updateUserAccount(updatedUserAccount).catch((reason: unknown) => {
       console.error(reason)
     }).finally(() => {
       navigate(fromPath ?? '/')

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import HttpService, { ErrorMessageStatus } from '../http/http.service'
 import bows from 'bows'
 import { type UserMetadata } from './models/user-metadata.model'
-import { type Profile } from './models/profile.model'
+import { UserAccount } from './models/user-account.model'
 import { type Preferences } from './models/preferences.model'
 import { type Settings } from './models/settings.model'
 import { type CompleteSignupPayload } from './models/complete-signup-payload.model'
@@ -68,10 +68,10 @@ export default class UserApi {
     }
   }
 
-  static async updateProfile(userId: string, profile: Profile): Promise<Profile> {
-    const { data } = await HttpService.put<Profile, Profile>({
+  static async updateUserAccount(userId: string, userAccount: UserAccount): Promise<UserAccount> {
+    const { data } = await HttpService.put<UserAccount, UserAccount>({
       url: `/metadata/${userId}/profile`,
-      payload: profile
+      payload: userAccount
     })
     return data
   }

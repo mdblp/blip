@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,7 @@ import config from '../../config/config'
 import { UserRole } from './enums/user-role.enum'
 import { type MedicalData } from '../../data/models/medical-data.model'
 import { type Preferences } from './preferences.model'
-import { type Profile } from './profile.model'
+import { type UserAccount } from './user-account.model'
 import { type Settings } from './settings.model'
 import { type AuthenticatedUser } from './authenticated-user.model'
 import { AuthenticatedUserMetadata } from './enums/authenticated-user-metadata.enum'
@@ -47,7 +47,7 @@ export default class User {
   role: UserRole
   medicalData?: MedicalData
   preferences?: Preferences
-  profile?: Profile
+  account?: UserAccount
   settings?: Settings
 
   constructor(authenticatedUser: AuthenticatedUser) {
@@ -66,15 +66,15 @@ export default class User {
   }
 
   get firstName(): string {
-    return this.profile?.firstName ?? ''
+    return this.account?.firstName ?? ''
   }
 
   get lastName(): string {
-    return this.profile?.lastName ?? this.profile?.fullName ?? this.username
+    return this.account?.lastName ?? this.account?.fullName ?? this.username
   }
 
   get fullName(): string {
-    return this.profile?.fullName ?? this.username
+    return this.account?.fullName ?? this.username
   }
 
   get birthday(): string | undefined {
@@ -86,7 +86,7 @@ export default class User {
   }
 
   private getRawBirthday(): string {
-    const birthday = this.profile?.patient?.birthday
+    const birthday = this.account?.patient?.birthday
     if (birthday && birthday.length > 0 && birthday.includes('T')) {
       return birthday.split('T')[0]
     }
@@ -130,9 +130,9 @@ export default class User {
    * @returns a boolean indicating if a new training is available
    */
   newTrainingAvailable(): boolean {
-    if (this.profile?.trainingAck) {
+    if (this.account?.trainingAck) {
       // A `null` is fine here, because `new Date(null).valueOf() === 0`
-      const acceptDate = new Date(this.profile.trainingAck.acceptanceTimestamp)
+      const acceptDate = new Date(this.account.trainingAck.acceptanceTimestamp)
       if (!Number.isFinite(acceptDate.getTime())) {
         // if acceptDate is not a valid formatted date string, get user to re-acknowledge training materials
         return true
@@ -147,17 +147,17 @@ export default class User {
    * @description the first login is determined by null consents object
    */
   shouldAcceptConsent(): boolean {
-    return !(this.profile?.termsOfUse?.isAccepted && this.profile.privacyPolicy?.isAccepted)
+    return !(this.account?.termsOfUse?.isAccepted && this.account.privacyPolicy?.isAccepted)
   }
 
   /**
    * Check If the user should renew his consent.
    */
   shouldRenewConsent(): boolean {
-    if (!this.profile?.termsOfUse || !this.profile.privacyPolicy) {
+    if (!this.account?.termsOfUse || !this.account.privacyPolicy) {
       return true
     }
-    return (this.checkConsent(this.profile.termsOfUse) || this.checkConsent(this.profile.privacyPolicy))
+    return (this.checkConsent(this.account.termsOfUse) || this.checkConsent(this.account.privacyPolicy))
   }
 
   isFirstLogin(): boolean {
