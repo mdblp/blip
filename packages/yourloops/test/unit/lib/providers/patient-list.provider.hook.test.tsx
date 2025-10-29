@@ -142,11 +142,12 @@ describe('usePatientListProviderHook', () => {
   })
 
   describe('displayedColumns', () => {
-    it('should have the correct list of columns for hcp', () => {
+    it('should have the correct list of columns for hcp based on his preference', () => {
       const { result } = renderHook(() => usePatientListProviderHook())
       const expectedColumns: GridColumnVisibilityModel = {
         [PatientListColumns.Flag]: true,
         [PatientListColumns.Patient]: true,
+        [PatientListColumns.PatientProfile]: false,
         [PatientListColumns.Age]: false,
         [PatientListColumns.DateOfBirth]: false,
         [PatientListColumns.Gender]: false,
@@ -164,7 +165,7 @@ describe('usePatientListProviderHook', () => {
       expect(result.current.displayedColumns).toEqual(expectedColumns)
     })
 
-    it('should have the correct list of columns for caregivers', () => {
+    it('should have the correct list of columns for caregivers based on his preference', () => {
       (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
         return {
           user: {
@@ -177,6 +178,7 @@ describe('usePatientListProviderHook', () => {
       const expectedColumns: GridColumnVisibilityModel = {
         [PatientListColumns.Flag]: true,
         [PatientListColumns.Patient]: true,
+        [PatientListColumns.PatientProfile]: false,
         [PatientListColumns.Age]: false,
         [PatientListColumns.DateOfBirth]: false,
         [PatientListColumns.Gender]: false,
@@ -206,6 +208,7 @@ describe('usePatientListProviderHook', () => {
       const expectedColumns: GridColumnVisibilityModel = {
         [PatientListColumns.Flag]: true,
         [PatientListColumns.Patient]: true,
+        [PatientListColumns.PatientProfile]: true,
         [PatientListColumns.Age]: false,
         [PatientListColumns.DateOfBirth]: true,
         [PatientListColumns.Gender]: false,
@@ -235,6 +238,7 @@ describe('usePatientListProviderHook', () => {
       const expectedColumns: GridColumnVisibilityModel = {
         [PatientListColumns.Flag]: true,
         [PatientListColumns.Patient]: true,
+        [PatientListColumns.PatientProfile]: false,
         [PatientListColumns.Age]: false,
         [PatientListColumns.DateOfBirth]: true,
         [PatientListColumns.Gender]: false,
