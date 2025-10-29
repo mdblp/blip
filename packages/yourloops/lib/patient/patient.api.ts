@@ -61,6 +61,11 @@ export default class PatientApi {
     return data
   }
 
+  static async getPatientInfo(userId: string): Promise<Patient> {
+    const { data } = await HttpService.get<Patient>({ url: `/bff/v1/patients/${userId}` })
+    return data
+  }
+
   static async getPatientsMetricsForHcp(userId: string, teamId: string, patientIds: string[]): Promise<PatientMetrics[]> {
     const { data } = await HttpService.get<PatientMetrics[]>({
       url: `/bff/v1/hcps/${userId}/teams/${teamId}/patients-metrics`,

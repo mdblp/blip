@@ -40,13 +40,14 @@ import PatientUtils from '../../../../lib/patient/patient.util'
 import EmailIcon from '@mui/icons-material/Email'
 import PersonIcon from '@mui/icons-material/Person'
 import CakeIcon from '@mui/icons-material/Cake'
-import SquareFootIcon from '@mui/icons-material/SquareFoot'
 import ScaleIcon from '@mui/icons-material/Scale'
 import HeightIcon from '@mui/icons-material/Height'
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid'
 import MonitorWeightIcon from '@mui/icons-material/MonitorWeight'
 import StraightenIcon from '@mui/icons-material/Straighten'
 import { BasalIcon } from '../../../../components/icons/diabeloop/basal-icon'
+import { PatientDiabeticProfileChip } from '../../../../components/chips/patient-diabetic-profile-chip'
+import { getUserName } from '../../../../lib/auth/user.util'
 
 interface InformationSectionProps {
   patient: Patient
@@ -81,10 +82,11 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
   }
 
   const getDbUnits = (): string => {
-    // TODO:
-    //  will be replaced by the actual units from patient settings when patient settings are implemented
-    //  as the same time as the patient profile
-    return 'mg / dL'
+    if (!patient.settings.units) {
+      return t('N/A')
+    }
+
+    return `${patient.settings.units.bg}`
   }
 
   const getAge = (): string => {
@@ -122,13 +124,11 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
             >
               {getPatientInitials()}
             </Avatar>
-            <Box>
-              <Typography variant="body2" color="text.secondary">
-                {`${t('patient')} ${t(patient.diabeticProfile?.type)}`}
-              </Typography>
+            <Box display="flex" alignItems="center">
               <Typography variant="h6" fontWeight="medium">
-                {`${patient.profile.firstName || ''}, ${patient.profile.lastName || ''}`.trim() || t('N/A')}
+                {getUserName(patient.profile.firstName, patient.profile.lastName, patient.profile.fullName) || t('N/A')}
               </Typography>
+              <PatientDiabeticProfileChip patientDiabeticType={patient.diabeticProfile.type} />
             </Box>
           </Box>
           <Grid container spacing={2}>
@@ -159,33 +159,6 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
                 </Box>
               </Box>
 
-              {/* Email */}
-              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
-                <EmailIcon sx={{ color: 'text.secondary' }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('email')}
-                  </Typography>
-                  <Typography variant="body2">
-                    {patient.profile.email || t('N/A')}
-                  </Typography>
-                </Box>
-              </Box>
-
-
-              {/* Equipment Date */}
-              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
-                <PhoneAndroidIcon sx={{ color: 'text.secondary' }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('equipment-date')}
-                  </Typography>
-                  <Typography variant="body2">
-                    {formatDate(patient.medicalData?.range?.startDate) || t('N/A')}
-                  </Typography>
-                </Box>
-              </Box>
-
               {/* Weight */}
               <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
                 <MonitorWeightIcon sx={{ color: 'text.secondary' }} />
@@ -212,8 +185,34 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
                 </Box>
               </Box>
 
+              {/* Email */}
+              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
+                <EmailIcon sx={{ color: 'text.secondary' }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('email')}
+                  </Typography>
+                  <Typography variant="body2">
+                    {patient.profile.email || t('N/A')}
+                  </Typography>
+                </Box>
+              </Box>
+
             </Grid>
             <Grid item xs={6}>
+
+              {/* Equipment Date */}
+              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
+                <PhoneAndroidIcon sx={{ color: 'text.secondary' }} />
+                <Box>
+                  <Typography variant="body2" color="text.secondary">
+                    {t('equipment-date')}
+                  </Typography>
+                  <Typography variant="body2">
+                    {formatDate(patient.medicalData?.range?.startDate) || t('N/A')}
+                  </Typography>
+                </Box>
+              </Box>
 
               {/* HbA1c */}
               <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
@@ -254,18 +253,6 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
                 </Box>
               </Box>
 
-              {/* cannula size */}
-              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
-                <SquareFootIcon sx={{ color: 'text.secondary' }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('cannula-size')}
-                  </Typography>
-                  <Typography variant="body2">
-                    {`${patient.settings.cannulaSize?.value || t('N/A')} ${patient.settings.cannulaSize?.unit || ''}`}
-                  </Typography>
-                </Box>
-              </Box>
             </Grid>
           </Grid>
         </Box>

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
+import React, { type FC, useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { PatientData } from '../components/patient-data/patient-data'
 import { CareTeamSettingsPage } from '../pages/care-team-settings/care-team-settings-page'
@@ -36,12 +36,33 @@ import { InvalidRoute } from '../components/invalid-route'
 import { UserAccountPage } from '../pages/user-account/user-account-page'
 import { NotificationsPage } from '../pages/notifications/notifications-page'
 import { AppUserRoute } from '../models/enums/routes.enum'
-import PatientUtils from '../lib/patient/patient.util'
+//import PatientUtils from '../lib/patient/patient.util'
 import { useAuth } from '../lib/auth'
+import PatientApi from '../lib/patient/patient.api'
+import { Patient } from '../lib/patient/models/patient.model'
+import { errorTextFromException } from '../lib/utils'
+import { logError } from '../utils/error.util'
+import { useAlert } from '../components/utils/snackbar'
+import { useTranslation } from 'react-i18next'
 
 export const PatientLayout: FC = () => {
   const { user } = useAuth()
-  const patient = PatientUtils.mapUserToPatient(user)
+  const { t } = useTranslation()
+  const alert = useAlert()
+  const [patient, setPatient] = React.useState<Patient>()
+
+  useEffect(() => {
+    PatientApi.getPatientInfo(user.id)
+      .then((patientInfos) => {
+        setPatient(patientInfos)
+      }).catch((err) => {
+        const errorMessage = errorTextFromException(err)
+        logError(errorMessage, 'fetch-patient-infos')
+        alert.error(t('error-http-40x'))
+      })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user])
+
   return (
     <TeamContextProvider>
       <DashboardLayout>

@@ -82,22 +82,22 @@ export default class PatientUtils {
     })
   }
 
-  static mapUserToPatient(user: User): Patient {
-    const userAccount = user.account
-    return {
-      userid: user.id,
-      profile: {
-        firstName: userAccount.firstName,
-        fullName: userAccount.fullName,
-        lastName: userAccount.lastName,
-        email: userAccount.email,
-        sex: userAccount?.patient?.sex ?? Gender.NotDefined,
-        birthdate: userAccount?.patient?.birthday
-      },
-      settings: user.settings,
-      hasSentUnreadMessages: false
-    }
-  }
+  // static mapUserToPatient(user: User): Patient {
+  //   const profile = user.profile
+  //   return {
+  //     userid: user.id,
+  //     profile: {
+  //       firstName: profile.firstName,
+  //       fullName: profile.fullName,
+  //       lastName: profile.lastName,
+  //       email: profile.email,
+  //       sex: profile?.patient?.sex ?? Gender.NotDefined,
+  //       birthdate: profile?.patient?.birthday
+  //     },
+  //     settings: user.settings,
+  //     hasSentUnreadMessages: false
+  //   }
+  // }
 
   static computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {
     return patients.map((patient: Patient) => {

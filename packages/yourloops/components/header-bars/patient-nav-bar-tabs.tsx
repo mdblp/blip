@@ -180,7 +180,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
               root: classes.root
             }}
           />
-          {user.isUserHcp() && !TeamUtils.isPrivate(teamId) &&
+          {user.isUserHcpOrPatient() && !TeamUtils.isPrivate(teamId) &&
             <Tab
               className={classes.tab}
               value={PatientView.PatientProfile}
