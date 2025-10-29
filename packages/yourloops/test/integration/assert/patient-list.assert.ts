@@ -435,7 +435,7 @@ export const checkPatientListHideShowColumns = async () => {
   expect(columnSettingsPopoverForReset).toBeVisible()
 
   const patientToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('Patient')).getByRole('checkbox')
-  const patientProfileToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('Patient')).getByRole('checkbox')
+  const patientProfileToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('Profile')).getByRole('checkbox')
   const ageToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('Age')).getByRole('checkbox')
   const dateOfBirthToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('Date of birth')).getByRole('checkbox')
   const genderToggleForReset = within(within(columnSettingsPopoverForReset).getByLabelText('Gender')).getByRole('checkbox')

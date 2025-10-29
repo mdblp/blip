@@ -58,7 +58,7 @@ interface PatientDiabeticProfileProps {
   sx?: SxProps<Theme>
 }
 
-  export const PatientDiabeticProfileChip: FunctionComponent<PatientDiabeticProfileProps> = (props) =>  {
+export const PatientDiabeticProfileChip: FunctionComponent<PatientDiabeticProfileProps> = (props) => {
   const { patientDiabeticType, sx } = props
   const { t } = useTranslation()
   const { classes } = styles()
@@ -83,8 +83,7 @@ interface PatientDiabeticProfileProps {
     }
   }
 
-  const currentPatientDiabeticType = patientDiabeticType ?? DiabeticType.DT1DT2
-  const chipConfig = getChipConfig(currentPatientDiabeticType)
+  const chipConfig = getChipConfig(patientDiabeticType)
 
   return (
     <Chip
