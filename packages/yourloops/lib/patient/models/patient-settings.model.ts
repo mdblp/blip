@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { DeviceSystem } from 'medical-domain'
+import { BgUnit, DeviceSystem } from 'medical-domain'
 
 export interface PatientSettings {
   a1c?: {
@@ -37,5 +37,8 @@ export interface PatientSettings {
   cannulaSize?: {
     value: number
     unit: string
+  }
+  units?: {
+    bg: BgUnit
   }
 }

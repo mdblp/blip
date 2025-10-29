@@ -235,7 +235,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                     }
                   />
                   {
-                    user.isUserHcp() && !TeamUtils.isPrivate(teamId) &&
+                    user.isUserHcpOrPatient() && !TeamUtils.isPrivate(teamId) &&
                     <Route
                       path={AppUserRoute.PatientProfile}
                       element={
