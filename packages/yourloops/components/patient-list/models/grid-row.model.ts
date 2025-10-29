@@ -27,6 +27,7 @@
 
 import { type PatientListColumns, type PendingPatientListColumns } from './enums/patient-list.enum'
 import { type Patient } from '../../../lib/patient/models/patient.model'
+import { DiabeticType } from 'medical-domain'
 
 export interface GridRowModel {
   id: string
@@ -44,6 +45,7 @@ export interface GridRowModel {
   [PatientListColumns.Variance]?: number
   [PatientListColumns.LastDataUpdate]?: string
   [PatientListColumns.Actions]: Patient
+  [PatientListColumns.PatientProfile]: DiabeticType
 }
 
 export interface PendingGridRowModel {

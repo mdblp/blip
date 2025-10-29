@@ -42,8 +42,8 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import Typography from '@mui/material/Typography'
 import { getUserName } from '../../lib/auth/user.util'
-import Chip from '@mui/material/Chip'
 import { DiabeticType } from 'medical-domain'
+import { PatientDiabeticProfileChip } from '../chips/patient-diabetic-profile-chip'
 
 interface PatientNavBarTabsProps {
   currentPatient: Patient
@@ -92,23 +92,9 @@ const styles = makeStyles()((theme: Theme) => {
       flex: 1,
       display: 'flex',
       justifyContent: 'flex-end'
-    },
-    chip: {
-      textTransform: 'none',
-      borderRadius: theme.spacing(2),
-      minWidth: 'auto',
-      paddingX: theme.spacing(2),
-      paddingY: theme.spacing(0.5),
-      margin: theme.spacing(0, 0, 0, 4),
-      height: '26px'
     }
   }
 })
-
-interface ChipConfig {
-  label: string
-  color: 'primary' | 'pink' | 'darkBlue'
-}
 
 export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (props) => {
   const {
@@ -131,28 +117,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
     navigate(`../..`, { relative: 'path' })
   }
 
-  const getChipConfig = (type: DiabeticType): ChipConfig => {
-    switch (type) {
-      case DiabeticType.DT1DT2:
-        return {
-          label: t('range-profile-type-1-and-2'),
-          color: 'primary'
-        }
-      case DiabeticType.DT1Pregnancy:
-        return {
-          label: t('range-profile-pregnancy-type-1'),
-          color: 'pink'
-        }
-      case DiabeticType.Custom:
-        return {
-          label: t('range-profile-custom'),
-          color: 'darkBlue'
-        }
-    }
-  }
-
   const currentPatientDiabeticType = currentPatient.diabeticProfile?.type ?? DiabeticType.DT1DT2
-  const chipConfig = getChipConfig(currentPatientDiabeticType)
 
   return (
     <Box className={classes.tabsContainer}>
@@ -167,11 +132,8 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
             <Typography>
             {getUserName(currentPatient.profile.firstName, currentPatient.profile.lastName, currentPatient.profile.fullName)}
             </Typography>
-            <Chip
-              label={chipConfig.label}
-              variant={'filled'}
-              color={chipConfig.color}
-              className={classes.chip}
+            <PatientDiabeticProfileChip
+              patientDiabeticType={currentPatientDiabeticType}
             />
           </>
         }

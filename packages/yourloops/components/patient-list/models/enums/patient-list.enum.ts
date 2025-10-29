@@ -44,7 +44,8 @@ export enum PatientListColumns {
   Patient = 'patient',
   System = 'system',
   TimeInRange = 'time-in-range',
-  Variance = 'variance'
+  Variance = 'variance',
+  PatientProfile = 'patient-profile'
 }
 
 export enum PendingPatientListColumns {
