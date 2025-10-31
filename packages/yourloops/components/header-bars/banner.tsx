@@ -47,7 +47,7 @@ export const Banner = (): JSX.Element => {
 
   const acknowledgeCurrentBanner = () => {
     setClosed(true)
-    registerBannerAck(banner?.id ?? 'N/A')
+    registerBannerAck(banner.id)
   }
 
   useEffect(() => {
