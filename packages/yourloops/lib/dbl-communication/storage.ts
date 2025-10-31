@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,35 +25,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface AppConfig {
-  VERSION: string
-  API_HOST: string
-  BRANDING: string
-  DOMAIN_NAME?: string
-  DEV: boolean
-  TEST: boolean
-  LATEST_TERMS?: string
-  LATEST_TRAINING?: string
-  LATEST_RELEASE?: string
-  SUPPORT_WEB_ADDRESS?: string
-  CONTACT_SUPPORT_WEB_URL: string
-  ASSETS_URL?: string | null
-  METRICS_SERVICE?: string | null
-  TERMS_PRIVACY_DATE?: string
-  STONLY_WID: string
-  COOKIE_BANNER_CLIENT_ID: string
-  SESSION_TIMEOUT: number
-  YLP820_BASAL_TIME: number
-  CBG_BUCKETS_ENABLED: boolean
-  ECPS_ENABLED: boolean
-  AUTH0_DOMAIN: string
-  AUTH0_ISSUER: string
-  AUTH0_CLIENT_ID: string
-  YLPZ_RA_LAD_FR: string
-  YLPZ_RA_LAD_EN: string
-  YLPZ_RA_LAD_NL: string
-  YLPZ_RA_LAD_IT: string
-  YLPZ_RA_LAD_ES: string
-  YLPZ_RA_LAD_DE: string
-  IDLE_TIMEOUT_MS: number
+import { BannerContent } from './models/banner.model'
+
+const pageAckStorageKey = 'acknowledgedDblCommunicationIds'
+const bannerStorageKey = 'acknowledgedBannersIds'
+
+export function registerDblCommunicationAck(id: string): void {
+  const ids = JSON.parse(localStorage.getItem(pageAckStorageKey) ?? '[]')
+  if (!ids.includes(id)) {
+    ids.push(id)
+    localStorage.setItem(pageAckStorageKey, JSON.stringify(ids))
+  }
 }
+
+export function isDblCommunicationAcknowledged(id: string): boolean {
+  const ids = JSON.parse(localStorage.getItem(pageAckStorageKey) ?? '[]')
+  return ids.includes(id)
+}
+
+export function registerBannerAck(id: string): void {
+  const acknowledgmentNumbers = JSON.parse(localStorage.getItem(bannerStorageKey) ?? '{}')
+  if (!acknowledgmentNumbers[id]) {
+    acknowledgmentNumbers[id] = 1
+  } else {
+    acknowledgmentNumbers[id] += 1
+  }
+  localStorage.setItem(bannerStorageKey, JSON.stringify(acknowledgmentNumbers))
+}
+
+export function isBannerInfoAcknowledged(banner: BannerContent): boolean {
+  const acknowledgmentNumbers = JSON.parse(localStorage.getItem(bannerStorageKey) ?? '{}')
+  if (!acknowledgmentNumbers[banner.id]) {
+    return false
+  }
+  return acknowledgmentNumbers[banner.id] >= banner.nbOfViewsBeforeHide
+}
+
