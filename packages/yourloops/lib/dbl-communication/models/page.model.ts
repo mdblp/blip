@@ -29,5 +29,4 @@ export interface InformationPage {
   id: string
   title: string;
   content: string;
-  acknowledged: boolean;
 }

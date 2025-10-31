@@ -33,7 +33,6 @@ export default class DblCommunicationApi {
   static async getInfoPage(): Promise<InformationPage> {
     try {
       const { data } = await HttpService.get<InformationPage>({ url: 'bff/communications/ylp-info-page' })
-      data.acknowledged = false
       return data
     } catch (err) {
       console.log("Error while getting system communications", err)

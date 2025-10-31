@@ -91,7 +91,7 @@ export const getRedirectUrl = (route: string, user: User, isAuthenticated: boole
   if (!trainingPath && route !== AppRoute.CompleteSignup && !renewConsentPath && user && user.hasToDisplayTrainingInfoPage()) {
     return AppRoute.Training
   }
-  if (route !== AppRoute.DblCommunication && user && user.hasToDisplayDblCommunicationPage()) {
+  if (user && user.hasToDisplayDblCommunicationPage()) {
     return AppRoute.DblCommunication
   }
   return undefined

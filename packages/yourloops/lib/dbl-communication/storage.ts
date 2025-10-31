@@ -30,7 +30,6 @@ import { BannerContent } from './models/banner.model'
 const pageAckStorageKey = 'acknowledgedDblCommunicationIds'
 const bannerStorageKey = 'acknowledgedBannersIds'
 
-// Should this be moved to dbl-communication.api.ts to have all code in the same place?
 export function registerDblCommunicationAck(id: string): void {
   const ids = JSON.parse(localStorage.getItem(pageAckStorageKey) ?? '[]')
   if (!ids.includes(id)) {
