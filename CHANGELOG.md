@@ -12,6 +12,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3611 Manage events superposition in Daily view
 - YLP-3612 Make events superposition popover draggable
 - YLP-3616 Time In Tight Range (TITR) statistic
+- YLP-3654 As Hcp, i can see the patient profile value in Yourloops
 
 ### Changed
 - YLP-2347 Display patient monitoring parameters in the patient profile page
@@ -30,7 +31,10 @@ It is based on Tidepool Blip 1.27.
 - YLP-3707 User account page new design
 - YLP-3710 Move the "EVENTS" section above the glycemia curve
 - YLP-3730 Delete "Avg. Daily" in dashboard and trends view to lighten all the frame
+- YLP-3731 Improve the calendar object in trend and daily view
 - YLP-3742 Update glycemia chart legend to display tight range color
+- YLP-3743 Delete "Est. insulin requirements" in the daily view
+- YLP-3750 Replace how to calculate of TIR and TITR for views with several days by correct ones
 
 ### Engineering
 - YLP-3672 D3 version update

@@ -38,11 +38,8 @@ import {
   checkDeviceUsageWidgetNoData,
   checkDeviceUsageWidgetWithTwoWeeksOldData
 } from '../assert/device-usage.assert'
-import { patient1Info, patient2Info } from '../data/patient.api.data'
 import {
-  checkPatientDropdown,
-  checkPatientNavBarForPatientAndCaregiver,
-  checkPatientSwitch
+  checkPatientNavBarForPatientAndCaregiver
 } from '../assert/patient-nav-bar.assert'
 import {
   checkEmptyMedicalFilesWidgetForHcp,
@@ -109,10 +106,6 @@ export const testTrendsDataVisualisationForHCP = async () => {
   await checkTrendsStatsWidgetsTooltips()
 }
 
-export const testPatientNavBarForHcp = async () => {
-  await checkPatientDropdown(patient1Info, patient2Info)
-}
-
 export const testPatientNavBarForPatientAndCaregiver = async () => {
   await checkPatientNavBarForPatientAndCaregiver()
 }
@@ -123,10 +116,6 @@ export const testEmptyMedicalFilesWidgetForPatient = async () => {
 
 export const testEmptyMedicalFilesWidgetForHcp = async () => {
   await checkEmptyMedicalFilesWidgetForHcp()
-}
-
-export const testSwitchPatientCorrectDataDisplay = async () => {
-  await checkPatientSwitch()
 }
 
 export const testDailyViewTooltipsAndValuesMgdl = async () => {
@@ -143,7 +132,7 @@ export const testDailyViewTooltipsAndValuesMgdl = async () => {
 
   await checkAverageGlucoseStatWidget('Avg. Glucose (CGM)mg/dL101')
   await checkStandardDeviationStatWidget('Standard Deviation (22-180)mg/dL79')
-  await checkTotalInsulinStatWidget('Total Delivered Insulin71.2UMeal bolus85.4 %60.8UBasal & correction bolus1.8 %1.3UManual bolus7.2 %5.1UPen bolus5.8 %4.1UEst. total insulin requirement--')
+  await checkTotalInsulinStatWidget('Total Delivered Insulin71.2UMeal bolus85.4 %60.8UBasal & correction bolus1.8 %1.3UManual bolus7.2 %5.1UPen bolus5.8 %4.1U')
 }
 
 export const testDailyViewChartsDblg1 = () => {

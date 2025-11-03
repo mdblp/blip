@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,24 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { mockAuth0Hook } from './auth0.hook.mock'
-import { mockNotificationAPI } from './notification.api.mock'
-import { mockDirectShareApi } from './direct-share.api.mock'
-import { mockTeamAPI } from './team.api.mock'
-import { mockChatAPI } from './chat.api.mock'
-import { mockMedicalFilesAPI } from './medical-files.api.mock'
-import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
-import { mockUserApi } from './user.api.mock'
-import { mockPatientApiForPatients } from './patient.api.mock'
-import { Patient } from '../../../lib/patient/models/patient.model'
 
-export const mockPatientLogin = (patient: Patient) => {
-  mockAuth0Hook(UserRole.Patient, patient.userid)
-  mockNotificationAPI()
-  mockDirectShareApi()
-  mockTeamAPI()
-  mockUserApi().mockUserDataFetch({ firstName: patient.profile.firstName, lastName: patient.profile.lastName })
-  mockChatAPI()
-  mockMedicalFilesAPI()
-  mockPatientApiForPatients()
+.chip {
+  fill-opacity: 0.3;
+  stroke-width: 1;
+}
+
+.horizontal-line {
+  stroke-width: 2;
+}
+
+.chip-label {
+  font-size: 11px;
 }

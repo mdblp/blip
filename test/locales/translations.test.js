@@ -243,7 +243,6 @@ const ignoredTransKeyForYourLoops = [
   'time-in-range-cgm-daily-average',
   'readings-in-range-bgm-daily-average',
   'time-in-range-cgm-one-day',
-  'compute-ndays-time-in-range',
   'compute-oneday-time-in-range',
   'remaining-time',
   'created-by-unknown',

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,25 +24,27 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+// the doc to add color tokens is here:
+// https://mui.com/material-ui/customization/palette/#adding-color-tokens
 
-import { mockAuth0Hook } from './auth0.hook.mock'
-import { mockNotificationAPI } from './notification.api.mock'
-import { mockDirectShareApi } from './direct-share.api.mock'
-import { mockTeamAPI } from './team.api.mock'
-import { mockChatAPI } from './chat.api.mock'
-import { mockMedicalFilesAPI } from './medical-files.api.mock'
-import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
-import { mockUserApi } from './user.api.mock'
-import { mockPatientApiForPatients } from './patient.api.mock'
-import { Patient } from '../../../lib/patient/models/patient.model'
+import '@mui/material/Chip';
 
-export const mockPatientLogin = (patient: Patient) => {
-  mockAuth0Hook(UserRole.Patient, patient.userid)
-  mockNotificationAPI()
-  mockDirectShareApi()
-  mockTeamAPI()
-  mockUserApi().mockUserDataFetch({ firstName: patient.profile.firstName, lastName: patient.profile.lastName })
-  mockChatAPI()
-  mockMedicalFilesAPI()
-  mockPatientApiForPatients()
+declare module '@mui/material/Chip' {
+  interface ChipPropsColorOverrides {
+    pink: true;
+    darkBlue: true;
+  }
+}
+
+declare module '@mui/material/styles' {
+  // Palette['primary'] ensure that custom colors (pink, darkBlue) have the same structure and properties
+  // as the default primary color (like main, light, dark, contrastText)
+  interface Palette {
+    pink: Palette['primary'];
+    darkBlue: Palette['primary'];
+  }
+  interface PaletteOptions {
+    pink?: PaletteOptions['primary'];
+    darkBlue?: PaletteOptions['primary'];
+  }
 }

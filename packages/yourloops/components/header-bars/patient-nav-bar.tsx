@@ -28,13 +28,7 @@
 import React, { type FunctionComponent, memo } from 'react'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import Box from '@mui/material/Box'
-import { useAuth } from '../../lib/auth'
-import { makeStyles } from 'tss-react/mui'
-import { type Theme } from '@mui/material/styles'
 import { PatientNavBarTabs } from './patient-nav-bar-tabs'
-import { PatientNavBarSelect } from './patient-nav-bar-select'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import { useNavigate } from 'react-router-dom'
 import { type PatientView } from '../../enum/patient-view.enum'
 
 interface PatientNavBarProps {
@@ -45,25 +39,7 @@ interface PatientNavBarProps {
   onClickDaily?: () => void
   onClickPrint?: () => void
   onClickTrends?: () => void
-  onSwitchPatient: (patient: Patient) => void
 }
-
-const styles = makeStyles()((theme: Theme) => {
-  return {
-    topContainer: {
-      backgroundColor: theme.palette.common.white,
-      borderBottom: `1px solid ${theme.palette.divider}`,
-      paddingBlock: theme.spacing(1),
-      width: '100%'
-    },
-    backIcon: {
-      cursor: 'pointer',
-      marginLeft: theme.spacing(4),
-      marginRight: theme.spacing(4),
-      marginTop: theme.spacing(2)
-    }
-  }
-})
 
 const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
   const {
@@ -71,35 +47,12 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
     currentPatient,
     onChangePatientView,
     onClickPrint,
-    onSwitchPatient
   } = props
-
-  const { user } = useAuth()
-  const navigate = useNavigate()
-  const { classes } = styles()
-
-  const goBackHome = (): void => {
-    navigate(`../..`, { relative: 'path' })
-  }
 
   return (
     <Box data-testid="patient-nav-bar" display="flex" flexDirection="column" marginBottom={3}>
-      {!user.isUserPatient() &&
-        <Box className={classes.topContainer}>
-          <Box display="flex" paddingTop={2}>
-            <ArrowBackIcon
-              data-testid="subnav-arrow-back"
-              className={classes.backIcon}
-              onClick={goBackHome}
-            />
-            <PatientNavBarSelect
-              currentPatient={currentPatient}
-              onSwitchPatient={onSwitchPatient}
-            />
-          </Box>
-        </Box>
-      }
       <PatientNavBarTabs
+        currentPatient={currentPatient}
         currentPatientView={currentPatientView}
         onChangePatientView={onChangePatientView}
         onClickPrint={onClickPrint}

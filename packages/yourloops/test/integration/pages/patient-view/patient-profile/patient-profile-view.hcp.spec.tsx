@@ -59,6 +59,18 @@ describe('Patient profile view for HCP', () => {
   const patientTargetAndAlertsRouteMmoL = `/teams/${myThirdTeamId}/patients/${patientWithMmolId}${AppUserRoute.PatientProfile}`
   const patientProfileRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.PatientProfile}`
 
+  /**
+   * @see https://github.com/testing-library/react-testing-library/issues/651
+   * @description SVGElement.getBBOx is not implemented in JSDOM yet.
+   */
+  Object.defineProperty(globalThis.SVGElement.prototype, 'getBBox', {
+    writable: true,
+    value: jest.fn().mockReturnValue({
+      x: 0,
+      y: 0,
+    }),
+  });
+
   describe('Alerts section', () => {
     beforeEach(() => {
       mockAuth0Hook()
