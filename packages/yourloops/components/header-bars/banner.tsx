@@ -49,15 +49,16 @@ export const Banner = (): JSX.Element => {
   }
 
   useEffect(() => {
-    const dblInfo = DblCommunicationApi.getDblBanner()
-    dblInfo.then((data) => {
-      if(isBannerInfoAcknowledged(data)) {
+    const fetchBanner = async (): Promise<void> => {
+      const dblInfo = await DblCommunicationApi.getDblBanner()
+      if (!dblInfo || isBannerInfoAcknowledged(dblInfo)) {
         setNewBannerAvailable(false)
         return
       }
       setNewBannerAvailable(true)
-      setBanner(data)
-    })
+      setBanner(dblInfo)
+    }
+    fetchBanner()
   }, [])
 
   return (

@@ -25,31 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpService from '../http/http.service'
-import { InformationPage } from './models/page.model'
-import { BannerContent } from './models/banner.model'
-import bows from 'bows'
+import DblCommunicationApi from '../../../lib/dbl-communication/dbl-communication.api'
 
-const log = bows('DblCommunication API')
+export const mockDblCommunicationApi = () => {
 
-export default class DblCommunicationApi {
-  static async getInfoPage(): Promise<InformationPage | null> {
-    try {
-      const { data } = await HttpService.get<InformationPage>({ url: 'bff/communications/ylp-info-page' })
-      return data
-    } catch (err) {
-      log.error("Error while getting system info page", err)
-      return null
-    }
-  }
-
-  static async getDblBanner(): Promise<BannerContent | null> {
-    try {
-      const { data } = await HttpService.get<BannerContent>({ url: 'bff/communications/ylp-banner' })
-      return data
-    } catch (err) {
-      log.error("Error while getting system banner", err)
-      return null
-    }
-  }
+  // const infoPage = {
+  //   id: "page-info-12345",
+  //   title: "Important Information",
+  //   content: "<p>This is an <b>important information</b> page for all users.</p>"
+  // }
+  // const bannerContent = {
+  //   id: "banner-12345",
+  //   message: "This is a <b>critical banner message</b> for all users.",
+  //   level: "warning",
+  //   nbOfViewsBeforeHide: 3
+  // }
+  //
+  // jest.spyOn(DblCommunicationApi, 'getInfoPage').mockResolvedValue(infoPage)
+  //
+  // jest.spyOn(DblCommunicationApi, 'getDblBanner').mockResolvedValue(bannerContent)
+  jest.spyOn(DblCommunicationApi, 'getInfoPage').mockResolvedValue(null)
+  jest.spyOn(DblCommunicationApi, 'getDblBanner').mockResolvedValue(null)
 }

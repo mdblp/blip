@@ -76,7 +76,7 @@ describe('DblCommunicationApi', () => {
 
       // Then
       expect(mockedHttpService.get).toHaveBeenCalledWith({ url: 'bff/communications/ylp-info-page' })
-      expect(result).toBeUndefined()
+      expect(result).toBeNull()
     })
 
     it('should handle null response data gracefully', async () => {
@@ -120,7 +120,7 @@ describe('DblCommunicationApi', () => {
 
       // Then
       expect(mockedHttpService.get).toHaveBeenCalledWith({ url: 'bff/communications/ylp-banner' })
-      expect(result).toBeUndefined()
+      expect(result).toBeNull()
     })
 
     it('should handle different banner levels correctly', async () => {
