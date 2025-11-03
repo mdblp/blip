@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,7 +33,7 @@ import { Auth0Provider } from '@auth0/auth0-react'
 import { type AuthContext, AuthContextProvider, type SignupForm, useAuth, type User } from '../../../../lib/auth'
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
 import UserApi from '../../../../lib/auth/user.api'
-import { type Profile } from '../../../../lib/auth/models/profile.model'
+import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { AuthenticatedUserMetadata } from '../../../../lib/auth/models/enums/authenticated-user-metadata.enum'
@@ -51,7 +51,7 @@ describe('Auth hook', () => {
   const userId = 'fakeUserId'
   const userId1 = 'fakeUserId1'
   const userId2 = 'fakeUserId2'
-  const profile: Profile = {
+  const account: UserAccount = {
     firstName: 'John',
     lastName: 'Doe',
     fullName: 'John Doe',
@@ -96,7 +96,7 @@ describe('Auth hook', () => {
       logout: jest.fn(),
       getAccessTokenWithPopup: jest.fn()
     })
-    jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({ profile, preferences, settings })
+    jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({ profile: account, preferences, settings })
   })
 
   describe('Initialization', () => {
@@ -128,14 +128,14 @@ describe('Auth hook', () => {
 
   describe('Updates', () => {
     const updatedPreferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
-    const updatedProfile: Profile = {
-      ...profile,
+    const updatedUserAccount: UserAccount = {
+      ...account,
       privacyPolicy: { acceptanceTimestamp: new Date().toISOString(), isAccepted: true }
     }
     const updatedSettings: Settings = { ...settings, country: CountryCodes.Italy }
 
     beforeAll(() => {
-      jest.spyOn(UserApi, 'updateProfile').mockResolvedValueOnce(updatedProfile)
+      jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValueOnce(updatedUserAccount)
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValueOnce(updatedPreferences)
       jest.spyOn(UserApi, 'updateSettings').mockResolvedValueOnce(updatedSettings)
     })
@@ -152,13 +152,13 @@ describe('Auth hook', () => {
 
     it('updateProfile should call the API with the good parameters', async () => {
       await initAuthContext()
-      expect(auth.user.profile).toEqual(profile)
+      expect(auth.user.account).toEqual(account)
 
       await act(async () => {
-        await auth.updateProfile({ ...updatedProfile })
+        await auth.updateUserAccount({ ...updatedUserAccount })
       })
-      expect(UserApi.updateProfile).toHaveBeenCalledWith(auth.user.id, updatedProfile)
-      expect(auth.user.profile).toEqual(updatedProfile)
+      expect(UserApi.updateUserAccount).toHaveBeenCalledWith(auth.user.id, updatedUserAccount)
+      expect(auth.user.account).toEqual(updatedUserAccount)
     })
 
     it('updateSettings should call the API with the good parameters', async () => {
@@ -177,7 +177,7 @@ describe('Auth hook', () => {
     it('should change the user role', async () => {
       jest.spyOn(UserApi, 'changeUserRoleToHcp').mockResolvedValue(undefined)
       jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValue({
-        profile: { ...profile, hcpProfession: undefined },
+        profile: { ...account, hcpProfession: undefined },
         preferences,
         settings
       })
@@ -190,13 +190,13 @@ describe('Auth hook', () => {
       const updatedUser: User = auth.user
 
       expect(UserApi.changeUserRoleToHcp).toHaveBeenCalledTimes(1)
-      expect(updatedUser.profile.termsOfUse.isAccepted).toBe(true)
-      expect(updatedUser.profile.privacyPolicy.isAccepted).toBe(true)
-      expect(Date.parse(updatedUser.profile.termsOfUse.acceptanceTimestamp)).toBeGreaterThanOrEqual(now)
-      expect(Date.parse(updatedUser.profile.privacyPolicy.acceptanceTimestamp)).toBeGreaterThanOrEqual(now)
+      expect(updatedUser.account.termsOfUse.isAccepted).toBe(true)
+      expect(updatedUser.account.privacyPolicy.isAccepted).toBe(true)
+      expect(Date.parse(updatedUser.account.termsOfUse.acceptanceTimestamp)).toBeGreaterThanOrEqual(now)
+      expect(Date.parse(updatedUser.account.privacyPolicy.acceptanceTimestamp)).toBeGreaterThanOrEqual(now)
       expect(updatedUser.role).toBe(UserRole.Hcp)
-      expect(updatedUser.profile.hcpProfession).toEqual(HcpProfession.diabeto)
-      expect(updatedUser.profile.contactConsent.isAccepted).toBeFalsy()
+      expect(updatedUser.account.hcpProfession).toEqual(HcpProfession.diabeto)
+      expect(updatedUser.account.contactConsent.isAccepted).toBeFalsy()
     })
   })
 
@@ -279,7 +279,7 @@ describe('Auth hook', () => {
     it('should update user profile, preferences and settings', async () => {
       jest.spyOn(UserApi, 'completeUserSignup').mockResolvedValueOnce(undefined)
       jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValueOnce(undefined)
-      jest.spyOn(UserApi, 'updateProfile').mockResolvedValue(undefined)
+      jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValue(undefined)
       jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(undefined)
       jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(undefined)
       const signupForm: SignupForm = {
@@ -295,7 +295,7 @@ describe('Auth hook', () => {
       }
       await initAuthContext()
 
-      expect(auth.user.profile).toBeUndefined()
+      expect(auth.user.account).toBeUndefined()
       expect(auth.user.preferences).toBeUndefined()
       expect(auth.user.settings).toBeUndefined()
 
@@ -304,13 +304,13 @@ describe('Auth hook', () => {
       })
 
       expect(auth.user.role).toEqual(UserRole.Hcp)
-      expect(auth.user.profile.firstName).toEqual('Tim')
-      expect(auth.user.profile.lastName).toEqual('Hagine')
-      expect(auth.user.profile.fullName).toEqual('Tim Hagine')
-      expect(auth.user.profile.hcpProfession).toEqual(HcpProfession.nurse)
-      expect(auth.user.profile.termsOfUse.isAccepted).toBeTruthy()
-      expect(auth.user.profile.privacyPolicy.isAccepted).toBeTruthy()
-      expect(auth.user.profile.contactConsent.isAccepted).toBeTruthy()
+      expect(auth.user.account.firstName).toEqual('Tim')
+      expect(auth.user.account.lastName).toEqual('Hagine')
+      expect(auth.user.account.fullName).toEqual('Tim Hagine')
+      expect(auth.user.account.hcpProfession).toEqual(HcpProfession.nurse)
+      expect(auth.user.account.termsOfUse.isAccepted).toBeTruthy()
+      expect(auth.user.account.privacyPolicy.isAccepted).toBeTruthy()
+      expect(auth.user.account.contactConsent.isAccepted).toBeTruthy()
       expect(auth.user.preferences.displayLanguageCode).toEqual(LanguageCodes.Fr)
       expect(auth.user.settings.country).toEqual(CountryCodes.France)
     })

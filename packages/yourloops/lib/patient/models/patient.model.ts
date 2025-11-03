@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PatientProfile } from './patient-profile.model'
+import { type PatientAccount } from './patient-profile.model'
 import { type PatientSettings } from './patient-settings.model'
 import { type MonitoringAlerts } from './monitoring-alerts.model'
 import { type UserInviteStatus } from '../../team/models/enums/user-invite-status.enum'
@@ -38,7 +38,7 @@ import { DiabeticProfile } from './patient-diabete-profile'
 
 export interface Patient extends Partial<PatientMetrics> {
   readonly userid: string
-  profile: PatientProfile
+  profile: PatientAccount
   settings: PatientSettings
   diabeticProfile?: DiabeticProfile
   monitoringAlertsParameters?: MonitoringAlertsParameters

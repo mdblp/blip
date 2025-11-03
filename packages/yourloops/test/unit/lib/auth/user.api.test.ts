@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import UserApi from '../../../../lib/auth/user.api'
 import HttpService, { ErrorMessageStatus } from '../../../../lib/http/http.service'
 import { type AxiosResponse } from 'axios'
-import { type Profile } from '../../../../lib/auth/models/profile.model'
+import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { type UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
@@ -40,7 +40,7 @@ import { type ChangeUserRoleToHcpPayload } from '../../../../lib/auth/models/cha
 
 describe('User API', () => {
   const userId = 'userId'
-  const profile: Profile = {
+  const account: UserAccount = {
     firstName: 'Bernard',
     lastName: 'Tichaut',
     fullName: 'Bernard Tichaut',
@@ -51,7 +51,7 @@ describe('User API', () => {
 
   describe('getUserMetadata', () => {
     it('should get the user metadata (profile, preferences, settings at once)', async () => {
-      const data: UserMetadata = { profile, settings, preferences }
+      const data: UserMetadata = { profile: account, settings, preferences }
       jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data } as AxiosResponse)
       const response = await UserApi.getUserMetadata(userId)
       expect(response).toEqual(data)
@@ -74,12 +74,12 @@ describe('User API', () => {
 
   describe('updateProfile', () => {
     it('should return the updated profile on success', async () => {
-      jest.spyOn(HttpService, 'put').mockResolvedValue({ data: profile } as AxiosResponse)
-      const updatedProfile = await UserApi.updateProfile(userId, profile)
-      expect(updatedProfile).toEqual(profile)
+      jest.spyOn(HttpService, 'put').mockResolvedValue({ data: account } as AxiosResponse)
+      const updatedProfile = await UserApi.updateUserAccount(userId, account)
+      expect(updatedProfile).toEqual(account)
       expect(HttpService.put).toHaveBeenCalledWith({
         url: `/metadata/${userId}/profile`,
-        payload: profile
+        payload: account
       })
     })
   })
@@ -112,7 +112,7 @@ describe('User API', () => {
   describe('completeUserSignup', () => {
     it('should return the complete signup payload on success', async () => {
       const payload: CompleteSignupPayload = {
-        profile,
+        profile: account,
         settings,
         preferences,
         email: 'test@email.com',

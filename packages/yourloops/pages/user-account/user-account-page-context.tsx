@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,39 +26,39 @@
  */
 
 import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
-import useProfilePageContextHook from './profile-page-context.hook'
-import { type ProfileErrors, type ProfileForm } from './models/profile-form.model'
-import { type ProfileFormKey } from './models/enums/profile-form-key.enum'
+import useUserAccountPageContextHook from './user-account-page-context.hook'
+import { type UserAccountErrors, type UserAccountForm } from './models/user-account-form.model'
+import { type UserAccountFormKey } from './models/enums/user-account-form-key.enum'
 import { type LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 import { type HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
 import { type BgUnit } from 'medical-domain'
 
-interface ProfilePageContext {
+interface UserAccountPageContext {
   canSave: boolean
-  errors: ProfileErrors
-  profileForm: ProfileForm
-  saveProfile: () => Promise<void>
+  errors: UserAccountErrors
+  userAccountForm: UserAccountForm
+  saveUserAccount: () => Promise<void>
   saving: boolean
-  updateProfileForm: (key: ProfileFormKey, value: boolean | string | LanguageCodes | BgUnit | HcpProfession) => void
+  updateUserAccountForm: (key: UserAccountFormKey, value: boolean | string | LanguageCodes | BgUnit | HcpProfession) => void
 }
 
-const ProfilePageStateContext = createContext<ProfilePageContext>({} as ProfilePageContext)
+const UserAccountPageStateContext = createContext<UserAccountPageContext>({} as UserAccountPageContext)
 
-export const ProfilePageContextProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
+export const UserAccountPageContextProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const {
     canSave,
     errors,
-    profileForm,
-    saveProfile,
+    userAccountForm,
+    saveUserAccount,
     saving,
-    updateProfileForm
-  } = useProfilePageContextHook()
+    updateUserAccountForm
+  } = useUserAccountPageContextHook()
 
   return (
-    <ProfilePageStateContext.Provider value={{ profileForm, updateProfileForm, errors, canSave, saving, saveProfile }}>
+    <UserAccountPageStateContext.Provider value={{ userAccountForm, updateUserAccountForm, errors, canSave, saving, saveUserAccount }}>
       {children}
-    </ProfilePageStateContext.Provider>
+    </UserAccountPageStateContext.Provider>
   )
 }
 
-export const useProfilePageState = (): ProfilePageContext => useContext(ProfilePageStateContext)
+export const useUserAccountPageState = (): UserAccountPageContext => useContext(UserAccountPageStateContext)

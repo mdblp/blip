@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -48,7 +48,7 @@ import { availableLanguageCodes, changeLanguage, getCurrentLang } from '../langu
 import metrics from '../metrics'
 import { type AuthContext } from './models/auth-context.model'
 import { type Preferences } from './models/preferences.model'
-import { type Profile } from './models/profile.model'
+import { UserAccount } from './models/user-account.model'
 import { type Settings } from './models/settings.model'
 import { UserRole } from './models/enums/user-role.enum'
 import { type AuthenticatedUser, IDLE_USER_QUERY_PARAM } from './models/authenticated-user.model'
@@ -90,9 +90,9 @@ export function AuthContextImpl(): AuthContext {
     refreshUser()
   }
 
-  const updateProfile = async (profile: Profile): Promise<void> => {
+  const updateUserAccount = async (userAccount: UserAccount): Promise<void> => {
     const user = getUser()
-    user.profile = await UserApi.updateProfile(user.id, profile)
+    user.account = await UserApi.updateUserAccount(user.id, userAccount)
     refreshUser()
   }
 
@@ -152,7 +152,7 @@ export function AuthContextImpl(): AuthContext {
     await refreshToken() // Refreshing access token to get the new role in it
 
     user.role = UserRole.Hcp
-    user.profile = { ...user.profile, ...payload }
+    user.account = { ...user.account, ...payload }
     refreshUser()
   }
 
@@ -171,7 +171,7 @@ export function AuthContextImpl(): AuthContext {
       if (user.role !== UserRole.Unset) {
         const userMetadata = await UserApi.getUserMetadata(user.id)
         if (userMetadata) {
-          user.profile = userMetadata.profile
+          user.account = userMetadata.profile
           user.preferences = userMetadata.preferences
           user.settings = userMetadata.settings
           if (!user.settings) {
@@ -216,7 +216,7 @@ export function AuthContextImpl(): AuthContext {
 
   const completeSignup = async (signupForm: SignupForm): Promise<void> => {
     const now = new Date().toISOString()
-    const profile: Profile = {
+    const userAccount: UserAccount = {
       email: auth0user.email,
       fullName: `${signupForm.profileFirstname} ${signupForm.profileLastname}`,
       firstName: signupForm.profileFirstname,
@@ -225,9 +225,9 @@ export function AuthContextImpl(): AuthContext {
       privacyPolicy: { acceptanceTimestamp: now, isAccepted: signupForm.privacyPolicy }
     }
     if (signupForm.accountRole === UserRole.Hcp) {
-      profile.contactConsent = { acceptanceTimestamp: now, isAccepted: signupForm.feedback }
-      profile.hcpProfession = signupForm.hcpProfession
-      profile.hcpConfirmAck = { acceptanceTimestamp: now, isAccepted: signupForm.hcpConfirmAck }
+      userAccount.contactConsent = { acceptanceTimestamp: now, isAccepted: signupForm.feedback }
+      userAccount.hcpProfession = signupForm.hcpProfession
+      userAccount.hcpConfirmAck = { acceptanceTimestamp: now, isAccepted: signupForm.hcpConfirmAck }
     }
     const preferences: Preferences = { displayLanguageCode: signupForm.preferencesLanguage }
     const settings: Settings = { country: signupForm.profileCountry }
@@ -238,7 +238,7 @@ export function AuthContextImpl(): AuthContext {
       email: auth0user.email,
       role: signupForm.accountRole,
       preferences,
-      profile,
+      profile: userAccount,
       settings
     })
 
@@ -246,7 +246,7 @@ export function AuthContextImpl(): AuthContext {
 
     user.role = signupForm.accountRole
     user.preferences = preferences
-    user.profile = profile
+    user.account = userAccount
     user.settings = settings
   }
 
@@ -268,7 +268,7 @@ export function AuthContextImpl(): AuthContext {
     user,
     isLoggedIn,
     fetchingUser,
-    updateProfile,
+    updateUserAccount,
     updatePreferences,
     updateSettings,
     logout,

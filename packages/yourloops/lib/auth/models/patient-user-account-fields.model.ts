@@ -25,25 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Gender } from '../../auth/models/enums/gender.enum'
+import { type Gender } from './enums/gender.enum'
 
-export interface PatientAccount {
-  birthdate?: string
-  firstName?: string
-  fullName: string
-  lastName?: string
-  email: string
-  sex: Gender
-  weight?: Weight
-  height?: Height
-}
-
-export interface Weight  {
-  value: number
-  unit: string
-}
-
-export interface Height {
-  value: number
-  unit: string
+export interface PatientUserAccountFields {
+  birthday?: string
+  birthPlace?: string
+  diagnosisDate?: string
+  diagnosisType?: string
+  sex?: Gender
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,13 +26,13 @@
  */
 
 import { type Preferences } from '../../auth/models/preferences.model'
-import { type Profile } from '../../auth/models/profile.model'
+import { type UserAccount } from '../../auth/models/user-account.model'
 import { type Settings } from '../../auth/models/settings.model'
 
 export interface DirectShareUser {
   userId: string
   preferences?: Preferences | null
-  profile?: Profile | null
+  profile?: UserAccount | null
   settings?: Settings | null
   email: string
   idVerified: boolean

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,21 +29,22 @@ import { act, renderHook } from '@testing-library/react'
 import * as authHookMock from '../../../../lib/auth'
 import { type User } from '../../../../lib/auth'
 import * as alertMock from '../../../../components/utils/snackbar'
-import useProfilePageContextHook from '../../../../pages/profile/profile-page-context.hook'
-import { type Profile } from '../../../../lib/auth/models/profile.model'
+import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { CountryCodes } from '../../../../lib/auth/models/country.model'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { ProfileFormKey } from '../../../../pages/profile/models/enums/profile-form-key.enum'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 import { Unit } from 'medical-domain'
+import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
+import { UserAccountFormKey } from '../../../../pages/user-account/models/enums/user-account-form-key.enum'
+import useUserAccountPageContextHook from '../../../../pages/user-account/user-account-page-context.hook'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../components/utils/snackbar')
 
-describe('Profile page context hook', () => {
-  const profile: Profile = {
+describe('User account page context hook', () => {
+  const account: UserAccount = {
     email: 'elie@coptere.com',
     firstName: 'Elie',
     lastName: 'Coptere',
@@ -53,10 +54,7 @@ describe('Profile page context hook', () => {
       birthPlace: 'Anywhere',
       diagnosisDate: '2020-12-02',
       diagnosisType: '1',
-      referringDoctor: 'Dr Dre',
-      sex: 'M',
-      ins: '123456789012345',
-      ssn: '012345678901234'
+      sex: Gender.Male,
     },
     termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
     privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
@@ -65,7 +63,8 @@ describe('Profile page context hook', () => {
   const settings: Settings = {
     a1c: {
       rawdate: '2020-01-01',
-      value: '7.5'
+      value: '7.5',
+      date: '2020-01-01'
     },
     country: CountryCodes.France,
     units: { bg: Unit.MmolPerLiter }
@@ -73,7 +72,7 @@ describe('Profile page context hook', () => {
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
   const onSuccessAlertMock = jest.fn()
   const onErrorAlertMock = jest.fn()
-  const updateProfileMock = jest.fn()
+  const updateUserAccountMock = jest.fn()
   const updateSettingsMock = jest.fn()
   const updatePreferencesMock = jest.fn()
 
@@ -84,7 +83,7 @@ describe('Profile page context hook', () => {
     }));
     (authHookMock.useAuth as jest.Mock).mockImplementation(() => {
       return {
-        updateProfile: updateProfileMock,
+        updateUserAccount: updateUserAccountMock,
         updateSettings: updateSettingsMock,
         updatePreferences: updatePreferencesMock,
         user: {
@@ -92,12 +91,12 @@ describe('Profile page context hook', () => {
           isUserHcp: () => false,
           isUserCaregiver: () => false,
           isUserPatient: () => true,
-          profile,
+          account,
           preferences,
           settings,
-          firstName: profile.firstName,
-          lastName: profile.lastName,
-          birthday: profile.patient.birthday
+          firstName: account.firstName,
+          lastName: account.lastName,
+          birthday: account.patient.birthday
         } as User
       }
     })
@@ -106,21 +105,21 @@ describe('Profile page context hook', () => {
   it('should save profile when user change some fields', async () => {
     const firstName = 'Odile'
     const lastName = 'Deray'
-    const expectedProfile = { ...profile, firstName, lastName, fullName: `${firstName} ${lastName}` }
+    const expectedUserAccount = { ...account, firstName, lastName, fullName: `${firstName} ${lastName}` }
     const expectedSettings = { ...settings, units: { bg: Unit.MilligramPerDeciliter } }
     const expectedPreferences = { displayLanguageCode: 'en' }
-    const { result } = renderHook(() => useProfilePageContextHook())
-    const { updateProfileForm } = result.current
+    const { result } = renderHook(() => useUserAccountPageContextHook())
+    const { updateUserAccountForm } = result.current
     await act(async () => {
-      updateProfileForm(ProfileFormKey.firstName, firstName)
-      updateProfileForm(ProfileFormKey.lastName, lastName)
-      updateProfileForm(ProfileFormKey.units, Unit.MilligramPerDeciliter)
-      updateProfileForm(ProfileFormKey.lang, 'en')
+      updateUserAccountForm(UserAccountFormKey.firstName, firstName)
+      updateUserAccountForm(UserAccountFormKey.lastName, lastName)
+      updateUserAccountForm(UserAccountFormKey.units, Unit.MilligramPerDeciliter)
+      updateUserAccountForm(UserAccountFormKey.lang, 'en')
     })
     await act(async () => {
-      await result.current.saveProfile()
+      await result.current.saveUserAccount()
     })
-    expect(updateProfileMock).toHaveBeenCalledWith(expectedProfile)
+    expect(updateUserAccountMock).toHaveBeenCalledWith(expectedUserAccount)
     expect(updateSettingsMock).toHaveBeenCalledWith(expectedSettings)
     expect(updatePreferencesMock).toHaveBeenCalledWith(expectedPreferences)
     expect(onSuccessAlertMock).toHaveBeenCalled()
@@ -140,9 +139,9 @@ describe('Profile page context hook', () => {
       }
     })
 
-    const { result } = renderHook(() => useProfilePageContextHook())
+    const { result } = renderHook(() => useUserAccountPageContextHook())
     await act(async () => {
-      await result.current.saveProfile()
+      await result.current.saveUserAccount()
     })
     expect(onErrorAlertMock).toHaveBeenCalled()
   })

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,25 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Gender } from '../../auth/models/enums/gender.enum'
 
-export interface PatientAccount {
-  birthdate?: string
-  firstName?: string
-  fullName: string
-  lastName?: string
-  email: string
-  sex: Gender
-  weight?: Weight
-  height?: Height
+import {
+  checkConsequencesDialog,
+  checkConsequencesDialogClosing,
+  checkHcpProfessionDialogAndSave,
+  checkHcpProfessionDialogClosing,
+  checkPrivacyAndTermsDialog,
+  checkPrivacyAndTermsDialogClosing
+} from '../assert/caregiver-switch-role-hcp.assert'
+
+export const testCaregiverSwitchRoleToHcp = async (): Promise<void> => {
+  await checkConsequencesDialog()
+  await checkPrivacyAndTermsDialog()
+  await checkHcpProfessionDialogAndSave()
 }
 
-export interface Weight  {
-  value: number
-  unit: string
-}
-
-export interface Height {
-  value: number
-  unit: string
+export const testCaregiverSwitchRoleDialogsClosing = async (): Promise<void> => {
+  await checkConsequencesDialogClosing()
+  await checkPrivacyAndTermsDialogClosing()
+  await checkHcpProfessionDialogClosing()
 }
