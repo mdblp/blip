@@ -37,7 +37,7 @@ import BasicDropdownWithValidation from '../../../components/dropdown/basic-drop
 import { PatientProfileForm } from './patient-account-form'
 import { useUserAccountPageState } from '../user-account-page-context'
 import { userAccountFormCommonClasses } from '../css-classes'
-import { UserAccountFormKey } from '../models/enums/profile-form-key.enum'
+import { UserAccountFormKey } from '../models/enums/user-account-form-key.enum'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'

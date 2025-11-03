@@ -39,7 +39,7 @@ import TextField from '@mui/material/TextField'
 import { useAuth } from '../../../lib/auth'
 import { useUserAccountPageState } from '../user-account-page-context'
 import { userAccountFormCommonClasses } from '../css-classes'
-import { UserAccountFormKey } from '../models/enums/profile-form-key.enum'
+import { UserAccountFormKey } from '../models/enums/user-account-form-key.enum'
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 import PatientUtils from '../../../lib/patient/patient.util'
 

@@ -40,7 +40,7 @@ import { type LanguageCodes } from '../../../lib/auth/models/enums/language-code
 import { useUserAccountPageState } from '../user-account-page-context'
 import { useAuth } from '../../../lib/auth'
 import { userAccountFormCommonClasses } from '../css-classes'
-import { UserAccountFormKey } from '../models/enums/profile-form-key.enum'
+import { UserAccountFormKey } from '../models/enums/user-account-form-key.enum'
 import { type BgUnit, Unit } from 'medical-domain'
 import Typography from '@mui/material/Typography'
 

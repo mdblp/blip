@@ -37,7 +37,7 @@ import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 import { Unit } from 'medical-domain'
 import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
-import { UserAccountFormKey } from '../../../../pages/user-account/models/enums/profile-form-key.enum'
+import { UserAccountFormKey } from '../../../../pages/user-account/models/enums/user-account-form-key.enum'
 import useUserAccountPageContextHook from '../../../../pages/user-account/user-account-page-context.hook'
 
 jest.mock('../../../../lib/auth')

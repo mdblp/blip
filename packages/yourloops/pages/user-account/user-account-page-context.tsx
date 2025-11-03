@@ -27,8 +27,8 @@
 
 import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
 import useUserAccountPageContextHook from './user-account-page-context.hook'
-import { type UserAccountErrors, type UserAccountForm } from './models/profile-form.model'
-import { type UserAccountFormKey } from './models/enums/profile-form-key.enum'
+import { type UserAccountErrors, type UserAccountForm } from './models/user-account-form.model'
+import { type UserAccountFormKey } from './models/enums/user-account-form-key.enum'
 import { type LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 import { type HcpProfession } from '../../lib/auth/models/enums/hcp-profession.enum'
 import { type BgUnit } from 'medical-domain'
