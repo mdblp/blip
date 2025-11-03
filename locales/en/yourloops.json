@@ -322,6 +322,7 @@
   "hypoglycemia-tooltip1": "Hypoglycemia: {{percentage}}",
   "hypoglycemia-tooltip2": "Alert triggered when {{threshold}}% of time below {{veryLowBg}} {{unit}} threshold over the period considered.",
   "identification-code": "Identification code",
+  "important-information": "Important information",
   "information": "Information",
   "initial-hba1c": "Initial HbA1c",
   "in-range": "in range",
