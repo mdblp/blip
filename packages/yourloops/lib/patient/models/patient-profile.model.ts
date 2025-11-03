@@ -36,6 +36,13 @@ export interface PatientAccount {
   sex: Gender
   weight?: Weight
   height?: Height
+  drugTreatment: string
+  diet: string[]
+  profession: string
+  hobbies: string[]
+  physicalActivities: string[]
+  hoursSpentOnPhysicalActivitiesPerWeek: number
+  comments: string
 }
 
 export interface Weight  {

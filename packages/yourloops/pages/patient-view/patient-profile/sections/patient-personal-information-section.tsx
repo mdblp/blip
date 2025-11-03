@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC } from 'react'
+import React, { FC, useMemo, useState } from 'react'
 import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import Card from '@mui/material/Card'
@@ -48,16 +48,98 @@ import StraightenIcon from '@mui/icons-material/Straighten'
 import { BasalIcon } from '../../../../components/icons/diabeloop/basal-icon'
 import { PatientDiabeticProfileChip } from '../../../../components/chips/patient-diabetic-profile-chip'
 import { getUserName } from '../../../../lib/auth/user.util'
+import { useAuth } from '../../../../lib/auth'
+import { makeStyles } from 'tss-react/mui'
+import { type Theme } from '@mui/material/styles'
+import { Autocomplete, TextField } from "@mui/material"
+import InputAdornment from '@mui/material/InputAdornment'
+import { LoadingButton } from '@mui/lab'
+import { Save } from '@mui/icons-material'
+import { errorTextFromException } from '../../../../lib/utils'
+import { logError } from '../../../../utils/error.util'
+import { useAlert } from '../../../../components/utils/snackbar'
+import Alert from '@mui/material/Alert'
+import { PhysicalActivityName } from 'medical-domain'
+import { PatientAccount } from '../../../../lib/patient/models/patient-profile.model'
+
+export enum AdditionalPatientAdditionalPatientProfileFormKey {
+  DrugTreatment = 'drugTreatment',
+  Diet = 'diet',
+  Profession = 'profession',
+  Hobbies = 'hobbies',
+  PhysicalActivities = 'physicalActivities',
+  HoursSpentOnPhysicalActivitiesPerWeek = 'hoursSpentOnPhysicalActivitiesPerWeek',
+  Comments = 'comments'
+}
 
 interface InformationSectionProps {
   patient: Patient
 }
 
+const useStyles = makeStyles()((theme: Theme) => ({
+  separator: {
+    border: `1px solid ${theme.palette.divider}`,
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(2)
+  },
+  sectionTitle: {
+    marginBottom: theme.spacing(2),
+  },
+  alert: {
+    marginBottom: theme.spacing(1),
+    width: '90%',
+  },
+  formField: {
+    marginBottom: theme.spacing(3),
+    width: '80%'
+  },
+  openCommentsField: {
+    width: '90%'
+  }
+}))
+
 export const PatientPersonalInformationSection: FC<InformationSectionProps> = (props) => {
   const { patient } = props
   const theme = useTheme()
+  const { user } = useAuth()
   const { t } = useTranslation()
+  const { classes } = useStyles()
+  const alert = useAlert()
+  const [additionalPatientProfileForm, setAdditionalPatientProfileForm] = useState<PatientAccount>(patient.profile)
+  const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 
+  const updateAdditionalPatientProfileForm = (key: AdditionalPatientAdditionalPatientProfileFormKey, value: unknown): void => {
+    setAdditionalPatientProfileForm((prevForm) => ({
+      ...prevForm,
+      [key]: value
+    }))
+  }
+
+  const saveButtonDisabled = useMemo(() => {
+    return saveInProgress
+  }, [saveInProgress])
+
+  const save = async (): Promise<void> => {
+    setSaveInProgress(true)
+    try {
+      //await updatePatientDiabeticAdditionalPatientProfile(patient.userid, additionalPatientProfileForm)
+      patient.profile = additionalPatientProfileForm
+      console.log('Saved additional patient profile:', JSON.stringify(additionalPatientProfileForm, null, 2))
+      alert.success(t('patient-update-success'))
+    } catch (error) {
+      const errorMessage = errorTextFromException(error)
+      logError(errorMessage, 'update-patient-ranges')
+      alert.error(t('patient-update-error'))
+    }
+    finally {
+      setSaveInProgress(false)
+    }
+  }
+
+  const physicalActivityNameList = Object.values(PhysicalActivityName)
+  const dietOptions = ['no-specific-diet','vegetarian', 'gluten-free', 'low-carbohydrates-diet', 'vegan', 'ketogenic-diet', 'caloric-restriction', 'intermittent-fasting', 'paleolithic-diet', 'other']
+
+  // read part
   const getGender = (): string => {
     return PatientUtils.getGenderLabel(patient.profile.sex)
   }
@@ -128,7 +210,9 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
               <Typography variant="h6" fontWeight="medium">
                 {getUserName(patient.profile.firstName, patient.profile.lastName, patient.profile.fullName) || t('N/A')}
               </Typography>
-              <PatientDiabeticProfileChip patientDiabeticType={patient.diabeticProfile.type} />
+              {user.isUserPatient() &&
+                <PatientDiabeticProfileChip patientDiabeticType={patient.diabeticProfile.type} />
+              }
             </Box>
           </Box>
           <Grid container spacing={2}>
@@ -255,6 +339,143 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
 
             </Grid>
           </Grid>
+          <div className={classes.separator} />
+
+          {/* Additional Information Section */}
+          <Typography variant="h6" className={classes.sectionTitle}>
+            {t('additional-information')}
+          </Typography>
+
+          {/* Info Banner */}
+          <Alert data-testid="additional-information-status-disclamer-label" severity="info" className={classes.alert}>
+            {t('additional-information-disclaimer')}
+          </Alert>
+
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              {/* Drug Treatment Other Than Insulin */}
+              <TextField
+                id="additionalPatientProfile-drug-treatment"
+                data-testid="additionalPatientProfile-drug-treatment"
+                label={t('drug-treatment-other-than-insulin')}
+                variant="outlined"
+                className={classes.formField}
+                value={additionalPatientProfileForm.drugTreatment || ''}
+                onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.DrugTreatment, e.target.value)}
+              />
+
+              {/* Profession */}
+              <TextField
+                data-testid="additional-patient-profile-profession"
+                label={t('profession')}
+                variant="outlined"
+                className={classes.formField}
+                value={additionalPatientProfileForm.profession || ''}
+                onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.Profession, e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={6}>
+              {/* Diet */}
+              <Autocomplete
+                multiple
+                data-testid="additional-patient-profile-diet"
+                options={dietOptions}
+                getOptionLabel={(option) => t(option)}
+                limitTags={2}
+                freeSolo
+                className={classes.formField}
+                value={additionalPatientProfileForm.diet}
+                onChange={(e, value) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.Diet, value)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    label={t('diet')}
+                  />
+                )}
+              />
+
+              {/* Hobby */}
+              <TextField
+                id="additionalPatientProfile-hobby"
+                data-testid="additionalPatientProfile-hobby"
+                label={t('hobby')}
+                variant="outlined"
+                className={classes.formField}
+                value={additionalPatientProfileForm.hobbies || ''}
+                onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.Hobbies, e.target.value)}
+              />
+            </Grid>
+          </Grid>
+
+          {/* Physical Activity Section */}
+          <Grid container spacing={1} mb={1}>
+            <Grid item xs={6}>
+              <Autocomplete
+                multiple
+                data-testid="additionalPatientProfile-physical-activity"
+                options={physicalActivityNameList}
+                limitTags={3}
+                getOptionLabel={(option) => t(`params|${option}`)}
+                freeSolo
+                className={classes.formField}
+                value={additionalPatientProfileForm.physicalActivities}
+                onChange={(e, value) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.PhysicalActivities, value)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    label={t('physical-activity')}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                id="additionalPatientProfile-physical-activity-duration"
+                data-testid="additionalPatientProfile-physical-activity-duration"
+                label={t('duration-per-week')}
+                variant="outlined"
+                className={classes.formField}
+                type="number"
+                value={additionalPatientProfileForm.hoursSpentOnPhysicalActivitiesPerWeek || ''}
+                onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.HoursSpentOnPhysicalActivitiesPerWeek, e.target.value)}
+                InputProps={{
+                  endAdornment: <InputAdornment position="end">{t('hours')}</InputAdornment>
+                }}
+              />
+            </Grid>
+          </Grid>
+
+          {/* Open Comments - Full Width  TODO: look how to handle row properties*/}
+          <TextField
+            id="additionalPatientProfile-open-comments"
+            data-testid="additionalPatientProfile-open-comments"
+            label={t('open-comments')}
+            variant="outlined"
+            multiline
+            //rows={1}
+            className={classes.openCommentsField}
+            value={additionalPatientProfileForm.comments || ''}
+            onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.Comments, e.target.value)}
+          />
+          <Box display="flex" justifyContent="flex-end" mt={4}>
+            <LoadingButton
+              loading={saveInProgress}
+              id="save-button-id"
+              variant="contained"
+              color="primary"
+              disableElevation
+              startIcon={<Save />}
+              disabled={saveButtonDisabled}
+              onClick={save}
+              data-testid="additional-info-save"
+              sx={{ minWidth: 120 }}
+            >
+              {t('button-save')}
+            </LoadingButton>
+          </Box>
         </Box>
       </CardContent>
     </Card>
