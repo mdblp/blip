@@ -26,8 +26,6 @@
  */
 
 import React, { useEffect } from 'react'
-import _ from 'lodash'
-import bows from 'bows'
 
 import Alert from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar';
@@ -66,7 +64,7 @@ export const Banner = (): JSX.Element => {
     <Snackbar
       open={newBannerAvailable && !closed}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      autoHideDuration={null} // Pas de fermeture automatique pour les infos critiques
+      autoHideDuration={null}
     >
       <Alert
         severity={banner?.level}

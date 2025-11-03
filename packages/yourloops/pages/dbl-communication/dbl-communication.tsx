@@ -34,20 +34,16 @@ import Container from '@mui/material/Container'
 import config from '../../lib/config/config'
 import { GlobalStyles } from 'tss-react'
 import { useAuth } from '../../lib/auth'
-import AppBar from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
-import Avatar from '@mui/material/Avatar'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { setPageTitle } from '../../lib/utils'
 import { useTheme } from '@mui/material/styles'
-import { useDblCommunicationStyles } from './dbl-communication.styles'
 import { registerDblCommunicationAck } from '../../lib/dbl-communication/storage'
+import { BasicHeader } from '../../components/header-bars/basic-header'
 
 
 export const DblCommunicationPage: FunctionComponent = () => {
-  const { classes: { appBar, desktopLogo } } = useDblCommunicationStyles()
   const { t } = useTranslation()
-  const { logout, user } = useAuth()
+  const { user } = useAuth()
   const theme = useTheme()
   const navigate = useNavigate()
   const location = useLocation()
@@ -59,9 +55,7 @@ export const DblCommunicationPage: FunctionComponent = () => {
     communicationTitle = user.newDblCommunication.title
     communicationContent = user.newDblCommunication.content
   }
-  const logoutUser = (): void => {
-    logout()
-  }
+
 
   const ackInformation = (): void => {
     registerDblCommunicationAck(user.newDblCommunication.id)
@@ -72,39 +66,14 @@ export const DblCommunicationPage: FunctionComponent = () => {
 
   return (
     <>
-      <AppBar
-        elevation={0}
-        className={appBar}
-        position="fixed"
-        data-testid="dbl-comm-header"
-      >
-        <Toolbar>
-          <Avatar
-            id="header-main-logo"
-            aria-label={t('alt-img-logo')}
-            variant="square"
-            src={`/branding_${config.BRANDING}_logo.svg`}
-            alt={t('alt-img-logo')}
-            className={desktopLogo}
-          />
-          <Box sx={{ flexGrow: 1 }} />
-          <Button
-            variant="outlined"
-            color="info"
-            onClick={logoutUser}
-          >
-            {t('button-logout')}
-          </Button>
-        </Toolbar>
-      </AppBar>
-
+      <BasicHeader testId="dbl-comm-header"/>
       <Box
         display="flex"
         justifyContent="center"
         alignItems="center"
         height="90vh"
         textAlign="center"
-        data-testid="verify-email-content"
+        data-testid="dbl-comm-content"
       >
         <GlobalStyles styles={{ body: { backgroundColor: theme.palette.common.white } }} />
 
@@ -123,7 +92,7 @@ export const DblCommunicationPage: FunctionComponent = () => {
           </Box>
 
           <Box textAlign="left">
-            <Box mt={3} mb={3} data-testid="verify-email-details-2" dangerouslySetInnerHTML={{ __html: communicationContent }}/>
+            <Box mt={3} mb={3} data-testid="dbl-comm-details" dangerouslySetInnerHTML={{ __html: communicationContent }}/>
           </Box>
 
           <Box marginTop={4}>

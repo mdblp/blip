@@ -25,9 +25,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpService, { ErrorMessageStatus } from '../http/http.service'
+import HttpService from '../http/http.service'
 import { InformationPage } from './models/page.model'
 import { BannerContent } from './models/banner.model'
+import bows from 'bows'
+
+const log = bows('DblCommunication API')
 
 export default class DblCommunicationApi {
   static async getInfoPage(): Promise<InformationPage> {
@@ -35,7 +38,7 @@ export default class DblCommunicationApi {
       const { data } = await HttpService.get<InformationPage>({ url: 'bff/communications/ylp-info-page' })
       return data
     } catch (err) {
-      console.log("Error while getting system communications", err)
+      log.error("Error while getting system info page", err)
       return undefined
     }
   }
@@ -45,7 +48,7 @@ export default class DblCommunicationApi {
       const { data } = await HttpService.get<BannerContent>({ url: 'bff/communications/ylp-banner' })
       return data
     } catch (err) {
-      console.log("Error while getting system communications", err)
+      log.error("Error while getting system banner", err)
       return undefined
     }
   }

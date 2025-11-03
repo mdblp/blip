@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,9 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import React, { FunctionComponent } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useAuth } from '../../lib/auth'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import Avatar from '@mui/material/Avatar'
+import config from '../../lib/config/config'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 import { makeStyles } from 'tss-react/mui'
 
-export const useDblCommunicationStyles = makeStyles()((theme) => {
+export const styles = makeStyles()((theme) => {
   return {
     appBar: {
       borderBottom: `1px solid ${theme.palette.divider}`,
@@ -40,3 +49,48 @@ export const useDblCommunicationStyles = makeStyles()((theme) => {
     }
   }
 })
+
+const logoutUser = (): void => {
+  const { logout } = useAuth()
+  logout()
+}
+
+interface BasicHeaderProps {
+  testId: string
+}
+
+export const BasicHeader: FunctionComponent<BasicHeaderProps> = (props) => {
+  const { testId } = props
+  const { classes: { appBar, desktopLogo } } = styles()
+  const { t } = useTranslation()
+
+  return (
+    <>
+      <AppBar
+        elevation={0}
+        className={appBar}
+        position="fixed"
+        data-testid={testId}
+      >
+        <Toolbar>
+          <Avatar
+            id="header-main-logo"
+            aria-label={t('alt-img-logo')}
+            variant="square"
+            src={`/branding_${config.BRANDING}_logo.svg`}
+            alt={t('alt-img-logo')}
+            className={desktopLogo}
+          />
+          <Box sx={{ flexGrow: 1 }} />
+          <Button
+            variant="outlined"
+            color="info"
+            onClick={logoutUser}
+          >
+            {t('button-logout')}
+          </Button>
+        </Toolbar>
+      </AppBar>
+    </>
+  )
+}
