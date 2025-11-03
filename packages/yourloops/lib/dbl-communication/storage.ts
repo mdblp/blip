@@ -45,17 +45,19 @@ export function isDblCommunicationAcknowledged(id: string): boolean {
 
 export function registerBannerAck(id: string): void {
   const acknowledgmentNumbers = JSON.parse(localStorage.getItem(bannerStorageKey) ?? '{}')
-  if (!acknowledgmentNumbers[id]) {
-    acknowledgmentNumbers[id] = 1
-  } else {
+  const bannerIdAlreadyStored = acknowledgmentNumbers[id]
+  if (bannerIdAlreadyStored) {
     acknowledgmentNumbers[id] += 1
+  } else {
+    acknowledgmentNumbers[id] = 1
   }
   localStorage.setItem(bannerStorageKey, JSON.stringify(acknowledgmentNumbers))
 }
 
 export function isBannerInfoAcknowledged(banner: BannerContent): boolean {
   const acknowledgmentNumbers = JSON.parse(localStorage.getItem(bannerStorageKey) ?? '{}')
-  if (!acknowledgmentNumbers[banner.id]) {
+  const neverSeen = !acknowledgmentNumbers[banner.id]
+  if (neverSeen) {
     return false
   }
   return acknowledgmentNumbers[banner.id] >= banner.nbOfViewsBeforeHide

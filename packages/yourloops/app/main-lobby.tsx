@@ -79,19 +79,19 @@ export const getRedirectUrl = (route: string, user: User, isAuthenticated: boole
   if (!isAuthenticated && !routeIsPublic && !isCurrentRouteAlwaysAccessible) {
     return AppRoute.Login
   }
-  if (route !== AppRoute.CompleteSignup && isAuthenticated && user && user.isFirstLogin()) {
+  if (route !== AppRoute.CompleteSignup && isAuthenticated && user?.isFirstLogin()) {
     return AppRoute.CompleteSignup
   }
-  if (!renewConsentPath && user && user.hasToAcceptNewConsent()) {
+  if (!renewConsentPath && user?.hasToAcceptNewConsent()) {
     return AppRoute.NewConsent
   }
-  if (!renewConsentPath && user && user.hasToRenewConsent()) {
+  if (!renewConsentPath && user?.hasToRenewConsent()) {
     return AppRoute.RenewConsent
   }
-  if (!trainingPath && route !== AppRoute.CompleteSignup && !renewConsentPath && user && user.hasToDisplayTrainingInfoPage()) {
+  if (!trainingPath && route !== AppRoute.CompleteSignup && !renewConsentPath && user?.hasToDisplayTrainingInfoPage()) {
     return AppRoute.Training
   }
-  if (user && user.hasToDisplayDblCommunicationPage()) {
+  if (user?.hasToDisplayDblCommunicationPage()) {
     return AppRoute.DblCommunication
   }
   return undefined

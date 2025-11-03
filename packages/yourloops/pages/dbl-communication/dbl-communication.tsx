@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useEffect, useState } from 'react'
+import React, { type FunctionComponent } from 'react'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'

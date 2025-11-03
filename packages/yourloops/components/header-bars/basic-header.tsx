@@ -50,11 +50,6 @@ export const styles = makeStyles()((theme) => {
   }
 })
 
-const logoutUser = (): void => {
-  const { logout } = useAuth()
-  logout()
-}
-
 interface BasicHeaderProps {
   testId: string
 }
@@ -63,9 +58,13 @@ export const BasicHeader: FunctionComponent<BasicHeaderProps> = (props) => {
   const { testId } = props
   const { classes: { appBar, desktopLogo } } = styles()
   const { t } = useTranslation()
+  const { logout } = useAuth()
+
+  const logoutUser = (): void => {
+    logout()
+  }
 
   return (
-    <>
       <AppBar
         elevation={0}
         className={appBar}
@@ -91,6 +90,5 @@ export const BasicHeader: FunctionComponent<BasicHeaderProps> = (props) => {
           </Button>
         </Toolbar>
       </AppBar>
-    </>
   )
 }

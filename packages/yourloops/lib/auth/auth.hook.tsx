@@ -166,7 +166,6 @@ export function AuthContextImpl(): AuthContext {
 
   const getDblCommunicationMessages = async (user: User): Promise<void> => {
     user.newDblCommunication = await DblCommunicationApi.getInfoPage()
-    //TODO: verify if the user has read them or not (local storage)
   }
 
   async function getProfile(user: User) {

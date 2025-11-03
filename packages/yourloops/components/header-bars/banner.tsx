@@ -40,7 +40,7 @@ import {
 export const Banner = (): JSX.Element => {
   const [closed, setClosed] = React.useState<boolean>(false)
   const [newBannerAvailable, setNewBannerAvailable] = React.useState<boolean>(false)
-  const [banner, setBannerContent] = React.useState<BannerContent>()
+  const [banner, setBanner] = React.useState<BannerContent>()
 
 
   const acknowledgeCurrentBanner = () => {
@@ -56,7 +56,7 @@ export const Banner = (): JSX.Element => {
         return
       }
       setNewBannerAvailable(true)
-      setBannerContent(data)
+      setBanner(data)
     })
   }, [])
 
