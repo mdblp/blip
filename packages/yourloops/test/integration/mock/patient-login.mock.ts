@@ -40,11 +40,11 @@ import { mockDblCommunicationApi } from './dbl-communication.api'
 export const mockPatientLogin = (patient: Patient) => {
   mockAuth0Hook(UserRole.Patient, patient.userid)
   mockNotificationAPI()
+  mockDblCommunicationApi()
   mockDirectShareApi()
   mockTeamAPI()
   mockUserApi().mockUserDataFetch({ firstName: patient.profile.firstName, lastName: patient.profile.lastName })
   mockChatAPI()
   mockMedicalFilesAPI()
   mockPatientApiForPatients()
-  mockDblCommunicationApi()
 }

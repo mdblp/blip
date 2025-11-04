@@ -57,9 +57,10 @@ describe('Training page when new training available', () => {
     const router = renderPage('/training')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/training')
+      expect(screen.getByText('New training available, please read what\'s new before continuing on YourLoops.')).toBeVisible()
     })
 
-    expect(screen.getByText('New training available, please read what\'s new before continuing on YourLoops.')).toBeVisible()
+
     const openButton = screen.getByText('Open training')
     expect(openButton).toBeEnabled()
     await userEvent.click(openButton)
