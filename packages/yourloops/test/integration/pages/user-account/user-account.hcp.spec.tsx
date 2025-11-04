@@ -44,14 +44,12 @@ import { mockAuthApi } from '../../mock/auth.api.mock'
 import { Unit } from 'medical-domain'
 import {
   type AppMainLayoutHcpParams,
-  testAppMainLayoutForHcp,
-  testBannerLanguageUpdate
+  testAppMainLayoutForHcp
 } from '../../use-cases/app-main-layout-visualisation'
-import { ConfigService } from '../../../../lib/config/config.service'
 import ErrorApi from '../../../../lib/error/error.api'
 import { testHcpUserInfoUpdate, testPasswordChangeRequest } from '../../use-cases/user-account-management'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
-import { mockDblCommunicationApi, mockDblCommunicationApiBanner } from '../../mock/dbl-communication.api'
+import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 
 describe('User account page for hcp', () => {
   const userAccountRoute = AppUserRoute.UserAccount
