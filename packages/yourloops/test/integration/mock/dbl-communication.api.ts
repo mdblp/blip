@@ -28,22 +28,23 @@
 import DblCommunicationApi from '../../../lib/dbl-communication/dbl-communication.api'
 
 export const mockDblCommunicationApi = () => {
+  jest.spyOn(DblCommunicationApi, 'getInfoPage').mockResolvedValue(null)
+  jest.spyOn(DblCommunicationApi, 'getDblBanner').mockResolvedValue(null)
+}
+
+export const mockDblCommunicationApiBanner = () => {
 
   // const infoPage = {
   //   id: "page-info-12345",
   //   title: "Important Information",
   //   content: "<p>This is an <b>important information</b> page for all users.</p>"
   // }
-  // const bannerContent = {
-  //   id: "banner-12345",
-  //   message: "This is a <b>critical banner message</b> for all users.",
-  //   level: "warning",
-  //   nbOfViewsBeforeHide: 3
-  // }
-  //
-  // jest.spyOn(DblCommunicationApi, 'getInfoPage').mockResolvedValue(infoPage)
-  //
-  // jest.spyOn(DblCommunicationApi, 'getDblBanner').mockResolvedValue(bannerContent)
+  const bannerContent = {
+    id: "banner-12345",
+    message: "This is a <b>critical banner message</b> for all users.",
+    level: "warning",
+    nbOfViewsBeforeHide: 3
+  }
   jest.spyOn(DblCommunicationApi, 'getInfoPage').mockResolvedValue(null)
-  jest.spyOn(DblCommunicationApi, 'getDblBanner').mockResolvedValue(null)
+  jest.spyOn(DblCommunicationApi, 'getDblBanner').mockResolvedValue(bannerContent)
 }

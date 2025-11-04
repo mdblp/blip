@@ -70,6 +70,7 @@ export const Banner = (): JSX.Element => {
       <Alert
         severity={banner?.level}
         onClose={acknowledgeCurrentBanner}
+        data-testid='dbl-banner-alert'
       >
         <div dangerouslySetInnerHTML={{ __html: banner?.message ?? '' }} />
       </Alert>

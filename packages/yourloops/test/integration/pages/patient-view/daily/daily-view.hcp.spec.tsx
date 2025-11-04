@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,6 +42,7 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { Unit } from 'medical-domain'
 import { testDailyViewTooltipsAndValuesMmolL } from '../../../use-cases/patient-data-visualisation'
 import { patient2Id } from '../../../data/patient.api.data'
+import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 
 describe('Daily view for HCP', () => {
   const firstName = 'HCP firstName'
@@ -58,6 +59,7 @@ describe('Daily view for HCP', () => {
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForHcp()
     mockChatAPI()
+    mockDblCommunicationApi()
   })
 
   afterEach(() => {

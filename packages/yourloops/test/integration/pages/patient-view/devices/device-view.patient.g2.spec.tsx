@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,6 +41,7 @@ import { testAppMainLayoutForPatient } from '../../../use-cases/app-main-layout-
 import { testG2DevicesVisualisation } from '../../../use-cases/device-settings-visualisation'
 import { testDeviceSettingsNavigationForPatient } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 
 describe('Device view for G2 Patient', () => {
   const firstName = 'patient g2 firstName'
@@ -51,6 +52,7 @@ describe('Device view for G2 Patient', () => {
   beforeEach(() => {
     mockWindowResizer()
     mockAuth0Hook(UserRole.Patient, patientg2Id)
+    mockDblCommunicationApi()
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()

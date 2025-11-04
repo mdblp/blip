@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -71,6 +71,7 @@ import { testChatWidgetForHcp } from '../../../use-cases/communication-system'
 import { ConfigService } from '../../../../../lib/config/config.service'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
+import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 
 describe('Dashboard view for HCP', () => {
   const patientDashboardRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Dashboard}`
@@ -80,6 +81,7 @@ describe('Dashboard view for HCP', () => {
 
   beforeEach(() => {
     mockAuth0Hook()
+    mockDblCommunicationApi()
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()

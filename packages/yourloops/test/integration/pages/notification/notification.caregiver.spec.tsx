@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,6 +41,7 @@ import { mockPatientApiForCaregivers } from '../../mock/patient.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { invitationDirectShare } from '../../data/notification.data'
 import { testNotificationManagementForCaregiver } from '../../use-cases/notification-management'
+import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 
 describe('Notification page for caregiver', () => {
   const firstName = 'Jeanned'
@@ -61,6 +62,7 @@ describe('Notification page for caregiver', () => {
     mockPatientApiForCaregivers()
     mockNotificationAPI()
     mockDirectShareApi()
+    mockDblCommunicationApi()
     jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValue([invitationDirectShare])
     jest.spyOn(DirectShareApi, 'getDirectShares').mockResolvedValue([directSharePatient])
     jest.spyOn(NotificationApi, 'acceptInvitation').mockResolvedValue()

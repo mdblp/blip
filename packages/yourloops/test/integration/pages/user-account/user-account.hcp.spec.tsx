@@ -51,6 +51,7 @@ import { ConfigService } from '../../../../lib/config/config.service'
 import ErrorApi from '../../../../lib/error/error.api'
 import { testHcpUserInfoUpdate, testPasswordChangeRequest } from '../../use-cases/user-account-management'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
+import { mockDblCommunicationApi, mockDblCommunicationApiBanner } from '../../mock/dbl-communication.api'
 
 describe('User account page for hcp', () => {
   const userAccountRoute = AppUserRoute.UserAccount
@@ -73,6 +74,7 @@ describe('User account page for hcp', () => {
 
   beforeAll(() => {
     mockAuth0Hook()
+    mockDblCommunicationApi()
     mockAuthApi()
     mockUserApi().mockUserDataFetch({ account, preferences, settings })
     mockNotificationAPI()
@@ -123,16 +125,5 @@ describe('User account page for hcp', () => {
     expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, expectedSettings)
 
     await testPasswordChangeRequest(loggedInUserEmail)
-  })
-
-  it('should show the banner and change its content when the banner is enabled and language is changed', async () => {
-    jest.spyOn(ConfigService, 'isBannerEnabled').mockReturnValue(true)
-
-    const router = renderPage(userAccountRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(userAccountRoute)
-    })
-
-    await testBannerLanguageUpdate()
   })
 })

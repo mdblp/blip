@@ -44,6 +44,7 @@ import {
 } from '../../../use-cases/device-settings-visualisation'
 import { testDeviceSettingsNavigationForPatient } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 
 describe('Device view for G1 Patient', () => {
   const firstName = 'patient firstName'
@@ -54,6 +55,7 @@ describe('Device view for G1 Patient', () => {
   beforeEach(() => {
     mockWindowResizer()
     mockAuth0Hook(UserRole.Patient, patient1Id)
+    mockDblCommunicationApi()
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()

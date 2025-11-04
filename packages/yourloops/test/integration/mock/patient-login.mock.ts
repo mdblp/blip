@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,6 +35,7 @@ import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from './user.api.mock'
 import { mockPatientApiForPatients } from './patient.api.mock'
 import { Patient } from '../../../lib/patient/models/patient.model'
+import { mockDblCommunicationApi } from './dbl-communication.api'
 
 export const mockPatientLogin = (patient: Patient) => {
   mockAuth0Hook(UserRole.Patient, patient.userid)
@@ -45,4 +46,5 @@ export const mockPatientLogin = (patient: Patient) => {
   mockChatAPI()
   mockMedicalFilesAPI()
   mockPatientApiForPatients()
+  mockDblCommunicationApi()
 }
