@@ -46,6 +46,7 @@ import { useTranslation } from 'react-i18next'
 import { logError } from '../../utils/error.util'
 import { DiabeticProfile } from './models/patient-diabete-profile'
 
+// Custom hook to manage patients' data and actions for healthcare professionals and caregivers
 export default function usePatientsProviderCustomHook(): PatientsContextResult {
   const { t } = useTranslation()
   const { cancel: cancelInvite } = useNotification()
