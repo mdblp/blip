@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, useEffect } from 'react'
+import React, { type FC, useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { PatientData } from '../components/patient-data/patient-data'
 import { CareTeamSettingsPage } from '../pages/care-team-settings/care-team-settings-page'
@@ -36,7 +36,6 @@ import { InvalidRoute } from '../components/invalid-route'
 import { UserAccountPage } from '../pages/user-account/user-account-page'
 import { NotificationsPage } from '../pages/notifications/notifications-page'
 import { AppUserRoute } from '../models/enums/routes.enum'
-//import PatientUtils from '../lib/patient/patient.util'
 import { useAuth } from '../lib/auth'
 import PatientApi from '../lib/patient/patient.api'
 import { Patient } from '../lib/patient/models/patient.model'
@@ -49,7 +48,7 @@ export const PatientLayout: FC = () => {
   const { user } = useAuth()
   const { t } = useTranslation()
   const alert = useAlert()
-  const [patient, setPatient] = React.useState<Patient>()
+  const [patient, setPatient] = useState<Patient>()
 
   useEffect(() => {
     PatientApi.getPatientInfo(user.id)

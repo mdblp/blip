@@ -60,7 +60,8 @@ import { logError } from '../../../../utils/error.util'
 import { useAlert } from '../../../../components/utils/snackbar'
 import Alert from '@mui/material/Alert'
 import { PhysicalActivityName } from 'medical-domain'
-import { PatientAccount } from '../../../../lib/patient/models/patient-profile.model'
+import { ProfilePatient } from '../../../../lib/patient/models/patient-profile.model'
+import PatientApi from '../../../../lib/patient/patient.api'
 
 export enum AdditionalPatientAdditionalPatientProfileFormKey {
   DrugTreatment = 'drugTreatment',
@@ -104,8 +105,9 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
   const { user } = useAuth()
   const { t } = useTranslation()
   const { classes } = useStyles()
+
   const alert = useAlert()
-  const [additionalPatientProfileForm, setAdditionalPatientProfileForm] = useState<PatientAccount>(patient.profile)
+  const [additionalPatientProfileForm, setAdditionalPatientProfileForm] = useState<ProfilePatient>(patient.profile)
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 
   const updateAdditionalPatientProfileForm = (key: AdditionalPatientAdditionalPatientProfileFormKey, value: unknown): void => {
@@ -122,9 +124,8 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
   const save = async (): Promise<void> => {
     setSaveInProgress(true)
     try {
-      //await updatePatientDiabeticAdditionalPatientProfile(patient.userid, additionalPatientProfileForm)
+      await PatientApi.updatePatientProfile(patient.userid, additionalPatientProfileForm)
       patient.profile = additionalPatientProfileForm
-      console.log('Saved additional patient profile:', JSON.stringify(additionalPatientProfileForm, null, 2))
       alert.success(t('patient-update-success'))
     } catch (error) {
       const errorMessage = errorTextFromException(error)
@@ -448,14 +449,13 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
             </Grid>
           </Grid>
 
-          {/* Open Comments - Full Width  TODO: look how to handle row properties*/}
+          {/* Open Comments*/}
           <TextField
             id="additionalPatientProfile-open-comments"
             data-testid="additionalPatientProfile-open-comments"
             label={t('open-comments')}
             variant="outlined"
             multiline
-            //rows={1}
             className={classes.openCommentsField}
             value={additionalPatientProfileForm.comments || ''}
             onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.Comments, e.target.value)}
@@ -463,7 +463,6 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
           <Box display="flex" justifyContent="flex-end" mt={4}>
             <LoadingButton
               loading={saveInProgress}
-              id="save-button-id"
               variant="contained"
               color="primary"
               disableElevation

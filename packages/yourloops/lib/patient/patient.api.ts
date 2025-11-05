@@ -30,10 +30,11 @@ import { getCurrentLang } from '../language'
 import { UserRole } from '../auth/models/enums/user-role.enum'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
-import { type Patient, type PatientMetrics } from './models/patient.model'
+import { type Patient, type PatientMetrics, UserProfilePayload } from './models/patient.model'
 import { type MonitoringAlertsParameters } from 'medical-domain'
 import { DiabeticProfilePayload } from './models/patient-diabete-profile'
 import { type DiabeticProfile } from './models/patient-diabete-profile'
+import { ProfilePatient } from './models/patient-profile.model'
 
 export const PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE = 'patient-already-in-team'
 const PATIENT_ALREADY_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
@@ -130,5 +131,24 @@ export default class PatientApi {
       url: `/metadata/${patientId}/diabetic-profile`,
       payload: payload
     })
+  }
+
+  static async updatePatientProfile(patientId: string, patientProfile: ProfilePatient) {
+    const payload: UserProfilePayload = {
+      patient: {
+        drugTreatment : patientProfile.drugTreatment,
+        diet : patientProfile.diet,
+        profession : patientProfile.profession,
+        hobbies : patientProfile.hobbies,
+        physicalActivities : patientProfile.physicalActivities,
+        hoursSpentOnPhysicalActivitiesPerWeek : patientProfile.hoursSpentOnPhysicalActivitiesPerWeek,
+        comments : patientProfile.comments
+      }
+    }
+    const { data } = await HttpService.put<void, UserProfilePayload>({
+      url: `/metadata/${patientId}/profile`,
+      payload: payload
+    })
+    return data
   }
 }
