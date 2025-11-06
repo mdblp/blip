@@ -110,6 +110,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
   const [additionalPatientProfileForm, setAdditionalPatientProfileForm] = useState<ProfilePatient>(patient.profile)
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   const updateAdditionalPatientProfileForm = (key: AdditionalPatientAdditionalPatientProfileFormKey, value: unknown): void => {
     setAdditionalPatientProfileForm((prevForm) => ({
       ...prevForm,
