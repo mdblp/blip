@@ -46,5 +46,5 @@ export const mockPatientLogin = (patient: Patient) => {
   mockUserApi().mockUserDataFetch({ firstName: patient.profile.firstName, lastName: patient.profile.lastName })
   mockChatAPI()
   mockMedicalFilesAPI()
-  mockPatientApiForPatients()
+  mockPatientApiForPatients(patient)
 }
