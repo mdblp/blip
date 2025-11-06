@@ -109,7 +109,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
   const alert = useAlert()
   const [additionalPatientProfileForm, setAdditionalPatientProfileForm] = useState<ProfilePatient>(patient.profile)
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
-  
+
   const updateAdditionalPatientProfileForm = (key: AdditionalPatientAdditionalPatientProfileFormKey, value: unknown): void => {
     setAdditionalPatientProfileForm((prevForm) => ({
       ...prevForm,
@@ -362,6 +362,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
                 className={classes.formField}
                 value={additionalPatientProfileForm.drugTreatment || ''}
                 onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.DrugTreatment, e.target.value)}
+                disabled={!user.isUserPatient()}
               />
 
               {/* Profession */}
@@ -372,6 +373,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
                 className={classes.formField}
                 value={additionalPatientProfileForm.profession || ''}
                 onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.Profession, e.target.value)}
+                disabled={!user.isUserPatient()}
               />
             </Grid>
 
@@ -394,6 +396,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
                     label={t('diet')}
                   />
                 )}
+                disabled={!user.isUserPatient()}
               />
 
               {/* Hobby */}
@@ -404,6 +407,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
                 className={classes.formField}
                 value={additionalPatientProfileForm.hobbies || ''}
                 onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.Hobbies, e.target.value)}
+                disabled={!user.isUserPatient()}
               />
             </Grid>
           </Grid>
@@ -428,6 +432,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
                     label={t('physical-activity')}
                   />
                 )}
+                disabled={!user.isUserPatient()}
               />
             </Grid>
             <Grid item xs={6}>
@@ -442,6 +447,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
                 InputProps={{
                   endAdornment: <InputAdornment position="end">{t('hours')}</InputAdornment>
                 }}
+                disabled={!user.isUserPatient()}
               />
             </Grid>
           </Grid>
@@ -455,22 +461,25 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
             className={classes.openCommentsField}
             value={additionalPatientProfileForm.comments || ''}
             onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.Comments, e.target.value)}
+            disabled={!user.isUserPatient()}
           />
-          <Box display="flex" justifyContent="flex-end" mt={4}>
-            <LoadingButton
-              loading={saveInProgress}
-              variant="contained"
-              color="primary"
-              disableElevation
-              startIcon={<Save />}
-              disabled={saveButtonDisabled}
-              onClick={save}
-              data-testid="additional-info-save"
-              sx={{ minWidth: 120 }}
-            >
-              {t('button-save')}
-            </LoadingButton>
-          </Box>
+          { user.isUserPatient() &&
+            <Box display="flex" justifyContent="flex-end" mt={4}>
+              <LoadingButton
+                loading={saveInProgress}
+                variant="contained"
+                color="primary"
+                disableElevation
+                startIcon={<Save />}
+                disabled={saveButtonDisabled}
+                onClick={save}
+                data-testid="additional-info-save"
+                sx={{ minWidth: 120 }}
+              >
+                {t('button-save')}
+              </LoadingButton>
+            </Box>
+          }
         </Box>
       </CardContent>
     </Card>
