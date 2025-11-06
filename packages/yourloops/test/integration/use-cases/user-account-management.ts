@@ -27,7 +27,7 @@
 
 import {
   checkCaregiverInfoUpdate,
-  checkCaregiverUserAccountLayout, checkHcpInfoUpdate, checkHcpUserAccountLayout,
+  checkCaregiverUserAccountLayout, checkEmailChangeRequest, checkHcpInfoUpdate, checkHcpUserAccountLayout,
   checkPasswordChangeRequest, checkPatientInfoUpdate, checkPatientUserAccountLayout
 } from '../assert/user-account.assert'
 
@@ -48,6 +48,10 @@ export const testPatientUserInfoUpdate = async (): Promise<void> => {
 
 export const testPasswordChangeRequest = async (userEmail: string): Promise<void> => {
   await checkPasswordChangeRequest(userEmail)
+}
+
+export const testEmailChangeRequest = async (userId: string, newEmail: string, code: string): Promise<void> => {
+  await checkEmailChangeRequest(userId, newEmail, code)
 }
 
 

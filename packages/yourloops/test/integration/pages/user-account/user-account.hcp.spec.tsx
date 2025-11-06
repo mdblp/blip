@@ -47,7 +47,11 @@ import {
   testAppMainLayoutForHcp
 } from '../../use-cases/app-main-layout-visualisation'
 import ErrorApi from '../../../../lib/error/error.api'
-import { testHcpUserInfoUpdate, testPasswordChangeRequest } from '../../use-cases/user-account-management'
+import {
+  testEmailChangeRequest,
+  testHcpUserInfoUpdate,
+  testPasswordChangeRequest
+} from '../../use-cases/user-account-management'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 
@@ -123,5 +127,14 @@ describe('User account page for hcp', () => {
     expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, expectedSettings)
 
     await testPasswordChangeRequest(loggedInUserEmail)
+  })
+
+  it('should open the change e-mail popup, complete the flow successfully and display success snackbar', async () => {
+    const router = renderPage(userAccountRoute)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(userAccountRoute)
+    })
+
+    await testEmailChangeRequest(loggedInUserId, 'newEmail@diabeloop.fr', '457845789')
   })
 })

@@ -49,7 +49,11 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import { mockAuthApi } from '../../mock/auth.api.mock'
 import { Unit } from 'medical-domain'
 import ErrorApi from '../../../../lib/error/error.api'
-import { testCaregiverUserInfoUpdate, testPasswordChangeRequest } from '../../use-cases/user-account-management'
+import {
+  testCaregiverUserInfoUpdate,
+  testEmailChangeRequest,
+  testPasswordChangeRequest
+} from '../../use-cases/user-account-management'
 import {
   testCaregiverSwitchRoleDialogsClosing,
   testCaregiverSwitchRoleToHcp
@@ -118,5 +122,14 @@ describe('User account page for caregiver', () => {
 
     expect(changeUserRoleToHcpMock).toHaveBeenCalled()
     expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })
+  })
+
+  it('should open the change e-mail popup, complete the flow successfully and display success snackbar', async () => {
+    const router = renderPage(userAccountRoute)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(userAccountRoute)
+    })
+
+    await testEmailChangeRequest(loggedInUserId, 'newEmail@diabeloop.fr', '457845789')
   })
 })

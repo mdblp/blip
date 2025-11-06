@@ -39,12 +39,7 @@ import { useAlert } from '../../../components/utils/snackbar'
 import TextField from '@mui/material/TextField'
 import { userAccountFormCommonClasses } from '../css-classes'
 import ConfirmDialog from '../../../components/dialogs/confirm-dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogActions from '@mui/material/DialogActions'
-import { LoadingButton } from '@mui/lab'
-import Dialog from '@mui/material/Dialog'
+import { ChangeEmailModal } from '../modals/change-email-modal'
 
 export const SecurityForm: FC = () => {
   const { t } = useTranslation('yourloops')
@@ -53,20 +48,6 @@ export const SecurityForm: FC = () => {
   const { classes } = userAccountFormCommonClasses()
   const [showUpdatePasswordDialog, setShowUpdatePasswordDialog] = React.useState<boolean>(false)
   const [showUpdateEmailDialog, setShowUpdateEmailDialog] = React.useState<boolean>(false)
-  const [newEmail, setNewEmail] = React.useState<string>('')
-  const [changeEmailCode, setChangeEmailCode] = React.useState<string>('')
-  const [operationInProgress, setOperationInProgress] = React.useState<boolean>(false)
-  const [emailSentSuccess, setEmailSentSuccess] = React.useState<boolean|undefined>(undefined)
-  const [codeVerificationSuccess, setCodeVerificationSuccess] = React.useState<boolean|undefined>(undefined)
-
-  const resetDialogState = (): void => {
-    setNewEmail('')
-    setChangeEmailCode('')
-    setEmailSentSuccess(undefined)
-    setCodeVerificationSuccess(undefined)
-    setShowUpdateEmailDialog(false)
-    setShowUpdatePasswordDialog(false)
-  }
 
   const sendChangePasswordEmail = async (): Promise<void> => {
     try {
@@ -77,31 +58,6 @@ export const SecurityForm: FC = () => {
       logError(errorMessage, 'change-password')
       alert.error(t('alert-change-password-email-failed'))
     }
-  }
-
-  const sendChangeEmailRequest = async (): Promise<void> => {
-    setOperationInProgress(true)
-    try {
-      await AuthApi.sendChangeEmailRequest(user.id, newEmail)
-      setEmailSentSuccess(true)
-    } catch (error: unknown) {
-      setEmailSentSuccess(false)
-    }
-    setOperationInProgress(false)
-  }
-
-  const validateChangeEmailRequest = async (): Promise<void> => {
-    setOperationInProgress(true)
-    try {
-      await AuthApi.validateChangeEmailRequest(changeEmailCode)
-      setCodeVerificationSuccess(true)
-      setOperationInProgress(false)
-      resetDialogState()
-      alert.success(t('alert-change-email-success'))
-    } catch (error: unknown) {
-      setCodeVerificationSuccess(false)
-    }
-    setOperationInProgress(false)
   }
 
   return (
@@ -154,86 +110,7 @@ export const SecurityForm: FC = () => {
         }}
         onConfirm={sendChangePasswordEmail}
       />
-      <Dialog
-        data-testid="confirm-email-change-dialog"
-        open={showUpdateEmailDialog}
-        fullWidth
-        maxWidth="sm"
-        onClose={() => {
-          setShowUpdateEmailDialog(false)
-        }}
-      >
-        <DialogTitle>
-          {t('button-change-email')}
-        </DialogTitle>
-
-        <DialogContent>
-          <Box display="flex" flexDirection="column">
-            <TextField
-              data-testid="user-email-current"
-              label={t('email')}
-              variant="outlined"
-              value={user.email}
-              disabled={true}
-              className={classes.formInput}
-            />
-            <TextField
-              data-testid="user-new-email"
-              label={t('new-email')}
-              error={emailSentSuccess == false}
-              helperText={emailSentSuccess == false ? t("error-occurred") : undefined}
-              variant="outlined"
-              value={newEmail}
-              onChange={(e) => {
-                setNewEmail(e.target.value)
-              }}
-              disabled={false}
-              className={classes.formInput}
-            />
-            <TextField
-              data-testid="user-new-email-code"
-              label={t('code')}
-              error={codeVerificationSuccess == false}
-              helperText={codeVerificationSuccess == false ? t("error-occurred") : undefined}
-              variant="outlined"
-              value={changeEmailCode}
-              disabled={false}
-              onChange={(e) => {
-                setChangeEmailCode(e.target.value)
-              }}
-              className={classes.formInput}
-              sx={{ display: emailSentSuccess == true ? 'inherit' : 'none' }}
-            />
-            <DialogContentText marginTop={2}>
-              {t('email-change-dialog-text-part1')}<br />
-              {t('email-change-dialog-text-part2')}
-            </DialogContentText>
-          </Box>
-        </DialogContent>
-
-        <DialogActions>
-          <Button
-            data-testid="confirm-dialog-cancel-button"
-            variant="outlined"
-            onClick={() => {
-              setShowUpdateEmailDialog(false)
-            }}
-          >
-            {t('button-cancel')}
-          </Button>
-          <LoadingButton
-            loading={operationInProgress}
-            data-testid="confirm-dialog-confirm-button"
-            variant="contained"
-            color={"primary"}
-            disableElevation
-            disabled={operationInProgress || newEmail.length == 0}
-            onClick={emailSentSuccess == true ? validateChangeEmailRequest : sendChangeEmailRequest}
-          >
-            {t('button-confirm')}
-          </LoadingButton>
-        </DialogActions>
-      </Dialog>
+      <ChangeEmailModal showUpdateEmailDialog={showUpdateEmailDialog} setShowUpdateEmailDialog={setShowUpdateEmailDialog} />
     </>
   )
 }
