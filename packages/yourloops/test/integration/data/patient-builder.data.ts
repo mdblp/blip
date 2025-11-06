@@ -65,13 +65,13 @@ export const buildPatient = (params: {
       lastName: params.profile?.lastName || 'fakeLastname',
       email: params.profile?.email || 'fake@email.com',
       sex: params.profile?.sex || Gender.Male,
-      drugTreatment: "",
+      drugTreatment: '',
       diet: ['gluten-free'],
-      profession: "Pescador",
-      hobbies: ['eating burger'],
+      profession: 'Pescador',
+      hobbies: 'eating burger',
       physicalActivities: ['Running'],
       hoursSpentOnPhysicalActivitiesPerWeek: 2,
-      comments: ""
+      comments: ''
     },
     settings: {
       a1c: params.settings?.a1c || { date: '2023-05-26T12:28:36.047Z', value: 'fakeA1cValue' },

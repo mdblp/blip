@@ -212,7 +212,6 @@ describe('Patient profile view for HCP', () => {
     })
 
     // TODO: Uncomment when the feature is implemented with the API
-    // eslint-disable-next-line jest/no-commented-out-tests
     // it('should handle missing patient data gracefully', async () => {
     //   // Mock patient with missing data
     //   mockPatientApiForHcp().mockPatientDataFetch({
@@ -231,7 +230,110 @@ describe('Patient profile view for HCP', () => {
     //   const naTexts = await screen.findAllByText('N/A')
     //   expect(naTexts.length).toBeGreaterThan(0)
     // })
+
+
   })
+
+  describe('Information section - Additional information form', () => {
+    beforeEach(() => {
+      mockAuth0Hook()
+      mockNotificationAPI()
+      mockDirectShareApi()
+      mockTeamAPI()
+      mockUserApi().mockUserDataFetch({ firstName, lastName })
+      mockPatientApiForHcp()
+      mockDataAPI()
+    })
+
+    it('should display additional information section with disclaimer', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const disclaimer = await screen.findByTestId('additional-information-status-disclamer-label')
+      expect(disclaimer).toBeVisible()
+    })
+
+    it('should display drug treatment field', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const drugTreatmentField = await screen.findByTestId('additional-patient-profile-drug-treatment')
+      expect(drugTreatmentField).toBeVisible()
+      expect(drugTreatmentField).toBeEnabled()
+    })
+
+    it('should display profession field', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const professionField = await screen.findByTestId('additional-patient-profile-profession')
+      expect(professionField).toBeVisible()
+      expect(professionField).toBeEnabled()
+    })
+
+    it('should display diet autocomplete', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const dietField = await screen.findByTestId('additional-patient-profile-diet')
+      expect(dietField).toBeVisible()
+      expect(dietField).toBeEnabled()
+    })
+
+    it('should display hobbies field', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const hobbiesField = await screen.findByTestId('additional-patient-profile-hobby')
+      expect(hobbiesField).toBeVisible()
+      expect(hobbiesField).toBeEnabled()
+    })
+
+    it('should display physical activities field', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const physicalActivitiesField = await screen.findByTestId('additional-patient-profile-physical-activity')
+      expect(physicalActivitiesField).toBeVisible()
+    })
+
+    it('should display physical activity duration field', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const durationField = await screen.findByTestId('additional-patient-profile-physical-activity-duration')
+      expect(durationField).toBeVisible()
+    })
+
+    it('should display open comments field', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const commentsField = await screen.findByTestId('additional-patient-profile-open-comments')
+      expect(commentsField).toBeVisible()
+    })
+
+    it('should not see save button', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const saveButton = await screen.findByTestId('additional-info-save')
+      await userEvent.click(saveButton)
+
+      expect(saveButton).not.toBeVisible()
+    })
+  })
+
+
 
   describe('Range section', () => {
     beforeEach(() => {
