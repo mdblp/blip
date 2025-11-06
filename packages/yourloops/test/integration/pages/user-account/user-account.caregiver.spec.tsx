@@ -55,6 +55,7 @@ import {
   testCaregiverSwitchRoleToHcp
 } from '../../use-cases/caregiver-switch-role-hcp'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
+import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 
 describe('User account page for caregiver', () => {
   const userAccountRoute = AppUserRoute.UserAccount
@@ -77,6 +78,7 @@ describe('User account page for caregiver', () => {
 
   beforeAll(() => {
     mockAuth0Hook(UserRole.Caregiver)
+    mockDblCommunicationApi()
     mockAuthApi()
     mockUserApi().mockUserDataFetch({ account, preferences, settings })
     mockNotificationAPI()

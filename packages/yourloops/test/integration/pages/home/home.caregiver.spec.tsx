@@ -44,6 +44,7 @@ import { buildPatient } from '../../data/patient-builder.data'
 import moment from 'moment-timezone'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
 import ErrorApi from '../../../../lib/error/error.api'
+import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
@@ -56,6 +57,7 @@ describe('Caregiver home page', () => {
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForCaregivers()
     mockDirectShareApi()
+    mockDblCommunicationApi()
   })
 
   it('should render the patient list page with correct components', async () => {

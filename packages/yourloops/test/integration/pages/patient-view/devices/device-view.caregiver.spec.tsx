@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,6 +41,7 @@ import { testAppMainLayoutForCaregiver } from '../../../use-cases/app-main-layou
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { act } from '@testing-library/react'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
+import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 
 describe('Devices view for Caregiver', () => {
   const firstName = 'Caregiver firstName'
@@ -51,6 +52,7 @@ describe('Devices view for Caregiver', () => {
   beforeEach(() => {
     mockWindowResizer()
     mockAuth0Hook(UserRole.Caregiver)
+    mockDblCommunicationApi()
     mockNotificationAPI()
     mockDirectShareApi()
     mockUserApi().mockUserDataFetch({ firstName, lastName })

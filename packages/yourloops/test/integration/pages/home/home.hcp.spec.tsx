@@ -51,6 +51,7 @@ import { type Router } from '../../models/router.model'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
 import ErrorApi from '../../../../lib/error/error.api'
+import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -67,6 +68,7 @@ describe('HCP home page', () => {
     mockPatientApiForHcp()
     mockDirectShareApi()
     mockDataAPI()
+    mockDblCommunicationApi()
     jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
     jest.spyOn(PatientApi, 'invitePatient').mockResolvedValue(undefined)
     jest.spyOn(NotificationApi, 'cancelInvitation').mockResolvedValue(undefined)

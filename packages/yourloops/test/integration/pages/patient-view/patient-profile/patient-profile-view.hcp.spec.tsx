@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -51,8 +51,21 @@ import { Unit } from 'medical-domain'
 import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { getTranslation } from '../../../../utils/i18n'
+import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 
 describe('Patient profile view for HCP', () => {
+
+  beforeEach(() => {
+    mockAuth0Hook()
+    mockNotificationAPI()
+    mockDirectShareApi()
+    mockTeamAPI()
+    mockUserApi().mockUserDataFetch({ firstName, lastName })
+    mockPatientApiForHcp()
+    mockDataAPI()
+    mockDblCommunicationApi()
+  })
+
   const firstName = 'HCP firstName'
   const lastName = 'HCP lastName'
 
@@ -72,15 +85,6 @@ describe('Patient profile view for HCP', () => {
   });
 
   describe('Alerts section', () => {
-    beforeEach(() => {
-      mockAuth0Hook()
-      mockNotificationAPI()
-      mockDirectShareApi()
-      mockTeamAPI()
-      mockUserApi().mockUserDataFetch({ firstName, lastName })
-      mockPatientApiForHcp()
-      mockDataAPI()
-    })
 
     it('should render correct layout', async () => {
       const appMainLayoutParams: AppMainLayoutHcpParams = {
@@ -238,6 +242,7 @@ describe('Patient profile view for HCP', () => {
       mockUserApi().mockUserDataFetch({ firstName, lastName })
       mockPatientApiForHcp()
       mockDataAPI()
+      mockDblCommunicationApi()
       // defined in Node 17+, not in Jest env (Node 16)
       // simple polyfill that works for JSON-serializable objects
       // does not support functions, Dates, Maps, Sets, etc.

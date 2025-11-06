@@ -53,6 +53,7 @@ import {
 } from '../../../use-cases/patient-data-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
+import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 
 describe('Dashboard view for caregiver', () => {
   const patientDashboardRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Dashboard}`
@@ -61,6 +62,7 @@ describe('Dashboard view for caregiver', () => {
 
   beforeEach(() => {
     mockAuth0Hook(UserRole.Caregiver)
+    mockDblCommunicationApi()
     mockNotificationAPI()
     mockDirectShareApi()
     mockUserApi().mockUserDataFetch({ firstName, lastName })

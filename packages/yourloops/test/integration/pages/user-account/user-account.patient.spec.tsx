@@ -45,6 +45,7 @@ import { Unit } from 'medical-domain'
 import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { testPatientUserInfoUpdate } from '../../use-cases/user-account-management'
+import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 
 describe('User account page for patient', () => {
   const userAccountRoute = AppUserRoute.UserAccount
@@ -78,6 +79,7 @@ describe('User account page for patient', () => {
 
   beforeAll(() => {
     mockAuth0Hook(UserRole.Patient)
+    mockDblCommunicationApi()
     mockUserApi().mockUserDataFetch({ account, preferences, settings })
     mockNotificationAPI()
     mockDirectShareApi()
