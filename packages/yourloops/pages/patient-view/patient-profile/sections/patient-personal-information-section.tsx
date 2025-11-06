@@ -109,8 +109,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
   const alert = useAlert()
   const [additionalPatientProfileForm, setAdditionalPatientProfileForm] = useState<ProfilePatient>(patient.profile)
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
-
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  
   const updateAdditionalPatientProfileForm = (key: AdditionalPatientAdditionalPatientProfileFormKey, value: unknown): void => {
     setAdditionalPatientProfileForm((prevForm) => ({
       ...prevForm,
@@ -417,7 +416,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
                 data-testid="additional-patient-profile-physical-activity"
                 options={physicalActivityNameList}
                 limitTags={3}
-                getOptionLabel={(option) => t(`params|${option}`)}
+                getOptionLabel={(option: string) => t(`params|${option}`)}
                 freeSolo
                 className={classes.formField}
                 value={additionalPatientProfileForm.physicalActivities}
