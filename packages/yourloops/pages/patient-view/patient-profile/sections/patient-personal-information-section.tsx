@@ -356,8 +356,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
             <Grid item xs={6}>
               {/* Drug Treatment Other Than Insulin */}
               <TextField
-                id="additionalPatientProfile-drug-treatment"
-                data-testid="additionalPatientProfile-drug-treatment"
+                data-testid="additional-patient-profile-drug-treatment"
                 label={t('drug-treatment-other-than-insulin')}
                 variant="outlined"
                 className={classes.formField}
@@ -399,8 +398,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
 
               {/* Hobby */}
               <TextField
-                id="additionalPatientProfile-hobby"
-                data-testid="additionalPatientProfile-hobby"
+                data-testid="additional-patient-profile-hobby"
                 label={t('hobby')}
                 variant="outlined"
                 className={classes.formField}
@@ -415,7 +413,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
             <Grid item xs={6}>
               <Autocomplete
                 multiple
-                data-testid="additionalPatientProfile-physical-activity"
+                data-testid="additional-patient-profile-physical-activity"
                 options={physicalActivityNameList}
                 limitTags={3}
                 getOptionLabel={(option) => t(`params|${option}`)}
@@ -434,14 +432,13 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
             </Grid>
             <Grid item xs={6}>
               <TextField
-                id="additionalPatientProfile-physical-activity-duration"
-                data-testid="additionalPatientProfile-physical-activity-duration"
+                data-testid="additional-patient-profile-physical-activity-duration"
                 label={t('duration-per-week')}
                 variant="outlined"
                 className={classes.formField}
                 type="number"
                 value={additionalPatientProfileForm.hoursSpentOnPhysicalActivitiesPerWeek || ''}
-                onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.HoursSpentOnPhysicalActivitiesPerWeek, e.target.value)}
+                onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.HoursSpentOnPhysicalActivitiesPerWeek, +e.target.value)} // the + allow convertion into number
                 InputProps={{
                   endAdornment: <InputAdornment position="end">{t('hours')}</InputAdornment>
                 }}
@@ -451,8 +448,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
 
           {/* Open Comments*/}
           <TextField
-            id="additionalPatientProfile-open-comments"
-            data-testid="additionalPatientProfile-open-comments"
+            data-testid="additional-patient-profile-open-comments"
             label={t('open-comments')}
             variant="outlined"
             multiline

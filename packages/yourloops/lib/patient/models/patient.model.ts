@@ -81,7 +81,7 @@ export interface ProfilePatientPayload {
   drugTreatment: string
   diet: string[]
   profession: string
-  hobbies: string[]
+  hobbies: string
   physicalActivities: string[]
   hoursSpentOnPhysicalActivitiesPerWeek: number
   comments: string
