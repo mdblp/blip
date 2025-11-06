@@ -30,6 +30,11 @@ import User from '../../../../../lib/auth/models/user.model'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
 import { AuthenticatedUserMetadata } from '../../../../../lib/auth/models/enums/authenticated-user-metadata.enum'
 import { type UserAccount } from '../../../../../lib/auth/models/user-account.model'
+import { isDblCommunicationAcknowledged } from '../../../../../lib/dbl-communication/storage'
+
+jest.mock('../../../../../lib/dbl-communication/storage', () => ({
+  isDblCommunicationAcknowledged: jest.fn()
+}))
 
 describe('User', () => {
   const email = 'text@example.com'
@@ -141,6 +146,38 @@ describe('User', () => {
     expect(user.shouldRenewConsent()).toBe(true)
     user.account.privacyPolicy.acceptanceTimestamp = '2021-01-02'
     expect(user.shouldRenewConsent()).toBe(false)
+  })
+
+  describe('hasToDisplayDblCommunicationPage', () => {
+
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    it('hasToDisplayDblCommunicationPage - should return false when newDblCommunication is undefined', () => {
+      const user = createUser()
+      expect(user.hasToDisplayDblCommunicationPage()).toBe(false)
+    })
+
+    it('hasToDisplayDblCommunicationPage - should return false when communication is acknowledged', () => {
+      const user = createUser()
+      user.newDblCommunication = { id: 'comm-1', title: 'New Communication', content: 'Content' };
+
+      (isDblCommunicationAcknowledged as jest.Mock).mockReturnValue(true)
+
+      expect(user.hasToDisplayDblCommunicationPage()).toBe(false)
+      expect(isDblCommunicationAcknowledged).toHaveBeenCalledWith('comm-1')
+    })
+
+    it('hasToDisplayDblCommunicationPage - should return true when communication is not acknowledged', () => {
+      const user = createUser()
+      user.newDblCommunication = { id: 'comm-1', title: 'New Communication', content: 'Content' };
+
+      (isDblCommunicationAcknowledged as jest.Mock).mockReturnValue(false)
+
+      expect(user.hasToDisplayDblCommunicationPage()).toBe(true)
+      expect(isDblCommunicationAcknowledged).toHaveBeenCalledWith('comm-1')
+    })
   })
 
   describe('Get birthday', () => {

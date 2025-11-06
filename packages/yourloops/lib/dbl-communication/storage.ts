@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,46 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-// Polyfills for compatibility with older browsers:
-import 'core-js/stable'
+import { BannerContent } from './models/banner.model'
 
-import React from 'react'
+const pageAckStorageKey = 'acknowledgedDblCommunicationIds'
+const bannerStorageKey = 'acknowledgedBannersIds'
 
-import config from '../lib/config/config'
-import { init as i18nInit } from '../lib/language'
-import initCookiesConsentListener from '../lib/cookies-manager'
-import initDayJS from '../lib/dayjs'
-import { initTheme } from '../components/theme'
-
-import { Yourloops } from './app'
-import OnError from './error'
-import { BrowserRouter } from 'react-router-dom'
-import initAxios from '../lib/http/axios.service'
-import { createRoot } from 'react-dom/client'
-
-i18nInit().then(() => {
-  let div = document.getElementById('app')
-  if (div === null) {
-    div = document.createElement('div')
-    div.id = 'app'
-    document.body.appendChild(div)
+export function registerDblCommunicationAck(id: string): void {
+  const ids = JSON.parse(localStorage.getItem(pageAckStorageKey) ?? '[]')
+  if (!ids.includes(id)) {
+    ids.push(id)
+    localStorage.setItem(pageAckStorageKey, JSON.stringify(ids))
   }
+}
 
-  initDayJS()
-  initCookiesConsentListener()
-  initAxios()
-  initTheme()
+export function isDblCommunicationAcknowledged(id: string): boolean {
+  const ids = JSON.parse(localStorage.getItem(pageAckStorageKey) ?? '[]')
+  return ids.includes(id)
+}
 
-  const root = createRoot(div)
-  root.render(config.DEV ? <React.StrictMode><Yourloops /></React.StrictMode> : <Yourloops />)
+export function registerBannerAck(id: string): void {
+  const acknowledgmentNumbers = JSON.parse(localStorage.getItem(bannerStorageKey) ?? '{}')
+  const bannerIdAlreadyStored = acknowledgmentNumbers[id]
+  if (bannerIdAlreadyStored) {
+    acknowledgmentNumbers[id] += 1
+  } else {
+    acknowledgmentNumbers[id] = 1
+  }
+  localStorage.setItem(bannerStorageKey, JSON.stringify(acknowledgmentNumbers))
+}
 
-  window.onerror = (event, source, lineno, colno, error) => {
-    if (source && !source.endsWith('.js')) {
-      return true
-    }
-    console.error(event, source, lineno, colno, error)
-    root.render(<BrowserRouter><OnError event={event} source={source} lineno={lineno} colno={colno}
-                                        error={error} /></BrowserRouter>)
+export function isBannerInfoAcknowledged(banner: BannerContent): boolean {
+  const acknowledgmentNumbers = JSON.parse(localStorage.getItem(bannerStorageKey) ?? '{}')
+  const neverSeen = !acknowledgmentNumbers[banner.id]
+  if (neverSeen) {
     return false
   }
-})
+  return acknowledgmentNumbers[banner.id] >= banner.nbOfViewsBeforeHide
+}
+

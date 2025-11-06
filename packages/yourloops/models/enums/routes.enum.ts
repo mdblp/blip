@@ -47,6 +47,7 @@ export enum AppUserRoute {
 
 export enum AppRoute {
   CompleteSignup = '/complete-signup',
+  DblCommunication = '/dbl-communication',
   Login = '/login',
   NewConsent = '/new-consent',
   ProductLabelling = '/product-labelling',

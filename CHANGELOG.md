@@ -13,6 +13,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-3612 Make events superposition popover draggable
 - YLP-3616 Time In Tight Range (TITR) statistic
 - YLP-3654 As Hcp, i can see the patient profile value in Yourloops
+- YLP-3708 Add a new page to display a diabeloop communication just after the login (displayed on demand, when necessary)
+- YLP-3709 Rework the banner to display live content (updated by Diabeloop team)
+
 
 ### Changed
 - YLP-2347 Display patient monitoring parameters in the patient profile page
