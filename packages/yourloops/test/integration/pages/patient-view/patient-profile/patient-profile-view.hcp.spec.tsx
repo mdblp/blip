@@ -212,6 +212,7 @@ describe('Patient profile view for HCP', () => {
     })
 
     // TODO: Uncomment when the feature is implemented with the API
+    // eslint-disable-next-line jest/no-commented-out-tests
     // it('should handle missing patient data gracefully', async () => {
     //   // Mock patient with missing data
     //   mockPatientApiForHcp().mockPatientDataFetch({

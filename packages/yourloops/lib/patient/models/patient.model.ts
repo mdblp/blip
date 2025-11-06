@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Height, type ProfilePatient, Weight } from './patient-profile.model'
+import { type ProfilePatient } from './patient-profile.model'
 import { type PatientSettings } from './patient-settings.model'
 import { type MonitoringAlerts } from './monitoring-alerts.model'
 import { type UserInviteStatus } from '../../team/models/enums/user-invite-status.enum'
@@ -36,7 +36,6 @@ import { type MedicalData } from '../../data/models/medical-data.model'
 import { DiabeticProfile } from './patient-diabete-profile'
 import type { Consent } from '../../auth/models/consent.model'
 import type { HcpProfession } from '../../auth/models/enums/hcp-profession.enum'
-import type { Gender } from '../../auth/models/enums/gender.enum'
 
 // Data structure used in the application to represent a patient
 export interface Patient extends Partial<PatientMetrics> {

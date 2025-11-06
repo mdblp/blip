@@ -110,27 +110,6 @@ describe('Patient profile view for Patient', () => {
       expect(unitsText).toBeVisible()
     })
 
-    // TODO: Uncomment when the feature is implemented with the API
-    // it('should handle missing patient data gracefully', async () => {
-    //   // Mock patient with missing data
-    //   mockPatientApiForHcp().mockPatientDataFetch({
-    //     profile: {
-    //       firstName: '',
-    //       lastName: '',
-    //       email: '',
-    //       birthdate: '',
-    //       sex: undefined
-    //     }
-    //   })
-    //
-    //   renderPage(patientProfileRoute)
-    //
-    //   // Verify N/A is displayed for missing data
-    //   const naTexts = await screen.findAllByText('N/A')
-    //   expect(naTexts.length).toBeGreaterThan(0)
-    // })
-
-
   })
 
   describe('Information section - Additional information form', () => {
