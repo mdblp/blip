@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,13 +26,6 @@
  */
 
 export interface AppConfig {
-  BANNER_ENABLED: boolean
-  BANNER_LABEL_EN: string
-  BANNER_LABEL_ES: string
-  BANNER_LABEL_DE: string
-  BANNER_LABEL_FR: string
-  BANNER_LABEL_IT: string
-  BANNER_LABEL_NL: string
   VERSION: string
   API_HOST: string
   BRANDING: string
