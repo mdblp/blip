@@ -53,7 +53,6 @@ import { screen, waitFor, within } from '@testing-library/react'
 import { patient2Info } from '../../../data/patient.api.data'
 import { buildHba1cData } from '../../../data/data-api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
-import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
 import {
   testTrendsDataVisualisationForHCP,
   testTrendsWeekDayFilter
@@ -67,7 +66,6 @@ describe('Trends view for anyone', () => {
   beforeEach(() => {
     mockWindowResizer()
     mockPatientLogin(patient2Info)
-    mockPatientApiForPatients()
   })
 
   describe('with all kind of data', () => {
