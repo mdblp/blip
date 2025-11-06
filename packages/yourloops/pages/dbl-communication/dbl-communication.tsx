@@ -25,87 +25,63 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, useEffect, useState } from 'react'
+import React, { type FunctionComponent } from 'react'
 import Button from '@mui/material/Button'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { useAuth0 } from '@auth0/auth0-react'
 import Container from '@mui/material/Container'
 import config from '../../lib/config/config'
 import { GlobalStyles } from 'tss-react'
-import Link from '@mui/material/Link'
 import { useAuth } from '../../lib/auth'
-import { useAlert } from '../../components/utils/snackbar'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { setPageTitle } from '../../lib/utils'
 import { useTheme } from '@mui/material/styles'
-import { Auth0Error } from '../../lib/auth/models/enums/auth0-error.enum'
+import { registerDblCommunicationAck } from '../../lib/dbl-communication/storage'
 import { BasicHeader } from '../../components/header-bars/basic-header'
 
-export const VerifyEmailPage: FunctionComponent = () => {
-  const { loginWithRedirect, getAccessTokenSilently } = useAuth0()
+
+export const DblCommunicationPage: FunctionComponent = () => {
   const { t } = useTranslation()
-  const { logout } = useAuth()
-  const alert = useAlert()
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(true)
-  const navigate = useNavigate()
+  const { user } = useAuth()
   const theme = useTheme()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const fromPath = location.state?.from?.pathname
+  let communicationTitle = ''
+  let communicationContent = ''
 
-  const contactSupport = async (): Promise<void> => {
-    window.open(config.CONTACT_SUPPORT_WEB_URL, '_blank')
+  if (user?.newDblCommunication) {
+    communicationTitle = user.newDblCommunication.title
+    communicationContent = user.newDblCommunication.content
+  } else {
+    // In case of no communication, navigate home
+    navigate(fromPath ?? '/')
+    return null
   }
 
-  const logoutUser = (): void => {
-    logout()
+
+  const ackInformation = (): void => {
+    registerDblCommunicationAck(user.newDblCommunication.id)
+    navigate(fromPath ?? '/')
   }
 
-  const goToAppHome = async (): Promise<void> => {
-    try {
-      if (!isUserLoggedIn) {
-        navigate('/')
-        return
-      }
-      await loginWithRedirect()
-    } catch (error) {
-      const errorDescription = error.error_description
-      if (errorDescription === Auth0Error.EmailNotVerified) {
-        alert.warning(t('alert-email-not-verified'))
-        return
-      }
-      if (errorDescription === Auth0Error.ConsentRequired) {
-        await loginWithRedirect()
-        return
-      }
-      throw error
-    }
-  }
-
-  useEffect(() => {
-    getAccessTokenSilently()
-      .catch((error: Error) => {
-      if (error.message === Auth0Error.LoginRequired) {
-          setIsUserLoggedIn(false)
-        }
-      })
-  }, [getAccessTokenSilently])
-
-  setPageTitle(t('verify-email'))
+  setPageTitle(t('important-information'))
 
   return (
     <>
-      <BasicHeader testId="verify-email-header"/>
+      <BasicHeader testId="dbl-comm-header"/>
       <Box
         display="flex"
         justifyContent="center"
         alignItems="center"
         height="90vh"
         textAlign="center"
-        data-testid="verify-email-content"
+        data-testid="dbl-comm-content"
       >
         <GlobalStyles styles={{ body: { backgroundColor: theme.palette.common.white } }} />
 
-        <Container maxWidth="sm">
+        <Container maxWidth="md">
           <Box display="flex" justifyContent="center">
             <img
               data-testid="header-main-logo"
@@ -116,40 +92,17 @@ export const VerifyEmailPage: FunctionComponent = () => {
           </Box>
 
           <Box mt={4} mb={3}>
-            <Typography variant="h5">{t('verify-email-title')}</Typography>
+            <Typography data-testid="dbl-comm-title" variant="h5" dangerouslySetInnerHTML={{ __html: communicationTitle }}/>
           </Box>
 
           <Box textAlign="left">
-            <Typography>{t('verify-email-details-1')}</Typography>
-
-            <Box mt={3} mb={3} data-testid="verify-email-details-2">
-              <Trans
-                i18nKey="verify-email-details-2"
-                t={t}
-                components={{ underline: <Link component="button" underline="always" onClick={contactSupport} /> }} />
-            </Box>
-
-            <Box data-testid="verify-email-details-3">
-              <Trans
-                i18nKey="verify-email-details-3"
-                t={t}
-                components={{ underline: <Link component="button" underline="always" onClick={logoutUser} /> }} />
-            </Box>
-
-            <br />
-
-            <Box data-testid="verify-email-details-4">
-              <Trans
-                i18nKey="verify-email-details-4"
-                t={t}
-                components={{ underline: <Link component="button" underline="always" onClick={logoutUser} /> }} />
-            </Box>
+            <Box mt={3} mb={3} data-testid="dbl-comm-details" dangerouslySetInnerHTML={{ __html: communicationContent }}/>
           </Box>
 
           <Box marginTop={4}>
             <Button
               variant="contained"
-              onClick={goToAppHome}
+              onClick={ackInformation}
               disableElevation
             >
               {t('button-continue')}

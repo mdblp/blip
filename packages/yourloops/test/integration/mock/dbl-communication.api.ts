@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,35 +25,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum AppUserRoute {
-  Caregivers = '/caregivers',
-  CareTeamSettings = '/teams/:teamId',
-  PrivatePatientsList = '/teams/private/patients',
-  PatientsList = '/teams/:teamId/patients',
-  PatientView = '/teams/:teamId/patients/:patientId/*',
-  Daily = '/daily',
-  Devices = '/devices',
-  Dashboard = '/dashboard',
-  Home = '/home',
-  NotFound = '/not-found',
-  Notifications = '/notifications',
-  Patient = '/patient',
-  Patients = '/patients',
-  PatientProfile = '/patient-profile',
-  Teams = '/teams',
-  Trends = '/trends',
-  UserAccount = '/user-account'
+import DblCommunicationApi from '../../../lib/dbl-communication/dbl-communication.api'
+import { BannerContent } from '../../../lib/dbl-communication/models/banner.model'
+import { InformationPage } from '../../../lib/dbl-communication/models/page.model'
+
+export const mockDblCommunicationApi = () => {
+  jest.spyOn(DblCommunicationApi, 'getInfoPage').mockResolvedValue(null)
+  jest.spyOn(DblCommunicationApi, 'getDblBanner').mockResolvedValue(null)
 }
 
-export enum AppRoute {
-  CompleteSignup = '/complete-signup',
-  DblCommunication = '/dbl-communication',
-  Login = '/login',
-  NewConsent = '/new-consent',
-  ProductLabelling = '/product-labelling',
-  RenewConsent = '/renew-consent',
-  SignupInformation = '/signup-information',
-  Training = '/training',
-  VerifyEmail = '/verify-email',
-  VerifyEmailResult = '/verify-email-result'
+export const mockDblCommunicationApiBanner = (bannerContent: BannerContent) => {
+
+jest.spyOn(DblCommunicationApi, 'getInfoPage').mockResolvedValue(null)
+  jest.spyOn(DblCommunicationApi, 'getDblBanner').mockResolvedValue(bannerContent)
+}
+
+export const mockDblCommunicationApiPage = (infoPage: InformationPage) => {
+  jest.spyOn(DblCommunicationApi, 'getInfoPage').mockResolvedValue(infoPage)
+  jest.spyOn(DblCommunicationApi, 'getDblBanner').mockResolvedValue(null)
 }

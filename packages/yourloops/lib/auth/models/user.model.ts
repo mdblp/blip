@@ -35,6 +35,8 @@ import { type Settings } from './settings.model'
 import { type AuthenticatedUser } from './authenticated-user.model'
 import { AuthenticatedUserMetadata } from './enums/authenticated-user-metadata.enum'
 import { REGEX_BIRTHDATE } from '../../utils'
+import { InformationPage } from '../../dbl-communication/models/page.model'
+import { isDblCommunicationAcknowledged } from '../../dbl-communication/storage'
 
 export default class User {
   readonly email: string
@@ -49,6 +51,7 @@ export default class User {
   preferences?: Preferences
   account?: UserAccount
   settings?: Settings
+  newDblCommunication?: InformationPage
 
   constructor(authenticatedUser: AuthenticatedUser) {
     this.email = authenticatedUser.email
@@ -175,4 +178,14 @@ export default class User {
   hasToDisplayTrainingInfoPage(): boolean {
     return this.newTrainingAvailable()
   }
+
+  hasToDisplayDblCommunicationPage(): boolean {
+    return (
+      this.newDblCommunication !== undefined &&
+      this.newDblCommunication !== null &&
+      !isDblCommunicationAcknowledged(this.newDblCommunication.id)
+    )
+  }
+
+
 }

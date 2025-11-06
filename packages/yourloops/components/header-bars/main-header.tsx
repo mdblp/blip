@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -48,7 +48,6 @@ import { styled, Tab, Tabs } from '@mui/material'
 import { HcpNavigationTab } from '../../models/enums/hcp-navigation-tab.model'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { Banner } from './banner'
-import { ConfigService } from '../../lib/config/config.service'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 import TeamUtils, { PRIVATE_TEAM_ID } from '../../lib/team/team.util'
 
@@ -131,9 +130,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
           flexDirection="column"
           width="100%"
         >
-          {ConfigService.isBannerEnabled() &&
-            <Banner />
-          }
+          <Banner />
           <Box
             alignItems="center"
             display="flex"

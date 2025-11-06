@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,35 +25,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum AppUserRoute {
-  Caregivers = '/caregivers',
-  CareTeamSettings = '/teams/:teamId',
-  PrivatePatientsList = '/teams/private/patients',
-  PatientsList = '/teams/:teamId/patients',
-  PatientView = '/teams/:teamId/patients/:patientId/*',
-  Daily = '/daily',
-  Devices = '/devices',
-  Dashboard = '/dashboard',
-  Home = '/home',
-  NotFound = '/not-found',
-  Notifications = '/notifications',
-  Patient = '/patient',
-  Patients = '/patients',
-  PatientProfile = '/patient-profile',
-  Teams = '/teams',
-  Trends = '/trends',
-  UserAccount = '/user-account'
-}
+import HttpService from '../http/http.service'
+import { InformationPage } from './models/page.model'
+import { BannerContent } from './models/banner.model'
+import bows from 'bows'
+import { getCurrentLang } from '../language'
 
-export enum AppRoute {
-  CompleteSignup = '/complete-signup',
-  DblCommunication = '/dbl-communication',
-  Login = '/login',
-  NewConsent = '/new-consent',
-  ProductLabelling = '/product-labelling',
-  RenewConsent = '/renew-consent',
-  SignupInformation = '/signup-information',
-  Training = '/training',
-  VerifyEmail = '/verify-email',
-  VerifyEmailResult = '/verify-email-result'
+const log = bows('DblCommunication API')
+
+export default class DblCommunicationApi {
+  static async getInfoPage(): Promise<InformationPage | null> {
+    const lang = getCurrentLang()
+    try {
+      const { data } = await HttpService.get<InformationPage>({
+        url: 'bff/communications/ylp-info-page?lang=' + lang,
+        config: {
+          headers: { 'Accept-Language': lang }
+        }
+      })
+      return data
+    } catch (err) {
+      log.error("Error while getting system info page", err)
+      return null
+    }
+  }
+
+  static async getDblBanner(): Promise<BannerContent | null> {
+    const lang = getCurrentLang()
+    try {
+      const { data } = await HttpService.get<BannerContent>({
+        url: 'bff/communications/ylp-banner?lang=' + lang,
+        config: {
+          headers: { 'Accept-Language': lang }
+        }
+      })
+      return data
+    } catch (err) {
+      log.error("Error while getting system banner", err)
+      return null
+    }
+  }
 }
