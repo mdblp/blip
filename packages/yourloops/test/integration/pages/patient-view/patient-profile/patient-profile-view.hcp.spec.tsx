@@ -327,10 +327,8 @@ describe('Patient profile view for HCP', () => {
         renderPage(patientProfileRoute)
       })
 
-      const saveButton = await screen.findByTestId('additional-info-save')
-      await userEvent.click(saveButton)
-
-      expect(saveButton).not.toBeVisible()
+      const saveButton = screen.queryByTestId('additional-info-save')
+      expect(saveButton).not.toBeInTheDocument()
     })
   })
 

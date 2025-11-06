@@ -75,7 +75,7 @@ export const createPatient = (
       drugTreatment: "",
       diet: ['no-specific-diet'],
       profession: "space explorer",
-      hobbies: ['master light saber', 'fly spaceship'],
+      hobbies: 'master light saber,fly spaceship',
       physicalActivities: ['Mixed'],
       hoursSpentOnPhysicalActivitiesPerWeek: 4,
       comments: "i am your father"
