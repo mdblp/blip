@@ -78,7 +78,7 @@ export const SecurityForm: FC = () => {
         <Box marginTop={2}>
           <Box display="flex" marginTop={2}>
             <Button
-              sx={{marginRight: 2}}
+              sx={{ marginRight: 2 }}
               variant="outlined"
               color="primary"
               disableElevation

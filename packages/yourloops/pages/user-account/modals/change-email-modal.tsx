@@ -46,7 +46,7 @@ interface ChangeEmailModalProps {
   setShowUpdateEmailDialog: (arg0: boolean) => void
 }
 
-export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({showUpdateEmailDialog, setShowUpdateEmailDialog}) => {
+export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDialog, setShowUpdateEmailDialog }) => {
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
   const alert = useAlert()
