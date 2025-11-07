@@ -29,11 +29,10 @@ import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockDataAPI, pumpSettingsData, pumpSettingsDblg1Mobigo } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
-import { patient1Id } from '../../../data/patient.api.data'
+import { patient1Id, patient1Info } from '../../../data/patient.api.data'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
 import { renderPage } from '../../../utils/render'
 import { mockUserApi } from '../../../mock/user.api.mock'
-import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
 import { mockTeamAPI } from '../../../mock/team.api.mock'
@@ -45,6 +44,7 @@ import {
 import { testDeviceSettingsNavigationForPatient } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
 
 describe('Device view for G1 Patient', () => {
   const firstName = 'patient firstName'
@@ -60,7 +60,7 @@ describe('Device view for G1 Patient', () => {
     mockDirectShareApi()
     mockTeamAPI()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForPatients()
+    mockPatientLogin(patient1Info)
     mockDataAPI(pumpSettingsData)
   })
 
