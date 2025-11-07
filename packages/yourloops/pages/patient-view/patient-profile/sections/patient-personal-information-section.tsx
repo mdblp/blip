@@ -61,7 +61,7 @@ import { useAlert } from '../../../../components/utils/snackbar'
 import Alert from '@mui/material/Alert'
 import { PhysicalActivityName } from 'medical-domain'
 import { ProfilePatient } from '../../../../lib/patient/models/patient-profile.model'
-import PatientApi from '../../../../lib/patient/patient.api'
+import usePatient from '../../../../lib/patient/patient.hook'
 
 export enum AdditionalPatientAdditionalPatientProfileFormKey {
   DrugTreatment = 'drugTreatment',
@@ -107,6 +107,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
   const { classes } = useStyles()
 
   const alert = useAlert()
+  const { updatePatientProfile } = usePatient()
   const [additionalPatientProfileForm, setAdditionalPatientProfileForm] = useState<ProfilePatient>(patient.profile)
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 
@@ -124,8 +125,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
   const save = async (): Promise<void> => {
     setSaveInProgress(true)
     try {
-      await PatientApi.updatePatientProfile(patient.userid, additionalPatientProfileForm)
-      patient.profile = additionalPatientProfileForm
+      await updatePatientProfile(patient.userid, additionalPatientProfileForm)
       alert.success(t('patient-update-success'))
     } catch (error) {
       const errorMessage = errorTextFromException(error)
