@@ -26,38 +26,25 @@
  */
 
 import { act } from '@testing-library/react'
-import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockDataAPI, pumpSettingsDblg2 } from '../../../mock/data.api.mock'
-import { mockNotificationAPI } from '../../../mock/notification.api.mock'
-import { patientg2Id } from '../../../data/patient.api.data'
-import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
+import { patient2Info } from '../../../data/patient.api.data'
 import { renderPage } from '../../../utils/render'
-import { mockUserApi } from '../../../mock/user.api.mock'
-import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
-import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
-import { mockTeamAPI } from '../../../mock/team.api.mock'
 import { testAppMainLayoutForPatient } from '../../../use-cases/app-main-layout-visualisation'
 import { testG2DevicesVisualisation } from '../../../use-cases/device-settings-visualisation'
 import { testDeviceSettingsNavigationForPatient } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
 
 describe('Device view for G2 Patient', () => {
-  const firstName = 'patient g2 firstName'
-  const lastName = 'patient g2 lastName'
+  const firstName = patient2Info.profile.firstName
+  const lastName = patient2Info.profile.lastName
 
   const deviceRoute = AppUserRoute.Devices
 
   beforeEach(() => {
     mockWindowResizer()
-    mockAuth0Hook(UserRole.Patient, patientg2Id)
-    mockDblCommunicationApi()
-    mockNotificationAPI()
-    mockDirectShareApi()
-    mockTeamAPI()
-    mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForPatients()
+    mockPatientLogin(patient2Info)
     mockDataAPI(pumpSettingsDblg2)
   })
 
