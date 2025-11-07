@@ -78,6 +78,7 @@ export const SecurityForm: FC = () => {
         <Box marginTop={2}>
           <Box display="flex" marginTop={2}>
             <Button
+              data-testid="change-email-button"
               sx={{ marginRight: 2 }}
               variant="outlined"
               color="primary"

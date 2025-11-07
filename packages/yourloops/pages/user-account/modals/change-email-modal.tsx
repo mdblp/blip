@@ -48,7 +48,7 @@ interface ChangeEmailModalProps {
 
 export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDialog, setShowUpdateEmailDialog }) => {
   const { t } = useTranslation('yourloops')
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const alert = useAlert()
   const { classes } = userAccountFormCommonClasses()
   const [newEmail, setNewEmail] = React.useState<string>('')
@@ -72,8 +72,9 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
       setEmailSentSuccess(true)
     } catch (error: unknown) {
       setEmailSentSuccess(false)
+    } finally {
+      setOperationInProgress(false)
     }
-    setOperationInProgress(false)
   }
 
   const validateChangeEmailRequest = async (): Promise<void> => {
@@ -84,10 +85,12 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
       setOperationInProgress(false)
       resetDialogState()
       alert.success(t('alert-change-email-success'))
+      logout()
     } catch (error: unknown) {
       setCodeVerificationSuccess(false)
+    } finally {
+      setOperationInProgress(false)
     }
-    setOperationInProgress(false)
   }
 
   return (
