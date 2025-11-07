@@ -50,7 +50,7 @@ export const checkPatientNavBarAsCaregiver = () => {
 }
 
 export const checkPatientNavBarAsPatient = () => {
-  checkPatientNavBarCommon('DashboardDailyTrendsDevice')
+  checkPatientNavBarCommon('DashboardDailyTrendsProfileDevice')
 }
 
 export const checkPatientDropdown = async (initialPatient: Patient, patientToSwitchTo: Patient) => {

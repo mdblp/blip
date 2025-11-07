@@ -35,11 +35,12 @@ import { waitFor } from '@testing-library/react'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { testLeaveTeamPatient } from '../../use-cases/care-team-visualisation'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { patient1Id } from '../../data/patient.api.data'
+import { patient1Id, patient1Info } from '../../data/patient.api.data'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
+import { mockPatientLogin } from '../../mock/patient-login.mock'
 
 describe('Patient care team settings page', () => {
   const firstName = 'Jacques'
@@ -49,6 +50,7 @@ describe('Patient care team settings page', () => {
 
   beforeEach(() => {
     mockAuth0Hook(UserRole.Patient, patient1Id)
+    mockPatientLogin(patient1Info)
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
