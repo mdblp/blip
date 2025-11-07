@@ -31,6 +31,7 @@ import Typography from '@mui/material/Typography'
 import { type SvgIconComponent } from '@mui/icons-material'
 
 interface InfoRowProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: SvgIconComponent | ForwardRefExoticComponent<any>
   label: string
   value: string
