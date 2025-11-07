@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC, useMemo, useState } from 'react'
+import React, { FC, useMemo } from 'react'
 import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import Card from '@mui/material/Card'
@@ -34,9 +34,6 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
 import Grid from '@mui/material/Grid'
-import { formatBirthdate, formatDate } from 'dumb'
-import { Patient } from '../../../../lib/patient/models/patient.model'
-import PatientUtils from '../../../../lib/patient/patient.util'
 import EmailIcon from '@mui/icons-material/Email'
 import PersonIcon from '@mui/icons-material/Person'
 import CakeIcon from '@mui/icons-material/Cake'
@@ -45,33 +42,18 @@ import HeightIcon from '@mui/icons-material/Height'
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid'
 import MonitorWeightIcon from '@mui/icons-material/MonitorWeight'
 import StraightenIcon from '@mui/icons-material/Straighten'
+import { type Theme } from '@mui/material/styles'
+import { makeStyles } from 'tss-react/mui'
+import Alert from '@mui/material/Alert'
+import { formatBirthdate } from 'dumb'
+import { Patient } from '../../../../lib/patient/models/patient.model'
 import { BasalIcon } from '../../../../components/icons/diabeloop/basal-icon'
 import { PatientDiabeticProfileChip } from '../../../../components/chips/patient-diabetic-profile-chip'
 import { getUserName } from '../../../../lib/auth/user.util'
 import { useAuth } from '../../../../lib/auth'
-import { makeStyles } from 'tss-react/mui'
-import { type Theme } from '@mui/material/styles'
-import { Autocomplete, TextField } from "@mui/material"
-import InputAdornment from '@mui/material/InputAdornment'
-import { LoadingButton } from '@mui/lab'
-import { Save } from '@mui/icons-material'
-import { errorTextFromException } from '../../../../lib/utils'
-import { logError } from '../../../../utils/error.util'
-import { useAlert } from '../../../../components/utils/snackbar'
-import Alert from '@mui/material/Alert'
-import { PhysicalActivityName } from 'medical-domain'
-import { ProfilePatient } from '../../../../lib/patient/models/patient-profile.model'
-import usePatient from '../../../../lib/patient/patient.hook'
-
-export enum AdditionalPatientAdditionalPatientProfileFormKey {
-  DrugTreatment = 'drugTreatment',
-  Diet = 'diet',
-  Profession = 'profession',
-  Hobbies = 'hobbies',
-  PhysicalActivities = 'physicalActivities',
-  HoursSpentOnPhysicalActivitiesPerWeek = 'hoursSpentOnPhysicalActivitiesPerWeek',
-  Comments = 'comments'
-}
+import { InfoRow } from '../box/patient-profile-information-info-row'
+import { getPatientDisplayInfo } from './patient-profile-section.utils'
+import { AdditionalInfoForm } from '../form/patient-profile-additional-info-form'
 
 interface InformationSectionProps {
   patient: Patient
@@ -106,87 +88,8 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
   const { t } = useTranslation()
   const { classes } = useStyles()
 
-  const alert = useAlert()
-  const { updatePatientProfile } = usePatient()
-  const [additionalPatientProfileForm, setAdditionalPatientProfileForm] = useState<ProfilePatient>(patient.profile)
-  const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 
-  const updateAdditionalPatientProfileForm = (key: AdditionalPatientAdditionalPatientProfileFormKey, value: unknown): void => {
-    setAdditionalPatientProfileForm((prevForm) => ({
-      ...prevForm,
-      [key]: value
-    }))
-  }
-
-  const saveButtonDisabled = useMemo(() => {
-    return saveInProgress
-  }, [saveInProgress])
-
-  const save = async (): Promise<void> => {
-    setSaveInProgress(true)
-    try {
-      await updatePatientProfile(patient.userid, additionalPatientProfileForm)
-      alert.success(t('patient-update-success'))
-    } catch (error) {
-      const errorMessage = errorTextFromException(error)
-      logError(errorMessage, 'update-patient-ranges')
-      alert.error(t('patient-update-error'))
-    }
-    finally {
-      setSaveInProgress(false)
-    }
-  }
-
-  const physicalActivityNameList = Object.values(PhysicalActivityName)
-  const dietOptions = ['no-specific-diet','vegetarian', 'gluten-free', 'low-carbohydrates-diet', 'vegan', 'ketogenic-diet', 'caloric-restriction', 'intermittent-fasting', 'paleolithic-diet', 'other']
-
-  // read part
-  const getGender = (): string => {
-    return PatientUtils.getGenderLabel(patient.profile.sex)
-  }
-
-  const getPatientInitials = (): string => {
-    const firstName = patient.profile.firstName || ''
-    const lastName = patient.profile.lastName || ''
-    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
-  }
-
-  const getHbA1c = (): string => {
-    // Get HbA1c from patient settings if available
-    const a1c = patient?.settings?.a1c?.value
-    const a1cDate = patient?.settings?.a1c?.date
-
-    if (!a1c || !a1cDate) {
-      return t('N/A')
-    }
-
-    return `${a1c}% - (${a1cDate})`
-
-  }
-
-  const getDbUnits = (): string => {
-    if (!patient.settings.units) {
-      return t('N/A')
-    }
-
-    return `${patient.settings.units.bg}`
-  }
-
-  const getAge = (): string => {
-    if (!patient.profile.birthdate) {
-      return t('N/A')
-    }
-    const birthDate = new Date(patient.profile.birthdate)
-    const today = new Date()
-    let age = today.getFullYear() - birthDate.getFullYear()
-    const monthDiff = today.getMonth() - birthDate.getMonth()
-
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--
-    }
-
-    return `${age} ${t('years-old')}`
-  }
+  const patientInfo = useMemo(() => getPatientDisplayInfo(patient), [patient])
 
   return (
     <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="information-section">
@@ -205,7 +108,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
                 fontWeight: 'bold'
               }}
             >
-              {getPatientInitials()}
+              {patientInfo.initials}
             </Avatar>
             <Box display="flex" alignItems="center">
               <Typography variant="h6" fontWeight="medium">
@@ -218,126 +121,17 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
           </Box>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              {/* Date of birth */}
-              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
-                <CakeIcon sx={{ color: 'text.secondary' }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('date-of-birth')}
-                  </Typography>
-                  <Typography variant="body2">
-                    {`${formatBirthdate(patient.profile.birthdate)} (${getAge()})`}
-                  </Typography>
-                </Box>
-              </Box>
-
-              {/* Gender */}
-              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
-                <PersonIcon sx={{ color: 'text.secondary' }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('gender')}
-                  </Typography>
-                  <Typography variant="body2">
-                    {getGender()}
-                  </Typography>
-                </Box>
-              </Box>
-
-              {/* Weight */}
-              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
-                <MonitorWeightIcon sx={{ color: 'text.secondary' }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('params|WEIGHT')}
-                  </Typography>
-                  <Typography variant="body2">
-                    {`${patient.profile.weight?.value || t('N/A')} ${patient.profile.weight?.unit || ''}`}
-                  </Typography>
-                </Box>
-              </Box>
-
-              {/* Height */}
-              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
-                <HeightIcon sx={{ color: 'text.secondary' }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('params|HEIGHT')}
-                  </Typography>
-                  <Typography variant="body2">
-                    {`${patient.profile.height?.value || t('N/A')} ${patient.profile.height?.unit || ''}`}
-                  </Typography>
-                </Box>
-              </Box>
-
-              {/* Email */}
-              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
-                <EmailIcon sx={{ color: 'text.secondary' }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('email')}
-                  </Typography>
-                  <Typography variant="body2">
-                    {patient.profile.email || t('N/A')}
-                  </Typography>
-                </Box>
-              </Box>
-
+              <InfoRow icon={CakeIcon} dataTestId='CakeIcon' label={t('date-of-birth')} value={`${formatBirthdate(patient.profile.birthdate)} (${patientInfo.age})`} />
+              <InfoRow icon={PersonIcon} dataTestId='PersonIcon' label={t('gender')} value={patientInfo.gender} />
+              <InfoRow icon={MonitorWeightIcon} dataTestId='MonitorWeightIcon' label={t('params|WEIGHT')} value={patientInfo.weight} />
+              <InfoRow icon={HeightIcon} dataTestId='HeightIcon' label={t('params|HEIGHT')} value={patientInfo.height} />
+              <InfoRow icon={EmailIcon} dataTestId='EmailIcon' label={t('email')} value={patient.profile.email || t('N/A')} />
             </Grid>
             <Grid item xs={6}>
-
-              {/* Equipment Date */}
-              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
-                <PhoneAndroidIcon sx={{ color: 'text.secondary' }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('equipment-date')}
-                  </Typography>
-                  <Typography variant="body2">
-                    {formatDate(patient.medicalData?.range?.startDate) || t('N/A')}
-                  </Typography>
-                </Box>
-              </Box>
-
-              {/* HbA1c */}
-              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
-                <StraightenIcon sx={{ color: 'text.secondary' }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('hba1c')}
-                  </Typography>
-                  <Typography variant="body2">
-                    {getHbA1c()}
-                  </Typography>
-                </Box>
-              </Box>
-
-              {/* glycemia units */}
-              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
-                <ScaleIcon sx={{ color: 'text.secondary' }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('glycemia-units')}
-                  </Typography>
-                  <Typography variant="body2">
-                    {getDbUnits()}
-                  </Typography>
-                </Box>
-              </Box>
-
-              {/* insulin type */}
-              <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
-                <BasalIcon data-testid="basal-icon" sx={{ color: 'text.secondary' }} />
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {t('params|INSULIN_TYPE')}
-                  </Typography>
-                  <Typography variant="body2">
-                    {`${patient.settings.insulinType || t('N/A')}`}
-                  </Typography>
-                </Box>
-              </Box>
-
+              <InfoRow icon={PhoneAndroidIcon} dataTestId='PhoneAndroidIcon' label={t('equipment-date')} value={patientInfo.equipmentDate} />
+              <InfoRow icon={StraightenIcon} dataTestId='StraightenIcon' label={t('hba1c')} value={patientInfo.hba1c} />
+              <InfoRow icon={ScaleIcon} dataTestId='ScaleIcon' label={t('glycemia-units')} value={patientInfo.dbUnits} />
+              <InfoRow icon={BasalIcon} dataTestId='basal-icon' label={t('params|INSULIN_TYPE')} value={patientInfo.insulinType} />
             </Grid>
           </Grid>
           <div className={classes.separator} />
@@ -352,134 +146,10 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
             {t('additional-information-disclaimer')}
           </Alert>
 
-          <Grid container spacing={3}>
-            <Grid item xs={6}>
-              {/* Drug Treatment Other Than Insulin */}
-              <TextField
-                data-testid="additional-patient-profile-drug-treatment"
-                label={t('drug-treatment-other-than-insulin')}
-                variant="outlined"
-                className={classes.formField}
-                value={additionalPatientProfileForm.drugTreatment || ''}
-                onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.DrugTreatment, e.target.value)}
-                disabled={!user.isUserPatient()}
-              />
-
-              {/* Profession */}
-              <TextField
-                data-testid="additional-patient-profile-profession"
-                label={t('profession')}
-                variant="outlined"
-                className={classes.formField}
-                value={additionalPatientProfileForm.profession || ''}
-                onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.Profession, e.target.value)}
-                disabled={!user.isUserPatient()}
-              />
-            </Grid>
-
-            <Grid item xs={6}>
-              {/* Diet */}
-              <Autocomplete
-                multiple
-                data-testid="additional-patient-profile-diet"
-                options={dietOptions}
-                getOptionLabel={(option) => t(option)}
-                limitTags={2}
-                freeSolo
-                className={classes.formField}
-                value={additionalPatientProfileForm.diet}
-                onChange={(e, value) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.Diet, value)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="outlined"
-                    label={t('diet')}
-                  />
-                )}
-                disabled={!user.isUserPatient()}
-              />
-
-              {/* Hobby */}
-              <TextField
-                data-testid="additional-patient-profile-hobby"
-                label={t('hobby')}
-                variant="outlined"
-                className={classes.formField}
-                value={additionalPatientProfileForm.hobbies || ''}
-                onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.Hobbies, e.target.value)}
-                disabled={!user.isUserPatient()}
-              />
-            </Grid>
-          </Grid>
-
-          {/* Physical Activity Section */}
-          <Grid container spacing={1} mb={1}>
-            <Grid item xs={6}>
-              <Autocomplete
-                multiple
-                data-testid="additional-patient-profile-physical-activity"
-                options={physicalActivityNameList}
-                limitTags={3}
-                getOptionLabel={(option: string) => t(`params|${option}`)}
-                freeSolo
-                className={classes.formField}
-                value={additionalPatientProfileForm.physicalActivities}
-                onChange={(e, value) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.PhysicalActivities, value)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="outlined"
-                    label={t('physical-activity')}
-                  />
-                )}
-                disabled={!user.isUserPatient()}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField
-                data-testid="additional-patient-profile-physical-activity-duration"
-                label={t('duration-per-week')}
-                variant="outlined"
-                className={classes.formField}
-                type="number"
-                value={additionalPatientProfileForm.hoursSpentOnPhysicalActivitiesPerWeek || ''}
-                onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.HoursSpentOnPhysicalActivitiesPerWeek, +e.target.value)} // the + allow convertion into number
-                InputProps={{
-                  endAdornment: <InputAdornment position="end">{t('hours')}</InputAdornment>
-                }}
-                disabled={!user.isUserPatient()}
-              />
-            </Grid>
-          </Grid>
-
-          {/* Open Comments*/}
-          <TextField
-            data-testid="additional-patient-profile-open-comments"
-            label={t('open-comments')}
-            variant="outlined"
-            multiline
-            className={classes.openCommentsField}
-            value={additionalPatientProfileForm.comments || ''}
-            onChange={(e) => updateAdditionalPatientProfileForm(AdditionalPatientAdditionalPatientProfileFormKey.Comments, e.target.value)}
-            disabled={!user.isUserPatient()}
+          <AdditionalInfoForm
+            patient={patient}
           />
-          { user.isUserPatient() &&
-            <Box display="flex" justifyContent="flex-end" mt={4}>
-              <LoadingButton
-                loading={saveInProgress}
-                variant="contained"
-                color="primary"
-                disableElevation
-                startIcon={<Save />}
-                disabled={saveButtonDisabled}
-                onClick={save}
-                data-testid="additional-info-save"
-                sx={{ minWidth: 120 }}
-              >
-                {t('button-save')}
-              </LoadingButton>
-            </Box>
-          }
+
         </Box>
       </CardContent>
     </Card>
