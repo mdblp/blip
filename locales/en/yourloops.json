@@ -88,7 +88,7 @@
   "alarm-urgent-low-soon-title": "Urgent low soon",
   "alarm-with-code": "Alarm {{code}}",
   "alerts": "Alerts",
-  "alert-change-email-success": "E-mail changed successfully",
+  "alert-change-email-success": "E-mail changed successfully, please login with new email.",
   "alert-change-password-email-failed": "Impossible to send the change password e-mail. Please try again later.",
   "alert-change-password-email-success": "E-mail sent successfully",
   "alert-email-not-verified": "You have not verified your email.",

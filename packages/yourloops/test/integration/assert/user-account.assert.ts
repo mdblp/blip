@@ -279,6 +279,6 @@ export const checkEmailChangeRequest = async (userId: string, newEmail: string, 
   expect(AuthApi.validateChangeEmailRequest).toHaveBeenCalledWith(code)
 
   // snackbar should show up and popup should be closed
-  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('E-mail changed successfully')
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('E-mail changed successfully, please login with new email.')
   await waitForElementToBeRemoved(() => screen.queryByTestId('confirm-email-change-dialog'))
 }

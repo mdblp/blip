@@ -85,6 +85,8 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
       setOperationInProgress(false)
       resetDialogState()
       alert.success(t('alert-change-email-success'))
+      //wait for 5 seconds before logging out
+      await new Promise(resolve => setTimeout(resolve, 5000))
       logout()
     } catch (error: unknown) {
       setCodeVerificationSuccess(false)
