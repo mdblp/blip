@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2022-2023, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,19 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Patient } from './patient.model'
-import { type ProfilePatient } from './patient-profile.model'
+import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
+import usePatientProvider from './patient.hook'
+import { type PatientResult } from './models/patient-context-result.model'
 
-export interface PatientContextResult {
-  patient: Patient
-  initialized: boolean
-  leaveTeam: (team: string) => Promise<void>
+const PatientContext = createContext<PatientResult>({} as PatientResult)
+
+export const PatientProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
+  const patientProviderCustomHook = usePatientProvider()
+
+  return <PatientContext.Provider value={patientProviderCustomHook}>{children}</PatientContext.Provider>
 }
 
-export interface PatientResult {
-  patient: Patient
-  refreshInProgress: boolean;
-  getPatientInfo: (userid: string) => void;
-  updatePatientProfile: (patientId: string, patientProfile: ProfilePatient) => Promise<void>;
-  refresh: () => void;
+export function usePatient(): PatientResult {
+  return useContext(PatientContext)
 }
