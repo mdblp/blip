@@ -63,7 +63,7 @@ export default function usePatient(): PatientResult {
   }
 
   useEffect(() => {
-    if (user) {
+    if (user && user.isUserPatient()) {
       getPatientInfo(user.id)
     }
   }, [getPatientInfo, user])

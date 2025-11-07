@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
+import React, { type FC, type FunctionComponent } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { PatientData } from '../components/patient-data/patient-data'
 import { CareTeamSettingsPage } from '../pages/care-team-settings/care-team-settings-page'
@@ -41,20 +41,27 @@ import { PatientProvider } from '../lib/patient/patient.provider'
 
 export const PatientLayout: FC = () => {
   const { patient } = usePatient()
-    return (
+
+  return (
     <TeamContextProvider>
       <DashboardLayout>
-        <PatientProvider>
-          <Routes>
-            <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
-            <Route path={AppUserRoute.UserAccount} element={<UserAccountPage />} />
-            <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
-            <Route path={AppUserRoute.Caregivers} element={<PatientCaregiversPage />} />
-            <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
-            <Route path="*" element={<PatientData patient={patient}/>} />
-          </Routes>
-        </PatientProvider>
+        <Routes>
+          <Route path={AppUserRoute.NotFound} element={<InvalidRoute />} />
+          <Route path={AppUserRoute.UserAccount} element={<UserAccountPage />} />
+          <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
+          <Route path={AppUserRoute.Caregivers} element={<PatientCaregiversPage />} />
+          <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
+          <Route path="*" element={<PatientData patient={patient} />} />
+        </Routes>
       </DashboardLayout>
     </TeamContextProvider>
+  )
+}
+
+export const PatientLayoutWithContext: FunctionComponent = () => {
+  return (
+    <PatientProvider>
+      <PatientLayout />
+    </PatientProvider>
   )
 }
