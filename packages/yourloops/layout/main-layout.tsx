@@ -30,7 +30,7 @@ import { useAuth } from '../lib/auth'
 import { NotificationContextProvider } from '../lib/notifications/notification.hook'
 import { Navigate, Route } from 'react-router-dom'
 import { CaregiverLayout } from './caregiver-layout'
-import { PatientLayout } from './patient-layout'
+import { PatientLayoutWithContext } from './patient-layout'
 import { UserRole } from '../lib/auth/models/enums/user-role.enum'
 import { HcpLayoutWithContext } from './hcp-layout'
 import { AppUserRoute } from '../models/enums/routes.enum'
@@ -45,7 +45,7 @@ export const MainLayout: FC = () => {
       case UserRole.Caregiver:
         return <CaregiverLayout />
       case UserRole.Patient:
-        return <PatientLayout />
+        return <PatientLayoutWithContext />
       default:
         console.error(`no layout found for role ${user?.role}`)
         return <Route
