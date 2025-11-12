@@ -62,6 +62,8 @@ interface BolusTooltipProps {
   timePrefs: TimePrefs
 }
 
+const HIDDEN_PRESCRIPTORS = [Prescriptor.EatingShortlyManagement, Prescriptor.Manual]
+
 const MINIMAL_OVERRIDE = 0.1
 
 export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
@@ -74,7 +76,7 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
 
   // Common properties
   const prescriptor = bolusData?.prescriptor
-  const shouldDisplayPrescriptor = prescriptor && prescriptor !== Prescriptor.Manual
+  const shouldDisplayPrescriptor = prescriptor && !HIDDEN_PRESCRIPTORS.includes(prescriptor)
   const bolusSubType = bolusData?.subType
   const iob = bolusData?.insulinOnBoard
   const delivered = getDelivered(bolusData as Bolus)
@@ -101,6 +103,7 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
       case BolusType.Manual:
         return t('Manual Bolus')
       case BolusType.Meal:
+      case BolusType.EatingShortly:
         return t('Meal Bolus')
       case BolusType.Correction:
         return t('Correction')
@@ -116,6 +119,7 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
       case BolusType.Manual:
         return colors.darkBlueBackground
       case BolusType.Meal:
+      case BolusType.EatingShortly:
         return colors.greenBackground
       case BolusType.Correction:
         return colors.blueBackground
@@ -129,6 +133,8 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
   const bolusType = getBolusType(bolus)
   const bolusTypeTitle = getTitleByBolusType(bolusType)
   const color = getColorByBolusType(bolusType)
+
+  const isEatingShortlyBolus = bolusType === BolusType.EatingShortly
 
   const insulinUnitLabel = t('U')
 
@@ -147,6 +153,9 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
           }
           {isWizard && isFatMeal &&
             <TooltipLine label={t('High fat meal')} />
+          }
+          {isEatingShortlyBolus &&
+            <TooltipLine label={t('meal-without-carb-counting')} />
           }
           {isWizard && inputTime &&
             <TooltipLine label={`${t('Entered at')} ${formatInputTime(inputTime, timePrefs)}`} />

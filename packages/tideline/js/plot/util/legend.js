@@ -177,6 +177,20 @@ const legend = {
       },
       type: 'text'
     },
+    // Meal without carb counting
+    getLegendIcon(ICON_TYPE_SQUARE, `${BOLUS_LEGEND_COMMON_CLASSES} d3-bolus-eating-shortly`),
+    {
+      create: (opts) => {
+        return opts.selection.append('text')
+          .classed('d3-pool-legend', true)
+          .text(t('meal-without-carb-counting'))
+          .each(function () {
+            opts.widths.push(this.getBoundingClientRect().width - legend.SHAPE_MARGIN)
+            opts.textHeight = this.getBoundingClientRect().height
+          })
+      },
+      type: 'text'
+    },
     // Correction Bolus
     getLegendIcon(ICON_TYPE_SQUARE, `${BOLUS_LEGEND_COMMON_CLASSES} d3-bolus-correction`),
     {

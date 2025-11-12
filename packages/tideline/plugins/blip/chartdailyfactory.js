@@ -408,6 +408,13 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     onCarbOut: options.onTooltipOut
   }))
 
+  // TODO To update
+  poolBolus.addPlotType({ type: 'eatingShortly' }, plotCarb(poolBolus, {
+    timezoneAware: chart.options.timePrefs.timezoneAware,
+    onCarbHover: options.onCarbHover,
+    onCarbOut: options.onTooltipOut
+  }))
+
   // Add confidential mode to Bolus pool: Must be the last in the pool to mask stuff below
   poolBolus.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolBolus, {
     tidelineData,

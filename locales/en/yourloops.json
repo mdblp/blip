@@ -361,6 +361,7 @@
   "maximum": "Maximum",
   "meal-bolus": "Meal bolus",
   "meal-carbs": "Meal carbs",
+  "meal-without-carb-counting": "Meal without carb counting",
   "medical-files": "Medical files",
   "medical-report": "Medical report",
   "medical-report-delete-failed": "Medical report delete failed",
