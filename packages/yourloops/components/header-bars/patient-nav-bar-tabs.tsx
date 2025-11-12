@@ -140,7 +140,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
       </Box>
       <Box className={classes.centerSection}>
         <Tabs value={getSelectedTab()} classes={{ root: classes.root }}
-              TabIndicatorProps={ !user.isUserPatient() ? { style: { display: 'none' } } : undefined }
+              TabIndicatorProps={ !user.isUserPatient() && { style: { display: 'none' } } }
         >
           <Tab
             className={classes.tab}
