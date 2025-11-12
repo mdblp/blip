@@ -64,9 +64,6 @@ export const checkDeviceUsageWidgetWithTwoWeeksOldData = async () => {
   const changeDate = changeDateUTC.tz(zone).format('ll LT')
   const changeDate2 = changeDate2UTC.tz(zone).format('ll LT')
 
-  console.log(`changeDateUTC: ${changeDateUTC}, changeDate2UTC: ${changeDate2UTC}`)
-
-  console.log(`changeDate: ${changeDate}, changeDate2: ${changeDate2}`)
   expect(await screen.findByTestId('cartridge-changes-stat', {}, { timeout: 3000 })).toHaveTextContent(`Cartridge changes${changeDate}--${changeDate2}2hours`)
 }
 
