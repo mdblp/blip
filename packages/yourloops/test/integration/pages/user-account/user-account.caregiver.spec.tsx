@@ -34,7 +34,7 @@ import {
 } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForCaregivers, mockPatientApiForHcp } from '../../mock/patient.api.mock'
@@ -128,6 +128,7 @@ describe('User account page for caregiver', () => {
     const router = renderPage(userAccountRoute)
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual(userAccountRoute)
+      expect(screen.getByText('User account')).toBeVisible()
     })
 
     await testEmailChangeRequest(loggedInUserId, 'newEmail@diabeloop.fr', '457845789')

@@ -29,7 +29,7 @@ import { renderPage } from '../../utils/render'
 import { loggedInUserEmail, loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
@@ -133,6 +133,7 @@ describe('User account page for hcp', () => {
     const router = renderPage(userAccountRoute)
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual(userAccountRoute)
+      expect(screen.getByText('User account')).toBeVisible()
     })
 
     await testEmailChangeRequest(loggedInUserId, 'newEmail@diabeloop.fr', '457845789')
