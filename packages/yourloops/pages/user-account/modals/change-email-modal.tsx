@@ -54,14 +54,18 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
   const [newEmail, setNewEmail] = React.useState<string>('')
   const [changeEmailCode, setChangeEmailCode] = React.useState<string>('')
   const [operationInProgress, setOperationInProgress] = React.useState<boolean>(false)
-  const [emailSentSuccess, setEmailSentSuccess] = React.useState<boolean|undefined>(undefined)
-  const [codeVerificationSuccess, setCodeVerificationSuccess] = React.useState<boolean|undefined>(undefined)
+  const [emailSent, setEmailSent] = React.useState<boolean>(false)
+  const [emailSentSuccess, setEmailSentSuccess] = React.useState<boolean>(false)
+  const [codeValidationSent, setCodeValidationSent] = React.useState<boolean>(false)
+  const [codeValidationSuccess, setCodeValidationSuccess] = React.useState<boolean>(false)
 
   const resetDialogState = (): void => {
     setNewEmail('')
     setChangeEmailCode('')
-    setEmailSentSuccess(undefined)
-    setCodeVerificationSuccess(undefined)
+    setEmailSentSuccess(false)
+    setCodeValidationSuccess(false)
+    setEmailSent(false)
+    setCodeValidationSent(false)
     setShowUpdateEmailDialog(false)
   }
 
@@ -73,6 +77,7 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
     } catch (error: unknown) {
       setEmailSentSuccess(false)
     } finally {
+      setEmailSent(true)
       setOperationInProgress(false)
     }
   }
@@ -81,7 +86,7 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
     setOperationInProgress(true)
     try {
       await AuthApi.validateChangeEmailRequest(changeEmailCode)
-      setCodeVerificationSuccess(true)
+      setCodeValidationSuccess(true)
       setOperationInProgress(false)
       resetDialogState()
       alert.success(t('alert-change-email-success'))
@@ -89,15 +94,16 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
       await new Promise(resolve => setTimeout(resolve, 5000))
       logout()
     } catch (error: unknown) {
-      setCodeVerificationSuccess(false)
+      setCodeValidationSuccess(false)
     } finally {
+      setCodeValidationSent(true)
       setOperationInProgress(false)
     }
   }
 
-  let isEmailSentSuccess = emailSentSuccess == false
+  const emailSentError = emailSent && !emailSentSuccess
+  const codeValidationError = codeValidationSent && !codeValidationSuccess
 
-  let isCodeVerificationSuccess = codeVerificationSuccess == false
   return (
       <Dialog
         data-testid="confirm-email-change-dialog"
@@ -125,8 +131,8 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
             <TextField
               data-testid="user-new-email"
               label={t('new-email')}
-              error={isEmailSentSuccess}
-              helperText={isEmailSentSuccess ? t("error-occurred") : undefined}
+              error={emailSentError}
+              helperText={emailSentError ? t("error-occurred") : undefined}
               variant="outlined"
               value={newEmail}
               onChange={(e) => {
@@ -138,8 +144,8 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
             <TextField
               data-testid="user-new-email-code"
               label={t('code')}
-              error={isCodeVerificationSuccess}
-              helperText={isCodeVerificationSuccess ? t("error-occurred") : undefined}
+              error={codeValidationError}
+              helperText={codeValidationError ? t("error-occurred") : undefined}
               variant="outlined"
               value={changeEmailCode}
               disabled={false}
@@ -173,7 +179,7 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
             color={"primary"}
             disableElevation
             disabled={operationInProgress || newEmail.length == 0}
-            onClick={emailSentSuccess ? validateChangeEmailRequest : sendChangeEmailRequest}
+            onClick={emailSentSuccess   ? validateChangeEmailRequest : sendChangeEmailRequest}
           >
             {t('button-confirm')}
           </LoadingButton>
