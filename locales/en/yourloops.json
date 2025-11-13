@@ -669,5 +669,15 @@
   "weight": "Weight",
   "yesterday": "Yesterday",
   "years-old": "years old",
-  "zen-mode": "Zen mode"
+  "zen-mode": "Zen mode",
+  "no-specific-diet": "No specific diet",
+  "vegetarian": "Vegetarian",
+  "gluten-free": "Gluten-free",
+  "low-carbohydrates-diet": "Low carbohydrates diet",
+  "vegan": "Vegan",
+  "ketogenic-diet": "Ketogenic diet",
+  "caloric-restriction": "Caloric restriction",
+  "intermittent-fasting": "Intermittent fasting",
+  "paleolithic-diet": "Paleolithic diet",
+  "other": "Other"
 }

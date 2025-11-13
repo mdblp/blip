@@ -113,7 +113,6 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
     <>
       <Grid container spacing={3}>
         <Grid item xs={6}>
-          {/* Drug Treatment Other Than Insulin */}
           <TextField
             data-testid="additional-patient-profile-drug-treatment"
             label={t('drug-treatment-other-than-insulin')}
@@ -124,7 +123,6 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
             disabled={!user.isUserPatient()}
           />
 
-          {/* Profession */}
           <TextField
             data-testid="additional-patient-profile-profession"
             label={t('profession')}
@@ -228,7 +226,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
             startIcon={<Save />}
             disabled={saveButtonDisabled}
             onClick={save}
-            data-testid="additional-info-save"
+            data-testid="additional-patient-profile-save"
             sx={{ minWidth: 120 }}
           >
             {t('button-save')}
