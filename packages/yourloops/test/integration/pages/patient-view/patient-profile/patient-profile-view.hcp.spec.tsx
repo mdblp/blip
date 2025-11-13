@@ -327,7 +327,7 @@ describe('Patient profile view for HCP', () => {
         renderPage(patientProfileRoute)
       })
 
-      const saveButton = screen.queryByTestId('additional-info-save')
+      const saveButton = screen.queryByTestId('additional-patient-profile-save')
       expect(saveButton).not.toBeInTheDocument()
     })
   })
