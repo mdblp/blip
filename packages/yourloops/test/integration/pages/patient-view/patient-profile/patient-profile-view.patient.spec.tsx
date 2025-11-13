@@ -295,7 +295,7 @@ describe('Patient profile view for Patient', () => {
         renderPage(patientProfileRoute)
       })
 
-      const saveButton = await screen.findByTestId('additional-info-save')
+      const saveButton = await screen.findByTestId('additional-patient-profile-save')
       expect(saveButton).toBeVisible()
       expect(saveButton).toBeEnabled()
     })
@@ -311,7 +311,7 @@ describe('Patient profile view for Patient', () => {
       const drugTreatmentField = await screen.findByTestId('additional-patient-profile-drug-treatment')
       await userEvent.type(drugTreatmentField, 'Updated treatment')
 
-      const saveButton = await screen.findByTestId('additional-info-save')
+      const saveButton = await screen.findByTestId('additional-patient-profile-save')
       await userEvent.click(saveButton)
 
       expect(updatePatientProfileSpy).toHaveBeenCalled()
@@ -322,7 +322,7 @@ describe('Patient profile view for Patient', () => {
     //     renderPage(patientProfileRoute)
     //   })
     //
-    //   const saveButton = await screen.findByTestId('additional-info-save')
+    //   const saveButton = await screen.findByTestId('additional-patient-profile-save')
     //   await userEvent.click(saveButton)
     //
     //   expect(saveButton).toBeDisabled()
