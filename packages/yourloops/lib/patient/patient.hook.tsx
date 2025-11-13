@@ -41,40 +41,47 @@ export default function usePatient(): PatientResult {
   const { user } = useAuth()
   const { t } = useTranslation()
   const alert = useAlert()
-  const [patient, setPatient] = useState<Patient>()
+  const [patient, setPatient] = useState<Patient>(() => {
+    return {
+      userid : user.id
+    } as Patient
+  })
   const [refreshInProgress, setRefreshInProgress] = useState<boolean>(false)
 
-  const getPatientInfo = useCallback((userid: string) => {
+  const getPatientInfo = useCallback(async (userid: string): Promise<void> => {
     setRefreshInProgress(true)
-    PatientApi.getPatientInfo(userid)
-      .then((patientInfos) => {
-        setPatient(patientInfos)
-      }).catch((err) => {
-        const errorMessage = errorTextFromException(err)
-        logError(errorMessage, 'fetch-patient-infos')
-        alert.error(t('error-http-40x'))
-    }).finally(() => {
+    try {
+      const patientInfos = await PatientApi.getPatientInfo(userid)
+      setPatient(patientInfos)
+    } catch (err) {
+      const errorMessage = errorTextFromException(err)
+      logError(errorMessage, 'fetch-patient-infos')
+      alert.error(t('error-http-40x'))
+      // Reset to minimal patient state on error
+      setPatient({ userid } as Patient)
+    } finally {
       setRefreshInProgress(false)
-    })
+    }
   }, [alert, t])
 
-  const refresh = (): void => {
-    getPatientInfo(user.id)
-  }
+  const refresh = useCallback((): void => {
+    void getPatientInfo(user.id)
+  }, [getPatientInfo, user.id])
 
   useEffect(() => {
-    if (user && user.isUserPatient()) {
-      getPatientInfo(user.id)
+    if (user?.isUserPatient()) {
+      void getPatientInfo(user.id)
     }
-  }, [getPatientInfo, user])
-
+  }, [user, getPatientInfo])
 
   const updatePatientProfile = async (patientId: string, patientProfile: ProfilePatient): Promise<void> => {
     try {
       await PatientApi.updatePatientProfile(patientId, patientProfile)
-      refresh()
+      await getPatientInfo(patientId)
     } catch (error) {
-      throw Error(`updatePatientProfile: failed to update patient with id ${patientId}`)
+      const errorMessage = errorTextFromException(error)
+      logError(errorMessage, 'update-patient-profile')
+      throw new Error(`Failed to update patient profile: ${errorMessage}`, { cause: error })
     }
   }
 
