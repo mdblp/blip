@@ -95,6 +95,9 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
     }
   }
 
+  let isEmailSentSuccess = emailSentSuccess == false
+
+  let isCodeVerificationSuccess = codeVerificationSuccess == false
   return (
       <Dialog
         data-testid="confirm-email-change-dialog"
@@ -122,8 +125,8 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
             <TextField
               data-testid="user-new-email"
               label={t('new-email')}
-              error={emailSentSuccess == false}
-              helperText={emailSentSuccess == false ? t("error-occurred") : undefined}
+              error={isEmailSentSuccess}
+              helperText={isEmailSentSuccess ? t("error-occurred") : undefined}
               variant="outlined"
               value={newEmail}
               onChange={(e) => {
@@ -135,8 +138,8 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
             <TextField
               data-testid="user-new-email-code"
               label={t('code')}
-              error={codeVerificationSuccess == false}
-              helperText={codeVerificationSuccess == false ? t("error-occurred") : undefined}
+              error={isCodeVerificationSuccess}
+              helperText={isCodeVerificationSuccess ? t("error-occurred") : undefined}
               variant="outlined"
               value={changeEmailCode}
               disabled={false}
@@ -144,7 +147,7 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
                 setChangeEmailCode(e.target.value)
               }}
               className={classes.formInput}
-              sx={{ display: emailSentSuccess == true ? 'inherit' : 'none' }}
+              sx={{ display: emailSentSuccess ? 'inherit' : 'none' }}
             />
             <DialogContentText marginTop={2}>
               {t('email-change-dialog-text-part1')}<br />
@@ -170,7 +173,7 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
             color={"primary"}
             disableElevation
             disabled={operationInProgress || newEmail.length == 0}
-            onClick={emailSentSuccess == true ? validateChangeEmailRequest : sendChangeEmailRequest}
+            onClick={emailSentSuccess ? validateChangeEmailRequest : sendChangeEmailRequest}
           >
             {t('button-confirm')}
           </LoadingButton>
