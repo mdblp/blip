@@ -81,7 +81,7 @@ export const RangeVisualizationChart: FC<RangeVisualizationChartProps> = (props)
     const yMin = bgBounds.veryLowThreshold - yPadding
     const yMax = bgBounds.veryHighThreshold + yPadding
 
-    const yScale = d3.scaleLinear()
+    const yScale = d3.scaleLog()
       .domain([yMin, yMax])
       .range([chartHeight, 0])
 

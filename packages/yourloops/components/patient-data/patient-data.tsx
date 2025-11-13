@@ -107,7 +107,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   setPageTitle(pageTitle)
 
   useEffect(() => {
-    if (patient.userid !== patientIdForWhichDataHasBeenFetched.current) {
+    if (patient?.userid && patient.userid !== patientIdForWhichDataHasBeenFetched.current) {
       patientIdForWhichDataHasBeenFetched.current = patient.userid
       fetchPatientData()
         .catch((err) => {
@@ -235,7 +235,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                     }
                   />
                   {
-                    user.isUserHcp() && !TeamUtils.isPrivate(teamId) &&
+                    user.isUserHcpOrPatient() && !TeamUtils.isPrivate(teamId) &&
                     <Route
                       path={AppUserRoute.PatientProfile}
                       element={

@@ -35,12 +35,14 @@ import { AlertsSection } from './sections/alerts-section'
 import { Patient } from '../../../lib/patient/models/patient.model'
 import { RangeSection } from './sections/range-section'
 import { UnsavedChangesDialog } from './dialog/unsaved-changes-dialog'
+import { useAuth } from '../../../lib/auth'
 
 interface PatientProfileViewProps {
   patient : Patient
 }
 
 export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => {
+  const { user } = useAuth()
   const [selectedSection, setSelectedSection] = useState(PatientProfileViewSection.Information)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
   const [pendingNavigationSection, setPendingNavigationSection] = useState<PatientProfileViewSection | null>(null)
@@ -90,7 +92,9 @@ export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => 
     <Container data-testid="patient-profile-view-container" maxWidth="xl">
       <Grid container spacing={3}>
         <Grid item xs={3}>
-          <PatientProfileViewMenu selectedSection={selectedSection} selectSection={selectSection} />
+          { user.isUserHcp() &&
+            <PatientProfileViewMenu selectedSection={selectedSection} selectSection={selectSection} />
+          }
         </Grid>
         <Grid item xs={9}>
           {displaySelectedSection()}

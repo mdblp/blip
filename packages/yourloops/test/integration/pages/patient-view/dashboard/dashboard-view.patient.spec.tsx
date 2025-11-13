@@ -34,7 +34,6 @@ import {
   sixteenDaysOldDashboardData,
   twoWeeksOldDashboardData
 } from '../../../mock/data.api.mock'
-import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { type MedicalFilesWidgetParams } from '../../../assert/medical-widget.assert'
 import { mockMedicalFilesAPI, mockMedicalFilesApiEmptyResult } from '../../../mock/medical-files.api.mock'
@@ -57,7 +56,7 @@ import {
   testDashboardDataVisualisationSixteenDaysOldData,
   testDashboardDataVisualisationTwoWeeksOldData,
   testEmptyMedicalFilesWidgetForPatient,
-  testPatientNavBarForPatientAndCaregiver
+  testPatientNavBarForPatient
 } from '../../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForPatient } from '../../../use-cases/medical-reports-management'
 import { testChatWidgetForPatient } from '../../../use-cases/communication-system'
@@ -72,7 +71,6 @@ describe('Dashboard view for patient', () => {
 
   beforeEach(() => {
     mockPatientLogin(patient1Info)
-    mockPatientApiForPatients()
     mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
     mockChatAPI()
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
@@ -101,7 +99,7 @@ describe('Dashboard view for patient', () => {
 
     await testAppMainLayoutForPatient(appMainLayoutParams)
     await testDashboardDataVisualisationForPatientOrPrivateTeam(patientDashboardLayoutParams)
-    await testPatientNavBarForPatientAndCaregiver()
+    await testPatientNavBarForPatient()
   })
 
   it('should display medical reports', async () => {

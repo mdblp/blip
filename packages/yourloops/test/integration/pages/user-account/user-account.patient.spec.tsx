@@ -46,6 +46,7 @@ import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { testPatientUserInfoUpdate } from '../../use-cases/user-account-management'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
+import { buildPatient } from '../../data/patient-builder.data'
 
 describe('User account page for patient', () => {
   const userAccountRoute = AppUserRoute.UserAccount
@@ -76,6 +77,8 @@ describe('User account page for patient', () => {
     units: { bg: Unit.MilligramPerDeciliter }
   }
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
+  // not used only for the mockPatientApiForPatients
+  const patient = buildPatient({ userid: "fakeone" })
 
   beforeAll(() => {
     mockAuth0Hook(UserRole.Patient)
@@ -84,7 +87,7 @@ describe('User account page for patient', () => {
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
-    mockPatientApiForPatients()
+    mockPatientApiForPatients(patient)
   })
 
   it('should render user account page for a French patient and be able to edit his profile', async () => {

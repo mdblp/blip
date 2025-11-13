@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,43 +25,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, type ReactElement } from 'react'
-import { useAuth } from '../lib/auth'
-import { NotificationContextProvider } from '../lib/notifications/notification.hook'
-import { Navigate, Route } from 'react-router-dom'
-import { CaregiverLayout } from './caregiver-layout'
-import { PatientLayoutWithContext } from './patient-layout'
-import { UserRole } from '../lib/auth/models/enums/user-role.enum'
-import { HcpLayoutWithContext } from './hcp-layout'
-import { AppUserRoute } from '../models/enums/routes.enum'
+import React, { type FC, ForwardRefExoticComponent } from 'react'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { type SvgIconComponent } from '@mui/icons-material'
 
-export const MainLayout: FC = () => {
-  const { user } = useAuth()
+interface InfoRowProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  icon: SvgIconComponent | ForwardRefExoticComponent<any>
+  label: string
+  value: string
+  dataTestId?: string
+}
 
-  const getUserLayout = (): ReactElement => {
-    switch (user?.role) {
-      case UserRole.Hcp:
-        return <HcpLayoutWithContext />
-      case UserRole.Caregiver:
-        return <CaregiverLayout />
-      case UserRole.Patient:
-        return <PatientLayoutWithContext />
-      default:
-        console.error(`no layout found for role ${user?.role}`)
-        return <Route
-          path="*"
-          element={<Navigate to={AppUserRoute.NotFound} replace />}
-        />
-    }
-  }
+export const InfoRow: FC<InfoRowProps> = ({ icon: Icon, label, value, dataTestId }) => {
+  const testId = dataTestId || Icon.name || 'icon'
 
   return (
-    <React.Fragment>
-      {user &&
-        <NotificationContextProvider>
-          {getUserLayout()}
-        </NotificationContextProvider>
-      }
-    </React.Fragment>
+    <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
+      <Icon sx={{ color: 'text.secondary' }} data-testid={testId} />
+      <Box>
+        <Typography variant="body2" color="text.secondary">
+          {label}
+        </Typography>
+        <Typography variant="body2">
+          {value}
+        </Typography>
+      </Box>
+    </Box>
   )
 }

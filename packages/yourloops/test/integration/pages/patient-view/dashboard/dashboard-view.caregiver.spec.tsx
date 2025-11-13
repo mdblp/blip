@@ -49,7 +49,7 @@ import {
   testDashboardDataVisualisationForPatientOrPrivateTeam,
   testDashboardDataVisualisationSixteenDaysOldData,
   testDashboardDataVisualisationTwoWeeksOldData,
-  testPatientNavBarForPatientAndCaregiver
+  testPatientNavBarForCaregiver
 } from '../../../use-cases/patient-data-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
@@ -88,7 +88,7 @@ describe('Dashboard view for caregiver', () => {
 
     await testAppMainLayoutForCaregiver(appMainLayoutParams)
     await testDashboardDataVisualisationForPatientOrPrivateTeam(patientDashboardLayoutParams)
-    await testPatientNavBarForPatientAndCaregiver()
+    await testPatientNavBarForCaregiver()
   })
 
   it('should render correct statistic when data is two weeks old', async () => {

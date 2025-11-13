@@ -117,7 +117,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
     navigate(`../..`, { relative: 'path' })
   }
 
-  const currentPatientDiabeticType = currentPatient.diabeticProfile?.type ?? DiabeticType.DT1DT2
+  const currentPatientDiabeticType = currentPatient?.diabeticProfile?.type ?? DiabeticType.DT1DT2
 
   return (
     <Box className={classes.tabsContainer}>
@@ -179,7 +179,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
               root: classes.root
             }}
           />
-          {user.isUserHcp() && !TeamUtils.isPrivate(teamId) &&
+          {user.isUserHcpOrPatient() && !TeamUtils.isPrivate(teamId) &&
             <Tab
               className={classes.tab}
               value={PatientView.PatientProfile}
