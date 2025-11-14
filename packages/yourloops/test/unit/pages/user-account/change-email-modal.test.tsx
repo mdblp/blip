@@ -65,8 +65,8 @@ describe('ChangeEmailModal', () => {
   function getComponent(open = true) {
     return (
       <ChangeEmailModal
-        showUpdateEmailDialog={open}
-        setShowUpdateEmailDialog={setShowUpdateEmailDialog}
+        showChangeEmailModal={open}
+        setChangeEmailModal={setShowUpdateEmailDialog}
       />
     )
   }

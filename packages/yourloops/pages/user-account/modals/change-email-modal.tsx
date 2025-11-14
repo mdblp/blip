@@ -42,11 +42,11 @@ import { LoadingButton } from '@mui/lab'
 import Dialog from '@mui/material/Dialog'
 
 interface ChangeEmailModalProps {
-  showUpdateEmailDialog: boolean
-  setShowUpdateEmailDialog: (arg0: boolean) => void
+  showChangeEmailModal: boolean
+  setChangeEmailModal: (arg0: boolean) => void
 }
 
-export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDialog, setShowUpdateEmailDialog }) => {
+export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showChangeEmailModal, setChangeEmailModal }) => {
   const { t } = useTranslation('yourloops')
   const { user, logout } = useAuth()
   const alert = useAlert()
@@ -66,7 +66,7 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
     setCodeValidationSuccess(false)
     setEmailSent(false)
     setCodeValidationSent(false)
-    setShowUpdateEmailDialog(false)
+    setChangeEmailModal(false)
   }
 
   const sendChangeEmailRequest = async (): Promise<void> => {
@@ -107,11 +107,11 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
   return (
       <Dialog
         data-testid="confirm-email-change-dialog"
-        open={showUpdateEmailDialog}
+        open={showChangeEmailModal}
         fullWidth
         maxWidth="sm"
         onClose={() => {
-          setShowUpdateEmailDialog(false)
+          setChangeEmailModal(false)
         }}
       >
         <DialogTitle>
@@ -132,7 +132,7 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
               data-testid="user-new-email"
               label={t('new-email')}
               error={emailSentError}
-              helperText={emailSentError ? t("error-occurred") : undefined}
+              helperText={emailSentError && t('error-occurred')}
               variant="outlined"
               value={newEmail}
               onChange={(e) => {
@@ -145,7 +145,7 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
               data-testid="user-new-email-code"
               label={t('code')}
               error={codeValidationError}
-              helperText={codeValidationError ? t("error-occurred") : undefined}
+              helperText={codeValidationError && t('error-occurred')}
               variant="outlined"
               value={changeEmailCode}
               disabled={false}
@@ -167,7 +167,7 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showUpdateEmailDia
             data-testid="confirm-dialog-cancel-button"
             variant="outlined"
             onClick={() => {
-              setShowUpdateEmailDialog(false)
+              setChangeEmailModal(false)
             }}
           >
             {t('button-cancel')}

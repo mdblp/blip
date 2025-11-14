@@ -47,7 +47,7 @@ export const SecurityForm: FC = () => {
   const alert = useAlert()
   const { classes } = userAccountFormCommonClasses()
   const [showUpdatePasswordDialog, setShowUpdatePasswordDialog] = React.useState<boolean>(false)
-  const [showUpdateEmailDialog, setShowUpdateEmailDialog] = React.useState<boolean>(false)
+  const [showChangeEmailModal, setShowChangeEmailModal] = React.useState<boolean>(false)
 
   const sendChangePasswordEmail = async (): Promise<void> => {
     try {
@@ -84,7 +84,7 @@ export const SecurityForm: FC = () => {
               color="primary"
               disableElevation
               onClick={() => {
-                setShowUpdateEmailDialog(true)
+                setShowChangeEmailModal(true)
               }}
             >
               {t('button-change-email')}
@@ -103,6 +103,7 @@ export const SecurityForm: FC = () => {
         </Box>
       </Box>
       <ConfirmDialog
+        confirmColor={"primary"}
         open={showUpdatePasswordDialog}
         title={t('button-change-password')}
         label={t('change-password-info')}
@@ -111,7 +112,7 @@ export const SecurityForm: FC = () => {
         }}
         onConfirm={sendChangePasswordEmail}
       />
-      <ChangeEmailModal showUpdateEmailDialog={showUpdateEmailDialog} setShowUpdateEmailDialog={setShowUpdateEmailDialog} />
+      <ChangeEmailModal showChangeEmailModal={showChangeEmailModal} setChangeEmailModal={setShowChangeEmailModal} />
     </>
   )
 }
