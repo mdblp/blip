@@ -55,10 +55,8 @@ export const getPatientHbA1c = (patient: Patient): string => {
   return `${a1c}% - (${formatDate(a1cDate)})`
 }
 
-export const getPatientInitials = (firstName?: string, lastName?: string): string => {
-  const first = firstName || ''
-  const last = lastName || ''
-  return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase()
+export const getPatientInitials = (firstName: string = '', lastName: string = ''): string => {
+  return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
 }
 
 export const getPatientDisplayInfo = (patient: Patient) => ({
