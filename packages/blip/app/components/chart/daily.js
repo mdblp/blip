@@ -30,6 +30,7 @@ import {
   BloodGlucoseTooltip,
   BolusTooltip,
   ConfidentialTooltip,
+  EatingShortlyTooltip,
   EventsSuperpositionPopover,
   IobTooltip,
   NightModeTooltip,
@@ -86,7 +87,8 @@ class DailyChart extends React.Component {
     onTooltipOut: PropTypes.func.isRequired,
     onEventSuperpositionClick: PropTypes.func.isRequired,
     onChartMounted: PropTypes.func.isRequired,
-    trackMetric: PropTypes.func.isRequired
+    trackMetric: PropTypes.func.isRequired,
+    isEatingShortlyEnabled: PropTypes.bool.isRequired
   }
 
   constructor(props) {
@@ -101,6 +103,7 @@ class DailyChart extends React.Component {
       'onSMBGHover',
       'onCBGHover',
       'onCarbHover',
+      'onEatingShortlyHover',
       'onReservoirHover',
       'onPhysicalHover',
       'onParameterHover',
@@ -113,7 +116,8 @@ class DailyChart extends React.Component {
       'onZenModeHover',
       'onTooltipOut',
       'onEventSuperpositionClick',
-      'trackMetric'
+      'trackMetric',
+      'isEatingShortlyEnabled'
     ]
 
     this.log = bows('DailyChart')
@@ -287,7 +291,8 @@ class Daily extends React.Component {
     onCreateMessage: PropTypes.func.isRequired,
     onShowMessageThread: PropTypes.func.isRequired,
     // navigation handlers
-    onDatetimeLocationChange: PropTypes.func.isRequired
+    onDatetimeLocationChange: PropTypes.func.isRequired,
+    isEatingShortlyEnabled: PropTypes.bool.isRequired
   }
 
   constructor(props) {
@@ -354,7 +359,8 @@ class Daily extends React.Component {
 
     return (
       <div id="tidelineMain" className="daily">
-        <Box data-testid="daily-view-content" className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
+        <Box data-testid="daily-view-content" className="container-box-outer patient-data-content-outer" display="flex"
+             flexDirection="column">
           <Box display="flex">
             {this.state.chartMounted &&
               <DailyDatePicker
@@ -396,6 +402,7 @@ class Daily extends React.Component {
                   onBasalHover={this.handleBasalHover}
                   onCBGHover={this.handleCBGHover}
                   onCarbHover={this.handleCarbHover}
+                  onEatingShortlyHover={this.handleEatingShortlyHover}
                   onReservoirHover={this.handleReservoirHover}
                   onPhysicalHover={this.handlePhysicalHover}
                   onParameterHover={this.handleParameterHover}
@@ -410,6 +417,7 @@ class Daily extends React.Component {
                   onEventSuperpositionClick={this.handleEventSuperpositionClick}
                   onChartMounted={this.onChartMounted}
                   trackMetric={trackMetric}
+                  isEatingShortlyEnabled={this.props.isEatingShortlyEnabled}
                   ref={this.chartRef}
                 />
               </div>
@@ -611,6 +619,22 @@ class Daily extends React.Component {
     const tooltip = (
       <RescueCarbsTooltip
         food={datum.data}
+        position={{
+          top: datum.top,
+          left: datum.left
+        }}
+        side={datum.side}
+        timePrefs={datum.timePrefs}
+      />)
+    this.setState({ tooltip })
+  }
+
+  handleEatingShortlyHover = (datum) => {
+    console.log({ datum})
+    this.updateDatumHoverForTooltip(datum)
+    const tooltip = (
+      <EatingShortlyTooltip
+        eatingShortly={datum.data}
         position={{
           top: datum.top,
           left: datum.left

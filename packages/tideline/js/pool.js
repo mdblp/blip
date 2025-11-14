@@ -18,7 +18,7 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
-import legendDefs from './plot/util/legend'
+import { drawLegend } from './plot/util/legend'
 
 /**
  * @typedef {import('./tidelinedata').default} MedicalDataService
@@ -36,8 +36,9 @@ import legendDefs from './plot/util/legend'
 /**
  * A pool: An horizontal graph for the daily view
  * @param {OneDay} container OneDay container
+ * @param isEatingShortlyEnabled feature toggle for the Eating Shortly management
  */
-function Pool(container) {
+function Pool(container, isEatingShortlyEnabled = false) {
   const minHeight = 20
   const maxHeight = 300
 
@@ -180,7 +181,8 @@ function Pool(container) {
         .append('g')
         .attr('id', `${id}_legend_${legend.name}`)
         .attr('transform', `translate(${x},${y})`)
-      legendDefs.draw(legendGroup, legend.name)
+
+      drawLegend(legendGroup, legend.name, isEatingShortlyEnabled)
     })
   })
 

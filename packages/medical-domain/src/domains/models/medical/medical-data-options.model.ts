@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -44,6 +44,7 @@ interface MedicalDataOptions {
     duration: number
   }
   timePrefs: TimePrefs
+  isEatingShortlyEnabled?: boolean
 }
 
 interface BgClasses {
@@ -126,7 +127,8 @@ const defaultMedicalDataOptions: MedicalDataOptions = {
   timePrefs: {
     timezoneAware: true,
     timezoneName: 'UTC',
-  }
+  },
+  isEatingShortlyEnabled: false
 }
 
 export default MedicalDataOptions
