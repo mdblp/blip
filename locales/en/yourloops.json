@@ -371,6 +371,8 @@
   "manual-bolus": "Manual bolus",
   "manual-flag": "Manual flag",
   "maximum": "Maximum",
+  "max-hours-per-week" : "a week have 168 hours",
+  "max-length-exceeded": "the maximum length is {{max}} characters",
   "meal-bolus": "Meal bolus",
   "meal-carbs": "Meal carbs",
   "medical-files": "Medical files",

@@ -70,15 +70,20 @@ enum AdditionalPatientAdditionalPatientProfileFormKey {
   Comments = 'comments'
 }
 
+const TEXT_FIELD_MAX_LENGTH = 100
+const COMMENTS_MAX_LENGTH = 255
+const MAX_HOURS_IN_WEEK = 168
+
 export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
   const { patient } = props
   const { user } = useAuth()
   const { t } = useTranslation()
   const alert = useAlert()
   const { updatePatientProfile } = usePatient()
-  const [additionalPatientProfileForm, setAdditionalPatientProfileForm] = useState<ProfilePatient>(patient.profile)
-  const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
   const { classes } = useStyles()
+  const [additionalPatientProfileForm, setAdditionalPatientProfileForm] = useState<ProfilePatient>(patient.profile)
+  const [errors, setErrors] = useState<Partial<Record<AdditionalPatientAdditionalPatientProfileFormKey, string>>>({})
+  const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 
   const onFieldChange = (key: AdditionalPatientAdditionalPatientProfileFormKey, value: unknown): void => {
     setAdditionalPatientProfileForm((prevForm) => ({
@@ -88,12 +93,36 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
   }
 
   const saveButtonDisabled = useMemo(() => {
-    return saveInProgress
-  }, [saveInProgress])
+    return saveInProgress || Object.values(errors).some((error) => error?.length > 0)
+  }, [saveInProgress, errors])
 
   const physicalActivityNameList = Object.values(PhysicalActivityName)
   const dietOptions = ['no-specific-diet','vegetarian', 'gluten-free', 'low-carbohydrates-diet', 'vegan', 'ketogenic-diet', 'caloric-restriction', 'intermittent-fasting', 'paleolithic-diet', 'other']
 
+  const validateHoursPerWeek = (hours: number): void => {
+    const error = hours > MAX_HOURS_IN_WEEK ? t('max-hours-per-week', { max: TEXT_FIELD_MAX_LENGTH }) : ''
+    setErrors(prev => ({ ...prev, [AdditionalPatientAdditionalPatientProfileFormKey.HoursSpentOnPhysicalActivitiesPerWeek]: error }))
+  }
+
+  const validateDrugTreatment = (drugTreatment: string): void => {
+    const error = drugTreatment.length > TEXT_FIELD_MAX_LENGTH ? t('max-length-exceeded', { max: TEXT_FIELD_MAX_LENGTH }) : ''
+    setErrors(prev => ({ ...prev, [AdditionalPatientAdditionalPatientProfileFormKey.DrugTreatment]: error }))
+  }
+
+  const validateProfession = (profession: string): void => {
+    const error = profession.length > TEXT_FIELD_MAX_LENGTH ? t('max-length-exceeded', { max: TEXT_FIELD_MAX_LENGTH }) : ''
+    setErrors( prev => ({ ...prev , [AdditionalPatientAdditionalPatientProfileFormKey.Profession]: error }))
+  }
+
+  const validateComments = (comments: string): void => {
+    const error = comments.length > COMMENTS_MAX_LENGTH ? t('max-length-exceeded', { max: COMMENTS_MAX_LENGTH }) : ''
+    setErrors( prev => ({ ...prev , [AdditionalPatientAdditionalPatientProfileFormKey.Comments]: error }))
+  }
+
+  const validateHobbies = (hobbies: string): void => {
+    const error = hobbies.length > TEXT_FIELD_MAX_LENGTH ? t('max-length-exceeded', { max: TEXT_FIELD_MAX_LENGTH }) : ''
+    setErrors(prev => ({ ...prev, [AdditionalPatientAdditionalPatientProfileFormKey.Hobbies]: error }))
+  }
 
   const save = async (): Promise<void> => {
     setSaveInProgress(true)
@@ -119,8 +148,13 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
             variant="outlined"
             className={classes.formField}
             value={additionalPatientProfileForm.drugTreatment || ''}
-            onChange={(e) => onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.DrugTreatment, e.target.value)}
+            onChange={(e) => {
+              onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.DrugTreatment, e.target.value)
+              validateDrugTreatment(e.target.value)
+            }}
             disabled={!user.isUserPatient()}
+            error={!!errors.drugTreatment}
+            helperText={errors.drugTreatment}
           />
 
           <TextField
@@ -129,8 +163,13 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
             variant="outlined"
             className={classes.formField}
             value={additionalPatientProfileForm.profession || ''}
-            onChange={(e) => onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.Profession, e.target.value)}
+            onChange={(e) => {
+              onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.Profession, e.target.value)
+              validateProfession(e.target.value)
+            }}
             disabled={!user.isUserPatient()}
+            error={!!errors.profession}
+            helperText={errors.profession}
           />
         </Grid>
 
@@ -143,7 +182,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
             limitTags={2}
             freeSolo
             className={classes.formField}
-            value={additionalPatientProfileForm.diet}
+            value={additionalPatientProfileForm.diet || []} // to prevent MUI error when no value is selected (controlled component)
             onChange={(e, value) => onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.Diet, value)}
             renderInput={(params) => (
               <TextField
@@ -161,8 +200,13 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
             variant="outlined"
             className={classes.formField}
             value={additionalPatientProfileForm.hobbies || ''}
-            onChange={(e) => onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.Hobbies, e.target.value)}
+            onChange={(e) => {
+              onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.Hobbies, e.target.value)
+              validateHobbies(e.target.value)
+            }}
             disabled={!user.isUserPatient()}
+            error={!!errors.hobbies}
+            helperText={errors.hobbies}
           />
         </Grid>
       </Grid>
@@ -177,7 +221,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
             getOptionLabel={(option: string) => t(`params|${option}`)}
             freeSolo
             className={classes.formField}
-            value={additionalPatientProfileForm.physicalActivities}
+            value={additionalPatientProfileForm.physicalActivities || []} // to prevent MUI error when no value is selected (controlled component)
             onChange={(e, value) => onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.PhysicalActivities, value)}
             renderInput={(params) => (
               <TextField
@@ -197,11 +241,17 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
             className={classes.formField}
             type="number"
             value={additionalPatientProfileForm.hoursSpentOnPhysicalActivitiesPerWeek || ''}
-            onChange={(e) => onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.HoursSpentOnPhysicalActivitiesPerWeek, +e.target.value)} // the + allow convertion into number
+            onChange={(e) => {
+              onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.HoursSpentOnPhysicalActivitiesPerWeek, +e.target.value)
+              validateHoursPerWeek(+e.target.value)
+            }} // the + allow conversion into number
             InputProps={{
+              inputProps: { min: 0 },
               endAdornment: <InputAdornment position="end">{t('hours')}</InputAdornment>
             }}
             disabled={!user.isUserPatient()}
+            error={!!errors.hoursSpentOnPhysicalActivitiesPerWeek}
+            helperText={errors.hoursSpentOnPhysicalActivitiesPerWeek}
           />
         </Grid>
       </Grid>
@@ -213,8 +263,13 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
         multiline
         className={classes.openCommentsField}
         value={additionalPatientProfileForm.comments || ''}
-        onChange={(e) => onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.Comments, e.target.value)}
+        onChange={(e) => {
+          onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.Comments, e.target.value)
+          validateComments(e.target.value)
+        }}
         disabled={!user.isUserPatient()}
+        error={!!errors.comments}
+        helperText={errors.comments}
       />
       { user.isUserPatient() &&
         <Box display="flex" justifyContent="flex-end" mt={4}>
