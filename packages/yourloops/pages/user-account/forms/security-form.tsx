@@ -38,12 +38,16 @@ import { logError } from '../../../utils/error.util'
 import { useAlert } from '../../../components/utils/snackbar'
 import TextField from '@mui/material/TextField'
 import { userAccountFormCommonClasses } from '../css-classes'
+import ConfirmDialog from '../../../components/dialogs/confirm-dialog'
+import { ChangeEmailModal } from '../modals/change-email-modal'
 
 export const SecurityForm: FC = () => {
   const { t } = useTranslation('yourloops')
   const { user } = useAuth()
   const alert = useAlert()
   const { classes } = userAccountFormCommonClasses()
+  const [showUpdatePasswordDialog, setShowUpdatePasswordDialog] = React.useState<boolean>(false)
+  const [showChangeEmailModal, setShowChangeEmailModal] = React.useState<boolean>(false)
 
   const sendChangePasswordEmail = async (): Promise<void> => {
     try {
@@ -52,7 +56,6 @@ export const SecurityForm: FC = () => {
     } catch (error: unknown) {
       const errorMessage = errorTextFromException(error)
       logError(errorMessage, 'change-password')
-
       alert.error(t('alert-change-password-email-failed'))
     }
   }
@@ -73,19 +76,43 @@ export const SecurityForm: FC = () => {
           />
         </Box>
         <Box marginTop={2}>
-          <span>{t('change-password-info')}</span>
           <Box display="flex" marginTop={2}>
+            <Button
+              data-testid="change-email-button"
+              sx={{ marginRight: 2 }}
+              variant="outlined"
+              color="primary"
+              disableElevation
+              onClick={() => {
+                setShowChangeEmailModal(true)
+              }}
+            >
+              {t('button-change-email')}
+            </Button>
             <Button
               variant="outlined"
               color="primary"
               disableElevation
-              onClick={sendChangePasswordEmail}
+              onClick={() => {
+                setShowUpdatePasswordDialog(true)
+              }}
             >
               {t('button-change-password')}
             </Button>
           </Box>
         </Box>
       </Box>
+      <ConfirmDialog
+        confirmColor={"primary"}
+        open={showUpdatePasswordDialog}
+        title={t('button-change-password')}
+        label={t('change-password-info')}
+        onClose={() => {
+          setShowUpdatePasswordDialog(false)
+        }}
+        onConfirm={sendChangePasswordEmail}
+      />
+      <ChangeEmailModal showChangeEmailModal={showChangeEmailModal} setChangeEmailModal={setShowChangeEmailModal} />
     </>
   )
 }

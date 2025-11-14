@@ -31,6 +31,8 @@ import HttpService from '../http/http.service'
 
 const AUTH0_CONNECTION_TYPE = 'Username-Password-Authentication'
 const AUTH0_CHANGE_PASSWORD_URL = '/dbconnections/change_password'
+const AUTH_CHANGE_USERNAME_URL = '/auth/v2/user'
+const AUTH_VALIDATE_CHANGE_USERNAME_URL = '/auth/v2/verify-email'
 
 export class AuthApi {
   static async sendResetPasswordEmail(userEmail: string): Promise<AxiosResponse> {
@@ -42,6 +44,21 @@ export class AuthApi {
         connection: AUTH0_CONNECTION_TYPE
       },
       config: { baseURL: `https://${appConfig.AUTH0_DOMAIN}`, params: { noHeader: true } }
+    })
+  }
+
+  static async sendChangeEmailRequest(userId: string, newUserEmail: string): Promise<AxiosResponse> {
+    return await HttpService.put({
+      url: `${AUTH_CHANGE_USERNAME_URL}/${userId}`,
+      payload: {
+        username: newUserEmail,
+      },
+    })
+  }
+
+  static async validateChangeEmailRequest(code: string): Promise<AxiosResponse> {
+    return await HttpService.post({
+      url: `${AUTH_VALIDATE_CHANGE_USERNAME_URL}?verificationCode=${code}`,
     })
   }
 }

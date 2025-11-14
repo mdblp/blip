@@ -15,8 +15,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-3654 As Hcp, i can see the patient profile value in Yourloops
 - YLP-3708 Add a new page to display a diabeloop communication just after the login (displayed on demand, when necessary)
 - YLP-3709 Rework the banner to display live content (updated by Diabeloop team)
+- YLP-3711 As an HCP and a caregiver, I can see and change my email address from the section "USER account"
 - YLP-3753 Design for the new menu organisation in the HCP view
-
 
 ### Changed
 - YLP-2347 Display patient monitoring parameters in the patient profile page
