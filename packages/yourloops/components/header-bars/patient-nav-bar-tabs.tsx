@@ -70,7 +70,6 @@ const styles = makeStyles()((theme: Theme) => {
     tab: {
       fontWeight: 'bold',
       fontSize: theme.typography.htmlFontSize,
-      color: 'var(--text-color-primary)'
     },
     backIcon: {
       cursor: 'pointer',
