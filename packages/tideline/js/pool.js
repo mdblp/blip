@@ -180,6 +180,7 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
       const legendGroup = mainSVG.select('#tidelineLabels')
         .append('g')
         .attr('id', `${id}_legend_${legend.name}`)
+        .attr('data-testid', `${id}_legend_${legend.name}`)
         .attr('transform', `translate(${x},${y})`)
 
       drawLegend(legendGroup, legend.name, shouldDisplayEatingShortlyLegend)

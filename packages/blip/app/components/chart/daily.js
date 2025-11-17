@@ -630,7 +630,6 @@ class Daily extends React.Component {
   }
 
   handleEatingShortlyHover = (datum) => {
-    console.log({ datum})
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <EatingShortlyTooltip

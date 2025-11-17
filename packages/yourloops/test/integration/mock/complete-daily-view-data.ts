@@ -30,6 +30,7 @@ import {
   AlarmEventType,
   AlarmLevel,
   BasalDeliveryType,
+  Bolus,
   BolusSubtype,
   DatumType,
   DeviceSystem,
@@ -84,6 +85,8 @@ import {
   CONFIDENTIAL_MODE_ID,
   Data,
   DUBLIN_TIMEZONE,
+  EATING_SHORTLY_BOLUS_ID,
+  EATING_SHORTLY_EVENT_ID,
   EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID,
   EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID_2,
   EVENT_SUPERPOSITION_ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID,
@@ -159,6 +162,37 @@ export const getCompleteDailyViewDataDblg2 = (deviceName: DeviceSystem = DeviceS
       "isoWeekday": WeekDays.Monday,
     }
   ]
+
+  const boluses = data.bolus
+  const eatingShortlyBolus: Bolus = {
+    id: EATING_SHORTLY_BOLUS_ID,
+    type: DatumType.Bolus,
+    subType: BolusSubtype.Normal,
+    normal: 0.5,
+    prescriptor: Prescriptor.EatingShortlyManagement,
+    epoch: 1659945600000,
+    normalTime: '2022-08-08T15:30:00.000Z',
+    timezone: 'Europe/Paris',
+    guessedTimezone: false,
+    isoWeekday: WeekDays.Friday,
+    displayOffset: -120,
+    source: Source.Diabeloop,
+    wizard: null
+  }
+  data.bolus = [...boluses, eatingShortlyBolus]
+
+  data.eatingShortlyEvents = [{
+    id: EATING_SHORTLY_EVENT_ID,
+    guid: EATING_SHORTLY_EVENT_ID,
+    type: DatumType.EatingShortlyEvent,
+    epoch: 1659945600000,
+    normalTime: '2022-08-08T15:30:00.000Z',
+    timezone: 'Europe/Paris',
+    guessedTimezone: false,
+    displayOffset: -120,
+    isoWeekday: WeekDays.Friday,
+    source: Source.Diabeloop,
+  }]
 
   return completeData
 }
@@ -1332,6 +1366,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "isoWeekday": WeekDays.Sunday
         }
       ],
+      eatingShortlyEvents: [],
       iob: [],
       messages: [],
       meals: [
@@ -1801,6 +1836,7 @@ export const getTimezoneChangeData = (): Data => {
       ],
       confidentialModes: [],
       deviceParametersChanges: [],
+      eatingShortlyEvents: [],
       iob: [],
       messages: [],
       meals: [],

@@ -60,13 +60,16 @@ import {
   BASAL_TIME_CHANGE_INITAL_TIME_ID,
   CARB_ID,
   CBG_ID,
-  PARIS_TIMEZONE,
   CONFIDENTIAL_MODE_ID,
+  DUBLIN_TIMEZONE,
+  EATING_SHORTLY_BOLUS_ID,
+  EATING_SHORTLY_EVENT_ID,
   EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID,
   IOB_ID,
   MANUAL_BOLUS_ID,
   NIGHT_MODE_ID,
   PARAMETER_ID,
+  PARIS_TIMEZONE,
   PEN_BOLUS_ID,
   PHYSICAL_ACTIVITY_ID,
   PHYSICAL_ACTIVITY_TIME,
@@ -85,8 +88,7 @@ import {
   WIZARD_UNDELIVERED_ID,
   WIZARD_UNDELIVERED_INPUT_TIME,
   ZEN_MODE_ID,
-  ZEN_MODE_ID_WITH_GLY,
-  DUBLIN_TIMEZONE
+  ZEN_MODE_ID_WITH_GLY
 } from '../mock/data.api.mock'
 import moment from 'moment-timezone'
 import { checkStatTooltip } from './stats.assert'
@@ -198,6 +200,8 @@ export const checkDailyTidelineContainerTooltipsDblg2 = async () => {
   expect(await screen.findByTestId(`nightMode_group_${NIGHT_MODE_ID}`, {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
   await checkTidelineContainerElementTooltip(`nightMode_group_${NIGHT_MODE_ID}`, 'Night mode11:00 pmDuration10 hours')
   await checkTidelineContainerElementTooltip(`iob_${IOB_ID}`,'Active insulin5:30 pmInsulin on board (IOB)Insulin25.00U')
+  await checkTidelineContainerElementTooltip(`bolus_eating_shortly_${EATING_SHORTLY_BOLUS_ID}`, 'Meal5:30 pmMeal without carb countingLoop modeBolus TypeStandardDelivered0.5U')
+  await checkTidelineContainerElementTooltip(`eating_shortly_event_${EATING_SHORTLY_EVENT_ID}`, 'Meal5:30 pmMeal without carb counting')
 }
 
 export const checkDailyTidelineContainerTooltipsMmolL = async () => {
@@ -289,6 +293,9 @@ export const checkDailyViewChartsDblg1 = () => {
   checkDailyViewChartsCommon()
 
   expect(screen.queryByTestId('poolIob-chart-label')).not.toBeInTheDocument()
+
+  const bolusChartLegend = screen.getByTestId('poolBolus_legend_bolus')
+  expect(bolusChartLegend).not.toHaveTextContent('Meal without carb counting')
 }
 
 export const checkDailyViewChartsDblg2 = () => {
@@ -296,6 +303,9 @@ export const checkDailyViewChartsDblg2 = () => {
 
   const iobChartLabel = screen.getByTestId('poolIob-chart-label')
   expect(iobChartLabel).toHaveTextContent('Active insulin (U)')
+
+  const bolusChartLegend = screen.getByTestId('poolBolus_legend_bolus')
+  expect(bolusChartLegend).toHaveTextContent('Meal without carb counting')
 }
 
 export const checkDailyTimeInRangeStatsWidgetsMgdl = async () => {

@@ -1,9 +1,9 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
-import eatingShortlyIcon from 'eating-shortly.svg'
+import eatingShortlyEventIcon from 'eating-shortly.svg'
 import utils from './util/utils'
 
-function plotEatingShortly(pool, opts) {
+function plotEatingShortlyEvent(pool, opts) {
   var defaults = {
     r: 14,
     padding: 4
@@ -16,7 +16,7 @@ function plotEatingShortly(pool, opts) {
   }
 
 
-  function eatingShortly(selection) {
+  function eatingShortlyEvent(selection) {
     var yPos = opts.r + opts.padding
     opts.xScale = pool.xScale().copy()
     const height = 24
@@ -24,9 +24,7 @@ function plotEatingShortly(pool, opts) {
     const imageCenterY = 6
 
     selection.each(function () {
-      // TODO find out how to filter for eatingShortly elements
       const filteredData = opts.tidelineData.medicalData.eatingShortlyEvents
-      console.log({ filteredData })
 
       if (filteredData.length < 1) {
         // Remove previous data
@@ -41,8 +39,8 @@ function plotEatingShortly(pool, opts) {
       const eatingShortlyGroup = allEatingShortly.enter()
         .append('g')
         .classed('d3-eating-shortly-group', true)
-        .attr('id', (d) => `eating_shortly_group_${d.id}`)
-        .attr('data-testid', (d) => `eating_shortly_group_${d.id}`)
+        .attr('id', (d) => `eating_shortly_event_${d.id}`)
+        .attr('data-testid', (d) => `eating_shortly_event_${d.id}`)
 
       eatingShortlyGroup
         .append('circle')
@@ -58,7 +56,7 @@ function plotEatingShortly(pool, opts) {
         .attr('y', imageCenterY)
         .attr('width', width)
         .attr('height', height)
-        .attr('href', eatingShortlyIcon)
+        .attr('href', eatingShortlyEventIcon)
 
       selection.selectAll('.d3-eating-shortly-group').on('mouseover', function () {
         opts.onEatingShortlyHover({
@@ -73,7 +71,7 @@ function plotEatingShortly(pool, opts) {
     })
   }
 
-  return eatingShortly
+  return eatingShortlyEvent
 }
 
-export default plotEatingShortly
+export default plotEatingShortlyEvent

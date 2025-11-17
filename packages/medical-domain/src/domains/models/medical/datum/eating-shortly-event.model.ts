@@ -26,9 +26,9 @@
  */
 
 import BaseDatum from './basics/base-datum.model'
-import Duration from './basics/duration.model'
 import { DatumType } from './enums/datum-type.enum'
 
-export type EatingShortlyEvent = BaseDatum & Duration & {
+export type EatingShortlyEvent = BaseDatum & {
+  guid: string
   type: DatumType.EatingShortlyEvent
 }

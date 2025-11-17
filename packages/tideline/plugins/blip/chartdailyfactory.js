@@ -47,7 +47,7 @@ import plotNightMode from '../../js/plot/nightModeEvent'
 import plotEventSuperposition from '../../js/plot/eventSuperposition'
 import { getDataWithoutSuperpositionEvents, getSuperpositionEvents, isDBLG2 } from 'dumb'
 import plotIob from '../../js/plot/iob'
-import plotEatingShortly from '../../js/plot/eatingShortly'
+import plotEatingShortlyEvent from '../../js/plot/eatingShortlyEvent'
 
 /**
  * @typedef {import('../../js/tidelinedata').default } MedicalDataService
@@ -165,6 +165,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   // carbs and boluses data pool
   /** @type {Pool} */
   const shouldDisplayEatingShortlyLegend = isDblg2User && options.isEatingShortlyEnabled
+
   const poolBolus = new Pool(chart, shouldDisplayEatingShortlyLegend)
   chart.addPool(poolBolus)
   const poolBolusId = 'poolBolus'
@@ -410,7 +411,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     onCarbOut: options.onTooltipOut
   }))
 
-  poolBolus.addPlotType({ type: 'eatingShortly' }, plotEatingShortly(poolBolus, {
+  poolBolus.addPlotType({ type: 'eatingShortly' }, plotEatingShortlyEvent(poolBolus, {
     tidelineData,
     timezoneAware: chart.options.timePrefs.timezoneAware,
     onEatingShortlyHover: options.onEatingShortlyHover,
