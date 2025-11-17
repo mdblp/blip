@@ -31,8 +31,9 @@ import '@mui/material/Chip';
 
 declare module '@mui/material/Chip' {
   interface ChipPropsColorOverrides {
-    pink: true;
-    darkBlue: true;
+    lightPink: true;
+    lightDarkBlue: true;
+    lightBlue: true;
   }
 }
 
@@ -40,11 +41,13 @@ declare module '@mui/material/styles' {
   // Palette['primary'] ensure that custom colors (pink, darkBlue) have the same structure and properties
   // as the default primary color (like main, light, dark, contrastText)
   interface Palette {
-    pink: Palette['primary'];
-    darkBlue: Palette['primary'];
+    lightPink: Palette['primary'];
+    lightDarkBlue: Palette['primary'];
+    lightBlue: Palette['primary'];
   }
   interface PaletteOptions {
-    pink?: PaletteOptions['primary'];
-    darkBlue?: PaletteOptions['primary'];
+    lightPink?: PaletteOptions['primary'];
+    lightDarkBlue?: PaletteOptions['primary'];
+    lightBlue?: PaletteOptions['primary'];
   }
 }

@@ -50,7 +50,7 @@ const styles = makeStyles()((theme: Theme) => {
 
 interface ChipConfig {
   label: string
-  color: 'primary' | 'pink' | 'darkBlue'
+  color: 'lightBlue' | 'lightPink' | 'lightDarkBlue'
 }
 
 interface PatientDiabeticProfileProps {
@@ -68,17 +68,17 @@ export const PatientDiabeticProfileChip: FunctionComponent<PatientDiabeticProfil
       case DiabeticType.DT1DT2:
         return {
           label: t('range-profile-type-1-and-2'),
-          color: 'primary'
+          color: 'lightBlue'
         }
       case DiabeticType.DT1Pregnancy:
         return {
           label: t('range-profile-pregnancy-type-1'),
-          color: 'pink'
+          color: 'lightPink'
         }
       case DiabeticType.Custom:
         return {
           label: t('range-profile-custom'),
-          color: 'darkBlue'
+          color: 'lightDarkBlue'
         }
     }
   }
