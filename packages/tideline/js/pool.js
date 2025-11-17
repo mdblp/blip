@@ -36,9 +36,9 @@ import { drawLegend } from './plot/util/legend'
 /**
  * A pool: An horizontal graph for the daily view
  * @param {OneDay} container OneDay container
- * @param isEatingShortlyEnabled feature toggle for the Eating Shortly management
+ * @param shouldDisplayEatingShortlyLegend Whether to display the "Meal without carb counting" legend
  */
-function Pool(container, isEatingShortlyEnabled = false) {
+function Pool(container, shouldDisplayEatingShortlyLegend = false) {
   const minHeight = 20
   const maxHeight = 300
 
@@ -182,7 +182,7 @@ function Pool(container, isEatingShortlyEnabled = false) {
         .attr('id', `${id}_legend_${legend.name}`)
         .attr('transform', `translate(${x},${y})`)
 
-      drawLegend(legendGroup, legend.name, isEatingShortlyEnabled)
+      drawLegend(legendGroup, legend.name, shouldDisplayEatingShortlyLegend)
     })
   })
 

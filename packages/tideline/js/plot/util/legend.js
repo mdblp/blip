@@ -47,8 +47,8 @@ const getLegendIcon = (iconType, customClasses, customWidthFactor = 1) => {
   }
 }
 
-const getMealWithoutCarbCountingLegendItems = (isEatingShortlyEnabled) => {
-  if (!isEatingShortlyEnabled) {
+const getMealWithoutCarbCountingLegendItems = (shouldDisplayEatingShortlyLegend) => {
+  if (!shouldDisplayEatingShortlyLegend) {
     return []
   }
 
@@ -69,7 +69,7 @@ const getMealWithoutCarbCountingLegendItems = (isEatingShortlyEnabled) => {
   ]
 }
 
-const getLegend = (isEatingShortlyEnabled) => {
+const getLegend = (shouldDisplayEatingShortlyLegend) => {
   const shapeMargin = 3
   const shapeWidth = 15.5
 
@@ -206,7 +206,7 @@ const getLegend = (isEatingShortlyEnabled) => {
         type: 'text'
       },
       // Meal Bolus without carb counting
-      ...getMealWithoutCarbCountingLegendItems(isEatingShortlyEnabled),
+      ...getMealWithoutCarbCountingLegendItems(shouldDisplayEatingShortlyLegend),
       // Correction Bolus
       getLegendIcon(ICON_TYPE_SQUARE, `${BOLUS_LEGEND_COMMON_CLASSES} d3-bolus-correction`),
       {
@@ -400,8 +400,8 @@ const getLegend = (isEatingShortlyEnabled) => {
   }
 }
 
-export const drawLegend = (selection, type, isEatingShortlyEnabled, isDblg2) => {
-  const legendWithToggle = getLegend(isEatingShortlyEnabled)
+export const drawLegend = (selection, type, shouldDisplayEatingShortlyLegend) => {
+  const legendWithToggle = getLegend(shouldDisplayEatingShortlyLegend)
   legendWithToggle.draw(selection, type)
 }
 
