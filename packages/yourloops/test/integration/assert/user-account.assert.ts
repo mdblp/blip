@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { fireEvent, screen, within } from '@testing-library/react'
+import { fireEvent, screen, waitForElementToBeRemoved, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AuthApi } from '../../../lib/auth/auth.api'
 import { Unit } from 'medical-domain'
@@ -49,8 +49,8 @@ export const checkCaregiverUserAccountLayout = () => {
   const emailInput = screen.getByLabelText('Email')
   expect(emailInput).toHaveValue('yann.blanc@example.com')
   expect(emailInput).toBeDisabled()
-  expect(screen.getByText('By clicking this button, you will receive an e-mail allowing you to change your password.')).toBeVisible()
   expect(screen.getByRole('button', { name: 'Change password' })).toBeEnabled()
+  expect(screen.getByRole('button', { name: 'Change e-mail' })).toBeEnabled()
 
   expect(screen.getByText('Professional account')).toBeVisible()
   expect(screen.getByText('Caregivers can upgrade their account to a professional account. The professional account is reserved for healthcare professionals as a tool to facilitate patient care.')).toBeVisible()
@@ -78,8 +78,8 @@ export const checkHcpUserAccountLayout = () => {
   const emailInput = screen.getByLabelText('Email')
   expect(emailInput).toHaveValue('yann.blanc@example.com')
   expect(emailInput).toBeDisabled()
-  expect(screen.getByText('By clicking this button, you will receive an e-mail allowing you to change your password.')).toBeVisible()
   expect(screen.getByRole('button', { name: 'Change password' })).toBeEnabled()
+  expect(screen.getByRole('button', { name: 'Change e-mail' })).toBeEnabled()
 }
 
 export const checkPatientUserAccountLayout = () => {
@@ -205,13 +205,21 @@ export const checkPasswordChangeRequest = async (email: string): Promise<void> =
   const changePasswordCategoryTitle = screen.getByText('Security')
   expect(changePasswordCategoryTitle).toBeVisible()
 
-  const changePasswordInfoLabel = screen.getByText('By clicking this button, you will receive an e-mail allowing you to change your password.')
-  expect(changePasswordInfoLabel).toBeVisible()
-
   const changePasswordButton = screen.getByRole('button', { name: 'Change password' })
   expect(changePasswordButton).toBeEnabled()
 
   await userEvent.click(changePasswordButton)
+
+  const changePasswordInfoLabel = screen.getByText('You will receive an e-mail allowing you to change your password.')
+  expect(changePasswordInfoLabel).toBeVisible()
+
+  const changePasswordConfirmButton = screen.getByRole('button', { name: 'Confirm' })
+  expect(changePasswordConfirmButton).toBeEnabled()
+
+  const changePasswordCancelButton = screen.getByRole('button', { name: 'Cancel' })
+  expect(changePasswordCancelButton).toBeEnabled()
+
+  await userEvent.click(changePasswordConfirmButton)
 
   expect(AuthApi.sendResetPasswordEmail).toHaveBeenCalledWith(email)
 
@@ -225,6 +233,52 @@ export const checkPasswordChangeRequest = async (email: string): Promise<void> =
   jest.spyOn(AuthApi, 'sendResetPasswordEmail').mockRejectedValueOnce('Error')
   await userEvent.click(changePasswordButton)
 
+  await userEvent.click(changePasswordConfirmButton)
+
   const changePasswordEmailFailedSnackbar = screen.getByTestId('alert-snackbar')
   expect(changePasswordEmailFailedSnackbar).toHaveTextContent('Impossible to send the change password e-mail. Please try again later.')
+}
+
+export const checkEmailChangeRequest = async (userId: string, newEmail: string, code: string): Promise<void> => {
+  // Act – open the Change Email popup
+  const changeEmailButton = screen.getByRole('button', { name: 'Change e-mail' })
+  await userEvent.click(changeEmailButton)
+
+  // Assert that popup appears
+  const dialog = screen.getByTestId('confirm-email-change-dialog')
+  expect(dialog).toBeInTheDocument()
+
+  // Assert click on Cancel close the popup
+  const cancelButton = screen.getByRole('button', { name: 'Cancel' })
+  await userEvent.click(cancelButton)
+  await waitForElementToBeRemoved(() => screen.queryByTestId('confirm-email-change-dialog'))
+
+  // Act – open the Change Email popup
+  await userEvent.click(changeEmailButton)
+
+  // Enter new email
+  const newEmailField = screen.getByLabelText('New e-mail')
+  await userEvent.clear(newEmailField)
+  await userEvent.type(newEmailField, newEmail)
+
+  // Click confirm → should call sendChangeEmailRequest
+  const confirmButton = screen.getByRole('button', { name: 'Confirm' })
+  await userEvent.click(confirmButton)
+  expect(AuthApi.sendChangeEmailRequest).toHaveBeenCalledWith(
+    userId,
+    newEmail
+  )
+
+  // After email is sent, code input should appear
+  const codeField = screen.getByLabelText('Code')
+  await userEvent.clear(codeField)
+  await userEvent.type(codeField, code)
+
+  // Click confirm again → should validate the code
+  await userEvent.click(confirmButton)
+  expect(AuthApi.validateChangeEmailRequest).toHaveBeenCalledWith(code)
+
+  // snackbar should show up and popup should be closed
+  expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('E-mail changed successfully, please login with new email.')
+  await waitForElementToBeRemoved(() => screen.queryByTestId('confirm-email-change-dialog'))
 }

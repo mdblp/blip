@@ -34,7 +34,7 @@ import {
 } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForCaregivers, mockPatientApiForHcp } from '../../mock/patient.api.mock'
@@ -49,7 +49,11 @@ import { mockUserApi } from '../../mock/user.api.mock'
 import { mockAuthApi } from '../../mock/auth.api.mock'
 import { Unit } from 'medical-domain'
 import ErrorApi from '../../../../lib/error/error.api'
-import { testCaregiverUserInfoUpdate, testPasswordChangeRequest } from '../../use-cases/user-account-management'
+import {
+  testCaregiverUserInfoUpdate,
+  testEmailChangeRequest,
+  testPasswordChangeRequest
+} from '../../use-cases/user-account-management'
 import {
   testCaregiverSwitchRoleDialogsClosing,
   testCaregiverSwitchRoleToHcp
@@ -118,5 +122,15 @@ describe('User account page for caregiver', () => {
 
     expect(changeUserRoleToHcpMock).toHaveBeenCalled()
     expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })
+  })
+
+  it('should open the change e-mail popup, complete the flow successfully and display success snackbar', async () => {
+    const router = renderPage(userAccountRoute)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(userAccountRoute)
+      expect(screen.getByText('User account')).toBeVisible()
+    })
+
+    await testEmailChangeRequest(loggedInUserId, 'newEmail@diabeloop.fr', '457845789')
   })
 })
