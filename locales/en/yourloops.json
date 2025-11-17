@@ -29,7 +29,7 @@
   "adapt-alerts-close": "Keep current values",
   "adapt-alerts-confirm": "Adapt alerts",
   "adapt-alerts-message": "The patient has a new profile. Do you wish to adapt the alerts to the new profile or keep the current ones?",
-  "adapt-alerts-title" : "New profile for patient",
+  "adapt-alerts-title": "New profile for patient",
   "add-new-patient-disabled-info": "To invite a patient, you must first select a care team from the dropdown menu. You can create you own care team if you need to. Alternatively, you can provide the patient with your YourLoops email address so they can enable private data sharing with you.",
   "add-patient": "Add a patient",
   "added": "Added",
@@ -191,7 +191,7 @@
   "chat-footer-reply": "Reply",
   "chat-footer-start-writing": "Start typing",
   "close-without-saving": "Data change unsaved",
-  "close-without-saving-warning" : "This page has unsaved changes, they will be lost if you close without saving.\nAre you sure you want to leave ?",
+  "close-without-saving-warning": "This page has unsaved changes, they will be lost if you close without saving.\nAre you sure you want to leave ?",
   "code": "Code",
   "coefficient-of-variation": "Coefficient of Variation",
   "coefficient-of-variation-tooltip": "**CV (Coefficient of Variation):** The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.",
@@ -660,5 +660,13 @@
   "weight": "Weight",
   "yesterday": "Yesterday",
   "years-old": "years old",
-  "zen-mode": "Zen mode"
+  "zen-mode": "Zen mode",
+  "page-title-hcp-or-caregiver": "To strengthen the protection of your data, Diabeloop will gradually implement a two-factor authentication system for your YourLoops account.",
+  "page-body-hcp-or-caregiver ": "Once you’ve entered your username and password, YourLoops will send a verification code to the email address associated with your YourLoops account (the email address used as your username). If you do not have or no longer have access to this email address, please update your address in the ‘user account’ menu.\r\nIf you encounter any problems with this process, please contact Diabeloop at the following address: contact@diabeloop.fr",
+  "page-title-patient": "To strengthen the protection of your data, Diabeloop will gradually implement a two-factor authentication system for your YourLoops account.\r\nOnce you’ve entered your username and password, YourLoops will send a verification code to the email address associated with your YourLoops account (the email address used as your username).",
+  "page-body-patient ": "If you do not have or no longer have access to this email address, you can update your login details directly on your DBLG1 device, in the ‘Settings’ menu.\r\nIf you encounter any difficulties with this process, we recommend that you contact your care team.",
+  "banner-title-hcp-caregiver": "To strengthen the protection of your data, Diabeloop will gradually implement a two-factor authentication system for your YourLoops account.",
+  "banner-body-hcp-or-caregiver ": "If you do not have or no longer have access to your email address (used as username), please update your address in the ‘user account’ menu.\r\nIf you encounter any problems with this process, please contact Diabeloop at the following address: contact@diabeloop.fr",
+  "banner-title-patient": "To strengthen the protection of your data, Diabeloop will gradually implement a two-factor authentication system for your YourLoops account.",
+  "banner-body-patient ": "If you do not have or no longer have access to your email address (used as username), you can update your login details directly on your DBLG1 device, in the ‘Settings’ menu. If you encounter any difficulties with this process, we recommend that you contact your care team."
 }
