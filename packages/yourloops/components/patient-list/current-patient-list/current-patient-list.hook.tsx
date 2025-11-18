@@ -312,7 +312,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         }
       }
     ]
-  }, [classes.mandatoryCellBorder, onClickRemovePatient, t])
+  }, [classes.mandatoryCellBorder, onClickRemovePatient, t, noDataLabel])
 
   const onRowClick = (params: GridRowParams): void => {
     navigate(`${params.id}/dashboard`)
