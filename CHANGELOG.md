@@ -40,6 +40,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3742 Update glycemia chart legend to display tight range color
 - YLP-3743 Delete "Est. insulin requirements" in the daily view
 - YLP-3750 Replace how to calculate of TIR and TITR for views with several days by correct ones
+- YLP-3754 Chip colors for profiles
 
 ### Engineering
 - YLP-3672 D3 version update
