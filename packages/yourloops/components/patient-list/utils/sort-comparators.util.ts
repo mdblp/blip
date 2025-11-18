@@ -102,16 +102,19 @@ export const sortByMonitoringAlertsCount: PatientSortComparator = (patient1: Pat
   return 0
 }
 
-export const sortByLastDataUpdate: SortComparator = (date1AsString: string, date2AsString: string): number => {
-  const noDataLabel = t('N/A')
-  if (date2AsString === noDataLabel) {
+export const sortByLastDataUpdate = (date1: moment.Moment | null, date2: moment.Moment | null): number => {
+  if (date1 === null) {
     return 1
   }
-  if (date1AsString === noDataLabel) {
+  if (date2 === null) {
     return -1
   }
-  const lastDataUpdateAsDate1 = new Date(date1AsString).getTime()
-  const lastDataUpdateAsDate2 = new Date(date2AsString).getTime()
 
-  return lastDataUpdateAsDate1 - lastDataUpdateAsDate2
+  if (date1.isSame(date2, 'm')) {
+    return 1
+  } else if (date1.isAfter(date2, 'm')) {
+    return -1
+  } else {
+    return 1
+  }
 }

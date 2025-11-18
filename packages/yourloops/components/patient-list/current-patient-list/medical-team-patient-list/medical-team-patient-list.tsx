@@ -26,9 +26,10 @@
  */
 
 import React, { type FunctionComponent, useState } from 'react'
-import { DataGrid, type GridPaginationModel, useGridApiRef } from '@mui/x-data-grid'
+import { DataGrid, type GridPaginationModel, type GridSortModel, useGridApiRef } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
 import { PatientListCustomFooter } from '../../patient-list-custom-footer'
+import { PatientListColumns } from '../../models/enums/patient-list.enum'
 import { usePatientListContext } from '../../../../lib/providers/patient-list.provider'
 import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useMedicalTeamPatientListHook } from './medical-team-patient-list.hook'
@@ -56,6 +57,7 @@ export const MedicalTeamPatientList: FunctionComponent<MedicalTeamPatientListPro
   const gridApiRef = useGridApiRef()
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
+  const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
 
   return (
     <>
@@ -72,6 +74,8 @@ export const MedicalTeamPatientList: FunctionComponent<MedicalTeamPatientListPro
           loading={refreshInProgress}
           disableVirtualization={process.env.NODE_ENV === 'test'}
           columnVisibilityModel={displayedColumns}
+          sortModel={sortModel}
+          onSortModelChange={setSortModel}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           onRowClick={onRowClick}

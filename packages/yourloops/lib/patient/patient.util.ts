@@ -171,22 +171,17 @@ export default class PatientUtils {
     return value || value === 0 ? `${Math.round(value * 10) / 10}%` : t('N/A')
   }
 
-  static getLastUploadDate(medicalData: MedicalData, noDataLabel: string): string {
+  static getLastUploadDate(medicalData: MedicalData): moment.Moment | null {
     if (!medicalData) {
       return null
     }
 
     const dataEndDate = medicalData.range?.endDate
     if (!dataEndDate) {
-      return noDataLabel
+      return null
     }
 
     const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
-    const mLastUpload = moment.tz(dataEndDate, browserTimezone)
-    if (!mLastUpload.isValid()) {
-      return noDataLabel
-    }
-
-    return mLastUpload.format('lll')
+    return moment.tz(dataEndDate, browserTimezone)
   }
 }
