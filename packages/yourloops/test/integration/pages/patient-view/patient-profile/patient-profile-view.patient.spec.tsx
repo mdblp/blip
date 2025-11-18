@@ -316,16 +316,5 @@ describe('Patient profile view for Patient', () => {
 
       expect(updatePatientProfileSpy).toHaveBeenCalled()
     })
-
-    // it('should disable save button while saving', async () => {
-    //   await act(async () => {
-    //     renderPage(patientProfileRoute)
-    //   })
-    //
-    //   const saveButton = await screen.findByTestId('additional-patient-profile-save')
-    //   await userEvent.click(saveButton)
-    //
-    //   expect(saveButton).toBeDisabled()
-    // })
   })
 })
