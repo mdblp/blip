@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,43 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, type ReactElement } from 'react'
-import { useAuth } from '../lib/auth'
-import { NotificationContextProvider } from '../lib/notifications/notification.hook'
-import { Navigate, Route } from 'react-router-dom'
-import { CaregiverLayout } from './caregiver-layout'
-import { PatientLayoutWithContext } from './patient-layout'
-import { UserRole } from '../lib/auth/models/enums/user-role.enum'
-import { HcpLayoutWithContext } from './hcp-layout'
-import { AppUserRoute } from '../models/enums/routes.enum'
+import React, { createContext, type FunctionComponent, type PropsWithChildren, useContext } from 'react'
+import usePatientProvider from './patient.hook'
+import { type PatientResult } from './models/patient-context-result.model'
 
-export const MainLayout: FC = () => {
-  const { user } = useAuth()
+const PatientContext = createContext<PatientResult>({} as PatientResult)
 
-  const getUserLayout = (): ReactElement => {
-    switch (user?.role) {
-      case UserRole.Hcp:
-        return <HcpLayoutWithContext />
-      case UserRole.Caregiver:
-        return <CaregiverLayout />
-      case UserRole.Patient:
-        return <PatientLayoutWithContext />
-      default:
-        console.error(`no layout found for role ${user?.role}`)
-        return <Route
-          path="*"
-          element={<Navigate to={AppUserRoute.NotFound} replace />}
-        />
-    }
-  }
+export const PatientProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
+  const patientProviderCustomHook = usePatientProvider()
 
-  return (
-    <React.Fragment>
-      {user &&
-        <NotificationContextProvider>
-          {getUserLayout()}
-        </NotificationContextProvider>
-      }
-    </React.Fragment>
-  )
+  return <PatientContext.Provider value={patientProviderCustomHook}>{children}</PatientContext.Provider>
+}
+
+export function usePatient(): PatientResult {
+  return useContext(PatientContext)
 }

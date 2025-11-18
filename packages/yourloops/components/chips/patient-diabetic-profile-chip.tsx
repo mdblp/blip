@@ -41,7 +41,7 @@ const styles = makeStyles()((theme: Theme) => {
       minWidth: 'auto',
       paddingX: theme.spacing(2),
       paddingY: theme.spacing(0.5),
-      margin: theme.spacing(0, 0, 0, 4),
+      margin: theme.spacing(0, 0, 0, 2),
       height: '26px'
     }
   }

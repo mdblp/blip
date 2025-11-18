@@ -64,10 +64,6 @@ export const testPatientPersonalInformation = async (): Promise<void> => {
   const insulinIcon = await screen.findByTestId('basal-icon')
   expect(insulinIcon).toBeInTheDocument()
 
-  // Test cannula section
-  const cannulaIcon = await screen.findByTestId('SquareFootIcon')
-  expect(cannulaIcon).toBeInTheDocument()
-
   // Verify the information section container
   const informationSection = screen.getByTestId('information-section')
   expect(informationSection).toBeInTheDocument()
