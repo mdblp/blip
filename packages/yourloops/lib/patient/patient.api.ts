@@ -34,7 +34,7 @@ import { type Patient, type PatientMetrics, UserProfilePayload } from './models/
 import { type MonitoringAlertsParameters } from 'medical-domain'
 import { DiabeticProfilePayload } from './models/patient-diabete-profile'
 import { type DiabeticProfile } from './models/patient-diabete-profile'
-import { ProfilePatient } from './models/patient-profile.model'
+import { PatientProfile } from './models/patient-profile.model'
 
 export const PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE = 'patient-already-in-team'
 const PATIENT_ALREADY_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
@@ -133,7 +133,7 @@ export default class PatientApi {
     })
   }
 
-  static async updatePatientProfile(patientId: string, patientProfile: ProfilePatient) {
+  static async updatePatientProfile(patientId: string, patientProfile: PatientProfile) {
     const payload: UserProfilePayload = {
       patient: {
         drugTreatment : patientProfile.drugTreatment,

@@ -26,7 +26,7 @@
  */
 
 import { type Patient } from './patient.model'
-import { type ProfilePatient } from './patient-profile.model'
+import { type PatientProfile } from './patient-profile.model'
 
 export interface PatientContextResult {
   patient: Patient
@@ -37,6 +37,6 @@ export interface PatientContextResult {
 export interface PatientResult {
   patient: Patient
   refreshInProgress: boolean;
-  updatePatientProfile: (patientId: string, patientProfile: ProfilePatient) => Promise<void>;
+  updatePatientProfile: (patientId: string, patientProfile: PatientProfile) => Promise<void>;
   refresh: () => void;
 }

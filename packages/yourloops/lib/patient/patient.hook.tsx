@@ -34,7 +34,7 @@ import { type Patient } from './models/patient.model'
 import { useAlert } from '../../components/utils/snackbar'
 import { useTranslation } from 'react-i18next'
 import { logError } from '../../utils/error.util'
-import { ProfilePatient } from './models/patient-profile.model'
+import { PatientProfile } from './models/patient-profile.model'
 
 // Custom hook to manage retrieve and actions for the patient
 export default function usePatient(): PatientResult {
@@ -74,7 +74,7 @@ export default function usePatient(): PatientResult {
     }
   }, [user, getPatientInfo])
 
-  const updatePatientProfile = async (patientId: string, patientProfile: ProfilePatient): Promise<void> => {
+  const updatePatientProfile = async (patientId: string, patientProfile: PatientProfile): Promise<void> => {
     try {
       await PatientApi.updatePatientProfile(patientId, patientProfile)
       await getPatientInfo(patientId)

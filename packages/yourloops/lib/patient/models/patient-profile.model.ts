@@ -31,7 +31,7 @@ import { type Gender } from '../../auth/models/enums/gender.enum'
 // Used to represent the patient information in his/her profile
 // used by both patient and HCP applications when displaying patient data
 // structure used in the application
-export interface ProfilePatient {
+export interface PatientProfile {
   birthdate?: string
   firstName?: string
   fullName: string

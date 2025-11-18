@@ -32,7 +32,7 @@ import { Autocomplete } from '@mui/material'
 import InputAdornment from '@mui/material/InputAdornment'
 import { useTranslation } from 'react-i18next'
 import { PhysicalActivityName } from 'medical-domain'
-import { type ProfilePatient } from '../../../../lib/patient/models/patient-profile.model'
+import { type PatientProfile } from '../../../../lib/patient/models/patient-profile.model'
 import Box from '@mui/material/Box'
 import { LoadingButton } from '@mui/lab'
 import { Save } from '@mui/icons-material'
@@ -81,7 +81,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
   const  alert = useAlert()
   const { updatePatientProfile } = usePatient()
   const { classes } = useStyles()
-  const [additionalPatientProfileForm, setAdditionalPatientProfileForm] = useState<ProfilePatient>(patient.profile)
+  const [additionalPatientProfileForm, setAdditionalPatientProfileForm] = useState<PatientProfile>(patient.profile)
   const [errors, setErrors] = useState<Partial<Record<PatientProfileAdditionalInfoFormKey, string>>>({})
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 
