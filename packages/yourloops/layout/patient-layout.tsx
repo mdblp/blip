@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
+import React, { type FC, type FunctionComponent } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { PatientData } from '../components/patient-data/patient-data'
 import { CareTeamSettingsPage } from '../pages/care-team-settings/care-team-settings-page'
@@ -36,12 +36,12 @@ import { InvalidRoute } from '../components/invalid-route'
 import { UserAccountPage } from '../pages/user-account/user-account-page'
 import { NotificationsPage } from '../pages/notifications/notifications-page'
 import { AppUserRoute } from '../models/enums/routes.enum'
-import PatientUtils from '../lib/patient/patient.util'
-import { useAuth } from '../lib/auth'
+import usePatient from '../lib/patient/patient.hook'
+import { PatientProvider } from '../lib/patient/patient.provider'
 
 export const PatientLayout: FC = () => {
-  const { user } = useAuth()
-  const patient = PatientUtils.mapUserToPatient(user)
+  const { patient } = usePatient()
+
   return (
     <TeamContextProvider>
       <DashboardLayout>
@@ -51,9 +51,17 @@ export const PatientLayout: FC = () => {
           <Route path={AppUserRoute.Notifications} element={<NotificationsPage />} />
           <Route path={AppUserRoute.Caregivers} element={<PatientCaregiversPage />} />
           <Route path={AppUserRoute.CareTeamSettings} element={<CareTeamSettingsPage />} />
-          <Route path="*" element={<PatientData patient={patient}/>} />
+          <Route path="*" element={<PatientData patient={patient} />} />
         </Routes>
       </DashboardLayout>
     </TeamContextProvider>
+  )
+}
+
+export const PatientLayoutWithContext: FunctionComponent = () => {
+  return (
+    <PatientProvider>
+      <PatientLayout />
+    </PatientProvider>
   )
 }

@@ -34,9 +34,11 @@ import {
   PATIENTS_METRICS_BY_TEAMID,
   pendingPatient
 } from '../data/patient.api.data'
+import { Patient } from '../../../lib/patient/models/patient.model'
 
-export const mockPatientApiForPatients = () => {
+export const mockPatientApiForPatients = (patient: Patient) => {
   jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
+  jest.spyOn(PatientApi, 'getPatientInfo').mockResolvedValue(patient)
 }
 
 export const mockPatientApiForCaregivers = () => {

@@ -39,7 +39,8 @@ import {
   checkDeviceUsageWidgetWithTwoWeeksOldData
 } from '../assert/device-usage.assert'
 import {
-  checkPatientNavBarForPatientAndCaregiver
+  checkPatientNavBarForCaregiver,
+  checkPatientNavBarForPatient,
 } from '../assert/patient-nav-bar.assert'
 import {
   checkEmptyMedicalFilesWidgetForHcp,
@@ -106,8 +107,11 @@ export const testTrendsDataVisualisationForHCP = async () => {
   await checkTrendsStatsWidgetsTooltips()
 }
 
-export const testPatientNavBarForPatientAndCaregiver = async () => {
-  await checkPatientNavBarForPatientAndCaregiver()
+export const testPatientNavBarForPatient = async () => {
+  await checkPatientNavBarForPatient()
+}
+export const testPatientNavBarForCaregiver = async () => {
+  await checkPatientNavBarForCaregiver()
 }
 
 export const testEmptyMedicalFilesWidgetForPatient = async () => {

@@ -30,7 +30,7 @@ import { type MedicalData } from '../../../lib/data/models/medical-data.model'
 import { type Patient, type PatientMetrics } from '../../../lib/patient/models/patient.model'
 import { type GlycemiaIndicators } from '../../../lib/patient/models/glycemia-indicators.model'
 import { type MonitoringAlertsParameters } from 'medical-domain'
-import { type PatientAccount } from '../../../lib/patient/models/patient-profile.model'
+import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
@@ -49,7 +49,7 @@ const defaultMedicalData = { range: { startDate: '', endDate: '' } }
 export const buildPatient = (params: {
   userid: string
   monitoringAlertsParameters?: MonitoringAlertsParameters
-  profile?: Partial<PatientAccount>
+  profile?: Partial<PatientProfile>
   settings?: Partial<PatientSettings>
   flagged?: boolean
   hasSentUnreadMessages?: boolean
@@ -64,7 +64,14 @@ export const buildPatient = (params: {
       fullName: params.profile?.fullName || 'fakePatientFullName',
       lastName: params.profile?.lastName || 'fakeLastname',
       email: params.profile?.email || 'fake@email.com',
-      sex: params.profile?.sex || Gender.Male
+      sex: params.profile?.sex || Gender.Male,
+      drugTreatment: '',
+      diet: ['gluten-free'],
+      profession: 'Pescador',
+      hobbies: 'eating burger',
+      physicalActivities: ['Running'],
+      hoursSpentOnPhysicalActivitiesPerWeek: 2,
+      comments: ''
     },
     settings: {
       a1c: params.settings?.a1c || { date: '2023-05-26T12:28:36.047Z', value: 'fakeA1cValue' },

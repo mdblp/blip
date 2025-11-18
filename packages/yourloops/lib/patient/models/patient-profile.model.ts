@@ -27,7 +27,11 @@
 
 import { type Gender } from '../../auth/models/enums/gender.enum'
 
-export interface PatientAccount {
+// Patient profile information
+// Used to represent the patient information in his/her profile
+// used by both patient and HCP applications when displaying patient data
+// structure used in the application
+export interface PatientProfile {
   birthdate?: string
   firstName?: string
   fullName: string
@@ -36,6 +40,13 @@ export interface PatientAccount {
   sex: Gender
   weight?: Weight
   height?: Height
+  drugTreatment: string
+  diet: string[]
+  profession: string
+  hobbies: string
+  physicalActivities: string[]
+  hoursSpentOnPhysicalActivitiesPerWeek: number
+  comments: string
 }
 
 export interface Weight  {
