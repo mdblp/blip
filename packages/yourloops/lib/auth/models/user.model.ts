@@ -108,6 +108,10 @@ export default class User {
     return this.role === UserRole.Caregiver
   }
 
+  isUserHcpOrPatient(): boolean {
+    return this.role === UserRole.Patient || this.role === UserRole.Hcp
+  }
+
   /**
    * Check the given consent against the latest consent publication date
    * @param consent {Consent}

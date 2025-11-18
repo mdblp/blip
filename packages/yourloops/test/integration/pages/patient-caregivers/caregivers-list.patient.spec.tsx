@@ -27,7 +27,6 @@
 
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { patient1Info } from '../../data/patient.api.data'
-import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import { renderPage } from '../../utils/render'
 import { waitFor } from '@testing-library/react'
 import { testCaregiversVisualisation } from '../../use-cases/patient-caregivers-management'
@@ -42,7 +41,6 @@ describe('Caregivers list for patient', () => {
 
   beforeEach(() => {
     mockPatientLogin(patient1Info)
-    mockPatientApiForPatients()
     mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
     mockChatAPI()
     mockDataAPI(oneDayDashboardData)

@@ -33,7 +33,6 @@ import { renderPage } from '../../../utils/render'
 import { checkPatientLayout } from '../../../assert/layout.assert'
 import { patient2Info } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
-import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
 
@@ -41,7 +40,6 @@ describe('Trends view for patient', () => {
   beforeEach(() => {
     mockWindowResizer()
     mockPatientLogin(patient2Info)
-    mockPatientApiForPatients()
   })
 
   afterEach(() => {
