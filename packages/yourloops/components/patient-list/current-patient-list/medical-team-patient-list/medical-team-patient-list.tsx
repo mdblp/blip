@@ -26,7 +26,7 @@
  */
 
 import React, { type FunctionComponent, useState } from 'react'
-import { DataGrid, type GridPaginationModel, type GridSortModel, useGridApiRef } from '@mui/x-data-grid'
+import { DataGrid, type GridPaginationModel, useGridApiRef } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
 import { PatientListCustomFooter } from '../../patient-list-custom-footer'
 import { usePatientListContext } from '../../../../lib/providers/patient-list.provider'
