@@ -3,6 +3,9 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.8.0-beta - 2025-07-11
+### Fixed
+- YLP-3545 Sorting by last data update on Patients list does not work for languages other than English
+
 ### Added
 - YLP-2135 As A HCP user, I can attribute to a diabetic profile to patient
 - YLP-2344 Patient profile information page for HCPs only

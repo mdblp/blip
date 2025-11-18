@@ -57,7 +57,6 @@ export const MedicalTeamPatientList: FunctionComponent<MedicalTeamPatientListPro
   const gridApiRef = useGridApiRef()
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
-  const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
 
   return (
     <>
@@ -74,8 +73,6 @@ export const MedicalTeamPatientList: FunctionComponent<MedicalTeamPatientListPro
           loading={refreshInProgress}
           disableVirtualization={process.env.NODE_ENV === 'test'}
           columnVisibilityModel={displayedColumns}
-          sortModel={sortModel}
-          onSortModelChange={setSortModel}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           onRowClick={onRowClick}
