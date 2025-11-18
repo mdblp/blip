@@ -163,9 +163,9 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     .gutterWeight(1.0)
 
   // carbs and boluses data pool
-  /** @type {Pool} */
   const shouldDisplayEatingShortlyLegend = isDblg2User && options.isEatingShortlyEnabled
 
+  /** @type {Pool} */
   const poolBolus = new Pool(chart, shouldDisplayEatingShortlyLegend)
   chart.addPool(poolBolus)
   const poolBolusId = 'poolBolus'
