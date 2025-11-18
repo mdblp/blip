@@ -60,7 +60,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   }
 }))
 
-enum AdditionalPatientAdditionalPatientProfileFormKey {
+enum PatientProfileAdditionalInfoFormKey {
   DrugTreatment = 'drugTreatment',
   Diet = 'diet',
   Profession = 'profession',
@@ -78,14 +78,14 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
   const { patient } = props
   const { user } = useAuth()
   const { t } = useTranslation()
-  const alert = useAlert()
+  const  alert = useAlert()
   const { updatePatientProfile } = usePatient()
   const { classes } = useStyles()
   const [additionalPatientProfileForm, setAdditionalPatientProfileForm] = useState<ProfilePatient>(patient.profile)
-  const [errors, setErrors] = useState<Partial<Record<AdditionalPatientAdditionalPatientProfileFormKey, string>>>({})
+  const [errors, setErrors] = useState<Partial<Record<PatientProfileAdditionalInfoFormKey, string>>>({})
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
 
-  const onFieldChange = (key: AdditionalPatientAdditionalPatientProfileFormKey, value: unknown): void => {
+  const onFieldChange = (key: PatientProfileAdditionalInfoFormKey, value: unknown): void => {
     setAdditionalPatientProfileForm((prevForm) => ({
       ...prevForm,
       [key]: value
@@ -101,27 +101,27 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
 
   const validateHoursPerWeek = (hours: number): void => {
     const error = hours > MAX_HOURS_IN_WEEK ? t('max-hours-per-week', { max: TEXT_FIELD_MAX_LENGTH }) : ''
-    setErrors(prev => ({ ...prev, [AdditionalPatientAdditionalPatientProfileFormKey.HoursSpentOnPhysicalActivitiesPerWeek]: error }))
+    setErrors(prev => ({ ...prev, [PatientProfileAdditionalInfoFormKey.HoursSpentOnPhysicalActivitiesPerWeek]: error }))
   }
 
   const validateDrugTreatment = (drugTreatment: string): void => {
     const error = drugTreatment.length > TEXT_FIELD_MAX_LENGTH ? t('max-length-exceeded', { max: TEXT_FIELD_MAX_LENGTH }) : ''
-    setErrors(prev => ({ ...prev, [AdditionalPatientAdditionalPatientProfileFormKey.DrugTreatment]: error }))
+    setErrors(prev => ({ ...prev, [PatientProfileAdditionalInfoFormKey.DrugTreatment]: error }))
   }
 
   const validateProfession = (profession: string): void => {
     const error = profession.length > TEXT_FIELD_MAX_LENGTH ? t('max-length-exceeded', { max: TEXT_FIELD_MAX_LENGTH }) : ''
-    setErrors( prev => ({ ...prev , [AdditionalPatientAdditionalPatientProfileFormKey.Profession]: error }))
+    setErrors( prev => ({ ...prev , [PatientProfileAdditionalInfoFormKey.Profession]: error }))
   }
 
   const validateComments = (comments: string): void => {
     const error = comments.length > COMMENTS_MAX_LENGTH ? t('max-length-exceeded', { max: COMMENTS_MAX_LENGTH }) : ''
-    setErrors( prev => ({ ...prev , [AdditionalPatientAdditionalPatientProfileFormKey.Comments]: error }))
+    setErrors( prev => ({ ...prev , [PatientProfileAdditionalInfoFormKey.Comments]: error }))
   }
 
   const validateHobbies = (hobbies: string): void => {
     const error = hobbies.length > TEXT_FIELD_MAX_LENGTH ? t('max-length-exceeded', { max: TEXT_FIELD_MAX_LENGTH }) : ''
-    setErrors(prev => ({ ...prev, [AdditionalPatientAdditionalPatientProfileFormKey.Hobbies]: error }))
+    setErrors(prev => ({ ...prev, [PatientProfileAdditionalInfoFormKey.Hobbies]: error }))
   }
 
   const save = async (): Promise<void> => {
@@ -149,7 +149,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
             className={classes.formField}
             value={additionalPatientProfileForm.drugTreatment || ''}
             onChange={(e) => {
-              onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.DrugTreatment, e.target.value)
+              onFieldChange(PatientProfileAdditionalInfoFormKey.DrugTreatment, e.target.value)
               validateDrugTreatment(e.target.value)
             }}
             disabled={!user.isUserPatient()}
@@ -164,7 +164,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
             className={classes.formField}
             value={additionalPatientProfileForm.profession || ''}
             onChange={(e) => {
-              onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.Profession, e.target.value)
+              onFieldChange(PatientProfileAdditionalInfoFormKey.Profession, e.target.value)
               validateProfession(e.target.value)
             }}
             disabled={!user.isUserPatient()}
@@ -183,7 +183,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
             freeSolo
             className={classes.formField}
             value={additionalPatientProfileForm.diet || []} // to prevent MUI error when no value is selected (controlled component)
-            onChange={(e, value) => onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.Diet, value)}
+            onChange={(e, value) => onFieldChange(PatientProfileAdditionalInfoFormKey.Diet, value)}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -201,7 +201,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
             className={classes.formField}
             value={additionalPatientProfileForm.hobbies || ''}
             onChange={(e) => {
-              onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.Hobbies, e.target.value)
+              onFieldChange(PatientProfileAdditionalInfoFormKey.Hobbies, e.target.value)
               validateHobbies(e.target.value)
             }}
             disabled={!user.isUserPatient()}
@@ -222,7 +222,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
             freeSolo
             className={classes.formField}
             value={additionalPatientProfileForm.physicalActivities || []} // to prevent MUI error when no value is selected (controlled component)
-            onChange={(e, value) => onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.PhysicalActivities, value)}
+            onChange={(e, value) => onFieldChange(PatientProfileAdditionalInfoFormKey.PhysicalActivities, value)}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -242,7 +242,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
             type="number"
             value={additionalPatientProfileForm.hoursSpentOnPhysicalActivitiesPerWeek || ''}
             onChange={(e) => {
-              onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.HoursSpentOnPhysicalActivitiesPerWeek, +e.target.value)
+              onFieldChange(PatientProfileAdditionalInfoFormKey.HoursSpentOnPhysicalActivitiesPerWeek, +e.target.value)
               validateHoursPerWeek(+e.target.value)
             }} // the + allow conversion into number
             InputProps={{
@@ -264,7 +264,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
         className={classes.openCommentsField}
         value={additionalPatientProfileForm.comments || ''}
         onChange={(e) => {
-          onFieldChange(AdditionalPatientAdditionalPatientProfileFormKey.Comments, e.target.value)
+          onFieldChange(PatientProfileAdditionalInfoFormKey.Comments, e.target.value)
           validateComments(e.target.value)
         }}
         disabled={!user.isUserPatient()}

@@ -37,7 +37,6 @@ export interface PatientContextResult {
 export interface PatientResult {
   patient: Patient
   refreshInProgress: boolean;
-  getPatientInfo: (userid: string) => void;
   updatePatientProfile: (patientId: string, patientProfile: ProfilePatient) => Promise<void>;
   refresh: () => void;
 }

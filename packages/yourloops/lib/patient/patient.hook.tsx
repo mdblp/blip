@@ -88,7 +88,6 @@ export default function usePatient(): PatientResult {
   return {
     patient,
     refreshInProgress,
-    getPatientInfo,
     updatePatientProfile,
     refresh
   }

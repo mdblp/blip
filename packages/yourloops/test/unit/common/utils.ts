@@ -73,7 +73,7 @@ export const createPatient = (
       email: profile?.email || 'fake@email.com',
       sex: profile?.sex || Gender.Male,
       drugTreatment: "",
-      diet: ['no-specific-diet'],
+      diet: ['no-specific-diet', 'ewok eater'],
       profession: "space explorer",
       hobbies: 'master light saber,fly spaceship',
       physicalActivities: ['Mixed'],
