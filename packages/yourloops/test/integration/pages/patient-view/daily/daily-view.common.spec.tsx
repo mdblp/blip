@@ -61,6 +61,7 @@ import { t } from '../../../../../lib/language'
 import { checkReportDialogPresets } from '../../../assert/report-dialog.assert'
 import ErrorApi from '../../../../../lib/error/error.api'
 import { DeviceSystem } from 'medical-domain'
+import { ConfigService } from '../../../../../lib/config/config.service'
 
 describe('Daily view for anyone', () => {
   const dailyRoute = AppUserRoute.Daily
@@ -91,6 +92,8 @@ describe('Daily view for anyone', () => {
   describe('with DBLG2 device', () => {
     it('should render correct tooltips and values', async () => {
       mockDataAPI(getCompleteDailyViewDataDblg2(DeviceSystem.Dblg2, "1.1.0"))
+      jest.spyOn(ConfigService, 'getIsEatingShortlyEnabled').mockReturnValue(true)
+
       const router = renderPage(dailyRoute)
       await waitFor(() => {
         expect(router.state.location.pathname).toEqual(dailyRoute)

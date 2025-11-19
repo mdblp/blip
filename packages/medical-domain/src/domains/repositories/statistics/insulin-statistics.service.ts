@@ -38,11 +38,12 @@ import {
 import { buildHoursRangeMap, getWeekDaysFilter, roundValue } from './statistics.utils'
 import { type ParameterConfig, PumpSettings } from '../../models/medical/datum/pump-settings.model'
 import { type TimeInAutoStatistics } from '../../models/statistics/time-in-auto.model'
-import { Basal, BolusSubtype, Prescriptor } from '../../../index'
+import { Basal, BolusSubtype } from '../../../index'
 import { getHours, MS_IN_DAY } from '../time/time.service'
 import { HoursRange } from '../../models/statistics/satistics.model'
 import type Wizard from '../../models/medical/datum/wizard.model'
 import WizardService from '../medical/datum/wizard.service'
+import Prescriptor from '../../models/medical/datum/enums/prescriptor.enum'
 
 function resamplingDuration(basals: Basal[], start: number, end: number): Basal[] {
   return basals.map(basal => {
@@ -71,20 +72,20 @@ function calculateEstimatedTotalInsulin(total: number, automatedBasalDuration: n
     return (total * MS_IN_DAY) / automatedBasalDuration
   }
 
-  return  0
+  return 0
 }
 
 function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], mealBoluses: Wizard[], numDays: number, dateFilter: DateFilter, automatedBasalDuration: number): BasalBolusStatistics {
   if (numDays === 0) {
     return {
-      bolus:0,
-      basal:0,
-      totalMealBoluses:0,
-      totalManualBoluses:0,
-      totalPenBoluses:0,
-      totalCorrectiveBolusesAndBasals:0,
-      estimatedTotalInsulin:0,
-      total:0
+      bolus: 0,
+      basal: 0,
+      totalMealBoluses: 0,
+      totalManualBoluses: 0,
+      totalPenBoluses: 0,
+      totalCorrectiveBolusesAndBasals: 0,
+      estimatedTotalInsulin: 0,
+      total: 0
     }
   }
 
@@ -95,15 +96,25 @@ function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], mealBoluses: Wiz
 
   // Bolus computing
   const filteredBolus = BolusService.filterOnDate(bolus, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  const filteredMealBoluses = WizardService.filterOnDate(mealBoluses, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  const totalMealBoluses = filteredMealBoluses.reduce((total, mealBolus) => {
+  const filteredWizardBoluses = WizardService.filterOnDate(mealBoluses, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+
+  const totalWizardBoluses = filteredWizardBoluses.reduce((total, mealBolus) => {
     if (mealBolus.bolus) {
       return mealBolus.bolusPart2 ? total + mealBolus.bolus.normal + mealBolus.bolusPart2.normal : total + mealBolus.bolus.normal
     }
     return total
   }, 0)
 
-  const filteredMealBolusesIds = filteredMealBoluses.map((mealBolus) => mealBolus.bolusId)
+  const mealWithoutCarbCountingBoluses = filteredBolus.filter((bolus) => bolus.prescriptor === Prescriptor.EatingShortlyManagement)
+  const totalMealWithoutCarbCountingBoluses = mealWithoutCarbCountingBoluses.reduce((total, bolus) => {
+    return total + bolus.normal
+  }, 0)
+
+  const totalMealBoluses = totalWizardBoluses + totalMealWithoutCarbCountingBoluses
+
+  const filteredWizardBolusesIds = filteredWizardBoluses.map((mealBolus) => mealBolus.bolusId)
+  const filteredMealWithoutCarbCountingBolusesIds = mealWithoutCarbCountingBoluses.map((bolus) => bolus.id)
+  const filteredMealBolusesIds = [...filteredWizardBolusesIds, ...filteredMealWithoutCarbCountingBolusesIds]
 
   const filteredBolusesWithoutMeals = filteredBolus.reduce((bolusesWithoutMeals, bolus) => {
     const isMealBolus = filteredMealBolusesIds.includes(bolus.id) || bolus.biphasicId
@@ -148,13 +159,22 @@ function getBasalBolusData(basalsData: Basal[], bolus: Bolus[], mealBoluses: Wiz
     totalPenBoluses: totalPenBoluses / numDays,
     totalCorrectiveBolusesAndBasals: totalCorrectiveBolusesAndBasal / numDays,
     total: total / numDays,
-    estimatedTotalInsulin : estimatedTotalInsulin / numDays
+    estimatedTotalInsulin: estimatedTotalInsulin / numDays
   }
 }
 
 function getTotalInsulinAndWeightData(basalsData: Basal[], bolusData: Bolus[], mealBoluses: Wizard[], numDays: number, dateFilter: DateFilter, pumpSettings: PumpSettings[], automatedBasalDuration: number): TotalInsulinStatisticsAndWeight {
   const weight = getWeight(pumpSettings)
-  const { basal, bolus, totalMealBoluses, totalManualBoluses, totalPenBoluses,totalCorrectiveBolusesAndBasals, total, estimatedTotalInsulin } = getBasalBolusData(basalsData, bolusData, mealBoluses, numDays, dateFilter, automatedBasalDuration)
+  const {
+    basal,
+    bolus,
+    totalMealBoluses,
+    totalManualBoluses,
+    totalPenBoluses,
+    totalCorrectiveBolusesAndBasals,
+    total,
+    estimatedTotalInsulin
+  } = getBasalBolusData(basalsData, bolusData, mealBoluses, numDays, dateFilter, automatedBasalDuration)
 
   return {
     basal,
@@ -184,8 +204,8 @@ function getAutomatedAndManualBasalDuration(basalsData: Basal[], dateFilter: Dat
   const manualPercentage = Math.round(100 * manualBasalPerDay / total)
 
   return {
-    automatedBasalDuration: automatedBasalPerDay ,
-    manualBasalDuration: manualBasalPerDay ,
+    automatedBasalDuration: automatedBasalPerDay,
+    manualBasalDuration: manualBasalPerDay,
     automatedPercentage,
     manualPercentage
   }
@@ -194,14 +214,14 @@ function getAutomatedAndManualBasalDuration(basalsData: Basal[], dateFilter: Dat
 function getManualBolusAverageStatistics(boluses: Bolus[], dateFilter: DateFilter): ManualBolusAverageStatistics {
   const carbsMap = buildHoursRangeMap<Bolus>()
 
-  const midnightToThree = carbsMap.get(HoursRange.MidnightToThree)as Bolus[]
-  const threeToSix = carbsMap.get(HoursRange.ThreeToSix)as Bolus[]
-  const sixToNine = carbsMap.get(HoursRange.SixToNine)as Bolus[]
-  const nineToTwelve = carbsMap.get(HoursRange.NineToTwelve)as Bolus[]
-  const twelveToFifteen = carbsMap.get(HoursRange.TwelveToFifteen)as Bolus[]
-  const fifteenToEighteen = carbsMap.get(HoursRange.FifteenToEighteen)as Bolus[]
-  const eighteenToTwentyOne = carbsMap.get(HoursRange.EighteenToTwentyOne)as Bolus[]
-  const twentyOneToMidnight = carbsMap.get(HoursRange.TwentyOneToMidnight)as Bolus[]
+  const midnightToThree = carbsMap.get(HoursRange.MidnightToThree) as Bolus[]
+  const threeToSix = carbsMap.get(HoursRange.ThreeToSix) as Bolus[]
+  const sixToNine = carbsMap.get(HoursRange.SixToNine) as Bolus[]
+  const nineToTwelve = carbsMap.get(HoursRange.NineToTwelve) as Bolus[]
+  const twelveToFifteen = carbsMap.get(HoursRange.TwelveToFifteen) as Bolus[]
+  const fifteenToEighteen = carbsMap.get(HoursRange.FifteenToEighteen) as Bolus[]
+  const eighteenToTwentyOne = carbsMap.get(HoursRange.EighteenToTwentyOne) as Bolus[]
+  const twentyOneToMidnight = carbsMap.get(HoursRange.TwentyOneToMidnight) as Bolus[]
 
 
   const manualBoluses = boluses.filter(bolus => bolus.prescriptor === Prescriptor.Manual)
@@ -257,7 +277,7 @@ function getManualBolusAverageStatistics(boluses: Bolus[], dateFilter: DateFilte
 function getManualBolusAveragePerRange(boluses: Bolus[]): ManualBolusAveragePerRange {
   const confirmedDoseValues = boluses.reduce((totalDose, bolus) => totalDose + (bolus.normal ?? 0), 0)
   const numberOfInjections = boluses.length
-  const confirmedDose = numberOfInjections === 0 ? 0 : roundValue (confirmedDoseValues / numberOfInjections)
+  const confirmedDose = numberOfInjections === 0 ? 0 : roundValue(confirmedDoseValues / numberOfInjections)
   return {
     confirmedDose,
     numberOfInjections

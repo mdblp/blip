@@ -90,7 +90,7 @@ describe('Patient data utils', () => {
         const medicalData = patientDataUtils.buildMedicalData(mockdataFromApi)
         expect(medicalData instanceof MedicalDataService).toBeTruthy()
         expect(medicalData.medicalData).toEqual(medicalServiceResult)
-        expect(Object.keys(medicalData.medicalData).length).toEqual(18)
+        expect(Object.keys(medicalData.medicalData).length).toEqual(19)
       })
     })
 

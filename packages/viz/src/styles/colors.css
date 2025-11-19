@@ -25,6 +25,7 @@
   --bolus-ride: white;
   --bolus-undelivered: var(--error-color-main);
   --bolus-meal: var(--success-color-main);
+  --bolus-eating-shortly: var(--success-color-dark);
   --bolus-correction: var(--info-color-50);
   --bolus-manual: var(--dark-blue-main);
   --bolus-pen: var(--purple-main);
