@@ -43,6 +43,7 @@ import { NightMode } from './datum/night-mode.model'
 import { Iob } from './datum/iob.datum'
 import { Basal } from './datum/basal.model'
 import { TimeZoneChange } from './datum/time-zone-change.model'
+import { EatingShortlyEvent } from './datum/eating-shortly-event.model'
 
 interface MedicalData {
   alarmEvents: AlarmEvent[]
@@ -51,6 +52,7 @@ interface MedicalData {
   cbg: Cbg[]
   confidentialModes: ConfidentialMode[]
   deviceParametersChanges: DeviceParameterChange[]
+  eatingShortlyEvents: EatingShortlyEvent[]
   iob: Iob[]
   meals: Meal[]
   messages: Message[]

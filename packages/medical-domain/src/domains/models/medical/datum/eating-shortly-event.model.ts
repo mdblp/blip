@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,11 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-enum Prescriptor {
-  Auto = 'auto',
-  EatingShortlyManagement = 'auto-esm',
-  Hybrid = 'hybrid',
-  Manual = 'manual'
-}
+import BaseDatum from './basics/base-datum.model'
+import { DatumType } from './enums/datum-type.enum'
 
-export default Prescriptor
+export type EatingShortlyEvent = BaseDatum & {
+  guid: string
+  type: DatumType.EatingShortlyEvent
+}

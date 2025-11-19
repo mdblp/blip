@@ -55,6 +55,7 @@ import { getPageTitleByPatientView } from './patient-data.utils'
 import { DevicesView } from '../../pages/patient-view/devices/devices-view'
 import { logError } from '../../utils/error.util'
 import { PatientProfileView } from '../../pages/patient-view/patient-profile/patient-profile-view'
+import { ConfigService } from '../../lib/config/config.service'
 
 interface PatientDataProps {
   patient: Patient
@@ -119,6 +120,8 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patient])
+
+  const isEatingShortlyEnabled = ConfigService.getIsEatingShortlyEnabled()
 
   return (
     <>
@@ -186,6 +189,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                           onCreateMessage={showMessageCreation}
                           onShowMessageThread={showMessageThread}
                           onDatetimeLocationChange={handleDatetimeLocationChange}
+                          isEatingShortlyEnabled={isEatingShortlyEnabled}
                           ref={dailyChartRef}
                         />
                         <>

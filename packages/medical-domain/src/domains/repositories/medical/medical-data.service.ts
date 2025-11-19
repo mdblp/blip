@@ -74,6 +74,8 @@ import {
   PumpSettingsParameter
 } from '../../models/medical/datum/pump-settings.model'
 import { Datum } from '../../models/medical/datum.model'
+import Bolus from '../../models/medical/datum/bolus.model'
+import Prescriptor from '../../models/medical/datum/enums/prescriptor.enum'
 
 const EXCLUDED_PARAMETERS = ['INSULIN_TYPE_USED']
 
@@ -85,6 +87,7 @@ class MedicalDataService {
     cbg: [],
     confidentialModes: [],
     deviceParametersChanges: [],
+    eatingShortlyEvents: [],
     iob: [],
     messages: [],
     meals: [],
@@ -215,6 +218,9 @@ class MedicalDataService {
     if (data.deviceParametersChanges) {
       this.medicalData.deviceParametersChanges = data.deviceParametersChanges
     }
+    if (data.eatingShortlyEvents) {
+      this.medicalData.eatingShortlyEvents = this.medicalData.eatingShortlyEvents.concat(data.eatingShortlyEvents)
+    }
     if (data.iob) {
       this.medicalData.iob = this.medicalData.iob.concat(data.iob)
     }
@@ -255,6 +261,7 @@ class MedicalDataService {
     this.join()
     this.setTimeZones()
     this.group()
+    this.checkEatingShortlyData()
     this.setEndPoints()
     this.generateFillData()
     this.generateBasicsData()
@@ -390,6 +397,16 @@ class MedicalDataService {
   private group(): void {
     this.medicalData.deviceParametersChanges = DeviceParameterChangeService.groupData(this.medicalData.deviceParametersChanges)
     this.medicalData.alarmEvents = AlarmEventService.groupData(this.medicalData.alarmEvents)
+  }
+
+  private checkEatingShortlyData(): void {
+    if (this._datumOpts.isEatingShortlyEnabled) {
+      return
+    }
+
+    // Remove all eating shortly data if the toggle is disabled
+    this.medicalData.eatingShortlyEvents = []
+    this.medicalData.bolus = this.medicalData.bolus.filter((bolus: Bolus) => bolus.prescriptor !== Prescriptor.EatingShortlyManagement)
   }
 
   private getAllData(excludeKeys: string[] = []): Datum[] {
