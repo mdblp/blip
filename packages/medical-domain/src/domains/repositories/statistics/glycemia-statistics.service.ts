@@ -102,7 +102,7 @@ const isInTightRange = (bgValue: number, units: BgUnit): boolean => {
 }
 
 const isInRangeDt1 = (bgValue: number, units: BgUnit): boolean => {
-  const bounds = {lower: DEFAULT_BG_BOUNDS[units].targetLower, upper: DEFAULT_BG_BOUNDS[units].targetUpper}
+  const bounds = { lower: DEFAULT_BG_BOUNDS[units].targetLower, upper: DEFAULT_BG_BOUNDS[units].targetUpper }
   return bgValue >= bounds.lower && bgValue <= bounds.upper
 }
 
@@ -213,7 +213,7 @@ function getTimeInRangeDt1Data(cbgData: Cbg[], units: BgUnit, numDays: number, d
   const durationInRange = reduceCbgRange(
     cbgData,
     dateFilter,
-    (cbg) => isInTightRange(cbg.value, units)
+    (cbg) => isInRangeDt1(cbg.value, units)
   );
 
   if (numDays > 1) {
