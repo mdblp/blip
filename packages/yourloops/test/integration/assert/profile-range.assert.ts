@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,35 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PatientListColumns, type PendingPatientListColumns } from './enums/patient-list.enum'
-import { type Patient } from '../../../lib/patient/models/patient.model'
-import { DiabeticType } from 'medical-domain'
-import moment from 'moment-timezone'
 
-export interface GridRowModel {
-  id: string
-  [PatientListColumns.Flag]?: Patient
-  [PatientListColumns.Patient]: Patient
-  [PatientListColumns.DateOfBirth]?: Patient
-  [PatientListColumns.Age]?: number
-  [PatientListColumns.Gender]?: string
-  [PatientListColumns.System]?: string
-  [PatientListColumns.MonitoringAlerts]?: Patient
-  [PatientListColumns.Messages]?: boolean
-  [PatientListColumns.TimeInRange]?: number
-  [PatientListColumns.GlucoseManagementIndicator]?: number
-  [PatientListColumns.BelowRange]?: number
-  [PatientListColumns.Variance]?: number
-  [PatientListColumns.LastDataUpdate]?: moment.Moment | null
-  [PatientListColumns.Actions]: Patient
-  [PatientListColumns.PatientProfile]: DiabeticType
-}
+import { testProfilesForMalePatient } from '../use-cases/range-and-alerts-management'
 
-export interface PendingGridRowModel {
-  id: string
-  isInviteAvailable: boolean
-  [PendingPatientListColumns.Actions]: Patient
-  [PendingPatientListColumns.Date]: string
-  [PendingPatientListColumns.Email]: string
-  [PendingPatientListColumns.InviteSentBy]: string
+export const checkProfilesForMalePatient = () => {
+  testProfilesForMalePatient()
 }

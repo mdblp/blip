@@ -38,12 +38,16 @@ import { patient1Id, patientWithMmolId } from '../../../data/patient.api.data'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
   testMonitoringAlertsParametersConfigurationForPatientMgdl,
-  testMonitoringAlertsParametersConfigurationForPatientMmol, testUnsavedChangesOnNavigation
+  testMonitoringAlertsParametersConfigurationForPatientMmol,
+  testUnsavedChangesOnNavigation
 } from '../../../use-cases/monitoring-alerts-parameters-management'
 import {
-  testAlertsViewContent, testRangeFormValidation, testRangePatientProfileDisplay,
+  testAlertsViewContent,
+  testRangeFormValidation,
+  testRangePatientProfileDisplay,
   testRangeUnitDisplay,
-  testRangeViewContent, testSaveButtonForRanges
+  testRangeViewContent,
+  testSaveButtonForRanges
 } from '../../../use-cases/range-and-alerts-management'
 import { testPatientPersonalInformation } from '../../../use-cases/patient-personal-information-management'
 import { Settings } from '../../../../../lib/auth/models/settings.model'
@@ -52,9 +56,9 @@ import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { getTranslation } from '../../../../utils/i18n'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
+import { checkProfilesForMalePatient } from '../../../assert/profile-range.assert'
 
 describe('Patient profile view for HCP', () => {
-
   beforeEach(() => {
     mockAuth0Hook()
     mockNotificationAPI()
@@ -71,6 +75,7 @@ describe('Patient profile view for HCP', () => {
 
   const patientTargetAndAlertsRouteMmoL = `/teams/${myThirdTeamId}/patients/${patientWithMmolId}${AppUserRoute.PatientProfile}`
   const patientProfileRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.PatientProfile}`
+  const malePatientProfileRoute = `/teams/${myThirdTeamId}/patients/${patientWithMmolId}${AppUserRoute.PatientProfile}`
 
   /**
    * @see https://github.com/testing-library/react-testing-library/issues/651
@@ -80,12 +85,11 @@ describe('Patient profile view for HCP', () => {
     writable: true,
     value: jest.fn().mockReturnValue({
       x: 0,
-      y: 0,
-    }),
+      y: 0
+    })
   });
 
   describe('Alerts section', () => {
-
     it('should render correct layout', async () => {
       const appMainLayoutParams: AppMainLayoutHcpParams = {
         footerHasLanguageSelector: false,
@@ -332,8 +336,6 @@ describe('Patient profile view for HCP', () => {
     })
   })
 
-
-
   describe('Range section', () => {
     beforeEach(() => {
       mockAuth0Hook()
@@ -391,9 +393,9 @@ describe('Patient profile view for HCP', () => {
       const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
       await userEvent.click(menuButton)
 
-      await  testRangePatientProfileDisplay('range-profile-type-1-and-2', 250, 180, 70, 54)
-      await  testRangePatientProfileDisplay('range-profile-pregnancy-type-1', 250, 140, 63, 54)
-      await  testRangePatientProfileDisplay('range-profile-custom', 250, 180, 70, 54)
+      await testRangePatientProfileDisplay('range-profile-type-1-and-2', 250, 180, 70, 54)
+      await testRangePatientProfileDisplay('range-profile-pregnancy-type-1', 250, 140, 63, 54)
+      await testRangePatientProfileDisplay('range-profile-custom', 250, 180, 70, 54)
 
     })
 
@@ -420,6 +422,15 @@ describe('Patient profile view for HCP', () => {
       await testRangeFormValidation()
     })
 
-  })
+    it('should not display the Pregnancy profile for male patients', async () => {
+      await act(async () => {
+        renderPage(malePatientProfileRoute)
+      })
 
+      const menuButton = within(screen.getByTestId('patient-profile-view-menu')).getByText(getTranslation('range'))
+      await userEvent.click(menuButton)
+
+      checkProfilesForMalePatient()
+    })
+  })
 })

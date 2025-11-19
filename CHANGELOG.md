@@ -3,6 +3,9 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.8.0-beta - 2025-07-11
+### Fixed
+- YLP-3545 Sorting by last data update on Patients list does not work for languages other than English
+
 ### Added
 - YLP-2135 As A HCP user, I can attribute to a diabetic profile to patient
 - YLP-2344 Patient profile information page for HCPs only
@@ -42,6 +45,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3743 Delete "Est. insulin requirements" in the daily view
 - YLP-3750 Replace how to calculate of TIR and TITR for views with several days by correct ones
 - YLP-3754 Chip colors for profiles
+- YLP-3756 Filter available profiles by patient gender
 
 ### Engineering
 - YLP-3672 D3 version update
