@@ -66,12 +66,12 @@ export const buildPatient = (params: {
       email: params.profile?.email || 'fake@email.com',
       sex: params.profile?.sex || Gender.Male,
       weight: {
-        unit : "Kg",
-        value : 70
+        unit: "Kg",
+        value: 70
       },
       height: {
-        unit : "cm",
-        value : 170
+        unit: "cm",
+        value: 170
       },
       drugTreatment: '',
       diet: ['gluten-free'],
@@ -84,8 +84,8 @@ export const buildPatient = (params: {
     settings: {
       a1c: params.settings?.a1c || { date: '2023-05-26T12:28:36.047Z', value: 'fakeA1cValue' },
       system: params.settings?.system,
-      insulinType : "1",
-      units : {
+      insulinType: "1",
+      units: {
         bg: Unit.MilligramPerDeciliter,
       }
     },

@@ -28,7 +28,7 @@
 import { screen, within } from '@testing-library/react'
 import { getTranslation } from '../../utils/i18n'
 
-async function assertInfoRow(iconDataTestId: string, boxDataTestId:string, expectedTransKeyLabel: string, expectedTextValue: string ) {
+async function assertInfoRow(iconDataTestId: string, boxDataTestId: string, expectedTransKeyLabel: string, expectedTextValue: string) {
   const icon = await screen.findByTestId(iconDataTestId)
   expect(icon).toBeVisible()
   const label = within(screen.getByTestId(boxDataTestId)).getByText(getTranslation(expectedTransKeyLabel))

@@ -67,7 +67,11 @@ enum InsulinType {
   Other = '5',
 }
 
-export const getPatientInsulinType = (insulinType: string): string => {
+export const getPatientInsulinType = (insulinType?: string): string => {
+  if (!insulinType) {
+    return t('N/A')
+  }
+
   switch (insulinType) {
     case InsulinType.Novorapid:
       return t('insulin-type-novorapid')
@@ -93,5 +97,5 @@ export const getPatientDisplayInfo = (patient: Patient) => ({
   weight: `${patient.profile.weight?.value || t('N/A')} ${patient.profile.weight?.unit || ''}`,
   height: `${patient.profile.height?.value || t('N/A')} ${patient.profile.height?.unit || ''}`,
   equipmentDate: formatDate(patient.medicalData?.range?.startDate) || t('N/A'),
-  insulinType: getPatientInsulinType(patient.settings.insulinType) || t('N/A')
+  insulinType: getPatientInsulinType(patient.settings.insulinType)
 })
