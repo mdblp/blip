@@ -42,6 +42,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3743 Delete "Est. insulin requirements" in the daily view
 - YLP-3750 Replace how to calculate of TIR and TITR for views with several days by correct ones
 - YLP-3754 Chip colors for profiles
+- YLP-3756 Filter available profiles by patient gender
 
 ### Engineering
 - YLP-3672 D3 version update

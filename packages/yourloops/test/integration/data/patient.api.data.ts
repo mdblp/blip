@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -80,7 +80,7 @@ export const patient1Info: Patient = buildPatient({
     firstName: 'Patient1',
     fullName: 'Patient1 Groby',
     lastName: 'Groby',
-    sex: Gender.Male
+    sex: Gender.Female
   },
   settings: { ...defaultSettings, system: DeviceSystem.Dblg2 }
 })
