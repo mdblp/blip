@@ -49,7 +49,7 @@ export const testPatientPersonalInformation = async (): Promise<void> => {
   await assertInfoRow('date-of-birth-icon', 'date-of-birth-box', 'date-of-birth', 'Jan 1, 1980 (45 years old)')
 
   // Test gender section
-  await assertInfoRow('gender-icon', 'gender-box', 'gender', 'Male')
+  await assertInfoRow('gender-icon', 'gender-box', 'gender', 'Female')
 
   // Test weight section
   await assertInfoRow('weight-icon', 'weight-box', 'WEIGHT', '70 Kg')
