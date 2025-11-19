@@ -288,7 +288,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         renderCell: (params: GridRenderCellParams<GridRowModel, moment.Moment | null>) => {
           const value = params.value
           let dateToDisplay = noDataLabel
-          if (value != null) {
+          if (value !== null) {
               const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
               const date = moment.tz(value, browserTimezone)
               if (date.isValid()) {
