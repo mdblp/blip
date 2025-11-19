@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,14 +40,15 @@ export enum AppUserRoute {
   Patient = '/patient',
   Patients = '/patients',
   Preferences = '/preferences',
-  TargetAndAlerts = '/target-and-alerts',
   PatientProfile = '/patient-profile',
   Teams = '/teams',
-  Trends = '/trends'
+  Trends = '/trends',
+  UserAccount = '/user-account'
 }
 
 export enum AppRoute {
   CompleteSignup = '/complete-signup',
+  DblCommunication = '/dbl-communication',
   Login = '/login',
   NewConsent = '/new-consent',
   ProductLabelling = '/product-labelling',

@@ -59,6 +59,9 @@ import { usePatientListStyles } from '../patient-list.styles'
 import { useNavigate } from 'react-router-dom'
 import { Skeleton } from '@mui/material'
 import { useAuth } from '../../../lib/auth'
+import { DiabeticType } from 'medical-domain'
+import { PatientDiabeticProfileChip } from '../../chips/patient-diabetic-profile-chip'
+import moment from 'moment-timezone'
 
 interface CurrentPatientListProps {
   patients: Patient[]
@@ -99,13 +102,14 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         [PatientListColumns.Gender]: PatientUtils.getGenderLabel(patient.profile.sex),
         [PatientListColumns.MonitoringAlerts]: patient,
         [PatientListColumns.System]: patient.settings.system ?? noDataLabel,
-        [PatientListColumns.LastDataUpdate]: PatientUtils.getLastUploadDate(patient.medicalData, noDataLabel),
+        [PatientListColumns.LastDataUpdate]: PatientUtils.getLastUploadDate(patient.medicalData),
         [PatientListColumns.Messages]: patient.hasSentUnreadMessages,
         [PatientListColumns.TimeInRange]: patient.glycemiaIndicators?.timeInRange,
         [PatientListColumns.GlucoseManagementIndicator]: patient.glycemiaIndicators?.glucoseManagementIndicator,
         [PatientListColumns.BelowRange]: patient.glycemiaIndicators?.hypoglycemia,
         [PatientListColumns.Variance]: patient.glycemiaIndicators?.coefficientOfVariation,
-        [PatientListColumns.Actions]: patient
+        [PatientListColumns.Actions]: patient,
+        [PatientListColumns.PatientProfile]: patient.diabeticProfile?.type ?? DiabeticType.DT1DT2
       }
     })
   }, [noDataLabel, sortedPatients])
@@ -142,6 +146,17 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
           return <Box data-email={email}>{name}</Box>
         },
         sortComparator: sortByUserName
+      },
+      {
+        field: PatientListColumns.PatientProfile,
+        headerName: t('patient-profile'),
+        width: 150,
+        align: 'left',
+        renderCell: (params: GridRenderCellParams<GridRowModel, DiabeticType>) => {
+          return <PatientDiabeticProfileChip
+                  patientDiabeticType={params.value}
+                  sx={{ ml: '0 !important' }} /> // override default margin-left
+        }
       },
       {
         field: PatientListColumns.Age,
@@ -268,10 +283,19 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         width: 180,
         headerName: t('last-data-update'),
         description: t('last-data-update-tooltip'),
+        sortable: true,
         sortComparator: sortByLastDataUpdate,
-        renderCell: (params: GridRenderCellParams<GridRowModel, string>) => {
+        renderCell: (params: GridRenderCellParams<GridRowModel, moment.Moment | null>) => {
           const value = params.value
-          return value ?? <Skeleton data-testid="last-data-update-cell-skeleton"
+          let dateToDisplay = noDataLabel
+          if (value !== null) {
+              const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
+              const date = moment.tz(value, browserTimezone)
+              if (date.isValid()) {
+                dateToDisplay = date.format('lll')
+              }
+          }
+          return dateToDisplay ?? <Skeleton data-testid="last-data-update-cell-skeleton"
                                     variant="rounded"
                                     width={150}
                                     height={SKELETON_HEIGHT_PX} />
@@ -288,7 +312,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         }
       }
     ]
-  }, [classes.mandatoryCellBorder, onClickRemovePatient, t])
+  }, [classes.mandatoryCellBorder, onClickRemovePatient, t, noDataLabel])
 
   const onRowClick = (params: GridRowParams): void => {
     navigate(`${params.id}/dashboard`)

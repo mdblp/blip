@@ -29,7 +29,7 @@ import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { checkStatTooltip } from './stats.assert'
 
-const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Daily average of the time spent in range, based on CGM readings.How we calculate this: (%) is the number of readings in range divided by all readings for this time period. (time) is number of readings in range multiplied by the CGM sample frequency.'
+const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Time spent in range, based on CGM readings.How we calculate this: (%) is the number of readings in range divided by all readings for this time period. (time) is 24 hours multiplied by % in range.'
 const READINGS_IN_RANGE_TOOLTIP = 'Readings In Range: Number of BGM readings.Derived from 15 BGM readings.'
 const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added together, divided by the number of readings.'
 const AVG_GLUCOSE_BGM_TOOLTIP = 'Avg. Glucose (BGM): All BGM glucose values added together, divided by the number of readings.'

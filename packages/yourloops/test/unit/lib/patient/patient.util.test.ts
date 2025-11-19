@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,8 +30,6 @@ import PatientUtils from '../../../../lib/patient/patient.util'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
-import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
-import { type User } from '../../../../lib/auth'
 import PatientApi from '../../../../lib/patient/patient.api'
 
 const defaultMonitoringAlerts = {
@@ -285,72 +283,6 @@ describe('Patient utils', () => {
     it('should return N/A if the value is not defined', () => {
       expect(PatientUtils.formatPercentageValue(undefined)).toEqual('N/A')
       expect(PatientUtils.formatPercentageValue(null)).toEqual('N/A')
-    })
-  })
-
-  describe('mapUserToPatient', () => {
-    it('should convert a user into a patient model', () => {
-      const user = {
-        id: 'patient-id',
-        preferences: {
-          displayLanguageCode: LanguageCodes.En
-        },
-        profile: {
-          fullName: 'Patient 1',
-          firstName: 'Patient',
-          lastName: '1',
-          email: 'patient@email.fr',
-          patient: {
-            birthday: '1980-01-01T10:44:34+01:00',
-            diagnosisType: 'type1',
-            sex: 'F'
-          },
-          termsOfUse: {
-            acceptanceTimestamp: '2021-05-22',
-            isAccepted: true
-          },
-          privacyPolicy: {
-            acceptanceTimestamp: '2021-05-22',
-            isAccepted: true
-          },
-          trainingAck: {
-            acceptanceTimestamp: '2022-10-11',
-            isAccepted: true
-          }
-        },
-        settings: null,
-        consents: null
-      } as unknown as User
-
-      expect(PatientUtils.mapUserToPatient(user)).toEqual({
-        userid: 'patient-id',
-        profile: {
-          firstName: 'Patient',
-          lastName: '1',
-          fullName: 'Patient 1',
-          email: 'patient@email.fr',
-          sex: Gender.Female,
-          birthdate: '1980-01-01T10:44:34+01:00'
-        },
-        settings: null,
-        hasSentUnreadMessages: false
-      })
-    })
-
-    it('should set the sex as Not Defined if none is specified', () => {
-      const user = {
-        id: 'patient-id',
-        profile: {
-          email: 'patient@email.fr',
-          patient: {
-            birthday: '1980-01-01T10:44:34+01:00',
-            diagnosisType: 'type1'
-          }
-        }
-      } as unknown as User
-
-      const result = PatientUtils.mapUserToPatient(user)
-      expect(result.profile.sex).toEqual(Gender.NotDefined)
     })
   })
 

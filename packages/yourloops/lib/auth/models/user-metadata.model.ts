@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,10 +27,10 @@
 
 import { type Preferences } from './preferences.model'
 import { type Settings } from './settings.model'
-import { type Profile } from './profile.model'
+import { UserAccount } from './user-account.model'
 
 export interface UserMetadata {
   preferences: Preferences
-  profile: Profile
+  profile: UserAccount
   settings: Settings
 }

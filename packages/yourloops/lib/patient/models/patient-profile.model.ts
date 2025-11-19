@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,6 +27,10 @@
 
 import { type Gender } from '../../auth/models/enums/gender.enum'
 
+// Patient profile information
+// Used to represent the patient information in his/her profile
+// used by both patient and HCP applications when displaying patient data
+// structure used in the application
 export interface PatientProfile {
   birthdate?: string
   firstName?: string
@@ -36,6 +40,13 @@ export interface PatientProfile {
   sex: Gender
   weight?: Weight
   height?: Height
+  drugTreatment: string
+  diet: string[]
+  profession: string
+  hobbies: string
+  physicalActivities: string[]
+  hoursSpentOnPhysicalActivitiesPerWeek: number
+  comments: string
 }
 
 export interface Weight  {

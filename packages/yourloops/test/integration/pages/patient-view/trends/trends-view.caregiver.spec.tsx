@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -43,6 +43,7 @@ import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
+import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 
 describe('Trends view for caregiver', () => {
   const firstName = 'HCP firstName'
@@ -51,6 +52,7 @@ describe('Trends view for caregiver', () => {
   beforeEach(() => {
     mockWindowResizer()
     mockAuth0Hook(UserRole.Caregiver)
+    mockDblCommunicationApi()
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()

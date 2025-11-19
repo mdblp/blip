@@ -3,6 +3,9 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.8.0-beta - 2025-07-11
+### Fixed
+- YLP-3545 Sorting by last data update on Patients list does not work for languages other than English
+
 ### Added
 - YLP-2135 As A HCP user, I can attribute to a diabetic profile to patient
 - YLP-2344 Patient profile information page for HCPs only
@@ -12,6 +15,13 @@ It is based on Tidepool Blip 1.27.
 - YLP-3611 Manage events superposition in Daily view
 - YLP-3612 Make events superposition popover draggable
 - YLP-3616 Time In Tight Range (TITR) statistic
+- YLP-3654 As Hcp, i can see the patient profile value in Yourloops
+- YLP-3688 display additional patient profile information
+- YLP-3701 Eating shortly management (event, bolus and legend)
+- YLP-3708 Add a new page to display a diabeloop communication just after the login (displayed on demand, when necessary)
+- YLP-3709 Rework the banner to display live content (updated by Diabeloop team)
+- YLP-3711 As an HCP and a caregiver, I can see and change my email address from the section "USER account"
+- YLP-3753 Design for the new menu organisation in the HCP view
 
 ### Changed
 - YLP-2347 Display patient monitoring parameters in the patient profile page
@@ -27,8 +37,15 @@ It is based on Tidepool Blip 1.27.
 - YLP-3690 Update basal tooltip style in Daily view
 - YLP-3700 Update time change tooltip style in Daily view
 - YLP-3702 Update Time In Loop Mode stat style
+- YLP-3707 User account page new design
 - YLP-3710 Move the "EVENTS" section above the glycemia curve
 - YLP-3730 Delete "Avg. Daily" in dashboard and trends view to lighten all the frame
+- YLP-3731 Improve the calendar object in trend and daily view
+- YLP-3742 Update glycemia chart legend to display tight range color
+- YLP-3743 Delete "Est. insulin requirements" in the daily view
+- YLP-3750 Replace how to calculate of TIR and TITR for views with several days by correct ones
+- YLP-3754 Chip colors for profiles
+- YLP-3756 Filter available profiles by patient gender
 
 ### Engineering
 - YLP-3672 D3 version update

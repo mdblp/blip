@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -36,13 +36,6 @@ const DUMMY_URL = `https://${DUMMY_DOMAIN}/`
 const defaultSessionTimeout = 1800000
 
 const defaultConfig: AppConfig = {
-  BANNER_ENABLED: false,
-  BANNER_LABEL_EN: "",
-  BANNER_LABEL_ES: "",
-  BANNER_LABEL_DE: "",
-  BANNER_LABEL_FR: "",
-  BANNER_LABEL_IT: "",
-  BANNER_LABEL_NL: "",
   VERSION: '0.0.0',
   API_HOST: `${window.location.protocol}//${window.location.hostname}:3000`,
   DOMAIN_NAME: window.location.hostname,
@@ -72,7 +65,8 @@ const defaultConfig: AppConfig = {
   YLPZ_RA_LAD_IT: 'YLPZ-RA-LAD-001-it-Rev6',
   YLPZ_RA_LAD_ES: 'YLPZ-RA-LAD-001-es-Rev6',
   YLPZ_RA_LAD_DE: 'YLPZ-RA-LAD-001-de-Rev6',
-  IDLE_TIMEOUT_MS: 1800000
+  IDLE_TIMEOUT_MS: 1800000,
+  EATING_SHORTLY_ENABLED: false
 }
 const appConfig = _.assign({}, defaultConfig)
 if (_.has(window, 'config') && _.isObjectLike(_.get(window, 'config', null))) {

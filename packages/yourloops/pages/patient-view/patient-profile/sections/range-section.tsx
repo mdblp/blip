@@ -44,12 +44,14 @@ import { Patient } from '../../../../lib/patient/models/patient.model'
 import { errorTextFromException } from '../../../../lib/utils'
 import { logError } from '../../../../utils/error.util'
 import { useAlert } from '../../../../components/utils/snackbar'
-import { DiabeticType, getDefaultRangeByDiabeticType, Unit, createMonitoringAlertsParameters } from 'medical-domain'
+import { createMonitoringAlertsParameters, DiabeticType, getDefaultRangeByDiabeticType, Unit } from 'medical-domain'
 import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useAuth } from '../../../../lib/auth'
 import { convertIfNeeded } from '../../../../components/patient-data/patient-data.utils'
 import { DiabeticProfile } from '../../../../lib/patient/models/patient-diabete-profile'
 import { AdaptAlertsDialog } from '../dialog/adapt-alerts-dialog'
+import { RangeVisualizationChart } from '../charts/range-visualization-chart'
+import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
 
 interface RangeSectionProps {
   patient: Patient
@@ -128,11 +130,19 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
   const [showDialog, setShowDialog] = useState(false)
   const { updatePatientDiabeticProfile, updatePatientMonitoringAlertsParameters } = usePatientsContext()
 
-  const patientDiabeticProfiles = [
-    { type: DiabeticType.DT1DT2, label: t('range-profile-type-1-and-2') },
-    { type: DiabeticType.DT1Pregnancy, label: t('range-profile-pregnancy-type-1') },
-    { type: DiabeticType.Custom, label: t('range-profile-custom') }
-  ]
+  const getDiabeticProfiles = (): { type: DiabeticType, label: string }[] => {
+    const defaultProfiles = [
+      { type: DiabeticType.DT1DT2, label: t('range-profile-type-1-and-2') },
+      { type: DiabeticType.DT1Pregnancy, label: t('range-profile-pregnancy-type-1') },
+      { type: DiabeticType.Custom, label: t('range-profile-custom') }
+    ]
+
+    if (patient.profile.sex === Gender.Male) {
+      return defaultProfiles.filter(profile => profile.type !== DiabeticType.DT1Pregnancy)
+    }
+
+    return defaultProfiles
+  }
 
   const hasErrorMessage = useMemo(() => {
     return Object.values(errors).some((error) => error === true)
@@ -292,7 +302,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
             {/* Patient Type Selection */}
             <Box data-testid="patient-type-selection" mb={3}>
               <Box display="flex" flexWrap="wrap" gap={1} marginTop={2}>
-                {patientDiabeticProfiles.map((patientType) => (
+                {getDiabeticProfiles().map((patientType) => (
                   <Chip
                     key={patientType.type}
                     label={patientType.label}
@@ -313,20 +323,13 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
             {/* Range Configuration */}
             <Grid container spacing={3}>
-              {/* Left side - Visual representation */}
               <Grid item xs={12} md={6}>
-                <Box
-                  sx={{
-                    position: 'relative',
-                    height: 300,
-                    border: '1px solid #e0e0e0',
-                    borderRadius: 1,
-                    overflow: 'hidden'
-                  }}
+                <Box data-testid="range-configuration-viz" display="flex" flexDirection="column" gap={1}
                 >
-                  {/* Range visualization would go here */}
-                  <Typography variant="body2" color="text.secondary" p={2}>
-                  </Typography>
+                  <RangeVisualizationChart
+                    bgBounds={selectedDiabeticProfile.bloodGlucosePreference.bgBounds}
+                    displayedUnit={displayedUnit}
+                  />
                 </Box>
               </Grid>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -71,7 +71,14 @@ export const createPatient = (
       fullName: profile?.fullName || 'fakePatientFullName',
       lastName: profile?.lastName || 'fakeLastname',
       email: profile?.email || 'fake@email.com',
-      sex: profile?.sex || Gender.Male
+      sex: profile?.sex || Gender.Male,
+      drugTreatment: "",
+      diet: ['no-specific-diet', 'ewok eater'],
+      profession: "space explorer",
+      hobbies: 'master light saber,fly spaceship',
+      physicalActivities: ['Mixed'],
+      hoursSpentOnPhysicalActivitiesPerWeek: 4,
+      comments: "i am your father"
     },
     diabeticProfile: {
       type: DiabeticType.DT1DT2,

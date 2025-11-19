@@ -49,6 +49,7 @@ import {
 } from '../../../use-cases/device-settings-visualisation'
 import { testDeviceSettingsNavigationForHcp } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 
 describe('Device view for HCP', () => {
   const firstName = 'HCP firstName'
@@ -59,6 +60,7 @@ describe('Device view for HCP', () => {
   beforeEach(() => {
     mockWindowResizer()
     mockAuth0Hook()
+    mockDblCommunicationApi()
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()

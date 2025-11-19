@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,18 +31,20 @@ import { mockDirectShareApi } from './direct-share.api.mock'
 import { mockTeamAPI } from './team.api.mock'
 import { mockChatAPI } from './chat.api.mock'
 import { mockMedicalFilesAPI } from './medical-files.api.mock'
-import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from './user.api.mock'
 import { mockPatientApiForPatients } from './patient.api.mock'
+import { Patient } from '../../../lib/patient/models/patient.model'
+import { mockDblCommunicationApi } from './dbl-communication.api'
 
-export const mockPatientLogin = (patient: ITeamMember) => {
-  mockAuth0Hook(UserRole.Patient, patient.userId)
+export const mockPatientLogin = (patient: Patient) => {
+  mockAuth0Hook(UserRole.Patient, patient.userid)
   mockNotificationAPI()
+  mockDblCommunicationApi()
   mockDirectShareApi()
   mockTeamAPI()
   mockUserApi().mockUserDataFetch({ firstName: patient.profile.firstName, lastName: patient.profile.lastName })
   mockChatAPI()
   mockMedicalFilesAPI()
-  mockPatientApiForPatients()
+  mockPatientApiForPatients(patient)
 }

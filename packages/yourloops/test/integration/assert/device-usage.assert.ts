@@ -51,8 +51,17 @@ export const checkDeviceUsageWidgetWithTwoWeeksOldData = async () => {
   expect(screen.getByTestId('device-usage-device-list')).toHaveTextContent('DevicesCGMDexcom G6DBLDiabeloopPumpVICENTRA')
   expect(screen.getByTestId('device-usage-updates')).toHaveTextContent('Last updatesNov 7, 2022 3:01 PMAggressiveness for lunch (130% ➞ 90%)Nov 2, 2022 6:00 PMAggressiveness for breakfast (100% ➞ 110%)Nov 2, 2022 6:00 PMAggressiveness for dinner (100% ➞ 90%)Nov 2, 2022 8:00 AMHyperglycemia threshold (180.1mg/dL ➞ 140.0mg/dL)Nov 2, 2022 8:00 AMHypoglycemia threshold (70.0mg/dL ➞ 60.0mg/dL)Nov 1, 2022 1:00 AMAggressiveness in hyperglycemia (143%)Nov 1, 2022 1:00 AMBreakfast - large (150.0g)Nov 1, 2022 1:00 AMDinner - large (150.0g)Nov 1, 2022 1:00 AMLunch - large (70.0g)Nov 1, 2022 1:00 AMAggressiveness for breakfast (100%)Nov 1, 2022 1:00 AMAggressiveness for breakfast (110% ➞ 100%)Nov 1, 2022 1:00 AMAggressiveness for dinner (100%)Nov 1, 2022 1:00 AMAggressiveness for dinner (90% ➞ 100%)Nov 1, 2022 1:00 AMAggressiveness for lunch (130%)Nov 1, 2022 1:00 AMBreakfast - average (70.0g)Nov 1, 2022 1:00 AMDinner - average (60.0g)Nov 1, 2022 1:00 AMLunch - average (50.0g)Nov 1, 2022 1:00 AMAggressiveness in normoglycemia (100%)Nov 1, 2022 1:00 AMTarget glucose level (100.0mg/dL)Nov 1, 2022 1:00 AMHyperglycemia threshold (180.1mg/dL)Nov 1, 2022 1:00 AMHyperglycemia threshold (140.0mg/dL ➞ 180.1mg/dL)Nov 1, 2022 1:00 AMHypoglycemia threshold (70.0mg/dL)Nov 1, 2022 1:00 AMHypoglycemia threshold (60.0mg/dL ➞ 70.0mg/dL)Nov 1, 2022 1:00 AMBreakfast - small (15.0g)Nov 1, 2022 1:00 AMDinner - small (20.0g)Nov 1, 2022 1:00 AMLunch - small (30.0g)Nov 1, 2022 1:00 AMTotal Daily Insulin (53.0U)Nov 1, 2022 1:00 AMWeight (69.0kg)')
 
-  const changeDate = `${RESERVOIR_CHANGE_13_DAYS_AGO_DATE.format('ll')} 5:00 PM`
-  const changeDate2 = `${RESERVOIR_CHANGE_13_DAYS_AGO_DATE.format('ll')} 7:00 PM`
+  const zone = 'Europe/Paris';
+  const changeDateUTC = RESERVOIR_CHANGE_13_DAYS_AGO_DATE.clone()
+    .hour(15)
+    .minute(0)
+    .utc()
+  const changeDate2UTC = RESERVOIR_CHANGE_13_DAYS_AGO_DATE.clone()
+    .hour(17)
+    .minute(0)
+    .utc()
+  const changeDate = changeDateUTC.tz(zone).format('ll LT')
+  const changeDate2 = changeDate2UTC.tz(zone).format('ll LT')
   expect(await screen.findByTestId('cartridge-changes-stat', {}, { timeout: 3000 })).toHaveTextContent(`Cartridge changes${changeDate}--${changeDate2}2hours`)
 }
 

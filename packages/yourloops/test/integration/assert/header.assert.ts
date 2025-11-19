@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -67,7 +67,7 @@ const checkUserMenu = async (header: BoundFunctions<typeof queries>, userName: s
   await userEvent.click(header.getByText(userName))
 
   const userMenu = within(screen.getByTestId('user-menu'))
-  expect(userMenu.getByText('Profile settings')).toBeVisible()
+  expect(userMenu.getByText('User account')).toBeVisible()
   expect(userMenu.getByText('Customer support')).toBeVisible()
   expect(userMenu.getByText('Logout')).toBeVisible()
 
@@ -140,13 +140,13 @@ export const changeTeamScope = async (currentTeamName: string, wantedTeamName: s
 }
 
 export const checkBannerLanguageChange = async () => {
-  expect(await screen.findByRole('banner')).toHaveTextContent('Ceci est le texte de la bannière en français')
+  expect(await screen.getByTestId('dbl-banner-alert')).toHaveTextContent('This is a <b>critical banner message</b> for all users.')
 
-  fireEvent.mouseDown(within(screen.getByTestId('profile-local-selector')).getByRole('combobox'))
+  fireEvent.mouseDown(within(screen.getByTestId('user-account-locale-selector')).getByRole('combobox'))
   fireEvent.click(screen.getByRole('option', { name: 'English' }))
   const saveButton = screen.getByRole('button', { name: 'Save' })
 
   await userEvent.click(saveButton)
 
-  expect(await screen.findByRole('banner')).toHaveTextContent('This is the banner text in english')
+  expect(await screen.findByRole('banner')).toHaveTextContent('This is a <b>critical banner message</b> for all users.')
 }

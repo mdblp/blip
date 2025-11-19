@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,9 +60,7 @@ import {
   testDashboardDataVisualisationPrivateTeamNoData,
   testDashboardDataVisualisationSixteenDaysOldData,
   testDashboardDataVisualisationTwoWeeksOldData,
-  testEmptyMedicalFilesWidgetForHcp,
-  testPatientNavBarForHcp,
-  testSwitchPatientCorrectDataDisplay
+  testEmptyMedicalFilesWidgetForHcp
 } from '../../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForHcp } from '../../../use-cases/medical-reports-management'
 import { type MedicalFilesWidgetParams } from '../../../assert/medical-widget.assert'
@@ -73,6 +71,7 @@ import { testChatWidgetForHcp } from '../../../use-cases/communication-system'
 import { ConfigService } from '../../../../../lib/config/config.service'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
+import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 
 describe('Dashboard view for HCP', () => {
   const patientDashboardRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Dashboard}`
@@ -82,6 +81,7 @@ describe('Dashboard view for HCP', () => {
 
   beforeEach(() => {
     mockAuth0Hook()
+    mockDblCommunicationApi()
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()
@@ -133,16 +133,6 @@ describe('Dashboard view for HCP', () => {
     })
 
     await testDashboardDataVisualisationNoDataForHcp()
-  })
-
-  it('should be able to switch from patient to patient', async () => {
-    mockDataAPI(oneDayDashboardData)
-
-    await act(async () => {
-      renderPage(patientDashboardRoute)
-    })
-
-    await testPatientNavBarForHcp()
   })
 
   it('should be able to manage medical reports', async () => {
@@ -255,10 +245,4 @@ describe('Dashboard view for HCP', () => {
     await testEmptyMedicalFilesWidgetForHcp()
   })
 
-  it('should render correct patient data when changing patient in the header dropdown', async () => {
-    await act(async () => {
-      renderPage(patientDashboardRoute)
-    })
-    await testSwitchPatientCorrectDataDisplay()
-  })
 })

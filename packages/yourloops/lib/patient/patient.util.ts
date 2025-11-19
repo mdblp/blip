@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -80,23 +80,6 @@ export default class PatientUtils {
       patient.medicalData = patientMetrics.medicalData
       return patient
     })
-  }
-
-  static mapUserToPatient(user: User): Patient {
-    const profile = user.profile
-    return {
-      userid: user.id,
-      profile: {
-        firstName: profile.firstName,
-        fullName: profile.fullName,
-        lastName: profile.lastName,
-        email: profile.email,
-        sex: profile?.patient?.sex ?? Gender.NotDefined,
-        birthdate: profile?.patient?.birthday
-      },
-      settings: user.settings,
-      hasSentUnreadMessages: false
-    }
   }
 
   static computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {
@@ -188,22 +171,17 @@ export default class PatientUtils {
     return value || value === 0 ? `${Math.round(value * 10) / 10}%` : t('N/A')
   }
 
-  static getLastUploadDate(medicalData: MedicalData, noDataLabel: string): string {
+  static getLastUploadDate(medicalData: MedicalData): moment.Moment | null {
     if (!medicalData) {
       return null
     }
 
     const dataEndDate = medicalData.range?.endDate
     if (!dataEndDate) {
-      return noDataLabel
+      return null
     }
 
     const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
-    const mLastUpload = moment.tz(dataEndDate, browserTimezone)
-    if (!mLastUpload.isValid()) {
-      return noDataLabel
-    }
-
-    return mLastUpload.format('lll')
+    return moment.tz(dataEndDate, browserTimezone)
   }
 }

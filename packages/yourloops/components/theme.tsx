@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -162,6 +162,24 @@ export function getTheme(): Theme {
         main: getColor('--info-color-main'),
         light: getColor('--info-color-light'),
         dark: getColor('--info-color-dark')
+      },
+      lightBlue: {
+        main: getColor('--info-color-20'),
+        light: getColor('--info-color-20'),
+        dark: getColor('--info-color-20'),
+        contrastText: getColor('--text-color-primary'),
+      },
+      lightPink: {
+        main: getColor('--pink-color-20'),
+        light: getColor('--pink-color-20'),
+        dark: getColor('--pink-color-20'),
+        contrastText: getColor('--text-color-primary'),
+      },
+      lightDarkBlue: {
+        main: getColor('--dark-blue-color-20'),
+        light: getColor('--dark-blue-color-20'),
+        dark: getColor('--dark-blue-color-20'),
+        contrastText: getColor('--text-color-primary'),
       }
     }
   })

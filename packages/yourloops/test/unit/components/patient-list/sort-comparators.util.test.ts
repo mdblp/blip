@@ -34,6 +34,7 @@ import {
   sortByMonitoringAlertsCount,
   sortByUserName
 } from '../../../../components/patient-list/utils/sort-comparators.util'
+import moment from 'moment-timezone'
 
 describe('useSortComparatorsHook', () => {
   describe('sortByUserName', () => {
@@ -151,13 +152,13 @@ describe('useSortComparatorsHook', () => {
 
   describe('sortByLastDataUpdate', () => {
     it('should sort the patients by last data update', () => {
-      const notAvailableDate = 'N/A'
-      const oldestDate = 'Sep 14, 2023 1:50 AM'
-      const mostRecentDate = 'Sep 20, 2023 1:50 AM'
+      const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
+      const oldestDate = moment.tz('Sep 14, 2023 1:50 AM', browserTimezone)
+      const mostRecentDate = moment.tz('Sep 20, 2023 1:50 AM', browserTimezone)
 
-      expect(sortByLastDataUpdate(notAvailableDate, notAvailableDate)).toEqual(1)
-      expect(sortByLastDataUpdate(notAvailableDate, oldestDate)).toEqual(-1)
-      expect(sortByLastDataUpdate(oldestDate, notAvailableDate)).toEqual(1)
+      expect(sortByLastDataUpdate(null, null)).toEqual(1)
+      expect(sortByLastDataUpdate(null, oldestDate)).toEqual(-1)
+      expect(sortByLastDataUpdate(oldestDate, null)).toEqual(1)
       expect(sortByLastDataUpdate(oldestDate, mostRecentDate)).toBeLessThanOrEqual(-1)
       expect(sortByLastDataUpdate(mostRecentDate, oldestDate)).toBeGreaterThanOrEqual(1)
       expect(sortByLastDataUpdate(oldestDate, oldestDate)).toEqual(0)

@@ -17,14 +17,14 @@
 
 import _ from 'lodash'
 import commonbolus from './commonbolus'
-import { BolusSubtype, DatumType, Prescriptor, WizardInputMealSource } from 'medical-domain'
+import { BolusSubtype, DatumType, Prescriptor } from 'medical-domain'
 
-const BolusTypes = {
+const BolusType = {
   meal: 1,
   correction: 2,
   manual: 3,
   pen: 4,
-  umm: 5
+  eatingShortly: 5
 }
 
 /**
@@ -33,22 +33,23 @@ const BolusTypes = {
  */
 function bolusToLegend(b) {
   if (b.type === DatumType.Wizard) {
-    if (b?.inputMeal?.source === WizardInputMealSource.Umm) {
-      return BolusTypes.umm
-    }
-    return BolusTypes.meal
+    return BolusType.meal
   }
+
   const bolus = commonbolus.getBolus(b)
   if (bolus.subType === BolusSubtype.Pen) {
-    return BolusTypes.pen
+    return BolusType.pen
   }
   if (bolus.prescriptor === Prescriptor.Manual) {
-    return BolusTypes.manual
+    return BolusType.manual
+  }
+  if (bolus.prescriptor === Prescriptor.EatingShortlyManagement) {
+    return BolusType.eatingShortly
   }
   if (bolus.subType === BolusSubtype.Biphasic) {
-    return BolusTypes.meal
+    return BolusType.meal
   }
-  return BolusTypes.correction
+  return BolusType.correction
 }
 
 /**
@@ -58,14 +59,16 @@ function bolusToLegend(b) {
  */
 function bolusClass(b, baseClass) {
   switch (bolusToLegend(b)) {
-    case BolusTypes.manual:
+    case BolusType.manual:
       return `${baseClass} d3-bolus-manual`
-    case BolusTypes.meal:
+    case BolusType.meal:
       return `${baseClass} d3-bolus-meal`
-    case BolusTypes.correction:
+    case BolusType.correction:
       return `${baseClass} d3-bolus-correction`
-    case BolusTypes.pen:
+    case BolusType.pen:
       return `${baseClass} d3-bolus-pen`
+    case BolusType.eatingShortly:
+      return `${baseClass} d3-bolus-eating-shortly`
     default:
       return baseClass
   }
@@ -155,7 +158,7 @@ function drawBolus(pool, opts = {}) {
         .attr('x', (d) => xPosition(commonbolus.getBolus(d)))
         .attr('y', (d) => opts.yScale(commonbolus.getDelivered(d)))
         .attr('width', (d) => {
-          if (bolusToLegend(d) === BolusTypes.correction) {
+          if (bolusToLegend(d) === BolusType.correction) {
             return opts.width / 2
           }
           return opts.width
@@ -175,7 +178,7 @@ function drawBolus(pool, opts = {}) {
         .attr('x', (d) => xPosition(commonbolus.getBolus(d)))
         .attr('y', (d) => opts.yScale(commonbolus.getProgrammed(d)))
         .attr('width', (d) => {
-          if (bolusToLegend(d) === BolusTypes.correction) {
+          if (bolusToLegend(d) === BolusType.correction) {
             return opts.width / 2
           }
           return opts.width

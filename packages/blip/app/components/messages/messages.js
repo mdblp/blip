@@ -188,7 +188,7 @@ class Messages extends React.Component {
         const commentId = await addComment(comment)
 
         comment.id = commentId
-        comment.user = user.profile
+        comment.user = user.account
         this.setState({
           messages: messages.concat([comment])
         }, () => {
@@ -216,7 +216,7 @@ class Messages extends React.Component {
         const messageId = await createNote(message)
         // set so we can display right away
         message.id = messageId // TODO: Need to fix this too;
-        message.user = user.profile
+        message.user = user.account
         // give this message to anyone that needs it
         await onNewMessage(message)
         // Close the modal
