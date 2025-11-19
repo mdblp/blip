@@ -153,28 +153,47 @@ function getTimeInRangeData(cbgData: Cbg[], bgBounds: BgBounds, numDays: number,
   return durationInRange
 }
 
-function getTimeInTightRangeData(cbgData: Cbg[], units: BgUnit, numDays: number, dateFilter: DateFilter): {
-  value: number,
-  total: number
-} {
-  const filteredCbg = CbgService.filterOnDate(cbgData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  const durationInRange = filteredCbg.reduce(
+function reduceCbgRange(
+  cbgData: Cbg[],
+  dateFilter: DateFilter,
+  predicate: (cbg: Cbg) => boolean
+) {
+  const filteredCbg = CbgService.filterOnDate(
+    cbgData,
+    dateFilter.start,
+    dateFilter.end,
+    getWeekDaysFilter(dateFilter)
+  );
+
+  return filteredCbg.reduce(
     (result, cbg) => {
-      const isInRange = isInTightRange(cbg.value, units)
-      const duration = cgmSampleFrequency(cbg.deviceName)
+      const isInRange = predicate(cbg);
+      const duration = cgmSampleFrequency(cbg.deviceName);
 
       if (isInRange) {
-        result.value += duration
+        result.value += duration;
       }
 
-      result.total += duration
-      return result
+      result.total += duration;
+      return result;
     },
     {
       value: 0,
       total: 0
     }
-  )
+  );
+}
+
+
+function getTimeInTightRangeData(cbgData: Cbg[], units: BgUnit, numDays: number, dateFilter: DateFilter): {
+  value: number,
+  total: number
+} {
+  const durationInRange = reduceCbgRange(
+    cbgData,
+    dateFilter,
+    (cbg) => isInTightRange(cbg.value, units)
+  );
 
   if (numDays > 1) {
     // If the period is more than 1 day, we return the average daily time in range
@@ -191,24 +210,11 @@ function getTimeInRangeDt1Data(cbgData: Cbg[], units: BgUnit, numDays: number, d
   value: number,
   total: number
 } {
-  const filteredCbg = CbgService.filterOnDate(cbgData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
-  const durationInRange = filteredCbg.reduce(
-    (result, cbg) => {
-      const isInRange = isInRangeDt1(cbg.value, units)
-      const duration = cgmSampleFrequency(cbg.deviceName)
-
-      if (isInRange) {
-        result.value += duration
-      }
-
-      result.total += duration
-      return result
-    },
-    {
-      value: 0,
-      total: 0
-    }
-  )
+  const durationInRange = reduceCbgRange(
+    cbgData,
+    dateFilter,
+    (cbg) => isInTightRange(cbg.value, units)
+  );
 
   if (numDays > 1) {
     // If the period is more than 1 day, we return the average daily time in range

@@ -131,9 +131,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
     total: number
   }
 
-  console.log(`Diabetic profile: ${diabeticProfile}`)
-
-  if (diabeticProfile == DiabeticType.DT1Pregnancy && isDailyView) {
+  if (diabeticProfile === DiabeticType.DT1Pregnancy && isDailyView) {
     const bgClasses = defaultBgClasses[bgUnits]
     defaultBgPrefs = {
       bgUnits: bgUnits,
@@ -158,7 +156,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           bgPrefs={bgPrefs}
           days={numberOfDays}
         />
-        { diabeticProfile == DiabeticType.DT1Pregnancy &&  isDailyView &&
+        { diabeticProfile === DiabeticType.DT1Pregnancy &&  isDailyView &&
             <Box marginTop={theme.spacing(3)}>
               <TimeInRangeDT1Chart
                 data={timeInRangeDt1Data}
