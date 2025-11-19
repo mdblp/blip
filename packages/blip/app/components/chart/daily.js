@@ -430,6 +430,7 @@ class Daily extends React.Component {
                   medicalData={tidelineData.medicalData}
                   bgPrefs={this.props.bgPrefs}
                   dateFilter={dateFilter}
+                  diabeticProfile={this.props.patient?.diabeticProfile?.type}
                 />
               </div>
             </div>

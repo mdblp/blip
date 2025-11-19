@@ -26,7 +26,7 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import { type BgPrefs, CBGStatType, LoopModeStat, TimeInRangeChart, TimeInTightRangeChart } from 'dumb'
+import { type BgPrefs, CBGStatType, LoopModeStat, TimeInRangeChart, TimeInTightRangeChart, TimeInRangeDT1Chart } from 'dumb'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { SensorUsageStat } from './sensor-usage-stat'
@@ -35,7 +35,7 @@ import {
   type BgType,
   CarbsStatisticsService,
   type DateFilter,
-  DatumType,
+  DatumType, defaultBgClasses, DiabeticType,
   GlycemiaStatisticsService,
   type MedicalData,
   MS_IN_DAY,
@@ -56,6 +56,7 @@ export interface PatientStatisticsProps {
   medicalData: MedicalData
   bgPrefs: BgPrefs
   dateFilter: DateFilter
+  diabeticProfile?: string
 }
 
 const useStyles = makeStyles()((theme) => ({
@@ -66,7 +67,7 @@ const useStyles = makeStyles()((theme) => ({
 }))
 
 export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (props) => {
-  const { medicalData, bgPrefs, dateFilter } = props
+  const { medicalData, bgPrefs, dateFilter, diabeticProfile } = props
   const { classes } = useStyles()
   const location = useLocation()
   const theme = useTheme()
@@ -124,6 +125,28 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
     estimatedTotalInsulin,
   } = BasalBolusStatisticsService.getTotalInsulinAndWeightData(medicalData.basal, medicalData.bolus, medicalData.wizards, numberOfDays, dateFilter, medicalData.pumpSettings, automatedBasalDuration)
 
+  let defaultBgPrefs: BgPrefs
+  let timeInRangeDt1Data: {
+    value: number,
+    total: number
+  }
+
+  console.log(`Diabetic profile: ${diabeticProfile}`)
+
+  if (diabeticProfile == DiabeticType.DT1Pregnancy && isDailyView) {
+    const bgClasses = defaultBgClasses[bgUnits]
+    defaultBgPrefs = {
+      bgUnits: bgUnits,
+      bgClasses: bgClasses,
+      bgBounds: {
+        veryHighThreshold: bgClasses.high,
+        targetUpperBound: bgClasses.target,
+        targetLowerBound: bgClasses.low,
+        veryLowThreshold: bgClasses.veryLow
+      }
+    }
+    timeInRangeDt1Data = GlycemiaStatisticsService.getTimeInRangeDt1Data(medicalData.cbg, bgUnits, numberOfDays, dateFilter)
+  }
 
   return (
     <Box data-testid="patient-statistics">
@@ -135,6 +158,15 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           bgPrefs={bgPrefs}
           days={numberOfDays}
         />
+        { diabeticProfile == DiabeticType.DT1Pregnancy &&  isDailyView &&
+            <Box marginTop={theme.spacing(3)}>
+              <TimeInRangeDT1Chart
+                data={timeInRangeDt1Data}
+                bgPrefs={defaultBgPrefs}
+              />
+            </Box>
+        }
+
         <Box marginTop={theme.spacing(3)}>
           <TimeInTightRangeChart
             data={timeInTightRangeData}

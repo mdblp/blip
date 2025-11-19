@@ -101,6 +101,11 @@ const isInTightRange = (bgValue: number, units: BgUnit): boolean => {
   return bgValue >= bounds.lower && bgValue <= bounds.upper
 }
 
+const isInRangeDt1 = (bgValue: number, units: BgUnit): boolean => {
+  const bounds = {lower: DEFAULT_BG_BOUNDS[units].targetLower, upper: DEFAULT_BG_BOUNDS[units].targetUpper}
+  return bgValue >= bounds.lower && bgValue <= bounds.upper
+}
+
 const cgmSampleFrequency = (cgmDeviceName: string): number => (
   cgmDeviceName.startsWith('AbbottFreeStyleLibre') ? 15 * MS_IN_MIN : 5 * MS_IN_MIN
 )
@@ -156,6 +161,40 @@ function getTimeInTightRangeData(cbgData: Cbg[], units: BgUnit, numDays: number,
   const durationInRange = filteredCbg.reduce(
     (result, cbg) => {
       const isInRange = isInTightRange(cbg.value, units)
+      const duration = cgmSampleFrequency(cbg.deviceName)
+
+      if (isInRange) {
+        result.value += duration
+      }
+
+      result.total += duration
+      return result
+    },
+    {
+      value: 0,
+      total: 0
+    }
+  )
+
+  if (numDays > 1) {
+    // If the period is more than 1 day, we return the average daily time in range
+    // Which means the total duration is one day in ms (MS_IN_DAY)
+    return {
+      value: durationInRange.value / durationInRange.total * MS_IN_DAY,
+      total: MS_IN_DAY
+    }
+  }
+  return durationInRange
+}
+
+function getTimeInRangeDt1Data(cbgData: Cbg[], units: BgUnit, numDays: number, dateFilter: DateFilter): {
+  value: number,
+  total: number
+} {
+  const filteredCbg = CbgService.filterOnDate(cbgData, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
+  const durationInRange = filteredCbg.reduce(
+    (result, cbg) => {
+      const isInRange = isInRangeDt1(cbg.value, units)
       const duration = cgmSampleFrequency(cbg.deviceName)
 
       if (isInRange) {
@@ -334,6 +373,10 @@ export interface GlycemiaStatisticsAdapter {
     value: number,
     total: number
   }
+  getTimeInRangeDt1Data: (cbgData: Cbg[], units: BgUnit, numDays: number, dateFilter: DateFilter) => {
+    value: number,
+    total: number
+  }
   getSensorUsage: (cbgData: Cbg[], dateFilter: DateFilter) => SensorUsageStatistics
   getAverageGlucoseData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => AverageGlucoseStatistics
   getCoefficientOfVariationData: (bgData: Cbg[] | Smbg[], dateFilter: DateFilter) => CoefficientOfVariationStatistics
@@ -345,6 +388,7 @@ export const GlycemiaStatisticsService: GlycemiaStatisticsAdapter = {
   getReadingsInRangeData,
   getTimeInRangeData,
   getTimeInTightRangeData,
+  getTimeInRangeDt1Data,
   getSensorUsage,
   getAverageGlucoseData,
   getCoefficientOfVariationData,

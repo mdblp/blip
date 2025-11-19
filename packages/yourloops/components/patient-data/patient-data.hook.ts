@@ -78,6 +78,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
   const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const bgClasses = defaultBgClasses[bgUnits] // used to class the blood glucose values in the chart
+
   const bgPrefs: BgPrefs = convertIfNeeded(patient?.diabeticProfile?.bloodGlucosePreference, bgUnits) || {
     bgUnits,
     bgClasses,
@@ -88,6 +89,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
       veryLowThreshold: bgClasses.veryLow
     }
   }
+
   const defaultChartPrefs = {
     trends: {
       activeDays: {

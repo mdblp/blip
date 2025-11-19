@@ -56,7 +56,9 @@ export {
 export {
   TimeInTightRangeChart
 } from './components/stats/time-in-range/time-in-tight-range-chart/time-in-tight-range-chart'
-
+export {
+  TimeInRangeDT1Chart
+} from './components/stats/time-in-range/time-in-range-chart/time-in-range-dt1-chart'
 // Tooltips
 export { AlarmEventTooltip } from './components/tooltips/alarm-event-tooltip/alarm-event-tooltip'
 export { BasalTooltip } from './components/tooltips/basal-tooltip/basal-tooltip'

@@ -55,6 +55,10 @@
   background-color: var(--info-color-light);
 }
 
+.timeInRangeDt1-background {
+  background-color: var(--bg-target);
+}
+
 .veryHigh-duration-background {
   background-color: var(--warning-color-10);
   border-color: var(--warning-color-20);
@@ -81,6 +85,11 @@
 }
 
 .tightRange-duration-background {
+  background-color: var(--info-color-10);
+  border-color: var(--info-color-20);
+}
+
+.timeInRangeDt1-duration-background {
   background-color: var(--info-color-10);
   border-color: var(--info-color-20);
 }
@@ -115,4 +124,8 @@
 
 .tightRange-color {
   color: var(--info-color-main);
+}
+
+.timeInRangeDt1-color {
+  color: var(--bg-target);
 }
