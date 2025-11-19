@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,6 +40,7 @@ import {
   DatumType,
   type Meal,
   Prescriptor,
+  Source,
   type Wizard,
   WizardInputMealFat,
   WizardInputMealSource
@@ -235,4 +236,22 @@ export const buildSingleWizardData = (bolusId: string): Wizard => {
       normal: 1
     }
   } as Wizard
+}
+
+export const buildSingleEatingShortlyBolusData = (): Bolus => {
+  return {
+    id: 'eating-shortly-bolus-id',
+    type: DatumType.Bolus,
+    subType: BolusSubtype.Normal,
+    normal: 0.5,
+    prescriptor: Prescriptor.EatingShortlyManagement,
+    epoch: 1517454000000,
+    normalTime: '2018-02-01T03:00:00.000Z',
+    timezone: 'Europe/Paris',
+    guessedTimezone: false,
+    isoWeekday: WeekDays.Friday,
+    displayOffset: 60,
+    source: Source.Diabeloop,
+    wizard: null
+  }
 }

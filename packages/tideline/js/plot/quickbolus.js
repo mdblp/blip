@@ -44,6 +44,9 @@ const getDataTestId = (d) => {
   if (d.prescriptor === Prescriptor.Manual) {
     return `bolus_manual_${d.id}`
   }
+  if (d.prescriptor === Prescriptor.EatingShortlyManagement) {
+    return `bolus_eating_shortly_${d.id}`
+  }
   return 'd3-bolus-group'
 }
 

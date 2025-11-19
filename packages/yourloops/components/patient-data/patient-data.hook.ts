@@ -29,7 +29,7 @@ import { type BgPrefs, buildDevice, Device } from 'dumb'
 import { PatientView } from '../../enum/patient-view.enum'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import { type ChartPrefs } from '../dashboard-cards/models/chart-prefs.model'
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
 import type MedicalDataService from 'medical-domain'
 import { defaultBgClasses, type TimePrefs, TimeService, Unit } from 'medical-domain'
@@ -42,7 +42,6 @@ import { AppUserRoute } from '../../models/enums/routes.enum'
 export interface usePatientDataResult {
   bgPrefs: BgPrefs
   changePatientView: (patientView: PatientView) => void
-  changePatient: (patient: Patient) => void
   chartPrefs: ChartPrefs
   currentPatientView: PatientView
   dailyChartRef: MutableRefObject<DailyChartRef>
@@ -72,7 +71,6 @@ const DEFAULT_MS_RANGE = TimeService.MS_IN_DAY
 
 export const usePatientData = ({ patient }: UsePatientDataProps): usePatientDataResult => {
   const navigate = useNavigate()
-  const { teamId } = useParams()
   const { user } = useAuth()
   const { pathname } = useLocation()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -80,7 +78,7 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   const dateQueryParam = searchParams.get(DATE_QUERY_PARAM_KEY)
   const bgUnits = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter
   const bgClasses = defaultBgClasses[bgUnits] // used to class the blood glucose values in the chart
-  const bgPrefs: BgPrefs = convertIfNeeded(patient.diabeticProfile?.bloodGlucosePreference, bgUnits) || {
+  const bgPrefs: BgPrefs = convertIfNeeded(patient?.diabeticProfile?.bloodGlucosePreference, bgUnits) || {
     bgUnits,
     bgClasses,
     bgBounds: {
@@ -157,11 +155,6 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
     }
   }
 
-  const changePatient = (patient: Patient): void => {
-    patientDataUtils.current.changePatient(patient)
-    setMedicalData(null)
-    navigate(`${AppUserRoute.Teams}/${teamId}${AppUserRoute.Patients}/${patient.userid}${getRouteByPatientView(currentPatientView)}`)
-  }
 
   const getMsRangeByPatientView = (patientView: PatientView, patientMedicalData: MedicalDataService): number => {
     if (patientMedicalData && patientView === PatientView.Dashboard) {
@@ -321,7 +314,6 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
   return {
     bgPrefs,
     changePatientView,
-    changePatient,
     currentPatientView,
     chartPrefs,
     dailyChartRef,

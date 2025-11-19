@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,16 +29,13 @@ import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-al
 import { type MedicalData } from '../../../lib/data/models/medical-data.model'
 import { type Patient, type PatientMetrics } from '../../../lib/patient/models/patient.model'
 import { type GlycemiaIndicators } from '../../../lib/patient/models/glycemia-indicators.model'
+import { type MonitoringAlertsParameters } from 'medical-domain'
 import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
-import { type ITeamMember } from '../../../lib/team/models/i-team-member.model'
-import { TeamMemberRole } from '../../../lib/team/models/enums/team-member-role.enum'
-import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
 import { DiabeticProfile } from '../../../lib/patient/models/patient-diabete-profile'
 import { defaultBgClasses, DiabeticType, Unit } from 'medical-domain'
-import { type MonitoringAlertsParameters } from 'medical-domain'
 
 const defaultGlycemiaIndicators: GlycemiaIndicators = {
   timeInRange: 0,
@@ -67,7 +64,14 @@ export const buildPatient = (params: {
       fullName: params.profile?.fullName || 'fakePatientFullName',
       lastName: params.profile?.lastName || 'fakeLastname',
       email: params.profile?.email || 'fake@email.com',
-      sex: params.profile?.sex || Gender.Male
+      sex: params.profile?.sex || Gender.Male,
+      drugTreatment: '',
+      diet: ['gluten-free'],
+      profession: 'Pescador',
+      hobbies: 'eating burger',
+      physicalActivities: ['Running'],
+      hoursSpentOnPhysicalActivitiesPerWeek: 2,
+      comments: ''
     },
     settings: {
       a1c: params.settings?.a1c || { date: '2023-05-26T12:28:36.047Z', value: 'fakeA1cValue' },
@@ -117,32 +121,5 @@ export const buildPatientMetrics = (params: {
     },
     glycemiaIndicators: defaultGlycemiaIndicators,
     medicalData: params.medicalData || defaultMedicalData
-  }
-}
-
-export const buildTeamMemberFromPatient = (patient: Patient, metrics: PatientMetrics, teamId: string, invitationStatus: UserInviteStatus): ITeamMember => {
-  return {
-    userId: patient.userid,
-    teamId,
-    role: TeamMemberRole.patient,
-    profile: {
-      email: patient.profile.email,
-      firstName: patient.profile.firstName,
-      fullName: patient.profile.fullName,
-      lastName: patient.profile.lastName,
-      patient: { birthday: '1980-01-01T10:44:34+01:00', diagnosisType: 'type1' },
-      privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-      termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
-      trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
-    },
-    settings: null,
-    preferences: { displayLanguageCode: LanguageCodes.En },
-    invitationStatus,
-    email: patient.profile.email,
-    idVerified: false,
-    unreadMessages: patient.hasSentUnreadMessages ? 1 : 0,
-    alarms: metrics?.monitoringAlerts,
-    glycemiaIndicators: metrics?.glycemiaIndicators,
-    medicalData: metrics?.medicalData
   }
 }

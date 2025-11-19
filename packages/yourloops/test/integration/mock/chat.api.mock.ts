@@ -35,7 +35,7 @@ import {
   myThirdTeamId,
   myThirdTeamName
 } from './team.api.mock'
-import { patient1AsTeamMember, patient1Id } from '../data/patient.api.data'
+import { patient1Id, patient1Info } from '../data/patient.api.data'
 import type User from '../../../lib/auth/models/user.model'
 
 export const mockChatAPI = () => {
@@ -52,7 +52,7 @@ export const mockChatAPI = () => {
         text: `This is a message sent to the team ${myFirstTeamName}`,
         timezone: 'timezone not used',
         timestamp: '2023-03-30T09:10:06Z',
-        user: { profile: patient1AsTeamMember.profile } as User
+        user: { profile: patient1Info.profile } as unknown as User
       }
       return Promise.resolve([message])
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,8 +32,7 @@ import { renderPage } from '../../utils/render'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
-import { buildPatient, buildTeamMemberFromPatient } from '../../data/patient-builder.data'
+import { buildPatient } from '../../data/patient-builder.data'
 
 describe('Training page when new training available', () => {
   beforeAll(() => {
@@ -49,8 +48,7 @@ describe('Training page when new training available', () => {
       }
     }
     const notAckTrainingPatient = buildPatient({ userid: 'id', profile })
-    const patientAsTeamMember = buildTeamMemberFromPatient(notAckTrainingPatient, undefined, 'team-id', UserInviteStatus.Accepted)
-    mockPatientLogin(patientAsTeamMember)
+    mockPatientLogin(notAckTrainingPatient)
     mockAuth0Hook(UserRole.Patient)
     mockUserApi()
   })
@@ -59,9 +57,10 @@ describe('Training page when new training available', () => {
     const router = renderPage('/training')
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual('/training')
+      expect(screen.getByText('New training available, please read what\'s new before continuing on YourLoops.')).toBeVisible()
     })
 
-    expect(screen.getByText('New training available, please read what\'s new before continuing on YourLoops.')).toBeVisible()
+
     const openButton = screen.getByText('Open training')
     expect(openButton).toBeEnabled()
     await userEvent.click(openButton)

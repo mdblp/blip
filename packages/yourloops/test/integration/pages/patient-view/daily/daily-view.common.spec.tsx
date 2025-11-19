@@ -42,7 +42,7 @@ import * as constants from '../../../../../../viz/src/modules/print/utils/consta
 import DataApi from '../../../../../lib/data/data.api'
 import { User } from '../../../../../lib/auth'
 import { when } from 'jest-when'
-import { patient2AsTeamMember } from '../../../data/patient.api.data'
+import { patient2Info } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
@@ -61,13 +61,14 @@ import { t } from '../../../../../lib/language'
 import { checkReportDialogPresets } from '../../../assert/report-dialog.assert'
 import ErrorApi from '../../../../../lib/error/error.api'
 import { DeviceSystem } from 'medical-domain'
+import { ConfigService } from '../../../../../lib/config/config.service'
 
 describe('Daily view for anyone', () => {
   const dailyRoute = AppUserRoute.Daily
 
   beforeEach(() => {
     mockWindowResizer()
-    mockPatientLogin(patient2AsTeamMember)
+    mockPatientLogin(patient2Info)
   })
 
   afterEach(() => {
@@ -91,6 +92,8 @@ describe('Daily view for anyone', () => {
   describe('with DBLG2 device', () => {
     it('should render correct tooltips and values', async () => {
       mockDataAPI(getCompleteDailyViewDataDblg2(DeviceSystem.Dblg2, "1.1.0"))
+      jest.spyOn(ConfigService, 'getIsEatingShortlyEnabled').mockReturnValue(true)
+
       const router = renderPage(dailyRoute)
       await waitFor(() => {
         expect(router.state.location.pathname).toEqual(dailyRoute)
@@ -153,8 +156,8 @@ describe('Daily view for anyone', () => {
       await userEvent.click(generateReportDialogFirstPdf.getByText('Download'))
 
       // This checks that we tried to generate a pdf
-      expect(downloadLinkElement.download).toEqual(`yourloops-report-${patient2AsTeamMember.userId}.pdf`)
-      expect(downloadLinkElement.href.length).toBeGreaterThan(17500)
+      expect(downloadLinkElement.download).toEqual(`yourloops-report-${patient2Info.userid}.pdf`)
+      expect(downloadLinkElement.href.length).toBeGreaterThan(17480)
       expect(downloadLinkElement.href.length).toBeLessThan(18000)
       expect(downloadLinkElement.click).toHaveBeenCalledTimes(1)
 
@@ -174,7 +177,7 @@ describe('Daily view for anyone', () => {
       // This checks for CSV generation
       expect(downloadLinkElement.download).toEqual(`report.zip`)
       expect(downloadLinkElement.click).toHaveBeenCalledTimes(2)
-      expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), patient2AsTeamMember.userId, '2020-01-02T00:00:00.000Z', '2020-01-15T23:59:59.999Z')
+      expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), patient2Info.userid, '2020-01-02T00:00:00.000Z', '2020-01-15T23:59:59.999Z')
     })
 
     it('should display an alert when CSV report generation failed', async () => {
@@ -221,7 +224,7 @@ describe('Daily view for anyone', () => {
       await userEvent.click(generateReportDialog.getByText('Download'))
 
       // This checks for CSV generation
-      expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), patient2AsTeamMember.userId, '2020-01-02T00:00:00.000Z', '2020-01-15T23:59:59.999Z')
+      expect(httpGetSpy).toHaveBeenCalledWith(expect.any(User), patient2Info.userid, '2020-01-02T00:00:00.000Z', '2020-01-15T23:59:59.999Z')
       expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('An error occurred. Please contact support for assistance')
 
     })

@@ -26,17 +26,10 @@
  */
 
 import { act } from '@testing-library/react'
-import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
+import { patient1Info } from '../../../data/patient.api.data'
 import { mockDataAPI, pumpSettingsData, pumpSettingsDblg1Mobigo } from '../../../mock/data.api.mock'
-import { mockNotificationAPI } from '../../../mock/notification.api.mock'
-import { patient1Id } from '../../../data/patient.api.data'
-import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
 import { renderPage } from '../../../utils/render'
-import { mockUserApi } from '../../../mock/user.api.mock'
-import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
-import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
-import { mockTeamAPI } from '../../../mock/team.api.mock'
 import { testAppMainLayoutForPatient } from '../../../use-cases/app-main-layout-visualisation'
 import {
   testDevicesMenuLayoutForMobigoDevice,
@@ -44,21 +37,17 @@ import {
 } from '../../../use-cases/device-settings-visualisation'
 import { testDeviceSettingsNavigationForPatient } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
 
 describe('Device view for G1 Patient', () => {
-  const firstName = 'patient firstName'
-  const lastName = 'patient lastName'
+  const firstName = patient1Info.profile.firstName
+  const lastName = patient1Info.profile.lastName
 
   const deviceRoute = AppUserRoute.Devices
 
   beforeEach(() => {
     mockWindowResizer()
-    mockAuth0Hook(UserRole.Patient, patient1Id)
-    mockNotificationAPI()
-    mockDirectShareApi()
-    mockTeamAPI()
-    mockUserApi().mockUserDataFetch({ firstName, lastName })
-    mockPatientApiForPatients()
+    mockPatientLogin(patient1Info)
     mockDataAPI(pumpSettingsData)
   })
 

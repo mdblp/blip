@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -53,6 +53,7 @@ import { ConsentPage } from '../pages/consent/consent-page'
 import Box from '@mui/material/Box'
 import { VerifyEmailResultPage } from '../pages/verify-email/verify-email-result-page'
 import { SignupInformationPage } from '../pages/signup-information/signup-information-page'
+import { DblCommunicationPage } from '../pages/dbl-communication/dbl-communication'
 
 const muiCache = createCache({
   key: 'mui',
@@ -78,17 +79,20 @@ export const getRedirectUrl = (route: string, user: User, isAuthenticated: boole
   if (!isAuthenticated && !routeIsPublic && !isCurrentRouteAlwaysAccessible) {
     return AppRoute.Login
   }
-  if (route !== AppRoute.CompleteSignup && isAuthenticated && user && user.isFirstLogin()) {
+  if (route !== AppRoute.CompleteSignup && isAuthenticated && user?.isFirstLogin()) {
     return AppRoute.CompleteSignup
   }
-  if (!renewConsentPath && user && user.hasToAcceptNewConsent()) {
+  if (!renewConsentPath && user?.hasToAcceptNewConsent()) {
     return AppRoute.NewConsent
   }
-  if (!renewConsentPath && user && user.hasToRenewConsent()) {
+  if (!renewConsentPath && user?.hasToRenewConsent()) {
     return AppRoute.RenewConsent
   }
-  if (!trainingPath && route !== AppRoute.CompleteSignup && !renewConsentPath && user && user.hasToDisplayTrainingInfoPage()) {
+  if (!trainingPath && route !== AppRoute.CompleteSignup && !renewConsentPath && user?.hasToDisplayTrainingInfoPage()) {
     return AppRoute.Training
+  }
+  if (route !==  AppRoute.DblCommunication && user?.hasToDisplayDblCommunicationPage()) {
+    return AppRoute.DblCommunication
   }
   return undefined
 }
@@ -139,6 +143,7 @@ export const MainLobby: FC = () => {
                     <Route path={AppRoute.Training} element={<TrainingPage />} />
                     <Route path={AppRoute.VerifyEmail} element={<VerifyEmailPage />} />
                     <Route path={AppRoute.VerifyEmailResult} element={<VerifyEmailResultPage />} />
+                    <Route path={AppRoute.DblCommunication} element={<DblCommunicationPage />} />
                     <Route path="*" element={<MainLayout />} />
                   </Routes>
                 </Box>

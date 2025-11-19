@@ -232,7 +232,7 @@ describe('stat', () => {
         const result = stat.getStatAnnotations(data, commonStats.timeInRange, multiDayOpts)
         expect(result, JSON.stringify(result)).to.have.ordered.members([
           '**Time In Range:** Daily average of the time spent in range, based on CGM readings.',
-          'compute-ndays-time-in-range'
+          'compute-oneday-time-in-range'
         ])
       })
     })

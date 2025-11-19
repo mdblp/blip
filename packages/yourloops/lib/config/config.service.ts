@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,34 +26,13 @@
  */
 
 import appConfig from './config'
-import { getLanguage } from '../language'
-import { LanguageCodes } from '../auth/models/enums/language-codes.enum'
 
 export class ConfigService {
   static getIdleTimeout(): number {
     return appConfig.IDLE_TIMEOUT_MS
   }
 
-  static isBannerEnabled(): boolean {
-    return appConfig.BANNER_ENABLED
-  }
-
-  static getBannerLabel(): string {
-    const language = getLanguage()
-    switch (language) {
-      case LanguageCodes.Es:
-        return appConfig.BANNER_LABEL_ES
-      case LanguageCodes.De:
-        return appConfig.BANNER_LABEL_DE
-      case LanguageCodes.Fr:
-        return appConfig.BANNER_LABEL_FR
-      case LanguageCodes.It:
-        return appConfig.BANNER_LABEL_IT
-      case LanguageCodes.Nl:
-        return appConfig.BANNER_LABEL_NL
-      case LanguageCodes.En:
-      default:
-        return appConfig.BANNER_LABEL_EN
-    }
+  static getIsEatingShortlyEnabled(): boolean {
+    return appConfig.EATING_SHORTLY_ENABLED
   }
 }

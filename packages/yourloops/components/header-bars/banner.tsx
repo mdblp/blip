@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,35 +25,55 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
+import React, { useEffect } from 'react'
 
-import { useTheme } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import { ConfigService } from '../../lib/config/config.service'
+import Alert from '@mui/material/Alert'
+import Snackbar from '@mui/material/Snackbar';
+import { BannerContent } from '../../lib/dbl-communication/models/banner.model'
+import DblCommunicationApi from '../../lib/dbl-communication/dbl-communication.api'
+import {
+  isBannerInfoAcknowledged,
+  registerBannerAck,
+} from '../../lib/dbl-communication/storage'
 
 
-export const Banner: FC = () => {
-  const theme = useTheme();
+export const Banner = (): JSX.Element => {
+  const [closed, setClosed] = React.useState<boolean>(false)
+  const [newBannerAvailable, setNewBannerAvailable] = React.useState<boolean>(false)
+  const [banner, setBanner] = React.useState<BannerContent>()
+
+
+  const acknowledgeCurrentBanner = () => {
+    setClosed(true)
+    registerBannerAck(banner.id)
+  }
+
+  useEffect(() => {
+    const fetchBanner = async (): Promise<void> => {
+      const dblInfo = await DblCommunicationApi.getDblBanner()
+      if (!dblInfo || isBannerInfoAcknowledged(dblInfo)) {
+        setNewBannerAvailable(false)
+        return
+      }
+      setNewBannerAvailable(true)
+      setBanner(dblInfo)
+    }
+    fetchBanner()
+  }, [])
 
   return (
-    <Box
-      alignItems="center"
-      bgcolor="var(--primary-color-dark)"
-      display="flex"
-      justifyContent="center"
-      minHeight={60}
-      paddingLeft={theme.spacing(4)}
-      paddingRight={theme.spacing(4)}
-      width="100%"
+    <Snackbar
+      open={newBannerAvailable && !closed}
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      autoHideDuration={null}
     >
-      <Typography
-        color={theme.palette.common.white}
-        variant="subtitle2"
-        textAlign="center"
-        dangerouslySetInnerHTML={{ __html: ConfigService.getBannerLabel() }}
+      <Alert
+        severity={banner?.level}
+        onClose={acknowledgeCurrentBanner}
+        data-testid='dbl-banner-alert'
       >
-      </Typography>
-    </Box>
+        <div dangerouslySetInnerHTML={{ __html: banner?.message ?? '' }} />
+      </Alert>
+    </Snackbar>
   )
 }

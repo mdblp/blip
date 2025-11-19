@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -65,7 +65,8 @@ describe('Main lobby', () => {
         hasToAcceptNewConsent: () => false,
         hasToRenewConsent: () => false,
         isFirstLogin: () => false,
-        hasToDisplayTrainingInfoPage: () => false
+        hasToDisplayTrainingInfoPage: () => false,
+        hasToDisplayDblCommunicationPage: () => false
       } as User
 
       testGetRedirectUrl('/login', user, false, undefined)
@@ -113,6 +114,18 @@ describe('Main lobby', () => {
       } as User
 
       testGetRedirectUrl('/', user, true, '/training')
+    })
+
+    it('should return dbl communication url when a user is logged in and there is a communication available', () => {
+      const user = {
+        hasToAcceptNewConsent: () => false,
+        hasToRenewConsent: () => false,
+        isFirstLogin: () => false,
+        hasToDisplayTrainingInfoPage: () => false,
+        hasToDisplayDblCommunicationPage: () => true
+      } as User
+
+      testGetRedirectUrl('/', user, true, '/dbl-communication')
     })
   })
 })

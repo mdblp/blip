@@ -36,10 +36,17 @@ import Button from '@mui/material/Button'
 import GetAppIcon from '@mui/icons-material/GetApp'
 import { PatientView } from '../../enum/patient-view.enum'
 import { useAuth } from '../../lib/auth'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import TeamUtils from '../../lib/team/team.util'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { type Patient } from '../../lib/patient/models/patient.model'
+import Typography from '@mui/material/Typography'
+import { getUserName } from '../../lib/auth/user.util'
+import { DiabeticType } from 'medical-domain'
+import { PatientDiabeticProfileChip } from '../chips/patient-diabetic-profile-chip'
 
 interface PatientNavBarTabsProps {
+  currentPatient: Patient
   currentPatientView: PatientView
   onChangePatientView: (patientView: PatientView) => void
   onClickPrint: MouseEventHandler<HTMLButtonElement>
@@ -56,19 +63,41 @@ const styles = makeStyles()((theme: Theme) => {
       boxShadow: theme.shadows[3],
       backgroundColor: theme.palette.common.white,
       display: 'flex',
+      alignItems: 'center',
       justifyContent: 'space-between',
       paddingInline: theme.spacing(3)
     },
     tab: {
       fontWeight: 'bold',
       fontSize: theme.typography.htmlFontSize,
-      color: 'var(--text-color-primary)'
+    },
+    backIcon: {
+      cursor: 'pointer',
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(4),
+    },
+    leftSection: {
+      flex: 1,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-start'
+    },
+    centerSection: {
+      flex: 1,
+      display: 'flex',
+      justifyContent: 'center'
+    },
+    rightSection: {
+      flex: 1,
+      display: 'flex',
+      justifyContent: 'flex-end'
     }
   }
 })
 
 export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (props) => {
   const {
+    currentPatient,
     currentPatientView,
     onChangePatientView,
     onClickPrint
@@ -77,86 +106,116 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
   const { classes } = styles()
   const { user } = useAuth()
   const { teamId } = useParams()
+  const navigate = useNavigate()
 
   const getSelectedTab = (): PatientView => {
     return currentPatientView ?? PatientView.Dashboard
   }
 
+  const goBackHome = (): void => {
+    navigate(`../..`, { relative: 'path' })
+  }
+
+  const currentPatientDiabeticType = currentPatient?.diabeticProfile?.type ?? DiabeticType.DT1DT2
+
   return (
     <Box className={classes.tabsContainer}>
-      <Tabs value={getSelectedTab()} classes={{ root: classes.root }}>
-        <Tab
-          className={classes.tab}
-          value={PatientView.Dashboard}
-          data-testid="dashboard-tab"
-          iconPosition="start"
-          label={t('dashboard')}
-          onClick={() => {
-            onChangePatientView(PatientView.Dashboard)
-          }}
-          classes={{
-            root: classes.root
-          }}
-        />
-        <Tab
-          className={classes.tab}
-          value={PatientView.Daily}
-          data-testid="daily-tab"
-          iconPosition="start"
-          label={t('daily')}
-          onClick={() => {
-            onChangePatientView(PatientView.Daily)
-          }}
-          classes={{
-            root: classes.root
-          }}
-        />
-        <Tab
-          className={classes.tab}
-          value={PatientView.Trends}
-          data-testid="trends-tab"
-          iconPosition="start"
-          label={t('trends')}
-          onClick={() => {
-            onChangePatientView(PatientView.Trends)
-          }}
-          classes={{
-            root: classes.root
-          }}
-        />
-        {user.isUserHcp() && !TeamUtils.isPrivate(teamId) &&
+      <Box data-testid="subnav-patient-info" className={classes.leftSection}>
+        {!user.isUserPatient() &&
+          <>
+            <ArrowBackIcon
+              data-testid="subnav-arrow-back"
+              className={classes.backIcon}
+              onClick={goBackHome}
+            />
+            <Typography>
+            {getUserName(currentPatient.profile.firstName, currentPatient.profile.lastName, currentPatient.profile.fullName)}
+            </Typography>
+            <PatientDiabeticProfileChip
+              patientDiabeticType={currentPatientDiabeticType}
+            />
+          </>
+        }
+      </Box>
+      <Box className={classes.centerSection}>
+        <Tabs value={getSelectedTab()} classes={{ root: classes.root }}
+              TabIndicatorProps={ !user.isUserPatient() && { style: { display: 'none' } } }
+        >
           <Tab
             className={classes.tab}
-            value={PatientView.PatientProfile}
-            data-testid="patient-profile-tab"
+            value={PatientView.Dashboard}
+            data-testid="dashboard-tab"
             iconPosition="start"
-            label={t('patient-profile')}
+            label={t('dashboard')}
             onClick={() => {
-              onChangePatientView(PatientView.PatientProfile)
+              onChangePatientView(PatientView.Dashboard)
             }}
             classes={{
               root: classes.root
             }}
           />
-        }
-        <Tab
-          className={classes.tab}
-          value={PatientView.Devices}
-          data-testid="device-tab"
-          iconPosition="start"
-          label={t('devices')}
-          onClick={() => {
-            onChangePatientView(PatientView.Devices)
-          }}
-          classes={{
-            root: classes.root
-          }}
-        />
-      </Tabs>
-      <Button data-testid="download-report" onClick={onClickPrint}>
-        <GetAppIcon />
-        {t('button-pdf-download-report')}
-      </Button>
+          <Tab
+            className={classes.tab}
+            value={PatientView.Daily}
+            data-testid="daily-tab"
+            iconPosition="start"
+            label={t('daily')}
+            onClick={() => {
+              onChangePatientView(PatientView.Daily)
+            }}
+            classes={{
+              root: classes.root
+            }}
+          />
+          <Tab
+            className={classes.tab}
+            value={PatientView.Trends}
+            data-testid="trends-tab"
+            iconPosition="start"
+            label={t('trends')}
+            onClick={() => {
+              onChangePatientView(PatientView.Trends)
+            }}
+            classes={{
+              root: classes.root
+            }}
+          />
+          {user.isUserHcpOrPatient() && !TeamUtils.isPrivate(teamId) &&
+            <Tab
+              className={classes.tab}
+              value={PatientView.PatientProfile}
+              data-testid="patient-profile-tab"
+              iconPosition="start"
+              label={t('patient-profile')}
+              onClick={() => {
+                onChangePatientView(PatientView.PatientProfile)
+              }}
+              classes={{
+                root: classes.root
+              }}
+            />
+          }
+          <Tab
+            className={classes.tab}
+            value={PatientView.Devices}
+            data-testid="device-tab"
+            iconPosition="start"
+            label={t('devices')}
+            onClick={() => {
+              onChangePatientView(PatientView.Devices)
+            }}
+            classes={{
+              root: classes.root
+            }}
+          />
+        </Tabs>
+      </Box>
+      <Box className={classes.rightSection}>
+        <Button data-testid="download-report" onClick={onClickPrint}>
+          <GetAppIcon />
+          {t('button-pdf-download-report')}
+        </Button>
+      </Box>
     </Box>
   )
 }

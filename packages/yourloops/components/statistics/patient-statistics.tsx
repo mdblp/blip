@@ -138,7 +138,6 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
         <Box marginTop={theme.spacing(3)}>
           <TimeInTightRangeChart
             data={timeInTightRangeData}
-            days={numberOfDays}
             bgPrefs={bgPrefs}
           />
         </Box>

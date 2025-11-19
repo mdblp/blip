@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,8 +34,10 @@ import { type PatientInvite } from './patient-invite.model'
 import { type GlycemiaIndicators } from './glycemia-indicators.model'
 import { type MedicalData } from '../../data/models/medical-data.model'
 import { DiabeticProfile } from './patient-diabete-profile'
+import type { Consent } from '../../auth/models/consent.model'
+import type { HcpProfession } from '../../auth/models/enums/hcp-profession.enum'
 
-
+// Data structure used in the application to represent a patient
 export interface Patient extends Partial<PatientMetrics> {
   readonly userid: string
   profile: PatientProfile
@@ -55,4 +57,31 @@ export interface PatientMetrics {
   glycemiaIndicators: GlycemiaIndicators
   /** Patient medical data. undefined means not fetched, null if the fetch failed */
   medicalData?: MedicalData | null
+}
+
+// Data structure used to communicate with the backend
+// Definition can be found in seagull-api documentation
+// Order are the same as in seagull-api for easier comparison
+export interface UserProfilePayload {
+  fullName?: string
+  firstName?: string
+  lastName?: string
+  email?: string
+  patient: ProfilePatientPayload
+  hcpProfession?: HcpProfession
+  termsOfUse?: Consent
+  privacyPolicy?: Consent
+  contactConsent?: Consent
+  trainingAck?: Consent
+  hcpConfirmAck?: Consent
+}
+
+export interface ProfilePatientPayload {
+  drugTreatment: string
+  diet: string[]
+  profession: string
+  hobbies: string
+  physicalActivities: string[]
+  hoursSpentOnPhysicalActivitiesPerWeek: number
+  comments: string
 }

@@ -85,13 +85,6 @@ export const useTimeInRangeChartHook = (props: TimeInRangeChartHookProps): TimeI
     const annotations = []
     switch (type) {
       case CBGStatType.TimeInRange:
-        if (days > 1) {
-          annotations.push(
-            t('time-in-range-cgm-daily-average'),
-            t('compute-ndays-time-in-range', { cbgLabel: t('CGM') })
-          )
-          break
-        }
         annotations.push(
           t('time-in-range-cgm-one-day'),
           t('compute-oneday-time-in-range')
@@ -111,7 +104,7 @@ export const useTimeInRangeChartHook = (props: TimeInRangeChartHookProps): TimeI
     }
 
     return annotations
-  }, [bgType, data.total, days, t, type])
+  }, [bgType, data.total, t, type])
 
   const onStatMouseover = (id: StatLevel, barTitle: string, hasValues: boolean): void => {
     if (hasValues) {

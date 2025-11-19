@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -45,7 +45,7 @@ import Typography from '@mui/material/Typography'
 
 import { useAuth } from '../../lib/auth'
 import appConfig from '../../lib/config/config'
-import { type Profile } from '../../lib/auth/models/profile.model'
+import { type UserAccount } from '../../lib/auth/models/user-account.model'
 import { ConsentForm } from '../../components/consents'
 
 interface ConsentProps {
@@ -93,7 +93,7 @@ export const ConsentPage: FC<ConsentProps> = (props) => {
   const { classes } = style()
   const [policyAccepted, setPolicyAccepted] = useState(false)
   const [termsAccepted, setTermsAccepted] = useState(false)
-  const [feedbackAccepted, setFeedbackAccepted] = useState(auth.user?.profile?.contactConsent?.isAccepted)
+  const [feedbackAccepted, setFeedbackAccepted] = useState(auth.user?.account?.contactConsent?.isAccepted)
   const log = useMemo(() => bows('consent'), [])
   const fromPath = useMemo(() => location.state?.from?.pathname, [location])
 
@@ -103,7 +103,7 @@ export const ConsentPage: FC<ConsentProps> = (props) => {
     const consentsChecked = policyAccepted && termsAccepted
     // Ask for feedback only if the user is an HCP, and didn't have previously
     // see that option (e.g. Account created before it was implemented)
-    const showFeedback = user.isUserHcp() && !user.profile?.contactConsent
+    const showFeedback = user.isUserHcp() && !user.account?.contactConsent
 
     const onDecline = (): void => {
       try {
@@ -115,13 +115,13 @@ export const ConsentPage: FC<ConsentProps> = (props) => {
 
     const onConfirm = (): void => {
       const now = new Date().toISOString()
-      const updatedProfile = _.cloneDeep(user.profile ?? {}) as Profile
-      updatedProfile.termsOfUse = { acceptanceTimestamp: now, isAccepted: termsAccepted }
-      updatedProfile.privacyPolicy = { acceptanceTimestamp: now, isAccepted: policyAccepted }
+      const updatedUserAccount = _.cloneDeep(user.account ?? {}) as UserAccount
+      updatedUserAccount.termsOfUse = { acceptanceTimestamp: now, isAccepted: termsAccepted }
+      updatedUserAccount.privacyPolicy = { acceptanceTimestamp: now, isAccepted: policyAccepted }
       if (showFeedback) {
-        updatedProfile.contactConsent = { acceptanceTimestamp: now, isAccepted: feedbackAccepted }
+        updatedUserAccount.contactConsent = { acceptanceTimestamp: now, isAccepted: feedbackAccepted }
       }
-      auth.updateProfile(updatedProfile).catch((reason: unknown) => {
+      auth.updateUserAccount(updatedUserAccount).catch((reason: unknown) => {
         log.error(reason)
       }).finally(() => {
         navigate(fromPath ?? '/')

@@ -34,7 +34,6 @@ import {
   sixteenDaysOldDashboardData,
   twoWeeksOldDashboardData
 } from '../../../mock/data.api.mock'
-import { mockPatientApiForPatients } from '../../../mock/patient.api.mock'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { type MedicalFilesWidgetParams } from '../../../assert/medical-widget.assert'
 import { mockMedicalFilesAPI, mockMedicalFilesApiEmptyResult } from '../../../mock/medical-files.api.mock'
@@ -47,7 +46,7 @@ import {
   mySecondTeamId,
   mySecondTeamName
 } from '../../../mock/team.api.mock'
-import { patient1AsTeamMember, patient1Id, patient1Info } from '../../../data/patient.api.data'
+import { patient1Id, patient1Info } from '../../../data/patient.api.data'
 import { mockChatAPI } from '../../../mock/chat.api.mock'
 import { type AppMainLayoutParams, testAppMainLayoutForPatient } from '../../../use-cases/app-main-layout-visualisation'
 import { type PatientDashboardLayoutParams } from '../../../assert/layout.assert'
@@ -57,7 +56,7 @@ import {
   testDashboardDataVisualisationSixteenDaysOldData,
   testDashboardDataVisualisationTwoWeeksOldData,
   testEmptyMedicalFilesWidgetForPatient,
-  testPatientNavBarForPatientAndCaregiver
+  testPatientNavBarForPatient
 } from '../../../use-cases/patient-data-visualisation'
 import { testMedicalWidgetForPatient } from '../../../use-cases/medical-reports-management'
 import { testChatWidgetForPatient } from '../../../use-cases/communication-system'
@@ -71,8 +70,7 @@ describe('Dashboard view for patient', () => {
   const lastName = patient1Info.profile.lastName
 
   beforeEach(() => {
-    mockPatientLogin(patient1AsTeamMember)
-    mockPatientApiForPatients()
+    mockPatientLogin(patient1Info)
     mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
     mockChatAPI()
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
@@ -101,7 +99,7 @@ describe('Dashboard view for patient', () => {
 
     await testAppMainLayoutForPatient(appMainLayoutParams)
     await testDashboardDataVisualisationForPatientOrPrivateTeam(patientDashboardLayoutParams)
-    await testPatientNavBarForPatientAndCaregiver()
+    await testPatientNavBarForPatient()
   })
 
   it('should display medical reports', async () => {

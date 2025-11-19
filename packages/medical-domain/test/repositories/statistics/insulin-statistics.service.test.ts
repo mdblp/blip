@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,6 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BasalBolusStatisticsService, HoursRange } from '../../../src'
 import {
   basalsData,
@@ -37,7 +37,8 @@ import {
   dateFilterTwoDays,
   MS_IN_HOUR,
   manualBolusData,
-  buildSingleWizardData
+  buildSingleWizardData,
+  buildSingleEatingShortlyBolusData
 } from '../../mock/data.statistics.mock'
 import { ManualBolusAverageStatistics } from '../../../src/domains/models/statistics/basal-bolus-statistics.model'
 
@@ -69,18 +70,19 @@ describe('getBasalBolusData', () => {
   it('should return the total basal and bolus insulin delivery when viewing 1 day', () => {
     const basals = buildBasalsData(basalsData)
     const bolus = buildBolusData(bolusData)
+    const eatingShortlyBolus = buildSingleEatingShortlyBolusData()
     const wizard = buildSingleWizardData(bolus[0].id)
     const biphasicWizard = buildSingleWizardData(bolus[1].id)
 
-    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, bolus, [wizard, biphasicWizard], 1, dateFilterOneDay, 0)
+    const basalBolusData = BasalBolusStatisticsService.getBasalBolusData(basals, [...bolus, eatingShortlyBolus], [wizard, biphasicWizard], 1, dateFilterOneDay, 0)
     const expectBasalBolusData = {
       totalCorrectiveBolusesAndBasals: 16.5,
       totalManualBoluses: 0,
-      totalMealBoluses: 2,
+      totalMealBoluses: 2.5,
       totalPenBoluses: 4,
-      total: 22.5,
+      total: 23,
       basal: 1.5,
-      bolus: 21,
+      bolus: 21.5,
       estimatedTotalInsulin: 0
     }
     expect(basalBolusData).toEqual(expectBasalBolusData)

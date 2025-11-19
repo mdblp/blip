@@ -68,6 +68,7 @@ const alias = {
   'cartridge-vicentra.png': path.resolve(__dirname, '../../branding/sitechange/cartridge-vicentra.png'),
   'warmup-dexcom.svg': path.resolve(__dirname, '../../branding/warmup/warmup-dexcom.svg'),
   'device-event.svg': path.resolve(__dirname, '../../branding/alarm-event/device-event.svg'),
+  'eating-shortly.svg': path.resolve(__dirname, '../../branding/eating-shortly/eating-shortly.svg'),
   'hyperglycemia-event.svg': path.resolve(__dirname, '../../branding/alarm-event/hyperglycemia-event.svg'),
   'hypoglycemia-event.svg': path.resolve(__dirname, '../../branding/alarm-event/hypoglycemia-event.svg'),
   'night-mode.svg': path.resolve(__dirname, '../../branding/night-mode/night-mode.svg'),

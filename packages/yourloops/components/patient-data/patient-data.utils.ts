@@ -41,6 +41,7 @@ import { PatientView } from '../../enum/patient-view.enum'
 import { type GetPatientDataOptions } from '../../lib/data/models/get-patient-data-options.model'
 import i18next from 'i18next'
 import { BgPrefs, formatBgValue } from 'dumb'
+import { ConfigService } from '../../lib/config/config.service'
 
 interface GetDatetimeBoundsArgs {
   currentPatientView: PatientView
@@ -131,7 +132,8 @@ export class PatientDataUtils {
         end: this.partialDataLoad.range.end.valueOf()
       },
       bgUnits: this.bgUnits,
-      defaultPumpManufacturer: 'default'
+      defaultPumpManufacturer: 'default',
+      isEatingShortlyEnabled: ConfigService.getIsEatingShortlyEnabled()
     }
     medicalData.add(data)
     return medicalData
@@ -230,6 +232,7 @@ export class PatientDataUtils {
       cbg: [],
       confidentialModes: [],
       deviceParametersChanges: [],
+      eatingShortlyEvents: [],
       iob: [],
       messages: [],
       meals: [],

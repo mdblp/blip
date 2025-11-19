@@ -28,7 +28,7 @@
 import { waitFor } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
-import { patient1AsTeamMember } from '../../data/patient.api.data'
+import { patient1Info } from '../../data/patient.api.data'
 import NotificationApi from '../../../../lib/notifications/notification.api'
 import { buildTeamOne, buildTeamTwo, iTeamOne } from '../../mock/team.api.mock'
 import TeamAPI from '../../../../lib/team/team.api'
@@ -37,7 +37,7 @@ import { checkAcceptTeamInvite, checkPatientAcceptTeamInvite } from '../../asser
 
 describe('Notification page for patient', () => {
   beforeAll(() => {
-    mockPatientLogin(patient1AsTeamMember)
+    mockPatientLogin(patient1Info)
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
     jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValue([invitationTeam])
     jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(iTeamOne)

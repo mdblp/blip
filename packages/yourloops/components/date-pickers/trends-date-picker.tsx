@@ -27,14 +27,13 @@
 
 import React, { type FunctionComponent, type MouseEventHandler } from 'react'
 
-import DateRangeIcon from '@mui/icons-material/DateRange'
-import InputAdornment from '@mui/material/InputAdornment'
-import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import SkipNextIcon from '@mui/icons-material/SkipNext'
 import DialogRangeDatePicker from './dialog-range-date-picker'
+import Button from '@mui/material/Button'
+import classes from './date-picker.css'
 
 interface TrendsDatePickerProps {
   atMostRecent: boolean
@@ -83,25 +82,18 @@ export const TrendsDatePicker: FunctionComponent<TrendsDatePickerProps> = (props
         data-testid="button-nav-back"
         onClick={onBackButtonClick}
         disabled={backButtonDisabled}
-        size="large"
+        className={classes.calendarButton}
       >
         <NavigateBeforeIcon />
       </IconButton>
-      <TextField
+      <Button
         id="trends-chart-title-dates"
         onClick={() => { setIsOpen(true) }}
-        variant="standard"
-        value={displayedDate}
         disabled={disabled || isOpen}
-        InputProps={disabled ? undefined : {
-          readOnly: true,
-          startAdornment: (
-            <InputAdornment position="start">
-              <DateRangeIcon className="calendar-nav-icon" />
-            </InputAdornment>
-          )
-        }}
-      />
+        className={classes.calendarButton}
+      >
+        {displayedDate}
+      </Button>
       {isOpen &&
         <DialogRangeDatePicker
           start={start}
@@ -117,14 +109,16 @@ export const TrendsDatePicker: FunctionComponent<TrendsDatePickerProps> = (props
         data-testid="button-nav-next"
         onClick={onNextButtonClick}
         disabled={nextButtonDisabled}
-        size="large">
+        className={classes.calendarButton}
+      >
         <NavigateNextIcon />
       </IconButton>
       <IconButton
         data-testid="button-nav-mostrecent"
         onClick={onMostRecentButtonClick}
         disabled={nextButtonDisabled}
-        size="large">
+        className={classes.calendarButton}
+      >
         <SkipNextIcon />
       </IconButton>
     </React.Fragment>

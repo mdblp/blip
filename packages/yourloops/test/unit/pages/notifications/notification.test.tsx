@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,7 +33,7 @@ import { Notification } from '../../../../pages/notifications/notification'
 import { type Notification as NotificationModel } from '../../../../lib/notifications/models/notification.model'
 import * as notificationHookMock from '../../../../lib/notifications/notification.hook'
 import { NotificationType } from '../../../../lib/notifications/models/enums/notification-type.enum'
-import { type Profile } from '../../../../lib/auth/models/profile.model'
+import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 
 jest.mock('../../../../lib/notifications/notification.hook')
@@ -47,7 +47,7 @@ describe('Notification', () => {
       profile: {
         email: 'jeanne.dubois@email.com',
         fullName: 'Jeanne Dubois'
-      } as Profile
+      } as UserAccount
     },
     creatorId: 'a',
     email: 'a@example.com',
@@ -63,7 +63,7 @@ describe('Notification', () => {
       profile: {
         email: 'jeanne.dubois@email.com',
         fullName: 'Jeanne Dubois'
-      } as Profile
+      } as UserAccount
     },
     creatorId: 'a',
     email: 'a@example.com',
@@ -84,6 +84,7 @@ describe('Notification', () => {
       notification={notification}
       userRole={role}
       onHelp={onHelp}
+      refreshReceivedInvitations={_.noop}
     />
   )
 
@@ -195,6 +196,7 @@ describe('Notification', () => {
           notification={props.notif}
           userRole={UserRole.Hcp}
           onHelp={_.noop}
+          refreshReceivedInvitations={_.noop}
         />
       )
     }

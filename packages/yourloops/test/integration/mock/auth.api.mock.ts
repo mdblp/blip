@@ -28,5 +28,7 @@
 import { AuthApi } from '../../../lib/auth/auth.api'
 
 export const mockAuthApi = () => {
-  jest.spyOn(AuthApi, 'sendResetPasswordEmail').mockResolvedValue()
+  jest.spyOn(AuthApi, 'sendResetPasswordEmail').mockResolvedValue(undefined)
+  jest.spyOn(AuthApi, 'sendChangeEmailRequest').mockResolvedValue(undefined)
+  jest.spyOn(AuthApi, 'validateChangeEmailRequest').mockResolvedValue(undefined)
 }

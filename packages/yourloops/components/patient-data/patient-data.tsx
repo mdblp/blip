@@ -55,6 +55,7 @@ import { getPageTitleByPatientView } from './patient-data.utils'
 import { DevicesView } from '../../pages/patient-view/devices/devices-view'
 import { logError } from '../../utils/error.util'
 import { PatientProfileView } from '../../pages/patient-view/patient-profile/patient-profile-view'
+import { ConfigService } from '../../lib/config/config.service'
 
 interface PatientDataProps {
   patient: Patient
@@ -71,7 +72,6 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     bgPrefs,
     chartPrefs,
     changePatientView,
-    changePatient,
     currentPatientView,
     dailyDate,
     dailyChartRef,
@@ -108,7 +108,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   setPageTitle(pageTitle)
 
   useEffect(() => {
-    if (patient.userid !== patientIdForWhichDataHasBeenFetched.current) {
+    if (patient?.userid && patient.userid !== patientIdForWhichDataHasBeenFetched.current) {
       patientIdForWhichDataHasBeenFetched.current = patient.userid
       fetchPatientData()
         .catch((err) => {
@@ -121,6 +121,8 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patient])
 
+  const isEatingShortlyEnabled = ConfigService.getIsEatingShortlyEnabled()
+
   return (
     <>
       <PatientNavBar
@@ -130,7 +132,6 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
         onClickPrint={() => {
           setShowPdfDialog(true)
         }}
-        onSwitchPatient={changePatient}
       />
       <>
         {loadingData
@@ -188,6 +189,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                           onCreateMessage={showMessageCreation}
                           onShowMessageThread={showMessageThread}
                           onDatetimeLocationChange={handleDatetimeLocationChange}
+                          isEatingShortlyEnabled={isEatingShortlyEnabled}
                           ref={dailyChartRef}
                         />
                         <>
@@ -237,7 +239,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                     }
                   />
                   {
-                    user.isUserHcp() && !TeamUtils.isPrivate(teamId) &&
+                    user.isUserHcpOrPatient() && !TeamUtils.isPrivate(teamId) &&
                     <Route
                       path={AppUserRoute.PatientProfile}
                       element={

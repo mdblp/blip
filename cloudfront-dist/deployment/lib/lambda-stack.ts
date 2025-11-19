@@ -15,7 +15,7 @@ export class LambdaStack extends core.Stack {
 
     const override = new lambda.Function(this, this.functionName, {
       functionName: this.functionName,
-      runtime: lambda.Runtime.NODEJS_22_X,    // execution environment
+      runtime: lambda.Runtime.NODEJS_24_X,    // execution environment
       code: lambda.Code.fromAsset(`${distDir}/lambda`),  // code loaded from "lambda" directory
       handler: `cloudfront-${prefix}-blip-request-viewer.handler`,                // file is "hello", function is "handler"
       role: new iam.Role(this, 'AllowLambdaServiceToAssumeRole', {

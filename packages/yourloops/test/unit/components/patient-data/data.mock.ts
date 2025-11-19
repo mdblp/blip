@@ -25,7 +25,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import WeekDays from 'medical-domain/dist/src/domains/models/time/enum/weekdays.enum'
+import { DatumType, Source } from 'medical-domain'
+
 export const mockdataFromApi = {
+  alarmEvents: [],
   basal: [],
   bolus: [],
   cbg: [
@@ -36,12 +40,12 @@ export const mockdataFromApi = {
       timezone: 'Europe/Paris',
       guessedTimezone: false,
       id: '2020-01-20_0',
-      type: 'cbg',
-      source: 'Diabeloop',
+      type: DatumType.Cbg,
+      source: Source.Diabeloop,
       units: 'mg/dL',
       value: 182,
       localDate: '2020-01-20',
-      isoWeekday: 'monday',
+      isoWeekday: WeekDays.Monday,
       msPer24: 39600000,
       deviceName: 'Unknown'
     },
@@ -52,12 +56,12 @@ export const mockdataFromApi = {
       timezone: 'Europe/Paris',
       guessedTimezone: false,
       id: '2020-01-19_0',
-      type: 'cbg',
-      source: 'Diabeloop',
+      type: DatumType.Cbg,
+      source: Source.Diabeloop,
       units: 'mg/dL',
       value: 164,
       localDate: '2020-01-19',
-      isoWeekday: 'sunday',
+      isoWeekday: WeekDays.Sunday,
       msPer24: 39600000,
       deviceName: 'Unknown'
     },
@@ -68,12 +72,12 @@ export const mockdataFromApi = {
       timezone: 'Europe/Paris',
       guessedTimezone: false,
       id: '2020-01-19_1',
-      type: 'cbg',
-      source: 'Diabeloop',
+      type: DatumType.Cbg,
+      source: Source.Diabeloop,
       units: 'mg/dL',
       value: 196,
       localDate: '2020-01-19',
-      isoWeekday: 'sunday',
+      isoWeekday: WeekDays.Sunday,
       msPer24: 39600000,
       deviceName: 'Unknown'
     },
@@ -84,12 +88,12 @@ export const mockdataFromApi = {
       timezone: 'Europe/Paris',
       guessedTimezone: false,
       id: '2020-01-19_2',
-      type: 'cbg',
-      source: 'Diabeloop',
+      type: DatumType.Cbg,
+      source: Source.Diabeloop,
       units: 'mg/dL',
       value: 196,
       localDate: '2020-01-19',
-      isoWeekday: 'sunday',
+      isoWeekday: WeekDays.Sunday,
       msPer24: 39600000,
       deviceName: 'Unknown'
     },
@@ -100,18 +104,20 @@ export const mockdataFromApi = {
       timezone: 'Europe/Paris',
       guessedTimezone: false,
       id: '2020-01-18_0',
-      type: 'cbg',
-      source: 'Diabeloop',
+      type: DatumType.Cbg,
+      source: Source.Diabeloop,
       units: 'mg/dL',
       value: 177,
       localDate: '2020-01-18',
-      isoWeekday: 'saturday',
+      isoWeekday: WeekDays.Saturday,
       msPer24: 39600000,
       deviceName: 'Unknown'
     }
   ],
   confidentialModes: [],
   deviceParametersChanges: [],
+  eatingShortlyEvents: [],
+  iob: [],
   messages: [],
   meals: [
     {
@@ -121,8 +127,8 @@ export const mockdataFromApi = {
       timezone: 'Europe/Paris',
       guessedTimezone: false,
       id: 'food_19-35-00',
-      type: 'food',
-      source: 'Diabeloop',
+      type: DatumType.Food,
+      source: Source.Diabeloop,
       meal: 'rescuecarbs',
       uploadId: 'osef',
       nutrition: [],
@@ -130,16 +136,18 @@ export const mockdataFromApi = {
       prescriptor: ''
     }
   ],
+  nightModes: [],
   physicalActivities: [],
   pumpSettings: [],
   reservoirChanges: [],
   smbg: [],
+  timezoneChanges: [],
   warmUps: [],
   wizards: [
     {
       id: "1ad669607b31b2d87d92cdfda35845f8",
-      type: "wizard",
-      source: "Diabeloop",
+      type: DatumType.Wizard,
+      source: Source.Diabeloop,
       timezone: "Europe/Paris",
       normalTime: "2023-10-30T20:35:00.000Z",
       epoch: 1698698100000,
@@ -245,6 +253,7 @@ export const medicalServiceResult = {
   ],
   confidentialModes: [],
   deviceParametersChanges: [],
+  eatingShortlyEvents: [],
   iob: [],
   messages: [],
   meals: [

@@ -66,6 +66,7 @@ export { ConfidentialTooltip } from './components/tooltips/confidential-tooltip/
 export {
   EventSuperpositionPopoverMemoized as EventsSuperpositionPopover
 } from './components/tooltips/events-superposition-popover/events-superposition-popover'
+export { EatingShortlyTooltip } from './components/tooltips/eating-shortly-tooltip/eating-shortly-tooltip'
 export { IobTooltip } from './components/tooltips/iob-tooltip/iob-tooltip'
 export { NightModeTooltip } from './components/tooltips/night-mode-tooltip/night-mode-tooltip'
 export { ParameterTooltip } from './components/tooltips/parameter-tooltip/parameter-tooltip'

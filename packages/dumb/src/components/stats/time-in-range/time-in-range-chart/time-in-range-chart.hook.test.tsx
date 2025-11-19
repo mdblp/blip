@@ -151,7 +151,7 @@ describe('CBGPercentageBarChart hook', () => {
 
   it('should compute the right annotations', () => {
     const { result: firstHook } = renderHook(() => useTimeInRangeChartHook({ ...defaultProps }))
-    expect(firstHook.current.annotations).toEqual(['**Time In Range:** Daily average of the time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is number of readings in range multiplied by the CGM sample frequency.'])
+    expect(firstHook.current.annotations).toEqual(['**Time In Range:** Time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is 24 hours multiplied by % in range.'])
 
     const { result: secondHook } = renderHook(() => useTimeInRangeChartHook({ ...defaultProps, days: 0 }))
     expect(secondHook.current.annotations).toEqual(['**Time In Range:** Time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is 24 hours multiplied by % in range.'])
@@ -167,7 +167,7 @@ describe('CBGPercentageBarChart hook', () => {
       ...defaultProps,
       bgType: DatumType.Smbg
     }))
-    expect(fourthHook.current.annotations).toEqual(['**Time In Range:** Daily average of the time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is number of readings in range multiplied by the CGM sample frequency.', 'Derived from _**1000**_ BGM readings.'])
+    expect(fourthHook.current.annotations).toEqual(['**Time In Range:** Time spent in range, based on CGM readings.', '**How we calculate this:**\n\n**(%)** is the number of readings in range divided by all readings for this time period.\n\n**(time)** is 24 hours multiplied by % in range.', 'Derived from _**1000**_ BGM readings.'])
   })
 
   it('onMouseOver and OnMouseLeave should return correct values', async () => {

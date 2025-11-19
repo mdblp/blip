@@ -42,8 +42,9 @@ import type BasicData from '../../../src/domains/repositories/medical/basics-dat
 import * as BasiscsDataService from '../../../src/domains/repositories/medical/basics-data.service'
 import * as TimeService from '../../../src/domains/repositories/time/time.service'
 import * as crypto from "crypto"
-import { DatumType } from '../../../src'
+import { DatumType, Source } from '../../../src'
 import { DeviceEventSubtype } from '../../../src/domains/models/medical/datum/enums/device-event-subtype.enum'
+import WeekDays from '../../../src/domains/models/time/enum/weekdays.enum'
 
 // window.crypto is not defined in jest...
 Object.defineProperty(global, 'crypto', {
@@ -412,6 +413,20 @@ const testData = {
           "previousValue": ""
         }
       ]
+    }
+  ],
+  eatingShortlyEvents: [
+    {
+      id: 'eating_shortly_event_id',
+      guid: 'eating_shortly_event_id',
+      type: DatumType.EatingShortlyEvent,
+      epoch: 1659945600000,
+      normalTime: '2022-08-08T15:30:00.000Z',
+      timezone: 'Europe/Paris',
+      guessedTimezone: false,
+      displayOffset: -120,
+      isoWeekday: WeekDays.Friday,
+      source: Source.Diabeloop,
     }
   ],
   iob: [
@@ -1468,6 +1483,7 @@ describe('MedicalDataService', () => {
       start: new Date().valueOf(),
       end: new Date().valueOf()
     }
+    medicalData.opts.isEatingShortlyEnabled = true
 
     beforeAll(() => {
       DatumService.normalize = datumNormalizeMock
@@ -1495,7 +1511,7 @@ describe('MedicalDataService', () => {
       Object.keys(medicalData.medicalData).forEach(
         (type) => {
           if (type === 'timezoneChanges') {
-            expectedCount.timezoneChanges = 2
+            expectedCount.timezoneChanges = 3
           } else if (type === 'deviceParametersChanges') {
             // Parameters are grouped
             expectedCount.deviceParametersChanges = 1

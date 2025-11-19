@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,6 +41,7 @@ import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../u
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
+import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 
 describe('Trends view for HCP', () => {
   const firstName = 'HCP firstName'
@@ -49,6 +50,7 @@ describe('Trends view for HCP', () => {
   beforeEach(() => {
     mockWindowResizer()
     mockAuth0Hook()
+    mockDblCommunicationApi()
     mockNotificationAPI()
     mockDirectShareApi()
     mockTeamAPI()

@@ -76,7 +76,7 @@ interface ValueErrorPair {
 }
 
 export const DEFAULT_BG_UNIT = Unit.MilligramPerDeciliter
-const DEFAULT_REPORTING_PERIOD = 55
+const DEFAULT_REPORTING_PERIOD = 168
 
 export const useMonitoringAlertsContentConfiguration = (
   {

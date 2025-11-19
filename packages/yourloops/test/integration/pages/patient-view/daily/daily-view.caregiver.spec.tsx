@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,6 +40,7 @@ import { mockPatientApiForCaregivers } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
+import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 
 describe('Daily view for caregiver', () => {
   const firstName = 'Caregiver firstName'
@@ -52,6 +53,7 @@ describe('Daily view for caregiver', () => {
     mockDirectShareApi()
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForCaregivers()
+    mockDblCommunicationApi()
   })
 
   afterEach(() => {

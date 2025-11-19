@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,6 +34,7 @@ import { buildAvailableTeams, mockTeamAPI, myThirdTeamName } from '../../mock/te
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
+import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 
 describe('Invalid Route', () => {
   const firstName = 'firstName'
@@ -46,6 +47,7 @@ describe('Invalid Route', () => {
     mockTeamAPI()
     mockPatientApiForHcp()
     mockDirectShareApi()
+    mockDblCommunicationApi()
   })
 
   it('should render correct components when navigating to an unknown route and redirect to \'/\' when clicking on home link', async () => {

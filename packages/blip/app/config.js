@@ -19,13 +19,6 @@ const DUMMY_DOMAIN = 'example.com'
 const DUMMY_URL = `https://${DUMMY_DOMAIN}/`
 
 const defaultConfig = {
-  BANNER_ENABLED: false,
-  BANNER_LABEL_EN: '',
-  BANNER_LABEL_ES: '',
-  BANNER_LABEL_DE: '',
-  BANNER_LABEL_FR: '',
-  BANNER_LABEL_IT: '',
-  BANNER_LABEL_NL: '',
   VERSION: '0.0.0',
   UPLOAD_API: 'https://tidepool.org/uploader',
   API_HOST: `${window.location.protocol}//${window.location.host}`,
@@ -50,7 +43,8 @@ const defaultConfig = {
   YLPZ_RA_LAD_IT: 'YLPZ-RA-LAD-001-it-Rev6',
   YLPZ_RA_LAD_ES: 'YLPZ-RA-LAD-001-es-Rev6',
   YLPZ_RA_LAD_DE: 'YLPZ-RA-LAD-001-de-Rev6',
-  IDLE_TIMEOUT_MS: 1800000
+  IDLE_TIMEOUT_MS: 1800000,
+  EATING_SHORTLY_ENABLED: false
 }
 
 /** @typedef {typeof defaultConfig} AppConfig */

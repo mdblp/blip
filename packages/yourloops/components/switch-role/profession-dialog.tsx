@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -66,7 +66,7 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
         <strong>{t('profession-dialog-title')}</strong>
       </DialogTitle>
       <DialogContent id="switch-role-consequences-dialog-content">
-        <Box>
+        <Box marginTop={2}>
           <BasicDropdownWithValidation
             onSelect={setHcpProfession}
             defaultValue={HcpProfession.empty}

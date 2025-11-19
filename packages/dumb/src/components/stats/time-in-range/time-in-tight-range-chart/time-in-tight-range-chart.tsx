@@ -37,19 +37,15 @@ import { TIGHT_RANGE_BOUNDS } from 'medical-domain'
 
 interface TimeInTightRangeChartProps {
   data: { value: number, total: number }
-  days: number,
   bgPrefs: BgPrefs
 }
 
 export const TimeInTightRangeChart: FC<TimeInTightRangeChartProps> = (props) => {
-  const { days, data, bgPrefs } = props
+  const { data, bgPrefs } = props
   const { t } = useTranslation('main')
 
-  const isDailyView = days <= 1
   const title = t('time-in-tight-range')
-  const annotations = isDailyView ?
-    [t('time-in-tight-range-cgm-one-day'), t('compute-oneday-time-in-tight-range')] :
-    [t('time-in-tight-range-cgm-daily-average'), t('compute-ndays-time-in-tight-range', { cbgLabel: t('CGM') })]
+  const annotations = [t('time-in-tight-range-cgm-one-day'), t('compute-oneday-time-in-tight-range')]
 
   const bounds = TIGHT_RANGE_BOUNDS[bgPrefs.bgUnits]
   const legendValues = [

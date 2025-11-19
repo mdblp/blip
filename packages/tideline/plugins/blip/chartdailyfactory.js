@@ -47,6 +47,7 @@ import plotNightMode from '../../js/plot/nightModeEvent'
 import plotEventSuperposition from '../../js/plot/eventSuperposition'
 import { getDataWithoutSuperpositionEvents, getSuperpositionEvents, isDBLG2 } from 'dumb'
 import plotIob from '../../js/plot/iob'
+import plotEatingShortlyEvent from '../../js/plot/eatingShortlyEvent'
 
 /**
  * @typedef {import('../../js/tidelinedata').default } MedicalDataService
@@ -162,8 +163,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     .gutterWeight(1.0)
 
   // carbs and boluses data pool
+  const shouldDisplayEatingShortlyLegend = isDblg2User && options.isEatingShortlyEnabled
+
   /** @type {Pool} */
-  const poolBolus = new Pool(chart)
+  const poolBolus = new Pool(chart, shouldDisplayEatingShortlyLegend)
   chart.addPool(poolBolus)
   const poolBolusId = 'poolBolus'
   poolBolus
@@ -406,6 +409,13 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     timezoneAware: chart.options.timePrefs.timezoneAware,
     onCarbHover: options.onCarbHover,
     onCarbOut: options.onTooltipOut
+  }))
+
+  poolBolus.addPlotType({ type: 'eatingShortly' }, plotEatingShortlyEvent(poolBolus, {
+    tidelineData,
+    timezoneAware: chart.options.timePrefs.timezoneAware,
+    onEatingShortlyHover: options.onEatingShortlyHover,
+    onEatingShortlyOut: options.onTooltipOut
   }))
 
   // Add confidential mode to Bolus pool: Must be the last in the pool to mask stuff below

@@ -37,17 +37,13 @@ import { GlobalStyles } from 'tss-react'
 import Link from '@mui/material/Link'
 import { useAuth } from '../../lib/auth'
 import { useAlert } from '../../components/utils/snackbar'
-import AppBar from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
-import Avatar from '@mui/material/Avatar'
 import { useNavigate } from 'react-router-dom'
 import { setPageTitle } from '../../lib/utils'
-import { useVerifyEmailStyles } from './verify-email.styles'
 import { useTheme } from '@mui/material/styles'
 import { Auth0Error } from '../../lib/auth/models/enums/auth0-error.enum'
+import { BasicHeader } from '../../components/header-bars/basic-header'
 
 export const VerifyEmailPage: FunctionComponent = () => {
-  const { classes: { appBar, desktopLogo } } = useVerifyEmailStyles()
   const { loginWithRedirect, getAccessTokenSilently } = useAuth0()
   const { t } = useTranslation()
   const { logout } = useAuth()
@@ -98,32 +94,7 @@ export const VerifyEmailPage: FunctionComponent = () => {
 
   return (
     <>
-      <AppBar
-        elevation={0}
-        className={appBar}
-        position="fixed"
-        data-testid="verify-email-header"
-      >
-        <Toolbar>
-          <Avatar
-            id="header-main-logo"
-            aria-label={t('alt-img-logo')}
-            variant="square"
-            src={`/branding_${config.BRANDING}_logo.svg`}
-            alt={t('alt-img-logo')}
-            className={desktopLogo}
-          />
-          <Box sx={{ flexGrow: 1 }} />
-          <Button
-            variant="outlined"
-            color="info"
-            onClick={logoutUser}
-          >
-            {t('button-logout')}
-          </Button>
-        </Toolbar>
-      </AppBar>
-
+      <BasicHeader testId="verify-email-header"/>
       <Box
         display="flex"
         justifyContent="center"

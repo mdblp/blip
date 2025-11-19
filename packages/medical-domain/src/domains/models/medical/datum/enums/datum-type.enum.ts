@@ -30,6 +30,7 @@ export enum DatumType {
   Bolus = 'bolus',
   Cbg = 'cbg',
   DeviceEvent = 'deviceEvent',
+  EatingShortlyEvent = 'EatingShortlyEvent',
   Fill = 'fill',
   Food = 'food',
   Iob = 'iob',

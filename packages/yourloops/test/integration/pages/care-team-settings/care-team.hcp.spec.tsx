@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -59,6 +59,7 @@ import {
 } from '../../use-cases/monitoring-alerts-parameters-management'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
+import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 
 describe('HCP care team settings page', () => {
   const firstName = 'Jacques'
@@ -77,6 +78,7 @@ describe('HCP care team settings page', () => {
     mockPatientApiForHcp()
     mockDirectShareApi()
     mockDataAPI()
+    mockDblCommunicationApi()
   })
 
   const renderCareTeamSettingsPage = async (route: string) => {

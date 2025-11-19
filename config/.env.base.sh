@@ -16,13 +16,7 @@ export YLPZ_RA_LAD_IT='intended-use.it'
 export YLPZ_RA_LAD_ES='intended-use.es'
 export YLPZ_RA_LAD_DE='intended-use.de'
 export IDLE_TIMEOUT_MS=1800000
-export BANNER_ENABLED=false
-export BANNER_LABEL_EN=""
-export BANNER_LABEL_ES=""
-export BANNER_LABEL_DE=""
-export BANNER_LABEL_FR=""
-export BANNER_LABEL_IT=""
-export BANNER_LABEL_NL=""
+export EATING_SHORTLY_ENABLED=true
 
 # External services:
 # URL to HELP system
