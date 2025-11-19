@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,6 +27,7 @@
 
 enum Prescriptor {
   Auto = 'auto',
+  EatingShortlyManagement = 'auto-esm',
   Hybrid = 'hybrid',
   Manual = 'manual'
 }

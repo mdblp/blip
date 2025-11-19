@@ -304,7 +304,17 @@ const ignoredTransKeyForYourLoops = [
   'signup-information-message-2',
   'device',
   'safety-basal-profile-values-not-available',
-  'data-period-text-trends'
+  'data-period-text-trends',
+  'no-specific-diet',
+  'vegetarian',
+  'gluten-free',
+  'low-carbohydrates-diet',
+  'vegan',
+  'ketogenic-diet',
+  'caloric-restriction',
+  'intermittent-fasting',
+  'paleolithic-diet',
+  'other'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   // Documentation!

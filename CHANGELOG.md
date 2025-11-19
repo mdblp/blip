@@ -3,6 +3,9 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.8.0-beta - 2025-07-11
+### Fixed
+- YLP-3545 Sorting by last data update on Patients list does not work for languages other than English
+
 ### Added
 - YLP-2135 As A HCP user, I can attribute to a diabetic profile to patient
 - YLP-2344 Patient profile information page for HCPs only
@@ -13,6 +16,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-3612 Make events superposition popover draggable
 - YLP-3616 Time In Tight Range (TITR) statistic
 - YLP-3654 As Hcp, i can see the patient profile value in Yourloops
+- YLP-3688 display additional patient profile information
+- YLP-3701 Eating shortly management (event, bolus and legend)
 - YLP-3708 Add a new page to display a diabeloop communication just after the login (displayed on demand, when necessary)
 - YLP-3709 Rework the banner to display live content (updated by Diabeloop team)
 - YLP-3711 As an HCP and a caregiver, I can see and change my email address from the section "USER account"
@@ -39,6 +44,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-3742 Update glycemia chart legend to display tight range color
 - YLP-3743 Delete "Est. insulin requirements" in the daily view
 - YLP-3750 Replace how to calculate of TIR and TITR for views with several days by correct ones
+- YLP-3754 Chip colors for profiles
+- YLP-3756 Filter available profiles by patient gender
 
 ### Engineering
 - YLP-3672 D3 version update

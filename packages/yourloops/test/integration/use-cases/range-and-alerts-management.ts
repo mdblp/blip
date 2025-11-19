@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -216,4 +216,10 @@ async function fillRangeForm(severeHyper: number, hyper: number, hypo: number, s
   await userEvent.clear(severeHypoInput)
   await userEvent.type(severeHypoInput, severeHypo.toString())
   expect(severeHypoInput).toHaveValue(severeHypo)
+}
+
+export const testProfilesForMalePatient = () => {
+  expect(screen.getByRole('button', { name: 'Type 1' })).toBeVisible()
+  expect(screen.getByRole('button', { name: 'Custom' })).toBeVisible()
+  expect(screen.queryByRole('button', { name: 'Pregnancy type 1' })).not.toBeInTheDocument()
 }

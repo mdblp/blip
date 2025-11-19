@@ -58,13 +58,6 @@ function stringOption(value, defaultValue) {
 const isDev = (process.env.NODE_ENV === 'development')
 const isTest = (process.env.NODE_ENV === 'test')
 const config = {
-  BANNER_ENABLED: booleanFromText(process.env.BANNER_ENABLED, false),
-  BANNER_LABEL_EN: stringOption(process.env.BANNER_LABEL_EN, ''),
-  BANNER_LABEL_ES: stringOption(process.env.BANNER_LABEL_ES, ''),
-  BANNER_LABEL_DE: stringOption(process.env.BANNER_LABEL_DE, ''),
-  BANNER_LABEL_FR: stringOption(process.env.BANNER_LABEL_FR, ''),
-  BANNER_LABEL_IT: stringOption(process.env.BANNER_LABEL_IT, ''),
-  BANNER_LABEL_NL: stringOption(process.env.BANNER_LABEL_NL, ''),
   TARGET_ENVIRONMENT: stringOption(process.env.TARGET_ENVIRONMENT, 'dev'),
   DOMAIN_NAME: stringOption(process.env.DOMAIN_NAME, 'www.preview.your-loops.dev'),
   ALLOW_SEARCH_ENGINE_ROBOTS: booleanFromText(process.env.ALLOW_SEARCH_ENGINE_ROBOTS, false),
@@ -97,7 +90,8 @@ const config = {
   YLPZ_RA_LAD_IT: process.env.YLPZ_RA_LAD_IT,
   YLPZ_RA_LAD_ES: process.env.YLPZ_RA_LAD_ES,
   YLPZ_RA_LAD_DE: process.env.YLPZ_RA_LAD_DE,
-  IDLE_TIMEOUT_MS: process.env.IDLE_TIMEOUT_MS || 1800000
+  IDLE_TIMEOUT_MS: process.env.IDLE_TIMEOUT_MS || 1800000,
+  EATING_SHORTLY_ENABLED: booleanFromText(process.env.EATING_SHORTLY_ENABLED, false)
 }
 
 module.exports = config

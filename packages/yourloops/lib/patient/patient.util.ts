@@ -82,23 +82,6 @@ export default class PatientUtils {
     })
   }
 
-  static mapUserToPatient(user: User): Patient {
-    const userAccount = user.account
-    return {
-      userid: user.id,
-      profile: {
-        firstName: userAccount.firstName,
-        fullName: userAccount.fullName,
-        lastName: userAccount.lastName,
-        email: userAccount.email,
-        sex: userAccount?.patient?.sex ?? Gender.NotDefined,
-        birthdate: userAccount?.patient?.birthday
-      },
-      settings: user.settings,
-      hasSentUnreadMessages: false
-    }
-  }
-
   static computeFlaggedPatients = (patients: Patient[], flaggedPatients: string[]): Patient[] => {
     return patients.map((patient: Patient) => {
       patient.flagged = flaggedPatients.includes(patient.userid)
@@ -188,22 +171,17 @@ export default class PatientUtils {
     return value || value === 0 ? `${Math.round(value * 10) / 10}%` : t('N/A')
   }
 
-  static getLastUploadDate(medicalData: MedicalData, noDataLabel: string): string {
+  static getLastUploadDate(medicalData: MedicalData): moment.Moment | null {
     if (!medicalData) {
       return null
     }
 
     const dataEndDate = medicalData.range?.endDate
     if (!dataEndDate) {
-      return noDataLabel
+      return null
     }
 
     const browserTimezone = new Intl.DateTimeFormat().resolvedOptions().timeZone
-    const mLastUpload = moment.tz(dataEndDate, browserTimezone)
-    if (!mLastUpload.isValid()) {
-      return noDataLabel
-    }
-
-    return mLastUpload.format('lll')
+    return moment.tz(dataEndDate, browserTimezone)
   }
 }

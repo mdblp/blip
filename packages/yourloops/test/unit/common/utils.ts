@@ -27,7 +27,7 @@
 
 import { type MonitoringAlerts } from '../../../lib/patient/models/monitoring-alerts.model'
 import { type Team, type TeamMember } from '../../../lib/team'
-import { type PatientAccount } from '../../../lib/patient/models/patient-profile.model'
+import { type PatientProfile } from '../../../lib/patient/models/patient-profile.model'
 import { type PatientSettings } from '../../../lib/patient/models/patient-settings.model'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
@@ -49,7 +49,7 @@ export const createPatient = (
   id = 'fakePatientId',
   invitationStatus: UserInviteStatus = UserInviteStatus.Accepted,
   monitoringAlertsParameters: MonitoringAlertsParameters | undefined = undefined,
-  profile: Partial<PatientAccount> = undefined,
+  profile: Partial<PatientProfile> = undefined,
   settings: Partial<PatientSettings> = undefined,
   monitoringAlerts: Partial<MonitoringAlerts> = undefined,
   flagged: boolean = false,
@@ -71,7 +71,14 @@ export const createPatient = (
       fullName: profile?.fullName || 'fakePatientFullName',
       lastName: profile?.lastName || 'fakeLastname',
       email: profile?.email || 'fake@email.com',
-      sex: profile?.sex || Gender.Male
+      sex: profile?.sex || Gender.Male,
+      drugTreatment: "",
+      diet: ['no-specific-diet', 'ewok eater'],
+      profession: "space explorer",
+      hobbies: 'master light saber,fly spaceship',
+      physicalActivities: ['Mixed'],
+      hoursSpentOnPhysicalActivitiesPerWeek: 4,
+      comments: "i am your father"
     },
     diabeticProfile: {
       type: DiabeticType.DT1DT2,
