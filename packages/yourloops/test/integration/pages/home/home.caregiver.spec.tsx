@@ -165,7 +165,7 @@ describe('Caregiver home page', () => {
 
     const patientTableBody = screen.getByTestId('current-patient-list-grid')
     expect(within(patientTableBody).getAllByRole('row')).toHaveLength(5)
-    expect(patientTableBody).toHaveTextContent('PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Jan 1, 1980Flag patient pending-patient@diabeloop.frPatient PendingJan 1, 1980Flag patient patient2@diabeloop.frRouis Patient2Jan 1, 1980Flag patient patient3@diabeloop.frSrairi Patient3Jan 1, 1980')
+    expect(patientTableBody).toHaveTextContent('PatientDate of birthTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Jan 1, 1980N/AFlag patient pending-patient@diabeloop.frPatient PendingJan 1, 1980N/AFlag patient patient2@diabeloop.frRouis Patient2Jan 1, 1980N/AFlag patient patient3@diabeloop.frSrairi Patient3Jan 1, 1980N/A')
     const removePatientButton = screen.getByRole('button', { name: `Remove patient ${patient2Info.profile.email}` })
     expect(removePatientButton).toBeVisible()
 
