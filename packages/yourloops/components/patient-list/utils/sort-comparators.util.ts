@@ -100,18 +100,19 @@ export const sortByMonitoringAlertsCount: PatientSortComparator = (patient1: Pat
 }
 
 export const sortByLastDataUpdate = (date1: moment.Moment | null, date2: moment.Moment | null): number => {
-  if (date1 === null) {
+  if (date2 === null) {
     return 1
   }
-  if (date2 === null) {
+
+  if (date1 === null) {
     return -1
   }
 
   if (date1.isSame(date2, 'm')) {
-    return 1
+    return 0
   } else if (date1.isAfter(date2, 'm')) {
-    return -1
-  } else {
     return 1
+  } else {
+    return -1
   }
 }
