@@ -25,60 +25,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
+import { getTranslation } from '../../utils/i18n'
 
-export const testPatientPersonalInformation = async (): Promise<void> => {
-  // Test birthdate section
-  const cakeIcon = await screen.findByTestId('CakeIcon')
-  expect(cakeIcon).toBeInTheDocument()
-
-  // Test gender section
-  const personIcon = await screen.findByTestId('PersonIcon')
-  expect(personIcon).toBeInTheDocument()
-
-  // Test email section
-  const emailIcon = await screen.findByTestId('EmailIcon')
-  expect(emailIcon).toBeInTheDocument()
-
-  // Test email section
-  const equipmentDate = await screen.findByTestId('PhoneAndroidIcon')
-  expect(equipmentDate).toBeInTheDocument()
-
-  // Test weight section
-  const weightIcon = await screen.findByTestId('MonitorWeightIcon')
-  expect(weightIcon).toBeInTheDocument()
-
-  // Test height section
-  const heightIcon = await screen.findByTestId('HeightIcon')
-  expect(heightIcon).toBeInTheDocument()
-
-  // Test HbA1c section
-  const scienceIcon = await screen.findByTestId('StraightenIcon')
-  expect(scienceIcon).toBeInTheDocument()
-
-  // Test glycemia units section
-  const scaleIcon = await screen.findByTestId('ScaleIcon')
-  expect(scaleIcon).toBeInTheDocument()
-
-  // Test insulin type section
-  const insulinIcon = await screen.findByTestId('basal-icon')
-  expect(insulinIcon).toBeInTheDocument()
-
-  // Verify the information section container
-  const informationSection = screen.getByTestId('information-section')
-  expect(informationSection).toBeInTheDocument()
+async function assertInfoRow(iconDataTestId: string, boxDataTestId:string, expectedTransKeyLabel: string, expectedTextValue: string ) {
+  const icon = await screen.findByTestId(iconDataTestId)
+  expect(icon).toBeVisible()
+  const label = within(screen.getByTestId(boxDataTestId)).getByText(getTranslation(expectedTransKeyLabel))
+  expect(label).toBeVisible()
+  const textValue = within(screen.getByTestId(boxDataTestId)).getByText(expectedTextValue)
+  expect(textValue).toBeVisible()
 }
 
-export const testPatientPersonalInformationWithMedicalData = async (): Promise<void> => {
-  // Test HbA1c value display with percentage
-  const hba1cValue = await screen.findByText(/%/)
-  expect(hba1cValue).toBeInTheDocument()
+export const testPatientPersonalInformation = async (): Promise<void> => {
+  // Verify the information section container
+  const informationSection = screen.getByTestId('information-section')
+  expect(informationSection).toBeVisible()
 
-  // Test units display (mg/dL or mmol/L)
-  const unitsText = await screen.findByText(/mg.*dL|mmol.*L/i)
-  expect(unitsText).toBeInTheDocument()
+  const avatar = screen.getByTestId('patient-avatar')
+  expect(avatar).toBeInTheDocument()
 
-  // Test age calculation display
-  const ageValue = await screen.findByText(/years.old/i)
-  expect(ageValue).toBeInTheDocument()
+  // Test birthdate section
+  await assertInfoRow('date-of-birth-icon', 'date-of-birth-box', 'date-of-birth', 'Jan 1, 1980 (45 years old)')
+
+  // Test gender section
+  await assertInfoRow('gender-icon', 'gender-box', 'gender', 'Male')
+
+  // Test weight section
+  await assertInfoRow('weight-icon', 'weight-box', 'WEIGHT', '70 Kg')
+
+  // Test height section
+  await assertInfoRow('height-icon', 'height-box', 'HEIGHT', '170 cm')
+
+  // Test email section
+  await assertInfoRow('email-icon', 'email-box', 'email', 'patient1@diabeloop.fr')
+
+  // Test equipment date section
+  await assertInfoRow('equipment-date-icon', 'equipment-date-box', 'equipment-date', 'N/A')
+
+  // Test HbA1c section
+  await assertInfoRow('hba1c-icon', 'hba1c-box', 'hba1c', 'fakeA1cValue% - (May 26, 2023)')
+
+  // Test glycemia units section
+  await assertInfoRow('glycemia-units-icon', 'glycemia-units-box', 'glycemia-units', 'mg/dL')
+
+  // Test insulin type section
+  await assertInfoRow('insulin-type-icon', 'insulin-type-box', 'INSULIN_TYPE', 'Novorapid® U100')
 }

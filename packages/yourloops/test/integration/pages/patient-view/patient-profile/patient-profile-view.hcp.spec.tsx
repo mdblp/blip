@@ -150,69 +150,15 @@ describe('Patient profile view for HCP', () => {
       await act(async () => {
         renderPage(patientProfileRoute)
       })
-      // Test that the patient's personal information component is rendered
-      const informationSection = await screen.findByTestId('information-section')
-      expect(informationSection).toBeInTheDocument()
 
       await testPatientPersonalInformation()
-    })
-
-    it('should display patient avatar with initials', async () => {
-      await act(async () => {
-        renderPage(patientProfileRoute)
-      })
-
-      // Test avatar display with patient initials
-      const avatar = screen.getByTestId('patient-avatar')
-      expect(avatar).toBeInTheDocument()
-    })
-
-    it('should display patient email with email icon', async () => {
-      renderPage(patientProfileRoute)
-
-      // Test email field with EmailIcon
-      const emailText = await screen.findByText(/email/i)
-      expect(emailText).toBeInTheDocument()
-    })
-
-    it('should display patient gender with person icon', async () => {
-      renderPage(patientProfileRoute)
-
-      // Test gender field with PersonIcon
-      const genderText = await screen.findByText(/gender/i)
-      expect(genderText).toBeInTheDocument()
-    })
-
-    it('should display patient birth date with cake icon', async () => {
-      renderPage(patientProfileRoute)
-
-      // Test birth date field with CakeIcon
-      const birthDateText = await screen.findByText(/date.of.birth/i)
-      expect(birthDateText).toBeInTheDocument()
     })
 
     it('should display patient age with access time icon', async () => {
       renderPage(patientProfileRoute)
 
-      // Test age field with AccessTimeIcon
       const ageText = await screen.findByText(/age/i)
       expect(ageText).toBeInTheDocument()
-    })
-
-    it('should display HbA1c with science icon', async () => {
-      renderPage(patientProfileRoute)
-
-      // Test HbA1c field with ScienceIcon
-      const hba1cText = await screen.findByText(/hba1c/i)
-      expect(hba1cText).toBeInTheDocument()
-    })
-
-    it('should display glycemia units', async () => {
-      renderPage(patientProfileRoute)
-
-      // Test units field
-      const unitsText = await screen.findByText(/glycemia.units/i)
-      expect(unitsText).toBeInTheDocument()
     })
 
     // TODO: Uncomment when the feature is implemented with the API

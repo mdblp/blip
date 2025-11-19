@@ -59,6 +59,31 @@ export const getPatientInitials = (firstName: string = '', lastName: string = ''
   return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
 }
 
+enum InsulinType {
+  Novorapid = '1',
+  Humalog = '2',
+  Fiasp = '3',
+  Lyumjev = '4',
+  Other = '5',
+}
+
+export const getPatientInsulinType = (insulinType: string): string => {
+  switch (insulinType) {
+    case InsulinType.Novorapid:
+      return t('insulin-type-novorapid')
+    case InsulinType.Humalog:
+      return t('insulin-type-humalog')
+    case InsulinType.Fiasp:
+      return t('insulin-type-fiasp')
+    case InsulinType.Lyumjev:
+      return t('insulin-type-lyumjev')
+    case InsulinType.Other:
+      return t('insulin-type-other')
+    default:
+      return t('N/A')
+  }
+}
+
 export const getPatientDisplayInfo = (patient: Patient) => ({
   initials: getPatientInitials(patient.profile.firstName, patient.profile.lastName),
   age: getPatientAge(patient.profile.birthdate),
@@ -68,5 +93,5 @@ export const getPatientDisplayInfo = (patient: Patient) => ({
   weight: `${patient.profile.weight?.value || t('N/A')} ${patient.profile.weight?.unit || ''}`,
   height: `${patient.profile.height?.value || t('N/A')} ${patient.profile.height?.unit || ''}`,
   equipmentDate: formatDate(patient.medicalData?.range?.startDate) || t('N/A'),
-  insulinType: patient.settings.insulinType || t('N/A')
+  insulinType: getPatientInsulinType(patient.settings.insulinType) || t('N/A')
 })
