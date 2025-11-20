@@ -41,12 +41,14 @@ import {
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 import { loggedInUserId } from '../mock/auth0.hook.mock'
 import { buildPatient, buildPatientMetrics } from './patient-builder.data'
-import { DeviceSystem } from 'medical-domain'
+import { DEFAULT_BG_BOUNDS, defaultBgClasses, DeviceSystem, DiabeticType, MGDL_UNITS, Unit } from 'medical-domain'
+import { BgPrefs } from 'dumb'
+import { BG_CLAMP_THRESHOLD } from 'medical-domain/dist/src/domains/models/medical/medical-data-options.model'
 
 export const patient1Id = 'patient1Id'
 export const patient2Id = 'patient2Id'
 export const patient3Id = 'patient3Id'
-export const patientg2Id = 'patientG2Id'
+export const patientPregnancyId = 'patientPregnantId'
 
 export const unreadMessagesPatientId = 'unreadMessagesPatientId'
 export const patientWithMmolId = 'patientWithMmolId'
@@ -217,6 +219,41 @@ export const patient3Info: Patient = buildPatient({
 })
 
 const patient3Metrics: PatientMetrics = buildPatientMetrics({ userId: patient3Id })
+
+export const patientPregnancyInfo: Patient = buildPatient({
+  userid: patientPregnancyId,
+  monitoringAlertsParameters: defaultMonitoringAlertsParameters,
+  profile: {
+    birthdate: '1988-01-01T10:44:34+01:00',
+    email: 'patient2@diabeloop.fr',
+    firstName: 'Patient',
+    fullName: 'Patient Rolls',
+    lastName: 'Rolls',
+    sex: Gender.Female
+  },
+  settings: { ...defaultSettings, a1c: { value: '8.9', date: '2023-11-21T12:30:38.473Z' } },
+  diabeticProfile: {
+    type: DiabeticType.DT1Pregnancy,
+    bloodGlucosePreference: {
+      bgUnits : Unit.MilligramPerDeciliter,
+        bgClasses: {
+          veryLow: 54,
+          low: 63,
+          target: 140,
+          high: 250,
+          veryHigh: 600
+        },
+        bgBounds: {
+          veryHighThreshold: 250,
+          targetUpperBound: 140,
+          targetLowerBound: 63,
+          veryLowThreshold: 54
+      }
+    }
+  }
+})
+
+const patientPregnancyMetrics: PatientMetrics = buildPatientMetrics({ userId: patient2Id })
 
 export const patientWithMmolInfo: Patient = buildPatient({
   userid: patientWithMmolId,

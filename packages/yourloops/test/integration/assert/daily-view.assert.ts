@@ -344,3 +344,7 @@ const checkDailyTimeInRangeStatsWidgetsPercentages = (patientStatistics: BoundFu
   expect(patientStatistics.getByTestId('cbg-percentage-stat-low-timeInRange')).toHaveTextContent('20m27%')
   expect(patientStatistics.getByTestId('cbg-percentage-stat-veryLow-timeInRange')).toHaveTextContent('25m33%')
 }
+
+export const checkTimeInRangeDefaultStats = async () => {
+  expect(await screen.findByTestId(`timeInRangeDt1-title`, {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
+}
