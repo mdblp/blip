@@ -41,9 +41,7 @@ import {
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 import { loggedInUserId } from '../mock/auth0.hook.mock'
 import { buildPatient, buildPatientMetrics } from './patient-builder.data'
-import { DEFAULT_BG_BOUNDS, defaultBgClasses, DeviceSystem, DiabeticType, MGDL_UNITS, Unit } from 'medical-domain'
-import { BgPrefs } from 'dumb'
-import { BG_CLAMP_THRESHOLD } from 'medical-domain/dist/src/domains/models/medical/medical-data-options.model'
+import { DeviceSystem, DiabeticType, Unit } from 'medical-domain'
 
 export const patient1Id = 'patient1Id'
 export const patient2Id = 'patient2Id'
@@ -252,8 +250,6 @@ export const patientPregnancyInfo: Patient = buildPatient({
     }
   }
 })
-
-const patientPregnancyMetrics: PatientMetrics = buildPatientMetrics({ userId: patient2Id })
 
 export const patientWithMmolInfo: Patient = buildPatient({
   userid: patientWithMmolId,
