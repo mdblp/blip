@@ -77,7 +77,8 @@ import { Datum } from '../../models/medical/datum.model'
 import Bolus from '../../models/medical/datum/bolus.model'
 import Prescriptor from '../../models/medical/datum/enums/prescriptor.enum'
 
-const EXCLUDED_PARAMETERS = ['INSULIN_TYPE_USED']
+// the first one is for g1, the second one for g2
+const EXCLUDED_PARAMETERS = ['INSULIN_TYPE_USED', 'INSULIN_TYPE']
 
 class MedicalDataService {
   medicalData: MedicalData = {
