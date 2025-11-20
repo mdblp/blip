@@ -121,17 +121,17 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
           </Box>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <InfoRow icon={CakeIcon} dataTestId='CakeIcon' label={t('date-of-birth')} value={`${formatBirthdate(patient.profile.birthdate)} (${patientInfo.age})`} />
-              <InfoRow icon={PersonIcon} dataTestId='PersonIcon' label={t('gender')} value={patientInfo.gender} />
-              <InfoRow icon={MonitorWeightIcon} dataTestId='MonitorWeightIcon' label={t('params|WEIGHT')} value={patientInfo.weight} />
-              <InfoRow icon={HeightIcon} dataTestId='HeightIcon' label={t('params|HEIGHT')} value={patientInfo.height} />
-              <InfoRow icon={EmailIcon} dataTestId='EmailIcon' label={t('email')} value={patient.profile.email || t('N/A')} />
+              <InfoRow icon={CakeIcon} dataTestId='date-of-birth' label={t('date-of-birth')} value={`${formatBirthdate(patient.profile.birthdate)} (${patientInfo.age})`} />
+              <InfoRow icon={PersonIcon} dataTestId='gender' label={t('gender')} value={patientInfo.gender} />
+              <InfoRow icon={MonitorWeightIcon} dataTestId='weight' label={t('params|WEIGHT')} value={patientInfo.weight} />
+              <InfoRow icon={HeightIcon} dataTestId='height' label={t('params|HEIGHT')} value={patientInfo.height} />
+              <InfoRow icon={EmailIcon} dataTestId='email' label={t('email')} value={patient.profile.email || t('N/A')} />
             </Grid>
             <Grid item xs={6}>
-              <InfoRow icon={PhoneAndroidIcon} dataTestId='PhoneAndroidIcon' label={t('equipment-date')} value={patientInfo.equipmentDate} />
-              <InfoRow icon={StraightenIcon} dataTestId='StraightenIcon' label={t('hba1c')} value={patientInfo.hba1c} />
-              <InfoRow icon={ScaleIcon} dataTestId='ScaleIcon' label={t('glycemia-units')} value={patientInfo.dbUnits} />
-              <InfoRow icon={BasalIcon} dataTestId='basal-icon' label={t('params|INSULIN_TYPE')} value={patientInfo.insulinType} />
+              <InfoRow icon={PhoneAndroidIcon} dataTestId='equipment-date' label={t('equipment-date')} value={patientInfo.equipmentDate} />
+              <InfoRow icon={StraightenIcon} dataTestId='hba1c' label={t('hba1c')} value={patientInfo.hba1c} />
+              <InfoRow icon={ScaleIcon} dataTestId='glycemia-units' label={t('glycemia-units')} value={patientInfo.dbUnits} />
+              <InfoRow icon={BasalIcon} dataTestId='insulin-type' label={t('params|INSULIN_TYPE')} value={patientInfo.insulinType} />
             </Grid>
           </Grid>
           <div className={classes.separator} />

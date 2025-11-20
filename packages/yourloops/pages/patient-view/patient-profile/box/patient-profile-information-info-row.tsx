@@ -43,8 +43,8 @@ export const InfoRow: FC<InfoRowProps> = ({ icon: Icon, label, value, dataTestId
 
   return (
     <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
-      <Icon sx={{ color: 'text.secondary' }} data-testid={testId} />
-      <Box>
+      <Icon sx={{ color: 'text.secondary' }} data-testid={`${testId}-icon`} />
+      <Box data-testid={`${testId}-box`}>
         <Typography variant="body2" color="text.secondary">
           {label}
         </Typography>
