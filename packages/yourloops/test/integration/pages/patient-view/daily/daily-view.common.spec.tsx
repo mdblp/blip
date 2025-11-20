@@ -263,6 +263,7 @@ describe('Daily view for anyone', () => {
   describe('with diabetic profile pregnancy patients', () => {
     it('should display default target widgets', async () => {
       mockPatientLogin(patientPregnancyInfo)
+      mockDataAPI()
       const router = renderPage(dailyRoute)
       await waitFor(() => {
         expect(router.state.location.pathname).toEqual(dailyRoute)
