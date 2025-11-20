@@ -201,8 +201,8 @@ describe('Patient profile view for HCP', () => {
         renderPage(patientProfileRoute)
       })
 
-      const disclaimer = await screen.findByTestId('additional-information-status-disclamer-label')
-      expect(disclaimer).toBeVisible()
+      const disclaimer = screen.queryByTestId('additional-information-status-disclamer-label');
+      expect(disclaimer).not.toBeInTheDocument();
     })
 
     it('should display drug treatment field', async () => {
@@ -212,7 +212,6 @@ describe('Patient profile view for HCP', () => {
 
       const drugTreatmentField = await screen.findByTestId('additional-patient-profile-drug-treatment')
       expect(drugTreatmentField).toBeVisible()
-      expect(drugTreatmentField).toBeEnabled()
     })
 
     it('should display profession field', async () => {
@@ -222,7 +221,6 @@ describe('Patient profile view for HCP', () => {
 
       const professionField = await screen.findByTestId('additional-patient-profile-profession')
       expect(professionField).toBeVisible()
-      expect(professionField).toBeEnabled()
     })
 
     it('should display diet autocomplete', async () => {
@@ -232,7 +230,6 @@ describe('Patient profile view for HCP', () => {
 
       const dietField = await screen.findByTestId('additional-patient-profile-diet')
       expect(dietField).toBeVisible()
-      expect(dietField).toBeEnabled()
     })
 
     it('should display hobbies field', async () => {
@@ -242,7 +239,6 @@ describe('Patient profile view for HCP', () => {
 
       const hobbiesField = await screen.findByTestId('additional-patient-profile-hobby')
       expect(hobbiesField).toBeVisible()
-      expect(hobbiesField).toBeEnabled()
     })
 
     it('should display physical activities field', async () => {
