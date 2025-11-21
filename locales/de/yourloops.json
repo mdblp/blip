@@ -172,7 +172,6 @@
   "button-team-add-member": "Medizinische Fachkraft hinzufügen",
   "button-team-leave": "Team verlassen",
   "button-validate": "Bestätigen",
-  "cannula-size": "Kanülengröße",
   "care-team-membership": "Meine Teams:",
   "care-team-no-membership": "Keine Behandlungsteams",
   "care-team-values-applied": "Behandlungsteam-Werte angewendet",
@@ -278,7 +277,6 @@
   "error-severe-hypoglycemia": "Der schwere Hypoglykämie-Schwellenwert muss zwischen dem Hypoglykämie-Schwellenwert und dem minimal zulässigen Wert liegen",
   "estimated-total-insulin": "Geschätzter Gesamtinsulinbedarf",
   "estimated-total-insulin-tooltip": "**Geschätzter Gesamtinsulinbedarf:** Schätzung des gesamten Insulinbedarfs des Patienten (sowohl Basal- als auch Bolusinsulin, in Einheiten) über 24 Stunden. Diese Schätzung berücksichtigt nur den Zeitraum im Loop-Modus, um so nah wie möglich an den tatsächlichen physiologischen Bedürfnissen des Patienten zu sein.",
-  "estimated-total-insulin-avg-how-calculate-tooltip": "**Berechnungsmethode: ** Alle Basal- und Bolusinsulinabgaben während des Closed-Loop-Zeitraums (in Einheiten) werden addiert, auf 24 Stunden normalisiert und durch die Anzahl der Tage in dieser Ansicht dividiert.",
   "event-icon": "Ereignis-Symbol",
   "event-trigger-threshold": "Schwellenwert für die Ereignisauslösung",
   "equipment-date": "Ausstattungsdatum",
@@ -317,6 +315,7 @@
   "header-tab-patients": "Patienten",
   "health-care-professional": "Medizinische Fachkraft",
   "high-bg-input": "Hoher Glukosemesswert",
+  "hours": "Stunden",
   "hypoglycemia": "Unterhalb des Zielbereichs",
   "hypoglycemia-tooltip1": "Hypoglykämie: {{percentage}} %",
   "hypoglycemia-tooltip2": "Warnung wird ausgelöst, wenn {{threshold}} % der Zeit im betrachteten Zeitraum unter dem Schwellenwert {{veryLowBg}} {{unit}} verbracht wird.",
@@ -326,6 +325,7 @@
   "in-range": "im Zielbereich",
   "insulin": "Insulin",
   "insulin-on-board": "Aktives Insulin (IOB)",
+  "insulin-type-other": "Sonstige",
   "insulin-unit-u": "U",
   "invalid-code": "Der Code ist ungültig",
   "invalid-email": "Ungültige E-Mail-Adresse (Sonderzeichen sind nicht erlaubt).",
@@ -473,6 +473,7 @@
   "personal-settings": "Persönliche Einstellungen",
   "phone-number": "Telefonnummer",
   "preferences": "Voreinstellungen",
+  "profession": "Beruf",
   "preset-dates-range-1week": "1 Woche",
   "preset-dates-range-2weeks": "2 Wochen",
   "preset-dates-range-3months": "3 Monate",
@@ -649,5 +650,6 @@
   "weight": "Körpergewicht",
   "yesterday": "Gestern",
   "years-old": "Jahre alt",
-  "zen-mode": "Zen‑Modus"
+  "zen-mode": "Zen‑Modus",
+  "other": "Sonstige"
 }

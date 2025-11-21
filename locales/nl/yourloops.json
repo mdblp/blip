@@ -293,12 +293,14 @@
   "header-tab-patients": "Patiënten",
   "health-care-professional": "Zorgverlener",
   "high-bg-input": "Hoge bloedglucose-invoer",
+  "hours": "uur",
   "hypoglycemia": "Beneden bereik",
   "hypoglycemia-tooltip1": "Hypoglykemie: {{percentage}}%",
   "hypoglycemia-tooltip2": "Waarschuwing wordt geactiveerd wanneer {{threshold}}% van de tijd onder {{veryLowBg}} {{unit}} grenswaarde ligt in de betreffende periode.",
   "identification-code": "Identificatiecode",
   "information": "Informatie",
   "initial-hba1c": "Eerste HbA1c",
+  "insulin-type-other": "Overige",
   "insulin-unit-u": "U",
   "invalid-code": "De code is ongeldig.",
   "invalid-email": "Ongeldig e-mailadres (speciale tekens zijn niet toegestaan).",
@@ -444,6 +446,7 @@
   "personal-settings": "Persoonlijke instellingen",
   "phone-number": "Telefoonnummer",
   "preferences": "Voorkeuren",
+  "profession": "Beroep",
   "preset-dates-range-1week": "1 week",
   "preset-dates-range-2weeks": "2 weken",
   "preset-dates-range-3months": "3 maanden",
@@ -602,5 +605,6 @@
   "verify-email-title": "Controleer je e-mailadres",
   "very-low-bg-input": "Zeer lage bloedglucose-invoer",
   "weight": "Gewicht",
-  "yesterday": "Gisteren"
+  "yesterday": "Gisteren",
+  "other": "Overige"
 }

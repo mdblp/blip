@@ -1,4 +1,5 @@
 {
+  "%-I:%M %p": "%-I:%M %p",
   "%b %-d, %Y": "%-d %b %Y",
   "**Avg. Daily Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view.": "**Insulina media giornaliera:** somma di tutte le erogazioni di insulina basale e insulina del bolo (in unità), divisa per il numero di giorni di questa vista.",
   "**Daily Insulin:** All basal and bolus insulin delivery (in Units) added together.": "**Insulina giornaliera:** somma di tutte le erogazioni di insulina basale e insulina del bolo (in unità).",
@@ -34,7 +35,7 @@
   "Basal Events": "Eventi basali",
   "Basal Rates": "Velocità basali",
   "Basal:Bolus Ratio": "Rapporto basale:bolo",
-  "Basals": "Basali",
+  "Basals": "Basale",
   "Below {{threshold}}": "Sotto {{threshold}}",
   "Bolus": "Bolo",
   "Bolus Legend": "Bolo",
@@ -143,7 +144,6 @@
   "Software version": "Versione software",
   "Su_Sunday": "Do",
   "Suspends": "Sospensioni",
-  "Temp Basals": "Basali temporanei",
   "Th_Thursday": "Gi",
   "The Basics": "Panoramica",
   "There is no {{displayType}} data for this time period :(": "Nessun dato {{displayType}} per questo periodo di tempo :(",
