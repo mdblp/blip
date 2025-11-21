@@ -26,7 +26,11 @@
  */
 
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
-import { checkSMBGDailyStatsWidgetsTooltips, checkTimeChangeIndicator } from '../../../assert/daily-view.assert'
+import {
+  checkSMBGDailyStatsWidgetsTooltips,
+  checkTimeChangeIndicator,
+  checkTimeInRangeDefaultStats
+} from '../../../assert/daily-view.assert'
 import { mockDataAPI, smbgData, twoWeeksOfCbg } from '../../../mock/data.api.mock'
 import { renderPage } from '../../../utils/render'
 import {
@@ -42,7 +46,7 @@ import * as constants from '../../../../../../viz/src/modules/print/utils/consta
 import DataApi from '../../../../../lib/data/data.api'
 import { User } from '../../../../../lib/auth'
 import { when } from 'jest-when'
-import { patient2Info } from '../../../data/patient.api.data'
+import { patient2Info, patientPregnancyInfo } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
@@ -253,6 +257,19 @@ describe('Daily view for anyone', () => {
       })
 
       await checkTimeChangeIndicator()
+    })
+  })
+
+  describe('with diabetic profile pregnancy patients', () => {
+    it('should display default target widgets', async () => {
+      mockPatientLogin(patientPregnancyInfo)
+      mockDataAPI()
+      const router = renderPage(dailyRoute)
+      await waitFor(() => {
+        expect(router.state.location.pathname).toEqual(dailyRoute)
+      })
+
+      await checkTimeInRangeDefaultStats()
     })
   })
 })

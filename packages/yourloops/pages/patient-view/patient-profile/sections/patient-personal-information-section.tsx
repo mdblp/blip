@@ -141,10 +141,11 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
             {t('additional-information')}
           </Typography>
 
-          {/* Info Banner */}
-          <Alert data-testid="additional-information-status-disclamer-label" severity="info" className={classes.alert}>
-            {t('additional-information-disclaimer')}
-          </Alert>
+          {  user.isUserPatient() &&
+            <Alert data-testid="additional-information-status-disclamer-label" severity="info" className={classes.alert}>
+              {t('additional-information-disclaimer')}
+            </Alert>
+          }
 
           <AdditionalInfoForm
             patient={patient}

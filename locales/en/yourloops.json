@@ -621,6 +621,7 @@
   "time-in-range": "TIR",
   "time-in-range-cgm-daily-average": "**Time In Range:** Daily average of the time spent in range, based on CGM readings.",
   "time-in-range-cgm-one-day": "**Time In Range:** Time spent in range, based on CGM readings.",
+  "time-in-range-dt1": "Time In Range (default target)",
   "time-in-range-tooltip": "Time In Range",
   "time-in-tight-range": "Time In Tight Range",
   "time-in-tight-range-cgm-one-day": "**Time In Tight Range:** Time spent in tight range, based on CGM readings.",

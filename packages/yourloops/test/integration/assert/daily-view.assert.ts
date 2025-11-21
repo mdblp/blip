@@ -344,3 +344,9 @@ const checkDailyTimeInRangeStatsWidgetsPercentages = (patientStatistics: BoundFu
   expect(patientStatistics.getByTestId('cbg-percentage-stat-low-timeInRange')).toHaveTextContent('20m27%')
   expect(patientStatistics.getByTestId('cbg-percentage-stat-veryLow-timeInRange')).toHaveTextContent('25m33%')
 }
+
+export const checkTimeInRangeDefaultStats = async () => {
+  const TIRDT1 = within(await screen.findByTestId('time-in-range-dt1-chart'))
+  expect(await screen.findByText('70-180', {}, { timeout: 3000 })).toBeVisible()
+  expect (TIRDT1.getByTestId('cbg-percentage-stat-timeInRangeDt1-timeInRangeDt1')).toHaveTextContent('15m20%')
+}

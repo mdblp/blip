@@ -35,6 +35,7 @@ export enum CBGStatType {
   StandardDeviation = 'standardDev',
   TimeInAuto = 'timeInAuto',
   TimeInRange = 'timeInRange',
+  TimeInRangeDt1 = 'timeInRangeDt1',
   TimeInTightRange = 'timeInTightRange',
   TotalInsulin = 'totalInsulin',
 }
@@ -52,6 +53,7 @@ export enum StatLevel {
   Low = 'low',
   VeryLow = 'veryLow',
   TightRange = 'tightRange',
+  TimeInRangeDt1 = 'timeInRangeDt1',
 }
 
 export enum StatFormats {
