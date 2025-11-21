@@ -291,12 +291,14 @@
   "header-tab-patients": "患者",
   "health-care-professional": "医療従事者",
   "high-bg-input": "高血糖の入力",
+  "hours": "時間",
   "hypoglycemia": "Time Below Range",
   "hypoglycemia-tooltip1": "低血糖： {{percentage}}",
   "hypoglycemia-tooltip2": "期間中、{{veryLowBg}}{{unit}}を下回った時間が{{threshold}}％に達した場合に発生するアラート。",
   "identification-code": "識別コード",
   "information": "基本情報",
   "initial-hba1c": "初期HbA1c",
+  "insulin-type-other": "その他",
   "insulin-unit-u": "U",
   "invalid-code": "コードが無効です。",
   "invalid-email": "無効なメールアドレスです。（特殊文字は使用できません）",
@@ -440,6 +442,7 @@
   "personal-settings": "個人設定",
   "phone-number": "電話番号",
   "preferences": "設定",
+  "profession": "職業",
   "preset-dates-range-1week": "1 週間",
   "preset-dates-range-2weeks": "2 週間",
   "preset-dates-range-3months": "3 ヶ月",
@@ -596,5 +599,6 @@
   "verify-email-title": "メールアドレスの確認",
   "very-low-bg-input": "低血糖の入力",
   "weight": "体重",
-  "yesterday": "昨日"
+  "yesterday": "昨日",
+  "other": "その他"
 }

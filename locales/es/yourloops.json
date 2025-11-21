@@ -293,12 +293,14 @@
   "header-tab-patients": "Pacientes",
   "health-care-professional": "Personal sanitario",
   "high-bg-input": "Entrada de glucemia alta",
+  "hours": "horas",
   "hypoglycemia": "Inferior al intervalo ideal",
   "hypoglycemia-tooltip1": "Hipoglucemia: {{percentage}}",
   "hypoglycemia-tooltip2": "Alerta activada si el {{threshold}} % del tiempo se está por debajo del umbral {{veryLowBg}} {{unit}} durante el periodo considerado.",
   "identification-code": "Código de identificación",
   "information": "Información",
   "initial-hba1c": "HbA1c inicial",
+  "insulin-type-other": "Otra",
   "insulin-unit-u": "U",
   "invalid-code": "El código no es válido",
   "invalid-email": "Dirección de correo electrónico no válida (los caracteres especiales no están permitidos).",
@@ -444,6 +446,7 @@
   "personal-settings": "Ajustes personales",
   "phone-number": "Número de teléfono",
   "preferences": "Preferencias",
+  "profession": "Profesión",
   "preset-dates-range-1week": "1 semana",
   "preset-dates-range-2weeks": "2 semanas",
   "preset-dates-range-3months": "3 meses",
@@ -602,5 +605,6 @@
   "verify-email-title": "Verifique su dirección de correo electrónico",
   "very-low-bg-input": "Entrada de glucemia muy baja",
   "weight": "Peso",
-  "yesterday": "Ayer"
+  "yesterday": "Ayer",
+  "other": "Otra"
 }

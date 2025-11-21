@@ -293,12 +293,14 @@
   "header-tab-patients": "Pazienti",
   "health-care-professional": "Operatore sanitario",
   "high-bg-input": "Inserita glicemia alta",
+  "hours": "ore",
   "hypoglycemia": "Sotto l'intervallo",
   "hypoglycemia-tooltip1": "Ipoglicemia: {{percentage}}%",
   "hypoglycemia-tooltip2": "Avviso attivato quando il {{threshold}}% del tempo è trascorso al di sotto della soglia di {{veryLowBg}} {{unit}} nel periodo considerato.",
   "identification-code": "Codice di identificazione",
   "information": "Informazioni",
   "initial-hba1c": "HbA1c iniziale",
+  "insulin-type-other": "Altro",
   "insulin-unit-u": "U",
   "invalid-code": "Il codice non è valido",
   "invalid-email": "Indirizzo email non valido (i caratteri speciali non sono consentiti).",
@@ -444,6 +446,7 @@
   "personal-settings": "Impostazioni personali",
   "phone-number": "Numero di telefono",
   "preferences": "Preferenze",
+  "profession": "Professione",
   "preset-dates-range-1week": "1 settimana",
   "preset-dates-range-2weeks": "2 settimane",
   "preset-dates-range-3months": "3 mesi",
@@ -572,6 +575,7 @@
   "tooltip-release-notes": "Note di rilascio",
   "tooltip-smbg-data": "Derivato da _**{{total}}**_ letture {{smbgLabel}}.",
   "total-declared-carbs": "Somma dei carboidrati segnalati",
+  "total-insulin-days-tooltip": "**Insulina totale somministrata:** somma di tutta l'insulina basale e di bolo somministrata (in unità).",
   "total-insulin-how-calculate-tooltip": "**Metodo di calcolo: **(%) è il rispettivo totale di erogazione basale o in bolo diviso per l’insulina totale erogata per questo periodo.",
   "training": "Formazione",
   "training-body": "Nuova attività di formazione disponibile, leggi le novità prima di continuare su YourLoops.",
@@ -602,5 +606,6 @@
   "verify-email-title": "Verifica il tuo indirizzo e-mail",
   "very-low-bg-input": "Inserita glicemia molto bassa",
   "weight": "Peso",
-  "yesterday": "Ieri"
+  "yesterday": "Ieri",
+  "other": "Altro"
 }
