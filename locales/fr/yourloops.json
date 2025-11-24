@@ -621,6 +621,7 @@
   "time-in-range": "TIR",
   "time-in-range-cgm-daily-average": "**Temps dans la cible :** Moyenne quotidienne du temps passé dans la cible, à partir des données CGM.",
   "time-in-range-cgm-one-day": "**Temps dans la cible :** Temps passé dans la cible, à partir des données CGM.",
+  "time-in-range-dt1": "Temps dans la cible (valeurs par défaut)",
   "time-in-range-tooltip": "Temps dans la cible",
   "time-in-tight-range": "Temps dans la cible restreinte",
   "time-in-tight-range-cgm-one-day": "**Temps dans la cible :** Temps passé dans la cible, calculé à partir des données CGM.",
