@@ -1,4 +1,5 @@
 {
+  "%-I:%M %p": "%-I:%M %p",
   "%b %-d, %Y": "%-d %b %Y",
   "**Avg. Daily Insulin:** All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view.": "**Prom. insulina diaria:** suma de todas las administraciones de insulina basal y de bolo (en unidades) dividida entre el número de días de esta vista.",
   "**Daily Insulin:** All basal and bolus insulin delivery (in Units) added together.": "**Insulina diaria:** suma de todas las administraciones de insulina basal y de bolo (en unidades).",
@@ -143,9 +144,11 @@
   "Software version": "Versión del software",
   "Su_Sunday": "D",
   "Suspends": "Suspensiones",
+  "Temp Basals": "Basal temp",
   "Th_Thursday": "J",
   "The Basics": "Información general",
   "There is no {{displayType}} data for this time period :(": "No hay datos de {{displayType}} para este periodo de tiempo :(",
+  "nothing-to-display": "¡No hay nada que mostrar!",
   "Time Above Range": "Tiempo superior al interv. ideal",
   "Time Below Range": "Tiempo inferior al interv. ideal",
   "Time Change": "Cambio de hora",
