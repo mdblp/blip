@@ -223,7 +223,7 @@ export const checkPasswordChangeRequest = async (email: string): Promise<void> =
 
   expect(AuthApi.sendResetPasswordEmail).toHaveBeenCalledWith(email)
 
-  const changePasswordEmailSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
+  const changePasswordEmailSuccessfulSnackbar = await screen.findByTestId('alert-snackbar')
   expect(changePasswordEmailSuccessfulSnackbar).toHaveTextContent('E-mail sent successfully')
   expect(changePasswordInfoLabel).not.toBeVisible()
 
@@ -236,7 +236,7 @@ export const checkPasswordChangeRequest = async (email: string): Promise<void> =
 
   await userEvent.click(changePasswordConfirmButton)
 
-  const changePasswordEmailFailedSnackbar = screen.getByTestId('alert-snackbar')
+  const changePasswordEmailFailedSnackbar = await screen.findByTestId('alert-snackbar')
   expect(changePasswordEmailFailedSnackbar).toHaveTextContent('Impossible to send the change password e-mail. Please try again later.')
 }
 
