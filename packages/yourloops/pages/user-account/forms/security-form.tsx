@@ -57,6 +57,8 @@ export const SecurityForm: FC = () => {
       const errorMessage = errorTextFromException(error)
       logError(errorMessage, 'change-password')
       alert.error(t('alert-change-password-email-failed'))
+    } finally {
+      setShowUpdatePasswordDialog(false)
     }
   }
 
@@ -110,10 +112,7 @@ export const SecurityForm: FC = () => {
         onClose={() => {
           setShowUpdatePasswordDialog(false)
         }}
-        onConfirm={async () => {
-          await sendChangePasswordEmail()
-          setShowUpdatePasswordDialog(false)
-        }}
+        onConfirm={() => sendChangePasswordEmail}
       />
       <ChangeEmailModal showChangeEmailModal={showChangeEmailModal} setChangeEmailModal={setShowChangeEmailModal} />
     </>
