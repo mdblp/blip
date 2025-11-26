@@ -249,6 +249,11 @@ export const checkEmailChangeRequest = async (userId: string, newEmail: string, 
   const dialog = screen.getByTestId('confirm-email-change-dialog')
   expect(dialog).toBeInTheDocument()
 
+  // Enter new email
+  let newEmailField = screen.getByLabelText('New e-mail')
+  await userEvent.clear(newEmailField)
+  await userEvent.type(newEmailField, newEmail)
+
   // Assert click on Cancel close the popup
   const cancelButton = screen.getByRole('button', { name: 'Cancel' })
   await userEvent.click(cancelButton)
@@ -257,8 +262,9 @@ export const checkEmailChangeRequest = async (userId: string, newEmail: string, 
   // Act – open the Change Email popup
   await userEvent.click(changeEmailButton)
 
-  // Enter new email
-  const newEmailField = screen.getByLabelText('New e-mail')
+  // Verify the cancel button reset the data in the modal, and enter the new email
+  newEmailField = screen.getByLabelText('New e-mail')
+  expect(newEmailField).toHaveValue("")
   await userEvent.clear(newEmailField)
   await userEvent.type(newEmailField, newEmail)
 
