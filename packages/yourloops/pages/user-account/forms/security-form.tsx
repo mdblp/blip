@@ -112,7 +112,7 @@ export const SecurityForm: FC = () => {
         onClose={() => {
           setShowUpdatePasswordDialog(false)
         }}
-        onConfirm={() => sendChangePasswordEmail}
+        onConfirm={sendChangePasswordEmail}
       />
       <ChangeEmailModal showChangeEmailModal={showChangeEmailModal} setChangeEmailModal={setShowChangeEmailModal} />
     </>
