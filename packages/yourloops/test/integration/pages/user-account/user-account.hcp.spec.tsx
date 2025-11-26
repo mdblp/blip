@@ -108,7 +108,7 @@ describe('User account page for hcp', () => {
       }
     }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
-    const expectedSettings = { units: { bg: Unit.MilligramPerDeciliter }, country: CountryCodes.Austria }
+    const expectedSettings: Settings = { units: { bg: Unit.MilligramPerDeciliter }, country: CountryCodes.Austria }
     const updateUserAccountMock = jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValue(expectedUserAccount)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
     const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
