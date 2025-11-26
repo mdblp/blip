@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { fireEvent, screen, waitForElementToBeRemoved, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, waitForElementToBeRemoved, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AuthApi } from '../../../lib/auth/auth.api'
 import { Unit } from 'medical-domain'
@@ -233,11 +233,12 @@ export const checkPasswordChangeRequest = async (email: string): Promise<void> =
 
   jest.spyOn(AuthApi, 'sendResetPasswordEmail').mockRejectedValueOnce('Error')
   await userEvent.click(changePasswordButton)
-
   await userEvent.click(changePasswordConfirmButton)
 
-  const changePasswordEmailFailedSnackbar = await screen.findByTestId('alert-snackbar')
-  expect(changePasswordEmailFailedSnackbar).toHaveTextContent('Impossible to send the change password e-mail. Please try again later.')
+  await waitFor(() => {
+    expect(screen.getByTestId('alert-snackbar'))
+      .toHaveTextContent('Impossible to send the change password e-mail. Please try again later.');
+  });
 }
 
 export const checkEmailChangeRequest = async (userId: string, newEmail: string, code: string): Promise<void> => {
