@@ -149,6 +149,7 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showChangeEmailMod
               variant="outlined"
               value={changeEmailCode}
               disabled={false}
+              type={"number"}
               onChange={(e) => {
                 setChangeEmailCode(e.target.value)
               }}
@@ -168,6 +169,7 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showChangeEmailMod
             variant="outlined"
             onClick={() => {
               setChangeEmailModal(false)
+              resetDialogState()
             }}
           >
             {t('button-cancel')}

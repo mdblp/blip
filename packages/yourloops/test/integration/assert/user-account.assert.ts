@@ -225,6 +225,7 @@ export const checkPasswordChangeRequest = async (email: string): Promise<void> =
 
   const changePasswordEmailSuccessfulSnackbar = screen.getByTestId('alert-snackbar')
   expect(changePasswordEmailSuccessfulSnackbar).toHaveTextContent('E-mail sent successfully')
+  expect(changePasswordInfoLabel).not.toBeVisible()
 
   const changePasswordEmailSuccessfulSnackbarCloseButton = within(changePasswordEmailSuccessfulSnackbar).getByTitle('Close')
 
