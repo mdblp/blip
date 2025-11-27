@@ -57,9 +57,10 @@ export const SecurityForm: FC = () => {
       const errorMessage = errorTextFromException(error)
       logError(errorMessage, 'change-password')
       alert.error(t('alert-change-password-email-failed'))
-    } finally {
-      setShowUpdatePasswordDialog(false)
     }
+    // finally {
+    //   setShowUpdatePasswordDialog(false)
+    // }
   }
 
   return (
