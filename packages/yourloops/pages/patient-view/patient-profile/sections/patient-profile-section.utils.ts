@@ -74,7 +74,7 @@ export const getPatientInsulinType = (insulinType?: string): string => {
   }
 
   // Insulin type is sent as a string by g1 and g2, but the UI is using the enum InsulinType
-  const insulinTypeNumber = parseInt(insulinType)
+  const insulinTypeNumber = Number.parseInt(insulinType)
 
   switch (insulinTypeNumber) {
     case InsulinType.Novorapid:
