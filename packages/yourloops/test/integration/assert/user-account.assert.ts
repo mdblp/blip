@@ -226,25 +226,32 @@ export const checkPasswordChangeRequest = async (email: string): Promise<void> =
   const changePasswordEmailSuccessfulSnackbar = await screen.findByTestId('alert-snackbar')
   expect(changePasswordEmailSuccessfulSnackbar).toHaveTextContent('E-mail sent successfully')
   expect(changePasswordInfoLabel).not.toBeVisible()
+}
 
-  const changePasswordEmailSuccessfulSnackbarCloseButton = within(changePasswordEmailSuccessfulSnackbar).getByTitle('Close')
-
-  await userEvent.click(changePasswordEmailSuccessfulSnackbarCloseButton)
+export const checkPasswordChangeRequestFailed = async (email: string): Promise<void> => {
+  const changePasswordCategoryTitle = screen.getByText('Security')
+  expect(changePasswordCategoryTitle).toBeVisible()
 
   jest.spyOn(AuthApi, 'sendResetPasswordEmail').mockRejectedValueOnce('Error')
+
+  const changePasswordButton = screen.getByRole('button', { name: 'Change password' })
+  expect(changePasswordButton).toBeEnabled()
+
   await userEvent.click(changePasswordButton)
+
+  const changePasswordInfoLabel = screen.getByText('You will receive an e-mail allowing you to change your password.')
+  expect(changePasswordInfoLabel).toBeVisible()
+
+  const changePasswordConfirmButton = screen.getByRole('button', { name: 'Confirm' })
+  expect (changePasswordConfirmButton).toBeEnabled()
+
   await userEvent.click(changePasswordConfirmButton)
 
-  expect(AuthApi.sendResetPasswordEmail).toHaveBeenCalled()
+  expect(AuthApi.sendResetPasswordEmail).toHaveBeenCalledWith(email)
 
-  //show DOM for debug
-  screen.debug();
-
-  const snackbar = await screen.findByTestId('alert-snackbar', {}, { timeout: 5000 });
-
-  expect(snackbar).toHaveTextContent(
-    'Impossible to send the change password e-mail. Please try again later.'
-  );
+  const changePasswordEmailSuccessfulSnackbar = await screen.findByTestId('alert-snackbar')
+  expect(changePasswordEmailSuccessfulSnackbar).toHaveTextContent('Impossible to send the change password e-mail. Please try again later.')
+  expect(changePasswordInfoLabel).not.toBeVisible()
 }
 
 export const checkEmailChangeRequest = async (userId: string, newEmail: string, code: string): Promise<void> => {

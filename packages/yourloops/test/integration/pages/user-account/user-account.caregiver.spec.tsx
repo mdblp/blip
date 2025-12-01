@@ -52,7 +52,7 @@ import ErrorApi from '../../../../lib/error/error.api'
 import {
   testCaregiverUserInfoUpdate,
   testEmailChangeRequest,
-  testPasswordChangeRequest
+  testPasswordChangeRequest, testPasswordChangeRequestFailed
 } from '../../use-cases/user-account-management'
 import {
   testCaregiverSwitchRoleDialogsClosing,
@@ -122,6 +122,15 @@ describe('User account page for caregiver', () => {
 
     expect(changeUserRoleToHcpMock).toHaveBeenCalled()
     expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })
+  })
+
+  it('should render user account page for a caregiver and display error if change password failed', async () => {
+    const router = renderPage(userAccountRoute)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(userAccountRoute)
+    })
+
+    await testPasswordChangeRequestFailed(loggedInUserEmail)
   })
 
   it('should open the change e-mail popup, complete the flow successfully and display success snackbar', async () => {
