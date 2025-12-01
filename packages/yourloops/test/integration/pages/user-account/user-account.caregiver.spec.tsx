@@ -128,6 +128,7 @@ describe('User account page for caregiver', () => {
     const router = renderPage(userAccountRoute)
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual(userAccountRoute)
+      expect(screen.getByText('User account')).toBeVisible()
     })
 
     await testPasswordChangeRequestFailed(loggedInUserEmail)
