@@ -60,19 +60,23 @@ export const getPatientInitials = (firstName: string = '', lastName: string = ''
 }
 
 enum InsulinType {
-  Novorapid = '1',
-  Humalog = '2',
-  Fiasp = '3',
-  Lyumjev = '4',
-  Other = '5',
+  Novorapid = 1,
+  Humalog = 2,
+  Fiasp = 3,
+  Lyumjev = 4,
+  Other = 5,
 }
 
 export const getPatientInsulinType = (insulinType?: string): string => {
+
   if (!insulinType) {
     return t('N/A')
   }
 
-  switch (insulinType) {
+  // Insulin type is sent as a string by g1 and g2, but the UI is using the enum InsulinType
+  const insulinTypeNumber = Number.parseInt(insulinType)
+
+  switch (insulinTypeNumber) {
     case InsulinType.Novorapid:
       return t('insulin-type-novorapid')
     case InsulinType.Humalog:
