@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { fireEvent, screen, waitFor, waitForElementToBeRemoved, within } from '@testing-library/react'
+import { fireEvent, screen, waitForElementToBeRemoved, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AuthApi } from '../../../lib/auth/auth.api'
 import { Unit } from 'medical-domain'
