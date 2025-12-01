@@ -52,6 +52,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3672 D3 version update
 - Added data-testids to fix E2E flaky tests
 - YLP-3764 Fix change email and change password modal
+- YLP-3765 Fix parameter change tooltip broken content
 
 ## 3.7.0 - 2025-07-10
 ### Added
