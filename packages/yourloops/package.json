@@ -1,6 +1,6 @@
 {
   "name": "yourloops",
-  "version": "3.8.0-rc1",
+  "version": "3.8.0-rc2",
   "private": true,
   "description": "Blip is a web app for type 1 diabetes (T1D).",
   "repository": {
@@ -24,7 +24,7 @@
     "test": "npm run unit-test && npm run integration-test",
     "unit-test": "jest --config=test/unit/jest.config.js",
     "integration-test": "jest --config=test/integration/jest.config.js",
-    "integration-test-hcp": "jest --config=test/integration/jest.config.js --testMatch '<rootDir>/pages/**/*.hcp.spec.tsx'",
+    "integration-test-hcp": "jest --config=test/integration/jest.config.js --testMatch '<rootDir>/pages/**/user-account.hcp.spec.tsx'",
     "integration-test-caregiver": "jest --config=test/integration/jest.config.js --testMatch '<rootDir>/pages/**/*.caregiver.spec.tsx'",
     "integration-test-patient": "jest --config=test/integration/jest.config.js --testMatch '<rootDir>/pages/**/*.patient.spec.tsx'",
     "integration-test-common": "jest --config=test/integration/jest.config.js --testMatch '<rootDir>/pages/**/*' --testPathIgnorePatterns '\\.(hcp|caregiver|patient)\\.spec\\.tsx'",
