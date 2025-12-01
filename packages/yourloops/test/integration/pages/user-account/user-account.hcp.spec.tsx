@@ -129,7 +129,7 @@ describe('User account page for hcp', () => {
     await testPasswordChangeRequest(loggedInUserEmail)
   })
 
-  it('should render user account page for a caregiver and display error if change password failed', async () => {
+  it('should render user account page for an hcp and display error if change password failed', async () => {
     const router = renderPage(userAccountRoute)
     await waitFor(() => {
       expect(router.state.location.pathname).toEqual(userAccountRoute)
