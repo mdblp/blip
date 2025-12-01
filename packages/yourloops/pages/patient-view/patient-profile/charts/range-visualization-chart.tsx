@@ -138,10 +138,6 @@ export const RangeVisualizationChart: FC<RangeVisualizationChartProps> = (props)
       drawChip(g, threshold.id, yPos, threshold.value.toString(), threshold.color)
     })
 
-    // "In range" chip
-    const yChipPos = (yScale(bgBounds.targetUpperBound) + yScale(bgBounds.targetLowerBound)) / 2
-    drawChip(g,"in-range", yChipPos, t('in-range'), 'var(--bg-target)')
-
     drawColoredDotsCurve(g, xScale, yScale, displayedUnit, getColorForValue)
 
   }, [bgBounds, displayedUnit, t])

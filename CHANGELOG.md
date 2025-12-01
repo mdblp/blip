@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.8.0-rc1 - 2025-11-25
+## 3.8.0-rc2 - 2025-11-25
 ### Fixed
 - YLP-3545 Sorting by last data update on Patients list does not work for languages other than English
 
@@ -51,6 +51,8 @@ It is based on Tidepool Blip 1.27.
 ### Engineering
 - YLP-3672 D3 version update
 - Added data-testids to fix E2E flaky tests
+- YLP-3764 Fix change email and change password modal
+- YLP-3765 Fix parameter change tooltip broken content
 
 ## 3.7.0 - 2025-07-10
 ### Added

@@ -52,7 +52,7 @@ import ErrorApi from '../../../../lib/error/error.api'
 import {
   testCaregiverUserInfoUpdate,
   testEmailChangeRequest,
-  testPasswordChangeRequest
+  testPasswordChangeRequest, testPasswordChangeRequestFailed
 } from '../../use-cases/user-account-management'
 import {
   testCaregiverSwitchRoleDialogsClosing,
@@ -97,7 +97,7 @@ describe('User account page for caregiver', () => {
 
     const expectedUserAccount = { ...account, firstName: 'Jean', lastName: 'Talue', fullName: 'Jean Talue' }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
-    const expectedSettings = { ...settings, units: { bg: Unit.MilligramPerDeciliter } }
+    const expectedSettings: Settings = { ...settings, units: { bg: Unit.MilligramPerDeciliter } }
     const updateUserAccountMock = jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValue(expectedUserAccount)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
     const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
@@ -122,6 +122,16 @@ describe('User account page for caregiver', () => {
 
     expect(changeUserRoleToHcpMock).toHaveBeenCalled()
     expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })
+  })
+
+  it('should render user account page for a caregiver and display error if change password failed', async () => {
+    const router = renderPage(userAccountRoute)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(userAccountRoute)
+      expect(screen.getByText('User account')).toBeVisible()
+    })
+
+    await testPasswordChangeRequestFailed(loggedInUserEmail)
   })
 
   it('should open the change e-mail popup, complete the flow successfully and display success snackbar', async () => {
