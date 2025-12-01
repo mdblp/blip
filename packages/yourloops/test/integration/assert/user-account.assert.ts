@@ -237,6 +237,9 @@ export const checkPasswordChangeRequest = async (email: string): Promise<void> =
 
   expect(AuthApi.sendResetPasswordEmail).toHaveBeenCalled()
 
+  //show DOM for debug
+  screen.debug();
+
   await waitFor(() => {
     expect(screen.getByTestId('alert-snackbar'))
       .toHaveTextContent('Impossible to send the change password e-mail. Please try again later.');
