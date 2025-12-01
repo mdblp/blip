@@ -240,10 +240,11 @@ export const checkPasswordChangeRequest = async (email: string): Promise<void> =
   //show DOM for debug
   screen.debug();
 
-  await waitFor(() => {
-    expect(screen.getByTestId('alert-snackbar'))
-      .toHaveTextContent('Impossible to send the change password e-mail. Please try again later.');
-  });
+  const snackbar = await screen.findByTestId('alert-snackbar', {}, { timeout: 5000 });
+
+  expect(snackbar).toHaveTextContent(
+    'Impossible to send the change password e-mail. Please try again later.'
+  );
 }
 
 export const checkEmailChangeRequest = async (userId: string, newEmail: string, code: string): Promise<void> => {
