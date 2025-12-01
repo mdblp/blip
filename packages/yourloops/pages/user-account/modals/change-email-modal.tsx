@@ -149,7 +149,7 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showChangeEmailMod
               variant="outlined"
               value={changeEmailCode}
               disabled={false}
-              type={"number"}
+              type="number"
               onChange={(e) => {
                 setChangeEmailCode(e.target.value)
               }}
