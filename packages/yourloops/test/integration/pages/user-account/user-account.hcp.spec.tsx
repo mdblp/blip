@@ -50,7 +50,7 @@ import ErrorApi from '../../../../lib/error/error.api'
 import {
   testEmailChangeRequest,
   testHcpUserInfoUpdate,
-  testPasswordChangeRequest
+  testPasswordChangeRequest, testPasswordChangeRequestFailed
 } from '../../use-cases/user-account-management'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
@@ -127,6 +127,15 @@ describe('User account page for hcp', () => {
     expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, expectedSettings)
 
     await testPasswordChangeRequest(loggedInUserEmail)
+  })
+
+  it('should render user account page for a caregiver and display error if change password failed', async () => {
+    const router = renderPage(userAccountRoute)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(userAccountRoute)
+    })
+
+    await testPasswordChangeRequestFailed(loggedInUserEmail)
   })
 
   it('should open the change e-mail popup, complete the flow successfully and display success snackbar', async () => {
