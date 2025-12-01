@@ -59,7 +59,8 @@ export const SecurityForm: FC = () => {
       alert.error(t('alert-change-password-email-failed'))
     }
     finally {
-      setShowUpdatePasswordDialog(false)
+      // setShowUpdatePasswordDialog(false)
+      console.log("finally")
     }
   }
 
