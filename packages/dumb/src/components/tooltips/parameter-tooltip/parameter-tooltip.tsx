@@ -55,7 +55,7 @@ export const ParameterTooltip: FunctionComponent<ParameterTooltipProps> = (props
       dateTitle={getDateTitleForBaseDatum(parameter, timePrefs)}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
-        <div data-testid="tooltip-daily-parameters" className={styles.container}>
+        <div data-testid="tooltip-daily-parameters" className={styles.containerLarge}>
           {parameter.params.map((parameter: Parameter) =>
             <ParameterChangeLine key={parameter.id} parameter={parameter} />
           )}

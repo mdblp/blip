@@ -31,6 +31,7 @@ import React, { FC } from 'react'
 import commonStyles from '../../../styles/tooltip-common.css'
 import { Parameter } from 'medical-domain'
 import { useTranslation } from 'react-i18next'
+import Grid from '@mui/material/Grid'
 
 interface ParameterChangeLineProps {
   parameter: Parameter
@@ -43,41 +44,60 @@ export const ParameterChangeLine: FC<ParameterChangeLineProps> = (props) => {
   const parameterId = parameter.id
   const hasPreviousValue = !!parameter.previousValue
   const formattedPreviousValue = hasPreviousValue && formatParameterValue(parameter.previousValue, parameter.unit)
-  const valueClasses = hasPreviousValue ? styles.value : `${styles.value} ${styles['value-no-prev']}`
   const value = formatParameterValue(parameter.value, parameter.unit)
 
   return (
-    <React.Fragment key={parameterId}>
-      <span id={`tooltip-daily-parameter-${parameterId}-name`}
-            data-testid={'parameter-name'}
-            className={styles.label}
-      >
+    <Grid container spacing={1} key={parameterId}>
+      <Grid item xs={7}>
+        <span
+          id={`tooltip-daily-parameter-${parameterId}-name`}
+          data-testid={'parameter-name'}
+          className={styles.bold}
+        >
           {t(`params|${parameter.name}`)}
         </span>
-      {
-        hasPreviousValue &&
-        <>
-            <span id={`tooltip-daily-parameter-${parameterId}-prev`}
-                  data-testid={'parameter-previous-value'}
-                  className={styles.previous}
-            >
-              {formattedPreviousValue}
-            </span>
-          <span id={`tooltip-daily-parameter-${parameterId}-arrow`}>&rarr;</span>
-        </>
-      }
-      <span id={`tooltip-daily-parameter-${parameterId}-value`}
-            data-testid={'parameter-value'}
-            className={valueClasses}
-      >
+      </Grid>
+
+      <Grid item xs={1} display="flex" justifyContent="end">
+        {
+          hasPreviousValue &&
+          <span
+            id={`tooltip-daily-parameter-${parameterId}-prev`}
+            data-testid={'parameter-previous-value'}
+          >
+          {formattedPreviousValue}
+        </span>
+        }
+      </Grid>
+
+      <Grid item xs={1} display="flex" justifyContent="center">
+        {
+          hasPreviousValue &&
+          <span id={`tooltip-daily-parameter-${parameterId}-arrow`}>
+            &rarr;
+          </span>
+        }
+      </Grid>
+
+      <Grid item xs={1} display="flex" justifyContent="end">
+        <span
+          id={`tooltip-daily-parameter-${parameterId}-value`}
+          data-testid={'parameter-value'}
+          className={styles.bold}
+        >
           {value}
         </span>
-      <span id={`tooltip-daily-parameter-${parameterId}-units`}
-            data-testid={'parameter-units'}
-            className={commonStyles.units}
-      >
+      </Grid>
+
+      <Grid item xs={2}>
+        <span
+          id={`tooltip-daily-parameter-${parameterId}-units`}
+          data-testid={'parameter-units'}
+          className={commonStyles.units}
+        >
           {t(parameter.unit)}
         </span>
-    </React.Fragment>
+      </Grid>
+    </Grid>
   )
 }
