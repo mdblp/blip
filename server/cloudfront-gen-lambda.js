@@ -161,6 +161,13 @@ function genContentSecurityPolicy() {
   contentSecurityPolicy.frameSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_DE}.pdf`)
   contentSecurityPolicy.frameSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`)
 
+  contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_FR}.pdf`)
+  contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_EN}.pdf`)
+  contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_ES}.pdf`)
+  contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_IT}.pdf`)
+  contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_DE}.pdf`)
+  contentSecurityPolicy.objectSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`)
+
   let csp = ''
   for (const cspName in contentSecurityPolicy) {
     if (Object.prototype.hasOwnProperty.call(contentSecurityPolicy, cspName)) {
