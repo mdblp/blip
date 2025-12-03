@@ -170,7 +170,8 @@ function genContentSecurityPolicy() {
     `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_IT}.pdf`,
     `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_DE}.pdf`,
     `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`
-  );
+  )
+
   let csp = ''
   for (const cspName in contentSecurityPolicy) {
     if (Object.prototype.hasOwnProperty.call(contentSecurityPolicy, cspName)) {
