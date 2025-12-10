@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { fireEvent, screen, waitForElementToBeRemoved, within } from '@testing-library/react'
+import { act, fireEvent, screen, waitForElementToBeRemoved, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AuthApi } from '../../../lib/auth/auth.api'
 import { Unit } from 'medical-domain'
@@ -105,10 +105,10 @@ export const checkPatientUserAccountLayout = () => {
 
 export const checkCaregiverInfoUpdate = async () => {
   fireEvent.mouseDown(within(screen.getByTestId('user-account-locale-selector')).getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: 'English' }))
+  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: 'English' })))
 
   fireEvent.mouseDown(within(screen.getByTestId('user-account-units-selector')).getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: Unit.MilligramPerDeciliter }))
+  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: Unit.MilligramPerDeciliter })))
 
   const firstNameInput = screen.getByLabelText('First name')
   const lastNameInput = screen.getByLabelText('Last name')
@@ -136,22 +136,22 @@ export const checkCaregiverInfoUpdate = async () => {
 
 export const checkHcpInfoUpdate = async () => {
   fireEvent.mouseDown(within(screen.getByTestId('user-account-locale-selector')).getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: 'English' }))
+  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: 'English' })))
 
   fireEvent.mouseDown(within(screen.getByTestId('user-account-units-selector')).getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: Unit.MilligramPerDeciliter }))
+  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: Unit.MilligramPerDeciliter })))
 
   fireEvent.mouseDown(within(screen.getByTestId('dropdown-profession-selector')).getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: 'Nurse' }))
+  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: 'Nurse' })))
 
   fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: 'Japan' }))
+  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: 'Japan' })))
 
   fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: 'United Kingdom' }))
+  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: 'United Kingdom' })))
 
   fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: 'Austria' }))
+  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: 'Austria' })))
 
   const firstNameInput = screen.getByLabelText('First name')
   const lastNameInput = screen.getByLabelText('Last name')
@@ -177,7 +177,7 @@ export const checkHcpInfoUpdate = async () => {
 
 export const checkPatientInfoUpdate = async () => {
   fireEvent.mouseDown(within(screen.getByTestId('user-account-locale-selector')).getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: 'English' }))
+  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: 'English' })))
 
   const firstNameInput = screen.getByLabelText('First name')
   const lastNameInput = screen.getByLabelText('Last name')

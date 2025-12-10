@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { patient1Info, patient2Info } from '../data/patient.api.data'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import userEvent from '@testing-library/user-event'
@@ -59,7 +59,7 @@ export const checkPatientDropdown = async (initialPatient: Patient, patientToSwi
   expect(secondaryHeader).toHaveTextContent(initialPatientHeaderContent)
 
   fireEvent.mouseDown(within(secondaryHeader).getByText(`${patient1Info.profile.lastName} ${patient1Info.profile.firstName}`))
-  fireEvent.click(within(screen.getByRole('listbox')).getByText(`${patient2Info.profile.lastName} ${patient2Info.profile.firstName}`))
+  await act(async () => fireEvent.mouseDown(within(screen.getByRole('listbox')).getByText(`${patient2Info.profile.lastName} ${patient2Info.profile.firstName}`)))
 
   const secondPatientName = `${patientToSwitchTo.profile.lastName} ${patientToSwitchTo.profile.firstName}`
   const secondaryHeaderRefreshed = await screen.findByTestId('patient-nav-bar')

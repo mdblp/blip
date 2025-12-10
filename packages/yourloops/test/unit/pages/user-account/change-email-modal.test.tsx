@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { ChangeEmailModal } from '../../../../pages/user-account/modals/change-email-modal'
 import { AuthApi } from '../../../../lib/auth/auth.api'
 
@@ -80,9 +80,9 @@ describe('ChangeEmailModal', () => {
     expect(screen.getByRole('button', { name: 'button-confirm' })).toBeInTheDocument()
   })
 
-  it('should close dialog when cancel button is clicked', () => {
+  it('should close dialog when cancel button is clicked', async () => {
     render(getComponent())
-    fireEvent.click(screen.getByRole('button', { name: 'button-cancel' }))
+    await act(async () => fireEvent.mouseDown(screen.getByRole('button', { name: 'button-cancel' })))
     expect(setShowUpdateEmailDialog).toHaveBeenCalledWith(false)
   })
 
@@ -94,7 +94,7 @@ describe('ChangeEmailModal', () => {
     render(getComponent())
     const newEmailField = screen.getByLabelText('new-email')
     fireEvent.change(newEmailField, { target: { value: 'new@email.com' } })
-    fireEvent.click(screen.getByRole('button', { name: 'button-confirm' }))
+    await act(async () => fireEvent.mouseDown(screen.getByRole('button', { name: 'button-confirm' })))
 
     await waitFor(() =>
       expect(sendChangeEmailRequest).toHaveBeenCalledWith('user-id', 'new@email.com')
@@ -107,7 +107,7 @@ describe('ChangeEmailModal', () => {
     render(getComponent())
     const newEmailField = screen.getByLabelText('new-email')
     fireEvent.change(newEmailField, { target: { value: 'bad@email.com' } })
-    fireEvent.click(screen.getByRole('button', { name: 'button-confirm' }))
+    await act(async () => fireEvent.mouseDown(screen.getByRole('button', { name: 'button-confirm' })))
 
     await waitFor(() => {
       expect(screen.getByLabelText('new-email')).toHaveAttribute('aria-invalid', 'true')
@@ -127,12 +127,12 @@ describe('ChangeEmailModal', () => {
     fireEvent.change(screen.getByLabelText('new-email'), {
       target: { value: 'new@email.com' }
     })
-    fireEvent.click(screen.getByRole('button', { name: 'button-confirm' }))
+    await act(async () => fireEvent.mouseDown(screen.getByRole('button', { name: 'button-confirm' })))
     await waitFor(() => expect(AuthApi.sendChangeEmailRequest).toHaveBeenCalled())
 
     // Simulate code input visible (force re-render to simulate success)
     fireEvent.change(screen.getByLabelText('code'), { target: { value: '123456' } })
-    fireEvent.click(screen.getByRole('button', { name: 'button-confirm' }))
+    await act(async () => fireEvent.mouseDown(screen.getByRole('button', { name: 'button-confirm' })))
 
     await waitFor(() => expect(validateChangeEmailRequest).toHaveBeenCalledWith('123456'))
   })

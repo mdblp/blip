@@ -82,7 +82,7 @@ describe('TeamInformation', () => {
   async function editTeamInfo() {
     const editInfoButton = screen.getByRole('button', { name: 'button-edit-information' })
     await act(async () => {
-      fireEvent.click(editInfoButton)
+      fireEvent.mouseDown(editInfoButton)
     })
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeNull()
@@ -90,7 +90,7 @@ describe('TeamInformation', () => {
     const editTeamDialog = within(screen.getByRole('dialog'))
     const editTeamButton = editTeamDialog.getByRole('button', { name: 'button-save' })
     await act(async () => {
-      fireEvent.click(editTeamButton)
+      fireEvent.mouseDown(editTeamButton)
     })
     await waitFor(() => {
       expect(updateTeamMock).toHaveBeenCalledWith(team)
@@ -159,7 +159,7 @@ describe('TeamInformation', () => {
     render(getTeamInformationJSX())
     const editInfoButton = screen.getByRole('button', { name: 'button-edit-information' })
     await act(async () => {
-      fireEvent.click(editInfoButton)
+      fireEvent.mouseDown(editInfoButton)
     })
     await waitFor(() => {
       expect(screen.queryByRole('dialog')).not.toBeNull()
@@ -167,7 +167,7 @@ describe('TeamInformation', () => {
     const editTeamDialog = within(screen.getByRole('dialog'))
     const editTeamButton = editTeamDialog.getByRole('button', { name: 'button-cancel' })
     await act(async () => {
-      fireEvent.click(editTeamButton)
+      fireEvent.mouseDown(editTeamButton)
     })
     await waitFor(() => {
       expect(updateTeamMock).toHaveBeenCalledTimes(0)

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import {
   getAccessTokenWithPopupMock,
   loggedInUserEmail,
@@ -100,10 +100,10 @@ describe('Signup stepper as hcp', () => {
     await userEvent.click(screen.getByText('Nurse'))
 
     fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
-    fireEvent.click(screen.getByRole('option', { name: 'Japan' }))
+    await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: 'Japan' })))
 
     fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
-    fireEvent.click(screen.getByRole('option', { name: 'United Kingdom' }))
+    await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: 'United Kingdom' })))
 
     expect(createButton).not.toBeDisabled()
     await userEvent.click(screen.getByText('Create account'))
