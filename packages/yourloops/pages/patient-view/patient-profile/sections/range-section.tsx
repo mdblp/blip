@@ -33,11 +33,11 @@ import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import { InputAdornment } from "@mui/material"
-import { LoadingButton } from '@mui/lab'
+import Button from '@mui/material/Button'
 import { Save } from '@mui/icons-material'
 import Chip from '@mui/material/Chip'
 import { Patient } from '../../../../lib/patient/models/patient.model'
@@ -323,7 +323,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
             {/* Range Configuration */}
             <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Box data-testid="range-configuration-viz" display="flex" flexDirection="column" gap={1}
                 >
                   <RangeVisualizationChart
@@ -334,7 +334,8 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
               </Grid>
 
               {/* Right side - Range inputs */}
-              <Grid item xs={12} md={6}>
+              <Grid
+                size={{ xs: 12, md: 6 }}>
                 <Box data-testid="range-configuration-form" display="flex" flexDirection="column" gap={1}>
                   <TextField
                     data-testid="severe-hyperglycemia-field"
@@ -484,7 +485,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
             </Grid>
             {/* Action Buttons */}
             <Box display="flex" justifyContent="flex-end" marginTop={8}>
-              <LoadingButton
+              <Button
                 loading={saveInProgress}
                 id="save-button-id"
                 variant="contained"
@@ -496,7 +497,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
                 data-testid="range-config-save"
               >
                 {t('button-save')}
-              </LoadingButton>
+              </Button>
               <AdaptAlertsDialog
                 open={showDialog}
                 onClose={keepCurrentAlerts}

@@ -30,7 +30,7 @@ import { useAuth } from '../../lib/auth'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Button from '@mui/material/Button'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
 import Box from '@mui/material/Box'
@@ -114,7 +114,7 @@ export const TrainingPage: FC = () => {
         justifyContent="center"
         className={classes.centeredGrid}
       >
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Card className={classes.card}>
             <CardMedia>
               <Box marginY={2}>

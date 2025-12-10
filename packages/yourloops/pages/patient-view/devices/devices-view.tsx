@@ -33,7 +33,7 @@ import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import { CurrentParametersSection } from './sections/current-parameters-section'
 import Typography from '@mui/material/Typography'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import { SafetyBasalProfileSection } from './sections/safety-basal-profile-section'
 import { ChangeHistorySection } from './sections/change-history-section'
 import { DevicesViewMenu } from './devices-view-menu'
@@ -71,14 +71,14 @@ export const DevicesView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecifi
       {medicalData.medicalData.pumpSettings.length > 0
         ?
         <Grid container spacing={3}>
-          <Grid item xs={3}>
+          <Grid size={3}>
             <DevicesViewMenu
               selectedSection={selectedSection}
               selectSection={selectSection}
               shouldDisplaySafetyBasalProfile={isBasalSafetyProfileAvailable(pumpSettings)}
             />
           </Grid>
-          <Grid item xs={9}>
+          <Grid size={9}>
             {
               isSelected(DeviceViewSection.CurrentParameters) ?
                 <CurrentParametersSection pumpSettings={pumpSettings} />

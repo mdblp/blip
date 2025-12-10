@@ -36,7 +36,7 @@ import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import colors from '../../../styles/colors.css'
 import moment from 'moment-timezone'
 import { getDateTimeFormat } from '../../../utils/datetime/datetime.util'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import styles from './time-change-tooltip.css'
 
 interface TimeChangeTooltipProps {
@@ -78,22 +78,22 @@ export const TimeChangeTooltip: FC<TimeChangeTooltipProps> = (props) => {
   const getTimezoneChangeContent = (): JSX.Element => {
     return (
       <Grid container spacing={1} sx={{ maxWidth: '324px' }}>
-        <Grid item xs={4}>
+        <Grid size={4}>
           {t('previous-time')}
         </Grid>
-        <Grid item xs={3} className={styles.value}>
+        <Grid className={styles.value} size={3}>
           {formattedPreviousTime}
         </Grid>
-        <Grid item xs={5} className={styles.value}>
+        <Grid className={styles.value} size={5}>
           <span className={styles.timezone}>{previousTimezone}</span>
         </Grid>
-        <Grid item xs={4}>
+        <Grid size={4}>
           {t('new-time')}
         </Grid>
-        <Grid item xs={3} className={styles.value}>
+        <Grid className={styles.value} size={3}>
           {formattedNewTime}
         </Grid>
-        <Grid item xs={5} className={styles.value}>
+        <Grid className={styles.value} size={5}>
           <span className={styles.timezone}>{newTimezone}</span>
         </Grid>
       </Grid>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,7 +33,7 @@ import CardContent from '@mui/material/CardContent'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import EmailIcon from '@mui/icons-material/Email'
 import PersonIcon from '@mui/icons-material/Person'
 import CakeIcon from '@mui/icons-material/Cake'
@@ -120,14 +120,14 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
             </Box>
           </Box>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid size={6}>
               <InfoRow icon={CakeIcon} dataTestId='date-of-birth' label={t('date-of-birth')} value={`${formatBirthdate(patient.profile.birthdate)} (${patientInfo.age})`} />
               <InfoRow icon={PersonIcon} dataTestId='gender' label={t('gender')} value={patientInfo.gender} />
               <InfoRow icon={MonitorWeightIcon} dataTestId='weight' label={t('params|WEIGHT')} value={patientInfo.weight} />
               <InfoRow icon={HeightIcon} dataTestId='height' label={t('params|HEIGHT')} value={patientInfo.height} />
               <InfoRow icon={EmailIcon} dataTestId='email' label={t('email')} value={patient.profile.email || t('N/A')} />
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={6}>
               <InfoRow icon={PhoneAndroidIcon} dataTestId='equipment-date' label={t('equipment-date')} value={patientInfo.equipmentDate} />
               <InfoRow icon={StraightenIcon} dataTestId='hba1c' label={t('hba1c')} value={patientInfo.hba1c} />
               <InfoRow icon={ScaleIcon} dataTestId='glycemia-units' label={t('glycemia-units')} value={patientInfo.dbUnits} />

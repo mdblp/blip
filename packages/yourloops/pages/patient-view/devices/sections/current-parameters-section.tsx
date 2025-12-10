@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,7 +34,7 @@ import { useTranslation } from 'react-i18next'
 import Button from '@mui/material/Button'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
 import { useTheme } from '@mui/material/styles'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import { makeStyles } from 'tss-react/mui'
 import { DeviceInfoTable } from '../../../../components/device/device-info-table'
 import { PumpInfoTable } from '../../../../components/device/pump-info-table'
@@ -75,7 +75,7 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
   sortHistory(history)
 
   return (
-    <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="current-parameters-section">
+    (<Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="current-parameters-section">
       <CardHeader
         title={t('devices-and-current-parameters')}
         subheader={`${t('last-upload:')} ${lastUploadDate}`}
@@ -99,7 +99,7 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
           spacing={4}
           rowSpacing={4}
         >
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             {device.name == DeviceSystem.Dblg1
               && <DeviceInfoTable device={device} />
             }
@@ -109,7 +109,9 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
             <PumpInfoTable pump={pump} />
             <CgmInfoTable cgm={cgm} />
           </Grid>
-          <Grid item xs={12} sm={6} data-testid="parameters-container">
+          <Grid
+            data-testid="parameters-container"
+            size={{ xs: 12, sm: 6 }}>
             <ParameterList parameters={parameters} />
           </Grid>
         </Grid>

@@ -35,7 +35,7 @@ import { t } from 'i18next'
 import { formatDuration } from '../../../utils/datetime/datetime.util'
 import { ensureNumeric } from '../stats.util'
 import Chip from '@mui/material/Chip'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import { LoopModePercentageDetail } from './loop-mode-percentage-detail'
 import { StatColoredBar } from '../stat-colored-bar/stat-colored-bar'
 import { LineColor } from '../../../models/enums/line-color.enum'
@@ -83,14 +83,14 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
         </Box>
       </Box>
       <Grid container spacing={0} sx={{ marginTop: 1 }}>
-        <Grid item xs={3}>
+        <Grid size={3}>
           <LoopModePercentageDetail
             percentageValue={automatedPercentage}
             duration={automatedDuration}
             valueClassName={styles.autoValueColor}
           />
         </Grid>
-        <Grid item xs={6} sx={{ alignSelf: 'flex-start' }}>
+        <Grid sx={{ alignSelf: 'flex-start' }} size={6}>
           <StatColoredBar
             dotItem={{ color: 'var(--bg-target)', alignmentPercent: dotAlignment }}
             lineColorItems={[
@@ -99,7 +99,7 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
             ]}
           />
         </Grid>
-        <Grid item xs={3}>
+        <Grid size={3}>
           <LoopModePercentageDetail
             percentageValue={manualPercentage}
             duration={manualDuration}

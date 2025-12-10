@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2024-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,7 @@ import React, { FC } from 'react'
 import { setPageTitle } from '../../lib/utils'
 import { Trans, useTranslation } from 'react-i18next'
 import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
 import appConfig from '../../lib/config/config'
@@ -84,7 +84,7 @@ export const SignupInformationPage: FC = () => {
         justifyContent="center"
         minHeight="90vh"
       >
-        <Grid item xs={12}>
+        <Grid size={12}>
             <Card className={classes.card} elevation={4}>
               <CardMedia className={classes.logoHeader}>
                 <img src={`/branding_${appConfig.BRANDING}_logo.svg`} height={35} alt={t('alt-img-logo')} data-testid="yourloops-logo" />

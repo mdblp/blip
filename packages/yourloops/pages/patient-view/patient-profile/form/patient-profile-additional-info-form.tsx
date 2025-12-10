@@ -26,7 +26,7 @@
  */
 
 import React, { type FC, useMemo, useState } from 'react'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import TextField from '@mui/material/TextField'
 import { Autocomplete } from '@mui/material'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -34,7 +34,7 @@ import { useTranslation } from 'react-i18next'
 import { PhysicalActivityName } from 'medical-domain'
 import { type PatientProfile } from '../../../../lib/patient/models/patient-profile.model'
 import Box from '@mui/material/Box'
-import { LoadingButton } from '@mui/lab'
+import Button from '@mui/material/Button'
 import { Save } from '@mui/icons-material'
 import { errorTextFromException } from '../../../../lib/utils'
 import { logError } from '../../../../utils/error.util'
@@ -78,7 +78,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
   const { patient } = props
   const { user } = useAuth()
   const { t } = useTranslation()
-  const  alert = useAlert()
+  const alert = useAlert()
   const { updatePatientProfile } = usePatient()
   const { classes } = useStyles()
   const [additionalPatientProfileForm, setAdditionalPatientProfileForm] = useState<PatientProfile>(patient.profile)
@@ -97,7 +97,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
   }, [saveInProgress, errors])
 
   const physicalActivityNameList = Object.values(PhysicalActivityName)
-  const dietOptions = ['no-specific-diet','vegetarian', 'gluten-free', 'low-carbohydrates-diet', 'vegan', 'ketogenic-diet', 'caloric-restriction', 'intermittent-fasting', 'paleolithic-diet', 'other']
+  const dietOptions = ['no-specific-diet', 'vegetarian', 'gluten-free', 'low-carbohydrates-diet', 'vegan', 'ketogenic-diet', 'caloric-restriction', 'intermittent-fasting', 'paleolithic-diet', 'other']
 
   const validateHoursPerWeek = (hours: number): void => {
     const error = hours > MAX_HOURS_IN_WEEK ? t('max-hours-per-week', { max: TEXT_FIELD_MAX_LENGTH }) : ''
@@ -111,12 +111,12 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
 
   const validateProfession = (profession: string): void => {
     const error = profession.length > TEXT_FIELD_MAX_LENGTH ? t('max-length-exceeded', { max: TEXT_FIELD_MAX_LENGTH }) : ''
-    setErrors( prev => ({ ...prev , [PatientProfileAdditionalInfoFormKey.Profession]: error }))
+    setErrors(prev => ({ ...prev, [PatientProfileAdditionalInfoFormKey.Profession]: error }))
   }
 
   const validateComments = (comments: string): void => {
     const error = comments.length > COMMENTS_MAX_LENGTH ? t('max-length-exceeded', { max: COMMENTS_MAX_LENGTH }) : ''
-    setErrors( prev => ({ ...prev , [PatientProfileAdditionalInfoFormKey.Comments]: error }))
+    setErrors(prev => ({ ...prev, [PatientProfileAdditionalInfoFormKey.Comments]: error }))
   }
 
   const validateHobbies = (hobbies: string): void => {
@@ -133,15 +133,14 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
       const errorMessage = errorTextFromException(error)
       logError(errorMessage, 'update-patient-ranges')
       alert.error(t('patient-update-error'))
-    }
-    finally {
+    } finally {
       setSaveInProgress(false)
     }
   }
   return (
     <>
       <Grid container spacing={3}>
-        <Grid item xs={6}>
+        <Grid size={6}>
           <TextField
             data-testid="additional-patient-profile-drug-treatment"
             label={t('drug-treatment-other-than-insulin')}
@@ -173,7 +172,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
           />
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid size={6}>
           <Autocomplete
             multiple
             data-testid="additional-patient-profile-diet"
@@ -210,9 +209,8 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
           />
         </Grid>
       </Grid>
-
       <Grid container spacing={1} mb={1}>
-        <Grid item xs={6}>
+        <Grid size={6}>
           <Autocomplete
             multiple
             data-testid="additional-patient-profile-physical-activity"
@@ -233,7 +231,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
             disabled={!user.isUserPatient()}
           />
         </Grid>
-        <Grid item xs={6}>
+        <Grid size={6}>
           <TextField
             data-testid="additional-patient-profile-physical-activity-duration"
             label={t('duration-per-week')}
@@ -255,7 +253,6 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
           />
         </Grid>
       </Grid>
-
       <TextField
         data-testid="additional-patient-profile-open-comments"
         label={t('open-comments')}
@@ -271,9 +268,9 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
         error={!!errors.comments}
         helperText={errors.comments}
       />
-      { user.isUserPatient() &&
+      {user.isUserPatient() &&
         <Box display="flex" justifyContent="flex-end" mt={4}>
-          <LoadingButton
+          <Button
             loading={saveInProgress}
             variant="contained"
             color="primary"
@@ -285,7 +282,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
             sx={{ minWidth: 120 }}
           >
             {t('button-save')}
-          </LoadingButton>
+          </Button>
         </Box>
       }
     </>

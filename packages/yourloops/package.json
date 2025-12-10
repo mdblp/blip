@@ -36,9 +36,9 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
-    "@mui/icons-material": "^5.14.13",
-    "@mui/lab": "^5.0.0-alpha.151",
-    "@mui/material": "^5.14.16",
+    "@mui/icons-material": "^6.0.0",
+    "@mui/lab": "^6.0.0-beta",
+    "@mui/material": "^6.0.0",
     "@mui/x-data-grid": "^6.18.2",
     "axios": "^1.7.4",
     "bows": "^1.7.2",
@@ -56,9 +56,13 @@
     "react-draggable": "^4.5.0",
     "react-i18next": "^13.3.0",
     "react-idle-timer": "^5.7.2",
+    "react-is": "^18.2.0",
     "react-resize-detector": "^9.1.0",
     "react-router-dom": "^6.16.0",
     "tss-react": "^4.9.2",
     "uuid": "^10.0.0"
+  },
+  "overrides": {
+    "react-is": "^18.2.0"
   }
 }

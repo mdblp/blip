@@ -37,7 +37,7 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
 import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import CardContent from '@mui/material/CardContent'
 
 import Button from '@mui/material/Button'
@@ -137,7 +137,7 @@ export const ConsentPage: FC<ConsentProps> = (props) => {
           justifyContent="center"
           className={classes.centeredGrid}
         >
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Card className={classes.card}>
               <CardMedia>
                 <Box marginY={2}>

@@ -30,7 +30,7 @@ import { type Patient } from '../../lib/patient/models/patient.model'
 import type MedicalDataService from 'medical-domain'
 import { type DateFilter, type MedicalData } from 'medical-domain'
 import { type BgPrefs } from 'dumb'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../lib/auth'
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -179,44 +179,35 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
       rowSpacing={2}
       paddingX={3}
     >
-      <Grid
-        item
-        xs={12}
-        display="flex"
-        alignItems="center"
-      >
+      <Grid display="flex" alignItems="center" size={12}>
           <Alert severity="info">
             {t('data-period-text')}
           </Alert>
       </Grid>
-
-
-      <Grid item xs={gridWidgetSize}>
+      <Grid size={gridWidgetSize}>
         <PatientStatistics
           medicalData={medicalData}
           bgPrefs={bgPrefs}
           dateFilter={dateFilter}
         />
       </Grid>
-
-      <Grid item xs={gridWidgetSize}>
+      <Grid size={gridWidgetSize}>
         <DevicesColumn
           dateFilter={dateFilter}
           goToDailySpecificDate={goToDailySpecificDate}
           medicalDataService={medicalDataService}
         />
       </Grid>
-
       {!isCaregiver && !isPatientWithNoTeams && !isSelectedTeamPrivate &&
         <>
-          <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
+          <Grid className={classes.gridItemContainer} size={gridWidgetSize}>
             {user.isUserHcp() &&
               <MonitoringAlertsCard patient={patient} />
             }
             <MedicalFilesCard patient={patient} />
           </Grid>
 
-          <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
+          <Grid className={classes.gridItemContainer} size={gridWidgetSize}>
             <ChatWidget
               patient={patient}
             />

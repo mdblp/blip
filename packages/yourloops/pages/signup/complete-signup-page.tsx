@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,7 +33,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import { SignUpStepper } from './signup-stepper'
 import { SignUpFormStateProvider } from './signup-formstate-context'
 import appConfig from '../../lib/config/config'
@@ -68,7 +68,7 @@ export const CompleteSignUpPage: FunctionComponent = () => {
         justifyContent="center"
         minHeight="90vh"
       >
-        <Grid item xs={12}>
+        <Grid size={12}>
           <SignUpFormStateProvider>
             <Card id="card-signup" className={classes.card} elevation={4}>
               <CardMedia className={classes.logoHeader}>

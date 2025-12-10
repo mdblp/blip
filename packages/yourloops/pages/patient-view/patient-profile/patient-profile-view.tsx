@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 import React, { type FC, useState } from 'react'
 import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import { PatientPersonalInformationSection } from './sections/patient-personal-information-section'
 import { PatientProfileViewMenu } from './patient-profile-view-menu'
 import { PatientProfileViewSection } from './patient-profile-view-section.enum'
@@ -91,12 +91,12 @@ export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => 
   return (
     <Container data-testid="patient-profile-view-container" maxWidth="xl">
       <Grid container spacing={3}>
-        <Grid item xs={3}>
+        <Grid size={3}>
           { user.isUserHcp() &&
             <PatientProfileViewMenu selectedSection={selectedSection} selectSection={selectSection} />
           }
         </Grid>
-        <Grid item xs={9}>
+        <Grid size={9}>
           {displaySelectedSection()}
         </Grid>
         { showDialog &&

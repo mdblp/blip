@@ -26,7 +26,7 @@
  */
 
 import React, { type FunctionComponent } from 'react'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import LockIcon from '@mui/icons-material/LockOutlined'
 import styles from './confidential-tooltip.css'
 import colors from '../../../styles/colors.css'
@@ -51,10 +51,10 @@ export const ConfidentialTooltip: FunctionComponent<ConfidentialTooltipProps> = 
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
         <Grid container direction="row" alignItems="center" justifyContent="center">
-          <Grid item>
+          <Grid>
             <LockIcon className={styles.icon} />
           </Grid>
-          <Grid item>{t('Confidential mode')}</Grid>
+          <Grid>{t('Confidential mode')}</Grid>
         </Grid>
       }
     />
