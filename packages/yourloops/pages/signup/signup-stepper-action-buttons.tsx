@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,6 @@ import React, { type FunctionComponent } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
-import { LoadingButton } from '@mui/lab'
 
 interface SignupStepperActionButtonsProps {
   nextButtonLabel: string
@@ -66,7 +65,7 @@ const SignupStepperActionButtons: FunctionComponent<SignupStepperActionButtonsPr
           {t('button-back')}
         </Button>
       </Box>
-      <LoadingButton
+      <Button
         data-testid="next-step"
         loading={inProgress}
         variant="contained"
@@ -76,7 +75,7 @@ const SignupStepperActionButtons: FunctionComponent<SignupStepperActionButtonsPr
         onClick={onClickNextButton}
       >
         {nextButtonLabel}
-      </LoadingButton>
+      </Button>
     </Box>
   )
 }

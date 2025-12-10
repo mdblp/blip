@@ -46,7 +46,6 @@ import { Radio, RadioGroup } from '@mui/material'
 
 import { type CalendarOrientation } from '../date-pickers/models'
 import RangeDatePicker from '../date-pickers/range-date-picker'
-import { LoadingButton } from '@mui/lab'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import type MedicalDataService from 'medical-domain'
 import { TimeService } from 'medical-domain'
@@ -406,7 +405,7 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
         >
           {t('button-cancel')}
         </Button>
-        <LoadingButton
+        <Button
           data-testid="pdf-options-button-download"
           disabled={!!customStartDate}
           loading={buildingReport}
@@ -416,7 +415,7 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
           onClick={onClickDownload}
         >
           {t('button-download')}
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   )

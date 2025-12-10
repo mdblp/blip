@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,7 +32,6 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { LoadingButton } from '@mui/lab'
 import DialogContentText from '@mui/material/DialogContentText'
 import { useReinvitePatientDialog } from './reinvite-patient-dialog.hook'
 import { useParams } from 'react-router-dom'
@@ -93,7 +92,7 @@ export const ReinvitePatientDialog: FunctionComponent<ReinvitePatientDialogProps
         >
           {t('button-cancel')}
         </Button>
-        <LoadingButton
+        <Button
           data-testid="reinvite-confirm"
           loading={processing}
           color="error"
@@ -102,7 +101,7 @@ export const ReinvitePatientDialog: FunctionComponent<ReinvitePatientDialogProps
           onClick={handleOnClickReinvite}
         >
           {t('button-resend-invite')}
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   )

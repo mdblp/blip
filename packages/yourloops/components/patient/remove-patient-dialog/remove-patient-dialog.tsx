@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,7 +33,6 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import useRemovePatientDialog from './remove-patient-dialog.hook'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { LoadingButton } from '@mui/lab'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import DialogContentText from '@mui/material/DialogContentText'
@@ -105,7 +104,7 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
         >
           {t('button-cancel')}
         </Button>
-        <LoadingButton
+        <Button
           loading={processing}
           data-testid="remove-patient-dialog-validate-button"
           color="error"
@@ -114,7 +113,7 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
           onClick={handleOnClickRemove}
         >
           {t('button-remove-patient')}
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   )

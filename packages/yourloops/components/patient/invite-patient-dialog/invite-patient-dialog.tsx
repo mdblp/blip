@@ -47,7 +47,6 @@ import { type Team, useTeam } from '../../../lib/team'
 import metrics from '../../../lib/metrics'
 import { useAlert } from '../../utils/snackbar'
 import { PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE } from '../../../lib/patient/patient.api'
-import { LoadingButton } from '@mui/lab'
 import { useParams } from 'react-router-dom'
 import { logError } from '../../../utils/error.util'
 
@@ -202,7 +201,7 @@ export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose
         >
           {t('button-cancel')}
         </Button>
-        <LoadingButton
+        <Button
           id="patient-list-dialog-add-button-add"
           disabled={!!errorMessage || !isValidEmail()}
           loading={inProgress}
@@ -212,7 +211,7 @@ export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose
           onClick={addPatient}
         >
           {t('button-invite')}
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   )

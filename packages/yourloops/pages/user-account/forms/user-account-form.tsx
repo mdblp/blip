@@ -36,7 +36,6 @@ import { PreferencesForm } from './preferences-form'
 import { useTranslation } from 'react-i18next'
 import { useUserAccountPageState } from '../user-account-page-context'
 import { userAccountFormCommonClasses } from '../css-classes'
-import { LoadingButton } from '@mui/lab'
 
 export const UserAccountForm: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
@@ -53,7 +52,7 @@ export const UserAccountForm: FunctionComponent = () => {
             {t('button-cancel')}
           </Button>
         </LinkRedirect>
-        <LoadingButton
+        <Button
           loading={saving}
           data-testid="user-account-save-button"
           variant="contained"
@@ -64,7 +63,7 @@ export const UserAccountForm: FunctionComponent = () => {
           onClick={saveUserAccount}
         >
           {t('button-save')}
-        </LoadingButton>
+        </Button>
       </Box>
     </React.Fragment>
   )

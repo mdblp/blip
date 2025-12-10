@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,7 +33,6 @@ import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { useAuth } from '../../lib/auth'
-import { LoadingButton } from '@mui/lab'
 import { Unit } from 'medical-domain'
 import { type MonitoringAlertsParameters } from 'medical-domain'
 import { Save } from '@mui/icons-material'
@@ -151,7 +150,7 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
           </Button>
         }
         {!displayInReadonly &&
-          <LoadingButton
+          <Button
             loading={saveInProgress}
             id="save-button-id"
             variant="contained"
@@ -163,7 +162,7 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
             data-testid="monitoring-alert-config-save"
           >
             {t('button-save')}
-          </LoadingButton>
+          </Button>
         }
       </Box>
     </>

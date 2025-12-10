@@ -38,7 +38,6 @@ import DialogTitle from '@mui/material/DialogTitle'
 import MedicalFilesApi from '../../lib/medical-files/medical-files.api'
 import { useAlert } from '../utils/snackbar'
 import { type MedicalReport } from '../../lib/medical-files/models/medical-report.model'
-import { LoadingButton } from '@mui/lab'
 import { logError } from '../../utils/error.util'
 import { errorTextFromException } from '../../lib/utils'
 
@@ -97,7 +96,7 @@ export default function MedicalReportDeleteDialog({ onClose, medicalReport, onDe
         >
           {t('button-cancel')}
         </Button>
-        <LoadingButton
+        <Button
           variant="contained"
           disableElevation
           loading={inProgress}
@@ -105,7 +104,7 @@ export default function MedicalReportDeleteDialog({ onClose, medicalReport, onDe
           onClick={deleteMedicalReport}
         >
           {t('button-delete')}
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   )

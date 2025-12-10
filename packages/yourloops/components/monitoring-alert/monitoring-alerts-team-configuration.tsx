@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,7 @@ import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { useAuth } from '../../lib/auth'
-import { LoadingButton } from '@mui/lab'
+import Button from '@mui/material/Button'
 import { Unit } from 'medical-domain'
 import { type MonitoringAlertsParameters } from 'medical-domain'
 import { Save } from '@mui/icons-material'
@@ -79,7 +79,7 @@ export const MonitoringAlertsTeamConfiguration: FC<MonitoringAlertsTeamConfigura
       />
       <Box display="flex" justifyContent="flex-end" margin={2}>
         {!displayInReadonly &&
-          <LoadingButton
+          <Button
             loading={saveInProgress}
             id="save-button-id"
             variant="contained"
@@ -91,7 +91,7 @@ export const MonitoringAlertsTeamConfiguration: FC<MonitoringAlertsTeamConfigura
             data-testid="monitoring-alert-config-save"
           >
             {t('button-save')}
-          </LoadingButton>
+          </Button>
         }
       </Box>
     </>

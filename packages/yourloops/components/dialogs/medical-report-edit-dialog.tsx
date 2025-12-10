@@ -45,7 +45,6 @@ import Typography from '@mui/material/Typography'
 import { type CategoryProps } from '../dashboard-cards/medical-files/medical-files-card'
 import { useMedicalReportEditDialog } from './medical-report-edit-dialog.hook'
 import { type MedicalReport } from '../../lib/medical-files/models/medical-report.model'
-import { LoadingButton } from '@mui/lab'
 
 export interface MedicalReportEditDialogProps extends CategoryProps {
   onClose: () => void
@@ -172,7 +171,7 @@ export default function MedicalReportEditDialog(props: MedicalReportEditDialogPr
           {isInReadOnly ? t('button-close') : t('button-cancel')}
         </Button>
         {!isInReadOnly &&
-          <LoadingButton
+          <Button
             loading={inProgress}
             variant="contained"
             color="primary"
@@ -181,7 +180,7 @@ export default function MedicalReportEditDialog(props: MedicalReportEditDialogPr
             onClick={saveMedicalReport}
           >
             {t('button-save')}
-          </LoadingButton>
+          </Button>
         }
       </DialogActions>
     </Dialog>

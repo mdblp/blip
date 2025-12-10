@@ -38,7 +38,6 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogActions from '@mui/material/DialogActions'
-import { LoadingButton } from '@mui/lab'
 import Dialog from '@mui/material/Dialog'
 
 interface ChangeEmailModalProps {
@@ -172,7 +171,7 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showChangeEmailMod
           >
             {t('button-cancel')}
           </Button>
-          <LoadingButton
+          <Button
             loading={operationInProgress}
             data-testid="confirm-dialog-confirm-button"
             variant="contained"
@@ -182,7 +181,7 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showChangeEmailMod
             onClick={emailSentSuccess   ? validateChangeEmailRequest : sendChangeEmailRequest}
           >
             {t('button-confirm')}
-          </LoadingButton>
+          </Button>
         </DialogActions>
       </Dialog>
   )
