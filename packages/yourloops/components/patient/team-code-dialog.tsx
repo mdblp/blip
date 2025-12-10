@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,8 +27,6 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
@@ -47,7 +45,7 @@ export interface TeamCodeDialogProps {
 }
 
 const reCode = /^([0-9]{3})([0-9]{3})([0-9]{3})$/
-const dialogClasses = makeStyles({ name: 'ylp-dialog-team-code' })((theme: Theme) => {
+const dialogClasses = makeStyles({ name: 'ylp-dialog-team-code' })((theme) => {
   return {
     contentCode: {
       display: 'flex',

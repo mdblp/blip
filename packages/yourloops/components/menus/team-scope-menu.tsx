@@ -28,7 +28,7 @@
 import React, { type FunctionComponent, useState } from 'react'
 import Box from '@mui/material/Box'
 import { makeStyles } from 'tss-react/mui'
-import { type Theme, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { type Team, useTeam } from '../../lib/team'
 import PersonIcon from '@mui/icons-material/Person'
 import { TeamType } from '../../lib/team/models/enums/team-type.enum'
@@ -55,7 +55,7 @@ import { AppUserRoute } from '../../models/enums/routes.enum'
 import { logError } from '../../utils/error.util'
 import { errorTextFromException } from '../../lib/utils'
 
-const classes = makeStyles()((theme: Theme) => ({
+const classes = makeStyles()((theme) => ({
   sectionTitle: {
     fontWeight: 'bold',
     paddingLeft: theme.spacing(2),

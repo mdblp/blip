@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,6 @@
 
 import React, { type FunctionComponent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Stepper from '@mui/material/Stepper'
@@ -45,7 +44,7 @@ export interface SignUpFormProps {
   handleNext: () => void
 }
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   stepper: {
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),

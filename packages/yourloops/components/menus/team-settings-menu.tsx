@@ -32,7 +32,7 @@ import { useNavigate } from 'react-router-dom'
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 
-import { type Theme, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Badge from '@mui/material/Badge'
@@ -58,7 +58,7 @@ import { AppUserRoute } from '../../models/enums/routes.enum'
 import { PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE } from '../../lib/team/team.api'
 import { logError } from '../../utils/error.util'
 
-const classes = makeStyles()((theme: Theme) => ({
+const classes = makeStyles()((theme) => ({
   teamIcon: {
     marginRight: theme.spacing(2)
   },

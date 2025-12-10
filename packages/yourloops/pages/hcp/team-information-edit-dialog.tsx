@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import _ from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { type Theme, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 
 import Box from '@mui/material/Box'
@@ -62,7 +62,7 @@ export interface TeamInformationEditModalProps {
   teamToEdit: TeamEditModalContentProps | null
 }
 
-const modalStyles = makeStyles()((theme: Theme) => {
+const modalStyles = makeStyles()((theme) => {
   return {
     dialogContent: {
       maxHeight: '28em'

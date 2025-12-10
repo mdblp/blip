@@ -27,7 +27,6 @@
 
 import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -39,7 +38,7 @@ import { SignUpFormStateProvider } from './signup-formstate-context'
 import appConfig from '../../lib/config/config'
 import { setPageTitle } from '../../lib/utils'
 
-const formStyle = makeStyles({ name: 'signup-page-styles' })((theme: Theme) => ({
+const formStyle = makeStyles({ name: 'signup-page-styles' })((theme) => ({
   card: {
     marginBlock: theme.spacing(2)
   },

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,17 +28,16 @@
 import _ from 'lodash'
 import React from 'react'
 import { type Dayjs } from 'dayjs'
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Typography from '@mui/material/Typography'
 
 import {
-  type CalendarPosition,
+  animationStyle,
   type CalendarChangeMonth,
+  type CalendarPosition,
   type CalendarSelection,
   type CalendarSelectionRange,
-  type CalendarSelectionSingle,
-  animationStyle
+  type CalendarSelectionSingle
 } from './models'
 import MonthDayElements, { dayStyles } from './month-days-elements'
 
@@ -53,7 +52,7 @@ interface CalendarProps {
   onChange: (date: Dayjs, updateCurrentMonth?: boolean) => void
 }
 
-const calendarStyles = makeStyles({ name: 'date-pickers-calendar' })((theme: Theme) => {
+const calendarStyles = makeStyles({ name: 'date-pickers-calendar' })((theme) => {
   return {
     calendar: {
       display: 'flex',

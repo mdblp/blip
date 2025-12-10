@@ -35,7 +35,6 @@ import CardMedia from '@mui/material/CardMedia'
 import appConfig from '../../lib/config/config'
 import CardContent from '@mui/material/CardContent'
 import { makeStyles } from 'tss-react/mui'
-import type { Theme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
@@ -43,7 +42,7 @@ import { useAuth } from '../../lib/auth'
 import Alert from '@mui/material/Alert'
 import { useAuth0 } from '@auth0/auth0-react'
 
-const formStyle = makeStyles({ name: 'signup-page-styles' })((theme: Theme) => ({
+const formStyle = makeStyles({ name: 'signup-page-styles' })((theme) => ({
   card: {
     marginBlock: theme.spacing(2)
   },

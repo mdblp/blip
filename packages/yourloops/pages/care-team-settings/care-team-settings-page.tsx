@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,6 @@
 
 import React, { type FC, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
@@ -44,7 +43,7 @@ import { useParams } from 'react-router-dom'
 import { setPageTitle } from '../../lib/utils'
 import SpinningLoader from '../../components/loaders/spinning-loader'
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   activeLink: {
     color: theme.palette.primary.main
   },

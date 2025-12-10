@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,6 @@
 
 import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import { useLocation } from 'react-router-dom'
 
@@ -49,7 +48,7 @@ import { type AppRoute } from '../../models/enums/routes.enum'
 import { getCurrentLang } from '../../lib/language'
 import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 
-export const footerStyle = makeStyles({ name: 'footer-component-styles' })((theme: Theme) => {
+export const footerStyle = makeStyles({ name: 'footer-component-styles' })((theme) => {
   return {
     appVersionLink: {
       marginLeft: theme.spacing(1)

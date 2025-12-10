@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,8 +27,6 @@
 
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Checkbox from '@mui/material/Checkbox'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
@@ -47,7 +45,7 @@ import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enu
 import { getUserName } from '../../lib/auth/user.util'
 import { logError } from '../../utils/error.util'
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   checkboxTableCellBody: {
     padding: `0 ${theme.spacing(2)} !important`
   },

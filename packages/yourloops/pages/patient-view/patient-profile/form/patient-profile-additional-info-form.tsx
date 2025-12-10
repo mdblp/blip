@@ -41,7 +41,6 @@ import { logError } from '../../../../utils/error.util'
 import { useAlert } from '../../../../components/utils/snackbar'
 import usePatient from '../../../../lib/patient/patient.hook'
 import { makeStyles } from 'tss-react/mui'
-import type { Theme } from '@mui/material/styles'
 import { Patient } from '../../../../lib/patient/models/patient.model'
 import { useAuth } from '../../../../lib/auth'
 
@@ -50,7 +49,7 @@ interface AdditionalInfoFormProps {
 }
 
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   formField: {
     marginBottom: theme.spacing(3),
     width: '80%'

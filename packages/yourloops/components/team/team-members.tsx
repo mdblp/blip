@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,6 @@ import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Typography from '@mui/material/Typography'
 import Table from '@mui/material/Table'
@@ -56,7 +55,7 @@ import TeamUtils from '../../lib/team/team.util'
 import { TeamMemberRole, type TypeTeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 import { logError } from '../../utils/error.util'
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   checkboxTableCellHeader: {
     padding: `0 ${theme.spacing(1)} !important`
   },

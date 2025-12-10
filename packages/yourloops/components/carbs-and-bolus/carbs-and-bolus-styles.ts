@@ -26,7 +26,6 @@
  */
 
 import { makeStyles } from 'tss-react/mui'
-import { Theme } from '@mui/material/styles'
 
 export const LIGHT_BORDER = '1px solid #e7e7e7'
 export const RESCUE_CARBS_COLOR = 'var(--error-color-main)'
@@ -34,7 +33,7 @@ export const MANUAL_BOLUS_COLOR = 'var(--dark-blue-main)'
 
 export const DEFAULT_TOOLTIP_POSITION = { top: 0, left: 85 }
 
-export const useCarbsAndBolusStyles = makeStyles()((theme: Theme) => ({
+export const useCarbsAndBolusStyles = makeStyles()((theme) => ({
   cell: {
     borderRadius: theme.spacing(1),
     margin: 'auto',

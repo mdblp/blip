@@ -27,27 +27,24 @@
 
 import React, { FC, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { useAuth } from '../../lib/auth'
-import { Unit } from 'medical-domain'
-import { type MonitoringAlertsParameters } from 'medical-domain'
+import { type MonitoringAlertsParameters, Unit } from 'medical-domain'
 import { Save } from '@mui/icons-material'
 import { useMonitoringAlertsPatientConfiguration } from './monitoring-alerts-patient-configuration.hook'
 import { MonitoringAlertsContentConfiguration } from './monitoring-alerts-content-configuration'
 import Chip from '@mui/material/Chip'
 import Alert from '@mui/material/Alert'
 
-const useMonitoringAlertConfigurationStyles = makeStyles()((theme: Theme) => ({
+const useMonitoringAlertConfigurationStyles = makeStyles()((theme) => ({
   cancelButton: {
     marginRight: theme.spacing(2)
   }
 }))
 
-const useApplyTeamButtonStyles = makeStyles()((theme: Theme) => ({
+const useApplyTeamButtonStyles = makeStyles()((theme) => ({
   applyTeamValuesButtonCheckedSaved: {
     background: 'var(--button-care-team-values-applied-bg)',
     color: theme.palette.success.dark,

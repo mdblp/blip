@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,7 +31,6 @@ import Tab from '@mui/material/Tab'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { makeStyles } from 'tss-react/mui'
-import { type Theme } from '@mui/material/styles'
 import Button from '@mui/material/Button'
 import GetAppIcon from '@mui/icons-material/GetApp'
 import { PatientView } from '../../enum/patient-view.enum'
@@ -52,7 +51,7 @@ interface PatientNavBarTabsProps {
   onClickPrint: MouseEventHandler<HTMLButtonElement>
 }
 
-const styles = makeStyles()((theme: Theme) => {
+const styles = makeStyles()((theme) => {
   const TAB_HEIGHT = theme.spacing(6)
   return {
     root: {

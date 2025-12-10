@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,8 +27,6 @@
 
 import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -46,7 +44,7 @@ import FormHelperText from '@mui/material/FormHelperText'
 import { Unit } from 'medical-domain'
 import { MonitoringValuesDisplayed } from './monitoring-alerts-content-configuration.hook'
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   categoryInfo: {
     marginLeft: theme.spacing(3)
   },

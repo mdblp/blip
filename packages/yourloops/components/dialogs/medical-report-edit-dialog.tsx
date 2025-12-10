@@ -27,7 +27,6 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
@@ -52,7 +51,7 @@ export interface MedicalReportEditDialogProps extends CategoryProps {
   medicalReport?: MedicalReport
 }
 
-const classes = makeStyles()((theme: Theme) => ({
+const classes = makeStyles()((theme) => ({
   divider: {
     margin: '30px 0 10px 16px'
   },

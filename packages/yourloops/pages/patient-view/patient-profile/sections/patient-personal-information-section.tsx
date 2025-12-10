@@ -42,7 +42,6 @@ import HeightIcon from '@mui/icons-material/Height'
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid'
 import MonitorWeightIcon from '@mui/icons-material/MonitorWeight'
 import StraightenIcon from '@mui/icons-material/Straighten'
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Alert from '@mui/material/Alert'
 import { formatBirthdate } from 'dumb'
@@ -59,7 +58,7 @@ interface InformationSectionProps {
   patient: Patient
 }
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   separator: {
     border: `1px solid ${theme.palette.divider}`,
     marginBottom: theme.spacing(2),

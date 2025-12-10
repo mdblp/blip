@@ -104,85 +104,87 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showChangeEmailMod
   const codeValidationError = codeValidationSent && !codeValidationSuccess
 
   return (
-      <Dialog
-        data-testid="confirm-email-change-dialog"
-        open={showChangeEmailModal}
-        fullWidth
-        maxWidth="sm"
-        onClose={() => {
-          setChangeEmailModal(false)
-        }}
-      >
-        <DialogTitle>
-          {t('button-change-email')}
-        </DialogTitle>
-
-        <DialogContent>
-          <Box display="flex" flexDirection="column">
-            <TextField
-              data-testid="user-email-current"
-              label={t('email')}
-              variant="outlined"
-              value={user.email}
-              disabled={true}
-              className={classes.formInput}
-            />
-            <TextField
-              data-testid="user-new-email"
-              label={t('new-email')}
-              error={emailSentError}
-              helperText={emailSentError && t('error-occurred')}
-              variant="outlined"
-              value={newEmail}
-              onChange={(e) => {
-                setNewEmail(e.target.value)
-              }}
-              disabled={false}
-              className={classes.formInput}
-            />
-            <TextField
-              data-testid="user-new-email-code"
-              label={t('code')}
-              error={codeValidationError}
-              helperText={codeValidationError && t('error-occurred')}
-              variant="outlined"
-              value={changeEmailCode}
-              disabled={false}
-              onChange={(e) => {
-                setChangeEmailCode(e.target.value)
-              }}
-              className={classes.formInput}
-              sx={{ display: emailSentSuccess ? 'inherit' : 'none' }}
-            />
-            <DialogContentText marginTop={2}>
-              {t('email-change-dialog-text-part1')}<br />
-              {t('email-change-dialog-text-part2')}
-            </DialogContentText>
-          </Box>
-        </DialogContent>
-
-        <DialogActions>
-          <Button
-            data-testid="confirm-dialog-cancel-button"
+    <Dialog
+      data-testid="confirm-email-change-dialog"
+      open={showChangeEmailModal}
+      fullWidth
+      maxWidth="sm"
+      onClose={() => {
+        setChangeEmailModal(false)
+      }}
+    >
+      <DialogTitle>
+        {t('button-change-email')}
+      </DialogTitle>
+      <DialogContent>
+        <Box display="flex" flexDirection="column">
+          <TextField
+            data-testid="user-email-current"
+            label={t('email')}
             variant="outlined"
-            onClick={() => {
-              setChangeEmailModal(false)
+            value={user.email}
+            disabled={true}
+            className={classes.formInput}
+          />
+          <TextField
+            data-testid="user-new-email"
+            label={t('new-email')}
+            error={emailSentError}
+            helperText={emailSentError && t('error-occurred')}
+            variant="outlined"
+            value={newEmail}
+            onChange={(e) => {
+              setNewEmail(e.target.value)
             }}
-          >
-            {t('button-cancel')}
-          </Button>
-          <Button
-            loading={operationInProgress}
-            data-testid="confirm-dialog-confirm-button"
-            variant="contained"
-            color={"primary"}
-            disableElevation
-            disabled={operationInProgress || newEmail.length == 0}
-            onClick={emailSentSuccess   ? validateChangeEmailRequest : sendChangeEmailRequest}
-          >
-            {t('button-confirm')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+            disabled={false}
+            className={classes.formInput}
+          />
+          <TextField
+            data-testid="user-new-email-code"
+            label={t('code')}
+            error={codeValidationError}
+            helperText={codeValidationError && t('error-occurred')}
+            variant="outlined"
+            value={changeEmailCode}
+            disabled={false}
+            onChange={(e) => {
+              setChangeEmailCode(e.target.value)
+            }}
+            className={classes.formInput}
+            sx={[emailSentSuccess ? {
+              display: 'inherit'
+            } : {
+              display: 'none'
+            }]}
+          />
+          <DialogContentText marginTop={2}>
+            {t('email-change-dialog-text-part1')}<br />
+            {t('email-change-dialog-text-part2')}
+          </DialogContentText>
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          data-testid="confirm-dialog-cancel-button"
+          variant="outlined"
+          onClick={() => {
+            setChangeEmailModal(false)
+          }}
+        >
+          {t('button-cancel')}
+        </Button>
+        <Button
+          loading={operationInProgress}
+          data-testid="confirm-dialog-confirm-button"
+          variant="contained"
+          color={"primary"}
+          disableElevation
+          disabled={operationInProgress || newEmail.length == 0}
+          onClick={emailSentSuccess ? validateChangeEmailRequest : sendChangeEmailRequest}
+        >
+          {t('button-confirm')}
+        </Button>
+      </DialogActions>
+    </Dialog>
   )
 }

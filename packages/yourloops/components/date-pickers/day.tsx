@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { alpha, type Theme } from '@mui/material/styles'
+import { alpha } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import ButtonBase, { type ButtonBaseProps } from '@mui/material/ButtonBase'
 
@@ -35,7 +35,7 @@ interface DayProps extends ButtonBaseProps {
   selected?: boolean
 }
 
-const dayStyles = makeStyles<void, 'disabled' | 'selected'>({ name: 'date-pickers-day' })((theme: Theme, _params, classes) => ({
+const dayStyles = makeStyles<void, 'disabled' | 'selected'>({ name: 'date-pickers-day' })((theme, _params, classes) => ({
   root: {
     padding: 0,
     backgroundColor: theme.palette.background.paper,

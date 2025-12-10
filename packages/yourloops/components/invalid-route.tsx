@@ -38,13 +38,15 @@ export const InvalidRoute: FC = () => {
   setPageTitle(t('page-not-found'))
 
   return (
-    <Grid container direction="column" justifyContent="center" alignItems="center">
+    (<Grid container direction="column" justifyContent="center" alignItems="center">
       <p>{t('page-not-found')}</p>
-      <Typography sx={{ color: (theme) => theme.palette.primary.main }}>
+      <Typography sx={theme => ({
+        color: theme.palette.primary.main
+      })}>
         <Link to="/">
           {t('breadcrumb-home')}
         </Link>
       </Typography>
-    </Grid>
-  )
+    </Grid>)
+  );
 }

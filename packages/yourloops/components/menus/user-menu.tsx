@@ -36,7 +36,7 @@ import FaceIcon from '@mui/icons-material/Face'
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar'
 import StethoscopeIcon from '../icons/stethoscope-icon'
 
-import { type Theme, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Box from '@mui/material/Box'
@@ -58,7 +58,7 @@ import IconButton from '@mui/material/IconButton'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { getUserName } from '../../lib/auth/user.util'
 
-const classes = makeStyles()((theme: Theme) => ({
+const classes = makeStyles()((theme) => ({
   typography: {
     overflow: 'hidden',
     textOverflow: 'ellipsis',

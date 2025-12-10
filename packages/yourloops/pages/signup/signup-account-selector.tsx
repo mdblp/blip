@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,8 +27,6 @@
 
 import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -44,7 +42,7 @@ import { type SignUpFormProps } from './signup-stepper'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { SignupFormKey } from './models/enums/signup-form-key.enum'
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   Paper: {
     textAlign: 'start',
     marginTop: theme.spacing(2),

@@ -28,7 +28,7 @@
 import React, { type FC, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import dayjs, { type Dayjs } from 'dayjs'
-import { type Theme, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import DateRangeIcon from '@mui/icons-material/DateRange'
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -90,7 +90,7 @@ interface PrintReportDialogProps {
 const DEFAULT_PRESET: Presets = '4weeks'
 const MAX_SELECTABLE_DAYS = 90
 
-const printOptionsStyle = makeStyles({ name: 'dialog-pdf-options' })((theme: Theme) => {
+const printOptionsStyle = makeStyles({ name: 'dialog-pdf-options' })((theme) => {
   return {
     marginTop: {
       marginTop: theme.spacing(2)

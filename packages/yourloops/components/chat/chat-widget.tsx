@@ -29,7 +29,7 @@ import React, { type KeyboardEvent, useEffect, useRef, useState } from 'react'
 
 import EmojiPicker, { type EmojiClickData, EmojiStyle } from 'emoji-picker-react'
 
-import { type Theme, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import SendIcon from '@mui/icons-material/Send'
 import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined'
@@ -66,7 +66,7 @@ const CHAT_CONTENT_MIN_HEIGHT = '280px'
 const CHAT_CONTENT_MAX_HEIGHT = '450px'
 const KEYBOARD_EVENT_ESCAPE = 'Escape'
 
-const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) => {
+const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme) => {
   return {
     iconButton: {
       backgroundColor: 'white',

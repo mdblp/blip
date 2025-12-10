@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,14 +27,12 @@
 
 import React, { type FunctionComponent } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { type BaseConsentCheck } from './models/consent-check.model'
 
-const formStyles = makeStyles({ name: 'ylp-form-consents' })((theme: Theme) => {
+const formStyles = makeStyles({ name: 'ylp-form-consents' })((theme) => {
   return {
     formControlLabel: {
       marginTop: theme.spacing(2),

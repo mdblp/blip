@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,6 @@
  */
 
 import React from 'react'
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Typography from '@mui/material/Typography'
 
@@ -37,7 +36,7 @@ interface YearSelectorProps {
   onSelectYear: (year: number) => void
 }
 
-const yearSelectorStyles = makeStyles({ name: 'date-pickers-year-selector' })((theme: Theme) => {
+const yearSelectorStyles = makeStyles({ name: 'date-pickers-year-selector' })((theme) => {
   return {
     root: {
       cursor: 'pointer',
