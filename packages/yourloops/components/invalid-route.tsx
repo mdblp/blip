@@ -40,7 +40,7 @@ export const InvalidRoute: FC = () => {
   return (
     <Grid container direction="column" justifyContent="center" alignItems="center">
       <p>{t('page-not-found')}</p>
-      <Typography color="primary">
+      <Typography sx={{ color: (theme) => theme.palette.primary.main }}>
         <Link to="/">
           {t('breadcrumb-home')}
         </Link>
