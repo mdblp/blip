@@ -116,8 +116,8 @@ export const CareTeamSettingsPage: FC = () => {
   }
 
   return (
-    <Box role="main" paddingLeft={2}>
-      <Box display="flex">
+    <Box role="main" sx={{ paddingLeft: 2 }}>
+      <Box sx={{ display: "flex" }}>
         {isUserHcp &&
           <div className={classes.drawer} role="navigation">
             <div
@@ -172,7 +172,12 @@ export const CareTeamSettingsPage: FC = () => {
             </div>
           </div>
         }
-        <Box display="flex" justifyContent="center" margin="auto">
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            margin: "auto"
+          }}>
           {team ?
             <div className={classes.teamDetails}>
               <div

@@ -44,9 +44,10 @@ const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
   return (
     <Box
       data-testid={`${type}-stats-legends`}
-      display="flex"
-      justifyContent="space-between"
-    >
+      sx={{
+        display: "flex",
+        justifyContent: "space-between"
+      }}>
       <ul className={styles['stat-legend']}>
         {
           legend.map((legend: { className: string, value: string }) => (
@@ -58,7 +59,9 @@ const StatLegend: FunctionComponent<StatLegendProps> = (props) => {
           ))
         }
       </ul>
-      <Box fontSize="12px">
+      <Box sx={{
+        fontSize: "12px"
+      }}>
         {units}
       </Box>
     </Box>

@@ -160,7 +160,11 @@ export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose
       </DialogTitle>
 
       <DialogContent>
-        <Box display="flex" flexDirection="column">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column"
+          }}>
           <Alert severity="info">{t('modal-add-patient-info')}</Alert>
           <TextField
             id="patient-list-dialog-add-email"
@@ -172,12 +176,12 @@ export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose
             onChange={handleChangeEmail}
             helperText={errorMessage}
           />
-          <Box mt={2}>
+          <Box sx={{ mt: 2 }}>
             <DialogContentText id="patient-list-dialog-add-warning-line1">
               {t('modal-add-patient-warning-line1')}
             </DialogContentText>
           </Box>
-          <Box mt={1}>
+          <Box sx={{ mt: 1 }}>
             <Trans
               id="patient-list-dialog-add-warning-line2"
               data-testid="modal-add-patient-warning-line2"

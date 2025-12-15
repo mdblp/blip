@@ -33,7 +33,7 @@ import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import { InputAdornment } from "@mui/material"
@@ -300,8 +300,14 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
             </Typography>
 
             {/* Patient Type Selection */}
-            <Box data-testid="patient-type-selection" mb={3}>
-              <Box display="flex" flexWrap="wrap" gap={1} marginTop={2}>
+            <Box data-testid="patient-type-selection" sx={{ mb: 3 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 1,
+                  marginTop: 2
+                }}>
                 {getDiabeticProfiles().map((patientType) => (
                   <Chip
                     key={patientType.type}
@@ -324,8 +330,13 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
             {/* Range Configuration */}
             <Grid container spacing={3}>
               <Grid size={{ xs: 12, md: 6 }}>
-                <Box data-testid="range-configuration-viz" display="flex" flexDirection="column" gap={1}
-                >
+                <Box
+                  data-testid="range-configuration-viz"
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 1
+                  }}>
                   <RangeVisualizationChart
                     bgBounds={selectedDiabeticProfile.bloodGlucosePreference.bgBounds}
                     displayedUnit={displayedUnit}
@@ -336,7 +347,13 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
               {/* Right side - Range inputs */}
               <Grid
                 size={{ xs: 12, md: 6 }}>
-                <Box data-testid="range-configuration-form" display="flex" flexDirection="column" gap={1}>
+                <Box
+                  data-testid="range-configuration-form"
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 1
+                  }}>
                   <TextField
                     data-testid="severe-hyperglycemia-field"
                     label={t('range-severe-hyperglycemia')}
@@ -484,7 +501,12 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
               </Grid>
             </Grid>
             {/* Action Buttons */}
-            <Box display="flex" justifyContent="flex-end" marginTop={8}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginTop: 8
+              }}>
               <Button
                 loading={saveInProgress}
                 id="save-button-id"

@@ -71,10 +71,11 @@ const SignUpAccountSelector: FunctionComponent<SignUpFormProps> = (props) => {
 
   return (
     <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-    >
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center"
+      }}>
       <RadioGroup
         value={signupForm.accountRole}
         onChange={event => { updateForm(SignupFormKey.AccountRole, event.target.value) }}

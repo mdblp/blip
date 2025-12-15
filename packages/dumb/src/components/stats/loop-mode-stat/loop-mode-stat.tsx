@@ -35,7 +35,7 @@ import { t } from 'i18next'
 import { formatDuration } from '../../../utils/datetime/datetime.util'
 import { ensureNumeric } from '../stats.util'
 import Chip from '@mui/material/Chip'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import { LoopModePercentageDetail } from './loop-mode-percentage-detail'
 import { StatColoredBar } from '../stat-colored-bar/stat-colored-bar'
 import { LineColor } from '../../../models/enums/line-color.enum'
@@ -72,7 +72,12 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
 
   return (
     <div data-testid="loop-mode-stat">
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}>
         <Box className={commonStyles.title}>
           {title}
           <StatTooltip annotations={annotations} />

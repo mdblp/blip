@@ -293,8 +293,13 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
         <Typography variant="h4">{t('button-pdf-download-report')}</Typography>
 
         <Typography variant="body2" className={classes.marginTop}>{t('dialog-pdf-options-presets')}</Typography>
-        <Box display="flex" flexDirection="row" flexWrap="wrap"
-             justifyContent={matchLandscape ? 'start' : 'space-between'}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: matchLandscape ? 'start' : 'space-between'
+          }}>
           <Chip
             id="pdf-options-button-one-week"
             variant={presetSelected === '1week' ? 'filled' : 'outlined'}
@@ -341,7 +346,12 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
           />
         </Box>
 
-        <Box display="flex" mt={2} flexDirection="column">
+        <Box
+          sx={{
+            display: "flex",
+            mt: 2,
+            flexDirection: "column"
+          }}>
           <Typography variant="body2"
                       className={classes.customRangeText}>{t('dialog-pdf-options-custom-range')}</Typography>
           <TextField
@@ -360,7 +370,7 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
             }}
           />
         </Box>
-        <Box display="flex" className={classes.calendarBox}>
+        <Box className={classes.calendarBox} sx={{ display: "flex" }}>
           <RangeDatePicker
             minDate={minDate}
             maxDate={maxDate}

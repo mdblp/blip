@@ -33,7 +33,7 @@ import CardContent from '@mui/material/CardContent'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import EmailIcon from '@mui/icons-material/Email'
 import PersonIcon from '@mui/icons-material/Person'
 import CakeIcon from '@mui/icons-material/Cake'
@@ -94,9 +94,19 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
     <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="information-section">
       <CardContent>
 
-        <Box display="flex" flexDirection="column" gap={3}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 3
+          }}>
           {/* Patient Header with Avatar */}
-          <Box display="flex" alignItems="center" gap={2}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2
+            }}>
             <Avatar
               data-testid="patient-avatar"
               sx={{
@@ -109,8 +119,12 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
             >
               {patientInfo.initials}
             </Avatar>
-            <Box display="flex" alignItems="center">
-              <Typography variant="h6" fontWeight="medium">
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center"
+              }}>
+              <Typography variant="h6" sx={{ fontWeight: "medium" }}>
                 {getUserName(patient.profile.firstName, patient.profile.lastName, patient.profile.fullName) || t('N/A')}
               </Typography>
               {user.isUserPatient() &&

@@ -27,7 +27,7 @@
 
 import React, { type FC, useState } from 'react'
 import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import { PatientPersonalInformationSection } from './sections/patient-personal-information-section'
 import { PatientProfileViewMenu } from './patient-profile-view-menu'
 import { PatientProfileViewSection } from './patient-profile-view-section.enum'

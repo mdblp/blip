@@ -30,7 +30,7 @@ import { type Patient } from '../../lib/patient/models/patient.model'
 import type MedicalDataService from 'medical-domain'
 import { type DateFilter, type MedicalData } from 'medical-domain'
 import { type BgPrefs } from 'dumb'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../lib/auth'
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -177,9 +177,16 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
       container
       spacing={2}
       rowSpacing={2}
-      paddingX={3}
+      sx={{
+        paddingX: 3
+      }}
     >
-      <Grid display="flex" alignItems="center" size={12}>
+      <Grid
+        size={12}
+        sx={{
+          display: "flex",
+          alignItems: "center"
+        }}>
           <Alert severity="info">
             {t('data-period-text')}
           </Alert>

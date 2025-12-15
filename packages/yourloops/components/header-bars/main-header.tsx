@@ -123,19 +123,27 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
     >
       <Toolbar className={toolbar}>
         <Box
-          display="flex"
-          flexDirection="column"
-          width="100%"
-        >
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%"
+          }}>
           <Banner />
           <Box
-            alignItems="center"
-            display="flex"
-            minHeight={64}
-            padding={`0 ${theme.spacing(2)}`}
-            width="100%"
-          >
-            <Box display="flex" alignItems="center" justifyContent="flex-start" flex={1}>
+            sx={{
+              alignItems: "center",
+              display: "flex",
+              minHeight: 64,
+              padding: `0 ${theme.spacing(2)}`,
+              width: "100%"
+            }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                flex: 1
+              }}>
               <Link to="/">
                 <Avatar
                   id="header-main-logo"
@@ -147,7 +155,13 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                 />
               </Link>
             </Box>
-            <Box flex={2} display="flex" alignItems="center" justifyContent="center">
+            <Box
+              sx={{
+                flex: 2,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}>
               {user.isUserHcp() &&
                 <StyledTabs value={getSelectedTab()} centered>
                   <StyledTab
@@ -173,7 +187,13 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                 </StyledTabs>
               }
             </Box>
-            <Box display="flex" alignItems="center" justifyContent="flex-end" flex={1}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                flex: 1
+              }}>
               <Link to={AppUserRoute.Notifications} id="header-notification-link">
                 <Badge
                   id="notification-count-badge"

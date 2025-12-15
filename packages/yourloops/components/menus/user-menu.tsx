@@ -147,7 +147,9 @@ function UserMenu(): JSX.Element {
             onClick={openMenu}
           >
             <Tooltip title={tooltipText} disableInteractive>
-              <Typography id="user-menu-full-name" className={typography} maxWidth={MENU_MAX_WIDTH_PX}>
+              <Typography id="user-menu-full-name" className={typography} sx={{
+                maxWidth: MENU_MAX_WIDTH_PX
+              }}>
                 {userName}
               </Typography>
             </Tooltip>
@@ -179,7 +181,7 @@ function UserMenu(): JSX.Element {
             </Typography>
           </MenuItem>
 
-          <Box marginY={2}>
+          <Box sx={{ marginY: 2 }}>
             <Divider variant="middle" />
           </Box>
 

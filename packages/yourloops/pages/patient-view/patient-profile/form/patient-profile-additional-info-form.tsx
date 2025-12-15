@@ -26,7 +26,7 @@
  */
 
 import React, { type FC, useMemo, useState } from 'react'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import { Autocomplete } from '@mui/material'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -208,7 +208,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
           />
         </Grid>
       </Grid>
-      <Grid container spacing={1} mb={1}>
+      <Grid container spacing={1} sx={{ mb: 1 }}>
         <Grid size={6}>
           <Autocomplete
             multiple
@@ -268,7 +268,12 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
         helperText={errors.comments}
       />
       {user.isUserPatient() &&
-        <Box display="flex" justifyContent="flex-end" mt={4}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            mt: 4
+          }}>
           <Button
             loading={saveInProgress}
             variant="contained"

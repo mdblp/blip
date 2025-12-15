@@ -75,11 +75,12 @@ export const SignUpStepper: FunctionComponent = () => {
   return (
     <React.Fragment>
       <Box
-        marginX="auto"
-        marginY={3}
-        textAlign="center"
-        maxWidth="60%"
-      >
+        sx={{
+          marginX: "auto",
+          marginY: 3,
+          textAlign: "center",
+          maxWidth: "60%"
+        }}>
         <Typography variant="h5">
           {t('account-creation-finalization')}
         </Typography>

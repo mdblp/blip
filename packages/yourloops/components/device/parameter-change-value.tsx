@@ -41,10 +41,11 @@ export const ParameterChangeValue: FC<ParameterChangeValueProps> = ({ parameter 
 
   return (
     <Box
-      display="flex"
-      alignItems="center"
       className={`${parameter.name.toLowerCase()} ${parameter.previousValue ? 'updated-value' : 'added-value'}`}
-    >
+      sx={{
+        display: "flex",
+        alignItems: "center"
+      }}>
       {parameter.previousValue &&
         <>
           <span>{`${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}`}</span>

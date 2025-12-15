@@ -44,10 +44,11 @@ const TimeInRangeTitle: FunctionComponent<TimeInRangeTitleProps> = (props) => {
   return (
     <Box
       data-testid={`${type}-title`}
-      display="flex"
-      alignItems="center"
       className={commonStyles.title}
-    >
+      sx={{
+        display: "flex",
+        alignItems: "center"
+      }}>
       {title}
       {shouldDisplayInfoTooltip &&
         <StatTooltip annotations={annotations} />

@@ -90,7 +90,7 @@ const RemovePatientDialog: FunctionComponent<RemovePatientDialogProps> = ({ onCl
           {isSelectedTeamPrivate ? t('modal-remove-patient-from-private-practice-info') : t('modal-remove-patient-from-team-info')}
         </DialogContentText>
 
-        <Box mt={2}>
+        <Box sx={{ mt: 2 }}>
           <Alert severity="info">
             {t('modal-remove-patient-alert-info')}
           </Alert>

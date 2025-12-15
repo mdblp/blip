@@ -89,11 +89,12 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
   return (
     <DataCard data-testid="monitoring-alerts-card">
       <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        sx={{ paddingBottom: theme.spacing(1) }}
-      >
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingBottom: theme.spacing(1)
+        }}>
         <Typography sx={{ fontWeight: 'bold' }}>
           {`${t('monitoring-alerts')}${numberOfMonitoringAlertsLabel}`}
         </Typography>
@@ -117,10 +118,11 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
         ? <>
           <Box
             id="time-away-target-monitoring-alert-id"
-            display="flex"
-            justifyContent="space-between"
             className={timeSpentAwayFromTargetActive ? classes.alertColor : ''}
-          >
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             {t('time-out-of-range-target')}
             {patient.monitoringAlerts.timeSpentAwayFromTargetRate
               ? <SimpleValue {...timeSpentAwayFromTargetRateProps} />
@@ -131,10 +133,11 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
           </Box>
           <Box
             id="severe-hypo-monitoring-alert-id"
-            display="flex"
-            justifyContent="space-between"
             className={frequencyOfSevereHypoglycemiaActive ? classes.alertColor : ''}
-          >
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             {t('alert-hypoglycemic')}
             {patient.monitoringAlerts.frequencyOfSevereHypoglycemiaRate
               ? <SimpleValue {...frequencyOfSevereHypoglycemiaRateProps} />
@@ -145,10 +148,11 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
           </Box>
           <Box
             id="non-data-transmission-monitoring-alert-id"
-            display="flex"
-            justifyContent="space-between"
             className={nonDataTransmissionActive ? classes.alertColor : ''}
-          >
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             {t('data-not-transmitted')}
             {patient.monitoringAlerts.nonDataTransmissionRate
               ? <SimpleValue {...nonDataTransmissionRateProps} />
@@ -166,24 +170,27 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
           </Box>
 
           <Box
-            display="flex"
-            justifyContent="space-between"
-            sx={{ paddingTop: theme.spacing(1) }}
-          >
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              paddingTop: theme.spacing(1)
+            }}>
             <MonitoringAlertsCardSkeletonValue />
           </Box>
           <Box
-            display="flex"
-            justifyContent="space-between"
-            sx={{ paddingTop: theme.spacing(1) }}
-          >
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              paddingTop: theme.spacing(1)
+            }}>
             <MonitoringAlertsCardSkeletonValue />
           </Box>
           <Box
-            display="flex"
-            justifyContent="space-between"
-            sx={{ paddingTop: theme.spacing(1) }}
-          >
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              paddingTop: theme.spacing(1)
+            }}>
             <MonitoringAlertsCardSkeletonValue />
           </Box>
         </Box>

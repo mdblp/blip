@@ -107,7 +107,7 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
     discardChanges,
     save,
     setMonitoringValuesDisplayed,
-    onValueChange,
+    onValueChange
   } = useMonitoringAlertsPatientConfiguration({
     monitoringAlertsParameters,
     saveInProgress,
@@ -117,7 +117,7 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
   })
 
   useEffect(() => {
-      onUnsavedChangesChange(!saveButtonDisabled)
+    onUnsavedChangesChange(!saveButtonDisabled)
   }, [onUnsavedChangesChange, saveButtonDisabled])
 
   return (
@@ -135,7 +135,12 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
         setMonitoringValuesDisplayed={setMonitoringValuesDisplayed}
         onValueChange={onValueChange}
       />
-      <Box display="flex" justifyContent="flex-end" margin={2}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          margin: 2
+        }}>
         {!saveButtonDisabled &&
           <Button
             className={classes.cancelButton}
@@ -211,7 +216,11 @@ const MonitoringAlertsPatientApplyTeamButton: FC<MonitoringAlertsPatientApplyTea
   }, [t, useTeamValues])
 
   return (
-    <Box height={APPLY_CARE_TEAM_VALUES_SECTION_HEIGHT} marginBottom={4}>
+    <Box
+      sx={{
+        height: APPLY_CARE_TEAM_VALUES_SECTION_HEIGHT,
+        marginBottom: 4
+      }}>
       <Chip
         className={applyCareTeamValuesChipClassName}
         variant={applyCareTeamValuesChipVariant}
@@ -219,12 +228,11 @@ const MonitoringAlertsPatientApplyTeamButton: FC<MonitoringAlertsPatientApplyTea
         onClick={useTeamValues ? undefined : resetToTeamDefaultValues}
         data-testid="monitoring-alert-config-reset"
       />
-      <Box marginTop={2}>
-        { !areValuesSaved &&
+      <Box sx={{ marginTop: 2 }}>
+        {!areValuesSaved &&
           <Alert data-testid="monitoring-alerts-patient-status-label" severity="info">{statusLabel}</Alert>
         }
       </Box>
-
     </Box>
   )
 }

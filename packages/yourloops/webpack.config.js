@@ -103,7 +103,7 @@ const plugins = [
     BRANDING_LIST: JSON.stringify(brandings.map(brand => brand.replace('/', '-')))
   }),
   new MiniCssExtractPlugin({
-    filename: isDev ? 'style.css' : 'style.[contenthash].css'
+    filename: isDev ? 'style.[name].css' : 'style.[contenthash].css'
   }),
   new SubresourceIntegrityPlugin({
     hashFuncNames: ['sha512'],
@@ -220,7 +220,8 @@ const webpackConfig = {
       buffer: require.resolve('buffer')
     },
     cache: true,
-    symlinks: true
+    symlinks: true,
+    fullySpecified: false
   },
 
   resolveLoader: {

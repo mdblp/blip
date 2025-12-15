@@ -37,7 +37,7 @@ import {
   WarmUp
 } from 'medical-domain'
 import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import Draggable from 'react-draggable'
 import { computeDateValue, getDateTitleForBaseDatum } from '../../../utils/tooltip/tooltip.util'
 import { getAlarmEventIcon, getAlarmEventTitle } from '../../../utils/alarm-event/alarm-event.util'
@@ -164,11 +164,12 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
                   <Grid size={10}>
                     <Box>
                       <Box
-                        display="flex"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        sx={{ marginBottom: theme.spacing(1) }}
-                      >
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginBottom: theme.spacing(1)
+                        }}>
                         <span className={styles.title}>{getTitle(event)}</span>
                         <span>{computeDateValue(getDateTitleForBaseDatum(event, timePrefs))}</span>
                       </Box>

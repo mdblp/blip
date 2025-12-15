@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -251,7 +251,11 @@ export const MessageCell: FunctionComponent<MessageCellProps> = ({ hasNewMessage
       title={title}
       aria-label={title}
     >
-      <Box display="flex" justifyContent="center">
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center"
+        }}>
         {hasNewMessages
           ? <Badge color="warning" variant="dot">
             <MessageIcon
@@ -282,7 +286,11 @@ export const ActionsCell: FunctionComponent<ActionsCellProps> = ({ patient, onCl
       title={removePatientLabel}
       aria-label={removePatientLabel}
     >
-      <Box display="flex" justifyContent="end">
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "end"
+        }}>
         <IconActionButton
           data-action="remove-patient"
           data-testid={`${removePatientLabel} ${patient.profile.email}`}

@@ -45,20 +45,22 @@ export const StatLine: FC<StatLineProps> = (props) => {
 
   return (
     <Box
-      display="flex"
-      justifyContent="space-between"
-      alignItems="center"
-    >
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
+      }}>
       <Box className={isBold ? commonStyles.title : ''}>
         {title}
         {annotations && <StatTooltip annotations={annotations} />}
       </Box>
       {value ?
         <Box
-          display="flex"
-          alignItems="baseline"
           className={styles.boldValue}
-        >
+          sx={{
+            display: "flex",
+            alignItems: "baseline"
+          }}>
         <span className={valueClasses}>
           {value}
         </span>
@@ -66,7 +68,12 @@ export const StatLine: FC<StatLineProps> = (props) => {
           {units}
         </span>
         </Box>
-        : <Box className={styles.disabledLabel} fontSize="24px" marginLeft="auto">
+        : <Box
+        className={styles.disabledLabel}
+        sx={{
+          fontSize: "24px",
+          marginLeft: "auto"
+        }}>
             --
           </Box>
       }

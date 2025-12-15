@@ -139,20 +139,21 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
           bgUnit
         })}
       </Typography>
-      <Box display="flex" data-testid="time-target">
+      <Box data-testid="time-target" sx={{ display: "flex" }}>
         <div className={classes.subCategoryContainer}>
           <Typography className={classes.subCategoryTitle}>
             A. {t('glycemic-target')}
           </Typography>
           <div className={classes.valueSelection}>
             <Box
-              display="flex"
-              alignItems="center"
-              marginRight={2}
-              paddingBottom={1}
-              position="relative"
               data-testid="low-bg-text-field-id"
-            >
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                marginRight: 2,
+                paddingBottom: 1,
+                position: "relative"
+              }}>
               <Typography>{t('minimum')}</Typography>
               <TextField
                 disabled={displayInReadonly}
@@ -190,12 +191,13 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
               }
             </Box>
             <Box
-              display="flex"
-              alignItems="center"
-              paddingBottom={1}
-              position="relative"
               data-testid="high-bg-text-field-id"
-            >
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                paddingBottom: 1,
+                position: "relative"
+              }}>
               <Typography>{t('maximum')}</Typography>
               <TextField
                 disabled={displayInReadonly}
@@ -285,7 +287,7 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
           bgUnit
         })}
       </Typography>
-      <Box display="flex" data-testid="severe-hypoglycemia">
+      <Box data-testid="severe-hypoglycemia" sx={{ display: "flex" }}>
         <div className={classes.subCategoryContainer}>
           <Typography className={classes.subCategoryTitle}>A. {t('severe-hypoglycemia-threshold', {
             hypoThreshold: monitoringValuesDisplayed.hypoThreshold.value,
@@ -294,9 +296,10 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
           <Box
             className={classes.valueSelection}
             data-testid="very-low-bg-text-field-id"
-            position="relative"
-            paddingBottom={2}
-          >
+            sx={{
+              position: "relative",
+              paddingBottom: 2
+            }}>
             <Typography>{t('severe-hypoglycemia-below')}</Typography>
             <TextField
               disabled={displayInReadonly}
@@ -380,7 +383,7 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
       <Typography variant="caption" className={classes.categoryInfo}>
         {t('current-trigger-setting-data', { nonDataThreshold: monitoringValuesDisplayed.nonDataTxThreshold.value })}
       </Typography>
-      <Box display="flex">
+      <Box sx={{ display: "flex" }}>
         <div className={classes.subCategoryContainer}>
           <Typography className={classes.subCategoryTitle}>A. {t('event-trigger-threshold')}</Typography>
           <div className={classes.valueSelection}>

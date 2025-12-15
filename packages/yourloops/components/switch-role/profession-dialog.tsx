@@ -65,7 +65,7 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
         <strong>{t('profession-dialog-title')}</strong>
       </DialogTitle>
       <DialogContent id="switch-role-consequences-dialog-content">
-        <Box marginTop={2}>
+        <Box sx={{ marginTop: 2 }}>
           <BasicDropdownWithValidation
             onSelect={setHcpProfession}
             defaultValue={HcpProfession.empty}

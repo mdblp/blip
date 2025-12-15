@@ -36,7 +36,7 @@ import { TooltipLine } from '../common/tooltip-line/tooltip-line'
 import colors from '../../../styles/colors.css'
 import moment from 'moment-timezone'
 import { getDateTimeFormat } from '../../../utils/datetime/datetime.util'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import styles from './time-change-tooltip.css'
 
 interface TimeChangeTooltipProps {

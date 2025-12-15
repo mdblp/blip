@@ -56,6 +56,7 @@ import { useAuth } from '../../../lib/auth'
 import { DiabeticType } from 'medical-domain'
 import { PatientDiabeticProfileChip } from '../../chips/patient-diabetic-profile-chip'
 import moment from 'moment-timezone'
+import { AppUserRoute } from '../../../models/enums/routes.enum'
 
 interface CurrentPatientListProps {
   patients: Patient[]
@@ -306,7 +307,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
   }, [classes.mandatoryCellBorder, onClickRemovePatient, t, noDataLabel])
 
   const onRowClick = (params: GridRowParams): void => {
-    navigate(`${params.id}/dashboard`)
+    navigate(`${params.id}${AppUserRoute.Dashboard}`)
   }
 
   return { allRows, allColumns, onRowClick }

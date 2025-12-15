@@ -63,7 +63,7 @@ export const SecurityForm: FC = () => {
   return (
     <>
       <Divider variant="middle" sx={{ marginY: 3 }} />
-      <Box marginY={2}>
+      <Box sx={{ marginY: 2 }}>
         <Typography variant="h6" sx={{ marginBottom: 2 }}>{t('security')}</Typography>
         <Box className={classes.inputContainer}>
           <TextField
@@ -75,8 +75,12 @@ export const SecurityForm: FC = () => {
             className={classes.formInput}
           />
         </Box>
-        <Box marginTop={2}>
-          <Box display="flex" marginTop={2}>
+        <Box sx={{ marginTop: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              marginTop: 2
+            }}>
             <Button
               data-testid="change-email-button"
               sx={{ marginRight: 2 }}

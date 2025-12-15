@@ -32,7 +32,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import { SignUpStepper } from './signup-stepper'
 import { SignUpFormStateProvider } from './signup-formstate-context'
 import appConfig from '../../lib/config/config'
@@ -63,10 +63,11 @@ export const CompleteSignUpPage: FunctionComponent = () => {
       <Grid
         container
         spacing={0}
-        alignItems="center"
-        justifyContent="center"
-        minHeight="90vh"
-      >
+        sx={{
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "90vh"
+        }}>
         <Grid size={12}>
           <SignUpFormStateProvider>
             <Card id="card-signup" className={classes.card} elevation={4}>

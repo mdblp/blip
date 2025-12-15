@@ -28,7 +28,7 @@
 import React, { type FC } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import { setPageTitle } from '../lib/utils'
 
@@ -38,7 +38,13 @@ export const InvalidRoute: FC = () => {
   setPageTitle(t('page-not-found'))
 
   return (
-    (<Grid container direction="column" justifyContent="center" alignItems="center">
+    <Grid
+      container
+      direction="column"
+      sx={{
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
       <p>{t('page-not-found')}</p>
       <Typography sx={theme => ({
         color: theme.palette.primary.main
@@ -47,6 +53,6 @@ export const InvalidRoute: FC = () => {
           {t('breadcrumb-home')}
         </Link>
       </Typography>
-    </Grid>)
-  );
+    </Grid>
+  )
 }

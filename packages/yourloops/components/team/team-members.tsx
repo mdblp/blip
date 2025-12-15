@@ -149,7 +149,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
             }
           </div>
         </div>
-        <Box paddingX={3}>
+        <Box sx={{ paddingX: 3 }}>
           <TableContainer component={Paper}>
             <Table
               id="team-members-list-table"

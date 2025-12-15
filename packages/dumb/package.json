@@ -41,7 +41,7 @@
     "url": "https://github.com/mdblp/blip/issues"
   },
   "dependencies": {
-    "@mui/icons-material": "^6.5.0",
+    "@mui/icons-material": "^7.0.0",
     "react-resize-detector": "^8.0.4"
   }
 }

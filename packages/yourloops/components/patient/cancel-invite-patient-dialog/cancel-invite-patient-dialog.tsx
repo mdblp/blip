@@ -68,7 +68,7 @@ export const CancelInvitePatientDialog: FunctionComponent<CancelInvitePatientDia
             parent={React.Fragment}
           />
         </DialogContentText>
-        <Box mt={2}>
+        <Box sx={{ mt: 2 }}>
           <Alert severity="info">{t('modal-cancel-patient-invite-info')}</Alert>
         </Box>
       </DialogContent>

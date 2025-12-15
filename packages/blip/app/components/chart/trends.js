@@ -26,7 +26,7 @@ import SubNav, { weekDays } from './trendssubnav'
 import Footer from './footer'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
 import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsContainer, TrendsProvider } from 'dumb'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
@@ -557,8 +557,19 @@ class Trends extends React.Component {
     return (
       <TrendsProvider>
         <div id="tidelineMain" className="trends grid">
-          <Box data-testid="trends-view-content" className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
-            <Grid display="flex" alignItems="center" size={12}>
+          <Box
+            data-testid="trends-view-content"
+            className="container-box-outer patient-data-content-outer"
+            sx={{
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+            <Grid
+              size={12}
+              sx={{
+                display: 'flex',
+                alignItems: 'center'
+              }}>
               <Alert severity="info" sx={{marginBottom: 2}}>
                 {t('data-period-text-trends')}
               </Alert>
@@ -577,7 +588,7 @@ class Trends extends React.Component {
                   <CbgDateTraceLabel />
                   <FocusedRangeLabels bgUnit={this.props.bgPrefs.bgUnits} />
                 </div>
-                <Box marginBottom={2}>
+                <Box sx={{ marginBottom: 2 }}>
                   <Footer onClickRefresh={this.props.onClickRefresh}>
                     <RangeSelect />
                   </Footer>

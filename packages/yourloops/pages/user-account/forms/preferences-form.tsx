@@ -56,7 +56,7 @@ export const PreferencesForm: FunctionComponent = () => {
   const languageLabelId = "language-input-label"
 
   return (
-    <Box marginTop={4}>
+    <Box sx={{ marginTop: 4 }}>
       <Typography variant="h6" sx={{ marginBottom: 2 }}>{t('preferences')}</Typography>
 
       <Box className={classes.inputContainer}>
@@ -101,7 +101,7 @@ export const PreferencesForm: FunctionComponent = () => {
       </Box>
 
       {user.isUserHcp() &&
-        <Box marginTop={1}>
+        <Box sx={{ marginTop: 1 }}>
           <ConsentFeedback
             id="user-account"
             userRole={user.role}

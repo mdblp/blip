@@ -230,12 +230,13 @@ function ChatWidget(props: Readonly<ChatWidgetProps>): JSX.Element {
   return (
     <DataCard data-testid="chat-card">
       <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        sx={{ paddingBottom: theme.spacing(1) }}
         data-testid="chat-widget-header"
-      >
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingBottom: theme.spacing(1)
+        }}>
         <Typography sx={{ fontWeight: 'bold', paddingBottom: '8px' }}>
           {`${t('messages')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
         </Typography>
@@ -275,8 +276,9 @@ function ChatWidget(props: Readonly<ChatWidgetProps>): JSX.Element {
           </FormGroup>
         }
       </Box>
-
-      <Box position="relative">
+      <Box sx={{
+        position: "relative"
+      }}>
         <Dialog open={here} onClose={() => setHere(false)}>
           <DialogContent>
             <DialogContentText>

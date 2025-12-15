@@ -127,11 +127,12 @@ const LoginPageDesktop: FunctionComponent = () => {
       >
         <Toolbar>
           <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            width="100%"
-          >
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%"
+            }}>
             <img
               data-testid="header-main-logo"
               aria-label={t('alt-img-logo')}
@@ -139,7 +140,7 @@ const LoginPageDesktop: FunctionComponent = () => {
               alt={t('alt-img-logo')}
               width="180"
             />
-            <Box display="flex">
+            <Box sx={{ display: "flex" }}>
               <Button
                 data-testid="register-button"
                 variant="outlined"
@@ -159,10 +160,11 @@ const LoginPageDesktop: FunctionComponent = () => {
                 {t('button-connect')}
               </Button>
               <Box
-                display="flex"
-                alignItems="center"
-                marginLeft={1}
-              >
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginLeft: 1
+                }}>
                 <Link href={`mailto:${diabeloopExternalUrls.contactEmail}`}>
                   <Typography
                     variant="subtitle2"
@@ -171,7 +173,11 @@ const LoginPageDesktop: FunctionComponent = () => {
                     {t('contact')}
                   </Typography>
                 </Link>
-                <Box marginX={1} color={theme.palette.primary.main}>|</Box>
+                <Box
+                  sx={{
+                    marginX: 1,
+                    color: theme.palette.primary.main
+                  }}>|</Box>
                 <LanguageIcon
                   data-testid="language-icon"
                   sx={{ color: 'var(--logo-color)', marginRight: theme.spacing(1) }}
@@ -184,12 +190,17 @@ const LoginPageDesktop: FunctionComponent = () => {
       </AppBar>
       <Toolbar sx={{ marginBlock: theme.spacing(2) }} />
       <Box
-        width="100%"
-        height="calc(100% - 97px)"
-      >
+        sx={{
+          width: "100%",
+          height: "calc(100% - 97px)"
+        }}>
         <img src={loginPageBackground} alt={t('alt-img-login-page-background')} className={classes.backgroundImage} />
 
-        <Box display="flex" height="100%">
+        <Box
+          sx={{
+            display: "flex",
+            height: "100%"
+          }}>
           <Box className={classes.infoContainer} data-testid="info-container">
             <Box className={classes.heading} data-testid="login-page-desktop-title">
               <Trans
@@ -228,7 +239,13 @@ const LoginPageDesktop: FunctionComponent = () => {
               </Link>
             }
           </Box>
-          <Box display="flex" justifyContent="center" alignItems="center" flexGrow={1}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexGrow: 1
+            }}>
             <img src={loginPageLaptop} alt={t('alt-img-login-page-laptop')} className={classes.laptopImage} />
           </Box>
         </Box>

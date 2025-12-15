@@ -99,7 +99,9 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
 
   return (
     <React.Fragment>
-      <Box textAlign="center">
+      <Box sx={{
+        textAlign: "center"
+      }}>
         <DialogTitle>
           <strong data-testid="team-add-dialog-title">
             {t('join-team-title', { teamName })}
@@ -107,7 +109,12 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
         </DialogTitle>
 
         <DialogContent>
-          <Box display="flex" flexDirection="column" alignItems="center">
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center"
+            }}>
             <DialogContentText data-testid="label-dialog">
               {t('team-code')}
             </DialogContentText>

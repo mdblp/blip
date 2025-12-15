@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -156,7 +156,7 @@ function CaregiversTable(props: CaregiverTableProps): JSX.Element {
         >
           <TableCell id={`patient-caregivers-table-row-${userId}-status`}>
             {isPending &&
-              <Box display="flex">
+              <Box sx={{ display: "flex" }}>
                 <Tooltip title={t('pending-invite')} aria-label={t('pending-invite')} placement="bottom">
                   <AccessTimeIcon id={`patient-caregivers-table-row-pendingicon-${userId}`} />
                 </Tooltip>
@@ -169,7 +169,7 @@ function CaregiversTable(props: CaregiverTableProps): JSX.Element {
             {isPending ? '-' : getUserFirstName(user)}
           </TableCell>
           <TableCell id={`patient-caregivers-table-row-${userId}-email`}>
-            <Box display="flex">
+            <Box sx={{ display: "flex" }}>
               {user.username}
               {user.idVerified && <CertifiedProfessionalIcon />}
             </Box>

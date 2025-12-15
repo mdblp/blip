@@ -161,7 +161,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
           endIcon={<ArrowDropDownIcon />}
           onClick={openMenu}
         >
-          <Typography className={typography} maxWidth={MENU_MAX_WIDTH_PX}>{selectedTeamName}</Typography>
+          <Typography className={typography} sx={{ maxWidth: MENU_MAX_WIDTH_PX }}>{selectedTeamName}</Typography>
         </Button>
       }
 
@@ -182,7 +182,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
 
           {hasMedicalTeams &&
             <>
-              <Box marginY={2}>
+              <Box sx={{ marginY: 2 }}>
                 <Divider variant="middle" />
               </Box>
 
@@ -207,7 +207,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
             </>
           }
 
-          <Box marginY={2}>
+          <Box sx={{ marginY: 2 }}>
             <Divider variant="middle" />
           </Box>
 

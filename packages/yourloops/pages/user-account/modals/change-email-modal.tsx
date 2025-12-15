@@ -117,7 +117,11 @@ export const ChangeEmailModal: FC<ChangeEmailModalProps> = ({ showChangeEmailMod
         {t('button-change-email')}
       </DialogTitle>
       <DialogContent>
-        <Box display="flex" flexDirection="column">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column"
+          }}>
           <TextField
             data-testid="user-email-current"
             label={t('email')}

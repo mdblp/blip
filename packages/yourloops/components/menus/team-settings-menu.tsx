@@ -185,7 +185,13 @@ function TeamSettingsMenu(): JSX.Element {
       >
         <Box className={menu} data-testid="teams-list">
           <ListSubheader>
-            <Box display="flex" justifyContent="space-between" alignItems="center" className={paddingBottom}>
+            <Box
+              className={paddingBottom}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center"
+              }}>
               <Typography variant="caption">
                 {t('care-team-membership')}
               </Typography>
@@ -203,7 +209,7 @@ function TeamSettingsMenu(): JSX.Element {
                   redirectToTeamDetails(team.id)
                 }}
               >
-                <Box marginX={1}>•</Box>
+                <Box sx={{ marginX: 1 }}>•</Box>
                 <Typography>{team.name}</Typography>
               </ListItemButton>
             ))
@@ -213,7 +219,7 @@ function TeamSettingsMenu(): JSX.Element {
           }
 
           <Box>
-            <Box marginY={2}>
+            <Box sx={{ marginY: 2 }}>
               <Divider variant="middle" />
             </Box>
 
@@ -231,7 +237,13 @@ function TeamSettingsMenu(): JSX.Element {
 
           <Box>
             <ListSubheader>
-              <Box display="flex" justifyContent="space-between" alignItems="center" className={paddingBottom}>
+              <Box
+                className={paddingBottom}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                }}>
                 <Typography variant="caption">
                   {t('my-caregivers')}
                 </Typography>

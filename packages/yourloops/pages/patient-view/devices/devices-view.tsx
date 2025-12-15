@@ -33,7 +33,7 @@ import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import { CurrentParametersSection } from './sections/current-parameters-section'
 import Typography from '@mui/material/Typography'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import { SafetyBasalProfileSection } from './sections/safety-basal-profile-section'
 import { ChangeHistorySection } from './sections/change-history-section'
 import { DevicesViewMenu } from './devices-view-menu'
@@ -98,12 +98,13 @@ export const DevicesView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecifi
           </Grid>
         </Grid>
         : <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          marginTop={theme.spacing(4)}
-        >
-          <Typography fontWeight={500}>{t('no-settings-on-device-alert-message')}</Typography>
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: theme.spacing(4)
+        }}>
+          <Typography sx={{ fontWeight: 500 }}>{t('no-settings-on-device-alert-message')}</Typography>
         </Box>
       }
     </Container>

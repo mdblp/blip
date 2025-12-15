@@ -66,10 +66,12 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
 
   return (
     <Box
-      width="12.5%"
-      sx={{ ...sx, borderLeft: LIGHT_BORDER }}
       data-testid="carbs-and-bolus-cell"
-    >
+      sx={{
+        width: "12.5%",
+        ...sx,
+        borderLeft: LIGHT_BORDER
+      }}>
       <Typography
         variant="caption"
         sx={{ marginLeft: theme.spacing(0.5) }}

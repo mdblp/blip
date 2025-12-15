@@ -217,7 +217,7 @@ function TeamInformationEditDialog(props: TeamInformationEditModalProps): JSX.El
       </Link>
     )
     warningLines = (
-      <Box px={2}>
+      <Box sx={{ px: 2 }}>
         <p id="team-edit-dialog-warning-line1">{t('team-modal-create-warning-line1')}</p>
         <p id="team-edit-dialog-warning-line2">
           <Trans
@@ -255,14 +255,22 @@ function TeamInformationEditDialog(props: TeamInformationEditModalProps): JSX.El
       </DialogTitle>
 
       {team
-        ? <Box paddingX={2} paddingBottom={2}>
+        ? <Box
+        sx={{
+          paddingX: 2,
+          paddingBottom: 2
+        }}>
           <span id="team-edit-dialog-info-line">{t('team-modal-create-info')}</span>
         </Box>
         : <Box />
       }
 
       <DialogContent className={classes.dialogContent}>
-        <Box display="flex" flexDirection="column">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column"
+          }}>
           <TextField
             id="team-edit-dialog-field-name"
             className={classes.formChild}

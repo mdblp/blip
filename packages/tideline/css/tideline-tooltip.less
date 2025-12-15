@@ -21,7 +21,7 @@
 // mixins
 .bigText {
   span {
-    .mainText;
+    .mainText();
     font-size: @font-size-xlarge-tooltips;
   }
 }
@@ -52,26 +52,26 @@
   padding: @margin-shift 0 0 0;
   p {
     span {
-      .mainText;
+      .mainText();
       &.secondary {
-        .secondaryText;
+        .secondaryText();
         .message-from-to {
-          .secondaryText;
-          .mutedText;
+          .secondaryText();
+          .mutedText();
         }
         .message-author {
-          .bigText;
+          .bigText();
         }
         .message-text {
-          .plainText;
+          .plainText();
           white-space: pre-line;
         }
       }
       &.plain {
-        .plainText;
+        .plainText();
       }
       &.muted {
-        .mutedText;
+        .mutedText();
       }
     }
     margin-top: -@margin-shift;
@@ -79,7 +79,7 @@
     padding: 0px 7.5px 2px 7.5px;
     text-align: center;
     &.value {
-      .bigText;
+      .bigText();
     }
 
     &.messageTooltip {
@@ -98,7 +98,7 @@
   color: @text;
   font-size: @font-size-large-tooltips;
   .title {
-    .bwiz;
+    .bwiz();
     align-items: baseline;
     background-color: @title-background;
     display: flex;
@@ -117,10 +117,10 @@
         padding-right: 4px;
       }
       &.plain {
-        .plainText;
+        .plainText();
       }
       &.timestamp {
-        .secondaryText;
+        .secondaryText();
         color: darken(@text, 20%);
       }
     }
@@ -133,16 +133,16 @@
         text-align: right;
       }
       &.label {
-        .bwiz;
+        .bwiz();
         padding-right: 10px;
       }
       &.del {
-        .bwiz;
+        .bwiz();
         font-weight: bold;
         padding-bottom: 5px;
       }
       &.big {
-        .bwiz;
+        .bwiz();
         font-weight: bold;
         font-size: @font-size-xlarge-tooltips;
         text-align: right;

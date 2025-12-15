@@ -52,12 +52,13 @@ const SignupStepperActionButtons: FunctionComponent<SignupStepperActionButtonsPr
   return (
     <Box
       id="signup-profileform-button-group"
-      display="flex"
-      justifyContent="end"
-      mx={0}
-      mt={4}
-    >
-      <Box marginRight={2}>
+      sx={{
+        display: "flex",
+        justifyContent: "end",
+        mx: 0,
+        mt: 4
+      }}>
+      <Box sx={{ marginRight: 2 }}>
         <Button
           variant="outlined"
           onClick={onClickBackButton}

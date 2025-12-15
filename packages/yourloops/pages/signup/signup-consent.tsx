@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -69,11 +69,12 @@ const SignUpConsent: FunctionComponent<SignUpFormProps> = (props) => {
 
   return (
     <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
       data-testid="consents"
-    >
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center"
+      }}>
       <ConsentForm
         id="signup"
         userRole={signupForm.accountRole}

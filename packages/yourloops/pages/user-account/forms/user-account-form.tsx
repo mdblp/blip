@@ -46,7 +46,12 @@ export const UserAccountForm: FunctionComponent = () => {
     <React.Fragment>
       <PersonalInfoForm />
       <PreferencesForm />
-      <Box display="flex" justifyContent="flex-end" my={3}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          my: 3
+        }}>
         <LinkRedirect className={classes.cancelLink} to="/">
           <Button variant="outlined">
             {t('button-cancel')}

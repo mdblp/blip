@@ -29,7 +29,7 @@ import React, { FC } from 'react'
 import { setPageTitle } from '../../lib/utils'
 import { Trans, useTranslation } from 'react-i18next'
 import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
 import appConfig from '../../lib/config/config'
@@ -79,10 +79,11 @@ export const SignupInformationPage: FC = () => {
       <Grid
         container
         spacing={0}
-        alignItems="center"
-        justifyContent="center"
-        minHeight="90vh"
-      >
+        sx={{
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "90vh"
+        }}>
         <Grid size={12}>
             <Card className={classes.card} elevation={4}>
               <CardMedia className={classes.logoHeader}>
@@ -90,20 +91,22 @@ export const SignupInformationPage: FC = () => {
               </CardMedia>
               <CardContent className={classes.cardContent}>
                 <Box
-                  marginX="auto"
-                  marginY={3}
-                  textAlign="center"
-                  maxWidth="60%"
-                >
+                  sx={{
+                    marginX: "auto",
+                    marginY: 3,
+                    textAlign: "center",
+                    maxWidth: "60%"
+                  }}>
                   <Typography variant="h5">
                     {t('signup-information')}
                   </Typography>
                 </Box>
                 <Box
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="center"
-                >
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center"
+                  }}>
                   <p>{t('signup-information-message-1')}</p>
 
                   <Alert severity="info" data-testid="signup-information-alert">
@@ -117,12 +120,15 @@ export const SignupInformationPage: FC = () => {
                   </Alert>
                 </Box>
                 <Box
-                  display="flex"
-                  justifyContent="end"
-                  mx={0}
-                  mt={4}
-                >
-                  <Box marginRight={2}>
+                  sx={{
+                    display: "flex",
+                    justifyContent: "end",
+                    mx: 0,
+                    mt: 4
+                  }}>
+                  <Box sx={{
+                    marginRight: 2
+                  }}>
                     <Button
                       variant="outlined"
                       data-testid="cancel-button"
@@ -131,7 +137,9 @@ export const SignupInformationPage: FC = () => {
                       {t('button-cancel')}
                     </Button>
                   </Box>
-                  <Box marginRight={2}>
+                  <Box sx={{
+                    marginRight: 2
+                  }}>
                     <Button
                       variant="contained"
                       color="primary"

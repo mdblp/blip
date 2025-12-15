@@ -85,14 +85,15 @@ const LoginPageMobile: FunctionComponent = () => {
         className={classes.topBackground}
       />
       <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        textAlign="center"
-        marginTop={5}
-        paddingX={2}
-        height="100vh"
-      >
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          marginTop: 5,
+          paddingX: 2,
+          height: "100vh"
+        }}>
         <img
           data-testid="header-main-logo"
           aria-label={t('alt-img-logo')}
@@ -120,10 +121,11 @@ const LoginPageMobile: FunctionComponent = () => {
         }
 
         <Box
-          width={`calc(100% - ${theme.spacing(4)})`}
-          position="absolute"
-          bottom={theme.spacing(4)}
-        >
+          sx={{
+            width: `calc(100% - ${theme.spacing(4)})`,
+            position: "absolute",
+            bottom: theme.spacing(4)
+          }}>
           <Box>
             <LanguageIcon
               data-testid="language-icon"
