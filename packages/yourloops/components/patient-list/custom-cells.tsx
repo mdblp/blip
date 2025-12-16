@@ -175,7 +175,14 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
   const sharedTooltip = t('monitoring-alerts-shared-tooltip')
 
   return (
-    <>
+    <Box sx={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignContent: 'center',
+      flexWrap: 'wrap'
+    }}>
       <Tooltip
         title={
           <>
@@ -236,7 +243,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
           data-testid="no-data-icon"
         />
       </Tooltip>
-    </>
+    </Box>
   )
 }
 

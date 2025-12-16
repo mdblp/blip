@@ -112,7 +112,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
   }
 
   const goBackHome = (): void => {
-    navigate(`../..`, { relative: 'path' })
+    navigate('/')
   }
 
   const currentPatientDiabeticType = currentPatient?.diabeticProfile?.type ?? DiabeticType.DT1DT2
