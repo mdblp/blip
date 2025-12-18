@@ -28,7 +28,6 @@
 import React, { type FunctionComponent, useState } from 'react'
 import { DataGrid, type GridPaginationModel, type GridSortModel, useGridApiRef } from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
-import { PatientListColumns } from '../models/enums/patient-list.enum'
 import { usePatientListContext } from '../../../lib/providers/patient-list.provider'
 import { usePatientsContext } from '../../../lib/patient/patients.provider'
 import { usePendingPatientListHook } from './pending-patient-list.hook'
@@ -64,7 +63,7 @@ export const PendingPatientList: FunctionComponent<PendingPatientListProps> = (p
   const gridApiRef = useGridApiRef()
 
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
-  const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
+  const [sortModel, setSortModel] = useState<GridSortModel>([])
   const [teamCodeDialogOpen, setTeamCodeDialogOpen] = useState(false)
 
   return (
