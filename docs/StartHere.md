@@ -44,20 +44,20 @@ flowchart TD
 ### 1. Getting Started
 Start with these documents to understand the project:
 
-| Document | Description |
-|----------|-------------|
-| [Feature Overview](./FeatureOverview.md) | High-level features and user flows |
-| [Architecture](./Architecture.md) | Application architecture and patterns |
-| [Directory Structure](./DirectoryStructure.md) | Monorepo organization |
+| Document                                       | Description                           |
+|------------------------------------------------|---------------------------------------|
+| [Feature Overview](./FeatureOverview.md)       | High-level features and user flows    |
+| [Architecture](./Architecture.md)              | Application architecture and patterns |
+| [Directory Structure](./DirectoryStructure.md) | Monorepo organization                 |
 
 ### 2. Core Concepts
 Understand how the application works:
 
-| Document | Description |
-|----------|-------------|
-| [Packages](./Packages.md) | The 6 packages and their responsibilities |
-| [Authentication](./Authentication.md) | Auth0 integration and user management |
-| [Data Flow](DataFlow.md) | Data fetching, processing, and visualization |
+| Document                              | Description                                  |
+|---------------------------------------|----------------------------------------------|
+| [Packages](./Packages.md)             | The 6 packages and their responsibilities    |
+| [Authentication](./Authentication.md) | Auth0 integration and user management        |
+| [Data Flow](DataFlow.md)              | Data fetching, processing, and visualization |
 
 ### 3. Development Reference
 Technical details for daily development:
@@ -77,11 +77,11 @@ Technical details for daily development:
 - [viz](./Packages.md#5-viz) - Data visualizations
 
 ### Key Files
-| File | Purpose |
-|------|---------|
-| `packages/yourloops/app/app.tsx` | Application entry point |
-| `packages/yourloops/app/main-lobby.tsx` | Main routing logic |
-| `packages/medical-domain/src/index.ts` | Medical domain API |
+| File                                    | Purpose                 |
+|-----------------------------------------|-------------------------|
+| `packages/yourloops/app/app.tsx`        | Application entry point |
+| `packages/yourloops/app/main-lobby.tsx` | Main routing logic      |
+| `packages/medical-domain/src/index.ts`  | Medical domain API      |
 
 ## Development Workflow
 
