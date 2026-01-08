@@ -229,4 +229,3 @@ blip/
 
 - [Packages](./Packages.md) - Detailed package documentation
 - [Architecture](./Architecture.md) - Application architecture
-- [Dependencies](./Dependencies.md) - External dependencies
