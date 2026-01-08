@@ -62,11 +62,10 @@ Understand how the application works:
 ### 3. Development Reference
 Technical details for daily development:
 
-| Document | Description |
-|----------|-------------|
-| [Code Style](./CodeStyle.md) | Coding conventions and best practices |
-| [Internationalization](./Internationalization.md) | i18next translation system |
-| [Dependencies](./Dependencies.md) | External libraries and tools |
+| Document                                          | Description                           |
+|---------------------------------------------------|---------------------------------------|
+| [Code Style](./CodeStyle.md)                      | Coding conventions and best practices |
+| [Internationalization](./Internationalization.md) | i18next translation system            |
 
 ## Quick Links
 
