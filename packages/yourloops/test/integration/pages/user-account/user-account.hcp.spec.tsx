@@ -50,7 +50,7 @@ import ErrorApi from '../../../../lib/error/error.api'
 import {
   testEmailChangeRequest,
   testHcpUserInfoUpdate,
-  testPasswordChangeRequest
+  testPasswordChangeRequest, testPasswordChangeRequestFailed
 } from '../../use-cases/user-account-management'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
@@ -108,7 +108,7 @@ describe('User account page for hcp', () => {
       }
     }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
-    const expectedSettings = { units: { bg: Unit.MilligramPerDeciliter }, country: CountryCodes.Austria }
+    const expectedSettings: Settings = { units: { bg: Unit.MilligramPerDeciliter }, country: CountryCodes.Austria }
     const updateUserAccountMock = jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValue(expectedUserAccount)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
     const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
@@ -127,6 +127,16 @@ describe('User account page for hcp', () => {
     expect(updateSettingsMock).toHaveBeenCalledWith(loggedInUserId, expectedSettings)
 
     await testPasswordChangeRequest(loggedInUserEmail)
+  })
+
+  it('should render user account page for an hcp and display error if change password failed', async () => {
+    const router = renderPage(userAccountRoute)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(userAccountRoute)
+      expect(screen.getByText('User account')).toBeVisible()
+    })
+
+    await testPasswordChangeRequestFailed(loggedInUserEmail)
   })
 
   it('should open the change e-mail popup, complete the flow successfully and display success snackbar', async () => {
