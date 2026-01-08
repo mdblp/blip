@@ -1,16 +1,232 @@
-## App & directory structure
+# Directory Structure
 
-- **Bootstrap** ([`app/bootstrap.js`](https://github.com/tidepool-org/blip/blob/master/app/bootstrap.js 'GitHub: blip app/bootstrap.js')): Where our application is "bootstrapped" into the HTML served. We initialize the API and then render the React application here.
-- **Redux** ([`app/redux/`](https://github.com/tidepool-org/blip/tree/master/app/redux 'GitHub: blip app/redux/')): Where our redux implementation lives. This code is responsible for state management of the application.
-- **Root** ([`app/redux/containers/Root.js`](https://github.com/tidepool-org/blip/blob/master/app/redux/containers/Root.js 'GitHub: app/redux/containers/Root.js')): The Root component for our React application.
-- **Routes** ([`app/routes.js`](https://github.com/tidepool-org/blip/blob/master/app/routes.js 'GitHub: blip app/routes.js')): Our route definitions for the application. See also: [blip's usage of React Router](./ReactRouter.md).
-- **Core** ([`app/core/`](https://github.com/tidepool-org/blip/tree/master/app/core 'GitHub: blip app/core/')): Scripts and styles shared by all app components. This is where the API and various utilities live.
-- **Components** ([`app/components/`](https://github.com/tidepool-org/blip/tree/master/app/components 'GitHub: blip app/components/')): Reusable React components smaller than the "page" level—in other words, the building blocks of the application.
-- **Pages** ([`app/pages/`](https://github.com/tidepool-org/blip/tree/master/app/pages 'GitHub: blip app/pages/')): Higher-level React components that combine reusable components together. The routes defined in routes.js typically provide a "page" component as the route `component`, and each of these page components is connected to blip's redux store of application state.
-- **Services** (`app/core/<service>.js`): Singletons used to interface with external services or to provide some common utility; they are attached to the global `app` object (for example, `app.api` which handles communicating with the platform).
-- **Global styles** ([`app/core/less/`](https://github.com/tidepool-org/blip/tree/master/app/core/less 'GitHub: blip app/core/less/')): Where our global Less style files live.
-- **Local styles**: Local styles are defined in `.less` files alongside React component files.
+This document describes the directory structure of the YourLoops monorepo.
 
-### Config object
+## Root Structure
 
-The [`config.app.js`](https://github.com/tidepool-org/blip/blob/master/config.app.js 'GitHub: config.app.js') file has some magic constants that look like `__FOO__` statements replaced by the value of the corresponding environment variable when the build or development server is run. If you need to add new environment variables, you should also update `webpack.config.js` with definitions for them, as well as `.eslintrc`.
+```
+blip/
+├── packages/           # NPM workspaces (monorepo packages)
+├── branding/          # Visual assets and theming
+├── locales/           # Internationalization files
+├── server/            # Production server
+├── cloudfront-dist/   # AWS CloudFront deployment
+├── docs/              # Documentation
+├── public/            # Static public assets
+├── config/            # Environment configuration
+└── test/              # Root-level tests
+```
+
+## Monorepo Packages
+
+```mermaid
+graph TD
+    subgraph packages/
+        YL[yourloops/<br/>Main Application]
+        MD[medical-domain/<br/>Medical Services]
+        DUMB[dumb/<br/>UI Components]
+        TL[tideline/<br/>Timeline Charts]
+        VIZ[viz/<br/>Visualizations]
+        BLIP[blip/<br/>Legacy Core]
+    end
+```
+
+### packages/yourloops/
+
+The main React application package.
+
+```
+packages/yourloops/
+├── app/                    # Application entry point
+│   ├── app.tsx            # Root component with Auth0Provider
+│   ├── main-lobby.tsx     # Main routing and layout
+│   └── bootstrap.tsx      # Application bootstrap
+│
+├── pages/                  # Page-level components
+│   ├── login/             # Login page
+│   ├── signup/            # Signup flow
+│   ├── patient/           # Patient dashboard
+│   ├── patient-view/      # Patient data view
+│   ├── hcp/               # Healthcare provider pages
+│   ├── consent/           # Consent management
+│   ├── training/          # Training pages
+│   └── user-account/      # Account settings
+│
+├── components/             # Reusable components
+│   ├── header-bars/       # Navigation headers
+│   ├── footer/            # Application footer
+│   ├── dialogs/           # Modal dialogs
+│   ├── patient-data/      # Patient data display
+│   ├── patient-list/      # Patient list components
+│   ├── statistics/        # Statistics display
+│   ├── chat/              # Chat/messaging components
+│   ├── team/              # Team management
+│   ├── buttons/           # Button components
+│   ├── menus/             # Menu components
+│   └── utils/             # Utility components
+│
+├── lib/                    # Services and utilities
+│   ├── auth/              # Authentication (Auth0)
+│   ├── config/            # Configuration service
+│   ├── http/              # HTTP client
+│   ├── data/              # Data services
+│   ├── team/              # Team services
+│   ├── patient/           # Patient services
+│   ├── chat/              # Chat services
+│   ├── notifications/     # Notification services
+│   └── custom-hooks/      # React custom hooks
+│
+├── layout/                 # Layout components
+│   └── main-layout.tsx    # Main application layout
+│
+├── models/                 # TypeScript interfaces
+│   └── enums/             # Enumeration types
+│
+├── types/                  # Type definitions
+├── utils/                  # Utility functions
+├── images/                 # Image assets
+├── css/                    # Global styles
+└── test/                   # Tests
+    ├── unit/              # Unit tests
+    └── integration/       # Integration tests
+```
+
+### packages/medical-domain/
+
+Medical data models and services.
+
+```
+packages/medical-domain/
+├── src/
+│   ├── index.ts           # Public API exports
+│   └── domains/
+│       ├── models/        # Data models
+│       │   ├── medical/   # Medical data types
+│       │   │   ├── datum/ # Individual data types
+│       │   │   │   ├── bolus.model.ts
+│       │   │   │   ├── basal.model.ts
+│       │   │   │   ├── cbg.model.ts
+│       │   │   │   └── enums/
+│       │   │   └── medical-data.model.ts
+│       │   ├── statistics/
+│       │   └── time/
+│       ├── repositories/  # Services
+│       │   ├── medical/   # Medical data services
+│       │   ├── statistics/# Statistics services
+│       │   └── time/      # Time utilities
+│       └── utils/         # Utility functions
+└── test/                  # Tests
+```
+
+### packages/dumb/
+
+Functional React components.
+
+```
+packages/dumb/
+├── src/
+│   ├── index.ts          # Public exports
+│   ├── components/
+│   │   ├── stats/        # Statistics components
+│   │   ├── trends/       # Trend components
+│   │   ├── tooltips/     # Tooltip components
+│   │   └── controls/     # Control components
+│   ├── models/           # Component models
+│   ├── modules/          # Feature modules
+│   ├── utils/            # Utilities
+│   └── styles/           # Component styles
+└── test/                 # Tests
+```
+
+### packages/tideline/
+
+D3.js timeline visualization library.
+
+```
+packages/tideline/
+├── js/
+│   ├── index.js          # Main entry
+│   ├── oneday.js         # One-day view
+│   ├── pool.js           # Data pool management
+│   ├── data/             # Data utilities
+│   └── plot/             # Plot renderers
+├── plugins/              # Visualization plugins
+│   └── blip/             # Blip-specific plugins
+├── css/                  # Styles
+├── fonts/                # Font assets
+└── test/                 # Tests
+```
+
+### packages/viz/
+
+Data visualization components.
+
+```
+packages/viz/
+├── src/
+│   ├── index.js          # Public exports
+│   ├── modules/          # Visualization modules
+│   │   ├── print/        # PDF generation
+│   │   └── trends/       # Trend visualizations
+│   ├── styles/           # Visualization styles
+│   ├── types/            # TypeScript types
+│   └── utils/            # Utilities
+├── data/                 # Sample data
+├── docs/                 # Viz documentation
+└── test/                 # Tests
+```
+
+### packages/blip/
+
+Legacy core application module.
+
+```
+packages/blip/
+├── app/
+│   ├── core/             # Core utilities
+│   ├── components/       # Legacy components
+│   └── redux/            # Redux state (legacy)
+└── test/                 # Tests
+```
+
+## Configuration Files
+
+```
+blip/
+├── package.json           # Root package with workspaces
+├── tsconfig.base.json     # Base TypeScript config
+├── jest.config.js         # Jest test configuration
+├── babel.config.json      # Babel configuration
+├── .eslintrc.json         # ESLint configuration
+├── .editorconfig          # Editor configuration
+├── crowdin.yml            # Translation config
+└── Dockerfile             # Docker build
+```
+
+## Key Entry Points
+
+| File | Purpose |
+|------|---------|
+| `packages/yourloops/app/app.tsx` | Application root component |
+| `packages/yourloops/app/main-lobby.tsx` | Main routing logic |
+| `packages/medical-domain/src/index.ts` | Medical domain exports |
+| `packages/dumb/src/index.ts` | Dumb components exports |
+| `server/server.js` | Production server |
+
+## Build Outputs
+
+```
+blip/
+├── dist/                  # Production build output
+│   ├── static/           # Compiled JS/CSS
+│   └── public/           # Public assets
+└── packages/*/dist/       # Package build outputs
+```
+
+---
+
+## See Also
+
+- [Packages](./Packages.md) - Detailed package documentation
+- [Architecture](./Architecture.md) - Application architecture
+- [Dependencies](./Dependencies.md) - External dependencies

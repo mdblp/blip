@@ -1,48 +1,91 @@
-# Blip
+# YourLoops (Blip)
 
 [![Yourloops front CI](https://github.com/mdblp/blip/actions/workflows/ci.yml/badge.svg)](https://github.com/mdblp/blip/actions/workflows/ci.yml)
 
-Blip is a web app for type 1 diabetes (T1D) built on top of the [Tidepool](http://tidepool.org/) platform. It allows patients and their "care team" (family, doctors) to visualize their diabetes device data (from insulin pumps, BGMs, and/or CGMs) and message each other.
+YourLoops is a web application for type 1 diabetes (T1D) management developed by [Diabeloop](https://www.diabeloop.com/). It allows patients and their care team (family, healthcare providers) to visualize diabetes device data (insulin pumps, BGMs, CGMs) and communicate with each other.
 
-This README is focused on just the details of getting blip running locally. For more detailed information aimed at those working on the development of blip, please see the [developer guide](docs/StartHere.md).
+## Architecture Overview
+
+```mermaid
+graph TB
+    subgraph "YourLoops Monorepo"
+        YL[yourloops<br/>Main React App]
+        MD[medical-domain<br/>Medical Data Services]
+        DUMB[dumb<br/>Functional Components]
+        TL[tideline<br/>D3.js Timeline]
+        VIZ[viz<br/>Data Visualization]
+        BLIP[blip<br/>Legacy Core]
+    end
+
+    subgraph "External Services"
+        AUTH0[Auth0<br/>Authentication]
+        API[Backloops API<br/>Backend Services]
+    end
+
+    YL --> MD
+    YL --> DUMB
+    YL --> TL
+    YL --> VIZ
+    YL --> BLIP
+    DUMB --> MD
+    VIZ --> TL
+    VIZ --> MD
+    YL --> AUTH0
+    YL --> API
+```
+
+## Documentation
+
+For detailed documentation, see the [Developer Guide](docs/StartHere.md):
+
+- [Architecture Overview](docs/Architecture.md)
+- [Packages Documentation](docs/Packages.md)
+- [Directory Structure](docs/DirectoryStructure.md)
+- [Authentication](docs/Authentication.md)
+- [Data Flow](docs/DataFlow.md)
+- [Internationalization](docs/Internationalization.md)
 
 * * * * *
 
-### Table of contents
+### Table of Contents
 
-- [Before you start](#before-you-start)
+- [Before You Start](#before-you-start)
 - [Install](#install)
-- [Build and deployment](#build-and-deployment)
+- [Build and Deployment](#build-and-deployment)
 - [Configuration](#configuration)
-- [Run a production server locally](#run-a-production-server-locally)
+- [Run a Production Server Locally](#run-a-production-server-locally)
 - [Debugging](#debugging)
-- [Linting](#Linting)
-- [Running the tests](#running-the-tests)
-- [Independent server for production or docker](#independent-server-for-production-or-docker)
-- [Documentation for developers](#documentation-for-developers)
-- [Copyright management](#copyright-management)
+- [Linting](#linting)
+- [Running the Tests](#running-the-tests)
+- [Copyright Management](#copyright-management)
 
-## Before you start
+## Before You Start
 
-If this is the first time you're looking at Yoorloops (blip) locally, start with the [mdblp/dblp](https://github.com/mdblp/yourloops/tree/next/k8s) repository to setup the backend before continuing here.
+If this is your first time setting up YourLoops locally, start with the [yourloops/k8s](https://github.com/mdblp/yourloops/tree/next/k8s) repository to setup the Backloops backend services before continuing here.
 
 ## Install
 
-Requirements:
-- [NVM](https://github.com/nvm-sh/nvm) for managing your nodejs
-- [Node.js](http://nodejs.org/ 'Node.js') version 16.x or higher
-- [npm](https://www.npmjs.com/ 'npm') version 8.x or higher
+### Requirements
 
-Clone this repo [from GitHub](https://github.com/mdblp/blip 'GitHub: blip'), then install the dependencies:
+- [NVM](https://github.com/nvm-sh/nvm) - Node Version Manager (recommended)
+- [Node.js](http://nodejs.org/) version 16.x or higher
+- [npm](https://www.npmjs.com/) version 8.x or higher
 
-After cloning this repository to your local machine, first make sure that you have node >= `16.x` and npm >= `8.x` installed. If you have a different major version of node installed, consider using [nvm](https://github.com/creationix/nvm 'GitHub: Node Version Manager') to manage and switch between multiple node (& npm) installations.
-You can install the latest npm version with: `npm install -g npm@latest`.
-
-Once your environment is setup with node and npm, install the dependencies:
+### Quick Start
 
 ```bash
-$ npm install
+# Clone the repository
+git clone https://github.com/mdblp/blip.git
+cd blip
+
+# Use the correct Node version (if using nvm)
+nvm use
+
+# Install dependencies
+npm install
 ```
+
+> **Note:** If you have a different major version of node installed, use [nvm](https://github.com/creationix/nvm) to manage and switch between multiple node installations. Update npm with: `npm install -g npm@latest`
 
 ## Build and deployment
 
