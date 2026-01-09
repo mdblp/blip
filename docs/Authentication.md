@@ -1,6 +1,7 @@
 # Authentication
 
-YourLoops uses [Auth0](https://auth0.com/) for authentication and authorization. This document describes the authentication flow and integration patterns.
+YourLoops uses [Auth0](https://auth0.com/) for authentication and authorization.
+This document describes the authentication flow and integration patterns and the high-level permissions model.
 
 ## Architecture Overview
 
@@ -157,23 +158,24 @@ class User {
 
 ### Route Categories
 
+YourLoops routes are divided into two categories.
+You will find below the main routes (not the exaustive list)
+you can find the complete list in the [routes.enum.ts](../packages/yourloops/models/enums/routes.enum.ts)
+
 ```mermaid
 graph TD
     subgraph "Public Routes"
         LOGIN["/login"]
-        VERIFY["/verify-email"]
         LABELLING["/product-labelling"]
     end
 
     subgraph "Protected Routes"
         DASH["/dashboard"]
-        PATIENT["/patient/:id"]
-        SETTINGS["/settings"]
-    end
-
-    subgraph "Always Accessible"
-        CONSENT["/consent"]
-        TRAINING["/training"]
+      PATIENT["/patient/:id"]
+      TEAMS["/teams/*"]
+      SETTINGS["/devices"]
+      CONSENT["/consent"]
+      TRAINING["/training"]
     end
 
     AUTH{Authenticated?}
@@ -184,43 +186,7 @@ graph TD
 
 ### Redirect Logic
 
-The `MainLobby` component handles route protection and redirects:
-
-```typescript
-// packages/yourloops/app/main-lobby.tsx
-export const getRedirectUrl = (
-  route: string,
-  user: User,
-  isAuthenticated: boolean
-): string | undefined => {
-  // Public route + authenticated → redirect to home
-  if (isRoutePublic(route) && isAuthenticated) {
-    return '/'
-  }
-
-  // Protected route + not authenticated → redirect to login
-  if (!isAuthenticated && !isRoutePublic(route)) {
-    return AppRoute.Login
-  }
-
-  // First login → complete signup
-  if (isAuthenticated && user?.isFirstLogin()) {
-    return AppRoute.CompleteSignup
-  }
-
-  // Consent required
-  if (user?.hasToAcceptNewConsent()) {
-    return AppRoute.NewConsent
-  }
-
-  // Training required
-  if (user?.hasToDisplayTrainingInfoPage()) {
-    return AppRoute.Training
-  }
-
-  return undefined
-}
-```
+The `MainLobby` component handles route protection and redirects.
 
 ## Session Management
 
@@ -231,13 +197,13 @@ YourLoops implements automatic logout after user inactivity:
 ```typescript
 import { useIdleTimer } from 'react-idle-timer'
 
-const { isIdle } = useIdleTimer({
-  timeout: ConfigService.getIdleTimeout(),
-  onIdle: () => {
-    // Logout user and redirect
-    logout({ returnTo: window.location.origin })
+const onIdle = (): void => {
+  if (isLoggedIn) {
+    logout(true)
   }
-})
+}
+
+useIdleTimer({ timeout: ConfigService.getIdleTimeout(), onIdle })
 ```
 
 ### Configuration

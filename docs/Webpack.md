@@ -56,12 +56,12 @@ graph TB
 
 ### Main Configuration Files
 
-| File | Purpose | Package |
-|------|---------|---------|
-| `packages/yourloops/webpack.config.js` | Main application build | YourLoops app |
-| `packages/blip/webpack.config.js` | Legacy components and utilities | Blip core |
-| `packages/tideline/webpack.config.js` | Timeline visualization library | Tideline |
-| `webpack.locales-loader.js` | Custom locale bundle loader | Root |
+| File                                   | Purpose                         | Package       |
+|----------------------------------------|---------------------------------|---------------|
+| `packages/yourloops/webpack.config.js` | Main application build          | YourLoops app |
+| `packages/blip/webpack.config.js`      | Legacy components and utilities | Blip core     |
+| `packages/tideline/webpack.config.js`  | Timeline visualization library  | Tideline      |
+| `webpack.locales-loader.js`            | Custom locale bundle loader     | Root          |
 
 ### Build Modes
 
@@ -130,13 +130,13 @@ entry: {
 
 Webpack automatically splits code into optimized chunks:
 
-| Cache Group | Purpose | Priority | Example Modules |
-|-------------|---------|----------|-----------------|
-| `polyfills` | Browser compatibility | 0 | @babel/*, core-js |
-| `d3` | Data visualization | 0 | d3-*, tidepool-viz |
-| `pdfkit` | PDF generation | 0 | pdfkit |
-| `react` | UI framework | 0 | react*, @material-ui |
-| `modules` | Other dependencies | -1 | All other node_modules |
+| Cache Group | Purpose               | Priority | Example Modules        |
+|-------------|-----------------------|----------|------------------------|
+| `polyfills` | Browser compatibility | 0        | @babel/*, core-js      |
+| `d3`        | Data visualization    | 0        | d3-*, tidepool-viz     |
+| `pdfkit`    | PDF generation        | 0        | pdfkit                 |
+| `react`     | UI framework          | 0        | react*, @material-ui   |
+| `modules`   | Other dependencies    | -1       | All other node_modules |
 
 ## Asset Management
 

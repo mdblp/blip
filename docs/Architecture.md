@@ -61,7 +61,6 @@ flowchart TD
     subgraph Data["Data Layer"]
         HTTP[HTTP Client]
         MEDICAL[Medical Domain]
-        CACHE[Cache]
     end
 
     subgraph Visualization["Visualization Layer"]
@@ -162,7 +161,7 @@ sequenceDiagram
     H->>S: fetchData(id)
     S->>A: GET /data/{id}
     A->>S: Raw JSON
-    S->>M: normalize(data)
+    S->>M: normalizing (data) -- not always done
     M->>S: MedicalData
     S->>H: Processed Data
     H->>C: { data, loading, error }
@@ -306,7 +305,6 @@ flowchart LR
 | **Code Splitting** | `React.lazy()`       | Smaller initial bundle |
 | **Memoization**    | `useMemo`, `memo`    | Prevent re-renders     |
 | **Data Windowing** | Date range filtering | Reduce data volume     |
-| **Virtualization** | Virtual lists        | Handle large datasets  |
 
 ## Security Architecture
 
