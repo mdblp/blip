@@ -4,10 +4,11 @@ This document describes how data flows through the YourLoops application, from b
 
 ## Overview
 
+In order to not overwhelm the diagram, not all services are shown.
 ```mermaid
 flowchart LR
     subgraph Backend["Backloops Services"]
-        TW[Tide Whisperer<br/>Data API]
+        TW[Tide Whisperer V2<br/>Data API]
         CREW[Crew<br/>Teams API]
         PELICAN[Pelican<br/>Chat API]
     end
@@ -98,6 +99,7 @@ flowchart TD
 
 ### Data Types
 
+In order to not overwhelm the diagram, not all types are shown.
 ```mermaid
 classDiagram
     class MedicalData {
@@ -312,51 +314,29 @@ graph TB
 
     subgraph "Backloops Services"
         TW[tide-whisperer-v2<br/>Medical Data]
-        SHORE[shoreline<br/>Authentication]
+        BFF[Harbour<br/>BFF Gateway]
+        AUTH[auth<br/>Authentication]
         CREW[crew<br/>Team Management]
         HYDRO[hydrophone<br/>Notifications]
         PELICAN[pelican<br/>Messaging]
     end
 
     APP --> TW
-    APP --> SHORE
+    APP --> AUTH
     APP --> CREW
     APP --> HYDRO
     APP --> PELICAN
 ```
 
-### API Endpoints
+### Main API Endpoints
 
-| Service | Purpose | Key Endpoints |
-|---------|---------|---------------|
-| `tide-whisperer-v2` | Medical data access | `GET /data/{userId}` |
-| `shoreline` | User management | `GET /user`, `POST /user` |
-| `crew` | Team management | `GET /teams`, `POST /teams` |
-| `hydrophone` | Email notifications | `POST /send` |
-| `pelican` | Chat/messaging | `GET /messages`, `POST /messages` |
-
-## Caching Strategy
-
-### Client-Side Caching
-
-```mermaid
-flowchart TD
-    REQ[Data Request] --> CACHE{In Cache?}
-    CACHE -->|Yes| VALID{Still Valid?}
-    CACHE -->|No| FETCH[Fetch from API]
-    VALID -->|Yes| RETURN[Return Cached]
-    VALID -->|No| FETCH
-    FETCH --> STORE[Store in Cache]
-    STORE --> RETURN
-```
-
-### Cache Invalidation
-
-- **Time-based**: Data expires after configurable TTL
-- **Event-based**: Cache cleared on user actions (e.g., data upload)
-- **Navigation-based**: Fresh data fetched on page navigation
-
-## Real-Time Updates
+| Service             | Purpose                                   | Key Endpoints                     |
+|---------------------|-------------------------------------------|-----------------------------------|
+| `tide-whisperer-v2` | Medical data access                       | `GET /data/v2/all/{userId}`       |
+| `harbour`           | Backend for front end (aggration gateway) | `GET /bff/v1/*`                   |
+| `crew`              | Team management                           | `GET /teams`, `POST /teams`       |
+| `hydrophone`        | Email notifications                       | `POST /send`                      |
+| `pelican`           | Chat/messaging                            | `GET /messages`, `POST /messages` |
 
 ### Chat/Messaging Flow
 
@@ -382,18 +362,45 @@ sequenceDiagram
 
 ### Data Fetch Errors
 
+the http service will throw an error if the response status code is not 2xx.
+
 ```typescript
-try {
-  const data = await fetchMedicalData(patientId)
-} catch (error) {
-  if (error instanceof NetworkError) {
-    // Show offline message
-  } else if (error instanceof AuthError) {
-    // Redirect to login
-  } else if (error instanceof ValidationError) {
-    // Show data error message
+private static handleError(error: AxiosError, excludedErrorCodes: number[] = []): Error {
+  if (!error.response || excludedErrorCodes.includes(error.response.status)) {
+    return error
+  }
+
+  if (error.response.status >= 400 && error.response.status <= 550) {
+    switch (error.response.status) {
+      case HttpStatus.StatusNotFound:
+        throw Error(ErrorMessageStatus.NotFound)
+      case HttpStatus.StatusInternalServerError:
+        throw Error(t('error-http-500'))
+      default:
+        throw Error(t('error-http-40x'))
+    }
   }
 }
+```
+
+then the error will be handled in the component or the custom hook, most of the time using this pattern below:
+
+```typescript
+const funcName = useCallback(async (userid: string): Promise<void> => {
+  setRefreshInProgress(true)
+  try {
+    const dataNeeded = await nameOfApiToCall(userid) // to change of course
+      ...
+  } catch (err) {
+    const errorMessage = errorTextFromException(err)
+    logError(errorMessage, 'fetch-patient-infos')
+    alert.error(t('error-http-40x'))
+    // Reset to minimal patient state on error
+      ...
+  } finally {
+    setRefreshInProgress(false)
+  }
+}, [alert, t])
 ```
 
 ### Error States in UI
