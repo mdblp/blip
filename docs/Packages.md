@@ -1,45 +1,45 @@
 # Packages Documentation
 
-YourLoops uses a monorepo architecture managed by npm workspaces. This document describes each package, its purpose, and how they interconnect.
+YourLoops uses a monorepo architecture managed by npm workspaces. This document describes each package, its purpose, and
+how they interconnect.
 
 ## Package Overview
 
 ```mermaid
 graph TD
-    subgraph "Application Layer"
-        YL[yourloops]
-    end
+  subgraph "Application Layer"
+    YL[yourloops]
+  end
 
-    subgraph "UI Components Layer"
-        DUMB[dumb]
-        VIZ[viz]
-    end
+  subgraph "UI Components Layer"
+    DUMB[dumb]
+    VIZ[viz]
+  end
 
-    subgraph "Data & Visualization Layer"
-        MD[medical-domain]
-        TL[tideline]
-    end
+  subgraph "Data & Visualization Layer"
+    MD[medical-domain]
+    TL[tideline]
+  end
 
-    subgraph "Legacy Layer"
-        BLIP[blip]
-    end
+  subgraph "Legacy Layer"
+    BLIP[blip]
+  end
 
-    YL --> DUMB
-    YL --> VIZ
-    YL --> MD
-    YL --> TL
-    YL --> BLIP
-    DUMB --> MD
-    VIZ --> MD
-    VIZ --> TL
-    TL --> MD
-
-    style YL fill:#4CAF50,color:#fff
-    style MD fill:#2196F3,color:#fff
-    style DUMB fill:#FF9800,color:#fff
-    style TL fill:#9C27B0,color:#fff
-    style VIZ fill:#E91E63,color:#fff
-    style BLIP fill:#607D8B,color:#fff
+  YL --> DUMB
+  YL --> VIZ
+  YL --> MD
+  YL --> TL
+  YL --> BLIP
+  DUMB --> MD
+  VIZ --> MD
+  VIZ --> TL
+  TL --> MD
+  style YL fill: #4CAF50, color: #fff
+  style MD fill: #2196F3, color: #fff
+  style DUMB fill: #FF9800, color: #fff
+  style TL fill: #9C27B0, color: #fff
+  style VIZ fill: #E91E63, color: #fff
+  style BLIP fill: #607D8B, color: #fff
 ```
 
 ## Packages
@@ -51,6 +51,7 @@ graph TD
 The main React application that provides the user interface for YourLoops.
 
 #### Purpose
+
 - Entry point for the web application
 - Authentication management (Auth0)
 - Routing and navigation
@@ -59,16 +60,17 @@ The main React application that provides the user interface for YourLoops.
 
 #### Key Directories
 
-| Directory | Description |
-|-----------|-------------|
-| `app/` | Application entry point and main layout |
-| `pages/` | Page-level components (login, dashboard, patient view) |
-| `components/` | Reusable UI components |
-| `lib/` | Services, hooks, and utilities |
-| `layout/` | Layout components |
-| `models/` | TypeScript interfaces and types |
+| Directory     | Description                                            |
+|---------------|--------------------------------------------------------|
+| `app/`        | Application entry point and main layout                |
+| `pages/`      | Page-level components (login, dashboard, patient view) |
+| `components/` | Reusable UI components                                 |
+| `lib/`        | Services, hooks, and utilities                         |
+| `layout/`     | Layout components                                      |
+| `models/`     | TypeScript interfaces and types                        |
 
 #### Key Technologies
+
 - React 18 with TypeScript
 - React Router v6
 - Auth0 for authentication
@@ -81,13 +83,13 @@ The main React application that provides the user interface for YourLoops.
 // packages/yourloops/app/app.tsx
 export const Yourloops: FC = () => {
   return (
-    <Auth0Provider {...auth0Config}>
-      <BrowserRouter>
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </BrowserRouter>
-    </Auth0Provider>
+    <Auth0Provider { ...auth0Config } >
+    <BrowserRouter>
+      <AuthContextProvider>
+        <MainLobby / >
+    </AuthContextProvider>
+    < /BrowserRouter>
+    < /Auth0Provider>
   )
 }
 ```
@@ -101,6 +103,7 @@ export const Yourloops: FC = () => {
 Centralizes medical data models, services, and utilities for diabetes management.
 
 #### Purpose
+
 - Define medical data types (Bolus, Basal, Cbg, etc.)
 - Normalize and deduplicate medical data from backend services
 - Provide statistics calculation services
@@ -110,55 +113,66 @@ Centralizes medical data models, services, and utilities for diabetes management
 
 ```mermaid
 classDiagram
-    class MedicalDataService {
-        +normalize(data)
-        +deduplicate(data)
-        +filter(data, dateFilter)
-    }
+  class MedicalDataService {
+    +normalize(data)
+    +deduplicate(data)
+    +filter(data, dateFilter)
+  }
 
-    class Unit {
-        <<enumeration>>
-        Gram
-        Kilogram
-        InsulinUnit
-        MilligramPerDeciliter
-        MmolPerLiter
-    }
+  class Unit {
+    <<enumeration>>
+    Gram
+    Kilogram
+    InsulinUnit
+    MilligramPerDeciliter
+    MmolPerLiter
+  }
 
-    class DatumType {
-        <<enumeration>>
-        Basal
-        Bolus
-        Cbg
-        Smbg
-        Wizard
-        Meal
-        PhysicalActivity
-    }
+  class DatumType {
+    <<enumeration>>
+    Basal
+    Bolus
+    Cbg
+    Smbg
+    Wizard
+    Meal
+    PhysicalActivity
+  }
 
-    MedicalDataService --> Unit
-    MedicalDataService --> DatumType
+  MedicalDataService --> Unit
+  MedicalDataService --> DatumType
 ```
 
 #### Main Types
 
-| Type | Description |
-|------|-------------|
-| `Bolus` | Insulin bolus data (meal, correction, manual) |
-| `Basal` | Basal insulin delivery data |
-| `Cbg` | Continuous Blood Glucose readings |
-| `Smbg` | Self-Monitored Blood Glucose readings |
-| `Wizard` | Bolus calculator wizard data |
-| `Meal` | Meal and carbohydrate data |
-| `PhysicalActivity` | Physical activity records |
+| Type                      | Description                                   |
+|---------------------------|-----------------------------------------------|
+| `alarmEvents`             | Alarm events                                  |
+| `Bolus`                   | Insulin bolus data (meal, correction, manual) |
+| `Basal`                   | Basal insulin delivery data                   |
+| `Cbg`                     | Continuous Blood Glucose readings             |
+| `Smbg`                    | Self-Monitored Blood Glucose readings         |
+| `ConfidentialModes`       | Base medical data type                        |
+| `DeviceParametersChanges` | Enumerated medical data types                 |
+| `EatingShortlyEvents`     | Meal declared without details event data      |
+| `Iob`                     | Insulin on board data                         |
+| `Messages`                | Notes data                                    |
+| `Wizard`                  | Meal and carbohydrate data                    |
+| `Meal`                    | Rescue carbs data                             |
+| `NightModes`              | Night mode events                             |
+| `PhysicalActivity`        | Physical activity records                     |
+| `PumpSettings`            | Pump settings data                            |
+| `reservoirChanges`        | Reservoir Changes data                        |
+| `WarmUps`                 | Warm Ups data                                 |
+| `ZenModes`                | Zen Mode events                               |
 
 #### Statistics Services
 
-| Service | Description |
-|---------|-------------|
-| `GlycemiaStatisticsService` | Blood glucose statistics (TIR, average, etc.) |
-| `BasalBolusStatisticsService` | Insulin delivery statistics |
-| `CarbsStatisticsService` | Carbohydrate intake statistics |
+| Service                       | Description                                   |
+|-------------------------------|-----------------------------------------------|
+| `GlycemiaStatisticsService`   | Blood glucose statistics (TIR, average, etc.) |
+| `BasalBolusStatisticsService` | Insulin delivery statistics                   |
+| `CarbsStatisticsService`      | Carbohydrate intake statistics                |
 
 ---
 
@@ -166,9 +180,11 @@ classDiagram
 
 **Location:** `packages/dumb/`
 
-Functional React components rewritten from the `viz` package. All components are "dumb" (presentational) with no internal state management.
+Functional React components rewritten from the `viz` package. All components are "dumb" (presentational) with no
+internal state management.
 
 #### Purpose
+
 - Provide reusable, stateless UI components
 - Modern functional React patterns
 - Data visualization components for statistics and trends
@@ -183,6 +199,7 @@ Functional React components rewritten from the `viz` package. All components are
 | `components/controls/` | Control components (buttons, selectors) |
 
 #### Design Philosophy
+
 - Pure functional components
 - Props-driven rendering
 - No side effects
@@ -197,6 +214,7 @@ Functional React components rewritten from the `viz` package. All components are
 D3.js-based timeline visualization library for diabetes device data.
 
 #### Purpose
+
 - Render timeline-style data visualizations
 - Handle complex multi-day data rendering
 - Provide pooled data visualization (multiple data types in lanes)
@@ -205,28 +223,29 @@ D3.js-based timeline visualization library for diabetes device data.
 
 ```mermaid
 graph LR
-    subgraph "Tideline Components"
-        OD[One Day View]
-        POOL[Data Pools]
-        PLOT[Plot Renderers]
-    end
+  subgraph "Tideline Components"
+    OD[One Day View]
+    POOL[Data Pools]
+    PLOT[Plot Renderers]
+  end
 
-    subgraph "Data Types"
-        BG[Blood Glucose]
-        INS[Insulin]
-        CARBS[Carbohydrates]
-        EVENTS[Device Events]
-    end
+  subgraph "Data Types"
+    BG[Blood Glucose]
+    INS[Insulin]
+    CARBS[Carbohydrates]
+    EVENTS[Device Events]
+  end
 
-    OD --> POOL
-    POOL --> PLOT
-    PLOT --> BG
-    PLOT --> INS
-    PLOT --> CARBS
-    PLOT --> EVENTS
+  OD --> POOL
+  POOL --> PLOT
+  PLOT --> BG
+  PLOT --> INS
+  PLOT --> CARBS
+  PLOT --> EVENTS
 ```
 
 #### Dependencies
+
 - [D3.js](https://d3js.org/) - Data visualization library
 - [Crossfilter](https://crossfilter.github.io/crossfilter/) - Fast multidimensional filtering
 - [Moment.js](https://momentjs.com/) - Date/time manipulation
@@ -241,6 +260,7 @@ graph LR
 Data visualization components for diabetes device data, built on top of tideline.
 
 #### Purpose
+
 - Higher-level visualization components
 - Chart containers and layouts
 - Print-ready visualizations for PDF export
@@ -262,12 +282,15 @@ Data visualization components for diabetes device data, built on top of tideline
 Legacy core application module inherited from Tidepool.
 
 #### Purpose
+
 - Legacy components and utilities
 - Backward compatibility
 - Gradual migration to modern packages
 
 #### Note
-> This package is being progressively deprecated. New features should be implemented in `yourloops` or other modern packages.
+
+> This package is being progressively deprecated. New features should be implemented in `yourloops` or other modern
+> packages.
 
 ---
 

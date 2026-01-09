@@ -31,11 +31,11 @@ flowchart LR
     H --> CHAT
 ```
 
-| Role | Description |
-|------|-------------|
-| **Patient** | Person with diabetes, manages own data and sharing |
+| Role          | Description                                         |
+|---------------|-----------------------------------------------------|
+| **Patient**   | Person with diabetes, manages own data and sharing  |
 | **Caregiver** | Family member or friend with access to patient data |
-| **HCP** | Healthcare provider managing multiple patients |
+| **HCP**       | Healthcare provider managing multiple patients      |
 
 ## Core Features
 
@@ -92,7 +92,6 @@ Detailed charts for a specific day:
 #### Trends View
 Analyze BGM or CGM trends over time:
 - 1, 2, or 4 week analysis periods
-- Pattern identification
 - Statistical summaries
 
 ### 3. Default View Logic
@@ -109,11 +108,13 @@ flowchart TD
 
 ### 4. Team Management
 
+this diagram shows the relationship between the different user roles: Patients, Healthcare Professional and Caregivers.
+
 ```mermaid
 flowchart TD
     subgraph Patient
         P[Patient]
-        SHARE[Share Data]
+        SHARE[Share Data with]
     end
 
     subgraph HCP["Healthcare Provider"]
@@ -124,14 +125,14 @@ flowchart TD
 
     subgraph Caregiver
         C[Caregiver]
-        ACCESS[View Access]
+        ACCESS[View Patient Data]
     end
 
     P --> SHARE
     SHARE --> TEAM
     SHARE --> C
-    H --> TEAM
-    TEAM --> PATIENTS
+    H -- belongs to --> TEAM
+    TEAM -- see  --> PATIENTS
     C --> ACCESS
 ```
 
@@ -144,6 +145,8 @@ flowchart TD
 #### For Healthcare Providers
 - Create and manage medical teams
 - Invite patients to teams
+- invite hcp members
+- manage hcp permissions (member vs admin)
 - Monitor multiple patients
 - Access patient data with permission
 
@@ -154,7 +157,7 @@ flowchart TD
 
 ### 5. Communication
 
-Real-time messaging between patients and their care team:
+simple messaging between patients and their care team (messages fetched after the login):
 - Team-based chat
 - Message notifications
 - Unread message tracking
@@ -169,13 +172,12 @@ Real-time messaging between patients and their care team:
 
 ### Supported Devices
 
-| Device Type | Data Collected |
-|-------------|----------------|
-| **DBLG1** | Pump data, CGM, settings |
-| **DBLG2** | Pump data, CGM, settings |
-| **CGM** | Continuous glucose readings |
-| **BGM** | Manual blood glucose readings |
-| **Insulin Pump** | Basal, bolus, settings |
+| Device Type      | Data Collected                |
+|------------------|-------------------------------|
+| **DBLG1**        | Pump data, CGM, settings      |
+| **DBLG2**        | Pump data, CGM, settings      |
+| **CGM**          | Continuous glucose readings   |
+| **Insulin Pump** | Basal, bolus, settings        |
 
 ### Data Types
 
@@ -234,12 +236,12 @@ YourLoops supports multiple languages:
 
 | Language | Code |
 |----------|------|
-| English | `en` |
-| French | `fr` |
-| German | `de` |
-| Spanish | `es` |
-| Italian | `it` |
-| Dutch | `nl` |
+| English  | `en` |
+| French   | `fr` |
+| German   | `de` |
+| Spanish  | `es` |
+| Italian  | `it` |
+| Dutch    | `nl` |
 | Japanese | `ja` |
 
 ---

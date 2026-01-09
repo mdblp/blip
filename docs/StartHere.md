@@ -44,11 +44,10 @@ flowchart TD
 ### 1. Getting Started
 Start with these documents to understand the project:
 
-| Document                                       | Description                           |
-|------------------------------------------------|---------------------------------------|
-| [Feature Overview](./FeatureOverview.md)       | High-level features and user flows    |
-| [Architecture](./Architecture.md)              | Application architecture and patterns |
-| [Directory Structure](./DirectoryStructure.md) | Monorepo organization                 |
+| Document                                 | Description                           |
+|------------------------------------------|---------------------------------------|
+| [Feature Overview](./FeatureOverview.md) | High-level features and user flows    |
+| [Architecture](./Architecture.md)        | Application architecture and patterns |
 
 ### 2. Core Concepts
 Understand how the application works:
