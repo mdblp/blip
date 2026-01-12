@@ -181,7 +181,7 @@ export const checkPatientInfoUpdate = async () => {
 
   const firstNameInput = screen.getByLabelText('First name')
   const lastNameInput = screen.getByLabelText('Last name')
-  const saveButton = screen.getByRole('button', { name: 'Save' })
+  const saveButton = screen.getByRole('button', { name: 'Save', hidden: true })
 
   await userEvent.clear(firstNameInput)
   await userEvent.clear(lastNameInput)

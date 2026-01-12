@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -117,6 +117,8 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
 
   const currentPatientDiabeticType = currentPatient?.diabeticProfile?.type ?? DiabeticType.DT1DT2
 
+  const tabsIndicatorStyle = user.isUserPatient() ? {} : { style: { display: 'none' } }
+
   return (
     <Box className={classes.tabsContainer}>
       <Box data-testid="subnav-patient-info" className={classes.leftSection}>
@@ -137,8 +139,10 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
         }
       </Box>
       <Box className={classes.centerSection}>
-        <Tabs value={getSelectedTab()} classes={{ root: classes.root }}
-              slotProps={{ indicator: !user.isUserPatient() && { style: { display: 'none' } } }}
+        <Tabs
+          value={getSelectedTab()}
+          classes={{ root: classes.root }}
+          slotProps={{ indicator: tabsIndicatorStyle }}
         >
           <Tab
             className={classes.tab}
