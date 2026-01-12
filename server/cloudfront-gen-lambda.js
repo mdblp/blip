@@ -56,7 +56,7 @@ const contentSecurityPolicy = {
   defaultSrc: ["'none'"],
   // remove unsafe-inline and unsafe-eval when pdfkit will be replaced by a more secure library
   // eslint-disable-next-line quotes
-  scriptSrc: ["'strict-dynamic'", "'nonce-${nonce}'", "'unsafe-inline'",  "'unsafe-eval'",  "http:", "https:"],
+  scriptSrc: ["'strict-dynamic'", "'nonce-${nonce}'", "'unsafe-inline'", "'unsafe-eval'", "http:", "https:"],
   scriptSrcElem: ["'strict-dynamic'", "'nonce-${nonce}'"],
   styleSrc: ["'self'", "'unsafe-inline'"],
   imgSrc: ["'self'", 'data:'],
@@ -154,12 +154,23 @@ function genContentSecurityPolicy() {
   contentSecurityPolicy.frameSrc.push(`https://${blipConfig.AUTH0_DOMAIN}`)
 
   // Allow the integration of product labels documents (pdf) hosted on a remote server
-  contentSecurityPolicy.frameSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_FR}.pdf`)
-  contentSecurityPolicy.frameSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_EN}.pdf`)
-  contentSecurityPolicy.frameSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_ES}.pdf`)
-  contentSecurityPolicy.frameSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_IT}.pdf`)
-  contentSecurityPolicy.frameSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_DE}.pdf`)
-  contentSecurityPolicy.frameSrc.push(`${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`)
+  contentSecurityPolicy.frameSrc.push(
+    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_FR}.pdf`,
+    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_EN}.pdf`,
+    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_ES}.pdf`,
+    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_IT}.pdf`,
+    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_DE}.pdf`,
+    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`
+  )
+
+  contentSecurityPolicy.objectSrc.push(
+    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_FR}.pdf`,
+    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_EN}.pdf`,
+    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_ES}.pdf`,
+    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_IT}.pdf`,
+    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_DE}.pdf`,
+    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`
+  )
 
   let csp = ''
   for (const cspName in contentSecurityPolicy) {
@@ -328,7 +339,7 @@ switch (_.get(process, 'env.METRICS_SERVICE', 'disabled')) {
   case 'matomo':
     console.info('- Using matomo tracker code')
     if (!_.isEmpty(process.env.MATOMO_TRACKER_URL) && process.env.MATOMO_TRACKER_URL.startsWith('http')) {
-    // Replace tracker Javascript
+      // Replace tracker Javascript
 
       let matomoTrackerUrl = process.env.MATOMO_TRACKER_URL
       if (!matomoTrackerUrl.endsWith('/')) {
@@ -455,7 +466,7 @@ fs.readdir(paletteDir, (err, files) => {
   // Find the file matching the pattern
   let md5File = files.find(file => md5Pattern.test(file))
 
-  if(md5File) {
+  if (md5File) {
     console.log('Palette md5 file found, serving md5 file in index.html')
     indexHtml = indexHtml.replace('palette.css', `${md5File}`)
   } else {
