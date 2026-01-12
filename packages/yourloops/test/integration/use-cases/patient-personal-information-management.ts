@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -46,7 +46,7 @@ export const testPatientPersonalInformation = async (): Promise<void> => {
   expect(avatar).toBeInTheDocument()
 
   // Test birthdate section
-  await assertInfoRow('date-of-birth-icon', 'date-of-birth-box', 'date-of-birth', 'Jan 1, 1980 (45 years old)')
+  await assertInfoRow('date-of-birth-icon', 'date-of-birth-box', 'date-of-birth', 'Jan 1, 1980 (46 years old)')
 
   // Test gender section
   await assertInfoRow('gender-icon', 'gender-box', 'gender', 'Female')
