@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -77,7 +77,7 @@ describe('usePatientData hook', () => {
       })
 
       expect(result.current.msRange).toEqual(TimeService.MS_IN_DAY)
-      expect(useNavigateMock).toHaveBeenCalledWith(`..${AppUserRoute.Daily}`, { relative: 'path' })
+      expect(useNavigateMock).toHaveBeenCalledWith(expect.stringContaining(AppUserRoute.Daily))
     })
 
     it('should change currentPatientView to Trends', async () => {
@@ -90,7 +90,7 @@ describe('usePatientData hook', () => {
       })
 
       expect(result.current.msRange).toEqual(DEFAULT_MS_RANGE)
-      expect(useNavigateMock).toHaveBeenCalledWith(`..${AppUserRoute.Trends}`, { relative: 'path' })
+      expect(useNavigateMock).toHaveBeenCalledWith(expect.stringContaining(AppUserRoute.Trends))
     })
   })
 

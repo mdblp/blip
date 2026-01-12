@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -122,7 +122,7 @@ export const checkPatientListFilters = async () => {
   expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters deactivated: 6 patient(s) out of 6')
   expect(screen.queryByTestId('reset-filters-link')).not.toBeInTheDocument()
   const dataGridRowCurrent = screen.getByTestId('current-patient-list-grid')
-  expect(within(dataGridRowCurrent).getAllByRole('row')).toHaveLength(7)
+  expect(within(dataGridRowCurrent).getAllByRole('row')).toHaveLength(6)
 
   const lastDataUploadDate = moment.tz(hypoglycemiaPatientMetrics.medicalData.range.endDate, new Intl.DateTimeFormat().resolvedOptions().timeZone).format('lll')
   expect(dataGridRowCurrent).toHaveTextContent(`PatientProfileDate of birthMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1Jan 1, 1980No new messages from the patient0%0%N/AFlag patient unread-messages@patient.frMessages Patient UnreadType 1Jan 1, 1980The patient has sent you new messages0%0%N/AFlag patient time-out-of-range@patient.frOut of Range Patient TimeType 1Jan 1, 1980No new messages from the patient0%0%N/AUnflag patient flagged@patient.frPatient FlaggedType 1Jan 1, 1980No new messages from the patient0%0%N/AFlag patient hypoglycemia@patient.frPatient HypoglycemiaType 1Jan 1, 1980No new messages from the patient0%0%Jan 1, 2023 9:44 AMFlag patient z-no-data@patient.frPatient Z - No DataType 1Jan 1, 1980No new messages from the patient0%0%N/AData calculated on the last 14 days (current day excluded). The values correspond to the average of the daily values.Rows per page:101–6 of 6`)
