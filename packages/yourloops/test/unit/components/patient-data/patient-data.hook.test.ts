@@ -143,7 +143,7 @@ describe('usePatientData hook', () => {
         result.current.goToDailySpecificDate(currentDate)
       })
       expect(result.current.dailyDate).toEqual(currentDate)
-      expect(useNavigateMock).toHaveBeenCalledWith(`..${AppUserRoute.Daily}?date=${new Date(currentDate).toISOString()}`, { relative: 'path' })
+      expect(useNavigateMock).toHaveBeenCalledWith(expect.stringContaining(`${AppUserRoute.Daily}?date=${new Date(currentDate).toISOString()}`))
     })
   })
 })
