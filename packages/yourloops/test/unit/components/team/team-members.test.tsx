@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,7 +40,6 @@ import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-ro
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { MemoryRouter } from 'react-router-dom'
 import ErrorApi from '../../../../lib/error/error.api'
-import { patient2Info } from '../../../integration/data/patient.api.data'
 
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')
