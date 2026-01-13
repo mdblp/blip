@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,6 +27,7 @@
 
 import { screen, within } from '@testing-library/react'
 import { getTranslation } from '../../utils/i18n'
+import { PATIENT_AGE } from '../utils/helpers'
 
 async function assertInfoRow(iconDataTestId: string, boxDataTestId: string, expectedTransKeyLabel: string, expectedTextValue: string) {
   const icon = await screen.findByTestId(iconDataTestId)
@@ -46,7 +47,7 @@ export const testPatientPersonalInformation = async (): Promise<void> => {
   expect(avatar).toBeInTheDocument()
 
   // Test birthdate section
-  await assertInfoRow('date-of-birth-icon', 'date-of-birth-box', 'date-of-birth', 'Jan 1, 1980 (45 years old)')
+  await assertInfoRow('date-of-birth-icon', 'date-of-birth-box', 'date-of-birth', `Jan 1, 1980 (${PATIENT_AGE} years old)`)
 
   // Test gender section
   await assertInfoRow('gender-icon', 'gender-box', 'gender', 'Female')

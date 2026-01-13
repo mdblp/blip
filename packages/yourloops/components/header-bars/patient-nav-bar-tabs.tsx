@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -44,6 +44,7 @@ import Typography from '@mui/material/Typography'
 import { getUserName } from '../../lib/auth/user.util'
 import { DiabeticType } from 'medical-domain'
 import { PatientDiabeticProfileChip } from '../chips/patient-diabetic-profile-chip'
+import { AppUserRoute } from '../../models/enums/routes.enum'
 
 interface PatientNavBarTabsProps {
   currentPatient: Patient
@@ -113,7 +114,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
   }
 
   const goBackHome = (): void => {
-    navigate(`../..`, { relative: 'path' })
+    navigate(`${AppUserRoute.Teams}/${teamId}${AppUserRoute.Patients}`)
   }
 
   const currentPatientDiabeticType = currentPatient?.diabeticProfile?.type ?? DiabeticType.DT1DT2

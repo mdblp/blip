@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -177,7 +177,9 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
     setMsRange(newMsRange)
 
     const route = getRouteByPatientView(patientView)
-    navigate(`..${route}`, { relative: 'path' })
+
+    const urlPrefix = pathname.substring(0, pathname.lastIndexOf('/'))
+    navigate(`${urlPrefix}${route}`)
   }
 
   const updateChartPrefs = (chartPrefs: ChartPrefs): void => {
@@ -186,7 +188,10 @@ export const usePatientData = ({ patient }: UsePatientDataProps): usePatientData
 
   const goToDailySpecificDate = (date: number | Date): void => {
     setDailyDate(date instanceof Date ? date.valueOf() : date)
-    navigate(`../${PatientView.Daily}?date=${new Date(date).toISOString()}`, { relative: 'path' })
+
+    const urlPrefix = pathname.substring(0, pathname.lastIndexOf('/'))
+    navigate(`${urlPrefix}${AppUserRoute.Daily}?date=${new Date(date).toISOString()}`)
+
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
