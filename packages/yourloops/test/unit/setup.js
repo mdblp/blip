@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,5 +27,10 @@
 
 import '@testing-library/jest-dom'
 import { enableFetchMocks } from 'jest-fetch-mock'
+
+const { TextEncoder, TextDecoder } = require('util')
+
+global.TextEncoder = TextEncoder
+global.TextDecoder = TextDecoder
 
 enableFetchMocks()
