@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,3 +28,7 @@
 export const getTomorrowDate = (): Date => {
   return new Date(Date.now() + 86400000)
 }
+
+const CURRENT_YEAR = new Date().getFullYear()
+const PATIENT_BIRTH_YEAR = 1980
+export const PATIENT_AGE = CURRENT_YEAR - PATIENT_BIRTH_YEAR

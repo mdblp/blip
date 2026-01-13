@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -49,6 +49,7 @@ import {
 import NotificationApi from '../../../lib/notifications/notification.api'
 import { type Router } from '../models/router.model'
 import moment from 'moment-timezone'
+import { PATIENT_AGE } from '../utils/helpers'
 
 const SVG_ICON_DISABLED_CLASS = 'MuiSvgIcon-colorDisabled'
 const SVG_ICON_FILL = 'currentColor'
@@ -426,7 +427,7 @@ export const checkPatientListHideShowColumns = async () => {
 
   await checkTooltipsColumnHeader(dataGridCurrentRows)
 
-  expect(dataGridCurrentRows).toHaveTextContent('PatientProfileAgeDate of birthGenderSystemMonitoring alertsMessagesTIRGMIBelow rangeCVLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 145Jan 1, 1980FemaleDBLG2No new messages from the patient0%N/A0%N/AN/AFlag patient z-no-data@patient.frPatient Z - No DataType 145Jan 1, 1980FemaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient-mmol@diabeloop.frPerotto PatientMmolType 145Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient2@diabeloop.frRouis Patient2Type 145Jan 1, 1980FemaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient3@diabeloop.frSrairi Patient3Type 145Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/A')
+  expect(dataGridCurrentRows).toHaveTextContent(`PatientProfileAgeDate of birthGenderSystemMonitoring alertsMessagesTIRGMIBelow rangeCVLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1${PATIENT_AGE}Jan 1, 1980FemaleDBLG2No new messages from the patient0%N/A0%N/AN/AFlag patient z-no-data@patient.frPatient Z - No DataType 1${PATIENT_AGE}Jan 1, 1980FemaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient-mmol@diabeloop.frPerotto PatientMmolType 1${PATIENT_AGE}Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient2@diabeloop.frRouis Patient2Type 1${PATIENT_AGE}Jan 1, 1980FemaleDBLG1No new messages from the patient0%N/A0%N/AN/AFlag patient patient3@diabeloop.frSrairi Patient3Type 1${PATIENT_AGE}Jan 1, 1980MaleDBLG1No new messages from the patient0%N/A0%N/AN/A`)
 
   await userEvent.click(columnSettingsButton)
   const columnSettingsPopoverForReset = screen.getByRole('presentation')
