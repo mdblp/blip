@@ -351,10 +351,8 @@ sequenceDiagram
     U1->>APP1: Send message
     APP1->>API: POST /messages
     API->>APP1: Message ID
-    loop Polling
-        APP2->>API: GET /messages (since lastId)
-        API->>APP2: New messages
-    end
+    APP2->>API: GET /messages (on page load only)
+    API->>APP2: New messages
     APP2->>U2: Display message
 ```
 
@@ -417,10 +415,10 @@ stateDiagram-v2
 
 ## Performance Considerations
 
-1. **Lazy Loading**: Charts loaded on demand
+1. **Lazy Loading**: patient list metrics loaded on demand
 2. **Data Windowing**: Only visible date range loaded
 3. **Memoization**: Expensive calculations cached
-4. **Web Workers**: Heavy processing off main thread
+4. **Web Workers**: Heavy processing off main thread, (not yet implemented, can be a future improvement)
 
 ---
 
