@@ -199,18 +199,42 @@ classDiagram
 
 ### Patient Onboarding
 
+the patient onboarding occurs only through the DBLx device during its initial setup.
+
 ```mermaid
 sequenceDiagram
-    participant U as User
+    participant U as Patient
+    participant D as DBL Device
     participant APP as YourLoops
     participant EMAIL as Email
 
-    U->>APP: Sign up
+    U->>D: Initial setup
+    D->>APP: Sign up
     APP->>EMAIL: Send verification
     U->>EMAIL: Click verify link
     EMAIL->>APP: Verify email
     APP->>U: Show consent page
     U->>APP: Accept consent
+    APP->>U: Show training
+    U->>APP: Complete training
+    APP->>U: Dashboard access
+```
+
+### HCP and Caregivers Onboarding
+
+
+```mermaid
+sequenceDiagram
+    participant U as Hcp/Caregiver
+    participant APP as YourLoops
+    participant EMAIL as Email
+
+    U->>APP:Sign up
+    APP->>EMAIL: Send verification
+    U->>EMAIL: Click verify link
+    EMAIL->>APP: Verify email
+    APP->>U: Show profile setup
+    U->>APP: Complete profile
     APP->>U: Show training
     U->>APP: Complete training
     APP->>U: Dashboard access
