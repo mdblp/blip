@@ -7,8 +7,9 @@
 - [ ] Code formatted on every file
 - [ ] Copyright added on every file
 - [ ] End-to-end tests successful on CI
+- [ ] Update documentations (in docs dir if necessary)
 
 ---
 
-:camera: UI screenshot (if applicable):
+:camera: UI screenshot or video (if applicable):
 
