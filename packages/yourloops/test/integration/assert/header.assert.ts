@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, type BoundFunctions, fireEvent, type queries, screen, within } from '@testing-library/react'
+import { type BoundFunctions, fireEvent, type queries, screen, within } from '@testing-library/react'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
 import { type Team } from '../../../lib/team'
 import userEvent from '@testing-library/user-event'
@@ -51,7 +51,7 @@ const getIconTestIdByRole = (role: UserRole): string => {
   switch (role) {
     case UserRole.Caregiver:
       return 'caregiver-icon'
-    case UserRole.Hcp:
+    case UserRole.Hcp:m
       return 'hcp-icon'
     case UserRole.Patient:
       return 'patient-icon'
@@ -143,7 +143,7 @@ export const checkBannerLanguageChange = async () => {
   expect(await screen.getByTestId('dbl-banner-alert')).toHaveTextContent('This is a <b>critical banner message</b> for all users.')
 
   fireEvent.mouseDown(within(screen.getByTestId('user-account-locale-selector')).getByRole('combobox'))
-  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: 'English' })))
+  fireEvent.click(screen.getByRole('option', { name: 'English' }))
   const saveButton = screen.getByRole('button', { name: 'Save' })
 
   await userEvent.click(saveButton)
