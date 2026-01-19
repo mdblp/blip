@@ -51,7 +51,7 @@ const getIconTestIdByRole = (role: UserRole): string => {
   switch (role) {
     case UserRole.Caregiver:
       return 'caregiver-icon'
-    case UserRole.Hcp:m
+    case UserRole.Hcp:
       return 'hcp-icon'
     case UserRole.Patient:
       return 'patient-icon'
