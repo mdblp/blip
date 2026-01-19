@@ -28,9 +28,9 @@
 import '@testing-library/jest-dom'
 import { enableFetchMocks } from 'jest-fetch-mock'
 
-const { TextEncoder, TextDecoder } = require('util')
+const { TextEncoder, TextDecoder } = require('node:util')
 
-global.TextEncoder = TextEncoder
-global.TextDecoder = TextDecoder
+globalThis.TextEncoder = TextEncoder
+globalThis.TextDecoder = TextDecoder
 
 enableFetchMocks()

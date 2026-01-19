@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import '@testing-library/jest-dom'
 import { enableFetchMocks } from 'jest-fetch-mock'
 
-const { TextEncoder, TextDecoder } = require('util')
+const { TextEncoder, TextDecoder } = require('node:util')
 
 // Mocking the `scroll` method as it is not implemented in jsdom (used by the Chat widget component)
 Element.prototype.scroll = jest.fn()
@@ -39,8 +39,8 @@ Element.prototype.scrollIntoView = jest.fn()
 
 global.URL.createObjectURL = jest.fn().mockReturnValue('/')
 
-global.TextEncoder = TextEncoder
-global.TextDecoder = TextDecoder
+globalThis.TextEncoder = TextEncoder
+globalThis.TextDecoder = TextDecoder
 
 enableFetchMocks()
 
