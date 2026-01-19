@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,8 +27,6 @@
 
 import React, { type FunctionComponent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Container from '@mui/material/Container'
 import List from '@mui/material/List'
@@ -45,7 +43,7 @@ import { type Notification as NotificationModel } from '../../lib/notifications/
 import { Notification } from './notification'
 import SpinningLoader from '../../components/loaders/spinning-loader'
 
-const useStyles = makeStyles({ name: 'ylp-page-notifications-list' })((theme: Theme) => ({
+const useStyles = makeStyles({ name: 'ylp-page-notifications-list' })((theme) => ({
   homeIcon: {
     marginRight: '0.5em'
   },

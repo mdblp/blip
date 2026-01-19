@@ -70,7 +70,7 @@ const AverageDailyDoseStat: FunctionComponent<AverageDailyDoseStatProps> = (prop
     <div className={commonStyles.statWrapper}>
       <div className={`${commonStyles.stat} ${styles.isOpen}`}>
         <div className={commonStyles.statHeader}>
-          <Box display="flex" className={commonStyles.chartTitle}>
+          <Box className={commonStyles.chartTitle} sx={{ display: "flex" }}>
             {title}
             <StatTooltip annotations={annotations} />
           </Box>

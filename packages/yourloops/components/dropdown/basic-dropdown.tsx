@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,7 +31,6 @@ import { useTranslation } from 'react-i18next'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { type SelectChangeEvent } from '@mui/material/Select'
 import { makeStyles } from 'tss-react/mui'
-import { type Theme } from '@mui/material/styles'
 import OutlinedInput from '@mui/material/OutlinedInput'
 
 export interface BasicDropdownProps {
@@ -43,7 +42,7 @@ export interface BasicDropdownProps {
   onSelect: (value: string) => void
 }
 
-const styles = makeStyles()((theme: Theme) => ({
+const styles = makeStyles()((theme) => ({
   select: {
     backgroundColor: theme.palette.grey[100],
     height: '40px',

@@ -139,12 +139,13 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
           : <>
             {!medicalData?.hasDiabetesData() &&
               <Box
-                display="flex"
-                flexDirection="column"
-                justifyContent="center"
-                alignItems="center"
-                height="100%"
-              >
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100%"
+                }}>
                 <Typography>{t('no-patient-data', { patientName: patient.profile.fullName })}</Typography>
                 <Button
                   variant="contained"

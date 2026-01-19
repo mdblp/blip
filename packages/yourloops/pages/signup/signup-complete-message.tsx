@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -45,7 +45,12 @@ export const SignupCompleteMessage: FC = () => {
   }
 
   return (
-    <Box paddingX={2} paddingTop={1} textAlign="left">
+    <Box
+      sx={{
+        paddingX: 2,
+        paddingTop: 1,
+        textAlign: "left"
+      }}>
       <Typography id="signup-steppers-ending-text-1" variant="h6" gutterBottom>
         {t('account-creation-finalized')}
       </Typography>
@@ -57,11 +62,12 @@ export const SignupCompleteMessage: FC = () => {
       </Typography>
       <Box
         id="signup-consent-button-group"
-        display="flex"
-        justifyContent="center"
-        mx={0}
-        mt={4}
-      >
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          mx: 0,
+          mt: 4
+        }}>
         <Button
           data-testid="validate-account-completion"
           variant="contained"

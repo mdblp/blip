@@ -30,8 +30,6 @@ import _ from 'lodash'
 import bows from 'bows'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
-
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
@@ -52,7 +50,7 @@ interface ConsentProps {
   messageKey: string
 }
 
-const style = makeStyles({ name: 'ylp-component-consent' })((theme: Theme) => {
+const style = makeStyles({ name: 'ylp-component-consent' })((theme) => {
   return {
     mainContainer: {
       [theme.breakpoints.down('sm')]: {
@@ -133,14 +131,15 @@ export const ConsentPage: FC<ConsentProps> = (props) => {
         <Grid
           container
           spacing={0}
-          alignItems="center"
-          justifyContent="center"
           className={classes.centeredGrid}
-        >
-          <Grid item xs={12}>
+          sx={{
+            alignItems: "center",
+            justifyContent: "center"
+          }}>
+          <Grid size={12}>
             <Card className={classes.card}>
               <CardMedia>
-                <Box marginY={2}>
+                <Box sx={{ marginY: 2 }}>
                   <img
                     src={`/branding_${appConfig.BRANDING}_logo.svg`}
                     height="60"

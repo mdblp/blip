@@ -50,7 +50,13 @@ const PatientNavBar: FunctionComponent<PatientNavBarProps> = (props) => {
   } = props
 
   return (
-    <Box data-testid="patient-nav-bar" display="flex" flexDirection="column" marginBottom={3}>
+    <Box
+      data-testid="patient-nav-bar"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        marginBottom: 3
+      }}>
       <PatientNavBarTabs
         currentPatient={currentPatient}
         currentPatientView={currentPatientView}

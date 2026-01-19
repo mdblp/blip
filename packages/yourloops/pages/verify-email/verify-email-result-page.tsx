@@ -133,17 +133,19 @@ export const VerifyEmailResultPage: FC = () => {
       </AppBar>
 
       <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="90vh"
-        textAlign="center"
         data-testid="verify-email-result-content"
-      >
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "90vh",
+          textAlign: "center"
+        }}>
         <GlobalStyles styles={{ body: { backgroundColor: theme.palette.common.white } }} />
 
         <Container maxWidth="sm">
-          <Box mt={4} mb={3}>
+          <Box
+            sx={{ mt: 4, mb: 3 }}>
             {isSuccess
               ? <RightIcon
                 color="primary"
@@ -156,7 +158,8 @@ export const VerifyEmailResultPage: FC = () => {
                 data-testid="wrong-icon"
               />}
           </Box>
-          <Box mt={4} mb={3}>
+          <Box
+            sx={{ mt: 4, mb: 3 }}>
             <Typography variant="h5">{title}</Typography>
           </Box>
 
@@ -164,7 +167,7 @@ export const VerifyEmailResultPage: FC = () => {
             <Typography>{infoLabel}</Typography>
           </Box>
 
-          <Box marginTop={4}>
+          <Box sx={{ marginTop: 4 }}>
             <Button
               variant="contained"
               onClick={isSuccess ? goToAppHome : logoutUser}

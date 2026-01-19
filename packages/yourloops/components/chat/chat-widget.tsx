@@ -29,7 +29,7 @@ import React, { type KeyboardEvent, useEffect, useRef, useState } from 'react'
 
 import EmojiPicker, { type EmojiClickData, EmojiStyle } from 'emoji-picker-react'
 
-import { type Theme, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import SendIcon from '@mui/icons-material/Send'
 import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined'
@@ -66,7 +66,7 @@ const CHAT_CONTENT_MIN_HEIGHT = '280px'
 const CHAT_CONTENT_MAX_HEIGHT = '450px'
 const KEYBOARD_EVENT_ESCAPE = 'Escape'
 
-const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme: Theme) => {
+const chatWidgetStyles = makeStyles({ name: 'ylp-chat-widget' })((theme) => {
   return {
     iconButton: {
       backgroundColor: 'white',
@@ -230,12 +230,13 @@ function ChatWidget(props: Readonly<ChatWidgetProps>): JSX.Element {
   return (
     <DataCard data-testid="chat-card">
       <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        sx={{ paddingBottom: theme.spacing(1) }}
         data-testid="chat-widget-header"
-      >
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingBottom: theme.spacing(1)
+        }}>
         <Typography sx={{ fontWeight: 'bold', paddingBottom: '8px' }}>
           {`${t('messages')} ${nbUnread > 0 ? `(+${nbUnread})` : ''}`}
         </Typography>
@@ -275,8 +276,9 @@ function ChatWidget(props: Readonly<ChatWidgetProps>): JSX.Element {
           </FormGroup>
         }
       </Box>
-
-      <Box position="relative">
+      <Box sx={{
+        position: "relative"
+      }}>
         <Dialog open={here} onClose={() => setHere(false)}>
           <DialogContent>
             <DialogContentText>

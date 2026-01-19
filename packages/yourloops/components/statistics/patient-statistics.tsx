@@ -157,7 +157,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           days={numberOfDays}
         />
         { diabeticProfile === DiabeticType.DT1Pregnancy &&  isDailyView &&
-            <Box marginTop={theme.spacing(3)}>
+            <Box sx={{ marginTop: theme.spacing(3) }}>
               <TimeInRangeDT1Chart
                 data={timeInRangeDt1Data}
                 bgPrefs={defaultBgPrefs}
@@ -165,14 +165,14 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
             </Box>
         }
 
-        <Box marginTop={theme.spacing(3)}>
+        <Box sx={{ marginTop: theme.spacing(3) }}>
           <TimeInTightRangeChart
             data={timeInTightRangeData}
             bgPrefs={bgPrefs}
           />
         </Box>
         {isTrendsView &&
-          <Box marginTop={theme.spacing(2)}>
+          <Box sx={{ marginTop: theme.spacing(2) }}>
             <Divider className={classes.divider}/>
             <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage}/>
           </Box>

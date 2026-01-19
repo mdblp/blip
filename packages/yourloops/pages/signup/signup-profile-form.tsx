@@ -124,10 +124,11 @@ const SignUpProfileForm: FunctionComponent<SignUpFormProps> = (props) => {
 
   return (
     <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-    >
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center"
+      }}>
       <TextField
         InputProps={{
           inputProps: {

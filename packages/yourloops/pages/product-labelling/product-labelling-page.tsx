@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -69,7 +69,12 @@ export const ProductLabellingPage: FC = () => {
   setPageTitle(t('product-labelling'))
 
   return (
-    <Box marginBottom={2} sx={{ width: '100%', height: '100%' }}>
+    <Box
+      sx={{
+        marginBottom: 2,
+        width: '100%',
+        height: '100%'
+      }}>
       <object
         aria-label={t('product-labelling')}
         data-testid="udipdf"

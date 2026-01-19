@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,6 @@ import Select, { type SelectChangeEvent } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
 import { type ResourceLanguage } from 'i18next'
@@ -39,7 +38,7 @@ interface LanguageSelectProps {
   className?: string
 }
 
-const styles = makeStyles()((theme: Theme) => ({
+const styles = makeStyles()((theme) => ({
   select: {
     fontSize: theme.typography.caption.fontSize,
     color: theme.palette.grey[700],

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -187,8 +187,10 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
     return buildPendingRows()
   }, [buildPendingRows])
 
+  const columns: GridColDef[] = useMemo(() => buildPendingColumns(), [buildPendingColumns])
+
   return {
-    columns: buildPendingColumns(),
+    columns,
     patientToCancelInvite,
     patientToReinvite,
     rowsProps,

@@ -135,7 +135,7 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
     <React.Fragment>
       {medicalReports
         ? medicalReports.length === 0
-          ? <Typography color="text.secondary">{emptyListLabel}</Typography>
+          ? <Typography sx={{ color: "text.secondary" }}>{emptyListLabel}</Typography>
           : <List className={classes.list}>
           {getSortedMedicalReports(medicalReports).map((medicalReport, index) =>
             <MedicalReportItem
@@ -149,9 +149,13 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
         </List>
         : <SpinningLoader size={20} />
       }
-
       {user.isUserHcp() &&
-        <Box display="flex" justifyContent="end" marginTop={2}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "end",
+            marginTop: 2
+          }}>
           <Button
             variant="contained"
             color="primary"
@@ -165,7 +169,6 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
           </Button>
         </Box>
       }
-
       {isEditDialogOpen &&
         <MedicalReportEditDialog
           {...props}
@@ -174,7 +177,6 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
           onSaved={updateMedicalReportList}
         />
       }
-
       {medicalReportToDelete &&
         <MedicalReportDeleteDialog
           teamName={medicalReportToDelete.teamName}

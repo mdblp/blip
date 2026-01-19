@@ -156,19 +156,20 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
             return (
               <React.Fragment key={event.id}>
                 <Grid container>
-                  <Grid item xs={2}>
+                  <Grid size={2}>
                     <Box className={styles.icon}>
                       <img src={getIcon(event)} alt={t('event-icon')} />
                     </Box>
                   </Grid>
-                  <Grid item xs={10}>
+                  <Grid size={10}>
                     <Box>
                       <Box
-                        display="flex"
-                        justifyContent="space-between"
-                        alignItems="center"
-                        sx={{ marginBottom: theme.spacing(1) }}
-                      >
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginBottom: theme.spacing(1)
+                        }}>
                         <span className={styles.title}>{getTitle(event)}</span>
                         <span>{computeDateValue(getDateTitleForBaseDatum(event, timePrefs))}</span>
                       </Box>

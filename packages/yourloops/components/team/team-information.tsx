@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,6 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { type Theme } from '@mui/material/styles'
 
 import { makeStyles } from 'tss-react/mui'
 
@@ -51,7 +50,7 @@ import TeamUtils from '../../lib/team/team.util'
 import { errorTextFromException, PhonePrefixCode } from '../../lib/utils'
 import { logError } from '../../utils/error.util'
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   body: {
     display: 'flex',
     flexWrap: 'wrap',

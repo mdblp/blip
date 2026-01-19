@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,8 +26,6 @@
  */
 
 import React from 'react'
-
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Face from '@mui/icons-material/Face'
 import { useTranslation } from 'react-i18next'
@@ -43,7 +41,7 @@ export interface ChatMessageProps {
   ack: boolean
 }
 
-const chatMessageStyles = makeStyles({ name: 'ylp-chat-message' })((theme: Theme) => {
+const chatMessageStyles = makeStyles({ name: 'ylp-chat-message' })((theme) => {
   return {
     chatMessageContainer: {
       fontFamily: 'Roboto',

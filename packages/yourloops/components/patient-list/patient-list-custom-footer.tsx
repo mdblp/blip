@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,16 +38,18 @@ export const PatientListCustomFooter: FunctionComponent = () => {
 
   return (
     <Box
-      display="flex"
-      justifyContent="space-between"
-      alignItems="center"
       className={classes.customFooter}
-    >
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
+      }}>
       <Typography
-        color="text.secondary"
         variant="body2"
-        paddingLeft={2}
-      >
+        sx={{
+          color: "text.secondary",
+          paddingLeft: 2
+        }}>
         {t('data-period-text')}
       </Typography>
       <GridPagination />

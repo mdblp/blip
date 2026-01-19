@@ -59,8 +59,13 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
 
   return (
     <Box data-testid="cbg-standard-deviation-stat">
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Box display="flex" className={commonStyles.title}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}>
+        <Box className={commonStyles.title} sx={{ display: "flex" }}>
           {title}
           {!Number.isNaN(standardDeviation) &&
             <>
@@ -76,15 +81,27 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
           }
           <StatTooltip annotations={annotations} />
         </Box>
-        <Box fontSize="12px">
+        <Box sx={{
+          fontSize: "12px"
+        }}>
           {units}
         </Box>
       </Box>
-      <Box display="flex" alignItems="center" marginLeft="6px">
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          marginLeft: "6px"
+        }}>
         {Number.isNaN(standardDeviation) ? (
           <>
             <div className={stylesCbgCommon['disabled-line']} />
-            <Box className={stylesCbgCommon['disabled-label']} fontSize="24px" marginLeft="auto">
+            <Box
+              className={stylesCbgCommon['disabled-label']}
+              sx={{
+                fontSize: "24px",
+                marginLeft: "auto"
+              }}>
               --
             </Box>
           </>
@@ -102,7 +119,12 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
               ]}
               lineWidth={'calc(100% - 60px)'}
             />
-            <Box className={styles.value} fontSize="20px" marginLeft="auto">
+            <Box
+              className={styles.value}
+              sx={{
+                fontSize: "20px",
+                marginLeft: "auto"
+              }}>
               {standardDeviation}
             </Box>
           </>

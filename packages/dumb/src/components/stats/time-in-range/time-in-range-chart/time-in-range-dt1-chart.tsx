@@ -62,7 +62,7 @@ export const TimeInRangeDT1Chart: FC<TimeInRangeDT1ChartProps> = (props) => {
         shouldDisplayInfoTooltip={true}
         type={CBGStatType.TimeInRangeDt1}
       />
-      <Box marginBottom={1}>
+      <Box sx={{ marginBottom: 1 }}>
         <CbgPercentageBarChart
           type={CBGStatType.TimeInRangeDt1}
           id={StatLevel.TimeInRangeDt1}

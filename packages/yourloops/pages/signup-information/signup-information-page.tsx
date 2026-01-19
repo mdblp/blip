@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2024-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,7 +35,6 @@ import CardMedia from '@mui/material/CardMedia'
 import appConfig from '../../lib/config/config'
 import CardContent from '@mui/material/CardContent'
 import { makeStyles } from 'tss-react/mui'
-import type { Theme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
@@ -43,7 +42,7 @@ import { useAuth } from '../../lib/auth'
 import Alert from '@mui/material/Alert'
 import { useAuth0 } from '@auth0/auth0-react'
 
-const formStyle = makeStyles({ name: 'signup-page-styles' })((theme: Theme) => ({
+const formStyle = makeStyles({ name: 'signup-page-styles' })((theme) => ({
   card: {
     marginBlock: theme.spacing(2)
   },
@@ -80,31 +79,34 @@ export const SignupInformationPage: FC = () => {
       <Grid
         container
         spacing={0}
-        alignItems="center"
-        justifyContent="center"
-        minHeight="90vh"
-      >
-        <Grid item xs={12}>
+        sx={{
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "90vh"
+        }}>
+        <Grid size={12}>
             <Card className={classes.card} elevation={4}>
               <CardMedia className={classes.logoHeader}>
                 <img src={`/branding_${appConfig.BRANDING}_logo.svg`} height={35} alt={t('alt-img-logo')} data-testid="yourloops-logo" />
               </CardMedia>
               <CardContent className={classes.cardContent}>
                 <Box
-                  marginX="auto"
-                  marginY={3}
-                  textAlign="center"
-                  maxWidth="60%"
-                >
+                  sx={{
+                    marginX: "auto",
+                    marginY: 3,
+                    textAlign: "center",
+                    maxWidth: "60%"
+                  }}>
                   <Typography variant="h5">
                     {t('signup-information')}
                   </Typography>
                 </Box>
                 <Box
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="center"
-                >
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center"
+                  }}>
                   <p>{t('signup-information-message-1')}</p>
 
                   <Alert severity="info" data-testid="signup-information-alert">
@@ -118,12 +120,15 @@ export const SignupInformationPage: FC = () => {
                   </Alert>
                 </Box>
                 <Box
-                  display="flex"
-                  justifyContent="end"
-                  mx={0}
-                  mt={4}
-                >
-                  <Box marginRight={2}>
+                  sx={{
+                    display: "flex",
+                    justifyContent: "end",
+                    mx: 0,
+                    mt: 4
+                  }}>
+                  <Box sx={{
+                    marginRight: 2
+                  }}>
                     <Button
                       variant="outlined"
                       data-testid="cancel-button"
@@ -132,7 +137,9 @@ export const SignupInformationPage: FC = () => {
                       {t('button-cancel')}
                     </Button>
                   </Box>
-                  <Box marginRight={2}>
+                  <Box sx={{
+                    marginRight: 2
+                  }}>
                     <Button
                       variant="contained"
                       color="primary"

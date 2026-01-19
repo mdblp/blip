@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { fireEvent, screen, within } from '@testing-library/react'
+import { act, fireEvent, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { patient1Id, patient1Info, patientWithMmolId } from '../data/patient.api.data'
 import { Unit } from 'medical-domain'
@@ -165,15 +165,15 @@ export const checkSaveButtonForMmolForPatient = async (): Promise<void> => {
 
   const dropDownOutRange = within(monitoringAlertsSection.getByTestId('dropdown-out-of-range'))
   fireEvent.mouseDown(dropDownOutRange.getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: '15%' }))
+  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: '15%' })))
 
   const dropDownHypo = within(monitoringAlertsSection.getByTestId('dropdown-hypo'))
   fireEvent.mouseDown(dropDownHypo.getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: '20%' }))
+  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: '20%' })))
 
   const dropDownNonData = within(monitoringAlertsSection.getByTestId('dropdown-nonData'))
   fireEvent.mouseDown(dropDownNonData.getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: '40%' }))
+  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: '40%' })))
 
   await userEvent.click(saveButton)
 
@@ -233,15 +233,15 @@ export const checkDiscardButtonForPatient = async (): Promise<void> => {
 
   const dropDownOutRange = within(monitoringAlertsSection.getByTestId('dropdown-out-of-range'))
   fireEvent.mouseDown(dropDownOutRange.getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: '15%' }))
+  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: '15%' })))
 
   const dropDownHypo = within(monitoringAlertsSection.getByTestId('dropdown-hypo'))
   fireEvent.mouseDown(dropDownHypo.getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: '20%' }))
+  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: '20%' })))
 
   const dropDownNonData = within(monitoringAlertsSection.getByTestId('dropdown-nonData'))
   fireEvent.mouseDown(dropDownNonData.getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: '40%' }))
+  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: '40%' })))
 
   expect(monitoringAlertsSection.getByTestId('monitoring-alerts-patient-status-label')).toHaveTextContent(getTranslation('custom-values-entered'))
   const discardButton = monitoringAlertsSection.getByRole('button', { name: 'Discard changes' })

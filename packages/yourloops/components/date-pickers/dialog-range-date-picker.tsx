@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,7 @@ import React from 'react'
 import dayjs, { type Dayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
 
-import { useTheme, type Theme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Button from '@mui/material/Button'
@@ -37,7 +37,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 
-import { type CalendarOrientation, type DateRange, type CalendarSelectionRange, MIN_YEAR, MAX_YEAR } from './models'
+import { type CalendarOrientation, type CalendarSelectionRange, type DateRange, MAX_YEAR, MIN_YEAR } from './models'
 import RangeDatePicker from './range-date-picker'
 
 interface DatePickerProps {
@@ -56,7 +56,7 @@ interface DatePickerProps {
   onSelectedDateChange?: (start?: string, end?: string) => void
 }
 
-const datePickerStyle = makeStyles({ name: 'date-picker-days-range' })((theme: Theme) => {
+const datePickerStyle = makeStyles({ name: 'date-picker-days-range' })((theme) => {
   return {
     dialogPaper: {
       margin: 0,

@@ -49,11 +49,12 @@ export const AlarmMultipleOccurrences: FC<AlarmMultipleOccurrencesProps> = (prop
   return (
     <>
       <Box
-        marginTop={theme.spacing(1)}
-        marginBottom={theme.spacing(1)}
-        paddingLeft={theme.spacing(1)}
-        borderLeft={`2px solid ${borderColor}`}
-      >
+        sx={{
+          marginTop: theme.spacing(1),
+          marginBottom: theme.spacing(1),
+          paddingLeft: theme.spacing(1),
+          borderLeft: `2px solid ${borderColor}`
+        }}>
         <TooltipLine
           label={t('alarm-multiple-occurrences', { maxFrequency: GROUP_ALARMS_THRESHOLD_MINUTES })} />
       </Box>

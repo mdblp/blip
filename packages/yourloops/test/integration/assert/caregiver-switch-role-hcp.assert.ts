@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { fireEvent, screen, within } from '@testing-library/react'
+import { act, fireEvent, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 export const checkConsequencesDialog = async () => {
@@ -83,7 +83,7 @@ export const checkHcpProfessionDialogAndSave = async () => {
   expect(hcpProfessionSelect.textContent).toEqual('​Profession')
 
   fireEvent.mouseDown(within(screen.getByTestId('dropdown-profession-selector')).getByRole('combobox'))
-  fireEvent.click(screen.getByRole('option', { name: 'Dietitian' }))
+  await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: 'Dietitian' })))
   expect(hcpProfessionSelect).toHaveTextContent('Dietitian')
 
   await userEvent.click(validateButton)

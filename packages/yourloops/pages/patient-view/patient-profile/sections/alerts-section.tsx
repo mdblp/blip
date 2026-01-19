@@ -103,7 +103,7 @@ export const AlertsSection: FC<AlertsSectionProps> = (props) => {
           >
             <Typography
               variant="body2"
-              paddingBottom={theme.spacing(2)}
+              sx={{ paddingBottom: theme.spacing(2) }}
             >
               {t('monitoring-alerts-description')}
             </Typography>

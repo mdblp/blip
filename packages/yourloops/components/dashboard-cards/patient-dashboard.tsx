@@ -177,46 +177,44 @@ export const PatientDashboard: FunctionComponent<PatientDashboardProps> = (props
       container
       spacing={2}
       rowSpacing={2}
-      paddingX={3}
+      sx={{
+        paddingX: 3
+      }}
     >
       <Grid
-        item
-        xs={12}
-        display="flex"
-        alignItems="center"
-      >
+        size={12}
+        sx={{
+          display: "flex",
+          alignItems: "center"
+        }}>
           <Alert severity="info">
             {t('data-period-text')}
           </Alert>
       </Grid>
-
-
-      <Grid item xs={gridWidgetSize}>
+      <Grid size={gridWidgetSize}>
         <PatientStatistics
           medicalData={medicalData}
           bgPrefs={bgPrefs}
           dateFilter={dateFilter}
         />
       </Grid>
-
-      <Grid item xs={gridWidgetSize}>
+      <Grid size={gridWidgetSize}>
         <DevicesColumn
           dateFilter={dateFilter}
           goToDailySpecificDate={goToDailySpecificDate}
           medicalDataService={medicalDataService}
         />
       </Grid>
-
       {!isCaregiver && !isPatientWithNoTeams && !isSelectedTeamPrivate &&
         <>
-          <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
+          <Grid className={classes.gridItemContainer} size={gridWidgetSize}>
             {user.isUserHcp() &&
               <MonitoringAlertsCard patient={patient} />
             }
             <MedicalFilesCard patient={patient} />
           </Grid>
 
-          <Grid item xs={gridWidgetSize} className={classes.gridItemContainer}>
+          <Grid className={classes.gridItemContainer} size={gridWidgetSize}>
             <ChatWidget
               patient={patient}
             />

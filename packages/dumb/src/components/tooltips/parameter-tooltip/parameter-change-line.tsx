@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -48,7 +48,7 @@ export const ParameterChangeLine: FC<ParameterChangeLineProps> = (props) => {
 
   return (
     <Grid container spacing={1} key={parameterId}>
-      <Grid item xs={7}>
+      <Grid size={7}>
         <span
           id={`tooltip-daily-parameter-${parameterId}-name`}
           data-testid={'parameter-name'}
@@ -58,7 +58,7 @@ export const ParameterChangeLine: FC<ParameterChangeLineProps> = (props) => {
         </span>
       </Grid>
 
-      <Grid item xs={1} display="flex" justifyContent="end">
+      <Grid size={1} display="flex" justifyContent="end">
         {
           hasPreviousValue &&
           <span
@@ -70,7 +70,7 @@ export const ParameterChangeLine: FC<ParameterChangeLineProps> = (props) => {
         }
       </Grid>
 
-      <Grid item xs={1} display="flex" justifyContent="center">
+      <Grid size={1} display="flex" justifyContent="center">
         {
           hasPreviousValue &&
           <span id={`tooltip-daily-parameter-${parameterId}-arrow`}>
@@ -79,7 +79,7 @@ export const ParameterChangeLine: FC<ParameterChangeLineProps> = (props) => {
         }
       </Grid>
 
-      <Grid item xs={1} display="flex" justifyContent="end">
+      <Grid size={1} display="flex" justifyContent="end">
         <span
           id={`tooltip-daily-parameter-${parameterId}-value`}
           data-testid={'parameter-value'}
@@ -89,7 +89,7 @@ export const ParameterChangeLine: FC<ParameterChangeLineProps> = (props) => {
         </span>
       </Grid>
 
-      <Grid item xs={2}>
+      <Grid size={2}>
         <span
           id={`tooltip-daily-parameter-${parameterId}-units`}
           data-testid={'parameter-units'}

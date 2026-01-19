@@ -127,13 +127,14 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
     <React.Fragment>
       <Box
         data-testid="patient-list-header"
-        padding={theme.spacing(4, 4, 0, 4)}
+        sx={{ padding: theme.spacing(4, 4, 0, 4) }}
       >
         <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-        >
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}>
           <Box>
             <Tooltip title={t('patient-list-search-tooltip')}>
               <TextField
@@ -216,10 +217,11 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
         </Box>
 
         <Box
-          display="flex"
-          justifyContent="space-between"
-          paddingTop={1}
-        >
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            paddingTop: 1
+          }}>
           <Tabs
             value={selectedTab}
             onChange={(event, newValue) => {

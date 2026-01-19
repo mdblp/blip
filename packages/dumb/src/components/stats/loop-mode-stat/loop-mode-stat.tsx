@@ -72,7 +72,12 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
 
   return (
     <div data-testid="loop-mode-stat">
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}>
         <Box className={commonStyles.title}>
           {title}
           <StatTooltip annotations={annotations} />
@@ -83,14 +88,14 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
         </Box>
       </Box>
       <Grid container spacing={0} sx={{ marginTop: 1 }}>
-        <Grid item xs={3}>
+        <Grid size={3}>
           <LoopModePercentageDetail
             percentageValue={automatedPercentage}
             duration={automatedDuration}
             valueClassName={styles.autoValueColor}
           />
         </Grid>
-        <Grid item xs={6} sx={{ alignSelf: 'flex-start' }}>
+        <Grid sx={{ alignSelf: 'flex-start' }} size={6}>
           <StatColoredBar
             dotItem={{ color: 'var(--bg-target)', alignmentPercent: dotAlignment }}
             lineColorItems={[
@@ -99,7 +104,7 @@ const LoopModeStat: FunctionComponent<LoopModeStatProps> = (props) => {
             ]}
           />
         </Grid>
-        <Grid item xs={3}>
+        <Grid size={3}>
           <LoopModePercentageDetail
             percentageValue={manualPercentage}
             duration={manualDuration}

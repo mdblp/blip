@@ -121,11 +121,12 @@ export const CartridgeChangesStat: FC<CartridgeChangesStatProps> = (props) => {
           (changeItem) =>
             <React.Fragment key={changeItem.id}>
               <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
                 data-testid="cartridge-change-item"
-              >
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                }}>
                 <Button
                   variant="text"
                   size="medium"
@@ -137,16 +138,17 @@ export const CartridgeChangesStat: FC<CartridgeChangesStatProps> = (props) => {
                 </Button>
 
                 <Box
-                  display="flex"
-                  alignItems="center"
                   className={classes.deviceValue}
-                >
+                  sx={{
+                    display: "flex",
+                    alignItems: "center"
+                  }}>
                   <SimpleValue suffix={changeItem.durationUnit} value={changeItem.duration} />
                 </Box>
               </Box>
             </React.Fragment>
         ) :
-        <Typography color="text.secondary">{t('no-cartridge-changes')}</Typography>}
+        <Typography sx={{ color: "text.secondary" }}>{t('no-cartridge-changes')}</Typography>}
     </Box>
   )
 }

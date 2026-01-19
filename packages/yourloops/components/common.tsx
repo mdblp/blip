@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 
-export const commonComponentStyles = makeStyles()((theme: Theme) => ({
+export const commonComponentStyles = makeStyles()((theme) => ({
   categoryHeader: {
     display: 'flex',
     justifyContent: 'space-between',

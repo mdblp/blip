@@ -163,7 +163,6 @@ class TrendsSubNav extends React.Component {
         key={domain}
         type="button"
         onClick={clickButton}>
-
         {this.renderDomain(domain)}
       </button>
     )

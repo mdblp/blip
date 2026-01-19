@@ -31,7 +31,6 @@ import Tab from '@mui/material/Tab'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { makeStyles } from 'tss-react/mui'
-import { type Theme } from '@mui/material/styles'
 import Button from '@mui/material/Button'
 import GetAppIcon from '@mui/icons-material/GetApp'
 import { PatientView } from '../../enum/patient-view.enum'
@@ -44,7 +43,6 @@ import Typography from '@mui/material/Typography'
 import { getUserName } from '../../lib/auth/user.util'
 import { DiabeticType } from 'medical-domain'
 import { PatientDiabeticProfileChip } from '../chips/patient-diabetic-profile-chip'
-import { AppUserRoute } from '../../models/enums/routes.enum'
 
 interface PatientNavBarTabsProps {
   currentPatient: Patient
@@ -53,7 +51,7 @@ interface PatientNavBarTabsProps {
   onClickPrint: MouseEventHandler<HTMLButtonElement>
 }
 
-const styles = makeStyles()((theme: Theme) => {
+const styles = makeStyles()((theme) => {
   const TAB_HEIGHT = theme.spacing(6)
   return {
     root: {
@@ -114,10 +112,12 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
   }
 
   const goBackHome = (): void => {
-    navigate(`${AppUserRoute.Teams}/${teamId}${AppUserRoute.Patients}`)
+    navigate('/')
   }
 
   const currentPatientDiabeticType = currentPatient?.diabeticProfile?.type ?? DiabeticType.DT1DT2
+
+  const tabsIndicatorStyle = user.isUserPatient() ? {} : { style: { display: 'none' } }
 
   return (
     <Box className={classes.tabsContainer}>
@@ -139,8 +139,10 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
         }
       </Box>
       <Box className={classes.centerSection}>
-        <Tabs value={getSelectedTab()} classes={{ root: classes.root }}
-              TabIndicatorProps={ !user.isUserPatient() && { style: { display: 'none' } } }
+        <Tabs
+          value={getSelectedTab()}
+          classes={{ root: classes.root }}
+          slotProps={{ indicator: tabsIndicatorStyle }}
         >
           <Tab
             className={classes.tab}

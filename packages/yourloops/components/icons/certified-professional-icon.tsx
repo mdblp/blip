@@ -37,7 +37,7 @@ function CertifiedProfessionalIcon({ id }: { id?: string }): JSX.Element {
   const { t } = useTranslation('yourloops')
 
   return (
-    <Box id={id} marginLeft={1}>
+    <Box id={id} sx={{ marginLeft: 1 }}>
       <Tooltip title={t('certified-professional-account') } placement="bottom">
         <VerifiedUserOutlinedIcon color="primary" fontSize="small" />
       </Tooltip>

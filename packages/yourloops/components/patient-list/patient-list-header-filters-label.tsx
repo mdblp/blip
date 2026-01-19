@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -69,13 +69,14 @@ export const PatientListHeaderFiltersLabel: FunctionComponent<PatientListHeaderF
 
   return (
     <Box
-      display="flex"
-      alignItems="center"
-    >
+      sx={{
+        display: "flex",
+        alignItems: "center"
+      }}>
       <Typography
         data-testid="filters-label"
         variant="subtitle2"
-        color="text.secondary"
+        sx={{ color: "text.secondary" }}
       >
         {filtersLabel}
       </Typography>

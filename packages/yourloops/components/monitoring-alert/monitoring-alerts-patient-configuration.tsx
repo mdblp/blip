@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,28 +27,24 @@
 
 import React, { FC, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { useAuth } from '../../lib/auth'
-import { LoadingButton } from '@mui/lab'
-import { Unit } from 'medical-domain'
-import { type MonitoringAlertsParameters } from 'medical-domain'
+import { type MonitoringAlertsParameters, Unit } from 'medical-domain'
 import { Save } from '@mui/icons-material'
 import { useMonitoringAlertsPatientConfiguration } from './monitoring-alerts-patient-configuration.hook'
 import { MonitoringAlertsContentConfiguration } from './monitoring-alerts-content-configuration'
 import Chip from '@mui/material/Chip'
 import Alert from '@mui/material/Alert'
 
-const useMonitoringAlertConfigurationStyles = makeStyles()((theme: Theme) => ({
+const useMonitoringAlertConfigurationStyles = makeStyles()((theme) => ({
   cancelButton: {
     marginRight: theme.spacing(2)
   }
 }))
 
-const useApplyTeamButtonStyles = makeStyles()((theme: Theme) => ({
+const useApplyTeamButtonStyles = makeStyles()((theme) => ({
   applyTeamValuesButtonCheckedSaved: {
     background: 'var(--button-care-team-values-applied-bg)',
     color: theme.palette.success.dark,
@@ -111,7 +107,7 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
     discardChanges,
     save,
     setMonitoringValuesDisplayed,
-    onValueChange,
+    onValueChange
   } = useMonitoringAlertsPatientConfiguration({
     monitoringAlertsParameters,
     saveInProgress,
@@ -121,7 +117,7 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
   })
 
   useEffect(() => {
-      onUnsavedChangesChange(!saveButtonDisabled)
+    onUnsavedChangesChange(!saveButtonDisabled)
   }, [onUnsavedChangesChange, saveButtonDisabled])
 
   return (
@@ -139,7 +135,12 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
         setMonitoringValuesDisplayed={setMonitoringValuesDisplayed}
         onValueChange={onValueChange}
       />
-      <Box display="flex" justifyContent="flex-end" margin={2}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          margin: 2
+        }}>
         {!saveButtonDisabled &&
           <Button
             className={classes.cancelButton}
@@ -151,7 +152,7 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
           </Button>
         }
         {!displayInReadonly &&
-          <LoadingButton
+          <Button
             loading={saveInProgress}
             id="save-button-id"
             variant="contained"
@@ -163,7 +164,7 @@ export const MonitoringAlertsPatientConfiguration: FC<MonitoringAlertsPatientCon
             data-testid="monitoring-alert-config-save"
           >
             {t('button-save')}
-          </LoadingButton>
+          </Button>
         }
       </Box>
     </>
@@ -215,7 +216,11 @@ const MonitoringAlertsPatientApplyTeamButton: FC<MonitoringAlertsPatientApplyTea
   }, [t, useTeamValues])
 
   return (
-    <Box height={APPLY_CARE_TEAM_VALUES_SECTION_HEIGHT} marginBottom={4}>
+    <Box
+      sx={{
+        height: APPLY_CARE_TEAM_VALUES_SECTION_HEIGHT,
+        marginBottom: 4
+      }}>
       <Chip
         className={applyCareTeamValuesChipClassName}
         variant={applyCareTeamValuesChipVariant}
@@ -223,12 +228,11 @@ const MonitoringAlertsPatientApplyTeamButton: FC<MonitoringAlertsPatientApplyTea
         onClick={useTeamValues ? undefined : resetToTeamDefaultValues}
         data-testid="monitoring-alert-config-reset"
       />
-      <Box marginTop={2}>
-        { !areValuesSaved &&
+      <Box sx={{ marginTop: 2 }}>
+        {!areValuesSaved &&
           <Alert data-testid="monitoring-alerts-patient-status-label" severity="info">{statusLabel}</Alert>
         }
       </Box>
-
     </Box>
   )
 }

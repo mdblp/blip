@@ -47,7 +47,6 @@ import { type Team, useTeam } from '../../../lib/team'
 import metrics from '../../../lib/metrics'
 import { useAlert } from '../../utils/snackbar'
 import { PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE } from '../../../lib/patient/patient.api'
-import { LoadingButton } from '@mui/lab'
 import { useParams } from 'react-router-dom'
 import { logError } from '../../../utils/error.util'
 
@@ -161,7 +160,11 @@ export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose
       </DialogTitle>
 
       <DialogContent>
-        <Box display="flex" flexDirection="column">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column"
+          }}>
           <Alert severity="info">{t('modal-add-patient-info')}</Alert>
           <TextField
             id="patient-list-dialog-add-email"
@@ -173,12 +176,12 @@ export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose
             onChange={handleChangeEmail}
             helperText={errorMessage}
           />
-          <Box mt={2}>
+          <Box sx={{ mt: 2 }}>
             <DialogContentText id="patient-list-dialog-add-warning-line1">
               {t('modal-add-patient-warning-line1')}
             </DialogContentText>
           </Box>
-          <Box mt={1}>
+          <Box sx={{ mt: 1 }}>
             <Trans
               id="patient-list-dialog-add-warning-line2"
               data-testid="modal-add-patient-warning-line2"
@@ -202,7 +205,7 @@ export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose
         >
           {t('button-cancel')}
         </Button>
-        <LoadingButton
+        <Button
           id="patient-list-dialog-add-button-add"
           disabled={!!errorMessage || !isValidEmail()}
           loading={inProgress}
@@ -212,7 +215,7 @@ export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose
           onClick={addPatient}
         >
           {t('button-invite')}
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   )

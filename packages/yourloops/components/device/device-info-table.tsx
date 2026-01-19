@@ -45,7 +45,11 @@ export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
     <GenericListCard title={device.name} data-testid="settings-table-terminal">
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Manufacturer')}</Typography>
             <Typography variant="body2" className="bold">{device.manufacturer}</Typography>
           </Box>
@@ -53,7 +57,11 @@ export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
       </ListItem>
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Identifier')}</Typography>
             <Typography variant="body2" className="bold">{device.deviceId}</Typography>
           </Box>
@@ -61,7 +69,11 @@ export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
       </ListItem>
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('IMEI')}</Typography>
             <Typography variant="body2" className="bold">{device.imei}</Typography>
           </Box>
@@ -69,7 +81,11 @@ export const DeviceInfoTable: FC<DeviceInfoProps> = ({ device }) => {
       </ListItem>
       <ListItem>
         <ListItemText className="list-item">
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Software version')}</Typography>
             <Typography variant="body2" className="bold">{device.swVersion}</Typography>
           </Box>

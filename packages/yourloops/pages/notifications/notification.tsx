@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,8 +28,6 @@
 import React, { type FunctionComponent, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import moment from 'moment-timezone'
-
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import GroupIcon from '@mui/icons-material/Group'
 import PersonIcon from '@mui/icons-material/Person'
@@ -67,7 +65,7 @@ interface NotificationIconPayload {
   className: string
 }
 
-const useStyles = makeStyles({ name: 'ylp-page-notification' })((theme: Theme) => ({
+const useStyles = makeStyles({ name: 'ylp-page-notification' })((theme) => ({
   container: {
     display: 'flex',
     alignItems: 'center',

@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BoundFunctions, fireEvent, queries, screen, within } from '@testing-library/react'
+import { act, BoundFunctions, fireEvent, queries, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {
   ALARM_EVENT_DANA_EMPTY_PUMP_BATTERY_ID,
@@ -262,7 +262,7 @@ export const checkEventsSuperposition = async () => {
   expect(eventSuperposition).toBeVisible()
   expect(eventSuperposition).toHaveTextContent('6')
 
-  fireEvent.click(eventSuperposition)
+  await act(async () => fireEvent.mouseDown(eventSuperposition))
   const popover = screen.getByTestId(`events-superposition-popover-${EVENT_SUPERPOSITION_ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`)
   expect(popover).toBeVisible()
 

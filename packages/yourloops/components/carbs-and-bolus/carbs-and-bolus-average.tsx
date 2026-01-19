@@ -82,14 +82,18 @@ export const CarbsAndBolusAverage: FC<CarbsAndBolusAverageProps> = ({ medicalDat
 
   return (
     <Box
-      margin="32px 10px 32px 40px"
       data-testid="rescue-carbs-and-manual-bolus-average"
+      sx={{
+        margin: "32px 10px 32px 40px"
+      }}
     >
       <Typography sx={{ fontWeight: 500, marginBottom: theme.spacing(1) }}
                   data-testid="title-rescue-carbs-and-manual-bolus-average">
         {t('daily-rescue-carbs-and-manual-and-pen-bolus', { numberOfDays: numberOfDaysSelected() })}
       </Typography>
-      <Box display="flex">
+      <Box sx={{
+        display: "flex"
+      }}>
         <CarbsAndBolusCell
           time={CarbsAndBolusTimeRangeMs.Midnight}
           rescueCarbs={rescueCarbsStats.get(HoursRange.MidnightToThree)}
@@ -133,23 +137,26 @@ export const CarbsAndBolusAverage: FC<CarbsAndBolusAverageProps> = ({ medicalDat
         />
       </Box>
       <Box
-        display="flex"
-        justifyContent="end"
-        alignItems="baseline"
-        marginTop={1}
         data-testid="rescue-carbs-and-manual-bolus-average-caption"
-      >
+        sx={{
+          display: "flex",
+          justifyContent: "end",
+          alignItems: "baseline",
+          marginTop: 1
+        }}>
         <Box
           className={classes.captionColorIndicator}
-          marginX={1}
-          sx={{ backgroundColor: RESCUE_CARBS_COLOR }}
-        />
+          sx={{
+            marginX: 1,
+            backgroundColor: RESCUE_CARBS_COLOR
+          }} />
         <Typography variant="caption">{t('rescue-carbs-number')}</Typography>
         <Box
           className={classes.captionColorIndicator}
-          marginX={1}
-          sx={{ backgroundColor: MANUAL_BOLUS_COLOR }}
-        />
+          sx={{
+            marginX: 1,
+            backgroundColor: MANUAL_BOLUS_COLOR
+          }} />
         <Typography variant="caption">{t('manual-bolus-number')}</Typography>
       </Box>
     </Box>

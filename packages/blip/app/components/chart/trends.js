@@ -557,13 +557,19 @@ class Trends extends React.Component {
     return (
       <TrendsProvider>
         <div id="tidelineMain" className="trends grid">
-          <Box data-testid="trends-view-content" className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
+          <Box
+            data-testid="trends-view-content"
+            className="container-box-outer patient-data-content-outer"
+            sx={{
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
             <Grid
-              item
-              xs={12}
-              display="flex"
-              alignItems="center"
-            >
+              size={12}
+              sx={{
+                display: 'flex',
+                alignItems: 'center'
+              }}>
               <Alert severity="info" sx={{marginBottom: 2}}>
                 {t('data-period-text-trends')}
               </Alert>
@@ -582,7 +588,7 @@ class Trends extends React.Component {
                   <CbgDateTraceLabel />
                   <FocusedRangeLabels bgUnit={this.props.bgPrefs.bgUnits} />
                 </div>
-                <Box marginBottom={2}>
+                <Box sx={{ marginBottom: 2 }}>
                   <Footer onClickRefresh={this.props.onClickRefresh}>
                     <RangeSelect />
                   </Footer>

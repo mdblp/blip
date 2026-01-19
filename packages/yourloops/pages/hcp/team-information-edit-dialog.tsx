@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import _ from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { type Theme, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 
 import Box from '@mui/material/Box'
@@ -62,7 +62,7 @@ export interface TeamInformationEditModalProps {
   teamToEdit: TeamEditModalContentProps | null
 }
 
-const modalStyles = makeStyles()((theme: Theme) => {
+const modalStyles = makeStyles()((theme) => {
   return {
     dialogContent: {
       maxHeight: '28em'
@@ -217,7 +217,7 @@ function TeamInformationEditDialog(props: TeamInformationEditModalProps): JSX.El
       </Link>
     )
     warningLines = (
-      <Box px={2}>
+      <Box sx={{ px: 2 }}>
         <p id="team-edit-dialog-warning-line1">{t('team-modal-create-warning-line1')}</p>
         <p id="team-edit-dialog-warning-line2">
           <Trans
@@ -255,14 +255,22 @@ function TeamInformationEditDialog(props: TeamInformationEditModalProps): JSX.El
       </DialogTitle>
 
       {team
-        ? <Box paddingX={2} paddingBottom={2}>
+        ? <Box
+        sx={{
+          paddingX: 2,
+          paddingBottom: 2
+        }}>
           <span id="team-edit-dialog-info-line">{t('team-modal-create-info')}</span>
         </Box>
         : <Box />
       }
 
       <DialogContent className={classes.dialogContent}>
-        <Box display="flex" flexDirection="column">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column"
+          }}>
           <TextField
             id="team-edit-dialog-field-name"
             className={classes.formChild}

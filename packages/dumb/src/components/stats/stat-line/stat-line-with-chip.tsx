@@ -52,18 +52,20 @@ export const StatLineWithChip: FC<StatLineWithChipProps> = (props) => {
 
   return (
     <Box
-      display="flex"
-      justifyContent="space-between"
-      alignItems="center"
-    >
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
+      }}>
       <div>
         {title}
       </div>
       <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-      >
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}>
         <Chip
           label={`${getPercentage(Math.max(value, 0))} %`}
           variant="outlined"
@@ -72,10 +74,11 @@ export const StatLineWithChip: FC<StatLineWithChipProps> = (props) => {
         />
         <Box
           className={styles.row}
-          display="flex"
-          width="50px"
-          alignItems="baseline"
-        >
+          sx={{
+            display: "flex",
+            width: "50px",
+            alignItems: "baseline"
+          }}>
           <span className={styles.rowValue}>
             {value > 0 ? value : '0'}
           </span>

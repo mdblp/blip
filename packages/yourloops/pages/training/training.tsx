@@ -37,7 +37,6 @@ import Box from '@mui/material/Box'
 import appConfig from '../../lib/config/config'
 import CardContent from '@mui/material/CardContent'
 import Container from '@mui/material/Container'
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Link from '@mui/material/Link'
 import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
@@ -46,7 +45,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import { setPageTitle } from '../../lib/utils'
 import { UserAccount } from '../../lib/auth/models/user-account.model'
 
-const style = makeStyles({ name: 'ylp-training-page' })((theme: Theme) => {
+const style = makeStyles({ name: 'ylp-training-page' })((theme) => {
   return {
     mainContainer: {
       [theme.breakpoints.down('sm')]: {
@@ -110,14 +109,15 @@ export const TrainingPage: FC = () => {
       <Grid
         container
         spacing={0}
-        alignItems="center"
-        justifyContent="center"
         className={classes.centeredGrid}
-      >
-        <Grid item xs={12}>
+        sx={{
+          alignItems: "center",
+          justifyContent: "center"
+        }}>
+        <Grid size={12}>
           <Card className={classes.card}>
             <CardMedia>
-              <Box marginY={2}>
+              <Box sx={{ marginY: 2 }}>
                 <img
                   src={`/branding_${appConfig.BRANDING}_logo.svg`}
                   height="60"

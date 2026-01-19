@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,6 @@
 
 import React from 'react'
 import { type Dayjs, isDayjs } from 'dayjs'
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import { type CalendarSelection, type CalendarSelectionRange } from './models'
 import Day from './day'
@@ -42,7 +41,7 @@ interface MonthDayElementsProps {
   onHoverDay?: (data: Dayjs) => void
 }
 
-export const dayStyles = makeStyles({ name: 'date-pickers-day' })((theme: Theme) => ({
+export const dayStyles = makeStyles({ name: 'date-pickers-day' })((theme) => ({
   dayElement: {
     width: 40,
     height: 40,

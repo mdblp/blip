@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,7 +32,6 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import { LoadingButton } from '@mui/lab'
 import DialogContentText from '@mui/material/DialogContentText'
 import { useCancelInvitePatientDialog } from './cancel-invite-patient-dialog.hook'
 import Alert from '@mui/material/Alert'
@@ -69,7 +68,7 @@ export const CancelInvitePatientDialog: FunctionComponent<CancelInvitePatientDia
             parent={React.Fragment}
           />
         </DialogContentText>
-        <Box mt={2}>
+        <Box sx={{ mt: 2 }}>
           <Alert severity="info">{t('modal-cancel-patient-invite-info')}</Alert>
         </Box>
       </DialogContent>
@@ -81,7 +80,7 @@ export const CancelInvitePatientDialog: FunctionComponent<CancelInvitePatientDia
         >
           {t('modal-cancel-patient-invite-button-keep')}
         </Button>
-        <LoadingButton
+        <Button
           loading={processing}
           data-testid="cancel-patient-invite-button"
           color="error"
@@ -90,7 +89,7 @@ export const CancelInvitePatientDialog: FunctionComponent<CancelInvitePatientDia
           onClick={handleOnClickCancelInvite}
         >
           {t('modal-cancel-patient-invite-button-cancel')}
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   )

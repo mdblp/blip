@@ -359,8 +359,16 @@ class Daily extends React.Component {
 
     return (
       <div id="tidelineMain" className="daily">
-        <Box data-testid="daily-view-content" className="container-box-outer patient-data-content-outer" display="flex" flexDirection="column">
-          <Box display="flex">
+        <Box
+          data-testid="daily-view-content"
+          className="container-box-outer patient-data-content-outer"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+          <Box sx={{
+            display: 'flex'
+          }}>
             {this.state.chartMounted &&
               <DailyDatePicker
                 atMostRecent={atMostRecent}

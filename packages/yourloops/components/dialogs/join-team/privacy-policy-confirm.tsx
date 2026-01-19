@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,7 +39,6 @@ import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
 import metrics from '../../../lib/metrics'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { useTheme } from '@mui/material/styles'
-import { LoadingButton } from '@mui/lab'
 
 export interface ConfirmTeamProps {
   onCompleteStep: () => Promise<void>
@@ -135,7 +134,7 @@ export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
         >
           {t('button-cancel')}
         </Button>
-        <LoadingButton
+        <Button
           loading={inProgress}
           id="team-add-dialog-confirm-team-button-add-team"
           disabled={!policyChecked}
@@ -145,7 +144,7 @@ export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
           onClick={onCompleteStep}
         >
           {t('join-team')}
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </React.Fragment>
   )

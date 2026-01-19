@@ -47,7 +47,11 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device
     <GenericListCard title={t('mobile-application')} data-testid="settings-table-mobileapp">
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Manufacturer')}</Typography>
             <Typography variant="body2" className="bold"
                         sx={{ textTransform: 'uppercase' }}>{app.manufacturer ?? t('N/A')}</Typography>
@@ -56,7 +60,11 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device
       </ListItem>
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Name')}</Typography>
             <Typography variant="body2" className="bold">{device.name ?? t('N/A')}</Typography>
           </Box>
@@ -64,7 +72,11 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device
       </ListItem>
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Software version')}</Typography>
             <Typography variant="body2" className="bold">{app.swVersion ?? t('N/A')}</Typography>
           </Box>
@@ -72,7 +84,11 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device
       </ListItem>
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('activation-code')}</Typography>
             <Typography variant="body2" className="bold">{formatCode(app.activationCode) ?? t('N/A')}</Typography>
           </Box>
@@ -80,7 +96,11 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device
       </ListItem>
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Identifier')}</Typography>
             <Typography variant="body2" className="bold">{app.identifier ?? t('N/A')}</Typography>
           </Box>
@@ -88,7 +108,11 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device
       </ListItem>
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('smartphone-model')}</Typography>
             <Typography variant="body2" className="bold">{device.smartphoneModel ?? t('N/A')}</Typography>
           </Box>
@@ -96,7 +120,11 @@ export const MobileAppInfoTable: FC<MobileApplicationInfoProps> = ({ app, device
       </ListItem>
       <ListItem>
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('smartphone-os-version')}</Typography>
             <Typography variant="body2" className="bold">{device.osVersion ?? t('N/A')}</Typography>
           </Box>

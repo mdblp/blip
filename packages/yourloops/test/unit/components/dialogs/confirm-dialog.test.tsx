@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import ConfirmDialog, { type ConfirmDialogProps } from '../../../../components/dialogs/confirm-dialog'
 
 describe('ConfirmDialog', () => {
@@ -51,15 +51,15 @@ describe('ConfirmDialog', () => {
     expect(screen.getByText(defaultProps.label)).toBeInTheDocument()
   })
 
-  it('should call onClose when clicking on cancel button', () => {
+  it('should call onClose when clicking on cancel button', async () => {
     render(getConfirmDialogPropsJSX())
-    fireEvent.click(screen.getByRole('button', { name: 'button-cancel' }))
+    await act(async () => fireEvent.mouseDown(screen.getByRole('button', { name: 'button-cancel' })))
     expect(onClose).toHaveBeenCalled()
   })
 
-  it('should call onConfirm when clicking on confirm button', () => {
+  it('should call onConfirm when clicking on confirm button', async () => {
     render(getConfirmDialogPropsJSX())
-    fireEvent.click(screen.getByRole('button', { name: 'button-confirm' }))
+    await act(async () => fireEvent.mouseDown(screen.getByRole('button', { name: 'button-confirm' })))
     expect(onConfirm).toHaveBeenCalled()
   })
 

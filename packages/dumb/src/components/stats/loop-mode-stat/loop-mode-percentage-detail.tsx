@@ -44,7 +44,12 @@ export const LoopModePercentageDetail: FunctionComponent<LoopModePercentageDetai
   const isPercentageValid = !Number.isNaN(percentageValue)
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center"
+      }}>
       {isPercentageValid ?
         <>
           <SimpleValue value={percentageValue.toString()} suffix={Unit.Percent} valueClassName={valueClassName} />

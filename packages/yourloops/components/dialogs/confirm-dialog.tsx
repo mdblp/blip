@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,7 +34,6 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
-import { LoadingButton } from '@mui/lab'
 
 export interface ConfirmDialogProps {
   open?: boolean
@@ -81,7 +80,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
         >
           {closeLabel}
         </Button>
-        <LoadingButton
+        <Button
           loading={inProgress}
           data-testid="confirm-dialog-confirm-button"
           variant="contained"
@@ -91,7 +90,7 @@ export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
           onClick={onConfirm}
         >
           {confirmLabel}
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   )

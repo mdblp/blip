@@ -74,16 +74,18 @@ export const DeviceListCard: FC<DeviceListCardProps> = (props) => {
         (key) =>
           <React.Fragment key={key}>
             <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center"
+              }}>
               {deviceData[key].label}
               <Box
-                display="flex"
-                alignItems="center"
                 className={classes.deviceValue}
-              >
+                sx={{
+                  display: "flex",
+                  alignItems: "center"
+                }}>
                   <span className={classes.deviceValue}>
                     {deviceData[key].value}
                   </span>

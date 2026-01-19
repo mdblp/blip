@@ -24,11 +24,12 @@ function TidelineFooter(props) {
   const { children, onClickRefresh } = props
   return (
     <Box
-      display="flex"
-      justifyContent="space-between"
-      marginLeft={5}
-      marginRight="10px"
-    >
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginLeft: 5,
+        marginRight: '10px'
+      }}>
       <Box>
         <Button
           data-testid="confirm-dialog-cancel-button"

@@ -38,7 +38,6 @@ import DialogTitle from '@mui/material/DialogTitle'
 import { HcpProfession, HcpProfessionList } from '../../lib/auth/models/enums/hcp-profession.enum'
 import { type SwitchRoleProfessionDialogProps } from './models'
 import BasicDropdownWithValidation from '../dropdown/basic-dropdown-with-validation'
-import { LoadingButton } from '@mui/lab'
 
 function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX.Element {
   const { open, onAccept, onCancel, inProgress } = props
@@ -66,7 +65,7 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
         <strong>{t('profession-dialog-title')}</strong>
       </DialogTitle>
       <DialogContent id="switch-role-consequences-dialog-content">
-        <Box marginTop={2}>
+        <Box sx={{ marginTop: 2 }}>
           <BasicDropdownWithValidation
             onSelect={setHcpProfession}
             defaultValue={HcpProfession.empty}
@@ -87,7 +86,7 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
         >
           {t('button-decline')}
         </Button>
-        <LoadingButton
+        <Button
           loading={inProgress}
           id="switch-role-profession-dialog-button-validate"
           variant="contained"
@@ -97,7 +96,7 @@ function SwitchRoleProfessionDialog(props: SwitchRoleProfessionDialogProps): JSX
           onClick={handleAccept}
         >
           {t('button-validate')}
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   )

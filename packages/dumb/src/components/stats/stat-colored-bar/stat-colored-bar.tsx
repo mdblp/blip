@@ -57,7 +57,12 @@ export const StatColoredBar: FC<StatColoredBarProps> = (props) => {
   const { dotItem, horizontalLineItems, lineColorItems, lineWidth } = props
 
   return (
-    <Box display="flex" className={styles.lines} sx={{ width: lineWidth || '100%' }} >
+    <Box
+      className={styles.lines}
+      sx={{
+        display: "flex",
+        width: lineWidth || '100%'
+      }}>
       {lineColorItems.map((item: LineColorItem) => (
         <div
           key={item.index}

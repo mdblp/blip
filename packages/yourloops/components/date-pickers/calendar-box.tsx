@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,12 +27,11 @@
 
 import React from 'react'
 import { type Dayjs } from 'dayjs'
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import {
+  type CalendarChangeMonth,
   type CalendarOrientation,
   type CalendarPosition,
-  type CalendarChangeMonth,
   type CalendarSelection,
   type CalendarSelectionSingle
 } from './models'
@@ -58,7 +57,7 @@ interface CalendarBoxProps {
   onSelectYear?: (year: number) => void
 }
 
-const calendarBoxStyles = makeStyles({ name: 'date-pickers-calendar-views' })((theme: Theme) => {
+const calendarBoxStyles = makeStyles({ name: 'date-pickers-calendar-views' })((theme) => {
   return {
     calendarBox: {
       backgroundColor: theme.palette.background.paper,

@@ -27,8 +27,6 @@
 
 import React, { type FunctionComponent } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Checkbox from '@mui/material/Checkbox'
 import FormControl from '@mui/material/FormControl'
@@ -42,7 +40,7 @@ import { type ConsentFormProps } from './models/consent-form-props.model'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { ConsentHcpConfirmAck } from './hcp-confirm-ack'
 
-const formStyles = makeStyles({ name: 'ylp-form-consents' })((theme: Theme) => {
+const formStyles = makeStyles({ name: 'ylp-form-consents' })((theme) => {
   return {
     formControlLabel: {
       marginTop: theme.spacing(2),

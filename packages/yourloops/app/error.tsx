@@ -112,7 +112,11 @@ function OnError(props: OnErrorProps): JSX.Element {
       <DialogTitle>{t('app-crash-title')}</DialogTitle>
       <DialogContent>
         {!isBrowserOfficiallySupported() &&
-          <Box marginBottom={theme.spacing(1)} maxWidth={600}>
+          <Box
+            sx={{
+              marginBottom: theme.spacing(1),
+              maxWidth: 600
+            }}>
             <Alert severity="info" sx={{ borderRadius: '12px' }}>{t('use-supported-browser')}</Alert>
           </Box>
         }

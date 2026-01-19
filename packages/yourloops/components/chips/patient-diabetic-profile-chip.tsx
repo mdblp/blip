@@ -33,7 +33,7 @@ import type { Theme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import { type SxProps } from '@mui/material'
 
-const styles = makeStyles()((theme: Theme) => {
+const styles = makeStyles()((theme) => {
   return {
     chip: {
       textTransform: 'none',

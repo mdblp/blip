@@ -50,11 +50,17 @@ export const ConfidentialTooltip: FunctionComponent<ConfidentialTooltipProps> = 
       backgroundColor={colors.confidentialMode}
       offset={DEFAULT_TOOLTIP_OFFSET}
       content={
-        <Grid container direction="row" alignItems="center" justifyContent="center">
-          <Grid item>
+        <Grid
+          container
+          direction="row"
+          sx={{
+            alignItems: "center",
+            justifyContent: "center"
+          }}>
+          <Grid>
             <LockIcon className={styles.icon} />
           </Grid>
-          <Grid item>{t('Confidential mode')}</Grid>
+          <Grid>{t('Confidential mode')}</Grid>
         </Grid>
       }
     />
