@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import {
   getAccessTokenWithPopupMock,
   loggedInUserEmail,
@@ -87,10 +87,10 @@ describe('Signup stepper as caregiver', () => {
     expect(createButton).not.toBeDisabled()
 
     fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
-    await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: 'United Kingdom' })))
+    fireEvent.click(screen.getByRole('option', { name: 'United Kingdom' }))
 
     fireEvent.mouseDown(within(screen.getByTestId('country-selector')).getByRole('combobox'))
-    await act(async () => fireEvent.mouseDown(screen.getByRole('option', { name: 'Japan' })))
+    fireEvent.click(screen.getByRole('option', { name: 'Japan' }))
 
     await userEvent.click(createButton)
     expect(updateAuth0UserMetadataMock).toHaveBeenCalledWith(
