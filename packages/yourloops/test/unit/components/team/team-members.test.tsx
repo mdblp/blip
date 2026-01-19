@@ -44,8 +44,6 @@ import ErrorApi from '../../../../lib/error/error.api'
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')
 describe('TeamMembers', () => {
-  const refresh = jest.fn()
-
   const teamId = 'teamId'
   const members = [
     buildTeamMember('userId1'),
@@ -80,13 +78,12 @@ describe('TeamMembers', () => {
     jest.spyOn(TeamUtils, 'isUserAdministrator').mockReturnValue(true)
   })
 
-  function getTeamMembersJSX(props: TeamMembersProps = { team, refreshParent: refresh }) {
+  function getTeamMembersJSX(props: TeamMembersProps = { team }) {
     return (
       <MemoryRouter>
         <ThemeProvider theme={getTheme()}>
           <TeamMembers
             team={props.team}
-            refreshParent={props.refreshParent}
           />
         </ThemeProvider>
       </MemoryRouter>
@@ -104,11 +101,11 @@ describe('TeamMembers', () => {
     expect(screen.queryByRole('button', { name: 'button-team-add-member' })).not.toBeNull()
   })
 
-  it('should open the invite member dialog when clicking on the add member button', async () => {
+  it('should open the invite member dialog when clicking on the add member button', () => {
     render(getTeamMembersJSX())
     expect(screen.queryByRole('dialog')).toBeNull()
     const addMemberButton = screen.getByRole('button', { name: 'button-team-add-member' })
-    await act(async () => fireEvent.mouseDown(addMemberButton))
+    fireEvent.click(addMemberButton)
     expect(screen.queryByRole('dialog')).not.toBeNull()
   })
 
@@ -116,15 +113,15 @@ describe('TeamMembers', () => {
     const email = 'fake@email.com'
     render(getTeamMembersJSX())
     const addMemberButton = screen.getByRole('button', { name: 'button-team-add-member' })
-    await act(async () => fireEvent.mouseDown(addMemberButton))
+    fireEvent.click(addMemberButton)
     const inviteMemberDialog = within(screen.queryByRole('dialog'))
     const emailInput = inviteMemberDialog.getByRole('textbox', { name: 'email' })
     await userEvent.type(emailInput, email)
     const adminCheckbox = inviteMemberDialog.getByRole('checkbox')
-    await act(async () => fireEvent.mouseDown(adminCheckbox))
+    fireEvent.click(adminCheckbox)
     const inviteButton = inviteMemberDialog.getByRole('button', { name: 'button-invite' })
     await act(async () => {
-      fireEvent.mouseDown(inviteButton)
+      fireEvent.click(inviteButton)
       await waitFor(() => {
         expect(inviteMemberMock).toHaveBeenCalledWith(team, email, TeamMemberRole.admin)
       })
@@ -141,13 +138,13 @@ describe('TeamMembers', () => {
     inviteMemberMock.mockRejectedValueOnce(Error('This is a mock error thrown on purpose'))
     render(getTeamMembersJSX())
     const addMemberButton = screen.getByRole('button', { name: 'button-team-add-member' })
-    await act(async () => fireEvent.mouseDown(addMemberButton))
+    fireEvent.click(addMemberButton)
     const inviteMemberDialog = within(screen.queryByRole('dialog'))
     const emailInput = inviteMemberDialog.getByRole('textbox', { name: 'email' })
     await userEvent.type(emailInput, email)
     const inviteButton = inviteMemberDialog.getByRole('button', { name: 'button-invite' })
     await act(async () => {
-      fireEvent.mouseDown(inviteButton)
+      fireEvent.click(inviteButton)
       await waitFor(() => {
         expect(inviteMemberMock).toHaveBeenCalledWith(team, email, TeamMemberRole.member)
       })

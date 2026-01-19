@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, fireEvent, render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import React from 'react'
 
 import BasicDropdownWithValidation, {
@@ -55,7 +55,7 @@ describe('BasicDropdownWithValidation', () => {
     )
   }
 
-  it('should call onSelect spy when an option is selected', async () => {
+  it('should call onSelect spy when an option is selected', () => {
     const defaultValue = 'defaultValue'
     const disabledValue = 'disabledValue'
     const valueToSelect = 'valueToSelect'
@@ -75,7 +75,7 @@ describe('BasicDropdownWithValidation', () => {
     render(fakeDropdown(props))
     fireEvent.mouseDown(screen.getByRole('combobox'))
     const menuItems = within(screen.getByRole('listbox'))
-    await act(async () => fireEvent.mouseDown(menuItems.getByText(valueToSelect)))
+    fireEvent.click(menuItems.getByText(valueToSelect))
     expect(spyOnSelect).toHaveBeenCalledTimes(1)
   })
 })
