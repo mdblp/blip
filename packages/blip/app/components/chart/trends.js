@@ -153,7 +153,7 @@ class Trends extends React.Component {
     don't want current day data (vomiting face ...).
      */
     const now = new Date()
-    if (this.endDate.getDate() === now.getDate() + 1 && this.endDate.getMonth() === now.getMonth() ||
+    if (this.endDate.getDate() === now.getDate() + 1 && this.endDate.getMonth() === now.getMonth() && this.endDate.getFullYear() === now.getFullYear() ||
     this.endDate > now) {
       this.endDate.setDate(now.getDate())
       this.endDate.setMonth(now.getMonth())
