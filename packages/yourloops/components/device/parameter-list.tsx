@@ -70,9 +70,11 @@ export const ParameterList: FC<ParameterListProps> = ({ parameters }) => {
                   <Tooltip title={isEllipsisActive(document.getElementById(`${parameter.name}-${index}`)) ? parameter.name : ''}>
                     <Typography
                       className="is-ellipsis"
-                      maxWidth={PARAMETER_STRING_MAX_WIDTH}
                       variant="body2"
                       id={`${parameter.name}-${index}`}
+                      sx={{
+                        maxWidth: PARAMETER_STRING_MAX_WIDTH
+                      }}
                     >
                       {t(`params|${parameter.name}`)}
                     </Typography>

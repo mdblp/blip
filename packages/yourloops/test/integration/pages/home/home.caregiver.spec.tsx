@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -251,12 +251,12 @@ describe('Caregiver home page', () => {
     expect(columnSettingsPopover).toBeVisible()
     expect(within(columnSettingsPopover).getByText('Show column')).toBeVisible()
 
-    const patientToggle = within(within(columnSettingsPopover).getByLabelText('Patient')).getByRole('checkbox')
-    const ageToggle = within(within(columnSettingsPopover).getByLabelText('Age')).getByRole('checkbox')
-    const dateOfBirthToggle = within(within(columnSettingsPopover).getByLabelText('Date of birth')).getByRole('checkbox')
-    const genderToggle = within(within(columnSettingsPopover).getByLabelText('Gender')).getByRole('checkbox')
-    const systemToggle = within(within(columnSettingsPopover).getByLabelText('System')).getByRole('checkbox')
-    const lastUpdateToggle = within(within(columnSettingsPopover).getByLabelText('Last data update')).getByRole('checkbox')
+    const patientToggle = within(within(columnSettingsPopover).getByLabelText('Patient')).getByRole('switch')
+    const ageToggle = within(within(columnSettingsPopover).getByLabelText('Age')).getByRole('switch')
+    const dateOfBirthToggle = within(within(columnSettingsPopover).getByLabelText('Date of birth')).getByRole('switch')
+    const genderToggle = within(within(columnSettingsPopover).getByLabelText('Gender')).getByRole('switch')
+    const systemToggle = within(within(columnSettingsPopover).getByLabelText('System')).getByRole('switch')
+    const lastUpdateToggle = within(within(columnSettingsPopover).getByLabelText('Last data update')).getByRole('switch')
     expect(patientToggle).toHaveProperty('checked', true)
     expect(patientToggle).toHaveProperty('disabled', true)
     expect(ageToggle).toHaveProperty('checked', false)

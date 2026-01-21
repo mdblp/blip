@@ -45,7 +45,11 @@ export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
     <GenericListCard title={t('Pump')} data-testid="settings-table-pump">
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Manufacturer')}</Typography>
             <Typography
               variant="body2"
@@ -58,7 +62,11 @@ export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
       </ListItem>
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Product')}</Typography>
             <Typography variant="body2" className="bold">{pump.product ? pump.product : t('N/A')}</Typography>
           </Box>
@@ -66,7 +74,11 @@ export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
       </ListItem>
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Serial Number')}</Typography>
             <Typography variant="body2" className="bold">{pump.serialNumber ? pump.serialNumber : t('N/A')}</Typography>
           </Box>
@@ -74,7 +86,11 @@ export const PumpInfoTable: FC<PumpInfoProps> = ({ pump }) => {
       </ListItem>
       <ListItem className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Pump version')}</Typography>
             <Typography variant="body2" className="bold">{pump.swVersion ? pump.swVersion : t('N/A')}</Typography>
           </Box>

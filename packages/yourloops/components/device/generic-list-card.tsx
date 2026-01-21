@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,7 +31,7 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import List from '@mui/material/List'
 import Divider from '@mui/material/Divider'
-import { type Theme, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 
 interface GenericListCardProps extends PropsWithChildren {
@@ -39,7 +39,7 @@ interface GenericListCardProps extends PropsWithChildren {
   ['data-testid']?: string
 }
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   cardHeader: {
     backgroundColor: 'var(--primary-color-background)',
     fontSize: theme.typography.fontSize,

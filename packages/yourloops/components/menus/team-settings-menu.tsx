@@ -32,7 +32,7 @@ import { useNavigate } from 'react-router-dom'
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 
-import { type Theme, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Badge from '@mui/material/Badge'
@@ -58,7 +58,7 @@ import { AppUserRoute } from '../../models/enums/routes.enum'
 import { PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE } from '../../lib/team/team.api'
 import { logError } from '../../utils/error.util'
 
-const classes = makeStyles()((theme: Theme) => ({
+const classes = makeStyles()((theme) => ({
   teamIcon: {
     marginRight: theme.spacing(2)
   },
@@ -185,7 +185,13 @@ function TeamSettingsMenu(): JSX.Element {
       >
         <Box className={menu} data-testid="teams-list">
           <ListSubheader>
-            <Box display="flex" justifyContent="space-between" alignItems="center" className={paddingBottom}>
+            <Box
+              className={paddingBottom}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center"
+              }}>
               <Typography variant="caption">
                 {t('care-team-membership')}
               </Typography>
@@ -203,7 +209,7 @@ function TeamSettingsMenu(): JSX.Element {
                   redirectToTeamDetails(team.id)
                 }}
               >
-                <Box marginX={1}>•</Box>
+                <Box sx={{ marginX: 1 }}>•</Box>
                 <Typography>{team.name}</Typography>
               </ListItemButton>
             ))
@@ -213,7 +219,7 @@ function TeamSettingsMenu(): JSX.Element {
           }
 
           <Box>
-            <Box marginY={2}>
+            <Box sx={{ marginY: 2 }}>
               <Divider variant="middle" />
             </Box>
 
@@ -231,7 +237,13 @@ function TeamSettingsMenu(): JSX.Element {
 
           <Box>
             <ListSubheader>
-              <Box display="flex" justifyContent="space-between" alignItems="center" className={paddingBottom}>
+              <Box
+                className={paddingBottom}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                }}>
                 <Typography variant="caption">
                   {t('my-caregivers')}
                 </Typography>

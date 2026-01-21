@@ -143,7 +143,7 @@ export const PatientCaregiversPage: FC = () => {
         : <>
           <SecondaryBar onShowAddCaregiverDialog={handleShowAddCaregiverDialog} />
           <Container maxWidth="lg">
-            <Box marginTop={4}>
+            <Box sx={{ marginTop: 4 }}>
               <CaregiversTable
                 caregivers={caregivers}
                 fetchCaregivers={fetchCaregivers}

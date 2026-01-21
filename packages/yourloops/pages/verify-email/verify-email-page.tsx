@@ -84,7 +84,7 @@ export const VerifyEmailPage: FunctionComponent = () => {
   useEffect(() => {
     getAccessTokenSilently()
       .catch((error: Error) => {
-      if (error.message === Auth0Error.LoginRequired) {
+        if (error.message === Auth0Error.LoginRequired) {
           setIsUserLoggedIn(false)
         }
       })
@@ -94,19 +94,24 @@ export const VerifyEmailPage: FunctionComponent = () => {
 
   return (
     <>
-      <BasicHeader testId="verify-email-header"/>
+      <BasicHeader testId="verify-email-header" />
       <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="90vh"
-        textAlign="center"
         data-testid="verify-email-content"
-      >
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "90vh",
+          textAlign: "center"
+        }}>
         <GlobalStyles styles={{ body: { backgroundColor: theme.palette.common.white } }} />
 
         <Container maxWidth="sm">
-          <Box display="flex" justifyContent="center">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center"
+            }}>
             <img
               data-testid="header-main-logo"
               aria-label={t('alt-img-logo')}
@@ -115,14 +120,17 @@ export const VerifyEmailPage: FunctionComponent = () => {
               width="140" />
           </Box>
 
-          <Box mt={4} mb={3}>
+          <Box
+            sx={{ mt: 4, mb: 3 }}>
             <Typography variant="h5">{t('verify-email-title')}</Typography>
           </Box>
 
-          <Box textAlign="left">
+          <Box sx={{ textAlign: "left" }}>
             <Typography>{t('verify-email-details-1')}</Typography>
 
-            <Box mt={3} mb={3} data-testid="verify-email-details-2">
+            <Box
+              data-testid="verify-email-details-2"
+              sx={{ mt: 3, mb: 3 }}>
               <Trans
                 i18nKey="verify-email-details-2"
                 t={t}
@@ -146,7 +154,7 @@ export const VerifyEmailPage: FunctionComponent = () => {
             </Box>
           </Box>
 
-          <Box marginTop={4}>
+          <Box sx={{ marginTop: 4 }}>
             <Button
               variant="contained"
               onClick={goToAppHome}

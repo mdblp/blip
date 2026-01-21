@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,8 +28,6 @@
 import React, { type FunctionComponent, type MouseEventHandler } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useAuth0 } from '@auth0/auth0-react'
-
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import loginPageBackground from 'images/login-page-background-mobile.png'
 import config from '../../lib/config/config'
@@ -43,7 +41,7 @@ import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
 import { useLogin } from './login.hook'
 
-const styles = makeStyles({ name: 'login-page-styles' })((theme: Theme) => ({
+const styles = makeStyles({ name: 'login-page-styles' })((theme) => ({
   button: {
     fontSize: '1.1rem',
     width: '100%',
@@ -87,14 +85,15 @@ const LoginPageMobile: FunctionComponent = () => {
         className={classes.topBackground}
       />
       <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        textAlign="center"
-        marginTop={5}
-        paddingX={2}
-        height="100vh"
-      >
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          marginTop: 5,
+          paddingX: 2,
+          height: "100vh"
+        }}>
         <img
           data-testid="header-main-logo"
           aria-label={t('alt-img-logo')}
@@ -122,10 +121,11 @@ const LoginPageMobile: FunctionComponent = () => {
         }
 
         <Box
-          width={`calc(100% - ${theme.spacing(4)})`}
-          position="absolute"
-          bottom={theme.spacing(4)}
-        >
+          sx={{
+            width: `calc(100% - ${theme.spacing(4)})`,
+            position: "absolute",
+            bottom: theme.spacing(4)
+          }}>
           <Box>
             <LanguageIcon
               data-testid="language-icon"

@@ -48,7 +48,11 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
     <GenericListCard title={t('CGM')} data-testid="settings-table-cgm">
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Manufacturer')}</Typography>
             <Typography variant="body2" className="bold">{cgm.manufacturer ?? FALLBACK_VALUE}</Typography>
           </Box>
@@ -56,7 +60,11 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
       </ListItem>
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Product')}</Typography>
             <Typography variant="body2" className="bold">{cgm.name ?? FALLBACK_VALUE}</Typography>
           </Box>
@@ -64,7 +72,11 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
       </ListItem>
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Cgm sensor expiration date')}</Typography>
             <Typography variant="body2" className="bold">{formatDateWithMomentLongFormat(new Date(cgm.expirationDate)) ?? FALLBACK_VALUE}</Typography>
           </Box>
@@ -72,7 +84,11 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
       </ListItem>
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Cgm transmitter software version')}</Typography>
             <Typography variant="body2" className="bold">{cgm.swVersionTransmitter ?? FALLBACK_VALUE}</Typography>
           </Box>
@@ -80,7 +96,11 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
       </ListItem>
       <ListItem divider className="list-item">
         <ListItemText>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Cgm transmitter id')}</Typography>
             <Typography variant="body2" className="bold">{cgm.transmitterId ?? FALLBACK_VALUE}</Typography>
           </Box>
@@ -88,7 +108,11 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
       </ListItem>
       <ListItem>
         <ListItemText className="list-item">
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
             <Typography variant="body2">{t('Cgm transmitter end of life')}</Typography>
             <Typography
               variant="body2"

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -99,7 +99,7 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
           spacing={4}
           rowSpacing={4}
         >
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             {device.name == DeviceSystem.Dblg1
               && <DeviceInfoTable device={device} />
             }
@@ -109,7 +109,9 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
             <PumpInfoTable pump={pump} />
             <CgmInfoTable cgm={cgm} />
           </Grid>
-          <Grid item xs={12} sm={6} data-testid="parameters-container">
+          <Grid
+            data-testid="parameters-container"
+            size={{ xs: 12, sm: 6 }}>
             <ParameterList parameters={parameters} />
           </Grid>
         </Grid>

@@ -72,7 +72,7 @@ const TimeInRangeChart: FunctionComponent<TimeInRangeChartProps> = (props) => {
         onMouseLeave={() => {
           onMouseLeave()
         }}
-        marginBottom={1}
+        sx={{ marginBottom: 1 }}
       >
         <CBGPercentageBar {...cbgStatsProps.veryHighStat} />
         <CBGPercentageBar {...cbgStatsProps.highStat} />

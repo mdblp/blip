@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,13 +26,7 @@
  */
 
 import { type Patient } from '../../../lib/patient/models/patient.model'
-import {
-  type GridColDef,
-  type GridRenderCellParams,
-  type GridRowParams,
-  type GridRowsProp,
-  type GridValueFormatterParams
-} from '@mui/x-data-grid'
+import { type GridColDef, type GridRenderCellParams, type GridRowParams, type GridRowsProp } from '@mui/x-data-grid'
 import { useTranslation } from 'react-i18next'
 import { type GridRowModel } from '../models/grid-row.model'
 import { PatientListColumns } from '../models/enums/patient-list.enum'
@@ -62,6 +56,7 @@ import { useAuth } from '../../../lib/auth'
 import { DiabeticType } from 'medical-domain'
 import { PatientDiabeticProfileChip } from '../../chips/patient-diabetic-profile-chip'
 import moment from 'moment-timezone'
+import { AppUserRoute } from '../../../models/enums/routes.enum'
 
 interface CurrentPatientListProps {
   patients: Patient[]
@@ -169,10 +164,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         headerName: t('date-of-birth'),
         sortComparator: sortByDateOfBirth,
         width: 150,
-        valueFormatter: (params: GridValueFormatterParams<Patient>): string => {
-          const patient = params.value
-          return formatBirthdate(patient.profile.birthdate)
-        }
+        valueFormatter: (patient: Patient): string => formatBirthdate(patient.profile.birthdate)
       },
       {
         field: PatientListColumns.Gender,
@@ -210,7 +202,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         description: t('time-in-range-tooltip'),
         headerAlign: 'left',
         align: 'left',
-        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value),
+        valueFormatter: (value: number): string => PatientUtils.formatPercentageValue(value),
         renderCell: (params: GridRenderCellParams<GridRowModel, number>) => {
           const value = params.value
           return isNumberValueDefined(value)
@@ -229,7 +221,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         headerAlign: 'left',
         align: 'left',
         width: 120,
-        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value),
+        valueFormatter: (value: number): string => PatientUtils.formatPercentageValue(value),
         renderCell: (params: GridRenderCellParams<GridRowModel, number>) => {
           const value = params.value
           return isNumberValueDefined(value)
@@ -248,7 +240,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         headerAlign: 'left',
         align: 'left',
         width: 120,
-        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value),
+        valueFormatter: (value: number): string => PatientUtils.formatPercentageValue(value),
         renderCell: (params: GridRenderCellParams<GridRowModel, number>) => {
           const value = params.value
           return isNumberValueDefined(value)
@@ -266,7 +258,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
         description: t('coefficient-of-variation'),
         headerAlign: 'left',
         align: 'left',
-        valueFormatter: (params: GridValueFormatterParams<number>): string => PatientUtils.formatPercentageValue(params.value),
+        valueFormatter: (value: number): string => PatientUtils.formatPercentageValue(value),
         renderCell: (params: GridRenderCellParams<GridRowModel, number>) => {
           const value = params.value
           return isNumberValueDefined(value)
@@ -315,7 +307,7 @@ export const useCurrentPatientListHook = (props: CurrentPatientListProps): Curre
   }, [classes.mandatoryCellBorder, onClickRemovePatient, t, noDataLabel])
 
   const onRowClick = (params: GridRowParams): void => {
-    navigate(`${params.id}/dashboard`)
+    navigate(`${params.id}${AppUserRoute.Dashboard}`)
   }
 
   return { allRows, allColumns, onRowClick }

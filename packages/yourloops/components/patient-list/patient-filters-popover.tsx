@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -83,7 +83,11 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
       }}
       transformOrigin={{ vertical: -10, horizontal: 0 }}
     >
-      <Box marginX={theme.spacing(3)} marginTop={theme.spacing(3)}>
+      <Box
+        sx={{
+          marginX: theme.spacing(3),
+          marginTop: theme.spacing(3)
+        }}>
         <Typography variant="h6" className={classes.title}>{t('personal-settings')}</Typography>
         <PatientListOptionToggle
           ariaLabel={t('filter-flagged')}

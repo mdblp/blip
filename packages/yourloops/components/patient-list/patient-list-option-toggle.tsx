@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -62,26 +62,31 @@ export const PatientListOptionToggle: FunctionComponent<PatientsFiltersTogglePro
   return (
     <Stack
       direction="row"
-      alignItems="center"
-      justifyContent="space-between"
-      gap={1}
-      marginBottom={theme.spacing(1)}
-    >
-        <Box display="flex" alignItems="center">
-          {icon}
-          <Typography variant="subtitle1" className={classes.label}>{label}</Typography>
+      sx={{
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 1,
+        marginBottom: theme.spacing(1)
+      }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center"
+        }}>
+        {icon}
+        <Typography variant="subtitle1" className={classes.label}>{label}</Typography>
+      </Box>
+      <Tooltip title={tooltip}>
+        <Box>
+          <Switch
+            aria-label={ariaLabel}
+            className={classes.toggle}
+            checked={checked}
+            disabled={disabled}
+            onChange={onToggleChange}
+          />
         </Box>
-        <Tooltip title={tooltip}>
-          <Box>
-            <Switch
-              aria-label={ariaLabel}
-              className={classes.toggle}
-              checked={checked}
-              disabled={disabled}
-              onChange={onToggleChange}
-            />
-          </Box>
-        </Tooltip>
+      </Tooltip>
     </Stack>
   )
 }

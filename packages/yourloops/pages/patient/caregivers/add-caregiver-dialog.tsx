@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -99,7 +99,7 @@ function AddCaregiverDialog(props: AddDialogProps): JSX.Element {
       </DialogTitle>
 
       <DialogContent>
-        <Box paddingTop={1}>
+        <Box sx={{ paddingTop: 1 }}>
           <TextField
             id="patient-add-caregiver-dialog-email"
             data-testid="patient-add-caregiver-dialog-email"

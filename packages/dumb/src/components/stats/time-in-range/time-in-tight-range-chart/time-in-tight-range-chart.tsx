@@ -62,7 +62,7 @@ export const TimeInTightRangeChart: FC<TimeInTightRangeChartProps> = (props) => 
         shouldDisplayInfoTooltip={true}
         type={CBGStatType.TimeInTightRange}
       />
-      <Box marginBottom={1}>
+      <Box sx={{ marginBottom: 1 }}>
         <CbgPercentageBarChart
           type={CBGStatType.TimeInTightRange}
           id={StatLevel.TightRange}

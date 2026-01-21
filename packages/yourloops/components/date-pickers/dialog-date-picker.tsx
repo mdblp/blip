@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,7 @@ import React from 'react'
 import dayjs, { type Dayjs, isDayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
 
-import { type Theme, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import Button from '@mui/material/Button'
@@ -54,7 +54,7 @@ interface DatePickerProps {
   onSelectedDateChange?: (date?: string) => void
 }
 
-const datePickerStyle = makeStyles<CalendarStylesProps>({ name: 'date-picker-single-day' })((theme: Theme, { orientation }) => {
+const datePickerStyle = makeStyles<CalendarStylesProps>({ name: 'date-picker-single-day' })((theme, { orientation }) => {
   return {
     dialogPaper: {
       margin: 0,

@@ -42,10 +42,16 @@ export const InfoRow: FC<InfoRowProps> = ({ icon: Icon, label, value, dataTestId
   const testId = dataTestId || Icon.name || 'icon'
 
   return (
-    <Box display="flex" alignItems="center" gap={2} sx={{ mt: 3 }}>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 2,
+        mt: 3
+      }}>
       <Icon sx={{ color: 'text.secondary' }} data-testid={`${testId}-icon`} />
       <Box data-testid={`${testId}-box`}>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {label}
         </Typography>
         <Typography variant="body2">

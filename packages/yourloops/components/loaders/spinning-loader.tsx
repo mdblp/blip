@@ -46,7 +46,12 @@ const Loader: FunctionComponent<CenteredSpinningLoaderProps> = ({ size = 40, cla
   }, [])
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center">
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
       <Lottie
         autoplay
         animationData={LottieCustomLoaderJson}

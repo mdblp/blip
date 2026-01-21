@@ -71,14 +71,14 @@ export const DevicesView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecifi
       {medicalData.medicalData.pumpSettings.length > 0
         ?
         <Grid container spacing={3}>
-          <Grid item xs={3}>
+          <Grid size={3}>
             <DevicesViewMenu
               selectedSection={selectedSection}
               selectSection={selectSection}
               shouldDisplaySafetyBasalProfile={isBasalSafetyProfileAvailable(pumpSettings)}
             />
           </Grid>
-          <Grid item xs={9}>
+          <Grid size={9}>
             {
               isSelected(DeviceViewSection.CurrentParameters) ?
                 <CurrentParametersSection pumpSettings={pumpSettings} />
@@ -98,12 +98,13 @@ export const DevicesView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecifi
           </Grid>
         </Grid>
         : <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          marginTop={theme.spacing(4)}
-        >
-          <Typography fontWeight={500}>{t('no-settings-on-device-alert-message')}</Typography>
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: theme.spacing(4)
+        }}>
+          <Typography sx={{ fontWeight: 500 }}>{t('no-settings-on-device-alert-message')}</Typography>
         </Box>
       }
     </Container>

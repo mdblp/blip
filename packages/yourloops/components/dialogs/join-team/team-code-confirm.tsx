@@ -37,7 +37,6 @@ import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 import { useAlert } from '../../utils/snackbar'
 import { getNumericCode } from '../../../lib/team/team-code.utils'
-import { LoadingButton } from '@mui/lab'
 import { logError } from '../../../utils/error.util'
 import { errorTextFromException } from '../../../lib/utils'
 import { formatCode } from '../../../utils/format.utils'
@@ -100,7 +99,9 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
 
   return (
     <React.Fragment>
-      <Box textAlign="center">
+      <Box sx={{
+        textAlign: "center"
+      }}>
         <DialogTitle>
           <strong data-testid="team-add-dialog-title">
             {t('join-team-title', { teamName })}
@@ -108,7 +109,12 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
         </DialogTitle>
 
         <DialogContent>
-          <Box display="flex" flexDirection="column" alignItems="center">
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center"
+            }}>
             <DialogContentText data-testid="label-dialog">
               {t('team-code')}
             </DialogContentText>
@@ -135,7 +141,7 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
         >
           {t('button-cancel')}
         </Button>
-        <LoadingButton
+        <Button
           loading={isInProgress}
           id="team-add-dialog-button-add-team"
           disabled={joinButtonDisabled}
@@ -145,7 +151,7 @@ export const TeamCodeConfirm = (props: ConfirmTeamProps): JSX.Element => {
           onClick={handleClickJoinTeam}
         >
           {t('button-continue')}
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </React.Fragment>
   )

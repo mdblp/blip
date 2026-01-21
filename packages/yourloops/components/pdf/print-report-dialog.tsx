@@ -28,7 +28,7 @@
 import React, { type FC, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import dayjs, { type Dayjs } from 'dayjs'
-import { type Theme, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import DateRangeIcon from '@mui/icons-material/DateRange'
 import useMediaQuery from '@mui/material/useMediaQuery'
@@ -46,7 +46,6 @@ import { Radio, RadioGroup } from '@mui/material'
 
 import { type CalendarOrientation } from '../date-pickers/models'
 import RangeDatePicker from '../date-pickers/range-date-picker'
-import { LoadingButton } from '@mui/lab'
 import { type Patient } from '../../lib/patient/models/patient.model'
 import type MedicalDataService from 'medical-domain'
 import { TimeService } from 'medical-domain'
@@ -91,7 +90,7 @@ interface PrintReportDialogProps {
 const DEFAULT_PRESET: Presets = '4weeks'
 const MAX_SELECTABLE_DAYS = 90
 
-const printOptionsStyle = makeStyles({ name: 'dialog-pdf-options' })((theme: Theme) => {
+const printOptionsStyle = makeStyles({ name: 'dialog-pdf-options' })((theme) => {
   return {
     marginTop: {
       marginTop: theme.spacing(2)
@@ -294,8 +293,13 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
         <Typography variant="h4">{t('button-pdf-download-report')}</Typography>
 
         <Typography variant="body2" className={classes.marginTop}>{t('dialog-pdf-options-presets')}</Typography>
-        <Box display="flex" flexDirection="row" flexWrap="wrap"
-             justifyContent={matchLandscape ? 'start' : 'space-between'}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: matchLandscape ? 'start' : 'space-between'
+          }}>
           <Chip
             id="pdf-options-button-one-week"
             variant={presetSelected === '1week' ? 'filled' : 'outlined'}
@@ -342,7 +346,12 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
           />
         </Box>
 
-        <Box display="flex" mt={2} flexDirection="column">
+        <Box
+          sx={{
+            display: "flex",
+            mt: 2,
+            flexDirection: "column"
+          }}>
           <Typography variant="body2"
                       className={classes.customRangeText}>{t('dialog-pdf-options-custom-range')}</Typography>
           <TextField
@@ -361,7 +370,7 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
             }}
           />
         </Box>
-        <Box display="flex" className={classes.calendarBox}>
+        <Box className={classes.calendarBox} sx={{ display: "flex" }}>
           <RangeDatePicker
             minDate={minDate}
             maxDate={maxDate}
@@ -406,7 +415,7 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
         >
           {t('button-cancel')}
         </Button>
-        <LoadingButton
+        <Button
           data-testid="pdf-options-button-download"
           disabled={!!customStartDate}
           loading={buildingReport}
@@ -416,7 +425,7 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
           onClick={onClickDownload}
         >
           {t('button-download')}
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   )

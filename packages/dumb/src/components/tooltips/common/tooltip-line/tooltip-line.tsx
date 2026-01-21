@@ -63,7 +63,11 @@ export const TooltipLine: FunctionComponent<TooltipLineProps> = (props) => {
     <div className={getGlobalClasses()}>
       <span>{label}</span>
       {isValueDefined &&
-        <Box flexDirection="row" sx={{ ml: 1 }}>
+        <Box
+          sx={{
+            flexDirection: "row",
+            ml: 1
+          }}>
           <span>{value}</span>
           {units && <span className={styles.units}>{units}</span>}
         </Box>

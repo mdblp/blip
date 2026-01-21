@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -95,7 +95,11 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
       </DialogTitle>
 
       <DialogContent>
-        <Box display="flex" flexDirection="column">
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column"
+          }}>
           <TextField
             id="team-add-member-dialog-field-email"
             onChange={handleChangeEMail}

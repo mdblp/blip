@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,9 +38,17 @@ export const InvalidRoute: FC = () => {
   setPageTitle(t('page-not-found'))
 
   return (
-    <Grid container direction="column" justifyContent="center" alignItems="center">
+    <Grid
+      container
+      direction="column"
+      sx={{
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
       <p>{t('page-not-found')}</p>
-      <Typography color="primary">
+      <Typography sx={theme => ({
+        color: theme.palette.primary.main
+      })}>
         <Link to="/">
           {t('breadcrumb-home')}
         </Link>

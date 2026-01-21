@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,7 +42,6 @@ import HeightIcon from '@mui/icons-material/Height'
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid'
 import MonitorWeightIcon from '@mui/icons-material/MonitorWeight'
 import StraightenIcon from '@mui/icons-material/Straighten'
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 import Alert from '@mui/material/Alert'
 import { formatBirthdate } from 'dumb'
@@ -59,7 +58,7 @@ interface InformationSectionProps {
   patient: Patient
 }
 
-const useStyles = makeStyles()((theme: Theme) => ({
+const useStyles = makeStyles()((theme) => ({
   separator: {
     border: `1px solid ${theme.palette.divider}`,
     marginBottom: theme.spacing(2),
@@ -95,9 +94,19 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
     <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="information-section">
       <CardContent>
 
-        <Box display="flex" flexDirection="column" gap={3}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 3
+          }}>
           {/* Patient Header with Avatar */}
-          <Box display="flex" alignItems="center" gap={2}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2
+            }}>
             <Avatar
               data-testid="patient-avatar"
               sx={{
@@ -110,8 +119,12 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
             >
               {patientInfo.initials}
             </Avatar>
-            <Box display="flex" alignItems="center">
-              <Typography variant="h6" fontWeight="medium">
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center"
+              }}>
+              <Typography variant="h6" sx={{ fontWeight: "medium" }}>
                 {getUserName(patient.profile.firstName, patient.profile.lastName, patient.profile.fullName) || t('N/A')}
               </Typography>
               {user.isUserPatient() &&
@@ -120,14 +133,14 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
             </Box>
           </Box>
           <Grid container spacing={2}>
-            <Grid item xs={6}>
+            <Grid size={6}>
               <InfoRow icon={CakeIcon} dataTestId='date-of-birth' label={t('date-of-birth')} value={`${formatBirthdate(patient.profile.birthdate)} (${patientInfo.age})`} />
               <InfoRow icon={PersonIcon} dataTestId='gender' label={t('gender')} value={patientInfo.gender} />
               <InfoRow icon={MonitorWeightIcon} dataTestId='weight' label={t('params|WEIGHT')} value={patientInfo.weight} />
               <InfoRow icon={HeightIcon} dataTestId='height' label={t('params|HEIGHT')} value={patientInfo.height} />
               <InfoRow icon={EmailIcon} dataTestId='email' label={t('email')} value={patient.profile.email || t('N/A')} />
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={6}>
               <InfoRow icon={PhoneAndroidIcon} dataTestId='equipment-date' label={t('equipment-date')} value={patientInfo.equipmentDate} />
               <InfoRow icon={StraightenIcon} dataTestId='hba1c' label={t('hba1c')} value={patientInfo.hba1c} />
               <InfoRow icon={ScaleIcon} dataTestId='glycemia-units' label={t('glycemia-units')} value={patientInfo.dbUnits} />

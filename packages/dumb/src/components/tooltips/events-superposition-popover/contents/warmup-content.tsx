@@ -39,7 +39,11 @@ export const WarmUpContent: FC<WarmupContentProps> = (props) => {
   const { warmUpEvent } = props
 
   return (
-    <Box display="flex" justifyContent="space-between">
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between"
+      }}>
       <span className={styles.contentLine}>
         {getWarmUpDescription()}
       </span>

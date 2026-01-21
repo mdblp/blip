@@ -51,10 +51,14 @@ export const ProfessionalAccountForm: FC = () => {
   return (
     <>
       <Divider variant="middle" sx={{ marginY: 3 }} />
-      <Box marginY={2}>
+      <Box sx={{ marginY: 2 }}>
         <Typography variant="h6" sx={{ marginBottom: 2 }}>{t('professional-account')}</Typography>
         <span>{t('caregiver-upgrade-account-description')}</span>
-        <Box display="flex" marginTop={2}>
+        <Box
+          sx={{
+            display: "flex",
+            marginTop: 2
+          }}>
           <Button
             data-testid="switch-role-button"
             variant="outlined"

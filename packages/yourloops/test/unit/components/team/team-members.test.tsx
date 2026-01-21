@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -44,8 +44,6 @@ import ErrorApi from '../../../../lib/error/error.api'
 jest.mock('../../../../components/utils/snackbar')
 jest.mock('../../../../lib/team')
 describe('TeamMembers', () => {
-  const refresh = jest.fn()
-
   const teamId = 'teamId'
   const members = [
     buildTeamMember('userId1'),
@@ -61,7 +59,7 @@ describe('TeamMembers', () => {
       UserInviteStatus.Accepted
     )
   ]
-  const team = buildTeam(teamId, members)
+  const defaultTeam = buildTeam(teamId, members)
   const nbNonPatientTeamMembers = 4
   const inviteMemberMock = jest.fn()
   const successMock = jest.fn()
@@ -69,7 +67,7 @@ describe('TeamMembers', () => {
 
   beforeAll(() => {
     (teamHookMock.useTeam as jest.Mock).mockImplementation(() => {
-      return { inviteMember: inviteMemberMock, getTeam: jest.fn().mockReturnValue(team) }
+      return { inviteMember: inviteMemberMock, getTeam: jest.fn().mockReturnValue(defaultTeam) }
     });
     (alertHookMock.useAlert as jest.Mock).mockImplementation(() => {
       return { success: successMock, error: errorMock }
@@ -80,13 +78,12 @@ describe('TeamMembers', () => {
     jest.spyOn(TeamUtils, 'isUserAdministrator').mockReturnValue(true)
   })
 
-  function getTeamMembersJSX(props: TeamMembersProps = { team, refreshParent: refresh }) {
+  function getTeamMembersJSX({ team }: TeamMembersProps = { team: defaultTeam }) {
     return (
       <MemoryRouter>
         <ThemeProvider theme={getTheme()}>
           <TeamMembers
-            team={props.team}
-            refreshParent={props.refreshParent}
+            team={team}
           />
         </ThemeProvider>
       </MemoryRouter>
@@ -126,7 +123,7 @@ describe('TeamMembers', () => {
     await act(async () => {
       fireEvent.click(inviteButton)
       await waitFor(() => {
-        expect(inviteMemberMock).toHaveBeenCalledWith(team, email, TeamMemberRole.admin)
+        expect(inviteMemberMock).toHaveBeenCalledWith(defaultTeam, email, TeamMemberRole.admin)
       })
       await waitFor(() => {
         expect(successMock).toHaveBeenCalledWith('team-page-success-invite-hcp')
@@ -149,7 +146,7 @@ describe('TeamMembers', () => {
     await act(async () => {
       fireEvent.click(inviteButton)
       await waitFor(() => {
-        expect(inviteMemberMock).toHaveBeenCalledWith(team, email, TeamMemberRole.member)
+        expect(inviteMemberMock).toHaveBeenCalledWith(defaultTeam, email, TeamMemberRole.member)
       })
       await waitFor(() => {
         expect(errorMock).toHaveBeenCalledWith('team-page-failed-invite-hcp')

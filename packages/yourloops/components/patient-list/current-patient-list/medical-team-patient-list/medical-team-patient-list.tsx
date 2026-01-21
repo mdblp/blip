@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -61,7 +61,7 @@ export const MedicalTeamPatientList: FunctionComponent<MedicalTeamPatientListPro
 
   return (
     <>
-      <Box data-testid="current-patient-list-grid" width={width}>
+      <Box data-testid="current-patient-list-grid" sx={{ width: width }}>
         <DataGrid
           columns={columns}
           rows={rowsProps}

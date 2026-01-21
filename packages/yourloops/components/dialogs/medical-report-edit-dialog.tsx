@@ -27,7 +27,6 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { type Theme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
 
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
@@ -45,7 +44,6 @@ import Typography from '@mui/material/Typography'
 import { type CategoryProps } from '../dashboard-cards/medical-files/medical-files-card'
 import { useMedicalReportEditDialog } from './medical-report-edit-dialog.hook'
 import { type MedicalReport } from '../../lib/medical-files/models/medical-report.model'
-import { LoadingButton } from '@mui/lab'
 
 export interface MedicalReportEditDialogProps extends CategoryProps {
   onClose: () => void
@@ -53,7 +51,7 @@ export interface MedicalReportEditDialogProps extends CategoryProps {
   medicalReport?: MedicalReport
 }
 
-const classes = makeStyles()((theme: Theme) => ({
+const classes = makeStyles()((theme) => ({
   divider: {
     margin: '30px 0 10px 16px'
   },
@@ -172,7 +170,7 @@ export default function MedicalReportEditDialog(props: MedicalReportEditDialogPr
           {isInReadOnly ? t('button-close') : t('button-cancel')}
         </Button>
         {!isInReadOnly &&
-          <LoadingButton
+          <Button
             loading={inProgress}
             variant="contained"
             color="primary"
@@ -181,7 +179,7 @@ export default function MedicalReportEditDialog(props: MedicalReportEditDialogPr
             onClick={saveMedicalReport}
           >
             {t('button-save')}
-          </LoadingButton>
+          </Button>
         }
       </DialogActions>
     </Dialog>

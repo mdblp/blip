@@ -70,19 +70,24 @@ export const DblCommunicationPage: FunctionComponent = () => {
 
   return (
     <>
-      <BasicHeader testId="dbl-comm-header"/>
+      <BasicHeader testId="dbl-comm-header" />
       <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="90vh"
-        textAlign="center"
         data-testid="dbl-comm-content"
-      >
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "90vh",
+          textAlign: "center"
+        }}>
         <GlobalStyles styles={{ body: { backgroundColor: theme.palette.common.white } }} />
 
         <Container maxWidth="md">
-          <Box display="flex" justifyContent="center">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center"
+            }}>
             <img
               data-testid="header-main-logo"
               aria-label={t('alt-img-logo')}
@@ -91,15 +96,22 @@ export const DblCommunicationPage: FunctionComponent = () => {
               width="140" />
           </Box>
 
-          <Box mt={4} mb={3}>
-            <Typography data-testid="dbl-comm-title" variant="h5" dangerouslySetInnerHTML={{ __html: communicationTitle }}/>
+          <Box
+            sx={{ mt: 4, mb: 3 }}
+          >
+            <Typography data-testid="dbl-comm-title" variant="h5"
+                        dangerouslySetInnerHTML={{ __html: communicationTitle }} />
           </Box>
 
-          <Box textAlign="left">
-            <Box mt={3} mb={3} data-testid="dbl-comm-details" dangerouslySetInnerHTML={{ __html: communicationContent }}/>
+          <Box sx={{ textAlign: "left" }}>
+            <Box
+              data-testid="dbl-comm-details"
+              dangerouslySetInnerHTML={{ __html: communicationContent }}
+              sx={{ mt: 3, mb: 3 }}
+            />
           </Box>
 
-          <Box marginTop={4}>
+          <Box sx={{ marginTop: 4 }}>
             <Button
               variant="contained"
               onClick={ackInformation}

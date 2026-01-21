@@ -80,11 +80,12 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                 <TableRow sx={{ backgroundColor: 'var(--primary-color-background)' }} className="change-date-row">
                   <TableCell colSpan={5}>
                     <Box
-                      display="flex"
-                      justifyContent="end"
-                      alignItems="center"
-                      gap={1}
-                    >
+                      sx={{
+                        display: "flex",
+                        justifyContent: "end",
+                        alignItems: "center",
+                        gap: 1
+                      }}>
                       <IconButton
                         size="small"
                         color="primary"
@@ -115,9 +116,11 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                       <Tooltip title={isEllipsisActive(document.getElementById(`${parameter.name}-${index}`)) ? parameter.name : ''}>
                         <Typography
                           className="is-ellipsis"
-                          maxWidth={PARAMETER_STRING_MAX_WIDTH}
                           variant="body2"
                           id={`${parameter.name}-${index}`}
+                          sx={{
+                            maxWidth: PARAMETER_STRING_MAX_WIDTH
+                          }}
                         >
                           {t(`params|${parameter.name}`)}
                         </Typography>

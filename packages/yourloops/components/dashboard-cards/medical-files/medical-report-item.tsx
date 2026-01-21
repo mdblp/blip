@@ -115,7 +115,12 @@ export const MedicalReportItem: FunctionComponent<MedicalReportItemProps> = (pro
         <ListItemIcon>
           <DescriptionOutlinedIcon />
         </ListItemIcon>
-        <Box display="flex" justifyContent="space-between" width="100%">
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%"
+          }}>
           <ListItemText
             className={classes.reportNameItem}
             primary={
@@ -123,17 +128,26 @@ export const MedicalReportItem: FunctionComponent<MedicalReportItemProps> = (pro
                 <Typography component="span" variant="subtitle2" className="bold">
                   {t('medical-report')}-{medicalReport.number}&nbsp;
                 </Typography>
-                <Typography component="span" variant="caption" alignSelf="center">
+                <Typography component="span" variant="caption" sx={{
+                  alignSelf: "center"
+                }}>
                   {medicalReportDate}
                 </Typography>
               </>
             }
             secondary={
               <span className={classes.secondaryText}>
-                <Typography component="span" variant="caption" color="text.secondary">
+                <Typography component="span" variant="caption" sx={{
+                  color: "text.secondary"
+                }}>
                   {createdBy}
                 </Typography>
-                <Typography component="span" fontSize="12px" color="text.secondary">
+                <Typography
+                  component="span"
+                  sx={{
+                    fontSize: "12px",
+                    color: "text.secondary"
+                  }}>
                   {teamName}
                 </Typography>
               </span>

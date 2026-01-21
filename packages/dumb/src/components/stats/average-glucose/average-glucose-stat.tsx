@@ -50,20 +50,35 @@ const AverageGlucose: FunctionComponent<AverageGlucoseProps> = (props) => {
 
   return (
     <Box data-testid="average-glucose-stat">
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}>
         <div className={commonStyles.title}>
           {title}
           <StatTooltip annotations={[tooltipValue]} />
         </div>
-        <Box fontSize="12px">
+        <Box sx={{ fontSize: "12px" }}>
           {units}
         </Box>
       </Box>
-      <Box display="flex" alignItems="center" marginLeft="6px">
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          marginLeft: "6px"
+        }}>
         {Number.isNaN(value)
           ? <>
             <div className={styles['disabled-line']} />
-            <Box className={styles['disabled-label']} fontSize="24px" marginLeft="auto">
+            <Box
+              className={styles['disabled-label']}
+              sx={{
+                fontSize: "24px",
+                marginLeft: "auto"
+              }}>
               --
             </Box>
           </>
@@ -77,7 +92,13 @@ const AverageGlucose: FunctionComponent<AverageGlucoseProps> = (props) => {
               dotItem={{ color: valueBasedStyles.backgroundColor, alignmentPercent: valueBasedStyles.left }}
               lineWidth={'calc(100% - 60px)'}
             />
-            <Box className={valueBasedStyles.color} fontSize="20px" fontWeight="bold" marginLeft="auto">
+            <Box
+              className={valueBasedStyles.color}
+              sx={{
+                fontSize: "20px",
+                fontWeight: "bold",
+                marginLeft: "auto"
+              }}>
               {value}
             </Box>
           </>
