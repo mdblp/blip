@@ -76,7 +76,6 @@ const styles = makeStyles()((theme) => {
       marginRight: theme.spacing(4),
     },
     leftSection: {
-      flex: 1,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'flex-start'
@@ -87,7 +86,6 @@ const styles = makeStyles()((theme) => {
       justifyContent: 'center'
     },
     rightSection: {
-      flex: 1,
       display: 'flex',
       justifyContent: 'flex-end'
     }

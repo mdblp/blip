@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -43,6 +43,7 @@ import usePatient from '../../../../lib/patient/patient.hook'
 import { makeStyles } from 'tss-react/mui'
 import { Patient } from '../../../../lib/patient/models/patient.model'
 import { useAuth } from '../../../../lib/auth'
+import { inputBaseClasses } from '@mui/material/InputBase'
 
 interface AdditionalInfoFormProps {
   patient: Patient
@@ -150,7 +151,11 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
               onFieldChange(PatientProfileAdditionalInfoFormKey.DrugTreatment, e.target.value)
               validateDrugTreatment(e.target.value)
             }}
-            disabled={!user.isUserPatient()}
+            slotProps={{
+              input: {
+                readOnly: !user.isUserPatient()
+              }
+            }}
             error={!!errors.drugTreatment}
             helperText={errors.drugTreatment}
           />
@@ -165,9 +170,33 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
               onFieldChange(PatientProfileAdditionalInfoFormKey.Profession, e.target.value)
               validateProfession(e.target.value)
             }}
-            disabled={!user.isUserPatient()}
+            slotProps={{
+              input: {
+                readOnly: !user.isUserPatient()
+              }
+            }}
             error={!!errors.profession}
             helperText={errors.profession}
+          />
+
+          <Autocomplete
+            multiple
+            data-testid="additional-patient-profile-physical-activity"
+            options={physicalActivityNameList}
+            limitTags={3}
+            getOptionLabel={(option: string) => t(`params|${option}`)}
+            freeSolo
+            className={classes.formField}
+            value={additionalPatientProfileForm.physicalActivities || []} // to prevent MUI error when no value is selected (controlled component)
+            onChange={(e, value) => onFieldChange(PatientProfileAdditionalInfoFormKey.PhysicalActivities, value)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                label={t('physical-activity')}
+              />
+            )}
+            readOnly={!user.isUserPatient()}
           />
         </Grid>
 
@@ -189,7 +218,7 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
                 label={t('diet')}
               />
             )}
-            disabled={!user.isUserPatient()}
+            readOnly={!user.isUserPatient()}
           />
 
           <TextField
@@ -202,35 +231,15 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
               onFieldChange(PatientProfileAdditionalInfoFormKey.Hobbies, e.target.value)
               validateHobbies(e.target.value)
             }}
-            disabled={!user.isUserPatient()}
+            slotProps={{
+              input: {
+                readOnly: !user.isUserPatient()
+              }
+            }}
             error={!!errors.hobbies}
             helperText={errors.hobbies}
           />
-        </Grid>
-      </Grid>
-      <Grid container spacing={1} sx={{ mb: 1 }}>
-        <Grid size={6}>
-          <Autocomplete
-            multiple
-            data-testid="additional-patient-profile-physical-activity"
-            options={physicalActivityNameList}
-            limitTags={3}
-            getOptionLabel={(option: string) => t(`params|${option}`)}
-            freeSolo
-            className={classes.formField}
-            value={additionalPatientProfileForm.physicalActivities || []} // to prevent MUI error when no value is selected (controlled component)
-            onChange={(e, value) => onFieldChange(PatientProfileAdditionalInfoFormKey.PhysicalActivities, value)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="outlined"
-                label={t('physical-activity')}
-              />
-            )}
-            disabled={!user.isUserPatient()}
-          />
-        </Grid>
-        <Grid size={6}>
+
           <TextField
             data-testid="additional-patient-profile-physical-activity-duration"
             label={t('duration-per-week')}
@@ -242,16 +251,32 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
               onFieldChange(PatientProfileAdditionalInfoFormKey.HoursSpentOnPhysicalActivitiesPerWeek, +e.target.value)
               validateHoursPerWeek(+e.target.value)
             }} // the + allow conversion into number
-            InputProps={{
-              inputProps: { min: 0 },
-              endAdornment: <InputAdornment position="end">{t('hours')}</InputAdornment>
-            }}
-            disabled={!user.isUserPatient()}
             error={!!errors.hoursSpentOnPhysicalActivitiesPerWeek}
             helperText={errors.hoursSpentOnPhysicalActivitiesPerWeek}
+            slotProps={{
+              input: {
+                readOnly: !user.isUserPatient(),
+                // Show the "hours" adornment only when there is a value
+                endAdornment: (
+                  <InputAdornment
+                    position="end"
+                    sx={{
+                      opacity: 0,
+                      pointerEvents: 'none',
+                      [`[data-shrink=true] ~ .${inputBaseClasses.root} > &`]: {
+                        opacity: 1
+                      }
+                    }}
+                  >
+                    {t('hours')}
+                  </InputAdornment>
+                )
+              }
+            }}
           />
         </Grid>
       </Grid>
+
       <TextField
         data-testid="additional-patient-profile-open-comments"
         label={t('open-comments')}
@@ -263,10 +288,15 @@ export const AdditionalInfoForm: FC<AdditionalInfoFormProps> = (props) => {
           onFieldChange(PatientProfileAdditionalInfoFormKey.Comments, e.target.value)
           validateComments(e.target.value)
         }}
-        disabled={!user.isUserPatient()}
+        slotProps={{
+          input: {
+            readOnly: !user.isUserPatient()
+          }
+        }}
         error={!!errors.comments}
         helperText={errors.comments}
       />
+
       {user.isUserPatient() &&
         <Box
           sx={{
