@@ -69,7 +69,7 @@ function plotWizard(pool, opts = defaults) {
         .join('g')
         .classed('d3-wizard-group', true)
         .attr('id', d => `wizard_group_${d.id}`)
-        .attr('data-testid', d => `wizard_group_${d.id}`)<
+        .attr('data-testid', d => `wizard_group_${d.id}`)
         .sort((/** @type {Datum} */ a, /** @type {Datum} */ b) => {
           // Sort by size so smaller boluses are drawn last
           const bolusA = a.bolus ?? a
