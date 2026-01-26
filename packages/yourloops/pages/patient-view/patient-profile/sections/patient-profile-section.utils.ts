@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -52,7 +52,7 @@ export const getPatientHbA1c = (patient: Patient): string => {
 
   if (!a1c || !a1cDate) return t('N/A')
 
-  return `${a1c}% - (${formatDate(a1cDate)})`
+  return `${a1c}% (${formatDate(a1cDate)})`
 }
 
 export const getPatientInitials = (firstName: string = '', lastName: string = ''): string => {

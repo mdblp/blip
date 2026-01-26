@@ -65,7 +65,7 @@ export const testPatientPersonalInformation = async (): Promise<void> => {
   await assertInfoRow('equipment-date-icon', 'equipment-date-box', 'equipment-date', 'N/A')
 
   // Test HbA1c section
-  await assertInfoRow('hba1c-icon', 'hba1c-box', 'hba1c', 'fakeA1cValue% - (May 26, 2023)')
+  await assertInfoRow('hba1c-icon', 'hba1c-box', 'hba1c', 'fakeA1cValue% (May 26, 2023)')
 
   // Test glycemia units section
   await assertInfoRow('glycemia-units-icon', 'glycemia-units-box', 'glycemia-units', 'mg/dL')

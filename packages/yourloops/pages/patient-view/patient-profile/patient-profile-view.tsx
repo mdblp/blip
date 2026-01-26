@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -90,16 +90,16 @@ export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => 
 
   return (
     <Container data-testid="patient-profile-view-container" maxWidth="xl">
-      <Grid container spacing={3}>
-        <Grid size={3}>
-          { user.isUserHcp() &&
+      <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
+        {user.isUserHcp() &&
+          <Grid size={3}>
             <PatientProfileViewMenu selectedSection={selectedSection} selectSection={selectSection} />
-          }
-        </Grid>
+          </Grid>
+        }
         <Grid size={9}>
           {displaySelectedSection()}
         </Grid>
-        { showDialog &&
+        {showDialog &&
           <UnsavedChangesDialog
             open={showDialog}
             onConfirm={confirmNavigation}

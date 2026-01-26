@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,7 +42,7 @@ export const BasalIcon = React.forwardRef((props: SvgIconProps, ref: ForwardedRe
   return (
     <SvgIcon {...props} ref={ref}>
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3 20H5.04545V12H18.9545V20H21" stroke="#1A1A19" className={classes.stroke} />
+        <path d="M3 20H5.04545V12H18.9545V20H21" stroke="currentColor" className={classes.stroke} />
       </svg>
     </SvgIcon>
   )
