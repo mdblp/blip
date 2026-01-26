@@ -50,7 +50,7 @@ function plotWizard(pool, opts = defaults) {
       xScale: pool.xScale().copy()
     })
 
-    selection.each(function(/** @type {Datum[]} */ currentData) {
+    selection.each(function (/** @type {Datum[]} */ currentData) {
       if (currentData.length < 1) {
         d3.select(this).selectAll('g.d3-wizard-group').remove()
         return
@@ -78,11 +78,11 @@ function plotWizard(pool, opts = defaults) {
         })
 
       // Filter for elements with carb input
-      const carbs = wizardGroups.filter(/** @type {Datum} */ d => d.carbInput)
+      const carbs = wizardGroups.filter(/** @type {Datum} */d => d.carbInput)
       drawBolus.carb(carbs)
 
       // Filter for elements with bolus data
-      const boluses = wizardGroups.filter(/** @type {Datum} */ d => _.isObject(d.bolus))
+      const boluses = wizardGroups.filter(/** @type {Datum} */d => _.isObject(d.bolus))
       drawBolus.bolus(boluses)
 
       // Filter for boluses where programmed differs from delivered
@@ -116,16 +116,12 @@ function plotWizard(pool, opts = defaults) {
 
       // Set up tooltip event handlers
       selection.selectAll('.d3-wizard-group')
-        .on('mouseover', function(event, d) {
-          if (d.bolus) {
-            drawBolus.tooltip.add(d, utils.getTooltipContainer(this))
-          }
+        .on('mouseover', function (event, d) {
+          drawBolus.tooltip.add(d, utils.getTooltipContainer(this))
           highlight.on(d3.select(this))
         })
-        .on('mouseout', function(event, d) {
-          if (d.bolus) {
-            drawBolus.tooltip.remove(d)
-          }
+        .on('mouseout', function (event, d) {
+          drawBolus.tooltip.remove(d)
           highlight.off()
         })
     })

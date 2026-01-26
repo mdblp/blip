@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -89,12 +89,13 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
   const inputTime = (bolus as Wizard).inputTime
   const recommended = getRecommended(bolus as Wizard)
   const suggested = Number.isFinite(recommended) ? recommended : null
+  const isMealWithoutBolus = isWizard && carbs && !bolusData
 
   const rawOverride = programmed - recommended
   const override = formatInsulin(rawOverride)
   const overrideValue = programmed > recommended ? `+${override}` : override.toString()
-  const shouldDisplayOverride = Number.isFinite(programmed) && Number.isFinite(recommended) && Math.abs(rawOverride) >= MINIMAL_OVERRIDE
-  const shouldDisplayRecommended = (isInterrupted || shouldDisplayOverride) && suggested !== null
+  const shouldDisplayOverride = isWizard && !isMealWithoutBolus && Number.isFinite(programmed) && Number.isFinite(recommended) && Math.abs(rawOverride) >= MINIMAL_OVERRIDE
+  const shouldDisplayRecommended = isWizard && !isMealWithoutBolus && (isInterrupted || shouldDisplayOverride) && suggested !== null
 
   const getTitleByBolusType = (bolusType: BolusType): string => {
     switch (bolusType) {
@@ -168,11 +169,11 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
           {bolusSubType && bolusSubType !== BolusSubtype.Pen &&
             <TooltipLine label={t('bolus_type')} value={t(`bolus_${bolusSubType}`)} />
           }
-          {isWizard && (shouldDisplayOverride || shouldDisplayRecommended) && <div className={styles.dividerSmall} />}
-          {isWizard && shouldDisplayRecommended &&
+          {(shouldDisplayOverride || shouldDisplayRecommended) && <div className={styles.dividerSmall} />}
+          {shouldDisplayRecommended &&
             <TooltipLine label={t('Recommended')} value={formatInsulin(recommended)} units={insulinUnitLabel} isBold />
           }
-          {isWizard && shouldDisplayOverride &&
+          {shouldDisplayOverride &&
             <TooltipLine label={t('Override')} value={overrideValue} units={insulinUnitLabel} isBold
                          customColor={TooltipColor.Undelivered} />
           }
@@ -182,6 +183,12 @@ export const BolusTooltip: FunctionComponent<BolusTooltipProps> = (props) => {
           }
           {Number.isFinite(delivered) &&
             <TooltipLine label={t('Delivered')} value={formatInsulin(delivered)} units={insulinUnitLabel} isBold />
+          }
+          {isMealWithoutBolus &&
+            <>
+              <div className={styles.dividerSmall} />
+              <TooltipLine label={t('no-bolus-recommended')} isBold />
+            </>
           }
         </div>
       }

@@ -125,11 +125,7 @@ function drawBolus(pool, opts = {}) {
     carb: function(carbs) {
       const xPos = (d) => xPosition(d) + halfWidth
       const yScaleCarbs = (ci) => opts.yScaleCarbs ? opts.yScaleCarbs(ci) : opts.r
-      const yPos = (d) => {
-        const r = yScaleCarbs(d.carbInput)
-        const bolusValue = d.bolus ? commonbolus.getProgrammed(d) : 0
-        return opts.yScale(bolusValue) - r - (bolusValue ? opts.carbPadding : 0)
-      }
+      const yPos = opts.r + opts.carbPadding
 
       carbs.append('circle')
         .attr('cx', xPos)
