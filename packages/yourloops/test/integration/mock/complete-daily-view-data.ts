@@ -110,7 +110,8 @@ import {
   WIZARD_NEGATIVE_OVERRIDE_ID,
   WIZARD_POSITIVE_OVERRIDE_ID,
   WIZARD_UMM_ID,
-  WIZARD_UNDELIVERED_ID, WIZARD_WITHOUT_BOLUS_ID,
+  WIZARD_UNDELIVERED_ID,
+  WIZARD_WITHOUT_BOLUS_ID,
   ZEN_MODE_ID,
   ZEN_MODE_ID_WITH_GLY
 } from './data.api.mock'
@@ -1738,7 +1739,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "recommended": {
             "carb": 0,
             "correction": 0,
-            "net": 10.07
+            "net": 0
           },
           "isoWeekday": WeekDays.Thursday
         },

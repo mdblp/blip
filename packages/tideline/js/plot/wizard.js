@@ -69,7 +69,7 @@ function plotWizard(pool, opts = defaults) {
         .join('g')
         .classed('d3-wizard-group', true)
         .attr('id', d => `wizard_group_${d.id}`)
-        .attr('data-testid', d => `wizard_group_${d.id}`)
+        .attr('data-testid', d => `wizard_group_${d.id}`)<
         .sort((/** @type {Datum} */ a, /** @type {Datum} */ b) => {
           // Sort by size so smaller boluses are drawn last
           const bolusA = a.bolus ?? a
@@ -78,11 +78,11 @@ function plotWizard(pool, opts = defaults) {
         })
 
       // Filter for elements with carb input
-      const carbs = wizardGroups.filter(/** @type {Datum} */d => d.carbInput)
+      const carbs = wizardGroups.filter(/** @type {Datum} */ d => d.carbInput)
       drawBolus.carb(carbs)
 
       // Filter for elements with bolus data
-      const boluses = wizardGroups.filter(/** @type {Datum} */d => _.isObject(d.bolus))
+      const boluses = wizardGroups.filter(/** @type {Datum} */ d => _.isObject(d.bolus))
       drawBolus.bolus(boluses)
 
       // Filter for boluses where programmed differs from delivered
