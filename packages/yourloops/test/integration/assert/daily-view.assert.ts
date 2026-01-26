@@ -79,7 +79,7 @@ import {
   SMBG_ID,
   WARMUP_01_ID,
   WIZARD_LOW_OVERRIDE_ID,
-  WIZARD_LOW_OVERRIDE_INPUT_TIME,
+  WIZARD_INPUT_TIME,
   WIZARD_NEGATIVE_OVERRIDE_ID,
   WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME,
   WIZARD_POSITIVE_OVERRIDE_ID,
@@ -87,6 +87,7 @@ import {
   WIZARD_UMM_ID,
   WIZARD_UNDELIVERED_ID,
   WIZARD_UNDELIVERED_INPUT_TIME,
+  WIZARD_WITHOUT_BOLUS_ID,
   ZEN_MODE_ID,
   ZEN_MODE_ID_WITH_GLY
 } from '../mock/data.api.mock'
@@ -100,7 +101,7 @@ const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added to
 const AVG_GLUCOSE_BGM_TOOLTIP = 'Avg. Glucose (BGM): All BGM glucose values added together, divided by the number of readings.'
 const TOTAL_INSULIN_TOOLTIP = 'Total Delivered Insulin: All basal and bolus insulin delivery (in Units) added together.How we calculate this: (%) is the respective total of basal or bolus delivery divided by total insulin delivered for this time period.'
 const TIME_IN_LOOP_MODE_TOOLTIP = 'Time In Loop Mode: Time spent in automated basal delivery.How we calculate this: (%) is the duration in loop mode ON or OFF divided by the total duration of basals for this time period. (time) is the estimated time in each mode.'
-const TOTAL_CARBS_DECLARED_TOOLTIP = 'Total Carbs: All carb entries from meals or rescue carbs added together.Derived from 5 carb entries, including rescue carbs.'
+const TOTAL_CARBS_DECLARED_TOOLTIP = 'Total Carbs: All carb entries from meals or rescue carbs added together.Derived from 6 carb entries, including rescue carbs.'
 const STANDARD_DEVIATION_TOOLTIP = 'SD (Standard Deviation): How far values are from the average.'
 const STANDARD_DEVIATION_BGM_TOOLTIP = 'SD (Standard Deviation): How far values are from the average.Derived from 15 BGM readings.'
 const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
@@ -123,7 +124,8 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   expect(screen.queryByTestId(`wizard_group_${WIZARD_UMM_ID}`)).not.toBeInTheDocument()
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_POSITIVE_OVERRIDE_ID}`, `Meal8:45 pmCarbs100gEntered at ${moment(WIZARD_POSITIVE_OVERRIDE_INPUT_TIME).format('h:mm a')}IOB3.12ULoop modeBolus TypeStandardRecommended14.35UOverride+5.00UDelivered19.35U`)
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_NEGATIVE_OVERRIDE_ID}`, `Meal8:55 pmCarbs100gEntered at ${moment(WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME).format('h:mm a')}IOB3.06ULoop modeBolus TypeStandardRecommended10.05UOverride−1.0UDelivered9.05U`)
-  await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_LOW_OVERRIDE_ID}`, `Meal9:05 pmCarbs100gEntered at ${moment(WIZARD_LOW_OVERRIDE_INPUT_TIME).format('h:mm a')}IOB3.06ULoop modeBolus TypeStandardDelivered10.05U`)
+  await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_LOW_OVERRIDE_ID}`, `Meal9:05 pmCarbs100gEntered at ${moment(WIZARD_INPUT_TIME).format('h:mm a')}IOB3.06ULoop modeBolus TypeStandardDelivered10.05U`)
+  await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_WITHOUT_BOLUS_ID}`, `Meal9:10 pmCarbs30gEntered at ${moment(WIZARD_INPUT_TIME).format('h:mm a')}No bolus recommended`)
   await checkTidelineContainerElementTooltip(`bolus_pen_${PEN_BOLUS_ID}`, 'Pen9:55 pmDelivered4.05U')
   await checkTidelineContainerElementTooltip(`bolus_manual_${MANUAL_BOLUS_ID}`, 'Manual10:55 pmBolus TypeStandardDelivered5.05U')
   await checkTidelineContainerElementTooltip(`carb_group_${CARB_ID}`, '2:00 pmRecommended16gConfirmed15g')
@@ -213,6 +215,7 @@ export const checkDailyTidelineContainerTooltipsMmolL = async () => {
   expect(screen.queryByTestId(`wizard_group_${WIZARD_UMM_ID}`)).not.toBeInTheDocument()
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_POSITIVE_OVERRIDE_ID}`, `Meal8:45 pmCarbs100gEntered at ${moment(WIZARD_POSITIVE_OVERRIDE_INPUT_TIME).format('h:mm a')}IOB3.12ULoop modeBolus TypeStandardRecommended14.35UOverride+5.00UDelivered19.35U`)
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_NEGATIVE_OVERRIDE_ID}`, `Meal8:55 pmCarbs100gEntered at ${moment(WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME).format('h:mm a')}IOB3.06ULoop modeBolus TypeStandardRecommended10.05UOverride−1.0UDelivered9.05U`)
+  await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_WITHOUT_BOLUS_ID}`, `Meal9:10 pmCarbs30gEntered at ${moment(WIZARD_INPUT_TIME).format('h:mm a')}No bolus recommended`)
   await checkTidelineContainerElementTooltip(`carb_group_${CARB_ID}`, 'Rescue carbs2:00 pmRecommended16gConfirmed15g')
   await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_ID}`, `Physical Activity3:00 pmNameRunningIntensitymoderateDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_TIME).format('h')}:00 pm`)
   await checkTidelineContainerElementTooltip(`reservoir_group_${RESERVOIR_CHANGE_ID}`, 'Pump7:00 pmCartridge change')
@@ -328,7 +331,7 @@ export const checkDailyTimeInRangeStatsWidgetsMmolL = async () => {
 
 export const checkTotalCarbsStatContent = async () => {
   const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
-  expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Total of declared carbs360gMeal carbs345gRescue carbs15g')
+  expect(patientStatistics.getByTestId('total-carbs-stat')).toHaveTextContent('Total of declared carbs390gMeal carbs375gRescue carbs15g')
 }
 
 export const checkTimeChangeIndicator = async () => {

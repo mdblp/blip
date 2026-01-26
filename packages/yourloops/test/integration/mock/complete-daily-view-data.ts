@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, Diabeloop
+ * Copyright (c) 2024-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -110,7 +110,7 @@ import {
   WIZARD_NEGATIVE_OVERRIDE_ID,
   WIZARD_POSITIVE_OVERRIDE_ID,
   WIZARD_UMM_ID,
-  WIZARD_UNDELIVERED_ID,
+  WIZARD_UNDELIVERED_ID, WIZARD_WITHOUT_BOLUS_ID,
   ZEN_MODE_ID,
   ZEN_MODE_ID_WITH_GLY
 } from './data.api.mock'
@@ -1708,6 +1708,29 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "bolusId": WIZARD_BOLUS_LOW_OVERRIDE_ID,
           "bolusIds": new Set([WIZARD_BOLUS_LOW_OVERRIDE_ID]),
           "carbInput": 100,
+          "units": "mmol/L",
+          "bolus": null,
+          "bolusPart2": null,
+          "inputTime": "2022-08-08T22:45:00Z",
+          "recommended": {
+            "carb": 0,
+            "correction": 0,
+            "net": 10.07
+          },
+          "isoWeekday": WeekDays.Thursday
+        },
+        {
+          "epoch": 1659984400000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T19:10:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": WIZARD_WITHOUT_BOLUS_ID,
+          "type": DatumType.Wizard,
+          "source": Source.Diabeloop,
+          "bolusId": "",
+          "bolusIds": new Set([]),
+          "carbInput": 30,
           "units": "mmol/L",
           "bolus": null,
           "bolusPart2": null,

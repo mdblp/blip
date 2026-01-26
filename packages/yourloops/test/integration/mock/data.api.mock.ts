@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -67,6 +67,7 @@ export const WIZARD_UMM_ID = 'wizardId2'
 export const WIZARD_POSITIVE_OVERRIDE_ID = 'wizardId3'
 export const WIZARD_NEGATIVE_OVERRIDE_ID = 'wizardId4'
 export const WIZARD_LOW_OVERRIDE_ID = 'wizardId5'
+export const WIZARD_WITHOUT_BOLUS_ID = 'wizardId6'
 export const CARB_ID = 'carbId'
 export const PHYSICAL_ACTIVITY_ID = 'physicalActivityId'
 export const PHYSICAL_ACTIVITY_WITHOUT_NAME_ID = 'physicalActivityId2'
@@ -122,9 +123,8 @@ export const BASAL_MANUAL_ID = 'basalManualId'
 export const WIZARD_UNDELIVERED_INPUT_TIME = '2022-08-08T02:00:00Z'
 export const WIZARD_POSITIVE_OVERRIDE_INPUT_TIME = '2022-08-08T22:45:00Z'
 export const WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME = '2022-08-08T23:15:00Z'
-export const WIZARD_LOW_OVERRIDE_INPUT_TIME = '2022-08-08T22:45:00Z'
+export const WIZARD_INPUT_TIME = '2022-08-08T22:45:00Z'
 export const YESTERDAY_DATE: Moment = moment().subtract(1, 'days')
-export const RESERVOIR_CHANGE_TODAY_DATE: Moment = moment()
 export const TWO_WEEKS_AGO_DATE: Moment = moment().subtract(14, 'days')
 export const RESERVOIR_CHANGE_13_DAYS_AGO_DATE: Moment = moment().subtract(13, 'days')
 export const SIXTEEN_DAYS_AGO_DATE: Moment = moment().subtract(16, 'days')
