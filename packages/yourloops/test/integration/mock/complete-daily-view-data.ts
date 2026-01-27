@@ -38,7 +38,7 @@ import {
   Prescriptor,
   PumpManufacturer,
   Source,
-  Unit,
+  Unit, Wizard,
   WizardInputMealFat,
   WizardInputMealSource
 } from 'medical-domain'
@@ -194,6 +194,31 @@ export const getCompleteDailyViewDataDblg2 = (deviceName: DeviceSystem = DeviceS
     isoWeekday: WeekDays.Friday,
     source: Source.Diabeloop,
   }]
+
+  const mealWithoutBolus: Wizard = {
+      "epoch": 1659984400000,
+      "displayOffset": -120,
+      "normalTime": "2022-08-08T19:10:00.000Z",
+      "timezone": "Europe/Paris",
+      "guessedTimezone": false,
+      "id": WIZARD_WITHOUT_BOLUS_ID,
+      "type": DatumType.Wizard,
+      "source": Source.Diabeloop,
+      "bolusId": "",
+      "bolusIds": new Set([]),
+      "carbInput": 30,
+      "units": "mmol/L",
+      "bolus": null,
+      "bolusPart2": null,
+      "inputTime": "2022-08-08T22:45:00Z",
+      "recommended": {
+        "carb": 0,
+        "correction": 0,
+        "net": 0
+      },
+      "isoWeekday": WeekDays.Thursday
+    }
+    data.wizards = [...data.wizards, mealWithoutBolus]
 
   return completeData
 }
@@ -1719,30 +1744,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
             "net": 10.07
           },
           "isoWeekday": WeekDays.Thursday
-        },
-        {
-          "epoch": 1659984400000,
-          "displayOffset": -120,
-          "normalTime": "2022-08-08T19:10:00.000Z",
-          "timezone": "Europe/Paris",
-          "guessedTimezone": false,
-          "id": WIZARD_WITHOUT_BOLUS_ID,
-          "type": DatumType.Wizard,
-          "source": Source.Diabeloop,
-          "bolusId": "",
-          "bolusIds": new Set([]),
-          "carbInput": 30,
-          "units": "mmol/L",
-          "bolus": null,
-          "bolusPart2": null,
-          "inputTime": "2022-08-08T22:45:00Z",
-          "recommended": {
-            "carb": 0,
-            "correction": 0,
-            "net": 0
-          },
-          "isoWeekday": WeekDays.Thursday
-        },
+        }
       ],
       zenModes: [
         {
