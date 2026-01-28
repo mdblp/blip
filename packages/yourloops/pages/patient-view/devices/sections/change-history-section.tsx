@@ -43,7 +43,7 @@ export const ChangeHistorySection: FC<ChangeHistorySectionProps> = (props) => {
   const { goToDailySpecificDate, pumpSettings } = props
   const theme = useTheme()
   const { t } = useTranslation()
-  const history = pumpSettings.payload.history
+  const history = pumpSettings.payload.history.parameters
   const timezone = pumpSettings.timezone
 
   return (

@@ -81,7 +81,7 @@ export const LastUpdatesCard: FC<LastUpdatesCardProps> = (props) => {
       >
         <Table>
           <TableBody className={classes.sectionContent}>
-            {pumpSettings && getPumpSettingsParameterList(pumpSettings.payload.history).map((parameter) => (
+            {pumpSettings && getPumpSettingsParameterList(pumpSettings.payload.history.parameters).map((parameter) => (
               <TableRow
                 key={`${parameter.name}-${parameter.effectiveDate}-${parameter.previousValue}`}
                 data-param={parameter.name}

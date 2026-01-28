@@ -48,7 +48,7 @@ export const DevicesColumn: FC<DeviceUsageWidgetProps> = (props) => {
   } = GlycemiaStatisticsService.getSensorUsage(medicalDataService.medicalData.cbg, dateFilter)
 
   if (pumpSettings) {
-    sortHistory(pumpSettings.payload.history)
+    sortHistory(pumpSettings.payload.history.parameters)
   }
 
   return (

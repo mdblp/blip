@@ -575,7 +575,7 @@ class MedicalDataService {
     this.medicalData.pumpSettings = this.medicalData.pumpSettings.map((pumpSettings: PumpSettings) => {
       pumpSettings.payload.parameters = this.removeExcludedParameters(pumpSettings.payload.parameters)
 
-      pumpSettings.payload.history = pumpSettings.payload.history.map((historyItem: ParametersChange) => {
+      pumpSettings.payload.history.parameters = pumpSettings.payload.history.parameters.map((historyItem: ParametersChange) => {
         historyItem.parameters = this.removeExcludedParameters(historyItem.parameters) as PumpSettingsParameter[]
         return historyItem
       })
