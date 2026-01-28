@@ -288,7 +288,7 @@ export class PumpSettings extends Common {
     this.deviceTime = opts.deviceTime
     this.deviceId = dblDevice.deviceId
     this.payload = _.cloneDeep(dblDevice.payload)
-    this.payload.history = _.cloneDeep(dblParamHistory.history)
+    this.payload.history.parameters = _.cloneDeep(dblParamHistory.history.parameters)
 
     this.deviceTime = opts.deviceTime
     this.time = this.makeTime()

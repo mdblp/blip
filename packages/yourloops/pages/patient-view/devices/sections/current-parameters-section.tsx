@@ -72,7 +72,7 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
 
   sortParameterList(parameters)
   formatParameters(parameters)
-  sortHistory(history)
+  sortHistory(history.parameters) // TODO: ask why ?
 
   return (
     <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="current-parameters-section">
