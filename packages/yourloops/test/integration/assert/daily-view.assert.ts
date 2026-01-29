@@ -79,7 +79,7 @@ import {
   SMBG_ID,
   WARMUP_01_ID,
   WIZARD_LOW_OVERRIDE_ID,
-  WIZARD_LOW_OVERRIDE_INPUT_TIME,
+  WIZARD_INPUT_TIME,
   WIZARD_NEGATIVE_OVERRIDE_ID,
   WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME,
   WIZARD_POSITIVE_OVERRIDE_ID,
@@ -87,6 +87,7 @@ import {
   WIZARD_UMM_ID,
   WIZARD_UNDELIVERED_ID,
   WIZARD_UNDELIVERED_INPUT_TIME,
+  WIZARD_WITHOUT_BOLUS_ID,
   ZEN_MODE_ID,
   ZEN_MODE_ID_WITH_GLY
 } from '../mock/data.api.mock'
@@ -123,7 +124,7 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   expect(screen.queryByTestId(`wizard_group_${WIZARD_UMM_ID}`)).not.toBeInTheDocument()
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_POSITIVE_OVERRIDE_ID}`, `Meal8:45 pmCarbs100gEntered at ${moment(WIZARD_POSITIVE_OVERRIDE_INPUT_TIME).format('h:mm a')}IOB3.12ULoop modeBolus TypeStandardRecommended14.35UOverride+5.00UDelivered19.35U`)
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_NEGATIVE_OVERRIDE_ID}`, `Meal8:55 pmCarbs100gEntered at ${moment(WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME).format('h:mm a')}IOB3.06ULoop modeBolus TypeStandardRecommended10.05UOverride−1.0UDelivered9.05U`)
-  await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_LOW_OVERRIDE_ID}`, `Meal9:05 pmCarbs100gEntered at ${moment(WIZARD_LOW_OVERRIDE_INPUT_TIME).format('h:mm a')}IOB3.06ULoop modeBolus TypeStandardDelivered10.05U`)
+  await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_LOW_OVERRIDE_ID}`, `Meal9:05 pmCarbs100gEntered at ${moment(WIZARD_INPUT_TIME).format('h:mm a')}IOB3.06ULoop modeBolus TypeStandardDelivered10.05U`)
   await checkTidelineContainerElementTooltip(`bolus_pen_${PEN_BOLUS_ID}`, 'Pen9:55 pmDelivered4.05U')
   await checkTidelineContainerElementTooltip(`bolus_manual_${MANUAL_BOLUS_ID}`, 'Manual10:55 pmBolus TypeStandardDelivered5.05U')
   await checkTidelineContainerElementTooltip(`carb_group_${CARB_ID}`, '2:00 pmRecommended16gConfirmed15g')
@@ -202,6 +203,7 @@ export const checkDailyTidelineContainerTooltipsDblg2 = async () => {
   await checkTidelineContainerElementTooltip(`iob_${IOB_ID}`,'Active insulin5:30 pmInsulin on board (IOB)Insulin25.00U')
   await checkTidelineContainerElementTooltip(`bolus_eating_shortly_${EATING_SHORTLY_BOLUS_ID}`, 'Meal5:30 pmMeal without carb countingLoop modeBolus TypeStandardDelivered0.5U')
   await checkTidelineContainerElementTooltip(`eating_shortly_event_${EATING_SHORTLY_EVENT_ID}`, 'Meal5:30 pmMeal without carb counting')
+  await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_WITHOUT_BOLUS_ID}`, `Meal9:10 pmCarbs30gEntered at ${moment(WIZARD_INPUT_TIME).format('h:mm a')}No bolus recommended`)
 }
 
 export const checkDailyTidelineContainerTooltipsMmolL = async () => {
