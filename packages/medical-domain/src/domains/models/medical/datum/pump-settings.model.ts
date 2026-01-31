@@ -106,7 +106,7 @@ interface MobileAppConfig {
   swVersion:string
 }
 
-export interface DeviceHistoryChange {
+interface DeviceHistoryChange {
   changeType: ChangeType
   effectiveDate: string
   name: string
@@ -139,4 +139,4 @@ interface PumpSettings extends BaseDatum {
   }
 }
 
-export type { CgmConfig, DeviceConfig, ParametersChange, DeviceHistory, PumpConfig, ParameterConfig, PumpSettings, SecurityBasalConfig, SecurityBasalRate, MobileAppConfig }
+export type { CgmConfig, DeviceConfig, DeviceHistory,DeviceHistoryChange , ParametersChange, PumpConfig, ParameterConfig, PumpSettings, SecurityBasalConfig, SecurityBasalRate, MobileAppConfig }

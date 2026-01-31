@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,11 +24,33 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import { type DeviceHistoryChange } from 'medical-domain'
+import React, { FC } from 'react'
+import { useTheme } from '@mui/material/styles'
+import Box from '@mui/material/Box'
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
 
+interface DeviceChangeValueProps {
+  device: DeviceHistoryChange
+}
 
-export enum DeviceViewSection {
-  ChangeHistory = 'ChangeHistory',
-  CurrentParameters = 'CurrentParameters',
-  DeviceChangeHistory = 'DeviceChangeHistory',
-  SafetyBasalProfile = 'SafetyBasalProfile'
+export const DeviceChangeValue: FC<DeviceChangeValueProps> = ({ device }) => {
+  const theme = useTheme()
+
+  return (
+    <Box
+      className={`${device.name} ${device.previousValue ? 'updated-value' : 'added-value'}`}
+      sx={{
+        display: "flex",
+        alignItems: "center"
+      }}>
+      {device.previousValue &&
+        <>
+          <span>{`${device.previousValue}`}</span>
+          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
+        </>
+      }
+      <span>{`${device.value}`}</span>
+    </Box>
+  )
 }
