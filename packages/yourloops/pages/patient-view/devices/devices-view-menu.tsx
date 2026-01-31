@@ -107,6 +107,17 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
             </ListItemIcon>
             <ListItemText className={classes.menuItemText}>{t('change-history')}</ListItemText>
           </MenuItem>
+          <MenuItem
+            selected={selectedSection === DeviceViewSection.DeviceChangeHistory}
+            onClick={() => selectSection(DeviceViewSection.DeviceChangeHistory)}
+            sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
+            data-testid="device-change-history-menu-button"
+          >
+            <ListItemIcon>
+              <History fontSize="small" />
+            </ListItemIcon>
+            <ListItemText className={classes.menuItemText}>{t('device-change-history')}</ListItemText>
+          </MenuItem>
         </MenuList>
       </CardContent>
     </Card>
