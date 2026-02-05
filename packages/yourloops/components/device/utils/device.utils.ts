@@ -26,7 +26,7 @@
  */
 
 import {
-  type DeviceConfig, DeviceSystem, MobileAppConfig,
+  type DeviceConfig, DeviceHistory, DeviceSystem, MobileAppConfig,
   type ParameterConfig,
   type ParametersChange,
   type PumpSettingsParameter,
@@ -166,6 +166,50 @@ export const sortHistory = (history: ParametersChange[]): void => {
   sortHistoryParametersByDate(history)
   sortPumpSettingsParametersByDate(history)
   sortPumpSettingsParametersByLevel(history)
+}
+
+const sortDeviceHistoryChangeByChangeDate = (deviceHistoryChanges: DeviceHistory[]): DeviceHistory[] => {
+  return deviceHistoryChanges.sort((a, b) => {
+    return new Date(b.changeDate).valueOf() - new Date(a.changeDate).valueOf()
+  })
+}
+
+const sortDeviceHistoryChangeByEffectiveDate = (history: DeviceHistory[]): void => {
+  history.forEach((deviceChange) => {
+    deviceChange.devices.sort((deviceA, deviceB) => {
+      return sortByDate(deviceA.effectiveDate, deviceB.effectiveDate)
+    })
+  })
+}
+
+export const sortDeviceChangeHistory = (history: DeviceHistory[]): void => {
+  sortDeviceHistoryChangeByChangeDate(history)
+  sortDeviceHistoryChangeByEffectiveDate(history)
+}
+
+export const getTranslationKeyForDeviceChange = (deviceChangeName: string): string => {
+  switch (deviceChangeName) {
+    case "HANDSET_IMEI":
+      return "device-change-handset-imei"
+    case "HANDSET_NAME":
+      return "device-change-handset-name"
+    case "HANDSET_SW_VERSION":
+      return "device-change-handset-sw-version"
+    case "SMARTPHONE_MODEL":
+      return "device-change-smartphone-model"
+    case "CGM_NAME":
+      return "device-change-cgm-name"
+    case "CGM_MANUFACTURER":
+      return "device-change-cgm-manufacturer"
+    case "PUMP_MANUFACTURER":
+      return "device-change-pump-manufacturer"
+    case "PUMP_NAME":
+      return "device-change-pump-name"
+    case "MOBILE_APP_VERSION":
+      return "device-change-mobile-app-version"
+    case "MOBILE_APP_ACTIVATION_CODE":
+      return "device-change-mobile-app-activation-code"
+  }
 }
 
 export const sortParameterList = (parameters: ParameterConfig[]): void => {

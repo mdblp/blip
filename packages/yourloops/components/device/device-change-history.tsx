@@ -39,7 +39,6 @@ export const DeviceChangeValue: FC<DeviceChangeValueProps> = ({ device }) => {
 
   return (
     <Box
-      className={`${device.name} ${device.previousValue ? 'updated-value' : 'added-value'}`}
       sx={{
         display: "flex",
         alignItems: "center"
