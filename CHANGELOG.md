@@ -3,6 +3,9 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.9.0-beta - 2026-03-12
+### Added
+- YLP-3617 As a user, I can see the devices changes history
+
 ### Changed
 - YLP-3618 Meal without bolus management in Daily view
 
