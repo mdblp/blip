@@ -45,6 +45,9 @@ import { formatDateWithMomentLongFormat, isEllipsisActive } from '../../lib/util
 import { CustomChangeChip } from './custom-change-chip'
 import { ParameterChangeValue } from './parameter-change-value'
 import classes from './device.css'
+import {
+  sortHistory
+} from './utils/device.utils'
 import Tooltip from '@mui/material/Tooltip'
 
 interface ParametersChangeHistoryProps {
@@ -61,6 +64,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
     goToDailySpecificDate(date)
     window.scroll(0, 0)
   }
+  sortHistory(history)
 
   return (
     <Card variant="outlined" data-testid="history-parameter-table">
