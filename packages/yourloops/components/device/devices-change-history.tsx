@@ -37,12 +37,15 @@ import { useTranslation } from 'react-i18next'
 import Typography from '@mui/material/Typography'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Box from '@mui/material/Box'
-import { PARAMETER_STRING_MAX_WIDTH } from './utils/device.utils'
+import {
+  getTranslationKeyForDeviceChange,
+  PARAMETER_STRING_MAX_WIDTH,
+  sortDeviceChangeHistory
+} from './utils/device.utils'
 import { type DeviceHistory } from 'medical-domain'
 import IconButton from '@mui/material/IconButton'
 import { useTheme } from '@mui/material/styles'
 import { formatDateWithMomentLongFormat, isEllipsisActive } from '../../lib/utils'
-import { ParameterChangeValue } from './parameter-change-value'
 import classes from './device.css'
 import Tooltip from '@mui/material/Tooltip'
 import { DeviceChangeValue } from './device-change-history'
@@ -61,6 +64,8 @@ export const DevicesChangeHistory: FC<DevicesChangeHistoryProps> = ({ history, g
     goToDailySpecificDate(date)
     window.scroll(0, 0)
   }
+
+  sortDeviceChangeHistory(history)
 
   return (
     <Card variant="outlined" data-testid="device-history-table">
@@ -108,7 +113,7 @@ export const DevicesChangeHistory: FC<DevicesChangeHistoryProps> = ({ history, g
                 {DevicesChange.devices.map((device, index) => (
                   <TableRow
                     key={`${device.effectiveDate}-${index}`}
-                    data-testid={`Devices-group-${DevicesChange.changeDate.substring(0, 10)}-${historyCurrentIndex}-rows-${index}`}
+                    data-testid={`devices-group-${DevicesChange.changeDate.substring(0, 10)}-${historyCurrentIndex}-rows-${index}`}
                     className={`${classes.parameterRow} parameter-change-row`}
                   >
                     <TableCell>
@@ -121,7 +126,7 @@ export const DevicesChangeHistory: FC<DevicesChangeHistoryProps> = ({ history, g
                             maxWidth: PARAMETER_STRING_MAX_WIDTH
                           }}
                         >
-                          {t(`params|${device.name}`)}
+                          {t(`${getTranslationKeyForDeviceChange(device.name)}`)}
                         </Typography>
                       </Tooltip>
                     </TableCell>
