@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,6 +30,7 @@ import type PumpManufacturer from './enums/pump-manufacturer.enum'
 import { type DatumType } from './enums/datum-type.enum'
 import type Unit from './enums/unit.enum'
 import { DeviceSystem } from './enums/device-system.enum'
+import { DblParameter } from './enums/dbl-parameter.enum'
 
 export enum ChangeType {
   Added = 'added',
@@ -62,7 +63,7 @@ export interface PumpSettingsParameter {
   changeType: ChangeType
   effectiveDate: string
   level: number
-  name: string
+  name: DblParameter
   unit: Unit
   value: string
   previousUnit?: Unit
@@ -85,7 +86,7 @@ interface PumpConfig {
 interface ParameterConfig {
   effectiveDate: string
   level: number
-  name: string
+  name: DblParameter
   unit: Unit
   value: string
 }

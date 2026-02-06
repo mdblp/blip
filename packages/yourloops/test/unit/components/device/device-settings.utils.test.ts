@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -64,6 +64,7 @@ describe('Device settings utils', () => {
         { name: 'LARGE_MEAL_LUNCH' },
         { name: 'BOLUS_AGGRESSIVENESS_FACTOR' },
         { name: 'SMALL_MEAL_LUNCH' },
+        { name: 'HEIGHT' },
         { name: 'LARGE_MEAL_BREAKFAST' },
         { name: 'MEAL_RATIO_BREAKFAST_FACTOR' },
         { name: 'LARGE_MEAL_DINNER' },
@@ -73,25 +74,26 @@ describe('Device settings utils', () => {
       ]
 
       const expectedResult = [
-        { name: 'MEDIUM_MEAL_BREAKFAST' },
-        { name: 'MEDIUM_MEAL_LUNCH' },
-        { name: 'MEDIUM_MEAL_DINNER' },
         { name: 'TOTAL_INSULIN_FOR_24H' },
-        { name: 'WEIGHT' },
-        { name: 'PATIENT_GLY_HYPER_LIMIT' },
-        { name: 'PATIENT_GLY_HYPO_LIMIT' },
         { name: 'PATIENT_GLYCEMIA_TARGET' },
         { name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA' },
         { name: 'BOLUS_AGGRESSIVENESS_FACTOR' },
         { name: 'MEAL_RATIO_BREAKFAST_FACTOR' },
         { name: 'MEAL_RATIO_LUNCH_FACTOR' },
         { name: 'MEAL_RATIO_DINNER_FACTOR' },
+        { name: 'PATIENT_GLY_HYPO_LIMIT' },
+        { name: 'PATIENT_GLY_HYPER_LIMIT' },
+        { name: 'MEDIUM_MEAL_BREAKFAST' },
+        { name: 'MEDIUM_MEAL_LUNCH' },
+        { name: 'MEDIUM_MEAL_DINNER' },
         { name: 'SMALL_MEAL_BREAKFAST' },
-        { name: 'LARGE_MEAL_BREAKFAST' },
         { name: 'SMALL_MEAL_LUNCH' },
-        { name: 'LARGE_MEAL_LUNCH' },
         { name: 'SMALL_MEAL_DINNER' },
-        { name: 'LARGE_MEAL_DINNER' }
+        { name: 'LARGE_MEAL_BREAKFAST' },
+        { name: 'LARGE_MEAL_LUNCH' },
+        { name: 'LARGE_MEAL_DINNER' },
+        { name: 'WEIGHT' },
+        { name: 'HEIGHT' }
       ]
 
       sortParameterList(parameterList as ParameterConfig[])

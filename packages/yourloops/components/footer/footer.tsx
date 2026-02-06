@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -47,6 +47,7 @@ import AccompanyingDocumentLinks from './accompanying-document-links'
 import { type AppRoute } from '../../models/enums/routes.enum'
 import { getCurrentLang } from '../../lib/language'
 import { LanguageCodes } from '../../lib/auth/models/enums/language-codes.enum'
+import { ExternalFilesService } from '../../lib/external-files/external-files.service'
 
 export const footerStyle = makeStyles({ name: 'footer-component-styles' })((theme) => {
   return {
@@ -226,6 +227,11 @@ export const Footer: FunctionComponent = () => {
   const currentLanguage = getCurrentLang()
   const shouldDisplayMedicalDeviceWarning = currentLanguage === LanguageCodes.Ja
 
+  const cookiesPolicyUrl = ExternalFilesService.getCookiesPolicyUrl()
+  const privacyPolicyUrl = ExternalFilesService.getPrivacyPolicyUrl()
+  const termsOfUseUrl = ExternalFilesService.getTermsOfUseUrl()
+  const releaseNotesUrl = ExternalFilesService.getReleaseNotesUrl()
+
   const handleShowCookieBanner = (): void => {
     if (typeof window.openAxeptioCookies === 'function') {
       window.openAxeptioCookies()
@@ -267,7 +273,7 @@ export const Footer: FunctionComponent = () => {
         <Link
           id="footer-link-url-privacy-policy"
           target="_blank"
-          href={diabeloopExternalUrls.privacyPolicy}
+          href={privacyPolicyUrl}
           rel="nofollow"
           onClick={metricsPdfDocument('privacy_policy')}
           className={classes.link}
@@ -278,7 +284,7 @@ export const Footer: FunctionComponent = () => {
         <Link
           id="footer-link-url-terms"
           target="_blank"
-          href={diabeloopExternalUrls.terms}
+          href={termsOfUseUrl}
           rel="nofollow"
           onClick={metricsPdfDocument('terms')}
           className={classes.link}
@@ -297,7 +303,7 @@ export const Footer: FunctionComponent = () => {
         <Link
           id="footer-link-url-cookies-policy"
           target="_blank"
-          href={diabeloopExternalUrls.cookiesPolicy}
+          href={cookiesPolicyUrl}
           rel="nofollow"
           onClick={metricsPdfDocument('yourloops-cookiepolicy')}
           className={classes.link}
@@ -326,7 +332,7 @@ export const Footer: FunctionComponent = () => {
             <Link
               data-testid="footer-link-url-release-notes"
               target="_blank"
-              href={diabeloopExternalUrls.releaseNotes}
+              href={releaseNotesUrl}
               rel="nofollow"
               onClick={metricsPdfDocument('release_notes')}
               className={`${classes.link} ${classes.appVersionLink}`}

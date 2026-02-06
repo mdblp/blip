@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,11 +39,11 @@ import CardContent from '@mui/material/CardContent'
 import Container from '@mui/material/Container'
 import { makeStyles } from 'tss-react/mui'
 import Link from '@mui/material/Link'
-import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { setPageTitle } from '../../lib/utils'
 import { UserAccount } from '../../lib/auth/models/user-account.model'
+import { ExternalFilesService } from '../../lib/external-files/external-files.service'
 
 const style = makeStyles({ name: 'ylp-training-page' })((theme) => {
   return {
@@ -89,6 +89,8 @@ export const TrainingPage: FC = () => {
   const { classes } = style()
   const [trainingOpened, setTrainingOpened] = useState(false)
   const [checked, setChecked] = useState(false)
+
+  const trainingUrl = ExternalFilesService.getTrainingUrl(user?.role)
 
   const ackTraining = (): void => {
     const now = new Date().toISOString()
@@ -157,7 +159,7 @@ export const TrainingPage: FC = () => {
                   </Button>
                   : <Link
                     underline="none"
-                    href={diabeloopExternalUrls.training(user?.role)}
+                    href={trainingUrl}
                     target="_blank"
                     rel="noreferrer"
                   >
