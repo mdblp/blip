@@ -37,7 +37,7 @@ import { useTranslation } from 'react-i18next'
 import Typography from '@mui/material/Typography'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Box from '@mui/material/Box'
-import { PARAMETER_STRING_MAX_WIDTH } from './utils/device.utils'
+import { PARAMETER_STRING_MAX_WIDTH, sortHistory } from './utils/device.utils'
 import { type ParametersChange } from 'medical-domain'
 import IconButton from '@mui/material/IconButton'
 import { useTheme } from '@mui/material/styles'
@@ -45,9 +45,6 @@ import { formatDateWithMomentLongFormat, isEllipsisActive } from '../../lib/util
 import { CustomChangeChip } from './custom-change-chip'
 import { ParameterChangeValue } from './parameter-change-value'
 import classes from './device.css'
-import {
-  sortHistory
-} from './utils/device.utils'
 import Tooltip from '@mui/material/Tooltip'
 
 interface ParametersChangeHistoryProps {
