@@ -317,7 +317,7 @@ const ignoredTransKeyForYourLoops = [
   'other',
   'device-change-history',
   'device-change-handset-imei',
-  'device-change-handset-name',
+  'device-change-handset-device-id',
   'device-change-handset-sw-version',
   'device-change-smartphone-model',
   'device-change-cgm-name',

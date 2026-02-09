@@ -191,8 +191,8 @@ export const getTranslationKeyForDeviceChange = (deviceChangeName: string): stri
   switch (deviceChangeName) {
     case "HANDSET_IMEI":
       return "device-change-handset-imei"
-    case "HANDSET_NAME":
-      return "device-change-handset-name"
+    case "HANDSET_DEVICE_ID":
+      return "device-change-handset-device-id"
     case "HANDSET_SW_VERSION":
       return "device-change-handset-sw-version"
     case "SMARTPHONE_MODEL":

@@ -261,7 +261,7 @@
   "devices-and-current-parameters": "Devices and current settings",
   "device-change-history": "Devices change history",
   "device-change-handset-imei": "IMEI",
-  "device-change-handset-name": "Handset",
+  "device-change-handset-device-id": "Handset",
   "device-change-handset-sw-version": "Software version",
   "device-change-smartphone-model": "Smartphone model",
   "device-change-cgm-name": "Cgm product",
