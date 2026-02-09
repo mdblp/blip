@@ -127,7 +127,12 @@ export const ParameterList: FC<ParameterListProps> = ({ parameters }) => {
                   {isHcp &&
                     <TableCell align="center" padding="none">
                       {hasMemo(parameter.name) &&
-                        <IconButton color="primary" aria-label={t('parameter-info-open', { parameterName: parameter.name })} onClick={() => selectParameter(parameter)}>
+                        <IconButton
+                          color="primary"
+                          aria-label={t('parameter-info-open', { parameterName: parameter.name })}
+                          data-testid={`parameter-info-button-${parameter.name}`}
+                          onClick={() => selectParameter(parameter)}
+                        >
                           <InfoOutline />
                         </IconButton>
                       }
