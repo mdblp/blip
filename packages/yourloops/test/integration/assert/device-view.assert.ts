@@ -50,7 +50,82 @@ export const checkCurrentParametersContent = () => {
 export const checkG2CurrentParametersContent = () => {
   const deviceSettings = screen.getByTestId('current-parameters-section')
   const date = moment.tz(pumpSettingsData.data.pumpSettings[0].normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
-  expect(deviceSettings).toHaveTextContent(`Devices and current settingsLast update: ${date}Copy as textMobile applicationManufacturerDiabeloopNameDBLG2Software version1.0.0Activation code123 - 456 - 789Identifieree2bfb587758Smartphone modelA25Smartphone OS version14PumpManufacturerVICENTRAProducttestPumpSerial number123456Pump versionbetaCGMManufacturerDexcomProductG6Sensor expirationApr 12, 2050Transmitter software versionv1Transmitter IDa1234Transmitter expirationApr 12, 2050SettingValueUnitTotal Daily Insulin53.0UTarget glucose level110.0mg/dLAggressiveness in normoglycemia100%Aggressiveness in hyperglycemia100%Aggressiveness for breakfast100%Aggressiveness for lunch100%Aggressiveness for dinner80%Hypoglycemia threshold75.0mg/dLHyperglycemia threshold180.0mg/dLBreakfast - average36.0gLunch - average96.0gDinner - average96.0gBreakfast - small18.0gLunch - small48.0gDinner - small48.0gBreakfast - large54.0gLunch - large144.0gDinner - large144.0gWeight72.0kg`)
+  expect(deviceSettings).toHaveTextContent(`Devices and current settingsLast update: ${date}Copy as textMobile applicationManufacturerDiabeloopNameDBLG2Software version1.0.0Activation code123 - 456 - 789Identifieree2bfb587758Smartphone modelA25Smartphone OS version14PumpManufacturerVICENTRAProducttestPumpSerial number123456Pump versionbetaCGMManufacturerDexcomProductG6Sensor expirationApr 12, 2050Transmitter software versionv1Transmitter IDa1234Transmitter expirationApr 12, 2050SettingValueUnitTotal Daily Insulin53.0UTarget glucose level110.0mg/dLAggressiveness in normoglycemia100%Aggressiveness in hyperglycemia100%Aggressiveness for breakfast100%Aggressiveness for lunch100%Aggressiveness for dinner80%Hypoglycemia threshold75.0mg/dLHyperglycemia threshold180.0mg/dLBreakfast - average36.0gLunch - average96.0gDinner - average96.0gBreakfast - small18.0gLunch - small48.0gDinner - small48.0gBreakfast - large54.0gLunch - large144.0gDinner - large144.0gWeight72.0kgHeight174cm`)
+}
+
+export const checkParametersMemo = async () => {
+  const currentParametersSection = screen.getByTestId('current-parameters-section')
+
+  const totalDailyInsulinMemoButton = within(currentParametersSection).getByRole('button', { name: 'Open TOTAL_INSULIN_FOR_24H setting information' })
+  expect(totalDailyInsulinMemoButton).toBeVisible()
+  const targetGlucoseLevelMemoButton = within(currentParametersSection).getByRole('button', { name: 'Open PATIENT_GLYCEMIA_TARGET setting information' })
+  expect(targetGlucoseLevelMemoButton).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open BOLUS_AGGRESSIVENESS_FACTOR setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open MEAL_RATIO_BREAKFAST_FACTOR setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open MEAL_RATIO_LUNCH_FACTOR setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open MEAL_RATIO_DINNER_FACTOR setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open PATIENT_GLY_HYPO_LIMIT setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open PATIENT_GLY_HYPER_LIMIT setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open MEDIUM_MEAL_BREAKFAST setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open MEDIUM_MEAL_LUNCH setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open MEDIUM_MEAL_DINNER setting information' })).toBeVisible()
+
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open SMALL_MEAL_BREAKFAST setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open SMALL_MEAL_LUNCH setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open SMALL_MEAL_DINNER setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open LARGE_MEAL_BREAKFAST setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open LARGE_MEAL_LUNCH setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open LARGE_MEAL_DINNER setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open WEIGHT setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open HEIGHT setting information' })).not.toBeInTheDocument()
+
+  await userEvent.click(totalDailyInsulinMemoButton)
+
+  const totalDailyInsulinMemoDialog = screen.getByTestId('parameter-memo-dialog')
+  expect(totalDailyInsulinMemoDialog).toBeVisible()
+  expect(totalDailyInsulinMemoDialog).toHaveTextContent('Setting information: Total Daily Insulin')
+  const totalDailyInsulinMemoDialogIframe = within(totalDailyInsulinMemoDialog).getByTestId('parameter-memo-iframe')
+  expect(totalDailyInsulinMemoDialogIframe).toBeVisible()
+  const totalDailyInsulinMemoDialogCloseButton = within(totalDailyInsulinMemoDialog).getByRole('button', { name: 'Close' })
+  await userEvent.click(totalDailyInsulinMemoDialogCloseButton)
+  expect(totalDailyInsulinMemoDialog).not.toBeVisible()
+
+  await userEvent.click(targetGlucoseLevelMemoButton)
+
+  const targetGlucoseLevelMemoDialog = screen.getByTestId('parameter-memo-dialog')
+  expect(targetGlucoseLevelMemoDialog).toBeVisible()
+  expect(targetGlucoseLevelMemoDialog).toHaveTextContent('Setting information: Target glucose level')
+  const targetGlucoseLevelMemoDialogIframe = within(targetGlucoseLevelMemoDialog).getByTestId('parameter-memo-iframe')
+  expect(targetGlucoseLevelMemoDialogIframe).toBeVisible()
+  const targetGlucoseLevelMemoDialogCloseButton = within(targetGlucoseLevelMemoDialog).getByRole('button', { name: 'Close' })
+  await userEvent.click(targetGlucoseLevelMemoDialogCloseButton)
+  expect(targetGlucoseLevelMemoDialog).not.toBeVisible()
+}
+
+export const checkParametersMemoNotDisplayed = () => {
+  const currentParametersSection = screen.getByTestId('current-parameters-section')
+
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open TOTAL_INSULIN_FOR_24H setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open PATIENT_GLYCEMIA_TARGET setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open BOLUS_AGGRESSIVENESS_FACTOR setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open MEAL_RATIO_BREAKFAST_FACTOR setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open MEAL_RATIO_LUNCH_FACTOR setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open MEAL_RATIO_DINNER_FACTOR setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open PATIENT_GLY_HYPO_LIMIT setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open PATIENT_GLY_HYPER_LIMIT setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open MEDIUM_MEAL_BREAKFAST setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open MEDIUM_MEAL_LUNCH setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open MEDIUM_MEAL_DINNER setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open SMALL_MEAL_BREAKFAST setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open SMALL_MEAL_LUNCH setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open SMALL_MEAL_DINNER setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open LARGE_MEAL_BREAKFAST setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open LARGE_MEAL_LUNCH setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open LARGE_MEAL_DINNER setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open WEIGHT setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open HEIGHT setting information' })).not.toBeInTheDocument()
 }
 
 export const checkCopyTextButton = async () => {

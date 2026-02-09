@@ -44,6 +44,7 @@ import { InfoOutline } from '@mui/icons-material'
 import IconButton from '@mui/material/IconButton'
 import { ParameterMemoDialog } from '../dialogs/parameter-memo-dialog'
 import { useAuth } from '../../lib/auth'
+import metrics from '../../lib/metrics'
 
 interface ParameterListProps {
   parameters: ParameterConfig[]
@@ -77,6 +78,7 @@ export const ParameterList: FC<ParameterListProps> = ({ parameters }) => {
 
   const selectParameter = async (parameter: ParameterConfig): Promise<void> => {
     setSelectedParameter(parameter)
+    metrics.send('settings', 'open_setting_info', `open_setting_info_${parameter.name}`)
   }
 
   const handleClose = () => {
@@ -125,7 +127,7 @@ export const ParameterList: FC<ParameterListProps> = ({ parameters }) => {
                   {isHcp &&
                     <TableCell align="center" padding="none">
                       {hasMemo(parameter.name) &&
-                        <IconButton color="primary" aria-label={t('parameter-info-open')} onClick={() => selectParameter(parameter)}>
+                        <IconButton color="primary" aria-label={t('parameter-info-open', { parameterName: parameter.name })} onClick={() => selectParameter(parameter)}>
                           <InfoOutline />
                         </IconButton>
                       }

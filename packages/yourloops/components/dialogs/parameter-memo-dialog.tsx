@@ -82,6 +82,7 @@ export const ParameterMemoDialog: FC<ParameterMemoDialogProps> = (props) => {
       onClose={handleClose}
       fullWidth={true}
       maxWidth="xl"
+      data-testid="parameter-memo-dialog"
     >
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span>{title}</span>
@@ -105,6 +106,7 @@ export const ParameterMemoDialog: FC<ParameterMemoDialogProps> = (props) => {
                 border: 'none',
                 borderRadius: '24px'
               }}
+              data-testid="parameter-memo-iframe"
             />}
         </Box>
       </DialogContent>

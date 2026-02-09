@@ -725,7 +725,20 @@ export const pumpSettingsDblg2: Data = {
           },
           history,
           parameters: [
-            { name: DblParameter.Weight, value: '72', unit: Unit.Kilogram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
+            {
+              name: DblParameter.Weight,
+              value: '72',
+              unit: Unit.Kilogram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.Height,
+              value: '174',
+              unit: Unit.Centimeter,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
             {
               name: DblParameter.AverageBreakfast,
               value: '36',
