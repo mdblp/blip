@@ -95,7 +95,7 @@ export class ExternalFilesService {
       case DblParameter.HypoglycemiaThreshold:
         return ParameterMemoFilename.HypoglycemiaThreshold
       case DblParameter.TargetGlucoseLevel:
-        return ParameterMemoFilename.PatientGlycemiaTarget
+        return ParameterMemoFilename.TargetGlucoseLevel
       case DblParameter.TotalDailyInsulin:
         return ParameterMemoFilename.TotalInsulinForDay
       default:

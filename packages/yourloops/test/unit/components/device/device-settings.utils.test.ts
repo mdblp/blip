@@ -31,7 +31,7 @@ import {
   sortHistory,
   sortParameterList
 } from '../../../../components/device/utils/device.utils'
-import { type ParameterConfig, Unit } from 'medical-domain'
+import { DblParameter, type ParameterConfig, Unit } from 'medical-domain'
 import { expectedPumpSettingsParameterList, expectedSortedHistory, history } from './device-settings.mock'
 
 describe('Device settings utils', () => {
@@ -51,49 +51,49 @@ describe('Device settings utils', () => {
   describe('sortParameterList', () => {
     it('should sort the parameters in a correct order', () => {
       const parameterList = [
-        { name: 'MEDIUM_MEAL_DINNER' },
-        { name: 'TOTAL_INSULIN_FOR_24H' },
-        { name: 'MEDIUM_MEAL_LUNCH' },
-        { name: 'MEDIUM_MEAL_BREAKFAST' },
-        { name: 'PATIENT_GLY_HYPER_LIMIT' },
-        { name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA' },
-        { name: 'WEIGHT' },
-        { name: 'PATIENT_GLYCEMIA_TARGET' },
-        { name: 'MEAL_RATIO_LUNCH_FACTOR' },
-        { name: 'PATIENT_GLY_HYPO_LIMIT' },
-        { name: 'LARGE_MEAL_LUNCH' },
-        { name: 'BOLUS_AGGRESSIVENESS_FACTOR' },
-        { name: 'SMALL_MEAL_LUNCH' },
-        { name: 'HEIGHT' },
-        { name: 'LARGE_MEAL_BREAKFAST' },
-        { name: 'MEAL_RATIO_BREAKFAST_FACTOR' },
-        { name: 'LARGE_MEAL_DINNER' },
-        { name: 'MEAL_RATIO_DINNER_FACTOR' },
-        { name: 'SMALL_MEAL_BREAKFAST' },
-        { name: 'SMALL_MEAL_DINNER' }
+        { name: DblParameter.AverageDinner },
+        { name: DblParameter.TotalDailyInsulin },
+        { name: DblParameter.AverageLunch },
+        { name: DblParameter.AverageBreakfast },
+        { name: DblParameter.HyperglycemiaThreshold },
+        { name: DblParameter.AggressivenessNormoglycemia },
+        { name: DblParameter.Weight },
+        { name: DblParameter.TargetGlucoseLevel },
+        { name: DblParameter.AggressivenessLunch },
+        { name: DblParameter.HypoglycemiaThreshold },
+        { name: DblParameter.LargeLunch },
+        { name: DblParameter.AggressivenessHyperglycemia },
+        { name: DblParameter.SmallLunch },
+        { name: DblParameter.Height },
+        { name: DblParameter.LargeBreakfast },
+        { name: DblParameter.AggressivenessBreakfast },
+        { name: DblParameter.LargeDinner },
+        { name: DblParameter.AggressivenessDinner },
+        { name: DblParameter.SmallBreakfast },
+        { name: DblParameter.SmallDinner }
       ]
 
       const expectedResult = [
-        { name: 'TOTAL_INSULIN_FOR_24H' },
-        { name: 'PATIENT_GLYCEMIA_TARGET' },
-        { name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA' },
-        { name: 'BOLUS_AGGRESSIVENESS_FACTOR' },
-        { name: 'MEAL_RATIO_BREAKFAST_FACTOR' },
-        { name: 'MEAL_RATIO_LUNCH_FACTOR' },
-        { name: 'MEAL_RATIO_DINNER_FACTOR' },
-        { name: 'PATIENT_GLY_HYPO_LIMIT' },
-        { name: 'PATIENT_GLY_HYPER_LIMIT' },
-        { name: 'MEDIUM_MEAL_BREAKFAST' },
-        { name: 'MEDIUM_MEAL_LUNCH' },
-        { name: 'MEDIUM_MEAL_DINNER' },
-        { name: 'SMALL_MEAL_BREAKFAST' },
-        { name: 'SMALL_MEAL_LUNCH' },
-        { name: 'SMALL_MEAL_DINNER' },
-        { name: 'LARGE_MEAL_BREAKFAST' },
-        { name: 'LARGE_MEAL_LUNCH' },
-        { name: 'LARGE_MEAL_DINNER' },
-        { name: 'WEIGHT' },
-        { name: 'HEIGHT' }
+        { name: DblParameter.TotalDailyInsulin },
+        { name: DblParameter.TargetGlucoseLevel },
+        { name: DblParameter.AggressivenessNormoglycemia },
+        { name: DblParameter.AggressivenessHyperglycemia },
+        { name: DblParameter.AggressivenessBreakfast },
+        { name: DblParameter.AggressivenessLunch },
+        { name: DblParameter.AggressivenessDinner },
+        { name: DblParameter.HypoglycemiaThreshold },
+        { name: DblParameter.HyperglycemiaThreshold },
+        { name: DblParameter.AverageBreakfast },
+        { name: DblParameter.AverageLunch },
+        { name: DblParameter.AverageDinner },
+        { name: DblParameter.SmallBreakfast },
+        { name: DblParameter.SmallLunch },
+        { name: DblParameter.SmallDinner },
+        { name: DblParameter.LargeBreakfast },
+        { name: DblParameter.LargeLunch },
+        { name: DblParameter.LargeDinner },
+        { name: DblParameter.Weight },
+        { name: DblParameter.Height }
       ]
 
       sortParameterList(parameterList as ParameterConfig[])

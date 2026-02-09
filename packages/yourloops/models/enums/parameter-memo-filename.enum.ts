@@ -32,6 +32,6 @@ export enum ParameterMemoFilename {
   AverageMeal = 'average-meal',
   HyperglycemiaThreshold = 'hyperglycemia-threshold',
   HypoglycemiaThreshold = 'hypoglycemia-threshold',
-  PatientGlycemiaTarget = 'patient-glycemia-target',
+  TargetGlucoseLevel = 'target-glucose-level',
   TotalInsulinForDay = 'total-insulin-for-day'
 }
