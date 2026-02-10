@@ -21,6 +21,7 @@ const blipConfig = require('./config.app')
 const { getDistDir } = require('./gen-utils')
 const locales = require('../locales/languages.json')
 const assetlinksJson = require('../public/mobile-apps/assetlinks.json')
+const { PRODUCT_LABELLING_URLS, getAllSettingsMemoUrls } = require('./external-files-url')
 
 const reZendesk = /(^\s+<!-- Start of support Zendesk Widget script -->\n)(.*\n)*(^\s+<!-- End of support Zendesk Widget script -->)/m
 const reTrackerUrl = /const u = '(.*)'/
@@ -155,22 +156,12 @@ function genContentSecurityPolicy() {
 
   // Allow the integration of PDF files (product labels documents, settings memo) hosted on a remote server
   contentSecurityPolicy.frameSrc.push(
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_FR}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_EN}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_ES}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_IT}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_DE}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`,
-    `${blipConfig.ASSETS_URL}parameter-memo/en/total-insulin-for-day.pdf`
+    ...PRODUCT_LABELLING_URLS,
+    ...getAllSettingsMemoUrls()
   )
 
   contentSecurityPolicy.objectSrc.push(
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_FR}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_EN}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_ES}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_IT}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_DE}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`
+    ...PRODUCT_LABELLING_URLS
   )
 
   let csp = ''
