@@ -12,7 +12,7 @@
  *
  */
 
-import * as blipConfig from './config.app'
+import * as blipConfig from './config.app.js'
 
 const SETTINGS_MEMO_FOLDER = 'parameter-memo'
 
