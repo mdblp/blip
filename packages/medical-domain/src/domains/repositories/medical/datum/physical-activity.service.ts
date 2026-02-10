@@ -39,9 +39,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const base = BaseDatumService.normalize(rawData, opts)
   const duration = DurationService.normalize(rawData, opts)
   const isValidRawDataInputTime = typeof rawData.inputTime === 'string' && rawData.inputTime.trim() !== ''
-  const isValidRawDataUpdateTime = typeof rawData.updateTime === 'string' && rawData.updateTime.trim() !== ''
   const inputTime = isValidRawDataInputTime ? rawData.inputTime as string : base.normalTime
-  const updateTime = isValidRawDataUpdateTime ? rawData.updateTime as string : base.normalTime
   const name = rawData.name as string
   return {
     ...base,
@@ -50,8 +48,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     guid: rawData.guid as string,
     reportedIntensity: rawData.reportedIntensity as Intensity,
     inputTime,
-    name,
-    updateTime
+    name
   }
 }
 

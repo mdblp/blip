@@ -36,7 +36,6 @@ type PhysicalActivity = BaseDatum & Duration & {
   guid: string
   reportedIntensity: Intensity
   inputTime: string
-  updateTime: string
   duration: {
     units: DurationUnit
     value: number
