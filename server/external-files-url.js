@@ -1,4 +1,18 @@
-const blipConfig = require('./config.app')
+/**
+ * Define the URLs of the external files (PDF) used in the app.
+ * Copyright (c) 2026, Diabeloop
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the associated License, which is identical to the BSD 2-Clause
+ * License as published by the Open Source Initiative at opensource.org.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the License for more details.
+ *
+ */
+
+import * as blipConfig from './config.app'
 
 const SETTINGS_MEMO_FOLDER = 'parameter-memo'
 
