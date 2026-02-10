@@ -153,14 +153,15 @@ function genContentSecurityPolicy() {
   contentSecurityPolicy.connectSrc.push(`https://${blipConfig.AUTH0_DOMAIN}`)
   contentSecurityPolicy.frameSrc.push(`https://${blipConfig.AUTH0_DOMAIN}`)
 
-  // Allow the integration of product labels documents (pdf) hosted on a remote server
+  // Allow the integration of PDF files (product labels documents, settings memo) hosted on a remote server
   contentSecurityPolicy.frameSrc.push(
     `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_FR}.pdf`,
     `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_EN}.pdf`,
     `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_ES}.pdf`,
     `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_IT}.pdf`,
     `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_DE}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`
+    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`,
+    `${blipConfig.ASSETS_URL}parameter-memo/en/total-insulin-for-day.pdf`
   )
 
   contentSecurityPolicy.objectSrc.push(
