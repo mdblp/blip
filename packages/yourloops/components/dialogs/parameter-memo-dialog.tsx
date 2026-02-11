@@ -107,7 +107,8 @@ export const ParameterMemoDialog: FC<ParameterMemoDialogProps> = (props) => {
                 borderRadius: '24px'
               }}
               data-testid="parameter-memo-iframe"
-            />}
+            />
+          }
         </Box>
       </DialogContent>
     </Dialog>

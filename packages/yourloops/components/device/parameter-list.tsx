@@ -129,7 +129,7 @@ export const ParameterList: FC<ParameterListProps> = ({ parameters }) => {
                       {hasMemo(parameter.name) &&
                         <IconButton
                           color="primary"
-                          aria-label={t('parameter-info-open', { parameterName: parameter.name })}
+                          aria-label={t('parameter-info-open', { parameterName: t(`params|${parameter.name}`) })}
                           data-testid={`parameter-info-button-${parameter.name}`}
                           onClick={() => selectParameter(parameter)}
                         >
