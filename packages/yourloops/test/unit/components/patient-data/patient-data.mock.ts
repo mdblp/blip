@@ -61,17 +61,3 @@ export const patientDataMock: PatientData = [
   { time: '2022-08-08T17:00:00Z', type: 'deviceEvent', id: 'reservoirChangeId', subType: 'reservoirChange', timezone: 'Europe/Paris', uploadId: 'osef', _userId: 'osef' },
   { time: '2022-08-08T08:00:00Z', type: 'deviceEvent', id: 'parameterId', lastUpdateDate: '2022-08-08T08:00:00Z', level: '1', name: 'MEAL_RATIO_LUNCH_FACTOR', previousValue: '110', subType: 'deviceParameter', timezone: 'UTC', units: '%', uploadId: 'osef', value: '100', _userId: 'osef' }
 ]
-
-export const messagesMock: MessageNote[] = [
-  {
-    id: 'messageNoteId',
-    userid: 'fakeId',
-    messagetext: 'Nice carbs shot here !',
-    groupid: 'groupId',
-    timestamp: '2022-08-08T18:25:00Z',
-    parentmessage: 'parentMessage',
-    user: {
-      fullName: 'Dr Canut'
-    }
-  }
-]
