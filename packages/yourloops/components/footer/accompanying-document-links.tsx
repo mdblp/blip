@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,13 +30,15 @@ import Link from '@mui/material/Link'
 import { Link as RouterLink } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import { useTranslation } from 'react-i18next'
-import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { type User } from '../../lib/auth'
 import { footerStyle } from './footer'
+import { ExternalFilesService } from '../../lib/external-files/external-files.service'
 
 const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) => {
   const { t } = useTranslation('yourloops')
   const { classes: { link, separator } } = footerStyle()
+
+  const trainingUrl = ExternalFilesService.getTrainingUrl(user?.role)
 
   return (
     <React.Fragment>
@@ -53,7 +55,7 @@ const AccompanyingDocumentLinks: FunctionComponent<{ user: User }> = ({ user }) 
       <Link
         data-testid="training-link"
         target="_blank"
-        href={diabeloopExternalUrls.training(user?.role)}
+        href={trainingUrl}
         rel="nofollow"
         className={link}
       >

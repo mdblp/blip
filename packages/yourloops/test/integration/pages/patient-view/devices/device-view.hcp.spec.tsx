@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,7 +31,8 @@ import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from
 import {
   mockDataAPI,
   pumpSettingsData,
-  pumpSettingsDblg1Mobigo, pumpSettingsDblg2,
+  pumpSettingsDblg1Mobigo,
+  pumpSettingsDblg2,
   pumpSettingsDblg2WithoutSecurityBasalData
 } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
@@ -43,9 +44,10 @@ import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../use-cases/app-main-layout-visualisation'
 import {
-  testDevicesVisualisation,
   testDevicesMenuLayoutForMobigoDevice,
-  testEmptySafetyBasalProfileGenericErrorMessage, testG2DevicesVisualisation
+  testDevicesVisualisationForHcp,
+  testEmptySafetyBasalProfileGenericErrorMessage,
+  testG2DevicesVisualisationForHcp
 } from '../../../use-cases/device-settings-visualisation'
 import { testDeviceSettingsNavigationForHcp } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
@@ -91,7 +93,7 @@ describe('Device view for HCP', () => {
     await act(async () => {
       renderPage(deviceRoute)
     })
-    await testDevicesVisualisation()
+    await testDevicesVisualisationForHcp()
   })
 
   it('should display correct parameters when having g2 patients', async () => {
@@ -100,7 +102,7 @@ describe('Device view for HCP', () => {
     await act(async () => {
       renderPage(deviceRoute)
     })
-    await testG2DevicesVisualisation()
+    await testG2DevicesVisualisationForHcp()
   })
 
   it('should navigate to daily page when clicking on the daily button', async () => {

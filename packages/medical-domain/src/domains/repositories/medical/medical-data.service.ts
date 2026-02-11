@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -76,9 +76,9 @@ import {
 import { Datum } from '../../models/medical/datum.model'
 import Bolus from '../../models/medical/datum/bolus.model'
 import Prescriptor from '../../models/medical/datum/enums/prescriptor.enum'
+import { DblParameter } from '../../models/medical/datum/enums/dbl-parameter.enum'
 
-// the first one is for g1, the second one for g2
-const EXCLUDED_PARAMETERS = ['INSULIN_TYPE_USED', 'INSULIN_TYPE']
+const EXCLUDED_PARAMETERS = new Set([DblParameter.InsulinTypeUsed, DblParameter.InsulinType])
 
 class MedicalDataService {
   medicalData: MedicalData = {
@@ -567,7 +567,7 @@ class MedicalDataService {
 
   private removeExcludedParameters(parametersList: ParameterConfig[]) {
     return parametersList.filter((parameter) => {
-      return !EXCLUDED_PARAMETERS.includes(parameter.name)
+      return !EXCLUDED_PARAMETERS.has(parameter.name)
     })
   }
 

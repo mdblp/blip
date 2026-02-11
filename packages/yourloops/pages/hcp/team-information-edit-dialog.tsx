@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -47,12 +47,12 @@ import TextField from '@mui/material/TextField'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 import locales from '../../../../locales/languages.json'
-import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { type Team } from '../../lib/team'
 import { isZipCodeValid, PhonePrefixCode, REGEX_EMAIL, REGEX_PHONE } from '../../lib/utils'
 import { useAuth } from '../../lib/auth'
 import { type TeamEditModalContentProps } from './types'
 import { CountryCodes } from '../../lib/auth/models/country.model'
+import { ExternalFilesService } from '../../lib/external-files/external-files.service'
 
 type LocalesCountries = Record<string, {
   name: string
@@ -115,8 +115,10 @@ function TeamInformationEditDialog(props: TeamInformationEditModalProps): JSX.El
   const phoneNumberInputOnError: boolean = !(teamPhone.length === 0 || isPhoneNumberValid)
   const emailInputOnError: boolean = (!(teamEmail.length === 0 || isEmailValid))
 
+  const termsOfUseUrl = ExternalFilesService.getTermsOfUseUrl()
+
   for (const entry in countries) {
-    if (Object.prototype.hasOwnProperty.call(countries, entry)) {
+    if (Object.hasOwn(countries, entry)) {
       const { name } = countries[entry]
       optionsCountries.push(
         <MenuItem
@@ -131,8 +133,8 @@ function TeamInformationEditDialog(props: TeamInformationEditModalProps): JSX.El
     }
   }
   optionsCountries.sort((a: JSX.Element, b: JSX.Element) => {
-    const aName = a.key as string
-    const bName = b.key as string
+    const aName = a.key
+    const bName = b.key
     return aName.localeCompare(bName)
   })
 
@@ -212,7 +214,7 @@ function TeamInformationEditDialog(props: TeamInformationEditModalProps): JSX.El
     modalButtonValidate = t('button-create-team')
     const termsOfUse = t('terms-of-use')
     const linkTerms = (
-      <Link aria-label={termsOfUse} href={diabeloopExternalUrls.terms} target="_blank" rel="noreferrer">
+      <Link aria-label={termsOfUse} href={termsOfUseUrl} target="_blank" rel="noreferrer">
         {termsOfUse}
       </Link>
     )
@@ -347,9 +349,12 @@ function TeamInformationEditDialog(props: TeamInformationEditModalProps): JSX.El
             onChange={(e) => { setTeamPhone(e.target.value) }}
             error={phoneNumberInputOnError}
             helperText={phoneNumberInputOnError ? t('invalid-phone-number') : null}
-            InputProps={{
-              startAdornment: <InputAdornment position="start">{PhonePrefixCode[addrCountry]}</InputAdornment>
+            slotProps={{
+              input: {
+                startAdornment: <InputAdornment position="start">{PhonePrefixCode[addrCountry]}</InputAdornment>
+              }
             }}
+
             name="phone"
             value={teamPhone}
             label={t('phone-number')}

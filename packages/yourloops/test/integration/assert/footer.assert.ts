@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,8 +26,8 @@
  */
 
 import { screen, within } from '@testing-library/react'
-import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
+import { ExternalFilesService } from '../../../lib/external-files/external-files.service'
 
 const checkFooter = (hasLanguageSelector: boolean = false) => {
   const footer = within(screen.getByTestId('footer'))
@@ -47,12 +47,12 @@ const checkFooter = (hasLanguageSelector: boolean = false) => {
   expect(productLabellingLink).toBeVisible()
   expect(productLabellingLink).toHaveAttribute('href', '/product-labelling')
   expect(termsOfUseLink).toBeVisible()
-  expect(termsOfUseLink).toHaveAttribute('href', diabeloopExternalUrls.terms)
+  expect(termsOfUseLink).toHaveAttribute('href', ExternalFilesService.getTermsOfUseUrl())
   expect(privacyPolicyLink).toBeVisible()
-  expect(privacyPolicyLink).toHaveAttribute('href', diabeloopExternalUrls.privacyPolicy)
+  expect(privacyPolicyLink).toHaveAttribute('href', ExternalFilesService.getPrivacyPolicyUrl())
   expect(cookiesManagementLink).toBeVisible()
   expect(cookiesPolicyLink).toBeVisible()
-  expect(cookiesPolicyLink).toHaveAttribute('href', diabeloopExternalUrls.cookiesPolicy)
+  expect(cookiesPolicyLink).toHaveAttribute('href', ExternalFilesService.getCookiesPolicyUrl())
   expect(releaseNotesLink).toBeVisible()
   expect(releaseNotesLink).toHaveAttribute('href', 'fake-urlyourloops-release-notes.pdf')
   expect(contactLink).toBeVisible()
@@ -62,7 +62,7 @@ export const checkFooterForUserNotLoggedIn = (hasLanguageSelector: boolean = fal
   const footer = within(screen.getByTestId('footer'))
   const trainingLink = footer.getByText('Training')
   expect(trainingLink).toBeVisible()
-  expect(trainingLink).toHaveAttribute('href', diabeloopExternalUrls.training())
+  expect(trainingLink).toHaveAttribute('href', ExternalFilesService.getTrainingUrl())
   checkFooter(hasLanguageSelector)
 }
 
@@ -70,7 +70,7 @@ export const checkFooterForHcp = (hasLanguageSelector: boolean = false) => {
   const footer = within(screen.getByTestId('footer'))
   const trainingLink = footer.getByText('Training')
   expect(trainingLink).toBeVisible()
-  expect(trainingLink).toHaveAttribute('href', diabeloopExternalUrls.training(UserRole.Hcp))
+  expect(trainingLink).toHaveAttribute('href', ExternalFilesService.getTrainingUrl(UserRole.Hcp))
   checkFooter(hasLanguageSelector)
 }
 
@@ -78,7 +78,7 @@ export const checkFooterForPatient = (hasLanguageSelector: boolean = false) => {
   const footer = within(screen.getByTestId('footer'))
   const trainingLink = footer.getByText('Training')
   expect(trainingLink).toBeVisible()
-  expect(trainingLink).toHaveAttribute('href', diabeloopExternalUrls.training(UserRole.Patient))
+  expect(trainingLink).toHaveAttribute('href', ExternalFilesService.getTrainingUrl(UserRole.Patient))
   checkFooter(hasLanguageSelector)
 }
 
@@ -86,6 +86,6 @@ export const checkFooterForCaregiver = (hasLanguageSelector: boolean = false) =>
   const footer = within(screen.getByTestId('footer'))
   const trainingLink = footer.getByText('Training')
   expect(trainingLink).toBeVisible()
-  expect(trainingLink).toHaveAttribute('href', diabeloopExternalUrls.training(UserRole.Caregiver))
+  expect(trainingLink).toHaveAttribute('href', ExternalFilesService.getTrainingUrl(UserRole.Caregiver))
   checkFooter(hasLanguageSelector)
 }

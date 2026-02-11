@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,27 +24,14 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { AppRoute } from '../models/enums/routes.enum'
 
-/**
- * Class containing all external URLs related to Diabeloop
- */
-class DiabeloopExternalUrls {
-  readonly dblDiabetes: string = 'https://www.dbl-diabetes.com';
-  readonly contactEmail: string = 'yourloops@diabeloop.com';
-  readonly support: string = 'https://www.diabeloop.com';
+export enum ExternalFilename {
+  CookiesPolicy = 'yourloops-cookiepolicy',
+  PrivacyPolicy = 'yourloops-data-privacy',
+  ReleaseNotes = 'yourloops-release-notes',
+  TermsOfUse = 'yourloops-terms-of-use',
+  TrainingCaregiver = 'yourloops-caregiver-training',
+  TrainingHcp = 'yourloops-hcp-training',
+  TrainingLogin = 'yourloops-login-training',
+  TrainingPatient = 'yourloops-patient-training'
 }
-
-export const diabeloopExternalUrls = new DiabeloopExternalUrls()
-export const PUBLIC_ROUTES = [AppRoute.Login, AppRoute.VerifyEmail, AppRoute.VerifyEmailResult, AppRoute.SignupInformation]
-export const ALWAYS_ACCESSIBLE_ROUTES = [AppRoute.ProductLabelling]
-export const ROUTES_REQUIRING_LANGUAGE_SELECTOR = [
-  AppRoute.RenewConsent,
-  AppRoute.NewConsent,
-  AppRoute.Training,
-  AppRoute.SignupInformation,
-  AppRoute.CompleteSignup,
-  AppRoute.ProductLabelling,
-  AppRoute.VerifyEmail,
-  AppRoute.VerifyEmailResult
-]

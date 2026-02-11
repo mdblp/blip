@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,14 +32,28 @@ import {
   checkDevicesMenuLayoutWithBasalSafetyProfile,
   checkDevicesMenuLayoutWithoutBasalSafetyProfile,
   checkG2CopyTextButton,
-  checkG2CurrentParametersContent,
+  checkG2CurrentParametersContent, checkParametersMemo, checkParametersMemoNotDisplayed,
   checkSafetyBasalProfileContent,
   checkSafetyBasalProfileErrorMessage
 } from '../assert/device-view.assert'
 
+export const testDevicesVisualisationForHcp = async () => {
+  testDevicesMenuLayout()
+  await testCurrentParametersVisualisationForHcp()
+  await testBasalSafetyProfileVisualisation()
+  await testChangeHistoryVisualisation()
+}
+
 export const testDevicesVisualisation = async () => {
   testDevicesMenuLayout()
   await testCurrentParametersVisualisation()
+  await testBasalSafetyProfileVisualisation()
+  await testChangeHistoryVisualisation()
+}
+
+export const testG2DevicesVisualisationForHcp = async () => {
+  testDevicesMenuLayout()
+  await testG2CurrentParametersVisualisationForHcp()
   await testBasalSafetyProfileVisualisation()
   await testChangeHistoryVisualisation()
 }
@@ -63,13 +77,27 @@ export const testDevicesMenuLayoutForMobigoDevice = () => {
   checkDevicesMenuLayoutWithoutBasalSafetyProfile()
 }
 
+const testCurrentParametersVisualisationForHcp = async () => {
+  checkCurrentParametersContent()
+  await checkParametersMemo()
+  await checkCopyTextButton()
+}
+
 const testCurrentParametersVisualisation = async () => {
   checkCurrentParametersContent()
+  checkParametersMemoNotDisplayed()
   await checkCopyTextButton()
+}
+
+const testG2CurrentParametersVisualisationForHcp = async () => {
+  checkG2CurrentParametersContent()
+  await checkParametersMemo()
+  await checkG2CopyTextButton()
 }
 
 const testG2CurrentParametersVisualisation = async () => {
   checkG2CurrentParametersContent()
+  checkParametersMemoNotDisplayed()
   await checkG2CopyTextButton()
 }
 

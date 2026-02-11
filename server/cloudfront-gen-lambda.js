@@ -22,6 +22,46 @@ const { getDistDir } = require('./gen-utils')
 const locales = require('../locales/languages.json')
 const assetlinksJson = require('../public/mobile-apps/assetlinks.json')
 
+const SETTINGS_MEMO_FOLDER = 'parameter-memo'
+
+const ALL_SETTINGS_MEMO_FILE_NAMES = [
+  'aggressiveness-hyperglycemia',
+  'aggressiveness-meal',
+  'aggressiveness-normoglycemia',
+  'average-meal',
+  'hyperglycemia-threshold',
+  'hypoglycemia-threshold',
+  'target-glucose-level',
+  'total-insulin-for-day'
+]
+
+const PRODUCT_LABELLING_URLS = [
+  `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_FR}.pdf`,
+  `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_EN}.pdf`,
+  `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_ES}.pdf`,
+  `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_IT}.pdf`,
+  `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_DE}.pdf`,
+  `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`
+]
+
+const getSettingsMemoUrlsForLanguage = (languageCode) => {
+  return ALL_SETTINGS_MEMO_FILE_NAMES.map(
+    (fileName) => `${blipConfig.ASSETS_URL}${SETTINGS_MEMO_FOLDER}/${languageCode}/${fileName}.pdf`
+  )
+}
+
+const getAllSettingsMemoUrls = () => {
+  return [
+    ...getSettingsMemoUrlsForLanguage('en'),
+    ...getSettingsMemoUrlsForLanguage('fr'),
+    ...getSettingsMemoUrlsForLanguage('es'),
+    ...getSettingsMemoUrlsForLanguage('it'),
+    ...getSettingsMemoUrlsForLanguage('de'),
+    ...getSettingsMemoUrlsForLanguage('nl'),
+    ...getSettingsMemoUrlsForLanguage('ja')
+  ]
+}
+
 const reZendesk = /(^\s+<!-- Start of support Zendesk Widget script -->\n)(.*\n)*(^\s+<!-- End of support Zendesk Widget script -->)/m
 const reTrackerUrl = /const u = '(.*)'/
 const reTrackerSiteId = /const id = ([0-9])/
@@ -153,23 +193,18 @@ function genContentSecurityPolicy() {
   contentSecurityPolicy.connectSrc.push(`https://${blipConfig.AUTH0_DOMAIN}`)
   contentSecurityPolicy.frameSrc.push(`https://${blipConfig.AUTH0_DOMAIN}`)
 
-  // Allow the integration of product labels documents (pdf) hosted on a remote server
+  // Allow the integration of PDF files (product labels documents, settings memo) hosted on a remote server
+  const settingMemoUrls = getAllSettingsMemoUrls()
+
   contentSecurityPolicy.frameSrc.push(
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_FR}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_EN}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_ES}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_IT}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_DE}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`
+    ...PRODUCT_LABELLING_URLS,
+    ...settingMemoUrls
   )
 
+  contentSecurityPolicy.connectSrc.push(...settingMemoUrls)
+
   contentSecurityPolicy.objectSrc.push(
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_FR}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_EN}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_ES}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_IT}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_DE}.pdf`,
-    `${blipConfig.ASSETS_URL}${blipConfig.YLPZ_RA_LAD_NL}.pdf`
+    ...PRODUCT_LABELLING_URLS
   )
 
   let csp = ''

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -44,13 +44,88 @@ export const checkDevicesMenuLayoutWithoutBasalSafetyProfile = () => {
 export const checkCurrentParametersContent = () => {
   const deviceSettings = screen.getByTestId('current-parameters-section')
   const date = moment.tz(pumpSettingsData.data.pumpSettings[0].normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
-  expect(deviceSettings).toHaveTextContent(`Devices and current settingsLast update: ${date}Copy as textDBLG1ManufacturerDiabeloopIdentifier1234IMEI1234567890Software version1.0.5.25PumpManufacturerVICENTRAProducttestPumpSerial number123456Pump versionbetaCGMManufacturerDexcomProductG6Sensor expirationApr 12, 2050Transmitter software versionv1Transmitter IDa1234Transmitter expirationApr 12, 2050SettingValueUnitBreakfast - average36.0gLunch - average96.0gDinner - average96.0gWeight72.0kgHyperglycemia threshold180.0mg/dLHypoglycemia threshold75.0mg/dLTarget glucose level110.0mg/dLAggressiveness in normoglycemia100%Aggressiveness in hyperglycemia100%Aggressiveness for breakfast100%Aggressiveness for lunch100%Aggressiveness for dinner80%Breakfast - small18.0gBreakfast - large54.0gLunch - small48.0gLunch - large144.0gDinner - small48.0gDinner - large144.0g`)
+  expect(deviceSettings).toHaveTextContent(`Devices and current settingsLast update: ${date}Copy as textDBLG1ManufacturerDiabeloopIdentifier1234IMEI1234567890Software version1.0.5.25PumpManufacturerVICENTRAProducttestPumpSerial number123456Pump versionbetaCGMManufacturerDexcomProductG6Sensor expirationApr 12, 2050Transmitter software versionv1Transmitter IDa1234Transmitter expirationApr 12, 2050SettingValueUnitTotal Daily Insulin53.0UTarget glucose level110.0mg/dLAggressiveness in normoglycemia100%Aggressiveness in hyperglycemia100%Aggressiveness for breakfast100%Aggressiveness for lunch100%Aggressiveness for dinner80%Hypoglycemia threshold75.0mg/dLHyperglycemia threshold180.0mg/dLBreakfast - average36.0gLunch - average96.0gDinner - average96.0gBreakfast - small18.0gLunch - small48.0gDinner - small48.0gBreakfast - large54.0gLunch - large144.0gDinner - large144.0gWeight72.0kg`)
 }
 
 export const checkG2CurrentParametersContent = () => {
   const deviceSettings = screen.getByTestId('current-parameters-section')
   const date = moment.tz(pumpSettingsData.data.pumpSettings[0].normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
-  expect(deviceSettings).toHaveTextContent(`Devices and current settingsLast update: ${date}Copy as textMobile applicationManufacturerDiabeloopNameDBLG2Software version1.0.0Activation code123 - 456 - 789Identifieree2bfb587758Smartphone modelA25Smartphone OS version14PumpManufacturerVICENTRAProducttestPumpSerial number123456Pump versionbetaCGMManufacturerDexcomProductG6Sensor expirationApr 12, 2050Transmitter software versionv1Transmitter IDa1234Transmitter expirationApr 12, 2050SettingValueUnitBreakfast - average36.0gLunch - average96.0gDinner - average96.0gWeight72.0kgHyperglycemia threshold180.0mg/dLHypoglycemia threshold75.0mg/dLTarget glucose level110.0mg/dLAggressiveness in normoglycemia100%Aggressiveness in hyperglycemia100%Aggressiveness for breakfast100%Aggressiveness for lunch100%Aggressiveness for dinner80%Breakfast - small18.0gBreakfast - large54.0gLunch - small48.0gLunch - large144.0gDinner - small48.0gDinner - large144.0g`)
+  expect(deviceSettings).toHaveTextContent(`Devices and current settingsLast update: ${date}Copy as textMobile applicationManufacturerDiabeloopNameDBLG2Software version1.0.0Activation code123 - 456 - 789Identifieree2bfb587758Smartphone modelA25Smartphone OS version14PumpManufacturerVICENTRAProducttestPumpSerial number123456Pump versionbetaCGMManufacturerDexcomProductG6Sensor expirationApr 12, 2050Transmitter software versionv1Transmitter IDa1234Transmitter expirationApr 12, 2050SettingValueUnitTotal Daily Insulin53.0UTarget glucose level110.0mg/dLAggressiveness in normoglycemia100%Aggressiveness in hyperglycemia100%Aggressiveness for breakfast100%Aggressiveness for lunch100%Aggressiveness for dinner80%Hypoglycemia threshold75.0mg/dLHyperglycemia threshold180.0mg/dLBreakfast - average36.0gLunch - average96.0gDinner - average96.0gBreakfast - small18.0gLunch - small48.0gDinner - small48.0gBreakfast - large54.0gLunch - large144.0gDinner - large144.0gWeight72.0kgHeight174cm`)
+}
+
+export const checkParametersMemo = async () => {
+  const currentParametersSection = screen.getByTestId('current-parameters-section')
+
+  const totalDailyInsulinMemoButton = within(currentParametersSection).getByRole('button', { name: 'Open Total Daily Insulin setting information' })
+  expect(totalDailyInsulinMemoButton).toBeVisible()
+  const targetGlucoseLevelMemoButton = within(currentParametersSection).getByRole('button', { name: 'Open Target glucose level setting information' })
+  expect(targetGlucoseLevelMemoButton).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open Aggressiveness in normoglycemia setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open Aggressiveness in hyperglycemia setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open Aggressiveness for breakfast setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open Aggressiveness for lunch setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open Aggressiveness for dinner setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open Hypoglycemia threshold setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open Hyperglycemia threshold setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open Breakfast - average setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open Lunch - average setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open Dinner - average setting information' })).toBeVisible()
+
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Breakfast - small setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Lunch - small setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Dinner - small setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Breakfast - large setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Lunch - large setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Dinner - large setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Weight setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Height setting information' })).not.toBeInTheDocument()
+
+  await userEvent.click(totalDailyInsulinMemoButton)
+
+  const totalDailyInsulinMemoDialog = screen.getByTestId('parameter-memo-dialog')
+  expect(totalDailyInsulinMemoDialog).toBeVisible()
+  expect(totalDailyInsulinMemoDialog).toHaveTextContent('Setting information: Total Daily Insulin')
+  const totalDailyInsulinMemoDialogIframe = within(totalDailyInsulinMemoDialog).getByTestId('parameter-memo-iframe')
+  expect(totalDailyInsulinMemoDialogIframe).toBeVisible()
+  const totalDailyInsulinMemoDialogCloseButton = within(totalDailyInsulinMemoDialog).getByRole('button', { name: 'Close' })
+  await userEvent.click(totalDailyInsulinMemoDialogCloseButton)
+  expect(totalDailyInsulinMemoDialog).not.toBeVisible()
+
+  await userEvent.click(targetGlucoseLevelMemoButton)
+
+  const targetGlucoseLevelMemoDialog = screen.getByTestId('parameter-memo-dialog')
+  expect(targetGlucoseLevelMemoDialog).toBeVisible()
+  expect(targetGlucoseLevelMemoDialog).toHaveTextContent('Setting information: Target glucose level')
+  const targetGlucoseLevelMemoDialogIframe = within(targetGlucoseLevelMemoDialog).getByTestId('parameter-memo-iframe')
+  expect(targetGlucoseLevelMemoDialogIframe).toBeVisible()
+  const targetGlucoseLevelMemoDialogCloseButton = within(targetGlucoseLevelMemoDialog).getByRole('button', { name: 'Close' })
+  await userEvent.click(targetGlucoseLevelMemoDialogCloseButton)
+  expect(targetGlucoseLevelMemoDialog).not.toBeVisible()
+}
+
+export const checkParametersMemoNotDisplayed = () => {
+  const currentParametersSection = screen.getByTestId('current-parameters-section')
+
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Total Daily Insulin setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Target glucose level setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Aggressiveness in normoglycemia setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Aggressiveness in hyperglycemia setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Aggressiveness for breakfast setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Aggressiveness for lunch setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Aggressiveness for dinner setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Hypoglycemia threshold setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Hyperglycemia threshold setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Breakfast - average setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Lunch - average setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Dinner - average setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Breakfast - small setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Lunch - small setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Dinner - small setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Breakfast - large setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Lunch - large setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Dinner - large setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Weight setting information' })).not.toBeInTheDocument()
+  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Height setting information' })).not.toBeInTheDocument()
 }
 
 export const checkCopyTextButton = async () => {
@@ -65,7 +140,7 @@ export const checkCopyTextButton = async () => {
   await userEvent.click(copyTextButton)
 
   const date = moment.tz(pumpSettingsData.data.pumpSettings[0].normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
-  const copiedStringToPaste = `${date}\n\n-- DBL --\nManufacturer      Diabeloop\nIdentifier        1234\nIMEI              1234567890\nSoftware version  1.0.5.25\n\n-- Settings on ${formatCurrentDate()} --\nName                             Value  Unit\nBreakfast - average               36.0  g\nLunch - average                   96.0  g\nDinner - average                  96.0  g\nWeight                            72.0  kg\nHyperglycemia threshold          180.0  mg/dL\nHypoglycemia threshold            75.0  mg/dL\nTarget glucose level             110.0  mg/dL\nAggressiveness in normoglycemia    100  %\nAggressiveness in hyperglycemia    100  %\nAggressiveness for breakfast       100  %\nAggressiveness for lunch           100  %\nAggressiveness for dinner           80  %\nBreakfast - small                 18.0  g\nBreakfast - large                 54.0  g\nLunch - small                     48.0  g\nLunch - large                    144.0  g\nDinner - small                    48.0  g\nDinner - large                   144.0  g`
+  const copiedStringToPaste = `${date}\n\n-- DBL --\nManufacturer      Diabeloop\nIdentifier        1234\nIMEI              1234567890\nSoftware version  1.0.5.25\n\n-- Settings on ${formatCurrentDate()} --\nName                             Value  Unit\nTotal Daily Insulin               53.0  U\nTarget glucose level             110.0  mg/dL\nAggressiveness in normoglycemia    100  %\nAggressiveness in hyperglycemia    100  %\nAggressiveness for breakfast       100  %\nAggressiveness for lunch           100  %\nAggressiveness for dinner           80  %\nHypoglycemia threshold            75.0  mg/dL\nHyperglycemia threshold          180.0  mg/dL\nBreakfast - average               36.0  g\nLunch - average                   96.0  g\nDinner - average                  96.0  g\nBreakfast - small                 18.0  g\nLunch - small                     48.0  g\nDinner - small                    48.0  g\nBreakfast - large                 54.0  g\nLunch - large                    144.0  g\nDinner - large                   144.0  g\nWeight                            72.0  kg`
   expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringContaining(copiedStringToPaste))
 }
 
@@ -82,7 +157,7 @@ export const checkG2CopyTextButton = async () => {
 
   const date = moment.tz(pumpSettingsData.data.pumpSettings[0].normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
 
-  const copiedStringToPaste = `${date}\n\n-- Mobile application --\nManufacturer           Diabeloop\nName                   DBLG2\nSoftware version       1.0.0\nActivation code        123456789\nIdentifier             ee2bfb587758\nSmartphone model       A25\nSmartphone OS version  14\n\n-- Settings on ${formatCurrentDate()} --\nName                             Value  Unit\nBreakfast - average               36.0  g\nLunch - average                   96.0  g\nDinner - average                  96.0  g\nWeight                            72.0  kg\nHyperglycemia threshold          180.0  mg/dL\nHypoglycemia threshold            75.0  mg/dL\nTarget glucose level             110.0  mg/dL\nAggressiveness in normoglycemia    100  %\nAggressiveness in hyperglycemia    100  %\nAggressiveness for breakfast       100  %\nAggressiveness for lunch           100  %\nAggressiveness for dinner           80  %\nBreakfast - small                 18.0  g\nBreakfast - large                 54.0  g\nLunch - small                     48.0  g\nLunch - large                    144.0  g\nDinner - small                    48.0  g\nDinner - large                   144.0  g`
+  const copiedStringToPaste = `${date}\n\n-- Mobile application --\nManufacturer           Diabeloop\nName                   DBLG2\nSoftware version       1.0.0\nActivation code        123456789\nIdentifier             ee2bfb587758\nSmartphone model       A25\nSmartphone OS version  14\n\n-- Settings on ${formatCurrentDate()} --\nName                             Value  Unit\nTotal Daily Insulin               53.0  U\nTarget glucose level             110.0  mg/dL\nAggressiveness in normoglycemia    100  %\nAggressiveness in hyperglycemia    100  %\nAggressiveness for breakfast       100  %\nAggressiveness for lunch           100  %\nAggressiveness for dinner           80  %\nHypoglycemia threshold            75.0  mg/dL\nHyperglycemia threshold          180.0  mg/dL\nBreakfast - average               36.0  g\nLunch - average                   96.0  g\nDinner - average                  96.0  g\nBreakfast - small                 18.0  g\nLunch - small                     48.0  g\nDinner - small                    48.0  g\nBreakfast - large                 54.0  g\nLunch - large                    144.0  g\nDinner - large                   144.0  g\nWeight                            72.0  kg`
   expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringContaining(copiedStringToPaste))
 }
 
