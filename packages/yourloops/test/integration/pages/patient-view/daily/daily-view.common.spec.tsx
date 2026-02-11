@@ -38,7 +38,7 @@ import {
   checkReadingsInRangeStatsWidgets,
   checkStandardDeviationStatWidget
 } from '../../../assert/stats.assert'
-import { screen, waitFor, within } from '@testing-library/react'
+import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import dayjs from 'dayjs'
 import { weekArrayPlugin, weekdaysPlugin } from '../../../../../lib/dayjs'
@@ -83,9 +83,8 @@ describe('Daily view for anyone', () => {
   describe('with all kind of data', () => {
     it('should render correct tooltips and values', async () => {
       mockDataAPI()
-      const router = renderPage(dailyRoute)
-      await waitFor(() => {
-        expect(router.state.location.pathname).toEqual(dailyRoute)
+      await act(async () => {
+        renderPage(dailyRoute)
       })
 
       await testDailyViewTooltipsAndValuesMgdl()
@@ -98,9 +97,8 @@ describe('Daily view for anyone', () => {
       mockDataAPI(getCompleteDailyViewDataDblg2(DeviceSystem.Dblg2, "1.1.0"))
       jest.spyOn(ConfigService, 'getIsEatingShortlyEnabled').mockReturnValue(true)
 
-      const router = renderPage(dailyRoute)
-      await waitFor(() => {
-        expect(router.state.location.pathname).toEqual(dailyRoute)
+      await act(async () => {
+        renderPage(dailyRoute)
       })
 
       await testDailyViewTooltipsForDblg2()
@@ -111,9 +109,8 @@ describe('Daily view for anyone', () => {
   describe('with recent software version device (>1.17)', () => {
     it('should render correct tooltips and values', async () => {
       mockDataAPI(getCompleteDailyViewData(DeviceSystem.Dblg1, "1.17"))
-      const router = renderPage(dailyRoute)
-      await waitFor(() => {
-        expect(router.state.location.pathname).toEqual(dailyRoute)
+      await act(async () => {
+        renderPage(dailyRoute)
       })
 
       await testDailyViewTooltipsForRecentSoftware()
@@ -251,9 +248,8 @@ describe('Daily view for anyone', () => {
   describe('with timechange data', () => {
     it('should display a time or timezone change indicator', async () => {
       mockDataAPI(getTimezoneChangeData())
-      const router = renderPage(dailyRoute)
-      await waitFor(() => {
-        expect(router.state.location.pathname).toEqual(dailyRoute)
+      await act(async () => {
+        renderPage(dailyRoute)
       })
 
       await checkTimeChangeIndicator()
@@ -264,9 +260,8 @@ describe('Daily view for anyone', () => {
     it('should display default target widgets', async () => {
       mockPatientLogin(patientPregnancyInfo)
       mockDataAPI()
-      const router = renderPage(dailyRoute)
-      await waitFor(() => {
-        expect(router.state.location.pathname).toEqual(dailyRoute)
+      await act(async () => {
+        renderPage(dailyRoute)
       })
 
       await checkTimeInRangeDefaultStats()
