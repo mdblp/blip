@@ -27,6 +27,7 @@
 
 import React, { type FunctionComponent } from 'react'
 import styles from './stat-legend.css'
+import { formatNumberForLang } from 'yourloops/lib/language'
 
 interface StatLegendElementProps {
   cbgClassName: string
@@ -39,7 +40,7 @@ export const StatLegendElement: FunctionComponent<StatLegendElementProps> = (pro
   return (
     <li className={`${styles['stat-legend-item']} ${styles[`${cbgClassName}-border-bottom`]}`}>
       <span>
-        {value}
+        {formatNumberForLang(value)}
       </span>
     </li>
   )

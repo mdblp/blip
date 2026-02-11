@@ -30,6 +30,7 @@ import Box from '@mui/material/Box'
 import styles from '../insulin/insulin-stat.css'
 import commonStyles from '../../../styles/stat-common.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
+import { formatNumberForLang } from 'yourloops/lib/language'
 
 interface StatLineProps {
   title: string
@@ -62,7 +63,7 @@ export const StatLine: FC<StatLineProps> = (props) => {
             alignItems: "baseline"
           }}>
         <span className={valueClasses}>
-          {value}
+          {formatNumberForLang(value)}
         </span>
           <span className={styles.rowUnits}>
           {units}

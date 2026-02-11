@@ -34,6 +34,7 @@ import { SimpleValue } from '../common/simple-value'
 import { EMPTY_DATA_PLACEHOLDER } from '../../../models/stats.model'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import Box from '@mui/material/Box'
+import { formatNumberForLang } from 'yourloops/lib/language'
 
 interface AverageDailyDoseStatProps {
   annotations: string[]
@@ -86,7 +87,7 @@ const AverageDailyDoseStat: FunctionComponent<AverageDailyDoseStatProps> = (prop
           </div>
           <div>
             <span className={styles.inputValue}>
-              {weight}
+              {formatNumberForLang(weight)}
             </span>
             <span className={styles.units}>
               {weightSuffix}
@@ -98,7 +99,7 @@ const AverageDailyDoseStat: FunctionComponent<AverageDailyDoseStatProps> = (prop
             {footerLabel && <div className={styles.outputLabel}>{footerLabel}</div>}
             <div>
               <span className={outputValueClasses}>
-                {computedOutputValue}
+                {formatNumberForLang(computedOutputValue)}
               </span>
               <span className={styles.outputSuffix}>
               {t('U/kg')}

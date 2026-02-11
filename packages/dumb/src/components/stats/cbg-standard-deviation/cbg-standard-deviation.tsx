@@ -35,6 +35,7 @@ import { computeBgClassesBarStyle, computeCBGStyle } from '../common/cbg-utils'
 import { type BgClasses } from 'medical-domain'
 import { StatColoredBar } from '../stat-colored-bar/stat-colored-bar'
 import { LineColor } from '../../../models/enums/line-color.enum'
+import { formatNumberForLang } from 'yourloops/lib/language'
 
 export interface CBGStandardDeviationProps {
   annotations: string[]
@@ -72,9 +73,9 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
               &nbsp;
               <span className={styles['title-value']}>
                 (
-                <span className={`${valueBasedStyles.min.color} ${styles.spacing}`}>{standardDeviationMin}</span>
+                <span className={`${valueBasedStyles.min.color} ${styles.spacing}`}>{formatNumberForLang(standardDeviationMin)}</span>
                 -
-                <span className={`${valueBasedStyles.max.color} ${styles.spacing}`}>{standardDeviationMax}</span>
+                <span className={`${valueBasedStyles.max.color} ${styles.spacing}`}>{formatNumberForLang(standardDeviationMax)}</span>
                 )
               </span>
             </>
@@ -125,7 +126,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
                 fontSize: "20px",
                 marginLeft: "auto"
               }}>
-              {standardDeviation}
+              {formatNumberForLang(standardDeviation)}
             </Box>
           </>
         )}
