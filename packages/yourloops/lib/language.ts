@@ -120,6 +120,14 @@ const getLangName = (languageCode: LanguageCodes): string => {
   return _.get(locales, `resources.${languageCode}.name`, 'en')
 }
 
+const formatNumberForLang = (decimal: number | string): string => {
+  const lang = getCurrentLang()
+  if (lang !== 'en') {
+    return decimal.toString().replace(".",",")
+  }
+  return decimal.toString()
+}
+
 export {
   init,
   t,
@@ -127,6 +135,7 @@ export {
   getCurrentLang,
   getLangName,
   availableLanguageCodes,
-  availableCountries
+  availableCountries,
+  formatNumberForLang
 }
 export default i18n
