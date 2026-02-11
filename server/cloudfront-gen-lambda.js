@@ -194,10 +194,14 @@ function genContentSecurityPolicy() {
   contentSecurityPolicy.frameSrc.push(`https://${blipConfig.AUTH0_DOMAIN}`)
 
   // Allow the integration of PDF files (product labels documents, settings memo) hosted on a remote server
+  const settingMemoUrls = getAllSettingsMemoUrls()
+
   contentSecurityPolicy.frameSrc.push(
     ...PRODUCT_LABELLING_URLS,
-    ...getAllSettingsMemoUrls()
+    ...settingMemoUrls
   )
+
+  contentSecurityPolicy.connectSrc.push(...settingMemoUrls)
 
   contentSecurityPolicy.objectSrc.push(
     ...PRODUCT_LABELLING_URLS
