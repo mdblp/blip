@@ -26,7 +26,6 @@
  */
 
 import type { PatientData } from '../../../../lib/data/models/patient-datum.model'
-import type { MessageNote } from '../../../../lib/data/models/message-note.model'
 import type { PatientDataRange } from '../../../../lib/data/models/data-range.model'
 import { CONFIDENTIAL_MODE_ID } from '../../../integration/mock/data.api.mock'
 
