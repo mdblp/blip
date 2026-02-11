@@ -6,6 +6,7 @@ It is based on Tidepool Blip 1.27.
 ### Added
 - YLP-3613 Memos on DBL settings in Devices view
 - YLP-3617 As a user, I can see the devices changes history
+- YLP-3785 Be able to know the effective DBLG1 or DBLG2 settings for the day or period displayed in the daily view
 
 ### Changed
 - YLP-2823 Use , instead of . for languages other than English
