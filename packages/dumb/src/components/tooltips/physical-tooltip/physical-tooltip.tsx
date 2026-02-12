@@ -96,7 +96,7 @@ export const PhysicalTooltip: FunctionComponent<PhysicalTooltipProps> = (props) 
             <TooltipLine label={t('Entered at')} value={formatInputTime(physicalActivity.inputTime, timePrefs)} />
           }
           {
-            physicalActivity.updateTime &&
+            physicalActivity.updateTime && physicalActivity.updateTime != physicalActivity.inputTime &&
             <TooltipLine label={t('Updated at')} value={formatInputTime(physicalActivity.updateTime, timePrefs)} />
           }
         </div>
