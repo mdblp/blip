@@ -31,6 +31,7 @@ import { type TimePrefs } from 'medical-domain'
 import { computeDateValue } from '../../../../utils/tooltip/tooltip.util';
 import { useTrendsTooltip } from './trends-tooltip.hook'
 import { TooltipSide } from '../../../../models/enums/tooltip-side.enum'
+import { formatNumberForLang } from '../../../stats/stats.util'
 
 export interface Offset {
   top: number
@@ -120,7 +121,7 @@ export const TrendsTooltip: FunctionComponent<TooltipProps> = (
       }
       {content &&
         <div data-testid="tooltip-daily-content" className={styles.content}>
-          <span>{content}</span>
+          <span>{formatNumberForLang(content.toString())}</span>
         </div>
       }
     </div>
