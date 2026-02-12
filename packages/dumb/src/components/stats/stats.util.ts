@@ -32,9 +32,8 @@ export const ensureNumeric = (value: number | undefined | null): number => {
 }
 
 
-export const formatDecimalForLang = (decimal: number | string): string => {
+export const formatNumberForLang = (decimal: number | string): string => {
   const lang = i18next.language
-  console.log("formatDecimalForLang lang=", lang)
   if (lang === undefined || lang === 'en') {
     return decimal.toString()
   }

@@ -28,7 +28,7 @@ import React, { type FunctionComponent, memo } from 'react'
 import styles from './total-insulin-stat.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import Box from '@mui/material/Box'
-import { formatNumberForLang } from 'yourloops/lib/language'
+import { formatNumberForLang } from '../stats.util'
 
 interface TotalInsulinPropsData {
   id: string
@@ -50,7 +50,7 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
 
   const percent = (value: number): string => {
     const res = Math.round(100 * value / total)
-    return res > 0 ? res.toString(10) : '--'
+    return res > 0 ? formatNumberForLang(res.toString(10)) : '--'
   }
 
   return (

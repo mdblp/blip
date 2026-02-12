@@ -30,7 +30,7 @@ import Box from '@mui/material/Box'
 import styles from '../insulin/insulin-stat.css'
 import commonStyles from '../../../styles/stat-common.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import { formatNumberForLang } from 'yourloops/lib/language'
+import { formatNumberForLang } from '../stats.util'
 
 interface StatLineProps {
   title: string
