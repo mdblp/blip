@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -94,6 +94,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
   const {
     rescueCarbsPerDay,
     totalMealCarbsWithRescueCarbsEntries,
+    totalRescueCarbsEntries,
     totalCarbsPerDay,
     mealCarbsPerDay,
   } = CarbsStatisticsService.getCarbsData(medicalData.meals, medicalData.wizards, numberOfDays, dateFilter)
@@ -182,6 +183,7 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
       <DataCard>
         <CarbsStat
           totalMealCarbsWithRescueCarbsEntries={totalMealCarbsWithRescueCarbsEntries}
+          totalRescueCarbsEntries={totalRescueCarbsEntries}
           totalCarbsPerDay={Math.round(totalCarbsPerDay*10)/10}
           rescueCarbsPerDay={Math.round(rescueCarbsPerDay*10)/10}
           mealCarbsPerDay={Math.round(mealCarbsPerDay*10)/10}
