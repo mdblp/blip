@@ -34,7 +34,7 @@ import { computeBgClassesBarStyle, computeCBGStyle } from '../common/cbg-utils'
 import { type BgClasses } from 'medical-domain'
 import { StatColoredBar } from '../stat-colored-bar/stat-colored-bar'
 import { LineColor } from '../../../models/enums/line-color.enum'
-import { formatNumberForLang } from 'yourloops/lib/language'
+import { formatNumberForLang } from '../stats.util'
 
 export interface AverageGlucoseProps {
   bgClasses: BgClasses

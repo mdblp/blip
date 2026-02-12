@@ -30,6 +30,7 @@ import commonStyles from '../../../../styles/tooltip-common.css'
 import styles from './tooltip-line.css'
 import { TooltipColor } from '../../../../models/enums/tooltip-color.enum'
 import Box from '@mui/material/Box'
+import { formatNumberForLang } from '../../../stats/stats.util'
 
 interface TooltipLineProps {
   label: string
@@ -68,7 +69,7 @@ export const TooltipLine: FunctionComponent<TooltipLineProps> = (props) => {
             flexDirection: "row",
             ml: 1
           }}>
-          <span>{value}</span>
+          <span>{formatNumberForLang(value)}</span>
           {units && <span className={styles.units}>{units}</span>}
         </Box>
       }

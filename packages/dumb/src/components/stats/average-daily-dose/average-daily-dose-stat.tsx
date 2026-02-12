@@ -34,7 +34,7 @@ import { SimpleValue } from '../common/simple-value'
 import { EMPTY_DATA_PLACEHOLDER } from '../../../models/stats.model'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import Box from '@mui/material/Box'
-import { formatNumberForLang } from 'yourloops/lib/language'
+import { formatNumberForLang } from '../stats.util'
 
 interface AverageDailyDoseStatProps {
   annotations: string[]
