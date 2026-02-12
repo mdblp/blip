@@ -40,6 +40,7 @@ import classes from './device.css'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { isEllipsisActive } from '../../lib/utils'
+import { formatNumberForLang } from '../../lib/language'
 
 interface ParameterListProps {
   parameters: ParameterConfig[]
@@ -80,7 +81,7 @@ export const ParameterList: FC<ParameterListProps> = ({ parameters }) => {
                     </Typography>
                   </Tooltip>
                 </TableCell>
-                <TableCell align="right">{formatParameterValue(parameter.value, parameter.unit)}</TableCell>
+                <TableCell align="right">{formatNumberForLang(formatParameterValue(parameter.value, parameter.unit))}</TableCell>
                 <TableCell align="right">{parameter.unit}</TableCell>
               </TableRow>
             ))}

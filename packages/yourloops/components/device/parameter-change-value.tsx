@@ -31,6 +31,7 @@ import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material/styles'
 import { formatParameterValue } from './utils/device.utils'
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
+import { formatNumberForLang } from '../../lib/language'
 
 interface ParameterChangeValueProps {
   parameter: PumpSettingsParameter
@@ -48,11 +49,11 @@ export const ParameterChangeValue: FC<ParameterChangeValueProps> = ({ parameter 
       }}>
       {parameter.previousValue &&
         <>
-          <span>{`${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}`}</span>
+          <span>{`${formatNumberForLang(formatParameterValue(parameter.previousValue, parameter.previousUnit))} ${parameter.previousUnit}`}</span>
           <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
         </>
       }
-      <span>{`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}</span>
+      <span>{`${formatNumberForLang(formatParameterValue(parameter.value, parameter.unit))} ${parameter.unit}`}</span>
     </Box>
   )
 }

@@ -39,6 +39,7 @@ import { PumpSettings } from 'medical-domain'
 import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
+import { formatNumberForLang } from '../../../lib/language'
 
 interface LastUpdatesCardProps {
   pumpSettings: PumpSettings
@@ -97,11 +98,11 @@ export const LastUpdatesCard: FC<LastUpdatesCardProps> = (props) => {
                   {t(`params|${parameter.name}`)} (
                   {parameter.previousValue &&
                     <>
-                      {formatParameterValue(parameter.previousValue, parameter.previousUnit)}{parameter.previousUnit}
+                      {formatNumberForLang(formatParameterValue(parameter.previousValue, parameter.previousUnit))}{parameter.previousUnit}
                       <span> ➞ </span>
                     </>
                   }
-                  {formatParameterValue(parameter.value, parameter.unit)}{parameter.unit})
+                  {formatNumberForLang(formatParameterValue(parameter.value, parameter.unit))}{parameter.unit})
                 </TableCell>
               </TableRow>
             ))}

@@ -25,6 +25,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import i18next from 'i18next'
+
 export const ensureNumeric = (value: number | undefined | null): number => {
   return !value || isNaN(value) ? 0 : value
+}
+
+
+export const formatNumberForLang = (decimal: number | string): string => {
+  const lang = i18next.language
+  if (lang === undefined || lang === 'en') {
+    return decimal.toString()
+  }
+  return decimal.toString().replace(".",",")
 }

@@ -32,6 +32,7 @@ import styles from '../insulin/insulin-stat.css'
 import { useTheme } from '@mui/material/styles'
 import { roundToOneDecimal } from 'yourloops/components/statistics/statistics.util'
 import { EMPTY_DATA_PLACEHOLDER } from '../../../models/stats.model'
+import { formatNumberForLang } from '../stats.util'
 
 interface StatLineWithChipProps {
   title: string
@@ -67,7 +68,7 @@ export const StatLineWithChip: FC<StatLineWithChipProps> = (props) => {
           alignItems: "center"
         }}>
         <Chip
-          label={`${getPercentage(Math.max(value, 0))} %`}
+          label={`${formatNumberForLang(getPercentage(Math.max(value, 0)))} %`}
           variant="outlined"
           size="small"
           sx={{ marginRight: theme.spacing(1) }}
@@ -80,7 +81,7 @@ export const StatLineWithChip: FC<StatLineWithChipProps> = (props) => {
             alignItems: "baseline"
           }}>
           <span className={styles.rowValue}>
-            {value > 0 ? value : '0'}
+            {value > 0 ? formatNumberForLang(value) : '0'}
           </span>
           <span className={styles.rowUnits}>
            {units}

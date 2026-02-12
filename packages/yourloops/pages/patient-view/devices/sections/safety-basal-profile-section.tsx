@@ -40,6 +40,7 @@ import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
 import { DeviceSystem, SecurityBasalConfig } from 'medical-domain'
 import { isSafetyBasalAvailable, getSafetyBasalItems, SafetyBasalItem } from 'dumb'
+import { formatNumberForLang } from '../../../../lib/language'
 
 interface SafetyBasalProfileSectionProps {
   safetyBasalConfig: SecurityBasalConfig
@@ -87,7 +88,7 @@ export const SafetyBasalProfileSection: FC<SafetyBasalProfileSectionProps> = ({ 
                     <TableRow key={`${item.startTime}-${index}`} className={classes.tableRow}>
                       <TableCell>{item.startTime}</TableCell>
                       <TableCell>{item.endTime}</TableCell>
-                      <TableCell>{item.rate}</TableCell>
+                      <TableCell>{formatNumberForLang(item.rate)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
