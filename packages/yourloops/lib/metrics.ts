@@ -98,6 +98,8 @@ function sendMatomoMetrics(category: string, action: string, name?: string, valu
         matomoPaq.push(['setDomains', config.DOMAIN_NAME ?? window.location.hostname])
         matomoPaq.push(['trackAllContentImpressions'])
         matomoPaq.push(['enableLinkTracking'])
+        /*Set role for matomo*/
+        matomoPaq.push(['setCustomDimension', 1, 'hcp']);
         break
       case 'disabled':
         matomoPaq.push(['forgetConsentGiven'])
