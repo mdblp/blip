@@ -57,11 +57,6 @@ jobs:
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/publish' }}
     needs: build
     runs-on: ubuntu-latest
-    container:
-      image: docker.ci.diabeloop.eu/ci-toolbox:latest
-      credentials:
-        username: ${{ secrets.NEXUS_USERNAME }}
-        password: ${{ secrets.NEXUS_PASSWORD }}
 
     steps:
       - uses: xt0rted/pull-request-comment-branch@v2
@@ -76,8 +71,17 @@ jobs:
 
       - name: Get yourloops version from changelog
         run: |
-          cd blip
-          echo "semver=$(release-helper get-version)" > version.env
+          docker login ${{ secrets.REGISTRY }} \
+            -u ${{ secrets.NEXUS_USERNAME }} \
+            -p ${{ secrets.NEXUS_PASSWORD }}
+
+          docker run --rm \
+            -v ${{ github.workspace }}:/dblprm/blip/:rw --user 0:0
+            docker.ci.diabeloop.eu/ci-toolbox:latest \
+            sh -c "
+              cd blip
+              echo \"semver=\$(release-helper get-version)\" > version.env
+            "
 
       - name: Read env file
         id: changelog-version
