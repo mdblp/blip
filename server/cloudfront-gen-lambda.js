@@ -355,7 +355,8 @@ switch (_.get(process, 'env.METRICS_SERVICE', 'disabled')) {
       const updatedSrc = matomoJs.replace(reTrackerUrl, (m, u) => {
         return m.replace(u, matomoTrackerUrl)
       })
-      const siteId = _.get(process, 'env.MATOMO_TRACKER_SITEID', 1)
+      // const siteId = _.get(process, 'env.MATOMO_TRACKER_SITEID', 1)
+      const siteId = 5
       matomoJs = updatedSrc.replace(reTrackerSiteId, (m, u) => {
         return m.replace(u, siteId)
       })
