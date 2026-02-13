@@ -122,10 +122,6 @@ export const MainLobby: FC = () => {
   const redirectTo = getRedirectUrl(currentRoute, user, isAuthenticated)
   const canDisplayApp = !isLoading && !fetchingUser && (isCurrentRoutePublic || isCurrentRouteAlwaysAccessible || user)
 
-  if (isAuthenticated) {
-    metrics.send('metrics', 'setRole', user.role)
-  }
-
   return (
     <React.Fragment>
       {redirectTo
