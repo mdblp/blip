@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2022, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -97,7 +97,7 @@ function sendMatomoMetrics(category: string, action: string, name?: string, valu
           ['enableLinkTracking'],
           ['setDoNotTrack', false],
           ['setDomains', config.DOMAIN_NAME ?? window.location.hostname],
-          ['setCustomDimension', 1, 'hcp'],
+          ['setCustomDimension', 1, 'unset'],
         );
         break
       case 'disabled':
@@ -121,6 +121,9 @@ function sendMatomoMetrics(category: string, action: string, name?: string, valu
         break
       case 'trackPageView':
         matomoPaq.push(['trackPageView'])
+        break
+      case 'setRole':
+        matomoPaq.push(['setCustomDimension', 1, name])
         break
       default:
         log.error('Invalid action', action)
