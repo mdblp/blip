@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -54,6 +54,7 @@ import Box from '@mui/material/Box'
 import { VerifyEmailResultPage } from '../pages/verify-email/verify-email-result-page'
 import { SignupInformationPage } from '../pages/signup-information/signup-information-page'
 import { DblCommunicationPage } from '../pages/dbl-communication/dbl-communication'
+import metrics from '../lib/metrics'
 
 const muiCache = createCache({
   key: 'mui',
@@ -120,6 +121,10 @@ export const MainLobby: FC = () => {
 
   const redirectTo = getRedirectUrl(currentRoute, user, isAuthenticated)
   const canDisplayApp = !isLoading && !fetchingUser && (isCurrentRoutePublic || isCurrentRouteAlwaysAccessible || user)
+
+  if (isAuthenticated) {
+    metrics.send('metrics', 'setRole', user.role)
+  }
 
   return (
     <React.Fragment>
