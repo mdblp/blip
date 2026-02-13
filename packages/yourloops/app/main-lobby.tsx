@@ -54,7 +54,6 @@ import Box from '@mui/material/Box'
 import { VerifyEmailResultPage } from '../pages/verify-email/verify-email-result-page'
 import { SignupInformationPage } from '../pages/signup-information/signup-information-page'
 import { DblCommunicationPage } from '../pages/dbl-communication/dbl-communication'
-import metrics from '../lib/metrics'
 
 const muiCache = createCache({
   key: 'mui',
