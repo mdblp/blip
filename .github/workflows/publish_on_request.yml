@@ -76,7 +76,7 @@ jobs:
             -p ${{ secrets.NEXUS_PASSWORD }}
 
           docker run --rm \
-            -v ${{ github.workspace }}:/dblprm/blip/:rw --user 0:0
+            -v ${{ github.workspace }}:/dblprm/blip/:rw --user 0:0 \
             docker.ci.diabeloop.eu/ci-toolbox:latest \
             sh -c "
               cd blip
