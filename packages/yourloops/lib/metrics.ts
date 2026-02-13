@@ -97,7 +97,7 @@ function sendMatomoMetrics(category: string, action: string, name?: string, valu
           ['enableLinkTracking'],
           ['setDoNotTrack', false],
           ['setDomains', config.DOMAIN_NAME ?? window.location.hostname],
-          ['setCustomDimension', 1, 'unset'],
+          ['setCustomDimension', 1, 'unset']
         );
         break
       case 'disabled':
@@ -171,16 +171,16 @@ const metrics = {
       return
     }
 
-    switch (config.METRICS_SERVICE) {
-      case 'matomo':
-        sendMatomoMetrics(category, action, name, value)
-        break
-      case 'disabled':
-        logDisabledMetricsConfiguration()
-        break
-      default:
-        logUnknownMetricsConfiguration()
-    }
+    // switch (config.METRICS_SERVICE) {
+    //   case 'matomo':
+    sendMatomoMetrics(category, action, name, value)
+    //     break
+    //   case 'disabled':
+    //     logDisabledMetricsConfiguration()
+    //     break
+    //   default:
+    //     logUnknownMetricsConfiguration()
+    // }
   },
   setVariable: (name: string, value: string, scope: VariableScope = 'page'): void => {
     const matomoPaq: unknown[] | undefined = window._paq
