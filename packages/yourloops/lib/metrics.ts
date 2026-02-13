@@ -90,16 +90,15 @@ function sendMatomoMetrics(category: string, action: string, name?: string, valu
   if (category === 'metrics') {
     switch (action) {
       case 'enabled':
-        matomoPaq.push(['setConsentGiven'])
-        // Do it another time, since only one time seems to not be always enough:
-        matomoPaq.push(['setConsentGiven'])
-        // Clear the do not track default check
-        matomoPaq.push(['setDoNotTrack', false])
-        matomoPaq.push(['setDomains', config.DOMAIN_NAME ?? window.location.hostname])
-        matomoPaq.push(['trackAllContentImpressions'])
-        matomoPaq.push(['enableLinkTracking'])
-        /*Set role for matomo*/
-        matomoPaq.push(['setCustomDimension', 1, 'hcp']);
+        matomoPaq.push(['trackAllContentImpressions'],
+          /*Push two times because one was not enough*/
+          ['setConsentGiven'],
+          ['setConsentGiven'],
+          ['enableLinkTracking'],
+          ['setDoNotTrack', false],
+          ['setDomains', config.DOMAIN_NAME ?? window.location.hostname],
+          ['setCustomDimension', 1, 'hcp'],
+        );
         break
       case 'disabled':
         matomoPaq.push(['forgetConsentGiven'])
