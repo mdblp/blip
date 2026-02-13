@@ -33,7 +33,6 @@ import type MedicalData from '../../../src/domains/models/medical/medical-data.m
 import type MedicalDataOptions from '../../../src/domains/models/medical/medical-data-options.model'
 import BasalService from '../../../src/domains/repositories/medical/datum/basal.service'
 import BolusService from '../../../src/domains/repositories/medical/datum/bolus.service'
-import PhysicalActivityService from '../../../src/domains/repositories/medical/datum/physical-activity.service'
 import WizardService from '../../../src/domains/repositories/medical/datum/wizard.service'
 import DatumService from '../../../src/domains/repositories/medical/datum.service'
 import MedicalDataService from '../../../src/domains/repositories/medical/medical-data.service'
@@ -1490,7 +1489,6 @@ describe('MedicalDataService', () => {
       BasalService.deduplicate = basalDeduplicateMock
       BolusService.deduplicate = bolusDeduplicateMock
       WizardService.deduplicate = wizardDeduplicateMock
-      PhysicalActivityService.deduplicate = physicalActivityDeduplicateMock
     })
 
     afterEach(() => {
@@ -1618,7 +1616,6 @@ describe('MedicalDataService', () => {
       BasalService.deduplicate = basalDeduplicateMock
       BolusService.deduplicate = bolusDeduplicateMock
       WizardService.deduplicate = wizardDeduplicateMock
-      PhysicalActivityService.deduplicate = physicalActivityDeduplicateMock
     })
 
     afterEach(() => {
@@ -1715,7 +1712,6 @@ describe('MedicalDataService', () => {
       BasalService.deduplicate = basalDeduplicateMock
       BolusService.deduplicate = bolusDeduplicateMock
       WizardService.deduplicate = wizardDeduplicateMock
-      PhysicalActivityService.deduplicate = physicalActivityDeduplicateMock
       // eslint-disable-next-line no-import-assign
       BasiscsDataService.generateBasicData = generateBasicDataMock
       medicalDataService.add({})
