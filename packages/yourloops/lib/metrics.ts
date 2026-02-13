@@ -188,9 +188,9 @@ const metrics = {
     if (!found) {
       customVariables[scope].set(name, id)
     }
-    if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
+    // if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
       matomoPaq.push(['setCustomVariable', id, name, value, scope])
-    }
+    // }
   },
   deleteVariable: (name: string, scope: VariableScope = 'page'): void => {
     const matomoPaq: unknown[] | undefined = window._paq
@@ -200,32 +200,32 @@ const metrics = {
       return
     }
     customVariables[scope].delete(name)
-    if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
+    // if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
       matomoPaq.push(['deleteCustomVariable', id, scope])
-    }
+    // }
   },
   setUser: (user: User): void => {
     const matomoPaq: unknown[] | undefined = window._paq
-    if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
+    // if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
       matomoPaq.push(['setUserId', user.id])
       metrics.setVariable('UserRole', user.role)
       matomoPaq.push(['trackEvent', 'registration', 'login', user.role])
-    }
+    // }
   },
   resetUser: (): void => {
     const matomoPaq: unknown[] | undefined = window._paq
-    if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
+    // if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
       matomoPaq.push(['trackEvent', 'registration', 'logout'])
       metrics.deleteVariable('UserRole')
       matomoPaq.push(['resetUserId'])
       matomoPaq.push(['deleteCookies']) // Reset visitor id
-    }
+    // }
   },
   setLanguage: (language: string): void => {
-    const matomoPaq: unknown[] | undefined = window._paq
-    if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
+    // const matomoPaq: unknown[] | undefined = window._paq
+    // if (config.METRICS_SERVICE === 'matomo' && _.isObject(matomoPaq)) {
       metrics.setVariable('UserLang', language, 'visit')
-    }
+    // }
   },
   startTimer: (name: string): void => {
     timers.set(name, Date.now())
