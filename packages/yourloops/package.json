@@ -39,7 +39,7 @@
     "@mui/icons-material": "^7.0.0",
     "@mui/material": "^7.0.0",
     "@mui/x-data-grid": "^8.0.0",
-    "axios": "^1.7.4",
+    "axios": "^1.13.5",
     "bows": "^1.7.2",
     "core-js": "^3.38.0",
     "dayjs": "^1.11.10",

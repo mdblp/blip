@@ -36,7 +36,6 @@ import ConfidentialModeService from '../../../src/domains/repositories/medical/d
 import DeviceParameterChangeService from '../../../src/domains/repositories/medical/datum/device-parameter-change.service'
 import MealService from '../../../src/domains/repositories/medical/datum/meal.service'
 import MessageService from '../../../src/domains/repositories/medical/datum/message.service'
-import PhysicalActivityService from '../../../src/domains/repositories/medical/datum/physical-activity.service'
 import PumpSettingsService from '../../../src/domains/repositories/medical/datum/pump-settings.service'
 import ReservoirChangeService from '../../../src/domains/repositories/medical/datum/reservoir-change.service'
 import SmbgService from '../../../src/domains/repositories/medical/datum/smbg.service'

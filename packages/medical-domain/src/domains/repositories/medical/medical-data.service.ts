@@ -38,7 +38,6 @@ import BolusService from './datum/bolus.service'
 import DeviceParameterChangeService from './datum/device-parameter-change.service'
 import FillService from './datum/fill.service'
 import MessageService from './datum/message.service'
-import PhysicalActivityService from './datum/physical-activity.service'
 import TimeZoneChangeService from './datum/time-zone-change.service'
 import type MedicalDataOptions from '../../models/medical/medical-data-options.model'
 import {
@@ -336,7 +335,6 @@ class MedicalDataService {
     this.medicalData.basal = BasalService.deduplicate(this.medicalData.basal, this._datumOpts)
     this.medicalData.bolus = BolusService.deduplicate(this.medicalData.bolus, this._datumOpts)
     this.medicalData.wizards = WizardService.deduplicate(this.medicalData.wizards, this.medicalData.bolus, this._datumOpts)
-    this.medicalData.physicalActivities = PhysicalActivityService.deduplicate(this.medicalData.physicalActivities, this._datumOpts)
   }
 
   private getLatestPumpSettings(pumpSettings: PumpSettings[]): PumpSettings {
