@@ -29,5 +29,6 @@
 export enum DeviceViewSection {
   ChangeHistory = 'ChangeHistory',
   CurrentParameters = 'CurrentParameters',
+  DeviceChangeHistory = 'DeviceChangeHistory',
   SafetyBasalProfile = 'SafetyBasalProfile'
 }

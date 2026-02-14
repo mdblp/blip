@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,38 +24,32 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+import { type DeviceHistoryChange } from 'medical-domain'
 import React, { FC } from 'react'
-import { ParametersChangeHistory } from '../../../../components/device/parameters-change-history'
-import { PumpSettings } from 'medical-domain'
 import { useTheme } from '@mui/material/styles'
-import { useTranslation } from 'react-i18next'
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
+import Box from '@mui/material/Box'
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
 
-interface ChangeHistorySectionProps {
-  pumpSettings: PumpSettings
-  goToDailySpecificDate: (date: number) => void
+interface DeviceChangeValueProps {
+  device: DeviceHistoryChange
 }
 
-export const ChangeHistorySection: FC<ChangeHistorySectionProps> = (props) => {
-  const { goToDailySpecificDate, pumpSettings } = props
+export const DeviceChangeValue: FC<DeviceChangeValueProps> = ({ device }) => {
   const theme = useTheme()
-  const { t } = useTranslation()
-  const history = pumpSettings.payload.history.parameters
-  const timezone = pumpSettings.timezone
 
   return (
-    <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="change-history-section">
-      <CardHeader title={t('change-history')} />
-      <CardContent>
-        <ParametersChangeHistory
-          goToDailySpecificDate={goToDailySpecificDate}
-          history={history}
-          timezone={timezone}
-        />
-      </CardContent>
-    </Card>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center"
+      }}>
+      {device.previousValue &&
+        <>
+          <span>{`${device.previousValue}`}</span>
+          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
+        </>
+      }
+      <span>{`${device.value}`}</span>
+    </Box>
   )
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,9 +24,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 import React, { FC } from 'react'
-import { ParametersChangeHistory } from '../../../../components/device/parameters-change-history'
+import { DevicesChangeHistory } from '../../../../components/device/devices-change-history'
 import { PumpSettings } from 'medical-domain'
 import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
@@ -39,18 +38,18 @@ interface ChangeHistorySectionProps {
   goToDailySpecificDate: (date: number) => void
 }
 
-export const ChangeHistorySection: FC<ChangeHistorySectionProps> = (props) => {
+export const DeviceChangeHistorySection: FC<ChangeHistorySectionProps> = (props) => {
   const { goToDailySpecificDate, pumpSettings } = props
   const theme = useTheme()
   const { t } = useTranslation()
-  const history = pumpSettings.payload.history.parameters
+  const history = pumpSettings.payload.history.devices
   const timezone = pumpSettings.timezone
 
   return (
-    <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="change-history-section">
-      <CardHeader title={t('change-history')} />
+    <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="device-history-section">
+      <CardHeader title={t('device-change-history')} />
       <CardContent>
-        <ParametersChangeHistory
+        <DevicesChangeHistory
           goToDailySpecificDate={goToDailySpecificDate}
           history={history}
           timezone={timezone}

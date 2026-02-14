@@ -289,7 +289,10 @@ const PumpSettingsMock = (date, time) => {
           value: 72
         }
       ],
-      history
+      history: {
+        parameters: history,
+        devices: []
+      }
     }
   }
 }
@@ -513,7 +516,10 @@ export const pumpSettingsData: Data = {
             name: DeviceSystem.Dblg1,
             swVersion: '1.0.5.25'
           },
-          history,
+          history: {
+            parameters: history,
+            devices: []
+          },
           parameters: [
             { name: 'WEIGHT', value: '72', unit: Unit.Kilogram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
             {
@@ -709,7 +715,10 @@ export const pumpSettingsDblg2: Data = {
             swVersion: '',
             imei: ''
           },
-          history,
+          history: {
+            parameters: history,
+            devices: []
+          },
           parameters: [
             { name: 'WEIGHT', value: '72', unit: Unit.Kilogram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
             {
@@ -837,7 +846,7 @@ export const pumpSettingsDblg2: Data = {
             product: "testPump",
             name: 'Kaleido',
             swVersion: 'beta',
-            serialNumber: '123456',
+            serialNumber: '123456'
           },
           mobileApplication: {
             activationCode: '123456789',
@@ -905,7 +914,10 @@ export const pumpSettingsDblg1Mobigo: Data = {
             name: DeviceSystem.Dblg1,
             swVersion: '1.12.9'
           },
-          history,
+          history: {
+            parameters: history,
+            devices: []
+          },
           parameters: [
             { name: 'WEIGHT', value: '72', unit: Unit.Kilogram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
             {
@@ -1091,10 +1103,13 @@ export const pumpSettingsDblg2WithoutSecurityBasalData: Data = {
             operatingSystem: 'Android',
             osVersion: '14',
             smartphoneModel: 'A25',
-            imei : '',
+            imei: '',
             swVersion: ''
           },
-          history,
+          history: {
+            parameters: history,
+            devices: []
+          },
           parameters: [
             { name: 'WEIGHT', value: '72', unit: Unit.Kilogram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
             {
@@ -1371,7 +1386,10 @@ export const smallDataSet: Data = {
             "serialNumber": "123456",
             "swVersion": "beta"
           },
-          "history": [],
+          "history": {
+            "parameters" : [],
+            "devices" : []
+          },
           "parameters": [
             {
               "effectiveDate": "2020-01-17T08:00:00.000Z",
