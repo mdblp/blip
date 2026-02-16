@@ -71,10 +71,6 @@ const knownTypes: Array<{ data: Record<string, unknown>, service: DatumProcessor
     service: MessageService
   },
   {
-    data: { type: 'physicalActivity' },
-    service: PhysicalActivityService
-  },
-  {
     data: { type: 'pumpSettings' },
     service: PumpSettingsService
   },
