@@ -128,7 +128,6 @@ function genContentSecurityPolicy() {
 
   const metricsUrl = process.env.MATOMO_TRACKER_URL
   if (blipConfig.METRICS_SERVICE === 'matomo' && reUrl.test(metricsUrl)) {
-    console.log("reUrl found for matomo")
     const matomoUrl = metricsUrl.replace(reUrl, '$1')
     contentSecurityPolicy.scriptSrc.push(matomoUrl)
     contentSecurityPolicy.imgSrc.push(matomoUrl)
