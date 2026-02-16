@@ -388,7 +388,7 @@ switch (_.get(process, 'env.METRICS_SERVICE', 'disabled')) {
       indexHtml = indexHtml.replace(reMatomoJs, `$1${matomoConfigScripts}$3`)
 
       fs.writeFileSync(`${distDir}/static/${fileName}`, matomoJs)
-      console.log(`  => Saved matomo js file hashed to filename: ${fileName}`)
+      console.log('  => Saved matomo js file hashed to filename: ' + fileName)
     } else {
       console.error('  /!\\ Invalid matomo config url, please verify your MATOMO_TRACKER_URL env variable /!\\')
     }
