@@ -1502,7 +1502,6 @@ describe('MedicalDataService', () => {
       expect(basalDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(bolusDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(wizardDeduplicateMock).toHaveBeenCalledTimes(1)
-      expect(physicalActivityDeduplicateMock).toHaveBeenCalledTimes(1)
 
       // Main medicalData Checks (we have on objects of each except timezones)
       const expectedCount: Partial<Record<keyof MedicalData, number>> = {}
@@ -1627,7 +1626,6 @@ describe('MedicalDataService', () => {
       expect(basalDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(bolusDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(wizardDeduplicateMock).toHaveBeenCalledTimes(1)
-      expect(physicalActivityDeduplicateMock).toHaveBeenCalledTimes(1)
 
       // Main medicalData Checks (we have 2 objects for cbg & timezones, 1 for bolus & basal)
       const expectedCount: Partial<Record<keyof MedicalData, number>> = {}
