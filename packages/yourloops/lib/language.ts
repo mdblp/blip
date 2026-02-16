@@ -37,7 +37,6 @@ import { getBrowserLocale } from './browser'
 import metrics from './metrics'
 import { zendeskLocale } from './zendesk'
 import { type LanguageCodes } from './auth/models/enums/language-codes.enum'
-import i18next from 'i18next'
 
 const availableLanguageCodes = _.keys(locales.resources) as LanguageCodes[]
 const availableCountries: Country[] = _.map(locales.countries, (item, key) => {
