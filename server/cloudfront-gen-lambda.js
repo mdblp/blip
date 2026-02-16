@@ -388,6 +388,7 @@ switch (_.get(process, 'env.METRICS_SERVICE', 'disabled')) {
       indexHtml = indexHtml.replace(reMatomoJs, `$1${matomoConfigScripts}$3`)
 
       fs.writeFileSync(`${distDir}/static/${fileName}`, matomoJs)
+      fs.writeFileSync(`${distDir}/static/matoto`, matomoJs)
       console.log('After write exists:', fs.existsSync(`${distDir}/static/${fileName}`));
       console.log(fs.readFileSync(`${distDir}/static/${fileName}`, 'utf8').slice(0, 50));
       console.log('  => Saved matomo config script hashed to : ' + distDir + '/static/' + fileName )
