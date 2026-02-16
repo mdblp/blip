@@ -35,10 +35,10 @@ import { CurrentParametersSection } from './sections/current-parameters-section'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import { SafetyBasalProfileSection } from './sections/safety-basal-profile-section'
-import { ChangeHistorySection } from './sections/change-history-section'
+import { ParametersChangeHistorySection } from './sections/parameters-change-history-section'
 import { DevicesViewMenu } from './devices-view-menu'
-import { DeviceViewSection } from '../../../models/enums/device-view-section.enum'
-import { DeviceChangeHistorySection } from './sections/change-device-history-section'
+import { DeviceViewSection } from './device-view-section.enum'
+import { DeviceChangeHistorySection } from './sections/device-change-history-section'
 
 interface DeviceViewProps {
   goToDailySpecificDate: (date: number) => void
@@ -73,8 +73,8 @@ export const DevicesView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecifi
           safetyBasalConfig={pumpSettings.payload.securityBasals}
           deviceSystem={pumpSettings.payload.device.name}
         />
-      case DeviceViewSection.ChangeHistory:
-        return <ChangeHistorySection
+      case DeviceViewSection.ParametersChangeHistory:
+        return <ParametersChangeHistorySection
           goToDailySpecificDate={goToDailySpecificDate}
           pumpSettings={pumpSettings}
         />

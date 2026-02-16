@@ -183,6 +183,10 @@ const sortDeviceHistoryChangeByEffectiveDate = (history: DeviceHistory[]): void 
 }
 
 export const sortDeviceChangeHistory = (history: DeviceHistory[]): void => {
+  if (!history || history.length === 0) {
+    return
+  }
+
   sortDeviceHistoryChangeByChangeDate(history)
   sortDeviceHistoryChangeByEffectiveDate(history)
 }
@@ -194,9 +198,9 @@ export const getTranslationKeyForDeviceChange = (deviceChangeName: string): stri
     case "HANDSET_DEVICE_ID":
       return "device-change-handset-device-id"
     case "HANDSET_SW_VERSION":
-      return "device-change-handset-sw-version"
+      return "device-change-sw-version"
     case "SMARTPHONE_MODEL":
-      return "device-change-smartphone-model"
+      return "smartphone-model"
     case "CGM_NAME":
       return "device-change-cgm-name"
     case "CGM_MANUFACTURER":
@@ -206,9 +210,9 @@ export const getTranslationKeyForDeviceChange = (deviceChangeName: string): stri
     case "PUMP_NAME":
       return "device-change-pump-name"
     case "MOBILE_APP_VERSION":
-      return "device-change-mobile-app-version"
+      return "device-change-sw-version"
     case "MOBILE_APP_ACTIVATION_CODE":
-      return "device-change-mobile-app-activation-code"
+      return "activation-code"
   }
 }
 
