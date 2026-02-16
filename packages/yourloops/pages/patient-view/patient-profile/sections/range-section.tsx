@@ -52,6 +52,7 @@ import { DiabeticProfile } from '../../../../lib/patient/models/patient-diabete-
 import { AdaptAlertsDialog } from '../dialog/adapt-alerts-dialog'
 import { RangeVisualizationChart } from '../charts/range-visualization-chart'
 import { Gender } from '../../../../lib/auth/models/enums/gender.enum'
+import AnalyticsApi from '../../../../lib/analytics/analytics.api'
 
 interface RangeSectionProps {
   patient: Patient
@@ -179,6 +180,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
     setSelectedPatientType(type)
     setSelectedDiabeticProfile(getDiabeticProfileToDisplay(type))
     setErrors(DEFAULT_ERROR_STATE)
+    AnalyticsApi.trackClick(`range-profile-${type}-selected`)
   }
 
   const isFieldDisabled = (type: DiabeticType, field: FieldType): boolean => {
