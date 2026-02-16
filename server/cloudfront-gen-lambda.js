@@ -128,6 +128,7 @@ function genContentSecurityPolicy() {
 
   const metricsUrl = process.env.MATOMO_TRACKER_URL
   if (blipConfig.METRICS_SERVICE === 'matomo' && reUrl.test(metricsUrl)) {
+    console.log("reUrl found for matomo")
     const matomoUrl = metricsUrl.replace(reUrl, '$1')
     contentSecurityPolicy.scriptSrc.push(matomoUrl)
     contentSecurityPolicy.imgSrc.push(matomoUrl)
@@ -387,6 +388,7 @@ switch (_.get(process, 'env.METRICS_SERVICE', 'disabled')) {
       indexHtml = indexHtml.replace(reMatomoJs, `$1${matomoConfigScripts}$3`)
 
       fs.writeFileSync(`${distDir}/static/${fileName}`, matomoJs)
+      console.log(`  => Saved matomo js file hashed to filename: ${fileName}`)
     } else {
       console.error('  /!\\ Invalid matomo config url, please verify your MATOMO_TRACKER_URL env variable /!\\')
     }
