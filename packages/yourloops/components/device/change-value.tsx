@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,10 +25,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import React, { FC } from 'react'
+import { useTheme } from '@mui/material/styles'
+import Box from '@mui/material/Box'
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
 
-export enum DeviceViewSection {
-  ChangeHistory = 'ChangeHistory',
-  CurrentParameters = 'CurrentParameters',
-  DeviceChangeHistory = 'DeviceChangeHistory',
-  SafetyBasalProfile = 'SafetyBasalProfile'
+interface ChangeValueProps {
+  previousValue?: string
+  currentValue: string
+}
+
+export const ChangeValue: FC<ChangeValueProps> = (props) => {
+  const { previousValue, currentValue } = props
+  const theme = useTheme()
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center"
+      }}>
+      {previousValue &&
+        <>
+          <span>{`${previousValue}`}</span>
+          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
+        </>
+      }
+      <span>{`${currentValue}`}</span>
+    </Box>
+  )
 }

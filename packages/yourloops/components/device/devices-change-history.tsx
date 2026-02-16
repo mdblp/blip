@@ -48,7 +48,7 @@ import { useTheme } from '@mui/material/styles'
 import { formatDateWithMomentLongFormat, isEllipsisActive } from '../../lib/utils'
 import classes from './device.css'
 import Tooltip from '@mui/material/Tooltip'
-import { DeviceChangeValue } from './device-change-history'
+import { ChangeValue } from './change-value'
 
 interface DevicesChangeHistoryProps {
   goToDailySpecificDate: (date: number) => void
@@ -79,8 +79,8 @@ export const DevicesChangeHistory: FC<DevicesChangeHistoryProps> = ({ history, g
             </TableRow>
           </TableHead>
           <TableBody>
-            {history.map((DevicesChange, historyCurrentIndex) => (
-              <React.Fragment key={`${DevicesChange.changeDate}-${historyCurrentIndex}`}>
+            {history.map((devicesChange, historyCurrentIndex) => (
+              <React.Fragment key={`${devicesChange.changeDate}-${historyCurrentIndex}`}>
                 <TableRow sx={{ backgroundColor: 'var(--primary-color-background)' }} className="change-date-row">
                   <TableCell colSpan={5}>
                     <Box
@@ -93,10 +93,10 @@ export const DevicesChangeHistory: FC<DevicesChangeHistoryProps> = ({ history, g
                       <IconButton
                         size="small"
                         color="primary"
-                        data-testid={`daily-button-link-${DevicesChange.changeDate}`}
+                        data-testid={`daily-button-link-${devicesChange.changeDate}`}
                         sx={{ padding: 0 }}
                         onClick={() => {
-                          onClickChangeDate(new Date(DevicesChange.changeDate).getTime())
+                          onClickChangeDate(new Date(devicesChange.changeDate).getTime())
                         }}
                       >
                         <OpenInNewIcon fontSize="small" />
@@ -105,15 +105,15 @@ export const DevicesChangeHistory: FC<DevicesChangeHistoryProps> = ({ history, g
                         variant="body2"
                         sx={{ color: theme.palette.primary.main }}
                       >
-                        {formatDateWithMomentLongFormat(new Date(DevicesChange.changeDate), 'llll', timezone)}
+                        {formatDateWithMomentLongFormat(new Date(devicesChange.changeDate), 'llll', timezone)}
                       </Typography>
                     </Box>
                   </TableCell>
                 </TableRow>
-                {DevicesChange.devices.map((device, index) => (
+                {devicesChange.devices.map((device, index) => (
                   <TableRow
                     key={`${device.effectiveDate}-${index}`}
-                    data-testid={`devices-group-${DevicesChange.changeDate.substring(0, 10)}-${historyCurrentIndex}-rows-${index}`}
+                    data-testid={`devices-group-${devicesChange.changeDate.substring(0, 10)}-${historyCurrentIndex}-rows-${index}`}
                     className={`${classes.parameterRow} parameter-change-row`}
                   >
                     <TableCell>
@@ -131,7 +131,7 @@ export const DevicesChangeHistory: FC<DevicesChangeHistoryProps> = ({ history, g
                       </Tooltip>
                     </TableCell>
                     <TableCell>
-                      <DeviceChangeValue device={device} />
+                      <ChangeValue previousValue={device.previousValue} currentValue={ device.value} />
                     </TableCell>
                     <TableCell align="right">
                       {formatDateWithMomentLongFormat(new Date(device.effectiveDate), 'llll', timezone)}

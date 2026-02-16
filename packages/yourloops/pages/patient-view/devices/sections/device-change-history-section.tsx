@@ -33,12 +33,12 @@ import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 
-interface ChangeHistorySectionProps {
+interface DeviceChangeHistorySectionProps {
   pumpSettings: PumpSettings
   goToDailySpecificDate: (date: number) => void
 }
 
-export const DeviceChangeHistorySection: FC<ChangeHistorySectionProps> = (props) => {
+export const DeviceChangeHistorySection: FC<DeviceChangeHistorySectionProps> = (props) => {
   const { goToDailySpecificDate, pumpSettings } = props
   const theme = useTheme()
   const { t } = useTranslation()
