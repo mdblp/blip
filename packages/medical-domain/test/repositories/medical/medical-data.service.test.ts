@@ -28,7 +28,6 @@
 import type Basal from '../../../src/domains/models/medical/datum/basal.model'
 import type Bolus from '../../../src/domains/models/medical/datum/bolus.model'
 import type Wizard from '../../../src/domains/models/medical/datum/wizard.model'
-import type PhysicalActivity from '../../../src/domains/models/medical/datum/physical-activity.model'
 import type MedicalData from '../../../src/domains/models/medical/medical-data.model'
 import type MedicalDataOptions from '../../../src/domains/models/medical/medical-data-options.model'
 import BasalService from '../../../src/domains/repositories/medical/datum/basal.service'
