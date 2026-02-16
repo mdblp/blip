@@ -130,7 +130,7 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip(`carb_group_${CARB_ID}`, '2:00 pmRecommended16gConfirmed15g')
   await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_ID}`, `Physical Activity3:00 pmNameRunningIntensitymoderateDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_CREATE_TIME).format('h')}:00 pmUpdated at${moment(PHYSICAL_ACTIVITY_UPDATE_TIME).format('h')}:10 pm`)
   await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_WITHOUT_NAME_ID}`, `Physical Activity4:00 pmIntensitymoderateDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_WITHOUT_NAME_TIME).format('h')}:00 pm`)
-  expect(screen.queryByTestId(`pa_group_${PHYSICAL_ACTIVITY_WITHOUT_NAME_ID}`)).toContain('Updated at')
+  expect(screen.queryByTestId(`pa_group_${PHYSICAL_ACTIVITY_WITHOUT_NAME_ID}`)).not.toContain('Updated at')
   await checkTidelineContainerElementTooltip(`reservoir_group_${RESERVOIR_CHANGE_ID}`, 'Pump7:00 pmCartridge change')
   await checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, 'Settings change6:00 pmAggressiveness for lunch110→100%')
   await checkTidelineContainerElementTooltip(`cbg_${CBG_ID}`, 'Glycemia5:30 pmGlucose189')
