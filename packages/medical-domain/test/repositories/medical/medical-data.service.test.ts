@@ -1438,12 +1438,6 @@ const wizardDeduplicateMock = jest.fn(
   }
 )
 
-const physicalActivityDeduplicateMock = jest.fn(
-  (data: PhysicalActivity[], _opts: MedicalDataOptions) => {
-    return data
-  }
-)
-
 const testMedicalData = (medicalData: MedicalDataService, typeCounts: Record<keyof MedicalData, number>) => {
   Object.keys(typeCounts).forEach((dataType) => {
     const key = dataType as keyof MedicalData
