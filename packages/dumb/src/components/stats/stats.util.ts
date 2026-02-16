@@ -34,8 +34,9 @@ export const ensureNumeric = (value: number | undefined | null): number => {
 
 export const formatNumberForLang = (decimal: number | string): string => {
   const lang = i18next.language
-  if (lang === undefined || lang === 'en') {
-    return decimal.toString()
+  const formatter = Intl.NumberFormat(lang)
+  if (typeof decimal === "string") {
+    decimal = parseFloat(decimal)
   }
-  return decimal.toString().replace(".",",")
+  return formatter.format(decimal)
 }

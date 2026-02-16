@@ -37,6 +37,7 @@ import { getBrowserLocale } from './browser'
 import metrics from './metrics'
 import { zendeskLocale } from './zendesk'
 import { type LanguageCodes } from './auth/models/enums/language-codes.enum'
+import i18next from 'i18next'
 
 const availableLanguageCodes = _.keys(locales.resources) as LanguageCodes[]
 const availableCountries: Country[] = _.map(locales.countries, (item, key) => {
@@ -121,11 +122,12 @@ const getLangName = (languageCode: LanguageCodes): string => {
 }
 
 const formatNumberForLang = (decimal: number | string): string => {
-  const lang = getCurrentLang()
-  if (lang !== 'en') {
-    return decimal.toString().replace(".",",")
+  const lang= getCurrentLang()
+  const formatter = Intl.NumberFormat(lang)
+  if (typeof decimal === "string") {
+    decimal = parseFloat(decimal)
   }
-  return decimal.toString()
+  return formatter.format(decimal)
 }
 
 export {
