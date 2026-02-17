@@ -275,16 +275,18 @@ jobs:
         uses: actions/download-artifact@v4
 
       - name: Get yourloops version from changelog
-        uses: addnab/docker-run-action@v3
-        with:
-          username: ${{ secrets.NEXUS_USERNAME }}
-          password: ${{ secrets.NEXUS_PASSWORD }}
-          registry: ${{ secrets.REGISTRY }}
-          options: -v ${{ github.workspace }}:/dblprm/blip:rw --user 0:0
-          image: docker.ci.diabeloop.eu/ci-toolbox:latest
-          run: |
-            cd blip
-            echo "semver=$(release-helper get-version)" > version.env
+        run: |
+          docker login ${{ secrets.REGISTRY }} \
+            -u ${{ secrets.NEXUS_USERNAME }} \
+            -p ${{ secrets.NEXUS_PASSWORD }}
+
+          docker run --rm \
+            -v ${{ github.workspace }}:/dblprm/blip/:rw --user 0:0 \
+            docker.ci.diabeloop.eu/ci-toolbox:latest \
+            sh -c "
+              cd blip
+              echo \"semver=\$(release-helper get-version)\" > version.env
+            "
 
       - name: Read env file
         id: changelog-version
