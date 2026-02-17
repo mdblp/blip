@@ -33,6 +33,10 @@ export const ensureNumeric = (value: number | undefined | null): number => {
 
 
 export const formatNumberForLang = (decimal: number | string): string => {
+  /*For some cases, the value is set to --, so we keep this value for all languages */
+  if (decimal == '--') {
+    return '--'
+  }
   const lang = i18next.language
   const formatter = Intl.NumberFormat(lang)
   if (typeof decimal === "string") {
