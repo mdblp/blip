@@ -359,18 +359,23 @@ jobs:
 
       - name: Generating documentation
         env:
+          REGISTRY: ${{ secrets.REGISTRY }}
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
           soupFileName: blip-${{ needs.publish.outputs.version }}-soup.md
-        uses: addnab/docker-run-action@v3
-        with:
-          username: ${{ secrets.NEXUS_USERNAME }}
-          password: ${{ secrets.NEXUS_PASSWORD }}
-          registry: ${{ secrets.REGISTRY }}
-          options: -v ${{ github.workspace }}:/dblprm/blip/:rw --user 0:0
-          image: docker.ci.diabeloop.eu/ci-toolbox:latest
-          run: |
-            echo Generating soup file ${{ env.soupFileName }}
-            cd blip
-            release-helper gen-dep-report --deep-dep 'blip,dumb,medical-domain,tideline,tidepool-viz' "${{ env.soupFileName }}"
+        run: |
+          docker login "$REGISTRY" \
+            -u "$NEXUS_USERNAME" \
+            -p "$NEXUS_PASSWORD"
+
+          docker run --rm \
+            -v ${{ github.workspace }}:/dblprm/blip/:rw --user 0:0 \
+            docker.ci.diabeloop.eu/ci-toolbox:latest \
+            sh -c "
+              echo Generating soup file ${{ env.soupFileName }}
+              cd blip
+              release-helper gen-dep-report --deep-dep 'blip,dumb,medical-domain,tideline,tidepool-viz' "${{ env.soupFileName }}"
+            "
 
       - name: Upload soup file on artifact
         uses: actions/upload-artifact@v4
@@ -379,13 +384,18 @@ jobs:
           path: blip-${{ needs.publish.outputs.version }}-soup.md
 
       - name: Upload soup file to S3 bucket
-        uses: addnab/docker-run-action@v3
-        with:
-          options: -v ${{ github.workspace }}:/blip:rw --user 0:0
-          image: amazon/aws-cli
-          run: |
-            export AWS_ACCESS_KEY_ID=${{ secrets.AWS_KEY_ID }}
-            export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            export AWS_DEFAULT_REGION=eu-west-1
-            cd /blip
-            aws s3 cp blip-${{ needs.publish.outputs.version }}-soup.md s3://${{ secrets.AWS_BUCKET }}/soup/blip/
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: eu-west-1
+          AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/blip:rw \
+            --user 0:0 \
+            -e AWS_ACCESS_KEY_ID \
+            -e AWS_SECRET_ACCESS_KEY \
+            -e AWS_DEFAULT_REGION \
+            -e AWS_BUCKET \
+            amazon/aws-cli \
+            sh -c "cd /blip && aws s3 cp blip-${{ needs.publish.outputs.version }}-soup.md s3://${AWS_BUCKET}/soup/blip/"
