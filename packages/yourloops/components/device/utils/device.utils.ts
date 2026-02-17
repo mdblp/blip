@@ -213,6 +213,8 @@ export const getTranslationKeyForDeviceChange = (deviceChangeName: string): stri
       return "device-change-sw-version"
     case "MOBILE_APP_ACTIVATION_CODE":
       return "activation-code"
+    default:
+      return deviceChangeName
   }
 }
 

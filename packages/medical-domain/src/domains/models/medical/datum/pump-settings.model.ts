@@ -139,4 +139,4 @@ interface PumpSettings extends BaseDatum {
   }
 }
 
-export type { CgmConfig, DeviceConfig, DeviceHistory,DeviceHistoryChange , ParametersChange, PumpConfig, ParameterConfig, PumpSettings, SecurityBasalConfig, SecurityBasalRate, MobileAppConfig }
+export type { CgmConfig, DeviceConfig, DeviceHistory, DeviceHistoryChange, ParametersChange, PumpConfig, ParameterConfig, PumpSettings, SecurityBasalConfig, SecurityBasalRate, MobileAppConfig }

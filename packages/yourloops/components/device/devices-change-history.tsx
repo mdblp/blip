@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -131,7 +131,7 @@ export const DevicesChangeHistory: FC<DevicesChangeHistoryProps> = ({ history, g
                       </Tooltip>
                     </TableCell>
                     <TableCell>
-                      <ChangeValue previousValue={device.previousValue} currentValue={ device.value} />
+                      <ChangeValue previousValue={device.previousValue} currentValue={device.value} />
                     </TableCell>
                     <TableCell align="right">
                       {formatDateWithMomentLongFormat(new Date(device.effectiveDate), 'llll', timezone)}
