@@ -397,5 +397,6 @@ jobs:
             -e AWS_SECRET_ACCESS_KEY \
             -e AWS_DEFAULT_REGION \
             -e AWS_BUCKET \
+            --entrypoint sh \
             amazon/aws-cli \
-            sh -c "cd /blip && aws s3 cp blip-${{ needs.publish.outputs.version }}-soup.md s3://${AWS_BUCKET}/soup/blip/"
+            -c "cd /blip && aws s3 cp blip-${{ needs.publish.outputs.version }}-soup.md s3://${AWS_BUCKET}/soup/blip/"
