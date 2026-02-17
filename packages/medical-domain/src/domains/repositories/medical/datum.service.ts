@@ -35,7 +35,6 @@ import ConfidentialModeService from './datum/confidential-mode.service'
 import DeviceParameterChangeService from './datum/device-parameter-change.service'
 import MealService from './datum/meal.service'
 import MessageService from './datum/message.service'
-import PhysicalActivityService from './datum/physical-activity.service'
 import PumpSettingsService from './datum/pump-settings.service'
 import ReservoirChangeService from './datum/reservoir-change.service'
 import SmbgService from './datum/smbg.service'
@@ -83,7 +82,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
     case DatumType.Message:
       return MessageService.normalize(rawData, opts)
     case DatumType.PhysicalActivity:
-      return PhysicalActivityService.normalize(rawData, opts)
+      throw new Error(`case DatumType.PhysicalActivity should not have been called`)
     case DatumType.PumpSettings:
       return PumpSettingsService.normalize(rawData, opts)
     case DatumType.Smbg:

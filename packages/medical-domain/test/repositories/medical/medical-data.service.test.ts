@@ -28,12 +28,10 @@
 import type Basal from '../../../src/domains/models/medical/datum/basal.model'
 import type Bolus from '../../../src/domains/models/medical/datum/bolus.model'
 import type Wizard from '../../../src/domains/models/medical/datum/wizard.model'
-import type PhysicalActivity from '../../../src/domains/models/medical/datum/physical-activity.model'
 import type MedicalData from '../../../src/domains/models/medical/medical-data.model'
 import type MedicalDataOptions from '../../../src/domains/models/medical/medical-data-options.model'
 import BasalService from '../../../src/domains/repositories/medical/datum/basal.service'
 import BolusService from '../../../src/domains/repositories/medical/datum/bolus.service'
-import PhysicalActivityService from '../../../src/domains/repositories/medical/datum/physical-activity.service'
 import WizardService from '../../../src/domains/repositories/medical/datum/wizard.service'
 import DatumService from '../../../src/domains/repositories/medical/datum.service'
 import MedicalDataService from '../../../src/domains/repositories/medical/medical-data.service'
@@ -1439,12 +1437,6 @@ const wizardDeduplicateMock = jest.fn(
   }
 )
 
-const physicalActivityDeduplicateMock = jest.fn(
-  (data: PhysicalActivity[], _opts: MedicalDataOptions) => {
-    return data
-  }
-)
-
 const testMedicalData = (medicalData: MedicalDataService, typeCounts: Record<keyof MedicalData, number>) => {
   Object.keys(typeCounts).forEach((dataType) => {
     const key = dataType as keyof MedicalData
@@ -1490,7 +1482,6 @@ describe('MedicalDataService', () => {
       BasalService.deduplicate = basalDeduplicateMock
       BolusService.deduplicate = bolusDeduplicateMock
       WizardService.deduplicate = wizardDeduplicateMock
-      PhysicalActivityService.deduplicate = physicalActivityDeduplicateMock
     })
 
     afterEach(() => {
@@ -1504,7 +1495,6 @@ describe('MedicalDataService', () => {
       expect(basalDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(bolusDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(wizardDeduplicateMock).toHaveBeenCalledTimes(1)
-      expect(physicalActivityDeduplicateMock).toHaveBeenCalledTimes(1)
 
       // Main medicalData Checks (we have on objects of each except timezones)
       const expectedCount: Partial<Record<keyof MedicalData, number>> = {}
@@ -1618,7 +1608,6 @@ describe('MedicalDataService', () => {
       BasalService.deduplicate = basalDeduplicateMock
       BolusService.deduplicate = bolusDeduplicateMock
       WizardService.deduplicate = wizardDeduplicateMock
-      PhysicalActivityService.deduplicate = physicalActivityDeduplicateMock
     })
 
     afterEach(() => {
@@ -1630,7 +1619,6 @@ describe('MedicalDataService', () => {
       expect(basalDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(bolusDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(wizardDeduplicateMock).toHaveBeenCalledTimes(1)
-      expect(physicalActivityDeduplicateMock).toHaveBeenCalledTimes(1)
 
       // Main medicalData Checks (we have 2 objects for cbg & timezones, 1 for bolus & basal)
       const expectedCount: Partial<Record<keyof MedicalData, number>> = {}
@@ -1715,7 +1703,6 @@ describe('MedicalDataService', () => {
       BasalService.deduplicate = basalDeduplicateMock
       BolusService.deduplicate = bolusDeduplicateMock
       WizardService.deduplicate = wizardDeduplicateMock
-      PhysicalActivityService.deduplicate = physicalActivityDeduplicateMock
       // eslint-disable-next-line no-import-assign
       BasiscsDataService.generateBasicData = generateBasicDataMock
       medicalDataService.add({})
