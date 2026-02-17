@@ -107,6 +107,24 @@ interface MobileAppConfig {
   swVersion:string
 }
 
+interface DeviceHistoryChange {
+  changeType: ChangeType
+  effectiveDate: string
+  name: string
+  value: string
+  previousValue?: string
+}
+
+interface DeviceHistory {
+  changeDate: string
+  devices: DeviceHistoryChange[]
+}
+
+interface History {
+  devices: DeviceHistory[]
+  parameters: ParametersChange[]
+}
+
 interface PumpSettings extends BaseDatum {
   type: DatumType.PumpSettings
   deviceId: string
@@ -114,7 +132,7 @@ interface PumpSettings extends BaseDatum {
   payload: {
     cgm: CgmConfig
     device: DeviceConfig
-    history: ParametersChange[]
+    history: History
     parameters: ParameterConfig[]
     pump: PumpConfig
     securityBasals: SecurityBasalConfig
@@ -122,4 +140,4 @@ interface PumpSettings extends BaseDatum {
   }
 }
 
-export type { CgmConfig, DeviceConfig, ParametersChange, PumpConfig, ParameterConfig, PumpSettings, SecurityBasalConfig, SecurityBasalRate, MobileAppConfig }
+export type { CgmConfig, DeviceConfig, DeviceHistory, DeviceHistoryChange, ParametersChange, PumpConfig, ParameterConfig, PumpSettings, SecurityBasalConfig, SecurityBasalRate, MobileAppConfig }

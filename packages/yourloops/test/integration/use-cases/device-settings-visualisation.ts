@@ -28,7 +28,7 @@
 import {
   checkChangeHistoryContent,
   checkCopyTextButton,
-  checkCurrentParametersContent,
+  checkCurrentParametersContent, checkDeviceHistoryContent,
   checkDevicesMenuLayoutWithBasalSafetyProfile,
   checkDevicesMenuLayoutWithoutBasalSafetyProfile,
   checkG2CopyTextButton,
@@ -49,6 +49,7 @@ export const testDevicesVisualisation = async () => {
   await testCurrentParametersVisualisation()
   await testBasalSafetyProfileVisualisation()
   await testChangeHistoryVisualisation()
+  await testDeviceHistoryVisualisation()
 }
 
 export const testG2DevicesVisualisationForHcp = async () => {
@@ -63,6 +64,7 @@ export const testG2DevicesVisualisation = async () => {
   await testG2CurrentParametersVisualisation()
   await testBasalSafetyProfileVisualisation()
   await testChangeHistoryVisualisation()
+  await testDeviceHistoryVisualisation()
 }
 
 export const testEmptySafetyBasalProfileGenericErrorMessage = async () => {
@@ -107,4 +109,8 @@ const testBasalSafetyProfileVisualisation = async () => {
 
 const testChangeHistoryVisualisation = async () => {
   await checkChangeHistoryContent()
+}
+
+const testDeviceHistoryVisualisation = async () => {
+  await checkDeviceHistoryContent()
 }

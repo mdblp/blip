@@ -28,7 +28,7 @@
 import {
   type CgmConfig,
   type ChangeType,
-  type DeviceConfig, MobileAppConfig,
+  type DeviceConfig, DeviceHistory, MobileAppConfig,
   type ParameterConfig,
   type ParametersChange,
   type PumpConfig,
@@ -51,7 +51,7 @@ import { DblParameter } from '../../../models/medical/datum/enums/dbl-parameter.
 
 const t = i18next.t.bind(i18next)
 
-const normalizeHistory = (rawHistory: Array<Record<string, unknown>>, opts: MedicalDataOptions): ParametersChange[] => {
+const normalizeParamsHistory = (rawHistory: Array<Record<string, unknown>>, opts: MedicalDataOptions): ParametersChange[] => {
   return rawHistory.map(h => {
     const params = (h?.parameters ?? []) as Array<Record<string, string | number>>
     return {
@@ -71,6 +71,24 @@ const normalizeHistory = (rawHistory: Array<Record<string, unknown>>, opts: Medi
           previousUnit: previousUnit as Unit,
           previousValue,
           value
+        }
+      })
+    }
+  })
+}
+
+const normalizeDeviceHistory = (rawHistory: Array<Record<string, unknown>>): DeviceHistory[] => {
+  return rawHistory.map(h => {
+    const devices = (h?.devices ?? []) as Array<Record<string, string>>
+    return {
+      changeDate: (h?.changeDate ?? '') as string,
+      devices: devices.map(device => {
+        return {
+          changeType: device.changeType as ChangeType,
+          effectiveDate: device.effectiveDate,
+          name: device.name,
+          previousValue: device.previousValue,
+          value: device.value
         }
       })
     }
@@ -153,7 +171,9 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
   const rawCgm = (payload?.cgm ?? {}) as Record<string, unknown>
   const rawDevice = (payload?.device ?? {}) as Record<string, unknown>
   const rawPump = payload?.pump as Record<string, unknown> ?? null
-  const rawHistory = (payload?.history ?? []) as Array<Record<string, unknown>>
+  const rawHistory = (payload?.history ?? {}) as Record<string, unknown>
+  const rawParamsHistory = (rawHistory.parameters ?? []) as Array<Record<string, unknown>>
+  const rawDeviceHistory = (rawHistory.devices ?? []) as Array<Record<string, unknown>>
   const rawParams = (payload?.parameters ?? []) as Array<Record<string, unknown>>
   const rawSecurityBasals = (payload?.securityBasals ?? {}) as Record<string, unknown>
   const rawMobileApplication = (payload?.mobileApplication ?? {}) as Record<string, unknown>
@@ -166,7 +186,10 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
       cgm: normalizeCgm(rawCgm),
       device: normalizeDevice(rawDevice),
       pump: normalizePump(rawPump),
-      history: normalizeHistory(rawHistory, opts),
+      history: {
+        parameters : normalizeParamsHistory(rawParamsHistory, opts),
+        devices: normalizeDeviceHistory(rawDeviceHistory),
+      },
       parameters: normalizeParameters(rawParams, opts),
       securityBasals: normalizeSecurityBasals(rawSecurityBasals),
       mobileApplication: normalizeMobileApplication(rawMobileApplication)

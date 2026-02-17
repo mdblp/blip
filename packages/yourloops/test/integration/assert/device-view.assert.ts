@@ -33,12 +33,12 @@ import { formatCurrentDate } from 'dumb'
 
 export const checkDevicesMenuLayoutWithBasalSafetyProfile = () => {
   const devicesMenu = screen.getByTestId('devices-view-menu')
-  expect(devicesMenu).toHaveTextContent('DevicesCurrent settingsBasal safety profileChange history')
+  expect(devicesMenu).toHaveTextContent('DevicesCurrent settingsBasal safety profileSettings change historyDevices change history')
 }
 
 export const checkDevicesMenuLayoutWithoutBasalSafetyProfile = () => {
   const devicesMenu = screen.getByTestId('devices-view-menu')
-  expect(devicesMenu).toHaveTextContent('DevicesCurrent settingsChange history')
+  expect(devicesMenu).toHaveTextContent('DevicesCurrent settingsSettings change historyDevices change history')
 }
 
 export const checkCurrentParametersContent = () => {
@@ -180,16 +180,25 @@ export const checkSafetyBasalProfileErrorMessage = async (errorMessage: string) 
 }
 
 export const checkChangeHistoryContent = async () => {
-  const changeHistoryButton = within(screen.getByTestId('devices-view-menu')).getByText('Change history')
+  const changeHistoryButton = within(screen.getByTestId('devices-view-menu')).getByText('Settings change history')
   await userEvent.click(changeHistoryButton)
 
   const changeHistorySection = screen.getByTestId('change-history-section')
   expect(changeHistorySection).toBeVisible()
-  expect(changeHistorySection).toHaveTextContent('Change historySettingValueType of changeDateTue, Nov 1, 2022 1:00 AMAggressiveness for lunch130 %90 %UpdatedMon, Nov 7, 2022 3:01 PMAggressiveness for breakfast100 %110 %UpdatedWed, Nov 2, 2022 6:00 PMAggressiveness for dinner100 %90 %UpdatedWed, Nov 2, 2022 6:00 PMHyperglycemia threshold180.1 mg/dL140.0 mg/dLUpdatedWed, Nov 2, 2022 8:00 AMHypoglycemia threshold70.0 mg/dL60.0 mg/dLUpdatedWed, Nov 2, 2022 8:00 AMAggressiveness in hyperglycemia143 %AddedTue, Nov 1, 2022 1:00 AMBreakfast - large150.0 gAddedTue, Nov 1, 2022 1:00 AMDinner - large150.0 gAddedTue, Nov 1, 2022 1:00 AMLunch - large70.0 gAddedTue, Nov 1, 2022 1:00 AMAggressiveness for breakfast100 %AddedTue, Nov 1, 2022 1:00 AMAggressiveness for breakfast110 %100 %UpdatedTue, Nov 1, 2022 1:00 AMAggressiveness for dinner100 %AddedTue, Nov 1, 2022 1:00 AMAggressiveness for dinner90 %100 %UpdatedTue, Nov 1, 2022 1:00 AMAggressiveness for lunch130 %AddedTue, Nov 1, 2022 1:00 AMBreakfast - average70.0 gAddedTue, Nov 1, 2022 1:00 AMDinner - average60.0 gAddedTue, Nov 1, 2022 1:00 AMLunch - average50.0 gAddedTue, Nov 1, 2022 1:00 AMAggressiveness in normoglycemia100 %AddedTue, Nov 1, 2022 1:00 AMTarget glucose level100.0 mg/dLAddedTue, Nov 1, 2022 1:00 AMHyperglycemia threshold180.1 mg/dLAddedTue, Nov 1, 2022 1:00 AMHyperglycemia threshold140.0 mg/dL180.1 mg/dLUpdatedTue, Nov 1, 2022 1:00 AMHypoglycemia threshold70.0 mg/dLAddedTue, Nov 1, 2022 1:00 AMHypoglycemia threshold60.0 mg/dL70.0 mg/dLUpdatedTue, Nov 1, 2022 1:00 AMBreakfast - small15.0 gAddedTue, Nov 1, 2022 1:00 AMDinner - small20.0 gAddedTue, Nov 1, 2022 1:00 AMLunch - small30.0 gAddedTue, Nov 1, 2022 1:00 AMTotal Daily Insulin53.0 UAddedTue, Nov 1, 2022 1:00 AMWeight69.0 kgAddedTue, Nov 1, 2022 1:00 AM')
+  expect(changeHistorySection).toHaveTextContent('Settings change historySettingValueType of changeDateTue, Nov 1, 2022 1:00 AMAggressiveness for lunch130 %90 %UpdatedMon, Nov 7, 2022 3:01 PMAggressiveness for breakfast100 %110 %UpdatedWed, Nov 2, 2022 6:00 PMAggressiveness for dinner100 %90 %UpdatedWed, Nov 2, 2022 6:00 PMHyperglycemia threshold180.1 mg/dL140.0 mg/dLUpdatedWed, Nov 2, 2022 8:00 AMHypoglycemia threshold70.0 mg/dL60.0 mg/dLUpdatedWed, Nov 2, 2022 8:00 AMAggressiveness in hyperglycemia143 %AddedTue, Nov 1, 2022 1:00 AMBreakfast - large150.0 gAddedTue, Nov 1, 2022 1:00 AMDinner - large150.0 gAddedTue, Nov 1, 2022 1:00 AMLunch - large70.0 gAddedTue, Nov 1, 2022 1:00 AMAggressiveness for breakfast100 %AddedTue, Nov 1, 2022 1:00 AMAggressiveness for breakfast110 %100 %UpdatedTue, Nov 1, 2022 1:00 AMAggressiveness for dinner100 %AddedTue, Nov 1, 2022 1:00 AMAggressiveness for dinner90 %100 %UpdatedTue, Nov 1, 2022 1:00 AMAggressiveness for lunch130 %AddedTue, Nov 1, 2022 1:00 AMBreakfast - average70.0 gAddedTue, Nov 1, 2022 1:00 AMDinner - average60.0 gAddedTue, Nov 1, 2022 1:00 AMLunch - average50.0 gAddedTue, Nov 1, 2022 1:00 AMAggressiveness in normoglycemia100 %AddedTue, Nov 1, 2022 1:00 AMTarget glucose level100.0 mg/dLAddedTue, Nov 1, 2022 1:00 AMHyperglycemia threshold180.1 mg/dLAddedTue, Nov 1, 2022 1:00 AMHyperglycemia threshold140.0 mg/dL180.1 mg/dLUpdatedTue, Nov 1, 2022 1:00 AMHypoglycemia threshold70.0 mg/dLAddedTue, Nov 1, 2022 1:00 AMHypoglycemia threshold60.0 mg/dL70.0 mg/dLUpdatedTue, Nov 1, 2022 1:00 AMBreakfast - small15.0 gAddedTue, Nov 1, 2022 1:00 AMDinner - small20.0 gAddedTue, Nov 1, 2022 1:00 AMLunch - small30.0 gAddedTue, Nov 1, 2022 1:00 AMTotal Daily Insulin53.0 UAddedTue, Nov 1, 2022 1:00 AMWeight69.0 kgAddedTue, Nov 1, 2022 1:00 AM')
+}
+
+export const checkDeviceHistoryContent = async () => {
+  const changeHistoryButton = within(screen.getByTestId('devices-view-menu')).getByText('Devices change history')
+  await userEvent.click(changeHistoryButton)
+
+  const changeHistorySection = screen.getByTestId('device-history-section')
+  expect(changeHistorySection).toBeVisible()
+  expect(changeHistorySection).toHaveTextContent('Devices change history')
 }
 
 export const checkNavigationToDailyView = async (router, route: string) => {
-  const changeHistoryButton = within(screen.getByTestId('devices-view-menu')).getByText('Change history')
+  const changeHistoryButton = within(screen.getByTestId('devices-view-menu')).getByText('Settings change history')
   await userEvent.click(changeHistoryButton)
 
   const changeHistorySection = screen.getByTestId('change-history-section')

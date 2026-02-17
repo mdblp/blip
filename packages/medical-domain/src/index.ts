@@ -102,6 +102,8 @@ export {
   type MobileAppConfig,
   type ParameterConfig,
   type ParametersChange,
+  type DeviceHistory,
+  type DeviceHistoryChange,
   type PumpConfig,
   PumpSettings,
   type PumpSettingsParameter,
