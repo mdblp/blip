@@ -27,7 +27,6 @@
 
 import React, { type FunctionComponent } from 'react'
 import styles from './stat-legend.css'
-import { formatNumberForLang } from '../stats.util'
 
 interface StatLegendElementProps {
   cbgClassName: string
