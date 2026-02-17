@@ -7,6 +7,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3613 Memos on DBL settings in Devices view
 
 ### Changed
+- YLP-3815 Display update timestamp in yourloops
 - YLP-3618 Meal without bolus management in Daily view
 
 ### Engineering
