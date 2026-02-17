@@ -70,10 +70,14 @@ jobs:
         uses: actions/download-artifact@v4
 
       - name: Get yourloops version from changelog
+        env:
+          REGISTRY: ${{ secrets.REGISTRY }}
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: |
-          docker login ${{ secrets.REGISTRY }} \
-            -u ${{ secrets.NEXUS_USERNAME }} \
-            -p ${{ secrets.NEXUS_PASSWORD }}
+          docker login "$REGISTRY" \
+            -u "$NEXUS_USERNAME" \
+            -p "$NEXUS_PASSWORD"
 
           docker run --rm \
             -v ${{ github.workspace }}:/dblprm/blip/:rw --user 0:0 \
