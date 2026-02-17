@@ -51,7 +51,7 @@ const SimpleStat: FunctionComponent<SimpleStatProps> = (props) => {
   } = props
 
   const simpleValueProps = useMemo(() => {
-    return buildSimpleValueProps(summaryFormat, total, Number(value))
+    return buildSimpleValueProps(summaryFormat, total, value)
   }, [summaryFormat, total, value])
 
   return (
