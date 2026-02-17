@@ -1509,7 +1509,10 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
               "swVersion": "beta",
               "product": "zzz",
             },
-            history,
+            history: {
+              parameters: history,
+              devices : []
+            },
             "securityBasals": { "rates": null },
             "mobileApplication": {
               "manufacturer": "",

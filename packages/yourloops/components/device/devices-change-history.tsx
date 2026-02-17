@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,23 +37,26 @@ import { useTranslation } from 'react-i18next'
 import Typography from '@mui/material/Typography'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import Box from '@mui/material/Box'
-import { formatParameterValue, PARAMETER_STRING_MAX_WIDTH, sortHistory } from './utils/device.utils'
-import { type ParametersChange } from 'medical-domain'
+import {
+  getTranslationKeyForDeviceChange,
+  PARAMETER_STRING_MAX_WIDTH,
+  sortDeviceChangeHistory
+} from './utils/device.utils'
+import { type DeviceHistory } from 'medical-domain'
 import IconButton from '@mui/material/IconButton'
 import { useTheme } from '@mui/material/styles'
 import { formatDateWithMomentLongFormat, isEllipsisActive } from '../../lib/utils'
-import { CustomChangeChip } from './custom-change-chip'
 import classes from './device.css'
 import Tooltip from '@mui/material/Tooltip'
 import { ChangeValue } from './change-value'
 
-interface ParametersChangeHistoryProps {
+interface DevicesChangeHistoryProps {
   goToDailySpecificDate: (date: number) => void
-  history: ParametersChange[]
+  history: DeviceHistory[]
   timezone: string
 }
 
-export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ history, goToDailySpecificDate, timezone }) => {
+export const DevicesChangeHistory: FC<DevicesChangeHistoryProps> = ({ history, goToDailySpecificDate, timezone }) => {
   const theme = useTheme()
   const { t } = useTranslation()
 
@@ -61,23 +64,23 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
     goToDailySpecificDate(date)
     window.scroll(0, 0)
   }
-  sortHistory(history)
+
+  sortDeviceChangeHistory(history)
 
   return (
-    <Card variant="outlined" data-testid="history-parameter-table">
+    <Card variant="outlined" data-testid="device-history-table">
       <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>{t('Parameter')}</TableCell>
+              <TableCell>{t('device-history-title')}</TableCell>
               <TableCell>{t('Value')}</TableCell>
-              <TableCell align="right">{t('type-of-change')}</TableCell>
               <TableCell align="right">{t('date')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {history.map((parametersChange, historyCurrentIndex) => (
-              <React.Fragment key={`${parametersChange.changeDate}-${historyCurrentIndex}`}>
+            {history.map((devicesChange, historyCurrentIndex) => (
+              <React.Fragment key={`${devicesChange.changeDate}-${historyCurrentIndex}`}>
                 <TableRow sx={{ backgroundColor: 'var(--primary-color-background)' }} className="change-date-row">
                   <TableCell colSpan={5}>
                     <Box
@@ -90,10 +93,10 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                       <IconButton
                         size="small"
                         color="primary"
-                        data-testid={`daily-button-link-${parametersChange.changeDate}`}
+                        data-testid={`daily-button-link-${devicesChange.changeDate}`}
                         sx={{ padding: 0 }}
                         onClick={() => {
-                          onClickChangeDate(new Date(parametersChange.changeDate).getTime())
+                          onClickChangeDate(new Date(devicesChange.changeDate).getTime())
                         }}
                       >
                         <OpenInNewIcon fontSize="small" />
@@ -102,42 +105,36 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                         variant="body2"
                         sx={{ color: theme.palette.primary.main }}
                       >
-                        {formatDateWithMomentLongFormat(new Date(parametersChange.changeDate), 'llll', timezone)}
+                        {formatDateWithMomentLongFormat(new Date(devicesChange.changeDate), 'llll', timezone)}
                       </Typography>
                     </Box>
                   </TableCell>
                 </TableRow>
-                {parametersChange.parameters.map((parameter, index) => (
+                {devicesChange.devices.map((device, index) => (
                   <TableRow
-                    key={`${parameter.effectiveDate}-${index}`}
-                    data-testid={`parameters-group-${parametersChange.changeDate.substring(0, 10)}-${historyCurrentIndex}-rows-${index}`}
+                    key={`${device.effectiveDate}-${index}`}
+                    data-testid={`devices-group-${devicesChange.changeDate.substring(0, 10)}-${historyCurrentIndex}-rows-${index}`}
                     className={`${classes.parameterRow} parameter-change-row`}
                   >
                     <TableCell>
-                      <Tooltip title={isEllipsisActive(document.getElementById(`${parameter.name}-${index}`)) ? parameter.name : ''}>
+                      <Tooltip title={isEllipsisActive(document.getElementById(`${device.name}-${index}`)) ? device.name : ''}>
                         <Typography
                           className="is-ellipsis"
                           variant="body2"
-                          id={`${parameter.name}-${index}`}
+                          id={`${device.name}-${index}`}
                           sx={{
                             maxWidth: PARAMETER_STRING_MAX_WIDTH
                           }}
                         >
-                          {t(`params|${parameter.name}`)}
+                          {t(`${getTranslationKeyForDeviceChange(device.name)}`)}
                         </Typography>
                       </Tooltip>
                     </TableCell>
                     <TableCell>
-                      <ChangeValue
-                        previousValue={parameter.previousValue ? `${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}` : parameter.previousValue}
-                        currentValue={`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}
-                      />
+                      <ChangeValue previousValue={device.previousValue} currentValue={device.value} />
                     </TableCell>
                     <TableCell align="right">
-                      <CustomChangeChip changeType={parameter.changeType} />
-                    </TableCell>
-                    <TableCell align="right">
-                      {formatDateWithMomentLongFormat(new Date(parameter.effectiveDate), 'llll', timezone)}
+                      {formatDateWithMomentLongFormat(new Date(device.effectiveDate), 'llll', timezone)}
                     </TableCell>
                   </TableRow>
                 ))}

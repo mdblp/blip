@@ -38,8 +38,9 @@ import { BasalIcon } from '../../../components/icons/diabeloop/basal-icon'
 import Card from '@mui/material/Card'
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
-import { DeviceViewSection } from '../../../models/enums/device-view-section.enum'
+import { DeviceViewSection } from './device-view-section.enum'
 import { useTranslation } from 'react-i18next'
+import { DeviceSystemIcon } from '../../../components/icons/diabeloop/device-system-icon'
 
 interface DevicesViewMenuProps {
   shouldDisplaySafetyBasalProfile: boolean
@@ -97,8 +98,8 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
                 </MenuItem>
             }
           <MenuItem
-            selected={selectedSection === DeviceViewSection.ChangeHistory}
-            onClick={() => selectSection(DeviceViewSection.ChangeHistory)}
+            selected={selectedSection === DeviceViewSection.ParametersChangeHistory}
+            onClick={() => selectSection(DeviceViewSection.ParametersChangeHistory)}
             sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
             data-testid="change-history-menu-button"
           >
@@ -106,6 +107,17 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
               <History fontSize="small" />
             </ListItemIcon>
             <ListItemText className={classes.menuItemText}>{t('change-history')}</ListItemText>
+          </MenuItem>
+          <MenuItem
+            selected={selectedSection === DeviceViewSection.DeviceChangeHistory}
+            onClick={() => selectSection(DeviceViewSection.DeviceChangeHistory)}
+            sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
+            data-testid="device-change-history-menu-button"
+          >
+            <ListItemIcon>
+              <DeviceSystemIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText className={classes.menuItemText}>{t('device-change-history')}</ListItemText>
           </MenuItem>
         </MenuList>
       </CardContent>
