@@ -42,7 +42,7 @@ import {
   testShowParametersButtonIsNotDisplayed
 } from '../../../use-cases/show-parameters-visualisation'
 import { ChangeType, Unit } from 'medical-domain'
-
+// TODO: ask in Review if we should split daily-view-common test file into several independent files
 describe('Daily view for anyone - Show Parameters At', () => {
   const dailyRoute = AppUserRoute.Daily
 
@@ -125,6 +125,5 @@ describe('Daily view for anyone - Show Parameters At', () => {
 
       await testShowParametersButtonIsNotDisplayed()
     })
-
   })
 })
