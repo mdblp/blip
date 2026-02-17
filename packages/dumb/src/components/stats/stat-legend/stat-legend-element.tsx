@@ -40,7 +40,7 @@ export const StatLegendElement: FunctionComponent<StatLegendElementProps> = (pro
   return (
     <li className={`${styles['stat-legend-item']} ${styles[`${cbgClassName}-border-bottom`]}`}>
       <span>
-        {formatNumberForLang(value)}
+        {value}
       </span>
     </li>
   )
