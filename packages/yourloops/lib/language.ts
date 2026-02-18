@@ -127,7 +127,7 @@ const formatNumberForLang = (decimal: number | string, minimumFractionDigit?: nu
   }
   const lang= getCurrentLang()
   const formatter = Intl.NumberFormat(lang, {
-    minimumFractionDigits: minimumFractionDigit ? minimumFractionDigit : 1,
+    minimumFractionDigits: minimumFractionDigit !== null ? minimumFractionDigit : 1,
     maximumFractionDigits: 3
   })
   if (typeof decimal === "string") {

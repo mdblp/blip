@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,53 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import i18n from 'i18next'
-import moment from 'moment-timezone'
-
-import config from '../../../lib/config/config'
-import { formatNumberForLang, getCurrentLang, getLangName } from '../../../lib/language'
-import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
 import i18next from 'i18next'
+import { formatNumberForLang } from './stats.util'
 
-describe('Language', () => {
-  const zeSpy = jest.fn()
-
-  beforeAll(() => {
-    window.zE = zeSpy
-    config.METRICS_SERVICE = 'matomo'
-  })
-
-  afterAll(async () => {
-    delete window.zE
-    await i18n.changeLanguage(LanguageCodes.En)
-    delete window._paq
-    config.METRICS_SERVICE = 'disabled'
-  })
-
-  beforeEach(() => {
-    zeSpy.mockReset()
-    window._paq = []
-  })
-
-  it('should update zendesk & moment locale on change', async () => {
-    await i18n.changeLanguage(LanguageCodes.Fr)
-    expect(zeSpy).toHaveBeenCalledTimes(1)
-    expect(moment.locale()).toBe(LanguageCodes.Fr)
-    expect(localStorage.getItem('lang')).toBe(LanguageCodes.Fr)
-    expect(getCurrentLang()).toBe(LanguageCodes.Fr)
-    expect(window._paq).toEqual([['setCustomVariable', 1, 'UserLang', LanguageCodes.Fr, 'visit']])
-  })
-
-  it('getLangName should return the language name', () => {
-    expect(getLangName(LanguageCodes.En)).toBe('English')
-    expect(getLangName(LanguageCodes.Fr)).toBe('Français')
-    expect(getLangName(LanguageCodes.De)).toBe('Deutsch')
-    expect(getLangName(LanguageCodes.Es)).toBe('Español')
-    expect(getLangName(LanguageCodes.It)).toBe('Italiano')
-    expect(getLangName(LanguageCodes.Nl)).toBe('Nederlands')
-  })
-
-
+describe('StatsUtil', () => {
   describe('formatNumberForLang', () => {
     function checkFormattedNumber() {
       const integer = 10
@@ -86,7 +43,7 @@ describe('Language', () => {
     }
 
     it('should format numbers correctly for non english language', () => {
-      i18next.changeLanguage('fr')
+      i18next.language = 'fr'
       const decimal = 10.45
       const formattedDecimal = formatNumberForLang(decimal)
       expect(formattedDecimal).toBe('10,45')
@@ -97,7 +54,7 @@ describe('Language', () => {
     })
 
     it('should format numbers correctly for english language', () => {
-      i18next.changeLanguage('en')
+      i18next.language = 'en'
       const decimal = 10.45
       const formattedDecimal = formatNumberForLang(decimal)
       expect(formattedDecimal).toBe('10.45')
@@ -105,21 +62,21 @@ describe('Language', () => {
     })
 
     it('should format numbers with minimum fraction digits', () => {
-      i18next.changeLanguage('en')
+      i18next.language = 'en'
       const number = 10
       const formattedWithMinFraction = formatNumberForLang(number, 1)
       expect(formattedWithMinFraction).toBe('10.0')
     })
 
     it('should format numbers with no minimum fraction digits when explicitly set to 0', () => {
-      i18next.changeLanguage('en')
+      i18next.language = 'en'
       const number = 10
       const formattedWithoutFraction = formatNumberForLang(number, 0)
       expect(formattedWithoutFraction).toBe('10')
     })
 
     it('should handle decimal numbers with various fraction digits', () => {
-      i18next.changeLanguage('en')
+      i18next.language = 'en'
       const number1 = 10.1
       expect(formatNumberForLang(number1)).toBe('10.1')
       const number2 = 10.123
@@ -129,17 +86,18 @@ describe('Language', () => {
     })
 
     it('should format string numbers for non-english languages', () => {
-      i18next.changeLanguage('de')
+      i18next.language = 'de'
       const stringDecimal = '123.456'
       const formatted = formatNumberForLang(stringDecimal)
       expect(formatted).toBe('123,456')
     })
 
     it('should format string numbers for english language', () => {
-      i18next.changeLanguage('en')
+      i18next.language = 'en'
       const stringDecimal = '123.456'
       const formatted = formatNumberForLang(stringDecimal)
       expect(formatted).toBe('123.456')
     })
   })
 })
+
