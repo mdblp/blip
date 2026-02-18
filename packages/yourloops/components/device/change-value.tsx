@@ -29,6 +29,7 @@ import React, { FC } from 'react'
 import { useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
+import { formatNumberForLang } from '../../lib/language'
 
 interface ChangeValueProps {
   previousValue?: string
@@ -47,11 +48,11 @@ export const ChangeValue: FC<ChangeValueProps> = (props) => {
       }}>
       {previousValue &&
         <>
-          <span>{`${previousValue}`}</span>
+          <span>{`${formatNumberForLang(previousValue)}`}</span>
           <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
         </>
       }
-      <span>{`${currentValue}`}</span>
+      <span>{`${formatNumberForLang(currentValue)}`}</span>
     </Box>
   )
 }

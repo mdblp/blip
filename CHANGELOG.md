@@ -7,8 +7,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-3617 As a user, I can see the devices changes history
 
 ### Changed
-- YLP-3815 Display update timestamp in yourloops
+- YLP-2823 Use , instead of . for languages other than English
 - YLP-3618 Meal without bolus management in Daily view
+- YLP-3815 Display update timestamp in yourloops
 
 ### Engineering
 - YLP-3472 MUI version update (v5 to v7)

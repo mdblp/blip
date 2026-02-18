@@ -31,6 +31,7 @@ import { useTranslation } from 'react-i18next'
 import { SimpleValue } from '../common/simple-value'
 import { Unit } from 'medical-domain'
 import Box from '@mui/material/Box'
+import { formatNumberForLang } from '../stats.util'
 
 interface LoopModePercentageDetailProps {
   percentageValue: number
@@ -52,7 +53,7 @@ export const LoopModePercentageDetail: FunctionComponent<LoopModePercentageDetai
       }}>
       {isPercentageValid ?
         <>
-          <SimpleValue value={percentageValue.toString()} suffix={Unit.Percent} valueClassName={valueClassName} />
+          <SimpleValue value={formatNumberForLang(percentageValue)} suffix={Unit.Percent} valueClassName={valueClassName} />
           <Box className={styles.duration}>{duration}</Box>
         </>
         : <SimpleValue value={t('N/A')} suffix={''} valueClassName={valueClassName} />
