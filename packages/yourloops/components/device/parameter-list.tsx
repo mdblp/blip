@@ -45,6 +45,7 @@ import IconButton from '@mui/material/IconButton'
 import { ParameterMemoDialog } from '../dialogs/parameter-memo-dialog'
 import { useAuth } from '../../lib/auth'
 import metrics from '../../lib/metrics'
+import { formatNumberForLang } from '../../lib/language'
 
 interface ParameterListProps {
   parameters: ParameterConfig[]
@@ -122,7 +123,7 @@ export const ParameterList: FC<ParameterListProps> = ({ parameters }) => {
                       </Typography>
                     </Tooltip>
                   </TableCell>
-                  <TableCell align="right">{formatParameterValue(parameter.value, parameter.unit)}</TableCell>
+                  <TableCell align="right">{formatNumberForLang(formatParameterValue(parameter.value, parameter.unit))}</TableCell>
                   <TableCell align="right">{parameter.unit}</TableCell>
                   {isHcp &&
                     <TableCell align="center" padding="none">
