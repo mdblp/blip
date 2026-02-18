@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,27 +24,30 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { AppRoute } from '../models/enums/routes.enum'
 
-/**
- * Class containing all external URLs related to Diabeloop
- */
-class DiabeloopExternalUrls {
-  readonly dblDiabetes: string = 'https://www.dbl-diabetes.com';
-  readonly contactEmail: string = 'yourloops@diabeloop.com';
-  readonly support: string = 'https://www.diabeloop.com';
+export enum DblParameter {
+  AggressivenessBreakfast = 'MEAL_RATIO_BREAKFAST_FACTOR',
+  AggressivenessDinner = 'MEAL_RATIO_DINNER_FACTOR',
+  AggressivenessLunch = 'MEAL_RATIO_LUNCH_FACTOR',
+  AggressivenessHyperglycemia = 'BOLUS_AGGRESSIVENESS_FACTOR',
+  AggressivenessNormoglycemia = 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA',
+  AverageBreakfast = 'MEDIUM_MEAL_BREAKFAST',
+  AverageDinner = 'MEDIUM_MEAL_DINNER',
+  AverageLunch = 'MEDIUM_MEAL_LUNCH',
+  Height = 'HEIGHT',
+  HyperglycemiaThreshold = 'PATIENT_GLY_HYPER_LIMIT',
+  HypoglycemiaThreshold = 'PATIENT_GLY_HYPO_LIMIT',
+  // Insulin type from DBLG2
+  InsulinType = 'INSULIN_TYPE',
+  // Insulin type from DBLG1
+  InsulinTypeUsed = 'INSULIN_TYPE_USED',
+  LargeBreakfast = 'LARGE_MEAL_BREAKFAST',
+  LargeDinner = 'LARGE_MEAL_DINNER',
+  LargeLunch = 'LARGE_MEAL_LUNCH',
+  SmallBreakfast = 'SMALL_MEAL_BREAKFAST',
+  SmallDinner = 'SMALL_MEAL_DINNER',
+  SmallLunch = 'SMALL_MEAL_LUNCH',
+  TargetGlucoseLevel = 'PATIENT_GLYCEMIA_TARGET',
+  TotalDailyInsulin = 'TOTAL_INSULIN_FOR_24H',
+  Weight = 'WEIGHT',
 }
-
-export const diabeloopExternalUrls = new DiabeloopExternalUrls()
-export const PUBLIC_ROUTES = [AppRoute.Login, AppRoute.VerifyEmail, AppRoute.VerifyEmailResult, AppRoute.SignupInformation]
-export const ALWAYS_ACCESSIBLE_ROUTES = [AppRoute.ProductLabelling]
-export const ROUTES_REQUIRING_LANGUAGE_SELECTOR = [
-  AppRoute.RenewConsent,
-  AppRoute.NewConsent,
-  AppRoute.Training,
-  AppRoute.SignupInformation,
-  AppRoute.CompleteSignup,
-  AppRoute.ProductLabelling,
-  AppRoute.VerifyEmail,
-  AppRoute.VerifyEmailResult
-]

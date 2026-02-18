@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,60 +34,121 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import TableBody from '@mui/material/TableBody'
-import { type ParameterConfig } from 'medical-domain'
+import { DblParameter, type ParameterConfig } from 'medical-domain'
 import { formatParameterValue, PARAMETER_STRING_MAX_WIDTH } from './utils/device.utils'
 import classes from './device.css'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { isEllipsisActive } from '../../lib/utils'
+import { InfoOutline } from '@mui/icons-material'
+import IconButton from '@mui/material/IconButton'
+import { ParameterMemoDialog } from '../dialogs/parameter-memo-dialog'
+import { useAuth } from '../../lib/auth'
+import metrics from '../../lib/metrics'
 import { formatNumberForLang } from '../../lib/language'
 
 interface ParameterListProps {
   parameters: ParameterConfig[]
 }
 
+const PARAMETERS_WITH_MEMO = new Set([
+  DblParameter.TotalDailyInsulin,
+  DblParameter.AverageBreakfast,
+  DblParameter.AverageLunch,
+  DblParameter.AverageDinner,
+  DblParameter.AggressivenessNormoglycemia,
+  DblParameter.AggressivenessHyperglycemia,
+  DblParameter.AggressivenessBreakfast,
+  DblParameter.AggressivenessLunch,
+  DblParameter.AggressivenessDinner,
+  DblParameter.HypoglycemiaThreshold,
+  DblParameter.HyperglycemiaThreshold,
+  DblParameter.TargetGlucoseLevel
+])
+
 export const ParameterList: FC<ParameterListProps> = ({ parameters }) => {
   const { t } = useTranslation()
+  const { user } = useAuth()
+  const isHcp = user.isUserHcp()
+
+  const [selectedParameter, setSelectedParameter] = React.useState<ParameterConfig | null>(null)
+
+  const hasMemo = (parameterName: DblParameter): boolean => {
+    return PARAMETERS_WITH_MEMO.has(parameterName)
+  }
+
+  const selectParameter = async (parameter: ParameterConfig): Promise<void> => {
+    setSelectedParameter(parameter)
+    metrics.send('settings', 'open_setting_info', `open_setting_info_${parameter.name}`)
+  }
+
+  const handleClose = () => {
+    setSelectedParameter(null)
+  }
 
   return (
-    <Card variant="outlined">
-      <TableContainer>
-        <Table>
-          <TableHead className={classes.header}>
-            <TableRow>
-              <TableCell>{t('Parameter')}</TableCell>
-              <TableCell align="right">{t('Value')}</TableCell>
-              <TableCell align="right">{t('Unit')}</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {parameters.map((parameter, index) => (
-              <TableRow
-                key={parameter.name}
-                className={classes.parameterRow}
-                data-testid={`${parameter.name.toLowerCase()}-row`}
-              >
-                <TableCell>
-                  <Tooltip title={isEllipsisActive(document.getElementById(`${parameter.name}-${index}`)) ? parameter.name : ''}>
-                    <Typography
-                      className="is-ellipsis"
-                      variant="body2"
-                      id={`${parameter.name}-${index}`}
-                      sx={{
-                        maxWidth: PARAMETER_STRING_MAX_WIDTH
-                      }}
-                    >
-                      {t(`params|${parameter.name}`)}
-                    </Typography>
-                  </Tooltip>
-                </TableCell>
-                <TableCell align="right">{formatNumberForLang(formatParameterValue(parameter.value, parameter.unit))}</TableCell>
-                <TableCell align="right">{parameter.unit}</TableCell>
+    <>
+      <Card variant="outlined">
+        <TableContainer>
+          <Table>
+            <TableHead className={classes.header}>
+              <TableRow>
+                <TableCell>{t('Parameter')}</TableCell>
+                <TableCell align="right">{t('Value')}</TableCell>
+                <TableCell align="right">{t('Unit')}</TableCell>
+                {isHcp &&
+                  <TableCell></TableCell>
+                }
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Card>
+            </TableHead>
+            <TableBody>
+              {parameters.map((parameter, index) => (
+                <TableRow
+                  key={parameter.name}
+                  className={classes.parameterRow}
+                  data-testid={`${parameter.name.toLowerCase()}-row`}
+                >
+                  <TableCell>
+                    <Tooltip
+                      title={isEllipsisActive(document.getElementById(`${parameter.name}-${index}`)) ? parameter.name : ''}>
+                      <Typography
+                        className="is-ellipsis"
+                        variant="body2"
+                        id={`${parameter.name}-${index}`}
+                        sx={{
+                          maxWidth: PARAMETER_STRING_MAX_WIDTH
+                        }}
+                      >
+                        {t(`params|${parameter.name}`)}
+                      </Typography>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell align="right">{formatNumberForLang(formatParameterValue(parameter.value, parameter.unit))}</TableCell>
+                  <TableCell align="right">{parameter.unit}</TableCell>
+                  {isHcp &&
+                    <TableCell align="center" padding="none">
+                      {hasMemo(parameter.name) &&
+                        <IconButton
+                          color="primary"
+                          aria-label={t('parameter-info-open', { parameterName: t(`params|${parameter.name}`) })}
+                          data-testid={`parameter-info-button-${parameter.name}`}
+                          onClick={() => selectParameter(parameter)}
+                        >
+                          <InfoOutline />
+                        </IconButton>
+                      }
+                    </TableCell>
+                  }
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Card>
+
+      {isHcp && !!selectedParameter &&
+        <ParameterMemoDialog parameterName={selectedParameter.name} onDialogClose={handleClose} />
+      }
+    </>
   )
 }

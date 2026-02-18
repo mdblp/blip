@@ -6,8 +6,8 @@
 - [ ] No translation files updated (except for English files)
 - [ ] Code formatted on every file
 - [ ] Copyright added on every file
+- [ ] Documentation updated (in `docs` folder) if necessary
 - [ ] End-to-end tests successful on CI
-- [ ] Update documentations (in docs dir if necessary)
 
 ---
 

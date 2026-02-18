@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -47,6 +47,7 @@ import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../../models/time/date-filter.model'
 import i18next from 'i18next'
 import { DeviceSystem } from '../../../models/medical/datum/enums/device-system.enum'
+import { DblParameter } from '../../../models/medical/datum/enums/dbl-parameter.enum'
 
 const t = i18next.t.bind(i18next)
 
@@ -65,7 +66,7 @@ const normalizeParamsHistory = (rawHistory: Array<Record<string, unknown>>, opts
           changeType: param.changeType as ChangeType,
           effectiveDate: param.effectiveDate as string,
           level: param.level as number,
-          name: param.name as string,
+          name: param.name as DblParameter,
           unit: unit as Unit,
           previousUnit: previousUnit as Unit,
           previousValue,
@@ -150,7 +151,7 @@ const normalizeParameters = (rawParams: Array<Record<string, unknown>>, opts: Me
     return {
       effectiveDate: (rawParam?.effectiveDate ?? '') as string,
       level: (rawParam?.level ?? 1) as number,
-      name: (rawParam?.name ?? '') as string,
+      name: (rawParam?.name ?? '') as DblParameter,
       unit: unit as Unit,
       value
     }

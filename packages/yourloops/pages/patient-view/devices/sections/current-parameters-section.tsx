@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -79,10 +79,11 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
         subheader={`${t('last-upload:')} ${lastUploadDate}`}
         action={
           <Button
-            variant="contained"
+            variant="outlined"
             disableElevation
             startIcon={<FileCopyIcon />}
             onClick={onClickCopyButton}
+            aria-label={t('text-copy')}
           >
             {t('text-copy')}
           </Button>

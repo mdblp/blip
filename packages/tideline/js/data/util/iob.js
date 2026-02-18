@@ -1,4 +1,5 @@
-const TOTAL_DAILY_INSULIN_PARAM = 'TOTAL_INSULIN_FOR_24H'
+import { DblParameter } from 'medical-domain'
+
 const DEFAULT_MAX_IOB_VALUE_U = 45
 
 
@@ -7,7 +8,7 @@ export const getMaxIobValue = (medicalData) => {
     return DEFAULT_MAX_IOB_VALUE_U
   }
 
-  const totalDailyInsulinParameter = medicalData.pumpSettings[0]?.payload?.parameters?.find((parameter) => parameter.name === TOTAL_DAILY_INSULIN_PARAM)
+  const totalDailyInsulinParameter = medicalData.pumpSettings[0]?.payload?.parameters?.find((parameter) => parameter.name === DblParameter.TotalDailyInsulin)
   const totalDailyInsulinValue = totalDailyInsulinParameter && Number.parseFloat(totalDailyInsulinParameter.value)
 
   // The max IOB value is set to half of the total daily insulin, or a default max if that value is not available

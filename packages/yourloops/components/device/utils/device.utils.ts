@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,11 @@
  */
 
 import {
-  type DeviceConfig, DeviceHistory, DeviceSystem, MobileAppConfig,
+  DblParameter,
+  type DeviceConfig,
+  DeviceHistory,
+  DeviceSystem,
+  MobileAppConfig,
   type ParameterConfig,
   type ParametersChange,
   type PumpSettingsParameter,
@@ -220,25 +224,26 @@ export const getTranslationKeyForDeviceChange = (deviceChangeName: string): stri
 
 export const sortParameterList = (parameters: ParameterConfig[]): void => {
   const settingsOrder = [
-    'MEDIUM_MEAL_BREAKFAST',
-    'MEDIUM_MEAL_LUNCH',
-    'MEDIUM_MEAL_DINNER',
-    'TOTAL_INSULIN_FOR_24H',
-    'WEIGHT',
-    'PATIENT_GLY_HYPER_LIMIT',
-    'PATIENT_GLY_HYPO_LIMIT',
-    'PATIENT_GLYCEMIA_TARGET',
-    'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA',
-    'BOLUS_AGGRESSIVENESS_FACTOR',
-    'MEAL_RATIO_BREAKFAST_FACTOR',
-    'MEAL_RATIO_LUNCH_FACTOR',
-    'MEAL_RATIO_DINNER_FACTOR',
-    'SMALL_MEAL_BREAKFAST',
-    'LARGE_MEAL_BREAKFAST',
-    'SMALL_MEAL_LUNCH',
-    'LARGE_MEAL_LUNCH',
-    'SMALL_MEAL_DINNER',
-    'LARGE_MEAL_DINNER'
+    DblParameter.TotalDailyInsulin,
+    DblParameter.TargetGlucoseLevel,
+    DblParameter.AggressivenessNormoglycemia,
+    DblParameter.AggressivenessHyperglycemia,
+    DblParameter.AggressivenessBreakfast,
+    DblParameter.AggressivenessLunch,
+    DblParameter.AggressivenessDinner,
+    DblParameter.HypoglycemiaThreshold,
+    DblParameter.HyperglycemiaThreshold,
+    DblParameter.AverageBreakfast,
+    DblParameter.AverageLunch,
+    DblParameter.AverageDinner,
+    DblParameter.SmallBreakfast,
+    DblParameter.SmallLunch,
+    DblParameter.SmallDinner,
+    DblParameter.LargeBreakfast,
+    DblParameter.LargeLunch,
+    DblParameter.LargeDinner,
+    DblParameter.Weight,
+    DblParameter.Height
   ]
 
   parameters.sort((a, b) => {
