@@ -77,6 +77,7 @@ import Bolus from '../../models/medical/datum/bolus.model'
 import Prescriptor from '../../models/medical/datum/enums/prescriptor.enum'
 import { DblParameter } from '../../models/medical/datum/enums/dbl-parameter.enum'
 
+// Insulin type parameters from DBLG1 (`InsulinTypeUsed`) and DBLG2 (`InsulinType`) are excluded
 const EXCLUDED_PARAMETERS = new Set([DblParameter.InsulinTypeUsed, DblParameter.InsulinType])
 
 class MedicalDataService {

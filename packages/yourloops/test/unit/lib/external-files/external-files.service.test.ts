@@ -27,9 +27,9 @@
 
 import { ExternalFilesService } from '../../../../lib/external-files/external-files.service'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { ExternalFilename } from '../../../../models/enums/external-filename.enum'
+import { ExternalFilename } from '../../../../lib/external-files/enums/external-filename.enum'
 import { DblParameter } from 'medical-domain'
-import { ParameterMemoFilename } from '../../../../models/enums/parameter-memo-filename.enum'
+import { ParameterMemoFilename } from '../../../../lib/external-files/enums/parameter-memo-filename.enum'
 
 describe('ExternalFilesService', () => {
   describe('getTrainingFilename', () => {

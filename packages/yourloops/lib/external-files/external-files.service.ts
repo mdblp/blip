@@ -27,9 +27,9 @@
 
 import { DblParameter } from 'medical-domain'
 import { getCurrentLang } from '../language'
-import { ParameterMemoFilename } from '../../models/enums/parameter-memo-filename.enum'
+import { ParameterMemoFilename } from './enums/parameter-memo-filename.enum'
 import config from '../config/config'
-import { ExternalFilename } from '../../models/enums/external-filename.enum'
+import { ExternalFilename } from './enums/external-filename.enum'
 import { UserRole } from '../auth/models/enums/user-role.enum'
 
 const PARAMETER_MEMO_FOLDER = 'parameter-memo'

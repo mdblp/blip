@@ -35,6 +35,7 @@ import Dialog from '@mui/material/Dialog'
 import { useTranslation } from 'react-i18next'
 import { DblParameter } from 'medical-domain'
 import { Alert } from '@mui/material'
+import { ExternalFilesApi } from '../../lib/external-files/external-files.api'
 import { ExternalFilesService } from '../../lib/external-files/external-files.service'
 
 interface ParameterMemoDialogProps {
@@ -63,8 +64,8 @@ export const ParameterMemoDialog: FC<ParameterMemoDialogProps> = (props) => {
   useEffect(() => {
     const checkPdfAvailability = async () => {
       try {
-        const response = await fetch(filePath, { method: 'HEAD' })
-        if (!response.ok) {
+        const isFileAvailable = await ExternalFilesApi.checkFileExists(parameterName)
+        if (!isFileAvailable) {
           setHasError(true)
         }
       }
@@ -74,7 +75,7 @@ export const ParameterMemoDialog: FC<ParameterMemoDialogProps> = (props) => {
     }
 
     checkPdfAvailability()
-  }, [filePath])
+  }, [parameterName])
 
   return (
     <Dialog
