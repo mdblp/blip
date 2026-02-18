@@ -32,14 +32,14 @@ export const ensureNumeric = (value: number | undefined | null): number => {
 }
 
 
-export const formatNumberForLang = (decimal: number | string): string => {
+export const formatNumberForLang = (decimal: number | string, minimumFractionDigit?: number): string => {
   /* Some missing values are represented as --, so we keep it */
-  if (decimal ==='--') {
+  if (decimal === '--') {
     return decimal
   }
   const lang = i18next.language
   const formatter = Intl.NumberFormat(lang, {
-    minimumFractionDigits: 1,
+    minimumFractionDigits: minimumFractionDigit !== null ? minimumFractionDigit : 1,
     maximumFractionDigits: 3
   })
   if (typeof decimal === "string") {

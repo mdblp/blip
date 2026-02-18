@@ -73,9 +73,9 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
               &nbsp;
               <span className={styles['title-value']}>
                 (
-                <span className={`${valueBasedStyles.min.color} ${styles.spacing}`}>{formatNumberForLang(standardDeviationMin)}</span>
+                <span className={`${valueBasedStyles.min.color} ${styles.spacing}`}>{formatNumberForLang(standardDeviationMin, 0)}</span>
                 -
-                <span className={`${valueBasedStyles.max.color} ${styles.spacing}`}>{formatNumberForLang(standardDeviationMax)}</span>
+                <span className={`${valueBasedStyles.max.color} ${styles.spacing}`}>{formatNumberForLang(standardDeviationMax, 0)}</span>
                 )
               </span>
             </>
@@ -126,7 +126,7 @@ const CbgStandardDeviation: FunctionComponent<CBGStandardDeviationProps> = (prop
                 fontSize: "20px",
                 marginLeft: "auto"
               }}>
-              {formatNumberForLang(standardDeviation)}
+              {formatNumberForLang(standardDeviation, 0)}
             </Box>
           </>
         )}

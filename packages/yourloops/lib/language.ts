@@ -120,14 +120,14 @@ const getLangName = (languageCode: LanguageCodes): string => {
   return _.get(locales, `resources.${languageCode}.name`, 'en')
 }
 
-const formatNumberForLang = (decimal: number | string): string => {
+const formatNumberForLang = (decimal: number | string, minimumFractionDigit?: number): string => {
   /* Some missing values are represented as --, so we keep it */
-  if (decimal ==='--') {
+  if (decimal === '--') {
     return decimal
   }
   const lang= getCurrentLang()
   const formatter = Intl.NumberFormat(lang, {
-    minimumFractionDigits: 1,
+    minimumFractionDigits: minimumFractionDigit ? minimumFractionDigit : 1,
     maximumFractionDigits: 3
   })
   if (typeof decimal === "string") {
