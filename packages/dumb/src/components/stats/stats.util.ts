@@ -33,10 +33,21 @@ export const ensureNumeric = (value: number | undefined | null): number => {
 
 
 export const formatNumberForLang = (decimal: number | string): string => {
+  /* Some missing values are represented as --, so we keep it */
+  if (decimal ==='--') {
+    return decimal
+  }
   const lang = i18next.language
-  const formatter = Intl.NumberFormat(lang)
+  const formatter = Intl.NumberFormat(lang, {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 3
+  })
   if (typeof decimal === "string") {
-    decimal = parseFloat(decimal)
+    if (lang !== 'en') {
+      return decimal.replace(".", ",")
+    } else {
+      return decimal
+    }
   }
   return formatter.format(decimal)
 }
