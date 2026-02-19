@@ -1443,7 +1443,8 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "reportedIntensity": Intensity.Medium,
           "inputTime": "2022-08-08T13:00:00.000Z",
           "isoWeekday": WeekDays.Sunday,
-          "name": "RUNNING"
+          "name": "RUNNING",
+          "updateTime": "2022-08-08T13:10:00.000Z"
         },
         {
           "epoch": 1659967200000,
@@ -1464,7 +1465,8 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "reportedIntensity": Intensity.Medium,
           "inputTime": "2022-08-08T14:00:00.000Z",
           "isoWeekday": WeekDays.Sunday,
-          "name": ""
+          "name": "",
+          "updateTime": "2022-08-08T14:00:00.000Z",
         }
       ],
       pumpSettings: [
@@ -1507,7 +1509,10 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
               "swVersion": "beta",
               "product": "zzz",
             },
-            history,
+            history: {
+              parameters: history,
+              devices : []
+            },
             "securityBasals": { "rates": null },
             "mobileApplication": {
               "manufacturer": "",

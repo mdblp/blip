@@ -28,6 +28,7 @@ import React, { type FunctionComponent, memo } from 'react'
 import styles from './total-insulin-stat.css'
 import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import Box from '@mui/material/Box'
+import { formatNumberForLang } from '../stats.util'
 
 interface TotalInsulinPropsData {
   id: string
@@ -49,7 +50,7 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
 
   const percent = (value: number): string => {
     const res = Math.round(100 * value / total)
-    return res > 0 ? res.toString(10) : '--'
+    return res > 0 ? formatNumberForLang(res.toString(10)) : '--'
   }
 
   return (
@@ -59,7 +60,7 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
         <span className={styles.titleData}>
           (
           <span className={styles.titleTotal}>
-            {total}
+            {formatNumberForLang(total)}
           </span>
           <span className={styles.titleSuffix}>
             U
@@ -76,10 +77,10 @@ const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props) => {
                 {entry.title}
               </span>
               <span className={`${styles.rowValue} ${styles[`rowsTotalInsulin-${entry.id}`]}`}>
-                {`${entry.value > 0 ? entry.valueString : '0'} ${entry.units}`}
+                {`${entry.value > 0 ? formatNumberForLang(entry.valueString) : '0'} ${entry.units}`}
               </span>
               <div className={`${styles.rowPercent} ${styles[`rowsTotalInsulin-${entry.id}`]}`}>
-                <span className={styles.rowPercentValue}>{percent(Math.max(entry.value, 0))}</span>
+                <span className={styles.rowPercentValue}>{formatNumberForLang(percent(Math.max(entry.value, 0)))}</span>
                 <span className={styles.rowPercentUnits}>%</span>
               </div>
             </React.Fragment>

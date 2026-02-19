@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,10 +24,37 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+import React, { FC } from 'react'
+import { DevicesChangeHistory } from '../../../../components/device/devices-change-history'
+import { PumpSettings } from 'medical-domain'
+import { useTheme } from '@mui/material/styles'
+import { useTranslation } from 'react-i18next'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
 
+interface DeviceChangeHistorySectionProps {
+  pumpSettings: PumpSettings
+  goToDailySpecificDate: (date: number) => void
+}
 
-export enum DeviceViewSection {
-  ChangeHistory = 'ChangeHistory',
-  CurrentParameters = 'CurrentParameters',
-  SafetyBasalProfile = 'SafetyBasalProfile'
+export const DeviceChangeHistorySection: FC<DeviceChangeHistorySectionProps> = (props) => {
+  const { goToDailySpecificDate, pumpSettings } = props
+  const theme = useTheme()
+  const { t } = useTranslation()
+  const history = pumpSettings.payload.history.devices
+  const timezone = pumpSettings.timezone
+
+  return (
+    <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="device-history-section">
+      <CardHeader title={t('device-change-history')} />
+      <CardContent>
+        <DevicesChangeHistory
+          goToDailySpecificDate={goToDailySpecificDate}
+          history={history}
+          timezone={timezone}
+        />
+      </CardContent>
+    </Card>
+  )
 }

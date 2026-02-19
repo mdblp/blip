@@ -35,9 +35,10 @@ import { CurrentParametersSection } from './sections/current-parameters-section'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import { SafetyBasalProfileSection } from './sections/safety-basal-profile-section'
-import { ChangeHistorySection } from './sections/change-history-section'
+import { ParametersChangeHistorySection } from './sections/parameters-change-history-section'
 import { DevicesViewMenu } from './devices-view-menu'
-import { DeviceViewSection } from '../../../models/enums/device-view-section.enum'
+import { DeviceViewSection } from './device-view-section.enum'
+import { DeviceChangeHistorySection } from './sections/device-change-history-section'
 
 interface DeviceViewProps {
   goToDailySpecificDate: (date: number) => void
@@ -58,12 +59,30 @@ export const DevicesView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecifi
     return device.deviceId.toLowerCase().startsWith('mobigo');
   }
 
-  const isSelected = (section: DeviceViewSection): boolean => {
-    return section === selectedSection
-  }
 
   const selectSection = (section: DeviceViewSection): void => {
     setSelectedSection(section)
+  }
+
+  const displaySelectedSection = (): JSX.Element => {
+    switch (selectedSection) {
+      case DeviceViewSection.CurrentParameters:
+        return <CurrentParametersSection pumpSettings={pumpSettings} />
+      case DeviceViewSection.SafetyBasalProfile:
+        return <SafetyBasalProfileSection
+          safetyBasalConfig={pumpSettings.payload.securityBasals}
+          deviceSystem={pumpSettings.payload.device.name}
+        />
+      case DeviceViewSection.ParametersChangeHistory:
+        return <ParametersChangeHistorySection
+          goToDailySpecificDate={goToDailySpecificDate}
+          pumpSettings={pumpSettings}
+        />
+      case DeviceViewSection.DeviceChangeHistory:
+        return <DeviceChangeHistorySection goToDailySpecificDate={goToDailySpecificDate} pumpSettings={pumpSettings} />
+      default:
+        return <></>
+    }
   }
 
   return (
@@ -79,22 +98,7 @@ export const DevicesView: FC<DeviceViewProps> = ({ medicalData, goToDailySpecifi
             />
           </Grid>
           <Grid size={9}>
-            {
-              isSelected(DeviceViewSection.CurrentParameters) ?
-                <CurrentParametersSection pumpSettings={pumpSettings} />
-                : isSelected(DeviceViewSection.SafetyBasalProfile) ?
-                  <SafetyBasalProfileSection
-                    safetyBasalConfig={pumpSettings.payload.securityBasals}
-                    deviceSystem={pumpSettings.payload.device.name}
-                  />
-                  : isSelected(DeviceViewSection.ChangeHistory) ?
-                    <ChangeHistorySection
-                      goToDailySpecificDate={goToDailySpecificDate}
-                      pumpSettings={pumpSettings}
-                    />
-                    : <></>
-            }
-
+            {displaySelectedSection()}
           </Grid>
         </Grid>
         : <Box

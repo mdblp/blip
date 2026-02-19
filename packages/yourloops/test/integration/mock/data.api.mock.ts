@@ -31,6 +31,7 @@ import { history } from '../data/data-api.data'
 import type { PatientDataRange } from '../../../lib/data/models/data-range.model'
 import {
   DatumType,
+  DblParameter,
   DeviceSystem,
   DurationUnit,
   MedicalData,
@@ -71,7 +72,8 @@ export const WIZARD_WITHOUT_BOLUS_ID = 'wizardId6'
 export const CARB_ID = 'carbId'
 export const PHYSICAL_ACTIVITY_ID = 'physicalActivityId'
 export const PHYSICAL_ACTIVITY_WITHOUT_NAME_ID = 'physicalActivityId2'
-export const PHYSICAL_ACTIVITY_TIME = '2022-08-08T13:00:00Z'
+export const PHYSICAL_ACTIVITY_CREATE_TIME = '2022-08-08T13:00:00Z'
+export const PHYSICAL_ACTIVITY_UPDATE_TIME = '2022-08-08T13:10:00Z'
 export const PHYSICAL_ACTIVITY_WITHOUT_NAME_TIME = '2022-08-08T14:00:00Z'
 export const RESERVOIR_CHANGE_ID = 'reservoirChangeId'
 export const RESERVOIR_CHANGE2_ID = 'reservoirChangeId2'
@@ -284,12 +286,15 @@ const PumpSettingsMock = (date, time) => {
         {
           effectiveDate: '2020-01-17T08:00:00.000Z',
           level: 1,
-          name: 'WEIGHT',
+          name: DblParameter.Weight,
           unit: 'kg',
           value: 72
         }
       ],
-      history
+      history: {
+        parameters: history,
+        devices: []
+      }
     }
   }
 }
@@ -378,7 +383,7 @@ const deviceEventMock = (date, time) => {
         id: PARAMETER_ID,
         epoch: startTime,
         timezone: 'UTC',
-        name: 'MEAL_RATIO_LUNCH_FACTOR',
+        name: DblParameter.AggressivenessLunch,
         level: 1,
         units: Unit.Percent,
         value: 100,
@@ -513,123 +518,139 @@ export const pumpSettingsData: Data = {
             name: DeviceSystem.Dblg1,
             swVersion: '1.0.5.25'
           },
-          history,
+          history: {
+            parameters: history,
+            devices: []
+          },
           parameters: [
-            { name: 'WEIGHT', value: '72', unit: Unit.Kilogram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
             {
-              name: 'MEDIUM_MEAL_BREAKFAST',
+              name: DblParameter.Weight,
+              value: '72',
+              unit: Unit.Kilogram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.AverageBreakfast,
               value: '36',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEDIUM_MEAL_DINNER',
+              name: DblParameter.AverageDinner,
               value: '96',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'PATIENT_GLYCEMIA_TARGET',
+              name: DblParameter.TargetGlucoseLevel,
               value: '110',
               unit: Unit.MilligramPerDeciliter,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA',
+              name: DblParameter.TotalDailyInsulin,
+              value: '53.0',
+              unit: Unit.InsulinUnit,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.AggressivenessNormoglycemia,
               value: '100',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'PATIENT_GLY_HYPER_LIMIT',
+              name: DblParameter.HyperglycemiaThreshold,
               value: '180',
               unit: Unit.MilligramPerDeciliter,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEDIUM_MEAL_LUNCH',
+              name: DblParameter.AverageLunch,
               value: '96',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'PATIENT_GLY_HYPO_LIMIT',
+              name: DblParameter.HypoglycemiaThreshold,
               value: '75',
               unit: Unit.MilligramPerDeciliter,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'BOLUS_AGGRESSIVENESS_FACTOR',
+              name: DblParameter.AggressivenessHyperglycemia,
               value: '100',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'SMALL_MEAL_LUNCH',
+              name: DblParameter.SmallLunch,
               value: '48',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'SMALL_MEAL_BREAKFAST',
+              name: DblParameter.SmallBreakfast,
               value: '18',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEAL_RATIO_LUNCH_FACTOR',
+              name: DblParameter.AggressivenessLunch,
               value: '100',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'LARGE_MEAL_DINNER',
+              name: DblParameter.LargeDinner,
               value: '144',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEAL_RATIO_DINNER_FACTOR',
+              name: DblParameter.AggressivenessDinner,
               value: '80',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'LARGE_MEAL_BREAKFAST',
+              name: DblParameter.LargeBreakfast,
               value: '54',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEAL_RATIO_BREAKFAST_FACTOR',
+              name: DblParameter.AggressivenessBreakfast,
               value: '100',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'LARGE_MEAL_LUNCH',
+              name: DblParameter.LargeLunch,
               value: '144',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'SMALL_MEAL_DINNER',
+              name: DblParameter.SmallDinner,
               value: '48',
               unit: Unit.Gram,
               level: 1,
@@ -709,123 +730,146 @@ export const pumpSettingsDblg2: Data = {
             swVersion: '',
             imei: ''
           },
-          history,
+          history: {
+            parameters: history,
+            devices: []
+          },
           parameters: [
-            { name: 'WEIGHT', value: '72', unit: Unit.Kilogram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
             {
-              name: 'MEDIUM_MEAL_BREAKFAST',
+              name: DblParameter.Weight,
+              value: '72',
+              unit: Unit.Kilogram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.Height,
+              value: '174',
+              unit: Unit.Centimeter,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.AverageBreakfast,
               value: '36',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEDIUM_MEAL_DINNER',
+              name: DblParameter.AverageDinner,
               value: '96',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'PATIENT_GLYCEMIA_TARGET',
+              name: DblParameter.TargetGlucoseLevel,
               value: '110',
               unit: Unit.MilligramPerDeciliter,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA',
+              name: DblParameter.AggressivenessNormoglycemia,
               value: '100',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'PATIENT_GLY_HYPER_LIMIT',
+              name: DblParameter.HyperglycemiaThreshold,
               value: '180',
               unit: Unit.MilligramPerDeciliter,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEDIUM_MEAL_LUNCH',
+              name: DblParameter.TotalDailyInsulin,
+              value: '53.0',
+              unit: Unit.InsulinUnit,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.AverageLunch,
               value: '96',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'PATIENT_GLY_HYPO_LIMIT',
+              name: DblParameter.HypoglycemiaThreshold,
               value: '75',
               unit: Unit.MilligramPerDeciliter,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'BOLUS_AGGRESSIVENESS_FACTOR',
+              name: DblParameter.AggressivenessHyperglycemia,
               value: '100',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'SMALL_MEAL_LUNCH',
+              name: DblParameter.SmallLunch,
               value: '48',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'SMALL_MEAL_BREAKFAST',
+              name: DblParameter.SmallBreakfast,
               value: '18',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEAL_RATIO_LUNCH_FACTOR',
+              name: DblParameter.AggressivenessLunch,
               value: '100',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'LARGE_MEAL_DINNER',
+              name: DblParameter.LargeDinner,
               value: '144',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEAL_RATIO_DINNER_FACTOR',
+              name: DblParameter.AggressivenessDinner,
               value: '80',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'LARGE_MEAL_BREAKFAST',
+              name: DblParameter.LargeBreakfast,
               value: '54',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEAL_RATIO_BREAKFAST_FACTOR',
+              name: DblParameter.AggressivenessBreakfast,
               value: '100',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'LARGE_MEAL_LUNCH',
+              name: DblParameter.LargeLunch,
               value: '144',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'SMALL_MEAL_DINNER',
+              name: DblParameter.SmallDinner,
               value: '48',
               unit: Unit.Gram,
               level: 1,
@@ -837,7 +881,7 @@ export const pumpSettingsDblg2: Data = {
             product: "testPump",
             name: 'Kaleido',
             swVersion: 'beta',
-            serialNumber: '123456',
+            serialNumber: '123456'
           },
           mobileApplication: {
             activationCode: '123456789',
@@ -905,123 +949,133 @@ export const pumpSettingsDblg1Mobigo: Data = {
             name: DeviceSystem.Dblg1,
             swVersion: '1.12.9'
           },
-          history,
+          history: {
+            parameters: history,
+            devices: []
+          },
           parameters: [
-            { name: 'WEIGHT', value: '72', unit: Unit.Kilogram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
+            { name: DblParameter.Weight, value: '72', unit: Unit.Kilogram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
             {
-              name: 'MEDIUM_MEAL_BREAKFAST',
+              name: DblParameter.AverageBreakfast,
               value: '36',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEDIUM_MEAL_DINNER',
+              name: DblParameter.AverageDinner,
               value: '96',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'PATIENT_GLYCEMIA_TARGET',
+              name: DblParameter.TargetGlucoseLevel,
               value: '110',
               unit: Unit.MilligramPerDeciliter,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA',
+              name: DblParameter.AggressivenessNormoglycemia,
               value: '100',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'PATIENT_GLY_HYPER_LIMIT',
+              name: DblParameter.HyperglycemiaThreshold,
               value: '180',
               unit: Unit.MilligramPerDeciliter,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEDIUM_MEAL_LUNCH',
+              name: DblParameter.AverageLunch,
               value: '96',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'PATIENT_GLY_HYPO_LIMIT',
+              name: DblParameter.HypoglycemiaThreshold,
               value: '75',
               unit: Unit.MilligramPerDeciliter,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'BOLUS_AGGRESSIVENESS_FACTOR',
+              name: DblParameter.AggressivenessHyperglycemia,
               value: '100',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'SMALL_MEAL_LUNCH',
+              name: DblParameter.SmallLunch,
               value: '48',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'SMALL_MEAL_BREAKFAST',
+              name: DblParameter.SmallBreakfast,
               value: '18',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEAL_RATIO_LUNCH_FACTOR',
+              name: DblParameter.AggressivenessLunch,
               value: '100',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'LARGE_MEAL_DINNER',
+              name: DblParameter.LargeDinner,
               value: '144',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEAL_RATIO_DINNER_FACTOR',
+              name: DblParameter.AggressivenessDinner,
               value: '80',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'LARGE_MEAL_BREAKFAST',
+              name: DblParameter.TotalDailyInsulin,
+              value: '53.0',
+              unit: Unit.InsulinUnit,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.LargeBreakfast,
               value: '54',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEAL_RATIO_BREAKFAST_FACTOR',
+              name: DblParameter.AggressivenessBreakfast,
               value: '100',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'LARGE_MEAL_LUNCH',
+              name: DblParameter.LargeLunch,
               value: '144',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'SMALL_MEAL_DINNER',
+              name: DblParameter.SmallDinner,
               value: '48',
               unit: Unit.Gram,
               level: 1,
@@ -1091,126 +1145,136 @@ export const pumpSettingsDblg2WithoutSecurityBasalData: Data = {
             operatingSystem: 'Android',
             osVersion: '14',
             smartphoneModel: 'A25',
-            imei : '',
+            imei: '',
             swVersion: ''
           },
-          history,
+          history: {
+            parameters: history,
+            devices: []
+          },
           parameters: [
-            { name: 'WEIGHT', value: '72', unit: Unit.Kilogram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
+            { name: DblParameter.Weight, value: '72', unit: Unit.Kilogram, level: 1, effectiveDate: '2020-01-17T08:00:00.000Z' },
             {
-              name: 'MEDIUM_MEAL_BREAKFAST',
+              name: DblParameter.AverageBreakfast,
               value: '36',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEDIUM_MEAL_DINNER',
+              name: DblParameter.AverageDinner,
               value: '96',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'PATIENT_GLYCEMIA_TARGET',
+              name: DblParameter.TargetGlucoseLevel,
               value: '110',
               unit: Unit.MilligramPerDeciliter,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA',
+              name: DblParameter.AggressivenessNormoglycemia,
               value: '100',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'PATIENT_GLY_HYPER_LIMIT',
+              name: DblParameter.HyperglycemiaThreshold,
               value: '180',
               unit: Unit.MilligramPerDeciliter,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEDIUM_MEAL_LUNCH',
+              name: DblParameter.AverageLunch,
               value: '96',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'PATIENT_GLY_HYPO_LIMIT',
+              name: DblParameter.HypoglycemiaThreshold,
               value: '75',
               unit: Unit.MilligramPerDeciliter,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'BOLUS_AGGRESSIVENESS_FACTOR',
+              name: DblParameter.AggressivenessHyperglycemia,
               value: '100',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'SMALL_MEAL_LUNCH',
+              name: DblParameter.SmallLunch,
               value: '48',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'SMALL_MEAL_BREAKFAST',
+              name: DblParameter.SmallBreakfast,
               value: '18',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEAL_RATIO_LUNCH_FACTOR',
+              name: DblParameter.AggressivenessLunch,
               value: '100',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'LARGE_MEAL_DINNER',
+              name: DblParameter.LargeDinner,
               value: '144',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEAL_RATIO_DINNER_FACTOR',
+              name: DblParameter.AggressivenessDinner,
               value: '80',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'LARGE_MEAL_BREAKFAST',
+              name: DblParameter.LargeBreakfast,
               value: '54',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'MEAL_RATIO_BREAKFAST_FACTOR',
+              name: DblParameter.AggressivenessBreakfast,
               value: '100',
               unit: Unit.Percent,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'LARGE_MEAL_LUNCH',
+              name: DblParameter.TotalDailyInsulin,
+              value: '53.0',
+              unit: Unit.InsulinUnit,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.LargeLunch,
               value: '144',
               unit: Unit.Gram,
               level: 1,
               effectiveDate: '2020-01-17T08:00:00.000Z'
             },
             {
-              name: 'SMALL_MEAL_DINNER',
+              name: DblParameter.SmallDinner,
               value: '48',
               unit: Unit.Gram,
               level: 1,
@@ -1227,7 +1291,8 @@ export const pumpSettingsDblg2WithoutSecurityBasalData: Data = {
           mobileApplication: {
             manufacturer: Source.Diabeloop,
             identifier: DeviceSystem.Dblg2,
-            swVersion: '1.0.0'
+            swVersion: '1.0.0',
+            activationCode: '123456789'
           },
           securityBasals: { rates: null }
         }
@@ -1371,7 +1436,10 @@ export const smallDataSet: Data = {
             "serialNumber": "123456",
             "swVersion": "beta"
           },
-          "history": [],
+          "history": {
+            "parameters" : [],
+            "devices" : []
+          },
           "parameters": [
             {
               "effectiveDate": "2020-01-17T08:00:00.000Z",

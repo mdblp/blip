@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,27 +24,35 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { AppRoute } from '../models/enums/routes.enum'
 
-/**
- * Class containing all external URLs related to Diabeloop
- */
-class DiabeloopExternalUrls {
-  readonly dblDiabetes: string = 'https://www.dbl-diabetes.com';
-  readonly contactEmail: string = 'yourloops@diabeloop.com';
-  readonly support: string = 'https://www.diabeloop.com';
+import React, { FC } from 'react'
+import { useTheme } from '@mui/material/styles'
+import Box from '@mui/material/Box'
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
+import { formatNumberForLang } from '../../lib/language'
+
+interface ChangeValueProps {
+  previousValue?: string
+  currentValue: string
 }
 
-export const diabeloopExternalUrls = new DiabeloopExternalUrls()
-export const PUBLIC_ROUTES = [AppRoute.Login, AppRoute.VerifyEmail, AppRoute.VerifyEmailResult, AppRoute.SignupInformation]
-export const ALWAYS_ACCESSIBLE_ROUTES = [AppRoute.ProductLabelling]
-export const ROUTES_REQUIRING_LANGUAGE_SELECTOR = [
-  AppRoute.RenewConsent,
-  AppRoute.NewConsent,
-  AppRoute.Training,
-  AppRoute.SignupInformation,
-  AppRoute.CompleteSignup,
-  AppRoute.ProductLabelling,
-  AppRoute.VerifyEmail,
-  AppRoute.VerifyEmailResult
-]
+export const ChangeValue: FC<ChangeValueProps> = (props) => {
+  const { previousValue, currentValue } = props
+  const theme = useTheme()
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center"
+      }}>
+      {previousValue &&
+        <>
+          <span>{`${formatNumberForLang(previousValue)}`}</span>
+          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
+        </>
+      }
+      <span>{`${formatNumberForLang(currentValue)}`}</span>
+    </Box>
+  )
+}

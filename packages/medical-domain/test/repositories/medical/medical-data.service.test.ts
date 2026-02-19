@@ -28,12 +28,10 @@
 import type Basal from '../../../src/domains/models/medical/datum/basal.model'
 import type Bolus from '../../../src/domains/models/medical/datum/bolus.model'
 import type Wizard from '../../../src/domains/models/medical/datum/wizard.model'
-import type PhysicalActivity from '../../../src/domains/models/medical/datum/physical-activity.model'
 import type MedicalData from '../../../src/domains/models/medical/medical-data.model'
 import type MedicalDataOptions from '../../../src/domains/models/medical/medical-data-options.model'
 import BasalService from '../../../src/domains/repositories/medical/datum/basal.service'
 import BolusService from '../../../src/domains/repositories/medical/datum/bolus.service'
-import PhysicalActivityService from '../../../src/domains/repositories/medical/datum/physical-activity.service'
 import WizardService from '../../../src/domains/repositories/medical/datum/wizard.service'
 import DatumService from '../../../src/domains/repositories/medical/datum.service'
 import MedicalDataService from '../../../src/domains/repositories/medical/medical-data.service'
@@ -682,608 +680,610 @@ const testData = {
             "value": "150"
           }
         ],
-        "history": [
-          {
-            "changeDate": "2023-09-16T00:00",
-            "parameters": [
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-17T17:00:40.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_BREAKFAST_FACTOR",
-                "unit": "%",
-                "value": "110",
-                "previousValue": "100",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-16T00:00:00.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_BREAKFAST_FACTOR",
-                "unit": "%",
-                "value": "100",
-                "previousValue": "110",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-17T17:00:40.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_DINNER_FACTOR",
-                "unit": "%",
-                "value": "90",
-                "previousValue": "100",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-16T00:00:00.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_DINNER_FACTOR",
-                "unit": "%",
-                "value": "100",
-                "previousValue": "90",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-16T00:00:00.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_LUNCH_FACTOR",
-                "unit": "%",
-                "value": "130",
-                "previousValue": "90",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-22T14:01:14.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_LUNCH_FACTOR",
-                "unit": "%",
-                "value": "90",
-                "previousValue": "130",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-17T07:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPER_LIMIT",
-                "unit": "mg/dL",
-                "value": "140",
-                "previousValue": "180.1",
-                "previousUnit": "mg/dL"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-16T00:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPER_LIMIT",
-                "unit": "mg/dL",
-                "value": "180.1",
-                "previousValue": "140",
-                "previousUnit": "mg/dL"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-17T07:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPO_LIMIT",
-                "unit": "mg/dL",
-                "value": "60",
-                "previousValue": "70",
-                "previousUnit": "mg/dL"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-16T00:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPO_LIMIT",
-                "unit": "mg/dL",
-                "value": "70",
-                "previousValue": "60",
-                "previousUnit": "mg/dL"
-              }
-            ]
-          },
-          {
-            "changeDate": "2023-10-01T00:00",
-            "parameters": [
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-02T17:00:40.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_BREAKFAST_FACTOR",
-                "unit": "%",
-                "value": "110",
-                "previousValue": "100",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-01T00:00:00.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_BREAKFAST_FACTOR",
-                "unit": "%",
-                "value": "100",
-                "previousValue": "110",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-02T17:00:40.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_DINNER_FACTOR",
-                "unit": "%",
-                "value": "90",
-                "previousValue": "100",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-01T00:00:00.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_DINNER_FACTOR",
-                "unit": "%",
-                "value": "100",
-                "previousValue": "90",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-01T00:00:00.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_LUNCH_FACTOR",
-                "unit": "%",
-                "value": "130",
-                "previousValue": "90",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-07T14:01:14.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_LUNCH_FACTOR",
-                "unit": "%",
-                "value": "90",
-                "previousValue": "130",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-02T07:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPER_LIMIT",
-                "unit": "mg/dL",
-                "value": "140",
-                "previousValue": "180.1",
-                "previousUnit": "mg/dL"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-01T00:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPER_LIMIT",
-                "unit": "mg/dL",
-                "value": "180.1",
-                "previousValue": "140",
-                "previousUnit": "mg/dL"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-02T07:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPO_LIMIT",
-                "unit": "mg/dL",
-                "value": "60",
-                "previousValue": "70",
-                "previousUnit": "mg/dL"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-01T00:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPO_LIMIT",
-                "unit": "mg/dL",
-                "value": "70",
-                "previousValue": "60",
-                "previousUnit": "mg/dL"
-              }
-            ]
-          },
-          {
-            "changeDate": "2023-10-16T00:00",
-            "parameters": [
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-17T17:00:40.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_BREAKFAST_FACTOR",
-                "unit": "%",
-                "value": "110",
-                "previousValue": "100",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-16T00:00:00.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_BREAKFAST_FACTOR",
-                "unit": "%",
-                "value": "100",
-                "previousValue": "110",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-17T17:00:40.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_DINNER_FACTOR",
-                "unit": "%",
-                "value": "90",
-                "previousValue": "100",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-16T00:00:00.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_DINNER_FACTOR",
-                "unit": "%",
-                "value": "100",
-                "previousValue": "90",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-16T00:00:00.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_LUNCH_FACTOR",
-                "unit": "%",
-                "value": "130",
-                "previousValue": "90",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-22T14:01:14.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_LUNCH_FACTOR",
-                "unit": "%",
-                "value": "90",
-                "previousValue": "130",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-17T07:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPER_LIMIT",
-                "unit": "mg/dL",
-                "value": "140",
-                "previousValue": "180.1",
-                "previousUnit": "mg/dL"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-16T00:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPER_LIMIT",
-                "unit": "mg/dL",
-                "value": "180.1",
-                "previousValue": "140",
-                "previousUnit": "mg/dL"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-17T07:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPO_LIMIT",
-                "unit": "mg/dL",
-                "value": "60",
-                "previousValue": "70",
-                "previousUnit": "mg/dL"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-10-16T00:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPO_LIMIT",
-                "unit": "mg/dL",
-                "value": "70",
-                "previousValue": "60",
-                "previousUnit": "mg/dL"
-              }
-            ]
-          },
-          {
-            "changeDate": "2023-09-01T00:00",
-            "parameters": [
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "BOLUS_AGGRESSIVENESS_FACTOR",
-                "unit": "%",
-                "value": "143",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "LARGE_MEAL_BREAKFAST",
-                "unit": "g",
-                "value": "150",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "LARGE_MEAL_DINNER",
-                "unit": "g",
-                "value": "150",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "LARGE_MEAL_LUNCH",
-                "unit": "g",
-                "value": "70",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_BREAKFAST_FACTOR",
-                "unit": "%",
-                "value": "100",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-02T17:00:40.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_BREAKFAST_FACTOR",
-                "unit": "%",
-                "value": "110",
-                "previousValue": "100",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_BREAKFAST_FACTOR",
-                "unit": "%",
-                "value": "100",
-                "previousValue": "110",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_DINNER_FACTOR",
-                "unit": "%",
-                "value": "100",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-02T17:00:40.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_DINNER_FACTOR",
-                "unit": "%",
-                "value": "90",
-                "previousValue": "100",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_DINNER_FACTOR",
-                "unit": "%",
-                "value": "100",
-                "previousValue": "90",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_LUNCH_FACTOR",
-                "unit": "%",
-                "value": "130",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-07T14:01:14.000Z",
-                "level": 1,
-                "name": "MEAL_RATIO_LUNCH_FACTOR",
-                "unit": "%",
-                "value": "90",
-                "previousValue": "130",
-                "previousUnit": "%"
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "MEDIUM_MEAL_BREAKFAST",
-                "unit": "g",
-                "value": "70",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "MEDIUM_MEAL_DINNER",
-                "unit": "g",
-                "value": "60",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "MEDIUM_MEAL_LUNCH",
-                "unit": "g",
-                "value": "50",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA",
-                "unit": "%",
-                "value": "100",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLYCEMIA_TARGET",
-                "unit": "mg/dL",
-                "value": "100.0",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPER_LIMIT",
-                "unit": "mg/dL",
-                "value": "180.1",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-02T07:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPER_LIMIT",
-                "unit": "mg/dL",
-                "value": "140",
-                "previousValue": "180.1",
-                "previousUnit": "mg/dL"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPER_LIMIT",
-                "unit": "mg/dL",
-                "value": "180.1",
-                "previousValue": "140",
-                "previousUnit": "mg/dL"
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPO_LIMIT",
-                "unit": "mg/dL",
-                "value": "70",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-02T07:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPO_LIMIT",
-                "unit": "mg/dL",
-                "value": "60",
-                "previousValue": "70",
-                "previousUnit": "mg/dL"
-              },
-              {
-                "changeType": "updated",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "PATIENT_GLY_HYPO_LIMIT",
-                "unit": "mg/dL",
-                "value": "70",
-                "previousValue": "60",
-                "previousUnit": "mg/dL"
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "SMALL_MEAL_BREAKFAST",
-                "unit": "g",
-                "value": "15",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "SMALL_MEAL_DINNER",
-                "unit": "g",
-                "value": "20",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "SMALL_MEAL_LUNCH",
-                "unit": "g",
-                "value": "30",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "TOTAL_INSULIN_FOR_24H",
-                "unit": "U",
-                "value": "53",
-                "previousValue": "",
-                "previousUnit": ""
-              },
-              {
-                "changeType": "added",
-                "effectiveDate": "2023-09-01T00:00:00.000Z",
-                "level": 1,
-                "name": "WEIGHT",
-                "unit": "kg",
-                "value": "69.0",
-                "previousValue": "",
-                "previousUnit": ""
-              }
-            ]
-          }
-        ],
+        "history": {
+          "parameters": [
+            {
+              "changeDate": "2023-09-16T00:00",
+              "parameters": [
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-17T17:00:40.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_BREAKFAST_FACTOR",
+                  "unit": "%",
+                  "value": "110",
+                  "previousValue": "100",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-16T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_BREAKFAST_FACTOR",
+                  "unit": "%",
+                  "value": "100",
+                  "previousValue": "110",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-17T17:00:40.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_DINNER_FACTOR",
+                  "unit": "%",
+                  "value": "90",
+                  "previousValue": "100",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-16T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_DINNER_FACTOR",
+                  "unit": "%",
+                  "value": "100",
+                  "previousValue": "90",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-16T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_LUNCH_FACTOR",
+                  "unit": "%",
+                  "value": "130",
+                  "previousValue": "90",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-22T14:01:14.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_LUNCH_FACTOR",
+                  "unit": "%",
+                  "value": "90",
+                  "previousValue": "130",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-17T07:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPER_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "140",
+                  "previousValue": "180.1",
+                  "previousUnit": "mg/dL"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-16T00:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPER_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "180.1",
+                  "previousValue": "140",
+                  "previousUnit": "mg/dL"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-17T07:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPO_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "60",
+                  "previousValue": "70",
+                  "previousUnit": "mg/dL"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-16T00:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPO_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "70",
+                  "previousValue": "60",
+                  "previousUnit": "mg/dL"
+                }
+              ]
+            },
+            {
+              "changeDate": "2023-10-01T00:00",
+              "parameters": [
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-02T17:00:40.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_BREAKFAST_FACTOR",
+                  "unit": "%",
+                  "value": "110",
+                  "previousValue": "100",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_BREAKFAST_FACTOR",
+                  "unit": "%",
+                  "value": "100",
+                  "previousValue": "110",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-02T17:00:40.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_DINNER_FACTOR",
+                  "unit": "%",
+                  "value": "90",
+                  "previousValue": "100",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_DINNER_FACTOR",
+                  "unit": "%",
+                  "value": "100",
+                  "previousValue": "90",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_LUNCH_FACTOR",
+                  "unit": "%",
+                  "value": "130",
+                  "previousValue": "90",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-07T14:01:14.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_LUNCH_FACTOR",
+                  "unit": "%",
+                  "value": "90",
+                  "previousValue": "130",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-02T07:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPER_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "140",
+                  "previousValue": "180.1",
+                  "previousUnit": "mg/dL"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPER_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "180.1",
+                  "previousValue": "140",
+                  "previousUnit": "mg/dL"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-02T07:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPO_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "60",
+                  "previousValue": "70",
+                  "previousUnit": "mg/dL"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPO_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "70",
+                  "previousValue": "60",
+                  "previousUnit": "mg/dL"
+                }
+              ]
+            },
+            {
+              "changeDate": "2023-10-16T00:00",
+              "parameters": [
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-17T17:00:40.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_BREAKFAST_FACTOR",
+                  "unit": "%",
+                  "value": "110",
+                  "previousValue": "100",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-16T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_BREAKFAST_FACTOR",
+                  "unit": "%",
+                  "value": "100",
+                  "previousValue": "110",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-17T17:00:40.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_DINNER_FACTOR",
+                  "unit": "%",
+                  "value": "90",
+                  "previousValue": "100",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-16T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_DINNER_FACTOR",
+                  "unit": "%",
+                  "value": "100",
+                  "previousValue": "90",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-16T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_LUNCH_FACTOR",
+                  "unit": "%",
+                  "value": "130",
+                  "previousValue": "90",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-22T14:01:14.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_LUNCH_FACTOR",
+                  "unit": "%",
+                  "value": "90",
+                  "previousValue": "130",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-17T07:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPER_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "140",
+                  "previousValue": "180.1",
+                  "previousUnit": "mg/dL"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-16T00:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPER_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "180.1",
+                  "previousValue": "140",
+                  "previousUnit": "mg/dL"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-17T07:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPO_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "60",
+                  "previousValue": "70",
+                  "previousUnit": "mg/dL"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-10-16T00:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPO_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "70",
+                  "previousValue": "60",
+                  "previousUnit": "mg/dL"
+                }
+              ]
+            },
+            {
+              "changeDate": "2023-09-01T00:00",
+              "parameters": [
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "BOLUS_AGGRESSIVENESS_FACTOR",
+                  "unit": "%",
+                  "value": "143",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "LARGE_MEAL_BREAKFAST",
+                  "unit": "g",
+                  "value": "150",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "LARGE_MEAL_DINNER",
+                  "unit": "g",
+                  "value": "150",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "LARGE_MEAL_LUNCH",
+                  "unit": "g",
+                  "value": "70",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_BREAKFAST_FACTOR",
+                  "unit": "%",
+                  "value": "100",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-02T17:00:40.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_BREAKFAST_FACTOR",
+                  "unit": "%",
+                  "value": "110",
+                  "previousValue": "100",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_BREAKFAST_FACTOR",
+                  "unit": "%",
+                  "value": "100",
+                  "previousValue": "110",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_DINNER_FACTOR",
+                  "unit": "%",
+                  "value": "100",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-02T17:00:40.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_DINNER_FACTOR",
+                  "unit": "%",
+                  "value": "90",
+                  "previousValue": "100",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_DINNER_FACTOR",
+                  "unit": "%",
+                  "value": "100",
+                  "previousValue": "90",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_LUNCH_FACTOR",
+                  "unit": "%",
+                  "value": "130",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-07T14:01:14.000Z",
+                  "level": 1,
+                  "name": "MEAL_RATIO_LUNCH_FACTOR",
+                  "unit": "%",
+                  "value": "90",
+                  "previousValue": "130",
+                  "previousUnit": "%"
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEDIUM_MEAL_BREAKFAST",
+                  "unit": "g",
+                  "value": "70",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEDIUM_MEAL_DINNER",
+                  "unit": "g",
+                  "value": "60",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "MEDIUM_MEAL_LUNCH",
+                  "unit": "g",
+                  "value": "50",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_BASAL_AGGRESSIVENESS_FACTOR_LEVEL_IN_EUGLYCAEMIA",
+                  "unit": "%",
+                  "value": "100",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLYCEMIA_TARGET",
+                  "unit": "mg/dL",
+                  "value": "100.0",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPER_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "180.1",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-02T07:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPER_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "140",
+                  "previousValue": "180.1",
+                  "previousUnit": "mg/dL"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPER_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "180.1",
+                  "previousValue": "140",
+                  "previousUnit": "mg/dL"
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPO_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "70",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-02T07:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPO_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "60",
+                  "previousValue": "70",
+                  "previousUnit": "mg/dL"
+                },
+                {
+                  "changeType": "updated",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "PATIENT_GLY_HYPO_LIMIT",
+                  "unit": "mg/dL",
+                  "value": "70",
+                  "previousValue": "60",
+                  "previousUnit": "mg/dL"
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "SMALL_MEAL_BREAKFAST",
+                  "unit": "g",
+                  "value": "15",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "SMALL_MEAL_DINNER",
+                  "unit": "g",
+                  "value": "20",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "SMALL_MEAL_LUNCH",
+                  "unit": "g",
+                  "value": "30",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "TOTAL_INSULIN_FOR_24H",
+                  "unit": "U",
+                  "value": "53",
+                  "previousValue": "",
+                  "previousUnit": ""
+                },
+                {
+                  "changeType": "added",
+                  "effectiveDate": "2023-09-01T00:00:00.000Z",
+                  "level": 1,
+                  "name": "WEIGHT",
+                  "unit": "kg",
+                  "value": "69.0",
+                  "previousValue": "",
+                  "previousUnit": ""
+                }
+              ]
+            }
+          ],
+        },
         "pump": {
           "expirationDate": "2021-01-31T04:13:00.000Z",
           "manufacturer": "Roche",
@@ -1439,12 +1439,6 @@ const wizardDeduplicateMock = jest.fn(
   }
 )
 
-const physicalActivityDeduplicateMock = jest.fn(
-  (data: PhysicalActivity[], _opts: MedicalDataOptions) => {
-    return data
-  }
-)
-
 const testMedicalData = (medicalData: MedicalDataService, typeCounts: Record<keyof MedicalData, number>) => {
   Object.keys(typeCounts).forEach((dataType) => {
     const key = dataType as keyof MedicalData
@@ -1490,7 +1484,6 @@ describe('MedicalDataService', () => {
       BasalService.deduplicate = basalDeduplicateMock
       BolusService.deduplicate = bolusDeduplicateMock
       WizardService.deduplicate = wizardDeduplicateMock
-      PhysicalActivityService.deduplicate = physicalActivityDeduplicateMock
     })
 
     afterEach(() => {
@@ -1504,7 +1497,6 @@ describe('MedicalDataService', () => {
       expect(basalDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(bolusDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(wizardDeduplicateMock).toHaveBeenCalledTimes(1)
-      expect(physicalActivityDeduplicateMock).toHaveBeenCalledTimes(1)
 
       // Main medicalData Checks (we have on objects of each except timezones)
       const expectedCount: Partial<Record<keyof MedicalData, number>> = {}
@@ -1618,7 +1610,6 @@ describe('MedicalDataService', () => {
       BasalService.deduplicate = basalDeduplicateMock
       BolusService.deduplicate = bolusDeduplicateMock
       WizardService.deduplicate = wizardDeduplicateMock
-      PhysicalActivityService.deduplicate = physicalActivityDeduplicateMock
     })
 
     afterEach(() => {
@@ -1630,7 +1621,6 @@ describe('MedicalDataService', () => {
       expect(basalDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(bolusDeduplicateMock).toHaveBeenCalledTimes(1)
       expect(wizardDeduplicateMock).toHaveBeenCalledTimes(1)
-      expect(physicalActivityDeduplicateMock).toHaveBeenCalledTimes(1)
 
       // Main medicalData Checks (we have 2 objects for cbg & timezones, 1 for bolus & basal)
       const expectedCount: Partial<Record<keyof MedicalData, number>> = {}
@@ -1715,7 +1705,6 @@ describe('MedicalDataService', () => {
       BasalService.deduplicate = basalDeduplicateMock
       BolusService.deduplicate = bolusDeduplicateMock
       WizardService.deduplicate = wizardDeduplicateMock
-      PhysicalActivityService.deduplicate = physicalActivityDeduplicateMock
       // eslint-disable-next-line no-import-assign
       BasiscsDataService.generateBasicData = generateBasicDataMock
       medicalDataService.add({})

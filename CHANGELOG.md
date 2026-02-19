@@ -3,9 +3,15 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.9.0-beta - 2026-03-12
+### Added
+- YLP-3613 Memos on DBL settings in Devices view
+- YLP-3617 As a user, I can see the devices changes history
+
 ### Changed
+- YLP-2823 Use , instead of . for languages other than English
 - YLP-3618 Meal without bolus management in Daily view
 - YLP-3634 Add tooltips for Rescue carbs and Manual bolus metrics
+- YLP-3815 Display update timestamp in yourloops
 
 ### Engineering
 - YLP-3472 MUI version update (v5 to v7)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,34 +25,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
-import { type PumpSettingsParameter } from 'medical-domain'
-import Box from '@mui/material/Box'
+import React, { FC } from 'react'
+import { ParametersChangeHistory } from '../../../../components/device/parameters-change-history'
+import { PumpSettings } from 'medical-domain'
 import { useTheme } from '@mui/material/styles'
-import { formatParameterValue } from './utils/device.utils'
-import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
+import { useTranslation } from 'react-i18next'
+import Card from '@mui/material/Card'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
 
-interface ParameterChangeValueProps {
-  parameter: PumpSettingsParameter
+interface ParametersChangeHistorySectionProps {
+  pumpSettings: PumpSettings
+  goToDailySpecificDate: (date: number) => void
 }
 
-export const ParameterChangeValue: FC<ParameterChangeValueProps> = ({ parameter }) => {
+export const ParametersChangeHistorySection: FC<ParametersChangeHistorySectionProps> = (props) => {
+  const { goToDailySpecificDate, pumpSettings } = props
   const theme = useTheme()
+  const { t } = useTranslation()
+  const history = pumpSettings.payload.history.parameters
+  const timezone = pumpSettings.timezone
 
   return (
-    <Box
-      className={`${parameter.name.toLowerCase()} ${parameter.previousValue ? 'updated-value' : 'added-value'}`}
-      sx={{
-        display: "flex",
-        alignItems: "center"
-      }}>
-      {parameter.previousValue &&
-        <>
-          <span>{`${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}`}</span>
-          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
-        </>
-      }
-      <span>{`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}</span>
-    </Box>
+    <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="change-history-section">
+      <CardHeader title={t('change-history')} />
+      <CardContent>
+        <ParametersChangeHistory
+          goToDailySpecificDate={goToDailySpecificDate}
+          history={history}
+          timezone={timezone}
+        />
+      </CardContent>
+    </Card>
   )
 }

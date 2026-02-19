@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -140,14 +140,19 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
               <TextField
                 aria-label={t('patient-list-search-tooltip')}
                 placeholder={t('patient-list-search-placeholder')}
-                inputProps={{ 'aria-label': t('aria-search') }}
                 value={inputSearch}
                 className={classes.customTextField}
-                InputProps={{
-                  endAdornment: <InputAdornment position="end"><SearchIcon /></InputAdornment>,
-                  sx: { height: '42px', borderRadius: '28px' },
-                  inputProps: {
-                    "data-testid":"search-patient-bar"
+                slotProps={{
+                  input: {
+                    endAdornment:
+                      <InputAdornment position="end">
+                        <SearchIcon />
+                      </InputAdornment>,
+                    sx: { height: '42px', borderRadius: '24px' },
+                  },
+                  htmlInput: {
+                    'aria-label': t('aria-search'),
+                    'data-testid': 'search-patient-bar'
                   }
                 }}
                 onChange={event => {
