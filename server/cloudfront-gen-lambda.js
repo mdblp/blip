@@ -290,6 +290,7 @@ function withFilesList(err, files) {
       continue
     }
     selectedFiles.push(`'${filename}'`)
+    console.log('  => Adding file:', filename)
   }
   distribFiles = selectedFiles.join(',')
   genOutputFile()
