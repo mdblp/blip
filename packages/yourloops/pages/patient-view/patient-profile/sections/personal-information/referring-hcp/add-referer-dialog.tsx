@@ -34,23 +34,45 @@ import DialogActions from '@mui/material/DialogActions'
 import { User } from '../../../../../../lib/auth'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Box from '@mui/material/Box'
+import { ReferringHcpApi } from '../../../../../../lib/referring-hcp/referring-hcp.api'
+import { TeamMember, useTeam } from '../../../../../../lib/team'
+import { useParams } from 'react-router-dom'
 
 interface AddReferrerDialogProps {
-  patientName: string
+  patientInfo: { id: string, name: string }
   user: User
+  referringHcpIds: string[]
   onClose: () => void
 }
 
 const DEFAULT_HCP_ID_VALUE = ''
 
 export const AddReferrerDialog: FC<AddReferrerDialogProps> = (props) => {
-  const { patientName, user, onClose } = props
+  const { patientInfo, user, referringHcpIds, onClose } = props
   const { t } = useTranslation()
+  // TODO Does not work for Patient role
+  const { teamId } = useParams()
+  const { getTeam } = useTeam()
 
-  const [selectedHcpId, setSelectedHcpId] = React.useState(DEFAULT_HCP_ID_VALUE);
+  const [selectedHcpId, setSelectedHcpId] = React.useState(DEFAULT_HCP_ID_VALUE)
+
+  const patientId = patientInfo.id
+  const patientName = patientInfo.name
+
+  // TODO Does not work for Patient role
+  const selectedTeam = getTeam(teamId)
+  const availableHcps = selectedTeam.members.filter((hcp: TeamMember)=> !referringHcpIds.includes(hcp.userId))
+
+  const sortedAvailableHcpList = availableHcps.toSorted((a, b) => a.profile.fullName.localeCompare(b.profile.fullName))
 
   const handleChange = (event: SelectChangeEvent) => {
-    setSelectedHcpId(event.target.value);
+    setSelectedHcpId(event.target.value)
+  }
+
+  const onClickAddReferrer = async () => {
+    await ReferringHcpApi.addReferringHcp(patientId, selectedHcpId)
+
+    onClose()
   }
 
   return (
@@ -77,9 +99,9 @@ export const AddReferrerDialog: FC<AddReferrerDialogProps> = (props) => {
               label={t('referrer-name')}
               onChange={handleChange}
             >
-              <MenuItem value={'hcpId1'}>HCP Name 1</MenuItem>
-              <MenuItem value={'hcpId2'}>HCP Name 2</MenuItem>
-              <MenuItem value={'hcpId3'}>HCP Name 3</MenuItem>
+              {sortedAvailableHcpList.map((hcp) => (
+                <MenuItem key={hcp.userId} value={hcp.userId}>{hcp.profile?.fullName}</MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Box>
@@ -96,7 +118,7 @@ export const AddReferrerDialog: FC<AddReferrerDialogProps> = (props) => {
         </Button>
         <Button
           variant="contained"
-          onClick={onClose}
+          onClick={onClickAddReferrer}
           disabled={selectedHcpId === DEFAULT_HCP_ID_VALUE}
         >
           {t('button-add-referrer')}

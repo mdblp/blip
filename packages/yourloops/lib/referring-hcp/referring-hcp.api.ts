@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,26 +25,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PatientProfile } from './patient-profile.model'
-import { type PatientSettings } from './patient-settings.model'
-import { type UserInviteStatus } from '../../team/models/enums/user-invite-status.enum'
-import { type MonitoringAlertsParameters } from 'medical-domain'
-import { type PatientInvite } from './patient-invite.model'
-import { DiabeticProfile } from './patient-diabete-profile'
-import { PatientMetrics } from './patient-metrics.model'
-import { ReferringHcp } from '../../referring-hcp/models/referring-hcp.model'
+import HttpService from '../http/http.service'
+import { AddReferringHcpPayload } from './models/add-referring-hcp-payload.model'
 
-// Data structure used in the application to represent a patient
-export interface Patient extends Partial<PatientMetrics> {
-  readonly userid: string
-  profile: PatientProfile
-  settings: PatientSettings
-  diabeticProfile?: DiabeticProfile
-  monitoringAlertsParameters?: MonitoringAlertsParameters
-  invitationStatus?: UserInviteStatus
-  invite?: PatientInvite
-  isUsingTeamAlertParameters?: boolean
-  hasSentUnreadMessages: boolean
-  flagged?: boolean
-  referringHcps?: ReferringHcp[]
+export class ReferringHcpApi {
+  static async addReferringHcp(patientId: string, hcpId: string): Promise<void> {
+    await HttpService.post<void, AddReferringHcpPayload>({
+      url: `/crew/v1/patient/${patientId}/hcp-referents`,
+      payload: {
+        referentUserId: hcpId,
+        patientUserId: patientId
+      }
+    })
+  }
+
+  static async removeReferringHcp(patientId: string, hcpId: string): Promise<void> {
+    await HttpService.delete({ url: `/crew/v1/patient/${patientId}/hcp-referents/${hcpId}` })
+  }
+
+  // static async getHcpList(patientId: string): Promise<string[]> {
+  //   await HttpService.get({ url: `/bff/v1/patient/${patientId}/hcp-referents` })
+  // }
 }

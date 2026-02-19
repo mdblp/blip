@@ -42,14 +42,16 @@ import PersonRemoveIcon from '../../../../../../components/icons/mui/person-remo
 import IconActionButton from '../../../../../../components/buttons/icon-action'
 import Tooltip from '@mui/material/Tooltip'
 import { useAuth } from '../../../../../../lib/auth'
-import { Patient } from '../../../../../../lib/patient/models/patient.model'
 import { getUserName } from '../../../../../../lib/auth/user.util'
 import { RemoveReferrerDialog } from './remove-referrer-dialog'
 import { AddReferrerDialog } from './add-referer-dialog'
+import { ReferringHcp } from '../../../../../../lib/referring-hcp/models/referring-hcp.model'
+import { PatientProfile } from '../../../../../../lib/patient/models/patient-profile.model'
 
 interface PatientReferringHcpsProps {
-  patient: Patient
-  referrerCount: number
+  patientId: string
+  patientProfile: PatientProfile
+  referringHcps: ReferringHcp[]
 }
 
 const MAX_REFERRER_COUNT = 5
@@ -60,20 +62,43 @@ const useStyles = makeStyles()(() => ({
   }
 }))
 
-export const PatientReferringHcp: FC<PatientReferringHcpsProps> = (props) => {
-  const { patient, referrerCount } = props
+export const PatientReferringHcps: FC<PatientReferringHcpsProps> = (props) => {
+  const { patientId, patientProfile, referringHcps } = props
   const { t } = useTranslation()
   const { classes } = useStyles()
   const { user } = useAuth()
 
-  const isAddReferrerEnabled = referrerCount < MAX_REFERRER_COUNT
-  const hasReferrers = referrerCount > 0
+  const FAKE_REFERRING_HCPS: ReferringHcp[] = [
+    {
+      id: 'hcp-1',
+      fullName: 'Dr. John Doe',
+      profession: 'Endocrinologist',
+      email: 'john.doe@mail.com'
+    },
+    {
+      id: 'hcp-2',
+      fullName: 'Dr. Mila Fly',
+      profession: 'Chief in surgery',
+      email: 'mila.fly@mail.com'
+    }
+  ]
 
-  const patientProfile = patient.profile
+  // const referrerCount = referringHcps?.length || 0
+  const referrerCount = FAKE_REFERRING_HCPS?.length || 0
+  const hasReferrers = referrerCount > 0
+  // const referringHcpsSorted = hasReferrers && referringHcps.toSorted((a, b) => a.fullName.localeCompare(b.fullName))
+  const referringHcpsSorted = hasReferrers && FAKE_REFERRING_HCPS.toSorted((a, b) => a.fullName.localeCompare(b.fullName))
+
+  // const referringHcpIds = hasReferrers ? referringHcps.map(referrer => referrer.id) : []
+  const referringHcpIds = hasReferrers ? FAKE_REFERRING_HCPS.map(referrer => referrer.id) : []
+
+  const isAddReferrerEnabled = referrerCount < MAX_REFERRER_COUNT
+
   const patientName = getUserName(patientProfile.firstName, patientProfile.lastName, patientProfile.fullName)
 
   const [showAddDialog, setShowAddDialog] = useState<boolean>(false)
   const [showRemoveDialog, setShowRemoveDialog] = useState<boolean>(false)
+  const [referrerToRemove, setReferrerToRemove] = useState<ReferringHcp | null>(null)
 
   const onClickAdd = (): void => {
     setShowAddDialog(true)
@@ -85,6 +110,10 @@ export const PatientReferringHcp: FC<PatientReferringHcpsProps> = (props) => {
 
   const onClickRemove = (hcpId: string): void => {
     setShowRemoveDialog(true)
+
+    // const referrer = referringHcps?.find(hcp => hcp.id === hcpId) || null
+    const referrer = FAKE_REFERRING_HCPS?.find(hcp => hcp.id === hcpId) || null
+    setReferrerToRemove(referrer)
   }
 
   const onCloseRemoveDialog = (): void => {
@@ -134,23 +163,25 @@ export const PatientReferringHcp: FC<PatientReferringHcpsProps> = (props) => {
               </TableHead>
 
               <TableBody>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Profession</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell align="right">
-                    <IconActionButton
-                      // data-testid={`${removePatientLabel} ${patient.profile.email}`}
-                      // aria-label={`${removePatientLabel} ${patient.profile.email}`}
-                      icon={<PersonRemoveIcon />}
-                      color="inherit"
-                      tooltip={t('button-remove-referrer')}
-                      onClick={() => {
-                        onClickRemove('hcpId')
-                      }}
-                    />
-                  </TableCell>
-                </TableRow>
+                {referringHcpsSorted.map((referringHcp: ReferringHcp) => (
+                  <TableRow key={referringHcp.id}>
+                    <TableCell>{referringHcp.fullName}</TableCell>
+                    <TableCell>{referringHcp.profession}</TableCell>
+                    <TableCell>{referringHcp.email}</TableCell>
+                    <TableCell align="right" sx={{ py: 0 }}>
+                      <IconActionButton
+                        // data-testid={`${removePatientLabel} ${hcp.email}`}
+                        // aria-label={`${removePatientLabel} ${hcp.email}`}
+                        icon={<PersonRemoveIcon />}
+                        color="inherit"
+                        tooltip={t('button-remove-referrer')}
+                        onClick={() => {
+                          onClickRemove(referringHcp.id)
+                        }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -159,7 +190,8 @@ export const PatientReferringHcp: FC<PatientReferringHcpsProps> = (props) => {
 
       {showAddDialog &&
         <AddReferrerDialog
-          patientName={patientName}
+          patientInfo={{ id: patientId, name: patientName }}
+          referringHcpIds={referringHcpIds}
           user={user}
           onClose={onCloseAddDialog}
         />
@@ -167,9 +199,9 @@ export const PatientReferringHcp: FC<PatientReferringHcpsProps> = (props) => {
 
       {showRemoveDialog &&
         <RemoveReferrerDialog
-          referrerName={"HCP NAME"}
-          patientName={patientName}
-          user={user}
+          referringHcp={referrerToRemove}
+          patientInfo={{ id: patientId, name: patientName }}
+          isUserPatient={user.isUserPatient()}
           onClose={onCloseRemoveDialog}
         />
       }

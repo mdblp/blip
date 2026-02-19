@@ -31,24 +31,37 @@ import DialogContent from '@mui/material/DialogContent'
 import { Trans, useTranslation } from 'react-i18next'
 import DialogActions from '@mui/material/DialogActions'
 import Dialog from '@mui/material/Dialog'
-import { User } from '../../../../../../lib/auth'
+import { ReferringHcp } from '../../../../../../lib/referring-hcp/models/referring-hcp.model'
+import { ReferringHcpApi } from '../../../../../../lib/referring-hcp/referring-hcp.api'
 
 interface RemoveReferrerDialogProps {
-  referrerName: string
-  patientName: string
-  user: User
+  referringHcp: ReferringHcp
+  patientInfo: { id: string, name: string }
+  isUserPatient: boolean
   onClose: () => void
 }
 
 export const RemoveReferrerDialog: FC<RemoveReferrerDialogProps> = (props) => {
-  const { referrerName, patientName, user, onClose } = props
+  const { referringHcp, patientInfo, isUserPatient, onClose } = props
   const { t } = useTranslation()
+
+  const patientId = patientInfo.id
+  const referrerId = referringHcp.id
+
+  const patientName = patientInfo.name
+  const referrerName = referringHcp.fullName
+
+  const onClickRemoveReferrer = async () => {
+    await ReferringHcpApi.removeReferringHcp(patientId, referrerId)
+
+    onClose()
+  }
 
   return (
     <Dialog onClose={onClose} open={true}>
       <DialogTitle>{t('remove-referrer-title')}</DialogTitle>
       <DialogContent>
-        {user.isUserPatient() ?
+        {isUserPatient ?
           <Trans
             i18nKey="remove-referrer-question-patient"
             t={t}
@@ -75,7 +88,7 @@ export const RemoveReferrerDialog: FC<RemoveReferrerDialogProps> = (props) => {
         <Button
           variant="contained"
           color="error"
-          onClick={onClose}
+          onClick={onClickRemoveReferrer}
         >
           {t('button-remove-referrer')}
         </Button>

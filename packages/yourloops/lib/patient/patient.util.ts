@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 import PatientApi from './patient.api'
 import moment from 'moment-timezone'
-import { type Patient, type PatientMetrics } from './models/patient.model'
+import { type Patient } from './models/patient.model'
 import { UserInviteStatus } from '../team/models/enums/user-invite-status.enum'
 import { type User } from '../auth'
 import { type PatientsFilters } from '../providers/models/patients-filters.model'
@@ -35,6 +35,7 @@ import i18next from 'i18next'
 import { Gender } from '../auth/models/enums/gender.enum'
 import { UserRole } from '../auth/models/enums/user-role.enum'
 import { type MedicalData } from '../data/models/medical-data.model'
+import { PatientMetrics } from './models/patient-metrics.model'
 
 const t = i18next.t.bind(i18next)
 
