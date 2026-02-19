@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 ### Changed
 - YLP-2823 Use , instead of . for languages other than English
 - YLP-3618 Meal without bolus management in Daily view
+- YLP-3634 Add tooltips for Rescue carbs and Manual bolus metrics
 - YLP-3815 Display update timestamp in yourloops
 
 ### Engineering

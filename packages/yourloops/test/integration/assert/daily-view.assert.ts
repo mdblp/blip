@@ -99,12 +99,14 @@ const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Time spent in range, based on CGM 
 const READINGS_IN_RANGE_TOOLTIP = 'Readings In Range: Number of BGM readings.Derived from 15 BGM readings.'
 const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added together, divided by the number of readings.'
 const AVG_GLUCOSE_BGM_TOOLTIP = 'Avg. Glucose (BGM): All BGM glucose values added together, divided by the number of readings.'
-const TOTAL_INSULIN_TOOLTIP = 'Total Delivered Insulin: All basal and bolus insulin delivery (in Units) added together.How we calculate this: (%) is the respective total of basal or bolus delivery divided by total insulin delivered for this time period.'
+const TOTAL_INSULIN_TOOLTIP = 'Total Delivered Insulin: All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view.How we calculate this: (%) is the respective total of basal or bolus delivery divided by total insulin delivered for this time period.'
 const TIME_IN_LOOP_MODE_TOOLTIP = 'Time In Loop Mode: Time spent in automated basal delivery.How we calculate this: (%) is the duration in loop mode ON or OFF divided by the total duration of basals for this time period. (time) is the estimated time in each mode.'
 const TOTAL_CARBS_DECLARED_TOOLTIP = 'Total Carbs: All carb entries from meals or rescue carbs added together.Derived from 5 carb entries, including rescue carbs.'
 const STANDARD_DEVIATION_TOOLTIP = 'SD (Standard Deviation): How far values are from the average.'
 const STANDARD_DEVIATION_BGM_TOOLTIP = 'SD (Standard Deviation): How far values are from the average.Derived from 15 BGM readings.'
 const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
+const MANUAL_BOLUS_TOOLTIP = 'Manual bolus: Total insulin dose delivered (in units) as a manual bolus, divided by the number of days in this view.In some cases, a large number of manual boluses may indicate that the algorithm is not aggressive enough. Other signs may confirm this hypothesis, such as frequent hyperglycaemia or a difference (-10%) between the setting “Total Daily Insulin” and the total daily dose of insulin actually delivered.'
+const RESCUE_CARBS_TOOLTIP = 'Rescue carbs: All rescue carb entries added together (recommended or taken spontaneously), then divided by the number of days in this view. Computed from 1 rescue carbs.A significant amount of rescue carbs may, in some cases, indicate that the algorithm is too aggressive. Other signs may confirm this hypothesis, such as frequent hypoglycemia or a difference (+10%) between the setting “Total Daily Insulin” and the total daily dose of insulin actually delivered.'
 
 const checkTidelineContainerElementTooltip = async (id: string, expectedTextContent: string) => {
   const carbElement = screen.getByTestId(id)
@@ -251,6 +253,8 @@ export const checkDailyStatsWidgetsTooltips = async () => {
   await checkStatTooltip(patientStatistics, 'Total of declared carbs', TOTAL_CARBS_DECLARED_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'CV (CGM)', CV_TOOLTIP)
+  await checkStatTooltip(patientStatistics, 'Manual bolus', MANUAL_BOLUS_TOOLTIP)
+  await checkStatTooltip(patientStatistics, 'Rescue carbs', RESCUE_CARBS_TOOLTIP)
 }
 
 export const checkSMBGDailyStatsWidgetsTooltips = async () => {

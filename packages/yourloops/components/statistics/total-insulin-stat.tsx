@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -52,7 +52,9 @@ export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props
     weight
   } = props
 
-  const data = [
+  const manualBolusAnnotations = [t('tooltip-manual-bolus'), t('tooltip-manual-bolus-details')]
+
+  const data: { id: string, value: number, units: Unit, title: string, annotations?: string[] }[] = [
     {
       id: 'meal',
       value: roundToOneDecimal(totalMealBoluses),
@@ -71,9 +73,11 @@ export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props
       id: 'manual',
       value: roundToOneDecimal(totalManualBoluses),
       units: Unit.InsulinUnit,
-      title: t('manual-bolus')
+      title: t('manual-bolus'),
+      annotations: manualBolusAnnotations
     })
   }
+
   if (totalPenBoluses > 0) {
     data.push({
       id: 'pen',
@@ -82,7 +86,9 @@ export const TotalInsulinStat: FunctionComponent<TotalInsulinStatProps> = (props
       title: t('pen-bolus')
     })
   }
-  const weightValue = !weight ? '' : +weight.value
+
+  const weightValue = weight ? +weight.value : ''
+
   return (
     <InsulinStatisticsPanel
       data={data}
