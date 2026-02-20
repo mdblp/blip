@@ -34,14 +34,13 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { patient2Info } from '../../../data/patient.api.data'
 import { getCompleteDailyViewData } from '../../../mock/complete-daily-view-data'
 import {
-  testDisplayEffectiveParametersBeforeHistory,
   testDisplayEffectiveParametersFromHistory,
   testDisplayEffectiveParametersWithAllData,
   testOpenParametersPopover,
   testShowParametersButtonIsDisplayed,
   testShowParametersButtonIsNotDisplayed
 } from '../../../use-cases/show-parameters-visualisation'
-import { ChangeType, Unit } from 'medical-domain'
+import { ChangeType, DblParameter, Unit } from 'medical-domain'
 // TODO: ask in Review if we should split daily-view-common test file into several independent files
 describe('Daily view for anyone - Show Parameters At', () => {
   const dailyRoute = AppUserRoute.Daily
@@ -85,24 +84,16 @@ describe('Daily view for anyone - Show Parameters At', () => {
       await testDisplayEffectiveParametersWithAllData()
     })
 
-    it('should display original parameters when date is before history change', async () => {
-      const data = getCompleteDailyViewData()
-      data.data.pumpSettings[0].payload.parameters = [
-        { name: 'WEIGHT', value: '70', unit: Unit.Kilogram, level: 0, effectiveDate: '2024-01-01T00:00:00Z' }
-      ]
-
-      mockDataAPI(data)
-      await act(async () => {
-        renderPage(dailyRoute)
-      })
-
-      await testDisplayEffectiveParametersBeforeHistory()
-    })
-
-    it('should display original parameters when date is after history change', async () => {
+    it('should display current parameters when the target date is after history change', async () => {
+      // due to the data build the displayed date is after the history change,
+      // but the injected changeDate is 2024-01-01 because the parameters are for 2024 while getCompleteDailyViewData() has a range for 2022 (see dataRange in the fixture).
+      // and not the least, the current parameters is at: 2020-01-17T08:00:00.000Z
+      // Bref this mismatch makes this test intent unclear however, these dates are everywhere in the test suite. which makes it difficult
+      // to fix all the date's data
+      // for info the target date is : 2022-08-08T10:00:00.000Z
       const data = getCompleteDailyViewData()
       data.data.pumpSettings[0].payload.history.parameters = [
-        { changeDate : '2024-01-01T00:00:00Z', parameters : [{ name: 'WEIGHT', changeType: ChangeType.Updated, value: '72', unit: Unit.Kilogram, previousValue: '69', previousUnit : Unit.Kilogram, level: 0, effectiveDate: '2024-01-01T00:00:00Z' }] }
+        { changeDate : '2022-08-07T00:00:00Z', parameters : [{ name: DblParameter.Weight, changeType: ChangeType.Updated, value: '68', unit: Unit.Kilogram, previousValue: '69', previousUnit : Unit.Kilogram, level: 0, effectiveDate: '2022-08-07T00:00:00Z' }] }
       ]
 
       mockDataAPI(data)

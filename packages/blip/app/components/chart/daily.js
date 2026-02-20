@@ -398,7 +398,7 @@ class Daily extends React.Component {
                 <ShowParametersAt
                   date={epochLocation}
                   parameters={tidelineData.basicsData.data.pumpSettings.data[0].payload.parameters}
-                  history={tidelineData.basicsData.data.pumpSettings.data[0].payload.history.parameters}
+                  history={tidelineData.basicsData.data.pumpSettings.data[0].payload.history?.parameters ?? []}
                 />
               )
               }

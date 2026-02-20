@@ -66,11 +66,11 @@ export const getParametersAtDate = (
           case ChangeType.Deleted:
           case ChangeType.Updated:
             // If the parameter was updated or deleted after the target date, we need to revert it to its previous value
-            if (param && param.previousValue !== undefined) {
+            if (param?.previousValue !== undefined) {
               parametersMap.set(param.name, {
                 ...param,
                 value: param.previousValue,
-                ...(param.previousUnit !== undefined ? { unit: param.previousUnit } : {})
+                ...(param?.previousUnit !== undefined ? { unit: param.previousUnit } : {})
               })
             }
             break

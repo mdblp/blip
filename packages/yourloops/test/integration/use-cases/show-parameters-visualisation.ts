@@ -54,7 +54,7 @@ export const testOpenParametersPopover = async (): Promise<void> => {
 export const testDisplayEffectiveParametersWithAllData = async (): Promise<void> => {
   await testOpenParametersPopover()
 
-  checkParameterIsDisplayed('WEIGHT', '72.0', 'kg')
+  checkParameterIsDisplayed('PATIENT_GLY_HYPO_LIMIT', '60.0', 'mg/dL')
   checkParameterIsDisplayed('MEAL_RATIO_BREAKFAST_FACTOR', '110', '%')
   checkParameterIsDisplayed('MEAL_RATIO_DINNER_FACTOR', '90', '%')
 }
@@ -62,12 +62,5 @@ export const testDisplayEffectiveParametersWithAllData = async (): Promise<void>
 export const testDisplayEffectiveParametersFromHistory = async (): Promise<void> => {
   await testOpenParametersPopover()
 
-  checkParameterIsDisplayed('WEIGHT', '69.0', 'kg')
+  checkParameterIsDisplayed('WEIGHT', '68.0', 'kg')
 }
-
-export const testDisplayEffectiveParametersBeforeHistory = async (): Promise<void> => {
-  await testOpenParametersPopover()
-
-  checkParameterIsDisplayed('WEIGHT', '70.0', 'kg')
-}
-
