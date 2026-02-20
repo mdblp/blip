@@ -565,6 +565,8 @@
   "severe-hypoglycemia-below": "Severe hypoglycemia below",
   "severe-hypoglycemia-threshold": "Severe hypoglycemia threshold",
   "show-column": "Show column",
+  "show-parameters-at-title-button": "Device Settings",
+  "show-parameters-at-popover-header": "Settings of the displayed day",
   "signup": "Signup",
   "signup-information": "Signup information",
   "signup-information-message-1": "You are about to create a healthcare professional or caregiver account.",
