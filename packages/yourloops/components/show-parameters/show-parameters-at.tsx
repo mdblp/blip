@@ -62,7 +62,7 @@ export const ShowParametersAt: FunctionComponent<ShowParametersAtProps> = (props
   const handleClose = () => {
     setAnchorElement(null);
   };
-  
+
   return (
     <>
       <Button
@@ -76,6 +76,7 @@ export const ShowParametersAt: FunctionComponent<ShowParametersAtProps> = (props
       </Button>
       <Draggable>
         <Popover
+          data-testid={`show-parameters-at-popover`}
           open={open}
           anchorEl={anchorElement}
           anchorOrigin={{
@@ -103,11 +104,14 @@ export const ShowParametersAt: FunctionComponent<ShowParametersAtProps> = (props
               <Typography variant="h6">{t('show-parameters-at-popover-header')}</Typography>
             </Box>
             {effectiveParameters.map(param => (
-              <Box key={param.name} sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "4px 0",
+              <Box
+                data-testid={`${param.name.toLowerCase()}-row`}
+                key={param.name}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "4px 0",
               }}>
                 <Typography variant="body2">{t(`params|${param.name}`)}</Typography>
                 <Typography variant="body2">{formatParameterValue(param.value, param.unit)} {t(param.unit)}</Typography>
