@@ -25,18 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FunctionComponent, useMemo } from 'react'
-import { Button } from "@mui/material"
+import React, { type FunctionComponent, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import classes from './show-parameters.css'
-import Draggable from 'react-draggable'
-import Popover from '@mui/material/Popover'
-import { ParameterConfig, ParametersChange } from 'medical-domain'
-import { getParametersAtDate } from './show-parameters.utils'
 import Box from '@mui/material/Box'
-import { formatParameterValue } from 'dumb/dist/src/utils/format/format.util'
+import { Button } from "@mui/material"
 import SettingsIcon from '@mui/icons-material/Settings';
+import Popover from '@mui/material/Popover'
 import Typography from '@mui/material/Typography'
+import Draggable from 'react-draggable'
+import type { ParameterConfig, ParametersChange } from 'medical-domain'
+import { formatNumberForLang } from '../../lib/language'
+import { formatParameterValue, sortParameterList } from '../device/utils/device.utils'
+import classes from './show-parameters.css'
+import { getParametersAtDate } from './show-parameters.utils'
 
 interface ShowParametersAtProps {
   date: number | string | Date
@@ -63,63 +64,70 @@ export const ShowParametersAt: FunctionComponent<ShowParametersAtProps> = (props
     setAnchorElement(null);
   };
 
+  sortParameterList(effectiveParameters)
+
   return (
     <>
-      <Button
-        data-testid="show-parameters-at-button"
-        variant="outlined"
-        className={classes.secondaryButton}
-        onClick={showParameters}
-        startIcon={<SettingsIcon />}
-      >
-        {t('show-parameters-at-title-button')}
-      </Button>
-      <Draggable>
-        <Popover
-          data-testid={`show-parameters-at-popover`}
-          open={open}
-          anchorEl={anchorElement}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right'
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right'
-          }}
-          onClose={handleClose}
-          slotProps={{
-            paper: {
-              style: {
-                minWidth: 413,
-                padding: '16px',
-                borderRadius: '24px'
-              }
-            }
-          }}>
-          <div>
-            <Box sx={{
-              marginBottom: 1,
-            }}>
-              <Typography variant="h6">{t('show-parameters-at-popover-header')}</Typography>
-            </Box>
-            {effectiveParameters.map(param => (
-              <Box
-                data-testid={`${param.name.toLowerCase()}-row`}
-                key={param.name}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "4px 0",
+      {effectiveParameters?.length > 0 &&
+        <>
+          <Button
+            data-testid="show-parameters-at-button"
+            variant="outlined"
+            className={classes.secondaryButton}
+            onClick={showParameters}
+            startIcon={<SettingsIcon />}
+          >
+            {t('show-parameters-at-title-button')}
+          </Button>
+          <Draggable>
+            <Popover
+              data-testid={`show-parameters-at-popover`}
+              open={open}
+              anchorEl={anchorElement}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right'
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right'
+              }}
+              onClose={handleClose}
+              slotProps={{
+                paper: {
+                  style: {
+                    minWidth: 413,
+                    padding: '16px',
+                    borderRadius: '24px'
+                  }
+                }
               }}>
-                <Typography variant="body2">{t(`params|${param.name}`)}</Typography>
-                <Typography variant="body2">{formatParameterValue(param.value, param.unit)} {t(param.unit)}</Typography>
-              </Box>
-            ))}
-          </div>
-        </Popover>
-    </Draggable>
+              <div>
+                <Box sx={{
+                  marginBottom: 1
+                }}>
+                  <Typography variant="h6">{t('show-parameters-at-popover-header')}</Typography>
+                </Box>
+                {effectiveParameters.map(param => (
+                  <Box
+                    data-testid={`${param.name.toLowerCase()}-row`}
+                    key={param.name}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      padding: "4px 0"
+                    }}>
+                    <Typography variant="body2">{t(`params|${param.name}`)}</Typography>
+                    <Typography
+                      variant="body2">{formatNumberForLang(formatParameterValue(param.value, param.unit))} {t(param.unit)}</Typography>
+                  </Box>
+                ))}
+              </div>
+            </Popover>
+          </Draggable>
+        </>
+      }
     </>
   )
 }

@@ -24,7 +24,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { ParameterConfig, ParametersChange } from 'medical-domain'
+import { ChangeType, ParameterConfig, ParametersChange } from 'medical-domain'
 
 /**
  * Builds parameters at a given date from the current parameters and the history of changes.
@@ -35,14 +35,18 @@ export const getParametersAtDate = (
   targetDate: Date
 ): ParameterConfig[] => {
 
+  if (!history || !targetDate) {
+    return currentParameters
+  }
+
   const targetTimestamp = targetDate.getTime()
 
-  // First, we sort history by changeDate in descending order (more recent first)
+  // First, we sort history by changeDate in descending order (more recent first) so that we can apply changes in the correct order
   const sortedHistory = [...history].sort(
     (a, b) => new Date(b.changeDate).getTime() - new Date(a.changeDate).getTime()
   )
 
-  // build a map of parameters with their current values
+  // build a map of parameters with their current values to flatten it
   const parametersMap = new Map<string, ParameterConfig>()
   currentParameters.forEach(param => {
     parametersMap.set(param.name, { ...param })
@@ -54,11 +58,22 @@ export const getParametersAtDate = (
     // If changeDate is after the target date, it means the change was made after the target date, so we need to revert it
     if (changeTimestamp > targetTimestamp) {
       change.parameters.forEach(param => {
-        if (param && param.previousValue !== undefined) {
-          parametersMap.set(param.name, {
-            ...param,
-            value: param.previousValue
-          })
+        switch (param.changeType) {
+          case ChangeType.Added:
+            // If the parameter was added after the target date, we need to remove it
+            parametersMap.delete(param.name)
+            break
+          case ChangeType.Deleted:
+          case ChangeType.Updated:
+            // If the parameter was updated or deleted after the target date, we need to revert it to its previous value
+            if (param && param.previousValue !== undefined) {
+              parametersMap.set(param.name, {
+                ...param,
+                value: param.previousValue,
+                ...(param.previousUnit !== undefined ? { unit: param.previousUnit } : {})
+              })
+            }
+            break
         }
       })
 
