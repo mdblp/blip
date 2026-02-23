@@ -36,6 +36,7 @@ import { type ITeam } from '../../../../lib/team/models/i-team.model'
 import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
 import { type PostalAddress } from '../../../../lib/team/models/postal-address.model'
 import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
+import type { BgUnit } from 'medical-domain'
 
 describe('TeamApi', () => {
   const userId = 'userId'
@@ -136,12 +137,20 @@ describe('TeamApi', () => {
 
   describe('editTeam', () => {
     it('should edit a team', async () => {
-      const editedTeam = { name: 'updated name', id: '1234' } as ITeam
+      const editedTeam = { name: 'updated name', id: '1234' } as Team
+      const dto = {
+        name: 'updated name',
+        id: '1234',
+        address: undefined,
+        email: undefined,
+        members: [],
+        phone: undefined
+      }
       jest.spyOn(HttpService, 'put').mockResolvedValue(undefined)
       await TeamApi.editTeam(editedTeam)
       expect(HttpService.put).toHaveBeenCalledWith({
         url: `/crew/v1/teams/${editedTeam.id}`,
-        payload: editedTeam
+        payload: dto
       })
     })
   })
@@ -190,10 +199,60 @@ describe('TeamApi', () => {
 
   describe('getTeamFromCode', () => {
     const code = '123 456 789'
-    const team = { code } as ITeam
+    const teamDto = {
+      code,
+      address: "here",
+      email: "email",
+      id: "teamId",
+      members: [],
+      name: "teamName",
+      phone: "12345678",
+      type: TeamType.medical,
+    } as ITeam
+    teamDto.monitoringAlertsParameters = {
+      bgUnit: "mg/dL" as BgUnit,
+      hyperglycemia: {
+        rateThreshold: 3,
+        glycemiaUpperLimit: 3
+      },
+      hypoglycemia: {
+        rateThreshold: 3,
+        glycemiaLowerLimit: 3
+      },
+      nonDataTransmission: {
+        rateThreshold: 3,
+      },
+      timeOutOfRange: {
+        rateThreshold: 3,
+        glycemiaUpperLimit: 3,
+        glycemiaLowerLimit: 1
+      },
+    }
+    const team = {
+      code,
+      address: "here",
+      email: "email",
+      id: "teamId",
+      members: [],
+      name: "teamName",
+      phone: "12345678",
+      type: TeamType.medical,
+    }
+    team.monitoringAlertsParameters = {
+      "bgUnit": "mg/dL",
+      "highBg": 3,
+      "hyperThreshold": 3,
+      "hypoThreshold": 3,
+      "lowBg": 1,
+      "nonDataTxThreshold": 3,
+      "outOfRangeThreshold": 3,
+      "reportingPeriod": 168,
+      "veryHighBg": 3,
+      "veryLowBg": 3,
+    }
 
     it('should get a team with if exists', async () => {
-      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data: [team] } as AxiosResponse)
+      jest.spyOn(HttpService, 'get').mockResolvedValueOnce({ data: [teamDto] } as AxiosResponse)
       const response = await TeamApi.getTeamFromCode(code)
       expect(response).toEqual(team)
       expect(HttpService.get).toHaveBeenCalledWith({

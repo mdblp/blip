@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -50,6 +50,8 @@ interface MonitoringAlertsContentConfigurationHookReturn {
   getNonDataTxThresholdInitialState: () => ValueErrorPair
   getOutOfRangeThresholdInitialState: () => ValueErrorPair
   getVeryLowBgInitialState: () => ValueErrorMessagePair
+  getVeryHighBgInitialState: () => ValueErrorMessagePair
+  getHyperThresholdInitialState: () => ValueErrorPair
   monitoringValuesDisplayed: MonitoringValuesDisplayed
   save: () => void
   saveButtonDisabled: boolean
@@ -63,6 +65,8 @@ export interface MonitoringValuesDisplayed {
   nonDataTxThreshold: ValueErrorPair
   outOfRangeThreshold: ValueErrorPair
   veryLowBg: ValueErrorMessagePair
+  veryHighBg: ValueErrorMessagePair
+  hyperThreshold: ValueErrorPair
 }
 
 interface ValueErrorMessagePair {
@@ -107,6 +111,15 @@ export const useMonitoringAlertsContentConfiguration = (
     }
   }
 
+  const veryHighBgValue = getConvertedValue(monitoringAlertsParameters.veryHighBg, monitoringBgUnit, userBgUnit)
+  const getVeryHighBgInitialState = (): ValueErrorMessagePair => {
+    return {
+      value: veryHighBgValue,
+      errorMessage: getErrorMessage(userBgUnit, veryHighBgValue, thresholds.minVeryHighBg, thresholds.maxHighBg)
+    }
+  }
+
+
   const lowBgValue = getConvertedValue(monitoringAlertsParameters.lowBg, monitoringBgUnit, userBgUnit)
   const getLowBgInitialState = (): ValueErrorMessagePair => {
     return {
@@ -136,13 +149,22 @@ export const useMonitoringAlertsContentConfiguration = (
     }
   }
 
+  const getHyperThresholdInitialState = (): ValueErrorPair => {
+    return {
+      value: monitoringAlertsParameters.hyperThreshold,
+      error: isInvalidPercentage(monitoringAlertsParameters.hyperThreshold)
+    }
+  }
+
   const [monitoringValuesDisplayed, setMonitoringValuesDisplayed] = useState<MonitoringValuesDisplayed>(() => ({
     highBg: getHighBgInitialState(),
     hypoThreshold: getHypoThresholdInitialState(),
     lowBg: getLowBgInitialState(),
     nonDataTxThreshold: getNonDataTxThresholdInitialState(),
     outOfRangeThreshold: getOutOfRangeThresholdInitialState(),
-    veryLowBg: getVeryLowBgInitialState()
+    veryLowBg: getVeryLowBgInitialState(),
+    veryHighBg: getVeryHighBgInitialState(),
+    hyperThreshold: getHyperThresholdInitialState()
   }))
 
   const hasErrorMessage = useMemo(() => {
@@ -177,6 +199,8 @@ export const useMonitoringAlertsContentConfiguration = (
       outOfRangeThreshold: monitoringValuesDisplayed.outOfRangeThreshold.value,
       veryLowBg: monitoringValuesDisplayed.veryLowBg.value,
       hypoThreshold: monitoringValuesDisplayed.hypoThreshold.value,
+      veryHighBg: monitoringValuesDisplayed.veryHighBg.value,
+      hyperThreshold: monitoringValuesDisplayed.hyperThreshold.value,
       nonDataTxThreshold: monitoringValuesDisplayed.nonDataTxThreshold.value,
       reportingPeriod
     }
@@ -186,10 +210,12 @@ export const useMonitoringAlertsContentConfiguration = (
   return {
     getHighBgInitialState,
     getHypoThresholdInitialState,
+    getHyperThresholdInitialState,
     getLowBgInitialState,
     getNonDataTxThresholdInitialState,
     getOutOfRangeThresholdInitialState,
     getVeryLowBgInitialState,
+    getVeryHighBgInitialState,
     monitoringValuesDisplayed,
     save,
     saveButtonDisabled,

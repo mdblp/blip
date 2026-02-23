@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -48,6 +48,8 @@ export const buildThresholds = (bgUnit: BgUnit): Thresholds => {
       maxHighBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxHighBg, Unit.MilligramPerDeciliter) * 10) / 10,
       minVeryLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minVeryLowBg, Unit.MilligramPerDeciliter) * 10) / 10,
       maxVeryLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxVeryLowBg, Unit.MilligramPerDeciliter) * 10) / 10,
+      minVeryHighBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minVeryHighBg, Unit.MilligramPerDeciliter) * 10) / 10,
+      maxVeryHighBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxVeryHighBg, Unit.MilligramPerDeciliter) * 10) / 10,
       minLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minLowBg, Unit.MilligramPerDeciliter) * 10) / 10,
       maxLowBg: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxLowBg, Unit.MilligramPerDeciliter) * 10) / 10
     }

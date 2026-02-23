@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -93,14 +93,17 @@ function getDT1DT2RangeByUnit(unit: BgUnit): BgClasses {
 }
 
 // Returns the Alerts for the given blood glucose limits and BG unit
-export function createMonitoringAlertsParameters(veryLow: number, low: number, high: number, unit: BgUnit): MonitoringAlertsParameters {
+export function createMonitoringAlertsParameters(hypoLimit: number, hyperLimit: number,
+                                                 low: number, high: number, unit: BgUnit): MonitoringAlertsParameters {
   return {
     bgUnit: unit,
     lowBg: low,
     highBg: high,
     outOfRangeThreshold: 50, // the threshold is in %
-    veryLowBg: veryLow,
+    veryLowBg: hypoLimit,
+    veryHighBg: hyperLimit,
     hypoThreshold: 5,
+    hyperThreshold: 25,
     nonDataTxThreshold: 50,
     reportingPeriod: DEFAULT_REPORTING_PERIOD,
   }

@@ -33,8 +33,12 @@ import { type TeamMemberRole } from './models/enums/team-member-role.enum'
 import { type Team } from './models/team.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import { type ITeam } from './models/i-team.model'
+import { MonitoringAlertsParametersDto, mapMonAlertParamsFromInternal } from './models/monitoring-alerts-parameters.model'
+import { MonitoringAlertsParameters } from 'medical-domain'
 import { TeamType } from './models/enums/team-type.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
+
+const DEFAULT_REPORTING_PERIOD = 168
 
 const log = bows('Team API')
 
@@ -112,10 +116,21 @@ export default class TeamApi {
     return data
   }
 
-  static async editTeam(team: ITeam): Promise<void> {
+  static async editTeam(team: Team): Promise<void> {
+    const apiTeam: ITeam = {
+      id: team.id,
+      name: team.name,
+      phone: team.phone,
+      email: team.email,
+      address: team.address,
+      members: []
+    } as ITeam
+    if (team.monitoringAlertsParameters) {
+      apiTeam.monitoringAlertsParameters = mapMonAlertParamsFromInternal(team.monitoringAlertsParameters)
+    }
     await HttpService.put<void, ITeam>({
       url: `/crew/v1/teams/${team.id}`,
-      payload: team
+      payload: apiTeam
     })
   }
 
@@ -146,13 +161,27 @@ export default class TeamApi {
     })
   }
 
-  static async getTeamFromCode(code: string): Promise<ITeam | null> {
+  static async getTeamFromCode(code: string): Promise<Team | null> {
     try {
       const { data } = await HttpService.get<ITeam[]>({
         url: '/crew/v1/teams',
         config: { params: { code } }
       })
-      return data[0]
+      const dto = data[0]
+      const result = {
+        id: dto.id,
+        name: dto.name,
+        code: dto.code,
+        type: dto.type,
+        phone: dto.phone,
+        email: dto.email,
+        address: dto.address,
+        members: []
+      } as Team
+      if (dto.monitoringAlertsParameters) {
+        result.monitoringAlertsParameters = this.mapMonAlertParamsFromDto(dto.monitoringAlertsParameters)
+      }
+      return result
     } catch (err) {
       const error = err as Error
       if (error.message === ErrorMessageStatus.NotFound) {
@@ -184,5 +213,21 @@ export default class TeamApi {
     }
     const userRoute = isUserHcp ? HCP_ROUTE : PATIENTS_ROUTE
     return `/bff/v1/${userRoute}/${user.id}/teams`
+  }
+
+
+  static mapMonAlertParamsFromDto(dto: MonitoringAlertsParametersDto): MonitoringAlertsParameters {
+    return {
+      bgUnit: dto.bgUnit,
+      hypoThreshold: dto.hypoglycemia.rateThreshold,
+      hyperThreshold: dto.hyperglycemia.rateThreshold,
+      veryHighBg: dto.hyperglycemia.glycemiaUpperLimit,
+      veryLowBg: dto.hypoglycemia.glycemiaLowerLimit,
+      nonDataTxThreshold: dto.nonDataTransmission.rateThreshold,
+      outOfRangeThreshold: dto.timeOutOfRange.rateThreshold,
+      lowBg: dto.timeOutOfRange.glycemiaLowerLimit,
+      highBg: dto.timeOutOfRange.glycemiaUpperLimit,
+      reportingPeriod: DEFAULT_REPORTING_PERIOD
+    }
   }
 }

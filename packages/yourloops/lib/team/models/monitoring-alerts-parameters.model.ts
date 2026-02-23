@@ -24,28 +24,42 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { type BgValues, type Thresholds } from '../../lib/patient/models/monitoring-alerts.model'
-import { Unit } from 'medical-domain'
 
-export const DEFAULT_BG_VALUES: BgValues = {
-  bgUnitDefault: Unit.MilligramPerDeciliter,
-  outOfRangeThresholdDefault: 50,
-  nonDataTxThresholdDefault: 50,
-  hypoThresholdDefault: 5,
-  hyperThresholdDefault: 25,
-  veryLowBgDefault: 54,
-  veryHighBgDefault: 250,
-  lowBgDefault: 70,
-  highBgDefault: 180,
-  reportingPeriodDefault: 7 * 24
+import { type BgUnit, MonitoringAlertsParameters } from 'medical-domain'
+
+export interface MonitoringAlertsParametersDto {
+  bgUnit: BgUnit
+  hyperglycemia: alertParameters
+  hypoglycemia: alertParameters
+  nonDataTransmission: alertParameters
+  timeOutOfRange: alertParameters
 }
-export const DEFAULT_THRESHOLDS_IN_MGDL: Thresholds = {
-  minHighBg: 140,
-  maxHighBg: 250,
-  minVeryLowBg: 40,
-  maxVeryLowBg: 90,
-  minVeryHighBg: 150,
-  maxVeryHighBg: 200,
-  minLowBg: 50,
-  maxLowBg: 100
+
+interface alertParameters {
+  rateThreshold: number
+  glycemiaUpperLimit?: number
+  glycemiaLowerLimit?: number
 }
+
+export const mapMonAlertParamsFromInternal = (monitoringAlertsParameters: MonitoringAlertsParameters): MonitoringAlertsParametersDto => {
+  return {
+    bgUnit: monitoringAlertsParameters.bgUnit,
+    hyperglycemia: {
+      rateThreshold: 50,
+      glycemiaUpperLimit: 10
+    },
+    hypoglycemia: {
+      rateThreshold: monitoringAlertsParameters.hypoThreshold,
+      glycemiaLowerLimit: monitoringAlertsParameters.veryLowBg
+    },
+    nonDataTransmission: {
+      rateThreshold: monitoringAlertsParameters.nonDataTxThreshold
+    },
+    timeOutOfRange: {
+      rateThreshold: monitoringAlertsParameters.outOfRangeThreshold,
+      glycemiaLowerLimit: monitoringAlertsParameters.lowBg,
+      glycemiaUpperLimit: monitoringAlertsParameters.highBg
+    }
+  }
+}
+

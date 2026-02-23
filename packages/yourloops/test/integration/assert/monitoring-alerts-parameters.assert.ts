@@ -86,7 +86,7 @@ export const checkMonitoringAlertsParametersTeamAdmin = async (): Promise<void> 
 
   await userEvent.click(saveButton)
 
-  const thirdTeam = { ...buildTeamThree(), code: undefined, members: [], type: undefined }
+  const thirdTeam = buildTeamThree()
   thirdTeam.monitoringAlertsParameters.lowBg = 51
   expect(TeamApi.editTeam).toHaveBeenCalledWith(thirdTeam)
 }
@@ -182,8 +182,10 @@ export const checkSaveButtonForMmolForPatient = async (): Promise<void> => {
     lowBg: 4.8,
     highBg: 8.8,
     veryLowBg: 3.2,
+    veryHighBg: 13.9,
     outOfRangeThreshold: 15,
     hypoThreshold: 20,
+    hyperThreshold: 25,
     nonDataTxThreshold: 40,
     reportingPeriod: 7
   }

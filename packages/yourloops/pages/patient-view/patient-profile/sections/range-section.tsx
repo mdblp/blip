@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -260,7 +260,9 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
 
   const adaptAlerts = async (): Promise<void> => {
     const bgClasses = selectedDiabeticProfile.bloodGlucosePreference.bgClasses
-    patient.monitoringAlertsParameters = createMonitoringAlertsParameters(bgClasses.veryLow, bgClasses.low, bgClasses.target, displayedUnit)
+    patient.monitoringAlertsParameters = createMonitoringAlertsParameters(
+      bgClasses.veryLow, bgClasses.veryHigh, bgClasses.low, bgClasses.target, displayedUnit
+    )
     try {
       await updatePatientMonitoringAlertsParameters(patient)
       showAlertSuccess(t('patient-update-with-alert-success'))

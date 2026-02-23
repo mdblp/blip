@@ -24,28 +24,28 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { type BgValues, type Thresholds } from '../../lib/patient/models/monitoring-alerts.model'
-import { Unit } from 'medical-domain'
 
-export const DEFAULT_BG_VALUES: BgValues = {
-  bgUnitDefault: Unit.MilligramPerDeciliter,
-  outOfRangeThresholdDefault: 50,
-  nonDataTxThresholdDefault: 50,
-  hypoThresholdDefault: 5,
-  hyperThresholdDefault: 25,
-  veryLowBgDefault: 54,
-  veryHighBgDefault: 250,
-  lowBgDefault: 70,
-  highBgDefault: 180,
-  reportingPeriodDefault: 7 * 24
+import { MonitoringAlertsParameters } from 'medical-domain'
+import { MonitoringAlertsParametersDto, mapMonAlertParamsFromInternal } from '../../team/models/monitoring-alerts-parameters.model'
+
+
+export interface PatientAlertsConfiguration {
+  parameters: MonitoringAlertsParametersDto
+  isUsingTeamAlertParameters: boolean
+  reactivationDates: AlertReactivationDates | null
 }
-export const DEFAULT_THRESHOLDS_IN_MGDL: Thresholds = {
-  minHighBg: 140,
-  maxHighBg: 250,
-  minVeryLowBg: 40,
-  maxVeryLowBg: 90,
-  minVeryHighBg: 150,
-  maxVeryHighBg: 200,
-  minLowBg: 50,
-  maxLowBg: 100
+
+export interface AlertReactivationDates {
+  hyperglycemia: Date | null
+  hypoglycemia: Date | null
+  nonDataTransmission: Date | null
+  timeOutOfRange: Date | null
 }
+
+export const NewAlertConfigDto = (parameters: MonitoringAlertsParameters): PatientAlertsConfiguration => {
+  const parametersDto = mapMonAlertParamsFromInternal(parameters)
+  return {
+    parameters: parametersDto,
+  } as PatientAlertsConfiguration
+}
+
