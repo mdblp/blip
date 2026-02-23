@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -57,7 +57,7 @@ describe('PatientApi', () => {
     it('should remove a patient from a team', async () => {
       jest.spyOn(HttpService, 'delete').mockResolvedValueOnce(undefined)
       await PatientApi.removePatient(teamId, userId)
-      expect(HttpService.delete).toHaveBeenCalledWith({ url: `/crew/v0/teams/${teamId}/patients/${userId}` })
+      expect(HttpService.delete).toHaveBeenCalledWith({ url: `/crew/v1/teams/${teamId}/patients/${userId}` })
     })
   })
 })

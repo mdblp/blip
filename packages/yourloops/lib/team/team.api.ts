@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -106,7 +106,7 @@ export default class TeamApi {
       throw Error('Missing some mandatory parameters name, address or phone')
     }
     const { data } = await HttpService.post<ITeam, Partial<ITeam>>({
-      url: '/crew/v0/teams',
+      url: '/crew/v1/teams',
       payload: { ...team, type: TeamType.medical }
     })
     return data
@@ -114,17 +114,17 @@ export default class TeamApi {
 
   static async editTeam(team: ITeam): Promise<void> {
     await HttpService.put<void, ITeam>({
-      url: `/crew/v0/teams/${team.id}`,
+      url: `/crew/v1/teams/${team.id}`,
       payload: team
     })
   }
 
   static async deleteTeam(teamId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v0/teams/${teamId}` })
+    await HttpService.delete({ url: `/crew/v1/teams/${teamId}` })
   }
 
   static async leaveTeam(userId: string, teamId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v0/teams/${teamId}/members/${userId}` })
+    await HttpService.delete({ url: `/crew/v1/teams/${teamId}/members/${userId}` })
   }
 
   static async removeMember({ teamId, userId, email }: RemoveMemberArgs): Promise<void> {
@@ -141,7 +141,7 @@ export default class TeamApi {
     })
 
     await HttpService.put<void, ChangeMemberRoleSecondPayload>({
-      url: `/crew/v0/teams/${teamId}/members`,
+      url: `/crew/v1/teams/${teamId}/members`,
       payload: { teamId, userId, role }
     })
   }
@@ -149,7 +149,7 @@ export default class TeamApi {
   static async getTeamFromCode(code: string): Promise<ITeam | null> {
     try {
       const { data } = await HttpService.get<ITeam[]>({
-        url: '/crew/v0/teams',
+        url: '/crew/v1/teams',
         config: { params: { code } }
       })
       return data[0]
@@ -166,7 +166,7 @@ export default class TeamApi {
   static async joinTeam(teamId: string, userId: string): Promise<void> {
     try {
       await HttpService.post<void, { userId: string }>({
-        url: `/crew/v0/teams/${teamId}/patients`,
+        url: `/crew/v1/teams/${teamId}/patients`,
         payload: { userId }
       }, [PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_CODE])
     } catch (error) {

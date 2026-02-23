@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -60,7 +60,7 @@ export default class DirectShareApi {
   }
 
   static async removeDirectShare(patientId: string, viewerId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v0/direct-share/${patientId}/${viewerId}` })
+    await HttpService.delete({ url: `/crew/v1/direct-share/${patientId}/${viewerId}` })
   }
 
   private static mapShareUser(directShareApiArray: DirectShareAPI[]): ShareUser[] {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,6 +35,7 @@ import { type MonitoringAlertsParameters } from 'medical-domain'
 import { DiabeticProfilePayload } from './models/patient-diabete-profile'
 import { type DiabeticProfile } from './models/patient-diabete-profile'
 import { PatientProfile } from './models/patient-profile.model'
+import { MonitoringAlertsParametersDto, mapMonAlertParamsFromInternal } from '../team/models/monitoring-alerts-parameters.model'
 
 export const PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE = 'patient-already-in-team'
 const PATIENT_ALREADY_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
@@ -95,20 +96,21 @@ export default class PatientApi {
   }
 
   static async updatePatientAlerts(teamId: string, patientId: string, monitoringAlertsParameters: MonitoringAlertsParameters): Promise<void> {
-    await HttpService.put<void, MonitoringAlertsParameters>({
-      url: `/crew/v0/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`,
-      payload: monitoringAlertsParameters
+
+    await HttpService.put<void, MonitoringAlertsParametersDto>({
+      url: `/crew/v1/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`,
+      payload: mapMonAlertParamsFromInternal(monitoringAlertsParameters)
     })
   }
 
   static async deletePatientAlerts(teamId: string, patientId: string): Promise<void> {
     await HttpService.delete({
-      url: `/crew/v0/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`
+      url: `/crew/v1/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`
     })
   }
 
   static async removePatient(teamId: string, userId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v0/teams/${teamId}/patients/${userId}` })
+    await HttpService.delete({ url: `/crew/v1/teams/${teamId}/patients/${userId}` })
   }
 
   static async updatePatientDiabeticProfile(patientId: string, diabeticProfile: DiabeticProfile): Promise<void> {
