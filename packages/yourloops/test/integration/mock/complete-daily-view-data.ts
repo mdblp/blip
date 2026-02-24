@@ -33,12 +33,14 @@ import {
   Bolus,
   BolusSubtype,
   DatumType,
+  DblParameter,
   DeviceSystem,
   DurationUnit,
   Prescriptor,
   PumpManufacturer,
   Source,
-  Unit, Wizard,
+  Unit,
+  Wizard,
   WizardInputMealFat,
   WizardInputMealSource
 } from 'medical-domain'
@@ -1524,9 +1526,9 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
               {
                 "effectiveDate": "2020-01-17T08:00:00.000Z",
                 "level": 1,
-                "name": "WEIGHT",
+                "name": DblParameter.Weight,
                 "unit": Unit.Kilogram,
-                "value": "72"
+                "value": "68"
               }
             ],
           }

@@ -26,7 +26,7 @@
  */
 
 import moment from 'moment-timezone'
-import { ChangeType, ParametersChange, Unit } from 'medical-domain'
+import { ChangeType, DblParameter, ParametersChange, Unit } from 'medical-domain'
 
 export const history: ParametersChange[] = [
   {
@@ -267,7 +267,7 @@ export const history: ParametersChange[] = [
         changeType: ChangeType.Added,
       },
       {
-        name: 'WEIGHT',
+        name: DblParameter.Weight,
         value: '69.0',
         unit: Unit.Kilogram,
         level: 1,
