@@ -47,6 +47,7 @@ import { RemoveReferrerDialog } from './remove-referrer-dialog'
 import { AddReferrerDialog } from './add-referer-dialog'
 import { ReferringHcp } from '../../../../../../lib/referring-hcp/models/referring-hcp.model'
 import { PatientProfile } from '../../../../../../lib/patient/models/patient-profile.model'
+import Avatar from '@mui/material/Avatar'
 
 interface PatientReferringHcpsProps {
   patientId: string
@@ -99,6 +100,14 @@ export const PatientReferringHcps: FC<PatientReferringHcpsProps> = (props) => {
   const [showAddDialog, setShowAddDialog] = useState<boolean>(false)
   const [showRemoveDialog, setShowRemoveDialog] = useState<boolean>(false)
   const [referrerToRemove, setReferrerToRemove] = useState<ReferringHcp | null>(null)
+
+  const getInitials = (referrerFullname: string): string => {
+    const splitName = referrerFullname.split(' ')
+    const firstInitial = splitName[0]?.charAt(0) || ''
+    const secondInitial = splitName[1]?.charAt(0) || ''
+
+    return `${firstInitial}${secondInitial}`
+  }
 
   const onClickAdd = (): void => {
     setShowAddDialog(true)
@@ -155,6 +164,7 @@ export const PatientReferringHcps: FC<PatientReferringHcpsProps> = (props) => {
             <Table>
               <TableHead className={classes.tableHeader}>
                 <TableRow>
+                  <TableCell padding="checkbox"></TableCell>
                   <TableCell>{t('name')}</TableCell>
                   <TableCell>{t('profession')}</TableCell>
                   <TableCell>{t('email')}</TableCell>
@@ -165,6 +175,11 @@ export const PatientReferringHcps: FC<PatientReferringHcpsProps> = (props) => {
               <TableBody>
                 {referringHcpsSorted.map((referringHcp: ReferringHcp) => (
                   <TableRow key={referringHcp.id}>
+                    <TableCell>
+                      <Avatar sx={{ bgcolor: 'var(--text-color-secondary)' }}>
+                        {getInitials(referringHcp.fullName)}
+                      </Avatar>
+                    </TableCell>
                     <TableCell>{referringHcp.fullName}</TableCell>
                     <TableCell>{referringHcp.profession}</TableCell>
                     <TableCell>{referringHcp.email}</TableCell>
