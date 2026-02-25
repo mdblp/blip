@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, Diabeloop
+ * Copyright (c) 2024-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,8 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import MedicalDataService, { DeviceSystem } from 'medical-domain'
+import MedicalDataService, { CgmSystem, DeviceSystem } from 'medical-domain'
 import { Device } from '../../models/device.model'
+
+const DEXCOM_G7_WARMUP_MAX_DURATION_MS = 60 * 60 * 1000 // 1 hour
 
 export const isDBLG1 = (deviceName: string): boolean => {
   return deviceName.toUpperCase() === DeviceSystem.Dblg1
@@ -34,6 +36,14 @@ export const isDBLG1 = (deviceName: string): boolean => {
 
 export const isDBLG2 = (deviceName: string): boolean => {
   return deviceName.toUpperCase() === DeviceSystem.Dblg2
+}
+
+export const isDexcomG7 = (cgmName: string): boolean => {
+  return cgmName.toUpperCase() === CgmSystem.DexcomG7
+}
+
+export const hasG7Duration = (durationMs: number): boolean => {
+  return durationMs < DEXCOM_G7_WARMUP_MAX_DURATION_MS
 }
 
 export const isDeviceVersionHigherOrEqual = (device: Device, majorVersion: number, minorVersion: number): boolean => {

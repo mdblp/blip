@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -43,7 +43,7 @@ import { computeDateValue, getDateTitleForBaseDatum } from '../../../utils/toolt
 import { getAlarmEventIcon, getAlarmEventTitle } from '../../../utils/alarm-event/alarm-event.util'
 import { useTranslation } from 'react-i18next'
 import { getReservoirChangeIcon, getReservoirChangeTitle } from '../../../utils/reservoir-change/reservoir-change.util'
-import warmUpIcon from 'warmup-dexcom.svg'
+import dexcomG6Icon from 'dexcom-g6.svg'
 import parameterChangeIcon from 'parameter-change.png'
 import styles from './events-superposition-popover.css'
 import { BgPrefs } from '../../../models/blood-glucose.model'
@@ -119,7 +119,8 @@ const EventsSuperpositionPopover: FC<EventsSuperpositionPopoverProps> = (props) 
         return getReservoirChangeIcon(pumpManufacturer)
       }
       case DeviceEventSubtype.Warmup:
-        return warmUpIcon
+        // TODO to update
+        return dexcomG6Icon
       default:
         return ''
     }

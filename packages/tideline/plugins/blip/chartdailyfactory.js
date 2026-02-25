@@ -16,38 +16,38 @@
  * == BSD2 LICENSE ==
  */
 
+import * as d3 from 'd3'
+import { getDataWithoutSuperpositionEvents, getSuperpositionEvents, isDBLG2 } from 'dumb'
+import { EventEmitter } from 'events'
 import i18next from 'i18next'
 import _ from 'lodash'
-import { EventEmitter } from 'events'
-import * as d3 from 'd3'
 
 import { MGDL_UNITS } from 'medical-domain'
-
-import Pool from '../../js/pool'
 import oneDay from '../../js/oneday'
+import plotAlarmEvent from '../../js/plot/alarmEvent'
+import plotBasal from '../../js/plot/basal'
+import plotCarb from '../../js/plot/carb'
+import plotCbg from '../../js/plot/cbg'
+import plotConfidentialModeEvent from '../../js/plot/confidentialModeEvent'
+import plotDeviceParameterChange from '../../js/plot/deviceParameterChange'
+import plotEatingShortlyEvent from '../../js/plot/eatingShortlyEvent'
+import plotEventSuperposition from '../../js/plot/eventSuperposition'
+import plotIob from '../../js/plot/iob'
+import plotMessage from '../../js/plot/message'
+import plotNightMode from '../../js/plot/nightModeEvent'
+import plotPhysicalActivity from '../../js/plot/physicalActivity'
+import plotQuickbolus from '../../js/plot/quickbolus'
+import plotReservoirChange from '../../js/plot/reservoir'
+import plotSmbg from '../../js/plot/smbg'
+import plotTimeChange from '../../js/plot/timechange'
+import axesDailyx from '../../js/plot/util/axes/dailyx'
 import fill from '../../js/plot/util/fill'
 import { createYAxisBasal, createYAxisBG, createYAxisBolus, createYAxisIob } from '../../js/plot/util/scales'
-import axesDailyx from '../../js/plot/util/axes/dailyx'
-import plotZenModeEvent from '../../js/plot/zenModeEvent'
-import plotPhysicalActivity from '../../js/plot/physicalActivity'
-import plotReservoirChange from '../../js/plot/reservoir'
-import plotDeviceParameterChange from '../../js/plot/deviceParameterChange'
-import plotConfidentialModeEvent from '../../js/plot/confidentialModeEvent'
 import plotWarmUp from '../../js/plot/warmup'
-import plotAlarmEvent from '../../js/plot/alarmEvent'
-import plotCbg from '../../js/plot/cbg'
-import plotSmbg from '../../js/plot/smbg'
 import plotWizard from '../../js/plot/wizard'
-import plotCarb from '../../js/plot/carb'
-import plotQuickbolus from '../../js/plot/quickbolus'
-import plotBasal from '../../js/plot/basal'
-import plotMessage from '../../js/plot/message'
-import plotTimeChange from '../../js/plot/timechange'
-import plotNightMode from '../../js/plot/nightModeEvent'
-import plotEventSuperposition from '../../js/plot/eventSuperposition'
-import { getDataWithoutSuperpositionEvents, getSuperpositionEvents, isDBLG2 } from 'dumb'
-import plotIob from '../../js/plot/iob'
-import plotEatingShortlyEvent from '../../js/plot/eatingShortlyEvent'
+import plotZenModeEvent from '../../js/plot/zenModeEvent'
+
+import Pool from '../../js/pool'
 
 /**
  * @typedef {import('../../js/tidelinedata').default } MedicalDataService
@@ -97,7 +97,9 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   const pumpSettings = tidelineData?.medicalData?.pumpSettings
   const hasPumpSettings = pumpSettings?.length > 0
-  const isDblg2User = hasPumpSettings ? isDBLG2(pumpSettings[0].payload.device.name) : false
+  const isUsingDblg2 = hasPumpSettings ? isDBLG2(pumpSettings[0].payload.device.name) : false
+  // const isUsingDexcomG7 = hasPumpSettings ? isDexcomG7(pumpSettings[0].payload.cgm.name) : false
+  // const isUsingDexcomG7 = true
 
   // ***
   // Setup Pools
@@ -137,7 +139,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
       }],
       baseline: options.labelBaseline
     }])
-    .heightRatio(isDblg2User ? 0.5 : 0.4)
+    .heightRatio(isUsingDblg2 ? 0.5 : 0.4)
     .gutterWeight(1.0)
 
   // blood glucose data pool
@@ -163,7 +165,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     .gutterWeight(1.0)
 
   // carbs and boluses data pool
-  const shouldDisplayEatingShortlyLegend = isDblg2User && options.isEatingShortlyEnabled
+  const shouldDisplayEatingShortlyLegend = isUsingDblg2 && options.isEatingShortlyEnabled
 
   /** @type {Pool} */
   const poolBolus = new Pool(chart, shouldDisplayEatingShortlyLegend)
@@ -224,7 +226,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
 
   let poolIob = null
-  if (isDblg2User) {
+  if (isUsingDblg2) {
     poolIob = new Pool(chart)
     chart.addPool(poolIob)
     const poolIobId = 'poolIob'
@@ -333,6 +335,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotWarmUp(poolEvents, {
     warmUps,
+    isUsingDexcomG7,
     onWarmUpHover: options.onWarmUpHover,
     onWarmUpOut: options.onTooltipOut
   }))
@@ -444,7 +447,7 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     onConfidentialOut: options.onTooltipOut
   }))
 
-  if (isDblg2User) {
+  if (isUsingDblg2) {
     // IOB pool
     // setup axis & main y scale
     poolIob?.axisScaleFn(createYAxisIob)

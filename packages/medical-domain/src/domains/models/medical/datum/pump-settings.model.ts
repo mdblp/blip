@@ -31,6 +31,7 @@ import { type DatumType } from './enums/datum-type.enum'
 import type Unit from './enums/unit.enum'
 import { DeviceSystem } from './enums/device-system.enum'
 import { DblParameter } from './enums/dbl-parameter.enum'
+import { CgmSystem } from './enums/cgm-system.enum'
 
 export enum ChangeType {
   Added = 'added',
@@ -43,7 +44,7 @@ interface CgmConfig {
   endOfLifeTransmitterDate: string
   expirationDate: string
   manufacturer: string
-  name: string
+  name: CgmSystem
   swVersionTransmitter: string
   transmitterId: string
 }
