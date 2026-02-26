@@ -42,8 +42,4 @@ export class ReferringHcpApi {
   static async removeReferringHcp(patientId: string, hcpId: string): Promise<void> {
     await HttpService.delete({ url: `/crew/v1/patient/${patientId}/hcp-referents/${hcpId}` })
   }
-
-  // static async getHcpList(patientId: string): Promise<string[]> {
-  //   await HttpService.get({ url: `/bff/v1/patient/${patientId}/hcp-referents` })
-  // }
 }

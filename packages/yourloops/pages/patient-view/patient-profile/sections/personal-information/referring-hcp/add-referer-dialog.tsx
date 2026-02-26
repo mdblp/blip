@@ -35,8 +35,7 @@ import { User } from '../../../../../../lib/auth'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Box from '@mui/material/Box'
 import { ReferringHcpApi } from '../../../../../../lib/referring-hcp/referring-hcp.api'
-import { TeamMember, useTeam } from '../../../../../../lib/team'
-import { useParams } from 'react-router-dom'
+import { useAddReferrerDialog } from './add-referrer-dialog.hook'
 
 interface AddReferrerDialogProps {
   patientInfo: { id: string, name: string }
@@ -50,18 +49,14 @@ const DEFAULT_HCP_ID_VALUE = ''
 export const AddReferrerDialog: FC<AddReferrerDialogProps> = (props) => {
   const { patientInfo, user, referringHcpIds, onClose } = props
   const { t } = useTranslation()
-  // TODO Does not work for Patient role
-  const { teamId } = useParams()
-  const { getTeam } = useTeam()
+  const { getAvailableHcps } = useAddReferrerDialog({ referringHcpIds })
 
   const [selectedHcpId, setSelectedHcpId] = React.useState(DEFAULT_HCP_ID_VALUE)
 
   const patientId = patientInfo.id
   const patientName = patientInfo.name
 
-  // TODO Does not work for Patient role
-  const selectedTeam = getTeam(teamId)
-  const availableHcps = selectedTeam.members.filter((hcp: TeamMember)=> !referringHcpIds.includes(hcp.userId))
+  const availableHcps = getAvailableHcps()
 
   const sortedAvailableHcpList = availableHcps.toSorted((a, b) => a.profile.fullName.localeCompare(b.profile.fullName))
 

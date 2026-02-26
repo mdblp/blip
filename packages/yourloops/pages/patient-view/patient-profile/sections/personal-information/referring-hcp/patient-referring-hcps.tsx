@@ -60,6 +60,11 @@ const MAX_REFERRER_COUNT = 5
 const useStyles = makeStyles()(() => ({
   tableHeader: {
     backgroundColor: 'var(--primary-color-background)'
+  },
+  hideLastBorder: {
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
   }
 }))
 
@@ -73,13 +78,13 @@ export const PatientReferringHcps: FC<PatientReferringHcpsProps> = (props) => {
     {
       id: 'hcp-1',
       fullName: 'Dr. John Doe',
-      profession: 'Endocrinologist',
+      profession: 'hcp-profession-diabeto',
       email: 'john.doe@mail.com'
     },
     {
       id: 'hcp-2',
       fullName: 'Dr. Mila Fly',
-      profession: 'Chief in surgery',
+      profession: 'hcp-profession-other',
       email: 'mila.fly@mail.com'
     }
   ]
@@ -174,14 +179,14 @@ export const PatientReferringHcps: FC<PatientReferringHcpsProps> = (props) => {
 
               <TableBody>
                 {referringHcpsSorted.map((referringHcp: ReferringHcp) => (
-                  <TableRow key={referringHcp.id}>
+                  <TableRow key={referringHcp.id} className={classes.hideLastBorder}>
                     <TableCell>
                       <Avatar sx={{ bgcolor: 'var(--text-color-secondary)' }}>
                         {getInitials(referringHcp.fullName)}
                       </Avatar>
                     </TableCell>
                     <TableCell>{referringHcp.fullName}</TableCell>
-                    <TableCell>{referringHcp.profession}</TableCell>
+                    <TableCell>{t(referringHcp.profession)}</TableCell>
                     <TableCell>{referringHcp.email}</TableCell>
                     <TableCell align="right" sx={{ py: 0 }}>
                       <IconActionButton
