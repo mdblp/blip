@@ -45,7 +45,7 @@ export const DEFAULT_THRESHOLDS_IN_MGDL: Thresholds = {
   minVeryLowBg: 40,
   maxVeryLowBg: 90,
   minVeryHighBg: 150,
-  maxVeryHighBg: 200,
+  maxVeryHighBg: 250,
   minLowBg: 50,
   maxLowBg: 100
 }

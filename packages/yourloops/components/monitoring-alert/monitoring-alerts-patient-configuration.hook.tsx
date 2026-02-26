@@ -102,6 +102,8 @@ export const useMonitoringAlertsPatientConfiguration = (
       outOfRangeThreshold: teamParameters.outOfRangeThreshold,
       veryLowBg: getConvertedValue(teamParameters.veryLowBg, teamParametersUnit, userBgUnit),
       hypoThreshold: teamParameters.hypoThreshold,
+      veryHighBg: getConvertedValue(teamParameters.veryHighBg, teamParametersUnit, userBgUnit),
+      hyperThreshold: teamParameters.hyperThreshold,
       nonDataTxThreshold: teamParameters.nonDataTxThreshold,
       reportingPeriod: teamParameters.reportingPeriod
     }
@@ -112,6 +114,8 @@ export const useMonitoringAlertsPatientConfiguration = (
       && teamAlertParametersValues.lowBg === values.lowBg.value
       && teamAlertParametersValues.veryLowBg === values.veryLowBg.value
       && teamAlertParametersValues.hypoThreshold === values.hypoThreshold.value
+      && teamAlertParametersValues.veryHighBg === values.veryHighBg.value
+      && teamAlertParametersValues.hyperThreshold === values.hyperThreshold.value
       && teamAlertParametersValues.nonDataTxThreshold === values.nonDataTxThreshold.value
       && teamAlertParametersValues.outOfRangeThreshold === values.outOfRangeThreshold.value
   }

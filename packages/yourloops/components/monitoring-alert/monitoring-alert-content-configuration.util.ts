@@ -64,6 +64,7 @@ export const buildBgValues = (bgUnit: BgUnit): BgValues => {
       bgUnitDefault: Unit.MmolPerLiter,
       highBgDefault: Math.round(convertBG(DEFAULT_BG_VALUES.highBgDefault, Unit.MilligramPerDeciliter) * 10) / 10,
       veryLowBgDefault: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minVeryLowBg, Unit.MilligramPerDeciliter) * 10) / 10,
+      veryHighBgDefault: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.maxVeryHighBg, Unit.MilligramPerDeciliter) * 10) / 10,
       lowBgDefault: Math.round(convertBG(DEFAULT_THRESHOLDS_IN_MGDL.minLowBg, Unit.MilligramPerDeciliter) * 10) / 10
     }
   }

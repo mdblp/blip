@@ -45,8 +45,8 @@ export const mapMonAlertParamsFromInternal = (monitoringAlertsParameters: Monito
   return {
     bgUnit: monitoringAlertsParameters.bgUnit,
     hyperglycemia: {
-      rateThreshold: 50,
-      glycemiaUpperLimit: 10
+      rateThreshold: monitoringAlertsParameters.hyperThreshold,
+      glycemiaUpperLimit: monitoringAlertsParameters.veryHighBg
     },
     hypoglycemia: {
       rateThreshold: monitoringAlertsParameters.hypoThreshold,
