@@ -31,6 +31,7 @@ import { type DatumType } from './enums/datum-type.enum'
 import type Unit from './enums/unit.enum'
 import { DeviceSystem } from './enums/device-system.enum'
 import { DblParameter } from './enums/dbl-parameter.enum'
+import { DeviceChangeName } from './enums/device-change-name.enum'
 
 export enum ChangeType {
   Added = 'added',
@@ -110,7 +111,7 @@ interface MobileAppConfig {
 interface DeviceHistoryChange {
   changeType: ChangeType
   effectiveDate: string
-  name: string
+  name: DeviceChangeName
   value: string
   previousValue?: string
 }

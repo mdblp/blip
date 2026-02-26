@@ -25,35 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC } from 'react'
-import { useTheme } from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import TrendingFlatIcon from '@mui/icons-material/TrendingFlat'
-import { formatNumberForLang } from '../../lib/language'
-
-interface ChangeValueProps {
-  previousValue?: string
-  currentValue: string
-  withFormatting: boolean
-}
-
-export const ChangeValue: FC<ChangeValueProps> = (props) => {
-  const { previousValue, currentValue, withFormatting } = props
-  const theme = useTheme()
-
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center"
-      }}>
-      {previousValue &&
-        <>
-          <span>{withFormatting ? formatNumberForLang(previousValue) : previousValue}</span>
-          <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
-        </>
-      }
-      <span>{withFormatting ? formatNumberForLang(currentValue) : currentValue}</span>
-    </Box>
-  )
+export enum DeviceChangeName {
+  CgmManufacturer = 'CGM_MANUFACTURER',
+  CgmName = 'CGM_NAME',
+  HandsetDeviceId = 'HANDSET_DEVICE_ID',
+  HandsetImei = 'HANDSET_IMEI',
+  HandsetSoftwareVersion = 'HANDSET_SW_VERSION',
+  MobileAppActivationCode = 'MOBILE_APP_ACTIVATION_CODE',
+  MobileAppVersion = 'MOBILE_APP_VERSION',
+  PumpManufacturer = 'PUMP_MANUFACTURER',
+  PumpName = 'PUMP_NAME',
+  SmartphoneModel = 'SMARTPHONE_MODEL',
 }
