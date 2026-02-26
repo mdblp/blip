@@ -41,6 +41,8 @@ import React, { FC, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Patient } from '../../../../../lib/patient/models/patient.model'
 import { getPatientDisplayInfo } from './patient-personal-information.util'
+import { DblParameter } from 'medical-domain'
+import { formatNumberForLang } from '../../../../../lib/language'
 
 interface PatientInformationProps {
   patient: Patient
@@ -57,15 +59,15 @@ export const PatientInformation: FC<PatientInformationProps> = (props) => {
       <Grid size={6}>
         <InfoRow icon={CakeIcon} dataTestId='date-of-birth' label={t('date-of-birth')} value={`${formatBirthdate(patient.profile.birthdate)} (${patientInfo.age})`} />
         <InfoRow icon={PersonIcon} dataTestId='gender' label={t('gender')} value={patientInfo.gender} />
-        <InfoRow icon={MonitorWeightIcon} dataTestId='weight' label={t('params|WEIGHT')} value={patientInfo.weight} />
-        <InfoRow icon={HeightIcon} dataTestId='height' label={t('params|HEIGHT')} value={patientInfo.height} />
+        <InfoRow icon={MonitorWeightIcon} dataTestId='weight' label={t(`params|${DblParameter.Weight}`)} value={formatNumberForLang(patientInfo.weight)} />
+        <InfoRow icon={HeightIcon} dataTestId='height' label={t(`params|${DblParameter.Height}`)} value={formatNumberForLang(patientInfo.height)} />
         <InfoRow icon={EmailIcon} dataTestId='email' label={t('email')} value={patient.profile.email || t('N/A')} />
       </Grid>
       <Grid size={6}>
         <InfoRow icon={PhoneAndroidIcon} dataTestId='equipment-date' label={t('equipment-date')} value={patientInfo.equipmentDate} />
-        <InfoRow icon={StraightenIcon} dataTestId='hba1c' label={t('hba1c')} value={patientInfo.hba1c} />
+        <InfoRow icon={StraightenIcon} dataTestId='hba1c' label={t('hba1c')} value={formatNumberForLang(patientInfo.hba1c)} />
         <InfoRow icon={ScaleIcon} dataTestId='glycemia-units' label={t('glycemia-units')} value={patientInfo.dbUnits} />
-        <InfoRow icon={BasalIcon} dataTestId='insulin-type' label={t('params|INSULIN_TYPE')} value={patientInfo.insulinType} />
+        <InfoRow icon={BasalIcon} dataTestId='insulin-type' label={t(`params|${DblParameter.InsulinType}`)} value={patientInfo.insulinType} />
       </Grid>
     </Grid>
   )
