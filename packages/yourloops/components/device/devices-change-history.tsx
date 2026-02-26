@@ -131,7 +131,7 @@ export const DevicesChangeHistory: FC<DevicesChangeHistoryProps> = ({ history, g
                       </Tooltip>
                     </TableCell>
                     <TableCell>
-                      <ChangeValue previousValue={device.previousValue} currentValue={device.value} />
+                      <ChangeValue previousValue={device.previousValue} currentValue={device.value} withFormatting={false} />
                     </TableCell>
                     <TableCell align="right">
                       {formatDateWithMomentLongFormat(new Date(device.effectiveDate), 'llll', timezone)}
