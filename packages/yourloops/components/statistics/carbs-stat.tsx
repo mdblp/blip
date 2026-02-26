@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,12 +35,14 @@ export interface CarbsStatProps {
   rescueCarbsPerDay: number
   mealCarbsPerDay: number
   totalMealCarbsWithRescueCarbsEntries: number
+  totalRescueCarbsEntries: number
 }
 
 export const CarbsStat: FunctionComponent<CarbsStatProps> = (props) => {
   const {
     totalCarbsPerDay,
     totalMealCarbsWithRescueCarbsEntries,
+    totalRescueCarbsEntries,
     rescueCarbsPerDay,
     mealCarbsPerDay,
   } = props
@@ -51,6 +53,8 @@ export const CarbsStat: FunctionComponent<CarbsStatProps> = (props) => {
   const declaredCarbsAnnotation = [t(isDailyPage ? 'tooltip-per-day-carbs' : 'tooltip-avg-daily-week-carbs'), t('tooltip-declared-derived-carbs', { total: totalMealCarbsWithRescueCarbsEntries })]
   const totalCarbsTitle = t('total-declared-carbs')
   const carbsUnit = t('gram-unit')
+
+  const rescueCarbsAnnotation = [t('tooltip-rescue-carbs', { total: totalRescueCarbsEntries }), t('tooltip-rescue-carbs-details')]
 
   return (
     <div data-testid="total-carbs-stat">
@@ -73,6 +77,7 @@ export const CarbsStat: FunctionComponent<CarbsStatProps> = (props) => {
         value={rescueCarbsPerDay}
         units={carbsUnit}
         valueClasses={styles.rowValue}
+        annotations={rescueCarbsAnnotation}
       />
     </div>
   )

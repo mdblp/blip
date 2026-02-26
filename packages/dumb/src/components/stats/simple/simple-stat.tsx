@@ -38,7 +38,7 @@ interface SimpleStatProps {
   summaryFormat: StatFormats
   title: string
   total: number
-  value: number
+  value: number | string
 }
 
 const SimpleStat: FunctionComponent<SimpleStatProps> = (props) => {
@@ -51,7 +51,7 @@ const SimpleStat: FunctionComponent<SimpleStatProps> = (props) => {
   } = props
 
   const simpleValueProps = useMemo(() => {
-    return buildSimpleValueProps(summaryFormat, total, value)
+    return buildSimpleValueProps(summaryFormat, total, Number(value))
   }, [summaryFormat, total, value])
 
   return (

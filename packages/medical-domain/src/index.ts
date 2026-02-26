@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -86,6 +86,7 @@ export { BolusSubtype } from './domains/models/medical/datum/enums/bolus-subtype
 export { ClassificationType } from './domains/models/statistics/enum/bg-classification.enum'
 export { Datum } from './domains/models/medical/datum.model'
 export { DatumType } from './domains/models/medical/datum/enums/datum-type.enum'
+export { DblParameter } from './domains/models/medical/datum/enums/dbl-parameter.enum'
 export { DeviceEventSubtype } from './domains/models/medical/datum/enums/device-event-subtype.enum'
 export { DeviceSystem } from './domains/models/medical/datum/enums/device-system.enum'
 export { type DurationValue } from './domains/models/medical/datum/basics/duration.model'
@@ -101,6 +102,8 @@ export {
   type MobileAppConfig,
   type ParameterConfig,
   type ParametersChange,
+  type DeviceHistory,
+  type DeviceHistoryChange,
   type PumpConfig,
   PumpSettings,
   type PumpSettingsParameter,

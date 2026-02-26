@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,37 +25,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC } from 'react'
-import { ParametersChangeHistory } from '../../../../components/device/parameters-change-history'
-import { PumpSettings } from 'medical-domain'
-import { useTheme } from '@mui/material/styles'
-import { useTranslation } from 'react-i18next'
-import Card from '@mui/material/Card'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
+import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import {
+  checkShowParametersButtonIsDisplayed,
+  checkShowParametersButtonIsNotDisplayed,
+  checkParametersPopoverIsOpen,
+  checkParameterIsDisplayed,
+} from '../assert/show-parameters.assert'
 
-interface ChangeHistorySectionProps {
-  pumpSettings: PumpSettings
-  goToDailySpecificDate: (date: number) => void
+export const testShowParametersButtonIsDisplayed = async (): Promise<void> => {
+  checkShowParametersButtonIsDisplayed()
 }
 
-export const ChangeHistorySection: FC<ChangeHistorySectionProps> = (props) => {
-  const { goToDailySpecificDate, pumpSettings } = props
-  const theme = useTheme()
-  const { t } = useTranslation()
-  const history = pumpSettings.payload.history
-  const timezone = pumpSettings.timezone
+export const testShowParametersButtonIsNotDisplayed = async (): Promise<void> => {
+  checkShowParametersButtonIsNotDisplayed()
+}
 
-  return (
-    <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="change-history-section">
-      <CardHeader title={t('change-history')} />
-      <CardContent>
-        <ParametersChangeHistory
-          goToDailySpecificDate={goToDailySpecificDate}
-          history={history}
-          timezone={timezone}
-        />
-      </CardContent>
-    </Card>
-  )
+export const testOpenParametersPopover = async (): Promise<void> => {
+  checkShowParametersButtonIsDisplayed()
+
+  const button = screen.getByTestId('show-parameters-at-button')
+  await userEvent.click(button)
+
+  checkParametersPopoverIsOpen()
+}
+
+export const testDisplayEffectiveParametersWithAllData = async (): Promise<void> => {
+  await testOpenParametersPopover()
+
+  checkParameterIsDisplayed('PATIENT_GLY_HYPO_LIMIT', '60.0', 'mg/dL')
+  checkParameterIsDisplayed('MEAL_RATIO_BREAKFAST_FACTOR', '110', '%')
+  checkParameterIsDisplayed('MEAL_RATIO_DINNER_FACTOR', '90', '%')
+}
+
+export const testDisplayEffectiveParametersFromHistory = async (): Promise<void> => {
+  await testOpenParametersPopover()
+
+  checkParameterIsDisplayed('WEIGHT', '68.0', 'kg')
 }

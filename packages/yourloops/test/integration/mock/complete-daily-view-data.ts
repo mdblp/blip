@@ -33,12 +33,14 @@ import {
   Bolus,
   BolusSubtype,
   DatumType,
+  DblParameter,
   DeviceSystem,
   DurationUnit,
   Prescriptor,
   PumpManufacturer,
   Source,
-  Unit, Wizard,
+  Unit,
+  Wizard,
   WizardInputMealFat,
   WizardInputMealSource
 } from 'medical-domain'
@@ -1443,7 +1445,8 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "reportedIntensity": Intensity.Medium,
           "inputTime": "2022-08-08T13:00:00.000Z",
           "isoWeekday": WeekDays.Sunday,
-          "name": "RUNNING"
+          "name": "RUNNING",
+          "updateTime": "2022-08-08T13:10:00.000Z"
         },
         {
           "epoch": 1659967200000,
@@ -1464,7 +1467,8 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "reportedIntensity": Intensity.Medium,
           "inputTime": "2022-08-08T14:00:00.000Z",
           "isoWeekday": WeekDays.Sunday,
-          "name": ""
+          "name": "",
+          "updateTime": "2022-08-08T14:00:00.000Z",
         }
       ],
       pumpSettings: [
@@ -1507,7 +1511,10 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
               "swVersion": "beta",
               "product": "zzz",
             },
-            history,
+            history: {
+              parameters: history,
+              devices : []
+            },
             "securityBasals": { "rates": null },
             "mobileApplication": {
               "manufacturer": "",
@@ -1519,9 +1526,9 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
               {
                 "effectiveDate": "2020-01-17T08:00:00.000Z",
                 "level": 1,
-                "name": "WEIGHT",
+                "name": DblParameter.Weight,
                 "unit": Unit.Kilogram,
-                "value": "72"
+                "value": "68"
               }
             ],
           }

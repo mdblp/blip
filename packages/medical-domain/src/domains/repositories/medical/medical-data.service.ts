@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,7 +38,6 @@ import BolusService from './datum/bolus.service'
 import DeviceParameterChangeService from './datum/device-parameter-change.service'
 import FillService from './datum/fill.service'
 import MessageService from './datum/message.service'
-import PhysicalActivityService from './datum/physical-activity.service'
 import TimeZoneChangeService from './datum/time-zone-change.service'
 import type MedicalDataOptions from '../../models/medical/medical-data-options.model'
 import {
@@ -76,9 +75,10 @@ import {
 import { Datum } from '../../models/medical/datum.model'
 import Bolus from '../../models/medical/datum/bolus.model'
 import Prescriptor from '../../models/medical/datum/enums/prescriptor.enum'
+import { DblParameter } from '../../models/medical/datum/enums/dbl-parameter.enum'
 
-// the first one is for g1, the second one for g2
-const EXCLUDED_PARAMETERS = ['INSULIN_TYPE_USED', 'INSULIN_TYPE']
+// Insulin type parameters from DBLG1 (`InsulinTypeUsed`) and DBLG2 (`InsulinType`) are excluded
+const EXCLUDED_PARAMETERS = new Set([DblParameter.InsulinTypeUsed, DblParameter.InsulinType])
 
 class MedicalDataService {
   medicalData: MedicalData = {
@@ -336,7 +336,6 @@ class MedicalDataService {
     this.medicalData.basal = BasalService.deduplicate(this.medicalData.basal, this._datumOpts)
     this.medicalData.bolus = BolusService.deduplicate(this.medicalData.bolus, this._datumOpts)
     this.medicalData.wizards = WizardService.deduplicate(this.medicalData.wizards, this.medicalData.bolus, this._datumOpts)
-    this.medicalData.physicalActivities = PhysicalActivityService.deduplicate(this.medicalData.physicalActivities, this._datumOpts)
   }
 
   private getLatestPumpSettings(pumpSettings: PumpSettings[]): PumpSettings {
@@ -567,7 +566,7 @@ class MedicalDataService {
 
   private removeExcludedParameters(parametersList: ParameterConfig[]) {
     return parametersList.filter((parameter) => {
-      return !EXCLUDED_PARAMETERS.includes(parameter.name)
+      return !EXCLUDED_PARAMETERS.has(parameter.name)
     })
   }
 
@@ -575,7 +574,7 @@ class MedicalDataService {
     this.medicalData.pumpSettings = this.medicalData.pumpSettings.map((pumpSettings: PumpSettings) => {
       pumpSettings.payload.parameters = this.removeExcludedParameters(pumpSettings.payload.parameters)
 
-      pumpSettings.payload.history = pumpSettings.payload.history.map((historyItem: ParametersChange) => {
+      pumpSettings.payload.history.parameters = pumpSettings.payload.history.parameters.map((historyItem: ParametersChange) => {
         historyItem.parameters = this.removeExcludedParameters(historyItem.parameters) as PumpSettingsParameter[]
         return historyItem
       })

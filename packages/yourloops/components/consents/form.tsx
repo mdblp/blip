@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,12 +33,11 @@ import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormGroup from '@mui/material/FormGroup'
 import Link from '@mui/material/Link'
-
-import { diabeloopExternalUrls } from '../../lib/diabeloop-urls.model'
 import { type ConsentCheck } from './models/consent-check.model'
 import { type ConsentFormProps } from './models/consent-form-props.model'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
 import { ConsentHcpConfirmAck } from './hcp-confirm-ack'
+import { ExternalFilesService } from '../../lib/external-files/external-files.service'
 
 const formStyles = makeStyles({ name: 'ylp-form-consents' })((theme) => {
   return {
@@ -59,6 +58,8 @@ export const ConsentPrivacyPolicy: FunctionComponent<ConsentCheck> = ({ id, user
   const { t } = useTranslation('yourloops')
   const { classes } = formStyles()
 
+  const privacyPolicyUrl = ExternalFilesService.getPrivacyPolicyUrl()
+
   const checkboxPolicy = (
     <Checkbox
       id={`${id}-checkbox-privacy-policy`}
@@ -73,7 +74,7 @@ export const ConsentPrivacyPolicy: FunctionComponent<ConsentCheck> = ({ id, user
   const linkPrivacyPolicy = (
     <Link
       aria-label={privacyPolicy}
-      href={diabeloopExternalUrls.privacyPolicy}
+      href={privacyPolicyUrl}
       target="_blank"
       rel="noreferrer"
     >
@@ -106,6 +107,8 @@ export const ConsentTerms: FunctionComponent<ConsentCheck> = ({ id, userRole, ch
   const { t } = useTranslation('yourloops')
   const { classes } = formStyles()
 
+  const termsOfUseUrl = ExternalFilesService.getTermsOfUseUrl()
+
   const checkboxTerms = (
     <Checkbox
       id={`${id}-checkbox-terms`}
@@ -118,7 +121,7 @@ export const ConsentTerms: FunctionComponent<ConsentCheck> = ({ id, userRole, ch
   )
   const terms = t('terms-of-use')
   const linkTerms = (
-    <Link aria-label={terms} href={diabeloopExternalUrls.terms} target="_blank" rel="noreferrer">
+    <Link aria-label={terms} href={termsOfUseUrl} target="_blank" rel="noreferrer">
       {terms}
     </Link>
   )

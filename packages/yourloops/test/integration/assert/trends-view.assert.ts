@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,6 +39,8 @@ const STANDARD_DEVIATION_BGM_TOOLTIP = 'SD (Standard Deviation): How far values 
 const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
 const LOOP_MODE_TOOLTIP = 'Time In Loop Mode: Daily average of the time spent in automated basal delivery.How we calculate this: (%) is the duration in loop mode ON or OFF divided by the total duration of basals for this time period. (time) is the average daily time spent in loop mode ON or OFF.'
 const AVG_DAILY_CARBS_DECLARED_TOOLTIP = 'Total Carbs: All carb entries added together (meals and rescue carbs), then divided by the number of days in this view.Derived from 6 carb entries, including rescue carbs.'
+const MANUAL_BOLUS_TOOLTIP = 'Manual bolus: Total insulin dose delivered (in units) as a manual bolus, divided by the number of days in this view.In some cases, a large number of manual boluses may indicate that the algorithm is not aggressive enough. Other signs may confirm this hypothesis, such as frequent hyperglycaemia or a difference (-10%) between the setting “Total Daily Insulin” and the total daily dose of insulin actually delivered.'
+const RESCUE_CARBS_TOOLTIP = 'Rescue carbs: All rescue carb entries added together (recommended or taken spontaneously), then divided by the number of days in this view. Computed from 5 rescue carbs.A significant amount of rescue carbs may, in some cases, indicate that the algorithm is too aggressive. Other signs may confirm this hypothesis, such as frequent hypoglycemia or a difference (+10%) between the setting “Total Daily Insulin” and the total daily dose of insulin actually delivered.'
 export const GMI_TOOLTIP_EMPTY_VALUE = 'GMI (Glucose Management Indicator): Tells you what your calculated HbA1c level is likely to be, based on the average glucose level from your CGM readings.Why is this stat empty? There is not enough data present in this view to calculate it.'
 export const GMI_TOOLTIP = 'GMI (Glucose Management Indicator): Tells you what your calculated HbA1c level is likely to be, based on the average glucose level from your CGM readings.'
 
@@ -90,6 +92,8 @@ export const checkTrendsStatsWidgetsTooltips = async () => {
   await checkStatTooltip(patientStatistics, 'Total of declared carbs', AVG_DAILY_CARBS_DECLARED_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'GMI (estimated HbA1c)', GMI_TOOLTIP_EMPTY_VALUE)
   await checkStatTooltip(patientStatistics, 'Time In Loop Mode', LOOP_MODE_TOOLTIP)
+  await checkStatTooltip(patientStatistics, 'Rescue carbs', RESCUE_CARBS_TOOLTIP)
+  await checkStatTooltip(patientStatistics, 'Manual bolus', MANUAL_BOLUS_TOOLTIP)
 }
 
 export const checkTrendsTimeInRangeStatsWidgets = async () => {

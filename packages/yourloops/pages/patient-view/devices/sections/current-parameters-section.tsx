@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -44,7 +44,6 @@ import moment from 'moment/moment'
 import {
   copySettingsToClipboard,
   formatParameters,
-  sortHistory,
   sortParameterList
 } from '../../../../components/device/utils/device.utils'
 import { MobileAppInfoTable } from '../../../../components/device/mobile-app-info-table'
@@ -63,7 +62,7 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
   const theme = useTheme()
   const { classes } = useStyles()
   const { t } = useTranslation()
-  const { device, pump, cgm, parameters, history, mobileApplication } = pumpSettings.payload
+  const { device, pump, cgm, parameters, mobileApplication } = pumpSettings.payload
   const lastUploadDate = moment.tz(pumpSettings.normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
 
   const onClickCopyButton = async (): Promise<void> => {
@@ -72,7 +71,6 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
 
   sortParameterList(parameters)
   formatParameters(parameters)
-  sortHistory(history)
 
   return (
     <Card variant="outlined" sx={{ padding: theme.spacing(2) }} data-testid="current-parameters-section">
@@ -81,10 +79,11 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
         subheader={`${t('last-upload:')} ${lastUploadDate}`}
         action={
           <Button
-            variant="contained"
+            variant="outlined"
             disableElevation
             startIcon={<FileCopyIcon />}
             onClick={onClickCopyButton}
+            aria-label={t('text-copy')}
           >
             {t('text-copy')}
           </Button>

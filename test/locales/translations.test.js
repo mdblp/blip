@@ -314,7 +314,18 @@ const ignoredTransKeyForYourLoops = [
   'caloric-restriction',
   'intermittent-fasting',
   'paleolithic-diet',
-  'other'
+  'other',
+  'device-change-history',
+  'device-change-handset-imei',
+  'device-change-handset-device-id',
+  'device-change-smartphone-model',
+  'device-change-cgm-name',
+  'device-change-cgm-manufacturer',
+  'device-change-pump-manufacturer',
+  'device-change-pump-name',
+  'device-change-mobile-app-activation-code',
+  'device-change-sw-version',
+  'device-history-title'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   // Documentation!

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -75,7 +75,7 @@ export function getTheme(): Theme {
         styleOverrides: {
           root: {
             fontWeight: 600,
-            borderRadius: '28px',
+            borderRadius: '24px',
             textTransform: 'none'
           }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,10 +35,10 @@ import Button from '@mui/material/Button'
 import { Trans, useTranslation } from 'react-i18next'
 import { type Team } from '../../../lib/team'
 import { Link } from '@mui/material'
-import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
 import metrics from '../../../lib/metrics'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { useTheme } from '@mui/material/styles'
+import { ExternalFilesService } from '../../../lib/external-files/external-files.service'
 
 export interface ConfirmTeamProps {
   onCompleteStep: () => Promise<void>
@@ -54,6 +54,8 @@ export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
   const theme = useTheme()
   const privacyPolicy = t('privacy-policy')
 
+  const privacyPolicyUrl = ExternalFilesService.getPrivacyPolicyUrl()
+
   const handleChangeChecked = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setPolicyChecked(event.target.checked)
   }
@@ -61,7 +63,7 @@ export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
   const linkPrivacyPolicy = (
     <Link
       aria-label={privacyPolicy}
-      href={diabeloopExternalUrls.privacyPolicy}
+      href={privacyPolicyUrl}
       target="_blank"
       rel="noreferrer"
       onClick={() => {
@@ -107,8 +109,15 @@ export const PrivacyPolicyConfirm = (props: ConfirmTeamProps): JSX.Element => {
 
         <FormControl sx={{ marginBottom: theme.spacing(2) }}>
           <FormControlLabel
-            control={<Checkbox checked={policyChecked} onChange={handleChangeChecked}
-                               inputProps={{ 'aria-label': 'controlled' }} />}
+            control={
+            <Checkbox
+              checked={policyChecked}
+              onChange={handleChangeChecked}
+              slotProps={{
+                input: { 'aria-label': 'controlled' }
+              }}
+            />
+          }
             data-testid="checkbox-policy"
             label={t('modal-patient-share-team-privacy')}
             color="textPrimary"

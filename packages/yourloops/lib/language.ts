@@ -120,6 +120,26 @@ const getLangName = (languageCode: LanguageCodes): string => {
   return _.get(locales, `resources.${languageCode}.name`, 'en')
 }
 
+const formatNumberForLang = (decimal: number | string, minimumFractionDigit?: number): string => {
+  /* Some missing values are represented as --, so we keep it */
+  if (decimal === '--') {
+    return decimal
+  }
+  const lang= getCurrentLang()
+  const formatter = Intl.NumberFormat(lang, {
+    minimumFractionDigits: minimumFractionDigit !== null ? minimumFractionDigit : 1,
+    maximumFractionDigits: 3
+  })
+  if (typeof decimal === "string") {
+    if (lang !== 'en') {
+      return decimal.replace(".", ",")
+    } else {
+      return decimal
+    }
+  }
+  return formatter.format(decimal)
+}
+
 export {
   init,
   t,
@@ -127,6 +147,7 @@ export {
   getCurrentLang,
   getLangName,
   availableLanguageCodes,
-  availableCountries
+  availableCountries,
+  formatNumberForLang
 }
 export default i18n
