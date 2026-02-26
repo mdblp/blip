@@ -180,10 +180,29 @@ export const useMonitoringAlertsContentConfiguration = (
     return highBgValue !== monitoringValuesDisplayed.highBg.value ||
       lowBgValue !== monitoringValuesDisplayed.lowBg.value ||
       veryLowBgValue !== monitoringValuesDisplayed.veryLowBg.value ||
+      veryHighBgValue !== monitoringValuesDisplayed.veryHighBg.value ||
       monitoringAlertsParameters.hypoThreshold !== monitoringValuesDisplayed.hypoThreshold.value ||
+      monitoringAlertsParameters.hyperThreshold !== monitoringValuesDisplayed.hyperThreshold.value ||
       monitoringAlertsParameters.nonDataTxThreshold !== monitoringValuesDisplayed.nonDataTxThreshold.value ||
       monitoringAlertsParameters.outOfRangeThreshold !== monitoringValuesDisplayed.outOfRangeThreshold.value
-  }, [highBgValue, lowBgValue, monitoringAlertsParameters.hypoThreshold, monitoringAlertsParameters.nonDataTxThreshold, monitoringAlertsParameters.outOfRangeThreshold, monitoringValuesDisplayed.highBg.value, monitoringValuesDisplayed.hypoThreshold.value, monitoringValuesDisplayed.lowBg.value, monitoringValuesDisplayed.nonDataTxThreshold.value, monitoringValuesDisplayed.outOfRangeThreshold.value, monitoringValuesDisplayed.veryLowBg.value, veryLowBgValue])
+  }, [
+    highBgValue,
+    lowBgValue,
+    monitoringAlertsParameters.hypoThreshold,
+    monitoringAlertsParameters.hyperThreshold,
+    monitoringAlertsParameters.nonDataTxThreshold,
+    monitoringAlertsParameters.outOfRangeThreshold,
+    monitoringValuesDisplayed.highBg.value,
+    monitoringValuesDisplayed.hypoThreshold.value,
+    monitoringValuesDisplayed.hyperThreshold.value,
+    monitoringValuesDisplayed.lowBg.value,
+    monitoringValuesDisplayed.nonDataTxThreshold.value,
+    monitoringValuesDisplayed.outOfRangeThreshold.value,
+    monitoringValuesDisplayed.veryLowBg.value,
+    monitoringValuesDisplayed.veryHighBg.value,
+    veryLowBgValue,
+    veryHighBgValue
+  ])
 
   const saveButtonDisabled = useMemo(() => {
     return hasErrorMessage || saveInProgress || !haveValuesBeenUpdated

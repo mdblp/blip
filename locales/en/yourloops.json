@@ -343,6 +343,8 @@
   "hyperglycemia-above": "Hyperglycemia above",
   "hyperglycemia-threshold": "Hyperglycemia threshold",
   "hypoglycemia": "Below range",
+  "hyperglycemia-tooltip1": "Hyperglycemia: {{percentage}}",
+  "hyperglycemia-tooltip2": "Alert triggered when {{threshold}}% of time above {{veryHighBg}} {{unit}} threshold over the period considered.",
   "hypoglycemia-tooltip1": "Hypoglycemia: {{percentage}}",
   "hypoglycemia-tooltip2": "Alert triggered when {{threshold}}% of time below {{veryLowBg}} {{unit}} threshold over the period considered.",
   "identification-code": "Identification code",
