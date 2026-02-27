@@ -49,7 +49,6 @@ import i18next from 'i18next'
 import { DeviceSystem } from '../../../models/medical/datum/enums/device-system.enum'
 import { DblParameter } from '../../../models/medical/datum/enums/dbl-parameter.enum'
 import { DeviceChangeName } from '../../../models/medical/datum/enums/device-change-name.enum'
-import { CgmSystem } from '../../../models/medical/datum/enums/cgm-system.enum'
 
 const t = i18next.t.bind(i18next)
 
@@ -103,7 +102,7 @@ const normalizeCgm = (rawCgm: Record<string, unknown>): CgmConfig => {
     endOfLifeTransmitterDate: (rawCgm?.endOfLifeTransmitterDate ?? '') as string,
     expirationDate: (rawCgm?.expirationDate ?? '') as string,
     manufacturer: (rawCgm?.manufacturer ?? '') as string,
-    name: (rawCgm?.name ?? '') as CgmSystem,
+    name: (rawCgm?.name ?? '') as string,
     swVersionTransmitter: (rawCgm?.swVersionTransmitter ?? '') as string,
     transmitterId: (rawCgm?.transmitterId ?? '') as string
   }
