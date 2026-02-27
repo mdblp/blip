@@ -302,7 +302,7 @@ export const buildPrivateTeam = (): Team => {
 }
 
 
-export const anotherTeam: ITeam = {
+export const anotherTeam: Team = {
   name: 'iTeamOne',
   id: 'iTeamOneId',
   code: '679517388',
