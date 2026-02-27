@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,6 +32,7 @@ import styles from '../insulin/insulin-stat.css'
 import { useTheme } from '@mui/material/styles'
 import { roundToOneDecimal } from 'yourloops/components/statistics/statistics.util'
 import { EMPTY_DATA_PLACEHOLDER } from '../../../models/stats.model'
+import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
 import { formatNumberForLang } from '../stats.util'
 
 interface StatLineWithChipProps {
@@ -39,10 +40,11 @@ interface StatLineWithChipProps {
   value: number
   units: string
   totalValue: number
+  annotations?: string[]
 }
 
 export const StatLineWithChip: FC<StatLineWithChipProps> = (props) => {
-  const { title, value, units, totalValue } = props
+  const { annotations, title, value, units, totalValue } = props
   const theme = useTheme()
 
   const getPercentage = (value: number): string => {
@@ -60,6 +62,7 @@ export const StatLineWithChip: FC<StatLineWithChipProps> = (props) => {
       }}>
       <div>
         {title}
+        {annotations && <StatTooltip annotations={annotations} />}
       </div>
       <Box
         sx={{

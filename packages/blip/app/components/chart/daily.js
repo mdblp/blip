@@ -45,6 +45,7 @@ import {
 import Box from '@mui/material/Box'
 import { DailyDatePicker } from 'yourloops/components/date-pickers/daily-date-picker'
 import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
+import { ShowParametersAt } from 'yourloops/components/show-parameters/show-parameters-at'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import metrics from 'yourloops/lib/metrics'
 
@@ -366,25 +367,43 @@ class Daily extends React.Component {
             display: 'flex',
             flexDirection: 'column'
           }}>
-          <Box sx={{
-            display: 'flex'
-          }}>
-            {this.state.chartMounted &&
-              <DailyDatePicker
-                atMostRecent={atMostRecent}
-                displayedDate={title}
-                date={epochLocation}
-                endDate={this.endDate}
-                inTransition={inTransition}
-                loading={loading}
-                onBackButtonClick={this.handlePanBack}
-                onMostRecentButtonClick={this.handleClickMostRecent}
-                onNextButtonClick={this.handlePanForward}
-                onSelectedDateChange={onSelectedDateChange}
-                startDate={this.startDate}
-              />
-            }
-          </Box>
+          {this.state.chartMounted &&
+            <Box
+              data-testid="daily-header"
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
+              <Box sx={{
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <DailyDatePicker
+                  atMostRecent={atMostRecent}
+                  displayedDate={title}
+                  date={epochLocation}
+                  endDate={this.endDate}
+                  inTransition={inTransition}
+                  loading={loading}
+                  onBackButtonClick={this.handlePanBack}
+                  onMostRecentButtonClick={this.handleClickMostRecent}
+                  onNextButtonClick={this.handlePanForward}
+                  onSelectedDateChange={onSelectedDateChange}
+                  startDate={this.startDate}
+                />
+              </Box>
+              {tidelineData.basicsData?.data?.pumpSettings?.data?.[0]?.payload?.parameters?.length > 0 && (
+                <ShowParametersAt
+                  date={epochLocation}
+                  parameters={tidelineData.basicsData.data.pumpSettings.data[0].payload.parameters}
+                  history={tidelineData.basicsData.data.pumpSettings.data[0].payload.history?.parameters ?? []}
+                />
+              )
+              }
+            </Box>
+          }
           <Box className="chart-with-stats-wrapper" ref={this.refToAttachResize}>
             <div className="container-box-inner patient-data-content-inner light-rounded-border">
               <div className="patient-data-content-daily">

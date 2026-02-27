@@ -79,7 +79,7 @@ export const DevicesChangeHistory: FC<DevicesChangeHistoryProps> = ({ history, g
             </TableRow>
           </TableHead>
           <TableBody>
-            {history.map((devicesChange, historyCurrentIndex) => (
+            {history?.map((devicesChange, historyCurrentIndex) => (
               <React.Fragment key={`${devicesChange.changeDate}-${historyCurrentIndex}`}>
                 <TableRow sx={{ backgroundColor: 'var(--primary-color-background)' }} className="change-date-row">
                   <TableCell colSpan={5}>
@@ -110,7 +110,7 @@ export const DevicesChangeHistory: FC<DevicesChangeHistoryProps> = ({ history, g
                     </Box>
                   </TableCell>
                 </TableRow>
-                {devicesChange.devices.map((device, index) => (
+                {devicesChange.devices?.map((device, index) => (
                   <TableRow
                     key={`${device.effectiveDate}-${index}`}
                     data-testid={`devices-group-${devicesChange.changeDate.substring(0, 10)}-${historyCurrentIndex}-rows-${index}`}

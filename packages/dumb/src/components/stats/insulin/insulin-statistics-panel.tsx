@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,6 +41,7 @@ interface InsulinStatistic {
   title: string
   units: string
   value: number
+  annotations?: string[]
 }
 
 export interface InsulinStatisticsPanelProps {
@@ -61,7 +62,7 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
   const location = useLocation()
   const isDailyPage = location.pathname.includes('daily')
   const isDashboardPage = location.pathname.includes('dashboard')
-  const insulinAnnotations = isDailyPage ? t('total-insulin-days-tooltip') : t('average-daily-insulin-tooltip')
+  const insulinAnnotations = t('total-insulin-days-tooltip')
   const annotations = [insulinAnnotations, t('total-insulin-how-calculate-tooltip')]
 
   const estimatedTotalInsulinCalculationAnnotation = t('estimated-total-insulin-avg-how-calculate-tooltip')
@@ -106,6 +107,7 @@ const InsulinStatisticsPanel: FunctionComponent<InsulinStatisticsPanelProps> = (
               value={entry.value}
               units={entry.units}
               totalValue={totalInsulin}
+              annotations={entry.annotations}
             />
           </React.Fragment>
         )
