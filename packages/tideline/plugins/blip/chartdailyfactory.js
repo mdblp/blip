@@ -98,8 +98,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   const pumpSettings = tidelineData?.medicalData?.pumpSettings
   const hasPumpSettings = pumpSettings?.length > 0
   const isUsingDblg2 = hasPumpSettings ? isDBLG2(pumpSettings[0].payload.device.name) : false
-  // const isUsingDexcomG7 = hasPumpSettings ? isDexcomG7(pumpSettings[0].payload.cgm.name) : false
-  // const isUsingDexcomG7 = true
 
   // ***
   // Setup Pools
@@ -335,7 +333,6 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotWarmUp(poolEvents, {
     warmUps,
-    isUsingDexcomG7,
     onWarmUpHover: options.onWarmUpHover,
     onWarmUpOut: options.onTooltipOut
   }))

@@ -27,10 +27,9 @@
  */
 
 import * as d3 from 'd3'
-import dexcomG6Icon from 'dexcom-g6.svg'
-import dexcomG7Icon from 'dexcom-g7.svg'
-import { DEFAULT_IMAGE_MARGIN, DEFAULT_OPTIONS_SIZE } from './util/eventsConstants'
+import warmupIcon from 'warmup-icon.svg'
 import utils from './util/utils'
+import { DEFAULT_IMAGE_MARGIN, DEFAULT_OPTIONS_SIZE } from './util/eventsConstants'
 
 /**
  * @typedef {import("../tidelinedata").default} MedicalDataService
@@ -41,7 +40,7 @@ import utils from './util/utils'
 /**
  *
  * @param {Pool} pool
- * @param {{ onWarmUpHover: (p: any) => void, onWarmUpOut: () => void, warmUps: MedicalDataService, isUsingDexcomG7: boolean, size: number }} opts
+ * @param {{ onWarmUpHover: (p: any) => void, onWarmUpOut: () => void, warmUps: MedicalDataService, size: number }} opts
  * @returns {(data: Datum[]) => void}
  */
 
@@ -49,8 +48,6 @@ function plotWarmUp(pool, opts) {
   const width = 40
 
   opts.size = opts.size ?? DEFAULT_OPTIONS_SIZE
-
-  const warmupIcon = opts.isUsingDexcomG7 ? dexcomG7Icon : dexcomG6Icon
 
   function warmUp(selection) {
     const offset = pool.height() - DEFAULT_IMAGE_MARGIN

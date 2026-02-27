@@ -11,6 +11,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-2823 Use , instead of . for languages other than English
 - YLP-3618 Meal without bolus management in Daily view
 - YLP-3815 Display update timestamp in yourloops
+- YLP-3830 Use a generic CGM icon for warmup events
 
 ### Engineering
 - YLP-3472 MUI version update (v5 to v7)
