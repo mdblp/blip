@@ -33,6 +33,7 @@ import { getCurrentLang } from '../../../../lib/language'
 import { type User } from '../../../../lib/auth'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'
 import { type ITeam } from '../../../../lib/team/models/i-team.model'
+import { type Team } from '../../../../lib/team'
 import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
 import { type PostalAddress } from '../../../../lib/team/models/postal-address.model'
 import { TeamType } from '../../../../lib/team/models/enums/team-type.enum'
@@ -153,6 +154,57 @@ describe('TeamApi', () => {
         payload: dto
       })
     })
+    it('should map monitoring alert params correctly', async () => {
+      const editedTeam = {
+        name: 'updated name',
+        id: '1234' ,
+        monitoringAlertsParameters: {
+          bgUnit: "mg/dL",
+          lowBg: 3,
+          highBg: 10,
+          outOfRangeThreshold: 50,
+          veryLowBg: 2,
+          veryHighBg: 13,
+          hypoThreshold: 5,
+          hyperThreshold: 25,
+          nonDataTxThreshold: 15,
+          reportingPeriod: 24
+        }
+      } as Team
+      const dto = {
+        name: 'updated name',
+        id: '1234',
+        address: undefined,
+        email: undefined,
+        members: [],
+        phone: undefined,
+        monitoringAlertsParameters: {
+          bgUnit: "mg/dL",
+          hyperglycemia:{
+            rateThreshold: 25,
+            glycemiaUpperLimit: 13
+          },
+          hypoglycemia:{
+            rateThreshold: 5,
+            glycemiaLowerLimit: 2
+          },
+          timeOutOfRange:{
+            rateThreshold: 50,
+            glycemiaLowerLimit: 3,
+            glycemiaUpperLimit: 10
+          },
+          nonDataTransmission:{
+            rateThreshold: 15
+          }
+        }
+      }
+      jest.spyOn(HttpService, 'put').mockResolvedValue(undefined)
+      await TeamApi.editTeam(editedTeam)
+      expect(HttpService.put).toHaveBeenCalledWith({
+        url: `/crew/v1/teams/${editedTeam.id}`,
+        payload: dto
+      })
+    })
   })
 
   describe('deleteTeam', () => {
@@ -201,54 +253,52 @@ describe('TeamApi', () => {
     const code = '123 456 789'
     const teamDto = {
       code,
-      address: "here",
       email: "email",
       id: "teamId",
       members: [],
       name: "teamName",
       phone: "12345678",
       type: TeamType.medical,
+      monitoringAlertsParameters: {
+        bgUnit: "mg/dL" as BgUnit,
+        hyperglycemia: {
+          rateThreshold: 3,
+          glycemiaUpperLimit: 3
+        },
+        hypoglycemia: {
+          rateThreshold: 3,
+          glycemiaLowerLimit: 3
+        },
+        nonDataTransmission: {
+          rateThreshold: 3,
+        },
+        timeOutOfRange: {
+          rateThreshold: 3,
+          glycemiaUpperLimit: 3,
+          glycemiaLowerLimit: 1
+        }
+      }
     } as ITeam
-    teamDto.monitoringAlertsParameters = {
-      bgUnit: "mg/dL" as BgUnit,
-      hyperglycemia: {
-        rateThreshold: 3,
-        glycemiaUpperLimit: 3
-      },
-      hypoglycemia: {
-        rateThreshold: 3,
-        glycemiaLowerLimit: 3
-      },
-      nonDataTransmission: {
-        rateThreshold: 3,
-      },
-      timeOutOfRange: {
-        rateThreshold: 3,
-        glycemiaUpperLimit: 3,
-        glycemiaLowerLimit: 1
-      },
-    }
     const team = {
       code,
-      address: "here",
       email: "email",
       id: "teamId",
       members: [],
       name: "teamName",
       phone: "12345678",
       type: TeamType.medical,
-    }
-    team.monitoringAlertsParameters = {
-      "bgUnit": "mg/dL",
-      "highBg": 3,
-      "hyperThreshold": 3,
-      "hypoThreshold": 3,
-      "lowBg": 1,
-      "nonDataTxThreshold": 3,
-      "outOfRangeThreshold": 3,
-      "reportingPeriod": 168,
-      "veryHighBg": 3,
-      "veryLowBg": 3,
+      monitoringAlertsParameters: {
+        "bgUnit": "mg/dL",
+        "highBg": 3,
+        "hyperThreshold": 3,
+        "hypoThreshold": 3,
+        "lowBg": 1,
+        "nonDataTxThreshold": 3,
+        "outOfRangeThreshold": 3,
+        "reportingPeriod": 168,
+        "veryHighBg": 3,
+        "veryLowBg": 3
+      }
     }
 
     it('should get a team with if exists', async () => {
@@ -261,7 +311,7 @@ describe('TeamApi', () => {
       })
     })
 
-    it('should return null if team doesn\'t exists', async () => {
+    it('should return null if team does not exists', async () => {
       jest.spyOn(HttpService, 'get').mockRejectedValueOnce(Error(ErrorMessageStatus.NotFound))
       const response = await TeamApi.getTeamFromCode(code)
       expect(response).toEqual(null)
