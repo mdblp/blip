@@ -346,7 +346,7 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
           <Typography className={classes.subCategoryTitle}>
             B. {t('event-trigger-threshold')}
           </Typography>
-          <div className={classes.valueSelection} data-testid="dropdown-hypo">
+          <div className={classes.valueSelection} data-testid="dropdown-hyper">
             <Typography>{t('time-spent-hyperglycemia')}</Typography>
             <div className={classes.dropdown}>
               <BasicDropdown
