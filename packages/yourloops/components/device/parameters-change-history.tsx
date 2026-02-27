@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -131,6 +131,7 @@ export const ParametersChangeHistory: FC<ParametersChangeHistoryProps> = ({ hist
                       <ChangeValue
                         previousValue={parameter.previousValue ? `${formatParameterValue(parameter.previousValue, parameter.previousUnit)} ${parameter.previousUnit}` : parameter.previousValue}
                         currentValue={`${formatParameterValue(parameter.value, parameter.unit)} ${parameter.unit}`}
+                        withFormatting={true}
                       />
                     </TableCell>
                     <TableCell align="right">

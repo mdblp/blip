@@ -48,6 +48,7 @@ import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../../models/time
 import i18next from 'i18next'
 import { DeviceSystem } from '../../../models/medical/datum/enums/device-system.enum'
 import { DblParameter } from '../../../models/medical/datum/enums/dbl-parameter.enum'
+import { DeviceChangeName } from '../../../models/medical/datum/enums/device-change-name.enum'
 import { CgmSystem } from '../../../models/medical/datum/enums/cgm-system.enum'
 
 const t = i18next.t.bind(i18next)
@@ -87,7 +88,7 @@ const normalizeDeviceHistory = (rawHistory: Array<Record<string, unknown>>): Dev
         return {
           changeType: device.changeType as ChangeType,
           effectiveDate: device.effectiveDate,
-          name: device.name,
+          name: device.name as DeviceChangeName,
           previousValue: device.previousValue,
           value: device.value
         }

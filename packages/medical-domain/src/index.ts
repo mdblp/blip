@@ -88,6 +88,7 @@ export { ClassificationType } from './domains/models/statistics/enum/bg-classifi
 export { Datum } from './domains/models/medical/datum.model'
 export { DatumType } from './domains/models/medical/datum/enums/datum-type.enum'
 export { DblParameter } from './domains/models/medical/datum/enums/dbl-parameter.enum'
+export { DeviceChangeName } from './domains/models/medical/datum/enums/device-change-name.enum'
 export { DeviceEventSubtype } from './domains/models/medical/datum/enums/device-event-subtype.enum'
 export { DeviceSystem } from './domains/models/medical/datum/enums/device-system.enum'
 export { type DurationValue } from './domains/models/medical/datum/basics/duration.model'

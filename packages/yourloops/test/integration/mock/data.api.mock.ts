@@ -27,7 +27,7 @@
 
 import DataAPI from '../../../lib/data/data.api'
 import moment, { type Moment } from 'moment-timezone'
-import { history } from '../data/data-api.data'
+import { devicesHistory, history } from '../data/data-api.data'
 import type { PatientDataRange } from '../../../lib/data/models/data-range.model'
 import {
   DatumType,
@@ -293,7 +293,7 @@ const PumpSettingsMock = (date, time) => {
       ],
       history: {
         parameters: history,
-        devices: []
+        devices: devicesHistory
       }
     }
   }
@@ -520,7 +520,7 @@ export const pumpSettingsData: Data = {
           },
           history: {
             parameters: history,
-            devices: []
+            devices: devicesHistory
           },
           parameters: [
             {
@@ -732,7 +732,7 @@ export const pumpSettingsDblg2: Data = {
           },
           history: {
             parameters: history,
-            devices: []
+            devices: devicesHistory
           },
           parameters: [
             {
