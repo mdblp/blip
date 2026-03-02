@@ -27,7 +27,7 @@
  */
 
 import * as d3 from 'd3'
-import warmUpDexcom from 'warmup-dexcom.svg'
+import warmupIcon from 'warmup-icon.svg'
 import utils from './util/utils'
 import { DEFAULT_IMAGE_MARGIN, DEFAULT_OPTIONS_SIZE } from './util/eventsConstants'
 
@@ -40,7 +40,7 @@ import { DEFAULT_IMAGE_MARGIN, DEFAULT_OPTIONS_SIZE } from './util/eventsConstan
 /**
  *
  * @param {Pool} pool
- * @param {{ onParameterHover: (p: any) => void, onParameterOut: () => void, warmUps: MedicalDataService }} opts
+ * @param {{ onWarmUpHover: (p: any) => void, onWarmUpOut: () => void, warmUps: MedicalDataService, size: number }} opts
  * @returns {(data: Datum[]) => void}
  */
 
@@ -77,7 +77,7 @@ function plotWarmUp(pool, opts) {
         .attr('y', pool.height() / 2 - opts.size / 2)
         .attr('width', width)
         .attr('height', offset)
-        .attr('xlink:href', warmUpDexcom)
+        .attr('xlink:href', warmupIcon)
 
       allWarmUps.exit().remove()
 
