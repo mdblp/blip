@@ -63,7 +63,8 @@ const PARAMETERS_WITH_MEMO = new Set([
   DblParameter.AggressivenessDinner,
   DblParameter.HypoglycemiaThreshold,
   DblParameter.HyperglycemiaThreshold,
-  DblParameter.TargetGlucoseLevel
+  DblParameter.TargetGlucoseLevel,
+  DblParameter.Weight
 ])
 
 export const ParameterList: FC<ParameterListProps> = ({ parameters }) => {
