@@ -133,8 +133,7 @@ export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 
       veryHighBg:10,
       hypoThreshold: 15,
       hyperThreshold: 25,
-      nonDataTxThreshold: 20,
-      reportingPeriod: 7
+      nonDataTxThreshold: 20
     }
   }
 }

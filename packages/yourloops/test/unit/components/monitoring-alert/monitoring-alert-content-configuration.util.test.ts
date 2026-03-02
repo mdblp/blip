@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,8 +42,7 @@ describe('MonitoringAlertsContentConfiguration util', function () {
         outOfRangeThreshold: 10,
         veryLowBg: 40,
         hypoThreshold: 45,
-        nonDataTxThreshold: 50,
-        reportingPeriod: 7
+        nonDataTxThreshold: 50
       }
     })
 

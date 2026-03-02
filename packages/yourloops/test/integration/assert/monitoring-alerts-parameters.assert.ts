@@ -204,8 +204,7 @@ export const checkSaveButtonForMmolForPatient = async (): Promise<void> => {
     outOfRangeThreshold: 15,
     hypoThreshold: 20,
     hyperThreshold: 15,
-    nonDataTxThreshold: 40,
-    reportingPeriod: 7
+    nonDataTxThreshold: 40
   }
   expect(PatientApi.updatePatientAlerts).toHaveBeenCalledWith(myThirdTeamId, patientWithMmolId, expectedMonitoringAlertsParameters)
   expect(screen.getByText('Patient update succeeded')).toBeVisible()

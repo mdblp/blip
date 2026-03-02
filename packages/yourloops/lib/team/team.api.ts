@@ -38,8 +38,6 @@ import { MonitoringAlertsParameters } from 'medical-domain'
 import { TeamType } from './models/enums/team-type.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
 
-const DEFAULT_REPORTING_PERIOD = 168
-
 const log = bows('Team API')
 
 interface ChangeMemberRoleFirstPayload {
@@ -226,8 +224,7 @@ export default class TeamApi {
       nonDataTxThreshold: dto.nonDataTransmission.rateThreshold,
       outOfRangeThreshold: dto.timeOutOfRange.rateThreshold,
       lowBg: dto.timeOutOfRange.glycemiaLowerLimit,
-      highBg: dto.timeOutOfRange.glycemiaUpperLimit,
-      reportingPeriod: DEFAULT_REPORTING_PERIOD
+      highBg: dto.timeOutOfRange.glycemiaUpperLimit
     }
   }
 }

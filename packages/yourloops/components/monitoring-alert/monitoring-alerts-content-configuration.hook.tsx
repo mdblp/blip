@@ -80,7 +80,6 @@ interface ValueErrorPair {
 }
 
 export const DEFAULT_BG_UNIT = Unit.MilligramPerDeciliter
-const DEFAULT_REPORTING_PERIOD = 168
 
 export const useMonitoringAlertsContentConfiguration = (
   {
@@ -210,7 +209,6 @@ export const useMonitoringAlertsContentConfiguration = (
 
 
   const save = (): void => {
-    const reportingPeriod = (monitoringAlertsParameters.reportingPeriod && monitoringAlertsParameters.reportingPeriod > 0) ? monitoringAlertsParameters.reportingPeriod : DEFAULT_REPORTING_PERIOD
     const monitoringAlertsParametersUpdated: MonitoringAlertsParameters = {
       bgUnit: userBgUnit,
       lowBg: monitoringValuesDisplayed.lowBg.value,
@@ -220,8 +218,7 @@ export const useMonitoringAlertsContentConfiguration = (
       hypoThreshold: monitoringValuesDisplayed.hypoThreshold.value,
       veryHighBg: monitoringValuesDisplayed.veryHighBg.value,
       hyperThreshold: monitoringValuesDisplayed.hyperThreshold.value,
-      nonDataTxThreshold: monitoringValuesDisplayed.nonDataTxThreshold.value,
-      reportingPeriod
+      nonDataTxThreshold: monitoringValuesDisplayed.nonDataTxThreshold.value
     }
     onSave(monitoringAlertsParametersUpdated)
   }

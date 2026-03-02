@@ -104,8 +104,7 @@ export const useMonitoringAlertsPatientConfiguration = (
       hypoThreshold: teamParameters.hypoThreshold,
       veryHighBg: getConvertedValue(teamParameters.veryHighBg, teamParametersUnit, userBgUnit),
       hyperThreshold: teamParameters.hyperThreshold,
-      nonDataTxThreshold: teamParameters.nonDataTxThreshold,
-      reportingPeriod: teamParameters.reportingPeriod
+      nonDataTxThreshold: teamParameters.nonDataTxThreshold
     }
   }, [selectedTeam.monitoringAlertsParameters, userBgUnit])
 

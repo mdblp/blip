@@ -31,8 +31,6 @@ import { BgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../../models/medical/datum/b
 import { BG_CLAMP_THRESHOLD, BgClasses } from '../../../models/medical/medical-data-options.model'
 import type { MonitoringAlertsParameters } from '../../../models/monitoring-alerts/monitoring-alerts-parameters.model'
 
-const DEFAULT_REPORTING_PERIOD = 168
-
 // Returns the default BG range for a given diabetic profile type and BG unit
 // If no profile is found, returns the common one (DT1/DT2)
 export function getDefaultRangeByDiabeticType(type: string, unit: BgUnit): BgClasses {
@@ -104,7 +102,6 @@ export function createMonitoringAlertsParameters(hypoLimit: number, hyperLimit: 
     veryHighBg: hyperLimit,
     hypoThreshold: 5,
     hyperThreshold: 25,
-    nonDataTxThreshold: 50,
-    reportingPeriod: DEFAULT_REPORTING_PERIOD,
+    nonDataTxThreshold: 50
   }
 }

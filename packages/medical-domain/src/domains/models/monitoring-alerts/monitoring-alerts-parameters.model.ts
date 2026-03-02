@@ -36,5 +36,4 @@ export interface MonitoringAlertsParameters {
   hypoThreshold: number
   hyperThreshold: number
   nonDataTxThreshold: number
-  reportingPeriod: number
 }

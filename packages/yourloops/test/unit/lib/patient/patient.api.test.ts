@@ -74,8 +74,7 @@ describe('PatientApi', () => {
       outOfRangeThreshold: 50,
       hypoThreshold: 5,
       hyperThreshold: 10,
-      nonDataTxThreshold: 50,
-      reportingPeriod: 7
+      nonDataTxThreshold: 50
     }
 
     it('should update patient alerts parameters successfully', async () => {
@@ -151,8 +150,7 @@ describe('PatientApi', () => {
         outOfRangeThreshold: 60,
         hypoThreshold: 10,
         hyperThreshold: 15,
-        nonDataTxThreshold: 75,
-        reportingPeriod: 14
+        nonDataTxThreshold: 75
       }
 
       jest.spyOn(HttpService, 'put').mockResolvedValueOnce({ data: undefined } as AxiosResponse)

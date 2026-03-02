@@ -167,8 +167,7 @@ describe('TeamApi', () => {
           veryHighBg: 13,
           hypoThreshold: 5,
           hyperThreshold: 25,
-          nonDataTxThreshold: 15,
-          reportingPeriod: 24
+          nonDataTxThreshold: 15
         }
       } as Team
       const dto = {
@@ -295,7 +294,6 @@ describe('TeamApi', () => {
         "lowBg": 1,
         "nonDataTxThreshold": 3,
         "outOfRangeThreshold": 3,
-        "reportingPeriod": 168,
         "veryHighBg": 3,
         "veryLowBg": 3
       }

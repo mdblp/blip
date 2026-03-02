@@ -75,8 +75,7 @@ export const monitoringAlertsParameters: MonitoringAlertsParameters = {
   veryHighBg: 250,
   hypoThreshold: 10,
   hyperThreshold: 25,
-  nonDataTxThreshold: 15,
-  reportingPeriod: 7
+  nonDataTxThreshold: 15
 }
 export const monitoringAlertsParametersBgUnitMmol: MonitoringAlertsParameters = {
   bgUnit: Unit.MmolPerLiter,
@@ -87,8 +86,7 @@ export const monitoringAlertsParametersBgUnitMmol: MonitoringAlertsParameters = 
   veryHighBg: 13.9,
   hyperThreshold: 25,
   hypoThreshold: 10,
-  nonDataTxThreshold: 15,
-  reportingPeriod: 7
+  nonDataTxThreshold: 15
 }
 
 export const myFirstTeamId = 'myTeamId'
