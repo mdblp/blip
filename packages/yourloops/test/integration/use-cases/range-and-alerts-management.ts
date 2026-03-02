@@ -152,7 +152,7 @@ export const testSaveButtonForRanges = async () : Promise<void>  => {
     hyperThreshold: 25,
     outOfRangeThreshold: 50,
     veryLowBg: 50,
-    veryHighBg: 600,
+    veryHighBg: 200,
     hypoThreshold: 5,
     nonDataTxThreshold: 50,
     reportingPeriod: 168
