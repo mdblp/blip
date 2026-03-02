@@ -261,7 +261,7 @@ export const RangeSection: FC<RangeSectionProps> = (props) => {
   const adaptAlerts = async (): Promise<void> => {
     const bgClasses = selectedDiabeticProfile.bloodGlucosePreference.bgClasses
     patient.monitoringAlertsParameters = createMonitoringAlertsParameters(
-      bgClasses.veryLow, bgClasses.veryHigh, bgClasses.low, bgClasses.target, displayedUnit
+      bgClasses.veryLow, bgClasses.high, bgClasses.low, bgClasses.target, displayedUnit
     )
     try {
       await updatePatientMonitoringAlertsParameters(patient)
