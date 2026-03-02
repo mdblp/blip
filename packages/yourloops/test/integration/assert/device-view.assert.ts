@@ -70,6 +70,7 @@ export const checkParametersMemo = async () => {
   expect(within(currentParametersSection).getByRole('button', { name: 'Open Breakfast - average setting information' })).toBeVisible()
   expect(within(currentParametersSection).getByRole('button', { name: 'Open Lunch - average setting information' })).toBeVisible()
   expect(within(currentParametersSection).getByRole('button', { name: 'Open Dinner - average setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open Weight setting information' })).toBeVisible()
 
   expect(within(currentParametersSection).queryByRole('button', { name: 'Open Breakfast - small setting information' })).not.toBeInTheDocument()
   expect(within(currentParametersSection).queryByRole('button', { name: 'Open Lunch - small setting information' })).not.toBeInTheDocument()
@@ -77,7 +78,6 @@ export const checkParametersMemo = async () => {
   expect(within(currentParametersSection).queryByRole('button', { name: 'Open Breakfast - large setting information' })).not.toBeInTheDocument()
   expect(within(currentParametersSection).queryByRole('button', { name: 'Open Lunch - large setting information' })).not.toBeInTheDocument()
   expect(within(currentParametersSection).queryByRole('button', { name: 'Open Dinner - large setting information' })).not.toBeInTheDocument()
-  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Weight setting information' })).not.toBeInTheDocument()
   expect(within(currentParametersSection).queryByRole('button', { name: 'Open Height setting information' })).not.toBeInTheDocument()
 
   await userEvent.click(totalDailyInsulinMemoButton)

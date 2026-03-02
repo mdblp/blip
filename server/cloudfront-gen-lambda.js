@@ -32,7 +32,8 @@ const ALL_SETTINGS_MEMO_FILE_NAMES = [
   'hyperglycemia-threshold',
   'hypoglycemia-threshold',
   'target-glucose-level',
-  'total-insulin-for-day'
+  'total-insulin-for-day',
+  'weight'
 ]
 
 const PRODUCT_LABELLING_URLS = [

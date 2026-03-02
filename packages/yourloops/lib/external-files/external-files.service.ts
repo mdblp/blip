@@ -98,6 +98,8 @@ export class ExternalFilesService {
         return ParameterMemoFilename.TargetGlucoseLevel
       case DblParameter.TotalDailyInsulin:
         return ParameterMemoFilename.TotalInsulinForDay
+      case DblParameter.Weight:
+        return ParameterMemoFilename.Weight
       default:
         throw new Error(`No memo found for parameter ${parameterName}`)
     }

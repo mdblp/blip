@@ -33,5 +33,6 @@ export enum ParameterMemoFilename {
   HyperglycemiaThreshold = 'hyperglycemia-threshold',
   HypoglycemiaThreshold = 'hypoglycemia-threshold',
   TargetGlucoseLevel = 'target-glucose-level',
-  TotalInsulinForDay = 'total-insulin-for-day'
+  TotalInsulinForDay = 'total-insulin-for-day',
+  Weight = 'weight'
 }
