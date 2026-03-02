@@ -29,13 +29,13 @@ import { type BgUnit, MonitoringAlertsParameters } from 'medical-domain'
 
 export interface MonitoringAlertsParametersDto {
   bgUnit: BgUnit
-  hyperglycemia: alertParameters
-  hypoglycemia: alertParameters
-  nonDataTransmission: alertParameters
-  timeOutOfRange: alertParameters
+  hyperglycemia: AlertParameters
+  hypoglycemia: AlertParameters
+  nonDataTransmission: AlertParameters
+  timeOutOfRange: AlertParameters
 }
 
-interface alertParameters {
+interface AlertParameters {
   rateThreshold: number
   glycemiaUpperLimit?: number
   glycemiaLowerLimit?: number

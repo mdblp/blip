@@ -110,7 +110,7 @@ export const MonitoringAlertsSkeletonCell: FunctionComponent = () => {
   const theme = useTheme()
 
   return (
-    <>
+    <Box sx={{ display: 'flex', justifySelf: 'center' }}>
       <Skeleton
         variant="circular"
         width={ICON_SIZE_PX}
@@ -129,7 +129,13 @@ export const MonitoringAlertsSkeletonCell: FunctionComponent = () => {
         height={ICON_SIZE_PX}
         sx={{ marginRight: theme.spacing(1) }}
       />
-    </>
+      <Skeleton
+        variant="circular"
+        width={ICON_SIZE_PX}
+        height={ICON_SIZE_PX}
+        sx={{ marginRight: theme.spacing(1) }}
+      />
+    </Box>
   )
 }
 
