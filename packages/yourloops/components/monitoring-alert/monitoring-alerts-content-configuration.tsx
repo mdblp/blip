@@ -260,7 +260,7 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                   const newValuesToDisplay: MonitoringValuesDisplayed = {
                     ...monitoringValuesDisplayed,
                     outOfRangeThreshold: {
-                      value: parseFloat(value),
+                      value: Number.parseFloat(value),
                       error: false
                     }
                   }
@@ -360,7 +360,7 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                   const newValuesToDisplay: MonitoringValuesDisplayed = {
                     ...monitoringValuesDisplayed,
                     hyperThreshold: {
-                      value: parseFloat(value),
+                      value: Number.parseFloat(value),
                       error: false
                     }
                   }
@@ -460,7 +460,7 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                   const newValuesToDisplay: MonitoringValuesDisplayed = {
                     ...monitoringValuesDisplayed,
                     hypoThreshold: {
-                      value: parseFloat(value),
+                      value: Number.parseFloat(value),
                       error: false
                     }
                   }
@@ -502,7 +502,7 @@ export const MonitoringAlertsContentConfiguration: FC<MonitoringAlertsContentCon
                   const newValuesToDisplay: MonitoringValuesDisplayed = {
                     ...monitoringValuesDisplayed,
                     nonDataTxThreshold: {
-                      value: parseFloat(value),
+                      value: Number.parseFloat(value),
                       error: false
                     }
                   }
