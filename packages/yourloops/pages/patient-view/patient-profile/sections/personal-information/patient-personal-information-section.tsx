@@ -27,11 +27,9 @@
 
 import React, { FC } from 'react'
 import { useTheme } from '@mui/material/styles'
-import { useTranslation } from 'react-i18next'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
 import { makeStyles } from 'tss-react/mui'
 import { Patient } from '../../../../../lib/patient/models/patient.model'
 import { PatientAdditionalInformation } from './patient-additional-information'
@@ -49,9 +47,6 @@ const useStyles = makeStyles()((theme) => ({
     marginBottom: theme.spacing(2),
     marginTop: theme.spacing(2)
   },
-  sectionTitle: {
-    marginBottom: theme.spacing(2),
-  },
   formField: {
     marginBottom: theme.spacing(3),
     width: '80%'
@@ -64,7 +59,6 @@ const useStyles = makeStyles()((theme) => ({
 export const PatientPersonalInformationSection: FC<InformationSectionProps> = (props) => {
   const { patient } = props
   const theme = useTheme()
-  const { t } = useTranslation()
   const { classes } = useStyles()
 
 
@@ -92,12 +86,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
 
           <div className={classes.separator} />
 
-          <Typography variant="h6" className={classes.sectionTitle}>
-            {t('additional-information')}
-          </Typography>
-
           <PatientAdditionalInformation patient={patient} />
-
         </Box>
       </CardContent>
     </Card>

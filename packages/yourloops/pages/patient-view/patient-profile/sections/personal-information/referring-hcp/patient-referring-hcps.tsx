@@ -69,7 +69,8 @@ const useStyles = makeStyles()(() => ({
 }))
 
 export const PatientReferringHcps: FC<PatientReferringHcpsProps> = (props) => {
-  const { patientId, patientProfile, referringHcps } = props
+  // const { patientId, patientProfile, referringHcps } = props
+  const { patientId, patientProfile } = props
   const { t } = useTranslation()
   const { classes } = useStyles()
   const { user } = useAuth()

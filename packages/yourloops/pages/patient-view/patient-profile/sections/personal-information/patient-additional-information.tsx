@@ -31,6 +31,7 @@ import { AdditionalInfoForm } from './patient-profile-additional-info-form'
 import { useAuth } from '../../../../../lib/auth'
 import { useTranslation } from 'react-i18next'
 import { Patient } from '../../../../../lib/patient/models/patient.model'
+import Typography from '@mui/material/Typography'
 
 interface PatientAdditionalInformationProps {
   patient: Patient
@@ -43,6 +44,10 @@ export const PatientAdditionalInformation: FC<PatientAdditionalInformationProps>
 
   return (
     <>
+      <Typography variant="h6" sx={{ marginBottom: 2 }}>
+        {t('additional-information')}
+      </Typography>
+
       {user.isUserPatient() &&
         <Alert
           data-testid="additional-information-status-disclamer-label"
