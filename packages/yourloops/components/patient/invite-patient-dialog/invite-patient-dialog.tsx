@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,7 +40,6 @@ import TextField from '@mui/material/TextField'
 import Alert from '@mui/material/Alert'
 
 import { errorTextFromException, REGEX_EMAIL } from '../../../lib/utils'
-import { diabeloopExternalUrls } from '../../../lib/diabeloop-urls.model'
 import { usePatientsContext } from '../../../lib/patient/patients.provider'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 import { type Team, useTeam } from '../../../lib/team'
@@ -49,6 +48,7 @@ import { useAlert } from '../../utils/snackbar'
 import { PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE } from '../../../lib/patient/patient.api'
 import { useParams } from 'react-router-dom'
 import { logError } from '../../../utils/error.util'
+import { ExternalFilesService } from '../../../lib/external-files/external-files.service'
 
 export interface AddDialogProps {
   onClose: () => void
@@ -65,6 +65,9 @@ export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose
   const { teamId } = useParams()
   const { getTeam } = useTeam()
   const selectedTeam = getTeam(teamId)
+
+  const privacyPolicyUrl = ExternalFilesService.getPrivacyPolicyUrl()
+  const termsOfUseUrl = ExternalFilesService.getTermsOfUseUrl()
 
   const isValidEmail = (mail = email): boolean => mail.length > 0 && REGEX_EMAIL.test(mail)
 
@@ -128,7 +131,7 @@ export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose
     <Link
       id="patient-list-dialog-add-warning-link-terms"
       aria-label={termsOfUse}
-      href={diabeloopExternalUrls.terms}
+      href={termsOfUseUrl}
       target="_blank"
       rel="noreferrer"
     >
@@ -140,7 +143,7 @@ export const InvitePatientDialog: FunctionComponent<AddDialogProps> = ({ onClose
     <Link
       id="patient-list-dialog-add-warning-link-privacy"
       aria-label={privacyPolicy}
-      href={diabeloopExternalUrls.privacyPolicy}
+      href={privacyPolicyUrl}
       target="_blank"
       rel="noreferrer"
     >

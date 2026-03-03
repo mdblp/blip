@@ -199,14 +199,14 @@ export function selectDailyViewData(medicalData, startDate, endDate) {
  *
  * This is not complete, only valid for the device parameters.
  * Actually we can't get the pumpSettings at a specified date
- * from the API. This need to be addressed later.
+ * from the API. This needs to be addressed later.
  * @param {object} latestPumpSettings
  * @param {moment.Moment} date
  */
 export function generatePumpSettings(latestPumpSettings, date) {
   const ps = _.cloneDeep(latestPumpSettings)
   /** @type {{changeDate:string;parameters:{changeType:string;name:string;level:number;unit:string;value:string;}[]}[]} */
-  const history = ps?.payload?.history?.filter((h) => (moment.utc(h.changeDate).isBefore(date)))
+  const history = ps?.payload?.history?.parameters.filter((h) => (moment.utc(h.changeDate).isBefore(date)))
 
   // originalDate: hackish way to tell the information displayed do not match the print date
   ps.originalDate = ps.normalTime
@@ -232,7 +232,7 @@ export function generatePumpSettings(latestPumpSettings, date) {
   }
 
   // Update returned object:
-  ps.payload.history = history
+  ps.payload.history.parameters = history
   ps.payload.parameters = []
   _.forOwn(parameters, (p) => {
     ps.payload.parameters.push(p)

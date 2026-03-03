@@ -25,6 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import i18next from 'i18next'
+
 export const ensureNumeric = (value: number | undefined | null): number => {
   return !value || isNaN(value) ? 0 : value
+}
+
+
+export const formatNumberForLang = (decimal: number | string, minimumFractionDigit?: number): string => {
+  /* Some missing values are represented as --, so we keep it */
+  if (decimal === '--') {
+    return decimal
+  }
+  const lang = i18next.language
+  const formatter = Intl.NumberFormat(lang, {
+    minimumFractionDigits: minimumFractionDigit !== null ? minimumFractionDigit : 1,
+    maximumFractionDigits: 3
+  })
+  if (typeof decimal === "string") {
+    if (lang !== 'en') {
+      return decimal.replace(".", ",")
+    } else {
+      return decimal
+    }
+  }
+  return formatter.format(decimal)
 }

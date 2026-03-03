@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,9 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-export enum DeviceViewSection {
-  ChangeHistory = 'ChangeHistory',
-  CurrentParameters = 'CurrentParameters',
-  SafetyBasalProfile = 'SafetyBasalProfile'
+export enum ParameterMemoFilename {
+  AggressivenessHyperglycemia = 'aggressiveness-hyperglycemia',
+  AggressivenessMeal = 'aggressiveness-meal',
+  AggressivenessNormoglycemia = 'aggressiveness-normoglycemia',
+  AverageMeal = 'average-meal',
+  HyperglycemiaThreshold = 'hyperglycemia-threshold',
+  HypoglycemiaThreshold = 'hypoglycemia-threshold',
+  TargetGlucoseLevel = 'target-glucose-level',
+  TotalInsulinForDay = 'total-insulin-for-day',
+  Weight = 'weight'
 }

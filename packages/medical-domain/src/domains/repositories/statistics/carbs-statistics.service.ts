@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,7 +40,7 @@ import { getHours } from '../time/time.service'
 import { HoursRange } from '../../models/statistics/satistics.model'
 import Prescriptor from '../../models/medical/datum/enums/prescriptor.enum'
 
-const RECOMMENDED_PRESCRIPTOR_VALUES = [Prescriptor.Auto, Prescriptor.Hybrid]
+const RECOMMENDED_PRESCRIPTOR_VALUES = new Set([Prescriptor.Auto, Prescriptor.Hybrid])
 
 function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilter: DateFilter): CarbsStatistics {
   const filteredMeal = MealService.filterOnDate(meal, dateFilter.start, dateFilter.end, getWeekDaysFilter(dateFilter))
@@ -52,6 +52,7 @@ function getCarbsData(meal: Meal[], wizard: Wizard[], numDays: number, dateFilte
   const totalEntriesMealCarbWithRescueCarbs = rescueCarbsData.length + mealData.length
   const totalRescueCarbsEntries = rescueCarbsData.length
   const totalCarbs = mealCarbs + rescueCarbs
+
   return {
     mealCarbsPerDay: mealCarbs / numDays,
     rescueCarbsPerDay: rescueCarbs / numDays,
@@ -163,7 +164,7 @@ function getRescueCarbsComputations(rescueCarbs: Meal[]): RescueCarbsAveragePerR
   })
   const modifiedCarbsCount = modifiedCarbs.length
 
-  const recommendedCarbs = rescueCarbs.filter((rescueCarb) => rescueCarb.prescriptor && RECOMMENDED_PRESCRIPTOR_VALUES.includes(rescueCarb.prescriptor))
+  const recommendedCarbs = rescueCarbs.filter((rescueCarb) => rescueCarb.prescriptor && RECOMMENDED_PRESCRIPTOR_VALUES.has(rescueCarb.prescriptor))
   const recommendedStats = getRescueCarbsRecommendedStats(recommendedCarbs)
 
   return {

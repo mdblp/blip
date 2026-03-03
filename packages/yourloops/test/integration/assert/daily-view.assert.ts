@@ -72,7 +72,7 @@ import {
   PARIS_TIMEZONE,
   PEN_BOLUS_ID,
   PHYSICAL_ACTIVITY_ID,
-  PHYSICAL_ACTIVITY_TIME,
+  PHYSICAL_ACTIVITY_CREATE_TIME,
   PHYSICAL_ACTIVITY_WITHOUT_NAME_ID,
   PHYSICAL_ACTIVITY_WITHOUT_NAME_TIME,
   RESERVOIR_CHANGE_ID,
@@ -89,7 +89,7 @@ import {
   WIZARD_UNDELIVERED_INPUT_TIME,
   WIZARD_WITHOUT_BOLUS_ID,
   ZEN_MODE_ID,
-  ZEN_MODE_ID_WITH_GLY
+  ZEN_MODE_ID_WITH_GLY, PHYSICAL_ACTIVITY_UPDATE_TIME
 } from '../mock/data.api.mock'
 import moment from 'moment-timezone'
 import { checkStatTooltip } from './stats.assert'
@@ -99,12 +99,14 @@ const TIME_IN_RANGE_TOOLTIP = 'Time In Range: Time spent in range, based on CGM 
 const READINGS_IN_RANGE_TOOLTIP = 'Readings In Range: Number of BGM readings.Derived from 15 BGM readings.'
 const AVG_GLUCOSE_TOOLTIP = 'Avg. Glucose (CGM): All CGM glucose values added together, divided by the number of readings.'
 const AVG_GLUCOSE_BGM_TOOLTIP = 'Avg. Glucose (BGM): All BGM glucose values added together, divided by the number of readings.'
-const TOTAL_INSULIN_TOOLTIP = 'Total Delivered Insulin: All basal and bolus insulin delivery (in Units) added together.How we calculate this: (%) is the respective total of basal or bolus delivery divided by total insulin delivered for this time period.'
+const TOTAL_INSULIN_TOOLTIP = 'Total Delivered Insulin: All basal and bolus insulin delivery (in Units) added together, divided by the number of days in this view.How we calculate this: (%) is the respective total of basal or bolus delivery divided by total insulin delivered for this time period.'
 const TIME_IN_LOOP_MODE_TOOLTIP = 'Time In Loop Mode: Time spent in automated basal delivery.How we calculate this: (%) is the duration in loop mode ON or OFF divided by the total duration of basals for this time period. (time) is the estimated time in each mode.'
 const TOTAL_CARBS_DECLARED_TOOLTIP = 'Total Carbs: All carb entries from meals or rescue carbs added together.Derived from 5 carb entries, including rescue carbs.'
 const STANDARD_DEVIATION_TOOLTIP = 'SD (Standard Deviation): How far values are from the average.'
 const STANDARD_DEVIATION_BGM_TOOLTIP = 'SD (Standard Deviation): How far values are from the average.Derived from 15 BGM readings.'
 const CV_TOOLTIP = 'CV (Coefficient of Variation): The ratio of the standard deviation to the mean glucose. For any period greater than 1 day, we calculate the mean of daily CV.'
+const MANUAL_BOLUS_TOOLTIP = 'Manual bolus: Total insulin dose delivered (in units) as a manual bolus, divided by the number of days in this view.In some cases, a large number of manual boluses may indicate that the algorithm is not aggressive enough. Other signs may confirm this hypothesis, such as frequent hyperglycaemia or a difference (-10%) between the setting “Total Daily Insulin” and the total daily dose of insulin actually delivered.'
+const RESCUE_CARBS_TOOLTIP = 'Rescue carbs: All rescue carb entries added together (recommended or taken spontaneously), then divided by the number of days in this view. Computed from 1 rescue carbs.A significant amount of rescue carbs may, in some cases, indicate that the algorithm is too aggressive. Other signs may confirm this hypothesis, such as frequent hypoglycemia or a difference (+10%) between the setting “Total Daily Insulin” and the total daily dose of insulin actually delivered.'
 
 const checkTidelineContainerElementTooltip = async (id: string, expectedTextContent: string) => {
   const carbElement = screen.getByTestId(id)
@@ -128,8 +130,9 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip(`bolus_pen_${PEN_BOLUS_ID}`, 'Pen9:55 pmDelivered4.05U')
   await checkTidelineContainerElementTooltip(`bolus_manual_${MANUAL_BOLUS_ID}`, 'Manual10:55 pmBolus TypeStandardDelivered5.05U')
   await checkTidelineContainerElementTooltip(`carb_group_${CARB_ID}`, '2:00 pmRecommended16gConfirmed15g')
-  await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_ID}`, `Physical Activity3:00 pmNameRunningIntensitymoderateDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_TIME).format('h')}:00 pm`)
+  await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_ID}`, `Physical Activity3:00 pmNameRunningIntensitymoderateDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_CREATE_TIME).format('h')}:00 pmUpdated at${moment(PHYSICAL_ACTIVITY_UPDATE_TIME).format('h')}:10 pm`)
   await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_WITHOUT_NAME_ID}`, `Physical Activity4:00 pmIntensitymoderateDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_WITHOUT_NAME_TIME).format('h')}:00 pm`)
+  expect(screen.queryByTestId(`pa_group_${PHYSICAL_ACTIVITY_WITHOUT_NAME_ID}`)).not.toContain('Updated at')
   await checkTidelineContainerElementTooltip(`reservoir_group_${RESERVOIR_CHANGE_ID}`, 'Pump7:00 pmCartridge change')
   await checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, 'Settings change6:00 pmAggressiveness for lunch110→100%')
   await checkTidelineContainerElementTooltip(`cbg_${CBG_ID}`, 'Glycemia5:30 pmGlucose189')
@@ -216,7 +219,7 @@ export const checkDailyTidelineContainerTooltipsMmolL = async () => {
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_POSITIVE_OVERRIDE_ID}`, `Meal8:45 pmCarbs100gEntered at ${moment(WIZARD_POSITIVE_OVERRIDE_INPUT_TIME).format('h:mm a')}IOB3.12ULoop modeBolus TypeStandardRecommended14.35UOverride+5.00UDelivered19.35U`)
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_NEGATIVE_OVERRIDE_ID}`, `Meal8:55 pmCarbs100gEntered at ${moment(WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME).format('h:mm a')}IOB3.06ULoop modeBolus TypeStandardRecommended10.05UOverride−1.0UDelivered9.05U`)
   await checkTidelineContainerElementTooltip(`carb_group_${CARB_ID}`, 'Rescue carbs2:00 pmRecommended16gConfirmed15g')
-  await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_ID}`, `Physical Activity3:00 pmNameRunningIntensitymoderateDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_TIME).format('h')}:00 pm`)
+  await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_ID}`, `Physical Activity3:00 pmNameRunningIntensitymoderateDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_CREATE_TIME).format('h')}:00 pm`)
   await checkTidelineContainerElementTooltip(`reservoir_group_${RESERVOIR_CHANGE_ID}`, 'Pump7:00 pmCartridge change')
   await checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, 'Settings change6:00 pmAggressiveness for lunch110→100%')
   await checkTidelineContainerElementTooltip(`cbg_${CBG_ID}`, 'Glycemia5:30 pmGlucose10.5')
@@ -250,6 +253,8 @@ export const checkDailyStatsWidgetsTooltips = async () => {
   await checkStatTooltip(patientStatistics, 'Total of declared carbs', TOTAL_CARBS_DECLARED_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'Standard Deviation', STANDARD_DEVIATION_TOOLTIP)
   await checkStatTooltip(patientStatistics, 'CV (CGM)', CV_TOOLTIP)
+  await checkStatTooltip(patientStatistics, 'Manual bolus', MANUAL_BOLUS_TOOLTIP)
+  await checkStatTooltip(patientStatistics, 'Rescue carbs', RESCUE_CARBS_TOOLTIP)
 }
 
 export const checkSMBGDailyStatsWidgetsTooltips = async () => {

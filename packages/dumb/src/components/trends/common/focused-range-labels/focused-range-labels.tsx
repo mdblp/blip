@@ -34,6 +34,7 @@ import { useTrendsContext } from '../../../../provider/trends.provider'
 import { type BgUnit } from 'medical-domain'
 import { TooltipSide } from '../../../../models/enums/tooltip-side.enum'
 import { TrendsTooltip } from '../tooltip/trends-tooltip'
+import { formatNumberForLang } from '../../../stats/stats.util'
 
 interface FocusedRangeLabelsProps {
   bgUnit: BgUnit
@@ -84,7 +85,7 @@ export const FocusedRangeLabels: FunctionComponent<FocusedRangeLabelsProps> = (p
       <TrendsTooltip
         content={
           <span className={styles.number}>
-            {topSegmentBgValue}
+            {formatNumberForLang(topSegmentBgValue)}
           </span>
         }
         backgroundColor={TRANSPARENT_COLOR}
@@ -95,7 +96,7 @@ export const FocusedRangeLabels: FunctionComponent<FocusedRangeLabelsProps> = (p
       <TrendsTooltip
         content={
           <span className={styles.number}>
-            {bottomSegmentBgValue}
+            {formatNumberForLang(bottomSegmentBgValue)}
           </span>
         }
         backgroundColor={TRANSPARENT_COLOR}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2024, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -24,51 +24,15 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import config from './config/config'
-import { getCurrentLang } from './language'
-import { UserRole } from './auth/models/enums/user-role.enum'
 import { AppRoute } from '../models/enums/routes.enum'
 
 /**
  * Class containing all external URLs related to Diabeloop
  */
 class DiabeloopExternalUrls {
-  readonly dblDiabetes: string
-  readonly contactEmail: string
-  readonly releaseNotes: string
-  private readonly rootPathName: string
-  readonly support: string
-
-  constructor() {
-    this.dblDiabetes = 'https://www.dbl-diabetes.com'
-    this.contactEmail = 'yourloops@diabeloop.com'
-    this.rootPathName = `${config.ASSETS_URL}`
-    this.releaseNotes = `${this.rootPathName}yourloops-release-notes.pdf`
-    this.support = 'https://www.diabeloop.com'
-  }
-
-  get cookiesPolicy(): string {
-    return `${this.rootPathName}yourloops-cookiepolicy.${getCurrentLang()}.pdf`
-  }
-
-  get privacyPolicy(): string {
-    return `${this.rootPathName}yourloops-data-privacy.${getCurrentLang()}.pdf`
-  }
-
-  get terms(): string {
-    return `${this.rootPathName}yourloops-terms-of-use.${getCurrentLang()}.pdf`
-  }
-
-  training(role?: UserRole): string {
-    if (role === UserRole.Patient) {
-      return `${this.rootPathName}yourloops-patient-training.${getCurrentLang()}.pdf`
-    } else if (role === UserRole.Hcp) {
-      return `${this.rootPathName}yourloops-hcp-training.${getCurrentLang()}.pdf`
-    } else if (role === UserRole.Caregiver) {
-      return `${this.rootPathName}yourloops-caregiver-training.${getCurrentLang()}.pdf`
-    }
-    return `${this.rootPathName}yourloops-login-training.${getCurrentLang()}.pdf`
-  }
+  readonly dblDiabetes: string = 'https://www.dbl-diabetes.com';
+  readonly contactEmail: string = 'yourloops@diabeloop.com';
+  readonly support: string = 'https://www.diabeloop.com';
 }
 
 export const diabeloopExternalUrls = new DiabeloopExternalUrls()

@@ -29,8 +29,9 @@ import i18n from 'i18next'
 import moment from 'moment-timezone'
 
 import config from '../../../lib/config/config'
-import { getCurrentLang, getLangName } from '../../../lib/language'
+import { formatNumberForLang, getCurrentLang, getLangName } from '../../../lib/language'
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
+import i18next from 'i18next'
 
 describe('Language', () => {
   const zeSpy = jest.fn()
@@ -68,5 +69,77 @@ describe('Language', () => {
     expect(getLangName(LanguageCodes.Es)).toBe('Español')
     expect(getLangName(LanguageCodes.It)).toBe('Italiano')
     expect(getLangName(LanguageCodes.Nl)).toBe('Nederlands')
+  })
+
+
+  describe('formatNumberForLang', () => {
+    function checkFormattedNumber() {
+      const integer = 10
+      const formattedInteger = formatNumberForLang(integer, 0)
+      expect(formattedInteger).toBe('10')
+      const nan = '--'
+      const formattedNan = formatNumberForLang(nan)
+      expect(formattedNan).toBe('--')
+      const anotherNan = '< 10'
+      const anotherNanFormatted = formatNumberForLang(anotherNan)
+      expect(anotherNanFormatted).toBe('< 10')
+    }
+
+    it('should format numbers correctly for non english language', () => {
+      i18next.changeLanguage('fr')
+      const decimal = 10.45
+      const formattedDecimal = formatNumberForLang(decimal)
+      expect(formattedDecimal).toBe('10,45')
+      const decimalAsString = '10.45'
+      const formattedDecimalAsString = formatNumberForLang(decimalAsString)
+      expect(formattedDecimalAsString).toBe('10,45')
+      checkFormattedNumber()
+    })
+
+    it('should format numbers correctly for english language', () => {
+      i18next.changeLanguage('en')
+      const decimal = 10.45
+      const formattedDecimal = formatNumberForLang(decimal)
+      expect(formattedDecimal).toBe('10.45')
+      checkFormattedNumber()
+    })
+
+    it('should format numbers with minimum fraction digits', () => {
+      i18next.changeLanguage('en')
+      const number = 10
+      const formattedWithMinFraction = formatNumberForLang(number, 1)
+      expect(formattedWithMinFraction).toBe('10.0')
+    })
+
+    it('should format numbers with no minimum fraction digits when explicitly set to 0', () => {
+      i18next.changeLanguage('en')
+      const number = 10
+      const formattedWithoutFraction = formatNumberForLang(number, 0)
+      expect(formattedWithoutFraction).toBe('10')
+    })
+
+    it('should handle decimal numbers with various fraction digits', () => {
+      i18next.changeLanguage('en')
+      const number1 = 10.1
+      expect(formatNumberForLang(number1)).toBe('10.1')
+      const number2 = 10.123
+      expect(formatNumberForLang(number2)).toBe('10.123')
+      const number3 = 10.1234
+      expect(formatNumberForLang(number3)).toBe('10.123')
+    })
+
+    it('should format string numbers for non-english languages', () => {
+      i18next.changeLanguage('de')
+      const stringDecimal = '123.456'
+      const formatted = formatNumberForLang(stringDecimal)
+      expect(formatted).toBe('123,456')
+    })
+
+    it('should format string numbers for english language', () => {
+      i18next.changeLanguage('en')
+      const stringDecimal = '123.456'
+      const formatted = formatNumberForLang(stringDecimal)
+      expect(formatted).toBe('123.456')
+    })
   })
 })

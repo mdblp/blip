@@ -27,6 +27,7 @@
 
 import React, { type FunctionComponent } from 'react'
 import styles from './simple-value.css'
+import { formatNumberForLang } from '../stats.util'
 
 export interface SimpleValueProps {
   value: string
@@ -40,7 +41,7 @@ export const SimpleValue: FunctionComponent<SimpleValueProps> = (props) => {
     className,
     suffix,
     value,
-    valueClassName
+    valueClassName,
   } = props
 
   const globalClassNames = className ? `${styles.data} ${className}` : styles.summaryData
@@ -51,7 +52,7 @@ export const SimpleValue: FunctionComponent<SimpleValueProps> = (props) => {
       {value &&
         <div className={globalClassNames}>
           <span className={valueClassNames}>
-            {value}
+            {formatNumberForLang(value)}
           </span>
           <span className={styles.suffix}>
             {suffix}

@@ -34,16 +34,16 @@ import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 
-interface ChangeHistorySectionProps {
+interface ParametersChangeHistorySectionProps {
   pumpSettings: PumpSettings
   goToDailySpecificDate: (date: number) => void
 }
 
-export const ChangeHistorySection: FC<ChangeHistorySectionProps> = (props) => {
+export const ParametersChangeHistorySection: FC<ParametersChangeHistorySectionProps> = (props) => {
   const { goToDailySpecificDate, pumpSettings } = props
   const theme = useTheme()
   const { t } = useTranslation()
-  const history = pumpSettings.payload.history
+  const history = pumpSettings.payload.history.parameters
   const timezone = pumpSettings.timezone
 
   return (
