@@ -71,13 +71,13 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
   const frequencyOfHypoglycemiaActive = monitoringAlerts?.frequencyOfSevereHypoglycemiaActive
   const frequencyOfHyperglycemiaActive = monitoringAlerts?.frequencyOfSevereHyperglycemiaActive
   const nonDataTransmissionActive = monitoringAlerts?.nonDataTransmissionActive
-  const noActiveMonitoringAlert = !timeSpentAwayFromTargetActive && !frequencyOfHypoglycemiaActive && !nonDataTransmissionActive
+  const noActiveMonitoringAlert = !timeSpentAwayFromTargetActive && !frequencyOfHypoglycemiaActive && !nonDataTransmissionActive && !frequencyOfHyperglycemiaActive
 
   const buildNumberOfMonitoringAlertsLabel = (): string => {
     if (noActiveMonitoringAlert) {
       return ''
     }
-    const number = [timeSpentAwayFromTargetActive, frequencyOfHypoglycemiaActive, nonDataTransmissionActive].filter(value => value).length
+    const number = [timeSpentAwayFromTargetActive, frequencyOfHypoglycemiaActive, nonDataTransmissionActive, frequencyOfHyperglycemiaActive].filter(value => value).length
     return ` (+${number})`
   }
 
