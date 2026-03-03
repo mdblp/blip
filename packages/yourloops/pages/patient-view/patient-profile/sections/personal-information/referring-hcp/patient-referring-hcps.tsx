@@ -136,7 +136,10 @@ export const PatientReferringHcps: FC<PatientReferringHcpsProps> = (props) => {
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Box
+        sx={{ display: 'flex', justifyContent: 'space-between' }}
+        data-testid="patient-referring-hcps"
+      >
         <Typography variant="h6" sx={{ marginBottom: 2 }}>
           {t('referring-hcp')}
         </Typography>

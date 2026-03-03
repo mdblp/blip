@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -57,6 +57,11 @@ import userEvent from '@testing-library/user-event'
 import { getTranslation } from '../../../../utils/i18n'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { checkProfilesForMalePatient } from '../../../assert/profile-range.assert'
+import {
+  checkReferringHcpEmptyList,
+  checkReferringHcpFiveReferrers,
+  checkReferringHcpManagementHcp
+} from '../../../assert/referring-hcp.assert'
 
 describe('Patient profile view for HCP', () => {
   beforeEach(() => {
@@ -159,6 +164,18 @@ describe('Patient profile view for HCP', () => {
 
       const ageText = await screen.findByText(/age/i)
       expect(ageText).toBeInTheDocument()
+    })
+
+    it('should be able to view referring HCPs list with 0 referrer', () => {
+      checkReferringHcpEmptyList()
+    })
+
+    it('should be able to view and manage referring HCPs list with 1 referrer', () => {
+      checkReferringHcpManagementHcp()
+    })
+
+    it('should be able to view referring HCPs list with 5 referrer', () => {
+      checkReferringHcpFiveReferrers()
     })
 
     // TODO: Uncomment when the feature is implemented with the API
