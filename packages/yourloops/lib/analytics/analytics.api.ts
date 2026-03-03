@@ -28,7 +28,7 @@
 import HttpService from '../http/http.service'
 import { type ClickEvent } from './models/click.model'
 
-const ANALYTICS_API_BASE_URL = 'http://localhost:8080/api/v1'
+const ANALYTICS_API_BASE_URL = `/analytics`
 
 export default class AnalyticsApi {
   static trackClick(name: string) {
@@ -38,7 +38,7 @@ export default class AnalyticsApi {
       timestamp: new Date().toISOString()
     }
     HttpService.post<void, ClickEvent>({
-      url: `${ANALYTICS_API_BASE_URL}/metrics`,
+      url: `${ANALYTICS_API_BASE_URL}/v1/metrics`,
       payload: event
     })
   }
