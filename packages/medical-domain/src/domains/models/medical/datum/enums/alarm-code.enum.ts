@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,8 +30,17 @@ export enum AlarmCode {
   DanaEmptyReservoir = '51002',
   DanaIncompatibleActionsOnPump = '51003',
   DanaOcclusion = '51004',
-  Hyperglycemia = '10113',
-  Hypoglycemia = '12000',
+  G6LongHyperglycemia = '15000',
+  G6Hyperglycemia = '10113',
+  G6Hypoglycemia = '12000',
+  G6SensorSessionExpired = '11000',
+  G6UrgentLowSoon = '10112',
+  G7GracePeriodExpired = 'A1000',
+  G7Hyperglycemia = 'A0115',
+  G7Hypoglycemia = 'A2000',
+  G7LongHyperglycemia = 'A5000',
+  G7SensorSessionExpired = 'A0121',
+  G7UrgentLowSoon = 'A0102',
   InsightEmptyInsulinCartridge = '71002',
   InsightEmptyPumpBattery = '71001',
   InsightHypoglycemia = '10117',
@@ -42,13 +51,10 @@ export enum AlarmCode {
   KaleidoEmptyPumpBattery = '41001',
   KaleidoInsulinCartridgeExpired = '41003',
   KaleidoOcclusion = '41004',
-  LongHyperglycemia = '15000',
   LongHypoglycemia = '24000',
   MedisafeEmptyPumpBattery = '91001',
   MedisafeEmptyPumpReservoir = '91002',
   MedisafeOcclusion = '91004',
   NoReadingsHypoglycemiaRisk = '20100',
-  SensorSessionExpired = '11000',
   SuddenRiseInGlycemia = '20102',
-  UrgentLowSoon = '10112'
 }
