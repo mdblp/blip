@@ -70,6 +70,7 @@ export const checkParametersMemo = async () => {
   expect(within(currentParametersSection).getByRole('button', { name: 'Open Breakfast - average setting information' })).toBeVisible()
   expect(within(currentParametersSection).getByRole('button', { name: 'Open Lunch - average setting information' })).toBeVisible()
   expect(within(currentParametersSection).getByRole('button', { name: 'Open Dinner - average setting information' })).toBeVisible()
+  expect(within(currentParametersSection).getByRole('button', { name: 'Open Weight setting information' })).toBeVisible()
 
   expect(within(currentParametersSection).queryByRole('button', { name: 'Open Breakfast - small setting information' })).not.toBeInTheDocument()
   expect(within(currentParametersSection).queryByRole('button', { name: 'Open Lunch - small setting information' })).not.toBeInTheDocument()
@@ -77,7 +78,6 @@ export const checkParametersMemo = async () => {
   expect(within(currentParametersSection).queryByRole('button', { name: 'Open Breakfast - large setting information' })).not.toBeInTheDocument()
   expect(within(currentParametersSection).queryByRole('button', { name: 'Open Lunch - large setting information' })).not.toBeInTheDocument()
   expect(within(currentParametersSection).queryByRole('button', { name: 'Open Dinner - large setting information' })).not.toBeInTheDocument()
-  expect(within(currentParametersSection).queryByRole('button', { name: 'Open Weight setting information' })).not.toBeInTheDocument()
   expect(within(currentParametersSection).queryByRole('button', { name: 'Open Height setting information' })).not.toBeInTheDocument()
 
   await userEvent.click(totalDailyInsulinMemoButton)
@@ -194,7 +194,7 @@ export const checkDeviceHistoryContent = async () => {
 
   const changeHistorySection = screen.getByTestId('device-history-section')
   expect(changeHistorySection).toBeVisible()
-  expect(changeHistorySection).toHaveTextContent('Devices change history')
+  expect(changeHistorySection).toHaveTextContent('Devices change historyDevice changeValueDateFri, Apr 26, 2019 2:02 AMCgm manufacturerDexcomAbbottFri, Apr 12, 2019 2:02 AMHandsetMobiGo+DH22Fri, Apr 12, 2019 2:02 AMIMEI0123456789111111111Fri, Apr 12, 2019 2:02 AMSoftware version1.12.12-DBLG1-INS-DEXG6-COMMERCIAL1.18.0.1300-DBLG1-KAL-G6-COMMERCIALFri, Apr 12, 2019 2:02 AMActivation code123-456-789111-111-111Fri, Apr 12, 2019 2:02 AMCgm productG5G6Fri, Apr 26, 2019 2:02 AMSoftware version1.0.01.1.0Fri, Apr 26, 2019 2:02 AMPump manufacturerROCHEVICENTRAFri, Apr 26, 2019 2:02 AMPump nameInsightKaleidoFri, Apr 26, 2019 2:02 AMSmartphone modelA212FA26Fri, Apr 26, 2019 2:02 AMFri, Apr 12, 2019 2:02 AMCgm manufacturerDexcomFri, Apr 12, 2019 2:02 AMCgm productG5Fri, Apr 12, 2019 2:02 AMHandsetMobiGo+Fri, Apr 12, 2019 2:02 AMIMEI0123456789Fri, Apr 12, 2019 2:02 AMSoftware version1.12.12-DBLG1-INS-DEXG6-COMMERCIALFri, Apr 12, 2019 2:02 AMActivation code123-456-789Fri, Apr 12, 2019 2:02 AMSoftware version1.0.0Fri, Apr 12, 2019 2:02 AMPump manufacturerROCHEFri, Apr 12, 2019 2:02 AMPump nameInsightFri, Apr 12, 2019 2:02 AMSmartphone modelA212FFri, Apr 12, 2019 2:02 AM')
 }
 
 export const checkNavigationToDailyView = async (router, route: string) => {

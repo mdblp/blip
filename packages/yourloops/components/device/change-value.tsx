@@ -34,10 +34,11 @@ import { formatNumberForLang } from '../../lib/language'
 interface ChangeValueProps {
   previousValue?: string
   currentValue: string
+  withFormatting: boolean
 }
 
 export const ChangeValue: FC<ChangeValueProps> = (props) => {
-  const { previousValue, currentValue } = props
+  const { previousValue, currentValue, withFormatting } = props
   const theme = useTheme()
 
   return (
@@ -48,11 +49,11 @@ export const ChangeValue: FC<ChangeValueProps> = (props) => {
       }}>
       {previousValue &&
         <>
-          <span>{`${formatNumberForLang(previousValue)}`}</span>
+          <span>{withFormatting ? formatNumberForLang(previousValue) : previousValue}</span>
           <TrendingFlatIcon sx={{ marginInline: theme.spacing(1) }} />
         </>
       }
-      <span>{`${formatNumberForLang(currentValue)}`}</span>
+      <span>{withFormatting ? formatNumberForLang(currentValue) : currentValue}</span>
     </Box>
   )
 }

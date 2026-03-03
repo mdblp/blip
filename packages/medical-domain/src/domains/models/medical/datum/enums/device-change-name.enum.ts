@@ -25,14 +25,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum ParameterMemoFilename {
-  AggressivenessHyperglycemia = 'aggressiveness-hyperglycemia',
-  AggressivenessMeal = 'aggressiveness-meal',
-  AggressivenessNormoglycemia = 'aggressiveness-normoglycemia',
-  AverageMeal = 'average-meal',
-  HyperglycemiaThreshold = 'hyperglycemia-threshold',
-  HypoglycemiaThreshold = 'hypoglycemia-threshold',
-  TargetGlucoseLevel = 'target-glucose-level',
-  TotalInsulinForDay = 'total-insulin-for-day',
-  Weight = 'weight'
+export enum DeviceChangeName {
+  CgmManufacturer = 'CGM_MANUFACTURER',
+  CgmName = 'CGM_NAME',
+  HandsetDeviceId = 'HANDSET_DEVICE_ID',
+  HandsetImei = 'HANDSET_IMEI',
+  HandsetSoftwareVersion = 'HANDSET_SW_VERSION',
+  MobileAppActivationCode = 'MOBILE_APP_ACTIVATION_CODE',
+  MobileAppVersion = 'MOBILE_APP_VERSION',
+  PumpManufacturer = 'PUMP_MANUFACTURER',
+  PumpName = 'PUMP_NAME',
+  SmartphoneModel = 'SMARTPHONE_MODEL',
 }

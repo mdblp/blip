@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -66,7 +66,7 @@ const alias = {
   'cartridge.png': path.resolve(__dirname, '../../branding/sitechange/cartridge.png'),
   'infusion.png': path.resolve(__dirname, '../../branding/sitechange/infusion.png'),
   'cartridge-vicentra.png': path.resolve(__dirname, '../../branding/sitechange/cartridge-vicentra.png'),
-  'warmup-dexcom.svg': path.resolve(__dirname, '../../branding/warmup/warmup-dexcom.svg'),
+  'warmup-icon.svg': path.resolve(__dirname, '../../branding/warmup/warmup-icon.svg'),
   'device-event.svg': path.resolve(__dirname, '../../branding/alarm-event/device-event.svg'),
   'eating-shortly.svg': path.resolve(__dirname, '../../branding/eating-shortly/eating-shortly.svg'),
   'hyperglycemia-event.svg': path.resolve(__dirname, '../../branding/alarm-event/hyperglycemia-event.svg'),

@@ -27,6 +27,7 @@
 
 import {
   DblParameter,
+  DeviceChangeName,
   type DeviceConfig,
   DeviceHistory,
   DeviceSystem,
@@ -197,25 +198,25 @@ export const sortDeviceChangeHistory = (history: DeviceHistory[]): void => {
 
 export const getTranslationKeyForDeviceChange = (deviceChangeName: string): string => {
   switch (deviceChangeName) {
-    case "HANDSET_IMEI":
+    case DeviceChangeName.HandsetImei:
       return "device-change-handset-imei"
-    case "HANDSET_DEVICE_ID":
+    case DeviceChangeName.HandsetDeviceId:
       return "device-change-handset-device-id"
-    case "HANDSET_SW_VERSION":
+    case DeviceChangeName.HandsetSoftwareVersion:
       return "device-change-sw-version"
-    case "SMARTPHONE_MODEL":
+    case DeviceChangeName.SmartphoneModel:
       return "smartphone-model"
-    case "CGM_NAME":
+    case DeviceChangeName.CgmName:
       return "device-change-cgm-name"
-    case "CGM_MANUFACTURER":
+    case DeviceChangeName.CgmManufacturer:
       return "device-change-cgm-manufacturer"
-    case "PUMP_MANUFACTURER":
+    case DeviceChangeName.PumpManufacturer:
       return "device-change-pump-manufacturer"
-    case "PUMP_NAME":
+    case DeviceChangeName.PumpName:
       return "device-change-pump-name"
-    case "MOBILE_APP_VERSION":
+    case DeviceChangeName.MobileAppVersion:
       return "device-change-sw-version"
-    case "MOBILE_APP_ACTIVATION_CODE":
+    case DeviceChangeName.MobileAppActivationCode:
       return "activation-code"
     default:
       return deviceChangeName
