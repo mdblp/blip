@@ -114,10 +114,9 @@ export const useMonitoringAlertsContentConfiguration = (
   const getVeryHighBgInitialState = (): ValueErrorMessagePair => {
     return {
       value: veryHighBgValue,
-      errorMessage: getErrorMessage(userBgUnit, veryHighBgValue, thresholds.minVeryHighBg, thresholds.maxHighBg)
+      errorMessage: getErrorMessage(userBgUnit, veryHighBgValue, thresholds.minVeryHighBg, thresholds.maxVeryHighBg)
     }
   }
-
 
   const lowBgValue = getConvertedValue(monitoringAlertsParameters.lowBg, monitoringBgUnit, userBgUnit)
   const getLowBgInitialState = (): ValueErrorMessagePair => {
