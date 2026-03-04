@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,6 +38,11 @@ import { patient1Info } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
+import {
+  checkCliniciansEmptyList,
+  checkCliniciansFiveClinicians,
+  checkCliniciansManagementPatient
+} from '../../../assert/clinicians.assert'
 
 describe('Patient profile view for Patient', () => {
 
@@ -62,6 +67,18 @@ describe('Patient profile view for Patient', () => {
       })
 
       await testPatientPersonalInformation()
+    })
+
+    it('should be able to view clinicians list with 0 clinician', () => {
+      checkCliniciansEmptyList()
+    })
+
+    it('should be able to view and manage clinicians list with 1 clinician', () => {
+      checkCliniciansManagementPatient()
+    })
+
+    it('should be able to view clinicians list with 5 clinicians', () => {
+      checkCliniciansFiveClinicians()
     })
   })
 

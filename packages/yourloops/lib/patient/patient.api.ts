@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,11 +30,13 @@ import { getCurrentLang } from '../language'
 import { UserRole } from '../auth/models/enums/user-role.enum'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
-import { type Patient, type PatientMetrics, UserProfilePayload } from './models/patient.model'
+import { type Patient } from './models/patient.model'
 import { type MonitoringAlertsParameters } from 'medical-domain'
 import { DiabeticProfilePayload } from './models/patient-diabete-profile'
 import { type DiabeticProfile } from './models/patient-diabete-profile'
 import { PatientProfile } from './models/patient-profile.model'
+import { PatientMetrics } from './models/patient-metrics.model'
+import { UserProfilePayload } from './models/user-profile-payload.model'
 
 export const PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE = 'patient-already-in-team'
 const PATIENT_ALREADY_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
