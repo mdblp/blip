@@ -34,22 +34,22 @@ import DialogActions from '@mui/material/DialogActions'
 import { User } from '../../../../../../lib/auth'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Box from '@mui/material/Box'
-import { ReferringHcpApi } from '../../../../../../lib/referring-hcp/referring-hcp.api'
-import { useAddReferrerDialog } from './add-referrer-dialog.hook'
+import { ClinicianApi } from '../../../../../../lib/clinicians/clinician.api'
+import { useAddClinicianDialog } from './add-clinician-dialog.hook'
 
-interface AddReferrerDialogProps {
+interface AddClinicianDialogProps {
   patientInfo: { id: string, name: string }
   user: User
-  referringHcpIds: string[]
+  clinicianIds: string[]
   onClose: () => void
 }
 
 const DEFAULT_HCP_ID_VALUE = ''
 
-export const AddReferrerDialog: FC<AddReferrerDialogProps> = (props) => {
-  const { patientInfo, user, referringHcpIds, onClose } = props
+export const AddClinicianDialog: FC<AddClinicianDialogProps> = (props) => {
+  const { patientInfo, user, clinicianIds, onClose } = props
   const { t } = useTranslation()
-  const { getAvailableHcps } = useAddReferrerDialog({ referringHcpIds })
+  const { getAvailableHcps } = useAddClinicianDialog({ clinicianIds })
 
   const [selectedHcpId, setSelectedHcpId] = React.useState(DEFAULT_HCP_ID_VALUE)
 
@@ -64,20 +64,20 @@ export const AddReferrerDialog: FC<AddReferrerDialogProps> = (props) => {
     setSelectedHcpId(event.target.value)
   }
 
-  const onClickAddReferrer = async () => {
-    await ReferringHcpApi.addReferringHcp(patientId, selectedHcpId)
+  const onClickAddClinician = async () => {
+    await ClinicianApi.addClinician(patientId, selectedHcpId)
 
     onClose()
   }
 
   return (
     <Dialog onClose={onClose} open={true}>
-      <DialogTitle>{t('add-referrer-title')}</DialogTitle>
+      <DialogTitle>{t('add-clinician-title')}</DialogTitle>
       <DialogContent>
         {user.isUserPatient() ?
-          t('add-referrer-description-patient')
+          t('add-clinician-description-patient')
           : <Trans
-            i18nKey="add-referrer-description"
+            i18nKey="add-clinician-description"
             t={t}
             components={{ strong: <strong /> }}
             values={{ patientName }}
@@ -87,11 +87,11 @@ export const AddReferrerDialog: FC<AddReferrerDialogProps> = (props) => {
 
         <Box sx={{ marginY: 2 }}>
           <FormControl fullWidth>
-            <InputLabel id="referrer-name">{t('referrer-name')}</InputLabel>
+            <InputLabel id="clinician-name">{t('clinician-name')}</InputLabel>
             <Select
-              labelId="referrer-name"
+              labelId="clinician-name"
               value={selectedHcpId}
-              label={t('referrer-name')}
+              label={t('clinician-name')}
               onChange={handleChange}
             >
               {sortedAvailableHcpList.map((hcp) => (
@@ -102,7 +102,7 @@ export const AddReferrerDialog: FC<AddReferrerDialogProps> = (props) => {
         </Box>
 
 
-        {t('add-referrer-explanation')}
+        {t('add-clinician-explanation')}
       </DialogContent>
       <DialogActions>
         <Button
@@ -113,10 +113,10 @@ export const AddReferrerDialog: FC<AddReferrerDialogProps> = (props) => {
         </Button>
         <Button
           variant="contained"
-          onClick={onClickAddReferrer}
+          onClick={onClickAddClinician}
           disabled={selectedHcpId === DEFAULT_HCP_ID_VALUE}
         >
-          {t('button-add-referrer')}
+          {t('button-add-clinician')}
         </Button>
       </DialogActions>
     </Dialog>

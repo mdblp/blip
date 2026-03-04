@@ -25,7 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface AddReferringHcpPayload {
-  referentUserId: string
-  patientUserId: string
+import {
+  testHcpAddClinician,
+  testHcpRemoveClinician,
+  testPatientAddClinician,
+  testPatientRemoveClinician,
+  testCliniciansEmptyList,
+  testCliniciansFiveClinicians,
+  testCliniciansOneClinician
+} from '../use-cases/clinicians-management'
+
+export const checkCliniciansEmptyList = async (): Promise<void> => {
+  testCliniciansEmptyList()
+}
+
+export const checkCliniciansManagementPatient = async (): Promise<void> => {
+  testCliniciansOneClinician()
+  testPatientAddClinician()
+  testPatientRemoveClinician()
+}
+
+export const checkCliniciansManagementHcp = async (): Promise<void> => {
+  testCliniciansOneClinician()
+  testHcpAddClinician()
+  testHcpRemoveClinician()
+}
+
+export const checkCliniciansFiveClinicians = async (): Promise<void> => {
+  testCliniciansFiveClinicians()
 }

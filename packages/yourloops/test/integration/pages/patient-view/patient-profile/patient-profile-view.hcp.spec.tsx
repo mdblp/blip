@@ -58,10 +58,10 @@ import { getTranslation } from '../../../../utils/i18n'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { checkProfilesForMalePatient } from '../../../assert/profile-range.assert'
 import {
-  checkReferringHcpEmptyList,
-  checkReferringHcpFiveReferrers,
-  checkReferringHcpManagementHcp
-} from '../../../assert/referring-hcp.assert'
+  checkCliniciansEmptyList,
+  checkCliniciansFiveClinicians,
+  checkCliniciansManagementHcp
+} from '../../../assert/clinicians.assert'
 
 describe('Patient profile view for HCP', () => {
   beforeEach(() => {
@@ -166,16 +166,16 @@ describe('Patient profile view for HCP', () => {
       expect(ageText).toBeInTheDocument()
     })
 
-    it('should be able to view referring HCPs list with 0 referrer', () => {
-      checkReferringHcpEmptyList()
+    it('should be able to view clinicians list with 0 clinician', () => {
+      checkCliniciansEmptyList()
     })
 
-    it('should be able to view and manage referring HCPs list with 1 referrer', () => {
-      checkReferringHcpManagementHcp()
+    it('should be able to view and manage clinicians list with 1 clinician', () => {
+      checkCliniciansManagementHcp()
     })
 
-    it('should be able to view referring HCPs list with 5 referrer', () => {
-      checkReferringHcpFiveReferrers()
+    it('should be able to view clinicians list with 5 clinicians', () => {
+      checkCliniciansFiveClinicians()
     })
 
     // TODO: Uncomment when the feature is implemented with the API

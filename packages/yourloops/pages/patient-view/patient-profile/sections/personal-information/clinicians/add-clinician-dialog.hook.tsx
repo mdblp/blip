@@ -29,23 +29,23 @@ import { Team, TeamMember, useTeam } from '../../../../../../lib/team'
 import { useAuth } from '../../../../../../lib/auth'
 import { useParams } from 'react-router-dom'
 
-interface AddReferrerDialogHookProps {
-  referringHcpIds: string[]
+interface AddClinicianDialogHookProps {
+  clinicianIds: string[]
 }
 
-interface AddReferrerDialogHookReturn {
+interface AddClinicianDialogHookReturn {
   getAvailableHcps: () => TeamMember[]
 }
 
-export const useAddReferrerDialog = (props: AddReferrerDialogHookProps): AddReferrerDialogHookReturn => {
-  const { referringHcpIds } = props
+export const useAddClinicianDialog = (props: AddClinicianDialogHookProps): AddClinicianDialogHookReturn => {
+  const { clinicianIds } = props
   const { user } = useAuth()
   const { teamId } = useParams()
   const { getTeam, teams } = useTeam()
 
 
-  const removeReferrersFromList = (hcps: TeamMember[]): TeamMember[] => {
-    return hcps.filter((hcp: TeamMember) => !referringHcpIds.includes(hcp.userId))
+  const removeCliniciansFromList = (hcps: TeamMember[]): TeamMember[] => {
+    return hcps.filter((hcp: TeamMember) => !clinicianIds.includes(hcp.userId))
   }
 
   const isHcpInList = (hcpId: string, members: TeamMember[]): boolean => {
@@ -56,7 +56,7 @@ export const useAddReferrerDialog = (props: AddReferrerDialogHookProps): AddRefe
     if (user.isUserHcp()) {
       const selectedTeam = getTeam(teamId)
 
-      return removeReferrersFromList(selectedTeam.members)
+      return removeCliniciansFromList(selectedTeam.members)
     }
     if (user.isUserPatient()) {
       const allHcpsHavingAccessToPatient = teams.reduce((acc: TeamMember[], team: Team) => {
@@ -68,7 +68,7 @@ export const useAddReferrerDialog = (props: AddReferrerDialogHookProps): AddRefe
         return acc
       }, [])
 
-      return removeReferrersFromList(allHcpsHavingAccessToPatient)
+      return removeCliniciansFromList(allHcpsHavingAccessToPatient)
     }
     return []
   }

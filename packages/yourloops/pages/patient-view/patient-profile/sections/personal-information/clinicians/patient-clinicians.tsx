@@ -43,19 +43,19 @@ import IconActionButton from '../../../../../../components/buttons/icon-action'
 import Tooltip from '@mui/material/Tooltip'
 import { useAuth } from '../../../../../../lib/auth'
 import { getUserName } from '../../../../../../lib/auth/user.util'
-import { RemoveReferrerDialog } from './remove-referrer-dialog'
-import { AddReferrerDialog } from './add-referer-dialog'
-import { ReferringHcp } from '../../../../../../lib/referring-hcp/models/referring-hcp.model'
+import { RemoveClinicianDialog } from './remove-clinician-dialog'
+import { AddClinicianDialog } from './add-clinician-dialog'
+import { Clinician } from '../../../../../../lib/clinicians/models/clinician.model'
 import { PatientProfile } from '../../../../../../lib/patient/models/patient-profile.model'
 import Avatar from '@mui/material/Avatar'
 
-interface PatientReferringHcpsProps {
+interface PatientCliniciansProps {
   patientId: string
   patientProfile: PatientProfile
-  referringHcps: ReferringHcp[]
+  clinicians: Clinician[]
 }
 
-const MAX_REFERRER_COUNT = 5
+const MAX_CLINICIANS_COUNT = 5
 
 const useStyles = makeStyles()(() => ({
   tableHeader: {
@@ -68,14 +68,14 @@ const useStyles = makeStyles()(() => ({
   }
 }))
 
-export const PatientReferringHcps: FC<PatientReferringHcpsProps> = (props) => {
-  // const { patientId, patientProfile, referringHcps } = props
+export const PatientClinicians: FC<PatientCliniciansProps> = (props) => {
+  // const { patientId, patientProfile, clinicians } = props
   const { patientId, patientProfile } = props
   const { t } = useTranslation()
   const { classes } = useStyles()
   const { user } = useAuth()
 
-  const FAKE_REFERRING_HCPS: ReferringHcp[] = [
+  const FAKE_CLINICIANS: Clinician[] = [
     {
       id: 'hcp-1',
       fullName: 'Dr. John Doe',
@@ -90,25 +90,25 @@ export const PatientReferringHcps: FC<PatientReferringHcpsProps> = (props) => {
     }
   ]
 
-  // const referrerCount = referringHcps?.length || 0
-  const referrerCount = FAKE_REFERRING_HCPS?.length || 0
-  const hasReferrers = referrerCount > 0
-  // const referringHcpsSorted = hasReferrers && referringHcps.toSorted((a, b) => a.fullName.localeCompare(b.fullName))
-  const referringHcpsSorted = hasReferrers && FAKE_REFERRING_HCPS.toSorted((a, b) => a.fullName.localeCompare(b.fullName))
+  // const cliniciansCount = clinicians?.length || 0
+  const cliniciansCount = FAKE_CLINICIANS?.length || 0
+  const hasClinicians = cliniciansCount > 0
+  // const cliniciansSorted = hasClinicians && clinicians.toSorted((a, b) => a.fullName.localeCompare(b.fullName))
+  const cliniciansSorted = hasClinicians && FAKE_CLINICIANS.toSorted((a, b) => a.fullName.localeCompare(b.fullName))
 
-  // const referringHcpIds = hasReferrers ? referringHcps.map(referrer => referrer.id) : []
-  const referringHcpIds = hasReferrers ? FAKE_REFERRING_HCPS.map(referrer => referrer.id) : []
+  // const clinicianIds = hasClinicians ? clinicians.map(clinician => clinician.id) : []
+  const clinicianIds = hasClinicians ? FAKE_CLINICIANS.map(clinician => clinician.id) : []
 
-  const isAddReferrerEnabled = referrerCount < MAX_REFERRER_COUNT
+  const isAddClinicianEnabled = cliniciansCount < MAX_CLINICIANS_COUNT
 
   const patientName = getUserName(patientProfile.firstName, patientProfile.lastName, patientProfile.fullName)
 
   const [showAddDialog, setShowAddDialog] = useState<boolean>(false)
   const [showRemoveDialog, setShowRemoveDialog] = useState<boolean>(false)
-  const [referrerToRemove, setReferrerToRemove] = useState<ReferringHcp | null>(null)
+  const [clinicianToRemove, setClinicianToRemove] = useState<Clinician | null>(null)
 
-  const getInitials = (referrerFullname: string): string => {
-    const splitName = referrerFullname.split(' ')
+  const getInitials = (clinicianFullname: string): string => {
+    const splitName = clinicianFullname.split(' ')
     const firstInitial = splitName[0]?.charAt(0) || ''
     const secondInitial = splitName[1]?.charAt(0) || ''
 
@@ -126,9 +126,9 @@ export const PatientReferringHcps: FC<PatientReferringHcpsProps> = (props) => {
   const onClickRemove = (hcpId: string): void => {
     setShowRemoveDialog(true)
 
-    // const referrer = referringHcps?.find(hcp => hcp.id === hcpId) || null
-    const referrer = FAKE_REFERRING_HCPS?.find(hcp => hcp.id === hcpId) || null
-    setReferrerToRemove(referrer)
+    // const clinician = clinicians?.find(hcp => hcp.id === hcpId) || null
+    const clinician = FAKE_CLINICIANS?.find(hcp => hcp.id === hcpId) || null
+    setClinicianToRemove(clinician)
   }
 
   const onCloseRemoveDialog = (): void => {
@@ -139,35 +139,35 @@ export const PatientReferringHcps: FC<PatientReferringHcpsProps> = (props) => {
     <>
       <Box
         sx={{ display: 'flex', justifyContent: 'space-between' }}
-        data-testid="patient-referring-hcps"
+        data-testid="patient-clinicians"
       >
         <Typography variant="h6" sx={{ marginBottom: 2 }}>
-          {t('referring-hcp')}
+          {t('lead-clinicians')}
         </Typography>
         <Tooltip
-          title={t('too-many-referrers-tooltip', { maxReferrersCount: MAX_REFERRER_COUNT })}
-          disableHoverListener={isAddReferrerEnabled}
+          title={t('too-many-clinicians-tooltip', { maxCliniciansCount: MAX_CLINICIANS_COUNT })}
+          disableHoverListener={isAddClinicianEnabled}
         >
           {/* The span is needed to ensure the tooltip works when the button is disabled (MUI Tooltip doc) */}
           <span>
             <Button
-              variant={referrerCount === 0 ? 'contained' : 'outlined'}
-              disabled={!isAddReferrerEnabled}
+              variant={cliniciansCount === 0 ? 'contained' : 'outlined'}
+              disabled={!isAddClinicianEnabled}
               startIcon={<PersonAddIcon />}
               onClick={onClickAdd}
             >
-            {t('add-referring-hcp')}
+            {t('add-clinician')}
           </Button>
           </span>
         </Tooltip>
       </Box>
 
       <Box>
-        <Typography variant="body1">{t('referring-hcp-description')}</Typography>
+        <Typography variant="body1">{t('lead-clinicians-description')}</Typography>
       </Box>
 
       {
-        hasReferrers &&
+        hasClinicians &&
         <Card variant="outlined">
           <TableContainer>
             <Table>
@@ -182,25 +182,25 @@ export const PatientReferringHcps: FC<PatientReferringHcpsProps> = (props) => {
               </TableHead>
 
               <TableBody>
-                {referringHcpsSorted.map((referringHcp: ReferringHcp) => (
-                  <TableRow key={referringHcp.id} className={classes.hideLastBorder}>
+                {cliniciansSorted.map((clinician: Clinician) => (
+                  <TableRow key={clinician.id} className={classes.hideLastBorder}>
                     <TableCell>
                       <Avatar sx={{ bgcolor: 'var(--text-color-secondary)' }}>
-                        {getInitials(referringHcp.fullName)}
+                        {getInitials(clinician.fullName)}
                       </Avatar>
                     </TableCell>
-                    <TableCell>{referringHcp.fullName}</TableCell>
-                    <TableCell>{t(referringHcp.profession)}</TableCell>
-                    <TableCell>{referringHcp.email}</TableCell>
+                    <TableCell>{clinician.fullName}</TableCell>
+                    <TableCell>{t(clinician.profession)}</TableCell>
+                    <TableCell>{clinician.email}</TableCell>
                     <TableCell align="right" sx={{ py: 0 }}>
                       <IconActionButton
                         // data-testid={`${removePatientLabel} ${hcp.email}`}
                         // aria-label={`${removePatientLabel} ${hcp.email}`}
                         icon={<PersonRemoveIcon />}
                         color="inherit"
-                        tooltip={t('button-remove-referrer')}
+                        tooltip={t('button-remove-clinician')}
                         onClick={() => {
-                          onClickRemove(referringHcp.id)
+                          onClickRemove(clinician.id)
                         }}
                       />
                     </TableCell>
@@ -213,17 +213,17 @@ export const PatientReferringHcps: FC<PatientReferringHcpsProps> = (props) => {
       }
 
       {showAddDialog &&
-        <AddReferrerDialog
+        <AddClinicianDialog
           patientInfo={{ id: patientId, name: patientName }}
-          referringHcpIds={referringHcpIds}
+          clinicianIds={clinicianIds}
           user={user}
           onClose={onCloseAddDialog}
         />
       }
 
       {showRemoveDialog &&
-        <RemoveReferrerDialog
-          referringHcp={referrerToRemove}
+        <RemoveClinicianDialog
+          clinician={clinicianToRemove}
           patientInfo={{ id: patientId, name: patientName }}
           isUserPatient={user.isUserPatient()}
           onClose={onCloseRemoveDialog}

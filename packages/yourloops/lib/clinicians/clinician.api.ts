@@ -25,32 +25,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  testHcpAddReferrer,
-  testHcpRemoveReferrer,
-  testPatientAddReferrer,
-  testPatientRemoveReferrer,
-  testReferringHcpEmptyList,
-  testReferringHcpFiveReferrers,
-  testReferringHcpOneReferrer
-} from '../use-cases/referring-hcp-management'
+import HttpService from '../http/http.service'
+import { AddClinicianPayload } from './models/add-clinician-payload.model'
 
-export const checkReferringHcpEmptyList = async (): Promise<void> => {
-  testReferringHcpEmptyList()
-}
+export class ClinicianApi {
+  static async addClinician(patientId: string, hcpId: string): Promise<void> {
+    await HttpService.post<void, AddClinicianPayload>({
+      url: `/crew/v1/patient/${patientId}/hcp-referents`,
+      payload: {
+        referentUserId: hcpId,
+        patientUserId: patientId
+      }
+    })
+  }
 
-export const checkReferringHcpManagementPatient = async (): Promise<void> => {
-  testReferringHcpOneReferrer()
-  testPatientAddReferrer()
-  testPatientRemoveReferrer()
-}
-
-export const checkReferringHcpManagementHcp = async (): Promise<void> => {
-  testReferringHcpOneReferrer()
-  testHcpAddReferrer()
-  testHcpRemoveReferrer()
-}
-
-export const checkReferringHcpFiveReferrers = async (): Promise<void> => {
-  testReferringHcpFiveReferrers()
+  static async removeClinician(patientId: string, hcpId: string): Promise<void> {
+    await HttpService.delete({ url: `/crew/v1/patient/${patientId}/hcp-referents/${hcpId}` })
+  }
 }

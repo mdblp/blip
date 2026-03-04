@@ -25,21 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpService from '../http/http.service'
-import { AddReferringHcpPayload } from './models/add-referring-hcp-payload.model'
-
-export class ReferringHcpApi {
-  static async addReferringHcp(patientId: string, hcpId: string): Promise<void> {
-    await HttpService.post<void, AddReferringHcpPayload>({
-      url: `/crew/v1/patient/${patientId}/hcp-referents`,
-      payload: {
-        referentUserId: hcpId,
-        patientUserId: patientId
-      }
-    })
-  }
-
-  static async removeReferringHcp(patientId: string, hcpId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v1/patient/${patientId}/hcp-referents/${hcpId}` })
-  }
+export interface Clinician {
+  id: string
+  fullName: string
+  profession: string
+  email: string
 }

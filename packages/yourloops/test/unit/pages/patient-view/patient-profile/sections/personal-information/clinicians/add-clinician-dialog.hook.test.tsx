@@ -30,14 +30,14 @@ import * as teamHookMock from '../../../../../../../../lib/team'
 import * as authHookMock from '../../../../../../../../lib/auth'
 import { User } from '../../../../../../../../lib/auth'
 import * as router from 'react-router'
-import {
-  useAddReferrerDialog
-} from '../../../../../../../../pages/patient-view/patient-profile/sections/personal-information/referring-hcp/add-referrer-dialog.hook'
 import { renderHook } from '@testing-library/react'
+import {
+  useAddClinicianDialog
+} from '../../../../../../../../pages/patient-view/patient-profile/sections/personal-information/clinicians/add-clinician-dialog.hook'
 
 jest.mock('../../../../../../../../lib/team')
 jest.mock('../../../../../../../../lib/auth')
-describe('Add referrer dialog hook', () => {
+describe('Add clinician dialog hook', () => {
   let team: Team
   let user: User
 
@@ -89,7 +89,7 @@ describe('Add referrer dialog hook', () => {
         isUserPatient: () => true
       } as User
 
-      const { result } = renderHook(() => useAddReferrerDialog({ referringHcpIds: [memberId2, memberId3] }))
+      const { result } = renderHook(() => useAddClinicianDialog({ clinicianIds: [memberId2, memberId3] }))
       expect(result.current.getAvailableHcps()).toEqual(
         [
           { userId: memberId1 },
@@ -107,7 +107,7 @@ describe('Add referrer dialog hook', () => {
 
       team = team1
 
-      const { result } = renderHook(() => useAddReferrerDialog({ referringHcpIds: [memberId2, memberId3] }))
+      const { result } = renderHook(() => useAddClinicianDialog({ clinicianIds: [memberId2, memberId3] }))
       expect(result.current.getAvailableHcps()).toEqual(
         [
           { userId: memberId1 }

@@ -31,49 +31,49 @@ import DialogContent from '@mui/material/DialogContent'
 import { Trans, useTranslation } from 'react-i18next'
 import DialogActions from '@mui/material/DialogActions'
 import Dialog from '@mui/material/Dialog'
-import { ReferringHcp } from '../../../../../../lib/referring-hcp/models/referring-hcp.model'
-import { ReferringHcpApi } from '../../../../../../lib/referring-hcp/referring-hcp.api'
+import { ClinicianApi } from '../../../../../../lib/clinicians/clinician.api'
+import { Clinician } from '../../../../../../lib/clinicians/models/clinician.model'
 
-interface RemoveReferrerDialogProps {
-  referringHcp: ReferringHcp
+interface RemoveClinicianDialogProps {
+  clinician: Clinician
   patientInfo: { id: string, name: string }
   isUserPatient: boolean
   onClose: () => void
 }
 
-export const RemoveReferrerDialog: FC<RemoveReferrerDialogProps> = (props) => {
-  const { referringHcp, patientInfo, isUserPatient, onClose } = props
+export const RemoveClinicianDialog: FC<RemoveClinicianDialogProps> = (props) => {
+  const { clinician, patientInfo, isUserPatient, onClose } = props
   const { t } = useTranslation()
 
   const patientId = patientInfo.id
-  const referrerId = referringHcp.id
+  const clinicianId = clinician.id
 
   const patientName = patientInfo.name
-  const referrerName = referringHcp.fullName
+  const clinicianName = clinician.fullName
 
-  const onClickRemoveReferrer = async () => {
-    await ReferringHcpApi.removeReferringHcp(patientId, referrerId)
+  const onClickRemoveClinician = async () => {
+    await ClinicianApi.removeClinician(patientId, clinicianId)
 
     onClose()
   }
 
   return (
     <Dialog onClose={onClose} open={true}>
-      <DialogTitle>{t('remove-referrer-title')}</DialogTitle>
+      <DialogTitle>{t('remove-clinician-title')}</DialogTitle>
       <DialogContent>
         {isUserPatient ?
           <Trans
-            i18nKey="remove-referrer-question-patient"
+            i18nKey="remove-clinician-question-patient"
             t={t}
             components={{ strong: <strong /> }}
-            values={{ referrerName }}
+            values={{ clinicianName }}
             parent={React.Fragment}
           />
           : <Trans
-            i18nKey="remove-referrer-question"
+            i18nKey="remove-clinician-question"
             t={t}
             components={{ strong: <strong /> }}
-            values={{ referrerName, patientName }}
+            values={{ clinicianName, patientName }}
             parent={React.Fragment}
           />
         }
@@ -88,9 +88,9 @@ export const RemoveReferrerDialog: FC<RemoveReferrerDialogProps> = (props) => {
         <Button
           variant="contained"
           color="error"
-          onClick={onClickRemoveReferrer}
+          onClick={onClickRemoveClinician}
         >
-          {t('button-remove-referrer')}
+          {t('button-remove-clinician')}
         </Button>
       </DialogActions>
     </Dialog>

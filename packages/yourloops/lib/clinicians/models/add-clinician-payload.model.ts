@@ -25,9 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface ReferringHcp {
-  id: string
-  fullName: string
-  profession: string
-  email: string
+export interface AddClinicianPayload {
+  referentUserId: string
+  patientUserId: string
 }

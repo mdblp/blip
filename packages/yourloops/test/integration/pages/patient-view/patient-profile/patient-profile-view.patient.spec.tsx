@@ -39,10 +39,10 @@ import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
 import {
-  checkReferringHcpEmptyList,
-  checkReferringHcpFiveReferrers,
-  checkReferringHcpManagementPatient
-} from '../../../assert/referring-hcp.assert'
+  checkCliniciansEmptyList,
+  checkCliniciansFiveClinicians,
+  checkCliniciansManagementPatient
+} from '../../../assert/clinicians.assert'
 
 describe('Patient profile view for Patient', () => {
 
@@ -69,16 +69,16 @@ describe('Patient profile view for Patient', () => {
       await testPatientPersonalInformation()
     })
 
-    it('should be able to view referring HCPs list with 0 referrer', () => {
-      checkReferringHcpEmptyList()
+    it('should be able to view clinicians list with 0 clinician', () => {
+      checkCliniciansEmptyList()
     })
 
-    it('should be able to view and manage referring HCPs list with 1 referrer', () => {
-      checkReferringHcpManagementPatient()
+    it('should be able to view and manage clinicians list with 1 clinician', () => {
+      checkCliniciansManagementPatient()
     })
 
-    it('should be able to view referring HCPs list with 5 referrer', () => {
-      checkReferringHcpFiveReferrers()
+    it('should be able to view clinicians list with 5 clinicians', () => {
+      checkCliniciansFiveClinicians()
     })
   })
 

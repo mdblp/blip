@@ -326,9 +326,9 @@ const ignoredTransKeyForYourLoops = [
   'device-change-mobile-app-activation-code',
   'device-change-sw-version',
   'device-history-title',
-  'add-referrer-description',
-  'remove-referrer-question',
-  'remove-referrer-question-patient'
+  'add-clinician-description',
+  'remove-clinician-question',
+  'remove-clinician-question-patient'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   // Documentation!
