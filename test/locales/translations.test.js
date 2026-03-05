@@ -107,6 +107,8 @@ const ignoredTransKeyForYourLoops = [
   'hcp-profession-other',
   'hcp-profession-dietitian',
   // <Trans /> keys
+  'hyperglycemia-threshold',
+  'hyperglycemia-tooltip2',
   'consent-renew-message',
   'consent-welcome-message',
   'modal-add-patient-warning-line2',
@@ -225,6 +227,7 @@ const ignoredTransKeyForYourLoops = [
   'basal-rate-unit',
   'Basal',
   'Bolus',
+  'current-trigger-setting-hyperglycemia',
   'current-trigger-setting-hypoglycemia',
   'current-trigger-setting-tir',
   'product-labelling',

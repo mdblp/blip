@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,7 +30,7 @@ import { renderPage } from '../../utils/render'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { patient1Info } from '../../data/patient.api.data'
 import NotificationApi from '../../../../lib/notifications/notification.api'
-import { buildTeamOne, buildTeamTwo, iTeamOne } from '../../mock/team.api.mock'
+import { buildTeamOne, buildTeamTwo, anotherTeam } from '../../mock/team.api.mock'
 import TeamAPI from '../../../../lib/team/team.api'
 import { invitationTeam } from '../../data/notification.data'
 import { checkAcceptTeamInvite, checkPatientAcceptTeamInvite } from '../../assert/notification-join-team.assert'
@@ -40,7 +40,7 @@ describe('Notification page for patient', () => {
     mockPatientLogin(patient1Info)
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
     jest.spyOn(NotificationApi, 'getReceivedInvitations').mockResolvedValue([invitationTeam])
-    jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(iTeamOne)
+    jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(anotherTeam)
     jest.spyOn(NotificationApi, 'acceptInvitation').mockResolvedValue()
   })
 

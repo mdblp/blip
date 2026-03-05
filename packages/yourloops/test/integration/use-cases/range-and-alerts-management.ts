@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -149,11 +149,12 @@ export const testSaveButtonForRanges = async () : Promise<void>  => {
     bgUnit: Unit.MilligramPerDeciliter,
     lowBg: 80,
     highBg: 150,
+    hyperThreshold: 25,
     outOfRangeThreshold: 50,
     veryLowBg: 50,
+    veryHighBg: 200,
     hypoThreshold: 5,
-    nonDataTxThreshold: 50,
-    reportingPeriod: 168
+    nonDataTxThreshold: 50
   }
   const closingDialogDelayInMS = 400
   expect(PatientApi.updatePatientAlerts).toHaveBeenCalledWith(myThirdTeamId, patient1Id, expectedMonitoringAlertsParameters)
