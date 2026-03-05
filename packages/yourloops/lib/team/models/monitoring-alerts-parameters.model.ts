@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2026, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,16 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
+import { type BgUnit, MonitoringAlertsParameters } from 'medical-domain'
 
-export const checkMonitoringAlertsCard = async () => {
-  const monitoringAlertsCard = screen.getByTestId('monitoring-alerts-card')
-  expect(monitoringAlertsCard).toBeVisible()
-  expect(monitoringAlertsCard).toHaveTextContent('Monitoring alertsTime spent out of the target range10%Hyperglycemia alert17%Severe hypoglycemia alert20%Data not transmitted30%')
+export interface MonitoringAlertsParametersDto {
+  bgUnit: BgUnit
+  hyperglycemia: AlertParameters
+  hypoglycemia: AlertParameters
+  nonDataTransmission: AlertParameters
+  timeOutOfRange: AlertParameters
 }
 
-export const checkMonitoringAlertsCardNoData = async () => {
-  const monitoringAlertsCard = screen.getByTestId('monitoring-alerts-card')
-  expect(monitoringAlertsCard).toBeVisible()
-  expect(monitoringAlertsCard).toHaveTextContent('Monitoring alerts (+1)Time spent out of the target rangeN/AHyperglycemia alertN/ASevere hypoglycemia alertN/AData not transmitted100%')
+interface AlertParameters {
+  rateThreshold: number
+  glycemiaUpperLimit?: number
+  glycemiaLowerLimit?: number
 }
+
+export const mapMonAlertParamsFromInternal = (monitoringAlertsParameters: MonitoringAlertsParameters): MonitoringAlertsParametersDto => {
+  return {
+    bgUnit: monitoringAlertsParameters.bgUnit,
+    hyperglycemia: {
+      rateThreshold: monitoringAlertsParameters.hyperThreshold,
+      glycemiaUpperLimit: monitoringAlertsParameters.veryHighBg
+    },
+    hypoglycemia: {
+      rateThreshold: monitoringAlertsParameters.hypoThreshold,
+      glycemiaLowerLimit: monitoringAlertsParameters.veryLowBg
+    },
+    nonDataTransmission: {
+      rateThreshold: monitoringAlertsParameters.nonDataTxThreshold
+    },
+    timeOutOfRange: {
+      rateThreshold: monitoringAlertsParameters.outOfRangeThreshold,
+      glycemiaLowerLimit: monitoringAlertsParameters.lowBg,
+      glycemiaUpperLimit: monitoringAlertsParameters.highBg
+    }
+  }
+}
+

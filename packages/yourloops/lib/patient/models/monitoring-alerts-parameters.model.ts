@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2026, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,16 +25,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen } from '@testing-library/react'
+import { MonitoringAlertsParameters } from 'medical-domain'
+import { MonitoringAlertsParametersDto, mapMonAlertParamsFromInternal } from '../../team/models/monitoring-alerts-parameters.model'
 
-export const checkMonitoringAlertsCard = async () => {
-  const monitoringAlertsCard = screen.getByTestId('monitoring-alerts-card')
-  expect(monitoringAlertsCard).toBeVisible()
-  expect(monitoringAlertsCard).toHaveTextContent('Monitoring alertsTime spent out of the target range10%Hyperglycemia alert17%Severe hypoglycemia alert20%Data not transmitted30%')
+
+export interface PatientAlertsConfiguration {
+  parameters: MonitoringAlertsParametersDto
+  isUsingTeamAlertParameters: boolean
+  reactivationDates: AlertReactivationDates | null
 }
 
-export const checkMonitoringAlertsCardNoData = async () => {
-  const monitoringAlertsCard = screen.getByTestId('monitoring-alerts-card')
-  expect(monitoringAlertsCard).toBeVisible()
-  expect(monitoringAlertsCard).toHaveTextContent('Monitoring alerts (+1)Time spent out of the target rangeN/AHyperglycemia alertN/ASevere hypoglycemia alertN/AData not transmitted100%')
+export interface AlertReactivationDates {
+  hyperglycemia: Date | null
+  hypoglycemia: Date | null
+  nonDataTransmission: Date | null
+  timeOutOfRange: Date | null
 }
+
+export const NewAlertConfigDto = (parameters: MonitoringAlertsParameters): PatientAlertsConfiguration => {
+  const parametersDto = mapMonAlertParamsFromInternal(parameters)
+  return {
+    parameters: parametersDto,
+  } as PatientAlertsConfiguration
+}
+

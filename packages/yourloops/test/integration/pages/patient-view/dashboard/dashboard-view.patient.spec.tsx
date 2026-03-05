@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,7 +42,7 @@ import {
   buildPrivateTeam,
   buildTeamOne,
   buildTeamTwo,
-  iTeamOne,
+  anotherTeam,
   mySecondTeamId,
   mySecondTeamName
 } from '../../../mock/team.api.mock'
@@ -75,7 +75,7 @@ describe('Dashboard view for patient', () => {
     mockChatAPI()
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
     jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
-    jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(iTeamOne)
+    jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(anotherTeam)
   })
 
   it('should display correct components when patient is in some medical teams', async () => {

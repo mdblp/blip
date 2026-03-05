@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -67,6 +67,8 @@ const defaultMonitoringAlerts: MonitoringAlerts = {
   timeSpentAwayFromTargetActive: false,
   frequencyOfSevereHypoglycemiaRate: 20,
   frequencyOfSevereHypoglycemiaActive: false,
+  frequencyOfSevereHyperglycemiaRate: 17,
+  frequencyOfSevereHyperglycemiaActive: false,
   nonDataTransmissionRate: 30,
   nonDataTransmissionActive: false
 }
@@ -143,6 +145,7 @@ export const hypoglycemiaPatientMetrics: PatientMetrics = buildPatientMetrics({
   medicalData: { range: { startDate: '1980-01-01T10:44:34+01:00', endDate: '2023-01-01T10:44:34+01:00' } }
 })
 
+
 export const noDataTransferredPatientInfo: Patient = buildPatient({
   userid: noDataTransferredPatientId,
   monitoringAlertsParameters: defaultMonitoringAlertsParameters,
@@ -165,7 +168,9 @@ const noDataTransferredPatientMetrics: PatientMetrics = buildPatientMetrics({
     timeSpentAwayFromTargetActive: false,
     timeSpentAwayFromTargetRate: null,
     frequencyOfSevereHypoglycemiaActive: false,
-    frequencyOfSevereHypoglycemiaRate: null
+    frequencyOfSevereHypoglycemiaRate: null,
+    frequencyOfSevereHyperglycemiaActive: false,
+    frequencyOfSevereHyperglycemiaRate: null
   }
 })
 

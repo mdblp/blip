@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -133,16 +133,7 @@ function TeamContextImpl(): TeamContext {
   }
 
   const updateTeam = async (team: Team): Promise<void> => {
-    const apiTeam: ITeam = {
-      id: team.id,
-      name: team.name,
-      phone: team.phone,
-      email: team.email,
-      address: team.address,
-      members: [],
-      monitoringAlertsParameters: team.monitoringAlertsParameters
-    } as ITeam
-    await TeamApi.editTeam(apiTeam)
+    await TeamApi.editTeam(team)
     refresh()
     metrics.send('team_management', 'edit_care_team')
   }
@@ -190,8 +181,7 @@ function TeamContextImpl(): TeamContext {
   }
 
   const getTeamFromCode = async (code: string): Promise<Readonly<Team> | null> => {
-    const iTeam = await TeamApi.getTeamFromCode(code)
-    return iTeam ? { ...iTeam, members: [] } : null
+    return await TeamApi.getTeamFromCode(code)
   }
 
   const joinTeam = async (teamId: string): Promise<void> => {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,8 +30,6 @@ import { DiabeticType } from '../../../models/medical/patient-profile/diabetic-t
 import { BgUnit, MGDL_UNITS, MMOLL_UNITS } from '../../../models/medical/datum/bg.model'
 import { BG_CLAMP_THRESHOLD, BgClasses } from '../../../models/medical/medical-data-options.model'
 import type { MonitoringAlertsParameters } from '../../../models/monitoring-alerts/monitoring-alerts-parameters.model'
-
-const DEFAULT_REPORTING_PERIOD = 168
 
 // Returns the default BG range for a given diabetic profile type and BG unit
 // If no profile is found, returns the common one (DT1/DT2)
@@ -93,15 +91,17 @@ function getDT1DT2RangeByUnit(unit: BgUnit): BgClasses {
 }
 
 // Returns the Alerts for the given blood glucose limits and BG unit
-export function createMonitoringAlertsParameters(veryLow: number, low: number, high: number, unit: BgUnit): MonitoringAlertsParameters {
+export function createMonitoringAlertsParameters(hypoLimit: number, hyperLimit: number,
+                                                 low: number, high: number, unit: BgUnit): MonitoringAlertsParameters {
   return {
     bgUnit: unit,
     lowBg: low,
     highBg: high,
     outOfRangeThreshold: 50, // the threshold is in %
-    veryLowBg: veryLow,
+    veryLowBg: hypoLimit,
+    veryHighBg: hyperLimit,
     hypoThreshold: 5,
-    nonDataTxThreshold: 50,
-    reportingPeriod: DEFAULT_REPORTING_PERIOD,
+    hyperThreshold: 25,
+    nonDataTxThreshold: 50
   }
 }

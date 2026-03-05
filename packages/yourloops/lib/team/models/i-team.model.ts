@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,8 @@
 import { type TeamType } from './enums/team-type.enum'
 import { type ITeamMember } from './i-team-member.model'
 import { type PostalAddress } from './postal-address.model'
-import { type MonitoringAlertsParameters } from 'medical-domain'
+import { MonitoringAlertsParametersDto } from './monitoring-alerts-parameters.model'
+
 
 /**
  * Team interface (API view)
@@ -42,5 +43,5 @@ export interface ITeam {
   email?: string
   address?: PostalAddress
   members: ITeamMember[]
-  monitoringAlertsParameters: MonitoringAlertsParameters
+  monitoringAlertsParameters: MonitoringAlertsParametersDto
 }
