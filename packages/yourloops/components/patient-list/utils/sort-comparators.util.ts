@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -81,9 +81,10 @@ const getMonitoringAlertsCount = (patient: Patient): number => {
   const monitoringAlerts = patient.monitoringAlerts
   const timeOutOfRangeCount = monitoringAlerts.timeSpentAwayFromTargetActive ? 1 : 0
   const hypoglycemiaCount = monitoringAlerts.frequencyOfSevereHypoglycemiaActive ? 1 : 0
+  const hyperglycemiaCount = monitoringAlerts.frequencyOfSevereHyperglycemiaActive ? 1 : 0
   const noDataCount = monitoringAlerts.nonDataTransmissionActive ? 1 : 0
 
-  return timeOutOfRangeCount + hypoglycemiaCount + noDataCount
+  return timeOutOfRangeCount + hypoglycemiaCount + noDataCount + hyperglycemiaCount
 }
 
 export const sortByMonitoringAlertsCount: PatientSortComparator = (patient1: Patient, patient2: Patient): number => {

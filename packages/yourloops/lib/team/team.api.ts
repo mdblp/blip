@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,6 +33,8 @@ import { type TeamMemberRole } from './models/enums/team-member-role.enum'
 import { type Team } from './models/team.model'
 import { HttpHeaderKeys } from '../http/models/enums/http-header-keys.enum'
 import { type ITeam } from './models/i-team.model'
+import { MonitoringAlertsParametersDto, mapMonAlertParamsFromInternal } from './models/monitoring-alerts-parameters.model'
+import { MonitoringAlertsParameters } from 'medical-domain'
 import { TeamType } from './models/enums/team-type.enum'
 import HttpStatus from '../http/models/enums/http-status.enum'
 
@@ -106,25 +108,36 @@ export default class TeamApi {
       throw Error('Missing some mandatory parameters name, address or phone')
     }
     const { data } = await HttpService.post<ITeam, Partial<ITeam>>({
-      url: '/crew/v0/teams',
+      url: '/crew/v1/teams',
       payload: { ...team, type: TeamType.medical }
     })
     return data
   }
 
-  static async editTeam(team: ITeam): Promise<void> {
+  static async editTeam(team: Team): Promise<void> {
+    const apiTeam: ITeam = {
+      id: team.id,
+      name: team.name,
+      phone: team.phone,
+      email: team.email,
+      address: team.address,
+      members: []
+    } as ITeam
+    if (team.monitoringAlertsParameters) {
+      apiTeam.monitoringAlertsParameters = mapMonAlertParamsFromInternal(team.monitoringAlertsParameters)
+    }
     await HttpService.put<void, ITeam>({
-      url: `/crew/v0/teams/${team.id}`,
-      payload: team
+      url: `/crew/v1/teams/${team.id}`,
+      payload: apiTeam
     })
   }
 
   static async deleteTeam(teamId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v0/teams/${teamId}` })
+    await HttpService.delete({ url: `/crew/v1/teams/${teamId}` })
   }
 
   static async leaveTeam(userId: string, teamId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v0/teams/${teamId}/members/${userId}` })
+    await HttpService.delete({ url: `/crew/v1/teams/${teamId}/members/${userId}` })
   }
 
   static async removeMember({ teamId, userId, email }: RemoveMemberArgs): Promise<void> {
@@ -141,18 +154,32 @@ export default class TeamApi {
     })
 
     await HttpService.put<void, ChangeMemberRoleSecondPayload>({
-      url: `/crew/v0/teams/${teamId}/members`,
+      url: `/crew/v1/teams/${teamId}/members`,
       payload: { teamId, userId, role }
     })
   }
 
-  static async getTeamFromCode(code: string): Promise<ITeam | null> {
+  static async getTeamFromCode(code: string): Promise<Team | null> {
     try {
       const { data } = await HttpService.get<ITeam[]>({
-        url: '/crew/v0/teams',
+        url: '/crew/v1/teams',
         config: { params: { code } }
       })
-      return data[0]
+      const dto = data[0]
+      const result = {
+        id: dto.id,
+        name: dto.name,
+        code: dto.code,
+        type: dto.type,
+        phone: dto.phone,
+        email: dto.email,
+        address: dto.address,
+        members: []
+      } as Team
+      if (dto.monitoringAlertsParameters) {
+        result.monitoringAlertsParameters = this.mapMonAlertParamsFromDto(dto.monitoringAlertsParameters)
+      }
+      return result
     } catch (err) {
       const error = err as Error
       if (error.message === ErrorMessageStatus.NotFound) {
@@ -166,7 +193,7 @@ export default class TeamApi {
   static async joinTeam(teamId: string, userId: string): Promise<void> {
     try {
       await HttpService.post<void, { userId: string }>({
-        url: `/crew/v0/teams/${teamId}/patients`,
+        url: `/crew/v1/teams/${teamId}/patients`,
         payload: { userId }
       }, [PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_CODE])
     } catch (error) {
@@ -184,5 +211,20 @@ export default class TeamApi {
     }
     const userRoute = isUserHcp ? HCP_ROUTE : PATIENTS_ROUTE
     return `/bff/v1/${userRoute}/${user.id}/teams`
+  }
+
+
+  static mapMonAlertParamsFromDto(dto: MonitoringAlertsParametersDto): MonitoringAlertsParameters {
+    return {
+      bgUnit: dto.bgUnit,
+      hypoThreshold: dto.hypoglycemia.rateThreshold,
+      hyperThreshold: dto.hyperglycemia.rateThreshold,
+      veryHighBg: dto.hyperglycemia.glycemiaUpperLimit,
+      veryLowBg: dto.hypoglycemia.glycemiaLowerLimit,
+      nonDataTxThreshold: dto.nonDataTransmission.rateThreshold,
+      outOfRangeThreshold: dto.timeOutOfRange.rateThreshold,
+      lowBg: dto.timeOutOfRange.glycemiaLowerLimit,
+      highBg: dto.timeOutOfRange.glycemiaUpperLimit
+    }
   }
 }

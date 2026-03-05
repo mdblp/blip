@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,6 +30,8 @@ import { type BgUnit } from 'medical-domain'
 export interface MonitoringAlerts {
   timeSpentAwayFromTargetRate: number
   timeSpentAwayFromTargetActive: boolean
+  frequencyOfSevereHyperglycemiaRate: number
+  frequencyOfSevereHyperglycemiaActive: boolean
   frequencyOfSevereHypoglycemiaRate: number
   frequencyOfSevereHypoglycemiaActive: boolean
   nonDataTransmissionRate: number
@@ -41,6 +43,8 @@ export interface Thresholds {
   maxHighBg: number
   minVeryLowBg: number
   maxVeryLowBg: number
+  minVeryHighBg: number
+  maxVeryHighBg: number
   minLowBg: number
   maxLowBg: number
 }
@@ -50,7 +54,9 @@ export interface BgValues {
   outOfRangeThresholdDefault: number
   nonDataTxThresholdDefault: number
   hypoThresholdDefault: number
+  hyperThresholdDefault: number
   veryLowBgDefault: number
+  veryHighBgDefault: number
   lowBgDefault: number
   highBgDefault: number
   reportingPeriodDefault: number

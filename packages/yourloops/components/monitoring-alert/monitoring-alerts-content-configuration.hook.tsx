@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -50,6 +50,8 @@ interface MonitoringAlertsContentConfigurationHookReturn {
   getNonDataTxThresholdInitialState: () => ValueErrorPair
   getOutOfRangeThresholdInitialState: () => ValueErrorPair
   getVeryLowBgInitialState: () => ValueErrorMessagePair
+  getVeryHighBgInitialState: () => ValueErrorMessagePair
+  getHyperThresholdInitialState: () => ValueErrorPair
   monitoringValuesDisplayed: MonitoringValuesDisplayed
   save: () => void
   saveButtonDisabled: boolean
@@ -63,6 +65,8 @@ export interface MonitoringValuesDisplayed {
   nonDataTxThreshold: ValueErrorPair
   outOfRangeThreshold: ValueErrorPair
   veryLowBg: ValueErrorMessagePair
+  veryHighBg: ValueErrorMessagePair
+  hyperThreshold: ValueErrorPair
 }
 
 interface ValueErrorMessagePair {
@@ -76,7 +80,6 @@ interface ValueErrorPair {
 }
 
 export const DEFAULT_BG_UNIT = Unit.MilligramPerDeciliter
-const DEFAULT_REPORTING_PERIOD = 168
 
 export const useMonitoringAlertsContentConfiguration = (
   {
@@ -104,6 +107,14 @@ export const useMonitoringAlertsContentConfiguration = (
     return {
       value: veryLowBgValue,
       errorMessage: getErrorMessage(userBgUnit, veryLowBgValue, thresholds.minVeryLowBg, thresholds.maxVeryLowBg)
+    }
+  }
+
+  const veryHighBgValue = getConvertedValue(monitoringAlertsParameters.veryHighBg, monitoringBgUnit, userBgUnit)
+  const getVeryHighBgInitialState = (): ValueErrorMessagePair => {
+    return {
+      value: veryHighBgValue,
+      errorMessage: getErrorMessage(userBgUnit, veryHighBgValue, thresholds.minVeryHighBg, thresholds.maxVeryHighBg)
     }
   }
 
@@ -136,13 +147,22 @@ export const useMonitoringAlertsContentConfiguration = (
     }
   }
 
+  const getHyperThresholdInitialState = (): ValueErrorPair => {
+    return {
+      value: monitoringAlertsParameters.hyperThreshold,
+      error: isInvalidPercentage(monitoringAlertsParameters.hyperThreshold)
+    }
+  }
+
   const [monitoringValuesDisplayed, setMonitoringValuesDisplayed] = useState<MonitoringValuesDisplayed>(() => ({
     highBg: getHighBgInitialState(),
     hypoThreshold: getHypoThresholdInitialState(),
     lowBg: getLowBgInitialState(),
     nonDataTxThreshold: getNonDataTxThresholdInitialState(),
     outOfRangeThreshold: getOutOfRangeThresholdInitialState(),
-    veryLowBg: getVeryLowBgInitialState()
+    veryLowBg: getVeryLowBgInitialState(),
+    veryHighBg: getVeryHighBgInitialState(),
+    hyperThreshold: getHyperThresholdInitialState()
   }))
 
   const hasErrorMessage = useMemo(() => {
@@ -158,10 +178,29 @@ export const useMonitoringAlertsContentConfiguration = (
     return highBgValue !== monitoringValuesDisplayed.highBg.value ||
       lowBgValue !== monitoringValuesDisplayed.lowBg.value ||
       veryLowBgValue !== monitoringValuesDisplayed.veryLowBg.value ||
+      veryHighBgValue !== monitoringValuesDisplayed.veryHighBg.value ||
       monitoringAlertsParameters.hypoThreshold !== monitoringValuesDisplayed.hypoThreshold.value ||
+      monitoringAlertsParameters.hyperThreshold !== monitoringValuesDisplayed.hyperThreshold.value ||
       monitoringAlertsParameters.nonDataTxThreshold !== monitoringValuesDisplayed.nonDataTxThreshold.value ||
       monitoringAlertsParameters.outOfRangeThreshold !== monitoringValuesDisplayed.outOfRangeThreshold.value
-  }, [highBgValue, lowBgValue, monitoringAlertsParameters.hypoThreshold, monitoringAlertsParameters.nonDataTxThreshold, monitoringAlertsParameters.outOfRangeThreshold, monitoringValuesDisplayed.highBg.value, monitoringValuesDisplayed.hypoThreshold.value, monitoringValuesDisplayed.lowBg.value, monitoringValuesDisplayed.nonDataTxThreshold.value, monitoringValuesDisplayed.outOfRangeThreshold.value, monitoringValuesDisplayed.veryLowBg.value, veryLowBgValue])
+  }, [
+    highBgValue,
+    lowBgValue,
+    monitoringAlertsParameters.hypoThreshold,
+    monitoringAlertsParameters.hyperThreshold,
+    monitoringAlertsParameters.nonDataTxThreshold,
+    monitoringAlertsParameters.outOfRangeThreshold,
+    monitoringValuesDisplayed.highBg.value,
+    monitoringValuesDisplayed.hypoThreshold.value,
+    monitoringValuesDisplayed.hyperThreshold.value,
+    monitoringValuesDisplayed.lowBg.value,
+    monitoringValuesDisplayed.nonDataTxThreshold.value,
+    monitoringValuesDisplayed.outOfRangeThreshold.value,
+    monitoringValuesDisplayed.veryLowBg.value,
+    monitoringValuesDisplayed.veryHighBg.value,
+    veryLowBgValue,
+    veryHighBgValue
+  ])
 
   const saveButtonDisabled = useMemo(() => {
     return hasErrorMessage || saveInProgress || !haveValuesBeenUpdated
@@ -169,7 +208,6 @@ export const useMonitoringAlertsContentConfiguration = (
 
 
   const save = (): void => {
-    const reportingPeriod = (monitoringAlertsParameters.reportingPeriod && monitoringAlertsParameters.reportingPeriod > 0) ? monitoringAlertsParameters.reportingPeriod : DEFAULT_REPORTING_PERIOD
     const monitoringAlertsParametersUpdated: MonitoringAlertsParameters = {
       bgUnit: userBgUnit,
       lowBg: monitoringValuesDisplayed.lowBg.value,
@@ -177,8 +215,9 @@ export const useMonitoringAlertsContentConfiguration = (
       outOfRangeThreshold: monitoringValuesDisplayed.outOfRangeThreshold.value,
       veryLowBg: monitoringValuesDisplayed.veryLowBg.value,
       hypoThreshold: monitoringValuesDisplayed.hypoThreshold.value,
-      nonDataTxThreshold: monitoringValuesDisplayed.nonDataTxThreshold.value,
-      reportingPeriod
+      veryHighBg: monitoringValuesDisplayed.veryHighBg.value,
+      hyperThreshold: monitoringValuesDisplayed.hyperThreshold.value,
+      nonDataTxThreshold: monitoringValuesDisplayed.nonDataTxThreshold.value
     }
     onSave(monitoringAlertsParametersUpdated)
   }
@@ -186,10 +225,12 @@ export const useMonitoringAlertsContentConfiguration = (
   return {
     getHighBgInitialState,
     getHypoThresholdInitialState,
+    getHyperThresholdInitialState,
     getLowBgInitialState,
     getNonDataTxThresholdInitialState,
     getOutOfRangeThresholdInitialState,
     getVeryLowBgInitialState,
+    getVeryHighBgInitialState,
     monitoringValuesDisplayed,
     save,
     saveButtonDisabled,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -130,9 +130,10 @@ export function buildTeam(id = 'fakeTeamId', members: TeamMember[] = [], name = 
       highBg: 2,
       outOfRangeThreshold: 10,
       veryLowBg: 4,
+      veryHighBg:10,
       hypoThreshold: 15,
-      nonDataTxThreshold: 20,
-      reportingPeriod: 7
+      hyperThreshold: 25,
+      nonDataTxThreshold: 20
     }
   }
 }

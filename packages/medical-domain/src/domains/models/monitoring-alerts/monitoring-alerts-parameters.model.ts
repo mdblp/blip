@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,7 +32,8 @@ export interface MonitoringAlertsParameters {
   highBg: number
   outOfRangeThreshold: number
   veryLowBg: number
+  veryHighBg: number
   hypoThreshold: number
+  hyperThreshold: number
   nonDataTxThreshold: number
-  reportingPeriod: number
 }
