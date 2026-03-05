@@ -71,6 +71,8 @@ export const getContentTitleByCode = (alarmCode: AlarmCode, device: Device): str
     case AlarmCode.G6Hypoglycemia:
     case AlarmCode.LongHypoglycemia:
       return isRecentDevice ? t('alarm-hypoglycemia-title-new') : t('alarm-hypoglycemia-title-old')
+    case AlarmCode.G7BriefSensorIssue:
+      return t('alarm-g7-brief-sensor-issue-title')
     case AlarmCode.G7GracePeriodExpired:
       return t('alarm-g7-grace-period-expired-title')
     case AlarmCode.G7Hyperglycemia:
@@ -79,8 +81,12 @@ export const getContentTitleByCode = (alarmCode: AlarmCode, device: Device): str
       return t('alarm-hypoglycemia-title-new')
     case AlarmCode.G7LongHyperglycemia:
       return t('alarm-g7-long-hyperglycemia-title')
+    case AlarmCode.G7SensorFailed:
+      return t('alarm-g7-sensor-failed-title')
     case AlarmCode.G7SensorSessionExpired:
       return t('alarm-g7-sensor-session-expired-title')
+    case AlarmCode.G7SignalLoss:
+      return t('alarm-g7-signal-loss-title')
     case AlarmCode.G7UrgentLowSoon:
       return t('alarm-g7-urgent-low-soon-title')
     case AlarmCode.InsightHypoglycemia:
@@ -143,6 +149,8 @@ export const getAlarmEventDescription = (alarmCode: AlarmCode, device: Device, b
         value: convertedValue,
         unit: bgUnit
       }), t('alarm-loop-mode-deactivated-description')]
+    case AlarmCode.G7BriefSensorIssue:
+      return [t('alarm-g7-brief-sensor-issue-description')]
     case AlarmCode.G7GracePeriodExpired:
       return [t('alarm-g7-grace-period-expired-description'), t('alarm-loop-mode-turned-off')]
     case AlarmCode.G7Hyperglycemia:
@@ -157,8 +165,12 @@ export const getAlarmEventDescription = (alarmCode: AlarmCode, device: Device, b
         value: convertedValue,
         unit: bgUnit
       })]
+    case AlarmCode.G7SensorFailed:
+      return [t('alarm-g7-sensor-failed-description')]
     case AlarmCode.G7SensorSessionExpired:
       return [t('alarm-g7-sensor-session-expired-description')]
+    case AlarmCode.G7SignalLoss:
+      return [t('alarm-g7-signal-loss-description')]
     case AlarmCode.G7UrgentLowSoon:
       return [t('alarm-g7-urgent-low-soon-description', {
         value: convertedValue,
