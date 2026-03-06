@@ -1,4 +1,9 @@
 {
+  "acknowledge-monitoring-alert-dialog-body": "Do you wish to acknowledge the <strong>{{alertName}}</strong> monitoring alert for the patient <strong>{{patientName}}</strong>? The monitoring alert will be muted for all HCP users in the team until the next Hypoglycemia event.",
+  "acknowledge-monitoring-alert-dialog-title": "Acknowledge {{alertName}} monitoring alert",
+  "acknowledge-monitoring-alert-dialog-warning": "A monitoring alert must be acknowledged only if there is no patient risk.",
+  "acknowledge-monitoring-alert-dialog-analyse-button": "Analyse the alert",
+  "acknowledge-monitoring-alert-dialog-acknowledge-button": "Acknowledge the alert",
   "Austria": "Austria",
   "BGM": "BGM",
   "Basal": "Basal",
@@ -343,7 +348,7 @@
   "hyperglycemia": "Hyperglycemia",
   "hyperglycemia-above": "Hyperglycemia above",
   "hyperglycemia-threshold": "Hyperglycemia threshold",
-  "hypoglycemia": "Below range",
+  "hypoglycemia": "Hypoglycemia",
   "hyperglycemia-tooltip1": "Hyperglycemia: {{percentage}}",
   "hyperglycemia-tooltip2": "Alert triggered when {{threshold}}% of time above {{veryHighBg}} {{unit}} threshold over the period considered.",
   "hypoglycemia-tooltip1": "Hypoglycemia: {{percentage}}",

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,6 +28,7 @@
 import { type Team } from '../../team'
 import { type Patient } from './patient.model'
 import { DiabeticProfile } from './patient-diabete-profile'
+import { type AlertReactivationDates } from './monitoring-alerts-parameters.model'
 
 export interface PatientsContextResult {
   patients: Patient[]
@@ -41,6 +42,7 @@ export interface PatientsContextResult {
   markPatientMessagesAsRead: (patient: Patient) => void
   deletePatientMonitoringAlertsParameters: (patientId: string) => Promise<void>
   updatePatientMonitoringAlertsParameters: (patient: Patient) => Promise<void>
+  acknowledgePatientAlerts: (patientId: string, reactivationDates: AlertReactivationDates) => Promise<void>
   updatePatientDiabeticProfile:(patientId : string, selectedDiabeticProfile: DiabeticProfile) => Promise<void>
   removePatient: (patient: Patient) => Promise<void>
   refresh: () => void

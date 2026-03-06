@@ -30,7 +30,7 @@ import { MonitoringAlertsParametersDto, mapMonAlertParamsFromInternal } from '..
 
 
 export interface PatientAlertsConfiguration {
-  parameters: MonitoringAlertsParametersDto
+  parameters: MonitoringAlertsParametersDto | null
   isUsingTeamAlertParameters: boolean
   reactivationDates: AlertReactivationDates | null
 }
@@ -48,4 +48,5 @@ export const NewAlertConfigDto = (parameters: MonitoringAlertsParameters): Patie
     parameters: parametersDto,
   } as PatientAlertsConfiguration
 }
+
 
