@@ -25,52 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
+import {
+  testCliniciansEmptyList,
+  testCliniciansFiveClinicians,
+  testCliniciansOneClinician,
+  testHcpAddClinician,
+  testHcpRemoveClinician,
+  testPatientAddClinician,
+  testPatientRemoveClinician
+} from '../assert/clinicians.assert'
 
-export const testCliniciansEmptyList = () => {
-  const cliniciansSection = within(screen.getByTestId('patient-clinicians'))
-  expect(cliniciansSection.getByRole('button', { name: 'Add a referrer' })).toBeVisible()
-  expect(cliniciansSection).toHaveTextContent('Referring HCP allows you to identify the healthcare professionals to contact in case of need.')
+export const checkCliniciansEmptyList = async (): Promise<void> => {
+  testCliniciansEmptyList()
 }
 
-export const testCliniciansOneClinician = () => {
-  const cliniciansSection = within(screen.getByTestId('patient-clinicians'))
-  expect(cliniciansSection.getByRole('button', { name: 'Add a referrer' })).toBeVisible()
-  expect(cliniciansSection).toHaveTextContent('Referring HCP allows you to identify the healthcare professionals to contact in case of need.')
+export const checkCliniciansManagementPatient = async (): Promise<void> => {
+  await testCliniciansOneClinician()
+  testPatientAddClinician()
+  testPatientRemoveClinician()
 }
 
-export const testCliniciansFiveClinicians = () => {
-  const cliniciansSection = within(screen.getByTestId('patient-clinicians'))
-  expect(cliniciansSection.getByRole('button', { name: 'Add a referrer' })).toBeVisible()
-  expect(cliniciansSection).toHaveTextContent('Referring HCP allows you to identify the healthcare professionals to contact in case of need.')
+export const checkCliniciansManagementHcp = async (): Promise<void> => {
+  await testCliniciansOneClinician()
+  await testHcpRemoveClinician()
+  testHcpAddClinician()
 }
 
-export const testPatientRemoveClinician = () => {
-  const cliniciansSection = within(screen.getByTestId('patient-clinicians'))
-  const removeButtons = cliniciansSection.getAllByRole('button', { name: 'Remove referrer' })
-  expect(removeButtons.length).toBeGreaterThan(0)
-  removeButtons.forEach((button) => {
-    expect(button).toBeVisible()
-  })
-}
-
-export const testHcpRemoveClinician = () => {
-  const cliniciansSection = within(screen.getByTestId('patient-clinicians'))
-  const removeButtons = cliniciansSection.getAllByRole('button', { name: 'Remove clinician' })
-  expect(removeButtons.length).toBeGreaterThan(0)
-  removeButtons.forEach((button) => {
-    expect(button).toBeVisible()
-  })
-}
-
-export const testPatientAddClinician = () => {
-  const cliniciansSection = within(screen.getByTestId('patient-clinicians'))
-  const addButton = cliniciansSection.getByRole('button', { name: 'Add a referrer' })
-  expect(addButton).toBeVisible()
-}
-
-export const testHcpAddClinician = () => {
-  const cliniciansSection = within(screen.getByTestId('patient-clinicians'))
-  const addButton = cliniciansSection.getByRole('button', { name: 'Add a clinician' })
-  expect(addButton).toBeVisible()
+export const checkCliniciansFiveClinicians = async (): Promise<void> => {
+  await testCliniciansFiveClinicians()
 }

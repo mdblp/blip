@@ -33,32 +33,46 @@ import DialogActions from '@mui/material/DialogActions'
 import Dialog from '@mui/material/Dialog'
 import { ClinicianApi } from '../../../../../../lib/clinicians/clinician.api'
 import { Clinician } from '../../../../../../lib/clinicians/models/clinician.model'
+import { errorTextFromException } from '../../../../../../lib/utils'
+import { logError } from '../../../../../../utils/error.util'
+import { useAlert } from '../../../../../../components/utils/snackbar'
 
 interface RemoveClinicianDialogProps {
   clinician: Clinician
   patientInfo: { id: string, name: string }
   isUserPatient: boolean
   onClose: () => void
+  onSuccess: () => void
 }
 
 export const RemoveClinicianDialog: FC<RemoveClinicianDialogProps> = (props) => {
-  const { clinician, patientInfo, isUserPatient, onClose } = props
+  const { clinician, patientInfo, isUserPatient, onClose, onSuccess } = props
   const { t } = useTranslation()
+  const alert = useAlert()
 
   const patientId = patientInfo.id
   const clinicianId = clinician.id
 
   const patientName = patientInfo.name
-  const clinicianName = clinician.fullName
+  const clinicianName = clinician.name
 
   const onClickRemoveClinician = async () => {
-    await ClinicianApi.removeClinician(patientId, clinicianId)
+    try {
+      await ClinicianApi.removeClinician(patientId, clinicianId)
+      alert.success(t('clinician-remove-success'))
 
-    onClose()
+      onSuccess()
+    } catch (err) {
+      const errorMessage = errorTextFromException(err)
+      logError(errorMessage, 'remove-clinician')
+
+      alert.error(t('error-occurred'))
+      onClose()
+    }
   }
 
   return (
-    <Dialog onClose={onClose} open={true}>
+    <Dialog onClose={onClose} open={true} data-testid="remove-clinician-dialog">
       <DialogTitle>{t('remove-clinician-title')}</DialogTitle>
       <DialogContent>
         {isUserPatient ?

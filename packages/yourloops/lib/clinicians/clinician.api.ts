@@ -31,7 +31,7 @@ import { AddClinicianPayload } from './models/add-clinician-payload.model'
 export class ClinicianApi {
   static async addClinician(patientId: string, hcpId: string): Promise<void> {
     await HttpService.post<void, AddClinicianPayload>({
-      url: `/crew/v1/patient/${patientId}/hcp-referents`,
+      url: `/crew/v1/patients/${patientId}/hcp-referents`,
       payload: {
         referentUserId: hcpId,
         patientUserId: patientId
@@ -40,6 +40,6 @@ export class ClinicianApi {
   }
 
   static async removeClinician(patientId: string, hcpId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v1/patient/${patientId}/hcp-referents/${hcpId}` })
+    await HttpService.delete({ url: `/crew/v1/patients/${patientId}/hcp-referents/${hcpId}` })
   }
 }

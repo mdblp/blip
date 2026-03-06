@@ -34,7 +34,7 @@ import userEvent from '@testing-library/user-event'
 import { getTranslation } from '../../../../utils/i18n'
 import PatientApi from '../../../../../lib/patient/patient.api'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
-import { patient1Info } from '../../../data/patient.api.data'
+import { patient1Info, patient2Info, patient3Info } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
@@ -42,7 +42,7 @@ import {
   checkCliniciansEmptyList,
   checkCliniciansFiveClinicians,
   checkCliniciansManagementPatient
-} from '../../../assert/clinicians.assert'
+} from '../../../use-cases/clinicians-management'
 
 describe('Patient profile view for Patient', () => {
 
@@ -69,16 +69,32 @@ describe('Patient profile view for Patient', () => {
       await testPatientPersonalInformation()
     })
 
-    it('should be able to view clinicians list with 0 clinician', () => {
-      checkCliniciansEmptyList()
+    it('should be able to view clinicians list with 0 clinician', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      await checkCliniciansEmptyList()
     })
 
-    it('should be able to view and manage clinicians list with 1 clinician', () => {
-      checkCliniciansManagementPatient()
+    it('should be able to view and manage clinicians list with 1 clinician', async  () => {
+      mockPatientLogin(patient2Info)
+
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      await checkCliniciansManagementPatient()
     })
 
-    it('should be able to view clinicians list with 5 clinicians', () => {
-      checkCliniciansFiveClinicians()
+    it('should be able to view clinicians list with 5 clinicians', async () => {
+      mockPatientLogin(patient3Info)
+
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      await checkCliniciansFiveClinicians()
     })
   })
 

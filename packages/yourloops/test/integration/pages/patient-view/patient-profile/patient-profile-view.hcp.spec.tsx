@@ -34,7 +34,7 @@ import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
 import { AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../../use-cases/app-main-layout-visualisation'
 import { renderPage } from '../../../utils/render'
-import { patient1Id, patientWithMmolId } from '../../../data/patient.api.data'
+import { patient1Id, patient2Id, patient3Id, patientWithMmolId } from '../../../data/patient.api.data'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import {
   testMonitoringAlertsParametersConfigurationForPatientMgdl,
@@ -57,11 +57,8 @@ import userEvent from '@testing-library/user-event'
 import { getTranslation } from '../../../../utils/i18n'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { checkProfilesForMalePatient } from '../../../assert/profile-range.assert'
-import {
-  checkCliniciansEmptyList,
-  checkCliniciansFiveClinicians,
-  checkCliniciansManagementHcp
-} from '../../../assert/clinicians.assert'
+import { checkCliniciansEmptyList, checkCliniciansFiveClinicians, checkCliniciansManagementHcp } from '../../../use-cases/clinicians-management'
+import { mockCliniciansApi } from '../../../mock/clinicians.api.mock'
 
 describe('Patient profile view for HCP', () => {
   beforeEach(() => {
@@ -73,6 +70,7 @@ describe('Patient profile view for HCP', () => {
     mockPatientApiForHcp()
     mockDataAPI()
     mockDblCommunicationApi()
+    mockCliniciansApi()
   })
 
   const firstName = 'HCP firstName'
@@ -81,6 +79,9 @@ describe('Patient profile view for HCP', () => {
   const patientTargetAndAlertsRouteMmoL = `/teams/${myThirdTeamId}/patients/${patientWithMmolId}${AppUserRoute.PatientProfile}`
   const patientProfileRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.PatientProfile}`
   const malePatientProfileRoute = `/teams/${myThirdTeamId}/patients/${patientWithMmolId}${AppUserRoute.PatientProfile}`
+
+  const patientWithOneClinicianRoute = `/teams/${myThirdTeamId}/patients/${patient2Id}${AppUserRoute.PatientProfile}`
+  const patientWithFiveCliniciansRoute = `/teams/${myThirdTeamId}/patients/${patient3Id}${AppUserRoute.PatientProfile}`
 
   /**
    * @see https://github.com/testing-library/react-testing-library/issues/651
@@ -166,16 +167,28 @@ describe('Patient profile view for HCP', () => {
       expect(ageText).toBeInTheDocument()
     })
 
-    it('should be able to view clinicians list with 0 clinician', () => {
-      checkCliniciansEmptyList()
+    it('should be able to view clinicians list with 0 clinician', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      await checkCliniciansEmptyList()
     })
 
-    it('should be able to view and manage clinicians list with 1 clinician', () => {
-      checkCliniciansManagementHcp()
+    it('should be able to view and manage clinicians list with 1 clinician', async () => {
+      await act(async () => {
+        renderPage(patientWithOneClinicianRoute)
+      })
+
+      await checkCliniciansManagementHcp()
     })
 
-    it('should be able to view clinicians list with 5 clinicians', () => {
-      checkCliniciansFiveClinicians()
+    it('should be able to view clinicians list with 5 clinicians', async () => {
+      await act(async () => {
+        renderPage(patientWithFiveCliniciansRoute)
+      })
+
+      await checkCliniciansFiveClinicians()
     })
 
     // TODO: Uncomment when the feature is implemented with the API

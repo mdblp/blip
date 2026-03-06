@@ -36,20 +36,25 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Box from '@mui/material/Box'
 import { ClinicianApi } from '../../../../../../lib/clinicians/clinician.api'
 import { useAddClinicianDialog } from './add-clinician-dialog.hook'
+import { errorTextFromException } from '../../../../../../lib/utils'
+import { logError } from '../../../../../../utils/error.util'
+import { useAlert } from '../../../../../../components/utils/snackbar'
 
 interface AddClinicianDialogProps {
   patientInfo: { id: string, name: string }
   user: User
   clinicianIds: string[]
   onClose: () => void
+  onSuccess: () => void
 }
 
 const DEFAULT_HCP_ID_VALUE = ''
 
 export const AddClinicianDialog: FC<AddClinicianDialogProps> = (props) => {
-  const { patientInfo, user, clinicianIds, onClose } = props
+  const { patientInfo, user, clinicianIds, onClose, onSuccess } = props
   const { t } = useTranslation()
   const { getAvailableHcps } = useAddClinicianDialog({ clinicianIds })
+  const alert = useAlert()
 
   const [selectedHcpId, setSelectedHcpId] = React.useState(DEFAULT_HCP_ID_VALUE)
 
@@ -65,13 +70,23 @@ export const AddClinicianDialog: FC<AddClinicianDialogProps> = (props) => {
   }
 
   const onClickAddClinician = async () => {
-    await ClinicianApi.addClinician(patientId, selectedHcpId)
+    try {
+      await ClinicianApi.addClinician(patientId, selectedHcpId)
+      alert.success(t('clinician-add-success'))
 
-    onClose()
+      onSuccess()
+    } catch (err) {
+      const errorMessage = errorTextFromException(err)
+      logError(errorMessage, 'medical-report-delete')
+      console.log(err)
+
+      alert.error(t('error-occurred'))
+      onClose()
+    }
   }
 
   return (
-    <Dialog onClose={onClose} open={true}>
+    <Dialog onClose={onClose} open={true} data-testid="add-clinician-dialog">
       <DialogTitle>{t('add-clinician-title')}</DialogTitle>
       <DialogContent>
         {user.isUserPatient() ?
@@ -93,6 +108,7 @@ export const AddClinicianDialog: FC<AddClinicianDialogProps> = (props) => {
               value={selectedHcpId}
               label={t('clinician-name')}
               onChange={handleChange}
+              MenuProps={{ sx: { maxHeight: 300 } }}
             >
               {sortedAvailableHcpList.map((hcp) => (
                 <MenuItem key={hcp.userId} value={hcp.userId}>{hcp.profile?.fullName}</MenuItem>
@@ -100,7 +116,6 @@ export const AddClinicianDialog: FC<AddClinicianDialogProps> = (props) => {
             </Select>
           </FormControl>
         </Box>
-
 
         {t('add-clinician-explanation')}
       </DialogContent>

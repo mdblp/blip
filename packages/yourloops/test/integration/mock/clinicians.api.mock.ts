@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface Clinician {
-  id: string
-  name: string
-  profession: string
-  email: string
+import { ClinicianApi } from '../../../lib/clinicians/clinician.api'
+
+export const mockCliniciansApi = () => {
+  jest.spyOn(ClinicianApi, 'addClinician').mockResolvedValue()
+  jest.spyOn(ClinicianApi, 'removeClinician').mockResolvedValue()
 }
