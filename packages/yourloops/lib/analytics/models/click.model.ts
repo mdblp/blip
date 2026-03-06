@@ -26,7 +26,9 @@
  */
 
 export interface ClickEvent {
+  action: string
   name: string
   value: number
   timestamp: string
+  tags: Record<string, string>
 }

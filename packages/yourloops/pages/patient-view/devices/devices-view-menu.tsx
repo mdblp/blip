@@ -41,7 +41,7 @@ import { makeStyles } from 'tss-react/mui'
 import { DeviceViewSection } from './device-view-section.enum'
 import { useTranslation } from 'react-i18next'
 import { DeviceSystemIcon } from '../../../components/icons/diabeloop/device-system-icon'
-import AnalyticsApi from '../../../lib/analytics/analytics.api'
+import AnalyticsApi, { ElementType } from '../../../lib/analytics/analytics.api'
 
 interface DevicesViewMenuProps {
   shouldDisplaySafetyBasalProfile: boolean
@@ -67,7 +67,7 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
 
   function handleClick(section: DeviceViewSection) {
     selectSection(section)
-    AnalyticsApi.trackClick(`device-section-${section}-selected`)
+    AnalyticsApi.trackClick(`device-view-section-${section}`, ElementType.Link)
   }
 
   return (

@@ -38,6 +38,7 @@ import { formatNumberForLang } from '../../lib/language'
 import { formatParameterValue, sortParameterList } from '../device/utils/device.utils'
 import classes from './show-parameters.css'
 import { getParametersAtDate } from './show-parameters.utils'
+import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 
 interface ShowParametersAtProps {
   date: number | string | Date
@@ -58,6 +59,7 @@ export const ShowParametersAt: FunctionComponent<ShowParametersAtProps> = (props
 
   const showParameters = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorElement(event.currentTarget);
+    AnalyticsApi.trackClick(`show-parameters-at`, ElementType.Button)
   };
 
   const handleClose = () => {

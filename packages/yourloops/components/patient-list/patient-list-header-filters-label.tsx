@@ -36,6 +36,7 @@ import { usePatientListContext } from '../../lib/providers/patient-list.provider
 import Link from '@mui/material/Link'
 import { usePatientListHeaderFiltersLabelHook } from './patient-list-header-filters-label.hook'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
+import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 
 interface PatientListHeaderFiltersLabelProps {
   patientsDisplayedCount: number
@@ -94,7 +95,10 @@ export const PatientListHeaderFiltersLabel: FunctionComponent<PatientListHeaderF
             variant="subtitle2"
             underline="always"
             className={classes.resetButton}
-            onClick={resetFilters}
+            onClick={() => {
+              resetFilters()
+              AnalyticsApi.trackClick(`patient-list-header-filters-reset`, ElementType.Button)
+            }}
           >
             {t('reset')}
           </Link>
