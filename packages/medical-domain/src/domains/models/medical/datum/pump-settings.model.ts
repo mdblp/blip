@@ -47,6 +47,10 @@ interface CgmConfig {
   name: string
   swVersionTransmitter: string
   transmitterId: string
+  pairingCode: string
+  serialNumber: string
+  softwareNumber: string
+  firmwareVersion: string
 }
 
 interface DeviceConfig {

@@ -82,7 +82,9 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
           </Box>
         </ListItemText>
       </ListItem>
-      <ListItem divider className="list-item">
+      { cgm.name == "G6" &&
+        <>
+        <ListItem divider className="list-item">
         <ListItemText>
           <Box
             sx={{
@@ -123,6 +125,70 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
           </Box>
         </ListItemText>
       </ListItem>
+        </>
+      }
+      { cgm.name != "G6" &&
+        <>
+          <ListItem divider className="list-item">
+            <ListItemText>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between"
+                }}>
+                <Typography variant="body2">{t('Pairing code')}</Typography>
+                <Typography variant="body2" className="bold">{cgm.pairingCode ?? FALLBACK_VALUE}</Typography>
+              </Box>
+            </ListItemText>
+          </ListItem>
+          <ListItem divider className="list-item">
+            <ListItemText>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between"
+                }}>
+                <Typography variant="body2">{t('Serial number')}</Typography>
+                <Typography variant="body2" className="bold">{cgm.serialNumber ?? FALLBACK_VALUE}</Typography>
+              </Box>
+            </ListItemText>
+          </ListItem>
+          <ListItem divider className="list-item">
+            <ListItemText>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between"
+                }}>
+                <Typography variant="body2">{t('Software number')}</Typography>
+                <Typography
+                  variant="body2"
+                  className="bold"
+                >
+                  {cgm.softwareNumber ?? FALLBACK_VALUE}
+                </Typography>
+              </Box>
+            </ListItemText>
+          </ListItem>
+          <ListItem>
+            <ListItemText className="list-item">
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between"
+                }}>
+                <Typography variant="body2">{t('Firmware version')}</Typography>
+                <Typography
+                  variant="body2"
+                  className="bold"
+                >
+                  {cgm.firmwareVersion ?? FALLBACK_VALUE}
+                </Typography>
+              </Box>
+            </ListItemText>
+          </ListItem>
+        </>
+      }
     </GenericListCard>
   )
 }

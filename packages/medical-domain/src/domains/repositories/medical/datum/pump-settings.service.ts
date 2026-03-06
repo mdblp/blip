@@ -104,7 +104,11 @@ const normalizeCgm = (rawCgm: Record<string, unknown>): CgmConfig => {
     manufacturer: (rawCgm?.manufacturer ?? '') as string,
     name: (rawCgm?.name ?? '') as string,
     swVersionTransmitter: (rawCgm?.swVersionTransmitter ?? '') as string,
-    transmitterId: (rawCgm?.transmitterId ?? '') as string
+    transmitterId: (rawCgm?.transmitterId ?? '') as string,
+    pairingCode: (rawCgm?.pairingCode ?? '') as string,
+    serialNumber: (rawCgm?.serialNumber ?? '') as string,
+    softwareNumber: (rawCgm?.softwareNumber ?? '') as string,
+    firmwareVersion: (rawCgm?.firmwareVersion ?? '') as string,
   }
 }
 
