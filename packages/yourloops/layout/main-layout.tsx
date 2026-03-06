@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC, type ReactElement } from 'react'
+import React, { type FC, type ReactElement, useEffect } from 'react'
 import { useAuth } from '../lib/auth'
 import { NotificationContextProvider } from '../lib/notifications/notification.hook'
 import { Navigate, Route } from 'react-router-dom'
@@ -34,12 +34,23 @@ import { PatientLayoutWithContext } from './patient-layout'
 import { UserRole } from '../lib/auth/models/enums/user-role.enum'
 import { HcpLayoutWithContext } from './hcp-layout'
 import { AppUserRoute } from '../models/enums/routes.enum'
+import metrics from '../lib/metrics'
 
 export const MainLayout: FC = () => {
   const { user } = useAuth()
 
+  const userRole = user?.role
+
+  useEffect(() => {
+    if (!userRole) {
+      return
+    }
+
+    metrics.send('metrics', 'setRole', userRole)
+  }, [userRole])
+
   const getUserLayout = (): ReactElement => {
-    switch (user?.role) {
+    switch (userRole) {
       case UserRole.Hcp:
         return <HcpLayoutWithContext />
       case UserRole.Caregiver:
