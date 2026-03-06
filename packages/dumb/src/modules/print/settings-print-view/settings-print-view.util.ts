@@ -136,48 +136,49 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
 
   switch (type) {
     case PdfSettingsDataType.Cgm:
-      if ((data as CgmConfig).name == "G6") {
+      const cgmData = (data as CgmConfig)
+      if (cgmData.name == "G6") {
         return [{
           label: t('Manufacturer'),
-          value: (data as CgmConfig).manufacturer
+          value: cgmData.manufacturer
         }, {
           label: t('Product'),
-          value: (data as CgmConfig).name
+          value: cgmData.name
         }, {
           label: t('Cgm sensor expiration date'),
-          value: (data as CgmConfig).expirationDate ? formatLocalizedFromUTC((data as CgmConfig).expirationDate, timePrefs, longDayFormat) : ''
+          value: cgmData.expirationDate ? formatLocalizedFromUTC(cgmData.expirationDate, timePrefs, longDayFormat) : ''
         }, {
           label: t('Cgm transmitter software version'),
-          value: (data as CgmConfig).swVersionTransmitter || ''
+          value: cgmData.swVersionTransmitter || ''
         }, {
           label: t('Cgm transmitter id'),
-          value: (data as CgmConfig).transmitterId || ''
+          value: cgmData.transmitterId || ''
         }, {
           label: t('Cgm transmitter end of life'),
-          value: (data as CgmConfig).endOfLifeTransmitterDate ? formatLocalizedFromUTC((data as CgmConfig).endOfLifeTransmitterDate, timePrefs, longDayFormat) : ''
+          value: cgmData.endOfLifeTransmitterDate ? formatLocalizedFromUTC(cgmData.endOfLifeTransmitterDate, timePrefs, longDayFormat) : ''
         }]
       } else {
         return [{
           label: t('Manufacturer'),
-          value: (data as CgmConfig).manufacturer
+          value: cgmData.manufacturer
         }, {
           label: t('Product'),
-          value: (data as CgmConfig).name
+          value: cgmData.name
         }, {
           label: t('Cgm sensor expiration date'),
-          value: (data as CgmConfig).expirationDate ? formatLocalizedFromUTC((data as CgmConfig).expirationDate, timePrefs, longDayFormat) : ''
+          value: cgmData.expirationDate ? formatLocalizedFromUTC(cgmData.expirationDate, timePrefs, longDayFormat) : ''
         }, {
           label: t('pairing-code'),
-          value: (data as CgmConfig).pairingCode || ''
+          value: cgmData.pairingCode || ''
         }, {
           label: t('serial-number'),
-          value: (data as CgmConfig).serialNumber || ''
+          value: cgmData.serialNumber || ''
         }, {
           label: t('software-number'),
-          value: (data as CgmConfig).softwareNumber || ''
+          value: cgmData.softwareNumber || ''
         }, {
           label: t('Cgm transmitter id'),
-          value: (data as CgmConfig).firmwareVersion || ''
+          value: cgmData.firmwareVersion || ''
         }]
       }
 
