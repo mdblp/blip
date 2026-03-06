@@ -61,6 +61,7 @@ import { type DateRange } from '../patient-data/patient-data.utils'
 import { CsvReportModel } from '../../lib/data/models/csv-report.model'
 import { logError } from '../../utils/error.util'
 import { errorTextFromException } from '../../lib/utils'
+import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 
 export type Presets = '1week' | '2weeks' | '4weeks' | '3months'
 
@@ -183,6 +184,7 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
 
   const handleClickPreset = (preset: Presets): void => {
     setReportOptions(getDatesFromPreset(preset, minDate, maxDate, reportOptions.format))
+    AnalyticsApi.trackClick(`print-report-dialog-preset-${preset}`, ElementType.Button)
   }
 
   const handleChangeCustomDate = (d: Dayjs): void => {
@@ -199,6 +201,7 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
   const presetSelected = reportOptions.preset
   const handleOutputFormat = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setReportOptions({ ...reportOptions, format: event.target.value as OutputFormat })
+    AnalyticsApi.trackClick(`print-report-dialog-output-format-${event.target.value}`, ElementType.Button)
   }
 
   const downloadFile = (url: string, fileName: string): void => {

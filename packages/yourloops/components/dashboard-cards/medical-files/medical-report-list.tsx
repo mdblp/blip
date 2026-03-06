@@ -51,6 +51,7 @@ import { MedicalReportItem } from './medical-report-item'
 import Typography from '@mui/material/Typography'
 import { logError } from '../../../utils/error.util'
 import { errorTextFromException } from '../../../lib/utils'
+import AnalyticsApi, { ElementType } from '../../../lib/analytics/analytics.api'
 
 const useStyle = makeStyles()(() => ({
   categoryTitle: {
@@ -163,6 +164,7 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
             startIcon={<NoteAddIcon />}
             onClick={() => {
               setIsEditDialogOpen(true)
+              AnalyticsApi.trackClick(`medical-report-add`, ElementType.Button)
             }}
           >
             {t('button-new')}
