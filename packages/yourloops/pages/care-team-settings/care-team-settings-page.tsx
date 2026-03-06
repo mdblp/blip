@@ -42,6 +42,7 @@ import TeamMonitoringAlertsConfiguration from '../../components/team/team-monito
 import { useParams } from 'react-router-dom'
 import { setPageTitle } from '../../lib/utils'
 import SpinningLoader from '../../components/loaders/spinning-loader'
+import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 
 const useStyles = makeStyles()((theme) => ({
   activeLink: {
@@ -130,6 +131,7 @@ export const CareTeamSettingsPage: FC = () => {
               }}
               onClick={() => {
                 scrollTo(teamInformation)
+                AnalyticsApi.trackClick(`care-team-settings-information`, ElementType.Link)
               }}
             >
               <InfoOutlinedIcon className={commonTeamClasses.icon} />
@@ -144,6 +146,7 @@ export const CareTeamSettingsPage: FC = () => {
               tabIndex={0}
               onClick={() => {
                 scrollTo(teamMembers)
+                AnalyticsApi.trackClick(`care-team-settings-members`, ElementType.Link)
               }}
               onKeyDown={() => {
                 scrollTo(teamMembers)
@@ -160,6 +163,7 @@ export const CareTeamSettingsPage: FC = () => {
               tabIndex={0}
               onClick={() => {
                 scrollTo(teamMonitoringAlerts)
+                AnalyticsApi.trackClick(`care-team-settings-monitoring-alerts`, ElementType.Link)
               }}
               onKeyDown={() => {
                 scrollTo(teamMonitoringAlerts)
