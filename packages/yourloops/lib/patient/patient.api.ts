@@ -35,6 +35,7 @@ import { type MonitoringAlertsParameters } from 'medical-domain'
 import { DiabeticProfilePayload } from './models/patient-diabete-profile'
 import { type DiabeticProfile } from './models/patient-diabete-profile'
 import { PatientProfile } from './models/patient-profile.model'
+import { NewAlertConfigDto, PatientAlertsConfiguration } from './models/monitoring-alerts-parameters.model'
 import { PatientMetrics } from './models/patient-metrics.model'
 import { UserProfilePayload } from './models/user-profile-payload.model'
 
@@ -97,20 +98,20 @@ export default class PatientApi {
   }
 
   static async updatePatientAlerts(teamId: string, patientId: string, monitoringAlertsParameters: MonitoringAlertsParameters): Promise<void> {
-    await HttpService.put<void, MonitoringAlertsParameters>({
-      url: `/crew/v0/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`,
-      payload: monitoringAlertsParameters
+    await HttpService.put<void, PatientAlertsConfiguration>({
+      url: `/crew/v1/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`,
+      payload: NewAlertConfigDto(monitoringAlertsParameters)
     })
   }
 
   static async deletePatientAlerts(teamId: string, patientId: string): Promise<void> {
     await HttpService.delete({
-      url: `/crew/v0/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`
+      url: `/crew/v1/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`
     })
   }
 
   static async removePatient(teamId: string, userId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v0/teams/${teamId}/patients/${userId}` })
+    await HttpService.delete({ url: `/crew/v1/teams/${teamId}/patients/${userId}` })
   }
 
   static async updatePatientDiabeticProfile(patientId: string, diabeticProfile: DiabeticProfile): Promise<void> {

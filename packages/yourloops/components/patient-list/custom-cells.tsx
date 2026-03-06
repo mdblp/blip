@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -40,6 +40,7 @@ import Badge from '@mui/material/Badge'
 import { TimeSpentOufOfRangeIcon } from '../icons/diabeloop/time-spent-ouf-of-range-icon'
 import { NoDataIcon } from '../icons/diabeloop/no-data-icon'
 import { HypoglycemiaIcon } from '../icons/diabeloop/hypoglycemia-icon'
+import { HyperglycemiaIcon } from '../icons/diabeloop/hyperglycemia-icon'
 import { NoMessageIcon } from '../icons/diabeloop/no-message-icon'
 import { MessageIcon } from '../icons/diabeloop/message-icon'
 import { convertBG } from '../../lib/units/units.util'
@@ -68,10 +69,12 @@ interface ActionsCellProps {
 interface MonitoringAlertsTooltips {
   timeSpentAwayFromTargetRate: string
   frequencyOfSevereHypoglycemiaRate: string
+  frequencyOfHyperglycemiaRate: string
   nonDataTransmissionRate: string
   min: number
   max: number
   veryLowBg: number
+  veryHighBg: number
 }
 
 const ICON_SIZE_PX = 25
@@ -107,7 +110,7 @@ export const MonitoringAlertsSkeletonCell: FunctionComponent = () => {
   const theme = useTheme()
 
   return (
-    <>
+    <Box sx={{ display: 'flex', justifySelf: 'center' }}>
       <Skeleton
         variant="circular"
         width={ICON_SIZE_PX}
@@ -126,7 +129,13 @@ export const MonitoringAlertsSkeletonCell: FunctionComponent = () => {
         height={ICON_SIZE_PX}
         sx={{ marginRight: theme.spacing(1) }}
       />
-    </>
+      <Skeleton
+        variant="circular"
+        width={ICON_SIZE_PX}
+        height={ICON_SIZE_PX}
+        sx={{ marginRight: theme.spacing(1) }}
+      />
+    </Box>
   )
 }
 
@@ -149,28 +158,34 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
     const lowBg = monitoringAlertsParameters.lowBg
     const highBg = monitoringAlertsParameters.highBg
     const veryLowBg = monitoringAlertsParameters.veryLowBg
+    const veryHighBg = monitoringAlertsParameters.veryHighBg
 
     return {
       timeSpentAwayFromTargetRate: PatientUtils.formatPercentageValue(monitoringAlerts.timeSpentAwayFromTargetRate),
       frequencyOfSevereHypoglycemiaRate: PatientUtils.formatPercentageValue(monitoringAlerts.frequencyOfSevereHypoglycemiaRate),
+      frequencyOfHyperglycemiaRate: PatientUtils.formatPercentageValue(monitoringAlerts.frequencyOfSevereHyperglycemiaRate),
       nonDataTransmissionRate: PatientUtils.formatPercentageValue(monitoringAlerts.nonDataTransmissionRate),
       min: isBgUnit ? roundUpToOneDecimal(lowBg) : convertBG(lowBg, bgUnit),
       max: isBgUnit ? roundUpToOneDecimal(highBg) : convertBG(highBg, bgUnit),
-      veryLowBg: isBgUnit ? roundUpToOneDecimal(veryLowBg) : convertBG(veryLowBg, bgUnit)
+      veryLowBg: isBgUnit ? roundUpToOneDecimal(veryLowBg) : convertBG(veryLowBg, bgUnit),
+      veryHighBg: isBgUnit ? roundUpToOneDecimal(veryHighBg) : convertBG(veryHighBg, bgUnit)
     }
   }
 
   const {
     timeSpentAwayFromTargetRate,
     frequencyOfSevereHypoglycemiaRate,
+    frequencyOfHyperglycemiaRate,
     nonDataTransmissionRate,
     min,
     max,
-    veryLowBg
+    veryLowBg,
+    veryHighBg
   } = buildTooltipValues()
 
   const isTimeSpentAwayFromTargetAlertActive = monitoringAlerts.timeSpentAwayFromTargetActive
   const isFrequencyOfSevereHypoglycemiaAlertActive = monitoringAlerts.frequencyOfSevereHypoglycemiaActive
+  const isFrequencyOfHyperglycemiaAlertActive = monitoringAlerts.frequencyOfSevereHyperglycemiaActive
   const isNonDataTransmissionAlertActive = monitoringAlerts.nonDataTransmissionActive
   const sharedTooltip = t('monitoring-alerts-shared-tooltip')
 
@@ -203,6 +218,28 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
         <TimeSpentOufOfRangeIcon
           color={isTimeSpentAwayFromTargetAlertActive ? 'inherit' : 'disabled'}
           data-testid="time-spent-out-of-range-icon"
+        />
+      </Tooltip>
+
+      <Tooltip
+        title={
+          <>
+            <Box>{t('hyperglycemia-tooltip1', { percentage: frequencyOfHyperglycemiaRate })}</Box>
+            <Box>
+              {t('hyperglycemia-tooltip2', {
+                veryHighBg,
+                threshold: monitoringAlertsParameters.hyperThreshold,
+                unit
+              })}
+            </Box>
+            <Box>{sharedTooltip}</Box>
+          </>
+        }
+      >
+        <HyperglycemiaIcon
+          sx={{ marginLeft: theme.spacing(1) }}
+          color={isFrequencyOfHyperglycemiaAlertActive ? 'error' : 'disabled'}
+          data-testid="hyperglycemia-icon"
         />
       </Tooltip>
 

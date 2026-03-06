@@ -487,7 +487,7 @@ export const checkPatientListHideShowColumns = async () => {
   expect(dataGridCurrentRows).toHaveTextContent('PatientProfileDate of birthMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1Jan 1, 1980No new messages from the patient0%0%N/AFlag patient z-no-data@patient.frPatient Z - No DataType 1Jan 1, 1980No new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPerotto PatientMmolType 1Jan 1, 1980No new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frRouis Patient2Type 1Jan 1, 1980No new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frSrairi Patient3Type 1Jan 1, 1980No new messages from the patient0%0%N/A')
 }
 
-const checkPatientListMonitoringAlertsIcons = async (outOfRangeTooltipValue: string, hypoglycemiaTooltipValue: string): Promise<void> => {
+const checkPatientListMonitoringAlertsIcons = async (outOfRangeTooltipValue: string, hypoglycemiaTooltipValue: string, hyperglycemiaTooltipValue: string): Promise<void> => {
   await waitFor(() => {
     expect(screen.queryByTestId('current-patient-list-grid')).toHaveTextContent('PatientProfileDate of birthMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1Jan 1, 1980No new messages from the patient0%0%N/AFlag patient z-no-data@patient.frPatient Z - No DataType 1Jan 1, 1980No new messages from the patient0%0%N/AFlag patient patient-mmol@diabeloop.frPerotto PatientMmolType 1Jan 1, 1980No new messages from the patient0%0%N/AFlag patient patient2@diabeloop.frRouis Patient2Type 1Jan 1, 1980No new messages from the patient0%0%N/AFlag patient patient3@diabeloop.frSrairi Patient3Type 1Jan 1, 1980No new messages from the patient0%0%N/A')
   })
@@ -519,6 +519,7 @@ const checkPatientListMonitoringAlertsIcons = async (outOfRangeTooltipValue: str
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
 
+  // Hypo alert icon and tooltip
   const firstRowHypoglycemiaIcon = within(dataGridRows).getAllByTestId('hypoglycemia-icon')[0]
   expect(firstRowHypoglycemiaIcon).toHaveAttribute('fill', SVG_ICON_FILL)
   expect(firstRowHypoglycemiaIcon.getAttribute('class').includes(SVG_ICON_DISABLED_CLASS)).toEqual(true)
@@ -531,6 +532,23 @@ const checkPatientListMonitoringAlertsIcons = async (outOfRangeTooltipValue: str
   expect(hypoglycemiaTooltip).toHaveTextContent(hypoglycemiaTooltipValue)
   expect(hypoglycemiaTooltip).toHaveTextContent('This value can be modified either in the care team settings or patient by patient.')
   await userEvent.unhover(firstRowHypoglycemiaIcon)
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+
+  // Hyper alert icon and tooltip
+  const firstRowHyperglycemiaIcon = within(dataGridRows).getAllByTestId('hyperglycemia-icon')[0]
+  expect(firstRowHyperglycemiaIcon).toHaveAttribute('fill', SVG_ICON_FILL)
+  expect(firstRowHyperglycemiaIcon.getAttribute('class').includes(SVG_ICON_DISABLED_CLASS)).toEqual(true)
+
+  expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  await userEvent.hover(firstRowHyperglycemiaIcon)
+  const hyperglycemiaTooltip = await screen.findByRole('tooltip')
+  expect(hyperglycemiaTooltip).toBeVisible()
+  expect(hyperglycemiaTooltip).toHaveTextContent('Hyperglycemia: 17%')
+  expect(hyperglycemiaTooltip).toHaveTextContent(hyperglycemiaTooltipValue)
+  expect(hyperglycemiaTooltip).toHaveTextContent('This value can be modified either in the care team settings or patient by patient.')
+  await userEvent.unhover(firstRowHyperglycemiaIcon)
   await waitFor(() => {
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
@@ -569,13 +587,15 @@ const checkPatientListMonitoringAlertsIcons = async (outOfRangeTooltipValue: str
 export const checkPatientListTooltipsMgDL = async (): Promise<void> => {
   const outOfRangeTooltip = 'Alert triggered when more than 5% of time over the period considered are off target (50-140 mg/dL).'
   const hypoglycemiaTooltip = 'Alert triggered when 10% of time below 40 mg/dL threshold over the period considered.'
-  await checkPatientListMonitoringAlertsIcons(outOfRangeTooltip, hypoglycemiaTooltip)
+  const hyperglycemiaTooltip = 'Alert triggered when 25% of time above 250 mg/dL threshold over the period considered.'
+  await checkPatientListMonitoringAlertsIcons(outOfRangeTooltip, hypoglycemiaTooltip, hyperglycemiaTooltip)
 }
 
 export const checkPatientListTooltipsMmolL = async (): Promise<void> => {
   const outOfRangeTooltip = 'Alert triggered when more than 5% of time over the period considered are off target (2.8-7.8 mmol/L).'
   const hypoglycemiaTooltip = 'Alert triggered when 10% of time below 2.2 mmol/L threshold over the period considered.'
-  await checkPatientListMonitoringAlertsIcons(outOfRangeTooltip, hypoglycemiaTooltip)
+  const hyperglycemiaTooltip = 'Alert triggered when 25% of time above 13.9 mmol/L threshold over the period considered.'
+  await checkPatientListMonitoringAlertsIcons(outOfRangeTooltip, hypoglycemiaTooltip, hyperglycemiaTooltip)
 }
 
 export const checkPatientListTooltipsNoData = async (): Promise<void> => {
@@ -604,6 +624,19 @@ export const checkPatientListTooltipsNoData = async (): Promise<void> => {
   expect(hypoglycemiaTooltip).toHaveTextContent('Alert triggered when 10% of time below 40 mg/dL threshold over the period considered.')
   expect(hypoglycemiaTooltip).toHaveTextContent('This value can be modified either in the care team settings or patient by patient.')
   await userEvent.unhover(noDataPatientHypoglycemiaIcon)
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+
+  const noDataPatientHyperglycemiaIcon = within(dataGridRows).getAllByTestId('hyperglycemia-icon')[noDataPatientIndex]
+  expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  await userEvent.hover(noDataPatientHyperglycemiaIcon)
+  const hyperglycemiaTooltip = await screen.findByRole('tooltip')
+  expect(hyperglycemiaTooltip).toBeVisible()
+  expect(hyperglycemiaTooltip).toHaveTextContent('Hyperglycemia: N/A')
+  expect(hyperglycemiaTooltip).toHaveTextContent('Alert triggered when 25% of time above 250 mg/dL threshold over the period considered.')
+  expect(hyperglycemiaTooltip).toHaveTextContent('This value can be modified either in the care team settings or patient by patient.')
+  await userEvent.unhover(noDataPatientHyperglycemiaIcon)
   await waitFor(() => {
     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
@@ -662,6 +695,9 @@ export const checkMonitoringAlertsIconsInactiveForFirstPatient = async (): Promi
 
   const firstRowHypoglycemiaIcon = within(dataGridRows).getAllByTestId('hypoglycemia-icon')[0]
   expect(firstRowHypoglycemiaIcon).toHaveStyle(`color: ${disabledColorAsRgba};`)
+
+  const firstRowHyperglycemiaIcon = within(dataGridRows).getAllByTestId('hyperglycemia-icon')[0]
+  expect(firstRowHyperglycemiaIcon).toHaveStyle(`color: ${disabledColorAsRgba};`)
 
   const firstRowNoDataIcon = within(dataGridRows).getAllByTestId('no-data-icon')[0]
   expect(firstRowNoDataIcon).toHaveStyle(`color: ${disabledColorAsRgba};`)

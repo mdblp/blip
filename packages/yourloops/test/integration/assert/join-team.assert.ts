@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,9 +28,8 @@
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import TeamAPI, { PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE } from '../../../lib/team/team.api'
-import { iTeamOne } from '../mock/team.api.mock'
+import { anotherTeam } from '../mock/team.api.mock'
 import { patient1Id } from '../data/patient.api.data'
-import { type ITeam } from '../../../lib/team/models/i-team.model'
 
 export const checkJoinTeamDialogCancel = async () => {
   const badgeTeamMenu = screen.getByLabelText('Open team menu')
@@ -92,7 +91,7 @@ export const checkJoinTeamDialogDisplayErrorMessage = async () => {
     name: 'My team',
     code: '263381990',
     address: { line1: '', line2: '' }
-  } as ITeam)
+  } as Team)
   jest.spyOn(TeamAPI, 'joinTeam').mockRejectedValueOnce(new Error(PATIENT_ALREADY_INVITED_IN_TEAM_ERROR_MESSAGE))
 
   await userEvent.click(addTeamButton)
@@ -141,7 +140,7 @@ export const checkJoinTeamDialog = async () => {
   await userEvent.click(checkPolicy)
   expect(addCareTeamButton).toBeEnabled()
   await userEvent.click(addCareTeamButton)
-  expect(TeamAPI.joinTeam).toHaveBeenCalledWith(iTeamOne.id, patient1Id)
+  expect(TeamAPI.joinTeam).toHaveBeenCalledWith(anotherTeam.id, patient1Id)
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   expect(screen.getByText('Your care team has now access to your data.')).toBeVisible()
 }

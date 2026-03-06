@@ -9,6 +9,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3785 Be able to know the effective DBLG1 or DBLG2 settings for the displayed day in the daily view
 - YLP-3787 Referring HCP management for patients
 - YLP-3788 Referring HCP management for HCPs
+- YLP-3813 Add hyperglycemia alerts (display in the patient view and settings in care teams and patients profile)
 
 ### Changed
 - YLP-2823 Use , instead of . for languages other than English
