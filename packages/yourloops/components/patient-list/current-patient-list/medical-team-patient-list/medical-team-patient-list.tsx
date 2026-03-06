@@ -26,7 +26,12 @@
  */
 
 import React, { type FunctionComponent, useState } from 'react'
-import { DataGrid, type GridPaginationModel, type GridSortModel, useGridApiRef } from '@mui/x-data-grid'
+import {
+  DataGrid,
+  type GridPaginationModel,
+  type GridSortModel,
+  useGridApiRef
+} from '@mui/x-data-grid'
 import Box from '@mui/material/Box'
 import { PatientListCustomFooter } from '../../patient-list-custom-footer'
 import { PatientListColumns } from '../../models/enums/patient-list.enum'
@@ -37,6 +42,7 @@ import RemovePatientDialog from '../../../patient/remove-patient-dialog/remove-p
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { EmptyPatientList } from '../../empty-patient-list/empty-patient-list'
 import { useWindowDimensions } from '../../../../lib/custom-hooks/use-window-dimensions.hook'
+import AnalyticsApi, { ElementType } from '../../../../lib/analytics/analytics.api'
 
 interface MedicalTeamPatientListProps {
   patients: Patient[]
@@ -59,6 +65,22 @@ export const MedicalTeamPatientList: FunctionComponent<MedicalTeamPatientListPro
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
   const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
 
+  const handleSortChange = (model: GridSortModel) => {
+    if (model.length > 0) {
+      const { field, sort } = model[0]
+
+      console.log('User sorted column:', field)
+      console.log('Direction:', sort)
+
+      setSortModel(model)
+      // 👉 Send analytics here
+      AnalyticsApi.trackClick(
+        `patient-list-sort-${field}_${sort}`,
+        ElementType.Button
+      )
+    }
+  }
+
   return (
     <>
       <Box data-testid="current-patient-list-grid" sx={{ width: width }}>
@@ -75,7 +97,7 @@ export const MedicalTeamPatientList: FunctionComponent<MedicalTeamPatientListPro
           disableVirtualization={process.env.NODE_ENV === 'test'}
           columnVisibilityModel={displayedColumns}
           sortModel={sortModel}
-          onSortModelChange={setSortModel}
+          onSortModelChange={handleSortChange}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           onRowClick={onRowClick}

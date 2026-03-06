@@ -48,6 +48,7 @@ import { PatientStatistics } from 'yourloops/components/statistics/patient-stati
 import { ShowParametersAt } from 'yourloops/components/show-parameters/show-parameters-at'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import metrics from 'yourloops/lib/metrics'
+import AnalyticsApi, { ElementType } from 'yourloops/lib/analytics/analytics.api'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -508,6 +509,7 @@ class Daily extends React.Component {
     }
     if (!loading && this.chartRef.current !== null) {
       this.chartRef.current.panBack()
+      AnalyticsApi.trackClick(`daily-pan-back`, ElementType.Button)
     }
   }
 
@@ -518,6 +520,7 @@ class Daily extends React.Component {
     }
     if (!loading && this.chartRef.current !== null) {
       this.chartRef.current.panForward()
+      AnalyticsApi.trackClick(`daily-pan-forward`, ElementType.Button)
     }
   }
 
@@ -528,6 +531,7 @@ class Daily extends React.Component {
     }
     if (!loading && this.chartRef.current !== null) {
       this.chartRef.current.goToMostRecent()
+      AnalyticsApi.trackClick(`daily-most-recent`, ElementType.Button)
     }
   }
 

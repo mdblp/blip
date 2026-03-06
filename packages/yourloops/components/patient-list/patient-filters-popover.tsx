@@ -44,6 +44,7 @@ import { TimeSpentOufOfRangeIcon } from '../icons/diabeloop/time-spent-ouf-of-ra
 import { HypoglycemiaIcon } from '../icons/diabeloop/hypoglycemia-icon'
 import { NoDataIcon } from '../icons/diabeloop/no-data-icon'
 import { MessageIcon } from '../icons/diabeloop/message-icon'
+import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 import { HyperglycemiaIcon } from '../icons/diabeloop/hyperglycemia-icon'
 
 interface PatientsFiltersDialogProps {
@@ -97,6 +98,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
           label={t('manual-flag')}
           onToggleChange={() => {
             setFilters({ ...filters, manualFlagEnabled: !filters.manualFlagEnabled })
+            AnalyticsApi.trackClick(`patient-filters-flagged`, ElementType.Toggle)
           }}
         />
 
@@ -110,6 +112,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
               label={t('time-out-of-range-target')}
               onToggleChange={() => {
                 setFilters({ ...filters, timeOutOfTargetEnabled: !filters.timeOutOfTargetEnabled })
+                AnalyticsApi.trackClick(`patient-filters-out-of-range`, ElementType.Toggle)
               }}
             />
             <PatientListOptionToggle
@@ -119,6 +122,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
               label={t('hyperglycemia')}
               onToggleChange={() => {
                 setFilters({ ...filters, hyperglycemiaEnabled: !filters.hyperglycemiaEnabled })
+                AnalyticsApi.trackClick(`patient-filters-hyperglycemia`, ElementType.Toggle)
               }}
             />
             <PatientListOptionToggle
@@ -128,6 +132,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
               label={t('hypoglycemia')}
               onToggleChange={() => {
                 setFilters({ ...filters, hypoglycemiaEnabled: !filters.hypoglycemiaEnabled })
+                AnalyticsApi.trackClick(`patient-filters-hypoglycemia`, ElementType.Toggle)
               }}
             />
             <PatientListOptionToggle
@@ -137,6 +142,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
               label={t('data-not-transmitted')}
               onToggleChange={() => {
                 setFilters({ ...filters, dataNotTransferredEnabled: !filters.dataNotTransferredEnabled })
+                AnalyticsApi.trackClick(`patient-filters-data-not-transmitted`, ElementType.Toggle)
               }}
             />
             <Typography variant="h6" className={classes.title}>{t('notification')}</Typography>
@@ -147,6 +153,7 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
               label={t('messages')}
               onToggleChange={() => {
                 setFilters({ ...filters, messagesEnabled: !filters.messagesEnabled })
+                AnalyticsApi.trackClick(`patient-filters-unread-messages`, ElementType.Toggle)
               }}
             />
           </>

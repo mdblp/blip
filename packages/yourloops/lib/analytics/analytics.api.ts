@@ -27,19 +27,34 @@
 
 import HttpService from '../http/http.service'
 import { type ClickEvent } from './models/click.model'
+import { logError } from '../../utils/error.util'
 
 const ANALYTICS_API_BASE_URL = `/analytics`
 
+export enum ElementType {
+  Button = 'button',
+  Link = 'link',
+  Toggle = 'toggle'
+}
+
 export default class AnalyticsApi {
-  static trackClick(name: string) {
+  static trackClick(name: string, type: ElementType) {
+    const tags = {
+      "elementType": type
+    }
     const event = {
       name,
       value: 1,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      action: 'click',
+      tags
     }
+    console.log(event)
     HttpService.post<void, ClickEvent>({
       url: `${ANALYTICS_API_BASE_URL}/v1/metrics`,
       payload: event
+    }).catch((err) => {
+      logError( `cannot send analytics: ${err}`, 'send-metrics')
     })
   }
 }
