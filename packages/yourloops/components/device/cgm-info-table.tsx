@@ -136,7 +136,7 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
                   display: "flex",
                   justifyContent: "space-between"
                 }}>
-                <Typography variant="body2">{t('Pairing code')}</Typography>
+                <Typography variant="body2">{t('pairing-code')}</Typography>
                 <Typography variant="body2" className="bold">{cgm.pairingCode ?? FALLBACK_VALUE}</Typography>
               </Box>
             </ListItemText>
@@ -148,7 +148,7 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
                   display: "flex",
                   justifyContent: "space-between"
                 }}>
-                <Typography variant="body2">{t('Serial number')}</Typography>
+                <Typography variant="body2">{t('serial-number')}</Typography>
                 <Typography variant="body2" className="bold">{cgm.serialNumber ?? FALLBACK_VALUE}</Typography>
               </Box>
             </ListItemText>
@@ -160,7 +160,7 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
                   display: "flex",
                   justifyContent: "space-between"
                 }}>
-                <Typography variant="body2">{t('Software number')}</Typography>
+                <Typography variant="body2">{t('software-number')}</Typography>
                 <Typography
                   variant="body2"
                   className="bold"
@@ -177,7 +177,7 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
                   display: "flex",
                   justifyContent: "space-between"
                 }}>
-                <Typography variant="body2">{t('Firmware version')}</Typography>
+                <Typography variant="body2">{t('firmware-version')}</Typography>
                 <Typography
                   variant="body2"
                   className="bold"
