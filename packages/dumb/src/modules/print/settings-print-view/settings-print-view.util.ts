@@ -136,38 +136,65 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
 
   switch (type) {
     case PdfSettingsDataType.Cgm:
-      return [{
-        label: t('Manufacturer'),
-        value: (data as CgmConfig).manufacturer
-      }, {
-        label: t('Product'),
-        value: (data as CgmConfig).name
-      }, {
-        label: t('Cgm sensor expiration date'),
-        value: formatLocalizedFromUTC((data as CgmConfig).expirationDate, timePrefs, longDayFormat)
-      }, {
-        label: t('Cgm transmitter software version'),
-        value: (data as CgmConfig).swVersionTransmitter
-      }, {
-        label: t('Cgm transmitter id'),
-        value: (data as CgmConfig).transmitterId
-      }, {
-        label: t('Cgm transmitter end of life'),
-        value: formatLocalizedFromUTC((data as CgmConfig).endOfLifeTransmitterDate, timePrefs, longDayFormat)
-      }]
+      const cgmData = (data as CgmConfig)
+      if (cgmData.name == "G6") {
+        return [{
+          label: t('Manufacturer'),
+          value: cgmData.manufacturer
+        }, {
+          label: t('Product'),
+          value: cgmData.name
+        }, {
+          label: t('Cgm sensor expiration date'),
+          value: cgmData.expirationDate ? formatLocalizedFromUTC(cgmData.expirationDate, timePrefs, longDayFormat) : ''
+        }, {
+          label: t('Cgm transmitter software version'),
+          value: cgmData.swVersionTransmitter || ''
+        }, {
+          label: t('Cgm transmitter id'),
+          value: cgmData.transmitterId || ''
+        }, {
+          label: t('Cgm transmitter end of life'),
+          value: cgmData.endOfLifeTransmitterDate ? formatLocalizedFromUTC(cgmData.endOfLifeTransmitterDate, timePrefs, longDayFormat) : ''
+        }]
+      } else {
+        return [{
+          label: t('Manufacturer'),
+          value: cgmData.manufacturer
+        }, {
+          label: t('Product'),
+          value: cgmData.name
+        }, {
+          label: t('Cgm sensor expiration date'),
+          value: cgmData.expirationDate ? formatLocalizedFromUTC(cgmData.expirationDate, timePrefs, longDayFormat) : ''
+        }, {
+          label: t('pairing-code'),
+          value: cgmData.pairingCode || ''
+        }, {
+          label: t('serial-number'),
+          value: cgmData.serialNumber || ''
+        }, {
+          label: t('software-number'),
+          value: cgmData.softwareNumber || ''
+        }, {
+          label: t('Cgm transmitter id'),
+          value: cgmData.firmwareVersion || ''
+        }]
+      }
+
     case PdfSettingsDataType.Device:
       return [{
         label: t('Manufacturer'),
-        value: (data as DeviceConfig).manufacturer
+        value: (data as DeviceConfig).manufacturer || ''
       }, {
         label: t('Identifier'),
-        value: (data as DeviceConfig).deviceId
+        value: (data as DeviceConfig).deviceId || ''
       }, {
         label: t('IMEI'),
-        value: (data as DeviceConfig).imei
+        value: (data as DeviceConfig).imei || ''
       }, {
         label: t('Software version'),
-        value: (data as DeviceConfig).swVersion
+        value: (data as DeviceConfig).swVersion || ''
       }]
     case PdfSettingsDataType.Pump:
       const pump = data as PumpConfig
@@ -205,6 +232,9 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
         value: mobileApp.identifier
       }]
     }
+
+    default:
+      return []
   }
 }
 
