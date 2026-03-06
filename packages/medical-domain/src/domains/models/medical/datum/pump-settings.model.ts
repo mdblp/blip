@@ -40,17 +40,17 @@ export enum ChangeType {
 }
 
 interface CgmConfig {
-  apiVersion: string
-  endOfLifeTransmitterDate: string
+  apiVersion?: string
+  endOfLifeTransmitterDate?: string
   expirationDate: string
   manufacturer: string
   name: string
-  swVersionTransmitter: string
-  transmitterId: string
-  pairingCode: string
-  serialNumber: string
-  softwareNumber: string
-  firmwareVersion: string
+  swVersionTransmitter?: string
+  transmitterId?: string
+  pairingCode?: string
+  serialNumber?: string
+  softwareNumber?: string
+  firmwareVersion?: string
 }
 
 interface DeviceConfig {
