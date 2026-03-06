@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -45,6 +45,7 @@ import { PRIVATE_TEAM_ID } from '../team/team.util'
 import { useTranslation } from 'react-i18next'
 import { logError } from '../../utils/error.util'
 import { DiabeticProfile } from './models/patient-diabete-profile'
+import { type AlertReactivationDates } from './models/monitoring-alerts-parameters.model'
 
 // Custom hook to manage patients' data and actions for healthcare professionals and caregivers
 export default function usePatientsProviderCustomHook(): PatientsContextResult {
@@ -170,6 +171,16 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
     }
   }
 
+  const acknowledgePatientAlerts = async (patientId: string, reactivationDates: AlertReactivationDates): Promise<void> => {
+    try {
+      await PatientApi.acknowledgePatientAlerts(teamId, patientId, reactivationDates)
+      refresh()
+    } catch (error) {
+      console.error(error)
+      throw Error(`Failed to acknowledge alerts for patient with id ${patientId}`)
+    }
+  }
+
   const deletePatientMonitoringAlertsParameters = async (patientId: string): Promise<void> => {
     try {
       await PatientApi.deletePatientAlerts(teamId, patientId)
@@ -221,6 +232,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
     markPatientMessagesAsRead,
     deletePatientMonitoringAlertsParameters,
     updatePatientMonitoringAlertsParameters,
+    acknowledgePatientAlerts,
     updatePatientDiabeticProfile,
     removePatient,
     refresh

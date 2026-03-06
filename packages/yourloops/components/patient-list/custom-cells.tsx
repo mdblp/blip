@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
+import React, { type FunctionComponent, useState } from 'react'
 import Box from '@mui/material/Box'
 import { useAuth } from '../../lib/auth'
 import { useTheme } from '@mui/material/styles'
@@ -47,6 +47,14 @@ import { convertBG } from '../../lib/units/units.util'
 import { Unit } from 'medical-domain'
 import { Skeleton } from '@mui/material'
 import PatientUtils from '../../lib/patient/patient.util'
+import { AcknowledgeMonitoringAlertDialog, MonitoringAlertType } from './acknowledge-monitoring-alert-dialog'
+import { type AlertReactivationDates } from '../../lib/patient/models/monitoring-alerts-parameters.model'
+import { usePatientsContext } from '../../lib/patient/patients.provider'
+import { AppUserRoute } from '../../models/enums/routes.enum'
+import { useNavigate } from 'react-router-dom'
+import { errorTextFromException } from '../../lib/utils'
+import { logError } from '../../utils/error.util'
+import { useAlert } from '../utils/snackbar'
 
 interface FlagCellProps {
   isFlagged: boolean
@@ -140,11 +148,14 @@ export const MonitoringAlertsSkeletonCell: FunctionComponent = () => {
 }
 
 export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> = ({ patient }) => {
+  const alert = useAlert()
   const { t } = useTranslation()
   const theme = useTheme()
   const { user } = useAuth()
+  const navigate = useNavigate()
+  const { acknowledgePatientAlerts } = usePatientsContext()
 
-  const { monitoringAlerts, monitoringAlertsParameters } = patient
+  const { userid, monitoringAlerts, monitoringAlertsParameters } = patient
   const unit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter // This is the default unit used when the logged-in user has no unit preference
 
   const roundUpToOneDecimal = (value: number): number => {
@@ -189,6 +200,51 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
   const isNonDataTransmissionAlertActive = monitoringAlerts.nonDataTransmissionActive
   const sharedTooltip = t('monitoring-alerts-shared-tooltip')
 
+  const handleAlertIconClick = (event: React.MouseEvent, alertType: MonitoringAlertType): void => {
+    event.stopPropagation()
+    setCurrentAlertType(alertType)
+    setIsDialogOpen(true)
+  }
+
+  const buildAlertClickHandler = (alertType: MonitoringAlertType, isActive: boolean): ((e: React.MouseEvent) => void) | undefined => {
+    if (!isActive) return undefined
+    return (e: React.MouseEvent) => { handleAlertIconClick(e, alertType) }
+  }
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [currentAlertType, setCurrentAlertType] = useState<MonitoringAlertType>(MonitoringAlertType.Hyperglycemia)
+
+  const handleDialogClose = (): void => {
+    setIsDialogOpen(false)
+  }
+
+  const handleAnalyse = (): void => {
+    navigate(`${userid}${AppUserRoute.Dashboard}`)
+    setIsDialogOpen(false)
+  }
+
+  const handleAcknowledge = async (): Promise<void> => {
+    const nextActivationDate = new Date(Date.now() + 48 * 60 * 60 * 1000)
+    const patientName = `${patient.profile.firstName} ${patient.profile.lastName}`
+    const reactivationDates: AlertReactivationDates = {
+      hyperglycemia: currentAlertType === MonitoringAlertType.Hyperglycemia ? nextActivationDate : null,
+      hypoglycemia: currentAlertType === MonitoringAlertType.Hypoglycemia ? nextActivationDate : null,
+      nonDataTransmission: currentAlertType === MonitoringAlertType.DataNotTransmitted ? nextActivationDate : null,
+      timeOutOfRange: currentAlertType === MonitoringAlertType.TimeSpentOutOfRange ? nextActivationDate : null,
+    }
+    try {
+      await acknowledgePatientAlerts(userid, reactivationDates)
+      alert.success(t('alert-acknowledge-monitoring-alert-success', {patientName}))
+    }catch (err) {
+      const errorMessage = errorTextFromException(err)
+      logError(errorMessage, 'acknowledge-monitoring-alert')
+      alert.error(t('alert-acknowledge-monitoring-alert-failure', {patientName}))
+    }
+
+    setIsDialogOpen(false)
+
+  }
+
   return (
     <Box sx={{
       width: '100%',
@@ -216,8 +272,10 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
         data-testid="time-spent-out-of-range-icon-tooltip"
       >
         <TimeSpentOufOfRangeIcon
+          sx={{ cursor: isTimeSpentAwayFromTargetAlertActive ? 'pointer' : 'default' }}
           color={isTimeSpentAwayFromTargetAlertActive ? 'inherit' : 'disabled'}
           data-testid="time-spent-out-of-range-icon"
+          onClick={buildAlertClickHandler(MonitoringAlertType.TimeSpentOutOfRange, isTimeSpentAwayFromTargetAlertActive)}
         />
       </Tooltip>
 
@@ -237,9 +295,10 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
         }
       >
         <HyperglycemiaIcon
-          sx={{ marginLeft: theme.spacing(1) }}
+          sx={{ marginLeft: theme.spacing(1), cursor: isFrequencyOfHyperglycemiaAlertActive ? 'pointer' : 'default' }}
           color={isFrequencyOfHyperglycemiaAlertActive ? 'error' : 'disabled'}
           data-testid="hyperglycemia-icon"
+          onClick={buildAlertClickHandler(MonitoringAlertType.Hyperglycemia, isFrequencyOfHyperglycemiaAlertActive)}
         />
       </Tooltip>
 
@@ -259,9 +318,10 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
         }
       >
         <HypoglycemiaIcon
-          sx={{ marginLeft: theme.spacing(1) }}
+          sx={{ marginLeft: theme.spacing(1), cursor: isFrequencyOfSevereHypoglycemiaAlertActive ? 'pointer' : 'default' }}
           color={isFrequencyOfSevereHypoglycemiaAlertActive ? 'error' : 'disabled'}
           data-testid="hypoglycemia-icon"
+          onClick={buildAlertClickHandler(MonitoringAlertType.Hypoglycemia, isFrequencyOfSevereHypoglycemiaAlertActive)}
         />
       </Tooltip>
 
@@ -275,11 +335,21 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
         }
       >
         <NoDataIcon
-          sx={{ marginLeft: theme.spacing(1) }}
+          sx={{ marginLeft: theme.spacing(1), cursor: isNonDataTransmissionAlertActive ? 'pointer' : 'default' }}
           color={isNonDataTransmissionAlertActive ? 'inherit' : 'disabled'}
           data-testid="no-data-icon"
+          onClick={buildAlertClickHandler(MonitoringAlertType.DataNotTransmitted, isNonDataTransmissionAlertActive)}
         />
       </Tooltip>
+
+      <AcknowledgeMonitoringAlertDialog
+        open={isDialogOpen}
+        patient={patient}
+        alertType={currentAlertType}
+        onClose={handleDialogClose}
+        onAnalyse={handleAnalyse}
+        onAcknowledge={handleAcknowledge}
+      />
     </Box>
   )
 }
