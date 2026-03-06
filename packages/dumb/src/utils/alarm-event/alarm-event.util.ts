@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,7 +39,7 @@ const t = i18next.t.bind(i18next)
 
 const DEFAULT_UNIT = MGDL_UNITS
 const INSIGHT_HYPOGLYCEMIA_DEFAULT_VALUE_MGDL = 70
-const HYPERGLYCEMIA_DEFAULT_VALUE_MGDL = 250
+const G6_HYPERGLYCEMIA_DEFAULT_VALUE_MGDL = 250
 const HYPOGLYCEMIA_DEFAULT_VALUE_MGDL = 55
 const LONG_HYPERGLYCEMIA_DEFAULT_VALUE_MGDL = 320
 const LONG_HYPOGLYCEMIA_DEFAULT_VALUE_MGDL = 60
@@ -65,12 +65,30 @@ export const getContentTitleByCode = (alarmCode: AlarmCode, device: Device): str
       return t('reservoir-empty')
     case AlarmCode.DanaIncompatibleActionsOnPump:
       return t('alarm-dana-incompatible-actions-on-pump-title')
-    case AlarmCode.Hyperglycemia:
-    case AlarmCode.LongHyperglycemia:
+    case AlarmCode.G6Hyperglycemia:
+    case AlarmCode.G6LongHyperglycemia:
       return isRecentDevice ? t('alarm-hyperglycemia-title-new') : t('alarm-hyperglycemia-title-old')
-    case AlarmCode.Hypoglycemia:
+    case AlarmCode.G6Hypoglycemia:
     case AlarmCode.LongHypoglycemia:
       return isRecentDevice ? t('alarm-hypoglycemia-title-new') : t('alarm-hypoglycemia-title-old')
+    case AlarmCode.G7BriefSensorIssue:
+      return t('alarm-g7-brief-sensor-issue-title')
+    case AlarmCode.G7GracePeriodExpired:
+      return t('alarm-g7-grace-period-expired-title')
+    case AlarmCode.G7Hyperglycemia:
+      return t('alarm-g7-hyperglycemia-title')
+    case AlarmCode.G7Hypoglycemia:
+      return t('alarm-hypoglycemia-title-new')
+    case AlarmCode.G7LongHyperglycemia:
+      return t('alarm-g7-long-hyperglycemia-title')
+    case AlarmCode.G7SensorFailed:
+      return t('alarm-g7-sensor-failed-title')
+    case AlarmCode.G7SensorSessionExpired:
+      return t('alarm-g7-sensor-session-expired-title')
+    case AlarmCode.G7SignalLoss:
+      return t('alarm-g7-signal-loss-title')
+    case AlarmCode.G7UrgentLowSoon:
+      return t('alarm-g7-urgent-low-soon-title')
     case AlarmCode.InsightHypoglycemia:
       return t('alarm-insight-hypoglycemia-title')
     case AlarmCode.InsightEmptyInsulinCartridge:
@@ -93,11 +111,11 @@ export const getContentTitleByCode = (alarmCode: AlarmCode, device: Device): str
       return t('alarm-kaleido-empty-pump-battery-title')
     case AlarmCode.NoReadingsHypoglycemiaRisk:
       return isRecentDevice ? t('alarm-no-readings-hypoglycemia-risk-title-new') : t('alarm-no-readings-hypoglycemia-risk-title-old')
-    case AlarmCode.SensorSessionExpired:
+    case AlarmCode.G6SensorSessionExpired:
       return t('alarm-sensor-session-expired-title')
     case AlarmCode.SuddenRiseInGlycemia:
       return isRecentDevice ? t('alarm-sudden-rise-glycemia-title-new') : t('alarm-sudden-rise-glycemia-title-old')
-    case AlarmCode.UrgentLowSoon:
+    case AlarmCode.G6UrgentLowSoon:
       return t('alarm-urgent-low-soon-title')
     default:
       return ''
@@ -121,16 +139,43 @@ export const getAlarmEventDescription = (alarmCode: AlarmCode, device: Device, b
     case AlarmCode.DanaOcclusion:
     case AlarmCode.MedisafeOcclusion:
       return [t('alarm-dana-occlusion-description')]
-    case AlarmCode.Hyperglycemia:
+    case AlarmCode.G6Hyperglycemia:
       return [t('alarm-hyperglycemia-description', {
         value: convertedValue,
         unit: bgUnit
       }), t('alarm-alert-loop-mode-deactivated-description')]
-    case AlarmCode.Hypoglycemia:
+    case AlarmCode.G6Hypoglycemia:
       return [t('alarm-hypoglycemia-description', {
         value: convertedValue,
         unit: bgUnit
       }), t('alarm-loop-mode-deactivated-description')]
+    case AlarmCode.G7BriefSensorIssue:
+      return [t('alarm-g7-brief-sensor-issue-description')]
+    case AlarmCode.G7GracePeriodExpired:
+      return [t('alarm-g7-grace-period-expired-description'), t('alarm-loop-mode-turned-off')]
+    case AlarmCode.G7Hyperglycemia:
+      return [t('alarm-g7-hyperglycemia-description')]
+    case AlarmCode.G7Hypoglycemia:
+      return [t('alarm-g7-hypoglycemia-description', {
+        value: convertedValue,
+        unit: bgUnit
+      })]
+    case AlarmCode.G7LongHyperglycemia:
+      return [t('alarm-g7-long-hyperglycemia-description', {
+        value: convertedValue,
+        unit: bgUnit
+      })]
+    case AlarmCode.G7SensorFailed:
+      return [t('alarm-g7-sensor-failed-description')]
+    case AlarmCode.G7SensorSessionExpired:
+      return [t('alarm-g7-sensor-session-expired-description')]
+    case AlarmCode.G7SignalLoss:
+      return [t('alarm-g7-signal-loss-description')]
+    case AlarmCode.G7UrgentLowSoon:
+      return [t('alarm-g7-urgent-low-soon-description', {
+        value: convertedValue,
+        unit: bgUnit
+      })]
     case AlarmCode.InsightEmptyInsulinCartridge:
       return [t('alarm-insight-empty-insulin-cartridge-description')]
     case AlarmCode.InsightEmptyPumpBattery:
@@ -154,7 +199,7 @@ export const getAlarmEventDescription = (alarmCode: AlarmCode, device: Device, b
       return [t('alarm-kaleido-insulin-cartridge-expired-description'), t('alarm-pump-cannot-deliver-insulin-description')]
     case AlarmCode.KaleidoOcclusion:
       return [t('alarm-kaleido-occlusion-description'), t('alarm-pump-cannot-deliver-insulin-description')]
-    case AlarmCode.LongHyperglycemia:
+    case AlarmCode.G6LongHyperglycemia:
       return isRecentDevice ? [t('alarm-long-hyperglycemia-description-new', {
         value: convertedValue,
         unit: bgUnit
@@ -172,11 +217,11 @@ export const getAlarmEventDescription = (alarmCode: AlarmCode, device: Device, b
         value: convertedValue,
         unit: bgUnit
       }), t('alarm-alert-loop-mode-activated-description')]
-    case AlarmCode.SensorSessionExpired:
+    case AlarmCode.G6SensorSessionExpired:
       return [t('alarm-sensor-session-expired-description-line1'), t('alarm-sensor-session-expired-description-line2')]
     case AlarmCode.SuddenRiseInGlycemia:
       return [t('alarm-sudden-rise-glycemia-description'), t('alarm-alert-loop-mode-activated-description')]
-    case AlarmCode.UrgentLowSoon:
+    case AlarmCode.G6UrgentLowSoon:
       return [t('alarm-urgent-low-soon-description', {
         value: convertedValue,
         unit: bgUnit
@@ -217,20 +262,23 @@ const getDefaultConvertedValue = (alarmCode: AlarmCode, unit: BgUnit): number =>
 
 const getDefaultValueByCode = (alarmCode: AlarmCode): number => {
   switch (alarmCode) {
-    case AlarmCode.Hyperglycemia:
-      return HYPERGLYCEMIA_DEFAULT_VALUE_MGDL
-    case AlarmCode.Hypoglycemia:
+    case AlarmCode.G6Hyperglycemia:
+      return G6_HYPERGLYCEMIA_DEFAULT_VALUE_MGDL
+    case AlarmCode.G6Hypoglycemia:
+    case AlarmCode.G7Hypoglycemia:
       return HYPOGLYCEMIA_DEFAULT_VALUE_MGDL
+    case AlarmCode.G6LongHyperglycemia:
+    case AlarmCode.G7LongHyperglycemia:
+      return LONG_HYPERGLYCEMIA_DEFAULT_VALUE_MGDL
+    case AlarmCode.G6UrgentLowSoon:
+    case AlarmCode.G7UrgentLowSoon:
+      return URGENT_LOW_SOON_DEFAULT_VALUE_MGDL
     case AlarmCode.InsightHypoglycemia:
       return INSIGHT_HYPOGLYCEMIA_DEFAULT_VALUE_MGDL
-    case AlarmCode.LongHyperglycemia:
-      return LONG_HYPERGLYCEMIA_DEFAULT_VALUE_MGDL
     case AlarmCode.LongHypoglycemia:
       return LONG_HYPOGLYCEMIA_DEFAULT_VALUE_MGDL
     case AlarmCode.NoReadingsHypoglycemiaRisk:
       return NO_READINGS_HYPOGLYCEMIA_RISK_DEFAULT_VALUE_MGDL
-    case AlarmCode.UrgentLowSoon:
-      return URGENT_LOW_SOON_DEFAULT_VALUE_MGDL
     default:
       return 0
   }

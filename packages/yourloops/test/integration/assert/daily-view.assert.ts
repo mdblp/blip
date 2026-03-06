@@ -32,8 +32,17 @@ import {
   ALARM_EVENT_DANA_EMPTY_RESERVOIR_ID,
   ALARM_EVENT_DANA_INCOMPATIBLE_ACTIONS_ON_PUMP_ID,
   ALARM_EVENT_DANA_OCCLUSION_ID,
-  ALARM_EVENT_HYPERGLYCEMIA_ID,
-  ALARM_EVENT_HYPOGLYCEMIA_ID,
+  ALARM_EVENT_G6_HYPERGLYCEMIA_ID,
+  ALARM_EVENT_G6_HYPOGLYCEMIA_ID,
+  ALARM_EVENT_G6_LONG_HYPERGLYCEMIA_ID,
+  ALARM_EVENT_G6_SENSOR_SESSION_EXPIRED_ID,
+  ALARM_EVENT_G6_URGENT_LOW_SOON_ID, ALARM_EVENT_G7_BRIEF_SENSOR_ISSUE,
+  ALARM_EVENT_G7_GRACE_PERIOD_EXPIRED,
+  ALARM_EVENT_G7_HYPERGLYCEMIA_ID,
+  ALARM_EVENT_G7_HYPOGLYCEMIA_ID,
+  ALARM_EVENT_G7_LONG_HYPERGLYCEMIA_ID, ALARM_EVENT_G7_SENSOR_FAILED_ID,
+  ALARM_EVENT_G7_SENSOR_SESSION_EXPIRED_ID, ALARM_EVENT_G7_SIGNAL_LOSS_ID,
+  ALARM_EVENT_G7_URGENT_LOW_SOON_ID,
   ALARM_EVENT_INSIGHT_EMPTY_INSULIN_CARTRIDGE_ID,
   ALARM_EVENT_INSIGHT_EMPTY_PUMP_BATTERY_ID,
   ALARM_EVENT_INSIGHT_HYPOGLYCEMIA_ID,
@@ -44,15 +53,12 @@ import {
   ALARM_EVENT_KALEIDO_EMPTY_PUMP_BATTERY_ID,
   ALARM_EVENT_KALEIDO_INSULIN_CARTRIDGE_EXPIRED_ID,
   ALARM_EVENT_KALEIDO_OCCLUSION_ID,
-  ALARM_EVENT_LONG_HYPERGLYCEMIA_ID,
   ALARM_EVENT_LONG_HYPOGLYCEMIA_ID,
   ALARM_EVENT_MEDISAFE_EMPTY_PUMP_BATTERY_ID,
   ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID,
   ALARM_EVENT_MEDISAFE_OCCLUSION_ID,
   ALARM_EVENT_NO_READINGS_HYPOGLYCEMIA_RISK_ID,
-  ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID,
   ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID,
-  ALARM_EVENT_URGENT_LOW_SOON_ID,
   BASAL_LOOP_MODE_OFF_ID,
   BASAL_LOOP_MODE_ON_ID,
   BASAL_MANUAL_ID,
@@ -71,15 +77,16 @@ import {
   PARAMETER_ID,
   PARIS_TIMEZONE,
   PEN_BOLUS_ID,
-  PHYSICAL_ACTIVITY_ID,
   PHYSICAL_ACTIVITY_CREATE_TIME,
+  PHYSICAL_ACTIVITY_ID,
+  PHYSICAL_ACTIVITY_UPDATE_TIME,
   PHYSICAL_ACTIVITY_WITHOUT_NAME_ID,
   PHYSICAL_ACTIVITY_WITHOUT_NAME_TIME,
   RESERVOIR_CHANGE_ID,
   SMBG_ID,
   WARMUP_01_ID,
-  WIZARD_LOW_OVERRIDE_ID,
   WIZARD_INPUT_TIME,
+  WIZARD_LOW_OVERRIDE_ID,
   WIZARD_NEGATIVE_OVERRIDE_ID,
   WIZARD_NEGATIVE_OVERRIDE_INPUT_TIME,
   WIZARD_POSITIVE_OVERRIDE_ID,
@@ -89,7 +96,7 @@ import {
   WIZARD_UNDELIVERED_INPUT_TIME,
   WIZARD_WITHOUT_BOLUS_ID,
   ZEN_MODE_ID,
-  ZEN_MODE_ID_WITH_GLY, PHYSICAL_ACTIVITY_UPDATE_TIME
+  ZEN_MODE_ID_WITH_GLY
 } from '../mock/data.api.mock'
 import moment from 'moment-timezone'
 import { checkStatTooltip } from './stats.assert'
@@ -137,8 +144,8 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, 'Settings change6:00 pmAggressiveness for lunch110→100%')
   await checkTidelineContainerElementTooltip(`cbg_${CBG_ID}`, 'Glycemia5:30 pmGlucose189')
   await checkTidelineContainerElementTooltip(`smbg_group_${SMBG_ID}`, 'Glycemia5:15 pmGlucose189Calibration')
-  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_HYPERGLYCEMIA_ID}`, 'Alert 101132:00 amHyperglycemiaG6 readings are above a configurable threshold (250 mg/dL by default).IMPORTANT: this alert is triggered only if loop mode is OFF.')
-  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_HYPOGLYCEMIA_ID}`, 'Alarm 120003:00 amHypoglycemiaYour glycemia is below 55 mg/dL.IMPORTANT this alarm is triggered only if loop mode is OFF.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_HYPERGLYCEMIA_ID}`, 'Alert 101132:00 amHyperglycemiaG6 readings are above a configurable threshold (250 mg/dL by default).IMPORTANT: this alert is triggered only if loop mode is OFF.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_HYPOGLYCEMIA_ID}`, 'Alarm 120003:00 amHypoglycemiaYour glycemia is below 55 mg/dL.IMPORTANT this alarm is triggered only if loop mode is OFF.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_INSIGHT_EMPTY_INSULIN_CARTRIDGE_ID}`, 'Alarm 710023:30 amCartridge emptyThere is no insulin left in the cartridge. Insert a new cartridge.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_INSIGHT_EMPTY_PUMP_BATTERY_ID}`, 'Alarm 710014:00 amPump empty batteryThe battery in your pump is dead. Insert a new battery.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_INSIGHT_HYPOGLYCEMIA_ID}`, 'Alert 101174:30 amHypoglycemia alertG6 readings are below a configurable threshold (70 mg/dL by default).IMPORTANT: this alert is triggered only if loop mode is OFF.')
@@ -149,12 +156,12 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_KALEIDO_EMPTY_PUMP_BATTERY_ID}`, 'Alarm 410017:00 amEmpty pump batteryThe pump will stop because its battery is empty.The pump can no longer deliver insulin.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_KALEIDO_INSULIN_CARTRIDGE_EXPIRED_ID}`, 'Alarm 410037:30 amInsulin cartridge expiredYour pump stopped because the insulin cartridge has expired.The pump can no longer deliver insulin.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_KALEIDO_OCCLUSION_ID}`, 'Alarm 410048:00 amOcclusionThe pump stopped because it has detected an occlusion.The pump can no longer deliver insulin.')
-  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_LONG_HYPERGLYCEMIA_ID}`, 'Alarm 150008:30 amHyperglycemiaThe G6 readings have been higher than 320 mg/dL for more than 20 minutes.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_LONG_HYPERGLYCEMIA_ID}`, 'Alarm 150008:30 amHyperglycemiaThe G6 readings have been higher than 320 mg/dL for more than 20 minutes.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_LONG_HYPOGLYCEMIA_ID}`, 'Alarm 240009:00 amHypoglycemiaYour G6 reading has been below 60 mg/dL for at least 25 minutes.IMPORTANT: this alarm is triggered only if loop mode is ON.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_NO_READINGS_HYPOGLYCEMIA_RISK_ID}`, 'Alert 201009:30 am15 minutes without G6 readings and hypoglycemia riskThe system has not received any G6 reading for 15 minutes. However, the last known G6 reading was less than 100 mg/dL.IMPORTANT: this alert is triggered only if loop mode is ON.')
-  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID}`, 'Alarm 1100010:00 amSensor session expiredThe sensor session has expired.IMPORTANT: If loop mode was ON, it will stop within the next 30 minutes.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_SENSOR_SESSION_EXPIRED_ID}`, 'Alarm 1100010:00 amSensor session expiredThe sensor session has expired.IMPORTANT: If loop mode was ON, it will stop within the next 30 minutes.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID}`, 'Alert 2010210:30 amA sudden rise in glycemia has been notedA sudden rise in glycemia was detected.IMPORTANT: this alert is triggered only if loop mode is ON.')
-  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_URGENT_LOW_SOON_ID}`, 'Alert 1011211:00 amUrgent low soonThe transmitter predicts that your glucose will be at or below 55 mg/dL in 20 minutes.IMPORTANT: this alert is triggered only if loop mode is OFF.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_URGENT_LOW_SOON_ID}`, 'Alert 1011211:00 amUrgent low soonThe transmitter predicts that your glucose will be at or below 55 mg/dL in 20 minutes.IMPORTANT: this alert is triggered only if loop mode is OFF.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_DANA_EMPTY_PUMP_BATTERY_ID}`, 'Alarm 5100111:30 amPump battery emptyThe pump battery is empty.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_DANA_EMPTY_RESERVOIR_ID}`, 'Alarm 5100212:00 pmReservoir emptyThere is no insulin left in the reservoir.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_DANA_INCOMPATIBLE_ACTIONS_ON_PUMP_ID}`, 'Alarm 5100312:30 pmIncompatible action on the pumpCertain actions on the pump are not supported. Loop mode is now OFF and cannot be restarted for up to 3 hours.')
@@ -172,9 +179,9 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
 }
 
 export const checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware = async () => {
-  expect(await screen.findByTestId(`alarmEvent_group_${ALARM_EVENT_HYPERGLYCEMIA_ID}`, {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
-  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_HYPERGLYCEMIA_ID}`, 'Alert 101132:00 amYour glucose is highG6 readings are above a configurable threshold (250 mg/dL by default).IMPORTANT: this alert is triggered only if loop mode is OFF.Occurred multiple times with a frequency of 30 minutes or less:at 2:10 am')
-  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_HYPOGLYCEMIA_ID}`, 'Alarm 120003:00 amUrgent LowYour glycemia is below 55 mg/dL.IMPORTANT this alarm is triggered only if loop mode is OFF.')
+  expect(await screen.findByTestId(`alarmEvent_group_${ALARM_EVENT_G6_HYPERGLYCEMIA_ID}`, {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_HYPERGLYCEMIA_ID}`, 'Alert 101132:00 amYour glucose is highG6 readings are above a configurable threshold (250 mg/dL by default).IMPORTANT: this alert is triggered only if loop mode is OFF.Occurred multiple times with a frequency of 30 minutes or less:at 2:10 am')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_HYPOGLYCEMIA_ID}`, 'Alarm 120003:00 amUrgent LowYour glycemia is below 55 mg/dL.IMPORTANT this alarm is triggered only if loop mode is OFF.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_INSIGHT_EMPTY_INSULIN_CARTRIDGE_ID}`, 'Alarm 710023:30 amCartridge emptyThere is no insulin left in the cartridge. Insert a new cartridge.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_INSIGHT_EMPTY_PUMP_BATTERY_ID}`, 'Alarm 710014:00 amPump empty batteryThe battery in your pump is dead. Insert a new battery.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_INSIGHT_HYPOGLYCEMIA_ID}`, 'Alert 101174:30 amHypoglycemia alertG6 readings are below a configurable threshold (70 mg/dL by default).IMPORTANT: this alert is triggered only if loop mode is OFF.')
@@ -185,12 +192,12 @@ export const checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware = async ()
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_KALEIDO_EMPTY_PUMP_BATTERY_ID}`, 'Alarm 410017:00 amEmpty pump batteryThe pump will stop because its battery is empty.The pump can no longer deliver insulin.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_KALEIDO_INSULIN_CARTRIDGE_EXPIRED_ID}`, 'Alarm 410037:30 amInsulin cartridge expiredYour pump stopped because the insulin cartridge has expired.The pump can no longer deliver insulin.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_KALEIDO_OCCLUSION_ID}`, 'Alarm 410048:00 amOcclusionThe pump stopped because it has detected an occlusion.The pump can no longer deliver insulin.')
-  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_LONG_HYPERGLYCEMIA_ID}`, 'Alarm 150008:30 amYour glucose is highHyperglycemia during a period')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_LONG_HYPERGLYCEMIA_ID}`, 'Alarm 150008:30 amYour glucose is highHyperglycemia during a period')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_LONG_HYPOGLYCEMIA_ID}`, 'Alarm 240009:00 amUrgent LowYour G6 reading has been below 60 mg/dL for at least 25 minutes.IMPORTANT: this alarm is triggered only if loop mode is ON.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_NO_READINGS_HYPOGLYCEMIA_RISK_ID}`, 'Alert 201009:30 amNo glucose readings for over 15 minutes. Risk of hypoglycemia.The system has not received any G6 reading for 15 minutes. However, the last known G6 reading was less than 100 mg/dL.IMPORTANT: this alert is triggered only if loop mode is ON.')
-  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID}`, 'Alarm 1100010:00 amSensor session expiredThe sensor session has expired.IMPORTANT: If loop mode was ON, it will stop within the next 30 minutes.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_SENSOR_SESSION_EXPIRED_ID}`, 'Alarm 1100010:00 amSensor session expiredThe sensor session has expired.IMPORTANT: If loop mode was ON, it will stop within the next 30 minutes.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID}`, 'Alert 2010210:30 amRapid rise in glycemiaA sudden rise in glycemia was detected.IMPORTANT: this alert is triggered only if loop mode is ON.')
-  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_URGENT_LOW_SOON_ID}`, 'Alert 1011211:00 amUrgent low soonThe transmitter predicts that your glucose will be at or below 55 mg/dL in 20 minutes.IMPORTANT: this alert is triggered only if loop mode is OFF.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_URGENT_LOW_SOON_ID}`, 'Alert 1011211:00 amUrgent low soonThe transmitter predicts that your glucose will be at or below 55 mg/dL in 20 minutes.IMPORTANT: this alert is triggered only if loop mode is OFF.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_DANA_EMPTY_PUMP_BATTERY_ID}`, 'Alarm 5100111:30 amPump battery emptyThe pump battery is empty.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_DANA_EMPTY_RESERVOIR_ID}`, 'Alarm 5100212:00 pmReservoir emptyThere is no insulin left in the reservoir.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_DANA_INCOMPATIBLE_ACTIONS_ON_PUMP_ID}`, 'Alarm 5100312:30 pmIncompatible action on the pumpCertain actions on the pump are not supported. Loop mode is now OFF and cannot be restarted for up to 3 hours.')
@@ -198,6 +205,15 @@ export const checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware = async ()
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_EMPTY_PUMP_BATTERY_ID}`, 'Alarm 910011:30 pmPump battery emptyThe pump battery is empty.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID}`, 'Alarm 910022:00 pmReservoir emptyThere is no insulin left in the reservoir.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`, 'Alarm 910042:30 pmOcclusionAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_BRIEF_SENSOR_ISSUE}`, 'Alert A01093:30 pmBrief sensor issueTemporary issue with the sensor.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_GRACE_PERIOD_EXPIRED}`, 'Alarm A10004:00 pmGrace period expiredYour sensor\'s grace period has expired.IMPORTANT: if loop mode was ON, it has been turned OFF.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_HYPERGLYCEMIA_ID}`, 'Alert A01154:30 pmHigh glucose in open loopYour sensor reading is at or above the level you set.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_HYPOGLYCEMIA_ID}`, 'Alarm A20005:00 pmUrgent LowYour sensor reading is 55 mg/dL or lower.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_LONG_HYPERGLYCEMIA_ID}`, 'Alarm A50005:30 pmProlonged hyperglycemiaYour glucose readings have been above 320 mg/dL for 90 minutes or more.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_SENSOR_FAILED_ID}`, 'Alarm A30009:00 pmSensor failedThe sensor has failed. You will not receive readings until you start a new sensor. Loop mode has been turned OFF.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_SENSOR_SESSION_EXPIRED_ID}`, 'Alert A01219:30 pmSensor expired - grace period startingThe sensor has expired and your grace period has started.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_SIGNAL_LOSS_ID}`, 'Alert A010810:00 pmSignal loss in open loopLost communication with the sensor.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_URGENT_LOW_SOON_ID}`, 'Alert A010210:30 pmUrgent low soon in open loopYour glucose is expected to drop below 55 mg/dL within the next 20 minutes.')
 }
 
 export const checkDailyTidelineContainerTooltipsDblg2 = async () => {
@@ -224,8 +240,8 @@ export const checkDailyTidelineContainerTooltipsMmolL = async () => {
   await checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, 'Settings change6:00 pmAggressiveness for lunch110→100%')
   await checkTidelineContainerElementTooltip(`cbg_${CBG_ID}`, 'Glycemia5:30 pmGlucose10.5')
   await checkTidelineContainerElementTooltip(`smbg_group_${SMBG_ID}`, 'Glycemia5:15 pmGlucose10.5Calibration')
-  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_HYPERGLYCEMIA_ID}`, 'Alert 101132:00 amHyperglycemiaG6 readings are above a configurable threshold (13.9 mmol/L by default).IMPORTANT: this alert is triggered only if loop mode is OFF.Occurred multiple times with a frequency of 30 minutes or less:at 2:10 am')
-  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_HYPOGLYCEMIA_ID}`, 'Alarm 120003:00 amHypoglycemiaYour glycemia is below 3.1 mmol/L.IMPORTANT this alarm is triggered only if loop mode is OFF.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_HYPERGLYCEMIA_ID}`, 'Alert 101132:00 amHyperglycemiaG6 readings are above a configurable threshold (13.9 mmol/L by default).IMPORTANT: this alert is triggered only if loop mode is OFF.Occurred multiple times with a frequency of 30 minutes or less:at 2:10 am')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_HYPOGLYCEMIA_ID}`, 'Alarm 120003:00 amHypoglycemiaYour glycemia is below 3.1 mmol/L.IMPORTANT this alarm is triggered only if loop mode is OFF.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_INSIGHT_EMPTY_INSULIN_CARTRIDGE_ID}`, 'Alarm 710023:30 amCartridge emptyThere is no insulin left in the cartridge. Insert a new cartridge.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_INSIGHT_EMPTY_PUMP_BATTERY_ID}`, 'Alarm 710014:00 amPump empty batteryThe battery in your pump is dead. Insert a new battery.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_INSIGHT_HYPOGLYCEMIA_ID}`, 'Alert 101174:30 amHypoglycemia alertG6 readings are below a configurable threshold (3.9 mmol/L by default).IMPORTANT: this alert is triggered only if loop mode is OFF.')
@@ -236,12 +252,21 @@ export const checkDailyTidelineContainerTooltipsMmolL = async () => {
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_KALEIDO_EMPTY_PUMP_BATTERY_ID}`, 'Alarm 410017:00 amEmpty pump batteryThe pump will stop because its battery is empty.The pump can no longer deliver insulin.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_KALEIDO_INSULIN_CARTRIDGE_EXPIRED_ID}`, 'Alarm 410037:30 amInsulin cartridge expiredYour pump stopped because the insulin cartridge has expired.The pump can no longer deliver insulin.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_KALEIDO_OCCLUSION_ID}`, 'Alarm 410048:00 amOcclusionThe pump stopped because it has detected an occlusion.The pump can no longer deliver insulin.')
-  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_LONG_HYPERGLYCEMIA_ID}`, 'Alarm 150008:30 amHyperglycemiaThe G6 readings have been higher than 17.8 mmol/L for more than 20 minutes.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_LONG_HYPERGLYCEMIA_ID}`, 'Alarm 150008:30 amHyperglycemiaThe G6 readings have been higher than 17.8 mmol/L for more than 20 minutes.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_LONG_HYPOGLYCEMIA_ID}`, 'Alarm 240009:00 amHypoglycemiaYour G6 reading has been below 3.3 mmol/L for at least 25 minutes.IMPORTANT: this alarm is triggered only if loop mode is ON.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_NO_READINGS_HYPOGLYCEMIA_RISK_ID}`, 'Alert 201009:30 am15 minutes without G6 readings and hypoglycemia riskThe system has not received any G6 reading for 15 minutes. However, the last known G6 reading was less than 5.6 mmol/L.IMPORTANT: this alert is triggered only if loop mode is ON.')
-  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_SENSOR_SESSION_EXPIRED_ID}`, 'Alarm 1100010:00 amSensor session expiredThe sensor session has expired.IMPORTANT: If loop mode was ON, it will stop within the next 30 minutes.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_SENSOR_SESSION_EXPIRED_ID}`, 'Alarm 1100010:00 amSensor session expiredThe sensor session has expired.IMPORTANT: If loop mode was ON, it will stop within the next 30 minutes.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_SUDDEN_RISE_IN_GLYCEMIA_ID}`, 'Alert 2010210:30 amA sudden rise in glycemia has been notedA sudden rise in glycemia was detected.IMPORTANT: this alert is triggered only if loop mode is ON.')
-  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_URGENT_LOW_SOON_ID}`, 'Alert 1011211:00 amUrgent low soonThe transmitter predicts that your glucose will be at or below 3.1 mmol/L in 20 minutes.IMPORTANT: this alert is triggered only if loop mode is OFF.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_URGENT_LOW_SOON_ID}`, 'Alert 1011211:00 amUrgent low soonThe transmitter predicts that your glucose will be at or below 3.1 mmol/L in 20 minutes.IMPORTANT: this alert is triggered only if loop mode is OFF.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_BRIEF_SENSOR_ISSUE}`, 'Alert A01093:30 pmBrief sensor issueTemporary issue with the sensor.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_GRACE_PERIOD_EXPIRED}`, 'Alarm A10004:00 pmGrace period expiredYour sensor\'s grace period has expired.IMPORTANT: if loop mode was ON, it has been turned OFF.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_HYPERGLYCEMIA_ID}`, 'Alert A01154:30 pmHigh glucose in open loopYour sensor reading is at or above the level you set.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_HYPOGLYCEMIA_ID}`, 'Alarm A20005:00 pmUrgent LowYour sensor reading is 3.1 mmol/L or lower.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_LONG_HYPERGLYCEMIA_ID}`, 'Alarm A50005:30 pmProlonged hyperglycemiaYour glucose readings have been above 17.8 mmol/L for 90 minutes or more.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_SENSOR_FAILED_ID}`, 'Alarm A30009:00 pmSensor failedThe sensor has failed. You will not receive readings until you start a new sensor. Loop mode has been turned OFF.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_SENSOR_SESSION_EXPIRED_ID}`, 'Alert A01219:30 pmSensor expired - grace period startingThe sensor has expired and your grace period has started.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_SIGNAL_LOSS_ID}`, 'Alert A010810:00 pmSignal loss in open loopLost communication with the sensor.')
+  await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G7_URGENT_LOW_SOON_ID}`, 'Alert A010210:30 pmUrgent low soon in open loopYour glucose is expected to drop below 3.1 mmol/L within the next 20 minutes.')
 }
 
 export const checkDailyStatsWidgetsTooltips = async () => {
