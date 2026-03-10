@@ -93,12 +93,6 @@ export const patient1Info: Patient = buildPatient({
   },
   settings: { ...defaultSettings, system: DeviceSystem.Dblg2 },
   referringHcps: []
-  // referringHcps: [{
-  //   id: 'clinician1Id',
-  //   name: 'Jean Michel',
-  //   email: '',
-  //   profession: 'hcp-profession-nurse'
-  // }]
 })
 
 export const patient1Metrics: PatientMetrics = buildPatientMetrics({ userId: patient1Id })
