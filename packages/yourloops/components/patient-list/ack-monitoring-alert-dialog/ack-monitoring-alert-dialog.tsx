@@ -60,7 +60,6 @@ export const AcknowledgeMonitoringAlertDialog: FunctionComponent<AcknowledgeMoni
   alertType,
   onClose
 }) => {
-  const inactivePeriodHours = 48
   const { t } = useTranslation()
   const { handleAnalyse, handleAcknowledge } = useAckMonitoringAlertDialog({ patient, alertType, onClose })
   const patientName = `${patient.profile.firstName} ${patient.profile.lastName}`
@@ -73,7 +72,7 @@ export const AcknowledgeMonitoringAlertDialog: FunctionComponent<AcknowledgeMoni
       onClose={onClose}
     >
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <strong>{t('acknowledge-monitoring-alert-dialog-title', {alertName})}</strong>
+        <strong>{t('acknowledge-monitoring-alert-dialog-title', { alertName })}</strong>
         <IconButton
           aria-label={t('button-close')}
           onClick={onClose}
@@ -89,7 +88,7 @@ export const AcknowledgeMonitoringAlertDialog: FunctionComponent<AcknowledgeMoni
             i18nKey={'acknowledge-monitoring-alert-dialog-body'}
             t={t}
             components={{ strong: <strong /> }}
-            values={{ alertName, patientName, inactivePeriodHours }}
+            values={{ alertName, patientName }}
             parent={React.Fragment}
           />
         </DialogContentText>
