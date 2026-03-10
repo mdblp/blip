@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC } from 'react';
+import React, { FC } from 'react'
 import Dialog from '@mui/material/Dialog'
 import { Button, DialogTitle, FormControl, InputLabel, MenuItem } from '@mui/material'
 import DialogContent from '@mui/material/DialogContent'
@@ -77,7 +77,7 @@ export const AddClinicianDialog: FC<AddClinicianDialogProps> = (props) => {
       onSuccess()
     } catch (err) {
       const errorMessage = errorTextFromException(err)
-      logError(errorMessage, 'medical-report-delete')
+      logError(errorMessage, 'add-clinician')
 
       alert.error(t('error-occurred'))
       onClose()

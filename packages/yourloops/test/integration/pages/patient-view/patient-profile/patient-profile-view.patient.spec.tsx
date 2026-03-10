@@ -81,7 +81,7 @@ describe('Patient profile view for Patient', () => {
       await checkCliniciansEmptyList()
     })
 
-    it('should be able to view and manage clinicians list with 1 clinician', async  () => {
+    it('should be able to view and manage clinicians list with 1 clinician', async () => {
       mockPatientLogin(patient2Info)
 
       await act(async () => {

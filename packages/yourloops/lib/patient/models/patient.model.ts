@@ -46,5 +46,5 @@ export interface Patient extends Partial<PatientMetrics> {
   isUsingTeamAlertParameters?: boolean
   hasSentUnreadMessages: boolean
   flagged?: boolean
-  referringHcps?: Clinician[]
+  referringHcps: Clinician[]
 }

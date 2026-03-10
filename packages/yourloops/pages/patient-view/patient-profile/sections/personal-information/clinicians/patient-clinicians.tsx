@@ -91,7 +91,7 @@ export const PatientClinicians: FC<PatientCliniciansProps> = (props) => {
 
   const [showAddDialog, setShowAddDialog] = useState<boolean>(false)
   const [showRemoveDialog, setShowRemoveDialog] = useState<boolean>(false)
-  const [clinicianToRemove, setClinicianToRemove] = useState<Clinician | null>(null)
+  const [clinicianToRemove, setClinicianToRemove] = useState<Clinician>(null)
 
   const getInitials = (clinicianName: string): string => {
     if (!clinicianName) {
@@ -122,10 +122,9 @@ export const PatientClinicians: FC<PatientCliniciansProps> = (props) => {
   }
 
   const onClickRemove = (hcpId: string): void => {
-    setShowRemoveDialog(true)
-
     const clinician = clinicians?.find(hcp => hcp.id === hcpId) || null
     setClinicianToRemove(clinician)
+    setShowRemoveDialog(true)
   }
 
   const onSuccessRemove = (): void => {
@@ -235,7 +234,7 @@ export const PatientClinicians: FC<PatientCliniciansProps> = (props) => {
         />
       }
 
-      {showRemoveDialog &&
+      {showRemoveDialog && clinicianToRemove &&
         <RemoveClinicianDialog
           clinician={clinicianToRemove}
           patientInfo={{ id: patientId, name: patientName }}
