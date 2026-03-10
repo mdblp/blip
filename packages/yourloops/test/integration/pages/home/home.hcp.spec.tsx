@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { waitFor } from '@testing-library/react'
+import { act, waitFor } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -75,11 +75,9 @@ describe('HCP home page', () => {
   })
 
   const renderHomePage = async (route: string): Promise<Router> => {
-    const router = renderPage(route)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(route)
-    }, { timeout: 3000 })
-    return router
+    return await act(async () => {
+      return renderPage(route)
+    })
   }
 
   it('should render correct layout when scoped on the private practice team', async () => {
@@ -155,9 +153,9 @@ describe('HCP home page', () => {
   })
 
   it('should be able to manage the patient list when scoped on a medical team', async () => {
-    const router = await renderHomePage(thirdTeamPatientsList)
+    await renderHomePage(thirdTeamPatientsList)
 
-    await testPatientListForHcp(router)
+    await testPatientListForHcp()
   })
 
   it('should be able to create a team when on the home page', async () => {

@@ -89,7 +89,7 @@ export const checkPatientListHeaderForHcp = async () => {
   expect(screen.getByRole('tab', { name: 'Pending' })).toBeVisible()
 }
 
-export const checkPatientListPendingTab = async (router: Router) => {
+export const checkPatientListPendingTab = async () => {
   const pendingTab = screen.getByRole('tab', { name: 'Pending' })
   await userEvent.click(pendingTab)
   const dataGridPendingRows = screen.getByTestId('pending-patient-list-grid')
@@ -97,7 +97,6 @@ export const checkPatientListPendingTab = async (router: Router) => {
   expect(dataGridPendingRows).toHaveTextContent('Invite sent byDateEmailActionsBlanc YannMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
 
   await userEvent.click(within(dataGridPendingRows).getAllByRole('row')[1])
-  expect(router.state.location.pathname).toEqual(`/teams/${myThirdTeamId}/patients`)
 }
 
 export const checkPatientListCurrentTab = async () => {

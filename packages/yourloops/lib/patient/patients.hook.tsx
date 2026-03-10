@@ -167,7 +167,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
       refresh()
     } catch (error) {
       console.error(error)
-      throw Error(`Failed to update patient with id ${patient.userid}`)
+      throw new Error(`Failed to update patient with id ${patient.userid}`)
     }
   }
 
@@ -177,7 +177,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
       refresh()
     } catch (error) {
       console.error(error)
-      throw Error(`Failed to acknowledge alerts for patient with id ${patientId}`)
+      throw new Error(`Failed to acknowledge alerts for patient with id ${patientId}`)
     }
   }
 
@@ -187,7 +187,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
       refresh()
     } catch (error) {
       console.error(error)
-      throw Error(`Failed to delete monitoring alert parameters for patient with id ${patientId}`)
+      throw new Error(`Failed to delete monitoring alert parameters for patient with id ${patientId}`)
     }
   }
 
@@ -208,7 +208,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
       await PatientApi.updatePatientDiabeticProfile(patientId, selectedDiabeticProfile)
       refresh()
     } catch (error) {
-      throw Error(`updatePatientDiabeticProfile: failed to update patient with id ${patientId}`)
+      throw new Error(`updatePatientDiabeticProfile: failed to update patient with id ${patientId}`)
     }
   }
 

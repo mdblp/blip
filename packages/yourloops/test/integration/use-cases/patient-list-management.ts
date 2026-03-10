@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -41,9 +41,8 @@ import {
   checkPendingPatientColumnsSettingsMedicalTeam
 } from '../assert/patient-list.assert'
 import { checkPatientFiltersForPrivateTeam } from '../assert/patient-filters.assert'
-import { type Router } from '../models/router.model'
 
-export const testPatientListForHcp = async (router: Router) => {
+export const testPatientListForHcp = async () => {
   await checkPatientListHeaderForHcp()
   await checkPatientListTooltipsMgDL()
   await checkPatientListTooltipsNoData()
@@ -53,7 +52,7 @@ export const testPatientListForHcp = async (router: Router) => {
   await checkPatientColumnsFiltersContent()
   await checkPendingPatientColumnsSettingsMedicalTeam()
   await checkPatientListHideShowColumns()
-  await checkPatientListPendingTab(router)
+  await checkPatientListPendingTab()
   await checkPatientListCurrentTab()
 }
 
