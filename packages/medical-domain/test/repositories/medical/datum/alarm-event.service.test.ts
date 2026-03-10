@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -47,7 +47,7 @@ describe('Alarm event service', () => {
           guid: 'Alarm179',
           inputTime: '2023-07-01T09:21:59.82Z',
           alarm: {
-            alarmCode: AlarmCode.Hypoglycemia,
+            alarmCode: AlarmCode.G6Hypoglycemia,
             alarmLevel: AlarmLevel.Alarm,
             alarmType: 'handset',
             ackStatus: 'acknowledged',
@@ -68,7 +68,7 @@ describe('Alarm event service', () => {
           guid: 'Alarm181',
           inputTime: '2023-07-01T09:36:59.076Z',
           alarm: {
-            alarmCode: AlarmCode.Hypoglycemia,
+            alarmCode: AlarmCode.G6Hypoglycemia,
             alarmLevel: AlarmLevel.Alarm,
             alarmType: 'handset',
             ackStatus: 'acknowledged',
@@ -92,7 +92,7 @@ describe('Alarm event service', () => {
         guid: 'Alarm179',
         inputTime: '2023-07-01T09:21:59.82Z',
         alarm: {
-          alarmCode: AlarmCode.Hypoglycemia,
+          alarmCode: AlarmCode.G6Hypoglycemia,
           alarmLevel: AlarmLevel.Alarm,
           alarmType: 'handset',
           ackStatus: 'acknowledged',
@@ -118,7 +118,7 @@ describe('Alarm event service', () => {
           guid: 'Alarm179',
           inputTime: '2023-07-01T09:21:59.82Z',
           alarm: {
-            alarmCode: AlarmCode.Hypoglycemia,
+            alarmCode: AlarmCode.G6Hypoglycemia,
             alarmLevel: AlarmLevel.Alarm,
             alarmType: 'handset',
             ackStatus: 'acknowledged',
@@ -139,7 +139,7 @@ describe('Alarm event service', () => {
           guid: 'Alarm181',
           inputTime: '2023-07-01T09:36:59.076Z',
           alarm: {
-            alarmCode: AlarmCode.UrgentLowSoon,
+            alarmCode: AlarmCode.G6UrgentLowSoon,
             alarmLevel: AlarmLevel.Alert,
             alarmType: 'handset',
             ackStatus: 'acknowledged',
@@ -168,7 +168,7 @@ describe('Alarm event service', () => {
           guid: 'Alarm179',
           inputTime: '2023-07-01T09:21:59.82Z',
           alarm: {
-            alarmCode: AlarmCode.Hypoglycemia,
+            alarmCode: AlarmCode.G6Hypoglycemia,
             alarmLevel: AlarmLevel.Alarm,
             alarmType: 'handset',
             ackStatus: 'acknowledged',
@@ -189,7 +189,7 @@ describe('Alarm event service', () => {
           guid: 'Alarm181',
           inputTime: '2023-07-01T09:36:59.076Z',
           alarm: {
-            alarmCode: AlarmCode.Hypoglycemia,
+            alarmCode: AlarmCode.G6Hypoglycemia,
             alarmLevel: AlarmLevel.Alarm,
             alarmType: 'handset',
             ackStatus: 'acknowledged',

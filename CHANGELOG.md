@@ -17,6 +17,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3634 Add tooltips for Rescue carbs and Manual bolus metrics
 - YLP-3815 Display update timestamp in yourloops
 - YLP-3830 Use a generic CGM icon for warmup events
+- YLP-3831 Alarms for G7 CGM
 - YLP-3834 Memo for Weight parameter
 
 ### Engineering
