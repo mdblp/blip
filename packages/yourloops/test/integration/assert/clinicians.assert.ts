@@ -27,7 +27,7 @@
 
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent, { PointerEventsCheckLevel } from '@testing-library/user-event/dist/cjs/index.js'
-import { ClinicianApi } from '../../../lib/clinicians/clinician.api'
+import { CliniciansApi } from '../../../lib/clinicians/clinicians.api'
 import { patient2Id } from '../data/patient.api.data'
 import { userTimId, userYdrisId } from '../mock/auth0.hook.mock'
 
@@ -142,7 +142,7 @@ export const testRemoveClinicianError = async () => {
 
   expect(screen.queryByTestId('remove-clinician-dialog')).not.toBeInTheDocument()
 
-  expect(ClinicianApi.removeClinician).toHaveBeenCalledWith(patient2Id, userTimId)
+  expect(CliniciansApi.removeClinician).toHaveBeenCalledWith(patient2Id, userTimId)
 
   const errorAlert = await screen.findByText('An error occurred, please try again later.')
   expect(errorAlert).toBeVisible()
@@ -162,7 +162,7 @@ export const testAddClinicianError = async () => {
   await userEvent.click(clinicianOption)
   await userEvent.click(addClinicianButton)
 
-  expect(ClinicianApi.addClinician).toHaveBeenCalledWith(patient2Id, userYdrisId)
+  expect(CliniciansApi.addClinician).toHaveBeenCalledWith(patient2Id, userYdrisId)
 
   const errorAlert = await screen.findByText('An error occurred, please try again later.')
   expect(errorAlert).toBeVisible()
@@ -181,8 +181,8 @@ const testRemoveClinicianSuccess = async () => {
   expect(confirmButton).toBeVisible()
   await userEvent.click(confirmButton)
 
-  expect(ClinicianApi.removeClinician).toHaveBeenCalledTimes(1)
-  expect(ClinicianApi.removeClinician).toHaveBeenCalledWith(patient2Id, userTimId)
+  expect(CliniciansApi.removeClinician).toHaveBeenCalledTimes(1)
+  expect(CliniciansApi.removeClinician).toHaveBeenCalledWith(patient2Id, userTimId)
 
   expect(screen.queryByTestId('remove-clinician-dialog')).not.toBeInTheDocument()
 
@@ -230,7 +230,7 @@ const testAddClinicianSuccess = async (isPatient: boolean) => {
   expect(addClinicianButton).toBeEnabled()
 
   await userEvent.click(addClinicianButton)
-  expect(ClinicianApi.addClinician).toHaveBeenCalledWith(patient2Id, userYdrisId)
+  expect(CliniciansApi.addClinician).toHaveBeenCalledWith(patient2Id, userYdrisId)
 
   const successAlert = await screen.findByText('Clinician added successfully')
   expect(successAlert).toBeVisible()

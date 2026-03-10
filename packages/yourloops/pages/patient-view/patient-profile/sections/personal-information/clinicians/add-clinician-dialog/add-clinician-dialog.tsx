@@ -34,7 +34,7 @@ import DialogActions from '@mui/material/DialogActions'
 import { User } from '../../../../../../../lib/auth'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Box from '@mui/material/Box'
-import { ClinicianApi } from '../../../../../../../lib/clinicians/clinician.api'
+import { CliniciansApi } from '../../../../../../../lib/clinicians/clinicians.api'
 import { useAddClinicianDialog } from './add-clinician-dialog.hook'
 import { errorTextFromException } from '../../../../../../../lib/utils'
 import { logError } from '../../../../../../../utils/error.util'
@@ -71,7 +71,7 @@ export const AddClinicianDialog: FC<AddClinicianDialogProps> = (props) => {
 
   const onClickAddClinician = async () => {
     try {
-      await ClinicianApi.addClinician(patientId, selectedHcpId)
+      await CliniciansApi.addClinician(patientId, selectedHcpId)
       alert.success(t('clinician-add-success'))
 
       onSuccess()

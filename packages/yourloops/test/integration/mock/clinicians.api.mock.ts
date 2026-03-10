@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ClinicianApi } from '../../../lib/clinicians/clinician.api'
+import { CliniciansApi } from '../../../lib/clinicians/clinicians.api'
 
 export const mockCliniciansApi = () => {
-  jest.spyOn(ClinicianApi, 'addClinician').mockResolvedValue()
-  jest.spyOn(ClinicianApi, 'removeClinician').mockResolvedValue()
+  jest.spyOn(CliniciansApi, 'addClinician').mockResolvedValue()
+  jest.spyOn(CliniciansApi, 'removeClinician').mockResolvedValue()
 }

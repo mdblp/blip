@@ -28,7 +28,7 @@
 import HttpService from '../http/http.service'
 import { AddClinicianPayload } from './models/add-clinician-payload.model'
 
-export class ClinicianApi {
+export class CliniciansApi {
   static async addClinician(patientId: string, hcpId: string): Promise<void> {
     await HttpService.post<void, AddClinicianPayload>({
       url: `/crew/v1/patients/${patientId}/hcp-referents`,

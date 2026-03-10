@@ -31,7 +31,7 @@ import DialogContent from '@mui/material/DialogContent'
 import { Trans, useTranslation } from 'react-i18next'
 import DialogActions from '@mui/material/DialogActions'
 import Dialog from '@mui/material/Dialog'
-import { ClinicianApi } from '../../../../../../../lib/clinicians/clinician.api'
+import { CliniciansApi } from '../../../../../../../lib/clinicians/clinicians.api'
 import { Clinician } from '../../../../../../../lib/clinicians/models/clinician.model'
 import { errorTextFromException } from '../../../../../../../lib/utils'
 import { logError } from '../../../../../../../utils/error.util'
@@ -58,7 +58,7 @@ export const RemoveClinicianDialog: FC<RemoveClinicianDialogProps> = (props) => 
 
   const onClickRemoveClinician = async () => {
     try {
-      await ClinicianApi.removeClinician(patientId, clinicianId)
+      await CliniciansApi.removeClinician(patientId, clinicianId)
       alert.success(t('clinician-remove-success'))
 
       onSuccess()

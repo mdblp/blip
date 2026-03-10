@@ -44,7 +44,7 @@ import {
   checkCliniciansManagementPatient
 } from '../../../use-cases/clinicians-management'
 import { mockCliniciansApi } from '../../../mock/clinicians.api.mock'
-import { ClinicianApi } from '../../../../../lib/clinicians/clinician.api'
+import { CliniciansApi } from '../../../../../lib/clinicians/clinicians.api'
 import ErrorApi from '../../../../../lib/error/error.api'
 
 describe('Patient profile view for Patient', () => {
@@ -104,8 +104,8 @@ describe('Patient profile view for Patient', () => {
     it('should handle gracefully error cases when managing clinicians', async () => {
       mockPatientLogin(patient2Info)
 
-      jest.spyOn(ClinicianApi, 'addClinician').mockRejectedValue('Add clinician error')
-      jest.spyOn(ClinicianApi, 'removeClinician').mockRejectedValue('Remove clinician error')
+      jest.spyOn(CliniciansApi, 'addClinician').mockRejectedValue('Add clinician error')
+      jest.spyOn(CliniciansApi, 'removeClinician').mockRejectedValue('Remove clinician error')
       jest.spyOn(ErrorApi, 'sendError').mockResolvedValue()
 
       await act(async () => {
