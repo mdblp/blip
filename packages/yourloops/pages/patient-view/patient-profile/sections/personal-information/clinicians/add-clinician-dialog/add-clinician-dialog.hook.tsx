@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Team, TeamMember, useTeam } from '../../../../../../lib/team'
-import { useAuth } from '../../../../../../lib/auth'
+import { Team, TeamMember, useTeam } from '../../../../../../../lib/team'
+import { useAuth } from '../../../../../../../lib/auth'
 import { useParams } from 'react-router-dom'
 
 interface AddClinicianDialogHookProps {

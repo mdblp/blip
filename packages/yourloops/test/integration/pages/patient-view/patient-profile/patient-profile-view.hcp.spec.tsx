@@ -57,8 +57,13 @@ import userEvent from '@testing-library/user-event'
 import { getTranslation } from '../../../../utils/i18n'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { checkProfilesForMalePatient } from '../../../assert/profile-range.assert'
-import { checkCliniciansEmptyList, checkCliniciansFiveClinicians, checkCliniciansManagementHcp } from '../../../use-cases/clinicians-management'
+import {
+  checkCliniciansEmptyList, checkCliniciansFiveClinicians,
+  checkCliniciansManagementErrors, checkCliniciansManagementHcp
+} from '../../../use-cases/clinicians-management'
 import { mockCliniciansApi } from '../../../mock/clinicians.api.mock'
+import { ClinicianApi } from '../../../../../lib/clinicians/clinician.api'
+import ErrorApi from '../../../../../lib/error/error.api'
 
 describe('Patient profile view for HCP', () => {
   beforeEach(() => {
@@ -189,6 +194,18 @@ describe('Patient profile view for HCP', () => {
       })
 
       await checkCliniciansFiveClinicians()
+    })
+
+    it('should handle gracefully error cases when managing clinicians', async () => {
+      jest.spyOn(ClinicianApi, 'addClinician').mockRejectedValue('Add clinician error')
+      jest.spyOn(ClinicianApi, 'removeClinician').mockRejectedValue('Remove clinician error')
+      jest.spyOn(ErrorApi, 'sendError').mockResolvedValue()
+
+      await act(async () => {
+        renderPage(patientWithOneClinicianRoute)
+      })
+
+      await checkCliniciansManagementErrors()
     })
 
     // TODO: Uncomment when the feature is implemented with the API

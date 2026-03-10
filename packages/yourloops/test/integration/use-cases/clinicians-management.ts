@@ -26,13 +26,14 @@
  */
 
 import {
+  testAddClinicianError,
   testCliniciansEmptyList,
   testCliniciansFiveClinicians,
   testCliniciansOneClinician,
   testHcpAddClinician,
   testHcpRemoveClinician,
   testPatientAddClinician,
-  testPatientRemoveClinician
+  testPatientRemoveClinician, testRemoveClinicianError
 } from '../assert/clinicians.assert'
 
 export const checkCliniciansEmptyList = async (): Promise<void> => {
@@ -41,16 +42,21 @@ export const checkCliniciansEmptyList = async (): Promise<void> => {
 
 export const checkCliniciansManagementPatient = async (): Promise<void> => {
   await testCliniciansOneClinician()
-  testPatientAddClinician()
-  testPatientRemoveClinician()
+  await testPatientRemoveClinician()
+  await testPatientAddClinician()
 }
 
 export const checkCliniciansManagementHcp = async (): Promise<void> => {
   await testCliniciansOneClinician()
   await testHcpRemoveClinician()
-  testHcpAddClinician()
+  await testHcpAddClinician()
 }
 
 export const checkCliniciansFiveClinicians = async (): Promise<void> => {
   await testCliniciansFiveClinicians()
+}
+
+export const checkCliniciansManagementErrors = async (): Promise<void> => {
+  await testRemoveClinicianError()
+  await testAddClinicianError()
 }

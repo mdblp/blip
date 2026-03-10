@@ -31,11 +31,11 @@ import DialogContent from '@mui/material/DialogContent'
 import { Trans, useTranslation } from 'react-i18next'
 import DialogActions from '@mui/material/DialogActions'
 import Dialog from '@mui/material/Dialog'
-import { ClinicianApi } from '../../../../../../lib/clinicians/clinician.api'
-import { Clinician } from '../../../../../../lib/clinicians/models/clinician.model'
-import { errorTextFromException } from '../../../../../../lib/utils'
-import { logError } from '../../../../../../utils/error.util'
-import { useAlert } from '../../../../../../components/utils/snackbar'
+import { ClinicianApi } from '../../../../../../../lib/clinicians/clinician.api'
+import { Clinician } from '../../../../../../../lib/clinicians/models/clinician.model'
+import { errorTextFromException } from '../../../../../../../lib/utils'
+import { logError } from '../../../../../../../utils/error.util'
+import { useAlert } from '../../../../../../../components/utils/snackbar'
 
 interface RemoveClinicianDialogProps {
   clinician: Clinician

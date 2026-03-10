@@ -31,14 +31,14 @@ import { Button, DialogTitle, FormControl, InputLabel, MenuItem } from '@mui/mat
 import DialogContent from '@mui/material/DialogContent'
 import { Trans, useTranslation } from 'react-i18next'
 import DialogActions from '@mui/material/DialogActions'
-import { User } from '../../../../../../lib/auth'
+import { User } from '../../../../../../../lib/auth'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Box from '@mui/material/Box'
-import { ClinicianApi } from '../../../../../../lib/clinicians/clinician.api'
+import { ClinicianApi } from '../../../../../../../lib/clinicians/clinician.api'
 import { useAddClinicianDialog } from './add-clinician-dialog.hook'
-import { errorTextFromException } from '../../../../../../lib/utils'
-import { logError } from '../../../../../../utils/error.util'
-import { useAlert } from '../../../../../../components/utils/snackbar'
+import { errorTextFromException } from '../../../../../../../lib/utils'
+import { logError } from '../../../../../../../utils/error.util'
+import { useAlert } from '../../../../../../../components/utils/snackbar'
 
 interface AddClinicianDialogProps {
   patientInfo: { id: string, name: string }
@@ -78,7 +78,6 @@ export const AddClinicianDialog: FC<AddClinicianDialogProps> = (props) => {
     } catch (err) {
       const errorMessage = errorTextFromException(err)
       logError(errorMessage, 'medical-report-delete')
-      console.log(err)
 
       alert.error(t('error-occurred'))
       onClose()

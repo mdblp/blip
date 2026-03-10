@@ -33,7 +33,7 @@ import * as router from 'react-router'
 import { renderHook } from '@testing-library/react'
 import {
   useAddClinicianDialog
-} from '../../../../../../../../pages/patient-view/patient-profile/sections/personal-information/clinicians/add-clinician-dialog.hook'
+} from '../../../../../../../../pages/patient-view/patient-profile/sections/personal-information/clinicians/add-clinician-dialog/add-clinician-dialog.hook'
 
 jest.mock('../../../../../../../../lib/team')
 jest.mock('../../../../../../../../lib/auth')
