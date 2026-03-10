@@ -47,14 +47,7 @@ import { convertBG } from '../../lib/units/units.util'
 import { Unit } from 'medical-domain'
 import { Skeleton } from '@mui/material'
 import PatientUtils from '../../lib/patient/patient.util'
-import { AcknowledgeMonitoringAlertDialog, MonitoringAlertType } from './acknowledge-monitoring-alert-dialog'
-import { type AlertReactivationDates } from '../../lib/patient/models/monitoring-alerts-parameters.model'
-import { usePatientsContext } from '../../lib/patient/patients.provider'
-import { AppUserRoute } from '../../models/enums/routes.enum'
-import { useNavigate } from 'react-router-dom'
-import { errorTextFromException } from '../../lib/utils'
-import { logError } from '../../utils/error.util'
-import { useAlert } from '../utils/snackbar'
+import { AcknowledgeMonitoringAlertDialog, MonitoringAlertType } from './ack-monitoring-alert-dialog/ack-monitoring-alert-dialog'
 
 interface FlagCellProps {
   isFlagged: boolean
@@ -148,14 +141,11 @@ export const MonitoringAlertsSkeletonCell: FunctionComponent = () => {
 }
 
 export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> = ({ patient }) => {
-  const alert = useAlert()
   const { t } = useTranslation()
   const theme = useTheme()
   const { user } = useAuth()
-  const navigate = useNavigate()
-  const { acknowledgePatientAlerts } = usePatientsContext()
 
-  const { userid, monitoringAlerts, monitoringAlertsParameters } = patient
+  const { monitoringAlerts, monitoringAlertsParameters } = patient
   const unit = user.settings?.units?.bg ?? Unit.MilligramPerDeciliter // This is the default unit used when the logged-in user has no unit preference
 
   const roundUpToOneDecimal = (value: number): number => {
@@ -218,32 +208,6 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
     setIsDialogOpen(false)
   }
 
-  const handleAnalyse = (): void => {
-    navigate(`${userid}${AppUserRoute.Dashboard}`)
-    setIsDialogOpen(false)
-  }
-
-  const handleAcknowledge = async (): Promise<void> => {
-    const nextActivationDate = new Date(Date.now() + 48 * 60 * 60 * 1000)
-    const patientName = `${patient.profile.firstName} ${patient.profile.lastName}`
-    const reactivationDates: AlertReactivationDates = {
-      hyperglycemia: currentAlertType === MonitoringAlertType.Hyperglycemia ? nextActivationDate : null,
-      hypoglycemia: currentAlertType === MonitoringAlertType.Hypoglycemia ? nextActivationDate : null,
-      nonDataTransmission: currentAlertType === MonitoringAlertType.DataNotTransmitted ? nextActivationDate : null,
-      timeOutOfRange: currentAlertType === MonitoringAlertType.TimeSpentOutOfRange ? nextActivationDate : null,
-    }
-    try {
-      await acknowledgePatientAlerts(userid, reactivationDates)
-      alert.success(t('alert-acknowledge-monitoring-alert-success', {patientName}))
-    }catch (err) {
-      const errorMessage = errorTextFromException(err)
-      logError(errorMessage, 'acknowledge-monitoring-alert')
-      alert.error(t('alert-acknowledge-monitoring-alert-failure', {patientName}))
-    }
-
-    setIsDialogOpen(false)
-
-  }
 
   return (
     <Box sx={{
@@ -347,8 +311,6 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
         patient={patient}
         alertType={currentAlertType}
         onClose={handleDialogClose}
-        onAnalyse={handleAnalyse}
-        onAcknowledge={handleAcknowledge}
       />
     </Box>
   )

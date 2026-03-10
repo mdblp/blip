@@ -37,7 +37,8 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
-import { type Patient } from '../../lib/patient/models/patient.model'
+import { type Patient } from '../../../lib/patient/models/patient.model'
+import useAckMonitoringAlertDialog from './ack-monitoring-alert-dialog.hook'
 
 export enum MonitoringAlertType {
   Hyperglycemia = 'hyperglycemia',
@@ -51,20 +52,17 @@ interface AcknowledgeMonitoringAlertDialogProps {
   patient: Patient
   alertType: MonitoringAlertType
   onClose: () => void
-  onAnalyse: () => void
-  onAcknowledge: () => void
 }
 
 export const AcknowledgeMonitoringAlertDialog: FunctionComponent<AcknowledgeMonitoringAlertDialogProps> = ({
   open,
   patient,
   alertType,
-  onClose,
-  onAnalyse,
-  onAcknowledge
+  onClose
 }) => {
   const inactivePeriodHours = 48
   const { t } = useTranslation()
+  const { handleAnalyse, handleAcknowledge } = useAckMonitoringAlertDialog({ patient, alertType, onClose })
   const patientName = `${patient.profile.firstName} ${patient.profile.lastName}`
   const alertName = t(alertType)
   return (
@@ -107,7 +105,7 @@ export const AcknowledgeMonitoringAlertDialog: FunctionComponent<AcknowledgeMoni
         <Button
           data-testid="acknowledge-monitoring-alert-dialog-analyse-button"
           variant="outlined"
-          onClick={onAnalyse}
+          onClick={handleAnalyse}
         >
           {t('acknowledge-monitoring-alert-dialog-analyse-button')}
         </Button>
@@ -115,7 +113,7 @@ export const AcknowledgeMonitoringAlertDialog: FunctionComponent<AcknowledgeMoni
           data-testid="acknowledge-monitoring-alert-dialog-acknowledge-button"
           variant="contained"
           disableElevation
-          onClick={onAcknowledge}
+          onClick={handleAcknowledge}
         >
           {t('acknowledge-monitoring-alert-dialog-acknowledge-button')}
         </Button>
