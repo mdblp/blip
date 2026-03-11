@@ -159,6 +159,7 @@ export const PatientClinicians: FC<PatientCliniciansProps> = (props) => {
               disabled={!isAddClinicianEnabled}
               startIcon={<PersonAddIcon />}
               onClick={onClickAdd}
+              data-testid="add-clinician-button"
             >
             {t('add-clinician')}
           </Button>
@@ -193,7 +194,11 @@ export const PatientClinicians: FC<PatientCliniciansProps> = (props) => {
 
                 <TableBody>
                   {cliniciansSorted.map((clinician: Clinician) => (
-                    <TableRow key={clinician.id} className={classes.hideLastBorder}>
+                    <TableRow
+                      key={clinician.id}
+                      className={classes.hideLastBorder}
+                      data-testid={`clinician-row-${clinician.name}`}
+                    >
                       <TableCell>
                         {
                           getInitials(clinician.name) &&
@@ -211,6 +216,7 @@ export const PatientClinicians: FC<PatientCliniciansProps> = (props) => {
                           color="inherit"
                           tooltip={t('button-remove-clinician')}
                           aria-label={t('button-remove-clinician-named', { clinicianName: clinician.name })}
+                          data-testid="remove-clinician-button"
                           onClick={() => {
                             onClickRemove(clinician.id)
                           }}

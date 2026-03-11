@@ -108,9 +108,16 @@ export const AddClinicianDialog: FC<AddClinicianDialogProps> = (props) => {
               label={t('clinician-name')}
               onChange={handleChange}
               MenuProps={{ sx: { maxHeight: 300 } }}
+              data-testid="add-clinician-select"
             >
               {sortedAvailableHcpList.map((hcp) => (
-                <MenuItem key={hcp.userId} value={hcp.userId}>{hcp.profile?.fullName}</MenuItem>
+                <MenuItem
+                  key={hcp.userId}
+                  value={hcp.userId}
+                  data-testid={`select-option-${hcp.profile?.fullName}`}
+                >
+                  {hcp.profile?.fullName}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -122,6 +129,7 @@ export const AddClinicianDialog: FC<AddClinicianDialogProps> = (props) => {
         <Button
           variant="outlined"
           onClick={onClose}
+          data-testid="add-clinician-cancel-button"
         >
           {t('button-cancel')}
         </Button>
@@ -129,6 +137,7 @@ export const AddClinicianDialog: FC<AddClinicianDialogProps> = (props) => {
           variant="contained"
           onClick={onClickAddClinician}
           disabled={selectedHcpId === DEFAULT_HCP_ID_VALUE}
+          data-testid="add-clinician-confirm-button"
         >
           {t('button-add-clinician')}
         </Button>

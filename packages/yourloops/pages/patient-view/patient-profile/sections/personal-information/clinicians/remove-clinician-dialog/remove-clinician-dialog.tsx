@@ -103,6 +103,7 @@ export const RemoveClinicianDialog: FC<RemoveClinicianDialogProps> = (props) => 
           variant="contained"
           color="error"
           onClick={onClickRemoveClinician}
+          data-testid="remove-clinician-confirm-button"
         >
           {t('button-remove-clinician')}
         </Button>
