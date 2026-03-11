@@ -38,18 +38,21 @@ import {
 } from './patient-filters.assert'
 import { changeTeamScope } from './header.assert'
 import {
+  hypoglycemiaPatientInfo,
   hypoglycemiaPatientMetrics,
   noDataTransferredPatientInfo,
   patient1Info,
   patient2Info,
   patient3Info,
   patientWithMmolInfo,
-  pendingPatient
+  pendingPatient,
+  timeSpentOutOfTargetRangePatientInfo
 } from '../data/patient.api.data'
 import NotificationApi from '../../../lib/notifications/notification.api'
-import { type Router } from '../models/router.model'
 import moment from 'moment-timezone'
 import { PATIENT_AGE } from '../utils/helpers'
+import { Router } from '../models/router.model'
+import { AppUserRoute } from '../../../models/enums/routes.enum'
 
 const SVG_ICON_DISABLED_CLASS = 'MuiSvgIcon-colorDisabled'
 const SVG_ICON_FILL = 'currentColor'
@@ -855,4 +858,110 @@ const checkTooltipsColumnHeader = async (dataGridRows) => {
   // Using `findByRole()` instead of `findByText()` because the tooltip has the same name as the column header
   expect(await screen.findByRole('tooltip', { name: 'Last data update' })).toBeVisible()
   await userEvent.unhover(lastDataUpdateColumnHeader)
+}
+
+const openAckDialogForPatient = async (testId: string, rowIndex: number): Promise<HTMLElement> => {
+  const dataGridRows = screen.getByTestId('current-patient-list-grid')
+  const icon = within(dataGridRows).getAllByTestId(testId)[rowIndex]
+  await userEvent.click(icon)
+  return screen.getByRole('dialog')
+}
+
+// Check the content of the Acknowledge monitoring alert dialog for a hypoglycemia alert, then close it with the close button
+export const checkAckMonitoringAlertDialogContent = async (): Promise<void> => {
+  const hypoglycemiaPatientName = `${hypoglycemiaPatientInfo.profile.firstName} ${hypoglycemiaPatientInfo.profile.lastName}`
+  const dialog = await openAckDialogForPatient('hypoglycemia-icon', 4)
+
+  expect(within(dialog).getByRole('heading')).toHaveTextContent('Acknowledge Hypoglycemia monitoring alert')
+  expect(within(dialog).getByText(/Do you wish to acknowledge/)).toHaveTextContent(`Do you wish to acknowledge the Hypoglycemia monitoring alert for the patient ${hypoglycemiaPatientName}? The current monitoring alert will be muted for all HCP users in the team`)
+  expect(within(dialog).getByRole('alert')).toBeVisible()
+
+  expect(within(dialog).getByRole('button', { name: 'Acknowledge the alert' })).toBeVisible()
+  expect(within(dialog).getByRole('button', { name: 'Analyse the alert' })).toBeVisible()
+
+  const closeButton = within(dialog).getByRole('button', { name: 'Close' })
+  await userEvent.click(closeButton)
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+
+}
+
+export const checkAckMonitoringAlertDialogCloseOnAnalyse = async (router: Router): Promise<void> => {
+  const dialog = await openAckDialogForPatient('hypoglycemia-icon', 4)
+
+  const analyseButton = within(dialog).getByRole('button', { name: 'Analyse the alert' })
+  await userEvent.click(analyseButton)
+
+  // Dialog should be closed after clicking Analyse
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+  expect(router.state.location.pathname).toEqual(`${AppUserRoute.Teams}/${filtersTeamId}/patients/${hypoglycemiaPatientInfo.userid}/dashboard`)
+}
+
+export const checkAckMonitoringAlertHypoglycemia = async (): Promise<void> => {
+  const dialog = await openAckDialogForPatient('hypoglycemia-icon', 4)
+
+  const acknowledgeButton = within(dialog).getByRole('button', { name: 'Acknowledge the alert' })
+  await userEvent.click(acknowledgeButton)
+
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+
+  // Check the API was called with the correct patientId and hypoglycemia date set
+  expect(PatientApi.acknowledgePatientAlerts).toHaveBeenCalledWith(
+    filtersTeamId,
+    hypoglycemiaPatientInfo.userid,
+    expect.objectContaining({
+      hypoglycemia: expect.any(Date),
+      hyperglycemia: null,
+      nonDataTransmission: null,
+      timeOutOfRange: null,
+    })
+  )
+}
+
+export const checkAckMonitoringAlertTimeOutOfRange = async (): Promise<void> => {
+  const dialog = await openAckDialogForPatient('time-spent-out-of-range-icon', 2)
+
+  const acknowledgeButton = within(dialog).getByTestId('acknowledge-monitoring-alert-dialog-acknowledge-button')
+  await userEvent.click(acknowledgeButton)
+
+  expect(PatientApi.acknowledgePatientAlerts).toHaveBeenCalledWith(
+    filtersTeamId,
+    timeSpentOutOfTargetRangePatientInfo.userid,
+    expect.objectContaining({
+      timeOutOfRange: expect.any(Date),
+      hyperglycemia: null,
+      hypoglycemia: null,
+      nonDataTransmission: null,
+    })
+  )
+}
+
+export const checkAckMonitoringAlertNoData = async (): Promise<void> => {
+  const dialog = await openAckDialogForPatient('no-data-icon', 5)
+
+  const acknowledgeButton = within(dialog).getByTestId('acknowledge-monitoring-alert-dialog-acknowledge-button')
+  await userEvent.click(acknowledgeButton)
+
+  expect(PatientApi.acknowledgePatientAlerts).toHaveBeenCalledWith(
+    filtersTeamId,
+    noDataTransferredPatientInfo.userid,
+    expect.objectContaining({
+      nonDataTransmission: expect.any(Date),
+      hyperglycemia: null,
+      hypoglycemia: null,
+      timeOutOfRange: null,
+    })
+  )
+}
+
+export const checkInactiveAlertIconRedirectToDashboard = async (router : Router): Promise<void> => {
+  // patient1Info has all alerts inactive — clicking the icon should NOT open a dialog
+  const dataGridRows = screen.getByTestId('current-patient-list-grid')
+  const inactiveHyperglycemiaIcon = within(dataGridRows).getAllByTestId('hyperglycemia-icon')[0]
+  await userEvent.click(inactiveHyperglycemiaIcon)
+  expect(router.state.location.pathname).toEqual(`${AppUserRoute.Teams}/${filtersTeamId}/patients/${patient1Info.userid}/dashboard`)
+}
+
+export const goBackToPatientsList = async (router : Router): Promise<void> => {
+  await userEvent.click(screen.getByTestId('main-header-hcp-patients-tab'))
+  expect(router.state.location.pathname).toEqual(`${AppUserRoute.Teams}/${filtersTeamId}/patients`)
 }

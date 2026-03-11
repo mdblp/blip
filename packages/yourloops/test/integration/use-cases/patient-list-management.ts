@@ -26,6 +26,12 @@
  */
 
 import {
+  checkAckMonitoringAlertDialogCloseOnAnalyse,
+  checkAckMonitoringAlertDialogContent,
+  checkAckMonitoringAlertHypoglycemia,
+  checkAckMonitoringAlertNoData,
+  checkAckMonitoringAlertTimeOutOfRange,
+  checkInactiveAlertIconRedirectToDashboard,
   checkMonitoringAlertsIconsInactiveForFirstPatient,
   checkPatientColumnsFiltersContent,
   checkPatientListColumnSort,
@@ -38,9 +44,10 @@ import {
   checkPatientListTooltipsMgDL,
   checkPatientListTooltipsMmolL,
   checkPatientListTooltipsNoData,
-  checkPendingPatientColumnsSettingsMedicalTeam
+  checkPendingPatientColumnsSettingsMedicalTeam, goBackToPatientsList
 } from '../assert/patient-list.assert'
 import { checkPatientFiltersForPrivateTeam } from '../assert/patient-filters.assert'
+import { Router } from '../models/router.model'
 
 export const testPatientListForHcp = async () => {
   await checkPatientListHeaderForHcp()
@@ -64,3 +71,15 @@ export const testPatientListForHcpPrivateTeam = async () => {
   await checkPatientListCurrentTabForPrivateTeam()
   await checkPatientFiltersForPrivateTeam()
 }
+
+export const testAckMonitoringAlerts = async (router: Router) => {
+  await checkInactiveAlertIconRedirectToDashboard(router)
+  await goBackToPatientsList(router)
+  await checkAckMonitoringAlertDialogContent()
+  await checkAckMonitoringAlertDialogCloseOnAnalyse(router)
+  await goBackToPatientsList(router)
+  await checkAckMonitoringAlertHypoglycemia()
+  await checkAckMonitoringAlertTimeOutOfRange()
+  await checkAckMonitoringAlertNoData()
+}
+
