@@ -211,7 +211,10 @@ export const checkCareTeamMembers = () => {
   expect(screen.getByTestId('team-members-list-table')).toHaveTextContent(`MemberEmailAdmin${loggedInUserLastName} ${loggedInUserFirstName}${loggedInUserEmail}${userTimLastName} ${userTimFirstName}${userTimEmail}`)
 }
 
-export const checkCareTeamMonitoringAlertsConfiguration = () => {
+export const checkCareTeamMonitoringAlertsConfiguration = async () => {
+  const menu = screen.getByTestId('care-team-settings-menu')
+  const monitoringAlertsConfigurationMenuItem = within(menu).getByText('Monitoring alerts')
+  await userEvent.click(monitoringAlertsConfigurationMenuItem)
   const monitoringAlertsConfigurationSection = screen.getByTestId('team-monitoring-alerts-configuration')
 
   expect(within(monitoringAlertsConfigurationSection).getByText('Monitoring alerts configuration')).toBeVisible()

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -44,7 +44,7 @@ import {
 export const testCareTeamLayout = async () => {
   await checkCareTeamInformation()
   checkCareTeamMembers()
-  checkCareTeamMonitoringAlertsConfiguration()
+  await checkCareTeamMonitoringAlertsConfiguration()
 }
 
 export const testRemoveTeamMember = async () => {
