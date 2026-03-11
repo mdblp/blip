@@ -24,14 +24,15 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import { type Patient } from '../../../../lib/patient/models/patient.model'
+import { type Patient } from '../../../../../lib/patient/models/patient.model'
 import { formatDate } from 'dumb'
 import i18next from 'i18next'
-import PatientUtils from '../../../../lib/patient/patient.util'
+import PatientUtils from '../../../../../lib/patient/patient.util'
+import { InsulinType } from '../../../../../models/enums/insulin-type.enum'
 
 const t = i18next.t.bind(i18next)
 
-export const getPatientAge = (birthdate?: string): string => {
+const getPatientAge = (birthdate?: string): string => {
   if (!birthdate) return t('N/A')
 
   const birthDate = new Date(birthdate)
@@ -46,7 +47,7 @@ export const getPatientAge = (birthdate?: string): string => {
   return `${age} ${t('years-old')}`
 }
 
-export const getPatientHbA1c = (patient: Patient): string => {
+const getPatientHbA1c = (patient: Patient): string => {
   const a1c = patient?.settings?.a1c?.value
   const a1cDate = patient?.settings?.a1c?.date
 
@@ -55,20 +56,11 @@ export const getPatientHbA1c = (patient: Patient): string => {
   return `${a1c}% (${formatDate(a1cDate)})`
 }
 
-export const getPatientInitials = (firstName: string = '', lastName: string = ''): string => {
+const getPatientInitials = (firstName: string = '', lastName: string = ''): string => {
   return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
 }
 
-enum InsulinType {
-  Novorapid = 1,
-  Humalog = 2,
-  Fiasp = 3,
-  Lyumjev = 4,
-  Other = 5,
-}
-
-export const getPatientInsulinType = (insulinType?: string): string => {
-
+const getPatientInsulinType = (insulinType?: string): string => {
   if (!insulinType) {
     return t('N/A')
   }
