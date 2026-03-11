@@ -897,13 +897,14 @@ export const checkAckMonitoringAlertDialogCloseOnAnalyse = async (router: Router
 }
 
 export const checkAckMonitoringAlertHypoglycemia = async (): Promise<void> => {
+  const hypoglycemiaPatientName = `${hypoglycemiaPatientInfo.profile.firstName} ${hypoglycemiaPatientInfo.profile.lastName}`
   const dialog = await openAckDialogForPatient('hypoglycemia-icon', 4)
 
   const acknowledgeButton = within(dialog).getByRole('button', { name: 'Acknowledge the alert' })
   await userEvent.click(acknowledgeButton)
 
   await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
-
+  await checkAndCloseAckAlert(`Monitoring alert Hypoglycemia acknowledged successfully for patient ${hypoglycemiaPatientName}`)
   // Check the API was called with the correct patientId and hypoglycemia date set
   expect(PatientApi.acknowledgePatientAlerts).toHaveBeenCalledWith(
     filtersTeamId,
@@ -918,11 +919,13 @@ export const checkAckMonitoringAlertHypoglycemia = async (): Promise<void> => {
 }
 
 export const checkAckMonitoringAlertTimeOutOfRange = async (): Promise<void> => {
+  const PatientName = `${timeSpentOutOfTargetRangePatientInfo.profile.firstName} ${timeSpentOutOfTargetRangePatientInfo.profile.lastName}`
   const dialog = await openAckDialogForPatient('time-spent-out-of-range-icon', 2)
 
   const acknowledgeButton = within(dialog).getByTestId('acknowledge-monitoring-alert-dialog-acknowledge-button')
   await userEvent.click(acknowledgeButton)
-
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+  await checkAndCloseAckAlert(`Monitoring alert Time spent out of range acknowledged successfully for patient ${PatientName}`)
   expect(PatientApi.acknowledgePatientAlerts).toHaveBeenCalledWith(
     filtersTeamId,
     timeSpentOutOfTargetRangePatientInfo.userid,
@@ -937,10 +940,11 @@ export const checkAckMonitoringAlertTimeOutOfRange = async (): Promise<void> => 
 
 export const checkAckMonitoringAlertNoData = async (): Promise<void> => {
   const dialog = await openAckDialogForPatient('no-data-icon', 5)
-
+  const PatientName = `${noDataTransferredPatientInfo.profile.firstName} ${noDataTransferredPatientInfo.profile.lastName}`
   const acknowledgeButton = within(dialog).getByTestId('acknowledge-monitoring-alert-dialog-acknowledge-button')
   await userEvent.click(acknowledgeButton)
-
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+  await checkAndCloseAckAlert(`Monitoring alert Data not transmitted acknowledged successfully for patient ${PatientName}`)
   expect(PatientApi.acknowledgePatientAlerts).toHaveBeenCalledWith(
     filtersTeamId,
     noDataTransferredPatientInfo.userid,
@@ -964,4 +968,11 @@ export const checkInactiveAlertIconRedirectToDashboard = async (router : Router)
 export const goBackToPatientsList = async (router : Router): Promise<void> => {
   await userEvent.click(screen.getByTestId('main-header-hcp-patients-tab'))
   expect(router.state.location.pathname).toEqual(`${AppUserRoute.Teams}/${filtersTeamId}/patients`)
+}
+
+export const checkAndCloseAckAlert = async (alertText: string): Promise<void> => {
+  const confirmation = screen.getByRole('alert')
+  expect(confirmation).toHaveTextContent(alertText)
+  const closeButton = within(confirmation).getByRole('button', { name: 'Close' })
+  await userEvent.click(closeButton)
 }

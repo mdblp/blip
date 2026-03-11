@@ -60,6 +60,7 @@ import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
 import ErrorApi from '../../../../lib/error/error.api'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { mockChatAPI } from '../../mock/chat.api.mock'
+import { mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -79,6 +80,7 @@ describe('HCP home page', () => {
     mockDataAPI()
     mockChatAPI()
     mockDblCommunicationApi()
+    mockMedicalFilesApiEmptyResult()
     jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
     jest.spyOn(PatientApi, 'invitePatient').mockResolvedValue(undefined)
     jest.spyOn(NotificationApi, 'cancelInvitation').mockResolvedValue(undefined)

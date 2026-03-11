@@ -56,6 +56,7 @@ const useAckMonitoringAlertDialog = ({ patient, alertType, onClose }: AckMonitor
   const { acknowledgePatientAlerts } = usePatientsContext()
 
   const patientName = `${patient.profile.firstName} ${patient.profile.lastName}`
+  const alertName = t(alertType)
 
   const handleAnalyse = (): void => {
     navigate(`${patient.userid}${AppUserRoute.Dashboard}`)
@@ -72,11 +73,11 @@ const useAckMonitoringAlertDialog = ({ patient, alertType, onClose }: AckMonitor
     }
     try {
       await acknowledgePatientAlerts(patient.userid, reactivationDates)
-      alert.success(t('alert-acknowledge-monitoring-alert-success', { patientName }))
+      alert.success(t('alert-acknowledge-monitoring-alert-success', {  alertName, patientName }))
     } catch (err) {
       const errorMessage = errorTextFromException(err)
       logError(errorMessage, 'acknowledge-monitoring-alert')
-      alert.error(t('alert-acknowledge-monitoring-alert-failure', { patientName }))
+      alert.error(t('alert-acknowledge-monitoring-alert-failure', { alertName, patientName }))
     }
     onClose()
   }

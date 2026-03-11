@@ -5,7 +5,7 @@
   "acknowledge-monitoring-alert-dialog-analyse-button": "Analyse the alert",
   "acknowledge-monitoring-alert-dialog-acknowledge-button": "Acknowledge the alert",
   "alert-acknowledge-monitoring-alert-failure": "Error while acknowledging monitoring alert for patient {{patientName}}. Please try again later.",
-  "alert-acknowledge-monitoring-alert-success": "Monitoring alert Hypoglycemia acknowledged successfully for patient {{patientName}}",
+  "alert-acknowledge-monitoring-alert-success": "Monitoring alert {{alertName}} acknowledged successfully for patient {{patientName}}",
   "Austria": "Austria",
   "BGM": "BGM",
   "Basal": "Basal",
