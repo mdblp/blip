@@ -26,7 +26,7 @@
  */
 
 import {
-  checkCareTeamInformation,
+  checkCareTeamInformation, checkCareTeamLayoutForPatient,
   checkCareTeamMembers,
   checkCareTeamMonitoringAlertsConfiguration,
   checkDeleteTeam,
@@ -71,6 +71,7 @@ export const testLeaveTeamHcp = async () => {
 }
 
 export const testLeaveTeamPatient = async () => {
+  await checkCareTeamLayoutForPatient()
   await checkLeaveTeamPatient()
 }
 

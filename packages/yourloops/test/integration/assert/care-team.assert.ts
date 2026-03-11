@@ -228,3 +228,11 @@ export const checkCareTeamMonitoringAlertsConfiguration = async () => {
   expect(monitoringAlertsConfigurationSection).toHaveTextContent('3. Severe hypoglycemiaCurrent trigger setting: 10% of time below 40 mg/dL thresholdA. Severe hypoglycemia threshold:Severe hypoglycemia below​mg/dLDefault: 54 mg/dLB. Event trigger thresholdTime spent in severe hypoglycemia10%​Default: 5%')
   expect(monitoringAlertsConfigurationSection).toHaveTextContent('4. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​Default: 50%')
 }
+
+export const checkCareTeamLayoutForPatient = async () => {
+  await screen.findByText('Information')
+
+  expect(screen.queryByTestId('care-team-settings-menu')).not.toBeInTheDocument()
+  expect(screen.getByTestId('team-information')).toBeVisible()
+  expect(screen.queryByTestId('team-members')).not.toBeInTheDocument()
+}
