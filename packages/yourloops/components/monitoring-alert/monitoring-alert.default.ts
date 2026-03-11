@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,16 +25,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 import { type BgValues, type Thresholds } from '../../lib/patient/models/monitoring-alerts.model'
-import { Unit } from 'medical-domain'
+import { DEFAULT_BG_BOUNDS, MGDL_UNITS, Unit } from 'medical-domain'
 
+// TODO: ideally these defaults should come from the api.
 export const DEFAULT_BG_VALUES: BgValues = {
   bgUnitDefault: Unit.MilligramPerDeciliter,
   outOfRangeThresholdDefault: 50,
   nonDataTxThresholdDefault: 50,
   hypoThresholdDefault: 5,
-  veryLowBgDefault: 54,
-  lowBgDefault: 70,
-  highBgDefault: 180,
+  hyperThresholdDefault: 15,
+  veryLowBgDefault: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryLow,
+  veryHighBgDefault: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh,
+  lowBgDefault: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower,
+  highBgDefault: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper,
   reportingPeriodDefault: 7 * 24
 }
 export const DEFAULT_THRESHOLDS_IN_MGDL: Thresholds = {
@@ -42,6 +45,8 @@ export const DEFAULT_THRESHOLDS_IN_MGDL: Thresholds = {
   maxHighBg: 250,
   minVeryLowBg: 40,
   maxVeryLowBg: 90,
+  minVeryHighBg: 180,
+  maxVeryHighBg: 400,
   minLowBg: 50,
   maxLowBg: 100
 }

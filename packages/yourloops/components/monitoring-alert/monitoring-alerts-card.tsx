@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -68,22 +68,24 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
 
   const monitoringAlerts = patient.monitoringAlerts
   const timeSpentAwayFromTargetActive = monitoringAlerts?.timeSpentAwayFromTargetActive
-  const frequencyOfSevereHypoglycemiaActive = monitoringAlerts?.frequencyOfSevereHypoglycemiaActive
+  const frequencyOfHypoglycemiaActive = monitoringAlerts?.frequencyOfSevereHypoglycemiaActive
+  const frequencyOfHyperglycemiaActive = monitoringAlerts?.frequencyOfSevereHyperglycemiaActive
   const nonDataTransmissionActive = monitoringAlerts?.nonDataTransmissionActive
-  const noActiveMonitoringAlert = !timeSpentAwayFromTargetActive && !frequencyOfSevereHypoglycemiaActive && !nonDataTransmissionActive
+  const noActiveMonitoringAlert = !timeSpentAwayFromTargetActive && !frequencyOfHypoglycemiaActive && !nonDataTransmissionActive && !frequencyOfHyperglycemiaActive
 
   const buildNumberOfMonitoringAlertsLabel = (): string => {
     if (noActiveMonitoringAlert) {
       return ''
     }
-    const number = [timeSpentAwayFromTargetActive, frequencyOfSevereHypoglycemiaActive, nonDataTransmissionActive].filter(value => value).length
+    const number = [timeSpentAwayFromTargetActive, frequencyOfHypoglycemiaActive, nonDataTransmissionActive, frequencyOfHyperglycemiaActive].filter(value => value).length
     return ` (+${number})`
   }
 
   const numberOfMonitoringAlertsLabel = buildNumberOfMonitoringAlertsLabel()
 
   const timeSpentAwayFromTargetRateProps = buildSimpleValueProps(StatFormats.Percentage, 100, patient.monitoringAlerts.timeSpentAwayFromTargetRate)
-  const frequencyOfSevereHypoglycemiaRateProps = buildSimpleValueProps(StatFormats.Percentage, 100, patient.monitoringAlerts.frequencyOfSevereHypoglycemiaRate)
+  const frequencyOfHypoglycemiaRateProps = buildSimpleValueProps(StatFormats.Percentage, 100, patient.monitoringAlerts.frequencyOfSevereHypoglycemiaRate)
+  const frequencyOfHyperglycemiaRateProps = buildSimpleValueProps(StatFormats.Percentage, 100, patient.monitoringAlerts.frequencyOfSevereHyperglycemiaRate)
   const nonDataTransmissionRateProps = buildSimpleValueProps(StatFormats.Percentage, 100, patient.monitoringAlerts.nonDataTransmissionRate)
 
   return (
@@ -132,15 +134,30 @@ function MonitoringAlertsCard(props: MonitoringAlertsCardProps): JSX.Element {
             }
           </Box>
           <Box
+            id="hyper-monitoring-alert-id"
+            className={frequencyOfHyperglycemiaActive ? classes.alertColor : ''}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between"
+            }}>
+            {t('alert-hyperglycemic')}
+            {patient.monitoringAlerts.frequencyOfSevereHyperglycemiaRate
+              ? <SimpleValue {...frequencyOfHyperglycemiaRateProps} />
+              : <Typography sx={{ fontWeight: 'bold' }}>
+                {t('N/A')}
+              </Typography>
+            }
+          </Box>
+          <Box
             id="severe-hypo-monitoring-alert-id"
-            className={frequencyOfSevereHypoglycemiaActive ? classes.alertColor : ''}
+            className={frequencyOfHypoglycemiaActive ? classes.alertColor : ''}
             sx={{
               display: "flex",
               justifyContent: "space-between"
             }}>
             {t('alert-hypoglycemic')}
             {patient.monitoringAlerts.frequencyOfSevereHypoglycemiaRate
-              ? <SimpleValue {...frequencyOfSevereHypoglycemiaRateProps} />
+              ? <SimpleValue {...frequencyOfHypoglycemiaRateProps} />
               : <Typography sx={{ fontWeight: 'bold' }}>
                 {t('N/A')}
               </Typography>

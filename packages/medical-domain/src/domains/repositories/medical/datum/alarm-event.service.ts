@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -64,16 +64,16 @@ const CATEGORIZED_ALARM_CODES = {
       AlarmCode.KaleidoEmptyPumpBattery,
       AlarmCode.KaleidoInsulinCartridgeExpired,
       AlarmCode.KaleidoOcclusion,
-      AlarmCode.SensorSessionExpired
+      AlarmCode.G6SensorSessionExpired
     ]
   },
   HYPOGLYCEMIA: {
-    ALARM: [AlarmCode.Hypoglycemia, AlarmCode.LongHypoglycemia],
-    ALERT: [AlarmCode.InsightHypoglycemia, AlarmCode.NoReadingsHypoglycemiaRisk, AlarmCode.UrgentLowSoon]
+    ALARM: [AlarmCode.G6Hypoglycemia, AlarmCode.LongHypoglycemia],
+    ALERT: [AlarmCode.InsightHypoglycemia, AlarmCode.NoReadingsHypoglycemiaRisk, AlarmCode.G6UrgentLowSoon]
   },
   HYPERGLYCEMIA: {
-    ALARM: [AlarmCode.LongHyperglycemia],
-    ALERT: [AlarmCode.Hyperglycemia, AlarmCode.SuddenRiseInGlycemia]
+    ALARM: [AlarmCode.G6LongHyperglycemia],
+    ALERT: [AlarmCode.G6Hyperglycemia, AlarmCode.SuddenRiseInGlycemia]
   }
 }
 
@@ -178,8 +178,7 @@ const groupData = (alarmEvents: AlarmEvent[]): AlarmEvent[] => {
 
   const alarmEventsWithGroupedOccurrences = Object
     .entries(alarmsByCode)
-    .map(([, value]) => value.alarmEvents)
-    .flat()
+    .flatMap(([, value]) => value.alarmEvents)
 
   return getSortedAlarmEvents(alarmEventsWithGroupedOccurrences)
 }

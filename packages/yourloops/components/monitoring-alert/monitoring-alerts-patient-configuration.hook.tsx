@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -80,9 +80,11 @@ export const useMonitoringAlertsPatientConfiguration = (
     getHighBgInitialState,
     getLowBgInitialState,
     getVeryLowBgInitialState,
+    getVeryHighBgInitialState,
     getNonDataTxThresholdInitialState,
     getOutOfRangeThresholdInitialState,
     getHypoThresholdInitialState,
+    getHyperThresholdInitialState,
     save,
     saveButtonDisabled,
     setMonitoringValuesDisplayed
@@ -100,8 +102,9 @@ export const useMonitoringAlertsPatientConfiguration = (
       outOfRangeThreshold: teamParameters.outOfRangeThreshold,
       veryLowBg: getConvertedValue(teamParameters.veryLowBg, teamParametersUnit, userBgUnit),
       hypoThreshold: teamParameters.hypoThreshold,
-      nonDataTxThreshold: teamParameters.nonDataTxThreshold,
-      reportingPeriod: teamParameters.reportingPeriod
+      veryHighBg: getConvertedValue(teamParameters.veryHighBg, teamParametersUnit, userBgUnit),
+      hyperThreshold: teamParameters.hyperThreshold,
+      nonDataTxThreshold: teamParameters.nonDataTxThreshold
     }
   }, [selectedTeam.monitoringAlertsParameters, userBgUnit])
 
@@ -110,6 +113,8 @@ export const useMonitoringAlertsPatientConfiguration = (
       && teamAlertParametersValues.lowBg === values.lowBg.value
       && teamAlertParametersValues.veryLowBg === values.veryLowBg.value
       && teamAlertParametersValues.hypoThreshold === values.hypoThreshold.value
+      && teamAlertParametersValues.veryHighBg === values.veryHighBg.value
+      && teamAlertParametersValues.hyperThreshold === values.hyperThreshold.value
       && teamAlertParametersValues.nonDataTxThreshold === values.nonDataTxThreshold.value
       && teamAlertParametersValues.outOfRangeThreshold === values.outOfRangeThreshold.value
   }
@@ -120,9 +125,15 @@ export const useMonitoringAlertsPatientConfiguration = (
 
     const defaultHighBgValue = getConvertedValue(defaultMonitoringAlertsParameters.highBg, teamBgUnit, userBgUnit)
     const defaultVeryLowBgValue = getConvertedValue(defaultMonitoringAlertsParameters.veryLowBg, teamBgUnit, userBgUnit)
+    const defaultVeryHighBgValue = getConvertedValue(defaultMonitoringAlertsParameters.veryHighBg, teamBgUnit, userBgUnit)
     const defaultLowBgValue = getConvertedValue(defaultMonitoringAlertsParameters.lowBg, teamBgUnit, userBgUnit)
 
-    const { minLowBg, maxLowBg, minHighBg, maxHighBg, minVeryLowBg, maxVeryLowBg } = buildThresholds(userBgUnit)
+    const {
+      minLowBg, maxLowBg,
+      minHighBg, maxHighBg,
+      minVeryLowBg, maxVeryLowBg,
+      minVeryHighBg, maxVeryHighBg
+    } = buildThresholds(userBgUnit)
 
     setMonitoringValuesDisplayed({
       highBg: {
@@ -132,6 +143,10 @@ export const useMonitoringAlertsPatientConfiguration = (
       hypoThreshold: {
         value: defaultMonitoringAlertsParameters.hypoThreshold,
         error: isInvalidPercentage(defaultMonitoringAlertsParameters.hypoThreshold)
+      },
+      hyperThreshold: {
+        value: defaultMonitoringAlertsParameters.hyperThreshold,
+        error: isInvalidPercentage(defaultMonitoringAlertsParameters.hyperThreshold)
       },
       lowBg: {
         value: defaultLowBgValue,
@@ -148,6 +163,10 @@ export const useMonitoringAlertsPatientConfiguration = (
       veryLowBg: {
         value: defaultVeryLowBgValue,
         errorMessage: getErrorMessage(userBgUnit, defaultVeryLowBgValue, minVeryLowBg, maxVeryLowBg)
+      },
+      veryHighBg: {
+        value: defaultVeryHighBgValue,
+        errorMessage: getErrorMessage(userBgUnit, defaultVeryHighBgValue, minVeryHighBg, maxVeryHighBg)
       }
     })
     setUseTeamValues(true)
@@ -160,7 +179,9 @@ export const useMonitoringAlertsPatientConfiguration = (
       lowBg: getLowBgInitialState(),
       nonDataTxThreshold: getNonDataTxThresholdInitialState(),
       outOfRangeThreshold: getOutOfRangeThresholdInitialState(),
-      veryLowBg: getVeryLowBgInitialState()
+      veryLowBg: getVeryLowBgInitialState(),
+      veryHighBg: getVeryHighBgInitialState(),
+      hyperThreshold: getHyperThresholdInitialState()
     }
     setMonitoringValuesDisplayed(newMonitoringParametersValuesToDisplay)
     setUseTeamValues(areTeamValuesAndGivenValuesTheSame(newMonitoringParametersValuesToDisplay))

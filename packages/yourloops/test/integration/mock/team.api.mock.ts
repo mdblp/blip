@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -72,9 +72,10 @@ export const monitoringAlertsParameters: MonitoringAlertsParameters = {
   highBg: minHighBg,
   outOfRangeThreshold: 5,
   veryLowBg: minVeryLowBg,
+  veryHighBg: 250,
   hypoThreshold: 10,
-  nonDataTxThreshold: 15,
-  reportingPeriod: 7
+  hyperThreshold: 25,
+  nonDataTxThreshold: 15
 }
 export const monitoringAlertsParametersBgUnitMmol: MonitoringAlertsParameters = {
   bgUnit: Unit.MmolPerLiter,
@@ -82,9 +83,10 @@ export const monitoringAlertsParametersBgUnitMmol: MonitoringAlertsParameters = 
   highBg: 7.8,
   outOfRangeThreshold: 5,
   veryLowBg: 2.2,
+  veryHighBg: 13.9,
+  hyperThreshold: 25,
   hypoThreshold: 10,
-  nonDataTxThreshold: 15,
-  reportingPeriod: 7
+  nonDataTxThreshold: 15
 }
 
 export const myFirstTeamId = 'myTeamId'
@@ -297,7 +299,8 @@ export const buildPrivateTeam = (): Team => {
   }
 }
 
-export const iTeamOne: ITeam = {
+
+export const anotherTeam: Team = {
   name: 'iTeamOne',
   id: 'iTeamOneId',
   code: '679517388',

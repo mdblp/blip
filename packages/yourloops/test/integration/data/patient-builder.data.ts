@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -119,6 +119,7 @@ export const buildPatientMetrics = (params: {
 }): PatientMetrics => {
   const timeSpentAwayFromTargetRate = params.monitoringAlerts?.timeSpentAwayFromTargetRate
   const frequencyOfSevereHypoglycemiaRate = params.monitoringAlerts?.frequencyOfSevereHypoglycemiaRate
+  const frequencyOfSevereHyperglycemiaRate = params.monitoringAlerts?.frequencyOfSevereHyperglycemiaRate
   const nonDataTransmissionRate = params.monitoringAlerts?.nonDataTransmissionRate
 
   return {
@@ -128,6 +129,8 @@ export const buildPatientMetrics = (params: {
       timeSpentAwayFromTargetActive: params.monitoringAlerts?.timeSpentAwayFromTargetActive || false,
       frequencyOfSevereHypoglycemiaRate: frequencyOfSevereHypoglycemiaRate !== undefined ? frequencyOfSevereHypoglycemiaRate : 20,
       frequencyOfSevereHypoglycemiaActive: params.monitoringAlerts?.frequencyOfSevereHypoglycemiaActive || false,
+      frequencyOfSevereHyperglycemiaRate: frequencyOfSevereHyperglycemiaRate !== undefined ? frequencyOfSevereHyperglycemiaRate : 17,
+      frequencyOfSevereHyperglycemiaActive: params.monitoringAlerts?.frequencyOfSevereHyperglycemiaActive || false,
       nonDataTransmissionRate: nonDataTransmissionRate !== undefined ? nonDataTransmissionRate : 30,
       nonDataTransmissionActive: params.monitoringAlerts?.nonDataTransmissionActive || false
     },

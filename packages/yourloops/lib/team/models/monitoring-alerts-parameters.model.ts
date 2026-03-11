@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2026, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,39 +25,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum AlarmCode {
-  DanaEmptyPumpBattery = '51001',
-  DanaEmptyReservoir = '51002',
-  DanaIncompatibleActionsOnPump = '51003',
-  DanaOcclusion = '51004',
-  G6LongHyperglycemia = '15000',
-  G6Hyperglycemia = '10113',
-  G6Hypoglycemia = '12000',
-  G6SensorSessionExpired = '11000',
-  G6UrgentLowSoon = '10112',
-  G7BriefSensorIssue = 'A0109',
-  G7GracePeriodExpired = 'A1000',
-  G7Hyperglycemia = 'A0115',
-  G7Hypoglycemia = 'A2000',
-  G7LongHyperglycemia = 'A5000',
-  G7SensorFailed = 'A3000',
-  G7SensorSessionExpired = 'A0121',
-  G7SignalLoss = 'A0108',
-  G7UrgentLowSoon = 'A0102',
-  InsightEmptyInsulinCartridge = '71002',
-  InsightEmptyPumpBattery = '71001',
-  InsightHypoglycemia = '10117',
-  InsightIncompatibleActionsOnPump = '71003',
-  InsightInsulinCartridgeExpired = '71020',
-  InsightOcclusion = '71004',
-  KaleidoEmptyInsulinCartridge = '41002',
-  KaleidoEmptyPumpBattery = '41001',
-  KaleidoInsulinCartridgeExpired = '41003',
-  KaleidoOcclusion = '41004',
-  LongHypoglycemia = '24000',
-  MedisafeEmptyPumpBattery = '91001',
-  MedisafeEmptyPumpReservoir = '91002',
-  MedisafeOcclusion = '91004',
-  NoReadingsHypoglycemiaRisk = '20100',
-  SuddenRiseInGlycemia = '20102',
+import { type BgUnit, MonitoringAlertsParameters } from 'medical-domain'
+
+export interface MonitoringAlertsParametersDto {
+  bgUnit: BgUnit
+  hyperglycemia: AlertParameters
+  hypoglycemia: AlertParameters
+  nonDataTransmission: AlertParameters
+  timeOutOfRange: AlertParameters
 }
+
+interface AlertParameters {
+  rateThreshold: number
+  glycemiaUpperLimit?: number
+  glycemiaLowerLimit?: number
+}
+
+export const mapMonAlertParamsFromInternal = (monitoringAlertsParameters: MonitoringAlertsParameters): MonitoringAlertsParametersDto => {
+  return {
+    bgUnit: monitoringAlertsParameters.bgUnit,
+    hyperglycemia: {
+      rateThreshold: monitoringAlertsParameters.hyperThreshold,
+      glycemiaUpperLimit: monitoringAlertsParameters.veryHighBg
+    },
+    hypoglycemia: {
+      rateThreshold: monitoringAlertsParameters.hypoThreshold,
+      glycemiaLowerLimit: monitoringAlertsParameters.veryLowBg
+    },
+    nonDataTransmission: {
+      rateThreshold: monitoringAlertsParameters.nonDataTxThreshold
+    },
+    timeOutOfRange: {
+      rateThreshold: monitoringAlertsParameters.outOfRangeThreshold,
+      glycemiaLowerLimit: monitoringAlertsParameters.lowBg,
+      glycemiaUpperLimit: monitoringAlertsParameters.highBg
+    }
+  }
+}
+
