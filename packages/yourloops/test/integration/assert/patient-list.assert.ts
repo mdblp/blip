@@ -873,7 +873,7 @@ export const checkAckMonitoringAlertDialogContent = async (): Promise<void> => {
   const dialog = await openAckDialogForPatient('hypoglycemia-icon', 4)
 
   expect(within(dialog).getByRole('heading')).toHaveTextContent('Acknowledge Hypoglycemia monitoring alert')
-  expect(within(dialog).getByText(/Do you wish to acknowledge/)).toHaveTextContent(`Do you wish to acknowledge the Hypoglycemia monitoring alert for the patient ${hypoglycemiaPatientName}? The current monitoring alert will be muted for all HCP users in the team`)
+  expect(within(dialog).getByText(/Do you wish to acknowledge/)).toHaveTextContent(`Do you wish to acknowledge the Hypoglycemia monitoring alert for the patient ${hypoglycemiaPatientName}? The current monitoring alert will be muted temporarily for all HCP users in the team`)
   expect(within(dialog).getByRole('alert')).toBeVisible()
 
   expect(within(dialog).getByRole('button', { name: 'Acknowledge the alert' })).toBeVisible()

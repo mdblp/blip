@@ -99,7 +99,9 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
   }
 
   const buildAlertClickHandler = (alertType: MonitoringAlertType, isActive: boolean): ((e: React.MouseEvent) => void) | undefined => {
-    if (!isActive) return undefined
+    if (!isActive) {
+      return undefined
+    }
     return (e: React.MouseEvent) => { handleAlertIconClick(e, alertType) }
   }
 

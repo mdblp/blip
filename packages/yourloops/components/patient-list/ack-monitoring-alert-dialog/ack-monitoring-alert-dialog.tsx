@@ -66,7 +66,6 @@ export const AcknowledgeMonitoringAlertDialog: FunctionComponent<AcknowledgeMoni
   const alertName = t(alertType)
   return (
     <Dialog
-      id="acknowledge-monitoring-alert-dialog"
       data-testid="acknowledge-monitoring-alert-dialog"
       open={open}
       onClose={onClose}
@@ -94,7 +93,7 @@ export const AcknowledgeMonitoringAlertDialog: FunctionComponent<AcknowledgeMoni
         </DialogContentText>
 
         <Box sx={{ mt: 2 }}>
-          <Alert severity="info" icon={false}>
+          <Alert severity="info">
             {t('acknowledge-monitoring-alert-dialog-warning')}
           </Alert>
         </Box>

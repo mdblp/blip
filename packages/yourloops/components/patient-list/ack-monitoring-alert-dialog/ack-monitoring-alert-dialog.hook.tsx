@@ -35,6 +35,7 @@ import { MonitoringAlertType } from './ack-monitoring-alert-dialog'
 import { AppUserRoute } from '../../../models/enums/routes.enum'
 import { errorTextFromException } from '../../../lib/utils'
 import { logError } from '../../../utils/error.util'
+import { getUserName } from '../../../lib/auth/user.util'
 
 const INACTIVE_PERIOD_MS = 48 * 60 * 60 * 1000
 
@@ -55,7 +56,7 @@ const useAckMonitoringAlertDialog = ({ patient, alertType, onClose }: AckMonitor
   const navigate = useNavigate()
   const { acknowledgePatientAlerts } = usePatientsContext()
 
-  const patientName = `${patient.profile.firstName} ${patient.profile.lastName}`
+  const patientName = getUserName(patient.profile.firstName, patient.profile.lastName, patient.profile.fullName)
   const alertName = t(alertType)
 
   const handleAnalyse = (): void => {
