@@ -58,6 +58,11 @@ export const checkContentForPatientMmol = async (): Promise<void> => {
 
 export const checkMonitoringAlertsParametersTeamAdmin = async (): Promise<void> => {
   jest.spyOn(TeamApi, 'editTeam').mockResolvedValue(undefined)
+
+  const menu = await screen.findByTestId('care-team-settings-menu')
+  const monitoringAlertsConfigurationMenuItem = within(menu).getByText('Monitoring alerts')
+  await userEvent.click(monitoringAlertsConfigurationMenuItem)
+
   const monitoringAlertsParameters = await screen.findByTestId('team-monitoring-alerts-configuration')
   expect(monitoringAlertsParameters).toHaveTextContent('Monitoring alerts configuration1. Time away from target rangeCurrent trigger setting: 5% of time off target (min at 50 mg/dL max at 140 mg/dL)A. Glycemic targetMinimum​mg/dLMaximum​mg/dLDefault: min at 70 mg/dL and max at 180 mg/dLB. Event trigger thresholdTime spent off target5%​Default: 50%')
   expect(monitoringAlertsParameters).toHaveTextContent('2. HyperglycemiaCurrent trigger setting: 25% of time above 250 mg/dL thresholdA. Hyperglycemia threshold:Hyperglycemia above​mg/dLDefault: 250 mg/dLB. Event trigger thresholdTime spent in hyperglycemia25%​Default: 25%')
@@ -98,6 +103,10 @@ export const checkMonitoringAlertsParametersTeamAdmin = async (): Promise<void> 
 }
 
 export const checkMonitoringAlertsParametersTeamMember = async (): Promise<void> => {
+  const menu = await screen.findByTestId('care-team-settings-menu')
+  const monitoringAlertsConfigurationMenuItem = within(menu).getByText('Monitoring alerts')
+  await userEvent.click(monitoringAlertsConfigurationMenuItem)
+
   const monitoringAlertsParameters = within(await screen.findByTestId('team-monitoring-alerts-configuration'))
   const lowBgInput = monitoringAlertsParameters.getByRole('spinbutton', { name: 'Low blood glucose input' })
   const highBgInput = monitoringAlertsParameters.getByRole('spinbutton', { name: 'High blood glucose input' })
