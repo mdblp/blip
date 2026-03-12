@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,12 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { waitFor } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { flaggedPatientId, patient1Info, patient1Metrics } from '../../data/patient.api.data'
-import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../mock/team.api.mock'
+import {
+  buildAvailableTeams,
+  filtersTeamId,
+  mockTeamAPI,
+  myThirdTeamId,
+  myThirdTeamName
+} from '../../mock/team.api.mock'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
@@ -39,6 +45,7 @@ import { mockDataAPI } from '../../mock/data.api.mock'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import {
+  testAckMonitoringAlerts,
   testPatientListForHcp,
   testPatientListForHcpPrivateTeam,
   testPatientListForHcpWithMmolL
@@ -52,6 +59,8 @@ import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
 import ErrorApi from '../../../../lib/error/error.api'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
+import { mockChatAPI } from '../../mock/chat.api.mock'
+import { mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -59,6 +68,7 @@ describe('HCP home page', () => {
 
   const privatePatientsList = `${AppUserRoute.Teams}/${PRIVATE_TEAM_ID}/patients`
   const thirdTeamPatientsList = `${AppUserRoute.Teams}/${myThirdTeamId}/patients`
+  const filterTeamPatientsList = `${AppUserRoute.Teams}/${filtersTeamId}/patients`
 
   beforeEach(() => {
     mockAuth0Hook()
@@ -68,18 +78,19 @@ describe('HCP home page', () => {
     mockPatientApiForHcp()
     mockDirectShareApi()
     mockDataAPI()
+    mockChatAPI()
     mockDblCommunicationApi()
+    mockMedicalFilesApiEmptyResult()
     jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
     jest.spyOn(PatientApi, 'invitePatient').mockResolvedValue(undefined)
     jest.spyOn(NotificationApi, 'cancelInvitation').mockResolvedValue(undefined)
+    jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
   })
 
   const renderHomePage = async (route: string): Promise<Router> => {
-    const router = renderPage(route)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(route)
-    }, { timeout: 3000 })
-    return router
+    return await act(async () => {
+      return renderPage(route)
+    })
   }
 
   it('should render correct layout when scoped on the private practice team', async () => {
@@ -155,9 +166,15 @@ describe('HCP home page', () => {
   })
 
   it('should be able to manage the patient list when scoped on a medical team', async () => {
-    const router = await renderHomePage(thirdTeamPatientsList)
+    await renderHomePage(thirdTeamPatientsList)
 
-    await testPatientListForHcp(router)
+    await testPatientListForHcp()
+  })
+
+  it('should be able to acknowledge patient alerts from the patient list', async () => {
+    const router = await renderHomePage(filterTeamPatientsList)
+
+    await testAckMonitoringAlerts(router)
   })
 
   it('should be able to create a team when on the home page', async () => {

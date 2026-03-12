@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,28 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MonitoringAlertsParameters } from 'medical-domain'
-import { MonitoringAlertsParametersDto, mapMonAlertParamsFromInternal } from '../../team/models/monitoring-alerts-parameters.model'
+import React, { type FunctionComponent } from 'react'
+import Box from '@mui/material/Box'
+import { useTheme } from '@mui/material/styles'
+import { Skeleton } from '@mui/material'
 
+const ICON_SIZE_PX = 25
 
-export interface PatientAlertsConfiguration {
-  parameters: MonitoringAlertsParametersDto | null
-  isUsingTeamAlertParameters: boolean
-  reactivationDates: AlertReactivationDates | null
+export const MonitoringAlertsSkeletonCell: FunctionComponent = () => {
+  const theme = useTheme()
+
+  return (
+    <Box sx={{ display: 'flex', justifySelf: 'center' }}>
+      <Skeleton variant="circular" width={ICON_SIZE_PX} height={ICON_SIZE_PX} sx={{ marginRight: theme.spacing(1) }} />
+      <Skeleton variant="circular" width={ICON_SIZE_PX} height={ICON_SIZE_PX} sx={{ marginRight: theme.spacing(1) }} />
+      <Skeleton variant="circular" width={ICON_SIZE_PX} height={ICON_SIZE_PX} sx={{ marginRight: theme.spacing(1) }} />
+      <Skeleton variant="circular" width={ICON_SIZE_PX} height={ICON_SIZE_PX} sx={{ marginRight: theme.spacing(1) }} />
+    </Box>
+  )
 }
-
-export interface AlertReactivationDates {
-  hyperglycemia: Date | null
-  hypoglycemia: Date | null
-  nonDataTransmission: Date | null
-  timeOutOfRange: Date | null
-}
-
-export const NewAlertConfigDto = (parameters: MonitoringAlertsParameters): PatientAlertsConfiguration => {
-  const parametersDto = mapMonAlertParamsFromInternal(parameters)
-  return {
-    parameters: parametersDto,
-  } as PatientAlertsConfiguration
-}
-
 

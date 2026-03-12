@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,28 +25,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MonitoringAlertsParameters } from 'medical-domain'
-import { MonitoringAlertsParametersDto, mapMonAlertParamsFromInternal } from '../../team/models/monitoring-alerts-parameters.model'
+import { type FunctionComponent } from 'react'
+import { useAuth } from '../../../lib/auth'
+import { useTranslation } from 'react-i18next'
+import IconActionButton from '../../buttons/icon-action'
+import FlagIcon from '@mui/icons-material/Flag'
+import FlagOutlineIcon from '@mui/icons-material/FlagOutlined'
+import { type Patient } from '../../../lib/patient/models/patient.model'
+import React from 'react'
 
-
-export interface PatientAlertsConfiguration {
-  parameters: MonitoringAlertsParametersDto | null
-  isUsingTeamAlertParameters: boolean
-  reactivationDates: AlertReactivationDates | null
+interface FlagCellProps {
+  isFlagged: boolean
+  patient: Patient
 }
 
-export interface AlertReactivationDates {
-  hyperglycemia: Date | null
-  hypoglycemia: Date | null
-  nonDataTransmission: Date | null
-  timeOutOfRange: Date | null
-}
+export const FlagIconCell: FunctionComponent<FlagCellProps> = ({ isFlagged, patient }) => {
+  const { flagPatient } = useAuth()
+  const { t } = useTranslation()
+  const flagPatientLabel = t('flag-patient', { patientEmail: patient.profile.email })
+  const unflagPatientLabel = t('unflag-patient', { patientEmail: patient.profile.email })
 
-export const NewAlertConfigDto = (parameters: MonitoringAlertsParameters): PatientAlertsConfiguration => {
-  const parametersDto = mapMonAlertParamsFromInternal(parameters)
-  return {
-    parameters: parametersDto,
-  } as PatientAlertsConfiguration
-}
+  const onClickFlag = async (): Promise<void> => {
+    await flagPatient(patient.userid)
+  }
 
+  return (
+    <IconActionButton
+      icon={isFlagged
+        ? <FlagIcon
+          titleAccess={unflagPatientLabel}
+          aria-label={unflagPatientLabel}
+        />
+        : <FlagOutlineIcon
+          titleAccess={flagPatientLabel}
+          aria-label={flagPatientLabel}
+        />}
+      color="inherit"
+      onClick={onClickFlag}
+    />
+  )
+}
 
