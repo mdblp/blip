@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,7 +38,7 @@ export default class TeamUtils {
   }
 
   static isUserAdministrator = (team: Team, userId: string): boolean => {
-    return team.members && !!team.members.find((member) => member.role === TeamMemberRole.admin && member.userId === userId)
+    return team.members?.some((member) => member.role === TeamMemberRole.admin && member.userId === userId)
   }
 
   static teamHasOnlyOneMember = (team: Team): boolean => {

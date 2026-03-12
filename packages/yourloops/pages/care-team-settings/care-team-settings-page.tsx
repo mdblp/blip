@@ -38,6 +38,7 @@ import { CareTeamSettingsMenu } from './care-team-settings-menu'
 import { InfoAndMembersSection } from './sections/info-and-members-section'
 import { MonitoringAlertsSection } from './sections/monitoring-alerts-section'
 import Card from '@mui/material/Card'
+import SpinningLoader from '../../components/loaders/spinning-loader'
 
 export const CareTeamSettingsPage: FC = () => {
   const { getTeam } = useTeam()
@@ -70,21 +71,26 @@ export const CareTeamSettingsPage: FC = () => {
 
   return (
     <Container maxWidth="xl" sx={{ my: 6 }}>
-      <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
-        {user.isUserHcp() &&
-          <Grid size={3}>
-            <CareTeamSettingsMenu
-              selectedSection={selectedSection}
-              selectSection={selectSection}
-            />
+      {
+        team ?
+          <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
+            {user.isUserHcp() &&
+              <Grid size={3}>
+                <CareTeamSettingsMenu
+                  selectedSection={selectedSection}
+                  selectSection={selectSection}
+                />
+              </Grid>
+            }
+            <Grid size={9}>
+              <Card variant="outlined" sx={{ px: 2, py: 5 }}>
+                {displaySelectedSection()}
+              </Card>
+            </Grid>
           </Grid>
-        }
-        <Grid size={9}>
-          <Card variant="outlined" sx={{ px: 2, py: 5 }}>
-            {displaySelectedSection()}
-          </Card>
-        </Grid>
-      </Grid>
+          : <SpinningLoader />
+      }
+
     </Container>
   )
 }
