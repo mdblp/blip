@@ -26,7 +26,8 @@
  */
 
 import {
-  checkCareTeamInformation, checkCareTeamLayoutForPatient,
+  checkCareTeamInformation,
+  checkCareTeamLayoutForPatient,
   checkCareTeamMembers,
   checkCareTeamMonitoringAlertsConfiguration,
   checkDeleteTeam,
