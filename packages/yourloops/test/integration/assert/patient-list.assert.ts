@@ -897,7 +897,7 @@ export const checkAckMonitoringAlertDialogCloseOnAnalyse = async (router: Router
 }
 
 export const checkAckMonitoringAlertHypoglycemia = async (): Promise<void> => {
-  const hypoglycemiaPatientName = `${hypoglycemiaPatientInfo.profile.firstName} ${hypoglycemiaPatientInfo.profile.lastName}`
+  const hypoglycemiaPatientName = `${hypoglycemiaPatientInfo.profile.lastName} ${hypoglycemiaPatientInfo.profile.firstName}`
   const dialog = await openAckDialogForPatient('hypoglycemia-icon', 4)
 
   const acknowledgeButton = within(dialog).getByRole('button', { name: 'Acknowledge the alert' })
@@ -919,7 +919,7 @@ export const checkAckMonitoringAlertHypoglycemia = async (): Promise<void> => {
 }
 
 export const checkAckMonitoringAlertTimeOutOfRange = async (): Promise<void> => {
-  const PatientName = `${timeSpentOutOfTargetRangePatientInfo.profile.firstName} ${timeSpentOutOfTargetRangePatientInfo.profile.lastName}`
+  const PatientName = `${timeSpentOutOfTargetRangePatientInfo.profile.lastName} ${timeSpentOutOfTargetRangePatientInfo.profile.firstName}`
   const dialog = await openAckDialogForPatient('time-spent-out-of-range-icon', 2)
 
   const acknowledgeButton = within(dialog).getByTestId('acknowledge-monitoring-alert-dialog-acknowledge-button')
@@ -940,7 +940,7 @@ export const checkAckMonitoringAlertTimeOutOfRange = async (): Promise<void> => 
 
 export const checkAckMonitoringAlertNoData = async (): Promise<void> => {
   const dialog = await openAckDialogForPatient('no-data-icon', 5)
-  const PatientName = `${noDataTransferredPatientInfo.profile.firstName} ${noDataTransferredPatientInfo.profile.lastName}`
+  const PatientName = `${noDataTransferredPatientInfo.profile.lastName} ${noDataTransferredPatientInfo.profile.firstName}`
   const acknowledgeButton = within(dialog).getByTestId('acknowledge-monitoring-alert-dialog-acknowledge-button')
   await userEvent.click(acknowledgeButton)
   await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
