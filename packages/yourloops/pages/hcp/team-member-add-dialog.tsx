@@ -102,7 +102,7 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
             marginTop: 1
           }}>
           <TextField
-            data-testid="team-add-member-dialog-field-email"
+            id="team-add-member-dialog-field-email"
             onChange={handleChangeEMail}
             name="email"
             value={email}
@@ -114,7 +114,7 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
           <FormControlLabel
             control={
               <Checkbox
-                data-testid="team-add-member-dialog-checkbox-admin"
+                id="team-add-member-dialog-checkbox-admin"
                 checked={role === TeamMemberRole.admin}
                 onChange={handleChangeRole}
                 name="role"
@@ -127,14 +127,14 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
 
       <DialogActions>
         <Button
-          data-testid="team-add-member-dialog-button-cancel"
+          id="team-add-member-dialog-button-cancel"
           variant="outlined"
           onClick={handleClickClose}
         >
           {t('button-cancel')}
         </Button>
         <Button
-          data-testid="team-add-member-dialog-button-add"
+          id="team-add-member-dialog-button-add"
           color="primary"
           variant="contained"
           disableElevation
