@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,13 +39,7 @@ import {
   sortByMonitoringAlertsCount,
   sortByUserName
 } from '../utils/sort-comparators.util'
-import {
-  ActionsCell,
-  FlagIconCell,
-  MessageCell,
-  MonitoringAlertsCell,
-  MonitoringAlertsSkeletonCell
-} from '../custom-cells'
+
 import { getUserName } from '../../../lib/auth/user.util'
 import Box from '@mui/material/Box'
 import { formatBirthdate } from 'dumb'
@@ -57,6 +51,11 @@ import { DiabeticType } from 'medical-domain'
 import { PatientDiabeticProfileChip } from '../../chips/patient-diabetic-profile-chip'
 import moment from 'moment-timezone'
 import { AppUserRoute } from '../../../models/enums/routes.enum'
+import { FlagIconCell } from '../custom-cells/flag-icon-cell'
+import { MonitoringAlertsSkeletonCell } from '../custom-cells/monitoring-alerts-skeleton-cell'
+import { MonitoringAlertsCell } from '../custom-cells/monitoring-alerts-cell'
+import { MessageCell } from '../custom-cells/message-cell'
+import { ActionsCell } from '../custom-cells/actions-cell'
 
 interface CurrentPatientListProps {
   patients: Patient[]

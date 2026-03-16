@@ -33,7 +33,7 @@ import PatientApi from '../../../../lib/patient/patient.api'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { HttpHeaderKeys } from '../../../../lib/http/models/enums/http-header-keys.enum'
 import { type MonitoringAlertsParameters, Unit } from 'medical-domain'
-import { type PatientAlertsConfiguration } from '../../../../lib/patient/models/monitoring-alerts-parameters.model'
+import { type AlertReactivationDates, type PatientAlertsConfiguration } from '../../../../lib/patient/models/monitoring-alerts-parameters.model'
 
 describe('PatientApi', () => {
   const userId = 'userId'
@@ -191,6 +191,64 @@ describe('PatientApi', () => {
 
       await expect(
         PatientApi.updatePatientAlerts(teamId, patientId, mockMonitoringAlertsParameters)
+      ).rejects.toThrow('Network error')
+    })
+  })
+
+  describe('acknowledgePatientAlerts', () => {
+    const patientId = 'patient123'
+    const reactivationDates: AlertReactivationDates = {
+      hyperglycemia: new Date('2026-03-12T00:00:00.000Z'),
+      hypoglycemia: null,
+      nonDataTransmission: null,
+      timeOutOfRange: null,
+    }
+
+    it('should call HttpService.put with the correct url and payload', async () => {
+      jest.spyOn(HttpService, 'put').mockResolvedValueOnce({ data: undefined } as AxiosResponse)
+
+      await PatientApi.acknowledgePatientAlerts(teamId, patientId, reactivationDates)
+
+      const expectedPayload: Partial<PatientAlertsConfiguration> = {
+        parameters: null,
+        isUsingTeamAlertParameters: false,
+        reactivationDates,
+      }
+
+      expect(HttpService.put).toHaveBeenCalledWith({
+        url: `/crew/v1/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`,
+        payload: expectedPayload
+      })
+    })
+
+    it('should send null for all reactivation dates when no alert is acknowledged', async () => {
+      jest.spyOn(HttpService, 'put').mockResolvedValueOnce({ data: undefined } as AxiosResponse)
+
+      const allNullDates: AlertReactivationDates = {
+        hyperglycemia: null,
+        hypoglycemia: null,
+        nonDataTransmission: null,
+        timeOutOfRange: null,
+      }
+
+      await PatientApi.acknowledgePatientAlerts(teamId, patientId, allNullDates)
+
+      expect(HttpService.put).toHaveBeenCalledWith({
+        url: `/crew/v1/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`,
+        payload: {
+          parameters: null,
+          isUsingTeamAlertParameters: false,
+          reactivationDates: allNullDates,
+        }
+      })
+    })
+
+    it('should propagate errors from HttpService', async () => {
+      const mockError = new Error('Network error')
+      jest.spyOn(HttpService, 'put').mockRejectedValueOnce(mockError)
+
+      await expect(
+        PatientApi.acknowledgePatientAlerts(teamId, patientId, reactivationDates)
       ).rejects.toThrow('Network error')
     })
   })
