@@ -29,8 +29,6 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import TuneIcon from '@mui/icons-material/Tune'
 
 import { commonComponentStyles } from '../common'
 import { type Team, useTeam } from '../../lib/team'
@@ -39,9 +37,7 @@ import { type MonitoringAlertsParameters } from 'medical-domain'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 import { useAuth } from '../../lib/auth'
-import {
-  MonitoringAlertsTeamConfiguration
-} from '../monitoring-alert/monitoring-alerts-team-configuration'
+import { MonitoringAlertsTeamConfiguration } from '../monitoring-alert/monitoring-alerts-team-configuration'
 import { useParams } from 'react-router-dom'
 import { logError } from '../../utils/error.util'
 import { errorTextFromException } from '../../lib/utils'

@@ -32,7 +32,6 @@ import { makeStyles } from 'tss-react/mui'
 
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import FolderSharedOutlinedIcon from '@mui/icons-material/FolderSharedOutlined'
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined'
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined'

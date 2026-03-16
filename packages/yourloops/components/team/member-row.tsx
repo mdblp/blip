@@ -155,7 +155,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
                 <HourglassEmptyRounded titleAccess="pending-user-icon" />
               </Box>
               : getInitials(teamMember.profile?.fullName) &&
-              <Avatar sx={{ bgcolor: 'var(--text-color-secondary)' }}>
+              <Avatar sx={{ bgcolor: 'var(--dark-blue-main)' }}>
                 {getInitials(teamMember.profile?.fullName)}
               </Avatar>
           }
@@ -181,7 +181,6 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
         >
           <Checkbox
             disabled={checkboxAdminDisabled}
-            // id={`members-row-${rowId}-role-checkbox`}
             data-testid="members-row-checkbox"
             checked={currentUserIsAdmin}
             onChange={switchRole}
