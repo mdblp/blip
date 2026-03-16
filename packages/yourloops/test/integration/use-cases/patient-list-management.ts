@@ -84,6 +84,6 @@ export const testAckMonitoringAlerts = async (router: Router) => {
   await checkAckMonitoringAlertHyperglycemia()
 }
 
-export const testAckMonitoringAlertsWithError = async (router: Router) => {
+export const testAckMonitoringAlertsWithError = async () => {
   await checkAckMonitoringAlertHypoglycemia(true)
 }
