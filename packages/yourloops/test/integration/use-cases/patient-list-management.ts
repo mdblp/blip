@@ -27,7 +27,7 @@
 
 import {
   checkAckMonitoringAlertDialogCloseOnAnalyse,
-  checkAckMonitoringAlertDialogContent,
+  checkAckMonitoringAlertDialogContent, checkAckMonitoringAlertHyperglycemia,
   checkAckMonitoringAlertHypoglycemia,
   checkAckMonitoringAlertNoData,
   checkAckMonitoringAlertTimeOutOfRange,
@@ -81,5 +81,9 @@ export const testAckMonitoringAlerts = async (router: Router) => {
   await checkAckMonitoringAlertHypoglycemia()
   await checkAckMonitoringAlertTimeOutOfRange()
   await checkAckMonitoringAlertNoData()
+  await checkAckMonitoringAlertHyperglycemia()
 }
 
+export const testAckMonitoringAlertsWithError = async (router: Router) => {
+  await checkAckMonitoringAlertHypoglycemia(true)
+}

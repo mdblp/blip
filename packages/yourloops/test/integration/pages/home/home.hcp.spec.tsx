@@ -45,7 +45,7 @@ import { mockDataAPI } from '../../mock/data.api.mock'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import {
-  testAckMonitoringAlerts,
+  testAckMonitoringAlerts, testAckMonitoringAlertsWithError,
   testPatientListForHcp,
   testPatientListForHcpPrivateTeam,
   testPatientListForHcpWithMmolL
@@ -175,6 +175,13 @@ describe('HCP home page', () => {
     const router = await renderHomePage(filterTeamPatientsList)
 
     await testAckMonitoringAlerts(router)
+  })
+
+  it('should handle gracefully error cases when acknowledging monitoring alerts', async () => {
+    jest.spyOn(PatientApi, 'acknowledgePatientAlerts').mockRejectedValue('Ack alert error')
+    const router = await renderHomePage(filterTeamPatientsList)
+
+    await testAckMonitoringAlertsWithError(router)
   })
 
   it('should be able to create a team when on the home page', async () => {
