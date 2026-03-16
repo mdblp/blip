@@ -34,11 +34,7 @@ import DialogActions from '@mui/material/DialogActions'
 import { User } from '../../../../../../../lib/auth'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Box from '@mui/material/Box'
-import { CliniciansApi } from '../../../../../../../lib/clinicians/clinicians.api'
 import { useAddClinicianDialog } from './add-clinician-dialog.hook'
-import { errorTextFromException } from '../../../../../../../lib/utils'
-import { logError } from '../../../../../../../utils/error.util'
-import { useAlert } from '../../../../../../../components/utils/snackbar'
 
 interface AddClinicianDialogProps {
   patientInfo: { id: string, name: string }
@@ -53,12 +49,17 @@ const DEFAULT_HCP_ID_VALUE = ''
 export const AddClinicianDialog: FC<AddClinicianDialogProps> = (props) => {
   const { patientInfo, user, clinicianIds, onClose, onSuccess } = props
   const { t } = useTranslation()
-  const { getAvailableHcps } = useAddClinicianDialog({ clinicianIds })
-  const alert = useAlert()
 
   const [selectedHcpId, setSelectedHcpId] = React.useState(DEFAULT_HCP_ID_VALUE)
-
   const patientId = patientInfo.id
+  const { getAvailableHcps, onClickAddClinician } = useAddClinicianDialog({
+    patientId,
+    clinicianIds,
+    selectedHcpId,
+    onSuccess,
+    onClose
+  })
+
   const patientName = patientInfo.name
 
   const availableHcps = getAvailableHcps()
@@ -67,21 +68,6 @@ export const AddClinicianDialog: FC<AddClinicianDialogProps> = (props) => {
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedHcpId(event.target.value)
-  }
-
-  const onClickAddClinician = async () => {
-    try {
-      await CliniciansApi.addClinician(patientId, selectedHcpId)
-      alert.success(t('clinician-add-success'))
-
-      onSuccess()
-    } catch (err) {
-      const errorMessage = errorTextFromException(err)
-      logError(errorMessage, 'add-clinician')
-
-      alert.error(t('error-occurred'))
-      onClose()
-    }
   }
 
   return (

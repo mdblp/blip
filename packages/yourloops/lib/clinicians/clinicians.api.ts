@@ -26,11 +26,11 @@
  */
 
 import HttpService from '../http/http.service'
-import { AddClinicianPayload } from './models/add-clinician-payload.model'
+import { ClinicianPayload } from './models/clinician-payload.model'
 
 export class CliniciansApi {
   static async addClinician(patientId: string, hcpId: string): Promise<void> {
-    await HttpService.post<void, AddClinicianPayload>({
+    await HttpService.post<void, ClinicianPayload>({
       url: `/crew/v1/patients/${patientId}/hcp-referents`,
       payload: {
         referentUserId: hcpId,

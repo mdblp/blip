@@ -28,23 +28,34 @@
 import { Team, TeamMember, useTeam } from '../../../../../../../lib/team'
 import { useAuth } from '../../../../../../../lib/auth'
 import { useParams } from 'react-router-dom'
+import { CliniciansApi } from '../../../../../../../lib/clinicians/clinicians.api'
+import { useAlert } from '../../../../../../../components/utils/snackbar'
+import { useTranslation } from 'react-i18next'
+import { errorTextFromException } from '../../../../../../../lib/utils'
+import { logError } from '../../../../../../../utils/error.util'
 
 interface AddClinicianDialogHookProps {
+  patientId: string
   clinicianIds: string[]
+  selectedHcpId: string
+  onSuccess: () => void
+  onClose: () => void
 }
 
 interface AddClinicianDialogHookReturn {
   getAvailableHcps: () => TeamMember[]
+  onClickAddClinician: () => Promise<void>
 }
 
 export const useAddClinicianDialog = (props: AddClinicianDialogHookProps): AddClinicianDialogHookReturn => {
-  const { clinicianIds } = props
+  const { patientId, clinicianIds, selectedHcpId, onSuccess, onClose } = props
   const { user } = useAuth()
   const { teamId } = useParams()
   const { getTeam, teams } = useTeam()
+  const alert = useAlert()
+  const { t } = useTranslation()
 
-
-  const removeCliniciansFromList = (hcps: TeamMember[]): TeamMember[] => {
+  const removeCurrentCliniciansFromList = (hcps: TeamMember[]): TeamMember[] => {
     return hcps.filter((hcp: TeamMember) => !clinicianIds.includes(hcp.userId))
   }
 
@@ -56,7 +67,7 @@ export const useAddClinicianDialog = (props: AddClinicianDialogHookProps): AddCl
     if (user.isUserHcp()) {
       const selectedTeam = getTeam(teamId)
 
-      return removeCliniciansFromList(selectedTeam.members)
+      return removeCurrentCliniciansFromList(selectedTeam.members)
     }
     if (user.isUserPatient()) {
       const allHcpsHavingAccessToPatient = teams.reduce((acc: TeamMember[], team: Team) => {
@@ -68,12 +79,28 @@ export const useAddClinicianDialog = (props: AddClinicianDialogHookProps): AddCl
         return acc
       }, [])
 
-      return removeCliniciansFromList(allHcpsHavingAccessToPatient)
+      return removeCurrentCliniciansFromList(allHcpsHavingAccessToPatient)
     }
     return []
   }
 
+  const onClickAddClinician = async () => {
+    try {
+      await CliniciansApi.addClinician(patientId, selectedHcpId)
+      alert.success(t('clinician-add-success'))
+
+      onSuccess()
+    } catch (err) {
+      const errorMessage = errorTextFromException(err)
+      logError(errorMessage, 'add-clinician')
+
+      alert.error(t('error-occurred'))
+      onClose()
+    }
+  }
+
   return {
-    getAvailableHcps
+    getAvailableHcps,
+    onClickAddClinician
   }
 }

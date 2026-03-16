@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface AddClinicianPayload {
+export interface ClinicianPayload {
   referentUserId: string
   patientUserId: string
 }
