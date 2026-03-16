@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,11 +34,13 @@ export const loggedInUserEmail = 'yann.blanc@example.com'
 export const loggedInUserFirstName = 'Yann'
 export const loggedInUserLastName = 'Blanc'
 export const loggedInUserFullName = `${loggedInUserFirstName} ${loggedInUserLastName}`
+export const loggedInUserInitials = 'YB'
 export const userTimId = 'userTimId'
 export const userTimEmail = 'tim.canu@example.com'
 export const userTimFirstName = 'Tim'
 export const userTimLastName = 'Canu'
 export const userTimFullName = `${userTimFirstName} ${userTimLastName}`
+export const userTimInitials = 'TC'
 export const userHugoId = 'userHugoId'
 export const userHugoEmail = 'hugo.rodrigues@example.com'
 export const userHugoFirstName = 'Hugo'

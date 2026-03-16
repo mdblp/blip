@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -98,10 +98,11 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
         <Box
           sx={{
             display: "flex",
-            flexDirection: "column"
+            flexDirection: "column",
+            marginTop: 1
           }}>
           <TextField
-            id="team-add-member-dialog-field-email"
+            data-testid="team-add-member-dialog-field-email"
             onChange={handleChangeEMail}
             name="email"
             value={email}
@@ -113,7 +114,7 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
           <FormControlLabel
             control={
               <Checkbox
-                id="team-add-member-dialog-checkbox-admin"
+                data-testid="team-add-member-dialog-checkbox-admin"
                 checked={role === TeamMemberRole.admin}
                 onChange={handleChangeRole}
                 name="role"
@@ -126,14 +127,14 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
 
       <DialogActions>
         <Button
-          id="team-add-member-dialog-button-cancel"
+          data-testid="team-add-member-dialog-button-cancel"
           variant="outlined"
           onClick={handleClickClose}
         >
           {t('button-cancel')}
         </Button>
         <Button
-          id="team-add-member-dialog-button-add"
+          data-testid="team-add-member-dialog-button-add"
           color="primary"
           variant="contained"
           disableElevation

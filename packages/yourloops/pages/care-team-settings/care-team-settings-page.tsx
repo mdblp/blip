@@ -71,8 +71,7 @@ export const CareTeamSettingsPage: FC = () => {
 
   return (
     <Container maxWidth="xl" sx={{ my: 6 }}>
-      {
-        team ?
+      {team ?
           <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
             {user.isUserHcp() &&
               <Grid size={3}>
@@ -83,7 +82,7 @@ export const CareTeamSettingsPage: FC = () => {
               </Grid>
             }
             <Grid size={9}>
-              <Card variant="outlined" sx={{ px: 2, py: 5 }}>
+              <Card variant="outlined" sx={{ px: 2, pt: 2, pb: 4 }}>
                 {displaySelectedSection()}
               </Card>
             </Grid>
