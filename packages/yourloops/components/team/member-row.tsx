@@ -152,7 +152,10 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
           {
             currentUserIsPending ?
               <Box sx={{ display: 'flex', justifyContent: 'center', color: 'var(--text-color-secondary)' }}>
-                <HourglassEmptyRounded titleAccess="pending-user-icon" />
+                <HourglassEmptyRounded
+                  titleAccess="pending-user-icon"
+                  aria-label={t('team-member-pending-status')}
+                />
               </Box>
               : getInitials(teamMember.profile?.fullName) &&
               <Avatar sx={{ bgcolor: 'var(--dark-blue-main)' }}>
