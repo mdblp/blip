@@ -35,8 +35,6 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 
 describe('Device view for G2 Patient with G7 CGM', () => {
-  const firstName = patient2Info.profile.firstName
-  const lastName = patient2Info.profile.lastName
 
   const deviceRoute = AppUserRoute.Devices
 
