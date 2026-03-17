@@ -30,7 +30,7 @@ import { mockDataAPI, pumpSettingsDblg2G7 } from '../../../mock/data.api.mock'
 import { patient2Info } from '../../../data/patient.api.data'
 import { renderPage } from '../../../utils/render'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
-import { testG2DevicesVisualisation, testG2G7CGMVisualisation } from '../../../use-cases/device-settings-visualisation'
+import { testG2G7CGMVisualisation } from '../../../use-cases/device-settings-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 
