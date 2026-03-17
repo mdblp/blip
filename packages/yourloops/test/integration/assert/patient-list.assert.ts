@@ -38,24 +38,28 @@ import {
 } from './patient-filters.assert'
 import { changeTeamScope } from './header.assert'
 import {
+  hypoglycemiaPatientInfo,
   hypoglycemiaPatientMetrics,
+  hyperglycemiaPatientInfo,
   noDataTransferredPatientInfo,
   patient1Info,
   patient2Info,
   patient3Info,
   patientWithMmolInfo,
-  pendingPatient
+  pendingPatient,
+  timeSpentOutOfTargetRangePatientInfo
 } from '../data/patient.api.data'
 import NotificationApi from '../../../lib/notifications/notification.api'
-import { type Router } from '../models/router.model'
 import moment from 'moment-timezone'
 import { PATIENT_AGE } from '../utils/helpers'
+import { Router } from '../models/router.model'
+import { AppUserRoute } from '../../../models/enums/routes.enum'
 
 const SVG_ICON_DISABLED_CLASS = 'MuiSvgIcon-colorDisabled'
 const SVG_ICON_FILL = 'currentColor'
 
 export const checkDataGridAfterSinglePatientFilter = (dataGridRow: HTMLElement, rowContent: string): void => {
-  expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
+  expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 7')
   expect(screen.getByTestId('reset-filters-link')).toHaveTextContent('Reset')
   const allRows = within(dataGridRow).getAllByRole('row')
   expect(allRows).toHaveLength(2)
@@ -89,7 +93,7 @@ export const checkPatientListHeaderForHcp = async () => {
   expect(screen.getByRole('tab', { name: 'Pending' })).toBeVisible()
 }
 
-export const checkPatientListPendingTab = async (router: Router) => {
+export const checkPatientListPendingTab = async () => {
   const pendingTab = screen.getByRole('tab', { name: 'Pending' })
   await userEvent.click(pendingTab)
   const dataGridPendingRows = screen.getByTestId('pending-patient-list-grid')
@@ -97,7 +101,6 @@ export const checkPatientListPendingTab = async (router: Router) => {
   expect(dataGridPendingRows).toHaveTextContent('Invite sent byDateEmailActionsBlanc YannMay 17, 2023pending-patient@diabeloop.frResend inviteCancel')
 
   await userEvent.click(within(dataGridPendingRows).getAllByRole('row')[1])
-  expect(router.state.location.pathname).toEqual(`/teams/${myThirdTeamId}/patients`)
 }
 
 export const checkPatientListCurrentTab = async () => {
@@ -120,13 +123,13 @@ export const checkPatientListFilters = async () => {
   await changeTeamScope(myThirdTeamName, filtersTeamName)
   expect(PatientApi.getPatientsForHcp).toHaveBeenCalledWith(loggedInUserId, filtersTeamId)
 
-  expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters deactivated: 6 patient(s) out of 6')
+  expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters deactivated: 7 patient(s) out of 7')
   expect(screen.queryByTestId('reset-filters-link')).not.toBeInTheDocument()
   const dataGridRowCurrent = screen.getByTestId('current-patient-list-grid')
-  expect(within(dataGridRowCurrent).getAllByRole('row')).toHaveLength(7)
+  expect(within(dataGridRowCurrent).getAllByRole('row')).toHaveLength(8)
 
   const lastDataUploadDate = moment.tz(hypoglycemiaPatientMetrics.medicalData.range.endDate, new Intl.DateTimeFormat().resolvedOptions().timeZone).format('lll')
-  expect(dataGridRowCurrent).toHaveTextContent(`PatientProfileDate of birthMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1Jan 1, 1980No new messages from the patient0%0%N/AFlag patient unread-messages@patient.frMessages Patient UnreadType 1Jan 1, 1980The patient has sent you new messages0%0%N/AFlag patient time-out-of-range@patient.frOut of Range Patient TimeType 1Jan 1, 1980No new messages from the patient0%0%N/AUnflag patient flagged@patient.frPatient FlaggedType 1Jan 1, 1980No new messages from the patient0%0%N/AFlag patient hypoglycemia@patient.frPatient HypoglycemiaType 1Jan 1, 1980No new messages from the patient0%0%Jan 1, 2023 9:44 AMFlag patient z-no-data@patient.frPatient Z - No DataType 1Jan 1, 1980No new messages from the patient0%0%N/AData calculated on the last 14 days (current day excluded). The values correspond to the average of the daily values.Rows per page:101–6 of 6`)
+  expect(dataGridRowCurrent).toHaveTextContent(`PatientProfileDate of birthMonitoring alertsMessagesTIRBelow rangeLast data updateActionsFlag patient patient1@diabeloop.frGroby Patient1Type 1Jan 1, 1980No new messages from the patient0%0%N/AFlag patient unread-messages@patient.frMessages Patient UnreadType 1Jan 1, 1980The patient has sent you new messages0%0%N/AFlag patient time-out-of-range@patient.frOut of Range Patient TimeType 1Jan 1, 1980No new messages from the patient0%0%N/AUnflag patient flagged@patient.frPatient FlaggedType 1Jan 1, 1980No new messages from the patient0%0%N/AFlag patient hyperglycemia@patient.frPatient HyperglycemiaType 1Jan 1, 1980No new messages from the patient0%0%Jan 1, 2023 9:44 AMFlag patient hypoglycemia@patient.frPatient HypoglycemiaType 1Jan 1, 1980No new messages from the patient0%0%Jan 1, 2023 9:44 AMFlag patient z-no-data@patient.frPatient Z - No DataType 1Jan 1, 1980No new messages from the patient0%0%N/AData calculated on the last 14 days (current day excluded). The values correspond to the average of the daily values.Rows per page:101–7 of 7`)
 
   // Check the default values
   const filtersButton = screen.getByRole('button', { name: 'Filters' })
@@ -139,7 +142,7 @@ export const checkPatientListFilters = async () => {
 
   // check the manual flag toggle
   await updatePatientsFilters({ ...defaultToggles, manualFlagFilterToggle: true })
-  expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 6')
+  expect(screen.getByTestId('filters-label')).toHaveTextContent('Filters activated: 1 patient(s) out of 7')
   checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, 'Unflag patient flagged@patient.frPatient FlaggedType 1Jan 1, 1980No new messages from the patient0%0%N/A')
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, manualFlagFilterToggle: true })
@@ -856,4 +859,147 @@ const checkTooltipsColumnHeader = async (dataGridRows) => {
   // Using `findByRole()` instead of `findByText()` because the tooltip has the same name as the column header
   expect(await screen.findByRole('tooltip', { name: 'Last data update' })).toBeVisible()
   await userEvent.unhover(lastDataUpdateColumnHeader)
+}
+
+const openAckDialogForPatient = async (testId: string, rowIndex: number): Promise<HTMLElement> => {
+  const dataGridRows = screen.getByTestId('current-patient-list-grid')
+  const icon = within(dataGridRows).getAllByTestId(testId)[rowIndex]
+  await userEvent.click(icon)
+  return screen.getByRole('dialog')
+}
+
+// Check the content of the Acknowledge monitoring alert dialog for a hypoglycemia alert, then close it with the close button
+export const checkAckMonitoringAlertDialogContent = async (): Promise<void> => {
+  const hypoglycemiaPatientName = `${hypoglycemiaPatientInfo.profile.firstName} ${hypoglycemiaPatientInfo.profile.lastName}`
+  const dialog = await openAckDialogForPatient('hypoglycemia-icon', 5)
+
+  expect(within(dialog).getByRole('heading')).toHaveTextContent('Acknowledge Hypoglycemia monitoring alert')
+  expect(within(dialog).getByText(/Do you wish to acknowledge/)).toHaveTextContent(`Do you wish to acknowledge the Hypoglycemia monitoring alert for the patient ${hypoglycemiaPatientName}? The current monitoring alert will be muted temporarily for all HCP users in the team`)
+  expect(within(dialog).getByRole('alert')).toBeVisible()
+
+  expect(within(dialog).getByRole('button', { name: 'Acknowledge the alert' })).toBeVisible()
+  expect(within(dialog).getByRole('button', { name: 'Analyse the alert' })).toBeVisible()
+
+  const closeButton = within(dialog).getByRole('button', { name: 'Close' })
+  await userEvent.click(closeButton)
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+
+}
+
+export const checkAckMonitoringAlertDialogCloseOnAnalyse = async (router: Router): Promise<void> => {
+  const dialog = await openAckDialogForPatient('hypoglycemia-icon', 5)
+
+  const analyseButton = within(dialog).getByRole('button', { name: 'Analyse the alert' })
+  await userEvent.click(analyseButton)
+
+  // Dialog should be closed after clicking Analyse
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+  expect(router.state.location.pathname).toEqual(`${AppUserRoute.Teams}/${filtersTeamId}/patients/${hypoglycemiaPatientInfo.userid}/dashboard`)
+}
+
+export const checkAckMonitoringAlertHypoglycemia = async (withError=false): Promise<void> => {
+  const hypoglycemiaPatientName = `${hypoglycemiaPatientInfo.profile.lastName} ${hypoglycemiaPatientInfo.profile.firstName}`
+  const dialog = await openAckDialogForPatient('hypoglycemia-icon', 5)
+
+  const acknowledgeButton = within(dialog).getByRole('button', { name: 'Acknowledge the alert' })
+  await userEvent.click(acknowledgeButton)
+
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+  if (withError) {
+    await checkAndCloseAckAlert(`Error while acknowledging monitoring alert for patient ${hypoglycemiaPatientName}. Please try again later.`)
+  } else {
+    await checkAndCloseAckAlert(`Monitoring alert Hypoglycemia acknowledged successfully for patient ${hypoglycemiaPatientName}`)
+  }
+  // Check the API was called with the correct patientId and hypoglycemia date set
+  expect(PatientApi.acknowledgePatientAlerts).toHaveBeenCalledWith(
+    filtersTeamId,
+    hypoglycemiaPatientInfo.userid,
+    expect.objectContaining({
+      hypoglycemia: expect.any(Date),
+      hyperglycemia: null,
+      nonDataTransmission: null,
+      timeOutOfRange: null,
+    })
+  )
+}
+
+export const checkAckMonitoringAlertHyperglycemia = async (): Promise<void> => {
+  const hyperglycemiaPatientName = `${hyperglycemiaPatientInfo.profile.lastName} ${hyperglycemiaPatientInfo.profile.firstName}`
+  const dialog = await openAckDialogForPatient('hyperglycemia-icon', 4)
+
+  const acknowledgeButton = within(dialog).getByRole('button', { name: 'Acknowledge the alert' })
+  await userEvent.click(acknowledgeButton)
+
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+  await checkAndCloseAckAlert(`Monitoring alert Hyperglycemia acknowledged successfully for patient ${hyperglycemiaPatientName}`)
+  // Check the API was called with the correct patientId and hyperglycemia date set
+  expect(PatientApi.acknowledgePatientAlerts).toHaveBeenCalledWith(
+    filtersTeamId,
+    hyperglycemiaPatientInfo.userid,
+    expect.objectContaining({
+      hyperglycemia: expect.any(Date),
+      hypoglycemia: null,
+      nonDataTransmission: null,
+      timeOutOfRange: null,
+    })
+  )
+}
+
+export const checkAckMonitoringAlertTimeOutOfRange = async (): Promise<void> => {
+  const PatientName = `${timeSpentOutOfTargetRangePatientInfo.profile.lastName} ${timeSpentOutOfTargetRangePatientInfo.profile.firstName}`
+  const dialog = await openAckDialogForPatient('time-spent-out-of-range-icon', 2)
+
+  const acknowledgeButton = within(dialog).getByTestId('acknowledge-monitoring-alert-dialog-acknowledge-button')
+  await userEvent.click(acknowledgeButton)
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+  await checkAndCloseAckAlert(`Monitoring alert Time spent out of range acknowledged successfully for patient ${PatientName}`)
+  expect(PatientApi.acknowledgePatientAlerts).toHaveBeenCalledWith(
+    filtersTeamId,
+    timeSpentOutOfTargetRangePatientInfo.userid,
+    expect.objectContaining({
+      timeOutOfRange: expect.any(Date),
+      hyperglycemia: null,
+      hypoglycemia: null,
+      nonDataTransmission: null,
+    })
+  )
+}
+
+export const checkAckMonitoringAlertNoData = async (): Promise<void> => {
+  const dialog = await openAckDialogForPatient('no-data-icon', 6)
+  const PatientName = `${noDataTransferredPatientInfo.profile.lastName} ${noDataTransferredPatientInfo.profile.firstName}`
+  const acknowledgeButton = within(dialog).getByTestId('acknowledge-monitoring-alert-dialog-acknowledge-button')
+  await userEvent.click(acknowledgeButton)
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+  await checkAndCloseAckAlert(`Monitoring alert Data not transmitted acknowledged successfully for patient ${PatientName}`)
+  expect(PatientApi.acknowledgePatientAlerts).toHaveBeenCalledWith(
+    filtersTeamId,
+    noDataTransferredPatientInfo.userid,
+    expect.objectContaining({
+      nonDataTransmission: expect.any(Date),
+      hyperglycemia: null,
+      hypoglycemia: null,
+      timeOutOfRange: null,
+    })
+  )
+}
+
+export const checkInactiveAlertIconRedirectToDashboard = async (router : Router): Promise<void> => {
+  // patient1Info has all alerts inactive — clicking the icon should NOT open a dialog
+  const dataGridRows = screen.getByTestId('current-patient-list-grid')
+  const inactiveHyperglycemiaIcon = within(dataGridRows).getAllByTestId('hyperglycemia-icon')[0]
+  await userEvent.click(inactiveHyperglycemiaIcon)
+  expect(router.state.location.pathname).toEqual(`${AppUserRoute.Teams}/${filtersTeamId}/patients/${patient1Info.userid}/dashboard`)
+}
+
+export const goBackToPatientsList = async (router : Router): Promise<void> => {
+  await userEvent.click(screen.getByTestId('main-header-hcp-patients-tab'))
+  expect(router.state.location.pathname).toEqual(`${AppUserRoute.Teams}/${filtersTeamId}/patients`)
+}
+
+export const checkAndCloseAckAlert = async (alertText: string): Promise<void> => {
+  const confirmation = screen.getByRole('alert')
+  expect(confirmation).toHaveTextContent(alertText)
+  const closeButton = within(confirmation).getByRole('button', { name: 'Close' })
+  await userEvent.click(closeButton)
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -102,7 +102,10 @@ describe('Patient profile view for HCP', () => {
           }
         }
       }
-      renderPage(patientProfileRoute)
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
       await testAppMainLayoutForHcp(appMainLayoutParams)
     })
 

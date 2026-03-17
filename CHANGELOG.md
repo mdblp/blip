@@ -5,6 +5,7 @@ It is based on Tidepool Blip 1.27.
 ## 3.9.0-beta - 2026-03-12
 ### Added
 - YLP-3613 Memos on DBL settings in Devices view
+- YLP-3614 Hcps can acknowledge patient monitoring alerts
 - YLP-3617 As a user, I can see the devices changes history
 - YLP-3785 Be able to know the effective DBLG1 or DBLG2 settings for the displayed day in the daily view
 - YLP-3813 Add hyperglycemia alerts (display in the patient view and settings in care teams and patients profile)

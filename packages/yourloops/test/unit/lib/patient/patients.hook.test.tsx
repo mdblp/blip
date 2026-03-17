@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -37,6 +37,7 @@ import PatientApi from '../../../../lib/patient/patient.api'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { INotificationType } from '../../../../lib/notifications/models/enums/i-notification-type.enum'
+import { type AlertReactivationDates } from '../../../../lib/patient/models/monitoring-alerts-parameters.model'
 
 jest.mock('../../../../lib/auth')
 jest.mock('../../../../lib/team')
@@ -146,6 +147,59 @@ describe('Patients hook', () => {
         expect(customHook.patients.length).toEqual(initialPatientsLength)
         expect(computePatientsSpy).toHaveBeenCalledTimes(1)
       })
+    })
+  })
+
+  describe('acknowledgePatientAlerts', () => {
+    const patient = createPatient('patient123', UserInviteStatus.Accepted)
+    const reactivationDates: AlertReactivationDates = {
+      hyperglycemia: new Date('2026-03-12T00:00:00.000Z'),
+      hypoglycemia: null,
+      nonDataTransmission: null,
+      timeOutOfRange: null,
+    }
+    let customHook
+
+    beforeAll(async () => {
+      const res = await renderPatientsHook([patient])
+      customHook = res.result.current
+    })
+
+    it('should call PatientApi.acknowledgePatientAlerts with the correct arguments', async () => {
+      jest.spyOn(PatientApi, 'acknowledgePatientAlerts').mockResolvedValueOnce(undefined)
+
+      await act(async () => {
+        await customHook.acknowledgePatientAlerts(patient.userid, reactivationDates)
+      })
+
+      expect(PatientApi.acknowledgePatientAlerts).toHaveBeenCalledWith(
+        null,
+        patient.userid,
+        reactivationDates
+      )
+    })
+
+    it('should trigger a refresh after a successful acknowledgement', async () => {
+      jest.spyOn(PatientApi, 'acknowledgePatientAlerts').mockResolvedValueOnce(undefined)
+      computePatientsSpy.mockClear()
+
+      await act(async () => {
+        await customHook.acknowledgePatientAlerts(patient.userid, reactivationDates)
+      })
+
+      await waitFor(() => {
+        expect(computePatientsSpy).toHaveBeenCalledTimes(1)
+      })
+    })
+
+    it('should throw an error when PatientApi.acknowledgePatientAlerts fails', async () => {
+      jest.spyOn(PatientApi, 'acknowledgePatientAlerts').mockRejectedValueOnce(new Error('API error'))
+
+      await expect(
+        act(async () => {
+          await customHook.acknowledgePatientAlerts(patient.userid, reactivationDates)
+        })
+      ).rejects.toThrow(`Failed to acknowledge alerts for patient with id ${patient.userid}`)
     })
   })
 })
