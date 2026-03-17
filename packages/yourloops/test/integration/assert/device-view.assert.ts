@@ -53,6 +53,12 @@ export const checkG2CurrentParametersContent = () => {
   expect(deviceSettings).toHaveTextContent(`Devices and current settingsLast update: ${date}Copy as textMobile applicationManufacturerDiabeloopNameDBLG2Software version1.0.0Activation code123 - 456 - 789Identifieree2bfb587758Smartphone modelA25Smartphone OS version14PumpManufacturerVICENTRAProducttestPumpSerial number123456Pump versionbetaCGMManufacturerDexcomProductG6Sensor expirationApr 12, 2050Transmitter software versionv1Transmitter IDa1234Transmitter expirationApr 12, 2050SettingValueUnitTotal Daily Insulin53.0UTarget glucose level110.0mg/dLAggressiveness in normoglycemia100%Aggressiveness in hyperglycemia100%Aggressiveness for breakfast100%Aggressiveness for lunch100%Aggressiveness for dinner80%Hypoglycemia threshold75.0mg/dLHyperglycemia threshold180.0mg/dLBreakfast - average36.0gLunch - average96.0gDinner - average96.0gBreakfast - small18.0gLunch - small48.0gDinner - small48.0gBreakfast - large54.0gLunch - large144.0gDinner - large144.0gWeight72.0kgHeight174cm`)
 }
 
+export const checkG2WithG7CurrentParametersContent = () => {
+  const deviceSettings = screen.getByTestId('current-parameters-section')
+  const date = moment.tz(pumpSettingsData.data.pumpSettings[0].normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
+  expect(deviceSettings).toHaveTextContent(`Devices and current settingsLast update: ${date}Copy as textMobile applicationManufacturerDiabeloopNameDBLG2Software version1.0.0Activation code123 - 456 - 789Identifieree2bfb587758Smartphone modelA25Smartphone OS version14PumpManufacturerVICENTRAProducttestPumpSerial number123456Pump versionbetaCGMManufacturerDexcomProductG7Sensor expirationApr 12, 2050Pairing codePC45Serial numberSN78Software numberSN1.2.2Firmware versionFV4.5.6SettingValueUnitTotal Daily Insulin53.0UTarget glucose level110.0mg/dLAggressiveness in normoglycemia100%Aggressiveness in hyperglycemia100%Aggressiveness for breakfast100%Aggressiveness for lunch100%Aggressiveness for dinner80%Hypoglycemia threshold75.0mg/dLHyperglycemia threshold180.0mg/dLBreakfast - average36.0gLunch - average96.0gDinner - average96.0gBreakfast - small18.0gLunch - small48.0gDinner - small48.0gBreakfast - large54.0gLunch - large144.0gDinner - large144.0gWeight72.0kgHeight174cm`)
+}
+
 export const checkParametersMemo = async () => {
   const currentParametersSection = screen.getByTestId('current-parameters-section')
 
