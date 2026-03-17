@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -45,6 +45,7 @@ import { PRIVATE_TEAM_ID } from '../team/team.util'
 import { useTranslation } from 'react-i18next'
 import { logError } from '../../utils/error.util'
 import { DiabeticProfile } from './models/patient-diabete-profile'
+import { type AlertReactivationDates } from './models/monitoring-alerts-parameters.model'
 
 // Custom hook to manage patients' data and actions for healthcare professionals and caregivers
 export default function usePatientsProviderCustomHook(): PatientsContextResult {
@@ -166,7 +167,17 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
       refresh()
     } catch (error) {
       console.error(error)
-      throw Error(`Failed to update patient with id ${patient.userid}`)
+      throw new Error(`Failed to update patient with id ${patient.userid}`)
+    }
+  }
+
+  const acknowledgePatientAlerts = async (patientId: string, reactivationDates: AlertReactivationDates): Promise<void> => {
+    try {
+      await PatientApi.acknowledgePatientAlerts(teamId, patientId, reactivationDates)
+      refresh()
+    } catch (error) {
+      console.error(error)
+      throw new Error(`Failed to acknowledge alerts for patient with id ${patientId}`)
     }
   }
 
@@ -176,7 +187,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
       refresh()
     } catch (error) {
       console.error(error)
-      throw Error(`Failed to delete monitoring alert parameters for patient with id ${patientId}`)
+      throw new Error(`Failed to delete monitoring alert parameters for patient with id ${patientId}`)
     }
   }
 
@@ -197,7 +208,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
       await PatientApi.updatePatientDiabeticProfile(patientId, selectedDiabeticProfile)
       refresh()
     } catch (error) {
-      throw Error(`updatePatientDiabeticProfile: failed to update patient with id ${patientId}`)
+      throw new Error(`updatePatientDiabeticProfile: failed to update patient with id ${patientId}`)
     }
   }
 
@@ -221,6 +232,7 @@ export default function usePatientsProviderCustomHook(): PatientsContextResult {
     markPatientMessagesAsRead,
     deletePatientMonitoringAlertsParameters,
     updatePatientMonitoringAlertsParameters,
+    acknowledgePatientAlerts,
     updatePatientDiabeticProfile,
     removePatient,
     refresh

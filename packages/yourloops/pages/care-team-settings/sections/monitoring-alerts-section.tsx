@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,28 +25,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MonitoringAlertsParameters } from 'medical-domain'
-import { MonitoringAlertsParametersDto, mapMonAlertParamsFromInternal } from '../../team/models/monitoring-alerts-parameters.model'
+import React, { FC } from 'react'
+import TeamMonitoringAlertsConfiguration from '../../../components/team/team-monitoring-alerts-configuration'
+import { Team } from '../../../lib/team'
+import { makeStyles } from 'tss-react/mui'
 
-
-export interface PatientAlertsConfiguration {
-  parameters: MonitoringAlertsParametersDto | null
-  isUsingTeamAlertParameters: boolean
-  reactivationDates: AlertReactivationDates | null
+interface MonitoringAlertsSectionProps {
+  team: Team
 }
 
-export interface AlertReactivationDates {
-  hyperglycemia: Date | null
-  hypoglycemia: Date | null
-  nonDataTransmission: Date | null
-  timeOutOfRange: Date | null
+const useStyles = makeStyles()(() => ({
+  refElement: {
+    scrollMarginTop: '70px'
+  }
+}))
+
+export const MonitoringAlertsSection: FC<MonitoringAlertsSectionProps> = (props) => {
+  const { team } = props
+  const { classes } = useStyles()
+
+  return (
+    <div className={classes.refElement}>
+      <TeamMonitoringAlertsConfiguration team={team} />
+    </div>
+  )
 }
-
-export const NewAlertConfigDto = (parameters: MonitoringAlertsParameters): PatientAlertsConfiguration => {
-  const parametersDto = mapMonAlertParamsFromInternal(parameters)
-  return {
-    parameters: parametersDto,
-  } as PatientAlertsConfiguration
-}
-
-

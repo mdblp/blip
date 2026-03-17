@@ -52,6 +52,7 @@ export const unreadMessagesPatientId = 'unreadMessagesPatientId'
 export const patientWithMmolId = 'patientWithMmolId'
 export const timeSpentOutOfTargetRangePatientId = 'timeSpentOutOfTargetRangePatientId'
 export const hypoglycemiaPatientId = 'hypoglycemiaPatientId'
+export const hyperglycemiaPatientId = 'hyperglycemiaPatientId'
 export const noDataTransferredPatientId = 'noDataTransferredPatientId'
 export const flaggedPatientId = 'flaggedPatientId'
 const pendingPatientId = 'pending-patient'
@@ -142,6 +143,26 @@ export const hypoglycemiaPatientInfo: Patient = buildPatient({
 export const hypoglycemiaPatientMetrics: PatientMetrics = buildPatientMetrics({
   userId: hypoglycemiaPatientId,
   monitoringAlerts: { ...defaultMonitoringAlerts, frequencyOfSevereHypoglycemiaActive: true },
+  medicalData: { range: { startDate: '1980-01-01T10:44:34+01:00', endDate: '2023-01-01T10:44:34+01:00' } }
+})
+
+export const hyperglycemiaPatientInfo: Patient = buildPatient({
+  userid: hyperglycemiaPatientId,
+  monitoringAlertsParameters: defaultMonitoringAlertsParameters,
+  profile: {
+    birthdate: '1980-01-01T10:44:34+01:00',
+    email: 'hyperglycemia@patient.fr',
+    firstName: 'Hyperglycemia',
+    lastName: 'Patient',
+    fullName: 'Hyperglycemia Patient',
+    sex: Gender.Female
+  },
+  settings: defaultSettings
+})
+
+export const hyperglycemiaPatientMetrics: PatientMetrics = buildPatientMetrics({
+  userId: hyperglycemiaPatientId,
+  monitoringAlerts: { ...defaultMonitoringAlerts, frequencyOfSevereHyperglycemiaActive: true },
   medicalData: { range: { startDate: '1980-01-01T10:44:34+01:00', endDate: '2023-01-01T10:44:34+01:00' } }
 })
 
@@ -348,6 +369,10 @@ export const PATIENTS_INFO_BY_TEAMID: Record<string, Patient[]> = {
       invitationStatus: UserInviteStatus.Accepted
     },
     {
+      ...hyperglycemiaPatientInfo,
+      invitationStatus: UserInviteStatus.Accepted
+    },
+    {
       ...noDataTransferredPatientInfo,
       invitationStatus: UserInviteStatus.Accepted
     },
@@ -377,6 +402,7 @@ export const PATIENTS_METRICS_BY_TEAMID: Record<string, PatientMetrics[]> = {
     unreadMessagesPatientMetrics,
     timeSpentOutOfRangePatientMetrics,
     hypoglycemiaPatientMetrics,
+    hyperglycemiaPatientMetrics,
     noDataTransferredPatientMetrics,
     flaggedPatientMetrics
   ]

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -61,5 +61,6 @@ export const mockPatientApiForHcp = () => {
     return Promise.resolve(patientsToReturn)
   })
   jest.spyOn(PatientApi, 'updatePatientAlerts').mockResolvedValue(undefined)
+  jest.spyOn(PatientApi, 'acknowledgePatientAlerts').mockResolvedValue(undefined)
   jest.spyOn(PatientApi, 'updatePatientDiabeticProfile').mockResolvedValue(undefined)
 }

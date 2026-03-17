@@ -211,7 +211,10 @@ export const checkCareTeamMembers = () => {
   expect(screen.getByTestId('team-members-list-table')).toHaveTextContent(`MemberEmailAdmin${loggedInUserLastName} ${loggedInUserFirstName}${loggedInUserEmail}${userTimLastName} ${userTimFirstName}${userTimEmail}`)
 }
 
-export const checkCareTeamMonitoringAlertsConfiguration = () => {
+export const checkCareTeamMonitoringAlertsConfiguration = async () => {
+  const menu = screen.getByTestId('care-team-settings-menu')
+  const monitoringAlertsConfigurationMenuItem = within(menu).getByText('Monitoring alerts')
+  await userEvent.click(monitoringAlertsConfigurationMenuItem)
   const monitoringAlertsConfigurationSection = screen.getByTestId('team-monitoring-alerts-configuration')
 
   expect(within(monitoringAlertsConfigurationSection).getByText('Monitoring alerts configuration')).toBeVisible()
@@ -224,4 +227,12 @@ export const checkCareTeamMonitoringAlertsConfiguration = () => {
   expect(monitoringAlertsConfigurationSection).toHaveTextContent('2. HyperglycemiaCurrent trigger setting: 25% of time above 250 mg/dL thresholdA. Hyperglycemia threshold:Hyperglycemia above​mg/dLDefault: 250 mg/dLB. Event trigger thresholdTime spent in hyperglycemia25%​Default: 25%')
   expect(monitoringAlertsConfigurationSection).toHaveTextContent('3. Severe hypoglycemiaCurrent trigger setting: 10% of time below 40 mg/dL thresholdA. Severe hypoglycemia threshold:Severe hypoglycemia below​mg/dLDefault: 54 mg/dLB. Event trigger thresholdTime spent in severe hypoglycemia10%​Default: 5%')
   expect(monitoringAlertsConfigurationSection).toHaveTextContent('4. Data not transmittedCurrent trigger setting: 15% of data not transmitted over the periodA. Event trigger thresholdTime spent without uploaded data15%​Default: 50%')
+}
+
+export const checkCareTeamLayoutForPatient = async () => {
+  await screen.findByText('Information')
+
+  expect(screen.queryByTestId('care-team-settings-menu')).not.toBeInTheDocument()
+  expect(screen.getByTestId('team-information')).toBeVisible()
+  expect(screen.queryByTestId('team-members')).not.toBeInTheDocument()
 }

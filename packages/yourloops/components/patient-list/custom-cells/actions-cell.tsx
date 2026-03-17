@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,28 +25,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MonitoringAlertsParameters } from 'medical-domain'
-import { MonitoringAlertsParametersDto, mapMonAlertParamsFromInternal } from '../../team/models/monitoring-alerts-parameters.model'
+import React, { type FunctionComponent } from 'react'
+import Box from '@mui/material/Box'
+import Tooltip from '@mui/material/Tooltip'
+import { useTranslation } from 'react-i18next'
+import IconActionButton from '../../buttons/icon-action'
+import PersonRemoveIcon from '../../icons/mui/person-remove-icon'
+import { type Patient } from '../../../lib/patient/models/patient.model'
 
-
-export interface PatientAlertsConfiguration {
-  parameters: MonitoringAlertsParametersDto | null
-  isUsingTeamAlertParameters: boolean
-  reactivationDates: AlertReactivationDates | null
+interface ActionsCellProps {
+  patient: Patient
+  onClickRemove: (patientId: string) => void
 }
 
-export interface AlertReactivationDates {
-  hyperglycemia: Date | null
-  hypoglycemia: Date | null
-  nonDataTransmission: Date | null
-  timeOutOfRange: Date | null
-}
+export const ActionsCell: FunctionComponent<ActionsCellProps> = ({ patient, onClickRemove }) => {
+  const { t } = useTranslation()
+  const removePatientLabel = t('button-remove-patient')
 
-export const NewAlertConfigDto = (parameters: MonitoringAlertsParameters): PatientAlertsConfiguration => {
-  const parametersDto = mapMonAlertParamsFromInternal(parameters)
-  return {
-    parameters: parametersDto,
-  } as PatientAlertsConfiguration
+  return (
+    <Tooltip title={removePatientLabel} aria-label={removePatientLabel}>
+      <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+        <IconActionButton
+          data-action="remove-patient"
+          data-testid={`${removePatientLabel} ${patient.profile.email}`}
+          aria-label={`${removePatientLabel} ${patient.profile.email}`}
+          icon={<PersonRemoveIcon />}
+          color="inherit"
+          onClick={() => { onClickRemove(patient.userid) }}
+        />
+      </Box>
+    </Tooltip>
+  )
 }
-
 

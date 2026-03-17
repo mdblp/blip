@@ -35,7 +35,11 @@ import { type MonitoringAlertsParameters } from 'medical-domain'
 import { DiabeticProfilePayload } from './models/patient-diabete-profile'
 import { type DiabeticProfile } from './models/patient-diabete-profile'
 import { PatientProfile } from './models/patient-profile.model'
-import { NewAlertConfigDto, PatientAlertsConfiguration } from './models/monitoring-alerts-parameters.model'
+import {
+  AlertReactivationDates,
+  NewAlertConfigDto,
+  PatientAlertsConfiguration
+} from './models/monitoring-alerts-parameters.model'
 
 export const PATIENT_ALREADY_IN_TEAM_ERROR_MESSAGE = 'patient-already-in-team'
 const PATIENT_ALREADY_IN_TEAM_ERROR_CODE = HttpStatus.StatusConflict
@@ -100,6 +104,18 @@ export default class PatientApi {
     await HttpService.put<void, PatientAlertsConfiguration>({
       url: `/crew/v1/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`,
       payload: NewAlertConfigDto(monitoringAlertsParameters)
+    })
+  }
+
+  static async acknowledgePatientAlerts(teamId: string, patientId: string, alertReactivationDates: AlertReactivationDates): Promise<void> {
+
+    await HttpService.put<void, PatientAlertsConfiguration>({
+      url: `/crew/v1/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`,
+      payload: {
+        parameters: null,
+        isUsingTeamAlertParameters: false,
+        reactivationDates: alertReactivationDates
+      }
     })
   }
 
