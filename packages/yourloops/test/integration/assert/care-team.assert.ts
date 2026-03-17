@@ -76,7 +76,7 @@ export const checkCareTeamInformation = async () => {
 
 export const checkRemoveMember = async () => {
   const teamMembersTable = await screen.findByRole('table')
-  expect(teamMembersTable).toHaveTextContent(/^MemberEmailAdminBlanc Yannyann.blanc@example.comCanu Timtim.canu@example.com--pending-user-iconhugo.rodrigues@example.com--pending-user-iconydris.rebibane@example.com$/)
+  expect(teamMembersTable).toHaveTextContent(/^MemberEmailAdminActionsYBYann Blancyann.blanc@example.comTCTim Canutim.canu@example.compending-user-iconPending...hugo.rodrigues@example.compending-user-iconPending...ydris.rebibane@example.com$/)
 
   const removeMemberButton = screen.getByRole('button', { name: `Remove the member ${userTimFullName}` })
   await userEvent.click(removeMemberButton)
@@ -155,7 +155,7 @@ export const checkNotTeamAdmin = async () => {
 
 export const checkDeleteTeam = async () => {
   const teamMembersTable = await screen.findByRole('table')
-  expect(teamMembersTable).toHaveTextContent('MemberEmailAdminHCP 0 Yourloops UI 28.0yann.blanc@example.com')
+  expect(teamMembersTable).toHaveTextContent('MemberEmailAdminActionsYUYourloops UI 28.0 HCP 0yann.blanc@example.com')
 
   const leaveTeamButton = screen.getByRole('button', { name: 'Leave team' })
   await userEvent.click(leaveTeamButton)
