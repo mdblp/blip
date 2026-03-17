@@ -162,6 +162,7 @@ const ignoredTransKeyForYourLoops = [
   // TODO
   'accompanying-documents',
   'account-flagged-for-deletion',
+  'acknowledge-monitoring-alert-dialog-body',
   'alarm-alert-loop-mode-activated-description',
   'alarm-alert-loop-mode-deactivated-description',
   'alarm-alert-with-code',
