@@ -949,9 +949,9 @@ export const pumpSettingsDblg2G7: Data = {
             manufacturer: 'Dexcom',
             name: 'G7',
             pairingCode: 'PC45',
-            serialNumber: 'SN45',
-            softwareNumber: 'SWN45',
-            firmwareVersion: 'FV45'
+            serialNumber: 'SN78',
+            softwareNumber: 'SN1.2.2',
+            firmwareVersion: 'FV4.5.6'
           },
           device: {
             deviceId: '1234',
