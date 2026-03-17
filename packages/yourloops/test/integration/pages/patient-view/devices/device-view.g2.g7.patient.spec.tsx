@@ -26,13 +26,11 @@
  */
 
 import { act } from '@testing-library/react'
-import { mockDataAPI, pumpSettingsDblg2, pumpSettingsDblg2G7 } from '../../../mock/data.api.mock'
+import { mockDataAPI, pumpSettingsDblg2G7 } from '../../../mock/data.api.mock'
 import { patient2Info } from '../../../data/patient.api.data'
 import { renderPage } from '../../../utils/render'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
-import { testAppMainLayoutForPatient } from '../../../use-cases/app-main-layout-visualisation'
 import { testG2DevicesVisualisation } from '../../../use-cases/device-settings-visualisation'
-import { testDeviceSettingsNavigationForPatient } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 
