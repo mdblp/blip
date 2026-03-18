@@ -26,10 +26,10 @@
  */
 
 import React, { FC } from 'react'
-import TeamInformation from '../../../components/team/team-information'
 import TeamMembers from '../../../components/team/team-members'
 import { Team } from '../../../lib/team'
 import Divider from '@mui/material/Divider'
+import { TeamInformation } from '../../../components/team/team-information'
 
 interface InfoAndMembersSectionProps {
   team: Team
@@ -44,7 +44,7 @@ export const InfoAndMembersSection: FC<InfoAndMembersSectionProps> = (props) => 
       <TeamInformation team={team} />
       {isUserHcp &&
         <>
-          <Divider sx={{ mb: 4 }} variant="middle" />
+          <Divider sx={{ my: 4 }} variant="middle" />
           <TeamMembers team={team} />
         </>
       }
