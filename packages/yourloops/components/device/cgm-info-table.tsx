@@ -83,7 +83,7 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
           </Box>
         </ListItemText>
       </ListItem>
-      { cgm.name == "G6" &&
+      { cgm.name === CGMName.G6 &&
         <>
         <ListItem divider className="list-item">
         <ListItemText>
