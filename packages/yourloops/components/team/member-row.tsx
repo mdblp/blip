@@ -46,6 +46,7 @@ import TableCell from '@mui/material/TableCell'
 import Avatar from '@mui/material/Avatar'
 import { HourglassEmptyRounded } from '@mui/icons-material'
 import Box from '@mui/material/Box'
+import { getInitials } from '../../lib/auth/user.util'
 
 const useStyles = makeStyles()(() => ({
   icon: {
@@ -95,19 +96,8 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
   const removeMemberDisabled = !loggedInUserIsAdmin || userUpdateInProgress || loggedInUserId === currentUserId ||
     (teamMember.status === UserInviteStatus.Pending && !teamMember.invitationId) // This condition basically means that the logged-in user did not invite the pending user
 
-  const getInitials = (memberName: string): string => {
-    if (!memberName) {
-      return ''
-    }
-
-    const splitName = memberName.split(' ')
-    const firstInitial = splitName[0]?.charAt(0) || ''
-    const secondInitial = splitName[1]?.charAt(0) || ''
-
-    const initials = `${firstInitial}${secondInitial}`
-
-    return initials.toUpperCase()
-  }
+  const memberFullName = teamMember.profile?.fullName
+  const memberInitials = getInitials(memberFullName)
 
   const switchRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const isAdmin = event.target.checked
@@ -157,9 +147,9 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
                   aria-label={t('team-member-pending-status')}
                 />
               </Box>
-              : getInitials(teamMember.profile?.fullName) &&
+              : memberInitials &&
               <Avatar sx={{ bgcolor: 'var(--dark-blue-main)' }}>
-                {getInitials(teamMember.profile?.fullName)}
+                {memberInitials}
               </Avatar>
           }
         </TableCell>
@@ -169,7 +159,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
         >
           {currentUserIsPending
             ? <span className={classes.pendingMemberName}>{t('pending-name')}</span>
-            : teamMember.profile?.fullName
+            : memberFullName
           }
         </TableCell>
         <TableCell
@@ -199,7 +189,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
               color="inherit"
               data-testid="remove-member-button"
               disabled={removeMemberDisabled}
-              aria-label={t('remove-member', { fullName: teamMember.profile?.fullName })}
+              aria-label={t('remove-member', { fullName: memberFullName })}
               onClick={() => {
                 setShowConfirmRemoveDialog(true)
               }}
@@ -213,7 +203,7 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
         <ConfirmDialog
           open={showConfirmRemoveDialog}
           title={t('remove-member-from-team')}
-          label={t('remove-member-confirm', { fullName: teamMember.profile?.fullName, teamName: team.name })}
+          label={t('remove-member-confirm', { fullName: memberFullName, teamName: team.name })}
           inProgress={userUpdateInProgress}
           onClose={() => {
             setShowConfirmRemoveDialog(false)
