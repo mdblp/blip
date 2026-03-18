@@ -32,7 +32,8 @@ import {
   checkDevicesMenuLayoutWithBasalSafetyProfile,
   checkDevicesMenuLayoutWithoutBasalSafetyProfile,
   checkG2CopyTextButton,
-  checkG2CurrentParametersContent, checkParametersMemo, checkParametersMemoNotDisplayed,
+  checkG2CurrentParametersContent,
+  checkG2WithG7CurrentParametersContent, checkParametersMemo, checkParametersMemoNotDisplayed,
   checkSafetyBasalProfileContent,
   checkSafetyBasalProfileErrorMessage
 } from '../assert/device-view.assert'
@@ -65,6 +66,10 @@ export const testG2DevicesVisualisation = async () => {
   await testBasalSafetyProfileVisualisation()
   await testChangeHistoryVisualisation()
   await testDeviceHistoryVisualisation()
+}
+
+export const testG2G7CGMVisualisation = async () => {
+  checkG2WithG7CurrentParametersContent()
 }
 
 export const testEmptySafetyBasalProfileGenericErrorMessage = async () => {
