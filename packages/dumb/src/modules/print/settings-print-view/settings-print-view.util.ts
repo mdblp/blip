@@ -39,7 +39,8 @@ import {
   type ParameterConfig,
   type PumpConfig,
   SecurityBasalConfig,
-  type TimePrefs
+  type TimePrefs,
+  CGMName
 } from 'medical-domain'
 import i18next from 'i18next'
 import {
@@ -137,7 +138,7 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
   switch (type) {
     case PdfSettingsDataType.Cgm:
       const cgmData = (data as CgmConfig)
-      if (cgmData.name == "G6") {
+      if (cgmData.name === CGMName.G6) {
         return [{
           label: t('Manufacturer'),
           value: cgmData.manufacturer

@@ -27,6 +27,7 @@
 
 import React, { type FC } from 'react'
 import type { CgmConfig } from 'medical-domain'
+import { CGMName } from 'medical-domain'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
@@ -127,7 +128,7 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
       </ListItem>
         </>
       }
-      { cgm.name != "G6" &&
+      { cgm.name !== CGMName.G6 &&
         <>
           <ListItem divider className="list-item">
             <ListItemText>

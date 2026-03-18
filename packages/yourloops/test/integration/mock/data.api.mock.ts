@@ -41,7 +41,8 @@ import {
   Unit,
   Wizard,
   WizardInputMealFat,
-  WizardInputMealSource
+  WizardInputMealSource,
+  CGMName
 } from 'medical-domain'
 import Cbg from 'medical-domain/dist/src/domains/models/medical/datum/cbg.model'
 import Bg from 'medical-domain/dist/src/domains/models/medical/datum/bg.model'
@@ -947,7 +948,7 @@ export const pumpSettingsDblg2G7: Data = {
           cgm: {
             expirationDate: '2050-04-12T17:53:54+02:00',
             manufacturer: 'Dexcom',
-            name: 'G7',
+            name: CGMName.G7,
             pairingCode: 'PC45',
             serialNumber: 'SN78',
             softwareNumber: 'SN1.2.2',
