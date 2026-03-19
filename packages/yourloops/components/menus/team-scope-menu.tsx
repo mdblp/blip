@@ -33,7 +33,6 @@ import { type Team, useTeam } from '../../lib/team'
 import PersonIcon from '@mui/icons-material/Person'
 import { TeamType } from '../../lib/team/models/enums/team-type.enum'
 import { useTranslation } from 'react-i18next'
-import { type TeamEditModalContentProps } from '../team/types'
 import { useAlert } from '../utils/snackbar'
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined'
 import { useNavigate } from 'react-router-dom'
@@ -49,11 +48,11 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Divider from '@mui/material/Divider'
 import AddIcon from '@mui/icons-material/Add'
-import TeamInformationEditDialog from '../team/team-information-edit-dialog'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { logError } from '../../utils/error.util'
 import { errorTextFromException } from '../../lib/utils'
+import { TeamCreateDialog } from '../team/team-create-dialog'
 
 const classes = makeStyles()((theme) => ({
   sectionTitle: {
@@ -89,7 +88,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
   const selectedTeam = getTeam(teamId)
   const alert = useAlert()
   const navigate = useNavigate()
-  const [teamCreationDialogData, setTeamCreationDialogData] = React.useState<TeamEditModalContentProps | null>(null)
+  const [showTeamCreationDialog, setShowTeamCreationDialog] = React.useState<boolean>(false)
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const isMenuOpen = !!anchorEl
   const theme = useTheme()
@@ -114,7 +113,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
   }
 
   const onCreateTeam = (): void => {
-    setTeamCreationDialogData({ team: null, onSaveTeam })
+    setShowTeamCreationDialog(true)
     closeMenu()
   }
 
@@ -130,9 +129,11 @@ export const TeamScopeMenu: FunctionComponent = () => {
 
         alert.error(t('team-page-failed-create'))
       }
+
+      setShowTeamCreationDialog(false)
     }
 
-    setTeamCreationDialogData(null)
+    setShowTeamCreationDialog(null)
   }
 
   const openMenu = ({ currentTarget }: { currentTarget: HTMLElement }): void => {
@@ -222,8 +223,8 @@ export const TeamScopeMenu: FunctionComponent = () => {
         </Box>
       </MenuLayout>
 
-      {teamCreationDialogData &&
-        <TeamInformationEditDialog teamToEdit={teamCreationDialogData} />
+      {showTeamCreationDialog &&
+        <TeamCreateDialog onSaveTeam={onSaveTeam} />
       }
     </>
   )
