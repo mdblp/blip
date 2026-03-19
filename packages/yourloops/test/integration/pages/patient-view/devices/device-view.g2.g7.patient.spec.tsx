@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2026, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,33 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import i18next from 'i18next'
-import { Unit } from 'medical-domain'
+import { act } from '@testing-library/react'
+import { mockDataAPI, pumpSettingsDblg2G7 } from '../../../mock/data.api.mock'
+import { patient2Info } from '../../../data/patient.api.data'
+import { renderPage } from '../../../utils/render'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
+import { testG2G7CGMVisualisation } from '../../../use-cases/device-settings-visualisation'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
 
-const t = i18next.t.bind(i18next)
+describe('Device view for G2 Patient with G7 CGM', () => {
 
-const DEFAULT_BG_UNIT = Unit.MilligramPerDeciliter
+  const deviceRoute = AppUserRoute.Devices
 
-export const getUserName = (firstName: string, lastName: string, fullName: string): string => {
-  return firstName && lastName ? t('user-name', { firstName, lastName }) : fullName
-}
+  beforeEach(() => {
+    mockWindowResizer()
+    mockPatientLogin(patient2Info)
+    mockDataAPI(pumpSettingsDblg2G7)
+  })
 
-export const getInitials = (fullName: string): string => {
-  if (!fullName) {
-    return ''
-  }
-
-  const splitName = fullName.split(' ')
-  const firstInitial = splitName[0]?.charAt(0) || ''
-  const secondInitial = splitName[1]?.charAt(0) || ''
-
-  const initials = `${firstInitial}${secondInitial}`
-
-  return initials.toUpperCase()
-}
-
-export const sanitizeBgUnit = (bgUnit: string): Unit.MilligramPerDeciliter | Unit.MmolPerLiter => {
-  const allowedBgUnits: Array< Unit.MilligramPerDeciliter | Unit.MmolPerLiter> = [Unit.MilligramPerDeciliter, Unit.MmolPerLiter]
-  const sanitizedUnit = allowedBgUnits.find((unit) => unit.toLocaleLowerCase() === bgUnit?.toLowerCase())
-  return sanitizedUnit ?? DEFAULT_BG_UNIT
-}
+  it('should display correct CGM info for G7 CGM', async () => {
+    await act(async () => {
+      renderPage(deviceRoute)
+    })
+    await testG2G7CGMVisualisation()
+  })
+})

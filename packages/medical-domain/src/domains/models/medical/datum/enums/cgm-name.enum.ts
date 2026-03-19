@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2026, Diabeloop
+ * Copyright (c) 2022-2024, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,33 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import i18next from 'i18next'
-import { Unit } from 'medical-domain'
-
-const t = i18next.t.bind(i18next)
-
-const DEFAULT_BG_UNIT = Unit.MilligramPerDeciliter
-
-export const getUserName = (firstName: string, lastName: string, fullName: string): string => {
-  return firstName && lastName ? t('user-name', { firstName, lastName }) : fullName
-}
-
-export const getInitials = (fullName: string): string => {
-  if (!fullName) {
-    return ''
-  }
-
-  const splitName = fullName.split(' ')
-  const firstInitial = splitName[0]?.charAt(0) || ''
-  const secondInitial = splitName[1]?.charAt(0) || ''
-
-  const initials = `${firstInitial}${secondInitial}`
-
-  return initials.toUpperCase()
-}
-
-export const sanitizeBgUnit = (bgUnit: string): Unit.MilligramPerDeciliter | Unit.MmolPerLiter => {
-  const allowedBgUnits: Array< Unit.MilligramPerDeciliter | Unit.MmolPerLiter> = [Unit.MilligramPerDeciliter, Unit.MmolPerLiter]
-  const sanitizedUnit = allowedBgUnits.find((unit) => unit.toLocaleLowerCase() === bgUnit?.toLowerCase())
-  return sanitizedUnit ?? DEFAULT_BG_UNIT
+export enum CGMName {
+  G6 = 'G6',
+  G7 = 'G7',
+  G7_15 = 'G7-15'
 }

@@ -41,7 +41,8 @@ import {
   Unit,
   Wizard,
   WizardInputMealFat,
-  WizardInputMealSource
+  WizardInputMealSource,
+  CGMName
 } from 'medical-domain'
 import Cbg from 'medical-domain/dist/src/domains/models/medical/datum/cbg.model'
 import Bg from 'medical-domain/dist/src/domains/models/medical/datum/bg.model'
@@ -728,6 +729,230 @@ export const pumpSettingsDblg2: Data = {
             name: 'G6',
             swVersionTransmitter: 'v1',
             transmitterId: 'a1234'
+          },
+          device: {
+            deviceId: '1234',
+            manufacturer: 'Samsung',
+            name: DeviceSystem.Dblg2,
+            operatingSystem: 'Android',
+            osVersion: '14',
+            smartphoneModel: 'A25',
+            swVersion: '',
+            imei: ''
+          },
+          history: {
+            parameters: history,
+            devices: devicesHistory
+          },
+          parameters: [
+            {
+              name: DblParameter.Weight,
+              value: '72',
+              unit: Unit.Kilogram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.Height,
+              value: '174',
+              unit: Unit.Centimeter,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.AverageBreakfast,
+              value: '36',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.AverageDinner,
+              value: '96',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.TargetGlucoseLevel,
+              value: '110',
+              unit: Unit.MilligramPerDeciliter,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.AggressivenessNormoglycemia,
+              value: '100',
+              unit: Unit.Percent,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.HyperglycemiaThreshold,
+              value: '180',
+              unit: Unit.MilligramPerDeciliter,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.TotalDailyInsulin,
+              value: '53.0',
+              unit: Unit.InsulinUnit,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.AverageLunch,
+              value: '96',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.HypoglycemiaThreshold,
+              value: '75',
+              unit: Unit.MilligramPerDeciliter,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.AggressivenessHyperglycemia,
+              value: '100',
+              unit: Unit.Percent,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.SmallLunch,
+              value: '48',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.SmallBreakfast,
+              value: '18',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.AggressivenessLunch,
+              value: '100',
+              unit: Unit.Percent,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.LargeDinner,
+              value: '144',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.AggressivenessDinner,
+              value: '80',
+              unit: Unit.Percent,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.LargeBreakfast,
+              value: '54',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.AggressivenessBreakfast,
+              value: '100',
+              unit: Unit.Percent,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.LargeLunch,
+              value: '144',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            },
+            {
+              name: DblParameter.SmallDinner,
+              value: '48',
+              unit: Unit.Gram,
+              level: 1,
+              effectiveDate: '2020-01-17T08:00:00.000Z'
+            }
+          ],
+          pump: {
+            manufacturer: PumpManufacturer.Vicentra,
+            product: "testPump",
+            name: 'Kaleido',
+            swVersion: 'beta',
+            serialNumber: '123456'
+          },
+          mobileApplication: {
+            activationCode: '123456789',
+            manufacturer: Source.Diabeloop,
+            identifier: 'ee2bfb587758',
+            swVersion: '1.0.0'
+          },
+          securityBasals: {
+            rates: [
+              { rate: 1, start: 0 },
+              { rate: 2, start: 510 },
+              { rate: 0.4, start: 840 }
+            ]
+          }
+        }
+      }
+    ],
+    cbg: [{
+      normalTime: '2020-01-01T10:00:00.000Z',
+      type: DatumType.Cbg,
+      id: '2020-01-01_0',
+      timezone: 'Europe/Paris',
+      units: Unit.MmolPerLiter,
+      value: 10.5,
+      isoWeekday: WeekDays.Wednesday,
+      epoch: 0,
+      displayOffset: 0,
+      guessedTimezone: false,
+      source: Source.Diabeloop,
+      localDate: '',
+      msPer24: 0,
+      deviceName: ''
+    }]
+  }
+}
+
+export const pumpSettingsDblg2G7: Data = {
+  dataRange: ['2022-08-08T16:35:00.000Z', '2022-08-08T16:40:00.000Z'],
+  data: {
+    pumpSettings: [
+      {
+        normalTime: '2020-01-01T10:00:00.000Z',
+        deviceId: '1234',
+        deviceTime: '2020-01-01T10:00:00.000Z',
+        type: DatumType.PumpSettings,
+        id: 'pump_settings',
+        timezone: 'UTC',
+        source: Source.Diabeloop,
+        isoWeekday: WeekDays.Sunday,
+        epoch: 0,
+        displayOffset: 0,
+        guessedTimezone: false,
+        payload: {
+          cgm: {
+            expirationDate: '2050-04-12T17:53:54+02:00',
+            manufacturer: 'Dexcom',
+            name: CGMName.G7,
+            pairingCode: 'PC45',
+            serialNumber: 'SN78',
+            softwareNumber: 'SN1.2.2',
+            firmwareVersion: 'FV4.5.6'
           },
           device: {
             deviceId: '1234',
