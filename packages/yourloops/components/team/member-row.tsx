@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,12 +29,10 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { makeStyles } from 'tss-react/mui'
 import Checkbox from '@mui/material/Checkbox'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import IconButton from '@mui/material/IconButton'
 
 import { type Team, type TeamMember, useTeam } from '../../lib/team'
 import { useAuth } from '../../lib/auth'
-import { StyledTableCell, StyledTableRow } from '../styled-components'
 import { errorTextFromException } from '../../lib/utils'
 import { useAlert } from '../utils/snackbar'
 import PersonRemoveIcon from '../icons/mui/person-remove-icon'
@@ -42,16 +40,15 @@ import ConfirmDialog from '../dialogs/confirm-dialog'
 import TeamUtils from '../../lib/team/team.util'
 import { UserInviteStatus } from '../../lib/team/models/enums/user-invite-status.enum'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
-import { getUserName } from '../../lib/auth/user.util'
 import { logError } from '../../utils/error.util'
+import TableRow from '@mui/material/TableRow'
+import TableCell from '@mui/material/TableCell'
+import Avatar from '@mui/material/Avatar'
+import { HourglassEmptyRounded } from '@mui/icons-material'
+import Box from '@mui/material/Box'
+import { getInitials } from '../../lib/auth/user.util'
 
-const useStyles = makeStyles()((theme) => ({
-  checkboxTableCellBody: {
-    padding: `0 ${theme.spacing(2)} !important`
-  },
-  deleteCell: {
-    color: theme.palette.primary.main
-  },
+const useStyles = makeStyles()(() => ({
   icon: {
     width: '56px',
     alignItems: 'center',
@@ -62,14 +59,13 @@ const useStyles = makeStyles()((theme) => ({
     width: '67px',
     justifyContent: 'center'
   },
-  tableRow: {
-    height: '55px'
+  hideLastBorder: {
+    '&:last-child td, &:last-child th': {
+      border: 0
+    }
   },
-  typography: {
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    color: theme.palette.common.black
+  pendingMemberName: {
+    fontStyle: "italic"
   }
 }))
 
@@ -99,6 +95,9 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
     userUpdateInProgress
   const removeMemberDisabled = !loggedInUserIsAdmin || userUpdateInProgress || loggedInUserId === currentUserId ||
     (teamMember.status === UserInviteStatus.Pending && !teamMember.invitationId) // This condition basically means that the logged-in user did not invite the pending user
+
+  const memberFullName = teamMember.profile?.fullName
+  const memberInitials = getInitials(memberFullName)
 
   const switchRole = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     const isAdmin = event.target.checked
@@ -135,82 +134,76 @@ function MemberRow(props: TeamMembersProps): JSX.Element {
 
   return (
     <>
-      <StyledTableRow
-        id={`member-row-${rowId}`}
+      <TableRow
         data-testid={`member-row-${rowId}`}
-        className={classes.tableRow}
-        hover
+        className={classes.hideLastBorder}
       >
-        <StyledTableCell
-          id={`${rowId}-member-full-name`}
-          className={classes.typography}
+        <TableCell>
+          {
+            currentUserIsPending ?
+              <Box sx={{ display: 'flex', justifyContent: 'center', color: 'var(--text-color-secondary)' }}>
+                <HourglassEmptyRounded
+                  titleAccess="pending-user-icon"
+                  aria-label={t('team-member-pending-status')}
+                />
+              </Box>
+              : memberInitials &&
+              <Avatar sx={{ bgcolor: 'var(--dark-blue-main)' }}>
+                {memberInitials}
+              </Avatar>
+          }
+        </TableCell>
+        <TableCell
+          data-testid={`${rowId}-member-full-name`}
           size="small"
         >
           {currentUserIsPending
-            ? ('--')
-            : (getUserName(teamMember.profile?.firstName, teamMember.profile?.lastName, teamMember.profile?.fullName))
+            ? <span className={classes.pendingMemberName}>{t('pending-name')}</span>
+            : memberFullName
           }
-        </StyledTableCell>
-        <StyledTableCell
+        </TableCell>
+        <TableCell
           size="small"
-          id={`${rowId}-icon`}
-          className={classes.iconCell}
-        >
-          {currentUserIsPending &&
-            <AccessTimeIcon
-              id={`${rowId}-pending-icon`}
-              aria-label={t('team-member-pending-status')}
-              titleAccess="pending-user-icon"
-              className={classes.icon}
-            />
-          }
-        </StyledTableCell>
-        <StyledTableCell
-          size="small"
-          id={`${rowId}-member-email`}
-          className={classes.typography}
+          data-testid={`${rowId}-member-email`}
         >
           {teamMember.email}
-        </StyledTableCell>
-        <StyledTableCell
-          size="small"
-          id={`${rowId}-checkbox`}
-          className={`${classes.typography} ${classes.checkboxTableCellBody}`}
-          padding="checkbox"
+        </TableCell>
+        <TableCell
+          align={loggedInUserIsAdmin ? 'inherit' : 'right'}
+          data-testid={`${rowId}-checkbox`}
         >
           <Checkbox
             disabled={checkboxAdminDisabled}
-            id={`members-row-${rowId}-role-checkbox`}
             data-testid="members-row-checkbox"
             checked={currentUserIsAdmin}
             onChange={switchRole}
           />
-        </StyledTableCell>
+        </TableCell>
         {loggedInUserIsAdmin &&
-          <StyledTableCell
+          <TableCell
             size="small"
-            id={`${rowId}-delete`}
+            data-testid={`${rowId}-delete`}
             className={classes.iconCell}
           >
             <IconButton
+              color="inherit"
               data-testid="remove-member-button"
-              className={classes.deleteCell}
               disabled={removeMemberDisabled}
-              aria-label={t('remove-member', { fullName: teamMember.profile?.fullName })}
+              aria-label={t('remove-member', { fullName: memberFullName })}
               onClick={() => {
                 setShowConfirmRemoveDialog(true)
               }}
               size="large">
               <PersonRemoveIcon />
             </IconButton>
-          </StyledTableCell>
+          </TableCell>
         }
-      </StyledTableRow>
+      </TableRow>
       {showConfirmRemoveDialog &&
         <ConfirmDialog
           open={showConfirmRemoveDialog}
           title={t('remove-member-from-team')}
-          label={t('remove-member-confirm', { fullName: teamMember.profile?.fullName, teamName: team.name })}
+          label={t('remove-member-confirm', { fullName: memberFullName, teamName: team.name })}
           inProgress={userUpdateInProgress}
           onClose={() => {
             setShowConfirmRemoveDialog(false)

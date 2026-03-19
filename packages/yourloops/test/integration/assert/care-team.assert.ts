@@ -40,12 +40,14 @@ import {
   loggedInUserFirstName,
   loggedInUserFullName,
   loggedInUserId,
+  loggedInUserInitials,
   loggedInUserLastName,
   userHugoFullName,
   userTimEmail,
   userTimFirstName,
   userTimFullName,
   userTimId,
+  userTimInitials,
   userTimLastName,
   userYdrisFullName
 } from '../mock/auth0.hook.mock'
@@ -58,7 +60,7 @@ import { patient1Id } from '../data/patient.api.data'
 export const checkCareTeamInformation = async () => {
   const teamInformationSection = within(await screen.findByTestId('team-information'))
 
-  expect(teamInformationSection.getByText('Information')).toBeVisible()
+  expect(teamInformationSection.getByText('Team information')).toBeVisible()
   expect(teamInformationSection.getByText('Edit information')).toBeVisible()
   expect(teamInformationSection.getByText('Edit information')).toBeEnabled()
 
@@ -74,7 +76,7 @@ export const checkCareTeamInformation = async () => {
 
 export const checkRemoveMember = async () => {
   const teamMembersTable = await screen.findByRole('table')
-  expect(teamMembersTable).toHaveTextContent(/^MemberEmailAdminBlanc Yannyann.blanc@example.comCanu Timtim.canu@example.com--pending-user-iconhugo.rodrigues@example.com--pending-user-iconydris.rebibane@example.com$/)
+  expect(teamMembersTable).toHaveTextContent(/^MemberEmailAdminActionsYBYann Blancyann.blanc@example.comTCTim Canutim.canu@example.compending-user-iconPending...hugo.rodrigues@example.compending-user-iconPending...ydris.rebibane@example.com$/)
 
   const removeMemberButton = screen.getByRole('button', { name: `Remove the member ${userTimFullName}` })
   await userEvent.click(removeMemberButton)
@@ -153,7 +155,7 @@ export const checkNotTeamAdmin = async () => {
 
 export const checkDeleteTeam = async () => {
   const teamMembersTable = await screen.findByRole('table')
-  expect(teamMembersTable).toHaveTextContent('MemberEmailAdminHCP 0 Yourloops UI 28.0yann.blanc@example.com')
+  expect(teamMembersTable).toHaveTextContent('MemberEmailAdminActionsYUYourloops UI 28.0 HCP 0yann.blanc@example.com')
 
   const leaveTeamButton = screen.getByRole('button', { name: 'Leave team' })
   await userEvent.click(leaveTeamButton)
@@ -202,13 +204,13 @@ export const checkLeaveTeamPatient = async () => {
 export const checkCareTeamMembers = () => {
   const teamMembersSection = within(screen.getByTestId('team-members'))
 
-  expect(teamMembersSection.getByText('Members (4)')).toBeVisible()
+  expect(teamMembersSection.getByText('Members')).toBeVisible()
   expect(teamMembersSection.getByText('Leave team')).toBeVisible()
   expect(teamMembersSection.getByText('Leave team')).toBeEnabled()
   expect(teamMembersSection.getByText('Add healthcare professional')).toBeVisible()
   expect(teamMembersSection.getByText('Add healthcare professional')).toBeEnabled()
 
-  expect(screen.getByTestId('team-members-list-table')).toHaveTextContent(`MemberEmailAdmin${loggedInUserLastName} ${loggedInUserFirstName}${loggedInUserEmail}${userTimLastName} ${userTimFirstName}${userTimEmail}`)
+  expect(screen.getByTestId('team-members-list-table')).toHaveTextContent(`MemberEmailAdminActions${loggedInUserInitials}${loggedInUserFirstName} ${loggedInUserLastName}${loggedInUserEmail}${userTimInitials}${userTimFirstName} ${userTimLastName}${userTimEmail}`)
 }
 
 export const checkCareTeamMonitoringAlertsConfiguration = async () => {
@@ -230,7 +232,7 @@ export const checkCareTeamMonitoringAlertsConfiguration = async () => {
 }
 
 export const checkCareTeamLayoutForPatient = async () => {
-  await screen.findByText('Information')
+  await screen.findByText('Team information')
 
   expect(screen.queryByTestId('care-team-settings-menu')).not.toBeInTheDocument()
   expect(screen.getByTestId('team-information')).toBeVisible()

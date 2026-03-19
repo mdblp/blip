@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -43,15 +43,6 @@ export const commonComponentStyles = makeStyles()((theme) => ({
   },
   root: {
     display: 'flex',
-    flexDirection: 'column',
-    marginLeft: theme.spacing(6),
-    marginRight: theme.spacing(6)
+    flexDirection: 'column'
   },
-  title: {
-    color: theme.palette.grey[800],
-    fontSize: theme.typography.h6.fontSize,
-    fontWeight: 600,
-    marginLeft: theme.spacing(2),
-    textTransform: 'uppercase'
-  }
 }))

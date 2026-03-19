@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -102,7 +102,7 @@ function LeaveTeamButton(props: LeaveTeamButtonProps): JSX.Element {
       <Button
         data-testid="leave-team-button"
         startIcon={<ExitToAppIcon />}
-        variant="contained"
+        variant="outlined"
         color="primary"
         disableElevation
         sx={{ marginRight: theme.spacing(2) }}

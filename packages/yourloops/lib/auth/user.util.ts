@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,6 +34,20 @@ const DEFAULT_BG_UNIT = Unit.MilligramPerDeciliter
 
 export const getUserName = (firstName: string, lastName: string, fullName: string): string => {
   return firstName && lastName ? t('user-name', { firstName, lastName }) : fullName
+}
+
+export const getInitials = (fullName: string): string => {
+  if (!fullName) {
+    return ''
+  }
+
+  const splitName = fullName.split(' ')
+  const firstInitial = splitName[0]?.charAt(0) || ''
+  const secondInitial = splitName[1]?.charAt(0) || ''
+
+  const initials = `${firstInitial}${secondInitial}`
+
+  return initials.toUpperCase()
 }
 
 export const sanitizeBgUnit = (bgUnit: string): Unit.MilligramPerDeciliter | Unit.MmolPerLiter => {

@@ -28,6 +28,7 @@ import { type Patient } from '../../../../lib/patient/models/patient.model'
 import { formatDate } from 'dumb'
 import i18next from 'i18next'
 import PatientUtils from '../../../../lib/patient/patient.util'
+import { getInitials } from '../../../../lib/auth/user.util'
 
 const t = i18next.t.bind(i18next)
 
@@ -55,10 +56,6 @@ export const getPatientHbA1c = (patient: Patient): string => {
   return `${a1c}% (${formatDate(a1cDate)})`
 }
 
-export const getPatientInitials = (firstName: string = '', lastName: string = ''): string => {
-  return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
-}
-
 enum InsulinType {
   Novorapid = 1,
   Humalog = 2,
@@ -68,7 +65,6 @@ enum InsulinType {
 }
 
 export const getPatientInsulinType = (insulinType?: string): string => {
-
   if (!insulinType) {
     return t('N/A')
   }
@@ -93,7 +89,7 @@ export const getPatientInsulinType = (insulinType?: string): string => {
 }
 
 export const getPatientDisplayInfo = (patient: Patient) => ({
-  initials: getPatientInitials(patient.profile.firstName, patient.profile.lastName),
+  initials: getInitials(patient.profile.fullName),
   age: getPatientAge(patient.profile.birthdate),
   gender: PatientUtils.getGenderLabel(patient.profile.sex),
   hba1c: getPatientHbA1c(patient),

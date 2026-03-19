@@ -168,7 +168,7 @@ describe('TeamMembers', () => {
     const tableHeaders = screen.getAllByRole('rowgroup')[0]
     const columns = within(tableHeaders).getAllByRole('columnheader')
     expect(columns).toHaveLength(5)
-    expect(columns[4].innerHTML).toBe('')
+    expect(columns[4].innerHTML).toBe('actions')
   })
 
   it('should create the correct number of row', () => {

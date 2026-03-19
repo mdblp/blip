@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,7 +32,6 @@ import { makeStyles } from 'tss-react/mui'
 
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import FolderSharedOutlinedIcon from '@mui/icons-material/FolderSharedOutlined'
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined'
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined'
@@ -49,6 +48,8 @@ import LeaveTeamButton from './leave-team-button'
 import TeamUtils from '../../lib/team/team.util'
 import { errorTextFromException, PhonePrefixCode } from '../../lib/utils'
 import { logError } from '../../utils/error.util'
+import CardHeader from '@mui/material/CardHeader'
+import Box from '@mui/material/Box'
 
 const useStyles = makeStyles()((theme) => ({
   body: {
@@ -120,24 +121,21 @@ function TeamInformation(props: TeamInformationProps): JSX.Element {
     <React.Fragment>
       <div className={commonTeamClasses.root} data-testid="team-information">
         <div className={commonTeamClasses.categoryHeader}>
-          <div data-stonlyid="care-team-settings-information-title">
-            <InfoOutlinedIcon />
-            <Typography className={commonTeamClasses.title}>
-              {t('information')}
-            </Typography>
-          </div>
+          <CardHeader title={t('team-information')} />
           {isUserAdmin &&
-            <Button
-              id="edit-team-button"
-              data-testid="edit-team-button"
-              variant="contained"
-              color="primary"
-              startIcon={<EditIcon />}
-              disableElevation
-              onClick={editTeam}
-            >
-              {t('button-edit-information')}
-            </Button>
+            <Box sx={{ paddingRight: 2 }}>
+              <Button
+                id="edit-team-button"
+                data-testid="edit-team-button"
+                variant="outlined"
+                color="primary"
+                startIcon={<EditIcon />}
+                disableElevation
+                onClick={editTeam}
+              >
+                {t('button-edit-information')}
+              </Button>
+            </Box>
           }
           {isUserPatient &&
             <div id="leave-team-button">

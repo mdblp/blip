@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,8 +29,6 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import TuneIcon from '@mui/icons-material/Tune'
 
 import { commonComponentStyles } from '../common'
 import { type Team, useTeam } from '../../lib/team'
@@ -39,12 +37,11 @@ import { type MonitoringAlertsParameters } from 'medical-domain'
 import { usePatientsContext } from '../../lib/patient/patients.provider'
 import { TeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 import { useAuth } from '../../lib/auth'
-import {
-  MonitoringAlertsTeamConfiguration
-} from '../monitoring-alert/monitoring-alerts-team-configuration'
+import { MonitoringAlertsTeamConfiguration } from '../monitoring-alert/monitoring-alerts-team-configuration'
 import { useParams } from 'react-router-dom'
 import { logError } from '../../utils/error.util'
 import { errorTextFromException } from '../../lib/utils'
+import CardHeader from '@mui/material/CardHeader'
 
 export interface TeamMonitoringAlertsConfigurationProps {
   team: Team
@@ -85,12 +82,10 @@ function TeamMonitoringAlertsConfiguration(props: TeamMonitoringAlertsConfigurat
   return (
     <div className={commonTeamClasses.root} data-testid="team-monitoring-alerts-configuration">
       <div className={commonTeamClasses.categoryHeader}>
-        <div data-stonlyid="care-team-settings-monitoring-alerts-configuration-title">
-          <TuneIcon />
-          <Typography className={commonTeamClasses.title} data-testid="monitoring-alert-configuration-section">
-            {t('monitoring-alerts-configuration')}
-          </Typography>
-        </div>
+        <CardHeader
+          title={t('monitoring-alerts-configuration')}
+          data-testid="monitoring-alert-configuration-section"
+        />
       </div>
       <Box sx={{ paddingX: 3 }}>
         <MonitoringAlertsTeamConfiguration
