@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,7 +29,7 @@ import React from 'react'
 import { type Team, type TeamMember } from '../../../../lib/team'
 import TeamInformationEditDialog, {
   type TeamInformationEditModalProps
-} from '../../../../pages/hcp/team-information-edit-dialog'
+} from '../../../../components/team/team-information-edit-dialog'
 import { act, render } from '@testing-library/react'
 import { Simulate, type SyntheticEventData } from 'react-dom/test-utils'
 import { triggerMouseEvent } from '../../common/utils'

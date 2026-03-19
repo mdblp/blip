@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -33,7 +33,7 @@ import { type Team, useTeam } from '../../lib/team'
 import PersonIcon from '@mui/icons-material/Person'
 import { TeamType } from '../../lib/team/models/enums/team-type.enum'
 import { useTranslation } from 'react-i18next'
-import { type TeamEditModalContentProps } from '../../pages/hcp/types'
+import { type TeamEditModalContentProps } from '../team/types'
 import { useAlert } from '../utils/snackbar'
 import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined'
 import { useNavigate } from 'react-router-dom'
@@ -49,7 +49,7 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Divider from '@mui/material/Divider'
 import AddIcon from '@mui/icons-material/Add'
-import TeamInformationEditDialog from '../../pages/hcp/team-information-edit-dialog'
+import TeamInformationEditDialog from '../team/team-information-edit-dialog'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { logError } from '../../utils/error.util'

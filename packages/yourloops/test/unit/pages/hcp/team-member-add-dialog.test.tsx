@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,8 +28,8 @@
 import React from 'react'
 
 import { type Team } from '../../../../lib/team'
-import AddMemberDialog, { type AddMemberDialogProps } from '../../../../pages/hcp/team-member-add-dialog'
-import { type AddMemberDialogContentProps } from '../../../../pages/hcp/types'
+import AddMemberDialog, { type AddMemberDialogProps } from '../../../../components/team/team-member-add-dialog'
+import { type AddMemberDialogContentProps } from '../../../../components/team/types'
 import { Simulate, type SyntheticEventData } from 'react-dom/test-utils'
 import { triggerMouseEvent } from '../../common/utils'
 import { TeamMemberRole } from '../../../../lib/team/models/enums/team-member-role.enum'

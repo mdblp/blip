@@ -33,8 +33,6 @@ import { makeStyles } from 'tss-react/mui'
 import Typography from '@mui/material/Typography'
 
 import { type Team, useTeam } from '../../lib/team'
-import TeamInformationEditDialog from '../../pages/hcp/team-information-edit-dialog'
-import { type TeamEditModalContentProps } from '../../pages/hcp/types'
 import { commonComponentStyles } from '../common'
 import { useAlert } from '../utils/snackbar'
 import { useAuth } from '../../lib/auth'
@@ -137,7 +135,6 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
   const isReadonly = isUserPatient || !isUserAdmin
   const { classes: commonTeamClasses } = commonComponentStyles()
   const { t } = useTranslation('yourloops')
-  const [teamToEdit, setTeamToEdit] = React.useState<TeamEditModalContentProps | null>(null)
 
   const [teamName, setTeamName] = useState(team?.name ?? '')
   const [teamPhone, setTeamPhone] = useState(team?.phone ?? '')
@@ -200,6 +197,17 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
     return (zipcodeInputOnError || phoneNumberInputOnError) || !valid
   }
 
+  const hasUpdates = () => {
+    return teamName !== team.name
+      || teamEmail !== team.email
+      || teamPhone !== team.phone
+      || addrLine1 !== team.address.line1
+      || addrLine2 !== team.address.line2
+      || addrZipCode !== team.address.zip
+      || addrCity !== team.address.city
+      || addrCountry !== team.address.country
+  }
+
   const formIsIncomplete = useMemo(isFormIsIncomplete, [
     teamName,
     teamEmail,
@@ -250,8 +258,6 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
         alert.error(t('team-page-failed-edit'))
       }
     }
-
-    setTeamToEdit(null)
   }
 
   const onCopyCodeToClipboard = async () => {
@@ -293,7 +299,7 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
           <IconActionButton
             color="inherit"
             size="small"
-            icon={<FileCopyRounded />}
+            icon={<FileCopyRounded fontSize="small" />}
             tooltip={t('copy-to-clipboard')}
             onClick={onCopyCodeToClipboard}
           />
@@ -464,7 +470,7 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
       {isUserAdmin &&
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', px: 2, pt: 2 }}>
           <Button
-            disabled={formIsIncomplete}
+            disabled={!hasUpdates() || formIsIncomplete}
             color="primary"
             variant="contained"
             disableElevation
@@ -474,10 +480,6 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
             {t('button-save')}
           </Button>
         </Box>
-      }
-
-      {teamToEdit &&
-        <TeamInformationEditDialog teamToEdit={teamToEdit} />
       }
     </React.Fragment>
   )
