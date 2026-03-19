@@ -104,9 +104,6 @@ export const TeamCreateDialog: FC<TeamCreateDialogProps> = (props: TeamCreateDia
     onSaveTeam(null)
   }
 
-  const ariaModal = t('button-create-a-team')
-  const modalTitle = t('team-modal-add-title')
-  const modalButtonValidate = t('button-create-team')
   const termsOfUse = t('terms-of-use')
   const linkTerms = (
     <Link aria-label={termsOfUse} href={termsOfUseUrl} target="_blank" rel="noreferrer">
@@ -133,7 +130,7 @@ export const TeamCreateDialog: FC<TeamCreateDialogProps> = (props: TeamCreateDia
 
   return (
     <Dialog
-      aria-labelledby={ariaModal}
+      aria-labelledby={t('button-create-a-team')}
       open={true}
       scroll="paper"
       onClose={handleCancelModal}
@@ -142,8 +139,12 @@ export const TeamCreateDialog: FC<TeamCreateDialogProps> = (props: TeamCreateDia
       fullScreen={isXSBreakpoint}
     >
       <DialogTitle>
-        <strong>{modalTitle}</strong>
+        <strong>{t('team-modal-add-title')}</strong>
       </DialogTitle>
+
+      <Box sx={{ px: 2, pb: 2 }}>
+        <span>{t('team-modal-create-info')}</span>
+      </Box>
 
       <DialogContent className={classes.dialogContent}>
         <Box
@@ -278,7 +279,7 @@ export const TeamCreateDialog: FC<TeamCreateDialogProps> = (props: TeamCreateDia
           disableElevation
           onClick={handleValidateModal}
         >
-          {modalButtonValidate}
+          {t('button-create-team')}
         </Button>
       </DialogActions>
     </Dialog>

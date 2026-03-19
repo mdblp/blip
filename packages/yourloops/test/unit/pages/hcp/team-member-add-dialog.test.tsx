@@ -28,7 +28,7 @@
 import React from 'react'
 
 import { type Team } from '../../../../lib/team'
-import AddMemberDialog, { type AddMemberDialogProps } from '../../../../components/team/team-member-add-dialog'
+import { AddMemberDialog, type AddMemberDialogProps } from '../../../../components/team/team-member-add-dialog'
 import { type AddMemberDialogContentProps } from '../../../../components/team/types'
 import { Simulate, type SyntheticEventData } from 'react-dom/test-utils'
 import { triggerMouseEvent } from '../../common/utils'

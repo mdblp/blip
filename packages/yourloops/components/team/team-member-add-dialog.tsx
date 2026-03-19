@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
@@ -47,19 +47,19 @@ export interface AddMemberDialogProps {
   addMember: null | AddMemberDialogContentProps
 }
 
-function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
+export const AddMemberDialog: FC<AddMemberDialogProps> = (props) => {
   const { addMember } = props
 
   const { t } = useTranslation('yourloops')
-  const [email, setEMail] = React.useState('')
+  const [email, setEmail] = React.useState('')
   const [role, setRole] = React.useState<Exclude<TypeTeamMemberRole, 'patient'>>(TeamMemberRole.member)
   const [buttonDisabled, setButtonDisabled] = React.useState(true)
 
   const teamName = addMember?.team.name ?? ''
 
-  const handleChangeEMail = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
     const eMail = e.target.value
-    setEMail(eMail)
+    setEmail(eMail)
     setButtonDisabled(!REGEX_EMAIL.test(eMail))
   }
   const handleChangeRole = (_e: React.ChangeEvent<HTMLInputElement>, checked: boolean): void => {
@@ -68,14 +68,14 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
 
   const handleClickClose = (): void => {
     addMember?.onMemberInvited(null)
-    setEMail('')
+    setEmail('')
     setButtonDisabled(true)
     setRole(TeamMemberRole.member)
   }
 
   const handleClickAdd = (): void => {
     addMember?.onMemberInvited({ email, role, team: addMember?.team })
-    setEMail('')
+    setEmail('')
     setButtonDisabled(true)
     setRole(TeamMemberRole.member)
   }
@@ -103,7 +103,7 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
           }}>
           <TextField
             id="team-add-member-dialog-field-email"
-            onChange={handleChangeEMail}
+            onChange={handleChangeEmail}
             name="email"
             value={email}
             label={t('email')}
@@ -147,5 +147,3 @@ function AddMemberDialog(props: AddMemberDialogProps): JSX.Element | null {
     </Dialog>
   )
 }
-
-export default AddMemberDialog

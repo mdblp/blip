@@ -168,10 +168,10 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
           }
         </Box>
 
-        {!isUserAdmin && !isUserPatient &&
+        {!isUserPatient &&
           <Box sx={{ px: 2, pb: 3, width: 'fit-content' }}>
             <Alert severity="info">
-              {t('only-admins-can-edit')}
+              {isUserAdmin ? t('team-modal-create-info') : t('only-admins-can-edit')}
             </Alert>
           </Box>
         }
