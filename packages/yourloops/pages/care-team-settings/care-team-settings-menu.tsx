@@ -39,6 +39,7 @@ import Card from '@mui/material/Card'
 import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material/styles'
+import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 
 interface CareTeamSettingsMenuProps {
   selectedSection: CareTeamSettingsSection
@@ -72,7 +73,10 @@ export const CareTeamSettingsMenu: FC<CareTeamSettingsMenuProps> = (props) => {
           />
           <MenuItem
             selected={selectedSection === CareTeamSettingsSection.InfoAndMembers}
-            onClick={() => selectSection(CareTeamSettingsSection.InfoAndMembers)}
+            onClick={() => {
+              AnalyticsApi.trackClick(`care-team-settings-menu-info-and-members`, ElementType.Link)
+              selectSection(CareTeamSettingsSection.InfoAndMembers)
+            }}
             sx={{ marginTop: theme.spacing(2), paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
             data-testid="info-and-members-menu-button"
           >
@@ -83,7 +87,10 @@ export const CareTeamSettingsMenu: FC<CareTeamSettingsMenuProps> = (props) => {
           </MenuItem>
           <MenuItem
             selected={selectedSection === CareTeamSettingsSection.MonitoringAlerts}
-            onClick={() => selectSection(CareTeamSettingsSection.MonitoringAlerts)}
+            onClick={() => {
+              AnalyticsApi.trackClick(`care-team-settings-menu-monitoring-alerts`, ElementType.Link)
+              selectSection(CareTeamSettingsSection.MonitoringAlerts)
+            }}
             sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
             data-testid="monitoring-alerts-menu-button"
           >
