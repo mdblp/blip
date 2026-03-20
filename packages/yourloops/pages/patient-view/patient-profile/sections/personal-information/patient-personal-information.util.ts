@@ -29,7 +29,7 @@ import { formatDate } from 'dumb'
 import i18next from 'i18next'
 import PatientUtils from '../../../../../lib/patient/patient.util'
 import { InsulinType } from '../../../../../models/enums/insulin-type.enum'
-import { getInitials } from '../../../../lib/auth/user.util'
+import { getInitials } from '../../../../../lib/auth/user.util'
 
 const t = i18next.t.bind(i18next)
 
@@ -55,10 +55,6 @@ const getPatientHbA1c = (patient: Patient): string => {
   if (!a1c || !a1cDate) return t('N/A')
 
   return `${a1c}% (${formatDate(a1cDate)})`
-}
-
-const getPatientInitials = (firstName: string = '', lastName: string = ''): string => {
-  return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
 }
 
 const getPatientInsulinType = (insulinType?: string): string => {
