@@ -73,7 +73,6 @@ export const MedicalTeamPatientList: FunctionComponent<MedicalTeamPatientListPro
       console.log('Direction:', sort)
 
       setSortModel(model)
-      // 👉 Send analytics here
       AnalyticsApi.trackClick(
         `patient-list-sort-${field}_${sort}`,
         ElementType.Button
