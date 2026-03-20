@@ -61,8 +61,8 @@ import {
   checkCliniciansEmptyList, checkCliniciansFiveClinicians,
   checkCliniciansManagementErrors, checkCliniciansManagementHcp
 } from '../../../use-cases/clinicians-management'
-import { mockCliniciansApi } from '../../../mock/clinicians.api.mock'
-import { CliniciansApi } from '../../../../../lib/clinicians/clinicians.api'
+import { mockLeadCliniciansApi } from '../../../mock/clinicians.api.mock'
+import { LeadCliniciansApi } from '../../../../../lib/lead-clinicians/lead-clinicians.api'
 import ErrorApi from '../../../../../lib/error/error.api'
 
 describe('Patient profile view for HCP', () => {
@@ -75,7 +75,7 @@ describe('Patient profile view for HCP', () => {
     mockPatientApiForHcp()
     mockDataAPI()
     mockDblCommunicationApi()
-    mockCliniciansApi()
+    mockLeadCliniciansApi()
   })
 
   const firstName = 'HCP firstName'
@@ -200,8 +200,8 @@ describe('Patient profile view for HCP', () => {
     })
 
     it('should handle gracefully error cases when managing clinicians', async () => {
-      jest.spyOn(CliniciansApi, 'addClinician').mockRejectedValue('Add clinician error')
-      jest.spyOn(CliniciansApi, 'removeClinician').mockRejectedValue('Remove clinician error')
+      jest.spyOn(LeadCliniciansApi, 'addClinician').mockRejectedValue('Add clinician error')
+      jest.spyOn(LeadCliniciansApi, 'removeClinician').mockRejectedValue('Remove clinician error')
       jest.spyOn(ErrorApi, 'sendError').mockResolvedValue()
 
       await act(async () => {

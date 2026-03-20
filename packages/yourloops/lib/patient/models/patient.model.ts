@@ -32,7 +32,7 @@ import { type MonitoringAlertsParameters } from 'medical-domain'
 import { type PatientInvite } from './patient-invite.model'
 import { DiabeticProfile } from './patient-diabete-profile'
 import { PatientMetrics } from './patient-metrics.model'
-import { Clinician } from '../../clinicians/models/clinician.model'
+import { LeadClinician } from '../../lead-clinicians/models/lead-clinician.model'
 
 // Data structure used in the application to represent a patient
 export interface Patient extends Partial<PatientMetrics> {
@@ -46,5 +46,5 @@ export interface Patient extends Partial<PatientMetrics> {
   isUsingTeamAlertParameters?: boolean
   hasSentUnreadMessages: boolean
   flagged?: boolean
-  referringHcps: Clinician[]
+  leadClinicians: LeadClinician[]
 }

@@ -35,7 +35,7 @@ import { type PatientSettings } from '../../../lib/patient/models/patient-settin
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 import { UserInviteStatus } from '../../../lib/team/models/enums/user-invite-status.enum'
 import { DiabeticProfile } from '../../../lib/patient/models/patient-diabete-profile'
-import { Clinician } from '../../../lib/clinicians/models/clinician.model'
+import { LeadClinician } from '../../../lib/clinicians/models/lead-clinician.model'
 
 const defaultGlycemiaIndicators: GlycemiaIndicators = {
   timeInRange: 0,
@@ -56,7 +56,7 @@ export const buildPatient = (params: {
   glycemiaIndicators?: GlycemiaIndicators
   medicalData?: MedicalData
   diabeticProfile?: DiabeticProfile
-  referringHcps?: Clinician[]
+  referringHcps?: LeadClinician[]
 }): Patient => {
   return {
     profile: {
@@ -110,7 +110,7 @@ export const buildPatient = (params: {
         }
       }
     },
-    referringHcps: params.referringHcps || []
+    leadClinicians: params.referringHcps || []
   }
 }
 

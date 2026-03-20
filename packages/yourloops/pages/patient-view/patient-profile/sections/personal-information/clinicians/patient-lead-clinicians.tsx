@@ -42,23 +42,23 @@ import PersonRemoveIcon from '../../../../../../components/icons/mui/person-remo
 import IconActionButton from '../../../../../../components/buttons/icon-action'
 import Tooltip from '@mui/material/Tooltip'
 import { useAuth } from '../../../../../../lib/auth'
-import { getUserName } from '../../../../../../lib/auth/user.util'
+import { getInitials, getUserName } from '../../../../../../lib/auth/user.util'
 import { RemoveClinicianDialog } from './remove-clinician-dialog/remove-clinician-dialog'
 import { AddClinicianDialog } from './add-clinician-dialog/add-clinician-dialog'
-import { Clinician } from '../../../../../../lib/clinicians/models/clinician.model'
+import { LeadClinician } from '../../../../../../lib/lead-clinicians/models/lead-clinician.model'
 import { PatientProfile } from '../../../../../../lib/patient/models/patient-profile.model'
 import Avatar from '@mui/material/Avatar'
 import { usePatientsContext } from '../../../../../../lib/patient/patients.provider'
 import SpinningLoader from '../../../../../../components/loaders/spinning-loader'
 import { usePatient } from '../../../../../../lib/patient/patient.provider'
 
-interface PatientCliniciansProps {
+interface PatientLeadCliniciansProps {
   patientId: string
   patientProfile: PatientProfile
-  clinicians: Clinician[]
+  leadClinicians: LeadClinician[]
 }
 
-const MAX_CLINICIANS_COUNT = 5
+const MAX_LEAD_CLINICIANS_COUNT = 5
 
 const useStyles = makeStyles()(() => ({
   tableHeader: {
@@ -71,38 +71,27 @@ const useStyles = makeStyles()(() => ({
   }
 }))
 
-export const PatientClinicians: FC<PatientCliniciansProps> = (props) => {
-  const { patientId, patientProfile, clinicians } = props
+export const PatientLeadClinicians: FC<PatientLeadCliniciansProps> = (props) => {
+  const { patientId, patientProfile, leadClinicians } = props
   const { t } = useTranslation()
   const { classes } = useStyles()
   const { user } = useAuth()
   const { refresh: refreshHcp, refreshInProgress: refreshInProgressHcp } = usePatientsContext()
   const { refresh: refreshPatient, refreshInProgress: refreshInProgressPatient } = usePatient()
 
-  const cliniciansCount = clinicians?.length || 0
-  const hasClinicians = cliniciansCount > 0
-  const cliniciansSorted = hasClinicians && clinicians.toSorted((a, b) => a.name?.localeCompare(b.name))
+  const leadCliniciansCount = leadClinicians?.length || 0
+  const hasLeadClinicians = leadCliniciansCount > 0
+  const leadCliniciansSorted = hasLeadClinicians && leadClinicians.toSorted((a, b) => a.name?.localeCompare(b.name))
 
-  const clinicianIds = hasClinicians ? clinicians.map(clinician => clinician.id) : []
+  const leadClinicianIds = hasLeadClinicians ? leadClinicians.map(clinician => clinician.id) : []
 
-  const isAddClinicianEnabled = cliniciansCount < MAX_CLINICIANS_COUNT
+  const isAddClinicianEnabled = leadCliniciansCount < MAX_LEAD_CLINICIANS_COUNT
 
   const patientName = getUserName(patientProfile.firstName, patientProfile.lastName, patientProfile.fullName)
 
   const [showAddDialog, setShowAddDialog] = useState<boolean>(false)
   const [showRemoveDialog, setShowRemoveDialog] = useState<boolean>(false)
-  const [clinicianToRemove, setClinicianToRemove] = useState<Clinician>(null)
-
-  const getInitials = (clinicianName: string): string => {
-    if (!clinicianName) {
-      return ''
-    }
-    const splitName = clinicianName.split(' ')
-    const firstInitial = splitName[0]?.charAt(0) || ''
-    const secondInitial = splitName[1]?.charAt(0) || ''
-
-    return `${firstInitial}${secondInitial}`
-  }
+  const [clinicianToRemove, setClinicianToRemove] = useState<LeadClinician>(null)
 
   const isPatient = user.isUserPatient()
   const refresh = isPatient ? refreshPatient : refreshHcp
@@ -122,7 +111,7 @@ export const PatientClinicians: FC<PatientCliniciansProps> = (props) => {
   }
 
   const onClickRemove = (hcpId: string): void => {
-    const clinician = clinicians?.find(hcp => hcp.id === hcpId) || null
+    const clinician = leadClinicians?.find(hcp => hcp.id === hcpId) || null
     setClinicianToRemove(clinician)
     setShowRemoveDialog(true)
   }
@@ -149,13 +138,13 @@ export const PatientClinicians: FC<PatientCliniciansProps> = (props) => {
           {t('lead-clinicians')}
         </Typography>
         <Tooltip
-          title={t('too-many-clinicians-tooltip', { maxCliniciansCount: MAX_CLINICIANS_COUNT })}
+          title={t('too-many-clinicians-tooltip', { maxCliniciansCount: MAX_LEAD_CLINICIANS_COUNT })}
           disableHoverListener={isAddClinicianEnabled}
         >
           {/* The span is needed to ensure the tooltip works when the button is disabled (MUI Tooltip doc) */}
           <span>
             <Button
-              variant={cliniciansCount === 0 ? 'contained' : 'outlined'}
+              variant={leadCliniciansCount === 0 ? 'contained' : 'outlined'}
               disabled={!isAddClinicianEnabled}
               startIcon={<PersonAddIcon />}
               onClick={onClickAdd}
@@ -174,11 +163,11 @@ export const PatientClinicians: FC<PatientCliniciansProps> = (props) => {
         >{t('lead-clinicians-description')}</Typography>
       </Box>
 
-      {hasClinicians && refreshInProgress &&
+      {hasLeadClinicians && refreshInProgress &&
         <SpinningLoader />
       }
 
-      {hasClinicians && !refreshInProgress &&
+      {hasLeadClinicians && !refreshInProgress &&
           <Card variant="outlined" data-testid="clinicians-table">
             <TableContainer>
               <Table>
@@ -193,7 +182,7 @@ export const PatientClinicians: FC<PatientCliniciansProps> = (props) => {
                 </TableHead>
 
                 <TableBody>
-                  {cliniciansSorted.map((clinician: Clinician) => (
+                  {leadCliniciansSorted.map((clinician: LeadClinician) => (
                     <TableRow
                       key={clinician.id}
                       className={classes.hideLastBorder}
@@ -233,7 +222,7 @@ export const PatientClinicians: FC<PatientCliniciansProps> = (props) => {
       {showAddDialog &&
         <AddClinicianDialog
           patientInfo={{ id: patientId, name: patientName }}
-          clinicianIds={clinicianIds}
+          clinicianIds={leadClinicianIds}
           user={user}
           onClose={onCloseAddDialog}
           onSuccess={onSuccessAdd}

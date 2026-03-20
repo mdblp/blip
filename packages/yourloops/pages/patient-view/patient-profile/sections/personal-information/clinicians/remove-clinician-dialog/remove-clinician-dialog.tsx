@@ -31,14 +31,14 @@ import DialogContent from '@mui/material/DialogContent'
 import { Trans, useTranslation } from 'react-i18next'
 import DialogActions from '@mui/material/DialogActions'
 import Dialog from '@mui/material/Dialog'
-import { CliniciansApi } from '../../../../../../../lib/clinicians/clinicians.api'
-import { Clinician } from '../../../../../../../lib/clinicians/models/clinician.model'
+import { LeadCliniciansApi } from '../../../../../../../lib/lead-clinicians/lead-clinicians.api'
+import { LeadClinician } from '../../../../../../../lib/lead-clinicians/models/lead-clinician.model'
 import { errorTextFromException } from '../../../../../../../lib/utils'
 import { logError } from '../../../../../../../utils/error.util'
 import { useAlert } from '../../../../../../../components/utils/snackbar'
 
 interface RemoveClinicianDialogProps {
-  clinician: Clinician
+  clinician: LeadClinician
   patientInfo: { id: string, name: string }
   isUserPatient: boolean
   onClose: () => void
@@ -58,7 +58,7 @@ export const RemoveClinicianDialog: FC<RemoveClinicianDialogProps> = (props) => 
 
   const onClickRemoveClinician = async () => {
     try {
-      await CliniciansApi.removeClinician(patientId, clinicianId)
+      await LeadCliniciansApi.removeClinician(patientId, clinicianId)
       alert.success(t('clinician-remove-success'))
 
       onSuccess()

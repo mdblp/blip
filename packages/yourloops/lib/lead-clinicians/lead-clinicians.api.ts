@@ -26,20 +26,19 @@
  */
 
 import HttpService from '../http/http.service'
-import { ClinicianPayload } from './models/clinician-payload.model'
+import { LeadClinicianPayload } from './models/lead-clinician-payload.model'
 
-export class CliniciansApi {
+export class LeadCliniciansApi {
   static async addClinician(patientId: string, hcpId: string): Promise<void> {
-    await HttpService.post<void, ClinicianPayload>({
-      url: `/crew/v1/patients/${patientId}/hcp-referents`,
+    await HttpService.post<void, LeadClinicianPayload>({
+      url: `/crew/v1/patients/${patientId}/lead-clinicians`,
       payload: {
-        referentUserId: hcpId,
-        patientUserId: patientId
+        hcpUserId: hcpId,
       }
     })
   }
 
   static async removeClinician(patientId: string, hcpId: string): Promise<void> {
-    await HttpService.delete({ url: `/crew/v1/patients/${patientId}/hcp-referents/${hcpId}` })
+    await HttpService.delete({ url: `/crew/v1/patients/${patientId}/lead-clinicians/${hcpId}` })
   }
 }

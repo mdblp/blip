@@ -89,7 +89,13 @@ describe('Add clinician dialog hook', () => {
         isUserPatient: () => true
       } as User
 
-      const { result } = renderHook(() => useAddClinicianDialog({ clinicianIds: [memberId2, memberId3] }))
+      const { result } = renderHook(() => useAddClinicianDialog({
+        clinicianIds: [memberId2, memberId3],
+        patientId: 'patientId',
+        selectedHcpId: 'hcpId',
+        onSuccess: () => {},
+        onClose: () => {}
+      }))
       expect(result.current.getAvailableHcps()).toEqual(
         [
           { userId: memberId1 },
@@ -107,7 +113,13 @@ describe('Add clinician dialog hook', () => {
 
       team = team1
 
-      const { result } = renderHook(() => useAddClinicianDialog({ clinicianIds: [memberId2, memberId3] }))
+      const { result } = renderHook(() => useAddClinicianDialog({
+        clinicianIds: [memberId2, memberId3],
+        patientId: 'patientId',
+        selectedHcpId: 'hcpId',
+        onSuccess: () => {},
+        onClose: () => {}
+      }))
       expect(result.current.getAvailableHcps()).toEqual(
         [
           { userId: memberId1 }

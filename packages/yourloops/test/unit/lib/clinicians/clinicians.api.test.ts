@@ -28,7 +28,7 @@
 import { CliniciansApi } from '../../../../lib/clinicians/clinicians.api'
 import HttpService from '../../../../lib/http/http.service'
 import { type AxiosResponse } from 'axios'
-import { type ClinicianPayload } from '../../../../lib/clinicians/models/clinician-payload.model'
+import { type LeadClinicianPayload } from '../../../../lib/clinicians/models/lead-clinician-payload.model'
 
 describe('CliniciansApi', () => {
   const patientId = 'patient123'
@@ -40,7 +40,7 @@ describe('CliniciansApi', () => {
 
   describe('addClinician', () => {
     it('should add a clinician to a patient successfully', async () => {
-      const expectedPayload: ClinicianPayload = {
+      const expectedPayload: LeadClinicianPayload = {
         referentUserId: hcpId,
         patientUserId: patientId
       }

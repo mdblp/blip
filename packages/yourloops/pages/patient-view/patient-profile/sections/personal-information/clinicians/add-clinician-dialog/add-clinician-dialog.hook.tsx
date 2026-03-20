@@ -28,7 +28,7 @@
 import { Team, TeamMember, useTeam } from '../../../../../../../lib/team'
 import { useAuth } from '../../../../../../../lib/auth'
 import { useParams } from 'react-router-dom'
-import { CliniciansApi } from '../../../../../../../lib/clinicians/clinicians.api'
+import { LeadCliniciansApi } from '../../../../../../../lib/lead-clinicians/lead-clinicians.api'
 import { useAlert } from '../../../../../../../components/utils/snackbar'
 import { useTranslation } from 'react-i18next'
 import { errorTextFromException } from '../../../../../../../lib/utils'
@@ -86,7 +86,7 @@ export const useAddClinicianDialog = (props: AddClinicianDialogHookProps): AddCl
 
   const onClickAddClinician = async () => {
     try {
-      await CliniciansApi.addClinician(patientId, selectedHcpId)
+      await LeadCliniciansApi.addClinician(patientId, selectedHcpId)
       alert.success(t('clinician-add-success'))
 
       onSuccess()

@@ -35,7 +35,7 @@ import { Patient } from '../../../../../lib/patient/models/patient.model'
 import { PatientAdditionalInformation } from './patient-additional-information'
 import { PatientInformation } from './patient-information'
 import { PatientTitle } from './patient-title'
-import { PatientClinicians } from './clinicians/patient-clinicians'
+import { PatientLeadClinicians } from './clinicians/patient-lead-clinicians'
 
 interface InformationSectionProps {
   patient: Patient
@@ -78,10 +78,10 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
 
           <div className={classes.separator} />
 
-          <PatientClinicians
+          <PatientLeadClinicians
             patientId={patient.userid}
             patientProfile={patient.profile}
-            clinicians={patient.referringHcps}
+            leadClinicians={patient.leadClinicians}
           />
 
           <div className={classes.separator} />
