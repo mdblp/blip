@@ -34,6 +34,6 @@ export enum DeviceChangeName {
   MobileAppActivationCode = 'MOBILE_APP_ACTIVATION_CODE',
   MobileAppVersion = 'MOBILE_APP_VERSION',
   PumpManufacturer = 'PUMP_MANUFACTURER',
-  PumpName = 'PUMP_NAME',
+  PumpProduct = 'PUMP_PRODUCT',
   SmartphoneModel = 'SMARTPHONE_MODEL',
 }
