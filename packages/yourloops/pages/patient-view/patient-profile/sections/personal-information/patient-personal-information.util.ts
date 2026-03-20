@@ -29,6 +29,7 @@ import { formatDate } from 'dumb'
 import i18next from 'i18next'
 import PatientUtils from '../../../../../lib/patient/patient.util'
 import { InsulinType } from '../../../../../models/enums/insulin-type.enum'
+import { getInitials } from '../../../../lib/auth/user.util'
 
 const t = i18next.t.bind(i18next)
 
@@ -85,7 +86,7 @@ const getPatientInsulinType = (insulinType?: string): string => {
 }
 
 export const getPatientDisplayInfo = (patient: Patient) => ({
-  initials: getPatientInitials(patient.profile.firstName, patient.profile.lastName),
+  initials: getInitials(patient.profile.fullName),
   age: getPatientAge(patient.profile.birthdate),
   gender: PatientUtils.getGenderLabel(patient.profile.sex),
   hba1c: getPatientHbA1c(patient),

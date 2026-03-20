@@ -83,6 +83,7 @@ export { type BgBounds, type CbgRangeStatistics } from './domains/models/statist
 export { BgClass } from './domains/models/statistics/enum/bg-class.enum'
 export { type BgType, type BgUnit, MGDL_UNITS, MMOLL_UNITS } from './domains/models/medical/datum/bg.model'
 export { BolusSubtype } from './domains/models/medical/datum/enums/bolus-subtype.enum'
+export { CGMName } from './domains/models/medical/datum/enums/cgm-name.enum'
 export { ClassificationType } from './domains/models/statistics/enum/bg-classification.enum'
 export { Datum } from './domains/models/medical/datum.model'
 export { DatumType } from './domains/models/medical/datum/enums/datum-type.enum'

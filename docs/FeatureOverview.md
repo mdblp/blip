@@ -17,6 +17,7 @@ flowchart LR
         SHARE[Share Data]
         TEAM[Manage Team]
         MONITOR[Monitor Patients]
+        ACK[Acknowledge Alerts]
         CHAT[Messaging]
     end
 
@@ -28,6 +29,7 @@ flowchart LR
     H --> DATA
     H --> TEAM
     H --> MONITOR
+    H --> ACK
     H --> CHAT
 ```
 
@@ -268,9 +270,46 @@ YourLoops supports multiple languages:
 | Dutch    | `nl` |
 | Japanese | `ja` |
 
----
+### 7. Monitoring Alerts
 
-## See Also
+HCPs can monitor patient health through automated alerts visible directly in the patient list.
+
+#### Alert Types
+
+| Alert | Description |
+|-------|-------------|
+| **Time spent out of range** | Patient spends too much time outside glycemic target |
+| **Hyperglycemia** | Frequency of hyperglycemia exceeds threshold |
+| **Hypoglycemia** | Frequency of hypoglycemia exceeds threshold |
+| **Data not transmitted** | Patient device has not uploaded data for too long |
+
+Active alerts are displayed as coloured icons in the patient list (Monitoring Alerts column). Inactive alerts are shown as disabled icons.
+
+#### Acknowledging an Alert
+
+When an alert is active, an HCP can acknowledge it directly from the patient list:
+
+```mermaid
+sequenceDiagram
+    participant H as HCP
+    participant LIST as Patient List
+    participant DIALOG as Ack Dialog
+    participant API as API
+
+    H->>LIST: Click active alert icon
+    LIST->>DIALOG: Open acknowledgement dialog
+    DIALOG->>H: Show alert details & warning message
+    H->>DIALOG: Click "Acknowledge the alert"
+    DIALOG->>API: PUT reactivation date (now + 48h)
+    API->>LIST: Refresh patient data
+    LIST->>H: Show success notification
+```
+
+- Acknowledging an alert **mutes it for 48 hours** for all HCP users in the team
+- A **safety warning** is displayed in the dialog: the alert should only be acknowledged if there is no patient risk
+- The HCP can alternatively click **"Analyse the alert"** to navigate directly to the patient's dashboard
+
+
 
 - [Architecture](./Architecture.md) - Technical architecture
 - [Data Flow](DataFlow.md) - How data flows through the app

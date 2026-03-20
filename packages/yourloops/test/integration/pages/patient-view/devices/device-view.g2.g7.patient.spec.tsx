@@ -25,28 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MonitoringAlertsParameters } from 'medical-domain'
-import { MonitoringAlertsParametersDto, mapMonAlertParamsFromInternal } from '../../team/models/monitoring-alerts-parameters.model'
+import { act } from '@testing-library/react'
+import { mockDataAPI, pumpSettingsDblg2G7 } from '../../../mock/data.api.mock'
+import { patient2Info } from '../../../data/patient.api.data'
+import { renderPage } from '../../../utils/render'
+import { mockWindowResizer } from '../../../mock/window-resizer.mock'
+import { testG2G7CGMVisualisation } from '../../../use-cases/device-settings-visualisation'
+import { AppUserRoute } from '../../../../../models/enums/routes.enum'
+import { mockPatientLogin } from '../../../mock/patient-login.mock'
 
+describe('Device view for G2 Patient with G7 CGM', () => {
 
-export interface PatientAlertsConfiguration {
-  parameters: MonitoringAlertsParametersDto | null
-  isUsingTeamAlertParameters: boolean
-  reactivationDates: AlertReactivationDates | null
-}
+  const deviceRoute = AppUserRoute.Devices
 
-export interface AlertReactivationDates {
-  hyperglycemia: Date | null
-  hypoglycemia: Date | null
-  nonDataTransmission: Date | null
-  timeOutOfRange: Date | null
-}
+  beforeEach(() => {
+    mockWindowResizer()
+    mockPatientLogin(patient2Info)
+    mockDataAPI(pumpSettingsDblg2G7)
+  })
 
-export const NewAlertConfigDto = (parameters: MonitoringAlertsParameters): PatientAlertsConfiguration => {
-  const parametersDto = mapMonAlertParamsFromInternal(parameters)
-  return {
-    parameters: parametersDto,
-  } as PatientAlertsConfiguration
-}
-
-
+  it('should display correct CGM info for G7 CGM', async () => {
+    await act(async () => {
+      renderPage(deviceRoute)
+    })
+    await testG2G7CGMVisualisation()
+  })
+})

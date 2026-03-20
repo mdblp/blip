@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,28 +25,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MonitoringAlertsParameters } from 'medical-domain'
-import { MonitoringAlertsParametersDto, mapMonAlertParamsFromInternal } from '../../team/models/monitoring-alerts-parameters.model'
+import React, { FC } from 'react'
+import TeamInformation from '../../../components/team/team-information'
+import TeamMembers from '../../../components/team/team-members'
+import { Team } from '../../../lib/team'
+import Divider from '@mui/material/Divider'
 
-
-export interface PatientAlertsConfiguration {
-  parameters: MonitoringAlertsParametersDto | null
-  isUsingTeamAlertParameters: boolean
-  reactivationDates: AlertReactivationDates | null
+interface InfoAndMembersSectionProps {
+  team: Team
+  isUserHcp: boolean
 }
 
-export interface AlertReactivationDates {
-  hyperglycemia: Date | null
-  hypoglycemia: Date | null
-  nonDataTransmission: Date | null
-  timeOutOfRange: Date | null
+export const InfoAndMembersSection: FC<InfoAndMembersSectionProps> = (props) => {
+  const { team, isUserHcp } = props
+
+  return (
+    <>
+      <TeamInformation team={team} />
+      {isUserHcp &&
+        <>
+          <Divider sx={{ mb: 4 }} variant="middle" />
+          <TeamMembers team={team} />
+        </>
+      }
+    </>
+  )
 }
-
-export const NewAlertConfigDto = (parameters: MonitoringAlertsParameters): PatientAlertsConfiguration => {
-  const parametersDto = mapMonAlertParamsFromInternal(parameters)
-  return {
-    parameters: parametersDto,
-  } as PatientAlertsConfiguration
-}
-
-

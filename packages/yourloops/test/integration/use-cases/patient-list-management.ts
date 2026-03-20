@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,6 +26,12 @@
  */
 
 import {
+  checkAckMonitoringAlertDialogCloseOnAnalyse,
+  checkAckMonitoringAlertDialogContent, checkAckMonitoringAlertHyperglycemia,
+  checkAckMonitoringAlertHypoglycemia,
+  checkAckMonitoringAlertNoData,
+  checkAckMonitoringAlertTimeOutOfRange,
+  checkInactiveAlertIconRedirectToDashboard,
   checkMonitoringAlertsIconsInactiveForFirstPatient,
   checkPatientColumnsFiltersContent,
   checkPatientListColumnSort,
@@ -38,12 +44,12 @@ import {
   checkPatientListTooltipsMgDL,
   checkPatientListTooltipsMmolL,
   checkPatientListTooltipsNoData,
-  checkPendingPatientColumnsSettingsMedicalTeam
+  checkPendingPatientColumnsSettingsMedicalTeam, goBackToPatientsList
 } from '../assert/patient-list.assert'
 import { checkPatientFiltersForPrivateTeam } from '../assert/patient-filters.assert'
-import { type Router } from '../models/router.model'
+import { Router } from '../models/router.model'
 
-export const testPatientListForHcp = async (router: Router) => {
+export const testPatientListForHcp = async () => {
   await checkPatientListHeaderForHcp()
   await checkPatientListTooltipsMgDL()
   await checkPatientListTooltipsNoData()
@@ -53,7 +59,7 @@ export const testPatientListForHcp = async (router: Router) => {
   await checkPatientColumnsFiltersContent()
   await checkPendingPatientColumnsSettingsMedicalTeam()
   await checkPatientListHideShowColumns()
-  await checkPatientListPendingTab(router)
+  await checkPatientListPendingTab()
   await checkPatientListCurrentTab()
 }
 
@@ -64,4 +70,20 @@ export const testPatientListForHcpWithMmolL = async () => {
 export const testPatientListForHcpPrivateTeam = async () => {
   await checkPatientListCurrentTabForPrivateTeam()
   await checkPatientFiltersForPrivateTeam()
+}
+
+export const testAckMonitoringAlerts = async (router: Router) => {
+  await checkInactiveAlertIconRedirectToDashboard(router)
+  await goBackToPatientsList(router)
+  await checkAckMonitoringAlertDialogContent()
+  await checkAckMonitoringAlertDialogCloseOnAnalyse(router)
+  await goBackToPatientsList(router)
+  await checkAckMonitoringAlertHypoglycemia()
+  await checkAckMonitoringAlertTimeOutOfRange()
+  await checkAckMonitoringAlertNoData()
+  await checkAckMonitoringAlertHyperglycemia()
+}
+
+export const testAckMonitoringAlertsWithError = async () => {
+  await checkAckMonitoringAlertHypoglycemia(true)
 }

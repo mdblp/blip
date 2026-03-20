@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,15 +29,11 @@ import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
 import { makeStyles } from 'tss-react/mui'
-import Typography from '@mui/material/Typography'
 import Table from '@mui/material/Table'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
 import Button from '@mui/material/Button'
-import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined'
 import TableBody from '@mui/material/TableBody'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
 
@@ -48,20 +44,19 @@ import { type AddMemberDialogContentProps } from '../../pages/hcp/types'
 import { commonComponentStyles } from '../common'
 import LeaveTeamButton from './leave-team-button'
 import { useAuth } from '../../lib/auth'
-import { StyledTableCell } from '../styled-components'
 import { useAlert } from '../utils/snackbar'
 import { errorTextFromException } from '../../lib/utils'
 import TeamUtils from '../../lib/team/team.util'
 import { TeamMemberRole, type TypeTeamMemberRole } from '../../lib/team/models/enums/team-member-role.enum'
 import { logError } from '../../utils/error.util'
+import CardHeader from '@mui/material/CardHeader'
+import Card from '@mui/material/Card'
+import TableCell from '@mui/material/TableCell'
+import TableRow from '@mui/material/TableRow'
 
 const useStyles = makeStyles()((theme) => ({
   checkboxTableCellHeader: {
     padding: `0 ${theme.spacing(1)} !important`
-  },
-  tableCellHeader: {
-    backgroundColor: theme.palette.common.white,
-    fontWeight: 600
   },
   tableCellIcon: {
     width: '67px'
@@ -69,6 +64,9 @@ const useStyles = makeStyles()((theme) => ({
   tableHeaderDelete: {
     width: '56px',
     padding: 0
+  },
+  tableHeader: {
+    backgroundColor: 'var(--primary-color-background)'
   }
 }))
 
@@ -126,13 +124,8 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
     <React.Fragment>
       <div className={commonTeamClasses.root} data-testid="team-members">
         <div className={commonTeamClasses.categoryHeader}>
-          <div data-stonlyid="care-team-settings-members-title">
-            <GroupOutlinedIcon />
-            <Typography className={commonTeamClasses.title}>
-              {t('members')} ({members.length})
-            </Typography>
-          </div>
-          <div>
+          <CardHeader title={t('members')} />
+          <Box sx={{ paddingRight: 2 }}>
             <LeaveTeamButton team={team} />
             {isUserAdmin &&
               <Button
@@ -147,63 +140,43 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
                 {t('button-team-add-member')}
               </Button>
             }
-          </div>
+          </Box>
         </div>
-        <Box sx={{ paddingX: 3 }}>
-          <TableContainer component={Paper}>
-            <Table
-              id="team-members-list-table"
-              data-testid="team-members-list-table"
-              aria-label={t('aria-table-list-members')}
-              stickyHeader
-            >
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell
-                    id="team-members-full-name"
-                    className={classes.tableCellHeader}
-                  >
-                    {t('member')}
-                  </StyledTableCell>
-                  <StyledTableCell
-                    id="team-members-status"
-                    className={`${classes.tableCellHeader} ${classes.tableCellIcon}`}
-                  >
-                  </StyledTableCell>
-                  <StyledTableCell
-                    id="team-members-email"
-                    className={classes.tableCellHeader}
-                  >
-                    {t('email')}
-                  </StyledTableCell>
-                  <StyledTableCell
-                    id="team-members-admin"
-                    className={`${classes.tableCellHeader} ${classes.checkboxTableCellHeader}`}
-                    padding="checkbox"
-                  >
-                    {t('admin')}
-                  </StyledTableCell>
-                  {isUserAdmin &&
-                    <StyledTableCell
-                      id="team-members-delete"
-                      className={classes.tableHeaderDelete}
-                    />
-                  }
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {members.map(
-                  (teamMember: TeamMember): JSX.Element => (
-                    <MemberRow
-                      key={teamMember.userId}
-                      teamMember={teamMember}
-                      team={team}
-                      refreshParent={refresh}
-                    />)
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
+
+        <Box sx={{ paddingX: 2 }}>
+          <Card variant="outlined" data-testid="clinicians-table">
+            <TableContainer>
+              <Table
+                id="team-members-list-table"
+                data-testid="team-members-list-table"
+                aria-label={t('aria-table-list-members')}
+              >
+                <TableHead className={classes.tableHeader}>
+                  <TableRow>
+                    <TableCell padding="checkbox"></TableCell>
+                    <TableCell>{t('member')}</TableCell>
+                    <TableCell>{t('email')}</TableCell>
+                    <TableCell align={isUserAdmin ? 'inherit' : 'right'}>{t('admin')}</TableCell>
+                    {isUserAdmin &&
+                      <TableCell align="right">{t('actions')}</TableCell>
+                    }
+                  </TableRow>
+                </TableHead>
+
+                <TableBody>
+                  {members.map(
+                    (teamMember: TeamMember): JSX.Element => (
+                      <MemberRow
+                        key={teamMember.userId}
+                        teamMember={teamMember}
+                        team={team}
+                        refreshParent={refresh}
+                      />)
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Card>
         </Box>
       </div>
       <AddMemberDialog addMember={addMember} />

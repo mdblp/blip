@@ -35,7 +35,11 @@ import { type MonitoringAlertsParameters } from 'medical-domain'
 import { DiabeticProfilePayload } from './models/patient-diabete-profile'
 import { type DiabeticProfile } from './models/patient-diabete-profile'
 import { PatientProfile } from './models/patient-profile.model'
-import { NewAlertConfigDto, PatientAlertsConfiguration } from './models/monitoring-alerts-parameters.model'
+import {
+  AlertReactivationDates,
+  NewAlertConfigDto,
+  PatientAlertsConfiguration
+} from './models/monitoring-alerts-parameters.model'
 import { PatientMetrics } from './models/patient-metrics.model'
 import { UserProfilePayload } from './models/user-profile-payload.model'
 
@@ -101,6 +105,18 @@ export default class PatientApi {
     await HttpService.put<void, PatientAlertsConfiguration>({
       url: `/crew/v1/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`,
       payload: NewAlertConfigDto(monitoringAlertsParameters)
+    })
+  }
+
+  static async acknowledgePatientAlerts(teamId: string, patientId: string, alertReactivationDates: AlertReactivationDates): Promise<void> {
+
+    await HttpService.put<void, PatientAlertsConfiguration>({
+      url: `/crew/v1/teams/${teamId}/patients/${patientId}/monitoring-alerts-parameters`,
+      payload: {
+        parameters: null,
+        isUsingTeamAlertParameters: false,
+        reactivationDates: alertReactivationDates
+      }
     })
   }
 

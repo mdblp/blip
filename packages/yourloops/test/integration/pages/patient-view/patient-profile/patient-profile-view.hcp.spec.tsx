@@ -113,7 +113,10 @@ describe('Patient profile view for HCP', () => {
           }
         }
       }
-      renderPage(patientProfileRoute)
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
       await testAppMainLayoutForHcp(appMainLayoutParams)
     })
 

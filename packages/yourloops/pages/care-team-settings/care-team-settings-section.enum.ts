@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,28 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { MonitoringAlertsParameters } from 'medical-domain'
-import { MonitoringAlertsParametersDto, mapMonAlertParamsFromInternal } from '../../team/models/monitoring-alerts-parameters.model'
-
-
-export interface PatientAlertsConfiguration {
-  parameters: MonitoringAlertsParametersDto | null
-  isUsingTeamAlertParameters: boolean
-  reactivationDates: AlertReactivationDates | null
+export enum CareTeamSettingsSection {
+  InfoAndMembers = 'InfoAndMembers',
+  MonitoringAlerts = 'MonitoringAlerts'
 }
-
-export interface AlertReactivationDates {
-  hyperglycemia: Date | null
-  hypoglycemia: Date | null
-  nonDataTransmission: Date | null
-  timeOutOfRange: Date | null
-}
-
-export const NewAlertConfigDto = (parameters: MonitoringAlertsParameters): PatientAlertsConfiguration => {
-  const parametersDto = mapMonAlertParamsFromInternal(parameters)
-  return {
-    parameters: parametersDto,
-  } as PatientAlertsConfiguration
-}
-
-
