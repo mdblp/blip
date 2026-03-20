@@ -25,10 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { CliniciansApi } from '../../../../lib/clinicians/clinicians.api'
+import { LeadCliniciansApi } from '../../../../lib/lead-clinicians/lead-clinicians.api'
 import HttpService from '../../../../lib/http/http.service'
 import { type AxiosResponse } from 'axios'
-import { type LeadClinicianPayload } from '../../../../lib/clinicians/models/lead-clinician-payload.model'
+import { type LeadClinicianPayload } from '../../../../lib/lead-clinicians/models/lead-clinician-payload.model'
 
 describe('CliniciansApi', () => {
   const patientId = 'patient123'
@@ -41,16 +41,15 @@ describe('CliniciansApi', () => {
   describe('addClinician', () => {
     it('should add a clinician to a patient successfully', async () => {
       const expectedPayload: LeadClinicianPayload = {
-        referentUserId: hcpId,
-        patientUserId: patientId
+        hcpUserId: hcpId
       }
 
       jest.spyOn(HttpService, 'post').mockResolvedValueOnce({ data: undefined } as AxiosResponse)
 
-      await CliniciansApi.addClinician(patientId, hcpId)
+      await LeadCliniciansApi.addClinician(patientId, hcpId)
 
       expect(HttpService.post).toHaveBeenCalledWith({
-        url: `/crew/v1/patients/${patientId}/hcp-referents`,
+        url: `/crew/v1/patients/${patientId}/lead-clinicians`,
         payload: expectedPayload
       })
       expect(HttpService.post).toHaveBeenCalledTimes(1)
@@ -61,7 +60,7 @@ describe('CliniciansApi', () => {
       jest.spyOn(HttpService, 'post').mockRejectedValueOnce(new Error(errorMessage))
 
       await expect(async () => {
-        await CliniciansApi.addClinician(patientId, hcpId)
+        await LeadCliniciansApi.addClinician(patientId, hcpId)
       }).rejects.toThrow(errorMessage)
 
       expect(HttpService.post).toHaveBeenCalledTimes(1)
@@ -72,18 +71,18 @@ describe('CliniciansApi', () => {
       jest.spyOn(HttpService, 'post').mockRejectedValueOnce(networkError)
 
       await expect(async () => {
-        await CliniciansApi.addClinician(patientId, hcpId)
+        await LeadCliniciansApi.addClinician(patientId, hcpId)
       }).rejects.toThrow('Network error')
     })
 
     it('should call the correct endpoint with valid patient and HCP IDs', async () => {
       jest.spyOn(HttpService, 'post').mockResolvedValueOnce({ data: undefined } as AxiosResponse)
 
-      await CliniciansApi.addClinician(patientId, hcpId)
+      await LeadCliniciansApi.addClinician(patientId, hcpId)
 
       expect(HttpService.post).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: `/crew/v1/patients/${patientId}/hcp-referents`
+          url: `/crew/v1/patients/${patientId}/lead-clinicians`
         })
       )
     })
@@ -93,10 +92,10 @@ describe('CliniciansApi', () => {
     it('should remove a clinician from a patient successfully', async () => {
       jest.spyOn(HttpService, 'delete').mockResolvedValueOnce(undefined)
 
-      await CliniciansApi.removeClinician(patientId, hcpId)
+      await LeadCliniciansApi.removeClinician(patientId, hcpId)
 
       expect(HttpService.delete).toHaveBeenCalledWith({
-        url: `/crew/v1/patients/${patientId}/hcp-referents/${hcpId}`
+        url: `/crew/v1/patients/${patientId}/lead-clinicians/${hcpId}`
       })
       expect(HttpService.delete).toHaveBeenCalledTimes(1)
     })
@@ -106,7 +105,7 @@ describe('CliniciansApi', () => {
       jest.spyOn(HttpService, 'delete').mockRejectedValueOnce(new Error(errorMessage))
 
       await expect(async () => {
-        await CliniciansApi.removeClinician(patientId, hcpId)
+        await LeadCliniciansApi.removeClinician(patientId, hcpId)
       }).rejects.toThrow(errorMessage)
 
       expect(HttpService.delete).toHaveBeenCalledTimes(1)
@@ -115,11 +114,11 @@ describe('CliniciansApi', () => {
     it('should call the correct endpoint with valid patient and HCP IDs', async () => {
       jest.spyOn(HttpService, 'delete').mockResolvedValueOnce(undefined)
 
-      await CliniciansApi.removeClinician(patientId, hcpId)
+      await LeadCliniciansApi.removeClinician(patientId, hcpId)
 
       expect(HttpService.delete).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: `/crew/v1/patients/${patientId}/hcp-referents/${hcpId}`
+          url: `/crew/v1/patients/${patientId}/lead-clinicians/${hcpId}`
         })
       )
     })
@@ -129,10 +128,10 @@ describe('CliniciansApi', () => {
       const specialHcpId = 'hcp-456_xyz'
       jest.spyOn(HttpService, 'delete').mockResolvedValueOnce(undefined)
 
-      await CliniciansApi.removeClinician(specialPatientId, specialHcpId)
+      await LeadCliniciansApi.removeClinician(specialPatientId, specialHcpId)
 
       expect(HttpService.delete).toHaveBeenCalledWith({
-        url: `/crew/v1/patients/${specialPatientId}/hcp-referents/${specialHcpId}`
+        url: `/crew/v1/patients/${specialPatientId}/lead-clinicians/${specialHcpId}`
       })
     })
   })
