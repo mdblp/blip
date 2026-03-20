@@ -191,7 +191,7 @@ export const PatientLeadClinicians: FC<PatientLeadCliniciansProps> = (props) => 
                       <TableCell>
                         {
                           getInitials(clinician.name) &&
-                          <Avatar sx={{ bgcolor: 'var(--text-color-secondary)' }}>
+                          <Avatar sx={{ bgcolor: 'var(--dark-blue-main)' }}>
                             {getInitials(clinician.name)}
                           </Avatar>
                         }
