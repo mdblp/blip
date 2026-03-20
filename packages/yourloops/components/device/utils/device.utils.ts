@@ -212,8 +212,8 @@ export const getTranslationKeyForDeviceChange = (deviceChangeName: string): stri
       return "device-change-cgm-manufacturer"
     case DeviceChangeName.PumpManufacturer:
       return "device-change-pump-manufacturer"
-    case DeviceChangeName.PumpName:
-      return "device-change-pump-name"
+    case DeviceChangeName.PumpProduct:
+      return "device-change-pump-product"
     case DeviceChangeName.MobileAppVersion:
       return "device-change-sw-version"
     case DeviceChangeName.MobileAppActivationCode:

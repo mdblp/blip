@@ -292,7 +292,7 @@
   "device-change-cgm-name": "Cgm product",
   "device-change-cgm-manufacturer": "Cgm manufacturer",
   "device-change-pump-manufacturer": "Pump manufacturer",
-  "device-change-pump-name": "Pump name",
+  "device-change-pump-product": "Pump product",
   "device-history-title": "Device change",
   "diabetes-type": "Diabetes type",
   "diagnosis": "Diagnosis",
