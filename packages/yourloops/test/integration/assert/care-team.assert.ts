@@ -235,6 +235,21 @@ export const checkCareTeamLayoutForPatient = async () => {
   await screen.findByText('Team information')
 
   expect(screen.queryByTestId('care-team-settings-menu')).not.toBeInTheDocument()
+
   expect(screen.getByTestId('team-information')).toBeVisible()
+  const teamInformationSection = within(screen.getByTestId('team-information'))
+  expect(teamInformationSection.queryByTestId('team-information-alert')).not.toBeInTheDocument()
+  expect(screen.getByTestId('team-information')).toHaveTextContent('Team informationLeave teamIdentification code036 - 038 - 775Name *Name *Country *​Country *Phone number *+44Phone number *EmailEmailAddress 1 *Address 1 *Address 2Address 2Zipcode *Zipcode *City (State / Province) *City (State / Province) *')
+  expect(teamInformationSection.queryByTestId('copy-team-code-button')).not.toBeInTheDocument()
+  expect(teamInformationSection.queryByTestId('team-information-save-button')).not.toBeInTheDocument()
+
+  expect(within(teamInformationSection.getByTestId('team-information-name-input')).getByRole('textbox')).toHaveAttribute('readonly')
+  expect(within(teamInformationSection.getByTestId('team-information-phone-input')).getByRole('textbox')).toHaveAttribute('readonly')
+  expect(within(teamInformationSection.getByTestId('team-information-email-input')).getByRole('textbox')).toHaveAttribute('readonly')
+  expect(within(teamInformationSection.getByTestId('team-information-addr1-input')).getByRole('textbox')).toHaveAttribute('readonly')
+  expect(within(teamInformationSection.getByTestId('team-information-addr2-input')).getByRole('textbox')).toHaveAttribute('readonly')
+  expect(within(teamInformationSection.getByTestId('team-information-zipCode-input')).getByRole('textbox')).toHaveAttribute('readonly')
+  expect(within(teamInformationSection.getByTestId('team-information-city-input')).getByRole('textbox')).toHaveAttribute('readonly')
+
   expect(screen.queryByTestId('team-members')).not.toBeInTheDocument()
 }

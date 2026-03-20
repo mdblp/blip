@@ -169,7 +169,7 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
         </Box>
 
         {!isUserPatient &&
-          <Box sx={{ px: 2, pb: 3, width: 'fit-content' }}>
+          <Box sx={{ px: 2, pb: 3, width: 'fit-content' }} data-testid="team-information-alert">
             <Alert severity="info">
               {isUserAdmin ? t('team-modal-create-info') : t('only-admins-can-edit')}
             </Alert>
@@ -185,6 +185,7 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
           {
             !isUserPatient &&
             <IconActionButton
+              data-testid="copy-team-code-button"
               color="inherit"
               size="small"
               icon={<FileCopyRounded fontSize="small" />}
@@ -199,6 +200,7 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
             <Box className={classes.fieldItem}>
               <AccountCircleRounded className={commonTeamClasses.icon} />
               <TextField
+                data-testid="team-information-name-input"
                 className={classes.inputField}
                 onChange={(e) => {
                   setTeamName(e.target.value)
@@ -215,7 +217,7 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
             <Box className={classes.fieldItem}>
               <PublicRounded className={commonTeamClasses.icon} />
               <FormControl
-                data-testid="country"
+                data-testid="team-information-country-select"
                 className={classes.inputField}
                 required
               >
@@ -240,6 +242,7 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
             <Box className={classes.fieldItem}>
               <LocalPhoneRounded className={commonTeamClasses.icon} />
               <TextField
+                data-testid="team-information-phone-input"
                 className={classes.inputField}
                 onChange={(e) => {
                   setTeamPhone(e.target.value)
@@ -264,6 +267,7 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
             <Box className={classes.fieldItem}>
               <EmailRounded className={commonTeamClasses.icon} />
               <TextField
+                data-testid="team-information-email-input"
                 className={classes.inputField}
                 onChange={(e) => {
                   setTeamEmail(e.target.value)
@@ -283,6 +287,7 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
             <Box className={classes.fieldItem}>
               <LocationOnRounded className={commonTeamClasses.icon} />
               <TextField
+                data-testid="team-information-addr1-input"
                 className={classes.inputField}
                 onChange={(e) => {
                   setAddrLine1(e.target.value)
@@ -299,6 +304,7 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
             <Box className={classes.fieldItem}>
               <LocationOnRounded className={commonTeamClasses.icon} />
               <TextField
+                data-testid="team-information-addr2-input"
                 className={classes.inputField}
                 onChange={(e) => {
                   setAddrLine2(e.target.value)
@@ -314,6 +320,7 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
             <Box className={classes.fieldItem}>
               <LocationOnRounded className={commonTeamClasses.icon} />
               <TextField
+                data-testid="team-information-zipCode-input"
                 className={classes.inputField}
                 onChange={(e) => {
                   setAddrZipCode(e.target.value)
@@ -332,6 +339,7 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
             <Box className={classes.fieldItem}>
               <LocationCityRounded className={commonTeamClasses.icon} />
               <TextField
+                data-testid="team-information-city-input"
                 className={classes.inputField}
                 onChange={(e) => {
                   setAddrCity(e.target.value)
@@ -349,7 +357,10 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
       </Box>
 
       {isUserAdmin &&
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', px: 2, pt: 2 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', px: 2, pt: 2 }}
+          data-testid="team-information-save-button"
+        >
           <Button
             disabled={!hasUpdates() || isFormInvalid}
             color="primary"
