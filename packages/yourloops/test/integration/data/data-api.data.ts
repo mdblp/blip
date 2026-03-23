@@ -334,7 +334,7 @@ export const devicesHistory: DeviceHistory[] = [
         {
           changeType: ChangeType.Added,
           effectiveDate: "2019-04-12T00:02:00.000Z",
-          name: DeviceChangeName.PumpName,
+          name: DeviceChangeName.PumpProduct,
           value: "Insight"
         },
         {
@@ -408,7 +408,7 @@ export const devicesHistory: DeviceHistory[] = [
         {
           changeType: ChangeType.Updated,
           effectiveDate: "2019-04-26T00:02:00.000Z",
-          name: DeviceChangeName.PumpName,
+          name: DeviceChangeName.PumpProduct,
           value: "Kaleido",
           previousValue: "Insight"
         },
