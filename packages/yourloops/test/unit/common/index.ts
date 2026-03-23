@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -81,7 +81,6 @@ const getPatient = (): User => {
       birthPlace: 'Anywhere',
       diagnosisDate: '2020-12-02',
       diagnosisType: '1',
-      referringDoctor: 'Dr Dre',
       sex: 'M',
       ins: '123456789012345',
       ssn: '012345678901234'

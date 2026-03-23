@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,10 +34,18 @@ import userEvent from '@testing-library/user-event'
 import { getTranslation } from '../../../../utils/i18n'
 import PatientApi from '../../../../../lib/patient/patient.api'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
-import { patient1Info } from '../../../data/patient.api.data'
+import { patient1Info, patient2Info, patient3Info } from '../../../data/patient.api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
+import {
+  checkCliniciansEmptyList,
+  checkCliniciansFiveClinicians, checkCliniciansManagementErrors,
+  checkCliniciansManagementPatient
+} from '../../../use-cases/clinicians-management'
+import { mockLeadCliniciansApi } from '../../../mock/clinicians.api.mock'
+import { LeadCliniciansApi } from '../../../../../lib/lead-clinicians/lead-clinicians.api'
+import ErrorApi from '../../../../../lib/error/error.api'
 
 describe('Patient profile view for Patient', () => {
 
@@ -49,6 +57,7 @@ describe('Patient profile view for Patient', () => {
       mockAuth0Hook(UserRole.Patient)
       mockPatientLogin(patient1Info)
       mockDataAPI()
+      mockLeadCliniciansApi()
     })
 
     afterEach(() => {
@@ -62,6 +71,48 @@ describe('Patient profile view for Patient', () => {
       })
 
       await testPatientPersonalInformation()
+    })
+
+    it('should be able to view clinicians list with 0 clinician', async () => {
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      await checkCliniciansEmptyList()
+    })
+
+    it('should be able to view and manage clinicians list with 1 clinician', async () => {
+      mockPatientLogin(patient2Info)
+
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      await checkCliniciansManagementPatient()
+    })
+
+    it('should be able to view clinicians list with 5 clinicians', async () => {
+      mockPatientLogin(patient3Info)
+
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      await checkCliniciansFiveClinicians()
+    })
+
+    it('should handle gracefully error cases when managing clinicians', async () => {
+      mockPatientLogin(patient2Info)
+
+      jest.spyOn(LeadCliniciansApi, 'addClinician').mockRejectedValue('Add clinician error')
+      jest.spyOn(LeadCliniciansApi, 'removeClinician').mockRejectedValue('Remove clinician error')
+      jest.spyOn(ErrorApi, 'sendError').mockResolvedValue()
+
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      await checkCliniciansManagementErrors()
     })
   })
 

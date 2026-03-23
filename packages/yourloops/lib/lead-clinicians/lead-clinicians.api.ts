@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,26 +25,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PatientProfile } from './patient-profile.model'
-import { type PatientSettings } from './patient-settings.model'
-import { type UserInviteStatus } from '../../team/models/enums/user-invite-status.enum'
-import { type MonitoringAlertsParameters } from 'medical-domain'
-import { type PatientInvite } from './patient-invite.model'
-import { DiabeticProfile } from './patient-diabete-profile'
-import { PatientMetrics } from './patient-metrics.model'
-import { LeadClinician } from '../../lead-clinicians/models/lead-clinician.model'
+import HttpService from '../http/http.service'
+import { LeadClinicianPayload } from './models/lead-clinician-payload.model'
 
-// Data structure used in the application to represent a patient
-export interface Patient extends Partial<PatientMetrics> {
-  readonly userid: string
-  profile: PatientProfile
-  settings: PatientSettings
-  diabeticProfile?: DiabeticProfile
-  monitoringAlertsParameters?: MonitoringAlertsParameters
-  invitationStatus?: UserInviteStatus
-  invite?: PatientInvite
-  isUsingTeamAlertParameters?: boolean
-  hasSentUnreadMessages: boolean
-  flagged?: boolean
-  leadClinicians: LeadClinician[]
+export class LeadCliniciansApi {
+  static async addClinician(patientId: string, hcpId: string): Promise<void> {
+    await HttpService.post<void, LeadClinicianPayload>({
+      url: `/crew/v1/patients/${patientId}/lead-clinicians`,
+      payload: {
+        hcpUserId: hcpId,
+      }
+    })
+  }
+
+  static async removeClinician(patientId: string, hcpId: string): Promise<void> {
+    await HttpService.delete({ url: `/crew/v1/patients/${patientId}/lead-clinicians/${hcpId}` })
+  }
 }
