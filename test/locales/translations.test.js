@@ -329,7 +329,7 @@ const ignoredTransKeyForYourLoops = [
   'device-change-cgm-name',
   'device-change-cgm-manufacturer',
   'device-change-pump-manufacturer',
-  'device-change-pump-name',
+  'device-change-pump-product',
   'device-change-mobile-app-activation-code',
   'device-change-sw-version',
   'device-history-title',
