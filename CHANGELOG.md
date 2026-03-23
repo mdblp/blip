@@ -10,6 +10,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3785 Be able to know the effective DBLG1 or DBLG2 settings for the displayed day in the daily view
 - YLP-3813 Add hyperglycemia alerts (display in the patient view and settings in care teams and patients profile)
 - YLP-3837 Display Dexcom G7 sensor information in device view
+- YLP-3847 Remove pairing-code and firmware version in UI
 
 ### Changed
 - YLP-2478 Care team settings menu

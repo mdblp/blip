@@ -137,18 +137,6 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
                   display: "flex",
                   justifyContent: "space-between"
                 }}>
-                <Typography variant="body2">{t('pairing-code')}</Typography>
-                <Typography variant="body2" className="bold">{cgm.pairingCode ?? FALLBACK_VALUE}</Typography>
-              </Box>
-            </ListItemText>
-          </ListItem>
-          <ListItem divider className="list-item">
-            <ListItemText>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between"
-                }}>
                 <Typography variant="body2">{t('serial-number')}</Typography>
                 <Typography variant="body2" className="bold">{cgm.serialNumber ?? FALLBACK_VALUE}</Typography>
               </Box>
@@ -167,23 +155,6 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
                   className="bold"
                 >
                   {cgm.softwareNumber ?? FALLBACK_VALUE}
-                </Typography>
-              </Box>
-            </ListItemText>
-          </ListItem>
-          <ListItem>
-            <ListItemText className="list-item">
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between"
-                }}>
-                <Typography variant="body2">{t('firmware-version')}</Typography>
-                <Typography
-                  variant="body2"
-                  className="bold"
-                >
-                  {cgm.firmwareVersion ?? FALLBACK_VALUE}
                 </Typography>
               </Box>
             </ListItemText>
