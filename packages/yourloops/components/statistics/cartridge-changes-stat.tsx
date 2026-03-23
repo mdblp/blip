@@ -36,6 +36,7 @@ import { formatDateWithMomentLongFormat, formatDurationToBiggestUnit } from '../
 import Button from '@mui/material/Button'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { SimpleValue } from 'dumb'
+import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 
 interface CartridgeChangesStatProps {
   dateFilter: DateFilter
@@ -48,6 +49,17 @@ const useStyles = makeStyles()(() => ({
     fontWeight: 'bold'
   }
 }))
+
+function handleClickOnCartridgeChange(goToDailySpecificDate: (date: Date) => void, changeItem: {
+  id: string;
+  timeToDisplay: string;
+  timeAsDate: Date;
+  duration: string;
+  durationUnit: string
+}) {
+  AnalyticsApi.trackClick(`cartridge-changes-stat`, ElementType.Link)
+  goToDailySpecificDate(changeItem.timeAsDate)
+}
 
 export const CartridgeChangesStat: FC<CartridgeChangesStatProps> = (props) => {
   const { dateFilter, goToDailySpecificDate, reservoirChanges } = props
@@ -131,7 +143,7 @@ export const CartridgeChangesStat: FC<CartridgeChangesStatProps> = (props) => {
                   variant="text"
                   size="medium"
                   startIcon={<OpenInNewIcon />}
-                  onClick={() => goToDailySpecificDate(changeItem.timeAsDate)}
+                  onClick={() => handleClickOnCartridgeChange(goToDailySpecificDate, changeItem)}
                   data-testid="go-to-daily-button"
                 >
                   {changeItem.timeToDisplay}

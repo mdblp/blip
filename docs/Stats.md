@@ -90,7 +90,9 @@ This document provides a comprehensive overview of all analytics tracking events
 - **Location:** Daily chart component
 - **User Action:** Clicking the back navigation button or using keyboard shortcuts
 
-## Medical Reports
+## Dashboard
+
+### Medical Reports
 
 #### `medical-report-add`
 - **Type:** Button
@@ -98,8 +100,15 @@ This document provides a comprehensive overview of all analytics tracking events
 - **Location:** Medical report list in dashboard cards
 - **User Action:** Clicking the "New" button to add a medical report
 
-## Print/PDF Report Dialog
+### Cartridge Change
 
+#### `cartridge-changes-stat`
+- **Type:** Link
+- **Description:** Tracks when a user goes to a cartridge change daily page from dashboard
+- **Location:** Cartridge change list in dashboard cards
+- **User Action:** Clicking the date link of the cartridge change to go to the daily page at a specific date
+
+## Print/PDF Report Dialog
 #### `print-report-dialog-preset-{preset}`
 - **Type:** Button
 - **Description:** Tracks when a user selects a predefined date range preset for report generation
