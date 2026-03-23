@@ -66,13 +66,9 @@ export const MedicalTeamPatientList: FunctionComponent<MedicalTeamPatientListPro
   const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
 
   const handleSortChange = (model: GridSortModel) => {
+    setSortModel(model)
     if (model.length > 0) {
       const { field, sort } = model[0]
-
-      console.log('User sorted column:', field)
-      console.log('Direction:', sort)
-
-      setSortModel(model)
       AnalyticsApi.trackClick(
         `patient-list-sort-${field}_${sort}`,
         ElementType.Button
