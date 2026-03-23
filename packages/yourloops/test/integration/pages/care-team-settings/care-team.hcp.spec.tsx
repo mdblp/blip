@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -143,7 +143,7 @@ describe('HCP care team settings page', () => {
     await testLeaveTeamHcp()
   })
 
-  it('should not be able to change member roles when not admin', async () => {
+  it('should not be able to update team info and change member roles when not admin', async () => {
     await renderCareTeamSettingsPage(filtersTeamDetailsRoute)
 
     await testNotTeamAdmin()

@@ -90,6 +90,12 @@ export const monitoringAlertsParametersBgUnitMmol: MonitoringAlertsParameters = 
 }
 
 export const myFirstTeamId = 'myTeamId'
+export const myFirstTeamPhoneNumber = '0476000000'
+export const myFirstTeamCode = '036 - 038 - 775'
+export const myFirstTeamEmail = 'hey@hey.hey'
+export const myFirstTeamAddress1 = '6 Road 66'
+export const myFirstTeamZipCode = 'W1D 1BS'
+export const myFirstTeamCity = 'London'
 export const mySecondTeamId = 'mySecondTeamId'
 export const myThirdTeamId = 'myThirdTeamId'
 export const filtersTeamId = 'filtersTeamId'
@@ -97,9 +103,18 @@ export const myFirstTeamName = 'MyFirstTeam'
 export const mySecondTeamName = 'MySecondTeam'
 export const myThirdTeamName = 'A - MyThirdTeam - to be deleted'
 export const myThirdTeamPhoneNumber = '0476000000'
-export const myThirdTeamCode = '263381988'
-export const myThirdTeamAddress = 'Guinness Road W1D 1BS Dublin GB'
+export const myThirdTeamCode = '263 - 381 - 988'
+export const myThirdTeamEmail = 'hey@third.hey'
+export const myThirdTeamAddress1 = 'Guinness Road'
+export const myThirdTeamZipCode = 'W1D 1BS'
+export const myThirdTeamCity = 'Dublin'
 export const filtersTeamName = 'Team used to test the patients filters'
+export const filtersTeamCode = '126 - 534 - 897'
+export const filtersTeamPhoneNumber = '0476000001'
+export const filtersTeamEmail = 'filters@team.com'
+export const filtersTeamAddress1 = 'Vaucanson'
+export const filtersTeamZipCode = '38000'
+export const filtersTeamCity = '38000'
 export const NEW_TEAM_ID = 'new-team-id'
 
 export const buildTeamOne = (): Team => {
@@ -110,7 +125,7 @@ export const buildTeamOne = (): Team => {
     type: TeamType.medical,
     phone: '0476000000',
     email: 'hey@hey.hey',
-    address: { line1: '6 Road 66', line2: '', zip: 'W1D 1BS', city: 'London', country: 'GB' },
+    address: { line1: '6 Road 66', line2: '', zip: 'W1D 1BS', city: 'London', country: 'UK' },
     members: [{
       userId: loggedInUserId,
       role: TeamMemberRole.admin,
@@ -179,8 +194,8 @@ export const buildTeamThree = (): Team => {
     code: '263381988',
     type: TeamType.medical,
     phone: '0476000000',
-    email: 'hey@third.hey',
-    address: { line1: 'Guinness Road', line2: '', zip: 'W1D 1BS', city: 'Dublin', country: 'GB' },
+    email: myThirdTeamEmail,
+    address: { line1: myThirdTeamAddress1, line2: '', zip: myThirdTeamZipCode, city: myThirdTeamCity, country: 'UK' },
     members: [
       {
         userId: loggedInUserId,
@@ -251,9 +266,9 @@ export const buildFiltersTeam = (): Team => {
     id: filtersTeamId,
     code: '126534897',
     type: TeamType.medical,
-    phone: '0476000001',
-    email: 'filters@team.com',
-    address: { line1: 'Vaucansson', line2: '', zip: '380000', city: 'Grenoble', country: 'FR' },
+    phone: filtersTeamPhoneNumber,
+    email: filtersTeamEmail,
+    address: { line1: filtersTeamAddress1, line2: '', zip: filtersTeamZipCode, city: filtersTeamCity, country: 'FR' },
     members: [{
       userId: loggedInUserId,
       role: TeamMemberRole.member,
@@ -324,6 +339,7 @@ export const buildAvailableTeams = (): Team[] => {
 
 export const mockTeamAPI = () => {
   jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue(buildAvailableTeams())
+  jest.spyOn(TeamAPI, 'editTeam').mockResolvedValue()
   jest.spyOn(TeamAPI, 'createTeam').mockRejectedValue('Mocked error')
 }
 

@@ -30,20 +30,24 @@ import {
   checkCareTeamLayoutForPatient,
   checkCareTeamMembers,
   checkCareTeamMonitoringAlertsConfiguration,
+  checkCopyTeamCode,
   checkDeleteTeam,
   checkGiveAdminRole,
+  checkInfoSectionForNotTeamAdmin,
   checkLeaveTeamHcp,
   checkLeaveTeamPatient,
-  checkNotTeamAdmin,
+  checkMembersSectionForNotTeamAdmin,
   checkRemoveAdminRole,
   checkRemoveMember,
   checkRemoveOurselvesFromTheMembers,
   checkRemovePendingMemberInvitedByOurselves,
   checkRemovePendingMemberNotInvitedByOurselves
 } from '../assert/care-team.assert'
+import { filtersTeamCode, myThirdTeamCode } from '../mock/team.api.mock'
 
 export const testCareTeamLayout = async () => {
   await checkCareTeamInformation()
+  await checkCopyTeamCode(myThirdTeamCode)
   checkCareTeamMembers()
   await checkCareTeamMonitoringAlertsConfiguration()
 }
@@ -77,5 +81,7 @@ export const testLeaveTeamPatient = async () => {
 }
 
 export const testNotTeamAdmin = async () => {
-  await checkNotTeamAdmin()
+  await checkInfoSectionForNotTeamAdmin()
+  await checkCopyTeamCode(filtersTeamCode)
+  await checkMembersSectionForNotTeamAdmin()
 }

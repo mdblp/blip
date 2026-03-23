@@ -95,16 +95,14 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
   const { t } = useTranslation('yourloops')
 
   const onSaveTeam = async (editedTeam: Partial<Team> | null): Promise<void> => {
-    if (editedTeam) {
-      try {
-        await teamHook.updateTeam(editedTeam as Team)
-        alert.success(t('team-page-success-edit'))
-      } catch (reason: unknown) {
-        const errorMessage = errorTextFromException(reason)
-        logError(errorMessage, 'team-information-edit')
+    try {
+      await teamHook.updateTeam(editedTeam as Team)
+      alert.success(t('team-page-success-edit'))
+    } catch (reason: unknown) {
+      const errorMessage = errorTextFromException(reason)
+      logError(errorMessage, 'team-information-edit')
 
-        alert.error(t('team-page-failed-edit'))
-      }
+      alert.error(t('team-page-failed-edit'))
     }
   }
 
@@ -159,8 +157,8 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
   }
 
   return (
-    <React.Fragment>
-      <Box className={commonTeamClasses.root} data-testid="team-information">
+    <Box data-testid="team-information">
+      <Box className={commonTeamClasses.root}>
         <Box className={commonTeamClasses.categoryHeader}>
           <CardHeader title={t('team-information')} />
           {isUserPatient &&
@@ -186,6 +184,7 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
             !isUserPatient &&
             <IconActionButton
               data-testid="copy-team-code-button"
+              aria-label={t('copy-to-clipboard')}
               color="inherit"
               size="small"
               icon={<FileCopyRounded fontSize="small" />}
@@ -195,7 +194,10 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
           }
         </Box>
 
-        <Box sx={{ display: 'flex', width: '100%', px: 2 }}>
+        <Box
+          sx={{ display: 'flex', width: '100%', px: 2 }}
+          data-testid="team-info-form"
+        >
           <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
             <Box className={classes.fieldItem}>
               <AccountCircleRounded className={commonTeamClasses.icon} />
@@ -373,6 +375,6 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
           </Button>
         </Box>
       }
-    </React.Fragment>
+    </Box>
   )
 }

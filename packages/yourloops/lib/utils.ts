@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -51,13 +51,13 @@ export enum PhonePrefixCode {
   NL = '+31',
   ES = '+34',
   CH = '+41',
-  GB = '+44',
+  UK = '+44',
 }
 
 export const isZipCodeValid = (country: CountryCodes | string, zipCode: string): boolean => {
   switch (country) {
-    case 'NL':
-    case 'GB':
+    case CountryCodes.Netherlands:
+    case CountryCodes.UnitedKingdom:
       return REGEX_ZIPCODE_WITH_STRING.test(zipCode)
     default:
       return REGEX_ZIPCODE_WITHOUT_STRING.test(zipCode)

@@ -25,15 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import {
+  filtersTeamAddress1,
+  filtersTeamCity,
+  filtersTeamCode,
+  filtersTeamEmail,
+  filtersTeamName,
+  filtersTeamPhoneNumber,
+  filtersTeamZipCode,
+  myFirstTeamAddress1,
+  myFirstTeamCity,
+  myFirstTeamCode,
+  myFirstTeamEmail,
   myFirstTeamId,
+  myFirstTeamName,
+  myFirstTeamPhoneNumber,
+  myFirstTeamZipCode,
   mySecondTeamId,
-  myThirdTeamAddress,
+  myThirdTeamAddress1,
+  myThirdTeamCity,
   myThirdTeamCode,
+  myThirdTeamEmail,
   myThirdTeamId,
   myThirdTeamName,
-  myThirdTeamPhoneNumber
+  myThirdTeamPhoneNumber,
+  myThirdTeamZipCode
 } from '../mock/team.api.mock'
 import {
   loggedInUserEmail,
@@ -61,17 +78,127 @@ export const checkCareTeamInformation = async () => {
   const teamInformationSection = within(await screen.findByTestId('team-information'))
 
   expect(teamInformationSection.getByText('Team information')).toBeVisible()
-  expect(teamInformationSection.getByText('Edit information')).toBeVisible()
-  expect(teamInformationSection.getByText('Edit information')).toBeEnabled()
+  expect(teamInformationSection.getByTestId('team-information-alert')).toHaveTextContent('This information will be displayed along your name when you invite a new patient or a team member. They will review this information to verify your identity. Please make sure it is accurate.')
 
-  expect(teamInformationSection.getByText('Team name')).toBeVisible()
-  expect(teamInformationSection.getByText(myThirdTeamName)).toBeVisible()
-  expect(teamInformationSection.getByText('Phone number')).toBeVisible()
-  expect(teamInformationSection.getByText(`(+44) ${myThirdTeamPhoneNumber}`)).toBeVisible()
   expect(teamInformationSection.getByText('Identification code')).toBeVisible()
   expect(teamInformationSection.getByText(myThirdTeamCode)).toBeVisible()
-  expect(teamInformationSection.getByText('Address')).toBeVisible()
-  expect(teamInformationSection.getByText(myThirdTeamAddress)).toBeVisible()
+  expect(teamInformationSection.getByRole('button', { name: 'Copy to clipboard' })).toBeVisible()
+
+  const teamInformationForm = within(teamInformationSection.getByTestId('team-info-form'))
+
+  const nameField = teamInformationForm.getByRole('textbox', { name: 'Name' })
+  expect(nameField).not.toHaveAttribute('readonly')
+  expect(nameField).toHaveAttribute('required')
+  expect(nameField).toHaveDisplayValue(myThirdTeamName)
+
+  expect(teamInformationForm.getByText('Country')).toBeVisible()
+  expect(teamInformationForm.getByText('United Kingdom')).toBeVisible()
+
+  const phoneNumberField = teamInformationForm.getByRole('textbox', { name: 'Phone number' })
+  expect(phoneNumberField).not.toHaveAttribute('readonly')
+  expect(phoneNumberField).toHaveAttribute('required')
+  expect(phoneNumberField).toHaveDisplayValue(myThirdTeamPhoneNumber)
+
+  const emailField = teamInformationForm.getByRole('textbox', { name: 'Email' })
+  expect(emailField).not.toHaveAttribute('readonly')
+  expect(emailField).not.toHaveAttribute('required')
+  expect(emailField).toHaveDisplayValue(myThirdTeamEmail)
+
+  const address1Field = teamInformationForm.getByRole('textbox', { name: 'Address 1' })
+  expect(address1Field).not.toHaveAttribute('readonly')
+  expect(address1Field).toHaveAttribute('required')
+  expect(address1Field).toHaveDisplayValue(myThirdTeamAddress1)
+
+  const address2Field = teamInformationForm.getByRole('textbox', { name: 'Address 2' })
+  expect(address2Field).not.toHaveAttribute('readonly')
+  expect(address2Field).not.toHaveAttribute('required')
+  expect(address2Field).toHaveDisplayValue('')
+
+  const zipCodeField = teamInformationForm.getByRole('textbox', { name: 'Zipcode' })
+  expect(zipCodeField).not.toHaveAttribute('readonly')
+  expect(zipCodeField).toHaveAttribute('required')
+  expect(zipCodeField).toHaveDisplayValue(myThirdTeamZipCode)
+
+  const cityField = teamInformationForm.getByRole('textbox', { name: 'City (State / Province)' })
+  expect(cityField).not.toHaveAttribute('readonly')
+  expect(cityField).toHaveAttribute('required')
+  expect(cityField).toHaveDisplayValue(myThirdTeamCity)
+
+  const saveButton = teamInformationSection.getByRole('button', { name: 'Save' })
+  expect(saveButton).toBeDisabled()
+
+  await userEvent.clear(nameField)
+  await userEvent.type(nameField, 'Team name updated')
+  expect(saveButton).toBeEnabled()
+  await userEvent.clear(nameField)
+  await userEvent.type(nameField, myThirdTeamName)
+  expect(saveButton).toBeDisabled()
+
+  await userEvent.clear(nameField)
+  await userEvent.type(nameField, 'Team name updated')
+  expect(saveButton).toBeEnabled()
+
+  await userEvent.type(phoneNumberField, 'ddd')
+  expect(screen.getByText('Please enter a valid phone number')).toBeVisible()
+  expect(saveButton).toBeDisabled()
+  await userEvent.clear(phoneNumberField)
+  await userEvent.type(phoneNumberField, myThirdTeamPhoneNumber)
+  expect(screen.queryByText('Please enter a valid phone number')).not.toBeInTheDocument()
+  expect(saveButton).toBeEnabled()
+
+  await userEvent.type(zipCodeField, '---')
+  expect(screen.getByText('Please enter a valid zipcode')).toBeVisible()
+  expect(saveButton).toBeDisabled()
+  await userEvent.clear(zipCodeField)
+  await userEvent.type(zipCodeField, myThirdTeamZipCode)
+  expect(screen.queryByText('Please enter a valid zipcode')).not.toBeInTheDocument()
+  expect(saveButton).toBeEnabled()
+
+  await userEvent.click(saveButton)
+  const successAlert = await screen.findByText('Team information successfully saved')
+  expect(successAlert).toBeVisible()
+}
+
+export const checkInfoSectionForNotTeamAdmin = async () => {
+  const teamInformationSection = within(await screen.findByTestId('team-information'))
+
+  expect(teamInformationSection.getByText('Team information')).toBeVisible()
+  expect(teamInformationSection.getByTestId('team-information-alert')).toHaveTextContent('Only administrators can edit this information. Please contact an administrator on your team to make changes.')
+
+  expect(teamInformationSection.getByText('Identification code')).toBeVisible()
+  expect(teamInformationSection.getByText(filtersTeamCode)).toBeVisible()
+  expect(teamInformationSection.getByRole('button', { name: 'Copy to clipboard' })).toBeVisible()
+
+  checkTeamInfoFieldsReadonly({
+    name: filtersTeamName,
+    country: 'France',
+    phoneNumber: filtersTeamPhoneNumber,
+    email: filtersTeamEmail,
+    address1: filtersTeamAddress1,
+    zipCode: filtersTeamZipCode,
+    city: filtersTeamCity
+  })
+
+  expect(teamInformationSection.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument()
+}
+
+export const checkCopyTeamCode = async (code: string) => {
+  const writeText = jest.fn()
+  Object.assign(navigator, {
+    clipboard: {
+      writeText
+    }
+  })
+
+  const copyCodeButton = screen.getByRole('button', { name: 'Copy to clipboard' })
+  await userEvent.hover(copyCodeButton)
+  expect(await screen.findByRole('tooltip')).toHaveTextContent('Copy to clipboard')
+  await userEvent.unhover(copyCodeButton)
+  await waitFor(() => {
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
+  })
+  await userEvent.click(copyCodeButton)
+  expect(navigator.clipboard.writeText).toHaveBeenCalledWith(code)
 }
 
 export const checkRemoveMember = async () => {
@@ -147,7 +274,7 @@ export const checkRemoveAdminRole = async () => {
   expect(TeamApi.getTeams).toHaveBeenCalledTimes(2)
 }
 
-export const checkNotTeamAdmin = async () => {
+export const checkMembersSectionForNotTeamAdmin = async () => {
   const memberToUpdateRow = await screen.findByTestId(`member-row-${userTimId}`)
   const roleCheckBoxNotAdmin = within(memberToUpdateRow).getByRole('checkbox')
   expect(roleCheckBoxNotAdmin).toBeDisabled()
@@ -239,17 +366,70 @@ export const checkCareTeamLayoutForPatient = async () => {
   expect(screen.getByTestId('team-information')).toBeVisible()
   const teamInformationSection = within(screen.getByTestId('team-information'))
   expect(teamInformationSection.queryByTestId('team-information-alert')).not.toBeInTheDocument()
-  expect(screen.getByTestId('team-information')).toHaveTextContent('Team informationLeave teamIdentification code036 - 038 - 775Name *Name *Country *​Country *Phone number *+44Phone number *EmailEmailAddress 1 *Address 1 *Address 2Address 2Zipcode *Zipcode *City (State / Province) *City (State / Province) *')
-  expect(teamInformationSection.queryByTestId('copy-team-code-button')).not.toBeInTheDocument()
-  expect(teamInformationSection.queryByTestId('team-information-save-button')).not.toBeInTheDocument()
+  expect(teamInformationSection.getByText('Identification code')).toBeVisible()
+  expect(teamInformationSection.getByText(myFirstTeamCode)).toBeVisible()
+  expect(screen.queryByRole('button', { name: 'Copy to clipboard' })).not.toBeInTheDocument()
+  expect(teamInformationSection.queryByRole('button', { name: 'Save' })).not.toBeInTheDocument()
 
-  expect(within(teamInformationSection.getByTestId('team-information-name-input')).getByRole('textbox')).toHaveAttribute('readonly')
-  expect(within(teamInformationSection.getByTestId('team-information-phone-input')).getByRole('textbox')).toHaveAttribute('readonly')
-  expect(within(teamInformationSection.getByTestId('team-information-email-input')).getByRole('textbox')).toHaveAttribute('readonly')
-  expect(within(teamInformationSection.getByTestId('team-information-addr1-input')).getByRole('textbox')).toHaveAttribute('readonly')
-  expect(within(teamInformationSection.getByTestId('team-information-addr2-input')).getByRole('textbox')).toHaveAttribute('readonly')
-  expect(within(teamInformationSection.getByTestId('team-information-zipCode-input')).getByRole('textbox')).toHaveAttribute('readonly')
-  expect(within(teamInformationSection.getByTestId('team-information-city-input')).getByRole('textbox')).toHaveAttribute('readonly')
+  checkTeamInfoFieldsReadonly({
+    name: myFirstTeamName,
+    country: 'United Kingdom',
+    phoneNumber: myFirstTeamPhoneNumber,
+    email: myFirstTeamEmail,
+    address1: myFirstTeamAddress1,
+    zipCode: myFirstTeamZipCode,
+    city: myFirstTeamCity
+  })
 
   expect(screen.queryByTestId('team-members')).not.toBeInTheDocument()
+}
+
+const checkTeamInfoFieldsReadonly = (teamInfo: {
+  name: string,
+  country: string,
+  phoneNumber: string,
+  email: string,
+  address1: string,
+  zipCode: string,
+  city: string
+}) => {
+  const teamInformationForm = within(screen.getByTestId('team-info-form'))
+
+  const nameField = teamInformationForm.getByRole('textbox', { name: 'Name' })
+  expect(nameField).toHaveAttribute('readonly')
+  expect(nameField).toHaveAttribute('required')
+  expect(nameField).toHaveDisplayValue(teamInfo.name)
+
+  expect(teamInformationForm.getByText('Country')).toBeVisible()
+  expect(teamInformationForm.getByText(teamInfo.country)).toBeVisible()
+
+  const phoneNumberField = teamInformationForm.getByRole('textbox', { name: 'Phone number' })
+  expect(phoneNumberField).toHaveAttribute('readonly')
+  expect(phoneNumberField).toHaveAttribute('required')
+  expect(phoneNumberField).toHaveDisplayValue(teamInfo.phoneNumber)
+
+  const emailField = teamInformationForm.getByRole('textbox', { name: 'Email' })
+  expect(emailField).toHaveAttribute('readonly')
+  expect(emailField).not.toHaveAttribute('required')
+  expect(emailField).toHaveDisplayValue(teamInfo.email)
+
+  const address1Field = teamInformationForm.getByRole('textbox', { name: 'Address 1' })
+  expect(address1Field).toHaveAttribute('readonly')
+  expect(address1Field).toHaveAttribute('required')
+  expect(address1Field).toHaveDisplayValue(teamInfo.address1)
+
+  const address2Field = teamInformationForm.getByRole('textbox', { name: 'Address 2' })
+  expect(address2Field).toHaveAttribute('readonly')
+  expect(address2Field).not.toHaveAttribute('required')
+  expect(address2Field).toHaveDisplayValue('')
+
+  const zipCodeField = teamInformationForm.getByRole('textbox', { name: 'Zipcode' })
+  expect(zipCodeField).toHaveAttribute('readonly')
+  expect(zipCodeField).toHaveAttribute('required')
+  expect(zipCodeField).toHaveDisplayValue(teamInfo.zipCode)
+
+  const cityField = teamInformationForm.getByRole('textbox', { name: 'City (State / Province)' })
+  expect(cityField).toHaveAttribute('readonly')
+  expect(cityField).toHaveAttribute('required')
+  expect(cityField).toHaveDisplayValue(teamInfo.city)
 }
