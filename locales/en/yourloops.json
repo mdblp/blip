@@ -339,6 +339,7 @@
   "filters": "Filters",
   "filters-activated": "Filters activated: {{patientsFilteredCount}} patient(s) out of {{totalNumberOfPatients}}",
   "filters-deactivated": "Filters deactivated: {{totalNumberOfPatients}} patient(s) out of {{totalNumberOfPatients}}",
+  "firmware-version": "Firmware version",
   "first-name": "First name",
   "flag-patient": "Flag patient {{patientEmail}}",
   "gender": "Gender",

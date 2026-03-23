@@ -174,6 +174,9 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
         }, {
           label: t('software-number'),
           value: cgmData.softwareNumber || ''
+        }, {
+          label: t('firmware-version'),
+          value: cgmData.firmwareVersion || ''
         }]
       }
 
