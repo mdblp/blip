@@ -363,11 +363,9 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
       </Box>
 
       {isUserAdmin &&
-        <Box
-          sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', px: 2, pt: 2 }}
-          data-testid="team-information-save-button"
-        >
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', px: 2, pt: 2 }}>
           <Button
+            data-testid="team-information-save-button"
             disabled={!hasUpdates() || isFormInvalid}
             color="primary"
             variant="contained"
