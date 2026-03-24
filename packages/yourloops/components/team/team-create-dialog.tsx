@@ -137,6 +137,7 @@ export const TeamCreateDialog: FC<TeamCreateDialogProps> = (props: TeamCreateDia
       maxWidth="sm"
       fullWidth
       fullScreen={isXSBreakpoint}
+      data-testid="team-create-dialog"
     >
       <DialogTitle>
         <strong>{t('team-modal-add-title')}</strong>
@@ -162,6 +163,7 @@ export const TeamCreateDialog: FC<TeamCreateDialogProps> = (props: TeamCreateDia
             label={t('team-edit-dialog-placeholder-name')}
             required
             aria-required="true"
+            data-testid="team-create-dialog-name-input"
           />
           <TextField
             className={classes.formChild}
@@ -173,6 +175,7 @@ export const TeamCreateDialog: FC<TeamCreateDialogProps> = (props: TeamCreateDia
             label={t('team-edit-dialog-placeholder-addr-line1')}
             required
             aria-required="true"
+            data-testid="team-create-dialog-addr1-input"
           />
           <TextField
             className={classes.formChild}
@@ -183,6 +186,7 @@ export const TeamCreateDialog: FC<TeamCreateDialogProps> = (props: TeamCreateDia
             value={addrLine2}
             label={t('team-edit-dialog-placeholder-addr-line2')}
             aria-required="false"
+            data-testid="team-create-dialog-addr2-input"
           />
           <TextField
             className={classes.formChild}
@@ -196,6 +200,7 @@ export const TeamCreateDialog: FC<TeamCreateDialogProps> = (props: TeamCreateDia
             label={t('team-edit-dialog-placeholder-addr-zip')}
             required
             aria-required="true"
+            data-testid="team-create-dialog-zipcode-input"
           />
           <TextField
             className={classes.formChild}
@@ -207,6 +212,7 @@ export const TeamCreateDialog: FC<TeamCreateDialogProps> = (props: TeamCreateDia
             label={t('team-edit-dialog-placeholder-addr-city')}
             required
             aria-required="true"
+            data-testid="team-create-dialog-city-input"
           />
           <FormControl
             data-testid="country"
@@ -217,7 +223,7 @@ export const TeamCreateDialog: FC<TeamCreateDialogProps> = (props: TeamCreateDia
               {t('team-edit-dialog-placeholder-addr-country')}
             </InputLabel>
             <Select
-              data-testid="team-edit-dialog-select-country"
+              data-testid="team-create-dialog-country-select"
               name="country"
               label={t('team-edit-dialog-placeholder-addr-country')}
               value={addrCountry}
@@ -240,12 +246,12 @@ export const TeamCreateDialog: FC<TeamCreateDialogProps> = (props: TeamCreateDia
                 startAdornment: <InputAdornment position="start">{PhonePrefixCode[addrCountry]}</InputAdornment>
               }
             }}
-
             name="phone"
             value={teamPhone}
             label={t('phone-number')}
             required
             aria-required="true"
+            data-testid="team-create-dialog-phone-input"
           />
           <TextField
             className={classes.formChild}
@@ -258,6 +264,7 @@ export const TeamCreateDialog: FC<TeamCreateDialogProps> = (props: TeamCreateDia
             value={teamEmail}
             label={t('email')}
             aria-required="false"
+          data-testid="team-create-dialog-email-input"
           />
         </Box>
       </DialogContent>
@@ -266,13 +273,14 @@ export const TeamCreateDialog: FC<TeamCreateDialogProps> = (props: TeamCreateDia
 
       <DialogActions>
         <Button
-          id="team-edit-dialog-button-close"
+          data-testid="team-create-dialog-cancel-button"
           variant="outlined"
           onClick={handleCancelModal}
         >
           {t('button-cancel')}
         </Button>
         <Button
+          data-testid="team-create-dialog-save-button"
           disabled={isFormInvalid}
           color="primary"
           variant="contained"

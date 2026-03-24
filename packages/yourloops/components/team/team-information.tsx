@@ -179,7 +179,11 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
           <Typography variant="subtitle2">
             {t('identification-code')}
           </Typography>
-          <Chip label={formattedTeamCode} sx={{ fontWeight: 'bold', mx: 2 }} />
+          <Chip
+            label={formattedTeamCode}
+            sx={{ fontWeight: 'bold', mx: 2 }}
+            data-testid="team-information-identification-code"
+          />
           {
             !isUserPatient &&
             <IconActionButton
@@ -223,11 +227,11 @@ export const TeamInformation: FC<TeamInformationProps> = (props) => {
                 className={classes.inputField}
                 required
               >
-                <InputLabel htmlFor="team-edit-dialog-select-country">
+                <InputLabel htmlFor="team-select-country">
                   {t('team-edit-dialog-placeholder-addr-country')}
                 </InputLabel>
                 <Select
-                  data-testid="team-edit-dialog-select-country"
+                  data-testid="team-select-country"
                   name="country"
                   label={t('team-edit-dialog-placeholder-addr-country')}
                   value={addrCountry}
