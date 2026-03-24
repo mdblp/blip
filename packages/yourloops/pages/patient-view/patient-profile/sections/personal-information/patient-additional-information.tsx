@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,26 +25,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type PatientProfile } from './patient-profile.model'
-import { type PatientSettings } from './patient-settings.model'
-import { type UserInviteStatus } from '../../team/models/enums/user-invite-status.enum'
-import { type MonitoringAlertsParameters } from 'medical-domain'
-import { type PatientInvite } from './patient-invite.model'
-import { DiabeticProfile } from './patient-diabete-profile'
-import { PatientMetrics } from './patient-metrics.model'
-import { LeadClinician } from '../../lead-clinicians/models/lead-clinician.model'
+import React, { FC } from 'react'
+import Alert from '@mui/material/Alert'
+import { AdditionalInfoForm } from './patient-profile-additional-info-form'
+import { useAuth } from '../../../../../lib/auth'
+import { useTranslation } from 'react-i18next'
+import { Patient } from '../../../../../lib/patient/models/patient.model'
+import Typography from '@mui/material/Typography'
 
-// Data structure used in the application to represent a patient
-export interface Patient extends Partial<PatientMetrics> {
-  readonly userid: string
-  profile: PatientProfile
-  settings: PatientSettings
-  diabeticProfile?: DiabeticProfile
-  monitoringAlertsParameters?: MonitoringAlertsParameters
-  invitationStatus?: UserInviteStatus
-  invite?: PatientInvite
-  isUsingTeamAlertParameters?: boolean
-  hasSentUnreadMessages: boolean
-  flagged?: boolean
-  leadClinicians: LeadClinician[]
+interface PatientAdditionalInformationProps {
+  patient: Patient
+}
+
+export const PatientAdditionalInformation: FC<PatientAdditionalInformationProps> = (props) => {
+  const { patient } = props
+  const { user } = useAuth()
+  const { t } = useTranslation()
+
+  return (
+    <>
+      <Typography variant="h6" sx={{ marginBottom: 2 }}>
+        {t('additional-information')}
+      </Typography>
+
+      {user.isUserPatient() &&
+        <Alert
+          data-testid="additional-information-status-disclamer-label"
+          severity="info"
+          sx={{
+            marginBottom: 1,
+            width: '90%'
+          }}
+        >
+          {t('additional-information-disclaimer')}
+        </Alert>
+      }
+
+      <AdditionalInfoForm
+        patient={patient}
+      />
+    </>
+  )
 }

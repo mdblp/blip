@@ -39,7 +39,14 @@ import {
   NEW_TEAM_ID
 } from '../mock/team.api.mock'
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
-import { loggedInUserId } from '../mock/auth0.hook.mock'
+import {
+  loggedInUserId,
+  userHugoEmail, userHugoFullName,
+  userHugoId,
+  userTimEmail,
+  userTimFullName,
+  userTimId, userYdrisEmail, userYdrisFullName, userYdrisId
+} from '../mock/auth0.hook.mock'
 import { buildPatient, buildPatientMetrics } from './patient-builder.data'
 import { DeviceSystem, DiabeticType, Unit } from 'medical-domain'
 
@@ -85,7 +92,8 @@ export const patient1Info: Patient = buildPatient({
     lastName: 'Groby',
     sex: Gender.Female
   },
-  settings: { ...defaultSettings, system: DeviceSystem.Dblg2 }
+  settings: { ...defaultSettings, system: DeviceSystem.Dblg2 },
+  referringHcps: []
 })
 
 export const patient1Metrics: PatientMetrics = buildPatientMetrics({ userId: patient1Id })
@@ -223,7 +231,13 @@ export const patient2Info: Patient = buildPatient({
     lastName: 'Rouis',
     sex: Gender.Female
   },
-  settings: { ...defaultSettings, a1c: { value: '8.9', date: '2023-11-21T12:30:38.473Z' } }
+  settings: { ...defaultSettings, a1c: { value: '8.9', date: '2023-11-21T12:30:38.473Z' } },
+  referringHcps: [{
+    id: userTimId,
+    name: userTimFullName,
+    email: userTimEmail,
+    profession: 'hcp-profession-nurse'
+  }]
 })
 
 const patient2Metrics: PatientMetrics = buildPatientMetrics({ userId: patient2Id })
@@ -239,7 +253,39 @@ export const patient3Info: Patient = buildPatient({
     fullName: 'Patient3 Srairi',
     sex: Gender.Male
   },
-  settings: defaultSettings
+  settings: defaultSettings,
+  referringHcps: [
+    {
+      id: userTimId,
+      name: userTimFullName,
+      email: userTimEmail,
+      profession: 'hcp-profession-nurse'
+    },
+    {
+      id: userHugoId,
+      name: userHugoFullName,
+      email: userHugoEmail,
+      profession: 'hcp-profession-diabeto'
+    },
+    {
+      id: userYdrisId,
+      name: userYdrisFullName,
+      email: userYdrisEmail,
+      profession: 'hcp-profession-other'
+    },
+    {
+      id: 'clinician-4',
+      name: 'Clinician Four',
+      email: 'clinician.four@example.com',
+      profession: 'hcp-profession-nurse'
+    },
+    {
+      id: 'clinician-5',
+      name: 'Clinician Number five',
+      email: 'clinician.five@example.com',
+      profession: 'hcp-profession-diabeto'
+    }
+  ]
 })
 
 const patient3Metrics: PatientMetrics = buildPatientMetrics({ userId: patient3Id })
