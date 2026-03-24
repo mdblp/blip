@@ -57,4 +57,22 @@ export default class AnalyticsApi {
       logError( `cannot send analytics: ${err}`, 'send-metrics')
     })
   }
+
+  static trackHover(name: string) {
+    const event = {
+      name,
+      value: 1,
+      timestamp: new Date().toISOString(),
+      action: 'hover',
+      tags: {
+      }
+    }
+    console.log(event)
+    HttpService.post<void, ClickEvent>({
+      url: `${ANALYTICS_API_BASE_URL}/v1/metrics`,
+      payload: event
+    }).catch((err) => {
+      logError( `cannot send analytics: ${err}`, 'send-metrics')
+    })
+  }
 }

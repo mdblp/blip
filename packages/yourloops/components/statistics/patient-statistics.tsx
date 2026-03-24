@@ -51,6 +51,7 @@ import { makeStyles } from 'tss-react/mui'
 import { CarbsStat } from './carbs-stat'
 import { DataCard } from '../data-card/data-card'
 import { useTheme } from '@mui/material/styles'
+import { AnalyticsApi } from '../../lib/analytics'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData
@@ -156,12 +157,14 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           data={timeInRangeChartData}
           bgPrefs={bgPrefs}
           days={numberOfDays}
+          trackHoverFunc={AnalyticsApi.trackHover}
         />
         { diabeticProfile === DiabeticType.DT1Pregnancy &&  isDailyView &&
             <Box sx={{ marginTop: theme.spacing(3) }}>
               <TimeInRangeDT1Chart
                 data={timeInRangeDt1Data}
                 bgPrefs={defaultBgPrefs}
+                trackHoverFunc={AnalyticsApi.trackHover}
               />
             </Box>
         }
@@ -170,12 +173,14 @@ export const PatientStatistics: FunctionComponent<PatientStatisticsProps> = (pro
           <TimeInTightRangeChart
             data={timeInTightRangeData}
             bgPrefs={bgPrefs}
+            trackHoverFunc={AnalyticsApi.trackHover}
           />
         </Box>
         {isTrendsView &&
           <Box sx={{ marginTop: theme.spacing(2) }}>
             <Divider className={classes.divider}/>
-            <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage}/>
+            <SensorUsageStat total={sensorUsageTotal} usage={sensorUsage} trackHoverFunc={AnalyticsApi.trackHover}
+            />
           </Box>
         }
       </DataCard>

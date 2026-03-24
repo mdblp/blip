@@ -39,6 +39,7 @@ interface SimpleStatProps {
   title: string
   total: number
   value: number | string
+  trackHoverFunc?: () => void
 }
 
 const SimpleStat: FunctionComponent<SimpleStatProps> = (props) => {
@@ -47,7 +48,8 @@ const SimpleStat: FunctionComponent<SimpleStatProps> = (props) => {
     summaryFormat,
     title,
     total,
-    value
+    value,
+    trackHoverFunc
   } = props
 
   const simpleValueProps = useMemo(() => {
@@ -61,7 +63,7 @@ const SimpleStat: FunctionComponent<SimpleStatProps> = (props) => {
           <div className={commonStyles.chartTitle}>
             {title}
             {annotations &&
-              <StatTooltip annotations={annotations} />
+              <StatTooltip annotations={annotations} trackHoverFunc={trackHoverFunc} />
             }
           </div>
           <SimpleValue {...simpleValueProps} />

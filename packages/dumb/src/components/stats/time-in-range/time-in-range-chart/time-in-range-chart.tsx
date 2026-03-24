@@ -41,10 +41,11 @@ interface TimeInRangeChartProps {
   cbgStatType: CBGStatType
   data: CbgRangeStatistics
   days: number
+  trackHoverFunc: (name: string) => void
 }
 
 const TimeInRangeChart: FunctionComponent<TimeInRangeChartProps> = (props) => {
-  const { bgPrefs, bgType, cbgStatType, data, days } = props
+  const { bgPrefs, bgType, cbgStatType, data, days, trackHoverFunc } = props
   const {
     annotations,
     cbgStatsProps,
@@ -67,6 +68,7 @@ const TimeInRangeChart: FunctionComponent<TimeInRangeChartProps> = (props) => {
         title={title}
         shouldDisplayInfoTooltip={!hoveredStatId}
         type={CBGStatType.TimeInRange}
+        trackHoverFunc={() => trackHoverFunc('time-in-range-chart-title')}
       />
       <Box
         onMouseLeave={() => {

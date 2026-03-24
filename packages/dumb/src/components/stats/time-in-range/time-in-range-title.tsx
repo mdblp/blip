@@ -35,11 +35,12 @@ interface TimeInRangeTitleProps {
   annotations: string[]
   title: string
   shouldDisplayInfoTooltip: boolean
-  type: CBGStatType
+  type: CBGStatType,
+  trackHoverFunc: () => void
 }
 
 const TimeInRangeTitle: FunctionComponent<TimeInRangeTitleProps> = (props) => {
-  const { annotations, title, shouldDisplayInfoTooltip, type } = props
+  const { annotations, title, shouldDisplayInfoTooltip, type, trackHoverFunc } = props
 
   return (
     <Box
@@ -51,7 +52,7 @@ const TimeInRangeTitle: FunctionComponent<TimeInRangeTitleProps> = (props) => {
       }}>
       {title}
       {shouldDisplayInfoTooltip &&
-        <StatTooltip annotations={annotations} />
+        <StatTooltip annotations={annotations} trackHoverFunc={trackHoverFunc} />
       }
     </Box>
   )
