@@ -158,24 +158,24 @@ export const CgmInfoTable: FC<CgmInfoProps> = ({ cgm }) => {
                 </Typography>
               </Box>
             </ListItemText>
-            <ListItem>
-              <ListItemText className="list-item">
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between"
-                  }}>
-                  <Typography variant="body2">{t('firmware-version')}</Typography>
-                  <Typography
-                    variant="body2"
-                    className="bold"
-                  >
-                    {cgm.firmwareVersion ?? FALLBACK_VALUE}
-                  </Typography>
-                </Box>
-              </ListItemText>
-            </ListItem>
           </ListItem>
+          <ListItem>
+          <ListItemText className="list-item">
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between"
+              }}>
+              <Typography variant="body2">{t('firmware-version')}</Typography>
+              <Typography
+                variant="body2"
+                className="bold"
+              >
+                {cgm.firmwareVersion ?? FALLBACK_VALUE}
+              </Typography>
+            </Box>
+          </ListItemText>
+        </ListItem> 
         </>
       }
     </GenericListCard>
