@@ -167,6 +167,136 @@ This document provides a comprehensive overview of all analytics tracking events
 - **Location:** Show parameters component
 - **User Action:** Clicking the button to display parameters at a specific date
 
+## Daily View Tooltips (Hover Events)
+
+#### `daily-basal`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over a basal rate element to view its tooltip
+- **Location:** Daily chart - Basal section
+- **User Action:** Hovering over a basal rate element
+
+#### `daily-bolus`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over a bolus element to view its tooltip
+- **Location:** Daily chart - Bolus/Carbs section
+- **User Action:** Hovering over a bolus element
+
+#### `daily-smbg`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over a self-monitoring blood glucose (SMBG) data point
+- **Location:** Daily chart - Blood glucose section
+- **User Action:** Hovering over an SMBG data point
+
+#### `daily-cbg`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over a continuous blood glucose (CBG) data point
+- **Location:** Daily chart - Blood glucose section
+- **User Action:** Hovering over a CBG data point
+
+#### `daily-carb`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over a carbohydrate entry (including rescue carbs)
+- **Location:** Daily chart - Bolus/Carbs section
+- **User Action:** Hovering over a carb element
+
+#### `daily-eating-shortly`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over an "eating shortly" event marker
+- **Location:** Daily chart - Events section
+- **User Action:** Hovering over an eating shortly event
+
+#### `daily-iob`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over an insulin on board (IOB) data point
+- **Location:** Daily chart - IOB curve
+- **User Action:** Hovering over the IOB curve
+
+#### `daily-reservoir-change`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over a reservoir change event marker
+- **Location:** Daily chart - Events section
+- **User Action:** Hovering over a reservoir change marker
+
+#### `daily-physical-activity`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over a physical activity event marker
+- **Location:** Daily chart - Events section
+- **User Action:** Hovering over a physical activity marker
+
+#### `daily-parameter`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over a parameter change event marker
+- **Location:** Daily chart - Events section
+- **User Action:** Hovering over a parameter change marker
+
+#### `daily-warmup`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over a CGM sensor warmup period
+- **Location:** Daily chart - Events section
+- **User Action:** Hovering over a warmup indicator
+
+#### `daily-alarm-event`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over an alarm event marker
+- **Location:** Daily chart - Events section
+- **User Action:** Hovering over an alarm event marker
+
+#### `daily-night-mode`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over a night mode period indicator
+- **Location:** Daily chart - Events section
+- **User Action:** Hovering over a night mode marker
+
+#### `daily-time-change`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over a time change event marker
+- **Location:** Daily chart - Events section
+- **User Action:** Hovering over a time change indicator
+
+#### `daily-zen-mode`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over a zen mode period indicator
+- **Location:** Daily chart - Events section
+- **User Action:** Hovering over a zen mode marker
+
+#### `daily-confidential`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over a confidential mode indicator
+- **Location:** Daily chart - Various sections
+- **User Action:** Hovering over confidential data
+
+#### `daily-event-superposition`
+- **Type:** Button
+- **Description:** Tracks when a user clicks on overlapping events to expand the event details popover
+- **Location:** Daily chart - Events section
+- **User Action:** Clicking on superposed events indicator
+
+## Statistics Widget Tooltips (Hover Events)
+
+#### `time-in-range-chart-title`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over the info icon of the Time In Range chart title
+- **Location:** Time In Range statistics widget
+- **User Action:** Hovering over the info tooltip icon
+
+#### `time-in-range-dt1-chart-title`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over the info icon of the Time In Range DT1 chart title
+- **Location:** Time In Range DT1 statistics widget (for DT1 Pregnancy profile)
+- **User Action:** Hovering over the info tooltip icon
+
+#### `time-in-tight-range-chart-title`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over the info icon of the Time In Tight Range chart title
+- **Location:** Time In Tight Range statistics widget
+- **User Action:** Hovering over the info tooltip icon
+
+#### `sensor-usage-stat`
+- **Type:** Hover
+- **Description:** Tracks when a user hovers over the info icon of the Sensor Usage statistic
+- **Location:** Sensor Usage statistics widget (Dashboard and Trends view)
+- **User Action:** Hovering over the info tooltip icon
+
 ---
 
 ## Tracking Categories Summary

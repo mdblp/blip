@@ -38,10 +38,11 @@ import { TIGHT_RANGE_BOUNDS } from 'medical-domain'
 interface TimeInTightRangeChartProps {
   data: { value: number, total: number }
   bgPrefs: BgPrefs
+  trackHoverFunc: (name: string) => void
 }
 
 export const TimeInTightRangeChart: FC<TimeInTightRangeChartProps> = (props) => {
-  const { data, bgPrefs } = props
+  const { data, bgPrefs, trackHoverFunc } = props
   const { t } = useTranslation('main')
 
   const title = t('time-in-tight-range')
@@ -61,6 +62,8 @@ export const TimeInTightRangeChart: FC<TimeInTightRangeChartProps> = (props) => 
         title={title}
         shouldDisplayInfoTooltip={true}
         type={CBGStatType.TimeInTightRange}
+        trackHoverFunc={() => trackHoverFunc('time-in-tight-range-chart-title')}
+
       />
       <Box sx={{ marginBottom: 1 }}>
         <CbgPercentageBarChart
