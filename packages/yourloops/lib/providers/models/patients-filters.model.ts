@@ -29,6 +29,7 @@ export interface PatientsFilters {
   pendingEnabled: boolean
   manualFlagEnabled: boolean
   timeOutOfTargetEnabled: boolean
+  hyperglycemiaEnabled: boolean
   hypoglycemiaEnabled: boolean
   dataNotTransferredEnabled: boolean
   messagesEnabled: boolean

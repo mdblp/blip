@@ -40,6 +40,7 @@ describe('usePatientListProviderHook', () => {
     pendingEnabled: false,
     manualFlagEnabled: false,
     timeOutOfTargetEnabled: false,
+    hyperglycemiaEnabled: false,
     hypoglycemiaEnabled: false,
     dataNotTransferredEnabled: false,
     messagesEnabled: false
@@ -49,6 +50,7 @@ describe('usePatientListProviderHook', () => {
     pendingEnabled: true,
     manualFlagEnabled: true,
     timeOutOfTargetEnabled: true,
+    hyperglycemiaEnabled: true,
     hypoglycemiaEnabled: true,
     dataNotTransferredEnabled: true,
     messagesEnabled: true

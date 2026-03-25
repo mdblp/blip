@@ -344,6 +344,7 @@
   "filter-data-not-transmitted": "Filter patients having a \"Data not transmitted\" monitoring alert",
   "filter-flagged": "Filter patients being flagged",
   "filter-hypoglycemia": "Filter patients having a \"Hypoglycemia\" monitoring alert",
+  "filter-hyperglycemia": "Filter patients having a \"Hyperglycemia\" monitoring alert",
   "filter-out-of-range": "Filter patients having a \"Time out of the range\" monitoring alert",
   "filter-pending": "{{patientsFilteredCount}} pending patient(s)",
   "filter-unread-messages": "Filter patients having sent unread messages",
