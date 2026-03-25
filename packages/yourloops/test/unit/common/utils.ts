@@ -62,6 +62,8 @@ export const createPatient = (
       timeSpentAwayFromTargetActive: monitoringAlerts?.timeSpentAwayFromTargetActive || false,
       frequencyOfSevereHypoglycemiaRate: monitoringAlerts?.frequencyOfSevereHypoglycemiaRate || 20,
       frequencyOfSevereHypoglycemiaActive: monitoringAlerts?.frequencyOfSevereHypoglycemiaActive || false,
+      frequencyOfSevereHyperglycemiaRate: monitoringAlerts?.frequencyOfSevereHyperglycemiaRate || 20,
+      frequencyOfSevereHyperglycemiaActive: monitoringAlerts?.frequencyOfSevereHyperglycemiaActive || false,
       nonDataTransmissionRate: monitoringAlerts?.nonDataTransmissionRate || 30,
       nonDataTransmissionActive: monitoringAlerts?.nonDataTransmissionActive || false
     },

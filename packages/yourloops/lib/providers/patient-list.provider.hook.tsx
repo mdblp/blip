@@ -36,6 +36,7 @@ const DEFAULT_FILTERS = {
   pendingEnabled: false,
   manualFlagEnabled: false,
   timeOutOfTargetEnabled: false,
+  hyperglycemiaEnabled: false,
   hypoglycemiaEnabled: false,
   dataNotTransferredEnabled: false,
   messagesEnabled: false
@@ -121,7 +122,7 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     setFilters(DEFAULT_FILTERS)
   }
 
-  const hasAnyNonPendingFiltersEnabled = filters.manualFlagEnabled || filters.timeOutOfTargetEnabled || filters.hypoglycemiaEnabled || filters.dataNotTransferredEnabled || filters.messagesEnabled
+  const hasAnyNonPendingFiltersEnabled = filters.manualFlagEnabled || filters.timeOutOfTargetEnabled || filters.hyperglycemiaEnabled || filters.hypoglycemiaEnabled  || filters.dataNotTransferredEnabled || filters.messagesEnabled
 
   return {
     filters,

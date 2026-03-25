@@ -35,6 +35,8 @@ import PatientApi from '../../../../lib/patient/patient.api'
 const defaultMonitoringAlerts = {
   timeSpentAwayFromTargetRate: 10,
   timeSpentAwayFromTargetActive: false,
+  frequencyOfSevereHyperglycemiaRate: 20,
+  frequencyOfSevereHyperglycemiaActive: false,
   frequencyOfSevereHypoglycemiaRate: 20,
   frequencyOfSevereHypoglycemiaActive: false,
   nonDataTransmissionRate: 30,
@@ -45,6 +47,7 @@ const defaultPatientFilters = {
   pendingEnabled: false,
   manualFlagEnabled: false,
   timeOutOfTargetEnabled: false,
+  hyperglycemiaEnabled: false,
   hypoglycemiaEnabled: false,
   dataNotTransferredEnabled: false,
   messagesEnabled: false
@@ -57,6 +60,10 @@ const patientWithTimeOutOfTargetAlert = createPatient('outOfTarget', UserInviteS
 const patientWithHypoglycemiaAlert = createPatient('hypoglycemia', UserInviteStatus.Accepted, undefined, undefined, undefined, {
   ...defaultMonitoringAlerts,
   frequencyOfSevereHypoglycemiaActive: true
+})
+const patientWithHyperglycemiaAlert = createPatient('hyperglycemia', UserInviteStatus.Accepted, undefined, undefined, undefined, {
+  ...defaultMonitoringAlerts,
+  frequencyOfSevereHyperglycemiaActive: true
 })
 const patientWithNoDataAlert = createPatient('noData', UserInviteStatus.Accepted, undefined, undefined, undefined, {
   ...defaultMonitoringAlerts,
@@ -108,7 +115,7 @@ describe('Patient utils', () => {
   })
 
   describe('filterPatientsOnMonitoringAlerts', () => {
-    const patients = [patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithNoDataAlert, noAlertsPatient]
+    const patients = [patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert,patientWithHyperglycemiaAlert, patientWithNoDataAlert, noAlertsPatient]
 
     it('should return all patient when no filter is selected', () => {
       const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, defaultPatientFilters)
@@ -120,9 +127,59 @@ describe('Patient utils', () => {
         ...defaultPatientFilters,
         dataNotTransferredEnabled: true,
         timeOutOfTargetEnabled: true,
+        hyperglycemiaEnabled: true,
+        hypoglycemiaEnabled: true
+      })
+      expect(result).toEqual([patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithHyperglycemiaAlert, patientWithNoDataAlert])
+    })
+
+    it('should return only patients with target, hypo and not transferred alerts when the filters are selected', () => {
+      const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
+        ...defaultPatientFilters,
+        dataNotTransferredEnabled: true,
+        timeOutOfTargetEnabled: true,
         hypoglycemiaEnabled: true
       })
       expect(result).toEqual([patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithNoDataAlert])
+    })
+
+    it('should return only patients with target, hyper and not transferred alerts when the filters are selected', () => {
+      const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
+        ...defaultPatientFilters,
+        dataNotTransferredEnabled: true,
+        timeOutOfTargetEnabled: true,
+        hyperglycemiaEnabled: true
+      })
+      expect(result).toEqual([patientWithTimeOutOfTargetAlert, patientWithHyperglycemiaAlert, patientWithNoDataAlert])
+    })
+
+    it('should return only patients with hypo, hyper and not transferred alerts when the filters are selected', () => {
+      const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
+        ...defaultPatientFilters,
+        dataNotTransferredEnabled: true,
+        hyperglycemiaEnabled: true,
+        hypoglycemiaEnabled: true
+      })
+      expect(result).toEqual([patientWithHypoglycemiaAlert, patientWithHyperglycemiaAlert, patientWithNoDataAlert])
+    })
+
+    it('should return only patients with hypo, hyper and target alerts when the filters are selected', () => {
+      const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
+        ...defaultPatientFilters,
+        hyperglycemiaEnabled: true,
+        hypoglycemiaEnabled: true,
+        timeOutOfTargetEnabled: true
+      })
+      expect(result).toEqual([patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithHyperglycemiaAlert])
+    })
+
+    it('should return only patients with target and hyper alert when target and hypo are the filters selected', () => {
+      const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
+        ...defaultPatientFilters,
+        timeOutOfTargetEnabled: true,
+        hyperglycemiaEnabled: true
+      })
+      expect(result).toEqual([patientWithTimeOutOfTargetAlert, patientWithHyperglycemiaAlert])
     })
 
     it('should return only patients with target and hypo alert when target and hypo are the filters selected', () => {
@@ -143,11 +200,29 @@ describe('Patient utils', () => {
       expect(result).toEqual([patientWithHypoglycemiaAlert, patientWithNoDataAlert])
     })
 
+    it('should return only patients with hyper and hypo alert are the filters selected', () => {
+      const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
+        ...defaultPatientFilters,
+        hyperglycemiaEnabled: true,
+        hypoglycemiaEnabled: true
+      })
+      expect(result).toEqual([patientWithHypoglycemiaAlert, patientWithHyperglycemiaAlert])
+    })
+
+    it('should return only patients with no data and hyper alert when no data and hypo are the filters selected', () => {
+      const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
+        ...defaultPatientFilters,
+        dataNotTransferredEnabled: true,
+        hyperglycemiaEnabled: true
+      })
+      expect(result).toEqual([patientWithHyperglycemiaAlert, patientWithNoDataAlert])
+    })
+
     it('should return only patients with target and no data alert when target and no data are the filters selected', () => {
       const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
         ...defaultPatientFilters,
-        timeOutOfTargetEnabled: true,
-        dataNotTransferredEnabled: true
+        dataNotTransferredEnabled: true,
+        timeOutOfTargetEnabled: true
       })
       expect(result).toEqual([patientWithTimeOutOfTargetAlert, patientWithNoDataAlert])
     })
@@ -158,6 +233,14 @@ describe('Patient utils', () => {
         timeOutOfTargetEnabled: true
       })
       expect(result).toEqual([patientWithTimeOutOfTargetAlert])
+    })
+
+    it('should return patient with hyper alert when hyper filter is selected', () => {
+      const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
+        ...defaultPatientFilters,
+        hyperglycemiaEnabled: true
+      })
+      expect(result).toEqual([patientWithHyperglycemiaAlert])
     })
 
     it('should return patient with hypo alert when hypo filter is selected', () => {
