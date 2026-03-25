@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -48,11 +48,11 @@ import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockAuthApi } from '../../mock/auth.api.mock'
 import { Unit } from 'medical-domain'
-import ErrorApi from '../../../../lib/error/error.api'
 import {
   testCaregiverUserInfoUpdate,
   testEmailChangeRequest,
-  testPasswordChangeRequest, testPasswordChangeRequestFailed
+  testPasswordChangeRequest,
+  testPasswordChangeRequestFailed
 } from '../../use-cases/user-account-management'
 import {
   testCaregiverSwitchRoleDialogsClosing,
@@ -60,6 +60,7 @@ import {
 } from '../../use-cases/caregiver-switch-role-hcp'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
+import { mockErrorApi } from '../../mock/error.api.mock'
 
 describe('User account page for caregiver', () => {
   const userAccountRoute = AppUserRoute.UserAccount
@@ -90,11 +91,10 @@ describe('User account page for caregiver', () => {
     mockTeamAPI()
     mockPatientApiForCaregivers()
     mockPatientApiForHcp() // Do not remove this, this is needed for when the user switches role
+    mockErrorApi()
   })
 
   it('should render user account page for a caregiver and be able to change his password and change his role to HCP', async () => {
-    jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
-
     const expectedUserAccount = { ...account, firstName: 'Jean', lastName: 'Talue', fullName: 'Jean Talue' }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
     const expectedSettings: Settings = { ...settings, units: { bg: Unit.MilligramPerDeciliter } }

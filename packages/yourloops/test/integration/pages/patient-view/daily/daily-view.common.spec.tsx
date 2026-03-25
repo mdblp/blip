@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -63,9 +63,9 @@ import {
 } from '../../../mock/complete-daily-view-data'
 import { t } from '../../../../../lib/language'
 import { checkReportDialogPresets } from '../../../assert/report-dialog.assert'
-import ErrorApi from '../../../../../lib/error/error.api'
 import { DeviceSystem } from 'medical-domain'
 import { ConfigService } from '../../../../../lib/config/config.service'
+import { mockErrorApi } from '../../../mock/error.api.mock'
 
 describe('Daily view for anyone', () => {
   const dailyRoute = AppUserRoute.Daily
@@ -73,6 +73,7 @@ describe('Daily view for anyone', () => {
   beforeEach(() => {
     mockWindowResizer()
     mockPatientLogin(patient2Info)
+    mockErrorApi()
   })
 
   afterEach(() => {
@@ -184,7 +185,6 @@ describe('Daily view for anyone', () => {
     it('should display an alert when CSV report generation failed', async () => {
       dayjs.extend(weekArrayPlugin)
       dayjs.extend(weekdaysPlugin)
-      jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
 
       const downloadLinkElement = {
         click: jest.fn(),

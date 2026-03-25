@@ -39,8 +39,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 
 import { type Team, type TeamMember, useTeam } from '../../lib/team'
 import MemberRow from './member-row'
-import AddMemberDialog from '../../pages/hcp/team-member-add-dialog'
-import { type AddMemberDialogContentProps } from '../../pages/hcp/types'
+import { type AddMemberDialogContentProps } from './types'
 import { commonComponentStyles } from '../common'
 import LeaveTeamButton from './leave-team-button'
 import { useAuth } from '../../lib/auth'
@@ -53,6 +52,7 @@ import CardHeader from '@mui/material/CardHeader'
 import Card from '@mui/material/Card'
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
+import { AddMemberDialog } from './team-member-add-dialog'
 
 const useStyles = makeStyles()((theme) => ({
   checkboxTableCellHeader: {

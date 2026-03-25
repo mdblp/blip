@@ -58,12 +58,14 @@ import { getTranslation } from '../../../../utils/i18n'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { checkProfilesForMalePatient } from '../../../assert/profile-range.assert'
 import {
-  checkCliniciansEmptyList, checkCliniciansFiveClinicians,
-  checkCliniciansManagementErrors, checkCliniciansManagementHcp
+  checkCliniciansEmptyList,
+  checkCliniciansFiveClinicians,
+  checkCliniciansManagementErrors,
+  checkCliniciansManagementHcp
 } from '../../../use-cases/clinicians-management'
 import { mockLeadCliniciansApi } from '../../../mock/clinicians.api.mock'
 import { LeadCliniciansApi } from '../../../../../lib/lead-clinicians/lead-clinicians.api'
-import ErrorApi from '../../../../../lib/error/error.api'
+import { mockErrorApi } from '../../../mock/error.api.mock'
 
 describe('Patient profile view for HCP', () => {
   beforeEach(() => {
@@ -76,6 +78,7 @@ describe('Patient profile view for HCP', () => {
     mockDataAPI()
     mockDblCommunicationApi()
     mockLeadCliniciansApi()
+    mockErrorApi()
   })
 
   const firstName = 'HCP firstName'
@@ -202,7 +205,6 @@ describe('Patient profile view for HCP', () => {
     it('should handle gracefully error cases when managing clinicians', async () => {
       jest.spyOn(LeadCliniciansApi, 'addClinician').mockRejectedValue('Add clinician error')
       jest.spyOn(LeadCliniciansApi, 'removeClinician').mockRejectedValue('Remove clinician error')
-      jest.spyOn(ErrorApi, 'sendError').mockResolvedValue()
 
       await act(async () => {
         renderPage(patientWithOneClinicianRoute)

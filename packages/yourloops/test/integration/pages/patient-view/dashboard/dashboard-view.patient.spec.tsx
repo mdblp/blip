@@ -28,10 +28,10 @@
 import { act, waitFor } from '@testing-library/react'
 import { renderPage } from '../../../utils/render'
 import {
-  oneDayDashboardData,
-  smallDataSet,
   mockDataAPI,
+  oneDayDashboardData,
   sixteenDaysOldDashboardData,
+  smallDataSet,
   twoWeeksOldDashboardData
 } from '../../../mock/data.api.mock'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
@@ -39,10 +39,10 @@ import { type MedicalFilesWidgetParams } from '../../../assert/medical-widget.as
 import { mockMedicalFilesAPI, mockMedicalFilesApiEmptyResult } from '../../../mock/medical-files.api.mock'
 import TeamAPI from '../../../../../lib/team/team.api'
 import {
+  anotherTeam,
   buildPrivateTeam,
   buildTeamOne,
   buildTeamTwo,
-  anotherTeam,
   mySecondTeamId,
   mySecondTeamName
 } from '../../../mock/team.api.mock'
@@ -62,7 +62,7 @@ import { testMedicalWidgetForPatient } from '../../../use-cases/medical-reports-
 import { testChatWidgetForPatient } from '../../../use-cases/communication-system'
 import { testJoinTeam } from '../../../use-cases/teams-management'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
-import ErrorApi from '../../../../../lib/error/error.api'
+import { mockErrorApi } from '../../../mock/error.api.mock'
 
 describe('Dashboard view for patient', () => {
   const patientDashboardRoute = AppUserRoute.Dashboard
@@ -73,6 +73,7 @@ describe('Dashboard view for patient', () => {
     mockPatientLogin(patient1Info)
     mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
     mockChatAPI()
+    mockErrorApi()
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
     jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
     jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(anotherTeam)
@@ -133,7 +134,6 @@ describe('Dashboard view for patient', () => {
   })
 
   it('should be able to join a team', async () => {
-    jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
     const router = renderPage(patientDashboardRoute)
 
     await waitFor(() => {

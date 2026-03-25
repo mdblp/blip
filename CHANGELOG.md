@@ -16,6 +16,7 @@ It is based on Tidepool Blip 1.27.
 
 ### Changed
 - YLP-2478 Care team settings menu
+- YLP-2480 Care team settings UI - Info section
 - YLP-2531 Care team settings UI - Members section
 - YLP-2823 Use , instead of . for languages other than English
 - YLP-3618 Meal without bolus management in Daily view

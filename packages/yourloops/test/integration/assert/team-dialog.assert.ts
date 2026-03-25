@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -64,7 +64,7 @@ export const checkCreateCareTeamDialog = async () => {
   expect(createTeamButton).toBeDisabled()
 
   // Team dropdown with prefix phone number
-  fireEvent.mouseDown(within(screen.getByTestId('team-edit-dialog-select-country')).getByRole('combobox'))
+  fireEvent.mouseDown(within(screen.getByTestId('team-create-dialog-country-select')).getByRole('combobox'))
   await userEvent.click(screen.getByRole('option', { name: 'Austria' }))
   expect(prefixPhoneNumber).toHaveTextContent(PhonePrefixCode.AT)
 

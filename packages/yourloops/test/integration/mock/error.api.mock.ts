@@ -25,29 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC } from 'react'
-import TeamMembers from '../../../components/team/team-members'
-import { Team } from '../../../lib/team'
-import Divider from '@mui/material/Divider'
-import { TeamInformation } from '../../../components/team/team-information'
+import ErrorApi from '../../../lib/error/error.api'
 
-interface InfoAndMembersSectionProps {
-  team: Team
-  isUserHcp: boolean
-}
-
-export const InfoAndMembersSection: FC<InfoAndMembersSectionProps> = (props) => {
-  const { team, isUserHcp } = props
-
-  return (
-    <>
-      <TeamInformation team={team} />
-      {isUserHcp &&
-        <>
-          <Divider sx={{ my: 4 }} variant="middle" />
-          <TeamMembers team={team} />
-        </>
-      }
-    </>
-  )
+export const mockErrorApi = () => {
+  jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
 }
