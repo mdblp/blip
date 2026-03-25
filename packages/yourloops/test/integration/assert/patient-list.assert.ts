@@ -167,17 +167,28 @@ export const checkPatientListFilters = async () => {
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, hypoglycemiaFilterToggle: true })
 
-  // check the no data toggle
+  // check the hypoglycemia toggle
   await updatePatientsFilters({
     ...defaultToggles,
     hypoglycemiaFilterToggle: true,
+    hyperglycemiaFilterToggle: true
+  })
+  checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, `Flag patient hyperglycemia@patient.frPatient HyperglycemiaType 1Jan 1, 1980No new messages from the patient0%0%${lastDataUploadDate}`)
+  await userEvent.click(filtersButton)
+  checkPatientsFilters({ ...defaultToggles, hyperglycemiaFilterToggle: true })
+
+
+  // check the no data toggle
+  await updatePatientsFilters({
+    ...defaultToggles,
+    hyperglycemiaFilterToggle: true,
     dataNotTransferredFilterToggle: true
   })
   checkDataGridAfterSinglePatientFilter(dataGridRowCurrent, 'Flag patient z-no-data@patient.frPatient Z - No DataType 1Jan 1, 1980No new messages from the patient0%0%N/A')
   await userEvent.click(filtersButton)
   checkPatientsFilters({ ...defaultToggles, dataNotTransferredFilterToggle: true })
 
-  // check the no data toggle
+  // check the unread message toggle
   await updatePatientsFilters({
     ...defaultToggles,
     dataNotTransferredFilterToggle: true,

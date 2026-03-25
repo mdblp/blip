@@ -31,6 +31,7 @@ import userEvent from '@testing-library/user-event'
 interface FilterPatientsPresentationToggles {
   manualFlagFilterToggle: boolean
   outOfRangeFilterToggle: boolean
+  hyperglycemiaFilterToggle: boolean,
   hypoglycemiaFilterToggle: boolean
   dataNotTransferredFilterToggle: boolean
   unreadMessagesFilterToggle: boolean
@@ -39,6 +40,7 @@ interface FilterPatientsPresentationToggles {
 export const defaultToggles: FilterPatientsPresentationToggles = {
   manualFlagFilterToggle: false,
   outOfRangeFilterToggle: false,
+  hyperglycemiaFilterToggle: false,
   hypoglycemiaFilterToggle: false,
   dataNotTransferredFilterToggle: false,
   unreadMessagesFilterToggle: false
@@ -46,14 +48,16 @@ export const defaultToggles: FilterPatientsPresentationToggles = {
 
 export const checkPatientsFilters = (toggles: FilterPatientsPresentationToggles = defaultToggles): void => {
   const filtersPresentation = screen.getByRole('presentation')
-  expect(filtersPresentation).toHaveTextContent('Personal settingsManual flagMonitoring alertsTime spent out of the target rangeHypoglycemiaData not transmittedNotificationMessagesCancelApply')
+  expect(filtersPresentation).toHaveTextContent('Personal settingsManual flagMonitoring alertsTime spent out of the target rangeHyperglycemiaHypoglycemiaData not transmittedNotificationMessagesCancelApply')
   const manualFlagFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients being flagged')).getByRole('switch')
   const outOfRangeFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having a "Time out of the range" monitoring alert')).getByRole('switch')
+  const hyperglycemiaFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having a "Hyperglycemia" monitoring alert')).getByRole('switch')
   const hypoglycemiaFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having a "Hypoglycemia" monitoring alert')).getByRole('switch')
   const dataNotTransferredFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having a "Data not transmitted" monitoring alert')).getByRole('switch')
   const unreadMessagesFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having sent unread messages')).getByRole('switch')
   expect(manualFlagFilterToggle).toHaveProperty('checked', toggles.manualFlagFilterToggle)
   expect(outOfRangeFilterToggle).toHaveProperty('checked', toggles.outOfRangeFilterToggle)
+  expect(hyperglycemiaFilterToggle).toHaveProperty('checked', toggles.hyperglycemiaFilterToggle)
   expect(hypoglycemiaFilterToggle).toHaveProperty('checked', toggles.hypoglycemiaFilterToggle)
   expect(dataNotTransferredFilterToggle).toHaveProperty('checked', toggles.dataNotTransferredFilterToggle)
   expect(unreadMessagesFilterToggle).toHaveProperty('checked', toggles.unreadMessagesFilterToggle)
@@ -80,6 +84,12 @@ export const updatePatientsFilters = async (toggles: FilterPatientsPresentationT
     const hypoglycemiaFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having a "Hypoglycemia" monitoring alert')).getByRole('switch')
     await userEvent.click(hypoglycemiaFilterToggle)
   }
+
+  if (toggles.hyperglycemiaFilterToggle) {
+    const hyperglycemiaFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having a "Hyperglycemia" monitoring alert')).getByRole('switch')
+    await userEvent.click(hyperglycemiaFilterToggle)
+  }
+
   if (toggles.dataNotTransferredFilterToggle) {
     const dataNotTransferredFilterToggle = within(within(filtersPresentation).getByLabelText('Filter patients having a "Data not transmitted" monitoring alert')).getByRole('switch')
     await userEvent.click(dataNotTransferredFilterToggle)
