@@ -169,16 +169,13 @@ const getTableRowsByDataTableType = (type: PdfSettingsDataType, data: TableData,
           label: t('Cgm sensor expiration date'),
           value: cgmData.expirationDate ? formatLocalizedFromUTC(cgmData.expirationDate, timePrefs, longDayFormat) : ''
         }, {
-          label: t('pairing-code'),
-          value: cgmData.pairingCode || ''
-        }, {
           label: t('serial-number'),
           value: cgmData.serialNumber || ''
         }, {
           label: t('software-number'),
           value: cgmData.softwareNumber || ''
         }, {
-          label: t('Cgm transmitter id'),
+          label: t('firmware-version'),
           value: cgmData.firmwareVersion || ''
         }]
       }

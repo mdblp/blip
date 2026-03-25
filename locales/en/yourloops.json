@@ -538,7 +538,6 @@
   "optional": "Optional",
   "override": "Override",
   "page-not-found": "Page not found",
-  "pairing-code": "Pairing code",
   "parameter-info-title": "Setting information: {{parameterName}}",
   "parameter-info-open": "Open {{parameterName}} setting information",
   "parameter-memo-load-error": "The document is currently being updated. The new version will be available soon.",
