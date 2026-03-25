@@ -126,6 +126,16 @@ export const checkCareTeamInformation = async () => {
 
   const saveButton = teamInformationSection.getByRole('button', { name: 'Save' })
   expect(saveButton).toBeDisabled()
+}
+
+export const checkTeamUpdateSuccess = async () => {
+  const teamInformationSection = within(await screen.findByTestId('team-information'))
+  const teamInformationForm = within(teamInformationSection.getByTestId('team-info-form'))
+
+  const nameField = teamInformationForm.getByRole('textbox', { name: 'Name' })
+  const phoneNumberField = teamInformationForm.getByRole('textbox', { name: 'Phone number' })
+  const zipCodeField = teamInformationForm.getByRole('textbox', { name: 'Zipcode' })
+  const saveButton = teamInformationSection.getByRole('button', { name: 'Save' })
 
   await userEvent.clear(nameField)
   await userEvent.type(nameField, 'Team name updated')
@@ -157,6 +167,21 @@ export const checkCareTeamInformation = async () => {
   await userEvent.click(saveButton)
   const successAlert = await screen.findByText('Team information successfully saved')
   expect(successAlert).toBeVisible()
+}
+
+export const checkTeamUpdateFailure = async () => {
+  const teamInformationSection = within(await screen.findByTestId('team-information'))
+  const teamInformationForm = within(teamInformationSection.getByTestId('team-info-form'))
+
+  const nameField = teamInformationForm.getByRole('textbox', { name: 'Name' })
+  const saveButton = teamInformationSection.getByRole('button', { name: 'Save' })
+
+  await userEvent.clear(nameField)
+  await userEvent.type(nameField, 'Team name updated')
+
+  await userEvent.click(saveButton)
+  const failureAlert = await screen.findByText('Impossible to save care team information. Please try again later.')
+  expect(failureAlert).toBeVisible()
 }
 
 export const checkInfoSectionForNotTeamAdmin = async () => {

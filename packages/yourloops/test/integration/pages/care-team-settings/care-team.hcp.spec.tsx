@@ -46,6 +46,7 @@ import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import {
   testCareTeamLayout,
+  testCareTeamUpdateError,
   testDeleteTeam,
   testGiveTeamMemberAdminRole,
   testLeaveTeamHcp,
@@ -60,6 +61,8 @@ import {
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
+import TeamAPI from '../../../../lib/team/team.api'
+import { mockErrorApi } from '../../mock/error.api.mock'
 
 describe('HCP care team settings page', () => {
   const firstName = 'Jacques'
@@ -79,6 +82,7 @@ describe('HCP care team settings page', () => {
     mockDirectShareApi()
     mockDataAPI()
     mockDblCommunicationApi()
+    mockErrorApi()
   })
 
   const renderCareTeamSettingsPage = async (route: string) => {
@@ -111,6 +115,14 @@ describe('HCP care team settings page', () => {
     await renderCareTeamSettingsPage(thirdTeamDetailsRoute)
 
     await testCareTeamLayout()
+  })
+
+  it('should handle gracefully a team update error', async () => {
+    jest.spyOn(TeamAPI, 'editTeam').mockRejectedValue(new Error('Error updating team'))
+
+    await renderCareTeamSettingsPage(thirdTeamDetailsRoute)
+
+    await testCareTeamUpdateError()
   })
 
   it('should be able to remove one team member from the team', async () => {

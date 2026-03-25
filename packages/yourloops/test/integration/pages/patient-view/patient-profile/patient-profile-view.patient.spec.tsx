@@ -40,12 +40,13 @@ import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { UserRole } from '../../../../../lib/auth/models/enums/user-role.enum'
 import {
   checkCliniciansEmptyList,
-  checkCliniciansFiveClinicians, checkCliniciansManagementErrors,
+  checkCliniciansFiveClinicians,
+  checkCliniciansManagementErrors,
   checkCliniciansManagementPatient
 } from '../../../use-cases/clinicians-management'
 import { mockLeadCliniciansApi } from '../../../mock/clinicians.api.mock'
 import { LeadCliniciansApi } from '../../../../../lib/lead-clinicians/lead-clinicians.api'
-import ErrorApi from '../../../../../lib/error/error.api'
+import { mockErrorApi } from '../../../mock/error.api.mock'
 
 describe('Patient profile view for Patient', () => {
 
@@ -58,6 +59,7 @@ describe('Patient profile view for Patient', () => {
       mockPatientLogin(patient1Info)
       mockDataAPI()
       mockLeadCliniciansApi()
+      mockErrorApi()
     })
 
     afterEach(() => {
@@ -106,7 +108,6 @@ describe('Patient profile view for Patient', () => {
 
       jest.spyOn(LeadCliniciansApi, 'addClinician').mockRejectedValue('Add clinician error')
       jest.spyOn(LeadCliniciansApi, 'removeClinician').mockRejectedValue('Remove clinician error')
-      jest.spyOn(ErrorApi, 'sendError').mockResolvedValue()
 
       await act(async () => {
         renderPage(patientProfileRoute)

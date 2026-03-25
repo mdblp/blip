@@ -45,7 +45,8 @@ import { mockDataAPI } from '../../mock/data.api.mock'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import {
-  testAckMonitoringAlerts, testAckMonitoringAlertsWithError,
+  testAckMonitoringAlerts,
+  testAckMonitoringAlertsWithError,
   testPatientListForHcp,
   testPatientListForHcpPrivateTeam,
   testPatientListForHcpWithMmolL
@@ -57,10 +58,10 @@ import NotificationApi from '../../../../lib/notifications/notification.api'
 import { type Router } from '../../models/router.model'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
-import ErrorApi from '../../../../lib/error/error.api'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
+import { mockErrorApi } from '../../mock/error.api.mock'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -81,10 +82,10 @@ describe('HCP home page', () => {
     mockChatAPI()
     mockDblCommunicationApi()
     mockMedicalFilesApiEmptyResult()
+    mockErrorApi()
     jest.spyOn(PatientApi, 'removePatient').mockResolvedValue(undefined)
     jest.spyOn(PatientApi, 'invitePatient').mockResolvedValue(undefined)
     jest.spyOn(NotificationApi, 'cancelInvitation').mockResolvedValue(undefined)
-    jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
   })
 
   const renderHomePage = async (route: string): Promise<Router> => {
@@ -159,7 +160,6 @@ describe('HCP home page', () => {
   })
 
   it('should be able to manage patients when scoped on a medical team', async () => {
-    jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
     await renderHomePage(thirdTeamPatientsList)
 
     await testPatientManagementMedicalTeam()
@@ -185,7 +185,6 @@ describe('HCP home page', () => {
   })
 
   it('should be able to create a team when on the home page', async () => {
-    jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
     const router = await renderHomePage(thirdTeamPatientsList)
 
     await testTeamCreation(router)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -42,18 +42,16 @@ import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockAuthApi } from '../../mock/auth.api.mock'
 import { Unit } from 'medical-domain'
-import {
-  type AppMainLayoutHcpParams,
-  testAppMainLayoutForHcp
-} from '../../use-cases/app-main-layout-visualisation'
-import ErrorApi from '../../../../lib/error/error.api'
+import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import {
   testEmailChangeRequest,
   testHcpUserInfoUpdate,
-  testPasswordChangeRequest, testPasswordChangeRequestFailed
+  testPasswordChangeRequest,
+  testPasswordChangeRequestFailed
 } from '../../use-cases/user-account-management'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
+import { mockErrorApi } from '../../mock/error.api.mock'
 
 describe('User account page for hcp', () => {
   const userAccountRoute = AppUserRoute.UserAccount
@@ -83,11 +81,10 @@ describe('User account page for hcp', () => {
     mockDirectShareApi()
     mockTeamAPI()
     mockPatientApiForHcp()
+    mockErrorApi()
   })
 
   it('should render user account page for a French HCP and be able to edit his profile and change his password', async () => {
-    jest.spyOn(ErrorApi, 'sendError').mockResolvedValue(null)
-
     const expectedUserAccount = {
       ...account,
       firstName: 'Jean',
