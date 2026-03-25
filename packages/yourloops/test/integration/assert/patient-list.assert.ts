@@ -878,7 +878,7 @@ export const checkAckMonitoringAlertDialogContent = async (): Promise<void> => {
   expect(within(dialog).getByRole('alert')).toBeVisible()
 
   expect(within(dialog).getByRole('button', { name: 'Acknowledge the alert' })).toBeVisible()
-  expect(within(dialog).getByRole('button', { name: 'Analyse the alert' })).toBeVisible()
+  expect(within(dialog).getByRole('button', { name: 'Analyze the alert' })).toBeVisible()
 
   const closeButton = within(dialog).getByRole('button', { name: 'Close' })
   await userEvent.click(closeButton)
@@ -889,7 +889,7 @@ export const checkAckMonitoringAlertDialogContent = async (): Promise<void> => {
 export const checkAckMonitoringAlertDialogCloseOnAnalyse = async (router: Router): Promise<void> => {
   const dialog = await openAckDialogForPatient('hypoglycemia-icon', 5)
 
-  const analyseButton = within(dialog).getByRole('button', { name: 'Analyse the alert' })
+  const analyseButton = within(dialog).getByRole('button', { name: 'Analyze the alert' })
   await userEvent.click(analyseButton)
 
   // Dialog should be closed after clicking Analyse
