@@ -12,6 +12,7 @@ It is based on Tidepool Blip 1.27.
 - YLP-3788 Referring HCP management for HCPs
 - YLP-3813 Add hyperglycemia alerts (display in the patient view and settings in care teams and patients profile)
 - YLP-3837 Display Dexcom G7 sensor information in device view
+- YLP-3847 Remove pairing-code and firmware version in UI
 
 ### Changed
 - YLP-2478 Care team settings menu
