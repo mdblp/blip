@@ -248,6 +248,7 @@ describe('Patient profile view for HCP', () => {
       mockUserApi().mockUserDataFetch({ firstName, lastName })
       mockPatientApiForHcp()
       mockDataAPI()
+      mockAnalyticsApi()
     })
 
     it('should display additional information section with disclaimer', async () => {
@@ -342,6 +343,7 @@ describe('Patient profile view for HCP', () => {
       mockPatientApiForHcp()
       mockDataAPI()
       mockDblCommunicationApi()
+      mockAnalyticsApi()
       // defined in Node 17+, not in Jest env (Node 16)
       // simple polyfill that works for JSON-serializable objects
       // does not support functions, Dates, Maps, Sets, etc.

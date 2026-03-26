@@ -59,6 +59,7 @@ import {
 } from '../../../use-cases/patient-data-visualisation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { getMinimalTrendViewData } from '../../../mock/minimal-trend-view-data'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 
 describe('Trends view for anyone', () => {
   const trendsRoute = AppUserRoute.Trends
@@ -66,6 +67,7 @@ describe('Trends view for anyone', () => {
   beforeEach(() => {
     mockWindowResizer()
     mockPatientLogin(patient2Info)
+    mockAnalyticsApi()
   })
 
   describe('with all kind of data', () => {

@@ -124,6 +124,7 @@ describe('Patient profile view for Patient', () => {
       mockAuth0Hook(UserRole.Patient)
       mockPatientLogin(patient1Info)
       mockDataAPI()
+      mockAnalyticsApi()
     })
 
     it('should display additional information section with disclaimer', async () => {

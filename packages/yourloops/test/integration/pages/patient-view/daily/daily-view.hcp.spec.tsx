@@ -43,6 +43,7 @@ import { Unit } from 'medical-domain'
 import { testDailyViewTooltipsAndValuesMmolL } from '../../../use-cases/patient-data-visualisation'
 import { patient2Id } from '../../../data/patient.api.data'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 
 describe('Daily view for HCP', () => {
   const firstName = 'HCP firstName'
@@ -60,6 +61,7 @@ describe('Daily view for HCP', () => {
     mockPatientApiForHcp()
     mockChatAPI()
     mockDblCommunicationApi()
+    mockAnalyticsApi()
   })
 
   afterEach(() => {
