@@ -173,7 +173,7 @@ describe('Patient utils', () => {
       expect(result).toEqual([patientWithTimeOutOfTargetAlert, patientWithHypoglycemiaAlert, patientWithHyperglycemiaAlert])
     })
 
-    it('should return only patients with target and hyper alert when target and hypo are the filters selected', () => {
+    it('should return only patients with target and hyper alert when target are the filters selected', () => {
       const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
         ...defaultPatientFilters,
         timeOutOfTargetEnabled: true,
@@ -200,7 +200,7 @@ describe('Patient utils', () => {
       expect(result).toEqual([patientWithHypoglycemiaAlert, patientWithNoDataAlert])
     })
 
-    it('should return only patients with hyper and hypo alert are the filters selected', () => {
+    it('should return only patients with hyper and hypo alert when hyper and hypo are the filters selected', () => {
       const result = PatientUtils.filterPatientsOnMonitoringAlerts(patients, {
         ...defaultPatientFilters,
         hyperglycemiaEnabled: true,
