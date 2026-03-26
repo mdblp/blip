@@ -39,7 +39,6 @@ import { InfoAndMembersSection } from './sections/info-and-members-section'
 import { MonitoringAlertsSection } from './sections/monitoring-alerts-section'
 import Card from '@mui/material/Card'
 import SpinningLoader from '../../components/loaders/spinning-loader'
-import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 
 export const CareTeamSettingsPage: FC = () => {
   const { getTeam } = useTeam()
