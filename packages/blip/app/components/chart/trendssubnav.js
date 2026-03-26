@@ -20,6 +20,7 @@ import cx from 'classnames'
 import i18next from 'i18next'
 import { Checkbox } from '@mui/material'
 import Button from '@mui/material/Button'
+import AnalyticsApi, { ElementType } from 'yourloops/lib/analytics/analytics.api'
 
 const t = i18next.t.bind(i18next)
 const domains = ['1 week', '2 weeks', '4 weeks', '3 months']
@@ -154,6 +155,7 @@ class TrendsSubNav extends React.Component {
 
     const clickButton = () => {
       this.props.domainClickHandlers[domain]()
+      AnalyticsApi.trackClick(`trends-preset-period-${domain.replace(/\s/g, '')}`, ElementType.Button)
     }
 
     return (
@@ -209,7 +211,10 @@ class TrendsSubNav extends React.Component {
         data-testid={dayFilterId}
         className={dayLinkClass}
         key={day}
-        onClick={this.props.onClickDay(day)}
+        onClick={(e) => {
+          this.props.onClickDay(day)(e)
+          AnalyticsApi.trackClick(`trends-day-${day}`, ElementType.Toggle)
+        }}
       >
         {this.renderDayAbbrev(day)}
       </Button>
@@ -234,8 +239,10 @@ class TrendsSubNav extends React.Component {
   handleSelectDaysGroup = (category) => {
     if (category === 'weekday') {
       this.props.toggleWeekdays(this.areWeekdaysActive())
+      AnalyticsApi.trackClick(`trends-weekday-group`, ElementType.Toggle)
     } else if (category === 'weekend') {
       this.props.toggleWeekends(this.areWeekendsActive())
+      AnalyticsApi.trackClick(`trends-weekend-group`, ElementType.Toggle)
     } else {
       console.error('Invalid category', category)
     }

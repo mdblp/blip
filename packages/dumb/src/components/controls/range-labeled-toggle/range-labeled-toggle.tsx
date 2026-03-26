@@ -36,10 +36,11 @@ interface LabeledCheckboxProps {
   displayFlag: DisplayFlag
   label: string
   sx?: SxProps<Theme>
+  trackClickFunc: (name: string, elementType: string) => void
 }
 
 export const RangeLabeledToggle: FunctionComponent<LabeledCheckboxProps> = (props) => {
-  const { checked, displayFlag, label, sx } = props
+  const { checked, displayFlag, label, sx, trackClickFunc } = props
   const { toggleCbgSegments } = useTrendsContext()
 
   return (
@@ -52,6 +53,7 @@ export const RangeLabeledToggle: FunctionComponent<LabeledCheckboxProps> = (prop
           checked={checked}
           onChange={() => {
             toggleCbgSegments(displayFlag)
+            trackClickFunc(`range-label-toggle-${displayFlag}`, 'toggle' )
           }}
         />
       }

@@ -34,7 +34,11 @@ import { useTrendsContext } from '../../../../provider/trends.provider'
 import { DisplayFlag } from '../../../../models/enums/display-flag.enum'
 import { useTranslation } from 'react-i18next'
 
-export const RangeSelect: FunctionComponent = () => {
+interface RangeSelectProps {
+  trackClickFunc: (name: string, elementType: string) => void
+}
+
+export const RangeSelect: FunctionComponent<RangeSelectProps> = ({ trackClickFunc }) => {
   const { displayFlags } = useTrendsContext()
   const { t } = useTranslation()
 
@@ -44,22 +48,26 @@ export const RangeSelect: FunctionComponent = () => {
         checked={displayFlags.cbg100Enabled}
         label={t('100% of Readings')}
         displayFlag={DisplayFlag.Cbg100Enabled}
+        trackClickFunc={trackClickFunc}
       />
       <RangeLabeledToggle
         checked={displayFlags.cbg80Enabled}
         label={t('80% of Readings')}
         displayFlag={DisplayFlag.Cbg80Enabled}
+        trackClickFunc={trackClickFunc}
       />
       <RangeLabeledToggle
         checked={displayFlags.cbg50Enabled}
         label={t('50% of Readings')}
         displayFlag={DisplayFlag.Cbg50Enabled}
+        trackClickFunc={trackClickFunc}
       />
       <RangeLabeledToggle
         checked={displayFlags.cbgMedianEnabled}
         displayFlag={DisplayFlag.CbgMedianEnabled}
         label={t('Median')}
         sx={{ marginRight: 0 }}
+        trackClickFunc={trackClickFunc}
       />
     </div>
   )

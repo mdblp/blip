@@ -39,6 +39,8 @@ import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import useAckMonitoringAlertDialog from './ack-monitoring-alert-dialog.hook'
+import { AnalyticsApi } from '../../../lib/analytics'
+import { ElementType } from '../../../lib/analytics/analytics.api'
 
 export enum MonitoringAlertType {
   Hyperglycemia = 'hyperglycemia',
@@ -103,7 +105,10 @@ export const AcknowledgeMonitoringAlertDialog: FunctionComponent<AcknowledgeMoni
         <Button
           data-testid="acknowledge-monitoring-alert-dialog-analyse-button"
           variant="outlined"
-          onClick={handleAnalyse}
+          onClick={() => {
+            handleAnalyse()
+            AnalyticsApi.trackClick(`acknowledge-monitoring-alert-dialog-analyse-${alertName}`, ElementType.Button)
+          }}
         >
           {t('acknowledge-monitoring-alert-dialog-analyse-button')}
         </Button>
@@ -111,7 +116,10 @@ export const AcknowledgeMonitoringAlertDialog: FunctionComponent<AcknowledgeMoni
           data-testid="acknowledge-monitoring-alert-dialog-acknowledge-button"
           variant="contained"
           disableElevation
-          onClick={handleAcknowledge}
+          onClick={() => {
+            AnalyticsApi.trackClick(`acknowledge-monitoring-alert-dialog-acknowledge-${alertName}`, ElementType.Button)
+            return handleAcknowledge()
+          }}
         >
           {t('acknowledge-monitoring-alert-dialog-acknowledge-button')}
         </Button>
