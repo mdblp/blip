@@ -66,6 +66,7 @@ import {
 import { mockLeadCliniciansApi } from '../../../mock/clinicians.api.mock'
 import { LeadCliniciansApi } from '../../../../../lib/lead-clinicians/lead-clinicians.api'
 import { mockErrorApi } from '../../../mock/error.api.mock'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 
 describe('Patient profile view for HCP', () => {
   beforeEach(() => {
@@ -79,6 +80,7 @@ describe('Patient profile view for HCP', () => {
     mockDblCommunicationApi()
     mockLeadCliniciansApi()
     mockErrorApi()
+    mockAnalyticsApi()
   })
 
   const firstName = 'HCP firstName'

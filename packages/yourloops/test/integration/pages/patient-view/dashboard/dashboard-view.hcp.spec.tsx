@@ -72,6 +72,7 @@ import { ConfigService } from '../../../../../lib/config/config.service'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 
 describe('Dashboard view for HCP', () => {
   const patientDashboardRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Dashboard}`
@@ -90,6 +91,7 @@ describe('Dashboard view for HCP', () => {
     mockChatAPI()
     mockMedicalFilesAPI(myThirdTeamId, myThirdTeamName)
     mockDataAPI()
+    mockAnalyticsApi()
   })
 
   it('should render correct components when navigating to a patient not scoped on the private team', async () => {

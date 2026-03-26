@@ -66,6 +66,7 @@ import { checkReportDialogPresets } from '../../../assert/report-dialog.assert'
 import { DeviceSystem } from 'medical-domain'
 import { ConfigService } from '../../../../../lib/config/config.service'
 import { mockErrorApi } from '../../../mock/error.api.mock'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 
 describe('Daily view for anyone', () => {
   const dailyRoute = AppUserRoute.Daily
@@ -74,6 +75,7 @@ describe('Daily view for anyone', () => {
     mockWindowResizer()
     mockPatientLogin(patient2Info)
     mockErrorApi()
+    mockAnalyticsApi()
   })
 
   afterEach(() => {

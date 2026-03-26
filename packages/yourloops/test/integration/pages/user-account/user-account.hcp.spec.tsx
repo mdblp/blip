@@ -52,6 +52,7 @@ import {
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { mockErrorApi } from '../../mock/error.api.mock'
+import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
 
 describe('User account page for hcp', () => {
   const userAccountRoute = AppUserRoute.UserAccount
@@ -82,6 +83,7 @@ describe('User account page for hcp', () => {
     mockTeamAPI()
     mockPatientApiForHcp()
     mockErrorApi()
+    mockAnalyticsApi()
   })
 
   it('should render user account page for a French HCP and be able to edit his profile and change his password', async () => {

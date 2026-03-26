@@ -61,6 +61,7 @@ import {
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { mockErrorApi } from '../../mock/error.api.mock'
+import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
 
 describe('User account page for caregiver', () => {
   const userAccountRoute = AppUserRoute.UserAccount
@@ -92,6 +93,7 @@ describe('User account page for caregiver', () => {
     mockPatientApiForCaregivers()
     mockPatientApiForHcp() // Do not remove this, this is needed for when the user switches role
     mockErrorApi()
+    mockAnalyticsApi()
   })
 
   it('should render user account page for a caregiver and be able to change his password and change his role to HCP', async () => {
