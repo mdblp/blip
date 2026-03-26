@@ -57,4 +57,5 @@ export interface AppConfig {
   YLPZ_RA_LAD_DE: string
   IDLE_TIMEOUT_MS: number
   EATING_SHORTLY_ENABLED: boolean
+  METRICS_CLICKODROME_ENABLED: boolean
 }
