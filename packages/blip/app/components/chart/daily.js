@@ -578,7 +578,18 @@ class Daily extends React.Component {
     return datum
   }
 
-  handleTooltipOut = () => this.setState({ tooltip: null }) // Tips for debug use: _.noop;
+  handleTooltipOut = () => {
+    // Cancel any pending hover analytics for quick mouse movements
+    const hoverTypes = [
+      'daily-basal', 'daily-bolus', 'daily-smbg', 'daily-cbg',
+      'daily-carb', 'daily-eating-shortly', 'daily-iob', 'daily-reservoir-change',
+      'daily-physical-activity', 'daily-parameter', 'daily-warmup', 'daily-alarm-event',
+      'daily-night-mode', 'daily-time-change', 'daily-zen-mode', 'daily-confidential'
+    ]
+    hoverTypes.forEach(type => AnalyticsApi.cancelHover(type))
+
+    this.setState({ tooltip: null })
+  }
 
   handleBasalHover = (datum) => {
     AnalyticsApi.trackHover('daily-basal')

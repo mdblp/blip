@@ -30,6 +30,7 @@ import { type ClickEvent } from './models/click.model'
 import { logError } from '../../utils/error.util'
 
 const ANALYTICS_API_BASE_URL = `/analytics`
+const HOVER_MIN_TIME_MS = 500
 
 export enum ElementType {
   Button = 'button',
@@ -37,42 +38,97 @@ export enum ElementType {
   Toggle = 'toggle'
 }
 
+interface EventKey {
+  name: string
+  action: string
+  elementType?: ElementType
+}
+
+interface HoverTracker {
+  name: string
+  startTime: number
+  timeoutId: NodeJS.Timeout
+}
+
 export default class AnalyticsApi {
-  static trackClick(name: string, type: ElementType) {
+  private static hoverTrackers: Map<string, HoverTracker> = new Map()
+
+  private static getEventKey(event: EventKey): string {
+    return `${event.action}:${event.name}:${event.elementType ?? ''}`
+  }
+
+  static trackClick(metricName: string, type: ElementType) {
     const tags = {
       "elementType": type
     }
-    const event = {
-      name,
+    const payload = {
+      name: metricName,
       value: 1,
       timestamp: new Date().toISOString(),
       action: 'click',
       tags
     }
-    console.log(event)
     HttpService.post<void, ClickEvent>({
       url: `${ANALYTICS_API_BASE_URL}/v1/metrics`,
-      payload: event
+      payload
     }).catch((err) => {
       logError( `cannot send analytics: ${err}`, 'send-metrics')
     })
   }
 
-  static trackHover(name: string) {
-    const event = {
-      name,
-      value: 1,
-      timestamp: new Date().toISOString(),
-      action: 'hover',
-      tags: {
-      }
+  static trackHover(metricName: string) {
+    console.log("Tracking hover for ", metricName, " at ", new Date().toISOString())
+    const eventKey = this.getEventKey({ name: metricName, action: 'hover' })
+
+    // If the tracker is already existing, do nothing.
+    // It's a duplicate (user hovered again before the previous tracker was sent)
+    const tracker = this.hoverTrackers.get(eventKey)
+    if (tracker) {
+      console.log(`Hover tracker for ${metricName} already exists, skipping...`)
+      return
     }
-    console.log(event)
-    HttpService.post<void, ClickEvent>({
-      url: `${ANALYTICS_API_BASE_URL}/v1/metrics`,
-      payload: event
-    }).catch((err) => {
-      logError( `cannot send analytics: ${err}`, 'send-metrics')
+
+    // Set up a delayed tracking - only triggered after HOVER_MIN_TIME_MS
+    const timeoutId = setTimeout(() => {
+      console.log(`Hover tracker for ${metricName} triggered after ${HOVER_MIN_TIME_MS}ms, sending analytics...`)
+
+      const eventKey = this.getEventKey({ name: metricName, action: 'hover' })
+
+      const payload = {
+        name: metricName,
+        value: 1,
+        timestamp: new Date().toISOString(),
+        action: 'hover',
+        tags: {}
+      }
+
+      HttpService.post<void, ClickEvent>({
+        url: `${ANALYTICS_API_BASE_URL}/v1/metrics`,
+        payload
+      }).catch((err) => {
+        logError(`cannot send analytics: ${err}`, 'send-metrics')
+      })
+      this.hoverTrackers.delete(eventKey)
+    }, HOVER_MIN_TIME_MS)
+
+    // Store the tracker
+    this.hoverTrackers.set(eventKey, {
+      name: metricName,
+      startTime: Date.now(),
+      timeoutId
     })
+  }
+
+  /* Cancel hover when leaving an element, will cancel only if the tracker
+  was called before HOVER_MIN_TIME_MS (after this the tracker is already sent
+   to the server) */
+  static cancelHover(metricName: string) {
+    console.log("Cancelling hover for ", metricName, " at ", new Date().toISOString())
+    const eventKey = this.getEventKey({ name: metricName, action: 'hover' })
+    const tracker = this.hoverTrackers.get(eventKey)
+    if (tracker) {
+      clearTimeout(tracker.timeoutId)
+      this.hoverTrackers.delete(eventKey)
+    }
   }
 }

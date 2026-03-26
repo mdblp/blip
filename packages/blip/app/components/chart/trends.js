@@ -33,6 +33,7 @@ import { PatientStatistics } from 'yourloops/components/statistics/patient-stati
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import metrics from 'yourloops/lib/metrics'
 import { CarbsAndBolusAverage } from 'yourloops/components/carbs-and-bolus/carbs-and-bolus-average'
+import AnalyticsApi, { ElementType } from 'yourloops/lib/analytics/analytics.api'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -426,6 +427,7 @@ class Trends extends React.Component {
       this.setEndPoints(newStartDate, newEndDate)
     }
     this.trackMetric('data_visualization', 'select_period', 'backward')
+    AnalyticsApi.trackClick(`trends-pan-back`, ElementType.Button)
   }
 
   handleClickForward(e) {
@@ -448,6 +450,7 @@ class Trends extends React.Component {
       this.setEndPoints(newStartDate, newEndDate)
     }
     this.trackMetric('data_visualization', 'select_period', 'forward')
+    AnalyticsApi.trackClick(`trends-pan-forward`, ElementType.Button)
   }
 
   handleClickMostRecent(event) {
@@ -463,6 +466,7 @@ class Trends extends React.Component {
     if (event) {
       // If event is set, it's a click, so we can track this change
       this.trackMetric('data_visualization', 'select_period', 'most_recent')
+      AnalyticsApi.trackClick(`trends-pan-most-recent`, ElementType.Button)
     }
   }
 
@@ -589,8 +593,11 @@ class Trends extends React.Component {
                   <FocusedRangeLabels bgUnit={this.props.bgPrefs.bgUnits} />
                 </div>
                 <Box sx={{ marginBottom: 2 }}>
-                  <Footer onClickRefresh={this.props.onClickRefresh}>
-                    <RangeSelect />
+                  <Footer onClickRefresh={(e) => {
+                    this.props.onClickRefresh(e)
+                    AnalyticsApi.trackClick(`trends-refresh`, ElementType.Button)
+                  }}>
+                    <RangeSelect trackClickFunc={AnalyticsApi.trackClick} />
                   </Footer>
                 </Box>
                 <CarbsAndBolusAverage
