@@ -341,6 +341,7 @@
   "filter-cannot-apply-pending-tab": "Filters cannot be applied on Pending tab",
   "filter-data-not-transmitted": "Filter patients having a \"Data not transmitted\" monitoring alert",
   "filter-flagged": "Filter patients being flagged",
+  "filter-hyperglycemia": "Filter patients having a \"Hyperglycemia\" monitoring alert",
   "filter-hypoglycemia": "Filter patients having a \"Hypoglycemia\" monitoring alert",
   "filter-out-of-range": "Filter patients having a \"Time out of the range\" monitoring alert",
   "filter-pending": "{{patientsFilteredCount}} pending patient(s)",

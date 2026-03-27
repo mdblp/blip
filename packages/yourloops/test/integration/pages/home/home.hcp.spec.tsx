@@ -179,9 +179,9 @@ describe('HCP home page', () => {
 
   it('should handle gracefully error cases when acknowledging monitoring alerts', async () => {
     jest.spyOn(PatientApi, 'acknowledgePatientAlerts').mockRejectedValue('Ack alert error')
-    const router = await renderHomePage(filterTeamPatientsList)
+    await renderHomePage(filterTeamPatientsList)
 
-    await testAckMonitoringAlertsWithError(router)
+    await testAckMonitoringAlertsWithError()
   })
 
   it('should be able to create a team when on the home page', async () => {

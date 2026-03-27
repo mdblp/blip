@@ -44,6 +44,7 @@ import { TimeSpentOufOfRangeIcon } from '../icons/diabeloop/time-spent-ouf-of-ra
 import { HypoglycemiaIcon } from '../icons/diabeloop/hypoglycemia-icon'
 import { NoDataIcon } from '../icons/diabeloop/no-data-icon'
 import { MessageIcon } from '../icons/diabeloop/message-icon'
+import { HyperglycemiaIcon } from '../icons/diabeloop/hyperglycemia-icon'
 
 interface PatientsFiltersDialogProps {
   anchorEl: Element
@@ -109,6 +110,15 @@ export const PatientFiltersPopover: FunctionComponent<PatientsFiltersDialogProps
               label={t('time-out-of-range-target')}
               onToggleChange={() => {
                 setFilters({ ...filters, timeOutOfTargetEnabled: !filters.timeOutOfTargetEnabled })
+              }}
+            />
+            <PatientListOptionToggle
+              ariaLabel={t('filter-hyperglycemia')}
+              checked={filters.hyperglycemiaEnabled}
+              icon={<HyperglycemiaIcon />}
+              label={t('hyperglycemia')}
+              onToggleChange={() => {
+                setFilters({ ...filters, hyperglycemiaEnabled: !filters.hyperglycemiaEnabled })
               }}
             />
             <PatientListOptionToggle
