@@ -39,8 +39,7 @@ import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
 import { type Patient } from '../../../lib/patient/models/patient.model'
 import useAckMonitoringAlertDialog from './ack-monitoring-alert-dialog.hook'
-import AnalyticsApi from '../../../lib/analytics/analytics.api'
-import { ElementType } from '../../../lib/analytics/analytics.api'
+import AnalyticsApi, { ElementType } from '../../../lib/analytics/analytics.api'
 
 export enum MonitoringAlertType {
   Hyperglycemia = 'hyperglycemia',
