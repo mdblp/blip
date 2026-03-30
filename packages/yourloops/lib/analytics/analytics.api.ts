@@ -30,7 +30,7 @@ import { type ClickEvent } from './models/click.model'
 import { logError } from '../../utils/error.util'
 import config from '../config/config'
 
-const ANALYTICS_API_BASE_URL = `/analytics`
+const ANALYTICS_API_BASE_URL = '/analytics'
 const HOVER_MIN_TIME_MS = 500
 
 export enum ElementType {
@@ -61,7 +61,7 @@ export default class AnalyticsApi {
   static trackClick(metricName: string, type: ElementType) {
     if (config.METRICS_CLICKODROME_ENABLED) {
       const tags = {
-        "elementType": type
+        elementType: type
       }
       const payload = {
         name: metricName,

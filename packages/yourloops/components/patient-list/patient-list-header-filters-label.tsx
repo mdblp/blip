@@ -97,7 +97,7 @@ export const PatientListHeaderFiltersLabel: FunctionComponent<PatientListHeaderF
             className={classes.resetButton}
             onClick={() => {
               resetFilters()
-              AnalyticsApi.trackClick(`patient-list-header-filters-reset`, ElementType.Button)
+              AnalyticsApi.trackClick('patient-list-header-filters-reset', ElementType.Button)
             }}
           >
             {t('reset')}

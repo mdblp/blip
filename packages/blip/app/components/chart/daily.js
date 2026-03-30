@@ -509,7 +509,7 @@ class Daily extends React.Component {
     }
     if (!loading && this.chartRef.current !== null) {
       this.chartRef.current.panBack()
-      AnalyticsApi.trackClick(`daily-pan-back`, ElementType.Button)
+      AnalyticsApi.trackClick('daily-pan-back', ElementType.Button)
     }
   }
 
@@ -520,7 +520,7 @@ class Daily extends React.Component {
     }
     if (!loading && this.chartRef.current !== null) {
       this.chartRef.current.panForward()
-      AnalyticsApi.trackClick(`daily-pan-forward`, ElementType.Button)
+      AnalyticsApi.trackClick('daily-pan-forward', ElementType.Button)
     }
   }
 
@@ -531,7 +531,7 @@ class Daily extends React.Component {
     }
     if (!loading && this.chartRef.current !== null) {
       this.chartRef.current.goToMostRecent()
-      AnalyticsApi.trackClick(`daily-most-recent`, ElementType.Button)
+      AnalyticsApi.trackClick('daily-most-recent', ElementType.Button)
     }
   }
 
@@ -853,7 +853,7 @@ class Daily extends React.Component {
   }
 
   handleEventSuperpositionClick = (datum) => {
-    AnalyticsApi.trackClick(`daily-event-superposition`, ElementType.Button)
+    AnalyticsApi.trackClick('daily-event-superposition', ElementType.Button)
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <EventsSuperpositionPopover

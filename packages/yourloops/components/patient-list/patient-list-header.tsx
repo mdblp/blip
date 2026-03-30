@@ -118,7 +118,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
 
   const openFiltersDialog = (): void => {
     setFiltersDialogOpen(true)
-    AnalyticsApi.trackClick(`patient-list-filters`, ElementType.Button)
+    AnalyticsApi.trackClick('patient-list-filters', ElementType.Button)
   }
 
   const closeFiltersDialog = (): void => {
@@ -214,7 +214,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
                     disabled={filters.pendingEnabled}
                     onClick={() => {
                       setIsColumnSelectorOpened(true)
-                      AnalyticsApi.trackClick(`patient-list-column-settings`, ElementType.Button)
+                      AnalyticsApi.trackClick('patient-list-column-settings', ElementType.Button)
                     }}
                   >
                     <Settings />

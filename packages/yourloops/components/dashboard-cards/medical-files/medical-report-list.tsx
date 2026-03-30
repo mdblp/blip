@@ -164,7 +164,7 @@ const MedicalReportList: FunctionComponent<CategoryProps> = (props) => {
             startIcon={<NoteAddIcon />}
             onClick={() => {
               setIsEditDialogOpen(true)
-              AnalyticsApi.trackClick(`medical-report-add`, ElementType.Button)
+              AnalyticsApi.trackClick('medical-report-add', ElementType.Button)
             }}
           >
             {t('button-new')}

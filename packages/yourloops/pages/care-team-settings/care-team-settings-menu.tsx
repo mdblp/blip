@@ -88,7 +88,7 @@ export const CareTeamSettingsMenu: FC<CareTeamSettingsMenuProps> = (props) => {
           <MenuItem
             selected={selectedSection === CareTeamSettingsSection.MonitoringAlerts}
             onClick={() => {
-              AnalyticsApi.trackClick(`care-team-settings-menu-monitoring-alerts`, ElementType.Link)
+              AnalyticsApi.trackClick('care-team-settings-menu-monitoring-alerts', ElementType.Link)
               selectSection(CareTeamSettingsSection.MonitoringAlerts)
             }}
             sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}

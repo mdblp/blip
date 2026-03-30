@@ -239,10 +239,10 @@ class TrendsSubNav extends React.Component {
   handleSelectDaysGroup = (category) => {
     if (category === 'weekday') {
       this.props.toggleWeekdays(this.areWeekdaysActive())
-      AnalyticsApi.trackClick(`trends-weekday-group`, ElementType.Toggle)
+      AnalyticsApi.trackClick('trends-weekday-group', ElementType.Toggle)
     } else if (category === 'weekend') {
       this.props.toggleWeekends(this.areWeekendsActive())
-      AnalyticsApi.trackClick(`trends-weekend-group`, ElementType.Toggle)
+      AnalyticsApi.trackClick('trends-weekend-group', ElementType.Toggle)
     } else {
       console.error('Invalid category', category)
     }

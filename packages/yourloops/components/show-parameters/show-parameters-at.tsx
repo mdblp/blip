@@ -59,7 +59,7 @@ export const ShowParametersAt: FunctionComponent<ShowParametersAtProps> = (props
 
   const showParameters = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorElement(event.currentTarget);
-    AnalyticsApi.trackClick(`show-parameters-at`, ElementType.Button)
+    AnalyticsApi.trackClick('show-parameters-at', ElementType.Button)
   };
 
   const handleClose = () => {

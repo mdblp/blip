@@ -132,7 +132,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
         onChangePatientView={changePatientView}
         onClickPrint={() => {
           setShowPdfDialog(true)
-          AnalyticsApi.trackClick(`patient-data-show-pdf`, ElementType.Button)
+          AnalyticsApi.trackClick('patient-data-show-pdf', ElementType.Button)
         }}
       />
       <>
@@ -155,7 +155,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                   disableElevation
                   onClick={() => {
                     refreshData()
-                    AnalyticsApi.trackClick(`patient-data-refresh-data`, ElementType.Button)
+                    AnalyticsApi.trackClick('patient-data-refresh-data', ElementType.Button)
                   }
                 }
                   sx={{ marginTop: theme.spacing(1) }}
