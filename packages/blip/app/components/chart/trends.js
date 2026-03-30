@@ -23,7 +23,6 @@ import i18next from 'i18next'
 import _ from 'lodash'
 import { TimeService } from 'medical-domain'
 import moment from 'moment-timezone'
-import PropTypes from 'prop-types'
 import React from 'react'
 import { utils as vizUtils } from 'tidepool-viz'
 import { CarbsAndBolusAverage } from 'yourloops/components/carbs-and-bolus/carbs-and-bolus-average'
@@ -88,20 +87,6 @@ function getMomentDayAt(date, tidelineData) {
  * @augments {React.Component<TrendsProps,TrendsState>}
  */
 class Trends extends React.Component {
-  static propTypes = {
-    bgPrefs: PropTypes.object.isRequired,
-    chartPrefs: PropTypes.object.isRequired,
-    epochLocation: PropTypes.number.isRequired,
-    msRange: PropTypes.number.isRequired,
-    patient: PropTypes.object,
-    tidelineData: PropTypes.object.isRequired,
-    loading: PropTypes.bool.isRequired,
-    onClickRefresh: PropTypes.func.isRequired,
-    onSwitchToDaily: PropTypes.func.isRequired,
-    onDatetimeLocationChange: PropTypes.func.isRequired,
-    updateChartPrefs: PropTypes.func.isRequired
-  }
-
   constructor(props) {
     super(props)
 
