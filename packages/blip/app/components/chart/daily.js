@@ -23,12 +23,12 @@ import ReactResizeDetector from 'react-resize-detector'
 import i18next from 'i18next'
 import { chartDailyFactory } from 'tideline'
 import { TimeService } from 'medical-domain'
-import Footer from './footer'
 import {
   AlarmEventTooltip,
   BasalTooltip,
   BloodGlucoseTooltip,
   BolusTooltip,
+  ChartFooter,
   ConfidentialTooltip,
   EatingShortlyTooltip,
   EventsSuperpositionPopover,
@@ -448,7 +448,7 @@ class Daily extends React.Component {
                 />
               </div>
               <Box marginBlock={2}>
-                <Footer onClickRefresh={this.props.onClickRefresh} />
+                <ChartFooter onClickRefresh={this.props.onClickRefresh} />
               </Box>
             </div>
             <div className="container-box-inner patient-data-sidebar">

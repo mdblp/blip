@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,6 +35,9 @@ export { SafetyBasalItem } from './models/safety-basal-item.model'
 export { PrintView } from './modules/print/print-view/print-view'
 export { SettingsPrintView } from './modules/print/settings-print-view/settings-print-view'
 
+// Controls
+export { ChartFooter } from './components/controls/chart-footer/chart-footer'
+
 // Stats
 export {
   AverageDailyDoseStatMemoized as AverageDailyDoseStat
@@ -59,6 +62,7 @@ export {
 export {
   TimeInRangeDT1Chart
 } from './components/stats/time-in-range/time-in-range-chart/time-in-range-dt1-chart'
+
 // Tooltips
 export { AlarmEventTooltip } from './components/tooltips/alarm-event-tooltip/alarm-event-tooltip'
 export { BasalTooltip } from './components/tooltips/basal-tooltip/basal-tooltip'
