@@ -52,7 +52,7 @@ interface HoverTracker {
 }
 
 export default class AnalyticsApi {
-  private static hoverTrackers: Map<string, HoverTracker> = new Map()
+  private static readonly hoverTrackers: Map<string, HoverTracker> = new Map()
 
   private static getEventKey(event: EventKey): string {
     return `${event.action}:${event.name}:${event.elementType ?? ''}`

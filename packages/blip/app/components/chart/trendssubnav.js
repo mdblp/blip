@@ -155,12 +155,12 @@ class TrendsSubNav extends React.Component {
 
     const clickButton = () => {
       this.props.domainClickHandlers[domain]()
-      AnalyticsApi.trackClick(`trends-preset-period-${domain.replace(/\s/g, '')}`, ElementType.Button)
+      AnalyticsApi.trackClick(`trends-preset-period-${domain.replaceAll(/\s/g, '')}`, ElementType.Button)
     }
 
     return (
       <button
-        id={`button-trends-period-${domain.replace(/\s/g, '')}`}
+        id={`button-trends-period-${domain.replaceAll(/\s/g, '')}`}
         className={domainLinkClass}
         key={domain}
         type="button"
