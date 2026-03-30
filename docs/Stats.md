@@ -37,6 +37,9 @@ Events are organized by page for easy reference.
 #### `patient-filters-hypoglycemia`
 - **Type:** Toggle
 - **Description:** Tracks when a user toggles the hypoglycemia alert filter in the filters popover (Monitoring Alerts section)
+#### `patient-filters-hyperglycemia`
+- **Type:** Toggle
+- **Description:** Tracks when a user toggles the hyperglycemia alert filter in the filters popover (Monitoring Alerts section)
 #### `patient-filters-data-not-transmitted`
 - **Type:** Toggle
 - **Description:** Tracks when a user toggles the data not transmitted filter in the filters popover (Monitoring Alerts section)
