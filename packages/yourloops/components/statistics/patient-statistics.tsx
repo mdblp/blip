@@ -51,7 +51,7 @@ import { makeStyles } from 'tss-react/mui'
 import { CarbsStat } from './carbs-stat'
 import { DataCard } from '../data-card/data-card'
 import { useTheme } from '@mui/material/styles'
-import { AnalyticsApi } from '../../lib/analytics'
+import AnalyticsApi from '../../lib/analytics/analytics.api'
 
 export interface PatientStatisticsProps {
   medicalData: MedicalData

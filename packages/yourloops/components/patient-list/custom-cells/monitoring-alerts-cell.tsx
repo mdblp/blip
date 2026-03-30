@@ -40,7 +40,7 @@ import { convertBG } from '../../../lib/units/units.util'
 import { Unit } from 'medical-domain'
 import PatientUtils from '../../../lib/patient/patient.util'
 import { AcknowledgeMonitoringAlertDialog, MonitoringAlertType } from '../ack-monitoring-alert-dialog/ack-monitoring-alert-dialog'
-import { AnalyticsApi } from '../../../lib/analytics'
+import AnalyticsApi from '../../../lib/analytics/analytics.api'
 import { ElementType } from '../../../lib/analytics/analytics.api'
 
 interface MonitoringAlertsCellProps {
