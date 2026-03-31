@@ -41,6 +41,7 @@ import {
   testShowParametersButtonIsNotDisplayed
 } from '../../../use-cases/show-parameters-visualisation'
 import { ChangeType, DblParameter, Unit } from 'medical-domain'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 // TODO: ask in Review if we should split daily-view-common test file into several independent files
 describe('Daily view for anyone - Show Parameters At', () => {
   const dailyRoute = AppUserRoute.Daily
@@ -48,6 +49,7 @@ describe('Daily view for anyone - Show Parameters At', () => {
   beforeEach(() => {
     mockWindowResizer()
     mockPatientLogin(patient2Info)
+    mockAnalyticsApi()
   })
 
   afterEach(() => {

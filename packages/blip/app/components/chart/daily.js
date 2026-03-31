@@ -48,6 +48,7 @@ import { PatientStatistics } from 'yourloops/components/statistics/patient-stati
 import { ShowParametersAt } from 'yourloops/components/show-parameters/show-parameters-at'
 import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
 import metrics from 'yourloops/lib/metrics'
+import AnalyticsApi, { ElementType } from 'yourloops/lib/analytics/analytics.api'
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
@@ -508,6 +509,7 @@ class Daily extends React.Component {
     }
     if (!loading && this.chartRef.current !== null) {
       this.chartRef.current.panBack()
+      AnalyticsApi.trackClick('daily-pan-back', ElementType.Button)
     }
   }
 
@@ -518,6 +520,7 @@ class Daily extends React.Component {
     }
     if (!loading && this.chartRef.current !== null) {
       this.chartRef.current.panForward()
+      AnalyticsApi.trackClick('daily-pan-forward', ElementType.Button)
     }
   }
 
@@ -528,6 +531,7 @@ class Daily extends React.Component {
     }
     if (!loading && this.chartRef.current !== null) {
       this.chartRef.current.goToMostRecent()
+      AnalyticsApi.trackClick('daily-most-recent', ElementType.Button)
     }
   }
 
@@ -574,9 +578,21 @@ class Daily extends React.Component {
     return datum
   }
 
-  handleTooltipOut = () => this.setState({ tooltip: null }) // Tips for debug use: _.noop;
+  handleTooltipOut = () => {
+    // Cancel any pending hover analytics for quick mouse movements
+    const hoverTypes = [
+      'daily-basal', 'daily-bolus', 'daily-smbg', 'daily-cbg',
+      'daily-carb', 'daily-eating-shortly', 'daily-iob', 'daily-reservoir-change',
+      'daily-physical-activity', 'daily-parameter', 'daily-warmup', 'daily-alarm-event',
+      'daily-night-mode', 'daily-time-change', 'daily-zen-mode', 'daily-confidential'
+    ]
+    hoverTypes.forEach(type => AnalyticsApi.cancelHover(type))
+
+    this.setState({ tooltip: null })
+  }
 
   handleBasalHover = (datum) => {
+    AnalyticsApi.trackHover('daily-basal')
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <BasalTooltip
@@ -593,6 +609,7 @@ class Daily extends React.Component {
   }
 
   handleBolusHover = (datum) => {
+    AnalyticsApi.trackHover('daily-bolus')
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <BolusTooltip
@@ -609,6 +626,7 @@ class Daily extends React.Component {
   }
 
   handleSMBGHover = (datum) => {
+    AnalyticsApi.trackHover('daily-smbg')
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <BloodGlucoseTooltip
@@ -626,6 +644,7 @@ class Daily extends React.Component {
   }
 
   handleCBGHover = (datum) => {
+    AnalyticsApi.trackHover('daily-cbg')
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <BloodGlucoseTooltip
@@ -642,6 +661,7 @@ class Daily extends React.Component {
   }
 
   handleCarbHover = (datum) => {
+    AnalyticsApi.trackHover('daily-carb')
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <RescueCarbsTooltip
@@ -657,6 +677,7 @@ class Daily extends React.Component {
   }
 
   handleEatingShortlyHover = (datum) => {
+    AnalyticsApi.trackHover('daily-eating-shortly')
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <EatingShortlyTooltip
@@ -672,6 +693,7 @@ class Daily extends React.Component {
   }
 
   handleIobHover = (datum) => {
+    AnalyticsApi.trackHover('daily-iob')
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <IobTooltip
@@ -687,6 +709,7 @@ class Daily extends React.Component {
   }
 
   handleReservoirHover = (datum) => {
+    AnalyticsApi.trackHover('daily-reservoir-change')
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <ReservoirTooltip
@@ -702,6 +725,7 @@ class Daily extends React.Component {
   }
 
   handlePhysicalHover = (datum) => {
+    AnalyticsApi.trackHover('daily-physical-activity')
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <PhysicalTooltip
@@ -718,6 +742,7 @@ class Daily extends React.Component {
   }
 
   handleParameterHover = (datum) => {
+    AnalyticsApi.trackHover('daily-parameter')
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <ParameterTooltip
@@ -733,6 +758,7 @@ class Daily extends React.Component {
   }
 
   handleWarmUpHover = (datum) => {
+    AnalyticsApi.trackHover('daily-warmup')
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <WarmUpTooltip
@@ -747,6 +773,7 @@ class Daily extends React.Component {
   }
 
   handleAlarmEventHover = (datum) => {
+    AnalyticsApi.trackHover('daily-alarm-event')
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <AlarmEventTooltip
@@ -764,6 +791,7 @@ class Daily extends React.Component {
   }
 
   handleNightModeHover = (datum) => {
+    AnalyticsApi.trackHover('daily-night-mode')
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <NightModeTooltip
@@ -779,6 +807,7 @@ class Daily extends React.Component {
   }
 
   handleTimeChangeHover = (datum) => {
+    AnalyticsApi.trackHover('daily-time-change')
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <TimeChangeTooltip
@@ -794,6 +823,7 @@ class Daily extends React.Component {
   }
 
   handleZenModeHover = (datum) => {
+    AnalyticsApi.trackHover('daily-zen-mode')
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <ZenModeTooltip
@@ -809,6 +839,7 @@ class Daily extends React.Component {
   }
 
   handleConfidentialHover = (datum) => {
+    AnalyticsApi.trackHover('daily-confidential')
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <ConfidentialTooltip
@@ -822,6 +853,7 @@ class Daily extends React.Component {
   }
 
   handleEventSuperpositionClick = (datum) => {
+    AnalyticsApi.trackClick('daily-event-superposition', ElementType.Button)
     this.updateDatumHoverForTooltip(datum)
     const tooltip = (
       <EventsSuperpositionPopover

@@ -32,11 +32,12 @@ import { useTranslation } from 'react-i18next'
 export interface SensorUsageStatProp {
   total: number
   usage: number
+  trackHoverFunc: (name: string) => void
 }
 
 export const SensorUsageStat: FunctionComponent<SensorUsageStatProp> = (props) => {
   const { t } = useTranslation()
-  const { usage, total } = props
+  const { usage, total, trackHoverFunc } = props
 
   return (
     <Box data-testid="sensor-usage-stat">
@@ -45,7 +46,9 @@ export const SensorUsageStat: FunctionComponent<SensorUsageStatProp> = (props) =
         title={t('sensor-usage')}
         value={usage}
         summaryFormat={StatFormats.Percentage}
-        total={total} />
+        total={total}
+        trackHoverFunc={() => trackHoverFunc('sensor-usage-stat')}
+      />
     </Box>
   )
 }

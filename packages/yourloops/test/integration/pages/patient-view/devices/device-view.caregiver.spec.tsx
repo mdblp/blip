@@ -42,6 +42,7 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { act } from '@testing-library/react'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 
 describe('Devices view for Caregiver', () => {
   const firstName = 'Caregiver firstName'
@@ -58,6 +59,7 @@ describe('Devices view for Caregiver', () => {
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForCaregivers()
     mockDataAPI(pumpSettingsData)
+    mockAnalyticsApi()
   })
 
   it('should render correct layout', async () => {

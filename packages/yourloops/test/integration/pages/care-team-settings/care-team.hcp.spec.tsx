@@ -63,6 +63,7 @@ import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import TeamAPI from '../../../../lib/team/team.api'
 import { mockErrorApi } from '../../mock/error.api.mock'
+import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
 
 describe('HCP care team settings page', () => {
   const firstName = 'Jacques'
@@ -83,6 +84,7 @@ describe('HCP care team settings page', () => {
     mockDataAPI()
     mockDblCommunicationApi()
     mockErrorApi()
+    mockAnalyticsApi()
   })
 
   const renderCareTeamSettingsPage = async (route: string) => {

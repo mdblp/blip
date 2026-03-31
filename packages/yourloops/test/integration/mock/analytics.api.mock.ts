@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,37 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
-import { StatTooltip } from '../../tooltips/stat-tooltip/stat-tooltip'
-import Box from '@mui/material/Box'
-import commonStyles from '../../../styles/stat-common.css'
-import { CBGStatType } from '../../../models/stats.model'
+import AnalyticsApi from '../../../lib/analytics/analytics.api'
 
-interface TimeInRangeTitleProps {
-  annotations: string[]
-  title: string
-  shouldDisplayInfoTooltip: boolean
-  type: CBGStatType,
-  trackHoverFunc: () => void
+export const mockAnalyticsApi = () => {
+  jest.spyOn(AnalyticsApi, 'trackClick').mockReturnValue()
+  jest.spyOn(AnalyticsApi, 'trackHover').mockReturnValue()
 }
-
-const TimeInRangeTitle: FunctionComponent<TimeInRangeTitleProps> = (props) => {
-  const { annotations, title, shouldDisplayInfoTooltip, type, trackHoverFunc } = props
-
-  return (
-    <Box
-      data-testid={`${type}-title`}
-      className={commonStyles.title}
-      sx={{
-        display: "flex",
-        alignItems: "center"
-      }}>
-      {title}
-      {shouldDisplayInfoTooltip &&
-        <StatTooltip annotations={annotations} trackHoverFunc={trackHoverFunc} />
-      }
-    </Box>
-  )
-}
-
-export const TimeInRangeTitleMemoized = React.memo(TimeInRangeTitle)

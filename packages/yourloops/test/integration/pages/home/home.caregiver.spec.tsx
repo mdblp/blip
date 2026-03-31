@@ -45,6 +45,7 @@ import moment from 'moment-timezone'
 import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { mockErrorApi } from '../../mock/error.api.mock'
+import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
 
 describe('Caregiver home page', () => {
   const firstName = 'Eric'
@@ -59,6 +60,7 @@ describe('Caregiver home page', () => {
     mockDirectShareApi()
     mockDblCommunicationApi()
     mockErrorApi()
+    mockAnalyticsApi()
   })
 
   it('should render the patient list page with correct components', async () => {

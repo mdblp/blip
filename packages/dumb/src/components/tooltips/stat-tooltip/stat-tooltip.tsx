@@ -34,7 +34,8 @@ import { useTranslation } from 'react-i18next'
 import { styled } from '@mui/material'
 
 interface StatTooltipProps {
-  annotations: string[]
+  annotations: string[],
+  trackHoverFunc?: () => void,
 }
 
 const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -52,7 +53,7 @@ const StyledTooltip = styled(({ className, ...props }: TooltipProps) => (
 }))
 
 export const StatTooltip: FunctionComponent<StatTooltipProps> = (props) => {
-  const { annotations } = props
+  const { annotations, trackHoverFunc } = props
   const { t } = useTranslation('main')
 
   const imageAlt = t('img-alt-hover-for-more-info')
@@ -61,6 +62,11 @@ export const StatTooltip: FunctionComponent<StatTooltipProps> = (props) => {
     <StyledTooltip
       disableFocusListener
       placement="top"
+      onOpen={() => {
+        if(trackHoverFunc) {
+          trackHoverFunc()
+        }
+      }}
       title={
         <div data-testid="stat-tooltip-content" className={styles.container}>
           {annotations.map((message, index) =>

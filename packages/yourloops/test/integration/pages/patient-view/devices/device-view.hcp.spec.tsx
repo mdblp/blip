@@ -52,6 +52,7 @@ import {
 import { testDeviceSettingsNavigationForHcp } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 
 describe('Device view for HCP', () => {
   const firstName = 'HCP firstName'
@@ -69,6 +70,7 @@ describe('Device view for HCP', () => {
     mockUserApi().mockUserDataFetch({ firstName, lastName })
     mockPatientApiForHcp()
     mockDataAPI(pumpSettingsData)
+    mockAnalyticsApi()
   })
 
   it('should render correct layout', async () => {
