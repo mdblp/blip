@@ -26,7 +26,7 @@
  */
 
 import React, { type FunctionComponent, useMemo } from 'react'
-import { withResizeDetector } from 'react-resize-detector'
+import { useResizeDetector } from 'react-resize-detector'
 import * as d3 from 'd3'
 import { type BgBounds, TimeService, type WeekDaysFilter } from 'medical-domain'
 import { NoDataLabel } from '../no-data-label/no-data-label'
@@ -74,16 +74,9 @@ interface TrendsSvgContainerProps {
   dates: string[]
   onSelectDate: OnSelectDateFunction
   yScaleDomain: number[]
-  height: number
-  width: number
 }
 
-const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
-  width = WIDTH,
-  height = HEIGHT,
-  ...props
-}
-) => {
+export const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = (props) => {
   const {
     yScaleDomain,
     cbgData,
@@ -91,6 +84,9 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
     bgPrefs,
     onSelectDate
   } = props
+
+  // Use resize detector hook to get dimensions
+  const { width = WIDTH, height = HEIGHT, ref } = useResizeDetector()
 
   const bgBounds = bgPrefs.bgBounds as BgBounds
 
@@ -128,7 +124,7 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
   }, [activeDays, cbgData.length, height, width])
 
   return (
-    <div>
+    <div ref={ref}>
       <svg height={height} width="100%">
         <Background
           margins={MARGINS}
@@ -196,4 +192,3 @@ const TrendsSvgContainer: FunctionComponent<TrendsSvgContainerProps> = ({
   )
 }
 
-export const TrendsSvgContainerSized = withResizeDetector(TrendsSvgContainer)

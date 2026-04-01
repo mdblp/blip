@@ -88,6 +88,11 @@ export { TooltipSide } from './models/enums/tooltip-side.enum'
 export { WarmUpTooltip } from './components/tooltips/warm-up-tooltip/warm-up-tooltip'
 export { ZenModeTooltip } from './components/tooltips/zen-mode-tooltip/zen-mode-tooltip'
 
+// Daily plot methods
+export { plotBasal } from './plot-methods/basal-rates/basal-rate'
+export { plotIob } from './plot-methods/active-insulin/iob'
+export { plotNightMode } from './plot-methods/events/night-mode'
+
 // Trends
 export { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'
 export { FocusedRangeLabels } from './components/trends/common/focused-range-labels/focused-range-labels'

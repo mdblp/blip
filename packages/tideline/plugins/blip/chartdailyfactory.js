@@ -16,38 +16,42 @@
  * == BSD2 LICENSE ==
  */
 
+import * as d3 from 'd3'
+import {
+  getDataWithoutSuperpositionEvents,
+  getSuperpositionEvents,
+  isDBLG2,
+  plotBasal,
+  plotIob,
+  plotNightMode
+} from 'dumb'
+import { EventEmitter } from 'events'
 import i18next from 'i18next'
 import _ from 'lodash'
-import { EventEmitter } from 'events'
-import * as d3 from 'd3'
 
 import { MGDL_UNITS } from 'medical-domain'
-
-import Pool from '../../js/pool'
 import oneDay from '../../js/oneday'
+import plotAlarmEvent from '../../js/plot/alarmEvent'
+import plotCarb from '../../js/plot/carb'
+import plotCbg from '../../js/plot/cbg'
+import plotConfidentialModeEvent from '../../js/plot/confidentialModeEvent'
+import plotDeviceParameterChange from '../../js/plot/deviceParameterChange'
+import plotEatingShortlyEvent from '../../js/plot/eatingShortlyEvent'
+import plotEventSuperposition from '../../js/plot/eventSuperposition'
+import plotMessage from '../../js/plot/message'
+import plotPhysicalActivity from '../../js/plot/physicalActivity'
+import plotQuickbolus from '../../js/plot/quickbolus'
+import plotReservoirChange from '../../js/plot/reservoir'
+import plotSmbg from '../../js/plot/smbg'
+import plotTimeChange from '../../js/plot/timechange'
+import axesDailyx from '../../js/plot/util/axes/dailyx'
 import fill from '../../js/plot/util/fill'
 import { createYAxisBasal, createYAxisBG, createYAxisBolus, createYAxisIob } from '../../js/plot/util/scales'
-import axesDailyx from '../../js/plot/util/axes/dailyx'
-import plotZenModeEvent from '../../js/plot/zenModeEvent'
-import plotPhysicalActivity from '../../js/plot/physicalActivity'
-import plotReservoirChange from '../../js/plot/reservoir'
-import plotDeviceParameterChange from '../../js/plot/deviceParameterChange'
-import plotConfidentialModeEvent from '../../js/plot/confidentialModeEvent'
 import plotWarmUp from '../../js/plot/warmup'
-import plotAlarmEvent from '../../js/plot/alarmEvent'
-import plotCbg from '../../js/plot/cbg'
-import plotSmbg from '../../js/plot/smbg'
 import plotWizard from '../../js/plot/wizard'
-import plotCarb from '../../js/plot/carb'
-import plotQuickbolus from '../../js/plot/quickbolus'
-import plotBasal from '../../js/plot/basal'
-import plotMessage from '../../js/plot/message'
-import plotTimeChange from '../../js/plot/timechange'
-import plotNightMode from '../../js/plot/nightModeEvent'
-import plotEventSuperposition from '../../js/plot/eventSuperposition'
-import { getDataWithoutSuperpositionEvents, getSuperpositionEvents, isDBLG2 } from 'dumb'
-import plotIob from '../../js/plot/iob'
-import plotEatingShortlyEvent from '../../js/plot/eatingShortlyEvent'
+import plotZenModeEvent from '../../js/plot/zenModeEvent'
+
+import Pool from '../../js/pool'
 
 /**
  * @typedef {import('../../js/tidelinedata').default } MedicalDataService
@@ -303,8 +307,8 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   poolEvents.addPlotType({ type: 'nightMode' }, plotNightMode(poolEvents, {
     tidelineData,
-    onNightModeHover: options.onNightModeHover,
-    onNightModeOut: options.onTooltipOut
+    onElementHover: options.onNightModeHover,
+    onElementOut: options.onTooltipOut
   }))
 
   poolEvents.addPlotType({ type: 'physicalActivity' }, plotPhysicalActivity(poolEvents, {
@@ -433,8 +437,8 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   // add basal data to basal pool
   poolBasal.addPlotType({ type: 'basal' }, plotBasal(poolBasal, {
     defaultSource: tidelineData.opts.defaultSource,
-    onBasalHover: options.onBasalHover,
-    onBasalOut: options.onTooltipOut
+    onElementHover: options.onBasalHover,
+    onElementOut: options.onTooltipOut
   }))
 
   // Add confidential mode to Basal pool: Must be the last in the pool to mask stuff below
@@ -457,8 +461,8 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     // add IOB curve to IOB pool
     poolIob?.addPlotType({ type: 'iob' }, plotIob(poolIob, {
       tidelineData,
-      onIobHover: options.onIobHover,
-      onIobOut: options.onTooltipOut
+      onElementHover: options.onIobHover,
+      onElementOut: options.onTooltipOut
     }))
 
     // Add confidential mode to IOB pool: Must be the last in the pool to mask stuff below
