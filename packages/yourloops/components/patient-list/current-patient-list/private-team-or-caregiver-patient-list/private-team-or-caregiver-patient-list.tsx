@@ -38,6 +38,7 @@ import { usePatientsContext } from '../../../../lib/patient/patients.provider'
 import { useWindowDimensions } from '../../../../lib/custom-hooks/use-window-dimensions.hook'
 import { PatientListColumns } from '../../models/enums/patient-list.enum'
 import RemovePatientDialog from '../../../patient/remove-patient-dialog/remove-patient-dialog'
+import AnalyticsApi, { ElementType } from '../../../../lib/analytics/analytics.api'
 
 interface PrivateTeamOrCaregiverPatientListProps {
   patients: Patient[]
@@ -61,6 +62,18 @@ export const PrivateTeamOrCaregiverPatientList: FunctionComponent<PrivateTeamOrC
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({ pageSize: 10, page: 0 })
   const [sortModel, setSortModel] = useState<GridSortModel>([{ field: PatientListColumns.Patient, sort: 'asc' }])
 
+
+  const handleSortChange = (model: GridSortModel) => {
+    setSortModel(model)
+    if (model.length > 0) {
+      const { field, sort } = model[0]
+      AnalyticsApi.trackClick(
+        `patient-list-sort-${field}_${sort}`,
+        ElementType.Button
+      )
+    }
+  }
+
   return (
     <>
       <Box data-testid="current-patient-list-grid" sx={{ width: width }}>
@@ -77,7 +90,7 @@ export const PrivateTeamOrCaregiverPatientList: FunctionComponent<PrivateTeamOrC
           disableVirtualization={process.env.NODE_ENV === 'test'}
           columnVisibilityModel={displayedColumns}
           sortModel={sortModel}
-          onSortModelChange={setSortModel}
+          onSortModelChange={handleSortChange}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           onRowClick={onRowClick}

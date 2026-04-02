@@ -81,17 +81,17 @@ export default class AnalyticsApi {
 
   static trackHover(metricName: string) {
     if (config.METRICS_CLICKODROME_ENABLED) {
-      const eventKey = this.getEventKey({ name: metricName, action: 'hover' })
+      const eventKey = AnalyticsApi.getEventKey({ name: metricName, action: 'hover' })
       // If the tracker is already existing, do nothing.
       // It's a duplicate (user hovered again before the previous tracker was sent)
-      const tracker = this.hoverTrackers.get(eventKey)
+      const tracker = AnalyticsApi.hoverTrackers.get(eventKey)
       if (tracker) {
         return
       }
 
       // Set up a delayed tracking - only triggered after HOVER_MIN_TIME_MS
       const timeoutId = setTimeout(() => {
-        const eventKey = this.getEventKey({ name: metricName, action: 'hover' })
+        const eventKey = AnalyticsApi.getEventKey({ name: metricName, action: 'hover' })
         const payload = {
           name: metricName,
           value: 1,
@@ -106,11 +106,11 @@ export default class AnalyticsApi {
         }).catch((err) => {
           logError(`cannot send analytics: ${err}`, 'send-metrics')
         })
-        this.hoverTrackers.delete(eventKey)
+        AnalyticsApi.hoverTrackers.delete(eventKey)
       }, HOVER_MIN_TIME_MS)
 
       // Store the tracker
-      this.hoverTrackers.set(eventKey, {
+      AnalyticsApi.hoverTrackers.set(eventKey, {
         name: metricName,
         startTime: Date.now(),
         timeoutId
@@ -122,11 +122,11 @@ export default class AnalyticsApi {
   was called before HOVER_MIN_TIME_MS (after this the tracker is already sent
    to the server) */
   static cancelHover(metricName: string) {
-    const eventKey = this.getEventKey({ name: metricName, action: 'hover' })
-    const tracker = this.hoverTrackers.get(eventKey)
+    const eventKey = AnalyticsApi.getEventKey({ name: metricName, action: 'hover' })
+    const tracker = AnalyticsApi.hoverTrackers.get(eventKey)
     if (tracker) {
       clearTimeout(tracker.timeoutId)
-      this.hoverTrackers.delete(eventKey)
+      AnalyticsApi.hoverTrackers.delete(eventKey)
     }
   }
 }
