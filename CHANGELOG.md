@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.9.0-beta - 2026-03-12
+## 3.9.0-rc1 - 2026-04-01
 ### Added
 - YLP-3613 Memos on DBL settings in Devices view
 - YLP-3614 Hcps can acknowledge patient monitoring alerts
@@ -13,6 +13,8 @@ It is based on Tidepool Blip 1.27.
 - YLP-3813 Add hyperglycemia alerts (display in the patient view and settings in care teams and patients profile)
 - YLP-3837 Display Dexcom G7 sensor information in device view
 - YLP-3847 Remove pairing-code and firmware version in UI
+- YLP-3873 Fix metrics service call in minified code
+- YLP-3875 Fix vulnerabilities
 
 ### Changed
 - YLP-2478 Care team settings menu

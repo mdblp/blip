@@ -1,6 +1,6 @@
 {
   "name": "yourloops",
-  "version": "3.9.0-beta",
+  "version": "3.9.0-rc1",
   "private": true,
   "description": "Blip is a web app for type 1 diabetes (T1D).",
   "repository": {
@@ -46,7 +46,7 @@
     "emoji-picker-react": "^4.5.16",
     "html-react-parser": "^4.2.9",
     "i18next": "^23.7.8",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.24",
     "lottie-react": "^2.4.0",
     "moment-timezone": "^0.5.43",
     "react": "18.3.1",
