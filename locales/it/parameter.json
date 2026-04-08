@@ -28,6 +28,7 @@
   "HOCKEY": "Hockey",
   "HOUSEHOLD_CHORES": "Household chores",
   "HYPO_FAR_FORWARD_PRED_DURATION": "Durata per la previsione dell’ipoglicemia",
+  "INSULIN_TYPE": "Tipo di insulina",
   "IOB_REAL_MIN_LEVEL": "Fattore IOB livello minimo",
   "IOB_REAL_SECU_FACTOR": "Fattore di sicurezza per IOB",
   "IOB_RISK_ACTIVE": "Attivazione rischio IOB Hypominimizer",

@@ -28,6 +28,7 @@
   "HOCKEY": "Hockey",
   "HOUSEHOLD_CHORES": "Household chores",
   "HYPO_FAR_FORWARD_PRED_DURATION": "長期低血糖予測",
+  "INSULIN_TYPE": "Insulin type",
   "IOB_REAL_MIN_LEVEL": "最小残存インスリン係数",
   "IOB_REAL_SECU_FACTOR": "残存インスリン(IOB)の安全係数",
   "IOB_RISK_ACTIVE": "ハイポミニマイザー残存インスリンリスクの起動",
