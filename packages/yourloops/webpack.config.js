@@ -79,6 +79,7 @@ const alias = {
   'diabeloop-logo.svg': path.resolve(__dirname, '../../branding/diabeloop/diabeloop-logo.svg'),
   'diabeloop-label.svg': path.resolve(__dirname, '../../branding/diabeloop/diabeloop-label.svg'),
   'parameter-change.png': path.resolve(__dirname, '../../branding/parameter-change/parameter.png'),
+  'physical-activity.png': path.resolve(__dirname, '../../branding/physical-activity/physical-activity.png'),
   images: path.resolve(__dirname, 'images/'),
   Museo_Slab: path.resolve(__dirname, '../../branding/fonts/museo-slab/'),
   ...blipWebpack.resolve.alias

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,6 +31,7 @@ import { inRange } from 'lodash'
 import { formatDecimalNumber } from '../format/format.util'
 
 const DEFAULT_PROGRAMMED_VALUE = 0
+const MINIMAL_OVERRIDE = 0.1 // Minimum override value to be considered an override
 
 export const getBolusType = (insulinEvent: Bolus | Wizard): BolusType => {
   if (insulinEvent.type === DatumType.Wizard) {
@@ -100,6 +101,65 @@ export const getRecommended = (wizard: Wizard): number => {
 
 export const getBolusFromInsulinEvent = (insulinEvent: Bolus | Wizard): Bolus | null => {
   return insulinEvent.type === DatumType.Wizard ? insulinEvent.bolus : insulinEvent
+}
+
+export const isBolusWithDelivered = (bolus: Bolus): boolean => {
+  const delivered = getDelivered(bolus)
+
+  return Number.isFinite(delivered) && delivered > 0
+}
+
+export const isBolusWithUndelivered = (bolus: Bolus): boolean => {
+  const delivered = getDelivered(bolus)
+  const programmed = getProgrammed(bolus) ?? 0
+
+  return Number.isFinite(delivered) && Number.isFinite(programmed) && programmed > delivered
+}
+
+export const isMealWithOverride = (meal: Wizard): boolean => {
+  const bolus = getBolusFromInsulinEvent(meal)
+  if (!bolus) {
+    return false
+  }
+
+  const recommended = getRecommended(meal)
+  const programmed = getProgrammed(bolus) ?? 0
+  const overrideValue = Math.abs(programmed - recommended)
+
+  return Number.isFinite(recommended) && Number.isFinite(programmed) &&
+    programmed > recommended && overrideValue >= MINIMAL_OVERRIDE
+}
+
+export const isMealWithUnderride = (meal: Wizard): boolean => {
+  const bolus = getBolusFromInsulinEvent(meal)
+  if (!bolus) {
+    return false
+  }
+
+  const recommended = getRecommended(meal)
+  const programmed = getProgrammed(bolus) ?? 0
+  const underrideValue = Math.abs(programmed - recommended)
+
+  return Number.isFinite(recommended) && Number.isFinite(programmed) &&
+    programmed < recommended && underrideValue >= MINIMAL_OVERRIDE
+}
+
+export const isMealWithDelivered = (meal: Wizard): boolean => {
+  const bolus = getBolusFromInsulinEvent(meal)
+  if (!bolus) {
+    return false
+  }
+
+  return isBolusWithDelivered(bolus)
+}
+
+export const isMealWithUndelivered = (meal: Wizard): boolean => {
+  const bolus = getBolusFromInsulinEvent(meal)
+  if (!bolus) {
+    return false
+  }
+
+  return isBolusWithUndelivered(bolus)
 }
 
 const fixFloatingPoint = (value: number): number => {

@@ -28,47 +28,23 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
-import deviceEventIcon from 'device-event.svg'
-import hyperglycemiaEventIcon from 'hyperglycemia-event.svg'
-import hypoglycemiaEventIcon from 'hypoglycemia-event.svg'
-
-import { AlarmEvent, AlarmEventType } from 'medical-domain'
-import { Pool } from '../../models/pool.model'
-import { getTooltipContainer } from '../../utils/daily-chart/daily-chart.util'
-import { PlotFunction } from '../../models/plot-function.model'
-import { PlotSelection } from '../../models/plot-selection.model'
-import { PlotOptions } from '../../models/plot-options.model'
+import { AlarmEvent } from 'medical-domain'
+import { Pool } from '../../../models/pool.model'
+import { drawImage, getTooltipContainer } from '../../../utils/daily-chart/daily-chart.util'
+import { PlotFunction } from '../../../models/plot-function.model'
+import { PlotSelection } from '../../../models/plot-selection.model'
+import { PlotOptions } from '../../../models/plot-options.model'
+import { getAlarmEventIcon } from '../../../utils/alarm-event/alarm-event.util'
 
 const D3_ALARM_EVENT_ID = 'alarmEvent'
 const DEFAULT_OPTIONS_SIZE = 30
 const DEFAULT_IMAGE_MARGIN = 8
 
-/**
- * Get the appropriate icon for an alarm event based on its type
- * @param alarmEventType - The type of alarm event
- * @returns The SVG icon for the alarm event type
- */
-const getAlarmEventImage = (alarmEventType: AlarmEventType): string => {
-  switch (alarmEventType) {
-    case AlarmEventType.Device:
-      return deviceEventIcon
-    case AlarmEventType.Hyperglycemia:
-      return hyperglycemiaEventIcon
-    case AlarmEventType.Hypoglycemia:
-      return hypoglycemiaEventIcon
-    case AlarmEventType.Unknown:
-    default:
-      return deviceEventIcon
-  }
-}
-
 type AlarmEventOptions = PlotOptions<AlarmEvent> & {
-  size?: number
   alarmEvents: AlarmEvent[]
 }
 
 const defaults: Partial<AlarmEventOptions> = {
-  size: DEFAULT_OPTIONS_SIZE,
   xScale: null
 }
 
@@ -81,7 +57,7 @@ const defaults: Partial<AlarmEventOptions> = {
 export const plotAlarmEvent = (
   pool: Pool<AlarmEvent>,
   opts: Partial<AlarmEventOptions> = {}
-): PlotFunction => {
+): PlotFunction<AlarmEvent> => {
   const options = _.defaults(opts, defaults) as AlarmEventOptions
 
   const height = pool.height() - DEFAULT_IMAGE_MARGIN
@@ -94,7 +70,7 @@ export const plotAlarmEvent = (
     return options.xScale(d.epoch)
   }
 
-  return (selection: PlotSelection): void => {
+  return (selection: PlotSelection<AlarmEvent>): void => {
     options.xScale = pool.xScale().copy()
 
     if (!options.xScale) {
@@ -126,14 +102,11 @@ export const plotAlarmEvent = (
             .attr('id', (data: AlarmEvent) => `${alarmEventPlotPrefixId}_${data.id}`)
             .attr('data-testid', (data: AlarmEvent) => `${alarmEventPlotPrefixId}_${data.guid}`)
 
-          // Add alarm event icon
-          group
-            .append('image')
-            .attr('x', (d: AlarmEvent) => xPos(d) - width / 2)
-            .attr('y', pool.height() / 2 - (options.size ?? DEFAULT_OPTIONS_SIZE) / 2)
-            .attr('width', width)
-            .attr('height', height)
-            .attr('href', (alarmEvent: AlarmEvent) => getAlarmEventImage(alarmEvent.alarmEventType))
+          const imageX = (d: AlarmEvent) => xPos(d) - width / 2
+          const imageY = pool.height() / 2 - (DEFAULT_OPTIONS_SIZE) / 2
+          const imageHref = (alarmEvent: AlarmEvent) => getAlarmEventIcon(alarmEvent.alarmEventType)
+
+          drawImage(group, imageX, imageY, height, width, imageHref)
 
           return group
         },
@@ -142,7 +115,7 @@ export const plotAlarmEvent = (
           update
             .select('image')
             .attr('x', (d: AlarmEvent) => xPos(d) - width / 2)
-            .attr('href', (alarmEvent: AlarmEvent) => getAlarmEventImage(alarmEvent.alarmEventType))
+            .attr('href', (alarmEvent: AlarmEvent) => getAlarmEventIcon(alarmEvent.alarmEventType))
 
           return update
         },

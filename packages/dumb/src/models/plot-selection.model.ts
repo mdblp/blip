@@ -27,4 +27,4 @@
 
 import * as d3 from 'd3'
 
-export type PlotSelection = d3.Selection<SVGGElement, any, any, any>
+export type PlotSelection<T> = d3.Selection<SVGGElement, T, SVGElement, unknown>

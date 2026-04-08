@@ -28,15 +28,17 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
-import { BgClasses, type BgUnit, DblParameter, DEFAULT_BG_BOUNDS, Iob, MedicalData, MGDL_UNITS } from 'medical-domain'
-import { Pool } from '../../models/pool.model'
-import { getTooltipContainer } from '../../utils/daily-chart/daily-chart.util'
-import { PlotFunction } from '../../models/plot-function.model'
-import { PlotSelection } from '../../models/plot-selection.model'
-import { PlotOptions } from '../../models/plot-options.model'
+import { DblParameter, Iob, MedicalData } from 'medical-domain'
+import { Pool } from '../../../models/pool.model'
+import { getTooltipContainer } from '../../../utils/daily-chart/daily-chart.util'
+import { PlotFunction } from '../../../models/plot-function.model'
+import { PlotSelection } from '../../../models/plot-selection.model'
+import { PlotOptions } from '../../../models/plot-options.model'
 
 
 const DEFAULT_MAX_IOB_VALUE_U = 45
+
+const DEFAULT_RADIUS = 2.5
 
 export const getMaxIobValue = (medicalData: MedicalData) => {
   if (!medicalData.pumpSettings || medicalData.pumpSettings.length === 0) {
@@ -50,25 +52,14 @@ export const getMaxIobValue = (medicalData: MedicalData) => {
   return totalDailyInsulinValue && Number.isFinite(totalDailyInsulinValue) ? totalDailyInsulinValue / 2 : DEFAULT_MAX_IOB_VALUE_U
 }
 
-type IobOptions = PlotOptions<Iob> & {
-  bgUnits: BgUnit
-  classes: Partial<BgClasses>
-  radius: number
-}
+type IobOptions = PlotOptions<Iob>
 
-type IobPlotFunction = PlotFunction & {
+type IobPlotFunction = PlotFunction<Iob> & {
   xPosition: (d: Iob) => number
   yPosition: (d: Iob) => number
 }
 
 const defaults: Partial<IobOptions> = {
-  bgUnits: MGDL_UNITS,
-  classes: {
-    low: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetLower,
-    target: DEFAULT_BG_BOUNDS[MGDL_UNITS].targetUpper,
-    high: DEFAULT_BG_BOUNDS[MGDL_UNITS].veryHigh
-  },
-  radius: 2.5,
   xScale: null
 }
 
@@ -81,7 +72,7 @@ const defaults: Partial<IobOptions> = {
 export const plotIob = (pool: Pool<Iob>, opts: Partial<IobOptions> = {}): IobPlotFunction => {
   const options = _.defaults(opts, defaults) as IobOptions
 
-  const iob = (selection: PlotSelection): void => {
+  const iob = (selection: PlotSelection<Iob>): void => {
     options.xScale = pool.xScale().copy()
 
     selection.each(function (this: SVGGElement) {
@@ -103,12 +94,12 @@ export const plotIob = (pool: Pool<Iob>, opts: Partial<IobOptions> = {}): IobPlo
           .attr('data-testid', (d: Iob) => `iob_${d.id}`)
           .attr('cx', iob.xPosition)
           .attr('cy', iob.yPosition)
-          .attr('r', options.radius)
+          .attr('r', DEFAULT_RADIUS)
           .classed('d3-iob', true),
         update => update
           .attr('cx', iob.xPosition)
           .attr('cy', iob.yPosition)
-          .attr('r', options.radius),
+          .attr('r', DEFAULT_RADIUS),
         exit => exit.remove()
       )
 
@@ -119,7 +110,7 @@ export const plotIob = (pool: Pool<Iob>, opts: Partial<IobOptions> = {}): IobPlo
         .on('mouseover', function (this: SVGCircleElement, event: MouseEvent, d: Iob) {
           const d3Select = d3.select(this)
           highlight.on(d3Select)
-          d3Select.attr('r', options.radius + 1)
+          d3Select.attr('r', DEFAULT_RADIUS + 1)
 
           if (options.onElementHover) {
             options.onElementHover({
@@ -131,7 +122,7 @@ export const plotIob = (pool: Pool<Iob>, opts: Partial<IobOptions> = {}): IobPlo
         .on('mouseout', function (this: SVGCircleElement) {
           highlight.off()
           d3.select(this)
-            .attr('r', options.radius)
+            .attr('r', DEFAULT_RADIUS)
 
           if (_.get(options, 'onIobOut', false)) {
             options.onElementOut?.()

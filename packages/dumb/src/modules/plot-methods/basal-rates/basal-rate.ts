@@ -28,23 +28,19 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 import { Basal, BasalDeliveryType } from 'medical-domain'
-import { Pool } from '../../models/pool.model'
-import { getTooltipContainer } from '../../utils/daily-chart/daily-chart.util'
-import { PlotFunction } from '../../models/plot-function.model'
-import { PlotSelection } from '../../models/plot-selection.model'
-import { PlotOptions } from '../../models/plot-options.model'
+import { Pool } from '../../../models/pool.model'
+import { getTooltipContainer } from '../../../utils/daily-chart/daily-chart.util'
+import { PlotFunction } from '../../../models/plot-function.model'
+import { PlotSelection } from '../../../models/plot-selection.model'
+import { PlotOptions } from '../../../models/plot-options.model'
 
 type BasalOptions = PlotOptions<Basal> & {
-  opacity: number
-  opacityDelta: number
-  pathStroke: number
-  tooltipPadding: number
   defaultSource: string
 }
 
-type BasalPlotFunction = PlotFunction & {
-  addRectToPool: (selection: d3.Selection<d3.BaseType, Basal, SVGGElement, any>, invisible?: boolean) => void
-  updatePath: (selection: d3.Selection<SVGPathElement, string, SVGGElement, any>, data: Basal[], isUndelivered?: boolean) => void
+type BasalPlotFunction = PlotFunction<Basal> & {
+  addRectToPool: (selection: d3.Selection<d3.BaseType, Basal, SVGGElement, unknown>, invisible?: boolean) => void
+  updatePath: (selection: d3.Selection<SVGPathElement, string, SVGGElement, unknown>, data: Basal[], isUndelivered?: boolean) => void
   pathData: (data: Basal[], isUndelivered?: boolean) => string
   xPosition: (d: Basal) => number
   segmentEndXPosition: (d: Basal) => number
@@ -56,11 +52,11 @@ type BasalPlotFunction = PlotFunction & {
   invisibleRectHeight: () => number
 }
 
+const DEFAULT_OPACITY = 0.6
+const DEFAULT_OPACITY_DELTA = 0.2
+const DEFAULT_PATH_STROKE = 1.5
+
 const defaults: Partial<BasalOptions> = {
-  opacity: 0.6,
-  opacityDelta: 0.2,
-  pathStroke: 1.5,
-  tooltipPadding: 20,
   defaultSource: 'default',
   xScale: null
 }
@@ -138,15 +134,18 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
     return undelivereds
   }
 
-  const basal: PlotFunction & any = function (selection: PlotSelection): void {
+  const basal: PlotFunction<Basal> & any = function (selection: PlotSelection<Basal>): void {
     options.xScale = pool.xScale().copy()
 
     if (!options.xScale) {
       throw new Error('xScale is not initialized')
     }
 
-    selection.each(function (this: SVGGElement, data: Basal[]) {
-      const currentData = _.filter(data, (d) => d.type === 'basal' && d.duration > 0)
+    selection.each(function (this: SVGGElement) {
+      const medicalData = options.tidelineData.medicalData
+      const basalValues = pool.filterDataForRender(medicalData.basal)
+
+      const currentData = _.filter(basalValues, (d) => d.type === 'basal' && d.duration > 0)
       d3.select(this).selectAll('g.d3-basal-path-group').remove()
 
       if (currentData.length < 1) {
@@ -219,7 +218,7 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: Basal) {
           // Set hover state
           d3.select(this).selectAll('.d3-basal.d3-rect-basal')
-            .attr('opacity', options.opacity + options.opacityDelta)
+            .attr('opacity', DEFAULT_OPACITY + DEFAULT_OPACITY_DELTA)
 
           if (options.onElementHover) {
             options.onElementHover({
@@ -232,10 +231,10 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
           // Remove hover state
           if (d.deliveryType === BasalDeliveryType.Temporary && d.rate > 0) {
             d3.select(this).selectAll('.d3-basal.d3-rect-basal')
-              .attr('opacity', options.opacity - options.opacityDelta)
+              .attr('opacity', DEFAULT_OPACITY - DEFAULT_OPACITY_DELTA)
           } else {
             d3.select(this).selectAll('.d3-basal.d3-rect-basal')
-              .attr('opacity', options.opacity)
+              .attr('opacity', DEFAULT_OPACITY)
           }
 
           if (options.onElementOut) {
@@ -268,9 +267,9 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
           return null
         }
         if (d.deliveryType === BasalDeliveryType.Temporary && d.rate > 0) {
-          return options.opacity - options.opacityDelta
+          return DEFAULT_OPACITY - DEFAULT_OPACITY_DELTA
         }
-        return options.opacity
+        return DEFAULT_OPACITY
       })
       .attr('width', basal.width)
       .attr('height', heightFn)
@@ -379,7 +378,7 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
    */
   basal.pathYPosition = (d: Basal): number => {
     const yScale = pool.yScale()
-    return yScale(d.rate) - options.pathStroke / 2
+    return yScale(d.rate) - DEFAULT_PATH_STROKE / 2
   }
 
   /**

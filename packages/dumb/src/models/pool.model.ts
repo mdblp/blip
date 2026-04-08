@@ -26,16 +26,16 @@
  */
 
 import * as d3 from 'd3'
-import { Iob } from 'medical-domain'
 
 export interface Pool<T> {
+  id: () => string
   xScale: () => {
     copy: () => d3.ScaleTime<number, number>
   }
   yScale: () => d3.ScaleContinuousNumeric<number, number>
   height: () => number
   filterDataForRender: (data: T[]) => T[]
-  highlight: (allPoints: d3.Selection<SVGCircleElement, Iob, SVGGElement, unknown>) => {
+  highlight: (allPoints: d3.Selection<SVGCircleElement, T, SVGGElement, unknown>) => {
     on: (selectMethod: d3.Selection<SVGCircleElement, unknown, null, undefined>) => void,
     off: () => void
   }

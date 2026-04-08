@@ -30,7 +30,9 @@ import MedicalDataService from 'medical-domain'
 
 export interface PlotOptions<T> {
   xScale: d3.ScaleTime<number, number> | null
-  onElementHover: (data: { data: T; rect: DOMRect, class?: string }) => void
+  onElementHover: OnElementHoverFunction<T>
   onElementOut: () => void
   tidelineData: MedicalDataService
 }
+
+export type OnElementHoverFunction<T> = (data: { data: T; rect: DOMRect, class?: string }) => void

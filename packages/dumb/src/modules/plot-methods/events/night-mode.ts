@@ -30,37 +30,24 @@ import * as d3 from 'd3'
 import nightModeIcon from 'night-mode.svg'
 
 import { NightMode } from 'medical-domain'
-import { Pool } from '../../models/pool.model'
-import { getTooltipContainer } from '../../utils/daily-chart/daily-chart.util'
-import { PlotFunction } from '../../models/plot-function.model'
-import { PlotSelection } from '../../models/plot-selection.model'
-import { PlotOptions } from '../../models/plot-options.model'
+import { Pool } from '../../../models/pool.model'
+import {
+  calculateWidth,
+  drawImage,
+  drawZoneRectangle,
+  getTooltipContainer,
+  xPos
+} from '../../../utils/daily-chart/daily-chart.util'
+import { PlotFunction } from '../../../models/plot-function.model'
+import { PlotSelection } from '../../../models/plot-selection.model'
+import { PlotOptions } from '../../../models/plot-options.model'
+import wizardService from 'medical-domain/dist/src/domains/repositories/medical/datum/wizard.service'
 
 const D3_NIGHT_MODE_ID = 'nightMode'
 
-/**
- * Calculate x position for an event
- */
-const xPos = (d: NightMode, xScale: d3.ScaleTime<number, number>): number => {
-  return xScale(new Date(d.normalTime))
-}
-
-/**
- * Calculate width for an event
- */
-const calculateWidth = (d: NightMode, xScale: d3.ScaleTime<number, number>): number => {
-  if (!d.normalEnd) {
-    return 0
-  }
-  return xScale(new Date(d.normalEnd)) - xScale(new Date(d.normalTime))
-}
-
-type NightModeOptions = PlotOptions<NightMode> & {
-  r: number
-}
+type NightModeOptions = PlotOptions<NightMode>
 
 const defaults: Partial<NightModeOptions> = {
-  r: 14,
   xScale: null
 }
 
@@ -70,14 +57,14 @@ const defaults: Partial<NightModeOptions> = {
  * @param opts - Configuration options
  * @returns The night mode plotting function
  */
-export const plotNightMode = (pool: Pool<NightMode>, opts: Partial<NightModeOptions> = {}): PlotFunction => {
+export const plotNightMode = (pool: Pool<NightMode>, opts: Partial<NightModeOptions> = {}): PlotFunction<NightMode> => {
   const options = _.defaults(opts, defaults) as NightModeOptions
 
   const height = pool.height()
   const width = 40
   const offset = height / 4
 
-  return (selection: PlotSelection): void => {
+  return (selection: PlotSelection<NightMode>): void => {
     options.xScale = pool.xScale().copy()
 
     if (!options.xScale) {
@@ -85,6 +72,9 @@ export const plotNightMode = (pool: Pool<NightMode>, opts: Partial<NightModeOpti
     }
 
     const xScale = options.xScale
+    const imageXPos = (d: NightMode) => xPos(d, xScale) + calculateWidth(d, xScale) / 2 - width / 2
+    const imageHeight = height / 2
+    const imageWidth = () => width
 
     selection.each(function (this: SVGGElement) {
       const nightModeEvents = pool.filterDataForRender(options.tidelineData.medicalData.nightModes)
@@ -110,21 +100,9 @@ export const plotNightMode = (pool: Pool<NightMode>, opts: Partial<NightModeOpti
             .attr('id', (d: NightMode) => `${nightModePlotPrefixId}_${d.id}`)
             .attr('data-testid', (d: NightMode) => `${nightModePlotPrefixId}_${d.guid}`)
 
-          // Add background rectangle
-          group.append('rect')
-            .classed('d3-rect-night d3-night', true)
-            .attr('x', (d: NightMode) => xPos(d, xScale))
-            .attr('y', 0)
-            .attr('width', (d: NightMode) => calculateWidth(d, xScale))
-            .attr('height', height)
+          drawZoneRectangle(group, height, xScale, 'd3-rect-night d3-night')
 
-          // Add night mode icon
-          group.append('image')
-            .attr('x', (d: NightMode) => xPos(d, xScale) + calculateWidth(d, xScale) / 2 - width / 2)
-            .attr('y', offset)
-            .attr('width', width)
-            .attr('height', height / 2)
-            .attr('href', nightModeIcon)
+          drawImage<NightMode>(group, imageXPos, offset, imageHeight, imageWidth, nightModeIcon)
 
           return group
         },
@@ -135,7 +113,7 @@ export const plotNightMode = (pool: Pool<NightMode>, opts: Partial<NightModeOpti
             .attr('width', (d: NightMode) => calculateWidth(d, xScale))
 
           update.select('image')
-            .attr('x', (d: NightMode) => xPos(d, xScale) + calculateWidth(d, xScale) / 2 - width / 2)
+            .attr('x', imageXPos)
 
           return update
         },

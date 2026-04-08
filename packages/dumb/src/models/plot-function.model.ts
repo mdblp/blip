@@ -27,4 +27,4 @@
 
 import { PlotSelection } from './plot-selection.model'
 
-export type PlotFunction= (selection: PlotSelection) => void
+export type PlotFunction<T> = (selection: PlotSelection<T>) => void

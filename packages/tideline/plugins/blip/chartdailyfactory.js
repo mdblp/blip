@@ -21,9 +21,22 @@ import {
   getDataWithoutSuperpositionEvents,
   getSuperpositionEvents,
   isDBLG2,
+  plotAlarmEvent,
   plotBasal,
+  plotBolus,
+  plotCbg,
+  plotConfidentialMode,
+  plotDeviceParameterChange,
+  plotEventSuperposition,
   plotIob,
-  plotNightMode
+  plotMeal,
+  plotNightMode,
+  plotPhysicalActivity,
+  plotRescueCarbs,
+  plotReservoirChange,
+  plotSmbg,
+  plotWarmUp,
+  plotZenMode
 } from 'dumb'
 import { EventEmitter } from 'events'
 import i18next from 'i18next'
@@ -31,25 +44,16 @@ import _ from 'lodash'
 
 import { MGDL_UNITS } from 'medical-domain'
 import oneDay from '../../js/oneday'
-import plotAlarmEvent from '../../js/plot/alarmEvent'
-import plotCarb from '../../js/plot/carb'
-import plotCbg from '../../js/plot/cbg'
-import plotConfidentialModeEvent from '../../js/plot/confidentialModeEvent'
-import plotDeviceParameterChange from '../../js/plot/deviceParameterChange'
 import plotEatingShortlyEvent from '../../js/plot/eatingShortlyEvent'
-import plotEventSuperposition from '../../js/plot/eventSuperposition'
+// import plotEventSuperposition from '../../js/plot/eventSuperposition'
 import plotMessage from '../../js/plot/message'
-import plotPhysicalActivity from '../../js/plot/physicalActivity'
-import plotQuickbolus from '../../js/plot/quickbolus'
-import plotReservoirChange from '../../js/plot/reservoir'
-import plotSmbg from '../../js/plot/smbg'
+// import plotQuickbolus from '../../js/plot/quickbolus'
+// import plotSmbg from '../../js/plot/smbg'
 import plotTimeChange from '../../js/plot/timechange'
 import axesDailyx from '../../js/plot/util/axes/dailyx'
 import fill from '../../js/plot/util/fill'
 import { createYAxisBasal, createYAxisBG, createYAxisBolus, createYAxisIob } from '../../js/plot/util/scales'
-import plotWarmUp from '../../js/plot/warmup'
-import plotWizard from '../../js/plot/wizard'
-import plotZenModeEvent from '../../js/plot/zenModeEvent'
+// import plotWizard from '../../js/plot/wizard'
 
 import Pool from '../../js/pool'
 
@@ -299,10 +303,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     isDaily: true
   }))
 
-  poolEvents.addPlotType({ type: 'zenMode' }, plotZenModeEvent(poolEvents, {
+  poolEvents.addPlotType({ type: 'zenMode' }, plotZenMode(poolEvents, {
     tidelineData,
-    onZenModeHover: options.onZenModeHover,
-    onZenModeOut: options.onTooltipOut
+    onElementHover: options.onZenModeHover,
+    onElementOut: options.onTooltipOut
   }))
 
   poolEvents.addPlotType({ type: 'nightMode' }, plotNightMode(poolEvents, {
@@ -312,8 +316,8 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   }))
 
   poolEvents.addPlotType({ type: 'physicalActivity' }, plotPhysicalActivity(poolEvents, {
-    onPhysicalHover: options.onPhysicalHover,
-    onPhysicalOut: options.onTooltipOut,
+    onElementHover: options.onPhysicalHover,
+    onElementOut: options.onTooltipOut,
     tidelineData
   }))
 
@@ -325,26 +329,26 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotReservoirChange(poolEvents, {
     reservoirChanges,
-    onReservoirHover: options.onReservoirHover,
-    onReservoirOut: options.onTooltipOut
+    onElementHover: options.onReservoirHover,
+    onElementOut: options.onTooltipOut
   }))
 
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotDeviceParameterChange(poolEvents, {
     parameterChanges,
-    onParameterHover: options.onParameterHover,
-    onParameterOut: options.onTooltipOut
+    onElementHover: options.onParameterHover,
+    onElementOut: options.onTooltipOut
   }))
 
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotWarmUp(poolEvents, {
     warmUps,
-    onWarmUpHover: options.onWarmUpHover,
-    onWarmUpOut: options.onTooltipOut
+    onElementHover: options.onWarmUpHover,
+    onElementOut: options.onTooltipOut
   }))
 
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotAlarmEvent(poolEvents, {
     alarmEvents,
-    onAlarmEventHover: options.onAlarmEventHover,
-    onAlarmEventOut: options.onTooltipOut
+    onElementHover: options.onAlarmEventHover,
+    onElementOut: options.onTooltipOut
   }))
 
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotEventSuperposition(poolEvents, {
@@ -353,36 +357,35 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   }))
 
   // Add confidential mode to Events pool: Must be the last in the pool to mask stuff below
-  poolEvents.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolEvents, {
+  poolEvents.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialMode(poolEvents, {
     tidelineData,
-    onConfidentialHover: options.onConfidentialHover,
-    onConfidentialOut: options.onTooltipOut,
+    onElementHover: options.onConfidentialHover,
+    onElementOut: options.onTooltipOut,
     hideLabel: true
   }))
 
   // add CBG data to BG pool
   poolBG.addPlotType({ type: 'cbg' }, plotCbg(poolBG, {
+    tidelineData,
     bgUnits: chart.options.bgUnits,
-    classes: chart.options.bgClasses,
-    timezoneAware: chart.options.timePrefs.timezoneAware,
-    onCBGHover: options.onCBGHover,
-    onCBGOut: options.onTooltipOut
+    bgClasses: chart.options.bgClasses,
+    onElementHover: options.onCBGHover,
+    onElementOut: options.onTooltipOut
   }))
 
   // add SMBG data to BG pool
   poolBG.addPlotType({ type: 'smbg' }, plotSmbg(poolBG, {
     bgUnits: chart.options.bgUnits,
-    classes: chart.options.bgClasses,
-    timezoneAware: chart.options.timePrefs.timezoneAware,
-    onSMBGHover: options.onSMBGHover,
-    onSMBGOut: options.onTooltipOut
+    bgClasses: chart.options.bgClasses,
+    onElementHover: options.onSMBGHover,
+    onElementOut: options.onTooltipOut
   }))
 
   // Add confidential mode to BG pool: Must be the last in the pool to mask stuff below
-  poolBG.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolBG, {
+  poolBG.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialMode(poolBG, {
     tidelineData,
-    onConfidentialHover: options.onConfidentialHover,
-    onConfidentialOut: options.onTooltipOut
+    onElementHover: options.onConfidentialHover,
+    onElementOut: options.onTooltipOut
   }))
 
   // setup axis & main y scale
@@ -394,25 +397,21 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   }))
 
   // quick bolus data to wizard pool
-  poolBolus.addPlotType({ type: 'bolus' }, plotQuickbolus(poolBolus, {
-    subdueOpacity: 0.4,
-    timezoneAware: chart.options.timePrefs.timezoneAware,
-    onBolusHover: options.onBolusHover,
-    onBolusOut: options.onTooltipOut
+  poolBolus.addPlotType({ type: 'bolus' }, plotBolus(poolBolus, {
+    onElementHover: options.onBolusHover,
+    onElementOut: options.onTooltipOut
   }))
 
   // add wizard data to wizard pool
-  poolBolus.addPlotType({ type: 'wizard' }, plotWizard(poolBolus, {
-    subdueOpacity: 0.4,
-    timezoneAware: chart.options.timePrefs.timezoneAware,
-    onBolusHover: options.onBolusHover,
-    onBolusOut: options.onTooltipOut
+  poolBolus.addPlotType({ type: 'wizard' }, plotMeal(poolBolus, {
+    onElementHover: options.onBolusHover,
+    onElementOut: options.onTooltipOut
   }))
 
-  poolBolus.addPlotType({ type: 'food' }, plotCarb(poolBolus, {
-    timezoneAware: chart.options.timePrefs.timezoneAware,
-    onCarbHover: options.onCarbHover,
-    onCarbOut: options.onTooltipOut
+  poolBolus.addPlotType({ type: 'food' }, plotRescueCarbs(poolBolus, {
+    tidelineData,
+    onElementHover: options.onCarbHover,
+    onElementOut: options.onTooltipOut
   }))
 
   poolBolus.addPlotType({ type: 'eatingShortly' }, plotEatingShortlyEvent(poolBolus, {
@@ -423,10 +422,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   }))
 
   // Add confidential mode to Bolus pool: Must be the last in the pool to mask stuff below
-  poolBolus.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolBolus, {
+  poolBolus.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialMode(poolBolus, {
     tidelineData,
-    onConfidentialHover: options.onConfidentialHover,
-    onConfidentialOut: options.onTooltipOut
+    onElementHover: options.onConfidentialHover,
+    onElementOut: options.onTooltipOut
   }))
 
   // setup axis & main y scale
@@ -436,16 +435,17 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
 
   // add basal data to basal pool
   poolBasal.addPlotType({ type: 'basal' }, plotBasal(poolBasal, {
+    tidelineData,
     defaultSource: tidelineData.opts.defaultSource,
     onElementHover: options.onBasalHover,
     onElementOut: options.onTooltipOut
   }))
 
   // Add confidential mode to Basal pool: Must be the last in the pool to mask stuff below
-  poolBasal.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolBasal, {
+  poolBasal.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialMode(poolBasal, {
     tidelineData,
-    onConfidentialHover: options.onConfidentialHover,
-    onConfidentialOut: options.onTooltipOut
+    onElementHover: options.onConfidentialHover,
+    onElementOut: options.onTooltipOut
   }))
 
   if (isDblg2User) {
@@ -466,10 +466,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     }))
 
     // Add confidential mode to IOB pool: Must be the last in the pool to mask stuff below
-    poolIob?.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialModeEvent(poolIob, {
+    poolIob?.addPlotType({ type: 'deviceEvent', name: 'confidential' }, plotConfidentialMode(poolIob, {
       tidelineData,
-      onConfidentialHover: options.onConfidentialHover,
-      onConfidentialOut: options.onTooltipOut
+      onElementHover: options.onConfidentialHover,
+      onElementOut: options.onTooltipOut
     }))
   }
 
