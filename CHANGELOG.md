@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.9.0-rc2 - 2026-04-08
+## 3.9.0-rc3 - 2026-04-09
 ### Added
 - YLP-3613 Memos on DBL settings in Devices view
 - YLP-3614 Hcps can acknowledge patient monitoring alerts
