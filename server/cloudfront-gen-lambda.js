@@ -188,7 +188,7 @@ function genContentSecurityPolicy() {
 
   if (blipConfig.COOKIE_BANNER_CLIENT_ID !== 'disabled') {
     contentSecurityPolicy.scriptSrc.push('https://static.axept.io')
-    contentSecurityPolicy.connectSrc.push('https://api.axept.io', 'https://client.axept.io')
+    contentSecurityPolicy.connectSrc.push('https://api.axept.io', 'https://client.axept.io', 'https://static.axept.io')
     contentSecurityPolicy.imgSrc.push('https://axeptio.imgix.net', 'https://www.google.com')
   }
   contentSecurityPolicy.connectSrc.push(`https://${blipConfig.AUTH0_DOMAIN}`)
