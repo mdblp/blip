@@ -25,8 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { Basal, DblParameter } from '../../../src'
-import { DatumType, DeviceEventSubtype, Source } from '../../../src'
+import { Basal, DatumType, DblParameter, DeviceEventSubtype, Source } from '../../../src'
 import type Bolus from '../../../src/domains/models/medical/datum/bolus.model'
 import type Wizard from '../../../src/domains/models/medical/datum/wizard.model'
 import type MedicalData from '../../../src/domains/models/medical/medical-data.model'
