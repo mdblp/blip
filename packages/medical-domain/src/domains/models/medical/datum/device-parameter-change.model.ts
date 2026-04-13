@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,6 +29,7 @@ import type Unit from './enums/unit.enum'
 import type BaseDatum from './basics/base-datum.model'
 import { type DatumType } from './enums/datum-type.enum'
 import { type DeviceEventSubtype } from './enums/device-event-subtype.enum'
+import { DblParameter } from './enums/dbl-parameter.enum'
 
 type DeviceParameterChange = BaseDatum & {
   type: DatumType.DeviceEvent
@@ -40,7 +41,7 @@ interface Parameter {
   id: string
   epoch: number
   timezone: string
-  name: string
+  name: DblParameter
   level: string
   unit: Unit
   value: string
