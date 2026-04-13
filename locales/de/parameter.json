@@ -29,6 +29,7 @@
   "HOUSEHOLD_CHORES": "Hausarbeit",
   "HYPO_FAR_FORWARD_PRED_DURATION": "Dauer für die Vorhersage einer Hypoglykämie",
   "INSULIN_TYPE": "Insulinetype",
+  "INSULIN_TYPE_USED": "Insulinetype",
   "IOB_REAL_MIN_LEVEL": "Minimaler IOB-Faktor",
   "IOB_REAL_SECU_FACTOR": "Sicherheitsfaktor IOB",
   "IOB_RISK_ACTIVE": "Hypominimizer IOB-Risiko Aktivierung",
