@@ -28,6 +28,8 @@
   "HOCKEY": "Hockey",
   "HOUSEHOLD_CHORES": "Huishoudelijke klusjes",
   "HYPO_FAR_FORWARD_PRED_DURATION": "Hypo lange termijn voorspelling",
+  "INSULIN_TYPE": "Insulinetype",
+  "INSULIN_TYPE_USED": "Insulinetype",
   "IOB_REAL_MIN_LEVEL": "",
   "IOB_REAL_SECU_FACTOR": "Veiligheidsfactor van IOB",
   "IOB_RISK_ACTIVE": "Hypo-minimizer IOB-risico-activering",

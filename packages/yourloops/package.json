@@ -1,6 +1,6 @@
 {
   "name": "yourloops",
-  "version": "3.9.0-beta",
+  "version": "3.10.0-beta",
   "private": true,
   "description": "Blip is a web app for type 1 diabetes (T1D).",
   "repository": {
@@ -39,7 +39,7 @@
     "@mui/icons-material": "^7.0.0",
     "@mui/material": "^7.0.0",
     "@mui/x-data-grid": "^8.0.0",
-    "axios": "^1.13.5",
+    "axios": "^1.15.0",
     "bows": "^1.7.2",
     "core-js": "^3.38.0",
     "dayjs": "^1.11.10",
