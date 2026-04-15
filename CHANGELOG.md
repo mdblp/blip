@@ -2,6 +2,8 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
+## 3.10.0-beta - 2026-04-15
+
 ## 3.9.0 - 2026-04-14
 ### Added
 - YLP-3613 Memos on DBL settings in Devices view
