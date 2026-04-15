@@ -55,6 +55,7 @@ import { PatientListHeaderFiltersLabel } from './patient-list-header-filters-lab
 import { ColumnSelectorPopover } from './column-selector-popover'
 import { useParams } from 'react-router-dom'
 import TeamUtils from '../../lib/team/team.util'
+import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 
 interface PatientListHeaderProps {
   selectedTab: PatientListTabs
@@ -117,6 +118,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
 
   const openFiltersDialog = (): void => {
     setFiltersDialogOpen(true)
+    AnalyticsApi.trackClick('patient-list-filters', ElementType.Button)
   }
 
   const closeFiltersDialog = (): void => {
@@ -212,6 +214,7 @@ export const PatientListHeader: FunctionComponent<PatientListHeaderProps> = (pro
                     disabled={filters.pendingEnabled}
                     onClick={() => {
                       setIsColumnSelectorOpened(true)
+                      AnalyticsApi.trackClick('patient-list-column-settings', ElementType.Button)
                     }}
                   >
                     <Settings />

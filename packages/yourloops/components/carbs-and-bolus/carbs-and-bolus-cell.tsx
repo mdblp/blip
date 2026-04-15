@@ -36,6 +36,7 @@ import { RescueCarbsTooltip } from './rescue-carbs-tooltip'
 import { ManualBolusTooltip } from './manual-bolus-tooltip'
 import { ManualBolusAveragePerRange, RescueCarbsAveragePerRange } from 'medical-domain'
 import { formatClocktimeFromMsPer24, getSimpleHourFormatSpace } from 'dumb'
+import AnalyticsApi from '../../lib/analytics/analytics.api'
 
 interface CarbsAndBolusCellProps {
   manualBolus: ManualBolusAveragePerRange
@@ -82,8 +83,14 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
         <Box
           className={classes.cell}
           sx={{ backgroundColor: carbsCellBackgroundColor }}
-          onMouseEnter={() => openPopover(TypeOfCell.RescueCarbs)}
-          onMouseLeave={closePopover}
+          onMouseEnter={() => {
+            openPopover(TypeOfCell.RescueCarbs);
+            AnalyticsApi.trackHover('carbs-and-bolus-cell-rescue-carbs');
+          }}
+          onMouseLeave={() => {
+            closePopover();
+            AnalyticsApi.cancelHover('carbs-and-bolus-cell-rescue-carbs');
+          }}
           data-testid={`rescue-carbs-cell-${displayTimeWithoutSpaces}`}
         >
           <Typography
@@ -100,8 +107,14 @@ export const CarbsAndBolusCell: FC<CarbsAndBolusCellProps> = (props) => {
         <Box
           className={classes.cell}
           sx={{ backgroundColor: bolusCellBackgroundColor }}
-          onMouseEnter={() => openPopover(TypeOfCell.ManualBolus)}
-          onMouseLeave={closePopover}
+          onMouseEnter={() => {
+            openPopover(TypeOfCell.ManualBolus);
+            AnalyticsApi.trackHover('carbs-and-bolus-cell-manual-pen-bolus');
+          }}
+          onMouseLeave={() => {
+            closePopover();
+            AnalyticsApi.cancelHover('carbs-and-bolus-cell-manual-pen-bolus');
+          }}
         >
           <Typography
             variant="caption"

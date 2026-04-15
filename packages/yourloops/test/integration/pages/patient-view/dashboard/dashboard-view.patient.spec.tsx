@@ -63,6 +63,7 @@ import { testChatWidgetForPatient } from '../../../use-cases/communication-syste
 import { testJoinTeam } from '../../../use-cases/teams-management'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockErrorApi } from '../../../mock/error.api.mock'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 
 describe('Dashboard view for patient', () => {
   const patientDashboardRoute = AppUserRoute.Dashboard
@@ -74,6 +75,7 @@ describe('Dashboard view for patient', () => {
     mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
     mockChatAPI()
     mockErrorApi()
+    mockAnalyticsApi()
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
     jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
     jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(anotherTeam)

@@ -32,6 +32,7 @@ import { DataCard } from '../../data-card/data-card'
 import MedicalDataService, { type DateFilter } from 'medical-domain'
 import { makeStyles } from 'tss-react/mui'
 import { CartridgeChangesStat } from '../../statistics/cartridge-changes-stat'
+import AnalyticsApi from '../../../lib/analytics/analytics.api'
 
 interface DevicesUsageCardProps {
   dateFilter: DateFilter
@@ -53,7 +54,7 @@ export const DevicesUsageCard: FC<DevicesUsageCardProps> = (props) => {
 
   return (
     <DataCard data-testid="devices-usage-card">
-      <SensorUsageStat total={totalUsage} usage={sensorUsage} />
+      <SensorUsageStat total={totalUsage} usage={sensorUsage} trackHoverFunc={AnalyticsApi.trackHover} />
       <Divider variant="fullWidth" className={classes.divider} />
       <CartridgeChangesStat
         dateFilter={dateFilter}

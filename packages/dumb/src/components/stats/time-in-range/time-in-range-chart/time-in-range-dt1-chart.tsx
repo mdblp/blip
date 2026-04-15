@@ -38,10 +38,11 @@ import { DEFAULT_BG_BOUNDS } from 'medical-domain'
 interface TimeInRangeDT1ChartProps {
   data: { value: number, total: number }
   bgPrefs: BgPrefs
+  trackHoverFunc: (name: string) => void
 }
 
 export const TimeInRangeDT1Chart: FC<TimeInRangeDT1ChartProps> = (props) => {
-  const { data, bgPrefs } = props
+  const { data, bgPrefs, trackHoverFunc } = props
   const { t } = useTranslation('main')
 
   const title = t('time-in-range-dt1')
@@ -61,6 +62,7 @@ export const TimeInRangeDT1Chart: FC<TimeInRangeDT1ChartProps> = (props) => {
         title={title}
         shouldDisplayInfoTooltip={true}
         type={CBGStatType.TimeInRangeDt1}
+        trackHoverFunc={() => trackHoverFunc('time-in-range-dt1-chart-title')}
       />
       <Box sx={{ marginBottom: 1 }}>
         <CbgPercentageBarChart

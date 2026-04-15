@@ -56,6 +56,7 @@ import { DevicesView } from '../../pages/patient-view/devices/devices-view'
 import { logError } from '../../utils/error.util'
 import { PatientProfileView } from '../../pages/patient-view/patient-profile/patient-profile-view'
 import { ConfigService } from '../../lib/config/config.service'
+import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 
 interface PatientDataProps {
   patient: Patient
@@ -131,6 +132,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
         onChangePatientView={changePatientView}
         onClickPrint={() => {
           setShowPdfDialog(true)
+          AnalyticsApi.trackClick('patient-data-show-pdf', ElementType.Button)
         }}
       />
       <>
@@ -151,7 +153,11 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                   variant="contained"
                   color="primary"
                   disableElevation
-                  onClick={refreshData}
+                  onClick={() => {
+                    refreshData()
+                    AnalyticsApi.trackClick('patient-data-refresh-data', ElementType.Button)
+                  }
+                }
                   sx={{ marginTop: theme.spacing(1) }}
                   data-testid="no-data-refresh-button"
                 >

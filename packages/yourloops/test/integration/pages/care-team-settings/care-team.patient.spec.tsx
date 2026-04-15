@@ -41,6 +41,7 @@ import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
+import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
 
 describe('Patient care team settings page', () => {
   const firstName = 'Jacques'
@@ -59,6 +60,7 @@ describe('Patient care team settings page', () => {
     mockMedicalFilesAPI(mySecondTeamId, mySecondTeamName)
     mockChatAPI()
     mockDblCommunicationApi()
+    mockAnalyticsApi()
   })
 
   const renderCareTeamSettingsPage = async (route: string) => {

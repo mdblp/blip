@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import type Basal from '../../../src/domains/models/medical/datum/basal.model'
+import { Basal, DatumType, DblParameter, DeviceEventSubtype, Source } from '../../../src'
 import type Bolus from '../../../src/domains/models/medical/datum/bolus.model'
 import type Wizard from '../../../src/domains/models/medical/datum/wizard.model'
 import type MedicalData from '../../../src/domains/models/medical/medical-data.model'
@@ -40,8 +40,6 @@ import type BasicData from '../../../src/domains/repositories/medical/basics-dat
 import * as BasiscsDataService from '../../../src/domains/repositories/medical/basics-data.service'
 import * as TimeService from '../../../src/domains/repositories/time/time.service'
 import * as crypto from "crypto"
-import { DatumType, Source } from '../../../src'
-import { DeviceEventSubtype } from '../../../src/domains/models/medical/datum/enums/device-event-subtype.enum'
 import WeekDays from '../../../src/domains/models/time/enum/weekdays.enum'
 
 // window.crypto is not defined in jest...
@@ -51,6 +49,41 @@ Object.defineProperty(global, 'crypto', {
     getRandomValues: (arr: any) => crypto.randomBytes(arr.length)
   }
 })
+
+const HISTORY_PARAMETER_INSULIN_ADDED = {
+  "changeDate": "2023-09-01T00:00",
+  "parameters": [
+    {
+      "changeType": "added",
+      "effectiveDate": "2023-09-01T00:00:00.000Z",
+      "level": 2,
+      "name": DblParameter.InsulinTypeUsed,
+      "unit": "",
+      "value": "5.0",
+      "previousValue": "",
+      "previousUnit": ""
+    }
+  ]
+}
+
+const INSULIN_PARAMETER = {
+  "effectiveDate": "2023-10-16T00:00:00.000Z",
+  "level": 2,
+  "name": DblParameter.InsulinTypeUsed,
+  "unit": "",
+  "value": "5.0"
+}
+
+const DEVICE_PARAMETER_INSULIN = {
+  "id": "deviceParameter_4",
+  "epoch": 1693526400000,
+  "timezone": "UTC",
+  "name": DblParameter.InsulinTypeUsed,
+  "level": "2",
+  "unit": "",
+  "value": "5.0",
+  "previousValue": ""
+}
 
 const testData = {
   alarmEvents: [{
@@ -65,7 +98,7 @@ const testData = {
     "duration": {
       "units": "hours",
       "value": 0
-      },
+    },
     "normalEnd": "2023-10-15T00:00:00.000Z",
     "epochEnd": 1697328000000,
     "subType": "alarm",
@@ -79,7 +112,7 @@ const testData = {
       "updateTime": "2023-10-15T00:00:00"
     },
     "alarmEventType": "Hyperglycemia"
-    }
+  }
   ],
   basal: [
     {
@@ -411,6 +444,19 @@ const testData = {
           "previousValue": ""
         }
       ]
+    },
+    {
+      "id": "deviceParameter_4",
+      "type": "deviceEvent",
+      "source": "Diabeloop",
+      "timezone": "UTC",
+      "normalTime": "2023-09-01T00:00:00.000Z",
+      "epoch": 1693526400000,
+      "displayOffset": 0,
+      "subType": "deviceParameter",
+      "params": [
+        DEVICE_PARAMETER_INSULIN
+      ]
     }
   ],
   eatingShortlyEvents: [
@@ -424,22 +470,22 @@ const testData = {
       guessedTimezone: false,
       displayOffset: -120,
       isoWeekday: WeekDays.Friday,
-      source: Source.Diabeloop,
+      source: Source.Diabeloop
     }
   ],
   iob: [
     {
-      "id":"iob_cef62a2ed0794_2020-01-04_0",
-      "isoWeekday":"friday",
-      "type":"iob",
+      "id": "iob_cef62a2ed0794_2020-01-04_0",
+      "isoWeekday": "friday",
+      "type": "iob",
       "source": "Diabeloop",
-      "timezone":"Europe/Paris",
-      "guessedTimezone":false,
-      "normalTime":"2023-10-30T10:00:00.000Z",
-      "epoch":1698688800000,
-      "displayOffset":-300,
-      "units":"U",
-      "value":49
+      "timezone": "Europe/Paris",
+      "guessedTimezone": false,
+      "normalTime": "2023-10-30T10:00:00.000Z",
+      "epoch": 1698688800000,
+      "displayOffset": -300,
+      "units": "U",
+      "value": 49
     }
   ],
   messages: [],
@@ -678,7 +724,8 @@ const testData = {
             "name": "LARGE_MEAL_DINNER",
             "unit": "g",
             "value": "150"
-          }
+          },
+          INSULIN_PARAMETER
         ],
         "history": {
           "parameters": [
@@ -1281,8 +1328,9 @@ const testData = {
                   "previousUnit": ""
                 }
               ]
-            }
-          ],
+            },
+            HISTORY_PARAMETER_INSULIN_ADDED
+          ]
         },
         "pump": {
           "expirationDate": "2021-01-31T04:13:00.000Z",
@@ -1515,6 +1563,29 @@ describe('MedicalDataService', () => {
       testMedicalData(medicalData, expectedCount as Record<keyof MedicalData, number>)
       expect(medicalData.timezoneList.length).toBe(8)
       expect(medicalData.timezoneList[0]).toStrictEqual({ time: 0, timezone: 'Europe/Paris' })
+
+      const pumpSettingsPayload = medicalData.medicalData.pumpSettings[0].payload
+      const historyParameters = pumpSettingsPayload.history.parameters
+      expect(historyParameters).toHaveLength(4)
+      expect(historyParameters).not.toContainEqual(HISTORY_PARAMETER_INSULIN_ADDED)
+
+      const parameters = pumpSettingsPayload.parameters
+      expect(parameters).toHaveLength(19)
+      expect(parameters).not.toContainEqual(INSULIN_PARAMETER)
+
+      const deviceParametersChanges = medicalData.medicalData.deviceParametersChanges
+      expect(deviceParametersChanges[0].params).toHaveLength(3)
+      expect(deviceParametersChanges[0].params).not.toContainEqual({
+        "id": "deviceParameter_4",
+        "epoch": 1693526400000,
+        "timezone": "Europe/Paris",
+        "name": DblParameter.InsulinTypeUsed,
+        "level": "2",
+        "unit": "",
+        "value": "5.0",
+        "previousValue": ""
+      })
+
       // Endpoints checks
       testEndPoints(medicalData)
       // Fill Data checks
@@ -1661,7 +1732,7 @@ describe('MedicalDataService', () => {
       },
       timePrefs: {
         timezoneAware: true,
-        timezoneName: 'Europe/Paris',
+        timezoneName: 'Europe/Paris'
       }
     }
 

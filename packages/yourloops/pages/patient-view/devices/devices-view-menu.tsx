@@ -41,6 +41,7 @@ import { makeStyles } from 'tss-react/mui'
 import { DeviceViewSection } from './device-view-section.enum'
 import { useTranslation } from 'react-i18next'
 import { DeviceSystemIcon } from '../../../components/icons/diabeloop/device-system-icon'
+import AnalyticsApi, { ElementType } from '../../../lib/analytics/analytics.api'
 
 interface DevicesViewMenuProps {
   shouldDisplaySafetyBasalProfile: boolean
@@ -64,6 +65,11 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
   const { classes } = useStyles()
   const { selectedSection, selectSection, shouldDisplaySafetyBasalProfile } = props
 
+  function handleClick(section: DeviceViewSection) {
+    selectSection(section)
+    AnalyticsApi.trackClick(`device-view-section-${section}`, ElementType.Link)
+  }
+
   return (
     <Card variant="outlined" data-testid="devices-view-menu">
       <CardContent>
@@ -74,7 +80,7 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
           }} />
           <MenuItem
             selected={selectedSection === DeviceViewSection.CurrentParameters}
-            onClick={() => selectSection(DeviceViewSection.CurrentParameters)}
+            onClick={() => handleClick(DeviceViewSection.CurrentParameters)}
             sx={{ marginTop: theme.spacing(2), paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
             data-testid="current-parameters-menu-button"
           >
@@ -87,7 +93,7 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
               shouldDisplaySafetyBasalProfile &&
                 <MenuItem
                     selected={selectedSection === DeviceViewSection.SafetyBasalProfile}
-                  onClick={() => selectSection(DeviceViewSection.SafetyBasalProfile)}
+                  onClick={() => handleClick(DeviceViewSection.SafetyBasalProfile)}
                   sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
                   data-testid="safety-basal-profile-menu-button"
                 >
@@ -99,7 +105,7 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
             }
           <MenuItem
             selected={selectedSection === DeviceViewSection.ParametersChangeHistory}
-            onClick={() => selectSection(DeviceViewSection.ParametersChangeHistory)}
+            onClick={() => handleClick(DeviceViewSection.ParametersChangeHistory)}
             sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
             data-testid="change-history-menu-button"
           >
@@ -110,7 +116,7 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
           </MenuItem>
           <MenuItem
             selected={selectedSection === DeviceViewSection.DeviceChangeHistory}
-            onClick={() => selectSection(DeviceViewSection.DeviceChangeHistory)}
+            onClick={() => handleClick(DeviceViewSection.DeviceChangeHistory)}
             sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
             data-testid="device-change-history-menu-button"
           >

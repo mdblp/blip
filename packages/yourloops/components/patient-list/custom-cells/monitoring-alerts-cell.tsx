@@ -39,7 +39,11 @@ import { HyperglycemiaIcon } from '../../icons/diabeloop/hyperglycemia-icon'
 import { convertBG } from '../../../lib/units/units.util'
 import { Unit } from 'medical-domain'
 import PatientUtils from '../../../lib/patient/patient.util'
-import { AcknowledgeMonitoringAlertDialog, MonitoringAlertType } from '../ack-monitoring-alert-dialog/ack-monitoring-alert-dialog'
+import {
+  AcknowledgeMonitoringAlertDialog,
+  MonitoringAlertType
+} from '../ack-monitoring-alert-dialog/ack-monitoring-alert-dialog'
+import AnalyticsApi, { ElementType } from '../../../lib/analytics/analytics.api'
 
 interface MonitoringAlertsCellProps {
   patient: Patient
@@ -96,6 +100,7 @@ export const MonitoringAlertsCell: FunctionComponent<MonitoringAlertsCellProps> 
     event.stopPropagation()
     setCurrentAlertType(alertType)
     setIsDialogOpen(true)
+    AnalyticsApi.trackClick(`monitoring-alerts-ack-${alertType}`, ElementType.Button)
   }
 
   const buildAlertClickHandler = (alertType: MonitoringAlertType, isActive: boolean): ((e: React.MouseEvent) => void) | undefined => {

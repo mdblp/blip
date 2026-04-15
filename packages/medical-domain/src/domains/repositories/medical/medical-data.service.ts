@@ -76,6 +76,7 @@ import { Datum } from '../../models/medical/datum.model'
 import Bolus from '../../models/medical/datum/bolus.model'
 import Prescriptor from '../../models/medical/datum/enums/prescriptor.enum'
 import { DblParameter } from '../../models/medical/datum/enums/dbl-parameter.enum'
+import DeviceParameterChange from '../../models/medical/datum/device-parameter-change.model'
 
 // Insulin type parameters from DBLG1 (`InsulinTypeUsed`) and DBLG2 (`InsulinType`) are excluded
 const EXCLUDED_PARAMETERS = new Set([DblParameter.InsulinTypeUsed, DblParameter.InsulinType])
@@ -570,17 +571,39 @@ class MedicalDataService {
     })
   }
 
-  private filterParameters() {
-    this.medicalData.pumpSettings = this.medicalData.pumpSettings.map((pumpSettings: PumpSettings) => {
-      pumpSettings.payload.parameters = this.removeExcludedParameters(pumpSettings.payload.parameters)
-
-      pumpSettings.payload.history.parameters = pumpSettings.payload.history.parameters.map((historyItem: ParametersChange) => {
+  private getParametersWithoutEmptyHistory(parametersChange: ParametersChange[]): ParametersChange[] {
+    return parametersChange
+      .map((historyItem: ParametersChange) => {
         historyItem.parameters = this.removeExcludedParameters(historyItem.parameters) as PumpSettingsParameter[]
         return historyItem
       })
+      .reduce((acc: ParametersChange[], historyItem: ParametersChange) => {
+        if (!historyItem.parameters || historyItem.parameters.length === 0) {
+          return acc
+        }
+
+        acc.push(historyItem)
+        return acc
+      }, [])
+  }
+
+  private filterParameters() {
+    this.medicalData.pumpSettings = this.medicalData.pumpSettings.map((pumpSettings: PumpSettings) => {
+      pumpSettings.payload.parameters = this.removeExcludedParameters(pumpSettings.payload.parameters)
+      pumpSettings.payload.history.parameters = this.getParametersWithoutEmptyHistory(pumpSettings.payload.history.parameters)
 
       return pumpSettings
     })
+
+    this.medicalData.deviceParametersChanges = this.medicalData.deviceParametersChanges.reduce((acc: DeviceParameterChange[], deviceParameterChange: DeviceParameterChange) => {
+      const filteredParameters = deviceParameterChange.params.filter((parameter) => !EXCLUDED_PARAMETERS.has(parameter.name))
+      if (filteredParameters.length === 0) {
+        return acc
+      }
+
+      acc.push(deviceParameterChange)
+      return acc
+    }, [])
   }
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,6 +35,7 @@ import { DatumType } from '../../../models/medical/datum/enums/datum-type.enum'
 import DatumService from '../datum.service'
 import { defaultWeekDaysFilter, type WeekDaysFilter } from '../../../models/time/date-filter.model'
 import { DeviceEventSubtype } from '../../../models/medical/datum/enums/device-event-subtype.enum'
+import { DblParameter } from '../../../models/medical/datum/enums/dbl-parameter.enum'
 
 /**
  * Used to regroup device parameters in one tooltip, when the changes are too close.
@@ -56,7 +57,7 @@ const normalize = (rawData: Record<string, unknown>, opts: MedicalDataOptions): 
         id: base.id,
         epoch: base.epoch,
         timezone: base.timezone,
-        name: rawData.name as string,
+        name: rawData.name as DblParameter,
         level: rawData.level as string,
         unit: unit as Unit,
         value,

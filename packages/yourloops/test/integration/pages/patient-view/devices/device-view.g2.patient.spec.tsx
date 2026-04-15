@@ -35,6 +35,7 @@ import { testG2DevicesVisualisation } from '../../../use-cases/device-settings-v
 import { testDeviceSettingsNavigationForPatient } from '../../../use-cases/device-settings-navigation'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
+import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 
 describe('Device view for G2 Patient', () => {
   const firstName = patient2Info.profile.firstName
@@ -46,6 +47,7 @@ describe('Device view for G2 Patient', () => {
     mockWindowResizer()
     mockPatientLogin(patient2Info)
     mockDataAPI(pumpSettingsDblg2)
+    mockAnalyticsApi()
   })
 
   it('should render correct layout', async () => {
