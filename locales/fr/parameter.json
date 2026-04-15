@@ -28,6 +28,8 @@
   "HOCKEY": "Hockey",
   "HOUSEHOLD_CHORES": "Tâches ménagères",
   "HYPO_FAR_FORWARD_PRED_DURATION": "Prédiction hypo à long terme",
+  "INSULIN_TYPE": "Type d'insuline",
+  "INSULIN_TYPE_USED": "Type d'insuline",
   "IOB_REAL_MIN_LEVEL": "Facteur de niveau minimum IOB",
   "IOB_REAL_SECU_FACTOR": "Facteur de sécurité IOB",
   "IOB_RISK_ACTIVE": "Hypominimizer IOB risk activation",
