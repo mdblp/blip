@@ -16,6 +16,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 
 import React from 'react'
+import PropTypes from 'prop-types'
 import _ from 'lodash'
 import i18next from 'i18next'
 import bows from 'bows'
@@ -199,6 +200,15 @@ class Message extends React.Component {
 
     return <div className={noteClasses}>{note}</div>
   }
+}
+
+Message.propTypes = {
+  theNote: PropTypes.object.isRequired,
+  imageSize: PropTypes.string,
+  onSaveEdit: PropTypes.func,
+  timePrefs: PropTypes.shape({
+    timezoneName: PropTypes.string.isRequired
+  }).isRequired
 }
 
 export default Message

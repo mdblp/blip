@@ -15,6 +15,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
 
+import PropTypes from 'prop-types'
+
 import React from 'react'
 import _ from 'lodash'
 import i18next from 'i18next'
@@ -242,6 +244,21 @@ class Messages extends React.Component {
     const { onClose } = this.props
     onClose()
   }
+}
+
+Messages.propTypes = {
+  messages: PropTypes.array,
+  createDatetime: PropTypes.string,
+  user: PropTypes.object.isRequired,
+  patient: PropTypes.object.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onNewMessage: PropTypes.func,
+  timePrefs: PropTypes.shape({
+    timezoneName: PropTypes.string.isRequired
+  }).isRequired,
+  trackMetric: PropTypes.func.isRequired
 }
 
 Messages.defaultProps = {

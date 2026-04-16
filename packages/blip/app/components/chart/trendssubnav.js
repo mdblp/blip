@@ -15,6 +15,7 @@
  * == BSD2 LICENSE ==
  */
 import React from 'react'
+import PropTypes from 'prop-types'
 import cx from 'classnames'
 import i18next from 'i18next'
 import { Checkbox } from '@mui/material'
@@ -26,6 +27,14 @@ const domains = ['1 week', '2 weeks', '4 weeks', '3 months']
 export const weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
 class DaysGroup extends React.Component {
+  static propTypes = {
+    active: PropTypes.bool.isRequired,
+    category: PropTypes.string.isRequired,
+    days: PropTypes.array.isRequired,
+    onClickGroup: PropTypes.func.isRequired,
+    id: PropTypes.string.isRequired
+  }
+
   render() {
     return (
       <div data-testid={this.props.id}>
@@ -46,6 +55,23 @@ class DaysGroup extends React.Component {
 }
 
 class TrendsSubNav extends React.Component {
+  static propTypes = {
+    activeDays: PropTypes.shape({
+      monday: PropTypes.bool.isRequired,
+      tuesday: PropTypes.bool.isRequired,
+      wednesday: PropTypes.bool.isRequired,
+      thursday: PropTypes.bool.isRequired,
+      friday: PropTypes.bool.isRequired,
+      saturday: PropTypes.bool.isRequired,
+      sunday: PropTypes.bool.isRequired
+    }).isRequired,
+    extentSize: PropTypes.number.isRequired,
+    domainClickHandlers: PropTypes.object.isRequired,
+    onClickDay: PropTypes.func.isRequired,
+    toggleWeekdays: PropTypes.func.isRequired,
+    toggleWeekends: PropTypes.func.isRequired
+  }
+
   renderDayAbbrev(day) {
     switch (day) {
       case 'monday': return t('M_Monday')

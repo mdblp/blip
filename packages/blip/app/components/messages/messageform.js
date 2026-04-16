@@ -16,6 +16,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 
 import React from 'react'
+import PropTypes from 'prop-types'
 import _ from 'lodash'
 import i18next from 'i18next'
 import bows from 'bows'
@@ -361,6 +362,21 @@ class MessageForm extends React.Component {
       </form>
     )
   }
+}
+
+MessageForm.propTypes = {
+  formFields: PropTypes.shape({
+    editableText: PropTypes.string.isRequired,
+    editableTimestamp: PropTypes.string,
+    displayTimestamp: PropTypes.string
+  }),
+  messagePrompt: PropTypes.string,
+  onCancel: PropTypes.func,
+  onSubmit: PropTypes.func,
+  alwaysActiveCommentForm: PropTypes.bool,
+  timePrefs: PropTypes.shape({
+    timezoneName: PropTypes.string.isRequired
+  }).isRequired
 }
 
 MessageForm.defaultProps = {

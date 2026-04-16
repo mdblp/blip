@@ -14,6 +14,7 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
+import PropTypes from 'prop-types'
 import React from 'react'
 import _ from 'lodash'
 import bows from 'bows'
@@ -51,10 +52,47 @@ import AnalyticsApi, { ElementType } from 'yourloops/lib/analytics/analytics.api
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
- * @typedef { import('../../index').DatePicker } DatePicker
+ * @typedef { import('../../index').DatePicker } DatePickertrends
  */
 
 class DailyChart extends React.Component {
+  static propTypes = {
+    loading: PropTypes.bool.isRequired,
+    bgClasses: PropTypes.object.isRequired,
+    bgUnits: PropTypes.string.isRequired,
+    epochLocation: PropTypes.number.isRequired,
+    msRange: PropTypes.number.isRequired,
+    patient: PropTypes.object,
+    refToAttachResize: PropTypes.object.isRequired,
+    tidelineData: PropTypes.object.isRequired,
+    timePrefs: PropTypes.object.isRequired,
+    // message handlers
+    onCreateMessage: PropTypes.func.isRequired,
+    onShowMessageThread: PropTypes.func.isRequired,
+    // other handlers
+    onDatetimeLocationChange: PropTypes.func.isRequired,
+    onTransition: PropTypes.func.isRequired,
+    onBasalHover: PropTypes.func.isRequired,
+    onBolusHover: PropTypes.func.isRequired,
+    onSMBGHover: PropTypes.func.isRequired,
+    onCBGHover: PropTypes.func.isRequired,
+    onCarbHover: PropTypes.func.isRequired,
+    onIobHover: PropTypes.func.isRequired,
+    onReservoirHover: PropTypes.func.isRequired,
+    onPhysicalHover: PropTypes.func.isRequired,
+    onParameterHover: PropTypes.func.isRequired,
+    onWarmUpHover: PropTypes.func.isRequired,
+    onAlarmEventHover: PropTypes.func.isRequired,
+    onNightModeHover: PropTypes.func.isRequired,
+    onZenModeHover: PropTypes.func.isRequired,
+    onConfidentialHover: PropTypes.func.isRequired,
+    onTooltipOut: PropTypes.func.isRequired,
+    onEventSuperpositionClick: PropTypes.func.isRequired,
+    onChartMounted: PropTypes.func.isRequired,
+    trackMetric: PropTypes.func.isRequired,
+    isEatingShortlyEnabled: PropTypes.bool.isRequired
+  }
+
   constructor(props) {
     super(props)
 
@@ -240,6 +278,25 @@ class DailyChart extends React.Component {
 
 /** @augments React.Component<DailyProps> */
 class Daily extends React.Component {
+  static propTypes = {
+    patient: PropTypes.object.isRequired,
+    device: PropTypes.object,
+    bgPrefs: PropTypes.object.isRequired,
+    timePrefs: PropTypes.object.isRequired,
+    epochLocation: PropTypes.number.isRequired,
+    msRange: PropTypes.number.isRequired,
+    tidelineData: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
+    // refresh handler
+    onClickRefresh: PropTypes.func.isRequired,
+    // message handlers
+    onCreateMessage: PropTypes.func.isRequired,
+    onShowMessageThread: PropTypes.func.isRequired,
+    // navigation handlers
+    onDatetimeLocationChange: PropTypes.func.isRequired,
+    isEatingShortlyEnabled: PropTypes.bool.isRequired
+  }
+
   constructor(props) {
     super(props)
 
