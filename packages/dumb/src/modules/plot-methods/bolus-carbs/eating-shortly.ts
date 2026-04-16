@@ -40,16 +40,17 @@ import {
 import { type PlotFunction } from '../../../models/plot-function.model'
 import { type PlotSelection } from '../../../models/plot-selection.model'
 import { type PlotOptions } from '../../../models/plot-options.model'
-import { COMMON_PADDING, COMMON_RADIUS } from '../common-display-values'
+import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
+import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
+import { PLOT_DIMENSIONS } from '../../../models/constants/plot.constants'
 
-const D3_EATING_SHORTLY_ID = 'eating_shortly'
+// ID generator for consistent element identification
+const idGen = createIdGenerator(DailyPlotElement.EatingShortly)
+
+// Image dimensions for eating shortly icon
 const IMAGE_WIDTH = 24
 const IMAGE_HEIGHT = 24
 const IMAGE_CENTER_Y = 6
-
-// Helper functions to reduce nesting
-const getGroupId = (d: EatingShortlyEvent): string => `${D3_EATING_SHORTLY_ID}_event_${d.id}`
-const getCircleId = (d: EatingShortlyEvent): string => `${D3_EATING_SHORTLY_ID}_circle_${d.id}`
 
 type EatingShortlyOptions = PlotOptions<EatingShortlyEvent>
 
@@ -59,9 +60,27 @@ const defaults: Partial<EatingShortlyOptions> = {
 
 /**
  * Plot eating shortly events in the diabetes management timeline
- * @param pool - The pool to render into
- * @param opts - Configuration options
- * @returns The eating shortly event plotting function
+ *
+ * Eating shortly events represent occasions when the patient indicated they would be eating soon
+ * but did not specify carbohydrate amounts. These are displayed as icons with surrounding circles.
+ *
+ * Visual Features:
+ * - Circle background for visibility
+ * - Icon overlay showing eating shortly symbol
+ * - Positioned on timeline based on event timestamp
+ *
+ * @param pool - The rendering pool containing scale and dimensions
+ * @param opts - Configuration options including scales, data, and event handlers
+ * @returns A function that renders eating shortly events when called with a D3 selection
+ *
+ * @example
+ * ```typescript
+ * const plot = plotEatingShortly(pool, {
+ *   tidelineData,
+ *   onElementHover: (event) => showTooltip(event.data)
+ * })
+ * selection.call(plot)
+ * ```
  */
 export const plotEatingShortly = (
   pool: Pool<EatingShortlyEvent>,
@@ -70,6 +89,7 @@ export const plotEatingShortly = (
   const options = _.defaults(opts, defaults) as EatingShortlyOptions
 
   return (selection: PlotSelection<EatingShortlyEvent>): void => {
+    // Initialize xScale from pool
     options.xScale = pool.xScale().copy()
 
     if (!options.xScale) {
@@ -77,9 +97,9 @@ export const plotEatingShortly = (
     }
 
     const xScale = options.xScale
-    const yPos = COMMON_RADIUS + COMMON_PADDING
+    const yPos = PLOT_DIMENSIONS.COMMON_RADIUS + PLOT_DIMENSIONS.COMMON_PADDING
 
-    // Helper functions that use xScale from closure
+    // Helper functions using closure variables
     const getXPos = (d: EatingShortlyEvent): number => xPos(d, xScale)
     const getImageX = (d: EatingShortlyEvent): number => getXPos(d) - IMAGE_WIDTH / 2
 
@@ -91,12 +111,27 @@ export const plotEatingShortly = (
       const group = enter
         .append('g')
         .classed(eatingShortlyGroupSelector, true)
-        .attr('id', getGroupId)
-        .attr('data-testid', getGroupId)
+        .attr('id', idGen.groupId)
+        .attr('data-testid', (d: EatingShortlyEvent) => idGen.testId(d))
 
-      drawCircle<EatingShortlyEvent>(group, getXPos, yPos, 'd3-circle-eating-shortly', getCircleId)
+      // Draw background circle for visibility
+      drawCircle<EatingShortlyEvent>(
+        group,
+        getXPos,
+        yPos,
+        'd3-circle-eating-shortly',
+        (d: EatingShortlyEvent) => idGen.elementId(d, 'circle')
+      )
 
-      drawImage<EatingShortlyEvent>(group, getImageX, IMAGE_CENTER_Y, IMAGE_HEIGHT, IMAGE_WIDTH, eatingShortlyIcon)
+      // Draw eating shortly icon
+      drawImage<EatingShortlyEvent>(
+        group,
+        getImageX,
+        IMAGE_CENTER_Y,
+        IMAGE_HEIGHT,
+        IMAGE_WIDTH,
+        eatingShortlyIcon
+      )
 
       return group
     }
@@ -105,11 +140,13 @@ export const plotEatingShortly = (
     const updateEatingShortlyElements = (
       update: d3.Selection<SVGGElement, EatingShortlyEvent, SVGGElement, unknown>
     ): d3.Selection<SVGGElement, EatingShortlyEvent, SVGGElement, unknown> => {
+      // Update circle position and size
       update.select('circle')
         .attr('cx', getXPos)
         .attr('cy', yPos)
-        .attr('r', COMMON_RADIUS)
+        .attr('r', PLOT_DIMENSIONS.COMMON_RADIUS)
 
+      // Update image position
       update.select('image')
         .attr('x', getImageX)
         .attr('y', IMAGE_CENTER_Y)
@@ -118,29 +155,30 @@ export const plotEatingShortly = (
     }
 
     selection.each(function (this: SVGGElement) {
+      // Step 1: Get filtered data from pool
       const eatingShortlyEvents = pool.filterDataForRender(
         options.tidelineData.medicalData.eatingShortlyEvents
       )
-      const eatingShortlyGroupSelector = `d3-${D3_EATING_SHORTLY_ID}-group`
+      const eatingShortlyGroupSelector = `d3-${DailyPlotElement.EatingShortly}-group`
 
+      // Step 2: Early exit if no data
       if (eatingShortlyEvents.length < 1) {
         d3.select(this).selectAll(`g.${eatingShortlyGroupSelector}`).remove()
         return
       }
 
-      // Select all eating shortly event groups and bind data
+      // Step 3: Data join with enter/update/exit pattern
       const allEatingShortlyEvents = d3.select(this)
         .selectAll<SVGGElement, EatingShortlyEvent>(`g.${eatingShortlyGroupSelector}`)
         .data(eatingShortlyEvents, (d: EatingShortlyEvent) => d.id)
 
-      // Using join pattern for enter/update/exit
       const eatingShortlyGroup = allEatingShortlyEvents.join(
         enter => createEatingShortlyElements(enter, eatingShortlyGroupSelector),
         update => updateEatingShortlyElements(update),
         exit => exit.remove()
       )
 
-      // Set up event handlers
+      // Step 4: Set up event handlers
       eatingShortlyGroup
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: EatingShortlyEvent) {
           if (options.onElementHover) {

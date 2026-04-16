@@ -29,8 +29,8 @@ import _ from 'lodash'
 import * as d3 from 'd3'
 import nightModeIcon from 'night-mode.svg'
 
-import { NightMode } from 'medical-domain'
-import { Pool } from '../../../models/pool.model'
+import { type NightMode } from 'medical-domain'
+import { type Pool } from '../../../models/pool.model'
 import {
   calculateWidth,
   drawImage,
@@ -38,12 +38,19 @@ import {
   getTooltipContainer,
   xPos
 } from '../../../utils/daily-chart/daily-chart.util'
-import { PlotFunction } from '../../../models/plot-function.model'
-import { PlotSelection } from '../../../models/plot-selection.model'
-import { PlotOptions } from '../../../models/plot-options.model'
-import wizardService from 'medical-domain/dist/src/domains/repositories/medical/datum/wizard.service'
+import { type PlotFunction } from '../../../models/plot-function.model'
+import { type PlotSelection } from '../../../models/plot-selection.model'
+import { type PlotOptions } from '../../../models/plot-options.model'
+import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
+import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
 
-const D3_NIGHT_MODE_ID = 'nightMode'
+// ID generator for consistent element identification
+const idGen = createIdGenerator(DailyPlotElement.NightMode)
+
+// Night mode image dimensions
+const NIGHT_MODE_IMAGE_WIDTH = 40
+const NIGHT_MODE_IMAGE_HEIGHT_DIVISOR = 2
+const NIGHT_MODE_OFFSET_DIVISOR = 4
 
 type NightModeOptions = PlotOptions<NightMode>
 
@@ -53,18 +60,36 @@ const defaults: Partial<NightModeOptions> = {
 
 /**
  * Plot night mode events in the diabetes management timeline
- * @param pool - The pool to render into
- * @param opts - Configuration options
- * @returns The night mode plotting function
+ *
+ * Night mode events represent periods when the patient has activated night mode
+ * on their diabetes management device. During night mode:
+ * - Alarms may be suppressed or muted
+ * - Target glucose ranges may be adjusted
+ * - Display brightness is reduced
+ * - Vibration alerts may replace audible alarms
+ *
+ * This visualization helps clinicians understand when patients are sleeping and
+ * how device behavior is modified during these periods, which is important for
+ * analyzing glucose patterns and alarm management.
+ *
+ * @param pool - The rendering pool containing scale and dimensions
+ * @param opts - Configuration options including scales, data, and event handlers
+ * @returns A function that renders night mode events when called with a D3 selection
+ *
+ * @example
+ * ```typescript
+ * const plot = plotNightMode(pool, {
+ *   tidelineData,
+ *   onElementHover: (event) => showTooltip(event.data)
+ * })
+ * selection.call(plot)
+ * ```
  */
 export const plotNightMode = (pool: Pool<NightMode>, opts: Partial<NightModeOptions> = {}): PlotFunction<NightMode> => {
   const options = _.defaults(opts, defaults) as NightModeOptions
 
-  const height = pool.height()
-  const width = 40
-  const offset = height / 4
-
   return (selection: PlotSelection<NightMode>): void => {
+    // Initialize xScale from pool
     options.xScale = pool.xScale().copy()
 
     if (!options.xScale) {
@@ -72,55 +97,74 @@ export const plotNightMode = (pool: Pool<NightMode>, opts: Partial<NightModeOpti
     }
 
     const xScale = options.xScale
-    const imageXPos = (d: NightMode) => xPos(d, xScale) + calculateWidth(d, xScale) / 2 - width / 2
-    const imageHeight = height / 2
-    const imageWidth = () => width
+    const height = pool.height()
+    const offset = height / NIGHT_MODE_OFFSET_DIVISOR
+
+    // Helper functions using closure variables
+    const imageXPos = (d: NightMode): number =>
+      xPos(d, xScale) + calculateWidth(d, xScale) / 2 - NIGHT_MODE_IMAGE_WIDTH / 2
+    const imageHeight = height / NIGHT_MODE_IMAGE_HEIGHT_DIVISOR
+    const imageWidth = (): number => NIGHT_MODE_IMAGE_WIDTH
+
+    /**
+     * Create new night mode visual elements
+     */
+    const createNightModeElements = (
+      enter: d3.Selection<d3.EnterElement, NightMode, SVGGElement, unknown>
+    ): d3.Selection<SVGGElement, NightMode, SVGGElement, unknown> => {
+      const group = enter
+        .append('g')
+        .classed(idGen.groupSelector(), true)
+        .attr('id', idGen.groupId)
+        .attr('data-testid', (d: NightMode) => idGen.testId(d))
+
+      drawZoneRectangle(group, height, xScale, 'd3-rect-night d3-night')
+
+      drawImage<NightMode>(group, imageXPos, offset, imageHeight, imageWidth, nightModeIcon)
+
+      return group
+    }
+
+    /**
+     * Update existing night mode visual elements
+     */
+    const updateNightModeElements = (
+      update: d3.Selection<SVGGElement, NightMode, SVGGElement, unknown>
+    ): d3.Selection<SVGGElement, NightMode, SVGGElement, unknown> => {
+      update.select('rect.d3-rect-night')
+        .attr('x', (d: NightMode) => xPos(d, xScale))
+        .attr('width', (d: NightMode) => calculateWidth(d, xScale))
+
+      update.select('image')
+        .attr('x', imageXPos)
+        .attr('y', offset)
+        .attr('height', imageHeight)
+
+      return update
+    }
 
     selection.each(function (this: SVGGElement) {
+      // Step 1: Get filtered data from pool
       const nightModeEvents = pool.filterDataForRender(options.tidelineData.medicalData.nightModes)
-      const nightModeGroupSelector = `d3-${D3_NIGHT_MODE_ID}-group`
 
+      // Step 2: Early exit if no data
       if (nightModeEvents.length < 1) {
-        d3.select(this).selectAll(`g.${nightModeGroupSelector}`).remove()
+        d3.select(this).selectAll(`g.${idGen.groupSelector()}`).remove()
         return
       }
 
-      // Select all night mode event groups and bind data
+      // Step 3: Data join with enter/update/exit
       const allNightModes = d3.select(this)
-        .selectAll<SVGGElement, NightMode>(`g.d3-${D3_NIGHT_MODE_ID}`)
+        .selectAll<SVGGElement, NightMode>(`g.${idGen.groupSelector()}`)
         .data(nightModeEvents, (d: NightMode) => d.id)
 
-      // Using join pattern for enter/update/exit
-      const nightModePlotPrefixId = `${D3_NIGHT_MODE_ID}_group`
       const nightModeGroup = allNightModes.join(
-        enter => {
-          const group = enter
-            .append('g')
-            .classed(nightModeGroupSelector, true)
-            .attr('id', (d: NightMode) => `${nightModePlotPrefixId}_${d.id}`)
-            .attr('data-testid', (d: NightMode) => `${nightModePlotPrefixId}_${d.guid}`)
-
-          drawZoneRectangle(group, height, xScale, 'd3-rect-night d3-night')
-
-          drawImage<NightMode>(group, imageXPos, offset, imageHeight, imageWidth, nightModeIcon)
-
-          return group
-        },
-        update => {
-          // Update existing elements
-          update.select('rect.d3-rect-night')
-            .attr('x', (d: NightMode) => xPos(d, xScale))
-            .attr('width', (d: NightMode) => calculateWidth(d, xScale))
-
-          update.select('image')
-            .attr('x', imageXPos)
-
-          return update
-        },
+        createNightModeElements,
+        updateNightModeElements,
         exit => exit.remove()
       )
 
-      // Set up event handlers
+      // Step 4: Set up event handlers
       nightModeGroup
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: NightMode) {
           if (options.onElementHover) {

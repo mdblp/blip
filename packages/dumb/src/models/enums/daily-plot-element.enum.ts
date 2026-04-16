@@ -25,23 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import * as d3 from 'd3'
-
-export interface Pool<T> {
-  id: () => string
-  xScale: () => {
-    copy: () => d3.ScaleTime<number, number>
-  }
-  yScale: () => d3.ScaleContinuousNumeric<number, number>
-  height: () => number
-  filterDataForRender: (data: T[]) => T[]
-  highlight: <BackgroundElement extends SVGElement = SVGElement>(
-    selector: string | d3.Selection<BackgroundElement, T, SVGGElement, unknown>,
-    opts?: { subdueOpacity?: number }
-  ) => {
-    on: <ForegroundElement extends SVGElement = SVGElement>(
-      el: d3.Selection<ForegroundElement, unknown, null, undefined>
-    ) => void
-    off: () => void
-  }
+export enum DailyPlotElement {
+  AlarmEvent = 'alarmEvent',
+  Basal = 'basal',
+  Bolus = 'bolus',
+  Cbg = 'cbg',
+  ConfidentialMode = 'confidential',
+  DeviceParameterChange = 'param',
+  EatingShortly = 'eatingShortly',
+  EventSuperposition = 'eventSuperposition',
+  Iob = 'iob',
+  Meal = 'meal',
+  NightMode = 'nightMode',
+  PhysicalActivity = 'pa',
+  RescueCarbs = 'carb',
+  ReservoirChange = 'reservoir',
+  Smbg = 'smbg',
+  TimezoneChange = 'timechange',
+  WarmUp = 'warmup',
+  Wizard = 'wizard',
+  ZenMode = 'event'
 }

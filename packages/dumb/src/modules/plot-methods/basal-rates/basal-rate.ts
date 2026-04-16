@@ -27,12 +27,17 @@
 
 import _ from 'lodash'
 import * as d3 from 'd3'
-import { Basal, BasalDeliveryType } from 'medical-domain'
-import { Pool } from '../../../models/pool.model'
+import { type Basal, BasalDeliveryType } from 'medical-domain'
+import { type Pool } from '../../../models/pool.model'
 import { getTooltipContainer } from '../../../utils/daily-chart/daily-chart.util'
-import { PlotFunction } from '../../../models/plot-function.model'
-import { PlotSelection } from '../../../models/plot-selection.model'
-import { PlotOptions } from '../../../models/plot-options.model'
+import { type PlotFunction } from '../../../models/plot-function.model'
+import { type PlotSelection } from '../../../models/plot-selection.model'
+import { type PlotOptions } from '../../../models/plot-options.model'
+import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
+import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
+
+// ID generator for consistent element identification
+const idGen = createIdGenerator(DailyPlotElement.Basal)
 
 type BasalOptions = PlotOptions<Basal> & {
   defaultSource: string
@@ -52,6 +57,7 @@ type BasalPlotFunction = PlotFunction<Basal> & {
   invisibleRectHeight: () => number
 }
 
+// Visual constants for basal rendering
 const DEFAULT_OPACITY = 0.6
 const DEFAULT_OPACITY_DELTA = 0.2
 const DEFAULT_PATH_STROKE = 1.5
@@ -92,10 +98,44 @@ function getBasalPathGroups(basals: Basal[]): Basal[][] {
 }
 
 /**
- * Plot basal insulin data
- * @param pool - The pool to render into
- * @param opts - Configuration options
- * @returns The basal plotting function
+ * Plot basal insulin data in the diabetes management timeline
+ *
+ * Basal insulin is background insulin delivered continuously throughout the day to maintain
+ * stable blood glucose levels between meals and overnight. This plotter visualizes basal
+ * rates as rectangles with heights proportional to the rate, connected by paths showing
+ * transitions between different rates.
+ *
+ * Visual Features:
+ * - Rectangles representing basal segments (height = rate, width = duration)
+ * - Connecting paths showing rate changes over time
+ * - Different visual styles for delivery types (scheduled, automated, temporary)
+ * - Undelivered/suppressed basal shown with special styling
+ * - Invisible hover target rectangles for better interactivity
+ *
+ * Delivery Types:
+ * - **Scheduled**: Pre-programmed basal rates
+ * - **Automated**: Algorithm-adjusted rates (e.g., closed-loop systems)
+ * - **Temporary**: Manual temporary rate adjustments
+ *
+ * Medical Context:
+ * - Basal insulin provides 40-60% of total daily insulin needs
+ * - Proper basal rates prevent blood sugar drift between meals
+ * - Automated basal adjustments help optimize glucose control
+ * - Temporary basals used for exercise, illness, etc.
+ *
+ * @param pool - The rendering pool containing scale and dimensions
+ * @param opts - Configuration options including scales, data, and event handlers
+ * @returns A function that renders basal insulin data when called with a D3 selection
+ *
+ * @example
+ * ```typescript
+ * const plot = plotBasal(pool, {
+ *   tidelineData,
+ *   defaultSource: 'Medtronic',
+ *   onElementHover: (event) => showTooltip(event.data)
+ * })
+ * selection.call(plot)
+ * ```
  */
 export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): BasalPlotFunction => {
   const options = _.defaults(opts, defaults) as BasalOptions
@@ -135,6 +175,7 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
   }
 
   const basal: PlotFunction<Basal> & any = function (selection: PlotSelection<Basal>): void {
+    // Initialize xScale from pool
     options.xScale = pool.xScale().copy()
 
     if (!options.xScale) {
@@ -142,44 +183,46 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
     }
 
     selection.each(function (this: SVGGElement) {
+      // Step 1: Get filtered data from pool
       const medicalData = options.tidelineData.medicalData
       const basalValues = pool.filterDataForRender(medicalData.basal)
 
+      // Step 2: Apply domain-specific filtering - only valid basal segments with duration > 0
       const currentData = _.filter(basalValues, (d) => d.type === 'basal' && d.duration > 0)
+
+      // Clean up old path groups
       d3.select(this).selectAll('g.d3-basal-path-group').remove()
 
+      // Step 3: Early exit if no data
       if (currentData.length < 1) {
-        // Remove previous data
         d3.select(this).selectAll('g.d3-basal-group').remove()
         return
       }
 
-      // Select all basal groups and bind data
+      // Step 4: Data join with enter/update/exit pattern for basal segments
       const basalSegments = d3.select(this)
         .selectAll<SVGGElement, Basal>('.d3-basal-group')
         .data(currentData, (d: Basal) => d.id)
 
-      // Handle exit selection first
       basalSegments.exit().remove()
 
-      // Create new basal groups for entering data
+      // Create new basal segment groups
       const basalSegmentGroups = basalSegments.enter()
         .append('g')
         .classed('d3-basal-group', true)
-        .attr('id', (d: Basal) => `basal_group_${d.id}`)
-        .attr('data-testid', (d: Basal) => `basal_group_${d.id}`)
+        .attr('id', idGen.groupId)
+        .attr('data-testid', (d: Basal) => idGen.testId(d))
 
-      // Add rectangles to non-zero rate basal segments
+      // Add visible rectangles for non-zero rate segments
       const nonZero = basalSegmentGroups.filter((d: Basal) => d.rate > 0)
       basal.addRectToPool(nonZero)
 
-      // Add invisible hover target rectangles for all basal segments
+      // Add invisible hover target rectangles for all segments
       basal.addRectToPool(basalSegmentGroups, true)
 
-      // Split data into groups by delivery type for path generation
+      // Step 5: Create connecting paths grouped by delivery type
       const basalPathGroups = getBasalPathGroups(currentData)
 
-      // Create or select the path group container
       const basalPathsGroup = selection
         .selectAll<SVGGElement, string>('.d3-basal-path-group')
         .data(['d3-basal-path-group'])
@@ -198,11 +241,10 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
           .join('path')
           .attr('class', (d: string) => d)
 
-        // Update path data
         basal.updatePath(path, pathData)
       })
 
-      // Handle undelivered path separately
+      // Handle undelivered/suppressed basal separately
       const undeliveredPathClass = 'd3-basal d3-path-basal d3-path-basal-undelivered'
       const undeliveredPath = basalPathsGroup
         .selectAll<SVGPathElement, string>(`.${undeliveredPathClass.replace(/ /g, '.')}`)
@@ -210,13 +252,12 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
         .join('path')
         .attr('class', (d: string) => d)
 
-      // Update undelivered path data
       basal.updatePath(undeliveredPath, getUndelivereds(currentData), true)
 
-      // Set up event handlers
+      // Step 6: Set up event handlers
       selection.selectAll<SVGGElement, Basal>(`.d3-basal-group`)
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: Basal) {
-          // Set hover state
+          // Increase opacity on hover
           d3.select(this).selectAll('.d3-basal.d3-rect-basal')
             .attr('opacity', DEFAULT_OPACITY + DEFAULT_OPACITY_DELTA)
 
@@ -228,7 +269,7 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
           }
         })
         .on('mouseout', function (this: SVGGElement, _event: MouseEvent, d: Basal) {
-          // Remove hover state
+          // Restore default opacity
           if (d.deliveryType === BasalDeliveryType.Temporary && d.rate > 0) {
             d3.select(this).selectAll('.d3-basal.d3-rect-basal')
               .attr('opacity', DEFAULT_OPACITY - DEFAULT_OPACITY_DELTA)
@@ -259,7 +300,7 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
     const yPosFn = invisible ? basal.invisibleRectYPosition : basal.yPosition
 
     selection.append('rect')
-      .attr('id', (d: Basal) => `basal_element_${invisible ? 'invisible' : 'visible'}_${d.id}`)
+      .attr('id', (d: Basal) => idGen.elementId(d, invisible ? 'invisible' : 'visible'))
       .attr('x', basal.xPosition)
       .attr('y', yPosFn)
       .attr('opacity', (d: Basal) => {

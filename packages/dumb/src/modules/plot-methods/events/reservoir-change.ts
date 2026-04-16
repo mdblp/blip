@@ -35,14 +35,15 @@ import { type PlotFunction } from '../../../models/plot-function.model'
 import { type PlotSelection } from '../../../models/plot-selection.model'
 import { type PlotOptions } from '../../../models/plot-options.model'
 import { getReservoirChangeIcon } from '../../../utils/reservoir-change/reservoir-change.util'
+import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
+import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
+import { PLOT_DIMENSIONS } from '../../../models/constants/plot.constants'
 
-const D3_RESERVOIR_ID = 'reservoir'
-const DEFAULT_OPTIONS_SIZE = 30
-const DEFAULT_IMAGE_MARGIN = 8
+// ID generator for consistent element identification
+const idGen = createIdGenerator(DailyPlotElement.ReservoirChange)
 
-// Helper functions to reduce nesting
-const getGroupId = (d: ReservoirChange): string => `${D3_RESERVOIR_ID}_group_${d.id}`
-const getPumpIcon = (d: ReservoirChange): string => getReservoirChangeIcon(d.pump.manufacturer)
+// Reservoir/cartridge change image dimensions
+const RESERVOIR_CHANGE_IMAGE_WIDTH = 40
 
 type ReservoirChangeOptions = PlotOptions<ReservoirChange> & {
   reservoirChanges: ReservoirChange[]
@@ -54,9 +55,30 @@ const defaults: Partial<ReservoirChangeOptions> = {
 
 /**
  * Plot cartridge/reservoir change events in the diabetes management timeline
- * @param pool - The pool to render into
- * @param opts - Configuration options
- * @returns The cartridge change plotting function
+ *
+ * Reservoir (cartridge) changes represent when a patient replaces the insulin
+ * reservoir/cartridge in their insulin pump. These events are important because:
+ * - They indicate insulin supply replenishment
+ * - Frequent changes may indicate pump issues or high insulin usage
+ * - Infrequent changes may indicate pump site problems
+ * - They help track pump maintenance compliance
+ *
+ * Each pump manufacturer has a specific cartridge icon to help identify the
+ * device type being used.
+ *
+ * @param pool - The rendering pool containing scale and dimensions
+ * @param opts - Configuration options including scales, reservoir changes data, and event handlers
+ * @returns A function that renders reservoir change events when called with a D3 selection
+ *
+ * @example
+ * ```typescript
+ * const plot = plotReservoirChange(pool, {
+ *   tidelineData,
+ *   reservoirChanges: medicalData.reservoirChanges,
+ *   onElementHover: (event) => showTooltip(event.data)
+ * })
+ * selection.call(plot)
+ * ```
  */
 export const plotReservoirChange = (
   pool: Pool<ReservoirChange>,
@@ -64,10 +86,8 @@ export const plotReservoirChange = (
 ): PlotFunction<ReservoirChange> => {
   const options = _.defaults(opts, defaults) as ReservoirChangeOptions
 
-  const height = pool.height() - DEFAULT_IMAGE_MARGIN
-  const width = 40
-
   return (selection: PlotSelection<ReservoirChange>): void => {
+    // Initialize xScale from pool
     options.xScale = pool.xScale().copy()
 
     if (!options.xScale) {
@@ -75,52 +95,70 @@ export const plotReservoirChange = (
     }
 
     const xScale = options.xScale
+    const height = pool.height() - PLOT_DIMENSIONS.DEFAULT_IMAGE_MARGIN
 
-    // Helper function that uses xScale from closure
-    const getXPos = (d: ReservoirChange): number => xScale(d.epoch) - width / 2
-    const getImageY = (): number => pool.height() / 2 - DEFAULT_OPTIONS_SIZE / 2
+    // Helper functions using closure variables
+    const getXPos = (d: ReservoirChange): number =>
+      xScale(d.epoch) - RESERVOIR_CHANGE_IMAGE_WIDTH / 2
+    const getImageY = (): number =>
+      pool.height() / 2 - PLOT_DIMENSIONS.DEFAULT_SIZE / 2
+    const getPumpIcon = (d: ReservoirChange): string =>
+      getReservoirChangeIcon(d.pump.manufacturer)
+
+    /**
+     * Create new reservoir change visual elements
+     */
+    const createReservoirChangeElements = (
+      enter: d3.Selection<d3.EnterElement, ReservoirChange, SVGGElement, unknown>
+    ): d3.Selection<SVGGElement, ReservoirChange, SVGGElement, unknown> => {
+      const group = enter
+        .append('g')
+        .classed(idGen.groupSelector(), true)
+        .attr('id', idGen.groupId)
+        .attr('data-testid', (d: ReservoirChange) => idGen.testId(d))
+
+      drawImage(group, getXPos, getImageY(), height, RESERVOIR_CHANGE_IMAGE_WIDTH, getPumpIcon)
+
+      return group
+    }
+
+    /**
+     * Update existing reservoir change visual elements
+     */
+    const updateReservoirChangeElements = (
+      update: d3.Selection<SVGGElement, ReservoirChange, SVGGElement, unknown>
+    ): d3.Selection<SVGGElement, ReservoirChange, SVGGElement, unknown> => {
+      update
+        .select('image')
+        .attr('x', getXPos)
+        .attr('y', getImageY())
+        .attr('href', getPumpIcon)
+
+      return update
+    }
 
     selection.each(function (this: SVGGElement) {
+      // Step 1: Get reservoir change data from options
       const filteredData = options.reservoirChanges
-      const reservoirGroupSelector = `d3-${D3_RESERVOIR_ID}-group`
 
+      // Step 2: Early exit if no data
       if (filteredData.length < 1) {
-        d3.select(this).selectAll(`g.${reservoirGroupSelector}`).remove()
+        d3.select(this).selectAll(`g.${idGen.groupSelector()}`).remove()
         return
       }
 
-      // Select all reservoir change event groups and bind data
+      // Step 3: Data join with enter/update/exit
       const allReservoirs = d3.select(this)
-        .selectAll<SVGGElement, ReservoirChange>(`g.${reservoirGroupSelector}`)
+        .selectAll<SVGGElement, ReservoirChange>(`g.${idGen.groupSelector()}`)
         .data(filteredData, (d: ReservoirChange) => d.id)
 
-      // Using join pattern for enter/update/exit
       const reservoirGroup = allReservoirs.join(
-        enter => {
-          const group = enter
-            .append('g')
-            .classed(reservoirGroupSelector, true)
-            .attr('id', getGroupId)
-            .attr('data-testid', getGroupId)
-
-          drawImage(group, getXPos, getImageY, height, width, getPumpIcon)
-
-          return group
-        },
-        update => {
-          // Update existing elements
-          update
-            .select('image')
-            .attr('x', getXPos)
-            .attr('y', getImageY)
-            .attr('href', getPumpIcon)
-
-          return update
-        },
+        createReservoirChangeElements,
+        updateReservoirChangeElements,
         exit => exit.remove()
       )
 
-      // Set up event handlers
+      // Step 4: Set up event handlers
       reservoirGroup
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: ReservoirChange) {
           if (options.onElementHover) {

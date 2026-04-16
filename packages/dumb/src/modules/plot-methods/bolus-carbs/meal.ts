@@ -44,13 +44,16 @@ import {
   getBolusType,
   getDelivered,
   getProgrammed,
-  getRecommended, isMealWithDelivered, isMealWithOverride, isMealWithUndelivered, isMealWithUnderride
+  getRecommended,
+  isMealWithDelivered,
+  isMealWithOverride,
+  isMealWithUndelivered,
+  isMealWithUnderride
 } from '../../../utils/bolus/bolus.util'
 import { BolusType } from '../../../models/enums/bolus-type.enum'
 
 const BOLUS_WIDTH = 12
 const HALF_BOLUS_WIDTH = BOLUS_WIDTH / 2
-const MINIMAL_OVERRIDE = 0.1 // Minimum override value to be considered an override
 const CARB_RADIUS = 14
 const CARB_PADDING = 4
 const MARKER_HEIGHT = 5
@@ -362,12 +365,12 @@ export const plotMeal = (
       )
 
       // Set up highlight behavior with selector string for both wizard and bolus groups
-      const highlight = pool.highlight('.d3-wizard-group, .d3-bolus-group' as any)
+      const highlight = pool.highlight('.d3-wizard-group, .d3-bolus-group')
 
       // Set up tooltip event handlers
       mealGroup
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: Wizard) {
-          highlight.on(d3.select(this) as any)
+          highlight.on(d3.select(this))
           if (options.onElementHover) {
             options.onElementHover({
               data: d,

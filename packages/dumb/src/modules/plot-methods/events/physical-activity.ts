@@ -32,7 +32,8 @@ import physicalActivityIcon from 'physical-activity.png'
 import { type PhysicalActivity } from 'medical-domain'
 import { type Pool } from '../../../models/pool.model'
 import {
-  calculateWidth, drawImage,
+  calculateWidth,
+  drawImage,
   drawZoneRectangle,
   getTooltipContainer,
   xPos
@@ -40,15 +41,13 @@ import {
 import { type PlotFunction } from '../../../models/plot-function.model'
 import { type PlotSelection } from '../../../models/plot-selection.model'
 import { type PlotOptions } from '../../../models/plot-options.model'
+import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
 
-const D3_PHYSICAL_ACTIVITY_ID = 'pa'
-const DEFAULT_IMAGE_MARGIN = 8
-const DEFAULT_OPTIONS_SIZE = 30
+import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
+import { PLOT_DIMENSIONS } from '../../../models/constants/plot.constants'
 
-// Helper functions to reduce nesting
-const getGroupId = (d: PhysicalActivity): string => `${D3_PHYSICAL_ACTIVITY_ID}_group_${d.id}`
-const getImageId = (d: PhysicalActivity): string => `${D3_PHYSICAL_ACTIVITY_ID}_img_${d.id}`
-const getRectId = (d: PhysicalActivity): string => `${D3_PHYSICAL_ACTIVITY_ID}_rect_${d.id}`
+// ID generator for consistent element identification
+const idGen = createIdGenerator(DailyPlotElement.PhysicalActivity)
 
 type PhysicalActivityOptions = PlotOptions<PhysicalActivity>
 
@@ -58,9 +57,34 @@ const defaults: Partial<PhysicalActivityOptions> = {
 
 /**
  * Plot physical activity events in the diabetes management timeline
- * @param pool - The pool to render into
- * @param opts - Configuration options
- * @returns The physical activity plotting function
+ *
+ * Physical activity events represent periods when the patient has engaged in exercise
+ * or physical activity. This information is critical for diabetes management because:
+ * - Exercise affects insulin sensitivity
+ * - Physical activity can lower blood glucose levels
+ * - Activity timing impacts insulin dosing decisions
+ * - Intensity affects glucose response
+ *
+ * The visualization shows:
+ * - Activity duration (zone rectangle)
+ * - Activity icon for visual identification
+ * - Reported intensity level (when available)
+ *
+ * This helps clinicians understand how exercise patterns correlate with glucose
+ * fluctuations and insulin requirements.
+ *
+ * @param pool - The rendering pool containing scale and dimensions
+ * @param opts - Configuration options including scales, data, and event handlers
+ * @returns A function that renders physical activity events when called with a D3 selection
+ *
+ * @example
+ * ```typescript
+ * const plot = plotPhysicalActivity(pool, {
+ *   tidelineData,
+ *   onElementHover: (event) => showTooltip(event.data)
+ * })
+ * selection.call(plot)
+ * ```
  */
 export const plotPhysicalActivity = (
   pool: Pool<PhysicalActivity>,
@@ -68,9 +92,8 @@ export const plotPhysicalActivity = (
 ): PlotFunction<PhysicalActivity> => {
   const options = _.defaults(opts, defaults) as PhysicalActivityOptions
 
-  const height = pool.height()
-
   return (selection: PlotSelection<PhysicalActivity>): void => {
+    // Initialize xScale from pool
     options.xScale = pool.xScale().copy()
 
     if (!options.xScale) {
@@ -78,23 +101,25 @@ export const plotPhysicalActivity = (
     }
 
     const xScale = options.xScale
+    const height = pool.height()
 
-    // Helper functions that use xScale from closure
+    // Helper functions using closure variables
     const getXPos = (d: PhysicalActivity): number => xPos(d, xScale)
     const getWidth = (d: PhysicalActivity): number => calculateWidth(d, xScale)
-    const getImageY = (): number => height / 2 - DEFAULT_OPTIONS_SIZE / 2
-    const getImageHeight = (): number => height - DEFAULT_IMAGE_MARGIN
+    const getImageY = (): number => height / 2 - PLOT_DIMENSIONS.DEFAULT_SIZE / 2
+    const getImageHeight = (): number => height - PLOT_DIMENSIONS.DEFAULT_IMAGE_MARGIN
 
-    // Enter callback: create new elements
+    /**
+     * Create new physical activity visual elements
+     */
     const createPhysicalActivityElements = (
-      enter: d3.Selection<d3.EnterElement, PhysicalActivity, SVGGElement, unknown>,
-      physicalActivityGroupSelector: string
+      enter: d3.Selection<d3.EnterElement, PhysicalActivity, SVGGElement, unknown>
     ): d3.Selection<SVGGElement, PhysicalActivity, SVGGElement, unknown> => {
       const group = enter
         .append('g')
-        .classed(physicalActivityGroupSelector, true)
-        .attr('id', getGroupId)
-        .attr('data-testid', getGroupId)
+        .classed(idGen.groupSelector(), true)
+        .attr('id', idGen.groupId)
+        .attr('data-testid', idGen.groupId)
 
       drawZoneRectangle(group, height, xScale, 'd3-rect-pa d3-pa')
 
@@ -103,7 +128,9 @@ export const plotPhysicalActivity = (
       return group
     }
 
-    // Update callback: update existing elements
+    /**
+     * Update existing physical activity visual elements
+     */
     const updatePhysicalActivityElements = (
       update: d3.Selection<SVGGElement, PhysicalActivity, SVGGElement, unknown>
     ): d3.Selection<SVGGElement, PhysicalActivity, SVGGElement, unknown> => {
@@ -119,48 +146,43 @@ export const plotPhysicalActivity = (
     }
 
     selection.each(function (this: SVGGElement) {
+      // Step 1: Get filtered data from pool
       const physicalActivities = pool.filterDataForRender(options.tidelineData.medicalData.physicalActivities)
-      const physicalActivityGroupSelector = `d3-${D3_PHYSICAL_ACTIVITY_ID}-group`
 
-      if (physicalActivities.length < 1) {
-        d3.select(this).selectAll(`g.${physicalActivityGroupSelector}`).remove()
-        return
-      }
-
-      // Filter for activities with reported intensity
+      // Step 2: Filter for activities with reported intensity (only these are displayed)
       const activitiesWithIntensity = physicalActivities.filter(
         (d: PhysicalActivity) => !_.isEmpty(d.reportedIntensity)
       )
 
+      // Step 3: Early exit if no data
       if (activitiesWithIntensity.length < 1) {
-        d3.select(this).selectAll(`g.${physicalActivityGroupSelector}`).remove()
+        d3.select(this).selectAll(`g.${idGen.groupSelector()}`).remove()
         return
       }
 
-      // Select all physical activity groups and bind data
+      // Step 4: Data join with enter/update/exit
       const allPhysicalActivities = d3.select(this)
-        .selectAll<SVGGElement, PhysicalActivity>(`g.${physicalActivityGroupSelector}`)
+        .selectAll<SVGGElement, PhysicalActivity>(`g.${idGen.groupSelector()}`)
         .data(activitiesWithIntensity, (d: PhysicalActivity) => d.id)
 
-      // Using join pattern for enter/update/exit
       const physicalActivityGroup = allPhysicalActivities.join(
-        enter => createPhysicalActivityElements(enter, physicalActivityGroupSelector),
-        update => updatePhysicalActivityElements(update),
+        createPhysicalActivityElements,
+        updatePhysicalActivityElements,
         exit => exit.remove()
       )
 
-      // Set up event handlers - only for activities with reported intensity
+      // Step 5: Set up event handlers
       physicalActivityGroup
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: PhysicalActivity) {
-          if (d.reportedIntensity && options.onElementHover) {
+          if (options.onElementHover) {
             options.onElementHover({
               data: d,
               rect: getTooltipContainer(this)
             })
           }
         })
-        .on('mouseout', function (this: SVGGElement, _event: MouseEvent, d: PhysicalActivity) {
-          if (d.reportedIntensity && options.onElementOut) {
+        .on('mouseout', function (this: SVGGElement) {
+          if (options.onElementOut) {
             options.onElementOut()
           }
         })

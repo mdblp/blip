@@ -36,14 +36,15 @@ import { type PlotFunction } from '../../../models/plot-function.model'
 import { type PlotSelection } from '../../../models/plot-selection.model'
 import { type PlotOptions } from '../../../models/plot-options.model'
 import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
-import { PLOT_DIMENSIONS, ELEMENT_IDS } from '../constants'
+import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
+import { PLOT_DIMENSIONS } from '../../../models/constants/plot.constants'
 
 // ID generator for consistent element identification
-const idGen = createIdGenerator(ELEMENT_IDS.TIMEZONE_CHANGE)
+const idGen = createIdGenerator(DailyPlotElement.TimezoneChange)
 
 // Custom test ID generator for timezone changes (includes timezone names)
 const getTimezoneTestId = (d: TimeZoneChange): string =>
-  `${ELEMENT_IDS.TIMEZONE_CHANGE}_${d.from.timeZoneName}_${d.to.timeZoneName}`
+  `${DailyPlotElement.TimezoneChange}_${d.from.timeZoneName}_${d.to.timeZoneName}`
 
 type TimeChangeOptions = PlotOptions<TimeZoneChange>
 

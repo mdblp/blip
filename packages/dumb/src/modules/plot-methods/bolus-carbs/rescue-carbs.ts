@@ -29,12 +29,17 @@ import _ from 'lodash'
 import * as d3 from 'd3'
 
 import { type Meal } from 'medical-domain'
-import { Pool } from '../../../models/pool.model'
+import { type Pool } from '../../../models/pool.model'
 import { drawCircle, drawText, getTooltipContainer } from '../../../utils/daily-chart/daily-chart.util'
-import { PlotFunction } from '../../../models/plot-function.model'
-import { PlotSelection } from '../../../models/plot-selection.model'
-import { PlotOptions } from '../../../models/plot-options.model'
-import { COMMON_PADDING, COMMON_RADIUS } from '../common-display-values'
+import { type PlotFunction } from '../../../models/plot-function.model'
+import { type PlotSelection } from '../../../models/plot-selection.model'
+import { type PlotOptions } from '../../../models/plot-options.model'
+import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
+import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
+import { PLOT_DIMENSIONS } from '../../../models/constants/plot.constants'
+
+// ID generator for consistent element identification
+const idGen = createIdGenerator(DailyPlotElement.RescueCarbs)
 
 type RescueCarbOptions = PlotOptions<Meal>
 
@@ -42,17 +47,38 @@ const defaults: Partial<RescueCarbOptions> = {
   xScale: null
 }
 
-// Helper functions to reduce nesting
+// Helper function for extracting carb amount from meal data
 const getCarbAmount = (data: Meal): string => (data.nutrition?.carbohydrate?.net ?? 0).toString()
-const getCarbGroupId = (data: Meal): string => `carb_group_${data.id}`
-const getCarbCircleId = (data: Meal): string => `carbs_circle_${data.id}`
-const getCarbTextId = (data: Meal): string => `carbs_text_${data.id}`
 
 /**
  * Plot rescue carbohydrate data in the diabetes management timeline
- * @param pool - The pool to render into
- * @param opts - Configuration options
- * @returns The rescue carb plotting function
+ *
+ * Rescue carbs are carbohydrates consumed to treat or prevent hypoglycemia (low blood sugar).
+ * These are displayed as circles with the carbohydrate amount shown as text overlay.
+ *
+ * Visual Features:
+ * - Circle background for visibility
+ * - Text showing carbohydrate amount in grams
+ * - Positioned on timeline based on consumption timestamp
+ * - Only meals with carbohydrate data are displayed
+ *
+ * Medical Context:
+ * - Rescue carbs are critical for diabetes management
+ * - They help patients recover from low blood sugar events
+ * - Tracking them helps identify patterns and adjust therapy
+ *
+ * @param pool - The rendering pool containing scale and dimensions
+ * @param opts - Configuration options including scales, data, and event handlers
+ * @returns A function that renders rescue carbohydrate data when called with a D3 selection
+ *
+ * @example
+ * ```typescript
+ * const plot = plotRescueCarbs(pool, {
+ *   tidelineData,
+ *   onElementHover: (event) => showTooltip(event.data)
+ * })
+ * selection.call(plot)
+ * ```
  */
 export const plotRescueCarbs = (
   pool: Pool<Meal>,
@@ -61,6 +87,7 @@ export const plotRescueCarbs = (
   const options = _.defaults(opts, defaults) as RescueCarbOptions
 
   return (selection: PlotSelection<Meal>): void => {
+    // Initialize xScale from pool
     options.xScale = pool.xScale().copy()
 
     if (!options.xScale) {
@@ -68,9 +95,9 @@ export const plotRescueCarbs = (
     }
 
     const xScale = options.xScale
-    const yPos = COMMON_RADIUS + COMMON_PADDING
+    const yPos = PLOT_DIMENSIONS.COMMON_RADIUS + PLOT_DIMENSIONS.COMMON_PADDING
 
-    // Helper functions that use xScale from closure
+    // Helper functions using closure variables
     const getXPos = (d: Meal): number => xScale(d.epoch)
 
     // Enter callback: create new elements
@@ -80,12 +107,27 @@ export const plotRescueCarbs = (
       const group = enter
         .append('g')
         .classed('d3-carb-group', true)
-        .attr('id', getCarbGroupId)
-        .attr('data-testid', getCarbGroupId)
+        .attr('id', idGen.groupId)
+        .attr('data-testid', (d: Meal) => idGen.testId(d))
 
-      drawCircle<Meal>(group, getXPos, yPos, 'd3-circle-rescuecarbs', getCarbCircleId)
+      // Draw background circle for visibility
+      drawCircle<Meal>(
+        group,
+        getXPos,
+        yPos,
+        'd3-circle-rescuecarbs',
+        (d: Meal) => idGen.elementId(d, 'circle')
+      )
 
-      drawText<Meal>(group, getCarbAmount, getXPos, yPos, 'd3-carbs-text', getCarbTextId)
+      // Draw carbohydrate amount text
+      drawText<Meal>(
+        group,
+        getCarbAmount,
+        getXPos,
+        yPos,
+        'd3-carbs-text',
+        (d: Meal) => idGen.elementId(d, 'text')
+      )
 
       return group
     }
@@ -94,11 +136,13 @@ export const plotRescueCarbs = (
     const updateRescueCarbElements = (
       update: d3.Selection<SVGGElement, Meal, SVGGElement, unknown>
     ): d3.Selection<SVGGElement, Meal, SVGGElement, unknown> => {
+      // Update circle position and size
       update.select('circle')
         .attr('cx', getXPos)
         .attr('cy', yPos)
-        .attr('r', COMMON_RADIUS)
+        .attr('r', PLOT_DIMENSIONS.COMMON_RADIUS)
 
+      // Update text content and position
       update.select('text')
         .text(getCarbAmount)
         .attr('x', getXPos)
@@ -108,28 +152,32 @@ export const plotRescueCarbs = (
     }
 
     selection.each(function (this: SVGGElement) {
+      // Step 1: Get filtered data from pool
       const rescueCarbs = pool.filterDataForRender(options.tidelineData.medicalData.meals)
+
+      // Step 2: Apply domain-specific filtering - only meals with carbohydrate data
       const filteredData: Meal[] = _.filter(rescueCarbs, (data: Meal) => {
         return _.get(data, 'nutrition.carbohydrate.net', false)
       }) as Meal[]
 
+      // Step 3: Early exit if no data
       if (filteredData.length < 1) {
         d3.select(this).selectAll('g.d3-carb-group').remove()
         return
       }
 
+      // Step 4: Data join with enter/update/exit pattern
       const allCarbs = d3.select(this)
         .selectAll<SVGGElement, Meal>('g.d3-carb-group')
         .data(filteredData, (d: Meal) => d.id)
 
-      // Using join pattern for enter/update/exit
       const carbGroup = allCarbs.join(
         enter => createRescueCarbElements(enter),
         update => updateRescueCarbElements(update),
         exit => exit.remove()
       )
 
-      // Set up event handlers
+      // Step 5: Set up event handlers
       carbGroup
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: Meal) {
           if (options.onElementHover) {

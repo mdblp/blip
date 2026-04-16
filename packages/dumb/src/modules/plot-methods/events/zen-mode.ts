@@ -31,7 +31,9 @@ import * as d3 from 'd3'
 import { type ZenMode } from 'medical-domain'
 import { type Pool } from '../../../models/pool.model'
 import {
-  calculateWidth, drawCircle, drawText,
+  calculateWidth,
+  drawCircle,
+  drawText,
   drawZoneRectangle,
   getTooltipContainer,
   xPos
@@ -39,14 +41,13 @@ import {
 import { type PlotFunction } from '../../../models/plot-function.model'
 import { type PlotSelection } from '../../../models/plot-selection.model'
 import { type PlotOptions } from '../../../models/plot-options.model'
+import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
+import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
 
-const D3_ZEN_MODE_ID = 'event'
+const ZEN_MODE_TEXT = 'ZEN'
 
-// Helper functions to reduce nesting
-const getGroupId = (d: ZenMode): string => `${D3_ZEN_MODE_ID}_group_${d.id}`
-// const getRectId = (d: ZenMode): string => `zen_${d.id}`
-const getCircleId = (d: ZenMode): string => `zen_circle_${d.id}`
-const getTextId = (d: ZenMode): string => `zen_text_${d.id}`
+// ID generator for consistent element identification
+const idGen = createIdGenerator(DailyPlotElement.ZenMode)
 
 type ZenModeOptions = PlotOptions<ZenMode>
 
@@ -56,9 +57,35 @@ const defaults: Partial<ZenModeOptions> = {
 
 /**
  * Plot zen mode events in the diabetes management timeline
- * @param pool - The pool to render into
- * @param opts - Configuration options
- * @returns The zen mode plotting function
+ *
+ * Zen mode events represent periods when the patient has activated zen mode on their
+ * diabetes management device. Zen mode is designed for meditation, relaxation, or
+ * situations requiring minimal device interaction:
+ * - Notifications are minimized or silenced
+ * - Non-critical alarms may be suppressed
+ * - Device displays minimal information
+ * - Reduced interruptions for the patient
+ *
+ * This visualization helps clinicians understand:
+ * - When patients need uninterrupted periods
+ * - Patterns of zen mode usage
+ * - Alarm management preferences
+ * - Patient lifestyle and device interaction patterns
+ *
+ * The visualization displays a zone rectangle with "ZEN" text in a circle.
+ *
+ * @param pool - The rendering pool containing scale and dimensions
+ * @param opts - Configuration options including scales, data, and event handlers
+ * @returns A function that renders zen mode events when called with a D3 selection
+ *
+ * @example
+ * ```typescript
+ * const plot = plotZenMode(pool, {
+ *   tidelineData,
+ *   onElementHover: (event) => showTooltip(event.data)
+ * })
+ * selection.call(plot)
+ * ```
  */
 export const plotZenMode = (
   pool: Pool<ZenMode>,
@@ -66,10 +93,8 @@ export const plotZenMode = (
 ): PlotFunction<ZenMode> => {
   const options = _.defaults(opts, defaults) as ZenModeOptions
 
-  const height = pool.height()
-  const offset = height / 2
-
   return (selection: PlotSelection<ZenMode>): void => {
+    // Initialize xScale from pool
     options.xScale = pool.xScale().copy()
 
     if (!options.xScale) {
@@ -77,33 +102,38 @@ export const plotZenMode = (
     }
 
     const xScale = options.xScale
+    const height = pool.height()
+    const offset = height / 2
 
-    // Helper functions that use xScale from closure
+    // Helper functions using closure variables
     const getXPos = (d: ZenMode): number => xPos(d, xScale)
     const getWidth = (d: ZenMode): number => calculateWidth(d, xScale)
     const getCenterX = (d: ZenMode): number => getXPos(d) + getWidth(d) / 2
 
-    // Enter callback: create new elements
+    /**
+     * Create new zen mode visual elements
+     */
     const createZenModeElements = (
-      enter: d3.Selection<d3.EnterElement, ZenMode, SVGGElement, unknown>,
-      zenModeGroupSelector: string
+      enter: d3.Selection<d3.EnterElement, ZenMode, SVGGElement, unknown>
     ): d3.Selection<SVGGElement, ZenMode, SVGGElement, unknown> => {
       const group = enter
         .append('g')
-        .classed(zenModeGroupSelector, true)
-        .attr('id', getGroupId)
-        .attr('data-testid', getGroupId)
+        .classed(idGen.groupSelector(), true)
+        .attr('id', idGen.groupId)
+        .attr('data-testid', (d: ZenMode) => idGen.testId(d))
 
       drawZoneRectangle(group, height, xScale, 'd3-rect-zen d3-zen')
 
-      drawCircle(group, getCenterX, offset, 'd3-circle-zen', getCircleId)
+      drawCircle(group, getCenterX, offset, 'd3-circle-zen', (d: ZenMode) => idGen.elementId(d, 'circle'))
 
-      drawText(group, 'ZEN', getCenterX, offset, 'd3-zen-text', getTextId)
+      drawText(group, ZEN_MODE_TEXT, getCenterX, offset, 'd3-zen-text', (d: ZenMode) => idGen.elementId(d, 'text'))
 
       return group
     }
 
-    // Update callback: update existing elements
+    /**
+     * Update existing zen mode visual elements
+     */
     const updateZenModeElements = (
       update: d3.Selection<SVGGElement, ZenMode, SVGGElement, unknown>
     ): d3.Selection<SVGGElement, ZenMode, SVGGElement, unknown> => {
@@ -121,27 +151,27 @@ export const plotZenMode = (
     }
 
     selection.each(function (this: SVGGElement) {
+      // Step 1: Get filtered data from pool
       const zenEvents = pool.filterDataForRender(options.tidelineData.medicalData.zenModes)
-      const zenModeGroupSelector = `d3-${D3_ZEN_MODE_ID}-group`
 
+      // Step 2: Early exit if no data
       if (zenEvents.length < 1) {
-        d3.select(this).selectAll(`g.${zenModeGroupSelector}`).remove()
+        d3.select(this).selectAll(`g.${idGen.groupSelector()}`).remove()
         return
       }
 
-      // Select all zen mode event groups and bind data
+      // Step 3: Data join with enter/update/exit
       const allZenModes = d3.select(this)
-        .selectAll<SVGGElement, ZenMode>(`g.${zenModeGroupSelector}`)
+        .selectAll<SVGGElement, ZenMode>(`g.${idGen.groupSelector()}`)
         .data(zenEvents, (d: ZenMode) => d.id)
 
-      // Using join pattern for enter/update/exit
       const zenModeGroup = allZenModes.join(
-        enter => createZenModeElements(enter, zenModeGroupSelector),
-        update => updateZenModeElements(update),
+        createZenModeElements,
+        updateZenModeElements,
         exit => exit.remove()
       )
 
-      // Set up event handlers
+      // Step 4: Set up event handlers
       zenModeGroup
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: ZenMode) {
           if (options.onElementHover) {

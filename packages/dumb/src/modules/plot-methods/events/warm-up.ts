@@ -35,14 +35,15 @@ import { drawImage, getTooltipContainer } from '../../../utils/daily-chart/daily
 import { type PlotFunction } from '../../../models/plot-function.model'
 import { type PlotSelection } from '../../../models/plot-selection.model'
 import { type PlotOptions } from '../../../models/plot-options.model'
+import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
+import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
+import { PLOT_DIMENSIONS } from '../../../models/constants/plot.constants'
 
-const D3_WARMUP_ID = 'warmup'
-const DEFAULT_OPTIONS_SIZE = 30
-const DEFAULT_IMAGE_MARGIN = 8
+// ID generator for consistent element identification
+const idGen = createIdGenerator(DailyPlotElement.WarmUp)
 
-// Helper functions to reduce nesting
-const getGroupId = (d: WarmUp): string => `${D3_WARMUP_ID}_group_${d.id}`
-const getTestId = (d: WarmUp): string => `${D3_WARMUP_ID}_group_${d.guid}`
+// Warm-up image dimensions
+const WARM_UP_IMAGE_WIDTH = 40
 
 type WarmUpOptions = PlotOptions<WarmUp> & {
   warmUps: WarmUp[]
@@ -54,9 +55,33 @@ const defaults: Partial<WarmUpOptions> = {
 
 /**
  * Plot warm-up events in the diabetes management timeline
- * @param pool - The pool to render into
- * @param opts - Configuration options
- * @returns The warm-up plotting function
+ *
+ * Warm-up events represent the initialization period for continuous glucose monitoring
+ * (CGM) sensors. During the warm-up period:
+ * - The sensor is calibrating and stabilizing
+ * - No glucose readings are available yet
+ * - The sensor is not providing actionable data
+ * - Typically lasts 2 hours for most CGM systems
+ *
+ * This visualization is critical for clinicians to understand:
+ * - Gaps in glucose data due to sensor initialization
+ * - Sensor change timing and frequency
+ * - Data availability periods
+ * - When to expect reliable glucose readings
+ *
+ * @param pool - The rendering pool containing scale and dimensions
+ * @param opts - Configuration options including scales, warm-up data, and event handlers
+ * @returns A function that renders warm-up events when called with a D3 selection
+ *
+ * @example
+ * ```typescript
+ * const plot = plotWarmUp(pool, {
+ *   tidelineData,
+ *   warmUps: medicalData.warmUps,
+ *   onElementHover: (event) => showTooltip(event.data)
+ * })
+ * selection.call(plot)
+ * ```
  */
 export const plotWarmUp = (
   pool: Pool<WarmUp>,
@@ -64,10 +89,8 @@ export const plotWarmUp = (
 ): PlotFunction<WarmUp> => {
   const options = _.defaults(opts, defaults) as WarmUpOptions
 
-  const height = pool.height() - DEFAULT_IMAGE_MARGIN
-  const width = 40
-
   return (selection: PlotSelection<WarmUp>): void => {
+    // Initialize xScale from pool
     options.xScale = pool.xScale().copy()
 
     if (!options.xScale) {
@@ -75,51 +98,66 @@ export const plotWarmUp = (
     }
 
     const xScale = options.xScale
+    const height = pool.height() - PLOT_DIMENSIONS.DEFAULT_IMAGE_MARGIN
 
-    // Helper function that uses xScale from closure
+    // Helper functions using closure variables
     const getXPos = (d: WarmUp): number => xScale(d.epoch)
-    const getImageY = (): number => pool.height() / 2 - DEFAULT_OPTIONS_SIZE / 2
+    const getImageY = (): number =>
+      pool.height() / 2 - PLOT_DIMENSIONS.DEFAULT_SIZE / 2
+
+    /**
+     * Create new warm-up visual elements
+     */
+    const createWarmUpElements = (
+      enter: d3.Selection<d3.EnterElement, WarmUp, SVGGElement, unknown>
+    ): d3.Selection<SVGGElement, WarmUp, SVGGElement, unknown> => {
+      const group = enter
+        .append('g')
+        .classed(idGen.groupSelector(), true)
+        .attr('id', idGen.groupId)
+        .attr('data-testid', (d: WarmUp) => idGen.testId(d))
+
+      drawImage(group, getXPos, getImageY(), height, WARM_UP_IMAGE_WIDTH, warmupIcon)
+
+      return group
+    }
+
+    /**
+     * Update existing warm-up visual elements
+     */
+    const updateWarmUpElements = (
+      update: d3.Selection<SVGGElement, WarmUp, SVGGElement, unknown>
+    ): d3.Selection<SVGGElement, WarmUp, SVGGElement, unknown> => {
+      update
+        .select('image')
+        .attr('x', getXPos)
+        .attr('y', getImageY())
+
+      return update
+    }
 
     selection.each(function (this: SVGGElement) {
+      // Step 1: Get filtered warm-up data from pool
       const warmUpEvents = pool.filterDataForRender(options.warmUps)
-      const warmUpGroupSelector = `d3-${D3_WARMUP_ID}-group`
 
+      // Step 2: Early exit if no data
       if (warmUpEvents.length < 1) {
-        d3.select(this).selectAll(`g.${warmUpGroupSelector}`).remove()
+        d3.select(this).selectAll(`g.${idGen.groupSelector()}`).remove()
         return
       }
 
-      // Select all warm-up event groups and bind data
+      // Step 3: Data join with enter/update/exit
       const allWarmUps = d3.select(this)
-        .selectAll<SVGGElement, WarmUp>(`g.${warmUpGroupSelector}`)
+        .selectAll<SVGGElement, WarmUp>(`g.${idGen.groupSelector()}`)
         .data(warmUpEvents, (d: WarmUp) => d.id)
 
-      // Using join pattern for enter/update/exit
       const warmUpGroup = allWarmUps.join(
-        enter => {
-          const group = enter
-            .append('g')
-            .classed(warmUpGroupSelector, true)
-            .attr('id', getGroupId)
-            .attr('data-testid', getTestId)
-
-          drawImage(group, getXPos, getImageY, height, width, warmupIcon)
-
-          return group
-        },
-        update => {
-          // Update existing elements
-          update
-            .select('image')
-            .attr('x', getXPos)
-            .attr('y', getImageY)
-
-          return update
-        },
+        createWarmUpElements,
+        updateWarmUpElements,
         exit => exit.remove()
       )
 
-      // Set up event handlers
+      // Step 4: Set up event handlers
       warmUpGroup
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: WarmUp) {
           if (options.onElementHover) {

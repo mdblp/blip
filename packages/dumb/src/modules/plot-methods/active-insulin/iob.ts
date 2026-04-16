@@ -28,19 +28,33 @@
 import _ from 'lodash'
 import * as d3 from 'd3'
 
-import { DblParameter, Iob, MedicalData } from 'medical-domain'
-import { Pool } from '../../../models/pool.model'
+import { DblParameter, type Iob, type MedicalData } from 'medical-domain'
+import { type Pool } from '../../../models/pool.model'
 import { getTooltipContainer } from '../../../utils/daily-chart/daily-chart.util'
-import { PlotFunction } from '../../../models/plot-function.model'
-import { PlotSelection } from '../../../models/plot-selection.model'
-import { PlotOptions } from '../../../models/plot-options.model'
+import { type PlotFunction } from '../../../models/plot-function.model'
+import { type PlotSelection } from '../../../models/plot-selection.model'
+import { type PlotOptions } from '../../../models/plot-options.model'
+import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
+import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
+import { PLOT_DIMENSIONS } from '../../../models/constants/plot.constants'
 
 
+// ID generator for consistent element identification
+const idGen = createIdGenerator(DailyPlotElement.Iob)
+
+// Default maximum IOB value when TDD is not available
 const DEFAULT_MAX_IOB_VALUE_U = 45
 
-const DEFAULT_RADIUS = 2.5
-
-export const getMaxIobValue = (medicalData: MedicalData) => {
+/**
+ * Calculate the maximum IOB value based on Total Daily Insulin (TDD)
+ *
+ * The maximum IOB display value is set to half of the total daily insulin dose,
+ * which is a common clinical guideline for safe insulin therapy.
+ *
+ * @param medicalData - The medical data containing pump settings
+ * @returns Maximum IOB value in units (half of TDD or default)
+ */
+export const getMaxIobValue = (medicalData: MedicalData): number => {
   if (!medicalData.pumpSettings || medicalData.pumpSettings.length === 0) {
     return DEFAULT_MAX_IOB_VALUE_U
   }
@@ -64,53 +78,89 @@ const defaults: Partial<IobOptions> = {
 }
 
 /**
- * Plot Insulin On Board (IOB) points
- * @param pool - The pool to render into
- * @param opts - Configuration options
- * @returns The IOB plotting function
+ * Plot Insulin On Board (IOB) data in the diabetes management timeline
+ *
+ * Insulin On Board (IOB) represents the amount of active insulin currently in the body
+ * from previous bolus doses. This helps prevent insulin stacking and guides dosing decisions.
+ *
+ * Visual Features:
+ * - Circles positioned on timeline based on timestamp
+ * - Circle height (y-position) represents IOB amount
+ * - Hover interaction increases radius and shows tooltip
+ * - Values filtered to maximum safe IOB (50% of Total Daily Insulin)
+ *
+ * Medical Context:
+ * - IOB accumulates from recent bolus doses
+ * - Decays over time based on insulin action curve (typically 3-6 hours)
+ * - Critical for preventing insulin stacking (too much active insulin)
+ * - Maximum safe IOB is typically set to half of Total Daily Insulin dose
+ * - Used by bolus calculators to recommend appropriate insulin doses
+ *
+ * Calculation:
+ * - IOB is calculated based on insulin action time and decay curves
+ * - Maximum display value = TDD / 2 (or 45 units if TDD unavailable)
+ * - Values exceeding maximum are filtered out for safety
+ *
+ * @param pool - The rendering pool containing scale and dimensions
+ * @param opts - Configuration options including scales, data, and event handlers
+ * @returns A function that renders IOB data when called with a D3 selection
+ *
+ * @example
+ * ```typescript
+ * const plot = plotIob(pool, {
+ *   tidelineData,
+ *   onElementHover: (event) => showTooltip(event.data),
+ *   onElementOut: () => hideTooltip()
+ * })
+ * selection.call(plot)
+ * ```
  */
 export const plotIob = (pool: Pool<Iob>, opts: Partial<IobOptions> = {}): IobPlotFunction => {
   const options = _.defaults(opts, defaults) as IobOptions
 
   const iob = (selection: PlotSelection<Iob>): void => {
+    // Initialize xScale from pool
     options.xScale = pool.xScale().copy()
 
     selection.each(function (this: SVGGElement) {
+      // Step 1: Get filtered data from pool
       const medicalData = options.tidelineData.medicalData
       const iobValues = pool.filterDataForRender(medicalData.iob)
 
+      // Step 2: Apply domain-specific filtering - only IOB values below maximum safe level
       const maxIobValue = getMaxIobValue(medicalData)
-
       const filteredIobValues = iobValues.filter(d => d.value <= maxIobValue)
 
+      // Step 3: Data join with enter/update/exit pattern
       const allIobPoints = d3.select(this)
         .selectAll<SVGCircleElement, Iob>('circle.d3-iob')
         .data(filteredIobValues, (d: Iob) => d.id)
 
-      // Using join pattern for enter/update/exit
       allIobPoints.join(
         enter => enter.append('circle')
-          .attr('id', (d: Iob) => `iob_${d.id}`)
-          .attr('data-testid', (d: Iob) => `iob_${d.id}`)
+          .attr('id', idGen.groupId)
+          .attr('data-testid', idGen.groupId)
           .attr('cx', iob.xPosition)
           .attr('cy', iob.yPosition)
-          .attr('r', DEFAULT_RADIUS)
+          .attr('r', PLOT_DIMENSIONS.CBG_IOB_RADIUS)
           .classed('d3-iob', true),
         update => update
           .attr('cx', iob.xPosition)
           .attr('cy', iob.yPosition)
-          .attr('r', DEFAULT_RADIUS),
+          .attr('r', PLOT_DIMENSIONS.CBG_IOB_RADIUS),
         exit => exit.remove()
       )
 
+      // Step 4: Set up highlight behavior
       const highlight = pool.highlight(allIobPoints)
 
-      // Set up mouseover and mouseout event handlers
+      // Step 5: Set up event handlers
       selection.selectAll<SVGCircleElement, Iob>('.d3-iob')
         .on('mouseover', function (this: SVGCircleElement, event: MouseEvent, d: Iob) {
           const d3Select = d3.select(this)
           highlight.on(d3Select)
-          d3Select.attr('r', DEFAULT_RADIUS + 1)
+          // Increase radius on hover for visual feedback
+          d3Select.attr('r', PLOT_DIMENSIONS.CBG_IOB_RADIUS + PLOT_DIMENSIONS.HOVER_RADIUS_INCREASE)
 
           if (options.onElementHover) {
             options.onElementHover({
@@ -121,11 +171,12 @@ export const plotIob = (pool: Pool<Iob>, opts: Partial<IobOptions> = {}): IobPlo
         })
         .on('mouseout', function (this: SVGCircleElement) {
           highlight.off()
+          // Restore default radius
           d3.select(this)
-            .attr('r', DEFAULT_RADIUS)
+            .attr('r', PLOT_DIMENSIONS.CBG_IOB_RADIUS)
 
-          if (_.get(options, 'onIobOut', false)) {
-            options.onElementOut?.()
+          if (options.onElementOut) {
+            options.onElementOut()
           }
         })
     })

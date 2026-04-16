@@ -29,16 +29,22 @@ import _ from 'lodash'
 import * as d3 from 'd3'
 
 import { type Bolus, BolusSubtype, Prescriptor } from 'medical-domain'
-import { Pool } from '../../../models/pool.model'
+import { type Pool } from '../../../models/pool.model'
 import { drawVerticalRectangle, getTooltipContainer } from '../../../utils/daily-chart/daily-chart.util'
-import { PlotFunction } from '../../../models/plot-function.model'
-import { PlotSelection } from '../../../models/plot-selection.model'
-import { PlotOptions } from '../../../models/plot-options.model'
+import { type PlotFunction } from '../../../models/plot-function.model'
+import { type PlotSelection } from '../../../models/plot-selection.model'
+import { type PlotOptions } from '../../../models/plot-options.model'
 import { getBolusType, isBolusWithDelivered, isBolusWithUndelivered } from '../../../utils/bolus/bolus.util'
 import { BolusType } from '../../../models/enums/bolus-type.enum'
+import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
+import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
+import { CSS_CLASSES, PLOT_DIMENSIONS } from '../../../models/constants/plot.constants'
 
-const BOLUS_WIDTH = 12
-const HALF_BOLUS_WIDTH = BOLUS_WIDTH / 2
+// ID generator for consistent element identification
+const idGen = createIdGenerator(DailyPlotElement.Bolus)
+
+// Bolus rectangle dimensions
+const HALF_BOLUS_WIDTH = PLOT_DIMENSIONS.BOLUS_WIDTH / 2
 
 type BolusPlotOptions = PlotOptions<Bolus>
 
@@ -115,10 +121,37 @@ const getMaxValue = (bolus: Bolus): number => {
 }
 
 /**
- * Plot bolus data (quick boluses without wizard data)
- * @param pool - The pool to render into
- * @param opts - Configuration options
- * @returns The bolus plotting function
+ * Plot bolus insulin delivery data (boluses without wizard/meal data)
+ *
+ * Boluses represent insulin delivery events. This plotter handles "quick boluses"
+ * that were delivered without using the bolus calculator (wizard). Different bolus
+ * types are visualized with different colors:
+ *
+ * Bolus Types:
+ * - **Manual**: User-initiated bolus without meal data
+ * - **Meal**: Bolus for carbohydrate coverage (blue)
+ * - **Correction**: Bolus to correct high blood glucose (orange, half width)
+ * - **Pen**: Insulin delivered via injection pen
+ * - **Eating Shortly**: Bolus for imminent carbohydrate intake
+ *
+ * Visual Features:
+ * - Delivered insulin shown as solid colored rectangle
+ * - Undelivered insulin (interruptions) shown as hatched rectangle above
+ * - Rectangle height proportional to insulin amount
+ * - Larger boluses drawn first to prevent occlusion of smaller ones
+ *
+ * @param pool - The rendering pool containing scale and dimensions
+ * @param opts - Configuration options including scales, data, and event handlers
+ * @returns A function that renders bolus data when called with a D3 selection
+ *
+ * @example
+ * ```typescript
+ * const plot = plotBolus(pool, {
+ *   tidelineData,
+ *   onElementHover: (event) => showTooltip(event.data)
+ * })
+ * selection.call(plot)
+ * ```
  */
 export const plotBolus = (
   pool: Pool<Bolus>,
@@ -126,127 +159,135 @@ export const plotBolus = (
 ): PlotFunction<Bolus> => {
   const options = _.defaults(opts, defaults) as BolusPlotOptions
 
-  const yScale = pool.yScale()
-  const top = yScale.range()[0]
-
-  const xPosition = (d: Bolus): number => {
-    if (!options.xScale) {
-      throw new Error('xScale is not initialized')
-    }
-    return options.xScale(d.epoch) - HALF_BOLUS_WIDTH
-  }
-
-  const yPosition = (d: Bolus): number => {
-    return yScale(getDelivered(d))
-  }
-
-  const bolusWidth = (d: Bolus): number => {
-    const bolusType = getBolusType(d)
-    if (bolusType === BolusType.Correction) {
-      return BOLUS_WIDTH / 2
-    }
-    return BOLUS_WIDTH
-  }
-
-  const bolusHeight = (d: Bolus): number => {
-    return top - yScale(getDelivered(d))
-  }
-
-  const getDeliveredClassNames = (d: Bolus) => getBolusClass(d, 'd3-bolus d3-rect-bolus')
-  const getBolusId = (d: Bolus) => `bolus_${d.id}`
-  const getUndeliveredYPosition = (d: Bolus) => yScale(getProgrammed(d))
-  const getUndeliveredHeight = (d: Bolus) => {
-    const delivered = getDelivered(d)
-    const programmed = getProgrammed(d)
-    return yScale(delivered) - yScale(programmed)
-  }
-  const getUndeliveredId = (d: Bolus) => `bolus_undelivered_${d.id}`
-
   return (selection: PlotSelection<Bolus>): void => {
+    // Initialize xScale from pool
     options.xScale = pool.xScale().copy()
 
     if (!options.xScale) {
       throw new Error('xScale is not initialized')
     }
 
+    const xScale = options.xScale
+    const yScale = pool.yScale()
+    const top = yScale.range()[0]
+
+    // Helper functions using closure variables
+    const xPosition = (d: Bolus): number => xScale(d.epoch) - HALF_BOLUS_WIDTH
+
+    const yPosition = (d: Bolus): number => yScale(getDelivered(d))
+
+    const bolusWidth = (d: Bolus): number => {
+      const bolusType = getBolusType(d)
+      if (bolusType === BolusType.Correction) {
+        return PLOT_DIMENSIONS.BOLUS_WIDTH / 2
+      }
+      return PLOT_DIMENSIONS.BOLUS_WIDTH
+    }
+
+    const bolusHeight = (d: Bolus): number => top - yScale(getDelivered(d))
+
+    const getDeliveredClassNames = (d: Bolus): string =>
+      getBolusClass(d, `${CSS_CLASSES.BOLUS} ${CSS_CLASSES.BOLUS_RECT}`)
+
+    const getBolusId = (d: Bolus): string => idGen.elementId(d, 'rect')
+
+    const getUndeliveredYPosition = (d: Bolus): number => yScale(getProgrammed(d))
+
+    const getUndeliveredHeight = (d: Bolus): number => {
+      const delivered = getDelivered(d)
+      const programmed = getProgrammed(d)
+      return yScale(delivered) - yScale(programmed)
+    }
+
+    const getUndeliveredId = (d: Bolus): string => idGen.elementId(d, 'undelivered')
+
+    /**
+     * Create new bolus visual elements
+     */
+    const createBolusElements = (
+      enter: d3.Selection<d3.EnterElement, Bolus, SVGGElement, unknown>
+    ): d3.Selection<SVGGElement, Bolus, SVGGElement, unknown> => {
+      const group = enter
+        .append('g')
+        .classed(CSS_CLASSES.BOLUS_GROUP, true)
+        .attr('id', idGen.groupId)
+        .attr('data-testid', getDataTestId)
+        .sort((a: Bolus, b: Bolus) => {
+          // Sort by size so smaller boluses are drawn last (on top)
+          return d3.descending(getMaxValue(a), getMaxValue(b))
+        })
+
+      // Draw the delivered bolus rectangle
+      const deliveredGroup = group.filter(isBolusWithDelivered)
+      drawVerticalRectangle(deliveredGroup, xPosition, yPosition, bolusHeight, bolusWidth, getDeliveredClassNames, getBolusId)
+
+      // Draw undelivered portion (interrupted boluses)
+      const undeliveredGroup = group.filter(isBolusWithUndelivered)
+      drawVerticalRectangle(undeliveredGroup, xPosition, getUndeliveredYPosition, getUndeliveredHeight, bolusWidth, `${CSS_CLASSES.BOLUS} d3-rect-undelivered`, getUndeliveredId)
+
+      return group
+    }
+
+    /**
+     * Update existing bolus visual elements
+     */
+    const updateBolusElements = (
+      update: d3.Selection<SVGGElement, Bolus, SVGGElement, unknown>
+    ): d3.Selection<SVGGElement, Bolus, SVGGElement, unknown> => {
+      update.sort((a: Bolus, b: Bolus) => {
+        return d3.descending(getMaxValue(a), getMaxValue(b))
+      })
+
+      update
+        .select(`rect.${CSS_CLASSES.BOLUS_RECT}`)
+        .attr('x', xPosition)
+        .attr('y', yPosition)
+        .attr('width', bolusWidth)
+        .attr('height', bolusHeight)
+        .attr('class', (d: Bolus) => getBolusClass(d, `${CSS_CLASSES.BOLUS} ${CSS_CLASSES.BOLUS_RECT}`))
+
+      update
+        .select('rect.d3-rect-undelivered')
+        .attr('x', xPosition)
+        .attr('y', getUndeliveredYPosition)
+        .attr('width', bolusWidth)
+        .attr('height', getUndeliveredHeight)
+
+      return update
+    }
+
     selection.each(function (this: SVGGElement) {
-      // Get the data bound to this element
+      // Step 1: Get the data bound to this element
       const data = d3.select(this).datum() as Bolus[]
 
-      // Filter out boluses with wizard
+      // Step 2: Filter out boluses with wizard (those are plotted separately)
       const currentData = _.filter(data, (d: Bolus) => _.isEmpty(d.wizard))
 
+      // Step 3: Early exit if no data
       if (currentData.length < 1) {
-        d3.select(this).selectAll('g.d3-bolus-group').remove()
+        d3.select(this).selectAll(`g.${CSS_CLASSES.BOLUS_GROUP}`).remove()
         return
       }
 
-      const allBoluses = d3
-        .select(this)
-        .selectAll<SVGGElement, Bolus>('g.d3-bolus-group')
+      // Step 4: Data join with enter/update/exit
+      const allBoluses = d3.select(this)
+        .selectAll<SVGGElement, Bolus>(`g.${CSS_CLASSES.BOLUS_GROUP}`)
         .data(currentData, (d: Bolus) => d.id)
 
-      // Using join pattern for enter/update/exit
       const bolusGroup = allBoluses.join(
-        enter => {
-          const group = enter
-            .append('g')
-            .classed('d3-bolus-group', true)
-            .attr('id', (d: Bolus) => `bolus_group_${d.id}`)
-            .attr('data-testid', getDataTestId)
-            .sort((a: Bolus, b: Bolus) => {
-              // Sort by size so smaller boluses are drawn last
-              return d3.descending(getMaxValue(a), getMaxValue(b))
-            })
-
-          // Draw the delivered bolus rectangle
-          const deliveredGroup = group.filter(isBolusWithDelivered)
-          drawVerticalRectangle(deliveredGroup, xPosition, yPosition, bolusHeight, bolusWidth, getDeliveredClassNames, getBolusId)
-
-          // Draw undelivered portion
-          const undeliveredGroup = group.filter(isBolusWithUndelivered)
-          drawVerticalRectangle(undeliveredGroup, xPosition, getUndeliveredYPosition, getUndeliveredHeight, bolusWidth, 'd3-rect-undelivered d3-bolus', getUndeliveredId)
-
-          return group
-        },
-        update => {
-          // Update existing elements
-          update
-            .sort((a: Bolus, b: Bolus) => {
-              return d3.descending(getMaxValue(a), getMaxValue(b))
-            })
-
-          update
-            .select('rect.d3-rect-bolus')
-            .attr('x', xPosition)
-            .attr('y', yPosition)
-            .attr('width', bolusWidth)
-            .attr('height', bolusHeight)
-            .attr('class', (d: Bolus) => getBolusClass(d, 'd3-bolus d3-rect-bolus'))
-
-          update
-            .select('rect.d3-rect-undelivered')
-            .attr('x', xPosition)
-            .attr('y', (d: Bolus) => yScale(getProgrammed(d)))
-            .attr('width', bolusWidth)
-            .attr('height', (d: Bolus) => {
-              const delivered = getDelivered(d)
-              const programmed = getProgrammed(d)
-              return yScale(delivered) - yScale(programmed)
-            })
-
-          return update
-        },
+        createBolusElements,
+        updateBolusElements,
         exit => exit.remove()
       )
 
-      // Set up highlight behavior with selector string for both wizard and bolus groups
-      const highlight = pool.highlight('.d3-wizard-group, .d3-bolus-group' as any)
+      // Step 5: Set up highlight behavior (includes wizard groups for coordinated highlighting)
+      // Note: Using selector string to highlight all bolus and wizard groups together
+      const highlight = pool.highlight('.d3-wizard-group, .d3-bolus-group')
 
-      // Set up tooltip event handlers
+      // Step 6: Set up event handlers
       bolusGroup
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: Bolus) {
-          highlight.on(d3.select(this) as any)
+          highlight.on(d3.select(this))
           if (options.onElementHover) {
             options.onElementHover({
               data: d,

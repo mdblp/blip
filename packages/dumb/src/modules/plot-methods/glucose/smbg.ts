@@ -36,10 +36,10 @@ import { type PlotSelection } from '../../../models/plot-selection.model'
 import { type PlotOptions } from '../../../models/plot-options.model'
 import { convertBgClassesToBgBounds, getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
 import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
-import { ELEMENT_IDS } from '../constants'
+import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
 
 // ID generator for consistent element identification
-const idGen = createIdGenerator(ELEMENT_IDS.SMBG)
+const idGen = createIdGenerator(DailyPlotElement.Smbg)
 
 // SMBG circle size (diameter is 16, radius is 7 accounting for 1px stroke)
 const SMBG_SIZE = 16
@@ -196,7 +196,7 @@ export const plotSmbg = (
       )
 
       // Step 4: Set up highlight behavior
-      const highlight = pool.highlight(smbgCircles)
+      const highlight = pool.highlight<SVGCircleElement>(smbgCircles)
 
       // Step 5: Set up event handlers
       smbgCircles
@@ -205,7 +205,7 @@ export const plotSmbg = (
           if (options.onElementHover) {
             options.onElementHover({
               data: d,
-              rect: getTooltipContainer(this.parentElement as unknown as SVGGElement),
+              rect: getTooltipContainer(this as unknown as SVGGElement),
               class: categorize(d)
             })
           }

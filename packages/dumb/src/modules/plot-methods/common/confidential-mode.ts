@@ -33,7 +33,9 @@ import lockIcon from 'lock.svg'
 import { type ConfidentialMode } from 'medical-domain'
 import { type Pool } from '../../../models/pool.model'
 import {
-  calculateWidth, drawImage, drawText,
+  calculateWidth,
+  drawImage,
+  drawText,
   drawZoneRectangle,
   getTooltipContainer,
   xPos
@@ -41,14 +43,20 @@ import {
 import { type PlotFunction } from '../../../models/plot-function.model'
 import { type PlotSelection } from '../../../models/plot-selection.model'
 import { type PlotOptions } from '../../../models/plot-options.model'
+import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
+import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
 
-const D3_CONFIDENTIAL_MODE_ID = 'confidential'
-const IMAGE_SIZE = 24
-// 3 hours max for the tooltip
-const MAX_SIZE_WITH_TOOLTIP = 1000 * 60 * 60 * 3
+// ID generator for consistent element identification
+const idGen = createIdGenerator(DailyPlotElement.ConfidentialMode)
+
+// Confidential mode specific constants
+const CONFIDENTIAL_MODE_IMAGE_SIZE = 24
+const CONFIDENTIAL_MODE_TEXT_OFFSET = 5
+// 3 hours max for the tooltip (events longer than this show label instead of tooltip)
+const MAX_DURATION_WITH_TOOLTIP_MS = 1000 * 60 * 60 * 3
 
 /**
- * Calculate duration for an event in milliseconds
+ * Calculate duration for a confidential mode event in milliseconds
  */
 const getDuration = (d: ConfidentialMode): number => {
   if (!d.normalEnd) {
@@ -59,20 +67,11 @@ const getDuration = (d: ConfidentialMode): number => {
 
 /**
  * Determine if the event should display a tooltip (duration < 3 hours)
+ * For longer events, a label is displayed instead of a tooltip
  */
-const displayTooltip = (d: ConfidentialMode): boolean => {
-  return getDuration(d) < MAX_SIZE_WITH_TOOLTIP
+const shouldDisplayTooltip = (d: ConfidentialMode): boolean => {
+  return getDuration(d) < MAX_DURATION_WITH_TOOLTIP_MS
 }
-
-// Helper functions to reduce nesting
-const getConfidentialGroupId = (d: ConfidentialMode, poolId: string): string =>
-  `${poolId}_${D3_CONFIDENTIAL_MODE_ID}_group_${d.id}`
-
-// const getConfidentialBackId = (d: ConfidentialMode, poolId: string): string =>
-//   `${poolId}_${D3_CONFIDENTIAL_MODE_ID}_back_${d.id}`
-
-const getConfidentialLockId = (d: ConfidentialMode, poolId: string): string =>
-  `${poolId}_${D3_CONFIDENTIAL_MODE_ID}_lock_${d.id}`
 
 type ConfidentialModeOptions = PlotOptions<ConfidentialMode> & {
   hideLabel?: boolean
@@ -85,9 +84,39 @@ const defaults: Partial<ConfidentialModeOptions> = {
 
 /**
  * Plot confidential mode events in the diabetes management timeline
- * @param pool - The pool to render into
- * @param opts - Configuration options
- * @returns The confidential mode plotting function
+ *
+ * Confidential mode events represent periods when patient data is hidden or masked
+ * for privacy reasons. This is used when:
+ * - Patients want to keep certain periods private from caregivers
+ * - Sensitive medical data needs to be protected
+ * - Patient privacy preferences need to be respected
+ * - Data sharing needs to be controlled
+ *
+ * The visualization shows:
+ * - A zone rectangle indicating the confidential period
+ * - A lock icon for visual identification
+ * - "Confidential mode" text label for longer periods (> 3 hours)
+ * - Tooltip for shorter periods (≤ 3 hours)
+ *
+ * This helps clinicians understand:
+ * - When data is hidden for privacy
+ * - Patient privacy preferences
+ * - Gaps in visible medical data
+ * - Periods requiring additional patient discussion
+ *
+ * @param pool - The rendering pool containing scale and dimensions
+ * @param opts - Configuration options including scales, data, hideLabel option, and event handlers
+ * @returns A function that renders confidential mode events when called with a D3 selection
+ *
+ * @example
+ * ```typescript
+ * const plot = plotConfidentialMode(pool, {
+ *   tidelineData,
+ *   hideLabel: false,
+ *   onElementHover: (event) => showTooltip(event.data)
+ * })
+ * selection.call(plot)
+ * ```
  */
 export const plotConfidentialMode = (
   pool: Pool<ConfidentialMode>,
@@ -95,10 +124,8 @@ export const plotConfidentialMode = (
 ): PlotFunction<ConfidentialMode> => {
   const options = _.defaults(opts, defaults) as ConfidentialModeOptions
 
-  const height = pool.height()
-  const poolId = pool.id()
-
   return (selection: PlotSelection<ConfidentialMode>): void => {
+    // Initialize xScale from pool
     options.xScale = pool.xScale().copy()
 
     if (!options.xScale) {
@@ -106,41 +133,56 @@ export const plotConfidentialMode = (
     }
 
     const xScale = options.xScale
+    const height = pool.height()
+    const poolId = pool.id()
 
-    // Helper functions that use xScale and poolId from closure
-    const getGroupId = (d: ConfidentialMode): string => getConfidentialGroupId(d, poolId)
-    // const getBackId = (d: ConfidentialMode): string => getConfidentialBackId(d, poolId)
-    const getLockId = (d: ConfidentialMode): string => getConfidentialLockId(d, poolId)
+    // Helper functions using closure variables
     const getXPos = (d: ConfidentialMode): number => xPos(d, xScale)
     const getWidth = (d: ConfidentialMode): number => calculateWidth(d, xScale)
-    const getImageX = (d: ConfidentialMode): number => getXPos(d) + (getWidth(d) - IMAGE_SIZE) / 2
-    const getImageY = (): number => (height - IMAGE_SIZE) / 2
-    const getTextX = (d: ConfidentialMode): number => getXPos(d) + getWidth(d) / 2
-    const getTextY = (): number => getImageY() + IMAGE_SIZE + 5
+    const getImageX = (d: ConfidentialMode): number =>
+      getXPos(d) + (getWidth(d) - CONFIDENTIAL_MODE_IMAGE_SIZE) / 2
+    const getImageY = (): number =>
+      (height - CONFIDENTIAL_MODE_IMAGE_SIZE) / 2
+    const getTextX = (d: ConfidentialMode): number =>
+      getXPos(d) + getWidth(d) / 2
+    const getTextY = (): number =>
+      getImageY() + CONFIDENTIAL_MODE_IMAGE_SIZE + CONFIDENTIAL_MODE_TEXT_OFFSET
 
-    // Enter callback: create new elements
+    /**
+     * Create new confidential mode visual elements
+     */
     const createConfidentialModeElements = (
-      enter: d3.Selection<d3.EnterElement, ConfidentialMode, SVGGElement, unknown>,
-      confidentialModeGroupSelector: string
+      enter: d3.Selection<d3.EnterElement, ConfidentialMode, SVGGElement, unknown>
     ): d3.Selection<SVGGElement, ConfidentialMode, SVGGElement, unknown> => {
       const group = enter
         .append('g')
-        .classed(confidentialModeGroupSelector, true)
-        .attr('id', getGroupId)
-        .attr('data-testid', getGroupId)
+        .classed(idGen.groupSelector(), true)
+        .attr('id', (d: ConfidentialMode) => `${poolId}_${idGen.groupId(d)}`)
+        .attr('data-testid', (d: ConfidentialMode) => `${poolId}_${idGen.groupId(d)}`)
 
       drawZoneRectangle(group, height, xScale, 'd3-back-confidential d3-confidential')
-      drawImage(group, getImageX, getImageY, IMAGE_SIZE, IMAGE_SIZE, lockIcon)
 
+      drawImage(group, getImageX, getImageY, CONFIDENTIAL_MODE_IMAGE_SIZE, CONFIDENTIAL_MODE_IMAGE_SIZE, lockIcon)
+
+      // Add text label only for events longer than 3 hours (if labels not hidden)
       if (!options.hideLabel) {
-        const confidentialModeWithTextGroup = group.filter((d: ConfidentialMode) => !displayTooltip(d))
-        drawText(confidentialModeWithTextGroup, t('Confidential mode'), getTextX, getTextY, 'd3-confidential-text', getLockId)
+        const confidentialModeWithTextGroup = group.filter((d: ConfidentialMode) => !shouldDisplayTooltip(d))
+        drawText(
+          confidentialModeWithTextGroup,
+          t('Confidential mode'),
+          getTextX,
+          getTextY,
+          'd3-confidential-text',
+          (d: ConfidentialMode) => `${poolId}_${idGen.elementId(d, 'text')}`
+        )
       }
 
       return group
     }
 
-    // Update callback: update existing elements
+    /**
+     * Update existing confidential mode visual elements
+     */
     const updateConfidentialModeElements = (
       update: d3.Selection<SVGGElement, ConfidentialMode, SVGGElement, unknown>
     ): d3.Selection<SVGGElement, ConfidentialMode, SVGGElement, unknown> => {
@@ -160,27 +202,29 @@ export const plotConfidentialMode = (
     }
 
     selection.each(function (this: SVGGElement) {
+      // Step 1: Get filtered data from pool
       const confidentialEvents = pool.filterDataForRender(options.tidelineData.medicalData.confidentialModes)
-      const confidentialModeGroupSelector = `d3-${D3_CONFIDENTIAL_MODE_ID}-group`
 
+      // Step 2: Early exit if no data
       if (confidentialEvents.length < 1) {
-        d3.select(this).selectAll(`g.${confidentialModeGroupSelector}`).remove()
+        d3.select(this).selectAll(`g.${idGen.groupSelector()}`).remove()
         return
       }
 
+      // Step 3: Data join with enter/update/exit
       const allConfidentialModes = d3.select(this)
-        .selectAll<SVGGElement, ConfidentialMode>(`g.${confidentialModeGroupSelector}`)
+        .selectAll<SVGGElement, ConfidentialMode>(`g.${idGen.groupSelector()}`)
         .data(confidentialEvents, (d: ConfidentialMode) => d.id)
 
       const confidentialModeGroup = allConfidentialModes.join(
-        enter => createConfidentialModeElements(enter, confidentialModeGroupSelector),
-        update => updateConfidentialModeElements(update),
+        createConfidentialModeElements,
+        updateConfidentialModeElements,
         exit => exit.remove()
       )
 
-      // Set up event handlers - only show tooltip for events with duration < 3 hours
+      // Step 4: Set up event handlers - only show tooltip for events with duration < 3 hours
       confidentialModeGroup
-        .filter((d: ConfidentialMode) => displayTooltip(d))
+        .filter((d: ConfidentialMode) => shouldDisplayTooltip(d))
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: ConfidentialMode) {
           if (options.onElementHover) {
             options.onElementHover({

@@ -44,36 +44,11 @@ export const PLOT_DIMENSIONS = {
   /** Width for bolus rectangles */
   BOLUS_WIDTH: 12,
 
-  /** Radius for CBG (continuous glucose) points */
-  CBG_RADIUS: 2.5,
+  /** Radius for CBG (continuous glucose) and IOB points */
+  CBG_IOB_RADIUS: 2.5,
 
   /** Default radius increase on hover */
   HOVER_RADIUS_INCREASE: 1
-} as const
-
-/**
- * Element type identifiers used for ID generation
- */
-export const ELEMENT_IDS = {
-  NIGHT_MODE: 'nightMode',
-  ZEN_MODE: 'zenMode',
-  PHYSICAL_ACTIVITY: 'pa',
-  ALARM_EVENT: 'alarmEvent',
-  WARM_UP: 'warmUp',
-  DEVICE_PARAMETER: 'deviceParameter',
-  RESERVOIR_CHANGE: 'reservoirChange',
-  CARTRIDGE_CHANGE: 'cartridgeChange',
-  TIMEZONE_CHANGE: 'timechange',
-  EATING_SHORTLY: 'eating_shortly',
-  RESCUE_CARBS: 'carb',
-  CONFIDENTIAL_MODE: 'confidentialMode',
-  EVENT_SUPERPOSITION: 'eventSuperposition',
-  BOLUS: 'bolus',
-  WIZARD: 'wizard',
-  MEAL: 'meal',
-  CBG: 'cbg',
-  SMBG: 'smbg',
-  BASAL: 'basal'
 } as const
 
 /**
@@ -84,6 +59,7 @@ export const CSS_CLASSES = {
   EVENT_GROUP: 'd3-event-group',
 
   // Bolus classes
+  BOLUS: 'd3-bolus',
   BOLUS_GROUP: 'd3-bolus-group',
   BOLUS_RECT: 'd3-rect-bolus',
   BOLUS_MANUAL: 'd3-bolus-manual',
@@ -122,16 +98,4 @@ export const CSS_CLASSES = {
   RECT: 'd3-rect'
 } as const
 
-/**
- * Z-index values for layering elements
- */
-export const Z_INDEX = {
-  BACKGROUND: 0,
-  ZONES: 1,
-  BASALS: 2,
-  BOLUSES: 3,
-  GLUCOSE: 4,
-  EVENTS: 5,
-  TOOLTIPS: 10
-} as const
 

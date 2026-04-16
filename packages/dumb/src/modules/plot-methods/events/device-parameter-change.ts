@@ -35,13 +35,15 @@ import { drawImage, getTooltipContainer } from '../../../utils/daily-chart/daily
 import { type PlotFunction } from '../../../models/plot-function.model'
 import { type PlotSelection } from '../../../models/plot-selection.model'
 import { type PlotOptions } from '../../../models/plot-options.model'
+import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
+import { PLOT_DIMENSIONS } from '../../../models/constants/plot.constants'
+import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
 
-const D3_PARAMETER_ID = 'param'
-const DEFAULT_OPTIONS_SIZE = 30
-const DEFAULT_IMAGE_MARGIN = 8
+// ID generator for consistent element identification
+const idGen = createIdGenerator(DailyPlotElement.DeviceParameterChange)
 
-// Helper functions to reduce nesting
-const getGroupId = (d: DeviceParameterChange): string => `${D3_PARAMETER_ID}_group_${d.id}`
+// Device parameter image dimensions
+const DEVICE_PARAMETER_IMAGE_WIDTH = 40
 
 type DeviceParameterChangeOptions = PlotOptions<DeviceParameterChange> & {
   parameterChanges: DeviceParameterChange[]
@@ -53,9 +55,31 @@ const defaults: Partial<DeviceParameterChangeOptions> = {
 
 /**
  * Plot device parameter change events in the diabetes management timeline
- * @param pool - The pool to render into
- * @param opts - Configuration options
- * @returns The device parameter change plotting function
+ *
+ * Device parameter changes represent modifications to diabetes device settings such as:
+ * - Basal rate adjustments
+ * - Insulin-to-carb ratio changes
+ * - Correction factor updates
+ * - Target glucose range modifications
+ * - Insulin sensitivity factor changes
+ *
+ * These events are important for understanding therapy adjustments and their impact
+ * on glucose control. Each parameter change is visualized with an icon to help
+ * patients and caregivers track device configuration history.
+ *
+ * @param pool - The rendering pool containing scale and dimensions
+ * @param opts - Configuration options including scales, parameter changes data, and event handlers
+ * @returns A function that renders device parameter change events when called with a D3 selection
+ *
+ * @example
+ * ```typescript
+ * const plot = plotDeviceParameterChange(pool, {
+ *   tidelineData,
+ *   parameterChanges: medicalData.deviceParametersChanges,
+ *   onElementHover: (event) => showTooltip(event.data)
+ * })
+ * selection.call(plot)
+ * ```
  */
 export const plotDeviceParameterChange = (
   pool: Pool<DeviceParameterChange>,
@@ -63,10 +87,8 @@ export const plotDeviceParameterChange = (
 ): PlotFunction<DeviceParameterChange> => {
   const options = _.defaults(opts, defaults) as DeviceParameterChangeOptions
 
-  const height = pool.height() - DEFAULT_IMAGE_MARGIN
-  const width = 40
-
   return (selection: PlotSelection<DeviceParameterChange>): void => {
+    // Initialize xScale from pool
     options.xScale = pool.xScale().copy()
 
     if (!options.xScale) {
@@ -74,53 +96,69 @@ export const plotDeviceParameterChange = (
     }
 
     const xScale = options.xScale
+    const height = pool.height() - PLOT_DIMENSIONS.DEFAULT_IMAGE_MARGIN
 
-    // Helper function that uses xScale from closure
-    const getXPos = (d: DeviceParameterChange): number => xScale(d.epoch) - width / 2
-    const getImageY = (): number => pool.height() / 2 - DEFAULT_OPTIONS_SIZE / 2
+    // Helper functions using closure variables
+    const getXPos = (d: DeviceParameterChange): number =>
+      xScale(d.epoch) - DEVICE_PARAMETER_IMAGE_WIDTH / 2
+    const getImageY = (): number =>
+      pool.height() / 2 - PLOT_DIMENSIONS.DEFAULT_SIZE / 2
+
+    /**
+     * Create new device parameter change visual elements
+     */
+    const createParameterElements = (
+      enter: d3.Selection<d3.EnterElement, DeviceParameterChange, SVGGElement, unknown>
+    ): d3.Selection<SVGGElement, DeviceParameterChange, SVGGElement, unknown> => {
+      const group = enter
+        .append('g')
+        .classed(idGen.groupSelector(), true)
+        .attr('id', idGen.groupId)
+        .attr('data-testid', (d: DeviceParameterChange) => idGen.testId(d))
+
+      drawImage(group, getXPos, getImageY(), height, DEVICE_PARAMETER_IMAGE_WIDTH, parameterIcon)
+
+      return group
+    }
+
+    /**
+     * Update existing device parameter change visual elements
+     */
+    const updateParameterElements = (
+      update: d3.Selection<SVGGElement, DeviceParameterChange, SVGGElement, unknown>
+    ): d3.Selection<SVGGElement, DeviceParameterChange, SVGGElement, unknown> => {
+      update
+        .select('image')
+        .attr('x', getXPos)
+        .attr('y', getImageY())
+
+      return update
+    }
 
     selection.each(function (this: SVGGElement) {
       // Always clean param-group because of multiple rendering when navigating between days
-      d3.select(this).selectAll('g.d3-param-group').remove()
+      d3.select(this).selectAll(`g.${idGen.groupSelector()}`).remove()
 
+      // Step 1: Get filtered data from pool
       const deviceParameters = pool.filterDataForRender(options.parameterChanges)
-      const parameterGroupSelector = 'd3-param-group'
 
+      // Step 2: Early exit if no data
       if (deviceParameters.length < 1) {
         return
       }
 
-      // Select all parameter change event groups and bind data
+      // Step 3: Data join with enter/update/exit
       const allParameters = d3.select(this)
-        .selectAll<SVGGElement, DeviceParameterChange>(`g.${parameterGroupSelector}`)
+        .selectAll<SVGGElement, DeviceParameterChange>(`g.${idGen.groupSelector()}`)
         .data(deviceParameters, (d: DeviceParameterChange) => d.id)
 
-      // Using join pattern for enter/update/exit
       const parameterGroup = allParameters.join(
-        enter => {
-          const group = enter
-            .append('g')
-            .classed(parameterGroupSelector, true)
-            .attr('id', getGroupId)
-            .attr('data-testid', getGroupId)
-
-          drawImage(group, getXPos, getImageY, height, width, parameterIcon)
-
-          return group
-        },
-        update => {
-          // Update existing elements
-          update
-            .select('image')
-            .attr('x', getXPos)
-            .attr('y', getImageY)
-
-          return update
-        },
+        createParameterElements,
+        updateParameterElements,
         exit => exit.remove()
       )
 
-      // Set up event handlers
+      // Step 4: Set up event handlers
       parameterGroup
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: DeviceParameterChange) {
           if (options.onElementHover) {

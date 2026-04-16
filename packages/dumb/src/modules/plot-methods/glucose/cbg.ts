@@ -36,10 +36,11 @@ import { type PlotSelection } from '../../../models/plot-selection.model'
 import { type PlotOptions } from '../../../models/plot-options.model'
 import { convertBgClassesToBgBounds, getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
 import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
-import { PLOT_DIMENSIONS, ELEMENT_IDS, CSS_CLASSES } from '../constants'
+import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
+import { CSS_CLASSES, PLOT_DIMENSIONS } from '../../../models/constants/plot.constants'
 
 // ID generator for consistent element identification
-const idGen = createIdGenerator(ELEMENT_IDS.CBG)
+const idGen = createIdGenerator(DailyPlotElement.Cbg)
 
 type CbgOptions = PlotOptions<Cbg> & {
   bgUnits: BgUnit
@@ -127,7 +128,7 @@ export const plotCbg = (
         .attr('data-testid', (d: Cbg) => idGen.testId(d))
         .attr('cx', xPosition)
         .attr('cy', yPosition)
-        .attr('r', PLOT_DIMENSIONS.CBG_RADIUS)
+        .attr('r', PLOT_DIMENSIONS.CBG_IOB_RADIUS)
     }
 
     /**
@@ -139,7 +140,7 @@ export const plotCbg = (
       return update
         .attr('cx', xPosition)
         .attr('cy', yPosition)
-        .attr('r', PLOT_DIMENSIONS.CBG_RADIUS)
+        .attr('r', PLOT_DIMENSIONS.CBG_IOB_RADIUS)
     }
 
     selection.each(function (this: SVGGElement) {
@@ -186,7 +187,7 @@ export const plotCbg = (
         .on('mouseover', function (this: SVGCircleElement, _event: MouseEvent, d: Cbg) {
           const d3Select = d3.select(this)
           highlight.on(d3Select)
-          d3Select.attr('r', PLOT_DIMENSIONS.CBG_RADIUS + PLOT_DIMENSIONS.HOVER_RADIUS_INCREASE)
+          d3Select.attr('r', PLOT_DIMENSIONS.CBG_IOB_RADIUS + PLOT_DIMENSIONS.HOVER_RADIUS_INCREASE)
 
           const bgCategory = categorize(d)
           switch (bgCategory) {
@@ -210,7 +211,7 @@ export const plotCbg = (
         .on('mouseout', function (this: SVGCircleElement) {
           highlight.off()
           d3.select(this)
-            .attr('r', PLOT_DIMENSIONS.CBG_RADIUS)
+            .attr('r', PLOT_DIMENSIONS.CBG_IOB_RADIUS)
             .classed(CSS_CLASSES.BG_LOW_FOCUS, false)
             .classed(CSS_CLASSES.BG_TARGET_FOCUS, false)
             .classed(CSS_CLASSES.BG_HIGH_FOCUS, false)
