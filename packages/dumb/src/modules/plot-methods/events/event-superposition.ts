@@ -35,6 +35,7 @@ import { PlotSelection } from '../../../models/plot-selection.model'
 import { PlotOptions } from '../../../models/plot-options.model'
 import { SuperpositionEvent } from '../../../models/superposition-event.model'
 import { SuperpositionEventSeverity } from '../../../models/enums/superposition-event-severity.enum'
+import { COMMON_RADIUS } from '../common-display-values'
 
 const D3_SUPERPOSITION_ID = 'eventSuperposition'
 
@@ -56,8 +57,6 @@ type EventSuperpositionOptions = PlotOptions<SuperpositionEvent> & {
 const defaults: Partial<EventSuperpositionOptions> = {
   xScale: null
 }
-
-const DEFAULT_RADIUS = 14
 
 /**
  * Plot superposition events in the diabetes management timeline
@@ -133,7 +132,7 @@ export const plotEventSuperposition = (
             .select('circle')
             .attr('cx', (d: SuperpositionEvent) => xPos(d))
             .attr('cy', offset)
-            .attr('r', DEFAULT_RADIUS)
+            .attr('r', COMMON_RADIUS)
             .attr('class', (d: SuperpositionEvent) => SEVERITY_CLASS_MAP[d.severity])
 
           update

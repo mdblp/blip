@@ -29,19 +29,23 @@ import _ from 'lodash'
 import * as d3 from 'd3'
 
 import { BgClass, BgClasses, BgUnit, type Cbg, ClassificationType, MGDL_UNITS } from 'medical-domain'
-import { Pool } from '../../../models/pool.model'
+import { type Pool } from '../../../models/pool.model'
 import { getTooltipContainer } from '../../../utils/daily-chart/daily-chart.util'
-import { PlotFunction } from '../../../models/plot-function.model'
-import { PlotSelection } from '../../../models/plot-selection.model'
-import { PlotOptions } from '../../../models/plot-options.model'
+import { type PlotFunction } from '../../../models/plot-function.model'
+import { type PlotSelection } from '../../../models/plot-selection.model'
+import { type PlotOptions } from '../../../models/plot-options.model'
 import { convertBgClassesToBgBounds, getBgClass } from '../../../utils/blood-glucose/blood-glucose.util'
+import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
+import { PLOT_DIMENSIONS, ELEMENT_IDS, CSS_CLASSES } from '../constants'
+
+// ID generator for consistent element identification
+const idGen = createIdGenerator(ELEMENT_IDS.CBG)
 
 type CbgOptions = PlotOptions<Cbg> & {
   bgUnits: BgUnit
   bgClasses: BgClasses
 }
 
-const DEFAULT_RADIUS = 2.5
 
 const defaults: Partial<CbgOptions> = {
   bgUnits: MGDL_UNITS,
@@ -49,10 +53,26 @@ const defaults: Partial<CbgOptions> = {
 }
 
 /**
- * Plot continuous blood glucose data points
- * @param pool - The pool to render into
- * @param opts - Configuration options
- * @returns The CBG plotting function
+ * Plot continuous blood glucose (CBG) data points in the diabetes management timeline
+ *
+ * CBG data represents continuous glucose monitoring readings, typically collected
+ * every 5 minutes. The visualization categorizes values into different ranges
+ * (very low, low, target, high, very high) using color-coded circles.
+ *
+ * @param pool - The rendering pool containing scale and dimensions
+ * @param opts - Configuration options including scales, data, BG units, and event handlers
+ * @returns A function that renders CBG points when called with a D3 selection
+ *
+ * @example
+ * ```typescript
+ * const plot = plotCbg(pool, {
+ *   tidelineData,
+ *   bgUnits: MGDL_UNITS,
+ *   bgClasses: { low: 70, target: 180, high: 250 },
+ *   onElementHover: (event) => showTooltip(event.data)
+ * })
+ * selection.call(plot)
+ * ```
  */
 export const plotCbg = (
   pool: Pool<Cbg>,
@@ -64,102 +84,122 @@ export const plotCbg = (
 
   const bgBounds = convertBgClassesToBgBounds(bgClasses, bgUnits)
 
+  // Helper function: Categorize glucose value into BG class
   const categorize = (d: Cbg): BgClass => {
     return getBgClass(bgBounds, d.value, ClassificationType.FiveWay)
   }
 
-  const xPosition = (d: Cbg): number => {
-    if (!options.xScale) {
-      throw new Error('xScale is not initialized')
-    }
-    return options.xScale(d.epoch)
-  }
-
-  const yPosition = (d: Cbg): number => {
-    const yScale = pool.yScale()
-    return yScale(d.value)
-  }
-
-  const addTooltip = (d: Cbg, rect: DOMRect): void => {
-    if (options.onElementHover) {
-      options.onElementHover({
-        data: d,
-        rect: rect,
-        class: categorize(d)
-      })
-    }
-  }
-
   return (selection: PlotSelection<Cbg>): void => {
+    // Initialize xScale from pool
     options.xScale = pool.xScale().copy()
 
     if (!options.xScale) {
       throw new Error('xScale is not initialized')
     }
 
+    const xScale = options.xScale
+    const yScale = pool.yScale()
+
+    // Helper functions using closure variables
+    const xPosition = (d: Cbg): number => xScale(d.epoch)
+    const yPosition = (d: Cbg): number => yScale(d.value)
+
+    const addTooltip = (d: Cbg, rect: DOMRect): void => {
+      if (options.onElementHover) {
+        options.onElementHover({
+          data: d,
+          rect: rect,
+          class: categorize(d)
+        })
+      }
+    }
+
+    /**
+     * Create new CBG circle elements
+     */
+    const createCbgElements = (
+      enter: d3.Selection<d3.EnterElement, Cbg, SVGGElement, unknown>
+    ): d3.Selection<SVGCircleElement, Cbg, SVGGElement, unknown> => {
+      return enter
+        .append('circle')
+        .classed(CSS_CLASSES.CBG, true)
+        .attr('id', (d: Cbg) => idGen.elementId(d, 'circle'))
+        .attr('data-testid', (d: Cbg) => idGen.testId(d))
+        .attr('cx', xPosition)
+        .attr('cy', yPosition)
+        .attr('r', PLOT_DIMENSIONS.CBG_RADIUS)
+    }
+
+    /**
+     * Update existing CBG circle elements
+     */
+    const updateCbgElements = (
+      update: d3.Selection<SVGCircleElement, Cbg, SVGGElement, unknown>
+    ): d3.Selection<SVGCircleElement, Cbg, SVGGElement, unknown> => {
+      return update
+        .attr('cx', xPosition)
+        .attr('cy', yPosition)
+        .attr('r', PLOT_DIMENSIONS.CBG_RADIUS)
+    }
+
     selection.each(function (this: SVGGElement) {
+      // Step 1: Get filtered data from pool
       const medicalData = options.tidelineData.medicalData
       const cbgValues = pool.filterDataForRender(medicalData.cbg)
 
-      const allCBG = d3
-        .select(this)
-        .selectAll<SVGCircleElement, Cbg>('circle.d3-cbg')
+      // Step 2: Early exit if no data
+      if (cbgValues.length < 1) {
+        d3.select(this).selectAll(`circle.${CSS_CLASSES.CBG}`).remove()
+        return
+      }
+
+      // Step 3: Data join with enter/update/exit
+      const allCBG = d3.select(this)
+        .selectAll<SVGCircleElement, Cbg>(`circle.${CSS_CLASSES.CBG}`)
         .data(cbgValues, (d: Cbg) => d.id)
 
-      // Using join pattern for enter/update/exit
       const cbgGroups = allCBG.join(
-        enter =>
-          enter
-            .append('circle')
-            .classed('d3-cbg', true)
-            .attr('id', (d: Cbg) => `cbg_${d.id}`)
-            .attr('data-testid', (d: Cbg) => `cbg_${d.id}`)
-            .attr('cx', xPosition)
-            .attr('cy', yPosition)
-            .attr('r', DEFAULT_RADIUS),
-        update =>
-          update
-            .attr('cx', xPosition)
-            .attr('cy', yPosition)
-            .attr('r', DEFAULT_RADIUS),
+        createCbgElements,
+        updateCbgElements,
         exit => exit.remove()
       )
 
-      // Filter and apply classes for different BG categories
+      // Step 4: Apply category-specific CSS classes
       const cbgVeryLow = cbgGroups.filter((d: Cbg) => categorize(d) === BgClass.VeryLow)
       const cbgLow = cbgGroups.filter((d: Cbg) => categorize(d) === BgClass.Low)
       const cbgTarget = cbgGroups.filter((d: Cbg) => categorize(d) === BgClass.Target)
       const cbgHigh = cbgGroups.filter((d: Cbg) => categorize(d) === BgClass.High)
       const cbgVeryHigh = cbgGroups.filter((d: Cbg) => categorize(d) === BgClass.VeryHigh)
 
-      cbgVeryLow.classed('d3-circle-cbg d3-bg-very-low', true)
-      cbgLow.classed('d3-circle-cbg d3-bg-low', true)
-      cbgTarget.classed('d3-circle-cbg d3-bg-target', true)
-      cbgHigh.classed('d3-circle-cbg d3-bg-high', true)
-      cbgVeryHigh.classed('d3-circle-cbg d3-bg-very-high', true)
+      cbgVeryLow.classed(`${CSS_CLASSES.CBG_CIRCLE} ${CSS_CLASSES.BG_VERY_LOW}`, true)
+      cbgLow.classed(`${CSS_CLASSES.CBG_CIRCLE} ${CSS_CLASSES.BG_LOW}`, true)
+      cbgTarget.classed(`${CSS_CLASSES.CBG_CIRCLE} ${CSS_CLASSES.BG_TARGET}`, true)
+      cbgHigh.classed(`${CSS_CLASSES.CBG_CIRCLE} ${CSS_CLASSES.BG_HIGH}`, true)
+      cbgVeryHigh.classed(`${CSS_CLASSES.CBG_CIRCLE} ${CSS_CLASSES.BG_VERY_HIGH}`, true)
 
+      // Step 5: Set up highlight behavior
       const highlight = pool.highlight(allCBG)
 
-      // Set up mouseover and mouseout event handlers
+      // Step 6: Set up event handlers
       d3.select(this)
-        .selectAll<SVGCircleElement, Cbg>('.d3-circle-cbg')
+        .selectAll<SVGCircleElement, Cbg>(`.${CSS_CLASSES.CBG_CIRCLE}`)
         .on('mouseover', function (this: SVGCircleElement, _event: MouseEvent, d: Cbg) {
           const d3Select = d3.select(this)
           highlight.on(d3Select)
-          d3Select.attr('r', DEFAULT_RADIUS + 1)
+          d3Select.attr('r', PLOT_DIMENSIONS.CBG_RADIUS + PLOT_DIMENSIONS.HOVER_RADIUS_INCREASE)
 
           const bgCategory = categorize(d)
           switch (bgCategory) {
             case BgClass.Low:
             case BgClass.VeryLow:
-              d3Select.classed('d3-bg-low-focus', true)
+              d3Select.classed(CSS_CLASSES.BG_LOW_FOCUS, true)
               break
             case BgClass.Target:
-              d3Select.classed('d3-bg-target-focus', true)
+              d3Select.classed(CSS_CLASSES.BG_TARGET_FOCUS, true)
               break
             case BgClass.High:
             case BgClass.VeryHigh:
-              d3Select.classed('d3-bg-high-focus', true)
+              d3Select.classed(CSS_CLASSES.BG_HIGH_FOCUS, true)
               break
             default:
               break
@@ -169,12 +209,11 @@ export const plotCbg = (
         })
         .on('mouseout', function (this: SVGCircleElement) {
           highlight.off()
-          d3
-            .select(this)
-            .attr('r', DEFAULT_RADIUS)
-            .classed('d3-bg-low-focus', false)
-            .classed('d3-bg-target-focus', false)
-            .classed('d3-bg-high-focus', false)
+          d3.select(this)
+            .attr('r', PLOT_DIMENSIONS.CBG_RADIUS)
+            .classed(CSS_CLASSES.BG_LOW_FOCUS, false)
+            .classed(CSS_CLASSES.BG_TARGET_FOCUS, false)
+            .classed(CSS_CLASSES.BG_HIGH_FOCUS, false)
 
           if (options.onElementOut) {
             options.onElementOut()

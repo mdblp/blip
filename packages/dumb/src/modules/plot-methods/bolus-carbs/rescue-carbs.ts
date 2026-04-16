@@ -34,15 +34,13 @@ import { drawCircle, drawText, getTooltipContainer } from '../../../utils/daily-
 import { PlotFunction } from '../../../models/plot-function.model'
 import { PlotSelection } from '../../../models/plot-selection.model'
 import { PlotOptions } from '../../../models/plot-options.model'
+import { COMMON_PADDING, COMMON_RADIUS } from '../common-display-values'
 
 type RescueCarbOptions = PlotOptions<Meal>
 
 const defaults: Partial<RescueCarbOptions> = {
   xScale: null
 }
-
-const DEFAULT_RADIUS = 14
-const DEFAULT_PADDING = 4
 
 // Helper functions to reduce nesting
 const getCarbAmount = (data: Meal): string => (data.nutrition?.carbohydrate?.net ?? 0).toString()
@@ -62,13 +60,6 @@ export const plotRescueCarbs = (
 ): PlotFunction<Meal> => {
   const options = _.defaults(opts, defaults) as RescueCarbOptions
 
-  const xPos = (d: Meal): number => {
-    if (!options.xScale) {
-      throw new Error('xScale is not initialized')
-    }
-    return options.xScale(d.epoch)
-  }
-
   return (selection: PlotSelection<Meal>): void => {
     options.xScale = pool.xScale().copy()
 
@@ -76,7 +67,45 @@ export const plotRescueCarbs = (
       throw new Error('xScale is not initialized')
     }
 
-    const yPos = DEFAULT_RADIUS + DEFAULT_PADDING
+    const xScale = options.xScale
+    const yPos = COMMON_RADIUS + COMMON_PADDING
+
+    // Helper functions that use xScale from closure
+    const getXPos = (d: Meal): number => xScale(d.epoch)
+
+    // Enter callback: create new elements
+    const createRescueCarbElements = (
+      enter: d3.Selection<d3.EnterElement, Meal, SVGGElement, unknown>
+    ): d3.Selection<SVGGElement, Meal, SVGGElement, unknown> => {
+      const group = enter
+        .append('g')
+        .classed('d3-carb-group', true)
+        .attr('id', getCarbGroupId)
+        .attr('data-testid', getCarbGroupId)
+
+      drawCircle<Meal>(group, getXPos, yPos, 'd3-circle-rescuecarbs', getCarbCircleId)
+
+      drawText<Meal>(group, getCarbAmount, getXPos, yPos, 'd3-carbs-text', getCarbTextId)
+
+      return group
+    }
+
+    // Update callback: update existing elements
+    const updateRescueCarbElements = (
+      update: d3.Selection<SVGGElement, Meal, SVGGElement, unknown>
+    ): d3.Selection<SVGGElement, Meal, SVGGElement, unknown> => {
+      update.select('circle')
+        .attr('cx', getXPos)
+        .attr('cy', yPos)
+        .attr('r', COMMON_RADIUS)
+
+      update.select('text')
+        .text(getCarbAmount)
+        .attr('x', getXPos)
+        .attr('y', yPos)
+
+      return update
+    }
 
     selection.each(function (this: SVGGElement) {
       const rescueCarbs = pool.filterDataForRender(options.tidelineData.medicalData.meals)
@@ -89,46 +118,18 @@ export const plotRescueCarbs = (
         return
       }
 
-      const allCarbs = d3
-        .select(this)
+      const allCarbs = d3.select(this)
         .selectAll<SVGGElement, Meal>('g.d3-carb-group')
         .data(filteredData, (d: Meal) => d.id)
 
       // Using join pattern for enter/update/exit
       const carbGroup = allCarbs.join(
-        enter => {
-          const group = enter
-            .append('g')
-            .classed('d3-carb-group', true)
-            .attr('id', getCarbGroupId)
-            .attr('data-testid', getCarbGroupId)
-
-          drawCircle(group, xPos, yPos, 'd3-circle-rescuecarbs', getCarbCircleId)
-
-          drawText(group, getCarbAmount, xPos, yPos, 'd3-carbs-text', getCarbTextId)
-
-          return group
-        },
-        update => {
-          // Update existing elements
-          update
-            .select('circle')
-            .attr('cx', xPos)
-            .attr('cy', yPos)
-            .attr('r', DEFAULT_RADIUS)
-
-          update
-            .select('text')
-            .text(getCarbAmount)
-            .attr('x', xPos)
-            .attr('y', yPos)
-
-          return update
-        },
+        enter => createRescueCarbElements(enter),
+        update => updateRescueCarbElements(update),
         exit => exit.remove()
       )
 
-      // Set up tooltip event handlers
+      // Set up event handlers
       carbGroup
         .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: Meal) {
           if (options.onElementHover) {

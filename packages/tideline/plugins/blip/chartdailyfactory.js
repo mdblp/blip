@@ -27,6 +27,7 @@ import {
   plotCbg,
   plotConfidentialMode,
   plotDeviceParameterChange,
+  plotEatingShortly,
   plotEventSuperposition,
   plotIob,
   plotMeal,
@@ -35,6 +36,7 @@ import {
   plotRescueCarbs,
   plotReservoirChange,
   plotSmbg,
+  plotTimeZoneChange,
   plotWarmUp,
   plotZenMode
 } from 'dumb'
@@ -44,16 +46,10 @@ import _ from 'lodash'
 
 import { MGDL_UNITS } from 'medical-domain'
 import oneDay from '../../js/oneday'
-import plotEatingShortlyEvent from '../../js/plot/eatingShortlyEvent'
-// import plotEventSuperposition from '../../js/plot/eventSuperposition'
 import plotMessage from '../../js/plot/message'
-// import plotQuickbolus from '../../js/plot/quickbolus'
-// import plotSmbg from '../../js/plot/smbg'
-import plotTimeChange from '../../js/plot/timechange'
 import axesDailyx from '../../js/plot/util/axes/dailyx'
 import fill from '../../js/plot/util/fill'
 import { createYAxisBasal, createYAxisBG, createYAxisBolus, createYAxisIob } from '../../js/plot/util/scales'
-// import plotWizard from '../../js/plot/wizard'
 
 import Pool from '../../js/pool'
 
@@ -414,11 +410,11 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     onElementOut: options.onTooltipOut
   }))
 
-  poolBolus.addPlotType({ type: 'eatingShortly' }, plotEatingShortlyEvent(poolBolus, {
+  poolBolus.addPlotType({ type: 'eatingShortly' }, plotEatingShortly(poolBolus, {
     tidelineData,
     timezoneAware: chart.options.timePrefs.timezoneAware,
-    onEatingShortlyHover: options.onEatingShortlyHover,
-    onEatingShortlyOut: options.onTooltipOut
+    onElementHover: options.onEatingShortlyHover,
+    onElementOut: options.onTooltipOut
   }))
 
   // Add confidential mode to Bolus pool: Must be the last in the pool to mask stuff below
@@ -488,10 +484,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   }))
 
   // add timechange images to messages pool
-  poolMessages.addPlotType({ type: 'deviceEvent' }, plotTimeChange(poolMessages, {
-    size: 30,
-    onTimeChangeHover: options.onTimeChangeHover,
-    onTimeChangeOut: options.onTooltipOut
+  poolMessages.addPlotType({ type: 'deviceEvent' }, plotTimeZoneChange(poolMessages, {
+    tidelineData,
+    onElementHover: options.onTimeChangeHover,
+    onElementOut: options.onTooltipOut
   }))
 
   return chart

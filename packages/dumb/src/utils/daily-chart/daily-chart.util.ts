@@ -26,8 +26,7 @@
  */
 
 import * as d3 from 'd3'
-
-const DEFAULT_RADIUS = 14
+import { COMMON_RADIUS } from '../../modules/plot-methods/common-display-values'
 
 export const getTooltipContainer = (element: SVGGElement): DOMRect => {
   const parentContainer = document.getElementById('tidelineMain')!.getBoundingClientRect()
@@ -86,7 +85,7 @@ export const drawCircle = <T extends { normalTime: string }>(
     .attr('id', id)
     .attr('cx', cx)
     .attr('cy', cy)
-    .attr('r', DEFAULT_RADIUS)
+    .attr('r', COMMON_RADIUS)
     .attr('stroke-width', 0)
     .attr('class', classNames)
 }
