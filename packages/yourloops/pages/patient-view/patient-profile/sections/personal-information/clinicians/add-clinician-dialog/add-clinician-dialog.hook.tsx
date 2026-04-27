@@ -34,6 +34,7 @@ import { useTranslation } from 'react-i18next'
 import { errorTextFromException } from '../../../../../../../lib/utils'
 import { logError } from '../../../../../../../utils/error.util'
 import { UserInviteStatus } from '../../../../../../../lib/team/models/enums/user-invite-status.enum'
+import AnalyticsApi, { ElementType } from '../../../../../../../lib/analytics/analytics.api'
 
 interface AddClinicianDialogHookProps {
   patientId: string
@@ -90,6 +91,8 @@ export const useAddClinicianDialog = (props: AddClinicianDialogHookProps): AddCl
   }
 
   const onClickAddClinician = async () => {
+    AnalyticsApi.trackClick('clinicians-add-confirm', ElementType.Button)
+
     try {
       await LeadCliniciansApi.addClinician(patientId, selectedHcpId)
       alert.success(t('clinician-add-success'))
