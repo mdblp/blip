@@ -67,6 +67,10 @@ export const useAddClinicianDialog = (props: AddClinicianDialogHookProps): AddCl
     return members.some((member) => member.userId === hcpId)
   }
 
+  const getMemberById = (memberId: string, members: TeamMember[]): TeamMember => {
+    return members.find((member) => member.userId === memberId)
+  }
+
   const getAvailableHcps = (): TeamMember[] => {
     if (user.isUserHcp()) {
       const selectedTeam = getTeam(teamId)
@@ -77,7 +81,14 @@ export const useAddClinicianDialog = (props: AddClinicianDialogHookProps): AddCl
     if (user.isUserPatient()) {
       const allHcpsHavingAccessToPatient = teams.reduce((acc: TeamMember[], team: Team) => {
         team.members?.forEach((currentTeamMember) => {
-          if (!isHcpInList(currentTeamMember.userId, acc)) {
+          const memberId = currentTeamMember.userId
+
+          if (isHcpInList(memberId, acc)) {
+            const record = getMemberById(memberId, acc)
+            if (record.status !== currentTeamMember.status && currentTeamMember.status === UserInviteStatus.Accepted) {
+              record.status = UserInviteStatus.Accepted
+            }
+          } else {
             acc.push(currentTeamMember)
           }
         })
