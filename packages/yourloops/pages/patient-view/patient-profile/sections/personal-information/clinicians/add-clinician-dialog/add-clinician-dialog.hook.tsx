@@ -33,6 +33,7 @@ import { useAlert } from '../../../../../../../components/utils/snackbar'
 import { useTranslation } from 'react-i18next'
 import { errorTextFromException } from '../../../../../../../lib/utils'
 import { logError } from '../../../../../../../utils/error.util'
+import { UserInviteStatus } from '../../../../../../../lib/team/models/enums/user-invite-status.enum'
 
 interface AddClinicianDialogHookProps {
   patientId: string
@@ -55,8 +56,10 @@ export const useAddClinicianDialog = (props: AddClinicianDialogHookProps): AddCl
   const alert = useAlert()
   const { t } = useTranslation()
 
-  const removeCurrentCliniciansFromList = (hcps: TeamMember[]): TeamMember[] => {
-    return hcps.filter((hcp: TeamMember) => !clinicianIds.includes(hcp.userId))
+  const getValidMembers = (hcps: TeamMember[]): TeamMember[] => {
+    return hcps
+      .filter((hcp: TeamMember) => !clinicianIds.includes(hcp.userId))
+      .filter((hcp: TeamMember) => hcp.status === UserInviteStatus.Accepted)
   }
 
   const isHcpInList = (hcpId: string, members: TeamMember[]): boolean => {
@@ -67,8 +70,9 @@ export const useAddClinicianDialog = (props: AddClinicianDialogHookProps): AddCl
     if (user.isUserHcp()) {
       const selectedTeam = getTeam(teamId)
 
-      return removeCurrentCliniciansFromList(selectedTeam.members)
+      return getValidMembers(selectedTeam.members)
     }
+
     if (user.isUserPatient()) {
       const allHcpsHavingAccessToPatient = teams.reduce((acc: TeamMember[], team: Team) => {
         team.members?.forEach((currentTeamMember) => {
@@ -79,8 +83,9 @@ export const useAddClinicianDialog = (props: AddClinicianDialogHookProps): AddCl
         return acc
       }, [])
 
-      return removeCurrentCliniciansFromList(allHcpsHavingAccessToPatient)
+      return getValidMembers(allHcpsHavingAccessToPatient)
     }
+
     return []
   }
 
