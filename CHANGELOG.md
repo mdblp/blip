@@ -2,7 +2,7 @@
 Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
-## 3.9.1 - 2026-04-27
+## 3.9.1-rc1 - 2026-04-27
 ### Fixed
 - YLP-3897 Cannot add clinicians to patient if there are pending members in the team
 
