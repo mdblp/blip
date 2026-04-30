@@ -34,6 +34,7 @@ import {
   monitoringAlertsParameters,
   monitoringAlertsParametersBgUnitMmol,
   myFirstTeamId,
+  myFourthTeamId,
   mySecondTeamId,
   myThirdTeamId,
   NEW_TEAM_ID
@@ -41,11 +42,15 @@ import {
 import { Gender } from '../../../lib/auth/models/enums/gender.enum'
 import {
   loggedInUserId,
-  userHugoEmail, userHugoFullName,
+  userHugoEmail,
+  userHugoFullName,
   userHugoId,
   userTimEmail,
   userTimFullName,
-  userTimId, userYdrisEmail, userYdrisFullName, userYdrisId
+  userTimId,
+  userYdrisEmail,
+  userYdrisFullName,
+  userYdrisId
 } from '../mock/auth0.hook.mock'
 import { buildPatient, buildPatientMetrics } from './patient-builder.data'
 import { DeviceSystem, DiabeticType, Unit } from 'medical-domain'
@@ -395,6 +400,20 @@ export const PATIENTS_INFO_BY_TEAMID: Record<string, Patient[]> = {
         creatorId: loggedInUserId,
         creationDate: '2023-05-17T11:37:42.638Z'
       }
+    }
+  ],
+  [myFourthTeamId]: [
+    {
+      ...patient1Info,
+      invitationStatus: UserInviteStatus.Accepted
+    },
+    {
+      ...patient2Info,
+      invitationStatus: UserInviteStatus.Accepted
+    },
+    {
+      ...patient3Info,
+      invitationStatus: UserInviteStatus.Accepted
     }
   ],
   [filtersTeamId]: [

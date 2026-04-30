@@ -28,7 +28,13 @@
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
-import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
+import {
+  buildAvailableTeams,
+  mockTeamAPI,
+  myFourthTeamId,
+  myThirdTeamId,
+  myThirdTeamName
+} from '../../../mock/team.api.mock'
 import { mockUserApi } from '../../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
@@ -90,8 +96,8 @@ describe('Patient profile view for HCP', () => {
   const patientProfileRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.PatientProfile}`
   const malePatientProfileRoute = `/teams/${myThirdTeamId}/patients/${patientWithMmolId}${AppUserRoute.PatientProfile}`
 
-  const patientWithOneClinicianRoute = `/teams/${myThirdTeamId}/patients/${patient2Id}${AppUserRoute.PatientProfile}`
-  const patientWithFiveCliniciansRoute = `/teams/${myThirdTeamId}/patients/${patient3Id}${AppUserRoute.PatientProfile}`
+  const patientWithOneClinicianRoute = `/teams/${myFourthTeamId}/patients/${patient2Id}${AppUserRoute.PatientProfile}`
+  const patientWithFiveCliniciansRoute = `/teams/${myFourthTeamId}/patients/${patient3Id}${AppUserRoute.PatientProfile}`
 
   /**
    * @see https://github.com/testing-library/react-testing-library/issues/651

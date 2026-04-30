@@ -98,6 +98,7 @@ export const myFirstTeamZipCode = 'W1D 1BS'
 export const myFirstTeamCity = 'London'
 export const mySecondTeamId = 'mySecondTeamId'
 export const myThirdTeamId = 'myThirdTeamId'
+export const myFourthTeamId = 'myFourthTeamId'
 export const filtersTeamId = 'filtersTeamId'
 export const myFirstTeamName = 'MyFirstTeam'
 export const mySecondTeamName = 'MySecondTeam'
@@ -167,7 +168,7 @@ export const buildTeamTwo = (): Team => {
     type: TeamType.medical,
     phone: '0476000000',
     email: 'hey@hey.hey',
-    address: { line1: '6 Road 66', line2: '', zip: 'W1D 1BS', city: 'London', country: 'GB' },
+    address: { line1: '6 Road 66', line2: '', zip: 'W1D 1BS', city: 'London', country: 'UK' },
     members: [{
       userId: loggedInUserId,
       role: TeamMemberRole.admin,
@@ -260,6 +261,79 @@ export const buildTeamThree = (): Team => {
   }
 }
 
+export const buildTeamFour = (): Team => {
+  return {
+    name: 'Fourth team',
+    id: myFourthTeamId,
+    code: '200011122',
+    type: TeamType.medical,
+    phone: '0476000000',
+    email: 'team4@mail.com',
+    address: { line1: '6 Road 66', line2: '', zip: 'W1D 1BS', city: 'London', country: 'UK' },
+    members: [
+      {
+        userId: loggedInUserId,
+        role: TeamMemberRole.admin,
+        profile: {
+          email: loggedInUserEmail,
+          firstName: loggedInUserFirstName,
+          fullName: loggedInUserFullName,
+          hcpProfession: HcpProfession.other,
+          lastName: loggedInUserLastName,
+          privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+          termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+        } as UserAccount,
+        status: UserInviteStatus.Accepted,
+        email: loggedInUserEmail
+      },
+      {
+        userId: userTimId,
+        role: TeamMemberRole.member,
+        profile: {
+          email: userTimEmail,
+          firstName: userTimFirstName,
+          fullName: userTimFullName,
+          hcpProfession: HcpProfession.other,
+          lastName: userTimLastName,
+          privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+          termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+        } as UserAccount,
+        status: UserInviteStatus.Accepted,
+        email: userTimEmail
+      }, {
+        userId: userHugoId,
+        role: TeamMemberRole.member,
+        profile: {
+          email: userHugoEmail,
+          firstName: userHugoFirstName,
+          fullName: userHugoFullName,
+          hcpProfession: HcpProfession.other,
+          lastName: userHugoLastName,
+          privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+          termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+        } as UserAccount,
+        status: UserInviteStatus.Pending,
+        email: userHugoEmail,
+        invitationId: 'fakeInvitationId'
+      }, {
+        userId: userYdrisId,
+        role: TeamMemberRole.member,
+        profile: {
+          email: userYdrisEmail,
+          firstName: userYdrisFirstName,
+          fullName: userYdrisFullName,
+          hcpProfession: HcpProfession.other,
+          lastName: userYdrisLastName,
+          privacyPolicy: { acceptanceTimestamp: '2021-05-22', isAccepted: true },
+          termsOfUse: { acceptanceTimestamp: '2021-05-22', isAccepted: true }
+        } as UserAccount,
+        status: UserInviteStatus.Accepted,
+        email: userYdrisEmail
+      }],
+    monitoringAlertsParameters
+  }
+}
+
 export const buildFiltersTeam = (): Team => {
   return {
     name: filtersTeamName,
@@ -334,7 +408,7 @@ export const anotherTeam: Team = {
 }
 
 export const buildAvailableTeams = (): Team[] => {
-  return [buildTeamOne(), buildTeamTwo(), buildTeamThree(), buildFiltersTeam(), buildPrivateTeam()]
+  return [buildTeamOne(), buildTeamTwo(), buildTeamThree(), buildTeamFour(), buildFiltersTeam(), buildPrivateTeam()]
 }
 
 export const mockTeamAPI = () => {

@@ -210,19 +210,18 @@ const testAddClinicianSuccess = async (isPatient: boolean) => {
   await userEvent.click(clinicianSelect)
 
   const clinicianOptions = within(screen.getByRole('listbox')).getAllByRole('option')
-  expect(clinicianOptions).toHaveLength(3)
+  expect(clinicianOptions).toHaveLength(2)
+
   // The options differ between HCP and patient as:
   // - The patient sees HCP from multiple teams
   // - The HCP only sees clinicians from their team (which doesn't include the Yourloops UI user)
   // but we add the "loggedInUser" (named Yann Blanc) in the mock for HCP tests
   if (isPatient) {
-    expect(clinicianOptions[0]).toHaveTextContent('Hugo Rodrigues')
-    expect(clinicianOptions[1]).toHaveTextContent('Ydris Rebibane')
-    expect(clinicianOptions[2]).toHaveTextContent('Yourloops UI 28.0 HCP 0')
+    expect(clinicianOptions[0]).toHaveTextContent('Ydris Rebibane')
+    expect(clinicianOptions[1]).toHaveTextContent('Yourloops UI 28.0 HCP 0')
   } else {
-    expect(clinicianOptions[0]).toHaveTextContent('Hugo Rodrigues')
-    expect(clinicianOptions[1]).toHaveTextContent('Yann Blanc')
-    expect(clinicianOptions[2]).toHaveTextContent('Ydris Rebibane')
+    expect(clinicianOptions[0]).toHaveTextContent('Yann Blanc')
+    expect(clinicianOptions[1]).toHaveTextContent('Ydris Rebibane')
   }
 
   const clinicianOption = within(screen.getByRole('listbox')).getByText('Ydris Rebibane')

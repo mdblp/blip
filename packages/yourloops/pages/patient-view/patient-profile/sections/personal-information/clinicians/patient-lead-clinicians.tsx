@@ -51,6 +51,7 @@ import Avatar from '@mui/material/Avatar'
 import { usePatientsContext } from '../../../../../../lib/patient/patients.provider'
 import SpinningLoader from '../../../../../../components/loaders/spinning-loader'
 import { usePatient } from '../../../../../../lib/patient/patient.provider'
+import AnalyticsApi, { ElementType } from '../../../../../../lib/analytics/analytics.api'
 
 interface PatientLeadCliniciansProps {
   patientId: string
@@ -98,6 +99,7 @@ export const PatientLeadClinicians: FC<PatientLeadCliniciansProps> = (props) => 
   const refreshInProgress = isPatient ? refreshInProgressPatient : refreshInProgressHcp
 
   const onClickAdd = (): void => {
+    AnalyticsApi.trackClick('clinicians-add', ElementType.Button)
     setShowAddDialog(true)
   }
 
