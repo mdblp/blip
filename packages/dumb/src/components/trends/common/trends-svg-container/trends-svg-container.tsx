@@ -71,6 +71,7 @@ interface TrendsSvgContainerProps {
   activeDays: WeekDaysFilter
   bgPrefs: BgPrefs
   cbgData: CbgDateTrace[]
+  dates: string[]
   onSelectDate: OnSelectDateFunction
   yScaleDomain: number[]
 }
