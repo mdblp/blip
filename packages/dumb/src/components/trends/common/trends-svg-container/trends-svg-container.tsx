@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -71,7 +71,6 @@ interface TrendsSvgContainerProps {
   activeDays: WeekDaysFilter
   bgPrefs: BgPrefs
   cbgData: CbgDateTrace[]
-  dates: string[]
   onSelectDate: OnSelectDateFunction
   yScaleDomain: number[]
 }

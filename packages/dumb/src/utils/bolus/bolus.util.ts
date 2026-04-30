@@ -56,7 +56,7 @@ export const getBolusType = (insulinEvent: Bolus | Wizard): BolusType => {
   return BolusType.Correction
 }
 
-export const getDelivered = (bolus: Bolus): number => {
+export const getDelivered = (bolus: Bolus | null): number => {
   if (!bolus?.normal || !inRange(bolus?.normal, Infinity)) {
     return Number.NaN
   }

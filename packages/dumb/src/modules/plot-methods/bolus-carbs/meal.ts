@@ -266,7 +266,7 @@ const handleEnterSelection = (
 
   // Draw the delivered bolus rectangle for wizards with bolus
   const bolusGroups = group.filter(isMealWithDelivered)
-  drawVerticalRectangle(bolusGroups, xPosition, (d: Wizard) => yScale(getDelivered(getBolusFromInsulinEvent(d)!)), bolusHeight, bolusWidth, helpers.getRectangleClasses, helpers.getBolusId)
+  drawVerticalRectangle(bolusGroups, xPosition, (d: Wizard) => yScale(getDelivered(getBolusFromInsulinEvent(d))), bolusHeight, bolusWidth, helpers.getRectangleClasses, helpers.getBolusId)
 
   // Draw undelivered portion
   const undeliveredGroups = group.filter(isMealWithUndelivered)
