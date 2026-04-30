@@ -25,14 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum ParameterMemoFilename {
-  AggressivenessHyperglycemia = 'aggressiveness-hyperglycemia',
-  AggressivenessMeal = 'aggressiveness-meal',
-  AggressivenessNormoglycemia = 'aggressiveness-normoglycemia',
-  AverageMeal = 'average-meal',
-  HyperglycemiaThreshold = 'hyperglycemia-threshold',
-  HypoglycemiaThreshold = 'hypoglycemiaggrea-threshold',
-  TargetGlucoseLevel = 'target-glucose-level',
-  TotalInsulinForDay = 'total-insulin-for-day',
-  Weight = 'weight'
+import * as d3 from 'd3'
+import MedicalDataService from 'medical-domain'
+
+export interface PlotOptions<T> {
+  xScale: d3.ScaleTime<number, number> | null
+  onElementHover: OnElementHoverFunction<T>
+  onElementOut: () => void
+  tidelineData: MedicalDataService
 }
+
+export type OnElementHoverFunction<T> = (data: { data: T; rect: DOMRect, class?: string }) => void

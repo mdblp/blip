@@ -25,14 +25,38 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum ParameterMemoFilename {
-  AggressivenessHyperglycemia = 'aggressiveness-hyperglycemia',
-  AggressivenessMeal = 'aggressiveness-meal',
-  AggressivenessNormoglycemia = 'aggressiveness-normoglycemia',
-  AverageMeal = 'average-meal',
-  HyperglycemiaThreshold = 'hyperglycemia-threshold',
-  HypoglycemiaThreshold = 'hypoglycemiaggrea-threshold',
-  TargetGlucoseLevel = 'target-glucose-level',
-  TotalInsulinForDay = 'total-insulin-for-day',
-  Weight = 'weight'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
+
+interface ChartFooterProps {
+  onClickRefresh: () => void
+  children?: JSX.Element,
+}
+
+export const ChartFooter: FC<ChartFooterProps> = (props) => {
+  const { children, onClickRefresh } = props
+  const { t } = useTranslation('main')
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginLeft: 5,
+        marginRight: '10px'
+      }}>
+      <Box>
+        <Button
+          data-testid="confirm-dialog-cancel-button"
+          variant="outlined"
+          onClick={onClickRefresh}
+        >
+          {t('Refresh')}
+        </Button>
+      </Box>
+      {children}
+    </Box>
+  )
 }

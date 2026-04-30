@@ -25,14 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum ParameterMemoFilename {
-  AggressivenessHyperglycemia = 'aggressiveness-hyperglycemia',
-  AggressivenessMeal = 'aggressiveness-meal',
-  AggressivenessNormoglycemia = 'aggressiveness-normoglycemia',
-  AverageMeal = 'average-meal',
-  HyperglycemiaThreshold = 'hyperglycemia-threshold',
-  HypoglycemiaThreshold = 'hypoglycemiaggrea-threshold',
-  TargetGlucoseLevel = 'target-glucose-level',
-  TotalInsulinForDay = 'total-insulin-for-day',
-  Weight = 'weight'
-}
+import * as d3 from 'd3'
+
+export type PlotSelection<T> = d3.Selection<SVGGElement, T, SVGElement, unknown>

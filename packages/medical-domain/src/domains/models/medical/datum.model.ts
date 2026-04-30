@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -44,9 +44,10 @@ import { AlarmEvent } from './datum/alarm-event.model';
 import { PumpSettings } from './datum/pump-settings.model'
 import { Basal } from './datum/basal.model'
 import { TimeZoneChange } from './datum/time-zone-change.model'
+import { NightMode } from './datum/night-mode.model'
 
 export type Datum = AlarmEvent | Basal | Bolus | Cbg | ConfidentialMode | DeviceParameterChange | Fill | Meal |
-Message | PhysicalActivity | PumpSettings | ReservoirChange | Smbg | Wizard |
+Message | NightMode | PhysicalActivity | PumpSettings | ReservoirChange | Smbg | Wizard |
 ZenMode | TimeZoneChange | WarmUp
 
 interface DatumProcessor<T> {

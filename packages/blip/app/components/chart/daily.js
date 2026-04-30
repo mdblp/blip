@@ -23,12 +23,12 @@ import ReactResizeDetector from 'react-resize-detector'
 import i18next from 'i18next'
 import { chartDailyFactory } from 'tideline'
 import { TimeService } from 'medical-domain'
-import Footer from './footer'
 import {
   AlarmEventTooltip,
   BasalTooltip,
   BloodGlucoseTooltip,
   BolusTooltip,
+  ChartFooter,
   ConfidentialTooltip,
   EatingShortlyTooltip,
   EventsSuperpositionPopover,
@@ -52,7 +52,7 @@ import AnalyticsApi, { ElementType } from 'yourloops/lib/analytics/analytics.api
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
- * @typedef { import('../../index').DatePicker } DatePicker
+ * @typedef { import('../../index').DatePicker } DatePickertrends
  */
 
 class DailyChart extends React.Component {
@@ -449,7 +449,7 @@ class Daily extends React.Component {
                 />
               </div>
               <Box marginBlock={2}>
-                <Footer onClickRefresh={this.props.onClickRefresh} />
+                <ChartFooter onClickRefresh={this.props.onClickRefresh} />
               </Box>
             </div>
             <div className="container-box-inner patient-data-sidebar">

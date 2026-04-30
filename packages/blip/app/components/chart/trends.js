@@ -14,25 +14,24 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  * == BSD2 LICENSE ==
  */
-import _ from 'lodash'
-import bows from 'bows'
-import moment from 'moment-timezone'
-import i18next from 'i18next'
-import React from 'react'
-import PropTypes from 'prop-types'
-import { utils as vizUtils } from 'tidepool-viz'
-import { TimeService } from 'medical-domain'
-import SubNav, { weekDays } from './trendssubnav'
-import Footer from './footer'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
-import { CbgDateTraceLabel, FocusedRangeLabels, RangeSelect, TrendsContainer, TrendsProvider } from 'dumb'
-import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
-import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
-import metrics from 'yourloops/lib/metrics'
+import bows from 'bows'
+import { CbgDateTraceLabel, ChartFooter, FocusedRangeLabels, RangeSelect, TrendsContainer, TrendsProvider } from 'dumb'
+import i18next from 'i18next'
+import _ from 'lodash'
+import { TimeService } from 'medical-domain'
+import moment from 'moment-timezone'
+import React from 'react'
+import PropTypes from 'prop-types'
+import { utils as vizUtils } from 'tidepool-viz'
 import { CarbsAndBolusAverage } from 'yourloops/components/carbs-and-bolus/carbs-and-bolus-average'
+import { TrendsDatePicker } from 'yourloops/components/date-pickers/trends-date-picker'
+import SpinningLoader from 'yourloops/components/loaders/spinning-loader'
+import { PatientStatistics } from 'yourloops/components/statistics/patient-statistics'
+import metrics from 'yourloops/lib/metrics'
+import SubNav, { weekDays } from './trendssubnav'
 import AnalyticsApi, { ElementType } from 'yourloops/lib/analytics/analytics.api'
 
 /**
@@ -593,12 +592,12 @@ class Trends extends React.Component {
                   <FocusedRangeLabels bgUnit={this.props.bgPrefs.bgUnits} />
                 </div>
                 <Box sx={{ marginBottom: 2 }}>
-                  <Footer onClickRefresh={(e) => {
+                  <ChartFooter onClickRefresh={(e) => {
                     this.props.onClickRefresh(e)
                     AnalyticsApi.trackClick('trends-refresh', ElementType.Button)
                   }}>
                     <RangeSelect trackClickFunc={AnalyticsApi.trackClick} />
-                  </Footer>
+                  </ChartFooter>
                 </Box>
                 <CarbsAndBolusAverage
                   medicalData={this.props.tidelineData.medicalData}

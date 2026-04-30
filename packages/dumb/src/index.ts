@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,6 +35,9 @@ export { SafetyBasalItem } from './models/safety-basal-item.model'
 export { PrintView } from './modules/print/print-view/print-view'
 export { SettingsPrintView } from './modules/print/settings-print-view/settings-print-view'
 
+// Controls
+export { ChartFooter } from './components/controls/chart-footer/chart-footer'
+
 // Stats
 export {
   AverageDailyDoseStatMemoized as AverageDailyDoseStat
@@ -59,6 +62,7 @@ export {
 export {
   TimeInRangeDT1Chart
 } from './components/stats/time-in-range/time-in-range-chart/time-in-range-dt1-chart'
+
 // Tooltips
 export { AlarmEventTooltip } from './components/tooltips/alarm-event-tooltip/alarm-event-tooltip'
 export { BasalTooltip } from './components/tooltips/basal-tooltip/basal-tooltip'
@@ -83,6 +87,26 @@ export { TooltipColor } from './models/enums/tooltip-color.enum'
 export { TooltipSide } from './models/enums/tooltip-side.enum'
 export { WarmUpTooltip } from './components/tooltips/warm-up-tooltip/warm-up-tooltip'
 export { ZenModeTooltip } from './components/tooltips/zen-mode-tooltip/zen-mode-tooltip'
+
+// Daily plot methods
+export { plotAlarmEvent } from './modules/plot-methods/events/alarm-event'
+export { plotBasal } from './modules/plot-methods/basal-rates/basal-rate'
+export { plotBolus } from './modules/plot-methods/bolus-carbs/bolus'
+export { plotCbg } from './modules/plot-methods/glucose/cbg'
+export { plotConfidentialMode } from './modules/plot-methods/common/confidential-mode'
+export { plotDeviceParameterChange } from './modules/plot-methods/events/device-parameter-change'
+export { plotEatingShortly } from './modules/plot-methods/bolus-carbs/eating-shortly'
+export { plotEventSuperposition } from './modules/plot-methods/events/event-superposition'
+export { plotIob } from './modules/plot-methods/active-insulin/iob'
+export { plotMeal } from './modules/plot-methods/bolus-carbs/meal'
+export { plotNightMode } from './modules/plot-methods/events/night-mode'
+export { plotPhysicalActivity } from './modules/plot-methods/events/physical-activity'
+export { plotRescueCarbs } from './modules/plot-methods/bolus-carbs/rescue-carbs'
+export { plotReservoirChange } from './modules/plot-methods/events/reservoir-change'
+export { plotSmbg } from './modules/plot-methods/glucose/smbg'
+export { plotTimeZoneChange } from './modules/plot-methods/header/timezone-change'
+export { plotWarmUp } from './modules/plot-methods/events/warm-up'
+export { plotZenMode } from './modules/plot-methods/events/zen-mode'
 
 // Trends
 export { CbgDateTraceLabel } from './components/trends/cbg/cbg-date-trace/cbg-date-trace-label'

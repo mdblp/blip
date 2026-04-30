@@ -25,14 +25,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export enum ParameterMemoFilename {
-  AggressivenessHyperglycemia = 'aggressiveness-hyperglycemia',
-  AggressivenessMeal = 'aggressiveness-meal',
-  AggressivenessNormoglycemia = 'aggressiveness-normoglycemia',
-  AverageMeal = 'average-meal',
-  HyperglycemiaThreshold = 'hyperglycemia-threshold',
-  HypoglycemiaThreshold = 'hypoglycemiaggrea-threshold',
-  TargetGlucoseLevel = 'target-glucose-level',
-  TotalInsulinForDay = 'total-insulin-for-day',
-  Weight = 'weight'
+export enum DailyPlotElement {
+  AlarmEvent = 'alarmEvent',
+  Basal = 'basal',
+  Bolus = 'bolus',
+  Cbg = 'cbg',
+  ConfidentialMode = 'confidential',
+  DeviceParameterChange = 'param',
+  EatingShortly = 'eatingShortly',
+  EventSuperposition = 'eventSuperposition',
+  Iob = 'iob',
+  Meal = 'meal',
+  NightMode = 'nightMode',
+  PhysicalActivity = 'pa',
+  RescueCarbs = 'carb',
+  ReservoirChange = 'reservoir',
+  Smbg = 'smbg',
+  TimezoneChange = 'timechange',
+  WarmUp = 'warmup',
+  Wizard = 'wizard',
+  ZenMode = 'event'
 }
