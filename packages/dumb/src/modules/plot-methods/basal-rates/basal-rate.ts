@@ -98,6 +98,110 @@ function getBasalPathGroups(basals: Basal[]): Basal[][] {
 }
 
 /**
+ * Helper: Get and filter basal data
+ */
+function getFilteredBasalData(pool: Pool<Basal>, options: BasalOptions): Basal[] {
+  const medicalData = options.tidelineData.medicalData
+  const basalValues = pool.filterDataForRender(medicalData.basal)
+  return _.filter(basalValues, (d) => d.type === 'basal' && d.duration > 0)
+}
+
+/**
+ * Helper: Create basal segment groups
+ */
+function createBasalSegmentGroups(
+  selection: d3.Selection<SVGGElement, unknown, null, undefined>,
+  currentData: Basal[],
+  basal: BasalPlotFunction
+): void {
+  const basalSegments = selection
+    .selectAll<SVGGElement, Basal>('.d3-basal-group')
+    .data(currentData, (d: Basal) => d.id)
+
+  basalSegments.exit().remove()
+
+  const basalSegmentGroups = basalSegments.enter()
+    .append('g')
+    .classed('d3-basal-group', true)
+    .attr('id', idGen.groupId)
+    .attr('data-testid', (d: Basal) => idGen.testId(d))
+
+  const nonZero = basalSegmentGroups.filter((d: Basal) => d.rate > 0)
+  basal.addRectToPool(nonZero)
+  basal.addRectToPool(basalSegmentGroups, true)
+}
+
+/**
+ * Helper: Create basal connecting paths
+ */
+function createBasalPaths(
+  selection: PlotSelection<Basal>,
+  currentData: Basal[],
+  basal: BasalPlotFunction
+): void {
+  const basalPathGroups = getBasalPathGroups(currentData)
+
+  const basalPathsGroup = selection
+    .selectAll<SVGGElement, string>('.d3-basal-path-group')
+    .data(['d3-basal-path-group'])
+    .join('g')
+    .attr('class', 'd3-basal-path-group')
+
+  basalPathGroups.forEach((pathData) => {
+    const id = pathData[0].id
+    const pathType = getBasalPathGroupType(pathData[0])
+    const pathClass = `d3-basal d3-path-basal d3-path-basal-${pathType}-${id}`
+
+    const path = basalPathsGroup
+      .selectAll<SVGPathElement, string>(`.${pathClass.replaceAll(' ', '.')}`)
+      .data([pathClass])
+      .join('path')
+      .attr('class', (d: string) => d)
+
+    basal.updatePath(path, pathData)
+  })
+}
+
+/**
+ * Helper: Calculate opacity for mouseout
+ */
+function getMouseOutOpacity(d: Basal): number {
+  if (d.deliveryType === BasalDeliveryType.Temporary && d.rate > 0) {
+    return DEFAULT_OPACITY - DEFAULT_OPACITY_DELTA
+  }
+  return DEFAULT_OPACITY
+}
+
+/**
+ * Helper: Setup event handlers for basal groups
+ */
+function setupBasalEventHandlers(
+  selection: PlotSelection<Basal>,
+  options: BasalOptions
+): void {
+  selection.selectAll<SVGGElement, Basal>(`.d3-basal-group`)
+    .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: Basal) {
+      d3.select(this).selectAll('.d3-basal.d3-rect-basal')
+        .attr('opacity', DEFAULT_OPACITY + DEFAULT_OPACITY_DELTA)
+
+      if (options.onElementHover) {
+        options.onElementHover({
+          data: d,
+          rect: getTooltipContainer(this)
+        })
+      }
+    })
+    .on('mouseout', function (this: SVGGElement, _event: MouseEvent, d: Basal) {
+      d3.select(this).selectAll('.d3-basal.d3-rect-basal')
+        .attr('opacity', getMouseOutOpacity(d))
+
+      if (options.onElementOut) {
+        options.onElementOut()
+      }
+    })
+}
+
+/**
  * Plot basal insulin data in the diabetes management timeline
  *
  * Basal insulin is background insulin delivered continuously throughout the day to maintain
@@ -141,7 +245,6 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
   const options = _.defaults(opts, defaults) as BasalOptions
 
   const basal: BasalPlotFunction = function (selection: PlotSelection<Basal>): void {
-    // Initialize xScale from pool
     options.xScale = pool.xScale().copy()
 
     if (!options.xScale) {
@@ -149,96 +252,52 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
     }
 
     selection.each(function (this: SVGGElement) {
-      // Step 1: Get filtered data from pool
-      const medicalData = options.tidelineData.medicalData
-      const basalValues = pool.filterDataForRender(medicalData.basal)
-
-      // Step 2: Apply domain-specific filtering - only valid basal segments with duration > 0
-      const currentData = _.filter(basalValues, (d) => d.type === 'basal' && d.duration > 0)
+      const currentData = getFilteredBasalData(pool, options)
+      const thisSelection = d3.select(this)
 
       // Clean up old path groups
-      d3.select(this).selectAll('g.d3-basal-path-group').remove()
+      thisSelection.selectAll('g.d3-basal-path-group').remove()
 
-      // Step 3: Early exit if no data
+      // Early exit if no data
       if (currentData.length < 1) {
-        d3.select(this).selectAll('g.d3-basal-group').remove()
+        thisSelection.selectAll('g.d3-basal-group').remove()
         return
       }
 
-      // Step 4: Data join with enter/update/exit pattern for basal segments
-      const basalSegments = d3.select(this)
-        .selectAll<SVGGElement, Basal>('.d3-basal-group')
-        .data(currentData, (d: Basal) => d.id)
+      // Create basal segment groups with rectangles
+      createBasalSegmentGroups(thisSelection, currentData, basal)
 
-      basalSegments.exit().remove()
+      // Create connecting paths
+      createBasalPaths(selection, currentData, basal)
 
-      // Create new basal segment groups
-      const basalSegmentGroups: d3.Selection<SVGGElement, Basal, SVGGElement, unknown> = basalSegments.enter()
-        .append('g')
-        .classed('d3-basal-group', true)
-        .attr('id', idGen.groupId)
-        .attr('data-testid', (d: Basal) => idGen.testId(d))
-
-      // Add visible rectangles for non-zero rate segments
-      const nonZero = basalSegmentGroups.filter((d: Basal) => d.rate > 0)
-      basal.addRectToPool(nonZero)
-
-      // Add invisible hover target rectangles for all segments
-      basal.addRectToPool(basalSegmentGroups, true)
-
-      // Step 5: Create connecting paths grouped by delivery type
-      const basalPathGroups = getBasalPathGroups(currentData)
-
-      const basalPathsGroup = selection
-        .selectAll<SVGGElement, string>('.d3-basal-path-group')
-        .data(['d3-basal-path-group'])
-        .join('g')
-        .attr('class', 'd3-basal-path-group')
-
-      // Create paths for each delivery type group
-      _.forEach(basalPathGroups, (pathData) => {
-        const id = pathData[0].id
-        const pathType = getBasalPathGroupType(pathData[0])
-        const pathClass = `d3-basal d3-path-basal d3-path-basal-${pathType}-${id}`
-
-        const path = basalPathsGroup
-          .selectAll<SVGPathElement, string>(`.${pathClass.replace(/ /g, '.')}`)
-          .data([pathClass])
-          .join('path')
-          .attr('class', (d: string) => d)
-
-        basal.updatePath(path, pathData)
-      })
-
-      // Step 6: Set up event handlers
-      selection.selectAll<SVGGElement, Basal>(`.d3-basal-group`)
-        .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: Basal) {
-          // Increase opacity on hover
-          d3.select(this).selectAll('.d3-basal.d3-rect-basal')
-            .attr('opacity', DEFAULT_OPACITY + DEFAULT_OPACITY_DELTA)
-
-          if (options.onElementHover) {
-            options.onElementHover({
-              data: d,
-              rect: getTooltipContainer(this)
-            })
-          }
-        })
-        .on('mouseout', function (this: SVGGElement, _event: MouseEvent, d: Basal) {
-          // Restore default opacity
-          if (d.deliveryType === BasalDeliveryType.Temporary && d.rate > 0) {
-            d3.select(this).selectAll('.d3-basal.d3-rect-basal')
-              .attr('opacity', DEFAULT_OPACITY - DEFAULT_OPACITY_DELTA)
-          } else {
-            d3.select(this).selectAll('.d3-basal.d3-rect-basal')
-              .attr('opacity', DEFAULT_OPACITY)
-          }
-
-          if (options.onElementOut) {
-            options.onElementOut()
-          }
-        })
+      // Setup event handlers
+      setupBasalEventHandlers(selection, options)
     })
+  }
+
+  /**
+   * Helper: Calculate opacity for rectangle
+   */
+  const getRectOpacity = (d: Basal, invisible: boolean): number | null => {
+    if (invisible) {
+      return null
+    }
+
+    if (d.deliveryType === BasalDeliveryType.Temporary && d.rate > 0) {
+      return DEFAULT_OPACITY - DEFAULT_OPACITY_DELTA
+    }
+
+    return DEFAULT_OPACITY
+  }
+
+  /**
+   * Helper: Get CSS class for rectangle
+   */
+  const getRectClass = (d: Basal, invisible: boolean): string => {
+    if (invisible) {
+      return 'd3-basal d3-basal-invisible'
+    }
+    return `d3-basal d3-rect-basal d3-basal-${d.deliveryType}`
   }
 
   /**
@@ -259,22 +318,10 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
       .attr('id', (d: Basal) => idGen.elementId(d, invisible ? 'invisible' : 'visible'))
       .attr('x', basal.xPosition)
       .attr('y', yPosFn)
-      .attr('opacity', (d: Basal) => {
-        if (invisible) {
-          return null
-        }
-        if (d.deliveryType === BasalDeliveryType.Temporary && d.rate > 0) {
-          return DEFAULT_OPACITY - DEFAULT_OPACITY_DELTA
-        }
-        return DEFAULT_OPACITY
-      })
+      .attr('opacity', (d: Basal) => getRectOpacity(d, invisible))
       .attr('width', basal.width)
       .attr('height', heightFn)
-      .attr('class', (d: Basal) =>
-        invisible
-          ? 'd3-basal d3-basal-invisible'
-          : `d3-basal d3-rect-basal d3-basal-${d.deliveryType}`
-      )
+      .attr('class', (d: Basal) => getRectClass(d, invisible))
   }
 
   /**
@@ -296,6 +343,35 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
   }
 
   /**
+   * Helper: Generate path segment command for a data point
+   */
+  const generatePathSegment = (datum: Basal, index: number, data: Basal[]): string => {
+    const stringCoords = (d: Basal): string => {
+      return basal.xPosition(d) + ',' + basal.pathYPosition(d) + ' '
+    }
+
+    let segment = ''
+
+    // Handle first point or non-contiguous segments
+    if (index === 0) {
+      segment += 'M' + stringCoords(datum)
+    } else {
+      const isContiguous = datum.normalTime === data[index - 1].normalEnd
+
+      if (isContiguous) {
+        segment += 'V' + basal.pathYPosition(datum) + ' '
+      } else {
+        segment += 'M' + stringCoords(datum)
+      }
+    }
+
+    // Always add horizontal line for the segment
+    segment += 'H' + basal.segmentEndXPosition(datum) + ' '
+
+    return segment
+  }
+
+  /**
    * Generate SVG path data string
    * @param data - The data to visualize
    * @returns The SVG path data string
@@ -303,27 +379,12 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
   basal.pathData = (data: Basal[]): string => {
     options.xScale = pool.xScale().copy()
 
-    function stringCoords(datum: Basal): string {
-      return basal.xPosition(datum) + ',' + basal.pathYPosition(datum) + ' '
-    }
+    let pathString = ''
+    data.forEach((datum, index) => {
+      pathString += generatePathSegment(datum, index, data)
+    })
 
-    let d = ''
-    for (let i = 0; i < data.length; ++i) {
-      if (i === 0) {
-        // start with a moveto command
-        d += 'M' + stringCoords(data[i])
-      } else if (data[i].normalTime === data[i - 1].normalEnd) {
-        // if segment is contiguous with previous, draw a vertical line connecting their values
-        d += 'V' + basal.pathYPosition(data[i]) + ' '
-      }
-      else if (data[i].normalTime !== data[i - 1].normalEnd) {
-        // if segment is not contiguous with previous, skip to beginning of segment
-        d += 'M' + stringCoords(data[i])
-      }
-      // always add a horizontal line corresponding to current segment
-      d += 'H' + basal.segmentEndXPosition(data[i]) + ' '
-    }
-    return d
+    return pathString
   }
 
   /**
@@ -408,4 +469,3 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
 
   return basal
 }
-

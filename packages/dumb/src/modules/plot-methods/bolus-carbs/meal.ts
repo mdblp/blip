@@ -65,7 +65,7 @@ type MealOptions = PlotOptions<Wizard> & {
 }
 
 const defaults: Partial<MealOptions> = {
-  xScale: null,
+  xScale: null
 }
 
 /**
@@ -119,6 +119,312 @@ const getMaxValue = (wizard: Wizard): number => {
 }
 
 /**
+ * Helper: Sort meals by size for rendering order
+ */
+const sortMealsBySize = (a: Wizard, b: Wizard): number => {
+  return d3.descending(getMaxValue(a), getMaxValue(b))
+}
+
+/**
+ * Helper: Draw underride triangles for a group
+ */
+const drawUnderrideTriangles = (
+  group: d3.Selection<SVGGElement, Wizard, SVGGElement, unknown>,
+  xPosition: (d: Wizard) => number,
+  yScale: d3.ScaleContinuousNumeric<number, number>,
+  underrideTriangle: (x: number, y: number) => string
+): void => {
+  group.append('polygon')
+    .attr('x', xPosition)
+    .attr('y', (d: Wizard) => {
+      const bolus = getBolusFromInsulinEvent(d)
+      if (!bolus) return 0
+      return yScale(getProgrammed(bolus) ?? 0)
+    })
+    .attr('points', (d: Wizard) => {
+      const x = xPosition(d)
+      const bolus = getBolusFromInsulinEvent(d)
+      if (!bolus) return ''
+      const y = yScale(getProgrammed(bolus) ?? 0)
+      return underrideTriangle(x, y)
+    })
+    .attr('id', (d: Wizard) => `wizard_underride_polygon_${d.id}`)
+    .attr('class', 'd3-polygon-ride d3-bolus')
+}
+
+/**
+ * Helper: Draw override triangles for a group
+ */
+const drawOverrideTriangles = (
+  group: d3.Selection<SVGGElement, Wizard, SVGGElement, unknown>,
+  xPosition: (d: Wizard) => number,
+  yScale: d3.ScaleContinuousNumeric<number, number>,
+  overrideTriangle: (x: number, y: number) => string
+): void => {
+  group.append('polygon')
+    .attr('x', xPosition)
+    .attr('y', (d: Wizard) => {
+      const recommended = getRecommended(d)
+      return yScale(recommended) - MARKER_HEIGHT
+    })
+    .attr('points', (d: Wizard) => {
+      const x = xPosition(d)
+      const recommended = getRecommended(d)
+      const y = yScale(recommended) - MARKER_HEIGHT
+      return overrideTriangle(x, y)
+    })
+    .attr('id', (d: Wizard) => `wizard_override_polygon_${d.id}`)
+    .attr('class', 'd3-polygon-ride d3-bolus')
+}
+
+/**
+ * Helper: Get helper functions for meal rendering
+ */
+const createMealHelpers = (
+  yScale: d3.ScaleContinuousNumeric<number, number>
+) => {
+  const getCarbId = (d: Wizard) => `carbs_circle_${d.id}`
+  const getCarbText = (d: Wizard) => d.carbInput.toString()
+  const getCarbTextId = (d: Wizard) => `carbs_text_${d.id}`
+  const getBolusId = (d: Wizard) => `bolus_${d.id}`
+  const getRectangleClasses = (d: Wizard) => getBolusClass(d, 'd3-bolus d3-rect-bolus')
+
+  const getUndeliveredYPosition = (d: Wizard) => {
+    const bolus = getBolusFromInsulinEvent(d)
+    if (!bolus) return 0
+    return yScale(getProgrammed(bolus) ?? 0)
+  }
+
+  const getUndeliveredHeight = (d: Wizard) => {
+    const bolus = getBolusFromInsulinEvent(d)
+    if (!bolus) return 0
+    const delivered = getDelivered(bolus)
+    const programmed = getProgrammed(bolus) ?? 0
+    return yScale(delivered) - yScale(programmed)
+  }
+
+  const getUndeliveredId = (d: Wizard) => `wizard_undelivered_${d.id}`
+
+  return {
+    getCarbId,
+    getCarbText,
+    getCarbTextId,
+    getBolusId,
+    getRectangleClasses,
+    getUndeliveredYPosition,
+    getUndeliveredHeight,
+    getUndeliveredId
+  }
+}
+
+/**
+ * Parameters for enter selection handler
+ */
+type EnterSelectionParams = {
+  enter: d3.Selection<d3.EnterElement, Wizard, SVGGElement, unknown>
+  xPosition: (d: Wizard) => number
+  carbXPos: (d: Wizard) => number
+  carbYPos: number
+  yScale: d3.ScaleContinuousNumeric<number, number>
+  bolusWidth: (d: Wizard) => number
+  bolusHeight: (d: Wizard) => number
+  helpers: ReturnType<typeof createMealHelpers>
+  underrideTriangle: (x: number, y: number) => string
+  overrideTriangle: (x: number, y: number) => string
+}
+
+/**
+ * Helper: Handle enter selection for new meal groups
+ */
+const handleEnterSelection = (
+  params: EnterSelectionParams
+): d3.Selection<SVGGElement, Wizard, SVGGElement, unknown> => {
+  const {
+    enter,
+    xPosition,
+    carbXPos,
+    carbYPos,
+    yScale,
+    bolusWidth,
+    bolusHeight,
+    helpers,
+    underrideTriangle,
+    overrideTriangle
+  } = params
+
+  const group = enter
+    .append('g')
+    .classed('d3-wizard-group', true)
+    .attr('id', (d: Wizard) => `wizard_group_${d.id}`)
+    .attr('data-testid', (d: Wizard) => `wizard_group_${d.id}`)
+    .sort(sortMealsBySize)
+
+  // Draw carbs for wizards with carb input
+  const carbGroups = group.filter((d: Wizard) => d.carbInput > 0)
+  drawCircle(carbGroups, carbXPos, carbYPos, 'd3-circle-carbs d3-carbs', helpers.getCarbId)
+  drawText(carbGroups, helpers.getCarbText, carbXPos, carbYPos, 'd3-carbs-text d3-carbs-text-meal', helpers.getCarbTextId)
+
+  // Draw the delivered bolus rectangle for wizards with bolus
+  const bolusGroups = group.filter(isMealWithDelivered)
+  drawVerticalRectangle(bolusGroups, xPosition, (d: Wizard) => yScale(getDelivered(getBolusFromInsulinEvent(d)!)), bolusHeight, bolusWidth, helpers.getRectangleClasses, helpers.getBolusId)
+
+  // Draw undelivered portion
+  const undeliveredGroups = group.filter(isMealWithUndelivered)
+  drawVerticalRectangle(undeliveredGroups, xPosition, helpers.getUndeliveredYPosition, helpers.getUndeliveredHeight, bolusWidth, 'd3-rect-undelivered d3-bolus', helpers.getUndeliveredId)
+
+  // Draw underride and override triangles
+  drawUnderrideTriangles(group.filter(isMealWithUnderride), xPosition, yScale, underrideTriangle)
+  drawOverrideTriangles(group.filter(isMealWithOverride), xPosition, yScale, overrideTriangle)
+
+  return group
+}
+
+/**
+ * Helper: Calculate triangle points for update
+ */
+const calculateTrianglePoints = (
+  d: Wizard,
+  xPosition: (d: Wizard) => number,
+  yScale: d3.ScaleContinuousNumeric<number, number>,
+  underrideTriangle: (x: number, y: number) => string,
+  overrideTriangle: (x: number, y: number) => string
+): string => {
+  const x = xPosition(d)
+  const bolus = getBolusFromInsulinEvent(d)
+  if (!bolus) return ''
+
+  const recommended = getRecommended(d)
+  const programmed = getProgrammed(bolus) ?? 0
+
+  if (programmed < recommended) {
+    const y = yScale(programmed)
+    return underrideTriangle(x, y)
+  } else {
+    const y = yScale(recommended) - MARKER_HEIGHT
+    return overrideTriangle(x, y)
+  }
+}
+
+/**
+ * Parameters for update selection handler
+ */
+type UpdateSelectionParams = {
+  update: d3.Selection<SVGGElement, Wizard, SVGGElement, unknown>
+  xPosition: (d: Wizard) => number
+  carbXPos: (d: Wizard) => number
+  carbYPos: number
+  carbYScale: number
+  yScale: d3.ScaleContinuousNumeric<number, number>
+  bolusWidth: (d: Wizard) => number
+  bolusHeight: (d: Wizard) => number
+  underrideTriangle: (x: number, y: number) => string
+  overrideTriangle: (x: number, y: number) => string
+}
+
+/**
+ * Helper: Handle update selection for existing meal groups
+ */
+const handleUpdateSelection = (
+  params: UpdateSelectionParams
+): d3.Selection<SVGGElement, Wizard, SVGGElement, unknown> => {
+  const {
+    update,
+    xPosition,
+    carbXPos,
+    carbYPos,
+    carbYScale,
+    yScale,
+    bolusWidth,
+    bolusHeight,
+    underrideTriangle,
+    overrideTriangle
+  } = params
+
+  update.sort(sortMealsBySize)
+
+  // Update carbs
+  update
+    .select('circle.d3-circle-carbs')
+    .attr('cx', carbXPos)
+    .attr('cy', carbYPos)
+    .attr('r', carbYScale)
+
+  update
+    .select('text.d3-carbs-text')
+    .text((d: Wizard) => d.carbInput)
+    .attr('x', carbXPos)
+    .attr('y', carbYPos)
+
+  // Update bolus rectangles
+  update
+    .select('rect.d3-rect-bolus')
+    .attr('x', xPosition)
+    .attr('y', (d: Wizard) => {
+      const bolus = getBolusFromInsulinEvent(d)
+      if (!bolus) return 0
+      return yScale(getDelivered(bolus))
+    })
+    .attr('width', bolusWidth)
+    .attr('height', bolusHeight)
+    .attr('class', (d: Wizard) => getBolusClass(d, 'd3-bolus d3-rect-bolus'))
+
+  // Update undelivered rectangles
+  update
+    .select('rect.d3-rect-undelivered')
+    .attr('x', xPosition)
+    .attr('y', (d: Wizard) => {
+      const bolus = getBolusFromInsulinEvent(d)
+      if (!bolus) return 0
+      return yScale(getProgrammed(bolus) ?? 0)
+    })
+    .attr('width', bolusWidth)
+    .attr('height', (d: Wizard) => {
+      const bolus = getBolusFromInsulinEvent(d)
+      if (!bolus) return 0
+      const delivered = getDelivered(bolus)
+      const programmed = getProgrammed(bolus) ?? 0
+      return yScale(delivered) - yScale(programmed)
+    })
+
+  // Update triangles
+  update
+    .select('polygon.d3-polygon-ride')
+    .attr('points', (d: Wizard) =>
+      calculateTrianglePoints(d, xPosition, yScale, underrideTriangle, overrideTriangle)
+    )
+
+  return update
+}
+
+/**
+ * Helper: Setup event handlers for meal groups
+ */
+const setupMealEventHandlers = (
+  mealGroup: d3.Selection<SVGGElement, Wizard, SVGGElement, unknown>,
+  pool: Pool<Wizard>,
+  options: MealOptions
+): void => {
+  const highlight = pool.highlight('.d3-wizard-group, .d3-bolus-group')
+
+  mealGroup
+    .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: Wizard) {
+      highlight.on(d3.select(this))
+      if (options.onElementHover) {
+        options.onElementHover({
+          data: d,
+          rect: getTooltipContainer(this)
+        })
+      }
+    })
+    .on('mouseout', function (this: SVGGElement) {
+      highlight.off()
+      if (options.onElementOut) {
+        options.onElementOut()
+      }
+    })
+}
+
+/**
  * Plot wizard/meal data (boluses with carb input and recommendations)
  * @param pool - The pool to render into
  * @param opts - Configuration options
@@ -140,13 +446,6 @@ export const plotMeal = (
     return options.xScale(d.epoch) - HALF_BOLUS_WIDTH
   }
 
-  const yPosition = (d: Wizard): number => {
-    const bolus = getBolusFromInsulinEvent(d)
-    if (!bolus) {
-      return 0
-    }
-    return yScale(getDelivered(bolus))
-  }
 
   const bolusWidth = (d: Wizard): number => {
     const bolusType = getBolusType(d)
@@ -177,15 +476,15 @@ export const plotMeal = (
   const triangleMiddle = (x: number): number => x + HALF_BOLUS_WIDTH
 
   const underrideTriangle = (x: number, y: number): string => {
-    return `${triangleLeft(x)},${y + MARKER_HEIGHT/2} ` +
-      `${triangleMiddle(x)},${y + MARKER_HEIGHT/2 + TRIANGLE_HEIGHT} ` +
-      `${triangleRight(x)},${y + MARKER_HEIGHT/2}`
+    return `${triangleLeft(x)},${y + MARKER_HEIGHT / 2} ` +
+      `${triangleMiddle(x)},${y + MARKER_HEIGHT / 2 + TRIANGLE_HEIGHT} ` +
+      `${triangleRight(x)},${y + MARKER_HEIGHT / 2}`
   }
 
   const overrideTriangle = (x: number, y: number): string => {
-    return `${triangleLeft(x)},${y + MARKER_HEIGHT/2} ` +
-      `${triangleMiddle(x)},${y + MARKER_HEIGHT/2 - TRIANGLE_HEIGHT} ` +
-      `${triangleRight(x)},${y + MARKER_HEIGHT/2}`
+    return `${triangleLeft(x)},${y + MARKER_HEIGHT / 2} ` +
+      `${triangleMiddle(x)},${y + MARKER_HEIGHT / 2 - TRIANGLE_HEIGHT} ` +
+      `${triangleRight(x)},${y + MARKER_HEIGHT / 2}`
   }
 
   return (selection: PlotSelection<Wizard>): void => {
@@ -195,27 +494,9 @@ export const plotMeal = (
       throw new Error('xScale is not initialized')
     }
 
-    const getCarbId = (d: Wizard) => `carbs_circle_${d.id}`
-    const getCarbText = (d: Wizard) => d.carbInput.toString()
-    const getCarbTextId = (d: Wizard) => `carbs_text_${d.id}`
-    const getBolusId = (d: Wizard) => `bolus_${d.id}`
-    const getRectangleClasses = (d: Wizard) => getBolusClass(d, 'd3-bolus d3-rect-bolus')
-    const getUndeliveredYPosition = (d: Wizard) => {
-      const bolus = getBolusFromInsulinEvent(d)
-      if (!bolus) return 0
-      return yScale(getProgrammed(bolus) ?? 0)
-    }
-    const getUndeliveredHeight = (d: Wizard) => {
-      const bolus = getBolusFromInsulinEvent(d)
-      if (!bolus) return 0
-      const delivered = getDelivered(bolus)
-      const programmed = getProgrammed(bolus) ?? 0
-      return yScale(delivered) - yScale(programmed)
-    }
-    const getUndeliveredId = (d: Wizard) => `wizard_undelivered_${d.id}`
+    const helpers = createMealHelpers(yScale)
 
     selection.each(function (this: SVGGElement) {
-      // Get the data bound to this element
       const currentData = d3.select(this).datum() as Wizard[]
 
       if (currentData.length < 1) {
@@ -228,162 +509,37 @@ export const plotMeal = (
         .selectAll<SVGGElement, Wizard>('g.d3-wizard-group')
         .data(currentData, (d: Wizard) => d.id)
 
-      // Using join pattern for enter/update/exit
+      // Using join pattern for enter/update/exit with extracted handlers
       const mealGroup = allMeals.join(
-        enter => {
-          const group = enter
-            .append('g')
-            .classed('d3-wizard-group', true)
-            .attr('id', (d: Wizard) => `wizard_group_${d.id}`)
-            .attr('data-testid', (d: Wizard) => `wizard_group_${d.id}`)
-            .sort((a: Wizard, b: Wizard) => {
-              // Sort by size so smaller boluses are drawn last
-              return d3.descending(getMaxValue(a), getMaxValue(b))
-            })
-
-          // Draw carbs for wizards with carb input
-          const carbGroups = group.filter((d: Wizard) => d.carbInput > 0)
-          drawCircle(carbGroups, carbXPos, carbYPos, 'd3-circle-carbs d3-carbs', getCarbId)
-          drawText(carbGroups, getCarbText, carbXPos, carbYPos, 'd3-carbs-text d3-carbs-text-meal', getCarbTextId)
-
-          // Draw the delivered bolus rectangle for wizards with bolus
-          const bolusGroups = group.filter(isMealWithDelivered)
-          drawVerticalRectangle(bolusGroups, xPosition, yPosition, bolusHeight, bolusWidth, getRectangleClasses, getBolusId)
-
-          // Draw undelivered portion
-          const undeliveredGroups = group.filter(isMealWithUndelivered)
-          drawVerticalRectangle(undeliveredGroups, xPosition, getUndeliveredYPosition, getUndeliveredHeight, bolusWidth, 'd3-rect-undelivered d3-bolus', getUndeliveredId)
-
-          // Draw underride triangles (recommended > programmed)
-          const underrideGroups = group.filter(isMealWithUnderride)
-
-          underrideGroups.append('polygon')
-            .attr('x', xPosition)
-            .attr('y', (d: Wizard) => {
-              const bolus = getBolusFromInsulinEvent(d)
-              if (!bolus) return 0
-              return yScale(getProgrammed(bolus) ?? 0)
-            })
-            .attr('points', (d: Wizard) => {
-              const x = xPosition(d)
-              const bolus = getBolusFromInsulinEvent(d)
-              if (!bolus) return ''
-              const y = yScale(getProgrammed(bolus) ?? 0)
-              return underrideTriangle(x, y)
-            })
-            .attr('id', (d: Wizard) => `wizard_underride_polygon_${d.id}`)
-            .attr('class', 'd3-polygon-ride d3-bolus')
-
-          // Draw override triangles (programmed > recommended)
-          const overrideGroups = group.filter(isMealWithOverride)
-
-          overrideGroups.append('polygon')
-            .attr('x', xPosition)
-            .attr('y', (d: Wizard) => {
-              const recommended = getRecommended(d)
-              return yScale(recommended) - MARKER_HEIGHT
-            })
-            .attr('points', (d: Wizard) => {
-              const x = xPosition(d)
-              const recommended = getRecommended(d)
-              const y = yScale(recommended) - MARKER_HEIGHT
-              return overrideTriangle(x, y)
-            })
-            .attr('id', (d: Wizard) => `wizard_override_polygon_${d.id}`)
-            .attr('class', 'd3-polygon-ride d3-bolus')
-
-          return group
-        },
-        update => {
-          // Update existing elements
-          update.sort((a: Wizard, b: Wizard) => {
-            return d3.descending(getMaxValue(a), getMaxValue(b))
-          })
-
-          // Update carbs
-          update
-            .select('circle.d3-circle-carbs')
-            .attr('cx', carbXPos)
-            .attr('cy', carbYPos)
-            .attr('r', carbYScale)
-
-          update
-            .select('text.d3-carbs-text')
-            .text((d: Wizard) => d.carbInput)
-            .attr('x', carbXPos)
-            .attr('y', carbYPos)
-
-          // Update bolus rectangles
-          update
-            .select('rect.d3-rect-bolus')
-            .attr('x', xPosition)
-            .attr('y', yPosition)
-            .attr('width', bolusWidth)
-            .attr('height', bolusHeight)
-            .attr('class', (d: Wizard) => getBolusClass(d, 'd3-bolus d3-rect-bolus'))
-
-          // Update undelivered rectangles
-          update
-            .select('rect.d3-rect-undelivered')
-            .attr('x', xPosition)
-            .attr('y', (d: Wizard) => {
-              const bolus = getBolusFromInsulinEvent(d)
-              if (!bolus) return 0
-              return yScale(getProgrammed(bolus) ?? 0)
-            })
-            .attr('width', bolusWidth)
-            .attr('height', (d: Wizard) => {
-              const bolus = getBolusFromInsulinEvent(d)
-              if (!bolus) return 0
-              const delivered = getDelivered(bolus)
-              const programmed = getProgrammed(bolus) ?? 0
-              return yScale(delivered) - yScale(programmed)
-            })
-
-          // Update triangles
-          update
-            .select('polygon.d3-polygon-ride')
-            .attr('points', (d: Wizard) => {
-              const x = xPosition(d)
-              const bolus = getBolusFromInsulinEvent(d)
-              if (!bolus) return ''
-              const recommended = getRecommended(d)
-              const programmed = getProgrammed(bolus) ?? 0
-
-              if (programmed < recommended) {
-                const y = yScale(programmed)
-                return underrideTriangle(x, y)
-              } else {
-                const y = yScale(recommended) - MARKER_HEIGHT
-                return overrideTriangle(x, y)
-              }
-            })
-
-          return update
-        },
+        enter => handleEnterSelection({
+          enter,
+          xPosition,
+          carbXPos,
+          carbYPos,
+          yScale,
+          bolusWidth,
+          bolusHeight,
+          helpers,
+          underrideTriangle,
+          overrideTriangle
+        }),
+        update => handleUpdateSelection({
+          update,
+          xPosition,
+          carbXPos,
+          carbYPos,
+          carbYScale,
+          yScale,
+          bolusWidth,
+          bolusHeight,
+          underrideTriangle,
+          overrideTriangle
+        }),
         exit => exit.remove()
       )
 
-      // Set up highlight behavior with selector string for both wizard and bolus groups
-      const highlight = pool.highlight('.d3-wizard-group, .d3-bolus-group')
-
-      // Set up tooltip event handlers
-      mealGroup
-        .on('mouseover', function (this: SVGGElement, _event: MouseEvent, d: Wizard) {
-          highlight.on(d3.select(this))
-          if (options.onElementHover) {
-            options.onElementHover({
-              data: d,
-              rect: getTooltipContainer(this)
-            })
-          }
-        })
-        .on('mouseout', function (this: SVGGElement) {
-          highlight.off()
-          if (options.onElementOut) {
-            options.onElementOut()
-          }
-        })
+      // Setup event handlers
+      setupMealEventHandlers(mealGroup, pool, options)
     })
   }
 }
