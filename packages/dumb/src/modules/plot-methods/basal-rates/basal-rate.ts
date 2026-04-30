@@ -44,9 +44,9 @@ type BasalOptions = PlotOptions<Basal> & {
 }
 
 type BasalPlotFunction = PlotFunction<Basal> & {
-  addRectToPool: (selection: d3.Selection<d3.BaseType, Basal, SVGGElement, unknown>, invisible?: boolean) => void
-  updatePath: (selection: d3.Selection<SVGPathElement, string, SVGGElement, unknown>, data: Basal[], isUndelivered?: boolean) => void
-  pathData: (data: Basal[], isUndelivered?: boolean) => string
+  addRectToPool: (selection: d3.Selection<SVGGElement, Basal, SVGGElement, unknown>, invisible?: boolean) => void
+  updatePath: (selection: d3.Selection<SVGPathElement, string, SVGGElement, unknown>, data: Basal[]) => void
+  pathData: (data: Basal[]) => string
   xPosition: (d: Basal) => number
   segmentEndXPosition: (d: Basal) => number
   yPosition: (d: Basal) => number
@@ -140,41 +140,7 @@ function getBasalPathGroups(basals: Basal[]): Basal[][] {
 export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): BasalPlotFunction => {
   const options = _.defaults(opts, defaults) as BasalOptions
 
-  /**
-   * Get the scheduled or automated delivery that was suppressed
-   * @param supp - The suppressed data
-   * @returns The suppressed scheduled or automated delivery
-   */
-  function getDeliverySuppressed(supp: any): Basal | undefined {
-    if (_.includes([BasalDeliveryType.Scheduled, BasalDeliveryType.Automated], supp.deliveryType)) {
-      return supp as Basal
-    } else if (supp.suppressed) {
-      return getDeliverySuppressed(supp.suppressed)
-    }
-    return undefined
-  }
-
-  /**
-   * Get undelivered basal segments
-   * @param data - Array of basal data
-   * @returns Undelivered segments
-   */
-  function getUndelivereds(data: Basal[]): Basal[] {
-    const undelivereds: Basal[] = []
-
-    for (const element of data) {
-      const d = element as any
-      if (d.suppressed) {
-        const scheduled = getDeliverySuppressed(d.suppressed)
-        if (scheduled) {
-          undelivereds.push(scheduled)
-        }
-      }
-    }
-    return undelivereds
-  }
-
-  const basal: PlotFunction<Basal> & any = function (selection: PlotSelection<Basal>): void {
+  const basal: BasalPlotFunction = function (selection: PlotSelection<Basal>): void {
     // Initialize xScale from pool
     options.xScale = pool.xScale().copy()
 
@@ -207,7 +173,7 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
       basalSegments.exit().remove()
 
       // Create new basal segment groups
-      const basalSegmentGroups = basalSegments.enter()
+      const basalSegmentGroups: d3.Selection<SVGGElement, Basal, SVGGElement, unknown> = basalSegments.enter()
         .append('g')
         .classed('d3-basal-group', true)
         .attr('id', idGen.groupId)
@@ -243,16 +209,6 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
 
         basal.updatePath(path, pathData)
       })
-
-      // Handle undelivered/suppressed basal separately
-      const undeliveredPathClass = 'd3-basal d3-path-basal d3-path-basal-undelivered'
-      const undeliveredPath = basalPathsGroup
-        .selectAll<SVGPathElement, string>(`.${undeliveredPathClass.replace(/ /g, '.')}`)
-        .data([undeliveredPathClass])
-        .join('path')
-        .attr('class', (d: string) => d)
-
-      basal.updatePath(undeliveredPath, getUndelivereds(currentData), true)
 
       // Step 6: Set up event handlers
       selection.selectAll<SVGGElement, Basal>(`.d3-basal-group`)
@@ -291,7 +247,7 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
    * @param invisible - Whether to create invisible hover target rectangles
    */
   basal.addRectToPool = (
-    selection: d3.Selection<d3.BaseType, Basal, SVGGElement, any>,
+    selection: d3.Selection<SVGGElement, Basal, SVGGElement, unknown>,
     invisible: boolean = false
   ): void => {
     options.xScale = pool.xScale().copy()
@@ -325,16 +281,14 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
    * Update path with new data
    * @param selection - The path selection to update
    * @param data - The data to visualize
-   * @param isUndelivered - Whether this is undelivered data
    */
   basal.updatePath = (
-    selection: d3.Selection<SVGPathElement, string, SVGGElement, any>,
+    selection: d3.Selection<SVGPathElement, string, SVGGElement, unknown>,
     data: Basal[],
-    isUndelivered: boolean = false
   ): void => {
     options.xScale = pool.xScale().copy()
 
-    const pathDef = basal.pathData(data, isUndelivered)
+    const pathDef = basal.pathData(data)
 
     if (pathDef !== '') {
       selection.attr('d', pathDef)
@@ -344,10 +298,9 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
   /**
    * Generate SVG path data string
    * @param data - The data to visualize
-   * @param isUndelivered - Whether this is undelivered data
    * @returns The SVG path data string
    */
-  basal.pathData = (data: Basal[], isUndelivered: boolean = false): string => {
+  basal.pathData = (data: Basal[]): string => {
     options.xScale = pool.xScale().copy()
 
     function stringCoords(datum: Basal): string {
@@ -359,11 +312,6 @@ export const plotBasal = (pool: Pool<Basal>, opts: Partial<BasalOptions> = {}): 
       if (i === 0) {
         // start with a moveto command
         d += 'M' + stringCoords(data[i])
-      } else if (isUndelivered && data[i].deliveryType === BasalDeliveryType.Automated) {
-        // For automated suppressed delivery, we always render at the baseline
-        const suppressed = _.clone(data[i])
-        suppressed.rate = 0
-        d += 'M' + stringCoords(suppressed)
       } else if (data[i].normalTime === data[i - 1].normalEnd) {
         // if segment is contiguous with previous, draw a vertical line connecting their values
         d += 'V' + basal.pathYPosition(data[i]) + ' '
