@@ -31,6 +31,7 @@ import { type PatientListContextResult } from './models/patient-list-context-res
 import { PatientListColumns } from '../../components/patient-list/models/enums/patient-list.enum'
 import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
 import { useAuth } from '../auth'
+import config from '../config/config'
 
 const DEFAULT_FILTERS = {
   pendingEnabled: false,
@@ -45,6 +46,7 @@ const DEFAULT_FILTERS = {
 const DEFAULT_COLUMNS_HCP = [
   PatientListColumns.Flag,
   PatientListColumns.Patient,
+  config.DATE_OF_BIRTH_HIDDEN ? PatientListColumns.Age : PatientListColumns.DateOfBirth,
   PatientListColumns.DateOfBirth,
   PatientListColumns.MonitoringAlerts,
   PatientListColumns.Messages,
@@ -58,7 +60,7 @@ const DEFAULT_COLUMNS_HCP = [
 const DEFAULT_COLUMNS_CAREGIVER = [
   PatientListColumns.Flag,
   PatientListColumns.Patient,
-  PatientListColumns.DateOfBirth,
+  config.DATE_OF_BIRTH_HIDDEN ? PatientListColumns.Age : PatientListColumns.DateOfBirth,
   PatientListColumns.TimeInRange,
   PatientListColumns.BelowRange,
   PatientListColumns.LastDataUpdate,
@@ -81,7 +83,7 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     [PatientListColumns.Flag]: true,
     [PatientListColumns.System]: getColumnPreference(PatientListColumns.System),
     [PatientListColumns.Patient]: true,
-    [PatientListColumns.DateOfBirth]: getColumnPreference(PatientListColumns.DateOfBirth),
+    [PatientListColumns.DateOfBirth]: config.DATE_OF_BIRTH_HIDDEN ? false : getColumnPreference(PatientListColumns.DateOfBirth),
     [PatientListColumns.Age]: getColumnPreference(PatientListColumns.Age),
     [PatientListColumns.Gender]: getColumnPreference(PatientListColumns.Gender),
     [PatientListColumns.MonitoringAlerts]: isUserHcp ? getColumnPreference(PatientListColumns.MonitoringAlerts) : false,

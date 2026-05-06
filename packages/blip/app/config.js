@@ -45,7 +45,8 @@ const defaultConfig = {
   YLPZ_RA_LAD_DE: 'YLPZ-RA-LAD-001-de-Rev6',
   IDLE_TIMEOUT_MS: 1800000,
   EATING_SHORTLY_ENABLED: false,
-  METRICS_CLICKODROME_ENABLED: true
+  METRICS_CLICKODROME_ENABLED: true,
+  DATE_OF_BIRTH_HIDDEN: false
 }
 
 /** @typedef {typeof defaultConfig} AppConfig */

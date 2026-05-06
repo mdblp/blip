@@ -58,4 +58,5 @@ export interface AppConfig {
   IDLE_TIMEOUT_MS: number
   EATING_SHORTLY_ENABLED: boolean
   METRICS_CLICKODROME_ENABLED: boolean
+  DATE_OF_BIRTH_HIDDEN: boolean
 }

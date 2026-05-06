@@ -17,6 +17,7 @@ export YLPZ_RA_LAD_DE='intended-use.de'
 export IDLE_TIMEOUT_MS=1800000
 export EATING_SHORTLY_ENABLED=true
 export METRICS_CLICKODROME_ENABLED=true
+export DATE_OF_BIRTH_HIDDEN=false
 
 # External services:
 # URL to HELP system
