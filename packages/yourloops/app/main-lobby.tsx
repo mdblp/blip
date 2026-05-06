@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
+import React, { type FC, useEffect, useRef } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 
@@ -64,6 +64,16 @@ const tssCache = createCache({
   key: 'tss'
 })
 tssCache.compat = true
+
+function createTrackerScript(tag: string): HTMLScriptElement {
+  const script = document.createElement('script')
+  script.src = 'https://analytics.preprod.your-loops.com/api/script.js'
+  script.dataset.siteId = 'b8768c4ec39f'
+  script.dataset.apiKey = 'YOUR-API-KEY'
+  script.dataset.tag = tag
+  script.defer = true
+  return script
+}
 
 const isRoutePublic = (route: string): boolean => PUBLIC_ROUTES.includes(route as AppRoute)
 const isRouteAlwaysAccessible = (route: string): boolean => ALWAYS_ACCESSIBLE_ROUTES.includes(route as AppRoute)
@@ -113,6 +123,26 @@ export const MainLobby: FC = () => {
   }
 
   useIdleTimer({ timeout: ConfigService.getIdleTimeout(), onIdle })
+
+  const trackerScriptRef = useRef<HTMLScriptElement | null>(null)
+  useEffect(() => {
+    const tag = user?.role
+    if (trackerScriptRef.current?.dataset.tag === tag) {
+      return
+    }
+
+    trackerScriptRef.current?.remove()
+    const script = createTrackerScript(tag)
+    document.head.appendChild(script)
+    trackerScriptRef.current = script
+
+    console.log('script added to HEAD with tag:', tag)
+
+    return () => {
+      script.remove()
+      trackerScriptRef.current = null
+    }
+  }, [user?.role])
 
   if ((!isCurrentRoutePublic || !isCurrentRouteAlwaysAccessible) && isLoading) {
     return <React.Fragment />
