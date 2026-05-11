@@ -175,7 +175,7 @@ describe('HCP home page', () => {
     await testPatientListForHcp()
   })
 
-  it('should not be able to see birth date in the patient list when scoped on a medical team ', async () => {
+  it('should not be able to see birth date in the patient list when scoped on a medical team', async () => {
     const originalValue = config.DATE_OF_BIRTH_HIDDEN
     config.DATE_OF_BIRTH_HIDDEN = true
 
