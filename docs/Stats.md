@@ -221,6 +221,14 @@ Events are organized by page for easy reference.
 ---
 
 ## Profile Page
+### Lead clinicians
+#### `clinicians-add`
+- **Type:** Button
+- **Description:** Tracks when a user clicks on the "Add a clinician" button on the Profile page
+#### `clinicians-add-confirm`
+- **Type:** Button
+- **Description:** Tracks when a user clicks on the "Add clinician" button on the "Add a lead clinician" dialog to confirm adding a clinician
+
 ### Range Settings
 #### `range-section-profile-{type}`
 - **Type:** Button
