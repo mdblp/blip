@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -63,6 +63,8 @@ import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
+import config from '../../../../lib/config/config'
+import userEvent from '@testing-library/user-event/dist/cjs/index.js'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -171,6 +173,26 @@ describe('HCP home page', () => {
     await renderHomePage(thirdTeamPatientsList)
 
     await testPatientListForHcp()
+  })
+
+  it('should not be able to see birth date in the patient list when scoped on a medical team ', async () => {
+    const originalValue = config.DATE_OF_BIRTH_HIDDEN
+    config.DATE_OF_BIRTH_HIDDEN = true
+
+    await act(async () => {
+      await renderHomePage(thirdTeamPatientsList)
+    })
+
+    /* Verify date of birth is not in tha table*/
+    const DOBText = screen.queryByText(/Date of birth/i)
+    expect(DOBText).not.toBeInTheDocument()
+
+    /*Verify date of birth is not in selectable columns*/
+    const columnSettingsButton = screen.getByRole('button', { name: 'Change columns settings' })
+    await userEvent.click(columnSettingsButton)
+    expect(DOBText).not.toBeInTheDocument()
+
+    config.DATE_OF_BIRTH_HIDDEN = originalValue
   })
 
   it('should be able to acknowledge patient alerts from the patient list', async () => {

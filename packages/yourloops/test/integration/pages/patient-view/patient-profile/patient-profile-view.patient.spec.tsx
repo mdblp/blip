@@ -48,6 +48,7 @@ import { mockLeadCliniciansApi } from '../../../mock/clinicians.api.mock'
 import { LeadCliniciansApi } from '../../../../../lib/lead-clinicians/lead-clinicians.api'
 import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import config from '../../../../../lib/config/config'
 
 describe('Patient profile view for Patient', () => {
 
@@ -75,6 +76,20 @@ describe('Patient profile view for Patient', () => {
       })
 
       await testPatientPersonalInformation()
+    })
+
+    it('should hide date of birth when DATE_OF_BIRTH_HIDDEN is true', async () => {
+      const originalValue = config.DATE_OF_BIRTH_HIDDEN
+      config.DATE_OF_BIRTH_HIDDEN = true
+
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const DOBText = screen.queryByText(/Date of birth/i)
+      expect(DOBText).not.toBeInTheDocument()
+
+      config.DATE_OF_BIRTH_HIDDEN = originalValue
     })
 
     it('should be able to view clinicians list with 0 clinician', async () => {
