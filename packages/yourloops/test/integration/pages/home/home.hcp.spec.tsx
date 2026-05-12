@@ -176,6 +176,7 @@ describe('HCP home page', () => {
   })
 
   it('should not be able to see birth date in the patient list when scoped on a medical team', async () => {
+    const textToFind = "Date of birth"
     const originalValue = config.DATE_OF_BIRTH_HIDDEN
     config.DATE_OF_BIRTH_HIDDEN = true
 
@@ -183,14 +184,15 @@ describe('HCP home page', () => {
       await renderHomePage(thirdTeamPatientsList)
     })
 
-    /* Verify date of birth is not in tha table*/
-    const DOBText = screen.queryByText(/Date of birth/i)
-    expect(DOBText).not.toBeInTheDocument()
+    /* Verify date of birth is not in the table*/
+    const dobInTable = screen.queryByText(textToFind)
+    expect(dobInTable).not.toBeInTheDocument()
 
     /*Verify date of birth is not in selectable columns*/
     const columnSettingsButton = screen.getByRole('button', { name: 'Change columns settings' })
     await userEvent.click(columnSettingsButton)
-    expect(DOBText).not.toBeInTheDocument()
+    const dobInSettings = screen.queryByText(textToFind)
+    expect(dobInSettings).not.toBeInTheDocument()
 
     config.DATE_OF_BIRTH_HIDDEN = originalValue
   })

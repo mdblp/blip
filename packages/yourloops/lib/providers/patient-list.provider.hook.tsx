@@ -43,10 +43,12 @@ const DEFAULT_FILTERS = {
   messagesEnabled: false
 }
 
+const DATE_OF_BIRTH_HIDDEN = config.DATE_OF_BIRTH_HIDDEN
+
 const DEFAULT_COLUMNS_HCP = [
   PatientListColumns.Flag,
   PatientListColumns.Patient,
-  config.DATE_OF_BIRTH_HIDDEN ? PatientListColumns.Age : PatientListColumns.DateOfBirth,
+  DATE_OF_BIRTH_HIDDEN ? PatientListColumns.Age : PatientListColumns.DateOfBirth,
   PatientListColumns.DateOfBirth,
   PatientListColumns.MonitoringAlerts,
   PatientListColumns.Messages,
@@ -60,7 +62,7 @@ const DEFAULT_COLUMNS_HCP = [
 const DEFAULT_COLUMNS_CAREGIVER = [
   PatientListColumns.Flag,
   PatientListColumns.Patient,
-  config.DATE_OF_BIRTH_HIDDEN ? PatientListColumns.Age : PatientListColumns.DateOfBirth,
+  DATE_OF_BIRTH_HIDDEN ? PatientListColumns.Age : PatientListColumns.DateOfBirth,
   PatientListColumns.TimeInRange,
   PatientListColumns.BelowRange,
   PatientListColumns.LastDataUpdate,

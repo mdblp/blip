@@ -59,7 +59,7 @@ export const PatientInformation: FC<PatientInformationProps> = (props) => {
     <Grid container spacing={2}>
       <Grid size={6}>
         { dateOfBirthHidden ?
-          <InfoRow icon={CakeIcon} dataTestId='age' label={t('age')} value={`${patientInfo.age}`} />
+          <InfoRow icon={CakeIcon} dataTestId='age' label={t('age')} value={patientInfo.age} />
           : <InfoRow icon={CakeIcon} dataTestId='date-of-birth' label={t('date-of-birth')} value={`${formatBirthdate(patient.profile.birthdate)} (${patientInfo.age})`} />
         }
         <InfoRow icon={PersonIcon} dataTestId='gender' label={t('gender')} value={patientInfo.gender} />
