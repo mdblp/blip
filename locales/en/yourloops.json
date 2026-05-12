@@ -49,6 +49,7 @@
   "additional-information": "Additional information",
   "admin": "Admin",
   "age": "Age",
+  "age-value": "Age: {{age}}",
   "alarm-alert-loop-mode-activated-description": "IMPORTANT: this alert is triggered only if loop mode is ON.",
   "alarm-alert-loop-mode-deactivated-description": "IMPORTANT: this alert is triggered only if loop mode is OFF.",
   "alarm-alert-with-code": "Alert {{code}}",
