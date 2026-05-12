@@ -52,7 +52,7 @@ import AnalyticsApi, { ElementType } from 'yourloops/lib/analytics/analytics.api
 
 /**
  * @typedef { import('medical-domain').MedicalDataService } MedicalDataService
- * @typedef { import('../../index').DatePicker } DatePickertrends
+ * @typedef { import('../../index').DatePicker } DatePicker
  */
 
 class DailyChart extends React.Component {
