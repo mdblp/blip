@@ -89,8 +89,8 @@ export interface IdGenerator {
  * const idGen = createIdGenerator('nightMode')
  *
  * // Generate IDs
- * const groupId = idGen.group(data)           // 'nightMode_group_abc123'
- * const circleId = idGen.element(data, 'circle') // 'nightMode_circle_abc123'
+ * const groupId = idGen.groupId(data)           // 'nightMode_group_abc123'
+ * const circleId = idGen.elementId(data, 'circle') // 'nightMode_circle_abc123'
  * const testId = idGen.testId(data)           // 'nightMode_group_guid-xyz' or 'nightMode_group_abc123'
  * const selector = idGen.groupSelector()      // 'd3-nightMode-group'
  * ```

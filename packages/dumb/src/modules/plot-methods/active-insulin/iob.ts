@@ -46,7 +46,7 @@ const idGen = createIdGenerator(DailyPlotElement.Iob)
 const DEFAULT_MAX_IOB_VALUE_U = 45
 
 /**
- * Calculate the maximum IOB value based on Total Daily Insulin (TDD)
+ * Calculate the maximum IOB value based on Total Daily Dose (TDD) of insulin
  *
  * The maximum IOB display value is set to half of the total daily insulin dose,
  * which is a common clinical guideline for safe insulin therapy.
