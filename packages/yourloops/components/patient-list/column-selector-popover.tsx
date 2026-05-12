@@ -78,10 +78,10 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
       name: PatientListColumns.Age,
       checked: updatedColumnsModel[PatientListColumns.Age]
     },
-    ...(!config.DATE_OF_BIRTH_HIDDEN ? [{
+    ...(config.DATE_OF_BIRTH_HIDDEN ? [] : [{
       name: PatientListColumns.DateOfBirth,
       checked: updatedColumnsModel[PatientListColumns.DateOfBirth]
-    }] : []),
+    }]),
     {
       name: PatientListColumns.Gender,
       checked: updatedColumnsModel[PatientListColumns.Gender]

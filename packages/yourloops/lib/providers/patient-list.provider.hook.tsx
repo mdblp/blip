@@ -85,7 +85,7 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     [PatientListColumns.Flag]: true,
     [PatientListColumns.System]: getColumnPreference(PatientListColumns.System),
     [PatientListColumns.Patient]: true,
-    [PatientListColumns.DateOfBirth]: config.DATE_OF_BIRTH_HIDDEN ? false : getColumnPreference(PatientListColumns.DateOfBirth),
+    [PatientListColumns.DateOfBirth]: DATE_OF_BIRTH_HIDDEN ? false : getColumnPreference(PatientListColumns.DateOfBirth),
     [PatientListColumns.Age]: getColumnPreference(PatientListColumns.Age),
     [PatientListColumns.Gender]: getColumnPreference(PatientListColumns.Gender),
     [PatientListColumns.MonitoringAlerts]: isUserHcp ? getColumnPreference(PatientListColumns.MonitoringAlerts) : false,

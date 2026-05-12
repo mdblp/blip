@@ -522,7 +522,7 @@ export class PrintView<T> {
 
     this.#patientInfoBox.width = this.doc.widthOfString(patientName)
     const patientAge = Math.floor((Date.now() - new Date(this.#patient.profile.birthdate).getTime()) / (365.25 * 24 * 60 * 60 * 1000))
-    const patientDateOfBirth = config.DATE_OF_BIRTH_HIDDEN ? t('age-value', { age: patientAge }) + ': ' + patientAge : t('DOB: {{birthdate}}', { birthdate: patientBirthdate })
+    const patientDateOfBirth = config.DATE_OF_BIRTH_HIDDEN ? t('age-value', { age: patientAge }) : t('DOB: {{birthdate}}', { birthdate: patientBirthdate })
 
     this.doc
       .font(this.font)
