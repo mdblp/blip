@@ -67,7 +67,6 @@ import { mockLeadCliniciansApi } from '../../../mock/clinicians.api.mock'
 import { LeadCliniciansApi } from '../../../../../lib/lead-clinicians/lead-clinicians.api'
 import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
- import config from '../../../../../lib/config/config'
 import { ConfigService } from '../../../../../lib/config/config.service'
 
 describe('Patient profile view for HCP', () => {
