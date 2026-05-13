@@ -85,6 +85,8 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     [PatientListColumns.Flag]: true,
     [PatientListColumns.System]: getColumnPreference(PatientListColumns.System),
     [PatientListColumns.Patient]: true,
+    // Here we're not using the const DATE_OF_BIRTH_HIDDEN because it breaks test, if you have time try to replace
+    // ConfigService.getDateOfBirthHidden by DATE_OF_BIRTH_HIDDEN and fix the according test in patient profile view hcp spec test file
     [PatientListColumns.DateOfBirth]: ConfigService.getDateOfBirthHidden() ? false : getColumnPreference(PatientListColumns.DateOfBirth),
     [PatientListColumns.Age]: getColumnPreference(PatientListColumns.Age),
     [PatientListColumns.Gender]: getColumnPreference(PatientListColumns.Gender),
