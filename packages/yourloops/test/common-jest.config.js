@@ -44,7 +44,7 @@ module.exports = {
   clearMocks: true,
 
   // Indicates whether the coverage information should be collected while executing the test
-  collectCoverage: false,
+  collectCoverage: true,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   collectCoverageFrom: [
@@ -109,8 +109,7 @@ module.exports = {
       YLPZ_RA_LAD_IT: 'YLPZ-RA-LAD-001-it-Rev6',
       YLPZ_RA_LAD_ES: 'YLPZ-RA-LAD-001-es-Rev6',
       YLPZ_RA_LAD_DE: 'YLPZ-RA-LAD-001-de-Rev6',
-      IDLE_TIMEOUT_MS: 1800000,
-      DATE_OF_BIRTH_HIDDEN: false
+      IDLE_TIMEOUT_MS: 1800000
     }
   },
 
@@ -233,7 +232,7 @@ module.exports = {
   //   "\\.pnp\\.[^\\/]+$"
   // ],
   transformIgnorePatterns: [
-    '/node_modules/(?!(lodash-es|d3|d3-[a-z-]+|internmap|robust-predicates|delaunator|react-markdown|micromark|micromark-[a-z-]+|mdast-util-[a-z-]+|unist-util-[a-z-]+|hast-util-[a-z-]+|remark-[a-z-]+|rehype-[a-z-]+|unified|vfile|vfile-message|bail|trough|devlop|property-information|html-url-attributes|comma-separated-tokens|space-separated-tokens|trim-lines|decode-named-character-reference|character-entities|zwitch|estree-util-is-identifier-name|ccount|stringify-entities|parse-entities|is-plain-obj)/)'
+    '/!node_modules\\/lodash-es/'
   ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
