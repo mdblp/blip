@@ -68,6 +68,7 @@ import { LeadCliniciansApi } from '../../../../../lib/lead-clinicians/lead-clini
 import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
  import config from '../../../../../lib/config/config'
+import { ConfigService } from '../../../../../lib/config/config.service'
 
 describe('Patient profile view for HCP', () => {
   beforeEach(() => {
@@ -175,8 +176,7 @@ describe('Patient profile view for HCP', () => {
     })
 
     it('should hide date of birth when DATE_OF_BIRTH_HIDDEN is true', async () => {
-      const originalValue = config.DATE_OF_BIRTH_HIDDEN
-      config.DATE_OF_BIRTH_HIDDEN = true
+      jest.spyOn(ConfigService, 'getDateOfBirthHidden').mockReturnValue(true)
 
       await act(async () => {
         renderPage(patientProfileRoute)
@@ -185,7 +185,6 @@ describe('Patient profile view for HCP', () => {
       const DOBText = screen.queryByText(/Date of birth/i)
       expect(DOBText).not.toBeInTheDocument()
 
-      config.DATE_OF_BIRTH_HIDDEN = originalValue
     })
 
     it('should display patient age with access time icon', async () => {

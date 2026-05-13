@@ -36,7 +36,7 @@ import { Patient } from '../../../lib/patient/models/patient.model'
 import { RangeSection } from './sections/range-section'
 import { UnsavedChangesDialog } from './dialog/unsaved-changes-dialog'
 import { useAuth } from '../../../lib/auth'
-import config from '../../../lib/config/config'
+import {  ConfigService } from '../../../lib/config/config.service'
 
 interface PatientProfileViewProps {
   patient : Patient
@@ -48,7 +48,7 @@ export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
   const [pendingNavigationSection, setPendingNavigationSection] = useState<PatientProfileViewSection | null>(null)
   const [showDialog, setShowDialog] = useState(false)
-  const dateOfBirthHidden = config.DATE_OF_BIRTH_HIDDEN
+  const dateOfBirthHidden = ConfigService.getDateOfBirthHidden()
 
 
   const confirmNavigation = (): void => {

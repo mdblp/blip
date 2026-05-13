@@ -63,7 +63,7 @@ import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
-import config from '../../../../lib/config/config'
+import {  ConfigService } from '../../../../lib/config/config.service'
 import userEvent from '@testing-library/user-event/dist/cjs/index.js'
 
 describe('HCP home page', () => {
@@ -177,8 +177,7 @@ describe('HCP home page', () => {
 
   it('should not be able to see birth date in the patient list when scoped on a medical team', async () => {
     const textToFind = "Date of birth"
-    const originalValue = config.DATE_OF_BIRTH_HIDDEN
-    config.DATE_OF_BIRTH_HIDDEN = true
+    jest.spyOn(ConfigService, 'getDateOfBirthHidden').mockReturnValue(true)
 
     await act(async () => {
       await renderHomePage(thirdTeamPatientsList)
@@ -193,8 +192,6 @@ describe('HCP home page', () => {
     await userEvent.click(columnSettingsButton)
     const dobInSettings = screen.queryByText(textToFind)
     expect(dobInSettings).not.toBeInTheDocument()
-
-    config.DATE_OF_BIRTH_HIDDEN = originalValue
   })
 
   it('should be able to acknowledge patient alerts from the patient list', async () => {

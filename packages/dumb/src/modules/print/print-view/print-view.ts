@@ -63,7 +63,7 @@ import { type Padding } from '../../../models/print/padding.model'
 import { type PageAddEvent } from '../../../models/print/page-add-event.model'
 import { type CellStripe } from '../../../models/print/cell-stripe.model'
 import { type Colors } from '../../../models/print/colors.model'
-import config from 'yourloops/lib/config/config'
+import {  ConfigService } from 'yourloops/lib/config/config.service'
 
 const PADDING_PATIENT_INFO = 10
 
@@ -522,7 +522,7 @@ export class PrintView<T> {
 
     this.#patientInfoBox.width = this.doc.widthOfString(patientName)
     const patientAge = Math.floor((Date.now() - new Date(this.#patient.profile.birthdate).getTime()) / (365.25 * 24 * 60 * 60 * 1000))
-    const patientDateOfBirth = config.DATE_OF_BIRTH_HIDDEN ? t('age-value', { age: patientAge }) : t('DOB: {{birthdate}}', { birthdate: patientBirthdate })
+    const patientDateOfBirth = ConfigService.getDateOfBirthHidden() ? t('age-value', { age: patientAge }) : t('DOB: {{birthdate}}', { birthdate: patientBirthdate })
 
     this.doc
       .font(this.font)

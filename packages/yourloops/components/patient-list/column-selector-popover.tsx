@@ -40,7 +40,7 @@ import { usePatientListContext } from '../../lib/providers/patient-list.provider
 import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
 import { useAuth } from '../../lib/auth'
 import Box from '@mui/material/Box'
-import config from '../../lib/config/config'
+import {  ConfigService } from '../../lib/config/config.service'
 
 interface ColumnSelectorPopoverProps {
   anchorEl: Element
@@ -78,7 +78,7 @@ export const ColumnSelectorPopover: FunctionComponent<ColumnSelectorPopoverProps
       name: PatientListColumns.Age,
       checked: updatedColumnsModel[PatientListColumns.Age]
     },
-    ...(config.DATE_OF_BIRTH_HIDDEN ? [] : [{
+    ...(ConfigService.getDateOfBirthHidden() ? [] : [{
       name: PatientListColumns.DateOfBirth,
       checked: updatedColumnsModel[PatientListColumns.DateOfBirth]
     }]),
