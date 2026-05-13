@@ -170,6 +170,7 @@ describe('HCP home page', () => {
   })
 
   it('should be able to manage the patient list when scoped on a medical team', async () => {
+    jest.spyOn(ConfigService, 'getDateOfBirthHidden').mockReturnValue(false)
     await renderHomePage(thirdTeamPatientsList)
 
     await testPatientListForHcp()
@@ -195,6 +196,7 @@ describe('HCP home page', () => {
   })
 
   it('should be able to acknowledge patient alerts from the patient list', async () => {
+    jest.spyOn(ConfigService, 'getDateOfBirthHidden').mockReturnValue(false)
     const router = await renderHomePage(filterTeamPatientsList)
 
     await testAckMonitoringAlerts(router)
@@ -214,6 +216,7 @@ describe('HCP home page', () => {
   })
 
   it('should show correct alerts tooltips when logged in with a user with units in mmol/L', async () => {
+    jest.spyOn(ConfigService, 'getDateOfBirthHidden').mockReturnValue(false)
     mockUserApi().mockUserDataFetch({
       firstName,
       lastName,
