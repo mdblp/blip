@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -63,6 +63,8 @@ import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
+import {  ConfigService } from '../../../../lib/config/config.service'
+import userEvent from '@testing-library/user-event/dist/cjs/index.js'
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -168,12 +170,33 @@ describe('HCP home page', () => {
   })
 
   it('should be able to manage the patient list when scoped on a medical team', async () => {
+    jest.spyOn(ConfigService, 'getDateOfBirthHidden').mockReturnValue(false)
     await renderHomePage(thirdTeamPatientsList)
 
     await testPatientListForHcp()
   })
 
+  it('should not be able to see birth date in the patient list when scoped on a medical team', async () => {
+    const textToFind = "Date of birth"
+    jest.spyOn(ConfigService, 'getDateOfBirthHidden').mockReturnValue(true)
+
+    await act(async () => {
+      await renderHomePage(thirdTeamPatientsList)
+    })
+
+    /* Verify date of birth is not in the table*/
+    const dobInTable = screen.queryByText(textToFind)
+    expect(dobInTable).not.toBeInTheDocument()
+
+    /*Verify date of birth is not in selectable columns*/
+    const columnSettingsButton = screen.getByRole('button', { name: 'Change columns settings' })
+    await userEvent.click(columnSettingsButton)
+    const dobInSettings = screen.queryByText(textToFind)
+    expect(dobInSettings).not.toBeInTheDocument()
+  })
+
   it('should be able to acknowledge patient alerts from the patient list', async () => {
+    jest.spyOn(ConfigService, 'getDateOfBirthHidden').mockReturnValue(false)
     const router = await renderHomePage(filterTeamPatientsList)
 
     await testAckMonitoringAlerts(router)
@@ -193,6 +216,7 @@ describe('HCP home page', () => {
   })
 
   it('should show correct alerts tooltips when logged in with a user with units in mmol/L', async () => {
+    jest.spyOn(ConfigService, 'getDateOfBirthHidden').mockReturnValue(false)
     mockUserApi().mockUserDataFetch({
       firstName,
       lastName,

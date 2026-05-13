@@ -3,6 +3,8 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.10.0-beta - 2026-04-15
+### Added
+- YLP-3907 Add a conditional rendering on birth date display
 
 ## 3.9.0 - 2026-04-14
 ### Added

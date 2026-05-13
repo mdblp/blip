@@ -31,6 +31,7 @@ import { type PatientListContextResult } from './models/patient-list-context-res
 import { PatientListColumns } from '../../components/patient-list/models/enums/patient-list.enum'
 import { type GridColumnVisibilityModel } from '@mui/x-data-grid'
 import { useAuth } from '../auth'
+import { ConfigService } from '../config/config.service'
 
 const DEFAULT_FILTERS = {
   pendingEnabled: false,
@@ -42,9 +43,12 @@ const DEFAULT_FILTERS = {
   messagesEnabled: false
 }
 
+const DATE_OF_BIRTH_HIDDEN = ConfigService.getDateOfBirthHidden()
+
 const DEFAULT_COLUMNS_HCP = [
   PatientListColumns.Flag,
   PatientListColumns.Patient,
+  DATE_OF_BIRTH_HIDDEN ? PatientListColumns.Age : PatientListColumns.DateOfBirth,
   PatientListColumns.DateOfBirth,
   PatientListColumns.MonitoringAlerts,
   PatientListColumns.Messages,
@@ -58,7 +62,7 @@ const DEFAULT_COLUMNS_HCP = [
 const DEFAULT_COLUMNS_CAREGIVER = [
   PatientListColumns.Flag,
   PatientListColumns.Patient,
-  PatientListColumns.DateOfBirth,
+  DATE_OF_BIRTH_HIDDEN ? PatientListColumns.Age : PatientListColumns.DateOfBirth,
   PatientListColumns.TimeInRange,
   PatientListColumns.BelowRange,
   PatientListColumns.LastDataUpdate,
@@ -81,7 +85,9 @@ export const usePatientListProviderHook = (): PatientListContextResult => {
     [PatientListColumns.Flag]: true,
     [PatientListColumns.System]: getColumnPreference(PatientListColumns.System),
     [PatientListColumns.Patient]: true,
-    [PatientListColumns.DateOfBirth]: getColumnPreference(PatientListColumns.DateOfBirth),
+    // Here we're not using the const DATE_OF_BIRTH_HIDDEN because it breaks test, if you have time try to replace
+    // ConfigService.getDateOfBirthHidden by DATE_OF_BIRTH_HIDDEN and fix the according test in patient profile view hcp spec test file
+    [PatientListColumns.DateOfBirth]: ConfigService.getDateOfBirthHidden() ? false : getColumnPreference(PatientListColumns.DateOfBirth),
     [PatientListColumns.Age]: getColumnPreference(PatientListColumns.Age),
     [PatientListColumns.Gender]: getColumnPreference(PatientListColumns.Gender),
     [PatientListColumns.MonitoringAlerts]: isUserHcp ? getColumnPreference(PatientListColumns.MonitoringAlerts) : false,

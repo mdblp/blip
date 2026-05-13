@@ -34,6 +34,7 @@
     "lint-fix-medical-domain": "npm run lint-fix -w medical-domain",
     "lint-dumb": "npm run lint -w dumb",
     "lint-fix-dumb": "npm run lint-fix -w dumb",
+    "lint-fix": "npm run lint-fix-blip && npm run lint-fix-yourloops && npm run lint-fix-medical-domain && npm run lint-fix-dumb",
     "test": "npm run test-locales && npm run test-lambda && npm run build-dependencies && npm run test --workspaces",
     "test-dumb": "npm run test -w dumb",
     "test-lambda": "bash test-lambda.sh",
