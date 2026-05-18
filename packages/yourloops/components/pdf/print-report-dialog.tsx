@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -184,7 +184,7 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
 
   const handleClickPreset = (preset: Presets): void => {
     setReportOptions(getDatesFromPreset(preset, minDate, maxDate, reportOptions.format))
-    AnalyticsApi.trackClick('print-report-dialog-preset-${preset}', ElementType.Button)
+    AnalyticsApi.trackClick(`print-report-dialog-preset-${preset}`, ElementType.Button)
   }
 
   const handleChangeCustomDate = (d: Dayjs): void => {
@@ -201,7 +201,7 @@ export const PrintReportDialog: FC<PrintReportDialogProps> = (props) => {
   const presetSelected = reportOptions.preset
   const handleOutputFormat = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setReportOptions({ ...reportOptions, format: event.target.value as OutputFormat })
-    AnalyticsApi.trackClick('print-report-dialog-output-format-${event.target.value}', ElementType.Button)
+    AnalyticsApi.trackClick(`print-report-dialog-output-format-${event.target.value}`, ElementType.Button)
   }
 
   const downloadFile = (url: string, fileName: string): void => {

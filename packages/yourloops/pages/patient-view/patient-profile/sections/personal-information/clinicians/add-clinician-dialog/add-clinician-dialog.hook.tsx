@@ -33,6 +33,8 @@ import { useAlert } from '../../../../../../../components/utils/snackbar'
 import { useTranslation } from 'react-i18next'
 import { errorTextFromException } from '../../../../../../../lib/utils'
 import { logError } from '../../../../../../../utils/error.util'
+import { UserInviteStatus } from '../../../../../../../lib/team/models/enums/user-invite-status.enum'
+import AnalyticsApi, { ElementType } from '../../../../../../../lib/analytics/analytics.api'
 
 interface AddClinicianDialogHookProps {
   patientId: string
@@ -55,36 +57,53 @@ export const useAddClinicianDialog = (props: AddClinicianDialogHookProps): AddCl
   const alert = useAlert()
   const { t } = useTranslation()
 
-  const removeCurrentCliniciansFromList = (hcps: TeamMember[]): TeamMember[] => {
-    return hcps.filter((hcp: TeamMember) => !clinicianIds.includes(hcp.userId))
+  const getValidMembers = (hcps: TeamMember[]): TeamMember[] => {
+    return hcps
+      .filter((hcp: TeamMember) => !clinicianIds.includes(hcp.userId))
+      .filter((hcp: TeamMember) => hcp.status === UserInviteStatus.Accepted)
   }
 
   const isHcpInList = (hcpId: string, members: TeamMember[]): boolean => {
     return members.some((member) => member.userId === hcpId)
   }
 
+  const getMemberById = (memberId: string, members: TeamMember[]): TeamMember => {
+    return members.find((member) => member.userId === memberId)
+  }
+
   const getAvailableHcps = (): TeamMember[] => {
     if (user.isUserHcp()) {
       const selectedTeam = getTeam(teamId)
 
-      return removeCurrentCliniciansFromList(selectedTeam.members)
+      return getValidMembers(selectedTeam.members)
     }
+
     if (user.isUserPatient()) {
       const allHcpsHavingAccessToPatient = teams.reduce((acc: TeamMember[], team: Team) => {
         team.members?.forEach((currentTeamMember) => {
-          if (!isHcpInList(currentTeamMember.userId, acc)) {
+          const memberId = currentTeamMember.userId
+
+          if (isHcpInList(memberId, acc)) {
+            const record = getMemberById(memberId, acc)
+            if (record.status !== currentTeamMember.status && currentTeamMember.status === UserInviteStatus.Accepted) {
+              record.status = UserInviteStatus.Accepted
+            }
+          } else {
             acc.push(currentTeamMember)
           }
         })
         return acc
       }, [])
 
-      return removeCurrentCliniciansFromList(allHcpsHavingAccessToPatient)
+      return getValidMembers(allHcpsHavingAccessToPatient)
     }
+
     return []
   }
 
   const onClickAddClinician = async () => {
+    AnalyticsApi.trackClick('clinicians-add-confirm', ElementType.Button)
+
     try {
       await LeadCliniciansApi.addClinician(patientId, selectedHcpId)
       alert.success(t('clinician-add-success'))
