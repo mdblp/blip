@@ -34,6 +34,7 @@ import { renderHook } from '@testing-library/react'
 import {
   useAddClinicianDialog
 } from '../../../../../../../../pages/patient-view/patient-profile/sections/personal-information/clinicians/add-clinician-dialog/add-clinician-dialog.hook'
+import { UserInviteStatus } from '../../../../../../../../lib/team/models/enums/user-invite-status.enum'
 
 jest.mock('../../../../../../../../lib/team')
 jest.mock('../../../../../../../../lib/auth')
@@ -50,17 +51,25 @@ describe('Add clinician dialog hook', () => {
   const team1 = {
     id: 'teamId1',
     members: [
-      { userId: memberId1 },
-      { userId: memberId2 },
-      { userId: memberId3 }
+      { userId: memberId1, status: UserInviteStatus.Accepted },
+      { userId: memberId2, status: UserInviteStatus.Accepted },
+      { userId: memberId3, status: UserInviteStatus.Accepted }
     ]
   } as Team
 
   const team2 = {
     id: 'teamId2',
     members: [
-      { userId: memberId4 },
-      { userId: memberId5 }
+      { userId: memberId4, status: UserInviteStatus.Accepted },
+      { userId: memberId5, status: UserInviteStatus.Accepted }
+    ]
+  } as Team
+
+  const team3 = {
+    id: 'teamId3',
+    members: [
+      { userId: memberId3, status: UserInviteStatus.Pending },
+      { userId: memberId4, status: UserInviteStatus.Accepted }
     ]
   } as Team
 
@@ -98,9 +107,9 @@ describe('Add clinician dialog hook', () => {
       }))
       expect(result.current.getAvailableHcps()).toEqual(
         [
-          { userId: memberId1 },
-          { userId: memberId4 },
-          { userId: memberId5 }
+          { userId: memberId1, status: UserInviteStatus.Accepted },
+          { userId: memberId4, status: UserInviteStatus.Accepted },
+          { userId: memberId5, status: UserInviteStatus.Accepted }
         ]
       )
     })
@@ -122,7 +131,29 @@ describe('Add clinician dialog hook', () => {
       }))
       expect(result.current.getAvailableHcps()).toEqual(
         [
-          { userId: memberId1 }
+          { userId: memberId1, status: UserInviteStatus.Accepted }
+        ]
+      )
+    })
+
+    it('should exclude pending members from the available HCP list', () => {
+      user = {
+        isUserHcp: () => true,
+        isUserPatient: () => false
+      } as User
+
+      team = team3
+
+      const { result } = renderHook(() => useAddClinicianDialog({
+        clinicianIds: [],
+        patientId: 'patientId',
+        selectedHcpId: 'hcpId',
+        onSuccess: () => {},
+        onClose: () => {}
+      }))
+      expect(result.current.getAvailableHcps()).toEqual(
+        [
+          { userId: memberId4, status: UserInviteStatus.Accepted }
         ]
       )
     })

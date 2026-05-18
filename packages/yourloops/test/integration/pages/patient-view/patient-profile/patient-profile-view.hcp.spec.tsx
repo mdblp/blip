@@ -28,7 +28,13 @@
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../../mock/direct-share.api.mock'
-import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
+import {
+  buildAvailableTeams,
+  mockTeamAPI,
+  myFourthTeamId,
+  myThirdTeamId,
+  myThirdTeamName
+} from '../../../mock/team.api.mock'
 import { mockUserApi } from '../../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../../mock/patient.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
@@ -67,6 +73,7 @@ import { mockLeadCliniciansApi } from '../../../mock/clinicians.api.mock'
 import { LeadCliniciansApi } from '../../../../../lib/lead-clinicians/lead-clinicians.api'
 import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import { ConfigService } from '../../../../../lib/config/config.service'
 
 describe('Patient profile view for HCP', () => {
   beforeEach(() => {
@@ -90,8 +97,8 @@ describe('Patient profile view for HCP', () => {
   const patientProfileRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.PatientProfile}`
   const malePatientProfileRoute = `/teams/${myThirdTeamId}/patients/${patientWithMmolId}${AppUserRoute.PatientProfile}`
 
-  const patientWithOneClinicianRoute = `/teams/${myThirdTeamId}/patients/${patient2Id}${AppUserRoute.PatientProfile}`
-  const patientWithFiveCliniciansRoute = `/teams/${myThirdTeamId}/patients/${patient3Id}${AppUserRoute.PatientProfile}`
+  const patientWithOneClinicianRoute = `/teams/${myFourthTeamId}/patients/${patient2Id}${AppUserRoute.PatientProfile}`
+  const patientWithFiveCliniciansRoute = `/teams/${myFourthTeamId}/patients/${patient3Id}${AppUserRoute.PatientProfile}`
 
   /**
    * @see https://github.com/testing-library/react-testing-library/issues/651
@@ -171,6 +178,18 @@ describe('Patient profile view for HCP', () => {
       })
 
       await testPatientPersonalInformation()
+    })
+
+    it('should hide date of birth when DATE_OF_BIRTH_HIDDEN is true', async () => {
+      jest.spyOn(ConfigService, 'getDateOfBirthHidden').mockReturnValue(true)
+
+      await act(async () => {
+        renderPage(patientProfileRoute)
+      })
+
+      const DOBText = screen.queryByText(/Date of birth/i)
+      expect(DOBText).not.toBeInTheDocument()
+
     })
 
     it('should display patient age with access time icon', async () => {

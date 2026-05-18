@@ -36,6 +36,7 @@ import { Patient } from '../../../lib/patient/models/patient.model'
 import { RangeSection } from './sections/range-section'
 import { UnsavedChangesDialog } from './dialog/unsaved-changes-dialog'
 import { useAuth } from '../../../lib/auth'
+import {  ConfigService } from '../../../lib/config/config.service'
 
 interface PatientProfileViewProps {
   patient : Patient
@@ -47,6 +48,8 @@ export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
   const [pendingNavigationSection, setPendingNavigationSection] = useState<PatientProfileViewSection | null>(null)
   const [showDialog, setShowDialog] = useState(false)
+  const dateOfBirthHidden = ConfigService.getDateOfBirthHidden()
+
 
   const confirmNavigation = (): void => {
     setShowDialog(false)
@@ -78,7 +81,7 @@ export const PatientProfileView: FC<PatientProfileViewProps> = ({ patient }) => 
   const displaySelectedSection = (): JSX.Element => {
     switch (selectedSection) {
       case PatientProfileViewSection.Information:
-        return <PatientPersonalInformationSection patient={patient} />
+        return <PatientPersonalInformationSection patient={patient} dateOfBirthHidden={dateOfBirthHidden} />
       case PatientProfileViewSection.Range:
         return <RangeSection patient={patient} />
       case PatientProfileViewSection.Alerts:

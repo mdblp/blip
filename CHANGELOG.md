@@ -3,8 +3,15 @@ Blip is the web front end for YourLoops system.
 It is based on Tidepool Blip 1.27.
 
 ## 3.10.0-beta - 2026-04-15
+### Added
+- YLP-3907 Add a conditional rendering on birth date display
+
 ### Engineering
 - YLP-3885 Daily components migration (data elements only)
+
+## 3.9.1 - 2026-05-04
+### Fixed
+- YLP-3897 Cannot add clinicians to patient if there are pending members in the team
 
 ## 3.9.0 - 2026-04-14
 ### Added

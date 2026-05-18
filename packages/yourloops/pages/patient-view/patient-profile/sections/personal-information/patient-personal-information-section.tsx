@@ -39,6 +39,7 @@ import { PatientLeadClinicians } from './clinicians/patient-lead-clinicians'
 
 interface InformationSectionProps {
   patient: Patient
+  dateOfBirthHidden: boolean
 }
 
 const useStyles = makeStyles()((theme) => ({
@@ -57,7 +58,7 @@ const useStyles = makeStyles()((theme) => ({
 }))
 
 export const PatientPersonalInformationSection: FC<InformationSectionProps> = (props) => {
-  const { patient } = props
+  const { patient, dateOfBirthHidden } = props
   const theme = useTheme()
   const { classes } = useStyles()
 
@@ -74,7 +75,7 @@ export const PatientPersonalInformationSection: FC<InformationSectionProps> = (p
           }}>
           <PatientTitle patient={patient} />
 
-          <PatientInformation patient={patient} />
+          <PatientInformation patient={patient} dateOfBirthHidden={dateOfBirthHidden} />
 
           <div className={classes.separator} />
 
