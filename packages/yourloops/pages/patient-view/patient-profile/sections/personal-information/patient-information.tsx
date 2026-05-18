@@ -46,10 +46,11 @@ import { formatNumberForLang } from '../../../../../lib/language'
 
 interface PatientInformationProps {
   patient: Patient
+  dateOfBirthHidden: boolean
 }
 
 export const PatientInformation: FC<PatientInformationProps> = (props) => {
-  const { patient } = props
+  const { patient, dateOfBirthHidden } = props
   const { t } = useTranslation()
 
   const patientInfo = useMemo(() => getPatientDisplayInfo(patient), [patient])
@@ -57,7 +58,10 @@ export const PatientInformation: FC<PatientInformationProps> = (props) => {
   return (
     <Grid container spacing={2}>
       <Grid size={6}>
-        <InfoRow icon={CakeIcon} dataTestId='date-of-birth' label={t('date-of-birth')} value={`${formatBirthdate(patient.profile.birthdate)} (${patientInfo.age})`} />
+        { dateOfBirthHidden ?
+          <InfoRow icon={CakeIcon} dataTestId='age' label={t('age')} value={patientInfo.age} />
+          : <InfoRow icon={CakeIcon} dataTestId='date-of-birth' label={t('date-of-birth')} value={`${formatBirthdate(patient.profile.birthdate)} (${patientInfo.age})`} />
+        }
         <InfoRow icon={PersonIcon} dataTestId='gender' label={t('gender')} value={patientInfo.gender} />
         <InfoRow icon={MonitorWeightIcon} dataTestId='weight' label={t(`params|${DblParameter.Weight}`)} value={formatNumberForLang(patientInfo.weight)} />
         <InfoRow icon={HeightIcon} dataTestId='height' label={t(`params|${DblParameter.Height}`)} value={formatNumberForLang(patientInfo.height)} />

@@ -92,7 +92,8 @@ const config = {
   YLPZ_RA_LAD_DE: process.env.YLPZ_RA_LAD_DE,
   IDLE_TIMEOUT_MS: process.env.IDLE_TIMEOUT_MS || 1800000,
   EATING_SHORTLY_ENABLED: booleanFromText(process.env.EATING_SHORTLY_ENABLED, false),
-  METRICS_CLICKODROME_ENABLED: booleanFromText(process.env.METRICS_CLICKODROME_ENABLED, true)
+  METRICS_CLICKODROME_ENABLED: booleanFromText(process.env.METRICS_CLICKODROME_ENABLED, true),
+  DATE_OF_BIRTH_HIDDEN: booleanFromText(process.env.DATE_OF_BIRTH_HIDDEN, false)
 }
 
 module.exports = config
