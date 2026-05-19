@@ -27,7 +27,7 @@
 
 import React, { type FunctionComponent } from 'react'
 import * as d3 from 'd3'
-import { TrendsSvgContainerSized as TrendsSvgContainer } from '../trends-svg-container/trends-svg-container'
+import { TrendsSvgContainer } from '../trends-svg-container/trends-svg-container'
 import { type BgPrefs } from '../../../../models/blood-glucose.model'
 import type MedicalDataService from 'medical-domain'
 import { type Cbg, type WeekDaysFilter, Unit } from 'medical-domain'

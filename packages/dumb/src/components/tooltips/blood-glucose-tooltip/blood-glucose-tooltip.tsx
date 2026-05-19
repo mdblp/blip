@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -55,7 +55,7 @@ export const BloodGlucoseTooltip: FunctionComponent<BloodGlucoseTooltipProps> = 
   const formattedValue = formatBgValue(data.value, bgPrefs.bgUnits)
 
   const bgClass = getBgClass(
-    convertBgClassesToBgBounds(bgPrefs.bgClasses),
+    convertBgClassesToBgBounds(bgPrefs.bgClasses, bgPrefs.bgUnits),
     data.value,
     ClassificationType.FiveWay
   )

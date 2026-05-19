@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,14 +26,14 @@
  */
 
 import { isNumber } from 'lodash'
-import { type BgBounds, BgClass, type BgClasses, ClassificationType } from 'medical-domain'
+import { type BgBounds, BgClass, type BgClasses, BgUnit, ClassificationType, defaultBgClasses } from 'medical-domain'
 
-export const convertBgClassesToBgBounds = (bgClasses: BgClasses): BgBounds => {
+export const convertBgClassesToBgBounds = (bgClasses: BgClasses, bgUnits: BgUnit): BgBounds => {
   return {
-    veryHighThreshold: bgClasses.high,
-    targetUpperBound: bgClasses.target,
-    targetLowerBound: bgClasses.low,
-    veryLowThreshold: bgClasses.veryLow
+    veryLowThreshold: bgClasses.veryLow ? bgClasses.veryLow : defaultBgClasses[bgUnits].veryLow,
+    targetLowerBound: bgClasses.low ? bgClasses.low : defaultBgClasses[bgUnits].low,
+    targetUpperBound: bgClasses.target ? bgClasses.target : defaultBgClasses[bgUnits].target,
+    veryHighThreshold: bgClasses.high ? bgClasses.high : defaultBgClasses[bgUnits].high
   }
 }
 

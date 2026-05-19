@@ -238,6 +238,7 @@ export const getAlarmEventIcon = (alarmEventType: AlarmEventType): string => {
     case AlarmEventType.Hypoglycemia:
       return alarmEventHypoIcon
     case AlarmEventType.Device:
+    case AlarmEventType.Unknown:
     default:
       return alarmEventDeviceIcon
   }

@@ -6,6 +6,9 @@ It is based on Tidepool Blip 1.27.
 ### Added
 - YLP-3907 Add a conditional rendering on birth date display
 
+### Engineering
+- YLP-3885 Daily components migration (data elements only)
+
 ## 3.9.1 - 2026-05-04
 ### Fixed
 - YLP-3897 Cannot add clinicians to patient if there are pending members in the team

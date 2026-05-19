@@ -142,7 +142,7 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   expect(screen.queryByTestId(`pa_group_${PHYSICAL_ACTIVITY_WITHOUT_NAME_ID}`)).not.toContain('Updated at')
   await checkTidelineContainerElementTooltip(`reservoir_group_${RESERVOIR_CHANGE_ID}`, 'Pump7:00 pmCartridge change')
   await checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, 'Settings change6:00 pmAggressiveness for lunch110→100%')
-  await checkTidelineContainerElementTooltip(`cbg_${CBG_ID}`, 'Glycemia5:30 pmGlucose189')
+  await checkTidelineContainerElementTooltip(`cbg_group_${CBG_ID}`, 'Glycemia5:30 pmGlucose189')
   await checkTidelineContainerElementTooltip(`smbg_group_${SMBG_ID}`, 'Glycemia5:15 pmGlucose189Calibration')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_HYPERGLYCEMIA_ID}`, 'Alert 101132:00 amHyperglycemiaG6 readings are above a configurable threshold (250 mg/dL by default).IMPORTANT: this alert is triggered only if loop mode is OFF.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_HYPOGLYCEMIA_ID}`, 'Alarm 120003:00 amHypoglycemiaYour glycemia is below 55 mg/dL.IMPORTANT this alarm is triggered only if loop mode is OFF.')
@@ -219,9 +219,9 @@ export const checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware = async ()
 export const checkDailyTidelineContainerTooltipsDblg2 = async () => {
   expect(await screen.findByTestId(`nightMode_group_${NIGHT_MODE_ID}`, {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
   await checkTidelineContainerElementTooltip(`nightMode_group_${NIGHT_MODE_ID}`, 'Night mode11:00 pmDuration10 hours')
-  await checkTidelineContainerElementTooltip(`iob_${IOB_ID}`,'Active insulin5:30 pmInsulin on board (IOB)Insulin25.00U')
+  await checkTidelineContainerElementTooltip(`iob_group_${IOB_ID}`,'Active insulin5:30 pmInsulin on board (IOB)Insulin25.00U')
   await checkTidelineContainerElementTooltip(`bolus_eating_shortly_${EATING_SHORTLY_BOLUS_ID}`, 'Meal5:30 pmMeal without carb countingLoop modeBolus TypeStandardDelivered0.5U')
-  await checkTidelineContainerElementTooltip(`eating_shortly_event_${EATING_SHORTLY_EVENT_ID}`, 'Meal5:30 pmMeal without carb counting')
+  await checkTidelineContainerElementTooltip(`eatingShortly_group_${EATING_SHORTLY_EVENT_ID}`, 'Meal5:30 pmMeal without carb counting')
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_WITHOUT_BOLUS_ID}`, `Meal9:10 pmCarbs30gEntered at ${moment(WIZARD_INPUT_TIME).format('h:mm a')}No bolus recommended`)
 }
 
@@ -238,7 +238,7 @@ export const checkDailyTidelineContainerTooltipsMmolL = async () => {
   await checkTidelineContainerElementTooltip(`pa_group_${PHYSICAL_ACTIVITY_ID}`, `Physical Activity3:00 pmNameRunningIntensitymoderateDuration30 minutesEntered at${moment(PHYSICAL_ACTIVITY_CREATE_TIME).format('h')}:00 pm`)
   await checkTidelineContainerElementTooltip(`reservoir_group_${RESERVOIR_CHANGE_ID}`, 'Pump7:00 pmCartridge change')
   await checkTidelineContainerElementTooltip(`param_group_${PARAMETER_ID}`, 'Settings change6:00 pmAggressiveness for lunch110→100%')
-  await checkTidelineContainerElementTooltip(`cbg_${CBG_ID}`, 'Glycemia5:30 pmGlucose10.5')
+  await checkTidelineContainerElementTooltip(`cbg_group_${CBG_ID}`, 'Glycemia5:30 pmGlucose10.5')
   await checkTidelineContainerElementTooltip(`smbg_group_${SMBG_ID}`, 'Glycemia5:15 pmGlucose10.5Calibration')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_HYPERGLYCEMIA_ID}`, 'Alert 101132:00 amHyperglycemiaG6 readings are above a configurable threshold (13.9 mmol/L by default).IMPORTANT: this alert is triggered only if loop mode is OFF.Occurred multiple times with a frequency of 30 minutes or less:at 2:10 am')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_G6_HYPOGLYCEMIA_ID}`, 'Alarm 120003:00 amHypoglycemiaYour glycemia is below 3.1 mmol/L.IMPORTANT this alarm is triggered only if loop mode is OFF.')

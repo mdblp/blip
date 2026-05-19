@@ -15,10 +15,8 @@
 
 import Daily from './daily'
 import Trends from './trends'
-import Footer from './footer'
 
 export {
   Daily,
-  Trends,
-  Footer
+  Trends
 }
