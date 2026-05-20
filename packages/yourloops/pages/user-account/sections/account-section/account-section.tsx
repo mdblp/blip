@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,21 +25,37 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
-import { type LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
-import { type BgUnit } from 'medical-domain'
-import { type Gender } from '../../../lib/auth/models/enums/gender.enum'
-import type { CountryCode } from '../../../lib/auth/models/country.model'
+import React, { FC } from 'react'
+import CardHeader from '@mui/material/CardHeader'
+import CardContent from '@mui/material/CardContent'
+import { UserAccountPageContextProvider } from '../../user-account-page-context'
+import { UserAccountForm } from '../../forms/user-account-form'
+import { SecurityForm } from '../../forms/security-form'
+import { ProfessionalAccountForm } from '../../forms/professional-account-form'
+import { useAuth } from '../../../../lib/auth'
+import { useTranslation } from 'react-i18next'
 
-export interface UserAccountForm {
-  feedbackAccepted: boolean | undefined
-  firstName: string
-  hcpProfession: HcpProfession
-  lang: LanguageCodes
-  lastName: string
-  sex: Gender | undefined
-  units: BgUnit
-  country: CountryCode
+export const AccountSection: FC = () => {
+  const { t } = useTranslation()
+  const { user } = useAuth()
+
+  return (
+    <>
+      <CardHeader title={t('user-account')} data-testid="user-account-title" />
+
+      <CardContent>
+        <UserAccountPageContextProvider>
+          <UserAccountForm />
+        </UserAccountPageContextProvider>
+
+        {!user.isUserPatient() &&
+          <SecurityForm />
+        }
+
+        {user.isUserCaregiver() &&
+          <ProfessionalAccountForm />
+        }
+      </CardContent>
+    </>
+  )
 }
-
-export type UserAccountErrors = Record<string, boolean>

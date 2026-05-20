@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,21 +25,47 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
-import { type LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
-import { type BgUnit } from 'medical-domain'
-import { type Gender } from '../../../lib/auth/models/enums/gender.enum'
-import type { CountryCode } from '../../../lib/auth/models/country.model'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import MenuItem from '@mui/material/MenuItem'
+import React, { FC } from 'react'
+import { makeStyles } from 'tss-react/mui'
+import { useTheme } from '@mui/material/styles'
 
-export interface UserAccountForm {
-  feedbackAccepted: boolean | undefined
-  firstName: string
-  hcpProfession: HcpProfession
-  lang: LanguageCodes
-  lastName: string
-  sex: Gender | undefined
-  units: BgUnit
-  country: CountryCode
+interface SectionMenuItemProps {
+  label: string
+  isSelected: boolean
+  selectSection: () => void
+  children: React.ReactNode
+  testId: string
 }
 
-export type UserAccountErrors = Record<string, boolean>
+const useStyles = makeStyles()((theme) => ({
+  menuTitle: {
+    fontWeight: 'bold',
+    paddingLeft: theme.spacing(2)
+  },
+  menuItemText: {
+    whiteSpace: 'pre-line',
+  }
+}))
+
+export const SectionMenuItem: FC<SectionMenuItemProps> = (props) => {
+  const { isSelected, label, selectSection, children, testId } = props
+  const { classes } = useStyles()
+  const theme = useTheme()
+
+  return (
+    <MenuItem
+      selected={isSelected}
+      onClick={() => selectSection()}
+      sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
+      data-testid={testId}
+    >
+      <ListItemIcon>
+        {children}
+      </ListItemIcon>
+      <ListItemText className={classes.menuItemText}>{label}</ListItemText>
+    </MenuItem>
+  )
+}

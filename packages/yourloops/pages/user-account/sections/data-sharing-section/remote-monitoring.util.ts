@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,21 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
-import { type LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
-import { type BgUnit } from 'medical-domain'
-import { type Gender } from '../../../lib/auth/models/enums/gender.enum'
-import type { CountryCode } from '../../../lib/auth/models/country.model'
+import { PartnerName } from '../../../../lib/external-consents/models/enum/partner-name.enum'
+import i18next from 'i18next'
 
-export interface UserAccountForm {
-  feedbackAccepted: boolean | undefined
-  firstName: string
-  hcpProfession: HcpProfession
-  lang: LanguageCodes
-  lastName: string
-  sex: Gender | undefined
-  units: BgUnit
-  country: CountryCode
+const t = i18next.t.bind(i18next)
+
+export const getRemoteMonitoringToolLabel = (name: PartnerName) => {
+  switch (name) {
+    case PartnerName.MyDiabby:
+      return t('my-diabby')
+    case PartnerName.GlookoXT:
+      return t('glooko-xt')
+    default:
+      return name
+  }
 }
-
-export type UserAccountErrors = Record<string, boolean>

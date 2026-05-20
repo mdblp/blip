@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import { type HcpProfession } from './enums/hcp-profession.enum'
 import { type UserRole } from './enums/user-role.enum'
 import { type LanguageCodes } from './enums/language-codes.enum'
-import { type CountryCodes } from './country.model'
+import { type CountryCode } from './country.model'
 
 export interface SignupForm {
   accountRole: UserRole
@@ -37,7 +37,7 @@ export interface SignupForm {
   hcpProfession?: HcpProfession
   preferencesLanguage: LanguageCodes
   privacyPolicy: boolean
-  profileCountry: CountryCodes
+  profileCountry: CountryCode
   profileFirstname: string
   profileLastname: string
   terms: boolean

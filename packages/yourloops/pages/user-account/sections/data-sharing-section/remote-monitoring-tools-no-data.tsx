@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,21 +25,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
-import { type LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
-import { type BgUnit } from 'medical-domain'
-import { type Gender } from '../../../lib/auth/models/enums/gender.enum'
-import type { CountryCode } from '../../../lib/auth/models/country.model'
+import React, { FC } from 'react'
+import { useTranslation } from 'react-i18next'
+import Typography from '@mui/material/Typography'
+import Alert from '@mui/material/Alert'
 
-export interface UserAccountForm {
-  feedbackAccepted: boolean | undefined
-  firstName: string
-  hcpProfession: HcpProfession
-  lang: LanguageCodes
-  lastName: string
-  sex: Gender | undefined
-  units: BgUnit
-  country: CountryCode
+export const RemoteMonitoringToolsNoData: FC = () => {
+  const { t } = useTranslation()
+
+  return (
+    <>
+      <Typography
+        variant="body1"
+        data-testid="patient-clinicians-description"
+      >
+        {t('data-sharing-not-enabled')}
+      </Typography>
+
+      <Alert severity="info" sx={{ marginTop: 2, width: 'fit-content' }}>
+        {t('remote-monitoring-information')}
+      </Alert>
+    </>
+  )
 }
-
-export type UserAccountErrors = Record<string, boolean>

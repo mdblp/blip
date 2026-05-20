@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,14 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type CountryCodes } from './country.model'
+import { type CountryCode } from './country.model'
 import { type BgUnit, DeviceSystem } from 'medical-domain'
 
 export interface Settings {
   units?: {
     bg?: BgUnit
   }
-  country?: CountryCodes
+  country?: CountryCode
   a1c?: {
     date: string
     rawdate: string

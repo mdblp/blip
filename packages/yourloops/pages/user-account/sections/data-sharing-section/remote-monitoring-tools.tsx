@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,21 +25,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
-import { type LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
-import { type BgUnit } from 'medical-domain'
-import { type Gender } from '../../../lib/auth/models/enums/gender.enum'
-import type { CountryCode } from '../../../lib/auth/models/country.model'
+import React, { FC } from 'react'
+import { ExternalConsent } from '../../../../lib/external-consents/models/external-consent.model'
+import { RemoteMonitoringToolsNoData } from './remote-monitoring-tools-no-data'
+import { RemoteMonitoringToolsTable } from './remote-monitoring-tools-table'
 
-export interface UserAccountForm {
-  feedbackAccepted: boolean | undefined
-  firstName: string
-  hcpProfession: HcpProfession
-  lang: LanguageCodes
-  lastName: string
-  sex: Gender | undefined
-  units: BgUnit
-  country: CountryCode
+interface RemoteMonitoringToolsContentProps {
+  consents: ExternalConsent[]
+  patientId: string
+  refresh: () => void
 }
 
-export type UserAccountErrors = Record<string, boolean>
+export const RemoteMonitoringTools: FC<RemoteMonitoringToolsContentProps> = (props) => {
+  const { consents, patientId, refresh } = props
+
+  const hasConsents = consents.length > 0
+
+  return (
+    <>
+      {
+        hasConsents
+          ? <RemoteMonitoringToolsTable
+            consents={consents}
+            patientId={patientId}
+            refresh={refresh}
+          />
+          : <RemoteMonitoringToolsNoData />
+      }
+    </>
+  )
+}

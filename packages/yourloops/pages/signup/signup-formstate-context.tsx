@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,7 +31,7 @@ import { getCurrentLang } from '../../lib/language'
 import { type SignupForm } from '../../lib/auth'
 import { type SignupFormKey } from './models/enums/signup-form-key.enum'
 import { UserRole } from '../../lib/auth/models/enums/user-role.enum'
-import { CountryCodes } from '../../lib/auth/models/country.model'
+import { CountryCode } from '../../lib/auth/models/country.model'
 
 interface ISignUpFormStateContext {
   signupForm: SignupForm
@@ -42,7 +42,7 @@ const initialState: SignupForm = {
   accountRole: UserRole.Unset,
   profileFirstname: '',
   profileLastname: '',
-  profileCountry: CountryCodes.Unknown,
+  profileCountry: CountryCode.Unknown,
   preferencesLanguage: getCurrentLang(),
   terms: false,
   privacyPolicy: false

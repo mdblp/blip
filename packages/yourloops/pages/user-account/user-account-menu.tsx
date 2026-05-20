@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,21 +25,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
-import { type LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
-import { type BgUnit } from 'medical-domain'
-import { type Gender } from '../../../lib/auth/models/enums/gender.enum'
-import type { CountryCode } from '../../../lib/auth/models/country.model'
+import React, { FC } from 'react'
+import { UserAccountSection } from './models/enums/user-account-section.enum'
+import { AccountCircle, Share } from '@mui/icons-material'
+import { SectionMenu } from '../../components/menus/section-menu/section-menu'
+import { useTranslation } from 'react-i18next'
 
-export interface UserAccountForm {
-  feedbackAccepted: boolean | undefined
-  firstName: string
-  hcpProfession: HcpProfession
-  lang: LanguageCodes
-  lastName: string
-  sex: Gender | undefined
-  units: BgUnit
-  country: CountryCode
+interface UserAccountMenuProps {
+  selectedSection: UserAccountSection
+  selectSection: (section: UserAccountSection) => void
 }
 
-export type UserAccountErrors = Record<string, boolean>
+export const UserAccountMenu: FC<UserAccountMenuProps> = (props) => {
+  const { selectedSection, selectSection } = props
+  const { t } = useTranslation()
+
+  const sections = [
+    {
+      label: t('account'),
+      value: UserAccountSection.Account,
+      testId: 'account-menu-button',
+      icon: <AccountCircle fontSize="small" />
+    },
+    {
+      label: t('data-sharing'),
+      value: UserAccountSection.DataSharing,
+      testId: 'data-sharing-menu-button',
+      icon: <Share fontSize="small" />
+    }
+  ]
+
+  return (
+    <SectionMenu
+      title={t('user-account')}
+      sections={sections}
+      selectedSection={selectedSection}
+      selectSection={selectSection}
+      testId="user-account-menu"
+    />
+  )
+}

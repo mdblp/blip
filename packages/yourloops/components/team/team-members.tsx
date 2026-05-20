@@ -121,7 +121,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
   }
 
   return (
-    <React.Fragment>
+    <>
       <div className={commonTeamClasses.root} data-testid="team-members">
         <div className={commonTeamClasses.categoryHeader}>
           <CardHeader title={t('members')} />
@@ -180,7 +180,7 @@ function TeamMembers(props: TeamMembersProps): JSX.Element {
         </Box>
       </div>
       <AddMemberDialog addMember={addMember} />
-    </React.Fragment>
+    </>
   )
 }
 

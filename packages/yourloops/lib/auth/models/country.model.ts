@@ -26,11 +26,11 @@
  */
 
 export interface Country {
-  code: CountryCodes
+  code: CountryCode
   name: string
 }
 
-export enum CountryCodes {
+export enum CountryCode {
   Austria = 'AT',
   Belgium = 'BE',
   France = 'FR',
