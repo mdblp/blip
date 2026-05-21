@@ -156,6 +156,7 @@ export const RemoteMonitoringToolsTable: FC<RemoteMonitoringToolsTableProps> = (
                       <Button
                         variant="outlined"
                         onClick={() => onClickRevoke(consent)}
+                        data-testid="revoke-consent-button"
                       >
                         {t('revoke-consent')}
                       </Button>
