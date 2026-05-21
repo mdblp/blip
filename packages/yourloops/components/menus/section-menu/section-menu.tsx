@@ -30,22 +30,22 @@ import MenuList from '@mui/material/MenuList'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import Card from '@mui/material/Card'
-import React, { FC } from 'react'
+import React from 'react'
 import { makeStyles } from 'tss-react/mui'
 import { useTheme } from '@mui/material/styles'
 import { SectionMenuItem } from './section-menu-item'
 
-interface SectionMenuProps {
+interface SectionMenuProps<T extends string> {
   title: string
-  sections: SectionMenuState[]
+  sections: SectionMenuState<T>[]
   selectedSection: string
-  selectSection: (section: string) => void
+  selectSection: (section: T) => void
   testId: string
 }
 
-interface SectionMenuState {
+interface SectionMenuState<T extends string> {
   label: string
-  value: string
+  value: T
   testId: string
   icon: React.ReactNode
 }
@@ -60,7 +60,7 @@ const useStyles = makeStyles()((theme) => ({
   }
 }))
 
-export const SectionMenu: FC<SectionMenuProps> = (props) => {
+export const SectionMenu = <T extends string>(props: SectionMenuProps<T>) => {
   const { sections, selectedSection, selectSection, title, testId } = props
   const { classes } = useStyles()
   const theme = useTheme()
@@ -74,9 +74,9 @@ export const SectionMenu: FC<SectionMenuProps> = (props) => {
             paddingTop: theme.spacing(1), marginBottom: theme.spacing(2),
           }} />
 
-          {sections.map((section: SectionMenuState) => (
+          {sections.map((section: SectionMenuState<T>) => (
             <SectionMenuItem
-              key={section.label}
+              key={section.value}
               label={section.label}
               isSelected={selectedSection === section.value}
               selectSection={() => selectSection(section.value)}

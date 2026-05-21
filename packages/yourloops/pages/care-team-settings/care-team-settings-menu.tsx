@@ -62,7 +62,7 @@ export const CareTeamSettingsMenu: FC<CareTeamSettingsMenuProps> = (props) => {
   ]
 
   return (
-    <SectionMenu
+    <SectionMenu<CareTeamSettingsSection>
       title={t('header-tab-care-team-settings')}
       sections={sections}
       selectedSection={selectedSection}

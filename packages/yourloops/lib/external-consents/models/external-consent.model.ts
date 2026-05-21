@@ -28,7 +28,7 @@
 import { PartnerName } from './enum/partner-name.enum'
 
 export interface ExternalConsent {
-  partnerId: string;
-  partnerName: PartnerName;
-  consentDate: string;
+  partnerId: string
+  partnerName: PartnerName
+  consentDate: string
 }

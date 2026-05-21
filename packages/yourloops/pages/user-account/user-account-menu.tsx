@@ -56,7 +56,7 @@ export const UserAccountMenu: FC<UserAccountMenuProps> = (props) => {
   ]
 
   return (
-    <SectionMenu
+    <SectionMenu<UserAccountSection>
       title={t('user-account')}
       sections={sections}
       selectedSection={selectedSection}

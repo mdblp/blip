@@ -77,7 +77,7 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
   ]
 
   return (
-    <SectionMenu
+    <SectionMenu<DeviceViewSection>
       title={t('devices')}
       sections={sections}
       selectedSection={selectedSection}

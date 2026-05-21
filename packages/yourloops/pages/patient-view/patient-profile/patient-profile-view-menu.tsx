@@ -64,7 +64,7 @@ export const PatientProfileViewMenu: FC<PatientProfileViewMenuProps> = (props) =
   ]
 
   return (
-    <SectionMenu
+    <SectionMenu<PatientProfileViewSection>
       title={t('patient-profile')}
       sections={sections}
       selectedSection={selectedSection}

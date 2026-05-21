@@ -143,7 +143,7 @@ export const RemoteMonitoringToolsTable: FC<RemoteMonitoringToolsTableProps> = (
                       <Avatar
                         variant="square"
                         src={getRemoteMonitoringToolLogo(consent.partnerName)}
-                        alt={consent.partnerName}
+                        alt={getRemoteMonitoringToolLabel(consent.partnerName)}
                       />
                     </TableCell>
                     <TableCell>
