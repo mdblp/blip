@@ -43,7 +43,7 @@ import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.
 import userEvent from '@testing-library/user-event'
 import { renderPage } from '../../utils/render'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { CountryCodes } from '../../../../lib/auth/models/country.model'
+import { CountryCode } from '../../../../lib/auth/models/country.model'
 import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
 import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 
@@ -114,7 +114,7 @@ describe('Signup stepper as hcp', () => {
         role: UserRole.Hcp,
         profile: expectedUserAccount,
         preferences: { displayLanguageCode: 'en' },
-        settings: { country: CountryCodes.UnitedKingdom }
+        settings: { country: CountryCode.UnitedKingdom }
       })
     )
     expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })

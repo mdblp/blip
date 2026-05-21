@@ -155,6 +155,7 @@
   "aria-search": "search",
   "aria-table-list-caregivers": "Table caregiver list",
   "aria-table-list-members": "Members' list",
+  "aria-table-remote-monitoring-tools": "Remote monitoring tools table",
   "aria-team-add-member-dialog-title": "New member for {{teamName}}",
   "aria-team-leave-dialog-question": "Are you sure you want to leave the care team {{teamName}}?",
   "aria-team-leave-dialog-title": "Leave care team",

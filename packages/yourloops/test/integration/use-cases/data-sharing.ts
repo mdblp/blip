@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,40 +26,29 @@
  */
 
 import {
-  checkCaregiverInfoUpdate,
-  checkCaregiverUserAccountLayout,
-  checkEmailChangeRequest,
-  checkHcpInfoUpdate,
-  checkHcpUserAccountLayout,
-  checkPasswordChangeRequest,
-  checkPasswordChangeRequestFailed,
-  checkPatientInfoUpdate,
-  checkPatientUserAccountLayout
-} from '../assert/user-account.assert'
+  checkDataSharingContentNoData,
+  checkDataSharingContentWithData,
+  checkRevokeConsentError,
+  checkRevokeConsentSuccess,
+  checkUserAccountMenuNotVisible,
+  checkUserAccountMenuVisible
+} from '../assert/data-sharing.assert'
 
-export const testCaregiverUserInfoUpdate = async (): Promise<void> => {
-  checkCaregiverUserAccountLayout()
-  await checkCaregiverInfoUpdate()
+export const testUserAccountMenuNotVisible = (): void => {
+  checkUserAccountMenuNotVisible()
 }
 
-export const testHcpUserInfoUpdate = async (): Promise<void> => {
-  checkHcpUserAccountLayout()
-  await checkHcpInfoUpdate()
+export const testDataSharingContentNoData = async (): Promise<void> => {
+  checkUserAccountMenuVisible()
+  await checkDataSharingContentNoData()
 }
 
-export const testPatientUserInfoUpdate = async (): Promise<void> => {
-  checkPatientUserAccountLayout()
-  await checkPatientInfoUpdate()
+export const testDataSharingContentWithData = async (): Promise<void> => {
+  checkUserAccountMenuVisible()
+  await checkDataSharingContentWithData()
+  await checkRevokeConsentSuccess()
 }
 
-export const testPasswordChangeRequest = async (userEmail: string): Promise<void> => {
-  await checkPasswordChangeRequest(userEmail)
-}
-
-export const testPasswordChangeRequestFailed = async (userEmail: string): Promise<void> => {
-  await checkPasswordChangeRequestFailed(userEmail)
-}
-
-export const testEmailChangeRequest = async (userId: string, newEmail: string, code: string): Promise<void> => {
-  await checkEmailChangeRequest(userId, newEmail, code)
+export const testRevokeConsentError = async (): Promise<void> => {
+  await checkRevokeConsentError()
 }

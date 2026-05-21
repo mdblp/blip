@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,41 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-  checkCaregiverInfoUpdate,
-  checkCaregiverUserAccountLayout,
-  checkEmailChangeRequest,
-  checkHcpInfoUpdate,
-  checkHcpUserAccountLayout,
-  checkPasswordChangeRequest,
-  checkPasswordChangeRequestFailed,
-  checkPatientInfoUpdate,
-  checkPatientUserAccountLayout
-} from '../assert/user-account.assert'
+import { ExternalConsentsApi } from '../../../lib/external-consents/external-consents.api'
 
-export const testCaregiverUserInfoUpdate = async (): Promise<void> => {
-  checkCaregiverUserAccountLayout()
-  await checkCaregiverInfoUpdate()
-}
-
-export const testHcpUserInfoUpdate = async (): Promise<void> => {
-  checkHcpUserAccountLayout()
-  await checkHcpInfoUpdate()
-}
-
-export const testPatientUserInfoUpdate = async (): Promise<void> => {
-  checkPatientUserAccountLayout()
-  await checkPatientInfoUpdate()
-}
-
-export const testPasswordChangeRequest = async (userEmail: string): Promise<void> => {
-  await checkPasswordChangeRequest(userEmail)
-}
-
-export const testPasswordChangeRequestFailed = async (userEmail: string): Promise<void> => {
-  await checkPasswordChangeRequestFailed(userEmail)
-}
-
-export const testEmailChangeRequest = async (userId: string, newEmail: string, code: string): Promise<void> => {
-  await checkEmailChangeRequest(userId, newEmail, code)
+export const mockExternalConsentsApi = () => {
+  jest.spyOn(ExternalConsentsApi, 'getConsents').mockResolvedValue([])
+  jest.spyOn(ExternalConsentsApi, 'revokeConsent').mockResolvedValue()
 }

@@ -34,7 +34,7 @@ import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
-import { CountryCodes } from '../../../../lib/auth/models/country.model'
+import { CountryCode } from '../../../../lib/auth/models/country.model'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
 import UserApi from '../../../../lib/auth/user.api'
@@ -53,6 +53,7 @@ import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
+import { testUserAccountMenuNotVisible } from '../../use-cases/data-sharing'
 
 describe('User account page for hcp', () => {
   const userAccountRoute = AppUserRoute.UserAccount
@@ -68,7 +69,7 @@ describe('User account page for hcp', () => {
     hcpProfession: HcpProfession.diabeto
   }
   const settings: Settings = {
-    country: CountryCodes.France,
+    country: CountryCode.France,
     units: { bg: Unit.MmolPerLiter }
   }
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
@@ -107,7 +108,7 @@ describe('User account page for hcp', () => {
       }
     }
     const expectedPreferences = { displayLanguageCode: 'en' as LanguageCodes }
-    const expectedSettings: Settings = { units: { bg: Unit.MilligramPerDeciliter }, country: CountryCodes.Austria }
+    const expectedSettings: Settings = { units: { bg: Unit.MilligramPerDeciliter }, country: CountryCode.Austria }
     const updateUserAccountMock = jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValue(expectedUserAccount)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
     const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
@@ -146,5 +147,15 @@ describe('User account page for hcp', () => {
     })
 
     await testEmailChangeRequest(loggedInUserId, 'newEmail@diabeloop.fr', '457845789')
+  })
+
+  it('should not have access to the Data Sharing section', async () => {
+    const router = renderPage(userAccountRoute)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(userAccountRoute)
+      expect(screen.getByText('User account')).toBeVisible()
+    })
+
+    testUserAccountMenuNotVisible()
   })
 })

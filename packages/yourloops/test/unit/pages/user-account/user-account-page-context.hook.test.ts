@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,7 +31,7 @@ import { type User } from '../../../../lib/auth'
 import * as alertMock from '../../../../components/utils/snackbar'
 import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
-import { CountryCodes } from '../../../../lib/auth/models/country.model'
+import { CountryCode } from '../../../../lib/auth/models/country.model'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
@@ -66,7 +66,7 @@ describe('User account page context hook', () => {
       value: '7.5',
       date: '2020-01-01'
     },
-    country: CountryCodes.France,
+    country: CountryCode.France,
     units: { bg: Unit.MmolPerLiter }
   }
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }

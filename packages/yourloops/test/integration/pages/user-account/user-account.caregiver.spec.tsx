@@ -40,7 +40,7 @@ import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForCaregivers, mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
-import { CountryCodes } from '../../../../lib/auth/models/country.model'
+import { CountryCode } from '../../../../lib/auth/models/country.model'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 import UserApi from '../../../../lib/auth/user.api'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
@@ -62,6 +62,7 @@ import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
+import { testUserAccountMenuNotVisible } from '../../use-cases/data-sharing'
 
 describe('User account page for caregiver', () => {
   const userAccountRoute = AppUserRoute.UserAccount
@@ -76,7 +77,7 @@ describe('User account page for caregiver', () => {
     trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
   }
   const settings: Settings = {
-    country: CountryCodes.France,
+    country: CountryCode.France,
     units: { bg: Unit.MmolPerLiter }
   }
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
@@ -144,5 +145,15 @@ describe('User account page for caregiver', () => {
     })
 
     await testEmailChangeRequest(loggedInUserId, 'newEmail@diabeloop.fr', '457845789')
+  })
+
+  it('should not have access to the Data Sharing section', async () => {
+    const router = renderPage(userAccountRoute)
+    await waitFor(() => {
+      expect(router.state.location.pathname).toEqual(userAccountRoute)
+      expect(screen.getByText('User account')).toBeVisible()
+    })
+
+    testUserAccountMenuNotVisible()
   })
 })

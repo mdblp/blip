@@ -43,7 +43,7 @@ import userEvent from '@testing-library/user-event'
 import { renderPage } from '../../utils/render'
 import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { CountryCodes } from '../../../../lib/auth/models/country.model'
+import { CountryCode } from '../../../../lib/auth/models/country.model'
 
 describe('Signup stepper as caregiver', () => {
   const { updateAuth0UserMetadataMock } = mockUserApi()
@@ -99,7 +99,7 @@ describe('Signup stepper as caregiver', () => {
         role: UserRole.Caregiver,
         profile: expectedProfile,
         preferences: { displayLanguageCode: 'en' },
-        settings: { country: CountryCodes.Japan }
+        settings: { country: CountryCode.Japan }
       })
     )
     expect(getAccessTokenWithPopupMock).toHaveBeenCalledWith({ authorizationParams: { ignoreCache: true } })

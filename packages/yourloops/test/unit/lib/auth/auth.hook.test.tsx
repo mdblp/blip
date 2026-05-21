@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -39,7 +39,7 @@ import { type Settings } from '../../../../lib/auth/models/settings.model'
 import { AuthenticatedUserMetadata } from '../../../../lib/auth/models/enums/authenticated-user-metadata.enum'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { type UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
-import { CountryCodes } from '../../../../lib/auth/models/country.model'
+import { CountryCode } from '../../../../lib/auth/models/country.model'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 import { Unit } from 'medical-domain'
 
@@ -59,7 +59,7 @@ describe('Auth hook', () => {
     hcpProfession: HcpProfession.diabeto
   }
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.En }
-  const settings: Settings = { country: CountryCodes.France, units: { bg: Unit.MilligramPerDeciliter } }
+  const settings: Settings = { country: CountryCode.France, units: { bg: Unit.MilligramPerDeciliter } }
 
   const initAuthContext = async (): Promise<void> => {
     auth = null
@@ -132,7 +132,7 @@ describe('Auth hook', () => {
       ...account,
       privacyPolicy: { acceptanceTimestamp: new Date().toISOString(), isAccepted: true }
     }
-    const updatedSettings: Settings = { ...settings, country: CountryCodes.Italy }
+    const updatedSettings: Settings = { ...settings, country: CountryCode.Italy }
 
     beforeAll(() => {
       jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValueOnce(updatedUserAccount)
@@ -288,7 +288,7 @@ describe('Auth hook', () => {
         profileLastname: 'Hagine',
         hcpProfession: HcpProfession.nurse,
         preferencesLanguage: LanguageCodes.Fr,
-        profileCountry: CountryCodes.France,
+        profileCountry: CountryCode.France,
         terms: true,
         privacyPolicy: true,
         feedback: true
@@ -312,7 +312,7 @@ describe('Auth hook', () => {
       expect(auth.user.account.privacyPolicy.isAccepted).toBeTruthy()
       expect(auth.user.account.contactConsent.isAccepted).toBeTruthy()
       expect(auth.user.preferences.displayLanguageCode).toEqual(LanguageCodes.Fr)
-      expect(auth.user.settings.country).toEqual(CountryCodes.France)
+      expect(auth.user.settings.country).toEqual(CountryCode.France)
     })
   })
 })

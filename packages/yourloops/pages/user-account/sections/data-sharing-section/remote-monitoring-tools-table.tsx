@@ -120,8 +120,8 @@ export const RemoteMonitoringToolsTable: FC<RemoteMonitoringToolsTableProps> = (
       <Card variant="outlined" data-testid="remote-monitoring-tools-table">
         <TableContainer>
           <Table
-            data-testid="team-members-list-table"
-            aria-label={t('aria-table-list-members')}
+            data-testid="remote-monitoring-tools-table"
+            aria-label={t('aria-table-remote-monitoring-tools')}
           >
             <TableHead className={classes.tableHeader}>
               <TableRow>
@@ -137,7 +137,7 @@ export const RemoteMonitoringToolsTable: FC<RemoteMonitoringToolsTableProps> = (
                   <TableRow
                     key={consent.partnerId}
                     className={classes.hideLastBorder}
-                    data-testid={`consent-row-${consent.partnerName}`}
+                    data-testid={`monitoring-tool-row-${consent.partnerName}`}
                   >
                     <TableCell>
                       <Avatar

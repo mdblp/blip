@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -34,7 +34,7 @@ import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { type UserMetadata } from '../../../../lib/auth/models/user-metadata.model'
 import { type CompleteSignupPayload } from '../../../../lib/auth/models/complete-signup-payload.model'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
-import { CountryCodes } from '../../../../lib/auth/models/country.model'
+import { CountryCode } from '../../../../lib/auth/models/country.model'
 import { HcpProfession } from '../../../../lib/auth/models/enums/hcp-profession.enum'
 import { type ChangeUserRoleToHcpPayload } from '../../../../lib/auth/models/change-user-role-to-hcp-payload.model'
 
@@ -46,7 +46,7 @@ describe('User API', () => {
     fullName: 'Bernard Tichaut',
     email: 'narbe@email.com'
   }
-  const settings = { country: CountryCodes.France } as Settings
+  const settings = { country: CountryCode.France } as Settings
   const preferences = { displayLanguageCode: 'en' } as Preferences
 
   describe('getUserMetadata', () => {

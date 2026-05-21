@@ -29,7 +29,7 @@ import { User } from '../../../lib/auth'
 import { HcpProfession } from '../../../lib/auth/models/enums/hcp-profession.enum'
 import { AuthenticatedUserMetadata } from '../../../lib/auth/models/enums/authenticated-user-metadata.enum'
 import { UserRole } from '../../../lib/auth/models/enums/user-role.enum'
-import { CountryCodes } from '../../../lib/auth/models/country.model'
+import { CountryCode } from '../../../lib/auth/models/country.model'
 import { LanguageCodes } from '../../../lib/auth/models/enums/language-codes.enum'
 import { Unit } from 'medical-domain'
 
@@ -44,7 +44,7 @@ const getHcp = (): User => {
   hcp.frProId = 'ANS20211229094028'
   hcp.profile = { email, firstName: 'John', lastName: 'Doe', fullName: 'John Doe', hcpProfession: HcpProfession.diabeto }
   hcp.preferences = { displayLanguageCode: 'en' }
-  hcp.settings = { units: { bg: Unit.MilligramPerDeciliter }, country: CountryCodes.France }
+  hcp.settings = { units: { bg: Unit.MilligramPerDeciliter }, country: CountryCode.France }
   return hcp
 }
 
@@ -58,7 +58,7 @@ const getCaregiver = (): User => {
   })
   caregiver.profile = { email, firstName: 'Caregiver', lastName: 'Example', fullName: 'Caregiver Example' }
   caregiver.preferences = { displayLanguageCode: 'de' }
-  caregiver.settings = { country: CountryCodes.Germany, units: { bg: Unit.MmolPerLiter } }
+  caregiver.settings = { country: CountryCode.Germany, units: { bg: Unit.MmolPerLiter } }
   return caregiver
 }
 
@@ -70,7 +70,7 @@ const getPatient = (): User => {
     sub: 'auth0|a0a0a0b0',
     [AuthenticatedUserMetadata.Roles]: [UserRole.Patient]
   })
-  patient.settings = { a1c: { rawdate: '2020-01-01', date: '2020-01-01', value: '7.5' }, country: CountryCodes.France }
+  patient.settings = { a1c: { rawdate: '2020-01-01', date: '2020-01-01', value: '7.5' }, country: CountryCode.France }
   patient.profile = {
     email,
     firstName: 'Josephine',
