@@ -9,6 +9,9 @@ It is based on Tidepool Blip 1.27.
 ### Engineering
 - YLP-3885 Daily components migration (data elements only)
 
+### Changed
+- YLP-3858 Allowing HCP to add an 11-digit phone number.
+
 ## 3.9.1 - 2026-05-04
 ### Fixed
 - YLP-3897 Cannot add clinicians to patient if there are pending members in the team
