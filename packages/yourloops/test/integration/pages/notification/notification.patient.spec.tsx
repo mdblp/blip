@@ -25,16 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, waitFor } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { patient1Info } from '../../data/patient.api.data'
 import NotificationApi from '../../../../lib/notifications/notification.api'
-import { buildTeamOne, buildTeamTwo, anotherTeam } from '../../mock/team.api.mock'
+import { anotherTeam, buildTeamOne, buildTeamTwo } from '../../mock/team.api.mock'
 import TeamAPI from '../../../../lib/team/team.api'
 import { invitationTeam } from '../../data/notification.data'
 import { checkAcceptTeamInvite, checkPatientAcceptTeamInvite } from '../../assert/notification-join-team.assert'
-import { AppRoute, AppUserRoute } from '../../../../models/enums/routes.enum'
+import { AppUserRoute } from '../../../../models/enums/routes.enum'
 
 describe('Notification page for patient', () => {
   beforeAll(() => {
