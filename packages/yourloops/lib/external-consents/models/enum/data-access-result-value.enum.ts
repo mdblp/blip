@@ -25,36 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import HttpService from '../http/http.service'
-import { ExternalConsent } from './models/external-consent.model'
-
-const EXTERNAL_CONSENTS_URL = '/health-bridge/patient-consents'
-
-export class ExternalConsentsApi {
-  static async getConsents(patientId: string): Promise<ExternalConsent[]> {
-    const { data } = await HttpService.get<ExternalConsent[]>({ url: `${EXTERNAL_CONSENTS_URL}/${patientId}` })
-    return data
-  }
-
-  static async addConsent(patientId: string, partnerId: string): Promise<void> {
-    await HttpService.post({
-      url: EXTERNAL_CONSENTS_URL,
-      payload: {
-        userId: patientId,
-        partnerId
-      }
-    })
-  }
-
-  static async revokeConsent(patientId: string, partnerId: string): Promise<void> {
-    await HttpService.delete({
-      url: EXTERNAL_CONSENTS_URL,
-      config: {
-        data: {
-          userId: patientId,
-          partnerId
-        }
-      }
-    })
-  }
+export enum DataAccessResultValue {
+  Accepted = 'accepted',
+  Denied = 'denied',
+  Error = 'error',
 }

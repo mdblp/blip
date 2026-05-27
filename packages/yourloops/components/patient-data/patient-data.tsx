@@ -57,10 +57,15 @@ import { logError } from '../../utils/error.util'
 import { PatientProfileView } from '../../pages/patient-view/patient-profile/patient-profile-view'
 import { ConfigService } from '../../lib/config/config.service'
 import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
+import { useQueryParams } from '../../lib/custom-hooks/query-params.hook'
+import { DataAccessRequestDialog } from '../dialogs/data-access/data-access-request-dialog'
+import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
 
 interface PatientDataProps {
   patient: Patient
 }
+
+const SHOW_CONSENT_QUERY_PARAM = 'showConsent'
 
 export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: PatientDataProps) => {
   const alert = useAlert()
@@ -68,6 +73,16 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   const { t } = useTranslation()
   const patientIdForWhichDataHasBeenFetched = useRef(null)
   const { teamId } = useParams()
+  const { user } = useAuth()
+
+  const queryParams = useQueryParams()
+
+  // const showConsentDialog = queryParams.get(SHOW_CONSENT_QUERY_PARAM)
+  const showDataAccessRequestDialog = user.isUserPatient() && true
+  const partnerId = 'newid12345'
+  const partnerName = PartnerName.GlookoXT
+
+  // const showDataAccessResultDialog = true
 
   const {
     bgPrefs,
@@ -101,7 +116,6 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     messageThread,
     replyToMessage
   } = useDailyNotes({ dailyDate, dailyChartRef, medicalData })
-  const { user } = useAuth()
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
 
@@ -269,6 +283,13 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                     onClose={() => {
                       setShowPdfDialog(false)
                     }}
+                  />
+                }
+                {showDataAccessRequestDialog &&
+                  <DataAccessRequestDialog
+                    patientId={user.id}
+                    partnerId={partnerId}
+                    partnerName={partnerName}
                   />
                 }
               </>
