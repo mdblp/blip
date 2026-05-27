@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, waitFor } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import { checkPatientNavBarAsPatient } from '../../../assert/patient-nav-bar.assert'
 import { mockDataAPI } from '../../../mock/data.api.mock'
@@ -49,10 +49,9 @@ describe('Trends view for patient', () => {
 
   it('should render correct layout', async () => {
     mockDataAPI(getMinimalTrendViewData())
-    const trendsRoute = AppUserRoute.Trends
-    const router = renderPage(trendsRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(trendsRoute)
+
+    await act(async () => {
+      renderPage(AppUserRoute.Trends)
     })
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()

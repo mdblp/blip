@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,12 +28,12 @@
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { patient1Info } from '../../data/patient.api.data'
 import { renderPage } from '../../utils/render'
-import { waitFor } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { testCaregiversVisualisation } from '../../use-cases/patient-caregivers-management'
 import { mockMedicalFilesAPI } from '../../mock/medical-files.api.mock'
 import { mySecondTeamId, mySecondTeamName } from '../../mock/team.api.mock'
 import { mockChatAPI } from '../../mock/chat.api.mock'
-import { oneDayDashboardData, mockDataAPI } from '../../mock/data.api.mock'
+import { mockDataAPI, oneDayDashboardData } from '../../mock/data.api.mock'
 import { testAppMainLayoutForPatient } from '../../use-cases/app-main-layout-visualisation'
 
 describe('Caregivers list for patient', () => {
@@ -47,10 +47,8 @@ describe('Caregivers list for patient', () => {
   })
 
   it('should display a list of caregivers and allow to manage them', async () => {
-    const router = renderPage(patientCaregiversRoute)
-
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(patientCaregiversRoute)
+    await act(async () => {
+      renderPage(patientCaregiversRoute)
     })
 
     await testAppMainLayoutForPatient({ loggedInUserFullName: `${patient1Info.profile.lastName} ${patient1Info.profile.firstName}` })

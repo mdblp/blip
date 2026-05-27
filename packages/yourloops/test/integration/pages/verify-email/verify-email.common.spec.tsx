@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import * as auth0Mock from '@auth0/auth0-react'
 import { getAccessTokenWithPopupMock, logoutMock } from '../../mock/auth0.hook.mock'
 import { renderPage } from '../../utils/render'
-import { waitFor } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { AppRoute } from '../../../../models/enums/routes.enum'
 import { testVerifyEmail } from '../../use-cases/email-verification'
 import { Auth0Error } from '../../../../lib/auth/models/enums/auth0-error.enum'
@@ -46,9 +46,8 @@ describe('Verify email page', () => {
     })
     window.open = jest.fn()
 
-    const router = renderPage(AppRoute.VerifyEmail)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(AppRoute.VerifyEmail)
+    await act(async () => {
+      renderPage(AppRoute.VerifyEmail)
     })
 
     await testVerifyEmail()

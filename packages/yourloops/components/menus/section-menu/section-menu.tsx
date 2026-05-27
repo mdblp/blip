@@ -79,7 +79,7 @@ export const SectionMenu = <T extends string>(props: SectionMenuProps<T>) => {
               key={section.value}
               label={section.label}
               isSelected={selectedSection === section.value}
-              selectSection={() => selectSection(section.value)}
+              onClick={() => selectSection(section.value)}
               testId={section.testId}
             >
               {section.icon}
