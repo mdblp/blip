@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2024-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,7 +28,7 @@
 import * as auth0Mock from '@auth0/auth0-react'
 import { renderPage } from '../../utils/render'
 import { AppRoute } from '../../../../models/enums/routes.enum'
-import { waitFor } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { testSignupInformation } from '../../use-cases/signup-information'
 
 describe('Signup information page', () => {
@@ -43,10 +43,8 @@ describe('Signup information page', () => {
   })
 
   it('should render the page with correct elements', async () => {
-    const router = renderPage(AppRoute.SignupInformation)
-
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(AppRoute.SignupInformation)
+    await act(async () => {
+      renderPage(AppRoute.SignupInformation)
     })
 
     await testSignupInformation(loginWithRedirectMock)

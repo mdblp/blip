@@ -34,13 +34,13 @@ import {
 } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { screen, waitFor } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForCaregivers, mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
-import { CountryCodes } from '../../../../lib/auth/models/country.model'
+import { CountryCode } from '../../../../lib/auth/models/country.model'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
 import UserApi from '../../../../lib/auth/user.api'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
@@ -62,6 +62,7 @@ import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
+import { testUserAccountMenuNotVisible } from '../../use-cases/data-sharing'
 
 describe('User account page for caregiver', () => {
   const userAccountRoute = AppUserRoute.UserAccount
@@ -76,7 +77,7 @@ describe('User account page for caregiver', () => {
     trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true }
   }
   const settings: Settings = {
-    country: CountryCodes.France,
+    country: CountryCode.France,
     units: { bg: Unit.MmolPerLiter }
   }
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
@@ -104,9 +105,8 @@ describe('User account page for caregiver', () => {
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
     const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
 
-    const router = renderPage(userAccountRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(userAccountRoute)
+    await act(async () => {
+      renderPage(userAccountRoute)
     })
 
     await checkCaregiverLayout(`${account.lastName} ${account.firstName}`)
@@ -127,22 +127,26 @@ describe('User account page for caregiver', () => {
   })
 
   it('should render user account page for a caregiver and display error if change password failed', async () => {
-    const router = renderPage(userAccountRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(userAccountRoute)
-      expect(screen.getByText('User account')).toBeVisible()
+    await act(async () => {
+      renderPage(userAccountRoute)
     })
 
     await testPasswordChangeRequestFailed(loggedInUserEmail)
   })
 
   it('should open the change e-mail popup, complete the flow successfully and display success snackbar', async () => {
-    const router = renderPage(userAccountRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(userAccountRoute)
-      expect(screen.getByText('User account')).toBeVisible()
+    await act(async () => {
+      renderPage(userAccountRoute)
     })
 
     await testEmailChangeRequest(loggedInUserId, 'newEmail@diabeloop.fr', '457845789')
+  })
+
+  it('should not have access to the Data Sharing section', async () => {
+    await act(async () => {
+      renderPage(userAccountRoute)
+    })
+
+    testUserAccountMenuNotVisible()
   })
 })

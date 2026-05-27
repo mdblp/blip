@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,13 +29,13 @@ import { renderPage } from '../../utils/render'
 import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { waitFor } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { checkPatientLayout } from '../../assert/layout.assert'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
 import { type UserAccount } from '../../../../lib/auth/models/user-account.model'
 import { type Settings } from '../../../../lib/auth/models/settings.model'
-import { CountryCodes } from '../../../../lib/auth/models/country.model'
+import { CountryCode } from '../../../../lib/auth/models/country.model'
 import { type Preferences } from '../../../../lib/auth/models/preferences.model'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import { LanguageCodes } from '../../../../lib/auth/models/enums/language-codes.enum'
@@ -47,6 +47,16 @@ import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { testPatientUserInfoUpdate } from '../../use-cases/user-account-management'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { buildPatient } from '../../data/patient-builder.data'
+import {
+  testDataSharingContentNoData,
+  testDataSharingContentWithData,
+  testRevokeConsentError,
+  testUserAccountMenuNotVisible
+} from '../../use-cases/data-sharing'
+import { mockErrorApi } from '../../mock/error.api.mock'
+import { mockExternalConsentsApi } from '../../mock/external-consents.api.mock'
+import { ExternalConsentsApi } from '../../../../lib/external-consents/external-consents.api'
+import { PartnerName } from '../../../../lib/external-consents/models/enum/partner-name.enum'
 
 describe('User account page for patient', () => {
   const userAccountRoute = AppUserRoute.UserAccount
@@ -73,7 +83,7 @@ describe('User account page for patient', () => {
       date: 'date should not be used in this scenario',
       value: '7.5'
     },
-    country: CountryCodes.France,
+    country: CountryCode.France,
     units: { bg: Unit.MilligramPerDeciliter }
   }
   const preferences: Preferences = { displayLanguageCode: LanguageCodes.Fr }
@@ -88,6 +98,8 @@ describe('User account page for patient', () => {
     mockDirectShareApi()
     mockTeamAPI()
     mockPatientApiForPatients(patient)
+    mockExternalConsentsApi()
+    mockErrorApi()
   })
 
   it('should render user account page for a French patient and be able to edit his profile', async () => {
@@ -96,15 +108,88 @@ describe('User account page for patient', () => {
     const updateUserAccountMock = jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValue(expectedUserAccount)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
 
-    const router = renderPage(userAccountRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(userAccountRoute)
+    await act(async () => {
+      renderPage(userAccountRoute)
     })
+
     await checkPatientLayout(`${account.lastName} ${account.firstName}`)
 
     await testPatientUserInfoUpdate()
 
     expect(updatePreferencesMock).toHaveBeenCalledWith(loggedInUserId, expectedPreferences)
     expect(updateUserAccountMock).toHaveBeenCalledWith(loggedInUserId, expectedUserAccount)
+  })
+
+  it('should have access to the Data Sharing section with no data', async () => {
+    await act(async () => {
+      renderPage(userAccountRoute)
+    })
+
+    await testDataSharingContentNoData()
+  })
+
+  it('should have access to the Data Sharing section with consents', async () => {
+    const preferencesWithEnLanguage: Preferences = { displayLanguageCode: LanguageCodes.En }
+    jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValueOnce({
+      profile: account,
+      settings,
+      preferences: preferencesWithEnLanguage
+    })
+
+    const consents = [
+      {
+        partnerId: 'partnerId1',
+        partnerName: PartnerName.GlookoXT,
+        consentDate: '2026-05-13T04:15:59.159Z'
+      },
+      {
+        partnerId: 'partnerId2',
+        partnerName: PartnerName.MyDiabby,
+        consentDate: '2026-05-19T14:15:59.159Z'
+      }
+    ]
+    jest.spyOn(ExternalConsentsApi, 'getConsents').mockResolvedValue(consents)
+
+    await act(async () => {
+      renderPage(userAccountRoute)
+    })
+
+    await testDataSharingContentWithData()
+
+    jest.spyOn(ExternalConsentsApi, 'revokeConsent').mockRejectedValueOnce(new Error('Revoke consent error'))
+    await testRevokeConsentError()
+  })
+
+  it('should not have access to the Data Sharing section if the patient does not have the FR country', async () => {
+    const settingsWithDeCountry: Settings = {
+      a1c: {
+        rawdate: '2020-01-01',
+        date: 'date should not be used in this scenario',
+        value: '7.5'
+      },
+      country: CountryCode.Germany,
+      units: { bg: Unit.MilligramPerDeciliter }
+    }
+
+    jest.spyOn(UserApi, 'getUserMetadata').mockResolvedValueOnce({
+      profile: {
+        firstName: 'Elie',
+        lastName: 'Coptere',
+        fullName: 'Elie Coptere',
+        email: 'fake@email.com',
+        termsOfUse: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
+        privacyPolicy: { acceptanceTimestamp: '2021-01-02', isAccepted: true },
+        trainingAck: { acceptanceTimestamp: '2022-10-11', isAccepted: true },
+        ...account
+      } as UserAccount,
+      settings: settingsWithDeCountry,
+      preferences
+    })
+
+    await act(async () => {
+      renderPage(userAccountRoute)
+    })
+
+    testUserAccountMenuNotVisible()
   })
 })

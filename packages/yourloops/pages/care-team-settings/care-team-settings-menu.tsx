@@ -27,80 +27,47 @@
 
 import React, { FC } from 'react'
 import { CareTeamSettingsSection } from './care-team-settings-section.enum'
-import CardContent from '@mui/material/CardContent'
-import MenuList from '@mui/material/MenuList'
-import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
-import MenuItem from '@mui/material/MenuItem'
-import ListItemIcon from '@mui/material/ListItemIcon'
 import { Info, Notifications } from '@mui/icons-material'
-import ListItemText from '@mui/material/ListItemText'
-import Card from '@mui/material/Card'
-import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '@mui/material/styles'
 import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
+import { SectionMenu } from '../../components/menus/section-menu/section-menu'
 
 interface CareTeamSettingsMenuProps {
   selectedSection: CareTeamSettingsSection
   selectSection: (section: CareTeamSettingsSection) => void
 }
 
-const useStyles = makeStyles()((theme) => ({
-  menuTitle: {
-    fontWeight: 'bold',
-    paddingLeft: theme.spacing(2)
-  },
-  menuItemText: {
-    whiteSpace: 'pre-line'
-  }
-}))
-
 export const CareTeamSettingsMenu: FC<CareTeamSettingsMenuProps> = (props) => {
   const { selectedSection, selectSection } = props
   const { t } = useTranslation()
-  const { classes } = useStyles()
-  const theme = useTheme()
+
+  function handleClick(section: CareTeamSettingsSection) {
+    selectSection(section)
+    AnalyticsApi.trackClick(`care-team-settings-menu-${section}`, ElementType.Link)
+  }
+
+  const sections = [
+    {
+      label: t('info-and-members'),
+      value: CareTeamSettingsSection.InfoAndMembers,
+      testId: 'info-and-members-menu-button',
+      icon: <Info fontSize="small" />
+    },
+    {
+      label: t('monitoring-alerts'),
+      value: CareTeamSettingsSection.MonitoringAlerts,
+      testId: 'monitoring-alerts-menu-button',
+      icon:  <Notifications fontSize="small" />
+    }
+  ]
 
   return (
-    <Card variant="outlined" data-testid="care-team-settings-menu">
-      <CardContent>
-        <MenuList>
-          <Typography className={classes.menuTitle}>{t('header-tab-care-team-settings')}</Typography>
-          <Divider
-            variant="middle"
-            sx={{ paddingTop: theme.spacing(1) }}
-          />
-          <MenuItem
-            selected={selectedSection === CareTeamSettingsSection.InfoAndMembers}
-            onClick={() => {
-              AnalyticsApi.trackClick(`care-team-settings-menu-info-and-members`, ElementType.Link)
-              selectSection(CareTeamSettingsSection.InfoAndMembers)
-            }}
-            sx={{ marginTop: theme.spacing(2), paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
-            data-testid="info-and-members-menu-button"
-          >
-            <ListItemIcon>
-              <Info fontSize="small" />
-            </ListItemIcon>
-            <ListItemText className={classes.menuItemText}>{t('info-and-members')}</ListItemText>
-          </MenuItem>
-          <MenuItem
-            selected={selectedSection === CareTeamSettingsSection.MonitoringAlerts}
-            onClick={() => {
-              AnalyticsApi.trackClick('care-team-settings-menu-monitoring-alerts', ElementType.Link)
-              selectSection(CareTeamSettingsSection.MonitoringAlerts)
-            }}
-            sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
-            data-testid="monitoring-alerts-menu-button"
-          >
-            <ListItemIcon>
-              <Notifications fontSize="small" />
-            </ListItemIcon>
-            <ListItemText className={classes.menuItemText}>{t('monitoring-alerts')}</ListItemText>
-          </MenuItem>
-        </MenuList>
-      </CardContent>
-    </Card>
+    <SectionMenu<CareTeamSettingsSection>
+      title={t('header-tab-care-team-settings')}
+      sections={sections}
+      selectedSection={selectedSection}
+      selectSection={handleClick}
+      testId="care-team-settings-menu"
+    />
   )
 }

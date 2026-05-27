@@ -30,7 +30,7 @@ import metrics from './metrics'
 import moment, { type LongDateFormatKey } from 'moment-timezone'
 import { type IUser } from './data/models/i-user.model'
 import { type Settings } from './auth/models/settings.model'
-import { CountryCodes } from './auth/models/country.model'
+import { CountryCode } from './auth/models/country.model'
 import { DurationUnit, Unit } from 'medical-domain'
 import { TIMEZONE_UTC } from 'dumb'
 
@@ -54,10 +54,10 @@ export enum PhonePrefixCode {
   UK = '+44',
 }
 
-export const isZipCodeValid = (country: CountryCodes | string, zipCode: string): boolean => {
+export const isZipCodeValid = (country: CountryCode | string, zipCode: string): boolean => {
   switch (country) {
-    case CountryCodes.Netherlands:
-    case CountryCodes.UnitedKingdom:
+    case CountryCode.Netherlands:
+    case CountryCode.UnitedKingdom:
       return REGEX_ZIPCODE_WITH_STRING.test(zipCode)
     default:
       return REGEX_ZIPCODE_WITHOUT_STRING.test(zipCode)
@@ -121,7 +121,7 @@ export function getUserLastName(user: IUser): string {
 export function fixYLP878Settings(settings: Settings | undefined | null): Settings {
   if (!settings) {
     return {
-      country: CountryCodes.France,
+      country: CountryCode.France,
       units: {
         bg: Unit.MilligramPerDeciliter
       }
@@ -132,7 +132,7 @@ export function fixYLP878Settings(settings: Settings | undefined | null): Settin
     bgUnit = Unit.MilligramPerDeciliter
   }
   const newSettings: Settings = {
-    country: settings.country ?? CountryCodes.France,
+    country: settings.country ?? CountryCode.France,
     units: { bg: bgUnit }
   }
   if (settings.a1c) {

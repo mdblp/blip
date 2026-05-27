@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, waitFor } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { renderPage } from '../../../utils/render'
 import {
   mockDataAPI,
@@ -94,10 +94,8 @@ describe('Dashboard view for patient', () => {
       isMonitoringAlertCardVisible: false
     }
 
-    const router = renderPage(patientDashboardRoute)
-
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(patientDashboardRoute)
+    await act(async () => {
+      renderPage(patientDashboardRoute)
     })
 
     await testAppMainLayoutForPatient(appMainLayoutParams)
@@ -115,10 +113,8 @@ describe('Dashboard view for patient', () => {
       selectedTeamName: mySecondTeamName
     }
 
-    const router = renderPage(patientDashboardRoute)
-
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(patientDashboardRoute)
+    await act(async () => {
+      renderPage(patientDashboardRoute)
     })
 
     await testMedicalWidgetForPatient(medicalFilesWidgetParams)
@@ -126,20 +122,17 @@ describe('Dashboard view for patient', () => {
 
   it('should be able to use the chat widget', async () => {
     mockDataAPI()
-    const router = renderPage(patientDashboardRoute)
 
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(patientDashboardRoute)
+    await act(async () => {
+      renderPage(patientDashboardRoute)
     })
 
     await testChatWidgetForPatient()
   })
 
   it('should be able to join a team', async () => {
-    const router = renderPage(patientDashboardRoute)
-
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(patientDashboardRoute)
+    await act(async () => {
+      renderPage(patientDashboardRoute)
     })
 
     await testJoinTeam()

@@ -25,15 +25,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { waitFor } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import { mockPatientLogin } from '../../mock/patient-login.mock'
 import { patient1Info } from '../../data/patient.api.data'
 import NotificationApi from '../../../../lib/notifications/notification.api'
-import { buildTeamOne, buildTeamTwo, anotherTeam } from '../../mock/team.api.mock'
+import { anotherTeam, buildTeamOne, buildTeamTwo } from '../../mock/team.api.mock'
 import TeamAPI from '../../../../lib/team/team.api'
 import { invitationTeam } from '../../data/notification.data'
 import { checkAcceptTeamInvite, checkPatientAcceptTeamInvite } from '../../assert/notification-join-team.assert'
+import { AppUserRoute } from '../../../../models/enums/routes.enum'
 
 describe('Notification page for patient', () => {
   beforeAll(() => {
@@ -45,9 +46,8 @@ describe('Notification page for patient', () => {
   })
 
   it('should be able to accept a team invite', async () => {
-    const router = renderPage('/notifications')
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/notifications')
+    await act(async () => {
+      renderPage(AppUserRoute.Notifications)
     })
 
     await checkPatientAcceptTeamInvite()

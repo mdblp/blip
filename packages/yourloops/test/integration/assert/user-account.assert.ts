@@ -83,24 +83,25 @@ export const checkHcpUserAccountLayout = () => {
 }
 
 export const checkPatientUserAccountLayout = () => {
-  expect(screen.getByText('User account')).toBeVisible()
+  const pageContent = within(screen.getByTestId('user-account-view'))
+  expect(pageContent.getByText('User account')).toBeVisible()
 
-  expect(screen.getByText('Personal information')).toBeVisible()
-  expect(screen.getByLabelText('First name')).toHaveValue('Elie')
-  expect(screen.getByLabelText('Last name')).toHaveValue('Coptere')
-  const emailInput = screen.getByLabelText('Email')
+  expect(pageContent.getByText('Personal information')).toBeVisible()
+  expect(pageContent.getByLabelText('First name')).toHaveValue('Elie')
+  expect(pageContent.getByLabelText('Last name')).toHaveValue('Coptere')
+  const emailInput = pageContent.getByLabelText('Email')
   expect(emailInput).toHaveValue('yann.blanc@example.com')
   expect(emailInput).toBeDisabled()
-  expect(screen.getByLabelText('Gender')).toHaveTextContent('Male')
-  expect(screen.queryByTestId('country-selector')).not.toBeInTheDocument()
+  expect(pageContent.getByLabelText('Gender')).toHaveTextContent('Male')
+  expect(pageContent.queryByTestId('country-selector')).not.toBeInTheDocument()
 
-  expect(screen.getByText('Preferences')).toBeVisible()
-  expect(screen.getByLabelText('Units')).toHaveTextContent('mg/dL')
-  expect(within(screen.getByTestId('user-account-units-selector')).getByRole('combobox')).toHaveAttribute('aria-disabled', 'true')
-  expect(screen.getByLabelText('Language')).toHaveTextContent('Français')
+  expect(pageContent.getByText('Preferences')).toBeVisible()
+  expect(pageContent.getByLabelText('Units')).toHaveTextContent('mg/dL')
+  expect(within(pageContent.getByTestId('user-account-units-selector')).getByRole('combobox')).toHaveAttribute('aria-disabled', 'true')
+  expect(pageContent.getByLabelText('Language')).toHaveTextContent('Français')
 
-  expect(screen.getByRole('button', { name: 'Cancel' })).toBeEnabled()
-  expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled()
+  expect(pageContent.getByRole('button', { name: 'Cancel' })).toBeEnabled()
+  expect(pageContent.getByRole('button', { name: 'Save' })).toBeDisabled()
 }
 
 export const checkCaregiverInfoUpdate = async () => {

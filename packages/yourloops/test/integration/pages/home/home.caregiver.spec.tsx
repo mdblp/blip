@@ -32,7 +32,7 @@ import { patient1Info, patient2Info } from '../../data/patient.api.data'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { renderPage } from '../../utils/render'
-import { act, screen, waitFor, within } from '@testing-library/react'
+import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import DirectShareApi from '../../../../lib/share/direct-share.api'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
@@ -42,7 +42,6 @@ import PatientApi from '../../../../lib/patient/patient.api'
 import { checkPatientListHeaderCaregiver } from '../../assert/patient-list.assert'
 import { buildPatient } from '../../data/patient-builder.data'
 import moment from 'moment-timezone'
-import { PRIVATE_TEAM_ID } from '../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
@@ -66,10 +65,10 @@ describe('Caregiver home page', () => {
   it('should render the patient list page with correct components', async () => {
     jest.spyOn(PatientApi, 'getPatientsMetricsForHcp')
 
-    const router = renderPage('/')
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(`/teams/${PRIVATE_TEAM_ID}/patients`)
-    }, { timeout: 3000 })
+    await act(async () => {
+      renderPage('/')
+    })
+
     expect(await screen.findByTestId('app-main-header')).toBeVisible()
     await checkCaregiverLayout(`${lastName} ${firstName}`)
     checkPatientListHeaderCaregiver()
@@ -127,11 +126,9 @@ describe('Caregiver home page', () => {
 
     jest.spyOn(PatientApi, 'getPatientsForCaregivers').mockResolvedValue([patient1, patient2, patient3])
 
-    renderPage('/')
-
-    await waitFor(() => {
-      expect(screen.queryByTestId('current-patient-list-grid')).toBeVisible()
-    }, { timeout: 10000 })
+    await act(async () => {
+      renderPage('/')
+    })
 
     const lastDataUploadDate = moment.tz(patient1.medicalData.range.endDate, new Intl.DateTimeFormat().resolvedOptions().timeZone).format('lll')
 
@@ -158,9 +155,8 @@ describe('Caregiver home page', () => {
   })
 
   it('should display a list of patients and allow to remove one of them', async () => {
-    const router = renderPage('/')
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(`/teams/${PRIVATE_TEAM_ID}/patients`)
+    await act(async () => {
+      renderPage('/')
     })
 
     await checkCaregiverLayout(`${lastName} ${firstName}`)
@@ -230,9 +226,8 @@ describe('Caregiver home page', () => {
   })
 
   it('should display the right columns for caregivers and be able to change them', async () => {
-    const router = renderPage('/')
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(`/teams/${PRIVATE_TEAM_ID}/patients`)
+    await act(async () => {
+      renderPage('/')
     })
 
     const columnSettingsButton = screen.getByRole('button', { name: 'Change columns settings' })

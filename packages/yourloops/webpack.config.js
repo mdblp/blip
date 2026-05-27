@@ -81,6 +81,8 @@ const alias = {
   'parameter-change.png': path.resolve(__dirname, '../../branding/parameter-change/parameter.png'),
   'physical-activity.png': path.resolve(__dirname, '../../branding/physical-activity/physical-activity.png'),
   'timezone-change.svg': path.resolve(__dirname, '../../branding/timezone-change/timezone-change.svg'),
+  'my-diabby-logo.svg': path.resolve(__dirname, '../../branding/external-partners/app-icon/my-diabby-logo.svg'),
+  'glooko-logo.svg': path.resolve(__dirname, '../../branding/external-partners/app-icon/glooko-logo.svg'),
   images: path.resolve(__dirname, 'images/'),
   Museo_Slab: path.resolve(__dirname, '../../branding/fonts/museo-slab/'),
   ...blipWebpack.resolve.alias

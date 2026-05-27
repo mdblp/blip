@@ -28,7 +28,7 @@
 import { Team } from '../../lib/team'
 import { isZipCodeValid, REGEX_EMAIL, REGEX_PHONE } from '../../lib/utils'
 import React, { Dispatch, SetStateAction, useMemo, useState } from 'react'
-import { CountryCodes } from '../../lib/auth/models/country.model'
+import { CountryCode } from '../../lib/auth/models/country.model'
 import locales from '../../../../locales/languages.json'
 import { useAuth } from '../../lib/auth'
 import MenuItem from '@mui/material/MenuItem'
@@ -89,7 +89,7 @@ export const useTeamCreateEdit = (props: TeamCreateEditHookProps): TeamCreateEdi
   const [addrLine2, setAddrLine2] = useState(team?.address?.line2 ?? '')
   const [addrZipCode, setAddrZipCode] = useState(team?.address?.zip ?? '')
   const [addrCity, setAddrCity] = useState(team?.address?.city ?? '')
-  const [addrCountry, setAddrCountry] = useState(team?.address?.country ?? authContext.user?.settings?.country ?? CountryCodes.France)
+  const [addrCountry, setAddrCountry] = useState(team?.address?.country ?? authContext.user?.settings?.country ?? CountryCode.France)
 
   const countries: LocalesCountries = locales.countries
   const optionsCountries: JSX.Element[] = []

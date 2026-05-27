@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,53 +25,62 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent } from 'react'
+import React, { type FunctionComponent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { setPageTitle } from '../../lib/utils'
 import { useAuth } from '../../lib/auth'
-import { UserAccountPageContextProvider } from './user-account-page-context'
-import { UserAccountForm } from './forms/user-account-form'
-import CardHeader from '@mui/material/CardHeader'
 import Card from '@mui/material/Card'
-import { useTheme } from '@mui/material/styles'
-import CardContent from '@mui/material/CardContent'
-import { SecurityForm } from './forms/security-form'
-import { ProfessionalAccountForm } from './forms/professional-account-form'
-import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
+import { UserAccountSection } from './models/enums/user-account-section.enum'
+import { AccountSection } from './sections/account-section/account-section'
+import { DataSharingSection } from './sections/data-sharing-section/data-sharing-section'
+import Grid from '@mui/material/Grid'
+import { UserAccountMenu } from './user-account-menu'
+import { CountryCode } from '../../lib/auth/models/country.model'
 
 export const UserAccountPage: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
-  const theme = useTheme()
   const { user } = useAuth()
+
+  const shouldDisplayMenu = user.isUserPatient() && user.settings.country === CountryCode.France
 
   setPageTitle(t('user-account'))
 
+  const [selectedSection, setSelectedSection] = useState(UserAccountSection.Account)
+
+  const selectSection = (section: UserAccountSection): void => {
+    setSelectedSection(section)
+  }
+
+  const displaySelectedSection = (): JSX.Element => {
+    switch (selectedSection) {
+      case UserAccountSection.Account:
+        return <AccountSection />
+      case UserAccountSection.DataSharing:
+        return <DataSharingSection />
+      default:
+        return <></>
+    }
+  }
+
   return (
-    <Container maxWidth="lg">
-      <Box
-        sx={{
-          width: "100%",
-          marginY: 6
-        }}>
-        <Card variant="outlined" sx={{ padding: theme.spacing(2) }}>
-          <CardHeader title={t('user-account')} data-testid="user-account-title" />
+    <Container maxWidth="xl" sx={{ my: 6 }}>
+      <Grid container spacing={3} sx={{ justifyContent: 'center' }}>
+        {shouldDisplayMenu &&
+          <Grid size={3}>
+            <UserAccountMenu
+              selectedSection={selectedSection}
+              selectSection={selectSection}
+            />
+          </Grid>
+        }
+        <Grid size={9}>
+          <Card variant="outlined" sx={{ px: 2, pt: 2, pb: 4 }} data-testid="user-account-view">
+            {displaySelectedSection()}
+          </Card>
+        </Grid>
+      </Grid>
 
-          <CardContent>
-            <UserAccountPageContextProvider>
-              <UserAccountForm />
-            </UserAccountPageContextProvider>
-
-            {!user.isUserPatient() &&
-              <SecurityForm />
-            }
-
-            {user.isUserCaregiver() &&
-              <ProfessionalAccountForm />
-            }
-          </CardContent>
-        </Card>
-      </Box>
     </Container>
   )
 }

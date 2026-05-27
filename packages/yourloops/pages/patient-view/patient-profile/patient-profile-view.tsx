@@ -36,7 +36,7 @@ import { Patient } from '../../../lib/patient/models/patient.model'
 import { RangeSection } from './sections/range-section'
 import { UnsavedChangesDialog } from './dialog/unsaved-changes-dialog'
 import { useAuth } from '../../../lib/auth'
-import {  ConfigService } from '../../../lib/config/config.service'
+import { ConfigService } from '../../../lib/config/config.service'
 
 interface PatientProfileViewProps {
   patient : Patient

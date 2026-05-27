@@ -335,7 +335,8 @@ const ignoredTransKeyForYourLoops = [
   'device-history-title',
   'add-clinician-description',
   'remove-clinician-question',
-  'remove-clinician-question-patient'
+  'remove-clinician-question-patient',
+  'revoke-consent-question'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   // Documentation!

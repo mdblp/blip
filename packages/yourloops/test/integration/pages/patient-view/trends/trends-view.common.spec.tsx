@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -49,7 +49,7 @@ import {
   checkTimeInRangeStatsTitle
 } from '../../../assert/stats.assert'
 import userEvent from '@testing-library/user-event'
-import { screen, waitFor, within } from '@testing-library/react'
+import { act, screen, within } from '@testing-library/react'
 import { patient2Info } from '../../../data/patient.api.data'
 import { buildHba1cData } from '../../../data/data-api.data'
 import { mockWindowResizer } from '../../../mock/window-resizer.mock'
@@ -73,9 +73,8 @@ describe('Trends view for anyone', () => {
   describe('with all kind of data', () => {
     it('should render trend page and statistics correctly', async () => {
       mockDataAPI(getMinimalTrendViewData())
-      const router = renderPage(trendsRoute)
-      await waitFor(() => {
-        expect(router.state.location.pathname).toEqual(trendsRoute)
+      await act(async () => {
+        renderPage(trendsRoute)
       })
 
       await testTrendsDataVisualisationForHCP()
@@ -102,7 +101,9 @@ describe('Trends view for anyone', () => {
   describe('with cbgs to calculate GMI', () => {
     it('should render correct tooltip and values GMI', async () => {
       mockDataAPI(buildHba1cData())
-      renderPage(trendsRoute)
+      await act(async () => {
+        renderPage(trendsRoute)
+      })
 
       const patientStatistics = within(await screen.findByTestId('patient-statistics', {}, { timeout: 3000 }))
       await checkGlucoseManagementIndicator('GMI (estimated HbA1c)7.7%')
@@ -113,7 +114,9 @@ describe('Trends view for anyone', () => {
   describe('with time in range data', () => {
     it('should display correct readings in range stats info', async () => {
       mockDataAPI(timeInRangeStatsTrendViewData)
-      renderPage(trendsRoute)
+      await act(async () => {
+        renderPage(trendsRoute)
+      })
 
       await checkTrendsTimeInRangeStatsWidgets()
       await checkTimeInRangeStatsTitle()
@@ -123,7 +126,9 @@ describe('Trends view for anyone', () => {
   describe('with smbg data', () => {
     it('should display correct readings in range stats info', async () => {
       mockDataAPI(smbgData)
-      renderPage(trendsRoute)
+      await act(async () => {
+        renderPage(trendsRoute)
+      })
 
       await checkReadingsInRangeStats()
       await checkSMBGTrendsStatsWidgetsTooltips()

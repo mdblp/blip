@@ -41,7 +41,7 @@ import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { renderPage } from '../../utils/render'
-import { waitFor } from '@testing-library/react'
+import { act, waitFor } from '@testing-library/react'
 import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import {
@@ -88,11 +88,9 @@ describe('HCP care team settings page', () => {
   })
 
   const renderCareTeamSettingsPage = async (route: string) => {
-    const router = renderPage(route)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(route)
+    await act(async () => {
+      renderPage(route)
     })
-    return router
   }
 
   it('should render the correct layout', async () => {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, Diabeloop
+ * Copyright (c) 2024-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,22 +26,13 @@
  */
 
 import React, { FC } from 'react'
-import CardContent from '@mui/material/CardContent'
-import MenuList from '@mui/material/MenuList'
-import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
-import MenuItem from '@mui/material/MenuItem'
-import ListItemIcon from '@mui/material/ListItemIcon'
 import { History, PhonelinkSetup } from '@mui/icons-material'
-import ListItemText from '@mui/material/ListItemText'
-import { BasalIcon } from '../../../components/icons/diabeloop/basal-icon'
-import Card from '@mui/material/Card'
-import { useTheme } from '@mui/material/styles'
-import { makeStyles } from 'tss-react/mui'
 import { DeviceViewSection } from './device-view-section.enum'
 import { useTranslation } from 'react-i18next'
 import { DeviceSystemIcon } from '../../../components/icons/diabeloop/device-system-icon'
 import AnalyticsApi, { ElementType } from '../../../lib/analytics/analytics.api'
+import { SectionMenu } from '../../../components/menus/section-menu/section-menu'
+import { BasalIcon } from '../../../components/icons/diabeloop/basal-icon'
 
 interface DevicesViewMenuProps {
   shouldDisplaySafetyBasalProfile: boolean
@@ -49,20 +40,8 @@ interface DevicesViewMenuProps {
   selectSection: (section: DeviceViewSection) => void
 }
 
-const useStyles = makeStyles()((theme) => ({
-  menuTitle: {
-    fontWeight: 'bold',
-    paddingLeft: theme.spacing(2)
-  },
-  menuItemText: {
-    whiteSpace: 'pre-line',
-  }
-}))
-
 export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
-  const theme = useTheme()
   const { t } = useTranslation()
-  const { classes } = useStyles()
   const { selectedSection, selectSection, shouldDisplaySafetyBasalProfile } = props
 
   function handleClick(section: DeviceViewSection) {
@@ -70,63 +49,40 @@ export const DevicesViewMenu: FC<DevicesViewMenuProps> = (props) => {
     AnalyticsApi.trackClick(`device-view-section-${section}`, ElementType.Link)
   }
 
+  const sections = [
+    {
+      label: t('current-parameters'),
+      value: DeviceViewSection.CurrentParameters,
+      testId: 'current-parameters-menu-button',
+      icon: <PhonelinkSetup fontSize="small" />
+    },
+    ...shouldDisplaySafetyBasalProfile ? [{
+      label: t('safety-basal-profile'),
+      value: DeviceViewSection.SafetyBasalProfile,
+      testId: 'safety-basal-profile-menu-button',
+      icon: <BasalIcon fontSize="small" />
+    }] : [],
+    {
+      label: t('change-history'),
+      value: DeviceViewSection.ParametersChangeHistory,
+      testId: 'change-history-menu-button',
+      icon: <History fontSize="small" />
+    },
+    {
+      label: t('device-change-history'),
+      value: DeviceViewSection.DeviceChangeHistory,
+      testId: 'device-change-history-menu-button',
+      icon: <DeviceSystemIcon fontSize="small" />
+    }
+  ]
+
   return (
-    <Card variant="outlined" data-testid="devices-view-menu">
-      <CardContent>
-        <MenuList>
-          <Typography className={classes.menuTitle}>{t('devices')}</Typography>
-          <Divider variant="middle" sx={{
-            paddingTop: theme.spacing(1)
-          }} />
-          <MenuItem
-            selected={selectedSection === DeviceViewSection.CurrentParameters}
-            onClick={() => handleClick(DeviceViewSection.CurrentParameters)}
-            sx={{ marginTop: theme.spacing(2), paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
-            data-testid="current-parameters-menu-button"
-          >
-            <ListItemIcon>
-              <PhonelinkSetup fontSize="small" />
-            </ListItemIcon>
-            <ListItemText className={classes.menuItemText}>{t('current-parameters')}</ListItemText>
-          </MenuItem>
-            {
-              shouldDisplaySafetyBasalProfile &&
-                <MenuItem
-                    selected={selectedSection === DeviceViewSection.SafetyBasalProfile}
-                  onClick={() => handleClick(DeviceViewSection.SafetyBasalProfile)}
-                  sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
-                  data-testid="safety-basal-profile-menu-button"
-                >
-                  <ListItemIcon>
-                    <BasalIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText className={classes.menuItemText}>{t('safety-basal-profile')}</ListItemText>
-                </MenuItem>
-            }
-          <MenuItem
-            selected={selectedSection === DeviceViewSection.ParametersChangeHistory}
-            onClick={() => handleClick(DeviceViewSection.ParametersChangeHistory)}
-            sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
-            data-testid="change-history-menu-button"
-          >
-            <ListItemIcon>
-              <History fontSize="small" />
-            </ListItemIcon>
-            <ListItemText className={classes.menuItemText}>{t('change-history')}</ListItemText>
-          </MenuItem>
-          <MenuItem
-            selected={selectedSection === DeviceViewSection.DeviceChangeHistory}
-            onClick={() => handleClick(DeviceViewSection.DeviceChangeHistory)}
-            sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
-            data-testid="device-change-history-menu-button"
-          >
-            <ListItemIcon>
-              <DeviceSystemIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText className={classes.menuItemText}>{t('device-change-history')}</ListItemText>
-          </MenuItem>
-        </MenuList>
-      </CardContent>
-    </Card>
+    <SectionMenu<DeviceViewSection>
+      title={t('devices')}
+      sections={sections}
+      selectedSection={selectedSection}
+      selectSection={handleClick}
+      testId="devices-view-menu"
+    />
   )
 }

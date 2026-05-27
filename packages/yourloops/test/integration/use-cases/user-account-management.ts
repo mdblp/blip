@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Diabeloop
+ * Copyright (c) 2025-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,8 +27,14 @@
 
 import {
   checkCaregiverInfoUpdate,
-  checkCaregiverUserAccountLayout, checkEmailChangeRequest, checkHcpInfoUpdate, checkHcpUserAccountLayout,
-  checkPasswordChangeRequest, checkPasswordChangeRequestFailed, checkPatientInfoUpdate, checkPatientUserAccountLayout
+  checkCaregiverUserAccountLayout,
+  checkEmailChangeRequest,
+  checkHcpInfoUpdate,
+  checkHcpUserAccountLayout,
+  checkPasswordChangeRequest,
+  checkPasswordChangeRequestFailed,
+  checkPatientInfoUpdate,
+  checkPatientUserAccountLayout
 } from '../assert/user-account.assert'
 
 export const testCaregiverUserInfoUpdate = async (): Promise<void> => {
@@ -57,5 +63,3 @@ export const testPasswordChangeRequestFailed = async (userEmail: string): Promis
 export const testEmailChangeRequest = async (userId: string, newEmail: string, code: string): Promise<void> => {
   await checkEmailChangeRequest(userId, newEmail, code)
 }
-
-

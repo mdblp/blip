@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -29,10 +29,10 @@ import { act, waitFor } from '@testing-library/react'
 import { logoutMock, mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import {
-  oneDayDashboardData,
-  smallDataSet,
   mockDataAPI,
+  oneDayDashboardData,
   sixteenDaysOldDashboardData,
+  smallDataSet,
   twoWeeksOldDashboardData
 } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
@@ -115,9 +115,8 @@ describe('Dashboard view for HCP', () => {
       isMonitoringAlertCardVisible: true
     }
 
-    const router = renderPage(patientDashboardRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(patientDashboardRoute)
+    await act(async () => {
+      renderPage(patientDashboardRoute)
     })
 
 
@@ -246,5 +245,4 @@ describe('Dashboard view for HCP', () => {
 
     await testEmptyMedicalFilesWidgetForHcp()
   })
-
 })

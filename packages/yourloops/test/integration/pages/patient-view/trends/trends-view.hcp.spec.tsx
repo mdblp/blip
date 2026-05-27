@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, waitFor } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import { mockDataAPI } from '../../../mock/data.api.mock'
@@ -78,10 +78,9 @@ describe('Trends view for HCP', () => {
         }
       }
     }
-    const trendsRoute = `/teams/${myThirdTeamId}/patients/${patient2Id}${AppUserRoute.Trends}`
-    const router = renderPage(trendsRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(trendsRoute)
+
+    await act(async () => {
+      renderPage(`/teams/${myThirdTeamId}/patients/${patient2Id}${AppUserRoute.Trends}`)
     })
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()

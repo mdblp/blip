@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2024-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,86 +26,50 @@
  */
 
 import React, { FC } from 'react'
-import CardContent from '@mui/material/CardContent'
-import MenuList from '@mui/material/MenuList'
-import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
-import MenuItem from '@mui/material/MenuItem'
-import ListItemIcon from '@mui/material/ListItemIcon'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
-import ListItemText from '@mui/material/ListItemText'
-import Card from '@mui/material/Card'
-import { useTheme } from '@mui/material/styles'
-import { makeStyles } from 'tss-react/mui'
 import { useTranslation } from 'react-i18next'
 import { PatientProfileViewSection } from './patient-profile-view-section.enum'
 import DesktopMacOutlinedIcon from '@mui/icons-material/DesktopMacOutlined'
 import { ChartIcon } from '../../../components/icons/diabeloop/chart-icon'
+import { SectionMenu } from '../../../components/menus/section-menu/section-menu'
 
 interface PatientProfileViewMenuProps {
   selectedSection: PatientProfileViewSection
   selectSection: (section: PatientProfileViewSection) => void
 }
 
-const useStyles = makeStyles()((theme) => ({
-  menuTitle: {
-    fontWeight: 'bold',
-    paddingLeft: theme.spacing(2)
-  },
-  menuItemText: {
-    whiteSpace: 'pre-line',
-  }
-}))
-
 export const PatientProfileViewMenu: FC<PatientProfileViewMenuProps> = (props) => {
-  const theme = useTheme()
   const { t } = useTranslation()
-  const { classes } = useStyles()
   const { selectedSection, selectSection } = props
 
+  const sections = [
+    {
+      label: t('information'),
+      value: PatientProfileViewSection.Information,
+      testId: 'information-menu-button',
+      icon: <InfoOutlinedIcon fontSize="small" />
+    },
+    {
+      label: t('range'),
+      value: PatientProfileViewSection.Range,
+      testId: 'range-profile-menu-button',
+      icon: <ChartIcon fontSize="small" />
+    },
+    {
+      label: t('alerts'),
+      value: PatientProfileViewSection.Alerts,
+      testId: 'alerts-profile-menu-button',
+      icon: <DesktopMacOutlinedIcon fontSize="small" />
+    }
+  ]
+
   return (
-    <Card variant="outlined" data-testid="patient-profile-view-menu">
-      <CardContent>
-        <MenuList>
-          <Typography className={classes.menuTitle}>{t('patient-profile')}</Typography>
-          <Divider variant="middle" sx={{
-            paddingTop: theme.spacing(1)
-          }} />
-          <MenuItem
-            selected={selectedSection === PatientProfileViewSection.Information}
-            onClick={() => selectSection(PatientProfileViewSection.Information)}
-            sx={{ marginTop: theme.spacing(2), paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
-            data-testid="information-menu-button"
-          >
-            <ListItemIcon>
-              <InfoOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText className={classes.menuItemText}>{t('information')}</ListItemText>
-          </MenuItem>
-          <MenuItem
-            selected={selectedSection === PatientProfileViewSection.Range}
-            onClick={() => selectSection(PatientProfileViewSection.Range)}
-            sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
-            data-testid="range-profile-menu-button"
-          >
-            <ListItemIcon>
-              <ChartIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText className={classes.menuItemText}>{t('range')}</ListItemText>
-          </MenuItem>
-          <MenuItem
-            selected={selectedSection === PatientProfileViewSection.Alerts}
-            onClick={() => selectSection(PatientProfileViewSection.Alerts)}
-            sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
-            data-testid="alerts-profile-menu-button"
-          >
-            <ListItemIcon>
-              <DesktopMacOutlinedIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText className={classes.menuItemText}>{t('alerts')}</ListItemText>
-          </MenuItem>
-        </MenuList>
-      </CardContent>
-    </Card>
+    <SectionMenu<PatientProfileViewSection>
+      title={t('patient-profile')}
+      sections={sections}
+      selectedSection={selectedSection}
+      selectSection={selectSection}
+      testId="patient-profile-view-menu"
+    />
   )
 }

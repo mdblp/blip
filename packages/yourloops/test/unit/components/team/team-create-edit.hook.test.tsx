@@ -29,7 +29,7 @@ import { renderHook, act } from '@testing-library/react'
 import { useTeamCreateEdit } from '../../../../components/team/team-create-edit.hook'
 import { type Team } from '../../../../lib/team'
 import * as authHookMock from '../../../../lib/auth'
-import { CountryCodes } from '../../../../lib/auth/models/country.model'
+import { CountryCode } from '../../../../lib/auth/models/country.model'
 
 jest.mock('../../../../lib/auth')
 
@@ -38,7 +38,7 @@ describe('useTeamCreateEdit', () => {
   const defaultUser = {
     id: 'user-id',
     settings: {
-      country: CountryCodes.France
+      country: CountryCode.France
     }
   }
 
@@ -62,7 +62,7 @@ describe('useTeamCreateEdit', () => {
       expect(result.current.addrLine2).toBe('')
       expect(result.current.addrZipCode).toBe('')
       expect(result.current.addrCity).toBe('')
-      expect(result.current.addrCountry).toBe(CountryCodes.France)
+      expect(result.current.addrCountry).toBe(CountryCode.France)
     })
 
     it('should initialize with team values when team is provided', () => {
@@ -76,7 +76,7 @@ describe('useTeamCreateEdit', () => {
           line2: 'Apt 4',
           zip: '75001',
           city: 'Paris',
-          country: CountryCodes.France
+          country: CountryCode.France
         }
       }
 
@@ -91,7 +91,7 @@ describe('useTeamCreateEdit', () => {
       expect(result.current.addrLine2).toBe('Apt 4')
       expect(result.current.addrZipCode).toBe('75001')
       expect(result.current.addrCity).toBe('Paris')
-      expect(result.current.addrCountry).toBe(CountryCodes.France)
+      expect(result.current.addrCountry).toBe(CountryCode.France)
     })
 
     it('should use user country when team country is not provided', () => {
@@ -103,7 +103,7 @@ describe('useTeamCreateEdit', () => {
         useTeamCreateEdit({ team, onSaveTeam: onSaveTeamMock })
       )
 
-      expect(result.current.addrCountry).toBe(CountryCodes.France)
+      expect(result.current.addrCountry).toBe(CountryCode.France)
     })
   })
 
@@ -127,7 +127,7 @@ describe('useTeamCreateEdit', () => {
         result.current.setAddrLine1('123 Main Street')
         result.current.setAddrZipCode('75001')
         result.current.setAddrCity('Paris')
-        result.current.setAddrCountry(CountryCodes.France)
+        result.current.setAddrCountry(CountryCode.France)
       })
 
       expect(result.current.isFormInvalid).toBe(false)
@@ -213,7 +213,7 @@ describe('useTeamCreateEdit', () => {
         result.current.setAddrLine1('123 Main Street')
         result.current.setAddrZipCode('invalid-zip')
         result.current.setAddrCity('Paris')
-        result.current.setAddrCountry(CountryCodes.France)
+        result.current.setAddrCountry(CountryCode.France)
       })
 
       expect(result.current.zipcodeInputOnError).toBe(true)
@@ -290,7 +290,7 @@ describe('useTeamCreateEdit', () => {
         result.current.setAddrLine2('  Apt 4  ')
         result.current.setAddrZipCode('  75001  ')
         result.current.setAddrCity('  Paris  ')
-        result.current.setAddrCountry(CountryCodes.France)
+        result.current.setAddrCountry(CountryCode.France)
       })
 
       act(() => {
@@ -306,7 +306,7 @@ describe('useTeamCreateEdit', () => {
           line2: 'Apt 4',
           zip: '75001',
           city: 'Paris',
-          country: CountryCodes.France
+          country: CountryCode.France
         }
       })
     })
