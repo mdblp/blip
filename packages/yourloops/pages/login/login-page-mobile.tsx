@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FunctionComponent, type MouseEventHandler } from 'react'
+import React, { FC } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useAuth0 } from '@auth0/auth0-react'
+import { AppState } from '@auth0/auth0-react'
 import { makeStyles } from 'tss-react/mui'
 import loginPageBackground from 'images/login-page-background-mobile.png'
 import config from '../../lib/config/config'
@@ -71,11 +71,15 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme) => ({
   }
 }))
 
-const LoginPageMobile: FunctionComponent = () => {
-  const { loginWithRedirect } = useAuth0()
+interface LoginPageMobileProps {
+  appState?: AppState
+}
+
+const LoginPageMobile: FC<LoginPageMobileProps> = (props) => {
+  const { appState } = props
   const { t, i18n } = useTranslation()
   const { classes, theme } = styles()
-  const { redirectToSignupInformation } = useLogin()
+  const { loginWithState, redirectToSignupInformation } = useLogin()
 
   return (
     <React.Fragment>
@@ -147,7 +151,7 @@ const LoginPageMobile: FunctionComponent = () => {
             data-testid="login-button"
             variant="contained"
             disableElevation
-            onClick={loginWithRedirect as MouseEventHandler}
+            onClick={() => loginWithState(appState)}
             className={classes.button}
           >
             {t('button-connect')}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -69,6 +69,8 @@ const defaultConfig: AppConfig = {
   EATING_SHORTLY_ENABLED: false,
   METRICS_CLICKODROME_ENABLED: true,
   DATE_OF_BIRTH_HIDDEN: false,
+  MY_DIABBY_PARTNER_ID: 'MyDiabbyClientId456789',
+  GLOOKO_XT_PARTNER_ID: 'GlooKoXtClientId789456'
 }
 const appConfig = _.assign({}, defaultConfig)
 if (_.has(window, 'config') && _.isObjectLike(_.get(window, 'config', null))) {

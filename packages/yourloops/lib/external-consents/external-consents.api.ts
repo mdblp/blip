@@ -28,15 +28,27 @@
 import HttpService from '../http/http.service'
 import { ExternalConsent } from './models/external-consent.model'
 
+const EXTERNAL_CONSENTS_URL = '/health-bridge/patient-consents'
+
 export class ExternalConsentsApi {
   static async getConsents(patientId: string): Promise<ExternalConsent[]> {
-    const { data } = await HttpService.get<ExternalConsent[]>({ url: `/health-bridge/patient-consents/${patientId}` })
+    const { data } = await HttpService.get<ExternalConsent[]>({ url: `${EXTERNAL_CONSENTS_URL}/${patientId}` })
     return data
+  }
+
+  static async addConsent(patientId: string, partnerId: string): Promise<void> {
+    await HttpService.post({
+      url: EXTERNAL_CONSENTS_URL,
+      payload: {
+        userId: patientId,
+        partnerId
+      }
+    })
   }
 
   static async revokeConsent(patientId: string, partnerId: string): Promise<void> {
     await HttpService.delete({
-      url: `/health-bridge/patient-consents`,
+      url: EXTERNAL_CONSENTS_URL,
       config: {
         data: {
           userId: patientId,

@@ -57,6 +57,8 @@ import { logError } from '../../utils/error.util'
 import { PatientProfileView } from '../../pages/patient-view/patient-profile/patient-profile-view'
 import { ConfigService } from '../../lib/config/config.service'
 import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
+import { DataAccessRequestDialog } from '../dialogs/data-access/data-access-request-dialog'
+import { AppState } from '@auth0/auth0-react'
 
 interface PatientDataProps {
   patient: Patient
@@ -68,6 +70,19 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   const { t } = useTranslation()
   const patientIdForWhichDataHasBeenFetched = useRef(null)
   const { teamId } = useParams()
+  const { getAppState, user } = useAuth()
+  const [appState, setAppState] = useState<AppState | null>(null)
+
+  useEffect(() => {
+    const appStateFromAuth = getAppState()
+    if (appStateFromAuth) {
+      setAppState(appStateFromAuth)
+    }
+  }, [getAppState])
+
+  const partnerId = appState?.partnerId
+  const callbackUrl = appState?.callbackUrl
+  const showDataAccessRequestDialog = user.isUserPatient() && !!partnerId
 
   const {
     bgPrefs,
@@ -101,7 +116,6 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     messageThread,
     replyToMessage
   } = useDailyNotes({ dailyDate, dailyChartRef, medicalData })
-  const { user } = useAuth()
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
 
@@ -269,6 +283,13 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                     onClose={() => {
                       setShowPdfDialog(false)
                     }}
+                  />
+                }
+                {showDataAccessRequestDialog &&
+                  <DataAccessRequestDialog
+                    patientId={user.id}
+                    partnerId={partnerId}
+                    callbackUrl={callbackUrl}
                   />
                 }
               </>
