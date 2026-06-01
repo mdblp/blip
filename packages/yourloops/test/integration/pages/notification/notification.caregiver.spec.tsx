@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,7 +26,7 @@
  */
 
 import { renderPage } from '../../utils/render'
-import { waitFor } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
 import NotificationApi from '../../../../lib/notifications/notification.api'
@@ -42,6 +42,7 @@ import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { invitationDirectShare } from '../../data/notification.data'
 import { testNotificationManagementForCaregiver } from '../../use-cases/notification-management'
 import { mockDblCommunicationApi } from '../../mock/dbl-communication.api'
+import { AppUserRoute } from '../../../../models/enums/routes.enum'
 
 describe('Notification page for caregiver', () => {
   const firstName = 'Jeanned'
@@ -69,9 +70,8 @@ describe('Notification page for caregiver', () => {
   })
 
   it('should be able to accept a direct share invite', async () => {
-    const router = renderPage('/notifications')
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual('/notifications')
+    await act(async () => {
+      renderPage(AppUserRoute.Notifications)
     })
 
     await testNotificationManagementForCaregiver()

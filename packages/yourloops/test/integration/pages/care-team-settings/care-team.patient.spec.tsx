@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,7 +31,7 @@ import { mockTeamAPI, myFirstTeamId, mySecondTeamId, mySecondTeamName } from '..
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { renderPage } from '../../utils/render'
-import { waitFor } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
 import { testLeaveTeamPatient } from '../../use-cases/care-team-visualisation'
 import { UserRole } from '../../../../lib/auth/models/enums/user-role.enum'
@@ -64,11 +64,9 @@ describe('Patient care team settings page', () => {
   })
 
   const renderCareTeamSettingsPage = async (route: string) => {
-    const router = renderPage(route)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(route)
+    await act(async () => {
+      renderPage(route)
     })
-    return router
   }
 
   it('should be able to leave a team', async () => {

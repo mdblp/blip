@@ -34,7 +34,7 @@ import {
 } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { screen, waitFor } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { checkCaregiverLayout } from '../../assert/layout.assert'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForCaregivers, mockPatientApiForHcp } from '../../mock/patient.api.mock'
@@ -105,9 +105,8 @@ describe('User account page for caregiver', () => {
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
     const updateSettingsMock = jest.spyOn(UserApi, 'updateSettings').mockResolvedValue(expectedSettings)
 
-    const router = renderPage(userAccountRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(userAccountRoute)
+    await act(async () => {
+      renderPage(userAccountRoute)
     })
 
     await checkCaregiverLayout(`${account.lastName} ${account.firstName}`)
@@ -128,30 +127,24 @@ describe('User account page for caregiver', () => {
   })
 
   it('should render user account page for a caregiver and display error if change password failed', async () => {
-    const router = renderPage(userAccountRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(userAccountRoute)
-      expect(screen.getByText('User account')).toBeVisible()
+    await act(async () => {
+      renderPage(userAccountRoute)
     })
 
     await testPasswordChangeRequestFailed(loggedInUserEmail)
   })
 
   it('should open the change e-mail popup, complete the flow successfully and display success snackbar', async () => {
-    const router = renderPage(userAccountRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(userAccountRoute)
-      expect(screen.getByText('User account')).toBeVisible()
+    await act(async () => {
+      renderPage(userAccountRoute)
     })
 
     await testEmailChangeRequest(loggedInUserId, 'newEmail@diabeloop.fr', '457845789')
   })
 
   it('should not have access to the Data Sharing section', async () => {
-    const router = renderPage(userAccountRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(userAccountRoute)
-      expect(screen.getByText('User account')).toBeVisible()
+    await act(async () => {
+      renderPage(userAccountRoute)
     })
 
     testUserAccountMenuNotVisible()

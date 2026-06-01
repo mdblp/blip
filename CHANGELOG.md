@@ -8,6 +8,9 @@ It is based on Tidepool Blip 1.27.
 - YLP-3893 Data sharing management with external partners
 - YLP-3907 Add a conditional rendering on birth date display
 
+### Changed
+- YLP-3858 Allowing HCP to add an 11-digit phone number.
+
 ### Engineering
 - YLP-3885 Daily components migration (data elements only)
 

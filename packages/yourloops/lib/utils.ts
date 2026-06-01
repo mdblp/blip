@@ -37,7 +37,7 @@ import { TIMEZONE_UTC } from 'dumb'
 // Matches the Amazon SES emails rules (only 7-bit ASCII)
 export const REGEX_EMAIL = /^[A-Za-z0-9][A-Za-z0-9._%+-]{0,64}@(?:(?=[A-Za-z0-9-]{1,63}\.)[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.){1,8}[A-Za-z]{2,63}$/
 export const REGEX_BIRTHDATE = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
-export const REGEX_PHONE = /^[0-9]{8,10}$/
+export const REGEX_PHONE = /^[0-9]{8,11}$/
 export const REGEX_ZIPCODE_WITHOUT_STRING = /^[0-9-]*$/
 export const REGEX_ZIPCODE_WITH_STRING = /^[A-Z0-9 ]*$/
 

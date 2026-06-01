@@ -95,6 +95,16 @@ describe('Regex', () => {
       expect(result).toBeFalsy()
     })
 
+    it('should be valid when given eleven numbers', () => {
+      // given
+      const value = '06000000000'
+      // when
+      const result = REGEX_PHONE.test(value)
+
+      // then
+      expect(result).toBeTruthy()
+    })
+
     it('should be invalid when given twelve numbers', () => {
       // given
       const value = '060000000000'

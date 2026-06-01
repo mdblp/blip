@@ -35,7 +35,7 @@ import { useTheme } from '@mui/material/styles'
 interface SectionMenuItemProps {
   label: string
   isSelected: boolean
-  selectSection: () => void
+  onClick: () => void
   children: React.ReactNode
   testId: string
 }
@@ -51,14 +51,14 @@ const useStyles = makeStyles()((theme) => ({
 }))
 
 export const SectionMenuItem: FC<SectionMenuItemProps> = (props) => {
-  const { isSelected, label, selectSection, children, testId } = props
+  const { isSelected, label, onClick, children, testId } = props
   const { classes } = useStyles()
   const theme = useTheme()
 
   return (
     <MenuItem
       selected={isSelected}
-      onClick={() => selectSection()}
+      onClick={() => onClick()}
       sx={{ paddingTop: theme.spacing(2), paddingBottom: theme.spacing(2) }}
       data-testid={testId}
     >

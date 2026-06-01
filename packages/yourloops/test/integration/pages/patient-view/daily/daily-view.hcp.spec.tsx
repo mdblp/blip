@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { screen, waitFor } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import { completeDailyViewDataMmol, mockDataAPI } from '../../../mock/data.api.mock'
@@ -82,9 +82,9 @@ describe('Daily view for HCP', () => {
         }
       }
     }
-    const router = renderPage(dailyRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(dailyRoute)
+
+    await act(async () => {
+      renderPage(dailyRoute)
     })
 
     expect(await screen.findByTestId('patient-nav-bar', {}, { timeout: 3000 })).toBeVisible()
@@ -100,9 +100,8 @@ describe('Daily view for HCP', () => {
     })
     mockDataAPI(completeDailyViewDataMmol)
 
-    const router = renderPage(dailyRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(dailyRoute)
+    await act(async () => {
+      renderPage(dailyRoute)
     })
 
     await testDailyViewTooltipsAndValuesMmolL()

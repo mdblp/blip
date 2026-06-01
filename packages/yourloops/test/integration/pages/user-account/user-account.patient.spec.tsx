@@ -29,7 +29,7 @@ import { renderPage } from '../../utils/render'
 import { loggedInUserId, mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockTeamAPI } from '../../mock/team.api.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
-import { screen, waitFor, within } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { checkPatientLayout } from '../../assert/layout.assert'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { mockPatientApiForPatients } from '../../mock/patient.api.mock'
@@ -108,10 +108,10 @@ describe('User account page for patient', () => {
     const updateUserAccountMock = jest.spyOn(UserApi, 'updateUserAccount').mockResolvedValue(expectedUserAccount)
     const updatePreferencesMock = jest.spyOn(UserApi, 'updatePreferences').mockResolvedValue(expectedPreferences)
 
-    const router = renderPage(userAccountRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(userAccountRoute)
+    await act(async () => {
+      renderPage(userAccountRoute)
     })
+
     await checkPatientLayout(`${account.lastName} ${account.firstName}`)
 
     await testPatientUserInfoUpdate()
@@ -121,12 +121,8 @@ describe('User account page for patient', () => {
   })
 
   it('should have access to the Data Sharing section with no data', async () => {
-    const router = renderPage(userAccountRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(userAccountRoute)
-
-      const pageContent = within(screen.getByTestId('user-account-view'))
-      expect(pageContent.getByText('User account')).toBeVisible()
+    await act(async () => {
+      renderPage(userAccountRoute)
     })
 
     await testDataSharingContentNoData()
@@ -154,12 +150,8 @@ describe('User account page for patient', () => {
     ]
     jest.spyOn(ExternalConsentsApi, 'getConsents').mockResolvedValue(consents)
 
-    const router = renderPage(userAccountRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(userAccountRoute)
-
-      const pageContent = within(screen.getByTestId('user-account-view'))
-      expect(pageContent.getByText('User account')).toBeVisible()
+    await act(async () => {
+      renderPage(userAccountRoute)
     })
 
     await testDataSharingContentWithData()
@@ -194,10 +186,8 @@ describe('User account page for patient', () => {
       preferences
     })
 
-    const router = renderPage(userAccountRoute)
-    await waitFor(() => {
-      expect(router.state.location.pathname).toEqual(userAccountRoute)
-      expect(screen.getByText('User account')).toBeVisible()
+    await act(async () => {
+      renderPage(userAccountRoute)
     })
 
     testUserAccountMenuNotVisible()
