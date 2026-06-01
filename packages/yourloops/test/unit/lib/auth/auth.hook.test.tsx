@@ -25,9 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React from 'react'
+import React, { act } from 'react'
 import { render, waitFor } from '@testing-library/react'
-import { act } from 'react-dom/test-utils'
 import * as auth0Mock from '@auth0/auth0-react'
 import { Auth0Provider } from '@auth0/auth0-react'
 import { type AuthContext, AuthContextProvider, type SignupForm, useAuth, type User } from '../../../../lib/auth'
@@ -313,6 +312,117 @@ describe('Auth hook', () => {
       expect(auth.user.account.contactConsent.isAccepted).toBeTruthy()
       expect(auth.user.preferences.displayLanguageCode).toEqual(LanguageCodes.Fr)
       expect(auth.user.settings.country).toEqual(CountryCode.France)
+    })
+  })
+
+  describe('getAppState', () => {
+    it('should return null when no appState has been set', async () => {
+      await initAuthContext()
+
+      const result = auth.getAppState()
+
+      expect(result).toBeNull()
+    })
+
+    it('should return the appState that was previously set via setAppStateJson', async () => {
+      const appState = { showConsent: true, callbackUrl: '/home' }
+      await initAuthContext()
+
+      act(() => {
+        auth.setAppStateJson(encodeURIComponent(JSON.stringify(appState)))
+      })
+
+      const result = auth.getAppState()
+
+      expect(result).toEqual(appState)
+    })
+
+    it('should reset appState to null after being read', async () => {
+      const appState = { showConsent: true }
+      await initAuthContext()
+
+      act(() => {
+        auth.setAppStateJson(encodeURIComponent(JSON.stringify(appState)))
+      })
+
+      await act(async () => {
+        auth.getAppState() // triggers setAppState(null) — act flushes it
+      })
+
+      const second = auth.getAppState()
+
+      expect(second).toBeNull()
+    })
+
+    it('should return the most recently set appState when setAppStateJson is called multiple times', async () => {
+      const first = { showConsent: false, callbackUrl: '/old' }
+      const second = { showConsent: true, callbackUrl: '/new' }
+      await initAuthContext()
+
+      act(() => {
+        auth.setAppStateJson(encodeURIComponent(JSON.stringify(first)))
+        auth.setAppStateJson(encodeURIComponent(JSON.stringify(second)))
+      })
+
+      expect(auth.getAppState()).toEqual(second)
+    })
+  })
+
+  describe('setAppStateJson', () => {
+    it('should store a simple decoded and parsed appState', async () => {
+      const appState = { showConsent: true }
+      await initAuthContext()
+
+      act(() => {
+        auth.setAppStateJson(encodeURIComponent(JSON.stringify(appState)))
+      })
+
+      expect(auth.getAppState()).toEqual(appState)
+    })
+
+    it('should store a complex nested appState', async () => {
+      const appState = { showConsent: true, callbackUrl: '/home?foo=bar&baz=1', meta: { step: 2 } }
+      await initAuthContext()
+
+      act(() => {
+        auth.setAppStateJson(encodeURIComponent(JSON.stringify(appState)))
+      })
+
+      expect(auth.getAppState()).toEqual(appState)
+    })
+
+    it('should correctly decode special characters in the appState', async () => {
+      const appState = { callbackUrl: '/home?redirect=/patient/123&name=John Doe' }
+      await initAuthContext()
+
+      act(() => {
+        auth.setAppStateJson(encodeURIComponent(JSON.stringify(appState)))
+      })
+
+      expect(auth.getAppState()).toEqual(appState)
+    })
+
+    it('should overwrite the previous appState when called again', async () => {
+      const first = { showConsent: false }
+      const second = { showConsent: true, callbackUrl: '/new' }
+      await initAuthContext()
+
+      act(() => {
+        auth.setAppStateJson(encodeURIComponent(JSON.stringify(first)))
+      })
+      act(() => {
+        auth.setAppStateJson(encodeURIComponent(JSON.stringify(second)))
+      })
+
+      expect(auth.getAppState()).toEqual(second)
+    })
+
+    it('should throw when given an invalid JSON string', async () => {
+      await initAuthContext()
+
+      expect(() => {
+        auth.setAppStateJson(encodeURIComponent('not-valid-json'))
+      }).toThrow(SyntaxError)
     })
   })
 })
