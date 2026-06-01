@@ -26,7 +26,6 @@
  */
 
 import React, { FC, useState } from 'react'
-import { PartnerName } from '../../../lib/external-consents/models/enum/partner-name.enum'
 import Dialog from '@mui/material/Dialog'
 import { DataAccessRequest } from './data-access-request'
 import { DataAccessResultValue } from '../../../lib/external-consents/models/enum/data-access-result-value.enum'
@@ -34,21 +33,26 @@ import { DataAccessResult } from './data-access-result'
 import { ExternalConsentsApi } from '../../../lib/external-consents/external-consents.api'
 import { errorTextFromException } from '../../../lib/utils'
 import { logError } from '../../../utils/error.util'
+import { getPartnerNameById } from '../../../lib/external-consents/external-consents.util'
 
 interface DataAccessRequestDialogProps {
   patientId: string
   partnerId: string
-  partnerName: PartnerName
-  // callbackUrl: string
+  callbackUrl: string
 }
 
 export const DataAccessRequestDialog: FC<DataAccessRequestDialogProps> = (props) => {
-  const { patientId, partnerId, partnerName } = props
+  const { callbackUrl, patientId, partnerId } = props
   const [result, setResult] = useState<DataAccessResultValue | undefined>(undefined)
   const [isLoading, setIsLoading] = useState(false)
 
+  const partnerName = getPartnerNameById(partnerId)
+  if (!partnerName) {
+    logError(`Partner id ${partnerId} not recognized, skipping data access request`, 'data-access-request')
+    return
+  }
+
   const onAcceptAccess = async () => {
-    // TODO Call backend
     setIsLoading(true)
     try {
       await ExternalConsentsApi.addConsent(patientId, partnerId)
@@ -56,7 +60,7 @@ export const DataAccessRequestDialog: FC<DataAccessRequestDialogProps> = (props)
       setResult(DataAccessResultValue.Accepted)
     } catch (err) {
       const errorMessage = errorTextFromException(err)
-      logError(errorMessage, 'revoke-consent')
+      logError(errorMessage, 'add-consent')
 
       setResult(DataAccessResultValue.Error)
     }
@@ -70,14 +74,18 @@ export const DataAccessRequestDialog: FC<DataAccessRequestDialogProps> = (props)
 
   return (
     <Dialog open data-testid="data-access-request-dialog">
-      {!result
-        ? <DataAccessRequest
+      {result
+        ? <DataAccessResult
+          partnerName={partnerName}
+          result={result}
+          callbackUrl={callbackUrl}
+        />
+        : <DataAccessRequest
           partnerName={partnerName}
           onAcceptAccess={onAcceptAccess}
           onDenyAccess={onDenyAccess}
           isLoading={isLoading}
         />
-        : <DataAccessResult partnerName={partnerName} result={result} />
       }
     </Dialog>
   )

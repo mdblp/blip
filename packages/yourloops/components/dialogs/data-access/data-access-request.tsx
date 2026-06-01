@@ -29,7 +29,7 @@ import React, { FC } from 'react'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import Box from '@mui/material/Box'
-import { ArrowRightAlt, CheckCircleOutlined } from '@mui/icons-material'
+import { CheckCircleOutlined, SwapHoriz } from '@mui/icons-material'
 import config from '../../../lib/config/config'
 import DialogContentText from '@mui/material/DialogContentText'
 import { Trans, useTranslation } from 'react-i18next'
@@ -102,7 +102,7 @@ export const DataAccessRequest: FC<DataAccessRequestProps> = (props) => {
             sx={{ width: 200, height: 'auto' }}
           />
 
-          <ArrowRightAlt fontSize="large" />
+          <SwapHoriz sx={{ color: 'text.secondary', fontSize: 'xxx-large' }} />
 
           <Box
             component="img"

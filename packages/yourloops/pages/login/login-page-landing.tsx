@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -35,11 +35,11 @@ import LoginPageMobile from './login-page-mobile'
 import LoginPageDesktop from './login-page-desktop'
 import { GlobalStyles } from 'tss-react'
 import { useQueryParams } from '../../lib/custom-hooks/query-params.hook'
-import { IDLE_USER_QUERY_PARAM } from '../../lib/auth'
 import { useTranslation } from 'react-i18next'
 import { AppRoute } from '../../models/enums/routes.enum'
 import { setPageTitle } from '../../lib/utils'
 import { Auth0Error } from '../../lib/auth/models/enums/auth0-error.enum'
+import { LoginQueryParam } from '../../lib/auth/models/enums/login-query-param.enum'
 
 export const LoginPageLanding: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
@@ -51,7 +51,7 @@ export const LoginPageLanding: FunctionComponent = () => {
   const queryParams = useQueryParams()
 
   useEffect(() => {
-    if (queryParams.get(IDLE_USER_QUERY_PARAM)) {
+    if (queryParams.get(LoginQueryParam.Idle)) {
       alert.warning(t('alert-inactive-user-logged-out'), { infiniteTimeout: true })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,12 +74,17 @@ export const LoginPageLanding: FunctionComponent = () => {
 
   setPageTitle(t('login'))
 
+  const partnerId = queryParams.get(LoginQueryParam.PartnerId)
+  const callbackUrl = queryParams.get(LoginQueryParam.CallbackUrl)
+
+  const appState = { partnerId, callbackUrl }
+
   return (
     <React.Fragment>
       <GlobalStyles styles={{ body: { backgroundColor: 'white' } }} />
       {isMobileView
-        ? <LoginPageMobile />
-        : <LoginPageDesktop />
+        ? <LoginPageMobile appState={appState} />
+        : <LoginPageDesktop appState={appState} />
       }
     </React.Fragment>
   )

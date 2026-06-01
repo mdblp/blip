@@ -28,7 +28,6 @@
 import React, { FC } from 'react'
 import { PartnerName } from '../../../lib/external-consents/models/enum/partner-name.enum'
 import { DataAccessResultValue } from '../../../lib/external-consents/models/enum/data-access-result-value.enum'
-import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import { Trans, useTranslation } from 'react-i18next'
 import DialogContent from '@mui/material/DialogContent'
@@ -38,14 +37,16 @@ import DialogContentText from '@mui/material/DialogContentText'
 import {
   getRemoteMonitoringToolLabel
 } from '../../../pages/user-account/sections/data-sharing-section/remote-monitoring.util'
+import { Link } from 'react-router-dom'
 
 interface DataAccessResultProps {
   partnerName: PartnerName
   result: DataAccessResultValue
+  callbackUrl: string
 }
 
 export const DataAccessResult: FC<DataAccessResultProps> = (props) => {
-  const { partnerName, result } = props
+  const { partnerName, result, callbackUrl } = props
   const { t } = useTranslation()
 
   const partnerLabel = getRemoteMonitoringToolLabel(partnerName)
@@ -97,7 +98,8 @@ export const DataAccessResult: FC<DataAccessResultProps> = (props) => {
       <DialogActions>
         <Button
           variant="contained"
-          // onClick={onClickCancel}
+          component={Link}
+          to={callbackUrl}
         >
           {t('button-ok')}
         </Button>

@@ -57,15 +57,12 @@ import { logError } from '../../utils/error.util'
 import { PatientProfileView } from '../../pages/patient-view/patient-profile/patient-profile-view'
 import { ConfigService } from '../../lib/config/config.service'
 import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
-import { useQueryParams } from '../../lib/custom-hooks/query-params.hook'
 import { DataAccessRequestDialog } from '../dialogs/data-access/data-access-request-dialog'
-import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
+import { AppState } from '@auth0/auth0-react'
 
 interface PatientDataProps {
   patient: Patient
 }
-
-const SHOW_CONSENT_QUERY_PARAM = 'showConsent'
 
 export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: PatientDataProps) => {
   const alert = useAlert()
@@ -73,16 +70,19 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   const { t } = useTranslation()
   const patientIdForWhichDataHasBeenFetched = useRef(null)
   const { teamId } = useParams()
-  const { user } = useAuth()
+  const { getAppState, user } = useAuth()
+  const [appState, setAppState] = useState<AppState | null>(null)
 
-  const queryParams = useQueryParams()
+  useEffect(() => {
+    const appStateFromAuth = getAppState()
+    if (appStateFromAuth) {
+      setAppState(appStateFromAuth)
+    }
+  }, [getAppState])
 
-  // const showConsentDialog = queryParams.get(SHOW_CONSENT_QUERY_PARAM)
-  const showDataAccessRequestDialog = user.isUserPatient() && true
-  const partnerId = 'newid12345'
-  const partnerName = PartnerName.GlookoXT
-
-  // const showDataAccessResultDialog = true
+  const partnerId = appState?.partnerId
+  const callbackUrl = appState?.callbackUrl
+  const showDataAccessRequestDialog = user.isUserPatient() && !!partnerId
 
   const {
     bgPrefs,
@@ -289,7 +289,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                   <DataAccessRequestDialog
                     patientId={user.id}
                     partnerId={partnerId}
-                    partnerName={partnerName}
+                    callbackUrl={callbackUrl}
                   />
                 }
               </>

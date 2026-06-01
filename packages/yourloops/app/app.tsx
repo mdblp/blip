@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,8 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
-import { BrowserRouter } from 'react-router-dom'
+import React, { type FC, type ReactNode } from 'react'
+import { BrowserRouter, useNavigate } from 'react-router-dom'
 import { Auth0Provider } from '@auth0/auth0-react'
 
 import '@fontsource/roboto/300.css'
@@ -41,8 +41,27 @@ import { AuthContextProvider } from '../lib/auth'
 import { MainLobby } from './main-lobby'
 import MetricsLocationListener from '../components/MetricsLocationListener'
 
-export const Yourloops: FC = () => {
-  const redirectUri = window.location.origin
+interface AppState {
+  returnTo?: string
+  appStateJSON?: string
+}
+
+const Auth0ProviderWithNavigate: FC<{ children: ReactNode }> = ({ children }) => {
+  const navigate = useNavigate()
+  const redirectUri = globalThis.location.origin
+
+  const onRedirectCallback = (appState?: AppState) => {
+    const returnTo = appState?.returnTo ?? '/'
+
+    if (appState?.appStateJSON) {
+      const url = new URL(returnTo, globalThis.location.origin)
+      url.searchParams.set('appStateJson', appState.appStateJSON)
+      navigate(`${url.pathname}${url.search}${url.hash}`)
+      return
+    }
+
+    navigate(returnTo)
+  }
 
   return (
     <Auth0Provider
@@ -55,13 +74,20 @@ export const Yourloops: FC = () => {
         audience: 'https://api-ext.your-loops.com'
       }}
       useRefreshTokens
+      onRedirectCallback={onRedirectCallback}
     >
-      <BrowserRouter>
-        <MetricsLocationListener />
-        <AuthContextProvider>
-          <MainLobby />
-        </AuthContextProvider>
-      </BrowserRouter>
+      {children}
     </Auth0Provider>
   )
 }
+
+export const Yourloops: FC = () => (
+  <BrowserRouter>
+    <Auth0ProviderWithNavigate>
+      <MetricsLocationListener />
+      <AuthContextProvider>
+        <MainLobby />
+      </AuthContextProvider>
+    </Auth0ProviderWithNavigate>
+  </BrowserRouter>
+)

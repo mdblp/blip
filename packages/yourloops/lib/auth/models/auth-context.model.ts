@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -31,6 +31,7 @@ import { type SignupForm } from './signup-form.model'
 import { type Preferences } from './preferences.model'
 import { UserAccount } from './user-account.model'
 import { type Settings } from './settings.model'
+import { AppState } from '@auth0/auth0-react'
 
 /**
  * The auth provider hook return values.
@@ -38,9 +39,11 @@ import { type Settings } from './settings.model'
 export interface AuthContext {
   fetchingUser: boolean
   flagPatient: (userId: string) => Promise<void> // Flag or un-flag one patient
+  getAppState: () => AppState
   getFlagPatients: () => string[]
   isLoggedIn: boolean
   logout: (isIdle?: boolean) => void
+  setAppStateJson: (appStateJson: string) => void
   setFlagPatients: (userIds: string[]) => Promise<void> // Set the flagged patient
   completeSignup: (signupForm: SignupForm) => Promise<void>
   switchRoleToHCP: (feedbackConsent: boolean, hcpProfession: HcpProfession) => Promise<void> // Switch user role from caregiver to hcp
