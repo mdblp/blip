@@ -59,6 +59,7 @@ import { ConfigService } from '../../lib/config/config.service'
 import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 import { DataAccessRequestDialog } from '../dialogs/data-access/data-access-request-dialog'
 import { AppState } from '@auth0/auth0-react'
+import { getPartnerNameById } from '../../lib/external-consents/external-consents.util'
 
 interface PatientDataProps {
   patient: Patient
@@ -70,19 +71,25 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   const { t } = useTranslation()
   const patientIdForWhichDataHasBeenFetched = useRef(null)
   const { teamId } = useParams()
-  const { getAppState, user } = useAuth()
+  const { getAndClearAppState, user } = useAuth()
   const [appState, setAppState] = useState<AppState | null>(null)
 
   useEffect(() => {
-    const appStateFromAuth = getAppState()
+    const appStateFromAuth = getAndClearAppState()
     if (appStateFromAuth) {
       setAppState(appStateFromAuth)
     }
-  }, [getAppState])
+  }, [getAndClearAppState])
 
   const partnerId = appState?.partnerId
   const callbackUrl = appState?.callbackUrl
-  const showDataAccessRequestDialog = user.isUserPatient() && !!partnerId
+  const isCallbackUrlValid = !!callbackUrl
+  const isPartnerIdValid = !!partnerId && !!getPartnerNameById(partnerId)
+  if (!isPartnerIdValid) {
+    logError(`Partner id ${partnerId} not recognized, skipping data access request`, 'data-access-request')
+  }
+
+  const showDataAccessRequestDialog = user.isUserPatient() && isPartnerIdValid && isCallbackUrlValid
 
   const {
     bgPrefs,

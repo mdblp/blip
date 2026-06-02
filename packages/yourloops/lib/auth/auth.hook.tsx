@@ -266,12 +266,12 @@ export function AuthContextImpl(): AuthContext {
     await getAccessTokenWithPopup({ authorizationParams: { ignoreCache: true } })
   }
 
-  const getAppState = (): AppState | null => {
+  const getAndClearAppState = useCallback((): AppState | null =>  {
     const appStateToReturn = appState
     setAppState(null)
 
     return appStateToReturn
-  }
+  }, [appState])
 
   const setAppStateJson = useCallback((appStateJson: string): void => {
     const decodedAppState = decodeURIComponent(appStateJson)
@@ -294,7 +294,7 @@ export function AuthContextImpl(): AuthContext {
     user,
     isLoggedIn,
     fetchingUser,
-    getAppState,
+    getAndClearAppState,
     updateUserAccount,
     updatePreferences,
     updateSettings,

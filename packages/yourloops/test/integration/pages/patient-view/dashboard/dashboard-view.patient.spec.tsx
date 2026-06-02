@@ -205,6 +205,23 @@ describe('Dashboard view for patient', () => {
     testDataAccessRequestModalNotVisible()
   })
 
+  it('should not display the Data Consent modal if the partnerId is invalid', async () => {
+    mockDataAPI()
+
+    const partnerId = 'invalid-partnerId'
+
+    jest.spyOn(ConfigService, 'getGlookoXtPartnerId').mockReturnValue('glooko-partnerId')
+    jest.spyOn(ConfigService, 'getMyDiabbyPartnerId').mockReturnValue('mydiabby-partnerId')
+    const appState = { partnerId, callbackUrl: 'https://fake-url.com' }
+    const appStateJson = encodeURIComponent(JSON.stringify(appState))
+
+    await act(async () => {
+      renderPage(`${patientDashboardRoute}?appStateJson=${appStateJson}`)
+    })
+
+    testDataAccessRequestModalNotVisible()
+  })
+
   it('should display the Data Consent modal for GlookoXT if the parameters are set and allow access', async () => {
     mockDataAPI()
 

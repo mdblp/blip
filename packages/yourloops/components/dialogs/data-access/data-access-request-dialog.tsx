@@ -47,10 +47,6 @@ export const DataAccessRequestDialog: FC<DataAccessRequestDialogProps> = (props)
   const [isLoading, setIsLoading] = useState(false)
 
   const partnerName = getPartnerNameById(partnerId)
-  if (!partnerName) {
-    logError(`Partner id ${partnerId} not recognized, skipping data access request`, 'data-access-request')
-    return
-  }
 
   const onAcceptAccess = async () => {
     setIsLoading(true)

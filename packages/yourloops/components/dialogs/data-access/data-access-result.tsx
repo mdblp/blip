@@ -98,8 +98,8 @@ export const DataAccessResult: FC<DataAccessResultProps> = (props) => {
       <DialogActions>
         <Button
           variant="contained"
-          component={Link}
-          to={callbackUrl}
+          component="a"
+          href={callbackUrl}
         >
           {t('button-ok')}
         </Button>

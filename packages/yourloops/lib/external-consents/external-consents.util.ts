@@ -28,7 +28,7 @@
 import { PartnerName } from './models/enum/partner-name.enum'
 import { ConfigService } from '../config/config.service'
 
-export const getPartnerNameById = (partnerId: string): PartnerName => {
+export const getPartnerNameById = (partnerId: string): PartnerName | null => {
   const glookoXtPartnerId = ConfigService.getGlookoXtPartnerId()
   const myDiabbyPartnerId = ConfigService.getMyDiabbyPartnerId()
 

@@ -39,7 +39,7 @@ import { AppState } from '@auth0/auth0-react'
 export interface AuthContext {
   fetchingUser: boolean
   flagPatient: (userId: string) => Promise<void> // Flag or un-flag one patient
-  getAppState: () => AppState
+  getAndClearAppState: () => AppState
   getFlagPatients: () => string[]
   isLoggedIn: boolean
   logout: (isIdle?: boolean) => void
