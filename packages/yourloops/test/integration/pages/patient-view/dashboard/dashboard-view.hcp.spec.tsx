@@ -25,7 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, waitFor } from '@testing-library/react'
+import { act } from 'react'
+import { waitFor } from '@testing-library/react'
 import { logoutMock, mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import {
@@ -73,6 +74,8 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import { testDataAccessRequestModalNotVisible } from '../../../use-cases/data-sharing'
+import { mockErrorApi } from '../../../mock/error.api.mock'
 
 describe('Dashboard view for HCP', () => {
   const patientDashboardRoute = `/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Dashboard}`
@@ -92,6 +95,7 @@ describe('Dashboard view for HCP', () => {
     mockMedicalFilesAPI(myThirdTeamId, myThirdTeamName)
     mockDataAPI()
     mockAnalyticsApi()
+    mockErrorApi()
   })
 
   it('should render correct components when navigating to a patient not scoped on the private team', async () => {
@@ -244,5 +248,19 @@ describe('Dashboard view for HCP', () => {
     })
 
     await testEmptyMedicalFilesWidgetForHcp()
+  })
+
+  it('should not display the Data Consent modal even if the parameters are set', async () => {
+    const glookoXtPartnerId = 'partnerId'
+
+    jest.spyOn(ConfigService, 'getGlookoXtPartnerId').mockReturnValue(glookoXtPartnerId)
+    const appState = { partnerId: glookoXtPartnerId, callbackUrl: 'https://fake-url.com' }
+    const appStateJson = encodeURIComponent(JSON.stringify(appState))
+
+    await act(async () => {
+      renderPage(`/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Dashboard}?appStateJson=${appStateJson}`)
+    })
+
+    testDataAccessRequestModalNotVisible()
   })
 })

@@ -103,3 +103,64 @@ export const checkRevokeConsentError = async (): Promise<void> => {
   expect(dialog).not.toBeInTheDocument()
   expect(screen.getByRole('alert')).toHaveTextContent('An error occurred, please try again later.')
 }
+
+export const checkDataAccessRequestModalNotVisible = (): void => {
+  expect(screen.queryByTestId('data-access-request-dialog')).not.toBeInTheDocument()
+}
+
+export const checkGlookoXtDataAccessRequestModalVisible = (): void => {
+  const modal = screen.queryByTestId('data-access-request-dialog')
+
+  expect(modal).toBeVisible()
+  expect(modal).toHaveTextContent('Data access requestThe Glooko XT app is requesting access to your data.If you agree, the following data will be shared:Glucose levelsInsulin delivery information (basal rate and boluses)Meal and rescue carb informationAlarms / alerts relating to data transmission and time outside the target range.Physical activity dataSome system settingsYou can revoke access to your data at any time in your User Account.')
+  expect(within(modal).getByRole('button', { name: 'Deny access' })).toBeVisible()
+  expect(within(modal).getByRole('button', { name: 'Allow access' })).toBeVisible()
+}
+
+export const checkMyDiabbyDataAccessRequestModalVisible = (): void => {
+  const modal = screen.queryByTestId('data-access-request-dialog')
+
+  expect(modal).toBeVisible()
+  expect(modal).toHaveTextContent('Data access requestThe MyDiabby Healthcare app is requesting access to your data.If you agree, the following data will be shared:Glucose levelsInsulin delivery information (basal rate and boluses)Meal and rescue carb informationAlarms / alerts relating to data transmission and time outside the target range.Physical activity dataSome system settingsYou can revoke access to your data at any time in your User Account.')
+  expect(within(modal).getByRole('button', { name: 'Deny access' })).toBeVisible()
+  expect(within(modal).getByRole('button', { name: 'Allow access' })).toBeVisible()
+}
+
+export const checkAcceptDataAccessRequest = async (): Promise<void> => {
+  const modal = screen.queryByTestId('data-access-request-dialog')
+  const allowAccessButton = within(modal).getByRole('button', { name: 'Allow access' })
+
+  await userEvent.click(allowAccessButton)
+
+  expect(screen.queryByTestId('data-access-request-dialog')).toHaveTextContent('Data access grantedThe application Glooko XT now has access to your data.You will be redirected to the application.')
+
+  const okLink = within(modal).getByRole('link', { name: 'Ok' })
+  expect(okLink).toBeVisible()
+  expect(okLink).toHaveAttribute('href', 'https://fake-url.com')
+}
+
+export const checkDenyDataAccessRequest = async (): Promise<void> => {
+  const modal = screen.queryByTestId('data-access-request-dialog')
+  const denyAccessButton = within(modal).getByRole('button', { name: 'Deny access' })
+
+  await userEvent.click(denyAccessButton)
+
+  expect(screen.queryByTestId('data-access-request-dialog')).toHaveTextContent('Data access refusedYou have denied the application MyDiabby Healthcare access to your data.You will be redirected to the application.')
+
+  const okLink = within(modal).getByRole('link', { name: 'Ok' })
+  expect(okLink).toBeVisible()
+  expect(okLink).toHaveAttribute('href', 'https://fake-url.com')
+}
+
+export const checkDataAccessRequestError = async (): Promise<void> => {
+  const modal = screen.queryByTestId('data-access-request-dialog')
+  const allowAccessButton = within(modal).getByRole('button', { name: 'Allow access' })
+
+  await userEvent.click(allowAccessButton)
+
+  expect(screen.queryByTestId('data-access-request-dialog')).toHaveTextContent('Error during data access requestAn error occurred while processing the data access request from MyDiabby Healthcare. Please retry the process.You will be redirected to the application.')
+
+  const okLink = within(modal).getByRole('link', { name: 'Ok' })
+  expect(okLink).toBeVisible()
+  expect(okLink).toHaveAttribute('href', 'https://fake-url.com')
+}
