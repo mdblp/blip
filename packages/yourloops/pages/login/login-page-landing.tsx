@@ -77,7 +77,7 @@ export const LoginPageLanding: FunctionComponent = () => {
   const partnerId = queryParams.get(LoginQueryParam.PartnerId)
   const callbackUrl = queryParams.get(LoginQueryParam.CallbackUrl)
 
-  const appState = { partnerId, callbackUrl }
+  const appState = partnerId && callbackUrl ? { partnerId, callbackUrl } : undefined
 
   return (
     <React.Fragment>

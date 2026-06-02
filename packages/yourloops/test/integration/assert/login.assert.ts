@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,33 +25,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { AppRoute } from '../../models/enums/routes.enum'
-import { useNavigate } from 'react-router-dom'
-import { AppState, useAuth0 } from '@auth0/auth0-react'
+import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
-interface LoginHookReturn {
-  loginWithState: (appState: AppState) => Promise<void>
-  redirectToSignupInformation: () => void
+export const checkLoginWithAppState = async (loginMock: jest.Mock) => {
+  const loginButton = screen.getByRole('button', { name: 'Connect' })
+  await userEvent.click(loginButton)
+
+  expect(loginMock).toHaveBeenCalledWith({
+    appState: {
+      appStateJSON: "%7B%22partnerId%22%3A%22partnerId%22%2C%22callbackUrl%22%3A%22https%3A%2F%2Ffake-url.com%22%7D"
+    }
+  })
 }
 
-export const useLogin = (): LoginHookReturn => {
-  const navigate = useNavigate()
-  const { loginWithRedirect } = useAuth0()
+export const checkLoginWithoutAppState = async (loginMock: jest.Mock) => {
+  const loginButton = screen.getByRole('button', { name: 'Connect' })
+  await userEvent.click(loginButton)
 
-  const redirectToSignupInformation = () => {
-    navigate(AppRoute.SignupInformation)
-  }
-
-  const loginWithState = async (appState: AppState) => {
-    if (!appState) {
-      await loginWithRedirect()
-      return
-    }
-
-    const appStateJson = encodeURIComponent(JSON.stringify(appState))
-
-    await loginWithRedirect({ appState: { appStateJSON: appStateJson } })
-  }
-
-  return { loginWithState, redirectToSignupInformation }
+  expect(loginMock).toHaveBeenCalledWith()
 }

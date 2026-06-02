@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -30,6 +30,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { renderPage } from '../../utils/render'
 import userEvent from '@testing-library/user-event'
 import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
+import { testLoginWithAppState, testLoginWithoutAppState } from '../../use-cases/login'
 
 jest.mock('@mui/material/useMediaQuery', () => {
   return () => true
@@ -73,5 +74,31 @@ describe('Login page mobile view', () => {
 
     await userEvent.click(loginButton)
     expect(loginWithRedirectMock).toHaveBeenCalled()
+  })
+
+  it('should build the app state and pass it to Auth0 if there are query parameters', async () => {
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      isAuthenticated: false,
+      isLoading: false,
+      user: undefined,
+      loginWithRedirect: loginWithRedirectMock
+    })
+
+    renderPage('/login?partnerId=partnerId&callbackUrl=https://fake-url.com')
+
+    await testLoginWithAppState(loginWithRedirectMock)
+  })
+
+  it('should build not pass an app state if query parameters are wrong', async () => {
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      isAuthenticated: false,
+      isLoading: false,
+      user: undefined,
+      loginWithRedirect: loginWithRedirectMock
+    })
+
+    renderPage('/login?test=test')
+
+    await testLoginWithoutAppState(loginWithRedirectMock)
   })
 })
