@@ -50,6 +50,8 @@ import { AppUserRoute } from '../../models/enums/routes.enum'
 import { Banner } from './banner'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 import TeamUtils, { PRIVATE_TEAM_ID } from '../../lib/team/team.util'
+import Button from '@mui/material/Button'
+import CareTeamSettingsIcon from '../icons/care-team-settings-icon'
 
 interface MainHeaderProps {
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
@@ -182,7 +184,6 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                   color="error"
                 >
                   <NotificationsNoneIcon/>
-
                 </Badge>
               </Link>
               <UserMenu />
@@ -197,31 +198,28 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
             boxSizing: "border-box",
             maxWidth: "100vw",
           }}>
-          {user.isUserHcp() && (
-            <StyledTabs value={getSelectedTab()}>
-              {!user?.isUserCaregiver() && (
-                <StyledTab
-                  label={
-                    <>
-                      {user.isUserPatient() && <TeamSettingsMenu />}
-                      {user.isUserHcp() && <TeamScopeMenu />}
-                    </>
-                  }
-                  value="tab-x"
-                />
-              )}
-              {!TeamUtils.isPrivate(teamId) && (
-                <StyledTab
-                  data-testid="main-header-hcp-care-team-settings-tab"
-                  className={tab}
-                  label={t('header-tab-care-team-settings')}
-                  value={HcpNavigationTab.CareTeam}
-                  onClick={() => {
-                    navigate(`${AppUserRoute.Teams}/${teamId}`)
-                  }}
-                />
-              )}
-            </StyledTabs>
+          {user.isUserHcp() && !user?.isUserCaregiver() && (
+              <Tab
+                label={
+                  <>
+                    {user.isUserPatient() && <TeamSettingsMenu />}
+                    {user.isUserHcp() && <TeamScopeMenu />}
+                  </>
+                }
+                value="tab-x"
+              />
+          )}
+          {!TeamUtils.isPrivate(teamId) && (
+            <Button
+              aria-label={t('header-tab-care-team-settings')}
+              value={HcpNavigationTab.CareTeam}
+              onClick={() => {
+                navigate(`${AppUserRoute.Teams}/${teamId}`)
+              }}
+              variant="outlined"
+              >
+              <CareTeamSettingsIcon data-testid="care-team-settings-icon" />
+            </Button>
           )}
         </Box>
       </Toolbar>

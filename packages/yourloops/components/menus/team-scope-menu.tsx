@@ -147,12 +147,16 @@ export const TeamScopeMenu: FunctionComponent = () => {
   return (
     <>
       {isMobile
-        ? <IconButton
+        ? <Button
           color="inherit"
           aria-label={t('open-team-selection-menu')}
-          onClick={openMenu}>
-          {selectedTeamIcon}
-        </IconButton>
+          data-testid="team-scope-menu-button-mobile"
+          data-stonlyid="team-scope-menu-button-mobile"
+          endIcon={<ArrowDropDownIcon />}
+          onClick={openMenu}
+        >
+          <Typography className={typography} sx={{ maxWidth: MENU_MAX_WIDTH_PX }}>{selectedTeamName}</Typography>
+        </Button>
         : <Button
           color="inherit"
           aria-label={t('open-team-selection-menu')}

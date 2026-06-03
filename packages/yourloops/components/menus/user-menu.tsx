@@ -35,6 +35,7 @@ import ContactSupportIcon from '@mui/icons-material/ContactSupport'
 import FaceIcon from '@mui/icons-material/Face'
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar'
 import StethoscopeIcon from '../icons/stethoscope-icon'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
@@ -86,6 +87,9 @@ function UserMenu(): JSX.Element {
   const userName = getUserName(firstName, lastName, fullName)
 
   const getRoleIcon = (): JSX.Element | null => {
+    if (isMobile){
+      return <AccountCircleIcon/>
+    }
     switch (user?.role) {
       case UserRole.Hcp:
         return <StethoscopeIcon data-testid="hcp-icon" />
