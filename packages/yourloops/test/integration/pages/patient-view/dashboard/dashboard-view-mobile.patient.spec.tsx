@@ -44,6 +44,7 @@ import {
 import { patient1Info } from '../../../data/patient.api.data'
 import { mockChatAPI } from '../../../mock/chat.api.mock'
 import { type AppMainLayoutParams, testAppMainLayoutForPatientMobile } from '../../../use-cases/app-main-layout-visualisation'
+import { testJoinTeam } from '../../../use-cases/teams-management'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
@@ -80,6 +81,14 @@ describe('Dashboard view for patient', () => {
     })
 
     await testAppMainLayoutForPatientMobile(appMainLayoutParams)
+  })
+
+  it('should be able to join a team', async () => {
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    await testJoinTeam()
   })
 
 })
