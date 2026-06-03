@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,7 +27,7 @@
 
 import React, { Dispatch, type FC, SetStateAction } from 'react'
 import { useTheme } from '@mui/material/styles'
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery'
 import { useAuth } from '../../lib/auth'
 import { MainHeaderMobileMemoized } from './main-header-mobile'
 import { MainHeaderDesktopMemoized } from './main-header-desktop'
