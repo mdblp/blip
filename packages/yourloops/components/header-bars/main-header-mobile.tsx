@@ -44,7 +44,7 @@ import { useAuth } from '../../lib/auth'
 import { TeamSettingsMenuMemoized as TeamSettingsMenu } from '../menus/team-settings-menu'
 import { UserMenuMemoized as UserMenu } from '../menus/user-menu'
 import { TeamScopeMenu } from '../menus/team-scope-menu'
-import { styled, Tab, Tabs } from '@mui/material'
+import { Tab } from '@mui/material'
 import { HcpNavigationTab } from '../../models/enums/hcp-navigation-tab.model'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { Banner } from './banner'
@@ -52,6 +52,7 @@ import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 import TeamUtils, { PRIVATE_TEAM_ID } from '../../lib/team/team.util'
 import Button from '@mui/material/Button'
 import CareTeamSettingsIcon from '../icons/care-team-settings-icon'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 interface MainHeaderProps {
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
@@ -63,6 +64,12 @@ const classes = makeStyles()((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     backgroundColor: theme.palette.common.white,
     color: 'var(--text-color-primary)'
+  },
+  arrowBack: {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.25rem",
+    color: "#009BD6"
   },
   mobileLogo: {
     width: "24.9vw",
@@ -84,12 +91,10 @@ const classes = makeStyles()((theme) => ({
   }
 }))
 
-// Allow the tabs to take the whole height of the toolbar
-const StyledTabs = styled(Tabs)(({ theme }) => ({ ...theme.mixins.toolbar }))
-const StyledTab = styled(Tab)(({ theme }) => ({ ...theme.mixins.toolbar }))
+// Allow the tabs to take the whole height of the toolbar => ({ ...theme.mixins.toolbar }))
 const MainHeader: FC<MainHeaderProps> = (props) => {
   const { setMainHeaderHeight } = props
-  const { classes: { mobileLogo, appBar, tab, toolbar } } = classes()
+  const { classes: { mobileLogo, appBar, tab, toolbar, arrowBack } } = classes()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
   const { user } = useAuth()
@@ -110,6 +115,10 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
     if (appMainHeaderElement) {
       setMainHeaderHeight(appMainHeaderElement.offsetHeight ?? 0)
     }
+  }
+
+  const goBackHome = (): void => {
+    navigate('/')
   }
 
   return (
@@ -198,29 +207,37 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
             boxSizing: "border-box",
             maxWidth: "100vw",
           }}>
-          {user.isUserHcp() && !user?.isUserCaregiver() && (
-              <Tab
-                label={
-                  <>
-                    {user.isUserPatient() && <TeamSettingsMenu />}
-                    {user.isUserHcp() && <TeamScopeMenu />}
-                  </>
-                }
-                value="tab-x"
-              />
-          )}
-          {!TeamUtils.isPrivate(teamId) && (
-            <Button
-              aria-label={t('header-tab-care-team-settings')}
-              value={HcpNavigationTab.CareTeam}
-              onClick={() => {
-                navigate(`${AppUserRoute.Teams}/${teamId}`)
-              }}
-              variant="outlined"
-              >
-              <CareTeamSettingsIcon data-testid="care-team-settings-icon" />
-            </Button>
-          )}
+          {pathname.endsWith('patients') ? (
+            <>
+            {user.isUserHcp() && !user?.isUserCaregiver() && (
+                <Tab
+                  label={
+                    <>
+                      {user.isUserPatient() && <TeamSettingsMenu />}
+                      {user.isUserHcp() && <TeamScopeMenu />}
+                    </>
+                  }
+                  value={getSelectedTab()}
+                  className={tab}
+                />
+              )} {!TeamUtils.isPrivate(teamId) && (
+              <Button
+                aria-label={t('header-tab-care-team-settings')}
+                value={HcpNavigationTab.CareTeam}
+                onClick={() => {
+                  navigate(`${AppUserRoute.Teams}/${teamId}`)
+                }}
+                variant="outlined"
+                >
+                <CareTeamSettingsIcon data-testid="care-team-settings-icon" />
+              </Button>
+            )}
+          </>
+        ):
+        (
+          <>
+          </>
+        )}
         </Box>
       </Toolbar>
     </AppBar>
