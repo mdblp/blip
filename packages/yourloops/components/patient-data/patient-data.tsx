@@ -85,7 +85,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   const callbackUrl = appState?.callbackUrl
   const isCallbackUrlValid = !!callbackUrl
   const isPartnerIdValid = !!partnerId && !!getPartnerNameById(partnerId)
-  if (!isPartnerIdValid) {
+  if (appState && !isPartnerIdValid) {
     logError(`Partner id ${partnerId} not recognized, skipping data access request`, 'data-access-request')
   }
 

@@ -319,7 +319,7 @@ describe('Auth hook', () => {
     it('should return null when no appState has been set', async () => {
       await initAuthContext()
 
-      const result = auth.getAppState()
+      const result = auth.getAndClearAppState()
 
       expect(result).toBeNull()
     })
@@ -332,7 +332,7 @@ describe('Auth hook', () => {
         auth.setAppStateJson(encodeURIComponent(JSON.stringify(appState)))
       })
 
-      const result = auth.getAppState()
+      const result = auth.getAndClearAppState()
 
       expect(result).toEqual(appState)
     })
@@ -346,10 +346,10 @@ describe('Auth hook', () => {
       })
 
       await act(async () => {
-        auth.getAppState() // triggers setAppState(null) — act flushes it
+        auth.getAndClearAppState() // triggers setAppState(null) — act flushes it
       })
 
-      const second = auth.getAppState()
+      const second = auth.getAndClearAppState()
 
       expect(second).toBeNull()
     })
@@ -364,7 +364,7 @@ describe('Auth hook', () => {
         auth.setAppStateJson(encodeURIComponent(JSON.stringify(second)))
       })
 
-      expect(auth.getAppState()).toEqual(second)
+      expect(auth.getAndClearAppState()).toEqual(second)
     })
   })
 
@@ -377,7 +377,7 @@ describe('Auth hook', () => {
         auth.setAppStateJson(encodeURIComponent(JSON.stringify(appState)))
       })
 
-      expect(auth.getAppState()).toEqual(appState)
+      expect(auth.getAndClearAppState()).toEqual(appState)
     })
 
     it('should store a complex nested appState', async () => {
@@ -388,7 +388,7 @@ describe('Auth hook', () => {
         auth.setAppStateJson(encodeURIComponent(JSON.stringify(appState)))
       })
 
-      expect(auth.getAppState()).toEqual(appState)
+      expect(auth.getAndClearAppState()).toEqual(appState)
     })
 
     it('should correctly decode special characters in the appState', async () => {
@@ -399,7 +399,7 @@ describe('Auth hook', () => {
         auth.setAppStateJson(encodeURIComponent(JSON.stringify(appState)))
       })
 
-      expect(auth.getAppState()).toEqual(appState)
+      expect(auth.getAndClearAppState()).toEqual(appState)
     })
 
     it('should overwrite the previous appState when called again', async () => {
@@ -414,7 +414,7 @@ describe('Auth hook', () => {
         auth.setAppStateJson(encodeURIComponent(JSON.stringify(second)))
       })
 
-      expect(auth.getAppState()).toEqual(second)
+      expect(auth.getAndClearAppState()).toEqual(second)
     })
 
     it('should throw when given an invalid JSON string', async () => {
