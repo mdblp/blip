@@ -236,6 +236,13 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
         ):
         (
           <>
+            <Button
+              startIcon={<ArrowBackIcon />}
+              onClick={goBackHome}
+              className={arrowBack}
+            >
+              Back
+            </Button>
           </>
         )}
         </Box>
