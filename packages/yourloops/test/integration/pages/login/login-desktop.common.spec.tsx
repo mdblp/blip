@@ -127,7 +127,7 @@ describe('Login page desktop view', () => {
     expect(screen.getByTestId('alert-snackbar')).toHaveTextContent('Your session has expired due to inactivity. Please login again.')
   })
 
-  it('should build the app state and pass it to Auth0 if there are query parameters', async () => {
+  it('should login immediately and pass app state to Auth0 if there are query parameters', async () => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       isAuthenticated: false,
       isLoading: false,
@@ -140,7 +140,7 @@ describe('Login page desktop view', () => {
     await testLoginWithAppState(loginWithRedirectMock)
   })
 
-  it('should build not pass an app state if query parameters are wrong', async () => {
+  it('should not login immediately if query parameters are wrong', async () => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       isAuthenticated: false,
       isLoading: false,

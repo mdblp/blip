@@ -29,9 +29,6 @@ import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 export const checkLoginWithAppState = async (loginMock: jest.Mock) => {
-  const loginButton = screen.getByRole('button', { name: 'Connect' })
-  await userEvent.click(loginButton)
-
   expect(loginMock).toHaveBeenCalledWith({
     appState: {
       appStateJSON: "%7B%22partnerId%22%3A%22partnerId%22%2C%22callbackUrl%22%3A%22https%3A%2F%2Ffake-url.com%22%7D"
@@ -40,8 +37,10 @@ export const checkLoginWithAppState = async (loginMock: jest.Mock) => {
 }
 
 export const checkLoginWithoutAppState = async (loginMock: jest.Mock) => {
+  expect(loginMock).not.toHaveBeenCalled()
+
   const loginButton = screen.getByRole('button', { name: 'Connect' })
   await userEvent.click(loginButton)
 
-  expect(loginMock).toHaveBeenCalledWith()
+  expect(loginMock).toHaveBeenCalled()
 }

@@ -25,9 +25,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { FC } from 'react'
+import React, { type FunctionComponent, type MouseEventHandler } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { AppState } from '@auth0/auth0-react'
+import { useAuth0 } from '@auth0/auth0-react'
 import { makeStyles } from 'tss-react/mui'
 import loginPageBackground from 'images/login-page-background-desktop.png'
 import loginPageLaptop from 'images/login-page-laptop.png'
@@ -111,15 +111,11 @@ const styles = makeStyles({ name: 'login-page-styles' })((theme) => ({
   }
 }))
 
-interface LoginPageDesktopProps {
-  appState?: AppState
-}
-
-const LoginPageDesktop: FC<LoginPageDesktopProps> = (props) => {
-  const { appState } = props
+const LoginPageDesktop: FunctionComponent = () => {
+  const { loginWithRedirect } = useAuth0()
   const { t, i18n } = useTranslation()
   const { classes, theme } = styles()
-  const { loginWithState, redirectToSignupInformation } = useLogin()
+  const { redirectToSignupInformation } = useLogin()
 
   return (
     <React.Fragment>
@@ -158,7 +154,7 @@ const LoginPageDesktop: FC<LoginPageDesktopProps> = (props) => {
                 data-testid="login-button"
                 variant="contained"
                 disableElevation
-                onClick={() => loginWithState(appState)}
+                onClick={loginWithRedirect as MouseEventHandler}
                 className={classes.button}
               >
                 {t('button-connect')}

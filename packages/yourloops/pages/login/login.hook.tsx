@@ -43,13 +43,7 @@ export const useLogin = (): LoginHookReturn => {
   }
 
   const loginWithState = async (appState: AppState) => {
-    if (!appState) {
-      await loginWithRedirect()
-      return
-    }
-
     const appStateJson = encodeURIComponent(JSON.stringify(appState))
-
     await loginWithRedirect({ appState: { appStateJSON: appStateJson } })
   }
 

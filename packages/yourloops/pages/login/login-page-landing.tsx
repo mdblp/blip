@@ -40,6 +40,7 @@ import { AppRoute } from '../../models/enums/routes.enum'
 import { setPageTitle } from '../../lib/utils'
 import { Auth0Error } from '../../lib/auth/models/enums/auth0-error.enum'
 import { LoginQueryParam } from '../../lib/auth/models/enums/login-query-param.enum'
+import { useLogin } from './login.hook'
 
 export const LoginPageLanding: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
@@ -49,6 +50,7 @@ export const LoginPageLanding: FunctionComponent = () => {
   const theme = useTheme()
   const isMobileView: boolean = useMediaQuery(theme.breakpoints.only('xs'))
   const queryParams = useQueryParams()
+  const { loginWithState } = useLogin()
 
   useEffect(() => {
     if (queryParams.get(LoginQueryParam.Idle)) {
@@ -77,14 +79,20 @@ export const LoginPageLanding: FunctionComponent = () => {
   const partnerId = queryParams.get(LoginQueryParam.PartnerId)
   const callbackUrl = queryParams.get(LoginQueryParam.CallbackUrl)
 
-  const appState = partnerId && callbackUrl ? { partnerId, callbackUrl } : undefined
+  useEffect(() => {
+    if (partnerId && callbackUrl) {
+      const appState = { partnerId, callbackUrl }
+
+      loginWithState(appState)
+    }
+  }, [callbackUrl, loginWithState, partnerId])
 
   return (
     <React.Fragment>
       <GlobalStyles styles={{ body: { backgroundColor: 'white' } }} />
       {isMobileView
-        ? <LoginPageMobile appState={appState} />
-        : <LoginPageDesktop appState={appState} />
+        ? <LoginPageMobile />
+        : <LoginPageDesktop />
       }
     </React.Fragment>
   )

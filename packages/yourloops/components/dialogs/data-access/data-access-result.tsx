@@ -37,7 +37,6 @@ import DialogContentText from '@mui/material/DialogContentText'
 import {
   getRemoteMonitoringToolLabel
 } from '../../../pages/user-account/sections/data-sharing-section/remote-monitoring.util'
-import { Link } from 'react-router-dom'
 
 interface DataAccessResultProps {
   partnerName: PartnerName

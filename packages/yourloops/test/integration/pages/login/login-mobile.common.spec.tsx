@@ -76,7 +76,7 @@ describe('Login page mobile view', () => {
     expect(loginWithRedirectMock).toHaveBeenCalled()
   })
 
-  it('should build the app state and pass it to Auth0 if there are query parameters', async () => {
+  it('should login immediately and pass app state to Auth0 if there are query parameters', async () => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       isAuthenticated: false,
       isLoading: false,
@@ -89,7 +89,7 @@ describe('Login page mobile view', () => {
     await testLoginWithAppState(loginWithRedirectMock)
   })
 
-  it('should build not pass an app state if query parameters are wrong', async () => {
+  it('should not login immediately if query parameters are wrong', async () => {
     (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
       isAuthenticated: false,
       isLoading: false,
