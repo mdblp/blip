@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -32,7 +32,6 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone'
 
 import { useTheme } from '@mui/material/styles'
 import { makeStyles } from 'tss-react/mui'
-import useMediaQuery from '@mui/material/useMediaQuery';
 import AppBar from '@mui/material/AppBar'
 import Avatar from '@mui/material/Avatar'
 import Badge from '@mui/material/Badge'
@@ -51,7 +50,6 @@ import { AppUserRoute } from '../../models/enums/routes.enum'
 import { Banner } from './banner'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 import TeamUtils, { PRIVATE_TEAM_ID } from '../../lib/team/team.util'
-import { MainHeaderMobileMemoized } from './main-header-mobile'
 
 interface MainHeaderProps {
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
@@ -64,14 +62,12 @@ const classes = makeStyles()((theme) => ({
     backgroundColor: theme.palette.common.white,
     color: 'var(--text-color-primary)'
   },
-  desktopLogo: {
-    width: 140
-  },
-  separator: {
-    height: 25,
-    width: 1,
-    backgroundColor: theme.palette.divider,
-    margin: `0 ${theme.spacing(2)}`
+  mobileLogo: {
+    width: "24.9vw",
+    height: "3.32vh",
+    '& img': {
+      objectFit: 'contain',
+    },
   },
   toolbar: {
     padding: 0
@@ -91,7 +87,7 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({ ...theme.mixins.toolbar }))
 const StyledTab = styled(Tab)(({ theme }) => ({ ...theme.mixins.toolbar }))
 const MainHeader: FC<MainHeaderProps> = (props) => {
   const { setMainHeaderHeight } = props
-  const { classes: { desktopLogo, separator, appBar, tab, toolbar } } = classes()
+  const { classes: { mobileLogo, appBar, tab, toolbar } } = classes()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
   const { user } = useAuth()
@@ -113,14 +109,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
       setMainHeaderHeight(appMainHeaderElement.offsetHeight ?? 0)
     }
   }
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // mobile render
-  if (isMobile) {
-    return ( <MainHeaderMobileMemoized setMainHeaderHeight={setMainHeaderHeight}/> )
-  }
-
-  // desktop render
   return (
     <AppBar
       id="app-main-header"
@@ -130,11 +119,21 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
       position="fixed"
       ref={appBarRefCallback}
     >
-      <Toolbar className={toolbar}>
+      <Toolbar className={toolbar}
+               sx={{
+                 display: 'flex',
+                 flexDirection: 'column',
+                 px: { xs: 1, md: 3 },
+                 boxSizing: 'border-box',
+                 alignItems: 'flex-start',
+                 gap: { xs: 1.5, md: 2 },
+               }}>
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
+            overflowX: "hidden",
+            boxSizing: "border-box",
             width: "100%"
           }}>
           <Banner />
@@ -142,16 +141,17 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
             sx={{
               alignItems: "center",
               display: "flex",
-              minHeight: 64,
+              minHeight: "7.6vh",
               padding: `0 ${theme.spacing(2)}`,
-              width: "100%"
+              width: "100%",
+              boxSizing: "border-box",
+              maxWidth: "100vw"
             }}>
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-start",
-                flex: 1
+                width: "97px",
+                height: "28px",
+                aspectRatio: "97/28"
               }}>
               <Link to="/">
                 <Avatar
@@ -160,48 +160,18 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                   variant="square"
                   src={`/branding_${config.BRANDING}_logo.svg`}
                   alt={t('alt-img-logo')}
-                  className={desktopLogo}
+                  className={mobileLogo}
                 />
               </Link>
-            </Box>
-            <Box
-              sx={{
-                flex: 2,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
-              }}>
-              {user.isUserHcp() &&
-                <StyledTabs value={getSelectedTab()} centered>
-                  <StyledTab
-                    data-testid="main-header-hcp-patients-tab"
-                    className={tab}
-                    label={t('header-tab-patients')}
-                    value={HcpNavigationTab.Patients}
-                    onClick={() => {
-                      navigate(`${AppUserRoute.Teams}/${teamId}${AppUserRoute.Patients}`)
-                    }}
-                  />
-                  {!TeamUtils.isPrivate(teamId) &&
-                    <StyledTab
-                      data-testid="main-header-hcp-care-team-settings-tab"
-                      className={tab}
-                      label={t('header-tab-care-team-settings')}
-                      value={HcpNavigationTab.CareTeam}
-                      onClick={() => {
-                        navigate(`${AppUserRoute.Teams}/${teamId}`)
-                      }}
-                    />
-                  }
-                </StyledTabs>
-              }
             </Box>
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "flex-end",
-                flex: 1
+                flex: 1,
+                gap: "0.5rem",
+                minWidth: 0
               }}>
               <Link to={AppUserRoute.Notifications} id="header-notification-link">
                 <Badge
@@ -211,24 +181,52 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                   overlap="circular"
                   color="error"
                 >
-                  <NotificationsNoneIcon />
+                  <NotificationsNoneIcon/>
+
                 </Badge>
               </Link>
-              <div className={separator} />
-              {!user?.isUserCaregiver() &&
-                <React.Fragment>
-                  {user.isUserPatient() && <TeamSettingsMenu />}
-                  {user.isUserHcp() && <TeamScopeMenu />}
-                  <div className={separator} />
-                </React.Fragment>
-              }
               <UserMenu />
             </Box>
           </Box>
         </Box>
+        <Box
+          sx={{
+            alignItems: "center",
+            justifyContent: "left",
+            overflowX: "hidden",
+            boxSizing: "border-box",
+            maxWidth: "100vw",
+          }}>
+          {user.isUserHcp() && (
+            <StyledTabs value={getSelectedTab()}>
+              {!user?.isUserCaregiver() && (
+                <StyledTab
+                  label={
+                    <>
+                      {user.isUserPatient() && <TeamSettingsMenu />}
+                      {user.isUserHcp() && <TeamScopeMenu />}
+                    </>
+                  }
+                  value="tab-x"
+                />
+              )}
+              {!TeamUtils.isPrivate(teamId) && (
+                <StyledTab
+                  data-testid="main-header-hcp-care-team-settings-tab"
+                  className={tab}
+                  label={t('header-tab-care-team-settings')}
+                  value={HcpNavigationTab.CareTeam}
+                  onClick={() => {
+                    navigate(`${AppUserRoute.Teams}/${teamId}`)
+                  }}
+                />
+              )}
+            </StyledTabs>
+          )}
+        </Box>
       </Toolbar>
     </AppBar>
   )
-
 }
-export const MainHeaderMemoized = React.memo(MainHeader)
+
+export const MainHeaderMobileMemoized = React.memo(MainHeader)
