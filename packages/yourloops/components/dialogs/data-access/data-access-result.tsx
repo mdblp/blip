@@ -42,13 +42,18 @@ interface DataAccessResultProps {
   partnerName: PartnerName
   result: DataAccessResultValue
   callbackUrl: string
+  patientId: string
 }
 
 export const DataAccessResult: FC<DataAccessResultProps> = (props) => {
-  const { partnerName, result, callbackUrl } = props
+  const { partnerName, result, callbackUrl, patientId } = props
   const { t } = useTranslation()
 
   const partnerLabel = getRemoteMonitoringToolLabel(partnerName)
+
+  const redirectUrl = new URL(callbackUrl)
+  redirectUrl.searchParams.set('patientUserId', patientId)
+  const redirectUrlString = redirectUrl.toString()
 
   const getTitle = (result: DataAccessResultValue): string => {
     switch (result) {
@@ -98,7 +103,8 @@ export const DataAccessResult: FC<DataAccessResultProps> = (props) => {
         <Button
           variant="contained"
           component="a"
-          href={callbackUrl}
+          href={redirectUrlString}
+          data-testid="redirect-ok-button"
         >
           {t('button-ok')}
         </Button>

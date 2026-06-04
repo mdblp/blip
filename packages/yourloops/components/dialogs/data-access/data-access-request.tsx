@@ -148,8 +148,6 @@ export const DataAccessRequest: FC<DataAccessRequestProps> = (props) => {
         <DialogContentText sx={{ marginTop: 2 }}>
           {t('data-access-request-description3')}
         </DialogContentText>
-
-
       </DialogContent>
 
       <DialogActions>
@@ -157,6 +155,7 @@ export const DataAccessRequest: FC<DataAccessRequestProps> = (props) => {
           variant="outlined"
           onClick={onDenyAccess}
           disabled={isLoading}
+          data-testid="deny-access-button"
         >
           {t('deny-access')}
         </Button>
@@ -165,6 +164,7 @@ export const DataAccessRequest: FC<DataAccessRequestProps> = (props) => {
           loading={isLoading}
           variant="contained"
           onClick={onAcceptAccess}
+          data-testid="allow-access-button"
         >
           {t('allow-access')}
         </Button>

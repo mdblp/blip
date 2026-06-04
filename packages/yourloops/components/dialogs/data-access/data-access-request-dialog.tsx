@@ -75,6 +75,7 @@ export const DataAccessRequestDialog: FC<DataAccessRequestDialogProps> = (props)
           partnerName={partnerName}
           result={result}
           callbackUrl={callbackUrl}
+          patientId={patientId}
         />
         : <DataAccessRequest
           partnerName={partnerName}
