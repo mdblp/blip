@@ -71,7 +71,7 @@ describe('Devices view for Caregiver', () => {
     await act(async () => {
       renderPage(devicesRoute)
     })
-    await testDevicesVisualisation()
+    await testDevicesVisualisation(false)
   })
 
   it('should display correct parameters when having g2 share', async () => {
@@ -80,7 +80,7 @@ describe('Devices view for Caregiver', () => {
     await act(async () => {
       renderPage(devicesRoute)
     })
-    await testG2DevicesVisualisation()
+    await testG2DevicesVisualisation(false)
   })
 
   it('should navigate to daily page when clicking on the daily button', async () => {

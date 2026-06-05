@@ -79,7 +79,10 @@ Events are organized by page for easy reference.
 #### `sensor-usage-stat`
 - **Type:** Hover
 - **Description:** Tracks when a user hovers over the info icon of the Sensor Usage statistic widget on the dashboard
-
+### Devices widget
+#### `dashboard-download-ifu`
+- **Type:** Button
+- **Description:** Tracks when a user clicks the "Download IFU" button in the devices widget
 ---
 
 ## Daily Page
@@ -245,7 +248,10 @@ Events are organized by page for easy reference.
 - **Description:** Tracks when a user navigates to a different section in the device view by clicking on a menu item
 - **Dynamic Values:**
   - `{section}`: The device section identifier (e.g., "settings", "history", etc.)
-
+### Device and current settings
+#### `current-parameters-download-ifu`
+- **Type:** Button
+- **Description:** Tracks when a user clicks the "Download IFU" button in the current settings
 ---
 
 ## Care Team Settings Page

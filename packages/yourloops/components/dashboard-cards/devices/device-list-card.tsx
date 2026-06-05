@@ -33,6 +33,7 @@ import { useTranslation } from 'react-i18next'
 import { PumpSettings } from 'medical-domain'
 import { makeStyles } from 'tss-react/mui'
 import { useTheme } from '@mui/material/styles'
+import { DownloadDocumentButton } from '../../buttons/download-document-button'
 
 interface DeviceListCardProps {
   pumpSettings: PumpSettings
@@ -57,19 +58,29 @@ export const DeviceListCard: FC<DeviceListCardProps> = (props) => {
     },
     device: {
       label: t('dbl'),
-      value: pumpSettings?.payload.device.manufacturer ?? ''
+      value: pumpSettings?.payload.device.name ?? ''
     },
     pump: {
       label: t('Pump'),
-      value: pumpSettings?.payload.pump.manufacturer ?? ''
+      value: pumpSettings?.payload.pump.manufacturer ? `${pumpSettings.payload.pump.manufacturer} ${pumpSettings.payload.pump.name}` : ''
     }
   }
 
   return (
     <DataCard data-testid="device-usage-device-list">
-      <Typography sx={{ fontWeight: 'bold', paddingBottom: theme.spacing(1) }}>
-        {t('devices')}
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <Typography sx={{ fontWeight: 'bold', paddingBottom: theme.spacing(1) }}>
+          {t('devices')}
+        </Typography>
+        <DownloadDocumentButton
+          documentName="test.pdf"
+          metricName="dashboard-download-ifu"
+          labelKey="button-download-ifu"
+          sx={{ float: 'right' }}
+        />
+      </Box>
+
+
       {Object.keys(deviceData).map(
         (key) =>
           <React.Fragment key={key}>

@@ -47,6 +47,8 @@ import {
   sortParameterList
 } from '../../../../components/device/utils/device.utils'
 import { MobileAppInfoTable } from '../../../../components/device/mobile-app-info-table'
+import Box from '@mui/material/Box'
+import { DownloadDocumentButton } from '../../../../components/buttons/download-document-button'
 
 interface CurrentParametersSectionProps {
   pumpSettings: PumpSettings
@@ -78,15 +80,23 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
         title={t('devices-and-current-parameters')}
         subheader={`${t('last-upload:')} ${lastUploadDate}`}
         action={
-          <Button
-            variant="outlined"
-            disableElevation
-            startIcon={<FileCopyIcon />}
-            onClick={onClickCopyButton}
-            aria-label={t('text-copy')}
-          >
-            {t('text-copy')}
-          </Button>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: theme.spacing(1) }}>
+            <DownloadDocumentButton
+              documentName="test.pdf"
+              metricName="dashboard-download-ifu"
+              labelKey="button-download-ifu"
+              sx={{ float: 'right' }}
+            />
+            <Button
+              variant="outlined"
+              disableElevation
+              startIcon={<FileCopyIcon />}
+              onClick={onClickCopyButton}
+              aria-label={t('text-copy')}
+            >
+              {t('text-copy')}
+            </Button>
+          </Box>
         }
         classes={{
           action: classes.cardHeaderAction

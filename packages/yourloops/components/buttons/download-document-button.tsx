@@ -32,6 +32,7 @@ import CloudDownloadOutlined from '@mui/icons-material/CloudDownloadOutlined'
 import { useTheme } from '@mui/material/styles'
 import MedicalFilesApi from '../../lib/medical-files/medical-files.api'
 import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
+import { useAuth } from '../../lib/auth'
 
 interface DownloadDocumentButtonProps {
   documentName: string
@@ -43,6 +44,11 @@ interface DownloadDocumentButtonProps {
 export const DownloadDocumentButton: FC<DownloadDocumentButtonProps> = ({ documentName, metricName, labelKey, sx }) => {
   const { t } = useTranslation()
   const theme = useTheme()
+  const { user } = useAuth()
+
+  if (!user.isUserPatient() && !user.isUserHcp()) {
+    return null
+  }
 
   const onClick = async (): Promise<void> => {
     const document = await MedicalFilesApi.getPresignedDocument(documentName)

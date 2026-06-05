@@ -26,8 +26,16 @@
  */
 import HttpService from '../http/http.service'
 import { type MedicalReport, type NewMedicalReport } from './models/medical-report.model'
+import { PresignedDocument } from './models/presigned-document.model'
 
 export default class MedicalFilesApi {
+  static async getPresignedDocument(name: string): Promise<PresignedDocument> {
+    const { data } = await HttpService.get<PresignedDocument>({
+      url: `/cargo/v0/documents/${name}/url`,
+    })
+    return data
+  }
+
   static async getMedicalReports(patientId: string, teamId?: string): Promise<MedicalReport[]> {
     const { data } = await HttpService.get<MedicalReport[]>({
       url: '/cargo/v0/medical-records',

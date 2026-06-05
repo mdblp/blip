@@ -1,6 +1,6 @@
 
 /*
- * Copyright (c) 2022, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -26,12 +26,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface Prescription {
-  id: string
+export interface PresignedDocument {
   name: string
-  patientId: string
-  teamId: string
-  prescriptorId: string
-  link: string
-  uploadedAt: string
+  url: string
+  ttl: number
 }

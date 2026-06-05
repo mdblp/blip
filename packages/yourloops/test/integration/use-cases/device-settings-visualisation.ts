@@ -45,9 +45,9 @@ export const testDevicesVisualisationForHcp = async () => {
   await testChangeHistoryVisualisation()
 }
 
-export const testDevicesVisualisation = async () => {
+export const testDevicesVisualisation = async (showDownloadButton = true) => {
   testDevicesMenuLayout()
-  await testCurrentParametersVisualisation()
+  await testCurrentParametersVisualisation(showDownloadButton)
   await testBasalSafetyProfileVisualisation()
   await testChangeHistoryVisualisation()
   await testDeviceHistoryVisualisation()
@@ -60,9 +60,9 @@ export const testG2DevicesVisualisationForHcp = async () => {
   await testChangeHistoryVisualisation()
 }
 
-export const testG2DevicesVisualisation = async () => {
+export const testG2DevicesVisualisation = async (showDownloadButton = true) => {
   testDevicesMenuLayout()
-  await testG2CurrentParametersVisualisation()
+  await testG2CurrentParametersVisualisation(showDownloadButton)
   await testBasalSafetyProfileVisualisation()
   await testChangeHistoryVisualisation()
   await testDeviceHistoryVisualisation()
@@ -90,8 +90,8 @@ const testCurrentParametersVisualisationForHcp = async () => {
   await checkCopyTextButton()
 }
 
-const testCurrentParametersVisualisation = async () => {
-  checkCurrentParametersContent()
+const testCurrentParametersVisualisation = async (showDownloadButton = true) => {
+  checkCurrentParametersContent(showDownloadButton)
   checkParametersMemoNotDisplayed()
   await checkCopyTextButton()
 }
@@ -102,8 +102,8 @@ const testG2CurrentParametersVisualisationForHcp = async () => {
   await checkG2CopyTextButton()
 }
 
-const testG2CurrentParametersVisualisation = async () => {
-  checkG2CurrentParametersContent()
+const testG2CurrentParametersVisualisation = async (showDownloadButton = true) => {
+  checkG2CurrentParametersContent(showDownloadButton)
   checkParametersMemoNotDisplayed()
   await checkG2CopyTextButton()
 }
