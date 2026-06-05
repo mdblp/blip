@@ -59,6 +59,9 @@ interface MainHeaderProps {
 }
 
 const classes = makeStyles()((theme) => ({
+  actionHeader: {
+    padding: `0 ${theme.spacing(2)}`
+  },
   appBar: {
     borderBottom: `1px solid ${theme.palette.divider}`,
     zIndex: theme.zIndex.drawer + 1,
@@ -66,35 +69,36 @@ const classes = makeStyles()((theme) => ({
     color: 'var(--text-color-primary)'
   },
   arrowBack: {
-    display: "flex",
-    alignItems: "center",
-    gap: "0.25rem",
-    color: "#009BD6"
+    color: 'var(--primary-color-main)',
+    paddingLeft: 'clamp(18px, 4.7vw, 22px)',
+    fontSize: 'clamp(16px, 4vw, 18px)'
   },
   mobileLogo: {
-    width: "24.9vw",
-    height: "3.32vh",
+    width: 'clamp(97px, 25vw, 100px)',
+    height: 'clamp(28px, 3.3vh, 30px)',
     '& img': {
       objectFit: 'contain',
     },
   },
-  toolbar: {
-    padding: 0
-  },
-  actionHeader: {
-    padding: `0 ${theme.spacing(2)}`
+  settingsButton: {
+    padding: 'clamp(8px, 1.2vh, 10px) clamp(25px, 7vw, 30px)',
+    borderColor: 'var(--text-color-primary)'
   },
   tab: {
     fontWeight: 'bold',
     textTransform: 'none',
-    fontSize: theme.typography.htmlFontSize
+    fontSize: theme.typography.htmlFontSize,
+    paddingLeft: 'clamp(32px, 11vw, 36px)',
+  },
+  toolbar: {
+    padding: 0
   }
 }))
 
 // Allow the tabs to take the whole height of the toolbar => ({ ...theme.mixins.toolbar }))
 const MainHeader: FC<MainHeaderProps> = (props) => {
   const { setMainHeaderHeight } = props
-  const { classes: { mobileLogo, appBar, tab, toolbar, arrowBack } } = classes()
+  const { classes: { mobileLogo, appBar, tab, toolbar, arrowBack, settingsButton } } = classes()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
   const { user } = useAuth()
@@ -130,21 +134,15 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
       position="fixed"
       ref={appBarRefCallback}
     >
-      <Toolbar className={toolbar}
-               sx={{
-                 display: 'flex',
-                 flexDirection: 'column',
-                 px: { xs: 1, md: 3 },
-                 boxSizing: 'border-box',
-                 alignItems: 'flex-start',
-                 gap: { xs: 1.5, md: 2 },
-               }}>
+      <Toolbar
+        className={toolbar}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+        }}>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            overflowX: "hidden",
-            boxSizing: "border-box",
             width: "100%"
           }}>
           <Banner />
@@ -152,18 +150,11 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
             sx={{
               alignItems: "center",
               display: "flex",
-              minHeight: "7.6vh",
+              minHeight: "clamp(64px, 7.5vh, 70px)",
               padding: `0 ${theme.spacing(2)}`,
-              width: "100%",
-              boxSizing: "border-box",
               maxWidth: "100vw"
             }}>
-            <Box
-              sx={{
-                width: "97px",
-                height: "28px",
-                aspectRatio: "97/28"
-              }}>
+            <Box>
               <Link to="/">
                 <Avatar
                   id="header-main-logo"
@@ -182,7 +173,6 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                 justifyContent: "flex-end",
                 flex: 1,
                 gap: "0.5rem",
-                minWidth: 0
               }}>
               <Link to={AppUserRoute.Notifications} id="header-notification-link">
                 <Badge
@@ -191,6 +181,10 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                   badgeContent={receivedInvitations.length}
                   overlap="circular"
                   color="error"
+                  sx={{
+                    width:'clamp(28px, 7.6vw, 30px)',
+                    height: 'clamp(28px, 3.3vh, 30px)'
+                  }}
                 >
                   <NotificationsNoneIcon/>
                 </Badge>
@@ -199,27 +193,20 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
             </Box>
           </Box>
         </Box>
-        <Box
-          sx={{
-            alignItems: "center",
-            justifyContent: "left",
-            overflowX: "hidden",
-            boxSizing: "border-box",
-            maxWidth: "100vw",
-          }}>
+        <Box>
           {pathname.endsWith('patients') ? (
             <>
             {user.isUserHcp() && !user?.isUserCaregiver() && (
-                <Tab
-                  label={
-                    <>
-                      {user.isUserPatient() && <TeamSettingsMenu />}
-                      {user.isUserHcp() && <TeamScopeMenu />}
-                    </>
-                  }
-                  value={getSelectedTab()}
-                  className={tab}
-                />
+              <Tab
+                label={
+                  <>
+                    {user.isUserPatient() && <TeamSettingsMenu />}
+                    {user.isUserHcp() && <TeamScopeMenu />}
+                  </>
+                }
+                value={getSelectedTab()}
+                className={tab}
+              />
               )} {!TeamUtils.isPrivate(teamId) && (
               <Button
                 aria-label={t('header-tab-care-team-settings')}
@@ -228,6 +215,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                   navigate(`${AppUserRoute.Teams}/${teamId}`)
                 }}
                 variant="outlined"
+                className={settingsButton}
                 >
                 <CareTeamSettingsIcon data-testid="care-team-settings-icon" />
               </Button>
@@ -237,7 +225,8 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
         (
           <>
             <Button
-              startIcon={<ArrowBackIcon />}
+              variant="text"
+              startIcon={<ArrowBackIcon/>}
               onClick={goBackHome}
               className={arrowBack}
             >
