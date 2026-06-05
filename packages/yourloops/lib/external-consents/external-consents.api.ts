@@ -31,8 +31,8 @@ import { ExternalConsent } from './models/external-consent.model'
 const EXTERNAL_CONSENTS_URL = '/health-bridge/patient-consents'
 
 export class ExternalConsentsApi {
-  static async getConsents(patientId: string): Promise<ExternalConsent[]> {
-    const { data } = await HttpService.get<ExternalConsent[]>({ url: `${EXTERNAL_CONSENTS_URL}/${patientId}` })
+  static async getConsents(): Promise<ExternalConsent[]> {
+    const { data } = await HttpService.get<ExternalConsent[]>({ url: EXTERNAL_CONSENTS_URL })
     return data
   }
 
