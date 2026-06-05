@@ -140,7 +140,13 @@ function UserMenu(): JSX.Element {
     <>
       <Box>
         {isMobile
-          ? <IconButton color="inherit" onClick={openMenu}>
+          ? <IconButton
+            color="inherit"
+            onClick={openMenu}
+            sx={{
+              width:'clamp(28px, 7.6vw, 30px)',
+              height: 'clamp(28px, 3.3vh, 30px)'
+            }}>
             {getRoleIcon()}
           </IconButton>
           : <Button
