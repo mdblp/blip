@@ -95,7 +95,6 @@ const classes = makeStyles()((theme) => ({
   }
 }))
 
-// Allow the tabs to take the whole height of the toolbar => ({ ...theme.mixins.toolbar }))
 const MainHeader: FC<MainHeaderProps> = (props) => {
   const { setMainHeaderHeight } = props
   const { classes: { mobileLogo, appBar, tab, toolbar, arrowBack, settingsButton } } = classes()
@@ -127,8 +126,8 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
 
   return (
     <AppBar
-      id="app-main-header"
-      data-testid="app-main-header"
+      id="app-main-header-mobile"
+      data-testid="app-main-header-mobile"
       elevation={0}
       className={appBar}
       position="fixed"

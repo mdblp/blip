@@ -25,7 +25,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen } from '@testing-library/react'
+import React from 'react';
+import { act, screen, render } from '@testing-library/react'
 import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
@@ -43,7 +44,7 @@ import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
-import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
+import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp, testAppMainLayoutForHcpMobile } from '../../use-cases/app-main-layout-visualisation'
 import {
   testAckMonitoringAlerts,
   testAckMonitoringAlertsWithError,
@@ -64,7 +65,21 @@ import { mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.moc
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
 import {  ConfigService } from '../../../../lib/config/config.service'
-import userEvent from '@testing-library/user-event/dist/cjs/index.js'
+import userEvent from '@testing-library/user-event';
+import mediaQuery from 'css-mediaquery';
+
+function mockScreenWidth(width: number): void {
+  window.matchMedia = (query: string): MediaQueryList => ({
+    matches: mediaQuery.match(query, { width }),
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => true,
+  });
+}
 
 describe('HCP home page', () => {
   const firstName = 'Eric'
@@ -92,6 +107,11 @@ describe('HCP home page', () => {
     jest.spyOn(NotificationApi, 'cancelInvitation').mockResolvedValue(undefined)
   })
 
+  const originalMatchMedia = window.matchMedia;
+
+  afterEach(() => {
+    window.matchMedia = originalMatchMedia;
+  });
   const renderHomePage = async (route: string): Promise<Router> => {
     return await act(async () => {
       return renderPage(route)
@@ -119,6 +139,31 @@ describe('HCP home page', () => {
     await renderHomePage(privatePatientsList)
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
+  })
+
+  it('In mobile version, should render correct layout when scoped on the private practice team', async () => {
+    mockScreenWidth(400);
+
+    jest.spyOn(PatientApi, 'getPatientsForHcp').mockResolvedValue([{
+      ...patient1Info,
+      invitationStatus: UserInviteStatus.Accepted
+    }])
+    jest.spyOn(PatientApi, 'getPatientsMetricsForHcp').mockResolvedValue([patient1Metrics])
+
+    const appMainLayoutParams: AppMainLayoutHcpParams = {
+      footerHasLanguageSelector: false,
+      headerInfo: {
+        loggedInUserFullName: `${lastName} ${firstName}`,
+        teamMenuInfo: {
+          isSelectedTeamPrivate: true,
+          availableTeams: buildAvailableTeams()
+        }
+      }
+    }
+
+    await renderHomePage(privatePatientsList)
+
+    await testAppMainLayoutForHcpMobile(appMainLayoutParams)
   })
 
   it('should be able to manage patients when scoped on the private practice team', async () => {
