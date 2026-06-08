@@ -88,7 +88,7 @@ function UserMenu(): JSX.Element {
 
   const getRoleIcon = (): JSX.Element | null => {
     if (isMobile){
-      return <AccountCircleIcon/>
+      return <AccountCircleIcon data-testid="mobile-account-icon"/>
     }
     switch (user?.role) {
       case UserRole.Hcp:

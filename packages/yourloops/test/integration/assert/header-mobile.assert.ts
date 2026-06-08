@@ -36,7 +36,7 @@ interface TeamMenuInfo {
   availableTeams: Team[]
 }
 
-export interface HeaderInfo {
+export interface HeaderInfoMobile {
   loggedInUserFullName: string
   teamMenuInfo: TeamMenuInfo
 }
@@ -50,7 +50,7 @@ const checkUserMenu = async (header: BoundFunctions<typeof queries>, userName: s
   const iconTestId = 'mobile-account-icon'
 
   expect(header.getByTestId(iconTestId)).toBeVisible()
-  expect(header.getByText(userName)).not.toBeInTheDocument()
+  expect(header.queryByText(userName)).not.toBeInTheDocument()
 
   await userEvent.click(header.getByTestId(iconTestId))
 
@@ -68,7 +68,7 @@ const checkTeamScopeMenu = async (header: BoundFunctions<typeof queries>, teamMe
   const teamScopeMenuText = teamMenuInfo.isSelectedTeamPrivate ? 'My private practice' : teamMenuInfo.selectedTeamName
 
   expect(header.getByLabelText('Open team selection menu')).toBeVisible()
-  expect(header.getByTestId(teamScopeMenuIcon)).not.toBeInTheDocument()
+  expect(header.queryByTestId(teamScopeMenuIcon)).not.toBeInTheDocument()
   expect(header.getByText(teamScopeMenuText)).toBeVisible()
 
   await userEvent.click(header.getByText(teamScopeMenuText))
@@ -88,14 +88,13 @@ const checkTeamScopeMenu = async (header: BoundFunctions<typeof queries>, teamMe
   expect(screen.queryByTestId('team-scope-menu')).not.toBeInTheDocument()
 }
 
-export const checkHcpHeader = async (headerInfo: HeaderInfo) => {
+export const checkHcpHeaderMobile = async (headerInfo: HeaderInfoMobile) => {
   const header = within(await screen.findByTestId('app-main-header-mobile'))
 
-  expect(header.getByText('Patients')).toBeVisible()
   if (headerInfo.teamMenuInfo.isSelectedTeamPrivate) {
-    expect(header.queryByText('Care team settings')).not.toBeInTheDocument()
+    expect(header.queryByTestId('care-team-settings-icon')).not.toBeInTheDocument();
   } else {
-    expect(header.getByText('Care team settings')).toBeVisible()
+    expect(header.getByTestId('care-team-settings-icon')).toBeVisible()
   }
 
   await checkTeamScopeMenu(header, headerInfo.teamMenuInfo)
@@ -111,7 +110,7 @@ export const changeTeamScope = async (currentTeamName: string, wantedTeamName: s
   await userEvent.click(teamScopeMenu.getByText(wantedTeamName))
 }
 
-export const checkBannerLanguageChange = async () => {
+export const checkBannerLanguageChangeMobile = async () => {
   expect(await screen.getByTestId('dbl-banner-alert')).toHaveTextContent('This is a <b>critical banner message</b> for all users.')
 
   fireEvent.mouseDown(within(screen.getByTestId('user-account-locale-selector')).getByRole('combobox'))
