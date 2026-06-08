@@ -68,7 +68,7 @@ export const DeviceListCard: FC<DeviceListCardProps> = (props) => {
 
   return (
     <DataCard data-testid="device-usage-device-list">
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography sx={{ fontWeight: 'bold', paddingBottom: theme.spacing(1) }}>
           {t('devices')}
         </Typography>
