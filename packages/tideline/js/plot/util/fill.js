@@ -22,6 +22,7 @@
  */
 
 import _ from 'lodash'
+import * as d3 from 'd3'
 
 const defaults = {
   duration: 3,
@@ -145,12 +146,18 @@ function drawFill(pool, opts = defaults) {
     return opts.xScale(d.epochEnd) - opts.xScale(d.epoch)
   }
 
+  fill.updateGuidelines = function(newGuidelines) {
+    opts.guidelines = newGuidelines
+    fill.drawGuidelines()
+  }
+
   fill.drawGuidelines = function() {
     const yScale = pool.yScale()
     var linesGroup = pool.group().selectAll('#' + pool.id() + '_guidelines').data([opts.guidelines])
     const g = linesGroup
       .join('g')
       .attr('id', pool.id() + '_guidelines')
+
     const lines = g
       .selectAll('line')
       .data(opts.guidelines)
@@ -161,8 +168,12 @@ function drawFill(pool, opts = defaults) {
       .attr('y2', (d) => yScale(d.height))
       .classed('d3-line-guide', true)
 
-    lines.each(function(d) {
-      this.classList.add(d['class'])
+    lines.each(function(line) {
+      this.classList.add(line['class'])
+
+      if (line.chip) {
+        fill.drawChip(line, yScale, this)
+      }
     })
   }
 
@@ -188,6 +199,36 @@ function drawFill(pool, opts = defaults) {
 
         return pool.height() - 2 * opts.gutter
       })
+  }
+
+  fill.drawChip = function (line, yScale, element) {
+    // Add a text chip to the line
+    const parent = d3.select(element.parentNode)
+    const yPos = yScale(line.height)
+    const xPos = opts.xScale.range()[0] + 15 // left edge
+
+    // Background rect for the chip
+    const chipGroup = parent.append('g')
+      .classed('d3-line-guide-chip', true)
+
+    const textEl = chipGroup.append('text')
+      .classed('d3-line-guide-chip-label', true)
+      .attr('x', xPos)
+      .attr('y', yPos)
+      .attr('dy', '0.35em') // vertical centering
+      .text(line.chip.label)
+
+    // Size the background rect based on the rendered text
+    const bbox = textEl.node().getBBox()
+    const padding = { x: 6, y: 4 }
+
+    chipGroup.insert('rect', 'text') // insert <rect> before <text> so it's behind
+      .classed('d3-line-guide-chip-bg', true)
+      .attr('x', bbox.x - padding.x)
+      .attr('y', bbox.y - padding.y)
+      .attr('width', bbox.width + padding.x * 2)
+      .attr('height', bbox.height + padding.y * 2)
+      .attr('rx', 8) // rounded corners
   }
 
   return fill

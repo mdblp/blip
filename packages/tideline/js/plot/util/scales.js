@@ -92,9 +92,10 @@ function createScaleBG(tidelineData, pool, extent, pad) {
 /**
  * @param {MedicalDataService} tidelineData
  * @param {[number, number]} extent
+ * @param {string} targetValue
  * @returns {string[]} The displayed ticks
  */
-function createTicksBG(tidelineData, extent) {
+function createTicksBG(tidelineData, extent, targetValue) {
   /** @type {"mg/dL" | "mmol/L"} */
   const bgUnits = _.get(tidelineData, 'opts.bgUnits', MGDL_UNITS)
   const bgValues = _.values(_.omit(tidelineData.opts.bgClasses, ['veryHigh', 'veryLow']))
@@ -111,6 +112,11 @@ function createTicksBG(tidelineData, extent) {
       ticks.pop()
     }
   })
+
+  if (targetValue) {
+    ticks.push(targetValue)
+  }
+
   return ticks
 }
 
@@ -118,16 +124,17 @@ function createTicksBG(tidelineData, extent) {
  * Create the Y-Axis SVG and scale for BG graph
  * @param {MedicalDataService} tidelineData
  * @param {Pool} pool Parent pool
+ * @param {string} targetValue
  * @returns {{ axis: Axis, scale: ScaleLinear }}
  */
-export function createYAxisBG(tidelineData, pool) {
+export function createYAxisBG(tidelineData, pool, targetValue) {
   const SMBG_SIZE = 16
 
   const allBG = tidelineData.medicalData.cbg.concat(tidelineData.medicalData.smbg)
   /** @type {[number, number]} */
   const extent = d3.extent(allBG, (d) => d.value)
   const scale = createScaleBG(tidelineData, pool, Array.from(extent), SMBG_SIZE/2)
-  const ticks = createTicksBG(tidelineData, Array.from(extent))
+  const ticks = createTicksBG(tidelineData, Array.from(extent), targetValue)
   const bgTickFormat = tidelineData.opts.bgUnits === MGDL_UNITS ? 'd' : '.1f'
 
   const axis = d3

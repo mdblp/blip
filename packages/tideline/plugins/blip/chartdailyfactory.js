@@ -18,7 +18,9 @@
 
 import * as d3 from 'd3'
 import {
+  getBgGuidelines,
   getDataWithoutSuperpositionEvents,
+  getTargetValueAtDate,
   getSuperpositionEvents,
   isDBLG2,
   plotAlarmEvent,
@@ -62,10 +64,11 @@ import Pool from '../../js/pool'
  * Create a 'One Day' chart object that is a wrapper around Tideline components
  * @param {HTMLElement} parentElement The div parent element
  * @param {MedicalDataService} tidelineData
+ * @param {number} epochLocation
  * @param {object} options
  * @returns {function}
  */
-function chartDailyFactory(parentElement, tidelineData, options = {}) {
+function chartDailyFactory(parentElement, tidelineData, epochLocation, options = {}) {
   const t = i18next.t.bind(i18next)
 
   const defaults = {
@@ -99,9 +102,13 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   chart.id(parentElement.id).width(width).height(height)
   d3.select(parentElement).call(chart)
 
-  const pumpSettings = tidelineData?.medicalData?.pumpSettings
+  const medicalData = tidelineData.medicalData
+
+  const pumpSettings = medicalData?.pumpSettings
   const hasPumpSettings = pumpSettings?.length > 0
-  const isDblg2User = hasPumpSettings ? isDBLG2(pumpSettings[0].payload.device.name) : false
+  const pumpSettingsPayload = hasPumpSettings && pumpSettings[0].payload
+
+  const isDblg2User = hasPumpSettings ? isDBLG2(pumpSettingsPayload.device.name) : false
 
   // ***
   // Setup Pools
@@ -277,23 +284,21 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     tidelineData
   }))
 
+  const targetDate = new Date(epochLocation)
+  const currentParameters = pumpSettingsPayload.parameters
+  const parametersHistory = pumpSettingsPayload.history.parameters
+
+  let targetValue = getTargetValueAtDate(currentParameters, parametersHistory, targetDate)
+
   // setup axis & main y scale
-  poolBG.axisScaleFn(createYAxisBG)
-  // add background fill rectangles to BG pool
-  poolBG.addPlotType({ type: 'fill' }, fill(poolBG, {
+  poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG, targetValue))
+
+  const bgFill = fill(poolBG, {
     endpoints: chart.endpoints,
     isDaily: true,
-    guidelines: [
-      {
-        class: 'd3-line-bg-threshold-low',
-        height: chart.options.bgClasses.low
-      },
-      {
-        class: 'd3-line-bg-threshold-high',
-        height: chart.options.bgClasses.target
-      }
-    ]
-  }))
+    guidelines: getBgGuidelines(targetValue, chart)
+  })
+  poolBG.addPlotType({ type: 'fill' }, bgFill)
 
   poolEvents.addPlotType({ type: 'fill' }, fill(poolEvents, {
     isDaily: true
@@ -318,10 +323,10 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
   }))
 
   const eventSuperpositionItems = getSuperpositionEvents(tidelineData)
-  const alarmEvents = getDataWithoutSuperpositionEvents(tidelineData.medicalData.alarmEvents, eventSuperpositionItems)
-  const parameterChanges = getDataWithoutSuperpositionEvents(tidelineData.medicalData.deviceParametersChanges, eventSuperpositionItems)
-  const reservoirChanges = getDataWithoutSuperpositionEvents(tidelineData.medicalData.reservoirChanges, eventSuperpositionItems)
-  const warmUps = getDataWithoutSuperpositionEvents(tidelineData.medicalData.warmUps, eventSuperpositionItems)
+  const alarmEvents = getDataWithoutSuperpositionEvents(medicalData.alarmEvents, eventSuperpositionItems)
+  const parameterChanges = getDataWithoutSuperpositionEvents(medicalData.deviceParametersChanges, eventSuperpositionItems)
+  const reservoirChanges = getDataWithoutSuperpositionEvents(medicalData.reservoirChanges, eventSuperpositionItems)
+  const warmUps = getDataWithoutSuperpositionEvents(medicalData.warmUps, eventSuperpositionItems)
 
   poolEvents.addPlotType({ type: 'deviceEvent' }, plotReservoirChange(poolEvents, {
     reservoirChanges,
@@ -489,6 +494,20 @@ function chartDailyFactory(parentElement, tidelineData, options = {}) {
     onElementHover: options.onTimeChangeHover,
     onElementOut: options.onTooltipOut
   }))
+
+  emitter.on('navigated', (newEpoch) => {
+    const newTargetValue = getTargetValueAtDate(currentParameters, parametersHistory, new Date(newEpoch))
+
+    if (newTargetValue !== targetValue) {
+      targetValue = newTargetValue
+
+      // Update the "Target" line height
+      bgFill.updateGuidelines(getBgGuidelines(targetValue, chart))
+      // Update the tick value on the Y axis
+      poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG, targetValue))
+      poolBG.updateAxes()
+    }
+  })
 
   return chart
 }

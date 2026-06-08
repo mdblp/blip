@@ -27,7 +27,7 @@
 
 import { AlarmCode, AlarmEvent, AlarmEventType, AlarmLevel, BgUnit, convertBG, MGDL_UNITS } from 'medical-domain'
 import i18next from 'i18next'
-import { isDBLG1, isDBLG2, isDeviceVersionHigherOrEqual } from '../device/device.utils'
+import { isDBLG1, isDBLG2, isDeviceVersionHigherOrEqual } from '../device/device.util'
 import { Device } from '../../models/device.model'
 import alarmEventDeviceIcon from 'device-event.svg'
 import alarmEventHyperIcon from 'hyperglycemia-event.svg'

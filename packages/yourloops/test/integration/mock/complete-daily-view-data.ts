@@ -49,7 +49,7 @@ import {
 } from 'medical-domain/dist/src/domains/models/medical/datum/enums/device-event-subtype.enum'
 import WeekDays from 'medical-domain/dist/src/domains/models/time/enum/weekdays.enum'
 import Intensity from 'medical-domain/dist/src/domains/models/medical/datum/enums/intensity.enum'
-import { history } from '../data/data-api.data'
+import { history, historyWithTargetChanges } from '../data/data-api.data'
 import {
   ALARM_EVENT_DANA_EMPTY_PUMP_BATTERY_ID,
   ALARM_EVENT_DANA_EMPTY_RESERVOIR_ID,
@@ -60,12 +60,15 @@ import {
   ALARM_EVENT_G6_HYPOGLYCEMIA_ID,
   ALARM_EVENT_G6_LONG_HYPERGLYCEMIA_ID,
   ALARM_EVENT_G6_SENSOR_SESSION_EXPIRED_ID,
-  ALARM_EVENT_G6_URGENT_LOW_SOON_ID, ALARM_EVENT_G7_BRIEF_SENSOR_ISSUE,
+  ALARM_EVENT_G6_URGENT_LOW_SOON_ID,
+  ALARM_EVENT_G7_BRIEF_SENSOR_ISSUE,
   ALARM_EVENT_G7_GRACE_PERIOD_EXPIRED,
   ALARM_EVENT_G7_HYPERGLYCEMIA_ID,
   ALARM_EVENT_G7_HYPOGLYCEMIA_ID,
-  ALARM_EVENT_G7_LONG_HYPERGLYCEMIA_ID, ALARM_EVENT_G7_SENSOR_FAILED_ID,
-  ALARM_EVENT_G7_SENSOR_SESSION_EXPIRED_ID, ALARM_EVENT_G7_SIGNAL_LOSS_ID,
+  ALARM_EVENT_G7_LONG_HYPERGLYCEMIA_ID,
+  ALARM_EVENT_G7_SENSOR_FAILED_ID,
+  ALARM_EVENT_G7_SENSOR_SESSION_EXPIRED_ID,
+  ALARM_EVENT_G7_SIGNAL_LOSS_ID,
   ALARM_EVENT_G7_URGENT_LOW_SOON_ID,
   ALARM_EVENT_INSIGHT_EMPTY_INSULIN_CARTRIDGE_ID,
   ALARM_EVENT_INSIGHT_EMPTY_PUMP_BATTERY_ID,
@@ -168,7 +171,7 @@ export const getCompleteDailyViewDataDblg2 = (deviceName: DeviceSystem = DeviceS
       "source": Source.Diabeloop,
       "units": Unit.InsulinUnit,
       "value": 25,
-      "isoWeekday": WeekDays.Monday,
+      "isoWeekday": WeekDays.Monday
     }
   ]
 
@@ -200,33 +203,33 @@ export const getCompleteDailyViewDataDblg2 = (deviceName: DeviceSystem = DeviceS
     guessedTimezone: false,
     displayOffset: -120,
     isoWeekday: WeekDays.Friday,
-    source: Source.Diabeloop,
+    source: Source.Diabeloop
   }]
 
   const mealWithoutBolus: Wizard = {
-      "epoch": 1659984400000,
-      "displayOffset": -120,
-      "normalTime": "2022-08-08T19:10:00.000Z",
-      "timezone": "Europe/Paris",
-      "guessedTimezone": false,
-      "id": WIZARD_WITHOUT_BOLUS_ID,
-      "type": DatumType.Wizard,
-      "source": Source.Diabeloop,
-      "bolusId": "",
-      "bolusIds": new Set([]),
-      "carbInput": 30,
-      "units": "mmol/L",
-      "bolus": null,
-      "bolusPart2": null,
-      "inputTime": "2022-08-08T22:45:00Z",
-      "recommended": {
-        "carb": 0,
-        "correction": 0,
-        "net": 0
-      },
-      "isoWeekday": WeekDays.Thursday
-    }
-    data.wizards = [...data.wizards, mealWithoutBolus]
+    "epoch": 1659984400000,
+    "displayOffset": -120,
+    "normalTime": "2022-08-08T19:10:00.000Z",
+    "timezone": "Europe/Paris",
+    "guessedTimezone": false,
+    "id": WIZARD_WITHOUT_BOLUS_ID,
+    "type": DatumType.Wizard,
+    "source": Source.Diabeloop,
+    "bolusId": "",
+    "bolusIds": new Set([]),
+    "carbInput": 30,
+    "units": "mmol/L",
+    "bolus": null,
+    "bolusPart2": null,
+    "inputTime": "2022-08-08T22:45:00Z",
+    "recommended": {
+      "carb": 0,
+      "correction": 0,
+      "net": 0
+    },
+    "isoWeekday": WeekDays.Thursday
+  }
+  data.wizards = [...data.wizards, mealWithoutBolus]
 
   return completeData
 }
@@ -1093,7 +1096,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           },
           "alarmEventType": AlarmEventType.Hyperglycemia,
           "isoWeekday": WeekDays.Sunday
-        },
+        }
       ],
       basal: [
         {
@@ -1562,7 +1565,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
               "id": "parameterId",
               "epoch": 1659945600000,
               "timezone": "UTC",
-              "name": "MEAL_RATIO_LUNCH_FACTOR",
+              "name": DblParameter.AggressivenessLunch,
               "level": "1",
               "unit": Unit.Percent,
               "value": "100",
@@ -1587,7 +1590,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
               "id": "parameterId",
               "epoch": 1659965100000,
               "timezone": "UTC",
-              "name": "MEAL_RATIO_LUNCH_FACTOR",
+              "name": DblParameter.AggressivenessLunch,
               "level": "1",
               "unit": Unit.Percent,
               "value": "100",
@@ -1672,7 +1675,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "inputTime": "2022-08-08T14:00:00.000Z",
           "isoWeekday": WeekDays.Sunday,
           "name": "",
-          "updateTime": "2022-08-08T14:00:00.000Z",
+          "updateTime": "2022-08-08T14:00:00.000Z"
         }
       ],
       pumpSettings: [
@@ -1706,18 +1709,18 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
               "swVersion": softwareVersion,
               "operatingSystem": "Android",
               "osVersion": "12",
-              "smartphoneModel": "X",
+              "smartphoneModel": "X"
             },
             "pump": {
               "manufacturer": PumpManufacturer.Vicentra,
               "name": "Kaleido",
               "serialNumber": "123456",
               "swVersion": "beta",
-              "product": "zzz",
+              "product": "zzz"
             },
             history: {
               parameters: history,
-              devices : []
+              devices: []
             },
             "securityBasals": { "rates": null },
             "mobileApplication": {
@@ -1734,7 +1737,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
                 "unit": Unit.Kilogram,
                 "value": "68"
               }
-            ],
+            ]
           }
         }
       ],
@@ -1998,7 +2001,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
             "value": 130,
             "initialValue": 110,
             "offset": 20,
-            "units": Unit.MilligramPerDeciliter,
+            "units": Unit.MilligramPerDeciliter
           },
           "epochEnd": 1659949200000,
           "guid": ZEN_MODE_ID_WITH_GLY,
@@ -2006,7 +2009,7 @@ export const getCompleteDailyViewData = (deviceName: DeviceSystem = DeviceSystem
           "isoWeekday": WeekDays.Sunday
         }
       ],
-      "timezoneChanges": []
+      timezoneChanges: []
     }
   }
 }
@@ -2089,3 +2092,242 @@ export const getTimezoneChangeData = (): Data => {
     }
   }
 }
+
+export const getTargetValueChangesData = (): Data => {
+  return {
+    dataRange: ['2022-10-29T00:00:00Z', '2022-10-31T00:00:00Z'],
+    data: {
+      alarmEvents: [],
+      basal: [
+        {
+          "epoch": 1659976200000,
+          "displayOffset": -120,
+          "normalTime": "2022-10-29T16:30:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": BASAL_LOOP_MODE_ON_ID,
+          "type": DatumType.Basal,
+          "source": Source.Diabeloop,
+          "subType": BasalDeliveryType.Automated,
+          "deliveryType": BasalDeliveryType.Automated,
+          "rate": 0.8,
+          "duration": 1000,
+          "normalEnd": "2022-08-08T16:30:01.000Z",
+          "epochEnd": 1659976201000,
+          "isoWeekday": WeekDays.Sunday
+        },
+      ],
+      bolus: [
+        {
+          "epoch": 1659984900000,
+          "displayOffset": -120,
+          "normalTime": "2022-10-29T20:55:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": MANUAL_BOLUS_ID,
+          "type": DatumType.Bolus,
+          "source": Source.Diabeloop,
+          "subType": BolusSubtype.Normal,
+          "normal": 5.05,
+          "prescriptor": Prescriptor.Manual,
+          "wizard": null,
+          "expectedNormal": 5.05,
+          "isoWeekday": WeekDays.Sunday
+        }
+      ],
+      cbg: [
+        {
+          "epoch": 1667169000000,
+          "displayOffset": 0,
+          "normalTime": "2022-10-30T22:30:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": "cbg_id",
+          "type": DatumType.Cbg,
+          "source": Source.Diabeloop,
+          "units": Unit.MilligramPerDeciliter,
+          "value": 189,
+          "localDate": "2022-10-30",
+          "isoWeekday": WeekDays.Monday,
+          "msPer24": 63000000,
+          "deviceName": "Unknown"
+        }
+      ],
+      confidentialModes: [],
+      deviceParametersChanges: [
+        {
+          "epoch": 1659945600000,
+          "displayOffset": 0,
+          "normalTime": "2022-10-29T16:00:00.000Z",
+          "timezone": "UTC",
+          "guessedTimezone": false,
+          "id": "parameterId",
+          "type": DatumType.DeviceEvent,
+          "source": Source.Diabeloop,
+          "subType": DeviceEventSubtype.DeviceParameter,
+          "params": [
+            {
+              "id": "parameterId",
+              "epoch": 1659945600000,
+              "timezone": "UTC",
+              "name": DblParameter.AggressivenessLunch,
+              "level": "1",
+              "unit": Unit.Percent,
+              "value": "100",
+              "previousValue": "110",
+              "lastUpdateDate": "2022-10-29T08:00:00Z"
+            }
+          ],
+          "isoWeekday": WeekDays.Sunday
+        }
+      ],
+      eatingShortlyEvents: [],
+      iob: [],
+      messages: [],
+      meals: [
+        {
+          "epoch": 1659960000000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T12:00:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": "carbId",
+          "type": DatumType.Food,
+          "source": Source.Diabeloop,
+          "meal": "rescuecarbs",
+          "nutrition": {
+            "carbohydrate": {
+              "net": 15,
+              "units": Unit.Grams
+            }
+          },
+          "prescribedNutrition": {
+            "carbohydrate": {
+              "net": 16,
+              "units": Unit.Grams
+            }
+          },
+          "prescriptor": Prescriptor.Hybrid,
+          "isoWeekday": WeekDays.Friday
+        }
+      ],
+      nightModes: [],
+      physicalActivities: [
+        {
+          "epoch": 1659963600000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T13:00:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": "physicalActivityId",
+          "type": DatumType.PhysicalActivity,
+          "source": Source.Diabeloop,
+          "duration": {
+            "units": DurationUnit.Seconds,
+            "value": 1800
+          },
+          "normalEnd": "2022-08-08T13:30:00.000Z",
+          "epochEnd": 1659965400000,
+          "guid": "pa_18",
+          "reportedIntensity": Intensity.Medium,
+          "inputTime": "2022-08-08T13:00:00.000Z",
+          "isoWeekday": WeekDays.Sunday,
+          "name": "RUNNING",
+          "updateTime": "2022-08-08T13:10:00.000Z"
+        },
+        {
+          "epoch": 1659967200000,
+          "displayOffset": -120,
+          "normalTime": "2022-08-08T14:00:00.000Z",
+          "timezone": "Europe/Paris",
+          "guessedTimezone": false,
+          "id": "physicalActivityId2",
+          "type": DatumType.PhysicalActivity,
+          "source": Source.Diabeloop,
+          "duration": {
+            "units": DurationUnit.Seconds,
+            "value": 1800
+          },
+          "normalEnd": "2022-08-08T14:30:00.000Z",
+          "epochEnd": 1659969000000,
+          "guid": "pa_19",
+          "reportedIntensity": Intensity.Medium,
+          "inputTime": "2022-08-08T14:00:00.000Z",
+          "isoWeekday": WeekDays.Sunday,
+          "name": "",
+          "updateTime": "2022-08-08T14:00:00.000Z"
+        }
+      ],
+      pumpSettings: [
+        {
+          "epoch": 1659976500000,
+          "displayOffset": 0,
+          "normalTime": "2022-10-29T16:35:00.000Z",
+          "timezone": "UTC",
+          "guessedTimezone": false,
+          "id": "pump_2022-08-08_6",
+          "type": DatumType.PumpSettings,
+          "source": Source.Diabeloop,
+          "isoWeekday": WeekDays.Sunday,
+          "deviceId": "1234",
+          "deviceTime": "2022-10-29T16:35:00.000Z",
+          "payload": {
+            "cgm": {
+              "apiVersion": "v1",
+              "endOfLifeTransmitterDate": "2050-04-12T17:53:54+02:00",
+              "expirationDate": "2050-04-12T17:53:54+02:00",
+              "manufacturer": "Dexcom",
+              "name": "G6",
+              "swVersionTransmitter": "v1",
+              "transmitterId": "a1234"
+            },
+            "device": {
+              "deviceId": "1234",
+              "imei": "1234567890",
+              "manufacturer": Source.Diabeloop,
+              "name": DeviceSystem.Dblg1,
+              "swVersion": "1.2.3",
+              "operatingSystem": "Android",
+              "osVersion": "12",
+              "smartphoneModel": "X"
+            },
+            "pump": {
+              "manufacturer": PumpManufacturer.Vicentra,
+              "name": "Kaleido",
+              "serialNumber": "123456",
+              "swVersion": "beta",
+              "product": "zzz"
+            },
+            history: {
+              parameters: historyWithTargetChanges,
+              devices: []
+            },
+            "securityBasals": { "rates": null },
+            "mobileApplication": {
+              "manufacturer": "",
+              "identifier": "",
+              "swVersion": "",
+              "activationCode": ""
+            },
+            "parameters": [
+              {
+                "effectiveDate": "2022-10-29T08:00:00.000Z",
+                "level": 1,
+                "name": DblParameter.TargetGlucoseLevel,
+                "unit": Unit.MilligramPerDeciliter,
+                "value": "120"
+              },
+            ]
+          }
+        }
+      ],
+      reservoirChanges: [],
+      smbg: [],
+      warmUps: [],
+      wizards: [],
+      zenModes: [],
+      timezoneChanges: []
+    }
+  }
+}
+

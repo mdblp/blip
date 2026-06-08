@@ -193,6 +193,7 @@ function Pool(container, shouldDisplayEatingShortlyLegend = false) {
       axisGroup.append('g')
         .attr('class', 'd3-y d3-axis')
         .attr('id', `pool-${id}-yAxis`)
+        .attr('data-testid', `pool-${id}-yAxis`)
         .attr('transform', 'translate(' + (container.axisGutter() - 1) + ',' + yPosition + ')')
     }
   })
