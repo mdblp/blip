@@ -188,7 +188,7 @@ describe('Dashboard view for HCP', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationTwoWeeksOldData(true)
+    await testDashboardDataVisualisationTwoWeeksOldData(false)
   })
 
   it('should render correct components when patient is in no medical teams', async () => {
@@ -223,7 +223,7 @@ describe('Dashboard view for HCP', () => {
 
     await testAppMainLayoutForHcp(appMainLayoutParams)
     testPatientNavBarLayoutForHcpInPrivateTeam()
-    await testDashboardDataVisualisationPrivateTeamNoData(patientDashboardLayoutParams)
+    await testDashboardDataVisualisationPrivateTeamNoData(patientDashboardLayoutParams, false)
   })
 
   it('should automatically log out an idle user', async () => {

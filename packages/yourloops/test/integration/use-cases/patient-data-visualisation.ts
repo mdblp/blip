@@ -73,7 +73,7 @@ import { screen } from '@testing-library/react'
 export const testDashboardDataVisualisationForHcp = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
   await checkPatientStatistics()
-  await checkDeviceUsageWidget(true)
+  await checkDeviceUsageWidget(false)
   await checkMonitoringAlertsCard()
 }
 
@@ -81,25 +81,25 @@ export const testDashboardDataVisualisationNoDataForHcp = async () => {
   await checkMonitoringAlertsCardNoData()
 }
 
-export const testDashboardDataVisualisationForPatientOrPrivateTeam = async (patientDashboardLayoutParams: PatientDashboardLayoutParams, displayGuide: boolean): Promise<void> => {
+export const testDashboardDataVisualisationForPatientOrPrivateTeam = async (patientDashboardLayoutParams: PatientDashboardLayoutParams): Promise<void> => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
   await checkPatientStatistics()
-  await checkDeviceUsageWidget(displayGuide)
+  await checkDeviceUsageWidget(false)
 }
 
 export const testDashboardDataVisualisationSixteenDaysOldData = async () => {
   await checkPatientStatisticsWithTwoWeeksOldData()
 }
 
-export const testDashboardDataVisualisationTwoWeeksOldData = async (displayGuide: boolean) => {
+export const testDashboardDataVisualisationTwoWeeksOldData = async () => {
   await checkPatientStatisticsWithTwoWeeksOldData()
-  await checkDeviceUsageWidgetWithTwoWeeksOldData(displayGuide)
+  await checkDeviceUsageWidgetWithTwoWeeksOldData(false)
 }
 
-export const testDashboardDataVisualisationPrivateTeamNoData = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
+export const testDashboardDataVisualisationPrivateTeamNoData = async (patientDashboardLayoutParams: PatientDashboardLayoutParams, showDownloadButton = true) => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
   await checkPatientStatisticsNoData()
-  await checkDeviceUsageWidgetNoData()
+  await checkDeviceUsageWidgetNoData(showDownloadButton)
 }
 
 export const testTrendsDataVisualisationForHCP = async () => {

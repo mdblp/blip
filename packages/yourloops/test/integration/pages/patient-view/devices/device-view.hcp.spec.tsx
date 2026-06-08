@@ -25,14 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
+import { act, screen } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import {
   mockDataAPI,
   pumpSettingsData,
   pumpSettingsDblg1Mobigo,
-  pumpSettingsDblg2,
+  pumpSettingsDblg2, pumpSettingsDblg2G7,
   pumpSettingsDblg2WithoutSecurityBasalData
 } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
@@ -53,6 +53,7 @@ import { testDeviceSettingsNavigationForHcp } from '../../../use-cases/device-se
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import { checkG2CurrentParametersContent } from '../../../assert/device-view.assert'
 
 describe('Device view for HCP', () => {
   const firstName = 'HCP firstName'
@@ -95,7 +96,7 @@ describe('Device view for HCP', () => {
     await act(async () => {
       renderPage(deviceRoute)
     })
-    await testDevicesVisualisationForHcp()
+    await testDevicesVisualisationForHcp(false)
   })
 
   it('should display correct parameters when having g2 patients', async () => {
@@ -104,7 +105,18 @@ describe('Device view for HCP', () => {
     await act(async () => {
       renderPage(deviceRoute)
     })
-    await testG2DevicesVisualisationForHcp()
+    await testG2DevicesVisualisationForHcp(false)
+  })
+
+  it('should display download button when having g2 patients with G7', async () => {
+    mockDataAPI(pumpSettingsDblg2G7)
+
+    await act(async () => {
+      renderPage(deviceRoute)
+    })
+
+    const deviceSettings = screen.getByTestId('current-parameters-section')
+    expect(deviceSettings).toHaveTextContent(`Download user guide`)
   })
 
   it('should navigate to daily page when clicking on the daily button', async () => {

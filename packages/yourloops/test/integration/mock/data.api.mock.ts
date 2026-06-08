@@ -1714,6 +1714,25 @@ export const smallDataSet: Data = {
   }
 }
 
+export const smallDataSetDblg1v118: Data = {
+  ...smallDataSet,
+  data: {
+    ...smallDataSet.data,
+    pumpSettings: [
+      {
+        ...smallDataSet.data.pumpSettings[0],
+        payload: {
+          ...smallDataSet.data.pumpSettings[0].payload,
+          device: {
+            ...smallDataSet.data.pumpSettings[0].payload.device,
+            swVersion: "1.18.0"
+          }
+        }
+      }
+    ]
+  }
+}
+
 export const noData: Data = {
   dataRange: ['', ''],
   data: []

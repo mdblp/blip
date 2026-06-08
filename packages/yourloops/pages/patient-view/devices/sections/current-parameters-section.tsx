@@ -26,7 +26,7 @@
  */
 
 import React, { type FC } from 'react'
-import { DeviceSystem, PumpSettings } from 'medical-domain'
+import { CGMName, DeviceSystem, PumpSettings } from 'medical-domain'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
@@ -81,12 +81,15 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
         subheader={`${t('last-upload:')} ${lastUploadDate}`}
         action={
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: theme.spacing(1) }}>
-            <DownloadDocumentButton
-              documentName="test.pdf"
-              metricName="dashboard-download-ifu"
-              labelKey="button-download-ifu"
-              sx={{ float: 'right' }}
-            />
+            {(device.name === DeviceSystem.Dblg2 && cgm.name === CGMName.G7||
+              (device.name === DeviceSystem.Dblg1 && device.swVersion.startsWith("1.18"))) &&
+              <DownloadDocumentButton
+                documentName="test.pdf"
+                metricName="dashboard-download-ifu"
+                labelKey="button-download-ifu"
+                sx={{ float: 'right' }}
+              />
+            }
             <Button
               variant="outlined"
               disableElevation
