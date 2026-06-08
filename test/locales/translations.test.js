@@ -336,7 +336,8 @@ const ignoredTransKeyForYourLoops = [
   'add-clinician-description',
   'remove-clinician-question',
   'remove-clinician-question-patient',
-  'revoke-consent-question'
+  'revoke-consent-question',
+  'button-download-ifu'
 ]
 const ignoredTransKeyInYourLoopsFiles = [
   // Documentation!
