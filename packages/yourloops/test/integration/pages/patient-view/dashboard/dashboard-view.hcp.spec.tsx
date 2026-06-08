@@ -188,7 +188,7 @@ describe('Dashboard view for HCP', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationTwoWeeksOldData()
+    await testDashboardDataVisualisationTwoWeeksOldData(true)
   })
 
   it('should render correct components when patient is in no medical teams', async () => {

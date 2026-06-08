@@ -73,7 +73,7 @@ import { screen } from '@testing-library/react'
 export const testDashboardDataVisualisationForHcp = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
   await checkPatientStatistics()
-  await checkDeviceUsageWidget()
+  await checkDeviceUsageWidget(true)
   await checkMonitoringAlertsCard()
 }
 
@@ -81,19 +81,19 @@ export const testDashboardDataVisualisationNoDataForHcp = async () => {
   await checkMonitoringAlertsCardNoData()
 }
 
-export const testDashboardDataVisualisationForPatientOrPrivateTeam = async (patientDashboardLayoutParams: PatientDashboardLayoutParams): Promise<void> => {
+export const testDashboardDataVisualisationForPatientOrPrivateTeam = async (patientDashboardLayoutParams: PatientDashboardLayoutParams, displayGuide: boolean): Promise<void> => {
   await checkPatientDashboardLayout(patientDashboardLayoutParams)
   await checkPatientStatistics()
-  await checkDeviceUsageWidget()
+  await checkDeviceUsageWidget(displayGuide)
 }
 
 export const testDashboardDataVisualisationSixteenDaysOldData = async () => {
   await checkPatientStatisticsWithTwoWeeksOldData()
 }
 
-export const testDashboardDataVisualisationTwoWeeksOldData = async () => {
+export const testDashboardDataVisualisationTwoWeeksOldData = async (displayGuide: boolean) => {
   await checkPatientStatisticsWithTwoWeeksOldData()
-  await checkDeviceUsageWidgetWithTwoWeeksOldData()
+  await checkDeviceUsageWidgetWithTwoWeeksOldData(displayGuide)
 }
 
 export const testDashboardDataVisualisationPrivateTeamNoData = async (patientDashboardLayoutParams: PatientDashboardLayoutParams) => {

@@ -87,7 +87,7 @@ describe('Dashboard view for caregiver', () => {
     })
 
     await testAppMainLayoutForCaregiver(appMainLayoutParams)
-    await testDashboardDataVisualisationForPatientOrPrivateTeam(patientDashboardLayoutParams)
+    await testDashboardDataVisualisationForPatientOrPrivateTeam(patientDashboardLayoutParams, false)
     await testPatientNavBarForCaregiver()
   })
 
@@ -98,7 +98,7 @@ describe('Dashboard view for caregiver', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationTwoWeeksOldData()
+    await testDashboardDataVisualisationTwoWeeksOldData(false)
   })
 
   it('should produce fourteen days old statistics when data is sixteen days old', async () => {
