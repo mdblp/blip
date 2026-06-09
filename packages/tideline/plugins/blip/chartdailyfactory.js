@@ -286,9 +286,10 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
 
   const targetDate = new Date(epochLocation)
   const currentParameters = pumpSettingsPayload.parameters
-  const parametersHistory = pumpSettingsPayload.history.parameters
+  const parametersHistory = pumpSettingsPayload.history?.parameters
 
-  let targetValue = getTargetValueAtDate(currentParameters, parametersHistory, targetDate)
+  const hasParameters = !!parametersHistory && !!currentParameters
+  let targetValue = hasParameters ? getTargetValueAtDate(currentParameters, parametersHistory, targetDate) : undefined
 
   // setup axis & main y scale
   poolBG.axisScaleFn(() => createYAxisBG(tidelineData, poolBG, targetValue))
@@ -496,7 +497,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   }))
 
   emitter.on('navigated', (newEpoch) => {
-    const newTargetValue = getTargetValueAtDate(currentParameters, parametersHistory, new Date(newEpoch))
+    const newTargetValue = hasParameters ? getTargetValueAtDate(currentParameters, parametersHistory, new Date(newEpoch)) : undefined
 
     if (newTargetValue !== targetValue) {
       targetValue = newTargetValue

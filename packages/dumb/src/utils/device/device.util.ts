@@ -125,7 +125,7 @@ export const getParametersAtDate = (
               parametersMap.set(param.name, {
                 ...param,
                 value: param.previousValue,
-                ...(param?.previousUnit !== undefined ? { unit: param.previousUnit } : {})
+                ...(param?.previousUnit === undefined ? {} : { unit: param.previousUnit })
               })
             }
             break
