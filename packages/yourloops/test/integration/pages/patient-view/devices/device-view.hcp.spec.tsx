@@ -53,7 +53,6 @@ import { testDeviceSettingsNavigationForHcp } from '../../../use-cases/device-se
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
-import { checkG2CurrentParametersContent } from '../../../assert/device-view.assert'
 
 describe('Device view for HCP', () => {
   const firstName = 'HCP firstName'

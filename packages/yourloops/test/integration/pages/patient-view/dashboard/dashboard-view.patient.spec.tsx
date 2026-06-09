@@ -31,7 +31,7 @@ import {
   mockDataAPI,
   oneDayDashboardData,
   sixteenDaysOldDashboardData,
-  smallDataSet, smallDataSetDblg1v118,
+  smallDataSetDblg1v118,
   twoWeeksOldDashboardData
 } from '../../../mock/data.api.mock'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'

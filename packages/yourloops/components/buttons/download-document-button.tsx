@@ -29,7 +29,6 @@ import React, { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import Button, { type ButtonProps } from '@mui/material/Button'
 import CloudDownloadOutlined from '@mui/icons-material/CloudDownloadOutlined'
-import { useTheme } from '@mui/material/styles'
 import MedicalFilesApi from '../../lib/medical-files/medical-files.api'
 import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 import { useAuth } from '../../lib/auth'
@@ -43,7 +42,6 @@ interface DownloadDocumentButtonProps {
 
 export const DownloadDocumentButton: FC<DownloadDocumentButtonProps> = ({ documentName, metricName, labelKey, sx }) => {
   const { t } = useTranslation()
-  const theme = useTheme()
   const { user } = useAuth()
 
   if (!user.isUserPatient() && !user.isUserHcp()) {
