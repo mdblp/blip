@@ -106,7 +106,7 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
 
   const pumpSettings = medicalData?.pumpSettings
   const hasPumpSettings = pumpSettings?.length > 0
-  const pumpSettingsPayload = hasPumpSettings && pumpSettings[0].payload
+  const pumpSettingsPayload = hasPumpSettings ? pumpSettings[0].payload : undefined
 
   const isDblg2User = hasPumpSettings ? isDBLG2(pumpSettingsPayload.device.name) : false
 
@@ -285,10 +285,10 @@ function chartDailyFactory(parentElement, tidelineData, epochLocation, options =
   }))
 
   const targetDate = new Date(epochLocation)
-  const currentParameters = pumpSettingsPayload.parameters
-  const parametersHistory = pumpSettingsPayload.history?.parameters
+  const currentParameters = pumpSettingsPayload?.parameters
+  const parametersHistory = pumpSettingsPayload?.history?.parameters
 
-  const hasParameters = !!parametersHistory && !!currentParameters
+  const hasParameters = Array.isArray(parametersHistory) && Array.isArray(currentParameters)
   let targetValue = hasParameters ? getTargetValueAtDate(currentParameters, parametersHistory, targetDate) : undefined
 
   // setup axis & main y scale

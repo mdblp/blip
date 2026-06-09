@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BgClasses } from 'medical-domain'
+import type { BgClasses } from 'medical-domain'
 import i18next from 'i18next'
 
 const t = i18next.t.bind(i18next)
@@ -39,7 +39,7 @@ interface Guideline {
   }
 }
 
-export const getBgGuidelines = (targetValue: string, chart: { options: { bgClasses: BgClasses }}): Guideline[] => {
+export const getBgGuidelines = (targetValue: string | undefined, chart: { options: { bgClasses: BgClasses }}): Guideline[] => {
   const defaultGuidelines: Guideline[] = [
     {
       class: 'd3-line-bg-threshold-low',

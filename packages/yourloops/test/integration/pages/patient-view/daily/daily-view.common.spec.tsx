@@ -73,7 +73,7 @@ import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
 
 /**
  * @see https://github.com/testing-library/react-testing-library/issues/651
- * @description SVGElement.getBBOx is not implemented in JSDOM yet.
+ * @description SVGElement.getBBox is not implemented in JSDOM yet.
  */
 Object.defineProperty(globalThis.SVGElement.prototype, 'getBBox', {
   writable: true,
