@@ -115,8 +115,8 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
   }
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  // mobile render
-  if (isMobile) {
+  // mobile render, only for HCP for now
+  if (isMobile && user.isUserHcp()) {
     return ( <MainHeaderMobileMemoized setMainHeaderHeight={setMainHeaderHeight}/> )
   }
 

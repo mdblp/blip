@@ -30,17 +30,17 @@ import { mockAuth0Hook } from '../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../mock/notification.api.mock'
 import { mockDirectShareApi } from '../../mock/direct-share.api.mock'
 import { flaggedPatientId, patient1Info, patient1Metrics } from '../../data/patient.api.data'
-import {
-  buildAvailableTeams,
-  mockTeamAPI,
-} from '../../mock/team.api.mock'
+import { buildAvailableTeams, mockTeamAPI } from '../../mock/team.api.mock'
 import { renderPage } from '../../utils/render'
 import { mockUserApi } from '../../mock/user.api.mock'
 import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
-import { type AppMainLayoutHcpParams, testAppMainLayoutForHcpMobile } from '../../use-cases/app-main-layout-visualisation'
+import {
+  type AppMainLayoutHcpParams,
+  testAppMainLayoutForHcpMobile
+} from '../../use-cases/app-main-layout-visualisation'
 import NotificationApi from '../../../../lib/notifications/notification.api'
 import { type Router } from '../../models/router.model'
 import { AppUserRoute } from '../../../../models/enums/routes.enum'
@@ -57,15 +57,19 @@ function mockScreenWidth(width: number): void {
     matches: mediaQuery.match(query, { width }),
     media: query,
     onchange: null,
-    addListener: () => {},
-    removeListener: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    dispatchEvent: () => true,
+    addListener: () => {
+    },
+    removeListener: () => {
+    },
+    addEventListener: () => {
+    },
+    removeEventListener: () => {
+    },
+    dispatchEvent: () => true
   });
 }
 
-describe('HCP home page', () => {
+describe('HCP home page, mobile version', () => {
   const firstName = 'Eric'
   const lastName = 'Ard'
 

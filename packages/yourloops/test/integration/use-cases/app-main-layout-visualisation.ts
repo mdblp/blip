@@ -32,10 +32,7 @@ import {
   checkPatientHeader,
   type HeaderInfo
 } from '../assert/header.assert'
-import {
-  checkBannerLanguageChangeMobile,
-  checkHcpHeaderMobile,
-} from '../assert/header-mobile.assert'
+import { checkBannerLanguageChangeMobile, checkHcpHeaderMobile } from '../assert/header-mobile.assert'
 import { checkFooterForCaregiver, checkFooterForHcp, checkFooterForPatient } from '../assert/footer.assert'
 import { checkPatientNavBarAsHcp, checkPatientNavBarAsHcpInPrivateTeam } from '../assert/patient-nav-bar.assert'
 

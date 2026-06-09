@@ -77,8 +77,8 @@ const classes = makeStyles()((theme) => ({
     width: 'clamp(97px, 25vw, 100px)',
     height: 'clamp(28px, 3.3vh, 30px)',
     '& img': {
-      objectFit: 'contain',
-    },
+      objectFit: 'contain'
+    }
   },
   settingsButton: {
     padding: 'clamp(8px, 1.2vh, 10px) clamp(25px, 7vw, 30px)',
@@ -88,7 +88,7 @@ const classes = makeStyles()((theme) => ({
     fontWeight: 'bold',
     textTransform: 'none',
     fontSize: theme.typography.htmlFontSize,
-    paddingLeft: 'clamp(32px, 11vw, 36px)',
+    paddingLeft: 'clamp(32px, 11vw, 36px)'
   },
   toolbar: {
     padding: 0
@@ -138,7 +138,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'flex-start',
+          alignItems: 'flex-start'
         }}>
         <Box
           sx={{
@@ -171,7 +171,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                 alignItems: "center",
                 justifyContent: "flex-end",
                 flex: 1,
-                gap: "0.5rem",
+                gap: "0.5rem"
               }}>
               <Link to={AppUserRoute.Notifications} id="header-notification-link">
                 <Badge
@@ -181,12 +181,12 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                   overlap="circular"
                   color="error"
                   sx={{
-                    width:'clamp(28px, 7.6vw, 30px)',
+                    width: 'clamp(28px, 7.6vw, 30px)',
                     height: 'clamp(28px, 3.3vh, 30px)'
                   }}
                   data-testid="notification-icon"
                 >
-                  <NotificationsNoneIcon/>
+                  <NotificationsNoneIcon />
                 </Badge>
               </Link>
               <UserMenu />
@@ -195,47 +195,47 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
         </Box>
         <Box>
           {pathname.endsWith('patients') ? (
-            <>
-            {user.isUserHcp() && !user?.isUserCaregiver() && (
-              <Tab
-                label={
-                  <>
-                    {user.isUserPatient() && <TeamSettingsMenu />}
-                    {user.isUserHcp() && <TeamScopeMenu />}
-                  </>
-                }
-                data-testid="team-selection-tab"
-                value={getSelectedTab()}
-                className={tab}
-              />
-              )} {!TeamUtils.isPrivate(teamId) && (
-              <Button
-                aria-label={t('header-tab-care-team-settings')}
-                value={HcpNavigationTab.CareTeam}
-                onClick={() => {
-                  navigate(`${AppUserRoute.Teams}/${teamId}`)
-                }}
-                variant="outlined"
-                className={settingsButton}
+              <>
+                {user.isUserHcp() && !user?.isUserCaregiver() && (
+                  <Tab
+                    label={
+                      <>
+                        {user.isUserPatient() && <TeamSettingsMenu />}
+                        {user.isUserHcp() && <TeamScopeMenu />}
+                      </>
+                    }
+                    data-testid="team-selection-tab"
+                    value={getSelectedTab()}
+                    className={tab}
+                  />
+                )} {!TeamUtils.isPrivate(teamId) && (
+                <Button
+                  aria-label={t('header-tab-care-team-settings')}
+                  value={HcpNavigationTab.CareTeam}
+                  onClick={() => {
+                    navigate(`${AppUserRoute.Teams}/${teamId}`)
+                  }}
+                  variant="outlined"
+                  className={settingsButton}
                 >
-                <CareTeamSettingsIcon data-testid="care-team-settings-icon" />
-              </Button>
+                  <CareTeamSettingsIcon data-testid="care-team-settings-icon" />
+                </Button>
+              )}
+              </>
+            ) :
+            (
+              <>
+                <Button
+                  variant="text"
+                  startIcon={<ArrowBackIcon />}
+                  onClick={goBackHome}
+                  className={arrowBack}
+                  data-testid="back-button"
+                >
+                  Back
+                </Button>
+              </>
             )}
-          </>
-        ):
-        (
-          <>
-            <Button
-              variant="text"
-              startIcon={<ArrowBackIcon/>}
-              onClick={goBackHome}
-              className={arrowBack}
-              data-testid="back-button"
-            >
-              Back
-            </Button>
-          </>
-        )}
         </Box>
       </Toolbar>
     </AppBar>
