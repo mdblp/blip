@@ -32,7 +32,7 @@ import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import { makeStyles } from 'tss-react/mui'
 import Button from '@mui/material/Button'
-import GetAppIcon from '@mui/icons-material/GetApp'
+import CloudDownloadOutlined from '@mui/icons-material/CloudDownloadOutlined'
 import { PatientView } from '../../enum/patient-view.enum'
 import { useAuth } from '../../lib/auth'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -212,8 +212,7 @@ export const PatientNavBarTabs: FunctionComponent<PatientNavBarTabsProps> = (pro
         </Tabs>
       </Box>
       <Box className={classes.rightSection}>
-        <Button data-testid="download-report" onClick={onClickPrint}>
-          <GetAppIcon />
+        <Button data-testid="download-report" onClick={onClickPrint} startIcon={<CloudDownloadOutlined />}>
           {t('button-pdf-download-report')}
         </Button>
       </Box>

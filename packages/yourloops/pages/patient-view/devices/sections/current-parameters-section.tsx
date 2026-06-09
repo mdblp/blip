@@ -26,7 +26,7 @@
  */
 
 import React, { type FC } from 'react'
-import { CGMName, DeviceSystem, PumpSettings } from 'medical-domain'
+import { DeviceSystem, PumpSettings, Unit } from 'medical-domain'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
@@ -49,6 +49,8 @@ import {
 import { MobileAppInfoTable } from '../../../../components/device/mobile-app-info-table'
 import Box from '@mui/material/Box'
 import { DownloadDocumentButton } from '../../../../components/buttons/download-document-button'
+import { usePatient } from '../../../../lib/patient/patient.provider'
+import { getIfuDocumentName } from '../../../../lib/medical-files/medical-files.utils'
 
 interface CurrentParametersSectionProps {
   pumpSettings: PumpSettings
@@ -63,8 +65,12 @@ const useStyles = makeStyles()(() => ({
 export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pumpSettings }) => {
   const theme = useTheme()
   const { classes } = useStyles()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { device, pump, cgm, parameters, mobileApplication } = pumpSettings.payload
+  const { patient } = usePatient()
+  const bgUnit = patient?.settings?.units?.bg ?? Unit.MilligramPerDeciliter
+  const lang = i18n.language
+  const ifuDocumentName = getIfuDocumentName(pumpSettings, bgUnit, lang)
   const lastUploadDate = moment.tz(pumpSettings.normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
 
   const onClickCopyButton = async (): Promise<void> => {
@@ -81,10 +87,9 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
         subheader={`${t('last-upload:')} ${lastUploadDate}`}
         action={
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: theme.spacing(1) }}>
-            {(device.name === DeviceSystem.Dblg2 && cgm.name === CGMName.G7||
-              (device.name === DeviceSystem.Dblg1 && device.swVersion.startsWith("1.18"))) &&
+            {ifuDocumentName &&
               <DownloadDocumentButton
-                documentName="test.pdf"
+                documentName={ifuDocumentName}
                 metricName="dashboard-download-ifu"
                 labelKey="button-download-ifu"
                 sx={{ float: 'right' }}

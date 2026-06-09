@@ -49,7 +49,7 @@ export default class MedicalFilesApi {
       url: '/cargo/v0/medical-records',
       payload
     })
-    return data
+  return data
   }
 
   static async updateMedicalReport(payload: MedicalReport): Promise<MedicalReport> {

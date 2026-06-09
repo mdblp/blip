@@ -60,9 +60,9 @@ export const testG2DevicesVisualisationForHcp = async (showDownloadButton = true
   await testChangeHistoryVisualisation()
 }
 
-export const testG2DevicesVisualisation = async () => {
+export const testG2DevicesVisualisation = async (showDownloadButton = false) => {
   testDevicesMenuLayout()
-  await testG2CurrentParametersVisualisation(false)
+  await testG2CurrentParametersVisualisation(showDownloadButton)
   await testBasalSafetyProfileVisualisation()
   await testChangeHistoryVisualisation()
   await testDeviceHistoryVisualisation()

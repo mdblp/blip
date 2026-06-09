@@ -30,10 +30,12 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { DataCard } from '../../data-card/data-card'
 import { useTranslation } from 'react-i18next'
-import { CGMName, DeviceSystem, PumpSettings } from 'medical-domain'
+import { PumpSettings, Unit } from 'medical-domain'
 import { makeStyles } from 'tss-react/mui'
 import { useTheme } from '@mui/material/styles'
 import { DownloadDocumentButton } from '../../buttons/download-document-button'
+import { usePatient } from '../../../lib/patient/patient.provider'
+import { getIfuDocumentName } from '../../../lib/medical-files/medical-files.utils'
 
 interface DeviceListCardProps {
   pumpSettings: PumpSettings
@@ -46,10 +48,13 @@ const useStyles = makeStyles()(() => ({
 }))
 
 export const DeviceListCard: FC<DeviceListCardProps> = (props) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { pumpSettings } = props
   const { classes } = useStyles()
   const theme = useTheme()
+  const { patient } = usePatient()
+  const bgUnit = patient?.settings?.units?.bg ?? Unit.MilligramPerDeciliter
+  const ifuDocumentName = pumpSettings ? getIfuDocumentName(pumpSettings, bgUnit, i18n.language) : null
 
   const deviceData = {
     cgm: {
@@ -72,10 +77,9 @@ export const DeviceListCard: FC<DeviceListCardProps> = (props) => {
         <Typography sx={{ fontWeight: 'bold', paddingBottom: theme.spacing(1) }}>
           {t('devices')}
         </Typography>
-        { pumpSettings?.payload.device.name === DeviceSystem.Dblg2 && pumpSettings?.payload.cgm.name === CGMName.G7 ||
-          (pumpSettings?.payload.device.name === DeviceSystem.Dblg1 && pumpSettings?.payload.device.swVersion.startsWith("1.18")) &&
+        {ifuDocumentName &&
           <DownloadDocumentButton
-            documentName="test.pdf"
+            documentName={ifuDocumentName}
             metricName="dashboard-download-ifu"
             labelKey="button-download-ifu"
             sx={{ float: 'right' }}

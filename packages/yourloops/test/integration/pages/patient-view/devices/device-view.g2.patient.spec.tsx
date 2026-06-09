@@ -61,7 +61,7 @@ describe('Device view for G2 Patient', () => {
     await act(async () => {
       renderPage(deviceRoute)
     })
-    await testG2DevicesVisualisation()
+    await testG2DevicesVisualisation(true)
   })
 
   it('should navigate to daily page when clicking on the daily button', async () => {

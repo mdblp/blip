@@ -105,7 +105,7 @@ describe('Device view for HCP', () => {
     await act(async () => {
       renderPage(deviceRoute)
     })
-    await testG2DevicesVisualisationForHcp(false)
+    await testG2DevicesVisualisationForHcp(true)
   })
 
   it('should display download button when having g2 patients with G7', async () => {
