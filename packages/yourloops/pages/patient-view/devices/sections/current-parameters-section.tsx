@@ -86,7 +86,7 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
         title={t('devices-and-current-parameters')}
         subheader={`${t('last-upload:')} ${lastUploadDate}`}
         action={
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: theme.spacing(1) }}>
+          <Box sx={{ marginTop: theme.spacing(3), display: 'flex', flexDirection: 'column', gap: theme.spacing(2) }}>
             {ifuDocumentName &&
               <DownloadDocumentButton
                 documentName={ifuDocumentName}

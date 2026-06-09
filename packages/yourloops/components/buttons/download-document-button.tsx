@@ -57,7 +57,7 @@ export const DownloadDocumentButton: FC<DownloadDocumentButtonProps> = ({ docume
   }
 
   return (
-    <Button sx={sx} data-testid="download-ifu" onClick={onClick} startIcon={<CloudDownloadOutlined/>}>
+    <Button size="large" sx={sx} data-testid="download-ifu" onClick={onClick} startIcon={<CloudDownloadOutlined/>}>
       {t(labelKey)}
     </Button>
   )
