@@ -184,6 +184,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                     width:'clamp(28px, 7.6vw, 30px)',
                     height: 'clamp(28px, 3.3vh, 30px)'
                   }}
+                  data-testid="notification-icon"
                 >
                   <NotificationsNoneIcon/>
                 </Badge>
@@ -203,6 +204,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                     {user.isUserHcp() && <TeamScopeMenu />}
                   </>
                 }
+                data-testid="team-selection-tab"
                 value={getSelectedTab()}
                 className={tab}
               />
@@ -228,6 +230,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
               startIcon={<ArrowBackIcon/>}
               onClick={goBackHome}
               className={arrowBack}
+              data-testid="back-button"
             >
               Back
             </Button>
