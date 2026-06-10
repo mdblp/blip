@@ -25,14 +25,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act, screen } from '@testing-library/react'
+import { act } from '@testing-library/react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { buildAvailableTeams, mockTeamAPI, myThirdTeamId, myThirdTeamName } from '../../../mock/team.api.mock'
 import {
   mockDataAPI,
   pumpSettingsData,
   pumpSettingsDblg1Mobigo,
-  pumpSettingsDblg2, pumpSettingsDblg2G7,
+  pumpSettingsDblg2,
   pumpSettingsDblg2WithoutSecurityBasalData
 } from '../../../mock/data.api.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'

@@ -51,6 +51,7 @@ import Box from '@mui/material/Box'
 import { DownloadDocumentButton } from '../../../../components/buttons/download-document-button'
 import { usePatient } from '../../../../lib/patient/patient.provider'
 import { getIfuDocumentName } from '../../../../lib/medical-files/medical-files.utils'
+import Tooltip from '@mui/material/Tooltip'
 
 interface CurrentParametersSectionProps {
   pumpSettings: PumpSettings
@@ -96,15 +97,20 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
                 size="large"
               />
             }
-            <Button
-              variant="outlined"
-              disableElevation
-              startIcon={<FileCopyIcon />}
-              onClick={onClickCopyButton}
-              aria-label={t('text-copy')}
-            >
-              {t('text-copy')}
-            </Button>
+            <Tooltip title={t('text-copy')}>
+              <Button
+                data-test-id={"copy-parameters-button"}
+                variant="outlined"
+                disableElevation
+                color="inherit"
+                onClick={onClickCopyButton}
+                aria-label={t('text-copy')}
+                sx={{ alignSelf: 'center', marginLeft: theme.spacing(2), minWidth: 0, padding: theme.spacing(1) }}
+              >
+                <FileCopyIcon />
+              </Button>
+            </Tooltip>
+
           </Box>
         }
         classes={{

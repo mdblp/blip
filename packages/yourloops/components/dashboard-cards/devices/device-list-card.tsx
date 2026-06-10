@@ -74,7 +74,7 @@ export const DeviceListCard: FC<DeviceListCardProps> = (props) => {
   return (
     <DataCard data-testid="device-usage-device-list">
       <Box sx={{ paddingBottom: theme.spacing(1), display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography sx={{ fontWeight: 'bold'}}>
+        <Typography sx={{ fontWeight: 'bold' }}>
           {t('devices')}
         </Typography>
         {ifuDocumentName &&
