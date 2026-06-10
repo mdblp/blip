@@ -73,8 +73,8 @@ export const DeviceListCard: FC<DeviceListCardProps> = (props) => {
 
   return (
     <DataCard data-testid="device-usage-device-list">
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography sx={{ fontWeight: 'bold', paddingBottom: theme.spacing(1) }}>
+      <Box sx={{ paddingBottom: theme.spacing(1), display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography sx={{ fontWeight: 'bold'}}>
           {t('devices')}
         </Typography>
         {ifuDocumentName &&
@@ -82,7 +82,7 @@ export const DeviceListCard: FC<DeviceListCardProps> = (props) => {
             documentName={ifuDocumentName}
             metricName="dashboard-download-ifu"
             labelKey="button-download-ifu"
-            sx={{ float: 'right' }}
+            size="medium"
           />
         }
 

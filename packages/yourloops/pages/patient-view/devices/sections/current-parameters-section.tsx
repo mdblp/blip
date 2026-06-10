@@ -90,9 +90,10 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
             {ifuDocumentName &&
               <DownloadDocumentButton
                 documentName={ifuDocumentName}
-                metricName="dashboard-download-ifu"
+                metricName="current-parameters-download-ifu"
                 labelKey="button-download-ifu"
                 sx={{ float: 'right' }}
+                size="large"
               />
             }
             <Button

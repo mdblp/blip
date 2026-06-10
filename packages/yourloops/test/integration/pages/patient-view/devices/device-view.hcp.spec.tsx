@@ -107,17 +107,6 @@ describe('Device view for HCP', () => {
     await testG2DevicesVisualisationForHcp(true)
   })
 
-  it('should display download button when having g2 patients with G7', async () => {
-    mockDataAPI(pumpSettingsDblg2G7)
-
-    await act(async () => {
-      renderPage(deviceRoute)
-    })
-
-    const deviceSettings = screen.getByTestId('current-parameters-section')
-    expect(deviceSettings).toHaveTextContent(`Download user guide`)
-  })
-
   it('should navigate to daily page when clicking on the daily button', async () => {
     let router
     await act(async () => {

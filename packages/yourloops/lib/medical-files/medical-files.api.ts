@@ -26,7 +26,7 @@
  */
 import HttpService from '../http/http.service'
 import { type MedicalReport, type NewMedicalReport } from './models/medical-report.model'
-import { PresignedDocument } from './models/presigned-document.model'
+import { type PresignedDocument } from './models/presigned-document.model'
 
 export default class MedicalFilesApi {
   static async getPresignedDocument(name: string): Promise<PresignedDocument> {
@@ -49,7 +49,7 @@ export default class MedicalFilesApi {
       url: '/cargo/v0/medical-records',
       payload
     })
-  return data
+    return data
   }
 
   static async updateMedicalReport(payload: MedicalReport): Promise<MedicalReport> {

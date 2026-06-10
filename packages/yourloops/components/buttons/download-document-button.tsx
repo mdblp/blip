@@ -32,15 +32,18 @@ import CloudDownloadOutlined from '@mui/icons-material/CloudDownloadOutlined'
 import MedicalFilesApi from '../../lib/medical-files/medical-files.api'
 import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 import { useAuth } from '../../lib/auth'
+import { OverridableStringUnion } from '@mui/types'
+import { ButtonPropsSizeOverrides } from '@mui/material/Button/Button'
 
 interface DownloadDocumentButtonProps {
   documentName: string
   metricName: string
   labelKey: string
   sx?: ButtonProps['sx']
+  size: OverridableStringUnion<'small' | 'medium' | 'large', ButtonPropsSizeOverrides>
 }
 
-export const DownloadDocumentButton: FC<DownloadDocumentButtonProps> = ({ documentName, metricName, labelKey, sx }) => {
+export const DownloadDocumentButton: FC<DownloadDocumentButtonProps> = ({ documentName, metricName, labelKey, sx, size }) => {
   const { t } = useTranslation()
   const { user } = useAuth()
 
@@ -55,7 +58,7 @@ export const DownloadDocumentButton: FC<DownloadDocumentButtonProps> = ({ docume
   }
 
   return (
-    <Button size="large" sx={sx} data-testid="download-ifu" onClick={onClick} startIcon={<CloudDownloadOutlined/>}>
+    <Button size={size} sx={sx} data-testid="download-ifu" onClick={onClick} startIcon={<CloudDownloadOutlined/>}>
       {t(labelKey)}
     </Button>
   )
