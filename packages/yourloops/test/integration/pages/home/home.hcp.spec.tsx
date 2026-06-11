@@ -43,7 +43,7 @@ import { mockPatientApiForHcp } from '../../mock/patient.api.mock'
 import PatientApi from '../../../../lib/patient/patient.api'
 import { mockDataAPI } from '../../mock/data.api.mock'
 import { UserInviteStatus } from '../../../../lib/team/models/enums/user-invite-status.enum'
-import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp} from '../../use-cases/app-main-layout-visualisation'
+import { type AppMainLayoutHcpParams, testAppMainLayoutForHcp } from '../../use-cases/app-main-layout-visualisation'
 import {
   testAckMonitoringAlerts,
   testAckMonitoringAlertsWithError,
