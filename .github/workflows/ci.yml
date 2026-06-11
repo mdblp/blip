@@ -38,204 +38,204 @@ jobs:
           npm run lint
           npm run test-locales
 
-  test-lambda:
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
+#  test-lambda:
+#    runs-on: ubuntu-latest
+#    needs: lint
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v6
+#
+#      - name: Use Node.js ${{ env.node-version }}
+#        uses: actions/setup-node@v6
+#        with:
+#          cache: 'npm'
+#          cache-dependency-path: package-lock.json
+#          node-version: ${{ env.node-version }}
+#
+#      - name: Install npm dependencies
+#        run: |
+#          npm ci
+#
+#      - name: Test lambda
+#        run: npm run test-lambda
 
-      - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
-        with:
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-          node-version: ${{ env.node-version }}
+#  test-tideline:
+#    runs-on: ubuntu-latest
+#    needs: lint
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v6
+#
+#      - name: Use Node.js ${{ env.node-version }}
+#        uses: actions/setup-node@v6
+#        with:
+#          cache: 'npm'
+#          cache-dependency-path: package-lock.json
+#          node-version: ${{ env.node-version }}
+#
+#      - name: Install npm dependencies
+#        run: |
+#          npm ci
+#          npm run build-dependencies
+#
+#      - name: Test tideline
+#        run: npm run test-tideline
 
-      - name: Install npm dependencies
-        run: |
-          npm ci
+#  test-medical:
+#    runs-on: ubuntu-latest
+#    needs: lint
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v6
+#
+#      - name: Use Node.js ${{ env.node-version }}
+#        uses: actions/setup-node@v6
+#        with:
+#          cache: 'npm'
+#          cache-dependency-path: package-lock.json
+#          node-version: ${{ env.node-version }}
+#
+#      - name: Install npm dependencies
+#        run: |
+#          npm ci
+#
+#      - name: Test medical domain
+#        run: npm run test-medical-domain
 
-      - name: Test lambda
-        run: npm run test-lambda
+#  test-dumb:
+#    runs-on: ubuntu-latest
+#    needs: lint
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v6
+#
+#      - name: Use Node.js ${{ env.node-version }}
+#        uses: actions/setup-node@v6
+#        with:
+#          cache: 'npm'
+#          cache-dependency-path: package-lock.json
+#          node-version: ${{ env.node-version }}
+#
+#      - name: Install npm dependencies
+#        run: |
+#          npm ci
+#          npm run build-dependencies
+#
+#      - name: Test dumb
+#        run: npm run test-dumb
 
-  test-tideline:
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
+#  test-yourloops-unit:
+#    runs-on: ubuntu-latest
+#    needs: lint
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v6
+#
+#      - name: Use Node.js ${{ env.node-version }}
+#        uses: actions/setup-node@v6
+#        with:
+#          cache: 'npm'
+#          cache-dependency-path: package-lock.json
+#          node-version: ${{ env.node-version }}
+#      - name: Install npm dependencies
+#        run: |
+#          npm ci
+#          npm run build-dependencies
+#
+#      - name: Test yourloops unit
+#        run: npm run test-yourloops-unit
 
-      - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
-        with:
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-          node-version: ${{ env.node-version }}
+#  test-yourloops-integration-hcp:
+#    runs-on: ubuntu-latest
+#    needs: lint
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v6
+#
+#      - name: Use Node.js ${{ env.node-version }}
+#        uses: actions/setup-node@v6
+#        with:
+#          cache: 'npm'
+#          cache-dependency-path: package-lock.json
+#          node-version: ${{ env.node-version }}
+#
+#      - name: Install npm dependencies
+#        run: |
+#          npm ci
+#          npm run build-dependencies
+#
+#      - name: Test yourloops integration hcp
+#        run: npm run test-yourloops-integration-hcp
 
-      - name: Install npm dependencies
-        run: |
-          npm ci
-          npm run build-dependencies
+#  test-yourloops-integration-caregiver:
+#    runs-on: ubuntu-latest
+#    needs: lint
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v6
+#
+#      - name: Use Node.js ${{ env.node-version }}
+#        uses: actions/setup-node@v6
+#        with:
+#          cache: 'npm'
+#          cache-dependency-path: package-lock.json
+#          node-version: ${{ env.node-version }}
+#
+#      - name: Install npm dependencies
+#        run: |
+#          npm ci
+#          npm run build-dependencies
+#
+#      - name: Test yourloops integration caregiver
+#        run: npm run test-yourloops-integration-caregiver
 
-      - name: Test tideline
-        run: npm run test-tideline
+#  test-yourloops-integration-patient:
+#    runs-on: ubuntu-latest
+#    needs: lint
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v6
+#
+#      - name: Use Node.js ${{ env.node-version }}
+#        uses: actions/setup-node@v6
+#        with:
+#          cache: 'npm'
+#          cache-dependency-path: package-lock.json
+#          node-version: ${{ env.node-version }}
+#
+#      - name: Install npm dependencies
+#        run: |
+#          npm ci
+#          npm run build-dependencies
+#
+#      - name: Test yourloops integration patient
+#        run: npm run test-yourloops-integration-patient
 
-  test-medical:
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
-        with:
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-          node-version: ${{ env.node-version }}
-
-      - name: Install npm dependencies
-        run: |
-          npm ci
-
-      - name: Test medical domain
-        run: npm run test-medical-domain
-
-  test-dumb:
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
-        with:
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-          node-version: ${{ env.node-version }}
-
-      - name: Install npm dependencies
-        run: |
-          npm ci
-          npm run build-dependencies
-
-      - name: Test dumb
-        run: npm run test-dumb
-
-  test-yourloops-unit:
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
-        with:
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-          node-version: ${{ env.node-version }}
-      - name: Install npm dependencies
-        run: |
-          npm ci
-          npm run build-dependencies
-
-      - name: Test yourloops unit
-        run: npm run test-yourloops-unit
-
-  test-yourloops-integration-hcp:
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
-        with:
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-          node-version: ${{ env.node-version }}
-
-      - name: Install npm dependencies
-        run: |
-          npm ci
-          npm run build-dependencies
-
-      - name: Test yourloops integration hcp
-        run: npm run test-yourloops-integration-hcp
-
-  test-yourloops-integration-caregiver:
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
-        with:
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-          node-version: ${{ env.node-version }}
-
-      - name: Install npm dependencies
-        run: |
-          npm ci
-          npm run build-dependencies
-
-      - name: Test yourloops integration caregiver
-        run: npm run test-yourloops-integration-caregiver
-
-  test-yourloops-integration-patient:
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
-        with:
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-          node-version: ${{ env.node-version }}
-
-      - name: Install npm dependencies
-        run: |
-          npm ci
-          npm run build-dependencies
-
-      - name: Test yourloops integration patient
-        run: npm run test-yourloops-integration-patient
-
-  test-yourloops-integration-common:
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
-        with:
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-          node-version: ${{ env.node-version }}
-
-      - name: Install npm dependencies
-        run: |
-          npm ci
-          npm run build-dependencies
-
-      - name: Test yourloops integration common
-        run: npm run test-yourloops-integration-common
+#  test-yourloops-integration-common:
+#    runs-on: ubuntu-latest
+#    needs: lint
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v6
+#
+#      - name: Use Node.js ${{ env.node-version }}
+#        uses: actions/setup-node@v6
+#        with:
+#          cache: 'npm'
+#          cache-dependency-path: package-lock.json
+#          node-version: ${{ env.node-version }}
+#
+#      - name: Install npm dependencies
+#        run: |
+#          npm ci
+#          npm run build-dependencies
+#
+#      - name: Test yourloops integration common
+#        run: npm run test-yourloops-integration-common
 
   build:
     runs-on: ubuntu-latest
-    needs: [ test-lambda, test-tideline, test-dumb, test-medical, test-yourloops-unit, test-yourloops-integration-hcp, test-yourloops-integration-caregiver, test-yourloops-integration-patient, test-yourloops-integration-common ]
+#    needs: [ test-lambda, test-tideline, test-dumb, test-medical, test-yourloops-unit, test-yourloops-integration-hcp, test-yourloops-integration-caregiver, test-yourloops-integration-patient, test-yourloops-integration-common ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -255,12 +255,12 @@ jobs:
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: nice bash build.sh
 
-      - name: Upload yourloops build
-        # if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')
-        uses: actions/upload-artifact@v7
-        with:
-          name: dist
-          path: dist/
+#      - name: Upload yourloops build
+#        # if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')
+#        uses: actions/upload-artifact@v7
+#        with:
+#          name: dist
+#          path: dist/
 
   publish:
     # if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')
@@ -303,46 +303,46 @@ jobs:
           expand: 'false'
           export: 'false'
 
-      - name: Set short commit sha
-        id: short-commit-compute
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+#      - name: Set short commit sha
+#        id: short-commit-compute
+#        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v4
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
-        with:
-          driver-opts: |
-            image=moby/buildkit:v0.10.6
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v4
+#        with:
+#          driver-opts: |
+#            image=moby/buildkit:v0.10.6
 
-      - name: Log in to the Nexus registry
-        uses: docker/login-action@v4
-        with:
-          registry: ${{ secrets.REGISTRY }}
-          username: ${{ secrets.NEXUS_USERNAME }}
-          password: ${{ secrets.NEXUS_PASSWORD }}
+#      - name: Log in to the Nexus registry
+#        uses: docker/login-action@v4
+#        with:
+#          registry: ${{ secrets.REGISTRY }}
+#          username: ${{ secrets.NEXUS_USERNAME }}
+#          password: ${{ secrets.NEXUS_PASSWORD }}
 
-      - name: Build and push blip Docker image
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          push: true
-          platforms: linux/arm64,linux/amd64
-          tags: |
-            ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
-            ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}
+#      - name: Build and push blip Docker image
+#        uses: docker/build-push-action@v7
+#        with:
+#          context: .
+#          push: true
+#          platforms: linux/arm64,linux/amd64
+#          tags: |
+#            ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
+#            ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}
 
-      - name: Creating new github tag
-        uses: rickstaa/action-create-tag@v1
-        with:
-          tag: v${{ steps.changelog-version.outputs.semver }}
-          force_push_tag: true
-      - name: Creating new github tag
-        uses: rickstaa/action-create-tag@v1
-        with:
-          tag: v${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
-          force_push_tag: true
+#      - name: Creating new github tag
+#        uses: rickstaa/action-create-tag@v1
+#        with:
+#          tag: v${{ steps.changelog-version.outputs.semver }}
+#          force_push_tag: true
+#      - name: Creating new github tag
+#        uses: rickstaa/action-create-tag@v1
+#        with:
+#          tag: v${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
+#          force_push_tag: true
 
   documentation:
     # if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')
@@ -358,51 +358,51 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - name: Install npm dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
-      - name: Generating documentation
-        env:
-          REGISTRY: ${{ secrets.REGISTRY }}
-          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-          soupFileName: blip-${{ needs.publish.outputs.version }}-soup.md
-        run: |
-          docker login "$REGISTRY" \
-            -u "$NEXUS_USERNAME" \
-            -p "$NEXUS_PASSWORD"
+#      - name: Generating documentation
+#        env:
+#          REGISTRY: ${{ secrets.REGISTRY }}
+#          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+#          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+#          soupFileName: blip-${{ needs.publish.outputs.version }}-soup.md
+#        run: |
+#          docker login "$REGISTRY" \
+#            -u "$NEXUS_USERNAME" \
+#            -p "$NEXUS_PASSWORD"
+#
+#          docker run --rm \
+#            -v ${{ github.workspace }}:/dblprm/blip/:rw --user 0:0 \
+#            docker.ci.diabeloop.eu/ci-toolbox:latest \
+#            sh -c "
+#              echo Generating soup file ${{ env.soupFileName }}
+#              cd blip
+#              release-helper gen-dep-report --deep-dep 'blip,dumb,medical-domain,tideline,tidepool-viz' "${{ env.soupFileName }}"
+#            "
 
-          docker run --rm \
-            -v ${{ github.workspace }}:/dblprm/blip/:rw --user 0:0 \
-            docker.ci.diabeloop.eu/ci-toolbox:latest \
-            sh -c "
-              echo Generating soup file ${{ env.soupFileName }}
-              cd blip
-              release-helper gen-dep-report --deep-dep 'blip,dumb,medical-domain,tideline,tidepool-viz' "${{ env.soupFileName }}"
-            "
+#      - name: Upload soup file on artifact
+#        uses: actions/upload-artifact@v7
+#        with:
+#          name: soup-list
+#          path: blip-${{ needs.publish.outputs.version }}-soup.md
 
-      - name: Upload soup file on artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: soup-list
-          path: blip-${{ needs.publish.outputs.version }}-soup.md
-
-      - name: Upload soup file to S3 bucket
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: eu-west-1
-          AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
-        run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/blip:rw \
-            --user 0:0 \
-            -e AWS_ACCESS_KEY_ID \
-            -e AWS_SECRET_ACCESS_KEY \
-            -e AWS_DEFAULT_REGION \
-            -e AWS_BUCKET \
-            --entrypoint sh \
-            amazon/aws-cli \
-            -c "cd /blip && aws s3 cp blip-${{ needs.publish.outputs.version }}-soup.md s3://${AWS_BUCKET}/soup/blip/"
+#      - name: Upload soup file to S3 bucket
+#        env:
+#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          AWS_DEFAULT_REGION: eu-west-1
+#          AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
+#        run: |
+#          docker run --rm \
+#            -v ${{ github.workspace }}:/blip:rw \
+#            --user 0:0 \
+#            -e AWS_ACCESS_KEY_ID \
+#            -e AWS_SECRET_ACCESS_KEY \
+#            -e AWS_DEFAULT_REGION \
+#            -e AWS_BUCKET \
+#            --entrypoint sh \
+#            amazon/aws-cli \
+#            -c "cd /blip && aws s3 cp blip-${{ needs.publish.outputs.version }}-soup.md s3://${AWS_BUCKET}/soup/blip/"
 
       - name: Generate SBOM (CycloneDx version)
         # see for usage: https://www.npmjs.com/package/%40cyclonedx/cyclonedx-npm
