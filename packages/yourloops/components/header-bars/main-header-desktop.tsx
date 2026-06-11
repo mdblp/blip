@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026, Diabeloop
+ * Copyright (c) 2022-2025, Diabeloop
  *
  * All rights reserved.
  *
@@ -44,15 +44,12 @@ import { useAuth } from '../../lib/auth'
 import { TeamSettingsMenuMemoized as TeamSettingsMenu } from '../menus/team-settings-menu'
 import { UserMenuMemoized as UserMenu } from '../menus/user-menu'
 import { TeamScopeMenu } from '../menus/team-scope-menu'
-import { Tab } from '@mui/material'
+import { styled, Tab, Tabs } from '@mui/material'
 import { HcpNavigationTab } from '../../models/enums/hcp-navigation-tab.model'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { Banner } from './banner'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
-import TeamUtils from '../../lib/team/team.util'
-import Button from '@mui/material/Button'
-import CareTeamSettingsIcon from '../icons/care-team-settings-icon'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import TeamUtils, { PRIVATE_TEAM_ID } from '../../lib/team/team.util'
 
 interface MainHeaderProps {
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
@@ -60,43 +57,39 @@ interface MainHeaderProps {
 
 const classes = makeStyles()((theme) => ({
   appBar: {
-    position: 'fixed',
-    zIndex: theme.zIndex.drawer + 1,
     borderBottom: `1px solid ${theme.palette.divider}`,
+    zIndex: theme.zIndex.drawer + 1,
     backgroundColor: theme.palette.common.white,
     color: 'var(--text-color-primary)'
   },
-
-  arrowBack: {
-    color: 'var(--primary-color-main)',
-    paddingLeft: 'clamp(18px, 4.7vw, 22px)',
-    fontSize: 'clamp(16px, 4vw, 18px)'
+  desktopLogo: {
+    width: 140
   },
-  mobileLogo: {
-    width: 'clamp(97px, 25vw, 100px)',
-    height: 'clamp(28px, 3.3vh, 30px)',
-    '& img': {
-      objectFit: 'contain'
-    }
+  separator: {
+    height: 25,
+    width: 1,
+    backgroundColor: theme.palette.divider,
+    margin: `0 ${theme.spacing(2)}`
   },
-  settingsButton: {
-    padding: 'clamp(8px, 1.2vh, 10px) clamp(25px, 7vw, 30px)',
-    borderColor: 'var(--text-color-primary)'
+  toolbar: {
+    padding: 0
+  },
+  actionHeader: {
+    padding: `0 ${theme.spacing(2)}`
   },
   tab: {
     fontWeight: 'bold',
     textTransform: 'none',
-    fontSize: theme.typography.htmlFontSize,
-    paddingLeft: 'clamp(32px, 11vw, 36px)'
-  },
-  toolbar: {
-    padding: 0
+    fontSize: theme.typography.htmlFontSize
   }
 }))
 
-const MainHeader: FC<MainHeaderProps> = (props) => {
+// Allow the tabs to take the whole height of the toolbar
+const StyledTabs = styled(Tabs)(({ theme }) => ({ ...theme.mixins.toolbar }))
+const StyledTab = styled(Tab)(({ theme }) => ({ ...theme.mixins.toolbar }))
+const MainHeaderDesktop: FC<MainHeaderProps> = (props) => {
   const { setMainHeaderHeight } = props
-  const { classes: { mobileLogo, appBar, tab, toolbar, arrowBack, settingsButton } } = classes()
+  const { classes: { desktopLogo, separator, appBar, tab, toolbar } } = classes()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
   const { user } = useAuth()
@@ -104,6 +97,15 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
+  const getSelectedTab = (): HcpNavigationTab | false => {
+    if (pathname.includes('patients') || pathname.includes(PRIVATE_TEAM_ID)) {
+      return HcpNavigationTab.Patients
+    }
+    if (pathname.includes('teams')) {
+      return HcpNavigationTab.CareTeam
+    }
+    return false
+  }
   const appBarRefCallback = (appMainHeaderElement: HTMLHeadElement): void => {
     if (appMainHeaderElement) {
       setMainHeaderHeight(appMainHeaderElement.offsetHeight ?? 0)
@@ -112,21 +114,18 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
 
   return (
     <AppBar
-      id="app-main-header-mobile"
-      data-testid="app-main-header-mobile"
+      id="app-main-header"
+      data-testid="app-main-header"
       elevation={0}
       className={appBar}
+      position="fixed"
       ref={appBarRefCallback}
     >
-      <Toolbar
-        className={toolbar}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start'
-        }}>
+      <Toolbar className={toolbar}>
         <Box
           sx={{
+            display: "flex",
+            flexDirection: "column",
             width: "100%"
           }}>
           <Banner />
@@ -134,11 +133,17 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
             sx={{
               alignItems: "center",
               display: "flex",
-              minHeight: "clamp(64px, 7.5vh, 70px)",
+              minHeight: 64,
               padding: `0 ${theme.spacing(2)}`,
-              maxWidth: "100vw"
+              width: "100%"
             }}>
-            <Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                flex: 1
+              }}>
               <Link to="/">
                 <Avatar
                   id="header-main-logo"
@@ -146,17 +151,48 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                   variant="square"
                   src={`/branding_${config.BRANDING}_logo.svg`}
                   alt={t('alt-img-logo')}
-                  className={mobileLogo}
+                  className={desktopLogo}
                 />
               </Link>
+            </Box>
+            <Box
+              sx={{
+                flex: 2,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}>
+              {user.isUserHcp() &&
+                <StyledTabs value={getSelectedTab()} centered>
+                  <StyledTab
+                    data-testid="main-header-hcp-patients-tab"
+                    className={tab}
+                    label={t('header-tab-patients')}
+                    value={HcpNavigationTab.Patients}
+                    onClick={() => {
+                      navigate(`${AppUserRoute.Teams}/${teamId}${AppUserRoute.Patients}`)
+                    }}
+                  />
+                  {!TeamUtils.isPrivate(teamId) &&
+                    <StyledTab
+                      data-testid="main-header-hcp-care-team-settings-tab"
+                      className={tab}
+                      label={t('header-tab-care-team-settings')}
+                      value={HcpNavigationTab.CareTeam}
+                      onClick={() => {
+                        navigate(`${AppUserRoute.Teams}/${teamId}`)
+                      }}
+                    />
+                  }
+                </StyledTabs>
+              }
             </Box>
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "flex-end",
-                flex: 1,
-                gap: "0.5rem"
+                flex: 1
               }}>
               <Link to={AppUserRoute.Notifications} id="header-notification-link">
                 <Badge
@@ -165,67 +201,25 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                   badgeContent={receivedInvitations.length}
                   overlap="circular"
                   color="error"
-                  sx={{
-                    width: 'clamp(28px, 7.6vw, 30px)',
-                    height: 'clamp(28px, 3.3vh, 30px)'
-                  }}
-                  data-testid="notification-icon"
                 >
                   <NotificationsNoneIcon />
                 </Badge>
               </Link>
+              <div className={separator} />
+              {!user?.isUserCaregiver() &&
+                <React.Fragment>
+                  {user.isUserPatient() && <TeamSettingsMenu />}
+                  {user.isUserHcp() && <TeamScopeMenu />}
+                  <div className={separator} />
+                </React.Fragment>
+              }
               <UserMenu />
             </Box>
           </Box>
         </Box>
-        <Box>
-          {pathname.endsWith('patients') ? (
-              <>
-                {user.isUserHcp() && !user?.isUserCaregiver() && (
-                  <Tab
-                    label={
-                      <>
-                        {user.isUserPatient() && <TeamSettingsMenu />}
-                        {user.isUserHcp() && <TeamScopeMenu />}
-                      </>
-                    }
-                    data-testid="team-selection-tab"
-                    className={tab}
-                  />
-                )} {!TeamUtils.isPrivate(teamId) && (
-                <Button
-                  aria-label={t('header-tab-care-team-settings')}
-                  value={HcpNavigationTab.CareTeam}
-                  onClick={() => {
-                    navigate(`${AppUserRoute.Teams}/${teamId}`)
-                  }}
-                  variant="outlined"
-                  className={settingsButton}
-                >
-                  <CareTeamSettingsIcon data-testid="care-team-settings-icon" />
-                </Button>
-              )}
-              </>
-            ) :
-            (
-              <>
-                <Button
-                  variant="text"
-                  startIcon={<ArrowBackIcon />}
-                  onClick={() => {
-                    navigate('/')
-                  }}
-                  className={arrowBack}
-                  data-testid="back-button"
-                >
-                  Back
-                </Button>
-              </>
-            )}
-        </Box>
       </Toolbar>
     </AppBar>
   )
-}
 
-export const MainHeaderMobileMemoized = React.memo(MainHeader)
+}
+export const MainHeaderDesktopMemoized = React.memo(MainHeaderDesktop)
