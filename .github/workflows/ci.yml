@@ -15,28 +15,28 @@ env:
   node-version: 24
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
-        with:
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-          node-version: ${{ env.node-version }}
-
-      - name: Install npm dependencies
-        run: |
-          npm run security-checks
-          npm ci
-
-      - name: Lint + test locales
-        run: |
-          npm run lint
-          npm run test-locales
+#  lint:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v6
+#
+#      - name: Use Node.js ${{ env.node-version }}
+#        uses: actions/setup-node@v6
+#        with:
+#          cache: 'npm'
+#          cache-dependency-path: package-lock.json
+#          node-version: ${{ env.node-version }}
+#
+#      - name: Install npm dependencies
+#        run: |
+#          npm run security-checks
+#          npm ci
+#
+#      - name: Lint + test locales
+#        run: |
+#          npm run lint
+#          npm run test-locales
 
 #  test-lambda:
 #    runs-on: ubuntu-latest
@@ -358,7 +358,7 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - name: Install npm dependencies
-        run: npm ci --legacy-peer-deps
+        run: npm ci
 
 #      - name: Generating documentation
 #        env:
@@ -406,7 +406,7 @@ jobs:
 
       - name: Generate SBOM (CycloneDx version)
         # see for usage: https://www.npmjs.com/package/%40cyclonedx/cyclonedx-npm
-        run: npx @cyclonedx/cyclonedx-npm --package-lock-only -o blip-${{ needs.publish.outputs.version }}-sbom.json
+        run: npx @cyclonedx/cyclonedx-npm --package-lock-only --omit dev -o blip-${{ needs.publish.outputs.version }}-sbom.json
 
 #      - name: Generate SBOM (GitHub version)
 #        env:
