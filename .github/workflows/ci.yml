@@ -275,6 +275,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: dist
+          path: /home/runner/work/blip/blip/dist
 
       - name: Get yourloops version from changelog
         env:
