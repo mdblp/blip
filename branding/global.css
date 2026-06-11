@@ -28,6 +28,10 @@ a {
 }
 
 @media screen and (max-width: 600px) {
+  html, body {
+    overflow-y: auto;
+  }
+
   :global(div.api-error-message) {
     width: 80%;
   }
