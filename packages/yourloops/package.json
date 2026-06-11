@@ -60,8 +60,5 @@
     "react-router-dom": "^6.16.0",
     "tss-react": "^4.9.2",
     "uuid": "^10.0.0"
-  },
-  "overrides": {
-    "react-is": "^18.3.1"
   }
 }
