@@ -32,7 +32,7 @@ import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import { useTranslation } from 'react-i18next'
 import Button from '@mui/material/Button'
-import FileCopyIcon from '@mui/icons-material/FileCopy'
+import FileCopyIconOutlined from '@mui/icons-material/FileCopyOutlined'
 import { useTheme } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import { makeStyles } from 'tss-react/mui'
@@ -87,13 +87,13 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
         title={t('devices-and-current-parameters')}
         subheader={`${t('last-upload:')} ${lastUploadDate}`}
         action={
-          <Box sx={{ marginTop: theme.spacing(3), display: 'flex', flexDirection: 'column', gap: theme.spacing(2) }}>
+          <Box sx={{ marginTop: theme.spacing(3), display: 'flex', flexDirection: 'column',
+            gap: theme.spacing(2), mx: theme.spacing(1) }}>
             {ifuDocumentName &&
               <DownloadDocumentButton
                 documentName={ifuDocumentName}
                 metricName="current-parameters-download-ifu"
                 labelKey="button-download-ifu"
-                sx={{ float: 'right' }}
                 size="large"
               />
             }
@@ -105,9 +105,9 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
                 color="inherit"
                 onClick={onClickCopyButton}
                 aria-label={t('text-copy')}
-                sx={{ alignSelf: 'center', marginLeft: theme.spacing(2), minWidth: 0, padding: theme.spacing(1) }}
+                sx={{ alignSelf: 'end', marginLeft: theme.spacing(2), minWidth: 0, padding: theme.spacing(1) }}
               >
-                <FileCopyIcon />
+                <FileCopyIconOutlined />
               </Button>
             </Tooltip>
 

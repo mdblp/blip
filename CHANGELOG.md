@@ -5,8 +5,8 @@ It is based on Tidepool Blip 1.27.
 ## 3.10.0-beta - 2026-04-15
 ### Added
 - YLP-3893 Data sharing management with external partners
-- YLP-3907 Add a conditional rendering on birth date display
 - YLP-3904 As an HCP or a patient, I would like to be able to download the IFU corresponding to the system used, directly from Yourloops
+- YLP-3907 Add a conditional rendering on birth date display
 
 ### Engineering
 - YLP-3885 Daily components migration (data elements only)
