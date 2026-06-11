@@ -406,13 +406,13 @@ jobs:
 
       - name: Generate SBOM (CycloneDx version)
         # see for usage: https://www.npmjs.com/package/%40cyclonedx/cyclonedx-npm
-        run: npx @cyclonedx/cyclonedx-npm -o blip-${{ needs.publish.outputs.version }}-sbom.json
+        run: npx @cyclonedx/cyclonedx-npm --package-lock-only -o blip-${{ needs.publish.outputs.version }}-sbom.json
 
-      - name: Generate SBOM (GitHub version)
-        env:
-          GH_TOKEN: ${{ secrets.GIT_TOKEN }}
-        run: |
-          gh ext install advanced-security/gh-sbom
-
-          gh sbom | jq
+#      - name: Generate SBOM (GitHub version)
+#        env:
+#          GH_TOKEN: ${{ secrets.GIT_TOKEN }}
+#        run: |
+#          gh ext install advanced-security/gh-sbom
+#
+#          gh sbom | jq
 
