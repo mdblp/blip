@@ -49,7 +49,7 @@ import { HcpNavigationTab } from '../../models/enums/hcp-navigation-tab.model'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { Banner } from './banner'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
-import TeamUtils, { PRIVATE_TEAM_ID } from '../../lib/team/team.util'
+import TeamUtils from '../../lib/team/team.util'
 import Button from '@mui/material/Button'
 import CareTeamSettingsIcon from '../icons/care-team-settings-icon'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
@@ -59,15 +59,14 @@ interface MainHeaderProps {
 }
 
 const classes = makeStyles()((theme) => ({
-  actionHeader: {
-    padding: `0 ${theme.spacing(2)}`
-  },
   appBar: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    position: 'fixed' as const,
     zIndex: theme.zIndex.drawer + 1,
+    borderBottom: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.common.white,
     color: 'var(--text-color-primary)'
   },
+
   arrowBack: {
     color: 'var(--primary-color-main)',
     paddingLeft: 'clamp(18px, 4.7vw, 22px)',
@@ -105,23 +104,10 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const teamId = localStorage.getItem(LOCAL_STORAGE_SELECTED_TEAM_ID_KEY)
-  const getSelectedTab = (): HcpNavigationTab | false => {
-    if (pathname.includes('patients') || pathname.includes(PRIVATE_TEAM_ID)) {
-      return HcpNavigationTab.Patients
-    }
-    if (pathname.includes('teams')) {
-      return HcpNavigationTab.CareTeam
-    }
-    return false
-  }
   const appBarRefCallback = (appMainHeaderElement: HTMLHeadElement): void => {
     if (appMainHeaderElement) {
       setMainHeaderHeight(appMainHeaderElement.offsetHeight ?? 0)
     }
-  }
-
-  const goBackHome = (): void => {
-    navigate('/')
   }
 
   return (
@@ -130,7 +116,6 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
       data-testid="app-main-header-mobile"
       elevation={0}
       className={appBar}
-      position="fixed"
       ref={appBarRefCallback}
     >
       <Toolbar
@@ -205,7 +190,6 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                       </>
                     }
                     data-testid="team-selection-tab"
-                    value={getSelectedTab()}
                     className={tab}
                   />
                 )} {!TeamUtils.isPrivate(teamId) && (
@@ -228,7 +212,9 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                 <Button
                   variant="text"
                   startIcon={<ArrowBackIcon />}
-                  onClick={goBackHome}
+                  onClick={() => {
+                    navigate('/')
+                  }}
                   className={arrowBack}
                   data-testid="back-button"
                 >
