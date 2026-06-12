@@ -413,6 +413,13 @@ jobs:
             --omit dev \
             -o blip-${{ needs.publish.outputs.version }}-sbom.json
 
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: sbom
+          path: blip-${{ needs.publish.outputs.version }}-sbom.json
+          retention-days: 30
+
 #      - name: Generate SBOM (GitHub version)
 #        env:
 #          GH_TOKEN: ${{ secrets.GIT_TOKEN }}
