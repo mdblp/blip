@@ -208,19 +208,17 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
               </>
             ) :
             (
-              <>
-                <Button
-                  variant="text"
-                  startIcon={<ArrowBackIcon />}
-                  onClick={() => {
-                    navigate('/')
-                  }}
-                  className={arrowBack}
-                  data-testid="back-button"
-                >
-                  Back
-                </Button>
-              </>
+              <Button
+                variant="text"
+                startIcon={<ArrowBackIcon />}
+                onClick={() => {
+                  navigate('/')
+                }}
+                className={arrowBack}
+                data-testid="back-button"
+              >
+                Back
+              </Button>
             )}
         </Box>
       </Toolbar>

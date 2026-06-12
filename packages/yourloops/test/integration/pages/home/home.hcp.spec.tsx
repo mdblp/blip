@@ -63,7 +63,7 @@ import { mockChatAPI } from '../../mock/chat.api.mock'
 import { mockMedicalFilesApiEmptyResult } from '../../mock/medical-files.api.mock'
 import { mockErrorApi } from '../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
-import {  ConfigService } from '../../../../lib/config/config.service'
+import { ConfigService } from '../../../../lib/config/config.service'
 import userEvent from '@testing-library/user-event';
 
 describe('HCP home page', () => {
