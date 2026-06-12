@@ -181,7 +181,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
         <Box>
           {pathname.endsWith('patients') ? (
               <>
-                {user.isUserHcp() && !user?.isUserCaregiver() && (
+                {!user?.isUserCaregiver() && (
                   <Tab
                     label={
                       <>
@@ -192,7 +192,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                     data-testid="team-selection-tab"
                     className={tab}
                   />
-                )} {!TeamUtils.isPrivate(teamId) && (
+                )} {!TeamUtils.isPrivate(teamId) && user.isUserHcp() && (
                 <Button
                   aria-label={t('header-tab-care-team-settings')}
                   value={HcpNavigationTab.CareTeam}
