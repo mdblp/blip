@@ -53,7 +53,7 @@ import { mockAnalyticsApi } from '../../mock/analytics.api.mock'
 import mediaQuery from 'css-mediaquery';
 
 function mockScreenWidth(width: number): void {
-  window.matchMedia = (query: string): MediaQueryList => ({
+  globalThis.matchMedia = (query: string): MediaQueryList => ({
     matches: mediaQuery.match(query, { width }),
     media: query,
     onchange: null,
