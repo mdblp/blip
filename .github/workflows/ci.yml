@@ -406,25 +406,33 @@ jobs:
 
       - name: Generate SBOM (CycloneDx version)
         # see for usage: https://www.npmjs.com/package/%40cyclonedx/cyclonedx-npm
-#        run: npx @cyclonedx/cyclonedx-npm --package-lock-only --ignore-npm-errors --omit dev -o blip-${{ needs.publish.outputs.version }}-sbom.json
         run: |
           npx @cyclonedx/cyclonedx-npm \
             --package-lock-only \
             --omit dev \
-            -o blip-${{ needs.publish.outputs.version }}-sbom.json
+            -o blip-sbom.json
 
       - name: Upload SBOM artifact
         uses: actions/upload-artifact@v7
         with:
           name: sbom
-          path: blip-${{ needs.publish.outputs.version }}-sbom.json
+          path: blip-sbom.json
           retention-days: 30
 
-#      - name: Generate SBOM (GitHub version)
-#        env:
-#          GH_TOKEN: ${{ secrets.GIT_TOKEN }}
-#        run: |
-#          gh ext install advanced-security/gh-sbom
-#
-#          gh sbom | jq
-
+      - name: Push SBOM to Sonatype IQ SBOM Manager
+        env:
+          USER_CODE: ${{ secrets.SBOM_MANAGER_USER_CODE }}
+          PASSCODE: ${{ secrets.SBOM_MANAGER_PASSCODE }}
+        run: |
+            APP_ID=$(curl --fail-with-body -s \
+              -u "${USER_CODE}:${PASSCODE}" \
+              "https://diabeloop.iq.sonatype.app/api/v2/applications?publicId=blip" \
+              | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
+            echo "Resolved applicationId: ${APP_ID}"
+            curl --fail-with-body \
+              -u "${USER_CODE}:${PASSCODE}" \
+              -F "file=@blip-sbom.json" \
+              -F "applicationId=${APP_ID}" \
+              -F "applicationVersion=${{ github.sha }}" \
+              -X POST \
+              "https://diabeloop.iq.sonatype.app/api/v2/sbom/import?ignoreValidationError=true"
