@@ -433,6 +433,6 @@ jobs:
               -u "${USER_CODE}:${PASSCODE}" \
               -F "file=@blip-sbom.json" \
               -F "applicationId=${APP_ID}" \
-              -F "applicationVersion=${{ github.sha }}" \
+              -F "applicationVersion=${{ needs.publish.outputs.version }}" \
               -X POST \
               "https://diabeloop.iq.sonatype.app/api/v2/sbom/import?ignoreValidationError=true"
