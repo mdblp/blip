@@ -31,6 +31,14 @@ import userEvent from '@testing-library/user-event'
 export const checkLoginWithAppState = async (loginMock: jest.Mock) => {
   expect(loginMock).toHaveBeenCalledWith({
     appState: {
+      appStateJSON: "%7B%22partnerId%22%3A%22partnerId%22%2C%22callbackUrl%22%3A%22https%3A%2F%2Ffake-url.com%22%2C%22partnerState%22%3A%22isFromYourLoops%22%7D"
+    }
+  })
+}
+
+export const checkLoginWithAppStateWithoutPartnerState = async (loginMock: jest.Mock) => {
+  expect(loginMock).toHaveBeenCalledWith({
+    appState: {
       appStateJSON: "%7B%22partnerId%22%3A%22partnerId%22%2C%22callbackUrl%22%3A%22https%3A%2F%2Ffake-url.com%22%7D"
     }
   })

@@ -31,7 +31,11 @@ import { renderPage } from '../../utils/render'
 import userEvent from '@testing-library/user-event'
 import { checkFooterForUserNotLoggedIn } from '../../assert/footer.assert'
 import { Auth0Error } from '../../../../lib/auth/models/enums/auth0-error.enum'
-import { testLoginWithAppState, testLoginWithoutAppState } from '../../use-cases/login'
+import {
+  testLoginWithAppState,
+  testLoginWithAppStateWithoutPartnerState,
+  testLoginWithoutAppState
+} from '../../use-cases/login'
 
 describe('Login page desktop view', () => {
   const loginWithRedirectMock = jest.fn()
@@ -135,9 +139,22 @@ describe('Login page desktop view', () => {
       loginWithRedirect: loginWithRedirectMock
     })
 
-    renderPage('/login?partnerId=partnerId&callbackUrl=https://fake-url.com')
+    renderPage('/login?partnerId=partnerId&callbackUrl=https://fake-url.com&state=isFromYourLoops')
 
     await testLoginWithAppState(loginWithRedirectMock)
+  })
+
+  it('should login immediately and should not pass partner state if it is not defined', async () => {
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      isAuthenticated: false,
+      isLoading: false,
+      user: undefined,
+      loginWithRedirect: loginWithRedirectMock
+    })
+
+    renderPage('/login?partnerId=partnerId&callbackUrl=https://fake-url.com')
+
+    await testLoginWithAppStateWithoutPartnerState(loginWithRedirectMock)
   })
 
   it('should not login immediately if query parameters are wrong', async () => {

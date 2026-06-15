@@ -136,7 +136,7 @@ export const checkAcceptDataAccessRequest = async (): Promise<void> => {
 
   const okLink = within(modal).getByRole('link', { name: 'Ok' })
   expect(okLink).toBeVisible()
-  expect(okLink).toHaveAttribute('href', 'https://fake-url.com/?patientUserId=patient1Id')
+  expect(okLink).toHaveAttribute('href', 'https://fake-url.com/?patientUserId=patient1Id&state=isFromYourLoops')
 }
 
 export const checkDenyDataAccessRequest = async (): Promise<void> => {

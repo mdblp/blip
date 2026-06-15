@@ -25,10 +25,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { checkLoginWithAppState, checkLoginWithoutAppState } from '../assert/login.assert'
+import {
+  checkLoginWithAppState,
+  checkLoginWithAppStateWithoutPartnerState,
+  checkLoginWithoutAppState
+} from '../assert/login.assert'
 
 export const testLoginWithAppState = async (loginMock: jest.Mock) => {
   await checkLoginWithAppState(loginMock)
+}
+
+export const testLoginWithAppStateWithoutPartnerState = async (loginMock: jest.Mock) => {
+  await checkLoginWithAppStateWithoutPartnerState(loginMock)
 }
 
 export const testLoginWithoutAppState = async (loginMock: jest.Mock) => {

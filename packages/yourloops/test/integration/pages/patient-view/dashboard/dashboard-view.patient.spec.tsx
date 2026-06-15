@@ -228,7 +228,7 @@ describe('Dashboard view for patient', () => {
     const glookoXtPartnerId = 'glooko-partnerId'
 
     jest.spyOn(ConfigService, 'getGlookoXtPartnerId').mockReturnValue(glookoXtPartnerId)
-    const appState = { partnerId: glookoXtPartnerId, callbackUrl: 'https://fake-url.com' }
+    const appState = { partnerId: glookoXtPartnerId, callbackUrl: 'https://fake-url.com', partnerState: 'isFromYourLoops' }
     const appStateJson = encodeURIComponent(JSON.stringify(appState))
 
     await act(async () => {

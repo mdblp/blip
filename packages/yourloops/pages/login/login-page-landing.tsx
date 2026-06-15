@@ -28,7 +28,7 @@
 import React, { type FunctionComponent, useEffect } from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material'
-import { useAuth0 } from '@auth0/auth0-react'
+import { AppState, useAuth0 } from '@auth0/auth0-react'
 import { useNavigate } from 'react-router-dom'
 import { useAlert } from '../../components/utils/snackbar'
 import LoginPageMobile from './login-page-mobile'
@@ -82,7 +82,10 @@ export const LoginPageLanding: FunctionComponent = () => {
 
   useEffect(() => {
     if (partnerId && callbackUrl) {
-      const appState = { partnerId, callbackUrl, partnerState: state }
+      const appState: AppState = { partnerId, callbackUrl }
+      if (state) {
+        appState.partnerState = state
+      }
 
       loginWithState(appState)
     }
