@@ -78,10 +78,11 @@ export const LoginPageLanding: FunctionComponent = () => {
 
   const partnerId = queryParams.get(LoginQueryParam.PartnerId)
   const callbackUrl = queryParams.get(LoginQueryParam.CallbackUrl)
+  const state = queryParams.get(LoginQueryParam.State)
 
   useEffect(() => {
     if (partnerId && callbackUrl) {
-      const appState = { partnerId, callbackUrl }
+      const appState = { partnerId, callbackUrl, partnerState: state }
 
       loginWithState(appState)
     }

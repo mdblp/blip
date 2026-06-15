@@ -43,16 +43,20 @@ interface DataAccessResultProps {
   result: DataAccessResultValue
   callbackUrl: string
   patientId: string
+  partnerState: string
 }
 
 export const DataAccessResult: FC<DataAccessResultProps> = (props) => {
-  const { partnerName, result, callbackUrl, patientId } = props
+  const { partnerName, result, callbackUrl, patientId, partnerState } = props
   const { t } = useTranslation()
 
   const partnerLabel = getRemoteMonitoringToolLabel(partnerName)
 
   const redirectUrl = new URL(callbackUrl)
   redirectUrl.searchParams.set('patientUserId', patientId)
+  if (partnerState) {
+    redirectUrl.searchParams.set('state', partnerState)
+  }
   const redirectUrlString = redirectUrl.toString()
 
   const getTitle = (result: DataAccessResultValue): string => {

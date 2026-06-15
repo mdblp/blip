@@ -83,6 +83,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
 
   const partnerId = appState?.partnerId
   const callbackUrl = appState?.callbackUrl
+  const partnerState = appState?.partnerState
   const isCallbackUrlValid = !!callbackUrl
   const isPartnerIdValid = !!partnerId && !!getPartnerNameById(partnerId)
   if (appState && !isPartnerIdValid) {
@@ -297,6 +298,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                     patientId={user.id}
                     partnerId={partnerId}
                     callbackUrl={callbackUrl}
+                    partnerState={partnerState}
                   />
                 }
               </>
