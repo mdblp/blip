@@ -53,9 +53,12 @@ export const DataAccessResult: FC<DataAccessResultProps> = (props) => {
   const partnerLabel = getRemoteMonitoringToolLabel(partnerName)
 
   const redirectUrl = new URL(callbackUrl)
-  redirectUrl.searchParams.set('patientUserId', patientId)
+  const searchParams = redirectUrl.searchParams
+
+  searchParams.set('patientUserId', patientId)
+  searchParams.set('result', result)
   if (partnerState) {
-    redirectUrl.searchParams.set('state', partnerState)
+    searchParams.set('state', partnerState)
   }
   const redirectUrlString = redirectUrl.toString()
 
