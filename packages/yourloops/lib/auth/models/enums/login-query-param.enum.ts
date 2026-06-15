@@ -28,5 +28,6 @@
 export enum LoginQueryParam {
   CallbackUrl = 'callbackUrl',
   Idle = 'idle',
-  PartnerId = 'partnerId'
+  PartnerId = 'partnerId',
+  State = 'state'
 }

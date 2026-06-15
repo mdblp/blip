@@ -39,10 +39,11 @@ interface DataAccessRequestDialogProps {
   patientId: string
   partnerId: string
   callbackUrl: string
+  partnerState: string
 }
 
 export const DataAccessRequestDialog: FC<DataAccessRequestDialogProps> = (props) => {
-  const { callbackUrl, patientId, partnerId } = props
+  const { callbackUrl, patientId, partnerId, partnerState } = props
   const [result, setResult] = useState<DataAccessResultValue | undefined>(undefined)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -76,6 +77,7 @@ export const DataAccessRequestDialog: FC<DataAccessRequestDialogProps> = (props)
           result={result}
           callbackUrl={callbackUrl}
           patientId={patientId}
+          partnerState={partnerState}
         />
         : <DataAccessRequest
           partnerName={partnerName}
