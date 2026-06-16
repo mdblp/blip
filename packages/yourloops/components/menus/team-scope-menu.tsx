@@ -146,28 +146,23 @@ export const TeamScopeMenu: FunctionComponent = () => {
 
   return (
     <>
-      {isMobile
-        ? <Button
-          aria-label={t('open-team-selection-menu')}
-          data-testid="team-scope-menu-button-mobile"
-          data-stonlyid="team-scope-menu-button-mobile"
-          endIcon={<ArrowDropDownIcon sx={{ color: 'var(--text-color-primary)' }}/>}
-          onClick={openMenu}
-        >
-          <Typography className={typography} sx={{ maxWidth: MENU_MAX_WIDTH_PX }} >{selectedTeamName}</Typography>
-        </Button>
-        : <Button
-          color="inherit"
-          aria-label={t('open-team-selection-menu')}
-          data-testid="team-scope-menu-button"
-          data-stonlyid="team-scope-menu-button"
-          startIcon={selectedTeamIcon}
-          endIcon={<ArrowDropDownIcon />}
-          onClick={openMenu}
-        >
-          <Typography className={typography} sx={{ maxWidth: MENU_MAX_WIDTH_PX }}>{selectedTeamName}</Typography>
-        </Button>
-      }
+      <Button
+        color="inherit"
+        aria-label={t('open-team-selection-menu')}
+        data-testid="team-scope-menu-button"
+        data-stonlyid="team-scope-menu-button"
+        startIcon={selectedTeamIcon}
+        sx={{
+          '& .MuiButton-startIcon': {
+            // To make the startIcon disappear on mobile
+            display: { xs: 'none', sm: 'inline-flex' }
+          }
+        }}
+        endIcon={<ArrowDropDownIcon />}
+        onClick={openMenu}
+      >
+        <Typography className={typography} sx={{ maxWidth: MENU_MAX_WIDTH_PX }}>{selectedTeamName}</Typography>
+      </Button>
 
       <MenuLayout open={isMenuOpen} anchorEl={anchorEl} onClose={closeMenu}>
         <Box className={menu} data-testid="team-scope-menu">

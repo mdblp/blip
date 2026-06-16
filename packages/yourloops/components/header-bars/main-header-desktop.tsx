@@ -50,18 +50,14 @@ import { AppUserRoute } from '../../models/enums/routes.enum'
 import { Banner } from './banner'
 import { LOCAL_STORAGE_SELECTED_TEAM_ID_KEY } from '../../layout/hcp-layout'
 import TeamUtils, { PRIVATE_TEAM_ID } from '../../lib/team/team.util'
+import { useStyles } from './main-header-style';
+import IconButton from '@mui/material/IconButton'
 
 interface MainHeaderProps {
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
 }
 
 const classes = makeStyles()((theme) => ({
-  appBar: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    zIndex: theme.zIndex.drawer + 1,
-    backgroundColor: theme.palette.common.white,
-    color: 'var(--text-color-primary)'
-  },
   desktopLogo: {
     width: 140
   },
@@ -70,9 +66,6 @@ const classes = makeStyles()((theme) => ({
     width: 1,
     backgroundColor: theme.palette.divider,
     margin: `0 ${theme.spacing(2)}`
-  },
-  toolbar: {
-    padding: 0
   },
   actionHeader: {
     padding: `0 ${theme.spacing(2)}`
@@ -89,7 +82,8 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({ ...theme.mixins.toolbar }))
 const StyledTab = styled(Tab)(({ theme }) => ({ ...theme.mixins.toolbar }))
 const MainHeaderDesktop: FC<MainHeaderProps> = (props) => {
   const { setMainHeaderHeight } = props
-  const { classes: { desktopLogo, separator, appBar, tab, toolbar } } = classes()
+  const { classes: { desktopLogo, separator, tab } } = classes()
+  const { classes: { appBar, toolbar } } = useStyles()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
   const { user } = useAuth()
@@ -114,7 +108,6 @@ const MainHeaderDesktop: FC<MainHeaderProps> = (props) => {
 
   return (
     <AppBar
-      id="app-main-header"
       data-testid="app-main-header"
       elevation={0}
       className={appBar}
@@ -146,7 +139,6 @@ const MainHeaderDesktop: FC<MainHeaderProps> = (props) => {
               }}>
               <Link to="/">
                 <Avatar
-                  id="header-main-logo"
                   aria-label={t('alt-img-logo')}
                   variant="square"
                   src={`/branding_${config.BRANDING}_logo.svg`}
@@ -194,17 +186,20 @@ const MainHeaderDesktop: FC<MainHeaderProps> = (props) => {
                 justifyContent: "flex-end",
                 flex: 1
               }}>
-              <Link to={AppUserRoute.Notifications} id="header-notification-link">
-                <Badge
-                  id="notification-count-badge"
-                  aria-label={t('notification-list')}
-                  badgeContent={receivedInvitations.length}
-                  overlap="circular"
-                  color="error"
-                >
+              <Badge
+                aria-label={t('notification-list')}
+                badgeContent={receivedInvitations.length}
+                overlap="circular"
+                color="error"
+              >
+                <IconButton
+                  onClick={() => { navigate(`${AppUserRoute.Notifications}`) }}
+                  sx={{
+                    color: 'var(--text-color-primary)'
+                  }}>
                   <NotificationsNoneIcon />
-                </Badge>
-              </Link>
+                </IconButton>
+              </Badge>
               <div className={separator} />
               {!user?.isUserCaregiver() &&
                 <React.Fragment>
