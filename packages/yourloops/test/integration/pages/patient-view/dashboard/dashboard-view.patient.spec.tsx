@@ -31,7 +31,7 @@ import {
   mockDataAPI,
   oneDayDashboardData,
   sixteenDaysOldDashboardData,
-  smallDataSet,
+  smallDataSetDblg1v118,
   twoWeeksOldDashboardData
 } from '../../../mock/data.api.mock'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
@@ -109,7 +109,7 @@ describe('Dashboard view for patient', () => {
     })
 
     await testAppMainLayoutForPatient(appMainLayoutParams)
-    await testDashboardDataVisualisationForPatientOrPrivateTeam(patientDashboardLayoutParams)
+    await testDashboardDataVisualisationForPatientOrPrivateTeam(patientDashboardLayoutParams, false)
     await testPatientNavBarForPatient()
   })
 
@@ -149,7 +149,7 @@ describe('Dashboard view for patient', () => {
   })
 
   it('should render correct components when patient is in no medical teams', async () => {
-    mockDataAPI(smallDataSet)
+    mockDataAPI(smallDataSetDblg1v118)
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildPrivateTeam()])
 
     const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
@@ -162,7 +162,7 @@ describe('Dashboard view for patient', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationPrivateTeamNoData(patientDashboardLayoutParams)
+    await testDashboardDataVisualisationPrivateTeamNoData(patientDashboardLayoutParams, true)
   })
 
   it('should render correct statistic when data is two weeks old', async () => {
