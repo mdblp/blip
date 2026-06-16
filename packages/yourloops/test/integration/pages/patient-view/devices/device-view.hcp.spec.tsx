@@ -95,7 +95,7 @@ describe('Device view for HCP', () => {
     await act(async () => {
       renderPage(deviceRoute)
     })
-    await testDevicesVisualisationForHcp()
+    await testDevicesVisualisationForHcp(false)
   })
 
   it('should display correct parameters when having g2 patients', async () => {
@@ -104,7 +104,7 @@ describe('Device view for HCP', () => {
     await act(async () => {
       renderPage(deviceRoute)
     })
-    await testG2DevicesVisualisationForHcp()
+    await testG2DevicesVisualisationForHcp(true)
   })
 
   it('should navigate to daily page when clicking on the daily button', async () => {
