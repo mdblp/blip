@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -38,7 +38,7 @@ import React, {
 import bows from 'bows'
 import _ from 'lodash'
 
-import { useAuth0 } from '@auth0/auth0-react'
+import { AppState, useAuth0 } from '@auth0/auth0-react'
 import { type HcpProfession } from './models/enums/hcp-profession.enum'
 import { zendeskLogout } from '../zendesk'
 import User from './models/user.model'
@@ -51,12 +51,13 @@ import { type Preferences } from './models/preferences.model'
 import { UserAccount } from './models/user-account.model'
 import { type Settings } from './models/settings.model'
 import { UserRole } from './models/enums/user-role.enum'
-import { type AuthenticatedUser, IDLE_USER_QUERY_PARAM } from './models/authenticated-user.model'
+import { type AuthenticatedUser } from './models/authenticated-user.model'
 import { type SignupForm } from './models/signup-form.model'
 import { type ChangeUserRoleToHcpPayload } from './models/change-user-role-to-hcp-payload.model'
 import { v4 as uuidv4 } from 'uuid'
 import { sanitizeBgUnit } from './user.util'
 import DblCommunicationApi from '../dbl-communication/dbl-communication.api'
+import { LoginQueryParam } from './models/enums/login-query-param.enum'
 
 const ReactAuthContext = createContext({} as AuthContext)
 const log = bows('AuthHook')
@@ -71,6 +72,7 @@ export function AuthContextImpl(): AuthContext {
   } = useAuth0()
   const [user, setUser] = useState<User | null>(null)
   const [fetchingUser, setFetchingUser] = useState<boolean>(false)
+  const [appState, setAppState] = useState<AppState | null>(null)
 
   const isLoggedIn = useMemo<boolean>(() => isAuthenticated && !!user, [isAuthenticated, user])
 
@@ -208,7 +210,7 @@ export function AuthContextImpl(): AuthContext {
     const defaultUrl = `${window.location.origin}/login`
 
     if (isIdle) {
-      return `${defaultUrl}?${IDLE_USER_QUERY_PARAM}=true`
+      return `${defaultUrl}?${LoginQueryParam.Idle}=true`
     }
     return defaultUrl
   }
@@ -264,6 +266,20 @@ export function AuthContextImpl(): AuthContext {
     await getAccessTokenWithPopup({ authorizationParams: { ignoreCache: true } })
   }
 
+  const getAndClearAppState = useCallback((): AppState | null =>  {
+    const appStateToReturn = appState
+    setAppState(null)
+
+    return appStateToReturn
+  }, [appState])
+
+  const setAppStateJson = useCallback((appStateJson: string): void => {
+    const decodedAppState = decodeURIComponent(appStateJson)
+    const appState = JSON.parse(decodedAppState)
+
+    setAppState(appState)
+  }, [])
+
   useEffect(() => {
     (async () => {
       if (isAuthenticated && !user) {
@@ -278,6 +294,7 @@ export function AuthContextImpl(): AuthContext {
     user,
     isLoggedIn,
     fetchingUser,
+    getAndClearAppState,
     updateUserAccount,
     updatePreferences,
     updateSettings,
@@ -286,7 +303,8 @@ export function AuthContextImpl(): AuthContext {
     flagPatient,
     setFlagPatients,
     getFlagPatients,
-    switchRoleToHCP
+    switchRoleToHCP,
+    setAppStateJson
   }
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2026, Diabeloop
+ * Copyright (c) 2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,40 +25,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-export interface AppConfig {
-  VERSION: string
-  API_HOST: string
-  BRANDING: string
-  DOMAIN_NAME?: string
-  DEV: boolean
-  TEST: boolean
-  LATEST_TERMS?: string
-  LATEST_TRAINING?: string
-  LATEST_RELEASE?: string
-  SUPPORT_WEB_ADDRESS?: string
-  CONTACT_SUPPORT_WEB_URL: string
-  ASSETS_URL?: string | null
-  METRICS_SERVICE?: string | null
-  TERMS_PRIVACY_DATE?: string
-  STONLY_WID: string
-  COOKIE_BANNER_CLIENT_ID: string
-  SESSION_TIMEOUT: number
-  YLP820_BASAL_TIME: number
-  CBG_BUCKETS_ENABLED: boolean
-  ECPS_ENABLED: boolean
-  AUTH0_DOMAIN: string
-  AUTH0_ISSUER: string
-  AUTH0_CLIENT_ID: string
-  YLPZ_RA_LAD_FR: string
-  YLPZ_RA_LAD_EN: string
-  YLPZ_RA_LAD_NL: string
-  YLPZ_RA_LAD_IT: string
-  YLPZ_RA_LAD_ES: string
-  YLPZ_RA_LAD_DE: string
-  IDLE_TIMEOUT_MS: number
-  EATING_SHORTLY_ENABLED: boolean
-  METRICS_CLICKODROME_ENABLED: boolean
-  DATE_OF_BIRTH_HIDDEN: boolean
-  MY_DIABBY_PARTNER_ID: string
-  GLOOKO_XT_PARTNER_ID: string
+import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+
+export const checkLoginWithAppState = async (loginMock: jest.Mock) => {
+  expect(loginMock).toHaveBeenCalledWith({
+    appState: {
+      appStateJSON: "%7B%22partnerId%22%3A%22partnerId%22%2C%22callbackUrl%22%3A%22https%3A%2F%2Ffake-url.com%22%2C%22partnerState%22%3A%22isFromYourLoops%22%7D"
+    }
+  })
+}
+
+export const checkLoginWithAppStateWithoutPartnerState = async (loginMock: jest.Mock) => {
+  expect(loginMock).toHaveBeenCalledWith({
+    appState: {
+      appStateJSON: "%7B%22partnerId%22%3A%22partnerId%22%2C%22callbackUrl%22%3A%22https%3A%2F%2Ffake-url.com%22%7D"
+    }
+  })
+}
+
+export const checkLoginWithoutAppState = async (loginMock: jest.Mock) => {
+  expect(loginMock).not.toHaveBeenCalled()
+
+  const loginButton = screen.getByRole('button', { name: 'Connect' })
+  await userEvent.click(loginButton)
+
+  expect(loginMock).toHaveBeenCalled()
 }

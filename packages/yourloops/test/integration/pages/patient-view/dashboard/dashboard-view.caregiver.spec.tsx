@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
+import { act } from 'react'
 import { mockAuth0Hook } from '../../../mock/auth0.hook.mock'
 import { mockNotificationAPI } from '../../../mock/notification.api.mock'
 import { patient1Id } from '../../../data/patient.api.data'
@@ -54,6 +54,8 @@ import {
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
+import { ConfigService } from '../../../../../lib/config/config.service'
+import { testDataAccessRequestModalNotVisible } from '../../../use-cases/data-sharing'
 
 describe('Dashboard view for caregiver', () => {
   const patientDashboardRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Dashboard}`
@@ -109,5 +111,21 @@ describe('Dashboard view for caregiver', () => {
     })
 
     await testDashboardDataVisualisationSixteenDaysOldData()
+  })
+
+  it('should not display the Data Consent modal even if the parameters are set', async () => {
+    mockDataAPI(sixteenDaysOldDashboardData)
+
+    const glookoXtPartnerId = 'partnerId'
+
+    jest.spyOn(ConfigService, 'getGlookoXtPartnerId').mockReturnValue(glookoXtPartnerId)
+    const appState = { partnerId: glookoXtPartnerId, callbackUrl: 'https://fake-url.com' }
+    const appStateJson = encodeURIComponent(JSON.stringify(appState))
+
+    await act(async () => {
+      renderPage(`${patientDashboardRoute}?appStateJson=${appStateJson}`)
+    })
+
+    testDataAccessRequestModalNotVisible()
   })
 })
