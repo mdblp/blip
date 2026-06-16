@@ -46,7 +46,9 @@ const defaultConfig = {
   IDLE_TIMEOUT_MS: 1800000,
   EATING_SHORTLY_ENABLED: false,
   METRICS_CLICKODROME_ENABLED: true,
-  DATE_OF_BIRTH_HIDDEN: false
+  DATE_OF_BIRTH_HIDDEN: false,
+  MY_DIABBY_PARTNER_ID: 'myDiabbyPartnerId',
+  GLOOKO_XT_PARTNER_ID: 'glookoXtPartnerId'
 }
 
 /** @typedef {typeof defaultConfig} AppConfig */

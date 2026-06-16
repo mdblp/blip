@@ -26,8 +26,14 @@
  */
 
 import {
+  checkAcceptDataAccessRequest,
+  checkDataAccessRequestError,
+  checkDataAccessRequestModalNotVisible,
   checkDataSharingContentNoData,
   checkDataSharingContentWithData,
+  checkDenyDataAccessRequest,
+  checkGlookoXtDataAccessRequestModalVisible,
+  checkMyDiabbyDataAccessRequestModalVisible,
   checkRevokeConsentError,
   checkRevokeConsentSuccess,
   checkUserAccountMenuNotVisible,
@@ -51,4 +57,22 @@ export const testDataSharingContentWithData = async (): Promise<void> => {
 
 export const testRevokeConsentError = async (): Promise<void> => {
   await checkRevokeConsentError()
+}
+
+export const testDataAccessRequestModalNotVisible = (): void => {
+  checkDataAccessRequestModalNotVisible()
+}
+
+export const testGlookoXtDataAccessRequestVisibleAndAccept = async (): Promise<void> => {
+  checkGlookoXtDataAccessRequestModalVisible()
+  await checkAcceptDataAccessRequest()
+}
+
+export const testMyDiabbyDataAccessRequestVisibleAndDeny = async (): Promise<void> => {
+  checkMyDiabbyDataAccessRequestModalVisible()
+  await checkDenyDataAccessRequest()
+}
+
+export const testDataAccessRequestError = async (): Promise<void> => {
+  await checkDataAccessRequestError()
 }

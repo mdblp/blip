@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2024-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,16 +25,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import { act } from 'react'
 import * as router from 'react-router'
-import { act, renderHook } from '@testing-library/react'
+import { renderHook } from '@testing-library/react'
 import { useLogin } from '../../../../pages/login/login.hook'
 import { AppRoute } from '../../../../models/enums/routes.enum'
+import * as auth0Mock from '@auth0/auth0-react'
+
+jest.mock('@auth0/auth0-react')
 
 describe('Login hook', () => {
   const useNavigateMock = jest.fn()
+  const loginWithRedirectMock = jest.fn()
 
   beforeAll(() => {
-    jest.spyOn(router, 'useNavigate').mockImplementation(() => useNavigateMock)
+    jest.spyOn(router, 'useNavigate').mockImplementation(() => useNavigateMock);
+    (auth0Mock.useAuth0 as jest.Mock).mockReturnValue({
+      loginWithRedirect: loginWithRedirectMock
+    })
+  })
+
+  beforeEach(() => {
+    loginWithRedirectMock.mockResolvedValue(undefined)
+  })
+
+  afterEach(() => {
+    loginWithRedirectMock.mockReset()
   })
 
   describe('redirectToSignupInformation', () => {
@@ -46,6 +62,52 @@ describe('Login hook', () => {
       })
 
       expect(useNavigateMock).toHaveBeenCalledWith(AppRoute.SignupInformation)
+    })
+  })
+
+  describe ('loginWithState', () => {
+    it('should call loginWithRedirect with the appState JSON-encoded', async () => {
+      const appState = { showConsent: true, callbackUrl: '/home' }
+      const { result } = renderHook(() => useLogin())
+
+      await act(async () => {
+        await result.current.loginWithState(appState)
+      })
+
+      expect(loginWithRedirectMock).toHaveBeenCalledWith({
+        appState: { appStateJSON: encodeURIComponent(JSON.stringify(appState)) }
+      })
+    })
+
+    it('should preserve nested/complex appState structure', async () => {
+      const appState = { showConsent: true, callbackUrl: '/home?foo=bar&baz=1', meta: { step: 2 } }
+      const { result } = renderHook(() => useLogin())
+
+      await act(async () => {
+        await result.current.loginWithState(appState)
+      })
+
+      const [call] = loginWithRedirectMock.mock.calls
+      const decoded = JSON.parse(decodeURIComponent(call[0].appState.appStateJSON))
+      expect(decoded).toEqual(appState)
+    })
+
+    it('should call loginWithRedirect exactly once per invocation', async () => {
+      const { result } = renderHook(() => useLogin())
+
+      await act(async () => {
+        await result.current.loginWithState({ showConsent: false })
+      })
+
+      expect(loginWithRedirectMock).toHaveBeenCalledTimes(1)
+    })
+
+    it('should propagate errors thrown by loginWithRedirect', async () => {
+      const error = new Error('Auth0 failure')
+      loginWithRedirectMock.mockRejectedValue(error)
+      const { result } = renderHook(() => useLogin())
+
+      await expect(result.current.loginWithState({ showConsent: true })).rejects.toThrow('Auth0 failure')
     })
   })
 })

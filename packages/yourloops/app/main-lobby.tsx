@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025, Diabeloop
+ * Copyright (c) 2022-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,7 +25,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import React, { type FC } from 'react'
+import React, { type FC, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useAuth0 } from '@auth0/auth0-react'
 
@@ -54,6 +54,7 @@ import Box from '@mui/material/Box'
 import { VerifyEmailResultPage } from '../pages/verify-email/verify-email-result-page'
 import { SignupInformationPage } from '../pages/signup-information/signup-information-page'
 import { DblCommunicationPage } from '../pages/dbl-communication/dbl-communication'
+import { useQueryParams } from '../lib/custom-hooks/query-params.hook'
 
 const muiCache = createCache({
   key: 'mui',
@@ -99,12 +100,21 @@ export const getRedirectUrl = (route: string, user: User, isAuthenticated: boole
 
 export const MainLobby: FC = () => {
   const { isLoading, isAuthenticated } = useAuth0()
-  const { fetchingUser, isLoggedIn, logout, user } = useAuth()
+  const { fetchingUser, isLoggedIn, logout, setAppStateJson, user } = useAuth()
   const location = useLocation()
+  const queryParams = useQueryParams()
+
   const currentRoute = location.pathname
   const theme = getTheme()
   const isCurrentRoutePublic = isRoutePublic(currentRoute)
   const isCurrentRouteAlwaysAccessible = isRouteAlwaysAccessible(currentRoute)
+
+  useEffect(() => {
+    const appStateJson = queryParams.get('appStateJson')
+    if (appStateJson) {
+      setAppStateJson(appStateJson)
+    }
+  }, [queryParams, setAppStateJson])
 
   const onIdle = (): void => {
     if (isLoggedIn) {

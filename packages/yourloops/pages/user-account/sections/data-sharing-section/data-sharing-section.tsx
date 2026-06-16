@@ -52,7 +52,7 @@ export const DataSharingSection: FC = () => {
   const fetchExternalConsents = useCallback(() => {
     setRefreshInProgress(true)
 
-    ExternalConsentsApi.getConsents(userId)
+    ExternalConsentsApi.getConsents()
       .then((consents: ExternalConsent[]) => {
         setConsents(consents)
         return consents
