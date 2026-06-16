@@ -52,15 +52,24 @@ export const DataAccessResult: FC<DataAccessResultProps> = (props) => {
 
   const partnerLabel = getRemoteMonitoringToolLabel(partnerName)
 
-  const redirectUrl = new URL(callbackUrl)
-  const searchParams = redirectUrl.searchParams
 
-  searchParams.set('patientUserId', patientId)
-  searchParams.set('result', result)
-  if (partnerState) {
-    searchParams.set('state', partnerState)
+
+  const getRedirectUrlString = (): string => {
+    const redirectUrl = new URL(callbackUrl)
+    const searchParams = redirectUrl.searchParams
+
+    searchParams.set('result', result)
+
+    if (result === DataAccessResultValue.Accepted) {
+      searchParams.set('patientUserId', patientId)
+    }
+
+    if (partnerState) {
+      searchParams.set('state', partnerState)
+    }
+
+    return redirectUrl.toString()
   }
-  const redirectUrlString = redirectUrl.toString()
 
   const getTitle = (result: DataAccessResultValue): string => {
     switch (result) {
@@ -110,7 +119,7 @@ export const DataAccessResult: FC<DataAccessResultProps> = (props) => {
         <Button
           variant="contained"
           component="a"
-          href={redirectUrlString}
+          href={getRedirectUrlString()}
           data-testid="redirect-ok-button"
         >
           {t('button-ok')}

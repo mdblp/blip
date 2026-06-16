@@ -136,7 +136,7 @@ export const checkAcceptDataAccessRequest = async (): Promise<void> => {
 
   const okLink = within(modal).getByRole('link', { name: 'Ok' })
   expect(okLink).toBeVisible()
-  expect(okLink).toHaveAttribute('href', 'https://fake-url.com/?patientUserId=patient1Id&result=accepted&state=isFromYourLoops')
+  expect(okLink).toHaveAttribute('href', 'https://fake-url.com/?result=accepted&patientUserId=patient1Id&state=isFromYourLoops')
 }
 
 export const checkDenyDataAccessRequest = async (): Promise<void> => {
@@ -149,7 +149,7 @@ export const checkDenyDataAccessRequest = async (): Promise<void> => {
 
   const okLink = within(modal).getByRole('link', { name: 'Ok' })
   expect(okLink).toBeVisible()
-  expect(okLink).toHaveAttribute('href', 'https://fake-url.com/?patientUserId=patient1Id&result=denied')
+  expect(okLink).toHaveAttribute('href', 'https://fake-url.com/?result=denied')
 }
 
 export const checkDataAccessRequestError = async (): Promise<void> => {
@@ -162,5 +162,5 @@ export const checkDataAccessRequestError = async (): Promise<void> => {
 
   const okLink = within(modal).getByRole('link', { name: 'Ok' })
   expect(okLink).toBeVisible()
-  expect(okLink).toHaveAttribute('href', 'https://fake-url.com/?patientUserId=patient1Id&result=error')
+  expect(okLink).toHaveAttribute('href', 'https://fake-url.com/?result=error')
 }
