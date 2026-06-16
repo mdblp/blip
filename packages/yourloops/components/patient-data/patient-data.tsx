@@ -57,6 +57,9 @@ import { logError } from '../../utils/error.util'
 import { PatientProfileView } from '../../pages/patient-view/patient-profile/patient-profile-view'
 import { ConfigService } from '../../lib/config/config.service'
 import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
+import { DataAccessRequestDialog } from '../dialogs/data-access/data-access-request-dialog'
+import { AppState } from '@auth0/auth0-react'
+import { getPartnerNameById } from '../../lib/external-consents/external-consents.util'
 
 interface PatientDataProps {
   patient: Patient
@@ -68,6 +71,26 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   const { t } = useTranslation()
   const patientIdForWhichDataHasBeenFetched = useRef(null)
   const { teamId } = useParams()
+  const { getAndClearAppState, user } = useAuth()
+  const [appState, setAppState] = useState<AppState | null>(null)
+
+  useEffect(() => {
+    const appStateFromAuth = getAndClearAppState()
+    if (appStateFromAuth) {
+      setAppState(appStateFromAuth)
+    }
+  }, [getAndClearAppState])
+
+  const partnerId = appState?.partnerId
+  const callbackUrl = appState?.callbackUrl
+  const partnerState = appState?.partnerState
+  const isCallbackUrlValid = !!callbackUrl
+  const isPartnerIdValid = !!partnerId && !!getPartnerNameById(partnerId)
+  if (appState && !isPartnerIdValid) {
+    logError(`Partner id ${partnerId} not recognized, skipping data access request`, 'data-access-request')
+  }
+
+  const showDataAccessRequestDialog = user.isUserPatient() && isPartnerIdValid && isCallbackUrlValid
 
   const {
     bgPrefs,
@@ -101,7 +124,6 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
     messageThread,
     replyToMessage
   } = useDailyNotes({ dailyDate, dailyChartRef, medicalData })
-  const { user } = useAuth()
 
   const [showPdfDialog, setShowPdfDialog] = useState<boolean>(false)
 
@@ -269,6 +291,14 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                     onClose={() => {
                       setShowPdfDialog(false)
                     }}
+                  />
+                }
+                {showDataAccessRequestDialog &&
+                  <DataAccessRequestDialog
+                    patientId={user.id}
+                    partnerId={partnerId}
+                    callbackUrl={callbackUrl}
+                    partnerState={partnerState}
                   />
                 }
               </>

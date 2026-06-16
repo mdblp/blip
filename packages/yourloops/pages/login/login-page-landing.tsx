@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, Diabeloop
+ * Copyright (c) 2023-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -28,18 +28,19 @@
 import React, { type FunctionComponent, useEffect } from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material'
-import { useAuth0 } from '@auth0/auth0-react'
+import { AppState, useAuth0 } from '@auth0/auth0-react'
 import { useNavigate } from 'react-router-dom'
 import { useAlert } from '../../components/utils/snackbar'
 import LoginPageMobile from './login-page-mobile'
 import LoginPageDesktop from './login-page-desktop'
 import { GlobalStyles } from 'tss-react'
 import { useQueryParams } from '../../lib/custom-hooks/query-params.hook'
-import { IDLE_USER_QUERY_PARAM } from '../../lib/auth'
 import { useTranslation } from 'react-i18next'
 import { AppRoute } from '../../models/enums/routes.enum'
 import { setPageTitle } from '../../lib/utils'
 import { Auth0Error } from '../../lib/auth/models/enums/auth0-error.enum'
+import { LoginQueryParam } from '../../lib/auth/models/enums/login-query-param.enum'
+import { useLogin } from './login.hook'
 
 export const LoginPageLanding: FunctionComponent = () => {
   const { t } = useTranslation('yourloops')
@@ -49,9 +50,10 @@ export const LoginPageLanding: FunctionComponent = () => {
   const theme = useTheme()
   const isMobileView: boolean = useMediaQuery(theme.breakpoints.only('xs'))
   const queryParams = useQueryParams()
+  const { loginWithState } = useLogin()
 
   useEffect(() => {
-    if (queryParams.get(IDLE_USER_QUERY_PARAM)) {
+    if (queryParams.get(LoginQueryParam.Idle)) {
       alert.warning(t('alert-inactive-user-logged-out'), { infiniteTimeout: true })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,6 +75,21 @@ export const LoginPageLanding: FunctionComponent = () => {
   }, [error])
 
   setPageTitle(t('login'))
+
+  const partnerId = queryParams.get(LoginQueryParam.PartnerId)
+  const callbackUrl = queryParams.get(LoginQueryParam.CallbackUrl)
+  const state = queryParams.get(LoginQueryParam.State)
+
+  useEffect(() => {
+    if (partnerId && callbackUrl) {
+      const appState: AppState = { partnerId, callbackUrl }
+      if (state) {
+        appState.partnerState = state
+      }
+
+      loginWithState(appState)
+    }
+  }, [callbackUrl, loginWithState, partnerId])
 
   return (
     <React.Fragment>

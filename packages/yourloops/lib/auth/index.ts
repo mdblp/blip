@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2023, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -25,19 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { type AuthContext } from './models/auth-context.model'
-import { type SignupForm } from './models/signup-form.model'
-import { IDLE_USER_QUERY_PARAM } from './models/authenticated-user.model'
-
-import { AuthContextProvider, useAuth } from './auth.hook'
-
 import User from './models/user.model'
 
-export {
-  type AuthContext,
-  IDLE_USER_QUERY_PARAM,
-  User,
-  type SignupForm,
-  AuthContextProvider,
-  useAuth
-}
+export { User }
+
+export { type AuthContext } from './models/auth-context.model'
+export { type SignupForm } from './models/signup-form.model'
+export { useAuth, AuthContextProvider } from './auth.hook'
