@@ -150,14 +150,7 @@ export const TeamScopeMenu: FunctionComponent = () => {
         color="inherit"
         aria-label={t('open-team-selection-menu')}
         data-testid="team-scope-menu-button"
-        data-stonlyid="team-scope-menu-button"
-        startIcon={selectedTeamIcon}
-        sx={{
-          '& .MuiButton-startIcon': {
-            // To make the startIcon disappear on mobile
-            display: { xs: 'none', sm: 'inline-flex' }
-          }
-        }}
+        startIcon={isMobile ? undefined : selectedTeamIcon}
         endIcon={<ArrowDropDownIcon />}
         onClick={openMenu}
       >
