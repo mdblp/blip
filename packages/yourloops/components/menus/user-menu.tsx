@@ -87,9 +87,6 @@ function UserMenu(): JSX.Element {
   const userName = getUserName(firstName, lastName, fullName)
 
   const getRoleIcon = (): JSX.Element | null => {
-    if (isMobile){
-      return <AccountCircleIcon data-testid="mobile-account-icon"/>
-    }
     switch (user?.role) {
       case UserRole.Hcp:
         return <StethoscopeIcon data-testid="hcp-icon" />
@@ -142,12 +139,8 @@ function UserMenu(): JSX.Element {
         {isMobile
           ? <IconButton
             color="inherit"
-            onClick={openMenu}
-            sx={{
-              width:'clamp(28px, 7.6vw, 30px)',
-              height: 'clamp(28px, 3.3vh, 30px)'
-            }}>
-            {getRoleIcon()}
+            onClick={openMenu}>
+            <AccountCircleIcon data-testid="mobile-account-icon"/>
           </IconButton>
           : <Button
             color="inherit"

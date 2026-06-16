@@ -53,20 +53,14 @@ import TeamUtils from '../../lib/team/team.util'
 import Button from '@mui/material/Button'
 import CareTeamSettingsIcon from '../icons/care-team-settings-icon'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import IconButton from '@mui/material/IconButton'
+import { useStyles } from './main-header-style';
 
 interface MainHeaderProps {
   setMainHeaderHeight: Dispatch<SetStateAction<number>>
 }
 
 const classes = makeStyles()((theme) => ({
-  appBar: {
-    position: 'fixed',
-    zIndex: theme.zIndex.drawer + 1,
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    backgroundColor: theme.palette.common.white,
-    color: 'var(--text-color-primary)'
-  },
-
   arrowBack: {
     color: 'var(--primary-color-main)',
     paddingLeft: 'clamp(18px, 4.7vw, 22px)',
@@ -87,16 +81,15 @@ const classes = makeStyles()((theme) => ({
     fontWeight: 'bold',
     textTransform: 'none',
     fontSize: theme.typography.htmlFontSize,
-    paddingLeft: 'clamp(32px, 11vw, 36px)'
-  },
-  toolbar: {
-    padding: 0
+    paddingLeft: 'clamp(32px, 11vw, 36px)',
+    opacity: 1
   }
 }))
 
-const MainHeader: FC<MainHeaderProps> = (props) => {
+const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
   const { setMainHeaderHeight } = props
-  const { classes: { mobileLogo, appBar, tab, toolbar, arrowBack, settingsButton } } = classes()
+  const { classes: { mobileLogo, tab, arrowBack, settingsButton } } = classes()
+  const { classes: { appBar, toolbar } } = useStyles()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
   const { user } = useAuth()
@@ -110,9 +103,20 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
     }
   }
 
+  const goBack = (): void => {
+    navigate('/')
+  }
+
+  const goToNotifications = (): void => {
+    navigate(`${AppUserRoute.Notifications}`)
+  }
+
+  const goToCareTeamSettings = (): void => {
+    navigate(`${AppUserRoute.Teams}/${teamId}`)
+  }
+
   return (
     <AppBar
-      id="app-main-header-mobile"
       data-testid="app-main-header-mobile"
       elevation={0}
       className={appBar}
@@ -122,63 +126,60 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
         className={toolbar}
         sx={{
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start'
+          flexDirection: 'column'
         }}>
         <Box
           sx={{
-            width: "100%"
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: '100%',
+            minHeight: "clamp(64px, 7.5vh, 70px)",
+            padding: `0 ${theme.spacing(2)}`
           }}>
           <Banner />
+          <Link to="/">
+            <Avatar
+              aria-label={t('alt-img-logo')}
+              variant="square"
+              src={`/branding_${config.BRANDING}_logo.svg`}
+              alt={t('alt-img-logo')}
+              className={mobileLogo}
+            />
+          </Link>
           <Box
             sx={{
-              alignItems: "center",
               display: "flex",
-              minHeight: "clamp(64px, 7.5vh, 70px)",
-              padding: `0 ${theme.spacing(2)}`,
-              maxWidth: "100vw"
+              gap: "0.5rem"
             }}>
-            <Box>
-              <Link to="/">
-                <Avatar
-                  id="header-main-logo"
-                  aria-label={t('alt-img-logo')}
-                  variant="square"
-                  src={`/branding_${config.BRANDING}_logo.svg`}
-                  alt={t('alt-img-logo')}
-                  className={mobileLogo}
-                />
-              </Link>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-                flex: 1,
-                gap: "0.5rem"
-              }}>
-              <Link to={AppUserRoute.Notifications} id="header-notification-link">
-                <Badge
-                  id="notification-count-badge"
-                  aria-label={t('notification-list')}
-                  badgeContent={receivedInvitations.length}
-                  overlap="circular"
-                  color="error"
-                  sx={{
-                    width: 'clamp(28px, 7.6vw, 30px)',
-                    height: 'clamp(28px, 3.3vh, 30px)'
-                  }}
-                  data-testid="notification-icon"
-                >
-                  <NotificationsNoneIcon />
-                </Badge>
-              </Link>
-              <UserMenu />
-            </Box>
+            <Badge
+              aria-label={t('notification-list')}
+              badgeContent={receivedInvitations.length}
+              overlap="circular"
+              color="error"
+              data-testid="notification-icon"
+            >
+              <IconButton
+                onClick={() => {
+                  goToNotifications()
+                }}
+                sx={{
+                  color: 'var(--text-color-primary)'
+                }}>
+                <NotificationsNoneIcon />
+              </IconButton>
+            </Badge>
+            <UserMenu />
           </Box>
         </Box>
-        <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            width: '100%'
+          }}
+        >
           {pathname.endsWith('patients') ? (
               <>
                 {!user?.isUserCaregiver() && (
@@ -192,19 +193,21 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                     data-testid="team-selection-tab"
                     className={tab}
                   />
-                )} {!TeamUtils.isPrivate(teamId) && user.isUserHcp() && (
-                <Button
-                  aria-label={t('header-tab-care-team-settings')}
-                  value={HcpNavigationTab.CareTeam}
-                  onClick={() => {
-                    navigate(`${AppUserRoute.Teams}/${teamId}`)
-                  }}
-                  variant="outlined"
-                  className={settingsButton}
-                >
-                  <CareTeamSettingsIcon data-testid="care-team-settings-icon" />
-                </Button>
-              )}
+                )}
+                {!TeamUtils.isPrivate(teamId) && user.isUserHcp() && (
+                  <Button
+                    aria-label={t('header-tab-care-team-settings')}
+                    value={HcpNavigationTab.CareTeam}
+                    onClick={() => {
+                      goToCareTeamSettings()
+                    }}
+                    variant="outlined"
+                    className={settingsButton}
+                    sx={{ color: 'var(--text-color-primary)' }}
+                  >
+                    <CareTeamSettingsIcon data-testid="care-team-settings-icon" />
+                  </Button>
+                )}
               </>
             ) :
             (
@@ -212,7 +215,7 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
                 variant="text"
                 startIcon={<ArrowBackIcon />}
                 onClick={() => {
-                  navigate('/')
+                  goBack()
                 }}
                 className={arrowBack}
                 data-testid="back-button"
@@ -226,4 +229,4 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
   )
 }
 
-export const MainHeaderMobileMemoized = React.memo(MainHeader)
+export const MainHeaderMobileMemoized = React.memo(MainHeaderMobile)

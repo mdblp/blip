@@ -28,6 +28,8 @@ a {
 }
 
 @media screen and (max-width: 600px) {
+  /* Necessary for the "position : fixed" property of the main header to work in mobile.
+  Force the scroll to apply itself to the body instead of a child div */
   html, body {
     overflow-y: auto;
   }
