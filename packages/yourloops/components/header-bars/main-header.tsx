@@ -45,8 +45,8 @@ const MainHeader: FC<MainHeaderProps> = (props) => {
   return (
     <>
       {isMobile && user.isUserHcp()
-        ? <MainHeaderMobileMemoized setMainHeaderHeight={setMainHeaderHeight} />   // mobile render, only for HCP for now
-        : <MainHeaderDesktopMemoized setMainHeaderHeight={setMainHeaderHeight} />  // desktop render
+        ? <MainHeaderMobileMemoized setMainHeaderHeight={setMainHeaderHeight} />
+        : <MainHeaderDesktopMemoized setMainHeaderHeight={setMainHeaderHeight} />
       }
     </>
   )

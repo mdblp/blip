@@ -44,7 +44,6 @@ import { useAuth } from '../../lib/auth'
 import { TeamSettingsMenuMemoized as TeamSettingsMenu } from '../menus/team-settings-menu'
 import { UserMenuMemoized as UserMenu } from '../menus/user-menu'
 import { TeamScopeMenu } from '../menus/team-scope-menu'
-import { Tab } from '@mui/material'
 import { HcpNavigationTab } from '../../models/enums/hcp-navigation-tab.model'
 import { AppUserRoute } from '../../models/enums/routes.enum'
 import { Banner } from './banner'
@@ -62,26 +61,25 @@ interface MainHeaderProps {
 
 const classes = makeStyles()((theme) => ({
   arrowBack: {
-    color: 'var(--primary-color-main)',
-    paddingLeft: 'clamp(18px, 4.7vw, 22px)',
-    fontSize: 'clamp(16px, 4vw, 18px)'
+    paddingLeft: `${theme.spacing(2)}`,
+    fontSize: '16px'
   },
   mobileLogo: {
-    width: 'clamp(97px, 25vw, 100px)',
-    height: 'clamp(28px, 3.3vh, 30px)',
+    width: '97px',
+    height: '28px',
     '& img': {
       objectFit: 'contain'
     }
   },
   settingsButton: {
-    padding: 'clamp(8px, 1.2vh, 10px) clamp(25px, 7vw, 30px)',
+    padding: `${theme.spacing(1)} ${theme.spacing(3)}`,
     borderColor: 'var(--text-color-primary)'
   },
   tab: {
     fontWeight: 'bold',
     textTransform: 'none',
     fontSize: theme.typography.htmlFontSize,
-    paddingLeft: 'clamp(32px, 11vw, 36px)',
+    paddingLeft: `${theme.spacing(4)}`,
     opacity: 1
   }
 }))
@@ -134,7 +132,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
             justifyContent: 'space-between',
             alignItems: 'center',
             width: '100%',
-            minHeight: "clamp(64px, 7.5vh, 70px)",
+            minHeight: "64px",
             padding: `0 ${theme.spacing(2)}`
           }}>
           <Banner />
@@ -150,7 +148,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
           <Box
             sx={{
               display: "flex",
-              gap: "0.5rem"
+              gap: `${theme.spacing(1)}`
             }}>
             <Badge
               aria-label={t('notification-list')}
@@ -160,12 +158,8 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
               data-testid="notification-icon"
             >
               <IconButton
-                onClick={() => {
-                  goToNotifications()
-                }}
-                sx={{
-                  color: 'var(--text-color-primary)'
-                }}>
+                color = "inherit"
+                onClick={goToNotifications}>
                 <NotificationsNoneIcon />
               </IconButton>
             </Badge>
@@ -177,30 +171,23 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
             display: 'flex',
             alignItems: 'center',
             gap: 2,
-            width: '100%'
+            width: '100%',
+            margin: `${theme.spacing(1)}`
           }}
         >
           {pathname.endsWith('patients') ? (
               <>
                 {!user?.isUserCaregiver() && (
-                  <Tab
-                    label={
-                      <>
+                  <Box className={tab}>
                         {user.isUserPatient() && <TeamSettingsMenu />}
-                        {user.isUserHcp() && <TeamScopeMenu />}
-                      </>
-                    }
-                    data-testid="team-selection-tab"
-                    className={tab}
-                  />
+                        {user.isUserHcp() && <TeamScopeMenu data-testid="team-selection-tab"/>}
+                  </Box>
                 )}
                 {!TeamUtils.isPrivate(teamId) && user.isUserHcp() && (
                   <Button
                     aria-label={t('header-tab-care-team-settings')}
                     value={HcpNavigationTab.CareTeam}
-                    onClick={() => {
-                      goToCareTeamSettings()
-                    }}
+                    onClick={goToCareTeamSettings}
                     variant="outlined"
                     className={settingsButton}
                     sx={{ color: 'var(--text-color-primary)' }}
@@ -214,13 +201,11 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
               <Button
                 variant="text"
                 startIcon={<ArrowBackIcon />}
-                onClick={() => {
-                  goBack()
-                }}
+                onClick={goBack}
                 className={arrowBack}
                 data-testid="back-button"
               >
-                Back
+                {t('Back')}
               </Button>
             )}
         </Box>
