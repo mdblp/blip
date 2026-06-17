@@ -166,7 +166,7 @@
   "avg-daily-carbs": "Avg. Daily Carbs",
   "avg-time-loop-how-calculate": "**How we calculate this**:\n\n(%) is the duration in loop mode ON or OFF divided by the total duration of basals for this time period.\n\n**(time)** is the average daily time spent in loop mode ON or OFF.",
   "avg-time-loop-tooltip": "**Time In Loop Mode**: Daily average of the time spent in automated basal delivery.",
-  "Back": "Back",
+  "back": "Back",
   "basal-and-correction-bolus": "Basal & correction bolus",
   "basal-rate": "Basal rate",
   "basal-rate-unit": "U/h",

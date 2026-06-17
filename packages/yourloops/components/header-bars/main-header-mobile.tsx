@@ -61,7 +61,7 @@ interface MainHeaderProps {
 
 const classes = makeStyles()((theme) => ({
   arrowBack: {
-    paddingLeft: `${theme.spacing(2)}`,
+    paddingLeft: theme.spacing(2),
     fontSize: '16px'
   },
   mobileLogo: {
@@ -79,7 +79,7 @@ const classes = makeStyles()((theme) => ({
     fontWeight: 'bold',
     textTransform: 'none',
     fontSize: theme.typography.htmlFontSize,
-    paddingLeft: `${theme.spacing(4)}`,
+    paddingLeft: theme.spacing(4),
     opacity: 1
   }
 }))
@@ -106,7 +106,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
   }
 
   const goToNotifications = (): void => {
-    navigate(`${AppUserRoute.Notifications}`)
+    navigate(AppUserRoute.Notifications)
   }
 
   const goToCareTeamSettings = (): void => {
@@ -148,7 +148,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
           <Box
             sx={{
               display: "flex",
-              gap: `${theme.spacing(1)}`
+              gap: theme.spacing(1)
             }}>
             <Badge
               aria-label={t('notification-list')}
@@ -172,7 +172,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
             alignItems: 'center',
             gap: 2,
             width: '100%',
-            margin: `${theme.spacing(1)}`
+            margin: theme.spacing(1)
           }}
         >
           {pathname.endsWith('patients') ? (
