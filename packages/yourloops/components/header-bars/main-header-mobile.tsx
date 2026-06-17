@@ -75,7 +75,7 @@ const classes = makeStyles()((theme) => ({
     padding: `${theme.spacing(1)} ${theme.spacing(3)}`,
     borderColor: 'var(--text-color-primary)'
   },
-  tab: {
+  teamMenu: {
     fontWeight: 'bold',
     textTransform: 'none',
     fontSize: theme.typography.htmlFontSize,
@@ -86,7 +86,7 @@ const classes = makeStyles()((theme) => ({
 
 const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
   const { setMainHeaderHeight } = props
-  const { classes: { mobileLogo, tab, arrowBack, settingsButton } } = classes()
+  const { classes: { mobileLogo, teamMenu, arrowBack, settingsButton } } = classes()
   const { classes: { appBar, toolbar } } = useStyles()
   const { t } = useTranslation('yourloops')
   const { receivedInvitations } = useNotification()
@@ -155,11 +155,11 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
               badgeContent={receivedInvitations.length}
               overlap="circular"
               color="error"
-              data-testid="notification-icon"
             >
               <IconButton
                 color = "inherit"
-                onClick={goToNotifications}>
+                onClick={goToNotifications}
+                data-testid="notification-icon">
                 <NotificationsNoneIcon />
               </IconButton>
             </Badge>
@@ -178,9 +178,12 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
           {pathname.endsWith('patients') ? (
               <>
                 {!user?.isUserCaregiver() && (
-                  <Box className={tab}>
+                  <Box
+                    className={teamMenu}
+                    data-testid="team-selection-tab"
+                  >
                         {user.isUserPatient() && <TeamSettingsMenu />}
-                        {user.isUserHcp() && <TeamScopeMenu data-testid="team-selection-tab"/>}
+                        {user.isUserHcp() && <TeamScopeMenu />}
                   </Box>
                 )}
                 {!TeamUtils.isPrivate(teamId) && user.isUserHcp() && (
