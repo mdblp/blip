@@ -34,6 +34,7 @@ import {
   checkDenyDataAccessRequest,
   checkGlookoXtDataAccessRequestModalVisible,
   checkMyDiabbyDataAccessRequestModalVisible,
+  checkPartnerNotRecognizedAlert,
   checkRevokeConsentError,
   checkRevokeConsentSuccess,
   checkUserAccountMenuNotVisible,
@@ -59,8 +60,9 @@ export const testRevokeConsentError = async (): Promise<void> => {
   await checkRevokeConsentError()
 }
 
-export const testDataAccessRequestModalNotVisible = (): void => {
+export const testDataAccessRequestModalError = async (): Promise<void> => {
   checkDataAccessRequestModalNotVisible()
+  await checkPartnerNotRecognizedAlert()
 }
 
 export const testGlookoXtDataAccessRequestVisibleAndAccept = async (): Promise<void> => {

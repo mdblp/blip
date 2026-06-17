@@ -55,7 +55,7 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { ConfigService } from '../../../../../lib/config/config.service'
-import { testDataAccessRequestModalNotVisible } from '../../../use-cases/data-sharing'
+import { testDataAccessRequestModalError } from '../../../use-cases/data-sharing'
 
 describe('Dashboard view for caregiver', () => {
   const patientDashboardRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Dashboard}`
@@ -126,6 +126,6 @@ describe('Dashboard view for caregiver', () => {
       renderPage(`${patientDashboardRoute}?appStateJson=${appStateJson}`)
     })
 
-    testDataAccessRequestModalNotVisible()
+    testDataAccessRequestModalError()
   })
 })

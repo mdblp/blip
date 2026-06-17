@@ -28,6 +28,7 @@
 import { ExternalConsentsApi } from '../../../lib/external-consents/external-consents.api'
 
 export const mockExternalConsentsApi = () => {
+  jest.spyOn(ExternalConsentsApi, 'getPartnerDetails').mockResolvedValue(null)
   jest.spyOn(ExternalConsentsApi, 'getConsents').mockResolvedValue([])
   jest.spyOn(ExternalConsentsApi, 'revokeConsent').mockResolvedValue()
   jest.spyOn(ExternalConsentsApi, 'addConsent').mockResolvedValue()

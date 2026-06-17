@@ -74,7 +74,7 @@ import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
-import { testDataAccessRequestModalNotVisible } from '../../../use-cases/data-sharing'
+import { testDataAccessRequestModalError } from '../../../use-cases/data-sharing'
 import { mockErrorApi } from '../../../mock/error.api.mock'
 
 describe('Dashboard view for HCP', () => {
@@ -261,6 +261,6 @@ describe('Dashboard view for HCP', () => {
       renderPage(`/teams/${myThirdTeamId}/patients/${patient1Id}${AppUserRoute.Dashboard}?appStateJson=${appStateJson}`)
     })
 
-    testDataAccessRequestModalNotVisible()
+    testDataAccessRequestModalError()
   })
 })
