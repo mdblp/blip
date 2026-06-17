@@ -59,7 +59,8 @@ import { ConfigService } from '../../lib/config/config.service'
 import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 import { DataAccessRequestDialog } from '../dialogs/data-access/data-access-request-dialog'
 import { AppState } from '@auth0/auth0-react'
-import { getPartnerNameById } from '../../lib/external-consents/external-consents.util'
+import { getPartnerNameById, validatePartner } from '../../lib/external-consents/external-consents.util'
+import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
 
 interface PatientDataProps {
   patient: Patient
@@ -84,13 +85,25 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
   const partnerId = appState?.partnerId
   const callbackUrl = appState?.callbackUrl
   const partnerState = appState?.partnerState
-  const isCallbackUrlValid = !!callbackUrl
-  const isPartnerIdValid = !!partnerId && !!getPartnerNameById(partnerId)
-  if (appState && !isPartnerIdValid) {
-    logError(`Partner id ${partnerId} not recognized, skipping data access request`, 'data-access-request')
-  }
+  const [partnerName, setPartnerName] = useState<PartnerName | null>(null)
 
-  const showDataAccessRequestDialog = user.isUserPatient() && isPartnerIdValid && isCallbackUrlValid
+  useEffect(() => {
+    if (!appState || !partnerId) return
+
+    const fetchPartner = async (): Promise<void> => {
+      const name = await validatePartner(partnerId, callbackUrl)
+      if (!name) {
+        logError(`Partner id ${partnerId} not recognized, skipping data access request`, 'data-access-request')
+        return
+      }
+
+      setPartnerName(name)
+    }
+
+    fetchPartner()
+  }, [appState, partnerId, callbackUrl])
+
+  const showDataAccessRequestDialog = user.isUserPatient() && !!partnerName
 
   const {
     bgPrefs,
@@ -299,6 +312,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
                     partnerId={partnerId}
                     callbackUrl={callbackUrl}
                     partnerState={partnerState}
+                    partnerName={partnerName}
                   />
                 }
               </>

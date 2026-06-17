@@ -25,34 +25,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { PartnerName } from './models/enum/partner-name.enum'
-import {ExternalConsentsApi} from './external-consents.api'
-import { ConfigService } from '../config/config.service'
+import { PartnerName } from './enum/partner-name.enum'
 
-export const getPartnerNameById = (partnerId: string): PartnerName | null => {
-  const glookoXtPartnerId = ConfigService.getGlookoXtPartnerId()
-  const myDiabbyPartnerId = ConfigService.getMyDiabbyPartnerId()
-
-  switch (partnerId) {
-    case glookoXtPartnerId:
-      return PartnerName.GlookoXT
-    case myDiabbyPartnerId:
-      return PartnerName.MyDiabby
-    default:
-      return null
-  }
-}
-
-export const validatePartner = async (partnerId: string, callbackUrl: string): Promise<PartnerName | null> => {
-  const details = await ExternalConsentsApi.getPartnerDetails(partnerId)
-  if (!!details || details.authorizedUrls.length == 0) {
-    return null
-  }
-  details.authorizedUrls.forEach((url) => {
-    if (url === callbackUrl) {
-      return details.partnerName
-    }
-  })
-  return null
-
+export interface PartnerDetails {
+  partnerId: string
+  partnerName: PartnerName
+  authorizedUrls: string[]
 }

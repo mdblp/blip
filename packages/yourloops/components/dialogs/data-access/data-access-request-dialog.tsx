@@ -34,20 +34,21 @@ import { ExternalConsentsApi } from '../../../lib/external-consents/external-con
 import { errorTextFromException } from '../../../lib/utils'
 import { logError } from '../../../utils/error.util'
 import { getPartnerNameById } from '../../../lib/external-consents/external-consents.util'
+import { PartnerName } from '../../../lib/external-consents/models/enum/partner-name.enum'
 
 interface DataAccessRequestDialogProps {
   patientId: string
   partnerId: string
   callbackUrl: string
   partnerState: string
+  partnerName: PartnerName
 }
 
 export const DataAccessRequestDialog: FC<DataAccessRequestDialogProps> = (props) => {
-  const { callbackUrl, patientId, partnerId, partnerState } = props
+  const { callbackUrl, patientId, partnerId, partnerState, partnerName } = props
   const [result, setResult] = useState<DataAccessResultValue | undefined>(undefined)
   const [isLoading, setIsLoading] = useState(false)
 
-  const partnerName = getPartnerNameById(partnerId)
 
   const onAcceptAccess = async () => {
     setIsLoading(true)
