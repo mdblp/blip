@@ -208,7 +208,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
                 className={arrowBack}
                 data-testid="back-button"
               >
-                {t('Back')}
+                {t('back')}
               </Button>
             )}
         </Box>
