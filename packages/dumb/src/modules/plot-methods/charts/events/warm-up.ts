@@ -30,14 +30,14 @@ import * as d3 from 'd3'
 import warmupIcon from 'warmup-icon.svg'
 
 import { type WarmUp } from 'medical-domain'
-import { type Pool } from '../../../models/pool.model'
-import { drawImage, getTooltipContainer } from '../../../utils/daily-chart/daily-chart.util'
-import { type PlotFunction } from '../../../models/plot-function.model'
-import { type PlotSelection } from '../../../models/plot-selection.model'
-import { type PlotOptions } from '../../../models/plot-options.model'
-import { createIdGenerator } from '../../../utils/id-generator/id-generator.util'
-import { DailyPlotElement } from '../../../models/enums/daily-plot-element.enum'
-import { PLOT_DIMENSIONS } from '../../../models/constants/plot.constants'
+import { type Pool } from '../../../../models/pool.model'
+import { drawImage, getTooltipContainer } from '../../../../utils/daily-chart/daily-chart.util'
+import { type PlotFunction } from '../../../../models/plot-function.model'
+import { type PlotSelection } from '../../../../models/plot-selection.model'
+import { type PlotOptions } from '../../../../models/plot-options.model'
+import { createIdGenerator } from '../../../../utils/id-generator/id-generator.util'
+import { DailyPlotElement } from '../../../../models/enums/daily-plot-element.enum'
+import { PLOT_DIMENSIONS } from '../../../../models/constants/plot.constants'
 
 // ID generator for consistent element identification
 const idGen = createIdGenerator(DailyPlotElement.WarmUp)

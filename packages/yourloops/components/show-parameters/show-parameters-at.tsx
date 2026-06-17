@@ -37,8 +37,8 @@ import type { ParameterConfig, ParametersChange } from 'medical-domain'
 import { formatNumberForLang } from '../../lib/language'
 import { formatParameterValue, sortParameterList } from '../device/utils/device.utils'
 import classes from './show-parameters.css'
-import { getParametersAtDate } from './show-parameters.utils'
 import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
+import { getParametersAtDate } from 'dumb'
 
 interface ShowParametersAtProps {
   date: number | string | Date

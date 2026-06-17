@@ -1735,7 +1735,7 @@ export const smallDataSetDblg1v118: Data = {
 
 export const noData: Data = {
   dataRange: ['', ''],
-  data: []
+  data: [] as unknown as MedicalData
 }
 
 export const smbgData: Data = {
@@ -1747,8 +1747,11 @@ export const smbgData: Data = {
     "cbg": [],
     "confidentialModes": [],
     "deviceParametersChanges": [],
+    "eatingShortlyEvents": [],
+    "iob": [],
     "messages": [],
     "meals": [],
+    "nightModes": [],
     "physicalActivities": [],
     "pumpSettings": [],
     "reservoirChanges": [],
@@ -2252,8 +2255,11 @@ export const timeInRangeStatsTrendViewData: Data = {
     ],
     "confidentialModes": [],
     "deviceParametersChanges": [],
+    "eatingShortlyEvents": [],
+    "iob": [],
     "messages": [],
     "meals": [],
+    "nightModes": [],
     "physicalActivities": [],
     "pumpSettings": [],
     "reservoirChanges": [],
@@ -2515,9 +2521,11 @@ export const twoWeeksOfCbg: Data = {
     ],
     "confidentialModes": [],
     "deviceParametersChanges": [],
+    "eatingShortlyEvents": [],
     "iob": [],
     "messages": [],
     "meals": [],
+    "nightModes": [],
     "physicalActivities": [],
     "pumpSettings": [],
     "reservoirChanges": [],
