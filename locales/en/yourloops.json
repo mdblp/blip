@@ -344,6 +344,7 @@
   "error-caregiver-already-in-list": "You are already sharing your data with this caregiver.",
   "error-email-verification": "An error occurred during the process.",
   "error-http-40x": "An error occurred. Please contact support for assistance",
+  "error-partner-not-recognized": "The partner could not be identified. Please contact support for assistance.",
   "error-http-500": "Something went wrong. Please try again in a few moments. If problem persists, contact support for assistance",
   "error-hyperglycemia": "Hyperglycemia limit must be between hypoglycemia limit and severe hyperglycemia limit",
   "error-hypoglycemia": "Hypoglycemia limit must be between severe hypoglycemia limit and hyperglycemia limit",

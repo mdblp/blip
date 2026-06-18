@@ -28,7 +28,7 @@
 import { PartnerName } from './enum/partner-name.enum'
 
 export interface PartnerDetails {
-  partnerId: string
-  partnerName: PartnerName
-  authorizedUrls: string[]
+  id: string
+  name: PartnerName
+  authorizedCallbackUrls: string[]
 }

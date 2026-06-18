@@ -59,6 +59,4 @@ export interface AppConfig {
   EATING_SHORTLY_ENABLED: boolean
   METRICS_CLICKODROME_ENABLED: boolean
   DATE_OF_BIRTH_HIDDEN: boolean
-  MY_DIABBY_PARTNER_ID: string
-  GLOOKO_XT_PARTNER_ID: string
 }

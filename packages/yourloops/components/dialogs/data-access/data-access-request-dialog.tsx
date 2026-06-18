@@ -33,7 +33,6 @@ import { DataAccessResult } from './data-access-result'
 import { ExternalConsentsApi } from '../../../lib/external-consents/external-consents.api'
 import { errorTextFromException } from '../../../lib/utils'
 import { logError } from '../../../utils/error.util'
-import { getPartnerNameById } from '../../../lib/external-consents/external-consents.util'
 import { PartnerName } from '../../../lib/external-consents/models/enum/partner-name.enum'
 
 interface DataAccessRequestDialogProps {

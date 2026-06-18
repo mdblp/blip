@@ -26,18 +26,60 @@
  */
 
 import { ConfigService } from '../../../../lib/config/config.service'
-import { getPartnerNameById } from '../../../../lib/external-consents/external-consents.util'
+import { validatePartner } from '../../../../lib/external-consents/external-consents.util'
 import { PartnerName } from '../../../../lib/external-consents/models/enum/partner-name.enum'
+import { ExternalConsentsApi } from '../../../../lib/external-consents/external-consents.api'
 
 describe('External consents util', () => {
-  describe('getPartnerNameById', () => {
-    it('should return the appropriate values based on config', () => {
-      jest.spyOn(ConfigService, 'getGlookoXtPartnerId').mockReturnValue('glooko-xt-partner-id')
-      jest.spyOn(ConfigService, 'getMyDiabbyPartnerId').mockReturnValue('my-diabby-partner-id')
 
-      expect(getPartnerNameById('glooko-xt-partner-id')).toBe(PartnerName.GlookoXT)
-      expect(getPartnerNameById('my-diabby-partner-id')).toBe(PartnerName.MyDiabby)
-      expect(getPartnerNameById('unknown-partner-id')).toBeNull()
+  describe('validatePartner', () => {
+    const partnerId = 'some-partner-id'
+    const callbackUrl = 'https://valid-callback.com'
+
+    it('should return null when getPartnerDetails returns null', async () => {
+      jest.spyOn(ExternalConsentsApi, 'getPartnerDetails').mockResolvedValue(null)
+
+      const result = await validatePartner(partnerId, callbackUrl)
+
+      expect(result).toBeNull()
+    })
+
+    it('should return null when authorizedCallbackUrls is empty', async () => {
+      jest.spyOn(ExternalConsentsApi, 'getPartnerDetails').mockResolvedValue({
+        id: partnerId,
+        name: PartnerName.GlookoXT,
+        authorizedCallbackUrls: []
+      })
+
+      const result = await validatePartner(partnerId, callbackUrl)
+
+      expect(result).toBeNull()
+    })
+
+    it('should return the partner name when callbackUrl matches an authorized URL', async () => {
+      jest.spyOn(ExternalConsentsApi, 'getPartnerDetails').mockResolvedValue({
+        id: partnerId,
+        name: PartnerName.GlookoXT,
+        authorizedCallbackUrls: ['https://other-url.com', callbackUrl]
+      })
+
+      const result = await validatePartner(partnerId, callbackUrl)
+
+      expect(result).toBe(PartnerName.GlookoXT)
+    })
+
+    it('should return null when callbackUrl does not match any authorized URL', async () => {
+      jest.spyOn(ExternalConsentsApi, 'getPartnerDetails').mockResolvedValue({
+        id: partnerId,
+        name: PartnerName.MyDiabby,
+        authorizedCallbackUrls: ['https://other-url.com', 'https://another-url.com']
+      })
+
+      const result = await validatePartner(partnerId, callbackUrl)
+
+      expect(result).toBeNull()
     })
   })
 })
+
+

@@ -59,7 +59,7 @@ import { ConfigService } from '../../lib/config/config.service'
 import AnalyticsApi, { ElementType } from '../../lib/analytics/analytics.api'
 import { DataAccessRequestDialog } from '../dialogs/data-access/data-access-request-dialog'
 import { AppState } from '@auth0/auth0-react'
-import { getPartnerNameById, validatePartner } from '../../lib/external-consents/external-consents.util'
+import { validatePartner } from '../../lib/external-consents/external-consents.util'
 import { PartnerName } from '../../lib/external-consents/models/enum/partner-name.enum'
 
 interface PatientDataProps {
@@ -94,6 +94,7 @@ export const PatientData: FunctionComponent<PatientDataProps> = ({ patient }: Pa
       const name = await validatePartner(partnerId, callbackUrl)
       if (!name) {
         logError(`Partner id ${partnerId} not recognized, skipping data access request`, 'data-access-request')
+        alert.error(t('error-partner-not-recognized'))
         return
       }
 
