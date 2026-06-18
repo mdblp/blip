@@ -54,8 +54,7 @@ import {
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { PRIVATE_TEAM_ID } from '../../../../../lib/team/team.util'
 import { mockDblCommunicationApi } from '../../../mock/dbl-communication.api'
-import { ConfigService } from '../../../../../lib/config/config.service'
-import { testDataAccessRequestModalError } from '../../../use-cases/data-sharing'
+import { checkDataAccessRequestModalNotVisible } from '../../../assert/data-sharing.assert'
 
 describe('Dashboard view for caregiver', () => {
   const patientDashboardRoute = `/teams/${PRIVATE_TEAM_ID}/patients/${patient1Id}${AppUserRoute.Dashboard}`
@@ -89,7 +88,7 @@ describe('Dashboard view for caregiver', () => {
     })
 
     await testAppMainLayoutForCaregiver(appMainLayoutParams)
-    await testDashboardDataVisualisationForPatientOrPrivateTeam(patientDashboardLayoutParams, false)
+    await testDashboardDataVisualisationForPatientOrPrivateTeam(patientDashboardLayoutParams)
     await testPatientNavBarForCaregiver()
   })
 
@@ -100,7 +99,7 @@ describe('Dashboard view for caregiver', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationTwoWeeksOldData(false)
+    await testDashboardDataVisualisationTwoWeeksOldData()
   })
 
   it('should produce fourteen days old statistics when data is sixteen days old', async () => {
@@ -118,7 +117,6 @@ describe('Dashboard view for caregiver', () => {
 
     const glookoXtPartnerId = 'partnerId'
 
-    jest.spyOn(ConfigService, 'getGlookoXtPartnerId').mockReturnValue(glookoXtPartnerId)
     const appState = { partnerId: glookoXtPartnerId, callbackUrl: 'https://fake-url.com' }
     const appStateJson = encodeURIComponent(JSON.stringify(appState))
 
@@ -126,6 +124,6 @@ describe('Dashboard view for caregiver', () => {
       renderPage(`${patientDashboardRoute}?appStateJson=${appStateJson}`)
     })
 
-    testDataAccessRequestModalError()
+    checkDataAccessRequestModalNotVisible()
   })
 })
