@@ -89,7 +89,7 @@ export const LoginPageLanding: FunctionComponent = () => {
 
       loginWithState(appState)
     }
-  }, [callbackUrl, loginWithState, partnerId])
+  }, [callbackUrl, loginWithState, partnerId, state])
 
   return (
     <React.Fragment>

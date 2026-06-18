@@ -26,17 +26,15 @@
  */
 
 import { PartnerName } from './models/enum/partner-name.enum'
-import {ExternalConsentsApi} from './external-consents.api'
+import { ExternalConsentsApi } from './external-consents.api'
 
 export const validatePartner = async (partnerId: string, callbackUrl: string): Promise<PartnerName | null> => {
   const details = await ExternalConsentsApi.getPartnerDetails(partnerId)
-  if (!details || details.authorizedCallbackUrls.length == 0) {
+  if (!details || details.authorizedCallbackUrls.length === 0) {
     return null
   }
-  for (const url of details.authorizedCallbackUrls) {
-    if (url === callbackUrl) {
+  if (details.authorizedCallbackUrls.includes(callbackUrl)) {
       return details.name
-    }
   }
 
   return null

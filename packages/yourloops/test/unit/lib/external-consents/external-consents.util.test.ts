@@ -25,7 +25,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { ConfigService } from '../../../../lib/config/config.service'
 import { validatePartner } from '../../../../lib/external-consents/external-consents.util'
 import { PartnerName } from '../../../../lib/external-consents/models/enum/partner-name.enum'
 import { ExternalConsentsApi } from '../../../../lib/external-consents/external-consents.api'

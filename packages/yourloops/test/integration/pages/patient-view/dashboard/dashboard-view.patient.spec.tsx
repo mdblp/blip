@@ -64,7 +64,6 @@ import { testJoinTeam } from '../../../use-cases/teams-management'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
-import { ConfigService } from '../../../../../lib/config/config.service'
 import {
   testDataAccessRequestError,
   testDataAccessRequestModalError,
@@ -75,6 +74,7 @@ import { mockExternalConsentsApi } from '../../../mock/external-consents.api.moc
 import { ExternalConsentsApi } from '../../../../../lib/external-consents/external-consents.api'
 import { PartnerDetails } from '../../../../../lib/external-consents/models/partner-details.model'
 import { PartnerName } from '../../../../../lib/external-consents/models/enum/partner-name.enum'
+import { checkDataAccessRequestModalNotVisible } from '../../../assert/data-sharing.assert'
 
 describe('Dashboard view for patient', () => {
   const patientDashboardRoute = AppUserRoute.Dashboard
@@ -204,7 +204,7 @@ describe('Dashboard view for patient', () => {
       renderPage(patientDashboardRoute)
     })
 
-    testDataAccessRequestModalError()
+    checkDataAccessRequestModalNotVisible()
   })
 
   it('should display an error for the data sharing if the partnerId is invalid', async () => {
