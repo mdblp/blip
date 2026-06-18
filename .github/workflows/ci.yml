@@ -365,7 +365,7 @@ jobs:
         with:
           app-name: blip
           language: js
-        secrets: inherit
+#        secrets: inherit
 
 #      - name: Generate SBOM (CycloneDx version)
 #        # See for usage: https://www.npmjs.com/package/%40cyclonedx/cyclonedx-npm
