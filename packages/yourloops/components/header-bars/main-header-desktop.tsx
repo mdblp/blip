@@ -139,6 +139,7 @@ const MainHeaderDesktop: FC<MainHeaderProps> = (props) => {
               }}>
               <Link to="/">
                 <Avatar
+                  id="header-main-logo"
                   aria-label={t('alt-img-logo')}
                   variant="square"
                   src={`/branding_${config.BRANDING}_logo.svg`}
@@ -187,12 +188,14 @@ const MainHeaderDesktop: FC<MainHeaderProps> = (props) => {
                 flex: 1
               }}>
               <Badge
+                id="notification-count-badge"
                 aria-label={t('notification-list')}
                 badgeContent={receivedInvitations.length}
                 overlap="circular"
                 color="error"
               >
                 <IconButton
+                  id={"header-notification-link"}
                   onClick={() => { navigate(`${AppUserRoute.Notifications}`) }}
                   sx={{
                     color: 'var(--text-color-primary)'
