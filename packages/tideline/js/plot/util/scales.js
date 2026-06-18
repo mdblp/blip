@@ -176,7 +176,7 @@ export function createYAxisBolus(tidelineData, pool) {
   const allBolus = tidelineData.medicalData.bolus.concat(tidelineData.medicalData.wizards)
   const scale = createScaleBolus(allBolus, pool)
   // set up y-axis for bolus
-  const bolusTickValues = [0, 1, 5, 10]
+  const bolusTickValues = [0, 1, 5]
   const maxBolusValue = scale.domain()[1]
   // Add additional legends
   while (maxBolusValue > bolusTickValues[bolusTickValues.length - 1] && bolusTickValues.length < 7) {

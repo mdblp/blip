@@ -322,6 +322,8 @@ const checkDailyViewChartsCommon = () => {
 
   const basalChartLabel = screen.getByTestId('poolBasal-chart-label')
   expect(basalChartLabel).toHaveTextContent('Basal Rates (U/h)')
+
+  expect(screen.getByTestId('pool-poolBolus-yAxis')).toHaveTextContent('01510152030')
 }
 
 export const checkDailyViewChartsDblg1 = () => {
@@ -392,4 +394,10 @@ export const checkGlucoseChartYAxis = async () => {
 
 export const checkGlucoseChartYAxisAtDate = async () => {
   expect(screen.getByTestId('pool-poolBG-yAxis')).toHaveTextContent('70180100')
+}
+
+export const checkBolusChartYAxisForSmallBoluses = async () => {
+  expect(screen.getByTestId('pool-poolBolus-yAxis')).toHaveTextContent('015')
+  // Check that the next tick (10) is not visible
+  expect(screen.getByTestId('pool-poolBolus-yAxis')).not.toHaveTextContent('01510')
 }
