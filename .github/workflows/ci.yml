@@ -360,11 +360,11 @@ jobs:
       - name: Install npm dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Generate and upload SBOM
-        uses: mdblp/.github/.github/workflows/sbom.yml@main
-        with:
-          app-name: blip
-          language: js
+#      - name: Generate and upload SBOM
+#        uses: mdblp/.github/.github/workflows/sbom.yml@main
+#        with:
+#          app-name: blip
+#          language: js
 #        secrets: inherit
 
 #      - name: Generate SBOM (CycloneDx version)
@@ -399,3 +399,10 @@ jobs:
 #              -F "applicationVersion=${{ needs.publish.outputs.version }}" \
 #              -X POST \
 #              "https://diabeloop.iq.sonatype.app/api/v2/sbom/import?ignoreValidationError=true"
+
+  sbom:
+    uses: mdblp/.github/.github/workflows/sbom.yml@main
+    with:
+      app-name: blip
+      language: js
+    secrets: inherit
