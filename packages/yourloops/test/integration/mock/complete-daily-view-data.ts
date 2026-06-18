@@ -2128,10 +2128,10 @@ export const getTargetValueChangesData = (): Data => {
           "type": DatumType.Bolus,
           "source": Source.Diabeloop,
           "subType": BolusSubtype.Normal,
-          "normal": 5.05,
+          "normal": 4.05,
           "prescriptor": Prescriptor.Manual,
           "wizard": null,
-          "expectedNormal": 5.05,
+          "expectedNormal": 4.05,
           "isoWeekday": WeekDays.Sunday
         }
       ],

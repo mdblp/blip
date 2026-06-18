@@ -27,6 +27,7 @@
 
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
 import {
+  checkBolusChartYAxisForSmallBoluses,
   checkGlucoseChartYAxis,
   checkGlucoseChartYAxisAtDate,
   checkSMBGDailyStatsWidgetsTooltips,
@@ -285,8 +286,8 @@ describe('Daily view for anyone', () => {
     })
   })
 
-  describe('with glycemic target defined', () => {
-    it('should display the target on the Glucose chart', async () => {
+  describe('with glycemic target defined and small boluses size', () => {
+    it('should display the target on the Glucose chart and adapt the Y axis of the Bolus chart', async () => {
       mockDataAPI(getTargetValueChangesData())
 
       await act(async () => {
@@ -294,6 +295,7 @@ describe('Daily view for anyone', () => {
       })
 
       await checkGlucoseChartYAxis()
+      await checkBolusChartYAxisForSmallBoluses()
     })
 
     it('should display the target defined at the required date', async () => {
