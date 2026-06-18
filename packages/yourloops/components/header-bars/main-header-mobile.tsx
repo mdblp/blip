@@ -138,6 +138,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
           <Banner />
           <Link to="/">
             <Avatar
+              id="header-main-logo"
               aria-label={t('alt-img-logo')}
               variant="square"
               src={`/branding_${config.BRANDING}_logo.svg`}
@@ -151,6 +152,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
               gap: theme.spacing(1)
             }}>
             <Badge
+              id="notification-count-badge"
               aria-label={t('notification-list')}
               badgeContent={receivedInvitations.length}
               overlap="circular"
@@ -158,6 +160,7 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
             >
               <IconButton
                 color = "inherit"
+                id={"header-notification-link"}
                 onClick={goToNotifications}
                 data-testid="notification-icon">
                 <NotificationsNoneIcon />
@@ -194,8 +197,9 @@ const MainHeaderMobile: FC<MainHeaderProps> = (props) => {
                     variant="outlined"
                     className={settingsButton}
                     sx={{ color: 'var(--text-color-primary)' }}
+                    data-testid="main-header-hcp-care-team-settings-button"
                   >
-                    <CareTeamSettingsIcon data-testid="care-team-settings-icon" />
+                    <CareTeamSettingsIcon />
                   </Button>
                 )}
               </>

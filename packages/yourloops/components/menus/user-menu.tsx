@@ -139,8 +139,9 @@ function UserMenu(): JSX.Element {
         {isMobile
           ? <IconButton
             color="inherit"
+            data-testid="user-menu-button"
             onClick={openMenu}>
-            <AccountCircleIcon data-testid="mobile-account-icon"/>
+            <AccountCircleIcon />
           </IconButton>
           : <Button
             color="inherit"

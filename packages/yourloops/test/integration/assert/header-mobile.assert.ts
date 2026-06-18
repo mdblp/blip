@@ -47,12 +47,12 @@ const checkHeader = (header: BoundFunctions<typeof queries>) => {
 }
 
 const checkUserMenu = async (header: BoundFunctions<typeof queries>, userName: string) => {
-  const iconTestId = 'mobile-account-icon'
+  const buttonUserMenuTestId = 'user-menu-button'
 
-  expect(header.getByTestId(iconTestId)).toBeVisible()
+  expect(header.getByTestId(buttonUserMenuTestId)).toBeVisible()
   expect(header.queryByText(userName)).not.toBeInTheDocument()
 
-  await userEvent.click(header.getByTestId(iconTestId))
+  await userEvent.click(header.getByTestId(buttonUserMenuTestId))
 
   const userMenu = within(screen.getByTestId('user-menu'))
   expect(userMenu.getByText('User account')).toBeVisible()
@@ -92,9 +92,9 @@ export const checkHcpHeaderMobile = async (headerInfo: HeaderInfoMobile) => {
   const header = within(await screen.findByTestId('app-main-header-mobile'))
 
   if (headerInfo.teamMenuInfo.isSelectedTeamPrivate) {
-    expect(header.queryByTestId('care-team-settings-icon')).not.toBeInTheDocument();
+    expect(header.queryByTestId('main-header-hcp-care-team-settings-button')).not.toBeInTheDocument();
   } else {
-    expect(header.getByTestId('care-team-settings-icon')).toBeVisible()
+    expect(header.getByTestId('main-header-hcp-care-team-settings-button')).toBeVisible()
   }
 
   expect(header.queryByTestId('back-button')).not.toBeInTheDocument();
