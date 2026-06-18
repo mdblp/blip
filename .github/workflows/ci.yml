@@ -235,7 +235,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-#    needs: [ test-lambda, test-tideline, test-dumb, test-medical, test-yourloops-unit, test-yourloops-integration-hcp, test-yourloops-integration-caregiver, test-yourloops-integration-patient, test-yourloops-integration-common ]
+    needs: [ test-lambda, test-tideline, test-dumb, test-medical, test-yourloops-unit, test-yourloops-integration-hcp, test-yourloops-integration-caregiver, test-yourloops-integration-patient, test-yourloops-integration-common ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -256,14 +256,14 @@ jobs:
         run: nice bash build.sh
 
       - name: Upload yourloops build
-        # if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')
+        if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')
         uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/
 
   publish:
-    # if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')
+    if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')
     needs: build
     runs-on: ubuntu-latest
     outputs:
@@ -303,104 +303,50 @@ jobs:
           expand: 'false'
           export: 'false'
 
-#      - name: Set short commit sha
-#        id: short-commit-compute
-#        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - name: Set short commit sha
+        id: short-commit-compute
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-#      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
 
-#      - name: Set up Docker Buildx
-#        uses: docker/setup-buildx-action@v4
-#        with:
-#          driver-opts: |
-#            image=moby/buildkit:v0.10.6
-
-#      - name: Log in to the Nexus registry
-#        uses: docker/login-action@v4
-#        with:
-#          registry: ${{ secrets.REGISTRY }}
-#          username: ${{ secrets.NEXUS_USERNAME }}
-#          password: ${{ secrets.NEXUS_PASSWORD }}
-
-#      - name: Build and push blip Docker image
-#        uses: docker/build-push-action@v7
-#        with:
-#          context: .
-#          push: true
-#          platforms: linux/arm64,linux/amd64
-#          tags: |
-#            ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
-#            ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}
-
-#      - name: Creating new github tag
-#        uses: rickstaa/action-create-tag@v1
-#        with:
-#          tag: v${{ steps.changelog-version.outputs.semver }}
-#          force_push_tag: true
-#      - name: Creating new github tag
-#        uses: rickstaa/action-create-tag@v1
-#        with:
-#          tag: v${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
-#          force_push_tag: true
-
-  documentation:
-    # if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')
-    runs-on: ubuntu-latest
-    needs: publish
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Use Node.js ${{ env.node-version }}
-        uses: actions/setup-node@v6
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
         with:
-          node-version: ${{ env.node-version }}
+          driver-opts: |
+            image=moby/buildkit:v0.10.6
 
-      - name: Install npm dependencies
-        run: npm ci --legacy-peer-deps
+      - name: Log in to the Nexus registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ secrets.REGISTRY }}
+          username: ${{ secrets.NEXUS_USERNAME }}
+          password: ${{ secrets.NEXUS_PASSWORD }}
 
-#      - name: Generate and upload SBOM
-#        uses: mdblp/.github/.github/workflows/sbom.yml@main
-#        with:
-#          app-name: blip
-#          language: js
-#        secrets: inherit
+      - name: Build and push blip Docker image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          platforms: linux/arm64,linux/amd64
+          tags: |
+            ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
+            ${{ secrets.REGISTRY }}/blip:${{ steps.changelog-version.outputs.semver }}
 
-#      - name: Generate SBOM (CycloneDx version)
-#        # See for usage: https://www.npmjs.com/package/%40cyclonedx/cyclonedx-npm
-#        run: |
-#          npx @cyclonedx/cyclonedx-npm \
-#            --package-lock-only \
-#            --omit dev \
-#            -o blip-sbom.json
-#
-#      - name: Upload SBOM artifact
-#        uses: actions/upload-artifact@v7
-#        with:
-#          name: sbom
-#          path: blip-sbom.json
-#          retention-days: 30
-#
-#      - name: Push SBOM to Sonatype IQ SBOM Manager
-#        env:
-#          USER_CODE: ${{ secrets.SBOM_MANAGER_USER_CODE }}
-#          PASSCODE: ${{ secrets.SBOM_MANAGER_PASSCODE }}
-#        run: |
-#            APP_ID=$(curl --fail-with-body -s \
-#              -u "${USER_CODE}:${PASSCODE}" \
-#              "https://diabeloop.iq.sonatype.app/api/v2/applications?publicId=blip" \
-#              | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)
-#            echo "Resolved applicationId: ${APP_ID}"
-#            curl --fail-with-body \
-#              -u "${USER_CODE}:${PASSCODE}" \
-#              -F "file=@blip-sbom.json" \
-#              -F "applicationId=${APP_ID}" \
-#              -F "applicationVersion=${{ needs.publish.outputs.version }}" \
-#              -X POST \
-#              "https://diabeloop.iq.sonatype.app/api/v2/sbom/import?ignoreValidationError=true"
+      - name: Creating new github tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: v${{ steps.changelog-version.outputs.semver }}
+          force_push_tag: true
+      - name: Creating new github tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: v${{ steps.changelog-version.outputs.semver }}-${{ steps.short-commit-compute.outputs.sha_short }}
+          force_push_tag: true
 
   sbom:
+    if: github.ref_name == 'main' || startsWith(github.ref_name, 'release/')
+    needs: publish
     uses: mdblp/.github/.github/workflows/sbom.yml@main
     with:
       app-name: blip
