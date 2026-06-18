@@ -86,75 +86,9 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
     setPatientToReinvite(null)
   }
 
-  const resendInvite = (patient: Patient): void => {
+  const resendInvite = useCallback((patient: Patient): void => {
     setPatientToReinvite(patient)
-  }
-
-  const buildPendingColumns = (): GridColDef[] => {
-    return [
-      {
-        field: PendingPatientListColumns.InviteSentBy,
-        type: 'string',
-        headerName: t('invite-sent-by'),
-        hideable: false,
-        minWidth: MEDIUM_CELL_WIDTH
-      },
-      {
-        field: PendingPatientListColumns.Date,
-        type: 'string',
-        headerName: t('date'),
-        hideable: false,
-        minWidth: SMALL_CELL_WIDTH
-      },
-      {
-        field: PendingPatientListColumns.Email,
-        type: 'string',
-        headerName: t('email'),
-        minWidth: MEDIUM_CELL_WIDTH
-      },
-      {
-        type: 'actions',
-        field: PendingPatientListColumns.Actions,
-        headerName: t('actions'),
-        getActions: (params: GridRowParams<PendingGridRowModel>) => {
-          const patient = params.row[PendingPatientListColumns.Actions]
-
-          if (!params.row.isInviteAvailable) {
-            return []
-          }
-          const patientEmail = patient.profile.email
-
-          return [
-            <Button
-              key={params.row.id}
-              data-action="reinvite-patient"
-              startIcon={<MailIcon />}
-              data-testid={`reinvite-patient-${patientEmail}`}
-              aria-label={`${t('button-resend-invite')} ${patientEmail}`}
-              onClick={() => {
-                resendInvite(patient)
-              }}
-            >
-              {t('button-resend-invite')}
-            </Button>,
-            <Button
-              key={params.row.id}
-              data-action="remove-patient"
-              startIcon={<CloseIcon />}
-              data-testid={`remove-patient-${patientEmail}`}
-              aria-label={`${t('button-remove-patient')} ${patientEmail}`}
-              onClick={() => {
-                removePatient(patient.userid)
-              }}
-            >
-              {t('button-cancel')}
-            </Button>
-          ]
-        },
-        minWidth: LARGE_CELL_WIDTH
-      }
-    ]
-  }
+  }, [])
 
   const buildPendingRows = useCallback((): GridRowsProp => {
     return patients.map((patient): PendingGridRowModel => {
@@ -187,7 +121,69 @@ export const usePendingPatientListHook = (props: PendingPatientListHookProps): P
     return buildPendingRows()
   }, [buildPendingRows])
 
-  const columns: GridColDef[] = useMemo(() => buildPendingColumns(), [buildPendingColumns])
+  const columns: GridColDef[] = useMemo((): GridColDef[] => [
+    {
+      field: PendingPatientListColumns.InviteSentBy,
+      type: 'string',
+      headerName: t('invite-sent-by'),
+      hideable: false,
+      minWidth: MEDIUM_CELL_WIDTH
+    },
+    {
+      field: PendingPatientListColumns.Date,
+      type: 'string',
+      headerName: t('date'),
+      hideable: false,
+      minWidth: SMALL_CELL_WIDTH
+    },
+    {
+      field: PendingPatientListColumns.Email,
+      type: 'string',
+      headerName: t('email'),
+      minWidth: MEDIUM_CELL_WIDTH
+    },
+    {
+      type: 'actions',
+      field: PendingPatientListColumns.Actions,
+      headerName: t('actions'),
+      getActions: (params: GridRowParams<PendingGridRowModel>) => {
+        const patient = params.row[PendingPatientListColumns.Actions]
+
+        if (!params.row.isInviteAvailable) {
+          return []
+        }
+        const patientEmail = patient.profile.email
+
+        return [
+          <Button
+            key={params.row.id}
+            data-action="reinvite-patient"
+            startIcon={<MailIcon />}
+            data-testid={`reinvite-patient-${patientEmail}`}
+            aria-label={`${t('button-resend-invite')} ${patientEmail}`}
+            onClick={() => {
+              resendInvite(patient)
+            }}
+          >
+            {t('button-resend-invite')}
+          </Button>,
+          <Button
+            key={params.row.id}
+            data-action="remove-patient"
+            startIcon={<CloseIcon />}
+            data-testid={`remove-patient-${patientEmail}`}
+            aria-label={`${t('button-remove-patient')} ${patientEmail}`}
+            onClick={() => {
+              removePatient(patient.userid)
+            }}
+          >
+            {t('button-cancel')}
+          </Button>
+        ]
+      },
+      minWidth: LARGE_CELL_WIDTH
+    }
+  ], [removePatient, resendInvite, t])
 
   return {
     columns,

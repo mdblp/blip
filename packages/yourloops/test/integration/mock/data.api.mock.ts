@@ -1714,9 +1714,28 @@ export const smallDataSet: Data = {
   }
 }
 
+export const smallDataSetDblg1v118: Data = {
+  ...smallDataSet,
+  data: {
+    ...smallDataSet.data,
+    pumpSettings: [
+      {
+        ...smallDataSet.data.pumpSettings[0],
+        payload: {
+          ...smallDataSet.data.pumpSettings[0].payload,
+          device: {
+            ...smallDataSet.data.pumpSettings[0].payload.device,
+            swVersion: "1.18.0"
+          }
+        }
+      }
+    ]
+  }
+}
+
 export const noData: Data = {
   dataRange: ['', ''],
-  data: []
+  data: [] as unknown as MedicalData
 }
 
 export const smbgData: Data = {
@@ -1728,8 +1747,11 @@ export const smbgData: Data = {
     "cbg": [],
     "confidentialModes": [],
     "deviceParametersChanges": [],
+    "eatingShortlyEvents": [],
+    "iob": [],
     "messages": [],
     "meals": [],
+    "nightModes": [],
     "physicalActivities": [],
     "pumpSettings": [],
     "reservoirChanges": [],
@@ -2233,8 +2255,11 @@ export const timeInRangeStatsTrendViewData: Data = {
     ],
     "confidentialModes": [],
     "deviceParametersChanges": [],
+    "eatingShortlyEvents": [],
+    "iob": [],
     "messages": [],
     "meals": [],
+    "nightModes": [],
     "physicalActivities": [],
     "pumpSettings": [],
     "reservoirChanges": [],
@@ -2496,9 +2521,11 @@ export const twoWeeksOfCbg: Data = {
     ],
     "confidentialModes": [],
     "deviceParametersChanges": [],
+    "eatingShortlyEvents": [],
     "iob": [],
     "messages": [],
     "meals": [],
+    "nightModes": [],
     "physicalActivities": [],
     "pumpSettings": [],
     "reservoirChanges": [],

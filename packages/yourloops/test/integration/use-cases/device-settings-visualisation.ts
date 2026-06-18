@@ -38,31 +38,31 @@ import {
   checkSafetyBasalProfileErrorMessage
 } from '../assert/device-view.assert'
 
-export const testDevicesVisualisationForHcp = async () => {
+export const testDevicesVisualisationForHcp = async (showDownloadButton = true) => {
   testDevicesMenuLayout()
-  await testCurrentParametersVisualisationForHcp()
+  await testCurrentParametersVisualisationForHcp(showDownloadButton)
   await testBasalSafetyProfileVisualisation()
   await testChangeHistoryVisualisation()
 }
 
 export const testDevicesVisualisation = async () => {
   testDevicesMenuLayout()
-  await testCurrentParametersVisualisation()
+  await testCurrentParametersVisualisation(false)
   await testBasalSafetyProfileVisualisation()
   await testChangeHistoryVisualisation()
   await testDeviceHistoryVisualisation()
 }
 
-export const testG2DevicesVisualisationForHcp = async () => {
+export const testG2DevicesVisualisationForHcp = async (showDownloadButton = true) => {
   testDevicesMenuLayout()
-  await testG2CurrentParametersVisualisationForHcp()
+  await testG2CurrentParametersVisualisationForHcp(showDownloadButton)
   await testBasalSafetyProfileVisualisation()
   await testChangeHistoryVisualisation()
 }
 
-export const testG2DevicesVisualisation = async () => {
+export const testG2DevicesVisualisation = async (showDownloadButton = false) => {
   testDevicesMenuLayout()
-  await testG2CurrentParametersVisualisation()
+  await testG2CurrentParametersVisualisation(showDownloadButton)
   await testBasalSafetyProfileVisualisation()
   await testChangeHistoryVisualisation()
   await testDeviceHistoryVisualisation()
@@ -84,26 +84,26 @@ export const testDevicesMenuLayoutForMobigoDevice = () => {
   checkDevicesMenuLayoutWithoutBasalSafetyProfile()
 }
 
-const testCurrentParametersVisualisationForHcp = async () => {
-  checkCurrentParametersContent()
+const testCurrentParametersVisualisationForHcp = async (showDownloadButton = true) => {
+  checkCurrentParametersContent(showDownloadButton)
   await checkParametersMemo()
   await checkCopyTextButton()
 }
 
-const testCurrentParametersVisualisation = async () => {
-  checkCurrentParametersContent()
+const testCurrentParametersVisualisation = async (showDownloadButton = true) => {
+  checkCurrentParametersContent(showDownloadButton)
   checkParametersMemoNotDisplayed()
   await checkCopyTextButton()
 }
 
-const testG2CurrentParametersVisualisationForHcp = async () => {
-  checkG2CurrentParametersContent()
+const testG2CurrentParametersVisualisationForHcp = async (showDownloadButton = true) => {
+  checkG2CurrentParametersContent(showDownloadButton)
   await checkParametersMemo()
   await checkG2CopyTextButton()
 }
 
-const testG2CurrentParametersVisualisation = async () => {
-  checkG2CurrentParametersContent()
+const testG2CurrentParametersVisualisation = async (showDownloadButton = true) => {
+  checkG2CurrentParametersContent(showDownloadButton)
   checkParametersMemoNotDisplayed()
   await checkG2CopyTextButton()
 }

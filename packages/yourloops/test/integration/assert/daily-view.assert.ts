@@ -36,12 +36,15 @@ import {
   ALARM_EVENT_G6_HYPOGLYCEMIA_ID,
   ALARM_EVENT_G6_LONG_HYPERGLYCEMIA_ID,
   ALARM_EVENT_G6_SENSOR_SESSION_EXPIRED_ID,
-  ALARM_EVENT_G6_URGENT_LOW_SOON_ID, ALARM_EVENT_G7_BRIEF_SENSOR_ISSUE,
+  ALARM_EVENT_G6_URGENT_LOW_SOON_ID,
+  ALARM_EVENT_G7_BRIEF_SENSOR_ISSUE,
   ALARM_EVENT_G7_GRACE_PERIOD_EXPIRED,
   ALARM_EVENT_G7_HYPERGLYCEMIA_ID,
   ALARM_EVENT_G7_HYPOGLYCEMIA_ID,
-  ALARM_EVENT_G7_LONG_HYPERGLYCEMIA_ID, ALARM_EVENT_G7_SENSOR_FAILED_ID,
-  ALARM_EVENT_G7_SENSOR_SESSION_EXPIRED_ID, ALARM_EVENT_G7_SIGNAL_LOSS_ID,
+  ALARM_EVENT_G7_LONG_HYPERGLYCEMIA_ID,
+  ALARM_EVENT_G7_SENSOR_FAILED_ID,
+  ALARM_EVENT_G7_SENSOR_SESSION_EXPIRED_ID,
+  ALARM_EVENT_G7_SIGNAL_LOSS_ID,
   ALARM_EVENT_G7_URGENT_LOW_SOON_ID,
   ALARM_EVENT_INSIGHT_EMPTY_INSULIN_CARTRIDGE_ID,
   ALARM_EVENT_INSIGHT_EMPTY_PUMP_BATTERY_ID,
@@ -169,13 +172,13 @@ export const checkDailyTidelineContainerTooltipsMgdl = async () => {
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_EMPTY_PUMP_BATTERY_ID}`, 'Alarm 910011:30 pmPump battery emptyThe pump battery is empty.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_EMPTY_RESERVOIR_ID}`, 'Alarm 910022:00 pmReservoir emptyThere is no insulin left in the reservoir.')
   await checkTidelineContainerElementTooltip(`alarmEvent_group_${ALARM_EVENT_MEDISAFE_OCCLUSION_ID}`, 'Alarm 910042:30 pmOcclusionAn occlusion was detected, which means that insulin delivery is not working at all or is restricted.')
-  await checkTidelineContainerElementTooltip(`warmup_group_${WARMUP_01_ID}`,'Sensor warmup6:30 pmSession end9:00 pm')
-  await checkTidelineContainerElementTooltip(`event_group_${ZEN_MODE_ID}`,'Zen mode11:00 pmDuration2hours')
-  await checkTidelineContainerElementTooltip(`event_group_${ZEN_MODE_ID_WITH_GLY}`,'Zen mode10:00 pmTarget glucose level130mg/dLSet target110mg/dLDifference+20mg/dLDuration2hours')
-  await checkTidelineContainerElementTooltip(`basal_group_${BASAL_LOOP_MODE_ON_ID}`,'Basal rate6:30 pmEnd time6:30 pmLoop modeONDelivered0.80U/h')
-  await checkTidelineContainerElementTooltip(`basal_group_${BASAL_LOOP_MODE_OFF_ID}`,'Basal rate6:31 pmEnd time6:31 pmLoop modeOFFDelivered0.20U/h')
-  await checkTidelineContainerElementTooltip(`basal_group_${BASAL_TEMP_ID}`,'Basal rate6:32 pmEnd time6:32 pmTemp basalDelivered0.30U/h')
-  await checkTidelineContainerElementTooltip(`basal_group_${BASAL_MANUAL_ID}`,'Basal rate6:33 pmEnd time6:33 pmLoop modeOFFDelivered0.10U/h')
+  await checkTidelineContainerElementTooltip(`warmup_group_${WARMUP_01_ID}`, 'Sensor warmup6:30 pmSession end9:00 pm')
+  await checkTidelineContainerElementTooltip(`event_group_${ZEN_MODE_ID}`, 'Zen mode11:00 pmDuration2hours')
+  await checkTidelineContainerElementTooltip(`event_group_${ZEN_MODE_ID_WITH_GLY}`, 'Zen mode10:00 pmTarget glucose level130mg/dLSet target110mg/dLDifference+20mg/dLDuration2hours')
+  await checkTidelineContainerElementTooltip(`basal_group_${BASAL_LOOP_MODE_ON_ID}`, 'Basal rate6:30 pmEnd time6:30 pmLoop modeONDelivered0.80U/h')
+  await checkTidelineContainerElementTooltip(`basal_group_${BASAL_LOOP_MODE_OFF_ID}`, 'Basal rate6:31 pmEnd time6:31 pmLoop modeOFFDelivered0.20U/h')
+  await checkTidelineContainerElementTooltip(`basal_group_${BASAL_TEMP_ID}`, 'Basal rate6:32 pmEnd time6:32 pmTemp basalDelivered0.30U/h')
+  await checkTidelineContainerElementTooltip(`basal_group_${BASAL_MANUAL_ID}`, 'Basal rate6:33 pmEnd time6:33 pmLoop modeOFFDelivered0.10U/h')
 }
 
 export const checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware = async () => {
@@ -219,7 +222,7 @@ export const checkDailyTidelineContainerTooltipsDBLG2OrRecentSoftware = async ()
 export const checkDailyTidelineContainerTooltipsDblg2 = async () => {
   expect(await screen.findByTestId(`nightMode_group_${NIGHT_MODE_ID}`, {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
   await checkTidelineContainerElementTooltip(`nightMode_group_${NIGHT_MODE_ID}`, 'Night mode11:00 pmDuration10 hours')
-  await checkTidelineContainerElementTooltip(`iob_group_${IOB_ID}`,'Active insulin5:30 pmInsulin on board (IOB)Insulin25.00U')
+  await checkTidelineContainerElementTooltip(`iob_group_${IOB_ID}`, 'Active insulin5:30 pmInsulin on board (IOB)Insulin25.00U')
   await checkTidelineContainerElementTooltip(`bolus_eating_shortly_${EATING_SHORTLY_BOLUS_ID}`, 'Meal5:30 pmMeal without carb countingLoop modeBolus TypeStandardDelivered0.5U')
   await checkTidelineContainerElementTooltip(`eatingShortly_group_${EATING_SHORTLY_EVENT_ID}`, 'Meal5:30 pmMeal without carb counting')
   await checkTidelineContainerElementTooltip(`wizard_group_${WIZARD_WITHOUT_BOLUS_ID}`, `Meal9:10 pmCarbs30gEntered at ${moment(WIZARD_INPUT_TIME).format('h:mm a')}No bolus recommended`)
@@ -365,8 +368,8 @@ export const checkTotalCarbsStatContent = async () => {
 
 export const checkTimeChangeIndicator = async () => {
   expect(await screen.findByTestId(`basal_group_${BASAL_TIME_CHANGE_INITAL_TIME_ID}`, {}, { timeout: 3000 })).toBeVisible() // This is used to wait for the container to be fully initialized
-  await checkTidelineContainerElementTooltip(`timechange_${PARIS_TIMEZONE}_${PARIS_TIMEZONE}`,'Time Change2:59 amPrevious time2:00 amNew time2:59 am')
-  await checkTidelineContainerElementTooltip(`timechange_${PARIS_TIMEZONE}_${DUBLIN_TIMEZONE}`,'Timezone Change10:30 pmPrevious time11:30 pmEurope/ParisNew time10:30 pmEurope/Dublin')
+  await checkTidelineContainerElementTooltip(`timechange_${PARIS_TIMEZONE}_${PARIS_TIMEZONE}`, 'Time Change2:59 amPrevious time2:00 amNew time2:59 am')
+  await checkTidelineContainerElementTooltip(`timechange_${PARIS_TIMEZONE}_${DUBLIN_TIMEZONE}`, 'Timezone Change10:30 pmPrevious time11:30 pmEurope/ParisNew time10:30 pmEurope/Dublin')
 }
 
 const checkDailyTimeInRangeStatsWidgetsPercentages = (patientStatistics: BoundFunctions<typeof queries>) => {
@@ -380,5 +383,13 @@ const checkDailyTimeInRangeStatsWidgetsPercentages = (patientStatistics: BoundFu
 export const checkTimeInRangeDefaultStats = async () => {
   const TIRDT1 = within(await screen.findByTestId('time-in-range-dt1-chart'))
   expect(await screen.findByText('70-180', {}, { timeout: 3000 })).toBeVisible()
-  expect (TIRDT1.getByTestId('cbg-percentage-stat-timeInRangeDt1-timeInRangeDt1')).toHaveTextContent('15m20%')
+  expect(TIRDT1.getByTestId('cbg-percentage-stat-timeInRangeDt1-timeInRangeDt1')).toHaveTextContent('15m20%')
+}
+
+export const checkGlucoseChartYAxis = async () => {
+  expect(screen.getByTestId('pool-poolBG-yAxis')).toHaveTextContent('70180120')
+}
+
+export const checkGlucoseChartYAxisAtDate = async () => {
+  expect(screen.getByTestId('pool-poolBG-yAxis')).toHaveTextContent('70180100')
 }

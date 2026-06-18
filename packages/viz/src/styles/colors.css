@@ -59,6 +59,9 @@
   --bg-very-low: var(--error-color-main);
   --bg-low: var(--error-color-50);
   --bg-target: var(--info-color-main);
+  --bg-target-threshold: var(--info-color-50);
+  --bg-target-chip-text: var(--dark-blue-main);
+  --bg-target-chip-background: var(--info-color-10);
   --bg-tight-range: var(--info-color-light);
   --bg-high: var(--warning-color-50);
   --bg-very-high: var(--warning-color-main);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, Diabeloop
+ * Copyright (c) 2024-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -27,17 +27,25 @@
 
 import { AppRoute } from '../../models/enums/routes.enum'
 import { useNavigate } from 'react-router-dom'
+import { AppState, useAuth0 } from '@auth0/auth0-react'
 
 interface LoginHookReturn {
+  loginWithState: (appState: AppState) => Promise<void>
   redirectToSignupInformation: () => void
 }
 
 export const useLogin = (): LoginHookReturn => {
   const navigate = useNavigate()
+  const { loginWithRedirect } = useAuth0()
 
   const redirectToSignupInformation = () => {
     navigate(AppRoute.SignupInformation)
   }
 
-  return { redirectToSignupInformation }
+  const loginWithState = async (appState: AppState) => {
+    const appStateJson = encodeURIComponent(JSON.stringify(appState))
+    await loginWithRedirect({ appState: { appStateJSON: appStateJson } })
+  }
+
+  return { loginWithState, redirectToSignupInformation }
 }

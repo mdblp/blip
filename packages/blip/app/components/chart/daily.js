@@ -159,7 +159,7 @@ class DailyChart extends React.Component {
     if (this.state.chart === null && !this.unmountingInProgress) {
       const { tidelineData, epochLocation } = this.props
       this.log.debug('Mounting...')
-      const chart = chartDailyFactory(this.refNode.current, tidelineData, _.pick(this.props, this.chartOpts))
+      const chart = chartDailyFactory(this.refNode.current, tidelineData, epochLocation, _.pick(this.props, this.chartOpts))
       this.setState({ chart }, () => {
         this.state.chart.setAtDate(epochLocation)
         this.bindEvents()

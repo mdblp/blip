@@ -25,13 +25,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { act } from '@testing-library/react'
+import { act } from 'react'
 import { renderPage } from '../../../utils/render'
 import {
   mockDataAPI,
   oneDayDashboardData,
   sixteenDaysOldDashboardData,
-  smallDataSet,
+  smallDataSetDblg1v118,
   twoWeeksOldDashboardData
 } from '../../../mock/data.api.mock'
 import { mockPatientLogin } from '../../../mock/patient-login.mock'
@@ -64,6 +64,15 @@ import { testJoinTeam } from '../../../use-cases/teams-management'
 import { AppUserRoute } from '../../../../../models/enums/routes.enum'
 import { mockErrorApi } from '../../../mock/error.api.mock'
 import { mockAnalyticsApi } from '../../../mock/analytics.api.mock'
+import { ConfigService } from '../../../../../lib/config/config.service'
+import {
+  testDataAccessRequestError,
+  testDataAccessRequestModalNotVisible,
+  testGlookoXtDataAccessRequestVisibleAndAccept,
+  testMyDiabbyDataAccessRequestVisibleAndDeny
+} from '../../../use-cases/data-sharing'
+import { mockExternalConsentsApi } from '../../../mock/external-consents.api.mock'
+import { ExternalConsentsApi } from '../../../../../lib/external-consents/external-consents.api'
 
 describe('Dashboard view for patient', () => {
   const patientDashboardRoute = AppUserRoute.Dashboard
@@ -76,6 +85,7 @@ describe('Dashboard view for patient', () => {
     mockChatAPI()
     mockErrorApi()
     mockAnalyticsApi()
+    mockExternalConsentsApi()
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildTeamOne(), buildTeamTwo()])
     jest.spyOn(TeamAPI, 'joinTeam').mockResolvedValue()
     jest.spyOn(TeamAPI, 'getTeamFromCode').mockResolvedValue(anotherTeam)
@@ -99,7 +109,7 @@ describe('Dashboard view for patient', () => {
     })
 
     await testAppMainLayoutForPatient(appMainLayoutParams)
-    await testDashboardDataVisualisationForPatientOrPrivateTeam(patientDashboardLayoutParams)
+    await testDashboardDataVisualisationForPatientOrPrivateTeam(patientDashboardLayoutParams, false)
     await testPatientNavBarForPatient()
   })
 
@@ -139,7 +149,7 @@ describe('Dashboard view for patient', () => {
   })
 
   it('should render correct components when patient is in no medical teams', async () => {
-    mockDataAPI(smallDataSet)
+    mockDataAPI(smallDataSetDblg1v118)
     jest.spyOn(TeamAPI, 'getTeams').mockResolvedValue([buildPrivateTeam()])
 
     const patientDashboardLayoutParams: PatientDashboardLayoutParams = {
@@ -152,7 +162,7 @@ describe('Dashboard view for patient', () => {
       renderPage(patientDashboardRoute)
     })
 
-    await testDashboardDataVisualisationPrivateTeamNoData(patientDashboardLayoutParams)
+    await testDashboardDataVisualisationPrivateTeamNoData(patientDashboardLayoutParams, true)
   })
 
   it('should render correct statistic when data is two weeks old', async () => {
@@ -183,5 +193,81 @@ describe('Dashboard view for patient', () => {
     })
 
     await testEmptyMedicalFilesWidgetForPatient()
+  })
+
+  it('should not display the Data Consent modal if the parameters are not set', async () => {
+    mockDataAPI()
+
+    await act(async () => {
+      renderPage(patientDashboardRoute)
+    })
+
+    testDataAccessRequestModalNotVisible()
+  })
+
+  it('should not display the Data Consent modal if the partnerId is invalid', async () => {
+    mockDataAPI()
+
+    const partnerId = 'invalid-partnerId'
+
+    jest.spyOn(ConfigService, 'getGlookoXtPartnerId').mockReturnValue('glooko-partnerId')
+    jest.spyOn(ConfigService, 'getMyDiabbyPartnerId').mockReturnValue('mydiabby-partnerId')
+    const appState = { partnerId, callbackUrl: 'https://fake-url.com' }
+    const appStateJson = encodeURIComponent(JSON.stringify(appState))
+
+    await act(async () => {
+      renderPage(`${patientDashboardRoute}?appStateJson=${appStateJson}`)
+    })
+
+    testDataAccessRequestModalNotVisible()
+  })
+
+  it('should display the Data Consent modal for GlookoXT if the parameters are set and allow access', async () => {
+    mockDataAPI()
+
+    const glookoXtPartnerId = 'glooko-partnerId'
+
+    jest.spyOn(ConfigService, 'getGlookoXtPartnerId').mockReturnValue(glookoXtPartnerId)
+    const appState = { partnerId: glookoXtPartnerId, callbackUrl: 'https://fake-url.com', partnerState: 'isFromYourLoops' }
+    const appStateJson = encodeURIComponent(JSON.stringify(appState))
+
+    await act(async () => {
+      renderPage(`${patientDashboardRoute}?appStateJson=${appStateJson}`)
+    })
+
+    await testGlookoXtDataAccessRequestVisibleAndAccept()
+  })
+
+  it('should display the Data Consent modal for MyDiabby if the parameters are set and deny access', async () => {
+    mockDataAPI()
+
+    const myDiabbyPartnerId = 'myDiabby-partnerId'
+
+    jest.spyOn(ConfigService, 'getMyDiabbyPartnerId').mockReturnValue(myDiabbyPartnerId)
+    const appState = { partnerId: myDiabbyPartnerId, callbackUrl: 'https://fake-url.com' }
+    const appStateJson = encodeURIComponent(JSON.stringify(appState))
+
+    await act(async () => {
+      renderPage(`${patientDashboardRoute}?appStateJson=${appStateJson}`)
+    })
+
+    await testMyDiabbyDataAccessRequestVisibleAndDeny()
+  })
+
+  it('should display the Data Consent modal and handle error during acceptance', async () => {
+    mockDataAPI()
+    jest.spyOn(ExternalConsentsApi, 'addConsent').mockRejectedValueOnce(new Error('Failed to add consent'))
+
+    const myDiabbyPartnerId = 'myDiabby-partnerId'
+
+    jest.spyOn(ConfigService, 'getMyDiabbyPartnerId').mockReturnValue(myDiabbyPartnerId)
+    const appState = { partnerId: myDiabbyPartnerId, callbackUrl: 'https://fake-url.com' }
+    const appStateJson = encodeURIComponent(JSON.stringify(appState))
+
+    await act(async () => {
+      renderPage(`${patientDashboardRoute}?appStateJson=${appStateJson}`)
+    })
+
+    await testDataAccessRequestError()
   })
 })

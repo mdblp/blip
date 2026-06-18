@@ -26,13 +26,13 @@
  */
 
 import React, { type FC } from 'react'
-import { DeviceSystem, PumpSettings } from 'medical-domain'
+import { DeviceSystem, PumpSettings, Unit } from 'medical-domain'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import { useTranslation } from 'react-i18next'
 import Button from '@mui/material/Button'
-import FileCopyIcon from '@mui/icons-material/FileCopy'
+import FileCopyIconOutlined from '@mui/icons-material/FileCopyOutlined'
 import { useTheme } from '@mui/material/styles'
 import Grid from '@mui/material/Grid'
 import { makeStyles } from 'tss-react/mui'
@@ -47,6 +47,11 @@ import {
   sortParameterList
 } from '../../../../components/device/utils/device.utils'
 import { MobileAppInfoTable } from '../../../../components/device/mobile-app-info-table'
+import Box from '@mui/material/Box'
+import { DownloadDocumentButton } from '../../../../components/buttons/download-document-button'
+import { usePatient } from '../../../../lib/patient/patient.provider'
+import { getIfuDocumentName } from '../../../../lib/medical-files/medical-files.utils'
+import Tooltip from '@mui/material/Tooltip'
 
 interface CurrentParametersSectionProps {
   pumpSettings: PumpSettings
@@ -61,8 +66,12 @@ const useStyles = makeStyles()(() => ({
 export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pumpSettings }) => {
   const theme = useTheme()
   const { classes } = useStyles()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { device, pump, cgm, parameters, mobileApplication } = pumpSettings.payload
+  const { patient } = usePatient()
+  const bgUnit = patient?.settings?.units?.bg ?? Unit.MilligramPerDeciliter
+  const lang = i18n.language
+  const ifuDocumentName = getIfuDocumentName(pumpSettings, bgUnit, lang)
   const lastUploadDate = moment.tz(pumpSettings.normalTime, 'UTC').tz(new Intl.DateTimeFormat().resolvedOptions().timeZone).format('LLLL')
 
   const onClickCopyButton = async (): Promise<void> => {
@@ -78,15 +87,31 @@ export const CurrentParametersSection: FC<CurrentParametersSectionProps> = ({ pu
         title={t('devices-and-current-parameters')}
         subheader={`${t('last-upload:')} ${lastUploadDate}`}
         action={
-          <Button
-            variant="outlined"
-            disableElevation
-            startIcon={<FileCopyIcon />}
-            onClick={onClickCopyButton}
-            aria-label={t('text-copy')}
-          >
-            {t('text-copy')}
-          </Button>
+          <Box sx={{ marginTop: theme.spacing(3), display: 'flex', flexDirection: 'column',
+            gap: theme.spacing(2), mx: theme.spacing(1) }}>
+            {ifuDocumentName &&
+              <DownloadDocumentButton
+                documentName={ifuDocumentName}
+                metricName="current-parameters-download-ifu"
+                labelKey="button-download-ifu"
+                size="large"
+              />
+            }
+            <Tooltip title={t('text-copy')}>
+              <Button
+                data-test-id={"copy-parameters-button"}
+                variant="outlined"
+                disableElevation
+                color="inherit"
+                onClick={onClickCopyButton}
+                aria-label={t('text-copy')}
+                sx={{ alignSelf: 'end', marginLeft: theme.spacing(2), minWidth: 0, padding: theme.spacing(1) }}
+              >
+                <FileCopyIconOutlined />
+              </Button>
+            </Tooltip>
+
+          </Box>
         }
         classes={{
           action: classes.cardHeaderAction

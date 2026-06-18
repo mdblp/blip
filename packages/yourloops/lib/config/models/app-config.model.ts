@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021-2025, Diabeloop
+ * Copyright (c) 2021-2026, Diabeloop
  *
  * All rights reserved.
  *
@@ -59,4 +59,6 @@ export interface AppConfig {
   EATING_SHORTLY_ENABLED: boolean
   METRICS_CLICKODROME_ENABLED: boolean
   DATE_OF_BIRTH_HIDDEN: boolean
+  MY_DIABBY_PARTNER_ID: string
+  GLOOKO_XT_PARTNER_ID: string
 }
